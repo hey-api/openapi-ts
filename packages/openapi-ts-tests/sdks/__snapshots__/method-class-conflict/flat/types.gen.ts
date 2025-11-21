@@ -54,7 +54,7 @@ export type AddressDto = {
     country: string;
 };
 
-export type AnnualInvoicesCount = "Tens" | "Hundred" | "Thousands" | "TenThousands" | "HundredThousands";
+export type AnnualInvoicesCount = 'Tens' | 'Hundred' | 'Thousands' | 'TenThousands' | 'HundredThousands';
 
 export type BankAccount = {
     id: number;
@@ -228,13 +228,13 @@ export type CounterpartyUpdateDto = {
     isFavourite?: boolean | null;
 };
 
-export type Country = "Czechia" | "Slovakia";
+export type Country = 'Czechia' | 'Slovakia';
 
 export type CreateInvoiceClientDto = {
     counterpartyId: number;
 };
 
-export type Currency = "CZK" | "EUR" | "USD" | "GBP";
+export type Currency = 'CZK' | 'EUR' | 'USD' | 'GBP';
 
 export type DataBoxCredentials = {
     id?: number;
@@ -251,7 +251,7 @@ export type DataBoxCredentialsUpsertDto = {
     password: string | null;
 };
 
-export type DocumentAction = "Uploaded";
+export type DocumentAction = 'Uploaded';
 
 export type DocumentBusiness = {
     id: number;
@@ -314,7 +314,7 @@ export type DocumentTypesSummary = {
     documentsCount: number;
 };
 
-export type FeedbackType = "Feedback" | "Bug";
+export type FeedbackType = 'Feedback' | 'Bug';
 
 export type ForgotPasswordRequest = {
     email: string;
@@ -362,7 +362,7 @@ export type InvitationCreateDto = {
     email: string;
 };
 
-export type InvitationStatus = "Pending" | "Expired" | "Rejected";
+export type InvitationStatus = 'Pending' | 'Expired' | 'Rejected';
 
 export type InvitationUpdateDto = {
     email?: string | null;
@@ -539,7 +539,7 @@ export type InvoiceSettingsBankAccountUpsertDto = {
     currency: Currency;
 };
 
-export type InvoiceStatus = "Draft" | "Issued" | "Paid" | "Overdue" | "Cancelled" | "Snapshot";
+export type InvoiceStatus = 'Draft' | 'Issued' | 'Paid' | 'Overdue' | 'Cancelled' | 'Snapshot';
 
 export type InvoiceSupplier = {
     name: string;
@@ -568,7 +568,7 @@ export type InvoiceTemplateUpsertDto = {
     footerText: string | null;
 };
 
-export type InvoiceType = "Regular" | "Corrective" | "Advance";
+export type InvoiceType = 'Regular' | 'Corrective' | 'Advance';
 
 export type InvoiceUpdateClientDto = {
     counterpartyId: number | null;
@@ -662,7 +662,7 @@ export type NumberingSettingUpsertDto = {
     lastExternalInvoiceSequenceNumber?: number | null;
 };
 
-export type PaymentMethod = "Cash" | "BankTransfer";
+export type PaymentMethod = 'Cash' | 'BankTransfer';
 
 export type PersonalDocumentsSummary = {
     documentsCount: number;
@@ -672,7 +672,7 @@ export type PersonalDocumentsSummary = {
 
 export type PushNotificationsProvider = 1 | 2;
 
-export type RecurrenceType = "Daily" | "Weekly" | "Monthly" | "Yearly";
+export type RecurrenceType = 'Daily' | 'Weekly' | 'Monthly' | 'Yearly';
 
 export type RecurringTask = {
     id: number;
@@ -747,7 +747,7 @@ export type SendFeedbackRequest = {
     traceId?: string | null;
 };
 
-export type SequencePosition = "Start" | "End";
+export type SequencePosition = 'Start' | 'End';
 
 export type Task = {
     id: number;
@@ -774,7 +774,7 @@ export type TaskRejectDto = {
     reason: string;
 };
 
-export type TaskStatus = "PendingClient" | "PendingAccountant" | "Completed" | "Canceled";
+export type TaskStatus = 'PendingClient' | 'PendingAccountant' | 'Completed' | 'Canceled';
 
 export type TaskSubmitDto = {
     answer: string | null;
@@ -826,7 +826,7 @@ export type UserUpdateDto = {
     phoneNumber?: string | null;
 };
 
-export type YearFormat = "Full" | "Short";
+export type YearFormat = 'Full' | 'Short';
 
 export type AccessTokenResponseWritable = {
     accessToken: string;
@@ -838,7 +838,7 @@ export type PostApiV1AccountingCompaniesData = {
     body?: AccountingCompanyCreateDto;
     path?: never;
     query?: never;
-    url: "/api/v1/accounting-companies";
+    url: '/api/v1/accounting-companies';
 };
 
 export type PostApiV1AccountingCompaniesResponses = {
@@ -856,7 +856,7 @@ export type DeleteApiV1AccountingCompaniesByIdData = {
         id: number;
     };
     query?: never;
-    url: "/api/v1/accounting-companies/{id}";
+    url: '/api/v1/accounting-companies/{id}';
 };
 
 export type DeleteApiV1AccountingCompaniesByIdResponses = {
@@ -872,7 +872,7 @@ export type PostApiV1AccountingCompaniesByIdData = {
         id: number;
     };
     query?: never;
-    url: "/api/v1/accounting-companies/{id}";
+    url: '/api/v1/accounting-companies/{id}';
 };
 
 export type PostApiV1AccountingCompaniesByIdResponses = {
@@ -917,7 +917,7 @@ export type ApiVVersionApiVersionOdataAccountingCompaniesData = {
          */
         count?: boolean;
     };
-    url: "/api/v1/odata/AccountingCompanies";
+    url: '/api/v1/odata/AccountingCompanies';
 };
 
 export type ApiVVersionApiVersionOdataAccountingCompaniesResponses = {
@@ -962,7 +962,7 @@ export type ApiVVersionApiVersionOdataAccountingCompaniesCountData = {
          */
         count?: boolean;
     };
-    url: "/api/v1/odata/AccountingCompanies/$count";
+    url: '/api/v1/odata/AccountingCompanies/$count';
 };
 
 export type ApiVVersionApiVersionOdataAccountingCompaniesCountResponses = {
@@ -978,7 +978,7 @@ export type PutApiV1AccountingCompanyMembershipsData = {
     body?: AccountingCompanyMembershipUpsertDto;
     path?: never;
     query?: never;
-    url: "/api/v1/accounting-company-memberships";
+    url: '/api/v1/accounting-company-memberships';
 };
 
 export type PutApiV1AccountingCompanyMembershipsResponses = {
@@ -996,7 +996,7 @@ export type DeleteApiV1AccountingCompanyMembershipsByIdData = {
         id: number;
     };
     query?: never;
-    url: "/api/v1/accounting-company-memberships/{id}";
+    url: '/api/v1/accounting-company-memberships/{id}';
 };
 
 export type DeleteApiV1AccountingCompanyMembershipsByIdResponses = {
@@ -1039,7 +1039,7 @@ export type ApiVVersionApiVersionOdataAccountingCompanyMembershipsData = {
          */
         count?: boolean;
     };
-    url: "/api/v1/odata/AccountingCompanyMemberships";
+    url: '/api/v1/odata/AccountingCompanyMemberships';
 };
 
 export type ApiVVersionApiVersionOdataAccountingCompanyMembershipsResponses = {
@@ -1084,7 +1084,7 @@ export type ApiVVersionApiVersionOdataAccountingCompanyMembershipsCountData = {
          */
         count?: boolean;
     };
-    url: "/api/v1/odata/AccountingCompanyMemberships/$count";
+    url: '/api/v1/odata/AccountingCompanyMemberships/$count';
 };
 
 export type ApiVVersionApiVersionOdataAccountingCompanyMembershipsCountResponses = {
@@ -1100,7 +1100,7 @@ export type PutApiV1BankAccountsData = {
     body?: BankAccountUpsertDto;
     path?: never;
     query?: never;
-    url: "/api/v1/bank-accounts";
+    url: '/api/v1/bank-accounts';
 };
 
 export type PutApiV1BankAccountsResponses = {
@@ -1118,7 +1118,7 @@ export type DeleteApiV1BankAccountsByIdData = {
         id: number;
     };
     query?: never;
-    url: "/api/v1/bank-accounts/{id}";
+    url: '/api/v1/bank-accounts/{id}';
 };
 
 export type DeleteApiV1BankAccountsByIdResponses = {
@@ -1161,7 +1161,7 @@ export type ApiVVersionApiVersionOdataBankAccountsData = {
          */
         count?: boolean;
     };
-    url: "/api/v1/odata/BankAccounts";
+    url: '/api/v1/odata/BankAccounts';
 };
 
 export type ApiVVersionApiVersionOdataBankAccountsResponses = {
@@ -1206,7 +1206,7 @@ export type ApiVVersionApiVersionOdataBankAccountsCountData = {
          */
         count?: boolean;
     };
-    url: "/api/v1/odata/BankAccounts/$count";
+    url: '/api/v1/odata/BankAccounts/$count';
 };
 
 export type ApiVVersionApiVersionOdataBankAccountsCountResponses = {
@@ -1222,7 +1222,7 @@ export type PutApiV1BusinessAccountantAssignmentsData = {
     body?: BusinessAccountantAssignmentUpsert;
     path?: never;
     query?: never;
-    url: "/api/v1/business-accountant-assignments";
+    url: '/api/v1/business-accountant-assignments';
 };
 
 export type PutApiV1BusinessAccountantAssignmentsResponses = {
@@ -1240,7 +1240,7 @@ export type DeleteApiV1BusinessAccountantAssignmentsByIdData = {
         id: number;
     };
     query?: never;
-    url: "/api/v1/business-accountant-assignments/{id}";
+    url: '/api/v1/business-accountant-assignments/{id}';
 };
 
 export type DeleteApiV1BusinessAccountantAssignmentsByIdResponses = {
@@ -1283,7 +1283,7 @@ export type ApiVVersionApiVersionOdataBusinessAccountantAssignmentsData = {
          */
         count?: boolean;
     };
-    url: "/api/v1/odata/BusinessAccountantAssignments";
+    url: '/api/v1/odata/BusinessAccountantAssignments';
 };
 
 export type ApiVVersionApiVersionOdataBusinessAccountantAssignmentsResponses = {
@@ -1328,7 +1328,7 @@ export type ApiVVersionApiVersionOdataBusinessAccountantAssignmentsCountData = {
          */
         count?: boolean;
     };
-    url: "/api/v1/odata/BusinessAccountantAssignments/$count";
+    url: '/api/v1/odata/BusinessAccountantAssignments/$count';
 };
 
 export type ApiVVersionApiVersionOdataBusinessAccountantAssignmentsCountResponses = {
@@ -1346,7 +1346,7 @@ export type GetApiV1BusinessDocumentsByIdRawData = {
         id: number;
     };
     query?: never;
-    url: "/api/v1/business-documents/{id}/raw";
+    url: '/api/v1/business-documents/{id}/raw';
 };
 
 export type GetApiV1BusinessDocumentsByIdRawResponses = {
@@ -1372,7 +1372,7 @@ export type PostApiV1BusinessDocumentsData = {
     };
     path?: never;
     query?: never;
-    url: "/api/v1/business-documents";
+    url: '/api/v1/business-documents';
 };
 
 export type PostApiV1BusinessDocumentsResponses = {
@@ -1390,7 +1390,7 @@ export type DeleteApiV1BusinessDocumentsByIdData = {
         id: number;
     };
     query?: never;
-    url: "/api/v1/business-documents/{id}";
+    url: '/api/v1/business-documents/{id}';
 };
 
 export type DeleteApiV1BusinessDocumentsByIdResponses = {
@@ -1408,7 +1408,7 @@ export type PutApiV1BusinessDocumentsByIdData = {
         id: number;
     };
     query?: never;
-    url: "/api/v1/business-documents/{id}";
+    url: '/api/v1/business-documents/{id}';
 };
 
 export type PutApiV1BusinessDocumentsByIdResponses = {
@@ -1426,7 +1426,7 @@ export type PostApiV1BusinessDocumentsByIdApproveData = {
         id: number;
     };
     query?: never;
-    url: "/api/v1/business-documents/{id}/approve";
+    url: '/api/v1/business-documents/{id}/approve';
 };
 
 export type PostApiV1BusinessDocumentsByIdApproveResponses = {
@@ -1444,7 +1444,7 @@ export type PostApiV1BusinessDocumentsByIdUnapproveData = {
         id: number;
     };
     query?: never;
-    url: "/api/v1/business-documents/{id}/unapprove";
+    url: '/api/v1/business-documents/{id}/unapprove';
 };
 
 export type PostApiV1BusinessDocumentsByIdUnapproveResponses = {
@@ -1462,7 +1462,7 @@ export type PostApiV1BusinessDocumentsByIdMoveToPersonalData = {
         id: number;
     };
     query?: never;
-    url: "/api/v1/business-documents/{id}/move-to-personal";
+    url: '/api/v1/business-documents/{id}/move-to-personal';
 };
 
 export type PostApiV1BusinessDocumentsByIdMoveToPersonalResponses = {
@@ -1478,7 +1478,7 @@ export type PostApiV1BusinessDocumentsByIdMoveToBusinessData = {
         id: number;
     };
     query?: never;
-    url: "/api/v1/business-documents/{id}/move-to-business";
+    url: '/api/v1/business-documents/{id}/move-to-business';
 };
 
 export type PostApiV1BusinessDocumentsByIdMoveToBusinessResponses = {
@@ -1524,7 +1524,7 @@ export type ApiVVersionApiVersionOdataBusinessDocumentActivitiesData = {
          */
         count?: boolean;
     };
-    url: "/api/v1/odata/BusinessDocumentActivities";
+    url: '/api/v1/odata/BusinessDocumentActivities';
 };
 
 export type ApiVVersionApiVersionOdataBusinessDocumentActivitiesResponses = {
@@ -1570,7 +1570,7 @@ export type ApiVVersionApiVersionOdataBusinessDocumentActivitiesCountData = {
          */
         count?: boolean;
     };
-    url: "/api/v1/odata/BusinessDocumentActivities/$count";
+    url: '/api/v1/odata/BusinessDocumentActivities/$count';
 };
 
 export type ApiVVersionApiVersionOdataBusinessDocumentActivitiesCountResponses = {
@@ -1616,7 +1616,7 @@ export type ApiVVersionApiVersionOdataBusinessDocumentsData = {
          */
         count?: boolean;
     };
-    url: "/api/v1/odata/BusinessDocuments";
+    url: '/api/v1/odata/BusinessDocuments';
 };
 
 export type ApiVVersionApiVersionOdataBusinessDocumentsResponses = {
@@ -1662,7 +1662,7 @@ export type ApiVVersionApiVersionOdataBusinessDocumentsCountData = {
          */
         count?: boolean;
     };
-    url: "/api/v1/odata/BusinessDocuments/$count";
+    url: '/api/v1/odata/BusinessDocuments/$count';
 };
 
 export type ApiVVersionApiVersionOdataBusinessDocumentsCountResponses = {
@@ -1708,7 +1708,7 @@ export type ApiVVersionApiVersionOdataBusinessDocumentsSummariesData = {
          */
         count?: boolean;
     };
-    url: "/api/v1/odata/BusinessDocumentsSummaries";
+    url: '/api/v1/odata/BusinessDocumentsSummaries';
 };
 
 export type ApiVVersionApiVersionOdataBusinessDocumentsSummariesResponses = {
@@ -1754,7 +1754,7 @@ export type ApiVVersionApiVersionOdataBusinessDocumentsSummariesCountData = {
          */
         count?: boolean;
     };
-    url: "/api/v1/odata/BusinessDocumentsSummaries/$count";
+    url: '/api/v1/odata/BusinessDocumentsSummaries/$count';
 };
 
 export type ApiVVersionApiVersionOdataBusinessDocumentsSummariesCountResponses = {
@@ -1772,7 +1772,7 @@ export type GetApiV1BusinessesByIdDocumentTypesSummaryData = {
         id: number;
     };
     query?: never;
-    url: "/api/v1/businesses/{id}/document-types-summary";
+    url: '/api/v1/businesses/{id}/document-types-summary';
 };
 
 export type GetApiV1BusinessesByIdDocumentTypesSummaryResponses = {
@@ -1788,7 +1788,7 @@ export type PostApiV1BusinessesData = {
     body?: BusinessCreateDto;
     path?: never;
     query?: never;
-    url: "/api/v1/businesses";
+    url: '/api/v1/businesses';
 };
 
 export type PostApiV1BusinessesResponses = {
@@ -1806,7 +1806,7 @@ export type DeleteApiV1BusinessesByIdData = {
         id: number;
     };
     query?: never;
-    url: "/api/v1/businesses/{id}";
+    url: '/api/v1/businesses/{id}';
 };
 
 export type DeleteApiV1BusinessesByIdResponses = {
@@ -1822,7 +1822,7 @@ export type PutApiV1BusinessesByIdData = {
         id: number;
     };
     query?: never;
-    url: "/api/v1/businesses/{id}";
+    url: '/api/v1/businesses/{id}';
 };
 
 export type PutApiV1BusinessesByIdResponses = {
@@ -1840,7 +1840,7 @@ export type PutApiV1BusinessesByIdContactData = {
         id: number;
     };
     query?: never;
-    url: "/api/v1/businesses/{id}/contact";
+    url: '/api/v1/businesses/{id}/contact';
 };
 
 export type PutApiV1BusinessesByIdContactResponses = {
@@ -1856,7 +1856,7 @@ export type PostApiV1BusinessesByIdDisconnectData = {
         id: number;
     };
     query?: never;
-    url: "/api/v1/businesses/{id}/disconnect";
+    url: '/api/v1/businesses/{id}/disconnect';
 };
 
 export type PostApiV1BusinessesByIdDisconnectResponses = {
@@ -1902,7 +1902,7 @@ export type ApiVVersionApiVersionOdataBusinessesData = {
          */
         count?: boolean;
     };
-    url: "/api/v1/odata/Businesses";
+    url: '/api/v1/odata/Businesses';
 };
 
 export type ApiVVersionApiVersionOdataBusinessesResponses = {
@@ -1948,7 +1948,7 @@ export type ApiVVersionApiVersionOdataBusinessesCountData = {
          */
         count?: boolean;
     };
-    url: "/api/v1/odata/Businesses/$count";
+    url: '/api/v1/odata/Businesses/$count';
 };
 
 export type ApiVVersionApiVersionOdataBusinessesCountResponses = {
@@ -1974,7 +1974,7 @@ export type ApiVVersionApiVersionOdataBusinessesKeyData = {
          */
         expand?: string;
     };
-    url: "/api/v1/odata/Businesses({key})";
+    url: '/api/v1/odata/Businesses({key})';
 };
 
 export type ApiVVersionApiVersionOdataBusinessesKeyResponses = {
@@ -2000,7 +2000,7 @@ export type ApiVVersionApiVersionOdataBusinessesKey2Data = {
          */
         expand?: string;
     };
-    url: "/api/v1/odata/Businesses/{key}";
+    url: '/api/v1/odata/Businesses/{key}';
 };
 
 export type ApiVVersionApiVersionOdataBusinessesKey2Responses = {
@@ -2016,7 +2016,7 @@ export type PutApiV1BusinessMembershipsData = {
     body?: BusinessMembershipUpsertDto;
     path?: never;
     query?: never;
-    url: "/api/v1/business-memberships";
+    url: '/api/v1/business-memberships';
 };
 
 export type PutApiV1BusinessMembershipsResponses = {
@@ -2063,7 +2063,7 @@ export type ApiVVersionApiVersionOdataBusinessSummariesData = {
          */
         count?: boolean;
     };
-    url: "/api/v1/odata/BusinessSummaries";
+    url: '/api/v1/odata/BusinessSummaries';
 };
 
 export type ApiVVersionApiVersionOdataBusinessSummariesResponses = {
@@ -2110,7 +2110,7 @@ export type ApiVVersionApiVersionOdataBusinessSummariesCountData = {
          */
         count?: boolean;
     };
-    url: "/api/v1/odata/BusinessSummaries/$count";
+    url: '/api/v1/odata/BusinessSummaries/$count';
 };
 
 export type ApiVVersionApiVersionOdataBusinessSummariesCountResponses = {
@@ -2126,7 +2126,7 @@ export type PostApiV1CounterpartiesData = {
     body?: CounterpartyCreateDto;
     path?: never;
     query?: never;
-    url: "/api/v1/counterparties";
+    url: '/api/v1/counterparties';
 };
 
 export type PostApiV1CounterpartiesResponses = {
@@ -2144,7 +2144,7 @@ export type DeleteApiV1CounterpartiesByIdData = {
         id: number;
     };
     query?: never;
-    url: "/api/v1/counterparties/{id}";
+    url: '/api/v1/counterparties/{id}';
 };
 
 export type DeleteApiV1CounterpartiesByIdResponses = {
@@ -2160,7 +2160,7 @@ export type PatchApiV1CounterpartiesByIdData = {
         id: number;
     };
     query?: never;
-    url: "/api/v1/counterparties/{id}";
+    url: '/api/v1/counterparties/{id}';
 };
 
 export type PatchApiV1CounterpartiesByIdResponses = {
@@ -2205,7 +2205,7 @@ export type ApiVVersionApiVersionOdataCounterpartiesData = {
          */
         count?: boolean;
     };
-    url: "/api/v1/odata/Counterparties";
+    url: '/api/v1/odata/Counterparties';
 };
 
 export type ApiVVersionApiVersionOdataCounterpartiesResponses = {
@@ -2250,7 +2250,7 @@ export type ApiVVersionApiVersionOdataCounterpartiesCountData = {
          */
         count?: boolean;
     };
-    url: "/api/v1/odata/Counterparties/$count";
+    url: '/api/v1/odata/Counterparties/$count';
 };
 
 export type ApiVVersionApiVersionOdataCounterpartiesCountResponses = {
@@ -2266,7 +2266,7 @@ export type PutApiV1DataBoxCredentialsData = {
     body?: DataBoxCredentialsUpsertDto;
     path?: never;
     query?: never;
-    url: "/api/v1/data-box-credentials";
+    url: '/api/v1/data-box-credentials';
 };
 
 export type PutApiV1DataBoxCredentialsResponses = {
@@ -2284,7 +2284,7 @@ export type DeleteApiV1DataBoxCredentialsByIdData = {
         id: number;
     };
     query?: never;
-    url: "/api/v1/data-box-credentials/{id}";
+    url: '/api/v1/data-box-credentials/{id}';
 };
 
 export type DeleteApiV1DataBoxCredentialsByIdResponses = {
@@ -2328,7 +2328,7 @@ export type ApiVVersionApiVersionOdataDataBoxCredentialsData = {
          */
         count?: boolean;
     };
-    url: "/api/v1/odata/DataBoxCredentials";
+    url: '/api/v1/odata/DataBoxCredentials';
 };
 
 export type ApiVVersionApiVersionOdataDataBoxCredentialsResponses = {
@@ -2374,7 +2374,7 @@ export type ApiVVersionApiVersionOdataDataBoxCredentialsCountData = {
          */
         count?: boolean;
     };
-    url: "/api/v1/odata/DataBoxCredentials/$count";
+    url: '/api/v1/odata/DataBoxCredentials/$count';
 };
 
 export type ApiVVersionApiVersionOdataDataBoxCredentialsCountResponses = {
@@ -2390,7 +2390,7 @@ export type GetApiDevData = {
     body?: never;
     path?: never;
     query?: never;
-    url: "/api/dev";
+    url: '/api/dev';
 };
 
 export type GetApiDevResponses = {
@@ -2404,7 +2404,7 @@ export type GetApiDevReseedDbData = {
     body?: never;
     path?: never;
     query?: never;
-    url: "/api/dev/reseed-db";
+    url: '/api/dev/reseed-db';
 };
 
 export type GetApiDevReseedDbResponses = {
@@ -2418,7 +2418,7 @@ export type GetApiDevDbResetData = {
     body?: never;
     path?: never;
     query?: never;
-    url: "/api/dev/db-reset";
+    url: '/api/dev/db-reset';
 };
 
 export type GetApiDevDbResetResponses = {
@@ -2432,7 +2432,7 @@ export type GetApiDevDbReset2Data = {
     body?: never;
     path?: never;
     query?: never;
-    url: "/api/dev/db/reset";
+    url: '/api/dev/db/reset';
 };
 
 export type GetApiDevDbReset2Responses = {
@@ -2446,7 +2446,7 @@ export type GetApiDevDbCreateData = {
     body?: never;
     path?: never;
     query?: never;
-    url: "/api/dev/db/create";
+    url: '/api/dev/db/create';
 };
 
 export type GetApiDevDbCreateResponses = {
@@ -2460,7 +2460,7 @@ export type GetApiDevDbTouchData = {
     body?: never;
     path?: never;
     query?: never;
-    url: "/api/dev/db/touch";
+    url: '/api/dev/db/touch';
 };
 
 export type GetApiDevDbTouchResponses = {
@@ -2474,7 +2474,7 @@ export type GetApiDevSeedData = {
     body?: never;
     path?: never;
     query?: never;
-    url: "/api/dev/seed";
+    url: '/api/dev/seed';
 };
 
 export type GetApiDevSeedResponses = {
@@ -2488,7 +2488,7 @@ export type GetApiDevSeedAllData = {
     body?: never;
     path?: never;
     query?: never;
-    url: "/api/dev/seed-all";
+    url: '/api/dev/seed-all';
 };
 
 export type GetApiDevSeedAllResponses = {
@@ -2502,7 +2502,7 @@ export type GetApiDevSeedProdData = {
     body?: never;
     path?: never;
     query?: never;
-    url: "/api/dev/seed-prod";
+    url: '/api/dev/seed-prod';
 };
 
 export type GetApiDevSeedProdResponses = {
@@ -2518,7 +2518,7 @@ export type GetApiDevJobProcessRecurringTasksData = {
     query?: {
         refDay?: string;
     };
-    url: "/api/dev/job/process-recurring-tasks";
+    url: '/api/dev/job/process-recurring-tasks';
 };
 
 export type GetApiDevJobProcessRecurringTasksResponses = {
@@ -2534,7 +2534,7 @@ export type GetApiDevNotificationsSendTestData = {
     query?: {
         userId?: number;
     };
-    url: "/api/dev/notifications/send-test";
+    url: '/api/dev/notifications/send-test';
 };
 
 export type GetApiDevNotificationsSendTestResponses = {
@@ -2550,7 +2550,7 @@ export type GetApiDevConfirmEmailData = {
     query?: {
         email?: string;
     };
-    url: "/api/dev/confirm-email";
+    url: '/api/dev/confirm-email';
 };
 
 export type GetApiDevConfirmEmailResponses = {
@@ -2568,7 +2568,7 @@ export type GetApiDevEmailSendTestData = {
         subject?: string;
         message?: string;
     };
-    url: "/api/dev/email/send-test";
+    url: '/api/dev/email/send-test';
 };
 
 export type GetApiDevEmailSendTestResponses = {
@@ -2582,7 +2582,7 @@ export type DeleteApiV1NotificationsDeviceTokensData = {
     body?: NotificationsDeviceTokenDeleteDto;
     path?: never;
     query?: never;
-    url: "/api/v1/notifications/device-tokens";
+    url: '/api/v1/notifications/device-tokens';
 };
 
 export type DeleteApiV1NotificationsDeviceTokensResponses = {
@@ -2596,7 +2596,7 @@ export type PutApiV1NotificationsDeviceTokensData = {
     body?: NotificationsDeviceTokenUpsertDto;
     path?: never;
     query?: never;
-    url: "/api/v1/notifications/device-tokens";
+    url: '/api/v1/notifications/device-tokens';
 };
 
 export type PutApiV1NotificationsDeviceTokensResponses = {
@@ -2639,7 +2639,7 @@ export type ApiVVersionApiVersionOdataDocumentTypesData = {
          */
         count?: boolean;
     };
-    url: "/api/v1/odata/DocumentTypes";
+    url: '/api/v1/odata/DocumentTypes';
 };
 
 export type ApiVVersionApiVersionOdataDocumentTypesResponses = {
@@ -2684,7 +2684,7 @@ export type ApiVVersionApiVersionOdataDocumentTypesCountData = {
          */
         count?: boolean;
     };
-    url: "/api/v1/odata/DocumentTypes/$count";
+    url: '/api/v1/odata/DocumentTypes/$count';
 };
 
 export type ApiVVersionApiVersionOdataDocumentTypesCountResponses = {
@@ -2700,7 +2700,7 @@ export type PostApiV1FeedbackData = {
     body?: SendFeedbackRequest;
     path?: never;
     query?: never;
-    url: "/api/v1/feedback";
+    url: '/api/v1/feedback';
 };
 
 export type PostApiV1FeedbackResponses = {
@@ -2714,7 +2714,7 @@ export type PostApiV1InvitationsData = {
     body?: InvitationCreateDto;
     path?: never;
     query?: never;
-    url: "/api/v1/invitations";
+    url: '/api/v1/invitations';
 };
 
 export type PostApiV1InvitationsResponses = {
@@ -2732,7 +2732,7 @@ export type PostApiV1InvitationsByIdAcceptData = {
         id: number;
     };
     query?: never;
-    url: "/api/v1/invitations/{id}/accept";
+    url: '/api/v1/invitations/{id}/accept';
 };
 
 export type PostApiV1InvitationsByIdAcceptResponses = {
@@ -2748,7 +2748,7 @@ export type PostApiV1InvitationsByIdRejectData = {
         id: number;
     };
     query?: never;
-    url: "/api/v1/invitations/{id}/reject";
+    url: '/api/v1/invitations/{id}/reject';
 };
 
 export type PostApiV1InvitationsByIdRejectResponses = {
@@ -2764,7 +2764,7 @@ export type DeleteApiV1InvitationsByIdData = {
         id: number;
     };
     query?: never;
-    url: "/api/v1/invitations/{id}";
+    url: '/api/v1/invitations/{id}';
 };
 
 export type DeleteApiV1InvitationsByIdResponses = {
@@ -2780,7 +2780,7 @@ export type PatchApiV1InvitationsByIdData = {
         id: number;
     };
     query?: never;
-    url: "/api/v1/invitations/{id}";
+    url: '/api/v1/invitations/{id}';
 };
 
 export type PatchApiV1InvitationsByIdResponses = {
@@ -2825,7 +2825,7 @@ export type ApiVVersionApiVersionOdataInvitationsData = {
          */
         count?: boolean;
     };
-    url: "/api/v1/odata/Invitations";
+    url: '/api/v1/odata/Invitations';
 };
 
 export type ApiVVersionApiVersionOdataInvitationsResponses = {
@@ -2870,7 +2870,7 @@ export type ApiVVersionApiVersionOdataInvitationsCountData = {
          */
         count?: boolean;
     };
-    url: "/api/v1/odata/Invitations/$count";
+    url: '/api/v1/odata/Invitations/$count';
 };
 
 export type ApiVVersionApiVersionOdataInvitationsCountResponses = {
@@ -2886,7 +2886,7 @@ export type PostApiV1InvoicesData = {
     body?: InvoiceCreateDto;
     path?: never;
     query?: never;
-    url: "/api/v1/invoices";
+    url: '/api/v1/invoices';
 };
 
 export type PostApiV1InvoicesResponses = {
@@ -2904,7 +2904,7 @@ export type DeleteApiV1InvoicesByIdData = {
         id: number;
     };
     query?: never;
-    url: "/api/v1/invoices/{id}";
+    url: '/api/v1/invoices/{id}';
 };
 
 export type DeleteApiV1InvoicesByIdResponses = {
@@ -2920,7 +2920,7 @@ export type PatchApiV1InvoicesByIdData = {
         id: number;
     };
     query?: never;
-    url: "/api/v1/invoices/{id}";
+    url: '/api/v1/invoices/{id}';
 };
 
 export type PatchApiV1InvoicesByIdResponses = {
@@ -2938,7 +2938,7 @@ export type GetApiV1InvoicesByIdPreviewData = {
         id: number;
     };
     query?: never;
-    url: "/api/v1/invoices/{id}/preview";
+    url: '/api/v1/invoices/{id}/preview';
 };
 
 export type GetApiV1InvoicesByIdPreviewResponses = {
@@ -2954,7 +2954,7 @@ export type PostApiV1InvoicesByIdSendData = {
         id: number;
     };
     query?: never;
-    url: "/api/v1/invoices/{id}/send";
+    url: '/api/v1/invoices/{id}/send';
 };
 
 export type PostApiV1InvoicesByIdSendResponses = {
@@ -2972,7 +2972,7 @@ export type PostApiV1InvoicesByIdSnapshotData = {
         id: number;
     };
     query?: never;
-    url: "/api/v1/invoices/{id}/snapshot";
+    url: '/api/v1/invoices/{id}/snapshot';
 };
 
 export type PostApiV1InvoicesByIdSnapshotResponses = {
@@ -3017,7 +3017,7 @@ export type ApiVVersionApiVersionOdataInvoicesData = {
          */
         count?: boolean;
     };
-    url: "/api/v1/odata/Invoices";
+    url: '/api/v1/odata/Invoices';
 };
 
 export type ApiVVersionApiVersionOdataInvoicesResponses = {
@@ -3062,7 +3062,7 @@ export type ApiVVersionApiVersionOdataInvoicesCountData = {
          */
         count?: boolean;
     };
-    url: "/api/v1/odata/Invoices/$count";
+    url: '/api/v1/odata/Invoices/$count';
 };
 
 export type ApiVVersionApiVersionOdataInvoicesCountResponses = {
@@ -3078,7 +3078,7 @@ export type PutApiV1InvoiceSettingsData = {
     body?: InvoiceSettingUpsertDto;
     path?: never;
     query?: never;
-    url: "/api/v1/invoice-settings";
+    url: '/api/v1/invoice-settings';
 };
 
 export type PutApiV1InvoiceSettingsResponses = {
@@ -3123,7 +3123,7 @@ export type ApiVVersionApiVersionOdataInvoiceSettingsData = {
          */
         count?: boolean;
     };
-    url: "/api/v1/odata/InvoiceSettings";
+    url: '/api/v1/odata/InvoiceSettings';
 };
 
 export type ApiVVersionApiVersionOdataInvoiceSettingsResponses = {
@@ -3168,7 +3168,7 @@ export type ApiVVersionApiVersionOdataInvoiceSettingsCountData = {
          */
         count?: boolean;
     };
-    url: "/api/v1/odata/InvoiceSettings/$count";
+    url: '/api/v1/odata/InvoiceSettings/$count';
 };
 
 export type ApiVVersionApiVersionOdataInvoiceSettingsCountResponses = {
@@ -3213,7 +3213,7 @@ export type ApiVVersionApiVersionOdataLicensesData = {
          */
         count?: boolean;
     };
-    url: "/api/v1/odata/Licenses";
+    url: '/api/v1/odata/Licenses';
 };
 
 export type ApiVVersionApiVersionOdataLicensesResponses = {
@@ -3258,7 +3258,7 @@ export type ApiVVersionApiVersionOdataLicensesCountData = {
          */
         count?: boolean;
     };
-    url: "/api/v1/odata/Licenses/$count";
+    url: '/api/v1/odata/Licenses/$count';
 };
 
 export type ApiVVersionApiVersionOdataLicensesCountResponses = {
@@ -3274,7 +3274,7 @@ export type PostApiV1NotificationsTestData = {
     body?: NotificationsTestSendDto;
     path?: never;
     query?: never;
-    url: "/api/v1/notifications/test";
+    url: '/api/v1/notifications/test';
 };
 
 export type PostApiV1NotificationsTestResponses = {
@@ -3290,7 +3290,7 @@ export type GetApiV1PersonalDocumentsByIdRawData = {
         id: number;
     };
     query?: never;
-    url: "/api/v1/personal-documents/{id}/raw";
+    url: '/api/v1/personal-documents/{id}/raw';
 };
 
 export type GetApiV1PersonalDocumentsByIdRawResponses = {
@@ -3313,7 +3313,7 @@ export type PostApiV1PersonalDocumentsData = {
     };
     path?: never;
     query?: never;
-    url: "/api/v1/personal-documents";
+    url: '/api/v1/personal-documents';
 };
 
 export type PostApiV1PersonalDocumentsResponses = {
@@ -3331,7 +3331,7 @@ export type PostApiV1PersonalDocumentsByIdMoveToBusinessData = {
         id: number;
     };
     query?: never;
-    url: "/api/v1/personal-documents/{id}/move-to-business";
+    url: '/api/v1/personal-documents/{id}/move-to-business';
 };
 
 export type PostApiV1PersonalDocumentsByIdMoveToBusinessResponses = {
@@ -3347,7 +3347,7 @@ export type DeleteApiV1PersonalDocumentsByIdData = {
         id: number;
     };
     query?: never;
-    url: "/api/v1/personal-documents/{id}";
+    url: '/api/v1/personal-documents/{id}';
 };
 
 export type DeleteApiV1PersonalDocumentsByIdResponses = {
@@ -3363,7 +3363,7 @@ export type GetApiV1PersonalDocumentsSummaryData = {
     body?: never;
     path?: never;
     query?: never;
-    url: "/api/v1/personal-documents/summary";
+    url: '/api/v1/personal-documents/summary';
 };
 
 export type GetApiV1PersonalDocumentsSummaryResponses = {
@@ -3408,7 +3408,7 @@ export type ApiVVersionApiVersionOdataPersonalDocumentsData = {
          */
         count?: boolean;
     };
-    url: "/api/v1/odata/PersonalDocuments";
+    url: '/api/v1/odata/PersonalDocuments';
 };
 
 export type ApiVVersionApiVersionOdataPersonalDocumentsResponses = {
@@ -3453,7 +3453,7 @@ export type ApiVVersionApiVersionOdataPersonalDocumentsCountData = {
          */
         count?: boolean;
     };
-    url: "/api/v1/odata/PersonalDocuments/$count";
+    url: '/api/v1/odata/PersonalDocuments/$count';
 };
 
 export type ApiVVersionApiVersionOdataPersonalDocumentsCountResponses = {
@@ -3469,7 +3469,7 @@ export type PostApiV1RecurringTasksData = {
     body?: RecurringTaskCreateDto;
     path?: never;
     query?: never;
-    url: "/api/v1/recurring-tasks";
+    url: '/api/v1/recurring-tasks';
 };
 
 export type PostApiV1RecurringTasksResponses = {
@@ -3487,7 +3487,7 @@ export type DeleteApiV1RecurringTasksByIdData = {
         id: number;
     };
     query?: never;
-    url: "/api/v1/recurring-tasks/{id}";
+    url: '/api/v1/recurring-tasks/{id}';
 };
 
 export type DeleteApiV1RecurringTasksByIdResponses = {
@@ -3503,7 +3503,7 @@ export type PatchApiV1RecurringTasksByIdData = {
         id: number;
     };
     query?: never;
-    url: "/api/v1/recurring-tasks/{id}";
+    url: '/api/v1/recurring-tasks/{id}';
 };
 
 export type PatchApiV1RecurringTasksByIdResponses = {
@@ -3548,7 +3548,7 @@ export type ApiVVersionApiVersionOdataRecurringTasksData = {
          */
         count?: boolean;
     };
-    url: "/api/v1/odata/RecurringTasks";
+    url: '/api/v1/odata/RecurringTasks';
 };
 
 export type ApiVVersionApiVersionOdataRecurringTasksResponses = {
@@ -3593,7 +3593,7 @@ export type ApiVVersionApiVersionOdataRecurringTasksCountData = {
          */
         count?: boolean;
     };
-    url: "/api/v1/odata/RecurringTasks/$count";
+    url: '/api/v1/odata/RecurringTasks/$count';
 };
 
 export type ApiVVersionApiVersionOdataRecurringTasksCountResponses = {
@@ -3609,7 +3609,7 @@ export type GetData = {
     body?: never;
     path?: never;
     query?: never;
-    url: "/";
+    url: '/';
 };
 
 export type GetResponses = {
@@ -3623,7 +3623,7 @@ export type PostApiV1TasksData = {
     body?: TasksCreateDto;
     path?: never;
     query?: never;
-    url: "/api/v1/tasks";
+    url: '/api/v1/tasks';
 };
 
 export type PostApiV1TasksResponses = {
@@ -3641,7 +3641,7 @@ export type PutApiV1TasksByIdData = {
         id: number;
     };
     query?: never;
-    url: "/api/v1/tasks/{id}";
+    url: '/api/v1/tasks/{id}';
 };
 
 export type PutApiV1TasksByIdResponses = {
@@ -3659,7 +3659,7 @@ export type PostApiV1TasksByIdSubmitData = {
         id: number;
     };
     query?: never;
-    url: "/api/v1/tasks/{id}/submit";
+    url: '/api/v1/tasks/{id}/submit';
 };
 
 export type PostApiV1TasksByIdSubmitResponses = {
@@ -3677,7 +3677,7 @@ export type PostApiV1TasksByIdApproveData = {
         id: number;
     };
     query?: never;
-    url: "/api/v1/tasks/{id}/approve";
+    url: '/api/v1/tasks/{id}/approve';
 };
 
 export type PostApiV1TasksByIdApproveResponses = {
@@ -3695,7 +3695,7 @@ export type PostApiV1TasksByIdRejectData = {
         id: number;
     };
     query?: never;
-    url: "/api/v1/tasks/{id}/reject";
+    url: '/api/v1/tasks/{id}/reject';
 };
 
 export type PostApiV1TasksByIdRejectResponses = {
@@ -3713,7 +3713,7 @@ export type GetApiV1TasksByIdCommentsData = {
         id: number;
     };
     query?: never;
-    url: "/api/v1/tasks/{id}/comments";
+    url: '/api/v1/tasks/{id}/comments';
 };
 
 export type GetApiV1TasksByIdCommentsResponses = {
@@ -3731,7 +3731,7 @@ export type GetApiV1TasksByIdDocumentsData = {
         id: number;
     };
     query?: never;
-    url: "/api/v1/tasks/{id}/documents";
+    url: '/api/v1/tasks/{id}/documents';
 };
 
 export type GetApiV1TasksByIdDocumentsResponses = {
@@ -3777,7 +3777,7 @@ export type ApiVVersionApiVersionOdataTasksData = {
          */
         count?: boolean;
     };
-    url: "/api/v1/odata/Tasks";
+    url: '/api/v1/odata/Tasks';
 };
 
 export type ApiVVersionApiVersionOdataTasksResponses = {
@@ -3823,7 +3823,7 @@ export type ApiVVersionApiVersionOdataTasksCountData = {
          */
         count?: boolean;
     };
-    url: "/api/v1/odata/Tasks/$count";
+    url: '/api/v1/odata/Tasks/$count';
 };
 
 export type ApiVVersionApiVersionOdataTasksCountResponses = {
@@ -3849,7 +3849,7 @@ export type ApiVVersionApiVersionOdataTasksKeyData = {
          */
         expand?: string;
     };
-    url: "/api/v1/odata/Tasks({key})";
+    url: '/api/v1/odata/Tasks({key})';
 };
 
 export type ApiVVersionApiVersionOdataTasksKeyResponses = {
@@ -3875,7 +3875,7 @@ export type ApiVVersionApiVersionOdataTasksKey2Data = {
          */
         expand?: string;
     };
-    url: "/api/v1/odata/Tasks/{key}";
+    url: '/api/v1/odata/Tasks/{key}';
 };
 
 export type ApiVVersionApiVersionOdataTasksKey2Responses = {
@@ -3891,7 +3891,7 @@ export type PostApiV1UserRegisterData = {
     body: RegisterRequest;
     path?: never;
     query?: never;
-    url: "/api/v1/user/register";
+    url: '/api/v1/user/register';
 };
 
 export type PostApiV1UserRegisterErrors = {
@@ -3917,7 +3917,7 @@ export type PostApiV1UserLoginData = {
         useCookies?: boolean;
         useSessionCookies?: boolean;
     };
-    url: "/api/v1/user/login";
+    url: '/api/v1/user/login';
 };
 
 export type PostApiV1UserLoginResponses = {
@@ -3933,7 +3933,7 @@ export type PostApiV1UserRefreshData = {
     body: RefreshRequest;
     path?: never;
     query?: never;
-    url: "/api/v1/user/refresh";
+    url: '/api/v1/user/refresh';
 };
 
 export type PostApiV1UserRefreshResponses = {
@@ -3953,7 +3953,7 @@ export type MapIdentityApiApiVVersionApiVersionUserConfirmEmailData = {
         code: string;
         changedEmail?: string;
     };
-    url: "/api/v1/user/confirmEmail";
+    url: '/api/v1/user/confirmEmail';
 };
 
 export type MapIdentityApiApiVVersionApiVersionUserConfirmEmailResponses = {
@@ -3967,7 +3967,7 @@ export type PostApiV1UserResendConfirmationEmailData = {
     body: ResendConfirmationEmailRequest;
     path?: never;
     query?: never;
-    url: "/api/v1/user/resendConfirmationEmail";
+    url: '/api/v1/user/resendConfirmationEmail';
 };
 
 export type PostApiV1UserResendConfirmationEmailResponses = {
@@ -3981,7 +3981,7 @@ export type PostApiV1UserForgotPasswordData = {
     body: ForgotPasswordRequest;
     path?: never;
     query?: never;
-    url: "/api/v1/user/forgotPassword";
+    url: '/api/v1/user/forgotPassword';
 };
 
 export type PostApiV1UserForgotPasswordErrors = {
@@ -4004,7 +4004,7 @@ export type PostApiV1UserResetPasswordData = {
     body: ResetPasswordRequest;
     path?: never;
     query?: never;
-    url: "/api/v1/user/resetPassword";
+    url: '/api/v1/user/resetPassword';
 };
 
 export type PostApiV1UserResetPasswordErrors = {
@@ -4027,7 +4027,7 @@ export type PostApiV1UserManage2FaData = {
     body: TwoFactorRequest;
     path?: never;
     query?: never;
-    url: "/api/v1/user/manage/2fa";
+    url: '/api/v1/user/manage/2fa';
 };
 
 export type PostApiV1UserManage2FaErrors = {
@@ -4056,7 +4056,7 @@ export type GetApiV1UserManageInfoData = {
     body?: never;
     path?: never;
     query?: never;
-    url: "/api/v1/user/manage/info";
+    url: '/api/v1/user/manage/info';
 };
 
 export type GetApiV1UserManageInfoErrors = {
@@ -4085,7 +4085,7 @@ export type PostApiV1UserManageInfoData = {
     body: InfoRequest;
     path?: never;
     query?: never;
-    url: "/api/v1/user/manage/info";
+    url: '/api/v1/user/manage/info';
 };
 
 export type PostApiV1UserManageInfoErrors = {
@@ -4114,7 +4114,7 @@ export type PostApiV1UserLogoutData = {
     body?: unknown;
     path?: never;
     query?: never;
-    url: "/api/v1/user/logout";
+    url: '/api/v1/user/logout';
 };
 
 export type PostApiV1UserLogoutResponses = {
@@ -4128,7 +4128,7 @@ export type GetApiV1UserDocumentsSummaryData = {
     body?: never;
     path?: never;
     query?: never;
-    url: "/api/v1/user/documents-summary";
+    url: '/api/v1/user/documents-summary';
 };
 
 export type GetApiV1UserDocumentsSummaryResponses = {
@@ -4144,7 +4144,7 @@ export type DeleteApiV1UserData = {
     body?: never;
     path?: never;
     query?: never;
-    url: "/api/v1/user";
+    url: '/api/v1/user';
 };
 
 export type DeleteApiV1UserResponses = {
@@ -4158,7 +4158,7 @@ export type GetApiV1UsersMeData = {
     body?: never;
     path?: never;
     query?: never;
-    url: "/api/v1/users/me";
+    url: '/api/v1/users/me';
 };
 
 export type GetApiV1UsersMeResponses = {
@@ -4176,7 +4176,7 @@ export type PatchApiV1UsersByIdData = {
         id: number;
     };
     query?: never;
-    url: "/api/v1/users/{id}";
+    url: '/api/v1/users/{id}';
 };
 
 export type PatchApiV1UsersByIdResponses = {

@@ -242,7 +242,7 @@ export const operationParameters = ({
           isParametersRequired = true;
         }
         flatParams.prop(parameter.name, (p) =>
-          p.optional(!parameter.isRequired).type(
+          p.required(parameter.isRequired).type(
             pluginTypeScript.api.schemaToType({
               plugin: pluginTypeScript,
               schema: parameter.schema,
@@ -261,7 +261,7 @@ export const operationParameters = ({
 
       result.parameters.push(
         $.param('parameters', (p) =>
-          p.optional(!isParametersRequired).type(flatParams),
+          p.required(isParametersRequired).type(flatParams),
         ),
       );
     }
@@ -269,7 +269,7 @@ export const operationParameters = ({
 
   result.parameters.push(
     $.param('options', (p) =>
-      p.optional(!isRequiredOptions).type(
+      p.required(isRequiredOptions).type(
         operationOptionsType({
           isDataAllowed: plugin.config.paramsStructure === 'grouped',
           operation,
@@ -610,7 +610,7 @@ export const operationStatements = ({
               : operation.body.mediaType,
           ),
         )
-        .spread($('options').attr('headers').optional(!isRequiredOptions));
+        .spread($('options').attr('headers').required(isRequiredOptions));
       if (hasParams) {
         headers.spread($('params').attr('headers'));
       }
@@ -625,9 +625,7 @@ export const operationStatements = ({
     : undefined;
 
   let clientExpression: ReturnType<typeof $.attr | typeof $.binary>;
-  const optionsClient = $('options')
-    .attr('client')
-    .optional(!isRequiredOptions);
+  const optionsClient = $('options').attr('client').required(isRequiredOptions);
   if (plugin.config.instance) {
     clientExpression = optionsClient.coalesce($('this').attr('client'));
   } else if (symbolClient) {

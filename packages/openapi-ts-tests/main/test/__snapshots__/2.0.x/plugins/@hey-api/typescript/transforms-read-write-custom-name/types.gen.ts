@@ -48,7 +48,7 @@ export type PostFooReadData = {
     body: WritableFooRead;
     path?: never;
     query?: never;
-    url: "/foo-read";
+    url: '/foo-read';
 };
 
 export type PostFooReadResponses = {

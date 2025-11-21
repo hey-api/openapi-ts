@@ -2,7 +2,7 @@
 
 import * as v from 'valibot';
 
-export const vBaz = v.optional(v.pipe(v.pipe(v.string(), v.regex(/foo\nbar/)), v.readonly()), "baz");
+export const vBaz = v.optional(v.pipe(v.pipe(v.string(), v.regex(/foo\nbar/)), v.readonly()), 'baz');
 
 export const vFoo: v.GenericSchema = v.optional(v.union([v.object({
         foo: v.optional(v.pipe(v.string(), v.regex(/^\d{3}-\d{2}-\d{4}$/))),

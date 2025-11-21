@@ -5,50 +5,50 @@ export type ClientOptions = {
 };
 
 export type Event = ({
-    type: "installation.updated";
+    type: 'installation.updated';
 } & EventInstallationUpdated) | ({
-    type: "lsp.client.diagnostics";
+    type: 'lsp.client.diagnostics';
 } & EventLspClientDiagnostics) | ({
-    type: "message.updated";
+    type: 'message.updated';
 } & EventMessageUpdated) | ({
-    type: "message.removed";
+    type: 'message.removed';
 } & EventMessageRemoved) | ({
-    type: "message.part.updated";
+    type: 'message.part.updated';
 } & EventMessagePartUpdated) | ({
-    type: "message.part.removed";
+    type: 'message.part.removed';
 } & EventMessagePartRemoved) | ({
-    type: "storage.write";
+    type: 'storage.write';
 } & EventStorageWrite) | ({
-    type: "permission.updated";
+    type: 'permission.updated';
 } & EventPermissionUpdated) | ({
-    type: "permission.replied";
+    type: 'permission.replied';
 } & EventPermissionReplied) | ({
-    type: "file.edited";
+    type: 'file.edited';
 } & EventFileEdited) | ({
-    type: "session.updated";
+    type: 'session.updated';
 } & EventSessionUpdated) | ({
-    type: "session.deleted";
+    type: 'session.deleted';
 } & EventSessionDeleted) | ({
-    type: "session.idle";
+    type: 'session.idle';
 } & EventSessionIdle) | ({
-    type: "session.error";
+    type: 'session.error';
 } & EventSessionError) | ({
-    type: "server.connected";
+    type: 'server.connected';
 } & EventServerConnected) | ({
-    type: "file.watcher.updated";
+    type: 'file.watcher.updated';
 } & EventFileWatcherUpdated) | ({
-    type: "ide.installed";
+    type: 'ide.installed';
 } & EventIdeInstalled);
 
 export type EventInstallationUpdated = {
-    type: "installation.updated";
+    type: 'installation.updated';
     properties: {
         version: string;
     };
 };
 
 export type EventLspClientDiagnostics = {
-    type: "lsp.client.diagnostics";
+    type: 'lsp.client.diagnostics';
     properties: {
         serverID: string;
         path: string;
@@ -56,22 +56,22 @@ export type EventLspClientDiagnostics = {
 };
 
 export type EventMessageUpdated = {
-    type: "message.updated";
+    type: 'message.updated';
     properties: {
         info: Message;
     };
 };
 
 export type Message = ({
-    role: "user";
+    role: 'user';
 } & UserMessage) | ({
-    role: "assistant";
+    role: 'assistant';
 } & AssistantMessage);
 
 export type UserMessage = {
     id: string;
     sessionID: string;
-    role: "user";
+    role: 'user';
     time: {
         created: number;
     };
@@ -80,19 +80,19 @@ export type UserMessage = {
 export type AssistantMessage = {
     id: string;
     sessionID: string;
-    role: "assistant";
+    role: 'assistant';
     time: {
         created: number;
         completed?: number;
     };
     error?: ({
-        name: "ProviderAuthError";
+        name: 'ProviderAuthError';
     } & ProviderAuthError) | ({
-        name: "UnknownError";
+        name: 'UnknownError';
     } & UnknownError) | ({
-        name: "MessageOutputLengthError";
+        name: 'MessageOutputLengthError';
     } & MessageOutputLengthError) | ({
-        name: "MessageAbortedError";
+        name: 'MessageAbortedError';
     } & MessageAbortedError);
     system: Array<string>;
     modelID: string;
@@ -116,7 +116,7 @@ export type AssistantMessage = {
 };
 
 export type ProviderAuthError = {
-    name: "ProviderAuthError";
+    name: 'ProviderAuthError';
     data: {
         providerID: string;
         message: string;
@@ -124,28 +124,28 @@ export type ProviderAuthError = {
 };
 
 export type UnknownError = {
-    name: "UnknownError";
+    name: 'UnknownError';
     data: {
         message: string;
     };
 };
 
 export type MessageOutputLengthError = {
-    name: "MessageOutputLengthError";
+    name: 'MessageOutputLengthError';
     data: {
         [key: string]: unknown;
     };
 };
 
 export type MessageAbortedError = {
-    name: "MessageAbortedError";
+    name: 'MessageAbortedError';
     data: {
         [key: string]: unknown;
     };
 };
 
 export type EventMessageRemoved = {
-    type: "message.removed";
+    type: 'message.removed';
     properties: {
         sessionID: string;
         messageID: string;
@@ -153,37 +153,37 @@ export type EventMessageRemoved = {
 };
 
 export type EventMessagePartUpdated = {
-    type: "message.part.updated";
+    type: 'message.part.updated';
     properties: {
         part: Part;
     };
 };
 
 export type Part = ({
-    type: "text";
+    type: 'text';
 } & TextPart) | ({
-    type: "reasoning";
+    type: 'reasoning';
 } & ReasoningPart) | ({
-    type: "file";
+    type: 'file';
 } & FilePart) | ({
-    type: "tool";
+    type: 'tool';
 } & ToolPart) | ({
-    type: "step-start";
+    type: 'step-start';
 } & StepStartPart) | ({
-    type: "step-finish";
+    type: 'step-finish';
 } & StepFinishPart) | ({
-    type: "snapshot";
+    type: 'snapshot';
 } & SnapshotPart) | ({
-    type: "patch";
+    type: 'patch';
 } & PatchPart) | ({
-    type: "agent";
+    type: 'agent';
 } & AgentPart);
 
 export type TextPart = {
     id: string;
     sessionID: string;
     messageID: string;
-    type: "text";
+    type: 'text';
     text: string;
     synthetic?: boolean;
     time?: {
@@ -196,7 +196,7 @@ export type ReasoningPart = {
     id: string;
     sessionID: string;
     messageID: string;
-    type: "reasoning";
+    type: 'reasoning';
     text: string;
     metadata?: {
         [key: string]: unknown;
@@ -211,7 +211,7 @@ export type FilePart = {
     id: string;
     sessionID: string;
     messageID: string;
-    type: "file";
+    type: 'file';
     mime: string;
     filename?: string;
     url: string;
@@ -219,14 +219,14 @@ export type FilePart = {
 };
 
 export type FilePartSource = ({
-    type: "file";
+    type: 'file';
 } & FileSource) | ({
-    type: "symbol";
+    type: 'symbol';
 } & SymbolSource);
 
 export type FileSource = {
     text: FilePartSourceText;
-    type: "file";
+    type: 'file';
     path: string;
 };
 
@@ -238,7 +238,7 @@ export type FilePartSourceText = {
 
 export type SymbolSource = {
     text: FilePartSourceText;
-    type: "symbol";
+    type: 'symbol';
     path: string;
     range: Range;
     name: string;
@@ -260,28 +260,28 @@ export type ToolPart = {
     id: string;
     sessionID: string;
     messageID: string;
-    type: "tool";
+    type: 'tool';
     callID: string;
     tool: string;
     state: ToolState;
 };
 
 export type ToolState = ({
-    status: "pending";
+    status: 'pending';
 } & ToolStatePending) | ({
-    status: "running";
+    status: 'running';
 } & ToolStateRunning) | ({
-    status: "completed";
+    status: 'completed';
 } & ToolStateCompleted) | ({
-    status: "error";
+    status: 'error';
 } & ToolStateError);
 
 export type ToolStatePending = {
-    status: "pending";
+    status: 'pending';
 };
 
 export type ToolStateRunning = {
-    status: "running";
+    status: 'running';
     input?: unknown;
     title?: string;
     metadata?: {
@@ -293,7 +293,7 @@ export type ToolStateRunning = {
 };
 
 export type ToolStateCompleted = {
-    status: "completed";
+    status: 'completed';
     input: {
         [key: string]: unknown;
     };
@@ -309,7 +309,7 @@ export type ToolStateCompleted = {
 };
 
 export type ToolStateError = {
-    status: "error";
+    status: 'error';
     input: {
         [key: string]: unknown;
     };
@@ -327,14 +327,14 @@ export type StepStartPart = {
     id: string;
     sessionID: string;
     messageID: string;
-    type: "step-start";
+    type: 'step-start';
 };
 
 export type StepFinishPart = {
     id: string;
     sessionID: string;
     messageID: string;
-    type: "step-finish";
+    type: 'step-finish';
     cost: number;
     tokens: {
         input: number;
@@ -351,7 +351,7 @@ export type SnapshotPart = {
     id: string;
     sessionID: string;
     messageID: string;
-    type: "snapshot";
+    type: 'snapshot';
     snapshot: string;
 };
 
@@ -359,7 +359,7 @@ export type PatchPart = {
     id: string;
     sessionID: string;
     messageID: string;
-    type: "patch";
+    type: 'patch';
     hash: string;
     files: Array<string>;
 };
@@ -368,7 +368,7 @@ export type AgentPart = {
     id: string;
     sessionID: string;
     messageID: string;
-    type: "agent";
+    type: 'agent';
     name: string;
     source?: {
         value: string;
@@ -378,7 +378,7 @@ export type AgentPart = {
 };
 
 export type EventMessagePartRemoved = {
-    type: "message.part.removed";
+    type: 'message.part.removed';
     properties: {
         sessionID: string;
         messageID: string;
@@ -387,7 +387,7 @@ export type EventMessagePartRemoved = {
 };
 
 export type EventStorageWrite = {
-    type: "storage.write";
+    type: 'storage.write';
     properties: {
         key: string;
         content?: unknown;
@@ -395,7 +395,7 @@ export type EventStorageWrite = {
 };
 
 export type EventPermissionUpdated = {
-    type: "permission.updated";
+    type: 'permission.updated';
     properties: Permission;
 };
 
@@ -416,7 +416,7 @@ export type Permission = {
 };
 
 export type EventPermissionReplied = {
-    type: "permission.replied";
+    type: 'permission.replied';
     properties: {
         sessionID: string;
         permissionID: string;
@@ -425,14 +425,14 @@ export type EventPermissionReplied = {
 };
 
 export type EventFileEdited = {
-    type: "file.edited";
+    type: 'file.edited';
     properties: {
         file: string;
     };
 };
 
 export type EventSessionUpdated = {
-    type: "session.updated";
+    type: 'session.updated';
     properties: {
         info: Session;
     };
@@ -459,52 +459,52 @@ export type Session = {
 };
 
 export type EventSessionDeleted = {
-    type: "session.deleted";
+    type: 'session.deleted';
     properties: {
         info: Session;
     };
 };
 
 export type EventSessionIdle = {
-    type: "session.idle";
+    type: 'session.idle';
     properties: {
         sessionID: string;
     };
 };
 
 export type EventSessionError = {
-    type: "session.error";
+    type: 'session.error';
     properties: {
         sessionID?: string;
         error?: ({
-            name: "ProviderAuthError";
+            name: 'ProviderAuthError';
         } & ProviderAuthError) | ({
-            name: "UnknownError";
+            name: 'UnknownError';
         } & UnknownError) | ({
-            name: "MessageOutputLengthError";
+            name: 'MessageOutputLengthError';
         } & MessageOutputLengthError) | ({
-            name: "MessageAbortedError";
+            name: 'MessageAbortedError';
         } & MessageAbortedError);
     };
 };
 
 export type EventServerConnected = {
-    type: "server.connected";
+    type: 'server.connected';
     properties: {
         [key: string]: unknown;
     };
 };
 
 export type EventFileWatcherUpdated = {
-    type: "file.watcher.updated";
+    type: 'file.watcher.updated';
     properties: {
         file: string;
-        event: "rename" | "change";
+        event: 'rename' | 'change';
     };
 };
 
 export type EventIdeInstalled = {
-    type: "ide.installed";
+    type: 'ide.installed';
     properties: {
         ide: string;
     };
@@ -552,7 +552,7 @@ export type Config = {
     /**
      * Control sharing behavior:'manual' allows manual sharing via commands, 'auto' enables automatic sharing, 'disabled' disables all sharing
      */
-    share?: "manual" | "auto" | "disabled";
+    share?: 'manual' | 'auto' | 'disabled';
     /**
      * @deprecated Use 'share' field instead. Share newly created sessions automatically
      */
@@ -640,9 +640,9 @@ export type Config = {
      */
     mcp?: {
         [key: string]: ({
-            type: "local";
+            type: 'local';
         } & McpLocalConfig) | ({
-            type: "remote";
+            type: 'remote';
         } & McpRemoteConfig);
     };
     formatter?: {
@@ -679,11 +679,11 @@ export type Config = {
      */
     layout?: LayoutConfig;
     permission?: {
-        edit?: "ask" | "allow" | "deny";
-        bash?: "ask" | "allow" | "deny" | {
-            [key: string]: "ask" | "allow" | "deny";
+        edit?: 'ask' | 'allow' | 'deny';
+        bash?: 'ask' | 'allow' | 'deny' | {
+            [key: string]: 'ask' | 'allow' | 'deny';
         };
-        webfetch?: "ask" | "allow" | "deny";
+        webfetch?: 'ask' | 'allow' | 'deny';
     };
     tools?: {
         [key: string]: boolean;
@@ -920,22 +920,22 @@ export type AgentConfig = {
      * Description of when to use the agent
      */
     description?: string;
-    mode?: "subagent" | "primary" | "all";
+    mode?: 'subagent' | 'primary' | 'all';
     permission?: {
-        edit?: "ask" | "allow" | "deny";
-        bash?: "ask" | "allow" | "deny" | {
-            [key: string]: "ask" | "allow" | "deny";
+        edit?: 'ask' | 'allow' | 'deny';
+        bash?: 'ask' | 'allow' | 'deny' | {
+            [key: string]: 'ask' | 'allow' | 'deny';
         };
-        webfetch?: "ask" | "allow" | "deny";
+        webfetch?: 'ask' | 'allow' | 'deny';
     };
     [key: string]: unknown | string | number | {
         [key: string]: boolean;
-    } | boolean | "subagent" | "primary" | "all" | {
-        edit?: "ask" | "allow" | "deny";
-        bash?: "ask" | "allow" | "deny" | {
-            [key: string]: "ask" | "allow" | "deny";
+    } | boolean | 'subagent' | 'primary' | 'all' | {
+        edit?: 'ask' | 'allow' | 'deny';
+        bash?: 'ask' | 'allow' | 'deny' | {
+            [key: string]: 'ask' | 'allow' | 'deny';
         };
-        webfetch?: "ask" | "allow" | "deny";
+        webfetch?: 'ask' | 'allow' | 'deny';
     } | undefined;
 };
 
@@ -977,7 +977,7 @@ export type McpLocalConfig = {
     /**
      * Type of MCP server connection
      */
-    type: "local";
+    type: 'local';
     /**
      * Command and arguments to run the MCP server
      */
@@ -998,7 +998,7 @@ export type McpRemoteConfig = {
     /**
      * Type of MCP server connection
      */
-    type: "remote";
+    type: 'remote';
     /**
      * URL of the remote MCP server
      */
@@ -1015,7 +1015,7 @@ export type McpRemoteConfig = {
     };
 };
 
-export type LayoutConfig = "auto" | "stretch";
+export type LayoutConfig = 'auto' | 'stretch';
 
 export type _Error = {
     data: {
@@ -1025,7 +1025,7 @@ export type _Error = {
 
 export type TextPartInput = {
     id?: string;
-    type: "text";
+    type: 'text';
     text: string;
     synthetic?: boolean;
     time?: {
@@ -1036,7 +1036,7 @@ export type TextPartInput = {
 
 export type FilePartInput = {
     id?: string;
-    type: "file";
+    type: 'file';
     mime: string;
     filename?: string;
     url: string;
@@ -1045,7 +1045,7 @@ export type FilePartInput = {
 
 export type AgentPartInput = {
     id?: string;
-    type: "agent";
+    type: 'agent';
     name: string;
     source?: {
         value: string;
@@ -1067,22 +1067,22 @@ export type File = {
     path: string;
     added: number;
     removed: number;
-    status: "added" | "deleted" | "modified";
+    status: 'added' | 'deleted' | 'modified';
 };
 
 export type Agent = {
     name: string;
     description?: string;
-    mode: "subagent" | "primary" | "all";
+    mode: 'subagent' | 'primary' | 'all';
     builtIn: boolean;
     topP?: number;
     temperature?: number;
     permission: {
-        edit: "ask" | "allow" | "deny";
+        edit: 'ask' | 'allow' | 'deny';
         bash: {
-            [key: string]: "ask" | "allow" | "deny";
+            [key: string]: 'ask' | 'allow' | 'deny';
         };
-        webfetch?: "ask" | "allow" | "deny";
+        webfetch?: 'ask' | 'allow' | 'deny';
     };
     model?: {
         modelID: string;
@@ -1098,27 +1098,27 @@ export type Agent = {
 };
 
 export type Auth = ({
-    type: "oauth";
+    type: 'oauth';
 } & OAuth) | ({
-    type: "api";
+    type: 'api';
 } & ApiAuth) | ({
-    type: "wellknown";
+    type: 'wellknown';
 } & WellKnownAuth);
 
 export type OAuth = {
-    type: "oauth";
+    type: 'oauth';
     refresh: string;
     access: string;
     expires: number;
 };
 
 export type ApiAuth = {
-    type: "api";
+    type: 'api';
     key: string;
 };
 
 export type WellKnownAuth = {
-    type: "wellknown";
+    type: 'wellknown';
     key: string;
     token: string;
 };
@@ -1127,7 +1127,7 @@ export type EventSubscribeData = {
     body?: never;
     path?: never;
     query?: never;
-    url: "/event";
+    url: '/event';
 };
 
 export type EventSubscribeResponses = {
@@ -1143,7 +1143,7 @@ export type AppGetData = {
     body?: never;
     path?: never;
     query?: never;
-    url: "/app";
+    url: '/app';
 };
 
 export type AppGetResponses = {
@@ -1159,7 +1159,7 @@ export type AppInitData = {
     body?: never;
     path?: never;
     query?: never;
-    url: "/app/init";
+    url: '/app/init';
 };
 
 export type AppInitResponses = {
@@ -1175,7 +1175,7 @@ export type ConfigGetData = {
     body?: never;
     path?: never;
     query?: never;
-    url: "/config";
+    url: '/config';
 };
 
 export type ConfigGetResponses = {
@@ -1191,7 +1191,7 @@ export type SessionListData = {
     body?: never;
     path?: never;
     query?: never;
-    url: "/session";
+    url: '/session';
 };
 
 export type SessionListResponses = {
@@ -1210,7 +1210,7 @@ export type SessionCreateData = {
     };
     path?: never;
     query?: never;
-    url: "/session";
+    url: '/session';
 };
 
 export type SessionCreateErrors = {
@@ -1237,7 +1237,7 @@ export type SessionDeleteData = {
         id: string;
     };
     query?: never;
-    url: "/session/{id}";
+    url: '/session/{id}';
 };
 
 export type SessionDeleteResponses = {
@@ -1255,7 +1255,7 @@ export type SessionGetData = {
         id: string;
     };
     query?: never;
-    url: "/session/{id}";
+    url: '/session/{id}';
 };
 
 export type SessionGetResponses = {
@@ -1275,7 +1275,7 @@ export type SessionUpdateData = {
         id: string;
     };
     query?: never;
-    url: "/session/{id}";
+    url: '/session/{id}';
 };
 
 export type SessionUpdateResponses = {
@@ -1293,7 +1293,7 @@ export type SessionChildrenData = {
         id: string;
     };
     query?: never;
-    url: "/session/{id}/children";
+    url: '/session/{id}/children';
 };
 
 export type SessionChildrenResponses = {
@@ -1318,7 +1318,7 @@ export type SessionInitData = {
         id: string;
     };
     query?: never;
-    url: "/session/{id}/init";
+    url: '/session/{id}/init';
 };
 
 export type SessionInitResponses = {
@@ -1336,7 +1336,7 @@ export type SessionAbortData = {
         id: string;
     };
     query?: never;
-    url: "/session/{id}/abort";
+    url: '/session/{id}/abort';
 };
 
 export type SessionAbortResponses = {
@@ -1354,7 +1354,7 @@ export type SessionUnshareData = {
         id: string;
     };
     query?: never;
-    url: "/session/{id}/share";
+    url: '/session/{id}/share';
 };
 
 export type SessionUnshareResponses = {
@@ -1372,7 +1372,7 @@ export type SessionShareData = {
         id: string;
     };
     query?: never;
-    url: "/session/{id}/share";
+    url: '/session/{id}/share';
 };
 
 export type SessionShareResponses = {
@@ -1396,7 +1396,7 @@ export type SessionSummarizeData = {
         id: string;
     };
     query?: never;
-    url: "/session/{id}/summarize";
+    url: '/session/{id}/summarize';
 };
 
 export type SessionSummarizeResponses = {
@@ -1417,7 +1417,7 @@ export type SessionMessagesData = {
         id: string;
     };
     query?: never;
-    url: "/session/{id}/message";
+    url: '/session/{id}/message';
 };
 
 export type SessionMessagesResponses = {
@@ -1443,11 +1443,11 @@ export type SessionChatData = {
             [key: string]: boolean;
         };
         parts: Array<({
-            type: "text";
+            type: 'text';
         } & TextPartInput) | ({
-            type: "file";
+            type: 'file';
         } & FilePartInput) | ({
-            type: "agent";
+            type: 'agent';
         } & AgentPartInput)>;
     };
     path: {
@@ -1457,7 +1457,7 @@ export type SessionChatData = {
         id: string;
     };
     query?: never;
-    url: "/session/{id}/message";
+    url: '/session/{id}/message';
 };
 
 export type SessionChatResponses = {
@@ -1485,7 +1485,7 @@ export type SessionMessageData = {
         messageID: string;
     };
     query?: never;
-    url: "/session/{id}/message/{messageID}";
+    url: '/session/{id}/message/{messageID}';
 };
 
 export type SessionMessageResponses = {
@@ -1512,7 +1512,7 @@ export type SessionShellData = {
         id: string;
     };
     query?: never;
-    url: "/session/{id}/shell";
+    url: '/session/{id}/shell';
 };
 
 export type SessionShellResponses = {
@@ -1533,7 +1533,7 @@ export type SessionRevertData = {
         id: string;
     };
     query?: never;
-    url: "/session/{id}/revert";
+    url: '/session/{id}/revert';
 };
 
 export type SessionRevertResponses = {
@@ -1551,7 +1551,7 @@ export type SessionUnrevertData = {
         id: string;
     };
     query?: never;
-    url: "/session/{id}/unrevert";
+    url: '/session/{id}/unrevert';
 };
 
 export type SessionUnrevertResponses = {
@@ -1565,14 +1565,14 @@ export type SessionUnrevertResponse = SessionUnrevertResponses[keyof SessionUnre
 
 export type PostSessionByIdPermissionsByPermissionIdData = {
     body?: {
-        response: "once" | "always" | "reject";
+        response: 'once' | 'always' | 'reject';
     };
     path: {
         id: string;
         permissionID: string;
     };
     query?: never;
-    url: "/session/{id}/permissions/{permissionID}";
+    url: '/session/{id}/permissions/{permissionID}';
 };
 
 export type PostSessionByIdPermissionsByPermissionIdResponses = {
@@ -1588,7 +1588,7 @@ export type ConfigProvidersData = {
     body?: never;
     path?: never;
     query?: never;
-    url: "/config/providers";
+    url: '/config/providers';
 };
 
 export type ConfigProvidersResponses = {
@@ -1611,7 +1611,7 @@ export type FindTextData = {
     query: {
         pattern: string;
     };
-    url: "/find";
+    url: '/find';
 };
 
 export type FindTextResponses = {
@@ -1645,7 +1645,7 @@ export type FindFilesData = {
     query: {
         query: string;
     };
-    url: "/find/file";
+    url: '/find/file';
 };
 
 export type FindFilesResponses = {
@@ -1663,7 +1663,7 @@ export type FindSymbolsData = {
     query: {
         query: string;
     };
-    url: "/find/symbol";
+    url: '/find/symbol';
 };
 
 export type FindSymbolsResponses = {
@@ -1681,7 +1681,7 @@ export type FileReadData = {
     query: {
         path: string;
     };
-    url: "/file";
+    url: '/file';
 };
 
 export type FileReadResponses = {
@@ -1689,7 +1689,7 @@ export type FileReadResponses = {
      * File content
      */
     200: {
-        type: "raw" | "patch";
+        type: 'raw' | 'patch';
         content: string;
     };
 };
@@ -1700,7 +1700,7 @@ export type FileStatusData = {
     body?: never;
     path?: never;
     query?: never;
-    url: "/file/status";
+    url: '/file/status';
 };
 
 export type FileStatusResponses = {
@@ -1721,7 +1721,7 @@ export type AppLogData = {
         /**
          * Log level
          */
-        level: "debug" | "info" | "error" | "warn";
+        level: 'debug' | 'info' | 'error' | 'warn';
         /**
          * Log message
          */
@@ -1735,7 +1735,7 @@ export type AppLogData = {
     };
     path?: never;
     query?: never;
-    url: "/log";
+    url: '/log';
 };
 
 export type AppLogResponses = {
@@ -1751,7 +1751,7 @@ export type AppAgentsData = {
     body?: never;
     path?: never;
     query?: never;
-    url: "/agent";
+    url: '/agent';
 };
 
 export type AppAgentsResponses = {
@@ -1769,7 +1769,7 @@ export type TuiAppendPromptData = {
     };
     path?: never;
     query?: never;
-    url: "/tui/append-prompt";
+    url: '/tui/append-prompt';
 };
 
 export type TuiAppendPromptResponses = {
@@ -1785,7 +1785,7 @@ export type TuiOpenHelpData = {
     body?: never;
     path?: never;
     query?: never;
-    url: "/tui/open-help";
+    url: '/tui/open-help';
 };
 
 export type TuiOpenHelpResponses = {
@@ -1801,7 +1801,7 @@ export type TuiOpenSessionsData = {
     body?: never;
     path?: never;
     query?: never;
-    url: "/tui/open-sessions";
+    url: '/tui/open-sessions';
 };
 
 export type TuiOpenSessionsResponses = {
@@ -1817,7 +1817,7 @@ export type TuiOpenThemesData = {
     body?: never;
     path?: never;
     query?: never;
-    url: "/tui/open-themes";
+    url: '/tui/open-themes';
 };
 
 export type TuiOpenThemesResponses = {
@@ -1833,7 +1833,7 @@ export type TuiOpenModelsData = {
     body?: never;
     path?: never;
     query?: never;
-    url: "/tui/open-models";
+    url: '/tui/open-models';
 };
 
 export type TuiOpenModelsResponses = {
@@ -1849,7 +1849,7 @@ export type TuiSubmitPromptData = {
     body?: never;
     path?: never;
     query?: never;
-    url: "/tui/submit-prompt";
+    url: '/tui/submit-prompt';
 };
 
 export type TuiSubmitPromptResponses = {
@@ -1865,7 +1865,7 @@ export type TuiClearPromptData = {
     body?: never;
     path?: never;
     query?: never;
-    url: "/tui/clear-prompt";
+    url: '/tui/clear-prompt';
 };
 
 export type TuiClearPromptResponses = {
@@ -1883,7 +1883,7 @@ export type TuiExecuteCommandData = {
     };
     path?: never;
     query?: never;
-    url: "/tui/execute-command";
+    url: '/tui/execute-command';
 };
 
 export type TuiExecuteCommandResponses = {
@@ -1899,11 +1899,11 @@ export type TuiShowToastData = {
     body?: {
         title?: string;
         message: string;
-        variant: "info" | "success" | "warning" | "error";
+        variant: 'info' | 'success' | 'warning' | 'error';
     };
     path?: never;
     query?: never;
-    url: "/tui/show-toast";
+    url: '/tui/show-toast';
 };
 
 export type TuiShowToastResponses = {
@@ -1921,7 +1921,7 @@ export type AuthSetData = {
         id: string;
     };
     query?: never;
-    url: "/auth/{id}";
+    url: '/auth/{id}';
 };
 
 export type AuthSetErrors = {

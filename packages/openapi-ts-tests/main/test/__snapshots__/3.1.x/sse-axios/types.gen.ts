@@ -17,7 +17,7 @@ export type Range = {
 
 export type SymbolSource = {
     text: FilePartSourceText;
-    type: "symbol";
+    type: 'symbol';
     path: string;
     range: Range;
     name: string;
@@ -32,77 +32,77 @@ export type FilePartSourceText = {
 
 export type FileSource = {
     text: FilePartSourceText;
-    type: "file";
+    type: 'file';
     path: string;
 };
 
 export type FilePartSource = ({
-    type: "file";
+    type: 'file';
 } & FileSource) | ({
-    type: "symbol";
+    type: 'symbol';
 } & SymbolSource);
 
 export type EventIdeInstalled = {
-    type: "ide.installed";
+    type: 'ide.installed';
     properties: {
         ide: string;
     };
 };
 
 export type EventFileWatcherUpdated = {
-    type: "file.watcher.updated";
+    type: 'file.watcher.updated';
     properties: {
         file: string;
-        event: "rename" | "change";
+        event: 'rename' | 'change';
     };
 };
 
 export type EventServerConnected = {
-    type: "server.connected";
+    type: 'server.connected';
     properties: {
         [key: string]: unknown;
     };
 };
 
 export type EventSessionError = {
-    type: "session.error";
+    type: 'session.error';
     properties: {
         sessionID?: string;
         error?: ({
-            name: "ProviderAuthError";
+            name: 'ProviderAuthError';
         } & ProviderAuthError) | ({
-            name: "UnknownError";
+            name: 'UnknownError';
         } & UnknownError) | ({
-            name: "MessageOutputLengthError";
+            name: 'MessageOutputLengthError';
         } & MessageOutputLengthError) | ({
-            name: "MessageAbortedError";
+            name: 'MessageAbortedError';
         } & MessageAbortedError);
     };
 };
 
 export type MessageAbortedError = {
-    name: "MessageAbortedError";
+    name: 'MessageAbortedError';
     data: {
         [key: string]: unknown;
     };
 };
 
 export type MessageOutputLengthError = {
-    name: "MessageOutputLengthError";
+    name: 'MessageOutputLengthError';
     data: {
         [key: string]: unknown;
     };
 };
 
 export type UnknownError = {
-    name: "UnknownError";
+    name: 'UnknownError';
     data: {
         message: string;
     };
 };
 
 export type ProviderAuthError = {
-    name: "ProviderAuthError";
+    name: 'ProviderAuthError';
     data: {
         providerID: string;
         message: string;
@@ -110,14 +110,14 @@ export type ProviderAuthError = {
 };
 
 export type EventSessionIdle = {
-    type: "session.idle";
+    type: 'session.idle';
     properties: {
         sessionID: string;
     };
 };
 
 export type EventSessionDeleted = {
-    type: "session.deleted";
+    type: 'session.deleted';
     properties: {
         info: Session;
     };
@@ -144,21 +144,21 @@ export type Session = {
 };
 
 export type EventSessionUpdated = {
-    type: "session.updated";
+    type: 'session.updated';
     properties: {
         info: Session;
     };
 };
 
 export type EventFileEdited = {
-    type: "file.edited";
+    type: 'file.edited';
     properties: {
         file: string;
     };
 };
 
 export type EventPermissionReplied = {
-    type: "permission.replied";
+    type: 'permission.replied';
     properties: {
         sessionID: string;
         permissionID: string;
@@ -183,12 +183,12 @@ export type Permission = {
 };
 
 export type EventPermissionUpdated = {
-    type: "permission.updated";
+    type: 'permission.updated';
     properties: Permission;
 };
 
 export type EventStorageWrite = {
-    type: "storage.write";
+    type: 'storage.write';
     properties: {
         key: string;
         content?: unknown;
@@ -196,7 +196,7 @@ export type EventStorageWrite = {
 };
 
 export type EventMessagePartRemoved = {
-    type: "message.part.removed";
+    type: 'message.part.removed';
     properties: {
         sessionID: string;
         messageID: string;
@@ -208,7 +208,7 @@ export type AgentPart = {
     id: string;
     sessionID: string;
     messageID: string;
-    type: "agent";
+    type: 'agent';
     name: string;
     source?: {
         value: string;
@@ -221,7 +221,7 @@ export type PatchPart = {
     id: string;
     sessionID: string;
     messageID: string;
-    type: "patch";
+    type: 'patch';
     hash: string;
     files: Array<string>;
 };
@@ -230,7 +230,7 @@ export type SnapshotPart = {
     id: string;
     sessionID: string;
     messageID: string;
-    type: "snapshot";
+    type: 'snapshot';
     snapshot: string;
 };
 
@@ -238,7 +238,7 @@ export type StepFinishPart = {
     id: string;
     sessionID: string;
     messageID: string;
-    type: "step-finish";
+    type: 'step-finish';
     cost: number;
     tokens: {
         input: number;
@@ -255,11 +255,11 @@ export type StepStartPart = {
     id: string;
     sessionID: string;
     messageID: string;
-    type: "step-start";
+    type: 'step-start';
 };
 
 export type ToolStateError = {
-    status: "error";
+    status: 'error';
     input: {
         [key: string]: unknown;
     };
@@ -274,7 +274,7 @@ export type ToolStateError = {
 };
 
 export type ToolStateCompleted = {
-    status: "completed";
+    status: 'completed';
     input: {
         [key: string]: unknown;
     };
@@ -290,7 +290,7 @@ export type ToolStateCompleted = {
 };
 
 export type ToolStateRunning = {
-    status: "running";
+    status: 'running';
     input?: unknown;
     title?: string;
     metadata?: {
@@ -302,24 +302,24 @@ export type ToolStateRunning = {
 };
 
 export type ToolStatePending = {
-    status: "pending";
+    status: 'pending';
 };
 
 export type ToolState = ({
-    status: "pending";
+    status: 'pending';
 } & ToolStatePending) | ({
-    status: "running";
+    status: 'running';
 } & ToolStateRunning) | ({
-    status: "completed";
+    status: 'completed';
 } & ToolStateCompleted) | ({
-    status: "error";
+    status: 'error';
 } & ToolStateError);
 
 export type ToolPart = {
     id: string;
     sessionID: string;
     messageID: string;
-    type: "tool";
+    type: 'tool';
     callID: string;
     tool: string;
     state: ToolState;
@@ -329,7 +329,7 @@ export type FilePart = {
     id: string;
     sessionID: string;
     messageID: string;
-    type: "file";
+    type: 'file';
     mime: string;
     filename?: string;
     url: string;
@@ -340,7 +340,7 @@ export type ReasoningPart = {
     id: string;
     sessionID: string;
     messageID: string;
-    type: "reasoning";
+    type: 'reasoning';
     text: string;
     metadata?: {
         [key: string]: unknown;
@@ -355,7 +355,7 @@ export type TextPart = {
     id: string;
     sessionID: string;
     messageID: string;
-    type: "text";
+    type: 'text';
     text: string;
     synthetic?: boolean;
     time?: {
@@ -365,34 +365,34 @@ export type TextPart = {
 };
 
 export type Part = ({
-    type: "text";
+    type: 'text';
 } & TextPart) | ({
-    type: "reasoning";
+    type: 'reasoning';
 } & ReasoningPart) | ({
-    type: "file";
+    type: 'file';
 } & FilePart) | ({
-    type: "tool";
+    type: 'tool';
 } & ToolPart) | ({
-    type: "step-start";
+    type: 'step-start';
 } & StepStartPart) | ({
-    type: "step-finish";
+    type: 'step-finish';
 } & StepFinishPart) | ({
-    type: "snapshot";
+    type: 'snapshot';
 } & SnapshotPart) | ({
-    type: "patch";
+    type: 'patch';
 } & PatchPart) | ({
-    type: "agent";
+    type: 'agent';
 } & AgentPart);
 
 export type EventMessagePartUpdated = {
-    type: "message.part.updated";
+    type: 'message.part.updated';
     properties: {
         part: Part;
     };
 };
 
 export type EventMessageRemoved = {
-    type: "message.removed";
+    type: 'message.removed';
     properties: {
         sessionID: string;
         messageID: string;
@@ -402,19 +402,19 @@ export type EventMessageRemoved = {
 export type AssistantMessage = {
     id: string;
     sessionID: string;
-    role: "assistant";
+    role: 'assistant';
     time: {
         created: number;
         completed?: number;
     };
     error?: ({
-        name: "ProviderAuthError";
+        name: 'ProviderAuthError';
     } & ProviderAuthError) | ({
-        name: "UnknownError";
+        name: 'UnknownError';
     } & UnknownError) | ({
-        name: "MessageOutputLengthError";
+        name: 'MessageOutputLengthError';
     } & MessageOutputLengthError) | ({
-        name: "MessageAbortedError";
+        name: 'MessageAbortedError';
     } & MessageAbortedError);
     system: Array<string>;
     modelID: string;
@@ -440,27 +440,27 @@ export type AssistantMessage = {
 export type UserMessage = {
     id: string;
     sessionID: string;
-    role: "user";
+    role: 'user';
     time: {
         created: number;
     };
 };
 
 export type Message = ({
-    role: "user";
+    role: 'user';
 } & UserMessage) | ({
-    role: "assistant";
+    role: 'assistant';
 } & AssistantMessage);
 
 export type EventMessageUpdated = {
-    type: "message.updated";
+    type: 'message.updated';
     properties: {
         info: Message;
     };
 };
 
 export type EventLspClientDiagnostics = {
-    type: "lsp.client.diagnostics";
+    type: 'lsp.client.diagnostics';
     properties: {
         serverID: string;
         path: string;
@@ -468,53 +468,53 @@ export type EventLspClientDiagnostics = {
 };
 
 export type EventInstallationUpdated = {
-    type: "installation.updated";
+    type: 'installation.updated';
     properties: {
         version: string;
     };
 };
 
 export type Event = ({
-    type: "installation.updated";
+    type: 'installation.updated';
 } & EventInstallationUpdated) | ({
-    type: "lsp.client.diagnostics";
+    type: 'lsp.client.diagnostics';
 } & EventLspClientDiagnostics) | ({
-    type: "message.updated";
+    type: 'message.updated';
 } & EventMessageUpdated) | ({
-    type: "message.removed";
+    type: 'message.removed';
 } & EventMessageRemoved) | ({
-    type: "message.part.updated";
+    type: 'message.part.updated';
 } & EventMessagePartUpdated) | ({
-    type: "message.part.removed";
+    type: 'message.part.removed';
 } & EventMessagePartRemoved) | ({
-    type: "storage.write";
+    type: 'storage.write';
 } & EventStorageWrite) | ({
-    type: "permission.updated";
+    type: 'permission.updated';
 } & EventPermissionUpdated) | ({
-    type: "permission.replied";
+    type: 'permission.replied';
 } & EventPermissionReplied) | ({
-    type: "file.edited";
+    type: 'file.edited';
 } & EventFileEdited) | ({
-    type: "session.updated";
+    type: 'session.updated';
 } & EventSessionUpdated) | ({
-    type: "session.deleted";
+    type: 'session.deleted';
 } & EventSessionDeleted) | ({
-    type: "session.idle";
+    type: 'session.idle';
 } & EventSessionIdle) | ({
-    type: "session.error";
+    type: 'session.error';
 } & EventSessionError) | ({
-    type: "server.connected";
+    type: 'server.connected';
 } & EventServerConnected) | ({
-    type: "file.watcher.updated";
+    type: 'file.watcher.updated';
 } & EventFileWatcherUpdated) | ({
-    type: "ide.installed";
+    type: 'ide.installed';
 } & EventIdeInstalled);
 
 export type EventSubscribeData = {
     body?: never;
     path?: never;
     query?: never;
-    url: "/event";
+    url: '/event';
 };
 
 export type EventSubscribeResponses = {

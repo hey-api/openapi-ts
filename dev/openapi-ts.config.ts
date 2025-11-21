@@ -217,11 +217,11 @@ export default defineConfig(() => {
         {
           // baseUrl: false,
           // exportFromIndex: true,
-          name: '@hey-api/client-fetch',
+          name: '@hey-api/client-angular',
           // runtimeConfigPath: path.resolve(__dirname, 'hey-api.ts'),
           // runtimeConfigPath: './src/hey-api.ts',
           // strictBaseUrl: true,
-          // throwOnError: true,
+          throwOnError: true,
         },
         {
           // case: 'snake_case',
@@ -255,7 +255,7 @@ export default defineConfig(() => {
           // classNameBuilder: '{{name}}',
           // classNameBuilder: '{{name}}Service',
           // classStructure: 'off',
-          client: false,
+          // client: false,
           // getSignature: ({ fields, signature, operation }) => {
           //   // ...
           //   fields.unwrap('path')
@@ -265,7 +265,7 @@ export default defineConfig(() => {
           name: '@hey-api/sdk',
           // operationId: false,
           // paramsStructure: 'flat',
-          // responseStyle: 'data',
+          responseStyle: 'data',
           // signature: 'auto',
           // signature: 'client',
           // signature: 'object',
@@ -296,7 +296,7 @@ export default defineConfig(() => {
           name: '@hey-api/transformers',
         },
         {
-          // name: 'fastify',
+          name: 'fastify',
         },
         {
           name: 'swr',
@@ -517,12 +517,12 @@ export default defineConfig(() => {
         {
           exportFromIndex: true,
           httpRequests: {
-            // asClass: true,
+            asClass: true,
           },
           httpResources: {
-            // asClass: true,
+            asClass: true,
           },
-          // name: '@angular/common',
+          name: '@angular/common',
         },
         {
           exportFromIndex: true,

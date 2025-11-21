@@ -15,7 +15,7 @@ export type PostV1FooData = {
     };
     path?: never;
     query?: never;
-    url: "/v1/foo";
+    url: '/v1/foo';
 };
 
 export type PostV1FooResponses = {

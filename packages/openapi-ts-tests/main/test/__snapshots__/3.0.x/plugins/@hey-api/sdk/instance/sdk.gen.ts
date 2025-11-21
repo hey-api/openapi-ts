@@ -29,7 +29,7 @@ class HeyApiClient {
 }
 
 class HeyApiRegistry<T> {
-    private readonly defaultKey = "default";
+    private readonly defaultKey = 'default';
     
     private readonly instances: Map<string, T> = new Map();
     
@@ -48,21 +48,21 @@ class HeyApiRegistry<T> {
 
 export class Bar extends HeyApiClient {
     public post<ThrowOnError extends boolean = false>(options?: Options<FooBarPostData, ThrowOnError>) {
-        return (options?.client ?? this.client).post<FooBarPostResponses, unknown, ThrowOnError>({ url: "/foo/bar", ...options });
+        return (options?.client ?? this.client).post<FooBarPostResponses, unknown, ThrowOnError>({ url: '/foo/bar', ...options });
     }
     
     public put<ThrowOnError extends boolean = false>(options?: Options<FooBarPutData, ThrowOnError>) {
-        return (options?.client ?? this.client).put<FooBarPutResponses, unknown, ThrowOnError>({ url: "/foo/bar", ...options });
+        return (options?.client ?? this.client).put<FooBarPutResponses, unknown, ThrowOnError>({ url: '/foo/bar', ...options });
     }
 }
 
 export class Foo extends HeyApiClient {
     public post<ThrowOnError extends boolean = false>(options?: Options<FooPostData, ThrowOnError>) {
-        return (options?.client ?? this.client).post<FooPostResponses, unknown, ThrowOnError>({ url: "/foo", ...options });
+        return (options?.client ?? this.client).post<FooPostResponses, unknown, ThrowOnError>({ url: '/foo', ...options });
     }
     
     public put<ThrowOnError extends boolean = false>(options?: Options<FooPutData, ThrowOnError>) {
-        return (options?.client ?? this.client).put<FooPutResponses, unknown, ThrowOnError>({ url: "/foo", ...options });
+        return (options?.client ?? this.client).put<FooPutResponses, unknown, ThrowOnError>({ url: '/foo', ...options });
     }
     
     bar = new Bar({ client: this.client });
@@ -80,11 +80,11 @@ export class Sdk extends HeyApiClient {
     }
     
     public getFoo<ThrowOnError extends boolean = false>(options?: Options<GetFooData, ThrowOnError>) {
-        return (options?.client ?? this.client).get<GetFooResponses, unknown, ThrowOnError>({ url: "/foo", ...options });
+        return (options?.client ?? this.client).get<GetFooResponses, unknown, ThrowOnError>({ url: '/foo', ...options });
     }
     
     public getFooBar<ThrowOnError extends boolean = false>(options?: Options<GetFooBarData, ThrowOnError>) {
-        return (options?.client ?? this.client).get<GetFooBarResponses, unknown, ThrowOnError>({ url: "/foo/bar", ...options });
+        return (options?.client ?? this.client).get<GetFooBarResponses, unknown, ThrowOnError>({ url: '/foo/bar', ...options });
     }
     
     foo = new Foo({ client: this.client });

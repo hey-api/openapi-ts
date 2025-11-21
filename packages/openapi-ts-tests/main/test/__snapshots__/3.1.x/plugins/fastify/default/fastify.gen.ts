@@ -7,7 +7,7 @@ import type { ApiVVersionODataControllerCountResponses, CallToTestOrderOfParamsD
 export type RouteHandlers = {
     import: RouteHandler<{
         Body: ImportData['body'];
-        Reply: Omit<ImportResponses, "default">;
+        Reply: Omit<ImportResponses, 'default'>;
     }>;
     apiVVersionODataControllerCount: RouteHandler<{
         Reply: ApiVVersionODataControllerCountResponses;
@@ -77,10 +77,10 @@ export type RouteHandlers = {
         Reply: DummyBResponses;
     }>;
     callWithDuplicateResponses: RouteHandler<{
-        Reply: Omit<CallWithDuplicateResponsesErrors, "default"> & CallWithDuplicateResponsesResponses;
+        Reply: Omit<CallWithDuplicateResponsesErrors, 'default'> & CallWithDuplicateResponsesResponses;
     }>;
     callWithResponses: RouteHandler<{
-        Reply: Omit<CallWithResponsesErrors, "default"> & CallWithResponsesResponses;
+        Reply: Omit<CallWithResponsesErrors, 'default'> & CallWithResponsesResponses;
     }>;
     collectionFormat: RouteHandler<{
         Querystring: CollectionFormatData['query'];

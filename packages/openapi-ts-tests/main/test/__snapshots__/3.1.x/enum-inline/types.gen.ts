@@ -12,17 +12,17 @@ export type Bar = {
     type?: Baz;
 };
 
-export type Baz = "qux" | "quux";
+export type Baz = 'qux' | 'quux';
 
-export type FooEnum = "foo" | "bar";
+export type FooEnum = 'foo' | 'bar';
 
-export type FooEnum2 = "baz";
+export type FooEnum2 = 'baz';
 
 export type GetFooData = {
     body?: never;
     path?: never;
     query?: never;
-    url: "/foo";
+    url: '/foo';
 };
 
 export type GetFooResponses = {
@@ -40,7 +40,7 @@ export type PostFooData = {
     body?: never;
     path?: never;
     query?: never;
-    url: "/foo";
+    url: '/foo';
 };
 
 export type PostFooResponses = {
@@ -58,7 +58,7 @@ export type PutFooData = {
     body?: never;
     path?: never;
     query?: never;
-    url: "/foo";
+    url: '/foo';
 };
 
 export type PutFooResponses = {

@@ -16,7 +16,7 @@
   },
   "devDependencies": {
     "sharp": "0.33.5",
-    "vitepress": "2.0.0-alpha.12",
+    "vitepress": "2.0.0-alpha.13",
     "vitepress-plugin-llms": "1.7.3",
     "vue": "3.5.23"
   },

@@ -3,7 +3,7 @@
 import { z } from 'zod';
 
 export const zFoo = z.object({
-    foo: z.literal("foo").optional(),
+    foo: z.literal('foo').optional(),
     bar: z.literal(3.2).optional(),
     baz: z.literal(-1).optional(),
     qux: z.literal(true).optional(),
@@ -11,7 +11,7 @@ export const zFoo = z.object({
         z.literal(1),
         z.literal(2),
         z.literal(3),
-        z.literal("foo"),
+        z.literal('foo'),
         z.literal(true)
     ]).optional(),
     corge: z.record(z.unknown()).optional(),
@@ -32,6 +32,6 @@ export const zFoo = z.object({
     integerUint16: z.literal(65535).optional(),
     integerUint32: z.literal(4294967295).optional(),
     integerUint64: z.number().int().optional(),
-    stringInt64: z.literal("-9223372036854775808").optional(),
-    stringUint64: z.literal("18446744073709551615").optional()
+    stringInt64: z.literal('-9223372036854775808').optional(),
+    stringUint64: z.literal('18446744073709551615').optional()
 });

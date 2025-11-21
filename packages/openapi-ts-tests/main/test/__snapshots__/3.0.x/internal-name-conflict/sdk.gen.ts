@@ -18,8 +18,8 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
     meta?: Record<string, unknown>;
 };
 
-export const create = <ThrowOnError extends boolean = false>(options?: Options<CreateData, ThrowOnError>) => (options?.client ?? client).get<CreateResponses, unknown, ThrowOnError>({ url: "/foo", ...options });
+export const create = <ThrowOnError extends boolean = false>(options?: Options<CreateData, ThrowOnError>) => (options?.client ?? client).get<CreateResponses, unknown, ThrowOnError>({ url: '/foo', ...options });
 
-export const create2 = <ThrowOnError extends boolean = false>(options?: Options<Create2Data, ThrowOnError>) => (options?.client ?? client).patch<Create2Responses, unknown, ThrowOnError>({ url: "/foo", ...options });
+export const create2 = <ThrowOnError extends boolean = false>(options?: Options<Create2Data, ThrowOnError>) => (options?.client ?? client).patch<Create2Responses, unknown, ThrowOnError>({ url: '/foo', ...options });
 
-export const create3 = <ThrowOnError extends boolean = false>(options?: Options<Create3Data, ThrowOnError>) => (options?.client ?? client).post<Create3Responses, unknown, ThrowOnError>({ url: "/foo", ...options });
+export const create3 = <ThrowOnError extends boolean = false>(options?: Options<Create3Data, ThrowOnError>) => (options?.client ?? client).post<Create3Responses, unknown, ThrowOnError>({ url: '/foo', ...options });

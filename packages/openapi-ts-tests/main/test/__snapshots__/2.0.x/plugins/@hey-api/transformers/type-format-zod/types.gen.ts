@@ -6,7 +6,7 @@ export type ClientOptions = {
 
 export type TypeID<T extends string> = `${T}_${string}`;
 
-export type UserId = TypeID<"user">;
+export type UserId = TypeID<'user'>;
 
 export type Foo = {
     bar?: number;
@@ -23,7 +23,7 @@ export type PostFooData = {
     body?: never;
     path?: never;
     query?: never;
-    url: "/foo";
+    url: '/foo';
 };
 
 export type PostFooResponses = {

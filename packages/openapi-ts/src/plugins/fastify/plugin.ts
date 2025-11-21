@@ -25,8 +25,8 @@ const operationToRouteHandler = ({
     if (operation.body) {
       type.prop('Body', (p) =>
         p
-          .optional(!operation.body!.required)
-          .type(`${symbolDataType.placeholder}['body']`),
+          .required(operation.body!.required)
+          .type($.type(symbolDataType.placeholder).idx($.type.literal('body'))),
       );
     }
 
@@ -34,30 +34,36 @@ const operationToRouteHandler = ({
       if (operation.parameters.header) {
         type.prop('Headers', (p) =>
           p
-            .optional(
-              !hasParameterGroupObjectRequired(operation.parameters!.header),
+            .required(
+              hasParameterGroupObjectRequired(operation.parameters!.header),
             )
-            .type(`${symbolDataType.placeholder}['headers']`),
+            .type(
+              $.type(symbolDataType.placeholder).idx($.type.literal('headers')),
+            ),
         );
       }
 
       if (operation.parameters.path) {
         type.prop('Params', (p) =>
           p
-            .optional(
-              !hasParameterGroupObjectRequired(operation.parameters!.path),
+            .required(
+              hasParameterGroupObjectRequired(operation.parameters!.path),
             )
-            .type(`${symbolDataType.placeholder}['path']`),
+            .type(
+              $.type(symbolDataType.placeholder).idx($.type.literal('path')),
+            ),
         );
       }
 
       if (operation.parameters.query) {
         type.prop('Querystring', (p) =>
           p
-            .optional(
-              !hasParameterGroupObjectRequired(operation.parameters!.query),
+            .required(
+              hasParameterGroupObjectRequired(operation.parameters!.query),
             )
-            .type(`${symbolDataType.placeholder}['query']`),
+            .type(
+              $.type(symbolDataType.placeholder).idx($.type.literal('query')),
+            ),
         );
       }
     }

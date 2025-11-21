@@ -1,5 +1,4 @@
 import type { Symbol } from '@hey-api/codegen-core';
-import type ts from 'typescript';
 
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
@@ -8,7 +7,7 @@ import {
   createOperationComment,
   isOperationOptionsRequired,
 } from '~/plugins/shared/utils/operation';
-import { tsc } from '~/tsc';
+import { $ } from '~/ts-dsl';
 import { stringCase } from '~/utils/stringCase';
 
 import type { AngularCommonPlugin } from './types';
@@ -17,7 +16,7 @@ interface AngularRequestClassEntry {
   className: string;
   classes: Set<string>;
   methods: Set<string>;
-  nodes: Array<ts.ClassElement>;
+  nodes: Array<ReturnType<typeof $.method | typeof $.field | typeof $.newline>>;
   root: boolean;
 }
 
@@ -88,8 +87,7 @@ const generateAngularClassRequests = ({
           if (!currentClass.nodes.length) {
             currentClass.nodes.push(methodNode);
           } else {
-            // @ts-expect-error
-            currentClass.nodes.push(tsc.identifier({ text: '\n' }), methodNode);
+            currentClass.nodes.push($.newline(), methodNode);
           }
 
           currentClass.methods.add(requestMethodName);
@@ -113,24 +111,19 @@ const generateAngularClassRequests = ({
         generateClass(childClass);
 
         currentClass.nodes.push(
-          tsc.propertyDeclaration({
-            initializer: tsc.newExpression({
-              argumentsArray: [],
-              expression: tsc.identifier({
-                text: buildName({
-                  config: {
-                    case: 'preserve',
-                    name: plugin.config.httpRequests.classNameBuilder,
-                  },
-                  name: childClass.className,
-                }),
+          $.field(
+            stringCase({ case: 'camelCase', value: childClass.className }),
+          ).assign(
+            $.new(
+              buildName({
+                config: {
+                  case: 'preserve',
+                  name: plugin.config.httpRequests.classNameBuilder,
+                },
+                name: childClass.className,
               }),
-            }),
-            name: stringCase({
-              case: 'camelCase',
-              value: childClass.className,
-            }),
-          }),
+            ),
+          ),
         );
       }
     }
@@ -155,17 +148,15 @@ const generateAngularClassRequests = ({
         name: currentClass.className,
       }),
     });
-    const node = tsc.classDeclaration({
-      decorator: currentClass.root
-        ? {
-            args: [{ providedIn: 'root' }],
-            name: symbolInjectable.placeholder,
-          }
-        : undefined,
-      exportClass: symbolClass.exported,
-      name: symbolClass.placeholder,
-      nodes: currentClass.nodes,
-    });
+    const node = $.class(symbolClass.placeholder)
+      .export(symbolClass.exported)
+      .$if(currentClass.root, (c) =>
+        c.decorator(
+          symbolInjectable.placeholder,
+          $.object().prop('providedIn', $.literal('root')),
+        ),
+      )
+      .do(...currentClass.nodes);
     plugin.setSymbolValue(symbolClass, node);
 
     generatedClasses.add(currentClass.className);
@@ -225,52 +216,20 @@ const generateRequestCallExpression = ({
     category: 'client',
   });
 
-  const optionsClient = tsc.propertyAccessExpression({
-    expression: tsc.identifier({ text: 'options' }),
-    isOptional: true,
-    name: 'client',
-  });
+  const optionsClient = $('options')
+    .attr('client')
+    .optional()
+    .$if(symbolClient, (c, s) => c.coalesce(s.placeholder));
 
-  let clientExpression: ts.Expression;
-  if (symbolClient) {
-    clientExpression = tsc.binaryExpression({
-      left: optionsClient,
-      operator: '??',
-      right: symbolClient.placeholder,
-    });
-  } else {
-    clientExpression = optionsClient;
-  }
-
-  return tsc.callExpression({
-    functionName: tsc.propertyAccessExpression({
-      expression: clientExpression,
-      name: 'requestOptions',
-    }),
-    parameters: [
-      tsc.objectExpression({
-        obj: [
-          {
-            key: 'responseStyle',
-            value: tsc.identifier({ text: "'data'" }),
-          },
-          {
-            key: 'method',
-            value: tsc.identifier({
-              text: `'${operation.method.toUpperCase()}'`,
-            }),
-          },
-          {
-            key: 'url',
-            value: tsc.identifier({ text: `'${operation.path}'` }),
-          },
-          {
-            spread: 'options',
-          },
-        ],
-      }),
-    ],
-  });
+  return optionsClient
+    .attr('requestOptions')
+    .call(
+      $.object()
+        .prop('responseStyle', $.literal('data'))
+        .prop('method', $.literal(operation.method.toUpperCase()))
+        .prop('url', $.literal(operation.path))
+        .spread('options'),
+    );
 };
 
 const generateAngularRequestMethod = ({
@@ -304,34 +263,24 @@ const generateAngularRequestMethod = ({
   });
   const dataType = symbolDataType?.placeholder || 'unknown';
 
-  return tsc.methodDeclaration({
-    accessLevel: 'public',
-    comment: createOperationComment({ operation }),
-    name: methodName,
-    parameters: [
-      {
-        isRequired: isRequiredOptions,
-        name: 'options',
-        type: `${symbolOptions.placeholder}<${dataType}, ThrowOnError>`,
-      },
-    ],
-    returnType: `${symbolHttpRequest.placeholder}<unknown>`,
-    statements: [
-      tsc.returnStatement({
-        expression: generateRequestCallExpression({
+  return $.method(methodName)
+    .public()
+    .$if(createOperationComment(operation), (c, v) => c.doc(v))
+    .param('options', (p) =>
+      p
+        .required(isRequiredOptions)
+        .type(`${symbolOptions.placeholder}<${dataType}, ThrowOnError>`),
+    )
+    .generic('ThrowOnError', (g) => g.extends('boolean').default(false))
+    .returns(`${symbolHttpRequest.placeholder}<unknown>`)
+    .do(
+      $.return(
+        generateRequestCallExpression({
           operation,
           plugin,
         }),
-      }),
-    ],
-    types: [
-      {
-        default: false,
-        extends: 'boolean',
-        name: 'ThrowOnError',
-      },
-    ],
-  });
+      ),
+    );
 };
 
 const generateAngularRequestFunction = ({
@@ -365,36 +314,27 @@ const generateAngularRequestFunction = ({
   });
   const dataType = symbolDataType?.placeholder || 'unknown';
 
-  return tsc.constVariable({
-    comment: createOperationComment({ operation }),
-    exportConst: symbol.exported,
-    expression: tsc.arrowFunction({
-      parameters: [
-        {
-          isRequired: isRequiredOptions,
-          name: 'options',
-          type: `${symbolOptions.placeholder}<${dataType}, ThrowOnError>`,
-        },
-      ],
-      returnType: `${symbolHttpRequest.placeholder}<unknown>`,
-      statements: [
-        tsc.returnStatement({
-          expression: generateRequestCallExpression({
-            operation,
-            plugin,
-          }),
-        }),
-      ],
-      types: [
-        {
-          default: false,
-          extends: 'boolean',
-          name: 'ThrowOnError',
-        },
-      ],
-    }),
-    name: symbol.placeholder,
-  });
+  return $.const(symbol.placeholder)
+    .export(symbol.exported)
+    .$if(createOperationComment(operation), (c, v) => c.doc(v))
+    .assign(
+      $.func()
+        .param('options', (p) =>
+          p
+            .required(isRequiredOptions)
+            .type(`${symbolOptions.placeholder}<${dataType}, ThrowOnError>`),
+        )
+        .generic('ThrowOnError', (g) => g.extends('boolean').default(false))
+        .returns(`${symbolHttpRequest.placeholder}<unknown>`)
+        .do(
+          $.return(
+            generateRequestCallExpression({
+              operation,
+              plugin,
+            }),
+          ),
+        ),
+    );
 };
 
 export const createHttpRequests: AngularCommonPlugin['Handler'] = ({

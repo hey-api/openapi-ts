@@ -7,9 +7,7 @@ import { client } from '../client.gen';
 import type { Options } from '../sdk.gen';
 import type { ApiVVersionODataControllerCountData, ApiVVersionODataControllerCountResponse, CallToTestOrderOfParamsData, CallWithDefaultOptionalParametersData, CallWithDefaultParametersData, CallWithDescriptionsData, CallWithDuplicateResponsesData, CallWithDuplicateResponsesResponse, CallWithNoContentResponseData, CallWithNoContentResponseResponse, CallWithParametersData, CallWithResponseAndNoContentResponseData, CallWithResponseAndNoContentResponseResponse, CallWithResponseData, CallWithResponseResponse, CallWithResponsesData, CallWithResponsesResponse, CallWithResultFromHeaderData, CallWithWeirdParameterNamesData, CollectionFormatData, ComplexParamsData, ComplexParamsResponse, ComplexTypesData, ComplexTypesResponse, DeleteCallWithoutParametersAndResponseData, DeleteFooData3, DeprecatedCallData, DummyAData, DummyAResponse, DummyBData, DummyBResponse, DuplicateName2Data, DuplicateName3Data, DuplicateName4Data, DuplicateNameData, ExportData, FileResponseData, FileResponseResponse, FooWowData, GetApiVbyApiVersionSimpleOperationData, GetApiVbyApiVersionSimpleOperationResponse, GetCallWithOptionalParamData, GetCallWithoutParametersAndResponseData, HeadCallWithoutParametersAndResponseData, ImportData, ImportResponse, MultipartRequestData, MultipartResponseData, MultipartResponseResponse, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, OptionsCallWithoutParametersAndResponseData, PatchApiVbyApiVersionNoTagData, PatchCallWithoutParametersAndResponseData, PostApiVbyApiVersionFormDataData, PostApiVbyApiVersionRequestBodyData, PostCallWithOptionalParamData, PostCallWithOptionalParamResponse, PostCallWithoutParametersAndResponseData, PutCallWithoutParametersAndResponseData, PutWithFormUrlEncodedData, TestErrorCodeData, TypesData, TypesResponse, UploadFileData, UploadFileResponse } from '../types.gen';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class DefaultServiceRequests {
     public export<ThrowOnError extends boolean = false>(options?: Options<ExportData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions({
@@ -76,9 +74,7 @@ export class ApiServiceRequests {
     vVersionService = new VVersionServiceRequests();
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class SimpleServiceRequests {
     public deleteCallWithoutParametersAndResponse<ThrowOnError extends boolean = false>(options?: Options<DeleteCallWithoutParametersAndResponseData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions({
@@ -145,9 +141,7 @@ export class SimpleServiceRequests {
     apiService = new ApiServiceRequests();
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class ParametersServiceRequests {
     public deleteFoo<ThrowOnError extends boolean = false>(options: Options<DeleteFooData3, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions({
@@ -195,9 +189,7 @@ export class ParametersServiceRequests {
     }
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class DescriptionsServiceRequests {
     public callWithDescriptions<ThrowOnError extends boolean = false>(options?: Options<CallWithDescriptionsData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions({
@@ -209,9 +201,7 @@ export class DescriptionsServiceRequests {
     }
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class DeprecatedServiceRequests {
     /**
      * @deprecated
@@ -226,9 +216,7 @@ export class DeprecatedServiceRequests {
     }
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class RequestBodyServiceRequests {
     public postApiVbyApiVersionRequestBody<ThrowOnError extends boolean = false>(options?: Options<PostApiVbyApiVersionRequestBodyData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions({
@@ -240,9 +228,7 @@ export class RequestBodyServiceRequests {
     }
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class FormDataServiceRequests {
     public postApiVbyApiVersionFormData<ThrowOnError extends boolean = false>(options?: Options<PostApiVbyApiVersionFormDataData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions({
@@ -254,9 +240,7 @@ export class FormDataServiceRequests {
     }
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class DefaultsServiceRequests {
     public callWithDefaultParameters<ThrowOnError extends boolean = false>(options?: Options<CallWithDefaultParametersData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions({
@@ -286,9 +270,7 @@ export class DefaultsServiceRequests {
     }
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class DuplicateServiceRequests {
     public duplicateName<ThrowOnError extends boolean = false>(options?: Options<DuplicateNameData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions({
@@ -327,9 +309,7 @@ export class DuplicateServiceRequests {
     }
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class NoContentServiceRequests {
     public callWithNoContentResponse<ThrowOnError extends boolean = false>(options?: Options<CallWithNoContentResponseData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions({
@@ -350,9 +330,7 @@ export class NoContentServiceRequests {
     }
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class ResponseServiceRequests {
     public callWithResponseAndNoContentResponse<ThrowOnError extends boolean = false>(options?: Options<CallWithResponseAndNoContentResponseData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions({
@@ -391,9 +369,7 @@ export class ResponseServiceRequests {
     }
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class MultipleTags1ServiceRequests {
     public dummyA<ThrowOnError extends boolean = false>(options?: Options<DummyAData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions({
@@ -414,9 +390,7 @@ export class MultipleTags1ServiceRequests {
     }
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class MultipleTags2ServiceRequests {
     public dummyA<ThrowOnError extends boolean = false>(options?: Options<DummyAData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions({
@@ -437,9 +411,7 @@ export class MultipleTags2ServiceRequests {
     }
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class MultipleTags3ServiceRequests {
     public dummyB<ThrowOnError extends boolean = false>(options?: Options<DummyBData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions({
@@ -451,9 +423,7 @@ export class MultipleTags3ServiceRequests {
     }
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class CollectionFormatServiceRequests {
     public collectionFormat<ThrowOnError extends boolean = false>(options: Options<CollectionFormatData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions({
@@ -465,9 +435,7 @@ export class CollectionFormatServiceRequests {
     }
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class TypesServiceRequests {
     public types<ThrowOnError extends boolean = false>(options: Options<TypesData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions({
@@ -479,9 +447,7 @@ export class TypesServiceRequests {
     }
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class UploadServiceRequests {
     public uploadFile<ThrowOnError extends boolean = false>(options: Options<UploadFileData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions({
@@ -493,9 +459,7 @@ export class UploadServiceRequests {
     }
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class FileResponseServiceRequests {
     public fileResponse<ThrowOnError extends boolean = false>(options: Options<FileResponseData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions({
@@ -507,9 +471,7 @@ export class FileResponseServiceRequests {
     }
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class ComplexServiceRequests {
     public complexTypes<ThrowOnError extends boolean = false>(options: Options<ComplexTypesData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions({
@@ -530,9 +492,7 @@ export class ComplexServiceRequests {
     }
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class MultipartServiceRequests {
     public multipartResponse<ThrowOnError extends boolean = false>(options?: Options<MultipartResponseData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions({
@@ -553,9 +513,7 @@ export class MultipartServiceRequests {
     }
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class HeaderServiceRequests {
     public callWithResultFromHeader<ThrowOnError extends boolean = false>(options?: Options<CallWithResultFromHeaderData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions({
@@ -567,9 +525,7 @@ export class HeaderServiceRequests {
     }
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class ErrorServiceRequests {
     public testErrorCode<ThrowOnError extends boolean = false>(options: Options<TestErrorCodeData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions({
@@ -581,9 +537,7 @@ export class ErrorServiceRequests {
     }
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class NonAsciiÆøåÆøÅöôêÊServiceRequests {
     public nonAsciiæøåÆøÅöôêÊ字符串<ThrowOnError extends boolean = false>(options: Options<NonAsciiæøåÆøÅöôêÊ字符串Data, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions({
@@ -607,9 +561,7 @@ export class NonAsciiÆøåÆøÅöôêÊServiceRequests {
     }
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class DefaultServiceResources {
     public export<ThrowOnError extends boolean = false>(options?: () => Options<ExportData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
@@ -664,9 +616,7 @@ export class ApiServiceResources {
     vVersionService = new VVersionServiceResources();
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class SimpleServiceResources {
     public deleteCallWithoutParametersAndResponse<ThrowOnError extends boolean = false>(options?: () => Options<DeleteCallWithoutParametersAndResponseData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
@@ -719,9 +669,7 @@ export class SimpleServiceResources {
     apiService = new ApiServiceResources();
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class ParametersServiceResources {
     public deleteFoo<ThrowOnError extends boolean = false>(options: () => Options<DeleteFooData3, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
@@ -759,9 +707,7 @@ export class ParametersServiceResources {
     }
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class DescriptionsServiceResources {
     public callWithDescriptions<ThrowOnError extends boolean = false>(options?: () => Options<CallWithDescriptionsData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
@@ -771,9 +717,7 @@ export class DescriptionsServiceResources {
     }
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class DeprecatedServiceResources {
     /**
      * @deprecated
@@ -786,9 +730,7 @@ export class DeprecatedServiceResources {
     }
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class RequestBodyServiceResources {
     public postApiVbyApiVersionRequestBody<ThrowOnError extends boolean = false>(options?: () => Options<PostApiVbyApiVersionRequestBodyData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
@@ -798,9 +740,7 @@ export class RequestBodyServiceResources {
     }
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class FormDataServiceResources {
     public postApiVbyApiVersionFormData<ThrowOnError extends boolean = false>(options?: () => Options<PostApiVbyApiVersionFormDataData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
@@ -810,9 +750,7 @@ export class FormDataServiceResources {
     }
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class DefaultsServiceResources {
     public callWithDefaultParameters<ThrowOnError extends boolean = false>(options?: () => Options<CallWithDefaultParametersData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
@@ -836,9 +774,7 @@ export class DefaultsServiceResources {
     }
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class DuplicateServiceResources {
     public duplicateName<ThrowOnError extends boolean = false>(options?: () => Options<DuplicateNameData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
@@ -869,9 +805,7 @@ export class DuplicateServiceResources {
     }
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class NoContentServiceResources {
     public callWithNoContentResponse<ThrowOnError extends boolean = false>(options?: () => Options<CallWithNoContentResponseData, ThrowOnError> | undefined) {
         return httpResource<CallWithNoContentResponseResponse>(() => {
@@ -888,9 +822,7 @@ export class NoContentServiceResources {
     }
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class ResponseServiceResources {
     public callWithResponseAndNoContentResponse<ThrowOnError extends boolean = false>(options?: () => Options<CallWithResponseAndNoContentResponseData, ThrowOnError> | undefined) {
         return httpResource<CallWithResponseAndNoContentResponseResponse>(() => {
@@ -921,9 +853,7 @@ export class ResponseServiceResources {
     }
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class MultipleTags1ServiceResources {
     public dummyA<ThrowOnError extends boolean = false>(options?: () => Options<DummyAData, ThrowOnError> | undefined) {
         return httpResource<DummyAResponse>(() => {
@@ -940,9 +870,7 @@ export class MultipleTags1ServiceResources {
     }
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class MultipleTags2ServiceResources {
     public dummyA<ThrowOnError extends boolean = false>(options?: () => Options<DummyAData, ThrowOnError> | undefined) {
         return httpResource<DummyAResponse>(() => {
@@ -959,9 +887,7 @@ export class MultipleTags2ServiceResources {
     }
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class MultipleTags3ServiceResources {
     public dummyB<ThrowOnError extends boolean = false>(options?: () => Options<DummyBData, ThrowOnError> | undefined) {
         return httpResource<DummyBResponse>(() => {
@@ -971,9 +897,7 @@ export class MultipleTags3ServiceResources {
     }
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class CollectionFormatServiceResources {
     public collectionFormat<ThrowOnError extends boolean = false>(options: () => Options<CollectionFormatData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
@@ -983,9 +907,7 @@ export class CollectionFormatServiceResources {
     }
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class TypesServiceResources {
     public types<ThrowOnError extends boolean = false>(options: () => Options<TypesData, ThrowOnError> | undefined) {
         return httpResource<TypesResponse>(() => {
@@ -995,9 +917,7 @@ export class TypesServiceResources {
     }
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class UploadServiceResources {
     public uploadFile<ThrowOnError extends boolean = false>(options: () => Options<UploadFileData, ThrowOnError> | undefined) {
         return httpResource<UploadFileResponse>(() => {
@@ -1007,9 +927,7 @@ export class UploadServiceResources {
     }
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class FileResponseServiceResources {
     public fileResponse<ThrowOnError extends boolean = false>(options: () => Options<FileResponseData, ThrowOnError> | undefined) {
         return httpResource<FileResponseResponse>(() => {
@@ -1019,9 +937,7 @@ export class FileResponseServiceResources {
     }
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class ComplexServiceResources {
     public complexTypes<ThrowOnError extends boolean = false>(options: () => Options<ComplexTypesData, ThrowOnError> | undefined) {
         return httpResource<ComplexTypesResponse>(() => {
@@ -1038,9 +954,7 @@ export class ComplexServiceResources {
     }
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class MultipartServiceResources {
     public multipartResponse<ThrowOnError extends boolean = false>(options?: () => Options<MultipartResponseData, ThrowOnError> | undefined) {
         return httpResource<MultipartResponseResponse>(() => {
@@ -1057,9 +971,7 @@ export class MultipartServiceResources {
     }
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class HeaderServiceResources {
     public callWithResultFromHeader<ThrowOnError extends boolean = false>(options?: () => Options<CallWithResultFromHeaderData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
@@ -1069,9 +981,7 @@ export class HeaderServiceResources {
     }
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class ErrorServiceResources {
     public testErrorCode<ThrowOnError extends boolean = false>(options: () => Options<TestErrorCodeData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
@@ -1081,9 +991,7 @@ export class ErrorServiceResources {
     }
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class NonAsciiÆøåÆøÅöôêÊServiceResources {
     public nonAsciiæøåÆøÅöôêÊ字符串<ThrowOnError extends boolean = false>(options: () => Options<NonAsciiæøåÆøÅöôêÊ字符串Data, ThrowOnError> | undefined) {
         return httpResource<NonAsciiæøåÆøÅöôêÊ字符串Response>(() => {
