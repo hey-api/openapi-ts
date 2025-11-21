@@ -1,0 +1,63 @@
+{
+  "openapi": "3.0.3",
+  "paths": {
+    "/whatever": {
+      "get": {
+        "summary": "Do the thing",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "description": "The id of the thing",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/_types.FooBar"
+            },
+            "style": "form"
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "_types.Foo": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["foo"]
+          },
+          "fooProp": {
+            "type": "string"
+          }
+        }
+      },
+      "_types.Bar": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["bar"]
+          },
+          "barProp": {
+            "type": "string"
+          }
+        }
+      },
+      "_types.FooBar": {
+        "discriminator": {
+          "propertyName": "type"
+        },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/_types.Foo"
+          },
+          {
+            "$ref": "#/components/schemas/_types.Bar"
+          }
+        ]
+      }
+    }
+  }
+}
