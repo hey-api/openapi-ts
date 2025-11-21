@@ -7,6 +7,12 @@ export const discriminatorValues = (
 ): ReadonlyArray<string> => {
   const values: Array<string> = [];
 
+  // If no mapping is provided, return empty array
+  // The discriminator property should already be defined in the referenced schemas
+  if (!mapping) {
+    return values;
+  }
+
   for (const name in mapping) {
     if (mapping[name] === $ref) {
       values.push(name);
