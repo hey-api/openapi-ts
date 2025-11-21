@@ -493,28 +493,30 @@ const parseAnyOf = ({
         irCompositionSchema.$ref,
         schema.discriminator.mapping,
       );
-      const valueSchemas: ReadonlyArray<IR.SchemaObject> = values.map(
-        (value) => ({
-          const: value,
-          type: 'string',
-        }),
-      );
-      const irDiscriminatorSchema: IR.SchemaObject = {
-        properties: {
-          [schema.discriminator.propertyName]:
-            valueSchemas.length > 1
-              ? {
-                  items: valueSchemas,
-                  logicalOperator: 'or',
-                }
-              : valueSchemas[0]!,
-        },
-        type: 'object',
-      };
-      irCompositionSchema = {
-        items: [irDiscriminatorSchema, irCompositionSchema],
-        logicalOperator: 'and',
-      };
+      if (values.length > 0) {
+        const valueSchemas: ReadonlyArray<IR.SchemaObject> = values.map(
+          (value) => ({
+            const: value,
+            type: 'string',
+          }),
+        );
+        const irDiscriminatorSchema: IR.SchemaObject = {
+          properties: {
+            [schema.discriminator.propertyName]:
+              valueSchemas.length > 1
+                ? {
+                    items: valueSchemas,
+                    logicalOperator: 'or',
+                  }
+                : valueSchemas[0]!,
+          },
+          type: 'object',
+        };
+        irCompositionSchema = {
+          items: [irDiscriminatorSchema, irCompositionSchema],
+          logicalOperator: 'and',
+        };
+      }
     }
 
     schemaItems.push(irCompositionSchema);
@@ -659,29 +661,31 @@ const parseOneOf = ({
         irCompositionSchema.$ref,
         schema.discriminator.mapping,
       );
-      const valueSchemas: ReadonlyArray<IR.SchemaObject> = values.map(
-        (value) => ({
-          const: value,
-          type: 'string',
-        }),
-      );
-      const irDiscriminatorSchema: IR.SchemaObject = {
-        properties: {
-          [schema.discriminator.propertyName]:
-            valueSchemas.length > 1
-              ? {
-                  items: valueSchemas,
-                  logicalOperator: 'or',
-                }
-              : valueSchemas[0]!,
-        },
-        required: [schema.discriminator.propertyName],
-        type: 'object',
-      };
-      irCompositionSchema = {
-        items: [irDiscriminatorSchema, irCompositionSchema],
-        logicalOperator: 'and',
-      };
+      if (values.length > 0) {
+        const valueSchemas: ReadonlyArray<IR.SchemaObject> = values.map(
+          (value) => ({
+            const: value,
+            type: 'string',
+          }),
+        );
+        const irDiscriminatorSchema: IR.SchemaObject = {
+          properties: {
+            [schema.discriminator.propertyName]:
+              valueSchemas.length > 1
+                ? {
+                    items: valueSchemas,
+                    logicalOperator: 'or',
+                  }
+                : valueSchemas[0]!,
+          },
+          required: [schema.discriminator.propertyName],
+          type: 'object',
+        };
+        irCompositionSchema = {
+          items: [irDiscriminatorSchema, irCompositionSchema],
+          logicalOperator: 'and',
+        };
+      }
     }
 
     // since we know oneOf will be using "or" logical operator, if the parsed

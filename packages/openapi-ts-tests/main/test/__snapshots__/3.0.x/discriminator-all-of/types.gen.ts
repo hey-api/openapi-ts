@@ -9,20 +9,14 @@ export type Foo = {
 };
 
 export type Bar = Foo & {
-    id: 'Bar';
-} & {
     bar?: string;
 };
 
 export type Baz = Foo & {
-    id: 'Baz';
-} & {
     baz?: string;
 };
 
 export type Qux = Foo & {
-    id: 'Qux';
-} & {
     qux?: boolean;
 };
 
