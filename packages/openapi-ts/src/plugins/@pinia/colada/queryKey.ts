@@ -66,7 +66,7 @@ export const createQueryKeyFunction = ({
     name: 'serializeQueryKeyValue',
   });
 
-  const fn = $.const(symbolCreateQueryKey.placeholder).assign(
+  const fn = $.const(symbolCreateQueryKey).assign(
     $.func()
       .param('id', (p) => p.type('string'))
       .param('options', (p) => p.optional().type(TOptionsType))
@@ -163,8 +163,6 @@ export const createQueryKeyType = ({
     tool: 'sdk',
   });
   const symbolQueryKeyType = plugin.registerSymbol({
-    exported: true,
-    kind: 'type',
     meta: {
       category: 'type',
       resource: 'QueryKey',
@@ -173,8 +171,8 @@ export const createQueryKeyType = ({
     name: 'QueryKey',
   });
   const queryKeyType = $.type
-    .alias(symbolQueryKeyType.placeholder)
-    .export(symbolQueryKeyType.exported)
+    .alias(symbolQueryKeyType)
+    .export()
     .generic(TOptionsType, (g) => g.extends($.type(symbolOptions.placeholder)))
     .type(
       $.type.tuple(
@@ -210,8 +208,8 @@ export const queryKeyStatement = ({
 }) => {
   const typeData = useTypeData({ operation, plugin });
   const { strippedTypeData } = getPublicTypeData({ plugin, typeData });
-  const statement = $.const(symbol.placeholder)
-    .export(symbol.exported)
+  const statement = $.const(symbol)
+    .export()
     .assign(
       $.func()
         .param('options', (p) =>

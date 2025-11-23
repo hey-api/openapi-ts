@@ -1,3 +1,4 @@
+import type { SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -44,6 +45,11 @@ export class TypeOperatorTsDsl extends TypeTsDsl<ts.TypeOperatorNode> {
     this.operator(ts.SyntaxKind.ReadonlyKeyword);
     this.type(type);
     return this;
+  }
+
+  /** Walk this node and its children with a visitor. */
+  traverse(visitor: (node: SyntaxNode) => void): void {
+    console.log(visitor);
   }
 
   /** Sets the target type of the operator. */

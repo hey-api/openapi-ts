@@ -1,3 +1,4 @@
+import type { SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -18,6 +19,11 @@ export class ThrowTsDsl extends TsDsl<ts.ThrowStatement> {
   message(value: string | MaybeTsDsl<ts.Expression>): this {
     this.msg = value;
     return this;
+  }
+
+  /** Walk this node and its children with a visitor. */
+  traverse(visitor: (node: SyntaxNode) => void): void {
+    console.log(visitor);
   }
 
   $render(): ts.ThrowStatement {

@@ -1,3 +1,4 @@
+import type { SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TypeTsDsl } from '../base';
@@ -29,6 +30,11 @@ export class TypeObjectTsDsl extends TypeTsDsl<ts.TypeNode> {
     const prop = new TypePropTsDsl(name, fn);
     this.props.push(prop);
     return this;
+  }
+
+  /** Walk this node and its children with a visitor. */
+  traverse(visitor: (node: SyntaxNode) => void): void {
+    console.log(visitor);
   }
 
   $render(): ts.TypeNode {

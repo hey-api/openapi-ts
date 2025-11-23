@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
+import type { SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl, TypeTsDsl } from '../base';
@@ -36,6 +37,11 @@ export class MethodTsDsl extends TsDsl<ts.MethodDeclaration> {
   returns(type: string | TypeTsDsl): this {
     this._returns = type instanceof TypeTsDsl ? type : new TypeExprTsDsl(type);
     return this;
+  }
+
+  /** Walk this node and its children with a visitor. */
+  traverse(visitor: (node: SyntaxNode) => void): void {
+    console.log(visitor);
   }
 
   /** Builds the `MethodDeclaration` node. */

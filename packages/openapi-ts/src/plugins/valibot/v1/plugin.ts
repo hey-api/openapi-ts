@@ -161,7 +161,6 @@ const handleComponent = ({
   const ast = irSchemaToAst({ plugin, schema, state });
   const baseName = refToName($ref);
   const symbol = plugin.registerSymbol({
-    exported: true,
     meta: {
       category: 'schema',
       path: state.path.value,

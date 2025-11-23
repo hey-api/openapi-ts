@@ -100,6 +100,7 @@ export class FileRegistry implements IFileRegistry {
       ...result,
       ...file, // clone to avoid mutation
       id,
+      localNames: new Set(),
       resolvedNames: result?.resolvedNames ?? new BiMap(),
       symbols: result?.symbols ?? {
         body: [],

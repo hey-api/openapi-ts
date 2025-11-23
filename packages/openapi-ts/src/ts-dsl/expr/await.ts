@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging */
+import type { SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -12,6 +13,11 @@ export class AwaitTsDsl extends TsDsl<ts.AwaitExpression> {
   constructor(expr: string | MaybeTsDsl<ts.Expression>) {
     super();
     this._awaitExpr = expr;
+  }
+
+  /** Walk this node and its children with a visitor. */
+  traverse(visitor: (node: SyntaxNode) => void): void {
+    console.log(visitor);
   }
 
   $render(): ts.AwaitExpression {

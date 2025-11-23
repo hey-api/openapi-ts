@@ -1,3 +1,4 @@
+import type { SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -16,6 +17,11 @@ export class TemplateTsDsl extends TsDsl<
   add(value: string | MaybeTsDsl<ts.Expression>): this {
     this.parts.push(value);
     return this;
+  }
+
+  /** Walk this node and its children with a visitor. */
+  traverse(visitor: (node: SyntaxNode) => void): void {
+    console.log(visitor);
   }
 
   $render(): ts.TemplateExpression | ts.NoSubstitutionTemplateLiteral {

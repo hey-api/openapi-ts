@@ -1,6 +1,6 @@
-import type { IProjectRenderMeta } from '../extensions/types';
+import type { IProjectRenderMeta } from '../extensions';
 import type { IFileOut, IFileRegistry } from '../files/types';
-import type { IOutput } from '../output/types';
+import type { IOutput } from '../output';
 import type { IRenderer } from '../renderer/types';
 import type { ISymbolRegistry } from '../symbols/types';
 

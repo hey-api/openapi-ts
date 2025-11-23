@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
+import type { Symbol, SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TypeTsDsl } from '../base';
@@ -11,22 +12,28 @@ import {
 import { TypeAttrTsDsl } from './attr';
 
 export class TypeExprTsDsl extends TypeTsDsl<ts.TypeReferenceNode> {
-  protected _exprInput?: string | ts.Identifier | TypeAttrTsDsl;
+  protected _exprInput?: Symbol | string | TypeAttrTsDsl;
 
   constructor();
   constructor(fn: (t: TypeExprTsDsl) => void);
-  constructor(name: string);
-  constructor(name: string, fn?: (t: TypeExprTsDsl) => void);
+  constructor(name: Symbol | string);
+  constructor(name: Symbol | string, fn?: (t: TypeExprTsDsl) => void);
   constructor(
-    nameOrFn?: string | ((t: TypeExprTsDsl) => void),
+    name?: Symbol | string | ((t: TypeExprTsDsl) => void),
     fn?: (t: TypeExprTsDsl) => void,
   ) {
     super();
-    if (typeof nameOrFn === 'string') {
-      this._exprInput = nameOrFn;
-      fn?.(this);
-    } else {
-      nameOrFn?.(this);
+    if (name) {
+      if (typeof name === 'function') {
+        name(this);
+      } else {
+        this._exprInput = name;
+        if (typeof name !== 'string') {
+          const symbol = this.getRootSymbol();
+          if (symbol) symbol.addDependency(name);
+        }
+        fn?.(this);
+      }
     }
   }
 
@@ -36,15 +43,25 @@ export class TypeExprTsDsl extends TypeTsDsl<ts.TypeReferenceNode> {
       right instanceof TypeAttrTsDsl
         ? right.base(this._exprInput)
         : new TypeAttrTsDsl(this._exprInput!, right);
+    this._exprInput = this._exprInput.setParent(this);
     return this;
   }
 
+  /** Walk this node and its children with a visitor. */
+  traverse(visitor: (node: SyntaxNode) => void): void {
+    console.log(visitor);
+  }
+
   $render(): ts.TypeReferenceNode {
-    if (!this._exprInput)
-      throw new Error('TypeExpr must have either an expression or an object');
+    if (!this._exprInput) throw new Error('TypeExpr must have an expression');
+    const typeName =
+      typeof this._exprInput === 'string' ||
+      this._exprInput instanceof TypeAttrTsDsl
+        ? this.$type(this._exprInput)
+        : this._exprInput.finalName;
     return ts.factory.createTypeReferenceNode(
       // @ts-expect-error --- need to fix types
-      this.$type(this._exprInput),
+      typeName,
       this.$generics(),
     );
   }

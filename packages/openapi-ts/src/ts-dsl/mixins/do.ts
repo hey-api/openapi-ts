@@ -7,7 +7,7 @@ import { StmtTsDsl } from '../stmt/stmt';
 /**
  * Adds `.do()` for appending statements or expressions to a body.
  */
-export class DoMixin extends TsDsl {
+export abstract class DoMixin extends TsDsl {
   protected _do?: Array<MaybeTsDsl<ts.Expression | ts.Statement>>;
 
   /** Adds one or more expressions/statements to the body. */
@@ -20,9 +20,5 @@ export class DoMixin extends TsDsl {
   protected $do(): ReadonlyArray<ts.Statement> {
     if (!this._do) return [];
     return this.$node(this._do.map((item) => new StmtTsDsl(item)));
-  }
-
-  $render(): ts.Node {
-    throw new Error('noop');
   }
 }

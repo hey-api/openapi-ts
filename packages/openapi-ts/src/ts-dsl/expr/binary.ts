@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
+import type { SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -117,6 +118,11 @@ export class BinaryTsDsl extends TsDsl<ts.BinaryExpression> {
   /** Multiplication — `this * expr` */
   times(expr: Expr): this {
     return this.opAndExpr('*', expr);
+  }
+
+  /** Walk this node and its children with a visitor. */
+  traverse(visitor: (node: SyntaxNode) => void): void {
+    console.log(visitor);
   }
 
   $render(): ts.BinaryExpression {

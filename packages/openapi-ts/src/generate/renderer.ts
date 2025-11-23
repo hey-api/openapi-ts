@@ -1,7 +1,6 @@
 import path from 'node:path';
 
 import type {
-  BiMap,
   Binding,
   File,
   IProject,
@@ -491,12 +490,46 @@ export class TypeScriptRenderer implements Renderer {
     return lines;
   }
 
-  private getUniqueName(base: string, names: BiMap<number, string>): string {
-    let index = 2;
-    let name = base;
-    while (names.hasValue(name)) {
-      name = `${base}${index}`;
-      index += 1;
+  private getUniqueName({
+    base,
+    file,
+    index,
+    project,
+    symbol,
+  }: {
+    base: string;
+    file: File;
+    index: number;
+    project: IProject;
+    symbol: Symbol;
+  }): string {
+    let name = index > 1 ? `${base}${index}` : base;
+    if (!file.resolvedNames.hasValue(name)) {
+      return name;
+    }
+    const conflictIds = file.resolvedNames.getKeys(name) ?? new Set();
+    const conflictSymbols = [...conflictIds]
+      .map((id) => project.symbols.get(id))
+      .filter((s): s is NonNullable<typeof s> => s !== undefined);
+    if (conflictSymbols.length > 0) {
+      const conflictKinds = conflictSymbols.map((s) => s.kind);
+      // avoid conflicts between class and type of the same name
+      if (
+        (symbol.kind === 'type' &&
+          (conflictKinds.includes('type') ||
+            conflictKinds.includes('class'))) ||
+        (symbol.kind !== 'type' &&
+          conflictKinds.some((kind) => kind !== 'type')) ||
+        (symbol.kind === 'class' && conflictKinds.includes('type'))
+      ) {
+        name = this.getUniqueName({
+          base,
+          file,
+          index: index + 1,
+          project,
+          symbol,
+        });
+      }
     }
     return name;
   }
@@ -516,22 +549,13 @@ export class TypeScriptRenderer implements Renderer {
     if (!symbol.name) return;
     const [symbolFile] = project.symbolIdToFiles(symbol.id);
     const symbolFileResolvedName = symbolFile?.resolvedNames.get(symbol.id);
-    let name = ensureValidIdentifier(symbolFileResolvedName ?? symbol.name);
-    const conflictId = file.resolvedNames.getKey(name);
-    if (conflictId !== undefined) {
-      const conflictSymbol = project.symbols.get(conflictId);
-      if (conflictSymbol) {
-        const kinds = [conflictSymbol.kind, symbol.kind];
-        if (
-          kinds.every((kind) => kind === 'type') ||
-          kinds.every((kind) => kind !== 'type') ||
-          // avoid conflicts between class and type of the same name
-          (kinds.includes('class') && kinds.includes('type'))
-        ) {
-          name = this.getUniqueName(name, file.resolvedNames);
-        }
-      }
-    }
+    const name = this.getUniqueName({
+      base: ensureValidIdentifier(symbolFileResolvedName ?? symbol.name),
+      file,
+      index: 1,
+      project,
+      symbol,
+    });
     file.resolvedNames.set(symbol.id, name);
     return name;
   }

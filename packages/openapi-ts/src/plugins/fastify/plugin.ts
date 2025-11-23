@@ -154,8 +154,6 @@ export const handler: FastifyPlugin['Handler'] = ({ plugin }) => {
   });
 
   const symbolRouteHandlers = plugin.registerSymbol({
-    exported: true,
-    kind: 'type',
     name: 'RouteHandlers',
   });
 
@@ -174,9 +172,6 @@ export const handler: FastifyPlugin['Handler'] = ({ plugin }) => {
     },
   );
 
-  const node = $.type
-    .alias(symbolRouteHandlers.placeholder)
-    .export(symbolRouteHandlers.exported)
-    .type(type);
+  const node = $.type.alias(symbolRouteHandlers).export().type(type);
   plugin.setSymbolValue(symbolRouteHandlers, node);
 };

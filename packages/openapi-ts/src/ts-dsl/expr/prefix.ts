@@ -1,3 +1,4 @@
+import type { SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -38,6 +39,11 @@ export class PrefixTsDsl extends TsDsl<ts.PrefixUnaryExpression> {
   op(op: ts.PrefixUnaryOperator): this {
     this._op = op;
     return this;
+  }
+
+  /** Walk this node and its children with a visitor. */
+  traverse(visitor: (node: SyntaxNode) => void): void {
+    console.log(visitor);
   }
 
   /** Renders the prefix unary expression node. */

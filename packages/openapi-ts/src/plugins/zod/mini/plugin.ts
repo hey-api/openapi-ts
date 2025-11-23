@@ -183,7 +183,6 @@ const handleComponent = ({
   const ast = irSchemaToAst({ plugin, schema, state });
   const baseName = refToName($ref);
   const symbol = plugin.registerSymbol({
-    exported: true,
     meta: {
       category: 'schema',
       path: state.path.value,
@@ -199,8 +198,6 @@ const handleComponent = ({
   });
   const typeInferSymbol = plugin.config.definitions.types.infer.enabled
     ? plugin.registerSymbol({
-        exported: true,
-        kind: 'type',
         meta: {
           category: 'type',
           path: state.path.value,

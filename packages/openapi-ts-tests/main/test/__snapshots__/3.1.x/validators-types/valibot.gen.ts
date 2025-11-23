@@ -13,8 +13,8 @@ export const vQux = v.record(v.string(), v.object({
  */
 export const vFoo: v.GenericSchema = v.optional(v.union([v.object({
         foo: v.optional(v.pipe(v.string(), v.regex(/^\d{3}-\d{2}-\d{4}$/))),
-        bar: v.optional(v.lazy(() => vBar)),
-        baz: v.optional(v.array(v.lazy(() => vFoo))),
+        bar: v.optional(v.lazy(() => vBar2)),
+        baz: v.optional(v.array(v.lazy(() => vFoo4))),
         qux: v.optional(v.pipe(v.number(), v.integer(), v.gtValue(0)), 0)
     }), v.null()]), null);
 

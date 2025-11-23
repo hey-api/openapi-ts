@@ -67,7 +67,6 @@ export const generateFlatSdk = ({
         plugin,
       });
       const symbol = plugin.registerSymbol({
-        exported: true,
         meta: {
           category: 'sdk',
           path: event._path,
@@ -82,8 +81,8 @@ export const generateFlatSdk = ({
           plugin,
         }),
       });
-      const node = $.const(symbol.placeholder)
-        .export(symbol.exported)
+      const node = $.const(symbol)
+        .export()
         .$if(createOperationComment(operation), (c, v) => c.doc(v))
         .assign(
           $.func()

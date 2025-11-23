@@ -30,11 +30,11 @@ export interface IBiMap<Key, Value> {
    */
   get(key: Key): Value | undefined;
   /**
-   * Gets the key associated with a value.
+   * Gets the keys associated with a value.
    *
    * @param value The value to look up.
    */
-  getKey(value: Value): Key | undefined;
+  getKeys(value: Value): Set<Key> | undefined;
   /**
    * Checks if a key exists in the map.
    *

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
+import type { Symbol, SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl, TypeTsDsl } from '../base';
@@ -20,9 +21,18 @@ export class VarTsDsl extends TsDsl<ts.VariableStatement> {
   protected name?: string;
   protected _type?: TypeTsDsl;
 
-  constructor(name?: string) {
+  constructor(name?: Symbol | string) {
     super();
-    this.name = name;
+    if (name) {
+      if (typeof name === 'string') {
+        this.name = name;
+      } else {
+        this.name = name.finalName;
+        this.symbol = name;
+        this.symbol.setKind('var');
+        this.symbol.setRootNode(this);
+      }
+    }
   }
 
   const(): this {
@@ -33,6 +43,11 @@ export class VarTsDsl extends TsDsl<ts.VariableStatement> {
   let(): this {
     this.kind = ts.NodeFlags.Let;
     return this;
+  }
+
+  /** Walk this node and its children with a visitor. */
+  traverse(visitor: (node: SyntaxNode) => void): void {
+    console.log(visitor);
   }
 
   /** Sets the variable type. */

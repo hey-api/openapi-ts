@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
+import type { Symbol, SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl, TypeTsDsl } from '../base';
@@ -29,27 +30,34 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends TsDsl<
       ? ts.FunctionExpression
       : ts.ArrowFunction
 > {
-  protected mode: FuncMode;
+  protected mode?: FuncMode;
   protected modifiers = createModifierAccessor(this);
   protected name?: string;
   protected _returns?: TypeTsDsl;
 
   constructor();
   constructor(fn: (f: ImplFuncTsDsl<'arrow'>) => void);
-  constructor(name: string);
-  constructor(name: string, fn: (f: ImplFuncTsDsl<'decl'>) => void);
+  constructor(name: Symbol | string);
+  constructor(name: Symbol | string, fn: (f: ImplFuncTsDsl<'decl'>) => void);
   constructor(
-    nameOrFn?: string | ((f: ImplFuncTsDsl<'arrow'>) => void),
+    nameOrFn?: Symbol | string | ((f: ImplFuncTsDsl<'arrow'>) => void),
     fn?: (f: ImplFuncTsDsl<'decl'>) => void,
   ) {
     super();
-    if (typeof nameOrFn === 'string') {
-      this.name = nameOrFn;
-      this.mode = 'decl';
-      fn?.(this as unknown as FuncTsDsl<'decl'>);
-    } else {
+    if (typeof nameOrFn === 'function') {
       this.mode = 'arrow';
-      nameOrFn?.(this as unknown as FuncTsDsl<'arrow'>);
+      nameOrFn(this as unknown as FuncTsDsl<'arrow'>);
+    } else if (nameOrFn) {
+      this.mode = 'decl';
+      if (typeof nameOrFn === 'string') {
+        this.name = nameOrFn;
+      } else {
+        this.name = nameOrFn.finalName;
+        this.symbol = nameOrFn;
+        this.symbol.setKind('function');
+        this.symbol.setRootNode(this);
+      }
+      fn?.(this as unknown as FuncTsDsl<'decl'>);
     }
   }
 
@@ -75,6 +83,11 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends TsDsl<
   returns(type: string | TypeTsDsl): this {
     this._returns = type instanceof TypeTsDsl ? type : new TypeExprTsDsl(type);
     return this;
+  }
+
+  /** Walk this node and its children with a visitor. */
+  traverse(visitor: (node: SyntaxNode) => void): void {
+    console.log(visitor);
   }
 
   $render(): M extends 'decl'

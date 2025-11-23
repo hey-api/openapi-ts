@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
+import type { Symbol, SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -20,9 +21,16 @@ export class EnumTsDsl extends TsDsl<ts.EnumDeclaration> {
   private _name: string | ts.Identifier;
   protected modifiers = createModifierAccessor(this);
 
-  constructor(name: string | ts.Identifier, fn?: (e: EnumTsDsl) => void) {
+  constructor(name: Symbol | string, fn?: (e: EnumTsDsl) => void) {
     super();
-    this._name = name;
+    if (typeof name === 'string') {
+      this._name = name;
+    } else {
+      this._name = name.finalName;
+      this.symbol = name;
+      this.symbol.setKind('enum');
+      this.symbol.setRootNode(this);
+    }
     fn?.(this);
   }
 
@@ -37,6 +45,11 @@ export class EnumTsDsl extends TsDsl<ts.EnumDeclaration> {
   members(...members: ReadonlyArray<EnumMemberTsDsl>): this {
     this._members.push(...members);
     return this;
+  }
+
+  /** Walk this node and its children with a visitor. */
+  traverse(visitor: (node: SyntaxNode) => void): void {
+    console.log(visitor);
   }
 
   /** Renders the enum declaration. */

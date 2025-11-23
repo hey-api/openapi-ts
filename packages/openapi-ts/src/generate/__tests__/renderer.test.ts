@@ -5,16 +5,16 @@ import { TypeScriptRenderer } from '../renderer';
 // Minimal local BiMap for tests to avoid importing runtime-only class
 class LocalBiMap<Key, Value> {
   private map = new Map<Key, Value>();
-  private reverse = new Map<Value, Key>();
+  private reverse = new Map<Value, Set<Key>>();
   get(key: Key) {
     return this.map.get(key);
   }
-  getKey(value: Value) {
+  getKeys(value: Value) {
     return this.reverse.get(value);
   }
   set(key: Key, value: Value) {
     this.map.set(key, value);
-    this.reverse.set(value, key);
+    this.reverse.set(value, new Set([key]));
     return this;
   }
   hasValue(value: Value) {

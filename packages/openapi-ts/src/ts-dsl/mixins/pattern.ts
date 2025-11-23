@@ -7,7 +7,7 @@ import { PatternTsDsl } from '../decl/pattern';
 /**
  * Mixin providing `.array()`, `.object()`, and `.spread()` methods for defining destructuring patterns.
  */
-export class PatternMixin extends TsDsl {
+export abstract class PatternMixin extends TsDsl {
   protected pattern?: PatternTsDsl;
 
   /** Defines an array binding pattern. */
@@ -33,9 +33,5 @@ export class PatternMixin extends TsDsl {
   /** Renders the pattern into a `BindingName`. */
   protected $pattern(): ts.BindingName | undefined {
     return this.$node(this.pattern);
-  }
-
-  $render(): ts.Node {
-    throw new Error('noop');
   }
 }

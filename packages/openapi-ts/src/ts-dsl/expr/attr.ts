@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
+import type { SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { validTypescriptIdentifierRegExp } from '~/utils/regexp';
@@ -26,6 +27,11 @@ export class AttrTsDsl extends TsDsl<
     super();
     this.left = left;
     this.right = right;
+  }
+
+  /** Walk this node and its children with a visitor. */
+  traverse(visitor: (node: SyntaxNode) => void): void {
+    console.log(visitor);
   }
 
   $render(): ts.PropertyAccessExpression | ts.ElementAccessExpression {

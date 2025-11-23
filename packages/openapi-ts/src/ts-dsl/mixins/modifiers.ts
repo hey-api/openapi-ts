@@ -1,3 +1,4 @@
+import type { Symbol } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { TsDsl } from '../base';
@@ -15,13 +16,11 @@ export function createModifierAccessor<Parent extends TsDsl>(parent: Parent) {
    * Adds a modifier of the specified kind to the modifiers list if the condition is true.
    *
    * @param kind - The syntax kind of the modifier to add.
-   * @param condition - Whether to add the modifier (default: true).
+   * @param condition - Whether to add the modifier.
    * @returns The parent DSL node for chaining.
    */
-  function _m(kind: ts.ModifierSyntaxKind, condition = true): Parent {
-    if (condition) {
-      modifiers.push(ts.factory.createModifier(kind));
-    }
+  function _m(kind: ts.ModifierSyntaxKind, condition: boolean): Parent {
+    if (condition) modifiers.push(ts.factory.createModifier(kind));
     return parent;
   }
 
@@ -41,6 +40,7 @@ export function createModifierAccessor<Parent extends TsDsl>(parent: Parent) {
 
 type Target = object & {
   _m?(kind: ts.ModifierSyntaxKind, condition?: boolean): unknown;
+  symbol?: Symbol;
 };
 
 /**
@@ -53,8 +53,9 @@ export class AbstractMixin {
    * @param condition - Whether to add the modifier (default: true).
    * @returns The target object for chaining.
    */
-  abstract<T extends Target>(this: T, condition: boolean = true): T {
-    return this._m!(ts.SyntaxKind.AbstractKeyword, condition) as T;
+  abstract<T extends Target>(this: T, condition?: boolean): T {
+    const cond = arguments.length === 0 ? true : Boolean(condition);
+    return this._m!(ts.SyntaxKind.AbstractKeyword, cond) as T;
   }
 }
 
@@ -68,8 +69,9 @@ export class AsyncMixin {
    * @param condition - Whether to add the modifier (default: true).
    * @returns The target object for chaining.
    */
-  async<T extends Target>(this: T, condition: boolean = true): T {
-    return this._m!(ts.SyntaxKind.AsyncKeyword, condition) as T;
+  async<T extends Target>(this: T, condition?: boolean): T {
+    const cond = arguments.length === 0 ? true : Boolean(condition);
+    return this._m!(ts.SyntaxKind.AsyncKeyword, cond) as T;
   }
 }
 
@@ -83,8 +85,9 @@ export class ConstMixin {
    * @param condition - Whether to add the modifier (default: true).
    * @returns The target object for chaining.
    */
-  const<T extends Target>(this: T, condition: boolean = true): T {
-    return this._m!(ts.SyntaxKind.ConstKeyword, condition) as T;
+  const<T extends Target>(this: T, condition?: boolean): T {
+    const cond = arguments.length === 0 ? true : Boolean(condition);
+    return this._m!(ts.SyntaxKind.ConstKeyword, cond) as T;
   }
 }
 
@@ -98,8 +101,9 @@ export class DeclareMixin {
    * @param condition - Whether to add the modifier (default: true).
    * @returns The target object for chaining.
    */
-  declare<T extends Target>(this: T, condition: boolean = true): T {
-    return this._m!(ts.SyntaxKind.DeclareKeyword, condition) as T;
+  declare<T extends Target>(this: T, condition?: boolean): T {
+    const cond = arguments.length === 0 ? true : Boolean(condition);
+    return this._m!(ts.SyntaxKind.DeclareKeyword, cond) as T;
   }
 }
 
@@ -113,8 +117,9 @@ export class DefaultMixin {
    * @param condition - Whether to add the modifier (default: true).
    * @returns The target object for chaining.
    */
-  default<T extends Target>(this: T, condition: boolean = true): T {
-    return this._m!(ts.SyntaxKind.DefaultKeyword, condition) as T;
+  default<T extends Target>(this: T, condition?: boolean): T {
+    const cond = arguments.length === 0 ? true : Boolean(condition);
+    return this._m!(ts.SyntaxKind.DefaultKeyword, cond) as T;
   }
 }
 
@@ -128,8 +133,10 @@ export class ExportMixin {
    * @param condition - Whether to add the modifier (default: true).
    * @returns The target object for chaining.
    */
-  export<T extends Target>(this: T, condition: boolean = true): T {
-    return this._m!(ts.SyntaxKind.ExportKeyword, condition) as T;
+  export<T extends Target>(this: T, condition?: boolean): T {
+    const cond = arguments.length === 0 ? true : Boolean(condition);
+    if (this.symbol) this.symbol.setExported(cond);
+    return this._m!(ts.SyntaxKind.ExportKeyword, cond) as T;
   }
 }
 
@@ -143,8 +150,9 @@ export class OverrideMixin {
    * @param condition - Whether to add the modifier (default: true).
    * @returns The target object for chaining.
    */
-  override<T extends Target>(this: T, condition: boolean = true): T {
-    return this._m!(ts.SyntaxKind.OverrideKeyword, condition) as T;
+  override<T extends Target>(this: T, condition?: boolean): T {
+    const cond = arguments.length === 0 ? true : Boolean(condition);
+    return this._m!(ts.SyntaxKind.OverrideKeyword, cond) as T;
   }
 }
 
@@ -158,8 +166,9 @@ export class PrivateMixin {
    * @param condition - Whether to add the modifier (default: true).
    * @returns The target object for chaining.
    */
-  private<T extends Target>(this: T, condition: boolean = true): T {
-    return this._m!(ts.SyntaxKind.PrivateKeyword, condition) as T;
+  private<T extends Target>(this: T, condition?: boolean): T {
+    const cond = arguments.length === 0 ? true : Boolean(condition);
+    return this._m!(ts.SyntaxKind.PrivateKeyword, cond) as T;
   }
 }
 
@@ -173,8 +182,9 @@ export class ProtectedMixin {
    * @param condition - Whether to add the modifier (default: true).
    * @returns The target object for chaining.
    */
-  protected<T extends Target>(this: T, condition: boolean = true): T {
-    return this._m!(ts.SyntaxKind.ProtectedKeyword, condition) as T;
+  protected<T extends Target>(this: T, condition?: boolean): T {
+    const cond = arguments.length === 0 ? true : Boolean(condition);
+    return this._m!(ts.SyntaxKind.ProtectedKeyword, cond) as T;
   }
 }
 
@@ -188,8 +198,9 @@ export class PublicMixin {
    * @param condition - Whether to add the modifier (default: true).
    * @returns The target object for chaining.
    */
-  public<T extends Target>(this: T, condition: boolean = true): T {
-    return this._m!(ts.SyntaxKind.PublicKeyword, condition) as T;
+  public<T extends Target>(this: T, condition?: boolean): T {
+    const cond = arguments.length === 0 ? true : Boolean(condition);
+    return this._m!(ts.SyntaxKind.PublicKeyword, cond) as T;
   }
 }
 
@@ -203,8 +214,9 @@ export class ReadonlyMixin {
    * @param condition - Whether to add the modifier (default: true).
    * @returns The target object for chaining.
    */
-  readonly<T extends Target>(this: T, condition: boolean = true): T {
-    return this._m!(ts.SyntaxKind.ReadonlyKeyword, condition) as T;
+  readonly<T extends Target>(this: T, condition?: boolean): T {
+    const cond = arguments.length === 0 ? true : Boolean(condition);
+    return this._m!(ts.SyntaxKind.ReadonlyKeyword, cond) as T;
   }
 }
 
@@ -218,7 +230,8 @@ export class StaticMixin {
    * @param condition - Whether to add the modifier (default: true).
    * @returns The target object for chaining.
    */
-  static<T extends Target>(this: T, condition: boolean = true): T {
-    return this._m!(ts.SyntaxKind.StaticKeyword, condition) as T;
+  static<T extends Target>(this: T, condition?: boolean): T {
+    const cond = arguments.length === 0 ? true : Boolean(condition);
+    return this._m!(ts.SyntaxKind.StaticKeyword, cond) as T;
   }
 }

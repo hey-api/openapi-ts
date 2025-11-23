@@ -19,7 +19,6 @@ export function mixin(target: Function, ...sources: ReadonlyArray<Function>) {
       Object.getOwnPropertyDescriptors(sourceProto),
     )) {
       if (key === 'constructor') continue;
-      if (key === '$render' && !descriptor.value.mixin) continue;
       Object.defineProperty(targetProto, key, descriptor);
     }
   }

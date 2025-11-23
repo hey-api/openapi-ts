@@ -17,10 +17,10 @@ export const zFoo = z._default(z.union([
             description: 'This is foo property.'
         })),
         get bar() {
-            return z.optional(z.lazy((): any => zBar));
+            return z.optional(z.lazy((): any => zBar2));
         },
         get baz() {
-            return z.optional(z.array(z.lazy((): any => zFoo)).register(z.globalRegistry, {
+            return z.optional(z.array(z.lazy((): any => zFoo4)).register(z.globalRegistry, {
                 description: 'This is baz property.'
             }));
         },

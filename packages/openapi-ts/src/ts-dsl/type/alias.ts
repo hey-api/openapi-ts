@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
+import type { Symbol, SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -9,14 +10,26 @@ import { createModifierAccessor, ExportMixin } from '../mixins/modifiers';
 import { TypeParamsMixin } from '../mixins/type-params';
 
 export class TypeAliasTsDsl extends TsDsl<ts.TypeAliasDeclaration> {
-  protected value?: MaybeTsDsl<ts.TypeNode>;
   protected modifiers = createModifierAccessor(this);
   protected name: string;
+  protected value?: MaybeTsDsl<ts.TypeNode>;
 
-  constructor(name: string, fn?: (t: TypeAliasTsDsl) => void) {
+  constructor(name: Symbol | string, fn?: (t: TypeAliasTsDsl) => void) {
     super();
-    this.name = name;
+    if (typeof name === 'string') {
+      this.name = name;
+    } else {
+      this.name = name.finalName;
+      this.symbol = name;
+      this.symbol.setKind('type');
+      this.symbol.setRootNode(this);
+    }
     fn?.(this);
+  }
+
+  /** Walk this node and its children with a visitor. */
+  traverse(visitor: (node: SyntaxNode) => void): void {
+    console.log(visitor);
   }
 
   /** Sets the type expression on the right-hand side of `= ...`. */

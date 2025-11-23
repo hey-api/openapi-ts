@@ -395,7 +395,7 @@ export const zDeprecatedModel = z.object({
  */
 export const zModelWithCircularReference = z.object({
     get prop() {
-        return z.optional(z.lazy((): any => zModelWithCircularReference));
+        return z.optional(z.lazy((): any => zModelWithCircularReference2));
     }
 });
 

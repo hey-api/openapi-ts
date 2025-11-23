@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
+import type { SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl } from '../base';
@@ -20,6 +21,11 @@ export class InitTsDsl extends TsDsl<ts.ConstructorDeclaration> {
   constructor(fn?: (i: InitTsDsl) => void) {
     super();
     fn?.(this);
+  }
+
+  /** Walk this node and its children with a visitor. */
+  traverse(visitor: (node: SyntaxNode) => void): void {
+    console.log(visitor);
   }
 
   /** Builds the `ConstructorDeclaration` node. */

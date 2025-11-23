@@ -23,14 +23,12 @@ export const createClientConfigType = ({
     name: 'ClientOptions',
   });
   const symbolCreateClientConfig = plugin.registerSymbol({
-    exported: true,
-    kind: 'type',
     name: 'CreateClientConfig',
   });
 
   const typeCreateClientConfig = $.type
-    .alias(symbolCreateClientConfig.placeholder)
-    .export(symbolCreateClientConfig.exported)
+    .alias(symbolCreateClientConfig)
+    .export()
     .doc([
       'The `createClientConfig()` function will be called on client initialization',
       "and the returned object will become the client's initial configuration.",

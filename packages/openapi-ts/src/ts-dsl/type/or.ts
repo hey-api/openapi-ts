@@ -1,3 +1,4 @@
+import type { SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TypeTsDsl } from '../base';
@@ -8,6 +9,11 @@ export class TypeOrTsDsl extends TypeTsDsl<ts.UnionTypeNode> {
   constructor(...nodes: Array<string | ts.TypeNode | TypeTsDsl>) {
     super();
     this.types(...nodes);
+  }
+
+  /** Walk this node and its children with a visitor. */
+  traverse(visitor: (node: SyntaxNode) => void): void {
+    console.log(visitor);
   }
 
   types(...nodes: Array<string | ts.TypeNode | TypeTsDsl>): this {

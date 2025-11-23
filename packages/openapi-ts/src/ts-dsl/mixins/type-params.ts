@@ -4,7 +4,7 @@ import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
 import { TypeParamTsDsl } from '../type/param';
 
-export class TypeParamsMixin extends TsDsl {
+export abstract class TypeParamsMixin extends TsDsl {
   protected _generics?: Array<string | MaybeTsDsl<TypeParamTsDsl>>;
 
   /** Adds a single type parameter (e.g. `T` in `Array<T>`). */
@@ -28,9 +28,5 @@ export class TypeParamsMixin extends TsDsl {
       const node = typeof g === 'string' ? new TypeParamTsDsl(g) : g;
       return this.$node(node);
     });
-  }
-
-  $render(): ts.Node {
-    throw new Error('noop');
   }
 }

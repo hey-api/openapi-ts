@@ -1,9 +1,7 @@
-import type { ITsDsl, MaybeArray } from '../base';
+import type { Constructor, ITsDsl, MaybeArray } from '../base';
 import { DocTsDsl } from '../layout/doc';
 
-export function DocMixin<
-  TBase extends new (...args: ReadonlyArray<any>) => ITsDsl,
->(Base: TBase) {
+export function DocMixin<TBase extends Constructor>(Base: TBase) {
   const $renderBase = Base.prototype.$render;
 
   class Mixin extends Base {
@@ -19,9 +17,6 @@ export function DocMixin<
       return this._doc ? this._doc.apply(node) : node;
     }
   }
-
-  // @ts-expect-error
-  Mixin.prototype.$render.mixin = true;
 
   return Mixin;
 }
