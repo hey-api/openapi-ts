@@ -8,7 +8,7 @@ export default defineConfig((options) => ({
      */
     if (ctx.format === 'esm') {
       return {
-        js: "import { createRequire } from 'module'; const require = createRequire(import.meta.url);",
+        js: `import { createRequire } from 'module'; const require = createRequire(import.${'meta'}.url);`,
       };
     }
 
