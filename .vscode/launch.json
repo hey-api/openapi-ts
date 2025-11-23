@@ -18,7 +18,7 @@
       "runtimeArgs": ["-r", "ts-node/register/transpile-only"],
       "program": "${workspaceFolder}/packages/openapi-ts/src/run.ts",
       "env": {
-        "DEBUG": "false"
+        "DEBUG": "heyapi:*"
       }
     }
   ]

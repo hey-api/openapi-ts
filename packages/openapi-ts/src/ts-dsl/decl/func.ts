@@ -1,9 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
 import type { Symbol, SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl, TypeTsDsl } from '../base';
-import { mixin } from '../mixins/apply';
 import { AsMixin } from '../mixins/as';
 import { DecoratorMixin } from '../mixins/decorator';
 import { DoMixin } from '../mixins/do';
@@ -11,7 +9,6 @@ import { DocMixin } from '../mixins/doc';
 import {
   AbstractMixin,
   AsyncMixin,
-  createModifierAccessor,
   PrivateMixin,
   ProtectedMixin,
   PublicMixin,
@@ -23,15 +20,30 @@ import { TypeExprTsDsl } from '../type/expr';
 
 type FuncMode = 'arrow' | 'decl' | 'expr';
 
-class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends TsDsl<
-  M extends 'decl'
-    ? ts.FunctionDeclaration
-    : M extends 'expr'
-      ? ts.FunctionExpression
-      : ts.ArrowFunction
-> {
+const Mixed = AbstractMixin(
+  AsMixin(
+    AsyncMixin(
+      DecoratorMixin(
+        DoMixin(
+          DocMixin(
+            ParamMixin(
+              PrivateMixin(
+                ProtectedMixin(
+                  PublicMixin(
+                    StaticMixin(TypeParamsMixin(TsDsl<ts.ArrowFunction>)),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+);
+
+class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends Mixed {
   protected mode?: FuncMode;
-  protected modifiers = createModifierAccessor(this);
   protected name?: string;
   protected _returns?: TypeTsDsl;
 
@@ -85,12 +97,12 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends TsDsl<
     return this;
   }
 
-  /** Walk this node and its children with a visitor. */
   traverse(visitor: (node: SyntaxNode) => void): void {
     console.log(visitor);
   }
 
-  $render(): M extends 'decl'
+  // @ts-expect-error --- need to fix types ---
+  protected override _render(): M extends 'decl'
     ? ts.FunctionDeclaration
     : M extends 'expr'
       ? ts.FunctionExpression
@@ -98,7 +110,7 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends TsDsl<
     if (this.mode === 'decl') {
       if (!this.name) throw new Error('Function declaration requires a name');
       return ts.factory.createFunctionDeclaration(
-        [...this.$decorators(), ...this.modifiers.list()],
+        [...this.$decorators(), ...this.modifiers],
         undefined,
         this.name,
         this.$generics(),
@@ -110,7 +122,7 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends TsDsl<
 
     if (this.mode === 'expr') {
       return ts.factory.createFunctionExpression(
-        this.modifiers.list(),
+        this.modifiers,
         undefined,
         this.name,
         this.$generics(),
@@ -127,7 +139,7 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends TsDsl<
         : ts.factory.createBlock(body, true);
 
     return ts.factory.createArrowFunction(
-      this.modifiers.list(),
+      this.modifiers,
       this.$generics(),
       this.$params(),
       this.$type(this._returns),
@@ -136,35 +148,6 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends TsDsl<
     ) as any;
   }
 }
-
-interface ImplFuncTsDsl
-  extends AbstractMixin,
-    AsMixin,
-    AsyncMixin,
-    DecoratorMixin,
-    DoMixin,
-    DocMixin,
-    ParamMixin,
-    PrivateMixin,
-    ProtectedMixin,
-    PublicMixin,
-    StaticMixin,
-    TypeParamsMixin {}
-mixin(
-  ImplFuncTsDsl,
-  AbstractMixin,
-  AsMixin,
-  AsyncMixin,
-  DecoratorMixin,
-  DoMixin,
-  DocMixin,
-  ParamMixin,
-  PrivateMixin,
-  ProtectedMixin,
-  PublicMixin,
-  StaticMixin,
-  TypeParamsMixin,
-);
 
 export const FuncTsDsl = ImplFuncTsDsl as {
   new (): FuncTsDsl<'arrow'>;

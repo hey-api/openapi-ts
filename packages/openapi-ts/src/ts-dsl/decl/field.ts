@@ -1,13 +1,10 @@
-/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
 import type { SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl, TypeTsDsl } from '../base';
-import { mixin } from '../mixins/apply';
 import { DecoratorMixin } from '../mixins/decorator';
 import { DocMixin } from '../mixins/doc';
 import {
-  createModifierAccessor,
   PrivateMixin,
   ProtectedMixin,
   PublicMixin,
@@ -17,8 +14,19 @@ import {
 import { ValueMixin } from '../mixins/value';
 import { TypeExprTsDsl } from '../type/expr';
 
-export class FieldTsDsl extends TsDsl<ts.PropertyDeclaration> {
-  protected modifiers = createModifierAccessor(this);
+const Mixed = DecoratorMixin(
+  DocMixin(
+    PrivateMixin(
+      ProtectedMixin(
+        PublicMixin(
+          ReadonlyMixin(StaticMixin(ValueMixin(TsDsl<ts.PropertyDeclaration>))),
+        ),
+      ),
+    ),
+  ),
+);
+
+export class FieldTsDsl extends Mixed {
   protected name: string;
   protected _type?: TypeTsDsl;
 
@@ -34,15 +42,13 @@ export class FieldTsDsl extends TsDsl<ts.PropertyDeclaration> {
     return this;
   }
 
-  /** Walk this node and its children with a visitor. */
   traverse(visitor: (node: SyntaxNode) => void): void {
     console.log(visitor);
   }
 
-  /** Builds the `PropertyDeclaration` node. */
-  $render(): ts.PropertyDeclaration {
+  protected override _render() {
     return ts.factory.createPropertyDeclaration(
-      [...this.$decorators(), ...this.modifiers.list()],
+      [...this.$decorators(), ...this.modifiers],
       this.name,
       undefined,
       this.$type(this._type),
@@ -50,24 +56,3 @@ export class FieldTsDsl extends TsDsl<ts.PropertyDeclaration> {
     );
   }
 }
-
-export interface FieldTsDsl
-  extends DecoratorMixin,
-    DocMixin,
-    PrivateMixin,
-    ProtectedMixin,
-    PublicMixin,
-    ReadonlyMixin,
-    StaticMixin,
-    ValueMixin {}
-mixin(
-  FieldTsDsl,
-  DecoratorMixin,
-  DocMixin,
-  PrivateMixin,
-  ProtectedMixin,
-  PublicMixin,
-  ReadonlyMixin,
-  StaticMixin,
-  ValueMixin,
-);

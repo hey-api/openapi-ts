@@ -3,7 +3,9 @@ import ts from 'typescript';
 
 import { TsDsl } from '../base';
 
-export class StmtTsDsl extends TsDsl<ts.Statement> {
+const Mixed = TsDsl<ts.Statement>;
+
+export class StmtTsDsl extends Mixed {
   protected _inner: ts.Expression | ts.Statement | TsDsl<any>;
 
   constructor(inner: ts.Expression | ts.Statement | TsDsl<any>) {
@@ -11,12 +13,11 @@ export class StmtTsDsl extends TsDsl<ts.Statement> {
     this._inner = inner;
   }
 
-  /** Walk this node and its children with a visitor. */
   traverse(visitor: (node: SyntaxNode) => void): void {
     console.log(visitor);
   }
 
-  $render(): ts.Statement {
+  protected override _render() {
     const node = this.$node(this._inner);
     return ts.isStatement(node)
       ? node

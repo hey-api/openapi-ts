@@ -1,14 +1,14 @@
-/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
 import type { SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl, TypeTsDsl } from '../base';
 import { TsDsl } from '../base';
-import { mixin } from '../mixins/apply';
 import { AsMixin, registerLazyAccessAsFactory } from '../mixins/as';
 import { ExprMixin } from '../mixins/expr';
 
-export class AsTsDsl extends TsDsl<ts.AsExpression> {
+const Mixed = AsMixin(ExprMixin(TsDsl<ts.AsExpression>));
+
+export class AsTsDsl extends Mixed {
   protected expr: string | MaybeTsDsl<ts.Expression>;
   protected type: string | TypeTsDsl;
 
@@ -26,15 +26,12 @@ export class AsTsDsl extends TsDsl<ts.AsExpression> {
     console.log(visitor);
   }
 
-  $render() {
+  protected override _render() {
     return ts.factory.createAsExpression(
       this.$node(this.expr),
       this.$type(this.type),
     );
   }
 }
-
-export interface AsTsDsl extends AsMixin, ExprMixin {}
-mixin(AsTsDsl, AsMixin, ExprMixin);
 
 registerLazyAccessAsFactory((...args) => new AsTsDsl(...args));

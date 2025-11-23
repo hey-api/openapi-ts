@@ -1,16 +1,13 @@
-/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
 import type { SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl, TypeTsDsl } from '../base';
-import { mixin } from '../mixins/apply';
 import { DecoratorMixin } from '../mixins/decorator';
 import { DoMixin } from '../mixins/do';
 import { DocMixin } from '../mixins/doc';
 import {
   AbstractMixin,
   AsyncMixin,
-  createModifierAccessor,
   PrivateMixin,
   ProtectedMixin,
   PublicMixin,
@@ -22,8 +19,29 @@ import { TypeParamsMixin } from '../mixins/type-params';
 import { TokenTsDsl } from '../token';
 import { TypeExprTsDsl } from '../type/expr';
 
-export class MethodTsDsl extends TsDsl<ts.MethodDeclaration> {
-  protected modifiers = createModifierAccessor(this);
+const Mixed = AbstractMixin(
+  AsyncMixin(
+    DecoratorMixin(
+      DoMixin(
+        DocMixin(
+          OptionalMixin(
+            ParamMixin(
+              PrivateMixin(
+                ProtectedMixin(
+                  PublicMixin(
+                    StaticMixin(TypeParamsMixin(TsDsl<ts.MethodDeclaration>)),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+);
+
+export class MethodTsDsl extends Mixed {
   protected name: string;
   protected _returns?: TypeTsDsl;
 
@@ -39,15 +57,13 @@ export class MethodTsDsl extends TsDsl<ts.MethodDeclaration> {
     return this;
   }
 
-  /** Walk this node and its children with a visitor. */
   traverse(visitor: (node: SyntaxNode) => void): void {
     console.log(visitor);
   }
 
-  /** Builds the `MethodDeclaration` node. */
-  $render(): ts.MethodDeclaration {
+  protected override _render() {
     return ts.factory.createMethodDeclaration(
-      [...this.$decorators(), ...this.modifiers.list()],
+      [...this.$decorators(), ...this.modifiers],
       undefined,
       this.name,
       this._optional ? this.$node(new TokenTsDsl().optional()) : undefined,
@@ -58,32 +74,3 @@ export class MethodTsDsl extends TsDsl<ts.MethodDeclaration> {
     );
   }
 }
-
-export interface MethodTsDsl
-  extends AbstractMixin,
-    AsyncMixin,
-    DecoratorMixin,
-    DoMixin,
-    DocMixin,
-    OptionalMixin,
-    ParamMixin,
-    PrivateMixin,
-    ProtectedMixin,
-    PublicMixin,
-    StaticMixin,
-    TypeParamsMixin {}
-mixin(
-  MethodTsDsl,
-  AbstractMixin,
-  AsyncMixin,
-  DecoratorMixin,
-  DoMixin,
-  DocMixin,
-  OptionalMixin,
-  ParamMixin,
-  PrivateMixin,
-  ProtectedMixin,
-  PublicMixin,
-  StaticMixin,
-  TypeParamsMixin,
-);

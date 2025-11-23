@@ -1,13 +1,13 @@
-/* eslint-disable @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging */
 import type { SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
-import { mixin } from '../mixins/apply';
 import { ExprMixin, registerLazyAccessAwaitFactory } from '../mixins/expr';
 
-export class AwaitTsDsl extends TsDsl<ts.AwaitExpression> {
+const Mixed = ExprMixin(TsDsl<ts.AwaitExpression>);
+
+export class AwaitTsDsl extends Mixed {
   protected _awaitExpr: string | MaybeTsDsl<ts.Expression>;
 
   constructor(expr: string | MaybeTsDsl<ts.Expression>) {
@@ -15,17 +15,13 @@ export class AwaitTsDsl extends TsDsl<ts.AwaitExpression> {
     this._awaitExpr = expr;
   }
 
-  /** Walk this node and its children with a visitor. */
   traverse(visitor: (node: SyntaxNode) => void): void {
     console.log(visitor);
   }
 
-  $render(): ts.AwaitExpression {
+  protected override _render() {
     return ts.factory.createAwaitExpression(this.$node(this._awaitExpr));
   }
 }
-
-export interface AwaitTsDsl extends ExprMixin {}
-mixin(AwaitTsDsl, ExprMixin);
 
 registerLazyAccessAwaitFactory((...args) => new AwaitTsDsl(...args));

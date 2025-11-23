@@ -5,7 +5,9 @@ import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
 import { LiteralTsDsl } from '../expr/literal';
 
-export class ThrowTsDsl extends TsDsl<ts.ThrowStatement> {
+const Mixed = TsDsl<ts.ThrowStatement>;
+
+export class ThrowTsDsl extends Mixed {
   protected error: string | MaybeTsDsl<ts.Expression>;
   protected msg?: string | MaybeTsDsl<ts.Expression>;
   protected useNew: boolean;
@@ -21,12 +23,11 @@ export class ThrowTsDsl extends TsDsl<ts.ThrowStatement> {
     return this;
   }
 
-  /** Walk this node and its children with a visitor. */
   traverse(visitor: (node: SyntaxNode) => void): void {
     console.log(visitor);
   }
 
-  $render(): ts.ThrowStatement {
+  protected override _render() {
     const errorNode = this.$node(this.error);
     const messageNode = this.$node(this.msg ? [this.msg] : []).map((expr) =>
       typeof expr === 'string' ? new LiteralTsDsl(expr).$render() : expr,

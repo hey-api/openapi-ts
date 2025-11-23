@@ -1,9 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
 import type { SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl, TypeTsDsl } from '../base';
-import { mixin } from '../mixins/apply';
 import { DecoratorMixin } from '../mixins/decorator';
 import { OptionalMixin } from '../mixins/optional';
 import { PatternMixin } from '../mixins/pattern';
@@ -11,7 +9,11 @@ import { ValueMixin } from '../mixins/value';
 import { TokenTsDsl } from '../token';
 import { TypeExprTsDsl } from '../type/expr';
 
-export class ParamTsDsl extends TsDsl<ts.ParameterDeclaration> {
+const Mixed = DecoratorMixin(
+  OptionalMixin(PatternMixin(ValueMixin(TsDsl<ts.ParameterDeclaration>))),
+);
+
+export class ParamTsDsl extends Mixed {
   protected name?: string;
   protected _type?: TypeTsDsl;
 
@@ -28,7 +30,6 @@ export class ParamTsDsl extends TsDsl<ts.ParameterDeclaration> {
     }
   }
 
-  /** Walk this node and its children with a visitor. */
   traverse(visitor: (node: SyntaxNode) => void): void {
     console.log(visitor);
   }
@@ -39,7 +40,7 @@ export class ParamTsDsl extends TsDsl<ts.ParameterDeclaration> {
     return this;
   }
 
-  $render(): ts.ParameterDeclaration {
+  protected override _render() {
     const name = this.$pattern() ?? this.name;
     if (!name)
       throw new Error(
@@ -55,10 +56,3 @@ export class ParamTsDsl extends TsDsl<ts.ParameterDeclaration> {
     );
   }
 }
-
-export interface ParamTsDsl
-  extends DecoratorMixin,
-    OptionalMixin,
-    PatternMixin,
-    ValueMixin {}
-mixin(ParamTsDsl, DecoratorMixin, OptionalMixin, PatternMixin, ValueMixin);

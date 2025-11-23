@@ -11,6 +11,8 @@ type Op =
   | ts.SyntaxKind.UniqueKeyword;
 type Type = string | MaybeTsDsl<ts.TypeNode>;
 
+const Mixed = TypeTsDsl<ts.TypeOperatorNode>;
+
 /**
  * Builds a TypeScript `TypeOperatorNode`, such as:
  *
@@ -23,7 +25,7 @@ type Type = string | MaybeTsDsl<ts.TypeNode>;
  *
  * The node will throw during render if required fields are missing.
  */
-export class TypeOperatorTsDsl extends TypeTsDsl<ts.TypeOperatorNode> {
+export class TypeOperatorTsDsl extends Mixed {
   protected _op?: Op;
   protected _type?: Type;
 
@@ -47,7 +49,6 @@ export class TypeOperatorTsDsl extends TypeTsDsl<ts.TypeOperatorNode> {
     return this;
   }
 
-  /** Walk this node and its children with a visitor. */
   traverse(visitor: (node: SyntaxNode) => void): void {
     console.log(visitor);
   }
@@ -65,7 +66,7 @@ export class TypeOperatorTsDsl extends TypeTsDsl<ts.TypeOperatorNode> {
     return this;
   }
 
-  $render(): ts.TypeOperatorNode {
+  protected override _render() {
     this.$validate();
     return ts.factory.createTypeOperatorNode(this._op, this.$type(this._type));
   }

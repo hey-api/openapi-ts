@@ -1,10 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
 import type { SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
-import { mixin } from '../mixins/apply';
 import { AsMixin } from '../mixins/as';
 import { ExprMixin } from '../mixins/expr';
 import { HintMixin } from '../mixins/hint';
@@ -16,7 +14,11 @@ type Stmt = string | MaybeTsDsl<ts.Statement>;
 type ExprFn = Expr | ((p: ObjectPropTsDsl) => void);
 type StmtFn = Stmt | ((p: ObjectPropTsDsl) => void);
 
-export class ObjectTsDsl extends TsDsl<ts.ObjectLiteralExpression> {
+const Mixed = AsMixin(
+  ExprMixin(HintMixin(LayoutMixin(TsDsl<ts.ObjectLiteralExpression>))),
+);
+
+export class ObjectTsDsl extends Mixed {
   protected _props: Array<ObjectPropTsDsl> = [];
 
   constructor(...props: Array<ObjectPropTsDsl>) {
@@ -72,23 +74,14 @@ export class ObjectTsDsl extends TsDsl<ts.ObjectLiteralExpression> {
     return this;
   }
 
-  /** Walk this node and its children with a visitor. */
   traverse(visitor: (node: SyntaxNode) => void): void {
     console.log(visitor);
   }
 
-  /** Builds and returns the object literal expression. */
-  $render(): ts.ObjectLiteralExpression {
+  protected override _render() {
     return ts.factory.createObjectLiteralExpression(
       this.$node(this._props),
       this.$multiline(this._props.length),
     );
   }
 }
-
-export interface ObjectTsDsl
-  extends AsMixin,
-    ExprMixin,
-    HintMixin,
-    LayoutMixin {}
-mixin(ObjectTsDsl, AsMixin, ExprMixin, HintMixin, LayoutMixin);

@@ -1,23 +1,24 @@
-/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
 import type { Symbol, SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl, TypeTsDsl } from '../base';
-import { mixin } from '../mixins/apply';
 import { DocMixin } from '../mixins/doc';
 import { HintMixin } from '../mixins/hint';
-import {
-  createModifierAccessor,
-  DefaultMixin,
-  ExportMixin,
-} from '../mixins/modifiers';
+import { DefaultMixin, ExportMixin } from '../mixins/modifiers';
 import { PatternMixin } from '../mixins/pattern';
 import { ValueMixin } from '../mixins/value';
 import { TypeExprTsDsl } from '../type/expr';
 
-export class VarTsDsl extends TsDsl<ts.VariableStatement> {
+const Mixed = DefaultMixin(
+  DocMixin(
+    ExportMixin(
+      HintMixin(PatternMixin(ValueMixin(TsDsl<ts.VariableStatement>))),
+    ),
+  ),
+);
+
+export class VarTsDsl extends Mixed {
   protected kind: ts.NodeFlags = ts.NodeFlags.None;
-  protected modifiers = createModifierAccessor(this);
   protected name?: string;
   protected _type?: TypeTsDsl;
 
@@ -45,7 +46,6 @@ export class VarTsDsl extends TsDsl<ts.VariableStatement> {
     return this;
   }
 
-  /** Walk this node and its children with a visitor. */
   traverse(visitor: (node: SyntaxNode) => void): void {
     console.log(visitor);
   }
@@ -61,12 +61,12 @@ export class VarTsDsl extends TsDsl<ts.VariableStatement> {
     return this;
   }
 
-  $render(): ts.VariableStatement {
+  protected override _render() {
     const name = this.$pattern() ?? this.name;
     if (!name)
       throw new Error('Var must have either a name or a destructuring pattern');
     return ts.factory.createVariableStatement(
-      this.modifiers.list(),
+      this.modifiers,
       ts.factory.createVariableDeclarationList(
         [
           ts.factory.createVariableDeclaration(
@@ -81,20 +81,3 @@ export class VarTsDsl extends TsDsl<ts.VariableStatement> {
     );
   }
 }
-
-export interface VarTsDsl
-  extends DefaultMixin,
-    DocMixin,
-    ExportMixin,
-    HintMixin,
-    PatternMixin,
-    ValueMixin {}
-mixin(
-  VarTsDsl,
-  DefaultMixin,
-  DocMixin,
-  ExportMixin,
-  HintMixin,
-  PatternMixin,
-  ValueMixin,
-);

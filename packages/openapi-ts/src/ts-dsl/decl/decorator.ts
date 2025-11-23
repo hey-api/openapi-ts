@@ -1,13 +1,13 @@
-/* eslint-disable @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging */
 import type { Symbol, SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
-import { mixin } from '../mixins/apply';
 import { ArgsMixin } from '../mixins/args';
 
-export class DecoratorTsDsl extends TsDsl<ts.Decorator> {
+const Mixed = ArgsMixin(TsDsl<ts.Decorator>);
+
+export class DecoratorTsDsl extends Mixed {
   protected name: Symbol | string | MaybeTsDsl<ts.Expression>;
 
   constructor(
@@ -17,18 +17,16 @@ export class DecoratorTsDsl extends TsDsl<ts.Decorator> {
     super();
     this.name = name;
     if (typeof name !== 'string' && 'id' in name) {
-      const symbol = this.getRootSymbol();
-      if (symbol) symbol.addDependency(name);
+      this.getRootSymbol().addDependency(name);
     }
     this.args(...args);
   }
 
-  /** Walk this node and its children with a visitor. */
   traverse(visitor: (node: SyntaxNode) => void): void {
     console.log(visitor);
   }
 
-  $render(): ts.Decorator {
+  protected override _render() {
     const target =
       typeof this.name !== 'string' && 'id' in this.name
         ? this.$maybeId(this.name.finalName)
@@ -42,6 +40,3 @@ export class DecoratorTsDsl extends TsDsl<ts.Decorator> {
     );
   }
 }
-
-export interface DecoratorTsDsl extends ArgsMixin {}
-mixin(DecoratorTsDsl, ArgsMixin);

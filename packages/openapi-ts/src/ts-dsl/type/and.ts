@@ -3,7 +3,9 @@ import ts from 'typescript';
 
 import { TypeTsDsl } from '../base';
 
-export class TypeAndTsDsl extends TypeTsDsl<ts.IntersectionTypeNode> {
+const Mixed = TypeTsDsl<ts.IntersectionTypeNode>;
+
+export class TypeAndTsDsl extends Mixed {
   protected _types: Array<string | ts.TypeNode | TypeTsDsl> = [];
 
   constructor(...nodes: Array<string | ts.TypeNode | TypeTsDsl>) {
@@ -11,7 +13,6 @@ export class TypeAndTsDsl extends TypeTsDsl<ts.IntersectionTypeNode> {
     this.types(...nodes);
   }
 
-  /** Walk this node and its children with a visitor. */
   traverse(visitor: (node: SyntaxNode) => void): void {
     console.log(visitor);
   }
@@ -21,7 +22,7 @@ export class TypeAndTsDsl extends TypeTsDsl<ts.IntersectionTypeNode> {
     return this;
   }
 
-  $render(): ts.IntersectionTypeNode {
+  protected override _render() {
     const flat: Array<ts.TypeNode> = [];
 
     for (const n of this._types) {

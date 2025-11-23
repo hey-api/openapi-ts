@@ -3,7 +3,9 @@ import ts from 'typescript';
 
 import { TsDsl } from '../base';
 
-export class IdTsDsl extends TsDsl<ts.Identifier> {
+const Mixed = TsDsl<ts.Identifier>;
+
+export class IdTsDsl extends Mixed {
   protected name: string;
 
   constructor(name: string) {
@@ -11,12 +13,11 @@ export class IdTsDsl extends TsDsl<ts.Identifier> {
     this.name = name;
   }
 
-  /** Walk this node and its children with a visitor. */
   traverse(visitor: (node: SyntaxNode) => void): void {
     console.log(visitor);
   }
 
-  $render(): ts.Identifier {
+  protected override _render() {
     return ts.factory.createIdentifier(this.name);
   }
 }

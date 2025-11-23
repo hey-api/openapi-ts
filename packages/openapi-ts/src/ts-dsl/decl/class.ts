@@ -1,29 +1,29 @@
-/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
 import type { Symbol, SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
 import { NewlineTsDsl } from '../layout/newline';
-import { mixin } from '../mixins/apply';
 import { DecoratorMixin } from '../mixins/decorator';
 import { DocMixin } from '../mixins/doc';
-import {
-  AbstractMixin,
-  createModifierAccessor,
-  DefaultMixin,
-  ExportMixin,
-} from '../mixins/modifiers';
+import { AbstractMixin, DefaultMixin, ExportMixin } from '../mixins/modifiers';
 import { TypeParamsMixin } from '../mixins/type-params';
 import { FieldTsDsl } from './field';
 import { InitTsDsl } from './init';
 import { MethodTsDsl } from './method';
 
-export class ClassTsDsl extends TsDsl<ts.ClassDeclaration> {
+const Mixed = AbstractMixin(
+  DecoratorMixin(
+    DefaultMixin(
+      DocMixin(ExportMixin(TypeParamsMixin(TsDsl<ts.ClassDeclaration>))),
+    ),
+  ),
+);
+
+export class ClassTsDsl extends Mixed {
   protected baseClass?: Symbol | string;
   protected body: Array<MaybeTsDsl<ts.ClassElement | NewlineTsDsl>> = [];
-  protected modifiers = createModifierAccessor(this);
-  protected name: string;
+  protected name: Symbol | string;
 
   constructor(name: Symbol | string) {
     super();
@@ -31,7 +31,7 @@ export class ClassTsDsl extends TsDsl<ts.ClassDeclaration> {
       this.name = name;
       return;
     }
-    this.name = name.finalName;
+    this.name = name;
     this.symbol = name;
     this.symbol.setKind('class');
     this.symbol.setRootNode(this);
@@ -40,7 +40,7 @@ export class ClassTsDsl extends TsDsl<ts.ClassDeclaration> {
   /** Adds one or more class members (fields, methods, etc.). */
   do(...items: ReadonlyArray<MaybeTsDsl<ts.ClassElement | ts.Node>>): this {
     for (const item of items) {
-      if (item && typeof item === 'object' && 'setParent' in item) {
+      if (typeof item === 'object' && 'setParent' in item) {
         item.setParent(this);
       }
       // @ts-expect-error --- IGNORE ---
@@ -54,8 +54,7 @@ export class ClassTsDsl extends TsDsl<ts.ClassDeclaration> {
     if (!base) return this;
     this.baseClass = base;
     if (typeof base !== 'string') {
-      const symbol = this.getRootSymbol();
-      if (symbol) symbol.addDependency(base);
+      this.getRootSymbol().addDependency(base);
     }
     return this;
   }
@@ -87,17 +86,17 @@ export class ClassTsDsl extends TsDsl<ts.ClassDeclaration> {
     return this;
   }
 
-  /** Walk this node and its children with a visitor. */
   traverse(visitor: (node: SyntaxNode) => void): void {
     console.log(visitor);
   }
 
-  /** Builds the `ClassDeclaration` node. */
-  $render(): ts.ClassDeclaration {
+  protected override _render() {
     const body = this.$node(this.body) as ReadonlyArray<ts.ClassElement>;
+    const name =
+      typeof this.name === 'string' ? this.name : this.name.finalName;
     return ts.factory.createClassDeclaration(
-      [...this.$decorators(), ...this.modifiers.list()],
-      this.name,
+      [...this.$decorators(), ...this.modifiers],
+      name,
       this.$generics(),
       this._renderHeritage(),
       body,
@@ -118,20 +117,3 @@ export class ClassTsDsl extends TsDsl<ts.ClassDeclaration> {
     ];
   }
 }
-
-export interface ClassTsDsl
-  extends AbstractMixin,
-    DecoratorMixin,
-    DefaultMixin,
-    DocMixin,
-    ExportMixin,
-    TypeParamsMixin {}
-mixin(
-  ClassTsDsl,
-  AbstractMixin,
-  DecoratorMixin,
-  DefaultMixin,
-  DocMixin,
-  ExportMixin,
-  TypeParamsMixin,
-);

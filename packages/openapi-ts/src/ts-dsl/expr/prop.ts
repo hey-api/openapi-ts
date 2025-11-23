@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging */
 import type { SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
@@ -6,7 +5,6 @@ import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
 import { GetterTsDsl } from '../decl/getter';
 import { SetterTsDsl } from '../decl/setter';
-import { mixin } from '../mixins/apply';
 import { DocMixin } from '../mixins/doc';
 import { safePropName } from '../utils/prop';
 import { IdTsDsl } from './id';
@@ -22,7 +20,9 @@ type Meta =
   | { kind: 'setter'; name: string }
   | { kind: 'spread'; name?: undefined };
 
-export class ObjectPropTsDsl extends TsDsl<ts.ObjectLiteralElementLike> {
+const Mixed = DocMixin(TsDsl<ts.ObjectLiteralElementLike>);
+
+export class ObjectPropTsDsl extends Mixed {
   protected _value?: Expr | Stmt;
   protected meta: Meta;
 
@@ -36,7 +36,6 @@ export class ObjectPropTsDsl extends TsDsl<ts.ObjectLiteralElementLike> {
     return this.missingRequiredCalls().length === 0;
   }
 
-  /** Walk this node and its children with a visitor. */
   traverse(visitor: (node: SyntaxNode) => void): void {
     console.log(visitor);
   }
@@ -50,7 +49,7 @@ export class ObjectPropTsDsl extends TsDsl<ts.ObjectLiteralElementLike> {
     return this;
   }
 
-  $render(): ts.ObjectLiteralElementLike {
+  protected override _render() {
     this.$validate();
     const node = this.$node(this._value);
     if (this.meta.kind === 'spread') {
@@ -104,6 +103,3 @@ export class ObjectPropTsDsl extends TsDsl<ts.ObjectLiteralElementLike> {
     return missing;
   }
 }
-
-export interface ObjectPropTsDsl extends DocMixin {}
-mixin(ObjectPropTsDsl, DocMixin);

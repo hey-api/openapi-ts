@@ -1,3 +1,4 @@
+import { debug } from '../debug';
 import type { ISymbolMeta } from '../extensions';
 import type { IFileOut } from '../files/types';
 import { wrapId } from '../renderer/utils';
@@ -171,6 +172,9 @@ export class Symbol {
     );
   }
 
+  /**
+   * Custom file path resolver, if provided.
+   */
   get getFilePath(): ((symbol: Symbol) => string | undefined) | undefined {
     return this.canonical._getFilePath;
   }
@@ -196,6 +200,9 @@ export class Symbol {
     return this.canonical._meta;
   }
 
+  /**
+   * User-intended name before aliasing or conflict resolution.
+   */
   get name(): string {
     return this.canonical._name;
   }
@@ -211,6 +218,7 @@ export class Symbol {
    * Add a direct dependency on another symbol.
    */
   addDependency(symbol: Symbol): void {
+    this.assertCanonical();
     if (symbol !== this) this._dependencies.add(symbol);
   }
 
@@ -232,6 +240,7 @@ export class Symbol {
    * @param exported — Whether the symbol is exported.
    */
   setExported(exported: boolean): void {
+    this.assertCanonical();
     this._exported = exported;
   }
 
@@ -241,6 +250,7 @@ export class Symbol {
    * @param list — Source files re‑exporting this symbol.
    */
   setExportFrom(list: ReadonlyArray<string>): void {
+    this.assertCanonical();
     this._exportFrom = list;
   }
 
@@ -250,6 +260,7 @@ export class Symbol {
    * This may only be set once.
    */
   setFile(file: IFileOut): void {
+    this.assertCanonical();
     if (this._file && this._file !== file) {
       throw new Error('Symbol is already assigned to a different file.');
     }
@@ -262,6 +273,7 @@ export class Symbol {
    * This may only be set once.
    */
   setFinalName(name: string): void {
+    this.assertCanonical();
     if (this._finalName && this._finalName !== name) {
       throw new Error('Symbol finalName has already been resolved.');
     }
@@ -274,6 +286,7 @@ export class Symbol {
    * @param kind — The import strategy (named/default/namespace).
    */
   setImportKind(kind: SymbolImportKind): void {
+    this.assertCanonical();
     this._importKind = kind;
   }
 
@@ -283,6 +296,7 @@ export class Symbol {
    * @param kind — The new symbol kind.
    */
   setKind(kind: SymbolKind): void {
+    this.assertCanonical();
     this._kind = kind;
   }
 
@@ -292,6 +306,7 @@ export class Symbol {
    * @param name — The new name.
    */
   setName(name: string): void {
+    this.assertCanonical();
     this._name = name;
   }
 
@@ -301,6 +316,7 @@ export class Symbol {
    * This may only be set once.
    */
   setRootNode(node: ISyntaxNode): void {
+    this.assertCanonical();
     if (this._rootNode && this._rootNode !== node) {
       throw new Error('Symbol is already bound to a different root DSL node.');
     }
@@ -312,5 +328,24 @@ export class Symbol {
    */
   toString(): string {
     return `[Symbol ${this.name}#${this.id}]`;
+  }
+
+  /**
+   * Ensures this symbol is canonical before allowing mutation.
+   *
+   * A symbol that has been marked as a stub (i.e., its `_canonical` points
+   * to a different symbol) may not be mutated. This guard throws an error
+   * if any setter attempts to modify a stub, preventing accidental writes
+   * to non‑canonical instances.
+   *
+   * @throws {Error} If the symbol is a stub and is being mutated.
+   * @private
+   */
+  private assertCanonical(): void {
+    if (this._canonical && this._canonical !== this) {
+      const message = `Illegal mutation of stub symbol ${this.toString()} → canonical: ${this._canonical.toString()}`;
+      debug(message, "symbol");
+      throw new Error(message);
+    }
   }
 }

@@ -1,16 +1,17 @@
-/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
 import type { Symbol, SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
-import { mixin } from '../mixins/apply';
 import { DocMixin } from '../mixins/doc';
-import { createModifierAccessor, ExportMixin } from '../mixins/modifiers';
+import { ExportMixin } from '../mixins/modifiers';
 import { TypeParamsMixin } from '../mixins/type-params';
 
-export class TypeAliasTsDsl extends TsDsl<ts.TypeAliasDeclaration> {
-  protected modifiers = createModifierAccessor(this);
+const Mixed = DocMixin(
+  ExportMixin(TypeParamsMixin(TsDsl<ts.TypeAliasDeclaration>)),
+);
+
+export class TypeAliasTsDsl extends Mixed {
   protected name: string;
   protected value?: MaybeTsDsl<ts.TypeNode>;
 
@@ -27,7 +28,6 @@ export class TypeAliasTsDsl extends TsDsl<ts.TypeAliasDeclaration> {
     fn?.(this);
   }
 
-  /** Walk this node and its children with a visitor. */
   traverse(visitor: (node: SyntaxNode) => void): void {
     console.log(visitor);
   }
@@ -38,21 +38,14 @@ export class TypeAliasTsDsl extends TsDsl<ts.TypeAliasDeclaration> {
     return this;
   }
 
-  /** Renders a `TypeAliasDeclaration` node. */
-  $render(): ts.TypeAliasDeclaration {
+  protected override _render() {
     if (!this.value)
       throw new Error(`Type alias '${this.name}' is missing a type definition`);
     return ts.factory.createTypeAliasDeclaration(
-      this.modifiers.list(),
+      this.modifiers,
       this.name,
       this.$generics(),
       this.$type(this.value),
     );
   }
 }
-
-export interface TypeAliasTsDsl
-  extends DocMixin,
-    ExportMixin,
-    TypeParamsMixin {}
-mixin(TypeAliasTsDsl, DocMixin, ExportMixin, TypeParamsMixin);

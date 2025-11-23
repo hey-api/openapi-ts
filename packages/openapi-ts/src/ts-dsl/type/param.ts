@@ -1,20 +1,22 @@
-import type { SyntaxNode } from '@hey-api/codegen-core';
+import type { Symbol, SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TypeTsDsl } from '../base';
 
-export class TypeParamTsDsl extends TypeTsDsl<ts.TypeParameterDeclaration> {
-  protected name?: string | ts.Identifier;
+const Mixed = TypeTsDsl<ts.TypeParameterDeclaration>;
+
+export class TypeParamTsDsl extends Mixed {
+  protected name?: Symbol | string;
   protected constraint?: string | MaybeTsDsl<TypeTsDsl> | boolean;
   protected defaultValue?: string | MaybeTsDsl<TypeTsDsl> | boolean;
 
-  constructor(
-    name?: string | ts.Identifier,
-    fn?: (name: TypeParamTsDsl) => void,
-  ) {
+  constructor(name?: Symbol | string, fn?: (name: TypeParamTsDsl) => void) {
     super();
     this.name = name;
+    if (name && typeof name !== 'string') {
+      this.getRootSymbol().addDependency(name);
+    }
     fn?.(this);
   }
 
@@ -28,16 +30,17 @@ export class TypeParamTsDsl extends TypeTsDsl<ts.TypeParameterDeclaration> {
     return this;
   }
 
-  /** Walk this node and its children with a visitor. */
   traverse(visitor: (node: SyntaxNode) => void): void {
     console.log(visitor);
   }
 
-  $render(): ts.TypeParameterDeclaration {
+  protected override _render() {
     if (!this.name) throw new Error('Missing type name');
+    const name =
+      typeof this.name === 'string' ? this.name : this.name.finalName;
     return ts.factory.createTypeParameterDeclaration(
       undefined,
-      this.$maybeId(this.name),
+      this.$maybeId(name),
       this.$type(this.constraint),
       this.$type(this.defaultValue),
     );

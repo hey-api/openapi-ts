@@ -1,13 +1,13 @@
-/* eslint-disable @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging */
 import type { SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
-import { mixin } from '../mixins/apply';
-import { ExprMixin, registerLazyAccessReturnFactory } from '../mixins/expr';
+import { registerLazyAccessReturnFactory } from '../mixins/expr';
 
-export class ReturnTsDsl extends TsDsl<ts.ReturnStatement> {
+const Mixed = TsDsl<ts.ReturnStatement>;
+
+export class ReturnTsDsl extends Mixed {
   protected _returnExpr?: string | MaybeTsDsl<ts.Expression>;
 
   constructor(expr?: string | MaybeTsDsl<ts.Expression>) {
@@ -15,17 +15,13 @@ export class ReturnTsDsl extends TsDsl<ts.ReturnStatement> {
     this._returnExpr = expr;
   }
 
-  /** Walk this node and its children with a visitor. */
   traverse(visitor: (node: SyntaxNode) => void): void {
     console.log(visitor);
   }
 
-  $render(): ts.ReturnStatement {
+  protected override _render() {
     return ts.factory.createReturnStatement(this.$node(this._returnExpr));
   }
 }
-
-export interface ReturnTsDsl extends ExprMixin {}
-mixin(ReturnTsDsl, ExprMixin);
 
 registerLazyAccessReturnFactory((...args) => new ReturnTsDsl(...args));
