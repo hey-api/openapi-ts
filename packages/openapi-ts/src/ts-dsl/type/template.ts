@@ -1,3 +1,4 @@
+import type { SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -15,6 +16,11 @@ export class TypeTemplateTsDsl extends TypeTsDsl<ts.TemplateLiteralTypeNode> {
   add(part: string | MaybeTsDsl<ts.TypeNode>): this {
     this.parts.push(part);
     return this;
+  }
+
+  /** Walk this node and its children with a visitor. */
+  traverse(visitor: (node: SyntaxNode) => void): void {
+    console.log(visitor);
   }
 
   /** Renders a TemplateLiteralTypeNode. */

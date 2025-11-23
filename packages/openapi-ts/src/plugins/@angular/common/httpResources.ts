@@ -136,7 +136,6 @@ const generateAngularClassServices = ({
       resource: '@angular/core.Injectable',
     });
     const symbolClass = plugin.registerSymbol({
-      exported: true,
       name: buildName({
         config: {
           case: 'preserve',
@@ -145,11 +144,11 @@ const generateAngularClassServices = ({
         name: currentClass.className,
       }),
     });
-    const node = $.class(symbolClass.placeholder)
-      .export(symbolClass.exported)
+    const node = $.class(symbolClass)
+      .export()
       .$if(currentClass.root, (c) =>
         c.decorator(
-          symbolInjectable.placeholder,
+          symbolInjectable,
           $.object().prop('providedIn', $.literal('root')),
         ),
       )
@@ -178,7 +177,6 @@ const generateAngularFunctionServices = ({
       });
 
       const symbol = plugin.registerSymbol({
-        exported: true,
         name: plugin.config.httpResources.methodNameBuilder(operation),
       });
       const node = generateAngularResourceFunction({
@@ -387,8 +385,8 @@ const generateAngularResourceFunction = ({
   });
   const dataType = symbolDataType?.placeholder || 'unknown';
 
-  return $.const(symbol.placeholder)
-    .export(symbol.exported)
+  return $.const(symbol)
+    .export()
     .$if(createOperationComment(operation), (c, v) => c.doc(v))
     .assign(
       $.func()

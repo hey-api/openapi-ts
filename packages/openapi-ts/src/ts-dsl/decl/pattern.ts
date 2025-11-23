@@ -1,3 +1,4 @@
+import type { SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeArray } from '../base';
@@ -42,6 +43,11 @@ export class PatternTsDsl extends TsDsl<ts.BindingName> {
   spread(name: string): this {
     this._spread = name;
     return this;
+  }
+
+  /** Walk this node and its children with a visitor. */
+  traverse(visitor: (node: SyntaxNode) => void): void {
+    console.log(visitor);
   }
 
   /** Builds and returns a BindingName (ObjectBindingPattern, ArrayBindingPattern, or Identifier). */

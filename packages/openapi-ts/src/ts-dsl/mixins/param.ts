@@ -3,7 +3,7 @@ import type ts from 'typescript';
 import { type MaybeTsDsl, TsDsl } from '../base';
 import { ParamTsDsl } from '../decl/param';
 
-export class ParamMixin extends TsDsl {
+export abstract class ParamMixin extends TsDsl {
   protected _params?: Array<MaybeTsDsl<ts.ParameterDeclaration>>;
 
   /** Adds a parameter. */
@@ -26,9 +26,5 @@ export class ParamMixin extends TsDsl {
   protected $params(): ReadonlyArray<ts.ParameterDeclaration> {
     if (!this._params) return [];
     return this.$node(this._params);
-  }
-
-  $render(): ts.Node {
-    throw new Error('noop');
   }
 }

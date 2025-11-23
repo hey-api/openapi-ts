@@ -1,5 +1,5 @@
 import type { IFileOut } from '../files/types';
-import type { ISymbolOut } from '../symbols/types';
+import type { Symbol } from '../symbols/symbol';
 import type { IBinding } from './types';
 
 export const createBinding = ({
@@ -10,7 +10,7 @@ export const createBinding = ({
 }: {
   file: IFileOut;
   modulePath: string;
-  symbol: ISymbolOut;
+  symbol: Symbol;
   symbolFile: IFileOut;
 }): IBinding => {
   const names: Array<string> = [];
@@ -48,12 +48,12 @@ export const createBinding = ({
         }
       } else if (symbol.name && fileResolvedName !== symbol.name) {
         name = symbol.name;
-        binding.aliases[name] = symbol.placeholder;
+        binding.aliases[name] = symbol.placeholder!;
       }
     }
-    names.push(name);
+    names.push(name!);
     if (symbol.kind === 'type') {
-      typeNames.push(name);
+      typeNames.push(name!);
     }
   }
   // cast type names to names to allow for cleaner API,

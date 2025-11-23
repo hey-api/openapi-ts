@@ -13,18 +13,25 @@ describe('SymbolRegistry', () => {
 
     // Register a symbol with meta
     const symbol1 = registry.register({
-      meta: {
-        foo: 'bar',
-      },
+      meta: { foo: 'bar' },
+      name: '',
       placeholder: 'Foo',
     });
-    expect(symbol1).toEqual({
-      id: expect.any(Number),
-      meta: {
-        foo: 'bar',
-      },
-      placeholder: 'Foo',
-    });
+    expect(symbol1).toEqual(
+      expect.objectContaining({
+        _dependencies: new Set(),
+        exportFrom: [],
+        exported: false,
+        id: expect.any(Number),
+        importKind: 'named',
+        kind: 'var',
+        meta: {
+          foo: 'bar',
+        },
+        name: '',
+        placeholder: 'Foo',
+      }),
+    );
 
     // get by id and meta
     expect(registry.get(symbol1.id)).toEqual(symbol1);
@@ -35,30 +42,33 @@ describe('SymbolRegistry', () => {
     expect(registry.isRegistered({ foo: 'bar' })).toBe(true);
 
     // Registering again with same meta creates a new symbol
-    const symbol1b = registry.register({ meta: { foo: 'bar' } });
+    const symbol1b = registry.register({
+      meta: { foo: 'bar' },
+      name: '',
+    });
     expect(symbol1b).not.toEqual(symbol1);
-
-    // Registering with id overrides the symbol
-    const symbol1c = registry.register({ id: symbol1.id });
-    expect(symbol1c).not.toEqual(symbol1);
-    expect(symbol1c.id).toBe(symbol1.id);
 
     // Reference returns same symbol
     const ref1 = registry.reference({ foo: 'bar' });
-    expect(ref1).toEqual(symbol1c);
+    expect(ref1).toEqual(symbol1);
 
     // Register a new symbol with different meta
     const symbol2 = registry.register({
       exportFrom: ['x'],
       meta: { bar: 'baz' },
+      name: '',
       placeholder: 'Bar',
     });
-    expect(symbol2).toEqual({
-      exportFrom: ['x'],
-      id: expect.any(Number),
-      meta: { bar: 'baz' },
-      placeholder: 'Bar',
-    });
+    expect(symbol2).toEqual(
+      expect.objectContaining({
+        dependencies: new Set(),
+        exportFrom: ['x'],
+        id: expect.any(Number),
+        meta: { bar: 'baz' },
+        name: '',
+        placeholder: 'Bar',
+      }),
+    );
 
     // Registered symbols are yielded in order
     const registered = Array.from(registry.registered());
@@ -79,6 +89,7 @@ describe('SymbolRegistry', () => {
     expect(registry.isRegistered(symRef.id)).toBe(false);
     const symRegistered = registry.register({
       meta: { qux: true },
+      name: '',
       placeholder: 'Qux',
     });
     expect(registry.isRegistered(symRegistered.id)).toBe(true);
@@ -122,11 +133,11 @@ describe('SymbolRegistry', () => {
     const refAD = registry.reference({ a: 0, d: 0 });
     const refAC = registry.reference({ a: 0, c: 0 });
 
-    expect(symC).toEqual(refA);
-    expect(symC).toEqual(refAB);
-    expect(symC).toEqual(refAC);
-    expect(symC).not.toEqual(refAD);
-    expect(symC).not.toEqual(refB);
+    expect(refA.canonical).toEqual(symC);
+    expect(refAB.canonical).toEqual(symC);
+    expect(refAC.canonical).toEqual(symC);
+    expect(refAD.canonical).not.toEqual(symC);
+    expect(refB.canonical).not.toEqual(symC);
     expect(symC.meta).toEqual({ a: 0, b: 0, c: 0 });
   });
 

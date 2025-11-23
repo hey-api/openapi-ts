@@ -53,6 +53,10 @@ export type IFileOut = IFileIn & {
    */
   readonly id: number;
   /**
+   * Names declared in local (non‑top‑level) scopes within this file.
+   */
+  readonly localNames: Set<string>;
+  /**
    * Map holding resolved names for symbols in this file.
    */
   readonly resolvedNames: IBiMap<number, string>;

@@ -1,9 +1,7 @@
-import type { ITsDsl, MaybeArray } from '../base';
+import type { Constructor, ITsDsl, MaybeArray } from '../base';
 import { NoteTsDsl } from '../layout/note';
 
-export function NoteMixin<
-  TBase extends new (...args: ReadonlyArray<any>) => ITsDsl,
->(Base: TBase) {
+export function NoteMixin<TBase extends Constructor>(Base: TBase) {
   const $renderBase = Base.prototype.$render;
 
   class Mixin extends Base {
@@ -19,9 +17,6 @@ export function NoteMixin<
       return this._note ? this._note.apply(node) : node;
     }
   }
-
-  // @ts-expect-error
-  Mixin.prototype.$render.mixin = true;
 
   return Mixin;
 }

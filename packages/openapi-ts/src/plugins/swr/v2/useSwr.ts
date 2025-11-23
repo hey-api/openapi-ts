@@ -27,7 +27,6 @@ export const createUseSwr = ({
     resource: 'swr',
   });
   const symbolUseQueryFn = plugin.registerSymbol({
-    exported: true,
     name: buildName({
       config: plugin.config.useSwr,
       name: operation.id,
@@ -48,8 +47,8 @@ export const createUseSwr = ({
     );
   }
 
-  const statement = $.const(symbolUseQueryFn.placeholder)
-    .export(symbolUseQueryFn.exported)
+  const statement = $.const(symbolUseQueryFn)
+    .export()
     .$if(plugin.config.comments && createOperationComment(operation), (c, v) =>
       c.doc(v),
     )

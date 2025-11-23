@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
+import type { SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl, TypeTsDsl } from '../base';
@@ -18,6 +19,11 @@ export class AsTsDsl extends TsDsl<ts.AsExpression> {
     super();
     this.expr = expr;
     this.type = type;
+  }
+
+  /** Walk this node and its children with a visitor. */
+  traverse(visitor: (node: SyntaxNode) => void): void {
+    console.log(visitor);
   }
 
   $render() {

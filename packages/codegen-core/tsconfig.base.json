@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
+    "composite": true,
     "declaration": true,
+    "declarationMap": true,
     "esModuleInterop": true,
     "module": "ESNext",
     "moduleResolution": "Bundler",

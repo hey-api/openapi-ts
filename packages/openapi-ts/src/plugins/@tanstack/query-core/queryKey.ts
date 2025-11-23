@@ -53,7 +53,7 @@ export const createQueryKeyFunction = ({
     .generic(TOptionsType)
     .idx(0);
 
-  const fn = $.const(symbolCreateQueryKey.placeholder).assign(
+  const fn = $.const(symbolCreateQueryKey).assign(
     $.func()
       .param('id', (p) => p.type('string'))
       .param('options', (p) => p.optional().type(TOptionsType))
@@ -132,8 +132,6 @@ export const createQueryKeyType = ({ plugin }: { plugin: PluginInstance }) => {
     tool: 'sdk',
   });
   const symbolQueryKeyType = plugin.registerSymbol({
-    exported: true,
-    kind: 'type',
     meta: {
       category: 'type',
       resource: 'QueryKey',
@@ -142,8 +140,8 @@ export const createQueryKeyType = ({ plugin }: { plugin: PluginInstance }) => {
     name: 'QueryKey',
   });
   const queryKeyType = $.type
-    .alias(symbolQueryKeyType.placeholder)
-    .export(symbolQueryKeyType.exported)
+    .alias(symbolQueryKeyType)
+    .export()
     .generic(TOptionsType, (g) => g.extends(symbolOptions.placeholder))
     .type(
       $.type.tuple(
@@ -176,8 +174,8 @@ export const queryKeyStatement = ({
   typeQueryKey?: string;
 }) => {
   const typeData = useTypeData({ operation, plugin });
-  const statement = $.const(symbol.placeholder)
-    .export(symbol.exported)
+  const statement = $.const(symbol)
+    .export()
     .assign(
       $.func()
         .param('options', (p) =>

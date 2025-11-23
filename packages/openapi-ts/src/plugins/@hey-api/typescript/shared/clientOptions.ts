@@ -51,8 +51,8 @@ export const createClientOptions = ({
   }
 
   const node = $.type
-    .alias(symbolClientOptions.placeholder)
-    .export(symbolClientOptions.exported)
+    .alias(symbolClientOptions)
+    .export()
     .type(
       $.type
         .object()

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-declaration-merging, @typescript-eslint/no-empty-object-type */
+import type { SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl } from '../base';
@@ -12,6 +13,11 @@ export class LiteralTsDsl extends TsDsl<ts.LiteralTypeNode['literal']> {
   constructor(value: string | number | boolean | null) {
     super();
     this.value = value;
+  }
+
+  /** Walk this node and its children with a visitor. */
+  traverse(visitor: (node: SyntaxNode) => void): void {
+    console.log(visitor);
   }
 
   $render(): ts.LiteralTypeNode['literal'] {

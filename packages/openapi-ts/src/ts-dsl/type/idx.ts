@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging */
+import type { SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -30,6 +31,11 @@ export class TypeIdxTsDsl extends TypeTsDsl<ts.IndexedAccessTypeNode> {
   index(index: string | MaybeTsDsl<ts.TypeNode> | number): this {
     this._index = index;
     return this;
+  }
+
+  /** Walk this node and its children with a visitor. */
+  traverse(visitor: (node: SyntaxNode) => void): void {
+    console.log(visitor);
   }
 
   $render(): ts.IndexedAccessTypeNode {

@@ -26,8 +26,8 @@ export const exportAst = ({
     resource: 'zod.z',
   });
 
-  const statement = $.const(symbol.placeholder)
-    .export(symbol.exported)
+  const statement = $.const(symbol)
+    .export()
     .$if(plugin.config.comments && createSchemaComment(schema), (c, v) =>
       c.doc(v),
     )
@@ -37,8 +37,8 @@ export const exportAst = ({
 
   if (typeInferSymbol) {
     const inferType = $.type
-      .alias(typeInferSymbol.placeholder)
-      .export(typeInferSymbol.exported)
+      .alias(typeInferSymbol)
+      .export()
       .type(
         $.type(z.placeholder)
           .attr(identifiers.infer)

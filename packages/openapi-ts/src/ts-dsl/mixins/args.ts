@@ -6,7 +6,7 @@ import { TsDsl } from '../base';
 /**
  * Adds `.arg()` and `.args()` for managing expression arguments in call-like nodes.
  */
-export class ArgsMixin extends TsDsl {
+export abstract class ArgsMixin extends TsDsl {
   protected _args?: Array<string | MaybeTsDsl<ts.Expression>>;
 
   /** Adds a single expression argument. */
@@ -25,9 +25,5 @@ export class ArgsMixin extends TsDsl {
   protected $args(): ReadonlyArray<ts.Expression> {
     if (!this._args) return [];
     return this.$node(this._args).map((arg) => this.$maybeId(arg));
-  }
-
-  $render(): ts.Node {
-    throw new Error('noop');
   }
 }

@@ -24,8 +24,8 @@ export const exportAst = ({
     resource: 'valibot.v',
   });
 
-  const statement = $.const(symbol.placeholder)
-    .export(symbol.exported)
+  const statement = $.const(symbol)
+    .export()
     .$if(plugin.config.comments && createSchemaComment(schema), (c, v) =>
       c.doc(v),
     )

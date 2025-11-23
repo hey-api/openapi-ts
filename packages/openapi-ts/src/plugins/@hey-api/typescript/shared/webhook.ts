@@ -24,8 +24,6 @@ const operationToDataType = ({
 
   if (operation.body) {
     const symbolWebhookPayload = plugin.registerSymbol({
-      exported: true,
-      kind: 'type',
       meta: {
         category: 'type',
         path: state.path.value,
@@ -44,8 +42,8 @@ const operationToDataType = ({
       }),
     });
     const node = $.type
-      .alias(symbolWebhookPayload.placeholder)
-      .export(symbolWebhookPayload.exported)
+      .alias(symbolWebhookPayload)
+      .export()
       .$if(createSchemaComment(operation.body.schema), (t, v) => t.doc(v))
       .type(
         irSchemaToAst({
@@ -88,8 +86,6 @@ const operationToDataType = ({
   data.required = dataRequired;
 
   const symbolWebhookRequest = plugin.registerSymbol({
-    exported: true,
-    kind: 'type',
     meta: {
       category: 'type',
       path: state.path.value,
@@ -105,8 +101,8 @@ const operationToDataType = ({
     }),
   });
   const node = $.type
-    .alias(symbolWebhookRequest.placeholder)
-    .export(symbolWebhookRequest.exported)
+    .alias(symbolWebhookRequest)
+    .export()
     .type(
       irSchemaToAst({
         plugin,

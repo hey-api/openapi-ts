@@ -1,11 +1,6 @@
-import type { ISymbolMeta } from '../extensions/types';
-import { wrapId } from '../renderer/utils';
-import type {
-  ISymbolIdentifier,
-  ISymbolIn,
-  ISymbolOut,
-  ISymbolRegistry,
-} from './types';
+import type { ISymbolMeta } from '../extensions';
+import { Symbol } from './symbol';
+import type { ISymbolIdentifier, ISymbolIn, ISymbolRegistry } from './types';
 
 type IndexEntry = [string, unknown];
 type IndexKeySpace = ReadonlyArray<IndexEntry>;
@@ -23,9 +18,9 @@ export class SymbolRegistry implements ISymbolRegistry {
   private registerOrder: Set<SymbolId> = new Set();
   private stubCache: Map<QueryCacheKey, SymbolId> = new Map();
   private stubs: Set<SymbolId> = new Set();
-  private values: Map<SymbolId, ISymbolOut> = new Map();
+  private values: Map<SymbolId, Symbol> = new Map();
 
-  get(identifier: ISymbolIdentifier): ISymbolOut | undefined {
+  get(identifier: ISymbolIdentifier): Symbol | undefined {
     return typeof identifier === 'number'
       ? this.values.get(identifier)
       : this.query(identifier)[0];
@@ -48,7 +43,7 @@ export class SymbolRegistry implements ISymbolRegistry {
     return symbol ? this.registerOrder.has(symbol.id) : false;
   }
 
-  query(filter: ISymbolMeta): ReadonlyArray<ISymbolOut> {
+  query(filter: ISymbolMeta): ReadonlyArray<Symbol> {
     const cacheKey = this.buildCacheKey(filter);
     const cachedIds = this.queryCache.get(cacheKey);
     if (cachedIds) {
@@ -87,33 +82,28 @@ export class SymbolRegistry implements ISymbolRegistry {
     return resultIds.map((symbolId) => this.values.get(symbolId)!);
   }
 
-  reference(meta: ISymbolMeta): ISymbolOut {
+  reference(meta: ISymbolMeta): Symbol {
     const [registered] = this.query(meta);
     if (registered) return registered;
+
     const cacheKey = this.buildCacheKey(meta);
     const cachedId = this.stubCache.get(cacheKey);
     if (cachedId !== undefined) return this.values.get(cachedId)!;
-    const id = this.id;
-    const stub: ISymbolOut = {
-      id,
-      meta,
-      placeholder: wrapId(String(id)),
-    };
+
+    const stub = new Symbol({ meta, name: '' }, this.id);
+
     this.values.set(stub.id, stub);
     this.stubs.add(stub.id);
     this.stubCache.set(cacheKey, stub.id);
     return stub;
   }
 
-  register(symbol: ISymbolIn): ISymbolOut {
-    const id = symbol.id !== undefined ? symbol.id : this.id;
-    const result: ISymbolOut = {
-      ...symbol, // clone to avoid mutation
-      id,
-      placeholder: symbol.placeholder ?? wrapId(String(id)),
-    };
+  register(symbol: ISymbolIn): Symbol {
+    const result = new Symbol(symbol, this.id);
+
     this.values.set(result.id, result);
     this.registerOrder.add(result.id);
+
     if (result.meta) {
       const indexKeySpace = this.buildIndexKeySpace(result.meta);
       this.indexSymbol(result.id, indexKeySpace);
@@ -123,7 +113,7 @@ export class SymbolRegistry implements ISymbolRegistry {
     return result;
   }
 
-  *registered(): IterableIterator<ISymbolOut> {
+  *registered(): IterableIterator<Symbol> {
     for (const id of this.registerOrder.values()) {
       yield this.values.get(id)!;
     }
@@ -192,7 +182,7 @@ export class SymbolRegistry implements ISymbolRegistry {
     return true;
   }
 
-  private replaceStubs(symbol: ISymbolOut, indexKeySpace: IndexKeySpace): void {
+  private replaceStubs(symbol: Symbol, indexKeySpace: IndexKeySpace): void {
     for (const stubId of this.stubs.values()) {
       const stub = this.values.get(stubId);
       if (
@@ -201,8 +191,8 @@ export class SymbolRegistry implements ISymbolRegistry {
       ) {
         const cacheKey = this.buildCacheKey(stub.meta);
         this.stubCache.delete(cacheKey);
-        this.values.set(stubId, Object.assign(stub, symbol));
         this.stubs.delete(stubId);
+        stub.setCanonical(symbol);
       }
     }
   }

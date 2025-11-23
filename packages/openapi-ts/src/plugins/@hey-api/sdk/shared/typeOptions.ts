@@ -35,8 +35,6 @@ export const createTypeOptions = ({
     name: 'Options',
   });
   const symbolOptions = plugin.registerSymbol({
-    exported: true,
-    kind: 'type',
     meta: {
       category: 'type',
       resource: 'client-options',
@@ -46,8 +44,8 @@ export const createTypeOptions = ({
   });
 
   const typeOptions = $.type
-    .alias(symbolOptions.placeholder)
-    .export(symbolOptions.exported)
+    .alias(symbolOptions)
+    .export()
     .$if(
       isNuxtClient,
       (t) =>

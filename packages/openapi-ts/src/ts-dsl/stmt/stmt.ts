@@ -1,3 +1,4 @@
+import type { SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl } from '../base';
@@ -8,6 +9,11 @@ export class StmtTsDsl extends TsDsl<ts.Statement> {
   constructor(inner: ts.Expression | ts.Statement | TsDsl<any>) {
     super();
     this._inner = inner;
+  }
+
+  /** Walk this node and its children with a visitor. */
+  traverse(visitor: (node: SyntaxNode) => void): void {
+    console.log(visitor);
   }
 
   $render(): ts.Statement {

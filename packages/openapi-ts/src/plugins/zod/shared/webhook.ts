@@ -116,7 +116,6 @@ export const irWebhookToAst = ({
 
     const ast = getAst(schemaData, state.path.value);
     const symbol = plugin.registerSymbol({
-      exported: true,
       meta: {
         category: 'schema',
         path: state.path.value,
@@ -133,8 +132,6 @@ export const irWebhookToAst = ({
     });
     const typeInferSymbol = plugin.config.webhooks.types.infer.enabled
       ? plugin.registerSymbol({
-          exported: true,
-          kind: 'type',
           meta: {
             category: 'type',
             path: state.path.value,

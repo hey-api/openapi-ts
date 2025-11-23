@@ -56,8 +56,7 @@ const createRegistryClass = ({
 }): TsDsl => {
   const defaultKey = 'defaultKey';
   const instances = 'instances';
-  return $.class(symbol.placeholder)
-    .export(symbol.exported)
+  return $.class(symbol)
     .generic('T')
     .field(defaultKey, (f) =>
       f.private().readonly().assign($.literal('default')),
@@ -122,8 +121,7 @@ const createClientClass = ({
     category: 'external',
     resource: 'client.Client',
   });
-  return $.class(symbol.placeholder)
-    .export(symbol.exported)
+  return $.class(symbol)
     .field('client', (f) => f.protected().type(symbolClient.placeholder))
     .newline()
     .init((i) =>
@@ -311,8 +309,6 @@ export const generateClassSdk = ({
 
   const symbolHeyApiClient = plugin.config.instance
     ? plugin.registerSymbol({
-        exported: false,
-        kind: 'class',
         meta: {
           category: 'utility',
           resource: 'class',
@@ -324,8 +320,6 @@ export const generateClassSdk = ({
     : undefined;
   const symbolHeyApiRegistry = plugin.config.instance
     ? plugin.registerSymbol({
-        exported: false,
-        kind: 'class',
         meta: {
           category: 'utility',
           resource: 'class',
@@ -420,8 +414,6 @@ export const generateClassSdk = ({
     }
 
     const symbol = plugin.registerSymbol({
-      exported: true,
-      kind: 'class',
       meta: {
         category: 'utility',
         resource: 'class',
@@ -485,15 +477,15 @@ export const generateClassSdk = ({
       currentClass.nodes.unshift(registryNode, $.newline());
     }
 
-    const node = $.class(symbol.placeholder)
-      .export(symbol.exported)
-      .extends(symbolHeyApiClient?.placeholder)
+    const node = $.class(symbol)
+      .export()
+      .extends(symbolHeyApiClient)
       .$if(currentClass.root && isAngularClient, (c) =>
         c.decorator(
           plugin.referenceSymbol({
             category: 'external',
             resource: '@angular/core.Injectable',
-          }).placeholder,
+          }),
           $.object().prop('providedIn', $.literal('root')),
         ),
       )

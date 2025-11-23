@@ -85,14 +85,13 @@ export const createClient: PluginHandler = ({ plugin }) => {
   ];
 
   const symbolClient = plugin.registerSymbol({
-    exported: true,
     meta: {
       category: 'client',
     },
     name: 'client',
   });
-  const statement = $.const(symbolClient.placeholder)
-    .export(symbolClient.exported)
+  const statement = $.const(symbolClient)
+    .export()
     .assign(
       $(symbolCreateClient.placeholder).$if(
         symbolCreateClientConfig,

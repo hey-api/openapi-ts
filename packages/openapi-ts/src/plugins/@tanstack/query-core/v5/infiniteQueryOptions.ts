@@ -36,7 +36,7 @@ const createInfiniteParamsFunction = ({
     }),
   });
 
-  const fn = $.const(symbolCreateInfiniteParams.placeholder).assign(
+  const fn = $.const(symbolCreateInfiniteParams).assign(
     $.func()
       .generic('K', (g) =>
         g.extends(
@@ -169,7 +169,6 @@ export const createInfiniteQueryOptions = ({
   });
 
   const symbolInfiniteQueryKey = plugin.registerSymbol({
-    exported: true,
     name: buildName({
       config: plugin.config.infiniteQueryKeys,
       name: operation.id,
@@ -231,14 +230,13 @@ export const createInfiniteQueryOptions = ({
   }
 
   const symbolInfiniteQueryOptionsFn = plugin.registerSymbol({
-    exported: true,
     name: buildName({
       config: plugin.config.infiniteQueryOptions,
       name: operation.id,
     }),
   });
-  const statement = $.const(symbolInfiniteQueryOptionsFn.placeholder)
-    .export(symbolInfiniteQueryOptionsFn.exported)
+  const statement = $.const(symbolInfiniteQueryOptionsFn)
+    .export()
     .$if(plugin.config.comments && createOperationComment(operation), (c, v) =>
       c.doc(v),
     )

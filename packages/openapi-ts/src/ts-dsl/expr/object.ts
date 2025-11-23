@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
+import type { SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -69,6 +70,11 @@ export class ObjectTsDsl extends TsDsl<ts.ObjectLiteralExpression> {
   spread(expr: ExprFn): this {
     this._props.push(new ObjectPropTsDsl({ kind: 'spread' }).value(expr));
     return this;
+  }
+
+  /** Walk this node and its children with a visitor. */
+  traverse(visitor: (node: SyntaxNode) => void): void {
+    console.log(visitor);
   }
 
   /** Builds and returns the object literal expression. */

@@ -5,7 +5,6 @@ import type { SchemaWithType } from '~/plugins';
 import { toRefs } from '~/plugins/shared/utils/refs';
 import type { MaybeTsDsl, TypeTsDsl } from '~/ts-dsl';
 import { $ } from '~/ts-dsl';
-import { pathToJsonPointer, refToName } from '~/utils/ref';
 
 import { createClientOptions } from '../shared/clientOptions';
 import { exportType } from '../shared/export';
@@ -29,7 +28,7 @@ export const irSchemaToAst = ({
       resource: 'definition',
       resourceId: schema.$ref,
     });
-    return $.type(symbol.placeholder);
+    return $.type(symbol);
   }
 
   if (schema.type) {
@@ -72,31 +71,10 @@ const handleComponent = ({
   schema: IR.SchemaObject;
 }) => {
   const type = irSchemaToAst({ plugin, schema, state });
-
-  // Don't tag enums as 'type' since they export runtime artifacts (values)
-  const isEnum = schema.type === 'enum' && plugin.config.enums.enabled;
-
-  const $ref = pathToJsonPointer(state.path.value);
-  const symbol = plugin.registerSymbol({
-    exported: true,
-    kind: isEnum ? undefined : 'type',
-    meta: {
-      category: 'type',
-      path: state.path.value,
-      resource: 'definition',
-      resourceId: $ref,
-      tags: state.tags?.value,
-      tool: 'typescript',
-    },
-    name: buildName({
-      config: plugin.config.definitions,
-      name: refToName($ref),
-    }),
-  });
   exportType({
     plugin,
     schema,
-    symbol,
+    state,
     type,
   });
 };
@@ -104,8 +82,6 @@ const handleComponent = ({
 export const handlerV1: HeyApiTypeScriptPlugin['Handler'] = ({ plugin }) => {
   // reserve identifier for ClientOptions
   const symbolClientOptions = plugin.registerSymbol({
-    exported: true,
-    kind: 'type',
     meta: {
       category: 'type',
       resource: 'client',
@@ -121,8 +97,6 @@ export const handlerV1: HeyApiTypeScriptPlugin['Handler'] = ({ plugin }) => {
   });
   // reserve identifier for Webhooks
   const symbolWebhooks = plugin.registerSymbol({
-    exported: true,
-    kind: 'type',
     meta: {
       category: 'type',
       resource: 'webhook',

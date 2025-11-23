@@ -72,14 +72,13 @@ export const createMutationOptions = ({
       o.prop('meta', v),
     );
   const symbolMutationOptions = plugin.registerSymbol({
-    exported: true,
     name: buildName({
       config: plugin.config.mutationOptions,
       name: operation.id,
     }),
   });
-  const statement = $.const(symbolMutationOptions.placeholder)
-    .export(symbolMutationOptions.exported)
+  const statement = $.const(symbolMutationOptions)
+    .export()
     .$if(plugin.config.comments && createOperationComment(operation), (c, v) =>
       c.doc(v),
     )

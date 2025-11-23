@@ -1,12 +1,12 @@
 import path from 'node:path';
 
-import type { IProjectRenderMeta } from '../extensions/types';
+import type { IProjectRenderMeta } from '../extensions';
 import { FileRegistry } from '../files/registry';
 import type { IFileOut, IFileSelector } from '../files/types';
-import type { IOutput } from '../output/types';
+import type { IOutput } from '../output';
 import type { IRenderer } from '../renderer/types';
 import { SymbolRegistry } from '../symbols/registry';
-import type { ISymbolOut } from '../symbols/types';
+import type { Symbol } from '../symbols/symbol';
 import type { IProject } from './types';
 
 const externalSourceSymbol = '@';
@@ -133,7 +133,7 @@ export class Project implements IProject {
     return Array.from(fileIds ?? []).map((fileId) => this.files.get(fileId)!);
   }
 
-  private symbolToFileSelector(symbol: ISymbolOut): IFileSelector {
+  private symbolToFileSelector(symbol: Symbol): IFileSelector {
     if (symbol.external) {
       return [externalSourceSymbol, symbol.external];
     }

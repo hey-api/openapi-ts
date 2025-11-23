@@ -28,7 +28,6 @@ export const createUseQuery = ({
   }
 
   const symbolUseQueryFn = plugin.registerSymbol({
-    exported: true,
     name: buildName({
       config: plugin.config.useQuery,
       name: operation.id,
@@ -53,8 +52,8 @@ export const createUseQuery = ({
     role: 'queryOptions',
     tool: plugin.name,
   });
-  const statement = $.const(symbolUseQueryFn.placeholder)
-    .export(symbolUseQueryFn.exported)
+  const statement = $.const(symbolUseQueryFn)
+    .export()
     .$if(plugin.config.comments && createOperationComment(operation), (c, v) =>
       c.doc(v),
     )

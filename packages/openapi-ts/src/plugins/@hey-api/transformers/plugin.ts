@@ -337,7 +337,6 @@ export const handler: HeyApiTransformersPlugin['Handler'] = ({ plugin }) => {
       });
       if (!nodes.length) return;
       const symbol = plugin.registerSymbol({
-        exported: true,
         meta: {
           category: 'transform',
           resource: 'operation',
@@ -352,8 +351,8 @@ export const handler: HeyApiTransformersPlugin['Handler'] = ({ plugin }) => {
           name: operation.id,
         }),
       });
-      const value = $.const(symbol.placeholder)
-        .export(symbol.exported)
+      const value = $.const(symbol)
+        .export()
         .assign(
           // TODO: parser - add types, generate types without transforms
           $.func()

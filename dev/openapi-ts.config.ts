@@ -39,8 +39,9 @@ export default defineConfig(() => {
             '3.1.x',
             // 'circular.yaml',
             // 'dutchie.json',
+            'enum-names-values.yaml',
             // 'invalid',
-            'full.yaml',
+            // 'full.yaml',
             // 'object-property-names.yaml',
             // 'openai.yaml',
             // 'opencode.yaml',
@@ -217,7 +218,7 @@ export default defineConfig(() => {
         {
           // baseUrl: false,
           // exportFromIndex: true,
-          name: '@hey-api/client-angular',
+          // name: '@hey-api/client-angular',
           // runtimeConfigPath: path.resolve(__dirname, 'hey-api.ts'),
           // runtimeConfigPath: './src/hey-api.ts',
           // strictBaseUrl: true,
@@ -265,7 +266,7 @@ export default defineConfig(() => {
           name: '@hey-api/sdk',
           // operationId: false,
           // paramsStructure: 'flat',
-          responseStyle: 'data',
+          // responseStyle: 'data',
           // signature: 'auto',
           // signature: 'client',
           // signature: 'object',
@@ -293,13 +294,13 @@ export default defineConfig(() => {
         {
           // bigInt: true,
           dates: true,
-          name: '@hey-api/transformers',
+          // name: '@hey-api/transformers',
         },
         {
-          name: 'fastify',
+          // name: 'fastify',
         },
         {
-          name: 'swr',
+          // name: 'swr',
         },
         {
           // case: 'SCREAMING_SNAKE_CASE',
@@ -362,7 +363,7 @@ export default defineConfig(() => {
           },
         },
         {
-          name: 'arktype',
+          // name: 'arktype',
           types: {
             infer: true,
           },

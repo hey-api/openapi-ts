@@ -54,7 +54,6 @@ export const createQueryOptions = ({
   });
 
   const symbolQueryKey = plugin.registerSymbol({
-    exported: true,
     name: buildName({
       config: plugin.config.queryKeys,
       name: operation.id,
@@ -107,7 +106,6 @@ export const createQueryOptions = ({
     );
 
   const symbolQueryOptionsFn = plugin.registerSymbol({
-    exported: plugin.config.queryOptions.exported,
     meta: {
       category: 'hook',
       resource: 'operation',
@@ -122,8 +120,8 @@ export const createQueryOptions = ({
   });
   // TODO: add type error
   // TODO: AxiosError<PutSubmissionMetaError>
-  const statement = $.const(symbolQueryOptionsFn.placeholder)
-    .export(symbolQueryOptionsFn.exported)
+  const statement = $.const(symbolQueryOptionsFn)
+    .export(plugin.config.queryOptions.exported)
     .$if(plugin.config.comments && createOperationComment(operation), (c, v) =>
       c.doc(v),
     )

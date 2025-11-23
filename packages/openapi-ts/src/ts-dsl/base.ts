@@ -1,13 +1,28 @@
+// TODO: symbol should be protected, but needs to be public to satisfy types
+import type { Symbol, SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 export type MaybeArray<T> = T | ReadonlyArray<T>;
 
-export interface ITsDsl<T extends ts.Node = ts.Node> {
+export interface ITsDsl<T extends ts.Node = ts.Node> extends SyntaxNode {
+  /** Render this DSL node into a concrete TypeScript AST node. */
   $render(): T;
 }
 
+export type Constructor<T = ITsDsl> = new (...args: ReadonlyArray<any>) => T;
+
 export abstract class TsDsl<T extends ts.Node = ts.Node> implements ITsDsl<T> {
+  /** Walk this node and its children with a visitor. */
+  abstract traverse(visitor: (node: SyntaxNode) => void): void;
+
+  /** Render this DSL node into a concrete TypeScript AST node. */
   abstract $render(): T;
+
+  /** Parent DSL node in the constructed syntax tree. */
+  protected parent?: TsDsl<any>;
+
+  /** The codegen symbol associated with this node. */
+  symbol?: Symbol;
 
   /** Conditionally applies a callback to this builder. */
   $if<T extends TsDsl, V, R extends TsDsl = T>(
@@ -84,6 +99,33 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements ITsDsl<T> {
     return this;
   }
 
+  /** Returns all locally declared names within this node. */
+  getLocalNames(): Iterable<string> {
+    return [];
+  }
+
+  /** Returns all symbols referenced by this node (directly or through children). */
+  getSymbols(): Iterable<Symbol> {
+    return [];
+  }
+
+  /** Rewrites internal identifier nodes after final name resolution. */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  rewriteIdentifiers(_map: Map<string, string>): void {
+    // noop
+  }
+
+  /** Assigns the parent DSL node, enforcing a single-parent invariant. */
+  setParent(parent: TsDsl<any>): this {
+    if (this.parent && this.parent !== parent) {
+      throw new Error(
+        `DSL node already has a parent (${this.parent.constructor.name}); cannot reassign to ${parent.constructor.name}.`,
+      );
+    }
+    this.parent = parent;
+    return this;
+  }
+
   protected $maybeId<T extends string | ts.Expression>(
     expr: T,
   ): T extends string ? ts.Identifier : T {
@@ -132,6 +174,18 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements ITsDsl<T> {
     return this.unwrap(value as any) as TypeOfMaybe<I>;
   }
 
+  /** Returns the root symbol associated with this DSL subtree. */
+  protected getRootSymbol(): Symbol | undefined {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    let n: TsDsl<any> | undefined = this;
+    while (n) {
+      if (n.symbol) return n.symbol;
+      n = n.parent;
+    }
+    return undefined;
+  }
+
+  /** Unwraps nested DSL nodes into raw TypeScript AST nodes. */
   protected unwrap<I>(value: I): I extends TsDsl<infer N> ? N : I {
     return (
       value instanceof TsDsl ? value.$render() : value

@@ -1,9 +1,7 @@
-import type { ITsDsl, MaybeArray } from '../base';
+import type { Constructor, ITsDsl, MaybeArray } from '../base';
 import { HintTsDsl } from '../layout/hint';
 
-export function HintMixin<
-  TBase extends new (...args: ReadonlyArray<any>) => ITsDsl,
->(Base: TBase) {
+export function HintMixin<TBase extends Constructor>(Base: TBase) {
   const $renderBase = Base.prototype.$render;
 
   class Mixin extends Base {
@@ -19,9 +17,6 @@ export function HintMixin<
       return this._hint ? this._hint.apply(node) : node;
     }
   }
-
-  // @ts-expect-error
-  Mixin.prototype.$render.mixin = true;
 
   return Mixin;
 }

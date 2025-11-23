@@ -1,3 +1,4 @@
+import type { SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -63,6 +64,11 @@ export class TypeMappedTsDsl extends TypeTsDsl<ts.MappedTypeNode> {
   required(): this {
     this.questionToken = new TokenTsDsl().minus();
     return this;
+  }
+
+  /** Walk this node and its children with a visitor. */
+  traverse(visitor: (node: SyntaxNode) => void): void {
+    console.log(visitor);
   }
 
   /** Sets the mapped value type: `[K in X]: ValueType` */

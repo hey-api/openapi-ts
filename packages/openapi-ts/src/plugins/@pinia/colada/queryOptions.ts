@@ -51,7 +51,6 @@ export const createQueryOptions = ({
   let keyExpression: ReturnType<typeof $.call>;
   if (plugin.config.queryKeys.enabled) {
     const symbolQueryKey = plugin.registerSymbol({
-      exported: true,
       name: buildName({
         config: plugin.config.queryKeys,
         name: operation.id,
@@ -125,7 +124,6 @@ export const createQueryOptions = ({
     );
 
   const symbolQueryOptionsFn = plugin.registerSymbol({
-    exported: true,
     meta: {
       category: 'hook',
       resource: 'operation',
@@ -142,8 +140,8 @@ export const createQueryOptions = ({
     category: 'external',
     resource: `${plugin.name}.defineQueryOptions`,
   });
-  const statement = $.const(symbolQueryOptionsFn.placeholder)
-    .export(symbolQueryOptionsFn.exported)
+  const statement = $.const(symbolQueryOptionsFn)
+    .export()
     .$if(plugin.config.comments && createOperationComment(operation), (c, v) =>
       c.doc(v),
     )

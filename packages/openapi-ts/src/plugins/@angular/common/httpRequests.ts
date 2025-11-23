@@ -133,7 +133,6 @@ const generateAngularClassRequests = ({
       resource: '@angular/core.Injectable',
     });
     const symbolClass = plugin.registerSymbol({
-      exported: true,
       meta: {
         category: 'utility',
         resource: 'class',
@@ -148,11 +147,11 @@ const generateAngularClassRequests = ({
         name: currentClass.className,
       }),
     });
-    const node = $.class(symbolClass.placeholder)
-      .export(symbolClass.exported)
+    const node = $.class(symbolClass)
+      .export()
       .$if(currentClass.root, (c) =>
         c.decorator(
-          symbolInjectable.placeholder,
+          symbolInjectable,
           $.object().prop('providedIn', $.literal('root')),
         ),
       )
@@ -181,7 +180,6 @@ const generateAngularFunctionRequests = ({
       });
 
       const symbol = plugin.registerSymbol({
-        exported: true,
         meta: {
           category: 'utility',
           resource: 'operation',
@@ -269,10 +267,10 @@ const generateAngularRequestMethod = ({
     .param('options', (p) =>
       p
         .required(isRequiredOptions)
-        .type(`${symbolOptions.placeholder}<${dataType}, ThrowOnError>`),
+        .type($.type(symbolOptions).generic(dataType).generic('ThrowOnError')),
     )
     .generic('ThrowOnError', (g) => g.extends('boolean').default(false))
-    .returns(`${symbolHttpRequest.placeholder}<unknown>`)
+    .returns($.type(symbolHttpRequest).generic('unknown'))
     .do(
       $.return(
         generateRequestCallExpression({
@@ -314,18 +312,20 @@ const generateAngularRequestFunction = ({
   });
   const dataType = symbolDataType?.placeholder || 'unknown';
 
-  return $.const(symbol.placeholder)
-    .export(symbol.exported)
+  return $.const(symbol)
+    .export()
     .$if(createOperationComment(operation), (c, v) => c.doc(v))
     .assign(
       $.func()
         .param('options', (p) =>
           p
             .required(isRequiredOptions)
-            .type(`${symbolOptions.placeholder}<${dataType}, ThrowOnError>`),
+            .type(
+              $.type(symbolOptions).generic(dataType).generic('ThrowOnError'),
+            ),
         )
         .generic('ThrowOnError', (g) => g.extends('boolean').default(false))
-        .returns(`${symbolHttpRequest.placeholder}<unknown>`)
+        .returns($.type(symbolHttpRequest).generic('unknown'))
         .do(
           $.return(
             generateRequestCallExpression({

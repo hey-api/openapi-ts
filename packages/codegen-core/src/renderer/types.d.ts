@@ -1,4 +1,4 @@
-import type { IProjectRenderMeta } from '../extensions/types';
+import type { IProjectRenderMeta } from '../extensions';
 import type { IFileOut } from '../files/types';
 import type { IProject } from '../project/types';
 

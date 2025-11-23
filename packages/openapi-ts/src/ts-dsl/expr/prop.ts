@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging */
+import type { SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -33,6 +34,11 @@ export class ObjectPropTsDsl extends TsDsl<ts.ObjectLiteralElementLike> {
   /** Returns true when all required builder calls are present. */
   get isValid(): boolean {
     return this.missingRequiredCalls().length === 0;
+  }
+
+  /** Walk this node and its children with a visitor. */
+  traverse(visitor: (node: SyntaxNode) => void): void {
+    console.log(visitor);
   }
 
   value(value: Expr | Stmt | ((p: ObjectPropTsDsl) => void)) {

@@ -16,8 +16,8 @@ export const createWebhooks = ({
   if (!webhookNames.length) return;
 
   const node = $.type
-    .alias(symbolWebhooks.placeholder)
-    .export(symbolWebhooks.exported)
+    .alias(symbolWebhooks)
+    .export()
     .type($.type.or(...webhookNames));
   plugin.setSymbolValue(symbolWebhooks, node);
 };

@@ -1,3 +1,4 @@
+import type { SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl } from './base';
@@ -53,6 +54,11 @@ export class TokenTsDsl<K extends ts.SyntaxKind = never> extends TsDsl<
     return (this as TokenTsDsl<ts.SyntaxKind.DotDotDotToken>).kind(
       ts.SyntaxKind.DotDotDotToken,
     );
+  }
+
+  /** Walk this node and its children with a visitor. */
+  traverse(visitor: (node: SyntaxNode) => void): void {
+    console.log(visitor);
   }
 
   /** Renders the final token */

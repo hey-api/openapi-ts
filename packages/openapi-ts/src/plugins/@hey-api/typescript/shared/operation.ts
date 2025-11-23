@@ -121,8 +121,6 @@ const operationToDataType = ({
   data.required = dataRequired;
 
   const symbol = plugin.registerSymbol({
-    exported: true,
-    kind: 'type',
     meta: {
       category: 'type',
       path: state.path.value,
@@ -138,8 +136,8 @@ const operationToDataType = ({
     }),
   });
   const node = $.type
-    .alias(symbol.placeholder)
-    .export(symbol.exported)
+    .alias(symbol)
+    .export()
     .type(
       irSchemaToAst({
         plugin,
@@ -164,8 +162,6 @@ export const operationToType = ({
 
   if (errors) {
     const symbolErrors = plugin.registerSymbol({
-      exported: true,
-      kind: 'type',
       meta: {
         category: 'type',
         path: state.path.value,
@@ -181,8 +177,8 @@ export const operationToType = ({
       }),
     });
     const node = $.type
-      .alias(symbolErrors.placeholder)
-      .export(symbolErrors.exported)
+      .alias(symbolErrors)
+      .export()
       .type(
         irSchemaToAst({
           plugin,
@@ -194,8 +190,6 @@ export const operationToType = ({
 
     if (error) {
       const symbol = plugin.registerSymbol({
-        exported: true,
-        kind: 'type',
         meta: {
           category: 'type',
           path: state.path.value,
@@ -214,8 +208,8 @@ export const operationToType = ({
         }),
       });
       const node = $.type
-        .alias(symbol.placeholder)
-        .export(symbol.exported)
+        .alias(symbol)
+        .export()
         .type(
           $.type(symbolErrors.placeholder).idx(
             $.type(symbolErrors.placeholder).keyof(),
@@ -227,8 +221,6 @@ export const operationToType = ({
 
   if (responses) {
     const symbolResponses = plugin.registerSymbol({
-      exported: true,
-      kind: 'type',
       meta: {
         category: 'type',
         path: state.path.value,
@@ -244,8 +236,8 @@ export const operationToType = ({
       }),
     });
     const node = $.type
-      .alias(symbolResponses.placeholder)
-      .export(symbolResponses.exported)
+      .alias(symbolResponses)
+      .export()
       .type(
         irSchemaToAst({
           plugin,
@@ -257,8 +249,6 @@ export const operationToType = ({
 
     if (response) {
       const symbol = plugin.registerSymbol({
-        exported: true,
-        kind: 'type',
         meta: {
           category: 'type',
           path: state.path.value,
@@ -277,8 +267,8 @@ export const operationToType = ({
         }),
       });
       const node = $.type
-        .alias(symbol.placeholder)
-        .export(symbol.exported)
+        .alias(symbol)
+        .export()
         .type(
           $.type(symbolResponses.placeholder).idx(
             $.type(symbolResponses.placeholder).keyof(),
