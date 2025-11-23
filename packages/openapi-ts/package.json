@@ -40,13 +40,13 @@
   ],
   "type": "module",
   "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
   "exports": {
     ".": {
       "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
       },
       "require": {
         "types": "./dist/index.d.cts",
@@ -55,8 +55,8 @@
     },
     "./internal": {
       "import": {
-        "types": "./dist/internal.d.ts",
-        "default": "./dist/internal.js"
+        "types": "./dist/internal.d.mts",
+        "default": "./dist/internal.mjs"
       },
       "require": {
         "types": "./dist/internal.d.cts",

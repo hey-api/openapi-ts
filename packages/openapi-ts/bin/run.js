@@ -5,10 +5,10 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const target = path.join(__dirname, '..', 'dist', 'run.js');
+const target = path.join(__dirname, '..', 'dist', 'run.mjs');
 
 if (!fs.existsSync(target)) {
-  console.error('openapi-ts not built (expect dist/run.js)');
+  console.error('openapi-ts not built (expect dist/run.mjs)');
   process.exit(1);
 }
 
