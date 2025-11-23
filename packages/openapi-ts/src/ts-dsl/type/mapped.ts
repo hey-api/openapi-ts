@@ -5,7 +5,9 @@ import type { MaybeTsDsl } from '../base';
 import { TypeTsDsl } from '../base';
 import { TokenTsDsl } from '../token';
 
-export class TypeMappedTsDsl extends TypeTsDsl<ts.MappedTypeNode> {
+const Mixed = TypeTsDsl<ts.MappedTypeNode>;
+
+export class TypeMappedTsDsl extends Mixed {
   protected questionToken?: TokenTsDsl<
     | ts.SyntaxKind.QuestionToken
     | ts.SyntaxKind.PlusToken
@@ -66,7 +68,6 @@ export class TypeMappedTsDsl extends TypeTsDsl<ts.MappedTypeNode> {
     return this;
   }
 
-  /** Walk this node and its children with a visitor. */
   traverse(visitor: (node: SyntaxNode) => void): void {
     console.log(visitor);
   }
@@ -77,7 +78,7 @@ export class TypeMappedTsDsl extends TypeTsDsl<ts.MappedTypeNode> {
     return this;
   }
 
-  $render(): ts.MappedTypeNode {
+  protected override _render() {
     this.$validate();
     return ts.factory.createMappedTypeNode(
       this.$node(this.readonlyToken),

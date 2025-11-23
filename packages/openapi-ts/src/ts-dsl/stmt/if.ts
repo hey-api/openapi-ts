@@ -1,13 +1,13 @@
-/* eslint-disable @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging */
 import type { SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
-import { mixin } from '../mixins/apply';
 import { DoMixin } from '../mixins/do';
 
-export class IfTsDsl extends TsDsl<ts.IfStatement> {
+const Mixed = DoMixin(TsDsl<ts.IfStatement>);
+
+export class IfTsDsl extends Mixed {
   protected _condition?: string | MaybeTsDsl<ts.Expression>;
   protected _else?: ReadonlyArray<MaybeTsDsl<ts.Statement>>;
 
@@ -26,12 +26,11 @@ export class IfTsDsl extends TsDsl<ts.IfStatement> {
     return this;
   }
 
-  /** Walk this node and its children with a visitor. */
   traverse(visitor: (node: SyntaxNode) => void): void {
     console.log(visitor);
   }
 
-  $render(): ts.IfStatement {
+  protected override _render() {
     if (!this._condition) throw new Error('Missing condition in if');
 
     const thenStmts = this.$do();
@@ -61,6 +60,3 @@ export class IfTsDsl extends TsDsl<ts.IfStatement> {
     return ts.factory.createIfStatement(condition, thenNode, elseNode);
   }
 }
-
-export interface IfTsDsl extends DoMixin {}
-mixin(IfTsDsl, DoMixin);

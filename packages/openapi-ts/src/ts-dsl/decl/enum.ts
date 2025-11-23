@@ -1,25 +1,20 @@
-/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
 import type { Symbol, SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
-import { mixin } from '../mixins/apply';
 import { DocMixin } from '../mixins/doc';
-import {
-  ConstMixin,
-  createModifierAccessor,
-  ExportMixin,
-} from '../mixins/modifiers';
+import { ConstMixin, ExportMixin } from '../mixins/modifiers';
 import { EnumMemberTsDsl } from './member';
 
 type Value = string | number | MaybeTsDsl<ts.Expression>;
 type ValueFn = Value | ((m: EnumMemberTsDsl) => void);
 
-export class EnumTsDsl extends TsDsl<ts.EnumDeclaration> {
+const Mixed = ConstMixin(DocMixin(ExportMixin(TsDsl<ts.EnumDeclaration>)));
+
+export class EnumTsDsl extends Mixed {
   private _members: Array<EnumMemberTsDsl> = [];
   private _name: string | ts.Identifier;
-  protected modifiers = createModifierAccessor(this);
 
   constructor(name: Symbol | string, fn?: (e: EnumTsDsl) => void) {
     super();
@@ -47,20 +42,15 @@ export class EnumTsDsl extends TsDsl<ts.EnumDeclaration> {
     return this;
   }
 
-  /** Walk this node and its children with a visitor. */
   traverse(visitor: (node: SyntaxNode) => void): void {
     console.log(visitor);
   }
 
-  /** Renders the enum declaration. */
-  $render(): ts.EnumDeclaration {
+  protected override _render() {
     return ts.factory.createEnumDeclaration(
-      this.modifiers.list(),
+      this.modifiers,
       this._name,
       this.$node(this._members),
     );
   }
 }
-
-export interface EnumTsDsl extends ConstMixin, DocMixin, ExportMixin {}
-mixin(EnumTsDsl, ConstMixin, DocMixin, ExportMixin);

@@ -1,24 +1,32 @@
-import type { Constructor, ITsDsl, MaybeArray } from '../base';
+import type ts from 'typescript';
+
+import type { MaybeArray } from '../base';
 import { HintTsDsl } from '../layout/hint';
+import type { BaseCtor, MixinCtor } from './types';
 
-export function HintMixin<TBase extends Constructor>(Base: TBase) {
-  const $renderBase = Base.prototype.$render;
+export interface HintMethods {
+  hint(lines?: MaybeArray<string>, fn?: (h: HintTsDsl) => void): this;
+}
 
-  class Mixin extends Base {
-    _hint?: HintTsDsl;
+export function HintMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
+  Base: TBase,
+) {
+  abstract class Hint extends Base {
+    protected _hint?: HintTsDsl;
 
-    hint(lines?: MaybeArray<string>, fn?: (h: HintTsDsl) => void): this {
+    protected hint(
+      lines?: MaybeArray<string>,
+      fn?: (h: HintTsDsl) => void,
+    ): this {
       this._hint = new HintTsDsl(lines, fn);
       return this;
     }
 
-    override $render(...args: Parameters<ITsDsl['$render']>) {
-      const node = $renderBase.apply(this, args);
+    protected override _render() {
+      const node = this.$render();
       return this._hint ? this._hint.apply(node) : node;
     }
   }
 
-  return Mixin;
+  return Hint as unknown as MixinCtor<TBase, HintMethods>;
 }
-
-export type HintMixin = InstanceType<ReturnType<typeof HintMixin>>;

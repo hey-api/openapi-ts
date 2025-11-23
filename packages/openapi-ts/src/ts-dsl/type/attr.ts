@@ -1,13 +1,13 @@
-/* eslint-disable @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging */
 import type { Symbol, SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TypeTsDsl } from '../base';
-import { mixin } from '../mixins/apply';
 import { TypeExprMixin } from '../mixins/type-expr';
 
-export class TypeAttrTsDsl extends TypeTsDsl<ts.QualifiedName> {
+const Mixed = TypeExprMixin(TypeTsDsl<ts.QualifiedName>);
+
+export class TypeAttrTsDsl extends Mixed {
   protected _base?: Symbol | string | MaybeTsDsl<ts.EntityName>;
   protected right: Symbol | string | ts.Identifier;
 
@@ -35,12 +35,11 @@ export class TypeAttrTsDsl extends TypeTsDsl<ts.QualifiedName> {
     return this;
   }
 
-  /** Walk this node and its children with a visitor. */
   traverse(visitor: (node: SyntaxNode) => void): void {
     console.log(visitor);
   }
 
-  $render(): ts.QualifiedName {
+  protected override _render() {
     if (!this._base) {
       throw new Error('TypeAttrTsDsl: missing base for qualified name');
     }
@@ -58,6 +57,3 @@ export class TypeAttrTsDsl extends TypeTsDsl<ts.QualifiedName> {
     return ts.factory.createQualifiedName(left, right);
   }
 }
-
-export interface TypeAttrTsDsl extends TypeExprMixin {}
-mixin(TypeAttrTsDsl, TypeExprMixin);

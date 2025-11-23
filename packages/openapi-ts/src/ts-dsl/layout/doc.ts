@@ -59,12 +59,12 @@ export class DocTsDsl extends TsDsl<ts.Node> {
     return node;
   }
 
-  /** Walk this node and its children with a visitor. */
-  traverse(visitor: (node: SyntaxNode) => void): void {
-    console.log(visitor);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  traverse(_visitor: (node: SyntaxNode) => void): void {
+    // noop
   }
 
-  $render(): ts.Node {
+  protected override _render(): ts.Node {
     // this class does not build a standalone node;
     // it modifies other nodes via `apply()`.
     // Return a dummy comment node for compliance.

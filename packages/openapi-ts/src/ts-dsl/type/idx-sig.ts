@@ -1,17 +1,16 @@
-/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
 import type { SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TypeTsDsl } from '../base';
-import { mixin } from '../mixins/apply';
 import { DocMixin } from '../mixins/doc';
-import { createModifierAccessor, ReadonlyMixin } from '../mixins/modifiers';
+import { ReadonlyMixin } from '../mixins/modifiers';
 
 type Type = string | MaybeTsDsl<ts.TypeNode>;
 
-export class TypeIdxSigTsDsl extends TypeTsDsl<ts.IndexSignatureDeclaration> {
-  protected modifiers = createModifierAccessor(this);
+const Mixed = DocMixin(ReadonlyMixin(TypeTsDsl<ts.IndexSignatureDeclaration>));
+
+export class TypeIdxSigTsDsl extends Mixed {
   protected _key?: Type;
   protected _name: string;
   protected _type?: Type;
@@ -33,7 +32,6 @@ export class TypeIdxSigTsDsl extends TypeTsDsl<ts.IndexSignatureDeclaration> {
     return this;
   }
 
-  /** Walk this node and its children with a visitor. */
   traverse(visitor: (node: SyntaxNode) => void): void {
     console.log(visitor);
   }
@@ -44,10 +42,10 @@ export class TypeIdxSigTsDsl extends TypeTsDsl<ts.IndexSignatureDeclaration> {
     return this;
   }
 
-  $render(): ts.IndexSignatureDeclaration {
+  protected override _render() {
     this.$validate();
     return ts.factory.createIndexSignature(
-      this.modifiers.list(),
+      this.modifiers,
       [
         ts.factory.createParameterDeclaration(
           undefined,
@@ -81,6 +79,3 @@ export class TypeIdxSigTsDsl extends TypeTsDsl<ts.IndexSignatureDeclaration> {
     return missing;
   }
 }
-
-export interface TypeIdxSigTsDsl extends DocMixin, ReadonlyMixin {}
-mixin(TypeIdxSigTsDsl, DocMixin, ReadonlyMixin);

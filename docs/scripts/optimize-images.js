@@ -31,19 +31,23 @@ const images = [
     ],
     source: 'bricks.png',
   },
-  // {
-  //   sizes: [
-  //     {
-  //       formats: ['png'],
-  //       width: 300,
-  //     },
-  //     {
-  //       formats: ['png'],
-  //       width: 640,
-  //     },
-  //   ],
-  //   source: 'hero.png',
-  // },
+  {
+    sizes: [
+      {
+        formats: ['png'],
+        width: 300,
+      },
+      {
+        formats: ['png'],
+        width: 640,
+      },
+      {
+        formats: ['png'],
+        width: 920,
+      },
+    ],
+    source: 'hero.png',
+  },
   {
     sizes: [
       {

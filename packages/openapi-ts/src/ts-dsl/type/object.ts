@@ -5,7 +5,9 @@ import { TypeTsDsl } from '../base';
 import { TypeIdxSigTsDsl } from './idx-sig';
 import { TypePropTsDsl } from './prop';
 
-export class TypeObjectTsDsl extends TypeTsDsl<ts.TypeNode> {
+const Mixed = TypeTsDsl<ts.TypeNode>;
+
+export class TypeObjectTsDsl extends Mixed {
   protected props: Array<TypePropTsDsl | TypeIdxSigTsDsl> = [];
 
   /** Returns true if object has at least one property or spread. */
@@ -32,12 +34,11 @@ export class TypeObjectTsDsl extends TypeTsDsl<ts.TypeNode> {
     return this;
   }
 
-  /** Walk this node and its children with a visitor. */
   traverse(visitor: (node: SyntaxNode) => void): void {
     console.log(visitor);
   }
 
-  $render(): ts.TypeNode {
+  protected override _render() {
     return ts.factory.createTypeLiteralNode(this.$node(this.props));
   }
 }

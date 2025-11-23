@@ -1,15 +1,15 @@
-/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
 import type { SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
-import { mixin } from '../mixins/apply';
 import { AsMixin } from '../mixins/as';
 import { LayoutMixin } from '../mixins/layout';
 import { LiteralTsDsl } from './literal';
 
-export class ArrayTsDsl extends TsDsl<ts.ArrayLiteralExpression> {
+const Mixed = AsMixin(LayoutMixin(TsDsl<ts.ArrayLiteralExpression>));
+
+export class ArrayTsDsl extends Mixed {
   protected _elements: Array<
     | { expr: MaybeTsDsl<ts.Expression>; kind: 'element' }
     | { expr: MaybeTsDsl<ts.Expression>; kind: 'spread' }
@@ -50,12 +50,11 @@ export class ArrayTsDsl extends TsDsl<ts.ArrayLiteralExpression> {
     return this;
   }
 
-  /** Walk this node and its children with a visitor. */
   traverse(visitor: (node: SyntaxNode) => void): void {
     console.log(visitor);
   }
 
-  $render(): ts.ArrayLiteralExpression {
+  protected override _render() {
     const elements = this._elements.map((item) => {
       const node = this.$node(item.expr);
       return item.kind === 'spread'
@@ -69,6 +68,3 @@ export class ArrayTsDsl extends TsDsl<ts.ArrayLiteralExpression> {
     );
   }
 }
-
-export interface ArrayTsDsl extends AsMixin, LayoutMixin {}
-mixin(ArrayTsDsl, AsMixin, LayoutMixin);

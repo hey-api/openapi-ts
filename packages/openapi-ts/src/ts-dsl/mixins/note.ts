@@ -1,24 +1,32 @@
-import type { Constructor, ITsDsl, MaybeArray } from '../base';
+import type ts from 'typescript';
+
+import type { MaybeArray } from '../base';
 import { NoteTsDsl } from '../layout/note';
+import type { BaseCtor, MixinCtor } from './types';
 
-export function NoteMixin<TBase extends Constructor>(Base: TBase) {
-  const $renderBase = Base.prototype.$render;
+export interface NoteMethods {
+  note(lines?: MaybeArray<string>, fn?: (h: NoteTsDsl) => void): this;
+}
 
-  class Mixin extends Base {
-    _note?: NoteTsDsl;
+export function NoteMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
+  Base: TBase,
+) {
+  abstract class Note extends Base {
+    protected _note?: NoteTsDsl;
 
-    note(lines?: MaybeArray<string>, fn?: (h: NoteTsDsl) => void): this {
+    protected note(
+      lines?: MaybeArray<string>,
+      fn?: (h: NoteTsDsl) => void,
+    ): this {
       this._note = new NoteTsDsl(lines, fn);
       return this;
     }
 
-    override $render(...args: Parameters<ITsDsl['$render']>) {
-      const node = $renderBase.apply(this, args);
+    protected override _render() {
+      const node = this.$render();
       return this._note ? this._note.apply(node) : node;
     }
   }
 
-  return Mixin;
+  return Note as unknown as MixinCtor<TBase, NoteMethods>;
 }
-
-export type NoteMixin = InstanceType<ReturnType<typeof NoteMixin>>;

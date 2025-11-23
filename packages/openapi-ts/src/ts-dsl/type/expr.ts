@@ -1,9 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
 import type { Symbol, SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TypeTsDsl } from '../base';
-import { mixin } from '../mixins/apply';
 import { TypeArgsMixin } from '../mixins/type-args';
 import {
   registerLazyAccessTypeExprFactory,
@@ -11,7 +9,9 @@ import {
 } from '../mixins/type-expr';
 import { TypeAttrTsDsl } from './attr';
 
-export class TypeExprTsDsl extends TypeTsDsl<ts.TypeReferenceNode> {
+const Mixed = TypeArgsMixin(TypeExprMixin(TypeTsDsl<ts.TypeReferenceNode>));
+
+export class TypeExprTsDsl extends Mixed {
   protected _exprInput?: Symbol | string | TypeAttrTsDsl;
 
   constructor();
@@ -29,8 +29,7 @@ export class TypeExprTsDsl extends TypeTsDsl<ts.TypeReferenceNode> {
       } else {
         this._exprInput = name;
         if (typeof name !== 'string') {
-          const symbol = this.getRootSymbol();
-          if (symbol) symbol.addDependency(name);
+          this.getRootSymbol().addDependency(name);
         }
         fn?.(this);
       }
@@ -47,12 +46,11 @@ export class TypeExprTsDsl extends TypeTsDsl<ts.TypeReferenceNode> {
     return this;
   }
 
-  /** Walk this node and its children with a visitor. */
   traverse(visitor: (node: SyntaxNode) => void): void {
     console.log(visitor);
   }
 
-  $render(): ts.TypeReferenceNode {
+  protected override _render() {
     if (!this._exprInput) throw new Error('TypeExpr must have an expression');
     const typeName =
       typeof this._exprInput === 'string' ||
@@ -66,9 +64,6 @@ export class TypeExprTsDsl extends TypeTsDsl<ts.TypeReferenceNode> {
     );
   }
 }
-
-export interface TypeExprTsDsl extends TypeArgsMixin, TypeExprMixin {}
-mixin(TypeExprTsDsl, TypeArgsMixin, TypeExprMixin);
 
 registerLazyAccessTypeExprFactory(
   (...args) =>

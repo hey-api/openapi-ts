@@ -1,18 +1,17 @@
-/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
 import type { SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TypeTsDsl } from '../base';
-import { mixin } from '../mixins/apply';
 import { DocMixin } from '../mixins/doc';
-import { createModifierAccessor, ReadonlyMixin } from '../mixins/modifiers';
+import { ReadonlyMixin } from '../mixins/modifiers';
 import { OptionalMixin } from '../mixins/optional';
 import { TokenTsDsl } from '../token';
 import { safePropName } from '../utils/prop';
 
-export class TypePropTsDsl extends TypeTsDsl<ts.TypeElement> {
-  protected modifiers = createModifierAccessor(this);
+const Mixed = DocMixin(OptionalMixin(ReadonlyMixin(TypeTsDsl<ts.TypeElement>)));
+
+export class TypePropTsDsl extends Mixed {
   protected name: string;
   protected _type?: string | MaybeTsDsl<ts.TypeNode>;
 
@@ -22,7 +21,6 @@ export class TypePropTsDsl extends TypeTsDsl<ts.TypeElement> {
     fn(this);
   }
 
-  /** Walk this node and its children with a visitor. */
   traverse(visitor: (node: SyntaxNode) => void): void {
     console.log(visitor);
   }
@@ -33,19 +31,15 @@ export class TypePropTsDsl extends TypeTsDsl<ts.TypeElement> {
     return this;
   }
 
-  /** Builds and returns the property signature. */
-  $render(): ts.TypeElement {
+  protected override _render() {
     if (!this._type) {
       throw new Error(`Type not specified for property '${this.name}'`);
     }
     return ts.factory.createPropertySignature(
-      this.modifiers.list(),
+      this.modifiers,
       safePropName(this.name),
       this._optional ? this.$node(new TokenTsDsl().optional()) : undefined,
       this.$type(this._type),
     );
   }
 }
-
-export interface TypePropTsDsl extends DocMixin, OptionalMixin, ReadonlyMixin {}
-mixin(TypePropTsDsl, DocMixin, OptionalMixin, ReadonlyMixin);

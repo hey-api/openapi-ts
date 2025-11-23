@@ -2,88 +2,114 @@ import type ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { BinaryTsDsl } from '../expr/binary';
+import type { BaseCtor, MixinCtor } from './types';
 
-type This = string | MaybeTsDsl<ts.Expression>;
 type Expr = string | MaybeTsDsl<ts.Expression>;
 
-export class OperatorMixin {
+export interface OperatorMethods {
   /** Logical AND — `this && expr` */
-  and(this: This, expr: Expr): BinaryTsDsl {
-    return new BinaryTsDsl(this).and(expr);
-  }
-
+  and(expr: Expr): BinaryTsDsl;
   /** Creates an assignment expression (e.g. `this = expr`). */
-  assign(this: This, expr: Expr): BinaryTsDsl {
-    return new BinaryTsDsl(this, '=', expr);
-  }
-
+  assign(expr: Expr): BinaryTsDsl;
   /** Nullish coalescing — `this ?? expr` */
-  coalesce(this: This, expr: Expr): BinaryTsDsl {
-    return new BinaryTsDsl(this).coalesce(expr);
-  }
-
+  coalesce(expr: Expr): BinaryTsDsl;
   /** Division — `this / expr` */
-  div(this: This, expr: Expr): BinaryTsDsl {
-    return new BinaryTsDsl(this).div(expr);
-  }
-
+  div(expr: Expr): BinaryTsDsl;
   /** Strict equality — `this === expr` */
-  eq(this: This, expr: Expr): BinaryTsDsl {
-    return new BinaryTsDsl(this).eq(expr);
-  }
-
+  eq(expr: Expr): BinaryTsDsl;
   /** Greater than — `this > expr` */
-  gt(this: This, expr: Expr): BinaryTsDsl {
-    return new BinaryTsDsl(this).gt(expr);
-  }
-
+  gt(expr: Expr): BinaryTsDsl;
   /** Greater than or equal — `this >= expr` */
-  gte(this: This, expr: Expr): BinaryTsDsl {
-    return new BinaryTsDsl(this).gte(expr);
-  }
-
+  gte(expr: Expr): BinaryTsDsl;
   /** Loose equality — `this == expr` */
-  looseEq(this: This, expr: Expr): BinaryTsDsl {
-    return new BinaryTsDsl(this).looseEq(expr);
-  }
-
+  looseEq(expr: Expr): BinaryTsDsl;
   /** Loose inequality — `this != expr` */
-  looseNeq(this: This, expr: Expr): BinaryTsDsl {
-    return new BinaryTsDsl(this).looseNeq(expr);
-  }
-
+  looseNeq(expr: Expr): BinaryTsDsl;
   /** Less than — `this < expr` */
-  lt(this: This, expr: Expr): BinaryTsDsl {
-    return new BinaryTsDsl(this).lt(expr);
-  }
-
+  lt(expr: Expr): BinaryTsDsl;
   /** Less than or equal — `this <= expr` */
-  lte(this: This, expr: Expr): BinaryTsDsl {
-    return new BinaryTsDsl(this).lte(expr);
-  }
-
+  lte(expr: Expr): BinaryTsDsl;
   /** Subtraction — `this - expr` */
-  minus(this: This, expr: Expr): BinaryTsDsl {
-    return new BinaryTsDsl(this).minus(expr);
-  }
-
+  minus(expr: Expr): BinaryTsDsl;
   /** Strict inequality — `this !== expr` */
-  neq(this: This, expr: Expr): BinaryTsDsl {
-    return new BinaryTsDsl(this).neq(expr);
-  }
-
+  neq(expr: Expr): BinaryTsDsl;
   /** Logical OR — `this || expr` */
-  or(this: This, expr: Expr): BinaryTsDsl {
-    return new BinaryTsDsl(this).or(expr);
-  }
-
+  or(expr: Expr): BinaryTsDsl;
   /** Addition — `this + expr` */
-  plus(this: This, expr: Expr): BinaryTsDsl {
-    return new BinaryTsDsl(this).plus(expr);
+  plus(expr: Expr): BinaryTsDsl;
+  /** Multiplication — `this * expr` */
+  times(expr: Expr): BinaryTsDsl;
+}
+
+export function OperatorMixin<
+  T extends ts.Expression,
+  TBase extends BaseCtor<T>,
+>(Base: TBase) {
+  abstract class Operator extends Base {
+    protected and(expr: Expr): BinaryTsDsl {
+      return new BinaryTsDsl(this).and(expr);
+    }
+
+    protected assign(expr: Expr): BinaryTsDsl {
+      return new BinaryTsDsl(this, '=', expr);
+    }
+
+    protected coalesce(expr: Expr): BinaryTsDsl {
+      return new BinaryTsDsl(this).coalesce(expr);
+    }
+
+    protected div(expr: Expr): BinaryTsDsl {
+      return new BinaryTsDsl(this).div(expr);
+    }
+
+    protected eq(expr: Expr): BinaryTsDsl {
+      return new BinaryTsDsl(this).eq(expr);
+    }
+
+    protected gt(expr: Expr): BinaryTsDsl {
+      return new BinaryTsDsl(this).gt(expr);
+    }
+
+    protected gte(expr: Expr): BinaryTsDsl {
+      return new BinaryTsDsl(this).gte(expr);
+    }
+
+    protected looseEq(expr: Expr): BinaryTsDsl {
+      return new BinaryTsDsl(this).looseEq(expr);
+    }
+
+    protected looseNeq(expr: Expr): BinaryTsDsl {
+      return new BinaryTsDsl(this).looseNeq(expr);
+    }
+
+    protected lt(expr: Expr): BinaryTsDsl {
+      return new BinaryTsDsl(this).lt(expr);
+    }
+
+    protected lte(expr: Expr): BinaryTsDsl {
+      return new BinaryTsDsl(this).lte(expr);
+    }
+
+    protected minus(expr: Expr): BinaryTsDsl {
+      return new BinaryTsDsl(this).minus(expr);
+    }
+
+    protected neq(expr: Expr): BinaryTsDsl {
+      return new BinaryTsDsl(this).neq(expr);
+    }
+
+    protected or(expr: Expr): BinaryTsDsl {
+      return new BinaryTsDsl(this).or(expr);
+    }
+
+    protected plus(expr: Expr): BinaryTsDsl {
+      return new BinaryTsDsl(this).plus(expr);
+    }
+
+    protected times(expr: Expr): BinaryTsDsl {
+      return new BinaryTsDsl(this).times(expr);
+    }
   }
 
-  /** Multiplication — `this * expr` */
-  times(this: This, expr: Expr): BinaryTsDsl {
-    return new BinaryTsDsl(this).times(expr);
-  }
+  return Operator as unknown as MixinCtor<TBase, OperatorMethods>;
 }

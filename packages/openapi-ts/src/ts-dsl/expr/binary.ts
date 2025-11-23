@@ -1,10 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
 import type { SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
-import { mixin } from '../mixins/apply';
 import { AsMixin } from '../mixins/as';
 import { ExprMixin } from '../mixins/expr';
 
@@ -28,7 +26,9 @@ type Operator =
   | '??'
   | '||';
 
-export class BinaryTsDsl extends TsDsl<ts.BinaryExpression> {
+const Mixed = AsMixin(ExprMixin(TsDsl<ts.BinaryExpression>));
+
+export class BinaryTsDsl extends Mixed {
   protected _base: Expr;
   protected _expr?: Expr;
   protected _op?: Op;
@@ -120,12 +120,11 @@ export class BinaryTsDsl extends TsDsl<ts.BinaryExpression> {
     return this.opAndExpr('*', expr);
   }
 
-  /** Walk this node and its children with a visitor. */
   traverse(visitor: (node: SyntaxNode) => void): void {
     console.log(visitor);
   }
 
-  $render(): ts.BinaryExpression {
+  protected override _render() {
     if (!this._op) {
       throw new Error('BinaryTsDsl: missing operator');
     }
@@ -172,6 +171,3 @@ export class BinaryTsDsl extends TsDsl<ts.BinaryExpression> {
     return token;
   }
 }
-
-export interface BinaryTsDsl extends AsMixin, ExprMixin {}
-mixin(BinaryTsDsl, AsMixin, ExprMixin);

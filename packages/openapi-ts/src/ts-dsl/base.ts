@@ -1,5 +1,6 @@
 // TODO: symbol should be protected, but needs to be public to satisfy types
 import type { Symbol, SyntaxNode } from '@hey-api/codegen-core';
+import { debug } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 export type MaybeArray<T> = T | ReadonlyArray<T>;
@@ -9,14 +10,15 @@ export interface ITsDsl<T extends ts.Node = ts.Node> extends SyntaxNode {
   $render(): T;
 }
 
+// @deprecated
 export type Constructor<T = ITsDsl> = new (...args: ReadonlyArray<any>) => T;
 
 export abstract class TsDsl<T extends ts.Node = ts.Node> implements ITsDsl<T> {
+  /** Render this DSL node into a concrete TypeScript AST node. */
+  protected abstract _render(): T;
+
   /** Walk this node and its children with a visitor. */
   abstract traverse(visitor: (node: SyntaxNode) => void): void;
-
-  /** Render this DSL node into a concrete TypeScript AST node. */
-  abstract $render(): T;
 
   /** Parent DSL node in the constructed syntax tree. */
   protected parent?: TsDsl<any>;
@@ -99,6 +101,14 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements ITsDsl<T> {
     return this;
   }
 
+  /** Render this DSL node into a concrete TypeScript AST node. */
+  $render(): T {
+    if (!this.parent) {
+      this._validate();
+    }
+    return this._render();
+  }
+
   /** Returns all locally declared names within this node. */
   getLocalNames(): Iterable<string> {
     return [];
@@ -118,10 +128,17 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements ITsDsl<T> {
   /** Assigns the parent DSL node, enforcing a single-parent invariant. */
   setParent(parent: TsDsl<any>): this {
     if (this.parent && this.parent !== parent) {
-      throw new Error(
-        `DSL node already has a parent (${this.parent.constructor.name}); cannot reassign to ${parent.constructor.name}.`,
-      );
+      const message = `${this.constructor.name} already had a parent (${this.parent.constructor.name}), new parent attempted: ${parent.constructor.name}`;
+      debug(message, 'dsl');
+      throw new Error(message);
     }
+
+    if (this.symbol) {
+      const message = `${this.constructor.name} has BOTH a symbol and a parent. This violates DSL invariants.`;
+      debug(message, 'dsl');
+      throw new Error(message);
+    }
+
     this.parent = parent;
     return this;
   }
@@ -175,14 +192,13 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements ITsDsl<T> {
   }
 
   /** Returns the root symbol associated with this DSL subtree. */
-  protected getRootSymbol(): Symbol | undefined {
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    let n: TsDsl<any> | undefined = this;
-    while (n) {
-      if (n.symbol) return n.symbol;
-      n = n.parent;
+  protected getRootSymbol(): Symbol {
+    if (!this.parent && !this.symbol) {
+      const message = `${this.constructor.name} has neither a parent nor a symbol — root symbol resolution failed.`;
+      debug(message, 'dsl');
+      throw new Error(message);
     }
-    return undefined;
+    return this.parent ? this.parent.getRootSymbol() : this.symbol!.canonical;
   }
 
   /** Unwraps nested DSL nodes into raw TypeScript AST nodes. */
@@ -190,6 +206,42 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements ITsDsl<T> {
     return (
       value instanceof TsDsl ? value.$render() : value
     ) as I extends TsDsl<infer N> ? N : I;
+  }
+
+  /** Validate DSL invariants. */
+  protected _validate(): void {
+    if (!this.parent && !this.symbol) {
+      const message = `${this.constructor.name}: top-level DSL node has no symbol`;
+      debug(message, 'dsl');
+      throw new Error(message);
+    }
+
+    if (this.parent && this.symbol) {
+      const message = `${this.constructor.name}: non-top-level node must not have a symbol`;
+      debug(message, 'dsl');
+      throw new Error(message);
+    }
+
+    if (this.parent === undefined && this.symbol === undefined) {
+      const message = `${this.constructor.name}: non-root DSL node is missing a parent`;
+      debug(message, 'dsl');
+      throw new Error(message);
+    }
+
+    if (this.symbol && this.symbol.canonical !== this.symbol) {
+      const message = `${this.constructor.name}: DSL node is holding a non-canonical (stub) symbol`;
+      debug(message, 'dsl');
+      throw new Error(message);
+    }
+
+    this.traverse((node) => {
+      const dsl = node as TsDsl<any>;
+      if (dsl !== this && dsl.parent !== this) {
+        const message = `${dsl.constructor.name}: child node has incorrect or missing parent`;
+        debug(message, 'dsl');
+        throw new Error(message);
+      }
+    });
   }
 }
 

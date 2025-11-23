@@ -4,9 +4,9 @@ import ts from 'typescript';
 import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
 
-export class TemplateTsDsl extends TsDsl<
-  ts.TemplateExpression | ts.NoSubstitutionTemplateLiteral
-> {
+const Mixed = TsDsl<ts.TemplateExpression | ts.NoSubstitutionTemplateLiteral>;
+
+export class TemplateTsDsl extends Mixed {
   protected parts: Array<string | MaybeTsDsl<ts.Expression>> = [];
 
   constructor(value?: string | MaybeTsDsl<ts.Expression>) {
@@ -19,12 +19,11 @@ export class TemplateTsDsl extends TsDsl<
     return this;
   }
 
-  /** Walk this node and its children with a visitor. */
   traverse(visitor: (node: SyntaxNode) => void): void {
     console.log(visitor);
   }
 
-  $render(): ts.TemplateExpression | ts.NoSubstitutionTemplateLiteral {
+  protected override _render() {
     const parts = this.$node(this.parts);
 
     const normalized: Array<string | ts.Expression> = [];

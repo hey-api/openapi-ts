@@ -1,24 +1,32 @@
-import type { Constructor, ITsDsl, MaybeArray } from '../base';
+import type ts from 'typescript';
+
+import type { MaybeArray } from '../base';
 import { DocTsDsl } from '../layout/doc';
+import type { BaseCtor, MixinCtor } from './types';
 
-export function DocMixin<TBase extends Constructor>(Base: TBase) {
-  const $renderBase = Base.prototype.$render;
+export interface DocMethods {
+  doc(lines?: MaybeArray<string>, fn?: (d: DocTsDsl) => void): this;
+}
 
-  class Mixin extends Base {
-    _doc?: DocTsDsl;
+export function DocMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
+  Base: TBase,
+) {
+  abstract class Doc extends Base {
+    protected _doc?: DocTsDsl;
 
-    doc(lines?: MaybeArray<string>, fn?: (d: DocTsDsl) => void): this {
+    protected doc(
+      lines?: MaybeArray<string>,
+      fn?: (d: DocTsDsl) => void,
+    ): this {
       this._doc = new DocTsDsl(lines, fn);
       return this;
     }
 
-    override $render(...args: Parameters<ITsDsl['$render']>) {
-      const node = $renderBase.apply(this, args);
+    protected override _render() {
+      const node = this.$render();
       return this._doc ? this._doc.apply(node) : node;
     }
   }
 
-  return Mixin;
+  return Doc as unknown as MixinCtor<TBase, DocMethods>;
 }
-
-export type DocMixin = InstanceType<ReturnType<typeof DocMixin>>;

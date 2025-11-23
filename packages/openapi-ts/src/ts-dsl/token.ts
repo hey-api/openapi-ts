@@ -56,13 +56,12 @@ export class TokenTsDsl<K extends ts.SyntaxKind = never> extends TsDsl<
     );
   }
 
-  /** Walk this node and its children with a visitor. */
-  traverse(visitor: (node: SyntaxNode) => void): void {
-    console.log(visitor);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  traverse(_visitor: (node: SyntaxNode) => void): void {
+    // noop
   }
 
-  /** Renders the final token */
-  $render(): ts.Token<K> {
+  protected override _render(): ts.Token<K> {
     if (!this._kind) {
       throw new Error(`Token missing \`.kind(kind)\``);
     }

@@ -1,16 +1,16 @@
-/* eslint-disable @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging */
 import type { SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TypeTsDsl } from '../base';
-import { mixin } from '../mixins/apply';
 import {
   registerLazyAccessTypeIdxFactory,
   TypeExprMixin,
 } from '../mixins/type-expr';
 
-export class TypeIdxTsDsl extends TypeTsDsl<ts.IndexedAccessTypeNode> {
+const Mixed = TypeExprMixin(TypeTsDsl<ts.IndexedAccessTypeNode>);
+
+export class TypeIdxTsDsl extends Mixed {
   protected _base: string | MaybeTsDsl<ts.TypeNode>;
   protected _index: string | MaybeTsDsl<ts.TypeNode> | number;
 
@@ -33,20 +33,16 @@ export class TypeIdxTsDsl extends TypeTsDsl<ts.IndexedAccessTypeNode> {
     return this;
   }
 
-  /** Walk this node and its children with a visitor. */
   traverse(visitor: (node: SyntaxNode) => void): void {
     console.log(visitor);
   }
 
-  $render(): ts.IndexedAccessTypeNode {
+  protected override _render() {
     return ts.factory.createIndexedAccessTypeNode(
       this.$type(this._base),
       this.$type(this._index),
     );
   }
 }
-
-export interface TypeIdxTsDsl extends TypeExprMixin {}
-mixin(TypeIdxTsDsl, TypeExprMixin);
 
 registerLazyAccessTypeIdxFactory((...args) => new TypeIdxTsDsl(...args));

@@ -1,15 +1,15 @@
-/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
 import type { SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
-import { mixin } from '../mixins/apply';
 import { ArgsMixin } from '../mixins/args';
 import { ExprMixin } from '../mixins/expr';
 import { TypeArgsMixin } from '../mixins/type-args';
 
-export class NewTsDsl extends TsDsl<ts.NewExpression> {
+const Mixed = ArgsMixin(ExprMixin(TypeArgsMixin(TsDsl<ts.NewExpression>)));
+
+export class NewTsDsl extends Mixed {
   protected classExpr: string | MaybeTsDsl<ts.Expression>;
 
   constructor(
@@ -21,13 +21,11 @@ export class NewTsDsl extends TsDsl<ts.NewExpression> {
     this.args(...args);
   }
 
-  /** Walk this node and its children with a visitor. */
   traverse(visitor: (node: SyntaxNode) => void): void {
     console.log(visitor);
   }
 
-  /** Builds the `NewExpression` node. */
-  $render(): ts.NewExpression {
+  protected override _render() {
     return ts.factory.createNewExpression(
       this.$node(this.classExpr),
       this.$generics(),
@@ -35,6 +33,3 @@ export class NewTsDsl extends TsDsl<ts.NewExpression> {
     );
   }
 }
-
-export interface NewTsDsl extends ArgsMixin, ExprMixin, TypeArgsMixin {}
-mixin(NewTsDsl, ArgsMixin, ExprMixin, TypeArgsMixin);

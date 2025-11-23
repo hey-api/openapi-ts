@@ -6,10 +6,12 @@ import { TsDsl } from '../base';
 import { IdTsDsl } from '../expr/id';
 import { TokenTsDsl } from '../token';
 
+const Mixed = TsDsl<ts.BindingName>;
+
 /**
  * Builds binding patterns (e.g. `{ foo, bar }`, `[a, b, ...rest]`).
  */
-export class PatternTsDsl extends TsDsl<ts.BindingName> {
+export class PatternTsDsl extends Mixed {
   protected pattern?:
     | { kind: 'array'; values: ReadonlyArray<string> }
     | { kind: 'object'; values: Record<string, string> };
@@ -45,13 +47,11 @@ export class PatternTsDsl extends TsDsl<ts.BindingName> {
     return this;
   }
 
-  /** Walk this node and its children with a visitor. */
   traverse(visitor: (node: SyntaxNode) => void): void {
     console.log(visitor);
   }
 
-  /** Builds and returns a BindingName (ObjectBindingPattern, ArrayBindingPattern, or Identifier). */
-  $render(): ts.BindingName {
+  protected override _render() {
     if (!this.pattern) {
       throw new Error('PatternTsDsl requires object() or array() pattern');
     }

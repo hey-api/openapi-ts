@@ -4,7 +4,9 @@ import ts from 'typescript';
 import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
 
-export class TernaryTsDsl extends TsDsl<ts.ConditionalExpression> {
+const Mixed = TsDsl<ts.ConditionalExpression>;
+
+export class TernaryTsDsl extends Mixed {
   protected _condition?: string | MaybeTsDsl<ts.Expression>;
   protected _then?: string | MaybeTsDsl<ts.Expression>;
   protected _else?: string | MaybeTsDsl<ts.Expression>;
@@ -29,12 +31,11 @@ export class TernaryTsDsl extends TsDsl<ts.ConditionalExpression> {
     return this;
   }
 
-  /** Walk this node and its children with a visitor. */
   traverse(visitor: (node: SyntaxNode) => void): void {
     console.log(visitor);
   }
 
-  $render(): ts.ConditionalExpression {
+  protected override _render() {
     if (!this._condition) throw new Error('Missing condition in ternary');
     if (!this._then) throw new Error('Missing then expression in ternary');
     if (!this._else) throw new Error('Missing else expression in ternary');

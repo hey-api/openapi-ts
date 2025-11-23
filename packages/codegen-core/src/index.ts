@@ -1,6 +1,7 @@
 export type { IBiMap as BiMap } from './bimap/types';
 export type { IBinding as Binding } from './bindings/types';
 export { createBinding, mergeBindings } from './bindings/utils';
+export { debug } from './debug';
 export type {
   IProjectRenderMeta as ProjectRenderMeta,
   ISymbolMeta as SymbolMeta,

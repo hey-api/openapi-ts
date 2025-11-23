@@ -1,30 +1,49 @@
-export class LayoutMixin {
-  protected static readonly DEFAULT_THRESHOLD = 3;
-  protected layout: boolean | number | undefined;
+import type ts from 'typescript';
 
-  /** Sets automatic line output with optional threshold (default: 3). */
-  auto(threshold: number = LayoutMixin.DEFAULT_THRESHOLD): this {
-    this.layout = threshold;
-    return this;
-  }
+import type { BaseCtor, MixinCtor } from './types';
 
-  /** Sets single line output. */
-  inline(): this {
-    this.layout = false;
-    return this;
-  }
-
-  /** Sets multi line output. */
-  pretty(): this {
-    this.layout = true;
-    return this;
-  }
-
+export interface LayoutMethods {
   /** Computes whether output should be multiline based on layout setting and element count. */
-  protected $multiline(count: number): boolean {
-    if (this.layout === undefined) {
-      this.layout = LayoutMixin.DEFAULT_THRESHOLD;
+  $multiline(count: number): boolean;
+  /** Sets automatic line output with optional threshold (default: 3). */
+  auto(threshold?: number): this;
+  /** Sets single line output. */
+  inline(): this;
+  /** Sets multi line output. */
+  pretty(): this;
+}
+
+export function LayoutMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
+  Base: TBase,
+) {
+  abstract class Layout extends Base {
+    protected static readonly DEFAULT_THRESHOLD = 3;
+    protected layout: boolean | number | undefined;
+
+    protected auto(threshold: number = Layout.DEFAULT_THRESHOLD): this {
+      this.layout = threshold;
+      return this;
     }
-    return typeof this.layout === 'number' ? count >= this.layout : this.layout;
+
+    protected inline(): this {
+      this.layout = false;
+      return this;
+    }
+
+    protected pretty(): this {
+      this.layout = true;
+      return this;
+    }
+
+    protected $multiline(count: number): boolean {
+      if (this.layout === undefined) {
+        this.layout = Layout.DEFAULT_THRESHOLD;
+      }
+      return typeof this.layout === 'number'
+        ? count >= this.layout
+        : this.layout;
+    }
   }
+
+  return Layout as unknown as MixinCtor<TBase, LayoutMethods>;
 }

@@ -4,7 +4,9 @@ import ts from 'typescript';
 import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
 
-export class PrefixTsDsl extends TsDsl<ts.PrefixUnaryExpression> {
+const Mixed = TsDsl<ts.PrefixUnaryExpression>;
+
+export class PrefixTsDsl extends Mixed {
   protected _expr?: string | MaybeTsDsl<ts.Expression>;
   protected _op?: ts.PrefixUnaryOperator;
 
@@ -41,13 +43,11 @@ export class PrefixTsDsl extends TsDsl<ts.PrefixUnaryExpression> {
     return this;
   }
 
-  /** Walk this node and its children with a visitor. */
   traverse(visitor: (node: SyntaxNode) => void): void {
     console.log(visitor);
   }
 
-  /** Renders the prefix unary expression node. */
-  $render(): ts.PrefixUnaryExpression {
+  protected override _render() {
     if (!this._expr) {
       throw new Error('Missing expression for prefix unary expression');
     }
