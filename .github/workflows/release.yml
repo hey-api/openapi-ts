@@ -21,7 +21,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node-version: ['24.10.0']
+        node-version: ['24.11.1']
     steps:
       - uses: actions/checkout@v5.0.1
 

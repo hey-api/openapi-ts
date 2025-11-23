@@ -18,7 +18,7 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
-        node-version: ['20.19.0', '22.12.0', '24.10.0']
+        node-version: ['20.19.0', '22.12.0', '24.11.1']
     steps:
       - uses: actions/checkout@v5.0.1
         with:
@@ -38,11 +38,11 @@ jobs:
         run: pnpm build --filter="@hey-api/**"
 
       - name: Check examples generated code
-        if: matrix.node-version == '24.10.0' && matrix.os == 'ubuntu-latest'
+        if: matrix.node-version == '24.11.1' && matrix.os == 'ubuntu-latest'
         run: pnpm examples:check
 
       - name: Build examples
-        if: matrix.node-version == '24.10.0' && matrix.os == 'ubuntu-latest'
+        if: matrix.node-version == '24.11.1' && matrix.os == 'ubuntu-latest'
         run: pnpm build --filter="@example/**"
 
       - name: Run linter
@@ -55,11 +55,11 @@ jobs:
         run: pnpm test --filter="@hey-api/**" --filter="@test/**"
 
       - name: Test examples
-        if: matrix.node-version == '24.10.0' && matrix.os == 'ubuntu-latest'
+        if: matrix.node-version == '24.11.1' && matrix.os == 'ubuntu-latest'
         run: pnpm test --filter="@example/**"
 
       - name: Publish preview packages
-        if: github.event_name == 'pull_request' && matrix.node-version == '24.10.0' && matrix.os == 'ubuntu-latest'
+        if: github.event_name == 'pull_request' && matrix.node-version == '24.11.1' && matrix.os == 'ubuntu-latest'
         run: ./scripts/publish-preview-packages.sh
         env:
           TURBO_SCM_BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
