@@ -2,9 +2,9 @@
   "name": "@config/vite-base",
   "version": "0.0.1",
   "description": "Base configuration for Vite and Vitest",
-  "main": "dist/index.js",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/index.mjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.mts",
   "license": "MIT",
   "type": "module",
   "scripts": {

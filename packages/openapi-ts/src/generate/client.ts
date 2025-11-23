@@ -213,7 +213,7 @@ export const generateClientBundle = ({
 
   const indexJsFile =
     clientModulePathComponents[clientModulePathComponents.length - 1];
-  const distFiles = [indexJsFile!, 'index.d.ts', 'index.d.cts'];
+  const distFiles = [indexJsFile!, 'index.d.mts', 'index.d.cts'];
   const dirPath = path.resolve(outputPath, 'client');
   ensureDirSync(dirPath);
   for (const file of distFiles) {
