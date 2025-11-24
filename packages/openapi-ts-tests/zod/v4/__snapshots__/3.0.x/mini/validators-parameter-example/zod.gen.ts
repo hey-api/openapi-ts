@@ -12,16 +12,28 @@ export const zGetUsersData = z.object({
     path: z.optional(z.never()),
     query: z.optional(z.object({
         sort: z.optional(z.string().register(z.globalRegistry, {
-            description: 'Sort order for results'
+            description: 'Sort order for results',
+            example: [
+                'name,desc'
+            ]
         })),
         filter: z.optional(z.string().register(z.globalRegistry, {
-            description: 'This description should be overridden'
+            description: 'Filter criteria',
+            example: [
+                'status:active'
+            ]
         })),
         limit: z.optional(z.int().check(z.gte(1), z.lte(100)).register(z.globalRegistry, {
-            description: 'Number of results per page'
+            description: 'Number of results per page',
+            example: [
+                25
+            ]
         })),
         search: z.optional(z.string().register(z.globalRegistry, {
-            description: 'Search query'
+            description: 'Search query',
+            example: [
+                'john doe'
+            ]
         }))
     }))
 });

@@ -9,26 +9,52 @@ import * as z from 'zod/mini';
  */
 export const zUser = z.object({
     id: z.optional(z.int().register(z.globalRegistry, {
-        description: 'Unique identifier for the user'
+        description: 'Unique identifier for the user',
+        example: [
+            1,
+            42,
+            999
+        ]
     })),
     username: z.optional(z.string().register(z.globalRegistry, {
-        description: 'The user login name'
+        description: 'The user login name',
+        example: [
+            'john_doe',
+            'jane_smith'
+        ]
     })),
     email: z.optional(z.email().register(z.globalRegistry, {
-        description: 'User email address'
+        description: 'User email address',
+        example: [
+            'user@example.com',
+            'test@test.org'
+        ]
     })),
     age: z.optional(z.int().register(z.globalRegistry, {
-        description: 'User age in years'
+        description: 'User age in years',
+        example: [
+            25,
+            30,
+            45
+        ]
     })),
     role: z.optional(z.string().register(z.globalRegistry, {
-        description: 'The role of the user'
+        description: 'The role of the user',
+        example: [
+            'admin',
+            'user',
+            'guest'
+        ]
     })),
     status: z.optional(z.enum([
         'active',
         'inactive',
         'suspended'
     ]).register(z.globalRegistry, {
-        description: 'Current status of the account'
+        description: 'Current status of the account',
+        example: [
+            'active'
+        ]
     }))
 }).register(z.globalRegistry, {
     description: 'A user in the system.'
@@ -43,10 +69,19 @@ export const zUser = z.object({
  */
 export const zProduct = z.object({
     sku: z.optional(z.string().check(z.regex(/^[A-Z]{3}-\d{4}$/)).register(z.globalRegistry, {
-        description: 'Product SKU code'
+        description: 'Product SKU code',
+        example: [
+            'ABC-1234',
+            'XYZ-9999'
+        ]
     })),
     price: z.optional(z.number().register(z.globalRegistry, {
-        description: 'Price in USD'
+        description: 'Price in USD',
+        example: [
+            19.99,
+            49.95,
+            99.99
+        ]
     }))
 }).register(z.globalRegistry, {
     description: 'A product in the catalog'

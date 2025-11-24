@@ -128,6 +128,9 @@ const parameterToIrParameter = ({
         return exampleObj.value;
       })
       .filter((val) => val !== undefined);
+  } else if (parameter.example !== undefined) {
+    // Convert single example to array
+    examplesArray = [parameter.example];
   }
 
   const finalSchema: SchemaObject = {
@@ -143,9 +146,8 @@ const parameterToIrParameter = ({
     example:
       parameter.example !== undefined ? parameter.example : schema?.example,
     examples:
-      examplesArray !== undefined && examplesArray.length > 0
-        ? examplesArray
-        : schema?.examples,
+      examplesArray ||
+      (schema?.example !== undefined ? [schema.example] : undefined),
   };
 
   const pagination = paginationField({

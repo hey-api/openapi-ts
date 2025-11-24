@@ -12,7 +12,7 @@ export const zGetUsersData = z.object({
     path: z.never().optional(),
     query: z.object({
         sort: z.string().describe('Sort order for results').optional(),
-        filter: z.string().describe('This description should be overridden').optional(),
+        filter: z.string().describe('Filter criteria').optional(),
         limit: z.number().int().gte(1).lte(100).describe('Number of results per page').optional(),
         search: z.string().describe('Search query').optional()
     }).optional()

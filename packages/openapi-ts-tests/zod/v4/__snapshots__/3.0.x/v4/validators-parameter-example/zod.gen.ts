@@ -18,7 +18,7 @@ export const zGetUsersData = z.object({
             ]
         })),
         filter: z.optional(z.string().meta({
-            description: 'This description should be overridden',
+            description: 'Filter criteria',
             example: [
                 'status:active'
             ]
