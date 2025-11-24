@@ -128,6 +128,7 @@ interface IRSchemaObject
     | 'default'
     | 'deprecated'
     | 'description'
+    | 'examples'
     | 'exclusiveMaximum'
     | 'exclusiveMinimum'
     | 'maximum'
