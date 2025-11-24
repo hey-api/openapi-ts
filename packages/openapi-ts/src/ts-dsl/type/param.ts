@@ -20,6 +20,10 @@ export class TypeParamTsDsl extends Mixed {
     fn?.(this);
   }
 
+  override collectSymbols(out: Set<Symbol>): void {
+    console.log(out);
+  }
+
   default(value: string | MaybeTsDsl<TypeTsDsl> | boolean): this {
     this.defaultValue = value;
     return this;
@@ -30,8 +34,8 @@ export class TypeParamTsDsl extends Mixed {
     return this;
   }
 
-  traverse(visitor: (node: SyntaxNode) => void): void {
-    console.log(visitor);
+  override traverse(visitor: (node: SyntaxNode) => void): void {
+    super.traverse(visitor);
   }
 
   protected override _render() {

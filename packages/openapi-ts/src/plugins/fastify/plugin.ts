@@ -26,7 +26,7 @@ const operationToRouteHandler = ({
       type.prop('Body', (p) =>
         p
           .required(operation.body!.required)
-          .type($.type(symbolDataType.placeholder).idx($.type.literal('body'))),
+          .type($.type(symbolDataType).idx($.type.literal('body'))),
       );
     }
 
@@ -37,9 +37,7 @@ const operationToRouteHandler = ({
             .required(
               hasParameterGroupObjectRequired(operation.parameters!.header),
             )
-            .type(
-              $.type(symbolDataType.placeholder).idx($.type.literal('headers')),
-            ),
+            .type($.type(symbolDataType).idx($.type.literal('headers'))),
         );
       }
 
@@ -49,9 +47,7 @@ const operationToRouteHandler = ({
             .required(
               hasParameterGroupObjectRequired(operation.parameters!.path),
             )
-            .type(
-              $.type(symbolDataType.placeholder).idx($.type.literal('path')),
-            ),
+            .type($.type(symbolDataType).idx($.type.literal('path'))),
         );
       }
 
@@ -61,9 +57,7 @@ const operationToRouteHandler = ({
             .required(
               hasParameterGroupObjectRequired(operation.parameters!.query),
             )
-            .type(
-              $.type(symbolDataType.placeholder).idx($.type.literal('query')),
-            ),
+            .type($.type(symbolDataType).idx($.type.literal('query'))),
         );
       }
     }
@@ -83,13 +77,10 @@ const operationToRouteHandler = ({
     if (keys.length) {
       const hasDefaultResponse = keys.includes('default');
       if (!hasDefaultResponse) {
-        errorsTypeReference = $.type(symbolErrorType.placeholder);
+        errorsTypeReference = $.type(symbolErrorType);
       } else if (keys.length > 1) {
         errorsTypeReference = $.type('Omit', (t) =>
-          t.generics(
-            $.type(symbolErrorType.placeholder),
-            $.type.literal('default'),
-          ),
+          t.generics($.type(symbolErrorType), $.type.literal('default')),
         );
       }
     }
@@ -107,13 +98,10 @@ const operationToRouteHandler = ({
     if (keys.length) {
       const hasDefaultResponse = keys.includes('default');
       if (!hasDefaultResponse) {
-        responsesTypeReference = $.type(symbolResponseType.placeholder);
+        responsesTypeReference = $.type(symbolResponseType);
       } else if (keys.length > 1) {
         responsesTypeReference = $.type('Omit', (t) =>
-          t.generics(
-            $.type(symbolResponseType.placeholder),
-            $.type.literal('default'),
-          ),
+          t.generics($.type(symbolResponseType), $.type.literal('default')),
         );
       }
     }
@@ -137,7 +125,7 @@ const operationToRouteHandler = ({
   });
   return {
     name: operation.id,
-    type: $.type(symbolRouteHandler.placeholder, (t) => t.generic(type)),
+    type: $.type(symbolRouteHandler, (t) => t.generic(type)),
   };
 };
 

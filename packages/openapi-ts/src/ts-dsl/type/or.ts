@@ -1,36 +1,48 @@
 import type { SyntaxNode } from '@hey-api/codegen-core';
+import { Symbol } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
-import { TypeTsDsl } from '../base';
+import { TsDsl, TypeTsDsl } from '../base';
+
+type Type = Symbol | string | ts.TypeNode | TypeTsDsl;
 
 const Mixed = TypeTsDsl<ts.UnionTypeNode>;
 
 export class TypeOrTsDsl extends Mixed {
-  protected _types: Array<string | ts.TypeNode | TypeTsDsl> = [];
+  protected _types: Array<Type> = [];
 
-  constructor(...nodes: Array<string | ts.TypeNode | TypeTsDsl>) {
+  constructor(...nodes: Array<Type>) {
     super();
     this.types(...nodes);
   }
 
-  traverse(visitor: (node: SyntaxNode) => void): void {
-    console.log(visitor);
+  override traverse(visitor: (node: SyntaxNode) => void): void {
+    super.traverse(visitor);
+    for (const node of this._types) {
+      if (node instanceof TsDsl) {
+        node.traverse(visitor);
+      }
+    }
   }
 
-  types(...nodes: Array<string | ts.TypeNode | TypeTsDsl>): this {
-    this._types.push(...nodes);
+  types(...nodes: Array<Type>): this {
+    for (const node of nodes) {
+      if (node instanceof TsDsl) node.setParent(this);
+      this._types.push(node);
+    }
     return this;
   }
 
   protected override _render() {
     const flat: Array<ts.TypeNode> = [];
 
-    for (const n of this._types) {
-      const t = this.$type(n);
-      if (ts.isUnionTypeNode(t)) {
-        flat.push(...t.types);
+    for (const node of this._types) {
+      const value = node instanceof Symbol ? node.finalName : node;
+      const type = this.$type(value);
+      if (ts.isUnionTypeNode(type)) {
+        flat.push(...type.types);
       } else {
-        flat.push(t);
+        flat.push(type);
       }
     }
 

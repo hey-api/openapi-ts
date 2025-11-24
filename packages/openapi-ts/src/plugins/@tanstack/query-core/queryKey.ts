@@ -49,9 +49,7 @@ export const createQueryKeyFunction = ({
     tool: 'sdk',
   });
 
-  const returnType = $.type(symbolQueryKeyType.placeholder)
-    .generic(TOptionsType)
-    .idx(0);
+  const returnType = $.type(symbolQueryKeyType).generic(TOptionsType).idx(0);
 
   const fn = $.const(symbolCreateQueryKey).assign(
     $.func()

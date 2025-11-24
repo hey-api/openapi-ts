@@ -30,11 +30,7 @@ export const exportAst = ({
       c.doc(v),
     )
     .$if(state.hasLazyExpression.value, (c) =>
-      c.type(
-        $.type(v.placeholder).attr(
-          ast.typeName || identifiers.types.GenericSchema,
-        ),
-      ),
+      c.type($.type(v).attr(ast.typeName || identifiers.types.GenericSchema)),
     )
     .assign(pipesToAst({ pipes: ast.pipes, plugin }));
   plugin.setSymbolValue(symbol, statement);

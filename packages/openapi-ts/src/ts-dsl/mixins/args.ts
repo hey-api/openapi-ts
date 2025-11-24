@@ -1,9 +1,10 @@
+import type { SyntaxNode } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import type { BaseCtor, MixinCtor } from './types';
 
-export interface ArgsMethods {
+export interface ArgsMethods extends SyntaxNode {
   /** Renders the arguments into an array of `Expression`s. */
   $args(): ReadonlyArray<ts.Expression>;
   /** Adds a single expression argument. */

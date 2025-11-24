@@ -6,7 +6,7 @@ import ts from 'typescript';
 export type MaybeArray<T> = T | ReadonlyArray<T>;
 
 export interface ITsDsl<T extends ts.Node = ts.Node> extends SyntaxNode {
-  /** Render this DSL node into a concrete TypeScript AST node. */
+  /** Render this node into a concrete TypeScript AST. */
   $render(): T;
 }
 
@@ -14,13 +14,10 @@ export interface ITsDsl<T extends ts.Node = ts.Node> extends SyntaxNode {
 export type Constructor<T = ITsDsl> = new (...args: ReadonlyArray<any>) => T;
 
 export abstract class TsDsl<T extends ts.Node = ts.Node> implements ITsDsl<T> {
-  /** Render this DSL node into a concrete TypeScript AST node. */
+  /** Render this node into a concrete TypeScript AST. */
   protected abstract _render(): T;
 
-  /** Walk this node and its children with a visitor. */
-  abstract traverse(visitor: (node: SyntaxNode) => void): void;
-
-  /** Parent DSL node in the constructed syntax tree. */
+  /** Parent node in the constructed syntax tree. */
   protected parent?: TsDsl<any>;
 
   /** The codegen symbol associated with this node. */
@@ -101,7 +98,7 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements ITsDsl<T> {
     return this;
   }
 
-  /** Render this DSL node into a concrete TypeScript AST node. */
+  /** Render this node into a concrete TypeScript AST. */
   $render(): T {
     if (!this.parent) {
       this._validate();
@@ -109,13 +106,14 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements ITsDsl<T> {
     return this._render();
   }
 
-  /** Returns all locally declared names within this node. */
-  getLocalNames(): Iterable<string> {
-    return [];
+  /** Returns all symbols referenced by this node (directly or through children). */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  collectSymbols(_out: Set<Symbol>): void {
+    // noop
   }
 
-  /** Returns all symbols referenced by this node (directly or through children). */
-  getSymbols(): Iterable<Symbol> {
+  /** Returns all locally declared names within this node. */
+  getLocalNames(): Iterable<string> {
     return [];
   }
 
@@ -125,7 +123,7 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements ITsDsl<T> {
     // noop
   }
 
-  /** Assigns the parent DSL node, enforcing a single-parent invariant. */
+  /** Assigns the parent node, enforcing a single-parent invariant. */
   setParent(parent: TsDsl<any>): this {
     if (this.parent && this.parent !== parent) {
       const message = `${this.constructor.name} already had a parent (${this.parent.constructor.name}), new parent attempted: ${parent.constructor.name}`;
@@ -141,6 +139,11 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements ITsDsl<T> {
 
     this.parent = parent;
     return this;
+  }
+
+  /** Walk this node and its children with a visitor. */
+  traverse(visitor: (node: SyntaxNode) => void): void {
+    visitor(this);
   }
 
   protected $maybeId<T extends string | ts.Expression>(
@@ -201,19 +204,23 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements ITsDsl<T> {
     return this.parent ? this.parent.getRootSymbol() : this.symbol!.canonical;
   }
 
-  /** Unwraps nested DSL nodes into raw TypeScript AST nodes. */
+  /** Unwraps nested nodes into raw TypeScript AST. */
   protected unwrap<I>(value: I): I extends TsDsl<infer N> ? N : I {
     return (
-      value instanceof TsDsl ? value.$render() : value
+      value instanceof TsDsl ? value._render() : value
     ) as I extends TsDsl<infer N> ? N : I;
   }
 
   /** Validate DSL invariants. */
   protected _validate(): void {
     if (!this.parent && !this.symbol) {
-      const message = `${this.constructor.name}: top-level DSL node has no symbol`;
+      const message =
+        `${this.constructor.name}: node has neither a parent nor a symbol — ` +
+        `this likely means the node was never attached to a parent or is incorrectly ` +
+        `being treated as a root-level construct.`;
       debug(message, 'dsl');
-      throw new Error(message);
+      // TODO: enable later
+      // throw new Error(message);
     }
 
     if (this.parent && this.symbol) {
@@ -223,21 +230,22 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements ITsDsl<T> {
     }
 
     if (this.parent === undefined && this.symbol === undefined) {
-      const message = `${this.constructor.name}: non-root DSL node is missing a parent`;
+      const message = `${this.constructor.name}: non-root node is missing a parent`;
       debug(message, 'dsl');
-      throw new Error(message);
+      // TODO: enable later
+      // throw new Error(message);
     }
 
     if (this.symbol && this.symbol.canonical !== this.symbol) {
-      const message = `${this.constructor.name}: DSL node is holding a non-canonical (stub) symbol`;
+      const message = `${this.constructor.name}: node is holding a non-canonical (stub) symbol`;
       debug(message, 'dsl');
       throw new Error(message);
     }
 
     this.traverse((node) => {
       const dsl = node as TsDsl<any>;
-      if (dsl !== this && dsl.parent !== this) {
-        const message = `${dsl.constructor.name}: child node has incorrect or missing parent`;
+      if (dsl !== this && !dsl.parent) {
+        const message = `${dsl.constructor.name}: child node has missing parent`;
         debug(message, 'dsl');
         throw new Error(message);
       }

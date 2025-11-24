@@ -68,8 +68,8 @@ export class TypeMappedTsDsl extends Mixed {
     return this;
   }
 
-  traverse(visitor: (node: SyntaxNode) => void): void {
-    console.log(visitor);
+  override traverse(visitor: (node: SyntaxNode) => void): void {
+    super.traverse(visitor);
   }
 
   /** Sets the mapped value type: `[K in X]: ValueType` */

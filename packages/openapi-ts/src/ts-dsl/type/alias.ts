@@ -1,4 +1,5 @@
-import type { Symbol, SyntaxNode } from '@hey-api/codegen-core';
+import type { SyntaxNode } from '@hey-api/codegen-core';
+import { Symbol } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -7,20 +8,23 @@ import { DocMixin } from '../mixins/doc';
 import { ExportMixin } from '../mixins/modifiers';
 import { TypeParamsMixin } from '../mixins/type-params';
 
+type Name = Symbol | string;
+type Value = MaybeTsDsl<ts.TypeNode>;
+
 const Mixed = DocMixin(
   ExportMixin(TypeParamsMixin(TsDsl<ts.TypeAliasDeclaration>)),
 );
 
 export class TypeAliasTsDsl extends Mixed {
-  protected name: string;
-  protected value?: MaybeTsDsl<ts.TypeNode>;
+  protected name: Name;
+  protected value?: Value;
 
-  constructor(name: Symbol | string, fn?: (t: TypeAliasTsDsl) => void) {
+  constructor(name: Name, fn?: (t: TypeAliasTsDsl) => void) {
     super();
     if (typeof name === 'string') {
       this.name = name;
     } else {
-      this.name = name.finalName;
+      this.name = name;
       this.symbol = name;
       this.symbol.setKind('type');
       this.symbol.setRootNode(this);
@@ -28,22 +32,37 @@ export class TypeAliasTsDsl extends Mixed {
     fn?.(this);
   }
 
-  traverse(visitor: (node: SyntaxNode) => void): void {
-    console.log(visitor);
+  override collectSymbols(out: Set<Symbol>): void {
+    super.collectSymbols(out);
+    if (this.name instanceof Symbol) {
+      out.add(this.name);
+    }
+    if (this.value instanceof TsDsl) {
+      this.value.collectSymbols(out);
+    }
+  }
+
+  override traverse(visitor: (node: SyntaxNode) => void): void {
+    super.traverse(visitor);
+    if (this.value instanceof TsDsl) {
+      this.value.traverse(visitor);
+    }
   }
 
   /** Sets the type expression on the right-hand side of `= ...`. */
-  type(node: MaybeTsDsl<ts.TypeNode>): this {
+  type(node: Value): this {
     this.value = node;
+    if (this.value instanceof TsDsl) this.value.setParent(this);
     return this;
   }
 
   protected override _render() {
     if (!this.value)
       throw new Error(`Type alias '${this.name}' is missing a type definition`);
+    const name = this.name instanceof Symbol ? this.name.finalName : this.name;
     return ts.factory.createTypeAliasDeclaration(
       this.modifiers,
-      this.name,
+      name,
       this.$generics(),
       this.$type(this.value),
     );

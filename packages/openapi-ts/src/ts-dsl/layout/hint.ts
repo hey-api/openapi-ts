@@ -1,4 +1,3 @@
-import type { SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeArray } from '../base';
@@ -39,11 +38,6 @@ export class HintTsDsl extends TsDsl<ts.Node> {
     }
 
     return node;
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  traverse(_visitor: (node: SyntaxNode) => void): void {
-    // noop
   }
 
   protected override _render(): ts.Node {

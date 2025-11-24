@@ -1,10 +1,11 @@
+import type { SyntaxNode } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import type { MaybeArray } from '../base';
 import { NoteTsDsl } from '../layout/note';
 import type { BaseCtor, MixinCtor } from './types';
 
-export interface NoteMethods {
+export interface NoteMethods extends SyntaxNode {
   note(lines?: MaybeArray<string>, fn?: (h: NoteTsDsl) => void): this;
 }
 

@@ -49,13 +49,13 @@ export const createClientConfigType = ({
           p
             .optional()
             .type(
-              $.type(symbolConfig.placeholder).generic(
+              $.type(symbolConfig).generic(
                 $.type.and(symbolDefaultClientOptions.placeholder, 'T'),
               ),
             ),
         )
         .returns(
-          $.type(symbolConfig.placeholder).generic(
+          $.type(symbolConfig).generic(
             $.type.and(
               $.type('Required').generic(
                 symbolDefaultClientOptions.placeholder,

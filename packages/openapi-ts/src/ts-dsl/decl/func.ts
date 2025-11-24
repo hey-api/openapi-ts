@@ -97,8 +97,8 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends Mixed {
     return this;
   }
 
-  traverse(visitor: (node: SyntaxNode) => void): void {
-    console.log(visitor);
+  override traverse(visitor: (node: SyntaxNode) => void): void {
+    super.traverse(visitor);
   }
 
   // @ts-expect-error --- need to fix types ---

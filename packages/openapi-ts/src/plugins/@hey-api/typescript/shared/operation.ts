@@ -210,11 +210,7 @@ export const operationToType = ({
       const node = $.type
         .alias(symbol)
         .export()
-        .type(
-          $.type(symbolErrors.placeholder).idx(
-            $.type(symbolErrors.placeholder).keyof(),
-          ),
-        );
+        .type($.type(symbolErrors).idx($.type(symbolErrors).keyof()));
       plugin.setSymbolValue(symbol, node);
     }
   }
@@ -269,11 +265,7 @@ export const operationToType = ({
       const node = $.type
         .alias(symbol)
         .export()
-        .type(
-          $.type(symbolResponses.placeholder).idx(
-            $.type(symbolResponses.placeholder).keyof(),
-          ),
-        );
+        .type($.type(symbolResponses).idx($.type(symbolResponses).keyof()));
       plugin.setSymbolValue(symbol, node);
     }
   }

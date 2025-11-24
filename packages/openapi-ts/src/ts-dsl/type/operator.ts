@@ -1,8 +1,8 @@
-import type { SyntaxNode } from '@hey-api/codegen-core';
+import type { Symbol, SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { TypeTsDsl } from '../base';
+import { TsDsl, TypeTsDsl } from '../base';
 import { registerLazyAccessTypeOperatorFactory } from '../mixins/type-expr';
 
 type Op =
@@ -29,6 +29,10 @@ export class TypeOperatorTsDsl extends Mixed {
   protected _op?: Op;
   protected _type?: Type;
 
+  override collectSymbols(out: Set<Symbol>): void {
+    super.collectSymbols(out);
+  }
+
   /** Shorthand: builds `keyof T`. */
   keyof(type: Type): this {
     this.operator(ts.SyntaxKind.KeyOfKeyword);
@@ -49,13 +53,17 @@ export class TypeOperatorTsDsl extends Mixed {
     return this;
   }
 
-  traverse(visitor: (node: SyntaxNode) => void): void {
-    console.log(visitor);
+  override traverse(visitor: (node: SyntaxNode) => void): void {
+    super.traverse(visitor);
+    if (this._type instanceof TsDsl) {
+      this._type.traverse(visitor);
+    }
   }
 
   /** Sets the target type of the operator. */
   type(type: Type): this {
     this._type = type;
+    if (this._type instanceof TsDsl) this._type.setParent(this);
     return this;
   }
 

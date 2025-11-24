@@ -12,7 +12,7 @@ export interface ModifierMethods extends Modifiers {
    *
    * @param kind - The syntax kind of the modifier to add.
    * @param condition - Whether to add the modifier.
-   * @returns The parent DSL node for chaining.
+   * @returns The parent node for chaining.
    */
   _m(kind: ts.ModifierSyntaxKind, condition: boolean): this;
 }

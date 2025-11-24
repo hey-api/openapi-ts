@@ -1,7 +1,8 @@
-import type { Symbol, SyntaxNode } from '@hey-api/codegen-core';
+import type { SyntaxNode } from '@hey-api/codegen-core';
+import { Symbol } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
-import { TypeTsDsl } from '../base';
+import { TsDsl, TypeTsDsl } from '../base';
 import { TypeArgsMixin } from '../mixins/type-args';
 import {
   registerLazyAccessTypeExprFactory,
@@ -23,16 +24,11 @@ export class TypeExprTsDsl extends Mixed {
     fn?: (t: TypeExprTsDsl) => void,
   ) {
     super();
-    if (name) {
-      if (typeof name === 'function') {
-        name(this);
-      } else {
-        this._exprInput = name;
-        if (typeof name !== 'string') {
-          this.getRootSymbol().addDependency(name);
-        }
-        fn?.(this);
-      }
+    if (typeof name === 'function') {
+      name(this);
+    } else {
+      this._exprInput = name;
+      fn?.(this);
     }
   }
 
@@ -42,12 +38,26 @@ export class TypeExprTsDsl extends Mixed {
       right instanceof TypeAttrTsDsl
         ? right.base(this._exprInput)
         : new TypeAttrTsDsl(this._exprInput!, right);
-    this._exprInput = this._exprInput.setParent(this);
+    this._exprInput.setParent(this);
     return this;
   }
 
-  traverse(visitor: (node: SyntaxNode) => void): void {
-    console.log(visitor);
+  override collectSymbols(out: Set<Symbol>): void {
+    super.collectSymbols(out);
+    if (this._exprInput && typeof this._exprInput !== 'string') {
+      if (this._exprInput instanceof Symbol) {
+        out.add(this._exprInput);
+      } else {
+        this._exprInput.collectSymbols(out);
+      }
+    }
+  }
+
+  override traverse(visitor: (node: SyntaxNode) => void): void {
+    super.traverse(visitor);
+    if (this._exprInput instanceof TsDsl) {
+      this._exprInput.traverse(visitor);
+    }
   }
 
   protected override _render() {

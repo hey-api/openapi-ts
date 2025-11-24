@@ -25,8 +25,8 @@ export class EnumMemberTsDsl extends Mixed {
     }
   }
 
-  traverse(visitor: (node: SyntaxNode) => void): void {
-    console.log(visitor);
+  override traverse(visitor: (node: SyntaxNode) => void): void {
+    super.traverse(visitor);
   }
 
   /** Sets the enum member value. */
@@ -37,7 +37,7 @@ export class EnumMemberTsDsl extends Mixed {
 
   protected override _render() {
     return ts.factory.createEnumMember(
-      safeMemberName(this._name),
+      this.$node(safeMemberName(this._name)),
       this.$node(this._value),
     );
   }

@@ -1,10 +1,11 @@
+import type { SyntaxNode } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { ParamTsDsl } from '../decl/param';
 import type { BaseCtor, MixinCtor } from './types';
 
-export interface ParamMethods {
+export interface ParamMethods extends SyntaxNode {
   /** Renders the parameters into an array of `ParameterDeclaration`s. */
   $params(): ReadonlyArray<ts.ParameterDeclaration>;
   /** Adds a parameter. */

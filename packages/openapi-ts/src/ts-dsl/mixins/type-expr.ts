@@ -1,3 +1,4 @@
+import type { Symbol, SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl, TypeTsDsl } from '../base';
@@ -64,7 +65,7 @@ export function registerLazyAccessTypeQueryFactory(
   typeQueryFactory = factory;
 }
 
-export interface TypeExprMethods {
+export interface TypeExprMethods extends SyntaxNode {
   /** Creates an indexed-access type (e.g. `Foo<T>[K]`). */
   idx(
     this: MaybeTsDsl<TypeTsDsl>,
@@ -74,7 +75,7 @@ export interface TypeExprMethods {
   keyof(this: MaybeTsDsl<TypeTsDsl>): TypeOperatorTsDsl;
   /** Shorthand: builds `readonly T`. */
   readonly(this: MaybeTsDsl<TypeTsDsl>): TypeOperatorTsDsl;
-  /** Create a TypeExpr DSL node representing ReturnType<this>. */
+  /** Create a TypeExpr node representing ReturnType<this>. */
   returnType(this: MaybeTsDsl<ts.Expression>): TypeExprTsDsl;
   /**
    * Create a `typeof` operator that narrows its return type based on the receiver.
@@ -91,9 +92,9 @@ export interface TypeExprMethods {
     : T extends MaybeTsDsl<TypeTsDsl>
       ? TypeQueryTsDsl
       : TypeQueryTsDsl | TypeOfExprTsDsl;
-  /** Create a TypeOfExpr DSL node representing typeof this. */
+  /** Create a TypeOfExpr node representing typeof this. */
   typeofExpr(this: MaybeTsDsl<ts.Expression>): TypeOfExprTsDsl;
-  /** Create a TypeQuery DSL node representing typeof this. */
+  /** Create a TypeQuery node representing typeof this. */
   typeofType(this: MaybeTsDsl<TypeTsDsl | ts.Expression>): TypeQueryTsDsl;
   /** Shorthand: builds `unique T`. */
   unique(this: MaybeTsDsl<TypeTsDsl>): TypeOperatorTsDsl;
@@ -104,46 +105,50 @@ export function TypeExprMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
 ) {
   abstract class TypeExpr extends Base {
     protected idx(
-      this: MaybeTsDsl<TypeTsDsl>,
+      this: TypeTsDsl,
       index: string | number | MaybeTsDsl<ts.TypeNode>,
     ): TypeIdxTsDsl {
       return typeIdxFactory!(this, index);
     }
 
-    protected keyof(this: MaybeTsDsl<TypeTsDsl>): TypeOperatorTsDsl {
+    protected keyof(this: TypeTsDsl): TypeOperatorTsDsl {
       return typeOperatorFactory!().keyof(this);
     }
 
-    protected readonly(this: MaybeTsDsl<TypeTsDsl>): TypeOperatorTsDsl {
+    protected readonly(this: TypeTsDsl): TypeOperatorTsDsl {
       return typeOperatorFactory!().readonly(this);
     }
 
-    protected returnType(this: MaybeTsDsl<ts.Expression>): TypeExprTsDsl {
-      return typeExprFactory!('ReturnType').generic(typeQueryFactory!(this));
+    protected returnType(this: TsDsl<ts.Expression>): TypeExprTsDsl {
+      const node = typeExprFactory!('ReturnType');
+      node.setParent(this);
+      return node.generic(typeQueryFactory!(this));
     }
 
-    protected typeofExpr(this: MaybeTsDsl<ts.Expression>): TypeOfExprTsDsl {
+    protected typeofExpr(this: TsDsl<ts.Expression>): TypeOfExprTsDsl {
       return typeOfExprFactory!(this);
     }
 
     protected typeofType(
-      this: MaybeTsDsl<TypeTsDsl | ts.Expression>,
+      this: TypeTsDsl | TsDsl<ts.Expression>,
     ): TypeQueryTsDsl {
       return typeQueryFactory!(this);
     }
 
-    protected typeof<T extends MaybeTsDsl<TypeTsDsl | ts.Expression>>(
+    protected typeof<T extends TypeTsDsl | TsDsl<ts.Expression>>(
       this: T,
-    ): T extends MaybeTsDsl<ts.Expression>
+    ): T extends TsDsl<ts.Expression>
       ? TypeOfExprTsDsl
-      : T extends MaybeTsDsl<TypeTsDsl>
+      : T extends TypeTsDsl
         ? TypeQueryTsDsl
         : TypeQueryTsDsl | TypeOfExprTsDsl {
       if (this instanceof TsDsl) {
-        const node = this.$render();
-        return ts.isExpression(node)
-          ? (typeOfExprFactory!(this) as any)
-          : (typeQueryFactory!(this) as any);
+        // @ts-expect-error
+        return (
+          ts.isExpression(this._render())
+            ? typeOfExprFactory!(this as any)
+            : typeQueryFactory!(this)
+        ) as any;
       }
 
       if (ts.isExpression(this as any)) {
@@ -153,8 +158,16 @@ export function TypeExprMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
       return typeQueryFactory!(this) as any;
     }
 
-    protected unique(this: MaybeTsDsl<TypeTsDsl>): TypeOperatorTsDsl {
+    protected unique(this: TypeTsDsl): TypeOperatorTsDsl {
       return typeOperatorFactory!().unique(this);
+    }
+
+    override collectSymbols(out: Set<Symbol>): void {
+      super.collectSymbols(out);
+    }
+
+    override traverse(visitor: (node: SyntaxNode) => void): void {
+      super.traverse(visitor);
     }
   }
 

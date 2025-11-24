@@ -1,4 +1,5 @@
-import type { Symbol, SyntaxNode } from '@hey-api/codegen-core';
+import type { SyntaxNode } from '@hey-api/codegen-core';
+import { Symbol } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -16,19 +17,23 @@ export class DecoratorTsDsl extends Mixed {
   ) {
     super();
     this.name = name;
-    if (typeof name !== 'string' && 'id' in name) {
+    if (name instanceof Symbol) {
       this.getRootSymbol().addDependency(name);
     }
     this.args(...args);
   }
 
-  traverse(visitor: (node: SyntaxNode) => void): void {
-    console.log(visitor);
+  override collectSymbols(out: Set<Symbol>): void {
+    console.log(out);
+  }
+
+  override traverse(visitor: (node: SyntaxNode) => void): void {
+    super.traverse(visitor);
   }
 
   protected override _render() {
     const target =
-      typeof this.name !== 'string' && 'id' in this.name
+      this.name instanceof Symbol
         ? this.$maybeId(this.name.finalName)
         : this.$node(this.name);
 

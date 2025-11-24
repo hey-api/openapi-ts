@@ -1,11 +1,11 @@
-import type { Symbol } from '@hey-api/codegen-core';
+import type { Symbol, SyntaxNode } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { DecoratorTsDsl } from '../decl/decorator';
 import type { BaseCtor, MixinCtor } from './types';
 
-export interface DecoratorMethods {
+export interface DecoratorMethods extends SyntaxNode {
   /** Renders the decorators into an array of `ts.Decorator`s. */
   $decorators(): ReadonlyArray<ts.Decorator>;
   /** Adds a decorator (e.g. `@sealed({ in: 'root' })`). */
@@ -25,9 +25,7 @@ export function DecoratorMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
       name: Symbol | string | MaybeTsDsl<ts.Expression>,
       ...args: ReadonlyArray<string | MaybeTsDsl<ts.Expression>>
     ): this {
-      this.decorators.push(
-        new DecoratorTsDsl(name, ...args).setParent(this as any),
-      );
+      this.decorators.push(new DecoratorTsDsl(name, ...args).setParent(this));
       return this;
     }
 

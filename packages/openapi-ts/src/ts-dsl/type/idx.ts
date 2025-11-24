@@ -2,39 +2,47 @@ import type { SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { TypeTsDsl } from '../base';
+import { TsDsl, TypeTsDsl } from '../base';
 import {
   registerLazyAccessTypeIdxFactory,
   TypeExprMixin,
 } from '../mixins/type-expr';
 
+type Base = string | MaybeTsDsl<ts.TypeNode>;
+type Index = string | number | MaybeTsDsl<ts.TypeNode>;
+
 const Mixed = TypeExprMixin(TypeTsDsl<ts.IndexedAccessTypeNode>);
 
 export class TypeIdxTsDsl extends Mixed {
-  protected _base: string | MaybeTsDsl<ts.TypeNode>;
-  protected _index: string | MaybeTsDsl<ts.TypeNode> | number;
+  protected _base!: Base;
+  protected _index!: Index;
 
-  constructor(
-    base: string | MaybeTsDsl<ts.TypeNode>,
-    index: string | MaybeTsDsl<ts.TypeNode> | number,
-  ) {
+  constructor(base: Base, index: Index) {
     super();
-    this._base = base;
-    this._index = index;
+    this.base(base);
+    this.index(index);
   }
 
-  base(base: string | MaybeTsDsl<ts.TypeNode>): this {
+  base(base: Base): this {
     this._base = base;
+    if (this._base instanceof TsDsl) this._base.setParent(this);
     return this;
   }
 
-  index(index: string | MaybeTsDsl<ts.TypeNode> | number): this {
+  index(index: Index): this {
     this._index = index;
+    if (this._index instanceof TsDsl) this._index.setParent(this);
     return this;
   }
 
-  traverse(visitor: (node: SyntaxNode) => void): void {
-    console.log(visitor);
+  override traverse(visitor: (node: SyntaxNode) => void): void {
+    super.traverse(visitor);
+    if (this._base instanceof TsDsl) {
+      this._base.traverse(visitor);
+    }
+    if (this._index instanceof TsDsl) {
+      this._index.traverse(visitor);
+    }
   }
 
   protected override _render() {

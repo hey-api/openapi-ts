@@ -41,9 +41,7 @@ export const createQueryKeyFunction = ({
     resource: `${plugin.name}._JSONValue`,
   });
 
-  const returnType = $.type(symbolQueryKeyType.placeholder)
-    .generic(TOptionsType)
-    .idx(0);
+  const returnType = $.type(symbolQueryKeyType).generic(TOptionsType).idx(0);
 
   const baseUrlKey = getClientBaseUrlKey(plugin.context.config);
 
@@ -173,7 +171,7 @@ export const createQueryKeyType = ({
   const queryKeyType = $.type
     .alias(symbolQueryKeyType)
     .export()
-    .generic(TOptionsType, (g) => g.extends($.type(symbolOptions.placeholder)))
+    .generic(TOptionsType, (g) => g.extends($.type(symbolOptions)))
     .type(
       $.type.tuple(
         $.type.and(

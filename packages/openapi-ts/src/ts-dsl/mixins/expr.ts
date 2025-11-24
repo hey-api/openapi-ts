@@ -1,3 +1,4 @@
+import type { SyntaxNode } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -41,7 +42,7 @@ export function registerLazyAccessReturnFactory(factory: ReturnFactory): void {
   returnFactory = factory;
 }
 
-export interface ExprMethods {
+export interface ExprMethods extends SyntaxNode {
   /** Accesses a property on the current expression (e.g. `this.foo`). */
   attr(name: string | ts.MemberName | number): AttrTsDsl;
   /** Awaits the current expression (e.g. `await expr`). */

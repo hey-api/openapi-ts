@@ -37,10 +37,14 @@ export class ClassTsDsl extends Mixed {
     this.symbol.setRootNode(this);
   }
 
+  override collectSymbols(out: Set<Symbol>): void {
+    console.log(out);
+  }
+
   /** Adds one or more class members (fields, methods, etc.). */
   do(...items: ReadonlyArray<MaybeTsDsl<ts.ClassElement | ts.Node>>): this {
     for (const item of items) {
-      if (typeof item === 'object' && 'setParent' in item) {
+      if (item instanceof TsDsl) {
         item.setParent(this);
       }
       // @ts-expect-error --- IGNORE ---
@@ -86,8 +90,8 @@ export class ClassTsDsl extends Mixed {
     return this;
   }
 
-  traverse(visitor: (node: SyntaxNode) => void): void {
-    console.log(visitor);
+  override traverse(visitor: (node: SyntaxNode) => void): void {
+    super.traverse(visitor);
   }
 
   protected override _render() {

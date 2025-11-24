@@ -1,8 +1,9 @@
+import type { SyntaxNode } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import type { BaseCtor, MixinCtor } from './types';
 
-export interface LayoutMethods {
+export interface LayoutMethods extends SyntaxNode {
   /** Computes whether output should be multiline based on layout setting and element count. */
   $multiline(count: number): boolean;
   /** Sets automatic line output with optional threshold (default: 3). */
