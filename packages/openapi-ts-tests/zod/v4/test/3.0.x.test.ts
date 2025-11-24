@@ -63,6 +63,21 @@ for (const zodVersion of zodVersions) {
         }),
         description: 'generates validator schemas',
       },
+      {
+        config: createConfig({
+          input: 'validators-parameter-example.yaml',
+          output: 'validators-parameter-example',
+          plugins: [
+            {
+              compatibilityVersion: zodVersion.compatibilityVersion,
+              metadata: 'local',
+              name: 'zod',
+            },
+          ],
+        }),
+        description:
+          'generates validator schemas with parameter-level examples in metadata',
+      },
     ];
 
     it.each(scenarios)('$description', async ({ config }) => {

@@ -92,7 +92,7 @@ export const irSchemaToAst = ({
           (schema.example !== undefined ? [schema.example] : undefined);
         if (examplesArray) {
           metadataObj.prop(
-            'examples',
+            'example',
             $.array()
               .pretty()
               .elements(...examplesArray.map((ex) => $.literal(ex))),

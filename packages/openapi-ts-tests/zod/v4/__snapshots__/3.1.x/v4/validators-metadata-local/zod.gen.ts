@@ -11,7 +11,7 @@ export const zUser = z.object({
     id: z.optional(z.int().meta({
         description: 'Unique identifier for the user',
         title: 'User ID',
-        examples: [
+        example: [
             1,
             42,
             999
@@ -20,7 +20,7 @@ export const zUser = z.object({
     username: z.optional(z.string().meta({
         description: 'The user login name',
         title: 'Username',
-        examples: [
+        example: [
             'john_doe',
             'jane_smith'
         ]
@@ -28,7 +28,7 @@ export const zUser = z.object({
     email: z.optional(z.email().meta({
         description: 'User email address',
         title: 'Email Address',
-        examples: [
+        example: [
             'user@example.com',
             'test@test.org'
         ]
@@ -36,7 +36,7 @@ export const zUser = z.object({
     age: z.optional(z.int().meta({
         description: 'User age in years',
         title: 'Age',
-        examples: [
+        example: [
             25,
             30,
             45
@@ -46,7 +46,7 @@ export const zUser = z.object({
         description: 'The role of the user',
         title: 'User Role',
         deprecated: true,
-        examples: [
+        example: [
             'admin',
             'user',
             'guest'
@@ -59,7 +59,7 @@ export const zUser = z.object({
     ]).meta({
         description: 'Current status of the account',
         title: 'Account Status',
-        examples: [
+        example: [
             'active'
         ]
     }))
@@ -79,7 +79,7 @@ export const zProduct = z.object({
     sku: z.optional(z.string().regex(/^[A-Z]{3}-\d{4}$/).meta({
         description: 'Product SKU code',
         title: 'Stock Keeping Unit',
-        examples: [
+        example: [
             'ABC-1234',
             'XYZ-9999'
         ]
@@ -87,7 +87,7 @@ export const zProduct = z.object({
     price: z.optional(z.number().meta({
         description: 'Price in USD',
         title: 'Product Price',
-        examples: [
+        example: [
             19.99,
             49.95,
             99.99

@@ -3,6 +3,7 @@ import type { IR } from '~/ir/types';
 import { refToName } from '~/utils/ref';
 
 import type {
+  ExampleObject,
   ParameterObject,
   ReferenceObject,
   SchemaObject,
@@ -114,10 +115,32 @@ const parameterToIrParameter = ({
     }
   }
 
+  // Handle parameter-level examples (Record) -> convert to array
+  let examplesArray: ReadonlyArray<unknown> | undefined;
+  if (parameter.examples) {
+    // Extract values from ExampleObject Record
+    examplesArray = Object.values(parameter.examples)
+      .map((exampleObj) => {
+        if ('$ref' in exampleObj) {
+          const dereferenced = context.dereference<ExampleObject>(exampleObj);
+          return dereferenced.value;
+        }
+        return exampleObj.value;
+      })
+      .filter((val) => val !== undefined);
+  }
+
   const finalSchema: SchemaObject = {
     deprecated: parameter.deprecated,
     description: parameter.description,
     ...schema,
+    // Parameter-level example/examples override schema-level ones
+    example:
+      parameter.example !== undefined ? parameter.example : schema?.example,
+    examples:
+      examplesArray !== undefined && examplesArray.length > 0
+        ? examplesArray
+        : schema?.examples,
   };
 
   const pagination = paginationField({
