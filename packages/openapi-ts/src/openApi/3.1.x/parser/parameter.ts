@@ -131,10 +131,15 @@ const parameterToIrParameter = ({
   }
 
   const finalSchema: SchemaObject = {
-    deprecated: parameter.deprecated,
-    description: parameter.description,
     ...schema,
-    // Parameter-level example/examples override schema-level ones
+    deprecated:
+      parameter.deprecated !== undefined
+        ? parameter.deprecated
+        : schema?.deprecated,
+    description:
+      parameter.description !== undefined
+        ? parameter.description
+        : schema?.description,
     example:
       parameter.example !== undefined ? parameter.example : schema?.example,
     examples:
