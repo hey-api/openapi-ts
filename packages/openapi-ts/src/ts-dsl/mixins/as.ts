@@ -1,3 +1,4 @@
+import type { SyntaxNode } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import type { MaybeTsDsl, TypeTsDsl } from '../base';
@@ -14,7 +15,7 @@ export function registerLazyAccessAsFactory(factory: AsFactory): void {
   asFactory = factory;
 }
 
-export interface AsMethods {
+export interface AsMethods extends SyntaxNode {
   /** Creates an `as` type assertion expression (e.g. `value as Type`). */
   as(type: string | TypeTsDsl): AsTsDsl;
 }
@@ -25,6 +26,10 @@ export function AsMixin<T extends ts.Expression, TBase extends BaseCtor<T>>(
   abstract class As extends Base {
     protected as(type: string | TypeTsDsl): AsTsDsl {
       return asFactory!(this, type);
+    }
+
+    override traverse(visitor: (node: SyntaxNode) => void): void {
+      super.traverse(visitor);
     }
   }
 

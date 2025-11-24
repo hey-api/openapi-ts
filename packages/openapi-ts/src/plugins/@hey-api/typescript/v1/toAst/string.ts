@@ -74,11 +74,11 @@ export const stringToAst = ({
         const node = $.type
           .alias(symbolTypeName)
           .export()
-          .type($.type(symbolTypeId.placeholder).generic($.type.literal(type)));
+          .type($.type(symbolTypeId).generic($.type.literal(type)));
         plugin.setSymbolValue(symbolTypeName, node);
       }
       const symbol = plugin.referenceSymbol(query);
-      return $.type(symbol.placeholder);
+      return $.type(symbol);
     }
   }
 

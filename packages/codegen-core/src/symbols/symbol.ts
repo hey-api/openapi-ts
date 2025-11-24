@@ -84,7 +84,7 @@ export class Symbol {
    */
   private _name: string;
   /**
-   * Root DSL node that defines this symbol.
+   * Root node that defines this symbol.
    *
    * @private
    */
@@ -311,14 +311,14 @@ export class Symbol {
   }
 
   /**
-   * Binds the DSL node that defines this symbol.
+   * Binds the node that defines this symbol.
    *
    * This may only be set once.
    */
   setRootNode(node: ISyntaxNode): void {
     this.assertCanonical();
     if (this._rootNode && this._rootNode !== node) {
-      throw new Error('Symbol is already bound to a different root DSL node.');
+      throw new Error('Symbol is already bound to a different root node.');
     }
     this._rootNode = node;
   }
@@ -344,7 +344,7 @@ export class Symbol {
   private assertCanonical(): void {
     if (this._canonical && this._canonical !== this) {
       const message = `Illegal mutation of stub symbol ${this.toString()} → canonical: ${this._canonical.toString()}`;
-      debug(message, "symbol");
+      debug(message, 'symbol');
       throw new Error(message);
     }
   }

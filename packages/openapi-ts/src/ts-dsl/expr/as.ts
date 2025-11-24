@@ -21,9 +21,8 @@ export class AsTsDsl extends Mixed {
     this.type = type;
   }
 
-  /** Walk this node and its children with a visitor. */
-  traverse(visitor: (node: SyntaxNode) => void): void {
-    console.log(visitor);
+  override traverse(visitor: (node: SyntaxNode) => void): void {
+    super.traverse(visitor);
   }
 
   protected override _render() {

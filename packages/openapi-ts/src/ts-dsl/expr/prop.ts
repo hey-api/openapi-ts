@@ -36,8 +36,8 @@ export class ObjectPropTsDsl extends Mixed {
     return this.missingRequiredCalls().length === 0;
   }
 
-  traverse(visitor: (node: SyntaxNode) => void): void {
-    console.log(visitor);
+  override traverse(visitor: (node: SyntaxNode) => void): void {
+    super.traverse(visitor);
   }
 
   value(value: Expr | Stmt | ((p: ObjectPropTsDsl) => void)) {
@@ -61,11 +61,15 @@ export class ObjectPropTsDsl extends Mixed {
       return ts.factory.createSpreadAssignment(node);
     }
     if (this.meta.kind === 'getter') {
-      const getter = new GetterTsDsl(safePropName(this.meta.name)).do(node);
+      const getter = new GetterTsDsl(
+        this.$node(safePropName(this.meta.name)),
+      ).do(node);
       return this.$node(getter);
     }
     if (this.meta.kind === 'setter') {
-      const setter = new SetterTsDsl(safePropName(this.meta.name)).do(node);
+      const setter = new SetterTsDsl(
+        this.$node(safePropName(this.meta.name)),
+      ).do(node);
       return this.$node(setter);
     }
     if (ts.isIdentifier(node) && node.text === this.meta.name) {
@@ -81,7 +85,7 @@ export class ObjectPropTsDsl extends Mixed {
         ? ts.factory.createComputedPropertyName(
             this.$node(new IdTsDsl(this.meta.name)),
           )
-        : safePropName(this.meta.name),
+        : this.$node(safePropName(this.meta.name)),
       node,
     );
   }

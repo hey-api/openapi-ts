@@ -1,42 +1,63 @@
-import type { Symbol, SyntaxNode } from '@hey-api/codegen-core';
+import type { SyntaxNode } from '@hey-api/codegen-core';
+import { Symbol } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { TypeTsDsl } from '../base';
+import { TsDsl, TypeTsDsl } from '../base';
 import { TypeExprMixin } from '../mixins/type-expr';
+
+type Base = Symbol | string | MaybeTsDsl<ts.EntityName>;
+type Right = Symbol | string | ts.Identifier;
 
 const Mixed = TypeExprMixin(TypeTsDsl<ts.QualifiedName>);
 
 export class TypeAttrTsDsl extends Mixed {
-  protected _base?: Symbol | string | MaybeTsDsl<ts.EntityName>;
-  protected right: Symbol | string | ts.Identifier;
+  protected _base?: Base;
+  protected _right!: Right;
 
-  constructor(
-    base: Symbol | string | MaybeTsDsl<ts.EntityName>,
-    right: string | ts.Identifier,
-  );
-  constructor(right: Symbol | string | ts.Identifier);
-  constructor(
-    baseOrRight: Symbol | string | MaybeTsDsl<ts.EntityName>,
-    maybeRight?: Symbol | string | ts.Identifier,
-  ) {
+  constructor(base: Base, right: string | ts.Identifier);
+  constructor(right: Right);
+  constructor(base: Base, right?: Right) {
     super();
-    if (maybeRight) {
-      this.base(baseOrRight);
-      this.right = maybeRight;
+    if (right) {
+      this.base(base);
+      this.right(right);
     } else {
-      this.base(undefined);
-      this.right = baseOrRight as string | ts.Identifier;
+      this.base();
+      this.right(base as Right);
     }
   }
 
-  base(base?: Symbol | string | MaybeTsDsl<ts.EntityName>): this {
+  base(base?: Base): this {
     this._base = base;
+    if (this._base instanceof TsDsl) this._base.setParent(this);
     return this;
   }
 
-  traverse(visitor: (node: SyntaxNode) => void): void {
-    console.log(visitor);
+  right(right: Right): this {
+    this._right = right;
+    return this;
+  }
+
+  override collectSymbols(out: Set<Symbol>): void {
+    super.collectSymbols(out);
+    if (this._base) {
+      if (this._base instanceof Symbol) {
+        out.add(this._base);
+      } else if (this._base instanceof TsDsl) {
+        this._base.collectSymbols(out);
+      }
+    }
+    if (this._right instanceof Symbol) {
+      out.add(this._right);
+    }
+  }
+
+  override traverse(visitor: (node: SyntaxNode) => void): void {
+    super.traverse(visitor);
+    if (this._base instanceof TsDsl) {
+      this._base.traverse(visitor);
+    }
   }
 
   protected override _render() {
@@ -44,16 +65,16 @@ export class TypeAttrTsDsl extends Mixed {
       throw new Error('TypeAttrTsDsl: missing base for qualified name');
     }
     const left =
-      typeof this._base !== 'string' && this._base && 'id' in this._base
+      this._base instanceof Symbol
         ? this.$node(this._base.finalName)
         : this.$node(this._base);
     if (!ts.isEntityName(left)) {
       throw new Error('TypeAttrTsDsl: base must be an EntityName');
     }
     const right =
-      typeof this.right !== 'string' && this.right && 'id' in this.right
-        ? this.$maybeId(this.right.finalName)
-        : this.$maybeId(this.right);
+      this._right instanceof Symbol
+        ? this.$maybeId(this._right.finalName)
+        : this.$maybeId(this._right);
     return ts.factory.createQualifiedName(left, right);
   }
 }

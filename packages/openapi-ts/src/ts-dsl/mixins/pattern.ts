@@ -1,10 +1,11 @@
+import type { SyntaxNode } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import type { MaybeArray } from '../base';
 import { PatternTsDsl } from '../decl/pattern';
 import type { BaseCtor, MixinCtor } from './types';
 
-export interface PatternMethods {
+export interface PatternMethods extends SyntaxNode {
   /** Renders the pattern into a `BindingName`. */
   $pattern(): ts.BindingName | undefined;
   /** Defines an array binding pattern. */
@@ -24,30 +25,31 @@ export function PatternMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
   Base: TBase,
 ) {
   abstract class Pattern extends Base {
-    protected pattern: PatternTsDsl = new PatternTsDsl();
+    protected pattern?: PatternTsDsl;
 
     protected array(
       ...props: ReadonlyArray<string> | [ReadonlyArray<string>]
     ): this {
-      this.pattern.array(...props);
+      (this.pattern ??= new PatternTsDsl()).array(...props);
       return this;
     }
 
     protected object(
       ...props: ReadonlyArray<MaybeArray<string> | Record<string, string>>
     ): this {
-      this.pattern.object(...props);
+      (this.pattern ??= new PatternTsDsl()).object(...props);
       return this;
     }
 
     /** Adds a spread element (e.g. `...args`, `...options`) to the pattern. */
     protected spread(name: string): this {
-      this.pattern.spread(name);
+      (this.pattern ??= new PatternTsDsl()).spread(name);
       return this;
     }
 
     /** Renders the pattern into a `BindingName`. */
     protected $pattern(): ts.BindingName | undefined {
+      if (!this.pattern) return;
       return this.$node(this.pattern);
     }
   }

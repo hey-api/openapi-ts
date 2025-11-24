@@ -80,7 +80,7 @@ export const createTypeOptions = ({
     )
     .type(
       $.type.and(
-        $.type(symbolClientOptions.placeholder).$if(
+        $.type(symbolClientOptions).$if(
           isNuxtClient,
           (t) =>
             t

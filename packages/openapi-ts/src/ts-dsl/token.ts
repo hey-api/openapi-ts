@@ -1,4 +1,3 @@
-import type { SyntaxNode } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl } from './base';
@@ -54,11 +53,6 @@ export class TokenTsDsl<K extends ts.SyntaxKind = never> extends TsDsl<
     return (this as TokenTsDsl<ts.SyntaxKind.DotDotDotToken>).kind(
       ts.SyntaxKind.DotDotDotToken,
     );
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  traverse(_visitor: (node: SyntaxNode) => void): void {
-    // noop
   }
 
   protected override _render(): ts.Token<K> {

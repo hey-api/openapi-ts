@@ -13,8 +13,8 @@ export class TypeAndTsDsl extends Mixed {
     this.types(...nodes);
   }
 
-  traverse(visitor: (node: SyntaxNode) => void): void {
-    console.log(visitor);
+  override traverse(visitor: (node: SyntaxNode) => void): void {
+    super.traverse(visitor);
   }
 
   types(...nodes: Array<string | ts.TypeNode | TypeTsDsl>): this {

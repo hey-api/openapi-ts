@@ -15,8 +15,8 @@ export class ReturnTsDsl extends Mixed {
     this._returnExpr = expr;
   }
 
-  traverse(visitor: (node: SyntaxNode) => void): void {
-    console.log(visitor);
+  override traverse(visitor: (node: SyntaxNode) => void): void {
+    super.traverse(visitor);
   }
 
   protected override _render() {

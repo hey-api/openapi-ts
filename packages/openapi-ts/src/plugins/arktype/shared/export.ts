@@ -48,9 +48,7 @@ export const exportAst = ({
     const inferType = $.type
       .alias(typeInferSymbol)
       .export()
-      .type(
-        $.type(symbol.placeholder).attr(identifiers.type.infer).typeofType(),
-      );
+      .type($.type(symbol).attr(identifiers.type.infer).typeofType());
     plugin.setSymbolValue(typeInferSymbol, inferType);
   }
 };

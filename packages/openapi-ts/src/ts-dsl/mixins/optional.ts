@@ -1,8 +1,9 @@
+import type { SyntaxNode } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import type { BaseCtor, MixinCtor } from './types';
 
-export interface OptionalMethods {
+export interface OptionalMethods extends SyntaxNode {
   _optional?: boolean;
   /** Marks the node as optional when the condition is true. */
   optional(condition?: boolean): this;

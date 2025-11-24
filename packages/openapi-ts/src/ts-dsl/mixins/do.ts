@@ -1,10 +1,11 @@
+import type { SyntaxNode } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { StmtTsDsl } from '../stmt/stmt';
 import type { BaseCtor, MixinCtor } from './types';
 
-export interface DoMethods {
+export interface DoMethods extends SyntaxNode {
   /** Renders the collected `.do()` calls into an array of `Statement` nodes. */
   $do(): ReadonlyArray<ts.Statement>;
   /** Adds one or more expressions/statements to the body. */

@@ -1,3 +1,4 @@
+import type { SyntaxNode } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -6,7 +7,7 @@ import type { BaseCtor, MixinCtor } from './types';
 
 type Expr = string | MaybeTsDsl<ts.Expression>;
 
-export interface OperatorMethods {
+export interface OperatorMethods extends SyntaxNode {
   /** Logical AND — `this && expr` */
   and(expr: Expr): BinaryTsDsl;
   /** Creates an assignment expression (e.g. `this = expr`). */

@@ -2,13 +2,13 @@ import type { Symbol } from './symbols/symbol';
 
 export interface ISyntaxNode {
   /**
+   * Collect symbols referenced directly by this node into the provided accumulator.
+   */
+  collectSymbols(out: Set<Symbol>): void;
+  /**
    * Return local names introduced by this node.
    */
   getLocalNames(): Iterable<string>;
-  /**
-   * Return symbols referenced directly by this node.
-   */
-  getSymbols(): Iterable<Symbol>;
   /**
    * Rewrite local identifiers based on a rename map.
    */

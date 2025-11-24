@@ -1,9 +1,10 @@
+import type { SyntaxNode } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import type { BaseCtor, MixinCtor } from './types';
 
-export interface ValueMethods {
+export interface ValueMethods extends SyntaxNode {
   $value(): ts.Expression | undefined;
   /** Sets the initializer expression (e.g. `= expr`). */
   assign(expr: string | MaybeTsDsl<ts.Expression>): this;

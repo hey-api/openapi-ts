@@ -23,14 +23,14 @@ export class ThrowTsDsl extends Mixed {
     return this;
   }
 
-  traverse(visitor: (node: SyntaxNode) => void): void {
-    console.log(visitor);
+  override traverse(visitor: (node: SyntaxNode) => void): void {
+    super.traverse(visitor);
   }
 
   protected override _render() {
     const errorNode = this.$node(this.error);
     const messageNode = this.$node(this.msg ? [this.msg] : []).map((expr) =>
-      typeof expr === 'string' ? new LiteralTsDsl(expr).$render() : expr,
+      typeof expr === 'string' ? this.$node(new LiteralTsDsl(expr)) : expr,
     );
     if (this.useNew) {
       return ts.factory.createThrowStatement(

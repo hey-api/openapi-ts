@@ -14,12 +14,12 @@ export function debug(message: string, group: keyof typeof DEBUG_GROUPS) {
   const value = process.env.DEBUG;
   if (!value) return;
 
-  const groups = value.split(",").map(x => x.trim().toLowerCase());
+  const groups = value.split(',').map((x) => x.trim().toLowerCase());
 
   if (
     !(
-      groups.includes("*") ||
-      groups.includes("heyapi:*") ||
+      groups.includes('*') ||
+      groups.includes('heyapi:*') ||
       groups.includes(`heyapi:${group}`) ||
       groups.includes(group)
     )

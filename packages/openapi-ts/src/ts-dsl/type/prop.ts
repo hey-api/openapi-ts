@@ -21,8 +21,8 @@ export class TypePropTsDsl extends Mixed {
     fn(this);
   }
 
-  traverse(visitor: (node: SyntaxNode) => void): void {
-    console.log(visitor);
+  override traverse(visitor: (node: SyntaxNode) => void): void {
+    super.traverse(visitor);
   }
 
   /** Sets the property type. */
@@ -37,7 +37,7 @@ export class TypePropTsDsl extends Mixed {
     }
     return ts.factory.createPropertySignature(
       this.modifiers,
-      safePropName(this.name),
+      this.$node(safePropName(this.name)),
       this._optional ? this.$node(new TokenTsDsl().optional()) : undefined,
       this.$type(this._type),
     );

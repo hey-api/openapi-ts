@@ -1,10 +1,11 @@
+import type { SyntaxNode } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import type { MaybeArray } from '../base';
 import { HintTsDsl } from '../layout/hint';
 import type { BaseCtor, MixinCtor } from './types';
 
-export interface HintMethods {
+export interface HintMethods extends SyntaxNode {
   hint(lines?: MaybeArray<string>, fn?: (h: HintTsDsl) => void): this;
 }
 

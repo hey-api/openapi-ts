@@ -31,7 +31,7 @@ export const exportAst = ({
     .$if(plugin.config.comments && createSchemaComment(schema), (c, v) =>
       c.doc(v),
     )
-    .$if(ast.typeName, (c, v) => c.type($.type(z.placeholder).attr(v)))
+    .$if(ast.typeName, (c, v) => c.type($.type(z).attr(v)))
     .assign(ast.expression);
   plugin.setSymbolValue(symbol, statement);
 
@@ -40,7 +40,7 @@ export const exportAst = ({
       .alias(typeInferSymbol)
       .export()
       .type(
-        $.type(z.placeholder)
+        $.type(z)
           .attr(identifiers.infer)
           .generic($(symbol.placeholder).typeofType()),
       );
