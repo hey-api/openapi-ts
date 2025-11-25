@@ -95,7 +95,11 @@ export const irSchemaToAst = ({
             'example',
             $.array()
               .pretty()
-              .elements(...examplesArray.map((ex) => $.literal(ex))),
+              .elements(
+                ...examplesArray.map((ex) =>
+                  $.literal(ex as string | number | boolean | null),
+                ),
+              ),
           );
           hasMetadata = true;
         }

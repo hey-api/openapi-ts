@@ -93,7 +93,7 @@ export const parametersArrayToObject = ({
   return parametersObject;
 };
 
-const parameterToIrParameter = ({
+export const parameterToIrParameter = ({
   $ref,
   context,
   parameter,
