@@ -1,8 +1,8 @@
-import type { SyntaxNode } from '@hey-api/codegen-core';
+import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { TypeTsDsl } from '../base';
+import { isTsDsl, TypeTsDsl } from '../base';
 import { TokenTsDsl } from '../token';
 
 const Mixed = TypeTsDsl<ts.MappedTypeNode>;
@@ -25,6 +25,14 @@ export class TypeMappedTsDsl extends Mixed {
   constructor(name?: string) {
     super();
     this.name(name);
+  }
+
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    this.questionToken?.analyze(ctx);
+    this.readonlyToken?.analyze(ctx);
+    if (isTsDsl(this._key)) this._key.analyze(ctx);
+    if (isTsDsl(this._type)) this._type.analyze(ctx);
   }
 
   /** Returns true when all required builder calls are present. */
@@ -66,10 +74,6 @@ export class TypeMappedTsDsl extends Mixed {
   required(): this {
     this.questionToken = new TokenTsDsl().minus();
     return this;
-  }
-
-  override traverse(visitor: (node: SyntaxNode) => void): void {
-    super.traverse(visitor);
   }
 
   /** Sets the mapped value type: `[K in X]: ValueType` */

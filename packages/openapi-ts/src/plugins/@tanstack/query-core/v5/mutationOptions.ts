@@ -85,5 +85,5 @@ export const createMutationOptions = ({
           $(mutationOptionsFn).return(),
         ),
     );
-  plugin.setSymbolValue(symbolMutationOptions, statement);
+  plugin.addNode(statement);
 };

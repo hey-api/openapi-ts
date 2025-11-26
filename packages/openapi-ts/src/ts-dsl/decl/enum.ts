@@ -1,4 +1,5 @@
-import type { Symbol, SyntaxNode } from '@hey-api/codegen-core';
+import type { AnalysisContext, Symbol } from '@hey-api/codegen-core';
+import { isSymbol } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -7,6 +8,7 @@ import { DocMixin } from '../mixins/doc';
 import { ConstMixin, ExportMixin } from '../mixins/modifiers';
 import { EnumMemberTsDsl } from './member';
 
+export type EnumName = Symbol | string;
 type Value = string | number | MaybeTsDsl<ts.Expression>;
 type ValueFn = Value | ((m: EnumMemberTsDsl) => void);
 
@@ -14,19 +16,24 @@ const Mixed = ConstMixin(DocMixin(ExportMixin(TsDsl<ts.EnumDeclaration>)));
 
 export class EnumTsDsl extends Mixed {
   private _members: Array<EnumMemberTsDsl> = [];
-  private _name: string | ts.Identifier;
+  private _name: EnumName;
 
-  constructor(name: Symbol | string, fn?: (e: EnumTsDsl) => void) {
+  constructor(name: EnumName, fn?: (e: EnumTsDsl) => void) {
     super();
-    if (typeof name === 'string') {
-      this._name = name;
-    } else {
-      this._name = name.finalName;
-      this.symbol = name;
-      this.symbol.setKind('enum');
-      this.symbol.setRootNode(this);
+    this._name = name;
+    if (isSymbol(name)) {
+      name.setKind('enum');
+      name.setNode(this);
     }
     fn?.(this);
+  }
+
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    if (isSymbol(this._name)) ctx.addDependency(this._name);
+    for (const member of this._members) {
+      member.analyze(ctx);
+    }
   }
 
   /** Adds an enum member. */
@@ -42,14 +49,11 @@ export class EnumTsDsl extends Mixed {
     return this;
   }
 
-  override traverse(visitor: (node: SyntaxNode) => void): void {
-    super.traverse(visitor);
-  }
-
   protected override _render() {
     return ts.factory.createEnumDeclaration(
       this.modifiers,
-      this._name,
+      // @ts-expect-error need to improve types
+      this.$node(this._name),
       this.$node(this._members),
     );
   }

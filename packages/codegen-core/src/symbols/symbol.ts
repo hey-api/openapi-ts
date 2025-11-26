@@ -1,9 +1,11 @@
 import { debug } from '../debug';
 import type { ISymbolMeta } from '../extensions';
 import type { IFileOut } from '../files/types';
+import type { INode } from '../nodes/node';
 import { wrapId } from '../renderer/utils';
-import type { ISyntaxNode } from '../syntax-node';
 import type { ISymbolIn, SymbolImportKind, SymbolKind } from './types';
+
+export const symbolBrand = globalThis.Symbol('symbol');
 
 export class Symbol {
   /**
@@ -49,10 +51,8 @@ export class Symbol {
   private _file?: IFileOut;
   /**
    * The alias-resolved, conflict-free emitted name.
-   *
-   * @private
    */
-  private _finalName?: string;
+  _finalName?: string;
   /**
    * Custom strategy to determine file output path.
    *
@@ -84,12 +84,14 @@ export class Symbol {
    */
   private _name: string;
   /**
-   * Root node that defines this symbol.
+   * Node that defines this symbol.
    *
    * @private
    */
-  private _rootNode?: ISyntaxNode;
+  private _node?: INode;
 
+  /** Brand used for identifying symbols. */
+  readonly '~brand': symbol = symbolBrand;
   /**
    * Globally unique, stable symbol ID.
    */
@@ -208,10 +210,10 @@ export class Symbol {
   }
 
   /**
-   * Read‑only accessor for the defining DSL root node.
+   * Read‑only accessor for the defining node.
    */
-  get rootNode(): ISyntaxNode | undefined {
-    return this.canonical._rootNode;
+  get node(): INode | undefined {
+    return this.canonical._node;
   }
 
   /**
@@ -315,12 +317,13 @@ export class Symbol {
    *
    * This may only be set once.
    */
-  setRootNode(node: ISyntaxNode): void {
+  setNode(node: INode): void {
     this.assertCanonical();
-    if (this._rootNode && this._rootNode !== node) {
-      throw new Error('Symbol is already bound to a different root node.');
+    if (this._node && this._node !== node) {
+      throw new Error('Symbol is already bound to a different node.');
     }
-    this._rootNode = node;
+    this._node = node;
+    node.symbol = this;
   }
 
   /**
@@ -348,4 +351,10 @@ export class Symbol {
       throw new Error(message);
     }
   }
+}
+
+export function isSymbol(value: unknown): value is Symbol {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
+  const obj = value as { '~brand'?: unknown };
+  return obj['~brand'] === symbolBrand && Object.hasOwn(obj, '~brand');
 }

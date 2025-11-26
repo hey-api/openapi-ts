@@ -1,4 +1,5 @@
-import type { Symbol, SyntaxNode } from '@hey-api/codegen-core';
+import type { AnalysisContext, Symbol } from '@hey-api/codegen-core';
+import { isSymbol } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl, TypeTsDsl } from '../base';
@@ -18,7 +19,8 @@ import { ParamMixin } from '../mixins/param';
 import { TypeParamsMixin } from '../mixins/type-params';
 import { TypeExprTsDsl } from '../type/expr';
 
-type FuncMode = 'arrow' | 'decl' | 'expr';
+export type FuncMode = 'arrow' | 'decl' | 'expr';
+export type FuncName = Symbol | string;
 
 const Mixed = AbstractMixin(
   AsMixin(
@@ -44,33 +46,36 @@ const Mixed = AbstractMixin(
 
 class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends Mixed {
   protected mode?: FuncMode;
-  protected name?: string;
+  protected name?: FuncName;
   protected _returns?: TypeTsDsl;
 
   constructor();
   constructor(fn: (f: ImplFuncTsDsl<'arrow'>) => void);
-  constructor(name: Symbol | string);
-  constructor(name: Symbol | string, fn: (f: ImplFuncTsDsl<'decl'>) => void);
+  constructor(name: FuncName);
+  constructor(name: FuncName, fn: (f: ImplFuncTsDsl<'decl'>) => void);
   constructor(
-    nameOrFn?: Symbol | string | ((f: ImplFuncTsDsl<'arrow'>) => void),
+    name?: FuncName | ((f: ImplFuncTsDsl<'arrow'>) => void),
     fn?: (f: ImplFuncTsDsl<'decl'>) => void,
   ) {
     super();
-    if (typeof nameOrFn === 'function') {
+    if (typeof name === 'function') {
       this.mode = 'arrow';
-      nameOrFn(this as unknown as FuncTsDsl<'arrow'>);
-    } else if (nameOrFn) {
+      name(this as unknown as FuncTsDsl<'arrow'>);
+    } else if (name) {
       this.mode = 'decl';
-      if (typeof nameOrFn === 'string') {
-        this.name = nameOrFn;
-      } else {
-        this.name = nameOrFn.finalName;
-        this.symbol = nameOrFn;
-        this.symbol.setKind('function');
-        this.symbol.setRootNode(this);
+      this.name = name;
+      if (isSymbol(name)) {
+        name.setKind('function');
+        name.setNode(this);
       }
       fn?.(this as unknown as FuncTsDsl<'decl'>);
     }
+  }
+
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    if (isSymbol(this.name)) ctx.addDependency(this.name);
+    this._returns?.analyze(ctx);
   }
 
   /** Switches the function to an arrow function form. */
@@ -97,10 +102,6 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends Mixed {
     return this;
   }
 
-  override traverse(visitor: (node: SyntaxNode) => void): void {
-    super.traverse(visitor);
-  }
-
   // @ts-expect-error --- need to fix types ---
   protected override _render(): M extends 'decl'
     ? ts.FunctionDeclaration
@@ -112,7 +113,8 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends Mixed {
       return ts.factory.createFunctionDeclaration(
         [...this.$decorators(), ...this.modifiers],
         undefined,
-        this.name,
+        // @ts-expect-error need to improve types
+        this.$node(this.name),
         this.$generics(),
         this.$params(),
         this.$type(this._returns),
@@ -124,7 +126,8 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends Mixed {
       return ts.factory.createFunctionExpression(
         this.modifiers,
         undefined,
-        this.name,
+        // @ts-expect-error need to improve types
+        this.$node(this.name),
         this.$generics(),
         this.$params(),
         this.$type(this._returns),

@@ -54,7 +54,7 @@ const operationToDataType = ({
           state,
         }),
       );
-    plugin.setSymbolValue(symbolWebhookPayload, node);
+    plugin.addNode(node);
 
     data.properties.body = { symbolRef: symbolWebhookPayload };
     dataRequired.push('body');
@@ -98,7 +98,7 @@ const operationToDataType = ({
         state,
       }),
     );
-  plugin.setSymbolValue(symbolWebhookRequest, node);
+  plugin.addNode(node);
 
   return symbolWebhookRequest;
 };

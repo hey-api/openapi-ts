@@ -38,9 +38,7 @@ export const createClientConfigType = ({
       'to ensure your client always has the correct values.',
     ])
     .generic('T', (g) =>
-      g
-        .extends(symbolDefaultClientOptions.placeholder)
-        .default(symbolClientOptions.placeholder),
+      g.extends(symbolDefaultClientOptions).default(symbolClientOptions),
     )
     .type(
       $.type
@@ -50,20 +48,18 @@ export const createClientConfigType = ({
             .optional()
             .type(
               $.type(symbolConfig).generic(
-                $.type.and(symbolDefaultClientOptions.placeholder, 'T'),
+                $.type.and(symbolDefaultClientOptions, 'T'),
               ),
             ),
         )
         .returns(
           $.type(symbolConfig).generic(
             $.type.and(
-              $.type('Required').generic(
-                symbolDefaultClientOptions.placeholder,
-              ),
+              $.type('Required').generic(symbolDefaultClientOptions),
               'T',
             ),
           ),
         ),
     );
-  plugin.setSymbolValue(symbolCreateClientConfig, typeCreateClientConfig);
+  plugin.addNode(typeCreateClientConfig);
 };

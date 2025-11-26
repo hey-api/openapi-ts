@@ -1,3 +1,4 @@
+import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeArray } from '../base';
@@ -17,6 +18,10 @@ export class DocTsDsl extends TsDsl<ts.Node> {
       }
     }
     fn?.(this);
+  }
+
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
   }
 
   add(...lines: ReadonlyArray<string>): this {

@@ -33,17 +33,13 @@ export const exportAst = ({
     )
     .$if(ast.typeName, (c, v) => c.type($.type(z).attr(v)))
     .assign(ast.expression);
-  plugin.setSymbolValue(symbol, statement);
+  plugin.addNode(statement);
 
   if (typeInferSymbol) {
     const inferType = $.type
       .alias(typeInferSymbol)
       .export()
-      .type(
-        $.type(z)
-          .attr(identifiers.infer)
-          .generic($(symbol.placeholder).typeofType()),
-      );
-    plugin.setSymbolValue(typeInferSymbol, inferType);
+      .type($.type(z).attr(identifiers.infer).generic($(symbol).typeofType()));
+    plugin.addNode(inferType);
   }
 };

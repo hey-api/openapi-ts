@@ -24,7 +24,7 @@ export const arrayToAst = ({
     category: 'external',
     resource: 'valibot.v',
   });
-  const functionName = $(v.placeholder).attr(identifiers.schemas.array);
+  const functionName = $(v).attr(identifiers.schemas.array);
 
   if (!schema.items) {
     const expression = functionName.call(
@@ -84,20 +84,20 @@ export const arrayToAst = ({
   }
 
   if (schema.minItems === schema.maxItems && schema.minItems !== undefined) {
-    const expression = $(v.placeholder)
+    const expression = $(v)
       .attr(identifiers.actions.length)
       .call($.fromValue(schema.minItems));
     result.pipes.push(expression);
   } else {
     if (schema.minItems !== undefined) {
-      const expression = $(v.placeholder)
+      const expression = $(v)
         .attr(identifiers.actions.minLength)
         .call($.fromValue(schema.minItems));
       result.pipes.push(expression);
     }
 
     if (schema.maxItems !== undefined) {
-      const expression = $(v.placeholder)
+      const expression = $(v)
         .attr(identifiers.actions.maxLength)
         .call($.fromValue(schema.maxItems));
       result.pipes.push(expression);

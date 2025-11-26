@@ -1,42 +1,38 @@
-import type { SyntaxNode } from '@hey-api/codegen-core';
-import { Symbol } from '@hey-api/codegen-core';
+import type { AnalysisContext, Symbol } from '@hey-api/codegen-core';
+import { isSymbol } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { TsDsl } from '../base';
+import { isTsDsl, TsDsl } from '../base';
 import { ArgsMixin } from '../mixins/args';
+
+export type DecoratorName = Symbol | string | MaybeTsDsl<ts.Expression>;
 
 const Mixed = ArgsMixin(TsDsl<ts.Decorator>);
 
 export class DecoratorTsDsl extends Mixed {
-  protected name: Symbol | string | MaybeTsDsl<ts.Expression>;
+  protected name: DecoratorName;
 
   constructor(
-    name: Symbol | string | MaybeTsDsl<ts.Expression>,
+    name: DecoratorName,
     ...args: ReadonlyArray<string | MaybeTsDsl<ts.Expression>>
   ) {
     super();
     this.name = name;
-    if (name instanceof Symbol) {
-      this.getRootSymbol().addDependency(name);
-    }
     this.args(...args);
   }
 
-  override collectSymbols(out: Set<Symbol>): void {
-    console.log(out);
-  }
-
-  override traverse(visitor: (node: SyntaxNode) => void): void {
-    super.traverse(visitor);
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    if (isSymbol(this.name)) {
+      ctx.addDependency(this.name);
+    } else if (isTsDsl(this.name)) {
+      this.name.analyze(ctx);
+    }
   }
 
   protected override _render() {
-    const target =
-      this.name instanceof Symbol
-        ? this.$maybeId(this.name.finalName)
-        : this.$node(this.name);
-
+    const target = this.$node(this.name);
     const args = this.$args();
     return ts.factory.createDecorator(
       args.length

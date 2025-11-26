@@ -1,4 +1,4 @@
-import type { SyntaxNode } from '@hey-api/codegen-core';
+import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl, TypeTsDsl } from '../base';
@@ -30,8 +30,9 @@ export class ParamTsDsl extends Mixed {
     }
   }
 
-  override traverse(visitor: (node: SyntaxNode) => void): void {
-    super.traverse(visitor);
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    this._type?.analyze(ctx);
   }
 
   /** Sets the parameter type. */

@@ -50,12 +50,12 @@ export const irSchemaToAst = ({
     };
     const refSymbol = plugin.referenceSymbol(query);
     if (plugin.isSymbolRegistered(query)) {
-      const ref = $(refSymbol.placeholder);
+      const ref = $(refSymbol);
       ast.pipes.push(ref);
     } else {
-      const lazyExpression = $(v.placeholder)
+      const lazyExpression = $(v)
         .attr(identifiers.schemas.lazy)
-        .call($.func().do($(refSymbol.placeholder).return()));
+        .call($.func().do($(refSymbol).return()));
       ast.pipes.push(lazyExpression);
       state.hasLazyExpression.value = true;
     }
@@ -69,7 +69,7 @@ export const irSchemaToAst = ({
     ast.pipes.push(typeAst.expression);
 
     if (plugin.config.metadata && schema.description) {
-      const expression = $(v.placeholder)
+      const expression = $(v)
         .attr(identifiers.actions.metadata)
         .call($.object().prop('description', $.literal(schema.description)));
       ast.pipes.push(expression);
@@ -91,12 +91,12 @@ export const irSchemaToAst = ({
       });
 
       if (schema.logicalOperator === 'and') {
-        const intersectExpression = $(v.placeholder)
+        const intersectExpression = $(v)
           .attr(identifiers.schemas.intersect)
           .call($.array(...itemsAst));
         ast.pipes.push(intersectExpression);
       } else {
-        const unionExpression = $(v.placeholder)
+        const unionExpression = $(v)
           .attr(identifiers.schemas.union)
           .call($.array(...itemsAst));
         ast.pipes.push(unionExpression);
@@ -120,9 +120,7 @@ export const irSchemaToAst = ({
 
   if (ast.pipes.length) {
     if (schema.accessScope === 'read') {
-      const readonlyExpression = $(v.placeholder)
-        .attr(identifiers.actions.readonly)
-        .call();
+      const readonlyExpression = $(v).attr(identifiers.actions.readonly).call();
       ast.pipes.push(readonlyExpression);
     }
 
@@ -132,7 +130,7 @@ export const irSchemaToAst = ({
       const isBigInt = schema.type === 'integer' && schema.format === 'int64';
       callParameter = numberParameter({ isBigInt, value: schema.default });
       ast.pipes = [
-        $(v.placeholder)
+        $(v)
           .attr(identifiers.schemas.optional)
           .call(pipesToAst({ pipes: ast.pipes, plugin }), callParameter),
       ];
@@ -140,7 +138,7 @@ export const irSchemaToAst = ({
 
     if (optional && !callParameter) {
       ast.pipes = [
-        $(v.placeholder)
+        $(v)
           .attr(identifiers.schemas.optional)
           .call(pipesToAst({ pipes: ast.pipes, plugin })),
       ];

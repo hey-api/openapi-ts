@@ -43,7 +43,7 @@ export default defineConfig(() => {
             // 'invalid',
             // 'full.yaml',
             // 'object-property-names.yaml',
-            // 'openai.yaml',
+            'openai.yaml',
             // 'opencode.yaml',
             // 'pagination-ref.yaml',
             // 'sdk-instance.yaml',
@@ -53,7 +53,7 @@ export default defineConfig(() => {
             // 'validators.yaml',
             // 'validators-circular-ref.json',
             // 'validators-circular-ref-2.yaml',
-            'zoom-video-sdk.json',
+            // 'zoom-video-sdk.json',
           ),
           // path: 'https://get.heyapi.dev/hey-api/backend?branch=main&version=1.0.0',
           // path: 'http://localhost:4000/',
@@ -237,6 +237,7 @@ export default defineConfig(() => {
           //   error: '他們_error_{{name}}',
           //   name: '你們_errors_{{name}}',
           // },
+          // exportFromIndex: false,
           name: '@hey-api/typescript',
           // requests: '我們_data_{{name}}',
           // responses: {
@@ -263,7 +264,7 @@ export default defineConfig(() => {
           // },
           // include...
           // instance: true,
-          // name: '@hey-api/sdk',
+          name: '@hey-api/sdk',
           // operationId: false,
           // paramsStructure: 'flat',
           // responseStyle: 'data',
@@ -272,7 +273,7 @@ export default defineConfig(() => {
           // signature: 'object',
           // transformer: '@hey-api/transformers',
           // transformer: true,
-          validator: 'valibot',
+          validator: 'zod',
           // validator: {
           //   request: 'zod',
           //   response: 'zod',
@@ -371,18 +372,18 @@ export default defineConfig(() => {
         {
           // case: 'SCREAMING_SNAKE_CASE',
           // comments: false,
-          // definitions: 'z{{name}}Definition',
+          definitions: 'z{{name}}',
           exportFromIndex: true,
           // metadata: true,
-          // name: 'valibot',
+          name: 'valibot',
           // requests: {
           //   case: 'PascalCase',
           //   name: '{{name}}Data',
           // },
-          // responses: {
-          //   // case: 'snake_case',
-          //   name: 'z{{name}}TestResponse',
-          // },
+          responses: {
+            // case: 'snake_case',
+            name: 'z{{name}}TestResponse',
+          },
           // webhooks: {
           //   name: 'q{{name}}CoolWebhook',
           // },
@@ -425,10 +426,7 @@ export default defineConfig(() => {
             validator({ $, schema, v }) {
               return [
                 $.const('parsed').assign(
-                  $(v.placeholder)
-                    .attr('safeParseAsync')
-                    .call(schema.placeholder, 'data')
-                    .await(),
+                  $(v).attr('safeParseAsync').call(schema, 'data').await(),
                 ),
                 $('parsed').return(),
               ];
@@ -449,9 +447,9 @@ export default defineConfig(() => {
             //     infer: 'D{{name}}ZodType',
             //   },
           },
-          // exportFromIndex: true,
+          exportFromIndex: true,
           metadata: true,
-          // name: 'zod',
+          name: 'zod',
           // requests: {
           //   // case: 'SCREAMING_SNAKE_CASE',
           //   // name: 'z{{name}}TestData',
@@ -505,10 +503,7 @@ export default defineConfig(() => {
             validator({ $, schema }) {
               return [
                 $.const('parsed').assign(
-                  $(schema.placeholder)
-                    .attr('safeParseAsync')
-                    .call('data')
-                    .await(),
+                  $(schema).attr('safeParseAsync').call('data').await(),
                 ),
                 $('parsed').return(),
               ];

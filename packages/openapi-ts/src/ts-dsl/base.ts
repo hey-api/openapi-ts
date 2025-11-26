@@ -1,26 +1,26 @@
 // TODO: symbol should be protected, but needs to be public to satisfy types
-import type { Symbol, SyntaxNode } from '@hey-api/codegen-core';
+import type { AnalysisContext, Node } from '@hey-api/codegen-core';
+import { Symbol } from '@hey-api/codegen-core';
 import { debug } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 export type MaybeArray<T> = T | ReadonlyArray<T>;
 
-export interface ITsDsl<T extends ts.Node = ts.Node> extends SyntaxNode {
+export interface ITsDsl<T extends ts.Node = ts.Node> extends Node {
   /** Render this node into a concrete TypeScript AST. */
   $render(): T;
 }
 
-// @deprecated
-export type Constructor<T = ITsDsl> = new (...args: ReadonlyArray<any>) => T;
+export const tsDslBrand = globalThis.Symbol('ts-dsl');
 
 export abstract class TsDsl<T extends ts.Node = ts.Node> implements ITsDsl<T> {
   /** Render this node into a concrete TypeScript AST. */
   protected abstract _render(): T;
 
-  /** Parent node in the constructed syntax tree. */
-  protected parent?: TsDsl<any>;
+  readonly '~brand': symbol = tsDslBrand;
 
-  /** The codegen symbol associated with this node. */
+  parent?: Node;
+
   symbol?: Symbol;
 
   /** Conditionally applies a callback to this builder. */
@@ -106,44 +106,9 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements ITsDsl<T> {
     return this._render();
   }
 
-  /** Returns all symbols referenced by this node (directly or through children). */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  collectSymbols(_out: Set<Symbol>): void {
+  analyze(_: AnalysisContext): void {
     // noop
-  }
-
-  /** Returns all locally declared names within this node. */
-  getLocalNames(): Iterable<string> {
-    return [];
-  }
-
-  /** Rewrites internal identifier nodes after final name resolution. */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  rewriteIdentifiers(_map: Map<string, string>): void {
-    // noop
-  }
-
-  /** Assigns the parent node, enforcing a single-parent invariant. */
-  setParent(parent: TsDsl<any>): this {
-    if (this.parent && this.parent !== parent) {
-      const message = `${this.constructor.name} already had a parent (${this.parent.constructor.name}), new parent attempted: ${parent.constructor.name}`;
-      debug(message, 'dsl');
-      throw new Error(message);
-    }
-
-    if (this.symbol) {
-      const message = `${this.constructor.name} has BOTH a symbol and a parent. This violates DSL invariants.`;
-      debug(message, 'dsl');
-      throw new Error(message);
-    }
-
-    this.parent = parent;
-    return this;
-  }
-
-  /** Walk this node and its children with a visitor. */
-  traverse(visitor: (node: SyntaxNode) => void): void {
-    visitor(this);
   }
 
   protected $maybeId<T extends string | ts.Expression>(
@@ -158,8 +123,11 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements ITsDsl<T> {
     if (value === undefined) {
       return undefined as NodeOfMaybe<I>;
     }
+    if (value instanceof Symbol) {
+      return this.$maybeId(value.finalName) as NodeOfMaybe<I>;
+    }
     if (typeof value === 'string') {
-      return ts.factory.createIdentifier(value) as NodeOfMaybe<I>;
+      return this.$maybeId(value) as NodeOfMaybe<I>;
     }
     if (value instanceof Array) {
       return value.map((item) => this.unwrap(item)) as NodeOfMaybe<I>;
@@ -173,6 +141,12 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements ITsDsl<T> {
   ): TypeOfMaybe<I> {
     if (value === undefined) {
       return undefined as TypeOfMaybe<I>;
+    }
+    if (value instanceof Symbol) {
+      return ts.factory.createTypeReferenceNode(
+        value.finalName,
+        args,
+      ) as TypeOfMaybe<I>;
     }
     if (typeof value === 'string') {
       return ts.factory.createTypeReferenceNode(value, args) as TypeOfMaybe<I>;
@@ -194,62 +168,22 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements ITsDsl<T> {
     return this.unwrap(value as any) as TypeOfMaybe<I>;
   }
 
-  /** Returns the root symbol associated with this DSL subtree. */
-  protected getRootSymbol(): Symbol {
-    if (!this.parent && !this.symbol) {
-      const message = `${this.constructor.name} has neither a parent nor a symbol — root symbol resolution failed.`;
-      debug(message, 'dsl');
-      throw new Error(message);
-    }
-    return this.parent ? this.parent.getRootSymbol() : this.symbol!.canonical;
-  }
-
   /** Unwraps nested nodes into raw TypeScript AST. */
   protected unwrap<I>(value: I): I extends TsDsl<infer N> ? N : I {
-    return (
-      value instanceof TsDsl ? value._render() : value
-    ) as I extends TsDsl<infer N> ? N : I;
+    return (isTsDsl(value) ? value._render() : value) as I extends TsDsl<
+      infer N
+    >
+      ? N
+      : I;
   }
 
-  /** Validate DSL invariants. */
+  /** Validate invariants. */
   protected _validate(): void {
-    if (!this.parent && !this.symbol) {
-      const message =
-        `${this.constructor.name}: node has neither a parent nor a symbol — ` +
-        `this likely means the node was never attached to a parent or is incorrectly ` +
-        `being treated as a root-level construct.`;
-      debug(message, 'dsl');
-      // TODO: enable later
-      // throw new Error(message);
-    }
-
-    if (this.parent && this.symbol) {
-      const message = `${this.constructor.name}: non-top-level node must not have a symbol`;
-      debug(message, 'dsl');
-      throw new Error(message);
-    }
-
-    if (this.parent === undefined && this.symbol === undefined) {
-      const message = `${this.constructor.name}: non-root node is missing a parent`;
-      debug(message, 'dsl');
-      // TODO: enable later
-      // throw new Error(message);
-    }
-
     if (this.symbol && this.symbol.canonical !== this.symbol) {
       const message = `${this.constructor.name}: node is holding a non-canonical (stub) symbol`;
       debug(message, 'dsl');
       throw new Error(message);
     }
-
-    this.traverse((node) => {
-      const dsl = node as TsDsl<any>;
-      if (dsl !== this && !dsl.parent) {
-        const message = `${dsl.constructor.name}: child node has missing parent`;
-        debug(message, 'dsl');
-        throw new Error(message);
-      }
-    });
   }
 }
 
@@ -300,3 +234,9 @@ type TypeOf<I> =
           : I extends ts.TypeNode
             ? I
             : never;
+
+export function isTsDsl(value: unknown): value is TsDsl {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
+  const obj = value as { '~brand'?: unknown };
+  return obj['~brand'] === tsDslBrand && Object.hasOwn(obj, '~brand');
+}

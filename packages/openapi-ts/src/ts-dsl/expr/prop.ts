@@ -1,16 +1,17 @@
-import type { SyntaxNode } from '@hey-api/codegen-core';
+import type { AnalysisContext, Symbol } from '@hey-api/codegen-core';
+import { isSymbol } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { TsDsl } from '../base';
+import { isTsDsl, TsDsl } from '../base';
 import { GetterTsDsl } from '../decl/getter';
 import { SetterTsDsl } from '../decl/setter';
 import { DocMixin } from '../mixins/doc';
 import { safePropName } from '../utils/prop';
 import { IdTsDsl } from './id';
 
-type Expr = string | MaybeTsDsl<ts.Expression>;
-type Stmt = string | MaybeTsDsl<ts.Statement>;
+type Expr = Symbol | string | MaybeTsDsl<ts.Expression>;
+type Stmt = Symbol | string | MaybeTsDsl<ts.Statement>;
 type Kind = 'computed' | 'getter' | 'prop' | 'setter' | 'spread';
 
 type Meta =
@@ -31,13 +32,18 @@ export class ObjectPropTsDsl extends Mixed {
     this.meta = meta;
   }
 
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    if (isSymbol(this._value)) {
+      ctx.addDependency(this._value);
+    } else if (isTsDsl(this._value)) {
+      this._value.analyze(ctx);
+    }
+  }
+
   /** Returns true when all required builder calls are present. */
   get isValid(): boolean {
     return this.missingRequiredCalls().length === 0;
-  }
-
-  override traverse(visitor: (node: SyntaxNode) => void): void {
-    super.traverse(visitor);
   }
 
   value(value: Expr | Stmt | ((p: ObjectPropTsDsl) => void)) {

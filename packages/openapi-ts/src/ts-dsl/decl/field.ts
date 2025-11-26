@@ -1,7 +1,8 @@
-import type { SyntaxNode } from '@hey-api/codegen-core';
+import type { AnalysisContext } from '@hey-api/codegen-core';
+import { isSymbol } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
-import { TsDsl, TypeTsDsl } from '../base';
+import { isTsDsl, TsDsl, TypeTsDsl } from '../base';
 import { DecoratorMixin } from '../mixins/decorator';
 import { DocMixin } from '../mixins/doc';
 import {
@@ -12,7 +13,10 @@ import {
   StaticMixin,
 } from '../mixins/modifiers';
 import { ValueMixin } from '../mixins/value';
+import type { TypeExprName } from '../type/expr';
 import { TypeExprTsDsl } from '../type/expr';
+
+export type FieldType = TypeExprName | TypeTsDsl;
 
 const Mixed = DecoratorMixin(
   DocMixin(
@@ -36,14 +40,19 @@ export class FieldTsDsl extends Mixed {
     fn?.(this);
   }
 
-  /** Sets the field type. */
-  type(type: string | TypeTsDsl): this {
-    this._type = type instanceof TypeTsDsl ? type : new TypeExprTsDsl(type);
-    return this;
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    if (isSymbol(this._type)) {
+      ctx.addDependency(this._type);
+    } else if (isTsDsl(this._type)) {
+      this._type.analyze(ctx);
+    }
   }
 
-  override traverse(visitor: (node: SyntaxNode) => void): void {
-    super.traverse(visitor);
+  /** Sets the field type. */
+  type(type: FieldType): this {
+    this._type = type instanceof TypeTsDsl ? type : new TypeExprTsDsl(type);
+    return this;
   }
 
   protected override _render() {

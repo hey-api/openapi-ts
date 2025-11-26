@@ -48,11 +48,11 @@ export const irSchemaToAst = ({
     };
     const refSymbol = plugin.referenceSymbol(query);
     if (plugin.isSymbolRegistered(query)) {
-      ast.expression = $(refSymbol.placeholder);
+      ast.expression = $(refSymbol);
     } else {
-      ast.expression = $(z.placeholder)
+      ast.expression = $(z)
         .attr(identifiers.lazy)
-        .call($.func().returns('any').do($(refSymbol.placeholder).return()));
+        .call($.func().returns('any').do($(refSymbol).return()));
       ast.hasLazyExpression = true;
       state.hasLazyExpression.value = true;
     }
@@ -69,7 +69,7 @@ export const irSchemaToAst = ({
       ast.expression = ast.expression
         .attr(identifiers.register)
         .call(
-          $(z.placeholder).attr(identifiers.globalRegistry),
+          $(z).attr(identifiers.globalRegistry),
           $.object()
             .pretty()
             .prop('description', $.literal(schema.description)),
@@ -99,7 +99,7 @@ export const irSchemaToAst = ({
           firstSchema.logicalOperator === 'or' ||
           (firstSchema.type && firstSchema.type !== 'object')
         ) {
-          ast.expression = $(z.placeholder)
+          ast.expression = $(z)
             .attr(identifiers.intersection)
             .call(...itemSchemas.map((schema) => schema.expression));
         } else {
@@ -109,7 +109,7 @@ export const irSchemaToAst = ({
               .expression!.attr(identifiers.and)
               .call(
                 schema.hasLazyExpression
-                  ? $(z.placeholder)
+                  ? $(z)
                       .attr(identifiers.lazy)
                       .call($.func().do(schema.expression.return()))
                   : schema.expression,
@@ -117,7 +117,7 @@ export const irSchemaToAst = ({
           });
         }
       } else {
-        ast.expression = $(z.placeholder)
+        ast.expression = $(z)
           .attr(identifiers.union)
           .call(
             $.array()
@@ -150,9 +150,7 @@ export const irSchemaToAst = ({
     }
 
     if (optional) {
-      ast.expression = $(z.placeholder)
-        .attr(identifiers.optional)
-        .call(ast.expression);
+      ast.expression = $(z).attr(identifiers.optional).call(ast.expression);
       ast.typeName = identifiers.ZodOptional;
     }
 

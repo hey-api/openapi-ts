@@ -5,6 +5,7 @@ import colorSupport from 'color-support';
 colors.enabled = colorSupport().hasBasic;
 
 const DEBUG_GROUPS = {
+  analyzer: colors.greenBright,
   dsl: colors.cyanBright,
   registry: colors.blueBright,
   symbol: colors.magentaBright,

@@ -1,3 +1,4 @@
+import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { BaseCtor, MixinCtor } from './types';
@@ -22,6 +23,10 @@ function ModifiersMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
 ) {
   abstract class Modifiers extends Base {
     protected modifiers: Array<ts.Modifier> = [];
+
+    override analyze(ctx: AnalysisContext): void {
+      super.analyze(ctx);
+    }
 
     protected _m(kind: ts.ModifierSyntaxKind, condition: boolean): this {
       if (condition) this.modifiers.push(ts.factory.createModifier(kind));

@@ -4,8 +4,7 @@ import ts from 'typescript';
 import { createOperationKey, operationResponsesMap } from '~/ir/operation';
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
-import { $ } from '~/ts-dsl';
-import { TsDsl } from '~/ts-dsl';
+import { $, isTsDsl } from '~/ts-dsl';
 import { refToName } from '~/utils/ref';
 
 import type { HeyApiTransformersPlugin } from './types';
@@ -28,7 +27,7 @@ const isNodeReturnStatement = ({
 }: {
   node: ts.Expression | ts.Statement | Expr;
 }) => {
-  if (node instanceof TsDsl) {
+  if (isTsDsl(node)) {
     node = node.$render();
   }
   return node.kind === ts.SyntaxKind.ReturnStatement;
@@ -112,13 +111,13 @@ const processSchemaType = ({
         });
 
         if (nodes.length) {
-          const node = $.const(symbol.placeholder).assign(
+          const node = $.const(symbol).assign(
             // TODO: parser - add types, generate types without transforms
             $.func()
               .param(dataVariableName, (p) => p.type('any'))
               .do(...ensureStatements(nodes)),
           );
-          plugin.setSymbolValue(symbol, node);
+          plugin.addNode(node);
         }
       } finally {
         buildingSymbols.delete(symbol.id);
@@ -131,7 +130,7 @@ const processSchemaType = ({
     const currentValue = plugin.gen.symbols.getValue(symbol.id);
     if (currentValue || buildingSymbols.has(symbol.id)) {
       const ref = plugin.referenceSymbol(query);
-      const callExpression = $(ref.placeholder).call(dataExpression);
+      const callExpression = $(ref).call(dataExpression);
 
       if (dataExpression) {
         // In a map callback, the item needs to be returned, not just the transformation result
@@ -358,10 +357,10 @@ export const handler: HeyApiTransformersPlugin['Handler'] = ({ plugin }) => {
           $.func()
             .async()
             .param(dataVariableName, (p) => p.type('any'))
-            .returns($.type('Promise').generic(symbolResponse.placeholder))
+            .returns($.type('Promise').generic(symbolResponse))
             .do(...ensureStatements(nodes)),
         );
-      plugin.setSymbolValue(symbol, value);
+      plugin.addNode(value);
     },
     {
       order: 'declarations',

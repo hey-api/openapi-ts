@@ -1,4 +1,5 @@
-import type { Symbol, SyntaxNode } from '@hey-api/codegen-core';
+import type { AnalysisContext, Symbol } from '@hey-api/codegen-core';
+import { isSymbol } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl, TypeTsDsl } from '../base';
@@ -8,6 +9,8 @@ import { DefaultMixin, ExportMixin } from '../mixins/modifiers';
 import { PatternMixin } from '../mixins/pattern';
 import { ValueMixin } from '../mixins/value';
 import { TypeExprTsDsl } from '../type/expr';
+
+export type VarName = Symbol | string;
 
 const Mixed = DefaultMixin(
   DocMixin(
@@ -19,21 +22,22 @@ const Mixed = DefaultMixin(
 
 export class VarTsDsl extends Mixed {
   protected kind: ts.NodeFlags = ts.NodeFlags.None;
-  protected name?: string;
+  protected name?: VarName;
   protected _type?: TypeTsDsl;
 
-  constructor(name?: Symbol | string) {
+  constructor(name?: VarName) {
     super();
-    if (name) {
-      if (typeof name === 'string') {
-        this.name = name;
-      } else {
-        this.name = name.finalName;
-        this.symbol = name;
-        this.symbol.setKind('var');
-        this.symbol.setRootNode(this);
-      }
+    this.name = name;
+    if (isSymbol(name)) {
+      name.setKind('var');
+      name.setNode(this);
     }
+  }
+
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    if (isSymbol(this.name)) ctx.addDependency(this.name);
+    this._type?.analyze(ctx);
   }
 
   const(): this {
@@ -44,10 +48,6 @@ export class VarTsDsl extends Mixed {
   let(): this {
     this.kind = ts.NodeFlags.Let;
     return this;
-  }
-
-  override traverse(visitor: (node: SyntaxNode) => void): void {
-    super.traverse(visitor);
   }
 
   /** Sets the variable type. */
@@ -62,7 +62,7 @@ export class VarTsDsl extends Mixed {
   }
 
   protected override _render() {
-    const name = this.$pattern() ?? this.name;
+    const name = this.$pattern() ?? this.$node(this.name);
     if (!name)
       throw new Error('Var must have either a name or a destructuring pattern');
     return ts.factory.createVariableStatement(
@@ -70,6 +70,7 @@ export class VarTsDsl extends Mixed {
       ts.factory.createVariableDeclarationList(
         [
           ts.factory.createVariableDeclaration(
+            // @ts-expect-error need to improve types
             name,
             undefined,
             this.$type(this._type),

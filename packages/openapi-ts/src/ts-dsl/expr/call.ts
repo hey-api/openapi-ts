@@ -1,33 +1,34 @@
-import type { SyntaxNode } from '@hey-api/codegen-core';
+import type { AnalysisContext, Symbol } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { TsDsl } from '../base';
+import { isTsDsl, TsDsl } from '../base';
 import { ArgsMixin } from '../mixins/args';
 import { AsMixin } from '../mixins/as';
-import { ExprMixin, registerLazyAccessCallFactory } from '../mixins/expr';
+import { ExprMixin, setCallFactory } from '../mixins/expr';
 import { TypeArgsMixin } from '../mixins/type-args';
+
+export type CallCallee = string | MaybeTsDsl<ts.Expression>;
+export type CallArg = Symbol | string | MaybeTsDsl<ts.Expression>;
+export type CallArgs = ReadonlyArray<CallArg | undefined>;
+export type CallCtor = (callee: CallCallee, ...args: CallArgs) => CallTsDsl;
 
 const Mixed = ArgsMixin(
   AsMixin(ExprMixin(TypeArgsMixin(TsDsl<ts.CallExpression>))),
 );
 
 export class CallTsDsl extends Mixed {
-  protected _callee: string | MaybeTsDsl<ts.Expression>;
+  protected _callee: CallCallee;
 
-  constructor(
-    callee: string | MaybeTsDsl<ts.Expression>,
-    ...args: ReadonlyArray<string | MaybeTsDsl<ts.Expression> | undefined>
-  ) {
+  constructor(callee: CallCallee, ...args: CallArgs) {
     super();
     this._callee = callee;
-    this.args(
-      ...args.filter((a): a is NonNullable<typeof a> => a !== undefined),
-    );
+    this.args(...args);
   }
 
-  override traverse(visitor: (node: SyntaxNode) => void): void {
-    super.traverse(visitor);
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    if (isTsDsl(this._callee)) this._callee.analyze(ctx);
   }
 
   protected override _render() {
@@ -39,4 +40,4 @@ export class CallTsDsl extends Mixed {
   }
 }
 
-registerLazyAccessCallFactory((expr, args) => new CallTsDsl(expr, ...args));
+setCallFactory((...args) => new CallTsDsl(...args));

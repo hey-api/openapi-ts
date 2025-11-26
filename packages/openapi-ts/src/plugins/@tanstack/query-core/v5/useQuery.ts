@@ -63,10 +63,10 @@ export const createUseQuery = ({
           p.required(isRequiredOptions).type(typeData),
         )
         .do(
-          $(symbolUseQuery.placeholder)
-            .call($(symbolQueryOptionsFn.placeholder).call(optionsParamName))
+          $(symbolUseQuery)
+            .call($(symbolQueryOptionsFn).call(optionsParamName))
             .return(),
         ),
     );
-  plugin.setSymbolValue(symbolUseQueryFn, statement);
+  plugin.addNode(statement);
 };

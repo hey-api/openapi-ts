@@ -60,5 +60,5 @@ export const createClientOptions = ({
           p.type($.type.or(...types)),
         ),
     );
-  plugin.setSymbolValue(symbolClientOptions, node);
+  plugin.addNode(node);
 };

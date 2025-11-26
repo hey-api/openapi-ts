@@ -1,9 +1,9 @@
-import type { SyntaxNode } from '@hey-api/codegen-core';
+import type { AnalysisContext, Node } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import type { BaseCtor, MixinCtor } from './types';
 
-export interface OptionalMethods extends SyntaxNode {
+export interface OptionalMethods extends Node {
   _optional?: boolean;
   /** Marks the node as optional when the condition is true. */
   optional(condition?: boolean): this;
@@ -16,6 +16,10 @@ export function OptionalMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
 ) {
   abstract class Optional extends Base {
     protected _optional?: boolean;
+
+    override analyze(ctx: AnalysisContext): void {
+      super.analyze(ctx);
+    }
 
     protected optional(condition?: boolean): this {
       this._optional = arguments.length === 0 ? true : Boolean(condition);

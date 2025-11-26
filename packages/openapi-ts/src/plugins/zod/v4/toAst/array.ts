@@ -22,7 +22,7 @@ export const arrayToAst = ({
     resource: 'zod.z',
   });
 
-  const functionName = $(z.placeholder).attr(identifiers.array);
+  const functionName = $(z).attr(identifiers.array);
 
   if (!schema.items) {
     result.expression = functionName.call(
@@ -66,7 +66,7 @@ export const arrayToAst = ({
           firstSchema.logicalOperator === 'or' ||
           (firstSchema.type && firstSchema.type !== 'object')
         ) {
-          intersectionExpression = $(z.placeholder)
+          intersectionExpression = $(z)
             .attr(identifiers.intersection)
             .call(...itemExpressions);
         } else {
@@ -80,10 +80,10 @@ export const arrayToAst = ({
 
         result.expression = functionName.call(intersectionExpression);
       } else {
-        result.expression = $(z.placeholder)
+        result.expression = $(z)
           .attr(identifiers.array)
           .call(
-            $(z.placeholder)
+            $(z)
               .attr(identifiers.union)
               .call($.array(...itemExpressions)),
           );

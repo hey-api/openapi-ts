@@ -156,7 +156,7 @@ const generateAngularClassRequests = ({
         ),
       )
       .do(...currentClass.nodes);
-    plugin.setSymbolValue(symbolClass, node);
+    plugin.addNode(node);
 
     generatedClasses.add(currentClass.className);
   };
@@ -195,7 +195,7 @@ const generateAngularFunctionRequests = ({
         plugin,
         symbol,
       });
-      plugin.setSymbolValue(symbol, node);
+      plugin.addNode(node);
     },
     {
       order: 'declarations',
@@ -217,7 +217,7 @@ const generateRequestCallExpression = ({
   const optionsClient = $('options')
     .attr('client')
     .optional()
-    .$if(symbolClient, (c, s) => c.coalesce(s.placeholder));
+    .$if(symbolClient, (c, s) => c.coalesce(s));
 
   return optionsClient
     .attr('requestOptions')
@@ -259,15 +259,16 @@ const generateAngularRequestMethod = ({
     role: 'data',
     tool: 'typescript',
   });
-  const dataType = symbolDataType?.placeholder || 'unknown';
 
   return $.method(methodName)
     .public()
     .$if(createOperationComment(operation), (c, v) => c.doc(v))
     .param('options', (p) =>
-      p
-        .required(isRequiredOptions)
-        .type($.type(symbolOptions).generic(dataType).generic('ThrowOnError')),
+      p.required(isRequiredOptions).type(
+        $.type(symbolOptions)
+          .generic(symbolDataType ?? 'unknown')
+          .generic('ThrowOnError'),
+      ),
     )
     .generic('ThrowOnError', (g) => g.extends('boolean').default(false))
     .returns($.type(symbolHttpRequest).generic('unknown'))
@@ -310,7 +311,6 @@ const generateAngularRequestFunction = ({
     role: 'data',
     tool: 'typescript',
   });
-  const dataType = symbolDataType?.placeholder || 'unknown';
 
   return $.const(symbol)
     .export()
@@ -318,11 +318,11 @@ const generateAngularRequestFunction = ({
     .assign(
       $.func()
         .param('options', (p) =>
-          p
-            .required(isRequiredOptions)
-            .type(
-              $.type(symbolOptions).generic(dataType).generic('ThrowOnError'),
-            ),
+          p.required(isRequiredOptions).type(
+            $.type(symbolOptions)
+              .generic(symbolDataType ?? 'unknown')
+              .generic('ThrowOnError'),
+          ),
         )
         .generic('ThrowOnError', (g) => g.extends('boolean').default(false))
         .returns($.type(symbolHttpRequest).generic('unknown'))

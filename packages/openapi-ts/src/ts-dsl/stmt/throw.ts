@@ -1,8 +1,8 @@
-import type { SyntaxNode } from '@hey-api/codegen-core';
+import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { TsDsl } from '../base';
+import { isTsDsl, TsDsl } from '../base';
 import { LiteralTsDsl } from '../expr/literal';
 
 const Mixed = TsDsl<ts.ThrowStatement>;
@@ -18,13 +18,15 @@ export class ThrowTsDsl extends Mixed {
     this.useNew = useNew;
   }
 
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    if (isTsDsl(this.error)) this.error.analyze(ctx);
+    if (isTsDsl(this.msg)) this.msg.analyze(ctx);
+  }
+
   message(value: string | MaybeTsDsl<ts.Expression>): this {
     this.msg = value;
     return this;
-  }
-
-  override traverse(visitor: (node: SyntaxNode) => void): void {
-    super.traverse(visitor);
   }
 
   protected override _render() {

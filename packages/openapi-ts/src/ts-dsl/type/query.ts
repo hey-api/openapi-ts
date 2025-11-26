@@ -1,8 +1,8 @@
-import type { SyntaxNode } from '@hey-api/codegen-core';
+import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { TypeTsDsl } from '../base';
+import { isTsDsl, TypeTsDsl } from '../base';
 import {
   registerLazyAccessTypeQueryFactory,
   TypeExprMixin,
@@ -18,8 +18,9 @@ export class TypeQueryTsDsl extends Mixed {
     this._expr = expr;
   }
 
-  override traverse(visitor: (node: SyntaxNode) => void): void {
-    super.traverse(visitor);
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    if (isTsDsl(this._expr)) this._expr.analyze(ctx);
   }
 
   protected override _render() {

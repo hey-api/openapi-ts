@@ -1,8 +1,8 @@
-import type { SyntaxNode } from '@hey-api/codegen-core';
+import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { TsDsl, TypeTsDsl } from '../base';
+import { isTsDsl, TypeTsDsl } from '../base';
 import {
   registerLazyAccessTypeIdxFactory,
   TypeExprMixin,
@@ -23,26 +23,20 @@ export class TypeIdxTsDsl extends Mixed {
     this.index(index);
   }
 
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    if (isTsDsl(this._base)) this._base.analyze(ctx);
+    if (isTsDsl(this._index)) this._index.analyze(ctx);
+  }
+
   base(base: Base): this {
     this._base = base;
-    if (this._base instanceof TsDsl) this._base.setParent(this);
     return this;
   }
 
   index(index: Index): this {
     this._index = index;
-    if (this._index instanceof TsDsl) this._index.setParent(this);
     return this;
-  }
-
-  override traverse(visitor: (node: SyntaxNode) => void): void {
-    super.traverse(visitor);
-    if (this._base instanceof TsDsl) {
-      this._base.traverse(visitor);
-    }
-    if (this._index instanceof TsDsl) {
-      this._index.traverse(visitor);
-    }
   }
 
   protected override _render() {

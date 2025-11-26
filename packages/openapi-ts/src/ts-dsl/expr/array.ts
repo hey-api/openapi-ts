@@ -1,8 +1,8 @@
-import type { SyntaxNode } from '@hey-api/codegen-core';
+import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { TsDsl } from '../base';
+import { isTsDsl, TsDsl } from '../base';
 import { AsMixin } from '../mixins/as';
 import { LayoutMixin } from '../mixins/layout';
 import { LiteralTsDsl } from './literal';
@@ -20,6 +20,13 @@ export class ArrayTsDsl extends Mixed {
   ) {
     super();
     this.elements(...exprs);
+  }
+
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    for (const item of this._elements) {
+      if (isTsDsl(item.expr)) item.expr.analyze(ctx);
+    }
   }
 
   /** Adds a single array element. */
@@ -48,10 +55,6 @@ export class ArrayTsDsl extends Mixed {
   spread(expr: MaybeTsDsl<ts.Expression>): this {
     this._elements.push({ expr, kind: 'spread' });
     return this;
-  }
-
-  override traverse(visitor: (node: SyntaxNode) => void): void {
-    super.traverse(visitor);
   }
 
   protected override _render() {

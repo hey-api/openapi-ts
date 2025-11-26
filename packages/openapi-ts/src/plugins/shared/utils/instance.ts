@@ -2,6 +2,7 @@ import path from 'node:path';
 
 import type {
   IProject,
+  Node,
   Symbol,
   SymbolIdentifier,
   SymbolIn,
@@ -103,6 +104,10 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     this.handler = props.handler;
     this.name = props.name;
     this.package = props.context.package;
+  }
+
+  addNode(node: Node): void {
+    return this.gen.nodes.add(node);
   }
 
   /**
@@ -345,6 +350,9 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     }
   }
 
+  /**
+   * @deprecated use addNode
+   */
   setSymbolValue(symbol: Symbol, value: unknown): void {
     for (const hook of this.eventHooks['symbol:setValue:before']) {
       hook({ plugin: this, symbol, value });

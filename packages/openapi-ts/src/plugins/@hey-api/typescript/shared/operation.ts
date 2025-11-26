@@ -145,7 +145,7 @@ const operationToDataType = ({
         state,
       }),
     );
-  plugin.setSymbolValue(symbol, node);
+  plugin.addNode(node);
 };
 
 export const operationToType = ({
@@ -186,7 +186,7 @@ export const operationToType = ({
           state,
         }),
       );
-    plugin.setSymbolValue(symbolErrors, node);
+    plugin.addNode(node);
 
     if (error) {
       const symbol = plugin.registerSymbol({
@@ -211,7 +211,7 @@ export const operationToType = ({
         .alias(symbol)
         .export()
         .type($.type(symbolErrors).idx($.type(symbolErrors).keyof()));
-      plugin.setSymbolValue(symbol, node);
+      plugin.addNode(node);
     }
   }
 
@@ -241,7 +241,7 @@ export const operationToType = ({
           state,
         }),
       );
-    plugin.setSymbolValue(symbolResponses, node);
+    plugin.addNode(node);
 
     if (response) {
       const symbol = plugin.registerSymbol({
@@ -266,7 +266,7 @@ export const operationToType = ({
         .alias(symbol)
         .export()
         .type($.type(symbolResponses).idx($.type(symbolResponses).keyof()));
-      plugin.setSymbolValue(symbol, node);
+      plugin.addNode(node);
     }
   }
 };

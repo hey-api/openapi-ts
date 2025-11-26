@@ -57,7 +57,7 @@ export const createQueryKeyFunction = ({
       .param('options', (p) => p.optional().type(TOptionsType))
       .param('infinite', (p) => p.optional().type('boolean'))
       .param('tags', (p) => p.optional().type('ReadonlyArray<string>'))
-      .generic(TOptionsType, (g) => g.extends(symbolOptions.placeholder))
+      .generic(TOptionsType, (g) => g.extends(symbolOptions))
       .returns($.type.tuple(returnType))
       .do(
         $.const('params')
@@ -88,7 +88,7 @@ export const createQueryKeyFunction = ({
         $.return($.array().element($('params'))),
       ),
   );
-  plugin.setSymbolValue(symbolCreateQueryKey, fn);
+  plugin.addNode(fn);
 };
 
 const createQueryKeyLiteral = ({
@@ -114,7 +114,7 @@ const createQueryKeyLiteral = ({
     resource: 'createQueryKey',
     tool: plugin.name,
   });
-  const createQueryKeyCallExpression = $(symbolCreateQueryKey.placeholder).call(
+  const createQueryKeyCallExpression = $(symbolCreateQueryKey).call(
     $.literal(id),
     'options',
     isInfinite || tagsArray ? $.literal(Boolean(isInfinite)) : undefined,
@@ -140,7 +140,7 @@ export const createQueryKeyType = ({ plugin }: { plugin: PluginInstance }) => {
   const queryKeyType = $.type
     .alias(symbolQueryKeyType)
     .export()
-    .generic(TOptionsType, (g) => g.extends(symbolOptions.placeholder))
+    .generic(TOptionsType, (g) => g.extends(symbolOptions))
     .type(
       $.type.tuple(
         $.type.and(
@@ -155,7 +155,7 @@ export const createQueryKeyType = ({ plugin }: { plugin: PluginInstance }) => {
         ),
       ),
     );
-  plugin.setSymbolValue(symbolQueryKeyType, queryKeyType);
+  plugin.addNode(queryKeyType);
 };
 
 export const queryKeyStatement = ({

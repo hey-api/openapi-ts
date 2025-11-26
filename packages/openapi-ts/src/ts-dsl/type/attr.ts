@@ -1,9 +1,9 @@
-import type { SyntaxNode } from '@hey-api/codegen-core';
-import { Symbol } from '@hey-api/codegen-core';
+import type { AnalysisContext, Symbol } from '@hey-api/codegen-core';
+import { isSymbol } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { TsDsl, TypeTsDsl } from '../base';
+import { isTsDsl, TypeTsDsl } from '../base';
 import { TypeExprMixin } from '../mixins/type-expr';
 
 type Base = Symbol | string | MaybeTsDsl<ts.EntityName>;
@@ -28,9 +28,18 @@ export class TypeAttrTsDsl extends Mixed {
     }
   }
 
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    if (isSymbol(this._base)) {
+      ctx.addDependency(this._base);
+    } else if (isTsDsl(this._base)) {
+      this._base.analyze(ctx);
+    }
+    if (isSymbol(this._right)) ctx.addDependency(this._right);
+  }
+
   base(base?: Base): this {
     this._base = base;
-    if (this._base instanceof TsDsl) this._base.setParent(this);
     return this;
   }
 
@@ -39,42 +48,18 @@ export class TypeAttrTsDsl extends Mixed {
     return this;
   }
 
-  override collectSymbols(out: Set<Symbol>): void {
-    super.collectSymbols(out);
-    if (this._base) {
-      if (this._base instanceof Symbol) {
-        out.add(this._base);
-      } else if (this._base instanceof TsDsl) {
-        this._base.collectSymbols(out);
-      }
-    }
-    if (this._right instanceof Symbol) {
-      out.add(this._right);
-    }
-  }
-
-  override traverse(visitor: (node: SyntaxNode) => void): void {
-    super.traverse(visitor);
-    if (this._base instanceof TsDsl) {
-      this._base.traverse(visitor);
-    }
-  }
-
   protected override _render() {
     if (!this._base) {
       throw new Error('TypeAttrTsDsl: missing base for qualified name');
     }
-    const left =
-      this._base instanceof Symbol
-        ? this.$node(this._base.finalName)
-        : this.$node(this._base);
+    const left = this.$node(this._base);
     if (!ts.isEntityName(left)) {
       throw new Error('TypeAttrTsDsl: base must be an EntityName');
     }
-    const right =
-      this._right instanceof Symbol
-        ? this.$maybeId(this._right.finalName)
-        : this.$maybeId(this._right);
-    return ts.factory.createQualifiedName(left, right);
+    return ts.factory.createQualifiedName(
+      left,
+      // @ts-expect-error need to improve types
+      this.$node(this._right),
+    );
   }
 }

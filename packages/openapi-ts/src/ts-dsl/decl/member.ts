@@ -1,8 +1,8 @@
-import type { SyntaxNode } from '@hey-api/codegen-core';
+import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { TsDsl } from '../base';
+import { isTsDsl, TsDsl } from '../base';
 import { DocMixin } from '../mixins/doc';
 import { safeMemberName } from '../utils/prop';
 
@@ -25,8 +25,9 @@ export class EnumMemberTsDsl extends Mixed {
     }
   }
 
-  override traverse(visitor: (node: SyntaxNode) => void): void {
-    super.traverse(visitor);
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    if (isTsDsl(this._value)) this._value.analyze(ctx);
   }
 
   /** Sets the enum member value. */

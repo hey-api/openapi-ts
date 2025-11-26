@@ -22,9 +22,9 @@ export const tupleToAst = ({
 
   if (schema.const && Array.isArray(schema.const)) {
     const tupleElements = schema.const.map((value) =>
-      $(z.placeholder).attr(identifiers.literal).call($.fromValue(value)),
+      $(z).attr(identifiers.literal).call($.fromValue(value)),
     );
-    result.expression = $(z.placeholder)
+    result.expression = $(z)
       .attr(identifiers.tuple)
       .call($.array(...tupleElements));
     return result as Omit<Ast, 'typeName'>;
@@ -49,7 +49,7 @@ export const tupleToAst = ({
     });
   }
 
-  result.expression = $(z.placeholder)
+  result.expression = $(z)
     .attr(identifiers.tuple)
     .call($.array(...tupleElements));
 

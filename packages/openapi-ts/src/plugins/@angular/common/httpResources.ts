@@ -153,7 +153,7 @@ const generateAngularClassServices = ({
         ),
       )
       .do(...currentClass.nodes);
-    plugin.setSymbolValue(symbolClass, node);
+    plugin.addNode(node);
 
     generatedClasses.add(currentClass.className);
   };
@@ -185,7 +185,7 @@ const generateAngularFunctionServices = ({
         plugin,
         symbol,
       });
-      plugin.setSymbolValue(symbol, node);
+      plugin.addNode(node);
     },
     {
       order: 'declarations',
@@ -213,7 +213,6 @@ const generateResourceCallExpression = ({
     resourceId: operation.id,
     role: 'response',
   });
-  const responseType = symbolResponseType?.placeholder || 'unknown';
 
   if (plugin.config.httpRequests.asClass) {
     // For class-based request methods, use inject and class hierarchy
@@ -239,9 +238,8 @@ const generateResourceCallExpression = ({
         category: 'external',
         resource: '@angular/core.inject',
       });
-      let methodAccess: ReturnType<typeof $.attr | typeof $.call> = $(
-        symbolInject.placeholder,
-      ).call(symbolClass.placeholder);
+      let methodAccess: ReturnType<typeof $.attr | typeof $.call> =
+        $(symbolInject).call(symbolClass);
 
       // Navigate through the class hierarchy
       for (let i = 1; i < firstEntry.path.length; i++) {
@@ -260,7 +258,7 @@ const generateResourceCallExpression = ({
         plugin.config.httpRequests.methodNameBuilder(operation),
       );
 
-      return $(symbolHttpResource.placeholder)
+      return $(symbolHttpResource)
         .call(
           $.func().do(
             $.const('opts').assign(
@@ -275,7 +273,7 @@ const generateResourceCallExpression = ({
             ),
           ),
         )
-        .generic(responseType);
+        .generic(symbolResponseType ?? 'unknown');
     }
   } else {
     const symbolHttpRequest = plugin.referenceSymbol({
@@ -286,7 +284,7 @@ const generateResourceCallExpression = ({
       tool: 'angular',
     });
 
-    return $(symbolHttpResource.placeholder)
+    return $(symbolHttpResource)
       .call(
         $.func().do(
           $.const('opts').assign(
@@ -296,19 +294,19 @@ const generateResourceCallExpression = ({
           ),
           $.return(
             $.ternary('opts')
-              .do($(symbolHttpRequest.placeholder).call('opts'))
+              .do($(symbolHttpRequest).call('opts'))
               .otherwise($.id('undefined')),
           ),
         ),
       )
-      .generic(responseType);
+      .generic(symbolResponseType ?? 'unknown');
   }
 
   // Fallback return (should not reach here)
-  return $(symbolHttpResource.placeholder).call(
+  return $(symbolHttpResource).call(
     $.func()
       .do($.return($.id('undefined')))
-      .generic(responseType),
+      .generic(symbolResponseType ?? 'unknown'),
   );
 };
 
@@ -336,17 +334,21 @@ const generateAngularResourceMethod = ({
     role: 'data',
     tool: 'typescript',
   });
-  const dataType = symbolDataType?.placeholder || 'unknown';
 
   return $.method(methodName)
     .public()
     .$if(createOperationComment(operation), (c, v) => c.doc(v))
     .param('options', (p) =>
-      p
-        .required(isRequiredOptions)
-        .type(
-          `() => ${symbolOptions.placeholder}<${dataType}, ThrowOnError> | undefined`,
+      p.required(isRequiredOptions).type(
+        $.type.func().returns(
+          $.type.or(
+            $.type(symbolOptions)
+              .generic(symbolDataType ?? 'unknown')
+              .generic('ThrowOnError'),
+            $.type('undefined'),
+          ),
         ),
+      ),
     )
     .generic('ThrowOnError', (g) => g.extends('boolean').default(false))
     .do(
@@ -383,7 +385,6 @@ const generateAngularResourceFunction = ({
     role: 'data',
     tool: 'typescript',
   });
-  const dataType = symbolDataType?.placeholder || 'unknown';
 
   return $.const(symbol)
     .export()
@@ -391,11 +392,16 @@ const generateAngularResourceFunction = ({
     .assign(
       $.func()
         .param('options', (p) =>
-          p
-            .required(isRequiredOptions)
-            .type(
-              `() => ${symbolOptions.placeholder}<${dataType}, ThrowOnError> | undefined`,
+          p.required(isRequiredOptions).type(
+            $.type.func().returns(
+              $.type.or(
+                $.type(symbolOptions)
+                  .generic(symbolDataType ?? 'unknown')
+                  .generic('ThrowOnError'),
+                $.type('undefined'),
+              ),
             ),
+          ),
         )
         .generic('ThrowOnError', (g) => g.extends('boolean').default(false))
         .do(

@@ -1,9 +1,9 @@
-import type { SyntaxNode } from '@hey-api/codegen-core';
+import type { AnalysisContext, Node } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import type { BaseCtor, MixinCtor } from './types';
 
-export interface LayoutMethods extends SyntaxNode {
+export interface LayoutMethods extends Node {
   /** Computes whether output should be multiline based on layout setting and element count. */
   $multiline(count: number): boolean;
   /** Sets automatic line output with optional threshold (default: 3). */
@@ -20,6 +20,10 @@ export function LayoutMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
   abstract class Layout extends Base {
     protected static readonly DEFAULT_THRESHOLD = 3;
     protected layout: boolean | number | undefined;
+
+    override analyze(ctx: AnalysisContext): void {
+      super.analyze(ctx);
+    }
 
     protected auto(threshold: number = Layout.DEFAULT_THRESHOLD): this {
       this.layout = threshold;

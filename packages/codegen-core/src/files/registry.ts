@@ -99,14 +99,13 @@ export class FileRegistry implements IFileRegistry {
     result = {
       ...result,
       ...file, // clone to avoid mutation
+      exports: result?.exports ?? [],
       id,
-      localNames: new Set(),
+      imports: result?.imports ?? [],
+      reexports: result?.reexports ?? [],
+      reservedNames: result?.reservedNames ?? new Map(),
       resolvedNames: result?.resolvedNames ?? new BiMap(),
-      symbols: result?.symbols ?? {
-        body: [],
-        exports: [],
-        imports: [],
-      },
+      symbols: result?.symbols ?? [],
     };
     this.values.set(id, result);
 

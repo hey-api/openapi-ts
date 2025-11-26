@@ -1,11 +1,11 @@
-import type { SyntaxNode } from '@hey-api/codegen-core';
+import type { AnalysisContext, Node } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import type { MaybeArray } from '../base';
 import { DocTsDsl } from '../layout/doc';
 import type { BaseCtor, MixinCtor } from './types';
 
-export interface DocMethods extends SyntaxNode {
+export interface DocMethods extends Node {
   doc(lines?: MaybeArray<string>, fn?: (d: DocTsDsl) => void): this;
 }
 
@@ -14,6 +14,10 @@ export function DocMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
 ) {
   abstract class Doc extends Base {
     protected _doc?: DocTsDsl;
+
+    override analyze(ctx: AnalysisContext): void {
+      super.analyze(ctx);
+    }
 
     protected doc(
       lines?: MaybeArray<string>,

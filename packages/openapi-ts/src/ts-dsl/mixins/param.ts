@@ -1,11 +1,11 @@
-import type { SyntaxNode } from '@hey-api/codegen-core';
+import type { AnalysisContext, Node } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
-import type { MaybeTsDsl } from '../base';
+import { isTsDsl, type MaybeTsDsl } from '../base';
 import { ParamTsDsl } from '../decl/param';
 import type { BaseCtor, MixinCtor } from './types';
 
-export interface ParamMethods extends SyntaxNode {
+export interface ParamMethods extends Node {
   /** Renders the parameters into an array of `ParameterDeclaration`s. */
   $params(): ReadonlyArray<ts.ParameterDeclaration>;
   /** Adds a parameter. */
@@ -22,6 +22,13 @@ export function ParamMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
 ) {
   abstract class Param extends Base {
     protected _params: Array<MaybeTsDsl<ts.ParameterDeclaration>> = [];
+
+    override analyze(ctx: AnalysisContext): void {
+      super.analyze(ctx);
+      for (const p of this._params) {
+        if (isTsDsl(p)) p.analyze(ctx);
+      }
+    }
 
     protected param(
       name: string | ((p: ParamTsDsl) => void),

@@ -1,9 +1,9 @@
-import type { SyntaxNode } from '@hey-api/codegen-core';
-import { Symbol } from '@hey-api/codegen-core';
+import type { AnalysisContext, Symbol } from '@hey-api/codegen-core';
+import { isSymbol } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { TsDsl } from '../base';
+import { isTsDsl, TsDsl } from '../base';
 import { DocMixin } from '../mixins/doc';
 import { ExportMixin } from '../mixins/modifiers';
 import { TypeParamsMixin } from '../mixins/type-params';
@@ -21,48 +21,33 @@ export class TypeAliasTsDsl extends Mixed {
 
   constructor(name: Name, fn?: (t: TypeAliasTsDsl) => void) {
     super();
-    if (typeof name === 'string') {
-      this.name = name;
-    } else {
-      this.name = name;
-      this.symbol = name;
-      this.symbol.setKind('type');
-      this.symbol.setRootNode(this);
+    this.name = name;
+    if (isSymbol(name)) {
+      name.setKind('type');
+      name.setNode(this);
     }
     fn?.(this);
   }
 
-  override collectSymbols(out: Set<Symbol>): void {
-    super.collectSymbols(out);
-    if (this.name instanceof Symbol) {
-      out.add(this.name);
-    }
-    if (this.value instanceof TsDsl) {
-      this.value.collectSymbols(out);
-    }
-  }
-
-  override traverse(visitor: (node: SyntaxNode) => void): void {
-    super.traverse(visitor);
-    if (this.value instanceof TsDsl) {
-      this.value.traverse(visitor);
-    }
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    if (isSymbol(this.name)) ctx.addDependency(this.name);
+    if (isTsDsl(this.value)) this.value.analyze(ctx);
   }
 
   /** Sets the type expression on the right-hand side of `= ...`. */
   type(node: Value): this {
     this.value = node;
-    if (this.value instanceof TsDsl) this.value.setParent(this);
     return this;
   }
 
   protected override _render() {
     if (!this.value)
       throw new Error(`Type alias '${this.name}' is missing a type definition`);
-    const name = this.name instanceof Symbol ? this.name.finalName : this.name;
     return ts.factory.createTypeAliasDeclaration(
       this.modifiers,
-      name,
+      // @ts-expect-error need to improve types
+      this.$node(this.name),
       this.$generics(),
       this.$type(this.value),
     );

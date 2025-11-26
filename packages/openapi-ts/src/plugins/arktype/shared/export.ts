@@ -34,21 +34,19 @@ export const exportAst = ({
     // .type(
     //   ast.typeName
     //     ? (tsc.propertyAccessExpression({
-    //         expression: z.placeholder,
+    //         expression: z,
     //         name: ast.typeName,
     //       }) as unknown as ts.TypeNode)
     //     : undefined,
     // )
-    .assign(
-      $(type.placeholder).call(ast.def ? $.literal(ast.def) : ast.expression),
-    );
-  plugin.setSymbolValue(symbol, statement);
+    .assign($(type).call(ast.def ? $.literal(ast.def) : ast.expression));
+  plugin.addNode(statement);
 
   if (typeInferSymbol) {
     const inferType = $.type
       .alias(typeInferSymbol)
       .export()
       .type($.type(symbol).attr(identifiers.type.infer).typeofType());
-    plugin.setSymbolValue(typeInferSymbol, inferType);
+    plugin.addNode(inferType);
   }
 };

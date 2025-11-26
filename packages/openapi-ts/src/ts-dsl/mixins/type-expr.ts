@@ -1,8 +1,8 @@
-import type { Symbol, SyntaxNode } from '@hey-api/codegen-core';
+import type { AnalysisContext, Node } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
-import type { MaybeTsDsl, TypeTsDsl } from '../base';
-import { TsDsl } from '../base';
+import type { MaybeTsDsl, TsDsl, TypeTsDsl } from '../base';
+import { isTsDsl } from '../base';
 import type { TypeOfExprTsDsl } from '../expr/typeof';
 import type { TypeExprTsDsl } from '../type/expr';
 import type { TypeIdxTsDsl } from '../type/idx';
@@ -65,7 +65,7 @@ export function registerLazyAccessTypeQueryFactory(
   typeQueryFactory = factory;
 }
 
-export interface TypeExprMethods extends SyntaxNode {
+export interface TypeExprMethods extends Node {
   /** Creates an indexed-access type (e.g. `Foo<T>[K]`). */
   idx(
     this: MaybeTsDsl<TypeTsDsl>,
@@ -104,6 +104,10 @@ export function TypeExprMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
   Base: TBase,
 ) {
   abstract class TypeExpr extends Base {
+    override analyze(ctx: AnalysisContext): void {
+      super.analyze(ctx);
+    }
+
     protected idx(
       this: TypeTsDsl,
       index: string | number | MaybeTsDsl<ts.TypeNode>,
@@ -120,9 +124,7 @@ export function TypeExprMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
     }
 
     protected returnType(this: TsDsl<ts.Expression>): TypeExprTsDsl {
-      const node = typeExprFactory!('ReturnType');
-      node.setParent(this);
-      return node.generic(typeQueryFactory!(this));
+      return typeExprFactory!('ReturnType').generic(typeQueryFactory!(this));
     }
 
     protected typeofExpr(this: TsDsl<ts.Expression>): TypeOfExprTsDsl {
@@ -142,10 +144,11 @@ export function TypeExprMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
       : T extends TypeTsDsl
         ? TypeQueryTsDsl
         : TypeQueryTsDsl | TypeOfExprTsDsl {
-      if (this instanceof TsDsl) {
+      if (isTsDsl(this)) {
         // @ts-expect-error
+        const node = this._render();
         return (
-          ts.isExpression(this._render())
+          ts.isExpression(node)
             ? typeOfExprFactory!(this as any)
             : typeQueryFactory!(this)
         ) as any;
@@ -160,14 +163,6 @@ export function TypeExprMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
 
     protected unique(this: TypeTsDsl): TypeOperatorTsDsl {
       return typeOperatorFactory!().unique(this);
-    }
-
-    override collectSymbols(out: Set<Symbol>): void {
-      super.collectSymbols(out);
-    }
-
-    override traverse(visitor: (node: SyntaxNode) => void): void {
-      super.traverse(visitor);
     }
   }
 

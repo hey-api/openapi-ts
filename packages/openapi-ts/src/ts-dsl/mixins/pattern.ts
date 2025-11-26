@@ -1,11 +1,11 @@
-import type { SyntaxNode } from '@hey-api/codegen-core';
+import type { AnalysisContext, Node } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
-import type { MaybeArray } from '../base';
+import { isTsDsl, type MaybeArray } from '../base';
 import { PatternTsDsl } from '../decl/pattern';
 import type { BaseCtor, MixinCtor } from './types';
 
-export interface PatternMethods extends SyntaxNode {
+export interface PatternMethods extends Node {
   /** Renders the pattern into a `BindingName`. */
   $pattern(): ts.BindingName | undefined;
   /** Defines an array binding pattern. */
@@ -26,6 +26,11 @@ export function PatternMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
 ) {
   abstract class Pattern extends Base {
     protected pattern?: PatternTsDsl;
+
+    override analyze(ctx: AnalysisContext): void {
+      super.analyze(ctx);
+      if (isTsDsl(this.pattern)) this.pattern.analyze(ctx);
+    }
 
     protected array(
       ...props: ReadonlyArray<string> | [ReadonlyArray<string>]

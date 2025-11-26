@@ -391,7 +391,7 @@ const schemasV2_0_X = ({
           }),
         ).as('const'),
       );
-    plugin.setSymbolValue(symbol, statement);
+    plugin.addNode(statement);
   }
 };
 
@@ -431,7 +431,7 @@ const schemasV3_0_X = ({
           }),
         ).as('const'),
       );
-    plugin.setSymbolValue(symbol, statement);
+    plugin.addNode(statement);
   }
 };
 
@@ -471,7 +471,7 @@ const schemasV3_1_X = ({
           }),
         ).as('const'),
       );
-    plugin.setSymbolValue(symbol, statement);
+    plugin.addNode(statement);
   }
 };
 
