@@ -14,6 +14,6 @@ export const nullToAst = ({
     resource: 'zod.z',
   });
   const result: Partial<Omit<Ast, 'typeName'>> = {};
-  result.expression = $(z.placeholder).attr(identifiers.null).call();
+  result.expression = $(z).attr(identifiers.null).call();
   return result as Omit<Ast, 'typeName'>;
 };

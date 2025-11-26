@@ -90,5 +90,5 @@ export const createMutationOptions = ({
         .returns(mutationType)
         .do($.return(mutationOpts)),
     );
-  plugin.setSymbolValue(symbolMutationOptions, statement);
+  plugin.addNode(statement);
 };

@@ -1,23 +1,33 @@
-import type { SyntaxNode } from '@hey-api/codegen-core';
+import type { AnalysisContext, Symbol } from '@hey-api/codegen-core';
+import { isSymbol } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
-import { TypeTsDsl } from '../base';
+import { isTsDsl, TypeTsDsl } from '../base';
+
+type Type = Symbol | string | ts.TypeNode | TypeTsDsl;
 
 const Mixed = TypeTsDsl<ts.IntersectionTypeNode>;
 
 export class TypeAndTsDsl extends Mixed {
-  protected _types: Array<string | ts.TypeNode | TypeTsDsl> = [];
+  protected _types: Array<Type> = [];
 
-  constructor(...nodes: Array<string | ts.TypeNode | TypeTsDsl>) {
+  constructor(...nodes: Array<Type>) {
     super();
     this.types(...nodes);
   }
 
-  override traverse(visitor: (node: SyntaxNode) => void): void {
-    super.traverse(visitor);
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    for (const t of this._types) {
+      if (isSymbol(t)) {
+        ctx.addDependency(t);
+      } else if (isTsDsl(t)) {
+        t.analyze(ctx);
+      }
+    }
   }
 
-  types(...nodes: Array<string | ts.TypeNode | TypeTsDsl>): this {
+  types(...nodes: Array<Type>): this {
     this._types.push(...nodes);
     return this;
   }

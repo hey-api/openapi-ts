@@ -14,6 +14,6 @@ export const voidToAst = ({
     category: 'external',
     resource: 'zod.z',
   });
-  result.expression = $(z.placeholder).attr(identifiers.void).call();
+  result.expression = $(z).attr(identifiers.void).call();
   return result as Omit<Ast, 'typeName'>;
 };

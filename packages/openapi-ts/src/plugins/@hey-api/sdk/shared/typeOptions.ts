@@ -56,23 +56,19 @@ export const createTypeOptions = ({
                 plugin.referenceSymbol({
                   category: 'external',
                   resource: 'client.Composable',
-                }).placeholder,
+                }),
               )
               .default($.type.literal('$fetch')),
           )
           .generic('TData', (g) =>
-            g
-              .extends(symbolTDataShape.placeholder)
-              .default(symbolTDataShape.placeholder),
+            g.extends(symbolTDataShape).default(symbolTDataShape),
           )
           .generic(nuxtTypeResponse, (g) => g.default('unknown'))
           .generic(nuxtTypeDefault, (g) => g.default('undefined')),
       (t) =>
         t
           .generic('TData', (g) =>
-            g
-              .extends(symbolTDataShape.placeholder)
-              .default(symbolTDataShape.placeholder),
+            g.extends(symbolTDataShape).default(symbolTDataShape),
           )
           .generic('ThrowOnError', (g) =>
             g.extends('boolean').default('boolean'),
@@ -100,7 +96,7 @@ export const createTypeOptions = ({
                 'custom client.',
               ])
               .required(!plugin.config.client && !plugin.config.instance)
-              .type(symbolClient.placeholder),
+              .type(symbolClient),
           )
           .prop('meta', (p) =>
             p
@@ -113,5 +109,5 @@ export const createTypeOptions = ({
           ),
       ),
     );
-  plugin.setSymbolValue(symbolOptions, typeOptions);
+  plugin.addNode(typeOptions);
 };

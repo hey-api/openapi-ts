@@ -119,6 +119,9 @@ export class SymbolRegistry implements ISymbolRegistry {
     }
   }
 
+  /**
+   * @deprecated
+   */
   setValue(symbolId: SymbolId, value: unknown): Map<SymbolId, unknown> {
     return this.nodes.set(symbolId, value);
   }

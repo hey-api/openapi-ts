@@ -1,11 +1,11 @@
-import type { SyntaxNode } from '@hey-api/codegen-core';
+import type { AnalysisContext, Node } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import type { MaybeArray } from '../base';
 import { HintTsDsl } from '../layout/hint';
 import type { BaseCtor, MixinCtor } from './types';
 
-export interface HintMethods extends SyntaxNode {
+export interface HintMethods extends Node {
   hint(lines?: MaybeArray<string>, fn?: (h: HintTsDsl) => void): this;
 }
 
@@ -14,6 +14,10 @@ export function HintMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
 ) {
   abstract class Hint extends Base {
     protected _hint?: HintTsDsl;
+
+    override analyze(ctx: AnalysisContext): void {
+      super.analyze(ctx);
+    }
 
     protected hint(
       lines?: MaybeArray<string>,

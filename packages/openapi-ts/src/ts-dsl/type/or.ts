@@ -1,8 +1,8 @@
-import type { SyntaxNode } from '@hey-api/codegen-core';
-import { Symbol } from '@hey-api/codegen-core';
+import type { AnalysisContext, Symbol } from '@hey-api/codegen-core';
+import { isSymbol } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
-import { TsDsl, TypeTsDsl } from '../base';
+import { isTsDsl, TypeTsDsl } from '../base';
 
 type Type = Symbol | string | ts.TypeNode | TypeTsDsl;
 
@@ -16,20 +16,19 @@ export class TypeOrTsDsl extends Mixed {
     this.types(...nodes);
   }
 
-  override traverse(visitor: (node: SyntaxNode) => void): void {
-    super.traverse(visitor);
-    for (const node of this._types) {
-      if (node instanceof TsDsl) {
-        node.traverse(visitor);
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    for (const t of this._types) {
+      if (isSymbol(t)) {
+        ctx.addDependency(t);
+      } else if (isTsDsl(t)) {
+        t.analyze(ctx);
       }
     }
   }
 
   types(...nodes: Array<Type>): this {
-    for (const node of nodes) {
-      if (node instanceof TsDsl) node.setParent(this);
-      this._types.push(node);
-    }
+    this._types.push(...nodes);
     return this;
   }
 
@@ -37,8 +36,7 @@ export class TypeOrTsDsl extends Mixed {
     const flat: Array<ts.TypeNode> = [];
 
     for (const node of this._types) {
-      const value = node instanceof Symbol ? node.finalName : node;
-      const type = this.$type(value);
+      const type = this.$type(node);
       if (ts.isUnionTypeNode(type)) {
         flat.push(...type.types);
       } else {

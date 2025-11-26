@@ -22,7 +22,7 @@ export const arrayToAst = ({
 
   const result: Partial<Omit<Ast, 'typeName'>> = {};
 
-  const functionName = $(z.placeholder).attr(identifiers.array);
+  const functionName = $(z).attr(identifiers.array);
 
   if (!schema.items) {
     result.expression = functionName.call(
@@ -66,13 +66,13 @@ export const arrayToAst = ({
           firstSchema.logicalOperator === 'or' ||
           (firstSchema.type && firstSchema.type !== 'object')
         ) {
-          intersectionExpression = $(z.placeholder)
+          intersectionExpression = $(z)
             .attr(identifiers.intersection)
             .call(...itemExpressions);
         } else {
           intersectionExpression = itemExpressions[0]!;
           for (let i = 1; i < itemExpressions.length; i++) {
-            intersectionExpression = $(z.placeholder)
+            intersectionExpression = $(z)
               .attr(identifiers.intersection)
               .call(intersectionExpression, itemExpressions[i]);
           }
@@ -80,10 +80,10 @@ export const arrayToAst = ({
 
         result.expression = functionName.call(intersectionExpression);
       } else {
-        result.expression = $(z.placeholder)
+        result.expression = $(z)
           .attr(identifiers.array)
           .call(
-            $(z.placeholder)
+            $(z)
               .attr(identifiers.union)
               .call($.array(...itemExpressions)),
           );
@@ -95,24 +95,18 @@ export const arrayToAst = ({
 
   if (schema.minItems === schema.maxItems && schema.minItems !== undefined) {
     checks.push(
-      $(z.placeholder)
-        .attr(identifiers.length)
-        .call($.fromValue(schema.minItems)),
+      $(z).attr(identifiers.length).call($.fromValue(schema.minItems)),
     );
   } else {
     if (schema.minItems !== undefined) {
       checks.push(
-        $(z.placeholder)
-          .attr(identifiers.minLength)
-          .call($.fromValue(schema.minItems)),
+        $(z).attr(identifiers.minLength).call($.fromValue(schema.minItems)),
       );
     }
 
     if (schema.maxItems !== undefined) {
       checks.push(
-        $(z.placeholder)
-          .attr(identifiers.maxLength)
-          .call($.fromValue(schema.maxItems)),
+        $(z).attr(identifiers.maxLength).call($.fromValue(schema.maxItems)),
       );
     }
   }

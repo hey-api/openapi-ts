@@ -1,13 +1,13 @@
-import type { SyntaxNode } from '@hey-api/codegen-core';
+import type { AnalysisContext, Node, Symbol } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { BinaryTsDsl } from '../expr/binary';
 import type { BaseCtor, MixinCtor } from './types';
 
-type Expr = string | MaybeTsDsl<ts.Expression>;
+type Expr = Symbol | string | MaybeTsDsl<ts.Expression>;
 
-export interface OperatorMethods extends SyntaxNode {
+export interface OperatorMethods extends Node {
   /** Logical AND — `this && expr` */
   and(expr: Expr): BinaryTsDsl;
   /** Creates an assignment expression (e.g. `this = expr`). */
@@ -47,6 +47,10 @@ export function OperatorMixin<
   TBase extends BaseCtor<T>,
 >(Base: TBase) {
   abstract class Operator extends Base {
+    override analyze(ctx: AnalysisContext): void {
+      super.analyze(ctx);
+    }
+
     protected and(expr: Expr): BinaryTsDsl {
       return new BinaryTsDsl(this).and(expr);
     }

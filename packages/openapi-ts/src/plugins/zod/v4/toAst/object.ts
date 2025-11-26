@@ -18,12 +18,12 @@ function defaultObjectBaseResolver({
   });
 
   if (additional) {
-    return $(z.placeholder)
+    return $(z)
       .attr(identifiers.record)
-      .call($(z.placeholder).attr(identifiers.string).call(), additional);
+      .call($(z).attr(identifiers.string).call(), additional);
   }
 
-  return $(z.placeholder).attr(identifiers.object).call(shape);
+  return $(z).attr(identifiers.object).call(shape);
 }
 
 export const objectToAst = ({

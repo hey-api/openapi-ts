@@ -184,24 +184,22 @@ export const operationOptionsType = ({
       resourceId: operation.id,
       role: 'response',
     });
-    const dataType = isDataAllowed
-      ? symbolDataType?.placeholder || 'unknown'
-      : 'never';
-    const responseType = symbolResponseType?.placeholder || 'unknown';
-    return `${symbolOptions.placeholder}<${nuxtTypeComposable}, ${dataType}, ${responseType}, ${nuxtTypeDefault}>`;
+    return $.type(symbolOptions)
+      .generic(nuxtTypeComposable)
+      .generic(isDataAllowed ? (symbolDataType ?? 'unknown') : 'never')
+      .generic(symbolResponseType ?? 'unknown')
+      .generic(nuxtTypeDefault);
   }
 
   // TODO: refactor this to be more generic, works for now
   if (throwOnError) {
-    const dataType = isDataAllowed
-      ? symbolDataType?.placeholder || 'unknown'
-      : 'never';
-    return `${symbolOptions.placeholder}<${dataType}, ${throwOnError}>`;
+    return $.type(symbolOptions)
+      .generic(isDataAllowed ? (symbolDataType ?? 'unknown') : 'never')
+      .generic(throwOnError);
   }
-  const dataType = isDataAllowed ? symbolDataType?.placeholder : 'never';
-  return dataType
-    ? `${symbolOptions.placeholder}<${dataType}>`
-    : symbolOptions.placeholder;
+  return $.type(symbolOptions).$if(!isDataAllowed || symbolDataType, (t) =>
+    t.generic(isDataAllowed ? symbolDataType! : 'never'),
+  );
 };
 
 type OperationParameters = {
@@ -359,7 +357,6 @@ export const operationStatements = ({
     resourceId: operation.id,
     role: isNuxtClient ? 'response' : 'responses',
   });
-  const responseType = symbolResponseType?.placeholder || 'unknown';
 
   const symbolErrorType = plugin.querySymbol({
     category: 'type',
@@ -367,7 +364,6 @@ export const operationStatements = ({
     resourceId: operation.id,
     role: isNuxtClient ? 'error' : 'errors',
   });
-  const errorType = symbolErrorType?.placeholder || 'unknown';
 
   // TODO: transform parameters
   // const query = {
@@ -394,7 +390,7 @@ export const operationStatements = ({
           category: 'external',
           resource: 'client.formDataBodySerializer',
         });
-        reqOptions.spread(symbol.placeholder);
+        reqOptions.spread(symbol);
         break;
       }
       case 'json':
@@ -410,7 +406,7 @@ export const operationStatements = ({
           category: 'external',
           resource: 'client.urlSearchParamsBodySerializer',
         });
-        reqOptions.spread(symbol.placeholder);
+        reqOptions.spread(symbol);
         break;
       }
     }
@@ -489,7 +485,7 @@ export const operationStatements = ({
     };
     if (plugin.isSymbolRegistered(query)) {
       const ref = plugin.referenceSymbol(query);
-      reqOptions.prop('responseTransformer', $(ref.placeholder));
+      reqOptions.prop('responseTransformer', $(ref));
     }
   }
 
@@ -563,7 +559,7 @@ export const operationStatements = ({
     });
     statements.push(
       $.const('params').assign(
-        $(symbol.placeholder).call($.array(...args), $.array(...config)),
+        $(symbol).call($.array(...args), $.array(...config)),
       ),
     );
     reqOptions.spread('params');
@@ -604,7 +600,7 @@ export const operationStatements = ({
   if (plugin.config.instance) {
     clientExpression = optionsClient.coalesce($('this').attr('client'));
   } else if (symbolClient) {
-    clientExpression = optionsClient.coalesce(symbolClient.placeholder);
+    clientExpression = optionsClient.coalesce(symbolClient);
   } else {
     clientExpression = optionsClient;
   }
@@ -623,11 +619,16 @@ export const operationStatements = ({
           (f) =>
             f
               .generic(nuxtTypeComposable)
-              .generic(`${responseType} | ${nuxtTypeDefault}`)
-              .generic(errorType)
+              .generic(
+                $.type.or(symbolResponseType ?? 'unknown', nuxtTypeDefault),
+              )
+              .generic(symbolErrorType ?? 'unknown')
               .generic(nuxtTypeDefault),
           (f) =>
-            f.generic(responseType).generic(errorType).generic('ThrowOnError'),
+            f
+              .generic(symbolResponseType ?? 'unknown')
+              .generic(symbolErrorType ?? 'unknown')
+              .generic('ThrowOnError'),
         )
         .$if(plugin.config.responseStyle === 'data', (f) =>
           f.generic($.type.literal(plugin.config.responseStyle)),

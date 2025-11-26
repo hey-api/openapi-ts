@@ -1,8 +1,8 @@
-import type { SyntaxNode } from '@hey-api/codegen-core';
+import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { TypeTsDsl } from '../base';
+import { isTsDsl, TypeTsDsl } from '../base';
 
 const Mixed = TypeTsDsl<ts.TemplateLiteralTypeNode>;
 
@@ -14,14 +14,17 @@ export class TypeTemplateTsDsl extends Mixed {
     if (value !== undefined) this.add(value);
   }
 
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    for (const part of this.parts) {
+      if (isTsDsl(part)) part.analyze(ctx);
+    }
+  }
+
   /** Adds a raw string segment or embedded type expression. */
   add(part: string | MaybeTsDsl<ts.TypeNode>): this {
     this.parts.push(part);
     return this;
-  }
-
-  override traverse(visitor: (node: SyntaxNode) => void): void {
-    super.traverse(visitor);
   }
 
   protected override _render() {

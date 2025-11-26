@@ -1,8 +1,9 @@
-import type { Symbol, SyntaxNode } from '@hey-api/codegen-core';
+import type { AnalysisContext, Symbol } from '@hey-api/codegen-core';
+import { isSymbol } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { TsDsl } from '../base';
+import { isTsDsl, TsDsl } from '../base';
 import { NewlineTsDsl } from '../layout/newline';
 import { DecoratorMixin } from '../mixins/decorator';
 import { DocMixin } from '../mixins/doc';
@@ -11,6 +12,10 @@ import { TypeParamsMixin } from '../mixins/type-params';
 import { FieldTsDsl } from './field';
 import { InitTsDsl } from './init';
 import { MethodTsDsl } from './method';
+
+type Base = Symbol | string;
+type Name = Symbol | string;
+type Body = Array<MaybeTsDsl<ts.ClassElement | ts.Node>>;
 
 const Mixed = AbstractMixin(
   DecoratorMixin(
@@ -21,65 +26,57 @@ const Mixed = AbstractMixin(
 );
 
 export class ClassTsDsl extends Mixed {
-  protected baseClass?: Symbol | string;
-  protected body: Array<MaybeTsDsl<ts.ClassElement | NewlineTsDsl>> = [];
-  protected name: Symbol | string;
+  protected baseClass?: Base;
+  protected body: Body = [];
+  protected name: Name;
 
-  constructor(name: Symbol | string) {
+  constructor(name: Name) {
     super();
-    if (typeof name === 'string') {
-      this.name = name;
-      return;
-    }
     this.name = name;
-    this.symbol = name;
-    this.symbol.setKind('class');
-    this.symbol.setRootNode(this);
+    if (isSymbol(name)) {
+      name.setKind('class');
+      name.setNode(this);
+    }
   }
 
-  override collectSymbols(out: Set<Symbol>): void {
-    console.log(out);
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    if (isSymbol(this.baseClass)) ctx.addDependency(this.baseClass);
+    if (isSymbol(this.name)) ctx.addDependency(this.name);
+    for (const item of this.body) {
+      if (isTsDsl(item)) item.analyze(ctx);
+    }
   }
 
   /** Adds one or more class members (fields, methods, etc.). */
-  do(...items: ReadonlyArray<MaybeTsDsl<ts.ClassElement | ts.Node>>): this {
-    for (const item of items) {
-      if (item instanceof TsDsl) {
-        item.setParent(this);
-      }
-      // @ts-expect-error --- IGNORE ---
-      this.body.push(item);
-    }
+  do(...items: Body): this {
+    this.body.push(...items);
     return this;
   }
 
-  /** Records a base class to extend from without rendering early. */
-  extends(base?: Symbol | string): this {
-    if (!base) return this;
+  /** Records a base class to extend from. */
+  extends(base?: Base): this {
     this.baseClass = base;
-    if (typeof base !== 'string') {
-      this.getRootSymbol().addDependency(base);
-    }
     return this;
   }
 
   /** Adds a class field. */
   field(name: string, fn?: (f: FieldTsDsl) => void): this {
-    const f = new FieldTsDsl(name, fn).setParent(this);
+    const f = new FieldTsDsl(name, fn);
     this.body.push(f);
     return this;
   }
 
   /** Adds a class constructor. */
   init(fn?: (i: InitTsDsl) => void): this {
-    const i = new InitTsDsl(fn).setParent(this);
+    const i = new InitTsDsl(fn);
     this.body.push(i);
     return this;
   }
 
   /** Adds a class method. */
   method(name: string, fn?: (m: MethodTsDsl) => void): this {
-    const m = new MethodTsDsl(name, fn).setParent(this);
+    const m = new MethodTsDsl(name, fn);
     this.body.push(m);
     return this;
   }
@@ -90,17 +87,12 @@ export class ClassTsDsl extends Mixed {
     return this;
   }
 
-  override traverse(visitor: (node: SyntaxNode) => void): void {
-    super.traverse(visitor);
-  }
-
   protected override _render() {
     const body = this.$node(this.body) as ReadonlyArray<ts.ClassElement>;
-    const name =
-      typeof this.name === 'string' ? this.name : this.name.finalName;
     return ts.factory.createClassDeclaration(
       [...this.$decorators(), ...this.modifiers],
-      name,
+      // @ts-expect-error need to improve types
+      this.$node(this.name),
       this.$generics(),
       this._renderHeritage(),
       body,
@@ -110,13 +102,12 @@ export class ClassTsDsl extends Mixed {
   /** Builds heritage clauses (extends). */
   private _renderHeritage(): ReadonlyArray<ts.HeritageClause> {
     if (!this.baseClass) return [];
-    const id =
-      typeof this.baseClass === 'string'
-        ? this.$maybeId(this.baseClass)
-        : this.$maybeId(this.baseClass.finalName);
     return [
       ts.factory.createHeritageClause(ts.SyntaxKind.ExtendsKeyword, [
-        ts.factory.createExpressionWithTypeArguments(id, undefined),
+        ts.factory.createExpressionWithTypeArguments(
+          this.$node(this.baseClass),
+          undefined,
+        ),
       ]),
     ];
   }

@@ -1,35 +1,30 @@
-import type { SyntaxNode } from '@hey-api/codegen-core';
+import type { AnalysisContext, Node } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
-import type { MaybeTsDsl, TypeTsDsl } from '../base';
-import type { AsTsDsl } from '../expr/as';
+import type { AsCtor, AsTsDsl, AsType } from '../expr/as';
 import type { BaseCtor, MixinCtor } from './types';
 
-type AsFactory = (
-  expr: string | MaybeTsDsl<ts.Expression>,
-  type: string | TypeTsDsl,
-) => AsTsDsl;
-let asFactory: AsFactory | undefined;
-/** Registers the As DSL factory after its module has finished evaluating. */
-export function registerLazyAccessAsFactory(factory: AsFactory): void {
+let asFactory: AsCtor | undefined;
+/** Lazy register the factory to avoid circular imports. */
+export function setAsFactory(factory: AsCtor): void {
   asFactory = factory;
 }
 
-export interface AsMethods extends SyntaxNode {
+export interface AsMethods extends Node {
   /** Creates an `as` type assertion expression (e.g. `value as Type`). */
-  as(type: string | TypeTsDsl): AsTsDsl;
+  as(type: AsType): AsTsDsl;
 }
 
 export function AsMixin<T extends ts.Expression, TBase extends BaseCtor<T>>(
   Base: TBase,
 ) {
   abstract class As extends Base {
-    protected as(type: string | TypeTsDsl): AsTsDsl {
-      return asFactory!(this, type);
+    override analyze(ctx: AnalysisContext): void {
+      super.analyze(ctx);
     }
 
-    override traverse(visitor: (node: SyntaxNode) => void): void {
-      super.traverse(visitor);
+    protected as(type: AsType): AsTsDsl {
+      return asFactory!(this, type);
     }
   }
 

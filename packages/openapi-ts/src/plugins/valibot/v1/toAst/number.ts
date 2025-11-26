@@ -68,42 +68,38 @@ export const numberToAst = ({
       literalValue = $.fromValue(constValue);
     }
 
-    return $(v.placeholder)
-      .attr(identifiers.schemas.literal)
-      .call(literalValue);
+    return $(v).attr(identifiers.schemas.literal).call(literalValue);
   }
 
   const pipes: Array<ReturnType<typeof $.call>> = [];
 
   // For bigint formats (int64, uint64), create union of number, string, and bigint with transform
   if (isBigInt) {
-    const unionExpression = $(v.placeholder)
+    const unionExpression = $(v)
       .attr(identifiers.schemas.union)
       .call(
         $.array(
-          $(v.placeholder).attr(identifiers.schemas.number).call(),
-          $(v.placeholder).attr(identifiers.schemas.string).call(),
-          $(v.placeholder).attr(identifiers.schemas.bigInt).call(),
+          $(v).attr(identifiers.schemas.number).call(),
+          $(v).attr(identifiers.schemas.string).call(),
+          $(v).attr(identifiers.schemas.bigInt).call(),
         ),
       );
     pipes.push(unionExpression);
 
     // Add transform to convert to BigInt
-    const transformExpression = $(v.placeholder)
+    const transformExpression = $(v)
       .attr(identifiers.actions.transform)
       .call($.func().param('x').do($('BigInt').call('x').return()));
     pipes.push(transformExpression);
   } else {
     // For regular number formats, use number schema
-    const expression = $(v.placeholder).attr(identifiers.schemas.number).call();
+    const expression = $(v).attr(identifiers.schemas.number).call();
     pipes.push(expression);
   }
 
   // Add integer validation for integer types (except when using bigint union)
   if (!isBigInt && isInteger) {
-    const expression = $(v.placeholder)
-      .attr(identifiers.actions.integer)
-      .call();
+    const expression = $(v).attr(identifiers.actions.integer).call();
     pipes.push(expression);
   }
 
@@ -115,7 +111,7 @@ export const numberToAst = ({
     const maxErrorMessage = formatInfo.maxError;
 
     // Add minimum value validation
-    const minExpression = $(v.placeholder)
+    const minExpression = $(v)
       .attr(identifiers.actions.minValue)
       .call(
         isBigInt ? $('BigInt').call($.literal(minValue)) : $.literal(minValue),
@@ -124,7 +120,7 @@ export const numberToAst = ({
     pipes.push(minExpression);
 
     // Add maximum value validation
-    const maxExpression = $(v.placeholder)
+    const maxExpression = $(v)
       .attr(identifiers.actions.maxValue)
       .call(
         isBigInt ? $('BigInt').call($.literal(maxValue)) : $.literal(maxValue),
@@ -134,24 +130,24 @@ export const numberToAst = ({
   }
 
   if (schema.exclusiveMinimum !== undefined) {
-    const expression = $(v.placeholder)
+    const expression = $(v)
       .attr(identifiers.actions.gtValue)
       .call(numberParameter({ isBigInt, value: schema.exclusiveMinimum }));
     pipes.push(expression);
   } else if (schema.minimum !== undefined) {
-    const expression = $(v.placeholder)
+    const expression = $(v)
       .attr(identifiers.actions.minValue)
       .call(numberParameter({ isBigInt, value: schema.minimum }));
     pipes.push(expression);
   }
 
   if (schema.exclusiveMaximum !== undefined) {
-    const expression = $(v.placeholder)
+    const expression = $(v)
       .attr(identifiers.actions.ltValue)
       .call(numberParameter({ isBigInt, value: schema.exclusiveMaximum }));
     pipes.push(expression);
   } else if (schema.maximum !== undefined) {
-    const expression = $(v.placeholder)
+    const expression = $(v)
       .attr(identifiers.actions.maxValue)
       .call(numberParameter({ isBigInt, value: schema.maximum }));
     pipes.push(expression);

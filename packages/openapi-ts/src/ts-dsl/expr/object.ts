@@ -1,4 +1,4 @@
-import type { SyntaxNode } from '@hey-api/codegen-core';
+import type { AnalysisContext, Symbol } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -9,8 +9,8 @@ import { HintMixin } from '../mixins/hint';
 import { LayoutMixin } from '../mixins/layout';
 import { ObjectPropTsDsl } from './prop';
 
-type Expr = string | MaybeTsDsl<ts.Expression>;
-type Stmt = string | MaybeTsDsl<ts.Statement>;
+type Expr = Symbol | string | MaybeTsDsl<ts.Expression>;
+type Stmt = Symbol | string | MaybeTsDsl<ts.Statement>;
 type ExprFn = Expr | ((p: ObjectPropTsDsl) => void);
 type StmtFn = Stmt | ((p: ObjectPropTsDsl) => void);
 
@@ -24,6 +24,13 @@ export class ObjectTsDsl extends Mixed {
   constructor(...props: Array<ObjectPropTsDsl>) {
     super();
     this.props(...props);
+  }
+
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    for (const prop of this._props) {
+      prop.analyze(ctx);
+    }
   }
 
   /** Adds a computed property (e.g. `{ [expr]: value }`). */
@@ -72,10 +79,6 @@ export class ObjectTsDsl extends Mixed {
   spread(expr: ExprFn): this {
     this._props.push(new ObjectPropTsDsl({ kind: 'spread' }).value(expr));
     return this;
-  }
-
-  override traverse(visitor: (node: SyntaxNode) => void): void {
-    super.traverse(visitor);
   }
 
   protected override _render() {

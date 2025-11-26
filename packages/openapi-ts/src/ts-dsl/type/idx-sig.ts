@@ -1,24 +1,31 @@
-import type { SyntaxNode } from '@hey-api/codegen-core';
+import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { TypeTsDsl } from '../base';
+import { isTsDsl, TypeTsDsl } from '../base';
 import { DocMixin } from '../mixins/doc';
 import { ReadonlyMixin } from '../mixins/modifiers';
 
-type Type = string | MaybeTsDsl<ts.TypeNode>;
+export type TypeIdxSigName = string;
+export type TypeIdxSigType = string | MaybeTsDsl<ts.TypeNode>;
 
 const Mixed = DocMixin(ReadonlyMixin(TypeTsDsl<ts.IndexSignatureDeclaration>));
 
 export class TypeIdxSigTsDsl extends Mixed {
-  protected _key?: Type;
-  protected _name: string;
-  protected _type?: Type;
+  protected _key?: TypeIdxSigType;
+  protected _name: TypeIdxSigName;
+  protected _type?: TypeIdxSigType;
 
-  constructor(name: string, fn?: (i: TypeIdxSigTsDsl) => void) {
+  constructor(name: TypeIdxSigName, fn?: (i: TypeIdxSigTsDsl) => void) {
     super();
     this._name = name;
     fn?.(this);
+  }
+
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    if (isTsDsl(this._key)) this._key.analyze(ctx);
+    if (isTsDsl(this._type)) this._type.analyze(ctx);
   }
 
   /** Returns true when all required builder calls are present. */
@@ -27,17 +34,13 @@ export class TypeIdxSigTsDsl extends Mixed {
   }
 
   /** Sets the key type: `[name: T]` */
-  key(type: Type): this {
+  key(type: TypeIdxSigType): this {
     this._key = type;
     return this;
   }
 
-  override traverse(visitor: (node: SyntaxNode) => void): void {
-    super.traverse(visitor);
-  }
-
   /** Sets the property type. */
-  type(type: Type): this {
+  type(type: TypeIdxSigType): this {
     this._type = type;
     return this;
   }
@@ -60,9 +63,9 @@ export class TypeIdxSigTsDsl extends Mixed {
   }
 
   $validate(): asserts this is this & {
-    _key: Type;
-    _name: string;
-    _type: Type;
+    _key: TypeIdxSigType;
+    _name: TypeIdxSigName;
+    _type: TypeIdxSigType;
   } {
     const missing = this.missingRequiredCalls();
     if (missing.length === 0) return;

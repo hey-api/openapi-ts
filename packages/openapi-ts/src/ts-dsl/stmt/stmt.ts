@@ -1,7 +1,7 @@
-import type { SyntaxNode } from '@hey-api/codegen-core';
+import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
-import { TsDsl } from '../base';
+import { isTsDsl, TsDsl } from '../base';
 
 const Mixed = TsDsl<ts.Statement>;
 
@@ -13,8 +13,9 @@ export class StmtTsDsl extends Mixed {
     this._inner = inner;
   }
 
-  override traverse(visitor: (node: SyntaxNode) => void): void {
-    super.traverse(visitor);
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    if (isTsDsl(this._inner)) this._inner.analyze(ctx);
   }
 
   protected override _render() {

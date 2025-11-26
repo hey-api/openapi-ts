@@ -1,8 +1,8 @@
-import type { SyntaxNode } from '@hey-api/codegen-core';
+import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { TsDsl } from '../base';
+import { isTsDsl, TsDsl } from '../base';
 
 const Mixed = TsDsl<ts.TemplateExpression | ts.NoSubstitutionTemplateLiteral>;
 
@@ -14,13 +14,16 @@ export class TemplateTsDsl extends Mixed {
     if (value !== undefined) this.add(value);
   }
 
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    for (const part of this.parts) {
+      if (isTsDsl(part)) part.analyze(ctx);
+    }
+  }
+
   add(value: string | MaybeTsDsl<ts.Expression>): this {
     this.parts.push(value);
     return this;
-  }
-
-  override traverse(visitor: (node: SyntaxNode) => void): void {
-    super.traverse(visitor);
   }
 
   protected override _render() {

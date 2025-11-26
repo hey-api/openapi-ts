@@ -55,13 +55,11 @@ export const stringToAst = ({
   });
 
   if (typeof schema.const === 'string') {
-    chain = $(z.placeholder)
-      .attr(identifiers.literal)
-      .call($.literal(schema.const));
+    chain = $(z).attr(identifiers.literal).call($.literal(schema.const));
     return chain;
   }
 
-  chain = $(z.placeholder).attr(identifiers.string).call();
+  chain = $(z).attr(identifiers.string).call();
 
   if (schema.format) {
     const args: FormatResolverArgs = { $, chain, plugin, schema };

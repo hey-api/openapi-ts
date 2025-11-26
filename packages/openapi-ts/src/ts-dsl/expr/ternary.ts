@@ -1,8 +1,8 @@
-import type { SyntaxNode } from '@hey-api/codegen-core';
+import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { TsDsl } from '../base';
+import { isTsDsl, TsDsl } from '../base';
 
 const Mixed = TsDsl<ts.ConditionalExpression>;
 
@@ -14,6 +14,13 @@ export class TernaryTsDsl extends Mixed {
   constructor(condition?: string | MaybeTsDsl<ts.Expression>) {
     super();
     if (condition) this.condition(condition);
+  }
+
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    if (isTsDsl(this._condition)) this._condition.analyze(ctx);
+    if (isTsDsl(this._then)) this._then.analyze(ctx);
+    if (isTsDsl(this._else)) this._else.analyze(ctx);
   }
 
   condition(condition: string | MaybeTsDsl<ts.Expression>) {
@@ -29,10 +36,6 @@ export class TernaryTsDsl extends Mixed {
   otherwise(expr: string | MaybeTsDsl<ts.Expression>) {
     this._else = expr;
     return this;
-  }
-
-  override traverse(visitor: (node: SyntaxNode) => void): void {
-    super.traverse(visitor);
   }
 
   protected override _render() {

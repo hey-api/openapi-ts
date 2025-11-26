@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { SymbolRegistry } from '../symbols/registry';
+import { isSymbol } from '../symbols/symbol';
 
 describe('SymbolRegistry', () => {
   it('covers the full public interface', () => {
@@ -259,5 +260,89 @@ describe('SymbolRegistry', () => {
     // The new stub isn't indexed, so query returns nothing yet
     const newQuery = registry.query({ something: 'else' });
     expect(newQuery).toEqual([]);
+  });
+
+  it('isSymbol covers various inputs', () => {
+    const registry = new SymbolRegistry();
+
+    // real registered symbol
+    const sym = registry.register({ meta: { a: 1 }, name: 'A' });
+    expect(isSymbol(sym)).toBe(true);
+
+    // stub reference (unregistered)
+    const stub = registry.reference({ b: 2 });
+    expect(isSymbol(stub)).toBe(true);
+
+    // primitives
+    expect(isSymbol(null)).toBe(false);
+    expect(isSymbol(undefined)).toBe(false);
+    expect(isSymbol(123)).toBe(false);
+    expect(isSymbol('foo')).toBe(false);
+    expect(isSymbol(true)).toBe(false);
+
+    // arrays and plain objects
+    expect(isSymbol([])).toBe(false);
+    expect(isSymbol({})).toBe(false);
+
+    // object with different tag
+    expect(isSymbol({ '~tag': 'not-a-symbol' })).toBe(false);
+
+    // object masquerading as a symbol (matches tag)
+    expect(isSymbol({ '~tag': 'heyapi.symbol' })).toBe(true);
+
+    // Date, Map, Set should be false
+    expect(isSymbol(new Date())).toBe(false);
+    expect(isSymbol(new Map())).toBe(false);
+    expect(isSymbol(new Set())).toBe(false);
+
+    // Typed arrays and ArrayBuffer should be false
+    expect(isSymbol(new Uint8Array())).toBe(false);
+    expect(isSymbol(new ArrayBuffer(8))).toBe(false);
+
+    // Functions without tag should be false
+    const fn = () => {};
+    expect(isSymbol(fn)).toBe(false);
+
+    // Class instance without tag should be false
+    class Foo {}
+    const foo = new Foo();
+    expect(isSymbol(foo)).toBe(false);
+
+    // Proxy with tag should be true if own property is present
+    const target = {} as Record<string, unknown>;
+    const proxied = new Proxy(target, {
+      get(_, prop) {
+        if (prop === '~tag') return 'heyapi.symbol';
+        return undefined;
+      },
+      getOwnPropertyDescriptor(_, prop) {
+        if (prop === '~tag')
+          return {
+            configurable: true,
+            enumerable: true,
+            value: 'heyapi.symbol',
+            writable: false,
+          };
+        return undefined;
+      },
+      has(_, prop) {
+        return prop === '~tag';
+      },
+    });
+    // Define as own property to satisfy hasOwn
+    Object.defineProperty(target, '~tag', {
+      configurable: true,
+      value: 'heyapi.symbol',
+    });
+    expect(isSymbol(proxied)).toBe(true);
+
+    // Inherited tag should be false (not own property)
+    const proto = { '~tag': 'heyapi.symbol' };
+    const objWithProto = Object.create(proto);
+    expect(isSymbol(objWithProto)).toBe(false);
+
+    // Primitive edge cases
+    expect(isSymbol(Symbol('x'))).toBe(false);
+    expect(isSymbol(0n)).toBe(false);
   });
 });

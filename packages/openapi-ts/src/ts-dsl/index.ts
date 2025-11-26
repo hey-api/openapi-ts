@@ -338,4 +338,4 @@ export type DollarTsDsl = {
 };
 
 export type { MaybeTsDsl, TypeTsDsl } from './base';
-export { TsDsl } from './base';
+export { isTsDsl, TsDsl, tsDslBrand } from './base';

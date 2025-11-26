@@ -79,9 +79,9 @@ export const createClient: PluginHandler = ({ plugin }) => {
   }
 
   const createConfigParameters = [
-    $(symbolCreateConfig.placeholder)
+    $(symbolCreateConfig)
       .call(defaultVals.hasProps() ? defaultVals : undefined)
-      .generic(symbolClientOptions.placeholder),
+      .generic(symbolClientOptions),
   ];
 
   const symbolClient = plugin.registerSymbol({
@@ -93,11 +93,11 @@ export const createClient: PluginHandler = ({ plugin }) => {
   const statement = $.const(symbolClient)
     .export()
     .assign(
-      $(symbolCreateClient.placeholder).$if(
+      $(symbolCreateClient).$if(
         symbolCreateClientConfig,
-        (c, s) => c.call($(s.placeholder).call(...createConfigParameters)),
+        (c, s) => c.call($(s).call(...createConfigParameters)),
         (c) => c.call(...createConfigParameters),
       ),
     );
-  plugin.setSymbolValue(symbolClient, statement);
+  plugin.addNode(statement);
 };

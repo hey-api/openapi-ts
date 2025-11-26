@@ -54,7 +54,7 @@ export const createUseSwr = ({
     )
     .assign(
       $.func().do(
-        $(symbolUseSwr.placeholder)
+        $(symbolUseSwr)
           .call(
             $.literal(operation.path),
             $.func()
@@ -64,5 +64,5 @@ export const createUseSwr = ({
           .return(),
       ),
     );
-  plugin.setSymbolValue(symbolUseQueryFn, statement);
+  plugin.addNode(statement);
 };

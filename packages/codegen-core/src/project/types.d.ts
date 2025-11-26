@@ -1,11 +1,13 @@
 import type { IProjectRenderMeta } from '../extensions';
-import type { IFileOut, IFileRegistry } from '../files/types';
+import type { IFileRegistry } from '../files/types';
+import type { INodeRegistry } from '../nodes/types';
 import type { IOutput } from '../output';
 import type { IRenderer } from '../renderer/types';
 import type { ISymbolRegistry } from '../symbols/types';
 
 /**
- * Represents a code generation project consisting of multiple codegen files.
+ * Represents a code generation project consisting of codegen files.
+ *
  * Manages imports, symbols, and output generation across the project.
  */
 export interface IProject {
@@ -22,10 +24,10 @@ export interface IProject {
    * @returns The transformed file name.
    */
   readonly fileName?: (name: string) => string;
-  /**
-   * Centralized file registry for the project.
-   */
+  /** Centralized file registry for the project. */
   readonly files: IFileRegistry;
+  /** Centralized node registry for the project. */
+  readonly nodes: INodeRegistry;
   /**
    * Produces output representations for all files in the project.
    *
@@ -45,25 +47,8 @@ export interface IProject {
    * }
    */
   readonly renderers: Record<string, IRenderer>;
-  /**
-   * The absolute path to the root folder of the project.
-   */
+  /** The absolute path to the root folder of the project. */
   readonly root: string;
-  /**
-   * Retrieves files that include symbol ID. The first file is the one
-   * where the symbol is declared, the rest are files that re-export it.
-   *
-   * @param symbolId The symbol ID to find.
-   * @returns An array of files containing the symbol.
-   * @example
-   * const files = project.symbolIdToFiles(31);
-   * for (const file of files) {
-   *   console.log(file.path);
-   * }
-   */
-  symbolIdToFiles(symbolId: number): ReadonlyArray<IFileOut>;
-  /**
-   * Centralized symbol registry for the project.
-   */
+  /** Centralized symbol registry for the project. */
   readonly symbols: ISymbolRegistry;
 }

@@ -13,6 +13,6 @@ export const neverToAst = ({
     category: 'external',
     resource: 'zod.z',
   });
-  const expression = $(z.placeholder).attr(identifiers.never).call();
+  const expression = $(z).attr(identifiers.never).call();
   return expression;
 };

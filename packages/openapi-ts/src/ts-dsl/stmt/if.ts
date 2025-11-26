@@ -1,8 +1,8 @@
-import type { SyntaxNode } from '@hey-api/codegen-core';
+import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { TsDsl } from '../base';
+import { isTsDsl, TsDsl } from '../base';
 import { DoMixin } from '../mixins/do';
 
 const Mixed = DoMixin(TsDsl<ts.IfStatement>);
@@ -16,6 +16,16 @@ export class IfTsDsl extends Mixed {
     if (condition) this.condition(condition);
   }
 
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    if (isTsDsl(this._condition)) this._condition.analyze(ctx);
+    if (this._else) {
+      for (const stmt of this._else) {
+        if (isTsDsl(stmt)) stmt.analyze(ctx);
+      }
+    }
+  }
+
   condition(condition: string | MaybeTsDsl<ts.Expression>): this {
     this._condition = condition;
     return this;
@@ -24,10 +34,6 @@ export class IfTsDsl extends Mixed {
   otherwise(...statements: ReadonlyArray<MaybeTsDsl<ts.Statement>>): this {
     this._else = statements;
     return this;
-  }
-
-  override traverse(visitor: (node: SyntaxNode) => void): void {
-    super.traverse(visitor);
   }
 
   protected override _render() {

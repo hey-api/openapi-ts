@@ -1,16 +1,21 @@
-import type { SyntaxNode } from '@hey-api/codegen-core';
+import type { AnalysisContext, Symbol } from '@hey-api/codegen-core';
+import { isSymbol } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { validTypescriptIdentifierRegExp } from '~/utils/regexp';
 
 import type { MaybeTsDsl } from '../base';
-import { TsDsl } from '../base';
+import { isTsDsl, TsDsl } from '../base';
 import { AsMixin } from '../mixins/as';
-import { ExprMixin, registerLazyAccessAttrFactory } from '../mixins/expr';
+import { ExprMixin, setAttrFactory } from '../mixins/expr';
 import { OperatorMixin } from '../mixins/operator';
 import { OptionalMixin } from '../mixins/optional';
 import { TokenTsDsl } from '../token';
 import { LiteralTsDsl } from './literal';
+
+export type AttrLeft = Symbol | string | MaybeTsDsl<ts.Expression>;
+export type AttrRight = Symbol | string | ts.MemberName | number;
+export type AttrCtor = (left: AttrLeft, right: AttrRight) => AttrTsDsl;
 
 const Mixed = AsMixin(
   ExprMixin(
@@ -23,20 +28,23 @@ const Mixed = AsMixin(
 );
 
 export class AttrTsDsl extends Mixed {
-  protected left: string | MaybeTsDsl<ts.Expression>;
-  protected right: string | ts.MemberName | number;
+  protected left: AttrLeft;
+  protected right: AttrRight;
 
-  constructor(
-    left: string | MaybeTsDsl<ts.Expression>,
-    right: string | ts.MemberName | number,
-  ) {
+  constructor(left: AttrLeft, right: AttrRight) {
     super();
     this.left = left;
     this.right = right;
   }
 
-  override traverse(visitor: (node: SyntaxNode) => void): void {
-    super.traverse(visitor);
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    if (isSymbol(this.left)) {
+      ctx.addDependency(this.left);
+    } else if (isTsDsl(this.left)) {
+      this.left.analyze(ctx);
+    }
+    if (isSymbol(this.right)) ctx.addDependency(this.right);
   }
 
   protected override _render() {
@@ -63,14 +71,16 @@ export class AttrTsDsl extends Mixed {
       return ts.factory.createPropertyAccessChain(
         leftNode,
         this.$node(new TokenTsDsl().questionDot()),
-        this.$maybeId(this.right),
+        // @ts-expect-error ts.MemberName is not properly recognized here
+        this.$node(this.right),
       );
     }
     return ts.factory.createPropertyAccessExpression(
       leftNode,
-      this.$maybeId(this.right),
+      // @ts-expect-error ts.MemberName is not properly recognized here
+      this.$node(this.right),
     );
   }
 }
 
-registerLazyAccessAttrFactory((...args) => new AttrTsDsl(...args));
+setAttrFactory((...args) => new AttrTsDsl(...args));

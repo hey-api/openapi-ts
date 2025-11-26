@@ -43,14 +43,14 @@ export const irSchemaToAst = ({
     };
     const refSymbol = plugin.referenceSymbol(query);
     if (plugin.isSymbolRegistered(query)) {
-      const ref = $(refSymbol.placeholder);
+      const ref = $(refSymbol);
       ast.expression = ref;
     } else {
-      // expression: z.placeholder,
+      // expression: z,
       // name: identifiers.lazy,
       const lazyExpression = $('TODO')
         .attr('TODO')
-        .call($.func().returns('any').do($.return(refSymbol.placeholder)));
+        .call($.func().returns('any').do($.return(refSymbol)));
       ast.expression = lazyExpression;
       ast.hasLazyExpression = true;
       state.hasLazyExpression.value = true;
@@ -74,7 +74,7 @@ export const irSchemaToAst = ({
       //   }),
       //   parameters: [
       //     tsc.propertyAccessExpression({
-      //       expression: z.placeholder,
+      //       expression: z,
       //       name: identifiers.globalRegistry,
       //     }),
       //     tsc.objectExpression({
@@ -113,7 +113,7 @@ export const irSchemaToAst = ({
       //       ) {
       //         ast.expression = tsc.callExpression({
       //           functionName: tsc.propertyAccessExpression({
-      //             expression: z.placeholder,
+      //             expression: z,
       //             name: identifiers.intersection,
       //           }),
       //           parameters: itemSchemas.map((schema) => schema.expression),
@@ -130,7 +130,7 @@ export const irSchemaToAst = ({
       //               schema.hasCircularReference
       //                 ? tsc.callExpression({
       //                     functionName: tsc.propertyAccessExpression({
-      //                       expression: z.placeholder,
+      //                       expression: z,
       //                       name: identifiers.lazy,
       //                     }),
       //                     parameters: [
@@ -151,7 +151,7 @@ export const irSchemaToAst = ({
       //     } else {
       //       ast.expression = tsc.callExpression({
       //         functionName: tsc.propertyAccessExpression({
-      //           expression: z.placeholder,
+      //           expression: z,
       //           name: identifiers.union,
       //         }),
       //         parameters: [
@@ -203,7 +203,7 @@ export const irSchemaToAst = ({
   //   if (optional) {
   //     ast.expression = tsc.callExpression({
   //       functionName: tsc.propertyAccessExpression({
-  //         expression: z.placeholder,
+  //         expression: z,
   //         name: identifiers.optional,
   //       }),
   //       parameters: [ast.expression],

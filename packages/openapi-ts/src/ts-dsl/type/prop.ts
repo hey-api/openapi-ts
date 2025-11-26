@@ -1,32 +1,41 @@
-import type { SyntaxNode } from '@hey-api/codegen-core';
+import type { AnalysisContext, Symbol } from '@hey-api/codegen-core';
+import { isSymbol } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { TypeTsDsl } from '../base';
+import { isTsDsl, TypeTsDsl } from '../base';
 import { DocMixin } from '../mixins/doc';
 import { ReadonlyMixin } from '../mixins/modifiers';
 import { OptionalMixin } from '../mixins/optional';
 import { TokenTsDsl } from '../token';
 import { safePropName } from '../utils/prop';
 
+export type TypePropName = string;
+export type TypePropType = Symbol | string | MaybeTsDsl<ts.TypeNode>;
+
 const Mixed = DocMixin(OptionalMixin(ReadonlyMixin(TypeTsDsl<ts.TypeElement>)));
 
 export class TypePropTsDsl extends Mixed {
-  protected name: string;
-  protected _type?: string | MaybeTsDsl<ts.TypeNode>;
+  protected name: TypePropName;
+  protected _type?: TypePropType;
 
-  constructor(name: string, fn: (p: TypePropTsDsl) => void) {
+  constructor(name: TypePropName, fn: (p: TypePropTsDsl) => void) {
     super();
     this.name = name;
     fn(this);
   }
 
-  override traverse(visitor: (node: SyntaxNode) => void): void {
-    super.traverse(visitor);
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    if (isSymbol(this._type)) {
+      ctx.addDependency(this._type);
+    } else if (isTsDsl(this._type)) {
+      this._type.analyze(ctx);
+    }
   }
 
   /** Sets the property type. */
-  type(type: string | MaybeTsDsl<ts.TypeNode>): this {
+  type(type: TypePropType): this {
     this._type = type;
     return this;
   }

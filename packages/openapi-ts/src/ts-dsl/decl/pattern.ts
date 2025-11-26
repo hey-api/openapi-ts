@@ -1,4 +1,4 @@
-import type { SyntaxNode } from '@hey-api/codegen-core';
+import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeArray } from '../base';
@@ -16,6 +16,10 @@ export class PatternTsDsl extends Mixed {
     | { kind: 'array'; values: ReadonlyArray<string> }
     | { kind: 'object'; values: Record<string, string> };
   protected _spread?: string;
+
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+  }
 
   /** Defines an array pattern (e.g. `[a, b, c]`). */
   array(...props: ReadonlyArray<string> | [ReadonlyArray<string>]): this {
@@ -45,10 +49,6 @@ export class PatternTsDsl extends Mixed {
   spread(name: string): this {
     this._spread = name;
     return this;
-  }
-
-  override traverse(visitor: (node: SyntaxNode) => void): void {
-    super.traverse(visitor);
   }
 
   protected override _render() {

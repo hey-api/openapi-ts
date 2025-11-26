@@ -1,13 +1,12 @@
-import type { SyntaxNode } from '@hey-api/codegen-core';
-import { Symbol } from '@hey-api/codegen-core';
+import type { AnalysisContext, Node, Symbol } from '@hey-api/codegen-core';
+import { isSymbol } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
-import type { MaybeTsDsl } from '../base';
-import { TsDsl } from '../base';
+import { isTsDsl, type MaybeTsDsl } from '../base';
 import { TypeParamTsDsl } from '../type/param';
 import type { BaseCtor, MixinCtor } from './types';
 
-export interface TypeParamsMethods extends SyntaxNode {
+export interface TypeParamsMethods extends Node {
   /** Returns the type parameters as an array of ts.TypeParameterDeclaration nodes. */
   $generics(): ReadonlyArray<ts.TypeParameterDeclaration> | undefined;
   /** Adds a single type parameter (e.g. `T` in `Array<T>`). */
@@ -24,10 +23,17 @@ export function TypeParamsMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
   abstract class TypeParams extends Base {
     protected _generics: Array<MaybeTsDsl<TypeParamTsDsl>> = [];
 
+    override analyze(ctx: AnalysisContext): void {
+      super.analyze(ctx);
+      for (const g of this._generics) {
+        if (isTsDsl(g)) g.analyze(ctx);
+      }
+    }
+
     protected generic(
       ...args: ConstructorParameters<typeof TypeParamTsDsl>
     ): this {
-      const g = new TypeParamTsDsl(...args).setParent(this);
+      const g = new TypeParamTsDsl(...args);
       this._generics.push(g);
       return this;
     }
@@ -36,11 +42,8 @@ export function TypeParamsMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
       ...args: ReadonlyArray<Symbol | string | MaybeTsDsl<TypeParamTsDsl>>
     ): this {
       for (let arg of args) {
-        if (typeof arg === 'string' || arg instanceof Symbol) {
+        if (typeof arg === 'string' || isSymbol(arg)) {
           arg = new TypeParamTsDsl(arg);
-        }
-        if (arg instanceof TsDsl) {
-          arg.setParent(this);
         }
         this._generics.push(arg);
       }

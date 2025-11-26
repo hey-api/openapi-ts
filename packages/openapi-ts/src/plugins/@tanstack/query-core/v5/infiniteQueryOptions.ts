@@ -90,7 +90,7 @@ const createInfiniteParamsFunction = ({
         $.return($('params').as('unknown').as($('page').typeofType())),
       ),
   );
-  plugin.setSymbolValue(symbolCreateInfiniteParams, fn);
+  plugin.addNode(fn);
 };
 
 export const createInfiniteQueryOptions = ({
@@ -181,7 +181,7 @@ export const createInfiniteQueryOptions = ({
     symbol: symbolInfiniteQueryKey,
     typeQueryKey,
   });
-  plugin.setSymbolValue(symbolInfiniteQueryKey, node);
+  plugin.addNode(node);
 
   const awaitSdkFn = $(queryFn)
     .call(
@@ -216,7 +216,7 @@ export const createInfiniteQueryOptions = ({
           ),
       ),
     $.const('params').assign(
-      $(symbolCreateInfiniteParams.placeholder).call('queryKey', 'page'),
+      $(symbolCreateInfiniteParams).call('queryKey', 'page'),
     ),
   ];
 
@@ -245,7 +245,7 @@ export const createInfiniteQueryOptions = ({
         .param('options', (p) => p.required(isRequiredOptions).type(typeData))
         .do(
           $.return(
-            $(symbolInfiniteQueryOptions.placeholder)
+            $(symbolInfiniteQueryOptions)
               .call(
                 $.object()
                   .pretty()
@@ -257,10 +257,7 @@ export const createInfiniteQueryOptions = ({
                       .param((p) => p.object('pageParam', 'queryKey', 'signal'))
                       .do(...statements),
                   )
-                  .prop(
-                    'queryKey',
-                    $(symbolInfiniteQueryKey.placeholder).call('options'),
-                  )
+                  .prop('queryKey', $(symbolInfiniteQueryKey).call('options'))
                   .$if(
                     handleMeta(plugin, operation, 'infiniteQueryOptions'),
                     (o, v) => o.prop('meta', v),
@@ -277,5 +274,5 @@ export const createInfiniteQueryOptions = ({
           ),
         ),
     );
-  plugin.setSymbolValue(symbolInfiniteQueryOptionsFn, statement);
+  plugin.addNode(statement);
 };

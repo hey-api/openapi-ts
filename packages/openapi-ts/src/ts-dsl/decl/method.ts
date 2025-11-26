@@ -1,4 +1,4 @@
-import type { SyntaxNode } from '@hey-api/codegen-core';
+import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl, TypeTsDsl } from '../base';
@@ -51,14 +51,15 @@ export class MethodTsDsl extends Mixed {
     fn?.(this);
   }
 
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    this._returns?.analyze(ctx);
+  }
+
   /** Sets the return type. */
   returns(type: string | TypeTsDsl): this {
     this._returns = type instanceof TypeTsDsl ? type : new TypeExprTsDsl(type);
     return this;
-  }
-
-  override traverse(visitor: (node: SyntaxNode) => void): void {
-    super.traverse(visitor);
   }
 
   protected override _render() {

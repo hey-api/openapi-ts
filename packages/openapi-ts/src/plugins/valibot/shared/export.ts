@@ -33,5 +33,5 @@ export const exportAst = ({
       c.type($.type(v).attr(ast.typeName || identifiers.types.GenericSchema)),
     )
     .assign(pipesToAst({ pipes: ast.pipes, plugin }));
-  plugin.setSymbolValue(symbol, statement);
+  plugin.addNode(statement);
 };

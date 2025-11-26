@@ -61,8 +61,8 @@ export const createQueryOptions = ({
       plugin,
       symbol: symbolQueryKey,
     });
-    plugin.setSymbolValue(symbolQueryKey, node);
-    keyExpression = $(symbolQueryKey.placeholder).call(optionsParamName);
+    plugin.addNode(node);
+    keyExpression = $(symbolQueryKey).call(optionsParamName);
   } else {
     const symbolCreateQueryKey = plugin.referenceSymbol({
       category: 'utility',
@@ -78,7 +78,7 @@ export const createQueryOptions = ({
     ) {
       tagsExpr = $.array(...operation.tags.map((t) => $.literal(t)));
     }
-    keyExpression = $(symbolCreateQueryKey.placeholder).call(
+    keyExpression = $(symbolCreateQueryKey).call(
       $.literal(operation.id),
       optionsParamName,
       tagsExpr,
@@ -146,7 +146,7 @@ export const createQueryOptions = ({
       c.doc(v),
     )
     .assign(
-      $(symbolDefineQueryOptions.placeholder).call(
+      $(symbolDefineQueryOptions).call(
         $.func()
           .param(optionsParamName, (p) =>
             p.required(isRequiredOptions).type(strippedTypeData),
@@ -154,5 +154,5 @@ export const createQueryOptions = ({
           .do($.return(queryOpts)),
       ),
     );
-  plugin.setSymbolValue(symbolQueryOptionsFn, statement);
+  plugin.addNode(statement);
 };

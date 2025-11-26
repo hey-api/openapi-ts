@@ -186,6 +186,6 @@ export const handlerV1: HeyApiTypeScriptPlugin['Handler'] = ({ plugin }) => {
       .alias(symbolWebhooks)
       .export()
       .type($.type.or(...webhooks));
-    plugin.setSymbolValue(symbolWebhooks, node);
+    plugin.addNode(node);
   }
 };

@@ -1,4 +1,12 @@
 import type { IBiMap } from '../bimap/types';
+import type {
+  PlannedExport,
+  PlannedImport,
+  PlannedReexport,
+} from '../bindings/plan';
+import type { Symbol } from '../symbols/symbol';
+import type { SymbolKind } from '../symbols/types';
+import type { Rules } from './rules';
 
 /**
  * Selector array used to reference files.
@@ -10,9 +18,7 @@ export type IFileSelector = ReadonlyArray<string>;
 export type IFileIdentifier = number | IFileSelector;
 
 export type IFileIn = {
-  /**
-   * File extension, if any.
-   */
+  /** File extension, if any. */
   extension?: string;
   /**
    * Indicates whether the file is external, meaning it is not generated
@@ -22,9 +28,7 @@ export type IFileIn = {
    * @example true
    */
   external?: boolean;
-  /**
-   * Unique file ID. If one is not provided, it will be auto-generated.
-   */
+  /** Unique file ID. If one is not provided, it will be auto-generated. */
   readonly id?: number;
   /**
    * The desired name for the file within the project. If there are multiple files
@@ -48,35 +52,22 @@ export type IFileIn = {
 };
 
 export type IFileOut = IFileIn & {
-  /**
-   * Unique file ID.
-   */
+  /** Named exports originating from this file */
+  readonly exports: Array<PlannedExport>;
+  /** Unique file ID. */
   readonly id: number;
-  /**
-   * Names declared in local (non‑top‑level) scopes within this file.
-   */
-  readonly localNames: Set<string>;
-  /**
-   * Map holding resolved names for symbols in this file.
-   */
+  /** Fully resolved imports this file needs */
+  readonly imports: Array<PlannedImport>;
+  /** Re-exports (“export { X } from …”) */
+  readonly reexports: Array<PlannedReexport>;
+  /** Top-level names in this file that cannot be reused (imports, exports, declarations, symbol names). */
+  readonly reservedNames: Map<string, Set<SymbolKind>>;
+  /** Map holding resolved names for symbols in this file. */
   readonly resolvedNames: IBiMap<number, string>;
-  /**
-   * Symbols in this file, categorized by their role.
-   */
-  readonly symbols: {
-    /**
-     * Symbols declared in the body of this file.
-     */
-    body: Array<number>;
-    /**
-     * Symbols re-exported from other files.
-     */
-    exports: Array<number>;
-    /**
-     * Symbols imported from other files.
-     */
-    imports: Array<number>;
-  };
+  /** Rules that control naming, imports, reexports, and scope behavior for this file. */
+  rules?: Rules;
+  /** Symbols defined inside this file */
+  readonly symbols: Array<Symbol>;
 };
 
 export interface IFileRegistry {
