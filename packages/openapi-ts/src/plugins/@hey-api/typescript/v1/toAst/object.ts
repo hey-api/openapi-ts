@@ -1,6 +1,7 @@
+import { fromRef, ref } from '@hey-api/codegen-core';
+
 import type { IR } from '~/ir/types';
 import type { SchemaWithType } from '~/plugins';
-import { toRef } from '~/plugins/shared/utils/refs';
 import { createSchemaComment } from '~/plugins/shared/utils/schema';
 import type { TypeTsDsl } from '~/ts-dsl';
 import { $ } from '~/ts-dsl';
@@ -28,7 +29,7 @@ export const objectToAst = ({
       schema: property,
       state: {
         ...state,
-        path: toRef([...state.path.value, 'properties', name]),
+        path: ref([...fromRef(state.path), 'properties', name]),
       },
     });
     const isRequired = required.includes(name);

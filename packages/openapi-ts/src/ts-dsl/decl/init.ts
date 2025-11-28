@@ -7,6 +7,7 @@ import { DoMixin } from '../mixins/do';
 import { DocMixin } from '../mixins/doc';
 import { PrivateMixin, ProtectedMixin, PublicMixin } from '../mixins/modifiers';
 import { ParamMixin } from '../mixins/param';
+import { BlockTsDsl } from '../stmt/block';
 
 const Mixed = DecoratorMixin(
   DoMixin(
@@ -21,20 +22,28 @@ const Mixed = DecoratorMixin(
 );
 
 export class InitTsDsl extends Mixed {
+  readonly '~dsl' = 'InitTsDsl';
+
   constructor(fn?: (i: InitTsDsl) => void) {
     super();
     fn?.(this);
   }
 
   override analyze(ctx: AnalysisContext): void {
-    super.analyze(ctx);
+    ctx.pushScope();
+    try {
+      super.analyze(ctx);
+    } finally {
+      ctx.popScope();
+    }
   }
 
-  protected override _render() {
-    return ts.factory.createConstructorDeclaration(
+  override toAst() {
+    const node = ts.factory.createConstructorDeclaration(
       [...this.$decorators(), ...this.modifiers],
       this.$params(),
-      ts.factory.createBlock(this.$do(), true),
+      this.$node(new BlockTsDsl(...this._do)),
     );
+    return this.$docs(node);
   }
 }

@@ -7,6 +7,7 @@ colors.enabled = colorSupport().hasBasic;
 const DEBUG_GROUPS = {
   analyzer: colors.greenBright,
   dsl: colors.cyanBright,
+  file: colors.yellowBright,
   registry: colors.blueBright,
   symbol: colors.magentaBright,
 } as const;

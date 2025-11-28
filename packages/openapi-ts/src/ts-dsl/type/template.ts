@@ -2,11 +2,13 @@ import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { isTsDsl, TypeTsDsl } from '../base';
+import { TypeTsDsl } from '../base';
 
 const Mixed = TypeTsDsl<ts.TemplateLiteralTypeNode>;
 
 export class TypeTemplateTsDsl extends Mixed {
+  readonly '~dsl' = 'TypeTemplateTsDsl';
+
   protected parts: Array<string | MaybeTsDsl<ts.TypeNode>> = [];
 
   constructor(value?: string | MaybeTsDsl<ts.TypeNode>) {
@@ -17,7 +19,7 @@ export class TypeTemplateTsDsl extends Mixed {
   override analyze(ctx: AnalysisContext): void {
     super.analyze(ctx);
     for (const part of this.parts) {
-      if (isTsDsl(part)) part.analyze(ctx);
+      ctx.analyze(part);
     }
   }
 
@@ -27,7 +29,7 @@ export class TypeTemplateTsDsl extends Mixed {
     return this;
   }
 
-  protected override _render() {
+  override toAst() {
     const parts = this.$node(this.parts);
 
     const normalized: Array<string | ts.TypeNode> = [];

@@ -1,8 +1,8 @@
-import type { AnalysisContext, Symbol } from '@hey-api/codegen-core';
-import { isSymbol } from '@hey-api/codegen-core';
+import type { AnalysisContext, Ref, Symbol } from '@hey-api/codegen-core';
+import { isNode, ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
-import { isTsDsl, TypeTsDsl } from '../base';
+import { TypeTsDsl } from '../base';
 import { TypeArgsMixin } from '../mixins/type-args';
 import {
   registerLazyAccessTypeExprFactory,
@@ -16,7 +16,9 @@ export type TypeExprExpr = TypeExprName | TypeAttrTsDsl;
 const Mixed = TypeArgsMixin(TypeExprMixin(TypeTsDsl<ts.TypeReferenceNode>));
 
 export class TypeExprTsDsl extends Mixed {
-  protected _exprInput?: TypeExprExpr;
+  readonly '~dsl' = 'TypeExprTsDsl';
+
+  protected _exprInput?: Ref<TypeExprExpr>;
 
   constructor();
   constructor(fn: (t: TypeExprTsDsl) => void);
@@ -30,32 +32,28 @@ export class TypeExprTsDsl extends Mixed {
     if (typeof name === 'function') {
       name(this);
     } else {
-      this._exprInput = name;
+      this._exprInput = name ? ref(name) : undefined;
       fn?.(this);
     }
   }
 
   override analyze(ctx: AnalysisContext): void {
     super.analyze(ctx);
-    if (isSymbol(this._exprInput)) {
-      ctx.addDependency(this._exprInput);
-    } else if (isTsDsl(this._exprInput)) {
-      this._exprInput.analyze(ctx);
-    }
+    ctx.analyze(this._exprInput);
   }
 
   /** Accesses a nested type (e.g. `Foo.Bar`). */
   attr(right: string | ts.Identifier | TypeAttrTsDsl): this {
-    this._exprInput = isTsDsl(right)
-      ? right.base(this._exprInput)
-      : new TypeAttrTsDsl(this._exprInput!, right);
+    this._exprInput = isNode(right)
+      ? ref(right.base(this._exprInput))
+      : ref(new TypeAttrTsDsl(this._exprInput!, right));
     return this;
   }
 
-  protected override _render() {
+  override toAst() {
     if (!this._exprInput) throw new Error('TypeExpr must have an expression');
     return ts.factory.createTypeReferenceNode(
-      // @ts-expect-error --- need to fix types
+      // @ts-expect-error need to improve types
       this.$type(this._exprInput),
       this.$generics(),
     );

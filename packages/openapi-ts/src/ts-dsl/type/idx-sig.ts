@@ -2,7 +2,7 @@ import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { isTsDsl, TypeTsDsl } from '../base';
+import { TypeTsDsl } from '../base';
 import { DocMixin } from '../mixins/doc';
 import { ReadonlyMixin } from '../mixins/modifiers';
 
@@ -12,6 +12,8 @@ export type TypeIdxSigType = string | MaybeTsDsl<ts.TypeNode>;
 const Mixed = DocMixin(ReadonlyMixin(TypeTsDsl<ts.IndexSignatureDeclaration>));
 
 export class TypeIdxSigTsDsl extends Mixed {
+  readonly '~dsl' = 'TypeIdxSigTsDsl';
+
   protected _key?: TypeIdxSigType;
   protected _name: TypeIdxSigName;
   protected _type?: TypeIdxSigType;
@@ -24,8 +26,8 @@ export class TypeIdxSigTsDsl extends Mixed {
 
   override analyze(ctx: AnalysisContext): void {
     super.analyze(ctx);
-    if (isTsDsl(this._key)) this._key.analyze(ctx);
-    if (isTsDsl(this._type)) this._type.analyze(ctx);
+    ctx.analyze(this._key);
+    ctx.analyze(this._type);
   }
 
   /** Returns true when all required builder calls are present. */
@@ -45,9 +47,9 @@ export class TypeIdxSigTsDsl extends Mixed {
     return this;
   }
 
-  protected override _render() {
+  override toAst() {
     this.$validate();
-    return ts.factory.createIndexSignature(
+    const node = ts.factory.createIndexSignature(
       this.modifiers,
       [
         ts.factory.createParameterDeclaration(
@@ -60,6 +62,7 @@ export class TypeIdxSigTsDsl extends Mixed {
       ],
       this.$type(this._type),
     );
+    return this.$docs(node);
   }
 
   $validate(): asserts this is this & {

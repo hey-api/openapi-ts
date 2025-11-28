@@ -348,248 +348,104 @@ export const putWithFormUrlEncodedRequest = <ThrowOnError extends boolean = fals
     ...options
 });
 
-export const exportResource = <ThrowOnError extends boolean = false>(options?: () => Options<ExportData, ThrowOnError> | undefined) => httpResource<unknown>(() => {
-    const opts = options ? options() : undefined;
-    return opts ? exportRequest(opts) : undefined;
-});
+export const exportResource = <ThrowOnError extends boolean = false>(options?: () => Options<ExportData, ThrowOnError> | undefined) => httpResource<unknown>(() => { const opts = options ? options() : undefined; return opts ? exportRequest(opts) : undefined; });
 
-export const patchApiVbyApiVersionNoTagResource = <ThrowOnError extends boolean = false>(options?: () => Options<PatchApiVbyApiVersionNoTagData, ThrowOnError> | undefined) => httpResource<unknown>(() => {
-    const opts = options ? options() : undefined;
-    return opts ? patchApiVbyApiVersionNoTagRequest(opts) : undefined;
-});
+export const patchApiVbyApiVersionNoTagResource = <ThrowOnError extends boolean = false>(options?: () => Options<PatchApiVbyApiVersionNoTagData, ThrowOnError> | undefined) => httpResource<unknown>(() => { const opts = options ? options() : undefined; return opts ? patchApiVbyApiVersionNoTagRequest(opts) : undefined; });
 
-export const importResource = <ThrowOnError extends boolean = false>(options: () => Options<ImportData, ThrowOnError> | undefined) => httpResource<ImportResponse>(() => {
-    const opts = options ? options() : undefined;
-    return opts ? importRequest(opts) : undefined;
-});
+export const importResource = <ThrowOnError extends boolean = false>(options: () => Options<ImportData, ThrowOnError> | undefined) => httpResource<ImportResponse>(() => { const opts = options ? options() : undefined; return opts ? importRequest(opts) : undefined; });
 
-export const fooWowResource = <ThrowOnError extends boolean = false>(options?: () => Options<FooWowData, ThrowOnError> | undefined) => httpResource<unknown>(() => {
-    const opts = options ? options() : undefined;
-    return opts ? fooWowRequest(opts) : undefined;
-});
+export const fooWowResource = <ThrowOnError extends boolean = false>(options?: () => Options<FooWowData, ThrowOnError> | undefined) => httpResource<unknown>(() => { const opts = options ? options() : undefined; return opts ? fooWowRequest(opts) : undefined; });
 
-export const apiVVersionODataControllerCountResource = <ThrowOnError extends boolean = false>(options?: () => Options<ApiVVersionODataControllerCountData, ThrowOnError> | undefined) => httpResource<ApiVVersionODataControllerCountResponse>(() => {
-    const opts = options ? options() : undefined;
-    return opts ? apiVVersionODataControllerCountRequest(opts) : undefined;
-});
+export const apiVVersionODataControllerCountResource = <ThrowOnError extends boolean = false>(options?: () => Options<ApiVVersionODataControllerCountData, ThrowOnError> | undefined) => httpResource<ApiVVersionODataControllerCountResponse>(() => { const opts = options ? options() : undefined; return opts ? apiVVersionODataControllerCountRequest(opts) : undefined; });
 
-export const getApiVbyApiVersionSimpleOperationResource = <ThrowOnError extends boolean = false>(options: () => Options<GetApiVbyApiVersionSimpleOperationData, ThrowOnError> | undefined) => httpResource<GetApiVbyApiVersionSimpleOperationResponse>(() => {
-    const opts = options ? options() : undefined;
-    return opts ? getApiVbyApiVersionSimpleOperationRequest(opts) : undefined;
-});
+export const getApiVbyApiVersionSimpleOperationResource = <ThrowOnError extends boolean = false>(options: () => Options<GetApiVbyApiVersionSimpleOperationData, ThrowOnError> | undefined) => httpResource<GetApiVbyApiVersionSimpleOperationResponse>(() => { const opts = options ? options() : undefined; return opts ? getApiVbyApiVersionSimpleOperationRequest(opts) : undefined; });
 
-export const deleteCallWithoutParametersAndResponseResource = <ThrowOnError extends boolean = false>(options?: () => Options<DeleteCallWithoutParametersAndResponseData, ThrowOnError> | undefined) => httpResource<unknown>(() => {
-    const opts = options ? options() : undefined;
-    return opts ? deleteCallWithoutParametersAndResponseRequest(opts) : undefined;
-});
+export const deleteCallWithoutParametersAndResponseResource = <ThrowOnError extends boolean = false>(options?: () => Options<DeleteCallWithoutParametersAndResponseData, ThrowOnError> | undefined) => httpResource<unknown>(() => { const opts = options ? options() : undefined; return opts ? deleteCallWithoutParametersAndResponseRequest(opts) : undefined; });
 
-export const getCallWithoutParametersAndResponseResource = <ThrowOnError extends boolean = false>(options?: () => Options<GetCallWithoutParametersAndResponseData, ThrowOnError> | undefined) => httpResource<unknown>(() => {
-    const opts = options ? options() : undefined;
-    return opts ? getCallWithoutParametersAndResponseRequest(opts) : undefined;
-});
+export const getCallWithoutParametersAndResponseResource = <ThrowOnError extends boolean = false>(options?: () => Options<GetCallWithoutParametersAndResponseData, ThrowOnError> | undefined) => httpResource<unknown>(() => { const opts = options ? options() : undefined; return opts ? getCallWithoutParametersAndResponseRequest(opts) : undefined; });
 
-export const headCallWithoutParametersAndResponseResource = <ThrowOnError extends boolean = false>(options?: () => Options<HeadCallWithoutParametersAndResponseData, ThrowOnError> | undefined) => httpResource<unknown>(() => {
-    const opts = options ? options() : undefined;
-    return opts ? headCallWithoutParametersAndResponseRequest(opts) : undefined;
-});
+export const headCallWithoutParametersAndResponseResource = <ThrowOnError extends boolean = false>(options?: () => Options<HeadCallWithoutParametersAndResponseData, ThrowOnError> | undefined) => httpResource<unknown>(() => { const opts = options ? options() : undefined; return opts ? headCallWithoutParametersAndResponseRequest(opts) : undefined; });
 
-export const optionsCallWithoutParametersAndResponseResource = <ThrowOnError extends boolean = false>(options?: () => Options<OptionsCallWithoutParametersAndResponseData, ThrowOnError> | undefined) => httpResource<unknown>(() => {
-    const opts = options ? options() : undefined;
-    return opts ? optionsCallWithoutParametersAndResponseRequest(opts) : undefined;
-});
+export const optionsCallWithoutParametersAndResponseResource = <ThrowOnError extends boolean = false>(options?: () => Options<OptionsCallWithoutParametersAndResponseData, ThrowOnError> | undefined) => httpResource<unknown>(() => { const opts = options ? options() : undefined; return opts ? optionsCallWithoutParametersAndResponseRequest(opts) : undefined; });
 
-export const patchCallWithoutParametersAndResponseResource = <ThrowOnError extends boolean = false>(options?: () => Options<PatchCallWithoutParametersAndResponseData, ThrowOnError> | undefined) => httpResource<unknown>(() => {
-    const opts = options ? options() : undefined;
-    return opts ? patchCallWithoutParametersAndResponseRequest(opts) : undefined;
-});
+export const patchCallWithoutParametersAndResponseResource = <ThrowOnError extends boolean = false>(options?: () => Options<PatchCallWithoutParametersAndResponseData, ThrowOnError> | undefined) => httpResource<unknown>(() => { const opts = options ? options() : undefined; return opts ? patchCallWithoutParametersAndResponseRequest(opts) : undefined; });
 
-export const postCallWithoutParametersAndResponseResource = <ThrowOnError extends boolean = false>(options?: () => Options<PostCallWithoutParametersAndResponseData, ThrowOnError> | undefined) => httpResource<unknown>(() => {
-    const opts = options ? options() : undefined;
-    return opts ? postCallWithoutParametersAndResponseRequest(opts) : undefined;
-});
+export const postCallWithoutParametersAndResponseResource = <ThrowOnError extends boolean = false>(options?: () => Options<PostCallWithoutParametersAndResponseData, ThrowOnError> | undefined) => httpResource<unknown>(() => { const opts = options ? options() : undefined; return opts ? postCallWithoutParametersAndResponseRequest(opts) : undefined; });
 
-export const putCallWithoutParametersAndResponseResource = <ThrowOnError extends boolean = false>(options?: () => Options<PutCallWithoutParametersAndResponseData, ThrowOnError> | undefined) => httpResource<unknown>(() => {
-    const opts = options ? options() : undefined;
-    return opts ? putCallWithoutParametersAndResponseRequest(opts) : undefined;
-});
+export const putCallWithoutParametersAndResponseResource = <ThrowOnError extends boolean = false>(options?: () => Options<PutCallWithoutParametersAndResponseData, ThrowOnError> | undefined) => httpResource<unknown>(() => { const opts = options ? options() : undefined; return opts ? putCallWithoutParametersAndResponseRequest(opts) : undefined; });
 
-export const deleteFooResource = <ThrowOnError extends boolean = false>(options: () => Options<DeleteFooData3, ThrowOnError> | undefined) => httpResource<unknown>(() => {
-    const opts = options ? options() : undefined;
-    return opts ? deleteFooRequest(opts) : undefined;
-});
+export const deleteFooResource = <ThrowOnError extends boolean = false>(options: () => Options<DeleteFooData3, ThrowOnError> | undefined) => httpResource<unknown>(() => { const opts = options ? options() : undefined; return opts ? deleteFooRequest(opts) : undefined; });
 
-export const callWithDescriptionsResource = <ThrowOnError extends boolean = false>(options?: () => Options<CallWithDescriptionsData, ThrowOnError> | undefined) => httpResource<unknown>(() => {
-    const opts = options ? options() : undefined;
-    return opts ? callWithDescriptionsRequest(opts) : undefined;
-});
+export const callWithDescriptionsResource = <ThrowOnError extends boolean = false>(options?: () => Options<CallWithDescriptionsData, ThrowOnError> | undefined) => httpResource<unknown>(() => { const opts = options ? options() : undefined; return opts ? callWithDescriptionsRequest(opts) : undefined; });
 
 /**
  * @deprecated
  */
-export const deprecatedCallResource = <ThrowOnError extends boolean = false>(options: () => Options<DeprecatedCallData, ThrowOnError> | undefined) => httpResource<unknown>(() => {
-    const opts = options ? options() : undefined;
-    return opts ? deprecatedCallRequest(opts) : undefined;
-});
+export const deprecatedCallResource = <ThrowOnError extends boolean = false>(options: () => Options<DeprecatedCallData, ThrowOnError> | undefined) => httpResource<unknown>(() => { const opts = options ? options() : undefined; return opts ? deprecatedCallRequest(opts) : undefined; });
 
-export const callWithParametersResource = <ThrowOnError extends boolean = false>(options: () => Options<CallWithParametersData, ThrowOnError> | undefined) => httpResource<unknown>(() => {
-    const opts = options ? options() : undefined;
-    return opts ? callWithParametersRequest(opts) : undefined;
-});
+export const callWithParametersResource = <ThrowOnError extends boolean = false>(options: () => Options<CallWithParametersData, ThrowOnError> | undefined) => httpResource<unknown>(() => { const opts = options ? options() : undefined; return opts ? callWithParametersRequest(opts) : undefined; });
 
-export const callWithWeirdParameterNamesResource = <ThrowOnError extends boolean = false>(options: () => Options<CallWithWeirdParameterNamesData, ThrowOnError> | undefined) => httpResource<unknown>(() => {
-    const opts = options ? options() : undefined;
-    return opts ? callWithWeirdParameterNamesRequest(opts) : undefined;
-});
+export const callWithWeirdParameterNamesResource = <ThrowOnError extends boolean = false>(options: () => Options<CallWithWeirdParameterNamesData, ThrowOnError> | undefined) => httpResource<unknown>(() => { const opts = options ? options() : undefined; return opts ? callWithWeirdParameterNamesRequest(opts) : undefined; });
 
-export const getCallWithOptionalParamResource = <ThrowOnError extends boolean = false>(options: () => Options<GetCallWithOptionalParamData, ThrowOnError> | undefined) => httpResource<unknown>(() => {
-    const opts = options ? options() : undefined;
-    return opts ? getCallWithOptionalParamRequest(opts) : undefined;
-});
+export const getCallWithOptionalParamResource = <ThrowOnError extends boolean = false>(options: () => Options<GetCallWithOptionalParamData, ThrowOnError> | undefined) => httpResource<unknown>(() => { const opts = options ? options() : undefined; return opts ? getCallWithOptionalParamRequest(opts) : undefined; });
 
-export const postCallWithOptionalParamResource = <ThrowOnError extends boolean = false>(options: () => Options<PostCallWithOptionalParamData, ThrowOnError> | undefined) => httpResource<PostCallWithOptionalParamResponse>(() => {
-    const opts = options ? options() : undefined;
-    return opts ? postCallWithOptionalParamRequest(opts) : undefined;
-});
+export const postCallWithOptionalParamResource = <ThrowOnError extends boolean = false>(options: () => Options<PostCallWithOptionalParamData, ThrowOnError> | undefined) => httpResource<PostCallWithOptionalParamResponse>(() => { const opts = options ? options() : undefined; return opts ? postCallWithOptionalParamRequest(opts) : undefined; });
 
-export const postApiVbyApiVersionRequestBodyResource = <ThrowOnError extends boolean = false>(options?: () => Options<PostApiVbyApiVersionRequestBodyData, ThrowOnError> | undefined) => httpResource<unknown>(() => {
-    const opts = options ? options() : undefined;
-    return opts ? postApiVbyApiVersionRequestBodyRequest(opts) : undefined;
-});
+export const postApiVbyApiVersionRequestBodyResource = <ThrowOnError extends boolean = false>(options?: () => Options<PostApiVbyApiVersionRequestBodyData, ThrowOnError> | undefined) => httpResource<unknown>(() => { const opts = options ? options() : undefined; return opts ? postApiVbyApiVersionRequestBodyRequest(opts) : undefined; });
 
-export const postApiVbyApiVersionFormDataResource = <ThrowOnError extends boolean = false>(options?: () => Options<PostApiVbyApiVersionFormDataData, ThrowOnError> | undefined) => httpResource<unknown>(() => {
-    const opts = options ? options() : undefined;
-    return opts ? postApiVbyApiVersionFormDataRequest(opts) : undefined;
-});
+export const postApiVbyApiVersionFormDataResource = <ThrowOnError extends boolean = false>(options?: () => Options<PostApiVbyApiVersionFormDataData, ThrowOnError> | undefined) => httpResource<unknown>(() => { const opts = options ? options() : undefined; return opts ? postApiVbyApiVersionFormDataRequest(opts) : undefined; });
 
-export const callWithDefaultParametersResource = <ThrowOnError extends boolean = false>(options?: () => Options<CallWithDefaultParametersData, ThrowOnError> | undefined) => httpResource<unknown>(() => {
-    const opts = options ? options() : undefined;
-    return opts ? callWithDefaultParametersRequest(opts) : undefined;
-});
+export const callWithDefaultParametersResource = <ThrowOnError extends boolean = false>(options?: () => Options<CallWithDefaultParametersData, ThrowOnError> | undefined) => httpResource<unknown>(() => { const opts = options ? options() : undefined; return opts ? callWithDefaultParametersRequest(opts) : undefined; });
 
-export const callWithDefaultOptionalParametersResource = <ThrowOnError extends boolean = false>(options?: () => Options<CallWithDefaultOptionalParametersData, ThrowOnError> | undefined) => httpResource<unknown>(() => {
-    const opts = options ? options() : undefined;
-    return opts ? callWithDefaultOptionalParametersRequest(opts) : undefined;
-});
+export const callWithDefaultOptionalParametersResource = <ThrowOnError extends boolean = false>(options?: () => Options<CallWithDefaultOptionalParametersData, ThrowOnError> | undefined) => httpResource<unknown>(() => { const opts = options ? options() : undefined; return opts ? callWithDefaultOptionalParametersRequest(opts) : undefined; });
 
-export const callToTestOrderOfParamsResource = <ThrowOnError extends boolean = false>(options: () => Options<CallToTestOrderOfParamsData, ThrowOnError> | undefined) => httpResource<unknown>(() => {
-    const opts = options ? options() : undefined;
-    return opts ? callToTestOrderOfParamsRequest(opts) : undefined;
-});
+export const callToTestOrderOfParamsResource = <ThrowOnError extends boolean = false>(options: () => Options<CallToTestOrderOfParamsData, ThrowOnError> | undefined) => httpResource<unknown>(() => { const opts = options ? options() : undefined; return opts ? callToTestOrderOfParamsRequest(opts) : undefined; });
 
-export const duplicateNameResource = <ThrowOnError extends boolean = false>(options?: () => Options<DuplicateNameData, ThrowOnError> | undefined) => httpResource<unknown>(() => {
-    const opts = options ? options() : undefined;
-    return opts ? duplicateNameRequest(opts) : undefined;
-});
+export const duplicateNameResource = <ThrowOnError extends boolean = false>(options?: () => Options<DuplicateNameData, ThrowOnError> | undefined) => httpResource<unknown>(() => { const opts = options ? options() : undefined; return opts ? duplicateNameRequest(opts) : undefined; });
 
-export const duplicateName2Resource = <ThrowOnError extends boolean = false>(options?: () => Options<DuplicateName2Data, ThrowOnError> | undefined) => httpResource<unknown>(() => {
-    const opts = options ? options() : undefined;
-    return opts ? duplicateName2Request(opts) : undefined;
-});
+export const duplicateName2Resource = <ThrowOnError extends boolean = false>(options?: () => Options<DuplicateName2Data, ThrowOnError> | undefined) => httpResource<unknown>(() => { const opts = options ? options() : undefined; return opts ? duplicateName2Request(opts) : undefined; });
 
-export const duplicateName3Resource = <ThrowOnError extends boolean = false>(options?: () => Options<DuplicateName3Data, ThrowOnError> | undefined) => httpResource<unknown>(() => {
-    const opts = options ? options() : undefined;
-    return opts ? duplicateName3Request(opts) : undefined;
-});
+export const duplicateName3Resource = <ThrowOnError extends boolean = false>(options?: () => Options<DuplicateName3Data, ThrowOnError> | undefined) => httpResource<unknown>(() => { const opts = options ? options() : undefined; return opts ? duplicateName3Request(opts) : undefined; });
 
-export const duplicateName4Resource = <ThrowOnError extends boolean = false>(options?: () => Options<DuplicateName4Data, ThrowOnError> | undefined) => httpResource<unknown>(() => {
-    const opts = options ? options() : undefined;
-    return opts ? duplicateName4Request(opts) : undefined;
-});
+export const duplicateName4Resource = <ThrowOnError extends boolean = false>(options?: () => Options<DuplicateName4Data, ThrowOnError> | undefined) => httpResource<unknown>(() => { const opts = options ? options() : undefined; return opts ? duplicateName4Request(opts) : undefined; });
 
-export const callWithNoContentResponseResource = <ThrowOnError extends boolean = false>(options?: () => Options<CallWithNoContentResponseData, ThrowOnError> | undefined) => httpResource<CallWithNoContentResponseResponse>(() => {
-    const opts = options ? options() : undefined;
-    return opts ? callWithNoContentResponseRequest(opts) : undefined;
-});
+export const callWithNoContentResponseResource = <ThrowOnError extends boolean = false>(options?: () => Options<CallWithNoContentResponseData, ThrowOnError> | undefined) => httpResource<CallWithNoContentResponseResponse>(() => { const opts = options ? options() : undefined; return opts ? callWithNoContentResponseRequest(opts) : undefined; });
 
-export const callWithResponseAndNoContentResponseResource = <ThrowOnError extends boolean = false>(options?: () => Options<CallWithResponseAndNoContentResponseData, ThrowOnError> | undefined) => httpResource<CallWithResponseAndNoContentResponseResponse>(() => {
-    const opts = options ? options() : undefined;
-    return opts ? callWithResponseAndNoContentResponseRequest(opts) : undefined;
-});
+export const callWithResponseAndNoContentResponseResource = <ThrowOnError extends boolean = false>(options?: () => Options<CallWithResponseAndNoContentResponseData, ThrowOnError> | undefined) => httpResource<CallWithResponseAndNoContentResponseResponse>(() => { const opts = options ? options() : undefined; return opts ? callWithResponseAndNoContentResponseRequest(opts) : undefined; });
 
-export const dummyAResource = <ThrowOnError extends boolean = false>(options?: () => Options<DummyAData, ThrowOnError> | undefined) => httpResource<DummyAResponse>(() => {
-    const opts = options ? options() : undefined;
-    return opts ? dummyARequest(opts) : undefined;
-});
+export const dummyAResource = <ThrowOnError extends boolean = false>(options?: () => Options<DummyAData, ThrowOnError> | undefined) => httpResource<DummyAResponse>(() => { const opts = options ? options() : undefined; return opts ? dummyARequest(opts) : undefined; });
 
-export const dummyBResource = <ThrowOnError extends boolean = false>(options?: () => Options<DummyBData, ThrowOnError> | undefined) => httpResource<DummyBResponse>(() => {
-    const opts = options ? options() : undefined;
-    return opts ? dummyBRequest(opts) : undefined;
-});
+export const dummyBResource = <ThrowOnError extends boolean = false>(options?: () => Options<DummyBData, ThrowOnError> | undefined) => httpResource<DummyBResponse>(() => { const opts = options ? options() : undefined; return opts ? dummyBRequest(opts) : undefined; });
 
-export const callWithResponseResource = <ThrowOnError extends boolean = false>(options?: () => Options<CallWithResponseData, ThrowOnError> | undefined) => httpResource<CallWithResponseResponse>(() => {
-    const opts = options ? options() : undefined;
-    return opts ? callWithResponseRequest(opts) : undefined;
-});
+export const callWithResponseResource = <ThrowOnError extends boolean = false>(options?: () => Options<CallWithResponseData, ThrowOnError> | undefined) => httpResource<CallWithResponseResponse>(() => { const opts = options ? options() : undefined; return opts ? callWithResponseRequest(opts) : undefined; });
 
-export const callWithDuplicateResponsesResource = <ThrowOnError extends boolean = false>(options?: () => Options<CallWithDuplicateResponsesData, ThrowOnError> | undefined) => httpResource<CallWithDuplicateResponsesResponse>(() => {
-    const opts = options ? options() : undefined;
-    return opts ? callWithDuplicateResponsesRequest(opts) : undefined;
-});
+export const callWithDuplicateResponsesResource = <ThrowOnError extends boolean = false>(options?: () => Options<CallWithDuplicateResponsesData, ThrowOnError> | undefined) => httpResource<CallWithDuplicateResponsesResponse>(() => { const opts = options ? options() : undefined; return opts ? callWithDuplicateResponsesRequest(opts) : undefined; });
 
-export const callWithResponsesResource = <ThrowOnError extends boolean = false>(options?: () => Options<CallWithResponsesData, ThrowOnError> | undefined) => httpResource<CallWithResponsesResponse>(() => {
-    const opts = options ? options() : undefined;
-    return opts ? callWithResponsesRequest(opts) : undefined;
-});
+export const callWithResponsesResource = <ThrowOnError extends boolean = false>(options?: () => Options<CallWithResponsesData, ThrowOnError> | undefined) => httpResource<CallWithResponsesResponse>(() => { const opts = options ? options() : undefined; return opts ? callWithResponsesRequest(opts) : undefined; });
 
-export const collectionFormatResource = <ThrowOnError extends boolean = false>(options: () => Options<CollectionFormatData, ThrowOnError> | undefined) => httpResource<unknown>(() => {
-    const opts = options ? options() : undefined;
-    return opts ? collectionFormatRequest(opts) : undefined;
-});
+export const collectionFormatResource = <ThrowOnError extends boolean = false>(options: () => Options<CollectionFormatData, ThrowOnError> | undefined) => httpResource<unknown>(() => { const opts = options ? options() : undefined; return opts ? collectionFormatRequest(opts) : undefined; });
 
-export const typesResource = <ThrowOnError extends boolean = false>(options: () => Options<TypesData, ThrowOnError> | undefined) => httpResource<TypesResponse>(() => {
-    const opts = options ? options() : undefined;
-    return opts ? typesRequest(opts) : undefined;
-});
+export const typesResource = <ThrowOnError extends boolean = false>(options: () => Options<TypesData, ThrowOnError> | undefined) => httpResource<TypesResponse>(() => { const opts = options ? options() : undefined; return opts ? typesRequest(opts) : undefined; });
 
-export const uploadFileResource = <ThrowOnError extends boolean = false>(options: () => Options<UploadFileData, ThrowOnError> | undefined) => httpResource<UploadFileResponse>(() => {
-    const opts = options ? options() : undefined;
-    return opts ? uploadFileRequest(opts) : undefined;
-});
+export const uploadFileResource = <ThrowOnError extends boolean = false>(options: () => Options<UploadFileData, ThrowOnError> | undefined) => httpResource<UploadFileResponse>(() => { const opts = options ? options() : undefined; return opts ? uploadFileRequest(opts) : undefined; });
 
-export const fileResponseResource = <ThrowOnError extends boolean = false>(options: () => Options<FileResponseData, ThrowOnError> | undefined) => httpResource<FileResponseResponse>(() => {
-    const opts = options ? options() : undefined;
-    return opts ? fileResponseRequest(opts) : undefined;
-});
+export const fileResponseResource = <ThrowOnError extends boolean = false>(options: () => Options<FileResponseData, ThrowOnError> | undefined) => httpResource<FileResponseResponse>(() => { const opts = options ? options() : undefined; return opts ? fileResponseRequest(opts) : undefined; });
 
-export const complexTypesResource = <ThrowOnError extends boolean = false>(options: () => Options<ComplexTypesData, ThrowOnError> | undefined) => httpResource<ComplexTypesResponse>(() => {
-    const opts = options ? options() : undefined;
-    return opts ? complexTypesRequest(opts) : undefined;
-});
+export const complexTypesResource = <ThrowOnError extends boolean = false>(options: () => Options<ComplexTypesData, ThrowOnError> | undefined) => httpResource<ComplexTypesResponse>(() => { const opts = options ? options() : undefined; return opts ? complexTypesRequest(opts) : undefined; });
 
-export const multipartResponseResource = <ThrowOnError extends boolean = false>(options?: () => Options<MultipartResponseData, ThrowOnError> | undefined) => httpResource<MultipartResponseResponse>(() => {
-    const opts = options ? options() : undefined;
-    return opts ? multipartResponseRequest(opts) : undefined;
-});
+export const multipartResponseResource = <ThrowOnError extends boolean = false>(options?: () => Options<MultipartResponseData, ThrowOnError> | undefined) => httpResource<MultipartResponseResponse>(() => { const opts = options ? options() : undefined; return opts ? multipartResponseRequest(opts) : undefined; });
 
-export const multipartRequestResource = <ThrowOnError extends boolean = false>(options?: () => Options<MultipartRequestData, ThrowOnError> | undefined) => httpResource<unknown>(() => {
-    const opts = options ? options() : undefined;
-    return opts ? multipartRequestRequest(opts) : undefined;
-});
+export const multipartRequestResource = <ThrowOnError extends boolean = false>(options?: () => Options<MultipartRequestData, ThrowOnError> | undefined) => httpResource<unknown>(() => { const opts = options ? options() : undefined; return opts ? multipartRequestRequest(opts) : undefined; });
 
-export const complexParamsResource = <ThrowOnError extends boolean = false>(options: () => Options<ComplexParamsData, ThrowOnError> | undefined) => httpResource<ComplexParamsResponse>(() => {
-    const opts = options ? options() : undefined;
-    return opts ? complexParamsRequest(opts) : undefined;
-});
+export const complexParamsResource = <ThrowOnError extends boolean = false>(options: () => Options<ComplexParamsData, ThrowOnError> | undefined) => httpResource<ComplexParamsResponse>(() => { const opts = options ? options() : undefined; return opts ? complexParamsRequest(opts) : undefined; });
 
-export const callWithResultFromHeaderResource = <ThrowOnError extends boolean = false>(options?: () => Options<CallWithResultFromHeaderData, ThrowOnError> | undefined) => httpResource<unknown>(() => {
-    const opts = options ? options() : undefined;
-    return opts ? callWithResultFromHeaderRequest(opts) : undefined;
-});
+export const callWithResultFromHeaderResource = <ThrowOnError extends boolean = false>(options?: () => Options<CallWithResultFromHeaderData, ThrowOnError> | undefined) => httpResource<unknown>(() => { const opts = options ? options() : undefined; return opts ? callWithResultFromHeaderRequest(opts) : undefined; });
 
-export const testErrorCodeResource = <ThrowOnError extends boolean = false>(options: () => Options<TestErrorCodeData, ThrowOnError> | undefined) => httpResource<unknown>(() => {
-    const opts = options ? options() : undefined;
-    return opts ? testErrorCodeRequest(opts) : undefined;
-});
+export const testErrorCodeResource = <ThrowOnError extends boolean = false>(options: () => Options<TestErrorCodeData, ThrowOnError> | undefined) => httpResource<unknown>(() => { const opts = options ? options() : undefined; return opts ? testErrorCodeRequest(opts) : undefined; });
 
-export const nonAsciiæøåÆøÅöôêÊ字符串Resource = <ThrowOnError extends boolean = false>(options: () => Options<NonAsciiæøåÆøÅöôêÊ字符串Data, ThrowOnError> | undefined) => httpResource<NonAsciiæøåÆøÅöôêÊ字符串Response>(() => {
-    const opts = options ? options() : undefined;
-    return opts ? nonAsciiæøåÆøÅöôêÊ字符串Request(opts) : undefined;
-});
+export const nonAsciiæøåÆøÅöôêÊ字符串Resource = <ThrowOnError extends boolean = false>(options: () => Options<NonAsciiæøåÆøÅöôêÊ字符串Data, ThrowOnError> | undefined) => httpResource<NonAsciiæøåÆøÅöôêÊ字符串Response>(() => { const opts = options ? options() : undefined; return opts ? nonAsciiæøåÆøÅöôêÊ字符串Request(opts) : undefined; });
 
 /**
  * Login User
  */
-export const putWithFormUrlEncodedResource = <ThrowOnError extends boolean = false>(options: () => Options<PutWithFormUrlEncodedData, ThrowOnError> | undefined) => httpResource<unknown>(() => {
-    const opts = options ? options() : undefined;
-    return opts ? putWithFormUrlEncodedRequest(opts) : undefined;
-});
+export const putWithFormUrlEncodedResource = <ThrowOnError extends boolean = false>(options: () => Options<PutWithFormUrlEncodedData, ThrowOnError> | undefined) => httpResource<unknown>(() => { const opts = options ? options() : undefined; return opts ? putWithFormUrlEncodedRequest(opts) : undefined; });

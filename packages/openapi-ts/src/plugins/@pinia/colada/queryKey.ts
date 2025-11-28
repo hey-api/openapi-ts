@@ -4,11 +4,13 @@ import { clientFolderAbsolutePath } from '~/generate/client';
 import { hasOperationDataRequired } from '~/ir/operation';
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
-import { getClientBaseUrlKey } from '~/plugins/@hey-api/client-core/utils';
+import {
+  getClientBaseUrlKey,
+  getClientPlugin,
+} from '~/plugins/@hey-api/client-core/utils';
 import { $ } from '~/ts-dsl';
 
 import type { PiniaColadaPlugin } from './types';
-import { useTypeData } from './useType';
 import { getPublicTypeData } from './utils';
 
 const TOptionsType = 'TOptions';
@@ -79,7 +81,18 @@ export const createQueryKeyFunction = ({
               .prop('_id', 'id')
               .prop(
                 baseUrlKey,
-                `options?.${baseUrlKey} || (options?.client ?? ${symbolClient?.placeholder}).getConfig().${baseUrlKey}`,
+                $('options')
+                  .attr(baseUrlKey)
+                  .optional()
+                  .or(
+                    $('options')
+                      .attr('client')
+                      .optional()
+                      .$if(symbolClient, (a, v) => a.coalesce(v))
+                      .attr('getConfig')
+                      .call()
+                      .attr(baseUrlKey),
+                  ),
               )
               .as(returnType),
           ),
@@ -196,8 +209,8 @@ export const queryKeyStatement = ({
   plugin: PiniaColadaPlugin['Instance'];
   symbol: Symbol;
 }) => {
-  const typeData = useTypeData({ operation, plugin });
-  const { strippedTypeData } = getPublicTypeData({ plugin, typeData });
+  const client = getClientPlugin(plugin.context.config);
+  const isNuxtClient = client.name === '@hey-api/client-nuxt';
   const statement = $.const(symbol)
     .export()
     .assign(
@@ -205,7 +218,7 @@ export const queryKeyStatement = ({
         .param('options', (p) =>
           p
             .required(hasOperationDataRequired(operation))
-            .type(strippedTypeData),
+            .type(getPublicTypeData({ isNuxtClient, operation, plugin })),
         )
         .do(
           createQueryKeyLiteral({

@@ -1,3 +1,4 @@
+// TODO: use this later
 export interface Rules {
   /** Whether two exported names may collide. */
   allowExportNameShadowing: boolean;

@@ -14,6 +14,8 @@ type RegexFlags<Avail extends string = RegexFlag> =
 const Mixed = TsDsl<ts.RegularExpressionLiteral>;
 
 export class RegExpTsDsl extends Mixed {
+  readonly '~dsl' = 'RegExpTsDsl';
+
   protected pattern: string;
   protected flags?: RegexFlags;
 
@@ -27,7 +29,7 @@ export class RegExpTsDsl extends Mixed {
     super.analyze(ctx);
   }
 
-  protected override _render() {
+  override toAst() {
     const patternContent =
       this.pattern.startsWith('/') && this.pattern.endsWith('/')
         ? this.pattern.slice(1, -1)

@@ -1,8 +1,8 @@
-import type { AnalysisContext, Node, Symbol } from '@hey-api/codegen-core';
-import { isSymbol } from '@hey-api/codegen-core';
+import type { AnalysisContext, Node, Ref, Symbol } from '@hey-api/codegen-core';
+import { ref } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
-import { isTsDsl, type MaybeTsDsl } from '../base';
+import type { MaybeTsDsl } from '../base';
 import type { BaseCtor, MixinCtor } from './types';
 
 type Arg = Symbol | string | MaybeTsDsl<ts.Expression>;
@@ -23,27 +23,25 @@ export function ArgsMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
   Base: TBase,
 ) {
   abstract class Args extends Base {
-    protected _args: Array<Arg> = [];
+    protected _args: Array<Ref<Arg>> = [];
 
     override analyze(ctx: AnalysisContext): void {
       super.analyze(ctx);
       for (const arg of this._args) {
-        if (isSymbol(arg)) {
-          ctx.addDependency(arg);
-        } else if (isTsDsl(arg)) {
-          arg.analyze(ctx);
-        }
+        ctx.analyze(arg);
       }
     }
 
     protected arg(arg: Arg | undefined): this {
-      if (arg !== undefined) this._args.push(arg);
+      if (arg !== undefined) this._args.push(ref(arg));
       return this;
     }
 
     protected args(...args: ReadonlyArray<Arg | undefined>): this {
       this._args.push(
-        ...args.filter((a): a is NonNullable<typeof a> => a !== undefined),
+        ...args
+          .filter((a): a is NonNullable<typeof a> => a !== undefined)
+          .map((a) => ref(a)),
       );
       return this;
     }

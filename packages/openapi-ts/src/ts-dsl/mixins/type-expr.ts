@@ -1,8 +1,7 @@
 import type { AnalysisContext, Node } from '@hey-api/codegen-core';
-import ts from 'typescript';
+import type ts from 'typescript';
 
 import type { MaybeTsDsl, TsDsl, TypeTsDsl } from '../base';
-import { isTsDsl } from '../base';
 import type { TypeOfExprTsDsl } from '../expr/typeof';
 import type { TypeExprTsDsl } from '../type/expr';
 import type { TypeIdxTsDsl } from '../type/idx';
@@ -77,21 +76,6 @@ export interface TypeExprMethods extends Node {
   readonly(this: MaybeTsDsl<TypeTsDsl>): TypeOperatorTsDsl;
   /** Create a TypeExpr node representing ReturnType<this>. */
   returnType(this: MaybeTsDsl<ts.Expression>): TypeExprTsDsl;
-  /**
-   * Create a `typeof` operator that narrows its return type based on the receiver.
-   *
-   * - If `this` is a `TsDsl<ts.Expression>` → returns TypeOfExprTsDsl
-   * - If `this` is a `TsDsl<TypeTsDsl>`     → returns TypeQueryTsDsl
-   * - If `this` is a raw ts.Expression      → returns TypeOfExprTsDsl
-   * - Otherwise                             → returns TypeQueryTsDsl
-   */
-  typeof<T extends MaybeTsDsl<TypeTsDsl | ts.Expression>>(
-    this: T,
-  ): T extends MaybeTsDsl<ts.Expression>
-    ? TypeOfExprTsDsl
-    : T extends MaybeTsDsl<TypeTsDsl>
-      ? TypeQueryTsDsl
-      : TypeQueryTsDsl | TypeOfExprTsDsl;
   /** Create a TypeOfExpr node representing typeof this. */
   typeofExpr(this: MaybeTsDsl<ts.Expression>): TypeOfExprTsDsl;
   /** Create a TypeQuery node representing typeof this. */
@@ -135,30 +119,6 @@ export function TypeExprMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
       this: TypeTsDsl | TsDsl<ts.Expression>,
     ): TypeQueryTsDsl {
       return typeQueryFactory!(this);
-    }
-
-    protected typeof<T extends TypeTsDsl | TsDsl<ts.Expression>>(
-      this: T,
-    ): T extends TsDsl<ts.Expression>
-      ? TypeOfExprTsDsl
-      : T extends TypeTsDsl
-        ? TypeQueryTsDsl
-        : TypeQueryTsDsl | TypeOfExprTsDsl {
-      if (isTsDsl(this)) {
-        // @ts-expect-error
-        const node = this._render();
-        return (
-          ts.isExpression(node)
-            ? typeOfExprFactory!(this as any)
-            : typeQueryFactory!(this)
-        ) as any;
-      }
-
-      if (ts.isExpression(this as any)) {
-        return typeOfExprFactory!(this as ts.Expression) as any;
-      }
-
-      return typeQueryFactory!(this) as any;
     }
 
     protected unique(this: TypeTsDsl): TypeOperatorTsDsl {

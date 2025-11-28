@@ -2,13 +2,15 @@ import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { isTsDsl, TsDsl } from '../base';
+import { TsDsl } from '../base';
 import { OperatorMixin } from '../mixins/operator';
 import { registerLazyAccessTypeOfExprFactory } from '../mixins/type-expr';
 
 const Mixed = OperatorMixin(TsDsl<ts.TypeOfExpression>);
 
 export class TypeOfExprTsDsl extends Mixed {
+  readonly '~dsl' = 'TypeOfExprTsDsl';
+
   protected _expr: string | MaybeTsDsl<ts.Expression>;
 
   constructor(expr: string | MaybeTsDsl<ts.Expression>) {
@@ -18,10 +20,10 @@ export class TypeOfExprTsDsl extends Mixed {
 
   override analyze(ctx: AnalysisContext): void {
     super.analyze(ctx);
-    if (isTsDsl(this._expr)) this._expr.analyze(ctx);
+    ctx.analyze(this._expr);
   }
 
-  protected override _render() {
+  override toAst() {
     return ts.factory.createTypeOfExpression(this.$node(this._expr));
   }
 }

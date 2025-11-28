@@ -2,7 +2,6 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import { postFooResponseTransformer } from './transformers.gen';
 import type { PostFooData, PostFooResponses } from './types.gen';
 import { zPostFooData, zPostFooResponse } from './zod.gen';
 
@@ -22,7 +21,6 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
 
 export const postFoo = <ThrowOnError extends boolean = false>(options?: Options<PostFooData, ThrowOnError>) => (options?.client ?? client).post<PostFooResponses, unknown, ThrowOnError>({
     requestValidator: async (data) => await zPostFooData.parseAsync(data),
-    responseTransformer: postFooResponseTransformer,
     responseValidator: async (data) => await zPostFooResponse.parseAsync(data),
     url: '/foo',
     ...options

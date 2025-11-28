@@ -343,7 +343,7 @@ export const vDeprecatedModel = v.object({
  * This is a model with one property containing a circular reference
  */
 export const vModelWithCircularReference: v.GenericSchema = v.object({
-    prop: v.optional(v.lazy(() => vModelWithCircularReference2))
+    prop: v.optional(v.lazy(() => vModelWithCircularReference))
 });
 
 /**

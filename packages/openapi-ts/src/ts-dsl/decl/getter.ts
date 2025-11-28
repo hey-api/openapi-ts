@@ -14,6 +14,9 @@ import {
   StaticMixin,
 } from '../mixins/modifiers';
 import { ParamMixin } from '../mixins/param';
+import { BlockTsDsl } from '../stmt/block';
+
+export type GetterName = string | ts.PropertyName;
 
 const Mixed = AbstractMixin(
   AsyncMixin(
@@ -34,25 +37,33 @@ const Mixed = AbstractMixin(
 );
 
 export class GetterTsDsl extends Mixed {
-  protected name: string | ts.PropertyName;
+  readonly '~dsl' = 'GetterTsDsl';
 
-  constructor(name: string | ts.PropertyName, fn?: (g: GetterTsDsl) => void) {
+  protected name: GetterName;
+
+  constructor(name: GetterName, fn?: (g: GetterTsDsl) => void) {
     super();
     this.name = name;
     fn?.(this);
   }
 
   override analyze(ctx: AnalysisContext): void {
-    super.analyze(ctx);
+    ctx.pushScope();
+    try {
+      super.analyze(ctx);
+    } finally {
+      ctx.popScope();
+    }
   }
 
-  protected override _render() {
-    return ts.factory.createGetAccessorDeclaration(
+  override toAst() {
+    const node = ts.factory.createGetAccessorDeclaration(
       [...this.$decorators(), ...this.modifiers],
       this.name,
       this.$params(),
       undefined,
-      ts.factory.createBlock(this.$do(), true),
+      this.$node(new BlockTsDsl(...this._do)),
     );
+    return this.$docs(node);
   }
 }

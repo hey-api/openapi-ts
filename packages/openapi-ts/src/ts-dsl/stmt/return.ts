@@ -1,9 +1,9 @@
-import type { AnalysisContext, Symbol } from '@hey-api/codegen-core';
-import { isSymbol } from '@hey-api/codegen-core';
+import type { AnalysisContext, Ref, Symbol } from '@hey-api/codegen-core';
+import { ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { isTsDsl, TsDsl } from '../base';
+import { TsDsl } from '../base';
 import { setReturnFactory } from '../mixins/expr';
 
 export type ReturnExpr = Symbol | string | MaybeTsDsl<ts.Expression>;
@@ -12,23 +12,21 @@ export type ReturnCtor = (expr?: ReturnExpr) => ReturnTsDsl;
 const Mixed = TsDsl<ts.ReturnStatement>;
 
 export class ReturnTsDsl extends Mixed {
-  protected _returnExpr?: ReturnExpr;
+  readonly '~dsl' = 'ReturnTsDsl';
+
+  protected _returnExpr?: Ref<ReturnExpr>;
 
   constructor(expr?: ReturnExpr) {
     super();
-    this._returnExpr = expr;
+    if (expr) this._returnExpr = ref(expr);
   }
 
   override analyze(ctx: AnalysisContext): void {
     super.analyze(ctx);
-    if (isSymbol(this._returnExpr)) {
-      ctx.addDependency(this._returnExpr);
-    } else if (isTsDsl(this._returnExpr)) {
-      this._returnExpr.analyze(ctx);
-    }
+    ctx.analyze(this._returnExpr);
   }
 
-  protected override _render() {
+  override toAst() {
     return ts.factory.createReturnStatement(this.$node(this._returnExpr));
   }
 }

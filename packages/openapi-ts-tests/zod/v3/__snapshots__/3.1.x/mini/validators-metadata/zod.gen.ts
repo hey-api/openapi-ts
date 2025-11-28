@@ -16,14 +16,10 @@ export const zFoo = z._default(z.union([
         foo: z.optional(z.string().check(z.regex(/^\d{3}-\d{2}-\d{4}$/)).register(z.globalRegistry, {
             description: 'This is foo property.'
         })),
-        get bar() {
-            return z.optional(z.lazy((): any => zBar2));
-        },
-        get baz() {
-            return z.optional(z.array(z.lazy((): any => zFoo4)).register(z.globalRegistry, {
-                description: 'This is baz property.'
-            }));
-        },
+        get bar() { return z.optional(z.lazy((): any => zBar)); },
+        get baz() { return z.optional(z.array(z.lazy((): any => zFoo)).register(z.globalRegistry, {
+            description: 'This is baz property.'
+        })); },
         qux: z._default(z.optional(z.int().check(z.gt(0)).register(z.globalRegistry, {
             description: 'This is qux property.'
         })), 0)

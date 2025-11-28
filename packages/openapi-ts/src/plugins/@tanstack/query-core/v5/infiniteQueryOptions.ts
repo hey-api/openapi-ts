@@ -1,3 +1,5 @@
+import { ref } from '@hey-api/codegen-core';
+
 import { operationPagination } from '~/ir/operation';
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
@@ -40,7 +42,15 @@ const createInfiniteParamsFunction = ({
     $.func()
       .generic('K', (g) =>
         g.extends(
-          "Pick<QueryKey<Options>[0], 'body' | 'headers' | 'path' | 'query'>",
+          $.type('Pick').generics(
+            $.type('QueryKey').generic('Options').idx(0),
+            $.type.or(
+              $.type.literal('body'),
+              $.type.literal('headers'),
+              $.type.literal('path'),
+              $.type.literal('query'),
+            ),
+          ),
         ),
       )
       .param('queryKey', (p) => p.type('QueryKey<Options>'))
@@ -100,7 +110,7 @@ export const createInfiniteQueryOptions = ({
 }: {
   operation: IR.OperationObject;
   plugin: PluginInstance;
-  queryFn: string;
+  queryFn: ReturnType<typeof $.expr | typeof $.call | typeof $.attr>;
 }): void => {
   const pagination = operationPagination({
     context: plugin.context,
@@ -147,7 +157,6 @@ export const createInfiniteQueryOptions = ({
   });
 
   const typeData = useTypeData({ operation, plugin });
-  const typeError = useTypeError({ operation, plugin });
   const typeResponse = useTypeResponse({ operation, plugin });
 
   const symbolQueryKeyType = plugin.referenceSymbol({
@@ -155,16 +164,22 @@ export const createInfiniteQueryOptions = ({
     resource: 'QueryKey',
     tool: plugin.name,
   });
-  const typeQueryKey = `${symbolQueryKeyType.placeholder}<${typeData}>`;
-  const typePageObjectParam = `Pick<${typeQueryKey}[0], 'body' | 'headers' | 'path' | 'query'>`;
+  const typeQueryKey = $.type(symbolQueryKeyType).generic(typeData);
+  const typePageObjectParam = $.type('Pick').generics(
+    typeQueryKey.idx(0),
+    $.type.or(
+      $.type.literal('body'),
+      $.type.literal('headers'),
+      $.type.literal('path'),
+      $.type.literal('query'),
+    ),
+  );
   const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
   const type = pluginTypeScript.api.schemaToType({
     plugin: pluginTypeScript,
     schema: pagination.schema,
     state: {
-      path: {
-        value: [],
-      },
+      path: ref([]),
     },
   });
 
@@ -204,7 +219,7 @@ export const createInfiniteQueryOptions = ({
       .type(typePageObjectParam)
       .hint('@ts-ignore')
       .assign(
-        $.ternary($('pageParam').typeof().eq($.literal('object')))
+        $.ternary($('pageParam').typeofExpr().eq($.literal('object')))
           .do('pageParam')
           .otherwise(
             $.object()
@@ -264,10 +279,9 @@ export const createInfiniteQueryOptions = ({
                   ),
               )
               .generics(
-                // TODO: better types syntax
                 typeResponse,
-                typeError || 'unknown',
-                `${symbolInfiniteDataType.placeholder}<${typeResponse}>`,
+                useTypeError({ operation, plugin }),
+                $.type(symbolInfiniteDataType).generic(typeResponse),
                 typeQueryKey,
                 $.type.or(type, typePageObjectParam),
               ),

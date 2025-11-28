@@ -19,6 +19,8 @@ const Mixed = AsMixin(
 );
 
 export class ObjectTsDsl extends Mixed {
+  readonly '~dsl' = 'ObjectTsDsl';
+
   protected _props: Array<ObjectPropTsDsl> = [];
 
   constructor(...props: Array<ObjectPropTsDsl>) {
@@ -29,7 +31,7 @@ export class ObjectTsDsl extends Mixed {
   override analyze(ctx: AnalysisContext): void {
     super.analyze(ctx);
     for (const prop of this._props) {
-      prop.analyze(ctx);
+      ctx.analyze(prop);
     }
   }
 
@@ -81,10 +83,11 @@ export class ObjectTsDsl extends Mixed {
     return this;
   }
 
-  protected override _render() {
-    return ts.factory.createObjectLiteralExpression(
+  override toAst() {
+    const node = ts.factory.createObjectLiteralExpression(
       this.$node(this._props),
       this.$multiline(this._props.length),
     );
+    return this.$hint(node);
   }
 }

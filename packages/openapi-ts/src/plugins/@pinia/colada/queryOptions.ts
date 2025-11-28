@@ -1,5 +1,6 @@
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
+import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
 import {
   createOperationComment,
   hasOperationSse,
@@ -14,7 +15,6 @@ import {
   queryKeyStatement,
 } from './queryKey';
 import type { PiniaColadaPlugin } from './types';
-import { useTypeData } from './useType';
 import { getPublicTypeData } from './utils';
 
 const optionsParamName = 'options';
@@ -27,7 +27,7 @@ export const createQueryOptions = ({
 }: {
   operation: IR.OperationObject;
   plugin: PiniaColadaPlugin['Instance'];
-  queryFn: string;
+  queryFn: ReturnType<typeof $.expr | typeof $.call | typeof $.attr>;
 }): void => {
   if (hasOperationSse({ operation })) {
     return;
@@ -85,11 +85,9 @@ export const createQueryOptions = ({
     );
   }
 
-  const typeData = useTypeData({ operation, plugin });
-  const { strippedTypeData } = getPublicTypeData({
-    plugin,
-    typeData,
-  });
+  const client = getClientPlugin(plugin.context.config);
+  const isNuxtClient = client.name === '@hey-api/client-nuxt';
+  const typeData = getPublicTypeData({ isNuxtClient, operation, plugin });
   const awaitSdkFn = $(queryFn)
     .call(
       $.object()
@@ -149,7 +147,7 @@ export const createQueryOptions = ({
       $(symbolDefineQueryOptions).call(
         $.func()
           .param(optionsParamName, (p) =>
-            p.required(isRequiredOptions).type(strippedTypeData),
+            p.required(isRequiredOptions).type(typeData),
           )
           .do($.return(queryOpts)),
       ),

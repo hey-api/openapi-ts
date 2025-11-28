@@ -1,3 +1,5 @@
+import { fromRef } from '@hey-api/codegen-core';
+
 import { operationResponsesMap } from '~/ir/operation';
 import { deduplicateSchema } from '~/ir/schema';
 import type { IR } from '~/ir/types';
@@ -123,11 +125,11 @@ const operationToDataType = ({
   const symbol = plugin.registerSymbol({
     meta: {
       category: 'type',
-      path: state.path.value,
+      path: fromRef(state.path),
       resource: 'operation',
       resourceId: operation.id,
       role: 'data',
-      tags: state.tags?.value,
+      tags: fromRef(state.tags),
       tool: 'typescript',
     },
     name: buildName({
@@ -164,11 +166,11 @@ export const operationToType = ({
     const symbolErrors = plugin.registerSymbol({
       meta: {
         category: 'type',
-        path: state.path.value,
+        path: fromRef(state.path),
         resource: 'operation',
         resourceId: operation.id,
         role: 'errors',
-        tags: state.tags?.value,
+        tags: fromRef(state.tags),
         tool: 'typescript',
       },
       name: buildName({
@@ -192,11 +194,11 @@ export const operationToType = ({
       const symbol = plugin.registerSymbol({
         meta: {
           category: 'type',
-          path: state.path.value,
+          path: fromRef(state.path),
           resource: 'operation',
           resourceId: operation.id,
           role: 'error',
-          tags: state.tags?.value,
+          tags: fromRef(state.tags),
           tool: 'typescript',
         },
         name: buildName({
@@ -219,11 +221,11 @@ export const operationToType = ({
     const symbolResponses = plugin.registerSymbol({
       meta: {
         category: 'type',
-        path: state.path.value,
+        path: fromRef(state.path),
         resource: 'operation',
         resourceId: operation.id,
         role: 'responses',
-        tags: state.tags?.value,
+        tags: fromRef(state.tags),
         tool: 'typescript',
       },
       name: buildName({
@@ -247,11 +249,11 @@ export const operationToType = ({
       const symbol = plugin.registerSymbol({
         meta: {
           category: 'type',
-          path: state.path.value,
+          path: fromRef(state.path),
           resource: 'operation',
           resourceId: operation.id,
           role: 'response',
-          tags: state.tags?.value,
+          tags: fromRef(state.tags),
           tool: 'typescript',
         },
         name: buildName({

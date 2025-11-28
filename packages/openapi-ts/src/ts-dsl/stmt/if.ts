@@ -2,67 +2,59 @@ import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { isTsDsl, TsDsl } from '../base';
+import { TsDsl } from '../base';
+import type { DoExpr } from '../mixins/do';
 import { DoMixin } from '../mixins/do';
+import { BlockTsDsl } from './block';
+
+export type IfCondition = string | MaybeTsDsl<ts.Expression>;
 
 const Mixed = DoMixin(TsDsl<ts.IfStatement>);
 
 export class IfTsDsl extends Mixed {
-  protected _condition?: string | MaybeTsDsl<ts.Expression>;
-  protected _else?: ReadonlyArray<MaybeTsDsl<ts.Statement>>;
+  readonly '~dsl' = 'IfTsDsl';
 
-  constructor(condition?: string | MaybeTsDsl<ts.Expression>) {
+  protected _condition?: IfCondition;
+  protected _else?: Array<DoExpr>;
+
+  constructor(condition?: IfCondition) {
     super();
     if (condition) this.condition(condition);
   }
 
   override analyze(ctx: AnalysisContext): void {
     super.analyze(ctx);
-    if (isTsDsl(this._condition)) this._condition.analyze(ctx);
+    ctx.analyze(this._condition);
     if (this._else) {
-      for (const stmt of this._else) {
-        if (isTsDsl(stmt)) stmt.analyze(ctx);
+      ctx.pushScope();
+      try {
+        for (const stmt of this._else) {
+          ctx.analyze(stmt);
+        }
+      } finally {
+        ctx.popScope();
       }
     }
   }
 
-  condition(condition: string | MaybeTsDsl<ts.Expression>): this {
+  condition(condition: IfCondition): this {
     this._condition = condition;
     return this;
   }
 
-  otherwise(...statements: ReadonlyArray<MaybeTsDsl<ts.Statement>>): this {
-    this._else = statements;
+  otherwise(...items: Array<DoExpr>): this {
+    this._else = items;
     return this;
   }
 
-  protected override _render() {
+  override toAst() {
     if (!this._condition) throw new Error('Missing condition in if');
+    if (!this._do) throw new Error('Missing then block in if');
 
-    const thenStmts = this.$do();
-    if (!thenStmts.length) throw new Error('Missing then block in if');
-
-    const condition = this.$node(this._condition);
-    const thenBlock =
-      thenStmts.length === 1
-        ? thenStmts[0]!
-        : ts.factory.createBlock(thenStmts, true);
-    const thenNode = ts.isBlock(thenBlock)
-      ? thenBlock
-      : ts.factory.createBlock([thenBlock], true);
-
-    let elseNode: ts.Statement | undefined;
-    if (this._else) {
-      const elseStmts = this.$node(this._else);
-      const elseBlock =
-        elseStmts.length === 1
-          ? elseStmts[0]!
-          : ts.factory.createBlock(elseStmts, true);
-      elseNode = ts.isBlock(elseBlock)
-        ? elseBlock
-        : ts.factory.createBlock([elseBlock], true);
-    }
-
-    return ts.factory.createIfStatement(condition, thenNode, elseNode);
+    return ts.factory.createIfStatement(
+      this.$node(this._condition),
+      this.$node(new BlockTsDsl(...this._do)),
+      this._else ? this.$node(new BlockTsDsl(this._else)) : undefined,
+    );
   }
 }

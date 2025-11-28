@@ -1,5 +1,6 @@
+import { fromRef, ref } from '@hey-api/codegen-core';
+
 import type { SchemaWithType } from '~/plugins';
-import { toRef } from '~/plugins/shared/utils/refs';
 import { $ } from '~/ts-dsl';
 
 import { pipesToAst } from '../../shared/pipesToAst';
@@ -69,7 +70,7 @@ export const objectToAst = ({
       schema: property,
       state: {
         ...state,
-        path: toRef([...state.path.value, 'properties', name]),
+        path: ref([...fromRef(state.path), 'properties', name]),
       },
     });
     if (propertyAst.hasLazyExpression) result.hasLazyExpression = true;
@@ -87,7 +88,7 @@ export const objectToAst = ({
         schema: schema.additionalProperties,
         state: {
           ...state,
-          path: toRef([...state.path.value, 'additionalProperties']),
+          path: ref([...fromRef(state.path), 'additionalProperties']),
         },
       });
       if (additionalAst.hasLazyExpression) result.hasLazyExpression = true;

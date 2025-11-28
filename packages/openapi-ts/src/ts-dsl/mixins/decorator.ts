@@ -1,7 +1,7 @@
 import type { AnalysisContext, Node, Symbol } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
-import { isTsDsl, type MaybeTsDsl } from '../base';
+import type { MaybeTsDsl } from '../base';
 import { DecoratorTsDsl } from '../decl/decorator';
 import type { BaseCtor, MixinCtor } from './types';
 
@@ -24,7 +24,7 @@ export function DecoratorMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
     override analyze(ctx: AnalysisContext): void {
       super.analyze(ctx);
       for (const decorator of this.decorators) {
-        if (isTsDsl(decorator)) decorator.analyze(ctx);
+        ctx.analyze(decorator);
       }
     }
 

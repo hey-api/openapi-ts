@@ -2,7 +2,7 @@ import type { AnalysisContext, Symbol } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { isTsDsl, TsDsl } from '../base';
+import { TsDsl } from '../base';
 import { ArgsMixin } from '../mixins/args';
 import { AsMixin } from '../mixins/as';
 import { ExprMixin, setCallFactory } from '../mixins/expr';
@@ -18,6 +18,8 @@ const Mixed = ArgsMixin(
 );
 
 export class CallTsDsl extends Mixed {
+  readonly '~dsl' = 'CallTsDsl';
+
   protected _callee: CallCallee;
 
   constructor(callee: CallCallee, ...args: CallArgs) {
@@ -28,10 +30,10 @@ export class CallTsDsl extends Mixed {
 
   override analyze(ctx: AnalysisContext): void {
     super.analyze(ctx);
-    if (isTsDsl(this._callee)) this._callee.analyze(ctx);
+    ctx.analyze(this._callee);
   }
 
-  protected override _render() {
+  override toAst() {
     return ts.factory.createCallExpression(
       this.$node(this._callee),
       this.$generics(),

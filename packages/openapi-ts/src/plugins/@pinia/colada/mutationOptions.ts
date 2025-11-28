@@ -1,11 +1,12 @@
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
+import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
 import { createOperationComment } from '~/plugins/shared/utils/operation';
 import { $ } from '~/ts-dsl';
 
 import { handleMeta } from './meta';
 import type { PiniaColadaPlugin } from './types';
-import { useTypeData, useTypeError, useTypeResponse } from './useType';
+import { useTypeError, useTypeResponse } from './useType';
 import { getPublicTypeData } from './utils';
 
 export const createMutationOptions = ({
@@ -15,32 +16,26 @@ export const createMutationOptions = ({
 }: {
   operation: IR.OperationObject;
   plugin: PiniaColadaPlugin['Instance'];
-  queryFn: string;
+  queryFn: ReturnType<typeof $.expr | typeof $.call | typeof $.attr>;
 }): void => {
   const symbolMutationOptionsType = plugin.referenceSymbol({
     category: 'external',
     resource: `${plugin.name}.UseMutationOptions`,
   });
 
-  const typeData = useTypeData({ operation, plugin });
-  const typeError = useTypeError({ operation, plugin });
-  const typeResponse = useTypeResponse({ operation, plugin });
-  const { isNuxtClient, strippedTypeData } = getPublicTypeData({
-    plugin,
-    typeData,
-  });
-  // TODO: better types syntax
-  const mutationType = isNuxtClient
-    ? `${symbolMutationOptionsType.placeholder}<${typeResponse}, ${strippedTypeData}, ${typeError}>`
-    : `${symbolMutationOptionsType.placeholder}<${typeResponse}, ${typeData}, ${typeError}>`;
+  const client = getClientPlugin(plugin.context.config);
+  const isNuxtClient = client.name === '@hey-api/client-nuxt';
 
-  const fnOptions = 'fnOptions';
+  const typeData = getPublicTypeData({ isNuxtClient, operation, plugin });
+
+  const options = plugin.symbol('options');
+  const fnOptions = plugin.symbol('vars');
 
   const awaitSdkFn = $(queryFn)
     .call(
       $.object()
         .pretty()
-        .spread('options')
+        .spread(options)
         .spread(fnOptions)
         .prop('throwOnError', $.literal(true)),
     )
@@ -64,7 +59,9 @@ export const createMutationOptions = ({
       $.func()
         .async()
         .param(fnOptions, (p) =>
-          p.$if(isNuxtClient, (f) => f.type(`Partial<${strippedTypeData}>`)),
+          p.$if(isNuxtClient, (f) =>
+            f.type($.type('Partial').generic(typeData)),
+          ),
         )
         .do(...statements),
     )
@@ -84,10 +81,15 @@ export const createMutationOptions = ({
     )
     .assign(
       $.func()
-        .param('options', (p) =>
-          p.optional().type(`Partial<${strippedTypeData}>`),
+        .param(options, (p) =>
+          p.optional().type($.type('Partial').generic(typeData)),
         )
-        .returns(mutationType)
+        .returns(
+          $.type(symbolMutationOptionsType)
+            .generic(useTypeResponse({ operation, plugin }))
+            .generic(typeData)
+            .generic(useTypeError({ operation, plugin })),
+        )
         .do($.return(mutationOpts)),
     );
   plugin.addNode(statement);

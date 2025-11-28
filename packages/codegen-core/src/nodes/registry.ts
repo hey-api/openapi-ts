@@ -2,7 +2,7 @@ import type { INode } from './node';
 import type { INodeRegistry } from './types';
 
 export class NodeRegistry implements INodeRegistry {
-  private brands: Map<symbol, Array<INode>> = new Map();
+  private brands: Map<string, Array<INode>> = new Map();
   private list: Array<INode> = [];
 
   add(node: INode): void {
@@ -20,7 +20,7 @@ export class NodeRegistry implements INodeRegistry {
     return this.list;
   }
 
-  byBrand(brand: symbol): ReadonlyArray<INode> {
+  byBrand(brand: string): ReadonlyArray<INode> {
     return this.brands.get(brand) ?? [];
   }
 }

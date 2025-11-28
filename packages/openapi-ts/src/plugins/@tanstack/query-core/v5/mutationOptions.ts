@@ -15,7 +15,7 @@ export const createMutationOptions = ({
 }: {
   operation: IR.OperationObject;
   plugin: PluginInstance;
-  queryFn: string;
+  queryFn: ReturnType<typeof $.expr | typeof $.call | typeof $.attr>;
 }): void => {
   const symbolMutationOptionsType = plugin.referenceSymbol({
     category: 'external',
@@ -23,10 +23,10 @@ export const createMutationOptions = ({
   });
 
   const typeData = useTypeData({ operation, plugin });
-  const typeError = useTypeError({ operation, plugin });
-  const typeResponse = useTypeResponse({ operation, plugin });
-  // TODO: better types syntax
-  const mutationType = `${symbolMutationOptionsType.placeholder}<${typeResponse}, ${typeError}, ${typeData}>`;
+  const mutationType = $.type(symbolMutationOptionsType)
+    .generic(useTypeResponse({ operation, plugin }))
+    .generic(useTypeError({ operation, plugin }))
+    .generic(typeData);
 
   const fnOptions = 'fnOptions';
 
@@ -63,7 +63,9 @@ export const createMutationOptions = ({
     )
     .assign(
       $.func()
-        .param('options', (p) => p.optional().type(`Partial<${typeData}>`))
+        .param('options', (p) =>
+          p.optional().type($.type('Partial').generic(typeData)),
+        )
         .returns(mutationType)
         .do(
           $.const(mutationOptionsFn)

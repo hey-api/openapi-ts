@@ -1,10 +1,11 @@
+import { fromRef } from '@hey-api/codegen-core';
+
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
 import { createSchemaComment } from '~/plugins/shared/utils/schema';
 import type { MaybeTsDsl, TypeTsDsl } from '~/ts-dsl';
-import { $ } from '~/ts-dsl';
+import { $, numberRegExp } from '~/ts-dsl';
 import { pathToJsonPointer, refToName } from '~/utils/ref';
-import { numberRegExp } from '~/utils/regexp';
 import { stringCase } from '~/utils/stringCase';
 
 import type { HeyApiTypeScriptPlugin } from '../types';
@@ -90,7 +91,7 @@ export const exportType = ({
   schema: IR.SchemaObject;
   type: MaybeTsDsl<TypeTsDsl>;
 }) => {
-  const $ref = pathToJsonPointer(state.path.value);
+  const $ref = pathToJsonPointer(fromRef(state.path));
 
   // root enums have an additional export
   if (schema.type === 'enum' && plugin.config.enums.enabled) {
@@ -110,10 +111,10 @@ export const exportType = ({
       const symbolObject = plugin.registerSymbol({
         meta: {
           category: 'utility',
-          path: state.path.value,
+          path: fromRef(state.path),
           resource: 'definition',
           resourceId: $ref,
-          tags: state.tags?.value,
+          tags: fromRef(state.tags),
           tool: 'typescript',
         },
         name: buildName({
@@ -138,10 +139,10 @@ export const exportType = ({
       const symbol = plugin.registerSymbol({
         meta: {
           category: 'type',
-          path: state.path.value,
+          path: fromRef(state.path),
           resource: 'definition',
           resourceId: $ref,
-          tags: state.tags?.value,
+          tags: fromRef(state.tags),
           tool: 'typescript',
         },
         name: buildName({
@@ -153,7 +154,9 @@ export const exportType = ({
         .alias(symbol)
         .export()
         .$if(createSchemaComment(schema), (t, v) => t.doc(v))
-        .type($.type(symbol).idx($.type(symbol).typeof().keyof()).typeof());
+        .type(
+          $.type(symbol).idx($.type(symbol).typeofType().keyof()).typeofType(),
+        );
       plugin.addNode(node);
       return;
     } else if (
@@ -168,10 +171,10 @@ export const exportType = ({
         const symbol = plugin.registerSymbol({
           meta: {
             category: 'type',
-            path: state.path.value,
+            path: fromRef(state.path),
             resource: 'definition',
             resourceId: $ref,
-            tags: state.tags?.value,
+            tags: fromRef(state.tags),
             tool: 'typescript',
           },
           name: buildName({
@@ -199,10 +202,10 @@ export const exportType = ({
   const symbol = plugin.registerSymbol({
     meta: {
       category: 'type',
-      path: state.path.value,
+      path: fromRef(state.path),
       resource: 'definition',
       resourceId: $ref,
-      tags: state.tags?.value,
+      tags: fromRef(state.tags),
       tool: 'typescript',
     },
     name: buildName({

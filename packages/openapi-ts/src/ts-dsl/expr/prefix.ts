@@ -2,11 +2,13 @@ import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { isTsDsl, TsDsl } from '../base';
+import { TsDsl } from '../base';
 
 const Mixed = TsDsl<ts.PrefixUnaryExpression>;
 
 export class PrefixTsDsl extends Mixed {
+  readonly '~dsl' = 'PrefixTsDsl';
+
   protected _expr?: string | MaybeTsDsl<ts.Expression>;
   protected _op?: ts.PrefixUnaryOperator;
 
@@ -21,7 +23,7 @@ export class PrefixTsDsl extends Mixed {
 
   override analyze(ctx: AnalysisContext): void {
     super.analyze(ctx);
-    if (isTsDsl(this._expr)) this._expr.analyze(ctx);
+    ctx.analyze(this._expr);
   }
 
   /** Sets the operand (the expression being prefixed). */
@@ -48,7 +50,7 @@ export class PrefixTsDsl extends Mixed {
     return this;
   }
 
-  protected override _render() {
+  override toAst() {
     if (!this._expr) {
       throw new Error('Missing expression for prefix unary expression');
     }

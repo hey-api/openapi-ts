@@ -1,15 +1,17 @@
-import type { AnalysisContext, Symbol } from '@hey-api/codegen-core';
-import { isSymbol } from '@hey-api/codegen-core';
+import type { AnalysisContext, Ref, Symbol } from '@hey-api/codegen-core';
+import { ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
-import { isTsDsl, TypeTsDsl } from '../base';
+import { TypeTsDsl } from '../base';
 
 type Type = Symbol | string | ts.TypeNode | TypeTsDsl;
 
 const Mixed = TypeTsDsl<ts.UnionTypeNode>;
 
 export class TypeOrTsDsl extends Mixed {
-  protected _types: Array<Type> = [];
+  readonly '~dsl' = 'TypeOrTsDsl';
+
+  protected _types: Array<Ref<Type>> = [];
 
   constructor(...nodes: Array<Type>) {
     super();
@@ -18,21 +20,17 @@ export class TypeOrTsDsl extends Mixed {
 
   override analyze(ctx: AnalysisContext): void {
     super.analyze(ctx);
-    for (const t of this._types) {
-      if (isSymbol(t)) {
-        ctx.addDependency(t);
-      } else if (isTsDsl(t)) {
-        t.analyze(ctx);
-      }
+    for (const type of this._types) {
+      ctx.analyze(type);
     }
   }
 
   types(...nodes: Array<Type>): this {
-    this._types.push(...nodes);
+    this._types.push(...nodes.map((n) => ref(n)));
     return this;
   }
 
-  protected override _render() {
+  override toAst() {
     const flat: Array<ts.TypeNode> = [];
 
     for (const node of this._types) {

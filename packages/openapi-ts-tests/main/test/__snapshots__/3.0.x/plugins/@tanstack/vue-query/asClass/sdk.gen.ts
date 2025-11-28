@@ -19,39 +19,27 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
 };
 
 export class BarService {
-    public static post<ThrowOnError extends boolean = false>(options?: Options<FooBarPostData, ThrowOnError>) {
-        return (options?.client ?? client).post<FooBarPostResponses, unknown, ThrowOnError>({ url: '/foo/bar', ...options });
-    }
+    public static post<ThrowOnError extends boolean = false>(options?: Options<FooBarPostData, ThrowOnError>) { return (options?.client ?? client).post<FooBarPostResponses, unknown, ThrowOnError>({ url: '/foo/bar', ...options }); }
     
-    public static put<ThrowOnError extends boolean = false>(options?: Options<FooBarPutData, ThrowOnError>) {
-        return (options?.client ?? client).put<FooBarPutResponses, unknown, ThrowOnError>({ url: '/foo/bar', ...options });
-    }
+    public static put<ThrowOnError extends boolean = false>(options?: Options<FooBarPutData, ThrowOnError>) { return (options?.client ?? client).put<FooBarPutResponses, unknown, ThrowOnError>({ url: '/foo/bar', ...options }); }
 }
 
 export class FooService {
-    public static post<ThrowOnError extends boolean = false>(options?: Options<FooPostData, ThrowOnError>) {
-        return (options?.client ?? client).post<FooPostResponses, unknown, ThrowOnError>({ url: '/foo', ...options });
-    }
+    public static post<ThrowOnError extends boolean = false>(options?: Options<FooPostData, ThrowOnError>) { return (options?.client ?? client).post<FooPostResponses, unknown, ThrowOnError>({ url: '/foo', ...options }); }
     
-    public static put<ThrowOnError extends boolean = false>(options?: Options<FooPutData, ThrowOnError>) {
-        return (options?.client ?? client).put<FooPutResponses, unknown, ThrowOnError>({ url: '/foo', ...options });
-    }
+    public static put<ThrowOnError extends boolean = false>(options?: Options<FooPutData, ThrowOnError>) { return (options?.client ?? client).put<FooPutResponses, unknown, ThrowOnError>({ url: '/foo', ...options }); }
     
     static barService = BarService;
 }
 
 export class FooBazService {
-    public static getFoo<ThrowOnError extends boolean = false>(options?: Options<GetFooData, ThrowOnError>) {
-        return (options?.client ?? client).get<GetFooResponses, unknown, ThrowOnError>({ url: '/foo', ...options });
-    }
+    public static getFoo<ThrowOnError extends boolean = false>(options?: Options<GetFooData, ThrowOnError>) { return (options?.client ?? client).get<GetFooResponses, unknown, ThrowOnError>({ url: '/foo', ...options }); }
     
     static fooService = FooService;
 }
 
 export class BarBazService {
-    public static getFooBar<ThrowOnError extends boolean = false>(options?: Options<GetFooBarData, ThrowOnError>) {
-        return (options?.client ?? client).get<GetFooBarResponses, unknown, ThrowOnError>({ url: '/foo/bar', ...options });
-    }
+    public static getFooBar<ThrowOnError extends boolean = false>(options?: Options<GetFooBarData, ThrowOnError>) { return (options?.client ?? client).get<GetFooBarResponses, unknown, ThrowOnError>({ url: '/foo/bar', ...options }); }
     
     static fooService = FooService;
 }

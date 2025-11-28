@@ -43,12 +43,13 @@ export default defineConfig(() => {
             // 'invalid',
             // 'full.yaml',
             // 'object-property-names.yaml',
-            'openai.yaml',
+            // 'openai.yaml',
             // 'opencode.yaml',
             // 'pagination-ref.yaml',
-            // 'sdk-instance.yaml',
+            'sdk-instance.yaml',
             // 'string-with-format.yaml',
             // 'transformers.json',
+            // 'transformers-recursive.json',
             // 'type-format.yaml',
             // 'validators.yaml',
             // 'validators-circular-ref.json',
@@ -83,7 +84,7 @@ export default defineConfig(() => {
         // 'https://somefakedomain.com/openapi.yaml',
       ],
       logs: {
-        // level: 'silent',
+        // level: 'debug',
         path: './logs',
       },
       // name: 'foo',
@@ -97,15 +98,22 @@ export default defineConfig(() => {
           //   suffix: '.meh',
           // },
           // format: 'prettier',
-          // importFileExtension: '.ts',
+          // importFileExtension: '.js',
           // indexFile: false,
           // lint: 'eslint',
           path: path.resolve(__dirname, '.gen'),
-          tsConfigPath: path.resolve(
-            __dirname,
-            'tsconfig',
-            'tsconfig.nodenext.json',
-          ),
+          preferExportAll: true,
+          resolveModuleName: (moduleName) => {
+            if (moduleName === 'valibot') {
+              return 'valibot';
+            }
+            return;
+          },
+          // tsConfigPath: path.resolve(
+          //   __dirname,
+          //   'tsconfig',
+          //   'tsconfig.nodenext.json',
+          // ),
         },
         // '.gen',
       ],
@@ -263,7 +271,7 @@ export default defineConfig(() => {
           //   fields.unwrap('path')
           // },
           // include...
-          // instance: true,
+          instance: true,
           name: '@hey-api/sdk',
           // operationId: false,
           // paramsStructure: 'flat',
@@ -273,7 +281,7 @@ export default defineConfig(() => {
           // signature: 'object',
           // transformer: '@hey-api/transformers',
           // transformer: true,
-          validator: 'zod',
+          validator: 'valibot',
           // validator: {
           //   request: 'zod',
           //   response: 'zod',
@@ -309,7 +317,7 @@ export default defineConfig(() => {
           exportFromIndex: true,
           infiniteQueryKeys: {
             // name: '{{name}}IQK',
-            name: 'options',
+            // name: 'options',
           },
           infiniteQueryOptions: {
             meta() {
@@ -318,7 +326,7 @@ export default defineConfig(() => {
               };
             },
             // name: '{{name}}IQO',
-            name: 'options',
+            // name: 'options',
           },
           mutationOptions: {
             meta() {
@@ -327,12 +335,12 @@ export default defineConfig(() => {
               };
             },
             // name: '{{name}}MO',
-            name: 'options',
+            // name: 'options',
           },
-          // name: '@tanstack/react-query',
+          name: '@tanstack/react-query',
           queryKeys: {
             // name: '{{name}}QK',
-            name: 'options',
+            // name: 'options',
             tags: true,
           },
           // queryOptions: false,
@@ -343,7 +351,7 @@ export default defineConfig(() => {
             //   }
             // },
             // name: '{{name}}QO',
-            name: 'options',
+            // name: 'options',
           },
           useQuery: true,
           '~hooks': {
@@ -423,14 +431,23 @@ export default defineConfig(() => {
                 // 'date-time': ({ $, pipes }) => pipes.push($('v').attr('isoDateTime').call()),
               },
             },
-            validator({ $, schema, v }) {
-              return [
-                $.const('parsed').assign(
-                  $(v).attr('safeParseAsync').call(schema, 'data').await(),
-                ),
-                $('parsed').return(),
-              ];
-            },
+            // validator({ $, plugin, schema, v }) {
+            //   const vShadow = plugin.symbol('v');
+            //   const test = plugin.symbol('test');
+            //   const e = plugin.symbol('err');
+            //   return [
+            //     $.const(vShadow).assign($.literal('hi')),
+            //     $('console').attr('log').call(vShadow),
+            //     $.try(
+            //       $.const(test).assign($.literal('test')),
+            //       $('console').attr('log').call($.literal('hi'), test),
+            //     ).catchArg(e),
+            //     $.const('parsed').assign(
+            //       $(v).attr('safeParseAsync').call(schema, 'data').await(),
+            //     ),
+            //     $('parsed').return(),
+            //   ];
+            // },
           },
         },
         {
@@ -500,14 +517,14 @@ export default defineConfig(() => {
                 // 'date-time': ({ $ }) => $('z').attr('date').call(),
               },
             },
-            validator({ $, schema }) {
-              return [
-                $.const('parsed').assign(
-                  $(schema).attr('safeParseAsync').call('data').await(),
-                ),
-                $('parsed').return(),
-              ];
-            },
+            // validator({ $, schema }) {
+            //   return [
+            //     $.const('parsed').assign(
+            //       $(schema).attr('safeParseAsync').call('data').await(),
+            //     ),
+            //     $('parsed').return(),
+            //   ];
+            // },
           },
         },
         {
@@ -528,7 +545,7 @@ export default defineConfig(() => {
         {
           exportFromIndex: true,
           // mutationOptions: '{{name}}Mutationssss',
-          // name: '@pinia/colada',
+          name: '@pinia/colada',
           // queryOptions: {
           //   name: '{{name}}Queryyyyy',
           // },
@@ -547,7 +564,6 @@ export default defineConfig(() => {
           },
         },
       ],
-      // useOptions: false,
       // watch: 3_000,
     },
     // {

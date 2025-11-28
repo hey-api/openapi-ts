@@ -26,7 +26,7 @@ export const createQueryOptions = ({
 }: {
   operation: IR.OperationObject;
   plugin: PluginInstance;
-  queryFn: string;
+  queryFn: ReturnType<typeof $.expr | typeof $.call | typeof $.attr>;
 }): void => {
   if (hasOperationSse({ operation })) {
     return;
@@ -67,8 +67,6 @@ export const createQueryOptions = ({
   });
   plugin.addNode(node);
 
-  const typeData = useTypeData({ operation, plugin });
-  const typeError = useTypeError({ operation, plugin });
   const typeResponse = useTypeResponse({ operation, plugin });
 
   const awaitSdkFn = $(queryFn)
@@ -128,14 +126,16 @@ export const createQueryOptions = ({
     .assign(
       $.func()
         .param(optionsParamName, (p) =>
-          p.required(isRequiredOptions).type(typeData),
+          p
+            .required(isRequiredOptions)
+            .type(useTypeData({ operation, plugin })),
         )
         .do(
           $(symbolQueryOptions)
             .call(queryOptionsObj)
             .generics(
               typeResponse,
-              typeError,
+              useTypeError({ operation, plugin }),
               typeResponse,
               $(symbolQueryKey).returnType(),
             )

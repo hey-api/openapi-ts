@@ -43,464 +43,308 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
 export const serviceWithEmptyTagQueryKey = (options?: Options<ServiceWithEmptyTagData>) => createQueryKey('serviceWithEmptyTag', options);
 
 export const serviceWithEmptyTagOptions = (options?: Options<ServiceWithEmptyTagData>) => queryOptions<unknown, AxiosError<DefaultError>, unknown, ReturnType<typeof serviceWithEmptyTagQueryKey>>({
-    queryFn: async ({ queryKey, signal }) => {
-        const { data } = await serviceWithEmptyTag({
-            ...options,
-            ...queryKey[0],
-            signal,
-            throwOnError: true
-        });
-        return data;
-    },
+    queryFn: async ({ queryKey, signal }) => { const { data } = await serviceWithEmptyTag({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true
+    }); return data; },
     queryKey: serviceWithEmptyTagQueryKey(options)
 });
 
-export const patchApiVbyApiVersionNoTagMutation = (options?: Partial<Options<PatchApiVbyApiVersionNoTagData>>): MutationOptions<unknown, AxiosError<DefaultError>, Options<PatchApiVbyApiVersionNoTagData>> => {
-    const mutationOptions: MutationOptions<unknown, AxiosError<DefaultError>, Options<PatchApiVbyApiVersionNoTagData>> = {
-        mutationFn: async (fnOptions) => {
-            const { data } = await patchApiVbyApiVersionNoTag({
-                ...options,
-                ...fnOptions,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-    return mutationOptions;
-};
+export const patchApiVbyApiVersionNoTagMutation = (options?: Partial<Options<PatchApiVbyApiVersionNoTagData>>): MutationOptions<unknown, AxiosError<DefaultError>, Options<PatchApiVbyApiVersionNoTagData>> => { const mutationOptions: MutationOptions<unknown, AxiosError<DefaultError>, Options<PatchApiVbyApiVersionNoTagData>> = {
+    mutationFn: async (fnOptions) => { const { data } = await patchApiVbyApiVersionNoTag({
+        ...options,
+        ...fnOptions,
+        throwOnError: true
+    }); return data; }
+}; return mutationOptions; };
 
-export const fooWowMutation = (options?: Partial<Options<FooWowData>>): MutationOptions<unknown, AxiosError<DefaultError>, Options<FooWowData>> => {
-    const mutationOptions: MutationOptions<unknown, AxiosError<DefaultError>, Options<FooWowData>> = {
-        mutationFn: async (fnOptions) => {
-            const { data } = await fooWow({
-                ...options,
-                ...fnOptions,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-    return mutationOptions;
-};
+export const fooWowMutation = (options?: Partial<Options<FooWowData>>): MutationOptions<unknown, AxiosError<DefaultError>, Options<FooWowData>> => { const mutationOptions: MutationOptions<unknown, AxiosError<DefaultError>, Options<FooWowData>> = {
+    mutationFn: async (fnOptions) => { const { data } = await fooWow({
+        ...options,
+        ...fnOptions,
+        throwOnError: true
+    }); return data; }
+}; return mutationOptions; };
 
-export const deleteCallWithoutParametersAndResponseMutation = (options?: Partial<Options<DeleteCallWithoutParametersAndResponseData>>): MutationOptions<unknown, AxiosError<DefaultError>, Options<DeleteCallWithoutParametersAndResponseData>> => {
-    const mutationOptions: MutationOptions<unknown, AxiosError<DefaultError>, Options<DeleteCallWithoutParametersAndResponseData>> = {
-        mutationFn: async (fnOptions) => {
-            const { data } = await deleteCallWithoutParametersAndResponse({
-                ...options,
-                ...fnOptions,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-    return mutationOptions;
-};
+export const deleteCallWithoutParametersAndResponseMutation = (options?: Partial<Options<DeleteCallWithoutParametersAndResponseData>>): MutationOptions<unknown, AxiosError<DefaultError>, Options<DeleteCallWithoutParametersAndResponseData>> => { const mutationOptions: MutationOptions<unknown, AxiosError<DefaultError>, Options<DeleteCallWithoutParametersAndResponseData>> = {
+    mutationFn: async (fnOptions) => { const { data } = await deleteCallWithoutParametersAndResponse({
+        ...options,
+        ...fnOptions,
+        throwOnError: true
+    }); return data; }
+}; return mutationOptions; };
 
 export const getCallWithoutParametersAndResponseQueryKey = (options?: Options<GetCallWithoutParametersAndResponseData>) => createQueryKey('getCallWithoutParametersAndResponse', options);
 
 export const getCallWithoutParametersAndResponseOptions = (options?: Options<GetCallWithoutParametersAndResponseData>) => queryOptions<unknown, AxiosError<DefaultError>, unknown, ReturnType<typeof getCallWithoutParametersAndResponseQueryKey>>({
-    queryFn: async ({ queryKey, signal }) => {
-        const { data } = await getCallWithoutParametersAndResponse({
-            ...options,
-            ...queryKey[0],
-            signal,
-            throwOnError: true
-        });
-        return data;
-    },
+    queryFn: async ({ queryKey, signal }) => { const { data } = await getCallWithoutParametersAndResponse({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true
+    }); return data; },
     queryKey: getCallWithoutParametersAndResponseQueryKey(options)
 });
 
-export const patchCallWithoutParametersAndResponseMutation = (options?: Partial<Options<PatchCallWithoutParametersAndResponseData>>): MutationOptions<unknown, AxiosError<DefaultError>, Options<PatchCallWithoutParametersAndResponseData>> => {
-    const mutationOptions: MutationOptions<unknown, AxiosError<DefaultError>, Options<PatchCallWithoutParametersAndResponseData>> = {
-        mutationFn: async (fnOptions) => {
-            const { data } = await patchCallWithoutParametersAndResponse({
-                ...options,
-                ...fnOptions,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-    return mutationOptions;
-};
+export const patchCallWithoutParametersAndResponseMutation = (options?: Partial<Options<PatchCallWithoutParametersAndResponseData>>): MutationOptions<unknown, AxiosError<DefaultError>, Options<PatchCallWithoutParametersAndResponseData>> => { const mutationOptions: MutationOptions<unknown, AxiosError<DefaultError>, Options<PatchCallWithoutParametersAndResponseData>> = {
+    mutationFn: async (fnOptions) => { const { data } = await patchCallWithoutParametersAndResponse({
+        ...options,
+        ...fnOptions,
+        throwOnError: true
+    }); return data; }
+}; return mutationOptions; };
 
-export const postCallWithoutParametersAndResponseMutation = (options?: Partial<Options<PostCallWithoutParametersAndResponseData>>): MutationOptions<unknown, AxiosError<DefaultError>, Options<PostCallWithoutParametersAndResponseData>> => {
-    const mutationOptions: MutationOptions<unknown, AxiosError<DefaultError>, Options<PostCallWithoutParametersAndResponseData>> = {
-        mutationFn: async (fnOptions) => {
-            const { data } = await postCallWithoutParametersAndResponse({
-                ...options,
-                ...fnOptions,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-    return mutationOptions;
-};
+export const postCallWithoutParametersAndResponseMutation = (options?: Partial<Options<PostCallWithoutParametersAndResponseData>>): MutationOptions<unknown, AxiosError<DefaultError>, Options<PostCallWithoutParametersAndResponseData>> => { const mutationOptions: MutationOptions<unknown, AxiosError<DefaultError>, Options<PostCallWithoutParametersAndResponseData>> = {
+    mutationFn: async (fnOptions) => { const { data } = await postCallWithoutParametersAndResponse({
+        ...options,
+        ...fnOptions,
+        throwOnError: true
+    }); return data; }
+}; return mutationOptions; };
 
-export const putCallWithoutParametersAndResponseMutation = (options?: Partial<Options<PutCallWithoutParametersAndResponseData>>): MutationOptions<unknown, AxiosError<DefaultError>, Options<PutCallWithoutParametersAndResponseData>> => {
-    const mutationOptions: MutationOptions<unknown, AxiosError<DefaultError>, Options<PutCallWithoutParametersAndResponseData>> = {
-        mutationFn: async (fnOptions) => {
-            const { data } = await putCallWithoutParametersAndResponse({
-                ...options,
-                ...fnOptions,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-    return mutationOptions;
-};
+export const putCallWithoutParametersAndResponseMutation = (options?: Partial<Options<PutCallWithoutParametersAndResponseData>>): MutationOptions<unknown, AxiosError<DefaultError>, Options<PutCallWithoutParametersAndResponseData>> => { const mutationOptions: MutationOptions<unknown, AxiosError<DefaultError>, Options<PutCallWithoutParametersAndResponseData>> = {
+    mutationFn: async (fnOptions) => { const { data } = await putCallWithoutParametersAndResponse({
+        ...options,
+        ...fnOptions,
+        throwOnError: true
+    }); return data; }
+}; return mutationOptions; };
 
-export const callWithDescriptionsMutation = (options?: Partial<Options<CallWithDescriptionsData>>): MutationOptions<unknown, AxiosError<DefaultError>, Options<CallWithDescriptionsData>> => {
-    const mutationOptions: MutationOptions<unknown, AxiosError<DefaultError>, Options<CallWithDescriptionsData>> = {
-        mutationFn: async (fnOptions) => {
-            const { data } = await callWithDescriptions({
-                ...options,
-                ...fnOptions,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-    return mutationOptions;
-};
+export const callWithDescriptionsMutation = (options?: Partial<Options<CallWithDescriptionsData>>): MutationOptions<unknown, AxiosError<DefaultError>, Options<CallWithDescriptionsData>> => { const mutationOptions: MutationOptions<unknown, AxiosError<DefaultError>, Options<CallWithDescriptionsData>> = {
+    mutationFn: async (fnOptions) => { const { data } = await callWithDescriptions({
+        ...options,
+        ...fnOptions,
+        throwOnError: true
+    }); return data; }
+}; return mutationOptions; };
 
-export const callWithParametersMutation = (options?: Partial<Options<CallWithParametersData>>): MutationOptions<unknown, AxiosError<DefaultError>, Options<CallWithParametersData>> => {
-    const mutationOptions: MutationOptions<unknown, AxiosError<DefaultError>, Options<CallWithParametersData>> = {
-        mutationFn: async (fnOptions) => {
-            const { data } = await callWithParameters({
-                ...options,
-                ...fnOptions,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-    return mutationOptions;
-};
+export const callWithParametersMutation = (options?: Partial<Options<CallWithParametersData>>): MutationOptions<unknown, AxiosError<DefaultError>, Options<CallWithParametersData>> => { const mutationOptions: MutationOptions<unknown, AxiosError<DefaultError>, Options<CallWithParametersData>> = {
+    mutationFn: async (fnOptions) => { const { data } = await callWithParameters({
+        ...options,
+        ...fnOptions,
+        throwOnError: true
+    }); return data; }
+}; return mutationOptions; };
 
-export const callWithWeirdParameterNamesMutation = (options?: Partial<Options<CallWithWeirdParameterNamesData>>): MutationOptions<unknown, AxiosError<DefaultError>, Options<CallWithWeirdParameterNamesData>> => {
-    const mutationOptions: MutationOptions<unknown, AxiosError<DefaultError>, Options<CallWithWeirdParameterNamesData>> = {
-        mutationFn: async (fnOptions) => {
-            const { data } = await callWithWeirdParameterNames({
-                ...options,
-                ...fnOptions,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-    return mutationOptions;
-};
+export const callWithWeirdParameterNamesMutation = (options?: Partial<Options<CallWithWeirdParameterNamesData>>): MutationOptions<unknown, AxiosError<DefaultError>, Options<CallWithWeirdParameterNamesData>> => { const mutationOptions: MutationOptions<unknown, AxiosError<DefaultError>, Options<CallWithWeirdParameterNamesData>> = {
+    mutationFn: async (fnOptions) => { const { data } = await callWithWeirdParameterNames({
+        ...options,
+        ...fnOptions,
+        throwOnError: true
+    }); return data; }
+}; return mutationOptions; };
 
 export const callWithDefaultParametersQueryKey = (options: Options<CallWithDefaultParametersData>) => createQueryKey('callWithDefaultParameters', options);
 
 export const callWithDefaultParametersOptions = (options: Options<CallWithDefaultParametersData>) => queryOptions<unknown, AxiosError<DefaultError>, unknown, ReturnType<typeof callWithDefaultParametersQueryKey>>({
-    queryFn: async ({ queryKey, signal }) => {
-        const { data } = await callWithDefaultParameters({
-            ...options,
-            ...queryKey[0],
-            signal,
-            throwOnError: true
-        });
-        return data;
-    },
+    queryFn: async ({ queryKey, signal }) => { const { data } = await callWithDefaultParameters({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true
+    }); return data; },
     queryKey: callWithDefaultParametersQueryKey(options)
 });
 
-export const callWithDefaultOptionalParametersMutation = (options?: Partial<Options<CallWithDefaultOptionalParametersData>>): MutationOptions<unknown, AxiosError<DefaultError>, Options<CallWithDefaultOptionalParametersData>> => {
-    const mutationOptions: MutationOptions<unknown, AxiosError<DefaultError>, Options<CallWithDefaultOptionalParametersData>> = {
-        mutationFn: async (fnOptions) => {
-            const { data } = await callWithDefaultOptionalParameters({
-                ...options,
-                ...fnOptions,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-    return mutationOptions;
-};
+export const callWithDefaultOptionalParametersMutation = (options?: Partial<Options<CallWithDefaultOptionalParametersData>>): MutationOptions<unknown, AxiosError<DefaultError>, Options<CallWithDefaultOptionalParametersData>> => { const mutationOptions: MutationOptions<unknown, AxiosError<DefaultError>, Options<CallWithDefaultOptionalParametersData>> = {
+    mutationFn: async (fnOptions) => { const { data } = await callWithDefaultOptionalParameters({
+        ...options,
+        ...fnOptions,
+        throwOnError: true
+    }); return data; }
+}; return mutationOptions; };
 
-export const callToTestOrderOfParamsMutation = (options?: Partial<Options<CallToTestOrderOfParamsData>>): MutationOptions<unknown, AxiosError<DefaultError>, Options<CallToTestOrderOfParamsData>> => {
-    const mutationOptions: MutationOptions<unknown, AxiosError<DefaultError>, Options<CallToTestOrderOfParamsData>> = {
-        mutationFn: async (fnOptions) => {
-            const { data } = await callToTestOrderOfParams({
-                ...options,
-                ...fnOptions,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-    return mutationOptions;
-};
+export const callToTestOrderOfParamsMutation = (options?: Partial<Options<CallToTestOrderOfParamsData>>): MutationOptions<unknown, AxiosError<DefaultError>, Options<CallToTestOrderOfParamsData>> => { const mutationOptions: MutationOptions<unknown, AxiosError<DefaultError>, Options<CallToTestOrderOfParamsData>> = {
+    mutationFn: async (fnOptions) => { const { data } = await callToTestOrderOfParams({
+        ...options,
+        ...fnOptions,
+        throwOnError: true
+    }); return data; }
+}; return mutationOptions; };
 
-export const duplicateNameMutation = (options?: Partial<Options<DuplicateNameData>>): MutationOptions<unknown, AxiosError<DefaultError>, Options<DuplicateNameData>> => {
-    const mutationOptions: MutationOptions<unknown, AxiosError<DefaultError>, Options<DuplicateNameData>> = {
-        mutationFn: async (fnOptions) => {
-            const { data } = await duplicateName({
-                ...options,
-                ...fnOptions,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-    return mutationOptions;
-};
+export const duplicateNameMutation = (options?: Partial<Options<DuplicateNameData>>): MutationOptions<unknown, AxiosError<DefaultError>, Options<DuplicateNameData>> => { const mutationOptions: MutationOptions<unknown, AxiosError<DefaultError>, Options<DuplicateNameData>> = {
+    mutationFn: async (fnOptions) => { const { data } = await duplicateName({
+        ...options,
+        ...fnOptions,
+        throwOnError: true
+    }); return data; }
+}; return mutationOptions; };
 
 export const duplicateName2QueryKey = (options?: Options<DuplicateName2Data>) => createQueryKey('duplicateName2', options);
 
 export const duplicateName2Options = (options?: Options<DuplicateName2Data>) => queryOptions<unknown, AxiosError<DefaultError>, unknown, ReturnType<typeof duplicateName2QueryKey>>({
-    queryFn: async ({ queryKey, signal }) => {
-        const { data } = await duplicateName2({
-            ...options,
-            ...queryKey[0],
-            signal,
-            throwOnError: true
-        });
-        return data;
-    },
+    queryFn: async ({ queryKey, signal }) => { const { data } = await duplicateName2({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true
+    }); return data; },
     queryKey: duplicateName2QueryKey(options)
 });
 
-export const duplicateName3Mutation = (options?: Partial<Options<DuplicateName3Data>>): MutationOptions<unknown, AxiosError<DefaultError>, Options<DuplicateName3Data>> => {
-    const mutationOptions: MutationOptions<unknown, AxiosError<DefaultError>, Options<DuplicateName3Data>> = {
-        mutationFn: async (fnOptions) => {
-            const { data } = await duplicateName3({
-                ...options,
-                ...fnOptions,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-    return mutationOptions;
-};
+export const duplicateName3Mutation = (options?: Partial<Options<DuplicateName3Data>>): MutationOptions<unknown, AxiosError<DefaultError>, Options<DuplicateName3Data>> => { const mutationOptions: MutationOptions<unknown, AxiosError<DefaultError>, Options<DuplicateName3Data>> = {
+    mutationFn: async (fnOptions) => { const { data } = await duplicateName3({
+        ...options,
+        ...fnOptions,
+        throwOnError: true
+    }); return data; }
+}; return mutationOptions; };
 
-export const duplicateName4Mutation = (options?: Partial<Options<DuplicateName4Data>>): MutationOptions<unknown, AxiosError<DefaultError>, Options<DuplicateName4Data>> => {
-    const mutationOptions: MutationOptions<unknown, AxiosError<DefaultError>, Options<DuplicateName4Data>> = {
-        mutationFn: async (fnOptions) => {
-            const { data } = await duplicateName4({
-                ...options,
-                ...fnOptions,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-    return mutationOptions;
-};
+export const duplicateName4Mutation = (options?: Partial<Options<DuplicateName4Data>>): MutationOptions<unknown, AxiosError<DefaultError>, Options<DuplicateName4Data>> => { const mutationOptions: MutationOptions<unknown, AxiosError<DefaultError>, Options<DuplicateName4Data>> = {
+    mutationFn: async (fnOptions) => { const { data } = await duplicateName4({
+        ...options,
+        ...fnOptions,
+        throwOnError: true
+    }); return data; }
+}; return mutationOptions; };
 
 export const callWithNoContentResponseQueryKey = (options?: Options<CallWithNoContentResponseData>) => createQueryKey('callWithNoContentResponse', options);
 
 export const callWithNoContentResponseOptions = (options?: Options<CallWithNoContentResponseData>) => queryOptions<unknown, AxiosError<DefaultError>, unknown, ReturnType<typeof callWithNoContentResponseQueryKey>>({
-    queryFn: async ({ queryKey, signal }) => {
-        const { data } = await callWithNoContentResponse({
-            ...options,
-            ...queryKey[0],
-            signal,
-            throwOnError: true
-        });
-        return data;
-    },
+    queryFn: async ({ queryKey, signal }) => { const { data } = await callWithNoContentResponse({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true
+    }); return data; },
     queryKey: callWithNoContentResponseQueryKey(options)
 });
 
 export const callWithResponseAndNoContentResponseQueryKey = (options?: Options<CallWithResponseAndNoContentResponseData>) => createQueryKey('callWithResponseAndNoContentResponse', options);
 
 export const callWithResponseAndNoContentResponseOptions = (options?: Options<CallWithResponseAndNoContentResponseData>) => queryOptions<CallWithResponseAndNoContentResponseResponse, AxiosError<DefaultError>, CallWithResponseAndNoContentResponseResponse, ReturnType<typeof callWithResponseAndNoContentResponseQueryKey>>({
-    queryFn: async ({ queryKey, signal }) => {
-        const { data } = await callWithResponseAndNoContentResponse({
-            ...options,
-            ...queryKey[0],
-            signal,
-            throwOnError: true
-        });
-        return data;
-    },
+    queryFn: async ({ queryKey, signal }) => { const { data } = await callWithResponseAndNoContentResponse({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true
+    }); return data; },
     queryKey: callWithResponseAndNoContentResponseQueryKey(options)
 });
 
 export const dummyAQueryKey = (options?: Options<DummyAData>) => createQueryKey('dummyA', options);
 
 export const dummyAOptions = (options?: Options<DummyAData>) => queryOptions<unknown, AxiosError<DefaultError>, unknown, ReturnType<typeof dummyAQueryKey>>({
-    queryFn: async ({ queryKey, signal }) => {
-        const { data } = await dummyA({
-            ...options,
-            ...queryKey[0],
-            signal,
-            throwOnError: true
-        });
-        return data;
-    },
+    queryFn: async ({ queryKey, signal }) => { const { data } = await dummyA({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true
+    }); return data; },
     queryKey: dummyAQueryKey(options)
 });
 
 export const dummyBQueryKey = (options?: Options<DummyBData>) => createQueryKey('dummyB', options);
 
 export const dummyBOptions = (options?: Options<DummyBData>) => queryOptions<unknown, AxiosError<DefaultError>, unknown, ReturnType<typeof dummyBQueryKey>>({
-    queryFn: async ({ queryKey, signal }) => {
-        const { data } = await dummyB({
-            ...options,
-            ...queryKey[0],
-            signal,
-            throwOnError: true
-        });
-        return data;
-    },
+    queryFn: async ({ queryKey, signal }) => { const { data } = await dummyB({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true
+    }); return data; },
     queryKey: dummyBQueryKey(options)
 });
 
 export const callWithResponseQueryKey = (options?: Options<CallWithResponseData>) => createQueryKey('callWithResponse', options);
 
 export const callWithResponseOptions = (options?: Options<CallWithResponseData>) => queryOptions<CallWithResponseResponse, AxiosError<DefaultError>, CallWithResponseResponse, ReturnType<typeof callWithResponseQueryKey>>({
-    queryFn: async ({ queryKey, signal }) => {
-        const { data } = await callWithResponse({
-            ...options,
-            ...queryKey[0],
-            signal,
-            throwOnError: true
-        });
-        return data;
-    },
+    queryFn: async ({ queryKey, signal }) => { const { data } = await callWithResponse({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true
+    }); return data; },
     queryKey: callWithResponseQueryKey(options)
 });
 
-export const callWithDuplicateResponsesMutation = (options?: Partial<Options<CallWithDuplicateResponsesData>>): MutationOptions<CallWithDuplicateResponsesResponse, AxiosError<CallWithDuplicateResponsesError>, Options<CallWithDuplicateResponsesData>> => {
-    const mutationOptions: MutationOptions<CallWithDuplicateResponsesResponse, AxiosError<CallWithDuplicateResponsesError>, Options<CallWithDuplicateResponsesData>> = {
-        mutationFn: async (fnOptions) => {
-            const { data } = await callWithDuplicateResponses({
-                ...options,
-                ...fnOptions,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-    return mutationOptions;
-};
+export const callWithDuplicateResponsesMutation = (options?: Partial<Options<CallWithDuplicateResponsesData>>): MutationOptions<CallWithDuplicateResponsesResponse, AxiosError<CallWithDuplicateResponsesError>, Options<CallWithDuplicateResponsesData>> => { const mutationOptions: MutationOptions<CallWithDuplicateResponsesResponse, AxiosError<CallWithDuplicateResponsesError>, Options<CallWithDuplicateResponsesData>> = {
+    mutationFn: async (fnOptions) => { const { data } = await callWithDuplicateResponses({
+        ...options,
+        ...fnOptions,
+        throwOnError: true
+    }); return data; }
+}; return mutationOptions; };
 
-export const callWithResponsesMutation = (options?: Partial<Options<CallWithResponsesData>>): MutationOptions<CallWithResponsesResponse, AxiosError<CallWithResponsesError>, Options<CallWithResponsesData>> => {
-    const mutationOptions: MutationOptions<CallWithResponsesResponse, AxiosError<CallWithResponsesError>, Options<CallWithResponsesData>> = {
-        mutationFn: async (fnOptions) => {
-            const { data } = await callWithResponses({
-                ...options,
-                ...fnOptions,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-    return mutationOptions;
-};
+export const callWithResponsesMutation = (options?: Partial<Options<CallWithResponsesData>>): MutationOptions<CallWithResponsesResponse, AxiosError<CallWithResponsesError>, Options<CallWithResponsesData>> => { const mutationOptions: MutationOptions<CallWithResponsesResponse, AxiosError<CallWithResponsesError>, Options<CallWithResponsesData>> = {
+    mutationFn: async (fnOptions) => { const { data } = await callWithResponses({
+        ...options,
+        ...fnOptions,
+        throwOnError: true
+    }); return data; }
+}; return mutationOptions; };
 
 export const collectionFormatQueryKey = (options: Options<CollectionFormatData>) => createQueryKey('collectionFormat', options);
 
 export const collectionFormatOptions = (options: Options<CollectionFormatData>) => queryOptions<unknown, AxiosError<DefaultError>, unknown, ReturnType<typeof collectionFormatQueryKey>>({
-    queryFn: async ({ queryKey, signal }) => {
-        const { data } = await collectionFormat({
-            ...options,
-            ...queryKey[0],
-            signal,
-            throwOnError: true
-        });
-        return data;
-    },
+    queryFn: async ({ queryKey, signal }) => { const { data } = await collectionFormat({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true
+    }); return data; },
     queryKey: collectionFormatQueryKey(options)
 });
 
 export const typesQueryKey = (options: Options<TypesData>) => createQueryKey('types', options);
 
 export const typesOptions = (options: Options<TypesData>) => queryOptions<TypesResponse, AxiosError<DefaultError>, TypesResponse, ReturnType<typeof typesQueryKey>>({
-    queryFn: async ({ queryKey, signal }) => {
-        const { data } = await types({
-            ...options,
-            ...queryKey[0],
-            signal,
-            throwOnError: true
-        });
-        return data;
-    },
+    queryFn: async ({ queryKey, signal }) => { const { data } = await types({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true
+    }); return data; },
     queryKey: typesQueryKey(options)
 });
 
 export const complexTypesQueryKey = (options: Options<ComplexTypesData>) => createQueryKey('complexTypes', options);
 
 export const complexTypesOptions = (options: Options<ComplexTypesData>) => queryOptions<ComplexTypesResponse, AxiosError<DefaultError>, ComplexTypesResponse, ReturnType<typeof complexTypesQueryKey>>({
-    queryFn: async ({ queryKey, signal }) => {
-        const { data } = await complexTypes({
-            ...options,
-            ...queryKey[0],
-            signal,
-            throwOnError: true
-        });
-        return data;
-    },
+    queryFn: async ({ queryKey, signal }) => { const { data } = await complexTypes({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true
+    }); return data; },
     queryKey: complexTypesQueryKey(options)
 });
 
-export const callWithResultFromHeaderMutation = (options?: Partial<Options<CallWithResultFromHeaderData>>): MutationOptions<unknown, AxiosError<DefaultError>, Options<CallWithResultFromHeaderData>> => {
-    const mutationOptions: MutationOptions<unknown, AxiosError<DefaultError>, Options<CallWithResultFromHeaderData>> = {
-        mutationFn: async (fnOptions) => {
-            const { data } = await callWithResultFromHeader({
-                ...options,
-                ...fnOptions,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-    return mutationOptions;
-};
+export const callWithResultFromHeaderMutation = (options?: Partial<Options<CallWithResultFromHeaderData>>): MutationOptions<unknown, AxiosError<DefaultError>, Options<CallWithResultFromHeaderData>> => { const mutationOptions: MutationOptions<unknown, AxiosError<DefaultError>, Options<CallWithResultFromHeaderData>> = {
+    mutationFn: async (fnOptions) => { const { data } = await callWithResultFromHeader({
+        ...options,
+        ...fnOptions,
+        throwOnError: true
+    }); return data; }
+}; return mutationOptions; };
 
-export const testErrorCodeMutation = (options?: Partial<Options<TestErrorCodeData>>): MutationOptions<unknown, AxiosError<DefaultError>, Options<TestErrorCodeData>> => {
-    const mutationOptions: MutationOptions<unknown, AxiosError<DefaultError>, Options<TestErrorCodeData>> = {
-        mutationFn: async (fnOptions) => {
-            const { data } = await testErrorCode({
-                ...options,
-                ...fnOptions,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-    return mutationOptions;
-};
+export const testErrorCodeMutation = (options?: Partial<Options<TestErrorCodeData>>): MutationOptions<unknown, AxiosError<DefaultError>, Options<TestErrorCodeData>> => { const mutationOptions: MutationOptions<unknown, AxiosError<DefaultError>, Options<TestErrorCodeData>> = {
+    mutationFn: async (fnOptions) => { const { data } = await testErrorCode({
+        ...options,
+        ...fnOptions,
+        throwOnError: true
+    }); return data; }
+}; return mutationOptions; };
 
-export const nonAsciiæøåÆøÅöôêÊ字符串Mutation = (options?: Partial<Options<NonAsciiæøåÆøÅöôêÊ字符串Data>>): MutationOptions<NonAsciiæøåÆøÅöôêÊ字符串Response, AxiosError<DefaultError>, Options<NonAsciiæøåÆøÅöôêÊ字符串Data>> => {
-    const mutationOptions: MutationOptions<NonAsciiæøåÆøÅöôêÊ字符串Response, AxiosError<DefaultError>, Options<NonAsciiæøåÆøÅöôêÊ字符串Data>> = {
-        mutationFn: async (fnOptions) => {
-            const { data } = await nonAsciiæøåÆøÅöôêÊ字符串({
-                ...options,
-                ...fnOptions,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-    return mutationOptions;
-};
+export const nonAsciiæøåÆøÅöôêÊ字符串Mutation = (options?: Partial<Options<NonAsciiæøåÆøÅöôêÊ字符串Data>>): MutationOptions<NonAsciiæøåÆøÅöôêÊ字符串Response, AxiosError<DefaultError>, Options<NonAsciiæøåÆøÅöôêÊ字符串Data>> => { const mutationOptions: MutationOptions<NonAsciiæøåÆøÅöôêÊ字符串Response, AxiosError<DefaultError>, Options<NonAsciiæøåÆøÅöôêÊ字符串Data>> = {
+    mutationFn: async (fnOptions) => { const { data } = await nonAsciiæøåÆøÅöôêÊ字符串({
+        ...options,
+        ...fnOptions,
+        throwOnError: true
+    }); return data; }
+}; return mutationOptions; };
 
 /**
  * Body should not be unknown
  *
  * Body should not be unknown
  */
-export const postApiVbyApiVersionBodyMutation = (options?: Partial<Options<PostApiVbyApiVersionBodyData>>): MutationOptions<PostApiVbyApiVersionBodyResponse, AxiosError<PostApiVbyApiVersionBodyError>, Options<PostApiVbyApiVersionBodyData>> => {
-    const mutationOptions: MutationOptions<PostApiVbyApiVersionBodyResponse, AxiosError<PostApiVbyApiVersionBodyError>, Options<PostApiVbyApiVersionBodyData>> = {
-        mutationFn: async (fnOptions) => {
-            const { data } = await postApiVbyApiVersionBody({
-                ...options,
-                ...fnOptions,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-    return mutationOptions;
-};
+export const postApiVbyApiVersionBodyMutation = (options?: Partial<Options<PostApiVbyApiVersionBodyData>>): MutationOptions<PostApiVbyApiVersionBodyResponse, AxiosError<PostApiVbyApiVersionBodyError>, Options<PostApiVbyApiVersionBodyData>> => { const mutationOptions: MutationOptions<PostApiVbyApiVersionBodyResponse, AxiosError<PostApiVbyApiVersionBodyError>, Options<PostApiVbyApiVersionBodyData>> = {
+    mutationFn: async (fnOptions) => { const { data } = await postApiVbyApiVersionBody({
+        ...options,
+        ...fnOptions,
+        throwOnError: true
+    }); return data; }
+}; return mutationOptions; };

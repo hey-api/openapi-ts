@@ -1,12 +1,13 @@
-import type { AnalysisContext, Symbol } from '@hey-api/codegen-core';
-import { isSymbol } from '@hey-api/codegen-core';
+import type { AnalysisContext, Ref, Symbol } from '@hey-api/codegen-core';
+import { fromRef, isSymbol, ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { isTsDsl, TsDsl } from '../base';
+import { TsDsl } from '../base';
 import { DocMixin } from '../mixins/doc';
 import { ExportMixin } from '../mixins/modifiers';
 import { TypeParamsMixin } from '../mixins/type-params';
+import { safeSymbolName } from '../utils/name';
 
 type Name = Symbol | string;
 type Value = MaybeTsDsl<ts.TypeNode>;
@@ -16,14 +17,17 @@ const Mixed = DocMixin(
 );
 
 export class TypeAliasTsDsl extends Mixed {
-  protected name: Name;
+  readonly '~dsl' = 'TypeAliasTsDsl';
+
+  protected name: Ref<Name>;
   protected value?: Value;
 
   constructor(name: Name, fn?: (t: TypeAliasTsDsl) => void) {
     super();
-    this.name = name;
+    this.name = ref(name);
     if (isSymbol(name)) {
       name.setKind('type');
+      name.setNameSanitizer(safeSymbolName);
       name.setNode(this);
     }
     fn?.(this);
@@ -31,8 +35,8 @@ export class TypeAliasTsDsl extends Mixed {
 
   override analyze(ctx: AnalysisContext): void {
     super.analyze(ctx);
-    if (isSymbol(this.name)) ctx.addDependency(this.name);
-    if (isTsDsl(this.value)) this.value.analyze(ctx);
+    ctx.analyze(this.name);
+    ctx.analyze(this.value);
   }
 
   /** Sets the type expression on the right-hand side of `= ...`. */
@@ -41,15 +45,18 @@ export class TypeAliasTsDsl extends Mixed {
     return this;
   }
 
-  protected override _render() {
+  override toAst() {
     if (!this.value)
-      throw new Error(`Type alias '${this.name}' is missing a type definition`);
-    return ts.factory.createTypeAliasDeclaration(
+      throw new Error(
+        `Type alias '${fromRef(this.name)}' is missing a type definition`,
+      );
+    const node = ts.factory.createTypeAliasDeclaration(
       this.modifiers,
       // @ts-expect-error need to improve types
       this.$node(this.name),
       this.$generics(),
       this.$type(this.value),
     );
+    return this.$docs(node);
   }
 }

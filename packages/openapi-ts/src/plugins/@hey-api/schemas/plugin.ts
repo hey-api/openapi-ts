@@ -3,7 +3,6 @@ import type { Context } from '~/ir/context';
 import type { OpenApiV2_0_XTypes } from '~/openApi/2.0.x';
 import type { OpenApiV3_0_XTypes } from '~/openApi/3.0.x';
 import type { OpenApiV3_1_XTypes } from '~/openApi/3.1.x';
-import { ensureValidIdentifier } from '~/openApi/shared/utils/identifier';
 import type { OpenApi } from '~/openApi/types';
 import { $ } from '~/ts-dsl';
 
@@ -352,7 +351,7 @@ const schemaName = ({
     customName = `${name}Schema`;
   }
 
-  return ensureValidIdentifier(customName);
+  return customName;
 };
 
 const schemasV2_0_X = ({

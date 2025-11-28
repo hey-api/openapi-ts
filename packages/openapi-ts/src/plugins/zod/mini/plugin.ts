@@ -1,10 +1,10 @@
 import type { SymbolMeta } from '@hey-api/codegen-core';
+import { fromRef, ref, refs } from '@hey-api/codegen-core';
 
 import { deduplicateSchema } from '~/ir/schema';
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
 import type { SchemaWithType } from '~/plugins';
-import { toRef, toRefs } from '~/plugins/shared/utils/refs';
 import { $ } from '~/ts-dsl';
 import { pathToJsonPointer, refToName } from '~/utils/ref';
 
@@ -54,7 +54,7 @@ export const irSchemaToAst = ({
         .attr(identifiers.lazy)
         .call($.func().returns('any').do($(refSymbol).return()));
       ast.hasLazyExpression = true;
-      state.hasLazyExpression.value = true;
+      state.hasLazyExpression['~ref'] = true;
     }
   } else if (schema.type) {
     const typeAst = irSchemaWithTypeToAst({
@@ -85,7 +85,7 @@ export const irSchemaToAst = ({
           schema: item,
           state: {
             ...state,
-            path: toRef([...state.path.value, 'items', index]),
+            path: ref([...fromRef(state.path), 'items', index]),
           },
         }),
       );
@@ -175,16 +175,16 @@ const handleComponent = ({
 }: IrSchemaToAstOptions & {
   schema: IR.SchemaObject;
 }): void => {
-  const $ref = pathToJsonPointer(state.path.value);
+  const $ref = pathToJsonPointer(fromRef(state.path));
   const ast = irSchemaToAst({ plugin, schema, state });
   const baseName = refToName($ref);
   const symbol = plugin.registerSymbol({
     meta: {
       category: 'schema',
-      path: state.path.value,
+      path: fromRef(state.path),
       resource: 'definition',
       resourceId: $ref,
-      tags: state.tags?.value,
+      tags: fromRef(state.tags),
       tool: 'zod',
     },
     name: buildName({
@@ -196,10 +196,10 @@ const handleComponent = ({
     ? plugin.registerSymbol({
         meta: {
           category: 'type',
-          path: state.path.value,
+          path: fromRef(state.path),
           resource: 'definition',
           resourceId: $ref,
-          tags: state.tags?.value,
+          tags: fromRef(state.tags),
           tool: 'zod',
           variant: 'infer',
         },
@@ -236,7 +236,7 @@ export const handlerMini: ZodPlugin['Handler'] = ({ plugin }) => {
     'schema',
     'webhook',
     (event) => {
-      const state = toRefs<PluginState>({
+      const state = refs<PluginState>({
         hasLazyExpression: false,
         path: event._path,
         tags: event.tags,
@@ -245,7 +245,7 @@ export const handlerMini: ZodPlugin['Handler'] = ({ plugin }) => {
         case 'operation':
           irOperationToAst({
             getAst: (schema, path) => {
-              const state = toRefs<PluginState>({
+              const state = refs<PluginState>({
                 hasLazyExpression: false,
                 path,
                 tags: event.tags,
@@ -281,7 +281,7 @@ export const handlerMini: ZodPlugin['Handler'] = ({ plugin }) => {
         case 'webhook':
           irWebhookToAst({
             getAst: (schema, path) => {
-              const state = toRefs<PluginState>({
+              const state = refs<PluginState>({
                 hasLazyExpression: false,
                 path,
                 tags: event.tags,

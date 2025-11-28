@@ -1,10 +1,10 @@
 import type { SymbolMeta } from '@hey-api/codegen-core';
-import ts from 'typescript';
+import type ts from 'typescript';
 
 import { createOperationKey, operationResponsesMap } from '~/ir/operation';
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
-import { $, isTsDsl } from '~/ts-dsl';
+import { $ } from '~/ts-dsl';
 import { refToName } from '~/utils/ref';
 
 import type { HeyApiTransformersPlugin } from './types';
@@ -17,21 +17,7 @@ const buildingSymbols = new Set<number>();
 
 type Expr = ReturnType<typeof $.fromValue | typeof $.return | typeof $.if>;
 
-const ensureStatements = (
-  nodes: Array<Expr | ts.Expression | ts.Statement>,
-): Array<ts.Statement | ReturnType<typeof $.return>> =>
-  nodes.map((node) => $.stmt(node).$render());
-
-const isNodeReturnStatement = ({
-  node,
-}: {
-  node: ts.Expression | ts.Statement | Expr;
-}) => {
-  if (isTsDsl(node)) {
-    node = node.$render();
-  }
-  return node.kind === ts.SyntaxKind.ReturnStatement;
-};
+const isNodeReturnStatement = (node: Expr) => node['~dsl'] === 'ReturnTsDsl';
 
 const schemaResponseTransformerNodes = ({
   plugin,
@@ -48,7 +34,7 @@ const schemaResponseTransformerNodes = ({
   // append return statement if one does not already exist
   if (nodes.length) {
     const last = nodes[nodes.length - 1]!;
-    if (!isNodeReturnStatement({ node: last })) {
+    if (!isNodeReturnStatement(last)) {
       nodes.push($.return(dataVariableName));
     }
   }
@@ -66,7 +52,7 @@ const processSchemaType = ({
     | ReturnType<typeof $.attr | typeof $.expr>;
   plugin: HeyApiTransformersPlugin['Instance'];
   schema: IR.SchemaObject;
-}): Array<Expr | ts.Expression | ts.Statement> => {
+}): Array<Expr> => {
   if (schema.$ref) {
     const query: SymbolMeta = {
       category: 'transform',
@@ -115,7 +101,7 @@ const processSchemaType = ({
             // TODO: parser - add types, generate types without transforms
             $.func()
               .param(dataVariableName, (p) => p.type('any'))
-              .do(...ensureStatements(nodes)),
+              .do(...nodes),
           );
           plugin.addNode(node);
         }
@@ -172,10 +158,11 @@ const processSchemaType = ({
       return [];
     }
 
+    // TODO: remove
     // Ensure the map callback has a return statement for the item
-    const mapCallbackStatements = ensureStatements(nodes);
+    const mapCallbackStatements: Array<Expr> = nodes;
     const hasReturnStatement = mapCallbackStatements.some((stmt) =>
-      isNodeReturnStatement({ node: stmt }),
+      isNodeReturnStatement(stmt),
     );
 
     if (!hasReturnStatement) {
@@ -196,7 +183,7 @@ const processSchemaType = ({
   }
 
   if (schema.type === 'object') {
-    let nodes: Array<ts.Expression | ts.Statement | Expr> = [];
+    let nodes: Array<Expr> = [];
     const required = schema.required ?? [];
 
     for (const name in schema.properties) {
@@ -225,7 +212,7 @@ const processSchemaType = ({
           // todo: Probably, it would make more sense to go with if(x !== undefined && x !== null) instead of if(x)
           // this place influences all underlying transformers, while it's not exactly transformer itself
           // Keep in mind that !!0 === false, so it already makes output for Bigint undesirable
-          $.if(propertyAccessExpression).do(...ensureStatements(propertyNodes)),
+          $.if(propertyAccessExpression).do(...propertyNodes),
         );
       }
     }
@@ -242,7 +229,7 @@ const processSchemaType = ({
       });
     }
 
-    let arrayNodes: Array<ts.Expression | ts.Statement | Expr> = [];
+    let arrayNodes: Array<Expr> = [];
     // process 2 items if one of them is null
     if (
       schema.logicalOperator === 'and' ||
@@ -262,10 +249,7 @@ const processSchemaType = ({
             arrayNodes = arrayNodes.concat(nodes);
           } else {
             // processed means the item was transformed
-            arrayNodes.push(
-              $.if('item').do(...ensureStatements(nodes)),
-              $.return('item'),
-            );
+            arrayNodes.push($.if('item').do(...nodes), $.return('item'));
           }
         }
       }
@@ -358,7 +342,7 @@ export const handler: HeyApiTransformersPlugin['Handler'] = ({ plugin }) => {
             .async()
             .param(dataVariableName, (p) => p.type('any'))
             .returns($.type('Promise').generic(symbolResponse))
-            .do(...ensureStatements(nodes)),
+            .do(...nodes),
         );
       plugin.addNode(value);
     },

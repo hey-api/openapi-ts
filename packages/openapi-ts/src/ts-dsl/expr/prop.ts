@@ -1,13 +1,13 @@
-import type { AnalysisContext, Symbol } from '@hey-api/codegen-core';
-import { isSymbol } from '@hey-api/codegen-core';
+import type { AnalysisContext, Ref, Symbol } from '@hey-api/codegen-core';
+import { ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { isTsDsl, TsDsl } from '../base';
+import { TsDsl } from '../base';
 import { GetterTsDsl } from '../decl/getter';
 import { SetterTsDsl } from '../decl/setter';
 import { DocMixin } from '../mixins/doc';
-import { safePropName } from '../utils/prop';
+import { safePropName } from '../utils/name';
 import { IdTsDsl } from './id';
 
 type Expr = Symbol | string | MaybeTsDsl<ts.Expression>;
@@ -24,7 +24,9 @@ type Meta =
 const Mixed = DocMixin(TsDsl<ts.ObjectLiteralElementLike>);
 
 export class ObjectPropTsDsl extends Mixed {
-  protected _value?: Expr | Stmt;
+  readonly '~dsl' = 'ObjectPropTsDsl';
+
+  protected _value?: Ref<Expr | Stmt>;
   protected meta: Meta;
 
   constructor(meta: Meta) {
@@ -34,11 +36,7 @@ export class ObjectPropTsDsl extends Mixed {
 
   override analyze(ctx: AnalysisContext): void {
     super.analyze(ctx);
-    if (isSymbol(this._value)) {
-      ctx.addDependency(this._value);
-    } else if (isTsDsl(this._value)) {
-      this._value.analyze(ctx);
-    }
+    ctx.analyze(this._value);
   }
 
   /** Returns true when all required builder calls are present. */
@@ -50,12 +48,12 @@ export class ObjectPropTsDsl extends Mixed {
     if (typeof value === 'function') {
       value(this);
     } else {
-      this._value = value;
+      this._value = ref(value);
     }
     return this;
   }
 
-  protected override _render() {
+  override toAst() {
     this.$validate();
     const node = this.$node(this._value);
     if (this.meta.kind === 'spread') {
@@ -64,29 +62,35 @@ export class ObjectPropTsDsl extends Mixed {
           'Invalid spread: object spread must be an expression, not a statement.',
         );
       }
-      return ts.factory.createSpreadAssignment(node);
+      const result = ts.factory.createSpreadAssignment(node);
+      return this.$docs(result);
     }
     if (this.meta.kind === 'getter') {
       const getter = new GetterTsDsl(
         this.$node(safePropName(this.meta.name)),
       ).do(node);
-      return this.$node(getter);
+      const result = this.$node(getter);
+      return this.$docs(result);
     }
     if (this.meta.kind === 'setter') {
       const setter = new SetterTsDsl(
         this.$node(safePropName(this.meta.name)),
       ).do(node);
-      return this.$node(setter);
+      const result = this.$node(setter);
+      return this.$docs(result);
     }
     if (ts.isIdentifier(node) && node.text === this.meta.name) {
-      return ts.factory.createShorthandPropertyAssignment(this.meta.name);
+      const result = ts.factory.createShorthandPropertyAssignment(
+        this.meta.name,
+      );
+      return this.$docs(result);
     }
     if (ts.isStatement(node)) {
       throw new Error(
         'Invalid property: object property value must be an expression, not a statement.',
       );
     }
-    return ts.factory.createPropertyAssignment(
+    const result = ts.factory.createPropertyAssignment(
       this.meta.kind === 'computed'
         ? ts.factory.createComputedPropertyName(
             this.$node(new IdTsDsl(this.meta.name)),
@@ -94,6 +98,7 @@ export class ObjectPropTsDsl extends Mixed {
         : this.$node(safePropName(this.meta.name)),
       node,
     );
+    return this.$docs(result);
   }
 
   $validate(): asserts this is this & {

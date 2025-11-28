@@ -16,6 +16,7 @@ import {
 import { OptionalMixin } from '../mixins/optional';
 import { ParamMixin } from '../mixins/param';
 import { TypeParamsMixin } from '../mixins/type-params';
+import { BlockTsDsl } from '../stmt/block';
 import { TokenTsDsl } from '../token';
 import { TypeExprTsDsl } from '../type/expr';
 
@@ -42,6 +43,8 @@ const Mixed = AbstractMixin(
 );
 
 export class MethodTsDsl extends Mixed {
+  readonly '~dsl' = 'MethodTsDsl';
+
   protected name: string;
   protected _returns?: TypeTsDsl;
 
@@ -52,8 +55,13 @@ export class MethodTsDsl extends Mixed {
   }
 
   override analyze(ctx: AnalysisContext): void {
-    super.analyze(ctx);
-    this._returns?.analyze(ctx);
+    ctx.pushScope();
+    try {
+      super.analyze(ctx);
+      ctx.analyze(this._returns);
+    } finally {
+      ctx.popScope();
+    }
   }
 
   /** Sets the return type. */
@@ -62,8 +70,8 @@ export class MethodTsDsl extends Mixed {
     return this;
   }
 
-  protected override _render() {
-    return ts.factory.createMethodDeclaration(
+  override toAst() {
+    const node = ts.factory.createMethodDeclaration(
       [...this.$decorators(), ...this.modifiers],
       undefined,
       this.name,
@@ -71,7 +79,8 @@ export class MethodTsDsl extends Mixed {
       this.$generics(),
       this.$params(),
       this.$type(this._returns),
-      ts.factory.createBlock(this.$do(), true),
+      this.$node(new BlockTsDsl(...this._do)),
     );
+    return this.$docs(node);
   }
 }

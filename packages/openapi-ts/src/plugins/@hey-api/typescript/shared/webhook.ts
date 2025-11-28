@@ -1,4 +1,5 @@
 import type { Symbol } from '@hey-api/codegen-core';
+import { fromRef } from '@hey-api/codegen-core';
 
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
@@ -28,11 +29,11 @@ const operationToDataType = ({
     const symbolWebhookPayload = plugin.registerSymbol({
       meta: {
         category: 'type',
-        path: state.path.value,
+        path: fromRef(state.path),
         resource: 'webhook',
         resourceId: operation.id,
         role: 'data',
-        tags: state.tags?.value,
+        tags: fromRef(state.tags),
         tool: 'typescript',
       },
       name: buildName({
@@ -76,11 +77,11 @@ const operationToDataType = ({
   const symbolWebhookRequest = plugin.registerSymbol({
     meta: {
       category: 'type',
-      path: state.path.value,
+      path: fromRef(state.path),
       resource: 'webhook',
       resourceId: operation.id,
       role: 'data',
-      tags: state.tags?.value,
+      tags: fromRef(state.tags),
       tool: 'typescript',
     },
     name: buildName({
