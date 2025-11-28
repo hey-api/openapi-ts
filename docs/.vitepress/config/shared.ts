@@ -85,7 +85,10 @@ export default defineConfig({
       ['meta', { content: 'Hey API', property: 'og:site_name' }],
       [
         'meta',
-        { content: `${domain}/images/logo-640w.png`, property: 'og:image' },
+        {
+          content: `${domain}/images/openapi-ts-hero-640w.png`,
+          property: 'og:image',
+        },
       ],
       ['meta', { content: url, property: 'og:url' }],
       [
