@@ -2,7 +2,7 @@ import type { AnalysisContext, Node, Symbol } from '@hey-api/codegen-core';
 import { isSymbol } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
-import { isTsDsl, type MaybeTsDsl } from '../base';
+import type { MaybeTsDsl } from '../base';
 import { TypeParamTsDsl } from '../type/param';
 import type { BaseCtor, MixinCtor } from './types';
 
@@ -26,7 +26,7 @@ export function TypeParamsMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
     override analyze(ctx: AnalysisContext): void {
       super.analyze(ctx);
       for (const g of this._generics) {
-        if (isTsDsl(g)) g.analyze(ctx);
+        ctx.analyze(g);
       }
     }
 

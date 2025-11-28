@@ -7,6 +7,8 @@ import { LiteralTsDsl } from '../expr/literal';
 const Mixed = TypeTsDsl<ts.LiteralTypeNode>;
 
 export class TypeLiteralTsDsl extends Mixed {
+  readonly '~dsl' = 'TypeLiteralTsDsl';
+
   protected value: string | number | boolean | null;
 
   constructor(value: string | number | boolean | null) {
@@ -18,7 +20,7 @@ export class TypeLiteralTsDsl extends Mixed {
     super.analyze(ctx);
   }
 
-  protected override _render() {
+  override toAst() {
     return ts.factory.createLiteralTypeNode(
       this.$node(new LiteralTsDsl(this.value)),
     );

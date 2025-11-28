@@ -1,15 +1,20 @@
-import type { AnalysisContext } from '@hey-api/codegen-core';
+import type { AnalysisContext, Ref, Symbol } from '@hey-api/codegen-core';
+import { fromRef, isSymbol, ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { isTsDsl, TsDsl } from '../base';
+import { TsDsl } from '../base';
+
+export type TemplatePart = Symbol | string | MaybeTsDsl<ts.Expression>;
 
 const Mixed = TsDsl<ts.TemplateExpression | ts.NoSubstitutionTemplateLiteral>;
 
 export class TemplateTsDsl extends Mixed {
-  protected parts: Array<string | MaybeTsDsl<ts.Expression>> = [];
+  readonly '~dsl' = 'TemplateTsDsl';
 
-  constructor(value?: string | MaybeTsDsl<ts.Expression>) {
+  protected parts: Array<Ref<TemplatePart>> = [];
+
+  constructor(value?: TemplatePart) {
     super();
     if (value !== undefined) this.add(value);
   }
@@ -17,17 +22,22 @@ export class TemplateTsDsl extends Mixed {
   override analyze(ctx: AnalysisContext): void {
     super.analyze(ctx);
     for (const part of this.parts) {
-      if (isTsDsl(part)) part.analyze(ctx);
+      ctx.analyze(part);
     }
   }
 
-  add(value: string | MaybeTsDsl<ts.Expression>): this {
-    this.parts.push(value);
+  add(value: TemplatePart): this {
+    this.parts.push(ref(value));
     return this;
   }
 
-  protected override _render() {
-    const parts = this.$node(this.parts);
+  override toAst() {
+    const parts = this.$node(
+      this.parts.map((p) => {
+        const part = fromRef(p);
+        return isSymbol(part) ? part.finalName : part;
+      }),
+    );
 
     const normalized: Array<string | ts.Expression> = [];
     // merge consecutive string parts

@@ -1,8 +1,7 @@
 import type { AnalysisContext } from '@hey-api/codegen-core';
-import { isSymbol } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
-import { isTsDsl, TsDsl, TypeTsDsl } from '../base';
+import { TsDsl, TypeTsDsl } from '../base';
 import { DecoratorMixin } from '../mixins/decorator';
 import { DocMixin } from '../mixins/doc';
 import {
@@ -31,6 +30,8 @@ const Mixed = DecoratorMixin(
 );
 
 export class FieldTsDsl extends Mixed {
+  readonly '~dsl' = 'FieldTsDsl';
+
   protected name: string;
   protected _type?: TypeTsDsl;
 
@@ -42,11 +43,7 @@ export class FieldTsDsl extends Mixed {
 
   override analyze(ctx: AnalysisContext): void {
     super.analyze(ctx);
-    if (isSymbol(this._type)) {
-      ctx.addDependency(this._type);
-    } else if (isTsDsl(this._type)) {
-      this._type.analyze(ctx);
-    }
+    ctx.analyze(this._type);
   }
 
   /** Sets the field type. */
@@ -55,13 +52,14 @@ export class FieldTsDsl extends Mixed {
     return this;
   }
 
-  protected override _render() {
-    return ts.factory.createPropertyDeclaration(
+  override toAst() {
+    const node = ts.factory.createPropertyDeclaration(
       [...this.$decorators(), ...this.modifiers],
       this.name,
       undefined,
       this.$type(this._type),
       this.$value(),
     );
+    return this.$docs(node);
   }
 }

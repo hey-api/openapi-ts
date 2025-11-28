@@ -8,12 +8,14 @@ import { TypePropTsDsl } from './prop';
 const Mixed = TypeTsDsl<ts.TypeNode>;
 
 export class TypeObjectTsDsl extends Mixed {
+  readonly '~dsl' = 'TypeObjectTsDsl';
+
   protected props: Array<TypePropTsDsl | TypeIdxSigTsDsl> = [];
 
   override analyze(ctx: AnalysisContext): void {
     super.analyze(ctx);
     for (const prop of this.props) {
-      prop.analyze(ctx);
+      ctx.analyze(prop);
     }
   }
 
@@ -41,7 +43,7 @@ export class TypeObjectTsDsl extends Mixed {
     return this;
   }
 
-  protected override _render() {
+  override toAst() {
     return ts.factory.createTypeLiteralNode(this.$node(this.props));
   }
 }

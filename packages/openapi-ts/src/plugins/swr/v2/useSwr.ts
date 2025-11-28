@@ -16,7 +16,7 @@ export const createUseSwr = ({
 }: {
   operation: IR.OperationObject;
   plugin: SwrPlugin['Instance'];
-  queryFn: string;
+  queryFn: ReturnType<typeof $.expr | typeof $.call | typeof $.attr>;
 }): void => {
   if (hasOperationSse({ operation })) {
     return;

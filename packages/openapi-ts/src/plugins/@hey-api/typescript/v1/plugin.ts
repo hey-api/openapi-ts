@@ -1,10 +1,10 @@
 import type { Symbol } from '@hey-api/codegen-core';
+import { refs } from '@hey-api/codegen-core';
 
 import { deduplicateSchema } from '~/ir/schema';
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
 import type { SchemaWithType } from '~/plugins';
-import { toRefs } from '~/plugins/shared/utils/refs';
 import type { MaybeTsDsl, TypeTsDsl } from '~/ts-dsl';
 import { $ } from '~/ts-dsl';
 
@@ -127,7 +127,7 @@ export const handlerV1: HeyApiTypeScriptPlugin['Handler'] = ({ plugin }) => {
     'server',
     'webhook',
     (event) => {
-      const state = toRefs<PluginState>({
+      const state = refs<PluginState>({
         path: event._path,
         tags: event.tags,
       });

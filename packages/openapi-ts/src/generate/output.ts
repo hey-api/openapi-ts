@@ -1,8 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import type { ProjectRenderMeta } from '@hey-api/codegen-core';
-
 import type { Context } from '~/ir/context';
 import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
 
@@ -17,10 +15,6 @@ export const generateOutput = async ({ context }: { context: Context }) => {
     }
   }
 
-  const meta: ProjectRenderMeta = {
-    importFileExtension: context.config.output.importFileExtension,
-  };
-
   const client = getClientPlugin(context.config);
   if (
     'bundle' in client.config &&
@@ -30,7 +24,9 @@ export const generateOutput = async ({ context }: { context: Context }) => {
     // not proud of this one
     // @ts-expect-error
     context.config._FRAGILE_CLIENT_BUNDLE_RENAMED = generateClientBundle({
-      meta,
+      meta: {
+        importFileExtension: context.config.output.importFileExtension,
+      },
       outputPath,
       // @ts-expect-error
       plugin: client,
@@ -42,7 +38,7 @@ export const generateOutput = async ({ context }: { context: Context }) => {
     await plugin.run();
   }
 
-  for (const file of context.gen.render(meta)) {
+  for (const file of context.gen.render()) {
     const filePath = path.resolve(outputPath, file.path);
     const dir = path.dirname(filePath);
     if (!context.config.dryRun) {

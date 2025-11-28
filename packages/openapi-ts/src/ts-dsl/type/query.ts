@@ -2,7 +2,7 @@ import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { isTsDsl, TypeTsDsl } from '../base';
+import { TypeTsDsl } from '../base';
 import {
   registerLazyAccessTypeQueryFactory,
   TypeExprMixin,
@@ -11,6 +11,8 @@ import {
 const Mixed = TypeExprMixin(TypeTsDsl<ts.TypeQueryNode>);
 
 export class TypeQueryTsDsl extends Mixed {
+  readonly '~dsl' = 'TypeQueryTsDsl';
+
   protected _expr: string | MaybeTsDsl<TypeTsDsl | ts.Expression>;
 
   constructor(expr: string | MaybeTsDsl<TypeTsDsl | ts.Expression>) {
@@ -20,10 +22,10 @@ export class TypeQueryTsDsl extends Mixed {
 
   override analyze(ctx: AnalysisContext): void {
     super.analyze(ctx);
-    if (isTsDsl(this._expr)) this._expr.analyze(ctx);
+    ctx.analyze(this._expr);
   }
 
-  protected override _render() {
+  override toAst() {
     const expr = this.$node(this._expr);
     return ts.factory.createTypeQueryNode(expr as unknown as ts.EntityName);
   }

@@ -1,7 +1,8 @@
 import type { AnalysisContext, Node } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
-import { isTsDsl, type MaybeTsDsl } from '../base';
+import type { MaybeTsDsl } from '../base';
+import type { ParamCtor, ParamName } from '../decl/param';
 import { ParamTsDsl } from '../decl/param';
 import type { BaseCtor, MixinCtor } from './types';
 
@@ -9,10 +10,7 @@ export interface ParamMethods extends Node {
   /** Renders the parameters into an array of `ParameterDeclaration`s. */
   $params(): ReadonlyArray<ts.ParameterDeclaration>;
   /** Adds a parameter. */
-  param(
-    name: string | ((p: ParamTsDsl) => void),
-    fn?: (p: ParamTsDsl) => void,
-  ): this;
+  param(...args: Parameters<ParamCtor>): this;
   /** Adds multiple parameters. */
   params(...params: ReadonlyArray<MaybeTsDsl<ts.ParameterDeclaration>>): this;
 }
@@ -25,13 +23,13 @@ export function ParamMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
 
     override analyze(ctx: AnalysisContext): void {
       super.analyze(ctx);
-      for (const p of this._params) {
-        if (isTsDsl(p)) p.analyze(ctx);
+      for (const param of this._params) {
+        ctx.analyze(param);
       }
     }
 
     protected param(
-      name: string | ((p: ParamTsDsl) => void),
+      name: ParamName | ((p: ParamTsDsl) => void),
       fn?: (p: ParamTsDsl) => void,
     ): this {
       const p = new ParamTsDsl(name, fn);

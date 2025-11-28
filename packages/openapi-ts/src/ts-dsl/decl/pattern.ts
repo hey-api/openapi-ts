@@ -12,6 +12,8 @@ const Mixed = TsDsl<ts.BindingName>;
  * Builds binding patterns (e.g. `{ foo, bar }`, `[a, b, ...rest]`).
  */
 export class PatternTsDsl extends Mixed {
+  readonly '~dsl' = 'PatternTsDsl';
+
   protected pattern?:
     | { kind: 'array'; values: ReadonlyArray<string> }
     | { kind: 'object'; values: Record<string, string> };
@@ -51,7 +53,7 @@ export class PatternTsDsl extends Mixed {
     return this;
   }
 
-  protected override _render() {
+  override toAst() {
     if (!this.pattern) {
       throw new Error('PatternTsDsl requires object() or array() pattern');
     }

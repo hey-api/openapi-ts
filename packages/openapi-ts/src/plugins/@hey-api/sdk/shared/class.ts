@@ -47,11 +47,11 @@ type SdkClassEntry = {
 export const registryName = '__registry';
 
 const createRegistryClass = ({
-  sdkName,
+  sdkSymbol,
   symbol,
 }: {
   plugin: HeyApiSdkPlugin['Instance'];
-  sdkName: string;
+  sdkSymbol: Symbol;
   symbol: Symbol;
 }): TsDsl => {
   const defaultKey = 'defaultKey';
@@ -84,7 +84,7 @@ const createRegistryClass = ({
           $.if($.not('instance')).do(
             $.throw('Error').message(
               $.template('No SDK client found. Create one with "new ')
-                .add(sdkName)
+                .add(sdkSymbol)
                 .add('()" to fix this error.'),
             ),
           ),
@@ -400,10 +400,7 @@ export const generateClassSdk = ({
       }
     }
 
-    if (
-      symbolHeyApiClient &&
-      !plugin.gen.symbols.hasValue(symbolHeyApiClient.id)
-    ) {
+    if (symbolHeyApiClient && !symbolHeyApiClient.node) {
       const node = createClientClass({
         plugin,
         symbol: symbolHeyApiClient,
@@ -459,7 +456,7 @@ export const generateClassSdk = ({
 
       const node = createRegistryClass({
         plugin,
-        sdkName: symbol.placeholder,
+        sdkSymbol: symbol,
         symbol: symbolHeyApiRegistry,
       });
       plugin.addNode(node);

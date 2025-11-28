@@ -6,6 +6,8 @@ import { TsDsl } from '../base';
 const Mixed = TsDsl<ts.Identifier>;
 
 export class IdTsDsl extends Mixed {
+  readonly '~dsl' = 'IdTsDsl';
+
   protected name: string;
 
   constructor(name: string) {
@@ -17,7 +19,7 @@ export class IdTsDsl extends Mixed {
     super.analyze(ctx);
   }
 
-  protected override _render() {
+  override toAst() {
     return ts.factory.createIdentifier(this.name);
   }
 }

@@ -2,7 +2,7 @@ import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { isTsDsl, TsDsl } from '../base';
+import { TsDsl } from '../base';
 import { AsMixin } from '../mixins/as';
 import { LayoutMixin } from '../mixins/layout';
 import { LiteralTsDsl } from './literal';
@@ -10,6 +10,8 @@ import { LiteralTsDsl } from './literal';
 const Mixed = AsMixin(LayoutMixin(TsDsl<ts.ArrayLiteralExpression>));
 
 export class ArrayTsDsl extends Mixed {
+  readonly '~dsl' = 'ArrayTsDsl';
+
   protected _elements: Array<
     | { expr: MaybeTsDsl<ts.Expression>; kind: 'element' }
     | { expr: MaybeTsDsl<ts.Expression>; kind: 'spread' }
@@ -25,7 +27,7 @@ export class ArrayTsDsl extends Mixed {
   override analyze(ctx: AnalysisContext): void {
     super.analyze(ctx);
     for (const item of this._elements) {
-      if (isTsDsl(item.expr)) item.expr.analyze(ctx);
+      ctx.analyze(item.expr);
     }
   }
 
@@ -57,7 +59,7 @@ export class ArrayTsDsl extends Mixed {
     return this;
   }
 
-  protected override _render() {
+  override toAst() {
     const elements = this._elements.map((item) => {
       const node = this.$node(item.expr);
       return item.kind === 'spread'

@@ -1,10 +1,10 @@
 import type { SymbolMeta } from '@hey-api/codegen-core';
+import { fromRef, refs } from '@hey-api/codegen-core';
 
 import { deduplicateSchema } from '~/ir/schema';
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
 import type { SchemaWithType } from '~/plugins/shared/types/schema';
-import { toRefs } from '~/plugins/shared/utils/refs';
 import { $ } from '~/ts-dsl';
 import { pathToJsonPointer, refToName } from '~/utils/ref';
 
@@ -53,7 +53,7 @@ export const irSchemaToAst = ({
         .call($.func().returns('any').do($.return(refSymbol)));
       ast.expression = lazyExpression;
       ast.hasLazyExpression = true;
-      state.hasLazyExpression.value = true;
+      state.hasLazyExpression['~ref'] = true;
     }
   } else if (schema.type) {
     const typeAst = irSchemaWithTypeToAst({
@@ -239,16 +239,16 @@ const handleComponent = ({
 }: IrSchemaToAstOptions & {
   schema: IR.SchemaObject;
 }): void => {
-  const $ref = pathToJsonPointer(state.path.value);
+  const $ref = pathToJsonPointer(fromRef(state.path));
   const ast = irSchemaToAst({ plugin, schema, state });
   const baseName = refToName($ref);
   const symbol = plugin.registerSymbol({
     meta: {
       category: 'schema',
-      path: state.path.value,
+      path: fromRef(state.path),
       resource: 'definition',
       resourceId: $ref,
-      tags: state.tags?.value,
+      tags: fromRef(state.tags),
       tool: 'arktype',
     },
     name: buildName({
@@ -260,7 +260,7 @@ const handleComponent = ({
     ? plugin.registerSymbol({
         meta: {
           category: 'type',
-          path: state.path.value,
+          path: fromRef(state.path),
           resource: 'definition',
           resourceId: $ref,
           tool: 'arktype',
@@ -298,7 +298,7 @@ export const handlerV2: ArktypePlugin['Handler'] = ({ plugin }) => {
     'schema',
     'webhook',
     (event) => {
-      const state = toRefs<PluginState>({
+      const state = refs<PluginState>({
         hasLazyExpression: false,
         path: event._path,
         tags: event.tags,

@@ -2,7 +2,7 @@ import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { isTsDsl, TypeTsDsl } from '../base';
+import { TypeTsDsl } from '../base';
 import { registerLazyAccessTypeOperatorFactory } from '../mixins/type-expr';
 
 type Op =
@@ -26,12 +26,14 @@ const Mixed = TypeTsDsl<ts.TypeOperatorNode>;
  * The node will throw during render if required fields are missing.
  */
 export class TypeOperatorTsDsl extends Mixed {
+  readonly '~dsl' = 'TypeOperatorTsDsl';
+
   protected _op?: Op;
   protected _type?: Type;
 
   override analyze(ctx: AnalysisContext): void {
     super.analyze(ctx);
-    if (isTsDsl(this._type)) this._type.analyze(ctx);
+    ctx.analyze(this._type);
   }
 
   /** Shorthand: builds `keyof T`. */
@@ -67,7 +69,7 @@ export class TypeOperatorTsDsl extends Mixed {
     return this;
   }
 
-  protected override _render() {
+  override toAst() {
     this.$validate();
     return ts.factory.createTypeOperatorNode(this._op, this.$type(this._type));
   }

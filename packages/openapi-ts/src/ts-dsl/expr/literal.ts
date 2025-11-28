@@ -8,6 +8,8 @@ import { AsMixin } from '../mixins/as';
 const Mixed = AsMixin(TsDsl<ts.LiteralTypeNode['literal']>);
 
 export class LiteralTsDsl extends Mixed {
+  readonly '~dsl' = 'LiteralTsDsl';
+
   protected value: string | number | boolean | null;
 
   constructor(value: string | number | boolean | null) {
@@ -19,7 +21,7 @@ export class LiteralTsDsl extends Mixed {
     super.analyze(ctx);
   }
 
-  protected override _render() {
+  override toAst() {
     if (typeof this.value === 'boolean') {
       return this.value ? ts.factory.createTrue() : ts.factory.createFalse();
     }

@@ -1,5 +1,5 @@
-import type { AnalysisContext, Symbol } from '@hey-api/codegen-core';
-import { isSymbol } from '@hey-api/codegen-core';
+import type { AnalysisContext, Ref, Symbol } from '@hey-api/codegen-core';
+import { isSymbol, ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl, TypeTsDsl } from '../base';
@@ -9,6 +9,7 @@ import { DefaultMixin, ExportMixin } from '../mixins/modifiers';
 import { PatternMixin } from '../mixins/pattern';
 import { ValueMixin } from '../mixins/value';
 import { TypeExprTsDsl } from '../type/expr';
+import { safeSymbolName } from '../utils/name';
 
 export type VarName = Symbol | string;
 
@@ -21,23 +22,26 @@ const Mixed = DefaultMixin(
 );
 
 export class VarTsDsl extends Mixed {
+  readonly '~dsl' = 'VarTsDsl';
+
   protected kind: ts.NodeFlags = ts.NodeFlags.None;
-  protected name?: VarName;
+  protected name?: Ref<VarName>;
   protected _type?: TypeTsDsl;
 
   constructor(name?: VarName) {
     super();
-    this.name = name;
+    if (name) this.name = ref(name);
     if (isSymbol(name)) {
       name.setKind('var');
+      name.setNameSanitizer(safeSymbolName);
       name.setNode(this);
     }
   }
 
   override analyze(ctx: AnalysisContext): void {
     super.analyze(ctx);
-    if (isSymbol(this.name)) ctx.addDependency(this.name);
-    this._type?.analyze(ctx);
+    ctx.analyze(this.name);
+    ctx.analyze(this._type);
   }
 
   const(): this {
@@ -61,11 +65,11 @@ export class VarTsDsl extends Mixed {
     return this;
   }
 
-  protected override _render() {
+  override toAst() {
     const name = this.$pattern() ?? this.$node(this.name);
     if (!name)
       throw new Error('Var must have either a name or a destructuring pattern');
-    return ts.factory.createVariableStatement(
+    const node = ts.factory.createVariableStatement(
       this.modifiers,
       ts.factory.createVariableDeclarationList(
         [
@@ -80,5 +84,6 @@ export class VarTsDsl extends Mixed {
         this.kind,
       ),
     );
+    return this.$docs(this.$hint(node));
   }
 }

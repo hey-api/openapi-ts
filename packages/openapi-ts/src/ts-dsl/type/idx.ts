@@ -2,7 +2,7 @@ import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { isTsDsl, TypeTsDsl } from '../base';
+import { TypeTsDsl } from '../base';
 import {
   registerLazyAccessTypeIdxFactory,
   TypeExprMixin,
@@ -14,6 +14,8 @@ type Index = string | number | MaybeTsDsl<ts.TypeNode>;
 const Mixed = TypeExprMixin(TypeTsDsl<ts.IndexedAccessTypeNode>);
 
 export class TypeIdxTsDsl extends Mixed {
+  readonly '~dsl' = 'TypeIdxTsDsl';
+
   protected _base!: Base;
   protected _index!: Index;
 
@@ -25,8 +27,8 @@ export class TypeIdxTsDsl extends Mixed {
 
   override analyze(ctx: AnalysisContext): void {
     super.analyze(ctx);
-    if (isTsDsl(this._base)) this._base.analyze(ctx);
-    if (isTsDsl(this._index)) this._index.analyze(ctx);
+    ctx.analyze(this._base);
+    ctx.analyze(this._index);
   }
 
   base(base: Base): this {
@@ -39,7 +41,7 @@ export class TypeIdxTsDsl extends Mixed {
     return this;
   }
 
-  protected override _render() {
+  override toAst() {
     return ts.factory.createIndexedAccessTypeNode(
       this.$type(this._base),
       this.$type(this._index),

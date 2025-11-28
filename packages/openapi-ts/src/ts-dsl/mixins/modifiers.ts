@@ -210,6 +210,8 @@ export function ExportMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
      */
     protected export(condition?: boolean): this {
       const cond = arguments.length === 0 ? true : Boolean(condition);
+      this.exported = cond;
+      // TODO: remove this side-effect once planner handles exported flag
       if (this.symbol) this.symbol.setExported(cond);
       return this._m(ts.SyntaxKind.ExportKeyword, cond);
     }

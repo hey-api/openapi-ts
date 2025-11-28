@@ -12,11 +12,13 @@ const Mixed = DocMixin(
 );
 
 export class TypeFuncTsDsl extends Mixed {
+  readonly '~dsl' = 'TypeFuncTsDsl';
+
   protected _returns?: TypeTsDsl;
 
   override analyze(ctx: AnalysisContext): void {
     super.analyze(ctx);
-    this._returns?.analyze(ctx);
+    ctx.analyze(this._returns);
   }
 
   /** Sets the return type. */
@@ -25,14 +27,15 @@ export class TypeFuncTsDsl extends Mixed {
     return this;
   }
 
-  protected override _render() {
+  override toAst() {
     if (this._returns === undefined) {
       throw new Error('Missing return type in function type DSL');
     }
-    return ts.factory.createFunctionTypeNode(
+    const node = ts.factory.createFunctionTypeNode(
       this.$generics(),
       this.$params(),
       this.$type(this._returns),
     );
+    return this.$docs(node);
   }
 }

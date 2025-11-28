@@ -1,11 +1,12 @@
-import type { AnalysisContext, Symbol } from '@hey-api/codegen-core';
-import { isSymbol } from '@hey-api/codegen-core';
+import type { AnalysisContext, Ref, Symbol } from '@hey-api/codegen-core';
+import { isSymbol, ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
 import { DocMixin } from '../mixins/doc';
 import { ConstMixin, ExportMixin } from '../mixins/modifiers';
+import { safeSymbolName } from '../utils/name';
 import { EnumMemberTsDsl } from './member';
 
 export type EnumName = Symbol | string;
@@ -15,14 +16,17 @@ type ValueFn = Value | ((m: EnumMemberTsDsl) => void);
 const Mixed = ConstMixin(DocMixin(ExportMixin(TsDsl<ts.EnumDeclaration>)));
 
 export class EnumTsDsl extends Mixed {
+  readonly '~dsl' = 'EnumTsDsl';
+
   private _members: Array<EnumMemberTsDsl> = [];
-  private _name: EnumName;
+  private _name: Ref<EnumName>;
 
   constructor(name: EnumName, fn?: (e: EnumTsDsl) => void) {
     super();
-    this._name = name;
+    this._name = ref(name);
     if (isSymbol(name)) {
       name.setKind('enum');
+      name.setNameSanitizer(safeSymbolName);
       name.setNode(this);
     }
     fn?.(this);
@@ -30,9 +34,14 @@ export class EnumTsDsl extends Mixed {
 
   override analyze(ctx: AnalysisContext): void {
     super.analyze(ctx);
-    if (isSymbol(this._name)) ctx.addDependency(this._name);
-    for (const member of this._members) {
-      member.analyze(ctx);
+    ctx.analyze(this._name);
+    ctx.pushScope();
+    try {
+      for (const member of this._members) {
+        ctx.analyze(member);
+      }
+    } finally {
+      ctx.popScope();
     }
   }
 
@@ -49,12 +58,13 @@ export class EnumTsDsl extends Mixed {
     return this;
   }
 
-  protected override _render() {
-    return ts.factory.createEnumDeclaration(
+  override toAst() {
+    const node = ts.factory.createEnumDeclaration(
       this.modifiers,
       // @ts-expect-error need to improve types
       this.$node(this._name),
       this.$node(this._members),
     );
+    return this.$docs(node);
   }
 }

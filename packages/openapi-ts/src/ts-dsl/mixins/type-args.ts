@@ -1,9 +1,8 @@
-import type { AnalysisContext, Node, Symbol } from '@hey-api/codegen-core';
-import { isSymbol } from '@hey-api/codegen-core';
+import type { AnalysisContext, Node, Ref, Symbol } from '@hey-api/codegen-core';
+import { ref } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import type { MaybeTsDsl, TypeTsDsl } from '../base';
-import { isTsDsl } from '../base';
 import type { BaseCtor, MixinCtor } from './types';
 
 type Arg = Symbol | string | MaybeTsDsl<TypeTsDsl>;
@@ -21,26 +20,22 @@ export function TypeArgsMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
   Base: TBase,
 ) {
   abstract class TypeArgs extends Base {
-    protected _generics: Array<Arg> = [];
+    protected _generics: Array<Ref<Arg>> = [];
 
     override analyze(ctx: AnalysisContext): void {
       super.analyze(ctx);
       for (const g of this._generics) {
-        if (isSymbol(g)) {
-          ctx.addDependency(g);
-        } else if (isTsDsl(g)) {
-          g.analyze(ctx);
-        }
+        ctx.analyze(g);
       }
     }
 
     protected generic(arg: Arg): this {
-      this._generics.push(arg);
+      this._generics.push(ref(arg));
       return this;
     }
 
     protected generics(...args: ReadonlyArray<Arg>): this {
-      this._generics.push(...args);
+      this._generics.push(...args.map((a) => ref(a)));
       return this;
     }
 

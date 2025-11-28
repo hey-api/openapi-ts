@@ -3,22 +3,22 @@
 import { z } from 'zod';
 
 export const zFoo: z.AnyZodObject = z.object({
-    quux: z.lazy(() => zQuux2).optional()
+    quux: z.lazy(() => zQuux).optional()
 });
 
 export const zBar: z.AnyZodObject = z.object({
-    bar: z.lazy(() => zBar2).optional(),
-    baz: z.lazy(() => zBaz2).optional()
+    bar: z.lazy(() => zBar).optional(),
+    baz: z.lazy(() => zBaz).optional()
 });
 
 export const zBaz: z.AnyZodObject = z.object({
-    quux: z.lazy(() => zQuux2).optional()
+    quux: z.lazy(() => zQuux).optional()
 });
 
 export const zQux: z.ZodTypeAny = z.union([
     z.object({
         type: z.literal('struct')
-    }).and(z.lazy(() => zCorge2)),
+    }).and(z.lazy(() => zCorge)),
     z.object({
         type: z.literal('array')
     }).and(zFoo)

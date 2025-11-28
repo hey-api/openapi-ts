@@ -6,6 +6,7 @@ import { NoteTsDsl } from '../layout/note';
 import type { BaseCtor, MixinCtor } from './types';
 
 export interface NoteMethods extends Node {
+  $note<T extends ts.Node>(node: T): T;
   note(lines?: MaybeArray<string>, fn?: (h: NoteTsDsl) => void): this;
 }
 
@@ -13,7 +14,7 @@ export function NoteMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
   Base: TBase,
 ) {
   abstract class Note extends Base {
-    protected _note?: NoteTsDsl;
+    private _note?: NoteTsDsl;
 
     override analyze(ctx: AnalysisContext): void {
       super.analyze(ctx);
@@ -27,8 +28,7 @@ export function NoteMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
       return this;
     }
 
-    protected override _render() {
-      const node = this.$render();
+    protected $note<T extends ts.Node>(node: T): T {
       return this._note ? this._note.apply(node) : node;
     }
   }

@@ -1,11 +1,14 @@
+import { symbolBrand } from '../brands';
 import { debug } from '../debug';
 import type { ISymbolMeta } from '../extensions';
-import type { IFileOut } from '../files/types';
+import type { File } from '../files/file';
 import type { INode } from '../nodes/node';
-import { wrapId } from '../renderer/utils';
-import type { ISymbolIn, SymbolImportKind, SymbolKind } from './types';
-
-export const symbolBrand = globalThis.Symbol('symbol');
+import type {
+  BindingKind,
+  ISymbolIn,
+  SymbolKind,
+  SymbolNameSanitizer,
+} from './types';
 
 export class Symbol {
   /**
@@ -14,16 +17,8 @@ export class Symbol {
    * Stubs created during DSL construction may later be associated
    * with a fully registered symbol. Once set, all property lookups
    * should defer to the canonical symbol.
-   *
-   * @private
    */
   private _canonical?: Symbol;
-  /**
-   * Private set of direct symbol dependencies.
-   *
-   * @private
-   */
-  private readonly _dependencies = new Set<Symbol>();
   /**
    * True if this symbol is exported from its defining file.
    *
@@ -46,13 +41,13 @@ export class Symbol {
   /**
    * The file this symbol is ultimately emitted into.
    *
-   * @private
+   * Only top-level symbols have an assigned file.
    */
-  private _file?: IFileOut;
+  private _file?: File;
   /**
    * The alias-resolved, conflict-free emitted name.
    */
-  _finalName?: string;
+  private _finalName?: string;
   /**
    * Custom strategy to determine file output path.
    *
@@ -64,7 +59,7 @@ export class Symbol {
    *
    * @default 'named'
    */
-  private _importKind: SymbolImportKind;
+  private _importKind: BindingKind;
   /**
    * Kind of symbol (class, type, alias, etc.).
    *
@@ -84,25 +79,20 @@ export class Symbol {
    */
   private _name: string;
   /**
-   * Node that defines this symbol.
+   * Optional function to sanitize the symbol name.
    *
-   * @private
+   * @default undefined
+   */
+  private _nameSanitizer?: SymbolNameSanitizer;
+  /**
+   * Node that defines this symbol.
    */
   private _node?: INode;
 
   /** Brand used for identifying symbols. */
-  readonly '~brand': symbol = symbolBrand;
-  /**
-   * Globally unique, stable symbol ID.
-   */
+  readonly '~brand' = symbolBrand;
+  /** Globally unique, stable symbol ID. */
   readonly id: number;
-  /**
-   * Placeholder name for the symbol to be replaced later with the final value.
-   *
-   * @deprecated
-   * @example "_heyapi_31_"
-   */
-  readonly placeholder: string;
 
   constructor(input: ISymbolIn, id: number) {
     this._exported = input.exported ?? false;
@@ -114,7 +104,6 @@ export class Symbol {
     this._kind = input.kind ?? 'var';
     this._meta = input.meta;
     this._name = input.name;
-    this.placeholder = input.placeholder || wrapId(String(id));
   }
 
   /**
@@ -126,13 +115,6 @@ export class Symbol {
    */
   get canonical(): Symbol {
     return this._canonical ?? this;
-  }
-
-  /**
-   * Read-only access to dependencies.
-   */
-  get dependencies(): ReadonlySet<Symbol> {
-    return this.canonical._dependencies;
   }
 
   /**
@@ -158,8 +140,10 @@ export class Symbol {
 
   /**
    * Read‑only accessor for the assigned output file.
+   *
+   * Only top-level symbols have an assigned file.
    */
-  get file(): IFileOut | undefined {
+  get file(): File | undefined {
     return this.canonical._file;
   }
 
@@ -167,11 +151,12 @@ export class Symbol {
    * Read‑only accessor for the resolved final emitted name.
    */
   get finalName(): string {
-    return (
-      this.canonical._finalName ||
-      this.canonical.placeholder ||
-      this.canonical.name
-    );
+    if (!this.canonical._finalName) {
+      const message = `Symbol finalName has not been resolved yet for ${this.canonical.toString()}`;
+      debug(message, 'symbol');
+      throw new Error(message);
+    }
+    return this.canonical._finalName;
   }
 
   /**
@@ -184,8 +169,15 @@ export class Symbol {
   /**
    * How this symbol should be imported (named/default/namespace).
    */
-  get importKind(): SymbolImportKind {
+  get importKind(): BindingKind {
     return this.canonical._importKind;
+  }
+
+  /**
+   * Indicates whether this is a canonical symbol (not a stub).
+   */
+  get isCanonical(): boolean {
+    return !this._canonical || this._canonical === this;
   }
 
   /**
@@ -210,18 +202,17 @@ export class Symbol {
   }
 
   /**
+   * Optional function to sanitize the symbol name.
+   */
+  get nameSanitizer(): SymbolNameSanitizer | undefined {
+    return this.canonical._nameSanitizer;
+  }
+
+  /**
    * Read‑only accessor for the defining node.
    */
   get node(): INode | undefined {
     return this.canonical._node;
-  }
-
-  /**
-   * Add a direct dependency on another symbol.
-   */
-  addDependency(symbol: Symbol): void {
-    this.assertCanonical();
-    if (symbol !== this) this._dependencies.add(symbol);
   }
 
   /**
@@ -261,10 +252,12 @@ export class Symbol {
    *
    * This may only be set once.
    */
-  setFile(file: IFileOut): void {
+  setFile(file: File): void {
     this.assertCanonical();
     if (this._file && this._file !== file) {
-      throw new Error('Symbol is already assigned to a different file.');
+      const message = `Symbol ${this.canonical.toString()} is already assigned to a different file.`;
+      debug(message, 'symbol');
+      throw new Error(message);
     }
     this._file = file;
   }
@@ -277,7 +270,9 @@ export class Symbol {
   setFinalName(name: string): void {
     this.assertCanonical();
     if (this._finalName && this._finalName !== name) {
-      throw new Error('Symbol finalName has already been resolved.');
+      const message = `Symbol finalName has already been resolved for ${this.canonical.toString()}.`;
+      debug(message, 'symbol');
+      throw new Error(message);
     }
     this._finalName = name;
   }
@@ -287,7 +282,7 @@ export class Symbol {
    *
    * @param kind — The import strategy (named/default/namespace).
    */
-  setImportKind(kind: SymbolImportKind): void {
+  setImportKind(kind: BindingKind): void {
     this.assertCanonical();
     this._importKind = kind;
   }
@@ -313,6 +308,16 @@ export class Symbol {
   }
 
   /**
+   * Sets a custom function to sanitize the symbol's name.
+   *
+   * @param fn — The name sanitizer function to apply.
+   */
+  setNameSanitizer(fn: SymbolNameSanitizer): void {
+    this.assertCanonical();
+    this._nameSanitizer = fn;
+  }
+
+  /**
    * Binds the node that defines this symbol.
    *
    * This may only be set once.
@@ -320,7 +325,9 @@ export class Symbol {
   setNode(node: INode): void {
     this.assertCanonical();
     if (this._node && this._node !== node) {
-      throw new Error('Symbol is already bound to a different node.');
+      const message = `Symbol ${this.canonical.toString()} is already bound to a different node.`;
+      debug(message, 'symbol');
+      throw new Error(message);
     }
     this._node = node;
     node.symbol = this;
@@ -342,7 +349,6 @@ export class Symbol {
    * to non‑canonical instances.
    *
    * @throws {Error} If the symbol is a stub and is being mutated.
-   * @private
    */
   private assertCanonical(): void {
     if (this._canonical && this._canonical !== this) {
@@ -351,10 +357,4 @@ export class Symbol {
       throw new Error(message);
     }
   }
-}
-
-export function isSymbol(value: unknown): value is Symbol {
-  if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
-  const obj = value as { '~brand'?: unknown };
-  return obj['~brand'] === symbolBrand && Object.hasOwn(obj, '~brand');
 }

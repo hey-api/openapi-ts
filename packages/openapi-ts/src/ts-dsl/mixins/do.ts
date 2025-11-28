@@ -1,15 +1,18 @@
 import type { AnalysisContext, Node } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
-import { isTsDsl, type MaybeTsDsl } from '../base';
+import type { MaybeTsDsl } from '../base';
 import { StmtTsDsl } from '../stmt/stmt';
 import type { BaseCtor, MixinCtor } from './types';
+
+export type DoExpr = MaybeTsDsl<ts.Expression | ts.Statement>;
 
 export interface DoMethods extends Node {
   /** Renders the collected `.do()` calls into an array of `Statement` nodes. */
   $do(): ReadonlyArray<ts.Statement>;
+  _do: Array<DoExpr>;
   /** Adds one or more expressions/statements to the body. */
-  do(...items: ReadonlyArray<MaybeTsDsl<ts.Expression | ts.Statement>>): this;
+  do(...items: ReadonlyArray<DoExpr>): this;
 }
 
 /**
@@ -19,18 +22,21 @@ export function DoMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
   Base: TBase,
 ) {
   abstract class Do extends Base {
-    protected _do: Array<MaybeTsDsl<ts.Expression | ts.Statement>> = [];
+    protected _do: Array<DoExpr> = [];
 
     override analyze(ctx: AnalysisContext): void {
       super.analyze(ctx);
-      for (const item of this._do) {
-        if (isTsDsl(item)) item.analyze(ctx);
+      ctx.pushScope();
+      try {
+        for (const item of this._do) {
+          ctx.analyze(item);
+        }
+      } finally {
+        ctx.popScope();
       }
     }
 
-    protected do(
-      ...items: ReadonlyArray<MaybeTsDsl<ts.Expression | ts.Statement>>
-    ): this {
+    protected do(...items: ReadonlyArray<DoExpr>): this {
       this._do.push(...items);
       return this;
     }

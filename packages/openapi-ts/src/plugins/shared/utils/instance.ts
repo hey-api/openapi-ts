@@ -312,29 +312,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
   }
 
   registerSymbol(symbol: SymbolIn): Symbol {
-    const symbolIn: SymbolIn = {
-      ...symbol,
-      exportFrom:
-        symbol.exportFrom ??
-        (!symbol.external &&
-        this.context.config.output.indexFile &&
-        this.config.exportFromIndex
-          ? ['index']
-          : undefined),
-      getFilePath: symbol.getFilePath ?? this.getSymbolFilePath.bind(this),
-      meta: {
-        pluginName: path.isAbsolute(this.name) ? 'custom' : this.name,
-        ...symbol.meta,
-      },
-    };
-    for (const hook of this.eventHooks['symbol:register:before']) {
-      hook({ plugin: this, symbol: symbolIn });
-    }
-    const symbolOut = this.gen.symbols.register(symbolIn);
-    for (const hook of this.eventHooks['symbol:register:after']) {
-      hook({ plugin: this, symbol: symbolOut });
-    }
-    return symbolOut;
+    return this.symbol(symbol.name, symbol);
   }
 
   /**
@@ -348,6 +326,33 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     for (const hook of this.eventHooks['plugin:handler:after']) {
       hook({ plugin: this });
     }
+  }
+
+  symbol(name: SymbolIn['name'], symbol?: Omit<SymbolIn, 'name'>): Symbol {
+    const symbolIn: SymbolIn = {
+      ...symbol,
+      exportFrom:
+        symbol?.exportFrom ??
+        (!symbol?.external &&
+        this.context.config.output.indexFile &&
+        this.config.exportFromIndex
+          ? ['index']
+          : undefined),
+      getFilePath: symbol?.getFilePath ?? this.getSymbolFilePath.bind(this),
+      meta: {
+        pluginName: path.isAbsolute(this.name) ? 'custom' : this.name,
+        ...symbol?.meta,
+      },
+      name,
+    };
+    for (const hook of this.eventHooks['symbol:register:before']) {
+      hook({ plugin: this, symbol: symbolIn });
+    }
+    const symbolOut = this.gen.symbols.register(symbolIn);
+    for (const hook of this.eventHooks['symbol:register:after']) {
+      hook({ plugin: this, symbol: symbolOut });
+    }
+    return symbolOut;
   }
 
   /**

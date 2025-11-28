@@ -1,5 +1,5 @@
-import type { AnalysisContext, Symbol } from '@hey-api/codegen-core';
-import { isSymbol } from '@hey-api/codegen-core';
+import type { AnalysisContext, Ref, Symbol } from '@hey-api/codegen-core';
+import { isSymbol, ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl, TypeTsDsl } from '../base';
@@ -17,7 +17,9 @@ import {
 } from '../mixins/modifiers';
 import { ParamMixin } from '../mixins/param';
 import { TypeParamsMixin } from '../mixins/type-params';
+import { BlockTsDsl } from '../stmt/block';
 import { TypeExprTsDsl } from '../type/expr';
+import { safeSymbolName } from '../utils/name';
 
 export type FuncMode = 'arrow' | 'decl' | 'expr';
 export type FuncName = Symbol | string;
@@ -45,8 +47,10 @@ const Mixed = AbstractMixin(
 );
 
 class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends Mixed {
+  readonly '~dsl' = 'FuncTsDsl';
+
   protected mode?: FuncMode;
-  protected name?: FuncName;
+  protected name?: Ref<FuncName>;
   protected _returns?: TypeTsDsl;
 
   constructor();
@@ -63,9 +67,10 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends Mixed {
       name(this as unknown as FuncTsDsl<'arrow'>);
     } else if (name) {
       this.mode = 'decl';
-      this.name = name;
+      this.name = ref(name);
       if (isSymbol(name)) {
         name.setKind('function');
+        name.setNameSanitizer(safeSymbolName);
         name.setNode(this);
       }
       fn?.(this as unknown as FuncTsDsl<'decl'>);
@@ -73,9 +78,14 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends Mixed {
   }
 
   override analyze(ctx: AnalysisContext): void {
-    super.analyze(ctx);
-    if (isSymbol(this.name)) ctx.addDependency(this.name);
-    this._returns?.analyze(ctx);
+    ctx.pushScope();
+    try {
+      super.analyze(ctx);
+      ctx.analyze(this.name);
+      ctx.analyze(this._returns);
+    } finally {
+      ctx.popScope();
+    }
   }
 
   /** Switches the function to an arrow function form. */
@@ -103,14 +113,16 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends Mixed {
   }
 
   // @ts-expect-error --- need to fix types ---
-  protected override _render(): M extends 'decl'
+  override toAst(): M extends 'decl'
     ? ts.FunctionDeclaration
     : M extends 'expr'
       ? ts.FunctionExpression
       : ts.ArrowFunction {
+    const body = this.$node(new BlockTsDsl(...this._do));
+
     if (this.mode === 'decl') {
       if (!this.name) throw new Error('Function declaration requires a name');
-      return ts.factory.createFunctionDeclaration(
+      const node = ts.factory.createFunctionDeclaration(
         [...this.$decorators(), ...this.modifiers],
         undefined,
         // @ts-expect-error need to improve types
@@ -118,12 +130,13 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends Mixed {
         this.$generics(),
         this.$params(),
         this.$type(this._returns),
-        ts.factory.createBlock(this.$do(), true),
+        body,
       ) as any;
+      return this.$docs(node);
     }
 
     if (this.mode === 'expr') {
-      return ts.factory.createFunctionExpression(
+      const node = ts.factory.createFunctionExpression(
         this.modifiers,
         undefined,
         // @ts-expect-error need to improve types
@@ -131,24 +144,24 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends Mixed {
         this.$generics(),
         this.$params(),
         this.$type(this._returns),
-        ts.factory.createBlock(this.$do(), true),
+        body,
       ) as any;
+      return this.$docs(node);
     }
 
-    const body = this.$do();
-    const exprBody =
-      body.length === 1 && ts.isReturnStatement(body[0]!)
-        ? (body[0].expression ?? ts.factory.createBlock(body, true))
-        : ts.factory.createBlock(body, true);
-
-    return ts.factory.createArrowFunction(
+    const node = ts.factory.createArrowFunction(
       this.modifiers,
       this.$generics(),
       this.$params(),
       this.$type(this._returns),
       undefined,
-      exprBody,
+      body.statements.length === 1 &&
+        ts.isReturnStatement(body.statements[0]!) &&
+        body.statements[0].expression
+        ? body.statements[0].expression
+        : body,
     ) as any;
+    return this.$docs(node);
   }
 }
 

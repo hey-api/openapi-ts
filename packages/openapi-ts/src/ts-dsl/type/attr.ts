@@ -1,9 +1,9 @@
-import type { AnalysisContext, Symbol } from '@hey-api/codegen-core';
-import { isSymbol } from '@hey-api/codegen-core';
+import type { AnalysisContext, Ref, Symbol } from '@hey-api/codegen-core';
+import { isRef, ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { isTsDsl, TypeTsDsl } from '../base';
+import { TypeTsDsl } from '../base';
 import { TypeExprMixin } from '../mixins/type-expr';
 
 type Base = Symbol | string | MaybeTsDsl<ts.EntityName>;
@@ -12,12 +12,14 @@ type Right = Symbol | string | ts.Identifier;
 const Mixed = TypeExprMixin(TypeTsDsl<ts.QualifiedName>);
 
 export class TypeAttrTsDsl extends Mixed {
-  protected _base?: Base;
-  protected _right!: Right;
+  readonly '~dsl' = 'TypeAttrTsDsl';
 
-  constructor(base: Base, right: string | ts.Identifier);
+  protected _base?: Ref<Base>;
+  protected _right!: Ref<Right>;
+
+  constructor(base: Base | Ref<Base>, right: string | ts.Identifier);
   constructor(right: Right);
-  constructor(base: Base, right?: Right) {
+  constructor(base: Base | Ref<Base>, right?: Right) {
     super();
     if (right) {
       this.base(base);
@@ -30,25 +32,25 @@ export class TypeAttrTsDsl extends Mixed {
 
   override analyze(ctx: AnalysisContext): void {
     super.analyze(ctx);
-    if (isSymbol(this._base)) {
-      ctx.addDependency(this._base);
-    } else if (isTsDsl(this._base)) {
-      this._base.analyze(ctx);
-    }
-    if (isSymbol(this._right)) ctx.addDependency(this._right);
+    ctx.analyze(this._base);
+    ctx.analyze(this._right);
   }
 
-  base(base?: Base): this {
-    this._base = base;
+  base(base?: Base | Ref<Base>): this {
+    if (isRef(base)) {
+      this._base = base;
+    } else {
+      this._base = base ? ref(base) : undefined;
+    }
     return this;
   }
 
   right(right: Right): this {
-    this._right = right;
+    this._right = ref(right);
     return this;
   }
 
-  protected override _render() {
+  override toAst() {
     if (!this._base) {
       throw new Error('TypeAttrTsDsl: missing base for qualified name');
     }

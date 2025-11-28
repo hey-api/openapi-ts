@@ -67,7 +67,18 @@ export const createQueryKeyFunction = ({
               .prop('_id', 'id')
               .prop(
                 baseUrlKey,
-                `options?.${baseUrlKey} || (options?.client ?? ${symbolClient?.placeholder}).getConfig().${baseUrlKey}`,
+                $('options')
+                  .attr(baseUrlKey)
+                  .optional()
+                  .or(
+                    $('options')
+                      .attr('client')
+                      .optional()
+                      .$if(symbolClient, (a, v) => a.coalesce(v))
+                      .attr('getConfig')
+                      .call()
+                      .attr(baseUrlKey),
+                  ),
               )
               .as(returnType),
           ),
@@ -169,7 +180,7 @@ export const queryKeyStatement = ({
   operation: IR.OperationObject;
   plugin: PluginInstance;
   symbol: Symbol;
-  typeQueryKey?: string;
+  typeQueryKey?: ReturnType<typeof $.type>;
 }) => {
   const typeData = useTypeData({ operation, plugin });
   const statement = $.const(symbol)

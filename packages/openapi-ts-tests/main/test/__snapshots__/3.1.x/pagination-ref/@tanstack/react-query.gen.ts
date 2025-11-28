@@ -42,15 +42,12 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
 export const getFooQueryKey = (options: Options<GetFooData>) => createQueryKey('getFoo', options);
 
 export const getFooOptions = (options: Options<GetFooData>) => queryOptions<GetFooResponse, DefaultError, GetFooResponse, ReturnType<typeof getFooQueryKey>>({
-    queryFn: async ({ queryKey, signal }) => {
-        const { data } = await getFoo({
-            ...options,
-            ...queryKey[0],
-            signal,
-            throwOnError: true
-        });
-        return data;
-    },
+    queryFn: async ({ queryKey, signal }) => { const { data } = await getFoo({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true
+    }); return data; },
     queryKey: getFooQueryKey(options)
 });
 
@@ -107,16 +104,10 @@ export const getFooInfiniteOptions = (options: Options<GetFooData>) => infiniteQ
     queryKey: getFooInfiniteQueryKey(options)
 });
 
-export const postFooMutation = (options?: Partial<Options<PostFooData>>): UseMutationOptions<unknown, DefaultError, Options<PostFooData>> => {
-    const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<PostFooData>> = {
-        mutationFn: async (fnOptions) => {
-            const { data } = await postFoo({
-                ...options,
-                ...fnOptions,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-    return mutationOptions;
-};
+export const postFooMutation = (options?: Partial<Options<PostFooData>>): UseMutationOptions<unknown, DefaultError, Options<PostFooData>> => { const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<PostFooData>> = {
+    mutationFn: async (fnOptions) => { const { data } = await postFoo({
+        ...options,
+        ...fnOptions,
+        throwOnError: true
+    }); return data; }
+}; return mutationOptions; };

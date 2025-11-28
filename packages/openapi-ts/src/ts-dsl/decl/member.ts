@@ -2,9 +2,9 @@ import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { isTsDsl, TsDsl } from '../base';
+import { TsDsl } from '../base';
 import { DocMixin } from '../mixins/doc';
-import { safeMemberName } from '../utils/prop';
+import { safeMemberName } from '../utils/name';
 
 type Value = string | number | MaybeTsDsl<ts.Expression>;
 type ValueFn = Value | ((m: EnumMemberTsDsl) => void);
@@ -12,6 +12,8 @@ type ValueFn = Value | ((m: EnumMemberTsDsl) => void);
 const Mixed = DocMixin(TsDsl<ts.EnumMember>);
 
 export class EnumMemberTsDsl extends Mixed {
+  readonly '~dsl' = 'EnumMemberTsDsl';
+
   private _name: string;
   private _value?: Value;
 
@@ -27,7 +29,7 @@ export class EnumMemberTsDsl extends Mixed {
 
   override analyze(ctx: AnalysisContext): void {
     super.analyze(ctx);
-    if (isTsDsl(this._value)) this._value.analyze(ctx);
+    ctx.analyze(this._value);
   }
 
   /** Sets the enum member value. */
@@ -36,10 +38,11 @@ export class EnumMemberTsDsl extends Mixed {
     return this;
   }
 
-  protected override _render() {
-    return ts.factory.createEnumMember(
+  override toAst() {
+    const node = ts.factory.createEnumMember(
       this.$node(safeMemberName(this._name)),
       this.$node(this._value),
     );
+    return this.$docs(node);
   }
 }

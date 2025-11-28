@@ -1,14 +1,15 @@
-import type { AnalysisContext, Symbol } from '@hey-api/codegen-core';
-import { isSymbol } from '@hey-api/codegen-core';
+import type { AnalysisContext, Ref, Symbol } from '@hey-api/codegen-core';
+import { isSymbol, ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { isTsDsl, TsDsl } from '../base';
+import { TsDsl } from '../base';
 import { NewlineTsDsl } from '../layout/newline';
 import { DecoratorMixin } from '../mixins/decorator';
 import { DocMixin } from '../mixins/doc';
 import { AbstractMixin, DefaultMixin, ExportMixin } from '../mixins/modifiers';
 import { TypeParamsMixin } from '../mixins/type-params';
+import { safeSymbolName } from '../utils/name';
 import { FieldTsDsl } from './field';
 import { InitTsDsl } from './init';
 import { MethodTsDsl } from './method';
@@ -26,25 +27,33 @@ const Mixed = AbstractMixin(
 );
 
 export class ClassTsDsl extends Mixed {
-  protected baseClass?: Base;
+  readonly '~dsl' = 'ClassTsDsl';
+
+  protected baseClass?: Ref<Base>;
   protected body: Body = [];
-  protected name: Name;
+  protected name: Ref<Name>;
 
   constructor(name: Name) {
     super();
-    this.name = name;
+    this.name = ref(name);
     if (isSymbol(name)) {
       name.setKind('class');
+      name.setNameSanitizer(safeSymbolName);
       name.setNode(this);
     }
   }
 
   override analyze(ctx: AnalysisContext): void {
     super.analyze(ctx);
-    if (isSymbol(this.baseClass)) ctx.addDependency(this.baseClass);
-    if (isSymbol(this.name)) ctx.addDependency(this.name);
-    for (const item of this.body) {
-      if (isTsDsl(item)) item.analyze(ctx);
+    ctx.analyze(this.baseClass);
+    ctx.analyze(this.name);
+    ctx.pushScope();
+    try {
+      for (const item of this.body) {
+        ctx.analyze(item);
+      }
+    } finally {
+      ctx.popScope();
     }
   }
 
@@ -56,7 +65,7 @@ export class ClassTsDsl extends Mixed {
 
   /** Records a base class to extend from. */
   extends(base?: Base): this {
-    this.baseClass = base;
+    this.baseClass = base ? ref(base) : undefined;
     return this;
   }
 
@@ -87,27 +96,26 @@ export class ClassTsDsl extends Mixed {
     return this;
   }
 
-  protected override _render() {
+  override toAst() {
     const body = this.$node(this.body) as ReadonlyArray<ts.ClassElement>;
-    return ts.factory.createClassDeclaration(
+    const node = ts.factory.createClassDeclaration(
       [...this.$decorators(), ...this.modifiers],
       // @ts-expect-error need to improve types
       this.$node(this.name),
       this.$generics(),
-      this._renderHeritage(),
+      this._heritage(),
       body,
     );
+    return this.$docs(node);
   }
 
   /** Builds heritage clauses (extends). */
-  private _renderHeritage(): ReadonlyArray<ts.HeritageClause> {
-    if (!this.baseClass) return [];
+  private _heritage(): ReadonlyArray<ts.HeritageClause> {
+    const node = this.$node(this.baseClass);
+    if (!node) return [];
     return [
       ts.factory.createHeritageClause(ts.SyntaxKind.ExtendsKeyword, [
-        ts.factory.createExpressionWithTypeArguments(
-          this.$node(this.baseClass),
-          undefined,
-        ),
+        ts.factory.createExpressionWithTypeArguments(node, undefined),
       ]),
     ];
   }

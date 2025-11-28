@@ -1,12 +1,11 @@
 import type { ISymbolMeta } from '../extensions';
 import type { Symbol } from './symbol';
 
+export type BindingKind = 'default' | 'named' | 'namespace';
+
 export type ISymbolIdentifier = number | ISymbolMeta;
 
-export type SymbolImportKind = 'namespace' | 'default' | 'named';
-
 export type SymbolKind =
-  | 'alias' // export { a as a2 } from 'a';
   | 'class'
   | 'enum'
   | 'function'
@@ -14,6 +13,8 @@ export type SymbolKind =
   | 'namespace'
   | 'type'
   | 'var';
+
+export type SymbolNameSanitizer = (name: string) => string;
 
 export type ISymbolIn = {
   /**
@@ -44,7 +45,7 @@ export type ISymbolIn = {
   /**
    * Kind of import if this symbol represents an import.
    */
-  importKind?: SymbolImportKind;
+  importKind?: BindingKind;
   /**
    * Kind of symbol.
    */
@@ -63,13 +64,6 @@ export type ISymbolIn = {
    * @example "UserModel"
    */
   name: string;
-  /**
-   * Placeholder name for the symbol to be replaced later with the final value.
-   *
-   * @deprecated
-   * @example "_heyapi_31_"
-   */
-  readonly placeholder?: string;
 };
 
 export interface ISymbolRegistry {
@@ -88,25 +82,18 @@ export interface ISymbolRegistry {
    */
   getValue(symbolId: number): unknown;
   /**
-   * Checks if the registry has a value associated with a symbol ID.
-   *
-   * @param symbolId Symbol ID.
-   * @returns True if the registry has a value for symbol ID, false otherwise.
-   */
-  hasValue(symbolId: number): boolean;
-  /**
-   * Returns the current symbol ID and increments it.
-   *
-   * @returns Symbol ID before being incremented.
-   */
-  readonly id: number;
-  /**
    * Returns whether a symbol is registered in the registry.
    *
    * @param identifier Symbol identifier to check.
    * @returns True if the symbol is registered, false otherwise.
    */
   isRegistered(identifier: ISymbolIdentifier): boolean;
+  /**
+   * Returns the current symbol ID and increments it.
+   *
+   * @returns Symbol ID before being incremented.
+   */
+  readonly nextId: number;
   /**
    * Queries symbols by metadata filter.
    *

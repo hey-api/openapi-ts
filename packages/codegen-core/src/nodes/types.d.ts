@@ -12,5 +12,5 @@ export interface INodeRegistry {
   /**
    * Nodes by backend brand, so planner doesn't need to filter repeatedly.
    */
-  byBrand(brand: symbol): ReadonlyArray<INode>;
+  byBrand(brand: string): ReadonlyArray<INode>;
 }

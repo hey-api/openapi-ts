@@ -29,7 +29,7 @@ export const exportAst = ({
     .$if(plugin.config.comments && createSchemaComment(schema), (c, v) =>
       c.doc(v),
     )
-    .$if(state.hasLazyExpression.value, (c) =>
+    .$if(state.hasLazyExpression['~ref'], (c) =>
       c.type($.type(v).attr(ast.typeName || identifiers.types.GenericSchema)),
     )
     .assign(pipesToAst({ pipes: ast.pipes, plugin }));

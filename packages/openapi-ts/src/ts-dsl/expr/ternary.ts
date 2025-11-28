@@ -2,11 +2,13 @@ import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { isTsDsl, TsDsl } from '../base';
+import { TsDsl } from '../base';
 
 const Mixed = TsDsl<ts.ConditionalExpression>;
 
 export class TernaryTsDsl extends Mixed {
+  readonly '~dsl' = 'TernaryTsDsl';
+
   protected _condition?: string | MaybeTsDsl<ts.Expression>;
   protected _then?: string | MaybeTsDsl<ts.Expression>;
   protected _else?: string | MaybeTsDsl<ts.Expression>;
@@ -18,9 +20,9 @@ export class TernaryTsDsl extends Mixed {
 
   override analyze(ctx: AnalysisContext): void {
     super.analyze(ctx);
-    if (isTsDsl(this._condition)) this._condition.analyze(ctx);
-    if (isTsDsl(this._then)) this._then.analyze(ctx);
-    if (isTsDsl(this._else)) this._else.analyze(ctx);
+    ctx.analyze(this._condition);
+    ctx.analyze(this._then);
+    ctx.analyze(this._else);
   }
 
   condition(condition: string | MaybeTsDsl<ts.Expression>) {
@@ -38,7 +40,7 @@ export class TernaryTsDsl extends Mixed {
     return this;
   }
 
-  protected override _render() {
+  override toAst() {
     if (!this._condition) throw new Error('Missing condition in ternary');
     if (!this._then) throw new Error('Missing then expression in ternary');
     if (!this._else) throw new Error('Missing else expression in ternary');

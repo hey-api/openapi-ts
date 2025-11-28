@@ -1,7 +1,7 @@
 import type { AnalysisContext, Node } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
-import { isTsDsl, type MaybeTsDsl } from '../base';
+import type { MaybeTsDsl } from '../base';
 import type { BaseCtor, MixinCtor } from './types';
 
 export type ValueExpr = string | MaybeTsDsl<ts.Expression>;
@@ -20,7 +20,7 @@ export function ValueMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
 
     override analyze(ctx: AnalysisContext): void {
       super.analyze(ctx);
-      if (isTsDsl(this.value)) this.value.analyze(ctx);
+      ctx.analyze(this.value);
     }
 
     protected assign(expr: ValueExpr): this {

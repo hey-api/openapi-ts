@@ -5,11 +5,13 @@ import { TsDsl } from '../base';
 import { IdTsDsl } from '../expr/id';
 
 export class NewlineTsDsl extends TsDsl<ts.Identifier> {
+  readonly '~dsl' = 'NewlineTsDsl';
+
   override analyze(ctx: AnalysisContext): void {
     super.analyze(ctx);
   }
 
-  protected override _render(): ts.Identifier {
+  override toAst(): ts.Identifier {
     return this.$node(new IdTsDsl('\n'));
   }
 }

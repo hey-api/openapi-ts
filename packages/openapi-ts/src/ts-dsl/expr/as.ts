@@ -1,9 +1,9 @@
-import type { AnalysisContext, Symbol } from '@hey-api/codegen-core';
-import { isSymbol } from '@hey-api/codegen-core';
+import type { AnalysisContext, Ref, Symbol } from '@hey-api/codegen-core';
+import { ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl, TypeTsDsl } from '../base';
-import { isTsDsl, TsDsl } from '../base';
+import { TsDsl } from '../base';
 import { AsMixin, setAsFactory } from '../mixins/as';
 import { ExprMixin } from '../mixins/expr';
 
@@ -14,30 +14,24 @@ export type AsCtor = (expr: AsExpr, type: AsType) => AsTsDsl;
 const Mixed = AsMixin(ExprMixin(TsDsl<ts.AsExpression>));
 
 export class AsTsDsl extends Mixed {
-  protected expr: AsExpr;
-  protected type: AsType;
+  readonly '~dsl' = 'AsTsDsl';
+
+  protected expr: Ref<AsExpr>;
+  protected type: Ref<AsType>;
 
   constructor(expr: AsExpr, type: AsType) {
     super();
-    this.expr = expr;
-    this.type = type;
+    this.expr = ref(expr);
+    this.type = ref(type);
   }
 
   override analyze(ctx: AnalysisContext): void {
     super.analyze(ctx);
-    if (isSymbol(this.expr)) {
-      ctx.addDependency(this.expr);
-    } else if (isTsDsl(this.expr)) {
-      this.expr.analyze(ctx);
-    }
-    if (isSymbol(this.type)) {
-      ctx.addDependency(this.type);
-    } else if (isTsDsl(this.type)) {
-      this.type.analyze(ctx);
-    }
+    ctx.analyze(this.expr);
+    ctx.analyze(this.type);
   }
 
-  protected override _render() {
+  override toAst() {
     return ts.factory.createAsExpression(
       this.$node(this.expr),
       this.$type(this.type),

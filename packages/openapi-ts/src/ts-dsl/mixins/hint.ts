@@ -6,6 +6,7 @@ import { HintTsDsl } from '../layout/hint';
 import type { BaseCtor, MixinCtor } from './types';
 
 export interface HintMethods extends Node {
+  $hint<T extends ts.Node>(node: T): T;
   hint(lines?: MaybeArray<string>, fn?: (h: HintTsDsl) => void): this;
 }
 
@@ -13,7 +14,7 @@ export function HintMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
   Base: TBase,
 ) {
   abstract class Hint extends Base {
-    protected _hint?: HintTsDsl;
+    private _hint?: HintTsDsl;
 
     override analyze(ctx: AnalysisContext): void {
       super.analyze(ctx);
@@ -27,8 +28,7 @@ export function HintMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
       return this;
     }
 
-    protected override _render() {
-      const node = this.$render();
+    protected $hint<T extends ts.Node>(node: T): T {
       return this._hint ? this._hint.apply(node) : node;
     }
   }

@@ -2,12 +2,14 @@ import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { isTsDsl, TsDsl } from '../base';
+import { TsDsl } from '../base';
 import { LiteralTsDsl } from '../expr/literal';
 
 const Mixed = TsDsl<ts.ThrowStatement>;
 
 export class ThrowTsDsl extends Mixed {
+  readonly '~dsl' = 'ThrowTsDsl';
+
   protected error: string | MaybeTsDsl<ts.Expression>;
   protected msg?: string | MaybeTsDsl<ts.Expression>;
   protected useNew: boolean;
@@ -20,8 +22,8 @@ export class ThrowTsDsl extends Mixed {
 
   override analyze(ctx: AnalysisContext): void {
     super.analyze(ctx);
-    if (isTsDsl(this.error)) this.error.analyze(ctx);
-    if (isTsDsl(this.msg)) this.msg.analyze(ctx);
+    ctx.analyze(this.error);
+    ctx.analyze(this.msg);
   }
 
   message(value: string | MaybeTsDsl<ts.Expression>): this {
@@ -29,7 +31,7 @@ export class ThrowTsDsl extends Mixed {
     return this;
   }
 
-  protected override _render() {
+  override toAst() {
     const errorNode = this.$node(this.error);
     const messageNode = this.$node(this.msg ? [this.msg] : []).map((expr) =>
       typeof expr === 'string' ? this.$node(new LiteralTsDsl(expr)) : expr,

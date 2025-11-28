@@ -1,13 +1,12 @@
 import type { SymbolMeta } from '@hey-api/codegen-core';
+import { refs } from '@hey-api/codegen-core';
 
 import type { Context } from '~/ir/context';
 import { statusCodeToGroup } from '~/ir/operation';
 import type { IR } from '~/ir/types';
 import { sanitizeNamespaceIdentifier } from '~/openApi/common/parser/sanitize';
 import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
-import { toRefs } from '~/plugins/shared/utils/refs';
-import { $ } from '~/ts-dsl';
-import { reservedJavaScriptKeywordsRegExp } from '~/utils/regexp';
+import { $, reservedJavaScriptKeywordsRegExp } from '~/ts-dsl';
 import { stringCase } from '~/utils/stringCase';
 import { transformClassName } from '~/utils/transform';
 
@@ -157,7 +156,7 @@ export const operationOptionsType = ({
   operation: IR.OperationObject;
   plugin: HeyApiSdkPlugin['Instance'];
   throwOnError?: string;
-}) => {
+}): ReturnType<typeof $.type> => {
   const client = getClientPlugin(plugin.context.config);
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
 
@@ -244,7 +243,7 @@ export const operationParameters = ({
             pluginTypeScript.api.schemaToType({
               plugin: pluginTypeScript,
               schema: parameter.schema,
-              state: toRefs({
+              state: refs({
                 path: [],
               }),
             }),

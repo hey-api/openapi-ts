@@ -1,11 +1,13 @@
 import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
-import { isTsDsl, TypeTsDsl } from '../base';
+import { TypeTsDsl } from '../base';
 
 const Mixed = TypeTsDsl<ts.TupleTypeNode>;
 
 export class TypeTupleTsDsl extends Mixed {
+  readonly '~dsl' = 'TypeTupleTsDsl';
+
   protected _elements: Array<string | ts.TypeNode | TypeTsDsl> = [];
 
   constructor(...nodes: Array<string | ts.TypeNode | TypeTsDsl>) {
@@ -15,8 +17,8 @@ export class TypeTupleTsDsl extends Mixed {
 
   override analyze(ctx: AnalysisContext): void {
     super.analyze(ctx);
-    for (const t of this._elements) {
-      if (isTsDsl(t)) t.analyze(ctx);
+    for (const type of this._elements) {
+      ctx.analyze(type);
     }
   }
 
@@ -25,7 +27,7 @@ export class TypeTupleTsDsl extends Mixed {
     return this;
   }
 
-  protected override _render() {
+  override toAst() {
     return ts.factory.createTupleTypeNode(
       this._elements.map((t) => this.$type(t)),
     );

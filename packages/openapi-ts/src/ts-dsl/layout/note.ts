@@ -6,6 +6,8 @@ import { TsDsl } from '../base';
 import { IdTsDsl } from '../expr/id';
 
 export class NoteTsDsl extends TsDsl<ts.Node> {
+  readonly '~dsl' = 'NoteTsDsl';
+
   protected _lines: Array<string> = [];
 
   constructor(lines?: MaybeArray<string>, fn?: (d: NoteTsDsl) => void) {
@@ -43,7 +45,7 @@ export class NoteTsDsl extends TsDsl<ts.Node> {
     return node;
   }
 
-  protected override _render(): ts.Node {
+  override toAst(): ts.Node {
     // this class does not build a standalone node;
     // it modifies other nodes via `apply()`.
     // Return a dummy comment node for compliance.

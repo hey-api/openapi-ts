@@ -1,16 +1,15 @@
-import type { AnalysisContext, Symbol } from '@hey-api/codegen-core';
-import { isSymbol } from '@hey-api/codegen-core';
+import type { AnalysisContext, Ref, Symbol } from '@hey-api/codegen-core';
+import { fromRef, ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
-import { validTypescriptIdentifierRegExp } from '~/utils/regexp';
-
 import type { MaybeTsDsl } from '../base';
-import { isTsDsl, TsDsl } from '../base';
+import { TsDsl } from '../base';
 import { AsMixin } from '../mixins/as';
 import { ExprMixin, setAttrFactory } from '../mixins/expr';
 import { OperatorMixin } from '../mixins/operator';
 import { OptionalMixin } from '../mixins/optional';
 import { TokenTsDsl } from '../token';
+import { validTypescriptIdentifierRegExp } from '../utils/regexp';
 import { LiteralTsDsl } from './literal';
 
 export type AttrLeft = Symbol | string | MaybeTsDsl<ts.Expression>;
@@ -28,43 +27,41 @@ const Mixed = AsMixin(
 );
 
 export class AttrTsDsl extends Mixed {
-  protected left: AttrLeft;
-  protected right: AttrRight;
+  readonly '~dsl' = 'AttrTsDsl';
+
+  protected left: Ref<AttrLeft>;
+  protected right: Ref<AttrRight>;
 
   constructor(left: AttrLeft, right: AttrRight) {
     super();
-    this.left = left;
-    this.right = right;
+    this.left = ref(left);
+    this.right = ref(right);
   }
 
   override analyze(ctx: AnalysisContext): void {
     super.analyze(ctx);
-    if (isSymbol(this.left)) {
-      ctx.addDependency(this.left);
-    } else if (isTsDsl(this.left)) {
-      this.left.analyze(ctx);
-    }
-    if (isSymbol(this.right)) ctx.addDependency(this.right);
+    ctx.analyze(this.left);
+    ctx.analyze(this.right);
   }
 
-  protected override _render() {
+  override toAst() {
     const leftNode = this.$node(this.left);
     validTypescriptIdentifierRegExp.lastIndex = 0;
     if (
-      typeof this.right === 'number' ||
-      (typeof this.right === 'string' &&
-        !validTypescriptIdentifierRegExp.test(this.right))
+      typeof fromRef(this.right) === 'number' ||
+      (typeof fromRef(this.right) === 'string' &&
+        !validTypescriptIdentifierRegExp.test(fromRef(this.right) as string))
     ) {
       if (this._optional) {
         return ts.factory.createElementAccessChain(
           leftNode,
           this.$node(new TokenTsDsl().questionDot()),
-          this.$node(new LiteralTsDsl(this.right)),
+          this.$node(new LiteralTsDsl(fromRef(this.right) as string)),
         );
       }
       return ts.factory.createElementAccessExpression(
         leftNode,
-        this.$node(new LiteralTsDsl(this.right)),
+        this.$node(new LiteralTsDsl(fromRef(this.right) as string)),
       );
     }
     if (this._optional) {

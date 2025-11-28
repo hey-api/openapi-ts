@@ -1,11 +1,13 @@
 import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
-import { isTsDsl, TsDsl } from '../base';
+import { TsDsl } from '../base';
 
 const Mixed = TsDsl<ts.Statement>;
 
 export class StmtTsDsl extends Mixed {
+  readonly '~dsl' = 'StmtTsDsl';
+
   protected _inner: ts.Expression | ts.Statement | TsDsl<any>;
 
   constructor(inner: ts.Expression | ts.Statement | TsDsl<any>) {
@@ -15,10 +17,10 @@ export class StmtTsDsl extends Mixed {
 
   override analyze(ctx: AnalysisContext): void {
     super.analyze(ctx);
-    if (isTsDsl(this._inner)) this._inner.analyze(ctx);
+    ctx.analyze(this._inner);
   }
 
-  protected override _render() {
+  override toAst() {
     const node = this.$node(this._inner);
     return ts.isStatement(node)
       ? node

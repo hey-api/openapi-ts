@@ -4,8 +4,7 @@ import {
   createOperationComment,
   isOperationOptionsRequired,
 } from '~/plugins/shared/utils/operation';
-import { $ } from '~/ts-dsl';
-import { reservedJavaScriptKeywordsRegExp } from '~/utils/regexp';
+import { $, reservedJavaScriptKeywordsRegExp } from '~/ts-dsl';
 
 import type { HeyApiSdkPlugin } from '../types';
 import { nuxtTypeComposable, nuxtTypeDefault } from './constants';
