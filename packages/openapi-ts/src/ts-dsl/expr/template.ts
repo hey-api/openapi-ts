@@ -1,11 +1,12 @@
+import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { TsDsl } from '../base';
+import { isTsDsl, TsDsl } from '../base';
 
-export class TemplateTsDsl extends TsDsl<
-  ts.TemplateExpression | ts.NoSubstitutionTemplateLiteral
-> {
+const Mixed = TsDsl<ts.TemplateExpression | ts.NoSubstitutionTemplateLiteral>;
+
+export class TemplateTsDsl extends Mixed {
   protected parts: Array<string | MaybeTsDsl<ts.Expression>> = [];
 
   constructor(value?: string | MaybeTsDsl<ts.Expression>) {
@@ -13,12 +14,19 @@ export class TemplateTsDsl extends TsDsl<
     if (value !== undefined) this.add(value);
   }
 
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    for (const part of this.parts) {
+      if (isTsDsl(part)) part.analyze(ctx);
+    }
+  }
+
   add(value: string | MaybeTsDsl<ts.Expression>): this {
     this.parts.push(value);
     return this;
   }
 
-  $render(): ts.TemplateExpression | ts.NoSubstitutionTemplateLiteral {
+  protected override _render() {
     const parts = this.$node(this.parts);
 
     const normalized: Array<string | ts.Expression> = [];

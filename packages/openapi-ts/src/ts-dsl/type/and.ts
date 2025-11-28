@@ -1,21 +1,38 @@
+import type { AnalysisContext, Symbol } from '@hey-api/codegen-core';
+import { isSymbol } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
-import { TypeTsDsl } from '../base';
+import { isTsDsl, TypeTsDsl } from '../base';
 
-export class TypeAndTsDsl extends TypeTsDsl<ts.IntersectionTypeNode> {
-  protected _types: Array<string | ts.TypeNode | TypeTsDsl> = [];
+type Type = Symbol | string | ts.TypeNode | TypeTsDsl;
 
-  constructor(...nodes: Array<string | ts.TypeNode | TypeTsDsl>) {
+const Mixed = TypeTsDsl<ts.IntersectionTypeNode>;
+
+export class TypeAndTsDsl extends Mixed {
+  protected _types: Array<Type> = [];
+
+  constructor(...nodes: Array<Type>) {
     super();
     this.types(...nodes);
   }
 
-  types(...nodes: Array<string | ts.TypeNode | TypeTsDsl>): this {
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    for (const t of this._types) {
+      if (isSymbol(t)) {
+        ctx.addDependency(t);
+      } else if (isTsDsl(t)) {
+        t.analyze(ctx);
+      }
+    }
+  }
+
+  types(...nodes: Array<Type>): this {
     this._types.push(...nodes);
     return this;
   }
 
-  $render(): ts.IntersectionTypeNode {
+  protected override _render() {
     const flat: Array<ts.TypeNode> = [];
 
     for (const n of this._types) {

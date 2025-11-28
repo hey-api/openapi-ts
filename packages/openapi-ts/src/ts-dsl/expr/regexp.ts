@@ -1,3 +1,4 @@
+import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl } from '../base';
@@ -10,7 +11,9 @@ type RegexFlags<Avail extends string = RegexFlag> =
       [K in Avail]: `${K}${RegexFlags<Exclude<Avail, K>>}`;
     }[Avail];
 
-export class RegExpTsDsl extends TsDsl<ts.RegularExpressionLiteral> {
+const Mixed = TsDsl<ts.RegularExpressionLiteral>;
+
+export class RegExpTsDsl extends Mixed {
   protected pattern: string;
   protected flags?: RegexFlags;
 
@@ -20,8 +23,11 @@ export class RegExpTsDsl extends TsDsl<ts.RegularExpressionLiteral> {
     this.flags = flags;
   }
 
-  /** Emits a RegularExpressionLiteral node. */
-  $render(): ts.RegularExpressionLiteral {
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+  }
+
+  protected override _render() {
     const patternContent =
       this.pattern.startsWith('/') && this.pattern.endsWith('/')
         ? this.pattern.slice(1, -1)

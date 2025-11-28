@@ -55,8 +55,7 @@ export class TokenTsDsl<K extends ts.SyntaxKind = never> extends TsDsl<
     );
   }
 
-  /** Renders the final token */
-  $render(): ts.Token<K> {
+  protected override _render(): ts.Token<K> {
     if (!this._kind) {
       throw new Error(`Token missing \`.kind(kind)\``);
     }

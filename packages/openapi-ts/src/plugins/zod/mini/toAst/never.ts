@@ -14,6 +14,6 @@ export const neverToAst = ({
     resource: 'zod.z',
   });
   const result: Partial<Omit<Ast, 'typeName'>> = {};
-  result.expression = $(z.placeholder).attr(identifiers.never).call();
+  result.expression = $(z).attr(identifiers.never).call();
   return result as Omit<Ast, 'typeName'>;
 };

@@ -20,13 +20,11 @@ export const booleanToAst = ({
 
   if (typeof schema.const === 'boolean') {
     pipes.push(
-      $(v.placeholder)
-        .attr(identifiers.schemas.literal)
-        .call($.literal(schema.const)),
+      $(v).attr(identifiers.schemas.literal).call($.literal(schema.const)),
     );
     return pipesToAst({ pipes, plugin });
   }
 
-  pipes.push($(v.placeholder).attr(identifiers.schemas.boolean).call());
+  pipes.push($(v).attr(identifiers.schemas.boolean).call());
   return pipesToAst({ pipes, plugin });
 };

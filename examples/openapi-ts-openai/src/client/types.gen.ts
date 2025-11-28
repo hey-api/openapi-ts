@@ -259,8 +259,8 @@ export const AssistantSupportedModels = {
   GPT_3_5_TURBO_16K_0613: 'gpt-3.5-turbo-16k-0613',
 } as const;
 
-export type AssistantSupportedModels =
-  (typeof AssistantSupportedModels)[keyof typeof AssistantSupportedModels];
+export type AssistantSupportedModels2 =
+  (typeof AssistantSupportedModels2)[keyof typeof AssistantSupportedModels2];
 
 /**
  * Code interpreter tool
@@ -378,8 +378,8 @@ export const AudioResponseFormat = {
  * The format of the output, in one of these options: `json`, `text`, `srt`, `verbose_json`, or `vtt`. For `gpt-4o-transcribe` and `gpt-4o-mini-transcribe`, the only supported format is `json`.
  *
  */
-export type AudioResponseFormat =
-  (typeof AudioResponseFormat)[keyof typeof AudioResponseFormat];
+export type AudioResponseFormat2 =
+  (typeof AudioResponseFormat2)[keyof typeof AudioResponseFormat2];
 
 /**
  * A log of a user action or configuration change within this organization.
@@ -389,7 +389,7 @@ export type AuditLog = {
    * The ID of this log.
    */
   id: string;
-  type: AuditLogEventType;
+  type: AuditLogEventType2;
   /**
    * The Unix timestamp (in seconds) of the event.
    */
@@ -949,8 +949,8 @@ export const AuditLogEventType = {
 /**
  * The event type.
  */
-export type AuditLogEventType =
-  (typeof AuditLogEventType)[keyof typeof AuditLogEventType];
+export type AuditLogEventType2 =
+  (typeof AuditLogEventType2)[keyof typeof AuditLogEventType2];
 
 /**
  * Auto Chunking Strategy
@@ -1911,8 +1911,8 @@ export const ChatCompletionRole = {
 /**
  * The role of the author of a message
  */
-export type ChatCompletionRole =
-  (typeof ChatCompletionRole)[keyof typeof ChatCompletionRole];
+export type ChatCompletionRole2 =
+  (typeof ChatCompletionRole2)[keyof typeof ChatCompletionRole2];
 
 /**
  * Options for streaming response. Only set this when you set `stream: true`.
@@ -2698,7 +2698,7 @@ export type CreateAssistantRequest = {
    * ID of the model to use. You can use the [List models](https://platform.openai.com/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](https://platform.openai.com/docs/models) for descriptions of them.
    *
    */
-  model: string | AssistantSupportedModels;
+  model: string | AssistantSupportedModels2;
   /**
    * The name of the assistant. The maximum length is 256 characters.
    *
@@ -2714,7 +2714,7 @@ export type CreateAssistantRequest = {
    *
    */
   instructions?: string;
-  reasoning_effort?: ReasoningEffort;
+  reasoning_effort?: ReasoningEffort2;
   /**
    * A list of tool enabled on the assistant. There can be a maximum of 128 tools per assistant. Tools can be of types `code_interpreter`, `file_search`, or `function`.
    *
@@ -2815,8 +2815,8 @@ export type CreateChatCompletionRequest = CreateModelResponseProperties & {
    */
   model: ModelIdsShared;
   modalities?: ResponseModalities;
-  verbosity?: Verbosity;
-  reasoning_effort?: ReasoningEffort;
+  verbosity?: Verbosity2;
+  reasoning_effort?: ReasoningEffort2;
   /**
    * An upper bound for the number of tokens that can be generated for a completion, including visible output tokens and [reasoning tokens](https://platform.openai.com/docs/guides/reasoning).
    *
@@ -2856,7 +2856,7 @@ export type CreateChatCompletionRequest = CreateModelResponseProperties & {
       type: 'approximate';
       approximate: WebSearchLocation;
     };
-    search_context_size?: WebSearchContextSize;
+    search_context_size?: WebSearchContextSize2;
   };
   /**
    * An integer between 0 and 20 specifying the number of most likely tokens to
@@ -3077,7 +3077,7 @@ export type CreateChatCompletionResponse = {
    * The model used for the chat completion.
    */
   model: string;
-  service_tier?: ServiceTier;
+  service_tier?: ServiceTier2;
   /**
    * This fingerprint represents the backend configuration that the model runs with.
    *
@@ -3151,7 +3151,7 @@ export type CreateChatCompletionStreamResponse = {
    * The model to generate the completion.
    */
   model: string;
-  service_tier?: ServiceTier;
+  service_tier?: ServiceTier2;
   /**
    * This fingerprint represents the backend configuration that the model runs with.
    * Can be used in conjunction with the `seed` request parameter to understand when backend changes have been made that might impact determinism.
@@ -3859,7 +3859,7 @@ export type CreateFileRequest = {
    *
    */
   file: Blob | File;
-  purpose: FilePurpose;
+  purpose: FilePurpose2;
   expires_after?: FileExpirationAfter;
 };
 
@@ -4065,7 +4065,7 @@ export type CreateImageEditRequest = {
    *
    */
   user?: string;
-  input_fidelity?: ImageInputFidelity;
+  input_fidelity?: ImageInputFidelity2;
   /**
    * Edit the image in streaming mode. Defaults to `false`. See the
    * [Image generation guide](https://platform.openai.com/docs/guides/image-generation) for more information.
@@ -4498,7 +4498,7 @@ export type CreateResponse = CreateModelResponseProperties &
      * enrolled in the zero data retention program).
      *
      */
-    include?: Array<Includable>;
+    include?: Array<Includable2>;
     /**
      * Whether to allow the model to run tool calls in parallel.
      *
@@ -4538,8 +4538,8 @@ export type CreateRunRequest = {
   /**
    * The ID of the [Model](https://platform.openai.com/docs/api-reference/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used.
    */
-  model?: string | AssistantSupportedModels;
-  reasoning_effort?: ReasoningEffort;
+  model?: string | AssistantSupportedModels2;
+  reasoning_effort?: ReasoningEffort2;
   /**
    * Overrides the [instructions](https://platform.openai.com/docs/api-reference/assistants/createAssistant) of the assistant. This is useful for modifying the behavior on a per-run basis.
    */
@@ -4836,7 +4836,7 @@ export type CreateTranscriptionRequest = {
    *
    */
   prompt?: string;
-  response_format?: AudioResponseFormat;
+  response_format?: AudioResponseFormat2;
   /**
    * The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. If set to 0, the model will use [log probability](https://en.wikipedia.org/wiki/Log_probability) to automatically increase the temperature until certain thresholds are hit.
    *
@@ -4866,7 +4866,7 @@ export type CreateTranscriptionRequest = {
    * the models `gpt-4o-transcribe` and `gpt-4o-mini-transcribe`.
    *
    */
-  include?: Array<TranscriptionInclude>;
+  include?: Array<TranscriptionInclude2>;
 };
 
 /**
@@ -5746,7 +5746,7 @@ export type EvalResponsesSource = {
   /**
    * Optional reasoning effort parameter. This is a query parameter used to select responses.
    */
-  reasoning_effort?: ReasoningEffort;
+  reasoning_effort?: ReasoningEffort2;
   /**
    * Sampling temperature. This is a query parameter used to select responses.
    */
@@ -6181,8 +6181,8 @@ export const FileSearchRanker = {
 /**
  * The ranker to use for the file search. If not specified will use the `auto` ranker.
  */
-export type FileSearchRanker =
-  (typeof FileSearchRanker)[keyof typeof FileSearchRanker];
+export type FileSearchRanker2 =
+  (typeof FileSearchRanker2)[keyof typeof FileSearchRanker2];
 
 /**
  * File search tool call ranking options
@@ -6193,7 +6193,7 @@ export type FileSearchRanker =
  *
  */
 export type FileSearchRankingOptions = {
-  ranker?: FileSearchRanker;
+  ranker?: FileSearchRanker2;
   /**
    * The score threshold for the file search. All values must be a floating point number between 0 and 1.
    */
@@ -7313,7 +7313,7 @@ export type ImageGenTool = {
    *
    */
   background?: 'transparent' | 'opaque' | 'auto';
-  input_fidelity?: ImageInputFidelity;
+  input_fidelity?: ImageInputFidelity2;
   /**
    * Optional mask for inpainting. Contains `image_url`
    * (string, optional) and `file_id` (string, optional).
@@ -7381,8 +7381,8 @@ export const ImageInputFidelity = { HIGH: 'high', LOW: 'low' } as const;
  * for `gpt-image-1`. Supports `high` and `low`. Defaults to `low`.
  *
  */
-export type ImageInputFidelity =
-  (typeof ImageInputFidelity)[keyof typeof ImageInputFidelity];
+export type ImageInputFidelity2 =
+  (typeof ImageInputFidelity2)[keyof typeof ImageInputFidelity2];
 
 /**
  * Image generation response
@@ -7494,7 +7494,7 @@ export const Includable = {
  * enrolled in the zero data retention program).
  *
  */
-export type Includable = (typeof Includable)[keyof typeof Includable];
+export type Includable2 = (typeof Includable2)[keyof typeof Includable2];
 
 /**
  * Audio input
@@ -8846,7 +8846,7 @@ export type ModelIdsResponses =
   | 'computer-use-preview'
   | 'computer-use-preview-2025-03-11';
 
-export type ModelIdsShared = string | ChatModel;
+export type ModelIdsShared = string | ChatModel2;
 
 export type ModelResponseProperties = {
   metadata?: Metadata;
@@ -8892,7 +8892,7 @@ export type ModelResponseProperties = {
    *
    */
   prompt_cache_key?: string;
-  service_tier?: ServiceTier;
+  service_tier?: ServiceTier2;
 };
 
 export type ModifyAssistantRequest = {
@@ -8900,8 +8900,8 @@ export type ModifyAssistantRequest = {
    * ID of the model to use. You can use the [List models](https://platform.openai.com/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](https://platform.openai.com/docs/models) for descriptions of them.
    *
    */
-  model?: string | AssistantSupportedModels;
-  reasoning_effort?: ReasoningEffort;
+  model?: string | AssistantSupportedModels2;
+  reasoning_effort?: ReasoningEffort2;
   /**
    * The name of the assistant. The maximum length is 256 characters.
    *
@@ -12424,7 +12424,7 @@ export type RealtimeTranscriptionSessionCreateResponse = {
  *
  */
 export type Reasoning = {
-  effort?: ReasoningEffort;
+  effort?: ReasoningEffort2;
   /**
    * A summary of the reasoning performed by the model. This can be
    * useful for debugging and understanding the model's reasoning process.
@@ -12468,8 +12468,8 @@ export const ReasoningEffort = {
  * on reasoning in a response.
  *
  */
-export type ReasoningEffort =
-  (typeof ReasoningEffort)[keyof typeof ReasoningEffort];
+export type ReasoningEffort2 =
+  (typeof ReasoningEffort2)[keyof typeof ReasoningEffort2];
 
 /**
  * Reasoning
@@ -12980,7 +12980,7 @@ export type ResponseCustomToolCallInputDoneEvent = {
  *
  */
 export type ResponseError = {
-  code: ResponseErrorCode;
+  code: ResponseErrorCode2;
   /**
    * A human-readable description of the error.
    *
@@ -13017,8 +13017,8 @@ export const ResponseErrorCode = {
  * The error code for the response.
  *
  */
-export type ResponseErrorCode =
-  (typeof ResponseErrorCode)[keyof typeof ResponseErrorCode];
+export type ResponseErrorCode2 =
+  (typeof ResponseErrorCode2)[keyof typeof ResponseErrorCode2];
 
 /**
  * Emitted when an error occurs.
@@ -13896,7 +13896,7 @@ export type ResponseProperties = {
    */
   text?: {
     format?: TextResponseFormatConfiguration;
-    verbosity?: Verbosity;
+    verbosity?: Verbosity2;
   };
   /**
    * An array of tools the model may call while generating a response. You
@@ -13923,7 +13923,7 @@ export type ResponseProperties = {
    *
    */
   tool_choice?:
-    | ToolChoiceOptions
+    | ToolChoiceOptions2
     | ToolChoiceAllowed
     | ToolChoiceTypes
     | ToolChoiceFunction
@@ -14765,7 +14765,7 @@ export type RunObject = {
    * The ID of the [assistant](https://platform.openai.com/docs/api-reference/assistants) used for execution of this run.
    */
   assistant_id: string;
-  status: RunStatus;
+  status: RunStatus2;
   /**
    * Details on the action required to continue the run. Will be `null` if no action is required.
    */
@@ -15190,7 +15190,7 @@ export type RunStepDetailsToolCallsFileSearchObject = {
  * The ranking options for the file search.
  */
 export type RunStepDetailsToolCallsFileSearchRankingOptionsObject = {
-  ranker: FileSearchRanker;
+  ranker: FileSearchRanker2;
   /**
    * The score threshold for the file search. All values must be a floating point number between 0 and 1.
    */
@@ -15537,7 +15537,7 @@ export const ServiceTier = {
  * When the `service_tier` parameter is set, the response body will include the `service_tier` value based on the processing mode actually used to serve the request. This response value may be different from the value set in the parameter.
  *
  */
-export type ServiceTier = (typeof ServiceTier)[keyof typeof ServiceTier];
+export type ServiceTier2 = (typeof ServiceTier2)[keyof typeof ServiceTier2];
 
 /**
  * Emitted for each chunk of audio data generated during speech synthesis.
@@ -15933,8 +15933,8 @@ export const ToolChoiceOptions = {
  * `required` means the model must call one or more tools.
  *
  */
-export type ToolChoiceOptions =
-  (typeof ToolChoiceOptions)[keyof typeof ToolChoiceOptions];
+export type ToolChoiceOptions2 =
+  (typeof ToolChoiceOptions2)[keyof typeof ToolChoiceOptions2];
 
 /**
  * Hosted tool
@@ -16100,8 +16100,8 @@ export type TranscriptionChunkingStrategy = 'auto' | VadConfig;
 
 export const TranscriptionInclude = { LOGPROBS: 'logprobs' } as const;
 
-export type TranscriptionInclude =
-  (typeof TranscriptionInclude)[keyof typeof TranscriptionInclude];
+export type TranscriptionInclude2 =
+  (typeof TranscriptionInclude2)[keyof typeof TranscriptionInclude2];
 
 export type TranscriptionSegment = {
   /**
@@ -17000,7 +17000,7 @@ export const Verbosity = {
  * Currently supported values are `low`, `medium`, and `high`.
  *
  */
-export type Verbosity = (typeof Verbosity)[keyof typeof Verbosity];
+export type Verbosity2 = (typeof Verbosity2)[keyof typeof Verbosity2];
 
 export type VoiceIdsShared =
   | string
@@ -17106,8 +17106,8 @@ export const WebSearchContextSize = {
  * search. One of `low`, `medium`, or `high`. `medium` is the default.
  *
  */
-export type WebSearchContextSize =
-  (typeof WebSearchContextSize)[keyof typeof WebSearchContextSize];
+export type WebSearchContextSize2 =
+  (typeof WebSearchContextSize2)[keyof typeof WebSearchContextSize2];
 
 /**
  * Web search location
@@ -18269,7 +18269,7 @@ export const FilePurpose = {
  * The intended purpose of the uploaded file. One of: - `assistants`: Used in the Assistants API - `batch`: Used in the Batch API - `fine-tune`: Used for fine-tuning - `vision`: Images used for vision fine-tuning - `user_data`: Flexible file type for any purpose - `evals`: Used for eval data sets
  *
  */
-export type FilePurpose = (typeof FilePurpose)[keyof typeof FilePurpose];
+export type FilePurpose2 = (typeof FilePurpose2)[keyof typeof FilePurpose2];
 
 export type BatchError = {
   /**
@@ -18451,7 +18451,7 @@ export const ChatModel = {
   GPT_3_5_TURBO_16K_0613: 'gpt-3.5-turbo-16k-0613',
 } as const;
 
-export type ChatModel = (typeof ChatModel)[keyof typeof ChatModel];
+export type ChatModel2 = (typeof ChatModel2)[keyof typeof ChatModel2];
 
 export type CreateThreadAndRunRequestWithoutStream = {
   /**
@@ -18567,8 +18567,8 @@ export type CreateRunRequestWithoutStream = {
   /**
    * The ID of the [Model](https://platform.openai.com/docs/api-reference/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used.
    */
-  model?: string | AssistantSupportedModels;
-  reasoning_effort?: ReasoningEffort;
+  model?: string | AssistantSupportedModels2;
+  reasoning_effort?: ReasoningEffort2;
   /**
    * Overrides the [instructions](https://platform.openai.com/docs/api-reference/assistants/createAssistant) of the assistant. This is useful for modifying the behavior on a per-run basis.
    */
@@ -18648,7 +18648,7 @@ export const RunStatus = {
 /**
  * The status of the run, which can be either `queued`, `in_progress`, `requires_action`, `cancelling`, `cancelled`, `failed`, `completed`, `incomplete`, or `expired`.
  */
-export type RunStatus = (typeof RunStatus)[keyof typeof RunStatus];
+export type RunStatus2 = (typeof RunStatus2)[keyof typeof RunStatus2];
 
 /**
  * The delta containing the fields that have changed on the run step.
@@ -20419,7 +20419,7 @@ export type ListAuditLogsData = {
     /**
      * Return only events with a `type` in one of these values. For example, `project.created`. For all options, see the documentation for the [audit log object](https://platform.openai.com/docs/api-reference/audit-logs/object).
      */
-    'event_types[]'?: Array<AuditLogEventType>;
+    'event_types[]'?: Array<AuditLogEventType2>;
     /**
      * Return only events performed by these actors. Can be a user ID, a service account ID, or an api key tracking ID.
      */
@@ -22143,7 +22143,7 @@ export type GetResponseData = {
      * parameter for Response creation above for more information.
      *
      */
-    include?: Array<Includable>;
+    include?: Array<Includable2>;
     /**
      * If set to true, the model response data will be streamed to the client
      * as it is generated using [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format).
@@ -22251,7 +22251,7 @@ export type ListInputItemsData = {
      * parameter for Response creation above for more information.
      *
      */
-    include?: Array<Includable>;
+    include?: Array<Includable2>;
   };
   url: '/responses/{response_id}/input_items';
 };

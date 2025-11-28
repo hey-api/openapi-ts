@@ -14,6 +14,6 @@ export const neverToAst = ({
     category: 'external',
     resource: 'zod.z',
   });
-  result.expression = $(z.placeholder).attr(identifiers.never).call();
+  result.expression = $(z).attr(identifiers.never).call();
   return result as Omit<Ast, 'typeName'>;
 };

@@ -121,8 +121,6 @@ const operationToDataType = ({
   data.required = dataRequired;
 
   const symbol = plugin.registerSymbol({
-    exported: true,
-    kind: 'type',
     meta: {
       category: 'type',
       path: state.path.value,
@@ -138,8 +136,8 @@ const operationToDataType = ({
     }),
   });
   const node = $.type
-    .alias(symbol.placeholder)
-    .export(symbol.exported)
+    .alias(symbol)
+    .export()
     .type(
       irSchemaToAst({
         plugin,
@@ -147,7 +145,7 @@ const operationToDataType = ({
         state,
       }),
     );
-  plugin.setSymbolValue(symbol, node);
+  plugin.addNode(node);
 };
 
 export const operationToType = ({
@@ -164,8 +162,6 @@ export const operationToType = ({
 
   if (errors) {
     const symbolErrors = plugin.registerSymbol({
-      exported: true,
-      kind: 'type',
       meta: {
         category: 'type',
         path: state.path.value,
@@ -181,8 +177,8 @@ export const operationToType = ({
       }),
     });
     const node = $.type
-      .alias(symbolErrors.placeholder)
-      .export(symbolErrors.exported)
+      .alias(symbolErrors)
+      .export()
       .type(
         irSchemaToAst({
           plugin,
@@ -190,12 +186,10 @@ export const operationToType = ({
           state,
         }),
       );
-    plugin.setSymbolValue(symbolErrors, node);
+    plugin.addNode(node);
 
     if (error) {
       const symbol = plugin.registerSymbol({
-        exported: true,
-        kind: 'type',
         meta: {
           category: 'type',
           path: state.path.value,
@@ -214,21 +208,15 @@ export const operationToType = ({
         }),
       });
       const node = $.type
-        .alias(symbol.placeholder)
-        .export(symbol.exported)
-        .type(
-          $.type(symbolErrors.placeholder).idx(
-            $.type(symbolErrors.placeholder).keyof(),
-          ),
-        );
-      plugin.setSymbolValue(symbol, node);
+        .alias(symbol)
+        .export()
+        .type($.type(symbolErrors).idx($.type(symbolErrors).keyof()));
+      plugin.addNode(node);
     }
   }
 
   if (responses) {
     const symbolResponses = plugin.registerSymbol({
-      exported: true,
-      kind: 'type',
       meta: {
         category: 'type',
         path: state.path.value,
@@ -244,8 +232,8 @@ export const operationToType = ({
       }),
     });
     const node = $.type
-      .alias(symbolResponses.placeholder)
-      .export(symbolResponses.exported)
+      .alias(symbolResponses)
+      .export()
       .type(
         irSchemaToAst({
           plugin,
@@ -253,12 +241,10 @@ export const operationToType = ({
           state,
         }),
       );
-    plugin.setSymbolValue(symbolResponses, node);
+    plugin.addNode(node);
 
     if (response) {
       const symbol = plugin.registerSymbol({
-        exported: true,
-        kind: 'type',
         meta: {
           category: 'type',
           path: state.path.value,
@@ -277,14 +263,10 @@ export const operationToType = ({
         }),
       });
       const node = $.type
-        .alias(symbol.placeholder)
-        .export(symbol.exported)
-        .type(
-          $.type(symbolResponses.placeholder).idx(
-            $.type(symbolResponses.placeholder).keyof(),
-          ),
-        );
-      plugin.setSymbolValue(symbol, node);
+        .alias(symbol)
+        .export()
+        .type($.type(symbolResponses).idx($.type(symbolResponses).keyof()));
+      plugin.addNode(node);
     }
   }
 };

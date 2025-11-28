@@ -1,13 +1,13 @@
-/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
+import type { AnalysisContext, Symbol } from '@hey-api/codegen-core';
+import { isSymbol } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { TsDsl } from '../base';
-import { mixin } from '../mixins/apply';
+import { isTsDsl, TsDsl } from '../base';
 import { AsMixin } from '../mixins/as';
 import { ExprMixin } from '../mixins/expr';
 
-type Expr = string | MaybeTsDsl<ts.Expression>;
+type Expr = Symbol | string | MaybeTsDsl<ts.Expression>;
 type Op = Operator | ts.BinaryOperator;
 type Operator =
   | '!='
@@ -27,7 +27,9 @@ type Operator =
   | '??'
   | '||';
 
-export class BinaryTsDsl extends TsDsl<ts.BinaryExpression> {
+const Mixed = AsMixin(ExprMixin(TsDsl<ts.BinaryExpression>));
+
+export class BinaryTsDsl extends Mixed {
   protected _base: Expr;
   protected _expr?: Expr;
   protected _op?: Op;
@@ -37,6 +39,20 @@ export class BinaryTsDsl extends TsDsl<ts.BinaryExpression> {
     this._base = base;
     this._op = op;
     this._expr = expr;
+  }
+
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    if (isSymbol(this._base)) {
+      ctx.addDependency(this._base);
+    } else if (isTsDsl(this._base)) {
+      this._base.analyze(ctx);
+    }
+    if (isSymbol(this._expr)) {
+      ctx.addDependency(this._expr);
+    } else if (isTsDsl(this._expr)) {
+      this._expr.analyze(ctx);
+    }
   }
 
   /** Logical AND — `this && expr` */
@@ -119,7 +135,7 @@ export class BinaryTsDsl extends TsDsl<ts.BinaryExpression> {
     return this.opAndExpr('*', expr);
   }
 
-  $render(): ts.BinaryExpression {
+  protected override _render() {
     if (!this._op) {
       throw new Error('BinaryTsDsl: missing operator');
     }
@@ -166,6 +182,3 @@ export class BinaryTsDsl extends TsDsl<ts.BinaryExpression> {
     return token;
   }
 }
-
-export interface BinaryTsDsl extends AsMixin, ExprMixin {}
-mixin(BinaryTsDsl, AsMixin, ExprMixin);

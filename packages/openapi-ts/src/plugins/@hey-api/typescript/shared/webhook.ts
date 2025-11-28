@@ -1,3 +1,5 @@
+import type { Symbol } from '@hey-api/codegen-core';
+
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
 import { createSchemaComment } from '~/plugins/shared/utils/schema';
@@ -12,7 +14,7 @@ const operationToDataType = ({
   state,
 }: IrSchemaToAstOptions & {
   operation: IR.OperationObject;
-}): string => {
+}): Symbol => {
   const data: IR.SchemaObject = {
     type: 'object',
   };
@@ -24,8 +26,6 @@ const operationToDataType = ({
 
   if (operation.body) {
     const symbolWebhookPayload = plugin.registerSymbol({
-      exported: true,
-      kind: 'type',
       meta: {
         category: 'type',
         path: state.path.value,
@@ -44,8 +44,8 @@ const operationToDataType = ({
       }),
     });
     const node = $.type
-      .alias(symbolWebhookPayload.placeholder)
-      .export(symbolWebhookPayload.exported)
+      .alias(symbolWebhookPayload)
+      .export()
       .$if(createSchemaComment(operation.body.schema), (t, v) => t.doc(v))
       .type(
         irSchemaToAst({
@@ -54,23 +54,9 @@ const operationToDataType = ({
           state,
         }),
       );
-    plugin.setSymbolValue(symbolWebhookPayload, node);
+    plugin.addNode(node);
 
-    plugin.registerSymbol({
-      exported: true,
-      kind: 'type',
-      meta: {
-        category: 'type',
-        path: state.path.value,
-        resource: 'definition',
-        resourceId: symbolWebhookPayload.placeholder,
-        tags: state.tags?.value,
-        tool: 'typescript',
-      },
-      name: symbolWebhookPayload.name,
-      placeholder: symbolWebhookPayload.placeholder,
-    });
-    data.properties.body = { $ref: symbolWebhookPayload.placeholder };
+    data.properties.body = { symbolRef: symbolWebhookPayload };
     dataRequired.push('body');
   } else {
     data.properties.body = { type: 'never' };
@@ -88,8 +74,6 @@ const operationToDataType = ({
   data.required = dataRequired;
 
   const symbolWebhookRequest = plugin.registerSymbol({
-    exported: true,
-    kind: 'type',
     meta: {
       category: 'type',
       path: state.path.value,
@@ -105,8 +89,8 @@ const operationToDataType = ({
     }),
   });
   const node = $.type
-    .alias(symbolWebhookRequest.placeholder)
-    .export(symbolWebhookRequest.exported)
+    .alias(symbolWebhookRequest)
+    .export()
     .type(
       irSchemaToAst({
         plugin,
@@ -114,9 +98,9 @@ const operationToDataType = ({
         state,
       }),
     );
-  plugin.setSymbolValue(symbolWebhookRequest, node);
+  plugin.addNode(node);
 
-  return symbolWebhookRequest.placeholder;
+  return symbolWebhookRequest;
 };
 
 export const webhookToType = ({
@@ -125,9 +109,9 @@ export const webhookToType = ({
   state,
 }: IrSchemaToAstOptions & {
   operation: IR.OperationObject;
-}): string => {
-  const name = operationToDataType({ operation, plugin, state });
-  return name;
+}): Symbol => {
+  const symbol = operationToDataType({ operation, plugin, state });
+  return symbol;
 
   // don't handle webhook responses for now, users only need requestBody
 };

@@ -14,6 +14,6 @@ export const nullToAst = ({
     category: 'external',
     resource: 'zod.z',
   });
-  result.expression = $(z.placeholder).attr(identifiers.null).call();
+  result.expression = $(z).attr(identifiers.null).call();
   return result as Omit<Ast, 'typeName'>;
 };

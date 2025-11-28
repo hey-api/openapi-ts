@@ -13,6 +13,6 @@ export const nullToAst = ({
     category: 'external',
     resource: 'valibot.v',
   });
-  const expression = $(v.placeholder).attr(identifiers.schemas.null).call();
+  const expression = $(v).attr(identifiers.schemas.null).call();
   return expression;
 };

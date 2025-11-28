@@ -21,36 +21,27 @@ function defaultObjectBaseResolver({
 
   // Handle `additionalProperties: { type: 'never' }` → v.strictObject()
   if (additional === null) {
-    return pipes.push(
-      $(v.placeholder).attr(identifiers.schemas.strictObject).call(shape),
-    );
+    return pipes.push($(v).attr(identifiers.schemas.strictObject).call(shape));
   }
 
   // Handle additionalProperties as schema → v.record() or v.objectWithRest()
   if (additional) {
     if (shape.isEmpty) {
       return pipes.push(
-        $(v.placeholder)
+        $(v)
           .attr(identifiers.schemas.record)
-          .call(
-            $(v.placeholder).attr(identifiers.schemas.string).call(),
-            additional,
-          ),
+          .call($(v).attr(identifiers.schemas.string).call(), additional),
       );
     }
 
     // If there are named properties, use v.objectWithRest() to validate both
     return pipes.push(
-      $(v.placeholder)
-        .attr(identifiers.schemas.objectWithRest)
-        .call(shape, additional),
+      $(v).attr(identifiers.schemas.objectWithRest).call(shape, additional),
     );
   }
 
   // Default case → v.object()
-  return pipes.push(
-    $(v.placeholder).attr(identifiers.schemas.object).call(shape),
-  );
+  return pipes.push($(v).attr(identifiers.schemas.object).call(shape));
 }
 
 export const objectToAst = ({

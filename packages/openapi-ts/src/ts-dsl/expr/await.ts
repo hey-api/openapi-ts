@@ -1,25 +1,36 @@
-/* eslint-disable @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging */
+import type { AnalysisContext, Symbol } from '@hey-api/codegen-core';
+import { isSymbol } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { TsDsl } from '../base';
-import { mixin } from '../mixins/apply';
-import { ExprMixin, registerLazyAccessAwaitFactory } from '../mixins/expr';
+import { isTsDsl, TsDsl } from '../base';
+import { ExprMixin, setAwaitFactory } from '../mixins/expr';
 
-export class AwaitTsDsl extends TsDsl<ts.AwaitExpression> {
-  protected _awaitExpr: string | MaybeTsDsl<ts.Expression>;
+export type AwaitExpr = Symbol | string | MaybeTsDsl<ts.Expression>;
+export type AwaitCtor = (expr: AwaitExpr) => AwaitTsDsl;
 
-  constructor(expr: string | MaybeTsDsl<ts.Expression>) {
+const Mixed = ExprMixin(TsDsl<ts.AwaitExpression>);
+
+export class AwaitTsDsl extends Mixed {
+  protected _awaitExpr: AwaitExpr;
+
+  constructor(expr: AwaitExpr) {
     super();
     this._awaitExpr = expr;
   }
 
-  $render(): ts.AwaitExpression {
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    if (isSymbol(this._awaitExpr)) {
+      ctx.addDependency(this._awaitExpr);
+    } else if (isTsDsl(this._awaitExpr)) {
+      this._awaitExpr.analyze(ctx);
+    }
+  }
+
+  protected override _render() {
     return ts.factory.createAwaitExpression(this.$node(this._awaitExpr));
   }
 }
 
-export interface AwaitTsDsl extends ExprMixin {}
-mixin(AwaitTsDsl, ExprMixin);
-
-registerLazyAccessAwaitFactory((...args) => new AwaitTsDsl(...args));
+setAwaitFactory((...args) => new AwaitTsDsl(...args));

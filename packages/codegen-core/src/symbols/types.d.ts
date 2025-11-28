@@ -1,6 +1,19 @@
-import type { ISymbolMeta } from '../extensions/types';
+import type { ISymbolMeta } from '../extensions';
+import type { Symbol } from './symbol';
 
 export type ISymbolIdentifier = number | ISymbolMeta;
+
+export type SymbolImportKind = 'namespace' | 'default' | 'named';
+
+export type SymbolKind =
+  | 'alias' // export { a as a2 } from 'a';
+  | 'class'
+  | 'enum'
+  | 'function'
+  | 'interface'
+  | 'namespace'
+  | 'type'
+  | 'var';
 
 export type ISymbolIn = {
   /**
@@ -27,19 +40,15 @@ export type ISymbolIn = {
    *
    * @returns The file path to output the symbol to, or undefined to fallback to default behavior.
    */
-  getFilePath?: (symbol: ISymbolOut) => string | undefined;
-  /**
-   * Unique symbol ID. If one is not provided, it will be auto-generated.
-   */
-  readonly id?: number;
+  getFilePath?: Symbol['getFilePath'];
   /**
    * Kind of import if this symbol represents an import.
    */
-  importKind?: 'namespace' | 'default' | 'named';
+  importKind?: SymbolImportKind;
   /**
    * Kind of symbol.
    */
-  kind?: 'class' | 'function' | 'type';
+  kind?: SymbolKind;
   /**
    * Arbitrary metadata about the symbol.
    *
@@ -47,22 +56,21 @@ export type ISymbolIn = {
    */
   meta?: ISymbolMeta;
   /**
-   * The desired name for the symbol within its file. If there are multiple symbols
-   * with the same desired name, this might not end up being the actual name.
+   * The intended, user-facing name of the symbol before any conflict resolution.
+   * It is **not** guaranteed to be the final emitted name — aliasing may occur if the
+   * file contains conflicting local identifiers or other symbols with the same intended name.
    *
    * @example "UserModel"
    */
-  name?: string;
+  name: string;
   /**
    * Placeholder name for the symbol to be replaced later with the final value.
    *
+   * @deprecated
    * @example "_heyapi_31_"
    */
   readonly placeholder?: string;
 };
-
-export type ISymbolOut = Omit<ISymbolIn, 'id' | 'placeholder'> &
-  Pick<Required<ISymbolIn>, 'id' | 'placeholder'>;
 
 export interface ISymbolRegistry {
   /**
@@ -71,7 +79,7 @@ export interface ISymbolRegistry {
    * @param identifier Symbol identifier to reference.
    * @returns The symbol, or undefined if not found.
    */
-  get(identifier: ISymbolIdentifier): ISymbolOut | undefined;
+  get(identifier: ISymbolIdentifier): Symbol | undefined;
   /**
    * Returns the value associated with a symbol ID.
    *
@@ -105,14 +113,14 @@ export interface ISymbolRegistry {
    * @param filter Metadata filter to query symbols by.
    * @returns Array of symbols matching the filter.
    */
-  query(filter: ISymbolMeta): ReadonlyArray<ISymbolOut>;
+  query(filter: ISymbolMeta): ReadonlyArray<Symbol>;
   /**
    * References a symbol.
    *
    * @param meta Metadata filter to reference symbol by.
    * @returns The referenced symbol.
    */
-  reference(meta: ISymbolMeta): ISymbolOut;
+  reference(meta: ISymbolMeta): Symbol;
   /**
    * Register a symbol globally.
    *
@@ -121,13 +129,13 @@ export interface ISymbolRegistry {
    * @param symbol Symbol to register.
    * @returns The registered symbol.
    */
-  register(symbol: ISymbolIn): ISymbolOut;
+  register(symbol: ISymbolIn): Symbol;
   /**
    * Get all symbols in the order they were registered.
    *
    * @returns Array of all registered symbols, in insert order.
    */
-  registered(): IterableIterator<ISymbolOut>;
+  registered(): IterableIterator<Symbol>;
   /**
    * Sets a value for a symbol by its ID.
    *

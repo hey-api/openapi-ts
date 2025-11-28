@@ -1,9 +1,12 @@
+import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { TsDsl } from '../base';
+import { isTsDsl, TsDsl } from '../base';
 
-export class TernaryTsDsl extends TsDsl<ts.ConditionalExpression> {
+const Mixed = TsDsl<ts.ConditionalExpression>;
+
+export class TernaryTsDsl extends Mixed {
   protected _condition?: string | MaybeTsDsl<ts.Expression>;
   protected _then?: string | MaybeTsDsl<ts.Expression>;
   protected _else?: string | MaybeTsDsl<ts.Expression>;
@@ -11,6 +14,13 @@ export class TernaryTsDsl extends TsDsl<ts.ConditionalExpression> {
   constructor(condition?: string | MaybeTsDsl<ts.Expression>) {
     super();
     if (condition) this.condition(condition);
+  }
+
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    if (isTsDsl(this._condition)) this._condition.analyze(ctx);
+    if (isTsDsl(this._then)) this._then.analyze(ctx);
+    if (isTsDsl(this._else)) this._else.analyze(ctx);
   }
 
   condition(condition: string | MaybeTsDsl<ts.Expression>) {
@@ -28,7 +38,7 @@ export class TernaryTsDsl extends TsDsl<ts.ConditionalExpression> {
     return this;
   }
 
-  $render(): ts.ConditionalExpression {
+  protected override _render() {
     if (!this._condition) throw new Error('Missing condition in ternary');
     if (!this._then) throw new Error('Missing then expression in ternary');
     if (!this._else) throw new Error('Missing else expression in ternary');

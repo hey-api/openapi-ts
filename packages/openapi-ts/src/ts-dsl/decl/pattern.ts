@@ -1,3 +1,4 @@
+import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeArray } from '../base';
@@ -5,14 +6,20 @@ import { TsDsl } from '../base';
 import { IdTsDsl } from '../expr/id';
 import { TokenTsDsl } from '../token';
 
+const Mixed = TsDsl<ts.BindingName>;
+
 /**
  * Builds binding patterns (e.g. `{ foo, bar }`, `[a, b, ...rest]`).
  */
-export class PatternTsDsl extends TsDsl<ts.BindingName> {
+export class PatternTsDsl extends Mixed {
   protected pattern?:
     | { kind: 'array'; values: ReadonlyArray<string> }
     | { kind: 'object'; values: Record<string, string> };
   protected _spread?: string;
+
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+  }
 
   /** Defines an array pattern (e.g. `[a, b, c]`). */
   array(...props: ReadonlyArray<string> | [ReadonlyArray<string>]): this {
@@ -44,8 +51,7 @@ export class PatternTsDsl extends TsDsl<ts.BindingName> {
     return this;
   }
 
-  /** Builds and returns a BindingName (ObjectBindingPattern, ArrayBindingPattern, or Identifier). */
-  $render(): ts.BindingName {
+  protected override _render() {
     if (!this.pattern) {
       throw new Error('PatternTsDsl requires object() or array() pattern');
     }

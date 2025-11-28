@@ -1,8 +1,17 @@
-import type { IProjectRenderMeta } from '../extensions/types';
+import type { IProjectRenderMeta } from '../extensions';
 import type { IFileOut } from '../files/types';
 import type { IProject } from '../project/types';
 
 export interface IRenderer {
+  /**
+   * Renders the given file.
+   *
+   * @param file The file to render.
+   * @param project The project the file belongs to.
+   * @param meta Arbitrary metadata.
+   * @returns Rendered content.
+   */
+  render(file: IFileOut, project: IProject, meta?: IProjectRenderMeta): string;
   /**
    * Renders content with replaced symbols.
    *

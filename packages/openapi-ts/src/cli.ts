@@ -85,7 +85,7 @@ export const runCli = async (): Promise<void> => {
         }
       : {};
 
-    if (userConfig.debug || stringToBoolean(process.env.DEBUG)) {
+    if (userConfig.debug) {
       (userConfig.logs as Record<string, unknown>).level = 'debug';
       delete userConfig.debug;
     } else if (userConfig.silent) {

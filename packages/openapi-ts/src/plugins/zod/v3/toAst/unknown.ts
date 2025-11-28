@@ -13,6 +13,6 @@ export const unknownToAst = ({
     category: 'external',
     resource: 'zod.z',
   });
-  const expression = $(z.placeholder).attr(identifiers.unknown).call();
+  const expression = $(z).attr(identifiers.unknown).call();
   return expression;
 };

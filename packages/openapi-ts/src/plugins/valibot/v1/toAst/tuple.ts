@@ -24,12 +24,10 @@ export const tupleToAst = ({
 
   if (schema.const && Array.isArray(schema.const)) {
     const tupleElements = schema.const.map((value) =>
-      $(v.placeholder)
-        .attr(identifiers.schemas.literal)
-        .call($.fromValue(value)),
+      $(v).attr(identifiers.schemas.literal).call($.fromValue(value)),
     );
     result.pipes = [
-      $(v.placeholder)
+      $(v)
         .attr(identifiers.schemas.tuple)
         .call($.array(...tupleElements)),
     ];
@@ -52,7 +50,7 @@ export const tupleToAst = ({
       return pipesToAst({ pipes: schemaPipes.pipes, plugin });
     });
     result.pipes = [
-      $(v.placeholder)
+      $(v)
         .attr(identifiers.schemas.tuple)
         .call($.array(...tupleElements)),
     ];

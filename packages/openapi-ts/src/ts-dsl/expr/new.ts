@@ -1,27 +1,36 @@
-/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
+import type { AnalysisContext, Symbol } from '@hey-api/codegen-core';
+import { isSymbol } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { TsDsl } from '../base';
-import { mixin } from '../mixins/apply';
+import { isTsDsl, TsDsl } from '../base';
 import { ArgsMixin } from '../mixins/args';
 import { ExprMixin } from '../mixins/expr';
 import { TypeArgsMixin } from '../mixins/type-args';
 
-export class NewTsDsl extends TsDsl<ts.NewExpression> {
-  protected classExpr: string | MaybeTsDsl<ts.Expression>;
+export type NewExpr = Symbol | string | MaybeTsDsl<ts.Expression>;
 
-  constructor(
-    classExpr: string | MaybeTsDsl<ts.Expression>,
-    ...args: ReadonlyArray<string | MaybeTsDsl<ts.Expression>>
-  ) {
+const Mixed = ArgsMixin(ExprMixin(TypeArgsMixin(TsDsl<ts.NewExpression>)));
+
+export class NewTsDsl extends Mixed {
+  protected classExpr: NewExpr;
+
+  constructor(classExpr: NewExpr, ...args: ReadonlyArray<NewExpr>) {
     super();
     this.classExpr = classExpr;
     this.args(...args);
   }
 
-  /** Builds the `NewExpression` node. */
-  $render(): ts.NewExpression {
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    if (isSymbol(this.classExpr)) {
+      ctx.addDependency(this.classExpr);
+    } else if (isTsDsl(this.classExpr)) {
+      this.classExpr.analyze(ctx);
+    }
+  }
+
+  protected override _render() {
     return ts.factory.createNewExpression(
       this.$node(this.classExpr),
       this.$generics(),
@@ -29,6 +38,3 @@ export class NewTsDsl extends TsDsl<ts.NewExpression> {
     );
   }
 }
-
-export interface NewTsDsl extends ArgsMixin, ExprMixin, TypeArgsMixin {}
-mixin(NewTsDsl, ArgsMixin, ExprMixin, TypeArgsMixin);

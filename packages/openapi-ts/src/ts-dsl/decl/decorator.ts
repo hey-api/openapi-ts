@@ -1,16 +1,20 @@
-/* eslint-disable @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging */
+import type { AnalysisContext, Symbol } from '@hey-api/codegen-core';
+import { isSymbol } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { TsDsl } from '../base';
-import { mixin } from '../mixins/apply';
+import { isTsDsl, TsDsl } from '../base';
 import { ArgsMixin } from '../mixins/args';
 
-export class DecoratorTsDsl extends TsDsl<ts.Decorator> {
-  protected name: string | ts.Expression;
+export type DecoratorName = Symbol | string | MaybeTsDsl<ts.Expression>;
+
+const Mixed = ArgsMixin(TsDsl<ts.Decorator>);
+
+export class DecoratorTsDsl extends Mixed {
+  protected name: DecoratorName;
 
   constructor(
-    name: string | ts.Expression,
+    name: DecoratorName,
     ...args: ReadonlyArray<string | MaybeTsDsl<ts.Expression>>
   ) {
     super();
@@ -18,19 +22,22 @@ export class DecoratorTsDsl extends TsDsl<ts.Decorator> {
     this.args(...args);
   }
 
-  $render(): ts.Decorator {
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    if (isSymbol(this.name)) {
+      ctx.addDependency(this.name);
+    } else if (isTsDsl(this.name)) {
+      this.name.analyze(ctx);
+    }
+  }
+
+  protected override _render() {
+    const target = this.$node(this.name);
     const args = this.$args();
     return ts.factory.createDecorator(
       args.length
-        ? ts.factory.createCallExpression(
-            this.$maybeId(this.name),
-            undefined,
-            args,
-          )
-        : this.$maybeId(this.name),
+        ? ts.factory.createCallExpression(target, undefined, args)
+        : target,
     );
   }
 }
-
-export interface DecoratorTsDsl extends ArgsMixin {}
-mixin(DecoratorTsDsl, ArgsMixin);

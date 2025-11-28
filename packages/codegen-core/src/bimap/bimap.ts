@@ -2,7 +2,7 @@ import type { IBiMap } from './types';
 
 export class BiMap<Key, Value> implements IBiMap<Key, Value> {
   private map = new Map<Key, Value>();
-  private reverse = new Map<Value, Key>();
+  private reverse = new Map<Value, Set<Key>>();
 
   delete(key: Key): boolean {
     const value = this.map.get(key);
@@ -13,9 +13,11 @@ export class BiMap<Key, Value> implements IBiMap<Key, Value> {
   }
 
   deleteValue(value: Value): boolean {
-    const key = this.reverse.get(value);
-    if (key !== undefined) {
-      this.map.delete(key);
+    const keys = this.reverse.get(value);
+    if (keys) {
+      for (const key of keys) {
+        this.map.delete(key);
+      }
     }
     return this.reverse.delete(value);
   }
@@ -28,7 +30,7 @@ export class BiMap<Key, Value> implements IBiMap<Key, Value> {
     return this.map.get(key);
   }
 
-  getKey(value: Value): Key | undefined {
+  getKeys(value: Value): Set<Key> | undefined {
     return this.reverse.get(value);
   }
 
@@ -47,14 +49,18 @@ export class BiMap<Key, Value> implements IBiMap<Key, Value> {
   set(key: Key, value: Value): this {
     const oldValue = this.map.get(key);
     if (oldValue !== undefined && oldValue !== value) {
-      this.reverse.delete(oldValue);
-    }
-    const oldKey = this.reverse.get(value);
-    if (oldKey !== undefined && oldKey !== key) {
-      this.map.delete(oldKey);
+      const oldKeys = this.reverse.get(oldValue);
+      if (oldKeys) {
+        oldKeys.delete(key);
+        if (oldKeys.size === 0) {
+          this.reverse.delete(oldValue);
+        }
+      }
     }
     this.map.set(key, value);
-    this.reverse.set(value, key);
+    const keys = this.reverse.get(value) ?? new Set<Key>();
+    keys.add(key);
+    this.reverse.set(value, keys);
     return this;
   }
 

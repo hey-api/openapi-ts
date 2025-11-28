@@ -1,18 +1,29 @@
-/* eslint-disable @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging */
+import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { TsDsl } from '../base';
-import { mixin } from '../mixins/apply';
+import { isTsDsl, TsDsl } from '../base';
 import { DoMixin } from '../mixins/do';
 
-export class IfTsDsl extends TsDsl<ts.IfStatement> {
+const Mixed = DoMixin(TsDsl<ts.IfStatement>);
+
+export class IfTsDsl extends Mixed {
   protected _condition?: string | MaybeTsDsl<ts.Expression>;
   protected _else?: ReadonlyArray<MaybeTsDsl<ts.Statement>>;
 
   constructor(condition?: string | MaybeTsDsl<ts.Expression>) {
     super();
     if (condition) this.condition(condition);
+  }
+
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    if (isTsDsl(this._condition)) this._condition.analyze(ctx);
+    if (this._else) {
+      for (const stmt of this._else) {
+        if (isTsDsl(stmt)) stmt.analyze(ctx);
+      }
+    }
   }
 
   condition(condition: string | MaybeTsDsl<ts.Expression>): this {
@@ -25,7 +36,7 @@ export class IfTsDsl extends TsDsl<ts.IfStatement> {
     return this;
   }
 
-  $render(): ts.IfStatement {
+  protected override _render() {
     if (!this._condition) throw new Error('Missing condition in if');
 
     const thenStmts = this.$do();
@@ -55,6 +66,3 @@ export class IfTsDsl extends TsDsl<ts.IfStatement> {
     return ts.factory.createIfStatement(condition, thenNode, elseNode);
   }
 }
-
-export interface IfTsDsl extends DoMixin {}
-mixin(IfTsDsl, DoMixin);

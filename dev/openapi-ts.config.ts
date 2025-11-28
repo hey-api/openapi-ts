@@ -39,10 +39,11 @@ export default defineConfig(() => {
             '3.1.x',
             // 'circular.yaml',
             // 'dutchie.json',
+            // 'enum-names-values.yaml',
             // 'invalid',
-            'full.yaml',
+            // 'full.yaml',
             // 'object-property-names.yaml',
-            // 'openai.yaml',
+            'openai.yaml',
             // 'opencode.yaml',
             // 'pagination-ref.yaml',
             // 'sdk-instance.yaml',
@@ -82,7 +83,7 @@ export default defineConfig(() => {
         // 'https://somefakedomain.com/openapi.yaml',
       ],
       logs: {
-        // level: 'debug',
+        // level: 'silent',
         path: './logs',
       },
       // name: 'foo',
@@ -217,7 +218,7 @@ export default defineConfig(() => {
         {
           // baseUrl: false,
           // exportFromIndex: true,
-          name: '@hey-api/client-angular',
+          // name: '@hey-api/client-angular',
           // runtimeConfigPath: path.resolve(__dirname, 'hey-api.ts'),
           // runtimeConfigPath: './src/hey-api.ts',
           // strictBaseUrl: true,
@@ -236,6 +237,7 @@ export default defineConfig(() => {
           //   error: '他們_error_{{name}}',
           //   name: '你們_errors_{{name}}',
           // },
+          // exportFromIndex: false,
           name: '@hey-api/typescript',
           // requests: '我們_data_{{name}}',
           // responses: {
@@ -265,13 +267,13 @@ export default defineConfig(() => {
           name: '@hey-api/sdk',
           // operationId: false,
           // paramsStructure: 'flat',
-          responseStyle: 'data',
+          // responseStyle: 'data',
           // signature: 'auto',
           // signature: 'client',
           // signature: 'object',
           // transformer: '@hey-api/transformers',
           // transformer: true,
-          validator: 'valibot',
+          validator: 'zod',
           // validator: {
           //   request: 'zod',
           //   response: 'zod',
@@ -293,21 +295,22 @@ export default defineConfig(() => {
         {
           // bigInt: true,
           dates: true,
-          name: '@hey-api/transformers',
+          // name: '@hey-api/transformers',
         },
         {
-          name: 'fastify',
+          // name: 'fastify',
         },
         {
-          name: 'swr',
+          // name: 'swr',
         },
         {
           // case: 'SCREAMING_SNAKE_CASE',
           // comments: false,
           exportFromIndex: true,
-          // infiniteQueryKeys: {
-          //   name: '{{name}}IQK',
-          // },
+          infiniteQueryKeys: {
+            // name: '{{name}}IQK',
+            name: 'options',
+          },
           infiniteQueryOptions: {
             meta() {
               return {
@@ -315,6 +318,7 @@ export default defineConfig(() => {
               };
             },
             // name: '{{name}}IQO',
+            name: 'options',
           },
           mutationOptions: {
             meta() {
@@ -323,10 +327,12 @@ export default defineConfig(() => {
               };
             },
             // name: '{{name}}MO',
+            name: 'options',
           },
-          name: '@tanstack/react-query',
+          // name: '@tanstack/react-query',
           queryKeys: {
             // name: '{{name}}QK',
+            name: 'options',
             tags: true,
           },
           // queryOptions: false,
@@ -336,7 +342,8 @@ export default defineConfig(() => {
             //     custom: 'value',
             //   }
             // },
-            name: '{{name}}QO',
+            // name: '{{name}}QO',
+            name: 'options',
           },
           useQuery: true,
           '~hooks': {
@@ -357,7 +364,7 @@ export default defineConfig(() => {
           },
         },
         {
-          name: 'arktype',
+          // name: 'arktype',
           types: {
             infer: true,
           },
@@ -365,7 +372,7 @@ export default defineConfig(() => {
         {
           // case: 'SCREAMING_SNAKE_CASE',
           // comments: false,
-          // definitions: 'z{{name}}Definition',
+          definitions: 'z{{name}}',
           exportFromIndex: true,
           // metadata: true,
           name: 'valibot',
@@ -373,10 +380,10 @@ export default defineConfig(() => {
           //   case: 'PascalCase',
           //   name: '{{name}}Data',
           // },
-          // responses: {
-          //   // case: 'snake_case',
-          //   name: 'z{{name}}TestResponse',
-          // },
+          responses: {
+            // case: 'snake_case',
+            name: 'z{{name}}TestResponse',
+          },
           // webhooks: {
           //   name: 'q{{name}}CoolWebhook',
           // },
@@ -419,10 +426,7 @@ export default defineConfig(() => {
             validator({ $, schema, v }) {
               return [
                 $.const('parsed').assign(
-                  $(v.placeholder)
-                    .attr('safeParseAsync')
-                    .call(schema.placeholder, 'data')
-                    .await(),
+                  $(v).attr('safeParseAsync').call(schema, 'data').await(),
                 ),
                 $('parsed').return(),
               ];
@@ -443,7 +447,7 @@ export default defineConfig(() => {
             //     infer: 'D{{name}}ZodType',
             //   },
           },
-          // exportFromIndex: true,
+          exportFromIndex: true,
           metadata: true,
           name: 'zod',
           // requests: {
@@ -499,10 +503,7 @@ export default defineConfig(() => {
             validator({ $, schema }) {
               return [
                 $.const('parsed').assign(
-                  $(schema.placeholder)
-                    .attr('safeParseAsync')
-                    .call('data')
-                    .await(),
+                  $(schema).attr('safeParseAsync').call('data').await(),
                 ),
                 $('parsed').return(),
               ];
@@ -522,7 +523,7 @@ export default defineConfig(() => {
           httpResources: {
             asClass: true,
           },
-          name: '@angular/common',
+          // name: '@angular/common',
         },
         {
           exportFromIndex: true,

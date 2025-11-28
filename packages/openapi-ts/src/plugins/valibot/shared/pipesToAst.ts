@@ -18,7 +18,7 @@ export const pipesToAst = ({
     category: 'external',
     resource: 'valibot.v',
   });
-  return $(v.placeholder)
+  return $(v)
     .attr(identifiers.methods.pipe)
     .call(...pipes);
 };

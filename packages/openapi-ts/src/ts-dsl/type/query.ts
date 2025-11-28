@@ -1,15 +1,16 @@
-/* eslint-disable @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging */
+import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { TypeTsDsl } from '../base';
-import { mixin } from '../mixins/apply';
+import { isTsDsl, TypeTsDsl } from '../base';
 import {
   registerLazyAccessTypeQueryFactory,
   TypeExprMixin,
 } from '../mixins/type-expr';
 
-export class TypeQueryTsDsl extends TypeTsDsl<ts.TypeQueryNode> {
+const Mixed = TypeExprMixin(TypeTsDsl<ts.TypeQueryNode>);
+
+export class TypeQueryTsDsl extends Mixed {
   protected _expr: string | MaybeTsDsl<TypeTsDsl | ts.Expression>;
 
   constructor(expr: string | MaybeTsDsl<TypeTsDsl | ts.Expression>) {
@@ -17,13 +18,15 @@ export class TypeQueryTsDsl extends TypeTsDsl<ts.TypeQueryNode> {
     this._expr = expr;
   }
 
-  $render(): ts.TypeQueryNode {
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    if (isTsDsl(this._expr)) this._expr.analyze(ctx);
+  }
+
+  protected override _render() {
     const expr = this.$node(this._expr);
     return ts.factory.createTypeQueryNode(expr as unknown as ts.EntityName);
   }
 }
-
-export interface TypeQueryTsDsl extends TypeExprMixin {}
-mixin(TypeQueryTsDsl, TypeExprMixin);
 
 registerLazyAccessTypeQueryFactory((...args) => new TypeQueryTsDsl(...args));

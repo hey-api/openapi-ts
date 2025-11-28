@@ -13,6 +13,6 @@ export const voidToAst = ({
     category: 'external',
     resource: 'zod.z',
   });
-  const expression = $(z.placeholder).attr(identifiers.void).call();
+  const expression = $(z).attr(identifiers.void).call();
   return expression;
 };

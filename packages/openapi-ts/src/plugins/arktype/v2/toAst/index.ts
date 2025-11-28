@@ -90,7 +90,7 @@ export const irSchemaWithTypeToAst = ({
     resource: 'arktype.type',
   });
 
-  const expression = $(type.placeholder).call(
+  const expression = $(type).call(
     $.object()
       .prop('name', $.literal('string'))
       .prop('platform', $.literal("'android' | 'ios'"))

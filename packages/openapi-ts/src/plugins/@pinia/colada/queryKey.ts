@@ -41,9 +41,7 @@ export const createQueryKeyFunction = ({
     resource: `${plugin.name}._JSONValue`,
   });
 
-  const returnType = $.type(symbolQueryKeyType.placeholder)
-    .generic(TOptionsType)
-    .idx(0);
+  const returnType = $.type(symbolQueryKeyType).generic(TOptionsType).idx(0);
 
   const baseUrlKey = getClientBaseUrlKey(plugin.context.config);
 
@@ -66,13 +64,13 @@ export const createQueryKeyFunction = ({
     name: 'serializeQueryKeyValue',
   });
 
-  const fn = $.const(symbolCreateQueryKey.placeholder).assign(
+  const fn = $.const(symbolCreateQueryKey).assign(
     $.func()
       .param('id', (p) => p.type('string'))
       .param('options', (p) => p.optional().type(TOptionsType))
       .param('tags', (p) => p.optional().type('ReadonlyArray<string>'))
       .returns($.type.tuple(returnType))
-      .generic(TOptionsType, (g) => g.extends(symbolOptions.placeholder))
+      .generic(TOptionsType, (g) => g.extends(symbolOptions))
       .do(
         $.const('params')
           .type(returnType)
@@ -88,13 +86,11 @@ export const createQueryKeyFunction = ({
         $.if('tags').do(
           $('params')
             .attr('tags')
-            .assign($('tags').as('unknown').as(symbolJsonValue.placeholder)),
+            .assign($('tags').as('unknown').as(symbolJsonValue)),
         ),
         $.if($('options').attr('body').optional().neq($.id('undefined'))).do(
           $.const('normalizedBody').assign(
-            $(symbolSerializeQueryValue.placeholder).call(
-              $('options').attr('body'),
-            ),
+            $(symbolSerializeQueryValue).call($('options').attr('body')),
           ),
           $.if($('normalizedBody').neq($.id('undefined'))).do(
             $('params').attr('body').assign('normalizedBody'),
@@ -105,9 +101,7 @@ export const createQueryKeyFunction = ({
         ),
         $.if($('options').attr('query').optional().neq($.id('undefined'))).do(
           $.const('normalizedQuery').assign(
-            $(symbolSerializeQueryValue.placeholder).call(
-              $('options').attr('query'),
-            ),
+            $(symbolSerializeQueryValue).call($('options').attr('query')),
           ),
           $.if($('normalizedQuery').neq($.id('undefined'))).do(
             $('params').attr('query').assign('normalizedQuery'),
@@ -116,7 +110,7 @@ export const createQueryKeyFunction = ({
         $.return($.array($('params'))),
       ),
   );
-  plugin.setSymbolValue(symbolCreateQueryKey, fn);
+  plugin.addNode(fn);
 };
 
 const createQueryKeyLiteral = ({
@@ -139,7 +133,7 @@ const createQueryKeyLiteral = ({
     resource: 'createQueryKey',
     tool: plugin.name,
   });
-  const createQueryKeyCallExpression = $(symbolCreateQueryKey.placeholder).call(
+  const createQueryKeyCallExpression = $(symbolCreateQueryKey).call(
     $.literal(id),
     'options',
     tagsExpression,
@@ -163,8 +157,6 @@ export const createQueryKeyType = ({
     tool: 'sdk',
   });
   const symbolQueryKeyType = plugin.registerSymbol({
-    exported: true,
-    kind: 'type',
     meta: {
       category: 'type',
       resource: 'QueryKey',
@@ -173,9 +165,9 @@ export const createQueryKeyType = ({
     name: 'QueryKey',
   });
   const queryKeyType = $.type
-    .alias(symbolQueryKeyType.placeholder)
-    .export(symbolQueryKeyType.exported)
-    .generic(TOptionsType, (g) => g.extends($.type(symbolOptions.placeholder)))
+    .alias(symbolQueryKeyType)
+    .export()
+    .generic(TOptionsType, (g) => g.extends($.type(symbolOptions)))
     .type(
       $.type.tuple(
         $.type.and(
@@ -184,19 +176,15 @@ export const createQueryKeyType = ({
             .object()
             .prop('_id', (p) => p.type('string'))
             .prop(getClientBaseUrlKey(plugin.context.config), (p) =>
-              p.optional().type(symbolJsonValue.placeholder),
+              p.optional().type(symbolJsonValue),
             )
-            .prop('body', (p) => p.optional().type(symbolJsonValue.placeholder))
-            .prop('query', (p) =>
-              p.optional().type(symbolJsonValue.placeholder),
-            )
-            .prop('tags', (p) =>
-              p.optional().type(symbolJsonValue.placeholder),
-            ),
+            .prop('body', (p) => p.optional().type(symbolJsonValue))
+            .prop('query', (p) => p.optional().type(symbolJsonValue))
+            .prop('tags', (p) => p.optional().type(symbolJsonValue)),
         ),
       ),
     );
-  plugin.setSymbolValue(symbolQueryKeyType, queryKeyType);
+  plugin.addNode(queryKeyType);
 };
 
 export const queryKeyStatement = ({
@@ -210,8 +198,8 @@ export const queryKeyStatement = ({
 }) => {
   const typeData = useTypeData({ operation, plugin });
   const { strippedTypeData } = getPublicTypeData({ plugin, typeData });
-  const statement = $.const(symbol.placeholder)
-    .export(symbol.exported)
+  const statement = $.const(symbol)
+    .export()
     .assign(
       $.func()
         .param('options', (p) =>

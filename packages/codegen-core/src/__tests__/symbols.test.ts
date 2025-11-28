@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { SymbolRegistry } from '../symbols/registry';
+import { isSymbol } from '../symbols/symbol';
 
 describe('SymbolRegistry', () => {
   it('covers the full public interface', () => {
@@ -13,18 +14,25 @@ describe('SymbolRegistry', () => {
 
     // Register a symbol with meta
     const symbol1 = registry.register({
-      meta: {
-        foo: 'bar',
-      },
+      meta: { foo: 'bar' },
+      name: '',
       placeholder: 'Foo',
     });
-    expect(symbol1).toEqual({
-      id: expect.any(Number),
-      meta: {
-        foo: 'bar',
-      },
-      placeholder: 'Foo',
-    });
+    expect(symbol1).toEqual(
+      expect.objectContaining({
+        _dependencies: new Set(),
+        exportFrom: [],
+        exported: false,
+        id: expect.any(Number),
+        importKind: 'named',
+        kind: 'var',
+        meta: {
+          foo: 'bar',
+        },
+        name: '',
+        placeholder: 'Foo',
+      }),
+    );
 
     // get by id and meta
     expect(registry.get(symbol1.id)).toEqual(symbol1);
@@ -35,30 +43,33 @@ describe('SymbolRegistry', () => {
     expect(registry.isRegistered({ foo: 'bar' })).toBe(true);
 
     // Registering again with same meta creates a new symbol
-    const symbol1b = registry.register({ meta: { foo: 'bar' } });
+    const symbol1b = registry.register({
+      meta: { foo: 'bar' },
+      name: '',
+    });
     expect(symbol1b).not.toEqual(symbol1);
-
-    // Registering with id overrides the symbol
-    const symbol1c = registry.register({ id: symbol1.id });
-    expect(symbol1c).not.toEqual(symbol1);
-    expect(symbol1c.id).toBe(symbol1.id);
 
     // Reference returns same symbol
     const ref1 = registry.reference({ foo: 'bar' });
-    expect(ref1).toEqual(symbol1c);
+    expect(ref1).toEqual(symbol1);
 
     // Register a new symbol with different meta
     const symbol2 = registry.register({
       exportFrom: ['x'],
       meta: { bar: 'baz' },
+      name: '',
       placeholder: 'Bar',
     });
-    expect(symbol2).toEqual({
-      exportFrom: ['x'],
-      id: expect.any(Number),
-      meta: { bar: 'baz' },
-      placeholder: 'Bar',
-    });
+    expect(symbol2).toEqual(
+      expect.objectContaining({
+        dependencies: new Set(),
+        exportFrom: ['x'],
+        id: expect.any(Number),
+        meta: { bar: 'baz' },
+        name: '',
+        placeholder: 'Bar',
+      }),
+    );
 
     // Registered symbols are yielded in order
     const registered = Array.from(registry.registered());
@@ -79,6 +90,7 @@ describe('SymbolRegistry', () => {
     expect(registry.isRegistered(symRef.id)).toBe(false);
     const symRegistered = registry.register({
       meta: { qux: true },
+      name: '',
       placeholder: 'Qux',
     });
     expect(registry.isRegistered(symRegistered.id)).toBe(true);
@@ -122,11 +134,11 @@ describe('SymbolRegistry', () => {
     const refAD = registry.reference({ a: 0, d: 0 });
     const refAC = registry.reference({ a: 0, c: 0 });
 
-    expect(symC).toEqual(refA);
-    expect(symC).toEqual(refAB);
-    expect(symC).toEqual(refAC);
-    expect(symC).not.toEqual(refAD);
-    expect(symC).not.toEqual(refB);
+    expect(refA.canonical).toEqual(symC);
+    expect(refAB.canonical).toEqual(symC);
+    expect(refAC.canonical).toEqual(symC);
+    expect(refAD.canonical).not.toEqual(symC);
+    expect(refB.canonical).not.toEqual(symC);
     expect(symC.meta).toEqual({ a: 0, b: 0, c: 0 });
   });
 
@@ -248,5 +260,89 @@ describe('SymbolRegistry', () => {
     // The new stub isn't indexed, so query returns nothing yet
     const newQuery = registry.query({ something: 'else' });
     expect(newQuery).toEqual([]);
+  });
+
+  it('isSymbol covers various inputs', () => {
+    const registry = new SymbolRegistry();
+
+    // real registered symbol
+    const sym = registry.register({ meta: { a: 1 }, name: 'A' });
+    expect(isSymbol(sym)).toBe(true);
+
+    // stub reference (unregistered)
+    const stub = registry.reference({ b: 2 });
+    expect(isSymbol(stub)).toBe(true);
+
+    // primitives
+    expect(isSymbol(null)).toBe(false);
+    expect(isSymbol(undefined)).toBe(false);
+    expect(isSymbol(123)).toBe(false);
+    expect(isSymbol('foo')).toBe(false);
+    expect(isSymbol(true)).toBe(false);
+
+    // arrays and plain objects
+    expect(isSymbol([])).toBe(false);
+    expect(isSymbol({})).toBe(false);
+
+    // object with different tag
+    expect(isSymbol({ '~tag': 'not-a-symbol' })).toBe(false);
+
+    // object masquerading as a symbol (matches tag)
+    expect(isSymbol({ '~tag': 'heyapi.symbol' })).toBe(true);
+
+    // Date, Map, Set should be false
+    expect(isSymbol(new Date())).toBe(false);
+    expect(isSymbol(new Map())).toBe(false);
+    expect(isSymbol(new Set())).toBe(false);
+
+    // Typed arrays and ArrayBuffer should be false
+    expect(isSymbol(new Uint8Array())).toBe(false);
+    expect(isSymbol(new ArrayBuffer(8))).toBe(false);
+
+    // Functions without tag should be false
+    const fn = () => {};
+    expect(isSymbol(fn)).toBe(false);
+
+    // Class instance without tag should be false
+    class Foo {}
+    const foo = new Foo();
+    expect(isSymbol(foo)).toBe(false);
+
+    // Proxy with tag should be true if own property is present
+    const target = {} as Record<string, unknown>;
+    const proxied = new Proxy(target, {
+      get(_, prop) {
+        if (prop === '~tag') return 'heyapi.symbol';
+        return undefined;
+      },
+      getOwnPropertyDescriptor(_, prop) {
+        if (prop === '~tag')
+          return {
+            configurable: true,
+            enumerable: true,
+            value: 'heyapi.symbol',
+            writable: false,
+          };
+        return undefined;
+      },
+      has(_, prop) {
+        return prop === '~tag';
+      },
+    });
+    // Define as own property to satisfy hasOwn
+    Object.defineProperty(target, '~tag', {
+      configurable: true,
+      value: 'heyapi.symbol',
+    });
+    expect(isSymbol(proxied)).toBe(true);
+
+    // Inherited tag should be false (not own property)
+    const proto = { '~tag': 'heyapi.symbol' };
+    const objWithProto = Object.create(proto);
+    expect(isSymbol(objWithProto)).toBe(false);
+
+    // Primitive edge cases
+    expect(isSymbol(Symbol('x'))).toBe(false);
+    expect(isSymbol(0n)).toBe(false);
   });
 });

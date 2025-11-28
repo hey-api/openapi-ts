@@ -1,11 +1,21 @@
+import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TypeTsDsl } from '../base';
 import { TypeIdxSigTsDsl } from './idx-sig';
 import { TypePropTsDsl } from './prop';
 
-export class TypeObjectTsDsl extends TypeTsDsl<ts.TypeNode> {
+const Mixed = TypeTsDsl<ts.TypeNode>;
+
+export class TypeObjectTsDsl extends Mixed {
   protected props: Array<TypePropTsDsl | TypeIdxSigTsDsl> = [];
+
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    for (const prop of this.props) {
+      prop.analyze(ctx);
+    }
+  }
 
   /** Returns true if object has at least one property or spread. */
   hasProps(): boolean {
@@ -31,7 +41,7 @@ export class TypeObjectTsDsl extends TypeTsDsl<ts.TypeNode> {
     return this;
   }
 
-  $render(): ts.TypeNode {
+  protected override _render() {
     return ts.factory.createTypeLiteralNode(this.$node(this.props));
   }
 }

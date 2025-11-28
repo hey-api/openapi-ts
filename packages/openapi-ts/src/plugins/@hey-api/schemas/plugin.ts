@@ -369,7 +369,6 @@ const schemasV2_0_X = ({
   for (const name in context.spec.definitions) {
     const schema = context.spec.definitions[name]!;
     const symbol = plugin.registerSymbol({
-      exported: true,
       meta: {
         category: 'schema',
         resource: 'definition',
@@ -383,8 +382,8 @@ const schemasV2_0_X = ({
       plugin,
       schema,
     });
-    const statement = $.const(symbol.placeholder)
-      .export(symbol.exported)
+    const statement = $.const(symbol)
+      .export()
       .assign(
         $(
           $.fromValue(obj, {
@@ -392,7 +391,7 @@ const schemasV2_0_X = ({
           }),
         ).as('const'),
       );
-    plugin.setSymbolValue(symbol, statement);
+    plugin.addNode(statement);
   }
 };
 
@@ -410,7 +409,6 @@ const schemasV3_0_X = ({
   for (const name in context.spec.components.schemas) {
     const schema = context.spec.components.schemas[name]!;
     const symbol = plugin.registerSymbol({
-      exported: true,
       meta: {
         category: 'schema',
         resource: 'definition',
@@ -424,8 +422,8 @@ const schemasV3_0_X = ({
       plugin,
       schema,
     });
-    const statement = $.const(symbol.placeholder)
-      .export(symbol.exported)
+    const statement = $.const(symbol)
+      .export()
       .assign(
         $(
           $.fromValue(obj, {
@@ -433,7 +431,7 @@ const schemasV3_0_X = ({
           }),
         ).as('const'),
       );
-    plugin.setSymbolValue(symbol, statement);
+    plugin.addNode(statement);
   }
 };
 
@@ -451,7 +449,6 @@ const schemasV3_1_X = ({
   for (const name in context.spec.components.schemas) {
     const schema = context.spec.components.schemas[name]!;
     const symbol = plugin.registerSymbol({
-      exported: true,
       meta: {
         category: 'schema',
         resource: 'definition',
@@ -465,8 +462,8 @@ const schemasV3_1_X = ({
       plugin,
       schema,
     });
-    const statement = $.const(symbol.placeholder)
-      .export(symbol.exported)
+    const statement = $.const(symbol)
+      .export()
       .assign(
         $(
           $.fromValue(obj, {
@@ -474,7 +471,7 @@ const schemasV3_1_X = ({
           }),
         ).as('const'),
       );
-    plugin.setSymbolValue(symbol, statement);
+    plugin.addNode(statement);
   }
 };
 

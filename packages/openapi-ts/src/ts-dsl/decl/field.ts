@@ -1,12 +1,11 @@
-/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
+import type { AnalysisContext } from '@hey-api/codegen-core';
+import { isSymbol } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
-import { TsDsl, TypeTsDsl } from '../base';
-import { mixin } from '../mixins/apply';
+import { isTsDsl, TsDsl, TypeTsDsl } from '../base';
 import { DecoratorMixin } from '../mixins/decorator';
 import { DocMixin } from '../mixins/doc';
 import {
-  createModifierAccessor,
   PrivateMixin,
   ProtectedMixin,
   PublicMixin,
@@ -14,10 +13,24 @@ import {
   StaticMixin,
 } from '../mixins/modifiers';
 import { ValueMixin } from '../mixins/value';
+import type { TypeExprName } from '../type/expr';
 import { TypeExprTsDsl } from '../type/expr';
 
-export class FieldTsDsl extends TsDsl<ts.PropertyDeclaration> {
-  protected modifiers = createModifierAccessor(this);
+export type FieldType = TypeExprName | TypeTsDsl;
+
+const Mixed = DecoratorMixin(
+  DocMixin(
+    PrivateMixin(
+      ProtectedMixin(
+        PublicMixin(
+          ReadonlyMixin(StaticMixin(ValueMixin(TsDsl<ts.PropertyDeclaration>))),
+        ),
+      ),
+    ),
+  ),
+);
+
+export class FieldTsDsl extends Mixed {
   protected name: string;
   protected _type?: TypeTsDsl;
 
@@ -27,16 +40,24 @@ export class FieldTsDsl extends TsDsl<ts.PropertyDeclaration> {
     fn?.(this);
   }
 
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    if (isSymbol(this._type)) {
+      ctx.addDependency(this._type);
+    } else if (isTsDsl(this._type)) {
+      this._type.analyze(ctx);
+    }
+  }
+
   /** Sets the field type. */
-  type(type: string | TypeTsDsl): this {
+  type(type: FieldType): this {
     this._type = type instanceof TypeTsDsl ? type : new TypeExprTsDsl(type);
     return this;
   }
 
-  /** Builds the `PropertyDeclaration` node. */
-  $render(): ts.PropertyDeclaration {
+  protected override _render() {
     return ts.factory.createPropertyDeclaration(
-      [...this.$decorators(), ...this.modifiers.list()],
+      [...this.$decorators(), ...this.modifiers],
       this.name,
       undefined,
       this.$type(this._type),
@@ -44,24 +65,3 @@ export class FieldTsDsl extends TsDsl<ts.PropertyDeclaration> {
     );
   }
 }
-
-export interface FieldTsDsl
-  extends DecoratorMixin,
-    DocMixin,
-    PrivateMixin,
-    ProtectedMixin,
-    PublicMixin,
-    ReadonlyMixin,
-    StaticMixin,
-    ValueMixin {}
-mixin(
-  FieldTsDsl,
-  DecoratorMixin,
-  DocMixin,
-  PrivateMixin,
-  ProtectedMixin,
-  PublicMixin,
-  ReadonlyMixin,
-  StaticMixin,
-  ValueMixin,
-);

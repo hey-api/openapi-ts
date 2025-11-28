@@ -1,10 +1,13 @@
+import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { TypeTsDsl } from '../base';
+import { isTsDsl, TypeTsDsl } from '../base';
 import { TokenTsDsl } from '../token';
 
-export class TypeMappedTsDsl extends TypeTsDsl<ts.MappedTypeNode> {
+const Mixed = TypeTsDsl<ts.MappedTypeNode>;
+
+export class TypeMappedTsDsl extends Mixed {
   protected questionToken?: TokenTsDsl<
     | ts.SyntaxKind.QuestionToken
     | ts.SyntaxKind.PlusToken
@@ -22,6 +25,14 @@ export class TypeMappedTsDsl extends TypeTsDsl<ts.MappedTypeNode> {
   constructor(name?: string) {
     super();
     this.name(name);
+  }
+
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    this.questionToken?.analyze(ctx);
+    this.readonlyToken?.analyze(ctx);
+    if (isTsDsl(this._key)) this._key.analyze(ctx);
+    if (isTsDsl(this._type)) this._type.analyze(ctx);
   }
 
   /** Returns true when all required builder calls are present. */
@@ -71,7 +82,7 @@ export class TypeMappedTsDsl extends TypeTsDsl<ts.MappedTypeNode> {
     return this;
   }
 
-  $render(): ts.MappedTypeNode {
+  protected override _render() {
     this.$validate();
     return ts.factory.createMappedTypeNode(
       this.$node(this.readonlyToken),

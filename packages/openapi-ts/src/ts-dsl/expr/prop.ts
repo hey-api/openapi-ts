@@ -1,17 +1,17 @@
-/* eslint-disable @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging */
+import type { AnalysisContext, Symbol } from '@hey-api/codegen-core';
+import { isSymbol } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { TsDsl } from '../base';
+import { isTsDsl, TsDsl } from '../base';
 import { GetterTsDsl } from '../decl/getter';
 import { SetterTsDsl } from '../decl/setter';
-import { mixin } from '../mixins/apply';
 import { DocMixin } from '../mixins/doc';
 import { safePropName } from '../utils/prop';
 import { IdTsDsl } from './id';
 
-type Expr = string | MaybeTsDsl<ts.Expression>;
-type Stmt = string | MaybeTsDsl<ts.Statement>;
+type Expr = Symbol | string | MaybeTsDsl<ts.Expression>;
+type Stmt = Symbol | string | MaybeTsDsl<ts.Statement>;
 type Kind = 'computed' | 'getter' | 'prop' | 'setter' | 'spread';
 
 type Meta =
@@ -21,13 +21,24 @@ type Meta =
   | { kind: 'setter'; name: string }
   | { kind: 'spread'; name?: undefined };
 
-export class ObjectPropTsDsl extends TsDsl<ts.ObjectLiteralElementLike> {
+const Mixed = DocMixin(TsDsl<ts.ObjectLiteralElementLike>);
+
+export class ObjectPropTsDsl extends Mixed {
   protected _value?: Expr | Stmt;
   protected meta: Meta;
 
   constructor(meta: Meta) {
     super();
     this.meta = meta;
+  }
+
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    if (isSymbol(this._value)) {
+      ctx.addDependency(this._value);
+    } else if (isTsDsl(this._value)) {
+      this._value.analyze(ctx);
+    }
   }
 
   /** Returns true when all required builder calls are present. */
@@ -44,7 +55,7 @@ export class ObjectPropTsDsl extends TsDsl<ts.ObjectLiteralElementLike> {
     return this;
   }
 
-  $render(): ts.ObjectLiteralElementLike {
+  protected override _render() {
     this.$validate();
     const node = this.$node(this._value);
     if (this.meta.kind === 'spread') {
@@ -56,11 +67,15 @@ export class ObjectPropTsDsl extends TsDsl<ts.ObjectLiteralElementLike> {
       return ts.factory.createSpreadAssignment(node);
     }
     if (this.meta.kind === 'getter') {
-      const getter = new GetterTsDsl(safePropName(this.meta.name)).do(node);
+      const getter = new GetterTsDsl(
+        this.$node(safePropName(this.meta.name)),
+      ).do(node);
       return this.$node(getter);
     }
     if (this.meta.kind === 'setter') {
-      const setter = new SetterTsDsl(safePropName(this.meta.name)).do(node);
+      const setter = new SetterTsDsl(
+        this.$node(safePropName(this.meta.name)),
+      ).do(node);
       return this.$node(setter);
     }
     if (ts.isIdentifier(node) && node.text === this.meta.name) {
@@ -76,7 +91,7 @@ export class ObjectPropTsDsl extends TsDsl<ts.ObjectLiteralElementLike> {
         ? ts.factory.createComputedPropertyName(
             this.$node(new IdTsDsl(this.meta.name)),
           )
-        : safePropName(this.meta.name),
+        : this.$node(safePropName(this.meta.name)),
       node,
     );
   }
@@ -98,6 +113,3 @@ export class ObjectPropTsDsl extends TsDsl<ts.ObjectLiteralElementLike> {
     return missing;
   }
 }
-
-export interface ObjectPropTsDsl extends DocMixin {}
-mixin(ObjectPropTsDsl, DocMixin);

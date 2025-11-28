@@ -1,7 +1,6 @@
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "declaration": false,
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "skipLibCheck": true

@@ -116,7 +116,6 @@ export const irWebhookToAst = ({
 
     const ast = getAst(schemaData, state.path.value);
     const symbol = plugin.registerSymbol({
-      exported: true,
       meta: {
         category: 'schema',
         path: state.path.value,

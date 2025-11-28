@@ -1,52 +1,62 @@
-/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
+import type { AnalysisContext, Symbol } from '@hey-api/codegen-core';
+import { isSymbol } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { TsDsl } from '../base';
+import { isTsDsl, TsDsl } from '../base';
 import { NewlineTsDsl } from '../layout/newline';
-import { mixin } from '../mixins/apply';
 import { DecoratorMixin } from '../mixins/decorator';
 import { DocMixin } from '../mixins/doc';
-import {
-  AbstractMixin,
-  createModifierAccessor,
-  DefaultMixin,
-  ExportMixin,
-} from '../mixins/modifiers';
+import { AbstractMixin, DefaultMixin, ExportMixin } from '../mixins/modifiers';
 import { TypeParamsMixin } from '../mixins/type-params';
 import { FieldTsDsl } from './field';
 import { InitTsDsl } from './init';
 import { MethodTsDsl } from './method';
 
-export class ClassTsDsl extends TsDsl<ts.ClassDeclaration> {
-  protected heritageClauses: Array<ts.HeritageClause> = [];
-  protected body: Array<MaybeTsDsl<ts.ClassElement | NewlineTsDsl>> = [];
-  protected modifiers = createModifierAccessor(this);
-  protected name: string;
+type Base = Symbol | string;
+type Name = Symbol | string;
+type Body = Array<MaybeTsDsl<ts.ClassElement | ts.Node>>;
 
-  constructor(name: string) {
+const Mixed = AbstractMixin(
+  DecoratorMixin(
+    DefaultMixin(
+      DocMixin(ExportMixin(TypeParamsMixin(TsDsl<ts.ClassDeclaration>))),
+    ),
+  ),
+);
+
+export class ClassTsDsl extends Mixed {
+  protected baseClass?: Base;
+  protected body: Body = [];
+  protected name: Name;
+
+  constructor(name: Name) {
     super();
     this.name = name;
+    if (isSymbol(name)) {
+      name.setKind('class');
+      name.setNode(this);
+    }
+  }
+
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    if (isSymbol(this.baseClass)) ctx.addDependency(this.baseClass);
+    if (isSymbol(this.name)) ctx.addDependency(this.name);
+    for (const item of this.body) {
+      if (isTsDsl(item)) item.analyze(ctx);
+    }
   }
 
   /** Adds one or more class members (fields, methods, etc.). */
-  do(...items: ReadonlyArray<MaybeTsDsl<ts.ClassElement | ts.Node>>): this {
-    // @ts-expect-error --- IGNORE ---
+  do(...items: Body): this {
     this.body.push(...items);
     return this;
   }
 
-  /** Adds a base class to extend from. */
-  extends(base?: string | ts.Expression | false | null): this {
-    if (!base) return this;
-    this.heritageClauses.push(
-      ts.factory.createHeritageClause(ts.SyntaxKind.ExtendsKeyword, [
-        ts.factory.createExpressionWithTypeArguments(
-          this.$maybeId(base),
-          undefined,
-        ),
-      ]),
-    );
+  /** Records a base class to extend from. */
+  extends(base?: Base): this {
+    this.baseClass = base;
     return this;
   }
 
@@ -77,32 +87,28 @@ export class ClassTsDsl extends TsDsl<ts.ClassDeclaration> {
     return this;
   }
 
-  /** Builds the `ClassDeclaration` node. */
-  $render(): ts.ClassDeclaration {
+  protected override _render() {
     const body = this.$node(this.body) as ReadonlyArray<ts.ClassElement>;
     return ts.factory.createClassDeclaration(
-      [...this.$decorators(), ...this.modifiers.list()],
-      this.name,
+      [...this.$decorators(), ...this.modifiers],
+      // @ts-expect-error need to improve types
+      this.$node(this.name),
       this.$generics(),
-      this.heritageClauses,
+      this._renderHeritage(),
       body,
     );
   }
-}
 
-export interface ClassTsDsl
-  extends AbstractMixin,
-    DecoratorMixin,
-    DefaultMixin,
-    DocMixin,
-    ExportMixin,
-    TypeParamsMixin {}
-mixin(
-  ClassTsDsl,
-  AbstractMixin,
-  DecoratorMixin,
-  DefaultMixin,
-  DocMixin,
-  ExportMixin,
-  TypeParamsMixin,
-);
+  /** Builds heritage clauses (extends). */
+  private _renderHeritage(): ReadonlyArray<ts.HeritageClause> {
+    if (!this.baseClass) return [];
+    return [
+      ts.factory.createHeritageClause(ts.SyntaxKind.ExtendsKeyword, [
+        ts.factory.createExpressionWithTypeArguments(
+          this.$node(this.baseClass),
+          undefined,
+        ),
+      ]),
+    ];
+  }
+}

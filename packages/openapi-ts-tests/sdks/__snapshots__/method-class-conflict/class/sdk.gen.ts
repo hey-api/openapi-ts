@@ -39,7 +39,7 @@ export class AccountingCompanyMemberships {
     }
     
     public static get api() {
-        return Api;
+        return Api2;
     }
 }
 
@@ -64,7 +64,7 @@ export class BankAccounts {
     }
     
     public static get api() {
-        return Api;
+        return Api2;
     }
 }
 
@@ -89,7 +89,7 @@ export class BusinessAccountantAssignments {
     }
     
     public static get api() {
-        return Api;
+        return Api2;
     }
 }
 
@@ -159,7 +159,7 @@ export class BusinessDocuments {
     }
     
     public static get api() {
-        return Api;
+        return Api2;
     }
 }
 
@@ -172,7 +172,7 @@ export class BusinessDocumentsSummaries {
     }
     
     public static get api() {
-        return Api;
+        return Api2;
     }
 }
 
@@ -231,7 +231,7 @@ export class Businesses {
     }
     
     public static get api() {
-        return Api;
+        return Api2;
     }
 }
 
@@ -241,7 +241,7 @@ export class BusinessSummaries {
     }
     
     public static get api() {
-        return Api;
+        return Api2;
     }
 }
 
@@ -277,7 +277,7 @@ export class Counterparties {
     }
     
     public static get api() {
-        return Api;
+        return Api2;
     }
 }
 
@@ -302,7 +302,7 @@ export class DataBoxCredentials {
     }
     
     public static get api() {
-        return Api;
+        return Api2;
     }
 }
 
@@ -312,7 +312,7 @@ export class DocumentTypes {
     }
     
     public static get api() {
-        return Api;
+        return Api2;
     }
 }
 
@@ -363,7 +363,7 @@ export class Invitations {
     }
     
     public static get api() {
-        return Api;
+        return Api2;
     }
 }
 
@@ -418,7 +418,7 @@ export class Invoices {
     }
     
     public static get api() {
-        return Api;
+        return Api2;
     }
 }
 
@@ -439,7 +439,7 @@ export class InvoiceSettings {
     }
     
     public static get api() {
-        return Api;
+        return Api2;
     }
 }
 
@@ -449,7 +449,7 @@ export class Licenses {
     }
     
     public static get api() {
-        return Api;
+        return Api2;
     }
 }
 
@@ -494,7 +494,7 @@ export class PersonalDocuments {
     }
     
     public static get api() {
-        return Api;
+        return Api2;
     }
 }
 
@@ -530,7 +530,7 @@ export class RecurringTasks {
     }
     
     public static get api() {
-        return Api;
+        return Api2;
     }
 }
 
@@ -600,7 +600,7 @@ export class Tasks {
     }
     
     public static get api() {
-        return Api;
+        return Api2;
     }
 }
 
@@ -693,7 +693,7 @@ export class Odata {
     }
     
     public static get accountingCompanies2() {
-        return AccountingCompanies;
+        return AccountingCompanies2;
     }
     
     static accountingCompanyMemberships2 = AccountingCompanyMemberships;
@@ -735,7 +735,7 @@ export class Odata {
 
 export class MapIdentityApi {
     public static get api() {
-        return Api;
+        return Api2;
     }
 }
 

@@ -48,11 +48,11 @@ export const irSchemaToAst = ({
     };
     const refSymbol = plugin.referenceSymbol(query);
     if (plugin.isSymbolRegistered(query)) {
-      ast.expression = $(refSymbol.placeholder);
+      ast.expression = $(refSymbol);
     } else {
-      ast.expression = $(z.placeholder)
+      ast.expression = $(z)
         .attr(identifiers.lazy)
-        .call($.func().do($(refSymbol.placeholder).return()));
+        .call($.func().do($(refSymbol).return()));
       ast.hasLazyExpression = true;
       state.hasLazyExpression.value = true;
     }
@@ -95,7 +95,7 @@ export const irSchemaToAst = ({
           firstSchema.logicalOperator === 'or' ||
           (firstSchema.type && firstSchema.type !== 'object')
         ) {
-          ast.expression = $(z.placeholder)
+          ast.expression = $(z)
             .attr(identifiers.intersection)
             .call(...itemTypes);
         } else {
@@ -105,7 +105,7 @@ export const irSchemaToAst = ({
           });
         }
       } else {
-        ast.expression = $(z.placeholder)
+        ast.expression = $(z)
           .attr(identifiers.union)
           .call(
             $.array()
@@ -171,7 +171,6 @@ const handleComponent = ({
   const ast = irSchemaToAst({ plugin, schema, state });
   const baseName = refToName($ref);
   const symbol = plugin.registerSymbol({
-    exported: true,
     meta: {
       category: 'schema',
       path: state.path.value,
@@ -187,8 +186,6 @@ const handleComponent = ({
   });
   const typeInferSymbol = plugin.config.definitions.types.infer.enabled
     ? plugin.registerSymbol({
-        exported: true,
-        kind: 'type',
         meta: {
           category: 'type',
           path: state.path.value,

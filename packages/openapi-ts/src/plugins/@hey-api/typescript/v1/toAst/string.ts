@@ -50,25 +50,21 @@ export const stringToAst = ({
 
         if (!plugin.getSymbol(queryTypeId)) {
           const symbolTypeId = plugin.registerSymbol({
-            exported: true,
-            kind: 'type',
             meta: queryTypeId,
             name: 'TypeID',
           });
           const nodeTypeId = $.type
-            .alias(symbolTypeId.placeholder)
-            .export(symbolTypeId.exported)
+            .alias(symbolTypeId)
+            .export()
             .generic('T', (g) => g.extends('string'))
             .type(
               $.type.template().add($.type('T')).add('_').add($.type('string')),
             );
-          plugin.setSymbolValue(symbolTypeId, nodeTypeId);
+          plugin.addNode(nodeTypeId);
         }
 
         const symbolTypeId = plugin.referenceSymbol(queryTypeId);
         const symbolTypeName = plugin.registerSymbol({
-          exported: true,
-          kind: 'type',
           meta: query,
           name: stringCase({
             case: plugin.config.case,
@@ -76,13 +72,13 @@ export const stringToAst = ({
           }),
         });
         const node = $.type
-          .alias(symbolTypeName.placeholder)
-          .export(symbolTypeName.exported)
-          .type($.type(symbolTypeId.placeholder).generic($.type.literal(type)));
-        plugin.setSymbolValue(symbolTypeName, node);
+          .alias(symbolTypeName)
+          .export()
+          .type($.type(symbolTypeId).generic($.type.literal(type)));
+        plugin.addNode(node);
       }
       const symbol = plugin.referenceSymbol(query);
-      return $.type(symbol.placeholder);
+      return $.type(symbol);
     }
   }
 

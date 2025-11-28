@@ -54,7 +54,6 @@ export const createQueryOptions = ({
   });
 
   const symbolQueryKey = plugin.registerSymbol({
-    exported: true,
     name: buildName({
       config: plugin.config.queryKeys,
       name: operation.id,
@@ -66,7 +65,7 @@ export const createQueryOptions = ({
     plugin,
     symbol: symbolQueryKey,
   });
-  plugin.setSymbolValue(symbolQueryKey, node);
+  plugin.addNode(node);
 
   const typeData = useTypeData({ operation, plugin });
   const typeError = useTypeError({ operation, plugin });
@@ -101,13 +100,12 @@ export const createQueryOptions = ({
         .param((p) => p.object('queryKey', 'signal'))
         .do(...statements),
     )
-    .prop('queryKey', $(symbolQueryKey.placeholder).call(optionsParamName))
+    .prop('queryKey', $(symbolQueryKey).call(optionsParamName))
     .$if(handleMeta(plugin, operation, 'queryOptions'), (o, v) =>
       o.prop('meta', v),
     );
 
   const symbolQueryOptionsFn = plugin.registerSymbol({
-    exported: plugin.config.queryOptions.exported,
     meta: {
       category: 'hook',
       resource: 'operation',
@@ -122,8 +120,8 @@ export const createQueryOptions = ({
   });
   // TODO: add type error
   // TODO: AxiosError<PutSubmissionMetaError>
-  const statement = $.const(symbolQueryOptionsFn.placeholder)
-    .export(symbolQueryOptionsFn.exported)
+  const statement = $.const(symbolQueryOptionsFn)
+    .export(plugin.config.queryOptions.exported)
     .$if(plugin.config.comments && createOperationComment(operation), (c, v) =>
       c.doc(v),
     )
@@ -133,16 +131,16 @@ export const createQueryOptions = ({
           p.required(isRequiredOptions).type(typeData),
         )
         .do(
-          $(symbolQueryOptions.placeholder)
+          $(symbolQueryOptions)
             .call(queryOptionsObj)
             .generics(
               typeResponse,
               typeError,
               typeResponse,
-              $(symbolQueryKey.placeholder).returnType(),
+              $(symbolQueryKey).returnType(),
             )
             .return(),
         ),
     );
-  plugin.setSymbolValue(symbolQueryOptionsFn, statement);
+  plugin.addNode(statement);
 };

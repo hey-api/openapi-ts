@@ -8,11 +8,11 @@ describe('BiMap', () => {
     // set and get
     expect(bimap.set(1, 'a')).toBe(bimap);
     expect(bimap.set(2, 'b')).toBe(bimap);
-    // get, getKey
+    // get, getKeys
     expect(bimap.get(1)).toBe('a');
     expect(bimap.get(2)).toBe('b');
-    expect(bimap.getKey('a')).toBe(1);
-    expect(bimap.getKey('b')).toBe(2);
+    expect(bimap.getKeys('a')).toEqual(new Set([1]));
+    expect(bimap.getKeys('b')).toEqual(new Set([2]));
     // hasKey, hasValue
     expect(bimap.hasKey(1)).toBe(true);
     expect(bimap.hasKey(2)).toBe(true);
@@ -52,13 +52,14 @@ describe('BiMap', () => {
     // Overwrite value for existing key
     bimap.set(1, 'z');
     expect(bimap.get(1)).toBe('z');
-    expect(bimap.getKey('z')).toBe(1);
+    expect(bimap.getKeys('z')).toEqual(new Set([1]));
     // Overwrite key for existing value
     bimap.set(3, 'z');
-    expect(bimap.getKey('z')).toBe(3);
-    expect(bimap.get(1)).toBeUndefined();
+    expect(bimap.getKeys('z')).toEqual(new Set([1, 3]));
+    expect(bimap.get(1)).toBe('z');
     // Iteration after overwrite
     expect(Array.from(bimap)).toEqual([
+      [1, 'z'],
       [2, 'y'],
       [3, 'z'],
     ]);

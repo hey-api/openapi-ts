@@ -26,31 +26,27 @@ export const exportAst = ({
     resource: 'arktype.type',
   });
 
-  const statement = $.const(symbol.placeholder)
-    .export(symbol.exported)
+  const statement = $.const(symbol)
+    .export()
     .$if(plugin.config.comments && createSchemaComment(schema), (c, v) =>
       c.doc(v),
     )
     // .type(
     //   ast.typeName
     //     ? (tsc.propertyAccessExpression({
-    //         expression: z.placeholder,
+    //         expression: z,
     //         name: ast.typeName,
     //       }) as unknown as ts.TypeNode)
     //     : undefined,
     // )
-    .assign(
-      $(type.placeholder).call(ast.def ? $.literal(ast.def) : ast.expression),
-    );
-  plugin.setSymbolValue(symbol, statement);
+    .assign($(type).call(ast.def ? $.literal(ast.def) : ast.expression));
+  plugin.addNode(statement);
 
   if (typeInferSymbol) {
     const inferType = $.type
-      .alias(typeInferSymbol.placeholder)
-      .export(typeInferSymbol.exported)
-      .type(
-        $.type(symbol.placeholder).attr(identifiers.type.infer).typeofType(),
-      );
-    plugin.setSymbolValue(typeInferSymbol, inferType);
+      .alias(typeInferSymbol)
+      .export()
+      .type($.type(symbol).attr(identifiers.type.infer).typeofType());
+    plugin.addNode(inferType);
   }
 };

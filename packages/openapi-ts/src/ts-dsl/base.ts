@@ -1,13 +1,27 @@
+// TODO: symbol should be protected, but needs to be public to satisfy types
+import type { AnalysisContext, Node } from '@hey-api/codegen-core';
+import { Symbol } from '@hey-api/codegen-core';
+import { debug } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 export type MaybeArray<T> = T | ReadonlyArray<T>;
 
-export interface ITsDsl<T extends ts.Node = ts.Node> {
+export interface ITsDsl<T extends ts.Node = ts.Node> extends Node {
+  /** Render this node into a concrete TypeScript AST. */
   $render(): T;
 }
 
+export const tsDslBrand = globalThis.Symbol('ts-dsl');
+
 export abstract class TsDsl<T extends ts.Node = ts.Node> implements ITsDsl<T> {
-  abstract $render(): T;
+  /** Render this node into a concrete TypeScript AST. */
+  protected abstract _render(): T;
+
+  readonly '~brand': symbol = tsDslBrand;
+
+  parent?: Node;
+
+  symbol?: Symbol;
 
   /** Conditionally applies a callback to this builder. */
   $if<T extends TsDsl, V, R extends TsDsl = T>(
@@ -84,6 +98,19 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements ITsDsl<T> {
     return this;
   }
 
+  /** Render this node into a concrete TypeScript AST. */
+  $render(): T {
+    if (!this.parent) {
+      this._validate();
+    }
+    return this._render();
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  analyze(_: AnalysisContext): void {
+    // noop
+  }
+
   protected $maybeId<T extends string | ts.Expression>(
     expr: T,
   ): T extends string ? ts.Identifier : T {
@@ -96,8 +123,11 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements ITsDsl<T> {
     if (value === undefined) {
       return undefined as NodeOfMaybe<I>;
     }
+    if (value instanceof Symbol) {
+      return this.$maybeId(value.finalName) as NodeOfMaybe<I>;
+    }
     if (typeof value === 'string') {
-      return ts.factory.createIdentifier(value) as NodeOfMaybe<I>;
+      return this.$maybeId(value) as NodeOfMaybe<I>;
     }
     if (value instanceof Array) {
       return value.map((item) => this.unwrap(item)) as NodeOfMaybe<I>;
@@ -111,6 +141,12 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements ITsDsl<T> {
   ): TypeOfMaybe<I> {
     if (value === undefined) {
       return undefined as TypeOfMaybe<I>;
+    }
+    if (value instanceof Symbol) {
+      return ts.factory.createTypeReferenceNode(
+        value.finalName,
+        args,
+      ) as TypeOfMaybe<I>;
     }
     if (typeof value === 'string') {
       return ts.factory.createTypeReferenceNode(value, args) as TypeOfMaybe<I>;
@@ -132,10 +168,22 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements ITsDsl<T> {
     return this.unwrap(value as any) as TypeOfMaybe<I>;
   }
 
+  /** Unwraps nested nodes into raw TypeScript AST. */
   protected unwrap<I>(value: I): I extends TsDsl<infer N> ? N : I {
-    return (
-      value instanceof TsDsl ? value.$render() : value
-    ) as I extends TsDsl<infer N> ? N : I;
+    return (isTsDsl(value) ? value._render() : value) as I extends TsDsl<
+      infer N
+    >
+      ? N
+      : I;
+  }
+
+  /** Validate invariants. */
+  protected _validate(): void {
+    if (this.symbol && this.symbol.canonical !== this.symbol) {
+      const message = `${this.constructor.name}: node is holding a non-canonical (stub) symbol`;
+      debug(message, 'dsl');
+      throw new Error(message);
+    }
   }
 }
 
@@ -186,3 +234,9 @@ type TypeOf<I> =
           : I extends ts.TypeNode
             ? I
             : never;
+
+export function isTsDsl(value: unknown): value is TsDsl {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
+  const obj = value as { '~brand'?: unknown };
+  return obj['~brand'] === tsDslBrand && Object.hasOwn(obj, '~brand');
+}

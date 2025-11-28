@@ -19,10 +19,10 @@ export const zFoo = z._default(z.union([
     z.object({
         foo: z.optional(z.string().check(z.regex(/^\d{3}-\d{2}-\d{4}$/))),
         get bar() {
-            return z.optional(z.lazy((): any => zBar));
+            return z.optional(z.lazy((): any => zBar2));
         },
         get baz() {
-            return z.optional(z.array(z.lazy((): any => zFoo)));
+            return z.optional(z.array(z.lazy((): any => zFoo4)));
         },
         qux: z._default(z.optional(z.int().check(z.gt(0))), 0)
     }),

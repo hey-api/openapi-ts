@@ -18,12 +18,10 @@ export const booleanToAst = ({
   });
 
   if (typeof schema.const === 'boolean') {
-    chain = $(z.placeholder)
-      .attr(identifiers.literal)
-      .call($.literal(schema.const));
+    chain = $(z).attr(identifiers.literal).call($.literal(schema.const));
     return chain;
   }
 
-  chain = $(z.placeholder).attr(identifiers.boolean).call();
+  chain = $(z).attr(identifiers.boolean).call();
   return chain;
 };

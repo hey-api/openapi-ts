@@ -117,7 +117,6 @@ export const irOperationToAst = ({
 
     const ast = getAst(schemaData, state.path.value);
     const symbol = plugin.registerSymbol({
-      exported: true,
       meta: {
         category: 'schema',
         path: state.path.value,
@@ -149,7 +148,6 @@ export const irOperationToAst = ({
         const path = [...state.path.value, 'responses'];
         const ast = getAst(response, path);
         const symbol = plugin.registerSymbol({
-          exported: true,
           meta: {
             category: 'schema',
             path,

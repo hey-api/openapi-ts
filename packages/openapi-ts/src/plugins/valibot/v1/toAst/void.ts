@@ -14,6 +14,6 @@ export const voidToAst = ({
     resource: 'valibot.v',
   });
 
-  const expression = $(v.placeholder).attr(identifiers.schemas.void).call();
+  const expression = $(v).attr(identifiers.schemas.void).call();
   return expression;
 };
