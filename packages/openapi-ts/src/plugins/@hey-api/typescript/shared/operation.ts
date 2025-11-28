@@ -162,6 +162,7 @@ export const operationToType = ({
   const { error, errors, response, responses } =
     operationResponsesMap(operation);
 
+  // TODO here
   if (errors) {
     const symbolErrors = plugin.registerSymbol({
       exported: true,
@@ -217,9 +218,7 @@ export const operationToType = ({
         .alias(symbol.placeholder)
         .export(symbol.exported)
         .type(
-          $.type(symbolErrors.placeholder).idx(
-            $.type(symbolErrors.placeholder).keyof(),
-          ),
+          $.type(symbolErrors.placeholder).idx($.type.literal("error")),
         );
       plugin.setSymbolValue(symbol, node);
     }

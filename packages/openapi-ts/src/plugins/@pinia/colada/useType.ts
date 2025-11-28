@@ -29,7 +29,7 @@ export const useTypeError = ({
     category: 'type',
     resource: 'operation',
     resourceId: operation.id,
-    role: 'error',
+    role: 'errors',
   });
 
   let typeErrorName: string | undefined = symbolErrorType?.placeholder;
@@ -39,7 +39,7 @@ export const useTypeError = ({
   if (client.name === '@hey-api/client-axios') {
     const symbol = plugin.referenceSymbol({
       category: 'external',
-      resource: 'axios.AxiosError',
+      resource: 'client',
     });
     typeErrorName = `${symbol.placeholder}<${typeErrorName}>`;
   }

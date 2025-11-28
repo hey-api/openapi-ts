@@ -92,6 +92,14 @@ export interface ClientOptions {
   throwOnError?: boolean;
 }
 
+export type AxiosErrorWithTypedStatus<U> =
+  U extends { error: infer E; status: infer S extends number }
+    ? AxiosError<E> & {
+    response: AxiosResponse<E> & { status: S };
+    status?: S;
+  }
+    : never;
+
 export type RequestResult<
   TData = unknown,
   TError = unknown,
@@ -106,7 +114,7 @@ export type RequestResult<
       | (AxiosResponse<
           TData extends Record<string, unknown> ? TData[keyof TData] : TData
         > & { error: undefined })
-      | (AxiosError<
+      | (AxiosErrorWithTypedStatus<
           TError extends Record<string, unknown> ? TError[keyof TError] : TError
         > & {
           data: undefined;
