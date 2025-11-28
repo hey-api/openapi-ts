@@ -43,6 +43,11 @@ const parseSchemaJsDoc = ({
     irSchema.example = schema.example;
   }
 
+  // Handle examples array (extended property for parameter-level examples)
+  if ('examples' in schema && schema.examples) {
+    irSchema.examples = schema.examples as ReadonlyArray<unknown>;
+  }
+
   if (schema.description) {
     irSchema.description = schema.description;
   }

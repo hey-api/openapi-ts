@@ -1,0 +1,72 @@
+openapi: 3.1.0
+info:
+  title: OpenAPI 3.1.0 validators with enhanced metadata
+  version: '1'
+paths:
+  /foo:
+    post:
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: OK
+components:
+  schemas:
+    User:
+      title: User Schema
+      description: 'A user in the system.'
+      type: object
+      properties:
+        id:
+          title: User ID
+          description: 'Unique identifier for the user'
+          type: integer
+          examples: [1, 42, 999]
+        username:
+          title: Username
+          description: 'The user login name'
+          type: string
+          examples: ['john_doe', 'jane_smith']
+        email:
+          title: Email Address
+          description: 'User email address'
+          type: string
+          format: email
+          examples: ['user@example.com', 'test@test.org']
+        age:
+          title: Age
+          description: 'User age in years'
+          type: integer
+          examples: [25, 30, 45]
+        role:
+          title: User Role
+          description: 'The role of the user'
+          type: string
+          deprecated: true
+          examples: ['admin', 'user', 'guest']
+        status:
+          title: Account Status
+          description: 'Current status of the account'
+          type: string
+          enum: ['active', 'inactive', 'suspended']
+          examples: ['active']
+    Product:
+      title: Product
+      description: 'A product in the catalog'
+      deprecated: true
+      type: object
+      properties:
+        sku:
+          title: Stock Keeping Unit
+          description: 'Product SKU code'
+          type: string
+          pattern: '^[A-Z]{3}-\d{4}$'
+          examples: ['ABC-1234', 'XYZ-9999']
+        price:
+          title: Product Price
+          description: 'Price in USD'
+          type: number
+          examples: [19.99, 49.95, 99.99]

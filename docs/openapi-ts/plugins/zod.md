@@ -240,6 +240,8 @@ export default {
 
 It's often useful to associate a schema with some additional [metadata](https://zod.dev/metadata) for documentation, code generation, AI structured outputs, form validation, and other purposes. If this is your use case, you can set `metadata` to `true` to generate additional metadata about schemas.
 
+> If you wish to generate metadata for individual parameters with the zod v4 api, you can set `metadata` to `'local'` to use the `.meta()` method.
+
 ::: code-group
 
 ```ts [example]
