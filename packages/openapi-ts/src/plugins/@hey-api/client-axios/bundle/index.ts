@@ -17,5 +17,6 @@ export type {
   RequestOptions,
   RequestResult,
   TDataShape,
+  AxiosErrorWithTypedStatus,
 } from './types';
 export { createConfig } from './utils';

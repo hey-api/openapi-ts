@@ -25,15 +25,17 @@ export const useTypeError = ({
 }): string => {
   const client = getClientPlugin(plugin.context.config);
 
+  // TODO use the errors type here
   const symbolErrorType = plugin.querySymbol({
     category: 'type',
     resource: 'operation',
     resourceId: operation.id,
-    role: 'error',
+    role: 'errors',
   });
 
   let typeErrorName: string | undefined = symbolErrorType?.placeholder;
   if (!typeErrorName) {
+    // TODO fix the default error
     const symbol = plugin.referenceSymbol({
       category: 'external',
       resource: `${plugin.name}.DefaultError`,
@@ -43,7 +45,7 @@ export const useTypeError = ({
   if (client.name === '@hey-api/client-axios') {
     const symbol = plugin.referenceSymbol({
       category: 'external',
-      resource: 'axios.AxiosError',
+      resource: 'AxiosErrorWithTypedStatus',
     });
     typeErrorName = `${symbol.placeholder}<${typeErrorName}>`;
   }

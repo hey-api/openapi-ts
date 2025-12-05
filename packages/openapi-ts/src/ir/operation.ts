@@ -145,8 +145,12 @@ export const operationResponsesMap = (
   // store default response to be evaluated last
   let defaultResponse: IR.ResponseObject | undefined;
 
+  const errorVariants: IR.SchemaObject[] = [];
+
+
   for (const name in operation.responses) {
     const response = operation.responses[name]!;
+
 
     switch (statusCodeToGroup({ statusCode: name })) {
       case '1XX':
@@ -159,6 +163,23 @@ export const operationResponsesMap = (
       case '4XX':
       case '5XX':
         errors.properties[name] = response.schema;
+
+        // TODO cleanup
+        const statusCode = Number(name);
+
+        const variant: IR.SchemaObject = {
+          type: 'object',
+          properties: {
+            status: {
+              type: 'integer',
+              const: statusCode,
+            },
+            error: response.schema,
+          },
+          required: ['status', 'error'],
+        };
+
+        errorVariants.push(variant);
         break;
       case 'default':
         defaultResponse = response;
@@ -222,6 +243,20 @@ export const operationResponsesMap = (
     errorUnion = deduplicateSchema({ schema: errorUnion });
     if (Object.keys(errorUnion).length && errorUnion.type !== 'unknown') {
       result.error = errorUnion;
+    }
+
+
+    if (errorVariants.length) {
+
+      let errorsUnion = addItemsToSchema({
+        items: errorVariants,
+        mutateSchemaOneItem: true,
+        schema: {},
+      });
+      errorsUnion = deduplicateSchema({ schema: errorsUnion });
+
+      // TODO keep it backwards compatible, do not break existing errors type
+      result.errors = errorsUnion;
     }
   }
 
