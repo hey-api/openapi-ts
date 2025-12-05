@@ -3,6 +3,7 @@ import type { IR } from '~/ir/types';
 import { refToName } from '~/utils/ref';
 
 import type {
+  ExampleObject,
   ParameterObject,
   ReferenceObject,
   SchemaObject,
@@ -92,7 +93,7 @@ export const parametersArrayToObject = ({
   return parametersObject;
 };
 
-const parameterToIrParameter = ({
+export const parameterToIrParameter = ({
   $ref,
   context,
   parameter,
@@ -114,10 +115,39 @@ const parameterToIrParameter = ({
     }
   }
 
+  // Handle parameter-level examples (Record) -> convert to array
+  let examplesArray: ReadonlyArray<unknown> | undefined;
+  if (parameter.examples) {
+    // Extract values from ExampleObject Record
+    examplesArray = Object.values(parameter.examples)
+      .map((exampleObj) => {
+        if ('$ref' in exampleObj) {
+          const dereferenced = context.dereference<ExampleObject>(exampleObj);
+          return dereferenced.value;
+        }
+        return exampleObj.value;
+      })
+      .filter((val) => val !== undefined);
+  } else if (parameter.example !== undefined) {
+    // Convert single example to array
+    examplesArray = [parameter.example];
+  }
+
   const finalSchema: SchemaObject = {
-    deprecated: parameter.deprecated,
-    description: parameter.description,
     ...schema,
+    deprecated:
+      parameter.deprecated !== undefined
+        ? parameter.deprecated
+        : schema?.deprecated,
+    description:
+      parameter.description !== undefined
+        ? parameter.description
+        : schema?.description,
+    example:
+      parameter.example !== undefined ? parameter.example : schema?.example,
+    examples:
+      examplesArray ||
+      (schema?.example !== undefined ? [schema.example] : undefined),
   };
 
   const pagination = paginationField({

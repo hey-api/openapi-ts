@@ -65,15 +65,62 @@ export const irSchemaToAst = ({
     ast.expression = typeAst.expression;
     ast.hasLazyExpression = typeAst.hasLazyExpression;
 
-    if (plugin.config.metadata && schema.description) {
-      ast.expression = ast.expression
-        .attr(identifiers.register)
-        .call(
-          $(z.placeholder).attr(identifiers.globalRegistry),
-          $.object()
-            .pretty()
-            .prop('description', $.literal(schema.description)),
-        );
+    if (plugin.config.metadata) {
+      // Build metadata object with all available fields
+      const metadataObj = $.object().pretty();
+      let hasMetadata = false;
+
+      if (schema.description) {
+        metadataObj.prop('description', $.literal(schema.description));
+        hasMetadata = true;
+      }
+
+      if (schema.title) {
+        metadataObj.prop('title', $.literal(schema.title));
+        hasMetadata = true;
+      }
+
+      if (schema.deprecated !== undefined) {
+        metadataObj.prop('deprecated', $.literal(schema.deprecated));
+        hasMetadata = true;
+      }
+
+      // Handle examples - convert single example to array or use examples array
+      if (schema.examples || schema.example !== undefined) {
+        const examplesArray =
+          schema.examples ||
+          (schema.example !== undefined ? [schema.example] : undefined);
+        if (examplesArray) {
+          metadataObj.prop(
+            'example',
+            $.array()
+              .pretty()
+              .elements(
+                ...examplesArray.map((ex) =>
+                  $.literal(ex as string | number | boolean | null),
+                ),
+              ),
+          );
+          hasMetadata = true;
+        }
+      }
+
+      if (hasMetadata) {
+        if (plugin.config.metadata === 'local') {
+          // Use .meta() for local metadata (Zod v4)
+          ast.expression = ast.expression
+            .attr(identifiers.meta)
+            .call(metadataObj);
+        } else {
+          // Use .register(z.globalRegistry, {...}) for global metadata (backwards compatible)
+          ast.expression = ast.expression
+            .attr(identifiers.register)
+            .call(
+              $(z.placeholder).attr(identifiers.globalRegistry),
+              metadataObj,
+            );
+        }
+      }
     }
   } else if (schema.items) {
     schema = deduplicateSchema({ schema });

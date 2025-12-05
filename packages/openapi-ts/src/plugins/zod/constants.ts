@@ -32,6 +32,7 @@ export const identifiers = {
   lte: 'lte',
   max: 'max',
   maxLength: 'maxLength',
+  meta: 'meta',
   min: 'min',
   minLength: 'minLength',
   never: 'never',
