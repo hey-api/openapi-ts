@@ -217,15 +217,17 @@ export const createSseClient = <TData = unknown>({
                 }
               }
 
-              onSseEvent?.({
+              const sseEvent = {
                 data,
                 event: eventName,
                 id: lastEventId,
                 retry: retryDelay,
-              });
+              };
+
+              onSseEvent?.(sseEvent);
 
               if (dataLines.length) {
-                yield data as any;
+                yield sseEvent as any;
               }
             }
           }
