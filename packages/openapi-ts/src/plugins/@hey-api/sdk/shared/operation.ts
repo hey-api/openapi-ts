@@ -544,19 +544,44 @@ export const operationStatements = ({
     for (const argName of opParameters.argNames) {
       args.push($(argName));
     }
-    for (const field of opParameters.fields) {
-      const shape = $.object();
-      if ('in' in field) {
-        shape.prop('in', $.literal(field.in));
-        if (field.key) {
-          shape.prop('key', $.literal(field.key));
+
+    // When using flat params, fields need to be wrapped in an args array
+    if (plugin.config.paramsStructure === 'flat') {
+      const fieldShapes: Array<ReturnType<typeof $.object>> = [];
+      for (const field of opParameters.fields) {
+        const shape = $.object();
+        if ('in' in field) {
+          shape.prop('in', $.literal(field.in));
+          if (field.key) {
+            shape.prop('key', $.literal(field.key));
+          }
+          if (field.map) {
+            shape.prop('map', $.literal(field.map));
+          }
         }
-        if (field.map) {
-          shape.prop('map', $.literal(field.map));
-        }
+        fieldShapes.push(shape);
       }
-      config.push(shape);
+      // Wrap all fields in an args array for flat params
+      const argsWrapper = $.object();
+      argsWrapper.prop('args', $.array(...fieldShapes));
+      config.push(argsWrapper);
+    } else {
+      // For grouped params, generate fields as before
+      for (const field of opParameters.fields) {
+        const shape = $.object();
+        if ('in' in field) {
+          shape.prop('in', $.literal(field.in));
+          if (field.key) {
+            shape.prop('key', $.literal(field.key));
+          }
+          if (field.map) {
+            shape.prop('map', $.literal(field.map));
+          }
+        }
+        config.push(shape);
+      }
     }
+
     const symbol = plugin.referenceSymbol({
       category: 'external',
       resource: 'client.buildClientParams',
