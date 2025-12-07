@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.88.1
+
+### Patch Changes
+
+- **@hey-api/sdk**: correctly map flat parameters ([#3047](https://github.com/hey-api/openapi-ts/pull/3047)) ([`55ef279`](https://github.com/hey-api/openapi-ts/commit/55ef27994740ba0af0bc8db17b3e71bfb5c11714)) by [@mrlubos](https://github.com/mrlubos)
+
 ## 0.88.0
 
 ### Minor Changes
