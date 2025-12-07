@@ -6,6 +6,9 @@
   "engines": {
     "node": ">=20.19.0"
   },
+  "scripts": {
+    "dev": "ts-node ./playground.ts"
+  },
   "devDependencies": {
     "@hey-api/codegen-core": "workspace:*",
     "@hey-api/openapi-ts": "workspace:*",
