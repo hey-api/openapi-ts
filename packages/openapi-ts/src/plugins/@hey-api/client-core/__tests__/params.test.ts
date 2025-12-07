@@ -346,6 +346,101 @@ describe('buildClientParams', () => {
       description: 'strip empty slots',
       params: {},
     },
+    {
+      args: [
+        {
+          id: '1335279038599663729',
+        },
+      ],
+      config: [
+        {
+          args: [
+            {
+              in: 'path',
+              key: 'id',
+            },
+          ],
+        },
+      ],
+      description: 'flat path parameter (issue #2984)',
+      params: {
+        path: {
+          id: '1335279038599663729',
+        },
+      },
+    },
+    {
+      args: [
+        {
+          id: 'ses_123',
+          messageID: 'msg_456',
+        },
+      ],
+      config: [
+        {
+          args: [
+            {
+              in: 'path',
+              key: 'id',
+            },
+            {
+              in: 'path',
+              key: 'messageID',
+            },
+          ],
+        },
+      ],
+      description: 'flat multiple path parameters',
+      params: {
+        path: {
+          id: 'ses_123',
+          messageID: 'msg_456',
+        },
+      },
+    },
+    {
+      args: [
+        {
+          id: 'ses_123',
+          messageID: 'msg_456',
+          modelID: 'gpt-4',
+          providerID: 'openai',
+        },
+      ],
+      config: [
+        {
+          args: [
+            {
+              in: 'path',
+              key: 'id',
+            },
+            {
+              in: 'body',
+              key: 'messageID',
+            },
+            {
+              in: 'body',
+              key: 'modelID',
+            },
+            {
+              in: 'body',
+              key: 'providerID',
+            },
+          ],
+        },
+      ],
+      description: 'flat mixed path and body parameters',
+      params: {
+        body: {
+          messageID: 'msg_456',
+          modelID: 'gpt-4',
+          providerID: 'openai',
+        },
+        path: {
+          id: 'ses_123',
+        },
+      },
+    },
   ];
 
   it.each(scenarios)('$description', async ({ args, config, params }) => {
