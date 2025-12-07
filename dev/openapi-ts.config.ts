@@ -40,10 +40,10 @@ export default defineConfig(() => {
             // 'circular.yaml',
             // 'dutchie.json',
             // 'invalid',
-            'full.yaml',
+            // 'full.yaml',
             // 'object-property-names.yaml',
             // 'openai.yaml',
-            // 'opencode.yaml',
+            'opencode.yaml',
             // 'pagination-ref.yaml',
             // 'sdk-instance.yaml',
             // 'string-with-format.yaml',
@@ -96,15 +96,15 @@ export default defineConfig(() => {
           //   suffix: '.meh',
           // },
           // format: 'prettier',
-          // importFileExtension: '.ts',
+          importFileExtension: '.ts',
           // indexFile: false,
           // lint: 'eslint',
           path: path.resolve(__dirname, '.gen'),
-          tsConfigPath: path.resolve(
-            __dirname,
-            'tsconfig',
-            'tsconfig.nodenext.json',
-          ),
+          // tsConfigPath: path.resolve(
+          //   __dirname,
+          //   'tsconfig',
+          //   'tsconfig.nodenext.json',
+          // ),
         },
         // '.gen',
       ],
@@ -217,7 +217,7 @@ export default defineConfig(() => {
         {
           // baseUrl: false,
           // exportFromIndex: true,
-          name: '@hey-api/client-angular',
+          // name: '@hey-api/client-angular',
           // runtimeConfigPath: path.resolve(__dirname, 'hey-api.ts'),
           // runtimeConfigPath: './src/hey-api.ts',
           // strictBaseUrl: true,
@@ -264,14 +264,14 @@ export default defineConfig(() => {
           // instance: true,
           name: '@hey-api/sdk',
           // operationId: false,
-          // paramsStructure: 'flat',
-          responseStyle: 'data',
+          paramsStructure: 'flat',
+          // responseStyle: 'data',
           // signature: 'auto',
           // signature: 'client',
           // signature: 'object',
           // transformer: '@hey-api/transformers',
           // transformer: true,
-          validator: 'valibot',
+          // validator: 'valibot',
           // validator: {
           //   request: 'zod',
           //   response: 'zod',
@@ -293,13 +293,13 @@ export default defineConfig(() => {
         {
           // bigInt: true,
           dates: true,
-          name: '@hey-api/transformers',
+          // name: '@hey-api/transformers',
         },
         {
-          name: 'fastify',
+          // name: 'fastify',
         },
         {
-          name: 'swr',
+          // name: 'swr',
         },
         {
           // case: 'SCREAMING_SNAKE_CASE',
@@ -357,7 +357,7 @@ export default defineConfig(() => {
           },
         },
         {
-          name: 'arktype',
+          // name: 'arktype',
           types: {
             infer: true,
           },
@@ -368,7 +368,7 @@ export default defineConfig(() => {
           // definitions: 'z{{name}}Definition',
           exportFromIndex: true,
           // metadata: true,
-          name: 'valibot',
+          // name: 'valibot',
           // requests: {
           //   case: 'PascalCase',
           //   name: '{{name}}Data',
@@ -445,7 +445,7 @@ export default defineConfig(() => {
           },
           // exportFromIndex: true,
           metadata: true,
-          name: 'zod',
+          // name: 'zod',
           // requests: {
           //   // case: 'SCREAMING_SNAKE_CASE',
           //   // name: 'z{{name}}TestData',
@@ -522,7 +522,7 @@ export default defineConfig(() => {
           httpResources: {
             asClass: true,
           },
-          name: '@angular/common',
+          // name: '@angular/common',
         },
         {
           exportFromIndex: true,
