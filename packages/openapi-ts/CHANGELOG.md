@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.88.2
+
+### Patch Changes
+
+- **clients**: handle CR and CRLF line endings in SSE ([#3055](https://github.com/hey-api/openapi-ts/pull/3055)) ([`d663232`](https://github.com/hey-api/openapi-ts/commit/d663232d8f10cb29744beeba073532e2f6b3b27a)) by [@nachogarcia](https://github.com/nachogarcia)
+
 ## 0.88.1
 
 ### Patch Changes
