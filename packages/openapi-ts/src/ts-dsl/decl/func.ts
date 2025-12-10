@@ -118,7 +118,7 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends Mixed {
     : M extends 'expr'
       ? ts.FunctionExpression
       : ts.ArrowFunction {
-    const body = this.$node(new BlockTsDsl(...this._do));
+    const body = this.$node(new BlockTsDsl(...this._do).pretty());
 
     if (this.mode === 'decl') {
       if (!this.name) throw new Error('Function declaration requires a name');

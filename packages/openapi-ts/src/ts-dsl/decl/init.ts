@@ -42,7 +42,7 @@ export class InitTsDsl extends Mixed {
     const node = ts.factory.createConstructorDeclaration(
       [...this.$decorators(), ...this.modifiers],
       this.$params(),
-      this.$node(new BlockTsDsl(...this._do)),
+      this.$node(new BlockTsDsl(...this._do).pretty()),
     );
     return this.$docs(node);
   }

@@ -84,14 +84,16 @@ export class TryTsDsl extends Mixed {
       : undefined;
 
     return ts.factory.createTryStatement(
-      this.$node(new BlockTsDsl(...this._try)),
+      this.$node(new BlockTsDsl(...this._try).pretty()),
       ts.factory.createCatchClause(
         catchParam
           ? ts.factory.createVariableDeclaration(catchParam)
           : undefined,
-        this.$node(new BlockTsDsl(...(this._catch ?? []))),
+        this.$node(new BlockTsDsl(...(this._catch ?? [])).pretty()),
       ),
-      this._finally ? this.$node(new BlockTsDsl(...this._finally)) : undefined,
+      this._finally
+        ? this.$node(new BlockTsDsl(...this._finally).pretty())
+        : undefined,
     );
   }
 }

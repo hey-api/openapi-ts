@@ -3,16 +3,24 @@
 import { z } from 'zod';
 
 export const zFoo = z.object({
-    get quux() { return z.optional(z.lazy((): any => zQuux)); }
+    get quux() {
+        return z.optional(z.lazy((): any => zQuux));
+    }
 });
 
 export const zBar = z.object({
-    get bar() { return z.optional(z.lazy((): any => zBar)); },
-    get baz() { return z.optional(z.lazy((): any => zBaz)); }
+    get bar() {
+        return z.optional(z.lazy((): any => zBar));
+    },
+    get baz() {
+        return z.optional(z.lazy((): any => zBaz));
+    }
 });
 
 export const zBaz = z.object({
-    get quux() { return z.optional(z.lazy((): any => zQuux)); }
+    get quux() {
+        return z.optional(z.lazy((): any => zQuux));
+    }
 });
 
 export const zQux = z.union([

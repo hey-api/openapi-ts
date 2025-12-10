@@ -44,6 +44,7 @@ export function LayoutMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
       if (this.layout === undefined) {
         this.layout = Layout.DEFAULT_THRESHOLD;
       }
+      if (count === 0) return false;
       return typeof this.layout === 'number'
         ? count >= this.layout
         : this.layout;

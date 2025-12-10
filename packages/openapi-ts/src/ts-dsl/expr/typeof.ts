@@ -4,7 +4,7 @@ import ts from 'typescript';
 import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
 import { OperatorMixin } from '../mixins/operator';
-import { registerLazyAccessTypeOfExprFactory } from '../mixins/type-expr';
+import { setTypeOfExprFactory } from '../mixins/type-expr';
 
 const Mixed = OperatorMixin(TsDsl<ts.TypeOfExpression>);
 
@@ -28,4 +28,4 @@ export class TypeOfExprTsDsl extends Mixed {
   }
 }
 
-registerLazyAccessTypeOfExprFactory((...args) => new TypeOfExprTsDsl(...args));
+setTypeOfExprFactory((...args) => new TypeOfExprTsDsl(...args));

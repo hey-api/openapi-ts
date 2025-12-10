@@ -4,10 +4,7 @@ import ts from 'typescript';
 
 import { TypeTsDsl } from '../base';
 import { TypeArgsMixin } from '../mixins/type-args';
-import {
-  registerLazyAccessTypeExprFactory,
-  TypeExprMixin,
-} from '../mixins/type-expr';
+import { setTypeExprFactory, TypeExprMixin } from '../mixins/type-expr';
 import { TypeAttrTsDsl } from './attr';
 
 export type TypeExprName = Symbol | string;
@@ -60,7 +57,7 @@ export class TypeExprTsDsl extends Mixed {
   }
 }
 
-registerLazyAccessTypeExprFactory(
+setTypeExprFactory(
   (...args) =>
     new TypeExprTsDsl(...(args as ConstructorParameters<typeof TypeExprTsDsl>)),
 );

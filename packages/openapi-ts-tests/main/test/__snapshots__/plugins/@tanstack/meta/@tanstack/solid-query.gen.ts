@@ -42,12 +42,15 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
 export const getFooQueryKey = (options?: Options<GetFooData>) => createQueryKey('getFoo', options);
 
 export const getFooOptions = (options?: Options<GetFooData>) => queryOptions<unknown, DefaultError, unknown, ReturnType<typeof getFooQueryKey>>({
-    queryFn: async ({ queryKey, signal }) => { const { data } = await getFoo({
-        ...options,
-        ...queryKey[0],
-        signal,
-        throwOnError: true
-    }); return data; },
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await getFoo({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
     queryKey: getFooQueryKey(options),
     meta: {
         id: 'getFoo',
@@ -59,12 +62,15 @@ export const getFooOptions = (options?: Options<GetFooData>) => queryOptions<unk
 export const getBarQueryKey = (options?: Options<GetBarData>) => createQueryKey('getBar', options);
 
 export const getBarOptions = (options?: Options<GetBarData>) => queryOptions<unknown, DefaultError, unknown, ReturnType<typeof getBarQueryKey>>({
-    queryFn: async ({ queryKey, signal }) => { const { data } = await getBar({
-        ...options,
-        ...queryKey[0],
-        signal,
-        throwOnError: true
-    }); return data; },
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await getBar({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
     queryKey: getBarQueryKey(options),
     meta: {
         id: 'getBar',

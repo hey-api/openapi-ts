@@ -53,8 +53,10 @@ export class IfTsDsl extends Mixed {
 
     return ts.factory.createIfStatement(
       this.$node(this._condition),
-      this.$node(new BlockTsDsl(...this._do)),
-      this._else ? this.$node(new BlockTsDsl(this._else)) : undefined,
+      this.$node(new BlockTsDsl(...this._do).pretty()),
+      this._else
+        ? this.$node(new BlockTsDsl(...this._else).pretty())
+        : undefined,
     );
   }
 }

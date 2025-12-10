@@ -62,7 +62,7 @@ export class GetterTsDsl extends Mixed {
       this.name,
       this.$params(),
       undefined,
-      this.$node(new BlockTsDsl(...this._do)),
+      this.$node(new BlockTsDsl(...this._do).pretty()),
     );
     return this.$docs(node);
   }

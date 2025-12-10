@@ -14,8 +14,12 @@ export const zQux = z.record(z.string(), z.object({
 export const zFoo = z._default(z.union([
     z.object({
         foo: z.optional(z.string().check(z.regex(/^\d{3}-\d{2}-\d{4}$/))),
-        get bar() { return z.optional(z.lazy((): any => zBar)); },
-        get baz() { return z.optional(z.array(z.lazy((): any => zFoo))); },
+        get bar() {
+            return z.optional(z.lazy((): any => zBar));
+        },
+        get baz() {
+            return z.optional(z.array(z.lazy((): any => zFoo)));
+        },
         qux: z._default(z.optional(z.int().check(z.gt(0))), 0)
     }),
     z.null()

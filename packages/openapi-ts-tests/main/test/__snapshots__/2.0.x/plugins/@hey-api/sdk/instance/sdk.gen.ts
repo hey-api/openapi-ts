@@ -23,19 +23,29 @@ class HeyApiClient {
     
     constructor(args?: {
         client?: Client;
-    }) { this.client = args?.client ?? client; }
+    }) {
+        this.client = args?.client ?? client;
+    }
 }
 
 export class Bar extends HeyApiClient {
-    public post<ThrowOnError extends boolean = false>(options?: Options<FooBarPostData, ThrowOnError>) { return (options?.client ?? this.client).post<FooBarPostResponses, unknown, ThrowOnError>({ url: '/foo/bar', ...options }); }
+    public post<ThrowOnError extends boolean = false>(options?: Options<FooBarPostData, ThrowOnError>) {
+        return (options?.client ?? this.client).post<FooBarPostResponses, unknown, ThrowOnError>({ url: '/foo/bar', ...options });
+    }
     
-    public put<ThrowOnError extends boolean = false>(options?: Options<FooBarPutData, ThrowOnError>) { return (options?.client ?? this.client).put<FooBarPutResponses, unknown, ThrowOnError>({ url: '/foo/bar', ...options }); }
+    public put<ThrowOnError extends boolean = false>(options?: Options<FooBarPutData, ThrowOnError>) {
+        return (options?.client ?? this.client).put<FooBarPutResponses, unknown, ThrowOnError>({ url: '/foo/bar', ...options });
+    }
 }
 
 export class Foo extends HeyApiClient {
-    public post<ThrowOnError extends boolean = false>(options?: Options<FooPostData, ThrowOnError>) { return (options?.client ?? this.client).post<FooPostResponses, unknown, ThrowOnError>({ url: '/foo', ...options }); }
+    public post<ThrowOnError extends boolean = false>(options?: Options<FooPostData, ThrowOnError>) {
+        return (options?.client ?? this.client).post<FooPostResponses, unknown, ThrowOnError>({ url: '/foo', ...options });
+    }
     
-    public put<ThrowOnError extends boolean = false>(options?: Options<FooPutData, ThrowOnError>) { return (options?.client ?? this.client).put<FooPutResponses, unknown, ThrowOnError>({ url: '/foo', ...options }); }
+    public put<ThrowOnError extends boolean = false>(options?: Options<FooPutData, ThrowOnError>) {
+        return (options?.client ?? this.client).put<FooPutResponses, unknown, ThrowOnError>({ url: '/foo', ...options });
+    }
     
     bar = new Bar({ client: this.client });
 }
@@ -53,7 +63,9 @@ class HeyApiRegistry<T> {
         return instance;
     }
     
-    set(value: T, key?: string): void { this.instances.set(key ?? this.defaultKey, value); }
+    set(value: T, key?: string): void {
+        this.instances.set(key ?? this.defaultKey, value);
+    }
 }
 
 export class Sdk extends HeyApiClient {
@@ -62,11 +74,18 @@ export class Sdk extends HeyApiClient {
     constructor(args?: {
         client?: Client;
         key?: string;
-    }) { super(args); Sdk.__registry.set(this, args?.key); }
+    }) {
+        super(args);
+        Sdk.__registry.set(this, args?.key);
+    }
     
-    public getFoo<ThrowOnError extends boolean = false>(options?: Options<GetFooData, ThrowOnError>) { return (options?.client ?? this.client).get<GetFooResponses, unknown, ThrowOnError>({ url: '/foo', ...options }); }
+    public getFoo<ThrowOnError extends boolean = false>(options?: Options<GetFooData, ThrowOnError>) {
+        return (options?.client ?? this.client).get<GetFooResponses, unknown, ThrowOnError>({ url: '/foo', ...options });
+    }
     
-    public getFooBar<ThrowOnError extends boolean = false>(options?: Options<GetFooBarData, ThrowOnError>) { return (options?.client ?? this.client).get<GetFooBarResponses, unknown, ThrowOnError>({ url: '/foo/bar', ...options }); }
+    public getFooBar<ThrowOnError extends boolean = false>(options?: Options<GetFooBarData, ThrowOnError>) {
+        return (options?.client ?? this.client).get<GetFooBarResponses, unknown, ThrowOnError>({ url: '/foo/bar', ...options });
+    }
     
     foo = new Foo({ client: this.client });
 }

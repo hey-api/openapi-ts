@@ -3,7 +3,9 @@
 import * as z from 'zod/v4-mini';
 
 export const zBar = z.object({
-    get bar() { return z.optional(z.array(z.lazy((): any => zBar))); }
+    get bar() {
+        return z.optional(z.array(z.lazy((): any => zBar)));
+    }
 });
 
 export const zFoo = z.object({
