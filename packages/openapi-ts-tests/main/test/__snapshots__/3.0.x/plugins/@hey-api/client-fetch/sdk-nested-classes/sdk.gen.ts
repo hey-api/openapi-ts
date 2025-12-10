@@ -19,11 +19,17 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
 };
 
 export class Domains {
-    public static get<ThrowOnError extends boolean = false>(options?: Options<BusinessProvidersDomainsGetData, ThrowOnError>) { return (options?.client ?? client).get<BusinessProvidersDomainsGetResponses, unknown, ThrowOnError>({ url: '/business/providers/domains', ...options }); }
+    public static get<ThrowOnError extends boolean = false>(options?: Options<BusinessProvidersDomainsGetData, ThrowOnError>) {
+        return (options?.client ?? client).get<BusinessProvidersDomainsGetResponses, unknown, ThrowOnError>({ url: '/business/providers/domains', ...options });
+    }
     
-    public static post<ThrowOnError extends boolean = false>(options?: Options<BusinessProvidersDomainsPostData, ThrowOnError>) { return (options?.client ?? client).post<BusinessProvidersDomainsPostResponses, unknown, ThrowOnError>({ url: '/business/providers/domains', ...options }); }
+    public static post<ThrowOnError extends boolean = false>(options?: Options<BusinessProvidersDomainsPostData, ThrowOnError>) {
+        return (options?.client ?? client).post<BusinessProvidersDomainsPostResponses, unknown, ThrowOnError>({ url: '/business/providers/domains', ...options });
+    }
     
-    public static putBusinessProvidersDomains<ThrowOnError extends boolean = false>(options?: Options<PutBusinessProvidersDomainsData, ThrowOnError>) { return (options?.client ?? client).put<PutBusinessProvidersDomainsResponses, unknown, ThrowOnError>({ url: '/business/providers/domains', ...options }); }
+    public static putBusinessProvidersDomains<ThrowOnError extends boolean = false>(options?: Options<PutBusinessProvidersDomainsData, ThrowOnError>) {
+        return (options?.client ?? client).put<PutBusinessProvidersDomainsResponses, unknown, ThrowOnError>({ url: '/business/providers/domains', ...options });
+    }
 }
 
 export class Providers {
@@ -31,13 +37,17 @@ export class Providers {
 }
 
 export class Business {
-    public static get<ThrowOnError extends boolean = false>(options?: Options<BusinessGetData, ThrowOnError>) { return (options?.client ?? client).get<BusinessGetResponses, unknown, ThrowOnError>({ url: '/locations/businesses', ...options }); }
+    public static get<ThrowOnError extends boolean = false>(options?: Options<BusinessGetData, ThrowOnError>) {
+        return (options?.client ?? client).get<BusinessGetResponses, unknown, ThrowOnError>({ url: '/locations/businesses', ...options });
+    }
     
     static providers = Providers;
 }
 
 export class Locations {
-    public static get<ThrowOnError extends boolean = false>(options?: Options<GetData, ThrowOnError>) { return (options?.client ?? client).get<GetResponses, unknown, ThrowOnError>({ url: '/locations', ...options }); }
+    public static get<ThrowOnError extends boolean = false>(options?: Options<GetData, ThrowOnError>) {
+        return (options?.client ?? client).get<GetResponses, unknown, ThrowOnError>({ url: '/locations', ...options });
+    }
     
     static business = Business;
 }

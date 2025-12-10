@@ -79,7 +79,7 @@ export class MethodTsDsl extends Mixed {
       this.$generics(),
       this.$params(),
       this.$type(this._returns),
-      this.$node(new BlockTsDsl(...this._do)),
+      this.$node(new BlockTsDsl(...this._do).pretty()),
     );
     return this.$docs(node);
   }

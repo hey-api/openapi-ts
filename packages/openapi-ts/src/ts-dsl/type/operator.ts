@@ -3,7 +3,7 @@ import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TypeTsDsl } from '../base';
-import { registerLazyAccessTypeOperatorFactory } from '../mixins/type-expr';
+import { setTypeOperatorFactory } from '../mixins/type-expr';
 
 type Op =
   | ts.SyntaxKind.KeyOfKeyword
@@ -92,6 +92,4 @@ export class TypeOperatorTsDsl extends Mixed {
   }
 }
 
-registerLazyAccessTypeOperatorFactory(
-  (...args) => new TypeOperatorTsDsl(...args),
-);
+setTypeOperatorFactory((...args) => new TypeOperatorTsDsl(...args));

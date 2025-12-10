@@ -16,8 +16,11 @@ const fooSchemaResponseTransformer = (data: any) => {
     return data;
 };
 
-const nestedDateObjectSchemaResponseTransformer = (data: any) => { if (data.foo) {
-    if (data.foo.bar) {
-        data.foo.bar = new Date(data.foo.bar);
+const nestedDateObjectSchemaResponseTransformer = (data: any) => {
+    if (data.foo) {
+        if (data.foo.bar) {
+            data.foo.bar = new Date(data.foo.bar);
+        }
     }
-} return data; };
+    return data;
+};

@@ -3,10 +3,7 @@ import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TypeTsDsl } from '../base';
-import {
-  registerLazyAccessTypeQueryFactory,
-  TypeExprMixin,
-} from '../mixins/type-expr';
+import { setTypeQueryFactory, TypeExprMixin } from '../mixins/type-expr';
 
 const Mixed = TypeExprMixin(TypeTsDsl<ts.TypeQueryNode>);
 
@@ -31,4 +28,4 @@ export class TypeQueryTsDsl extends Mixed {
   }
 }
 
-registerLazyAccessTypeQueryFactory((...args) => new TypeQueryTsDsl(...args));
+setTypeQueryFactory((...args) => new TypeQueryTsDsl(...args));

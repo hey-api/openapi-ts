@@ -23,13 +23,19 @@ class HeyApiClient {
     
     constructor(args?: {
         client?: Client;
-    }) { this.client = args?.client ?? client; }
+    }) {
+        this.client = args?.client ?? client;
+    }
 }
 
 export class Domains extends HeyApiClient {
-    public get<ThrowOnError extends boolean = false>(options?: Options<BusinessProvidersDomainsGetData, ThrowOnError>) { return (options?.client ?? this.client).get<BusinessProvidersDomainsGetResponses, unknown, ThrowOnError>({ url: '/business/providers/domains', ...options }); }
+    public get<ThrowOnError extends boolean = false>(options?: Options<BusinessProvidersDomainsGetData, ThrowOnError>) {
+        return (options?.client ?? this.client).get<BusinessProvidersDomainsGetResponses, unknown, ThrowOnError>({ url: '/business/providers/domains', ...options });
+    }
     
-    public post<ThrowOnError extends boolean = false>(options?: Options<BusinessProvidersDomainsPostData, ThrowOnError>) { return (options?.client ?? this.client).post<BusinessProvidersDomainsPostResponses, unknown, ThrowOnError>({ url: '/business/providers/domains', ...options }); }
+    public post<ThrowOnError extends boolean = false>(options?: Options<BusinessProvidersDomainsPostData, ThrowOnError>) {
+        return (options?.client ?? this.client).post<BusinessProvidersDomainsPostResponses, unknown, ThrowOnError>({ url: '/business/providers/domains', ...options });
+    }
 }
 
 export class Providers extends HeyApiClient {
@@ -37,7 +43,9 @@ export class Providers extends HeyApiClient {
 }
 
 export class Business extends HeyApiClient {
-    public get<ThrowOnError extends boolean = false>(options?: Options<BusinessGetData, ThrowOnError>) { return (options?.client ?? this.client).get<BusinessGetResponses, unknown, ThrowOnError>({ url: '/locations/businesses', ...options }); }
+    public get<ThrowOnError extends boolean = false>(options?: Options<BusinessGetData, ThrowOnError>) {
+        return (options?.client ?? this.client).get<BusinessGetResponses, unknown, ThrowOnError>({ url: '/locations/businesses', ...options });
+    }
     
     providers = new Providers({ client: this.client });
 }
@@ -55,7 +63,9 @@ class HeyApiRegistry<T> {
         return instance;
     }
     
-    set(value: T, key?: string): void { this.instances.set(key ?? this.defaultKey, value); }
+    set(value: T, key?: string): void {
+        this.instances.set(key ?? this.defaultKey, value);
+    }
 }
 
 export class NestedSdkWithInstance extends HeyApiClient {
@@ -64,11 +74,18 @@ export class NestedSdkWithInstance extends HeyApiClient {
     constructor(args?: {
         client?: Client;
         key?: string;
-    }) { super(args); NestedSdkWithInstance.__registry.set(this, args?.key); }
+    }) {
+        super(args);
+        NestedSdkWithInstance.__registry.set(this, args?.key);
+    }
     
-    public putBusinessProvidersDomains<ThrowOnError extends boolean = false>(options?: Options<PutBusinessProvidersDomainsData, ThrowOnError>) { return (options?.client ?? this.client).put<PutBusinessProvidersDomainsResponses, unknown, ThrowOnError>({ url: '/business/providers/domains', ...options }); }
+    public putBusinessProvidersDomains<ThrowOnError extends boolean = false>(options?: Options<PutBusinessProvidersDomainsData, ThrowOnError>) {
+        return (options?.client ?? this.client).put<PutBusinessProvidersDomainsResponses, unknown, ThrowOnError>({ url: '/business/providers/domains', ...options });
+    }
     
-    public get<ThrowOnError extends boolean = false>(options?: Options<GetData, ThrowOnError>) { return (options?.client ?? this.client).get<GetResponses, unknown, ThrowOnError>({ url: '/locations', ...options }); }
+    public get<ThrowOnError extends boolean = false>(options?: Options<GetData, ThrowOnError>) {
+        return (options?.client ?? this.client).get<GetResponses, unknown, ThrowOnError>({ url: '/locations', ...options });
+    }
     
     business = new Business({ client: this.client });
 }

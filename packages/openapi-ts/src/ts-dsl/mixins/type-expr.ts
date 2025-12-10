@@ -14,10 +14,8 @@ type TypeExprFactory = (
   fn?: (t: TypeExprTsDsl) => void,
 ) => TypeExprTsDsl;
 let typeExprFactory: TypeExprFactory | undefined;
-/** Registers the TypeExpr DSL factory after its module has finished evaluating. */
-export function registerLazyAccessTypeExprFactory(
-  factory: TypeExprFactory,
-): void {
+/** Lazy register the factory to avoid circular imports. */
+export function setTypeExprFactory(factory: TypeExprFactory): void {
   typeExprFactory = factory;
 }
 
@@ -26,10 +24,8 @@ type TypeIdxFactory = (
   index: string | number | MaybeTsDsl<ts.TypeNode>,
 ) => TypeIdxTsDsl;
 let typeIdxFactory: TypeIdxFactory | undefined;
-/** Registers the TypeIdxTsDsl DSL factory after its module has finished evaluating. */
-export function registerLazyAccessTypeIdxFactory(
-  factory: TypeIdxFactory,
-): void {
+/** Lazy register the factory to avoid circular imports. */
+export function setTypeIdxFactory(factory: TypeIdxFactory): void {
   typeIdxFactory = factory;
 }
 
@@ -37,19 +33,15 @@ type TypeOfExprFactory = (
   expr: string | MaybeTsDsl<ts.Expression>,
 ) => TypeOfExprTsDsl;
 let typeOfExprFactory: TypeOfExprFactory | undefined;
-/** Registers the TypeOfExpr DSL factory after its module has finished evaluating. */
-export function registerLazyAccessTypeOfExprFactory(
-  factory: TypeOfExprFactory,
-): void {
+/** Lazy register the factory to avoid circular imports. */
+export function setTypeOfExprFactory(factory: TypeOfExprFactory): void {
   typeOfExprFactory = factory;
 }
 
 type TypeOperatorFactory = () => TypeOperatorTsDsl;
 let typeOperatorFactory: TypeOperatorFactory | undefined;
-/** Registers the TypeOperatorTsDsl DSL factory after its module has finished evaluating. */
-export function registerLazyAccessTypeOperatorFactory(
-  factory: TypeOperatorFactory,
-): void {
+/** Lazy register the factory to avoid circular imports. */
+export function setTypeOperatorFactory(factory: TypeOperatorFactory): void {
   typeOperatorFactory = factory;
 }
 
@@ -57,10 +49,8 @@ type TypeQueryFactory = (
   expr: string | MaybeTsDsl<TypeTsDsl | ts.Expression>,
 ) => TypeQueryTsDsl;
 let typeQueryFactory: TypeQueryFactory | undefined;
-/** Registers the TypeQuery DSL factory after its module has finished evaluating. */
-export function registerLazyAccessTypeQueryFactory(
-  factory: TypeQueryFactory,
-): void {
+/** Lazy register the factory to avoid circular imports. */
+export function setTypeQueryFactory(factory: TypeQueryFactory): void {
   typeQueryFactory = factory;
 }
 

@@ -42,27 +42,42 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
 export const createQueryKey2 = (options?: Options<CreateData>) => createQueryKey('create', options);
 
 export const createOptions = (options?: Options<CreateData>) => queryOptions<unknown, DefaultError, unknown, ReturnType<typeof createQueryKey2>>({
-    queryFn: async ({ queryKey, signal }) => { const { data } = await create({
-        ...options,
-        ...queryKey[0],
-        signal,
-        throwOnError: true
-    }); return data; },
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await create({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
     queryKey: createQueryKey2(options)
 });
 
-export const create2Mutation = (options?: Partial<Options<Create2Data>>): UseMutationOptions<unknown, DefaultError, Options<Create2Data>> => { const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<Create2Data>> = {
-    mutationFn: async (fnOptions) => { const { data } = await create2({
-        ...options,
-        ...fnOptions,
-        throwOnError: true
-    }); return data; }
-}; return mutationOptions; };
+export const create2Mutation = (options?: Partial<Options<Create2Data>>): UseMutationOptions<unknown, DefaultError, Options<Create2Data>> => {
+    const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<Create2Data>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await create2({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
 
-export const create3Mutation = (options?: Partial<Options<Create3Data>>): UseMutationOptions<unknown, DefaultError, Options<Create3Data>> => { const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<Create3Data>> = {
-    mutationFn: async (fnOptions) => { const { data } = await create3({
-        ...options,
-        ...fnOptions,
-        throwOnError: true
-    }); return data; }
-}; return mutationOptions; };
+export const create3Mutation = (options?: Partial<Options<Create3Data>>): UseMutationOptions<unknown, DefaultError, Options<Create3Data>> => {
+    const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<Create3Data>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await create3({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};

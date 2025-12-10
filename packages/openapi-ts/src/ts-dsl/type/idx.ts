@@ -3,10 +3,7 @@ import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TypeTsDsl } from '../base';
-import {
-  registerLazyAccessTypeIdxFactory,
-  TypeExprMixin,
-} from '../mixins/type-expr';
+import { setTypeIdxFactory, TypeExprMixin } from '../mixins/type-expr';
 
 type Base = string | MaybeTsDsl<ts.TypeNode>;
 type Index = string | number | MaybeTsDsl<ts.TypeNode>;
@@ -49,4 +46,4 @@ export class TypeIdxTsDsl extends Mixed {
   }
 }
 
-registerLazyAccessTypeIdxFactory((...args) => new TypeIdxTsDsl(...args));
+setTypeIdxFactory((...args) => new TypeIdxTsDsl(...args));
