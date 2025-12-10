@@ -44,7 +44,7 @@ export default defineConfig(() => {
             // 'full.yaml',
             // 'object-property-names.yaml',
             // 'openai.yaml',
-            // 'opencode.yaml',
+            'opencode.yaml',
             // 'pagination-ref.yaml',
             'sdk-instance.yaml',
             // 'string-with-format.yaml',
@@ -281,7 +281,7 @@ export default defineConfig(() => {
           // signature: 'object',
           // transformer: '@hey-api/transformers',
           // transformer: true,
-          validator: 'valibot',
+          // validator: 'valibot',
           // validator: {
           //   request: 'zod',
           //   response: 'zod',
@@ -383,7 +383,7 @@ export default defineConfig(() => {
           definitions: 'z{{name}}',
           exportFromIndex: true,
           // metadata: true,
-          name: 'valibot',
+          // name: 'valibot',
           // requests: {
           //   case: 'PascalCase',
           //   name: '{{name}}Data',
@@ -466,7 +466,7 @@ export default defineConfig(() => {
           },
           exportFromIndex: true,
           metadata: true,
-          name: 'zod',
+          // name: 'zod',
           // requests: {
           //   // case: 'SCREAMING_SNAKE_CASE',
           //   // name: 'z{{name}}TestData',

@@ -543,6 +543,8 @@ export const operationStatements = ({
       const shape = $.object();
       if ('in' in field) {
         shape.prop('in', $.literal(field.in));
+      }
+      if ('key' in field) {
         if (field.key) {
           shape.prop('key', $.literal(field.key));
         }
@@ -558,7 +560,10 @@ export const operationStatements = ({
     });
     statements.push(
       $.const('params').assign(
-        $(symbol).call($.array(...args), $.array(...config)),
+        $(symbol).call(
+          $.array(...args),
+          $.array($.object().prop('args', $.array(...config))),
+        ),
       ),
     );
     reqOptions.spread('params');

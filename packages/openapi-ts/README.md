@@ -1,5 +1,5 @@
 <div align="center">
-  <img alt="Two people looking at the TypeScript logo" height="214" src="https://heyapi.dev/images/hero-920w.png" width="320">
+  <img alt="Hey API presents openapi-ts" height="214" src="https://heyapi.dev/images/openapi-ts-hero-640w.png" width="438">
   <h1><b>OpenAPI TypeScript</b></h1>
   <p><em>“OpenAPI codegen that just works.”</em><br/><sub>— Guillermo Rauch, CEO of Vercel</sub></p>
 </div>
@@ -64,10 +64,27 @@ Help Hey API stay around for the long haul by becoming a [sponsor](https://githu
             </picture>
           </a>
           <br/>
-          Best-in-class SDKs and MCP for your API.
+          Best-in-class developer interfaces for your API.
           <br/>
           <a href="https://kutt.it/pkEZyc" style="text-decoration:none;" target="_blank">
             stainless.com
+          </a>
+        </p>
+        <p></p>
+      </td>
+      <td align="center">
+        <p></p>
+        <p>
+          <a href="https://kutt.it/QM9Q2N" target="_blank">
+            <picture height="50px">
+              <img alt="Opencode logo" height="50px" src="https://heyapi.dev/opencode-logo-wordmark.svg">
+            </picture>
+          </a>
+          <br/>
+          The open source coding agent.
+          <br/>
+          <a href="https://kutt.it/QM9Q2N" style="text-decoration:none;" target="_blank">
+            opencode.ai
           </a>
         </p>
         <p></p>
