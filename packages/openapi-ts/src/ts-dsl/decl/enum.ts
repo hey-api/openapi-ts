@@ -6,7 +6,7 @@ import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
 import { DocMixin } from '../mixins/doc';
 import { ConstMixin, ExportMixin } from '../mixins/modifiers';
-import { safeSymbolName } from '../utils/name';
+import { safeRuntimeName } from '../utils/name';
 import { EnumMemberTsDsl } from './member';
 
 export type EnumName = Symbol | string;
@@ -26,7 +26,7 @@ export class EnumTsDsl extends Mixed {
     this._name = ref(name);
     if (isSymbol(name)) {
       name.setKind('enum');
-      name.setNameSanitizer(safeSymbolName);
+      name.setNameSanitizer(safeRuntimeName);
       name.setNode(this);
     }
     fn?.(this);

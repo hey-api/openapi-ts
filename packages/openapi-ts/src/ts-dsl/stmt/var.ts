@@ -9,7 +9,7 @@ import { DefaultMixin, ExportMixin } from '../mixins/modifiers';
 import { PatternMixin } from '../mixins/pattern';
 import { ValueMixin } from '../mixins/value';
 import { TypeExprTsDsl } from '../type/expr';
-import { safeSymbolName } from '../utils/name';
+import { safeRuntimeName } from '../utils/name';
 
 export type VarName = Symbol | string;
 
@@ -33,7 +33,7 @@ export class VarTsDsl extends Mixed {
     if (name) this.name = ref(name);
     if (isSymbol(name)) {
       name.setKind('var');
-      name.setNameSanitizer(safeSymbolName);
+      name.setNameSanitizer(safeRuntimeName);
       name.setNode(this);
     }
   }

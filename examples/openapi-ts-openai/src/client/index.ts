@@ -2,7 +2,6 @@
 
 export { OpenAi, type Options } from './sdk.gen';
 export {
-  type _Error,
   type ActivateOrganizationCertificatesData,
   type ActivateOrganizationCertificatesResponse,
   type ActivateOrganizationCertificatesResponses,
@@ -403,6 +402,7 @@ export {
   type Drag,
   type EasyInputMessage,
   type Embedding,
+  type Error,
   type ErrorEvent,
   type ErrorResponse,
   type Eval,

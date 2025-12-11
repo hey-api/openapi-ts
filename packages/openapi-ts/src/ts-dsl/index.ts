@@ -350,8 +350,4 @@ export type DollarTsDsl = {
 export type { MaybeTsDsl, TypeTsDsl } from './base';
 export { TsDsl } from './base';
 export { TypeScriptRenderer } from './render/typescript';
-export {
-  numberRegExp,
-  reservedJavaScriptKeywordsRegExp,
-  validTypescriptIdentifierRegExp,
-} from './utils/regexp';
+export { regexp } from './utils/regexp';

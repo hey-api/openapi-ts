@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
-import { safeSymbolName } from '../name';
+import { safeRuntimeName } from '../name';
 
-describe('safeSymbolName', () => {
+describe('safeRuntimeName', () => {
   const scenarios: ReadonlyArray<{
     name: string;
     output: string;
@@ -356,7 +356,7 @@ describe('safeSymbolName', () => {
   it.each(scenarios)(
     'transforms $name -> $output',
     async ({ name, output }) => {
-      expect(safeSymbolName(name)).toEqual(output);
+      expect(safeRuntimeName(name)).toEqual(output);
     },
   );
 });
