@@ -1,26 +1,28 @@
+import { fromRef, ref } from '../refs/refs';
+import type { Ref } from '../refs/types';
 import type { INode } from './node';
 import type { INodeRegistry } from './types';
 
 export class NodeRegistry implements INodeRegistry {
-  private brands: Map<string, Array<INode>> = new Map();
-  private list: Array<INode> = [];
+  private list: Array<Ref<INode | null>> = [];
 
-  add(node: INode): void {
-    this.list.push(node);
+  add(node: INode | null): number {
+    const index = this.list.push(ref(node));
+    return index - 1;
+  }
 
-    let group = this.brands.get(node['~brand']);
-    if (!group) {
-      group = [];
-      this.brands.set(node['~brand'], group);
+  *all(): Iterable<INode> {
+    for (const r of this.list) {
+      const node = fromRef(r);
+      if (node) yield node;
     }
-    group.push(node);
   }
 
-  all(): ReadonlyArray<INode> {
-    return this.list;
+  remove(index: number): void {
+    this.list[index] = ref(null);
   }
 
-  byBrand(brand: string): ReadonlyArray<INode> {
-    return this.brands.get(brand) ?? [];
+  update(index: number, node: INode | null): void {
+    this.list[index] = ref(node);
   }
 }

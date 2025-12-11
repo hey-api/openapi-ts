@@ -46,7 +46,7 @@ export default defineConfig(() => {
             // 'openai.yaml',
             'opencode.yaml',
             // 'pagination-ref.yaml',
-            'sdk-instance.yaml',
+            // 'sdk-instance.yaml',
             // 'string-with-format.yaml',
             // 'transformers.json',
             // 'transformers-recursive.json',
