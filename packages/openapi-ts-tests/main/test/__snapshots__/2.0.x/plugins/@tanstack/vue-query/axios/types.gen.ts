@@ -174,7 +174,7 @@ export type DictionaryWithProperties = {
 /**
  * This is a type-only model that defines Date as a string
  */
-export type _Date = string;
+export type Date = string;
 
 /**
  * This is a model with one number property

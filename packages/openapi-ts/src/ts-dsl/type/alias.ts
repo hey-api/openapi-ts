@@ -7,7 +7,7 @@ import { TsDsl } from '../base';
 import { DocMixin } from '../mixins/doc';
 import { ExportMixin } from '../mixins/modifiers';
 import { TypeParamsMixin } from '../mixins/type-params';
-import { safeSymbolName } from '../utils/name';
+import { safeTypeName } from '../utils/name';
 
 type Name = Symbol | string;
 type Value = MaybeTsDsl<ts.TypeNode>;
@@ -27,7 +27,7 @@ export class TypeAliasTsDsl extends Mixed {
     this.name = ref(name);
     if (isSymbol(name)) {
       name.setKind('type');
-      name.setNameSanitizer(safeSymbolName);
+      name.setNameSanitizer(safeTypeName);
       name.setNode(this);
     }
     fn?.(this);

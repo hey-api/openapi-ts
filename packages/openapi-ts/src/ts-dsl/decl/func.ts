@@ -19,7 +19,7 @@ import { ParamMixin } from '../mixins/param';
 import { TypeParamsMixin } from '../mixins/type-params';
 import { BlockTsDsl } from '../stmt/block';
 import { TypeExprTsDsl } from '../type/expr';
-import { safeSymbolName } from '../utils/name';
+import { safeRuntimeName } from '../utils/name';
 
 export type FuncMode = 'arrow' | 'decl' | 'expr';
 export type FuncName = Symbol | string;
@@ -70,7 +70,7 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends Mixed {
       this.name = ref(name);
       if (isSymbol(name)) {
         name.setKind('function');
-        name.setNameSanitizer(safeSymbolName);
+        name.setNameSanitizer(safeRuntimeName);
         name.setNode(this);
       }
       fn?.(this as unknown as FuncTsDsl<'decl'>);

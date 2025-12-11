@@ -9,7 +9,7 @@ import { DecoratorMixin } from '../mixins/decorator';
 import { DocMixin } from '../mixins/doc';
 import { AbstractMixin, DefaultMixin, ExportMixin } from '../mixins/modifiers';
 import { TypeParamsMixin } from '../mixins/type-params';
-import { safeSymbolName } from '../utils/name';
+import { safeRuntimeName } from '../utils/name';
 import { FieldTsDsl } from './field';
 import { InitTsDsl } from './init';
 import { MethodTsDsl } from './method';
@@ -38,7 +38,7 @@ export class ClassTsDsl extends Mixed {
     this.name = ref(name);
     if (isSymbol(name)) {
       name.setKind('class');
-      name.setNameSanitizer(safeSymbolName);
+      name.setNameSanitizer(safeRuntimeName);
       name.setNode(this);
     }
   }

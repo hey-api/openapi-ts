@@ -5,7 +5,7 @@ import ts from 'typescript';
 import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
 import { ArgsMixin } from '../mixins/args';
-import { safeSymbolName } from '../utils/name';
+import { safeRuntimeName } from '../utils/name';
 
 export type DecoratorName = Symbol | string | MaybeTsDsl<ts.Expression>;
 
@@ -23,7 +23,7 @@ export class DecoratorTsDsl extends Mixed {
     super();
     this.name = ref(name);
     if (isSymbol(name)) {
-      name.setNameSanitizer(safeSymbolName);
+      name.setNameSanitizer(safeRuntimeName);
     }
     this.args(...args);
   }

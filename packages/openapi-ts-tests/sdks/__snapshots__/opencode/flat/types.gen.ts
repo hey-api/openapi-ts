@@ -1017,7 +1017,7 @@ export type McpRemoteConfig = {
 
 export type LayoutConfig = 'auto' | 'stretch';
 
-export type _Error = {
+export type Error = {
     data: {
         [key: string]: unknown;
     };
@@ -1217,7 +1217,7 @@ export type SessionCreateErrors = {
     /**
      * Bad request
      */
-    400: _Error;
+    400: Error;
 };
 
 export type SessionCreateError = SessionCreateErrors[keyof SessionCreateErrors];
@@ -1928,7 +1928,7 @@ export type AuthSetErrors = {
     /**
      * Bad request
      */
-    400: _Error;
+    400: Error;
 };
 
 export type AuthSetError = AuthSetErrors[keyof AuthSetErrors];

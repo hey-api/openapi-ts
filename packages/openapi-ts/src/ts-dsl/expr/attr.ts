@@ -9,7 +9,7 @@ import { ExprMixin, setAttrFactory } from '../mixins/expr';
 import { OperatorMixin } from '../mixins/operator';
 import { OptionalMixin } from '../mixins/optional';
 import { TokenTsDsl } from '../token';
-import { validTypescriptIdentifierRegExp } from '../utils/regexp';
+import { regexp } from '../utils/regexp';
 import { LiteralTsDsl } from './literal';
 
 export type AttrLeft = Symbol | string | MaybeTsDsl<ts.Expression>;
@@ -46,11 +46,11 @@ export class AttrTsDsl extends Mixed {
 
   override toAst() {
     const leftNode = this.$node(this.left);
-    validTypescriptIdentifierRegExp.lastIndex = 0;
+    regexp.typeScriptIdentifier.lastIndex = 0;
     if (
       typeof fromRef(this.right) === 'number' ||
       (typeof fromRef(this.right) === 'string' &&
-        !validTypescriptIdentifierRegExp.test(fromRef(this.right) as string))
+        !regexp.typeScriptIdentifier.test(fromRef(this.right) as string))
     ) {
       if (this._optional) {
         return ts.factory.createElementAccessChain(

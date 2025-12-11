@@ -4,7 +4,7 @@ import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
 import { createSchemaComment } from '~/plugins/shared/utils/schema';
 import type { MaybeTsDsl, TypeTsDsl } from '~/ts-dsl';
-import { $, numberRegExp } from '~/ts-dsl';
+import { $, regexp } from '~/ts-dsl';
 import { pathToJsonPointer, refToName } from '~/utils/ref';
 import { stringCase } from '~/utils/stringCase';
 
@@ -58,10 +58,10 @@ const schemaToEnumObject = ({
         value: key,
       });
 
-      numberRegExp.lastIndex = 0;
+      regexp.number.lastIndex = 0;
       // TypeScript enum keys cannot be numbers
       if (
-        numberRegExp.test(key) &&
+        regexp.number.test(key) &&
         plugin.config.enums.enabled &&
         (plugin.config.enums.mode === 'typescript' ||
           plugin.config.enums.mode === 'typescript-const')

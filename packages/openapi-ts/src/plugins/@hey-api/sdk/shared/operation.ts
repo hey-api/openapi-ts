@@ -6,7 +6,7 @@ import { statusCodeToGroup } from '~/ir/operation';
 import type { IR } from '~/ir/types';
 import { sanitizeNamespaceIdentifier } from '~/openApi/common/parser/sanitize';
 import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
-import { $, reservedJavaScriptKeywordsRegExp } from '~/ts-dsl';
+import { $ } from '~/ts-dsl';
 import { stringCase } from '~/utils/stringCase';
 import { transformClassName } from '~/utils/transform';
 
@@ -14,6 +14,7 @@ import type { Field, Fields } from '../../client-core/bundle/params';
 import type { HeyApiSdkPlugin } from '../types';
 import { operationAuth } from './auth';
 import { nuxtTypeComposable, nuxtTypeDefault } from './constants';
+import { reservedJavaScriptKeywordsRegExp } from './regexp';
 import { getSignatureParameters } from './signature';
 import { createRequestValidator, createResponseValidator } from './validator';
 

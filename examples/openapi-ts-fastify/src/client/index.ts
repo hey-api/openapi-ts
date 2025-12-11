@@ -2,12 +2,12 @@
 
 export { createPets, listPets, type Options, showPetById } from './sdk.gen';
 export type {
-  _Error,
   ClientOptions,
   CreatePetsData,
   CreatePetsError,
   CreatePetsErrors,
   CreatePetsResponses,
+  Error,
   ListPetsData,
   ListPetsError,
   ListPetsErrors,

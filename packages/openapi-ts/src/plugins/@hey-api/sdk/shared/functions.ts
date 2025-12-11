@@ -4,11 +4,12 @@ import {
   createOperationComment,
   isOperationOptionsRequired,
 } from '~/plugins/shared/utils/operation';
-import { $, reservedJavaScriptKeywordsRegExp } from '~/ts-dsl';
+import { $ } from '~/ts-dsl';
 
 import type { HeyApiSdkPlugin } from '../types';
 import { nuxtTypeComposable, nuxtTypeDefault } from './constants';
 import { operationParameters, operationStatements } from './operation';
+import { reservedJavaScriptKeywordsRegExp } from './regexp';
 
 const serviceFunctionIdentifier = ({
   id,
