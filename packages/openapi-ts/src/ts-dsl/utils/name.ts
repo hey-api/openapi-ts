@@ -4,13 +4,8 @@ import type { TsDsl } from '../base';
 import { IdTsDsl } from '../expr/id';
 import { LiteralTsDsl } from '../expr/literal';
 import { regexp } from './regexp';
-import {
-  browserGlobals,
-  javaScriptGlobals,
-  javaScriptKeywords,
-  nodeGlobals,
-  typeScriptKeywords,
-} from './reserved';
+import type { ReservedList } from './reserved';
+import { reserved } from './reserved';
 
 export const safeMemberName = (name: string): TsDsl<ts.PropertyName> => {
   regexp.typeScriptIdentifier.lastIndex = 0;
@@ -36,7 +31,7 @@ export const safePropName = (name: string): TsDsl<ts.PropertyName> => {
   return new LiteralTsDsl(name) as TsDsl<ts.PropertyName>;
 };
 
-const sanitizeName = (name: string, reserved: Set<string>): string => {
+const safeName = (name: string, reserved: ReservedList): string => {
   let sanitized = '';
   let index: number;
 
@@ -56,23 +51,14 @@ const sanitizeName = (name: string, reserved: Set<string>): string => {
     index += 1;
   }
 
-  if (reserved.has(sanitized)) {
+  if (reserved['~values'].has(sanitized)) {
     sanitized = `_${sanitized}`;
   }
 
   return sanitized || '_';
 };
 
-const runtimeReserved = new Set([
-  ...browserGlobals,
-  ...javaScriptGlobals,
-  ...javaScriptKeywords,
-  ...nodeGlobals,
-  ...typeScriptKeywords,
-]);
-
-const typeReserved = new Set([...javaScriptKeywords, ...typeScriptKeywords]);
-
 export const safeRuntimeName = (name: string) =>
-  sanitizeName(name, runtimeReserved);
-export const safeTypeName = (name: string) => sanitizeName(name, typeReserved);
+  safeName(name, reserved.runtime);
+
+export const safeTypeName = (name: string) => safeName(name, reserved.type);
