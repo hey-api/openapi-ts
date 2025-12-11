@@ -107,13 +107,24 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
   }
 
   addNode(node: Node | null): number {
-    return this.gen.nodes.add(node);
-  }
-  removeNode(index: number): void {
-    return this.gen.nodes.remove(index);
+    for (const hook of this.eventHooks['node:set:before']) {
+      hook({ node, plugin: this });
+    }
+    const index = this.gen.nodes.add(node);
+    for (const hook of this.eventHooks['node:set:after']) {
+      hook({ node, plugin: this });
+    }
+    return index;
   }
   updateNode(index: number, node: Node | null): void {
-    return this.gen.nodes.update(index, node);
+    for (const hook of this.eventHooks['node:set:before']) {
+      hook({ node, plugin: this });
+    }
+    const result = this.gen.nodes.update(index, node);
+    for (const hook of this.eventHooks['node:set:after']) {
+      hook({ node, plugin: this });
+    }
+    return result;
   }
 
   /**
@@ -366,12 +377,12 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
 
   private buildEventHooks(): EventHooks {
     const result: EventHooks = {
+      'node:set:after': [],
+      'node:set:before': [],
       'plugin:handler:after': [],
       'plugin:handler:before': [],
       'symbol:register:after': [],
       'symbol:register:before': [],
-      'symbol:setValue:after': [],
-      'symbol:setValue:before': [],
     };
     const scopes = [
       this.config['~hooks']?.events,

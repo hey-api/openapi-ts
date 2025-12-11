@@ -107,11 +107,11 @@ export default defineConfig(() => {
           // indexFile: false,
           // lint: 'eslint',
           nameConflictResolver({ attempt, baseName }) {
-            console.log('resolving conflict for:', { attempt, baseName });
+            // console.log('resolving conflict for:', { attempt, baseName });
             return attempt === 0 ? baseName : `${baseName}_N${attempt + 1}`;
           },
           path: path.resolve(__dirname, '.gen'),
-          preferExportAll: true,
+          // preferExportAll: true,
           resolveModuleName: (moduleName) => {
             if (moduleName === 'valibot') {
               return 'valibot';
@@ -146,6 +146,14 @@ export default defineConfig(() => {
         },
         hooks: {
           events: {
+            // 'node:set:after': ({ node, plugin }) => {
+            //   if (node) {
+            //     console.log(`(${plugin.name}) set node:`, node.symbol);
+            //   }
+            // },
+            // 'node:set:before': ({ node, plugin }) => {
+            //   console.log(`(${plugin.name}) setting node:`, node?.symbol?.id);
+            // },
             // 'plugin:handler:after': ({ plugin }) => {
             //   console.log(`(${plugin.name}): handler finished`);
             // },
@@ -171,12 +179,6 @@ export default defineConfig(() => {
               //   );
               // }
             },
-            // 'symbol:setValue:after': ({ plugin, symbol }) => {
-            //   console.log(`(${plugin.name}) set value:`, symbol.id);
-            // },
-            // 'symbol:setValue:before': ({ plugin, symbol }) => {
-            //   console.log(`(${plugin.name}) setting value:`, symbol.id);
-            // },
           },
           operations: {
             getKind() {
