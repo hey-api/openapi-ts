@@ -97,9 +97,8 @@ export const moduleSortKey = ({
   preferFileExtension: string;
   root: string;
 }): SortKey => {
-  const fromPath = fromFile.finalPath!;
-  const filePath = file.finalPath!;
-  let modulePath = fromPath;
+  const filePath = file.finalPath!.split(path.sep).join('/');
+  let modulePath = fromFile.finalPath!.split(path.sep).join('/');
 
   // built-ins
   // TODO: based on nodeBuiltins set
@@ -110,7 +109,7 @@ export const moduleSortKey = ({
   }
 
   // outside project root
-  if (!modulePath.startsWith(root)) {
+  if (!modulePath.startsWith(root.split(path.sep).join('/'))) {
     return [1, 0, modulePath];
   }
 
