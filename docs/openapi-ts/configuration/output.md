@@ -264,18 +264,19 @@ As your project grows, the chances of name conflicts increase. We use a simple c
 
 ::: code-group
 
+<!-- prettier-ignore-start -->
 ```js [config]
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: {
-    nameConflictResolver({ attempt, baseName }) {
-      // [!code ++]
+    nameConflictResolver({ attempt, baseName }) { // [!code ++]
       return attempt === 0 ? baseName : `${baseName}_N${attempt + 1}`; // [!code ++]
     }, // [!code ++]
     path: 'src/client',
   },
 };
 ```
+<!-- prettier-ignore-end -->
 
 ```ts [example]
 export type ChatCompletion = string;
