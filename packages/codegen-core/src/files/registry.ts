@@ -1,3 +1,5 @@
+import path from 'node:path';
+
 import type { IProject } from '../project/types';
 import { File } from './file';
 import type { FileKeyArgs, IFileIn, IFileRegistry } from './types';
@@ -50,6 +52,7 @@ export class FileRegistry implements IFileRegistry {
   }
 
   private createFileKey(args: FileKeyArgs): string {
-    return `${args.external ? 'ext:' : ''}${args.logicalFilePath}${args.language ? `:${args.language}` : ''}`;
+    const logicalPath = args.logicalFilePath.split(path.sep).join('/');
+    return `${args.external ? 'ext:' : ''}${logicalPath}${args.language ? `:${args.language}` : ''}`;
   }
 }

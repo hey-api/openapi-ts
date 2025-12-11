@@ -1,3 +1,5 @@
+import path from 'node:path';
+
 import type { ExportModule, ImportModule } from '../bindings';
 import { fileBrand } from '../brands';
 import { debug } from '../debug';
@@ -63,7 +65,7 @@ export class File {
     this.external = input.external ?? false;
     this.id = id;
     if (input.language !== undefined) this._language = input.language;
-    this._logicalFilePath = input.logicalFilePath;
+    this._logicalFilePath = input.logicalFilePath.split(path.sep).join('/');
     if (input.name !== undefined) this._name = input.name;
     this.project = project;
   }
