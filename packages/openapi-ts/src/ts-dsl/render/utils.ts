@@ -1,6 +1,6 @@
 import path from 'node:path';
 
-import type { ExportGroup, File, ImportGroup } from '@hey-api/codegen-core';
+import type { ExportModule, File, ImportModule } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 const printer = ts.createPrinter({
@@ -76,12 +76,12 @@ export type SortDistance = number;
 export type SortModule = string;
 export type SortKey = [SortGroup, SortDistance, SortModule];
 
-export type ModuleExport = Omit<ExportGroup, 'from'> & {
+export type ModuleExport = Omit<ExportModule, 'from'> & {
   /** Module specifier for re-exports, e.g. `./foo`. */
   modulePath: string;
 };
 
-export type ModuleImport = Omit<ImportGroup, 'from'> & {
+export type ModuleImport = Omit<ImportModule, 'from'> & {
   /** Module specifier for imports, e.g. `./foo`. */
   modulePath: string;
 };

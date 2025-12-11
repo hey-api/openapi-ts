@@ -1,4 +1,4 @@
-import type { ExportGroup, ImportGroup } from '../bindings';
+import type { ExportModule, ImportModule } from '../bindings';
 import { fileBrand } from '../brands';
 import { debug } from '../debug';
 import type { Language } from '../languages/types';
@@ -12,7 +12,7 @@ export class File {
   /**
    * Exports from this file.
    */
-  private _exports: Array<ExportGroup> = [];
+  private _exports: Array<ExportModule> = [];
   /**
    * File extension (e.g. `.ts`).
    */
@@ -24,7 +24,7 @@ export class File {
   /**
    * Imports to this file.
    */
-  private _imports: Array<ImportGroup> = [];
+  private _imports: Array<ImportModule> = [];
   /**
    * Language of the file.
    */
@@ -71,7 +71,7 @@ export class File {
   /**
    * Exports from this file.
    */
-  get exports(): ReadonlyArray<ExportGroup> {
+  get exports(): ReadonlyArray<ExportModule> {
     return [...this._exports];
   }
 
@@ -103,7 +103,7 @@ export class File {
   /**
    * Imports to this file.
    */
-  get imports(): ReadonlyArray<ImportGroup> {
+  get imports(): ReadonlyArray<ImportModule> {
     return [...this._imports];
   }
 
@@ -154,14 +154,14 @@ export class File {
   /**
    * Add an export group to the file.
    */
-  addExport(group: ExportGroup): void {
+  addExport(group: ExportModule): void {
     this._exports.push(group);
   }
 
   /**
    * Add an import group to the file.
    */
-  addImport(group: ImportGroup): void {
+  addImport(group: ImportModule): void {
     this._imports.push(group);
   }
 
