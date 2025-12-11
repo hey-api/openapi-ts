@@ -47,8 +47,8 @@ export default defineConfig(() => {
             // 'full.yaml',
             // 'sdk-method-class-conflict.yaml',
             // 'object-property-names.yaml',
-            // 'openai.yaml',
-            'opencode.yaml',
+            'openai.yaml',
+            // 'opencode.yaml',
             // 'pagination-ref.yaml',
             // 'sdk-instance.yaml',
             // 'sdk-nested-classes.yaml',
@@ -106,6 +106,10 @@ export default defineConfig(() => {
           // importFileExtension: '.js',
           // indexFile: false,
           // lint: 'eslint',
+          nameConflictResolver({ attempt, baseName }) {
+            console.log('resolving conflict for:', { attempt, baseName });
+            return attempt === 0 ? baseName : `${baseName}_N${attempt + 1}`;
+          },
           path: path.resolve(__dirname, '.gen'),
           preferExportAll: true,
           resolveModuleName: (moduleName) => {

@@ -1,3 +1,4 @@
+import type { NameConflictResolver } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import type { StringCase, StringName } from './case';
@@ -90,6 +91,11 @@ export type UserOutput = {
    */
   lint?: Linters | null;
   /**
+   * Optional name conflict resolver to customize how naming conflicts
+   * are handled.
+   */
+  nameConflictResolver?: NameConflictResolver;
+  /**
    * The absolute path to the output folder.
    */
   path: string;
@@ -178,6 +184,11 @@ export type Output = {
    * Which linter to use to process output folder?
    */
   lint: Linters | null;
+  /**
+   * Optional name conflict resolver to customize how naming conflicts
+   * are handled.
+   */
+  nameConflictResolver: NameConflictResolver | undefined;
   /**
    * The absolute path to the output folder.
    */

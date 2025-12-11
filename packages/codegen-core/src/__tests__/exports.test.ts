@@ -39,6 +39,7 @@ export type _TypeExports = [
   index.ImportMember,
   index.ImportModule,
   index.Language,
+  index.NameConflictResolver,
   index.NameConflictResolvers,
   index.Node,
   index.Output,

@@ -1,4 +1,4 @@
-import { Project, simpleNameConflictResolver } from '@hey-api/codegen-core';
+import { Project } from '@hey-api/codegen-core';
 
 import type { Package } from '~/config/utils/package';
 import { packageFactory } from '~/config/utils/package';
@@ -68,11 +68,9 @@ export class Context<Spec extends Record<string, any> = any> {
     spec: Spec;
   }) {
     this.config = config;
+    // TODO: allow overriding via config
     this.gen = new Project({
       defaultFileName: 'index',
-      defaultNameConflictResolver(args) {
-        return simpleNameConflictResolver(args);
-      },
       fileName: (base) => {
         const name = buildName({
           config: config.output.fileName,
@@ -86,10 +84,11 @@ export class Context<Spec extends Record<string, any> = any> {
           ? name
           : `${name}${suffix}`;
       },
-      nameConflictResolvers: {
-        // TODO: allow overriding via config
-      },
-      // TODO: allow overriding via config
+      nameConflictResolvers: config.output.nameConflictResolver
+        ? {
+            typescript: config.output.nameConflictResolver,
+          }
+        : undefined,
       renderers: [
         new TypeScriptRenderer({
           preferExportAll: config.output.preferExportAll,
