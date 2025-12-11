@@ -106,8 +106,14 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     this.package = props.context.package;
   }
 
-  addNode(node: Node): void {
+  addNode(node: Node | null): number {
     return this.gen.nodes.add(node);
+  }
+  removeNode(index: number): void {
+    return this.gen.nodes.remove(index);
+  }
+  updateNode(index: number, node: Node | null): void {
+    return this.gen.nodes.update(index, node);
   }
 
   /**

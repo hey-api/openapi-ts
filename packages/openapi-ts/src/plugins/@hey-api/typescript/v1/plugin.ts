@@ -85,36 +85,10 @@ const handleComponent = ({
 };
 
 export const handlerV1: HeyApiTypeScriptPlugin['Handler'] = ({ plugin }) => {
-  // reserve identifier for ClientOptions
-  const symbolClientOptions = plugin.registerSymbol({
-    meta: {
-      category: 'type',
-      resource: 'client',
-      role: 'options',
-      tool: 'typescript',
-    },
-    name: buildName({
-      config: {
-        case: plugin.config.case,
-      },
-      name: 'ClientOptions',
-    }),
-  });
-  // reserve identifier for Webhooks
-  const symbolWebhooks = plugin.registerSymbol({
-    meta: {
-      category: 'type',
-      resource: 'webhook',
-      tool: 'typescript',
-      variant: 'container',
-    },
-    name: buildName({
-      config: {
-        case: plugin.config.case,
-      },
-      name: 'Webhooks',
-    }),
-  });
+  // reserve node for ClientOptions
+  const nodeClientIndex = plugin.addNode(null);
+  // reserve node for Webhooks
+  const nodeWebhooksIndex = plugin.addNode(null);
 
   const servers: Array<IR.ServerObject> = [];
   const webhooks: Array<Symbol> = [];
@@ -179,13 +153,29 @@ export const handlerV1: HeyApiTypeScriptPlugin['Handler'] = ({ plugin }) => {
     },
   );
 
-  createClientOptions({ plugin, servers, symbolClientOptions });
+  createClientOptions({ nodeIndex: nodeClientIndex, plugin, servers });
 
   if (webhooks.length > 0) {
+    const symbol = plugin.symbol(
+      buildName({
+        config: {
+          case: plugin.config.case,
+        },
+        name: 'Webhooks',
+      }),
+      {
+        meta: {
+          category: 'type',
+          resource: 'webhook',
+          tool: 'typescript',
+          variant: 'container',
+        },
+      },
+    );
     const node = $.type
-      .alias(symbolWebhooks)
+      .alias(symbol)
       .export()
       .type($.type.or(...webhooks));
-    plugin.addNode(node);
+    plugin.updateNode(nodeWebhooksIndex, node);
   }
 };

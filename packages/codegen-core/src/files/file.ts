@@ -141,7 +141,7 @@ export class File {
    * Syntax nodes contained in this file.
    */
   get nodes(): ReadonlyArray<INode> {
-    return this._nodes;
+    return [...this._nodes];
   }
 
   /**

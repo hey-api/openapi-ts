@@ -98,7 +98,7 @@ export class Analyzer {
   }
 
   analyze(
-    nodes: ReadonlyArray<INode>,
+    nodes: Iterable<INode>,
     callback?: (ctx: AnalysisContext, node: INode) => void,
   ): void {
     for (const node of nodes) {
