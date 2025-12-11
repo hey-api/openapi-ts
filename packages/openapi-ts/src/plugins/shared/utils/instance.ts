@@ -317,6 +317,9 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     return this.gen.symbols.reference(meta);
   }
 
+  /**
+   * @deprecated use `plugin.symbol()` instead
+   */
   registerSymbol(symbol: SymbolIn): Symbol {
     return this.symbol(symbol.name, symbol);
   }
@@ -359,19 +362,6 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
       hook({ plugin: this, symbol: symbolOut });
     }
     return symbolOut;
-  }
-
-  /**
-   * @deprecated use addNode
-   */
-  setSymbolValue(symbol: Symbol, value: unknown): void {
-    for (const hook of this.eventHooks['symbol:setValue:before']) {
-      hook({ plugin: this, symbol, value });
-    }
-    this.gen.symbols.setValue(symbol.id, value);
-    for (const hook of this.eventHooks['symbol:setValue:after']) {
-      hook({ plugin: this, symbol, value });
-    }
   }
 
   private buildEventHooks(): EventHooks {

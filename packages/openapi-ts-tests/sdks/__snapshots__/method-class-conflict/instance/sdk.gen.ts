@@ -28,6 +28,24 @@ class HeyApiClient {
     }
 }
 
+class HeyApiRegistry<T> {
+    private readonly defaultKey = 'default';
+    
+    private readonly instances: Map<string, T> = new Map();
+    
+    get(key?: string): T {
+        const instance = this.instances.get(key ?? this.defaultKey);
+        if (!instance) {
+            throw new Error(`No SDK client found. Create one with "new Sdk()" to fix this error.`);
+        }
+        return instance;
+    }
+    
+    set(value: T, key?: string): void {
+        this.instances.set(key ?? this.defaultKey, value);
+    }
+}
+
 export class AccountingCompanies extends HeyApiClient {
     public count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataAccountingCompaniesCountData, ThrowOnError>) {
         return (options?.client ?? this.client).get<ApiVVersionApiVersionOdataAccountingCompaniesCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/AccountingCompanies/$count', ...options });
@@ -298,24 +316,6 @@ export class Api extends HeyApiClient {
 
 export class MapIdentityApi extends HeyApiClient {
     api = new Api({ client: this.client });
-}
-
-class HeyApiRegistry<T> {
-    private readonly defaultKey = 'default';
-    
-    private readonly instances: Map<string, T> = new Map();
-    
-    get(key?: string): T {
-        const instance = this.instances.get(key ?? this.defaultKey);
-        if (!instance) {
-            throw new Error(`No SDK client found. Create one with "new Sdk()" to fix this error.`);
-        }
-        return instance;
-    }
-    
-    set(value: T, key?: string): void {
-        this.instances.set(key ?? this.defaultKey, value);
-    }
 }
 
 export class Sdk extends HeyApiClient {

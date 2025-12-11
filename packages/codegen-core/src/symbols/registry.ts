@@ -11,10 +11,6 @@ export class SymbolRegistry implements ISymbolRegistry {
   private _id: SymbolId = 0;
   private _indices: Map<IndexEntry[0], Map<IndexEntry[1], Set<SymbolId>>> =
     new Map();
-  /**
-   * @deprecated
-   */
-  private _nodes: Map<SymbolId, unknown> = new Map();
   private _queryCache: Map<QueryCacheKey, ReadonlyArray<SymbolId>> = new Map();
   private _queryCacheDependencies: Map<QueryCacheKey, Set<QueryCacheKey>> =
     new Map();
@@ -27,13 +23,6 @@ export class SymbolRegistry implements ISymbolRegistry {
     return typeof identifier === 'number'
       ? this._values.get(identifier)
       : this.query(identifier)[0];
-  }
-
-  /**
-   * @deprecated
-   */
-  getValue(symbolId: SymbolId): unknown {
-    return this._nodes.get(symbolId);
   }
 
   isRegistered(identifier: ISymbolIdentifier): boolean {
@@ -120,13 +109,6 @@ export class SymbolRegistry implements ISymbolRegistry {
     for (const id of this._registered.values()) {
       yield this._values.get(id)!;
     }
-  }
-
-  /**
-   * @deprecated
-   */
-  setValue(symbolId: SymbolId, value: unknown): Map<SymbolId, unknown> {
-    return this._nodes.set(symbolId, value);
   }
 
   private buildCacheKey(filter: ISymbolMeta): QueryCacheKey {

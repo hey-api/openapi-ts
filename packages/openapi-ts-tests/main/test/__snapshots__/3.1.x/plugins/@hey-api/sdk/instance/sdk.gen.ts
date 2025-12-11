@@ -28,6 +28,24 @@ class HeyApiClient {
     }
 }
 
+class HeyApiRegistry<T> {
+    private readonly defaultKey = 'default';
+    
+    private readonly instances: Map<string, T> = new Map();
+    
+    get(key?: string): T {
+        const instance = this.instances.get(key ?? this.defaultKey);
+        if (!instance) {
+            throw new Error(`No SDK client found. Create one with "new Sdk()" to fix this error.`);
+        }
+        return instance;
+    }
+    
+    set(value: T, key?: string): void {
+        this.instances.set(key ?? this.defaultKey, value);
+    }
+}
+
 export class Bar extends HeyApiClient {
     public post<ThrowOnError extends boolean = false>(options?: Options<FooBarPostData, ThrowOnError>) {
         return (options?.client ?? this.client).post<FooBarPostResponses, unknown, ThrowOnError>({ url: '/foo/bar', ...options });
@@ -48,24 +66,6 @@ export class Foo extends HeyApiClient {
     }
     
     bar = new Bar({ client: this.client });
-}
-
-class HeyApiRegistry<T> {
-    private readonly defaultKey = 'default';
-    
-    private readonly instances: Map<string, T> = new Map();
-    
-    get(key?: string): T {
-        const instance = this.instances.get(key ?? this.defaultKey);
-        if (!instance) {
-            throw new Error(`No SDK client found. Create one with "new Sdk()" to fix this error.`);
-        }
-        return instance;
-    }
-    
-    set(value: T, key?: string): void {
-        this.instances.set(key ?? this.defaultKey, value);
-    }
 }
 
 export class Sdk extends HeyApiClient {

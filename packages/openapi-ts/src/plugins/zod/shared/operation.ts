@@ -118,38 +118,42 @@ export const irOperationToAst = ({
     schemaData.required = [...requiredProperties];
 
     const ast = getAst(schemaData, fromRef(state.path));
-    const symbol = plugin.registerSymbol({
-      meta: {
-        category: 'schema',
-        path: fromRef(state.path),
-        resource: 'operation',
-        resourceId: operation.id,
-        role: 'data',
-        tags: fromRef(state.tags),
-        tool: 'zod',
-      },
-      name: buildName({
+    const symbol = plugin.symbol(
+      buildName({
         config: plugin.config.requests,
         name: operation.id,
       }),
-    });
+      {
+        meta: {
+          category: 'schema',
+          path: fromRef(state.path),
+          resource: 'operation',
+          resourceId: operation.id,
+          role: 'data',
+          tags: fromRef(state.tags),
+          tool: 'zod',
+        },
+      },
+    );
     const typeInferSymbol = plugin.config.requests.types.infer.enabled
-      ? plugin.registerSymbol({
-          meta: {
-            category: 'type',
-            path: fromRef(state.path),
-            resource: 'operation',
-            resourceId: operation.id,
-            role: 'data',
-            tags: fromRef(state.tags),
-            tool: 'zod',
-            variant: 'infer',
-          },
-          name: buildName({
+      ? plugin.symbol(
+          buildName({
             config: plugin.config.requests.types.infer,
             name: operation.id,
           }),
-        })
+          {
+            meta: {
+              category: 'type',
+              path: fromRef(state.path),
+              resource: 'operation',
+              resourceId: operation.id,
+              role: 'data',
+              tags: fromRef(state.tags),
+              tool: 'zod',
+              variant: 'infer',
+            },
+          },
+        )
       : undefined;
     exportAst({
       ast,
@@ -167,38 +171,42 @@ export const irOperationToAst = ({
       if (response) {
         const path = [...fromRef(state.path), 'responses'];
         const ast = getAst(response, path);
-        const symbol = plugin.registerSymbol({
-          meta: {
-            category: 'schema',
-            path,
-            resource: 'operation',
-            resourceId: operation.id,
-            role: 'responses',
-            tags: fromRef(state.tags),
-            tool: 'zod',
-          },
-          name: buildName({
+        const symbol = plugin.symbol(
+          buildName({
             config: plugin.config.responses,
             name: operation.id,
           }),
-        });
+          {
+            meta: {
+              category: 'schema',
+              path,
+              resource: 'operation',
+              resourceId: operation.id,
+              role: 'responses',
+              tags: fromRef(state.tags),
+              tool: 'zod',
+            },
+          },
+        );
         const typeInferSymbol = plugin.config.responses.types.infer.enabled
-          ? plugin.registerSymbol({
-              meta: {
-                category: 'type',
-                path,
-                resource: 'operation',
-                resourceId: operation.id,
-                role: 'responses',
-                tags: fromRef(state.tags),
-                tool: 'zod',
-                variant: 'infer',
-              },
-              name: buildName({
+          ? plugin.symbol(
+              buildName({
                 config: plugin.config.responses.types.infer,
                 name: operation.id,
               }),
-            })
+              {
+                meta: {
+                  category: 'type',
+                  path,
+                  resource: 'operation',
+                  resourceId: operation.id,
+                  role: 'responses',
+                  tags: fromRef(state.tags),
+                  tool: 'zod',
+                  variant: 'infer',
+                },
+              },
+            )
           : undefined;
         exportAst({
           ast,
