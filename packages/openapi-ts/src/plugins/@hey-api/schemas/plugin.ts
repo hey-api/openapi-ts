@@ -390,7 +390,7 @@ const schemasV2_0_X = ({
           }),
         ).as('const'),
       );
-    plugin.addNode(statement);
+    plugin.node(statement);
   }
 };
 
@@ -430,7 +430,7 @@ const schemasV3_0_X = ({
           }),
         ).as('const'),
       );
-    plugin.addNode(statement);
+    plugin.node(statement);
   }
 };
 
@@ -470,7 +470,7 @@ const schemasV3_1_X = ({
           }),
         ).as('const'),
       );
-    plugin.addNode(statement);
+    plugin.node(statement);
   }
 };
 

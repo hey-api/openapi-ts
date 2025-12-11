@@ -156,7 +156,7 @@ const generateAngularClassRequests = ({
         ),
       )
       .do(...currentClass.nodes);
-    plugin.addNode(node);
+    plugin.node(node);
 
     generatedClasses.add(currentClass.className);
   };
@@ -195,7 +195,7 @@ const generateAngularFunctionRequests = ({
         plugin,
         symbol,
       });
-      plugin.addNode(node);
+      plugin.node(node);
     },
     {
       order: 'declarations',

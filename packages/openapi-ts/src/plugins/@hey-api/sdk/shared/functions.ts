@@ -121,7 +121,7 @@ export const generateFlatSdk = ({
             )
             .do(...statements),
         );
-      plugin.addNode(node);
+      plugin.node(node);
     },
     {
       order: 'declarations',

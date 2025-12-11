@@ -65,7 +65,7 @@ export const createQueryOptions = ({
     plugin,
     symbol: symbolQueryKey,
   });
-  plugin.addNode(node);
+  plugin.node(node);
 
   const typeResponse = useTypeResponse({ operation, plugin });
 
@@ -142,5 +142,5 @@ export const createQueryOptions = ({
             .return(),
         ),
     );
-  plugin.addNode(statement);
+  plugin.node(statement);
 };

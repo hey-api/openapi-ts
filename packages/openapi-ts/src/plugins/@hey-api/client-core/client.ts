@@ -99,5 +99,5 @@ export const createClient: PluginHandler = ({ plugin }) => {
         (c) => c.call(...createConfigParameters),
       ),
     );
-  plugin.addNode(statement);
+  plugin.node(statement);
 };
