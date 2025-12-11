@@ -99,7 +99,7 @@ export const createQueryKeyFunction = ({
         $.return($.array().element($('params'))),
       ),
   );
-  plugin.addNode(fn);
+  plugin.node(fn);
 };
 
 const createQueryKeyLiteral = ({
@@ -166,7 +166,7 @@ export const createQueryKeyType = ({ plugin }: { plugin: PluginInstance }) => {
         ),
       ),
     );
-  plugin.addNode(queryKeyType);
+  plugin.node(queryKeyType);
 };
 
 export const queryKeyStatement = ({

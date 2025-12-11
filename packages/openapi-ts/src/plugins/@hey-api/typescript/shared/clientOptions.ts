@@ -76,5 +76,5 @@ export const createClientOptions = ({
           p.type($.type.or(...types)),
         ),
     );
-  plugin.updateNode(nodeIndex, node);
+  plugin.node(node, nodeIndex);
 };

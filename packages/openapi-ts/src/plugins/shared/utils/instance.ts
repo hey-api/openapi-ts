@@ -106,27 +106,6 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     this.package = props.context.package;
   }
 
-  addNode(node: Node | null): number {
-    for (const hook of this.eventHooks['node:set:before']) {
-      hook({ node, plugin: this });
-    }
-    const index = this.gen.nodes.add(node);
-    for (const hook of this.eventHooks['node:set:after']) {
-      hook({ node, plugin: this });
-    }
-    return index;
-  }
-  updateNode(index: number, node: Node | null): void {
-    for (const hook of this.eventHooks['node:set:before']) {
-      hook({ node, plugin: this });
-    }
-    const result = this.gen.nodes.update(index, node);
-    for (const hook of this.eventHooks['node:set:after']) {
-      hook({ node, plugin: this });
-    }
-    return result;
-  }
-
   /**
    * Iterates over various input elements as specified by the event types, in
    * a specific order: servers, schemas, parameters, request bodies, then
@@ -318,6 +297,30 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
 
   isSymbolRegistered(identifier: SymbolIdentifier): boolean {
     return this.gen.symbols.isRegistered(identifier);
+  }
+
+  /**
+   * Sets or adds a node to the project graph.
+   *
+   * @param node The node to be added or updated in the project graph.
+   * @param index The index at which to update the node. If undefined, the node will be added.
+   * @returns The index of the added node or void if updated.
+   */
+  node<T extends number | undefined = undefined>(
+    node: Node | null,
+    index?: T,
+  ): T extends number ? void : number {
+    for (const hook of this.eventHooks['node:set:before']) {
+      hook({ node, plugin: this });
+    }
+    const result =
+      index !== undefined
+        ? this.gen.nodes.update(index, node)
+        : this.gen.nodes.add(node);
+    for (const hook of this.eventHooks['node:set:after']) {
+      hook({ node, plugin: this });
+    }
+    return result as T extends number ? void : number;
   }
 
   querySymbol(filter: SymbolMeta): Symbol | undefined {

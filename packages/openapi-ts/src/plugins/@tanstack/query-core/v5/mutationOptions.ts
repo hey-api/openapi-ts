@@ -87,5 +87,5 @@ export const createMutationOptions = ({
           $(mutationOptionsFn).return(),
         ),
     );
-  plugin.addNode(statement);
+  plugin.node(statement);
 };

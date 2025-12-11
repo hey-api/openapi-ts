@@ -134,7 +134,7 @@ export const exportType = ({
             ),
           ).as('const'),
         );
-      plugin.addNode(objectNode);
+      plugin.node(objectNode);
 
       const symbol = plugin.registerSymbol({
         meta: {
@@ -157,7 +157,7 @@ export const exportType = ({
         .type(
           $.type(symbol).idx($.type(symbol).typeofType().keyof()).typeofType(),
         );
-      plugin.addNode(node);
+      plugin.node(node);
       return;
     } else if (
       plugin.config.enums.mode === 'typescript' ||
@@ -193,7 +193,7 @@ export const exportType = ({
                 .value($.fromValue(item.schema.const)),
             ),
           );
-        plugin.addNode(enumNode);
+        plugin.node(enumNode);
         return;
       }
     }
@@ -218,5 +218,5 @@ export const exportType = ({
     .export()
     .$if(createSchemaComment(schema), (t, v) => t.doc(v))
     .type(type);
-  plugin.addNode(node);
+  plugin.node(node);
 };

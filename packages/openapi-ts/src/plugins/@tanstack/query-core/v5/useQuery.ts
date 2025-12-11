@@ -68,5 +68,5 @@ export const createUseQuery = ({
             .return(),
         ),
     );
-  plugin.addNode(statement);
+  plugin.node(statement);
 };

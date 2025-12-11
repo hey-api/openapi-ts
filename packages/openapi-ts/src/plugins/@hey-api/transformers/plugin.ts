@@ -96,7 +96,7 @@ const processSchemaType = ({
               .param(dataVariableName, (p) => p.type('any'))
               .do(...nodes),
           );
-          plugin.addNode(node);
+          plugin.node(node);
         }
       } finally {
         buildingSymbols.delete(symbol.id);
@@ -336,7 +336,7 @@ export const handler: HeyApiTransformersPlugin['Handler'] = ({ plugin }) => {
             .returns($.type('Promise').generic(symbolResponse))
             .do(...nodes),
         );
-      plugin.addNode(value);
+      plugin.node(value);
     },
     {
       order: 'declarations',

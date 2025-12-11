@@ -86,9 +86,9 @@ const handleComponent = ({
 
 export const handlerV1: HeyApiTypeScriptPlugin['Handler'] = ({ plugin }) => {
   // reserve node for ClientOptions
-  const nodeClientIndex = plugin.addNode(null);
+  const nodeClientIndex = plugin.node(null);
   // reserve node for Webhooks
-  const nodeWebhooksIndex = plugin.addNode(null);
+  const nodeWebhooksIndex = plugin.node(null);
 
   const servers: Array<IR.ServerObject> = [];
   const webhooks: Array<Symbol> = [];
@@ -176,6 +176,6 @@ export const handlerV1: HeyApiTypeScriptPlugin['Handler'] = ({ plugin }) => {
       .alias(symbol)
       .export()
       .type($.type.or(...webhooks));
-    plugin.updateNode(nodeWebhooksIndex, node);
+    plugin.node(node, nodeWebhooksIndex);
   }
 };

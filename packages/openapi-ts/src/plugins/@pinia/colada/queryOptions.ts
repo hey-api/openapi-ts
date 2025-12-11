@@ -61,7 +61,7 @@ export const createQueryOptions = ({
       plugin,
       symbol: symbolQueryKey,
     });
-    plugin.addNode(node);
+    plugin.node(node);
     keyExpression = $(symbolQueryKey).call(optionsParamName);
   } else {
     const symbolCreateQueryKey = plugin.referenceSymbol({
@@ -152,5 +152,5 @@ export const createQueryOptions = ({
           .do($.return(queryOpts)),
       ),
     );
-  plugin.addNode(statement);
+  plugin.node(statement);
 };
