@@ -30,24 +30,18 @@ export const enumToAst = ({
     if (item.type === 'string' && typeof item.const === 'string') {
       const literal = $.literal(item.const);
       enumMembers.push(literal);
-      literalMembers.push(
-        $(z.placeholder).attr(identifiers.literal).call(literal),
-      );
+      literalMembers.push($(z).attr(identifiers.literal).call(literal));
     } else if (
       (item.type === 'number' || item.type === 'integer') &&
       typeof item.const === 'number'
     ) {
       allStrings = false;
       const literal = $.literal(item.const);
-      literalMembers.push(
-        $(z.placeholder).attr(identifiers.literal).call(literal),
-      );
+      literalMembers.push($(z).attr(identifiers.literal).call(literal));
     } else if (item.type === 'boolean' && typeof item.const === 'boolean') {
       allStrings = false;
       const literal = $.literal(item.const);
-      literalMembers.push(
-        $(z.placeholder).attr(identifiers.literal).call(literal),
-      );
+      literalMembers.push($(z).attr(identifiers.literal).call(literal));
     } else if (item.type === 'null' || item.const === null) {
       isNullable = true;
     }
@@ -65,22 +59,20 @@ export const enumToAst = ({
 
   // Use z.enum() for pure string enums, z.union() for mixed or non-string types
   if (allStrings && enumMembers.length > 0) {
-    result.expression = $(z.placeholder)
+    result.expression = $(z)
       .attr(identifiers.enum)
       .call($.array(...enumMembers));
   } else if (literalMembers.length === 1) {
     // For single-member unions, use the member directly instead of wrapping in z.union()
     result.expression = literalMembers[0]!;
   } else {
-    result.expression = $(z.placeholder)
+    result.expression = $(z)
       .attr(identifiers.union)
       .call($.array(...literalMembers));
   }
 
   if (isNullable) {
-    result.expression = $(z.placeholder)
-      .attr(identifiers.nullable)
-      .call(result.expression);
+    result.expression = $(z).attr(identifiers.nullable).call(result.expression);
   }
 
   return result as Omit<Ast, 'typeName'>;

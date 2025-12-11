@@ -5,12 +5,15 @@ import path from 'node:path';
 // @ts-ignore
 import { customClientPlugin } from '@hey-api/custom-client/plugin';
 // @ts-ignore
-import { defineConfig, utils } from '@hey-api/openapi-ts';
+import { defineConfig, reserved, utils } from '@hey-api/openapi-ts';
 
 // @ts-ignore
 import { myClientPlugin } from '../packages/openapi-ts-tests/main/test/custom/client/plugin';
 // @ts-ignore
 import { getSpecsPath } from '../packages/openapi-ts-tests/utils';
+
+reserved.runtime.set((list) => [...list, 'Agent']);
+reserved.type.set((list) => [...list, 'Agent']);
 
 // @ts-ignore
 export default defineConfig(() => {
@@ -39,15 +42,19 @@ export default defineConfig(() => {
             '3.1.x',
             // 'circular.yaml',
             // 'dutchie.json',
+            // 'enum-names-values.yaml',
             // 'invalid',
             // 'full.yaml',
+            // 'sdk-method-class-conflict.yaml',
             // 'object-property-names.yaml',
-            // 'openai.yaml',
-            'opencode.yaml',
+            'openai.yaml',
+            // 'opencode.yaml',
             // 'pagination-ref.yaml',
             // 'sdk-instance.yaml',
+            // 'sdk-nested-classes.yaml',
             // 'string-with-format.yaml',
             // 'transformers.json',
+            // 'transformers-recursive.json',
             // 'type-format.yaml',
             // 'validators.yaml',
             // 'validators-circular-ref.json',
@@ -96,10 +103,21 @@ export default defineConfig(() => {
           //   suffix: '.meh',
           // },
           // format: 'prettier',
-          importFileExtension: '.ts',
+          // importFileExtension: '.js',
           // indexFile: false,
           // lint: 'eslint',
+          nameConflictResolver({ attempt, baseName }) {
+            // console.log('resolving conflict for:', { attempt, baseName });
+            return attempt === 0 ? baseName : `${baseName}_N${attempt + 1}`;
+          },
           path: path.resolve(__dirname, '.gen'),
+          // preferExportAll: true,
+          resolveModuleName: (moduleName) => {
+            if (moduleName === 'valibot') {
+              return 'valibot';
+            }
+            return;
+          },
           // tsConfigPath: path.resolve(
           //   __dirname,
           //   'tsconfig',
@@ -128,6 +146,14 @@ export default defineConfig(() => {
         },
         hooks: {
           events: {
+            // 'node:set:after': ({ node, plugin }) => {
+            //   if (node) {
+            //     console.log(`(${plugin.name}) set node:`, node.symbol);
+            //   }
+            // },
+            // 'node:set:before': ({ node, plugin }) => {
+            //   console.log(`(${plugin.name}) setting node:`, node?.symbol?.id);
+            // },
             // 'plugin:handler:after': ({ plugin }) => {
             //   console.log(`(${plugin.name}): handler finished`);
             // },
@@ -153,12 +179,6 @@ export default defineConfig(() => {
               //   );
               // }
             },
-            // 'symbol:setValue:after': ({ plugin, symbol }) => {
-            //   console.log(`(${plugin.name}) set value:`, symbol.id);
-            // },
-            // 'symbol:setValue:before': ({ plugin, symbol }) => {
-            //   console.log(`(${plugin.name}) setting value:`, symbol.id);
-            // },
           },
           operations: {
             getKind() {
@@ -236,6 +256,7 @@ export default defineConfig(() => {
           //   error: '他們_error_{{name}}',
           //   name: '你們_errors_{{name}}',
           // },
+          // exportFromIndex: false,
           name: '@hey-api/typescript',
           // requests: '我們_data_{{name}}',
           // responses: {
@@ -261,10 +282,10 @@ export default defineConfig(() => {
           //   fields.unwrap('path')
           // },
           // include...
-          // instance: true,
+          instance: true,
           name: '@hey-api/sdk',
           // operationId: false,
-          paramsStructure: 'flat',
+          // paramsStructure: 'flat',
           // responseStyle: 'data',
           // signature: 'auto',
           // signature: 'client',
@@ -305,9 +326,10 @@ export default defineConfig(() => {
           // case: 'SCREAMING_SNAKE_CASE',
           // comments: false,
           exportFromIndex: true,
-          // infiniteQueryKeys: {
-          //   name: '{{name}}IQK',
-          // },
+          infiniteQueryKeys: {
+            // name: '{{name}}IQK',
+            // name: 'options',
+          },
           infiniteQueryOptions: {
             meta() {
               return {
@@ -315,6 +337,7 @@ export default defineConfig(() => {
               };
             },
             // name: '{{name}}IQO',
+            // name: 'options',
           },
           mutationOptions: {
             meta() {
@@ -323,10 +346,12 @@ export default defineConfig(() => {
               };
             },
             // name: '{{name}}MO',
+            // name: 'options',
           },
           name: '@tanstack/react-query',
           queryKeys: {
             // name: '{{name}}QK',
+            // name: 'options',
             tags: true,
           },
           // queryOptions: false,
@@ -336,7 +361,8 @@ export default defineConfig(() => {
             //     custom: 'value',
             //   }
             // },
-            name: '{{name}}QO',
+            // name: '{{name}}QO',
+            // name: 'options',
           },
           useQuery: true,
           '~hooks': {
@@ -365,7 +391,7 @@ export default defineConfig(() => {
         {
           // case: 'SCREAMING_SNAKE_CASE',
           // comments: false,
-          // definitions: 'z{{name}}Definition',
+          definitions: 'z{{name}}',
           exportFromIndex: true,
           // metadata: true,
           // name: 'valibot',
@@ -373,10 +399,10 @@ export default defineConfig(() => {
           //   case: 'PascalCase',
           //   name: '{{name}}Data',
           // },
-          // responses: {
-          //   // case: 'snake_case',
-          //   name: 'z{{name}}TestResponse',
-          // },
+          responses: {
+            // case: 'snake_case',
+            name: 'z{{name}}TestResponse',
+          },
           // webhooks: {
           //   name: 'q{{name}}CoolWebhook',
           // },
@@ -416,17 +442,23 @@ export default defineConfig(() => {
                 // 'date-time': ({ $, pipes }) => pipes.push($('v').attr('isoDateTime').call()),
               },
             },
-            validator({ $, schema, v }) {
-              return [
-                $.const('parsed').assign(
-                  $(v.placeholder)
-                    .attr('safeParseAsync')
-                    .call(schema.placeholder, 'data')
-                    .await(),
-                ),
-                $('parsed').return(),
-              ];
-            },
+            // validator({ $, plugin, schema, v }) {
+            //   const vShadow = plugin.symbol('v');
+            //   const test = plugin.symbol('test');
+            //   const e = plugin.symbol('err');
+            //   return [
+            //     $.const(vShadow).assign($.literal('hi')),
+            //     $('console').attr('log').call(vShadow),
+            //     $.try(
+            //       $.const(test).assign($.literal('test')),
+            //       $('console').attr('log').call($.literal('hi'), test),
+            //     ).catchArg(e),
+            //     $.const('parsed').assign(
+            //       $(v).attr('safeParseAsync').call(schema, 'data').await(),
+            //     ),
+            //     $('parsed').return(),
+            //   ];
+            // },
           },
         },
         {
@@ -443,7 +475,7 @@ export default defineConfig(() => {
             //     infer: 'D{{name}}ZodType',
             //   },
           },
-          // exportFromIndex: true,
+          exportFromIndex: true,
           metadata: true,
           // name: 'zod',
           // requests: {
@@ -496,17 +528,14 @@ export default defineConfig(() => {
                 // 'date-time': ({ $ }) => $('z').attr('date').call(),
               },
             },
-            validator({ $, schema }) {
-              return [
-                $.const('parsed').assign(
-                  $(schema.placeholder)
-                    .attr('safeParseAsync')
-                    .call('data')
-                    .await(),
-                ),
-                $('parsed').return(),
-              ];
-            },
+            // validator({ $, schema }) {
+            //   return [
+            //     $.const('parsed').assign(
+            //       $(schema).attr('safeParseAsync').call('data').await(),
+            //     ),
+            //     $('parsed').return(),
+            //   ];
+            // },
           },
         },
         {
@@ -527,7 +556,7 @@ export default defineConfig(() => {
         {
           exportFromIndex: true,
           // mutationOptions: '{{name}}Mutationssss',
-          // name: '@pinia/colada',
+          name: '@pinia/colada',
           // queryOptions: {
           //   name: '{{name}}Queryyyyy',
           // },
@@ -546,7 +575,6 @@ export default defineConfig(() => {
           },
         },
       ],
-      // useOptions: false,
       // watch: 3_000,
     },
     // {

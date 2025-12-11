@@ -49,17 +49,15 @@ export const createQueryKeyFunction = ({
     tool: 'sdk',
   });
 
-  const returnType = $.type(symbolQueryKeyType.placeholder)
-    .generic(TOptionsType)
-    .idx(0);
+  const returnType = $.type(symbolQueryKeyType).generic(TOptionsType).idx(0);
 
-  const fn = $.const(symbolCreateQueryKey.placeholder).assign(
+  const fn = $.const(symbolCreateQueryKey).assign(
     $.func()
       .param('id', (p) => p.type('string'))
       .param('options', (p) => p.optional().type(TOptionsType))
       .param('infinite', (p) => p.optional().type('boolean'))
       .param('tags', (p) => p.optional().type('ReadonlyArray<string>'))
-      .generic(TOptionsType, (g) => g.extends(symbolOptions.placeholder))
+      .generic(TOptionsType, (g) => g.extends(symbolOptions))
       .returns($.type.tuple(returnType))
       .do(
         $.const('params')
@@ -69,7 +67,18 @@ export const createQueryKeyFunction = ({
               .prop('_id', 'id')
               .prop(
                 baseUrlKey,
-                `options?.${baseUrlKey} || (options?.client ?? ${symbolClient?.placeholder}).getConfig().${baseUrlKey}`,
+                $('options')
+                  .attr(baseUrlKey)
+                  .optional()
+                  .or(
+                    $('options')
+                      .attr('client')
+                      .optional()
+                      .$if(symbolClient, (a, v) => a.coalesce(v))
+                      .attr('getConfig')
+                      .call()
+                      .attr(baseUrlKey),
+                  ),
               )
               .as(returnType),
           ),
@@ -90,7 +99,7 @@ export const createQueryKeyFunction = ({
         $.return($.array().element($('params'))),
       ),
   );
-  plugin.setSymbolValue(symbolCreateQueryKey, fn);
+  plugin.addNode(fn);
 };
 
 const createQueryKeyLiteral = ({
@@ -116,7 +125,7 @@ const createQueryKeyLiteral = ({
     resource: 'createQueryKey',
     tool: plugin.name,
   });
-  const createQueryKeyCallExpression = $(symbolCreateQueryKey.placeholder).call(
+  const createQueryKeyCallExpression = $(symbolCreateQueryKey).call(
     $.literal(id),
     'options',
     isInfinite || tagsArray ? $.literal(Boolean(isInfinite)) : undefined,
@@ -132,8 +141,6 @@ export const createQueryKeyType = ({ plugin }: { plugin: PluginInstance }) => {
     tool: 'sdk',
   });
   const symbolQueryKeyType = plugin.registerSymbol({
-    exported: true,
-    kind: 'type',
     meta: {
       category: 'type',
       resource: 'QueryKey',
@@ -142,9 +149,9 @@ export const createQueryKeyType = ({ plugin }: { plugin: PluginInstance }) => {
     name: 'QueryKey',
   });
   const queryKeyType = $.type
-    .alias(symbolQueryKeyType.placeholder)
-    .export(symbolQueryKeyType.exported)
-    .generic(TOptionsType, (g) => g.extends(symbolOptions.placeholder))
+    .alias(symbolQueryKeyType)
+    .export()
+    .generic(TOptionsType, (g) => g.extends(symbolOptions))
     .type(
       $.type.tuple(
         $.type.and(
@@ -159,7 +166,7 @@ export const createQueryKeyType = ({ plugin }: { plugin: PluginInstance }) => {
         ),
       ),
     );
-  plugin.setSymbolValue(symbolQueryKeyType, queryKeyType);
+  plugin.addNode(queryKeyType);
 };
 
 export const queryKeyStatement = ({
@@ -173,11 +180,11 @@ export const queryKeyStatement = ({
   operation: IR.OperationObject;
   plugin: PluginInstance;
   symbol: Symbol;
-  typeQueryKey?: string;
+  typeQueryKey?: ReturnType<typeof $.type>;
 }) => {
   const typeData = useTypeData({ operation, plugin });
-  const statement = $.const(symbol.placeholder)
-    .export(symbol.exported)
+  const statement = $.const(symbol)
+    .export()
     .assign(
       $.func()
         .param('options', (p) =>

@@ -1,69 +1,71 @@
+import type { AnalysisContext, Node } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
-import type { MaybeTsDsl } from '../base';
-import type { AttrTsDsl } from '../expr/attr';
-import type { AwaitTsDsl } from '../expr/await';
-import type { CallTsDsl } from '../expr/call';
-import type { ReturnTsDsl } from '../stmt/return';
+import type { AttrCtor, AttrRight, AttrTsDsl } from '../expr/attr';
+import type { AwaitCtor, AwaitTsDsl } from '../expr/await';
+import type { CallArgs, CallCtor, CallTsDsl } from '../expr/call';
+import type { ReturnCtor, ReturnTsDsl } from '../stmt/return';
+import type { BaseCtor, MixinCtor } from './types';
 
-type AttrFactory = (
-  expr: string | MaybeTsDsl<ts.Expression>,
-  name: string | ts.MemberName | number,
-) => AttrTsDsl;
-let attrFactory: AttrFactory | undefined;
-/** Registers the Attr DSL factory after its module has finished evaluating. */
-export function registerLazyAccessAttrFactory(factory: AttrFactory): void {
-  attrFactory = factory;
+let attrFactory: AttrCtor | undefined;
+/** Lazy register the factory to avoid circular imports. */
+export function setAttrFactory(fn: AttrCtor): void {
+  attrFactory = fn;
 }
 
-type AwaitFactory = (expr: string | MaybeTsDsl<ts.Expression>) => AwaitTsDsl;
-let awaitFactory: AwaitFactory | undefined;
-/** Registers the Await DSL factory after its module has finished evaluating. */
-export function registerLazyAccessAwaitFactory(factory: AwaitFactory): void {
-  awaitFactory = factory;
+let awaitFactory: AwaitCtor | undefined;
+/** Lazy register the factory to avoid circular imports. */
+export function setAwaitFactory(fn: AwaitCtor): void {
+  awaitFactory = fn;
 }
 
-type CallFactory = (
-  expr: string | MaybeTsDsl<ts.Expression>,
-  args: ReadonlyArray<string | MaybeTsDsl<ts.Expression> | undefined>,
-) => CallTsDsl;
-let callFactory: CallFactory | undefined;
-/** Registers the Call DSL factory after its module has finished evaluating. */
-export function registerLazyAccessCallFactory(factory: CallFactory): void {
-  callFactory = factory;
+let callFactory: CallCtor | undefined;
+/** Lazy register the factory to avoid circular imports. */
+export function setCallFactory(fn: CallCtor): void {
+  callFactory = fn;
 }
 
-type ReturnFactory = (expr: string | MaybeTsDsl<ts.Expression>) => ReturnTsDsl;
-let returnFactory: ReturnFactory | undefined;
-/** Registers the Return DSL factory after its module has finished evaluating. */
-export function registerLazyAccessReturnFactory(factory: ReturnFactory): void {
-  returnFactory = factory;
+let returnFactory: ReturnCtor | undefined;
+/** Lazy register the factory to avoid circular imports. */
+export function setReturnFactory(fn: ReturnCtor): void {
+  returnFactory = fn;
 }
 
-export class ExprMixin {
+export interface ExprMethods extends Node {
   /** Accesses a property on the current expression (e.g. `this.foo`). */
-  attr(
-    this: string | MaybeTsDsl<ts.Expression>,
-    name: string | ts.MemberName | number,
-  ): AttrTsDsl {
-    return attrFactory!(this, name);
-  }
-
+  attr(name: AttrRight): AttrTsDsl;
   /** Awaits the current expression (e.g. `await expr`). */
-  await(this: string | MaybeTsDsl<ts.Expression>): AwaitTsDsl {
-    return awaitFactory!(this);
-  }
-
+  await(): AwaitTsDsl;
   /** Calls the current expression (e.g. `fn(arg1, arg2)`). */
-  call(
-    this: string | MaybeTsDsl<ts.Expression>,
-    ...args: ReadonlyArray<string | MaybeTsDsl<ts.Expression> | undefined>
-  ): CallTsDsl {
-    return callFactory!(this, args);
+  call(...args: CallArgs): CallTsDsl;
+  /** Produces a `return` statement returning the current expression. */
+  return(): ReturnTsDsl;
+}
+
+export function ExprMixin<T extends ts.Expression, TBase extends BaseCtor<T>>(
+  Base: TBase,
+) {
+  abstract class Expr extends Base {
+    override analyze(ctx: AnalysisContext): void {
+      super.analyze(ctx);
+    }
+
+    protected attr(name: AttrRight): AttrTsDsl {
+      return attrFactory!(this, name);
+    }
+
+    protected await(): AwaitTsDsl {
+      return awaitFactory!(this);
+    }
+
+    protected call(...args: CallArgs): CallTsDsl {
+      return callFactory!(this, ...args);
+    }
+
+    protected return(): ReturnTsDsl {
+      return returnFactory!(this);
+    }
   }
 
-  /** Produces a `return` statement returning the current expression. */
-  return(this: string | MaybeTsDsl<ts.Expression>): ReturnTsDsl {
-    return returnFactory!(this);
-  }
+  return Expr as unknown as MixinCtor<TBase, ExprMethods>;
 }

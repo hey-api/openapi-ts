@@ -24,6 +24,7 @@ export const getOutput = (userConfig: UserConfig): Config['output'] => {
       indexFile: true,
       lint: null,
       path: '',
+      preferExportAll: false,
     },
     mappers: {
       object: (fields, defaultValue) => ({

@@ -57,10 +57,10 @@ export const getFooQuery = defineQueryOptions((options?: Options<GetFooData>) =>
 }));
 
 export const fooPostMutation = (options?: Partial<Options<FooPostData>>): UseMutationOptions<FooPostResponse, Options<FooPostData>, Error> => ({
-    mutation: async (fnOptions) => {
+    mutation: async (vars) => {
         const { data } = await FooBazService.fooService.post({
             ...options,
-            ...fnOptions,
+            ...vars,
             throwOnError: true
         });
         return data;
@@ -68,10 +68,10 @@ export const fooPostMutation = (options?: Partial<Options<FooPostData>>): UseMut
 });
 
 export const fooPutMutation = (options?: Partial<Options<FooPutData>>): UseMutationOptions<FooPutResponse, Options<FooPutData>, Error> => ({
-    mutation: async (fnOptions) => {
+    mutation: async (vars) => {
         const { data } = await FooBazService.fooService.put({
             ...options,
-            ...fnOptions,
+            ...vars,
             throwOnError: true
         });
         return data;
@@ -93,10 +93,10 @@ export const getFooBarQuery = defineQueryOptions((options?: Options<GetFooBarDat
 }));
 
 export const fooBarPostMutation = (options?: Partial<Options<FooBarPostData>>): UseMutationOptions<FooBarPostResponse, Options<FooBarPostData>, Error> => ({
-    mutation: async (fnOptions) => {
+    mutation: async (vars) => {
         const { data } = await FooBazService.fooService.barService.post({
             ...options,
-            ...fnOptions,
+            ...vars,
             throwOnError: true
         });
         return data;
@@ -104,10 +104,10 @@ export const fooBarPostMutation = (options?: Partial<Options<FooBarPostData>>): 
 });
 
 export const fooBarPutMutation = (options?: Partial<Options<FooBarPutData>>): UseMutationOptions<FooBarPutResponse, Options<FooBarPutData>, Error> => ({
-    mutation: async (fnOptions) => {
+    mutation: async (vars) => {
         const { data } = await FooBazService.fooService.barService.put({
             ...options,
-            ...fnOptions,
+            ...vars,
             throwOnError: true
         });
         return data;

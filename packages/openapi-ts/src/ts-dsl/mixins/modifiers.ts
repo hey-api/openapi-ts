@@ -1,224 +1,389 @@
+import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
-import type { TsDsl } from '../base';
+import type { BaseCtor, MixinCtor } from './types';
 
-/**
- * Creates an accessor for adding TypeScript modifiers to a parent DSL node.
- *
- * @param parent - The parent DSL node to which modifiers will be added.
- * @returns An object with a `list` method that returns the collected modifiers.
- */
-export function createModifierAccessor<Parent extends TsDsl>(parent: Parent) {
-  const modifiers: Array<ts.Modifier> = [];
+export type Modifiers = {
+  modifiers: Array<ts.Modifier>;
+};
 
+export interface ModifierMethods extends Modifiers {
   /**
    * Adds a modifier of the specified kind to the modifiers list if the condition is true.
    *
    * @param kind - The syntax kind of the modifier to add.
-   * @param condition - Whether to add the modifier (default: true).
-   * @returns The parent DSL node for chaining.
+   * @param condition - Whether to add the modifier.
+   * @returns The parent node for chaining.
    */
-  function _m(kind: ts.ModifierSyntaxKind, condition = true): Parent {
-    if (condition) {
-      modifiers.push(ts.factory.createModifier(kind));
-    }
-    return parent;
-  }
-
-  Object.assign(parent, { _m }); // attaches to parent
-
-  /**
-   * Returns the list of collected modifiers.
-   *
-   * @returns Array of TypeScript modifiers.
-   */
-  function list() {
-    return modifiers;
-  }
-
-  return { list };
+  _m(kind: ts.ModifierSyntaxKind, condition: boolean): this;
 }
 
-type Target = object & {
-  _m?(kind: ts.ModifierSyntaxKind, condition?: boolean): unknown;
-};
+function ModifiersMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
+  Base: TBase,
+) {
+  abstract class Modifiers extends Base {
+    protected modifiers: Array<ts.Modifier> = [];
 
-/**
- * Mixin that adds an `abstract` modifier to a node.
- */
-export class AbstractMixin {
+    override analyze(ctx: AnalysisContext): void {
+      super.analyze(ctx);
+    }
+
+    protected _m(kind: ts.ModifierSyntaxKind, condition: boolean): this {
+      if (condition) this.modifiers.push(ts.factory.createModifier(kind));
+      return this;
+    }
+  }
+
+  return Modifiers as unknown as MixinCtor<TBase, ModifierMethods>;
+}
+
+export interface AbstractMethods extends Modifiers {
   /**
    * Adds the `abstract` keyword modifier if the condition is true.
    *
    * @param condition - Whether to add the modifier (default: true).
    * @returns The target object for chaining.
    */
-  abstract<T extends Target>(this: T, condition: boolean = true): T {
-    return this._m!(ts.SyntaxKind.AbstractKeyword, condition) as T;
-  }
+  abstract(condition?: boolean): this;
 }
 
 /**
- * Mixin that adds an `async` modifier to a node.
+ * Mixin that adds an `abstract` modifier to a node.
  */
-export class AsyncMixin {
+export function AbstractMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
+  Base: TBase,
+) {
+  const Mixed = ModifiersMixin(Base as BaseCtor<T>);
+
+  abstract class Abstract extends Mixed {
+    protected abstract(condition?: boolean): this {
+      const cond = arguments.length === 0 ? true : Boolean(condition);
+      return this._m(ts.SyntaxKind.AbstractKeyword, cond);
+    }
+  }
+
+  return Abstract as unknown as MixinCtor<TBase, AbstractMethods>;
+}
+
+export interface AsyncMethods extends Modifiers {
   /**
    * Adds the `async` keyword modifier if the condition is true.
    *
    * @param condition - Whether to add the modifier (default: true).
    * @returns The target object for chaining.
    */
-  async<T extends Target>(this: T, condition: boolean = true): T {
-    return this._m!(ts.SyntaxKind.AsyncKeyword, condition) as T;
-  }
+  async(condition?: boolean): this;
 }
 
 /**
- * Mixin that adds a `const` modifier to a node.
+ * Mixin that adds an `async` modifier to a node.
  */
-export class ConstMixin {
+export function AsyncMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
+  Base: TBase,
+) {
+  const Mixed = ModifiersMixin(Base as BaseCtor<T>);
+
+  abstract class Async extends Mixed {
+    protected async(condition?: boolean): this {
+      const cond = arguments.length === 0 ? true : Boolean(condition);
+      return this._m(ts.SyntaxKind.AsyncKeyword, cond);
+    }
+  }
+
+  return Async as unknown as MixinCtor<TBase, AsyncMethods>;
+}
+
+export interface ConstMethods extends Modifiers {
   /**
    * Adds the `const` keyword modifier if the condition is true.
    *
    * @param condition - Whether to add the modifier (default: true).
    * @returns The target object for chaining.
    */
-  const<T extends Target>(this: T, condition: boolean = true): T {
-    return this._m!(ts.SyntaxKind.ConstKeyword, condition) as T;
-  }
+  const(condition?: boolean): this;
 }
 
 /**
- * Mixin that adds a `declare` modifier to a node.
+ * Mixin that adds a `const` modifier to a node.
  */
-export class DeclareMixin {
+export function ConstMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
+  Base: TBase,
+) {
+  const Mixed = ModifiersMixin(Base as BaseCtor<T>);
+
+  abstract class Const extends Mixed {
+    protected const(condition?: boolean): this {
+      const cond = arguments.length === 0 ? true : Boolean(condition);
+      return this._m(ts.SyntaxKind.ConstKeyword, cond);
+    }
+  }
+
+  return Const as unknown as MixinCtor<TBase, ConstMethods>;
+}
+
+export interface DeclareMethods extends Modifiers {
   /**
    * Adds the `declare` keyword modifier if the condition is true.
    *
    * @param condition - Whether to add the modifier (default: true).
    * @returns The target object for chaining.
    */
-  declare<T extends Target>(this: T, condition: boolean = true): T {
-    return this._m!(ts.SyntaxKind.DeclareKeyword, condition) as T;
-  }
+  declare(condition?: boolean): this;
 }
 
 /**
- * Mixin that adds a `default` modifier to a node.
+ * Mixin that adds a `declare` modifier to a node.
  */
-export class DefaultMixin {
+export function DeclareMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
+  Base: TBase,
+) {
+  const Mixed = ModifiersMixin(Base as BaseCtor<T>);
+
+  abstract class Declare extends Mixed {
+    protected declare(condition?: boolean): this {
+      const cond = arguments.length === 0 ? true : Boolean(condition);
+      return this._m(ts.SyntaxKind.DeclareKeyword, cond);
+    }
+  }
+
+  return Declare as unknown as MixinCtor<TBase, DeclareMethods>;
+}
+
+export interface DefaultMethods extends Modifiers {
   /**
    * Adds the `default` keyword modifier if the condition is true.
    *
    * @param condition - Whether to add the modifier (default: true).
    * @returns The target object for chaining.
    */
-  default<T extends Target>(this: T, condition: boolean = true): T {
-    return this._m!(ts.SyntaxKind.DefaultKeyword, condition) as T;
-  }
+  default(condition?: boolean): this;
 }
 
 /**
- * Mixin that adds an `export` modifier to a node.
+ * Mixin that adds a `default` modifier to a node.
  */
-export class ExportMixin {
+export function DefaultMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
+  Base: TBase,
+) {
+  const Mixed = ModifiersMixin(Base as BaseCtor<T>);
+
+  abstract class Default extends Mixed {
+    /**
+     * Adds the `default` keyword modifier if the condition is true.
+     *
+     * @param condition - Whether to add the modifier (default: true).
+     * @returns The target object for chaining.
+     */
+    protected default(condition?: boolean): this {
+      const cond = arguments.length === 0 ? true : Boolean(condition);
+      return this._m(ts.SyntaxKind.DefaultKeyword, cond);
+    }
+  }
+
+  return Default as unknown as MixinCtor<TBase, DefaultMethods>;
+}
+
+export interface ExportMethods extends Modifiers {
   /**
    * Adds the `export` keyword modifier if the condition is true.
    *
    * @param condition - Whether to add the modifier (default: true).
    * @returns The target object for chaining.
    */
-  export<T extends Target>(this: T, condition: boolean = true): T {
-    return this._m!(ts.SyntaxKind.ExportKeyword, condition) as T;
-  }
+  export(condition?: boolean): this;
 }
 
 /**
- * Mixin that adds an `override` modifier to a node.
+ * Mixin that adds an `export` modifier to a node.
  */
-export class OverrideMixin {
+export function ExportMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
+  Base: TBase,
+) {
+  const Mixed = ModifiersMixin(Base as BaseCtor<T>);
+
+  abstract class Export extends Mixed {
+    /**
+     * Adds the `export` keyword modifier if the condition is true.
+     *
+     * @param condition - Whether to add the modifier (default: true).
+     * @returns The target object for chaining.
+     */
+    protected export(condition?: boolean): this {
+      const cond = arguments.length === 0 ? true : Boolean(condition);
+      this.exported = cond;
+      // TODO: remove this side-effect once planner handles exported flag
+      if (this.symbol) this.symbol.setExported(cond);
+      return this._m(ts.SyntaxKind.ExportKeyword, cond);
+    }
+  }
+
+  return Export as unknown as MixinCtor<TBase, ExportMethods>;
+}
+
+export interface OverrideMethods extends Modifiers {
   /**
    * Adds the `override` keyword modifier if the condition is true.
    *
    * @param condition - Whether to add the modifier (default: true).
    * @returns The target object for chaining.
    */
-  override<T extends Target>(this: T, condition: boolean = true): T {
-    return this._m!(ts.SyntaxKind.OverrideKeyword, condition) as T;
-  }
+  override(condition?: boolean): this;
 }
 
 /**
- * Mixin that adds a `private` modifier to a node.
+ * Mixin that adds an `override` modifier to a node.
  */
-export class PrivateMixin {
+export function OverrideMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
+  Base: TBase,
+) {
+  const Mixed = ModifiersMixin(Base as BaseCtor<T>);
+
+  abstract class Override extends Mixed {
+    protected override(condition?: boolean): this {
+      const cond = arguments.length === 0 ? true : Boolean(condition);
+      return this._m(ts.SyntaxKind.OverrideKeyword, cond);
+    }
+  }
+
+  return Override as unknown as MixinCtor<TBase, OverrideMethods>;
+}
+
+export interface PrivateMethods extends Modifiers {
   /**
    * Adds the `private` keyword modifier if the condition is true.
    *
    * @param condition - Whether to add the modifier (default: true).
    * @returns The target object for chaining.
    */
-  private<T extends Target>(this: T, condition: boolean = true): T {
-    return this._m!(ts.SyntaxKind.PrivateKeyword, condition) as T;
-  }
+  private(condition?: boolean): this;
 }
 
 /**
- * Mixin that adds a `protected` modifier to a node.
+ * Mixin that adds a `private` modifier to a node.
  */
-export class ProtectedMixin {
+export function PrivateMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
+  Base: TBase,
+) {
+  const Mixed = ModifiersMixin(Base as BaseCtor<T>);
+
+  abstract class Private extends Mixed {
+    protected private(condition?: boolean): this {
+      const cond = arguments.length === 0 ? true : Boolean(condition);
+      return this._m(ts.SyntaxKind.PrivateKeyword, cond);
+    }
+  }
+
+  return Private as unknown as MixinCtor<TBase, PrivateMethods>;
+}
+
+export interface ProtectedMethods extends Modifiers {
   /**
    * Adds the `protected` keyword modifier if the condition is true.
    *
    * @param condition - Whether to add the modifier (default: true).
    * @returns The target object for chaining.
    */
-  protected<T extends Target>(this: T, condition: boolean = true): T {
-    return this._m!(ts.SyntaxKind.ProtectedKeyword, condition) as T;
-  }
+  protected(condition?: boolean): this;
 }
 
 /**
- * Mixin that adds a `public` modifier to a node.
+ * Mixin that adds a `protected` modifier to a node.
  */
-export class PublicMixin {
+export function ProtectedMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
+  Base: TBase,
+) {
+  const Mixed = ModifiersMixin(Base as BaseCtor<T>);
+
+  abstract class Protected extends Mixed {
+    protected protected(condition?: boolean): this {
+      const cond = arguments.length === 0 ? true : Boolean(condition);
+      return this._m(ts.SyntaxKind.ProtectedKeyword, cond);
+    }
+  }
+
+  return Protected as unknown as MixinCtor<TBase, ProtectedMethods>;
+}
+
+export interface PublicMethods extends Modifiers {
   /**
    * Adds the `public` keyword modifier if the condition is true.
    *
    * @param condition - Whether to add the modifier (default: true).
    * @returns The target object for chaining.
    */
-  public<T extends Target>(this: T, condition: boolean = true): T {
-    return this._m!(ts.SyntaxKind.PublicKeyword, condition) as T;
-  }
+  public(condition?: boolean): this;
 }
 
 /**
- * Mixin that adds a `readonly` modifier to a node.
+ * Mixin that adds a `public` modifier to a node.
  */
-export class ReadonlyMixin {
+export function PublicMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
+  Base: TBase,
+) {
+  const Mixed = ModifiersMixin(Base as BaseCtor<T>);
+
+  abstract class Public extends Mixed {
+    protected public(condition?: boolean): this {
+      const cond = arguments.length === 0 ? true : Boolean(condition);
+      return this._m(ts.SyntaxKind.PublicKeyword, cond);
+    }
+  }
+
+  return Public as unknown as MixinCtor<TBase, PublicMethods>;
+}
+
+export interface ReadonlyMethods extends Modifiers {
   /**
    * Adds the `readonly` keyword modifier if the condition is true.
    *
    * @param condition - Whether to add the modifier (default: true).
    * @returns The target object for chaining.
    */
-  readonly<T extends Target>(this: T, condition: boolean = true): T {
-    return this._m!(ts.SyntaxKind.ReadonlyKeyword, condition) as T;
-  }
+  readonly(condition?: boolean): this;
 }
 
 /**
- * Mixin that adds a `static` modifier to a node.
+ * Mixin that adds a `readonly` modifier to a node.
  */
-export class StaticMixin {
+export function ReadonlyMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
+  Base: TBase,
+) {
+  const Mixed = ModifiersMixin(Base as BaseCtor<T>);
+
+  abstract class Readonly extends Mixed {
+    protected readonly(condition?: boolean): this {
+      const cond = arguments.length === 0 ? true : Boolean(condition);
+      return this._m(ts.SyntaxKind.ReadonlyKeyword, cond);
+    }
+  }
+
+  return Readonly as unknown as MixinCtor<TBase, ReadonlyMethods>;
+}
+
+export interface StaticMethods extends Modifiers {
   /**
    * Adds the `static` keyword modifier if the condition is true.
    *
    * @param condition - Whether to add the modifier (default: true).
    * @returns The target object for chaining.
    */
-  static<T extends Target>(this: T, condition: boolean = true): T {
-    return this._m!(ts.SyntaxKind.StaticKeyword, condition) as T;
+  static(condition?: boolean): this;
+}
+
+/**
+ * Mixin that adds a `static` modifier to a node.
+ */
+export function StaticMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
+  Base: TBase,
+) {
+  const Mixed = ModifiersMixin(Base as BaseCtor<T>);
+
+  abstract class Static extends Mixed {
+    protected static(condition?: boolean): this {
+      const cond = arguments.length === 0 ? true : Boolean(condition);
+      return this._m(ts.SyntaxKind.StaticKeyword, cond);
+    }
   }
+
+  return Static as unknown as MixinCtor<TBase, StaticMethods>;
 }

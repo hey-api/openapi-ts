@@ -1,29 +1,48 @@
-/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
+import type { AnalysisContext, Ref, Symbol } from '@hey-api/codegen-core';
+import { isSymbol, ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
-import { mixin } from '../mixins/apply';
 import { DocMixin } from '../mixins/doc';
-import {
-  ConstMixin,
-  createModifierAccessor,
-  ExportMixin,
-} from '../mixins/modifiers';
+import { ConstMixin, ExportMixin } from '../mixins/modifiers';
+import { safeRuntimeName } from '../utils/name';
 import { EnumMemberTsDsl } from './member';
 
+export type EnumName = Symbol | string;
 type Value = string | number | MaybeTsDsl<ts.Expression>;
 type ValueFn = Value | ((m: EnumMemberTsDsl) => void);
 
-export class EnumTsDsl extends TsDsl<ts.EnumDeclaration> {
-  private _members: Array<EnumMemberTsDsl> = [];
-  private _name: string | ts.Identifier;
-  protected modifiers = createModifierAccessor(this);
+const Mixed = ConstMixin(DocMixin(ExportMixin(TsDsl<ts.EnumDeclaration>)));
 
-  constructor(name: string | ts.Identifier, fn?: (e: EnumTsDsl) => void) {
+export class EnumTsDsl extends Mixed {
+  readonly '~dsl' = 'EnumTsDsl';
+
+  private _members: Array<EnumMemberTsDsl> = [];
+  private _name: Ref<EnumName>;
+
+  constructor(name: EnumName, fn?: (e: EnumTsDsl) => void) {
     super();
-    this._name = name;
+    this._name = ref(name);
+    if (isSymbol(name)) {
+      name.setKind('enum');
+      name.setNameSanitizer(safeRuntimeName);
+      name.setNode(this);
+    }
     fn?.(this);
+  }
+
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    ctx.analyze(this._name);
+    ctx.pushScope();
+    try {
+      for (const member of this._members) {
+        ctx.analyze(member);
+      }
+    } finally {
+      ctx.popScope();
+    }
   }
 
   /** Adds an enum member. */
@@ -39,15 +58,13 @@ export class EnumTsDsl extends TsDsl<ts.EnumDeclaration> {
     return this;
   }
 
-  /** Renders the enum declaration. */
-  $render(): ts.EnumDeclaration {
-    return ts.factory.createEnumDeclaration(
-      this.modifiers.list(),
-      this._name,
+  override toAst() {
+    const node = ts.factory.createEnumDeclaration(
+      this.modifiers,
+      // @ts-expect-error need to improve types
+      this.$node(this._name),
       this.$node(this._members),
     );
+    return this.$docs(node);
   }
 }
-
-export interface EnumTsDsl extends ConstMixin, DocMixin, ExportMixin {}
-mixin(EnumTsDsl, ConstMixin, DocMixin, ExportMixin);

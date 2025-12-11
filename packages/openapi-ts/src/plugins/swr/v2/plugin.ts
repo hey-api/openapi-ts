@@ -1,5 +1,6 @@
 import { registryName } from '~/plugins/@hey-api/sdk/shared/class';
 import { operationClasses } from '~/plugins/@hey-api/sdk/shared/operation';
+import { $ } from '~/ts-dsl';
 import { stringCase } from '~/utils/stringCase';
 
 import type { SwrPlugin } from '../types';
@@ -32,7 +33,7 @@ export const handlerV2: SwrPlugin['Handler'] = ({ plugin }) => {
       const entry = classes ? classes.values().next().value : undefined;
       // TODO: this should use class graph to determine correct path string
       // as it's really easy to break once we change the class casing
-      let queryFn: string;
+      let queryFn: ReturnType<typeof $.expr | typeof $.call | typeof $.attr>;
       if (entry) {
         const symbolClass = plugin.referenceSymbol({
           category: 'utility',
@@ -40,25 +41,24 @@ export const handlerV2: SwrPlugin['Handler'] = ({ plugin }) => {
           resourceId: entry.path[0],
           tool: 'sdk',
         });
-        queryFn = [
-          symbolClass.placeholder,
-          ...(sdkPlugin.config.instance ? [registryName, 'get()'] : []),
-          ...entry.path.slice(1).map((className) =>
-            stringCase({
-              case: 'camelCase',
-              value: className,
-            }),
-          ),
-          entry.methodName,
-        ]
-          .filter(Boolean)
-          .join('.');
+        queryFn = $(symbolClass).$if(sdkPlugin.config.instance, (e) =>
+          e.attr(registryName).attr('get').call(),
+        );
+        for (const className of entry.path.slice(1)) {
+          const cls = stringCase({
+            case: 'camelCase',
+            value: className,
+          });
+          queryFn = queryFn.attr(cls);
+        }
+        queryFn = queryFn.attr(entry.methodName);
       } else {
-        queryFn = plugin.referenceSymbol({
+        const symbol = plugin.referenceSymbol({
           category: 'sdk',
           resource: 'operation',
           resourceId: operation.id,
-        }).placeholder;
+        });
+        queryFn = $(symbol);
       }
 
       if (plugin.hooks.operation.isQuery(operation)) {

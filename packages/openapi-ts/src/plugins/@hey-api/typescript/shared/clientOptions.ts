@@ -1,6 +1,5 @@
-import type { Symbol } from '@hey-api/codegen-core';
-
 import type { IR } from '~/ir/types';
+import { buildName } from '~/openApi/shared/utils/name';
 import {
   getClientBaseUrlKey,
   getClientPlugin,
@@ -28,13 +27,13 @@ const serverToBaseUrlType = ({ server }: { server: IR.ServerObject }) => {
 };
 
 export const createClientOptions = ({
+  nodeIndex,
   plugin,
   servers,
-  symbolClientOptions,
 }: {
+  nodeIndex: number;
   plugin: HeyApiTypeScriptPlugin['Instance'];
   servers: ReadonlyArray<IR.ServerObject>;
-  symbolClientOptions: Symbol;
 }) => {
   const client = getClientPlugin(plugin.context.config);
 
@@ -50,9 +49,26 @@ export const createClientOptions = ({
     types.push($.type.and($.type('string'), $.type.object()));
   }
 
+  const symbol = plugin.symbol(
+    buildName({
+      config: {
+        case: plugin.config.case,
+      },
+      name: 'ClientOptions',
+    }),
+    {
+      meta: {
+        category: 'type',
+        resource: 'client',
+        role: 'options',
+        tool: 'typescript',
+      },
+    },
+  );
+
   const node = $.type
-    .alias(symbolClientOptions.placeholder)
-    .export(symbolClientOptions.exported)
+    .alias(symbol)
+    .export()
     .type(
       $.type
         .object()
@@ -60,5 +76,5 @@ export const createClientOptions = ({
           p.type($.type.or(...types)),
         ),
     );
-  plugin.setSymbolValue(symbolClientOptions, node);
+  plugin.updateNode(nodeIndex, node);
 };

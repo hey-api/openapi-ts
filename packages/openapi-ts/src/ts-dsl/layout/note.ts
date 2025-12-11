@@ -1,3 +1,4 @@
+import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeArray } from '../base';
@@ -5,6 +6,8 @@ import { TsDsl } from '../base';
 import { IdTsDsl } from '../expr/id';
 
 export class NoteTsDsl extends TsDsl<ts.Node> {
+  readonly '~dsl' = 'NoteTsDsl';
+
   protected _lines: Array<string> = [];
 
   constructor(lines?: MaybeArray<string>, fn?: (d: NoteTsDsl) => void) {
@@ -17,6 +20,10 @@ export class NoteTsDsl extends TsDsl<ts.Node> {
       }
     }
     fn?.(this);
+  }
+
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
   }
 
   add(...lines: ReadonlyArray<string>): this {
@@ -38,7 +45,7 @@ export class NoteTsDsl extends TsDsl<ts.Node> {
     return node;
   }
 
-  $render(): ts.Node {
+  override toAst(): ts.Node {
     // this class does not build a standalone node;
     // it modifies other nodes via `apply()`.
     // Return a dummy comment node for compliance.

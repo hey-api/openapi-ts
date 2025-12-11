@@ -1,45 +1,53 @@
-/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
+import type { AnalysisContext, Ref, Symbol } from '@hey-api/codegen-core';
+import { ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TypeTsDsl } from '../base';
-import { mixin } from '../mixins/apply';
 import { DocMixin } from '../mixins/doc';
-import { createModifierAccessor, ReadonlyMixin } from '../mixins/modifiers';
+import { ReadonlyMixin } from '../mixins/modifiers';
 import { OptionalMixin } from '../mixins/optional';
 import { TokenTsDsl } from '../token';
-import { safePropName } from '../utils/prop';
+import { safePropName } from '../utils/name';
 
-export class TypePropTsDsl extends TypeTsDsl<ts.TypeElement> {
-  protected modifiers = createModifierAccessor(this);
-  protected name: string;
-  protected _type?: string | MaybeTsDsl<ts.TypeNode>;
+export type TypePropName = string;
+export type TypePropType = Symbol | string | MaybeTsDsl<ts.TypeNode>;
 
-  constructor(name: string, fn: (p: TypePropTsDsl) => void) {
+const Mixed = DocMixin(OptionalMixin(ReadonlyMixin(TypeTsDsl<ts.TypeElement>)));
+
+export class TypePropTsDsl extends Mixed {
+  readonly '~dsl' = 'TypePropTsDsl';
+
+  protected name: TypePropName;
+  protected _type?: Ref<TypePropType>;
+
+  constructor(name: TypePropName, fn: (p: TypePropTsDsl) => void) {
     super();
     this.name = name;
     fn(this);
   }
 
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    ctx.analyze(this._type);
+  }
+
   /** Sets the property type. */
-  type(type: string | MaybeTsDsl<ts.TypeNode>): this {
-    this._type = type;
+  type(type: TypePropType): this {
+    this._type = ref(type);
     return this;
   }
 
-  /** Builds and returns the property signature. */
-  $render(): ts.TypeElement {
+  override toAst() {
     if (!this._type) {
       throw new Error(`Type not specified for property '${this.name}'`);
     }
-    return ts.factory.createPropertySignature(
-      this.modifiers.list(),
-      safePropName(this.name),
+    const node = ts.factory.createPropertySignature(
+      this.modifiers,
+      this.$node(safePropName(this.name)),
       this._optional ? this.$node(new TokenTsDsl().optional()) : undefined,
       this.$type(this._type),
     );
+    return this.$docs(node);
   }
 }
-
-export interface TypePropTsDsl extends DocMixin, OptionalMixin, ReadonlyMixin {}
-mixin(TypePropTsDsl, DocMixin, OptionalMixin, ReadonlyMixin);

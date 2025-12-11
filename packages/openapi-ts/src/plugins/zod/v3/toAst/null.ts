@@ -13,6 +13,6 @@ export const nullToAst = ({
     category: 'external',
     resource: 'zod.z',
   });
-  const expression = $(z.placeholder).attr(identifiers.null).call();
+  const expression = $(z).attr(identifiers.null).call();
   return expression;
 };

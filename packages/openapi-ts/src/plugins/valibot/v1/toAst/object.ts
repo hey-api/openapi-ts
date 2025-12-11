@@ -1,5 +1,6 @@
+import { fromRef, ref } from '@hey-api/codegen-core';
+
 import type { SchemaWithType } from '~/plugins';
-import { toRef } from '~/plugins/shared/utils/refs';
 import { $ } from '~/ts-dsl';
 
 import { pipesToAst } from '../../shared/pipesToAst';
@@ -21,36 +22,27 @@ function defaultObjectBaseResolver({
 
   // Handle `additionalProperties: { type: 'never' }` → v.strictObject()
   if (additional === null) {
-    return pipes.push(
-      $(v.placeholder).attr(identifiers.schemas.strictObject).call(shape),
-    );
+    return pipes.push($(v).attr(identifiers.schemas.strictObject).call(shape));
   }
 
   // Handle additionalProperties as schema → v.record() or v.objectWithRest()
   if (additional) {
     if (shape.isEmpty) {
       return pipes.push(
-        $(v.placeholder)
+        $(v)
           .attr(identifiers.schemas.record)
-          .call(
-            $(v.placeholder).attr(identifiers.schemas.string).call(),
-            additional,
-          ),
+          .call($(v).attr(identifiers.schemas.string).call(), additional),
       );
     }
 
     // If there are named properties, use v.objectWithRest() to validate both
     return pipes.push(
-      $(v.placeholder)
-        .attr(identifiers.schemas.objectWithRest)
-        .call(shape, additional),
+      $(v).attr(identifiers.schemas.objectWithRest).call(shape, additional),
     );
   }
 
   // Default case → v.object()
-  return pipes.push(
-    $(v.placeholder).attr(identifiers.schemas.object).call(shape),
-  );
+  return pipes.push($(v).attr(identifiers.schemas.object).call(shape));
 }
 
 export const objectToAst = ({
@@ -78,7 +70,7 @@ export const objectToAst = ({
       schema: property,
       state: {
         ...state,
-        path: toRef([...state.path.value, 'properties', name]),
+        path: ref([...fromRef(state.path), 'properties', name]),
       },
     });
     if (propertyAst.hasLazyExpression) result.hasLazyExpression = true;
@@ -96,7 +88,7 @@ export const objectToAst = ({
         schema: schema.additionalProperties,
         state: {
           ...state,
-          path: toRef([...state.path.value, 'additionalProperties']),
+          path: ref([...fromRef(state.path), 'additionalProperties']),
         },
       });
       if (additionalAst.hasLazyExpression) result.hasLazyExpression = true;

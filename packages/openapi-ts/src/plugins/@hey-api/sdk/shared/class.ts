@@ -47,17 +47,16 @@ type SdkClassEntry = {
 export const registryName = '__registry';
 
 const createRegistryClass = ({
-  sdkName,
+  sdkSymbol,
   symbol,
 }: {
   plugin: HeyApiSdkPlugin['Instance'];
-  sdkName: string;
+  sdkSymbol: Symbol;
   symbol: Symbol;
 }): TsDsl => {
   const defaultKey = 'defaultKey';
   const instances = 'instances';
-  return $.class(symbol.placeholder)
-    .export(symbol.exported)
+  return $.class(symbol)
     .generic('T')
     .field(defaultKey, (f) =>
       f.private().readonly().assign($.literal('default')),
@@ -85,7 +84,7 @@ const createRegistryClass = ({
           $.if($.not('instance')).do(
             $.throw('Error').message(
               $.template('No SDK client found. Create one with "new ')
-                .add(sdkName)
+                .add(sdkSymbol)
                 .add('()" to fix this error.'),
             ),
           ),
@@ -122,9 +121,8 @@ const createClientClass = ({
     category: 'external',
     resource: 'client.Client',
   });
-  return $.class(symbol.placeholder)
-    .export(symbol.exported)
-    .field('client', (f) => f.protected().type(symbolClient.placeholder))
+  return $.class(symbol)
+    .field('client', (f) => f.protected().type(symbolClient))
     .newline()
     .init((i) =>
       i
@@ -135,7 +133,7 @@ const createClientClass = ({
               $.type
                 .object()
                 .prop('client', (p) =>
-                  p.optional(optionalClient).type(symbolClient.placeholder),
+                  p.optional(optionalClient).type(symbolClient),
                 ),
             ),
         )
@@ -146,7 +144,7 @@ const createClientClass = ({
               $('args')
                 .attr('client')
                 .optional(optionalClient)
-                .$if(optionalClient, (a) => a.coalesce(symClient!.placeholder)),
+                .$if(optionalClient, (a) => a.coalesce(symClient!)),
             ),
         ),
     );
@@ -268,14 +266,12 @@ export const generateClassSdk = ({
                           plugin.referenceSymbol({
                             category: 'external',
                             resource: 'client.Composable',
-                          }).placeholder,
+                          }),
                         )
                         .default($.type.literal('$fetch')),
                     )
                     .generic(nuxtTypeDefault, (t) =>
-                      t.$if(symbolResponse, (t, s) =>
-                        t.extends(s.placeholder).default(s.placeholder),
-                      ),
+                      t.$if(symbolResponse, (t, s) => t.extends(s).default(s)),
                     ),
                 (m) =>
                   m.generic('ThrowOnError', (t) =>
@@ -309,31 +305,22 @@ export const generateClassSdk = ({
     },
   );
 
-  const symbolHeyApiClient = plugin.config.instance
-    ? plugin.registerSymbol({
-        exported: false,
-        kind: 'class',
-        meta: {
-          category: 'utility',
-          resource: 'class',
-          resourceId: 'HeyApiClient',
-          tool: 'sdk',
-        },
-        name: 'HeyApiClient',
-      })
+  const heyApiClientIndex = plugin.config.instance
+    ? plugin.addNode(null)
     : undefined;
-  const symbolHeyApiRegistry = plugin.config.instance
-    ? plugin.registerSymbol({
-        exported: false,
-        kind: 'class',
-        meta: {
-          category: 'utility',
-          resource: 'class',
-          resourceId: 'HeyApiRegistry',
-          tool: 'sdk',
-        },
-        name: 'HeyApiRegistry',
-      })
+  const symbolHeyApiClient =
+    heyApiClientIndex !== undefined
+      ? plugin.symbol('HeyApiClient', {
+          meta: {
+            category: 'utility',
+            resource: 'class',
+            resourceId: 'HeyApiClient',
+            tool: 'sdk',
+          },
+        })
+      : undefined;
+  const heyApiRegistryIndex = plugin.config.instance
+    ? plugin.addNode(null)
     : undefined;
 
   const generateClass = (currentClass: SdkClassEntry) => {
@@ -380,10 +367,10 @@ export const generateClassSdk = ({
                 .static(!plugin.config.instance)
                 .assign(
                   plugin.config.instance
-                    ? $.new(refChildClass.placeholder).args(
+                    ? $.new(refChildClass).args(
                         $.object().prop('client', $('this').attr('client')),
                       )
-                    : $(refChildClass.placeholder),
+                    : $(refChildClass),
                 ),
             )
           : $.getter(memberName, (g) =>
@@ -392,10 +379,10 @@ export const generateClassSdk = ({
                 .do(
                   $.return(
                     plugin.config.instance
-                      ? $.new(refChildClass.placeholder).args(
+                      ? $.new(refChildClass).args(
                           $.object().prop('client', $('this').attr('client')),
                         )
-                      : refChildClass.placeholder,
+                      : refChildClass,
                   ),
                 ),
             );
@@ -409,29 +396,27 @@ export const generateClassSdk = ({
     }
 
     if (
+      heyApiClientIndex !== undefined &&
       symbolHeyApiClient &&
-      !plugin.gen.symbols.hasValue(symbolHeyApiClient.id)
+      !symbolHeyApiClient.node
     ) {
       const node = createClientClass({
         plugin,
         symbol: symbolHeyApiClient,
       });
-      plugin.setSymbolValue(symbolHeyApiClient, node);
+      plugin.updateNode(heyApiClientIndex, node);
     }
 
-    const symbol = plugin.registerSymbol({
-      exported: true,
-      kind: 'class',
+    const symbol = plugin.symbol(resourceId, {
       meta: {
         category: 'utility',
         resource: 'class',
         resourceId,
         tool: 'sdk',
       },
-      name: resourceId,
     });
 
-    if (currentClass.root && symbolHeyApiRegistry) {
+    if (currentClass.root && heyApiRegistryIndex !== undefined) {
       const symClient = plugin.getSymbol({
         category: 'client',
       });
@@ -447,14 +432,14 @@ export const generateClassSdk = ({
               $.type
                 .object()
                 .prop('client', (p) =>
-                  p.required(isClientRequired).type(symbolClient.placeholder),
+                  p.required(isClientRequired).type(symbolClient),
                 )
                 .prop('key', (p) => p.optional().type('string')),
             ),
           )
           .do(
             $('super').call('args'),
-            $(symbol.placeholder)
+            $(symbol)
               .attr(registryName)
               .attr('set')
               .call('this', $('args').attr('key').required(isClientRequired)),
@@ -467,38 +452,44 @@ export const generateClassSdk = ({
         currentClass.nodes.unshift(ctor, $.newline());
       }
 
+      const symbolRegistry = plugin.symbol('HeyApiRegistry', {
+        meta: {
+          category: 'utility',
+          resource: 'class',
+          resourceId: 'HeyApiRegistry',
+          tool: 'sdk',
+        },
+      });
       const node = createRegistryClass({
         plugin,
-        sdkName: symbol.placeholder,
-        symbol: symbolHeyApiRegistry,
+        sdkSymbol: symbol,
+        symbol: symbolRegistry,
       });
-      plugin.setSymbolValue(symbolHeyApiRegistry, node);
+      plugin.updateNode(heyApiRegistryIndex, node);
       const registryNode = $.field(registryName, (f) =>
         f
           .public()
           .static()
           .readonly()
-          .assign(
-            $.new(symbolHeyApiRegistry.placeholder).generic(symbol.placeholder),
-          ),
+          .assign($.new(symbolRegistry).generic(symbol)),
       );
       currentClass.nodes.unshift(registryNode, $.newline());
     }
 
-    const node = $.class(symbol.placeholder)
-      .export(symbol.exported)
-      .extends(symbolHeyApiClient?.placeholder)
+    const node = $.class(symbol)
+      .export()
+      .extends(symbolHeyApiClient)
       .$if(currentClass.root && isAngularClient, (c) =>
         c.decorator(
           plugin.referenceSymbol({
             category: 'external',
             resource: '@angular/core.Injectable',
-          }).placeholder,
+          }),
           $.object().prop('providedIn', $.literal('root')),
         ),
       )
       .do(...currentClass.nodes);
-    plugin.setSymbolValue(symbol, node);
+    plugin.addNode(node);
   };
 
   for (const sdkClass of sdkClasses.values()) {

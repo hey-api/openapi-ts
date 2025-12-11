@@ -1,6 +1,7 @@
+import { fromRef, ref } from '@hey-api/codegen-core';
+
 import { deduplicateSchema } from '~/ir/schema';
 import type { SchemaWithType } from '~/plugins';
-import { toRef } from '~/plugins/shared/utils/refs';
 import { $ } from '~/ts-dsl';
 
 import { identifiers } from '../../constants';
@@ -22,7 +23,7 @@ export const arrayToAst = ({
     resource: 'zod.z',
   });
 
-  const functionName = $(z.placeholder).attr(identifiers.array);
+  const functionName = $(z).attr(identifiers.array);
 
   if (!schema.items) {
     result.expression = functionName.call(
@@ -44,7 +45,7 @@ export const arrayToAst = ({
         schema: item,
         state: {
           ...state,
-          path: toRef([...state.path.value, 'items', index]),
+          path: ref([...fromRef(state.path), 'items', index]),
         },
       });
       if (itemAst.hasLazyExpression) {
@@ -66,7 +67,7 @@ export const arrayToAst = ({
           firstSchema.logicalOperator === 'or' ||
           (firstSchema.type && firstSchema.type !== 'object')
         ) {
-          intersectionExpression = $(z.placeholder)
+          intersectionExpression = $(z)
             .attr(identifiers.intersection)
             .call(...itemExpressions);
         } else {
@@ -80,10 +81,10 @@ export const arrayToAst = ({
 
         result.expression = functionName.call(intersectionExpression);
       } else {
-        result.expression = $(z.placeholder)
+        result.expression = $(z)
           .attr(identifiers.array)
           .call(
-            $(z.placeholder)
+            $(z)
               .attr(identifiers.union)
               .call($.array(...itemExpressions)),
           );

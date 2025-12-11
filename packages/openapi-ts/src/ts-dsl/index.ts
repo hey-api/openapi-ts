@@ -32,10 +32,12 @@ import { DocTsDsl } from './layout/doc';
 import { HintTsDsl } from './layout/hint';
 import { NewlineTsDsl } from './layout/newline';
 import { NoteTsDsl } from './layout/note';
+import { BlockTsDsl } from './stmt/block';
 import { IfTsDsl } from './stmt/if';
 import { ReturnTsDsl } from './stmt/return';
 import { StmtTsDsl } from './stmt/stmt';
 import { ThrowTsDsl } from './stmt/throw';
+import { TryTsDsl } from './stmt/try';
 import { VarTsDsl } from './stmt/var';
 import { TokenTsDsl } from './token';
 import { TypeAliasTsDsl } from './type/alias';
@@ -74,6 +76,10 @@ const base = {
   /** Creates a binary expression (e.g. `a + b`). */
   binary: (...args: ConstructorParameters<typeof BinaryTsDsl>) =>
     new BinaryTsDsl(...args),
+
+  /** Creates a statement block (`{ ... }`). */
+  block: (...args: ConstructorParameters<typeof BlockTsDsl>) =>
+    new BlockTsDsl(...args),
 
   /** Creates a function or method call expression (e.g. `fn(arg)`). */
   call: (...args: ConstructorParameters<typeof CallTsDsl>) =>
@@ -233,6 +239,10 @@ const base = {
   token: (...args: ConstructorParameters<typeof TokenTsDsl>) =>
     new TokenTsDsl(...args),
 
+  /** Creates a try/catch/finally statement. */
+  try: (...args: ConstructorParameters<typeof TryTsDsl>) =>
+    new TryTsDsl(...args),
+
   /** Creates a basic type reference or type expression (e.g. Foo or Foo<T>). */
   type: Object.assign(
     (...args: ConstructorParameters<typeof TypeExprTsDsl>) =>
@@ -339,3 +349,7 @@ export type DollarTsDsl = {
 
 export type { MaybeTsDsl, TypeTsDsl } from './base';
 export { TsDsl } from './base';
+export { TypeScriptRenderer } from './render/typescript';
+export { keywords } from './utils/keywords';
+export { regexp } from './utils/regexp';
+export { reserved } from './utils/reserved';

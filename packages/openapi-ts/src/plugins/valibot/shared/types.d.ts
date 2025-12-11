@@ -1,8 +1,7 @@
-import type { SymbolMeta } from '@hey-api/codegen-core';
+import type { Refs, SymbolMeta } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import type { IR } from '~/ir/types';
-import type { ToRefs } from '~/plugins';
 import type { $ } from '~/ts-dsl';
 
 import type { ValibotPlugin } from '../types';
@@ -15,7 +14,7 @@ export type Ast = {
 
 export type IrSchemaToAstOptions = {
   plugin: ValibotPlugin['Instance'];
-  state: ToRefs<PluginState>;
+  state: Refs<PluginState>;
 };
 
 export type PluginState = Pick<Required<SymbolMeta>, 'path'> &

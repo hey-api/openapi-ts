@@ -20,15 +20,15 @@ export const numberToAst = ({
 
   if (typeof schema.const === 'number') {
     // TODO: parser - handle bigint constants
-    const expression = $(z.placeholder)
+    const expression = $(z)
       .attr(identifiers.literal)
       .call($.literal(schema.const));
     return expression;
   }
 
   let numberExpression = isBigInt
-    ? $(z.placeholder).attr(identifiers.coerce).attr(identifiers.bigint).call()
-    : $(z.placeholder).attr(identifiers.number).call();
+    ? $(z).attr(identifiers.coerce).attr(identifiers.bigint).call()
+    : $(z).attr(identifiers.number).call();
 
   if (!isBigInt && schema.type === 'integer') {
     numberExpression = numberExpression.attr(identifiers.int).call();

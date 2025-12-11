@@ -1,13 +1,13 @@
-/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
+import type { AnalysisContext, Ref, Symbol } from '@hey-api/codegen-core';
+import { ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
-import { mixin } from '../mixins/apply';
 import { AsMixin } from '../mixins/as';
 import { ExprMixin } from '../mixins/expr';
 
-type Expr = string | MaybeTsDsl<ts.Expression>;
+type Expr = Symbol | string | MaybeTsDsl<ts.Expression>;
 type Op = Operator | ts.BinaryOperator;
 type Operator =
   | '!='
@@ -27,16 +27,26 @@ type Operator =
   | '??'
   | '||';
 
-export class BinaryTsDsl extends TsDsl<ts.BinaryExpression> {
-  protected _base: Expr;
-  protected _expr?: Expr;
+const Mixed = AsMixin(ExprMixin(TsDsl<ts.BinaryExpression>));
+
+export class BinaryTsDsl extends Mixed {
+  readonly '~dsl' = 'BinaryTsDsl';
+
+  protected _base: Ref<Expr>;
+  protected _expr?: Ref<Expr>;
   protected _op?: Op;
 
   constructor(base: Expr, op?: Op, expr?: Expr) {
     super();
-    this._base = base;
+    this._base = ref(base);
     this._op = op;
-    this._expr = expr;
+    if (expr) this._expr = ref(expr);
+  }
+
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    ctx.analyze(this._base);
+    ctx.analyze(this._expr);
   }
 
   /** Logical AND — `this && expr` */
@@ -119,15 +129,15 @@ export class BinaryTsDsl extends TsDsl<ts.BinaryExpression> {
     return this.opAndExpr('*', expr);
   }
 
-  $render(): ts.BinaryExpression {
+  override toAst() {
     if (!this._op) {
       throw new Error('BinaryTsDsl: missing operator');
     }
-    if (this._expr === undefined) {
+    const expr = this.$node(this._expr);
+    if (!expr) {
       throw new Error('BinaryTsDsl: missing right-hand expression');
     }
     const base = this.$node(this._base);
-    const expr = this.$node(this._expr);
     const operator =
       typeof this._op === 'string' ? this.opToToken(this._op) : this._op;
     return ts.factory.createBinaryExpression(base, operator, expr);
@@ -135,7 +145,7 @@ export class BinaryTsDsl extends TsDsl<ts.BinaryExpression> {
 
   /** Sets the binary operator and right-hand operand for this expression. */
   private opAndExpr(op: Op, expr: Expr): this {
-    this._expr = expr;
+    this._expr = ref(expr);
     this._op = op;
     return this;
   }
@@ -166,6 +176,3 @@ export class BinaryTsDsl extends TsDsl<ts.BinaryExpression> {
     return token;
   }
 }
-
-export interface BinaryTsDsl extends AsMixin, ExprMixin {}
-mixin(BinaryTsDsl, AsMixin, ExprMixin);

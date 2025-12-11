@@ -44,8 +44,11 @@ describe('OpenAPI parser', () => {
     };
     parseOpenApiSpec({
       config: {
-        // @ts-expect-error
-        output: {},
+        output: {
+          // @ts-expect-error
+          fileName: {},
+          path: '',
+        },
       },
       spec,
     });
@@ -63,8 +66,11 @@ describe('OpenAPI parser', () => {
     };
     parseOpenApiSpec({
       config: {
-        // @ts-expect-error
-        output: {},
+        output: {
+          // @ts-expect-error
+          fileName: {},
+          path: '',
+        },
       },
       spec,
     });
@@ -82,8 +88,11 @@ describe('OpenAPI parser', () => {
     };
     parseOpenApiSpec({
       config: {
-        // @ts-expect-error
-        output: {},
+        output: {
+          // @ts-expect-error
+          fileName: {},
+          path: '',
+        },
       },
       spec,
     });
@@ -101,8 +110,11 @@ describe('OpenAPI parser', () => {
     };
     parseOpenApiSpec({
       config: {
-        // @ts-expect-error
-        output: {},
+        output: {
+          // @ts-expect-error
+          fileName: {},
+          path: '',
+        },
       },
       spec,
     });
@@ -120,8 +132,11 @@ describe('OpenAPI parser', () => {
     };
     parseOpenApiSpec({
       config: {
-        // @ts-expect-error
-        output: {},
+        output: {
+          // @ts-expect-error
+          fileName: {},
+          path: '',
+        },
       },
       spec,
     });
@@ -138,8 +153,11 @@ describe('OpenAPI parser', () => {
     };
     parseOpenApiSpec({
       config: {
-        // @ts-expect-error
-        output: {},
+        output: {
+          // @ts-expect-error
+          fileName: {},
+          path: '',
+        },
       },
       spec,
     });
@@ -156,8 +174,11 @@ describe('OpenAPI parser', () => {
     };
     parseOpenApiSpec({
       config: {
-        // @ts-expect-error
-        output: {},
+        output: {
+          // @ts-expect-error
+          fileName: {},
+          path: '',
+        },
       },
       spec,
     });

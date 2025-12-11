@@ -5,6 +5,8 @@ import { TsDsl } from './base';
 export class TokenTsDsl<K extends ts.SyntaxKind = never> extends TsDsl<
   ts.Token<K>
 > {
+  readonly '~dsl' = 'TokenTsDsl';
+
   protected _kind?: K;
 
   /** Sets the token kind */
@@ -55,8 +57,7 @@ export class TokenTsDsl<K extends ts.SyntaxKind = never> extends TsDsl<
     );
   }
 
-  /** Renders the final token */
-  $render(): ts.Token<K> {
+  override toAst(): ts.Token<K> {
     if (!this._kind) {
       throw new Error(`Token missing \`.kind(kind)\``);
     }
