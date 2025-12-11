@@ -1,0 +1,55 @@
+openapi: 3.0.3
+info:
+  title: OpenAPI 3.0 validators with parameter-level examples
+  version: '1'
+paths:
+  /users:
+    get:
+      parameters:
+        - name: sort
+          in: query
+          description: 'Sort order for results'
+          schema:
+            type: string
+          example: 'name,desc'
+        - name: filter
+          in: query
+          description: 'Filter criteria'
+          required: false
+          schema:
+            type: string
+            description: 'This description should be overridden'
+            example: 'thisExampleShouldBeOverridden'
+          example: 'status:active'
+        - name: limit
+          in: query
+          description: 'Number of results per page'
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+          example: 25
+        - name: search
+          in: query
+          description: 'Search query'
+          schema:
+            type: string
+          example: 'john doe'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string

@@ -65,15 +65,41 @@ export const irSchemaToAst = ({
     ast.expression = typeAst.expression;
     ast.hasLazyExpression = typeAst.hasLazyExpression;
 
-    if (plugin.config.metadata && schema.description) {
-      ast.expression = ast.expression
-        .attr(identifiers.register)
-        .call(
-          $(z.placeholder).attr(identifiers.globalRegistry),
-          $.object()
-            .pretty()
-            .prop('description', $.literal(schema.description)),
-        );
+    if (plugin.config.metadata) {
+      // Build metadata object with all available fields
+      const metadataObj = $.object().pretty();
+      let hasMetadata = false;
+
+      if (schema.description) {
+        metadataObj.prop('description', $.literal(schema.description));
+        hasMetadata = true;
+      }
+
+      // Handle examples - convert single example to array or use examples array
+      if (schema.examples || schema.example !== undefined) {
+        const examplesArray =
+          schema.examples ||
+          (schema.example !== undefined ? [schema.example] : undefined);
+        if (examplesArray) {
+          metadataObj.prop(
+            'example',
+            $.array()
+              .pretty()
+              .elements(
+                ...examplesArray.map((ex) =>
+                  $.literal(ex as string | number | boolean | null),
+                ),
+              ),
+          );
+          hasMetadata = true;
+        }
+      }
+
+      if (hasMetadata) {
+        ast.expression = ast.expression
+          .attr(identifiers.register)
+          .call($(z.placeholder).attr(identifiers.globalRegistry), metadataObj);
+      }
     }
   } else if (schema.items) {
     schema = deduplicateSchema({ schema });

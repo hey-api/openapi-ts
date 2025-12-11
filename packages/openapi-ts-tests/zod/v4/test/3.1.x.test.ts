@@ -102,6 +102,36 @@ for (const zodVersion of zodVersions) {
       },
       {
         config: createConfig({
+          input: 'validators-metadata-enhanced.yaml',
+          output: 'validators-metadata-local',
+          plugins: [
+            {
+              compatibilityVersion: zodVersion.compatibilityVersion,
+              metadata: 'local',
+              name: 'zod',
+            },
+          ],
+        }),
+        description:
+          'generates validator schemas with local metadata using .meta()',
+      },
+      {
+        config: createConfig({
+          input: 'validators-metadata-enhanced.yaml',
+          output: 'validators-metadata-global',
+          plugins: [
+            {
+              compatibilityVersion: zodVersion.compatibilityVersion,
+              metadata: 'global',
+              name: 'zod',
+            },
+          ],
+        }),
+        description:
+          'generates validator schemas with global metadata using .register()',
+      },
+      {
+        config: createConfig({
           input: 'validators.yaml',
           output: 'validators-types',
           plugins: [

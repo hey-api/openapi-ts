@@ -151,9 +151,16 @@ export type UserConfig = Plugin.Name<'zod'> &
      * some additional metadata for documentation, code generation, AI
      * structured outputs, form validation, and other purposes.
      *
+     * Can be:
+     * - `false` or `undefined`: No metadata generation (default)
+     * - `true` or `'global'`: Use `.register(z.globalRegistry, {...})` for backwards compatibility
+     * - `'local'`: Use `.meta({...})` method (Zod v4 only)
+     *
+     * Metadata includes: description, title, deprecated, and examples from OpenAPI spec.
+     *
      * @default false
      */
-    metadata?: boolean;
+    metadata?: boolean | 'global' | 'local';
     /**
      * Configuration for request-specific Zod schemas.
      *
@@ -545,9 +552,16 @@ export type Config = Plugin.Name<'zod'> &
      * some additional metadata for documentation, code generation, AI
      * structured outputs, form validation, and other purposes.
      *
+     * Can be:
+     * - `false`: No metadata generation (default)
+     * - `true` or `'global'`: Use `.register(z.globalRegistry, {...})` for backwards compatibility
+     * - `'local'`: Use `.meta({...})` method (Zod v4 only)
+     *
+     * Metadata includes: description, title, deprecated, and examples from OpenAPI spec.
+     *
      * @default false
      */
-    metadata: boolean;
+    metadata: boolean | 'global' | 'local';
     /**
      * Configuration for request-specific Zod schemas.
      *

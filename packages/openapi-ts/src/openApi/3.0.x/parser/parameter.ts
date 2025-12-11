@@ -3,6 +3,7 @@ import type { IR } from '~/ir/types';
 import { refToName } from '~/utils/ref';
 
 import type {
+  ExampleObject,
   ParameterObject,
   ReferenceObject,
   SchemaObject,
@@ -92,7 +93,7 @@ export const parametersArrayToObject = ({
   return parametersObject;
 };
 
-const parameterToIrParameter = ({
+export const parameterToIrParameter = ({
   $ref,
   context,
   parameter,
@@ -114,17 +115,47 @@ const parameterToIrParameter = ({
     }
   }
 
-  const finalSchema: SchemaObject =
+  // Handle parameter-level examples (Record) -> extract values for IR schema
+  // Note: OpenAPI 3.0.x SchemaObject doesn't have 'examples' property, but we can
+  // pass it to the IR schema parser which will handle it
+  let parameterExamples: ReadonlyArray<unknown> | undefined;
+  if (parameter.examples) {
+    // Extract values from ExampleObject Record
+    parameterExamples = Object.values(parameter.examples)
+      .map((exampleObj) => {
+        if ('$ref' in exampleObj) {
+          const dereferenced = context.dereference<ExampleObject>(exampleObj);
+          return dereferenced.value;
+        }
+        return exampleObj.value;
+      })
+      .filter((val) => val !== undefined);
+  } else if (parameter.example !== undefined) {
+    // Convert single example to array
+    parameterExamples = [parameter.example];
+  }
+
+  const finalSchema: SchemaObject & { examples?: ReadonlyArray<unknown> } =
     schema && '$ref' in schema
       ? {
           allOf: [{ ...schema }],
           deprecated: parameter.deprecated,
           description: parameter.description,
+          examples: parameterExamples,
         }
       : {
-          deprecated: parameter.deprecated,
-          description: parameter.description,
           ...schema,
+          deprecated:
+            parameter.deprecated !== undefined
+              ? parameter.deprecated
+              : schema?.deprecated,
+          description:
+            parameter.description !== undefined
+              ? parameter.description
+              : schema?.description,
+          examples:
+            parameterExamples ||
+            (schema?.example !== undefined ? [schema.example] : undefined),
         };
 
   const pagination = paginationField({
