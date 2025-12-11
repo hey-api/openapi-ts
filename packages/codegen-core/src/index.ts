@@ -1,8 +1,8 @@
 export type {
-  ExportGroup,
-  ExportSingle,
-  ImportGroup,
-  ImportSingle,
+  ExportMember,
+  ExportModule,
+  ImportMember,
+  ImportModule,
 } from './bindings';
 export { nodeBrand, symbolBrand } from './brands';
 export { debug } from './debug';

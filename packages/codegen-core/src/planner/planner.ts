@@ -1,6 +1,6 @@
 import path from 'node:path';
 
-import type { ExportGroup, ImportGroup } from '../bindings';
+import type { ExportModule, ImportModule } from '../bindings';
 import type { IProjectRenderMeta } from '../extensions';
 import type { File } from '../files/file';
 import type { IFileIn } from '../files/types';
@@ -174,7 +174,7 @@ export class Planner {
     });
 
     for (const [file, fileMap] of seenByFile) {
-      const exports = new Map<File, ExportGroup>();
+      const exports = new Map<File, ExportModule>();
       for (const [, entry] of fileMap) {
         const source = sourceFile.get(entry.symbol.id)!;
         let exp = exports.get(source);
@@ -285,7 +285,7 @@ export class Planner {
     });
 
     for (const [file, fileMap] of seenByFile) {
-      const imports = new Map<File, ImportGroup>();
+      const imports = new Map<File, ImportModule>();
       for (const [, entry] of fileMap) {
         const source = entry.dep.file!;
         let imp = imports.get(source);
