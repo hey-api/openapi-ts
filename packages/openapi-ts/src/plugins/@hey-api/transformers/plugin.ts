@@ -1,11 +1,10 @@
 import type { SymbolMeta } from '@hey-api/codegen-core';
-import ts from 'typescript';
+import type ts from 'typescript';
 
 import { createOperationKey, operationResponsesMap } from '~/ir/operation';
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
 import { $ } from '~/ts-dsl';
-import { TsDsl } from '~/ts-dsl';
 import { refToName } from '~/utils/ref';
 
 import type { HeyApiTransformersPlugin } from './types';
@@ -18,21 +17,7 @@ const buildingSymbols = new Set<number>();
 
 type Expr = ReturnType<typeof $.fromValue | typeof $.return | typeof $.if>;
 
-const ensureStatements = (
-  nodes: Array<Expr | ts.Expression | ts.Statement>,
-): Array<ts.Statement | ReturnType<typeof $.return>> =>
-  nodes.map((node) => $.stmt(node).$render());
-
-const isNodeReturnStatement = ({
-  node,
-}: {
-  node: ts.Expression | ts.Statement | Expr;
-}) => {
-  if (node instanceof TsDsl) {
-    node = node.$render();
-  }
-  return node.kind === ts.SyntaxKind.ReturnStatement;
-};
+const isNodeReturnStatement = (node: Expr) => node['~dsl'] === 'ReturnTsDsl';
 
 const schemaResponseTransformerNodes = ({
   plugin,
@@ -49,7 +34,7 @@ const schemaResponseTransformerNodes = ({
   // append return statement if one does not already exist
   if (nodes.length) {
     const last = nodes[nodes.length - 1]!;
-    if (!isNodeReturnStatement({ node: last })) {
+    if (!isNodeReturnStatement(last)) {
       nodes.push($.return(dataVariableName));
     }
   }
@@ -67,40 +52,33 @@ const processSchemaType = ({
     | ReturnType<typeof $.attr | typeof $.expr>;
   plugin: HeyApiTransformersPlugin['Instance'];
   schema: IR.SchemaObject;
-}): Array<Expr | ts.Expression | ts.Statement> => {
+}): Array<Expr> => {
   if (schema.$ref) {
     const query: SymbolMeta = {
       category: 'transform',
       resource: 'definition',
       resourceId: schema.$ref,
     };
-
-    let symbol = plugin.getSymbol(query);
-
-    if (!symbol) {
-      // Register a placeholder symbol immediately and set its value to null
-      // as a stop token to prevent infinite recursion for self-referential
-      // schemas. We also mark this symbol as "building" so that nested
-      // references to it can emit calls that will be implemented later.
-      symbol = plugin.registerSymbol({
-        meta: query,
-        name: buildName({
+    const symbol =
+      plugin.getSymbol(query) ??
+      plugin.symbol(
+        buildName({
           config: {
             case: 'camelCase',
             name: '{{name}}SchemaResponseTransformer',
           },
           name: refToName(schema.$ref),
         }),
-      });
-      plugin.setSymbolValue(symbol, null);
-    }
+        {
+          meta: query,
+        },
+      );
 
     // Only compute the implementation if the symbol isn't already being built.
     // This prevents infinite recursion on self-referential schemas. We still
     // allow emitting a call when the symbol is currently being built so
     // parent nodes can reference the transformer that will be emitted later.
-    const existingValue = plugin.gen.symbols.getValue(symbol.id);
-    if (!existingValue && !buildingSymbols.has(symbol.id)) {
+    if (!symbol.node && !buildingSymbols.has(symbol.id)) {
       buildingSymbols.add(symbol.id);
       try {
         const refSchema = plugin.context.resolveIrRef<IR.SchemaObject>(
@@ -112,13 +90,13 @@ const processSchemaType = ({
         });
 
         if (nodes.length) {
-          const node = $.const(symbol.placeholder).assign(
+          const node = $.const(symbol).assign(
             // TODO: parser - add types, generate types without transforms
             $.func()
               .param(dataVariableName, (p) => p.type('any'))
-              .do(...ensureStatements(nodes)),
+              .do(...nodes),
           );
-          plugin.setSymbolValue(symbol, node);
+          plugin.addNode(node);
         }
       } finally {
         buildingSymbols.delete(symbol.id);
@@ -128,10 +106,9 @@ const processSchemaType = ({
     // Only emit a call if the symbol has a value (implementation) OR the
     // symbol is currently being built (recursive reference) — in the
     // latter case we allow emitting a call that will be implemented later.
-    const currentValue = plugin.gen.symbols.getValue(symbol.id);
-    if (currentValue || buildingSymbols.has(symbol.id)) {
+    if (symbol.node || buildingSymbols.has(symbol.id)) {
       const ref = plugin.referenceSymbol(query);
-      const callExpression = $(ref.placeholder).call(dataExpression);
+      const callExpression = $(ref).call(dataExpression);
 
       if (dataExpression) {
         // In a map callback, the item needs to be returned, not just the transformation result
@@ -173,10 +150,11 @@ const processSchemaType = ({
       return [];
     }
 
+    // TODO: remove
     // Ensure the map callback has a return statement for the item
-    const mapCallbackStatements = ensureStatements(nodes);
+    const mapCallbackStatements: Array<Expr> = nodes;
     const hasReturnStatement = mapCallbackStatements.some((stmt) =>
-      isNodeReturnStatement({ node: stmt }),
+      isNodeReturnStatement(stmt),
     );
 
     if (!hasReturnStatement) {
@@ -197,7 +175,7 @@ const processSchemaType = ({
   }
 
   if (schema.type === 'object') {
-    let nodes: Array<ts.Expression | ts.Statement | Expr> = [];
+    let nodes: Array<Expr> = [];
     const required = schema.required ?? [];
 
     for (const name in schema.properties) {
@@ -226,7 +204,7 @@ const processSchemaType = ({
           // todo: Probably, it would make more sense to go with if(x !== undefined && x !== null) instead of if(x)
           // this place influences all underlying transformers, while it's not exactly transformer itself
           // Keep in mind that !!0 === false, so it already makes output for Bigint undesirable
-          $.if(propertyAccessExpression).do(...ensureStatements(propertyNodes)),
+          $.if(propertyAccessExpression).do(...propertyNodes),
         );
       }
     }
@@ -243,7 +221,7 @@ const processSchemaType = ({
       });
     }
 
-    let arrayNodes: Array<ts.Expression | ts.Statement | Expr> = [];
+    let arrayNodes: Array<Expr> = [];
     // process 2 items if one of them is null
     if (
       schema.logicalOperator === 'and' ||
@@ -263,10 +241,7 @@ const processSchemaType = ({
             arrayNodes = arrayNodes.concat(nodes);
           } else {
             // processed means the item was transformed
-            arrayNodes.push(
-              $.if('item').do(...ensureStatements(nodes)),
-              $.return('item'),
-            );
+            arrayNodes.push($.if('item').do(...nodes), $.return('item'));
           }
         }
       }
@@ -337,7 +312,6 @@ export const handler: HeyApiTransformersPlugin['Handler'] = ({ plugin }) => {
       });
       if (!nodes.length) return;
       const symbol = plugin.registerSymbol({
-        exported: true,
         meta: {
           category: 'transform',
           resource: 'operation',
@@ -352,17 +326,17 @@ export const handler: HeyApiTransformersPlugin['Handler'] = ({ plugin }) => {
           name: operation.id,
         }),
       });
-      const value = $.const(symbol.placeholder)
-        .export(symbol.exported)
+      const value = $.const(symbol)
+        .export()
         .assign(
           // TODO: parser - add types, generate types without transforms
           $.func()
             .async()
             .param(dataVariableName, (p) => p.type('any'))
-            .returns($.type('Promise').generic(symbolResponse.placeholder))
-            .do(...ensureStatements(nodes)),
+            .returns($.type('Promise').generic(symbolResponse))
+            .do(...nodes),
         );
-      plugin.setSymbolValue(symbol, value);
+      plugin.addNode(value);
     },
     {
       order: 'declarations',

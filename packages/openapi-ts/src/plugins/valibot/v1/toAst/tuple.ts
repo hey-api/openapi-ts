@@ -1,5 +1,6 @@
+import { fromRef, ref } from '@hey-api/codegen-core';
+
 import type { SchemaWithType } from '~/plugins';
-import { toRef } from '~/plugins/shared/utils/refs';
 import { $ } from '~/ts-dsl';
 
 import { pipesToAst } from '../../shared/pipesToAst';
@@ -24,12 +25,10 @@ export const tupleToAst = ({
 
   if (schema.const && Array.isArray(schema.const)) {
     const tupleElements = schema.const.map((value) =>
-      $(v.placeholder)
-        .attr(identifiers.schemas.literal)
-        .call($.fromValue(value)),
+      $(v).attr(identifiers.schemas.literal).call($.fromValue(value)),
     );
     result.pipes = [
-      $(v.placeholder)
+      $(v)
         .attr(identifiers.schemas.tuple)
         .call($.array(...tupleElements)),
     ];
@@ -43,7 +42,7 @@ export const tupleToAst = ({
         schema: item,
         state: {
           ...state,
-          path: toRef([...state.path.value, 'items', index]),
+          path: ref([...fromRef(state.path), 'items', index]),
         },
       });
       if (schemaPipes.hasLazyExpression) {
@@ -52,7 +51,7 @@ export const tupleToAst = ({
       return pipesToAst({ pipes: schemaPipes.pipes, plugin });
     });
     result.pipes = [
-      $(v.placeholder)
+      $(v)
         .attr(identifiers.schemas.tuple)
         .call($.array(...tupleElements)),
     ];

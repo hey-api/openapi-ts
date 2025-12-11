@@ -1,6 +1,7 @@
+import { isNode } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
-import { TsDsl } from '../base';
+import type { TsDsl } from '../base';
 import { ArrayTsDsl } from './array';
 import { LiteralTsDsl } from './literal';
 import { ObjectTsDsl } from './object';
@@ -11,8 +12,8 @@ export const fromValue = (
     layout?: 'pretty';
   },
 ): TsDsl<ts.Expression> => {
-  if (input instanceof TsDsl) {
-    return input;
+  if (isNode(input)) {
+    return input as TsDsl<ts.Expression>;
   }
 
   if (input === null) {

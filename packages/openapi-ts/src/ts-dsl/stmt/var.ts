@@ -1,28 +1,47 @@
-/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
+import type { AnalysisContext, Ref, Symbol } from '@hey-api/codegen-core';
+import { isSymbol, ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl, TypeTsDsl } from '../base';
-import { mixin } from '../mixins/apply';
 import { DocMixin } from '../mixins/doc';
 import { HintMixin } from '../mixins/hint';
-import {
-  createModifierAccessor,
-  DefaultMixin,
-  ExportMixin,
-} from '../mixins/modifiers';
+import { DefaultMixin, ExportMixin } from '../mixins/modifiers';
 import { PatternMixin } from '../mixins/pattern';
 import { ValueMixin } from '../mixins/value';
 import { TypeExprTsDsl } from '../type/expr';
+import { safeRuntimeName } from '../utils/name';
 
-export class VarTsDsl extends TsDsl<ts.VariableStatement> {
+export type VarName = Symbol | string;
+
+const Mixed = DefaultMixin(
+  DocMixin(
+    ExportMixin(
+      HintMixin(PatternMixin(ValueMixin(TsDsl<ts.VariableStatement>))),
+    ),
+  ),
+);
+
+export class VarTsDsl extends Mixed {
+  readonly '~dsl' = 'VarTsDsl';
+
   protected kind: ts.NodeFlags = ts.NodeFlags.None;
-  protected modifiers = createModifierAccessor(this);
-  protected name?: string;
+  protected name?: Ref<VarName>;
   protected _type?: TypeTsDsl;
 
-  constructor(name?: string) {
+  constructor(name?: VarName) {
     super();
-    this.name = name;
+    if (name) this.name = ref(name);
+    if (isSymbol(name)) {
+      name.setKind('var');
+      name.setNameSanitizer(safeRuntimeName);
+      name.setNode(this);
+    }
+  }
+
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    ctx.analyze(this.name);
+    ctx.analyze(this._type);
   }
 
   const(): this {
@@ -46,15 +65,16 @@ export class VarTsDsl extends TsDsl<ts.VariableStatement> {
     return this;
   }
 
-  $render(): ts.VariableStatement {
-    const name = this.$pattern() ?? this.name;
+  override toAst() {
+    const name = this.$pattern() ?? this.$node(this.name);
     if (!name)
       throw new Error('Var must have either a name or a destructuring pattern');
-    return ts.factory.createVariableStatement(
-      this.modifiers.list(),
+    const node = ts.factory.createVariableStatement(
+      this.modifiers,
       ts.factory.createVariableDeclarationList(
         [
           ts.factory.createVariableDeclaration(
+            // @ts-expect-error need to improve types
             name,
             undefined,
             this.$type(this._type),
@@ -64,22 +84,6 @@ export class VarTsDsl extends TsDsl<ts.VariableStatement> {
         this.kind,
       ),
     );
+    return this.$docs(this.$hint(node));
   }
 }
-
-export interface VarTsDsl
-  extends DefaultMixin,
-    DocMixin,
-    ExportMixin,
-    HintMixin,
-    PatternMixin,
-    ValueMixin {}
-mixin(
-  VarTsDsl,
-  DefaultMixin,
-  DocMixin,
-  ExportMixin,
-  HintMixin,
-  PatternMixin,
-  ValueMixin,
-);

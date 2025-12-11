@@ -14,8 +14,6 @@ export const undefinedToAst = ({
     resource: 'valibot.v',
   });
 
-  const expression = $(v.placeholder)
-    .attr(identifiers.schemas.undefined)
-    .call();
+  const expression = $(v).attr(identifiers.schemas.undefined).call();
   return expression;
 };

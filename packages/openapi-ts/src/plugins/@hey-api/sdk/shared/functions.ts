@@ -5,11 +5,11 @@ import {
   isOperationOptionsRequired,
 } from '~/plugins/shared/utils/operation';
 import { $ } from '~/ts-dsl';
-import { reservedJavaScriptKeywordsRegExp } from '~/utils/regexp';
 
 import type { HeyApiSdkPlugin } from '../types';
 import { nuxtTypeComposable, nuxtTypeDefault } from './constants';
 import { operationParameters, operationStatements } from './operation';
+import { reservedJavaScriptKeywordsRegExp } from './regexp';
 
 const serviceFunctionIdentifier = ({
   id,
@@ -67,7 +67,6 @@ export const generateFlatSdk = ({
         plugin,
       });
       const symbol = plugin.registerSymbol({
-        exported: true,
         meta: {
           category: 'sdk',
           path: event._path,
@@ -82,8 +81,8 @@ export const generateFlatSdk = ({
           plugin,
         }),
       });
-      const node = $.const(symbol.placeholder)
-        .export(symbol.exported)
+      const node = $.const(symbol)
+        .export()
         .$if(createOperationComment(operation), (c, v) => c.doc(v))
         .assign(
           $.func()
@@ -98,14 +97,14 @@ export const generateFlatSdk = ({
                         plugin.referenceSymbol({
                           category: 'external',
                           resource: 'client.Composable',
-                        }).placeholder,
+                        }),
                       )
                       .default($.type.literal('$fetch')),
                   )
                   .generic(nuxtTypeDefault, (g) =>
                     g.$if(
                       symbolResponse,
-                      (t, s) => t.extends(s.placeholder).default(s.placeholder),
+                      (t, s) => t.extends(s).default(s),
                       (t) => t.default('undefined'),
                     ),
                   ),
@@ -122,7 +121,7 @@ export const generateFlatSdk = ({
             )
             .do(...statements),
         );
-      plugin.setSymbolValue(symbol, node);
+      plugin.addNode(node);
     },
     {
       order: 'declarations',

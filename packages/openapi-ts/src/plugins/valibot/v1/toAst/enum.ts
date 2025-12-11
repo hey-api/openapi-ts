@@ -40,12 +40,12 @@ export const enumToAst = ({
     resource: 'valibot.v',
   });
 
-  let resultExpression = $(v.placeholder)
+  let resultExpression = $(v)
     .attr(identifiers.schemas.picklist)
     .call($.array(...enumMembers));
 
   if (isNullable) {
-    resultExpression = $(v.placeholder)
+    resultExpression = $(v)
       .attr(identifiers.schemas.nullable)
       .call(resultExpression);
   }

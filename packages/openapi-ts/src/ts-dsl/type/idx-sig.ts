@@ -1,24 +1,33 @@
-/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
+import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TypeTsDsl } from '../base';
-import { mixin } from '../mixins/apply';
 import { DocMixin } from '../mixins/doc';
-import { createModifierAccessor, ReadonlyMixin } from '../mixins/modifiers';
+import { ReadonlyMixin } from '../mixins/modifiers';
 
-type Type = string | MaybeTsDsl<ts.TypeNode>;
+export type TypeIdxSigName = string;
+export type TypeIdxSigType = string | MaybeTsDsl<ts.TypeNode>;
 
-export class TypeIdxSigTsDsl extends TypeTsDsl<ts.IndexSignatureDeclaration> {
-  protected modifiers = createModifierAccessor(this);
-  protected _key?: Type;
-  protected _name: string;
-  protected _type?: Type;
+const Mixed = DocMixin(ReadonlyMixin(TypeTsDsl<ts.IndexSignatureDeclaration>));
 
-  constructor(name: string, fn?: (i: TypeIdxSigTsDsl) => void) {
+export class TypeIdxSigTsDsl extends Mixed {
+  readonly '~dsl' = 'TypeIdxSigTsDsl';
+
+  protected _key?: TypeIdxSigType;
+  protected _name: TypeIdxSigName;
+  protected _type?: TypeIdxSigType;
+
+  constructor(name: TypeIdxSigName, fn?: (i: TypeIdxSigTsDsl) => void) {
     super();
     this._name = name;
     fn?.(this);
+  }
+
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    ctx.analyze(this._key);
+    ctx.analyze(this._type);
   }
 
   /** Returns true when all required builder calls are present. */
@@ -27,21 +36,21 @@ export class TypeIdxSigTsDsl extends TypeTsDsl<ts.IndexSignatureDeclaration> {
   }
 
   /** Sets the key type: `[name: T]` */
-  key(type: Type): this {
+  key(type: TypeIdxSigType): this {
     this._key = type;
     return this;
   }
 
   /** Sets the property type. */
-  type(type: Type): this {
+  type(type: TypeIdxSigType): this {
     this._type = type;
     return this;
   }
 
-  $render(): ts.IndexSignatureDeclaration {
+  override toAst() {
     this.$validate();
-    return ts.factory.createIndexSignature(
-      this.modifiers.list(),
+    const node = ts.factory.createIndexSignature(
+      this.modifiers,
       [
         ts.factory.createParameterDeclaration(
           undefined,
@@ -53,12 +62,13 @@ export class TypeIdxSigTsDsl extends TypeTsDsl<ts.IndexSignatureDeclaration> {
       ],
       this.$type(this._type),
     );
+    return this.$docs(node);
   }
 
   $validate(): asserts this is this & {
-    _key: Type;
-    _name: string;
-    _type: Type;
+    _key: TypeIdxSigType;
+    _name: TypeIdxSigName;
+    _type: TypeIdxSigType;
   } {
     const missing = this.missingRequiredCalls();
     if (missing.length === 0) return;
@@ -75,6 +85,3 @@ export class TypeIdxSigTsDsl extends TypeTsDsl<ts.IndexSignatureDeclaration> {
     return missing;
   }
 }
-
-export interface TypeIdxSigTsDsl extends DocMixin, ReadonlyMixin {}
-mixin(TypeIdxSigTsDsl, DocMixin, ReadonlyMixin);

@@ -14,6 +14,6 @@ export const unknownToAst = ({
     resource: 'valibot.v',
   });
 
-  const expression = $(v.placeholder).attr(identifiers.schemas.unknown).call();
+  const expression = $(v).attr(identifiers.schemas.unknown).call();
   return expression;
 };

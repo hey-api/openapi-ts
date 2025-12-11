@@ -57,10 +57,10 @@ export const exportQuery = defineQueryOptions((options?: Options<ExportData>) =>
 }));
 
 export const patchApiVbyApiVersionNoTagMutation = (options?: Partial<Options<PatchApiVbyApiVersionNoTagData>>): UseMutationOptions<unknown, Options<PatchApiVbyApiVersionNoTagData>, Error> => ({
-    mutation: async (fnOptions) => {
+    mutation: async (vars) => {
         const { data } = await patchApiVbyApiVersionNoTag({
             ...options,
-            ...fnOptions,
+            ...vars,
             throwOnError: true
         });
         return data;
@@ -68,10 +68,10 @@ export const patchApiVbyApiVersionNoTagMutation = (options?: Partial<Options<Pat
 });
 
 export const importMutation = (options?: Partial<Options<ImportData>>): UseMutationOptions<ImportResponse, Options<ImportData>, Error> => ({
-    mutation: async (fnOptions) => {
+    mutation: async (vars) => {
         const { data } = await import_({
             ...options,
-            ...fnOptions,
+            ...vars,
             throwOnError: true
         });
         return data;
@@ -79,10 +79,10 @@ export const importMutation = (options?: Partial<Options<ImportData>>): UseMutat
 });
 
 export const fooWowMutation = (options?: Partial<Options<FooWowData>>): UseMutationOptions<unknown, Options<FooWowData>, Error> => ({
-    mutation: async (fnOptions) => {
+    mutation: async (vars) => {
         const { data } = await fooWow({
             ...options,
-            ...fnOptions,
+            ...vars,
             throwOnError: true
         });
         return data;
@@ -118,10 +118,10 @@ export const getApiVbyApiVersionSimpleOperationQuery = defineQueryOptions((optio
 }));
 
 export const deleteCallWithoutParametersAndResponseMutation = (options?: Partial<Options<DeleteCallWithoutParametersAndResponseData>>): UseMutationOptions<unknown, Options<DeleteCallWithoutParametersAndResponseData>, Error> => ({
-    mutation: async (fnOptions) => {
+    mutation: async (vars) => {
         const { data } = await deleteCallWithoutParametersAndResponse({
             ...options,
-            ...fnOptions,
+            ...vars,
             throwOnError: true
         });
         return data;
@@ -143,10 +143,10 @@ export const getCallWithoutParametersAndResponseQuery = defineQueryOptions((opti
 }));
 
 export const patchCallWithoutParametersAndResponseMutation = (options?: Partial<Options<PatchCallWithoutParametersAndResponseData>>): UseMutationOptions<unknown, Options<PatchCallWithoutParametersAndResponseData>, Error> => ({
-    mutation: async (fnOptions) => {
+    mutation: async (vars) => {
         const { data } = await patchCallWithoutParametersAndResponse({
             ...options,
-            ...fnOptions,
+            ...vars,
             throwOnError: true
         });
         return data;
@@ -154,10 +154,10 @@ export const patchCallWithoutParametersAndResponseMutation = (options?: Partial<
 });
 
 export const postCallWithoutParametersAndResponseMutation = (options?: Partial<Options<PostCallWithoutParametersAndResponseData>>): UseMutationOptions<unknown, Options<PostCallWithoutParametersAndResponseData>, Error> => ({
-    mutation: async (fnOptions) => {
+    mutation: async (vars) => {
         const { data } = await postCallWithoutParametersAndResponse({
             ...options,
-            ...fnOptions,
+            ...vars,
             throwOnError: true
         });
         return data;
@@ -165,10 +165,10 @@ export const postCallWithoutParametersAndResponseMutation = (options?: Partial<O
 });
 
 export const putCallWithoutParametersAndResponseMutation = (options?: Partial<Options<PutCallWithoutParametersAndResponseData>>): UseMutationOptions<unknown, Options<PutCallWithoutParametersAndResponseData>, Error> => ({
-    mutation: async (fnOptions) => {
+    mutation: async (vars) => {
         const { data } = await putCallWithoutParametersAndResponse({
             ...options,
-            ...fnOptions,
+            ...vars,
             throwOnError: true
         });
         return data;
@@ -176,10 +176,10 @@ export const putCallWithoutParametersAndResponseMutation = (options?: Partial<Op
 });
 
 export const deleteFooMutation = (options?: Partial<Options<DeleteFooData3>>): UseMutationOptions<unknown, Options<DeleteFooData3>, Error> => ({
-    mutation: async (fnOptions) => {
+    mutation: async (vars) => {
         const { data } = await deleteFoo({
             ...options,
-            ...fnOptions,
+            ...vars,
             throwOnError: true
         });
         return data;
@@ -187,10 +187,10 @@ export const deleteFooMutation = (options?: Partial<Options<DeleteFooData3>>): U
 });
 
 export const callWithDescriptionsMutation = (options?: Partial<Options<CallWithDescriptionsData>>): UseMutationOptions<unknown, Options<CallWithDescriptionsData>, Error> => ({
-    mutation: async (fnOptions) => {
+    mutation: async (vars) => {
         const { data } = await callWithDescriptions({
             ...options,
-            ...fnOptions,
+            ...vars,
             throwOnError: true
         });
         return data;
@@ -201,10 +201,10 @@ export const callWithDescriptionsMutation = (options?: Partial<Options<CallWithD
  * @deprecated
  */
 export const deprecatedCallMutation = (options?: Partial<Options<DeprecatedCallData>>): UseMutationOptions<unknown, Options<DeprecatedCallData>, Error> => ({
-    mutation: async (fnOptions) => {
+    mutation: async (vars) => {
         const { data } = await deprecatedCall({
             ...options,
-            ...fnOptions,
+            ...vars,
             throwOnError: true
         });
         return data;
@@ -212,10 +212,10 @@ export const deprecatedCallMutation = (options?: Partial<Options<DeprecatedCallD
 });
 
 export const callWithParametersMutation = (options?: Partial<Options<CallWithParametersData>>): UseMutationOptions<unknown, Options<CallWithParametersData>, Error> => ({
-    mutation: async (fnOptions) => {
+    mutation: async (vars) => {
         const { data } = await callWithParameters({
             ...options,
-            ...fnOptions,
+            ...vars,
             throwOnError: true
         });
         return data;
@@ -223,10 +223,10 @@ export const callWithParametersMutation = (options?: Partial<Options<CallWithPar
 });
 
 export const callWithWeirdParameterNamesMutation = (options?: Partial<Options<CallWithWeirdParameterNamesData>>): UseMutationOptions<unknown, Options<CallWithWeirdParameterNamesData>, Error> => ({
-    mutation: async (fnOptions) => {
+    mutation: async (vars) => {
         const { data } = await callWithWeirdParameterNames({
             ...options,
-            ...fnOptions,
+            ...vars,
             throwOnError: true
         });
         return data;
@@ -248,10 +248,10 @@ export const getCallWithOptionalParamQuery = defineQueryOptions((options: Option
 }));
 
 export const postCallWithOptionalParamMutation = (options?: Partial<Options<PostCallWithOptionalParamData>>): UseMutationOptions<PostCallWithOptionalParamResponse, Options<PostCallWithOptionalParamData>, Error> => ({
-    mutation: async (fnOptions) => {
+    mutation: async (vars) => {
         const { data } = await postCallWithOptionalParam({
             ...options,
-            ...fnOptions,
+            ...vars,
             throwOnError: true
         });
         return data;
@@ -259,10 +259,10 @@ export const postCallWithOptionalParamMutation = (options?: Partial<Options<Post
 });
 
 export const postApiVbyApiVersionRequestBodyMutation = (options?: Partial<Options<PostApiVbyApiVersionRequestBodyData>>): UseMutationOptions<unknown, Options<PostApiVbyApiVersionRequestBodyData>, Error> => ({
-    mutation: async (fnOptions) => {
+    mutation: async (vars) => {
         const { data } = await postApiVbyApiVersionRequestBody({
             ...options,
-            ...fnOptions,
+            ...vars,
             throwOnError: true
         });
         return data;
@@ -270,10 +270,10 @@ export const postApiVbyApiVersionRequestBodyMutation = (options?: Partial<Option
 });
 
 export const postApiVbyApiVersionFormDataMutation = (options?: Partial<Options<PostApiVbyApiVersionFormDataData>>): UseMutationOptions<unknown, Options<PostApiVbyApiVersionFormDataData>, Error> => ({
-    mutation: async (fnOptions) => {
+    mutation: async (vars) => {
         const { data } = await postApiVbyApiVersionFormData({
             ...options,
-            ...fnOptions,
+            ...vars,
             throwOnError: true
         });
         return data;
@@ -295,10 +295,10 @@ export const callWithDefaultParametersQuery = defineQueryOptions((options?: Opti
 }));
 
 export const callWithDefaultOptionalParametersMutation = (options?: Partial<Options<CallWithDefaultOptionalParametersData>>): UseMutationOptions<unknown, Options<CallWithDefaultOptionalParametersData>, Error> => ({
-    mutation: async (fnOptions) => {
+    mutation: async (vars) => {
         const { data } = await callWithDefaultOptionalParameters({
             ...options,
-            ...fnOptions,
+            ...vars,
             throwOnError: true
         });
         return data;
@@ -306,10 +306,10 @@ export const callWithDefaultOptionalParametersMutation = (options?: Partial<Opti
 });
 
 export const callToTestOrderOfParamsMutation = (options?: Partial<Options<CallToTestOrderOfParamsData>>): UseMutationOptions<unknown, Options<CallToTestOrderOfParamsData>, Error> => ({
-    mutation: async (fnOptions) => {
+    mutation: async (vars) => {
         const { data } = await callToTestOrderOfParams({
             ...options,
-            ...fnOptions,
+            ...vars,
             throwOnError: true
         });
         return data;
@@ -317,10 +317,10 @@ export const callToTestOrderOfParamsMutation = (options?: Partial<Options<CallTo
 });
 
 export const duplicateNameMutation = (options?: Partial<Options<DuplicateNameData>>): UseMutationOptions<unknown, Options<DuplicateNameData>, Error> => ({
-    mutation: async (fnOptions) => {
+    mutation: async (vars) => {
         const { data } = await duplicateName({
             ...options,
-            ...fnOptions,
+            ...vars,
             throwOnError: true
         });
         return data;
@@ -342,10 +342,10 @@ export const duplicateName2Query = defineQueryOptions((options?: Options<Duplica
 }));
 
 export const duplicateName3Mutation = (options?: Partial<Options<DuplicateName3Data>>): UseMutationOptions<unknown, Options<DuplicateName3Data>, Error> => ({
-    mutation: async (fnOptions) => {
+    mutation: async (vars) => {
         const { data } = await duplicateName3({
             ...options,
-            ...fnOptions,
+            ...vars,
             throwOnError: true
         });
         return data;
@@ -353,10 +353,10 @@ export const duplicateName3Mutation = (options?: Partial<Options<DuplicateName3D
 });
 
 export const duplicateName4Mutation = (options?: Partial<Options<DuplicateName4Data>>): UseMutationOptions<unknown, Options<DuplicateName4Data>, Error> => ({
-    mutation: async (fnOptions) => {
+    mutation: async (vars) => {
         const { data } = await duplicateName4({
             ...options,
-            ...fnOptions,
+            ...vars,
             throwOnError: true
         });
         return data;
@@ -434,10 +434,10 @@ export const callWithResponseQuery = defineQueryOptions((options?: Options<CallW
 }));
 
 export const callWithDuplicateResponsesMutation = (options?: Partial<Options<CallWithDuplicateResponsesData>>): UseMutationOptions<CallWithDuplicateResponsesResponse, Options<CallWithDuplicateResponsesData>, CallWithDuplicateResponsesError> => ({
-    mutation: async (fnOptions) => {
+    mutation: async (vars) => {
         const { data } = await callWithDuplicateResponses({
             ...options,
-            ...fnOptions,
+            ...vars,
             throwOnError: true
         });
         return data;
@@ -445,10 +445,10 @@ export const callWithDuplicateResponsesMutation = (options?: Partial<Options<Cal
 });
 
 export const callWithResponsesMutation = (options?: Partial<Options<CallWithResponsesData>>): UseMutationOptions<CallWithResponsesResponse, Options<CallWithResponsesData>, CallWithResponsesError> => ({
-    mutation: async (fnOptions) => {
+    mutation: async (vars) => {
         const { data } = await callWithResponses({
             ...options,
-            ...fnOptions,
+            ...vars,
             throwOnError: true
         });
         return data;
@@ -484,10 +484,10 @@ export const typesQuery = defineQueryOptions((options: Options<TypesData>) => ({
 }));
 
 export const uploadFileMutation = (options?: Partial<Options<UploadFileData>>): UseMutationOptions<UploadFileResponse, Options<UploadFileData>, Error> => ({
-    mutation: async (fnOptions) => {
+    mutation: async (vars) => {
         const { data } = await uploadFile({
             ...options,
-            ...fnOptions,
+            ...vars,
             throwOnError: true
         });
         return data;
@@ -537,10 +537,10 @@ export const multipartResponseQuery = defineQueryOptions((options?: Options<Mult
 }));
 
 export const multipartRequestMutation = (options?: Partial<Options<MultipartRequestData>>): UseMutationOptions<unknown, Options<MultipartRequestData>, Error> => ({
-    mutation: async (fnOptions) => {
+    mutation: async (vars) => {
         const { data } = await multipartRequest({
             ...options,
-            ...fnOptions,
+            ...vars,
             throwOnError: true
         });
         return data;
@@ -548,10 +548,10 @@ export const multipartRequestMutation = (options?: Partial<Options<MultipartRequ
 });
 
 export const complexParamsMutation = (options?: Partial<Options<ComplexParamsData>>): UseMutationOptions<ComplexParamsResponse, Options<ComplexParamsData>, Error> => ({
-    mutation: async (fnOptions) => {
+    mutation: async (vars) => {
         const { data } = await complexParams({
             ...options,
-            ...fnOptions,
+            ...vars,
             throwOnError: true
         });
         return data;
@@ -559,10 +559,10 @@ export const complexParamsMutation = (options?: Partial<Options<ComplexParamsDat
 });
 
 export const callWithResultFromHeaderMutation = (options?: Partial<Options<CallWithResultFromHeaderData>>): UseMutationOptions<unknown, Options<CallWithResultFromHeaderData>, Error> => ({
-    mutation: async (fnOptions) => {
+    mutation: async (vars) => {
         const { data } = await callWithResultFromHeader({
             ...options,
-            ...fnOptions,
+            ...vars,
             throwOnError: true
         });
         return data;
@@ -570,10 +570,10 @@ export const callWithResultFromHeaderMutation = (options?: Partial<Options<CallW
 });
 
 export const testErrorCodeMutation = (options?: Partial<Options<TestErrorCodeData>>): UseMutationOptions<unknown, Options<TestErrorCodeData>, Error> => ({
-    mutation: async (fnOptions) => {
+    mutation: async (vars) => {
         const { data } = await testErrorCode({
             ...options,
-            ...fnOptions,
+            ...vars,
             throwOnError: true
         });
         return data;
@@ -581,10 +581,10 @@ export const testErrorCodeMutation = (options?: Partial<Options<TestErrorCodeDat
 });
 
 export const nonAsciiæøåÆøÅöôêÊ字符串Mutation = (options?: Partial<Options<NonAsciiæøåÆøÅöôêÊ字符串Data>>): UseMutationOptions<NonAsciiæøåÆøÅöôêÊ字符串Response, Options<NonAsciiæøåÆøÅöôêÊ字符串Data>, Error> => ({
-    mutation: async (fnOptions) => {
+    mutation: async (vars) => {
         const { data } = await nonAsciiæøåÆøÅöôêÊ字符串({
             ...options,
-            ...fnOptions,
+            ...vars,
             throwOnError: true
         });
         return data;
@@ -595,10 +595,10 @@ export const nonAsciiæøåÆøÅöôêÊ字符串Mutation = (options?: Partial<
  * Login User
  */
 export const putWithFormUrlEncodedMutation = (options?: Partial<Options<PutWithFormUrlEncodedData>>): UseMutationOptions<unknown, Options<PutWithFormUrlEncodedData>, Error> => ({
-    mutation: async (fnOptions) => {
+    mutation: async (vars) => {
         const { data } = await putWithFormUrlEncoded({
             ...options,
-            ...fnOptions,
+            ...vars,
             throwOnError: true
         });
         return data;

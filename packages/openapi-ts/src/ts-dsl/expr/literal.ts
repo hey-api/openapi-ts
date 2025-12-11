@@ -1,12 +1,15 @@
-/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging, @typescript-eslint/no-empty-object-type */
+import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl } from '../base';
 import { PrefixTsDsl } from '../expr/prefix';
-import { mixin } from '../mixins/apply';
 import { AsMixin } from '../mixins/as';
 
-export class LiteralTsDsl extends TsDsl<ts.LiteralTypeNode['literal']> {
+const Mixed = AsMixin(TsDsl<ts.LiteralTypeNode['literal']>);
+
+export class LiteralTsDsl extends Mixed {
+  readonly '~dsl' = 'LiteralTsDsl';
+
   protected value: string | number | boolean | null;
 
   constructor(value: string | number | boolean | null) {
@@ -14,7 +17,11 @@ export class LiteralTsDsl extends TsDsl<ts.LiteralTypeNode['literal']> {
     this.value = value;
   }
 
-  $render(): ts.LiteralTypeNode['literal'] {
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+  }
+
+  override toAst() {
     if (typeof this.value === 'boolean') {
       return this.value ? ts.factory.createTrue() : ts.factory.createFalse();
     }
@@ -31,6 +38,3 @@ export class LiteralTsDsl extends TsDsl<ts.LiteralTypeNode['literal']> {
     throw new Error(`Unsupported literal: ${String(this.value)}`);
   }
 }
-
-export interface LiteralTsDsl extends AsMixin {}
-mixin(LiteralTsDsl, AsMixin);

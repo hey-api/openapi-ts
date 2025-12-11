@@ -14,6 +14,6 @@ export const unknownToAst = ({
     category: 'external',
     resource: 'zod.z',
   });
-  result.expression = $(z.placeholder).attr(identifiers.unknown).call();
+  result.expression = $(z).attr(identifiers.unknown).call();
   return result as Omit<Ast, 'typeName'>;
 };

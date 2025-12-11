@@ -1,26 +1,38 @@
-/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
+import type { AnalysisContext, Symbol } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
-import { mixin } from '../mixins/apply';
 import { AsMixin } from '../mixins/as';
 import { ExprMixin } from '../mixins/expr';
 import { HintMixin } from '../mixins/hint';
 import { LayoutMixin } from '../mixins/layout';
 import { ObjectPropTsDsl } from './prop';
 
-type Expr = string | MaybeTsDsl<ts.Expression>;
-type Stmt = string | MaybeTsDsl<ts.Statement>;
+type Expr = Symbol | string | MaybeTsDsl<ts.Expression>;
+type Stmt = Symbol | string | MaybeTsDsl<ts.Statement>;
 type ExprFn = Expr | ((p: ObjectPropTsDsl) => void);
 type StmtFn = Stmt | ((p: ObjectPropTsDsl) => void);
 
-export class ObjectTsDsl extends TsDsl<ts.ObjectLiteralExpression> {
+const Mixed = AsMixin(
+  ExprMixin(HintMixin(LayoutMixin(TsDsl<ts.ObjectLiteralExpression>))),
+);
+
+export class ObjectTsDsl extends Mixed {
+  readonly '~dsl' = 'ObjectTsDsl';
+
   protected _props: Array<ObjectPropTsDsl> = [];
 
   constructor(...props: Array<ObjectPropTsDsl>) {
     super();
     this.props(...props);
+  }
+
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    for (const prop of this._props) {
+      ctx.analyze(prop);
+    }
   }
 
   /** Adds a computed property (e.g. `{ [expr]: value }`). */
@@ -71,18 +83,11 @@ export class ObjectTsDsl extends TsDsl<ts.ObjectLiteralExpression> {
     return this;
   }
 
-  /** Builds and returns the object literal expression. */
-  $render(): ts.ObjectLiteralExpression {
-    return ts.factory.createObjectLiteralExpression(
+  override toAst() {
+    const node = ts.factory.createObjectLiteralExpression(
       this.$node(this._props),
       this.$multiline(this._props.length),
     );
+    return this.$hint(node);
   }
 }
-
-export interface ObjectTsDsl
-  extends AsMixin,
-    ExprMixin,
-    HintMixin,
-    LayoutMixin {}
-mixin(ObjectTsDsl, AsMixin, ExprMixin, HintMixin, LayoutMixin);

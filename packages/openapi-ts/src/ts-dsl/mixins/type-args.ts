@@ -1,29 +1,48 @@
+import type { AnalysisContext, Node, Ref, Symbol } from '@hey-api/codegen-core';
+import { ref } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import type { MaybeTsDsl, TypeTsDsl } from '../base';
-import { TsDsl } from '../base';
+import type { BaseCtor, MixinCtor } from './types';
 
-export class TypeArgsMixin extends TsDsl {
-  protected _generics?: Array<string | MaybeTsDsl<TypeTsDsl>>;
+type Arg = Symbol | string | MaybeTsDsl<TypeTsDsl>;
 
-  /** Adds a single type argument (e.g. `string` in `Foo<string>`). */
-  generic(arg: string | MaybeTsDsl<TypeTsDsl>): this {
-    (this._generics ??= []).push(arg);
-    return this;
-  }
-
-  /** Adds type arguments (e.g. `Map<string, number>`). */
-  generics(...args: ReadonlyArray<string | MaybeTsDsl<TypeTsDsl>>): this {
-    (this._generics ??= []).push(...args);
-    return this;
-  }
-
+export interface TypeArgsMethods extends Node {
   /** Returns the type arguments as an array of ts.TypeNode nodes. */
-  protected $generics(): ReadonlyArray<ts.TypeNode> | undefined {
-    return this.$type(this._generics);
+  $generics(): ReadonlyArray<ts.TypeNode> | undefined;
+  /** Adds a single type argument (e.g. `string` in `Foo<string>`). */
+  generic(arg: Arg): this;
+  /** Adds type arguments (e.g. `Map<string, number>`). */
+  generics(...args: ReadonlyArray<Arg>): this;
+}
+
+export function TypeArgsMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
+  Base: TBase,
+) {
+  abstract class TypeArgs extends Base {
+    protected _generics: Array<Ref<Arg>> = [];
+
+    override analyze(ctx: AnalysisContext): void {
+      super.analyze(ctx);
+      for (const g of this._generics) {
+        ctx.analyze(g);
+      }
+    }
+
+    protected generic(arg: Arg): this {
+      this._generics.push(ref(arg));
+      return this;
+    }
+
+    protected generics(...args: ReadonlyArray<Arg>): this {
+      this._generics.push(...args.map((a) => ref(a)));
+      return this;
+    }
+
+    protected $generics(): ReadonlyArray<ts.TypeNode> | undefined {
+      return this.$type(this._generics);
+    }
   }
 
-  $render(): ts.Node {
-    throw new Error('noop');
-  }
+  return TypeArgs as unknown as MixinCtor<TBase, TypeArgsMethods>;
 }
