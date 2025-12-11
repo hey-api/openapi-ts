@@ -27,6 +27,22 @@ describe(`SDK: ${namespace}`, () => {
     {
       config: createConfig({
         input: specPath,
+        output: {
+          path: 'export-all',
+          preferExportAll: true,
+        },
+        plugins: [
+          {
+            name: '@hey-api/sdk',
+            paramsStructure: 'flat',
+          },
+        ],
+      }),
+      description: 'export all',
+    },
+    {
+      config: createConfig({
+        input: specPath,
         output: 'flat',
         plugins: [
           {

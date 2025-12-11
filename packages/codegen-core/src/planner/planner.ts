@@ -384,10 +384,10 @@ export class Planner {
       const ok = kinds.every((kind) => canShareName(symbol.kind, kind));
       if (ok) break;
 
+      const language = symbol.node?.language || symbol.file?.language;
       const resolver =
-        (symbol.node?.language
-          ? this.project.nameConflictResolvers[symbol.node.language]
-          : undefined) ?? this.project.defaultNameConflictResolver;
+        (language ? this.project.nameConflictResolvers[language] : undefined) ??
+        this.project.defaultNameConflictResolver;
       const resolvedName = resolver({ attempt, baseName });
       if (!resolvedName) {
         throw new Error(`Unresolvable name conflict: ${symbol.toString()}`);
