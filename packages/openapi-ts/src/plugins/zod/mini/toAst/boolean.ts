@@ -19,14 +19,12 @@ export const booleanToAst = ({
   });
 
   if (typeof schema.const === 'boolean') {
-    chain = $(z.placeholder)
-      .attr(identifiers.literal)
-      .call($.literal(schema.const));
-    result.expression = chain.$render();
+    chain = $(z).attr(identifiers.literal).call($.literal(schema.const));
+    result.expression = chain;
     return result as Omit<Ast, 'typeName'>;
   }
 
-  chain = $(z.placeholder).attr(identifiers.boolean).call();
-  result.expression = chain.$render();
+  chain = $(z).attr(identifiers.boolean).call();
+  result.expression = chain;
   return result as Omit<Ast, 'typeName'>;
 };

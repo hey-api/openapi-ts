@@ -1,55 +1,49 @@
-/* eslint-disable @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging */
+import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
-import type { WithString } from '../base';
 import { TypeTsDsl } from '../base';
-import { mixin } from '../mixins/apply';
-import { OptionalMixin } from '../mixins/optional';
+import { TypeIdxSigTsDsl } from './idx-sig';
+import { TypePropTsDsl } from './prop';
 
-export class TypeObjectTsDsl extends TypeTsDsl<ts.TypeNode> {
-  private props: Array<TypePropTsDsl> = [];
+const Mixed = TypeTsDsl<ts.TypeNode>;
+
+export class TypeObjectTsDsl extends Mixed {
+  readonly '~dsl' = 'TypeObjectTsDsl';
+
+  protected props: Array<TypePropTsDsl | TypeIdxSigTsDsl> = [];
+
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    for (const prop of this.props) {
+      ctx.analyze(prop);
+    }
+  }
+
+  /** Returns true if object has at least one property or spread. */
+  hasProps(): boolean {
+    return this.props.length > 0;
+  }
+
+  /** Adds an index signature to the object type. */
+  idxSig(name: string, fn: (i: TypeIdxSigTsDsl) => void): this {
+    const idx = new TypeIdxSigTsDsl(name, fn);
+    this.props.push(idx);
+    return this;
+  }
+
+  /** Returns true if object has no properties or spreads. */
+  get isEmpty(): boolean {
+    return !this.props.length;
+  }
 
   /** Adds a property signature (returns property builder). */
   prop(name: string, fn: (p: TypePropTsDsl) => void): this {
-    const propTsDsl = new TypePropTsDsl(name, fn);
-    this.props.push(propTsDsl);
+    const prop = new TypePropTsDsl(name, fn);
+    this.props.push(prop);
     return this;
   }
 
-  $render(): ts.TypeNode {
+  override toAst() {
     return ts.factory.createTypeLiteralNode(this.$node(this.props));
   }
 }
-
-class TypePropTsDsl extends TypeTsDsl<ts.TypeElement> {
-  private name: string;
-  private typeInput?: WithString<ts.TypeNode>;
-
-  constructor(name: string, fn: (p: TypePropTsDsl) => void) {
-    super();
-    this.name = name;
-    fn(this);
-  }
-
-  /** Sets the property type. */
-  type(type: WithString<ts.TypeNode>): this {
-    this.typeInput = type;
-    return this;
-  }
-
-  /** Builds and returns the property signature. */
-  $render(): ts.TypeElement {
-    if (!this.typeInput) {
-      throw new Error(`Type not specified for property '${this.name}'`);
-    }
-    return ts.factory.createPropertySignature(
-      undefined,
-      this.$expr(this.name),
-      this.questionToken,
-      this.$type(this.typeInput),
-    );
-  }
-}
-
-interface TypePropTsDsl extends OptionalMixin {}
-mixin(TypePropTsDsl, OptionalMixin);

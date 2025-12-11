@@ -5404,7 +5404,7 @@ export type Embedding = {
   object: 'embedding';
 };
 
-export type _Error = {
+export type Error = {
   code: string;
   message: string;
   param: string;
@@ -5416,11 +5416,11 @@ export type _Error = {
  */
 export type ErrorEvent = {
   event: 'error';
-  data: _Error;
+  data: Error;
 };
 
 export type ErrorResponse = {
-  error: _Error;
+  error: Error;
 };
 
 /**
@@ -7373,10 +7373,7 @@ export type ImageGenToolCall = {
  * for `gpt-image-1`. Supports `high` and `low`. Defaults to `low`.
  *
  */
-export const ImageInputFidelity = {
-  HIGH: 'high',
-  LOW: 'low',
-} as const;
+export const ImageInputFidelity = { HIGH: 'high', LOW: 'low' } as const;
 
 /**
  * Control how much effort the model will exert to match the style and features,
@@ -16101,9 +16098,7 @@ export type TranscriptTextUsageTokens = {
  */
 export type TranscriptionChunkingStrategy = 'auto' | VadConfig;
 
-export const TranscriptionInclude = {
-  LOGPROBS: 'logprobs',
-} as const;
+export const TranscriptionInclude = { LOGPROBS: 'logprobs' } as const;
 
 export type TranscriptionInclude =
   (typeof TranscriptionInclude)[keyof typeof TranscriptionInclude];
@@ -19414,7 +19409,7 @@ export type DeleteEvalErrors = {
   /**
    * Evaluation not found.
    */
-  404: _Error;
+  404: Error;
 };
 
 export type DeleteEvalError = DeleteEvalErrors[keyof DeleteEvalErrors];
@@ -19538,7 +19533,7 @@ export type CreateEvalRunErrors = {
   /**
    * Bad request (for example, missing eval object)
    */
-  400: _Error;
+  400: Error;
 };
 
 export type CreateEvalRunError = CreateEvalRunErrors[keyof CreateEvalRunErrors];
@@ -19573,7 +19568,7 @@ export type DeleteEvalRunErrors = {
   /**
    * Run not found
    */
-  404: _Error;
+  404: Error;
 };
 
 export type DeleteEvalRunError = DeleteEvalRunErrors[keyof DeleteEvalRunErrors];
@@ -22121,7 +22116,7 @@ export type DeleteResponseErrors = {
   /**
    * Not Found
    */
-  404: _Error;
+  404: Error;
 };
 
 export type DeleteResponseError =
@@ -22203,7 +22198,7 @@ export type CancelResponseErrors = {
   /**
    * Not Found
    */
-  404: _Error;
+  404: Error;
 };
 
 export type CancelResponseError =

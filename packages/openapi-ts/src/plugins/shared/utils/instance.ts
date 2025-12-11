@@ -2,6 +2,7 @@ import path from 'node:path';
 
 import type {
   IProject,
+  Node,
   Symbol,
   SymbolIdentifier,
   SymbolIn,
@@ -103,6 +104,27 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     this.handler = props.handler;
     this.name = props.name;
     this.package = props.context.package;
+  }
+
+  addNode(node: Node | null): number {
+    for (const hook of this.eventHooks['node:set:before']) {
+      hook({ node, plugin: this });
+    }
+    const index = this.gen.nodes.add(node);
+    for (const hook of this.eventHooks['node:set:after']) {
+      hook({ node, plugin: this });
+    }
+    return index;
+  }
+  updateNode(index: number, node: Node | null): void {
+    for (const hook of this.eventHooks['node:set:before']) {
+      hook({ node, plugin: this });
+    }
+    const result = this.gen.nodes.update(index, node);
+    for (const hook of this.eventHooks['node:set:after']) {
+      hook({ node, plugin: this });
+    }
+    return result;
   }
 
   /**
@@ -306,30 +328,11 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     return this.gen.symbols.reference(meta);
   }
 
+  /**
+   * @deprecated use `plugin.symbol()` instead
+   */
   registerSymbol(symbol: SymbolIn): Symbol {
-    const symbolIn: SymbolIn = {
-      ...symbol,
-      exportFrom:
-        symbol.exportFrom ??
-        (!symbol.external &&
-        this.context.config.output.indexFile &&
-        this.config.exportFromIndex
-          ? ['index']
-          : undefined),
-      getFilePath: symbol.getFilePath ?? this.getSymbolFilePath.bind(this),
-      meta: {
-        pluginName: path.isAbsolute(this.name) ? 'custom' : this.name,
-        ...symbol.meta,
-      },
-    };
-    for (const hook of this.eventHooks['symbol:register:before']) {
-      hook({ plugin: this, symbol: symbolIn });
-    }
-    const symbolOut = this.gen.symbols.register(symbolIn);
-    for (const hook of this.eventHooks['symbol:register:after']) {
-      hook({ plugin: this, symbol: symbolOut });
-    }
-    return symbolOut;
+    return this.symbol(symbol.name, symbol);
   }
 
   /**
@@ -345,24 +348,41 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     }
   }
 
-  setSymbolValue(symbol: Symbol, value: unknown): void {
-    for (const hook of this.eventHooks['symbol:setValue:before']) {
-      hook({ plugin: this, symbol, value });
+  symbol(name: SymbolIn['name'], symbol?: Omit<SymbolIn, 'name'>): Symbol {
+    const symbolIn: SymbolIn = {
+      ...symbol,
+      exportFrom:
+        symbol?.exportFrom ??
+        (!symbol?.external &&
+        this.context.config.output.indexFile &&
+        this.config.exportFromIndex
+          ? ['index']
+          : undefined),
+      getFilePath: symbol?.getFilePath ?? this.getSymbolFilePath.bind(this),
+      meta: {
+        pluginName: path.isAbsolute(this.name) ? 'custom' : this.name,
+        ...symbol?.meta,
+      },
+      name,
+    };
+    for (const hook of this.eventHooks['symbol:register:before']) {
+      hook({ plugin: this, symbol: symbolIn });
     }
-    this.gen.symbols.setValue(symbol.id, value);
-    for (const hook of this.eventHooks['symbol:setValue:after']) {
-      hook({ plugin: this, symbol, value });
+    const symbolOut = this.gen.symbols.register(symbolIn);
+    for (const hook of this.eventHooks['symbol:register:after']) {
+      hook({ plugin: this, symbol: symbolOut });
     }
+    return symbolOut;
   }
 
   private buildEventHooks(): EventHooks {
     const result: EventHooks = {
+      'node:set:after': [],
+      'node:set:before': [],
       'plugin:handler:after': [],
       'plugin:handler:before': [],
       'symbol:register:after': [],
       'symbol:register:before': [],
-      'symbol:setValue:after': [],
-      'symbol:setValue:before': [],
     };
     const scopes = [
       this.config['~hooks']?.events,

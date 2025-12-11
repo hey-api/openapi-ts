@@ -1,6 +1,4 @@
-import type ts from 'typescript';
-
-import { $, TsDsl } from '~/ts-dsl';
+import { $ } from '~/ts-dsl';
 
 import type { ValibotPlugin } from '../types';
 import { identifiers } from '../v1/constants';
@@ -9,19 +7,18 @@ export const pipesToAst = ({
   pipes,
   plugin,
 }: {
-  pipes: ReadonlyArray<ts.Expression | ReturnType<typeof $.call>>;
+  pipes: ReadonlyArray<ReturnType<typeof $.call | typeof $.expr>>;
   plugin: ValibotPlugin['Instance'];
-}): ts.Expression => {
+}): ReturnType<typeof $.call | typeof $.expr> => {
   if (pipes.length === 1) {
-    return pipes[0] instanceof TsDsl ? pipes[0].$render() : pipes[0]!;
+    return pipes[0]!;
   }
 
   const v = plugin.referenceSymbol({
     category: 'external',
     resource: 'valibot.v',
   });
-  return $(v.placeholder)
+  return $(v)
     .attr(identifiers.methods.pipe)
-    .call(...pipes)
-    .$render();
+    .call(...pipes);
 };

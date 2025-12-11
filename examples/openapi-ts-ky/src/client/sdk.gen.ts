@@ -88,12 +88,7 @@ export const addPet = <ThrowOnError extends boolean = false>(
   options: Options<AddPetData, ThrowOnError>,
 ) =>
   (options.client ?? client).post<AddPetResponses, AddPetErrors, ThrowOnError>({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
+    security: [{ scheme: 'bearer', type: 'http' }],
     url: '/pet',
     ...options,
     headers: {
@@ -115,12 +110,7 @@ export const updatePet = <ThrowOnError extends boolean = false>(
     UpdatePetErrors,
     ThrowOnError
   >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
+    security: [{ scheme: 'bearer', type: 'http' }],
     url: '/pet',
     ...options,
     headers: {
@@ -142,12 +132,7 @@ export const findPetsByStatus = <ThrowOnError extends boolean = false>(
     FindPetsByStatusErrors,
     ThrowOnError
   >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
+    security: [{ scheme: 'bearer', type: 'http' }],
     url: '/pet/findByStatus',
     ...options,
   });
@@ -165,12 +150,7 @@ export const findPetsByTags = <ThrowOnError extends boolean = false>(
     FindPetsByTagsErrors,
     ThrowOnError
   >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
+    security: [{ scheme: 'bearer', type: 'http' }],
     url: '/pet/findByTags',
     ...options,
   });
@@ -188,12 +168,7 @@ export const deletePet = <ThrowOnError extends boolean = false>(
     DeletePetErrors,
     ThrowOnError
   >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
+    security: [{ scheme: 'bearer', type: 'http' }],
     url: '/pet/{petId}',
     ...options,
   });
@@ -212,14 +187,8 @@ export const getPetById = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     security: [
-      {
-        name: 'api_key',
-        type: 'apiKey',
-      },
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
+      { name: 'api_key', type: 'apiKey' },
+      { scheme: 'bearer', type: 'http' },
     ],
     url: '/pet/{petId}',
     ...options,
@@ -238,12 +207,7 @@ export const updatePetWithForm = <ThrowOnError extends boolean = false>(
     UpdatePetWithFormErrors,
     ThrowOnError
   >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
+    security: [{ scheme: 'bearer', type: 'http' }],
     url: '/pet/{petId}',
     ...options,
   });
@@ -262,12 +226,7 @@ export const uploadFile = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     bodySerializer: null,
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
+    security: [{ scheme: 'bearer', type: 'http' }],
     url: '/pet/{petId}/uploadImage',
     ...options,
     headers: {
@@ -289,12 +248,7 @@ export const getInventory = <ThrowOnError extends boolean = false>(
     GetInventoryErrors,
     ThrowOnError
   >({
-    security: [
-      {
-        name: 'api_key',
-        type: 'apiKey',
-      },
-    ],
+    security: [{ name: 'api_key', type: 'apiKey' }],
     url: '/store/inventory',
     ...options,
   });
@@ -332,10 +286,7 @@ export const deleteOrder = <ThrowOnError extends boolean = false>(
     DeleteOrderResponses,
     DeleteOrderErrors,
     ThrowOnError
-  >({
-    url: '/store/order/{orderId}',
-    ...options,
-  });
+  >({ url: '/store/order/{orderId}', ...options });
 
 /**
  * Find purchase order by ID.
@@ -349,10 +300,7 @@ export const getOrderById = <ThrowOnError extends boolean = false>(
     GetOrderByIdResponses,
     GetOrderByIdErrors,
     ThrowOnError
-  >({
-    url: '/store/order/{orderId}',
-    ...options,
-  });
+  >({ url: '/store/order/{orderId}', ...options });
 
 /**
  * Create user.
@@ -408,10 +356,7 @@ export const loginUser = <ThrowOnError extends boolean = false>(
     LoginUserResponses,
     LoginUserErrors,
     ThrowOnError
-  >({
-    url: '/user/login',
-    ...options,
-  });
+  >({ url: '/user/login', ...options });
 
 /**
  * Logs out current logged in user session.
@@ -425,10 +370,7 @@ export const logoutUser = <ThrowOnError extends boolean = false>(
     LogoutUserResponses,
     LogoutUserErrors,
     ThrowOnError
-  >({
-    url: '/user/logout',
-    ...options,
-  });
+  >({ url: '/user/logout', ...options });
 
 /**
  * Delete user resource.
@@ -442,10 +384,7 @@ export const deleteUser = <ThrowOnError extends boolean = false>(
     DeleteUserResponses,
     DeleteUserErrors,
     ThrowOnError
-  >({
-    url: '/user/{username}',
-    ...options,
-  });
+  >({ url: '/user/{username}', ...options });
 
 /**
  * Get user by user name.
@@ -459,10 +398,7 @@ export const getUserByName = <ThrowOnError extends boolean = false>(
     GetUserByNameResponses,
     GetUserByNameErrors,
     ThrowOnError
-  >({
-    url: '/user/{username}',
-    ...options,
-  });
+  >({ url: '/user/{username}', ...options });
 
 /**
  * Update user resource.

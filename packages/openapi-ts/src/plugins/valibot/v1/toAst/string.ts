@@ -1,5 +1,3 @@
-import type ts from 'typescript';
-
 import type { SchemaWithType } from '~/plugins';
 import { $ } from '~/ts-dsl';
 
@@ -20,28 +18,20 @@ const defaultFormatResolver = ({
 
   switch (schema.format) {
     case 'date':
-      return pipes.push(
-        $(v.placeholder).attr(identifiers.actions.isoDate).call(),
-      );
+      return pipes.push($(v).attr(identifiers.actions.isoDate).call());
     case 'date-time':
-      return pipes.push(
-        $(v.placeholder).attr(identifiers.actions.isoTimestamp).call(),
-      );
+      return pipes.push($(v).attr(identifiers.actions.isoTimestamp).call());
     case 'email':
-      return pipes.push(
-        $(v.placeholder).attr(identifiers.actions.email).call(),
-      );
+      return pipes.push($(v).attr(identifiers.actions.email).call());
     case 'ipv4':
     case 'ipv6':
-      return pipes.push($(v.placeholder).attr(identifiers.actions.ip).call());
+      return pipes.push($(v).attr(identifiers.actions.ip).call());
     case 'time':
-      return pipes.push(
-        $(v.placeholder).attr(identifiers.actions.isoTimeSecond).call(),
-      );
+      return pipes.push($(v).attr(identifiers.actions.isoTimeSecond).call());
     case 'uri':
-      return pipes.push($(v.placeholder).attr(identifiers.actions.url).call());
+      return pipes.push($(v).attr(identifiers.actions.url).call());
     case 'uuid':
-      return pipes.push($(v.placeholder).attr(identifiers.actions.uuid).call());
+      return pipes.push($(v).attr(identifiers.actions.uuid).call());
   }
 
   return true;
@@ -52,7 +42,7 @@ export const stringToAst = ({
   schema,
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'string'>;
-}): ts.Expression => {
+}): ReturnType<typeof $.call | typeof $.expr> => {
   const pipes: Array<ReturnType<typeof $.call>> = [];
 
   const v = plugin.referenceSymbol({
@@ -62,14 +52,12 @@ export const stringToAst = ({
 
   if (typeof schema.const === 'string') {
     pipes.push(
-      $(v.placeholder)
-        .attr(identifiers.schemas.literal)
-        .call($.literal(schema.const)),
+      $(v).attr(identifiers.schemas.literal).call($.literal(schema.const)),
     );
     return pipesToAst({ pipes, plugin });
   }
 
-  pipes.push($(v.placeholder).attr(identifiers.schemas.string).call());
+  pipes.push($(v).attr(identifiers.schemas.string).call());
 
   if (schema.format) {
     const args: FormatResolverArgs = { $, pipes, plugin, schema };
@@ -80,14 +68,12 @@ export const stringToAst = ({
 
   if (schema.minLength === schema.maxLength && schema.minLength !== undefined) {
     pipes.push(
-      $(v.placeholder)
-        .attr(identifiers.actions.length)
-        .call($.literal(schema.minLength)),
+      $(v).attr(identifiers.actions.length).call($.literal(schema.minLength)),
     );
   } else {
     if (schema.minLength !== undefined) {
       pipes.push(
-        $(v.placeholder)
+        $(v)
           .attr(identifiers.actions.minLength)
           .call($.literal(schema.minLength)),
       );
@@ -95,7 +81,7 @@ export const stringToAst = ({
 
     if (schema.maxLength !== undefined) {
       pipes.push(
-        $(v.placeholder)
+        $(v)
           .attr(identifiers.actions.maxLength)
           .call($.literal(schema.maxLength)),
       );
@@ -104,9 +90,7 @@ export const stringToAst = ({
 
   if (schema.pattern) {
     pipes.push(
-      $(v.placeholder)
-        .attr(identifiers.actions.regex)
-        .call($.regexp(schema.pattern)),
+      $(v).attr(identifiers.actions.regex).call($.regexp(schema.pattern)),
     );
   }
 

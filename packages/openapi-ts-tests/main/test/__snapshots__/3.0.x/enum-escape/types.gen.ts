@@ -5,7 +5,7 @@ export type ClientOptions = {
 };
 
 export type Foo = {
-    foo?: "foo'bar" | 'foo"bar';
+    foo?: 'foo\'bar' | 'foo"bar';
 };
 
-export type Bar = "foo'bar" | 'foo"bar';
+export type Bar = 'foo\'bar' | 'foo"bar';

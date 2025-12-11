@@ -15,7 +15,7 @@ export const createMutationOptions = ({
 }: {
   operation: IR.OperationObject;
   plugin: PluginInstance;
-  queryFn: string;
+  queryFn: ReturnType<typeof $.expr | typeof $.call | typeof $.attr>;
 }): void => {
   const symbolMutationOptionsType = plugin.referenceSymbol({
     category: 'external',
@@ -23,10 +23,10 @@ export const createMutationOptions = ({
   });
 
   const typeData = useTypeData({ operation, plugin });
-  const typeError = useTypeError({ operation, plugin });
-  const typeResponse = useTypeResponse({ operation, plugin });
-  // TODO: better types syntax
-  const mutationType = `${symbolMutationOptionsType.placeholder}<${typeResponse}, ${typeError}, ${typeData}>`;
+  const mutationType = $.type(symbolMutationOptionsType)
+    .generic(useTypeResponse({ operation, plugin }))
+    .generic(useTypeError({ operation, plugin }))
+    .generic(typeData);
 
   const fnOptions = 'fnOptions';
 
@@ -49,24 +49,23 @@ export const createMutationOptions = ({
     );
   }
 
-  const meta = handleMeta(plugin, operation, 'mutationOptions');
   const mutationOptionsFn = 'mutationOptions';
   const symbolMutationOptions = plugin.registerSymbol({
-    exported: true,
     name: buildName({
       config: plugin.config.mutationOptions,
       name: operation.id,
     }),
   });
-  const statement = $.const(symbolMutationOptions.placeholder)
-    .export(symbolMutationOptions.exported)
-    .$if(
-      plugin.config.comments && createOperationComment({ operation }),
-      (c, v) => c.doc(v as ReadonlyArray<string>),
+  const statement = $.const(symbolMutationOptions)
+    .export()
+    .$if(plugin.config.comments && createOperationComment(operation), (c, v) =>
+      c.doc(v),
     )
     .assign(
       $.func()
-        .param('options', (p) => p.optional().type(`Partial<${typeData}>`))
+        .param('options', (p) =>
+          p.optional().type($.type('Partial').generic(typeData)),
+        )
         .returns(mutationType)
         .do(
           $.const(mutationOptionsFn)
@@ -81,10 +80,12 @@ export const createMutationOptions = ({
                     .param(fnOptions)
                     .do(...statements),
                 )
-                .$if(meta, (c, v) => c.prop('meta', v)),
+                .$if(handleMeta(plugin, operation, 'mutationOptions'), (c, v) =>
+                  c.prop('meta', v),
+                ),
             ),
           $(mutationOptionsFn).return(),
         ),
     );
-  plugin.setSymbolValue(symbolMutationOptions, statement);
+  plugin.addNode(statement);
 };

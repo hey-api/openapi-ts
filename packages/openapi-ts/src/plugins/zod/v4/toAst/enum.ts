@@ -1,7 +1,5 @@
-import type ts from 'typescript';
-
 import type { SchemaWithType } from '~/plugins';
-import { tsc } from '~/tsc';
+import { $ } from '~/ts-dsl';
 
 import { identifiers } from '../../constants';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
@@ -21,8 +19,8 @@ export const enumToAst = ({
     resource: 'zod.z',
   });
 
-  const enumMembers: Array<ts.LiteralExpression> = [];
-  const literalMembers: Array<ts.CallExpression> = [];
+  const enumMembers: Array<ReturnType<typeof $.literal>> = [];
+  const literalMembers: Array<ReturnType<typeof $.call>> = [];
 
   let isNullable = false;
   let allStrings = true;
@@ -30,46 +28,20 @@ export const enumToAst = ({
   for (const item of schema.items ?? []) {
     // Zod supports string, number, and boolean enums
     if (item.type === 'string' && typeof item.const === 'string') {
-      const stringLiteral = tsc.stringLiteral({
-        text: item.const,
-      });
-      enumMembers.push(stringLiteral);
-      literalMembers.push(
-        tsc.callExpression({
-          functionName: tsc.propertyAccessExpression({
-            expression: z.placeholder,
-            name: identifiers.literal,
-          }),
-          parameters: [stringLiteral],
-        }),
-      );
+      const literal = $.literal(item.const);
+      enumMembers.push(literal);
+      literalMembers.push($(z).attr(identifiers.literal).call(literal));
     } else if (
       (item.type === 'number' || item.type === 'integer') &&
       typeof item.const === 'number'
     ) {
       allStrings = false;
-      const numberLiteral = tsc.ots.number(item.const);
-      literalMembers.push(
-        tsc.callExpression({
-          functionName: tsc.propertyAccessExpression({
-            expression: z.placeholder,
-            name: identifiers.literal,
-          }),
-          parameters: [numberLiteral],
-        }),
-      );
+      const literal = $.literal(item.const);
+      literalMembers.push($(z).attr(identifiers.literal).call(literal));
     } else if (item.type === 'boolean' && typeof item.const === 'boolean') {
       allStrings = false;
-      const booleanLiteral = tsc.ots.boolean(item.const);
-      literalMembers.push(
-        tsc.callExpression({
-          functionName: tsc.propertyAccessExpression({
-            expression: z.placeholder,
-            name: identifiers.literal,
-          }),
-          parameters: [booleanLiteral],
-        }),
-      );
+      const literal = $.literal(item.const);
+      literalMembers.push($(z).attr(identifiers.literal).call(literal));
     } else if (item.type === 'null' || item.const === null) {
       isNullable = true;
     }
@@ -87,44 +59,20 @@ export const enumToAst = ({
 
   // Use z.enum() for pure string enums, z.union() for mixed or non-string types
   if (allStrings && enumMembers.length > 0) {
-    result.expression = tsc.callExpression({
-      functionName: tsc.propertyAccessExpression({
-        expression: z.placeholder,
-        name: identifiers.enum,
-      }),
-      parameters: [
-        tsc.arrayLiteralExpression({
-          elements: enumMembers,
-          multiLine: false,
-        }),
-      ],
-    });
+    result.expression = $(z)
+      .attr(identifiers.enum)
+      .call($.array(...enumMembers));
   } else if (literalMembers.length === 1) {
     // For single-member unions, use the member directly instead of wrapping in z.union()
-    result.expression = literalMembers[0];
+    result.expression = literalMembers[0]!;
   } else {
-    result.expression = tsc.callExpression({
-      functionName: tsc.propertyAccessExpression({
-        expression: z.placeholder,
-        name: identifiers.union,
-      }),
-      parameters: [
-        tsc.arrayLiteralExpression({
-          elements: literalMembers,
-          multiLine: literalMembers.length > 3,
-        }),
-      ],
-    });
+    result.expression = $(z)
+      .attr(identifiers.union)
+      .call($.array(...literalMembers));
   }
 
   if (isNullable) {
-    result.expression = tsc.callExpression({
-      functionName: tsc.propertyAccessExpression({
-        expression: z.placeholder,
-        name: identifiers.nullable,
-      }),
-      parameters: [result.expression],
-    });
+    result.expression = $(z).attr(identifiers.nullable).call(result.expression);
   }
 
   return result as Omit<Ast, 'typeName'>;

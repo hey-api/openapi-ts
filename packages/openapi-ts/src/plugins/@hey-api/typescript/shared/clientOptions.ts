@@ -1,78 +1,80 @@
-import type { Symbol } from '@hey-api/codegen-core';
-import ts from 'typescript';
-
 import type { IR } from '~/ir/types';
+import { buildName } from '~/openApi/shared/utils/name';
 import {
   getClientBaseUrlKey,
   getClientPlugin,
 } from '~/plugins/@hey-api/client-core/utils';
-import { tsc } from '~/tsc';
+import type { TypeTsDsl } from '~/ts-dsl';
+import { $ } from '~/ts-dsl';
 import { parseUrl } from '~/utils/url';
 
 import type { HeyApiTypeScriptPlugin } from '../types';
-
-const stringType = tsc.keywordTypeNode({ keyword: 'string' });
 
 const serverToBaseUrlType = ({ server }: { server: IR.ServerObject }) => {
   const url = parseUrl(server.url);
 
   if (url.protocol && url.host) {
-    return tsc.literalTypeNode({
-      literal: tsc.stringLiteral({ text: server.url }),
-    });
+    return $.type.literal(server.url);
   }
 
-  return tsc.templateLiteralType({
-    value: [
-      url.protocol || stringType,
-      '://',
-      url.host || stringType,
-      url.port ? `:${url.port}` : '',
-      url.path || '',
-    ],
-  });
+  return $.type
+    .template()
+    .add(url.protocol || $.type('string'))
+    .add('://')
+    .add(url.host || $.type('string'))
+    .add(url.port ? `:${url.port}` : '')
+    .add(url.path || '');
 };
 
 export const createClientOptions = ({
+  nodeIndex,
   plugin,
   servers,
-  symbolClientOptions,
 }: {
+  nodeIndex: number;
   plugin: HeyApiTypeScriptPlugin['Instance'];
   servers: ReadonlyArray<IR.ServerObject>;
-  symbolClientOptions: Symbol;
 }) => {
   const client = getClientPlugin(plugin.context.config);
 
-  const types: Array<ts.TypeNode> = servers.map((server) =>
+  const types: Array<TypeTsDsl> = servers.map((server) =>
     serverToBaseUrlType({ server }),
   );
 
   if (!servers.length) {
-    types.push(stringType);
+    types.push($.type('string'));
   } else if (
     !('strictBaseUrl' in client.config && client.config.strictBaseUrl)
   ) {
-    types.push(
-      tsc.typeIntersectionNode({
-        types: [stringType, ts.factory.createTypeLiteralNode([])],
-      }),
-    );
+    types.push($.type.and($.type('string'), $.type.object()));
   }
 
-  const type = tsc.typeInterfaceNode({
-    properties: [
-      {
-        name: getClientBaseUrlKey(plugin.context.config),
-        type: tsc.typeUnionNode({ types }),
+  const symbol = plugin.symbol(
+    buildName({
+      config: {
+        case: plugin.config.case,
       },
-    ],
-    useLegacyResolution: false,
-  });
-  const node = tsc.typeAliasDeclaration({
-    exportType: symbolClientOptions.exported,
-    name: symbolClientOptions.placeholder,
-    type,
-  });
-  plugin.setSymbolValue(symbolClientOptions, node);
+      name: 'ClientOptions',
+    }),
+    {
+      meta: {
+        category: 'type',
+        resource: 'client',
+        role: 'options',
+        tool: 'typescript',
+      },
+    },
+  );
+
+  const node = $.type
+    .alias(symbol)
+    .export()
+    .type(
+      $.type
+        .object()
+        .prop(getClientBaseUrlKey(plugin.context.config), (p) =>
+          p.type($.type.or(...types)),
+        ),
+    );
+  plugin.updateNode(nodeIndex, node);
 };

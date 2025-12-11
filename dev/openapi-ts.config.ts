@@ -5,12 +5,15 @@ import path from 'node:path';
 // @ts-ignore
 import { customClientPlugin } from '@hey-api/custom-client/plugin';
 // @ts-ignore
-import { defineConfig, utils } from '@hey-api/openapi-ts';
+import { defineConfig, reserved, utils } from '@hey-api/openapi-ts';
 
 // @ts-ignore
 import { myClientPlugin } from '../packages/openapi-ts-tests/main/test/custom/client/plugin';
 // @ts-ignore
 import { getSpecsPath } from '../packages/openapi-ts-tests/utils';
+
+reserved.runtime.set((list) => [...list, 'Agent']);
+reserved.type.set((list) => [...list, 'Agent']);
 
 // @ts-ignore
 export default defineConfig(() => {
@@ -39,14 +42,19 @@ export default defineConfig(() => {
             '3.1.x',
             // 'circular.yaml',
             // 'dutchie.json',
+            // 'enum-names-values.yaml',
             // 'invalid',
             // 'full.yaml',
+            // 'object-property-names.yaml',
             'openai.yaml',
             // 'opencode.yaml',
             // 'pagination-ref.yaml',
             // 'sdk-instance.yaml',
+            // 'sdk-method-class-conflict.yaml',
+            // 'sdk-nested-classes.yaml',
             // 'string-with-format.yaml',
             // 'transformers.json',
+            // 'transformers-recursive.json',
             // 'type-format.yaml',
             // 'validators.yaml',
             // 'validators-circular-ref.json',
@@ -86,26 +94,37 @@ export default defineConfig(() => {
       },
       // name: 'foo',
       output: [
-        // {
-        //   // case: 'snake_case',
-        //   clean: true,
-        //   fileName: {
-        //     // case: 'snake_case',
-        //     // name: '{{name}}.renamed',
-        //     suffix: '.meh',
-        //   },
-        //   // format: 'prettier',
-        //   importFileExtension: '.ts',
-        //   // indexFile: false,
-        //   // lint: 'eslint',
-        //   path: path.resolve(__dirname, '.gen'),
-        //   tsConfigPath: path.resolve(
-        //     __dirname,
-        //     'tsconfig',
-        //     'tsconfig.nodenext.json',
-        //   ),
-        // },
-        '.gen',
+        {
+          // case: 'snake_case',
+          // clean: true,
+          // fileName: {
+          //   // case: 'snake_case',
+          //   // name: '{{name}}.renamed',
+          //   suffix: '.meh',
+          // },
+          // format: 'prettier',
+          // importFileExtension: '.js',
+          // indexFile: false,
+          // lint: 'eslint',
+          nameConflictResolver({ attempt, baseName }) {
+            // console.log('resolving conflict for:', { attempt, baseName });
+            return attempt === 0 ? baseName : `${baseName}_N${attempt + 1}`;
+          },
+          path: path.resolve(__dirname, '.gen'),
+          // preferExportAll: true,
+          resolveModuleName: (moduleName) => {
+            if (moduleName === 'valibot') {
+              return 'valibot';
+            }
+            return;
+          },
+          // tsConfigPath: path.resolve(
+          //   __dirname,
+          //   'tsconfig',
+          //   'tsconfig.nodenext.json',
+          // ),
+        },
+        // '.gen',
       ],
       parser: {
         filters: {
@@ -127,6 +146,14 @@ export default defineConfig(() => {
         },
         hooks: {
           events: {
+            // 'node:set:after': ({ node, plugin }) => {
+            //   if (node) {
+            //     console.log(`(${plugin.name}) set node:`, node.symbol);
+            //   }
+            // },
+            // 'node:set:before': ({ node, plugin }) => {
+            //   console.log(`(${plugin.name}) setting node:`, node?.symbol?.id);
+            // },
             // 'plugin:handler:after': ({ plugin }) => {
             //   console.log(`(${plugin.name}): handler finished`);
             // },
@@ -152,12 +179,6 @@ export default defineConfig(() => {
               //   );
               // }
             },
-            // 'symbol:setValue:after': ({ plugin, symbol }) => {
-            //   console.log(`(${plugin.name}) set value:`, symbol.id);
-            // },
-            // 'symbol:setValue:before': ({ plugin, symbol }) => {
-            //   console.log(`(${plugin.name}) setting value:`, symbol.id);
-            // },
           },
           operations: {
             getKind() {
@@ -216,26 +237,27 @@ export default defineConfig(() => {
         {
           // baseUrl: false,
           // exportFromIndex: true,
-          name: '@hey-api/client-fetch',
+          // name: '@hey-api/client-angular',
           // runtimeConfigPath: path.resolve(__dirname, 'hey-api.ts'),
           // runtimeConfigPath: './src/hey-api.ts',
           // strictBaseUrl: true,
-          // throwOnError: true,
+          throwOnError: true,
         },
         {
           // case: 'snake_case',
           // definitions: '你_snake_{{name}}',
-          // enums: {
-          //   // case: 'PascalCase',
-          //   // constantsIgnoreNull: true,
-          //   // enabled: false,
-          //   mode: 'javascript',
-          // },
+          enums: {
+            // case: 'PascalCase',
+            // constantsIgnoreNull: true,
+            // enabled: false,
+            // mode: 'typescript',
+          },
           // errors: {
           //   error: '他們_error_{{name}}',
           //   name: '你們_errors_{{name}}',
           // },
-          // name: '@hey-api/typescript',
+          // exportFromIndex: false,
+          name: '@hey-api/typescript',
           // requests: '我們_data_{{name}}',
           // responses: {
           //   name: '我_responses_{{name}}',
@@ -249,12 +271,12 @@ export default defineConfig(() => {
           // },
         },
         {
-          asClass: true,
+          // asClass: true,
           // auth: false,
           // classNameBuilder: '{{name}}',
           // classNameBuilder: '{{name}}Service',
           // classStructure: 'off',
-          client: false,
+          // client: false,
           // getSignature: ({ fields, signature, operation }) => {
           //   // ...
           //   fields.unwrap('path')
@@ -270,7 +292,7 @@ export default defineConfig(() => {
           // signature: 'object',
           // transformer: '@hey-api/transformers',
           // transformer: true,
-          validator: 'valibot',
+          // validator: 'valibot',
           // validator: {
           //   request: 'zod',
           //   response: 'zod',
@@ -298,15 +320,16 @@ export default defineConfig(() => {
           // name: 'fastify',
         },
         {
-          name: 'swr',
+          // name: 'swr',
         },
         {
           // case: 'SCREAMING_SNAKE_CASE',
           // comments: false,
           exportFromIndex: true,
-          // infiniteQueryKeys: {
-          //   name: '{{name}}IQK',
-          // },
+          infiniteQueryKeys: {
+            // name: '{{name}}IQK',
+            // name: 'options',
+          },
           infiniteQueryOptions: {
             meta() {
               return {
@@ -314,6 +337,7 @@ export default defineConfig(() => {
               };
             },
             // name: '{{name}}IQO',
+            // name: 'options',
           },
           mutationOptions: {
             meta() {
@@ -322,10 +346,12 @@ export default defineConfig(() => {
               };
             },
             // name: '{{name}}MO',
+            // name: 'options',
           },
           name: '@tanstack/react-query',
           queryKeys: {
             // name: '{{name}}QK',
+            // name: 'options',
             tags: true,
           },
           // queryOptions: false,
@@ -335,7 +361,8 @@ export default defineConfig(() => {
             //     custom: 'value',
             //   }
             // },
-            name: '{{name}}QO',
+            // name: '{{name}}QO',
+            // name: 'options',
           },
           useQuery: true,
           '~hooks': {
@@ -356,26 +383,26 @@ export default defineConfig(() => {
           },
         },
         {
-          name: 'arktype',
-          // types: {
-          //   infer: true,
-          // },
+          // name: 'arktype',
+          types: {
+            infer: true,
+          },
         },
         {
           // case: 'SCREAMING_SNAKE_CASE',
           // comments: false,
-          // definitions: 'z{{name}}Definition',
+          definitions: 'z{{name}}',
           exportFromIndex: true,
           // metadata: true,
-          name: 'valibot',
+          // name: 'valibot',
           // requests: {
           //   case: 'PascalCase',
           //   name: '{{name}}Data',
           // },
-          // responses: {
-          //   // case: 'snake_case',
-          //   name: 'z{{name}}TestResponse',
-          // },
+          responses: {
+            // case: 'snake_case',
+            name: 'z{{name}}TestResponse',
+          },
           // webhooks: {
           //   name: 'q{{name}}CoolWebhook',
           // },
@@ -415,23 +442,29 @@ export default defineConfig(() => {
                 // 'date-time': ({ $, pipes }) => pipes.push($('v').attr('isoDateTime').call()),
               },
             },
-            validator({ $, schema, v }) {
-              return [
-                $.const('parsed').assign(
-                  $(v.placeholder)
-                    .attr('safeParseAsync')
-                    .call(schema.placeholder, 'data')
-                    .await(),
-                ),
-                $('parsed').return(),
-              ];
-            },
+            // validator({ $, plugin, schema, v }) {
+            //   const vShadow = plugin.symbol('v');
+            //   const test = plugin.symbol('test');
+            //   const e = plugin.symbol('err');
+            //   return [
+            //     $.const(vShadow).assign($.literal('hi')),
+            //     $('console').attr('log').call(vShadow),
+            //     $.try(
+            //       $.const(test).assign($.literal('test')),
+            //       $('console').attr('log').call($.literal('hi'), test),
+            //     ).catchArg(e),
+            //     $.const('parsed').assign(
+            //       $(v).attr('safeParseAsync').call(schema, 'data').await(),
+            //     ),
+            //     $('parsed').return(),
+            //   ];
+            // },
           },
         },
         {
           // case: 'snake_case',
           // comments: false,
-          compatibilityVersion: 'mini',
+          compatibilityVersion: 4,
           dates: {
             // local: true,
             // offset: true,
@@ -442,9 +475,9 @@ export default defineConfig(() => {
             //     infer: 'D{{name}}ZodType',
             //   },
           },
-          // exportFromIndex: true,
+          exportFromIndex: true,
           metadata: true,
-          name: 'zod',
+          // name: 'zod',
           // requests: {
           //   // case: 'SCREAMING_SNAKE_CASE',
           //   // name: 'z{{name}}TestData',
@@ -495,17 +528,14 @@ export default defineConfig(() => {
                 // 'date-time': ({ $ }) => $('z').attr('date').call(),
               },
             },
-            validator({ $, schema }) {
-              return [
-                $.const('parsed').assign(
-                  $(schema.placeholder)
-                    .attr('safeParseAsync')
-                    .call('data')
-                    .await(),
-                ),
-                $('parsed').return(),
-              ];
-            },
+            // validator({ $, schema }) {
+            //   return [
+            //     $.const('parsed').assign(
+            //       $(schema).attr('safeParseAsync').call('data').await(),
+            //     ),
+            //     $('parsed').return(),
+            //   ];
+            // },
           },
         },
         {
@@ -516,17 +546,17 @@ export default defineConfig(() => {
         {
           exportFromIndex: true,
           httpRequests: {
-            // asClass: true,
+            asClass: true,
           },
           httpResources: {
-            // asClass: true,
+            asClass: true,
           },
           // name: '@angular/common',
         },
         {
           exportFromIndex: true,
           // mutationOptions: '{{name}}Mutationssss',
-          // name: '@pinia/colada',
+          name: '@pinia/colada',
           // queryOptions: {
           //   name: '{{name}}Queryyyyy',
           // },
@@ -545,7 +575,6 @@ export default defineConfig(() => {
           },
         },
       ],
-      // useOptions: false,
       // watch: 3_000,
     },
     // {

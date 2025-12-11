@@ -28,7 +28,6 @@ export const createUseQuery = ({
   }
 
   const symbolUseQueryFn = plugin.registerSymbol({
-    exported: true,
     name: buildName({
       config: plugin.config.useQuery,
       name: operation.id,
@@ -53,22 +52,21 @@ export const createUseQuery = ({
     role: 'queryOptions',
     tool: plugin.name,
   });
-  const statement = $.const(symbolUseQueryFn.placeholder)
-    .export(symbolUseQueryFn.exported)
-    .$if(
-      plugin.config.comments && createOperationComment({ operation }),
-      (c, v) => c.doc(v as ReadonlyArray<string>),
+  const statement = $.const(symbolUseQueryFn)
+    .export()
+    .$if(plugin.config.comments && createOperationComment(operation), (c, v) =>
+      c.doc(v),
     )
     .assign(
       $.func()
         .param(optionsParamName, (p) =>
-          p.optional(!isRequiredOptions).type(typeData),
+          p.required(isRequiredOptions).type(typeData),
         )
         .do(
-          $(symbolUseQuery.placeholder)
-            .call($(symbolQueryOptionsFn.placeholder).call(optionsParamName))
+          $(symbolUseQuery)
+            .call($(symbolQueryOptionsFn).call(optionsParamName))
             .return(),
         ),
     );
-  plugin.setSymbolValue(symbolUseQueryFn, statement);
+  plugin.addNode(statement);
 };

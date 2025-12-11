@@ -1,57 +1,63 @@
-/* eslint-disable @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging */
+import type { AnalysisContext, Ref, Symbol } from '@hey-api/codegen-core';
+import { isNode, ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
-import type { WithString } from '../base';
 import { TypeTsDsl } from '../base';
-import { mixin } from '../mixins/apply';
 import { TypeArgsMixin } from '../mixins/type-args';
+import { setTypeExprFactory, TypeExprMixin } from '../mixins/type-expr';
 import { TypeAttrTsDsl } from './attr';
-import { TypeIdxTsDsl } from './idx';
 
-export class TypeExprTsDsl extends TypeTsDsl<ts.TypeReferenceNode> {
-  private _exprInput?: WithString<ts.Identifier> | TypeAttrTsDsl;
+export type TypeExprName = Symbol | string;
+export type TypeExprExpr = TypeExprName | TypeAttrTsDsl;
+
+const Mixed = TypeArgsMixin(TypeExprMixin(TypeTsDsl<ts.TypeReferenceNode>));
+
+export class TypeExprTsDsl extends Mixed {
+  readonly '~dsl' = 'TypeExprTsDsl';
+
+  protected _exprInput?: Ref<TypeExprExpr>;
 
   constructor();
   constructor(fn: (t: TypeExprTsDsl) => void);
-  constructor(name: string);
-  constructor(name: string, fn?: (t: TypeExprTsDsl) => void);
+  constructor(name: TypeExprName);
+  constructor(name: TypeExprName, fn?: (t: TypeExprTsDsl) => void);
   constructor(
-    nameOrFn?: string | ((t: TypeExprTsDsl) => void),
+    name?: TypeExprName | ((t: TypeExprTsDsl) => void),
     fn?: (t: TypeExprTsDsl) => void,
   ) {
     super();
-    if (typeof nameOrFn === 'string') {
-      this._exprInput = nameOrFn;
-      fn?.(this);
+    if (typeof name === 'function') {
+      name(this);
     } else {
-      nameOrFn?.(this);
+      this._exprInput = name ? ref(name) : undefined;
+      fn?.(this);
     }
   }
 
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    ctx.analyze(this._exprInput);
+  }
+
   /** Accesses a nested type (e.g. `Foo.Bar`). */
-  attr(right: WithString<ts.Identifier> | TypeAttrTsDsl): this {
-    this._exprInput =
-      right instanceof TypeAttrTsDsl
-        ? right.base(this._exprInput)
-        : new TypeAttrTsDsl(this._exprInput!, right);
+  attr(right: string | ts.Identifier | TypeAttrTsDsl): this {
+    this._exprInput = isNode(right)
+      ? ref(right.base(this._exprInput))
+      : ref(new TypeAttrTsDsl(this._exprInput!, right));
     return this;
   }
 
-  /** Creates an indexed-access type (e.g. `Foo<T>[K]`). */
-  idx(index: WithString<ts.TypeNode> | number): TypeIdxTsDsl {
-    return new TypeIdxTsDsl(this, index);
-  }
-
-  $render(): ts.TypeReferenceNode {
-    if (!this._exprInput)
-      throw new Error('TypeExpr must have either an expression or an object');
+  override toAst() {
+    if (!this._exprInput) throw new Error('TypeExpr must have an expression');
     return ts.factory.createTypeReferenceNode(
-      // @ts-expect-error --- need to fix types
+      // @ts-expect-error need to improve types
       this.$type(this._exprInput),
       this.$generics(),
     );
   }
 }
 
-export interface TypeExprTsDsl extends TypeArgsMixin {}
-mixin(TypeExprTsDsl, TypeArgsMixin);
+setTypeExprFactory(
+  (...args) =>
+    new TypeExprTsDsl(...(args as ConstructorParameters<typeof TypeExprTsDsl>)),
+);

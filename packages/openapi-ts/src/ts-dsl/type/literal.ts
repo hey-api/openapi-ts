@@ -1,17 +1,26 @@
+import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TypeTsDsl } from '../base';
-import { LiteralTsDsl } from '../literal';
+import { LiteralTsDsl } from '../expr/literal';
 
-export class TypeLiteralTsDsl extends TypeTsDsl<ts.LiteralTypeNode> {
-  private value: string | number | boolean;
+const Mixed = TypeTsDsl<ts.LiteralTypeNode>;
 
-  constructor(value: string | number | boolean) {
+export class TypeLiteralTsDsl extends Mixed {
+  readonly '~dsl' = 'TypeLiteralTsDsl';
+
+  protected value: string | number | boolean | null;
+
+  constructor(value: string | number | boolean | null) {
     super();
     this.value = value;
   }
 
-  $render(): ts.LiteralTypeNode {
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+  }
+
+  override toAst() {
     return ts.factory.createLiteralTypeNode(
       this.$node(new LiteralTsDsl(this.value)),
     );

@@ -1,5 +1,5 @@
 import type { SchemaWithType } from '~/plugins';
-import { tsc } from '~/tsc';
+import { $ } from '~/ts-dsl';
 
 import { identifiers } from '../../constants';
 import { numberParameter } from '../../shared/numbers';
@@ -20,78 +20,38 @@ export const numberToAst = ({
 
   if (typeof schema.const === 'number') {
     // TODO: parser - handle bigint constants
-    const expression = tsc.callExpression({
-      functionName: tsc.propertyAccessExpression({
-        expression: z.placeholder,
-        name: identifiers.literal,
-      }),
-      parameters: [tsc.ots.number(schema.const)],
-    });
+    const expression = $(z)
+      .attr(identifiers.literal)
+      .call($.literal(schema.const));
     return expression;
   }
 
-  let numberExpression = tsc.callExpression({
-    functionName: isBigInt
-      ? tsc.propertyAccessExpression({
-          expression: tsc.propertyAccessExpression({
-            expression: z.placeholder,
-            name: identifiers.coerce,
-          }),
-          name: identifiers.bigint,
-        })
-      : tsc.propertyAccessExpression({
-          expression: z.placeholder,
-          name: identifiers.number,
-        }),
-  });
+  let numberExpression = isBigInt
+    ? $(z).attr(identifiers.coerce).attr(identifiers.bigint).call()
+    : $(z).attr(identifiers.number).call();
 
   if (!isBigInt && schema.type === 'integer') {
-    numberExpression = tsc.callExpression({
-      functionName: tsc.propertyAccessExpression({
-        expression: numberExpression,
-        name: identifiers.int,
-      }),
-    });
+    numberExpression = numberExpression.attr(identifiers.int).call();
   }
 
   if (schema.exclusiveMinimum !== undefined) {
-    numberExpression = tsc.callExpression({
-      functionName: tsc.propertyAccessExpression({
-        expression: numberExpression,
-        name: identifiers.gt,
-      }),
-      parameters: [
-        numberParameter({ isBigInt, value: schema.exclusiveMinimum }),
-      ],
-    });
+    numberExpression = numberExpression
+      .attr(identifiers.gt)
+      .call(numberParameter({ isBigInt, value: schema.exclusiveMinimum }));
   } else if (schema.minimum !== undefined) {
-    numberExpression = tsc.callExpression({
-      functionName: tsc.propertyAccessExpression({
-        expression: numberExpression,
-        name: identifiers.gte,
-      }),
-      parameters: [numberParameter({ isBigInt, value: schema.minimum })],
-    });
+    numberExpression = numberExpression
+      .attr(identifiers.gte)
+      .call(numberParameter({ isBigInt, value: schema.minimum }));
   }
 
   if (schema.exclusiveMaximum !== undefined) {
-    numberExpression = tsc.callExpression({
-      functionName: tsc.propertyAccessExpression({
-        expression: numberExpression,
-        name: identifiers.lt,
-      }),
-      parameters: [
-        numberParameter({ isBigInt, value: schema.exclusiveMaximum }),
-      ],
-    });
+    numberExpression = numberExpression
+      .attr(identifiers.lt)
+      .call(numberParameter({ isBigInt, value: schema.exclusiveMaximum }));
   } else if (schema.maximum !== undefined) {
-    numberExpression = tsc.callExpression({
-      functionName: tsc.propertyAccessExpression({
-        expression: numberExpression,
-        name: identifiers.lte,
-      }),
-      parameters: [numberParameter({ isBigInt, value: schema.maximum })],
-    });
+    numberExpression = numberExpression
+      .attr(identifiers.lte)
+      .call(numberParameter({ isBigInt, value: schema.maximum }));
   }
 
   return numberExpression;

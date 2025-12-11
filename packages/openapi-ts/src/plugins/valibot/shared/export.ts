@@ -24,18 +24,14 @@ export const exportAst = ({
     resource: 'valibot.v',
   });
 
-  const statement = $.const(symbol.placeholder)
-    .export(symbol.exported)
-    .$if(plugin.config.comments && createSchemaComment({ schema }), (c, v) =>
-      c.doc(v as ReadonlyArray<string>),
+  const statement = $.const(symbol)
+    .export()
+    .$if(plugin.config.comments && createSchemaComment(schema), (c, v) =>
+      c.doc(v),
     )
-    .$if(state.hasLazyExpression.value, (c) =>
-      c.type(
-        $.type(v.placeholder).attr(
-          ast.typeName || identifiers.types.GenericSchema.text,
-        ),
-      ),
+    .$if(state.hasLazyExpression['~ref'], (c) =>
+      c.type($.type(v).attr(ast.typeName || identifiers.types.GenericSchema)),
     )
     .assign(pipesToAst({ pipes: ast.pipes, plugin }));
-  plugin.setSymbolValue(symbol, statement);
+  plugin.addNode(statement);
 };

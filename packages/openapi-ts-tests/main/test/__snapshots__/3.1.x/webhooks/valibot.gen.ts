@@ -79,9 +79,7 @@ export const vSessionUserRoomSystemCalloutRingingWebhookRequest = v.object({
 
 export const vSessionRecordingStartedWebhookRequest = v.object({
     body: v.optional(v.strictObject({
-        event: v.picklist([
-            'session.recording_started'
-        ]),
+        event: v.picklist(['session.recording_started']),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
@@ -108,9 +106,7 @@ export const vSessionRecordingStartedWebhookRequest = v.object({
 
 export const vSessionRecordingResumedWebhookRequest = v.object({
     body: v.optional(v.strictObject({
-        event: v.picklist([
-            'session.recording_resumed'
-        ]),
+        event: v.picklist(['session.recording_resumed']),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
@@ -137,9 +133,7 @@ export const vSessionRecordingResumedWebhookRequest = v.object({
 
 export const vSessionLiveStreamingStoppedWebhookRequest = v.object({
     body: v.optional(v.strictObject({
-        event: v.picklist([
-            'session.live_streaming_stopped'
-        ]),
+        event: v.picklist(['session.live_streaming_stopped']),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
@@ -177,9 +171,7 @@ export const vSessionLiveStreamingStoppedWebhookRequest = v.object({
 
 export const vSessionStreamIngestionStoppedWebhookRequest = v.object({
     body: v.optional(v.strictObject({
-        event: v.picklist([
-            'session.stream_ingestion_stopped'
-        ]),
+        event: v.picklist(['session.stream_ingestion_stopped']),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
@@ -241,9 +233,7 @@ export const vSessionUserRoomSystemCalloutRejectedWebhookRequest = v.object({
 
 export const vSessionAlertWebhookRequest = v.object({
     body: v.optional(v.strictObject({
-        event: v.picklist([
-            'session.alert'
-        ]),
+        event: v.picklist(['session.alert']),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
@@ -272,9 +262,7 @@ export const vSessionAlertWebhookRequest = v.object({
 
 export const vSessionSharingEndedWebhookRequest = v.object({
     body: v.optional(v.strictObject({
-        event: v.picklist([
-            'session.sharing_ended'
-        ]),
+        event: v.picklist(['session.sharing_ended']),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
@@ -310,9 +298,7 @@ export const vSessionSharingEndedWebhookRequest = v.object({
 
 export const vSessionRecordingPausedWebhookRequest = v.object({
     body: v.optional(v.strictObject({
-        event: v.picklist([
-            'session.recording_paused'
-        ]),
+        event: v.picklist(['session.recording_paused']),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
@@ -339,9 +325,7 @@ export const vSessionRecordingPausedWebhookRequest = v.object({
 
 export const vSessionEndedWebhookRequest = v.object({
     body: v.optional(v.strictObject({
-        event: v.picklist([
-            'session.ended'
-        ]),
+        event: v.picklist(['session.ended']),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
@@ -365,9 +349,7 @@ export const vSessionEndedWebhookRequest = v.object({
 
 export const vSessionStartedWebhookRequest = v.object({
     body: v.optional(v.strictObject({
-        event: v.picklist([
-            'session.started'
-        ]),
+        event: v.picklist(['session.started']),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
@@ -390,9 +372,7 @@ export const vSessionStartedWebhookRequest = v.object({
 
 export const vSessionStreamIngestionUnbindWebhookRequest = v.object({
     body: v.optional(v.strictObject({
-        event: v.picklist([
-            'session.stream_ingestion_unbind'
-        ]),
+        event: v.picklist(['session.stream_ingestion_unbind']),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
@@ -421,9 +401,7 @@ export const vSessionStreamIngestionUnbindWebhookRequest = v.object({
 
 export const vSessionLiveStreamingStartedWebhookRequest = v.object({
     body: v.optional(v.strictObject({
-        event: v.picklist([
-            'session.live_streaming_started'
-        ]),
+        event: v.picklist(['session.live_streaming_started']),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
@@ -536,9 +514,7 @@ export const vSessionUserPhoneCalloutAcceptedWebhookRequest = v.object({
 
 export const vSessionUserLeftWebhookRequest = v.object({
     body: v.optional(v.strictObject({
-        event: v.picklist([
-            'session.user_left'
-        ]),
+        event: v.picklist(['session.user_left']),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
@@ -569,9 +545,7 @@ export const vSessionUserLeftWebhookRequest = v.object({
 
 export const vSessionSharingStartedWebhookRequest = v.object({
     body: v.optional(v.strictObject({
-        event: v.picklist([
-            'session.sharing_started'
-        ]),
+        event: v.picklist(['session.sharing_started']),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
@@ -642,9 +616,7 @@ export const vSessionUserPhoneCalloutCanceledWebhookRequest = v.object({
 
 export const vSessionRecordingTranscriptCompletedWebhookRequest = v.object({
     body: v.optional(v.strictObject({
-        event: v.picklist([
-            'session.recording_transcript_completed'
-        ]),
+        event: v.picklist(['session.recording_transcript_completed']),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
@@ -687,9 +659,7 @@ export const vSessionRecordingTranscriptCompletedWebhookRequest = v.object({
                         'JPG'
                     ])),
                     download_url: v.optional(v.string()),
-                    status: v.optional(v.picklist([
-                        'completed'
-                    ])),
+                    status: v.optional(v.picklist(['completed'])),
                     recording_type: v.optional(v.picklist([
                         'shared_screen_with_speaker_view(CC)',
                         'shared_screen_with_speaker_view',
@@ -719,9 +689,7 @@ export const vSessionRecordingTranscriptCompletedWebhookRequest = v.object({
 
 export const vSessionRecordingDeletedWebhookRequest = v.object({
     body: v.optional(v.strictObject({
-        event: v.picklist([
-            'session.recording_deleted'
-        ]),
+        event: v.picklist(['session.recording_deleted']),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
@@ -780,9 +748,7 @@ export const vSessionUserRoomSystemCalloutFailedWebhookRequest = v.object({
 
 export const vSessionRecordingCompletedWebhookRequest = v.object({
     body: v.optional(v.strictObject({
-        event: v.picklist([
-            'session.recording_completed'
-        ]),
+        event: v.picklist(['session.recording_completed']),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
@@ -824,9 +790,7 @@ export const vSessionRecordingCompletedWebhookRequest = v.object({
                         'JPG'
                     ])),
                     download_url: v.optional(v.string()),
-                    status: v.optional(v.picklist([
-                        'completed'
-                    ])),
+                    status: v.optional(v.picklist(['completed'])),
                     recording_type: v.optional(v.picklist([
                         'shared_screen_with_speaker_view(CC)',
                         'shared_screen_with_speaker_view',
@@ -874,9 +838,7 @@ export const vSessionRecordingCompletedWebhookRequest = v.object({
                         'JPG'
                     ])),
                     download_url: v.optional(v.string()),
-                    status: v.optional(v.picklist([
-                        'completed'
-                    ])),
+                    status: v.optional(v.picklist(['completed'])),
                     recording_type: v.optional(v.picklist([
                         'shared_screen_with_speaker_view(CC)',
                         'shared_screen_with_speaker_view',
@@ -905,21 +867,12 @@ export const vSessionRecordingCompletedWebhookRequest = v.object({
                     recording_end: v.optional(v.string()),
                     file_name: v.optional(v.string()),
                     file_path: v.optional(v.string()),
-                    file_type: v.optional(v.picklist([
-                        'MP4'
-                    ])),
+                    file_type: v.optional(v.picklist(['MP4'])),
                     file_size: v.optional(v.number()),
-                    file_extension: v.optional(v.picklist([
-                        'MP4'
-                    ])),
+                    file_extension: v.optional(v.picklist(['MP4'])),
                     download_url: v.optional(v.string()),
-                    status: v.optional(v.picklist([
-                        'completed'
-                    ])),
-                    recording_type: v.optional(v.picklist([
-                        'individual_user',
-                        'individual_shared_screen'
-                    ])),
+                    status: v.optional(v.picklist(['completed'])),
+                    recording_type: v.optional(v.picklist(['individual_user', 'individual_shared_screen'])),
                     user_id: v.optional(v.string()),
                     user_key: v.optional(v.string())
                 })))
@@ -932,9 +885,7 @@ export const vSessionRecordingCompletedWebhookRequest = v.object({
 
 export const vSessionRecordingTranscriptFailedWebhookRequest = v.object({
     body: v.optional(v.strictObject({
-        event: v.picklist([
-            'session.recording_transcript_failed'
-        ]),
+        event: v.picklist(['session.recording_transcript_failed']),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
@@ -957,9 +908,7 @@ export const vSessionRecordingTranscriptFailedWebhookRequest = v.object({
 
 export const vSessionRecordingTrashedWebhookRequest = v.object({
     body: v.optional(v.strictObject({
-        event: v.picklist([
-            'session.recording_trashed'
-        ]),
+        event: v.picklist(['session.recording_trashed']),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
@@ -984,9 +933,7 @@ export const vSessionRecordingTrashedWebhookRequest = v.object({
 
 export const vSessionUserJoinedWebhookRequest = v.object({
     body: v.optional(v.strictObject({
-        event: v.picklist([
-            'session.user_joined'
-        ]),
+        event: v.picklist(['session.user_joined']),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
@@ -1016,9 +963,7 @@ export const vSessionUserJoinedWebhookRequest = v.object({
 
 export const vSessionStreamIngestionStartedWebhookRequest = v.object({
     body: v.optional(v.strictObject({
-        event: v.picklist([
-            'session.stream_ingestion_started'
-        ]),
+        event: v.picklist(['session.stream_ingestion_started']),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
@@ -1047,9 +992,7 @@ export const vSessionStreamIngestionStartedWebhookRequest = v.object({
 
 export const vSessionStreamIngestionConnectedWebhookRequest = v.object({
     body: v.optional(v.strictObject({
-        event: v.picklist([
-            'session.stream_ingestion_connected'
-        ]),
+        event: v.picklist(['session.stream_ingestion_connected']),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
@@ -1078,9 +1021,7 @@ export const vSessionStreamIngestionConnectedWebhookRequest = v.object({
 
 export const vSessionStreamIngestionDisconnectedWebhookRequest = v.object({
     body: v.optional(v.strictObject({
-        event: v.picklist([
-            'session.stream_ingestion_disconnected'
-        ]),
+        event: v.picklist(['session.stream_ingestion_disconnected']),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
@@ -1109,9 +1050,7 @@ export const vSessionStreamIngestionDisconnectedWebhookRequest = v.object({
 
 export const vSessionRecordingRecoveredWebhookRequest = v.object({
     body: v.optional(v.strictObject({
-        event: v.picklist([
-            'session.recording_recovered'
-        ]),
+        event: v.picklist(['session.recording_recovered']),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),
@@ -1253,9 +1192,7 @@ export const vSessionUserRoomSystemCalloutAcceptedWebhookRequest = v.object({
 
 export const vSessionRecordingStoppedWebhookRequest = v.object({
     body: v.optional(v.strictObject({
-        event: v.picklist([
-            'session.recording_stopped'
-        ]),
+        event: v.picklist(['session.recording_stopped']),
         event_ts: v.pipe(v.union([
             v.number(),
             v.string(),

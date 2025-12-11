@@ -630,4 +630,64 @@ describe('createSseClient', () => {
     expect(validator).not.toHaveBeenCalled();
     expect(transformer).not.toHaveBeenCalled();
   });
+
+  it('handles CRLF line endings', async () => {
+    fetchMock.mockResolvedValue({
+      body: makeStream(['id: 1\r\nevent: test\r\ndata: {"foo":"bar"}\r\n\r\n']),
+      ok: true,
+    });
+
+    const onEvent = vi.fn();
+    const { stream } = createSseClient({
+      onSseEvent: onEvent,
+      url: 'http://localhost/sse',
+    });
+
+    const result: any[] = [];
+    for await (const ev of stream) result.push(ev);
+
+    expect(result).toEqual([{ foo: 'bar' }]);
+    expect(onEvent).toHaveBeenCalledWith({
+      data: { foo: 'bar' },
+      event: 'test',
+      id: '1',
+      retry: 3000,
+    });
+  });
+
+  it('handles CR-only line endings', async () => {
+    fetchMock.mockResolvedValue({
+      body: makeStream(['id: 2\revent: test\rdata: {"baz":"qux"}\r\r']),
+      ok: true,
+    });
+
+    const onEvent = vi.fn();
+    const { stream } = createSseClient({
+      onSseEvent: onEvent,
+      url: 'http://localhost/sse',
+    });
+
+    const result: any[] = [];
+    for await (const ev of stream) result.push(ev);
+
+    expect(result).toEqual([{ baz: 'qux' }]);
+    expect(onEvent).toHaveBeenCalledWith({
+      data: { baz: 'qux' },
+      event: 'test',
+      id: '2',
+      retry: 3000,
+    });
+  });
+
+  it('handles mixed line endings in a single stream', async () => {
+    fetchMock.mockResolvedValue({
+      body: makeStream(['data: 1\n\n', 'data: 2\r\n\r\n', 'data: 3\r\r']),
+      ok: true,
+    });
+
+    const { stream } = createSseClient({ url: 'http://localhost/sse' });
+    const result: any[] = [];
+    for await (const ev of stream) result.push(ev);
+    expect(result).toEqual([1, 2, 3]);
+  });
 });

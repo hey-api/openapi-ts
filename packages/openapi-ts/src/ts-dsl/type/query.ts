@@ -1,23 +1,31 @@
+import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
-import type { MaybeTsDsl, WithString } from '../base';
+import type { MaybeTsDsl } from '../base';
 import { TypeTsDsl } from '../base';
+import { setTypeQueryFactory, TypeExprMixin } from '../mixins/type-expr';
 
-export class TypeQueryTsDsl extends TypeTsDsl<ts.TypeQueryNode> {
-  private expr: MaybeTsDsl<WithString>;
+const Mixed = TypeExprMixin(TypeTsDsl<ts.TypeQueryNode>);
 
-  constructor(expr: MaybeTsDsl<WithString>) {
+export class TypeQueryTsDsl extends Mixed {
+  readonly '~dsl' = 'TypeQueryTsDsl';
+
+  protected _expr: string | MaybeTsDsl<TypeTsDsl | ts.Expression>;
+
+  constructor(expr: string | MaybeTsDsl<TypeTsDsl | ts.Expression>) {
     super();
-    this.expr = expr;
+    this._expr = expr;
   }
 
-  $render(): ts.TypeQueryNode {
-    const exprName = this.$node(this.expr);
-    if (!ts.isEntityName(exprName)) {
-      throw new Error(
-        'TypeQueryTsDsl: expression must resolve to an EntityName',
-      );
-    }
-    return ts.factory.createTypeQueryNode(exprName);
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    ctx.analyze(this._expr);
+  }
+
+  override toAst() {
+    const expr = this.$node(this._expr);
+    return ts.factory.createTypeQueryNode(expr as unknown as ts.EntityName);
   }
 }
+
+setTypeQueryFactory((...args) => new TypeQueryTsDsl(...args));

@@ -1,6 +1,3 @@
-import type ts from 'typescript';
-
-import type { TsDsl } from '~/ts-dsl';
 import { $ } from '~/ts-dsl';
 
 import { identifiers } from '../constants';
@@ -9,17 +6,13 @@ import type { ValidatorResolverArgs } from '../types';
 
 const defaultValidatorResolver = ({
   schema,
-}: ValidatorResolverArgs): TsDsl<ts.Statement> =>
-  $(schema.placeholder)
-    .attr(identifiers.parseAsync)
-    .call('data')
-    .await()
-    .return();
+}: ValidatorResolverArgs): ReturnType<typeof $.return> =>
+  $(schema).attr(identifiers.parseAsync).call('data').await().return();
 
 export const createRequestValidatorV4 = ({
   operation,
   plugin,
-}: ValidatorArgs): TsDsl | undefined => {
+}: ValidatorArgs): ReturnType<typeof $.func> | undefined => {
   const symbol = plugin.getSymbol({
     category: 'schema',
     resource: 'operation',
@@ -56,7 +49,7 @@ export const createRequestValidatorV4 = ({
 export const createResponseValidatorV4 = ({
   operation,
   plugin,
-}: ValidatorArgs): TsDsl | undefined => {
+}: ValidatorArgs): ReturnType<typeof $.func> | undefined => {
   const symbol = plugin.getSymbol({
     category: 'schema',
     resource: 'operation',

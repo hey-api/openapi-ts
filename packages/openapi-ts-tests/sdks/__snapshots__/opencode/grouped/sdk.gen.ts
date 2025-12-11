@@ -21,451 +21,290 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
 /**
  * Get events
  */
-export const eventSubscribe = <ThrowOnError extends boolean = false>(options?: Options<EventSubscribeData, ThrowOnError>) => {
-    return (options?.client ?? client).sse.get<EventSubscribeResponses, unknown, ThrowOnError>({
-        url: '/event',
-        ...options
-    });
-};
+export const eventSubscribe = <ThrowOnError extends boolean = false>(options?: Options<EventSubscribeData, ThrowOnError>) => (options?.client ?? client).sse.get<EventSubscribeResponses, unknown, ThrowOnError>({ url: '/event', ...options });
 
 /**
  * Get app info
  */
-export const appGet = <ThrowOnError extends boolean = false>(options?: Options<AppGetData, ThrowOnError>) => {
-    return (options?.client ?? client).get<AppGetResponses, unknown, ThrowOnError>({
-        url: '/app',
-        ...options
-    });
-};
+export const appGet = <ThrowOnError extends boolean = false>(options?: Options<AppGetData, ThrowOnError>) => (options?.client ?? client).get<AppGetResponses, unknown, ThrowOnError>({ url: '/app', ...options });
 
 /**
  * Initialize the app
  */
-export const appInit = <ThrowOnError extends boolean = false>(options?: Options<AppInitData, ThrowOnError>) => {
-    return (options?.client ?? client).post<AppInitResponses, unknown, ThrowOnError>({
-        url: '/app/init',
-        ...options
-    });
-};
+export const appInit = <ThrowOnError extends boolean = false>(options?: Options<AppInitData, ThrowOnError>) => (options?.client ?? client).post<AppInitResponses, unknown, ThrowOnError>({ url: '/app/init', ...options });
 
 /**
  * Get config info
  */
-export const configGet = <ThrowOnError extends boolean = false>(options?: Options<ConfigGetData, ThrowOnError>) => {
-    return (options?.client ?? client).get<ConfigGetResponses, unknown, ThrowOnError>({
-        url: '/config',
-        ...options
-    });
-};
+export const configGet = <ThrowOnError extends boolean = false>(options?: Options<ConfigGetData, ThrowOnError>) => (options?.client ?? client).get<ConfigGetResponses, unknown, ThrowOnError>({ url: '/config', ...options });
 
 /**
  * List all sessions
  */
-export const sessionList = <ThrowOnError extends boolean = false>(options?: Options<SessionListData, ThrowOnError>) => {
-    return (options?.client ?? client).get<SessionListResponses, unknown, ThrowOnError>({
-        url: '/session',
-        ...options
-    });
-};
+export const sessionList = <ThrowOnError extends boolean = false>(options?: Options<SessionListData, ThrowOnError>) => (options?.client ?? client).get<SessionListResponses, unknown, ThrowOnError>({ url: '/session', ...options });
 
 /**
  * Create a new session
  */
-export const sessionCreate = <ThrowOnError extends boolean = false>(options?: Options<SessionCreateData, ThrowOnError>) => {
-    return (options?.client ?? client).post<SessionCreateResponses, SessionCreateErrors, ThrowOnError>({
-        url: '/session',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options?.headers
-        }
-    });
-};
+export const sessionCreate = <ThrowOnError extends boolean = false>(options?: Options<SessionCreateData, ThrowOnError>) => (options?.client ?? client).post<SessionCreateResponses, SessionCreateErrors, ThrowOnError>({
+    url: '/session',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options?.headers
+    }
+});
 
 /**
  * Delete a session and all its data
  */
-export const sessionDelete = <ThrowOnError extends boolean = false>(options: Options<SessionDeleteData, ThrowOnError>) => {
-    return (options.client ?? client).delete<SessionDeleteResponses, unknown, ThrowOnError>({
-        url: '/session/{id}',
-        ...options
-    });
-};
+export const sessionDelete = <ThrowOnError extends boolean = false>(options: Options<SessionDeleteData, ThrowOnError>) => (options.client ?? client).delete<SessionDeleteResponses, unknown, ThrowOnError>({ url: '/session/{id}', ...options });
 
 /**
  * Get session
  */
-export const sessionGet = <ThrowOnError extends boolean = false>(options: Options<SessionGetData, ThrowOnError>) => {
-    return (options.client ?? client).get<SessionGetResponses, unknown, ThrowOnError>({
-        url: '/session/{id}',
-        ...options
-    });
-};
+export const sessionGet = <ThrowOnError extends boolean = false>(options: Options<SessionGetData, ThrowOnError>) => (options.client ?? client).get<SessionGetResponses, unknown, ThrowOnError>({ url: '/session/{id}', ...options });
 
 /**
  * Update session properties
  */
-export const sessionUpdate = <ThrowOnError extends boolean = false>(options: Options<SessionUpdateData, ThrowOnError>) => {
-    return (options.client ?? client).patch<SessionUpdateResponses, unknown, ThrowOnError>({
-        url: '/session/{id}',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers
-        }
-    });
-};
+export const sessionUpdate = <ThrowOnError extends boolean = false>(options: Options<SessionUpdateData, ThrowOnError>) => (options.client ?? client).patch<SessionUpdateResponses, unknown, ThrowOnError>({
+    url: '/session/{id}',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
 
 /**
  * Get a session's children
  */
-export const sessionChildren = <ThrowOnError extends boolean = false>(options: Options<SessionChildrenData, ThrowOnError>) => {
-    return (options.client ?? client).get<SessionChildrenResponses, unknown, ThrowOnError>({
-        url: '/session/{id}/children',
-        ...options
-    });
-};
+export const sessionChildren = <ThrowOnError extends boolean = false>(options: Options<SessionChildrenData, ThrowOnError>) => (options.client ?? client).get<SessionChildrenResponses, unknown, ThrowOnError>({ url: '/session/{id}/children', ...options });
 
 /**
  * Analyze the app and create an AGENTS.md file
  */
-export const sessionInit = <ThrowOnError extends boolean = false>(options: Options<SessionInitData, ThrowOnError>) => {
-    return (options.client ?? client).post<SessionInitResponses, unknown, ThrowOnError>({
-        url: '/session/{id}/init',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers
-        }
-    });
-};
+export const sessionInit = <ThrowOnError extends boolean = false>(options: Options<SessionInitData, ThrowOnError>) => (options.client ?? client).post<SessionInitResponses, unknown, ThrowOnError>({
+    url: '/session/{id}/init',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
 
 /**
  * Abort a session
  */
-export const sessionAbort = <ThrowOnError extends boolean = false>(options: Options<SessionAbortData, ThrowOnError>) => {
-    return (options.client ?? client).post<SessionAbortResponses, unknown, ThrowOnError>({
-        url: '/session/{id}/abort',
-        ...options
-    });
-};
+export const sessionAbort = <ThrowOnError extends boolean = false>(options: Options<SessionAbortData, ThrowOnError>) => (options.client ?? client).post<SessionAbortResponses, unknown, ThrowOnError>({ url: '/session/{id}/abort', ...options });
 
 /**
  * Unshare the session
  */
-export const sessionUnshare = <ThrowOnError extends boolean = false>(options: Options<SessionUnshareData, ThrowOnError>) => {
-    return (options.client ?? client).delete<SessionUnshareResponses, unknown, ThrowOnError>({
-        url: '/session/{id}/share',
-        ...options
-    });
-};
+export const sessionUnshare = <ThrowOnError extends boolean = false>(options: Options<SessionUnshareData, ThrowOnError>) => (options.client ?? client).delete<SessionUnshareResponses, unknown, ThrowOnError>({ url: '/session/{id}/share', ...options });
 
 /**
  * Share a session
  */
-export const sessionShare = <ThrowOnError extends boolean = false>(options: Options<SessionShareData, ThrowOnError>) => {
-    return (options.client ?? client).post<SessionShareResponses, unknown, ThrowOnError>({
-        url: '/session/{id}/share',
-        ...options
-    });
-};
+export const sessionShare = <ThrowOnError extends boolean = false>(options: Options<SessionShareData, ThrowOnError>) => (options.client ?? client).post<SessionShareResponses, unknown, ThrowOnError>({ url: '/session/{id}/share', ...options });
 
 /**
  * Summarize the session
  */
-export const sessionSummarize = <ThrowOnError extends boolean = false>(options: Options<SessionSummarizeData, ThrowOnError>) => {
-    return (options.client ?? client).post<SessionSummarizeResponses, unknown, ThrowOnError>({
-        url: '/session/{id}/summarize',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers
-        }
-    });
-};
+export const sessionSummarize = <ThrowOnError extends boolean = false>(options: Options<SessionSummarizeData, ThrowOnError>) => (options.client ?? client).post<SessionSummarizeResponses, unknown, ThrowOnError>({
+    url: '/session/{id}/summarize',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
 
 /**
  * List messages for a session
  */
-export const sessionMessages = <ThrowOnError extends boolean = false>(options: Options<SessionMessagesData, ThrowOnError>) => {
-    return (options.client ?? client).get<SessionMessagesResponses, unknown, ThrowOnError>({
-        url: '/session/{id}/message',
-        ...options
-    });
-};
+export const sessionMessages = <ThrowOnError extends boolean = false>(options: Options<SessionMessagesData, ThrowOnError>) => (options.client ?? client).get<SessionMessagesResponses, unknown, ThrowOnError>({ url: '/session/{id}/message', ...options });
 
 /**
  * Create and send a new message to a session
  */
-export const sessionChat = <ThrowOnError extends boolean = false>(options: Options<SessionChatData, ThrowOnError>) => {
-    return (options.client ?? client).post<SessionChatResponses, unknown, ThrowOnError>({
-        url: '/session/{id}/message',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers
-        }
-    });
-};
+export const sessionChat = <ThrowOnError extends boolean = false>(options: Options<SessionChatData, ThrowOnError>) => (options.client ?? client).post<SessionChatResponses, unknown, ThrowOnError>({
+    url: '/session/{id}/message',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
 
 /**
  * Get a message from a session
  */
-export const sessionMessage = <ThrowOnError extends boolean = false>(options: Options<SessionMessageData, ThrowOnError>) => {
-    return (options.client ?? client).get<SessionMessageResponses, unknown, ThrowOnError>({
-        url: '/session/{id}/message/{messageID}',
-        ...options
-    });
-};
+export const sessionMessage = <ThrowOnError extends boolean = false>(options: Options<SessionMessageData, ThrowOnError>) => (options.client ?? client).get<SessionMessageResponses, unknown, ThrowOnError>({ url: '/session/{id}/message/{messageID}', ...options });
 
 /**
  * Run a shell command
  */
-export const sessionShell = <ThrowOnError extends boolean = false>(options: Options<SessionShellData, ThrowOnError>) => {
-    return (options.client ?? client).post<SessionShellResponses, unknown, ThrowOnError>({
-        url: '/session/{id}/shell',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers
-        }
-    });
-};
+export const sessionShell = <ThrowOnError extends boolean = false>(options: Options<SessionShellData, ThrowOnError>) => (options.client ?? client).post<SessionShellResponses, unknown, ThrowOnError>({
+    url: '/session/{id}/shell',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
 
 /**
  * Revert a message
  */
-export const sessionRevert = <ThrowOnError extends boolean = false>(options: Options<SessionRevertData, ThrowOnError>) => {
-    return (options.client ?? client).post<SessionRevertResponses, unknown, ThrowOnError>({
-        url: '/session/{id}/revert',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers
-        }
-    });
-};
+export const sessionRevert = <ThrowOnError extends boolean = false>(options: Options<SessionRevertData, ThrowOnError>) => (options.client ?? client).post<SessionRevertResponses, unknown, ThrowOnError>({
+    url: '/session/{id}/revert',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
 
 /**
  * Restore all reverted messages
  */
-export const sessionUnrevert = <ThrowOnError extends boolean = false>(options: Options<SessionUnrevertData, ThrowOnError>) => {
-    return (options.client ?? client).post<SessionUnrevertResponses, unknown, ThrowOnError>({
-        url: '/session/{id}/unrevert',
-        ...options
-    });
-};
+export const sessionUnrevert = <ThrowOnError extends boolean = false>(options: Options<SessionUnrevertData, ThrowOnError>) => (options.client ?? client).post<SessionUnrevertResponses, unknown, ThrowOnError>({ url: '/session/{id}/unrevert', ...options });
 
 /**
  * Respond to a permission request
  */
-export const postSessionByIdPermissionsByPermissionId = <ThrowOnError extends boolean = false>(options: Options<PostSessionByIdPermissionsByPermissionIdData, ThrowOnError>) => {
-    return (options.client ?? client).post<PostSessionByIdPermissionsByPermissionIdResponses, unknown, ThrowOnError>({
-        url: '/session/{id}/permissions/{permissionID}',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers
-        }
-    });
-};
+export const postSessionByIdPermissionsByPermissionId = <ThrowOnError extends boolean = false>(options: Options<PostSessionByIdPermissionsByPermissionIdData, ThrowOnError>) => (options.client ?? client).post<PostSessionByIdPermissionsByPermissionIdResponses, unknown, ThrowOnError>({
+    url: '/session/{id}/permissions/{permissionID}',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
 
 /**
  * List all providers
  */
-export const configProviders = <ThrowOnError extends boolean = false>(options?: Options<ConfigProvidersData, ThrowOnError>) => {
-    return (options?.client ?? client).get<ConfigProvidersResponses, unknown, ThrowOnError>({
-        url: '/config/providers',
-        ...options
-    });
-};
+export const configProviders = <ThrowOnError extends boolean = false>(options?: Options<ConfigProvidersData, ThrowOnError>) => (options?.client ?? client).get<ConfigProvidersResponses, unknown, ThrowOnError>({ url: '/config/providers', ...options });
 
 /**
  * Find text in files
  */
-export const findText = <ThrowOnError extends boolean = false>(options: Options<FindTextData, ThrowOnError>) => {
-    return (options.client ?? client).get<FindTextResponses, unknown, ThrowOnError>({
-        url: '/find',
-        ...options
-    });
-};
+export const findText = <ThrowOnError extends boolean = false>(options: Options<FindTextData, ThrowOnError>) => (options.client ?? client).get<FindTextResponses, unknown, ThrowOnError>({ url: '/find', ...options });
 
 /**
  * Find files
  */
-export const findFiles = <ThrowOnError extends boolean = false>(options: Options<FindFilesData, ThrowOnError>) => {
-    return (options.client ?? client).get<FindFilesResponses, unknown, ThrowOnError>({
-        url: '/find/file',
-        ...options
-    });
-};
+export const findFiles = <ThrowOnError extends boolean = false>(options: Options<FindFilesData, ThrowOnError>) => (options.client ?? client).get<FindFilesResponses, unknown, ThrowOnError>({ url: '/find/file', ...options });
 
 /**
  * Find workspace symbols
  */
-export const findSymbols = <ThrowOnError extends boolean = false>(options: Options<FindSymbolsData, ThrowOnError>) => {
-    return (options.client ?? client).get<FindSymbolsResponses, unknown, ThrowOnError>({
-        url: '/find/symbol',
-        ...options
-    });
-};
+export const findSymbols = <ThrowOnError extends boolean = false>(options: Options<FindSymbolsData, ThrowOnError>) => (options.client ?? client).get<FindSymbolsResponses, unknown, ThrowOnError>({ url: '/find/symbol', ...options });
 
 /**
  * Read a file
  */
-export const fileRead = <ThrowOnError extends boolean = false>(options: Options<FileReadData, ThrowOnError>) => {
-    return (options.client ?? client).get<FileReadResponses, unknown, ThrowOnError>({
-        url: '/file',
-        ...options
-    });
-};
+export const fileRead = <ThrowOnError extends boolean = false>(options: Options<FileReadData, ThrowOnError>) => (options.client ?? client).get<FileReadResponses, unknown, ThrowOnError>({ url: '/file', ...options });
 
 /**
  * Get file status
  */
-export const fileStatus = <ThrowOnError extends boolean = false>(options?: Options<FileStatusData, ThrowOnError>) => {
-    return (options?.client ?? client).get<FileStatusResponses, unknown, ThrowOnError>({
-        url: '/file/status',
-        ...options
-    });
-};
+export const fileStatus = <ThrowOnError extends boolean = false>(options?: Options<FileStatusData, ThrowOnError>) => (options?.client ?? client).get<FileStatusResponses, unknown, ThrowOnError>({ url: '/file/status', ...options });
 
 /**
  * Write a log entry to the server logs
  */
-export const appLog = <ThrowOnError extends boolean = false>(options?: Options<AppLogData, ThrowOnError>) => {
-    return (options?.client ?? client).post<AppLogResponses, unknown, ThrowOnError>({
-        url: '/log',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options?.headers
-        }
-    });
-};
+export const appLog = <ThrowOnError extends boolean = false>(options?: Options<AppLogData, ThrowOnError>) => (options?.client ?? client).post<AppLogResponses, unknown, ThrowOnError>({
+    url: '/log',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options?.headers
+    }
+});
 
 /**
  * List all agents
  */
-export const appAgents = <ThrowOnError extends boolean = false>(options?: Options<AppAgentsData, ThrowOnError>) => {
-    return (options?.client ?? client).get<AppAgentsResponses, unknown, ThrowOnError>({
-        url: '/agent',
-        ...options
-    });
-};
+export const appAgents = <ThrowOnError extends boolean = false>(options?: Options<AppAgentsData, ThrowOnError>) => (options?.client ?? client).get<AppAgentsResponses, unknown, ThrowOnError>({ url: '/agent', ...options });
 
 /**
  * Append prompt to the TUI
  */
-export const tuiAppendPrompt = <ThrowOnError extends boolean = false>(options?: Options<TuiAppendPromptData, ThrowOnError>) => {
-    return (options?.client ?? client).post<TuiAppendPromptResponses, unknown, ThrowOnError>({
-        url: '/tui/append-prompt',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options?.headers
-        }
-    });
-};
+export const tuiAppendPrompt = <ThrowOnError extends boolean = false>(options?: Options<TuiAppendPromptData, ThrowOnError>) => (options?.client ?? client).post<TuiAppendPromptResponses, unknown, ThrowOnError>({
+    url: '/tui/append-prompt',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options?.headers
+    }
+});
 
 /**
  * Open the help dialog
  */
-export const tuiOpenHelp = <ThrowOnError extends boolean = false>(options?: Options<TuiOpenHelpData, ThrowOnError>) => {
-    return (options?.client ?? client).post<TuiOpenHelpResponses, unknown, ThrowOnError>({
-        url: '/tui/open-help',
-        ...options
-    });
-};
+export const tuiOpenHelp = <ThrowOnError extends boolean = false>(options?: Options<TuiOpenHelpData, ThrowOnError>) => (options?.client ?? client).post<TuiOpenHelpResponses, unknown, ThrowOnError>({ url: '/tui/open-help', ...options });
 
 /**
  * Open the session dialog
  */
-export const tuiOpenSessions = <ThrowOnError extends boolean = false>(options?: Options<TuiOpenSessionsData, ThrowOnError>) => {
-    return (options?.client ?? client).post<TuiOpenSessionsResponses, unknown, ThrowOnError>({
-        url: '/tui/open-sessions',
-        ...options
-    });
-};
+export const tuiOpenSessions = <ThrowOnError extends boolean = false>(options?: Options<TuiOpenSessionsData, ThrowOnError>) => (options?.client ?? client).post<TuiOpenSessionsResponses, unknown, ThrowOnError>({ url: '/tui/open-sessions', ...options });
 
 /**
  * Open the theme dialog
  */
-export const tuiOpenThemes = <ThrowOnError extends boolean = false>(options?: Options<TuiOpenThemesData, ThrowOnError>) => {
-    return (options?.client ?? client).post<TuiOpenThemesResponses, unknown, ThrowOnError>({
-        url: '/tui/open-themes',
-        ...options
-    });
-};
+export const tuiOpenThemes = <ThrowOnError extends boolean = false>(options?: Options<TuiOpenThemesData, ThrowOnError>) => (options?.client ?? client).post<TuiOpenThemesResponses, unknown, ThrowOnError>({ url: '/tui/open-themes', ...options });
 
 /**
  * Open the model dialog
  */
-export const tuiOpenModels = <ThrowOnError extends boolean = false>(options?: Options<TuiOpenModelsData, ThrowOnError>) => {
-    return (options?.client ?? client).post<TuiOpenModelsResponses, unknown, ThrowOnError>({
-        url: '/tui/open-models',
-        ...options
-    });
-};
+export const tuiOpenModels = <ThrowOnError extends boolean = false>(options?: Options<TuiOpenModelsData, ThrowOnError>) => (options?.client ?? client).post<TuiOpenModelsResponses, unknown, ThrowOnError>({ url: '/tui/open-models', ...options });
 
 /**
  * Submit the prompt
  */
-export const tuiSubmitPrompt = <ThrowOnError extends boolean = false>(options?: Options<TuiSubmitPromptData, ThrowOnError>) => {
-    return (options?.client ?? client).post<TuiSubmitPromptResponses, unknown, ThrowOnError>({
-        url: '/tui/submit-prompt',
-        ...options
-    });
-};
+export const tuiSubmitPrompt = <ThrowOnError extends boolean = false>(options?: Options<TuiSubmitPromptData, ThrowOnError>) => (options?.client ?? client).post<TuiSubmitPromptResponses, unknown, ThrowOnError>({ url: '/tui/submit-prompt', ...options });
 
 /**
  * Clear the prompt
  */
-export const tuiClearPrompt = <ThrowOnError extends boolean = false>(options?: Options<TuiClearPromptData, ThrowOnError>) => {
-    return (options?.client ?? client).post<TuiClearPromptResponses, unknown, ThrowOnError>({
-        url: '/tui/clear-prompt',
-        ...options
-    });
-};
+export const tuiClearPrompt = <ThrowOnError extends boolean = false>(options?: Options<TuiClearPromptData, ThrowOnError>) => (options?.client ?? client).post<TuiClearPromptResponses, unknown, ThrowOnError>({ url: '/tui/clear-prompt', ...options });
 
 /**
  * Execute a TUI command (e.g. agent_cycle)
  */
-export const tuiExecuteCommand = <ThrowOnError extends boolean = false>(options?: Options<TuiExecuteCommandData, ThrowOnError>) => {
-    return (options?.client ?? client).post<TuiExecuteCommandResponses, unknown, ThrowOnError>({
-        url: '/tui/execute-command',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options?.headers
-        }
-    });
-};
+export const tuiExecuteCommand = <ThrowOnError extends boolean = false>(options?: Options<TuiExecuteCommandData, ThrowOnError>) => (options?.client ?? client).post<TuiExecuteCommandResponses, unknown, ThrowOnError>({
+    url: '/tui/execute-command',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options?.headers
+    }
+});
 
 /**
  * Show a toast notification in the TUI
  */
-export const tuiShowToast = <ThrowOnError extends boolean = false>(options?: Options<TuiShowToastData, ThrowOnError>) => {
-    return (options?.client ?? client).post<TuiShowToastResponses, unknown, ThrowOnError>({
-        url: '/tui/show-toast',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options?.headers
-        }
-    });
-};
+export const tuiShowToast = <ThrowOnError extends boolean = false>(options?: Options<TuiShowToastData, ThrowOnError>) => (options?.client ?? client).post<TuiShowToastResponses, unknown, ThrowOnError>({
+    url: '/tui/show-toast',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options?.headers
+    }
+});
 
 /**
  * Set authentication credentials
  */
-export const authSet = <ThrowOnError extends boolean = false>(options: Options<AuthSetData, ThrowOnError>) => {
-    return (options.client ?? client).put<AuthSetResponses, AuthSetErrors, ThrowOnError>({
-        url: '/auth/{id}',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers
-        }
-    });
-};
+export const authSet = <ThrowOnError extends boolean = false>(options: Options<AuthSetData, ThrowOnError>) => (options.client ?? client).put<AuthSetResponses, AuthSetErrors, ThrowOnError>({
+    url: '/auth/{id}',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});

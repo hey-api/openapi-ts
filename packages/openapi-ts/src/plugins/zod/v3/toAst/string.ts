@@ -1,5 +1,3 @@
-import type ts from 'typescript';
-
 import type { SchemaWithType } from '~/plugins';
 import { $ } from '~/ts-dsl';
 
@@ -48,7 +46,7 @@ export const stringToAst = ({
   schema,
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'string'>;
-}): ts.CallExpression => {
+}): ReturnType<typeof $.call> => {
   let chain: ReturnType<typeof $.call>;
 
   const z = plugin.referenceSymbol({
@@ -57,13 +55,11 @@ export const stringToAst = ({
   });
 
   if (typeof schema.const === 'string') {
-    chain = $(z.placeholder)
-      .attr(identifiers.literal)
-      .call($.literal(schema.const));
-    return chain.$render();
+    chain = $(z).attr(identifiers.literal).call($.literal(schema.const));
+    return chain;
   }
 
-  chain = $(z.placeholder).attr(identifiers.string).call();
+  chain = $(z).attr(identifiers.string).call();
 
   if (schema.format) {
     const args: FormatResolverArgs = { $, chain, plugin, schema };
@@ -88,5 +84,5 @@ export const stringToAst = ({
     chain = chain.attr(identifiers.regex).call($.regexp(schema.pattern));
   }
 
-  return chain.$render();
+  return chain;
 };

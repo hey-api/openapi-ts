@@ -1,4 +1,4 @@
-import type { Symbol, SymbolIn } from '@hey-api/codegen-core';
+import type { Node, Symbol, SymbolIn } from '@hey-api/codegen-core';
 
 import type { IROperationObject } from '~/ir/types';
 import type { PluginInstance } from '~/plugins/shared/utils/instance';
@@ -8,6 +8,34 @@ export type Hooks = {
    * Event hooks.
    */
   events?: {
+    /**
+     * Triggered after adding or updating a node.
+     *
+     * You can use this to perform actions after a node is added or updated.
+     *
+     * @param args Arguments object.
+     * @returns void
+     */
+    'node:set:after'?: (args: {
+      /** The node added or updated. */
+      node: Node | null;
+      /** Plugin that added or updated the node. */
+      plugin: PluginInstance;
+    }) => void;
+    /**
+     * Triggered before adding or updating a node.
+     *
+     * You can use this to modify the node before it's added or updated.
+     *
+     * @param args Arguments object.
+     * @returns void
+     */
+    'node:set:before'?: (args: {
+      /** The node to be added or updated. */
+      node: Node | null;
+      /** Plugin adding or updating the node. */
+      plugin: PluginInstance;
+    }) => void;
     /**
      * Triggered after executing a plugin handler.
      *
@@ -55,38 +83,6 @@ export type Hooks = {
       plugin: PluginInstance;
       /** Symbol to register. */
       symbol: SymbolIn;
-    }) => void;
-    /**
-     * Triggered after setting a symbol value.
-     *
-     * You can use this to perform actions after a symbol's value is set.
-     *
-     * @param args Arguments object.
-     * @returns void
-     */
-    'symbol:setValue:after'?: (args: {
-      /** Plugin that set the symbol value. */
-      plugin: PluginInstance;
-      /** The symbol. */
-      symbol: Symbol;
-      /** The value that was set. */
-      value: unknown;
-    }) => void;
-    /**
-     * Triggered before setting a symbol value.
-     *
-     *  You can use this to modify the value before it's set.
-     *
-     * @param args Arguments object.
-     * @returns void
-     */
-    'symbol:setValue:before'?: (args: {
-      /** Plugin setting the symbol value. */
-      plugin: PluginInstance;
-      /** The symbol. */
-      symbol: Symbol;
-      /** The value to set. */
-      value: unknown;
     }) => void;
   };
   /**

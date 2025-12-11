@@ -15,8 +15,7 @@
       "skipFiles": ["<node_internals>/**"],
       "cwd": "${workspaceFolder}/dev",
       "runtimeExecutable": "node",
-      "runtimeArgs": ["-r", "ts-node/register/transpile-only"],
-      "program": "${workspaceFolder}/packages/openapi-ts/src/run.ts",
+      "program": "${workspaceFolder}/packages/openapi-ts/dist/run.mjs",
       "env": {
         "DEBUG": "false"
       }

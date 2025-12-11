@@ -72,11 +72,11 @@ const optionsParamName = 'options';
 export const createSwrInfiniteOptions = ({
   operation,
   plugin,
-  sdkFn,
+  queryFn,
 }: {
   operation: IR.OperationObject;
   plugin: SwrPlugin['Instance'];
-  sdkFn: string;
+  queryFn: ReturnType<typeof $.expr | typeof $.call | typeof $.attr>;
 }): void => {
   if (hasOperationSse({ operation })) {
     return;
@@ -168,7 +168,7 @@ export const createSwrInfiniteOptions = ({
   );
 
   // Call SDK function with the options from the key
-  const awaitSdkFn = $(sdkFn)
+  const awaitSdkFn = $(queryFn)
     .call(
       $.object().spread(optionsFromKey).prop('throwOnError', $.literal(true)),
     )
@@ -198,26 +198,26 @@ export const createSwrInfiniteOptions = ({
     .prop('getKey', $(getKeyNode))
     .prop('fetcher', fetcherFunction);
 
-  const symbolSwrInfiniteOptionsFn = plugin.registerSymbol({
-    exported: true,
-    meta: {
-      category: 'hook',
-      resource: 'operation',
-      resourceId: operation.id,
-      role: 'swrInfiniteOptions',
-      tool: plugin.name,
-    },
-    name: buildName({
+  const symbolSwrInfiniteOptionsFn = plugin.symbol(
+    buildName({
       config: plugin.config.swrInfiniteOptions,
       name: operation.id,
     }),
-  });
+    {
+      meta: {
+        category: 'hook',
+        resource: 'operation',
+        resourceId: operation.id,
+        role: 'swrInfiniteOptions',
+        tool: plugin.name,
+      },
+    },
+  );
 
-  const statement = $.const(symbolSwrInfiniteOptionsFn.placeholder)
-    .export(symbolSwrInfiniteOptionsFn.exported)
-    .$if(
-      plugin.config.comments && createOperationComment({ operation }),
-      (c, v) => c.doc(v as Array<string>),
+  const statement = $.const(symbolSwrInfiniteOptionsFn)
+    .export()
+    .$if(plugin.config.comments && createOperationComment(operation), (c, v) =>
+      c.doc(v),
     )
     .assign(
       $.func()
@@ -226,6 +226,5 @@ export const createSwrInfiniteOptions = ({
         )
         .do($.return(swrInfiniteOptionsObj)),
     );
-
-  plugin.setSymbolValue(symbolSwrInfiniteOptionsFn, statement);
+  plugin.addNode(statement);
 };

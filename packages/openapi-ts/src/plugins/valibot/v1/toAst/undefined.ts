@@ -1,5 +1,5 @@
 import type { SchemaWithType } from '~/plugins';
-import { tsc } from '~/tsc';
+import { $ } from '~/ts-dsl';
 
 import type { IrSchemaToAstOptions } from '../../shared/types';
 import { identifiers } from '../constants';
@@ -14,11 +14,6 @@ export const undefinedToAst = ({
     resource: 'valibot.v',
   });
 
-  const expression = tsc.callExpression({
-    functionName: tsc.propertyAccessExpression({
-      expression: v.placeholder,
-      name: identifiers.schemas.undefined,
-    }),
-  });
+  const expression = $(v).attr(identifiers.schemas.undefined).call();
   return expression;
 };

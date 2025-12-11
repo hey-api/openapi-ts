@@ -3,7 +3,7 @@
 import * as v from 'valibot';
 
 export const vFoo = v.object({
-    foo: v.optional(v.literal("foo")),
+    foo: v.optional(v.literal('foo')),
     bar: v.optional(v.literal(3.2)),
     baz: v.optional(v.literal(-1)),
     qux: v.optional(v.literal(true)),
@@ -19,15 +19,15 @@ export const vFoo = v.object({
     numberInt8: v.optional(v.literal(100)),
     numberInt16: v.optional(v.literal(1000)),
     numberInt32: v.optional(v.literal(100000)),
-    numberInt64: v.optional(v.literal(BigInt('1000000000000'))),
+    numberInt64: v.optional(v.literal(BigInt(1000000000000))),
     numberUint8: v.optional(v.literal(200)),
     numberUint16: v.optional(v.literal(50000)),
     numberUint32: v.optional(v.literal(3000000000)),
-    numberUint64: v.optional(v.literal(BigInt('18000000000000000000'))),
+    numberUint64: v.optional(v.literal(BigInt(18000000000000000000))),
     integerInt8: v.optional(v.literal(-100)),
     integerInt16: v.optional(v.literal(-1000)),
     integerInt32: v.optional(v.literal(-100000)),
-    integerInt64: v.optional(v.literal(BigInt('-1000000000000'))),
+    integerInt64: v.optional(v.literal(BigInt(-1000000000000))),
     integerUint8: v.optional(v.literal(255)),
     integerUint16: v.optional(v.literal(65535)),
     integerUint32: v.optional(v.literal(4294967295)),

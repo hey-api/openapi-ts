@@ -76,7 +76,7 @@ export const swrKeyStatement = ({
     funcBuilder.param('options', (p) => p.optional(!isRequired).type(typeData));
   }
 
-  const statement = $.const(symbol.placeholder)
+  const statement = $.const(symbol)
     .export(symbol.exported)
     .assign(funcBuilder.do($(keyExpression).return()));
 

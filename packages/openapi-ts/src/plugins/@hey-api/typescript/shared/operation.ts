@@ -1,8 +1,10 @@
+import { fromRef } from '@hey-api/codegen-core';
+
 import { operationResponsesMap } from '~/ir/operation';
 import { deduplicateSchema } from '~/ir/schema';
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
-import { tsc } from '~/tsc';
+import { $ } from '~/ts-dsl';
 
 import { irSchemaToAst } from '../v1/plugin';
 import type { IrSchemaToAstOptions } from './types';
@@ -121,15 +123,13 @@ const operationToDataType = ({
   data.required = dataRequired;
 
   const symbol = plugin.registerSymbol({
-    exported: true,
-    kind: 'type',
     meta: {
       category: 'type',
-      path: state.path.value,
+      path: fromRef(state.path),
       resource: 'operation',
       resourceId: operation.id,
       role: 'data',
-      tags: state.tags?.value,
+      tags: fromRef(state.tags),
       tool: 'typescript',
     },
     name: buildName({
@@ -137,17 +137,17 @@ const operationToDataType = ({
       name: operation.id,
     }),
   });
-  const type = irSchemaToAst({
-    plugin,
-    schema: data,
-    state,
-  });
-  const node = tsc.typeAliasDeclaration({
-    exportType: symbol.exported,
-    name: symbol.placeholder,
-    type,
-  });
-  plugin.setSymbolValue(symbol, node);
+  const node = $.type
+    .alias(symbol)
+    .export()
+    .type(
+      irSchemaToAst({
+        plugin,
+        schema: data,
+        state,
+      }),
+    );
+  plugin.addNode(node);
 };
 
 export const operationToType = ({
@@ -164,15 +164,13 @@ export const operationToType = ({
 
   if (errors) {
     const symbolErrors = plugin.registerSymbol({
-      exported: true,
-      kind: 'type',
       meta: {
         category: 'type',
-        path: state.path.value,
+        path: fromRef(state.path),
         resource: 'operation',
         resourceId: operation.id,
         role: 'errors',
-        tags: state.tags?.value,
+        tags: fromRef(state.tags),
         tool: 'typescript',
       },
       name: buildName({
@@ -180,29 +178,27 @@ export const operationToType = ({
         name: operation.id,
       }),
     });
-    const type = irSchemaToAst({
-      plugin,
-      schema: errors,
-      state,
-    });
-    const node = tsc.typeAliasDeclaration({
-      exportType: symbolErrors.exported,
-      name: symbolErrors.placeholder,
-      type,
-    });
-    plugin.setSymbolValue(symbolErrors, node);
+    const node = $.type
+      .alias(symbolErrors)
+      .export()
+      .type(
+        irSchemaToAst({
+          plugin,
+          schema: errors,
+          state,
+        }),
+      );
+    plugin.addNode(node);
 
     if (error) {
       const symbol = plugin.registerSymbol({
-        exported: true,
-        kind: 'type',
         meta: {
           category: 'type',
-          path: state.path.value,
+          path: fromRef(state.path),
           resource: 'operation',
           resourceId: operation.id,
           role: 'error',
-          tags: state.tags?.value,
+          tags: fromRef(state.tags),
           tool: 'typescript',
         },
         name: buildName({
@@ -213,35 +209,23 @@ export const operationToType = ({
           name: operation.id,
         }),
       });
-      const type = tsc.indexedAccessTypeNode({
-        indexType: tsc.typeOperatorNode({
-          operator: 'keyof',
-          type: tsc.typeReferenceNode({ typeName: symbolErrors.placeholder }),
-        }),
-        objectType: tsc.typeReferenceNode({
-          typeName: symbolErrors.placeholder,
-        }),
-      });
-      const node = tsc.typeAliasDeclaration({
-        exportType: symbol.exported,
-        name: symbol.placeholder,
-        type,
-      });
-      plugin.setSymbolValue(symbol, node);
+      const node = $.type
+        .alias(symbol)
+        .export()
+        .type($.type(symbolErrors).idx($.type(symbolErrors).keyof()));
+      plugin.addNode(node);
     }
   }
 
   if (responses) {
     const symbolResponses = plugin.registerSymbol({
-      exported: true,
-      kind: 'type',
       meta: {
         category: 'type',
-        path: state.path.value,
+        path: fromRef(state.path),
         resource: 'operation',
         resourceId: operation.id,
         role: 'responses',
-        tags: state.tags?.value,
+        tags: fromRef(state.tags),
         tool: 'typescript',
       },
       name: buildName({
@@ -249,29 +233,27 @@ export const operationToType = ({
         name: operation.id,
       }),
     });
-    const type = irSchemaToAst({
-      plugin,
-      schema: responses,
-      state,
-    });
-    const node = tsc.typeAliasDeclaration({
-      exportType: symbolResponses.exported,
-      name: symbolResponses.placeholder,
-      type,
-    });
-    plugin.setSymbolValue(symbolResponses, node);
+    const node = $.type
+      .alias(symbolResponses)
+      .export()
+      .type(
+        irSchemaToAst({
+          plugin,
+          schema: responses,
+          state,
+        }),
+      );
+    plugin.addNode(node);
 
     if (response) {
       const symbol = plugin.registerSymbol({
-        exported: true,
-        kind: 'type',
         meta: {
           category: 'type',
-          path: state.path.value,
+          path: fromRef(state.path),
           resource: 'operation',
           resourceId: operation.id,
           role: 'response',
-          tags: state.tags?.value,
+          tags: fromRef(state.tags),
           tool: 'typescript',
         },
         name: buildName({
@@ -282,23 +264,11 @@ export const operationToType = ({
           name: operation.id,
         }),
       });
-      const type = tsc.indexedAccessTypeNode({
-        indexType: tsc.typeOperatorNode({
-          operator: 'keyof',
-          type: tsc.typeReferenceNode({
-            typeName: symbolResponses.placeholder,
-          }),
-        }),
-        objectType: tsc.typeReferenceNode({
-          typeName: symbolResponses.placeholder,
-        }),
-      });
-      const node = tsc.typeAliasDeclaration({
-        exportType: symbol.exported,
-        name: symbol.placeholder,
-        type,
-      });
-      plugin.setSymbolValue(symbol, node);
+      const node = $.type
+        .alias(symbol)
+        .export()
+        .type($.type(symbolResponses).idx($.type(symbolResponses).keyof()));
+      plugin.addNode(node);
     }
   }
 };

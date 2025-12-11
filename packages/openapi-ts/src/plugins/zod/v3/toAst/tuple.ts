@@ -1,8 +1,7 @@
-import type ts from 'typescript';
+import { fromRef, ref } from '@hey-api/codegen-core';
 
 import type { SchemaWithType } from '~/plugins';
-import { toRef } from '~/plugins/shared/utils/refs';
-import { tsc } from '~/tsc';
+import { $ } from '~/ts-dsl';
 
 import { identifiers } from '../../constants';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
@@ -26,32 +25,18 @@ export const tupleToAst = ({
 
   if (schema.const && Array.isArray(schema.const)) {
     const tupleElements = schema.const.map((value) =>
-      tsc.callExpression({
-        functionName: tsc.propertyAccessExpression({
-          expression: z.placeholder,
-          name: identifiers.literal,
-        }),
-        parameters: [tsc.valueToExpression({ value })],
-      }),
+      $(z).attr(identifiers.literal).call($.fromValue(value)),
     );
-    const expression = tsc.callExpression({
-      functionName: tsc.propertyAccessExpression({
-        expression: z.placeholder,
-        name: identifiers.tuple,
-      }),
-      parameters: [
-        tsc.arrayLiteralExpression({
-          elements: tupleElements,
-        }),
-      ],
-    });
+    const expression = $(z)
+      .attr(identifiers.tuple)
+      .call($.array(...tupleElements));
     return {
       expression,
       hasLazyExpression,
     };
   }
 
-  const tupleElements: Array<ts.Expression> = [];
+  const tupleElements: Array<ReturnType<typeof $.call | typeof $.expr>> = [];
 
   if (schema.items) {
     schema.items.forEach((item, index) => {
@@ -60,7 +45,7 @@ export const tupleToAst = ({
         schema: item,
         state: {
           ...state,
-          path: toRef([...state.path.value, 'items', index]),
+          path: ref([...fromRef(state.path), 'items', index]),
         },
       });
       tupleElements.push(itemSchema.expression);
@@ -70,17 +55,10 @@ export const tupleToAst = ({
     });
   }
 
-  const expression = tsc.callExpression({
-    functionName: tsc.propertyAccessExpression({
-      expression: z.placeholder,
-      name: identifiers.tuple,
-    }),
-    parameters: [
-      tsc.arrayLiteralExpression({
-        elements: tupleElements,
-      }),
-    ],
-  });
+  const expression = $(z)
+    .attr(identifiers.tuple)
+    .call($.array(...tupleElements));
+
   return {
     expression,
     hasLazyExpression,

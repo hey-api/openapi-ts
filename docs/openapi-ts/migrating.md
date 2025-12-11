@@ -7,6 +7,34 @@ description: Migrating to @hey-api/openapi-ts.
 
 While we try to avoid breaking changes, sometimes it's unavoidable in order to offer you the latest features. This page lists changes that require updates to your code. If you run into a problem with migration, please [open an issue](https://github.com/hey-api/openapi-ts/issues).
 
+## v0.89.0
+
+### Prefer named exports
+
+This release changes the default for `index.ts` to prefer named exports. Named exports may lead to better IDE and bundler performance compared to asterisk (`*`) as your tooling doesn't have to inspect the underlying module to discover exports.
+
+While this change is merely cosmetic, you can set `output.preferExportAll` to `true` if you prefer to use the asterisk.
+
+```js
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: {
+    path: 'src/client',
+    preferExportAll: true, // [!code ++]
+  },
+};
+```
+
+### Removed `symbol:setValue:*` events
+
+These events have been removed in favor of `node:set:*` events.
+
+## v0.88.0
+
+### Removed `compiler` and `tsc` exports
+
+This release removes the `compiler` utility functions. Instead, it introduces a new TypeScript DSL exposed under the `$` symbol. All plugins now use this interface, so you may notice slight changes in the generated output.
+
 ## v0.87.0
 
 ### Removed legacy clients

@@ -328,9 +328,7 @@ export const updateUserRequest = <ThrowOnError extends boolean = false>(
     ...options,
   });
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class PetServiceResources {
   /**
    * Add a new pet to the store.
@@ -445,9 +443,7 @@ export class PetServiceResources {
   }
 }
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class StoreServiceResources {
   /**
    * Returns pet inventories by status.
@@ -506,9 +502,7 @@ export class StoreServiceResources {
   }
 }
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class UserServiceResources {
   /**
    * Create user.

@@ -1,5 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "dependencyDashboardTitle": "Dependencies 📦",
   "extends": ["config:recommended"],
   "minimumReleaseAge": "3 days",
   "prConcurrentLimit": 4,

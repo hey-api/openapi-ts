@@ -1,5 +1,3 @@
-import type ts from 'typescript';
-
 import type { SchemaWithType } from '~/plugins';
 import { $ } from '~/ts-dsl';
 
@@ -11,7 +9,7 @@ export const booleanToAst = ({
   schema,
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'boolean'>;
-}): ts.CallExpression => {
+}): ReturnType<typeof $.call> => {
   let chain: ReturnType<typeof $.call>;
 
   const z = plugin.referenceSymbol({
@@ -20,12 +18,10 @@ export const booleanToAst = ({
   });
 
   if (typeof schema.const === 'boolean') {
-    chain = $(z.placeholder)
-      .attr(identifiers.literal)
-      .call($.literal(schema.const));
-    return chain.$render();
+    chain = $(z).attr(identifiers.literal).call($.literal(schema.const));
+    return chain;
   }
 
-  chain = $(z.placeholder).attr(identifiers.boolean).call();
-  return chain.$render();
+  chain = $(z).attr(identifiers.boolean).call();
+  return chain;
 };

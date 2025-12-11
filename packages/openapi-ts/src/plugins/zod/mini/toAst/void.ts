@@ -1,5 +1,5 @@
 import type { SchemaWithType } from '~/plugins';
-import { tsc } from '~/tsc';
+import { $ } from '~/ts-dsl';
 
 import { identifiers } from '../../constants';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
@@ -14,11 +14,6 @@ export const voidToAst = ({
     resource: 'zod.z',
   });
   const result: Partial<Omit<Ast, 'typeName'>> = {};
-  result.expression = tsc.callExpression({
-    functionName: tsc.propertyAccessExpression({
-      expression: z.placeholder,
-      name: identifiers.void,
-    }),
-  });
+  result.expression = $(z).attr(identifiers.void).call();
   return result as Omit<Ast, 'typeName'>;
 };

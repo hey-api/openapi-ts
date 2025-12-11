@@ -19,7 +19,7 @@ export type Foo = {
     corge?: {
         [key: string]: unknown;
     };
-    garply?: 10n;
+    garply?: '10n';
     numberInt8?: 100;
     numberInt16?: 1000;
     numberInt32?: 100000;
@@ -35,7 +35,7 @@ export type Foo = {
     integerUint8?: 255;
     integerUint16?: 65535;
     integerUint32?: 4294967295;
-    integerUint64?: 18446744073709551615n;
+    integerUint64?: '18446744073709551615n';
     stringInt64?: '-9223372036854775808';
     stringUint64?: '18446744073709551615';
 };

@@ -4,12 +4,12 @@ import {
   createOperationComment,
   isOperationOptionsRequired,
 } from '~/plugins/shared/utils/operation';
-import { tsc } from '~/tsc';
-import { reservedJavaScriptKeywordsRegExp } from '~/utils/regexp';
+import { $ } from '~/ts-dsl';
 
 import type { HeyApiSdkPlugin } from '../types';
 import { nuxtTypeComposable, nuxtTypeDefault } from './constants';
 import { operationParameters, operationStatements } from './operation';
+import { reservedJavaScriptKeywordsRegExp } from './regexp';
 
 const serviceFunctionIdentifier = ({
   id,
@@ -81,53 +81,47 @@ export const generateFlatSdk = ({
           plugin,
         }),
       });
-      const node = tsc.constVariable({
-        comment: createOperationComment({ operation }),
-        exportConst: true,
-        expression: tsc.arrowFunction({
-          parameters: opParameters.parameters,
-          returnType: undefined,
-          statements,
-          types: isNuxtClient
-            ? [
-                {
-                  default: tsc.ots.string('$fetch'),
-                  extends: tsc.typeNode(
-                    plugin.referenceSymbol({
-                      category: 'external',
-                      resource: 'client.Composable',
-                    }).placeholder,
+      const node = $.const(symbol)
+        .export()
+        .$if(createOperationComment(operation), (c, v) => c.doc(v))
+        .assign(
+          $.func()
+            .params(...opParameters.parameters)
+            .$if(
+              isNuxtClient,
+              (f) =>
+                f
+                  .generic(nuxtTypeComposable, (g) =>
+                    g
+                      .extends(
+                        plugin.referenceSymbol({
+                          category: 'external',
+                          resource: 'client.Composable',
+                        }),
+                      )
+                      .default($.type.literal('$fetch')),
+                  )
+                  .generic(nuxtTypeDefault, (g) =>
+                    g.$if(
+                      symbolResponse,
+                      (t, s) => t.extends(s).default(s),
+                      (t) => t.default('undefined'),
+                    ),
                   ),
-                  name: nuxtTypeComposable,
-                },
-                {
-                  default: symbolResponse
-                    ? tsc.typeReferenceNode({
-                        typeName: symbolResponse.placeholder,
-                      })
-                    : tsc.typeNode('undefined'),
-                  extends: symbolResponse
-                    ? tsc.typeReferenceNode({
-                        typeName: symbolResponse.placeholder,
-                      })
-                    : undefined,
-                  name: nuxtTypeDefault,
-                },
-              ]
-            : [
-                {
-                  default:
-                    ('throwOnError' in client.config
-                      ? client.config.throwOnError
-                      : false) ?? false,
-                  extends: 'boolean',
-                  name: 'ThrowOnError',
-                },
-              ],
-        }),
-        name: symbol.placeholder,
-      });
-      plugin.setSymbolValue(symbol, node);
+              (f) =>
+                f.generic('ThrowOnError', (g) =>
+                  g
+                    .extends('boolean')
+                    .default(
+                      ('throwOnError' in client.config
+                        ? client.config.throwOnError
+                        : false) ?? false,
+                    ),
+                ),
+            )
+            .do(...statements),
+        );
+      plugin.addNode(node);
     },
     {
       order: 'declarations',

@@ -11,6 +11,8 @@
  * JavaScript identifier regexp pattern retrieved from https://developer.mozilla.org/docs/Web/JavaScript/Reference/Lexical_grammar#identifiers
  *
  * The output of this is expected to be converted to PascalCase
+ *
+ * @deprecated
  */
 export const sanitizeNamespaceIdentifier = (name: string) =>
   name

@@ -1,5 +1,27 @@
 # @hey-api/openapi-ts
 
+## 0.88.2
+
+### Patch Changes
+
+- **clients**: handle CR and CRLF line endings in SSE ([#3055](https://github.com/hey-api/openapi-ts/pull/3055)) ([`d663232`](https://github.com/hey-api/openapi-ts/commit/d663232d8f10cb29744beeba073532e2f6b3b27a)) by [@nachogarcia](https://github.com/nachogarcia)
+
+## 0.88.1
+
+### Patch Changes
+
+- **@hey-api/sdk**: correctly map flat parameters ([#3047](https://github.com/hey-api/openapi-ts/pull/3047)) ([`55ef279`](https://github.com/hey-api/openapi-ts/commit/55ef27994740ba0af0bc8db17b3e71bfb5c11714)) by [@mrlubos](https://github.com/mrlubos)
+
+## 0.88.0
+
+### Minor Changes
+
+- **output**: use TypeScript DSL ([#2986](https://github.com/hey-api/openapi-ts/pull/2986)) ([`37ff4ab`](https://github.com/hey-api/openapi-ts/commit/37ff4ab6bc89463778bf3709687ab84d3dab0618)) by [@mrlubos](https://github.com/mrlubos)
+
+### Removed `compiler` and `tsc` exports
+
+This release removes the `compiler` utility functions. Instead, it introduces a new TypeScript DSL exposed under the `$` symbol. All plugins now use this interface, so you may notice slight changes in the generated output.
+
 ## 0.87.5
 
 ### Patch Changes

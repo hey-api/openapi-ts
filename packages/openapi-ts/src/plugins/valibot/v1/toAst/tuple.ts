@@ -1,6 +1,7 @@
+import { fromRef, ref } from '@hey-api/codegen-core';
+
 import type { SchemaWithType } from '~/plugins';
-import { toRef } from '~/plugins/shared/utils/refs';
-import { tsc } from '~/tsc';
+import { $ } from '~/ts-dsl';
 
 import { pipesToAst } from '../../shared/pipesToAst';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
@@ -24,26 +25,12 @@ export const tupleToAst = ({
 
   if (schema.const && Array.isArray(schema.const)) {
     const tupleElements = schema.const.map((value) =>
-      tsc.callExpression({
-        functionName: tsc.propertyAccessExpression({
-          expression: v.placeholder,
-          name: identifiers.schemas.literal,
-        }),
-        parameters: [tsc.valueToExpression({ value })],
-      }),
+      $(v).attr(identifiers.schemas.literal).call($.fromValue(value)),
     );
     result.pipes = [
-      tsc.callExpression({
-        functionName: tsc.propertyAccessExpression({
-          expression: v.placeholder,
-          name: identifiers.schemas.tuple,
-        }),
-        parameters: [
-          tsc.arrayLiteralExpression({
-            elements: tupleElements,
-          }),
-        ],
-      }),
+      $(v)
+        .attr(identifiers.schemas.tuple)
+        .call($.array(...tupleElements)),
     ];
     return result as Omit<Ast, 'typeName'>;
   }
@@ -55,7 +42,7 @@ export const tupleToAst = ({
         schema: item,
         state: {
           ...state,
-          path: toRef([...state.path.value, 'items', index]),
+          path: ref([...fromRef(state.path), 'items', index]),
         },
       });
       if (schemaPipes.hasLazyExpression) {
@@ -64,17 +51,9 @@ export const tupleToAst = ({
       return pipesToAst({ pipes: schemaPipes.pipes, plugin });
     });
     result.pipes = [
-      tsc.callExpression({
-        functionName: tsc.propertyAccessExpression({
-          expression: v.placeholder,
-          name: identifiers.schemas.tuple,
-        }),
-        parameters: [
-          tsc.arrayLiteralExpression({
-            elements: tupleElements,
-          }),
-        ],
-      }),
+      $(v)
+        .attr(identifiers.schemas.tuple)
+        .call($.array(...tupleElements)),
     ];
     return result as Omit<Ast, 'typeName'>;
   }

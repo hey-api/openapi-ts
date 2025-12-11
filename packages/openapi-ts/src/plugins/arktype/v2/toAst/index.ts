@@ -1,6 +1,5 @@
-import ts from 'typescript';
-
 import type { SchemaWithType } from '~/plugins/shared/types/schema';
+import { $ } from '~/ts-dsl';
 
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
 import { nullToAst } from './null';
@@ -91,30 +90,11 @@ export const irSchemaWithTypeToAst = ({
     resource: 'arktype.type',
   });
 
-  const expression = ts.factory.createCallExpression(
-    ts.factory.createIdentifier(type.placeholder),
-    undefined,
-    [
-      ts.factory.createObjectLiteralExpression(
-        [
-          ts.factory.createPropertyAssignment(
-            'name',
-            ts.factory.createStringLiteral('string'),
-          ),
-          ts.factory.createPropertyAssignment(
-            'platform',
-            ts.factory.createStringLiteral("'android' | 'ios'"),
-          ),
-          ts.factory.createPropertyAssignment(
-            ts.factory.createComputedPropertyName(
-              ts.factory.createStringLiteral('versions?'),
-            ),
-            ts.factory.createStringLiteral('(number | string)[]'),
-          ),
-        ],
-        true,
-      ),
-    ],
+  const expression = $(type).call(
+    $.object()
+      .prop('name', $.literal('string'))
+      .prop('platform', $.literal("'android' | 'ios'"))
+      .prop('versions?', $.literal('(number | string)[]')),
   );
 
   return {

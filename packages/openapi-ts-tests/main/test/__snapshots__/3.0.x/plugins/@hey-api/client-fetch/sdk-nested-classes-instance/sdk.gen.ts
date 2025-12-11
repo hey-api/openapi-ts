@@ -29,7 +29,7 @@ class HeyApiClient {
 }
 
 class HeyApiRegistry<T> {
-    private readonly defaultKey = "default";
+    private readonly defaultKey = 'default';
     
     private readonly instances: Map<string, T> = new Map();
     
@@ -48,17 +48,11 @@ class HeyApiRegistry<T> {
 
 export class Domains extends HeyApiClient {
     public get<ThrowOnError extends boolean = false>(options?: Options<BusinessProvidersDomainsGetData, ThrowOnError>) {
-        return (options?.client ?? this.client).get<BusinessProvidersDomainsGetResponses, unknown, ThrowOnError>({
-            url: '/business/providers/domains',
-            ...options
-        });
+        return (options?.client ?? this.client).get<BusinessProvidersDomainsGetResponses, unknown, ThrowOnError>({ url: '/business/providers/domains', ...options });
     }
     
     public post<ThrowOnError extends boolean = false>(options?: Options<BusinessProvidersDomainsPostData, ThrowOnError>) {
-        return (options?.client ?? this.client).post<BusinessProvidersDomainsPostResponses, unknown, ThrowOnError>({
-            url: '/business/providers/domains',
-            ...options
-        });
+        return (options?.client ?? this.client).post<BusinessProvidersDomainsPostResponses, unknown, ThrowOnError>({ url: '/business/providers/domains', ...options });
     }
 }
 
@@ -68,10 +62,7 @@ export class Providers extends HeyApiClient {
 
 export class Business extends HeyApiClient {
     public get<ThrowOnError extends boolean = false>(options?: Options<BusinessGetData, ThrowOnError>) {
-        return (options?.client ?? this.client).get<BusinessGetResponses, unknown, ThrowOnError>({
-            url: '/locations/businesses',
-            ...options
-        });
+        return (options?.client ?? this.client).get<BusinessGetResponses, unknown, ThrowOnError>({ url: '/locations/businesses', ...options });
     }
     
     providers = new Providers({ client: this.client });
@@ -89,17 +80,11 @@ export class NestedSdkWithInstance extends HeyApiClient {
     }
     
     public putBusinessProvidersDomains<ThrowOnError extends boolean = false>(options?: Options<PutBusinessProvidersDomainsData, ThrowOnError>) {
-        return (options?.client ?? this.client).put<PutBusinessProvidersDomainsResponses, unknown, ThrowOnError>({
-            url: '/business/providers/domains',
-            ...options
-        });
+        return (options?.client ?? this.client).put<PutBusinessProvidersDomainsResponses, unknown, ThrowOnError>({ url: '/business/providers/domains', ...options });
     }
     
     public get<ThrowOnError extends boolean = false>(options?: Options<GetData, ThrowOnError>) {
-        return (options?.client ?? this.client).get<GetResponses, unknown, ThrowOnError>({
-            url: '/locations',
-            ...options
-        });
+        return (options?.client ?? this.client).get<GetResponses, unknown, ThrowOnError>({ url: '/locations', ...options });
     }
     
     business = new Business({ client: this.client });

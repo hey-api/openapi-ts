@@ -43,16 +43,16 @@ export type RouteHandlers = {
         Querystring?: GetCallWithOptionalParamData['query'];
     }>;
     postCallWithOptionalParam: RouteHandler<{
-        Body: PostCallWithOptionalParamData['body'];
+        Body?: PostCallWithOptionalParamData['body'];
         Querystring: PostCallWithOptionalParamData['query'];
         Reply: PostCallWithOptionalParamResponses;
     }>;
     postApiVbyApiVersionRequestBody: RouteHandler<{
-        Body: PostApiVbyApiVersionRequestBodyData['body'];
+        Body?: PostApiVbyApiVersionRequestBodyData['body'];
         Querystring?: PostApiVbyApiVersionRequestBodyData['query'];
     }>;
     postApiVbyApiVersionFormData: RouteHandler<{
-        Body: PostApiVbyApiVersionFormDataData['body'];
+        Body?: PostApiVbyApiVersionFormDataData['body'];
         Querystring?: PostApiVbyApiVersionFormDataData['query'];
     }>;
     callWithDefaultParameters: RouteHandler<{
@@ -107,10 +107,10 @@ export type RouteHandlers = {
         Reply: MultipartResponseResponses;
     }>;
     multipartRequest: RouteHandler<{
-        Body: MultipartRequestData['body'];
+        Body?: MultipartRequestData['body'];
     }>;
     complexParams: RouteHandler<{
-        Body: ComplexParamsData['body'];
+        Body?: ComplexParamsData['body'];
         Params: ComplexParamsData['path'];
         Reply: ComplexParamsResponses;
     }>;

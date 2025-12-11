@@ -1,6 +1,6 @@
 import { clientFolderAbsolutePath } from '~/generate/client';
 import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
-import { tsc } from '~/tsc';
+import { $ } from '~/ts-dsl';
 
 import type { HeyApiSdkPlugin } from '../types';
 import { nuxtTypeDefault, nuxtTypeResponse } from './constants';
@@ -35,8 +35,6 @@ export const createTypeOptions = ({
     name: 'Options',
   });
   const symbolOptions = plugin.registerSymbol({
-    exported: true,
-    kind: 'type',
     meta: {
       category: 'type',
       resource: 'client-options',
@@ -45,105 +43,71 @@ export const createTypeOptions = ({
     name: 'Options',
   });
 
-  const typeOptions = tsc.typeAliasDeclaration({
-    exportType: symbolOptions.exported,
-    name: symbolOptions.placeholder,
-    type: tsc.typeIntersectionNode({
-      types: [
-        tsc.typeReferenceNode({
-          typeArguments: isNuxtClient
-            ? [
-                tsc.typeReferenceNode({ typeName: 'TComposable' }),
-                tsc.typeReferenceNode({ typeName: 'TData' }),
-                tsc.typeReferenceNode({ typeName: nuxtTypeResponse }),
-                tsc.typeReferenceNode({ typeName: nuxtTypeDefault }),
-              ]
-            : [
-                tsc.typeReferenceNode({ typeName: 'TData' }),
-                tsc.typeReferenceNode({ typeName: 'ThrowOnError' }),
-              ],
-          typeName: symbolClientOptions.placeholder,
-        }),
-        tsc.typeInterfaceNode({
-          properties: [
-            {
-              comment: [
+  const typeOptions = $.type
+    .alias(symbolOptions)
+    .export()
+    .$if(
+      isNuxtClient,
+      (t) =>
+        t
+          .generic('TComposable', (g) =>
+            g
+              .extends(
+                plugin.referenceSymbol({
+                  category: 'external',
+                  resource: 'client.Composable',
+                }),
+              )
+              .default($.type.literal('$fetch')),
+          )
+          .generic('TData', (g) =>
+            g.extends(symbolTDataShape).default(symbolTDataShape),
+          )
+          .generic(nuxtTypeResponse, (g) => g.default('unknown'))
+          .generic(nuxtTypeDefault, (g) => g.default('undefined')),
+      (t) =>
+        t
+          .generic('TData', (g) =>
+            g.extends(symbolTDataShape).default(symbolTDataShape),
+          )
+          .generic('ThrowOnError', (g) =>
+            g.extends('boolean').default('boolean'),
+          ),
+    )
+    .type(
+      $.type.and(
+        $.type(symbolClientOptions).$if(
+          isNuxtClient,
+          (t) =>
+            t
+              .generic('TComposable')
+              .generic('TData')
+              .generic(nuxtTypeResponse)
+              .generic(nuxtTypeDefault),
+          (t) => t.generic('TData').generic('ThrowOnError'),
+        ),
+        $.type
+          .object()
+          .prop('client', (p) =>
+            p
+              .doc([
                 'You can provide a client instance returned by `createClient()` instead of',
                 'individual options. This might be also useful if you want to implement a',
                 'custom client.',
-              ],
-              isRequired: !plugin.config.client && !plugin.config.instance,
-              name: 'client',
-              type: tsc.typeReferenceNode({
-                typeName: symbolClient.placeholder,
-              }),
-            },
-            {
-              comment: [
+              ])
+              .required(!plugin.config.client && !plugin.config.instance)
+              .type(symbolClient),
+          )
+          .prop('meta', (p) =>
+            p
+              .doc([
                 'You can pass arbitrary values through the `meta` object. This can be',
                 "used to access values that aren't defined as part of the SDK function.",
-              ],
-              isRequired: false,
-              name: 'meta',
-              type: tsc.typeReferenceNode({
-                typeArguments: [
-                  tsc.keywordTypeNode({ keyword: 'string' }),
-                  tsc.keywordTypeNode({ keyword: 'unknown' }),
-                ],
-                typeName: 'Record',
-              }),
-            },
-          ],
-          useLegacyResolution: false,
-        }),
-      ],
-    }),
-    typeParameters: isNuxtClient
-      ? [
-          tsc.typeParameterDeclaration({
-            constraint: tsc.typeReferenceNode({
-              typeName: plugin.referenceSymbol({
-                category: 'external',
-                resource: 'client.Composable',
-              }).placeholder,
-            }),
-            defaultType: tsc.typeNode("'$fetch'"),
-            name: 'TComposable',
-          }),
-          tsc.typeParameterDeclaration({
-            constraint: tsc.typeReferenceNode({
-              typeName: symbolTDataShape.placeholder,
-            }),
-            defaultType: tsc.typeReferenceNode({
-              typeName: symbolTDataShape.placeholder,
-            }),
-            name: 'TData',
-          }),
-          tsc.typeParameterDeclaration({
-            defaultType: tsc.keywordTypeNode({ keyword: 'unknown' }),
-            name: nuxtTypeResponse,
-          }),
-          tsc.typeParameterDeclaration({
-            defaultType: tsc.keywordTypeNode({ keyword: 'undefined' }),
-            name: nuxtTypeDefault,
-          }),
-        ]
-      : [
-          tsc.typeParameterDeclaration({
-            constraint: tsc.typeReferenceNode({
-              typeName: symbolTDataShape.placeholder,
-            }),
-            defaultType: tsc.typeReferenceNode({
-              typeName: symbolTDataShape.placeholder,
-            }),
-            name: 'TData',
-          }),
-          tsc.typeParameterDeclaration({
-            constraint: tsc.keywordTypeNode({ keyword: 'boolean' }),
-            defaultType: tsc.keywordTypeNode({ keyword: 'boolean' }),
-            name: 'ThrowOnError',
-          }),
-        ],
-  });
-  plugin.setSymbolValue(symbolOptions, typeOptions);
+              ])
+              .optional()
+              .type($.type('Record').generics('string', 'unknown')),
+          ),
+      ),
+    );
+  plugin.addNode(typeOptions);
 };

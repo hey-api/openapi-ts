@@ -97,9 +97,9 @@ export type SimpleStringWithPattern = string | null;
 /**
  * This is a simple enum with strings
  */
-export type EnumWithStrings = 'Success' | 'Warning' | 'Error' | "'Single Quote'" | '"Double Quotes"' | 'Non-ascii: øæåôöØÆÅÔÖ字符串';
+export type EnumWithStrings = 'Success' | 'Warning' | 'Error' | '\'Single Quote\'' | '"Double Quotes"' | 'Non-ascii: øæåôöØÆÅÔÖ字符串';
 
-export type EnumWithReplacedCharacters = "'Single Quote'" | '"Double Quotes"' | 'øæåôöØÆÅÔÖ字符串' | 3.1 | '';
+export type EnumWithReplacedCharacters = '\'Single Quote\'' | '"Double Quotes"' | 'øæåôöØÆÅÔÖ字符串' | 3.1 | '';
 
 /**
  * This is a simple enum with numbers

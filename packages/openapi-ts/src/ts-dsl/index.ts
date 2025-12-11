@@ -1,47 +1,61 @@
-import { ArrayTsDsl } from './array';
-import { AsTsDsl } from './as';
-import { AttrTsDsl } from './attr';
-import { AwaitTsDsl } from './await';
-import { BinaryTsDsl } from './binary';
-import { CallTsDsl } from './call';
-import { ClassTsDsl } from './class';
-import { DecoratorTsDsl } from './decorator';
-import { DocTsDsl } from './doc';
-import { ExprTsDsl } from './expr';
-import { FieldTsDsl } from './field';
-import { FuncTsDsl } from './func';
-import { GetterTsDsl } from './getter';
-import { HintTsDsl } from './hint';
-import { IfTsDsl } from './if';
-import { InitTsDsl } from './init';
-import { LiteralTsDsl } from './literal';
-import { MethodTsDsl } from './method';
-import { NewTsDsl } from './new';
-import { NewlineTsDsl } from './newline';
-import { NotTsDsl } from './not';
-import { NoteTsDsl } from './note';
-import { ObjectTsDsl } from './object';
-import { ParamTsDsl } from './param';
-import { PatternTsDsl } from './pattern';
-import { RegExpTsDsl } from './regexp';
-import { ReturnTsDsl } from './return';
-import { SetterTsDsl } from './setter';
-import { TemplateTsDsl } from './template';
-import { TernaryTsDsl } from './ternary';
-import { ThrowTsDsl } from './throw';
+import { ClassTsDsl } from './decl/class';
+import { DecoratorTsDsl } from './decl/decorator';
+import { EnumTsDsl } from './decl/enum';
+import { FieldTsDsl } from './decl/field';
+import { FuncTsDsl } from './decl/func';
+import { GetterTsDsl } from './decl/getter';
+import { InitTsDsl } from './decl/init';
+import { EnumMemberTsDsl } from './decl/member';
+import { MethodTsDsl } from './decl/method';
+import { ParamTsDsl } from './decl/param';
+import { PatternTsDsl } from './decl/pattern';
+import { SetterTsDsl } from './decl/setter';
+import { ArrayTsDsl } from './expr/array';
+import { AsTsDsl } from './expr/as';
+import { AttrTsDsl } from './expr/attr';
+import { AwaitTsDsl } from './expr/await';
+import { BinaryTsDsl } from './expr/binary';
+import { CallTsDsl } from './expr/call';
+import { ExprTsDsl } from './expr/expr';
+import { fromValue as exprValue } from './expr/fromValue';
+import { IdTsDsl } from './expr/id';
+import { LiteralTsDsl } from './expr/literal';
+import { NewTsDsl } from './expr/new';
+import { ObjectTsDsl } from './expr/object';
+import { PrefixTsDsl } from './expr/prefix';
+import { ObjectPropTsDsl } from './expr/prop';
+import { RegExpTsDsl } from './expr/regexp';
+import { TemplateTsDsl } from './expr/template';
+import { TernaryTsDsl } from './expr/ternary';
+import { TypeOfExprTsDsl } from './expr/typeof';
+import { DocTsDsl } from './layout/doc';
+import { HintTsDsl } from './layout/hint';
+import { NewlineTsDsl } from './layout/newline';
+import { NoteTsDsl } from './layout/note';
+import { BlockTsDsl } from './stmt/block';
+import { IfTsDsl } from './stmt/if';
+import { ReturnTsDsl } from './stmt/return';
+import { StmtTsDsl } from './stmt/stmt';
+import { ThrowTsDsl } from './stmt/throw';
+import { TryTsDsl } from './stmt/try';
+import { VarTsDsl } from './stmt/var';
+import { TokenTsDsl } from './token';
 import { TypeAliasTsDsl } from './type/alias';
 import { TypeAndTsDsl } from './type/and';
 import { TypeAttrTsDsl } from './type/attr';
 import { TypeExprTsDsl } from './type/expr';
+import { fromValue as typeValue } from './type/fromValue';
+import { TypeFuncTsDsl } from './type/func';
 import { TypeIdxTsDsl } from './type/idx';
 import { TypeLiteralTsDsl } from './type/literal';
+import { TypeMappedTsDsl } from './type/mapped';
 import { TypeObjectTsDsl } from './type/object';
+import { TypeOperatorTsDsl } from './type/operator';
 import { TypeOrTsDsl } from './type/or';
 import { TypeParamTsDsl } from './type/param';
 import { TypeQueryTsDsl } from './type/query';
+import { TypeTemplateTsDsl } from './type/template';
 import { TypeTupleTsDsl } from './type/tuple';
-import { TypeOfExprTsDsl } from './typeof';
-import { VarTsDsl } from './var';
 
 const base = {
   /** Creates an array literal expression (e.g. `[1, 2, 3]`). */
@@ -63,6 +77,10 @@ const base = {
   binary: (...args: ConstructorParameters<typeof BinaryTsDsl>) =>
     new BinaryTsDsl(...args),
 
+  /** Creates a statement block (`{ ... }`). */
+  block: (...args: ConstructorParameters<typeof BlockTsDsl>) =>
+    new BlockTsDsl(...args),
+
   /** Creates a function or method call expression (e.g. `fn(arg)`). */
   call: (...args: ConstructorParameters<typeof CallTsDsl>) =>
     new CallTsDsl(...args),
@@ -83,6 +101,10 @@ const base = {
   doc: (...args: ConstructorParameters<typeof DocTsDsl>) =>
     new DocTsDsl(...args),
 
+  /** Creates an enum declaration. */
+  enum: (...args: ConstructorParameters<typeof EnumTsDsl>) =>
+    new EnumTsDsl(...args),
+
   /** Creates a general expression node. */
   expr: (...args: ConstructorParameters<typeof ExprTsDsl>) =>
     new ExprTsDsl(...args),
@@ -90,6 +112,9 @@ const base = {
   /** Creates a field declaration in a class or object. */
   field: (...args: ConstructorParameters<typeof FieldTsDsl>) =>
     new FieldTsDsl(...args),
+
+  /** Converts a runtime value into a corresponding expression node. */
+  fromValue: (...args: Parameters<typeof exprValue>) => exprValue(...args),
 
   /** Creates a function expression or declaration. */
   func: ((nameOrFn?: any, fn?: any) => {
@@ -102,6 +127,10 @@ const base = {
     (fn: (f: FuncTsDsl<'arrow'>) => void): FuncTsDsl<'arrow'>;
     (name: string): FuncTsDsl<'decl'>;
     (name: string, fn: (f: FuncTsDsl<'decl'>) => void): FuncTsDsl<'decl'>;
+    (
+      name?: string,
+      fn?: (f: FuncTsDsl<'decl'>) => void,
+    ): FuncTsDsl<'arrow'> | FuncTsDsl<'decl'>;
   },
 
   /** Creates a getter method declaration. */
@@ -111,6 +140,9 @@ const base = {
   /** Creates a single-line comment (//). */
   hint: (...args: ConstructorParameters<typeof HintTsDsl>) =>
     new HintTsDsl(...args),
+
+  /** Creates an identifier (e.g. `foo`). */
+  id: (...args: ConstructorParameters<typeof IdTsDsl>) => new IdTsDsl(...args),
 
   /** Creates an if statement. */
   if: (...args: ConstructorParameters<typeof IfTsDsl>) => new IfTsDsl(...args),
@@ -127,9 +159,17 @@ const base = {
   literal: (...args: ConstructorParameters<typeof LiteralTsDsl>) =>
     new LiteralTsDsl(...args),
 
+  /** Creates an enum member declaration. */
+  member: (...args: ConstructorParameters<typeof EnumMemberTsDsl>) =>
+    new EnumMemberTsDsl(...args),
+
   /** Creates a method declaration inside a class or object. */
   method: (...args: ConstructorParameters<typeof MethodTsDsl>) =>
     new MethodTsDsl(...args),
+
+  /** Creates a negation expression (`-x`). */
+  neg: (...args: ConstructorParameters<typeof PrefixTsDsl>) =>
+    new PrefixTsDsl(...args).neg(),
 
   /** Creates a new expression (e.g. `new ClassName()`). */
   new: (...args: ConstructorParameters<typeof NewTsDsl>) =>
@@ -139,9 +179,9 @@ const base = {
   newline: (...args: ConstructorParameters<typeof NewlineTsDsl>) =>
     new NewlineTsDsl(...args),
 
-  /** Creates a logical NOT expression (e.g. `!expr`). */
-  not: (...args: ConstructorParameters<typeof NotTsDsl>) =>
-    new NotTsDsl(...args),
+  /** Creates a logical NOT expression (`!x`). */
+  not: (...args: ConstructorParameters<typeof PrefixTsDsl>) =>
+    new PrefixTsDsl(...args).not(),
 
   /** Creates a block comment (/* ... *\/). */
   note: (...args: ConstructorParameters<typeof NoteTsDsl>) =>
@@ -159,6 +199,14 @@ const base = {
   pattern: (...args: ConstructorParameters<typeof PatternTsDsl>) =>
     new PatternTsDsl(...args),
 
+  /** Creates a prefix unary expression (e.g. `-x`, `!x`, `~x`). */
+  prefix: (...args: ConstructorParameters<typeof PrefixTsDsl>) =>
+    new PrefixTsDsl(...args),
+
+  /** Creates an object literal property (e.g. `{ foo: bar }`). */
+  prop: (...args: ConstructorParameters<typeof ObjectPropTsDsl>) =>
+    new ObjectPropTsDsl(...args),
+
   /** Creates a regular expression literal (e.g. `/foo/gi`). */
   regexp: (...args: ConstructorParameters<typeof RegExpTsDsl>) =>
     new RegExpTsDsl(...args),
@@ -171,6 +219,10 @@ const base = {
   setter: (...args: ConstructorParameters<typeof SetterTsDsl>) =>
     new SetterTsDsl(...args),
 
+  /** Wraps an expression or statement-like value into a `StmtTsDsl`. */
+  stmt: (...args: ConstructorParameters<typeof StmtTsDsl>) =>
+    new StmtTsDsl(...args),
+
   /** Creates a template literal expression. */
   template: (...args: ConstructorParameters<typeof TemplateTsDsl>) =>
     new TemplateTsDsl(...args),
@@ -182,6 +234,14 @@ const base = {
   /** Creates a throw statement. */
   throw: (...args: ConstructorParameters<typeof ThrowTsDsl>) =>
     new ThrowTsDsl(...args),
+
+  /** Creates a syntax token (e.g. `?`, `readonly`, `+`, `-`). */
+  token: (...args: ConstructorParameters<typeof TokenTsDsl>) =>
+    new TokenTsDsl(...args),
+
+  /** Creates a try/catch/finally statement. */
+  try: (...args: ConstructorParameters<typeof TryTsDsl>) =>
+    new TryTsDsl(...args),
 
   /** Creates a basic type reference or type expression (e.g. Foo or Foo<T>). */
   type: Object.assign(
@@ -204,6 +264,13 @@ const base = {
       expr: (...args: ConstructorParameters<typeof TypeExprTsDsl>) =>
         new TypeExprTsDsl(...args),
 
+      /** Converts a runtime value into a corresponding type expression node. */
+      fromValue: (...args: Parameters<typeof typeValue>) => typeValue(...args),
+
+      /** Creates a function type node (e.g. `(a: string) => number`). */
+      func: (...args: ConstructorParameters<typeof TypeFuncTsDsl>) =>
+        new TypeFuncTsDsl(...args),
+
       /** Creates an indexed-access type (e.g. `Foo<T>[K]`). */
       idx: (...args: ConstructorParameters<typeof TypeIdxTsDsl>) =>
         new TypeIdxTsDsl(...args),
@@ -212,9 +279,17 @@ const base = {
       literal: (...args: ConstructorParameters<typeof TypeLiteralTsDsl>) =>
         new TypeLiteralTsDsl(...args),
 
+      /** Creates a mapped type (e.g. `{ [K in keyof T]: U }`). */
+      mapped: (...args: ConstructorParameters<typeof TypeMappedTsDsl>) =>
+        new TypeMappedTsDsl(...args),
+
       /** Creates a type literal node (e.g. { foo: string }). */
       object: (...args: ConstructorParameters<typeof TypeObjectTsDsl>) =>
         new TypeObjectTsDsl(...args),
+
+      /** Creates a type operator node (e.g. `readonly T`, `keyof T`, `unique T`). */
+      operator: (...args: ConstructorParameters<typeof TypeOperatorTsDsl>) =>
+        new TypeOperatorTsDsl(...args),
 
       /** Represents a union type (e.g. `A | B | C`). */
       or: (...args: ConstructorParameters<typeof TypeOrTsDsl>) =>
@@ -227,6 +302,10 @@ const base = {
       /** Creates a type query node (e.g. `typeof Foo`). */
       query: (...args: ConstructorParameters<typeof TypeQueryTsDsl>) =>
         new TypeQueryTsDsl(...args),
+
+      /** Builds a TypeScript template literal *type* (e.g. `${Foo}-${Bar}` as a type). */
+      template: (...args: ConstructorParameters<typeof TypeTemplateTsDsl>) =>
+        new TypeTemplateTsDsl(...args),
 
       /** Creates a tuple type (e.g. [A, B, C]). */
       tuple: (...args: ConstructorParameters<typeof TypeTupleTsDsl>) =>
@@ -268,4 +347,9 @@ export type DollarTsDsl = {
   $: typeof $;
 };
 
+export type { MaybeTsDsl, TypeTsDsl } from './base';
 export { TsDsl } from './base';
+export { TypeScriptRenderer } from './render/typescript';
+export { keywords } from './utils/keywords';
+export { regexp } from './utils/regexp';
+export { reserved } from './utils/reserved';

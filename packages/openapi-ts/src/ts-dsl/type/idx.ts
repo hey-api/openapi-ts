@@ -1,35 +1,49 @@
+import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
-import type { MaybeTsDsl, WithString } from '../base';
+import type { MaybeTsDsl } from '../base';
 import { TypeTsDsl } from '../base';
+import { setTypeIdxFactory, TypeExprMixin } from '../mixins/type-expr';
 
-export class TypeIdxTsDsl extends TypeTsDsl<ts.IndexedAccessTypeNode> {
-  private _base: WithString<MaybeTsDsl<ts.TypeNode>>;
-  private _index: WithString<MaybeTsDsl<ts.TypeNode>> | number;
+type Base = string | MaybeTsDsl<ts.TypeNode>;
+type Index = string | number | MaybeTsDsl<ts.TypeNode>;
 
-  constructor(
-    base: WithString<MaybeTsDsl<ts.TypeNode>>,
-    index: WithString<MaybeTsDsl<ts.TypeNode>> | number,
-  ) {
+const Mixed = TypeExprMixin(TypeTsDsl<ts.IndexedAccessTypeNode>);
+
+export class TypeIdxTsDsl extends Mixed {
+  readonly '~dsl' = 'TypeIdxTsDsl';
+
+  protected _base!: Base;
+  protected _index!: Index;
+
+  constructor(base: Base, index: Index) {
     super();
-    this._base = base;
-    this._index = index;
+    this.base(base);
+    this.index(index);
   }
 
-  base(base: WithString<MaybeTsDsl<ts.TypeNode>>): this {
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    ctx.analyze(this._base);
+    ctx.analyze(this._index);
+  }
+
+  base(base: Base): this {
     this._base = base;
     return this;
   }
 
-  index(index: WithString<MaybeTsDsl<ts.TypeNode>> | number): this {
+  index(index: Index): this {
     this._index = index;
     return this;
   }
 
-  $render(): ts.IndexedAccessTypeNode {
+  override toAst() {
     return ts.factory.createIndexedAccessTypeNode(
       this.$type(this._base),
       this.$type(this._index),
     );
   }
 }
+
+setTypeIdxFactory((...args) => new TypeIdxTsDsl(...args));

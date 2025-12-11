@@ -1,92 +1,71 @@
+import type { AnalysisContext, Node } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
-import type { AsTsDsl } from '../as';
-import type { AttrTsDsl } from '../attr';
-import type { AwaitTsDsl } from '../await';
-import type { MaybeTsDsl, TypeTsDsl, WithString } from '../base';
-import type { CallTsDsl } from '../call';
-import type { ReturnTsDsl } from '../return';
+import type { AttrCtor, AttrRight, AttrTsDsl } from '../expr/attr';
+import type { AwaitCtor, AwaitTsDsl } from '../expr/await';
+import type { CallArgs, CallCtor, CallTsDsl } from '../expr/call';
+import type { ReturnCtor, ReturnTsDsl } from '../stmt/return';
+import type { BaseCtor, MixinCtor } from './types';
 
-/**
- * Access helpers depend on other DSL classes that are initialized later in the
- * module graph. We store factory callbacks here and let each class lazily
- * register its own implementation once it has finished evaluation. This keeps
- * mixin application order predictable and avoids circular import crashes.
- */
-
-type AsFactory = (
-  expr: MaybeTsDsl<WithString>,
-  type: WithString<TypeTsDsl>,
-) => AsTsDsl;
-let asFactory: AsFactory | undefined;
-/** Registers the Attr DSL factory after its module has finished evaluating. */
-export function registerLazyAccessAsFactory(factory: AsFactory): void {
-  asFactory = factory;
+let attrFactory: AttrCtor | undefined;
+/** Lazy register the factory to avoid circular imports. */
+export function setAttrFactory(fn: AttrCtor): void {
+  attrFactory = fn;
 }
 
-type AttrFactory = (
-  expr: MaybeTsDsl<WithString>,
-  name: WithString<ts.MemberName> | number,
-) => AttrTsDsl;
-let attrFactory: AttrFactory | undefined;
-/** Registers the Attr DSL factory after its module has finished evaluating. */
-export function registerLazyAccessAttrFactory(factory: AttrFactory): void {
-  attrFactory = factory;
+let awaitFactory: AwaitCtor | undefined;
+/** Lazy register the factory to avoid circular imports. */
+export function setAwaitFactory(fn: AwaitCtor): void {
+  awaitFactory = fn;
 }
 
-type AwaitFactory = (expr: MaybeTsDsl<WithString>) => AwaitTsDsl;
-let awaitFactory: AwaitFactory | undefined;
-/** Registers the Await DSL factory after its module has finished evaluating. */
-export function registerLazyAccessAwaitFactory(factory: AwaitFactory): void {
-  awaitFactory = factory;
+let callFactory: CallCtor | undefined;
+/** Lazy register the factory to avoid circular imports. */
+export function setCallFactory(fn: CallCtor): void {
+  callFactory = fn;
 }
 
-type CallFactory = (
-  expr: MaybeTsDsl<WithString>,
-  args: ReadonlyArray<MaybeTsDsl<WithString> | undefined>,
-) => CallTsDsl;
-let callFactory: CallFactory | undefined;
-/** Registers the Call DSL factory after its module has finished evaluating. */
-export function registerLazyAccessCallFactory(factory: CallFactory): void {
-  callFactory = factory;
+let returnFactory: ReturnCtor | undefined;
+/** Lazy register the factory to avoid circular imports. */
+export function setReturnFactory(fn: ReturnCtor): void {
+  returnFactory = fn;
 }
 
-type ReturnFactory = (expr: MaybeTsDsl<WithString>) => ReturnTsDsl;
-let returnFactory: ReturnFactory | undefined;
-/** Registers the Return DSL factory after its module has finished evaluating. */
-export function registerLazyAccessReturnFactory(factory: ReturnFactory): void {
-  returnFactory = factory;
-}
-
-export class ExprMixin {
-  /** Creates an `as` type assertion expression (e.g. `value as Type`). */
-  as(this: MaybeTsDsl<WithString>, type: WithString<TypeTsDsl>): AsTsDsl {
-    return asFactory!(this, type);
-  }
-
+export interface ExprMethods extends Node {
   /** Accesses a property on the current expression (e.g. `this.foo`). */
-  attr(
-    this: MaybeTsDsl<WithString>,
-    name: WithString<ts.MemberName> | number,
-  ): AttrTsDsl {
-    return attrFactory!(this, name);
-  }
-
+  attr(name: AttrRight): AttrTsDsl;
   /** Awaits the current expression (e.g. `await expr`). */
-  await(this: MaybeTsDsl<WithString>): AwaitTsDsl {
-    return awaitFactory!(this);
-  }
-
+  await(): AwaitTsDsl;
   /** Calls the current expression (e.g. `fn(arg1, arg2)`). */
-  call(
-    this: MaybeTsDsl<WithString>,
-    ...args: ReadonlyArray<MaybeTsDsl<WithString> | undefined>
-  ): CallTsDsl {
-    return callFactory!(this, args);
+  call(...args: CallArgs): CallTsDsl;
+  /** Produces a `return` statement returning the current expression. */
+  return(): ReturnTsDsl;
+}
+
+export function ExprMixin<T extends ts.Expression, TBase extends BaseCtor<T>>(
+  Base: TBase,
+) {
+  abstract class Expr extends Base {
+    override analyze(ctx: AnalysisContext): void {
+      super.analyze(ctx);
+    }
+
+    protected attr(name: AttrRight): AttrTsDsl {
+      return attrFactory!(this, name);
+    }
+
+    protected await(): AwaitTsDsl {
+      return awaitFactory!(this);
+    }
+
+    protected call(...args: CallArgs): CallTsDsl {
+      return callFactory!(this, ...args);
+    }
+
+    protected return(): ReturnTsDsl {
+      return returnFactory!(this);
+    }
   }
 
-  /** Produces a `return` statement returning the current expression. */
-  return(this: MaybeTsDsl<WithString>): ReturnTsDsl {
-    return returnFactory!(this);
-  }
+  return Expr as unknown as MixinCtor<TBase, ExprMethods>;
 }

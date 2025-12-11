@@ -1,10 +1,10 @@
 import type { SymbolMeta } from '@hey-api/codegen-core';
+import { fromRef, ref, refs } from '@hey-api/codegen-core';
 
 import { deduplicateSchema } from '~/ir/schema';
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
 import type { SchemaWithType } from '~/plugins';
-import { toRef, toRefs } from '~/plugins/shared/utils/refs';
 import { $ } from '~/ts-dsl';
 import { pathToJsonPointer, refToName } from '~/utils/ref';
 
@@ -48,14 +48,13 @@ export const irSchemaToAst = ({
     };
     const refSymbol = plugin.referenceSymbol(query);
     if (plugin.isSymbolRegistered(query)) {
-      ast.expression = $(refSymbol.placeholder).$render();
+      ast.expression = $(refSymbol);
     } else {
-      ast.expression = $(z.placeholder)
+      ast.expression = $(z)
         .attr(identifiers.lazy)
-        .call($.func().returns('any').do($(refSymbol.placeholder).return()))
-        .$render();
+        .call($.func().returns('any').do($(refSymbol).return()));
       ast.hasLazyExpression = true;
-      state.hasLazyExpression.value = true;
+      state.hasLazyExpression['~ref'] = true;
     }
   } else if (schema.type) {
     const typeAst = irSchemaWithTypeToAst({
@@ -67,15 +66,14 @@ export const irSchemaToAst = ({
     ast.hasLazyExpression = typeAst.hasLazyExpression;
 
     if (plugin.config.metadata && schema.description) {
-      ast.expression = $(ast.expression)
+      ast.expression = ast.expression
         .attr(identifiers.register)
         .call(
-          $(z.placeholder).attr(identifiers.globalRegistry),
+          $(z).attr(identifiers.globalRegistry),
           $.object()
             .pretty()
             .prop('description', $.literal(schema.description)),
-        )
-        .$render();
+        );
     }
   } else if (schema.items) {
     schema = deduplicateSchema({ schema });
@@ -87,7 +85,7 @@ export const irSchemaToAst = ({
           schema: item,
           state: {
             ...state,
-            path: toRef([...state.path.value, 'items', index]),
+            path: ref([...fromRef(state.path), 'items', index]),
           },
         }),
       );
@@ -101,35 +99,32 @@ export const irSchemaToAst = ({
           firstSchema.logicalOperator === 'or' ||
           (firstSchema.type && firstSchema.type !== 'object')
         ) {
-          ast.expression = $(z.placeholder)
+          ast.expression = $(z)
             .attr(identifiers.intersection)
-            .call(...itemSchemas.map((schema) => schema.expression))
-            .$render();
+            .call(...itemSchemas.map((schema) => schema.expression));
         } else {
           ast.expression = itemSchemas[0]!.expression;
           itemSchemas.slice(1).forEach((schema) => {
-            ast.expression = $(z.placeholder)
+            ast.expression = $(z)
               .attr(identifiers.intersection)
               .call(
                 ast.expression,
                 schema.hasLazyExpression
-                  ? $(z.placeholder)
+                  ? $(z)
                       .attr(identifiers.lazy)
-                      .call($.func().do($(schema.expression).return()))
+                      .call($.func().do(schema.expression.return()))
                   : schema.expression,
-              )
-              .$render();
+              );
           });
         }
       } else {
-        ast.expression = $(z.placeholder)
+        ast.expression = $(z)
           .attr(identifiers.union)
           .call(
             $.array()
               .pretty()
               .elements(...itemSchemas.map((schema) => schema.expression)),
-          )
-          .$render();
+          );
       }
     } else {
       ast = irSchemaToAst({ plugin, schema, state });
@@ -148,32 +143,25 @@ export const irSchemaToAst = ({
 
   if (ast.expression) {
     if (schema.accessScope === 'read') {
-      ast.expression = $(z.placeholder)
-        .attr(identifiers.readonly)
-        .call(ast.expression)
-        .$render();
+      ast.expression = $(z).attr(identifiers.readonly).call(ast.expression);
     }
 
     if (optional) {
-      ast.expression = $(z.placeholder)
-        .attr(identifiers.optional)
-        .call(ast.expression)
-        .$render();
+      ast.expression = $(z).attr(identifiers.optional).call(ast.expression);
       ast.typeName = identifiers.ZodMiniOptional;
     }
 
     if (schema.default !== undefined) {
       const isBigInt = schema.type === 'integer' && schema.format === 'int64';
-      const callParameter = numberParameter({
-        isBigInt,
-        value: schema.default,
-      });
-      if (callParameter) {
-        ast.expression = $(z.placeholder)
-          .attr(identifiers._default)
-          .call(ast.expression, callParameter)
-          .$render();
-      }
+      ast.expression = $(z)
+        .attr(identifiers._default)
+        .call(
+          ast.expression,
+          numberParameter({
+            isBigInt,
+            value: schema.default,
+          }),
+        );
     }
   }
 
@@ -187,17 +175,16 @@ const handleComponent = ({
 }: IrSchemaToAstOptions & {
   schema: IR.SchemaObject;
 }): void => {
-  const $ref = pathToJsonPointer(state.path.value);
+  const $ref = pathToJsonPointer(fromRef(state.path));
   const ast = irSchemaToAst({ plugin, schema, state });
   const baseName = refToName($ref);
   const symbol = plugin.registerSymbol({
-    exported: true,
     meta: {
       category: 'schema',
-      path: state.path.value,
+      path: fromRef(state.path),
       resource: 'definition',
       resourceId: $ref,
-      tags: state.tags?.value,
+      tags: fromRef(state.tags),
       tool: 'zod',
     },
     name: buildName({
@@ -207,14 +194,12 @@ const handleComponent = ({
   });
   const typeInferSymbol = plugin.config.definitions.types.infer.enabled
     ? plugin.registerSymbol({
-        exported: true,
-        kind: 'type',
         meta: {
           category: 'type',
-          path: state.path.value,
+          path: fromRef(state.path),
           resource: 'definition',
           resourceId: $ref,
-          tags: state.tags?.value,
+          tags: fromRef(state.tags),
           tool: 'zod',
           variant: 'infer',
         },
@@ -251,7 +236,7 @@ export const handlerMini: ZodPlugin['Handler'] = ({ plugin }) => {
     'schema',
     'webhook',
     (event) => {
-      const state = toRefs<PluginState>({
+      const state = refs<PluginState>({
         hasLazyExpression: false,
         path: event._path,
         tags: event.tags,
@@ -260,7 +245,7 @@ export const handlerMini: ZodPlugin['Handler'] = ({ plugin }) => {
         case 'operation':
           irOperationToAst({
             getAst: (schema, path) => {
-              const state = toRefs<PluginState>({
+              const state = refs<PluginState>({
                 hasLazyExpression: false,
                 path,
                 tags: event.tags,
@@ -296,7 +281,7 @@ export const handlerMini: ZodPlugin['Handler'] = ({ plugin }) => {
         case 'webhook':
           irWebhookToAst({
             getAst: (schema, path) => {
-              const state = toRefs<PluginState>({
+              const state = refs<PluginState>({
                 hasLazyExpression: false,
                 path,
                 tags: event.tags,

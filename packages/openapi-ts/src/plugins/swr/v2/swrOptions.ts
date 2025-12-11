@@ -51,11 +51,11 @@ const optionsParamName = 'options';
 export const createSwrOptions = ({
   operation,
   plugin,
-  sdkFn,
+  queryFn,
 }: {
   operation: IR.OperationObject;
   plugin: SwrPlugin['Instance'];
-  sdkFn: string;
+  queryFn: ReturnType<typeof $.expr | typeof $.call | typeof $.attr>;
 }): void => {
   if (hasOperationSse({ operation })) {
     return;
@@ -79,7 +79,7 @@ export const createSwrOptions = ({
       Object.keys(operation.parameters.query).length > 0);
 
   // Create the SDK function call
-  const awaitSdkFn = $(sdkFn)
+  const awaitSdkFn = $(queryFn)
     .call(
       $.object().spread(optionsParamName).prop('throwOnError', $.literal(true)),
     )
@@ -98,8 +98,8 @@ export const createSwrOptions = ({
 
   // Build the key call - only pass options if operation has parameters
   const keyCall = hasParams
-    ? $(symbolSwrKey.placeholder).call(optionsParamName)
-    : $(symbolSwrKey.placeholder).call();
+    ? $(symbolSwrKey).call(optionsParamName)
+    : $(symbolSwrKey).call();
 
   // Build the options object
   const swrOptionsObj = $.object()
@@ -112,27 +112,26 @@ export const createSwrOptions = ({
         .do(...statements),
     );
 
-  // Register the options symbol
-  const symbolSwrOptionsFn = plugin.registerSymbol({
-    exported: true,
-    meta: {
-      category: 'hook',
-      resource: 'operation',
-      resourceId: operation.id,
-      role: 'swrOptions',
-      tool: plugin.name,
-    },
-    name: buildName({
+  const symbolSwrOptionsFn = plugin.symbol(
+    buildName({
       config: plugin.config.swrOptions,
       name: operation.id,
     }),
-  });
+    {
+      meta: {
+        category: 'hook',
+        resource: 'operation',
+        resourceId: operation.id,
+        role: 'swrOptions',
+        tool: plugin.name,
+      },
+    },
+  );
 
-  const statement = $.const(symbolSwrOptionsFn.placeholder)
-    .export(symbolSwrOptionsFn.exported)
-    .$if(
-      plugin.config.comments && createOperationComment({ operation }),
-      (c, v) => c.doc(v as Array<string>),
+  const statement = $.const(symbolSwrOptionsFn)
+    .export()
+    .$if(plugin.config.comments && createOperationComment(operation), (c, v) =>
+      c.doc(v),
     )
     .assign(
       $.func()
@@ -141,6 +140,5 @@ export const createSwrOptions = ({
         )
         .do($.return(swrOptionsObj)),
     );
-
-  plugin.setSymbolValue(symbolSwrOptionsFn, statement);
+  plugin.addNode(statement);
 };

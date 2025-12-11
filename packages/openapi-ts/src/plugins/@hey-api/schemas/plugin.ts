@@ -3,9 +3,8 @@ import type { Context } from '~/ir/context';
 import type { OpenApiV2_0_XTypes } from '~/openApi/2.0.x';
 import type { OpenApiV3_0_XTypes } from '~/openApi/3.0.x';
 import type { OpenApiV3_1_XTypes } from '~/openApi/3.1.x';
-import { ensureValidIdentifier } from '~/openApi/shared/utils/identifier';
 import type { OpenApi } from '~/openApi/types';
-import { tsc } from '~/tsc';
+import { $ } from '~/ts-dsl';
 
 import type { HeyApiSchemasPlugin } from './types';
 
@@ -352,7 +351,7 @@ const schemaName = ({
     customName = `${name}Schema`;
   }
 
-  return ensureValidIdentifier(customName);
+  return customName;
 };
 
 const schemasV2_0_X = ({
@@ -369,7 +368,6 @@ const schemasV2_0_X = ({
   for (const name in context.spec.definitions) {
     const schema = context.spec.definitions[name]!;
     const symbol = plugin.registerSymbol({
-      exported: true,
       meta: {
         category: 'schema',
         resource: 'definition',
@@ -383,13 +381,16 @@ const schemasV2_0_X = ({
       plugin,
       schema,
     });
-    const statement = tsc.constVariable({
-      assertion: 'const',
-      exportConst: symbol.exported,
-      expression: tsc.objectExpression({ obj }),
-      name: symbol.placeholder,
-    });
-    plugin.setSymbolValue(symbol, statement);
+    const statement = $.const(symbol)
+      .export()
+      .assign(
+        $(
+          $.fromValue(obj, {
+            layout: 'pretty',
+          }),
+        ).as('const'),
+      );
+    plugin.addNode(statement);
   }
 };
 
@@ -407,7 +408,6 @@ const schemasV3_0_X = ({
   for (const name in context.spec.components.schemas) {
     const schema = context.spec.components.schemas[name]!;
     const symbol = plugin.registerSymbol({
-      exported: true,
       meta: {
         category: 'schema',
         resource: 'definition',
@@ -421,13 +421,16 @@ const schemasV3_0_X = ({
       plugin,
       schema,
     });
-    const statement = tsc.constVariable({
-      assertion: 'const',
-      exportConst: symbol.exported,
-      expression: tsc.objectExpression({ obj }),
-      name: symbol.placeholder,
-    });
-    plugin.setSymbolValue(symbol, statement);
+    const statement = $.const(symbol)
+      .export()
+      .assign(
+        $(
+          $.fromValue(obj, {
+            layout: 'pretty',
+          }),
+        ).as('const'),
+      );
+    plugin.addNode(statement);
   }
 };
 
@@ -445,7 +448,6 @@ const schemasV3_1_X = ({
   for (const name in context.spec.components.schemas) {
     const schema = context.spec.components.schemas[name]!;
     const symbol = plugin.registerSymbol({
-      exported: true,
       meta: {
         category: 'schema',
         resource: 'definition',
@@ -459,13 +461,16 @@ const schemasV3_1_X = ({
       plugin,
       schema,
     });
-    const statement = tsc.constVariable({
-      assertion: 'const',
-      exportConst: symbol.exported,
-      expression: tsc.objectExpression({ obj }),
-      name: symbol.placeholder,
-    });
-    plugin.setSymbolValue(symbol, statement);
+    const statement = $.const(symbol)
+      .export()
+      .assign(
+        $(
+          $.fromValue(obj, {
+            layout: 'pretty',
+          }),
+        ).as('const'),
+      );
+    plugin.addNode(statement);
   }
 };
 

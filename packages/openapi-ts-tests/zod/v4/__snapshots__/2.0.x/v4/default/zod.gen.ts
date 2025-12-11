@@ -77,7 +77,7 @@ export const zEnumWithStrings = z.enum([
     'Success',
     'Warning',
     'Error',
-    "'Single Quote'",
+    '\'Single Quote\'',
     '"Double Quotes"',
     'Non-ascii: øæåôöØÆÅÔÖ字符串'
 ]);
@@ -576,9 +576,7 @@ export const zCallWithDefaultParametersData = z.object({
         ]),
         parameterModel: z.object({
             prop: z.optional(z.string())
-        }).default({
-            prop: 'Hello World!'
-        })
+        }).default({ prop: 'Hello World!' })
     })
 });
 
@@ -787,7 +785,7 @@ export const zNonAsciiæøåÆøÅöôêÊ字符串Data = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
     query: z.object({
-        'nonAsciiParamæøåÆØÅöôêÊ': z.int()
+        nonAsciiParamæøåÆØÅöôêÊ: z.int()
     })
 });
 

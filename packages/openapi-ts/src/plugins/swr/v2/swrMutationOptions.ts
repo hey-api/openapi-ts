@@ -39,16 +39,16 @@ const optionsParamName = 'options';
 export const createSwrMutationOptions = ({
   operation,
   plugin,
-  sdkFn,
+  queryFn,
 }: {
   operation: IR.OperationObject;
   plugin: SwrPlugin['Instance'];
-  sdkFn: string;
+  queryFn: ReturnType<typeof $.expr | typeof $.call | typeof $.attr>;
 }): void => {
   const typeData = useTypeData({ operation, plugin });
 
   // Create the SDK function call with arg parameter
-  const awaitSdkFn = $(sdkFn)
+  const awaitSdkFn = $(queryFn)
     .call(
       $.object()
         .spread(optionsParamName)
@@ -128,33 +128,31 @@ export const createSwrMutationOptions = ({
         .do(...statements),
     );
 
-  // Register the mutation options symbol
-  const symbolSwrMutationOptionsFn = plugin.registerSymbol({
-    exported: true,
-    meta: {
-      category: 'hook',
-      resource: 'operation',
-      resourceId: operation.id,
-      role: 'swrMutationOptions',
-      tool: plugin.name,
-    },
-    name: buildName({
+  const symbolSwrMutationOptionsFn = plugin.symbol(
+    buildName({
       config: plugin.config.swrMutationOptions,
       name: operation.id,
     }),
-  });
+    {
+      meta: {
+        category: 'hook',
+        resource: 'operation',
+        resourceId: operation.id,
+        role: 'swrMutationOptions',
+        tool: plugin.name,
+      },
+    },
+  );
 
-  const statement = $.const(symbolSwrMutationOptionsFn.placeholder)
-    .export(symbolSwrMutationOptionsFn.exported)
-    .$if(
-      plugin.config.comments && createOperationComment({ operation }),
-      (c, v) => c.doc(v as Array<string>),
+  const statement = $.const(symbolSwrMutationOptionsFn)
+    .export()
+    .$if(plugin.config.comments && createOperationComment(operation), (c, v) =>
+      c.doc(v),
     )
     .assign(
       $.func()
-        .param(optionsParamName, (p) => p.optional(true).type(typeData))
+        .param(optionsParamName, (p) => p.optional().type(typeData))
         .do($.return(swrMutationOptionsObj)),
     );
-
-  plugin.setSymbolValue(symbolSwrMutationOptionsFn, statement);
+  plugin.addNode(statement);
 };

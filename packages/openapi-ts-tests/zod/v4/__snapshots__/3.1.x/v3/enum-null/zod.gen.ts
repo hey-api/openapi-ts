@@ -2,17 +2,8 @@
 
 import { z } from 'zod/v3';
 
-export const zFoo = z.enum([
-    'foo',
-    'bar'
-]).nullable();
+export const zFoo = z.enum(['foo', 'bar']).nullable();
 
-export const zBar = z.enum([
-    'foo',
-    'bar'
-]);
+export const zBar = z.enum(['foo', 'bar']);
 
-export const zBaz = z.enum([
-    'foo',
-    'bar'
-]);
+export const zBaz = z.enum(['foo', 'bar']);

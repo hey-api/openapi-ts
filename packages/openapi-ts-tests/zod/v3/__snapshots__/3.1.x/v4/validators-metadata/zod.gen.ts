@@ -14,18 +14,18 @@ export const zQux = z.record(z.string(), z.object({
 export const zFoo = z.union([
     z.object({
         foo: z.optional(z.string().regex(/^\d{3}-\d{2}-\d{4}$/).register(z.globalRegistry, {
-            description: "This is foo property."
+            description: 'This is foo property.'
         })),
         get bar() {
             return z.optional(z.lazy((): any => zBar));
         },
         get baz() {
             return z.optional(z.array(z.lazy((): any => zFoo)).register(z.globalRegistry, {
-                description: "This is baz property."
+                description: 'This is baz property.'
             }));
         },
         qux: z.optional(z.int().gt(0).register(z.globalRegistry, {
-            description: "This is qux property."
+            description: 'This is qux property.'
         })).default(0)
     }),
     z.null()
@@ -37,14 +37,14 @@ export const zFoo = z.union([
 export const zBar = z.object({
     foo: z.optional(zFoo)
 }).register(z.globalRegistry, {
-    description: "This is Bar schema."
+    description: 'This is Bar schema.'
 });
 
 /**
  * This is Foo parameter.
  */
 export const zFoo2 = z.string().register(z.globalRegistry, {
-    description: "This is Foo parameter."
+    description: 'This is Foo parameter.'
 });
 
 export const zFoo3 = z.object({
@@ -58,7 +58,7 @@ export const zPatchFooData = z.object({
     path: z.optional(z.never()),
     query: z.optional(z.object({
         foo: z.optional(z.string().register(z.globalRegistry, {
-            description: "This is Foo parameter."
+            description: 'This is Foo parameter.'
         })),
         bar: z.optional(zBar),
         baz: z.optional(z.object({
