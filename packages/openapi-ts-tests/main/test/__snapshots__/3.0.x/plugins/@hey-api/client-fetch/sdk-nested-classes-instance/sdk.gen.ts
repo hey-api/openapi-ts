@@ -28,6 +28,24 @@ class HeyApiClient {
     }
 }
 
+class HeyApiRegistry<T> {
+    private readonly defaultKey = 'default';
+    
+    private readonly instances: Map<string, T> = new Map();
+    
+    get(key?: string): T {
+        const instance = this.instances.get(key ?? this.defaultKey);
+        if (!instance) {
+            throw new Error(`No SDK client found. Create one with "new NestedSdkWithInstance()" to fix this error.`);
+        }
+        return instance;
+    }
+    
+    set(value: T, key?: string): void {
+        this.instances.set(key ?? this.defaultKey, value);
+    }
+}
+
 export class Domains extends HeyApiClient {
     public get<ThrowOnError extends boolean = false>(options?: Options<BusinessProvidersDomainsGetData, ThrowOnError>) {
         return (options?.client ?? this.client).get<BusinessProvidersDomainsGetResponses, unknown, ThrowOnError>({ url: '/business/providers/domains', ...options });
@@ -48,24 +66,6 @@ export class Business extends HeyApiClient {
     }
     
     providers = new Providers({ client: this.client });
-}
-
-class HeyApiRegistry<T> {
-    private readonly defaultKey = 'default';
-    
-    private readonly instances: Map<string, T> = new Map();
-    
-    get(key?: string): T {
-        const instance = this.instances.get(key ?? this.defaultKey);
-        if (!instance) {
-            throw new Error(`No SDK client found. Create one with "new NestedSdkWithInstance()" to fix this error.`);
-        }
-        return instance;
-    }
-    
-    set(value: T, key?: string): void {
-        this.instances.set(key ?? this.defaultKey, value);
-    }
 }
 
 export class NestedSdkWithInstance extends HeyApiClient {

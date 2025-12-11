@@ -75,13 +75,6 @@ export interface ISymbolRegistry {
    */
   get(identifier: ISymbolIdentifier): Symbol | undefined;
   /**
-   * Returns the value associated with a symbol ID.
-   *
-   * @param symbolId Symbol ID.
-   * @return The value associated with the symbol ID, or undefined if not found.
-   */
-  getValue(symbolId: number): unknown;
-  /**
    * Returns whether a symbol is registered in the registry.
    *
    * @param identifier Symbol identifier to check.
@@ -123,12 +116,4 @@ export interface ISymbolRegistry {
    * @returns Array of all registered symbols, in insert order.
    */
   registered(): IterableIterator<Symbol>;
-  /**
-   * Sets a value for a symbol by its ID.
-   *
-   * @param symbolId Symbol ID.
-   * @param value The value to set.
-   * @returns void
-   */
-  setValue(symbolId: number, value: unknown): Map<number, unknown>;
 }

@@ -59,33 +59,26 @@ const processSchemaType = ({
       resource: 'definition',
       resourceId: schema.$ref,
     };
-
-    let symbol = plugin.getSymbol(query);
-
-    if (!symbol) {
-      // Register a placeholder symbol immediately and set its value to null
-      // as a stop token to prevent infinite recursion for self-referential
-      // schemas. We also mark this symbol as "building" so that nested
-      // references to it can emit calls that will be implemented later.
-      symbol = plugin.registerSymbol({
-        meta: query,
-        name: buildName({
+    const symbol =
+      plugin.getSymbol(query) ??
+      plugin.symbol(
+        buildName({
           config: {
             case: 'camelCase',
             name: '{{name}}SchemaResponseTransformer',
           },
           name: refToName(schema.$ref),
         }),
-      });
-      plugin.setSymbolValue(symbol, null);
-    }
+        {
+          meta: query,
+        },
+      );
 
     // Only compute the implementation if the symbol isn't already being built.
     // This prevents infinite recursion on self-referential schemas. We still
     // allow emitting a call when the symbol is currently being built so
     // parent nodes can reference the transformer that will be emitted later.
-    const existingValue = plugin.gen.symbols.getValue(symbol.id);
-    if (!existingValue && !buildingSymbols.has(symbol.id)) {
+    if (!symbol.node && !buildingSymbols.has(symbol.id)) {
       buildingSymbols.add(symbol.id);
       try {
         const refSchema = plugin.context.resolveIrRef<IR.SchemaObject>(
@@ -113,8 +106,7 @@ const processSchemaType = ({
     // Only emit a call if the symbol has a value (implementation) OR the
     // symbol is currently being built (recursive reference) — in the
     // latter case we allow emitting a call that will be implemented later.
-    const currentValue = plugin.gen.symbols.getValue(symbol.id);
-    if (currentValue || buildingSymbols.has(symbol.id)) {
+    if (symbol.node || buildingSymbols.has(symbol.id)) {
       const ref = plugin.referenceSymbol(query);
       const callExpression = $(ref).call(dataExpression);
 
