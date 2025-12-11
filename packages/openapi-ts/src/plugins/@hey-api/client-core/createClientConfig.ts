@@ -61,5 +61,5 @@ export const createClientConfigType = ({
           ),
         ),
     );
-  plugin.addNode(typeCreateClientConfig);
+  plugin.node(typeCreateClientConfig);
 };

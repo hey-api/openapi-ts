@@ -109,5 +109,5 @@ export const createTypeOptions = ({
           ),
       ),
     );
-  plugin.addNode(typeOptions);
+  plugin.node(typeOptions);
 };

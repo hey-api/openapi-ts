@@ -64,5 +64,5 @@ export const createUseSwr = ({
           .return(),
       ),
     );
-  plugin.addNode(statement);
+  plugin.node(statement);
 };
