@@ -66,14 +66,15 @@ export const handlerV5: PluginHandler = ({ plugin }) => {
     },
     name: 'useQuery',
   });
+  // TODO what is the proper way?
   plugin.registerSymbol({
-    external: 'axios',
+    external: '../client/types.gen',
     kind: 'type',
     meta: {
       category: 'external',
-      resource: 'axios.AxiosError',
+      resource: 'AxiosErrorWithTypedStatus',
     },
-    name: 'AxiosError',
+    name: 'AxiosErrorWithTypedStatus',
   });
 
   const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
