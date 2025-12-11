@@ -40,13 +40,13 @@ export const exportAst = ({
     //     : undefined,
     // )
     .assign($(type).call(ast.def ? $.literal(ast.def) : ast.expression));
-  plugin.addNode(statement);
+  plugin.node(statement);
 
   if (typeInferSymbol) {
     const inferType = $.type
       .alias(typeInferSymbol)
       .export()
       .type($.type(symbol).attr(identifiers.type.infer).typeofType());
-    plugin.addNode(inferType);
+    plugin.node(inferType);
   }
 };

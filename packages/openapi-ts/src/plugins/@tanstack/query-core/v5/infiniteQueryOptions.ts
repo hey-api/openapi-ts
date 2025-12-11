@@ -100,7 +100,7 @@ const createInfiniteParamsFunction = ({
         $.return($('params').as('unknown').as($('page').typeofType())),
       ),
   );
-  plugin.addNode(fn);
+  plugin.node(fn);
 };
 
 export const createInfiniteQueryOptions = ({
@@ -196,7 +196,7 @@ export const createInfiniteQueryOptions = ({
     symbol: symbolInfiniteQueryKey,
     typeQueryKey,
   });
-  plugin.addNode(node);
+  plugin.node(node);
 
   const awaitSdkFn = $(queryFn)
     .call(
@@ -288,5 +288,5 @@ export const createInfiniteQueryOptions = ({
           ),
         ),
     );
-  plugin.addNode(statement);
+  plugin.node(statement);
 };

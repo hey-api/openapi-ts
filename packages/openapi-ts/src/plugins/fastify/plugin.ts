@@ -161,5 +161,5 @@ export const handler: FastifyPlugin['Handler'] = ({ plugin }) => {
   );
 
   const node = $.type.alias(symbolRouteHandlers).export().type(type);
-  plugin.addNode(node);
+  plugin.node(node);
 };

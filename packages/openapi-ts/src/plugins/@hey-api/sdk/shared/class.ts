@@ -306,7 +306,7 @@ export const generateClassSdk = ({
   );
 
   const heyApiClientIndex = plugin.config.instance
-    ? plugin.addNode(null)
+    ? plugin.node(null)
     : undefined;
   const symbolHeyApiClient =
     heyApiClientIndex !== undefined
@@ -320,7 +320,7 @@ export const generateClassSdk = ({
         })
       : undefined;
   const heyApiRegistryIndex = plugin.config.instance
-    ? plugin.addNode(null)
+    ? plugin.node(null)
     : undefined;
 
   const generateClass = (currentClass: SdkClassEntry) => {
@@ -404,7 +404,7 @@ export const generateClassSdk = ({
         plugin,
         symbol: symbolHeyApiClient,
       });
-      plugin.updateNode(heyApiClientIndex, node);
+      plugin.node(node, heyApiClientIndex);
     }
 
     const symbol = plugin.symbol(resourceId, {
@@ -465,7 +465,7 @@ export const generateClassSdk = ({
         sdkSymbol: symbol,
         symbol: symbolRegistry,
       });
-      plugin.updateNode(heyApiRegistryIndex, node);
+      plugin.node(node, heyApiRegistryIndex);
       const registryNode = $.field(registryName, (f) =>
         f
           .public()
@@ -489,7 +489,7 @@ export const generateClassSdk = ({
         ),
       )
       .do(...currentClass.nodes);
-    plugin.addNode(node);
+    plugin.node(node);
   };
 
   for (const sdkClass of sdkClasses.values()) {

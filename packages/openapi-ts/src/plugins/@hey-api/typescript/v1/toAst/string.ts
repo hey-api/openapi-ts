@@ -60,7 +60,7 @@ export const stringToAst = ({
             .type(
               $.type.template().add($.type('T')).add('_').add($.type('string')),
             );
-          plugin.addNode(nodeTypeId);
+          plugin.node(nodeTypeId);
         }
 
         const symbolTypeId = plugin.referenceSymbol(queryTypeId);
@@ -75,7 +75,7 @@ export const stringToAst = ({
           .alias(symbolTypeName)
           .export()
           .type($.type(symbolTypeId).generic($.type.literal(type)));
-        plugin.addNode(node);
+        plugin.node(node);
       }
       const symbol = plugin.referenceSymbol(query);
       return $.type(symbol);

@@ -147,7 +147,7 @@ const operationToDataType = ({
         state,
       }),
     );
-  plugin.addNode(node);
+  plugin.node(node);
 };
 
 export const operationToType = ({
@@ -188,7 +188,7 @@ export const operationToType = ({
           state,
         }),
       );
-    plugin.addNode(node);
+    plugin.node(node);
 
     if (error) {
       const symbol = plugin.registerSymbol({
@@ -213,7 +213,7 @@ export const operationToType = ({
         .alias(symbol)
         .export()
         .type($.type(symbolErrors).idx($.type(symbolErrors).keyof()));
-      plugin.addNode(node);
+      plugin.node(node);
     }
   }
 
@@ -243,7 +243,7 @@ export const operationToType = ({
           state,
         }),
       );
-    plugin.addNode(node);
+    plugin.node(node);
 
     if (response) {
       const symbol = plugin.registerSymbol({
@@ -268,7 +268,7 @@ export const operationToType = ({
         .alias(symbol)
         .export()
         .type($.type(symbolResponses).idx($.type(symbolResponses).keyof()));
-      plugin.addNode(node);
+      plugin.node(node);
     }
   }
 };
