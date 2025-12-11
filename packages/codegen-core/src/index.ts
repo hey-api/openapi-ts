@@ -26,7 +26,10 @@ export {
   simpleNameConflictResolver,
   underscoreNameConflictResolver,
 } from './planner/resolvers';
-export type { IAnalysisContext as AnalysisContext } from './planner/types';
+export type {
+  IAnalysisContext as AnalysisContext,
+  NameConflictResolver,
+} from './planner/types';
 export { Project } from './project/project';
 export type { IProject } from './project/types';
 export { fromRef, fromRefs, isRef, ref, refs } from './refs/refs';
