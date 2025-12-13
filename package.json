@@ -24,6 +24,7 @@
     "changeset": "changeset",
     "examples:check": "sh ./scripts/examples-check.sh",
     "examples:generate": "sh ./scripts/examples-generate.sh",
+    "examples:update-npm-versions": "sh ./scripts/update-examples-npm-versions.sh",
     "format": "prettier --write .",
     "lint:fix": "prettier --check --write . && eslint . --fix",
     "lint": "prettier --check . && eslint .",
