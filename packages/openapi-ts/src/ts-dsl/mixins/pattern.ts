@@ -1,4 +1,4 @@
-import type { AnalysisContext, Node } from '@hey-api/codegen-core';
+import type { AnalysisContext, AstContext, Node } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import type { MaybeArray } from '../base';
@@ -7,7 +7,7 @@ import type { BaseCtor, MixinCtor } from './types';
 
 export interface PatternMethods extends Node {
   /** Renders the pattern into a `BindingName`. */
-  $pattern(): ts.BindingName | undefined;
+  $pattern(ctx: AstContext): ts.BindingName | undefined;
   /** Defines an array binding pattern. */
   array(...props: ReadonlyArray<string> | [ReadonlyArray<string>]): this;
   /** Defines an object binding pattern. */
@@ -53,9 +53,9 @@ export function PatternMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
     }
 
     /** Renders the pattern into a `BindingName`. */
-    protected $pattern(): ts.BindingName | undefined {
+    protected $pattern(ctx: AstContext): ts.BindingName | undefined {
       if (!this.pattern) return;
-      return this.$node(this.pattern);
+      return this.$node(ctx, this.pattern);
     }
   }
 

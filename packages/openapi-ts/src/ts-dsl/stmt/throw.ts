@@ -1,4 +1,4 @@
-import type { AnalysisContext } from '@hey-api/codegen-core';
+import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -31,10 +31,13 @@ export class ThrowTsDsl extends Mixed {
     return this;
   }
 
-  override toAst() {
-    const errorNode = this.$node(this.error);
-    const messageNode = this.$node(this.msg ? [this.msg] : []).map((expr) =>
-      typeof expr === 'string' ? this.$node(new LiteralTsDsl(expr)) : expr,
+  override toAst(ctx: AstContext) {
+    const errorNode = this.$node(ctx, this.error);
+    const messageNode = this.$node(ctx, this.msg ? [this.msg] : []).map(
+      (expr) =>
+        typeof expr === 'string'
+          ? this.$node(ctx, new LiteralTsDsl(expr))
+          : expr,
     );
     if (this.useNew) {
       return ts.factory.createThrowStatement(

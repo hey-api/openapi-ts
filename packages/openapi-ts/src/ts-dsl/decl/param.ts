@@ -1,4 +1,9 @@
-import type { AnalysisContext, Ref, Symbol } from '@hey-api/codegen-core';
+import type {
+  AnalysisContext,
+  AstContext,
+  Ref,
+  Symbol,
+} from '@hey-api/codegen-core';
 import { fromRef, isSymbolRef, ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
@@ -51,8 +56,8 @@ export class ParamTsDsl extends Mixed {
     return this;
   }
 
-  override toAst() {
-    let name: string | ReturnType<typeof this.$pattern> = this.$pattern();
+  override toAst(ctx: AstContext) {
+    let name: string | ReturnType<typeof this.$pattern> = this.$pattern(ctx);
     if (!name && this.name) {
       name = isSymbolRef(this.name)
         ? fromRef(this.name).finalName
@@ -63,12 +68,12 @@ export class ParamTsDsl extends Mixed {
         'Param must have either a name or a destructuring pattern',
       );
     return ts.factory.createParameterDeclaration(
-      this.$decorators(),
+      this.$decorators(ctx),
       undefined,
       name,
-      this._optional ? this.$node(new TokenTsDsl().optional()) : undefined,
-      this.$type(this._type),
-      this.$value(),
+      this._optional ? this.$node(ctx, new TokenTsDsl().optional()) : undefined,
+      this.$type(ctx, this._type),
+      this.$value(ctx),
     );
   }
 }

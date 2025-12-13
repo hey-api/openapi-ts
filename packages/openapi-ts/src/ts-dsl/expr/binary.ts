@@ -1,4 +1,9 @@
-import type { AnalysisContext, Ref, Symbol } from '@hey-api/codegen-core';
+import type {
+  AnalysisContext,
+  AstContext,
+  Ref,
+  Symbol,
+} from '@hey-api/codegen-core';
 import { ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
@@ -129,15 +134,15 @@ export class BinaryTsDsl extends Mixed {
     return this.opAndExpr('*', expr);
   }
 
-  override toAst() {
+  override toAst(ctx: AstContext) {
     if (!this._op) {
       throw new Error('BinaryTsDsl: missing operator');
     }
-    const expr = this.$node(this._expr);
+    const expr = this.$node(ctx, this._expr);
     if (!expr) {
       throw new Error('BinaryTsDsl: missing right-hand expression');
     }
-    const base = this.$node(this._base);
+    const base = this.$node(ctx, this._base);
     const operator =
       typeof this._op === 'string' ? this.opToToken(this._op) : this._op;
     return ts.factory.createBinaryExpression(base, operator, expr);

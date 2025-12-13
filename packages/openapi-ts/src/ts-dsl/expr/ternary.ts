@@ -1,4 +1,4 @@
-import type { AnalysisContext } from '@hey-api/codegen-core';
+import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -40,17 +40,17 @@ export class TernaryTsDsl extends Mixed {
     return this;
   }
 
-  override toAst() {
+  override toAst(ctx: AstContext) {
     if (!this._condition) throw new Error('Missing condition in ternary');
     if (!this._then) throw new Error('Missing then expression in ternary');
     if (!this._else) throw new Error('Missing else expression in ternary');
 
     return ts.factory.createConditionalExpression(
-      this.$node(this._condition),
+      this.$node(ctx, this._condition),
       undefined,
-      this.$node(this._then),
+      this.$node(ctx, this._then),
       undefined,
-      this.$node(this._else),
+      this.$node(ctx, this._else),
     );
   }
 }

@@ -1,4 +1,4 @@
-import type { AnalysisContext } from '@hey-api/codegen-core';
+import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl, TypeTsDsl } from '../base';
@@ -70,17 +70,17 @@ export class MethodTsDsl extends Mixed {
     return this;
   }
 
-  override toAst() {
+  override toAst(ctx: AstContext) {
     const node = ts.factory.createMethodDeclaration(
-      [...this.$decorators(), ...this.modifiers],
+      [...this.$decorators(ctx), ...this.modifiers],
       undefined,
       this.name,
-      this._optional ? this.$node(new TokenTsDsl().optional()) : undefined,
-      this.$generics(),
-      this.$params(),
-      this.$type(this._returns),
-      this.$node(new BlockTsDsl(...this._do).pretty()),
+      this._optional ? this.$node(ctx, new TokenTsDsl().optional()) : undefined,
+      this.$generics(ctx),
+      this.$params(ctx),
+      this.$type(ctx, this._returns),
+      this.$node(ctx, new BlockTsDsl(...this._do).pretty()),
     );
-    return this.$docs(node);
+    return this.$docs(ctx, node);
   }
 }

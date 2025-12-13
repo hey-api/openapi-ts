@@ -1,4 +1,9 @@
-import type { AnalysisContext, Ref, Symbol } from '@hey-api/codegen-core';
+import type {
+  AnalysisContext,
+  AstContext,
+  Ref,
+  Symbol,
+} from '@hey-api/codegen-core';
 import { ref } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
@@ -30,7 +35,7 @@ export class ExprTsDsl extends Mixed {
     ctx.analyze(this._exprInput);
   }
 
-  override toAst() {
-    return this.$node(this._exprInput);
+  override toAst(ctx: AstContext) {
+    return this.$node(ctx, this._exprInput);
   }
 }

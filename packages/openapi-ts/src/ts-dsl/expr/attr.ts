@@ -1,4 +1,9 @@
-import type { AnalysisContext, Ref, Symbol } from '@hey-api/codegen-core';
+import type {
+  AnalysisContext,
+  AstContext,
+  Ref,
+  Symbol,
+} from '@hey-api/codegen-core';
 import { fromRef, ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
@@ -44,8 +49,8 @@ export class AttrTsDsl extends Mixed {
     ctx.analyze(this.right);
   }
 
-  override toAst() {
-    const leftNode = this.$node(this.left);
+  override toAst(ctx: AstContext) {
+    const leftNode = this.$node(ctx, this.left);
     regexp.typeScriptIdentifier.lastIndex = 0;
     if (
       typeof fromRef(this.right) === 'number' ||
@@ -55,27 +60,25 @@ export class AttrTsDsl extends Mixed {
       if (this._optional) {
         return ts.factory.createElementAccessChain(
           leftNode,
-          this.$node(new TokenTsDsl().questionDot()),
-          this.$node(new LiteralTsDsl(fromRef(this.right) as string)),
+          this.$node(ctx, new TokenTsDsl().questionDot()),
+          this.$node(ctx, new LiteralTsDsl(fromRef(this.right) as string)),
         );
       }
       return ts.factory.createElementAccessExpression(
         leftNode,
-        this.$node(new LiteralTsDsl(fromRef(this.right) as string)),
+        this.$node(ctx, new LiteralTsDsl(fromRef(this.right) as string)),
       );
     }
     if (this._optional) {
       return ts.factory.createPropertyAccessChain(
         leftNode,
-        this.$node(new TokenTsDsl().questionDot()),
-        // @ts-expect-error ts.MemberName is not properly recognized here
-        this.$node(this.right),
+        this.$node(ctx, new TokenTsDsl().questionDot()),
+        this.$node(ctx, this.right) as ts.MemberName,
       );
     }
     return ts.factory.createPropertyAccessExpression(
       leftNode,
-      // @ts-expect-error ts.MemberName is not properly recognized here
-      this.$node(this.right),
+      this.$node(ctx, this.right) as ts.MemberName,
     );
   }
 }
