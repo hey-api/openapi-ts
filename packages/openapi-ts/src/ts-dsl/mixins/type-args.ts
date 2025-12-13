@@ -1,4 +1,10 @@
-import type { AnalysisContext, Node, Ref, Symbol } from '@hey-api/codegen-core';
+import type {
+  AnalysisContext,
+  AstContext,
+  Node,
+  Ref,
+  Symbol,
+} from '@hey-api/codegen-core';
 import { ref } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
@@ -9,7 +15,7 @@ type Arg = Symbol | string | MaybeTsDsl<TypeTsDsl>;
 
 export interface TypeArgsMethods extends Node {
   /** Returns the type arguments as an array of ts.TypeNode nodes. */
-  $generics(): ReadonlyArray<ts.TypeNode> | undefined;
+  $generics(ctx: AstContext): ReadonlyArray<ts.TypeNode> | undefined;
   /** Adds a single type argument (e.g. `string` in `Foo<string>`). */
   generic(arg: Arg): this;
   /** Adds type arguments (e.g. `Map<string, number>`). */
@@ -39,8 +45,10 @@ export function TypeArgsMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
       return this;
     }
 
-    protected $generics(): ReadonlyArray<ts.TypeNode> | undefined {
-      return this.$type(this._generics);
+    protected $generics(
+      ctx: AstContext,
+    ): ReadonlyArray<ts.TypeNode> | undefined {
+      return this.$type(ctx, this._generics);
     }
   }
 

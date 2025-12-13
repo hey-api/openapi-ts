@@ -1,6 +1,7 @@
 // TODO: symbol should be protected, but needs to be public to satisfy types
 import type {
   AnalysisContext,
+  AstContext,
   File,
   FromRef,
   Language,
@@ -27,7 +28,8 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements Node<T> {
   parent?: Node;
   root?: Node;
   symbol?: Symbol;
-  toAst(): T {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  toAst(_: AstContext): T {
     return undefined as unknown as T;
   }
   readonly '~brand' = nodeBrand;
@@ -118,7 +120,7 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements Node<T> {
     ) as T extends string ? ts.Identifier : T;
   }
 
-  protected $node<I>(value: I): NodeOfMaybe<I> {
+  protected $node<I>(ctx: AstContext, value: I): NodeOfMaybe<I> {
     if (value === undefined) {
       return undefined as NodeOfMaybe<I>;
     }
@@ -133,13 +135,14 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements Node<T> {
     if (value instanceof Array) {
       return value.map((item) => {
         if (isRef(item)) item = fromRef(item);
-        return this.unwrap(item);
+        return this.unwrap(item, ctx);
       }) as NodeOfMaybe<I>;
     }
-    return this.unwrap(value as any) as NodeOfMaybe<I>;
+    return this.unwrap(value as any, ctx) as NodeOfMaybe<I>;
   }
 
   protected $type<I>(
+    ctx: AstContext,
     value: I,
     args?: ReadonlyArray<ts.TypeNode>,
   ): TypeOfMaybe<I> {
@@ -169,14 +172,19 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements Node<T> {
       ) as TypeOfMaybe<I>;
     }
     if (value instanceof Array) {
-      return value.map((item) => this.$type(item, args)) as TypeOfMaybe<I>;
+      return value.map((item) => this.$type(ctx, item, args)) as TypeOfMaybe<I>;
     }
-    return this.unwrap(value as any) as TypeOfMaybe<I>;
+    return this.unwrap(value as any, ctx) as TypeOfMaybe<I>;
   }
 
   /** Unwraps nested nodes into raw TypeScript AST. */
-  private unwrap<I>(value: I): I extends TsDsl<infer N> ? N : I {
-    return (isNode(value) ? value.toAst() : value) as I extends TsDsl<infer N>
+  private unwrap<I>(
+    value: I,
+    ctx: AstContext,
+  ): I extends TsDsl<infer N> ? N : I {
+    return (isNode(value) ? value.toAst(ctx) : value) as I extends TsDsl<
+      infer N
+    >
       ? N
       : I;
   }

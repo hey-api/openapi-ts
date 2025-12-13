@@ -1,4 +1,9 @@
-import type { AnalysisContext, Ref, Symbol } from '@hey-api/codegen-core';
+import type {
+  AnalysisContext,
+  AstContext,
+  Ref,
+  Symbol,
+} from '@hey-api/codegen-core';
 import { isNode, ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
@@ -47,12 +52,11 @@ export class TypeExprTsDsl extends Mixed {
     return this;
   }
 
-  override toAst() {
+  override toAst(ctx: AstContext) {
     if (!this._exprInput) throw new Error('TypeExpr must have an expression');
     return ts.factory.createTypeReferenceNode(
-      // @ts-expect-error need to improve types
-      this.$type(this._exprInput),
-      this.$generics(),
+      this.$type(ctx, this._exprInput) as ts.EntityName,
+      this.$generics(ctx),
     );
   }
 }

@@ -5,6 +5,7 @@ import { FileRegistry } from '../files/registry';
 import { defaultExtensions } from '../languages/extensions';
 import { defaultNameConflictResolvers } from '../languages/resolvers';
 import type { Extensions, NameConflictResolvers } from '../languages/types';
+import type { AstContext } from '../nodes/context';
 import { NodeRegistry } from '../nodes/registry';
 import type { IOutput } from '../output';
 import { Planner } from '../planner/planner';
@@ -60,9 +61,19 @@ export class Project implements IProject {
   render(meta?: IProjectRenderMeta): ReadonlyArray<IOutput> {
     new Planner(this).plan(meta);
     const files: Array<IOutput> = [];
+    const astContext: AstContext = {
+      getAccess(node) {
+        return node;
+      },
+    };
     for (const file of this.files.registered()) {
       if (file.finalPath && file.renderer) {
-        const content = file.renderer.render({ file, meta, project: this });
+        const content = file.renderer.render({
+          astContext,
+          file,
+          meta,
+          project: this,
+        });
         files.push({ content, path: file.finalPath });
       }
     }

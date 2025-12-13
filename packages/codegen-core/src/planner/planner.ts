@@ -109,7 +109,11 @@ export class Planner {
       if (finalPath) {
         file.setFinalPath(path.resolve(this.project.root, finalPath));
       }
-      const ctx: RenderContext = { file, meta, project: this.project };
+      const ctx: Omit<RenderContext, 'astContext'> = {
+        file,
+        meta,
+        project: this.project,
+      };
       const renderer = this.project.renderers.find((r) => r.supports(ctx));
       if (renderer) file.setRenderer(renderer);
     }

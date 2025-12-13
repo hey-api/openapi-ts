@@ -1,4 +1,4 @@
-import type { AnalysisContext } from '@hey-api/codegen-core';
+import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -50,7 +50,7 @@ export class PrefixTsDsl extends Mixed {
     return this;
   }
 
-  override toAst() {
+  override toAst(ctx: AstContext) {
     if (!this._expr) {
       throw new Error('Missing expression for prefix unary expression');
     }
@@ -59,7 +59,7 @@ export class PrefixTsDsl extends Mixed {
     }
     return ts.factory.createPrefixUnaryExpression(
       this._op,
-      this.$node(this._expr),
+      this.$node(ctx, this._expr),
     );
   }
 }

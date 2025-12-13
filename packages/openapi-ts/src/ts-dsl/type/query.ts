@@ -1,4 +1,4 @@
-import type { AnalysisContext } from '@hey-api/codegen-core';
+import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -22,8 +22,8 @@ export class TypeQueryTsDsl extends Mixed {
     ctx.analyze(this._expr);
   }
 
-  override toAst() {
-    const expr = this.$node(this._expr);
+  override toAst(ctx: AstContext) {
+    const expr = this.$node(ctx, this._expr);
     return ts.factory.createTypeQueryNode(expr as unknown as ts.EntityName);
   }
 }

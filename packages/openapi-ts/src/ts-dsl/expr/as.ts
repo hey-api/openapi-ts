@@ -1,4 +1,9 @@
-import type { AnalysisContext, Ref, Symbol } from '@hey-api/codegen-core';
+import type {
+  AnalysisContext,
+  AstContext,
+  Ref,
+  Symbol,
+} from '@hey-api/codegen-core';
 import { ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
@@ -31,10 +36,10 @@ export class AsTsDsl extends Mixed {
     ctx.analyze(this.type);
   }
 
-  override toAst() {
+  override toAst(ctx: AstContext) {
     return ts.factory.createAsExpression(
-      this.$node(this.expr),
-      this.$type(this.type),
+      this.$node(ctx, this.expr),
+      this.$type(ctx, this.type),
     );
   }
 }

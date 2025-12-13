@@ -1,4 +1,9 @@
-import type { AnalysisContext, Ref, Symbol } from '@hey-api/codegen-core';
+import type {
+  AnalysisContext,
+  AstContext,
+  Ref,
+  Symbol,
+} from '@hey-api/codegen-core';
 import { ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
@@ -40,14 +45,13 @@ export class TypeParamTsDsl extends Mixed {
     return this;
   }
 
-  override toAst() {
+  override toAst(ctx: AstContext) {
     if (!this.name) throw new Error('Missing type name');
     return ts.factory.createTypeParameterDeclaration(
       undefined,
-      // @ts-expect-error need to improve types
-      this.$node(this.name),
-      this.$type(this.constraint),
-      this.$type(this.defaultValue),
+      this.$node(ctx, this.name) as ts.Identifier,
+      this.$type(ctx, this.constraint),
+      this.$type(ctx, this.defaultValue),
     );
   }
 }
