@@ -69,15 +69,17 @@ export const createQueryOptions = ({
 
   const typeResponse = useTypeResponse({ operation, plugin });
 
-  const awaitSdkFn = $(queryFn)
-    .call(
-      $.object()
-        .spread(optionsParamName)
-        .spread($('queryKey').attr(0))
-        .prop('signal', $('signal'))
-        .prop('throwOnError', $.literal(true)),
-    )
-    .await();
+  const awaitSdkFn = $.lazy(() =>
+    $(queryFn)
+      .call(
+        $.object()
+          .spread(optionsParamName)
+          .spread($('queryKey').attr(0))
+          .prop('signal', $('signal'))
+          .prop('throwOnError', $.literal(true)),
+      )
+      .await(),
+  );
 
   const statements: Array<TsDsl<any>> = [];
   if (plugin.getPluginOrThrow('@hey-api/sdk').config.responseStyle === 'data') {

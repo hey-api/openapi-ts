@@ -31,15 +31,17 @@ export const createMutationOptions = ({
   const options = plugin.symbol('options');
   const fnOptions = plugin.symbol('vars');
 
-  const awaitSdkFn = $(queryFn)
-    .call(
-      $.object()
-        .pretty()
-        .spread(options)
-        .spread(fnOptions)
-        .prop('throwOnError', $.literal(true)),
-    )
-    .await();
+  const awaitSdkFn = $.lazy(() =>
+    $(queryFn)
+      .call(
+        $.object()
+          .pretty()
+          .spread(options)
+          .spread(fnOptions)
+          .prop('throwOnError', $.literal(true)),
+      )
+      .await(),
+  );
 
   const statements: Array<ReturnType<typeof $.var | typeof $.return>> = [];
 

@@ -30,14 +30,16 @@ export const createMutationOptions = ({
 
   const fnOptions = 'fnOptions';
 
-  const awaitSdkFn = $(queryFn)
-    .call(
-      $.object()
-        .spread('options')
-        .spread(fnOptions)
-        .prop('throwOnError', $.literal(true)),
-    )
-    .await();
+  const awaitSdkFn = $.lazy(() =>
+    $(queryFn)
+      .call(
+        $.object()
+          .spread('options')
+          .spread(fnOptions)
+          .prop('throwOnError', $.literal(true)),
+      )
+      .await(),
+  );
 
   const statements: Array<TsDsl<any>> = [];
   if (plugin.getPluginOrThrow('@hey-api/sdk').config.responseStyle === 'data') {
