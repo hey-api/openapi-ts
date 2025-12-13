@@ -33,9 +33,11 @@ export const createUseSwr = ({
     }),
   });
 
-  const awaitSdkFn = $(queryFn)
-    .call($.object().prop('throwOnError', $.literal(true)))
-    .await();
+  const awaitSdkFn = $.lazy(() =>
+    $(queryFn)
+      .call($.object().prop('throwOnError', $.literal(true)))
+      .await(),
+  );
 
   const statements: Array<TsDsl<any>> = [];
   if (plugin.getPluginOrThrow('@hey-api/sdk').config.responseStyle === 'data') {
