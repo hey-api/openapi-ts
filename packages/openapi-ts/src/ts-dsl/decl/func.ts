@@ -1,4 +1,9 @@
-import type { AnalysisContext, Ref, Symbol } from '@hey-api/codegen-core';
+import type {
+  AnalysisContext,
+  AstContext,
+  Ref,
+  Symbol,
+} from '@hey-api/codegen-core';
 import { isSymbol, ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
@@ -113,47 +118,47 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends Mixed {
   }
 
   // @ts-expect-error --- need to fix types ---
-  override toAst(): M extends 'decl'
+  override toAst(
+    ctx: AstContext,
+  ): M extends 'decl'
     ? ts.FunctionDeclaration
     : M extends 'expr'
       ? ts.FunctionExpression
       : ts.ArrowFunction {
-    const body = this.$node(new BlockTsDsl(...this._do).pretty());
+    const body = this.$node(ctx, new BlockTsDsl(...this._do).pretty());
 
     if (this.mode === 'decl') {
       if (!this.name) throw new Error('Function declaration requires a name');
       const node = ts.factory.createFunctionDeclaration(
-        [...this.$decorators(), ...this.modifiers],
+        [...this.$decorators(ctx), ...this.modifiers],
         undefined,
-        // @ts-expect-error need to improve types
-        this.$node(this.name),
-        this.$generics(),
-        this.$params(),
-        this.$type(this._returns),
+        this.$node(ctx, this.name) as ts.Identifier,
+        this.$generics(ctx),
+        this.$params(ctx),
+        this.$type(ctx, this._returns),
         body,
       ) as any;
-      return this.$docs(node);
+      return this.$docs(ctx, node);
     }
 
     if (this.mode === 'expr') {
       const node = ts.factory.createFunctionExpression(
         this.modifiers,
         undefined,
-        // @ts-expect-error need to improve types
-        this.$node(this.name),
-        this.$generics(),
-        this.$params(),
-        this.$type(this._returns),
+        this.$node(ctx, this.name) as ts.Identifier,
+        this.$generics(ctx),
+        this.$params(ctx),
+        this.$type(ctx, this._returns),
         body,
       ) as any;
-      return this.$docs(node);
+      return this.$docs(ctx, node);
     }
 
     const node = ts.factory.createArrowFunction(
       this.modifiers,
-      this.$generics(),
-      this.$params(),
-      this.$type(this._returns),
+      this.$generics(ctx),
+      this.$params(ctx),
+      this.$type(ctx, this._returns),
       undefined,
       body.statements.length === 1 &&
         ts.isReturnStatement(body.statements[0]!) &&
@@ -161,7 +166,7 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends Mixed {
         ? body.statements[0].expression
         : body,
     ) as any;
-    return this.$docs(node);
+    return this.$docs(ctx, node);
   }
 }
 

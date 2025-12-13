@@ -27,6 +27,7 @@ const constExports = [
 // Type-level test: will fail to compile if any type export is missing or renamed
 export type _TypeExports = [
   index.AnalysisContext,
+  index.AstContext,
   index.BindingKind,
   index.ExportMember,
   index.ExportModule,

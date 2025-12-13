@@ -1,4 +1,9 @@
-import type { AnalysisContext, Ref, Symbol } from '@hey-api/codegen-core';
+import type {
+  AnalysisContext,
+  AstContext,
+  Ref,
+  Symbol,
+} from '@hey-api/codegen-core';
 import { fromRef, isSymbol, ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
@@ -45,18 +50,17 @@ export class TypeAliasTsDsl extends Mixed {
     return this;
   }
 
-  override toAst() {
+  override toAst(ctx: AstContext) {
     if (!this.value)
       throw new Error(
         `Type alias '${fromRef(this.name)}' is missing a type definition`,
       );
     const node = ts.factory.createTypeAliasDeclaration(
       this.modifiers,
-      // @ts-expect-error need to improve types
-      this.$node(this.name),
-      this.$generics(),
-      this.$type(this.value),
+      this.$node(ctx, this.name) as ts.Identifier,
+      this.$generics(ctx),
+      this.$type(ctx, this.value),
     );
-    return this.$docs(node);
+    return this.$docs(ctx, node);
   }
 }

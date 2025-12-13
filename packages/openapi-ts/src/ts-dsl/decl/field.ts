@@ -1,4 +1,8 @@
-import type { AnalysisContext, Symbol } from '@hey-api/codegen-core';
+import type {
+  AnalysisContext,
+  AstContext,
+  Symbol,
+} from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl, TypeTsDsl } from '../base';
@@ -53,14 +57,14 @@ export class FieldTsDsl extends Mixed {
     return this;
   }
 
-  override toAst() {
+  override toAst(ctx: AstContext) {
     const node = ts.factory.createPropertyDeclaration(
-      [...this.$decorators(), ...this.modifiers],
-      this.$node(this.name) as ts.PropertyName,
+      [...this.$decorators(ctx), ...this.modifiers],
+      this.$node(ctx, this.name) as ts.PropertyName,
       undefined,
-      this.$type(this._type),
-      this.$value(),
+      this.$type(ctx, this._type),
+      this.$value(ctx),
     );
-    return this.$docs(node);
+    return this.$docs(ctx, node);
   }
 }

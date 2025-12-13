@@ -2,6 +2,7 @@ import type { File } from '../files/file';
 import type { Language } from '../languages/types';
 import type { IAnalysisContext } from '../planner/types';
 import type { Symbol } from '../symbols/symbol';
+import type { AstContext } from './context';
 
 export interface INode<T = unknown> {
   /** Perform semantic analysis. */
@@ -19,7 +20,7 @@ export interface INode<T = unknown> {
   /** The symbol associated with this node. */
   symbol?: Symbol;
   /** Convert this node into AST representation. */
-  toAst(): T;
+  toAst(ctx: AstContext): T;
   /** Brand used for renderer dispatch. */
   readonly '~brand': string;
 }

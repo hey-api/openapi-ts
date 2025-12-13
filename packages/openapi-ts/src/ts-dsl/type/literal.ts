@@ -1,4 +1,4 @@
-import type { AnalysisContext } from '@hey-api/codegen-core';
+import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TypeTsDsl } from '../base';
@@ -20,9 +20,9 @@ export class TypeLiteralTsDsl extends Mixed {
     super.analyze(ctx);
   }
 
-  override toAst() {
+  override toAst(ctx: AstContext) {
     return ts.factory.createLiteralTypeNode(
-      this.$node(new LiteralTsDsl(this.value)),
+      this.$node(ctx, new LiteralTsDsl(this.value)),
     );
   }
 }

@@ -1,4 +1,9 @@
-import type { AnalysisContext, Ref, Symbol } from '@hey-api/codegen-core';
+import type {
+  AnalysisContext,
+  AstContext,
+  Ref,
+  Symbol,
+} from '@hey-api/codegen-core';
 import { isSymbol, ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
@@ -65,8 +70,8 @@ export class VarTsDsl extends Mixed {
     return this;
   }
 
-  override toAst() {
-    const name = this.$pattern() ?? this.$node(this.name);
+  override toAst(ctx: AstContext) {
+    const name = this.$pattern(ctx) ?? this.$node(ctx, this.name);
     if (!name)
       throw new Error('Var must have either a name or a destructuring pattern');
     const node = ts.factory.createVariableStatement(
@@ -74,16 +79,15 @@ export class VarTsDsl extends Mixed {
       ts.factory.createVariableDeclarationList(
         [
           ts.factory.createVariableDeclaration(
-            // @ts-expect-error need to improve types
-            name,
+            name as ts.BindingName,
             undefined,
-            this.$type(this._type),
-            this.$value(),
+            this.$type(ctx, this._type),
+            this.$value(ctx),
           ),
         ],
         this.kind,
       ),
     );
-    return this.$docs(this.$hint(node));
+    return this.$docs(ctx, this.$hint(ctx, node));
   }
 }

@@ -1,4 +1,9 @@
-import type { AnalysisContext, Node, Symbol } from '@hey-api/codegen-core';
+import type {
+  AnalysisContext,
+  AstContext,
+  Node,
+  Symbol,
+} from '@hey-api/codegen-core';
 import { isSymbol } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
@@ -8,7 +13,9 @@ import type { BaseCtor, MixinCtor } from './types';
 
 export interface TypeParamsMethods extends Node {
   /** Returns the type parameters as an array of ts.TypeParameterDeclaration nodes. */
-  $generics(): ReadonlyArray<ts.TypeParameterDeclaration> | undefined;
+  $generics(
+    ast: AstContext,
+  ): ReadonlyArray<ts.TypeParameterDeclaration> | undefined;
   /** Adds a single type parameter (e.g. `T` in `Array<T>`). */
   generic(...args: ConstructorParameters<typeof TypeParamTsDsl>): this;
   /** Adds type parameters (e.g. `Map<string, T>`). */
@@ -50,10 +57,10 @@ export function TypeParamsMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
       return this;
     }
 
-    protected $generics():
-      | ReadonlyArray<ts.TypeParameterDeclaration>
-      | undefined {
-      return this.$node(this._generics);
+    protected $generics(
+      ctx: AstContext,
+    ): ReadonlyArray<ts.TypeParameterDeclaration> | undefined {
+      return this.$node(ctx, this._generics);
     }
   }
 

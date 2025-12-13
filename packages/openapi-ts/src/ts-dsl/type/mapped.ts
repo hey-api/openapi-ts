@@ -1,4 +1,4 @@
-import type { AnalysisContext } from '@hey-api/codegen-core';
+import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -84,19 +84,19 @@ export class TypeMappedTsDsl extends Mixed {
     return this;
   }
 
-  override toAst() {
+  override toAst(ctx: AstContext) {
     this.$validate();
     return ts.factory.createMappedTypeNode(
-      this.$node(this.readonlyToken),
+      this.$node(ctx, this.readonlyToken),
       ts.factory.createTypeParameterDeclaration(
         undefined,
         this._name,
-        this.$type(this._key),
+        this.$type(ctx, this._key),
         undefined,
       ),
       undefined,
-      this.$node(this.questionToken),
-      this.$type(this._type),
+      this.$node(ctx, this.questionToken),
+      this.$type(ctx, this._type),
       undefined,
     );
   }

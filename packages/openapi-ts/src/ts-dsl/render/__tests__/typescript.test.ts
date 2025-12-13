@@ -21,6 +21,11 @@ describe('TypeScriptRenderer', () => {
     fileOverrides = {},
     projectOverrides = {},
   ): RenderContext => ({
+    astContext: {
+      getAccess(node) {
+        return node;
+      },
+    },
     file: mockFile(fileOverrides),
     project: new Project({
       root: '/root',
@@ -42,6 +47,7 @@ describe('TypeScriptRenderer', () => {
   });
 
   it('renderImport() generates named and namespace imports correctly', () => {
+    const ctx = mockCtx();
     const group: ModuleImport = {
       imports: [
         {
@@ -55,11 +61,12 @@ describe('TypeScriptRenderer', () => {
       modulePath: 'foo',
       namespaceImport: undefined,
     };
-    const node = renderer['renderImport'](group);
+    const node = renderer['renderImport'](ctx, group);
     expect(ts.isImportDeclaration(node)).toBe(true);
   });
 
   it('renderExport() generates named and namespace exports correctly', () => {
+    const ctx = mockCtx();
     const group: ModuleExport = {
       canExportAll: false,
       exports: [
@@ -74,7 +81,7 @@ describe('TypeScriptRenderer', () => {
       modulePath: 'bar',
       namespaceExport: undefined,
     };
-    const node = renderer['renderExport'](group);
+    const node = renderer['renderExport'](ctx, group);
     expect(ts.isExportDeclaration(node)).toBe(true);
   });
 });
