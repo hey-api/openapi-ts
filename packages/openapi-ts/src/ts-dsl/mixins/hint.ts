@@ -1,13 +1,13 @@
 import type { AnalysisContext, Node } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
-import type { MaybeArray } from '../base';
+import type { HintFn, HintLines } from '../layout/hint';
 import { HintTsDsl } from '../layout/hint';
 import type { BaseCtor, MixinCtor } from './types';
 
 export interface HintMethods extends Node {
   $hint<T extends ts.Node>(node: T): T;
-  hint(lines?: MaybeArray<string>, fn?: (h: HintTsDsl) => void): this;
+  hint(lines?: HintLines, fn?: HintFn): this;
 }
 
 export function HintMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
@@ -20,10 +20,7 @@ export function HintMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
       super.analyze(ctx);
     }
 
-    protected hint(
-      lines?: MaybeArray<string>,
-      fn?: (h: HintTsDsl) => void,
-    ): this {
+    protected hint(lines?: HintLines, fn?: HintFn): this {
       this._hint = new HintTsDsl(lines, fn);
       return this;
     }

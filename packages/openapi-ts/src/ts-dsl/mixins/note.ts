@@ -1,13 +1,13 @@
 import type { AnalysisContext, Node } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
-import type { MaybeArray } from '../base';
+import type { NoteFn, NoteLines } from '../layout/note';
 import { NoteTsDsl } from '../layout/note';
 import type { BaseCtor, MixinCtor } from './types';
 
 export interface NoteMethods extends Node {
   $note<T extends ts.Node>(node: T): T;
-  note(lines?: MaybeArray<string>, fn?: (h: NoteTsDsl) => void): this;
+  note(lines?: NoteLines, fn?: NoteFn): this;
 }
 
 export function NoteMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
@@ -20,10 +20,7 @@ export function NoteMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
       super.analyze(ctx);
     }
 
-    protected note(
-      lines?: MaybeArray<string>,
-      fn?: (h: NoteTsDsl) => void,
-    ): this {
+    protected note(lines?: NoteLines, fn?: NoteFn): this {
       this._note = new NoteTsDsl(lines, fn);
       return this;
     }

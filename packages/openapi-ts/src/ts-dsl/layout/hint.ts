@@ -5,20 +5,18 @@ import type { MaybeArray } from '../base';
 import { TsDsl } from '../base';
 import { IdTsDsl } from '../expr/id';
 
+type HintMaybeLazy<T> = (() => T) | T;
+export type HintFn = (d: HintTsDsl) => void;
+export type HintLines = HintMaybeLazy<MaybeArray<string>>;
+
 export class HintTsDsl extends TsDsl<ts.Node> {
   readonly '~dsl' = 'HintTsDsl';
 
-  protected _lines: Array<string> = [];
+  protected _lines: Array<HintLines> = [];
 
-  constructor(lines?: MaybeArray<string>, fn?: (d: HintTsDsl) => void) {
+  constructor(lines?: HintLines, fn?: HintFn) {
     super();
-    if (lines) {
-      if (typeof lines === 'string') {
-        this.add(lines);
-      } else {
-        this.add(...lines);
-      }
-    }
+    if (lines) this.add(lines);
     fn?.(this);
   }
 
@@ -26,13 +24,22 @@ export class HintTsDsl extends TsDsl<ts.Node> {
     super.analyze(ctx);
   }
 
-  add(...lines: ReadonlyArray<string>): this {
-    this._lines.push(...lines);
+  add(lines: HintLines): this {
+    this._lines.push(lines);
     return this;
   }
 
   apply<T extends ts.Node>(node: T): T {
-    const lines = this._lines.filter((line) => Boolean(line) || line === '');
+    const lines = this._lines.reduce(
+      (lines: Array<string>, line: HintLines) => {
+        if (typeof line === 'function') line = line();
+        for (const l of typeof line === 'string' ? [line] : line) {
+          if (l || l === '') lines.push(l);
+        }
+        return lines;
+      },
+      [],
+    );
     if (!lines.length) return node;
 
     for (const line of lines) {

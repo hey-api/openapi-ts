@@ -47,6 +47,7 @@ type SdkClassEntry = {
 export const registryName = '__registry';
 
 const createRegistryClass = ({
+  plugin,
   sdkSymbol,
   symbol,
 }: {
@@ -54,15 +55,15 @@ const createRegistryClass = ({
   sdkSymbol: Symbol;
   symbol: Symbol;
 }): TsDsl => {
-  const defaultKey = 'defaultKey';
-  const instances = 'instances';
+  const symbolDefaultKey = plugin.symbol('defaultKey');
+  const symbolInstances = plugin.symbol('instances');
   return $.class(symbol)
     .generic('T')
-    .field(defaultKey, (f) =>
+    .field(symbolDefaultKey, (f) =>
       f.private().readonly().assign($.literal('default')),
     )
     .newline()
-    .field(instances, (f) =>
+    .field(symbolInstances, (f) =>
       f
         .private()
         .readonly()
@@ -77,9 +78,9 @@ const createRegistryClass = ({
         .do(
           $.const('instance').assign(
             $('this')
-              .attr('instances')
+              .attr(symbolInstances)
               .attr('get')
-              .call($('key').coalesce($('this').attr(defaultKey))),
+              .call($('key').coalesce($('this').attr(symbolDefaultKey))),
           ),
           $.if($.not('instance')).do(
             $.throw('Error').message(
@@ -99,9 +100,9 @@ const createRegistryClass = ({
         .param('key', (p) => p.type('string').optional())
         .do(
           $('this')
-            .attr(instances)
+            .attr(symbolInstances)
             .attr('set')
-            .call($('key').coalesce($('this').attr(defaultKey)), 'value'),
+            .call($('key').coalesce($('this').attr(symbolDefaultKey)), 'value'),
         ),
     );
 };
