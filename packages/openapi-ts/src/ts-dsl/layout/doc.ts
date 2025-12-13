@@ -5,20 +5,18 @@ import type { MaybeArray } from '../base';
 import { TsDsl } from '../base';
 import { IdTsDsl } from '../expr/id';
 
+type DocMaybeLazy<T> = (() => T) | T;
+export type DocFn = (d: DocTsDsl) => void;
+export type DocLines = DocMaybeLazy<MaybeArray<string>>;
+
 export class DocTsDsl extends TsDsl<ts.Node> {
   readonly '~dsl' = 'DocTsDsl';
 
-  protected _lines: Array<string> = [];
+  protected _lines: Array<DocLines> = [];
 
-  constructor(lines?: MaybeArray<string>, fn?: (d: DocTsDsl) => void) {
+  constructor(lines?: DocLines, fn?: DocFn) {
     super();
-    if (lines) {
-      if (typeof lines === 'string') {
-        this.add(lines);
-      } else {
-        this.add(...lines);
-      }
-    }
+    if (lines) this.add(lines);
     fn?.(this);
   }
 
@@ -26,13 +24,19 @@ export class DocTsDsl extends TsDsl<ts.Node> {
     super.analyze(ctx);
   }
 
-  add(...lines: ReadonlyArray<string>): this {
-    this._lines.push(...lines);
+  add(lines: DocLines): this {
+    this._lines.push(lines);
     return this;
   }
 
   apply<T extends ts.Node>(node: T): T {
-    const lines = this._lines.filter((line) => Boolean(line) || line === '');
+    const lines = this._lines.reduce((lines: Array<string>, line: DocLines) => {
+      if (typeof line === 'function') line = line();
+      for (const l of typeof line === 'string' ? [line] : line) {
+        if (l || l === '') lines.push(l);
+      }
+      return lines;
+    }, []);
     if (!lines.length) return node;
 
     const jsdocTexts = lines.map((line) =>

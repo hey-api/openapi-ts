@@ -10,6 +10,7 @@ import { DocMixin } from '../mixins/doc';
 import { AbstractMixin, DefaultMixin, ExportMixin } from '../mixins/modifiers';
 import { TypeParamsMixin } from '../mixins/type-params';
 import { safeRuntimeName } from '../utils/name';
+import type { FieldName } from './field';
 import { FieldTsDsl } from './field';
 import { InitTsDsl } from './init';
 import { MethodTsDsl } from './method';
@@ -70,7 +71,7 @@ export class ClassTsDsl extends Mixed {
   }
 
   /** Adds a class field. */
-  field(name: string, fn?: (f: FieldTsDsl) => void): this {
+  field(name: FieldName, fn?: (f: FieldTsDsl) => void): this {
     const f = new FieldTsDsl(name, fn);
     this.body.push(f);
     return this;
