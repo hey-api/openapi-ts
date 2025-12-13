@@ -76,6 +76,7 @@ export const createClient = (config: Config = {}): Client => {
     try {
       // assign Axios here for consistency with fetch
       const _axios = opts.axios!;
+
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { auth, ...optsWithoutAuth } = opts;
       const response = await _axios({
