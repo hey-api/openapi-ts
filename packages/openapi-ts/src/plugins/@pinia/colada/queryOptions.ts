@@ -88,14 +88,16 @@ export const createQueryOptions = ({
   const client = getClientPlugin(plugin.context.config);
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
   const typeData = getPublicTypeData({ isNuxtClient, operation, plugin });
-  const awaitSdkFn = $(queryFn)
-    .call(
-      $.object()
-        .spread(optionsParamName)
-        .spread(fnOptions)
-        .prop('throwOnError', $.literal(true)),
-    )
-    .await();
+  const awaitSdkFn = $.lazy(() =>
+    $(queryFn)
+      .call(
+        $.object()
+          .spread(optionsParamName)
+          .spread(fnOptions)
+          .prop('throwOnError', $.literal(true)),
+      )
+      .await(),
+  );
 
   const statements: Array<ReturnType<typeof $.return | typeof $.const>> = [];
   if (plugin.getPluginOrThrow('@hey-api/sdk').config.responseStyle === 'data') {
