@@ -1,4 +1,4 @@
-import type { AnalysisContext } from '@hey-api/codegen-core';
+import type { AnalysisContext, Symbol } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl, TypeTsDsl } from '../base';
@@ -15,6 +15,7 @@ import { ValueMixin } from '../mixins/value';
 import type { TypeExprName } from '../type/expr';
 import { TypeExprTsDsl } from '../type/expr';
 
+export type FieldName = Symbol | string;
 export type FieldType = TypeExprName | TypeTsDsl;
 
 const Mixed = DecoratorMixin(
@@ -32,10 +33,10 @@ const Mixed = DecoratorMixin(
 export class FieldTsDsl extends Mixed {
   readonly '~dsl' = 'FieldTsDsl';
 
-  protected name: string;
+  protected name: FieldName;
   protected _type?: TypeTsDsl;
 
-  constructor(name: string, fn?: (f: FieldTsDsl) => void) {
+  constructor(name: FieldName, fn?: (f: FieldTsDsl) => void) {
     super();
     this.name = name;
     fn?.(this);
@@ -55,7 +56,7 @@ export class FieldTsDsl extends Mixed {
   override toAst() {
     const node = ts.factory.createPropertyDeclaration(
       [...this.$decorators(), ...this.modifiers],
-      this.name,
+      this.$node(this.name) as ts.PropertyName,
       undefined,
       this.$type(this._type),
       this.$value(),
