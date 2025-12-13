@@ -198,15 +198,17 @@ export const createInfiniteQueryOptions = ({
   });
   plugin.node(node);
 
-  const awaitSdkFn = $(queryFn)
-    .call(
-      $.object()
-        .spread('options')
-        .spread('params')
-        .prop('signal', $('signal'))
-        .prop('throwOnError', $.literal(true)),
-    )
-    .await();
+  const awaitSdkFn = $.lazy(() =>
+    $(queryFn)
+      .call(
+        $.object()
+          .spread('options')
+          .spread('params')
+          .prop('signal', $('signal'))
+          .prop('throwOnError', $.literal(true)),
+      )
+      .await(),
+  );
 
   const symbolCreateInfiniteParams = plugin.referenceSymbol({
     category: 'utility',

@@ -1,3 +1,5 @@
+import type ts from 'typescript';
+
 import { ClassTsDsl } from './decl/class';
 import { DecoratorTsDsl } from './decl/decorator';
 import { EnumTsDsl } from './decl/enum';
@@ -56,8 +58,9 @@ import { TypeParamTsDsl } from './type/param';
 import { TypeQueryTsDsl } from './type/query';
 import { TypeTemplateTsDsl } from './type/template';
 import { TypeTupleTsDsl } from './type/tuple';
+import { LazyTsDsl } from './utils/lazy';
 
-const base = {
+const tsDsl = {
   /** Creates an array literal expression (e.g. `[1, 2, 3]`). */
   array: (...args: ConstructorParameters<typeof ArrayTsDsl>) =>
     new ArrayTsDsl(...args),
@@ -150,6 +153,11 @@ const base = {
   /** Creates an initialization block or statement. */
   init: (...args: ConstructorParameters<typeof InitTsDsl>) =>
     new InitTsDsl(...args),
+
+  /** Creates a lazy, context-aware node with deferred evaluation. */
+  lazy: <T extends ts.Node>(
+    ...args: ConstructorParameters<typeof LazyTsDsl<T>>
+  ) => new LazyTsDsl<T>(...args),
 
   /** Creates a let variable declaration (`let`). */
   let: (...args: ConstructorParameters<typeof VarTsDsl>) =>
@@ -324,7 +332,7 @@ const base = {
 
 export const $ = Object.assign(
   (...args: ConstructorParameters<typeof ExprTsDsl>) => new ExprTsDsl(...args),
-  base,
+  tsDsl,
 );
 
 export type DollarTsDsl = {
@@ -342,7 +350,7 @@ export type DollarTsDsl = {
    *
    * Returns:
    * - A new `ExprTsDsl` instance when called directly.
-   * - The `base` factory object for constructing more specific nodes.
+   * - The `tsDsl` object for constructing more specific nodes.
    */
   $: typeof $;
 };
