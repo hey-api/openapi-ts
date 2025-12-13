@@ -1,4 +1,9 @@
-import type { AnalysisContext, Ref, Symbol } from '@hey-api/codegen-core';
+import type {
+  AnalysisContext,
+  AstContext,
+  Ref,
+  Symbol,
+} from '@hey-api/codegen-core';
 import { ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
@@ -26,8 +31,8 @@ export class AwaitTsDsl extends Mixed {
     ctx.analyze(this._awaitExpr);
   }
 
-  override toAst() {
-    return ts.factory.createAwaitExpression(this.$node(this._awaitExpr));
+  override toAst(ctx: AstContext) {
+    return ts.factory.createAwaitExpression(this.$node(ctx, this._awaitExpr));
   }
 }
 

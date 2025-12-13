@@ -1,4 +1,4 @@
-import type { AnalysisContext } from '@hey-api/codegen-core';
+import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TypeTsDsl } from '../base';
@@ -27,15 +27,15 @@ export class TypeFuncTsDsl extends Mixed {
     return this;
   }
 
-  override toAst() {
+  override toAst(ctx: AstContext) {
     if (this._returns === undefined) {
       throw new Error('Missing return type in function type DSL');
     }
     const node = ts.factory.createFunctionTypeNode(
-      this.$generics(),
-      this.$params(),
-      this.$type(this._returns),
+      this.$generics(ctx),
+      this.$params(ctx),
+      this.$type(ctx, this._returns),
     );
-    return this.$docs(node);
+    return this.$docs(ctx, node);
   }
 }

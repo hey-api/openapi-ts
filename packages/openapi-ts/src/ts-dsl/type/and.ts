@@ -1,4 +1,9 @@
-import type { AnalysisContext, Ref, Symbol } from '@hey-api/codegen-core';
+import type {
+  AnalysisContext,
+  AstContext,
+  Ref,
+  Symbol,
+} from '@hey-api/codegen-core';
 import { ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
@@ -30,11 +35,11 @@ export class TypeAndTsDsl extends Mixed {
     return this;
   }
 
-  override toAst() {
+  override toAst(ctx: AstContext) {
     const flat: Array<ts.TypeNode> = [];
 
     for (const node of this._types) {
-      const type = this.$type(node);
+      const type = this.$type(ctx, node);
       if (ts.isIntersectionTypeNode(type)) {
         flat.push(...type.types);
       } else {

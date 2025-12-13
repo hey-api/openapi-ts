@@ -1,4 +1,10 @@
-import type { AnalysisContext, Node, Ref, Symbol } from '@hey-api/codegen-core';
+import type {
+  AnalysisContext,
+  AstContext,
+  Node,
+  Ref,
+  Symbol,
+} from '@hey-api/codegen-core';
 import { ref } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
@@ -9,7 +15,7 @@ type Arg = Symbol | string | MaybeTsDsl<ts.Expression>;
 
 export interface ArgsMethods extends Node {
   /** Renders the arguments into an array of `Expression`s. */
-  $args(): ReadonlyArray<ts.Expression>;
+  $args(ctx: AstContext): ReadonlyArray<ts.Expression>;
   /** Adds a single expression argument. */
   arg(arg: Arg | undefined): this;
   /** Adds one or more expression arguments. */
@@ -46,8 +52,8 @@ export function ArgsMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
       return this;
     }
 
-    protected $args(): ReadonlyArray<ts.Expression> {
-      return this.$node(this._args).map((arg) => this.$node(arg));
+    protected $args(ctx: AstContext): ReadonlyArray<ts.Expression> {
+      return this.$node(ctx, this._args).map((arg) => this.$node(ctx, arg));
     }
   }
 

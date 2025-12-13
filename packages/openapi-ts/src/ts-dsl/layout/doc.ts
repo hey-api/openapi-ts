@@ -1,11 +1,11 @@
-import type { AnalysisContext } from '@hey-api/codegen-core';
+import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeArray } from '../base';
 import { TsDsl } from '../base';
 import { IdTsDsl } from '../expr/id';
 
-type DocMaybeLazy<T> = (() => T) | T;
+type DocMaybeLazy<T> = ((ctx: AstContext) => T) | T;
 export type DocFn = (d: DocTsDsl) => void;
 export type DocLines = DocMaybeLazy<MaybeArray<string>>;
 
@@ -29,9 +29,9 @@ export class DocTsDsl extends TsDsl<ts.Node> {
     return this;
   }
 
-  apply<T extends ts.Node>(node: T): T {
+  apply<T extends ts.Node>(ctx: AstContext, node: T): T {
     const lines = this._lines.reduce((lines: Array<string>, line: DocLines) => {
-      if (typeof line === 'function') line = line();
+      if (typeof line === 'function') line = line(ctx);
       for (const l of typeof line === 'string' ? [line] : line) {
         if (l || l === '') lines.push(l);
       }
@@ -69,10 +69,10 @@ export class DocTsDsl extends TsDsl<ts.Node> {
     return node;
   }
 
-  override toAst(): ts.Node {
+  override toAst(ctx: AstContext): ts.Node {
     // this class does not build a standalone node;
     // it modifies other nodes via `apply()`.
     // Return a dummy comment node for compliance.
-    return this.$node(new IdTsDsl(''));
+    return this.$node(ctx, new IdTsDsl(''));
   }
 }

@@ -1,4 +1,9 @@
-import type { AnalysisContext, Ref, Symbol } from '@hey-api/codegen-core';
+import type {
+  AnalysisContext,
+  AstContext,
+  Ref,
+  Symbol,
+} from '@hey-api/codegen-core';
 import { isSymbol, ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
@@ -58,13 +63,12 @@ export class EnumTsDsl extends Mixed {
     return this;
   }
 
-  override toAst() {
+  override toAst(ctx: AstContext) {
     const node = ts.factory.createEnumDeclaration(
       this.modifiers,
-      // @ts-expect-error need to improve types
-      this.$node(this._name),
-      this.$node(this._members),
+      this.$node(ctx, this._name) as ts.Identifier,
+      this.$node(ctx, this._members) as ReadonlyArray<ts.EnumMember>,
     );
-    return this.$docs(node);
+    return this.$docs(ctx, node);
   }
 }

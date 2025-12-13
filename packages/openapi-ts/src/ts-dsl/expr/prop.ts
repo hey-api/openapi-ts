@@ -1,4 +1,9 @@
-import type { AnalysisContext, Ref, Symbol } from '@hey-api/codegen-core';
+import type {
+  AnalysisContext,
+  AstContext,
+  Ref,
+  Symbol,
+} from '@hey-api/codegen-core';
 import { ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
@@ -53,9 +58,9 @@ export class ObjectPropTsDsl extends Mixed {
     return this;
   }
 
-  override toAst() {
+  override toAst(ctx: AstContext) {
     this.$validate();
-    const node = this.$node(this._value);
+    const node = this.$node(ctx, this._value);
     if (this.meta.kind === 'spread') {
       if (ts.isStatement(node)) {
         throw new Error(
@@ -63,27 +68,27 @@ export class ObjectPropTsDsl extends Mixed {
         );
       }
       const result = ts.factory.createSpreadAssignment(node);
-      return this.$docs(result);
+      return this.$docs(ctx, result);
     }
     if (this.meta.kind === 'getter') {
       const getter = new GetterTsDsl(
-        this.$node(safePropName(this.meta.name)),
+        this.$node(ctx, safePropName(this.meta.name)),
       ).do(node);
-      const result = this.$node(getter);
-      return this.$docs(result);
+      const result = this.$node(ctx, getter);
+      return this.$docs(ctx, result);
     }
     if (this.meta.kind === 'setter') {
       const setter = new SetterTsDsl(
-        this.$node(safePropName(this.meta.name)),
+        this.$node(ctx, safePropName(this.meta.name)),
       ).do(node);
-      const result = this.$node(setter);
-      return this.$docs(result);
+      const result = this.$node(ctx, setter);
+      return this.$docs(ctx, result);
     }
     if (ts.isIdentifier(node) && node.text === this.meta.name) {
       const result = ts.factory.createShorthandPropertyAssignment(
         this.meta.name,
       );
-      return this.$docs(result);
+      return this.$docs(ctx, result);
     }
     if (ts.isStatement(node)) {
       throw new Error(
@@ -93,12 +98,12 @@ export class ObjectPropTsDsl extends Mixed {
     const result = ts.factory.createPropertyAssignment(
       this.meta.kind === 'computed'
         ? ts.factory.createComputedPropertyName(
-            this.$node(new IdTsDsl(this.meta.name)),
+            this.$node(ctx, new IdTsDsl(this.meta.name)),
           )
-        : this.$node(safePropName(this.meta.name)),
+        : this.$node(ctx, safePropName(this.meta.name)),
       node,
     );
-    return this.$docs(result);
+    return this.$docs(ctx, result);
   }
 
   $validate(): asserts this is this & {

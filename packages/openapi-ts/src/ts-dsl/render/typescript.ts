@@ -53,7 +53,7 @@ export class TypeScriptRenderer implements Renderer {
     for (const group of this.getImports(ctx)) {
       if (imports) imports += '\n';
       for (const imp of group) {
-        imports += `${nodeToString(this.renderImport(imp))}\n`;
+        imports += `${nodeToString(this.renderImport(ctx, imp))}\n`;
       }
     }
     text = `${text}${text && imports ? '\n' : ''}${imports}`;
@@ -62,7 +62,7 @@ export class TypeScriptRenderer implements Renderer {
     for (const node of ctx.file.nodes) {
       if (nodes) nodes += '\n';
       // @ts-expect-error
-      nodes += `${nodeToString(node.toAst())}\n`;
+      nodes += `${nodeToString(node.toAst(ctx.astContext))}\n`;
     }
     text = `${text}${text && nodes ? '\n' : ''}${nodes}`;
 
@@ -70,7 +70,7 @@ export class TypeScriptRenderer implements Renderer {
     for (const group of this.getExports(ctx)) {
       if ((!exports && nodes) || exports) exports += '\n';
       for (const exp of group) {
-        exports += `${nodeToString(this.renderExport(exp))}\n`;
+        exports += `${nodeToString(this.renderExport(ctx, exp))}\n`;
       }
     }
     text = `${text}${text && exports ? '\n' : ''}${exports}`;
@@ -234,7 +234,10 @@ export class TypeScriptRenderer implements Renderer {
     return imports;
   }
 
-  private renderExport(group: ModuleExport): ts.ExportDeclaration {
+  private renderExport(
+    ctx: RenderContext,
+    group: ModuleExport,
+  ): ts.ExportDeclaration {
     const specifiers = group.exports.map((exp) => {
       const specifier = ts.factory.createExportSpecifier(
         exp.isTypeOnly,
@@ -254,11 +257,14 @@ export class TypeScriptRenderer implements Renderer {
       undefined,
       group.isTypeOnly,
       exportClause,
-      $.literal(group.modulePath).toAst(),
+      $.literal(group.modulePath).toAst(ctx.astContext),
     );
   }
 
-  private renderImport(group: ModuleImport): ts.ImportDeclaration {
+  private renderImport(
+    ctx: RenderContext,
+    group: ModuleImport,
+  ): ts.ImportDeclaration {
     const specifiers = group.imports.map((imp) => {
       const specifier = ts.factory.createImportSpecifier(
         imp.isTypeOnly,
@@ -279,7 +285,7 @@ export class TypeScriptRenderer implements Renderer {
     return ts.factory.createImportDeclaration(
       undefined,
       importClause,
-      $.literal(group.modulePath).toAst(),
+      $.literal(group.modulePath).toAst(ctx.astContext),
     );
   }
 }

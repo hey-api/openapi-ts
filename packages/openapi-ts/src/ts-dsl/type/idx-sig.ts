@@ -1,4 +1,4 @@
-import type { AnalysisContext } from '@hey-api/codegen-core';
+import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -47,7 +47,7 @@ export class TypeIdxSigTsDsl extends Mixed {
     return this;
   }
 
-  override toAst() {
+  override toAst(ctx: AstContext) {
     this.$validate();
     const node = ts.factory.createIndexSignature(
       this.modifiers,
@@ -57,12 +57,12 @@ export class TypeIdxSigTsDsl extends Mixed {
           undefined,
           this._name,
           undefined,
-          this.$type(this._key),
+          this.$type(ctx, this._key),
         ),
       ],
-      this.$type(this._type),
+      this.$type(ctx, this._type),
     );
-    return this.$docs(node);
+    return this.$docs(ctx, node);
   }
 
   $validate(): asserts this is this & {

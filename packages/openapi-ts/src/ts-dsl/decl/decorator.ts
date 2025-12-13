@@ -1,4 +1,9 @@
-import type { AnalysisContext, Ref, Symbol } from '@hey-api/codegen-core';
+import type {
+  AnalysisContext,
+  AstContext,
+  Ref,
+  Symbol,
+} from '@hey-api/codegen-core';
 import { isSymbol, ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
@@ -33,9 +38,9 @@ export class DecoratorTsDsl extends Mixed {
     ctx.analyze(this.name);
   }
 
-  override toAst() {
-    const target = this.$node(this.name);
-    const args = this.$args();
+  override toAst(ctx: AstContext) {
+    const target = this.$node(ctx, this.name);
+    const args = this.$args(ctx);
     return ts.factory.createDecorator(
       args.length
         ? ts.factory.createCallExpression(target, undefined, args)

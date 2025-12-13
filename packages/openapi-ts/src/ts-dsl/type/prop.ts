@@ -1,4 +1,9 @@
-import type { AnalysisContext, Ref, Symbol } from '@hey-api/codegen-core';
+import type {
+  AnalysisContext,
+  AstContext,
+  Ref,
+  Symbol,
+} from '@hey-api/codegen-core';
 import { ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
@@ -38,16 +43,16 @@ export class TypePropTsDsl extends Mixed {
     return this;
   }
 
-  override toAst() {
+  override toAst(ctx: AstContext) {
     if (!this._type) {
       throw new Error(`Type not specified for property '${this.name}'`);
     }
     const node = ts.factory.createPropertySignature(
       this.modifiers,
-      this.$node(safePropName(this.name)),
-      this._optional ? this.$node(new TokenTsDsl().optional()) : undefined,
-      this.$type(this._type),
+      this.$node(ctx, safePropName(this.name)),
+      this._optional ? this.$node(ctx, new TokenTsDsl().optional()) : undefined,
+      this.$type(ctx, this._type),
     );
-    return this.$docs(node);
+    return this.$docs(ctx, node);
   }
 }
