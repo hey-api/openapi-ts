@@ -30,6 +30,7 @@ type Operator =
   | '>'
   | '>='
   | '??'
+  | '??='
   | '||';
 
 const Mixed = AsMixin(ExprMixin(TsDsl<ts.BinaryExpression>));
@@ -119,6 +120,11 @@ export class BinaryTsDsl extends Mixed {
     return this.opAndExpr('!==', expr);
   }
 
+  /** Nullish assignment — `this ??= expr` */
+  nullishAssign(expr: Expr): this {
+    return this.opAndExpr('??=', expr);
+  }
+
   /** Logical OR — `this || expr` */
   or(expr: Expr): this {
     return this.opAndExpr('||', expr);
@@ -172,6 +178,7 @@ export class BinaryTsDsl extends Mixed {
       '>': ts.SyntaxKind.GreaterThanToken,
       '>=': ts.SyntaxKind.GreaterThanEqualsToken,
       '??': ts.SyntaxKind.QuestionQuestionToken,
+      '??=': ts.SyntaxKind.QuestionQuestionEqualsToken,
       '||': ts.SyntaxKind.BarBarToken,
     };
     const token = tokenMap[op];

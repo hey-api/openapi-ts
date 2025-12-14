@@ -7,13 +7,13 @@ import type {
 import { ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
-import type { MaybeTsDsl } from '../base';
-import { TypeTsDsl } from '../base';
+import type { MaybeTsDsl, TypeTsDsl } from '../base';
+import { TsDsl } from '../base';
 
 export type TypeParamName = Symbol | string;
 export type TypeParamExpr = Symbol | string | boolean | MaybeTsDsl<TypeTsDsl>;
 
-const Mixed = TypeTsDsl<ts.TypeParameterDeclaration>;
+const Mixed = TsDsl<ts.TypeParameterDeclaration>;
 
 export class TypeParamTsDsl extends Mixed {
   readonly '~dsl' = 'TypeParamTsDsl';

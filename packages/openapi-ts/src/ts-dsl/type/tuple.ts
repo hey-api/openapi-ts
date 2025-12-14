@@ -1,9 +1,10 @@
 import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
-import { TypeTsDsl } from '../base';
+import type { TypeTsDsl } from '../base';
+import { TsDsl } from '../base';
 
-const Mixed = TypeTsDsl<ts.TupleTypeNode>;
+const Mixed = TsDsl<ts.TupleTypeNode>;
 
 export class TypeTupleTsDsl extends Mixed {
   readonly '~dsl' = 'TypeTupleTsDsl';

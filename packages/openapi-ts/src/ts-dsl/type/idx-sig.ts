@@ -2,14 +2,14 @@ import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { TypeTsDsl } from '../base';
+import { TsDsl } from '../base';
 import { DocMixin } from '../mixins/doc';
 import { ReadonlyMixin } from '../mixins/modifiers';
 
 export type TypeIdxSigName = string;
 export type TypeIdxSigType = string | MaybeTsDsl<ts.TypeNode>;
 
-const Mixed = DocMixin(ReadonlyMixin(TypeTsDsl<ts.IndexSignatureDeclaration>));
+const Mixed = DocMixin(ReadonlyMixin(TsDsl<ts.IndexSignatureDeclaration>));
 
 export class TypeIdxSigTsDsl extends Mixed {
   readonly '~dsl' = 'TypeIdxSigTsDsl';
