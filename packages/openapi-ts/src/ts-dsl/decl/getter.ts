@@ -14,6 +14,7 @@ import {
   StaticMixin,
 } from '../mixins/modifiers';
 import { ParamMixin } from '../mixins/param';
+import { TypeReturnsMixin } from '../mixins/type-returns';
 import { BlockTsDsl } from '../stmt/block';
 
 export type GetterName = string | ts.PropertyName;
@@ -26,7 +27,11 @@ const Mixed = AbstractMixin(
           ParamMixin(
             PrivateMixin(
               ProtectedMixin(
-                PublicMixin(StaticMixin(TsDsl<ts.GetAccessorDeclaration>)),
+                PublicMixin(
+                  StaticMixin(
+                    TypeReturnsMixin(TsDsl<ts.GetAccessorDeclaration>),
+                  ),
+                ),
               ),
             ),
           ),
@@ -61,7 +66,7 @@ export class GetterTsDsl extends Mixed {
       [...this.$decorators(ctx), ...this.modifiers],
       this.name,
       this.$params(ctx),
-      undefined,
+      this.$returns(ctx),
       this.$node(ctx, new BlockTsDsl(...this._do).pretty()),
     );
     return this.$docs(ctx, node);

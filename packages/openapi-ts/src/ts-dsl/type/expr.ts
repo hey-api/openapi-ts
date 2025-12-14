@@ -7,7 +7,7 @@ import type {
 import { isNode, ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
-import { TypeTsDsl } from '../base';
+import { TsDsl } from '../base';
 import { TypeArgsMixin } from '../mixins/type-args';
 import { TypeExprMixin } from '../mixins/type-expr';
 import { f } from '../utils/factories';
@@ -21,7 +21,7 @@ export type TypeExprCtor = (
   fn?: TypeExprFn,
 ) => TypeExprTsDsl;
 
-const Mixed = TypeArgsMixin(TypeExprMixin(TypeTsDsl<ts.TypeReferenceNode>));
+const Mixed = TypeArgsMixin(TypeExprMixin(TsDsl<ts.TypeReferenceNode>));
 
 export class TypeExprTsDsl extends Mixed {
   readonly '~dsl' = 'TypeExprTsDsl';

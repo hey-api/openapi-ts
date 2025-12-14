@@ -2,10 +2,10 @@ import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { TypeTsDsl } from '../base';
+import { TsDsl } from '../base';
 import { TokenTsDsl } from '../token';
 
-const Mixed = TypeTsDsl<ts.MappedTypeNode>;
+const Mixed = TsDsl<ts.MappedTypeNode>;
 
 export class TypeMappedTsDsl extends Mixed {
   readonly '~dsl' = 'TypeMappedTsDsl';

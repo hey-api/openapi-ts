@@ -8,7 +8,7 @@ import { ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { TypeTsDsl } from '../base';
+import { TsDsl } from '../base';
 import { DocMixin } from '../mixins/doc';
 import { ReadonlyMixin } from '../mixins/modifiers';
 import { OptionalMixin } from '../mixins/optional';
@@ -18,7 +18,7 @@ import { safePropName } from '../utils/name';
 export type TypePropName = string;
 export type TypePropType = Symbol | string | MaybeTsDsl<ts.TypeNode>;
 
-const Mixed = DocMixin(OptionalMixin(ReadonlyMixin(TypeTsDsl<ts.TypeElement>)));
+const Mixed = DocMixin(OptionalMixin(ReadonlyMixin(TsDsl<ts.TypeElement>)));
 
 export class TypePropTsDsl extends Mixed {
   readonly '~dsl' = 'TypePropTsDsl';

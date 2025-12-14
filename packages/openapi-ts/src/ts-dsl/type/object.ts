@@ -1,11 +1,11 @@
 import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
-import { TypeTsDsl } from '../base';
+import { TsDsl } from '../base';
 import { TypeIdxSigTsDsl } from './idx-sig';
 import { TypePropTsDsl } from './prop';
 
-const Mixed = TypeTsDsl<ts.TypeNode>;
+const Mixed = TsDsl<ts.TypeNode>;
 
 export class TypeObjectTsDsl extends Mixed {
   readonly '~dsl' = 'TypeObjectTsDsl';
