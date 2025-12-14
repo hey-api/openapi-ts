@@ -9,7 +9,7 @@ import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
-import { setReturnFactory } from '../mixins/expr';
+import { f } from '../utils/factories';
 
 export type ReturnExpr = Symbol | string | MaybeTsDsl<ts.Expression>;
 export type ReturnCtor = (expr?: ReturnExpr) => ReturnTsDsl;
@@ -36,4 +36,4 @@ export class ReturnTsDsl extends Mixed {
   }
 }
 
-setReturnFactory((...args) => new ReturnTsDsl(...args));
+f.return.set((...args) => new ReturnTsDsl(...args));

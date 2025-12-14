@@ -43,14 +43,16 @@ export default defineConfig(() => {
             // 'circular.yaml',
             // 'dutchie.json',
             // 'enum-names-values.yaml',
-            // 'invalid',
             // 'full.yaml',
-            // 'sdk-method-class-conflict.yaml',
+            // 'integer-formats.yaml',
+            // 'invalid',
             // 'object-property-names.yaml',
             // 'openai.yaml',
             'opencode.yaml',
             // 'pagination-ref.yaml',
+            // 'schema-const.yaml',
             // 'sdk-instance.yaml',
+            // 'sdk-method-class-conflict.yaml',
             // 'sdk-nested-classes.yaml',
             // 'string-with-format.yaml',
             // 'transformers.json',
@@ -477,7 +479,7 @@ export default defineConfig(() => {
           },
           exportFromIndex: true,
           metadata: true,
-          // name: 'zod',
+          name: 'zod',
           // requests: {
           //   // case: 'SCREAMING_SNAKE_CASE',
           //   // name: 'z{{name}}TestData',
@@ -526,6 +528,17 @@ export default defineConfig(() => {
               formats: {
                 // date: ({ $ }) => $('z').attr('date').call(),
                 // 'date-time': ({ $ }) => $('z').attr('date').call(),
+                // int64: ({ $ }) => $('z').attr('string').call().attr('refine').call(
+                //   $.func().param('val').do(
+                //     $.try(
+                //       $('z').attr('int64').call().attr('parse').call($('BigInt').call('val')),
+                //       $.return($.literal(true))
+                //     ).catch(
+                //       $.return($.literal(false))
+                //     ),
+                //   ),
+                //   $.object().prop('message', $.literal('Must be a valid int64 string'))
+                // ),
               },
             },
             // validator({ $, schema }) {
