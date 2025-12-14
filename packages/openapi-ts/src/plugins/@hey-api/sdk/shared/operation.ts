@@ -1,14 +1,12 @@
 import type { SymbolMeta } from '@hey-api/codegen-core';
 import { refs } from '@hey-api/codegen-core';
 
-import type { Context } from '~/ir/context';
 import { statusCodeToGroup } from '~/ir/operation';
 import type { IR } from '~/ir/types';
 import { sanitizeNamespaceIdentifier } from '~/openApi/common/parser/sanitize';
 import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
 import { $ } from '~/ts-dsl';
 import { stringCase } from '~/utils/stringCase';
-import { transformClassName } from '~/utils/transform';
 
 import type { Field, Fields } from '../../client-core/bundle/params';
 import type { HeyApiSdkPlugin } from '../types';
@@ -17,6 +15,13 @@ import { nuxtTypeComposable, nuxtTypeDefault } from './constants';
 import { reservedJavaScriptKeywordsRegExp } from './regexp';
 import { getSignatureParameters } from './signature';
 import { createRequestValidator, createResponseValidator } from './validator';
+
+type Plugin = {
+  config: Pick<
+    HeyApiSdkPlugin['Instance']['config'],
+    'asClass' | 'classNameBuilder' | 'classStructure' | 'instance'
+  >;
+};
 
 interface ClassNameEntry {
   /**
@@ -34,20 +39,16 @@ interface ClassNameEntry {
 }
 
 const operationClassName = ({
-  context,
+  plugin,
   value,
 }: {
-  context: Context;
+  plugin: Plugin;
   value: string;
 }) => {
-  const name = stringCase({
-    case: 'PascalCase',
-    value: sanitizeNamespaceIdentifier(value),
-  });
-  return transformClassName({
-    config: context.config,
-    name,
-  });
+  const name = stringCase({ case: 'PascalCase', value });
+  return typeof plugin.config.classNameBuilder === 'string'
+    ? plugin.config.classNameBuilder.replace('{{name}}', name)
+    : plugin.config.classNameBuilder(name);
 };
 
 const getOperationMethodName = ({
@@ -78,18 +79,11 @@ const getOperationMethodName = ({
  * Returns a list of classes where this operation appears in the generated SDK.
  */
 export const operationClasses = ({
-  context,
   operation,
   plugin,
 }: {
-  context: Context;
   operation: IR.OperationObject;
-  plugin: {
-    config: Pick<
-      HeyApiSdkPlugin['Instance']['config'],
-      'asClass' | 'classStructure' | 'instance'
-    >;
-  };
+  plugin: Plugin;
 }): Map<string, ClassNameEntry> => {
   const classNames = new Map<string, ClassNameEntry>();
 
@@ -115,7 +109,7 @@ export const operationClasses = ({
 
   for (const rootClass of rootClasses) {
     const finalClassName = operationClassName({
-      context,
+      plugin,
       value: className || rootClass,
     });
 
@@ -134,12 +128,7 @@ export const operationClasses = ({
     classNames.set(rootClass, {
       className: finalClassName,
       methodName: methodName || getOperationMethodName({ operation, plugin }),
-      path: path.map((value) =>
-        operationClassName({
-          context,
-          value,
-        }),
-      ),
+      path: path.map((value) => operationClassName({ plugin, value })),
     });
   }
 
