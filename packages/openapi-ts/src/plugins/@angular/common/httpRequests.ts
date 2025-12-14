@@ -38,11 +38,7 @@ const generateAngularClassRequests = ({
         operation,
       });
 
-      const classes = operationClasses({
-        context: plugin.context,
-        operation,
-        plugin: sdkPlugin,
-      });
+      const classes = operationClasses({ operation, plugin: sdkPlugin });
 
       for (const entry of classes.values()) {
         entry.path.forEach((currentClassName, index) => {

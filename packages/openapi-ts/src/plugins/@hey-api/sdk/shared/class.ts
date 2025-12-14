@@ -181,11 +181,7 @@ export const generateClassSdk = ({
           })
         : undefined;
 
-      const classes = operationClasses({
-        context: plugin.context,
-        operation,
-        plugin,
-      });
+      const classes = operationClasses({ operation, plugin });
 
       for (const entry of classes.values()) {
         entry.path.forEach((currentClassName, index) => {
