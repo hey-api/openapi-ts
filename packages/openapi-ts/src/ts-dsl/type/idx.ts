@@ -3,10 +3,12 @@ import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TypeTsDsl } from '../base';
-import { setTypeIdxFactory, TypeExprMixin } from '../mixins/type-expr';
+import { TypeExprMixin } from '../mixins/type-expr';
+import { f } from '../utils/factories';
 
 type Base = string | MaybeTsDsl<ts.TypeNode>;
 type Index = string | number | MaybeTsDsl<ts.TypeNode>;
+export type TypeIdxCtor = (base: Base, index: Index) => TypeIdxTsDsl;
 
 const Mixed = TypeExprMixin(TypeTsDsl<ts.IndexedAccessTypeNode>);
 
@@ -46,4 +48,4 @@ export class TypeIdxTsDsl extends Mixed {
   }
 }
 
-setTypeIdxFactory((...args) => new TypeIdxTsDsl(...args));
+f.type.idx.set((...args) => new TypeIdxTsDsl(...args));

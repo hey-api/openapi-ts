@@ -3,16 +3,20 @@ import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TypeTsDsl } from '../base';
-import { setTypeQueryFactory, TypeExprMixin } from '../mixins/type-expr';
+import { TypeExprMixin } from '../mixins/type-expr';
+import { f } from '../utils/factories';
+
+export type TypeQueryExpr = string | MaybeTsDsl<TypeTsDsl | ts.Expression>;
+export type TypeQueryCtor = (expr: TypeQueryExpr) => TypeQueryTsDsl;
 
 const Mixed = TypeExprMixin(TypeTsDsl<ts.TypeQueryNode>);
 
 export class TypeQueryTsDsl extends Mixed {
   readonly '~dsl' = 'TypeQueryTsDsl';
 
-  protected _expr: string | MaybeTsDsl<TypeTsDsl | ts.Expression>;
+  protected _expr: TypeQueryExpr;
 
-  constructor(expr: string | MaybeTsDsl<TypeTsDsl | ts.Expression>) {
+  constructor(expr: TypeQueryExpr) {
     super();
     this._expr = expr;
   }
@@ -28,4 +32,4 @@ export class TypeQueryTsDsl extends Mixed {
   }
 }
 
-setTypeQueryFactory((...args) => new TypeQueryTsDsl(...args));
+f.type.query.set((...args) => new TypeQueryTsDsl(...args));

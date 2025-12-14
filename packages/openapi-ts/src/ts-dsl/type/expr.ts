@@ -9,11 +9,17 @@ import ts from 'typescript';
 
 import { TypeTsDsl } from '../base';
 import { TypeArgsMixin } from '../mixins/type-args';
-import { setTypeExprFactory, TypeExprMixin } from '../mixins/type-expr';
+import { TypeExprMixin } from '../mixins/type-expr';
+import { f } from '../utils/factories';
 import { TypeAttrTsDsl } from './attr';
 
 export type TypeExprName = Symbol | string;
 export type TypeExprExpr = TypeExprName | TypeAttrTsDsl;
+export type TypeExprFn = (t: TypeExprTsDsl) => void;
+export type TypeExprCtor = (
+  nameOrFn?: TypeExprName | TypeExprFn,
+  fn?: TypeExprFn,
+) => TypeExprTsDsl;
 
 const Mixed = TypeArgsMixin(TypeExprMixin(TypeTsDsl<ts.TypeReferenceNode>));
 
@@ -23,13 +29,10 @@ export class TypeExprTsDsl extends Mixed {
   protected _exprInput?: Ref<TypeExprExpr>;
 
   constructor();
-  constructor(fn: (t: TypeExprTsDsl) => void);
+  constructor(fn: TypeExprFn);
   constructor(name: TypeExprName);
-  constructor(name: TypeExprName, fn?: (t: TypeExprTsDsl) => void);
-  constructor(
-    name?: TypeExprName | ((t: TypeExprTsDsl) => void),
-    fn?: (t: TypeExprTsDsl) => void,
-  ) {
+  constructor(name: TypeExprName, fn?: TypeExprFn);
+  constructor(name?: TypeExprName | TypeExprFn, fn?: TypeExprFn) {
     super();
     if (typeof name === 'function') {
       name(this);
@@ -61,7 +64,7 @@ export class TypeExprTsDsl extends Mixed {
   }
 }
 
-setTypeExprFactory(
+f.type.expr.set(
   (...args) =>
     new TypeExprTsDsl(...(args as ConstructorParameters<typeof TypeExprTsDsl>)),
 );
