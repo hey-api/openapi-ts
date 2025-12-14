@@ -321,11 +321,11 @@ const tsDsl = {
     },
   ),
 
-  /** Creates a runtime `typeof` expression (e.g. typeof x). */
+  /** Creates a `typeof` expression (e.g. `typeof value`). */
   typeofExpr: (...args: ConstructorParameters<typeof TypeOfExprTsDsl>) =>
     new TypeOfExprTsDsl(...args),
 
-  /** Creates a variable declaration (var). */
+  /** Creates a variable declaration (`var`). */
   var: (...args: ConstructorParameters<typeof VarTsDsl>) =>
     new VarTsDsl(...args),
 };

@@ -9,7 +9,8 @@ import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
-import { ExprMixin, setAwaitFactory } from '../mixins/expr';
+import { ExprMixin } from '../mixins/expr';
+import { f } from '../utils/factories';
 
 export type AwaitExpr = Symbol | string | MaybeTsDsl<ts.Expression>;
 export type AwaitCtor = (expr: AwaitExpr) => AwaitTsDsl;
@@ -36,4 +37,4 @@ export class AwaitTsDsl extends Mixed {
   }
 }
 
-setAwaitFactory((...args) => new AwaitTsDsl(...args));
+f.await.set((...args) => new AwaitTsDsl(...args));

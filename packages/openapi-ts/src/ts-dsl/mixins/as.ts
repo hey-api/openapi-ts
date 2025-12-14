@@ -1,18 +1,12 @@
 import type { AnalysisContext, Node } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
-import type { AsCtor, AsTsDsl, AsType } from '../expr/as';
-import type { BaseCtor, MixinCtor } from './types';
-
-let asFactory: AsCtor | undefined;
-/** Lazy register the factory to avoid circular imports. */
-export function setAsFactory(factory: AsCtor): void {
-  asFactory = factory;
-}
+import { f } from '../utils/factories';
+import type { BaseCtor, DropFirst, MixinCtor } from './types';
 
 export interface AsMethods extends Node {
   /** Creates an `as` type assertion expression (e.g. `value as Type`). */
-  as(type: AsType): AsTsDsl;
+  as(...args: DropFirst<Parameters<typeof f.as>>): ReturnType<typeof f.as>;
 }
 
 export function AsMixin<T extends ts.Expression, TBase extends BaseCtor<T>>(
@@ -23,8 +17,10 @@ export function AsMixin<T extends ts.Expression, TBase extends BaseCtor<T>>(
       super.analyze(ctx);
     }
 
-    protected as(type: AsType): AsTsDsl {
-      return asFactory!(this, type);
+    protected as(
+      ...args: DropFirst<Parameters<typeof f.as>>
+    ): ReturnType<typeof f.as> {
+      return f.as(this, ...args);
     }
   }
 
