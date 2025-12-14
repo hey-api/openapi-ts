@@ -259,43 +259,100 @@ export class Odata extends HeyApiClient {
         return (options?.client ?? this.client).get<ApiVVersionApiVersionOdataTasksKeyResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Tasks({key})', ...options });
     }
     
-    accountingCompanies2 = new AccountingCompanies({ client: this.client });
+    private _accountingCompanies2?: AccountingCompanies;
+    get accountingCompanies2(): AccountingCompanies {
+        return this._accountingCompanies2 ??= new AccountingCompanies({ client: this.client });
+    }
     
-    accountingCompanyMemberships2 = new AccountingCompanyMemberships({ client: this.client });
+    private _accountingCompanyMemberships2?: AccountingCompanyMemberships;
+    get accountingCompanyMemberships2(): AccountingCompanyMemberships {
+        return this._accountingCompanyMemberships2 ??= new AccountingCompanyMemberships({ client: this.client });
+    }
     
-    bankAccounts2 = new BankAccounts({ client: this.client });
+    private _bankAccounts2?: BankAccounts;
+    get bankAccounts2(): BankAccounts {
+        return this._bankAccounts2 ??= new BankAccounts({ client: this.client });
+    }
     
-    businessAccountantAssignments2 = new BusinessAccountantAssignments({ client: this.client });
+    private _businessAccountantAssignments2?: BusinessAccountantAssignments;
+    get businessAccountantAssignments2(): BusinessAccountantAssignments {
+        return this._businessAccountantAssignments2 ??= new BusinessAccountantAssignments({ client: this.client });
+    }
     
-    businessDocumentActivities2 = new BusinessDocumentActivities({ client: this.client });
+    private _businessDocumentActivities2?: BusinessDocumentActivities;
+    get businessDocumentActivities2(): BusinessDocumentActivities {
+        return this._businessDocumentActivities2 ??= new BusinessDocumentActivities({ client: this.client });
+    }
     
-    businessDocuments2 = new BusinessDocuments({ client: this.client });
+    private _businessDocuments2?: BusinessDocuments;
+    get businessDocuments2(): BusinessDocuments {
+        return this._businessDocuments2 ??= new BusinessDocuments({ client: this.client });
+    }
     
-    businessDocumentsSummaries2 = new BusinessDocumentsSummaries({ client: this.client });
+    private _businessDocumentsSummaries2?: BusinessDocumentsSummaries;
+    get businessDocumentsSummaries2(): BusinessDocumentsSummaries {
+        return this._businessDocumentsSummaries2 ??= new BusinessDocumentsSummaries({ client: this.client });
+    }
     
-    businesses2 = new Businesses({ client: this.client });
+    private _businesses2?: Businesses;
+    get businesses2(): Businesses {
+        return this._businesses2 ??= new Businesses({ client: this.client });
+    }
     
-    businessSummaries2 = new BusinessSummaries({ client: this.client });
+    private _businessSummaries2?: BusinessSummaries;
+    get businessSummaries2(): BusinessSummaries {
+        return this._businessSummaries2 ??= new BusinessSummaries({ client: this.client });
+    }
     
-    counterparties2 = new Counterparties({ client: this.client });
+    private _counterparties2?: Counterparties;
+    get counterparties2(): Counterparties {
+        return this._counterparties2 ??= new Counterparties({ client: this.client });
+    }
     
-    dataBoxCredentials2 = new DataBoxCredentials({ client: this.client });
+    private _dataBoxCredentials2?: DataBoxCredentials;
+    get dataBoxCredentials2(): DataBoxCredentials {
+        return this._dataBoxCredentials2 ??= new DataBoxCredentials({ client: this.client });
+    }
     
-    documentTypes2 = new DocumentTypes({ client: this.client });
+    private _documentTypes2?: DocumentTypes;
+    get documentTypes2(): DocumentTypes {
+        return this._documentTypes2 ??= new DocumentTypes({ client: this.client });
+    }
     
-    invitations2 = new Invitations({ client: this.client });
+    private _invitations2?: Invitations;
+    get invitations2(): Invitations {
+        return this._invitations2 ??= new Invitations({ client: this.client });
+    }
     
-    invoices2 = new Invoices({ client: this.client });
+    private _invoices2?: Invoices;
+    get invoices2(): Invoices {
+        return this._invoices2 ??= new Invoices({ client: this.client });
+    }
     
-    invoiceSettings2 = new InvoiceSettings({ client: this.client });
+    private _invoiceSettings2?: InvoiceSettings;
+    get invoiceSettings2(): InvoiceSettings {
+        return this._invoiceSettings2 ??= new InvoiceSettings({ client: this.client });
+    }
     
-    licenses2 = new Licenses({ client: this.client });
+    private _licenses2?: Licenses;
+    get licenses2(): Licenses {
+        return this._licenses2 ??= new Licenses({ client: this.client });
+    }
     
-    personalDocuments2 = new PersonalDocuments({ client: this.client });
+    private _personalDocuments2?: PersonalDocuments;
+    get personalDocuments2(): PersonalDocuments {
+        return this._personalDocuments2 ??= new PersonalDocuments({ client: this.client });
+    }
     
-    recurringTasks2 = new RecurringTasks({ client: this.client });
+    private _recurringTasks2?: RecurringTasks;
+    get recurringTasks2(): RecurringTasks {
+        return this._recurringTasks2 ??= new RecurringTasks({ client: this.client });
+    }
     
-    tasks2 = new Tasks({ client: this.client });
+    private _tasks2?: Tasks;
+    get tasks2(): Tasks {
+        return this._tasks2 ??= new Tasks({ client: this.client });
+    }
 }
 
 export class User extends HeyApiClient {
@@ -305,17 +362,29 @@ export class User extends HeyApiClient {
 }
 
 export class VVersionApiVersion extends HeyApiClient {
-    odata = new Odata({ client: this.client });
+    private _odata?: Odata;
+    get odata(): Odata {
+        return this._odata ??= new Odata({ client: this.client });
+    }
     
-    user = new User({ client: this.client });
+    private _user?: User;
+    get user(): User {
+        return this._user ??= new User({ client: this.client });
+    }
 }
 
 export class Api extends HeyApiClient {
-    vVersionApiVersion = new VVersionApiVersion({ client: this.client });
+    private _vVersionApiVersion?: VVersionApiVersion;
+    get vVersionApiVersion(): VVersionApiVersion {
+        return this._vVersionApiVersion ??= new VVersionApiVersion({ client: this.client });
+    }
 }
 
 export class MapIdentityApi extends HeyApiClient {
-    api = new Api({ client: this.client });
+    private _api?: Api;
+    get api(): Api {
+        return this._api ??= new Api({ client: this.client });
+    }
 }
 
 export class Sdk extends HeyApiClient {
@@ -994,7 +1063,13 @@ export class Sdk extends HeyApiClient {
         });
     }
     
-    api = new Api({ client: this.client });
+    private _api?: Api;
+    get api(): Api {
+        return this._api ??= new Api({ client: this.client });
+    }
     
-    mapIdentityApi = new MapIdentityApi({ client: this.client });
+    private _mapIdentityApi?: MapIdentityApi;
+    get mapIdentityApi(): MapIdentityApi {
+        return this._mapIdentityApi ??= new MapIdentityApi({ client: this.client });
+    }
 }

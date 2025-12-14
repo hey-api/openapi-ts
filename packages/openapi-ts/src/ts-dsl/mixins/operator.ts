@@ -34,6 +34,8 @@ export interface OperatorMethods extends Node {
   minus(expr: Expr): BinaryTsDsl;
   /** Strict inequality — `this !== expr` */
   neq(expr: Expr): BinaryTsDsl;
+  /** Nullish assignment — `this ??= expr` */
+  nullishAssign(expr: Expr): BinaryTsDsl;
   /** Logical OR — `this || expr` */
   or(expr: Expr): BinaryTsDsl;
   /** Addition — `this + expr` */
@@ -101,6 +103,10 @@ export function OperatorMixin<
 
     protected neq(expr: Expr): BinaryTsDsl {
       return new BinaryTsDsl(this).neq(expr);
+    }
+
+    protected nullishAssign(expr: Expr): BinaryTsDsl {
+      return new BinaryTsDsl(this).nullishAssign(expr);
     }
 
     protected or(expr: Expr): BinaryTsDsl {

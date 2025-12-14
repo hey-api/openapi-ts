@@ -15,7 +15,9 @@ import {
   ReadonlyMixin,
   StaticMixin,
 } from '../mixins/modifiers';
+import { OptionalMixin } from '../mixins/optional';
 import { ValueMixin } from '../mixins/value';
+import { TokenTsDsl } from '../token';
 import type { TypeExprName } from '../type/expr';
 import { TypeExprTsDsl } from '../type/expr';
 
@@ -24,10 +26,14 @@ export type FieldType = TypeExprName | TypeTsDsl;
 
 const Mixed = DecoratorMixin(
   DocMixin(
-    PrivateMixin(
-      ProtectedMixin(
-        PublicMixin(
-          ReadonlyMixin(StaticMixin(ValueMixin(TsDsl<ts.PropertyDeclaration>))),
+    OptionalMixin(
+      PrivateMixin(
+        ProtectedMixin(
+          PublicMixin(
+            ReadonlyMixin(
+              StaticMixin(ValueMixin(TsDsl<ts.PropertyDeclaration>)),
+            ),
+          ),
         ),
       ),
     ),
@@ -61,7 +67,7 @@ export class FieldTsDsl extends Mixed {
     const node = ts.factory.createPropertyDeclaration(
       [...this.$decorators(ctx), ...this.modifiers],
       this.$node(ctx, this.name) as ts.PropertyName,
-      undefined,
+      this._optional ? this.$node(ctx, new TokenTsDsl().optional()) : undefined,
       this.$type(ctx, this._type),
       this.$value(ctx),
     );

@@ -1,15 +1,15 @@
 import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
-import type { MaybeTsDsl } from '../base';
-import { TypeTsDsl } from '../base';
+import type { MaybeTsDsl, TypeTsDsl } from '../base';
+import { TsDsl } from '../base';
 import { TypeExprMixin } from '../mixins/type-expr';
 import { f } from '../utils/factories';
 
 export type TypeQueryExpr = string | MaybeTsDsl<TypeTsDsl | ts.Expression>;
 export type TypeQueryCtor = (expr: TypeQueryExpr) => TypeQueryTsDsl;
 
-const Mixed = TypeExprMixin(TypeTsDsl<ts.TypeQueryNode>);
+const Mixed = TypeExprMixin(TsDsl<ts.TypeQueryNode>);
 
 export class TypeQueryTsDsl extends Mixed {
   readonly '~dsl' = 'TypeQueryTsDsl';

@@ -7,11 +7,12 @@ import type {
 import { ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
-import { TypeTsDsl } from '../base';
+import type { TypeTsDsl } from '../base';
+import { TsDsl } from '../base';
 
 type Type = Symbol | string | ts.TypeNode | TypeTsDsl;
 
-const Mixed = TypeTsDsl<ts.UnionTypeNode>;
+const Mixed = TsDsl<ts.UnionTypeNode>;
 
 export class TypeOrTsDsl extends Mixed {
   readonly '~dsl' = 'TypeOrTsDsl';

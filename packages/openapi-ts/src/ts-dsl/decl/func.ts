@@ -7,7 +7,7 @@ import type {
 import { isSymbol, ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
-import { TsDsl, TypeTsDsl } from '../base';
+import { TsDsl } from '../base';
 import { AsMixin } from '../mixins/as';
 import { DecoratorMixin } from '../mixins/decorator';
 import { DoMixin } from '../mixins/do';
@@ -22,8 +22,8 @@ import {
 } from '../mixins/modifiers';
 import { ParamMixin } from '../mixins/param';
 import { TypeParamsMixin } from '../mixins/type-params';
+import { TypeReturnsMixin } from '../mixins/type-returns';
 import { BlockTsDsl } from '../stmt/block';
-import { TypeExprTsDsl } from '../type/expr';
 import { safeRuntimeName } from '../utils/name';
 
 export type FuncMode = 'arrow' | 'decl' | 'expr';
@@ -39,7 +39,11 @@ const Mixed = AbstractMixin(
               PrivateMixin(
                 ProtectedMixin(
                   PublicMixin(
-                    StaticMixin(TypeParamsMixin(TsDsl<ts.ArrowFunction>)),
+                    StaticMixin(
+                      TypeParamsMixin(
+                        TypeReturnsMixin(TsDsl<ts.ArrowFunction>),
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -56,7 +60,6 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends Mixed {
 
   protected mode?: FuncMode;
   protected name?: Ref<FuncName>;
-  protected _returns?: TypeTsDsl;
 
   constructor();
   constructor(fn: (f: ImplFuncTsDsl<'arrow'>) => void);
@@ -87,7 +90,6 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends Mixed {
     try {
       super.analyze(ctx);
       ctx.analyze(this.name);
-      ctx.analyze(this._returns);
     } finally {
       ctx.popScope();
     }
@@ -111,12 +113,6 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends Mixed {
     return this as unknown as FuncTsDsl<'expr'>;
   }
 
-  /** Sets the return type. */
-  returns(type: string | TypeTsDsl): this {
-    this._returns = type instanceof TypeTsDsl ? type : new TypeExprTsDsl(type);
-    return this;
-  }
-
   // @ts-expect-error --- need to fix types ---
   override toAst(
     ctx: AstContext,
@@ -135,7 +131,7 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends Mixed {
         this.$node(ctx, this.name) as ts.Identifier,
         this.$generics(ctx),
         this.$params(ctx),
-        this.$type(ctx, this._returns),
+        this.$returns(ctx),
         body,
       ) as any;
       return this.$docs(ctx, node);
@@ -148,7 +144,7 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends Mixed {
         this.$node(ctx, this.name) as ts.Identifier,
         this.$generics(ctx),
         this.$params(ctx),
-        this.$type(ctx, this._returns),
+        this.$returns(ctx),
         body,
       ) as any;
       return this.$docs(ctx, node);
@@ -158,7 +154,7 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends Mixed {
       this.modifiers,
       this.$generics(ctx),
       this.$params(ctx),
-      this.$type(ctx, this._returns),
+      this.$returns(ctx),
       undefined,
       body.statements.length === 1 &&
         ts.isReturnStatement(body.statements[0]!) &&
