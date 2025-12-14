@@ -23,14 +23,12 @@ export const createClientConfigType = ({
     name: 'ClientOptions',
   });
   const symbolCreateClientConfig = plugin.registerSymbol({
-    exported: true,
-    kind: 'type',
     name: 'CreateClientConfig',
   });
 
   const typeCreateClientConfig = $.type
-    .alias(symbolCreateClientConfig.placeholder)
-    .export(symbolCreateClientConfig.exported)
+    .alias(symbolCreateClientConfig)
+    .export()
     .doc([
       'The `createClientConfig()` function will be called on client initialization',
       "and the returned object will become the client's initial configuration.",
@@ -40,9 +38,7 @@ export const createClientConfigType = ({
       'to ensure your client always has the correct values.',
     ])
     .generic('T', (g) =>
-      g
-        .extends(symbolDefaultClientOptions.placeholder)
-        .default(symbolClientOptions.placeholder),
+      g.extends(symbolDefaultClientOptions).default(symbolClientOptions),
     )
     .type(
       $.type
@@ -51,21 +47,19 @@ export const createClientConfigType = ({
           p
             .optional()
             .type(
-              $.type(symbolConfig.placeholder).generic(
-                $.type.and(symbolDefaultClientOptions.placeholder, 'T'),
+              $.type(symbolConfig).generic(
+                $.type.and(symbolDefaultClientOptions, 'T'),
               ),
             ),
         )
         .returns(
-          $.type(symbolConfig.placeholder).generic(
+          $.type(symbolConfig).generic(
             $.type.and(
-              $.type('Required').generic(
-                symbolDefaultClientOptions.placeholder,
-              ),
+              $.type('Required').generic(symbolDefaultClientOptions),
               'T',
             ),
           ),
         ),
     );
-  plugin.setSymbolValue(symbolCreateClientConfig, typeCreateClientConfig);
+  plugin.node(typeCreateClientConfig);
 };

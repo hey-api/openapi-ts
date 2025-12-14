@@ -1,5 +1,6 @@
+import { fromRef, ref } from '@hey-api/codegen-core';
+
 import type { SchemaWithType } from '~/plugins';
-import { toRef } from '~/plugins/shared/utils/refs';
 import { $ } from '~/ts-dsl';
 
 import { identifiers } from '../../constants';
@@ -22,9 +23,9 @@ export const tupleToAst = ({
 
   if (schema.const && Array.isArray(schema.const)) {
     const tupleElements = schema.const.map((value) =>
-      $(z.placeholder).attr(identifiers.literal).call($.fromValue(value)),
+      $(z).attr(identifiers.literal).call($.fromValue(value)),
     );
-    result.expression = $(z.placeholder)
+    result.expression = $(z)
       .attr(identifiers.tuple)
       .call($.array(...tupleElements));
     return result as Omit<Ast, 'typeName'>;
@@ -39,7 +40,7 @@ export const tupleToAst = ({
         schema: item,
         state: {
           ...state,
-          path: toRef([...state.path.value, 'items', index]),
+          path: ref([...fromRef(state.path), 'items', index]),
         },
       });
       tupleElements.push(itemSchema.expression);
@@ -49,7 +50,7 @@ export const tupleToAst = ({
     });
   }
 
-  result.expression = $(z.placeholder)
+  result.expression = $(z)
     .attr(identifiers.tuple)
     .call($.array(...tupleElements));
 

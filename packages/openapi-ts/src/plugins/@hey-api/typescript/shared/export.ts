@@ -1,13 +1,15 @@
-import type { Symbol } from '@hey-api/codegen-core';
+import { fromRef } from '@hey-api/codegen-core';
 
 import type { IR } from '~/ir/types';
+import { buildName } from '~/openApi/shared/utils/name';
 import { createSchemaComment } from '~/plugins/shared/utils/schema';
 import type { MaybeTsDsl, TypeTsDsl } from '~/ts-dsl';
-import { $ } from '~/ts-dsl';
-import { numberRegExp } from '~/utils/regexp';
+import { $, regexp } from '~/ts-dsl';
+import { pathToJsonPointer, refToName } from '~/utils/ref';
 import { stringCase } from '~/utils/stringCase';
 
 import type { HeyApiTypeScriptPlugin } from '../types';
+import type { IrSchemaToAstOptions } from './types';
 
 const schemaToEnumObject = ({
   plugin,
@@ -56,10 +58,10 @@ const schemaToEnumObject = ({
         value: key,
       });
 
-      numberRegExp.lastIndex = 0;
+      regexp.number.lastIndex = 0;
       // TypeScript enum keys cannot be numbers
       if (
-        numberRegExp.test(key) &&
+        regexp.number.test(key) &&
         plugin.config.enums.enabled &&
         (plugin.config.enums.mode === 'typescript' ||
           plugin.config.enums.mode === 'typescript-const')
@@ -83,14 +85,14 @@ const schemaToEnumObject = ({
 export const exportType = ({
   plugin,
   schema,
-  symbol,
+  state,
   type,
-}: {
-  plugin: HeyApiTypeScriptPlugin['Instance'];
+}: IrSchemaToAstOptions & {
   schema: IR.SchemaObject;
-  symbol: Symbol;
   type: MaybeTsDsl<TypeTsDsl>;
 }) => {
+  const $ref = pathToJsonPointer(fromRef(state.path));
+
   // root enums have an additional export
   if (schema.type === 'enum' && plugin.config.enums.enabled) {
     const enumObject = schemaToEnumObject({ plugin, schema });
@@ -106,7 +108,21 @@ export const exportType = ({
         );
       }
 
-      const objectNode = $.const(symbol.placeholder)
+      const symbolObject = plugin.registerSymbol({
+        meta: {
+          category: 'utility',
+          path: fromRef(state.path),
+          resource: 'definition',
+          resourceId: $ref,
+          tags: fromRef(state.tags),
+          tool: 'typescript',
+        },
+        name: buildName({
+          config: plugin.config.definitions,
+          name: refToName($ref),
+        }),
+      });
+      const objectNode = $.const(symbolObject)
         .export()
         .$if(createSchemaComment(schema), (c, v) => c.doc(v))
         .assign(
@@ -118,17 +134,30 @@ export const exportType = ({
             ),
           ).as('const'),
         );
+      plugin.node(objectNode);
 
+      const symbol = plugin.registerSymbol({
+        meta: {
+          category: 'type',
+          path: fromRef(state.path),
+          resource: 'definition',
+          resourceId: $ref,
+          tags: fromRef(state.tags),
+          tool: 'typescript',
+        },
+        name: buildName({
+          config: plugin.config.definitions,
+          name: refToName($ref),
+        }),
+      });
       const node = $.type
-        .alias(symbol.placeholder)
+        .alias(symbol)
         .export()
         .$if(createSchemaComment(schema), (t, v) => t.doc(v))
         .type(
-          $.type(symbol.placeholder)
-            .idx($.type(symbol.placeholder).typeof().keyof())
-            .typeof(),
+          $.type(symbol).idx($.type(symbol).typeofType().keyof()).typeofType(),
         );
-      plugin.setSymbolValue(symbol, [objectNode, node]);
+      plugin.node(node);
       return;
     } else if (
       plugin.config.enums.mode === 'typescript' ||
@@ -139,7 +168,21 @@ export const exportType = ({
         (type) => type !== 'number' && type !== 'string',
       );
       if (shouldCreateTypeScriptEnum) {
-        const enumNode = $.enum(symbol.placeholder)
+        const symbol = plugin.registerSymbol({
+          meta: {
+            category: 'type',
+            path: fromRef(state.path),
+            resource: 'definition',
+            resourceId: $ref,
+            tags: fromRef(state.tags),
+            tool: 'typescript',
+          },
+          name: buildName({
+            config: plugin.config.definitions,
+            name: refToName($ref),
+          }),
+        });
+        const enumNode = $.enum(symbol)
           .export()
           .$if(createSchemaComment(schema), (e, v) => e.doc(v))
           .const(plugin.config.enums.mode === 'typescript-const')
@@ -150,16 +193,30 @@ export const exportType = ({
                 .value($.fromValue(item.schema.const)),
             ),
           );
-        plugin.setSymbolValue(symbol, enumNode);
+        plugin.node(enumNode);
         return;
       }
     }
   }
 
+  const symbol = plugin.registerSymbol({
+    meta: {
+      category: 'type',
+      path: fromRef(state.path),
+      resource: 'definition',
+      resourceId: $ref,
+      tags: fromRef(state.tags),
+      tool: 'typescript',
+    },
+    name: buildName({
+      config: plugin.config.definitions,
+      name: refToName($ref),
+    }),
+  });
   const node = $.type
-    .alias(symbol.placeholder)
-    .export(symbol.exported)
+    .alias(symbol)
+    .export()
     .$if(createSchemaComment(schema), (t, v) => t.doc(v))
     .type(type);
-  plugin.setSymbolValue(symbol, node);
+  plugin.node(node);
 };

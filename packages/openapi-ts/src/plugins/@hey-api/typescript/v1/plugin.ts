@@ -1,18 +1,18 @@
+import type { Symbol } from '@hey-api/codegen-core';
+import { refs } from '@hey-api/codegen-core';
+
 import { deduplicateSchema } from '~/ir/schema';
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
 import type { SchemaWithType } from '~/plugins';
-import { toRefs } from '~/plugins/shared/utils/refs';
 import type { MaybeTsDsl, TypeTsDsl } from '~/ts-dsl';
 import { $ } from '~/ts-dsl';
-import { pathToJsonPointer, refToName } from '~/utils/ref';
 
 import { createClientOptions } from '../shared/clientOptions';
 import { exportType } from '../shared/export';
 import { operationToType } from '../shared/operation';
 import type { IrSchemaToAstOptions, PluginState } from '../shared/types';
 import { webhookToType } from '../shared/webhook';
-import { createWebhooks } from '../shared/webhooks';
 import type { HeyApiTypeScriptPlugin } from '../types';
 import { irSchemaWithTypeToAst } from './toAst';
 
@@ -23,13 +23,17 @@ export const irSchemaToAst = ({
 }: IrSchemaToAstOptions & {
   schema: IR.SchemaObject;
 }): MaybeTsDsl<TypeTsDsl> => {
+  if (schema.symbolRef) {
+    return $.type(schema.symbolRef);
+  }
+
   if (schema.$ref) {
     const symbol = plugin.referenceSymbol({
       category: 'type',
       resource: 'definition',
       resourceId: schema.$ref,
     });
-    return $.type(symbol.placeholder);
+    return $.type(symbol);
   }
 
   if (schema.type) {
@@ -72,73 +76,22 @@ const handleComponent = ({
   schema: IR.SchemaObject;
 }) => {
   const type = irSchemaToAst({ plugin, schema, state });
-
-  // Don't tag enums as 'type' since they export runtime artifacts (values)
-  const isEnum = schema.type === 'enum' && plugin.config.enums.enabled;
-
-  const $ref = pathToJsonPointer(state.path.value);
-  const symbol = plugin.registerSymbol({
-    exported: true,
-    kind: isEnum ? undefined : 'type',
-    meta: {
-      category: 'type',
-      path: state.path.value,
-      resource: 'definition',
-      resourceId: $ref,
-      tags: state.tags?.value,
-      tool: 'typescript',
-    },
-    name: buildName({
-      config: plugin.config.definitions,
-      name: refToName($ref),
-    }),
-  });
   exportType({
     plugin,
     schema,
-    symbol,
+    state,
     type,
   });
 };
 
 export const handlerV1: HeyApiTypeScriptPlugin['Handler'] = ({ plugin }) => {
-  // reserve identifier for ClientOptions
-  const symbolClientOptions = plugin.registerSymbol({
-    exported: true,
-    kind: 'type',
-    meta: {
-      category: 'type',
-      resource: 'client',
-      role: 'options',
-      tool: 'typescript',
-    },
-    name: buildName({
-      config: {
-        case: plugin.config.case,
-      },
-      name: 'ClientOptions',
-    }),
-  });
-  // reserve identifier for Webhooks
-  const symbolWebhooks = plugin.registerSymbol({
-    exported: true,
-    kind: 'type',
-    meta: {
-      category: 'type',
-      resource: 'webhook',
-      tool: 'typescript',
-      variant: 'container',
-    },
-    name: buildName({
-      config: {
-        case: plugin.config.case,
-      },
-      name: 'Webhooks',
-    }),
-  });
+  // reserve node for ClientOptions
+  const nodeClientIndex = plugin.node(null);
+  // reserve node for Webhooks
+  const nodeWebhooksIndex = plugin.node(null);
 
   const servers: Array<IR.ServerObject> = [];
-  const webhookNames: Array<string> = [];
+  const webhooks: Array<Symbol> = [];
 
   plugin.forEach(
     'operation',
@@ -148,7 +101,7 @@ export const handlerV1: HeyApiTypeScriptPlugin['Handler'] = ({ plugin }) => {
     'server',
     'webhook',
     (event) => {
-      const state = toRefs<PluginState>({
+      const state = refs<PluginState>({
         path: event._path,
         tags: event.tags,
       });
@@ -185,7 +138,7 @@ export const handlerV1: HeyApiTypeScriptPlugin['Handler'] = ({ plugin }) => {
           servers.push(event.server);
           break;
         case 'webhook':
-          webhookNames.push(
+          webhooks.push(
             webhookToType({
               operation: event.operation,
               plugin,
@@ -200,6 +153,29 @@ export const handlerV1: HeyApiTypeScriptPlugin['Handler'] = ({ plugin }) => {
     },
   );
 
-  createClientOptions({ plugin, servers, symbolClientOptions });
-  createWebhooks({ plugin, symbolWebhooks, webhookNames });
+  createClientOptions({ nodeIndex: nodeClientIndex, plugin, servers });
+
+  if (webhooks.length > 0) {
+    const symbol = plugin.symbol(
+      buildName({
+        config: {
+          case: plugin.config.case,
+        },
+        name: 'Webhooks',
+      }),
+      {
+        meta: {
+          category: 'type',
+          resource: 'webhook',
+          tool: 'typescript',
+          variant: 'container',
+        },
+      },
+    );
+    const node = $.type
+      .alias(symbol)
+      .export()
+      .type($.type.or(...webhooks));
+    plugin.node(node, nodeWebhooksIndex);
+  }
 };

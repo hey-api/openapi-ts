@@ -1,9 +1,14 @@
+import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
 
-export class PrefixTsDsl extends TsDsl<ts.PrefixUnaryExpression> {
+const Mixed = TsDsl<ts.PrefixUnaryExpression>;
+
+export class PrefixTsDsl extends Mixed {
+  readonly '~dsl' = 'PrefixTsDsl';
+
   protected _expr?: string | MaybeTsDsl<ts.Expression>;
   protected _op?: ts.PrefixUnaryOperator;
 
@@ -14,6 +19,11 @@ export class PrefixTsDsl extends TsDsl<ts.PrefixUnaryExpression> {
     super();
     this._expr = expr;
     this._op = op;
+  }
+
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    ctx.analyze(this._expr);
   }
 
   /** Sets the operand (the expression being prefixed). */
@@ -40,8 +50,7 @@ export class PrefixTsDsl extends TsDsl<ts.PrefixUnaryExpression> {
     return this;
   }
 
-  /** Renders the prefix unary expression node. */
-  $render(): ts.PrefixUnaryExpression {
+  override toAst(ctx: AstContext) {
     if (!this._expr) {
       throw new Error('Missing expression for prefix unary expression');
     }
@@ -50,7 +59,7 @@ export class PrefixTsDsl extends TsDsl<ts.PrefixUnaryExpression> {
     }
     return ts.factory.createPrefixUnaryExpression(
       this._op,
-      this.$node(this._expr),
+      this.$node(ctx, this._expr),
     );
   }
 }

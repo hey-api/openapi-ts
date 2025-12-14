@@ -1,6 +1,6 @@
 {
   "name": "@hey-api/codegen-core",
-  "version": "0.3.3",
+  "version": "0.4.0",
   "description": "🧱 TypeScript framework for generating structured, multi-file source code from abstract syntax trees.",
   "homepage": "https://heyapi.dev/",
   "repository": {
@@ -59,6 +59,10 @@
   },
   "engines": {
     "node": ">=20.19.0"
+  },
+  "dependencies": {
+    "ansi-colors": "4.1.3",
+    "color-support": "1.1.3"
   },
   "peerDependencies": {
     "typescript": ">=5.5.3"

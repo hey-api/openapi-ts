@@ -28,24 +28,18 @@ export const enumToAst = ({
     if (item.type === 'string' && typeof item.const === 'string') {
       const literal = $.literal(item.const);
       enumMembers.push(literal);
-      literalMembers.push(
-        $(z.placeholder).attr(identifiers.literal).call(literal),
-      );
+      literalMembers.push($(z).attr(identifiers.literal).call(literal));
     } else if (
       (item.type === 'number' || item.type === 'integer') &&
       typeof item.const === 'number'
     ) {
       allStrings = false;
       const literal = $.literal(item.const);
-      literalMembers.push(
-        $(z.placeholder).attr(identifiers.literal).call(literal),
-      );
+      literalMembers.push($(z).attr(identifiers.literal).call(literal));
     } else if (item.type === 'boolean' && typeof item.const === 'boolean') {
       allStrings = false;
       const literal = $.literal(item.const);
-      literalMembers.push(
-        $(z.placeholder).attr(identifiers.literal).call(literal),
-      );
+      literalMembers.push($(z).attr(identifiers.literal).call(literal));
     } else if (item.type === 'null' || item.const === null) {
       isNullable = true;
     }
@@ -64,14 +58,14 @@ export const enumToAst = ({
   // Use z.enum() for pure string enums, z.union() for mixed or non-string types
   let enumExpression: ReturnType<typeof $.call>;
   if (allStrings && enumMembers.length > 0) {
-    enumExpression = $(z.placeholder)
+    enumExpression = $(z)
       .attr(identifiers.enum)
       .call($.array(...enumMembers));
   } else if (literalMembers.length === 1) {
     // For single-member unions, use the member directly instead of wrapping in z.union()
     enumExpression = literalMembers[0]!;
   } else {
-    enumExpression = $(z.placeholder)
+    enumExpression = $(z)
       .attr(identifiers.union)
       .call($.array(...literalMembers));
   }

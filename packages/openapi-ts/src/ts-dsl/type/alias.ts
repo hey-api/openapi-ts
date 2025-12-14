@@ -1,45 +1,66 @@
-/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
+import type {
+  AnalysisContext,
+  AstContext,
+  Ref,
+  Symbol,
+} from '@hey-api/codegen-core';
+import { fromRef, isSymbol, ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
-import { mixin } from '../mixins/apply';
 import { DocMixin } from '../mixins/doc';
-import { createModifierAccessor, ExportMixin } from '../mixins/modifiers';
+import { ExportMixin } from '../mixins/modifiers';
 import { TypeParamsMixin } from '../mixins/type-params';
+import { safeTypeName } from '../utils/name';
 
-export class TypeAliasTsDsl extends TsDsl<ts.TypeAliasDeclaration> {
-  protected value?: MaybeTsDsl<ts.TypeNode>;
-  protected modifiers = createModifierAccessor(this);
-  protected name: string;
+type Name = Symbol | string;
+type Value = MaybeTsDsl<ts.TypeNode>;
 
-  constructor(name: string, fn?: (t: TypeAliasTsDsl) => void) {
+const Mixed = DocMixin(
+  ExportMixin(TypeParamsMixin(TsDsl<ts.TypeAliasDeclaration>)),
+);
+
+export class TypeAliasTsDsl extends Mixed {
+  readonly '~dsl' = 'TypeAliasTsDsl';
+
+  protected name: Ref<Name>;
+  protected value?: Value;
+
+  constructor(name: Name, fn?: (t: TypeAliasTsDsl) => void) {
     super();
-    this.name = name;
+    this.name = ref(name);
+    if (isSymbol(name)) {
+      name.setKind('type');
+      name.setNameSanitizer(safeTypeName);
+      name.setNode(this);
+    }
     fn?.(this);
   }
 
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    ctx.analyze(this.name);
+    ctx.analyze(this.value);
+  }
+
   /** Sets the type expression on the right-hand side of `= ...`. */
-  type(node: MaybeTsDsl<ts.TypeNode>): this {
+  type(node: Value): this {
     this.value = node;
     return this;
   }
 
-  /** Renders a `TypeAliasDeclaration` node. */
-  $render(): ts.TypeAliasDeclaration {
+  override toAst(ctx: AstContext) {
     if (!this.value)
-      throw new Error(`Type alias '${this.name}' is missing a type definition`);
-    return ts.factory.createTypeAliasDeclaration(
-      this.modifiers.list(),
-      this.name,
-      this.$generics(),
-      this.$type(this.value),
+      throw new Error(
+        `Type alias '${fromRef(this.name)}' is missing a type definition`,
+      );
+    const node = ts.factory.createTypeAliasDeclaration(
+      this.modifiers,
+      this.$node(ctx, this.name) as ts.Identifier,
+      this.$generics(ctx),
+      this.$type(ctx, this.value),
     );
+    return this.$docs(ctx, node);
   }
 }
-
-export interface TypeAliasTsDsl
-  extends DocMixin,
-    ExportMixin,
-    TypeParamsMixin {}
-mixin(TypeAliasTsDsl, DocMixin, ExportMixin, TypeParamsMixin);

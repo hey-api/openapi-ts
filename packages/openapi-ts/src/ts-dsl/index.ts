@@ -1,3 +1,5 @@
+import type ts from 'typescript';
+
 import { ClassTsDsl } from './decl/class';
 import { DecoratorTsDsl } from './decl/decorator';
 import { EnumTsDsl } from './decl/enum';
@@ -32,10 +34,12 @@ import { DocTsDsl } from './layout/doc';
 import { HintTsDsl } from './layout/hint';
 import { NewlineTsDsl } from './layout/newline';
 import { NoteTsDsl } from './layout/note';
+import { BlockTsDsl } from './stmt/block';
 import { IfTsDsl } from './stmt/if';
 import { ReturnTsDsl } from './stmt/return';
 import { StmtTsDsl } from './stmt/stmt';
 import { ThrowTsDsl } from './stmt/throw';
+import { TryTsDsl } from './stmt/try';
 import { VarTsDsl } from './stmt/var';
 import { TokenTsDsl } from './token';
 import { TypeAliasTsDsl } from './type/alias';
@@ -54,8 +58,9 @@ import { TypeParamTsDsl } from './type/param';
 import { TypeQueryTsDsl } from './type/query';
 import { TypeTemplateTsDsl } from './type/template';
 import { TypeTupleTsDsl } from './type/tuple';
+import { LazyTsDsl } from './utils/lazy';
 
-const base = {
+const tsDsl = {
   /** Creates an array literal expression (e.g. `[1, 2, 3]`). */
   array: (...args: ConstructorParameters<typeof ArrayTsDsl>) =>
     new ArrayTsDsl(...args),
@@ -74,6 +79,10 @@ const base = {
   /** Creates a binary expression (e.g. `a + b`). */
   binary: (...args: ConstructorParameters<typeof BinaryTsDsl>) =>
     new BinaryTsDsl(...args),
+
+  /** Creates a statement block (`{ ... }`). */
+  block: (...args: ConstructorParameters<typeof BlockTsDsl>) =>
+    new BlockTsDsl(...args),
 
   /** Creates a function or method call expression (e.g. `fn(arg)`). */
   call: (...args: ConstructorParameters<typeof CallTsDsl>) =>
@@ -144,6 +153,11 @@ const base = {
   /** Creates an initialization block or statement. */
   init: (...args: ConstructorParameters<typeof InitTsDsl>) =>
     new InitTsDsl(...args),
+
+  /** Creates a lazy, context-aware node with deferred evaluation. */
+  lazy: <T extends ts.Node>(
+    ...args: ConstructorParameters<typeof LazyTsDsl<T>>
+  ) => new LazyTsDsl<T>(...args),
 
   /** Creates a let variable declaration (`let`). */
   let: (...args: ConstructorParameters<typeof VarTsDsl>) =>
@@ -233,6 +247,10 @@ const base = {
   token: (...args: ConstructorParameters<typeof TokenTsDsl>) =>
     new TokenTsDsl(...args),
 
+  /** Creates a try/catch/finally statement. */
+  try: (...args: ConstructorParameters<typeof TryTsDsl>) =>
+    new TryTsDsl(...args),
+
   /** Creates a basic type reference or type expression (e.g. Foo or Foo<T>). */
   type: Object.assign(
     (...args: ConstructorParameters<typeof TypeExprTsDsl>) =>
@@ -303,18 +321,18 @@ const base = {
     },
   ),
 
-  /** Creates a runtime `typeof` expression (e.g. typeof x). */
+  /** Creates a `typeof` expression (e.g. `typeof value`). */
   typeofExpr: (...args: ConstructorParameters<typeof TypeOfExprTsDsl>) =>
     new TypeOfExprTsDsl(...args),
 
-  /** Creates a variable declaration (var). */
+  /** Creates a variable declaration (`var`). */
   var: (...args: ConstructorParameters<typeof VarTsDsl>) =>
     new VarTsDsl(...args),
 };
 
 export const $ = Object.assign(
   (...args: ConstructorParameters<typeof ExprTsDsl>) => new ExprTsDsl(...args),
-  base,
+  tsDsl,
 );
 
 export type DollarTsDsl = {
@@ -332,10 +350,14 @@ export type DollarTsDsl = {
    *
    * Returns:
    * - A new `ExprTsDsl` instance when called directly.
-   * - The `base` factory object for constructing more specific nodes.
+   * - The `tsDsl` object for constructing more specific nodes.
    */
   $: typeof $;
 };
 
 export type { MaybeTsDsl, TypeTsDsl } from './base';
 export { TsDsl } from './base';
+export { TypeScriptRenderer } from './render/typescript';
+export { keywords } from './utils/keywords';
+export { regexp } from './utils/regexp';
+export { reserved } from './utils/reserved';

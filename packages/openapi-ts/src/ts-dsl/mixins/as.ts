@@ -1,24 +1,28 @@
+import type { AnalysisContext, Node } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
-import type { MaybeTsDsl, TypeTsDsl } from '../base';
-import type { AsTsDsl } from '../expr/as';
+import { f } from '../utils/factories';
+import type { BaseCtor, DropFirst, MixinCtor } from './types';
 
-type AsFactory = (
-  expr: string | MaybeTsDsl<ts.Expression>,
-  type: string | TypeTsDsl,
-) => AsTsDsl;
-let asFactory: AsFactory | undefined;
-/** Registers the As DSL factory after its module has finished evaluating. */
-export function registerLazyAccessAsFactory(factory: AsFactory): void {
-  asFactory = factory;
+export interface AsMethods extends Node {
+  /** Creates an `as` type assertion expression (e.g. `value as Type`). */
+  as(...args: DropFirst<Parameters<typeof f.as>>): ReturnType<typeof f.as>;
 }
 
-export class AsMixin {
-  /** Creates an `as` type assertion expression (e.g. `value as Type`). */
-  as(
-    this: string | MaybeTsDsl<ts.Expression>,
-    type: string | TypeTsDsl,
-  ): AsTsDsl {
-    return asFactory!(this, type);
+export function AsMixin<T extends ts.Expression, TBase extends BaseCtor<T>>(
+  Base: TBase,
+) {
+  abstract class As extends Base {
+    override analyze(ctx: AnalysisContext): void {
+      super.analyze(ctx);
+    }
+
+    protected as(
+      ...args: DropFirst<Parameters<typeof f.as>>
+    ): ReturnType<typeof f.as> {
+      return f.as(this, ...args);
+    }
   }
+
+  return As as unknown as MixinCtor<TBase, AsMethods>;
 }

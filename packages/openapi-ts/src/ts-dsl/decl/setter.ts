@@ -1,62 +1,68 @@
-/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
+import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl } from '../base';
-import { mixin } from '../mixins/apply';
 import { DecoratorMixin } from '../mixins/decorator';
 import { DoMixin } from '../mixins/do';
 import { DocMixin } from '../mixins/doc';
-import type { AsyncMixin } from '../mixins/modifiers';
 import {
   AbstractMixin,
-  createModifierAccessor,
+  AsyncMixin,
   PrivateMixin,
   ProtectedMixin,
   PublicMixin,
   StaticMixin,
 } from '../mixins/modifiers';
 import { ParamMixin } from '../mixins/param';
+import { BlockTsDsl } from '../stmt/block';
 
-export class SetterTsDsl extends TsDsl<ts.SetAccessorDeclaration> {
-  protected modifiers = createModifierAccessor(this);
-  protected name: string | ts.PropertyName;
+export type SetterName = string | ts.PropertyName;
 
-  constructor(name: string | ts.PropertyName, fn?: (s: SetterTsDsl) => void) {
+const Mixed = AbstractMixin(
+  AsyncMixin(
+    DecoratorMixin(
+      DoMixin(
+        DocMixin(
+          ParamMixin(
+            PrivateMixin(
+              ProtectedMixin(
+                PublicMixin(StaticMixin(TsDsl<ts.SetAccessorDeclaration>)),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+);
+
+export class SetterTsDsl extends Mixed {
+  readonly '~dsl' = 'SetterTsDsl';
+
+  protected name: SetterName;
+
+  constructor(name: SetterName, fn?: (s: SetterTsDsl) => void) {
     super();
     this.name = name;
     fn?.(this);
   }
 
-  $render(): ts.SetAccessorDeclaration {
-    return ts.factory.createSetAccessorDeclaration(
-      [...this.$decorators(), ...this.modifiers.list()],
+  override analyze(ctx: AnalysisContext): void {
+    ctx.pushScope();
+    try {
+      super.analyze(ctx);
+    } finally {
+      ctx.popScope();
+    }
+  }
+
+  override toAst(ctx: AstContext) {
+    const node = ts.factory.createSetAccessorDeclaration(
+      [...this.$decorators(ctx), ...this.modifiers],
       this.name,
-      this.$params(),
-      ts.factory.createBlock(this.$do(), true),
+      this.$params(ctx),
+      this.$node(ctx, new BlockTsDsl(...this._do).pretty()),
     );
+    return this.$docs(ctx, node);
   }
 }
-
-export interface SetterTsDsl
-  extends AbstractMixin,
-    AsyncMixin,
-    DecoratorMixin,
-    DoMixin,
-    DocMixin,
-    ParamMixin,
-    PrivateMixin,
-    ProtectedMixin,
-    PublicMixin,
-    StaticMixin {}
-mixin(
-  SetterTsDsl,
-  AbstractMixin,
-  DecoratorMixin,
-  DoMixin,
-  DocMixin,
-  ParamMixin,
-  PrivateMixin,
-  ProtectedMixin,
-  PublicMixin,
-  StaticMixin,
-);

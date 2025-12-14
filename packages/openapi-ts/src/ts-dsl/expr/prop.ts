@@ -1,17 +1,22 @@
-/* eslint-disable @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging */
+import type {
+  AnalysisContext,
+  AstContext,
+  Ref,
+  Symbol,
+} from '@hey-api/codegen-core';
+import { ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
 import { GetterTsDsl } from '../decl/getter';
 import { SetterTsDsl } from '../decl/setter';
-import { mixin } from '../mixins/apply';
 import { DocMixin } from '../mixins/doc';
-import { safePropName } from '../utils/prop';
+import { safePropName } from '../utils/name';
 import { IdTsDsl } from './id';
 
-type Expr = string | MaybeTsDsl<ts.Expression>;
-type Stmt = string | MaybeTsDsl<ts.Statement>;
+type Expr = Symbol | string | MaybeTsDsl<ts.Expression>;
+type Stmt = Symbol | string | MaybeTsDsl<ts.Statement>;
 type Kind = 'computed' | 'getter' | 'prop' | 'setter' | 'spread';
 
 type Meta =
@@ -21,13 +26,22 @@ type Meta =
   | { kind: 'setter'; name: string }
   | { kind: 'spread'; name?: undefined };
 
-export class ObjectPropTsDsl extends TsDsl<ts.ObjectLiteralElementLike> {
-  protected _value?: Expr | Stmt;
+const Mixed = DocMixin(TsDsl<ts.ObjectLiteralElementLike>);
+
+export class ObjectPropTsDsl extends Mixed {
+  readonly '~dsl' = 'ObjectPropTsDsl';
+
+  protected _value?: Ref<Expr | Stmt>;
   protected meta: Meta;
 
   constructor(meta: Meta) {
     super();
     this.meta = meta;
+  }
+
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    ctx.analyze(this._value);
   }
 
   /** Returns true when all required builder calls are present. */
@@ -39,46 +53,57 @@ export class ObjectPropTsDsl extends TsDsl<ts.ObjectLiteralElementLike> {
     if (typeof value === 'function') {
       value(this);
     } else {
-      this._value = value;
+      this._value = ref(value);
     }
     return this;
   }
 
-  $render(): ts.ObjectLiteralElementLike {
+  override toAst(ctx: AstContext) {
     this.$validate();
-    const node = this.$node(this._value);
+    const node = this.$node(ctx, this._value);
     if (this.meta.kind === 'spread') {
       if (ts.isStatement(node)) {
         throw new Error(
           'Invalid spread: object spread must be an expression, not a statement.',
         );
       }
-      return ts.factory.createSpreadAssignment(node);
+      const result = ts.factory.createSpreadAssignment(node);
+      return this.$docs(ctx, result);
     }
     if (this.meta.kind === 'getter') {
-      const getter = new GetterTsDsl(safePropName(this.meta.name)).do(node);
-      return this.$node(getter);
+      const getter = new GetterTsDsl(
+        this.$node(ctx, safePropName(this.meta.name)),
+      ).do(node);
+      const result = this.$node(ctx, getter);
+      return this.$docs(ctx, result);
     }
     if (this.meta.kind === 'setter') {
-      const setter = new SetterTsDsl(safePropName(this.meta.name)).do(node);
-      return this.$node(setter);
+      const setter = new SetterTsDsl(
+        this.$node(ctx, safePropName(this.meta.name)),
+      ).do(node);
+      const result = this.$node(ctx, setter);
+      return this.$docs(ctx, result);
     }
     if (ts.isIdentifier(node) && node.text === this.meta.name) {
-      return ts.factory.createShorthandPropertyAssignment(this.meta.name);
+      const result = ts.factory.createShorthandPropertyAssignment(
+        this.meta.name,
+      );
+      return this.$docs(ctx, result);
     }
     if (ts.isStatement(node)) {
       throw new Error(
         'Invalid property: object property value must be an expression, not a statement.',
       );
     }
-    return ts.factory.createPropertyAssignment(
+    const result = ts.factory.createPropertyAssignment(
       this.meta.kind === 'computed'
         ? ts.factory.createComputedPropertyName(
-            this.$node(new IdTsDsl(this.meta.name)),
+            this.$node(ctx, new IdTsDsl(this.meta.name)),
           )
-        : safePropName(this.meta.name),
+        : this.$node(ctx, safePropName(this.meta.name)),
       node,
     );
+    return this.$docs(ctx, result);
   }
 
   $validate(): asserts this is this & {
@@ -98,6 +123,3 @@ export class ObjectPropTsDsl extends TsDsl<ts.ObjectLiteralElementLike> {
     return missing;
   }
 }
-
-export interface ObjectPropTsDsl extends DocMixin {}
-mixin(ObjectPropTsDsl, DocMixin);

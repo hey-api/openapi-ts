@@ -1,13 +1,14 @@
+import { isNode } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
-import { TsDsl } from '../base';
+import type { TsDsl } from '../base';
 import { TypeLiteralTsDsl } from './literal';
 import { TypeObjectTsDsl } from './object';
 import { TypeTupleTsDsl } from './tuple';
 
 export const fromValue = (input: unknown): TsDsl<ts.TypeNode> => {
-  if (input instanceof TsDsl) {
-    return input;
+  if (isNode(input)) {
+    return input as TsDsl<ts.TypeNode>;
   }
 
   if (input === null) {

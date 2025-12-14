@@ -1,5 +1,6 @@
+import { fromRef, ref } from '@hey-api/codegen-core';
+
 import type { SchemaWithType } from '~/plugins';
-import { toRef } from '~/plugins/shared/utils/refs';
 import { $ } from '~/ts-dsl';
 
 import { identifiers } from '../../constants';
@@ -18,10 +19,10 @@ function defaultObjectBaseResolver({
   });
 
   if (additional) {
-    return $(z.placeholder).attr(identifiers.record).call(additional);
+    return $(z).attr(identifiers.record).call(additional);
   }
 
-  return $(z.placeholder).attr(identifiers.object).call(shape);
+  return $(z).attr(identifiers.object).call(shape);
 }
 
 export const objectToAst = ({
@@ -50,7 +51,7 @@ export const objectToAst = ({
       schema: property,
       state: {
         ...state,
-        path: toRef([...state.path.value, 'properties', name]),
+        path: ref([...fromRef(state.path), 'properties', name]),
       },
     });
 
@@ -70,7 +71,7 @@ export const objectToAst = ({
       schema: schema.additionalProperties,
       state: {
         ...state,
-        path: toRef([...state.path.value, 'additionalProperties']),
+        path: ref([...fromRef(state.path), 'additionalProperties']),
       },
     });
     hasLazyExpression = additionalAst.hasLazyExpression || hasLazyExpression;

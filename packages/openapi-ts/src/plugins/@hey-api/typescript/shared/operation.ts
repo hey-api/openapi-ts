@@ -1,3 +1,5 @@
+import { fromRef } from '@hey-api/codegen-core';
+
 import { operationResponsesMap } from '~/ir/operation';
 import { deduplicateSchema } from '~/ir/schema';
 import type { IR } from '~/ir/types';
@@ -121,15 +123,13 @@ const operationToDataType = ({
   data.required = dataRequired;
 
   const symbol = plugin.registerSymbol({
-    exported: true,
-    kind: 'type',
     meta: {
       category: 'type',
-      path: state.path.value,
+      path: fromRef(state.path),
       resource: 'operation',
       resourceId: operation.id,
       role: 'data',
-      tags: state.tags?.value,
+      tags: fromRef(state.tags),
       tool: 'typescript',
     },
     name: buildName({
@@ -138,8 +138,8 @@ const operationToDataType = ({
     }),
   });
   const node = $.type
-    .alias(symbol.placeholder)
-    .export(symbol.exported)
+    .alias(symbol)
+    .export()
     .type(
       irSchemaToAst({
         plugin,
@@ -147,7 +147,7 @@ const operationToDataType = ({
         state,
       }),
     );
-  plugin.setSymbolValue(symbol, node);
+  plugin.node(node);
 };
 
 export const operationToType = ({
@@ -164,15 +164,13 @@ export const operationToType = ({
 
   if (errors) {
     const symbolErrors = plugin.registerSymbol({
-      exported: true,
-      kind: 'type',
       meta: {
         category: 'type',
-        path: state.path.value,
+        path: fromRef(state.path),
         resource: 'operation',
         resourceId: operation.id,
         role: 'errors',
-        tags: state.tags?.value,
+        tags: fromRef(state.tags),
         tool: 'typescript',
       },
       name: buildName({
@@ -181,8 +179,8 @@ export const operationToType = ({
       }),
     });
     const node = $.type
-      .alias(symbolErrors.placeholder)
-      .export(symbolErrors.exported)
+      .alias(symbolErrors)
+      .export()
       .type(
         irSchemaToAst({
           plugin,
@@ -190,19 +188,17 @@ export const operationToType = ({
           state,
         }),
       );
-    plugin.setSymbolValue(symbolErrors, node);
+    plugin.node(node);
 
     if (error) {
       const symbol = plugin.registerSymbol({
-        exported: true,
-        kind: 'type',
         meta: {
           category: 'type',
-          path: state.path.value,
+          path: fromRef(state.path),
           resource: 'operation',
           resourceId: operation.id,
           role: 'error',
-          tags: state.tags?.value,
+          tags: fromRef(state.tags),
           tool: 'typescript',
         },
         name: buildName({
@@ -214,28 +210,22 @@ export const operationToType = ({
         }),
       });
       const node = $.type
-        .alias(symbol.placeholder)
-        .export(symbol.exported)
-        .type(
-          $.type(symbolErrors.placeholder).idx(
-            $.type(symbolErrors.placeholder).keyof(),
-          ),
-        );
-      plugin.setSymbolValue(symbol, node);
+        .alias(symbol)
+        .export()
+        .type($.type(symbolErrors).idx($.type(symbolErrors).keyof()));
+      plugin.node(node);
     }
   }
 
   if (responses) {
     const symbolResponses = plugin.registerSymbol({
-      exported: true,
-      kind: 'type',
       meta: {
         category: 'type',
-        path: state.path.value,
+        path: fromRef(state.path),
         resource: 'operation',
         resourceId: operation.id,
         role: 'responses',
-        tags: state.tags?.value,
+        tags: fromRef(state.tags),
         tool: 'typescript',
       },
       name: buildName({
@@ -244,8 +234,8 @@ export const operationToType = ({
       }),
     });
     const node = $.type
-      .alias(symbolResponses.placeholder)
-      .export(symbolResponses.exported)
+      .alias(symbolResponses)
+      .export()
       .type(
         irSchemaToAst({
           plugin,
@@ -253,19 +243,17 @@ export const operationToType = ({
           state,
         }),
       );
-    plugin.setSymbolValue(symbolResponses, node);
+    plugin.node(node);
 
     if (response) {
       const symbol = plugin.registerSymbol({
-        exported: true,
-        kind: 'type',
         meta: {
           category: 'type',
-          path: state.path.value,
+          path: fromRef(state.path),
           resource: 'operation',
           resourceId: operation.id,
           role: 'response',
-          tags: state.tags?.value,
+          tags: fromRef(state.tags),
           tool: 'typescript',
         },
         name: buildName({
@@ -277,14 +265,10 @@ export const operationToType = ({
         }),
       });
       const node = $.type
-        .alias(symbol.placeholder)
-        .export(symbol.exported)
-        .type(
-          $.type(symbolResponses.placeholder).idx(
-            $.type(symbolResponses.placeholder).keyof(),
-          ),
-        );
-      plugin.setSymbolValue(symbol, node);
+        .alias(symbol)
+        .export()
+        .type($.type(symbolResponses).idx($.type(symbolResponses).keyof()));
+      plugin.node(node);
     }
   }
 };

@@ -15,7 +15,7 @@ export const createMutationOptions = ({
 }: {
   operation: IR.OperationObject;
   plugin: PluginInstance;
-  queryFn: string;
+  queryFn: ReturnType<typeof $.expr | typeof $.call | typeof $.attr>;
 }): void => {
   const symbolMutationOptionsType = plugin.referenceSymbol({
     category: 'external',
@@ -23,21 +23,23 @@ export const createMutationOptions = ({
   });
 
   const typeData = useTypeData({ operation, plugin });
-  const typeError = useTypeError({ operation, plugin });
-  const typeResponse = useTypeResponse({ operation, plugin });
-  // TODO: better types syntax
-  const mutationType = `${symbolMutationOptionsType.placeholder}<${typeResponse}, ${typeError}, ${typeData}>`;
+  const mutationType = $.type(symbolMutationOptionsType)
+    .generic(useTypeResponse({ operation, plugin }))
+    .generic(useTypeError({ operation, plugin }))
+    .generic(typeData);
 
   const fnOptions = 'fnOptions';
 
-  const awaitSdkFn = $(queryFn)
-    .call(
-      $.object()
-        .spread('options')
-        .spread(fnOptions)
-        .prop('throwOnError', $.literal(true)),
-    )
-    .await();
+  const awaitSdkFn = $.lazy(() =>
+    $(queryFn)
+      .call(
+        $.object()
+          .spread('options')
+          .spread(fnOptions)
+          .prop('throwOnError', $.literal(true)),
+      )
+      .await(),
+  );
 
   const statements: Array<TsDsl<any>> = [];
   if (plugin.getPluginOrThrow('@hey-api/sdk').config.responseStyle === 'data') {
@@ -51,20 +53,21 @@ export const createMutationOptions = ({
 
   const mutationOptionsFn = 'mutationOptions';
   const symbolMutationOptions = plugin.registerSymbol({
-    exported: true,
     name: buildName({
       config: plugin.config.mutationOptions,
       name: operation.id,
     }),
   });
-  const statement = $.const(symbolMutationOptions.placeholder)
-    .export(symbolMutationOptions.exported)
+  const statement = $.const(symbolMutationOptions)
+    .export()
     .$if(plugin.config.comments && createOperationComment(operation), (c, v) =>
       c.doc(v),
     )
     .assign(
       $.func()
-        .param('options', (p) => p.optional().type(`Partial<${typeData}>`))
+        .param('options', (p) =>
+          p.optional().type($.type('Partial').generic(typeData)),
+        )
         .returns(mutationType)
         .do(
           $.const(mutationOptionsFn)
@@ -86,5 +89,5 @@ export const createMutationOptions = ({
           $(mutationOptionsFn).return(),
         ),
     );
-  plugin.setSymbolValue(symbolMutationOptions, statement);
+  plugin.node(statement);
 };

@@ -26,24 +26,20 @@ export const exportAst = ({
     resource: 'zod.z',
   });
 
-  const statement = $.const(symbol.placeholder)
-    .export(symbol.exported)
+  const statement = $.const(symbol)
+    .export()
     .$if(plugin.config.comments && createSchemaComment(schema), (c, v) =>
       c.doc(v),
     )
-    .$if(ast.typeName, (c, v) => c.type($.type(z.placeholder).attr(v)))
+    .$if(ast.typeName, (c, v) => c.type($.type(z).attr(v)))
     .assign(ast.expression);
-  plugin.setSymbolValue(symbol, statement);
+  plugin.node(statement);
 
   if (typeInferSymbol) {
     const inferType = $.type
-      .alias(typeInferSymbol.placeholder)
-      .export(typeInferSymbol.exported)
-      .type(
-        $.type(z.placeholder)
-          .attr(identifiers.infer)
-          .generic($(symbol.placeholder).typeofType()),
-      );
-    plugin.setSymbolValue(typeInferSymbol, inferType);
+      .alias(typeInferSymbol)
+      .export()
+      .type($.type(z).attr(identifiers.infer).generic($(symbol).typeofType()));
+    plugin.node(inferType);
   }
 };

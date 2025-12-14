@@ -1,12 +1,14 @@
-/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
+import type {
+  AnalysisContext,
+  AstContext,
+  Symbol,
+} from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl, TypeTsDsl } from '../base';
-import { mixin } from '../mixins/apply';
 import { DecoratorMixin } from '../mixins/decorator';
 import { DocMixin } from '../mixins/doc';
 import {
-  createModifierAccessor,
   PrivateMixin,
   ProtectedMixin,
   PublicMixin,
@@ -14,54 +16,55 @@ import {
   StaticMixin,
 } from '../mixins/modifiers';
 import { ValueMixin } from '../mixins/value';
+import type { TypeExprName } from '../type/expr';
 import { TypeExprTsDsl } from '../type/expr';
 
-export class FieldTsDsl extends TsDsl<ts.PropertyDeclaration> {
-  protected modifiers = createModifierAccessor(this);
-  protected name: string;
+export type FieldName = Symbol | string;
+export type FieldType = TypeExprName | TypeTsDsl;
+
+const Mixed = DecoratorMixin(
+  DocMixin(
+    PrivateMixin(
+      ProtectedMixin(
+        PublicMixin(
+          ReadonlyMixin(StaticMixin(ValueMixin(TsDsl<ts.PropertyDeclaration>))),
+        ),
+      ),
+    ),
+  ),
+);
+
+export class FieldTsDsl extends Mixed {
+  readonly '~dsl' = 'FieldTsDsl';
+
+  protected name: FieldName;
   protected _type?: TypeTsDsl;
 
-  constructor(name: string, fn?: (f: FieldTsDsl) => void) {
+  constructor(name: FieldName, fn?: (f: FieldTsDsl) => void) {
     super();
     this.name = name;
     fn?.(this);
   }
 
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    ctx.analyze(this._type);
+  }
+
   /** Sets the field type. */
-  type(type: string | TypeTsDsl): this {
+  type(type: FieldType): this {
     this._type = type instanceof TypeTsDsl ? type : new TypeExprTsDsl(type);
     return this;
   }
 
-  /** Builds the `PropertyDeclaration` node. */
-  $render(): ts.PropertyDeclaration {
-    return ts.factory.createPropertyDeclaration(
-      [...this.$decorators(), ...this.modifiers.list()],
-      this.name,
+  override toAst(ctx: AstContext) {
+    const node = ts.factory.createPropertyDeclaration(
+      [...this.$decorators(ctx), ...this.modifiers],
+      this.$node(ctx, this.name) as ts.PropertyName,
       undefined,
-      this.$type(this._type),
-      this.$value(),
+      this.$type(ctx, this._type),
+      this.$value(ctx),
     );
+    return this.$docs(ctx, node);
   }
 }
-
-export interface FieldTsDsl
-  extends DecoratorMixin,
-    DocMixin,
-    PrivateMixin,
-    ProtectedMixin,
-    PublicMixin,
-    ReadonlyMixin,
-    StaticMixin,
-    ValueMixin {}
-mixin(
-  FieldTsDsl,
-  DecoratorMixin,
-  DocMixin,
-  PrivateMixin,
-  ProtectedMixin,
-  PublicMixin,
-  ReadonlyMixin,
-  StaticMixin,
-  ValueMixin,
-);

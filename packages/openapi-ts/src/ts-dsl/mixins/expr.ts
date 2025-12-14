@@ -1,69 +1,52 @@
+import type { AnalysisContext, Node } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
-import type { MaybeTsDsl } from '../base';
-import type { AttrTsDsl } from '../expr/attr';
-import type { AwaitTsDsl } from '../expr/await';
-import type { CallTsDsl } from '../expr/call';
-import type { ReturnTsDsl } from '../stmt/return';
+import { f } from '../utils/factories';
+import type { BaseCtor, DropFirst, MixinCtor } from './types';
 
-type AttrFactory = (
-  expr: string | MaybeTsDsl<ts.Expression>,
-  name: string | ts.MemberName | number,
-) => AttrTsDsl;
-let attrFactory: AttrFactory | undefined;
-/** Registers the Attr DSL factory after its module has finished evaluating. */
-export function registerLazyAccessAttrFactory(factory: AttrFactory): void {
-  attrFactory = factory;
-}
-
-type AwaitFactory = (expr: string | MaybeTsDsl<ts.Expression>) => AwaitTsDsl;
-let awaitFactory: AwaitFactory | undefined;
-/** Registers the Await DSL factory after its module has finished evaluating. */
-export function registerLazyAccessAwaitFactory(factory: AwaitFactory): void {
-  awaitFactory = factory;
-}
-
-type CallFactory = (
-  expr: string | MaybeTsDsl<ts.Expression>,
-  args: ReadonlyArray<string | MaybeTsDsl<ts.Expression> | undefined>,
-) => CallTsDsl;
-let callFactory: CallFactory | undefined;
-/** Registers the Call DSL factory after its module has finished evaluating. */
-export function registerLazyAccessCallFactory(factory: CallFactory): void {
-  callFactory = factory;
-}
-
-type ReturnFactory = (expr: string | MaybeTsDsl<ts.Expression>) => ReturnTsDsl;
-let returnFactory: ReturnFactory | undefined;
-/** Registers the Return DSL factory after its module has finished evaluating. */
-export function registerLazyAccessReturnFactory(factory: ReturnFactory): void {
-  returnFactory = factory;
-}
-
-export class ExprMixin {
+export interface ExprMethods extends Node {
   /** Accesses a property on the current expression (e.g. `this.foo`). */
   attr(
-    this: string | MaybeTsDsl<ts.Expression>,
-    name: string | ts.MemberName | number,
-  ): AttrTsDsl {
-    return attrFactory!(this, name);
-  }
-
+    ...args: DropFirst<Parameters<typeof f.attr>>
+  ): ReturnType<typeof f.attr>;
   /** Awaits the current expression (e.g. `await expr`). */
-  await(this: string | MaybeTsDsl<ts.Expression>): AwaitTsDsl {
-    return awaitFactory!(this);
-  }
-
+  await(): ReturnType<typeof f.await>;
   /** Calls the current expression (e.g. `fn(arg1, arg2)`). */
   call(
-    this: string | MaybeTsDsl<ts.Expression>,
-    ...args: ReadonlyArray<string | MaybeTsDsl<ts.Expression> | undefined>
-  ): CallTsDsl {
-    return callFactory!(this, args);
+    ...args: DropFirst<Parameters<typeof f.call>>
+  ): ReturnType<typeof f.call>;
+  /** Produces a `return` statement returning the current expression. */
+  return(): ReturnType<typeof f.return>;
+}
+
+export function ExprMixin<T extends ts.Expression, TBase extends BaseCtor<T>>(
+  Base: TBase,
+) {
+  abstract class Expr extends Base {
+    override analyze(ctx: AnalysisContext): void {
+      super.analyze(ctx);
+    }
+
+    protected attr(
+      ...args: DropFirst<Parameters<typeof f.attr>>
+    ): ReturnType<typeof f.attr> {
+      return f.attr(this, ...args);
+    }
+
+    protected await(): ReturnType<typeof f.await> {
+      return f.await(this);
+    }
+
+    protected call(
+      ...args: DropFirst<Parameters<typeof f.call>>
+    ): ReturnType<typeof f.call> {
+      return f.call(this, ...args);
+    }
+
+    protected return(): ReturnType<typeof f.return> {
+      return f.return(this);
+    }
   }
 
-  /** Produces a `return` statement returning the current expression. */
-  return(this: string | MaybeTsDsl<ts.Expression>): ReturnTsDsl {
-    return returnFactory!(this);
-  }
+  return Expr as unknown as MixinCtor<TBase, ExprMethods>;
 }

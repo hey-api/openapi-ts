@@ -1,72 +1,87 @@
-/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
+import type {
+  AnalysisContext,
+  AstContext,
+  Ref,
+  Symbol,
+} from '@hey-api/codegen-core';
+import { fromRef, ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
-
-import { validTypescriptIdentifierRegExp } from '~/utils/regexp';
 
 import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
-import { mixin } from '../mixins/apply';
 import { AsMixin } from '../mixins/as';
-import { ExprMixin, registerLazyAccessAttrFactory } from '../mixins/expr';
+import { ExprMixin } from '../mixins/expr';
 import { OperatorMixin } from '../mixins/operator';
 import { OptionalMixin } from '../mixins/optional';
 import { TokenTsDsl } from '../token';
+import { f } from '../utils/factories';
+import { regexp } from '../utils/regexp';
 import { LiteralTsDsl } from './literal';
 
-export class AttrTsDsl extends TsDsl<
-  ts.PropertyAccessExpression | ts.ElementAccessExpression
-> {
-  protected left: string | MaybeTsDsl<ts.Expression>;
-  protected right: string | ts.MemberName | number;
+export type AttrLeft = Symbol | string | MaybeTsDsl<ts.Expression>;
+export type AttrRight = Symbol | string | ts.MemberName | number;
+export type AttrCtor = (left: AttrLeft, right: AttrRight) => AttrTsDsl;
 
-  constructor(
-    left: string | MaybeTsDsl<ts.Expression>,
-    right: string | ts.MemberName | number,
-  ) {
+const Mixed = AsMixin(
+  ExprMixin(
+    OperatorMixin(
+      OptionalMixin(
+        TsDsl<ts.PropertyAccessExpression | ts.ElementAccessExpression>,
+      ),
+    ),
+  ),
+);
+
+export class AttrTsDsl extends Mixed {
+  readonly '~dsl' = 'AttrTsDsl';
+
+  protected left: Ref<AttrLeft>;
+  protected right: Ref<AttrRight>;
+
+  constructor(left: AttrLeft, right: AttrRight) {
     super();
-    this.left = left;
-    this.right = right;
+    this.left = ref(left);
+    this.right = ref(right);
   }
 
-  $render(): ts.PropertyAccessExpression | ts.ElementAccessExpression {
-    const leftNode = this.$node(this.left);
-    validTypescriptIdentifierRegExp.lastIndex = 0;
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    ctx.analyze(this.left);
+    ctx.analyze(this.right);
+  }
+
+  override toAst(ctx: AstContext) {
+    const leftNode = this.$node(ctx, this.left);
+    regexp.typeScriptIdentifier.lastIndex = 0;
     if (
-      typeof this.right === 'number' ||
-      (typeof this.right === 'string' &&
-        !validTypescriptIdentifierRegExp.test(this.right))
+      typeof fromRef(this.right) === 'number' ||
+      (typeof fromRef(this.right) === 'string' &&
+        !regexp.typeScriptIdentifier.test(fromRef(this.right) as string))
     ) {
       if (this._optional) {
         return ts.factory.createElementAccessChain(
           leftNode,
-          this.$node(new TokenTsDsl().questionDot()),
-          this.$node(new LiteralTsDsl(this.right)),
+          this.$node(ctx, new TokenTsDsl().questionDot()),
+          this.$node(ctx, new LiteralTsDsl(fromRef(this.right) as string)),
         );
       }
       return ts.factory.createElementAccessExpression(
         leftNode,
-        this.$node(new LiteralTsDsl(this.right)),
+        this.$node(ctx, new LiteralTsDsl(fromRef(this.right) as string)),
       );
     }
     if (this._optional) {
       return ts.factory.createPropertyAccessChain(
         leftNode,
-        this.$node(new TokenTsDsl().questionDot()),
-        this.$maybeId(this.right),
+        this.$node(ctx, new TokenTsDsl().questionDot()),
+        this.$node(ctx, this.right) as ts.MemberName,
       );
     }
     return ts.factory.createPropertyAccessExpression(
       leftNode,
-      this.$maybeId(this.right),
+      this.$node(ctx, this.right) as ts.MemberName,
     );
   }
 }
 
-export interface AttrTsDsl
-  extends AsMixin,
-    ExprMixin,
-    OperatorMixin,
-    OptionalMixin {}
-mixin(AttrTsDsl, AsMixin, ExprMixin, OperatorMixin, OptionalMixin);
-
-registerLazyAccessAttrFactory((...args) => new AttrTsDsl(...args));
+f.attr.set((...args) => new AttrTsDsl(...args));

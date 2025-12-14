@@ -1,3 +1,5 @@
+import type { Symbol } from '@hey-api/codegen-core';
+
 import type { JsonSchemaDraft2020_12 } from '~/openApi/3.1.x/types/json-schema-draft-2020-12';
 import type {
   SecuritySchemeObject,
@@ -185,6 +187,10 @@ interface IRSchemaObject
    * follow a specific convention.
    */
   propertyNames?: IRSchemaObject;
+  /**
+   * Reference to symbol instead of `$ref` string.
+   */
+  symbolRef?: Symbol;
   /**
    * Each schema eventually resolves into `type`.
    */

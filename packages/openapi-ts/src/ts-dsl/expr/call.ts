@@ -1,42 +1,50 @@
-/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
+import type {
+  AnalysisContext,
+  AstContext,
+  Symbol,
+} from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
-import { mixin } from '../mixins/apply';
 import { ArgsMixin } from '../mixins/args';
 import { AsMixin } from '../mixins/as';
-import { ExprMixin, registerLazyAccessCallFactory } from '../mixins/expr';
+import { ExprMixin } from '../mixins/expr';
 import { TypeArgsMixin } from '../mixins/type-args';
+import { f } from '../utils/factories';
 
-export class CallTsDsl extends TsDsl<ts.CallExpression> {
-  protected _callee: string | MaybeTsDsl<ts.Expression>;
+export type CallCallee = string | MaybeTsDsl<ts.Expression>;
+export type CallArg = Symbol | string | MaybeTsDsl<ts.Expression>;
+export type CallArgs = ReadonlyArray<CallArg | undefined>;
+export type CallCtor = (callee: CallCallee, ...args: CallArgs) => CallTsDsl;
 
-  constructor(
-    callee: string | MaybeTsDsl<ts.Expression>,
-    ...args: ReadonlyArray<string | MaybeTsDsl<ts.Expression> | undefined>
-  ) {
+const Mixed = ArgsMixin(
+  AsMixin(ExprMixin(TypeArgsMixin(TsDsl<ts.CallExpression>))),
+);
+
+export class CallTsDsl extends Mixed {
+  readonly '~dsl' = 'CallTsDsl';
+
+  protected _callee: CallCallee;
+
+  constructor(callee: CallCallee, ...args: CallArgs) {
     super();
     this._callee = callee;
-    this.args(
-      ...args.filter((a): a is NonNullable<typeof a> => a !== undefined),
-    );
+    this.args(...args);
   }
 
-  $render(): ts.CallExpression {
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    ctx.analyze(this._callee);
+  }
+
+  override toAst(ctx: AstContext) {
     return ts.factory.createCallExpression(
-      this.$node(this._callee),
-      this.$generics(),
-      this.$args(),
+      this.$node(ctx, this._callee),
+      this.$generics(ctx),
+      this.$args(ctx),
     );
   }
 }
 
-export interface CallTsDsl
-  extends ArgsMixin,
-    AsMixin,
-    ExprMixin,
-    TypeArgsMixin {}
-mixin(CallTsDsl, ArgsMixin, AsMixin, ExprMixin, TypeArgsMixin);
-
-registerLazyAccessCallFactory((expr, args) => new CallTsDsl(expr, ...args));
+f.call.set((...args) => new CallTsDsl(...args));

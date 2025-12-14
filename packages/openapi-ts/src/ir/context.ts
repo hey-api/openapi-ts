@@ -2,12 +2,12 @@ import { Project } from '@hey-api/codegen-core';
 
 import type { Package } from '~/config/utils/package';
 import { packageFactory } from '~/config/utils/package';
-import { TypeScriptRenderer } from '~/generate/renderer';
 import type { Graph } from '~/graph';
 import { buildName } from '~/openApi/shared/utils/name';
 import type { PluginConfigMap } from '~/plugins/config';
 import { PluginInstance } from '~/plugins/shared/utils/instance';
 import type { PluginNames } from '~/plugins/types';
+import { TypeScriptRenderer } from '~/ts-dsl';
 import type { Config } from '~/types/config';
 import type { Logger } from '~/utils/logger';
 import { resolveRef } from '~/utils/ref';
@@ -68,6 +68,7 @@ export class Context<Spec extends Record<string, any> = any> {
     spec: Spec;
   }) {
     this.config = config;
+    // TODO: allow overriding via config
     this.gen = new Project({
       defaultFileName: 'index',
       fileName: (base) => {
@@ -83,10 +84,18 @@ export class Context<Spec extends Record<string, any> = any> {
           ? name
           : `${name}${suffix}`;
       },
-      renderers: {
-        // TODO: allow overriding via config with custom renderers
-        '.ts': new TypeScriptRenderer(),
-      },
+      nameConflictResolvers: config.output.nameConflictResolver
+        ? {
+            typescript: config.output.nameConflictResolver,
+          }
+        : undefined,
+      renderers: [
+        new TypeScriptRenderer({
+          preferExportAll: config.output.preferExportAll,
+          preferFileExtension: config.output.importFileExtension || undefined,
+          resolveModuleName: config.output.resolveModuleName,
+        }),
+      ],
       root: config.output.path,
     });
     this.logger = logger;

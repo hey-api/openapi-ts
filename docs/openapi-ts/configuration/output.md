@@ -108,9 +108,9 @@ export default {
 
 :::
 
-## Import File Extension
+## Module Extension
 
-You can customize the extension used for imported TypeScript files.
+You can customize the extension used for TypeScript modules.
 
 ::: code-group
 
@@ -257,6 +257,34 @@ export default {
 :::
 
 You can also prevent your output from being linted by adding your output path to the linter's ignore file.
+
+## Name Conflicts
+
+As your project grows, the chances of name conflicts increase. We use a simple conflict resolver that appends numeric suffixes to duplicate identifiers. If you prefer a different strategy, you can provide your own `nameConflictResolver` function.
+
+::: code-group
+
+<!-- prettier-ignore-start -->
+```js [config]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: {
+    nameConflictResolver({ attempt, baseName }) { // [!code ++]
+      return attempt === 0 ? baseName : `${baseName}_N${attempt + 1}`; // [!code ++]
+    }, // [!code ++]
+    path: 'src/client',
+  },
+};
+```
+<!-- prettier-ignore-end -->
+
+```ts [example]
+export type ChatCompletion = string;
+
+export type ChatCompletion_N2 = number;
+```
+
+:::
 
 ## TSConfig Path
 
