@@ -38,11 +38,7 @@ const generateAngularClassServices = ({
         operation,
       });
 
-      const classes = operationClasses({
-        context: plugin.context,
-        operation,
-        plugin: sdkPlugin,
-      });
+      const classes = operationClasses({ operation, plugin: sdkPlugin });
 
       for (const entry of classes.values()) {
         entry.path.forEach((currentClassName, index) => {
@@ -216,11 +212,7 @@ const generateResourceCallExpression = ({
 
   if (plugin.config.httpRequests.asClass) {
     // For class-based request methods, use inject and class hierarchy
-    const classes = operationClasses({
-      context: plugin.context,
-      operation,
-      plugin: sdkPlugin,
-    });
+    const classes = operationClasses({ operation, plugin: sdkPlugin });
 
     const firstEntry = Array.from(classes.values())[0];
     if (firstEntry) {
