@@ -1,30 +1,41 @@
-/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
+import type {
+  AnalysisContext,
+  AstContext,
+  Ref,
+  Symbol,
+} from '@hey-api/codegen-core';
+import { ref } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
-import { mixin } from '../mixins/apply';
 import { AsMixin } from '../mixins/as';
 import { ExprMixin } from '../mixins/expr';
 import { OperatorMixin } from '../mixins/operator';
 import { TypeExprMixin } from '../mixins/type-expr';
 
-export class ExprTsDsl extends TsDsl<ts.Expression> {
-  protected _exprInput: string | MaybeTsDsl<ts.Expression>;
+type Id = Symbol | string | MaybeTsDsl<ts.Expression>;
 
-  constructor(id: string | MaybeTsDsl<ts.Expression>) {
+const Mixed = AsMixin(
+  ExprMixin(OperatorMixin(TypeExprMixin(TsDsl<ts.Expression>))),
+);
+
+export class ExprTsDsl extends Mixed {
+  readonly '~dsl' = 'ExprTsDsl';
+
+  protected _exprInput: Ref<Id>;
+
+  constructor(id: Id) {
     super();
-    this._exprInput = id;
+    this._exprInput = ref(id);
   }
 
-  $render(): ts.Expression {
-    return this.$node(this._exprInput);
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    ctx.analyze(this._exprInput);
+  }
+
+  override toAst(ctx: AstContext) {
+    return this.$node(ctx, this._exprInput);
   }
 }
-
-export interface ExprTsDsl
-  extends AsMixin,
-    ExprMixin,
-    OperatorMixin,
-    TypeExprMixin {}
-mixin(ExprTsDsl, AsMixin, ExprMixin, OperatorMixin, TypeExprMixin);

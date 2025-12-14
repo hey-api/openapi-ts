@@ -7,11 +7,7 @@ import type { ValidatorResolverArgs } from '../types';
 const defaultValidatorResolver = ({
   schema,
 }: ValidatorResolverArgs): ReturnType<typeof $.return> =>
-  $(schema.placeholder)
-    .attr(identifiers.parseAsync)
-    .call('data')
-    .await()
-    .return();
+  $(schema).attr(identifiers.parseAsync).call('data').await().return();
 
 export const createRequestValidatorV4 = ({
   operation,

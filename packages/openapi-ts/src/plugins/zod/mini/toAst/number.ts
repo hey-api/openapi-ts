@@ -22,31 +22,31 @@ export const numberToAst = ({
 
   if (typeof schema.const === 'number') {
     // TODO: parser - handle bigint constants
-    result.expression = $(z.placeholder)
+    result.expression = $(z)
       .attr(identifiers.literal)
       .call($.literal(schema.const));
     return result as Omit<Ast, 'typeName'>;
   }
 
   result.expression = isBigInt
-    ? $(z.placeholder).attr(identifiers.coerce).attr(identifiers.bigint).call()
-    : $(z.placeholder).attr(identifiers.number).call();
+    ? $(z).attr(identifiers.coerce).attr(identifiers.bigint).call()
+    : $(z).attr(identifiers.number).call();
 
   if (!isBigInt && schema.type === 'integer') {
-    result.expression = $(z.placeholder).attr(identifiers.int).call();
+    result.expression = $(z).attr(identifiers.int).call();
   }
 
   const checks: Array<ReturnType<typeof $.call>> = [];
 
   if (schema.exclusiveMinimum !== undefined) {
     checks.push(
-      $(z.placeholder)
+      $(z)
         .attr(identifiers.gt)
         .call(numberParameter({ isBigInt, value: schema.exclusiveMinimum })),
     );
   } else if (schema.minimum !== undefined) {
     checks.push(
-      $(z.placeholder)
+      $(z)
         .attr(identifiers.gte)
         .call(numberParameter({ isBigInt, value: schema.minimum })),
     );
@@ -54,13 +54,13 @@ export const numberToAst = ({
 
   if (schema.exclusiveMaximum !== undefined) {
     checks.push(
-      $(z.placeholder)
+      $(z)
         .attr(identifiers.lt)
         .call(numberParameter({ isBigInt, value: schema.exclusiveMaximum })),
     );
   } else if (schema.maximum !== undefined) {
     checks.push(
-      $(z.placeholder)
+      $(z)
         .attr(identifiers.lte)
         .call(numberParameter({ isBigInt, value: schema.maximum })),
     );

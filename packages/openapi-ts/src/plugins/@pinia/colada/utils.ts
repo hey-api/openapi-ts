@@ -1,19 +1,20 @@
-import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
+import type { IR } from '~/ir/types';
+import { $ } from '~/ts-dsl';
 
 import type { PiniaColadaPlugin } from './types';
+import { useTypeData } from './useType';
 
 export const getPublicTypeData = ({
+  isNuxtClient,
+  operation,
   plugin,
-  typeData,
 }: {
+  isNuxtClient: boolean;
+  operation: IR.OperationObject;
   plugin: PiniaColadaPlugin['Instance'];
-  typeData: string;
 }) => {
-  const client = getClientPlugin(plugin.context.config);
-  const isNuxtClient = client.name === '@hey-api/client-nuxt';
-  const strippedTypeData = isNuxtClient
-    ? `Omit<${typeData}, 'composable'>`
+  const typeData = useTypeData({ operation, plugin });
+  return isNuxtClient
+    ? $.type('Omit').generic(typeData).generic('composable')
     : typeData;
-
-  return { isNuxtClient, strippedTypeData };
 };

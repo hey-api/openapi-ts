@@ -1,5 +1,77 @@
 # @hey-api/openapi-ts
 
+## 0.89.0
+
+### Minor Changes
+
+- **output**: add `preferExportAll` option ([#2990](https://github.com/hey-api/openapi-ts/pull/2990)) ([`c3a81e8`](https://github.com/hey-api/openapi-ts/commit/c3a81e89ba5ed3f373409582c5f814e1d10cae06)) by [@mrlubos](https://github.com/mrlubos)
+
+### Prefer named exports
+
+This release changes the default for `index.ts` to prefer named exports. Named exports may lead to better IDE and bundler performance compared to asterisk (`*`) as your tooling doesn't have to inspect the underlying module to discover exports.
+
+While this change is merely cosmetic, you can set `output.preferExportAll` to `true` if you prefer to use the asterisk.
+
+```js
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: {
+    path: 'src/client',
+    preferExportAll: true,
+  },
+};
+```
+
+- **parser**: removed `symbol:setValue:*` events ([#2990](https://github.com/hey-api/openapi-ts/pull/2990)) ([`c3a81e8`](https://github.com/hey-api/openapi-ts/commit/c3a81e89ba5ed3f373409582c5f814e1d10cae06)) by [@mrlubos](https://github.com/mrlubos)
+
+### Removed `symbol:setValue:*` events
+
+These events have been removed in favor of `node:set:*` events.
+
+### Patch Changes
+
+- **output**: add `nameConflictResolver` option ([#2990](https://github.com/hey-api/openapi-ts/pull/2990)) ([`c3a81e8`](https://github.com/hey-api/openapi-ts/commit/c3a81e89ba5ed3f373409582c5f814e1d10cae06)) by [@mrlubos](https://github.com/mrlubos)
+
+## Name Conflicts
+
+As your project grows, the chances of name conflicts increase. We use a simple conflict resolver that appends numeric suffixes to duplicate identifiers. If you prefer a different strategy, you can provide your own `nameConflictResolver` function.
+
+```js
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: {
+    nameConflictResolver({ attempt, baseName }) {
+      return attempt === 0 ? baseName : `${baseName}_N${attempt + 1}`;
+    },
+    path: 'src/client',
+  },
+};
+```
+
+Example output:
+
+```ts
+export type ChatCompletion = string;
+
+export type ChatCompletion_N2 = number;
+```
+
+### Updated Dependencies:
+
+- @hey-api/codegen-core@0.4.0
+
+## 0.88.2
+
+### Patch Changes
+
+- **clients**: handle CR and CRLF line endings in SSE ([#3055](https://github.com/hey-api/openapi-ts/pull/3055)) ([`d663232`](https://github.com/hey-api/openapi-ts/commit/d663232d8f10cb29744beeba073532e2f6b3b27a)) by [@nachogarcia](https://github.com/nachogarcia)
+
+## 0.88.1
+
+### Patch Changes
+
+- **@hey-api/sdk**: correctly map flat parameters ([#3047](https://github.com/hey-api/openapi-ts/pull/3047)) ([`55ef279`](https://github.com/hey-api/openapi-ts/commit/55ef27994740ba0af0bc8db17b3e71bfb5c11714)) by [@mrlubos](https://github.com/mrlubos)
+
 ## 0.88.0
 
 ### Minor Changes

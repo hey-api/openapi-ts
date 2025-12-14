@@ -1,10 +1,10 @@
 import type { SymbolMeta } from '@hey-api/codegen-core';
+import { fromRef, ref, refs } from '@hey-api/codegen-core';
 
 import { deduplicateSchema } from '~/ir/schema';
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
 import type { SchemaWithType } from '~/plugins';
-import { toRef, toRefs } from '~/plugins/shared/utils/refs';
 import { $ } from '~/ts-dsl';
 import { pathToJsonPointer, refToName } from '~/utils/ref';
 
@@ -50,14 +50,14 @@ export const irSchemaToAst = ({
     };
     const refSymbol = plugin.referenceSymbol(query);
     if (plugin.isSymbolRegistered(query)) {
-      const ref = $(refSymbol.placeholder);
+      const ref = $(refSymbol);
       ast.pipes.push(ref);
     } else {
-      const lazyExpression = $(v.placeholder)
+      const lazyExpression = $(v)
         .attr(identifiers.schemas.lazy)
-        .call($.func().do($(refSymbol.placeholder).return()));
+        .call($.func().do($(refSymbol).return()));
       ast.pipes.push(lazyExpression);
-      state.hasLazyExpression.value = true;
+      state.hasLazyExpression['~ref'] = true;
     }
   } else if (schema.type) {
     const typeAst = irSchemaWithTypeToAst({
@@ -69,7 +69,7 @@ export const irSchemaToAst = ({
     ast.pipes.push(typeAst.expression);
 
     if (plugin.config.metadata && schema.description) {
-      const expression = $(v.placeholder)
+      const expression = $(v)
         .attr(identifiers.actions.metadata)
         .call($.object().prop('description', $.literal(schema.description)));
       ast.pipes.push(expression);
@@ -84,19 +84,19 @@ export const irSchemaToAst = ({
           schema: item,
           state: {
             ...state,
-            path: toRef([...state.path.value, 'items', index]),
+            path: ref([...fromRef(state.path), 'items', index]),
           },
         });
         return pipesToAst({ pipes: itemAst.pipes, plugin });
       });
 
       if (schema.logicalOperator === 'and') {
-        const intersectExpression = $(v.placeholder)
+        const intersectExpression = $(v)
           .attr(identifiers.schemas.intersect)
           .call($.array(...itemsAst));
         ast.pipes.push(intersectExpression);
       } else {
-        const unionExpression = $(v.placeholder)
+        const unionExpression = $(v)
           .attr(identifiers.schemas.union)
           .call($.array(...itemsAst));
         ast.pipes.push(unionExpression);
@@ -120,9 +120,7 @@ export const irSchemaToAst = ({
 
   if (ast.pipes.length) {
     if (schema.accessScope === 'read') {
-      const readonlyExpression = $(v.placeholder)
-        .attr(identifiers.actions.readonly)
-        .call();
+      const readonlyExpression = $(v).attr(identifiers.actions.readonly).call();
       ast.pipes.push(readonlyExpression);
     }
 
@@ -132,7 +130,7 @@ export const irSchemaToAst = ({
       const isBigInt = schema.type === 'integer' && schema.format === 'int64';
       callParameter = numberParameter({ isBigInt, value: schema.default });
       ast.pipes = [
-        $(v.placeholder)
+        $(v)
           .attr(identifiers.schemas.optional)
           .call(pipesToAst({ pipes: ast.pipes, plugin }), callParameter),
       ];
@@ -140,7 +138,7 @@ export const irSchemaToAst = ({
 
     if (optional && !callParameter) {
       ast.pipes = [
-        $(v.placeholder)
+        $(v)
           .attr(identifiers.schemas.optional)
           .call(pipesToAst({ pipes: ast.pipes, plugin })),
       ];
@@ -157,17 +155,16 @@ const handleComponent = ({
 }: IrSchemaToAstOptions & {
   schema: IR.SchemaObject;
 }): void => {
-  const $ref = pathToJsonPointer(state.path.value);
+  const $ref = pathToJsonPointer(fromRef(state.path));
   const ast = irSchemaToAst({ plugin, schema, state });
   const baseName = refToName($ref);
   const symbol = plugin.registerSymbol({
-    exported: true,
     meta: {
       category: 'schema',
-      path: state.path.value,
+      path: fromRef(state.path),
       resource: 'definition',
       resourceId: $ref,
-      tags: state.tags?.value,
+      tags: fromRef(state.tags),
       tool: 'valibot',
     },
     name: buildName({
@@ -202,7 +199,7 @@ export const handlerV1: ValibotPlugin['Handler'] = ({ plugin }) => {
     'schema',
     'webhook',
     (event) => {
-      const state = toRefs<PluginState>({
+      const state = refs<PluginState>({
         hasLazyExpression: false,
         path: event._path,
         tags: event.tags,
@@ -211,7 +208,7 @@ export const handlerV1: ValibotPlugin['Handler'] = ({ plugin }) => {
         case 'operation':
           irOperationToAst({
             getAst: (schema, path) => {
-              const state = toRefs<PluginState>({
+              const state = refs<PluginState>({
                 hasLazyExpression: false,
                 path,
                 tags: event.tags,
@@ -247,7 +244,7 @@ export const handlerV1: ValibotPlugin['Handler'] = ({ plugin }) => {
         case 'webhook':
           irWebhookToAst({
             getAst: (schema, path) => {
-              const state = toRefs<PluginState>({
+              const state = refs<PluginState>({
                 hasLazyExpression: false,
                 path,
                 tags: event.tags,

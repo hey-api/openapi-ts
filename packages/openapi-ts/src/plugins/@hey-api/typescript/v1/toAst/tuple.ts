@@ -1,5 +1,6 @@
+import { fromRef, ref } from '@hey-api/codegen-core';
+
 import type { SchemaWithType } from '~/plugins';
-import { toRef } from '~/plugins/shared/utils/refs';
 import type { MaybeTsDsl, TypeTsDsl } from '~/ts-dsl';
 import { $ } from '~/ts-dsl';
 
@@ -24,7 +25,7 @@ export const tupleToAst = ({
         schema: item,
         state: {
           ...state,
-          path: toRef([...state.path.value, 'items', index]),
+          path: ref([...fromRef(state.path), 'items', index]),
         },
       });
       itemTypes.push(type);

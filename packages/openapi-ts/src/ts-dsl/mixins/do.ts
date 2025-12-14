@@ -1,28 +1,53 @@
+import type { AnalysisContext, AstContext, Node } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { TsDsl } from '../base';
 import { StmtTsDsl } from '../stmt/stmt';
+import type { BaseCtor, MixinCtor } from './types';
+
+export type DoExpr = MaybeTsDsl<ts.Expression | ts.Statement>;
+
+export interface DoMethods extends Node {
+  /** Renders the collected `.do()` calls into an array of `Statement` nodes. */
+  $do(ctx: AstContext): ReadonlyArray<ts.Statement>;
+  _do: Array<DoExpr>;
+  /** Adds one or more expressions/statements to the body. */
+  do(...items: ReadonlyArray<DoExpr>): this;
+}
 
 /**
  * Adds `.do()` for appending statements or expressions to a body.
  */
-export class DoMixin extends TsDsl {
-  protected _do?: Array<MaybeTsDsl<ts.Expression | ts.Statement>>;
+export function DoMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
+  Base: TBase,
+) {
+  abstract class Do extends Base {
+    protected _do: Array<DoExpr> = [];
 
-  /** Adds one or more expressions/statements to the body. */
-  do(...items: ReadonlyArray<MaybeTsDsl<ts.Expression | ts.Statement>>): this {
-    (this._do ??= []).push(...items);
-    return this;
+    override analyze(ctx: AnalysisContext): void {
+      super.analyze(ctx);
+      ctx.pushScope();
+      try {
+        for (const item of this._do) {
+          ctx.analyze(item);
+        }
+      } finally {
+        ctx.popScope();
+      }
+    }
+
+    protected do(...items: ReadonlyArray<DoExpr>): this {
+      this._do.push(...items);
+      return this;
+    }
+
+    protected $do(ctx: AstContext): ReadonlyArray<ts.Statement> {
+      return this.$node(
+        ctx,
+        this._do.map((item) => new StmtTsDsl(item)),
+      );
+    }
   }
 
-  /** Renders the collected `.do()` calls into an array of `Statement` nodes. */
-  protected $do(): ReadonlyArray<ts.Statement> {
-    if (!this._do) return [];
-    return this.$node(this._do.map((item) => new StmtTsDsl(item)));
-  }
-
-  $render(): ts.Node {
-    throw new Error('noop');
-  }
+  return Do as unknown as MixinCtor<TBase, DoMethods>;
 }

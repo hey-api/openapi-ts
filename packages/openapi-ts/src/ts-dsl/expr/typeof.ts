@@ -1,26 +1,34 @@
-/* eslint-disable @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging */
+import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
-import { mixin } from '../mixins/apply';
 import { OperatorMixin } from '../mixins/operator';
-import { registerLazyAccessTypeOfExprFactory } from '../mixins/type-expr';
+import { f } from '../utils/factories';
 
-export class TypeOfExprTsDsl extends TsDsl<ts.TypeOfExpression> {
-  protected _expr: string | MaybeTsDsl<ts.Expression>;
+export type TypeOfExpr = string | MaybeTsDsl<ts.Expression>;
+export type TypeOfExprCtor = (expr: TypeOfExpr) => TypeOfExprTsDsl;
 
-  constructor(expr: string | MaybeTsDsl<ts.Expression>) {
+const Mixed = OperatorMixin(TsDsl<ts.TypeOfExpression>);
+
+export class TypeOfExprTsDsl extends Mixed {
+  readonly '~dsl' = 'TypeOfExprTsDsl';
+
+  protected _expr: TypeOfExpr;
+
+  constructor(expr: TypeOfExpr) {
     super();
     this._expr = expr;
   }
 
-  $render(): ts.TypeOfExpression {
-    return ts.factory.createTypeOfExpression(this.$node(this._expr));
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    ctx.analyze(this._expr);
+  }
+
+  override toAst(ctx: AstContext) {
+    return ts.factory.createTypeOfExpression(this.$node(ctx, this._expr));
   }
 }
 
-export interface TypeOfExprTsDsl extends OperatorMixin {}
-mixin(TypeOfExprTsDsl, OperatorMixin);
-
-registerLazyAccessTypeOfExprFactory((...args) => new TypeOfExprTsDsl(...args));
+f.typeofExpr.set((...args) => new TypeOfExprTsDsl(...args));

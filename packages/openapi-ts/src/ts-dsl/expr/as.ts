@@ -1,34 +1,48 @@
-/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
+import type {
+  AnalysisContext,
+  AstContext,
+  Ref,
+  Symbol,
+} from '@hey-api/codegen-core';
+import { ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl, TypeTsDsl } from '../base';
 import { TsDsl } from '../base';
-import { mixin } from '../mixins/apply';
-import { AsMixin, registerLazyAccessAsFactory } from '../mixins/as';
+import { AsMixin } from '../mixins/as';
 import { ExprMixin } from '../mixins/expr';
+import { f } from '../utils/factories';
 
-export class AsTsDsl extends TsDsl<ts.AsExpression> {
-  protected expr: string | MaybeTsDsl<ts.Expression>;
-  protected type: string | TypeTsDsl;
+export type AsExpr = Symbol | string | MaybeTsDsl<ts.Expression>;
+export type AsType = Symbol | string | TypeTsDsl;
+export type AsCtor = (expr: AsExpr, type: AsType) => AsTsDsl;
 
-  constructor(
-    expr: string | MaybeTsDsl<ts.Expression>,
-    type: string | TypeTsDsl,
-  ) {
+const Mixed = AsMixin(ExprMixin(TsDsl<ts.AsExpression>));
+
+export class AsTsDsl extends Mixed {
+  readonly '~dsl' = 'AsTsDsl';
+
+  protected expr: Ref<AsExpr>;
+  protected type: Ref<AsType>;
+
+  constructor(expr: AsExpr, type: AsType) {
     super();
-    this.expr = expr;
-    this.type = type;
+    this.expr = ref(expr);
+    this.type = ref(type);
   }
 
-  $render() {
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    ctx.analyze(this.expr);
+    ctx.analyze(this.type);
+  }
+
+  override toAst(ctx: AstContext) {
     return ts.factory.createAsExpression(
-      this.$node(this.expr),
-      this.$type(this.type),
+      this.$node(ctx, this.expr),
+      this.$type(ctx, this.type),
     );
   }
 }
 
-export interface AsTsDsl extends AsMixin, ExprMixin {}
-mixin(AsTsDsl, AsMixin, ExprMixin);
-
-registerLazyAccessAsFactory((...args) => new AsTsDsl(...args));
+f.as.set((...args) => new AsTsDsl(...args));

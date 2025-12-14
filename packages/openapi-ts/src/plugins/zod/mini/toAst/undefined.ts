@@ -14,6 +14,6 @@ export const undefinedToAst = ({
     resource: 'zod.z',
   });
   const result: Partial<Omit<Ast, 'typeName'>> = {};
-  result.expression = $(z.placeholder).attr(identifiers.undefined).call();
+  result.expression = $(z).attr(identifiers.undefined).call();
   return result as Omit<Ast, 'typeName'>;
 };

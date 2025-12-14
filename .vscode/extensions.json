@@ -1,8 +1,11 @@
 {
   "recommendations": [
-    "EditorConfig.EditorConfig",
     "dbaeumer.vscode-eslint",
-    "esbenp.prettier-vscode",
-    "hilleer.yaml-plus-json"
+    "EditorConfig.EditorConfig",
+    "hilleer.yaml-plus-json",
+    "oxc.oxc-vscode",
+    "prettier.prettier-vscode",
+    "streetsidesoftware.code-spell-checker",
+    "usernamehw.errorlens"
   ]
 }

@@ -13,6 +13,6 @@ export const neverToAst = ({
     category: 'external',
     resource: 'valibot.v',
   });
-  const expression = $(v.placeholder).attr(identifiers.schemas.never).call();
+  const expression = $(v).attr(identifiers.schemas.never).call();
   return expression;
 };

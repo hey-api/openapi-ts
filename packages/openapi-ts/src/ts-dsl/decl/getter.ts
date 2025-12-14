@@ -1,63 +1,69 @@
-/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
+import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl } from '../base';
-import { mixin } from '../mixins/apply';
 import { DecoratorMixin } from '../mixins/decorator';
 import { DoMixin } from '../mixins/do';
 import { DocMixin } from '../mixins/doc';
-import type { AsyncMixin } from '../mixins/modifiers';
 import {
   AbstractMixin,
-  createModifierAccessor,
+  AsyncMixin,
   PrivateMixin,
   ProtectedMixin,
   PublicMixin,
   StaticMixin,
 } from '../mixins/modifiers';
 import { ParamMixin } from '../mixins/param';
+import { BlockTsDsl } from '../stmt/block';
 
-export class GetterTsDsl extends TsDsl<ts.GetAccessorDeclaration> {
-  protected modifiers = createModifierAccessor(this);
-  protected name: string | ts.PropertyName;
+export type GetterName = string | ts.PropertyName;
 
-  constructor(name: string | ts.PropertyName, fn?: (g: GetterTsDsl) => void) {
+const Mixed = AbstractMixin(
+  AsyncMixin(
+    DecoratorMixin(
+      DoMixin(
+        DocMixin(
+          ParamMixin(
+            PrivateMixin(
+              ProtectedMixin(
+                PublicMixin(StaticMixin(TsDsl<ts.GetAccessorDeclaration>)),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+);
+
+export class GetterTsDsl extends Mixed {
+  readonly '~dsl' = 'GetterTsDsl';
+
+  protected name: GetterName;
+
+  constructor(name: GetterName, fn?: (g: GetterTsDsl) => void) {
     super();
     this.name = name;
     fn?.(this);
   }
 
-  $render(): ts.GetAccessorDeclaration {
-    return ts.factory.createGetAccessorDeclaration(
-      [...this.$decorators(), ...this.modifiers.list()],
+  override analyze(ctx: AnalysisContext): void {
+    ctx.pushScope();
+    try {
+      super.analyze(ctx);
+    } finally {
+      ctx.popScope();
+    }
+  }
+
+  override toAst(ctx: AstContext) {
+    const node = ts.factory.createGetAccessorDeclaration(
+      [...this.$decorators(ctx), ...this.modifiers],
       this.name,
-      this.$params(),
+      this.$params(ctx),
       undefined,
-      ts.factory.createBlock(this.$do(), true),
+      this.$node(ctx, new BlockTsDsl(...this._do).pretty()),
     );
+    return this.$docs(ctx, node);
   }
 }
-
-export interface GetterTsDsl
-  extends AbstractMixin,
-    AsyncMixin,
-    DecoratorMixin,
-    DoMixin,
-    DocMixin,
-    ParamMixin,
-    PrivateMixin,
-    ProtectedMixin,
-    PublicMixin,
-    StaticMixin {}
-mixin(
-  GetterTsDsl,
-  AbstractMixin,
-  DecoratorMixin,
-  DoMixin,
-  DocMixin,
-  ParamMixin,
-  PrivateMixin,
-  ProtectedMixin,
-  PublicMixin,
-  StaticMixin,
-);

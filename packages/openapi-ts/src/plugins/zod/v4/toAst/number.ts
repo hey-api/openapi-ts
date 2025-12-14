@@ -22,18 +22,18 @@ export const numberToAst = ({
 
   if (typeof schema.const === 'number') {
     // TODO: parser - handle bigint constants
-    result.expression = $(z.placeholder)
+    result.expression = $(z)
       .attr(identifiers.literal)
       .call($.literal(schema.const));
     return result as Omit<Ast, 'typeName'>;
   }
 
   result.expression = isBigInt
-    ? $(z.placeholder).attr(identifiers.coerce).attr(identifiers.bigint).call()
-    : $(z.placeholder).attr(identifiers.number).call();
+    ? $(z).attr(identifiers.coerce).attr(identifiers.bigint).call()
+    : $(z).attr(identifiers.number).call();
 
   if (!isBigInt && schema.type === 'integer') {
-    result.expression = $(z.placeholder).attr(identifiers.int).call();
+    result.expression = $(z).attr(identifiers.int).call();
   }
 
   if (schema.exclusiveMinimum !== undefined) {

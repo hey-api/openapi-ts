@@ -1,60 +1,62 @@
-/* eslint-disable @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging */
+import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
-import { mixin } from '../mixins/apply';
+import type { DoExpr } from '../mixins/do';
 import { DoMixin } from '../mixins/do';
+import { BlockTsDsl } from './block';
 
-export class IfTsDsl extends TsDsl<ts.IfStatement> {
-  protected _condition?: string | MaybeTsDsl<ts.Expression>;
-  protected _else?: ReadonlyArray<MaybeTsDsl<ts.Statement>>;
+export type IfCondition = string | MaybeTsDsl<ts.Expression>;
 
-  constructor(condition?: string | MaybeTsDsl<ts.Expression>) {
+const Mixed = DoMixin(TsDsl<ts.IfStatement>);
+
+export class IfTsDsl extends Mixed {
+  readonly '~dsl' = 'IfTsDsl';
+
+  protected _condition?: IfCondition;
+  protected _else?: Array<DoExpr>;
+
+  constructor(condition?: IfCondition) {
     super();
     if (condition) this.condition(condition);
   }
 
-  condition(condition: string | MaybeTsDsl<ts.Expression>): this {
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    ctx.analyze(this._condition);
+    if (this._else) {
+      ctx.pushScope();
+      try {
+        for (const stmt of this._else) {
+          ctx.analyze(stmt);
+        }
+      } finally {
+        ctx.popScope();
+      }
+    }
+  }
+
+  condition(condition: IfCondition): this {
     this._condition = condition;
     return this;
   }
 
-  otherwise(...statements: ReadonlyArray<MaybeTsDsl<ts.Statement>>): this {
-    this._else = statements;
+  otherwise(...items: Array<DoExpr>): this {
+    this._else = items;
     return this;
   }
 
-  $render(): ts.IfStatement {
+  override toAst(ctx: AstContext) {
     if (!this._condition) throw new Error('Missing condition in if');
+    if (!this._do) throw new Error('Missing then block in if');
 
-    const thenStmts = this.$do();
-    if (!thenStmts.length) throw new Error('Missing then block in if');
-
-    const condition = this.$node(this._condition);
-    const thenBlock =
-      thenStmts.length === 1
-        ? thenStmts[0]!
-        : ts.factory.createBlock(thenStmts, true);
-    const thenNode = ts.isBlock(thenBlock)
-      ? thenBlock
-      : ts.factory.createBlock([thenBlock], true);
-
-    let elseNode: ts.Statement | undefined;
-    if (this._else) {
-      const elseStmts = this.$node(this._else);
-      const elseBlock =
-        elseStmts.length === 1
-          ? elseStmts[0]!
-          : ts.factory.createBlock(elseStmts, true);
-      elseNode = ts.isBlock(elseBlock)
-        ? elseBlock
-        : ts.factory.createBlock([elseBlock], true);
-    }
-
-    return ts.factory.createIfStatement(condition, thenNode, elseNode);
+    return ts.factory.createIfStatement(
+      this.$node(ctx, this._condition),
+      this.$node(ctx, new BlockTsDsl(...this._do).pretty()),
+      this._else
+        ? this.$node(ctx, new BlockTsDsl(...this._else).pretty())
+        : undefined,
+    );
   }
 }
-
-export interface IfTsDsl extends DoMixin {}
-mixin(IfTsDsl, DoMixin);

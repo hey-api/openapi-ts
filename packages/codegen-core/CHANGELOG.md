@@ -1,5 +1,11 @@
 # @hey-api/codegen-core
 
+## 0.4.0
+
+### Minor Changes
+
+- **symbols**: remove `placeholder` property ([#2990](https://github.com/hey-api/openapi-ts/pull/2990)) ([`c3a81e8`](https://github.com/hey-api/openapi-ts/commit/c3a81e89ba5ed3f373409582c5f814e1d10cae06)) by [@mrlubos](https://github.com/mrlubos)
+
 ## 0.3.3
 
 ### Patch Changes

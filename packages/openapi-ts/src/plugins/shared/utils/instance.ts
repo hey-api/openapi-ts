@@ -2,6 +2,7 @@ import path from 'node:path';
 
 import type {
   IProject,
+  Node,
   Symbol,
   SymbolIdentifier,
   SymbolIn,
@@ -298,6 +299,30 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     return this.gen.symbols.isRegistered(identifier);
   }
 
+  /**
+   * Sets or adds a node to the project graph.
+   *
+   * @param node The node to be added or updated in the project graph.
+   * @param index The index at which to update the node. If undefined, the node will be added.
+   * @returns The index of the added node or void if updated.
+   */
+  node<T extends number | undefined = undefined>(
+    node: Node | null,
+    index?: T,
+  ): T extends number ? void : number {
+    for (const hook of this.eventHooks['node:set:before']) {
+      hook({ node, plugin: this });
+    }
+    const result =
+      index !== undefined
+        ? this.gen.nodes.update(index, node)
+        : this.gen.nodes.add(node);
+    for (const hook of this.eventHooks['node:set:after']) {
+      hook({ node, plugin: this });
+    }
+    return result as T extends number ? void : number;
+  }
+
   querySymbol(filter: SymbolMeta): Symbol | undefined {
     return this.gen.symbols.query(filter)[0];
   }
@@ -306,30 +331,11 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     return this.gen.symbols.reference(meta);
   }
 
+  /**
+   * @deprecated use `plugin.symbol()` instead
+   */
   registerSymbol(symbol: SymbolIn): Symbol {
-    const symbolIn: SymbolIn = {
-      ...symbol,
-      exportFrom:
-        symbol.exportFrom ??
-        (!symbol.external &&
-        this.context.config.output.indexFile &&
-        this.config.exportFromIndex
-          ? ['index']
-          : undefined),
-      getFilePath: symbol.getFilePath ?? this.getSymbolFilePath.bind(this),
-      meta: {
-        pluginName: path.isAbsolute(this.name) ? 'custom' : this.name,
-        ...symbol.meta,
-      },
-    };
-    for (const hook of this.eventHooks['symbol:register:before']) {
-      hook({ plugin: this, symbol: symbolIn });
-    }
-    const symbolOut = this.gen.symbols.register(symbolIn);
-    for (const hook of this.eventHooks['symbol:register:after']) {
-      hook({ plugin: this, symbol: symbolOut });
-    }
-    return symbolOut;
+    return this.symbol(symbol.name, symbol);
   }
 
   /**
@@ -345,24 +351,41 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     }
   }
 
-  setSymbolValue(symbol: Symbol, value: unknown): void {
-    for (const hook of this.eventHooks['symbol:setValue:before']) {
-      hook({ plugin: this, symbol, value });
+  symbol(name: SymbolIn['name'], symbol?: Omit<SymbolIn, 'name'>): Symbol {
+    const symbolIn: SymbolIn = {
+      ...symbol,
+      exportFrom:
+        symbol?.exportFrom ??
+        (!symbol?.external &&
+        this.context.config.output.indexFile &&
+        this.config.exportFromIndex
+          ? ['index']
+          : undefined),
+      getFilePath: symbol?.getFilePath ?? this.getSymbolFilePath.bind(this),
+      meta: {
+        pluginName: path.isAbsolute(this.name) ? 'custom' : this.name,
+        ...symbol?.meta,
+      },
+      name,
+    };
+    for (const hook of this.eventHooks['symbol:register:before']) {
+      hook({ plugin: this, symbol: symbolIn });
     }
-    this.gen.symbols.setValue(symbol.id, value);
-    for (const hook of this.eventHooks['symbol:setValue:after']) {
-      hook({ plugin: this, symbol, value });
+    const symbolOut = this.gen.symbols.register(symbolIn);
+    for (const hook of this.eventHooks['symbol:register:after']) {
+      hook({ plugin: this, symbol: symbolOut });
     }
+    return symbolOut;
   }
 
   private buildEventHooks(): EventHooks {
     const result: EventHooks = {
+      'node:set:after': [],
+      'node:set:before': [],
       'plugin:handler:after': [],
       'plugin:handler:before': [],
       'symbol:register:after': [],
       'symbol:register:before': [],
-      'symbol:setValue:after': [],
-      'symbol:setValue:before': [],
     };
     const scopes = [
       this.config['~hooks']?.events,

@@ -1,52 +1,49 @@
-/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
+import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl } from '../base';
-import { mixin } from '../mixins/apply';
 import { DecoratorMixin } from '../mixins/decorator';
 import { DoMixin } from '../mixins/do';
 import { DocMixin } from '../mixins/doc';
-import {
-  createModifierAccessor,
-  PrivateMixin,
-  ProtectedMixin,
-  PublicMixin,
-} from '../mixins/modifiers';
+import { PrivateMixin, ProtectedMixin, PublicMixin } from '../mixins/modifiers';
 import { ParamMixin } from '../mixins/param';
+import { BlockTsDsl } from '../stmt/block';
 
-export class InitTsDsl extends TsDsl<ts.ConstructorDeclaration> {
-  protected modifiers = createModifierAccessor(this);
+const Mixed = DecoratorMixin(
+  DoMixin(
+    DocMixin(
+      ParamMixin(
+        PrivateMixin(
+          ProtectedMixin(PublicMixin(TsDsl<ts.ConstructorDeclaration>)),
+        ),
+      ),
+    ),
+  ),
+);
+
+export class InitTsDsl extends Mixed {
+  readonly '~dsl' = 'InitTsDsl';
 
   constructor(fn?: (i: InitTsDsl) => void) {
     super();
     fn?.(this);
   }
 
-  /** Builds the `ConstructorDeclaration` node. */
-  $render(): ts.ConstructorDeclaration {
-    return ts.factory.createConstructorDeclaration(
-      [...this.$decorators(), ...this.modifiers.list()],
-      this.$params(),
-      ts.factory.createBlock(this.$do(), true),
+  override analyze(ctx: AnalysisContext): void {
+    ctx.pushScope();
+    try {
+      super.analyze(ctx);
+    } finally {
+      ctx.popScope();
+    }
+  }
+
+  override toAst(ctx: AstContext) {
+    const node = ts.factory.createConstructorDeclaration(
+      [...this.$decorators(ctx), ...this.modifiers],
+      this.$params(ctx),
+      this.$node(ctx, new BlockTsDsl(...this._do).pretty()),
     );
+    return this.$docs(ctx, node);
   }
 }
-
-export interface InitTsDsl
-  extends DecoratorMixin,
-    DoMixin,
-    DocMixin,
-    ParamMixin,
-    PrivateMixin,
-    ProtectedMixin,
-    PublicMixin {}
-mixin(
-  InitTsDsl,
-  DecoratorMixin,
-  DoMixin,
-  DocMixin,
-  ParamMixin,
-  PrivateMixin,
-  ProtectedMixin,
-  PublicMixin,
-);

@@ -1,39 +1,57 @@
+import type {
+  AnalysisContext,
+  AstContext,
+  Ref,
+  Symbol,
+} from '@hey-api/codegen-core';
+import { ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TypeTsDsl } from '../base';
 
-export class TypeParamTsDsl extends TypeTsDsl<ts.TypeParameterDeclaration> {
-  protected name?: string | ts.Identifier;
-  protected constraint?: string | MaybeTsDsl<TypeTsDsl> | boolean;
-  protected defaultValue?: string | MaybeTsDsl<TypeTsDsl> | boolean;
+export type TypeParamName = Symbol | string;
+export type TypeParamExpr = Symbol | string | boolean | MaybeTsDsl<TypeTsDsl>;
 
-  constructor(
-    name?: string | ts.Identifier,
-    fn?: (name: TypeParamTsDsl) => void,
-  ) {
+const Mixed = TypeTsDsl<ts.TypeParameterDeclaration>;
+
+export class TypeParamTsDsl extends Mixed {
+  readonly '~dsl' = 'TypeParamTsDsl';
+
+  protected constraint?: Ref<TypeParamExpr>;
+  protected defaultValue?: Ref<TypeParamExpr>;
+  protected name?: Ref<TypeParamName>;
+
+  constructor(name?: TypeParamName, fn?: (name: TypeParamTsDsl) => void) {
     super();
-    this.name = name;
+    if (name) this.name = ref(name);
     fn?.(this);
   }
 
-  default(value: string | MaybeTsDsl<TypeTsDsl> | boolean): this {
-    this.defaultValue = value;
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    ctx.analyze(this.name);
+    ctx.analyze(this.constraint);
+    ctx.analyze(this.defaultValue);
+  }
+
+  default(value: TypeParamExpr): this {
+    this.defaultValue = ref(value);
     return this;
   }
 
-  extends(constraint: string | MaybeTsDsl<TypeTsDsl> | boolean): this {
-    this.constraint = constraint;
+  extends(constraint: TypeParamExpr): this {
+    this.constraint = ref(constraint);
     return this;
   }
 
-  $render(): ts.TypeParameterDeclaration {
+  override toAst(ctx: AstContext) {
     if (!this.name) throw new Error('Missing type name');
     return ts.factory.createTypeParameterDeclaration(
       undefined,
-      this.$maybeId(this.name),
-      this.$type(this.constraint),
-      this.$type(this.defaultValue),
+      this.$node(ctx, this.name) as ts.Identifier,
+      this.$type(ctx, this.constraint),
+      this.$type(ctx, this.defaultValue),
     );
   }
 }

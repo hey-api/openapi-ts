@@ -1,25 +1,39 @@
-/* eslint-disable @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging */
+import type {
+  AnalysisContext,
+  AstContext,
+  Ref,
+  Symbol,
+} from '@hey-api/codegen-core';
+import { ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
-import { mixin } from '../mixins/apply';
-import { ExprMixin, registerLazyAccessReturnFactory } from '../mixins/expr';
+import { f } from '../utils/factories';
 
-export class ReturnTsDsl extends TsDsl<ts.ReturnStatement> {
-  protected _returnExpr?: string | MaybeTsDsl<ts.Expression>;
+export type ReturnExpr = Symbol | string | MaybeTsDsl<ts.Expression>;
+export type ReturnCtor = (expr?: ReturnExpr) => ReturnTsDsl;
 
-  constructor(expr?: string | MaybeTsDsl<ts.Expression>) {
+const Mixed = TsDsl<ts.ReturnStatement>;
+
+export class ReturnTsDsl extends Mixed {
+  readonly '~dsl' = 'ReturnTsDsl';
+
+  protected _returnExpr?: Ref<ReturnExpr>;
+
+  constructor(expr?: ReturnExpr) {
     super();
-    this._returnExpr = expr;
+    if (expr) this._returnExpr = ref(expr);
   }
 
-  $render(): ts.ReturnStatement {
-    return ts.factory.createReturnStatement(this.$node(this._returnExpr));
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    ctx.analyze(this._returnExpr);
+  }
+
+  override toAst(ctx: AstContext) {
+    return ts.factory.createReturnStatement(this.$node(ctx, this._returnExpr));
   }
 }
 
-export interface ReturnTsDsl extends ExprMixin {}
-mixin(ReturnTsDsl, ExprMixin);
-
-registerLazyAccessReturnFactory((...args) => new ReturnTsDsl(...args));
+f.return.set((...args) => new ReturnTsDsl(...args));

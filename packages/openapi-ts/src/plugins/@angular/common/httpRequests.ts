@@ -133,7 +133,6 @@ const generateAngularClassRequests = ({
       resource: '@angular/core.Injectable',
     });
     const symbolClass = plugin.registerSymbol({
-      exported: true,
       meta: {
         category: 'utility',
         resource: 'class',
@@ -148,16 +147,16 @@ const generateAngularClassRequests = ({
         name: currentClass.className,
       }),
     });
-    const node = $.class(symbolClass.placeholder)
-      .export(symbolClass.exported)
+    const node = $.class(symbolClass)
+      .export()
       .$if(currentClass.root, (c) =>
         c.decorator(
-          symbolInjectable.placeholder,
+          symbolInjectable,
           $.object().prop('providedIn', $.literal('root')),
         ),
       )
       .do(...currentClass.nodes);
-    plugin.setSymbolValue(symbolClass, node);
+    plugin.node(node);
 
     generatedClasses.add(currentClass.className);
   };
@@ -181,7 +180,6 @@ const generateAngularFunctionRequests = ({
       });
 
       const symbol = plugin.registerSymbol({
-        exported: true,
         meta: {
           category: 'utility',
           resource: 'operation',
@@ -197,7 +195,7 @@ const generateAngularFunctionRequests = ({
         plugin,
         symbol,
       });
-      plugin.setSymbolValue(symbol, node);
+      plugin.node(node);
     },
     {
       order: 'declarations',
@@ -219,7 +217,7 @@ const generateRequestCallExpression = ({
   const optionsClient = $('options')
     .attr('client')
     .optional()
-    .$if(symbolClient, (c, s) => c.coalesce(s.placeholder));
+    .$if(symbolClient, (c, s) => c.coalesce(s));
 
   return optionsClient
     .attr('requestOptions')
@@ -261,18 +259,19 @@ const generateAngularRequestMethod = ({
     role: 'data',
     tool: 'typescript',
   });
-  const dataType = symbolDataType?.placeholder || 'unknown';
 
   return $.method(methodName)
     .public()
     .$if(createOperationComment(operation), (c, v) => c.doc(v))
     .param('options', (p) =>
-      p
-        .required(isRequiredOptions)
-        .type(`${symbolOptions.placeholder}<${dataType}, ThrowOnError>`),
+      p.required(isRequiredOptions).type(
+        $.type(symbolOptions)
+          .generic(symbolDataType ?? 'unknown')
+          .generic('ThrowOnError'),
+      ),
     )
     .generic('ThrowOnError', (g) => g.extends('boolean').default(false))
-    .returns(`${symbolHttpRequest.placeholder}<unknown>`)
+    .returns($.type(symbolHttpRequest).generic('unknown'))
     .do(
       $.return(
         generateRequestCallExpression({
@@ -312,20 +311,21 @@ const generateAngularRequestFunction = ({
     role: 'data',
     tool: 'typescript',
   });
-  const dataType = symbolDataType?.placeholder || 'unknown';
 
-  return $.const(symbol.placeholder)
-    .export(symbol.exported)
+  return $.const(symbol)
+    .export()
     .$if(createOperationComment(operation), (c, v) => c.doc(v))
     .assign(
       $.func()
         .param('options', (p) =>
-          p
-            .required(isRequiredOptions)
-            .type(`${symbolOptions.placeholder}<${dataType}, ThrowOnError>`),
+          p.required(isRequiredOptions).type(
+            $.type(symbolOptions)
+              .generic(symbolDataType ?? 'unknown')
+              .generic('ThrowOnError'),
+          ),
         )
         .generic('ThrowOnError', (g) => g.extends('boolean').default(false))
-        .returns(`${symbolHttpRequest.placeholder}<unknown>`)
+        .returns($.type(symbolHttpRequest).generic('unknown'))
         .do(
           $.return(
             generateRequestCallExpression({

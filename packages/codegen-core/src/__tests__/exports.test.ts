@@ -2,23 +2,58 @@ import { describe, expect, it } from 'vitest';
 
 import * as index from '../index';
 
-const constExports = ['createBinding', 'mergeBindings', 'Project', 'renderIds'];
+const constExports = [
+  'debug',
+  'defaultExtensions',
+  'defaultNameConflictResolvers',
+  'File',
+  'fromRef',
+  'fromRefs',
+  'isNode',
+  'isNodeRef',
+  'isRef',
+  'isSymbol',
+  'isSymbolRef',
+  'nodeBrand',
+  'Project',
+  'ref',
+  'refs',
+  'simpleNameConflictResolver',
+  'Symbol',
+  'symbolBrand',
+  'underscoreNameConflictResolver',
+];
 
 // Type-level test: will fail to compile if any type export is missing or renamed
 export type _TypeExports = [
-  index.BiMap<string, string>,
-  index.Binding,
-  index.ProjectRenderMeta,
-  index.SymbolMeta,
+  index.AnalysisContext,
+  index.AstContext,
+  index.BindingKind,
+  index.ExportMember,
+  index.ExportModule,
+  index.Extensions,
   index.File,
-  index.FileIdentifier,
   index.FileIn,
-  index.Output,
+  index.FromRef<any>,
+  index.FromRefs<any>,
   index.IProject,
+  index.ImportMember,
+  index.ImportModule,
+  index.Language,
+  index.NameConflictResolver,
+  index.NameConflictResolvers,
+  index.Node,
+  index.Output,
+  index.Project,
+  index.ProjectRenderMeta,
+  index.Ref<any>,
+  index.Refs<any>,
+  index.RenderContext,
   index.Renderer,
   index.Symbol,
   index.SymbolIdentifier,
   index.SymbolIn,
+  index.SymbolMeta,
 ];
 
 describe('index exports', () => {

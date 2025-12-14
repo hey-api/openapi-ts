@@ -1,15 +1,13 @@
-/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
+import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl, TypeTsDsl } from '../base';
-import { mixin } from '../mixins/apply';
 import { DecoratorMixin } from '../mixins/decorator';
 import { DoMixin } from '../mixins/do';
 import { DocMixin } from '../mixins/doc';
 import {
   AbstractMixin,
   AsyncMixin,
-  createModifierAccessor,
   PrivateMixin,
   ProtectedMixin,
   PublicMixin,
@@ -18,11 +16,35 @@ import {
 import { OptionalMixin } from '../mixins/optional';
 import { ParamMixin } from '../mixins/param';
 import { TypeParamsMixin } from '../mixins/type-params';
+import { BlockTsDsl } from '../stmt/block';
 import { TokenTsDsl } from '../token';
 import { TypeExprTsDsl } from '../type/expr';
 
-export class MethodTsDsl extends TsDsl<ts.MethodDeclaration> {
-  protected modifiers = createModifierAccessor(this);
+const Mixed = AbstractMixin(
+  AsyncMixin(
+    DecoratorMixin(
+      DoMixin(
+        DocMixin(
+          OptionalMixin(
+            ParamMixin(
+              PrivateMixin(
+                ProtectedMixin(
+                  PublicMixin(
+                    StaticMixin(TypeParamsMixin(TsDsl<ts.MethodDeclaration>)),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+);
+
+export class MethodTsDsl extends Mixed {
+  readonly '~dsl' = 'MethodTsDsl';
+
   protected name: string;
   protected _returns?: TypeTsDsl;
 
@@ -32,52 +54,33 @@ export class MethodTsDsl extends TsDsl<ts.MethodDeclaration> {
     fn?.(this);
   }
 
+  override analyze(ctx: AnalysisContext): void {
+    ctx.pushScope();
+    try {
+      super.analyze(ctx);
+      ctx.analyze(this._returns);
+    } finally {
+      ctx.popScope();
+    }
+  }
+
   /** Sets the return type. */
   returns(type: string | TypeTsDsl): this {
     this._returns = type instanceof TypeTsDsl ? type : new TypeExprTsDsl(type);
     return this;
   }
 
-  /** Builds the `MethodDeclaration` node. */
-  $render(): ts.MethodDeclaration {
-    return ts.factory.createMethodDeclaration(
-      [...this.$decorators(), ...this.modifiers.list()],
+  override toAst(ctx: AstContext) {
+    const node = ts.factory.createMethodDeclaration(
+      [...this.$decorators(ctx), ...this.modifiers],
       undefined,
       this.name,
-      this._optional ? this.$node(new TokenTsDsl().optional()) : undefined,
-      this.$generics(),
-      this.$params(),
-      this.$type(this._returns),
-      ts.factory.createBlock(this.$do(), true),
+      this._optional ? this.$node(ctx, new TokenTsDsl().optional()) : undefined,
+      this.$generics(ctx),
+      this.$params(ctx),
+      this.$type(ctx, this._returns),
+      this.$node(ctx, new BlockTsDsl(...this._do).pretty()),
     );
+    return this.$docs(ctx, node);
   }
 }
-
-export interface MethodTsDsl
-  extends AbstractMixin,
-    AsyncMixin,
-    DecoratorMixin,
-    DoMixin,
-    DocMixin,
-    OptionalMixin,
-    ParamMixin,
-    PrivateMixin,
-    ProtectedMixin,
-    PublicMixin,
-    StaticMixin,
-    TypeParamsMixin {}
-mixin(
-  MethodTsDsl,
-  AbstractMixin,
-  AsyncMixin,
-  DecoratorMixin,
-  DoMixin,
-  DocMixin,
-  OptionalMixin,
-  ParamMixin,
-  PrivateMixin,
-  ProtectedMixin,
-  PublicMixin,
-  StaticMixin,
-  TypeParamsMixin,
-);

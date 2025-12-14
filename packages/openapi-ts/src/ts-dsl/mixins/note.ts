@@ -1,29 +1,34 @@
-import type { ITsDsl, MaybeArray } from '../base';
+import type { AnalysisContext, AstContext, Node } from '@hey-api/codegen-core';
+import type ts from 'typescript';
+
+import type { NoteFn, NoteLines } from '../layout/note';
 import { NoteTsDsl } from '../layout/note';
+import type { BaseCtor, MixinCtor } from './types';
 
-export function NoteMixin<
-  TBase extends new (...args: ReadonlyArray<any>) => ITsDsl,
->(Base: TBase) {
-  const $renderBase = Base.prototype.$render;
+export interface NoteMethods extends Node {
+  $note<T extends ts.Node>(ctx: AstContext, node: T): T;
+  note(lines?: NoteLines, fn?: NoteFn): this;
+}
 
-  class Mixin extends Base {
-    _note?: NoteTsDsl;
+export function NoteMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
+  Base: TBase,
+) {
+  abstract class Note extends Base {
+    private _note?: NoteTsDsl;
 
-    note(lines?: MaybeArray<string>, fn?: (h: NoteTsDsl) => void): this {
+    override analyze(ctx: AnalysisContext): void {
+      super.analyze(ctx);
+    }
+
+    protected note(lines?: NoteLines, fn?: NoteFn): this {
       this._note = new NoteTsDsl(lines, fn);
       return this;
     }
 
-    override $render(...args: Parameters<ITsDsl['$render']>) {
-      const node = $renderBase.apply(this, args);
-      return this._note ? this._note.apply(node) : node;
+    protected $note<T extends ts.Node>(ctx: AstContext, node: T): T {
+      return this._note ? this._note.apply(ctx, node) : node;
     }
   }
 
-  // @ts-expect-error
-  Mixin.prototype.$render.mixin = true;
-
-  return Mixin;
+  return Note as unknown as MixinCtor<TBase, NoteMethods>;
 }
-
-export type NoteMixin = InstanceType<ReturnType<typeof NoteMixin>>;

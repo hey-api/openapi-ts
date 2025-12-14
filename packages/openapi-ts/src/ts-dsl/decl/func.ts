@@ -1,8 +1,13 @@
-/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
+import type {
+  AnalysisContext,
+  AstContext,
+  Ref,
+  Symbol,
+} from '@hey-api/codegen-core';
+import { isSymbol, ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl, TypeTsDsl } from '../base';
-import { mixin } from '../mixins/apply';
 import { AsMixin } from '../mixins/as';
 import { DecoratorMixin } from '../mixins/decorator';
 import { DoMixin } from '../mixins/do';
@@ -10,7 +15,6 @@ import { DocMixin } from '../mixins/doc';
 import {
   AbstractMixin,
   AsyncMixin,
-  createModifierAccessor,
   PrivateMixin,
   ProtectedMixin,
   PublicMixin,
@@ -18,38 +22,74 @@ import {
 } from '../mixins/modifiers';
 import { ParamMixin } from '../mixins/param';
 import { TypeParamsMixin } from '../mixins/type-params';
+import { BlockTsDsl } from '../stmt/block';
 import { TypeExprTsDsl } from '../type/expr';
+import { safeRuntimeName } from '../utils/name';
 
-type FuncMode = 'arrow' | 'decl' | 'expr';
+export type FuncMode = 'arrow' | 'decl' | 'expr';
+export type FuncName = Symbol | string;
 
-class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends TsDsl<
-  M extends 'decl'
-    ? ts.FunctionDeclaration
-    : M extends 'expr'
-      ? ts.FunctionExpression
-      : ts.ArrowFunction
-> {
-  protected mode: FuncMode;
-  protected modifiers = createModifierAccessor(this);
-  protected name?: string;
+const Mixed = AbstractMixin(
+  AsMixin(
+    AsyncMixin(
+      DecoratorMixin(
+        DoMixin(
+          DocMixin(
+            ParamMixin(
+              PrivateMixin(
+                ProtectedMixin(
+                  PublicMixin(
+                    StaticMixin(TypeParamsMixin(TsDsl<ts.ArrowFunction>)),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+);
+
+class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends Mixed {
+  readonly '~dsl' = 'FuncTsDsl';
+
+  protected mode?: FuncMode;
+  protected name?: Ref<FuncName>;
   protected _returns?: TypeTsDsl;
 
   constructor();
   constructor(fn: (f: ImplFuncTsDsl<'arrow'>) => void);
-  constructor(name: string);
-  constructor(name: string, fn: (f: ImplFuncTsDsl<'decl'>) => void);
+  constructor(name: FuncName);
+  constructor(name: FuncName, fn: (f: ImplFuncTsDsl<'decl'>) => void);
   constructor(
-    nameOrFn?: string | ((f: ImplFuncTsDsl<'arrow'>) => void),
+    name?: FuncName | ((f: ImplFuncTsDsl<'arrow'>) => void),
     fn?: (f: ImplFuncTsDsl<'decl'>) => void,
   ) {
     super();
-    if (typeof nameOrFn === 'string') {
-      this.name = nameOrFn;
-      this.mode = 'decl';
-      fn?.(this as unknown as FuncTsDsl<'decl'>);
-    } else {
+    if (typeof name === 'function') {
       this.mode = 'arrow';
-      nameOrFn?.(this as unknown as FuncTsDsl<'arrow'>);
+      name(this as unknown as FuncTsDsl<'arrow'>);
+    } else if (name) {
+      this.mode = 'decl';
+      this.name = ref(name);
+      if (isSymbol(name)) {
+        name.setKind('function');
+        name.setNameSanitizer(safeRuntimeName);
+        name.setNode(this);
+      }
+      fn?.(this as unknown as FuncTsDsl<'decl'>);
+    }
+  }
+
+  override analyze(ctx: AnalysisContext): void {
+    ctx.pushScope();
+    try {
+      super.analyze(ctx);
+      ctx.analyze(this.name);
+      ctx.analyze(this._returns);
+    } finally {
+      ctx.popScope();
     }
   }
 
@@ -77,81 +117,58 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends TsDsl<
     return this;
   }
 
-  $render(): M extends 'decl'
+  // @ts-expect-error --- need to fix types ---
+  override toAst(
+    ctx: AstContext,
+  ): M extends 'decl'
     ? ts.FunctionDeclaration
     : M extends 'expr'
       ? ts.FunctionExpression
       : ts.ArrowFunction {
+    const body = this.$node(ctx, new BlockTsDsl(...this._do).pretty());
+
     if (this.mode === 'decl') {
       if (!this.name) throw new Error('Function declaration requires a name');
-      return ts.factory.createFunctionDeclaration(
-        [...this.$decorators(), ...this.modifiers.list()],
+      const node = ts.factory.createFunctionDeclaration(
+        [...this.$decorators(ctx), ...this.modifiers],
         undefined,
-        this.name,
-        this.$generics(),
-        this.$params(),
-        this.$type(this._returns),
-        ts.factory.createBlock(this.$do(), true),
+        this.$node(ctx, this.name) as ts.Identifier,
+        this.$generics(ctx),
+        this.$params(ctx),
+        this.$type(ctx, this._returns),
+        body,
       ) as any;
+      return this.$docs(ctx, node);
     }
 
     if (this.mode === 'expr') {
-      return ts.factory.createFunctionExpression(
-        this.modifiers.list(),
+      const node = ts.factory.createFunctionExpression(
+        this.modifiers,
         undefined,
-        this.name,
-        this.$generics(),
-        this.$params(),
-        this.$type(this._returns),
-        ts.factory.createBlock(this.$do(), true),
+        this.$node(ctx, this.name) as ts.Identifier,
+        this.$generics(ctx),
+        this.$params(ctx),
+        this.$type(ctx, this._returns),
+        body,
       ) as any;
+      return this.$docs(ctx, node);
     }
 
-    const body = this.$do();
-    const exprBody =
-      body.length === 1 && ts.isReturnStatement(body[0]!)
-        ? (body[0].expression ?? ts.factory.createBlock(body, true))
-        : ts.factory.createBlock(body, true);
-
-    return ts.factory.createArrowFunction(
-      this.modifiers.list(),
-      this.$generics(),
-      this.$params(),
-      this.$type(this._returns),
+    const node = ts.factory.createArrowFunction(
+      this.modifiers,
+      this.$generics(ctx),
+      this.$params(ctx),
+      this.$type(ctx, this._returns),
       undefined,
-      exprBody,
+      body.statements.length === 1 &&
+        ts.isReturnStatement(body.statements[0]!) &&
+        body.statements[0].expression
+        ? body.statements[0].expression
+        : body,
     ) as any;
+    return this.$docs(ctx, node);
   }
 }
-
-interface ImplFuncTsDsl
-  extends AbstractMixin,
-    AsMixin,
-    AsyncMixin,
-    DecoratorMixin,
-    DoMixin,
-    DocMixin,
-    ParamMixin,
-    PrivateMixin,
-    ProtectedMixin,
-    PublicMixin,
-    StaticMixin,
-    TypeParamsMixin {}
-mixin(
-  ImplFuncTsDsl,
-  AbstractMixin,
-  AsMixin,
-  AsyncMixin,
-  DecoratorMixin,
-  DoMixin,
-  DocMixin,
-  ParamMixin,
-  PrivateMixin,
-  ProtectedMixin,
-  PublicMixin,
-  StaticMixin,
-  TypeParamsMixin,
-);
 
 export const FuncTsDsl = ImplFuncTsDsl as {
   new (): FuncTsDsl<'arrow'>;

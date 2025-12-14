@@ -6,6 +6,9 @@
   "engines": {
     "node": ">=20.19.0"
   },
+  "scripts": {
+    "dev": "ts-node ./playground.ts"
+  },
   "devDependencies": {
     "@hey-api/codegen-core": "workspace:*",
     "@hey-api/openapi-ts": "workspace:*",
@@ -15,7 +18,7 @@
     "@tanstack/solid-query": "5.73.3",
     "@tanstack/svelte-query": "5.73.3",
     "@tanstack/vue-query": "5.73.3",
-    "arktype": "2.1.25",
+    "arktype": "2.1.28",
     "swr": "2.3.6",
     "typescript": "5.9.3",
     "valibot": "1.1.0",

@@ -1,14 +1,18 @@
+import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TypeTsDsl } from '../base';
-import { registerLazyAccessTypeOperatorFactory } from '../mixins/type-expr';
+import { f } from '../utils/factories';
 
 type Op =
   | ts.SyntaxKind.KeyOfKeyword
   | ts.SyntaxKind.ReadonlyKeyword
   | ts.SyntaxKind.UniqueKeyword;
 type Type = string | MaybeTsDsl<ts.TypeNode>;
+export type TypeOperatorCtor = () => TypeOperatorTsDsl;
+
+const Mixed = TypeTsDsl<ts.TypeOperatorNode>;
 
 /**
  * Builds a TypeScript `TypeOperatorNode`, such as:
@@ -22,9 +26,16 @@ type Type = string | MaybeTsDsl<ts.TypeNode>;
  *
  * The node will throw during render if required fields are missing.
  */
-export class TypeOperatorTsDsl extends TypeTsDsl<ts.TypeOperatorNode> {
+export class TypeOperatorTsDsl extends Mixed {
+  readonly '~dsl' = 'TypeOperatorTsDsl';
+
   protected _op?: Op;
   protected _type?: Type;
+
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    ctx.analyze(this._type);
+  }
 
   /** Shorthand: builds `keyof T`. */
   keyof(type: Type): this {
@@ -59,9 +70,12 @@ export class TypeOperatorTsDsl extends TypeTsDsl<ts.TypeOperatorNode> {
     return this;
   }
 
-  $render(): ts.TypeOperatorNode {
+  override toAst(ctx: AstContext) {
     this.$validate();
-    return ts.factory.createTypeOperatorNode(this._op, this.$type(this._type));
+    return ts.factory.createTypeOperatorNode(
+      this._op,
+      this.$type(ctx, this._type),
+    );
   }
 
   /** Throws if required fields are not set. */
@@ -82,6 +96,4 @@ export class TypeOperatorTsDsl extends TypeTsDsl<ts.TypeOperatorNode> {
   }
 }
 
-registerLazyAccessTypeOperatorFactory(
-  (...args) => new TypeOperatorTsDsl(...args),
-);
+f.type.operator.set((...args) => new TypeOperatorTsDsl(...args));

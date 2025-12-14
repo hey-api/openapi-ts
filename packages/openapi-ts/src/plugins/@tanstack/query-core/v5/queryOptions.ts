@@ -26,7 +26,7 @@ export const createQueryOptions = ({
 }: {
   operation: IR.OperationObject;
   plugin: PluginInstance;
-  queryFn: string;
+  queryFn: ReturnType<typeof $.expr | typeof $.call | typeof $.attr>;
 }): void => {
   if (hasOperationSse({ operation })) {
     return;
@@ -54,7 +54,6 @@ export const createQueryOptions = ({
   });
 
   const symbolQueryKey = plugin.registerSymbol({
-    exported: true,
     name: buildName({
       config: plugin.config.queryKeys,
       name: operation.id,
@@ -66,21 +65,21 @@ export const createQueryOptions = ({
     plugin,
     symbol: symbolQueryKey,
   });
-  plugin.setSymbolValue(symbolQueryKey, node);
+  plugin.node(node);
 
-  const typeData = useTypeData({ operation, plugin });
-  const typeError = useTypeError({ operation, plugin });
   const typeResponse = useTypeResponse({ operation, plugin });
 
-  const awaitSdkFn = $(queryFn)
-    .call(
-      $.object()
-        .spread(optionsParamName)
-        .spread($('queryKey').attr(0))
-        .prop('signal', $('signal'))
-        .prop('throwOnError', $.literal(true)),
-    )
-    .await();
+  const awaitSdkFn = $.lazy(() =>
+    $(queryFn)
+      .call(
+        $.object()
+          .spread(optionsParamName)
+          .spread($('queryKey').attr(0))
+          .prop('signal', $('signal'))
+          .prop('throwOnError', $.literal(true)),
+      )
+      .await(),
+  );
 
   const statements: Array<TsDsl<any>> = [];
   if (plugin.getPluginOrThrow('@hey-api/sdk').config.responseStyle === 'data') {
@@ -101,13 +100,12 @@ export const createQueryOptions = ({
         .param((p) => p.object('queryKey', 'signal'))
         .do(...statements),
     )
-    .prop('queryKey', $(symbolQueryKey.placeholder).call(optionsParamName))
+    .prop('queryKey', $(symbolQueryKey).call(optionsParamName))
     .$if(handleMeta(plugin, operation, 'queryOptions'), (o, v) =>
       o.prop('meta', v),
     );
 
   const symbolQueryOptionsFn = plugin.registerSymbol({
-    exported: plugin.config.queryOptions.exported,
     meta: {
       category: 'hook',
       resource: 'operation',
@@ -122,27 +120,29 @@ export const createQueryOptions = ({
   });
   // TODO: add type error
   // TODO: AxiosError<PutSubmissionMetaError>
-  const statement = $.const(symbolQueryOptionsFn.placeholder)
-    .export(symbolQueryOptionsFn.exported)
+  const statement = $.const(symbolQueryOptionsFn)
+    .export(plugin.config.queryOptions.exported)
     .$if(plugin.config.comments && createOperationComment(operation), (c, v) =>
       c.doc(v),
     )
     .assign(
       $.func()
         .param(optionsParamName, (p) =>
-          p.required(isRequiredOptions).type(typeData),
+          p
+            .required(isRequiredOptions)
+            .type(useTypeData({ operation, plugin })),
         )
         .do(
-          $(symbolQueryOptions.placeholder)
+          $(symbolQueryOptions)
             .call(queryOptionsObj)
             .generics(
               typeResponse,
-              typeError,
+              useTypeError({ operation, plugin }),
               typeResponse,
-              $(symbolQueryKey.placeholder).returnType(),
+              $(symbolQueryKey).returnType(),
             )
             .return(),
         ),
     );
-  plugin.setSymbolValue(symbolQueryOptionsFn, statement);
+  plugin.node(statement);
 };

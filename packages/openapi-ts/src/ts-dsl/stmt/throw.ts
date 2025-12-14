@@ -1,10 +1,15 @@
+import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
 import { LiteralTsDsl } from '../expr/literal';
 
-export class ThrowTsDsl extends TsDsl<ts.ThrowStatement> {
+const Mixed = TsDsl<ts.ThrowStatement>;
+
+export class ThrowTsDsl extends Mixed {
+  readonly '~dsl' = 'ThrowTsDsl';
+
   protected error: string | MaybeTsDsl<ts.Expression>;
   protected msg?: string | MaybeTsDsl<ts.Expression>;
   protected useNew: boolean;
@@ -15,15 +20,24 @@ export class ThrowTsDsl extends TsDsl<ts.ThrowStatement> {
     this.useNew = useNew;
   }
 
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    ctx.analyze(this.error);
+    ctx.analyze(this.msg);
+  }
+
   message(value: string | MaybeTsDsl<ts.Expression>): this {
     this.msg = value;
     return this;
   }
 
-  $render(): ts.ThrowStatement {
-    const errorNode = this.$node(this.error);
-    const messageNode = this.$node(this.msg ? [this.msg] : []).map((expr) =>
-      typeof expr === 'string' ? new LiteralTsDsl(expr).$render() : expr,
+  override toAst(ctx: AstContext) {
+    const errorNode = this.$node(ctx, this.error);
+    const messageNode = this.$node(ctx, this.msg ? [this.msg] : []).map(
+      (expr) =>
+        typeof expr === 'string'
+          ? this.$node(ctx, new LiteralTsDsl(expr))
+          : expr,
     );
     if (this.useNew) {
       return ts.factory.createThrowStatement(

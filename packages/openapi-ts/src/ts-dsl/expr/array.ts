@@ -1,14 +1,17 @@
-/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
+import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
-import { mixin } from '../mixins/apply';
 import { AsMixin } from '../mixins/as';
 import { LayoutMixin } from '../mixins/layout';
 import { LiteralTsDsl } from './literal';
 
-export class ArrayTsDsl extends TsDsl<ts.ArrayLiteralExpression> {
+const Mixed = AsMixin(LayoutMixin(TsDsl<ts.ArrayLiteralExpression>));
+
+export class ArrayTsDsl extends Mixed {
+  readonly '~dsl' = 'ArrayTsDsl';
+
   protected _elements: Array<
     | { expr: MaybeTsDsl<ts.Expression>; kind: 'element' }
     | { expr: MaybeTsDsl<ts.Expression>; kind: 'spread' }
@@ -19,6 +22,13 @@ export class ArrayTsDsl extends TsDsl<ts.ArrayLiteralExpression> {
   ) {
     super();
     this.elements(...exprs);
+  }
+
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    for (const item of this._elements) {
+      ctx.analyze(item.expr);
+    }
   }
 
   /** Adds a single array element. */
@@ -49,9 +59,9 @@ export class ArrayTsDsl extends TsDsl<ts.ArrayLiteralExpression> {
     return this;
   }
 
-  $render(): ts.ArrayLiteralExpression {
+  override toAst(ctx: AstContext) {
     const elements = this._elements.map((item) => {
-      const node = this.$node(item.expr);
+      const node = this.$node(ctx, item.expr);
       return item.kind === 'spread'
         ? ts.factory.createSpreadElement(node)
         : node;
@@ -63,6 +73,3 @@ export class ArrayTsDsl extends TsDsl<ts.ArrayLiteralExpression> {
     );
   }
 }
-
-export interface ArrayTsDsl extends AsMixin, LayoutMixin {}
-mixin(ArrayTsDsl, AsMixin, LayoutMixin);
