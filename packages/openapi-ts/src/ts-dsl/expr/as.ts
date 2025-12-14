@@ -9,8 +9,9 @@ import ts from 'typescript';
 
 import type { MaybeTsDsl, TypeTsDsl } from '../base';
 import { TsDsl } from '../base';
-import { AsMixin, setAsFactory } from '../mixins/as';
+import { AsMixin } from '../mixins/as';
 import { ExprMixin } from '../mixins/expr';
+import { f } from '../utils/factories';
 
 export type AsExpr = Symbol | string | MaybeTsDsl<ts.Expression>;
 export type AsType = Symbol | string | TypeTsDsl;
@@ -44,4 +45,4 @@ export class AsTsDsl extends Mixed {
   }
 }
 
-setAsFactory((...args) => new AsTsDsl(...args));
+f.as.set((...args) => new AsTsDsl(...args));

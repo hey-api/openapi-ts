@@ -4,16 +4,19 @@ import ts from 'typescript';
 import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
 import { OperatorMixin } from '../mixins/operator';
-import { setTypeOfExprFactory } from '../mixins/type-expr';
+import { f } from '../utils/factories';
+
+export type TypeOfExpr = string | MaybeTsDsl<ts.Expression>;
+export type TypeOfExprCtor = (expr: TypeOfExpr) => TypeOfExprTsDsl;
 
 const Mixed = OperatorMixin(TsDsl<ts.TypeOfExpression>);
 
 export class TypeOfExprTsDsl extends Mixed {
   readonly '~dsl' = 'TypeOfExprTsDsl';
 
-  protected _expr: string | MaybeTsDsl<ts.Expression>;
+  protected _expr: TypeOfExpr;
 
-  constructor(expr: string | MaybeTsDsl<ts.Expression>) {
+  constructor(expr: TypeOfExpr) {
     super();
     this._expr = expr;
   }
@@ -28,4 +31,4 @@ export class TypeOfExprTsDsl extends Mixed {
   }
 }
 
-setTypeOfExprFactory((...args) => new TypeOfExprTsDsl(...args));
+f.typeofExpr.set((...args) => new TypeOfExprTsDsl(...args));

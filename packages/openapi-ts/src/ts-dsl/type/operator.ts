@@ -3,13 +3,14 @@ import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TypeTsDsl } from '../base';
-import { setTypeOperatorFactory } from '../mixins/type-expr';
+import { f } from '../utils/factories';
 
 type Op =
   | ts.SyntaxKind.KeyOfKeyword
   | ts.SyntaxKind.ReadonlyKeyword
   | ts.SyntaxKind.UniqueKeyword;
 type Type = string | MaybeTsDsl<ts.TypeNode>;
+export type TypeOperatorCtor = () => TypeOperatorTsDsl;
 
 const Mixed = TypeTsDsl<ts.TypeOperatorNode>;
 
@@ -95,4 +96,4 @@ export class TypeOperatorTsDsl extends Mixed {
   }
 }
 
-setTypeOperatorFactory((...args) => new TypeOperatorTsDsl(...args));
+f.type.operator.set((...args) => new TypeOperatorTsDsl(...args));

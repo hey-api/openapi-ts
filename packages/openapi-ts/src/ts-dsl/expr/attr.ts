@@ -10,10 +10,11 @@ import ts from 'typescript';
 import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
 import { AsMixin } from '../mixins/as';
-import { ExprMixin, setAttrFactory } from '../mixins/expr';
+import { ExprMixin } from '../mixins/expr';
 import { OperatorMixin } from '../mixins/operator';
 import { OptionalMixin } from '../mixins/optional';
 import { TokenTsDsl } from '../token';
+import { f } from '../utils/factories';
 import { regexp } from '../utils/regexp';
 import { LiteralTsDsl } from './literal';
 
@@ -83,4 +84,4 @@ export class AttrTsDsl extends Mixed {
   }
 }
 
-setAttrFactory((...args) => new AttrTsDsl(...args));
+f.attr.set((...args) => new AttrTsDsl(...args));

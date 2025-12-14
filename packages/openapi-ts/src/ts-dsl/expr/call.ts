@@ -9,8 +9,9 @@ import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
 import { ArgsMixin } from '../mixins/args';
 import { AsMixin } from '../mixins/as';
-import { ExprMixin, setCallFactory } from '../mixins/expr';
+import { ExprMixin } from '../mixins/expr';
 import { TypeArgsMixin } from '../mixins/type-args';
+import { f } from '../utils/factories';
 
 export type CallCallee = string | MaybeTsDsl<ts.Expression>;
 export type CallArg = Symbol | string | MaybeTsDsl<ts.Expression>;
@@ -46,4 +47,4 @@ export class CallTsDsl extends Mixed {
   }
 }
 
-setCallFactory((...args) => new CallTsDsl(...args));
+f.call.set((...args) => new CallTsDsl(...args));
