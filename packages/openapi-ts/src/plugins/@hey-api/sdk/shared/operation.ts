@@ -38,9 +38,11 @@ const operationClassName = ({
   value: string;
 }) => {
   const name = stringCase({ case: 'PascalCase', value });
-  return typeof plugin.config.classNameBuilder === 'string'
-    ? plugin.config.classNameBuilder.replace('{{name}}', name)
-    : plugin.config.classNameBuilder(name);
+  return (
+    (typeof plugin.config.classNameBuilder === 'string'
+      ? plugin.config.classNameBuilder.replace('{{name}}', name)
+      : plugin.config.classNameBuilder(name)) || name
+  );
 };
 
 export const operationMethodName = ({
@@ -69,7 +71,7 @@ export const operationClasses = ({
 
   if (plugin.config.classStructure === 'auto' && operation.operationId) {
     classCandidates = operation.operationId.split(/[./]/).filter(Boolean);
-    if (classCandidates.length > 1) {
+    if (classCandidates.length >= 2) {
       const methodCandidate = classCandidates.pop()!;
       methodName = stringCase({
         case: 'camelCase',
@@ -80,15 +82,10 @@ export const operationClasses = ({
   }
 
   const rootClasses = plugin.config.instance
-    ? [plugin.config.instance as string]
+    ? [plugin.config.instance]
     : (operation.tags ?? ['default']);
 
   for (const rootClass of rootClasses) {
-    const finalClassName = operationClassName({
-      plugin,
-      value: className || rootClass,
-    });
-
     // Default path
     let path = [rootClass];
     if (className) {
@@ -102,7 +99,7 @@ export const operationClasses = ({
     }
 
     classNames.set(rootClass, {
-      className: finalClassName,
+      className: operationClassName({ plugin, value: className || rootClass }),
       methodName: methodName || operationMethodName({ operation, plugin }),
       path: path.map((value) => operationClassName({ plugin, value })),
     });

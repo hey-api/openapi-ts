@@ -248,10 +248,8 @@ export type Config = Plugin.Name<'@hey-api/sdk'> &
      * Set `instance` to create an instantiable SDK. Using `true` will use the
      * default instance name; in practice, you want to define your own by passing
      * a string value.
-     *
-     * @default false
      */
-    instance: string | boolean;
+    instance: string;
     /**
      * Customise the name of methods within the service. By default,
      * {@link IR.OperationObject.id} is used.

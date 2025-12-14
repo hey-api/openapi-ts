@@ -11,7 +11,7 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
     classStructure: 'auto',
     client: true,
     exportFromIndex: true,
-    instance: false,
+    instance: '',
     operationId: true,
     paramsStructure: 'grouped',
     response: 'body',
@@ -79,7 +79,7 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
 
       plugin.config.asClass = true;
     } else {
-      plugin.config.instance = false;
+      plugin.config.instance = '';
     }
 
     // Set default classNameBuilder based on client type
