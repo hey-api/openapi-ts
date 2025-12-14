@@ -1,4 +1,3 @@
-import type { IR } from '~/ir/types';
 import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
 import {
   createOperationComment,
@@ -8,28 +7,11 @@ import { $ } from '~/ts-dsl';
 
 import type { HeyApiSdkPlugin } from '../types';
 import { nuxtTypeComposable, nuxtTypeDefault } from './constants';
-import { operationParameters, operationStatements } from './operation';
-import { reservedJavaScriptKeywordsRegExp } from './regexp';
-
-const serviceFunctionIdentifier = ({
-  id,
-  operation,
-  plugin,
-}: {
-  id: string;
-  operation: IR.OperationObject;
-  plugin: HeyApiSdkPlugin['Instance'];
-}) => {
-  if (plugin.config.methodNameBuilder) {
-    return plugin.config.methodNameBuilder(operation);
-  }
-
-  if (id.match(reservedJavaScriptKeywordsRegExp)) {
-    return `${id}_`;
-  }
-
-  return id;
-};
+import {
+  operationMethodName,
+  operationParameters,
+  operationStatements,
+} from './operation';
 
 export const generateFlatSdk = ({
   plugin,
@@ -66,7 +48,7 @@ export const generateFlatSdk = ({
         operation,
         plugin,
       });
-      const symbol = plugin.registerSymbol({
+      const symbol = plugin.symbol(operationMethodName({ operation, plugin }), {
         meta: {
           category: 'sdk',
           path: event._path,
@@ -75,11 +57,6 @@ export const generateFlatSdk = ({
           tags: event.tags,
           tool: 'sdk',
         },
-        name: serviceFunctionIdentifier({
-          id: operation.id,
-          operation,
-          plugin,
-        }),
       });
       const node = $.const(symbol)
         .export()
