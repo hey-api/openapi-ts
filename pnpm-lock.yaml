@@ -140,8 +140,8 @@ importers:
         specifier: 2.1.28
         version: 2.1.28
       swr:
-        specifier: 2.3.6
-        version: 2.3.6(react@19.0.0)
+        specifier: 2.3.7
+        version: 2.3.7(react@19.0.0)
       typescript:
         specifier: 5.9.3
         version: 5.9.3
@@ -12914,8 +12914,8 @@ packages:
     engines: {node: '>=16'}
     hasBin: true
 
-  swr@2.3.6:
-    resolution: {integrity: sha512-wfHRmHWk/isGNMwlLGlZX5Gzz/uTgo0o2IRuTMcf4CPuPFJZlq0rDaKUx+ozB5nBOReNV1kiOyzMfj+MBMikLw==}
+  swr@2.3.7:
+    resolution: {integrity: sha512-ZEquQ82QvalqTxhBVv/DlAg2mbmUjF4UgpPg9wwk4ufb9rQnZXh1iKyyKBqV6bQGu1Ie7L1QwSYO07qFIa1p+g==}
     peerDependencies:
       react: ^16.11.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
@@ -29056,7 +29056,7 @@ snapshots:
       picocolors: 1.1.1
       sax: 1.4.1
 
-  swr@2.3.6(react@19.0.0):
+  swr@2.3.7(react@19.0.0):
     dependencies:
       dequal: 2.0.3
       react: 19.0.0

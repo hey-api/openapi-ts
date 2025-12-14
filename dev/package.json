@@ -19,7 +19,7 @@
     "@tanstack/svelte-query": "5.73.3",
     "@tanstack/vue-query": "5.73.3",
     "arktype": "2.1.28",
-    "swr": "2.3.6",
+    "swr": "2.3.7",
     "typescript": "5.9.3",
     "valibot": "1.2.0",
     "zod": "4.1.12"
