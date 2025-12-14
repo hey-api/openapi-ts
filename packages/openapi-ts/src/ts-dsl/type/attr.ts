@@ -8,13 +8,13 @@ import { isRef, ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { TypeTsDsl } from '../base';
+import { TsDsl } from '../base';
 import { TypeExprMixin } from '../mixins/type-expr';
 
 type Base = Symbol | string | MaybeTsDsl<ts.EntityName>;
 type Right = Symbol | string | ts.Identifier;
 
-const Mixed = TypeExprMixin(TypeTsDsl<ts.QualifiedName>);
+const Mixed = TypeExprMixin(TsDsl<ts.QualifiedName>);
 
 export class TypeAttrTsDsl extends Mixed {
   readonly '~dsl' = 'TypeAttrTsDsl';

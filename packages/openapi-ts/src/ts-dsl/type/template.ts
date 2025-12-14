@@ -2,9 +2,9 @@ import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { TypeTsDsl } from '../base';
+import { TsDsl } from '../base';
 
-const Mixed = TypeTsDsl<ts.TemplateLiteralTypeNode>;
+const Mixed = TsDsl<ts.TemplateLiteralTypeNode>;
 
 export class TypeTemplateTsDsl extends Mixed {
   readonly '~dsl' = 'TypeTemplateTsDsl';

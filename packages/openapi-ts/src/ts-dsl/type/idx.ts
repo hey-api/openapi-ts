@@ -2,7 +2,7 @@ import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { TypeTsDsl } from '../base';
+import { TsDsl } from '../base';
 import { TypeExprMixin } from '../mixins/type-expr';
 import { f } from '../utils/factories';
 
@@ -10,7 +10,7 @@ type Base = string | MaybeTsDsl<ts.TypeNode>;
 type Index = string | number | MaybeTsDsl<ts.TypeNode>;
 export type TypeIdxCtor = (base: Base, index: Index) => TypeIdxTsDsl;
 
-const Mixed = TypeExprMixin(TypeTsDsl<ts.IndexedAccessTypeNode>);
+const Mixed = TypeExprMixin(TsDsl<ts.IndexedAccessTypeNode>);
 
 export class TypeIdxTsDsl extends Mixed {
   readonly '~dsl' = 'TypeIdxTsDsl';

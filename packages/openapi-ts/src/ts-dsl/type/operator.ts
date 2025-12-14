@@ -2,7 +2,7 @@ import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { TypeTsDsl } from '../base';
+import { TsDsl } from '../base';
 import { f } from '../utils/factories';
 
 type Op =
@@ -12,7 +12,7 @@ type Op =
 type Type = string | MaybeTsDsl<ts.TypeNode>;
 export type TypeOperatorCtor = () => TypeOperatorTsDsl;
 
-const Mixed = TypeTsDsl<ts.TypeOperatorNode>;
+const Mixed = TsDsl<ts.TypeOperatorNode>;
 
 /**
  * Builds a TypeScript `TypeOperatorNode`, such as:
