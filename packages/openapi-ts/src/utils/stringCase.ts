@@ -3,7 +3,7 @@ import type { StringCase } from '~/types/case';
 const uppercaseRegExp = /[\p{Lu}]/u;
 const lowercaseRegExp = /[\p{Ll}]/u;
 const identifierRegExp = /([\p{Alpha}\p{N}_]|$)/u;
-const separatorsRegExp = /[_.\- `\\[\]{}\\/]+/;
+const separatorsRegExp = /[_.:\- `\\[\]{}\\/]+/;
 
 const leadingSeparatorsRegExp = new RegExp(`^${separatorsRegExp.source}`);
 const separatorsAndIdentifierRegExp = new RegExp(

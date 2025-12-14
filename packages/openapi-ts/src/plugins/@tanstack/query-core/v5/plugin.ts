@@ -83,11 +83,7 @@ export const handlerV5: PluginHandler = ({ plugin }) => {
     'operation',
     ({ operation }) => {
       const classes = sdkPlugin.config.asClass
-        ? operationClasses({
-            context: plugin.context,
-            operation,
-            plugin: sdkPlugin,
-          })
+        ? operationClasses({ operation, plugin: sdkPlugin })
         : undefined;
       const entry = classes ? classes.values().next().value : undefined;
       // TODO: this should use class graph to determine correct path string

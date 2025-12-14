@@ -136,7 +136,7 @@ const scenarios: ReadonlyArray<{
     SCREAMING_SNAKE_CASE: 'IO_K8S_APIMACHINERY_PKG_APIS_META_V1_DELETE_OPTIONS',
     camelCase: 'ioK8sApimachineryPkgApisMetaV1DeleteOptions',
     snake_case: 'io_k8s_apimachinery_pkg_apis_meta_v1_delete_options',
-    value: 'io.k8sApimachinery.pkg.apis.meta.v1.DeleteOptions',
+    value: 'io.k8sApimachinery.pkg.apis.meta:v1.DeleteOptions',
   },
   {
     PascalCase: 'GenericSchemaDuplicateIssue1SystemBoolean',
