@@ -52,7 +52,7 @@ const safeName = (name: string, reserved: ReservedList): string => {
   }
 
   if (reserved['~values'].has(sanitized)) {
-    sanitized = `_${sanitized}`;
+    sanitized = `${sanitized}_`;
   }
 
   return sanitized || '_';

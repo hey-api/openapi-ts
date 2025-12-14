@@ -12,16 +12,8 @@ import type { Field, Fields } from '../../client-core/bundle/params';
 import type { HeyApiSdkPlugin } from '../types';
 import { operationAuth } from './auth';
 import { nuxtTypeComposable, nuxtTypeDefault } from './constants';
-import { reservedJavaScriptKeywordsRegExp } from './regexp';
 import { getSignatureParameters } from './signature';
 import { createRequestValidator, createResponseValidator } from './validator';
-
-type Plugin = {
-  config: Pick<
-    HeyApiSdkPlugin['Instance']['config'],
-    'asClass' | 'classNameBuilder' | 'classStructure' | 'instance'
-  >;
-};
 
 interface ClassNameEntry {
   /**
@@ -42,7 +34,7 @@ const operationClassName = ({
   plugin,
   value,
 }: {
-  plugin: Plugin;
+  plugin: HeyApiSdkPlugin['Instance'];
   value: string;
 }) => {
   const name = stringCase({ case: 'PascalCase', value });
@@ -51,29 +43,13 @@ const operationClassName = ({
     : plugin.config.classNameBuilder(name);
 };
 
-const getOperationMethodName = ({
+export const operationMethodName = ({
   operation,
   plugin,
 }: {
   operation: IR.OperationObject;
-  plugin: {
-    config: Pick<
-      HeyApiSdkPlugin['Instance']['config'],
-      'asClass' | 'methodNameBuilder'
-    >;
-  };
-}) => {
-  if (plugin.config.methodNameBuilder) {
-    return plugin.config.methodNameBuilder(operation);
-  }
-
-  const handleIllegal = !plugin.config.asClass;
-  if (handleIllegal && operation.id.match(reservedJavaScriptKeywordsRegExp)) {
-    return `${operation.id}_`;
-  }
-
-  return operation.id;
-};
+  plugin: HeyApiSdkPlugin['Instance'];
+}) => plugin.config.methodNameBuilder?.(operation) || operation.id;
 
 /**
  * Returns a list of classes where this operation appears in the generated SDK.
@@ -83,7 +59,7 @@ export const operationClasses = ({
   plugin,
 }: {
   operation: IR.OperationObject;
-  plugin: Plugin;
+  plugin: HeyApiSdkPlugin['Instance'];
 }): Map<string, ClassNameEntry> => {
   const classNames = new Map<string, ClassNameEntry>();
 
@@ -127,7 +103,7 @@ export const operationClasses = ({
 
     classNames.set(rootClass, {
       className: finalClassName,
-      methodName: methodName || getOperationMethodName({ operation, plugin }),
+      methodName: methodName || operationMethodName({ operation, plugin }),
       path: path.map((value) => operationClassName({ plugin, value })),
     });
   }
