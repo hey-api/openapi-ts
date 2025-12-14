@@ -9,347 +9,347 @@ describe('safeRuntimeName', () => {
   }> = [
     {
       name: 'document',
-      output: '_document',
+      output: 'document_',
     },
     {
       name: 'history',
-      output: '_history',
+      output: 'history_',
     },
     {
       name: 'location',
-      output: '_location',
+      output: 'location_',
     },
     {
       name: 'navigator',
-      output: '_navigator',
+      output: 'navigator_',
     },
     {
       name: 'window',
-      output: '_window',
+      output: 'window_',
     },
     {
       name: 'console',
-      output: '_console',
+      output: 'console_',
     },
     {
       name: 'Array',
-      output: '_Array',
+      output: 'Array_',
     },
     {
       name: 'Date',
-      output: '_Date',
+      output: 'Date_',
     },
     {
       name: 'Error',
-      output: '_Error',
+      output: 'Error_',
     },
     {
       name: 'Function',
-      output: '_Function',
+      output: 'Function_',
     },
     {
       name: 'JSON',
-      output: '_JSON',
+      output: 'JSON_',
     },
     {
       name: 'Map',
-      output: '_Map',
+      output: 'Map_',
     },
     {
       name: 'Math',
-      output: '_Math',
+      output: 'Math_',
     },
     {
       name: 'Object',
-      output: '_Object',
+      output: 'Object_',
     },
     {
       name: 'Promise',
-      output: '_Promise',
+      output: 'Promise_',
     },
     {
       name: 'RegExp',
-      output: '_RegExp',
+      output: 'RegExp_',
     },
     {
       name: 'Set',
-      output: '_Set',
+      output: 'Set_',
     },
     {
       name: 'WeakMap',
-      output: '_WeakMap',
+      output: 'WeakMap_',
     },
     {
       name: 'WeakSet',
-      output: '_WeakSet',
+      output: 'WeakSet_',
     },
     {
       name: 'arguments',
-      output: '_arguments',
+      output: 'arguments_',
     },
     {
       name: 'async',
-      output: '_async',
+      output: 'async_',
     },
     {
       name: 'await',
-      output: '_await',
+      output: 'await_',
     },
     {
       name: 'break',
-      output: '_break',
+      output: 'break_',
     },
     {
       name: 'case',
-      output: '_case',
+      output: 'case_',
     },
     {
       name: 'catch',
-      output: '_catch',
+      output: 'catch_',
     },
     {
       name: 'class',
-      output: '_class',
+      output: 'class_',
     },
     {
       name: 'const',
-      output: '_const',
+      output: 'const_',
     },
     {
       name: 'continue',
-      output: '_continue',
+      output: 'continue_',
     },
     {
       name: 'debugger',
-      output: '_debugger',
+      output: 'debugger_',
     },
     {
       name: 'default',
-      output: '_default',
+      output: 'default_',
     },
     {
       name: 'delete',
-      output: '_delete',
+      output: 'delete_',
     },
     {
       name: 'do',
-      output: '_do',
+      output: 'do_',
     },
     {
       name: 'else',
-      output: '_else',
+      output: 'else_',
     },
     {
       name: 'enum',
-      output: '_enum',
+      output: 'enum_',
     },
     {
       name: 'eval',
-      output: '_eval',
+      output: 'eval_',
     },
     {
       name: 'export',
-      output: '_export',
+      output: 'export_',
     },
     {
       name: 'extends',
-      output: '_extends',
+      output: 'extends_',
     },
     {
       name: 'false',
-      output: '_false',
+      output: 'false_',
     },
     {
       name: 'finally',
-      output: '_finally',
+      output: 'finally_',
     },
     {
       name: 'for',
-      output: '_for',
+      output: 'for_',
     },
     {
       name: 'from',
-      output: '_from',
+      output: 'from_',
     },
     {
       name: 'function',
-      output: '_function',
+      output: 'function_',
     },
     {
       name: 'if',
-      output: '_if',
+      output: 'if_',
     },
     {
       name: 'implements',
-      output: '_implements',
+      output: 'implements_',
     },
     {
       name: 'import',
-      output: '_import',
+      output: 'import_',
     },
     {
       name: 'in',
-      output: '_in',
+      output: 'in_',
     },
     {
       name: 'instanceof',
-      output: '_instanceof',
+      output: 'instanceof_',
     },
     {
       name: 'interface',
-      output: '_interface',
+      output: 'interface_',
     },
     {
       name: 'let',
-      output: '_let',
+      output: 'let_',
     },
     {
       name: 'new',
-      output: '_new',
+      output: 'new_',
     },
     {
       name: 'null',
-      output: '_null',
+      output: 'null_',
     },
     {
       name: 'package',
-      output: '_package',
+      output: 'package_',
     },
     {
       name: 'private',
-      output: '_private',
+      output: 'private_',
     },
     {
       name: 'protected',
-      output: '_protected',
+      output: 'protected_',
     },
     {
       name: 'public',
-      output: '_public',
+      output: 'public_',
     },
     {
       name: 'return',
-      output: '_return',
+      output: 'return_',
     },
     {
       name: 'static',
-      output: '_static',
+      output: 'static_',
     },
     {
       name: 'super',
-      output: '_super',
+      output: 'super_',
     },
     {
       name: 'switch',
-      output: '_switch',
+      output: 'switch_',
     },
     {
       name: 'this',
-      output: '_this',
+      output: 'this_',
     },
     {
       name: 'throw',
-      output: '_throw',
+      output: 'throw_',
     },
     {
       name: 'true',
-      output: '_true',
+      output: 'true_',
     },
     {
       name: 'try',
-      output: '_try',
+      output: 'try_',
     },
     {
       name: 'typeof',
-      output: '_typeof',
+      output: 'typeof_',
     },
     {
       name: 'var',
-      output: '_var',
+      output: 'var_',
     },
     {
       name: 'void',
-      output: '_void',
+      output: 'void_',
     },
     {
       name: 'while',
-      output: '_while',
+      output: 'while_',
     },
     {
       name: 'with',
-      output: '_with',
+      output: 'with_',
     },
     {
       name: 'yield',
-      output: '_yield',
+      output: 'yield_',
     },
     {
       name: 'global',
-      output: '_global',
+      output: 'global_',
     },
     {
       name: 'process',
-      output: '_process',
+      output: 'process_',
     },
     {
       name: 'Buffer',
-      output: '_Buffer',
+      output: 'Buffer_',
     },
     {
       name: 'any',
-      output: '_any',
+      output: 'any_',
     },
     {
       name: 'as',
-      output: '_as',
+      output: 'as_',
     },
     {
       name: 'bigint',
-      output: '_bigint',
+      output: 'bigint_',
     },
     {
       name: 'boolean',
-      output: '_boolean',
+      output: 'boolean_',
     },
     {
       name: 'namespace',
-      output: '_namespace',
+      output: 'namespace_',
     },
     {
       name: 'never',
-      output: '_never',
+      output: 'never_',
     },
     {
       name: 'null',
-      output: '_null',
+      output: 'null_',
     },
     {
       name: 'number',
-      output: '_number',
+      output: 'number_',
     },
     {
       name: 'string',
-      output: '_string',
+      output: 'string_',
     },
     {
       name: 'symbol',
-      output: '_symbol',
+      output: 'symbol_',
     },
     {
       name: 'type',
-      output: '_type',
+      output: 'type_',
     },
     {
       name: 'undefined',
-      output: '_undefined',
+      output: 'undefined_',
     },
     {
       name: 'unknown',
-      output: '_unknown',
+      output: 'unknown_',
     },
     {
       name: 'void',
-      output: '_void',
+      output: 'void_',
     },
   ];
 
