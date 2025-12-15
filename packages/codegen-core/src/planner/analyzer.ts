@@ -3,21 +3,17 @@ import type { INode } from '../nodes/node';
 import { fromRef, isRef, ref } from '../refs/refs';
 import type { Ref } from '../refs/types';
 import type { Symbol } from '../symbols/symbol';
-import type { IAnalysisContext, Input, NameScopes, Scope } from './types';
-
-const createScope = (parent?: Scope): Scope => ({
-  children: [],
-  localNames: new Map(),
-  parent,
-  symbols: [],
-});
+import type { NameScopes, Scope } from './scope';
+import { createScope } from './scope';
+import type { IAnalysisContext, Input } from './types';
 
 export class AnalysisContext implements IAnalysisContext {
+  scope: Scope;
   scopes: Scope = createScope();
   symbol?: Symbol;
-  scope: Scope = this.scopes;
 
   constructor(symbol?: Symbol) {
+    this.scope = this.scopes;
     this.symbol = symbol;
   }
 
@@ -62,7 +58,7 @@ export class AnalysisContext implements IAnalysisContext {
   }
 
   pushScope(): void {
-    const scope = createScope(this.scope);
+    const scope = createScope({ parent: this.scope });
     this.scope.children.push(scope);
     this.scope = scope;
   }

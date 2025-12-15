@@ -1,4 +1,10 @@
-import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
+import type {
+  AnalysisContext,
+  AstContext,
+  Ref,
+  Symbol,
+} from '@hey-api/codegen-core';
+import { ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl } from '../base';
@@ -19,6 +25,8 @@ import { TypeParamsMixin } from '../mixins/type-params';
 import { TypeReturnsMixin } from '../mixins/type-returns';
 import { BlockTsDsl } from '../stmt/block';
 import { TokenTsDsl } from '../token';
+
+export type MethodName = Symbol | string;
 
 const Mixed = AbstractMixin(
   AsyncMixin(
@@ -49,15 +57,17 @@ const Mixed = AbstractMixin(
 export class MethodTsDsl extends Mixed {
   readonly '~dsl' = 'MethodTsDsl';
 
-  protected name: string;
+  protected name: Ref<MethodName>;
 
-  constructor(name: string, fn?: (m: MethodTsDsl) => void) {
+  constructor(name: MethodName, fn?: (m: MethodTsDsl) => void) {
     super();
-    this.name = name;
+    this.name = ref(name);
     fn?.(this);
   }
 
   override analyze(ctx: AnalysisContext): void {
+    ctx.analyze(this.name);
+
     ctx.pushScope();
     try {
       super.analyze(ctx);
@@ -70,7 +80,7 @@ export class MethodTsDsl extends Mixed {
     const node = ts.factory.createMethodDeclaration(
       [...this.$decorators(ctx), ...this.modifiers],
       undefined,
-      this.name,
+      this.$node(ctx, this.name) as ts.PropertyName,
       this._optional ? this.$node(ctx, new TokenTsDsl().optional()) : undefined,
       this.$generics(ctx),
       this.$params(ctx),

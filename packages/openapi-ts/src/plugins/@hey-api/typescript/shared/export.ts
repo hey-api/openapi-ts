@@ -6,7 +6,7 @@ import { createSchemaComment } from '~/plugins/shared/utils/schema';
 import type { MaybeTsDsl, TypeTsDsl } from '~/ts-dsl';
 import { $, regexp } from '~/ts-dsl';
 import { pathToJsonPointer, refToName } from '~/utils/ref';
-import { stringCase } from '~/utils/stringCase';
+import { toCase } from '~/utils/to-case';
 
 import type { HeyApiTypeScriptPlugin } from '../types';
 import type { IrSchemaToAstOptions } from './types';
@@ -52,10 +52,8 @@ const schemaToEnumObject = ({
     }
 
     if (key) {
-      key = stringCase({
-        case: plugin.config.enums.case,
+      key = toCase(key, plugin.config.enums.case, {
         stripLeadingSeparators: false,
-        value: key,
       });
 
       regexp.number.lastIndex = 0;

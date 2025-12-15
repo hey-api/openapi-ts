@@ -12,7 +12,8 @@ import type { Symbol } from '../symbols/symbol';
 import type { SymbolKind } from '../symbols/types';
 import type { AnalysisContext } from './analyzer';
 import { Analyzer } from './analyzer';
-import type { AssignOptions, NameScopes } from './types';
+import type { AssignOptions, Scope } from './scope';
+import { createScope } from './scope';
 
 const isTypeOnlyKind = (kind: SymbolKind) =>
   kind === 'type' || kind === 'interface';
@@ -76,7 +77,7 @@ export class Planner {
     this.analyzer.analyze(this.project.nodes.all(), (ctx, node) => {
       const symbol = node.symbol;
       if (!symbol) return;
-      this.assignTopLevelName(symbol, ctx);
+      this.assignTopLevelName({ ctx, symbol });
     });
 
     this.analyzer.analyze(this.project.nodes.all(), (ctx, node) => {
@@ -86,8 +87,11 @@ export class Planner {
         const dep = fromRef(dependency);
         // top-level or external symbol
         if (dep.file) return;
-        this.assignLocalName(dep, ctx, {
-          scopesToUpdate: [file.allNames],
+        this.assignLocalName({
+          ctx,
+          file,
+          scopesToUpdate: [createScope({ localNames: file.allNames })],
+          symbol: dep,
         });
       });
     });
@@ -166,7 +170,7 @@ export class Planner {
         });
         exp.setFile(target);
         sourceFile.set(exp.id, file);
-        this.assignTopLevelName(exp, ctx);
+        this.assignTopLevelName({ ctx, symbol: exp });
 
         let entry = fileMap.get(exp.finalName);
         if (!entry) {
@@ -253,7 +257,7 @@ export class Planner {
         if (!dep.file || dep.file.id === file.id) return;
 
         if (dep.external) {
-          this.assignTopLevelName(dep, ctx);
+          this.assignTopLevelName({ ctx, symbol: dep });
         }
 
         const fromFileId = dep.file.id;
@@ -272,8 +276,10 @@ export class Planner {
             name: dep.finalName,
           });
           imp.setFile(file);
-          this.assignTopLevelName(imp, ctx, {
-            scope: imp.file!.allNames,
+          this.assignTopLevelName({
+            ctx,
+            scope: createScope({ localNames: imp.file!.allNames }),
+            symbol: imp,
           });
           entry = {
             dep,
@@ -334,17 +340,22 @@ export class Planner {
    * Supports optional overrides for the naming scope and scopes to update.
    */
   private assignTopLevelName(
-    symbol: Symbol,
-    ctx: AnalysisContext,
-    options?: Partial<AssignOptions>,
+    args: Partial<AssignOptions> & {
+      ctx: AnalysisContext;
+      symbol: Symbol;
+    },
   ): void {
-    if (!symbol.file) return;
-    this.assignSymbolName(symbol, {
-      scope: options?.scope ?? symbol.file.topLevelNames,
+    if (!args.symbol.file) return;
+    this.assignSymbolName({
+      ...args,
+      file: args.symbol.file,
+      scope:
+        args?.scope ??
+        createScope({ localNames: args.symbol.file.topLevelNames }),
       scopesToUpdate: [
-        symbol.file.allNames,
-        ctx.scopes.localNames,
-        ...(options?.scopesToUpdate ?? []),
+        createScope({ localNames: args.symbol.file.allNames }),
+        args.ctx.scopes,
+        ...(args?.scopesToUpdate ?? []),
       ],
     });
   }
@@ -357,14 +368,17 @@ export class Planner {
    * Updates all provided name scopes accordingly.
    */
   private assignLocalName(
-    symbol: Symbol,
-    ctx: AnalysisContext,
-    options: Pick<Partial<AssignOptions>, 'scope'> &
-      Pick<AssignOptions, 'scopesToUpdate'>,
+    args: Pick<Partial<AssignOptions>, 'scope'> &
+      Pick<AssignOptions, 'scopesToUpdate'> & {
+        ctx: AnalysisContext;
+        /** The file the symbol belongs to. */
+        file: File;
+        symbol: Symbol;
+      },
   ): void {
-    this.assignSymbolName(symbol, {
-      scope: options.scope ?? ctx.localNames(ctx.scope),
-      scopesToUpdate: options.scopesToUpdate,
+    this.assignSymbolName({
+      ...args,
+      scope: args.scope ?? args.ctx.scope,
     });
   }
 
@@ -375,20 +389,29 @@ export class Planner {
    *
    * Updates all specified name scopes with the assigned final name.
    */
-  private assignSymbolName(symbol: Symbol, options: AssignOptions): void {
+  private assignSymbolName(
+    args: AssignOptions & {
+      ctx: AnalysisContext;
+      /** The file the symbol belongs to. */
+      file: File;
+      symbol: Symbol;
+    },
+  ): void {
+    const { ctx, file, scope, scopesToUpdate, symbol } = args;
     if (this.cacheResolvedNames.has(symbol.id)) return;
 
     const baseName = symbol.name;
     let finalName = symbol.nameSanitizer?.(baseName) ?? baseName;
     let attempt = 1;
 
+    const localNames = ctx.localNames(scope);
     while (true) {
-      const kinds = [...(options.scope.get(finalName) ?? [])];
+      const kinds = [...(localNames.get(finalName) ?? [])];
 
       const ok = kinds.every((kind) => canShareName(symbol.kind, kind));
       if (ok) break;
 
-      const language = symbol.node?.language || symbol.file?.language;
+      const language = symbol.node?.language || file.language;
       const resolver =
         (language ? this.project.nameConflictResolvers[language] : undefined) ??
         this.project.defaultNameConflictResolver;
@@ -403,7 +426,7 @@ export class Planner {
 
     symbol.setFinalName(finalName);
     this.cacheResolvedNames.add(symbol.id);
-    const updateScopes = [options.scope, ...options.scopesToUpdate];
+    const updateScopes = [scope, ...scopesToUpdate];
     for (const scope of updateScopes) {
       this.updateScope(symbol, scope);
     }
@@ -414,11 +437,11 @@ export class Planner {
    *
    * Ensures the name scope tracks all kinds associated with a given name.
    */
-  private updateScope(symbol: Symbol, scope: NameScopes): void {
+  private updateScope(symbol: Symbol, scope: Scope): void {
     const name = symbol.finalName;
-    const cache = scope.get(name) ?? new Set<SymbolKind>();
+    const cache = scope.localNames.get(name) ?? new Set();
     cache.add(symbol.kind);
-    scope.set(name, cache);
+    scope.localNames.set(name, cache);
   }
 
   private symbolToFileIn(symbol: Symbol): IFileIn {

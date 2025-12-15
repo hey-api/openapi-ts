@@ -18,6 +18,7 @@ import { safeRuntimeName } from '../utils/name';
 import type { FieldName } from './field';
 import { FieldTsDsl } from './field';
 import { InitTsDsl } from './init';
+import type { MethodName } from './method';
 import { MethodTsDsl } from './method';
 
 type Base = Symbol | string;
@@ -63,6 +64,11 @@ export class ClassTsDsl extends Mixed {
     }
   }
 
+  /** Returns true if the class has any members. */
+  get hasBody(): boolean {
+    return this.body.length > 0;
+  }
+
   /** Adds one or more class members (fields, methods, etc.). */
   do(...items: Body): this {
     this.body.push(...items);
@@ -83,14 +89,15 @@ export class ClassTsDsl extends Mixed {
   }
 
   /** Adds a class constructor. */
-  init(fn?: (i: InitTsDsl) => void): this {
-    const i = new InitTsDsl(fn);
+  init(fn?: InitTsDsl | ((i: InitTsDsl) => void)): this {
+    const i =
+      typeof fn === 'function' ? new InitTsDsl(fn) : fn || new InitTsDsl();
     this.body.push(i);
     return this;
   }
 
   /** Adds a class method. */
-  method(name: string, fn?: (m: MethodTsDsl) => void): this {
+  method(name: MethodName, fn?: (m: MethodTsDsl) => void): this {
     const m = new MethodTsDsl(name, fn);
     this.body.push(m);
     return this;

@@ -1,4 +1,10 @@
-import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
+import type {
+  AnalysisContext,
+  AstContext,
+  Ref,
+  Symbol,
+} from '@hey-api/codegen-core';
+import { ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl } from '../base';
@@ -16,7 +22,7 @@ import {
 import { ParamMixin } from '../mixins/param';
 import { BlockTsDsl } from '../stmt/block';
 
-export type SetterName = string | ts.PropertyName;
+export type SetterName = Symbol | string | ts.PropertyName;
 
 const Mixed = AbstractMixin(
   AsyncMixin(
@@ -39,15 +45,17 @@ const Mixed = AbstractMixin(
 export class SetterTsDsl extends Mixed {
   readonly '~dsl' = 'SetterTsDsl';
 
-  protected name: SetterName;
+  protected name: Ref<SetterName>;
 
   constructor(name: SetterName, fn?: (s: SetterTsDsl) => void) {
     super();
-    this.name = name;
+    this.name = ref(name);
     fn?.(this);
   }
 
   override analyze(ctx: AnalysisContext): void {
+    ctx.analyze(this.name);
+
     ctx.pushScope();
     try {
       super.analyze(ctx);
@@ -59,7 +67,7 @@ export class SetterTsDsl extends Mixed {
   override toAst(ctx: AstContext) {
     const node = ts.factory.createSetAccessorDeclaration(
       [...this.$decorators(ctx), ...this.modifiers],
-      this.name,
+      this.$node(ctx, this.name) as ts.PropertyName,
       this.$params(ctx),
       this.$node(ctx, new BlockTsDsl(...this._do).pretty()),
     );

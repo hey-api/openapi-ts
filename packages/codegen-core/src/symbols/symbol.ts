@@ -337,7 +337,11 @@ export class Symbol {
    * Returns a debug‑friendly string representation identifying the symbol.
    */
   toString(): string {
-    return `[Symbol ${this.name}#${this.id}]`;
+    const canonical = this.canonical;
+    if (canonical._finalName && canonical._finalName !== canonical._name) {
+      return `[Symbol ${canonical._name} → ${canonical._finalName}#${canonical.id}]`;
+    }
+    return `[Symbol ${canonical._name}#${canonical.id}]`;
   }
 
   /**

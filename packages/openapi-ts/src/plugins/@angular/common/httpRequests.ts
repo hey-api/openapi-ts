@@ -8,7 +8,7 @@ import {
   isOperationOptionsRequired,
 } from '~/plugins/shared/utils/operation';
 import { $ } from '~/ts-dsl';
-import { stringCase } from '~/utils/stringCase';
+import { toCase } from '~/utils/to-case';
 
 import type { AngularCommonPlugin } from './types';
 
@@ -107,9 +107,7 @@ const generateAngularClassRequests = ({
         generateClass(childClass);
 
         currentClass.nodes.push(
-          $.field(
-            stringCase({ case: 'camelCase', value: childClass.className }),
-          ).assign(
+          $.field(toCase(childClass.className, 'camelCase')).assign(
             $.new(
               buildName({
                 config: {
