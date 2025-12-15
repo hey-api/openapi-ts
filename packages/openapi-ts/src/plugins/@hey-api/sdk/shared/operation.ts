@@ -6,7 +6,7 @@ import type { IR } from '~/ir/types';
 import { sanitizeNamespaceIdentifier } from '~/openApi/common/parser/sanitize';
 import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
 import { $ } from '~/ts-dsl';
-import { stringCase } from '~/utils/stringCase';
+import { toCase } from '~/utils/to-case';
 
 import type { Field, Fields } from '../../client-core/bundle/params';
 import type { HeyApiSdkPlugin } from '../types';
@@ -30,14 +30,15 @@ interface ClassNameEntry {
   path: ReadonlyArray<string>;
 }
 
-const operationClassName = ({
+export const operationClassName = ({
   plugin,
   value,
 }: {
   plugin: HeyApiSdkPlugin['Instance'];
   value: string;
 }) => {
-  const name = stringCase({ case: 'PascalCase', value });
+  // TODO: expose casing option
+  const name = toCase(value, 'PascalCase');
   return (
     (typeof plugin.config.classNameBuilder === 'string'
       ? plugin.config.classNameBuilder.replace('{{name}}', name)
@@ -48,10 +49,20 @@ const operationClassName = ({
 export const operationMethodName = ({
   operation,
   plugin,
+  value,
 }: {
   operation: IR.OperationObject;
   plugin: HeyApiSdkPlugin['Instance'];
-}) => plugin.config.methodNameBuilder?.(operation) || operation.id;
+  value?: string;
+}) => {
+  // TODO: expose casing option
+  const name = toCase(value || operation.id, 'camelCase');
+  return (
+    (typeof plugin.config.methodNameBuilder === 'string'
+      ? plugin.config.methodNameBuilder.replace('{{name}}', name)
+      : plugin.config.methodNameBuilder?.(name, operation)) || name
+  );
+};
 
 /**
  * Returns a list of classes where this operation appears in the generated SDK.
@@ -73,10 +84,10 @@ export const operationClasses = ({
     classCandidates = operation.operationId.split(/[./]/).filter(Boolean);
     if (classCandidates.length >= 2) {
       const methodCandidate = classCandidates.pop()!;
-      methodName = stringCase({
-        case: 'camelCase',
-        value: sanitizeNamespaceIdentifier(methodCandidate),
-      });
+      methodName = toCase(
+        sanitizeNamespaceIdentifier(methodCandidate),
+        'camelCase',
+      );
       className = classCandidates.pop()!;
     }
   }

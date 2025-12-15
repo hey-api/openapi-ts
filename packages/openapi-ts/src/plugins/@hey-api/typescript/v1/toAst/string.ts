@@ -3,7 +3,7 @@ import type { SymbolMeta } from '@hey-api/codegen-core';
 import type { SchemaWithType } from '~/plugins';
 import type { TypeTsDsl } from '~/ts-dsl';
 import { $ } from '~/ts-dsl';
-import { stringCase } from '~/utils/stringCase';
+import { toCase } from '~/utils/to-case';
 
 import type { IrSchemaToAstOptions } from '../../shared/types';
 
@@ -66,10 +66,7 @@ export const stringToAst = ({
         const symbolTypeId = plugin.referenceSymbol(queryTypeId);
         const symbolTypeName = plugin.registerSymbol({
           meta: query,
-          name: stringCase({
-            case: plugin.config.case,
-            value: `${type}_id`,
-          }),
+          name: toCase(`${type}_id`, plugin.config.case),
         });
         const node = $.type
           .alias(symbolTypeName)

@@ -12,6 +12,7 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
     client: true,
     exportFromIndex: true,
     instance: '',
+    methodNameBuilder: '{{name}}',
     operationId: true,
     paramsStructure: 'grouped',
     response: 'body',

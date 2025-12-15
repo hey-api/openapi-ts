@@ -1,7 +1,7 @@
 import { registryName } from '~/plugins/@hey-api/sdk/shared/class';
 import { operationClasses } from '~/plugins/@hey-api/sdk/shared/operation';
 import { $ } from '~/ts-dsl';
-import { stringCase } from '~/utils/stringCase';
+import { toCase } from '~/utils/to-case';
 
 import type { PluginHandler } from '../types';
 import { createInfiniteQueryOptions } from './infiniteQueryOptions';
@@ -100,10 +100,7 @@ export const handlerV5: PluginHandler = ({ plugin }) => {
           e.attr(registryName).attr('get').call(),
         );
         for (const className of entry.path.slice(1)) {
-          const cls = stringCase({
-            case: 'camelCase',
-            value: className,
-          });
+          const cls = toCase(className, 'camelCase');
           queryFn = queryFn.attr(cls);
         }
         queryFn = queryFn.attr(entry.methodName);

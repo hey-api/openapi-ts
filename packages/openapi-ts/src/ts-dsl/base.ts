@@ -135,10 +135,10 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements Node<T> {
     if (value instanceof Array) {
       return value.map((item) => {
         if (isRef(item)) item = fromRef(item);
-        return this.unwrap(item, ctx);
+        return this.unwrap(ctx, item);
       }) as NodeOfMaybe<I>;
     }
-    return this.unwrap(value as any, ctx) as NodeOfMaybe<I>;
+    return this.unwrap(ctx, value as any) as NodeOfMaybe<I>;
   }
 
   protected $type<I>(
@@ -174,13 +174,13 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements Node<T> {
     if (value instanceof Array) {
       return value.map((item) => this.$type(ctx, item, args)) as TypeOfMaybe<I>;
     }
-    return this.unwrap(value as any, ctx) as TypeOfMaybe<I>;
+    return this.unwrap(ctx, value as any) as TypeOfMaybe<I>;
   }
 
   /** Unwraps nested nodes into raw TypeScript AST. */
   private unwrap<I>(
-    value: I,
     ctx: AstContext,
+    value: I,
   ): I extends TsDsl<infer N> ? N : I {
     return (isNode(value) ? value.toAst(ctx) : value) as I extends TsDsl<
       infer N

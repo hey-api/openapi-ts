@@ -277,7 +277,7 @@ export default defineConfig(() => {
           // asClass: true,
           // auth: false,
           // classNameBuilder: '{{name}}',
-          // classNameBuilder: '{{name}}Service',
+          classNameBuilder: '{{name}}Service',
           // classStructure: 'off',
           // client: false,
           // getSignature: ({ fields, signature, operation }) => {
@@ -285,7 +285,8 @@ export default defineConfig(() => {
           //   fields.unwrap('path')
           // },
           // include...
-          instance: true,
+          instance: 'Root',
+          methodNameBuilder: '{{name}}Methods',
           name: '@hey-api/sdk',
           // operationId: false,
           // paramsStructure: 'flat',
@@ -304,10 +305,7 @@ export default defineConfig(() => {
             symbols: {
               // getFilePath: (symbol) => {
               //   if (symbol.name) {
-              //     return utils.stringCase({
-              //       case: 'camelCase',
-              //       value: symbol.name,
-              //     });
+              //     return utils.toCase(symbol.name, 'camelCase');
               //   }
               //   return;
               // },
@@ -351,7 +349,7 @@ export default defineConfig(() => {
             // name: '{{name}}MO',
             // name: 'options',
           },
-          name: '@tanstack/react-query',
+          // name: '@tanstack/react-query',
           queryKeys: {
             // name: '{{name}}QK',
             // name: 'options',
@@ -421,10 +419,7 @@ export default defineConfig(() => {
             symbols: {
               // getFilePath: (symbol) => {
               //   if (symbol.name) {
-              //     return utils.stringCase({
-              //       case: 'camelCase',
-              //       value: symbol.name,
-              //     });
+              //     return utils.toCase(symbol.name, 'camelCase');
               //   }
               //   return;
               // },
@@ -615,7 +610,7 @@ export default defineConfig(() => {
         {
           exportFromIndex: true,
           // mutationOptions: '{{name}}Mutationssss',
-          name: '@pinia/colada',
+          // name: '@pinia/colada',
           // queryOptions: {
           //   name: '{{name}}Queryyyyy',
           // },

@@ -5,7 +5,7 @@ import { fileBrand } from '../brands';
 import { debug } from '../debug';
 import type { Language } from '../languages/types';
 import type { INode } from '../nodes/node';
-import type { NameScopes } from '../planner/types';
+import type { NameScopes } from '../planner/scope';
 import type { IProject } from '../project/types';
 import type { Renderer } from '../renderer';
 import type { IFileIn } from './types';
