@@ -84,7 +84,7 @@ export const createClient = (config: Config = {}): Client => {
         data: getValidRequestBody(opts),
         headers: opts.headers as RawAxiosRequestHeaders,
         // let `paramsSerializer()` handle query params if it exists
-        params: opts.paramsSerializer ? opts.query : undefined,
+        params: !opts.paramsSerializer ? opts.query : undefined,
         url,
       });
 
