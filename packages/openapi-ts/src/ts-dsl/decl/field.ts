@@ -1,8 +1,10 @@
 import type {
   AnalysisContext,
   AstContext,
+  Ref,
   Symbol,
 } from '@hey-api/codegen-core';
+import { ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl, TypeTsDsl } from '../base';
@@ -43,17 +45,18 @@ const Mixed = DecoratorMixin(
 export class FieldTsDsl extends Mixed {
   readonly '~dsl' = 'FieldTsDsl';
 
-  protected name: FieldName;
+  protected name: Ref<FieldName>;
   protected _type?: TypeTsDsl;
 
   constructor(name: FieldName, fn?: (f: FieldTsDsl) => void) {
     super();
-    this.name = name;
+    this.name = ref(name);
     fn?.(this);
   }
 
   override analyze(ctx: AnalysisContext): void {
     super.analyze(ctx);
+    ctx.analyze(this.name);
     ctx.analyze(this._type);
   }
 

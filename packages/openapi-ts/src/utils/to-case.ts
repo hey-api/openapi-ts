@@ -3,7 +3,7 @@ import type { StringCase } from '~/types/case';
 const uppercaseRegExp = /[\p{Lu}]/u;
 const lowercaseRegExp = /[\p{Ll}]/u;
 const identifierRegExp = /([\p{Alpha}\p{N}_]|$)/u;
-const separatorsRegExp = /[_.:\- `\\[\]{}\\/]+/;
+const separatorsRegExp = /[_.:\- `\\[\](){}\\/]+/;
 
 const leadingSeparatorsRegExp = new RegExp(`^${separatorsRegExp.source}`);
 const separatorsAndIdentifierRegExp = new RegExp(
@@ -15,32 +15,25 @@ const numbersAndIdentifierRegExp = new RegExp(
   'gu',
 );
 
-const preserveCase = ({
-  case: _case,
-  string,
-}: {
-  readonly case: StringCase;
-  string: string;
-}) => {
+const preserveCase = (value: string, casing: StringCase) => {
   let isLastCharLower = false;
   let isLastCharUpper = false;
   let isLastLastCharUpper = false;
   let isLastLastCharPreserved = false;
 
   const separator =
-    _case === 'snake_case' || _case === 'SCREAMING_SNAKE_CASE' ? '_' : '-';
+    casing === 'snake_case' || casing === 'SCREAMING_SNAKE_CASE' ? '_' : '-';
 
-  for (let index = 0; index < string.length; index++) {
-    const character = string[index]!;
-    isLastLastCharPreserved =
-      index > 2 ? string[index - 3] === separator : true;
+  for (let index = 0; index < value.length; index++) {
+    const character = value[index]!;
+    isLastLastCharPreserved = index > 2 ? value[index - 3] === separator : true;
 
     let nextIndex = index + 1;
-    let nextCharacter = string[nextIndex];
+    let nextCharacter = value[nextIndex];
     separatorsRegExp.lastIndex = 0;
     while (nextCharacter && separatorsRegExp.test(nextCharacter)) {
       nextIndex += 1;
-      nextCharacter = string[nextIndex];
+      nextCharacter = value[nextIndex];
     }
     const isSeparatorBeforeNextCharacter = nextIndex !== index + 1;
 
@@ -55,7 +48,7 @@ const preserveCase = ({
           lowercaseRegExp.test(nextCharacter)))
     ) {
       // insert separator behind character
-      string = `${string.slice(0, index)}${separator}${string.slice(index)}`;
+      value = `${value.slice(0, index)}${separator}${value.slice(index)}`;
       index++;
       isLastLastCharUpper = isLastCharUpper;
       isLastCharLower = false;
@@ -72,7 +65,7 @@ const preserveCase = ({
       )
     ) {
       // insert separator 2 characters behind
-      string = `${string.slice(0, index - 1)}${separator}${string.slice(index - 1)}`;
+      value = `${value.slice(0, index - 1)}${separator}${value.slice(index - 1)}`;
       isLastLastCharUpper = isLastCharUpper;
       isLastCharLower = true;
       isLastCharUpper = false;
@@ -87,29 +80,33 @@ const preserveCase = ({
     }
   }
 
-  return string;
+  return value;
 };
 
-export const stringCase = ({
-  case: _case,
-  stripLeadingSeparators = true,
-  value,
-}: {
-  readonly case: StringCase | undefined;
-  /**
-   * If leading separators have a semantic meaning, we might not want to
-   * remove them.
-   */
-  stripLeadingSeparators?: boolean;
-  value: string;
-}): string => {
+/**
+ * Converts the given string to the specified casing.
+ *
+ * @param value - The string to convert
+ * @param casing - The target casing
+ * @param options - Additional options
+ * @returns The converted string
+ */
+export const toCase = (
+  value: string,
+  casing: StringCase | undefined,
+  options: {
+    /**
+     * If leading separators have a semantic meaning, we might not want to
+     * remove them.
+     */
+    stripLeadingSeparators?: boolean;
+  } = {},
+) => {
+  const stripLeadingSeparators = options.stripLeadingSeparators ?? true;
+
   let result = value.trim();
 
-  if (!result.length) {
-    return '';
-  }
-
-  if (!_case || _case === 'preserve') {
+  if (!result.length || !casing || casing === 'preserve') {
     return result;
   }
 
@@ -119,7 +116,7 @@ export const stringCase = ({
       return '';
     }
 
-    return _case === 'PascalCase' || _case === 'SCREAMING_SNAKE_CASE'
+    return casing === 'PascalCase' || casing === 'SCREAMING_SNAKE_CASE'
       ? result.toLocaleUpperCase()
       : result.toLocaleLowerCase();
   }
@@ -127,7 +124,7 @@ export const stringCase = ({
   const hasUpperCase = result !== result.toLocaleLowerCase();
 
   if (hasUpperCase) {
-    result = preserveCase({ case: _case, string: result });
+    result = preserveCase(result, casing);
   }
 
   if (stripLeadingSeparators || result[0] !== value[0]) {
@@ -135,15 +132,15 @@ export const stringCase = ({
   }
 
   result =
-    _case === 'SCREAMING_SNAKE_CASE'
+    casing === 'SCREAMING_SNAKE_CASE'
       ? result.toLocaleUpperCase()
       : result.toLocaleLowerCase();
 
-  if (_case === 'PascalCase') {
+  if (casing === 'PascalCase') {
     result = `${result.charAt(0).toLocaleUpperCase()}${result.slice(1)}`;
   }
 
-  if (_case === 'snake_case' || _case === 'SCREAMING_SNAKE_CASE') {
+  if (casing === 'snake_case' || casing === 'SCREAMING_SNAKE_CASE') {
     result = result.replaceAll(
       separatorsAndIdentifierRegExp,
       (match, identifier, offset) => {

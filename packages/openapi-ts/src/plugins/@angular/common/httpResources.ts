@@ -8,7 +8,7 @@ import {
   isOperationOptionsRequired,
 } from '~/plugins/shared/utils/operation';
 import { $ } from '~/ts-dsl';
-import { stringCase } from '~/utils/stringCase';
+import { toCase } from '~/utils/to-case';
 
 import type { AngularCommonPlugin } from './types';
 
@@ -107,12 +107,7 @@ const generateAngularClassServices = ({
         generateClass(childClass);
 
         currentClass.nodes.push(
-          $.field(
-            stringCase({
-              case: 'camelCase',
-              value: childClass.className,
-            }),
-          ).assign(
+          $.field(toCase(childClass.className, 'camelCase')).assign(
             $.new(
               buildName({
                 config: {
@@ -237,12 +232,7 @@ const generateResourceCallExpression = ({
       for (let i = 1; i < firstEntry.path.length; i++) {
         const className = firstEntry.path[i];
         if (className) {
-          methodAccess = methodAccess.attr(
-            stringCase({
-              case: 'camelCase',
-              value: className,
-            }),
-          );
+          methodAccess = methodAccess.attr(toCase(className, 'camelCase'));
         }
       }
 

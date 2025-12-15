@@ -1,7 +1,7 @@
 import type { Context } from '~/ir/context';
 import { createOperationKey } from '~/ir/operation';
 import { sanitizeNamespaceIdentifier } from '~/openApi/common/parser/sanitize';
-import { stringCase } from '~/utils/stringCase';
+import { toCase } from '~/utils/to-case';
 
 import type { State } from '../types/state';
 
@@ -49,20 +49,14 @@ export const operationToId = ({
     (!context.config.plugins['@hey-api/sdk'] ||
       context.config.plugins['@hey-api/sdk'].config.operationId)
   ) {
-    result = stringCase({
-      case: targetCase,
-      value: sanitizeNamespaceIdentifier(id),
-    });
+    result = toCase(sanitizeNamespaceIdentifier(id), targetCase);
   } else {
     const pathWithoutPlaceholders = path
       .replace(/{(.*?)}/g, 'by-$1')
       // replace slashes with hyphens for camelcase method at the end
       .replace(/[/:+]/g, '-');
 
-    result = stringCase({
-      case: targetCase,
-      value: `${method}-${pathWithoutPlaceholders}`,
-    });
+    result = toCase(`${method}-${pathWithoutPlaceholders}`, targetCase);
   }
 
   if (count > 1) {

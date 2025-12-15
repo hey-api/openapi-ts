@@ -1,6 +1,5 @@
-import { stringCase } from '~/utils/stringCase';
-
-import type { StringCase, StringName } from '../../../types/case';
+import type { StringCase, StringName } from '~/types/case';
+import { toCase } from '~/utils/to-case';
 
 export const buildName = ({
   config,
@@ -19,5 +18,5 @@ export const buildName = ({
     name = config.name.replace('{{name}}', `${separator}${name}${separator}`);
   }
 
-  return stringCase({ case: config.case, value: name });
+  return toCase(name, config.case);
 };
