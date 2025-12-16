@@ -29,6 +29,7 @@
 - [Hiram Chirino](https://github.com/chirino)
 - [Idan Ben Ami](https://github.com/idbenami)
 - [Jacob Cohen](https://github.com/jacobinu)
+- [Jan](https://github.com/JanST123)
 - [Jason Lee](https://github.com/LeeChSien)
 - [Jianqi Pan](https://github.com/Jannchie)
 - [John Gozde](https://github.com/jgoz)
