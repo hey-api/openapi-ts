@@ -19,9 +19,11 @@
     "@tanstack/svelte-query": "5.73.3",
     "@tanstack/vue-query": "5.73.3",
     "arktype": "2.1.29",
+    "nuxt": "3.14.1592",
     "swr": "2.3.8",
     "typescript": "5.9.3",
     "valibot": "1.2.0",
+    "vue": "3.5.25",
     "zod": "4.1.12"
   }
 }

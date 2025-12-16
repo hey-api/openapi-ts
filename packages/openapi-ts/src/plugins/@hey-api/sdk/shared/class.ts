@@ -2,7 +2,6 @@ import type { Symbol } from '@hey-api/codegen-core';
 
 import { $ } from '~/ts-dsl';
 
-import { SdkStructureModel } from '../model/structure';
 import type { HeyApiSdkPlugin } from '../types';
 
 export const registryName = '__registry';
@@ -108,41 +107,4 @@ export const createClientClass = ({
             ),
         ),
     );
-};
-
-export const generateClassSdk = ({
-  plugin,
-}: {
-  plugin: HeyApiSdkPlugin['Instance'];
-}): void => {
-  const structure = new SdkStructureModel(plugin.config.instance);
-
-  plugin.forEach(
-    'operation',
-    ({ operation }) => {
-      structure.insert(operation, plugin);
-    },
-    { order: 'declarations' },
-  );
-
-  const allDependencies: Array<ReturnType<typeof $.class>> = [];
-  const allNodes: Array<ReturnType<typeof $.class>> = [];
-
-  for (const model of structure.walk()) {
-    const { dependencies, node } = model.toNode(plugin);
-    allDependencies.push(...dependencies);
-    allNodes.push(node);
-  }
-
-  const uniqueDependencies = new Map<number, ReturnType<typeof $.class>>();
-  for (const dep of allDependencies) {
-    if (dep.symbol) uniqueDependencies.set(dep.symbol.id, dep);
-  }
-  for (const dep of uniqueDependencies.values()) {
-    plugin.node(dep);
-  }
-
-  for (const node of allNodes) {
-    plugin.node(node);
-  }
 };
