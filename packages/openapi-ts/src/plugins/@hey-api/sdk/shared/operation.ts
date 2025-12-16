@@ -66,6 +66,8 @@ export const operationMethodName = ({
 
 /**
  * Returns a list of classes where this operation appears in the generated SDK.
+ *
+ * @deprecated
  */
 export const operationClasses = ({
   operation,
