@@ -1,8 +1,8 @@
 import { clientFolderAbsolutePath } from '~/generate/client';
 import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
+import type { $ } from '~/ts-dsl';
 
-import { generateClassSdk } from '../shared/class';
-import { generateFlatSdk } from '../shared/functions';
+import { SdkStructureModel } from '../model/structure';
 import { createTypeOptions } from '../shared/typeOptions';
 import type { HeyApiSdkPlugin } from '../types';
 
@@ -12,35 +12,32 @@ export const handlerV1: HeyApiSdkPlugin['Handler'] = ({ plugin }) => {
   const isAngularClient = client.name === '@hey-api/client-angular';
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
 
-  plugin.registerSymbol({
+  plugin.symbol('formDataBodySerializer', {
     external: clientModule,
     meta: {
       category: 'external',
       resource: 'client.formDataBodySerializer',
       tool: client.name,
     },
-    name: 'formDataBodySerializer',
   });
-  plugin.registerSymbol({
+  plugin.symbol('urlSearchParamsBodySerializer', {
     external: clientModule,
     meta: {
       category: 'external',
       resource: 'client.urlSearchParamsBodySerializer',
       tool: client.name,
     },
-    name: 'urlSearchParamsBodySerializer',
   });
-  plugin.registerSymbol({
+  plugin.symbol('buildClientParams', {
     external: clientModule,
     meta: {
       category: 'external',
       resource: 'client.buildClientParams',
       tool: client.name,
     },
-    name: 'buildClientParams',
   });
   if (isNuxtClient) {
-    plugin.registerSymbol({
+    plugin.symbol('Composable', {
       external: clientModule,
       kind: 'type',
       meta: {
@@ -48,25 +45,57 @@ export const handlerV1: HeyApiSdkPlugin['Handler'] = ({ plugin }) => {
         resource: 'client.Composable',
         tool: client.name,
       },
-      name: 'Composable',
     });
   }
   if (isAngularClient && plugin.config.asClass) {
-    plugin.registerSymbol({
+    plugin.symbol('Injectable', {
       external: '@angular/core',
       meta: {
         category: 'external',
         resource: '@angular/core.Injectable',
       },
-      name: 'Injectable',
     });
   }
 
   createTypeOptions({ plugin });
 
-  if (plugin.config.asClass) {
-    generateClassSdk({ plugin });
-  } else {
-    generateFlatSdk({ plugin });
+  const structure = plugin.config.asClass
+    ? new SdkStructureModel(plugin.config.instance)
+    : new SdkStructureModel('', { flat: true });
+
+  plugin.forEach(
+    'operation',
+    (event) => {
+      structure.insert(
+        {
+          operation: event.operation,
+          path: event._path,
+          tags: event.tags,
+        },
+        plugin,
+      );
+    },
+    { order: 'declarations' },
+  );
+
+  const allDependencies: Array<ReturnType<typeof $.class>> = [];
+  const allNodes: Array<ReturnType<typeof $.class | typeof $.var>> = [];
+
+  for (const model of structure.walk()) {
+    const { dependencies, nodes } = model.toNode(plugin);
+    allDependencies.push(...dependencies);
+    allNodes.push(...nodes);
+  }
+
+  const uniqueDependencies = new Map<number, ReturnType<typeof $.class>>();
+  for (const dep of allDependencies) {
+    if (dep.symbol) uniqueDependencies.set(dep.symbol.id, dep);
+  }
+  for (const dep of uniqueDependencies.values()) {
+    plugin.node(dep);
+  }
+
+  for (const node of allNodes) {
+    plugin.node(node);
   }
 };

@@ -240,7 +240,7 @@ export default defineConfig(() => {
         {
           // baseUrl: false,
           // exportFromIndex: true,
-          // name: '@hey-api/client-angular',
+          name: '@hey-api/client-nuxt',
           // runtimeConfigPath: path.resolve(__dirname, 'hey-api.ts'),
           // runtimeConfigPath: './src/hey-api.ts',
           // strictBaseUrl: true,
@@ -274,7 +274,7 @@ export default defineConfig(() => {
           // },
         },
         {
-          asClass: true,
+          // asClass: true,
           // auth: false,
           // classNameBuilder: '{{name}}',
           classNameBuilder: '{{name}}Service',
@@ -285,7 +285,7 @@ export default defineConfig(() => {
           //   fields.unwrap('path')
           // },
           // include...
-          instance: 'Root',
+          // instance: 'Root',
           methodNameBuilder: '{{name}}Methods',
           name: '@hey-api/sdk',
           // operationId: false,
