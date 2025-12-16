@@ -1,47 +1,59 @@
-import type { IR } from '~/ir/types';
-
 import type { HeyApiSdkPlugin } from '../types';
-import { SdkClassModel } from './class';
+import type { Event } from './resource';
+import { SdkResourceModel } from './resource';
 
 export class SdkStructureModel {
+  /** If true, generates a flat SDK without resource hierarchy. */
+  private _flat: boolean;
   /** Name of the SDK. If empty, we fallback to operation tags. */
   private _name: string;
 
-  /** Root classes mapped by their names. */
-  roots: Map<string, SdkClassModel> = new Map();
+  /** Root resources mapped by their names. */
+  roots: Map<string, SdkResourceModel> = new Map();
 
-  constructor(name: string) {
+  constructor(
+    name: string,
+    options?: {
+      /** If true, generates a flat SDK without resource hierarchy. */
+      flat?: boolean;
+    },
+  ) {
+    this._flat = options?.flat ?? false;
     this._name = name;
   }
 
   /**
-   * Inserts an operation into the structure.
+   * Inserts an operation event into the structure.
    *
    * Parses the operation ID and organizes it into classes based on tags.
    */
-  insert(
-    operation: IR.OperationObject,
-    plugin: HeyApiSdkPlugin['Instance'],
-  ): void {
-    const roots = this._name ? [this._name] : (operation.tags ?? ['default']);
+  insert(event: Event, plugin: HeyApiSdkPlugin['Instance']): void {
+    const { operation } = event;
+    const roots = this._name
+      ? [this._name]
+      : this._flat
+        ? ['']
+        : operation.tags && operation.tags.length > 0
+          ? operation.tags
+          : ['default'];
 
     for (const name of roots) {
-      const model = this.root(name);
-      model.insert(operation, plugin);
+      const resource = this.root(name);
+      resource.insert(event, plugin);
     }
   }
 
   /**
-   * Gets or creates a root class by name.
+   * Gets or creates a root resource by name.
    *
    * If the root doesn't exist, it's created automatically.
    *
-   * @param name - The name of the root class
-   * @returns The root class instance
+   * @param name - The name of the root resource
+   * @returns The root resource instance
    */
-  root(name: string): SdkClassModel {
+  root(name: string): SdkResourceModel {
     if (!this.roots.has(name)) {
-      this.roots.set(name, new SdkClassModel(name));
+      this.roots.set(name, new SdkResourceModel(name));
     }
     return this.roots.get(name)!;
   }
@@ -49,11 +61,11 @@ export class SdkStructureModel {
   /**
    * Recursively walks the structure.
    *
-   * Yields all classes in the structure.
+   * Yields all resources in the structure.
    */
-  *walk(): Generator<SdkClassModel> {
-    for (const model of this.roots.values()) {
-      yield* model.walk();
+  *walk(): Generator<SdkResourceModel> {
+    for (const resource of this.roots.values()) {
+      yield* resource.walk();
     }
   }
 }
