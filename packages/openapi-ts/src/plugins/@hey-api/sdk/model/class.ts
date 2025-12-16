@@ -1,3 +1,5 @@
+import type { SymbolMeta } from '@hey-api/codegen-core';
+
 import type { IR } from '~/ir/types';
 import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
 import {
@@ -66,6 +68,22 @@ export class SdkClassModel {
   }
 
   /**
+   * Gets the full path of this class in the hierarchy.
+   *
+   * @returns An array of class names from the root to this class
+   */
+  getPath(): ReadonlyArray<string> {
+    const path: Array<string> = [];
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    let cursor: SdkClassModel | undefined = this;
+    while (cursor) {
+      path.unshift(cursor.name);
+      cursor = cursor.parent;
+    }
+    return path;
+  }
+
+  /**
    * Inserts an operation into the class tree.
    *
    * Parses the operation ID and creates the class hierarchy.
@@ -107,20 +125,21 @@ export class SdkClassModel {
         meta: {
           category: 'utility',
           resource: 'class',
-          resourceId: this.name,
+          resourceId: this.getPath().join('.'),
           tool: 'sdk',
         },
       },
     );
+    const metaClient: SymbolMeta = {
+      category: 'utility',
+      resource: 'class',
+      resourceId: 'HeyApiClient',
+      tool: 'sdk',
+    };
     const node = $.class(symbolClass)
       .export()
-      .extends(
-        plugin.referenceSymbol({
-          category: 'utility',
-          resource: 'class',
-          resourceId: 'HeyApiClient',
-          tool: 'sdk',
-        }),
+      .$if(plugin.config.instance, (c) =>
+        c.extends(plugin.referenceSymbol(metaClient)),
       )
       .$if(isAngularClient && this.isRoot, (c) =>
         c.decorator(
@@ -132,15 +151,8 @@ export class SdkClassModel {
         ),
       );
 
-    if (this.isRoot) {
-      const symbolClient = plugin.symbol('HeyApiClient', {
-        meta: {
-          category: 'utility',
-          resource: 'class',
-          resourceId: 'HeyApiClient',
-          tool: 'sdk',
-        },
-      });
+    if (this.isRoot && plugin.config.instance) {
+      const symbolClient = plugin.symbol('HeyApiClient', { meta: metaClient });
       const clientNode = createClientClass({ plugin, symbol: symbolClient });
       dependencies.push(clientNode);
       const symbolRegistry = plugin.symbol('HeyApiRegistry', {
@@ -272,27 +284,37 @@ export class SdkClassModel {
       const refChild = plugin.referenceSymbol({
         category: 'utility',
         resource: 'class',
-        resourceId: child.name,
+        resourceId: child.getPath().join('.'),
         tool: 'sdk',
       });
       const memberName = toCase(refChild.name, 'camelCase');
-      const privateName = plugin.symbol(`_${memberName}`);
-      const getterName = plugin.symbol(memberName);
-      node.field(privateName, (f) => f.private().optional().type(refChild));
-      node.do(
-        $.getter(getterName, (g) =>
-          g.returns(refChild).do(
-            $('this')
-              .attr(privateName)
-              .nullishAssign(
-                $.new(refChild).args(
-                  $.object().prop('client', $('this').attr('client')),
-                ),
-              )
-              .return(),
+      if (plugin.config.instance) {
+        const privateName = plugin.symbol(`_${memberName}`);
+        const getterName = plugin.symbol(memberName);
+        node.field(privateName, (f) => f.private().optional().type(refChild));
+        node.do(
+          $.getter(getterName, (g) =>
+            g.returns(refChild).do(
+              $('this')
+                .attr(privateName)
+                .nullishAssign(
+                  $.new(refChild).args(
+                    $.object().prop('client', $('this').attr('client')),
+                  ),
+                )
+                .return(),
+            ),
           ),
-        ),
-      );
+        );
+      } else {
+        node.do(
+          plugin.isSymbolRegistered(refChild.id)
+            ? $.field(memberName, (f) => f.static().assign($(refChild)))
+            : $.getter(memberName, (g) =>
+                g.public().static().do($.return(refChild)),
+              ),
+        );
+      }
     }
 
     return { dependencies, node };

@@ -54,7 +54,7 @@ export default defineConfig(() => {
             // 'sdk-instance.yaml',
             // 'sdk-method-class-conflict.yaml',
             // 'sdk-nested-classes.yaml',
-            // 'sdk-nested-conflict.yaml',
+            'sdk-nested-conflict.yaml',
             // 'string-with-format.yaml',
             // 'transformers.json',
             // 'transformers-recursive.json',
@@ -274,7 +274,7 @@ export default defineConfig(() => {
           // },
         },
         {
-          // asClass: true,
+          asClass: true,
           // auth: false,
           // classNameBuilder: '{{name}}',
           classNameBuilder: '{{name}}Service',
