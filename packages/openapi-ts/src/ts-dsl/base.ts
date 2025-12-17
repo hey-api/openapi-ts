@@ -1,11 +1,19 @@
 // TODO: symbol should be protected, but needs to be public to satisfy types
 import type {
+  AccessPatternContext,
+  AccessPatternOptions,
   AnalysisContext,
   AstContext,
   File,
   FromRef,
   Language,
   Node,
+  NodeName,
+  NodeNameSanitizer,
+  NodeRole,
+  NodeScope,
+  Ref,
+  StructuralRelationship,
   Symbol,
 } from '@hey-api/codegen-core';
 import {
@@ -14,19 +22,39 @@ import {
   isRef,
   isSymbol,
   nodeBrand,
+  ref,
 } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 export type MaybeArray<T> = T | ReadonlyArray<T>;
 
 export abstract class TsDsl<T extends ts.Node = ts.Node> implements Node<T> {
+  accessPattern?(
+    node: this,
+    options: AccessPatternOptions,
+    ctx: AccessPatternContext<this>,
+  ): unknown | undefined;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   analyze(_: AnalysisContext): void {}
   exported?: boolean;
   file?: File;
+  get name(): Node['name'] {
+    return {
+      ...this._name,
+      set: (value) => {
+        this._name = ref(value);
+      },
+      toString: () => (this._name ? this.$name(this._name) : ''),
+    } as Node['name'];
+  }
+  readonly nameSanitizer?: NodeNameSanitizer;
   language: Language = 'typescript';
   parent?: Node;
-  root?: Node;
+  role?: NodeRole;
+  root: boolean = false;
+  scope?: NodeScope = 'value';
+  structuralChildren?: Map<TsDsl, StructuralRelationship>;
+  structuralParents?: Map<TsDsl, StructuralRelationship>;
   symbol?: Symbol;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   toAst(_: AstContext): T {
@@ -35,7 +63,7 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements Node<T> {
   readonly '~brand' = nodeBrand;
 
   /** Branding property to identify the DSL class at runtime. */
-  abstract readonly '~dsl': string;
+  abstract readonly '~dsl': string & {};
 
   /** Conditionally applies a callback to this builder. */
   $if<T extends TsDsl, V, R extends TsDsl = T>(
@@ -120,6 +148,18 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements Node<T> {
     ) as T extends string ? ts.Identifier : T;
   }
 
+  protected $name(name: Ref<NodeName>): string {
+    const value = fromRef(name);
+    if (isSymbol(value)) {
+      try {
+        return value.finalName;
+      } catch {
+        return value.name;
+      }
+    }
+    return String(value);
+  }
+
   protected $node<I>(ctx: AstContext, value: I): NodeOfMaybe<I> {
     if (value === undefined) {
       return undefined as NodeOfMaybe<I>;
@@ -176,6 +216,8 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements Node<T> {
     }
     return this.unwrap(ctx, value as any) as TypeOfMaybe<I>;
   }
+
+  private _name?: Ref<NodeName>;
 
   /** Unwraps nested nodes into raw TypeScript AST. */
   private unwrap<I>(

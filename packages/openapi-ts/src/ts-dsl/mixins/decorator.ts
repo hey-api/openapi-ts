@@ -2,7 +2,7 @@ import type {
   AnalysisContext,
   AstContext,
   Node,
-  Symbol,
+  NodeName,
 } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
@@ -15,7 +15,7 @@ export interface DecoratorMethods extends Node {
   $decorators(ctx: AstContext): ReadonlyArray<ts.Decorator>;
   /** Adds a decorator (e.g. `@sealed({ in: 'root' })`). */
   decorator(
-    name: Symbol | string | MaybeTsDsl<ts.Expression>,
+    name: NodeName | MaybeTsDsl<ts.Expression>,
     ...args: ReadonlyArray<string | MaybeTsDsl<ts.Expression>>
   ): this;
 }
@@ -34,7 +34,7 @@ export function DecoratorMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
     }
 
     protected decorator(
-      name: Symbol | string | MaybeTsDsl<ts.Expression>,
+      name: NodeName,
       ...args: ReadonlyArray<string | MaybeTsDsl<ts.Expression>>
     ): this {
       this.decorators.push(new DecoratorTsDsl(name, ...args));

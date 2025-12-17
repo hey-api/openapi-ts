@@ -21,7 +21,16 @@ export type {
   NameConflictResolvers,
 } from './languages/types';
 export type { AstContext } from './nodes/context';
-export type { INode as Node } from './nodes/node';
+export type {
+  AccessPatternContext,
+  AccessPatternOptions,
+  INode as Node,
+  NodeName,
+  NodeNameSanitizer,
+  NodeRole,
+  NodeScope,
+  StructuralRelationship,
+} from './nodes/node';
 export type { IOutput as Output } from './output';
 export {
   simpleNameConflictResolver,

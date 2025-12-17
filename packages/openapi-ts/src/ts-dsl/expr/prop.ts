@@ -1,8 +1,8 @@
 import type {
   AnalysisContext,
   AstContext,
+  NodeName,
   Ref,
-  Symbol,
 } from '@hey-api/codegen-core';
 import { ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
@@ -15,8 +15,8 @@ import { DocMixin } from '../mixins/doc';
 import { safePropName } from '../utils/name';
 import { IdTsDsl } from './id';
 
-type Expr = Symbol | string | MaybeTsDsl<ts.Expression>;
-type Stmt = Symbol | string | MaybeTsDsl<ts.Statement>;
+type Expr = NodeName | MaybeTsDsl<ts.Expression>;
+type Stmt = NodeName | MaybeTsDsl<ts.Statement>;
 type Kind = 'computed' | 'getter' | 'prop' | 'setter' | 'spread';
 
 type Meta =
@@ -71,16 +71,12 @@ export class ObjectPropTsDsl extends Mixed {
       return this.$docs(ctx, result);
     }
     if (this.meta.kind === 'getter') {
-      const getter = new GetterTsDsl(
-        this.$node(ctx, safePropName(this.meta.name)),
-      ).do(node);
+      const getter = new GetterTsDsl(this.meta.name).do(node);
       const result = this.$node(ctx, getter);
       return this.$docs(ctx, result);
     }
     if (this.meta.kind === 'setter') {
-      const setter = new SetterTsDsl(
-        this.$node(ctx, safePropName(this.meta.name)),
-      ).do(node);
+      const setter = new SetterTsDsl(this.meta.name).do(node);
       const result = this.$node(ctx, setter);
       return this.$docs(ctx, result);
     }

@@ -1,7 +1,7 @@
 import type {
   AnalysisContext,
   AstContext,
-  Symbol,
+  NodeName,
 } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
@@ -11,13 +11,11 @@ import { BlockTsDsl } from './block';
 
 const Mixed = TsDsl<ts.TryStatement>;
 
-type CatchParam = Symbol | string;
-
 export class TryTsDsl extends Mixed {
   readonly '~dsl' = 'TryTsDsl';
 
   protected _catch?: Array<DoExpr>;
-  protected _catchArg?: CatchParam;
+  protected _catchArg?: NodeName;
   protected _finally?: Array<DoExpr>;
   protected _try?: Array<DoExpr>;
 
@@ -65,7 +63,7 @@ export class TryTsDsl extends Mixed {
     return this;
   }
 
-  catchArg(arg: CatchParam): this {
+  catchArg(arg: NodeName): this {
     this._catchArg = arg;
     return this;
   }

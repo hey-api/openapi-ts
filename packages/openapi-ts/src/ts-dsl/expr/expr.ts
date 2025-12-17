@@ -1,8 +1,8 @@
 import type {
   AnalysisContext,
   AstContext,
+  NodeName,
   Ref,
-  Symbol,
 } from '@hey-api/codegen-core';
 import { ref } from '@hey-api/codegen-core';
 import type ts from 'typescript';
@@ -14,7 +14,7 @@ import { ExprMixin } from '../mixins/expr';
 import { OperatorMixin } from '../mixins/operator';
 import { TypeExprMixin } from '../mixins/type-expr';
 
-type Id = Symbol | string | MaybeTsDsl<ts.Expression>;
+type Id = NodeName | MaybeTsDsl<ts.Expression>;
 
 const Mixed = AsMixin(
   ExprMixin(OperatorMixin(TypeExprMixin(TsDsl<ts.Expression>))),

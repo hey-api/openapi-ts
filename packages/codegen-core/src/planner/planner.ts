@@ -113,11 +113,7 @@ export class Planner {
       if (finalPath) {
         file.setFinalPath(path.resolve(this.project.root, finalPath));
       }
-      const ctx: Omit<RenderContext, 'astContext'> = {
-        file,
-        meta,
-        project: this.project,
-      };
+      const ctx: RenderContext = { file, meta, project: this.project };
       const renderer = this.project.renderers.find((r) => r.supports(ctx));
       if (renderer) file.setRenderer(renderer);
     }
@@ -401,7 +397,7 @@ export class Planner {
     if (this.cacheResolvedNames.has(symbol.id)) return;
 
     const baseName = symbol.name;
-    let finalName = symbol.nameSanitizer?.(baseName) ?? baseName;
+    let finalName = symbol.node?.nameSanitizer?.(baseName) ?? baseName;
     let attempt = 1;
 
     const localNames = ctx.localNames(scope);
@@ -420,7 +416,7 @@ export class Planner {
         throw new Error(`Unresolvable name conflict: ${symbol.toString()}`);
       }
 
-      finalName = symbol.nameSanitizer?.(resolvedName) ?? resolvedName;
+      finalName = symbol.node?.nameSanitizer?.(resolvedName) ?? resolvedName;
       attempt = attempt + 1;
     }
 

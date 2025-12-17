@@ -1,4 +1,8 @@
-import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
+import type {
+  AnalysisContext,
+  AstContext,
+  NodeName,
+} from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -14,12 +18,11 @@ const Mixed = DocMixin(TsDsl<ts.EnumMember>);
 export class EnumMemberTsDsl extends Mixed {
   readonly '~dsl' = 'EnumMemberTsDsl';
 
-  private _name: string;
   private _value?: Value;
 
-  constructor(name: string, value?: ValueFn) {
+  constructor(name: NodeName, value?: ValueFn) {
     super();
-    this._name = name;
+    this.name.set(name);
     if (typeof value === 'function') {
       value(this);
     } else {
@@ -40,7 +43,7 @@ export class EnumMemberTsDsl extends Mixed {
 
   override toAst(ctx: AstContext) {
     const node = ts.factory.createEnumMember(
-      this.$node(ctx, safeMemberName(this._name)),
+      this.$node(ctx, safeMemberName(this.name.toString())),
       this.$node(ctx, this._value),
     );
     return this.$docs(ctx, node);

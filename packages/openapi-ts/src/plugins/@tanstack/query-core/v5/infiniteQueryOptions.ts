@@ -106,11 +106,9 @@ const createInfiniteParamsFunction = ({
 export const createInfiniteQueryOptions = ({
   operation,
   plugin,
-  queryFn,
 }: {
   operation: IR.OperationObject;
   plugin: PluginInstance;
-  queryFn: ReturnType<typeof $.expr | typeof $.call | typeof $.attr>;
 }): void => {
   const pagination = operationPagination({
     context: plugin.context,
@@ -198,8 +196,15 @@ export const createInfiniteQueryOptions = ({
   });
   plugin.node(node);
 
-  const awaitSdkFn = $.lazy(() =>
-    $(queryFn)
+  const awaitSdkFn = $.lazy((ctx) =>
+    ctx
+      .getAccess<ReturnType<typeof $>>(
+        plugin.referenceSymbol({
+          category: 'sdk',
+          resource: 'operation',
+          resourceId: operation.id,
+        }),
+      )
       .call(
         $.object()
           .spread('options')

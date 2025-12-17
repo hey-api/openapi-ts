@@ -10,7 +10,7 @@ import type { IProject } from '../project/types';
 import type { Renderer } from '../renderer';
 import type { IFileIn } from './types';
 
-export class File {
+export class File<Node extends INode = INode> {
   /**
    * Exports from this file.
    */
@@ -42,7 +42,7 @@ export class File {
   /**
    * Syntax nodes contained in this file.
    */
-  private _nodes: Array<INode> = [];
+  private _nodes: Array<Node> = [];
   /**
    * Renderer assigned to this file.
    */
@@ -142,7 +142,7 @@ export class File {
   /**
    * Syntax nodes contained in this file.
    */
-  get nodes(): ReadonlyArray<INode> {
+  get nodes(): ReadonlyArray<Node> {
     return [...this._nodes];
   }
 
@@ -170,7 +170,7 @@ export class File {
   /**
    * Add a syntax node to the file.
    */
-  addNode(node: INode): void {
+  addNode(node: Node): void {
     this._nodes.push(node);
     node.file = this;
   }

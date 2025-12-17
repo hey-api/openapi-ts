@@ -1,8 +1,9 @@
 import type {
   AnalysisContext,
   AstContext,
+  NodeName,
+  NodeScope,
   Ref,
-  Symbol,
 } from '@hey-api/codegen-core';
 import { ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
@@ -10,21 +11,20 @@ import ts from 'typescript';
 import type { MaybeTsDsl, TypeTsDsl } from '../base';
 import { TsDsl } from '../base';
 
-export type TypeParamName = Symbol | string;
-export type TypeParamExpr = Symbol | string | boolean | MaybeTsDsl<TypeTsDsl>;
+export type TypeParamExpr = NodeName | boolean | MaybeTsDsl<TypeTsDsl>;
 
 const Mixed = TsDsl<ts.TypeParameterDeclaration>;
 
 export class TypeParamTsDsl extends Mixed {
   readonly '~dsl' = 'TypeParamTsDsl';
+  override scope: NodeScope = 'type';
 
   protected constraint?: Ref<TypeParamExpr>;
   protected defaultValue?: Ref<TypeParamExpr>;
-  protected name?: Ref<TypeParamName>;
 
-  constructor(name?: TypeParamName, fn?: (name: TypeParamTsDsl) => void) {
+  constructor(name?: NodeName, fn?: (name: TypeParamTsDsl) => void) {
     super();
-    if (name) this.name = ref(name);
+    if (name) this.name.set(name);
     fn?.(this);
   }
 
@@ -46,7 +46,8 @@ export class TypeParamTsDsl extends Mixed {
   }
 
   override toAst(ctx: AstContext) {
-    if (!this.name) throw new Error('Missing type name');
+    const name = this.name.toString();
+    if (!name) throw new Error('Missing type name');
     return ts.factory.createTypeParameterDeclaration(
       undefined,
       this.$node(ctx, this.name) as ts.Identifier,
