@@ -1,11 +1,15 @@
-import type { INode } from './node';
+import type { Symbol } from '../symbols/symbol';
+import type { AccessPatternOptions, INode } from './node';
 
 /**
  * Context passed to `.toAst()` methods.
  */
-export type AstContext = {
+export interface AstContext {
   /**
    * Returns the canonical node for accessing the provided node.
    */
-  getAccess<T extends INode>(node: T): T;
-};
+  getAccess<T = unknown>(
+    node: INode | Symbol,
+    options?: AccessPatternOptions,
+  ): T;
+}

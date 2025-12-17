@@ -1,8 +1,9 @@
 import type {
   AnalysisContext,
   AstContext,
+  NodeName,
+  NodeRole,
   Ref,
-  Symbol,
 } from '@hey-api/codegen-core';
 import { fromRef, isSymbol, ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
@@ -10,12 +11,13 @@ import ts from 'typescript';
 import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
 
-export type TemplatePart = Symbol | string | MaybeTsDsl<ts.Expression>;
+export type TemplatePart = NodeName | MaybeTsDsl<ts.Expression>;
 
 const Mixed = TsDsl<ts.TemplateExpression | ts.NoSubstitutionTemplateLiteral>;
 
 export class TemplateTsDsl extends Mixed {
   readonly '~dsl' = 'TemplateTsDsl';
+  override role?: NodeRole = 'literal';
 
   protected parts: Array<Ref<TemplatePart>> = [];
 
@@ -59,6 +61,8 @@ export class TemplateTsDsl extends Mixed {
           index++;
         }
         normalized.push(merged);
+      } else if (typeof current === 'number') {
+        normalized.push(String(current));
       } else {
         normalized.push(current);
       }

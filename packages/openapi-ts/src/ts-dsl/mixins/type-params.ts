@@ -2,9 +2,9 @@ import type {
   AnalysisContext,
   AstContext,
   Node,
-  Symbol,
+  NodeName,
 } from '@hey-api/codegen-core';
-import { isSymbol } from '@hey-api/codegen-core';
+import { isRef, isSymbol } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -19,9 +19,7 @@ export interface TypeParamsMethods extends Node {
   /** Adds a single type parameter (e.g. `T` in `Array<T>`). */
   generic(...args: ConstructorParameters<typeof TypeParamTsDsl>): this;
   /** Adds type parameters (e.g. `Map<string, T>`). */
-  generics(
-    ...args: ReadonlyArray<Symbol | string | MaybeTsDsl<TypeParamTsDsl>>
-  ): this;
+  generics(...args: ReadonlyArray<NodeName | MaybeTsDsl<TypeParamTsDsl>>): this;
 }
 
 export function TypeParamsMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
@@ -46,10 +44,15 @@ export function TypeParamsMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
     }
 
     protected generics(
-      ...args: ReadonlyArray<Symbol | string | MaybeTsDsl<TypeParamTsDsl>>
+      ...args: ReadonlyArray<NodeName | MaybeTsDsl<TypeParamTsDsl>>
     ): this {
       for (let arg of args) {
-        if (typeof arg === 'string' || isSymbol(arg)) {
+        if (
+          typeof arg === 'string' ||
+          typeof arg === 'number' ||
+          isSymbol(arg) ||
+          isRef(arg)
+        ) {
           arg = new TypeParamTsDsl(arg);
         }
         this._generics.push(arg);

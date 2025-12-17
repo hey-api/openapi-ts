@@ -1,7 +1,7 @@
 import type {
   AnalysisContext,
   AstContext,
-  Symbol,
+  NodeName,
 } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
@@ -13,8 +13,8 @@ import { HintMixin } from '../mixins/hint';
 import { LayoutMixin } from '../mixins/layout';
 import { ObjectPropTsDsl } from './prop';
 
-type Expr = Symbol | string | MaybeTsDsl<ts.Expression>;
-type Stmt = Symbol | string | MaybeTsDsl<ts.Statement>;
+type Expr = NodeName | MaybeTsDsl<ts.Expression>;
+type Stmt = NodeName | MaybeTsDsl<ts.Statement>;
 type ExprFn = Expr | ((p: ObjectPropTsDsl) => void);
 type StmtFn = Stmt | ((p: ObjectPropTsDsl) => void);
 

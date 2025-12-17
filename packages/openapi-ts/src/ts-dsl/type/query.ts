@@ -1,4 +1,8 @@
-import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
+import type {
+  AnalysisContext,
+  AstContext,
+  NodeScope,
+} from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl, TypeTsDsl } from '../base';
@@ -13,6 +17,7 @@ const Mixed = TypeExprMixin(TsDsl<ts.TypeQueryNode>);
 
 export class TypeQueryTsDsl extends Mixed {
   readonly '~dsl' = 'TypeQueryTsDsl';
+  override scope: NodeScope = 'type';
 
   protected _expr: TypeQueryExpr;
 

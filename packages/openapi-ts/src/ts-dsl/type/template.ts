@@ -1,4 +1,8 @@
-import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
+import type {
+  AnalysisContext,
+  AstContext,
+  NodeScope,
+} from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -8,6 +12,7 @@ const Mixed = TsDsl<ts.TemplateLiteralTypeNode>;
 
 export class TypeTemplateTsDsl extends Mixed {
   readonly '~dsl' = 'TypeTemplateTsDsl';
+  override scope: NodeScope = 'type';
 
   protected parts: Array<string | MaybeTsDsl<ts.TypeNode>> = [];
 

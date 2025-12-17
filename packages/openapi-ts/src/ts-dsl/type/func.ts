@@ -1,4 +1,8 @@
-import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
+import type {
+  AnalysisContext,
+  AstContext,
+  NodeScope,
+} from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl } from '../base';
@@ -13,6 +17,7 @@ const Mixed = DocMixin(
 
 export class TypeFuncTsDsl extends Mixed {
   readonly '~dsl' = 'TypeFuncTsDsl';
+  override scope: NodeScope = 'type';
 
   override analyze(ctx: AnalysisContext): void {
     super.analyze(ctx);

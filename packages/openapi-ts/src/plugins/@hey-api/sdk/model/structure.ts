@@ -7,9 +7,8 @@ export class SdkStructureModel {
   private _flat: boolean;
   /** Name of the SDK. If empty, we fallback to operation tags. */
   private _name: string;
-
   /** Root resources mapped by their names. */
-  roots: Map<string, SdkResourceModel> = new Map();
+  private _roots: Map<string, SdkResourceModel> = new Map();
 
   constructor(
     name: string,
@@ -52,10 +51,10 @@ export class SdkStructureModel {
    * @returns The root resource instance
    */
   root(name: string): SdkResourceModel {
-    if (!this.roots.has(name)) {
-      this.roots.set(name, new SdkResourceModel(name));
+    if (!this._roots.has(name)) {
+      this._roots.set(name, new SdkResourceModel(name));
     }
-    return this.roots.get(name)!;
+    return this._roots.get(name)!;
   }
 
   /**
@@ -64,7 +63,7 @@ export class SdkStructureModel {
    * Yields all resources in the structure.
    */
   *walk(): Generator<SdkResourceModel> {
-    for (const resource of this.roots.values()) {
+    for (const resource of this._roots.values()) {
       yield* resource.walk();
     }
   }

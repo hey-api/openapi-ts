@@ -1,10 +1,8 @@
 import type {
   AnalysisContext,
   AstContext,
-  Ref,
-  Symbol,
+  NodeName,
 } from '@hey-api/codegen-core';
-import { ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl } from '../base';
@@ -21,8 +19,7 @@ import {
 } from '../mixins/modifiers';
 import { ParamMixin } from '../mixins/param';
 import { BlockTsDsl } from '../stmt/block';
-
-export type SetterName = Symbol | string | ts.PropertyName;
+import { safeAccessorName } from '../utils/name';
 
 const Mixed = AbstractMixin(
   AsyncMixin(
@@ -44,12 +41,11 @@ const Mixed = AbstractMixin(
 
 export class SetterTsDsl extends Mixed {
   readonly '~dsl' = 'SetterTsDsl';
+  override readonly nameSanitizer = safeAccessorName;
 
-  protected name: Ref<SetterName>;
-
-  constructor(name: SetterName, fn?: (s: SetterTsDsl) => void) {
+  constructor(name: NodeName, fn?: (s: SetterTsDsl) => void) {
     super();
-    this.name = ref(name);
+    this.name.set(name);
     fn?.(this);
   }
 

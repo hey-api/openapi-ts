@@ -1,8 +1,9 @@
 import type {
   AnalysisContext,
   AstContext,
+  NodeName,
+  NodeRole,
   Ref,
-  Symbol,
 } from '@hey-api/codegen-core';
 import { isSymbol, ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
@@ -15,14 +16,10 @@ import { DocMixin } from '../mixins/doc';
 import { AbstractMixin, DefaultMixin, ExportMixin } from '../mixins/modifiers';
 import { TypeParamsMixin } from '../mixins/type-params';
 import { safeRuntimeName } from '../utils/name';
-import type { FieldName } from './field';
 import { FieldTsDsl } from './field';
 import { InitTsDsl } from './init';
-import type { MethodName } from './method';
 import { MethodTsDsl } from './method';
 
-type Base = Symbol | string;
-type Name = Symbol | string;
 type Body = Array<MaybeTsDsl<ts.ClassElement | ts.Node>>;
 
 const Mixed = AbstractMixin(
@@ -35,17 +32,17 @@ const Mixed = AbstractMixin(
 
 export class ClassTsDsl extends Mixed {
   readonly '~dsl' = 'ClassTsDsl';
+  override readonly nameSanitizer = safeRuntimeName;
+  override role?: NodeRole = 'container';
 
-  protected baseClass?: Ref<Base>;
+  protected baseClass?: Ref<NodeName>;
   protected body: Body = [];
-  protected name: Ref<Name>;
 
-  constructor(name: Name) {
+  constructor(name: NodeName) {
     super();
-    this.name = ref(name);
+    this.name.set(name);
     if (isSymbol(name)) {
       name.setKind('class');
-      name.setNameSanitizer(safeRuntimeName);
       name.setNode(this);
     }
   }
@@ -76,13 +73,13 @@ export class ClassTsDsl extends Mixed {
   }
 
   /** Records a base class to extend from. */
-  extends(base?: Base): this {
+  extends(base?: NodeName): this {
     this.baseClass = base ? ref(base) : undefined;
     return this;
   }
 
   /** Adds a class field. */
-  field(name: FieldName, fn?: (f: FieldTsDsl) => void): this {
+  field(name: NodeName, fn?: (f: FieldTsDsl) => void): this {
     const f = new FieldTsDsl(name, fn);
     this.body.push(f);
     return this;
@@ -97,7 +94,7 @@ export class ClassTsDsl extends Mixed {
   }
 
   /** Adds a class method. */
-  method(name: MethodName, fn?: (m: MethodTsDsl) => void): this {
+  method(name: NodeName, fn?: (m: MethodTsDsl) => void): this {
     const m = new MethodTsDsl(name, fn);
     this.body.push(m);
     return this;

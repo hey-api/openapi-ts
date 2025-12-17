@@ -1,10 +1,9 @@
 import type {
   AnalysisContext,
   AstContext,
-  Ref,
-  Symbol,
+  NodeName,
 } from '@hey-api/codegen-core';
-import { isSymbol, ref } from '@hey-api/codegen-core';
+import { isSymbol } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl } from '../base';
@@ -27,7 +26,6 @@ import { BlockTsDsl } from '../stmt/block';
 import { safeRuntimeName } from '../utils/name';
 
 export type FuncMode = 'arrow' | 'decl' | 'expr';
-export type FuncName = Symbol | string;
 
 const Mixed = AbstractMixin(
   AsMixin(
@@ -57,16 +55,16 @@ const Mixed = AbstractMixin(
 
 class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends Mixed {
   readonly '~dsl' = 'FuncTsDsl';
+  override readonly nameSanitizer = safeRuntimeName;
 
   protected mode?: FuncMode;
-  protected name?: Ref<FuncName>;
 
   constructor();
   constructor(fn: (f: ImplFuncTsDsl<'arrow'>) => void);
-  constructor(name: FuncName);
-  constructor(name: FuncName, fn: (f: ImplFuncTsDsl<'decl'>) => void);
+  constructor(name: NodeName);
+  constructor(name: NodeName, fn: (f: ImplFuncTsDsl<'decl'>) => void);
   constructor(
-    name?: FuncName | ((f: ImplFuncTsDsl<'arrow'>) => void),
+    name?: NodeName | ((f: ImplFuncTsDsl<'arrow'>) => void),
     fn?: (f: ImplFuncTsDsl<'decl'>) => void,
   ) {
     super();
@@ -75,10 +73,9 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends Mixed {
       name(this as unknown as FuncTsDsl<'arrow'>);
     } else if (name) {
       this.mode = 'decl';
-      this.name = ref(name);
+      this.name.set(name);
       if (isSymbol(name)) {
         name.setKind('function');
-        name.setNameSanitizer(safeRuntimeName);
         name.setNode(this);
       }
       fn?.(this as unknown as FuncTsDsl<'decl'>);
@@ -124,7 +121,8 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends Mixed {
     const body = this.$node(ctx, new BlockTsDsl(...this._do).pretty());
 
     if (this.mode === 'decl') {
-      if (!this.name) throw new Error('Function declaration requires a name');
+      const name = this.name.toString();
+      if (!name) throw new Error('Function declaration requires a name');
       const node = ts.factory.createFunctionDeclaration(
         [...this.$decorators(ctx), ...this.modifiers],
         undefined,
@@ -169,7 +167,7 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends Mixed {
 export const FuncTsDsl = ImplFuncTsDsl as {
   new (): FuncTsDsl<'arrow'>;
   new (fn: (f: FuncTsDsl<'arrow'>) => void): FuncTsDsl<'arrow'>;
-  new (name: string): FuncTsDsl<'decl'>;
-  new (name: string, fn: (f: FuncTsDsl<'decl'>) => void): FuncTsDsl<'decl'>;
+  new (name: NodeName): FuncTsDsl<'decl'>;
+  new (name: NodeName, fn: (f: FuncTsDsl<'decl'>) => void): FuncTsDsl<'decl'>;
 } & typeof ImplFuncTsDsl;
 export type FuncTsDsl<M extends FuncMode = 'arrow'> = ImplFuncTsDsl<M>;

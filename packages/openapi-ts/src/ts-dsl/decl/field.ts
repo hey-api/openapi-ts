@@ -1,10 +1,9 @@
 import type {
   AnalysisContext,
   AstContext,
-  Ref,
-  Symbol,
+  NodeName,
+  NodeRole,
 } from '@hey-api/codegen-core';
-import { ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl, TypeTsDsl } from '../base';
@@ -20,11 +19,9 @@ import {
 import { OptionalMixin } from '../mixins/optional';
 import { ValueMixin } from '../mixins/value';
 import { TokenTsDsl } from '../token';
-import type { TypeExprName } from '../type/expr';
 import { TypeExprTsDsl } from '../type/expr';
 
-export type FieldName = Symbol | string;
-export type FieldType = TypeExprName | TypeTsDsl;
+export type FieldType = NodeName | TypeTsDsl;
 
 const Mixed = DecoratorMixin(
   DocMixin(
@@ -44,13 +41,13 @@ const Mixed = DecoratorMixin(
 
 export class FieldTsDsl extends Mixed {
   readonly '~dsl' = 'FieldTsDsl';
+  override role?: NodeRole = 'accessor';
 
-  protected name: Ref<FieldName>;
   protected _type?: TypeTsDsl;
 
-  constructor(name: FieldName, fn?: (f: FieldTsDsl) => void) {
+  constructor(name: NodeName, fn?: (f: FieldTsDsl) => void) {
     super();
-    this.name = ref(name);
+    this.name.set(name);
     fn?.(this);
   }
 

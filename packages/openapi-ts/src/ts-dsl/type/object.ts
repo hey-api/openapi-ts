@@ -1,4 +1,8 @@
-import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
+import type {
+  AnalysisContext,
+  AstContext,
+  NodeScope,
+} from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl } from '../base';
@@ -9,6 +13,7 @@ const Mixed = TsDsl<ts.TypeNode>;
 
 export class TypeObjectTsDsl extends Mixed {
   readonly '~dsl' = 'TypeObjectTsDsl';
+  override scope: NodeScope = 'type';
 
   protected props: Array<TypePropTsDsl | TypeIdxSigTsDsl> = [];
 

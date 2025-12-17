@@ -7,7 +7,16 @@ import { AsMixin } from '../mixins/as';
 
 export type LiteralValue = string | number | boolean | bigint | null;
 
-const Mixed = AsMixin(TsDsl<ts.LiteralTypeNode['literal']>);
+const Mixed = AsMixin(
+  TsDsl<
+    | ts.BigIntLiteral
+    | ts.BooleanLiteral
+    | ts.NullLiteral
+    | ts.NumericLiteral
+    | ts.PrefixUnaryExpression
+    | ts.StringLiteral
+  >,
+);
 
 export class LiteralTsDsl extends Mixed {
   readonly '~dsl' = 'LiteralTsDsl';

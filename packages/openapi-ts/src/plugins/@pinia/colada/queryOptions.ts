@@ -23,11 +23,9 @@ const fnOptions = 'context';
 export const createQueryOptions = ({
   operation,
   plugin,
-  queryFn,
 }: {
   operation: IR.OperationObject;
   plugin: PiniaColadaPlugin['Instance'];
-  queryFn: ReturnType<typeof $.expr | typeof $.call | typeof $.attr>;
 }): void => {
   if (hasOperationSse({ operation })) {
     return;
@@ -88,8 +86,15 @@ export const createQueryOptions = ({
   const client = getClientPlugin(plugin.context.config);
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
   const typeData = getPublicTypeData({ isNuxtClient, operation, plugin });
-  const awaitSdkFn = $.lazy(() =>
-    $(queryFn)
+  const awaitSdkFn = $.lazy((ctx) =>
+    ctx
+      .getAccess<ReturnType<typeof $>>(
+        plugin.referenceSymbol({
+          category: 'sdk',
+          resource: 'operation',
+          resourceId: operation.id,
+        }),
+      )
       .call(
         $.object()
           .spread(optionsParamName)

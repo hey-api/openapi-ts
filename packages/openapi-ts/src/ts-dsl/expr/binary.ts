@@ -1,8 +1,8 @@
 import type {
   AnalysisContext,
   AstContext,
+  NodeName,
   Ref,
-  Symbol,
 } from '@hey-api/codegen-core';
 import { ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
@@ -12,7 +12,7 @@ import { TsDsl } from '../base';
 import { AsMixin } from '../mixins/as';
 import { ExprMixin } from '../mixins/expr';
 
-type Expr = Symbol | string | MaybeTsDsl<ts.Expression>;
+type Expr = NodeName | MaybeTsDsl<ts.Expression>;
 type Op = Operator | ts.BinaryOperator;
 type Operator =
   | '!='
