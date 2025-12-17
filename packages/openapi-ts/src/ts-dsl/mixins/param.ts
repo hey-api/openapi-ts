@@ -1,8 +1,13 @@
-import type { AnalysisContext, AstContext, Node } from '@hey-api/codegen-core';
+import type {
+  AnalysisContext,
+  AstContext,
+  Node,
+  NodeName,
+} from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import type { ParamCtor, ParamName } from '../decl/param';
+import type { ParamCtor } from '../decl/param';
 import { ParamTsDsl } from '../decl/param';
 import type { BaseCtor, MixinCtor } from './types';
 
@@ -29,7 +34,7 @@ export function ParamMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
     }
 
     protected param(
-      name: ParamName | ((p: ParamTsDsl) => void),
+      name: NodeName | ((p: ParamTsDsl) => void),
       fn?: (p: ParamTsDsl) => void,
     ): this {
       const p = new ParamTsDsl(name, fn);

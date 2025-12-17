@@ -1,8 +1,8 @@
 import type {
   AnalysisContext,
   AstContext,
+  NodeName,
   Ref,
-  Symbol,
 } from '@hey-api/codegen-core';
 import { ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
@@ -11,7 +11,7 @@ import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
 import { f } from '../utils/factories';
 
-export type ReturnExpr = Symbol | string | MaybeTsDsl<ts.Expression>;
+export type ReturnExpr = NodeName | MaybeTsDsl<ts.Expression>;
 export type ReturnCtor = (expr?: ReturnExpr) => ReturnTsDsl;
 
 const Mixed = TsDsl<ts.ReturnStatement>;

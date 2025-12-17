@@ -1,10 +1,10 @@
 import type {
   AnalysisContext,
   AstContext,
-  Ref,
-  Symbol,
+  NodeName,
+  NodeScope,
 } from '@hey-api/codegen-core';
-import { fromRef, isSymbol, ref } from '@hey-api/codegen-core';
+import { isSymbol } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -14,7 +14,6 @@ import { ExportMixin } from '../mixins/modifiers';
 import { TypeParamsMixin } from '../mixins/type-params';
 import { safeTypeName } from '../utils/name';
 
-type Name = Symbol | string;
 type Value = MaybeTsDsl<ts.TypeNode>;
 
 const Mixed = DocMixin(
@@ -23,16 +22,16 @@ const Mixed = DocMixin(
 
 export class TypeAliasTsDsl extends Mixed {
   readonly '~dsl' = 'TypeAliasTsDsl';
+  override readonly nameSanitizer = safeTypeName;
+  override scope: NodeScope = 'type';
 
-  protected name: Ref<Name>;
   protected value?: Value;
 
-  constructor(name: Name, fn?: (t: TypeAliasTsDsl) => void) {
+  constructor(name: NodeName, fn?: (t: TypeAliasTsDsl) => void) {
     super();
-    this.name = ref(name);
+    this.name.set(name);
     if (isSymbol(name)) {
       name.setKind('type');
-      name.setNameSanitizer(safeTypeName);
       name.setNode(this);
     }
     fn?.(this);
@@ -53,7 +52,7 @@ export class TypeAliasTsDsl extends Mixed {
   override toAst(ctx: AstContext) {
     if (!this.value)
       throw new Error(
-        `Type alias '${fromRef(this.name)}' is missing a type definition`,
+        `Type alias '${this.name.toString()}' is missing a type definition`,
       );
     const node = ts.factory.createTypeAliasDeclaration(
       this.modifiers,

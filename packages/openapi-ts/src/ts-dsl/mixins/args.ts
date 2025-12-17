@@ -2,8 +2,8 @@ import type {
   AnalysisContext,
   AstContext,
   Node,
+  NodeName,
   Ref,
-  Symbol,
 } from '@hey-api/codegen-core';
 import { ref } from '@hey-api/codegen-core';
 import type ts from 'typescript';
@@ -11,7 +11,7 @@ import type ts from 'typescript';
 import type { MaybeTsDsl } from '../base';
 import type { BaseCtor, MixinCtor } from './types';
 
-type Arg = Symbol | string | MaybeTsDsl<ts.Expression>;
+type Arg = NodeName | MaybeTsDsl<ts.Expression>;
 
 export interface ArgsMethods extends Node {
   /** Renders the arguments into an array of `Expression`s. */

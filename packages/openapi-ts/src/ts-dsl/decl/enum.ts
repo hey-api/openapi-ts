@@ -1,10 +1,9 @@
 import type {
   AnalysisContext,
   AstContext,
-  Ref,
-  Symbol,
+  NodeName,
 } from '@hey-api/codegen-core';
-import { isSymbol, ref } from '@hey-api/codegen-core';
+import { isSymbol } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -14,7 +13,6 @@ import { ConstMixin, ExportMixin } from '../mixins/modifiers';
 import { safeRuntimeName } from '../utils/name';
 import { EnumMemberTsDsl } from './member';
 
-export type EnumName = Symbol | string;
 type Value = string | number | MaybeTsDsl<ts.Expression>;
 type ValueFn = Value | ((m: EnumMemberTsDsl) => void);
 
@@ -22,16 +20,15 @@ const Mixed = ConstMixin(DocMixin(ExportMixin(TsDsl<ts.EnumDeclaration>)));
 
 export class EnumTsDsl extends Mixed {
   readonly '~dsl' = 'EnumTsDsl';
+  override readonly nameSanitizer = safeRuntimeName;
 
   private _members: Array<EnumMemberTsDsl> = [];
-  private _name: Ref<EnumName>;
 
-  constructor(name: EnumName, fn?: (e: EnumTsDsl) => void) {
+  constructor(name: NodeName, fn?: (e: EnumTsDsl) => void) {
     super();
-    this._name = ref(name);
+    this.name.set(name);
     if (isSymbol(name)) {
       name.setKind('enum');
-      name.setNameSanitizer(safeRuntimeName);
       name.setNode(this);
     }
     fn?.(this);
@@ -39,7 +36,7 @@ export class EnumTsDsl extends Mixed {
 
   override analyze(ctx: AnalysisContext): void {
     super.analyze(ctx);
-    ctx.analyze(this._name);
+    ctx.analyze(this.name);
     ctx.pushScope();
     try {
       for (const member of this._members) {
@@ -66,7 +63,7 @@ export class EnumTsDsl extends Mixed {
   override toAst(ctx: AstContext) {
     const node = ts.factory.createEnumDeclaration(
       this.modifiers,
-      this.$node(ctx, this._name) as ts.Identifier,
+      this.$node(ctx, this.name) as ts.Identifier,
       this.$node(ctx, this._members) as ReadonlyArray<ts.EnumMember>,
     );
     return this.$docs(ctx, node);

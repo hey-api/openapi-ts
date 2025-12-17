@@ -43,8 +43,8 @@ export default defineConfig(() => {
             // 'circular.yaml',
             // 'dutchie.json',
             // 'enum-names-values.yaml',
-            // 'full.yaml',
-            'integer-formats.yaml',
+            'full.yaml',
+            // 'integer-formats.yaml',
             // 'invalid',
             // 'object-property-names.yaml',
             // 'openai.yaml',
@@ -54,7 +54,7 @@ export default defineConfig(() => {
             // 'sdk-instance.yaml',
             // 'sdk-method-class-conflict.yaml',
             // 'sdk-nested-classes.yaml',
-            'sdk-nested-conflict.yaml',
+            // 'sdk-nested-conflict.yaml',
             // 'string-with-format.yaml',
             // 'transformers.json',
             // 'transformers-recursive.json',
@@ -240,7 +240,7 @@ export default defineConfig(() => {
         {
           // baseUrl: false,
           // exportFromIndex: true,
-          name: '@hey-api/client-nuxt',
+          // name: '@hey-api/client-nuxt',
           // runtimeConfigPath: path.resolve(__dirname, 'hey-api.ts'),
           // runtimeConfigPath: './src/hey-api.ts',
           // strictBaseUrl: true,
@@ -285,8 +285,8 @@ export default defineConfig(() => {
           //   fields.unwrap('path')
           // },
           // include...
-          // instance: 'Root',
-          methodNameBuilder: '{{name}}Methods',
+          instance: 'Root',
+          methodNameBuilder: '{{name}}',
           name: '@hey-api/sdk',
           // operationId: false,
           // paramsStructure: 'flat',
@@ -349,7 +349,7 @@ export default defineConfig(() => {
             // name: '{{name}}MO',
             // name: 'options',
           },
-          // name: '@tanstack/react-query',
+          name: '@tanstack/react-query',
           queryKeys: {
             // name: '{{name}}QK',
             // name: 'options',

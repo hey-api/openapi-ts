@@ -1,8 +1,9 @@
 import type {
   AnalysisContext,
   AstContext,
+  NodeName,
+  NodeScope,
   Ref,
-  Symbol,
 } from '@hey-api/codegen-core';
 import { ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
@@ -10,12 +11,13 @@ import ts from 'typescript';
 import type { TypeTsDsl } from '../base';
 import { TsDsl } from '../base';
 
-type Type = Symbol | string | ts.TypeNode | TypeTsDsl;
+type Type = NodeName | ts.TypeNode | TypeTsDsl;
 
 const Mixed = TsDsl<ts.UnionTypeNode>;
 
 export class TypeOrTsDsl extends Mixed {
   readonly '~dsl' = 'TypeOrTsDsl';
+  override scope: NodeScope = 'type';
 
   protected _types: Array<Ref<Type>> = [];
 

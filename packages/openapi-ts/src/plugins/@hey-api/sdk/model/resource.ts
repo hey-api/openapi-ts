@@ -120,7 +120,12 @@ export class SdkResourceModel {
       const { node, symbol: symbolClass } = this.classToNode(plugin);
 
       if (this.isRoot && plugin.config.instance) {
-        node.do(...this.rootClassToNode(symbolClass, dependencies, plugin));
+        this.enrichRootClass({
+          dependencies,
+          node,
+          plugin,
+          symbol: symbolClass,
+        });
       }
 
       this.operations.forEach((event, index) => {
@@ -286,6 +291,79 @@ export class SdkResourceModel {
     return { node, symbol };
   }
 
+  private enrichRootClass(args: {
+    dependencies: Array<ReturnType<typeof $.class>>;
+    node: ReturnType<typeof $.class>;
+    plugin: HeyApiSdkPlugin['Instance'];
+    symbol: Symbol;
+  }): void {
+    const { dependencies, node, plugin, symbol } = args;
+    const symbolClient = plugin.symbol('HeyApiClient', {
+      meta: {
+        category: 'utility',
+        resource: 'class',
+        resourceId: 'HeyApiClient',
+        tool: 'sdk',
+      },
+    });
+    dependencies.push(createClientClass({ plugin, symbol: symbolClient }));
+    const symbolRegistry = plugin.symbol('HeyApiRegistry', {
+      meta: {
+        category: 'utility',
+        resource: 'class',
+        resourceId: 'HeyApiRegistry',
+        tool: 'sdk',
+      },
+    });
+    dependencies.push(
+      createRegistryClass({
+        plugin,
+        sdkSymbol: symbol,
+        symbol: symbolRegistry,
+      }),
+    );
+    const isClientRequired =
+      !plugin.config.client || !plugin.getSymbol({ category: 'client' });
+    const registry = plugin.symbol('__registry');
+    node.accessPattern = (node) =>
+      $(node.name).attr(registry).attr('get').call();
+    node.do(
+      $.field(registry, (f) =>
+        f
+          .public()
+          .static()
+          .readonly()
+          .assign($.new(symbolRegistry).generic(symbol)),
+      ),
+      $.newline(),
+      $.init((i) =>
+        i
+          .param('args', (p) =>
+            p.required(isClientRequired).type(
+              $.type
+                .object()
+                .prop('client', (p) =>
+                  p.required(isClientRequired).type(
+                    plugin.referenceSymbol({
+                      category: 'external',
+                      resource: 'client.Client',
+                    }),
+                  ),
+                )
+                .prop('key', (p) => p.optional().type('string')),
+            ),
+          )
+          .do(
+            $('super').call('args'),
+            $(symbol)
+              .attr(registry)
+              .attr('set')
+              .call('this', $('args').attr('key').required(isClientRequired)),
+          ),
+      ),
+    );
+  }
+
   private implementFn<
     T extends ReturnType<typeof $.func | typeof $.method>,
   >(args: {
@@ -351,75 +429,5 @@ export class SdkResourceModel {
       )
       .params(...opParameters.parameters)
       .do(...statements) as T;
-  }
-
-  private rootClassToNode(
-    symbol: Symbol,
-    dependencies: Array<ReturnType<typeof $.class>>,
-    plugin: HeyApiSdkPlugin['Instance'],
-  ): ReadonlyArray<
-    ReturnType<typeof $.field | typeof $.init | typeof $.newline>
-  > {
-    const symbolClient = plugin.symbol('HeyApiClient', {
-      meta: {
-        category: 'utility',
-        resource: 'class',
-        resourceId: 'HeyApiClient',
-        tool: 'sdk',
-      },
-    });
-    dependencies.push(createClientClass({ plugin, symbol: symbolClient }));
-    const symbolRegistry = plugin.symbol('HeyApiRegistry', {
-      meta: {
-        category: 'utility',
-        resource: 'class',
-        resourceId: 'HeyApiRegistry',
-        tool: 'sdk',
-      },
-    });
-    dependencies.push(
-      createRegistryClass({
-        plugin,
-        sdkSymbol: symbol,
-        symbol: symbolRegistry,
-      }),
-    );
-    const isClientRequired =
-      !plugin.config.client || !plugin.getSymbol({ category: 'client' });
-    return [
-      $.field('__registry', (f) =>
-        f
-          .public()
-          .static()
-          .readonly()
-          .assign($.new(symbolRegistry).generic(symbol)),
-      ),
-      $.newline(),
-      $.init((i) =>
-        i
-          .param('args', (p) =>
-            p.required(isClientRequired).type(
-              $.type
-                .object()
-                .prop('client', (p) =>
-                  p.required(isClientRequired).type(
-                    plugin.referenceSymbol({
-                      category: 'external',
-                      resource: 'client.Client',
-                    }),
-                  ),
-                )
-                .prop('key', (p) => p.optional().type('string')),
-            ),
-          )
-          .do(
-            $('super').call('args'),
-            $(symbol)
-              .attr('__registry')
-              .attr('set')
-              .call('this', $('args').attr('key').required(isClientRequired)),
-          ),
-      ),
-    ];
   }
 }

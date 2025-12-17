@@ -1,7 +1,7 @@
 import type {
   AnalysisContext,
   AstContext,
-  Symbol,
+  NodeName,
 } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
@@ -14,7 +14,7 @@ import { TypeArgsMixin } from '../mixins/type-args';
 import { f } from '../utils/factories';
 
 export type CallCallee = string | MaybeTsDsl<ts.Expression>;
-export type CallArg = Symbol | string | MaybeTsDsl<ts.Expression>;
+export type CallArg = NodeName | MaybeTsDsl<ts.Expression>;
 export type CallArgs = ReadonlyArray<CallArg | undefined>;
 export type CallCtor = (callee: CallCallee, ...args: CallArgs) => CallTsDsl;
 

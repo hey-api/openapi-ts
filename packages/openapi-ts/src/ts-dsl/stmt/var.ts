@@ -1,10 +1,9 @@
 import type {
   AnalysisContext,
   AstContext,
-  Ref,
-  Symbol,
+  NodeName,
 } from '@hey-api/codegen-core';
-import { isSymbol, ref } from '@hey-api/codegen-core';
+import { isSymbol } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl, TypeTsDsl } from '../base';
@@ -16,8 +15,6 @@ import { ValueMixin } from '../mixins/value';
 import { TypeExprTsDsl } from '../type/expr';
 import { safeRuntimeName } from '../utils/name';
 
-export type VarName = Symbol | string;
-
 const Mixed = DefaultMixin(
   DocMixin(
     ExportMixin(
@@ -28,17 +25,16 @@ const Mixed = DefaultMixin(
 
 export class VarTsDsl extends Mixed {
   readonly '~dsl' = 'VarTsDsl';
+  override readonly nameSanitizer = safeRuntimeName;
 
   protected kind: ts.NodeFlags = ts.NodeFlags.None;
-  protected name?: Ref<VarName>;
   protected _type?: TypeTsDsl;
 
-  constructor(name?: VarName) {
+  constructor(name?: NodeName) {
     super();
-    if (name) this.name = ref(name);
+    if (name) this.name.set(name);
     if (isSymbol(name)) {
       name.setKind('var');
-      name.setNameSanitizer(safeRuntimeName);
       name.setNode(this);
     }
   }

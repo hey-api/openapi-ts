@@ -1,4 +1,9 @@
-import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
+import type {
+  AnalysisContext,
+  AstContext,
+  NodeName,
+  NodeScope,
+} from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -6,21 +11,20 @@ import { TsDsl } from '../base';
 import { DocMixin } from '../mixins/doc';
 import { ReadonlyMixin } from '../mixins/modifiers';
 
-export type TypeIdxSigName = string;
 export type TypeIdxSigType = string | MaybeTsDsl<ts.TypeNode>;
 
 const Mixed = DocMixin(ReadonlyMixin(TsDsl<ts.IndexSignatureDeclaration>));
 
 export class TypeIdxSigTsDsl extends Mixed {
   readonly '~dsl' = 'TypeIdxSigTsDsl';
+  override scope: NodeScope = 'type';
 
   protected _key?: TypeIdxSigType;
-  protected _name: TypeIdxSigName;
   protected _type?: TypeIdxSigType;
 
-  constructor(name: TypeIdxSigName, fn?: (i: TypeIdxSigTsDsl) => void) {
+  constructor(name: NodeName, fn?: (i: TypeIdxSigTsDsl) => void) {
     super();
-    this._name = name;
+    this.name.set(name);
     fn?.(this);
   }
 
@@ -55,7 +59,7 @@ export class TypeIdxSigTsDsl extends Mixed {
         ts.factory.createParameterDeclaration(
           undefined,
           undefined,
-          this._name,
+          this.$node(ctx, this.name) as ts.BindingName,
           undefined,
           this.$type(ctx, this._key),
         ),
@@ -67,20 +71,19 @@ export class TypeIdxSigTsDsl extends Mixed {
 
   $validate(): asserts this is this & {
     _key: TypeIdxSigType;
-    _name: TypeIdxSigName;
     _type: TypeIdxSigType;
   } {
     const missing = this.missingRequiredCalls();
     if (missing.length === 0) return;
+    const name = this.name.toString();
     throw new Error(
-      `Index signature${this._name ? ` "${this._name}"` : ''} missing ${missing.join(' and ')}`,
+      `Index signature${name ? ` "${name}"` : ''} missing ${missing.join(' and ')}`,
     );
   }
 
   private missingRequiredCalls(): ReadonlyArray<string> {
     const missing: Array<string> = [];
     if (!this._key) missing.push('.key()');
-    if (!this._name) missing.push('.name()');
     if (!this._type) missing.push('.\u200Btype()');
     return missing;
   }

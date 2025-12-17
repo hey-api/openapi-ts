@@ -1,8 +1,8 @@
 import type {
   AnalysisContext,
   AstContext,
+  NodeName,
   Ref,
-  Symbol,
 } from '@hey-api/codegen-core';
 import { ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
@@ -12,7 +12,7 @@ import { TsDsl } from '../base';
 import { ExprMixin } from '../mixins/expr';
 import { f } from '../utils/factories';
 
-export type AwaitExpr = Symbol | string | MaybeTsDsl<ts.Expression>;
+export type AwaitExpr = NodeName | MaybeTsDsl<ts.Expression>;
 export type AwaitCtor = (expr: AwaitExpr) => AwaitTsDsl;
 
 const Mixed = ExprMixin(TsDsl<ts.AwaitExpression>);

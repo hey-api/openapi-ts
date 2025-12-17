@@ -12,11 +12,9 @@ import { getPublicTypeData } from './utils';
 export const createMutationOptions = ({
   operation,
   plugin,
-  queryFn,
 }: {
   operation: IR.OperationObject;
   plugin: PiniaColadaPlugin['Instance'];
-  queryFn: ReturnType<typeof $.expr | typeof $.call | typeof $.attr>;
 }): void => {
   const symbolMutationOptionsType = plugin.referenceSymbol({
     category: 'external',
@@ -31,8 +29,15 @@ export const createMutationOptions = ({
   const options = plugin.symbol('options');
   const fnOptions = plugin.symbol('vars');
 
-  const awaitSdkFn = $.lazy(() =>
-    $(queryFn)
+  const awaitSdkFn = $.lazy((ctx) =>
+    ctx
+      .getAccess<ReturnType<typeof $>>(
+        plugin.referenceSymbol({
+          category: 'sdk',
+          resource: 'operation',
+          resourceId: operation.id,
+        }),
+      )
       .call(
         $.object()
           .pretty()

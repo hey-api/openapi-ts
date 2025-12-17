@@ -1,10 +1,10 @@
 import type {
   AnalysisContext,
   AstContext,
-  Ref,
-  Symbol,
+  NodeName,
+  NodeRole,
 } from '@hey-api/codegen-core';
-import { ref } from '@hey-api/codegen-core';
+import { isSymbol } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl } from '../base';
@@ -25,8 +25,7 @@ import { TypeParamsMixin } from '../mixins/type-params';
 import { TypeReturnsMixin } from '../mixins/type-returns';
 import { BlockTsDsl } from '../stmt/block';
 import { TokenTsDsl } from '../token';
-
-export type MethodName = Symbol | string;
+import { safeAccessorName } from '../utils/name';
 
 const Mixed = AbstractMixin(
   AsyncMixin(
@@ -56,12 +55,15 @@ const Mixed = AbstractMixin(
 
 export class MethodTsDsl extends Mixed {
   readonly '~dsl' = 'MethodTsDsl';
+  override readonly nameSanitizer = safeAccessorName;
+  override role?: NodeRole = 'accessor';
 
-  protected name: Ref<MethodName>;
-
-  constructor(name: MethodName, fn?: (m: MethodTsDsl) => void) {
+  constructor(name: NodeName, fn?: (m: MethodTsDsl) => void) {
     super();
-    this.name = ref(name);
+    this.name.set(name);
+    if (isSymbol(name)) {
+      name.setNode(this);
+    }
     fn?.(this);
   }
 

@@ -1,4 +1,8 @@
-import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
+import type {
+  AnalysisContext,
+  AstContext,
+  NodeScope,
+} from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -28,6 +32,7 @@ const Mixed = TsDsl<ts.TypeOperatorNode>;
  */
 export class TypeOperatorTsDsl extends Mixed {
   readonly '~dsl' = 'TypeOperatorTsDsl';
+  override scope: NodeScope = 'type';
 
   protected _op?: Op;
   protected _type?: Type;

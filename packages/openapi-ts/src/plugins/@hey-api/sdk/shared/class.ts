@@ -4,8 +4,6 @@ import { $ } from '~/ts-dsl';
 
 import type { HeyApiSdkPlugin } from '../types';
 
-export const registryName = '__registry';
-
 export const createRegistryClass = ({
   plugin,
   sdkSymbol,

@@ -1,8 +1,9 @@
 import type {
   AnalysisContext,
   AstContext,
+  NodeName,
+  NodeScope,
   Ref,
-  Symbol,
 } from '@hey-api/codegen-core';
 import { isRef, ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
@@ -11,13 +12,14 @@ import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
 import { TypeExprMixin } from '../mixins/type-expr';
 
-type Base = Symbol | string | MaybeTsDsl<ts.EntityName>;
-type Right = Symbol | string | ts.Identifier;
+type Base = NodeName | MaybeTsDsl<ts.EntityName>;
+type Right = NodeName | ts.Identifier;
 
 const Mixed = TypeExprMixin(TsDsl<ts.QualifiedName>);
 
 export class TypeAttrTsDsl extends Mixed {
   readonly '~dsl' = 'TypeAttrTsDsl';
+  override scope: NodeScope = 'type';
 
   protected _base?: Ref<Base>;
   protected _right!: Ref<Right>;

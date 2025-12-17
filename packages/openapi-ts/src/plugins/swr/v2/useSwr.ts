@@ -12,11 +12,9 @@ import type { SwrPlugin } from '../types';
 export const createUseSwr = ({
   operation,
   plugin,
-  queryFn,
 }: {
   operation: IR.OperationObject;
   plugin: SwrPlugin['Instance'];
-  queryFn: ReturnType<typeof $.expr | typeof $.call | typeof $.attr>;
 }): void => {
   if (hasOperationSse({ operation })) {
     return;
@@ -33,8 +31,15 @@ export const createUseSwr = ({
     }),
   });
 
-  const awaitSdkFn = $.lazy(() =>
-    $(queryFn)
+  const awaitSdkFn = $.lazy((ctx) =>
+    ctx
+      .getAccess<ReturnType<typeof $>>(
+        plugin.referenceSymbol({
+          category: 'sdk',
+          resource: 'operation',
+          resourceId: operation.id,
+        }),
+      )
       .call($.object().prop('throwOnError', $.literal(true)))
       .await(),
   );

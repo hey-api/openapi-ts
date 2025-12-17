@@ -22,11 +22,9 @@ const optionsParamName = 'options';
 export const createQueryOptions = ({
   operation,
   plugin,
-  queryFn,
 }: {
   operation: IR.OperationObject;
   plugin: PluginInstance;
-  queryFn: ReturnType<typeof $.expr | typeof $.call | typeof $.attr>;
 }): void => {
   if (hasOperationSse({ operation })) {
     return;
@@ -69,8 +67,15 @@ export const createQueryOptions = ({
 
   const typeResponse = useTypeResponse({ operation, plugin });
 
-  const awaitSdkFn = $.lazy(() =>
-    $(queryFn)
+  const awaitSdkFn = $.lazy((ctx) =>
+    ctx
+      .getAccess<ReturnType<typeof $>>(
+        plugin.referenceSymbol({
+          category: 'sdk',
+          resource: 'operation',
+          resourceId: operation.id,
+        }),
+      )
       .call(
         $.object()
           .spread(optionsParamName)
