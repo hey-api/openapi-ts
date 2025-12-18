@@ -10,7 +10,7 @@ export type VehicleDto = {
 };
 
 export type CarDto = VehicleDto & {
-    $type: 'Car' | 'Volvo';
+    $type: 'Car';
 } & {
     modelName: string;
 };

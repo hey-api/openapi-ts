@@ -79,47 +79,6 @@ const findDiscriminatorsInSchema = ({
   return discriminators;
 };
 
-/**
- * Gets all discriminator values for a schema and its children in the inheritance hierarchy.
- * For intermediate schemas (those that are extended by others), returns a union of all values.
- */
-const getAllDiscriminatorValues = ({
-  context,
-  discriminator,
-  schemaRef,
-}: {
-  context: Context;
-  discriminator: NonNullable<SchemaObject['discriminator']>;
-  schemaRef: string;
-}): string[] => {
-  const values: string[] = [];
-
-  // Check each entry in the discriminator mapping
-  for (const [value, mappedSchemaRef] of Object.entries(
-    discriminator.mapping || {},
-  )) {
-    if (mappedSchemaRef === schemaRef) {
-      // This is the current schema's own value
-      values.push(value);
-      continue;
-    }
-
-    // Check if the mapped schema extends the current schema
-    const mappedSchema = context.resolveRef<SchemaObject>(mappedSchemaRef);
-    if (mappedSchema.allOf) {
-      for (const item of mappedSchema.allOf) {
-        if ('$ref' in item && item.$ref === schemaRef) {
-          // This schema extends the current schema, add its value
-          values.push(value);
-          break;
-        }
-      }
-    }
-  }
-
-  return values;
-};
-
 const parseSchemaJsDoc = ({
   irSchema,
   schema,
@@ -460,22 +419,12 @@ const parseAllOf = ({
           );
 
           if (values.length > 0) {
-            // For schemas that are extended by others, we need to include all child discriminator values
-            // to create a union type (e.g., CarDto should have $type: 'Car' | 'Volvo')
-            const allValues = getAllDiscriminatorValues({
-              context,
-              discriminator,
-              schemaRef: state.$ref,
-            });
-
-            // Use allValues if we found children, otherwise use the original values
-            const finalValues = allValues.length > 0 ? allValues : values;
-
-            const valueSchemas: ReadonlyArray<IR.SchemaObject> =
-              finalValues.map((value) => ({
+            const valueSchemas: ReadonlyArray<IR.SchemaObject> = values.map(
+              (value) => ({
                 const: value,
                 type: 'string',
-              }));
+              }),
+            );
             const irDiscriminatorSchema: IR.SchemaObject = {
               properties: {
                 [discriminator.propertyName]:
