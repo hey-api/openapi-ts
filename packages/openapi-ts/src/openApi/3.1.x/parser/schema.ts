@@ -32,6 +32,98 @@ export const getSchemaTypes = ({
   return [];
 };
 
+/**
+ * Recursively finds discriminators in a schema, including nested allOf compositions.
+ * This is needed when a schema extends another schema via allOf, and that parent
+ * schema is itself an allOf composition with discriminators in inline schemas.
+ */
+const findDiscriminatorsInSchema = ({
+  context,
+  discriminators = [],
+  schema,
+}: {
+  context: Context;
+  discriminators?: Array<{
+    discriminator: NonNullable<SchemaObject['discriminator']>;
+    oneOf?: SchemaObject['oneOf'];
+  }>;
+  schema: SchemaObject;
+}): Array<{
+  discriminator: NonNullable<SchemaObject['discriminator']>;
+  oneOf?: SchemaObject['oneOf'];
+}> => {
+  // Check if this schema has a discriminator
+  if (schema.discriminator) {
+    discriminators.push({
+      discriminator: schema.discriminator,
+      oneOf: schema.oneOf,
+    });
+  }
+
+  // If this schema is an allOf composition, recursively search in its components
+  if (schema.allOf) {
+    for (const compositionSchema of schema.allOf) {
+      let resolvedSchema: SchemaObject;
+      if (compositionSchema.$ref) {
+        resolvedSchema = context.resolveRef<SchemaObject>(
+          compositionSchema.$ref,
+        );
+      } else {
+        resolvedSchema = compositionSchema;
+      }
+
+      findDiscriminatorsInSchema({
+        context,
+        discriminators,
+        schema: resolvedSchema,
+      });
+    }
+  }
+
+  return discriminators;
+};
+
+/**
+ * Gets all discriminator values for a schema and its children in the inheritance hierarchy.
+ * For intermediate schemas (those that are extended by others), returns a union of all values.
+ */
+const getAllDiscriminatorValues = ({
+  context,
+  discriminator,
+  schemaRef,
+}: {
+  context: Context;
+  discriminator: NonNullable<SchemaObject['discriminator']>;
+  schemaRef: string;
+}): Array<string> => {
+  const values: Array<string> = [];
+
+  // Check each entry in the discriminator mapping
+  for (const [value, mappedSchemaRef] of Object.entries(
+    discriminator.mapping || {},
+  )) {
+    if (mappedSchemaRef === schemaRef) {
+      // This is the current schema's own value
+      values.push(value);
+      continue;
+    }
+
+    // Check if the mapped schema extends the current schema
+    const mappedSchema = context.resolveRef<SchemaObject>(mappedSchemaRef);
+    if (mappedSchema.allOf) {
+      for (const item of mappedSchema.allOf) {
+        if (item.$ref && item.$ref === schemaRef) {
+          // This schema extends the current schema, add its value
+          values.push(value);
+          break;
+        }
+      }
+    }
+  }
+
+  return values;
+};
+
 const parseSchemaJsDoc = ({
   irSchema,
   schema,
@@ -389,6 +481,15 @@ const parseAllOf = ({
 
   const compositionSchemas = schema.allOf;
 
+  // Collect discriminator information to add after all compositions are processed
+  type DiscriminatorInfo = {
+    discriminator: NonNullable<SchemaObject['discriminator']>;
+    isRequired: boolean;
+    values: ReadonlyArray<string>;
+  };
+  const discriminatorsToAdd: Array<DiscriminatorInfo> = [];
+  const addedDiscriminators = new Set<string>();
+
   for (const compositionSchema of compositionSchemas) {
     const originalInAllOf = state.inAllOf;
     // Don't propagate inAllOf flag to $ref schemas to avoid issues with reusable components
@@ -421,42 +522,132 @@ const parseAllOf = ({
     if (compositionSchema.$ref) {
       const ref = context.resolveRef<SchemaObject>(compositionSchema.$ref);
       // `$ref` should be passed from the root `parseSchema()` call
-      if (ref.discriminator && state.$ref) {
-        const values = discriminatorValues(
-          state.$ref,
-          ref.discriminator.mapping,
-          // If the ref has oneOf, we only use the schema name as the value
-          // only if current schema is part of the oneOf. Else it is extending
-          // the ref schema
-          ref.oneOf
-            ? () => ref.oneOf!.some((o) => '$ref' in o && o.$ref === state.$ref)
-            : undefined,
-        );
-        if (values.length > 0) {
-          const valueSchemas: ReadonlyArray<IR.SchemaObject> = values.map(
-            (value) => ({
-              const: value,
-              type: 'string',
-            }),
-          );
-          const irDiscriminatorSchema: IR.SchemaObject = {
-            properties: {
-              [ref.discriminator.propertyName]:
-                valueSchemas.length > 1
-                  ? {
-                      items: valueSchemas,
-                      logicalOperator: 'or',
-                    }
-                  : valueSchemas[0]!,
-            },
-            type: 'object',
-          };
-          if (ref.required?.includes(ref.discriminator.propertyName)) {
-            irDiscriminatorSchema.required = [ref.discriminator.propertyName];
+      if (state.$ref) {
+        // Find all discriminators in the referenced schema, including nested allOf compositions
+        const discriminators = findDiscriminatorsInSchema({
+          context,
+          schema: ref,
+        });
+
+        // Process each discriminator found
+        for (const { discriminator, oneOf } of discriminators) {
+          // Skip if we've already collected this discriminator property
+          if (addedDiscriminators.has(discriminator.propertyName)) {
+            continue;
           }
-          schemaItems.push(irDiscriminatorSchema);
+
+          const values = discriminatorValues(
+            state.$ref,
+            discriminator.mapping,
+            // If the ref has oneOf, we only use the schema name as the value
+            // only if current schema is part of the oneOf. Else it is extending
+            // the ref schema
+            oneOf
+              ? () => oneOf.some((o) => '$ref' in o && o.$ref === state.$ref)
+              : undefined,
+          );
+
+          if (values.length > 0) {
+            // Check if the discriminator property is required in any of the discriminator schemas
+            const isRequired = discriminators.some(
+              (d) =>
+                d.discriminator.propertyName === discriminator.propertyName &&
+                // Check in the ref's required array or in the allOf components
+                (ref.required?.includes(d.discriminator.propertyName) ||
+                  (ref.allOf &&
+                    ref.allOf.some((item) => {
+                      const resolvedItem = item.$ref
+                        ? context.resolveRef<SchemaObject>(item.$ref)
+                        : item;
+                      return resolvedItem.required?.includes(
+                        d.discriminator.propertyName,
+                      );
+                    }))),
+            );
+
+            discriminatorsToAdd.push({
+              discriminator,
+              isRequired,
+              values,
+            });
+            addedDiscriminators.add(discriminator.propertyName);
+          }
         }
       }
+    }
+  }
+
+  // Now add discriminators after all compositions have been processed
+  for (const { discriminator, isRequired, values } of discriminatorsToAdd) {
+    // Get all discriminator values including children for union types
+    const allValues = getAllDiscriminatorValues({
+      context,
+      discriminator,
+      schemaRef: state.$ref!,
+    });
+
+    // Use allValues if we found children, otherwise use the original values
+    const finalValues = allValues.length > 0 ? allValues : values;
+
+    const valueSchemas: ReadonlyArray<IR.SchemaObject> = finalValues.map(
+      (value) => ({
+        const: value,
+        type: 'string',
+      }),
+    );
+
+    const discriminatorProperty: IR.SchemaObject =
+      valueSchemas.length > 1
+        ? {
+            items: valueSchemas,
+            logicalOperator: 'or',
+          }
+        : valueSchemas[0]!;
+
+    // Find the inline schema (non-$ref) to merge the discriminator property into
+    // The inline schema should be the last non-$ref item in schemaItems
+    let inlineSchema: IR.SchemaObject | undefined;
+    for (let i = schemaItems.length - 1; i >= 0; i--) {
+      const item = schemaItems[i]!;
+      // Check if this is not a $ref schema by looking for properties or checking if it came from an inline schema
+      if (item.type === 'object' || item.properties) {
+        inlineSchema = item;
+        break;
+      }
+    }
+
+    // If we found an inline schema, add the discriminator property to it
+    if (inlineSchema) {
+      if (!inlineSchema.properties) {
+        inlineSchema.properties = {};
+      }
+      inlineSchema.properties[discriminator.propertyName] =
+        discriminatorProperty;
+
+      if (isRequired) {
+        if (!inlineSchema.required) {
+          inlineSchema.required = [];
+        }
+        if (!inlineSchema.required.includes(discriminator.propertyName)) {
+          inlineSchema.required = [
+            ...inlineSchema.required,
+            discriminator.propertyName,
+          ];
+        }
+      }
+    } else {
+      // Fallback: create a separate discriminator schema if no inline schema found
+      const irDiscriminatorSchema: IR.SchemaObject = {
+        properties: {
+          [discriminator.propertyName]: discriminatorProperty,
+        },
+        type: 'object',
+      };
+
+      if (isRequired) {
+        irDiscriminatorSchema.required = [discriminator.propertyName];
+      }
+      schemaItems.push(irDiscriminatorSchema);
     }
   }
 

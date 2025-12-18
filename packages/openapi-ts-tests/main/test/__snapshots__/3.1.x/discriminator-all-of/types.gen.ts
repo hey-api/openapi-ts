@@ -9,21 +9,18 @@ export type Foo = {
 };
 
 export type Bar = Foo & {
-    id: 'Bar';
-} & {
     bar?: string;
+    id: 'Bar';
 };
 
 export type Baz = Foo & {
-    id: 'Baz';
-} & {
     baz?: string;
+    id: 'Baz';
 };
 
 export type Qux = Foo & {
-    id: 'Qux';
-} & {
     qux?: boolean;
+    id: 'Qux';
 };
 
 export type FooMapped = {
@@ -31,21 +28,18 @@ export type FooMapped = {
 };
 
 export type BarMapped = FooMapped & {
-    id: 'bar';
-} & {
     bar?: string;
+    id: 'bar';
 };
 
 export type BazMapped = FooMapped & {
-    id: 'baz';
-} & {
     baz?: string;
+    id: 'baz';
 };
 
 export type QuxMapped = FooMapped & {
-    id: 'QuxMapped';
-} & {
     qux?: boolean;
+    id: 'QuxMapped';
 };
 
 export type FooUnion = ({
