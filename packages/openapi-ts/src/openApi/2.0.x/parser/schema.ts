@@ -270,6 +270,22 @@ const parseString = ({
   return irSchema;
 };
 
+export const parseExtensions = ({
+  source,
+  target,
+}: {
+  source: object;
+  target: object;
+}) => {
+  for (const key in source) {
+    if (key.startsWith('x-')) {
+      (target as Record<string, unknown>)[key] = (
+        source as Record<string, unknown>
+      )[key];
+    }
+  }
+};
+
 const initIrSchema = ({
   schema,
 }: {
@@ -280,6 +296,11 @@ const initIrSchema = ({
   parseSchemaJsDoc({
     irSchema,
     schema,
+  });
+
+  parseExtensions({
+    source: schema,
+    target: irSchema,
   });
 
   return irSchema;

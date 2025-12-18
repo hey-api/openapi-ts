@@ -137,7 +137,7 @@ const schemaToJsonSchemaDraft_05 = ({
         plugin,
         schema: item,
       }),
-    ) as
+    ) as unknown as
       | OpenApiV3_0_XTypes['SchemaObject']
       | OpenApiV3_0_XTypes['ReferenceObject'];
   }
@@ -235,7 +235,7 @@ const schemaToJsonSchema2020_12 = ({
         plugin,
         schema: item,
       }),
-    ) as OpenApiV3_1_XTypes['SchemaObject'];
+    ) as unknown as OpenApiV3_1_XTypes['SchemaObject'];
   }
 
   const schema = structuredClone(_schema);
