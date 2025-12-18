@@ -1,10 +1,4 @@
-import type {
-  AnalysisContext,
-  AstContext,
-  NodeName,
-  NodeRole,
-  Ref,
-} from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName, Ref } from '@hey-api/codegen-core';
 import { fromRef, isSymbol, ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
@@ -17,7 +11,6 @@ const Mixed = TsDsl<ts.TemplateExpression | ts.NoSubstitutionTemplateLiteral>;
 
 export class TemplateTsDsl extends Mixed {
   readonly '~dsl' = 'TemplateTsDsl';
-  override role?: NodeRole = 'literal';
 
   protected parts: Array<Ref<TemplatePart>> = [];
 
@@ -38,9 +31,8 @@ export class TemplateTsDsl extends Mixed {
     return this;
   }
 
-  override toAst(ctx: AstContext) {
+  override toAst() {
     const parts = this.$node(
-      ctx,
       this.parts.map((p) => {
         const part = fromRef(p);
         return isSymbol(part) ? part.finalName : part;

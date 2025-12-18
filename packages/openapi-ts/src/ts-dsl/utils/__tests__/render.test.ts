@@ -3,10 +3,10 @@ import { Project } from '@hey-api/codegen-core';
 import ts from 'typescript';
 import { describe, expect, it } from 'vitest';
 
-import { astContext, type TsDsl } from '~/ts-dsl';
+import type { TsDsl } from '~/ts-dsl';
 
-import { TypeScriptRenderer } from '../typescript';
-import type { ModuleExport, ModuleImport } from '../utils';
+import { TypeScriptRenderer } from '../render';
+import type { ModuleExport, ModuleImport } from '../render-utils';
 
 describe('TypeScriptRenderer', () => {
   const renderer = new TypeScriptRenderer();
@@ -57,7 +57,7 @@ describe('TypeScriptRenderer', () => {
       modulePath: 'foo',
       namespaceImport: undefined,
     };
-    const node = renderer['renderImport'](astContext, group);
+    const node = renderer['renderImport'](group);
     expect(ts.isImportDeclaration(node)).toBe(true);
   });
 
@@ -76,7 +76,7 @@ describe('TypeScriptRenderer', () => {
       modulePath: 'bar',
       namespaceExport: undefined,
     };
-    const node = renderer['renderExport'](astContext, group);
+    const node = renderer['renderExport'](group);
     expect(ts.isExportDeclaration(node)).toBe(true);
   });
 });

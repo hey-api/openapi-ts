@@ -1,8 +1,4 @@
-import type {
-  AnalysisContext,
-  AstContext,
-  NodeScope,
-} from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeScope } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -45,10 +41,10 @@ export class TypeIdxTsDsl extends Mixed {
     return this;
   }
 
-  override toAst(ctx: AstContext) {
+  override toAst() {
     return ts.factory.createIndexedAccessTypeNode(
-      this.$type(ctx, this._base),
-      this.$type(ctx, this._index),
+      this.$type(this._base),
+      this.$type(this._index),
     );
   }
 }

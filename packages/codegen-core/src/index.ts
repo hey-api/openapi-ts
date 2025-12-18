@@ -20,16 +20,12 @@ export type {
   Language,
   NameConflictResolvers,
 } from './languages/types';
-export type { AstContext } from './nodes/context';
 export type {
-  AccessPatternContext,
-  AccessPatternOptions,
   INode as Node,
   NodeName,
   NodeNameSanitizer,
-  NodeRole,
+  NodeRelationship,
   NodeScope,
-  StructuralRelationship,
 } from './nodes/node';
 export type { IOutput as Output } from './output';
 export {

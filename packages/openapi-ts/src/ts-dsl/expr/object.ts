@@ -1,8 +1,4 @@
-import type {
-  AnalysisContext,
-  AstContext,
-  NodeName,
-} from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -87,11 +83,11 @@ export class ObjectTsDsl extends Mixed {
     return this;
   }
 
-  override toAst(ctx: AstContext) {
+  override toAst() {
     const node = ts.factory.createObjectLiteralExpression(
-      this.$node(ctx, this._props),
+      this.$node(this._props),
       this.$multiline(this._props.length),
     );
-    return this.$hint(ctx, node);
+    return this.$hint(node);
   }
 }

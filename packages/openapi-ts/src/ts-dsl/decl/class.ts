@@ -1,10 +1,4 @@
-import type {
-  AnalysisContext,
-  AstContext,
-  NodeName,
-  NodeRole,
-  Ref,
-} from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName, Ref } from '@hey-api/codegen-core';
 import { isSymbol, ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
@@ -33,7 +27,6 @@ const Mixed = AbstractMixin(
 export class ClassTsDsl extends Mixed {
   readonly '~dsl' = 'ClassTsDsl';
   override readonly nameSanitizer = safeRuntimeName;
-  override role?: NodeRole = 'container';
 
   protected baseClass?: Ref<NodeName>;
   protected body: Body = [];
@@ -106,21 +99,21 @@ export class ClassTsDsl extends Mixed {
     return this;
   }
 
-  override toAst(ctx: AstContext) {
-    const body = this.$node(ctx, this.body) as ReadonlyArray<ts.ClassElement>;
+  override toAst() {
+    const body = this.$node(this.body) as ReadonlyArray<ts.ClassElement>;
     const node = ts.factory.createClassDeclaration(
-      [...this.$decorators(ctx), ...this.modifiers],
-      this.$node(ctx, this.name) as ts.Identifier,
-      this.$generics(ctx),
-      this._heritage(ctx),
+      [...this.$decorators(), ...this.modifiers],
+      this.$node(this.name) as ts.Identifier,
+      this.$generics(),
+      this._heritage(),
       body,
     );
-    return this.$docs(ctx, node);
+    return this.$docs(node);
   }
 
   /** Builds heritage clauses (extends). */
-  private _heritage(ctx: AstContext): ReadonlyArray<ts.HeritageClause> {
-    const node = this.$node(ctx, this.baseClass);
+  private _heritage(): ReadonlyArray<ts.HeritageClause> {
+    const node = this.$node(this.baseClass);
     if (!node) return [];
     return [
       ts.factory.createHeritageClause(ts.SyntaxKind.ExtendsKeyword, [

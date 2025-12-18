@@ -1,8 +1,4 @@
-import type {
-  AnalysisContext,
-  AstContext,
-  NodeName,
-} from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -30,9 +26,9 @@ export class DecoratorTsDsl extends Mixed {
     ctx.analyze(this.name);
   }
 
-  override toAst(ctx: AstContext) {
-    const target = this.$node(ctx, this.name);
-    const args = this.$args(ctx);
+  override toAst() {
+    const target = this.$node(this.name);
+    const args = this.$args();
     return ts.factory.createDecorator(
       args.length
         ? ts.factory.createCallExpression(target, undefined, args)

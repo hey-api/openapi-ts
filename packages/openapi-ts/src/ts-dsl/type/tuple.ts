@@ -1,8 +1,4 @@
-import type {
-  AnalysisContext,
-  AstContext,
-  NodeScope,
-} from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeScope } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { TypeTsDsl } from '../base';
@@ -33,9 +29,9 @@ export class TypeTupleTsDsl extends Mixed {
     return this;
   }
 
-  override toAst(ctx: AstContext) {
+  override toAst() {
     return ts.factory.createTupleTypeNode(
-      this._elements.map((t) => this.$type(ctx, t)),
+      this._elements.map((t) => this.$type(t)),
     );
   }
 }

@@ -1,6 +1,5 @@
 import type {
   AnalysisContext,
-  AstContext,
   NodeName,
   NodeScope,
   Ref,
@@ -43,17 +42,17 @@ export class TypePropTsDsl extends Mixed {
     return this;
   }
 
-  override toAst(ctx: AstContext) {
+  override toAst() {
     const name = this.name.toString();
     if (!this._type || !name) {
       throw new Error(`Type not specified for property '${name}'`);
     }
     const node = ts.factory.createPropertySignature(
       this.modifiers,
-      this.$node(ctx, safePropName(name)),
-      this._optional ? this.$node(ctx, new TokenTsDsl().optional()) : undefined,
-      this.$type(ctx, this._type),
+      this.$node(safePropName(name)),
+      this._optional ? this.$node(new TokenTsDsl().optional()) : undefined,
+      this.$type(this._type),
     );
-    return this.$docs(ctx, node);
+    return this.$docs(node);
   }
 }

@@ -1,4 +1,4 @@
-import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
+import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl } from '../base';
@@ -32,15 +32,13 @@ export class LiteralTsDsl extends Mixed {
     super.analyze(ctx);
   }
 
-  override toAst(ctx: AstContext) {
+  override toAst() {
     if (typeof this.value === 'boolean') {
       return this.value ? ts.factory.createTrue() : ts.factory.createFalse();
     }
     if (typeof this.value === 'number') {
       const expr = ts.factory.createNumericLiteral(Math.abs(this.value));
-      return this.value < 0
-        ? this.$node(ctx, new PrefixTsDsl(expr).neg())
-        : expr;
+      return this.value < 0 ? this.$node(new PrefixTsDsl(expr).neg()) : expr;
     }
     if (typeof this.value === 'string') {
       return ts.factory.createStringLiteral(this.value, true);

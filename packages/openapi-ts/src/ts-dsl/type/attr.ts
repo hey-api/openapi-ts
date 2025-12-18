@@ -1,6 +1,5 @@
 import type {
   AnalysisContext,
-  AstContext,
   NodeName,
   NodeScope,
   Ref,
@@ -57,17 +56,17 @@ export class TypeAttrTsDsl extends Mixed {
     return this;
   }
 
-  override toAst(ctx: AstContext) {
+  override toAst() {
     if (!this._base) {
       throw new Error('TypeAttrTsDsl: missing base for qualified name');
     }
-    const left = this.$node(ctx, this._base);
+    const left = this.$node(this._base);
     if (!ts.isEntityName(left)) {
       throw new Error('TypeAttrTsDsl: base must be an EntityName');
     }
     return ts.factory.createQualifiedName(
       left,
-      this.$node(ctx, this._right) as ts.Identifier,
+      this.$node(this._right) as ts.Identifier,
     );
   }
 }

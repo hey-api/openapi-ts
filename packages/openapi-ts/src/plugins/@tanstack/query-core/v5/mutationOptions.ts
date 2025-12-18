@@ -30,7 +30,7 @@ export const createMutationOptions = ({
 
   const awaitSdkFn = $.lazy((ctx) =>
     ctx
-      .getAccess<ReturnType<typeof $>>(
+      .access(
         plugin.referenceSymbol({
           category: 'sdk',
           resource: 'operation',
@@ -57,12 +57,12 @@ export const createMutationOptions = ({
   }
 
   const mutationOptionsFn = 'mutationOptions';
-  const symbolMutationOptions = plugin.registerSymbol({
-    name: buildName({
+  const symbolMutationOptions = plugin.symbol(
+    buildName({
       config: plugin.config.mutationOptions,
       name: operation.id,
     }),
-  });
+  );
   const statement = $.const(symbolMutationOptions)
     .export()
     .$if(plugin.config.comments && createOperationComment(operation), (c, v) =>

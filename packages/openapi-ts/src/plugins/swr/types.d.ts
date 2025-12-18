@@ -109,7 +109,7 @@ export type UserConfig = Plugin.Name<'swr'> &
            * @returns A meta object with any properties you want to include
            *
            * @example
-           * ```typescript
+           * ```ts
            * meta: (operation) => ({
            *   customField: operation.id,
            *   isDeprecated: operation.deprecated,
@@ -170,7 +170,7 @@ export type UserConfig = Plugin.Name<'swr'> &
            * @returns A meta object with any properties you want to include
            *
            * @example
-           * ```typescript
+           * ```ts
            * meta: (operation) => ({
            *   customField: operation.id,
            *   isDeprecated: operation.deprecated,
@@ -282,7 +282,7 @@ export type UserConfig = Plugin.Name<'swr'> &
            * @returns A meta object with any properties you want to include
            *
            * @example
-           * ```typescript
+           * ```ts
            * meta: (operation) => ({
            *   customField: operation.id,
            *   isDeprecated: operation.deprecated,
@@ -427,7 +427,7 @@ export type Config = Plugin.Name<'swr'> &
        * @returns A meta object with any properties you want to include
        *
        * @example
-       * ```typescript
+       * ```ts
        * meta: (operation) => ({
        *   customField: operation.id,
        *   isDeprecated: operation.deprecated,
@@ -477,7 +477,7 @@ export type Config = Plugin.Name<'swr'> &
        * @returns A meta object with any properties you want to include
        *
        * @example
-       * ```typescript
+       * ```ts
        * meta: (operation) => ({
        *   customField: operation.id,
        *   isDeprecated: operation.deprecated,
@@ -567,7 +567,7 @@ export type Config = Plugin.Name<'swr'> &
        * @returns A meta object with any properties you want to include
        *
        * @example
-       * ```typescript
+       * ```ts
        * meta: (operation) => ({
        *   customField: operation.id,
        *   isDeprecated: operation.deprecated,

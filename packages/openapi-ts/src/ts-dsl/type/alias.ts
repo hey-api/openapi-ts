@@ -1,6 +1,5 @@
 import type {
   AnalysisContext,
-  AstContext,
   NodeName,
   NodeScope,
 } from '@hey-api/codegen-core';
@@ -49,17 +48,17 @@ export class TypeAliasTsDsl extends Mixed {
     return this;
   }
 
-  override toAst(ctx: AstContext) {
+  override toAst() {
     if (!this.value)
       throw new Error(
         `Type alias '${this.name.toString()}' is missing a type definition`,
       );
     const node = ts.factory.createTypeAliasDeclaration(
       this.modifiers,
-      this.$node(ctx, this.name) as ts.Identifier,
-      this.$generics(ctx),
-      this.$type(ctx, this.value),
+      this.$node(this.name) as ts.Identifier,
+      this.$generics(),
+      this.$type(this.value),
     );
-    return this.$docs(ctx, node);
+    return this.$docs(node);
   }
 }

@@ -1,9 +1,4 @@
-import type {
-  AnalysisContext,
-  AstContext,
-  Node,
-  NodeName,
-} from '@hey-api/codegen-core';
+import type { AnalysisContext, Node, NodeName } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -12,7 +7,7 @@ import type { BaseCtor, MixinCtor } from './types';
 
 export interface DecoratorMethods extends Node {
   /** Renders the decorators into an array of `ts.Decorator`s. */
-  $decorators(ctx: AstContext): ReadonlyArray<ts.Decorator>;
+  $decorators(): ReadonlyArray<ts.Decorator>;
   /** Adds a decorator (e.g. `@sealed({ in: 'root' })`). */
   decorator(
     name: NodeName | MaybeTsDsl<ts.Expression>,
@@ -41,8 +36,8 @@ export function DecoratorMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
       return this;
     }
 
-    protected $decorators(ctx: AstContext): ReadonlyArray<ts.Decorator> {
-      return this.$node(ctx, this.decorators);
+    protected $decorators(): ReadonlyArray<ts.Decorator> {
+      return this.$node(this.decorators);
     }
   }
 

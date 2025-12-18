@@ -1,10 +1,10 @@
-import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
+import type { AnalysisContext } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import { TsDsl } from '../base';
-import { astContext } from './context';
+import { TsDslContext } from './context';
 
-export type LazyThunk<T extends ts.Node> = (ctx: AstContext) => TsDsl<T>;
+export type LazyThunk<T extends ts.Node> = (ctx: TsDslContext) => TsDsl<T>;
 
 export class LazyTsDsl<T extends ts.Node = ts.Node> extends TsDsl<T> {
   readonly '~dsl' = 'LazyTsDsl';
@@ -18,10 +18,14 @@ export class LazyTsDsl<T extends ts.Node = ts.Node> extends TsDsl<T> {
 
   override analyze(ctx: AnalysisContext): void {
     super.analyze(ctx);
-    ctx.analyze(this._thunk(astContext));
+    ctx.analyze(this.toResult());
   }
 
-  override toAst(ctx: AstContext): T {
-    return this._thunk(ctx).toAst(ctx);
+  toResult(): TsDsl<T> {
+    return this._thunk(new TsDslContext());
+  }
+
+  override toAst(): T {
+    return this.toResult().toAst();
   }
 }

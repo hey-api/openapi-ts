@@ -1,6 +1,5 @@
 import type {
   AnalysisContext,
-  AstContext,
   NodeName,
   NodeScope,
 } from '@hey-api/codegen-core';
@@ -51,7 +50,7 @@ export class TypeIdxSigTsDsl extends Mixed {
     return this;
   }
 
-  override toAst(ctx: AstContext) {
+  override toAst() {
     this.$validate();
     const node = ts.factory.createIndexSignature(
       this.modifiers,
@@ -59,14 +58,14 @@ export class TypeIdxSigTsDsl extends Mixed {
         ts.factory.createParameterDeclaration(
           undefined,
           undefined,
-          this.$node(ctx, this.name) as ts.BindingName,
+          this.$node(this.name) as ts.BindingName,
           undefined,
-          this.$type(ctx, this._key),
+          this.$type(this._key),
         ),
       ],
-      this.$type(ctx, this._type),
+      this.$type(this._type),
     );
-    return this.$docs(ctx, node);
+    return this.$docs(node);
   }
 
   $validate(): asserts this is this & {

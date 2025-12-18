@@ -1,10 +1,5 @@
-import type {
-  AnalysisContext,
-  AstContext,
-  NodeName,
-  Ref,
-} from '@hey-api/codegen-core';
-import { ref } from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName, Ref } from '@hey-api/codegen-core';
+import { isNode, isSymbol, ref } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -28,6 +23,11 @@ export class ExprTsDsl extends Mixed {
   constructor(id: Id) {
     super();
     this._exprInput = ref(id);
+    if (typeof id === 'string' || isSymbol(id)) {
+      this.name.set(id);
+    } else if (isNode(id)) {
+      this.name.set(id.name);
+    }
   }
 
   override analyze(ctx: AnalysisContext): void {
@@ -35,7 +35,7 @@ export class ExprTsDsl extends Mixed {
     ctx.analyze(this._exprInput);
   }
 
-  override toAst(ctx: AstContext) {
-    return this.$node(ctx, this._exprInput);
+  override toAst() {
+    return this.$node(this._exprInput);
   }
 }

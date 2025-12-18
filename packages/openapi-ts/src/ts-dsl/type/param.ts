@@ -1,6 +1,5 @@
 import type {
   AnalysisContext,
-  AstContext,
   NodeName,
   NodeScope,
   Ref,
@@ -45,14 +44,14 @@ export class TypeParamTsDsl extends Mixed {
     return this;
   }
 
-  override toAst(ctx: AstContext) {
+  override toAst() {
     const name = this.name.toString();
     if (!name) throw new Error('Missing type name');
     return ts.factory.createTypeParameterDeclaration(
       undefined,
-      this.$node(ctx, this.name) as ts.Identifier,
-      this.$type(ctx, this.constraint),
-      this.$type(ctx, this.defaultValue),
+      this.$node(this.name) as ts.Identifier,
+      this.$type(this.constraint),
+      this.$type(this.defaultValue),
     );
   }
 }

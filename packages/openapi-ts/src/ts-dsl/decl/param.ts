@@ -1,8 +1,4 @@
-import type {
-  AnalysisContext,
-  AstContext,
-  NodeName,
-} from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl, TypeTsDsl } from '../base';
@@ -52,20 +48,20 @@ export class ParamTsDsl extends Mixed {
     return this;
   }
 
-  override toAst(ctx: AstContext) {
-    const name = this.$pattern(ctx) || this.name.toString();
+  override toAst() {
+    const name = this.$pattern() || this.name.toString();
     if (!name) {
       throw new Error(
         'Param must have either a name or a destructuring pattern',
       );
     }
     return ts.factory.createParameterDeclaration(
-      this.$decorators(ctx),
+      this.$decorators(),
       undefined,
       name,
-      this._optional ? this.$node(ctx, new TokenTsDsl().optional()) : undefined,
-      this.$type(ctx, this._type),
-      this.$value(ctx),
+      this._optional ? this.$node(new TokenTsDsl().optional()) : undefined,
+      this.$type(this._type),
+      this.$value(),
     );
   }
 }
