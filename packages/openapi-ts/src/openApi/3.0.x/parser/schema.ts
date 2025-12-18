@@ -91,8 +91,8 @@ const getAllDiscriminatorValues = ({
   context: Context;
   discriminator: NonNullable<SchemaObject['discriminator']>;
   schemaRef: string;
-}): string[] => {
-  const values: string[] = [];
+}): Array<string> => {
+  const values: Array<string> = [];
 
   // Check each entry in the discriminator mapping
   for (const [value, mappedSchemaRef] of Object.entries(
@@ -405,7 +405,7 @@ const parseAllOf = ({
     isRequired: boolean;
     values: ReadonlyArray<string>;
   };
-  const discriminatorsToAdd: DiscriminatorInfo[] = [];
+  const discriminatorsToAdd: Array<DiscriminatorInfo> = [];
   const addedDiscriminators = new Set<string>();
 
   for (const compositionSchema of compositionSchemas) {
@@ -527,10 +527,7 @@ const parseAllOf = ({
     // The inline schema should be the last non-$ref item in schemaItems
     let inlineSchema: IR.SchemaObject | undefined;
     for (let i = schemaItems.length - 1; i >= 0; i--) {
-      const item = schemaItems[i];
-      if (!item) {
-        continue;
-      }
+      const item = schemaItems[i]!;
       // Check if this is not a $ref schema by looking for properties or checking if it came from an inline schema
       if (item.type === 'object' || item.properties) {
         inlineSchema = item;
