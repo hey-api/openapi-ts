@@ -12,7 +12,7 @@ import type {
 } from '../types/spec';
 import { contentToSchema, mediaTypeObjects } from './mediaType';
 import { paginationField } from './pagination';
-import { schemaToIrSchema } from './schema';
+import { parseExtensions, schemaToIrSchema } from './schema';
 
 interface Operation
   extends Omit<OperationObject, 'parameters'>,
