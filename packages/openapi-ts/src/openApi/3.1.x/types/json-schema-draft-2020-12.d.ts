@@ -11,10 +11,6 @@ export interface JsonSchemaDraft2020_12
     StringKeywords,
     EnumExtensions,
     OpenApiSchemaExtensions {
-  /**
-   * OpenAPI extension fields (x-*) from the original schema.
-   * Specification Extensions may be used to add additional metadata.
-   */
   [extension: `x-${string}`]: unknown;
   /**
    * The `$comment` {@link https://json-schema.org/learn/glossary#keyword keyword} is strictly intended for adding comments to a schema. Its value must always be a string. Unlike the annotations `title`, `description`, and `examples`, JSON schema {@link https://json-schema.org/learn/glossary#implementation implementations} aren't allowed to attach any meaning or behavior to it whatsoever, and may even strip them at any time. Therefore, they are useful for leaving notes to future editors of a JSON schema, but should not be used to communicate to users of the schema.

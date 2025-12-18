@@ -8,7 +8,7 @@ import type {
   SchemaObject,
 } from '../types/spec';
 import { paginationField } from './pagination';
-import { schemaToIrSchema } from './schema';
+import { parseExtensions, schemaToIrSchema } from './schema';
 
 type Parameter = Exclude<ParameterObject, { in: 'body' }>;
 
@@ -165,13 +165,10 @@ const parameterToIrParameter = ({
     irParameter.required = parameter.required;
   }
 
-  // Copy extension fields
-  for (const key in parameter) {
-    if (key.startsWith('x-')) {
-      (irParameter as unknown as Record<string, unknown>)[key] =
-        parameter[key as keyof ParameterObject];
-    }
-  }
+  parseExtensions({
+    source: parameter,
+    target: irParameter,
+  });
 
   return irParameter;
 };

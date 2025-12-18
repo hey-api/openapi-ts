@@ -270,18 +270,16 @@ const parseString = ({
   return irSchema;
 };
 
-const parseExtensions = ({
-  irSchema,
-  schema,
+export const parseExtensions = <T extends Record<string, unknown>>({
+  source,
+  target,
 }: {
-  irSchema: IR.SchemaObject;
-  schema: SchemaObject;
+  source: T;
+  target: Record<string, unknown>;
 }) => {
-  // Copy all x-* extension fields from the source schema to the IR schema
-  for (const key in schema) {
+  for (const key in source) {
     if (key.startsWith('x-')) {
-      (irSchema as unknown as Record<string, unknown>)[key] =
-        schema[key as keyof SchemaObject];
+      target[key] = source[key];
     }
   }
 };
@@ -299,8 +297,8 @@ const initIrSchema = ({
   });
 
   parseExtensions({
-    irSchema,
-    schema,
+    source: schema,
+    target: irSchema,
   });
 
   return irSchema;

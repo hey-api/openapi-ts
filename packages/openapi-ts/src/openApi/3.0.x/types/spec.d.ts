@@ -452,10 +452,6 @@ export interface OAuthFlowsObject {
  * TODO: examples
  */
 export interface OperationObject {
-  /**
-   * OpenAPI extension fields (x-*) from the original operation.
-   * Specification Extensions may be used to add additional metadata.
-   */
   [extension: `x-${string}`]: unknown;
   /**
    * A map of possible out-of band callbacks related to the parent operation. The key is a unique identifier for the Callback Object. Each value in the map is a {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#callback-object Callback Object} that describes a request that may be initiated by the API provider and the expected responses.
@@ -552,10 +548,6 @@ export interface OperationObject {
  * TODO: examples
  */
 export interface ParameterObject {
-  /**
-   * OpenAPI extension fields (x-*) from the original parameter.
-   * Specification Extensions may be used to add additional metadata.
-   */
   [extension: `x-${string}`]: unknown;
   /**
    * If `true`, clients MAY pass a zero-length string value in place of parameters that would otherwise be omitted entirely, which the server SHOULD interpret as the parameter being unused. Default value is `false`. If {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#parameter-style `style`} is used, and if {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#style-examples behavior is _n/a_ (cannot be serialized)}, the value of `allowEmptyValue` SHALL be ignored. Interactions between this field and the parameter's {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#schema-object Schema Object} are implementation-defined. This field is valid only for `query` parameters. Use of this field is NOT RECOMMENDED, and it is likely to be removed in a later revision.
@@ -855,10 +847,6 @@ export interface ResponsesObject {
  * TODO: content, examples
  */
 export interface SchemaObject extends EnumExtensions {
-  /**
-   * OpenAPI extension fields (x-*) from the original schema.
-   * Specification Extensions may be used to add additional metadata.
-   */
   [extension: `x-${string}`]: unknown;
   /**
    * The value of "additionalProperties" MUST be a boolean or a schema.

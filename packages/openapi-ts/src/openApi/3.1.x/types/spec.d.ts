@@ -1046,10 +1046,6 @@ export interface OAuthFlowsObject {
  * ```
  */
 export interface OperationObject {
-  /**
-   * OpenAPI extension fields (x-*) from the original operation.
-   * Specification Extensions may be used to add additional metadata.
-   */
   [extension: `x-${string}`]: unknown;
   /**
    * A map of possible out-of band callbacks related to the parent operation. The key is a unique identifier for the Callback Object. Each value in the map is a {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#callback-object Callback Object} that describes a request that may be initiated by the API provider and the expected responses.
@@ -1199,10 +1195,6 @@ export interface OperationObject {
  * ```
  */
 export interface ParameterObject {
-  /**
-   * OpenAPI extension fields (x-*) from the original parameter.
-   * Specification Extensions may be used to add additional metadata.
-   */
   [extension: `x-${string}`]: unknown;
   /**
    * Sets the ability to pass empty-valued parameters. This is valid only for `query` parameters and allows sending a parameter with an empty value. Default value is `false`. If {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#parameterStyle `style`} is used, and if behavior is `n/a` (cannot be serialized), the value of `allowEmptyValue` SHALL be ignored. Use of this property is NOT RECOMMENDED, as it is likely to be removed in a later revision.
