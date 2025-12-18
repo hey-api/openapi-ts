@@ -8,6 +8,15 @@ import type {
 
 import type { IRMediaType } from './mediaType';
 
+/**
+ * OpenAPI Specification Extensions.
+ *
+ * See {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#specification-extensions Specification Extensions}.
+ */
+export interface SpecificationExtensions {
+  [extension: `x-${string}`]: unknown;
+}
+
 interface IRBodyObject {
   mediaType: string;
   /**
@@ -26,7 +35,7 @@ interface IRComponentsObject {
   schemas?: Record<string, IRSchemaObject>;
 }
 
-export interface IROperationObject {
+export interface IROperationObject extends SpecificationExtensions {
   body?: IRBodyObject;
   deprecated?: boolean;
   description?: string;
@@ -50,7 +59,8 @@ interface IRParametersObject {
 }
 
 interface IRParameterObject
-  extends Pick<JsonSchemaDraft2020_12, 'deprecated' | 'description'> {
+  extends Pick<JsonSchemaDraft2020_12, 'deprecated' | 'description'>,
+    SpecificationExtensions {
   /**
    * Determines whether the parameter value SHOULD allow reserved characters, as defined by RFC3986 `:/?#[]@!$&'()*+,;=` to be included without percent-encoding. The default value is `false`. This property SHALL be ignored if the request body media type is not `application/x-www-form-urlencoded` or `multipart/form-data`. If a value is explicitly defined, then the value of `contentType` (implicit or explicit) SHALL be ignored.
    */
@@ -124,25 +134,26 @@ interface IRResponseObject {
 
 interface IRSchemaObject
   extends Pick<
-    JsonSchemaDraft2020_12,
-    | '$ref'
-    | 'const'
-    | 'default'
-    | 'deprecated'
-    | 'description'
-    | 'exclusiveMaximum'
-    | 'exclusiveMinimum'
-    | 'maximum'
-    | 'maxItems'
-    | 'maxLength'
-    | 'minimum'
-    | 'minItems'
-    | 'minLength'
-    | 'pattern'
-    | 'required'
-    | 'title'
-    | 'example'
-  > {
+      JsonSchemaDraft2020_12,
+      | '$ref'
+      | 'const'
+      | 'default'
+      | 'deprecated'
+      | 'description'
+      | 'exclusiveMaximum'
+      | 'exclusiveMinimum'
+      | 'maximum'
+      | 'maxItems'
+      | 'maxLength'
+      | 'minimum'
+      | 'minItems'
+      | 'minLength'
+      | 'pattern'
+      | 'required'
+      | 'title'
+      | 'example'
+    >,
+    SpecificationExtensions {
   /**
    * If the schema is intended to be used as an object property, it can be
    * marked as read-only or write-only. This value controls whether the schema

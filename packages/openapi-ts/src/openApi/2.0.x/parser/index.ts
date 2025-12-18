@@ -84,10 +84,7 @@ export const parseV2_0_X = (context: Context<OpenApiV2_0_X>) => {
   parseServers({ context });
 
   for (const path in context.spec.paths) {
-    if (path.startsWith('x-')) {
-      continue;
-    }
-
+    if (path.startsWith('x-')) continue;
     const pathItem = context.spec.paths[path as PathKeys]!;
 
     const finalPathItem = pathItem.$ref

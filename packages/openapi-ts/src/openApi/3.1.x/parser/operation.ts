@@ -6,13 +6,14 @@ import { operationToId } from '~/openApi/shared/utils/operation';
 
 import type {
   OperationObject,
+  ReferenceObject,
   RequestBodyObject,
   ResponseObject,
   SecuritySchemeObject,
 } from '../types/spec';
 import { contentToSchema, mediaTypeObjects } from './mediaType';
 import { paginationField } from './pagination';
-import { schemaToIrSchema } from './schema';
+import { parseExtensions, schemaToIrSchema } from './schema';
 
 interface Operation
   extends Omit<OperationObject, 'parameters'>,
@@ -72,6 +73,11 @@ const initIrOperation = ({
   parseOperationJsDoc({
     irOperation,
     operation,
+  });
+
+  parseExtensions({
+    source: operation,
+    target: irOperation,
   });
 
   return irOperation;
@@ -151,11 +157,15 @@ const operationToIrOperation = ({
   }
 
   for (const name in operation.responses) {
+    if (name.startsWith('x-')) continue;
+
     if (!irOperation.responses) {
       irOperation.responses = {};
     }
 
-    const response = operation.responses[name]!;
+    const response = operation.responses[name]! as
+      | ResponseObject
+      | ReferenceObject;
     const responseObject =
       '$ref' in response
         ? context.resolveRef<ResponseObject>(response.$ref)

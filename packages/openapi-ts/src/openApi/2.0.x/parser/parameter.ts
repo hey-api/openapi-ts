@@ -8,7 +8,7 @@ import type {
   SchemaObject,
 } from '../types/spec';
 import { paginationField } from './pagination';
-import { schemaToIrSchema } from './schema';
+import { parseExtensions, schemaToIrSchema } from './schema';
 
 type Parameter = Exclude<ParameterObject, { in: 'body' }>;
 
@@ -164,6 +164,11 @@ const parameterToIrParameter = ({
   if (parameter.required) {
     irParameter.required = parameter.required;
   }
+
+  parseExtensions({
+    source: parameter,
+    target: irParameter,
+  });
 
   return irParameter;
 };
