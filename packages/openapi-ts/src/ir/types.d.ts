@@ -41,10 +41,10 @@ export interface IROperationObject {
   parameters?: IRParametersObject;
   path: keyof IRPathsObject;
   responses?: IRResponsesObject;
+  security?: ReadonlyArray<IRSecurityObject>;
   servers?: ReadonlyArray<IRServerObject>;
   summary?: string;
   tags?: ReadonlyArray<string>;
-  security?: ReadonlyArray<IRSecurityObject>;
 }
 
 interface IRParametersObject {

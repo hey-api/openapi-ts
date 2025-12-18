@@ -494,6 +494,10 @@ export interface OperationObject {
    */
   security?: ReadonlyArray<SecurityRequirementObject>;
   /**
+   * An alternative `servers` array to service this operation. If a `servers` array is specified at the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#path-item-servers Path Item Object} or {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#oas-servers OpenAPI Object} level, it will be overridden by this value.
+   */
+  servers?: ReadonlyArray<ServerObject>;
+  /**
    * A short summary of what the operation does.
    */
   summary?: string;
@@ -501,10 +505,6 @@ export interface OperationObject {
    * A list of tags for API documentation control. Tags can be used for logical grouping of operations by resources or any other qualifier.
    */
   tags?: ReadonlyArray<string>;
-  /**
-   * An alternative `servers` array to service this operation. If a `servers` array is specified at the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#path-item-servers Path Item Object} or {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#oas-servers OpenAPI Object} level, it will be overridden by this value.
-   */
-  servers?: ReadonlyArray<ServerObject>;
 }
 
 /**
@@ -594,6 +594,13 @@ export interface ParameterObject {
    */
   in: 'cookie' | 'header' | 'path' | 'query';
   /**
+   * **REQUIRED**. The name of the parameter. Parameter names are _case sensitive_.
+   * - If {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#parameter-in `in`} is `"path"`, the `name` field MUST correspond to a template expression occurring within the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#paths-path path} field in the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#paths-object Paths Object}. See {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#path-templating Path Templating} for further information.
+   * - If {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#parameter-in `in`} is `"header"` and the `name` field is `"Accept"`, `"Content-Type"` or `"Authorization"`, the parameter definition SHALL be ignored.
+   * - For all other cases, the `name` corresponds to the parameter name used by the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#parameter-in `in`} field.
+   */
+  name: string;
+  /**
    * Determines whether this parameter is mandatory. If the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#parameter-in parameter location} is `"path"`, this field is **REQUIRED** and its value MUST be `true`. Otherwise, the field MAY be included and its default value is `false`.
    */
   required?: boolean;
@@ -612,13 +619,6 @@ export interface ParameterObject {
     | 'pipeDelimited'
     | 'simple'
     | 'spaceDelimited';
-  /**
-   * **REQUIRED**. The name of the parameter. Parameter names are _case sensitive_.
-   * - If {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#parameter-in `in`} is `"path"`, the `name` field MUST correspond to a template expression occurring within the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#paths-path path} field in the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#paths-object Paths Object}. See {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#path-templating Path Templating} for further information.
-   * - If {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#parameter-in `in`} is `"header"` and the `name` field is `"Accept"`, `"Content-Type"` or `"Authorization"`, the parameter definition SHALL be ignored.
-   * - For all other cases, the `name` corresponds to the parameter name used by the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#parameter-in `in`} field.
-   */
-  name: string;
 }
 
 /**
@@ -924,6 +924,12 @@ export interface SchemaObject extends EnumExtensions {
    */
   example?: unknown;
   /**
+   * The value of "exclusiveMaximum" MUST be a boolean, representing whether the limit in "maximum" is exclusive or not.  An undefined value is the same as false.
+   *
+   * If "exclusiveMaximum" is true, then a numeric instance SHOULD NOT be equal to the value specified in "maximum".  If "exclusiveMaximum" is false (or not specified), then a numeric instance MAY be equal to the value of "maximum".
+   */
+  exclusiveMaximum?: boolean;
+  /**
    * The value of "exclusiveMinimum" MUST be a boolean, representing whether the limit in "minimum" is exclusive or not.  An undefined value is the same as false.
    *
    * If "exclusiveMinimum" is true, then a numeric instance SHOULD NOT be equal to the value specified in "minimum".  If "exclusiveMinimum" is false (or not specified), then a numeric instance MAY be equal to the value of "minimum".
@@ -1077,12 +1083,6 @@ export interface SchemaObject extends EnumExtensions {
    * This MAY be used only on property schemas. It has no effect on root schemas. Adds additional metadata to describe the XML representation of this property.
    */
   xml?: XMLObject;
-  /**
-   * The value of "exclusiveMaximum" MUST be a boolean, representing whether the limit in "maximum" is exclusive or not.  An undefined value is the same as false.
-   *
-   * If "exclusiveMaximum" is true, then a numeric instance SHOULD NOT be equal to the value specified in "maximum".  If "exclusiveMaximum" is false (or not specified), then a numeric instance MAY be equal to the value of "maximum".
-   */
-  exclusiveMaximum?: boolean;
 }
 
 /**
