@@ -1088,6 +1088,10 @@ export interface OperationObject {
    */
   security?: ReadonlyArray<SecurityRequirementObject>;
   /**
+   * An alternative `server` array to service this operation. If an alternative `server` object is specified at the Path Item Object or Root level, it will be overridden by this value.
+   */
+  servers?: ReadonlyArray<ServerObject>;
+  /**
    * A short summary of what the operation does.
    */
   summary?: string;
@@ -1095,10 +1099,6 @@ export interface OperationObject {
    * A list of tags for API documentation control. Tags can be used for logical grouping of operations by resources or any other qualifier.
    */
   tags?: ReadonlyArray<string>;
-  /**
-   * An alternative `server` array to service this operation. If an alternative `server` object is specified at the Path Item Object or Root level, it will be overridden by this value.
-   */
-  servers?: ReadonlyArray<ServerObject>;
 }
 
 /**
@@ -1241,6 +1241,13 @@ export interface ParameterObject {
    */
   in: 'cookie' | 'header' | 'path' | 'query';
   /**
+   * **REQUIRED**. The name of the parameter. Parameter names are _case sensitive_.
+   * - If {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#parameterIn `in`} is `"path"`, the `name` field MUST correspond to a template expression occurring within the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#pathsPath path} field in the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#paths-object Paths Object}. See {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#path-templating Path Templating} for further information.
+   * - If {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#parameterIn `in`} is `"header"` and the `name` field is `"Accept"`, `"Content-Type"` or `"Authorization"`, the parameter definition SHALL be ignored.
+   * - For all other cases, the `name` corresponds to the parameter name used by the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#parameterIn `in`} property.
+   */
+  name: string;
+  /**
    * Determines whether this parameter is mandatory. If the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#parameterIn parameter location} is `"path"`, this property is **REQUIRED** and its value MUST be `true`. Otherwise, the property MAY be included and its default value is `false`.
    */
   required?: boolean;
@@ -1259,13 +1266,6 @@ export interface ParameterObject {
     | 'pipeDelimited'
     | 'simple'
     | 'spaceDelimited';
-  /**
-   * **REQUIRED**. The name of the parameter. Parameter names are _case sensitive_.
-   * - If {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#parameterIn `in`} is `"path"`, the `name` field MUST correspond to a template expression occurring within the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#pathsPath path} field in the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#paths-object Paths Object}. See {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#path-templating Path Templating} for further information.
-   * - If {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#parameterIn `in`} is `"header"` and the `name` field is `"Accept"`, `"Content-Type"` or `"Authorization"`, the parameter definition SHALL be ignored.
-   * - For all other cases, the `name` corresponds to the parameter name used by the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#parameterIn `in`} property.
-   */
-  name: string;
 }
 
 /**

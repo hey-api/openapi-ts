@@ -67,6 +67,10 @@ export interface JsonSchemaDraft2020_12
    */
   dependentRequired?: Record<string, ReadonlyArray<string>>;
   /**
+   * The `dependentSchemas` keyword conditionally applies a {@link https://json-schema.org/learn/glossary#subschema subschema} when a given property is present. This schema is applied in the same way {@link https://json-schema.org/understanding-json-schema/reference/combining#allof allOf} applies schemas. Nothing is merged or extended. Both schemas apply independently.
+   */
+  dependentSchemas?: Record<string, JsonSchemaDraft2020_12>;
+  /**
    * The `deprecated` keyword is a boolean that indicates that the {@link https://json-schema.org/learn/glossary#instance instance} value the keyword applies to should not be used and may be removed in the future.
    */
   deprecated?: boolean;
@@ -152,10 +156,6 @@ export interface JsonSchemaDraft2020_12
    * The boolean keywords `readOnly` and `writeOnly` are typically used in an API context. `readOnly` indicates that a value should not be modified. It could be used to indicate that a `PUT` request that changes a value would result in a `400 Bad Request` response. `writeOnly` indicates that a value may be set, but will remain hidden. In could be used to indicate you can set a value with a `PUT` request, but it would not be included when retrieving that record with a `GET` request.
    */
   writeOnly?: boolean;
-  /**
-   * The `dependentSchemas` keyword conditionally applies a {@link https://json-schema.org/learn/glossary#subschema subschema} when a given property is present. This schema is applied in the same way {@link https://json-schema.org/understanding-json-schema/reference/combining#allof allOf} applies schemas. Nothing is merged or extended. Both schemas apply independently.
-   */
-  dependentSchemas?: Record<string, JsonSchemaDraft2020_12>;
 }
 
 interface ArrayKeywords {
