@@ -77,6 +77,14 @@ const initIrOperation = ({
     operation,
   });
 
+  // Copy extension fields
+  for (const key in operation) {
+    if (key.startsWith('x-')) {
+      (irOperation as unknown as Record<string, unknown>)[key] =
+        operation[key as keyof Operation];
+    }
+  }
+
   return irOperation;
 };
 

@@ -357,6 +357,22 @@ const parseString = ({
   return irSchema;
 };
 
+const parseExtensions = ({
+  irSchema,
+  schema,
+}: {
+  irSchema: IR.SchemaObject;
+  schema: SchemaObject;
+}) => {
+  // Copy all x-* extension fields from the source schema to the IR schema
+  for (const key in schema) {
+    if (key.startsWith('x-')) {
+      (irSchema as unknown as Record<string, unknown>)[key] =
+        schema[key as keyof SchemaObject];
+    }
+  }
+};
+
 const initIrSchema = ({
   schema,
 }: {
@@ -365,6 +381,11 @@ const initIrSchema = ({
   const irSchema: IR.SchemaObject = {};
 
   parseSchemaJsDoc({
+    irSchema,
+    schema,
+  });
+
+  parseExtensions({
     irSchema,
     schema,
   });
