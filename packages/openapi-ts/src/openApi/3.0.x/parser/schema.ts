@@ -276,12 +276,12 @@ const parseString = ({
   return irSchema;
 };
 
-export const parseExtensions = <T extends Record<string, unknown>>({
+export const parseExtensions = ({
   source,
   target,
 }: {
-  source: T;
-  target: Record<string, unknown>;
+  source: any;
+  target: any;
 }) => {
   for (const key in source) {
     if (key.startsWith('x-')) {

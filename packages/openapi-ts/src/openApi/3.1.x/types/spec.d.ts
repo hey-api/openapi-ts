@@ -137,7 +137,7 @@ export interface OpenApiV3_1_X extends SpecificationExtensions {
  *           description: callback successfully processed
  * ```
  */
-export interface CallbackObject extends SpecificationExtensions {
+export interface CallbackObject {
   /**
    * A Path Item Object, or a reference to one, used to define a callback request and expected responses. A {@link https://github.com/OAI/OpenAPI-Specification/blob/main/examples/v3.0/callback-example.yaml complete example} is available.
    */
@@ -1404,11 +1404,11 @@ export interface PathItemObject extends SpecificationExtensions {
  *                 $ref: '#/components/schemas/pet'
  * ```
  */
-export interface PathsObject extends SpecificationExtensions {
+export interface PathsObject {
   /**
    * A relative path to an individual endpoint. The field name MUST begin with a forward slash (`/`). The path is **appended** (no relative URL resolution) to the expanded URL from the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#server-object `Server Object`}'s `url` field in order to construct the full URL. {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#path-templating Path templating} is allowed. When matching URLs, concrete (non-templated) paths would be matched before their templated counterparts. Templated paths with the same hierarchy but different templated names MUST NOT exist as they are identical. In case of ambiguous matching, it's up to the tooling to decide which one to use.
    */
-  [path: `/${string}`]: PathItemObject;
+  [path: string]: PathItemObject;
 }
 
 /**
@@ -1633,7 +1633,7 @@ export interface ResponseObject extends SpecificationExtensions {
  *         $ref: '#/components/schemas/ErrorModel'
  * ```
  */
-export interface ResponsesObject extends SpecificationExtensions {
+export interface ResponsesObject {
   /**
    * Any {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#http-status-codes HTTP status code} can be used as the property name, but only one property per code, to describe the expected response for that HTTP status code. This field MUST be enclosed in quotation marks (for example, "200") for compatibility between JSON and YAML. To define a range of response codes, this field MAY contain the uppercase wildcard character `X`. For example, `2XX` represents all response codes between `[200-299]`. Only the following range definitions are allowed: `1XX`, `2XX`, `3XX`, `4XX`, and `5XX`. If a response is defined using an explicit code, the explicit code definition takes precedence over the range definition for that code.
    */
