@@ -27,10 +27,6 @@ interface IRComponentsObject {
 }
 
 export interface IROperationObject {
-  /**
-   * OpenAPI extension fields (x-*) from the original operation.
-   * These are custom fields that can be used by plugins.
-   */
   [extension: `x-${string}`]: unknown;
   body?: IRBodyObject;
   deprecated?: boolean;
@@ -56,10 +52,6 @@ interface IRParametersObject {
 
 interface IRParameterObject
   extends Pick<JsonSchemaDraft2020_12, 'deprecated' | 'description'> {
-  /**
-   * OpenAPI extension fields (x-*) from the original parameter.
-   * These are custom fields that can be used by plugins.
-   */
   [extension: `x-${string}`]: unknown;
   /**
    * Determines whether the parameter value SHOULD allow reserved characters, as defined by RFC3986 `:/?#[]@!$&'()*+,;=` to be included without percent-encoding. The default value is `false`. This property SHALL be ignored if the request body media type is not `application/x-www-form-urlencoded` or `multipart/form-data`. If a value is explicitly defined, then the value of `contentType` (implicit or explicit) SHALL be ignored.
@@ -153,10 +145,6 @@ interface IRSchemaObject
     | 'title'
     | 'example'
   > {
-  /**
-   * OpenAPI extension fields (x-*) from the original schema.
-   * These are custom fields that can be used by plugins.
-   */
   [extension: `x-${string}`]: unknown;
   /**
    * If the schema is intended to be used as an object property, it can be

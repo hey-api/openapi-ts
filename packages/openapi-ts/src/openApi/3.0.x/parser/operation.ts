@@ -12,7 +12,7 @@ import type {
 } from '../types/spec';
 import { contentToSchema, mediaTypeObjects } from './mediaType';
 import { paginationField } from './pagination';
-import { schemaToIrSchema } from './schema';
+import { parseExtensions, schemaToIrSchema } from './schema';
 
 interface Operation
   extends Omit<OperationObject, 'parameters'>,
@@ -74,13 +74,10 @@ const initIrOperation = ({
     operation,
   });
 
-  // Copy extension fields
-  for (const key in operation) {
-    if (key.startsWith('x-')) {
-      (irOperation as unknown as Record<string, unknown>)[key] =
-        operation[key as keyof Operation];
-    }
-  }
+  parseExtensions({
+    source: operation,
+    target: irOperation,
+  });
 
   return irOperation;
 };

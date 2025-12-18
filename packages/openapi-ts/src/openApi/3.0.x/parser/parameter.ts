@@ -9,7 +9,7 @@ import type {
 } from '../types/spec';
 import { mediaTypeObjects } from './mediaType';
 import { paginationField } from './pagination';
-import { schemaToIrSchema } from './schema';
+import { parseExtensions, schemaToIrSchema } from './schema';
 
 /**
  * Returns default parameter `allowReserved` based on value of `in`.
@@ -173,13 +173,10 @@ const parameterToIrParameter = ({
     irParameter.required = parameter.required;
   }
 
-  // Copy extension fields
-  for (const key in parameter) {
-    if (key.startsWith('x-')) {
-      (irParameter as unknown as Record<string, unknown>)[key] =
-        parameter[key as keyof ParameterObject];
-    }
-  }
+  parseExtensions({
+    source: parameter,
+    target: irParameter,
+  });
 
   return irParameter;
 };
