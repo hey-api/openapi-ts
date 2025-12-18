@@ -167,8 +167,8 @@ const parameterToIrParameter = ({
   }
 
   parseExtensions({
-    source: parameter,
-    target: irParameter,
+    source: parameter as Record<string, unknown>,
+    target: irParameter as Record<string, unknown>,
   });
 
   return irParameter;
