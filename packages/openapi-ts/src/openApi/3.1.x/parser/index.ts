@@ -121,7 +121,10 @@ export const parseV3_1_X = (context: Context<OpenApiV3_1_X>) => {
   parseServers({ context });
 
   for (const path in context.spec.paths) {
-    const pathItem = context.spec.paths[path as keyof PathsObject]!;
+    if (path.startsWith('x-')) continue;
+    const pathItem = context.spec.paths[
+      path as keyof PathsObject
+    ]! as PathItemObject;
 
     const finalPathItem = pathItem.$ref
       ? {
@@ -145,7 +148,7 @@ export const parseV3_1_X = (context: Context<OpenApiV3_1_X>) => {
         servers: finalPathItem.servers,
         summary: finalPathItem.summary,
       },
-      path: path as keyof PathsObject,
+      path: path as `/${string}`,
       securitySchemesMap,
       state,
     };

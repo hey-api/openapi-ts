@@ -1,7 +1,8 @@
 import type { JsonSchemaDraft2020_12 } from './json-schema-draft-2020-12';
 
 /**
- * Type for OpenAPI Specification Extensions (x-* fields).
+ * OpenAPI Specification Extensions.
+ *
  * See {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#specification-extensions Specification Extensions}.
  */
 export interface SpecificationExtensions {
@@ -429,7 +430,7 @@ export interface ContactObject extends SpecificationExtensions {
  *
  * will map to `Dog` because of the definition in the `mapping` element.
  */
-export interface DiscriminatorObject {
+export interface DiscriminatorObject extends SpecificationExtensions {
   /**
    * An object to hold mappings between payload values and schema names or references.
    */
@@ -1408,7 +1409,7 @@ export interface PathsObject extends SpecificationExtensions {
   /**
    * A relative path to an individual endpoint. The field name MUST begin with a forward slash (`/`). The path is **appended** (no relative URL resolution) to the expanded URL from the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#server-object `Server Object`}'s `url` field in order to construct the full URL. {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#path-templating Path templating} is allowed. When matching URLs, concrete (non-templated) paths would be matched before their templated counterparts. Templated paths with the same hierarchy but different templated names MUST NOT exist as they are identical. In case of ambiguous matching, it's up to the tooling to decide which one to use.
    */
-  [path: `/${string}`]: PathItemObject | unknown;
+  [path: `/${string}`]: PathItemObject;
 }
 
 /**
@@ -1672,7 +1673,7 @@ export interface ResponsesObject extends SpecificationExtensions {
  *
  * This object MAY be extended with {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#specification-extensions Specification Extensions}, though as noted, additional properties MAY omit the `x-` prefix within this object.
  */
-export type SchemaObject = JsonSchemaDraft2020_12;
+export type SchemaObject = JsonSchemaDraft2020_12 & SpecificationExtensions;
 
 /**
  * Lists the required security schemes to execute this operation. The name used for each property MUST correspond to a security scheme declared in the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#componentsSecuritySchemes Security Schemes} under the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#components-object Components Object}.

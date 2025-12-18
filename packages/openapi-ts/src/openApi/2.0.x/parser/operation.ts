@@ -78,8 +78,8 @@ const initIrOperation = ({
   });
 
   parseExtensions({
-    source: operation as Record<string, unknown>,
-    target: irOperation as Record<string, unknown>,
+    source: operation,
+    target: irOperation,
   });
 
   return irOperation;

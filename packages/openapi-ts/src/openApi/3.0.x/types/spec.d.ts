@@ -1,7 +1,8 @@
 import type { EnumExtensions } from '~/openApi/shared/types/openapi-spec-extensions';
 
 /**
- * Type for OpenAPI Specification Extensions (x-* fields).
+ * OpenAPI Specification Extensions.
+ *
  * See {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#specification-extensions Specification Extensions}.
  */
 export interface SpecificationExtensions {
@@ -284,7 +285,7 @@ export type HeaderObject = Omit<ParameterObject, 'in' | 'name'>;
  * version: 1.0.1
  * ```
  */
-export interface InfoObject {
+export interface InfoObject extends SpecificationExtensions {
   /**
    * The contact information for the exposed API.
    */
@@ -692,7 +693,7 @@ export interface PathsObject extends SpecificationExtensions {
   /**
    * A relative path to an individual endpoint. The field name MUST begin with a forward slash (`/`). The path is **appended** (no relative URL resolution) to the expanded URL from the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#server-object Server Object}'s `url` field in order to construct the full URL. {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#path-templating Path templating} is allowed. When matching URLs, concrete (non-templated) paths would be matched before their templated counterparts. Templated paths with the same hierarchy but different templated names MUST NOT exist as they are identical. In case of ambiguous matching, it's up to the tooling to decide which one to use.
    */
-  [path: `/${string}`]: PathItemObject | unknown;
+  [path: `/${string}`]: PathItemObject;
 }
 
 /**
