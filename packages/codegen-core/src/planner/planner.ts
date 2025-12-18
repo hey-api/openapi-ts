@@ -300,6 +300,7 @@ export class Planner {
             from: source,
             imports: [],
             isTypeOnly: true,
+            kind: 'named',
           };
         }
         const isTypeOnly = [...entry.kinds].every((kind) =>
@@ -307,11 +308,14 @@ export class Planner {
         );
         if (entry.symbol.importKind === 'namespace') {
           imp.imports = [];
-          imp.namespaceImport = entry.symbol.finalName;
+          imp.kind = 'namespace';
+          imp.localName = entry.symbol.finalName;
+        } else if (entry.symbol.importKind === 'default') {
+          imp.kind = 'default';
+          imp.localName = entry.symbol.finalName;
         } else {
           imp.imports.push({
             isTypeOnly,
-            kind: entry.symbol.importKind,
             localName: entry.symbol.finalName,
             sourceName: entry.dep.finalName,
           });

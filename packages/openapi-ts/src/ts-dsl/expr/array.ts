@@ -1,4 +1,4 @@
-import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
+import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -59,9 +59,9 @@ export class ArrayTsDsl extends Mixed {
     return this;
   }
 
-  override toAst(ctx: AstContext) {
+  override toAst() {
     const elements = this._elements.map((item) => {
-      const node = this.$node(ctx, item.expr);
+      const node = this.$node(item.expr);
       return item.kind === 'spread'
         ? ts.factory.createSpreadElement(node)
         : node;

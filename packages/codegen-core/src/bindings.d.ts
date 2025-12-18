@@ -32,8 +32,6 @@ export type ExportModule = Pick<ExportMember, 'isTypeOnly'> & {
 export interface ImportMember {
   /** Whether this import is type-only. */
   isTypeOnly: boolean;
-  /** Import flavor. */
-  kind: BindingKind;
   /**
    * The name this symbol will have locally in this file.
    * This is where aliasing is applied:
@@ -47,11 +45,12 @@ export interface ImportMember {
   sourceName: string;
 }
 
-export type ImportModule = Pick<ImportMember, 'isTypeOnly'> & {
-  /** Source file. */
-  from: File;
-  /** List of symbols imported from this module. */
-  imports: Array<ImportMember>;
-  /** Namespace import: `import * as name from 'module'`. Mutually exclusive with `imports`. */
-  namespaceImport?: string;
-};
+export type ImportModule = Pick<ImportMember, 'isTypeOnly'> &
+  Pick<Partial<ImportMember>, 'localName'> & {
+    /** Source file. */
+    from: File;
+    /** List of symbols imported from this module. */
+    imports: Array<ImportMember>;
+    /** Import flavor. */
+    kind: BindingKind;
+  };

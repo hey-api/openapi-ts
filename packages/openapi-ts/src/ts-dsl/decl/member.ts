@@ -1,8 +1,4 @@
-import type {
-  AnalysisContext,
-  AstContext,
-  NodeName,
-} from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -41,11 +37,11 @@ export class EnumMemberTsDsl extends Mixed {
     return this;
   }
 
-  override toAst(ctx: AstContext) {
+  override toAst() {
     const node = ts.factory.createEnumMember(
-      this.$node(ctx, safeMemberName(this.name.toString())),
-      this.$node(ctx, this._value),
+      this.$node(safeMemberName(this.name.toString())),
+      this.$node(this._value),
     );
-    return this.$docs(ctx, node);
+    return this.$docs(node);
   }
 }

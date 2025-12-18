@@ -134,10 +134,12 @@ export class SdkResourceModel {
         node.do(
           this.implementFn({
             node: $.method(this.createFnSymbol(plugin, event), (m) =>
-              m
+              this.attachComment({
+                node: m,
+                operation,
+              })
                 .public()
-                .static(!isAngularClient && !plugin.config.instance)
-                .$if(createOperationComment(operation), (m, v) => m.doc(v)),
+                .static(!isAngularClient && !plugin.config.instance),
             ),
             operation,
             plugin,
@@ -154,9 +156,8 @@ export class SdkResourceModel {
     } else {
       this.operations.forEach((event) => {
         const { operation } = event;
-        const node = $.const(this.createFnSymbol(plugin, event))
+        let node = $.const(this.createFnSymbol(plugin, event))
           .export()
-          .$if(createOperationComment(operation), (c, v) => c.doc(v))
           .assign(
             this.implementFn({
               node: $.func(),
@@ -164,6 +165,7 @@ export class SdkResourceModel {
               plugin,
             }),
           );
+        node = this.attachComment({ node, operation });
         nodes.push(node);
       });
     }
@@ -181,6 +183,13 @@ export class SdkResourceModel {
       yield* child.walk();
     }
     yield this;
+  }
+
+  private attachComment<
+    T extends ReturnType<typeof $.var | typeof $.method>,
+  >(args: { node: T; operation: IR.OperationObject }): T {
+    const { node, operation } = args;
+    return node.$if(createOperationComment(operation), (m, v) => m.doc(v)) as T;
   }
 
   private createFnSymbol(
@@ -325,8 +334,10 @@ export class SdkResourceModel {
     const isClientRequired =
       !plugin.config.client || !plugin.getSymbol({ category: 'client' });
     const registry = plugin.symbol('__registry');
-    node.accessPattern = (node) =>
-      $(node.name).attr(registry).attr('get').call();
+    node.toAccessNode = (node, options) => {
+      if (options.context) return;
+      return $(node.name).attr(registry).attr('get').call();
+    };
     node.do(
       $.field(registry, (f) =>
         f

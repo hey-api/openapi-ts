@@ -1,9 +1,4 @@
-import type {
-  AnalysisContext,
-  AstContext,
-  NodeName,
-  NodeRole,
-} from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl } from '../base';
@@ -48,7 +43,6 @@ const Mixed = AbstractMixin(
 export class GetterTsDsl extends Mixed {
   readonly '~dsl' = 'GetterTsDsl';
   override readonly nameSanitizer = safeAccessorName;
-  override role?: NodeRole = 'accessor';
 
   constructor(name: NodeName, fn?: (g: GetterTsDsl) => void) {
     super();
@@ -67,14 +61,14 @@ export class GetterTsDsl extends Mixed {
     }
   }
 
-  override toAst(ctx: AstContext) {
+  override toAst() {
     const node = ts.factory.createGetAccessorDeclaration(
-      [...this.$decorators(ctx), ...this.modifiers],
-      this.$node(ctx, this.name) as ts.PropertyName,
-      this.$params(ctx),
-      this.$returns(ctx),
-      this.$node(ctx, new BlockTsDsl(...this._do).pretty()),
+      [...this.$decorators(), ...this.modifiers],
+      this.$node(this.name) as ts.PropertyName,
+      this.$params(),
+      this.$returns(),
+      this.$node(new BlockTsDsl(...this._do).pretty()),
     );
-    return this.$docs(ctx, node);
+    return this.$docs(node);
   }
 }

@@ -1,6 +1,5 @@
 import type {
   AnalysisContext,
-  AstContext,
   Node,
   NodeName,
   Ref,
@@ -15,7 +14,7 @@ type Arg = NodeName | MaybeTsDsl<ts.Expression>;
 
 export interface ArgsMethods extends Node {
   /** Renders the arguments into an array of `Expression`s. */
-  $args(ctx: AstContext): ReadonlyArray<ts.Expression>;
+  $args(): ReadonlyArray<ts.Expression>;
   /** Adds a single expression argument. */
   arg(arg: Arg | undefined): this;
   /** Adds one or more expression arguments. */
@@ -52,8 +51,8 @@ export function ArgsMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
       return this;
     }
 
-    protected $args(ctx: AstContext): ReadonlyArray<ts.Expression> {
-      return this.$node(ctx, this._args).map((arg) => this.$node(ctx, arg));
+    protected $args(): ReadonlyArray<ts.Expression> {
+      return this.$node(this._args).map((arg) => this.$node(arg));
     }
   }
 

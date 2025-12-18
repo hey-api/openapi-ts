@@ -1,9 +1,4 @@
-import type {
-  AnalysisContext,
-  AstContext,
-  NodeName,
-  Ref,
-} from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName, Ref } from '@hey-api/codegen-core';
 import { fromRef, isSymbol, ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
@@ -48,8 +43,8 @@ export class AttrTsDsl extends Mixed {
     ctx.analyze(this.name);
   }
 
-  override toAst(ctx: AstContext) {
-    const leftNode = this.$node(ctx, this.left);
+  override toAst() {
+    const leftNode = this.$node(this.left);
     regexp.typeScriptIdentifier.lastIndex = 0;
     const right = fromRef(this.name);
     if (!regexp.typeScriptIdentifier.test(this.name.toString())) {
@@ -65,25 +60,25 @@ export class AttrTsDsl extends Mixed {
       if (this._optional) {
         return ts.factory.createElementAccessChain(
           leftNode,
-          this.$node(ctx, new TokenTsDsl().questionDot()),
-          this.$node(ctx, new LiteralTsDsl(value)),
+          this.$node(new TokenTsDsl().questionDot()),
+          this.$node(new LiteralTsDsl(value)),
         );
       }
       return ts.factory.createElementAccessExpression(
         leftNode,
-        this.$node(ctx, new LiteralTsDsl(value)),
+        this.$node(new LiteralTsDsl(value)),
       );
     }
     if (this._optional) {
       return ts.factory.createPropertyAccessChain(
         leftNode,
-        this.$node(ctx, new TokenTsDsl().questionDot()),
-        this.$node(ctx, this.name) as ts.MemberName,
+        this.$node(new TokenTsDsl().questionDot()),
+        this.$node(this.name) as ts.MemberName,
       );
     }
     return ts.factory.createPropertyAccessExpression(
       leftNode,
-      this.$node(ctx, this.name) as ts.MemberName,
+      this.$node(this.name) as ts.MemberName,
     );
   }
 }

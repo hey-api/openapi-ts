@@ -1,6 +1,5 @@
 import type {
   AnalysisContext,
-  AstContext,
   NodeName,
   NodeScope,
   Ref,
@@ -56,11 +55,11 @@ export class TypeExprTsDsl extends Mixed {
     return this;
   }
 
-  override toAst(ctx: AstContext) {
+  override toAst() {
     if (!this._exprInput) throw new Error('TypeExpr must have an expression');
     return ts.factory.createTypeReferenceNode(
-      this.$type(ctx, this._exprInput) as ts.EntityName,
-      this.$generics(ctx),
+      this.$type(this._exprInput) as ts.EntityName,
+      this.$generics(),
     );
   }
 }

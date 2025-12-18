@@ -1,8 +1,4 @@
-import type {
-  AnalysisContext,
-  AstContext,
-  NodeScope,
-} from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeScope } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl, TypeTsDsl } from '../base';
@@ -31,8 +27,8 @@ export class TypeQueryTsDsl extends Mixed {
     ctx.analyze(this._expr);
   }
 
-  override toAst(ctx: AstContext) {
-    const expr = this.$node(ctx, this._expr);
+  override toAst() {
+    const expr = this.$node(this._expr);
     return ts.factory.createTypeQueryNode(expr as unknown as ts.EntityName);
   }
 }

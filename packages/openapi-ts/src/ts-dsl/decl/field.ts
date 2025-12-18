@@ -1,9 +1,4 @@
-import type {
-  AnalysisContext,
-  AstContext,
-  NodeName,
-  NodeRole,
-} from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl, TypeTsDsl } from '../base';
@@ -41,7 +36,6 @@ const Mixed = DecoratorMixin(
 
 export class FieldTsDsl extends Mixed {
   readonly '~dsl' = 'FieldTsDsl';
-  override role?: NodeRole = 'accessor';
 
   protected _type?: TypeTsDsl;
 
@@ -63,14 +57,14 @@ export class FieldTsDsl extends Mixed {
     return this;
   }
 
-  override toAst(ctx: AstContext) {
+  override toAst() {
     const node = ts.factory.createPropertyDeclaration(
-      [...this.$decorators(ctx), ...this.modifiers],
-      this.$node(ctx, this.name) as ts.PropertyName,
-      this._optional ? this.$node(ctx, new TokenTsDsl().optional()) : undefined,
-      this.$type(ctx, this._type),
-      this.$value(ctx),
+      [...this.$decorators(), ...this.modifiers],
+      this.$node(this.name) as ts.PropertyName,
+      this._optional ? this.$node(new TokenTsDsl().optional()) : undefined,
+      this.$type(this._type),
+      this.$value(),
     );
-    return this.$docs(ctx, node);
+    return this.$docs(node);
   }
 }
