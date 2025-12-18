@@ -9,7 +9,7 @@ import type {
 } from '../types/spec';
 import { mediaTypeObjects } from './mediaType';
 import { paginationField } from './pagination';
-import { schemaToIrSchema } from './schema';
+import { parseExtensions, schemaToIrSchema } from './schema';
 
 /**
  * Returns default parameter `allowReserved` based on value of `in`.
