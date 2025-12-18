@@ -162,6 +162,20 @@ for (const client of clients) {
       {
         config: createConfig({
           output: {
+            path: 'tsconfig-node16-sdk',
+            tsConfigPath: path.join(
+              __dirname,
+              'tsconfig',
+              'tsconfig.node16.json',
+            ),
+          },
+          plugins: [client, '@hey-api/sdk'],
+        }),
+        description: 'SDK with Node16 tsconfig',
+      },
+      {
+        config: createConfig({
+          output: {
             importFileExtension: '.ts',
             path: 'import-file-extension-ts',
           },
