@@ -56,20 +56,10 @@
           { "$ref": "#/components/schemas/VehicleDto" },
           {
             "type": "object",
-            "required": ["$type", "modelName"],
+            "required": ["modelName"],
             "properties": {
-              "$type": {
-                "type": "string"
-              },
               "modelName": {
                 "type": "string"
-              }
-            },
-            "discriminator": {
-              "propertyName": "$type",
-              "mapping": {
-                "Car": "#/components/schemas/CarDto",
-                "Volvo": "#/components/schemas/VolvoDto"
               }
             }
           }
@@ -80,7 +70,7 @@
           { "$ref": "#/components/schemas/CarDto" },
           {
             "type": "object",
-            "required": ["$type", "seatbeltCount"],
+            "required": ["seatbeltCount"],
             "properties": {
               "seatbeltCount": {
                 "type": "integer"
