@@ -12,6 +12,11 @@ export interface JsonSchemaDraft2020_12
     EnumExtensions,
     OpenApiSchemaExtensions {
   /**
+   * OpenAPI extension fields (x-*) from the original schema.
+   * Specification Extensions may be used to add additional metadata.
+   */
+  [extension: `x-${string}`]: unknown;
+  /**
    * The `$comment` {@link https://json-schema.org/learn/glossary#keyword keyword} is strictly intended for adding comments to a schema. Its value must always be a string. Unlike the annotations `title`, `description`, and `examples`, JSON schema {@link https://json-schema.org/learn/glossary#implementation implementations} aren't allowed to attach any meaning or behavior to it whatsoever, and may even strip them at any time. Therefore, they are useful for leaving notes to future editors of a JSON schema, but should not be used to communicate to users of the schema.
    */
   $comment?: string;
@@ -61,10 +66,6 @@ export interface JsonSchemaDraft2020_12
    * The `dependentRequired` {@link https://json-schema.org/learn/glossary#keyword keyword} conditionally requires that certain properties must be present if a given property is present in an object. For example, suppose we have a {@link https://json-schema.org/learn/glossary#schema schema} representing a customer. If you have their credit card number, you also want to ensure you have a billing address. If you don't have their credit card number, a billing address would not be required. We represent this dependency of one property on another using the `dependentRequired` keyword. The value of the `dependentRequired` keyword is an object. Each entry in the object maps from the name of a property, _p_, to an array of strings listing properties that are required if _p_ is present.
    */
   dependentRequired?: Record<string, ReadonlyArray<string>>;
-  /**
-   * The `dependentSchemas` keyword conditionally applies a {@link https://json-schema.org/learn/glossary#subschema subschema} when a given property is present. This schema is applied in the same way {@link https://json-schema.org/understanding-json-schema/reference/combining#allof allOf} applies schemas. Nothing is merged or extended. Both schemas apply independently.
-   */
-  dependentSchemas?: Record<string, JsonSchemaDraft2020_12>;
   /**
    * The `deprecated` keyword is a boolean that indicates that the {@link https://json-schema.org/learn/glossary#instance instance} value the keyword applies to should not be used and may be removed in the future.
    */
@@ -151,6 +152,10 @@ export interface JsonSchemaDraft2020_12
    * The boolean keywords `readOnly` and `writeOnly` are typically used in an API context. `readOnly` indicates that a value should not be modified. It could be used to indicate that a `PUT` request that changes a value would result in a `400 Bad Request` response. `writeOnly` indicates that a value may be set, but will remain hidden. In could be used to indicate you can set a value with a `PUT` request, but it would not be included when retrieving that record with a `GET` request.
    */
   writeOnly?: boolean;
+  /**
+   * The `dependentSchemas` keyword conditionally applies a {@link https://json-schema.org/learn/glossary#subschema subschema} when a given property is present. This schema is applied in the same way {@link https://json-schema.org/understanding-json-schema/reference/combining#allof allOf} applies schemas. Nothing is merged or extended. Both schemas apply independently.
+   */
+  dependentSchemas?: Record<string, JsonSchemaDraft2020_12>;
 }
 
 interface ArrayKeywords {

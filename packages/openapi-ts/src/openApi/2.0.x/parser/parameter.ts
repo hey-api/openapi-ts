@@ -165,5 +165,13 @@ const parameterToIrParameter = ({
     irParameter.required = parameter.required;
   }
 
+  // Copy extension fields
+  for (const key in parameter) {
+    if (key.startsWith('x-')) {
+      (irParameter as unknown as Record<string, unknown>)[key] =
+        parameter[key as keyof ParameterObject];
+    }
+  }
+
   return irParameter;
 };
