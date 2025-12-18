@@ -77,7 +77,7 @@ export const patchOpenApiSpec = ({
         if (!schema || typeof schema !== 'object') continue;
 
         const patchFn = patchOptions.schemas[key]!;
-        patchFn(schema);
+        patchFn(schema as Parameters<typeof patchFn>[0]);
       }
     }
 

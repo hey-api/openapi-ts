@@ -361,12 +361,14 @@ export const parseExtensions = ({
   source,
   target,
 }: {
-  source: Record<string, unknown>;
-  target: Record<string, unknown>;
+  source: object;
+  target: object;
 }) => {
   for (const key in source) {
     if (key.startsWith('x-')) {
-      target[key] = source[key];
+      (target as Record<string, unknown>)[key] = (
+        source as Record<string, unknown>
+      )[key];
     }
   }
 };
@@ -384,8 +386,8 @@ const initIrSchema = ({
   });
 
   parseExtensions({
-    source: schema as Record<string, unknown>,
-    target: irSchema as Record<string, unknown>,
+    source: schema,
+    target: irSchema,
   });
 
   return irSchema;

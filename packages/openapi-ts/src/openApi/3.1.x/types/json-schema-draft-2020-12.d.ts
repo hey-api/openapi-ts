@@ -1,14 +1,8 @@
 import type { EnumExtensions } from '~/openApi/shared/types/openapi-spec-extensions';
 
 import type { MaybeArray } from '../../../types/utils';
+import type { SpecificationExtensions } from './spec';
 import type { OpenApiSchemaExtensions } from './spec-extensions';
-
-/**
- * Type for OpenAPI Specification Extensions (x-* fields).
- */
-export interface SpecificationExtensions {
-  [extension: `x-${string}`]: unknown;
-}
 
 // TODO: left out some keywords related to structuring a complex schema and declaring a dialect
 export interface JsonSchemaDraft2020_12

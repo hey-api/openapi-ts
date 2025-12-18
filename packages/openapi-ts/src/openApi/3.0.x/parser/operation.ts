@@ -6,6 +6,7 @@ import { operationToId } from '~/openApi/shared/utils/operation';
 import type {
   OperationObject,
   PathItemObject,
+  ReferenceObject,
   RequestBodyObject,
   ResponseObject,
   SecuritySchemeObject,
@@ -75,8 +76,8 @@ const initIrOperation = ({
   });
 
   parseExtensions({
-    source: operation as Record<string, unknown>,
-    target: irOperation as Record<string, unknown>,
+    source: operation,
+    target: irOperation,
   });
 
   return irOperation;
@@ -171,11 +172,15 @@ const operationToIrOperation = ({
   }
 
   for (const name in operation.responses) {
+    if (name.startsWith('x-')) continue;
+
     if (!irOperation.responses) {
       irOperation.responses = {};
     }
 
-    const response = operation.responses[name]!;
+    const response = operation.responses[name]! as
+      | ResponseObject
+      | ReferenceObject;
     const responseObject =
       '$ref' in response
         ? context.resolveRef<ResponseObject>(response.$ref)
