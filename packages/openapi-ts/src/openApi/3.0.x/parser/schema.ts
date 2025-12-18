@@ -80,10 +80,10 @@ const findDiscriminatorsInSchema = ({
 };
 
 /**
- * Checks if a schema is extended by other schemas in the given discriminator mapping.
- * This is used to determine if a schema is a leaf node in the inheritance hierarchy.
+ * Gets all discriminator values for a schema and its children in the inheritance hierarchy.
+ * For intermediate schemas (those that are extended by others), returns a union of all values.
  */
-const isSchemaExtendedInMapping = ({
+const getAllDiscriminatorValues = ({
   context,
   discriminator,
   schemaRef,
@@ -91,28 +91,33 @@ const isSchemaExtendedInMapping = ({
   context: Context;
   discriminator: NonNullable<SchemaObject['discriminator']>;
   schemaRef: string;
-}): boolean => {
-  // Check each schema in the discriminator mapping
-  for (const mappedSchemaRef of Object.values(discriminator.mapping || {})) {
-    // Skip if it's the same schema
+}): string[] => {
+  const values: string[] = [];
+
+  // Check each entry in the discriminator mapping
+  for (const [value, mappedSchemaRef] of Object.entries(
+    discriminator.mapping || {},
+  )) {
     if (mappedSchemaRef === schemaRef) {
+      // This is the current schema's own value
+      values.push(value);
       continue;
     }
 
-    // Resolve the mapped schema
+    // Check if the mapped schema extends the current schema
     const mappedSchema = context.resolveRef<SchemaObject>(mappedSchemaRef);
-
-    // Check if the mapped schema extends our schema via allOf
     if (mappedSchema.allOf) {
       for (const item of mappedSchema.allOf) {
         if ('$ref' in item && item.$ref === schemaRef) {
-          return true;
+          // This schema extends the current schema, add its value
+          values.push(value);
+          break;
         }
       }
     }
   }
 
-  return false;
+  return values;
 };
 
 const parseSchemaJsDoc = ({
@@ -455,59 +460,59 @@ const parseAllOf = ({
           );
 
           if (values.length > 0) {
-            // Check if the current schema is extended by other schemas in this discriminator mapping
-            // If so, don't add the discriminator value to avoid conflicts in multi-level inheritance
-            const isExtended = isSchemaExtendedInMapping({
+            // For schemas that are extended by others, we need to include all child discriminator values
+            // to create a union type (e.g., CarDto should have $type: 'Car' | 'Volvo')
+            const allValues = getAllDiscriminatorValues({
               context,
               discriminator,
               schemaRef: state.$ref,
             });
 
-            if (!isExtended) {
-              const valueSchemas: ReadonlyArray<IR.SchemaObject> = values.map(
-                (value) => ({
-                  const: value,
-                  type: 'string',
-                }),
-              );
-              const irDiscriminatorSchema: IR.SchemaObject = {
-                properties: {
-                  [discriminator.propertyName]:
-                    valueSchemas.length > 1
-                      ? {
-                          items: valueSchemas,
-                          logicalOperator: 'or',
-                        }
-                      : valueSchemas[0]!,
-                },
-                type: 'object',
-              };
+            // Use allValues if we found children, otherwise use the original values
+            const finalValues = allValues.length > 0 ? allValues : values;
 
-              // Check if the discriminator property is required in any of the discriminator schemas
-              // by looking at all discriminators with the same property name
-              const isRequired = discriminators.some(
-                (d) =>
-                  d.discriminator.propertyName === discriminator.propertyName &&
-                  // Check in the ref's required array or in the allOf components
-                  (ref.required?.includes(d.discriminator.propertyName) ||
-                    (ref.allOf &&
-                      ref.allOf.some((item) => {
-                        const resolvedItem =
-                          '$ref' in item
-                            ? context.resolveRef<SchemaObject>(item.$ref)
-                            : item;
-                        return resolvedItem.required?.includes(
-                          d.discriminator.propertyName,
-                        );
-                      }))),
-              );
+            const valueSchemas: ReadonlyArray<IR.SchemaObject> =
+              finalValues.map((value) => ({
+                const: value,
+                type: 'string',
+              }));
+            const irDiscriminatorSchema: IR.SchemaObject = {
+              properties: {
+                [discriminator.propertyName]:
+                  valueSchemas.length > 1
+                    ? {
+                        items: valueSchemas,
+                        logicalOperator: 'or',
+                      }
+                    : valueSchemas[0]!,
+              },
+              type: 'object',
+            };
 
-              if (isRequired) {
-                irDiscriminatorSchema.required = [discriminator.propertyName];
-              }
-              schemaItems.push(irDiscriminatorSchema);
-              addedDiscriminators.add(discriminator.propertyName);
+            // Check if the discriminator property is required in any of the discriminator schemas
+            // by looking at all discriminators with the same property name
+            const isRequired = discriminators.some(
+              (d) =>
+                d.discriminator.propertyName === discriminator.propertyName &&
+                // Check in the ref's required array or in the allOf components
+                (ref.required?.includes(d.discriminator.propertyName) ||
+                  (ref.allOf &&
+                    ref.allOf.some((item) => {
+                      const resolvedItem =
+                        '$ref' in item
+                          ? context.resolveRef<SchemaObject>(item.$ref)
+                          : item;
+                      return resolvedItem.required?.includes(
+                        d.discriminator.propertyName,
+                      );
+                    }))),
+            );
+
+            if (isRequired) {
+              irDiscriminatorSchema.required = [discriminator.propertyName];
             }
+            schemaItems.push(irDiscriminatorSchema);
+            addedDiscriminators.add(discriminator.propertyName);
           }
         }
       }
