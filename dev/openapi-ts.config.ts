@@ -43,7 +43,7 @@ export default defineConfig(() => {
             // 'circular.yaml',
             // 'dutchie.json',
             // 'enum-names-values.yaml',
-            'full.yaml',
+            // 'full.yaml',
             // 'integer-formats.yaml',
             // 'invalid',
             // 'object-property-names.yaml',
@@ -54,7 +54,7 @@ export default defineConfig(() => {
             // 'sdk-instance.yaml',
             // 'sdk-method-class-conflict.yaml',
             // 'sdk-nested-classes.yaml',
-            // 'sdk-nested-conflict.yaml',
+            'sdk-nested-conflict.yaml',
             // 'string-with-format.yaml',
             // 'transformers.json',
             // 'transformers-recursive.json',
@@ -274,10 +274,9 @@ export default defineConfig(() => {
           // },
         },
         {
-          // asClass: true,
+          asClass: true,
           // auth: false,
-          // classNameBuilder: '{{name}}',
-          classNameBuilder: '{{name}}Service',
+          // classNameBuilder: '{{name}}',',
           // classStructure: 'off',
           // client: false,
           // getSignature: ({ fields, signature, operation }) => {
@@ -285,8 +284,8 @@ export default defineConfig(() => {
           //   fields.unwrap('path')
           // },
           // include...
-          instance: 'Root',
-          methodNameBuilder: '{{name}}',
+          instance: 'OpencodeClient',
+          // methodNameBuilder: '{{name}}',
           name: '@hey-api/sdk',
           // operationId: false,
           // paramsStructure: 'flat',

@@ -1,113 +1,254 @@
-import type {
-  AccessPatternOptions,
-  AstContext,
-  NodeScope,
-  Symbol,
-} from '@hey-api/codegen-core';
+import type { BindingKind, NodeScope, Symbol } from '@hey-api/codegen-core';
 import { isSymbol } from '@hey-api/codegen-core';
+import type ts from 'typescript';
 
-import { $ } from '~/ts-dsl';
+import { $, TypeScriptRenderer } from '~/ts-dsl';
 
 import type { TsDsl } from '../base';
+import type { CallArgs } from '../expr/call';
 
-const getScope = (node: TsDsl): NodeScope => node.scope ?? 'value';
+export type NodeChain = ReadonlyArray<TsDsl>;
 
-function traverseStructuralParent(node: TsDsl): boolean {
-  if (node.role === 'literal') {
-    return false;
-  }
-  return true;
+export interface AccessOptions {
+  /** The access context. */
+  context?: 'example';
 }
 
-function foldAccessChain<Node extends TsDsl = TsDsl>(
-  chain: ReadonlyArray<Node>,
-): ReadonlyArray<Node> {
-  const folded: Array<Node> = [];
+export type AccessResult = ReturnType<
+  typeof $.expr | typeof $.attr | typeof $.call | typeof $.new
+>;
 
-  for (const node of chain) {
-    if (folded.length === 0) {
-      if (node.role === 'container') {
-        folded.push(node);
-      }
-    } else if (node.role === 'accessor') {
-      folded.push(node);
+export interface ExampleOptions {
+  /** Import kind for the root node. */
+  importKind?: BindingKind;
+  /** Import name for the root node. */
+  importName?: string;
+  /** Setup to run before calling the example. */
+  importSetup?:
+    | TsDsl<ts.Expression>
+    | ((imp: TsDsl<ts.Expression>) => TsDsl<ts.Expression>);
+  /** Module to import from. */
+  moduleName: string;
+  /** Example request payload. */
+  payload?: CallArgs | CallArgs[number];
+  /** Variable name for setup node. */
+  setupName?: string;
+}
+
+function accessChainToNode<T = AccessResult>(accessChain: NodeChain): T {
+  let result!: AccessResult;
+  accessChain.forEach((node, index) => {
+    if (index === 0) {
+      // assume correct node
+      result = node as typeof result;
+    } else {
+      result = result.attr(node.name);
+    }
+  });
+  return result as T;
+}
+
+function getAccessChainForNode(node: TsDsl): NodeChain {
+  const structuralChain = [...getStructuralChainForNode(node, new Set())];
+  const accessChain = structuralToAccessChain(structuralChain);
+  if (accessChain.length === 0) {
+    throw new Error(
+      `Cannot build access chain for node ${node['~dsl']} (${node.name.toString()})`,
+    );
+  }
+  return accessChain.map((node) => node.clone());
+}
+
+function getScope(node: TsDsl): NodeScope {
+  return node.scope ?? 'value';
+}
+
+function getStructuralChainForNode(
+  node: TsDsl,
+  visited: Set<TsDsl>,
+): NodeChain {
+  if (visited.has(node)) return [];
+  visited.add(node);
+
+  if (node['~dsl'] === 'TemplateTsDsl' || node['~dsl'] === 'FuncTsDsl') {
+    return [];
+  }
+
+  if (node.structuralParents) {
+    for (const [parent] of node.structuralParents) {
+      if (getScope(parent) !== getScope(node)) continue;
+
+      const chain = getStructuralChainForNode(parent, visited);
+      if (chain.length > 0) return [...chain, node];
     }
   }
 
-  return folded;
+  if (!node.root) return [];
+
+  return [node];
 }
 
-function getAccessChain<Node extends TsDsl = TsDsl>(
-  node: Node,
-): ReadonlyArray<Node> {
-  const chain: Array<TsDsl> = [];
-  const scope: NodeScope = getScope(node);
-  const visited = new Set<TsDsl>();
-
-  let current: TsDsl | undefined = node;
-  while (current) {
-    if (visited.has(current)) break;
-    visited.add(current);
-
-    chain.unshift(current);
-
-    let foundParent = false;
-    for (const [parent] of current.structuralParents || []) {
-      if (getScope(parent) === scope && traverseStructuralParent(parent)) {
-        current = parent;
-        foundParent = true;
-        break;
-      }
+/**
+ * Fold a structural chain to an access chain by removing
+ * non-accessor nodes.
+ */
+function structuralToAccessChain(structuralChain: NodeChain): NodeChain {
+  const accessChain: Array<TsDsl> = [];
+  structuralChain.forEach((node, index) => {
+    // assume first node is always included
+    if (index === 0) {
+      accessChain.push(node);
+    } else if (
+      node['~dsl'] === 'FieldTsDsl' ||
+      node['~dsl'] === 'GetterTsDsl' ||
+      node['~dsl'] === 'MethodTsDsl'
+    ) {
+      accessChain.push(node);
     }
-
-    if (!foundParent) break;
-  }
-
-  // trim any unreachable nodes before root
-  const rootIndex = chain.findIndex((node) => node.root);
-  if (rootIndex !== -1) {
-    chain.splice(0, rootIndex);
-  }
-
-  return foldAccessChain(chain) as ReadonlyArray<Node>;
+  });
+  return accessChain;
 }
 
-export const astContext: AstContext = {
-  getAccess<T = unknown>(
-    to: TsDsl | Symbol<TsDsl>,
-    options?: AccessPatternOptions,
+function transformAccessChain(
+  accessChain: NodeChain,
+  options: AccessOptions = {},
+): NodeChain {
+  return accessChain.map((node, index) => {
+    const accessNode = node.toAccessNode?.(node, options, {
+      chain: accessChain,
+      index,
+      isLeaf: index === accessChain.length - 1,
+      isRoot: index === 0,
+      length: accessChain.length,
+    });
+    if (accessNode) return accessNode;
+    if (index === 0) {
+      if (node['~dsl'] === 'ClassTsDsl') {
+        const nextNode = accessChain[index + 1];
+        if (nextNode?.['~dsl'] === 'FieldTsDsl') {
+          if ((nextNode as ReturnType<typeof $.field>).hasModifier('static')) {
+            return $(node.name);
+          }
+        }
+        return $.new(node.name).args();
+      }
+      return $(node.name);
+    }
+    return node;
+  });
+}
+
+export class TsDslContext {
+  /**
+   * Build an expression for accessing the node.
+   *
+   * @param node - The node or symbol to build access for
+   * @param options - Access options
+   * @returns Expression for accessing the node
+   *
+   * @example
+   * ```ts
+   * ctx.access(node); // → Expression for accessing the node
+   * ```
+   */
+  access<T = AccessResult>(
+    node: TsDsl | Symbol<TsDsl>,
+    options?: AccessOptions,
   ): T {
-    const node = isSymbol(to) ? to.node! : to;
-    const chain = getAccessChain(node);
-    if (chain.length === 0) return node as T;
+    const n = isSymbol(node) ? node.node : node;
+    if (!n) {
+      throw new Error(`Symbol ${node.name} is not resolved to a node.`);
+    }
+    const accessChain = getAccessChainForNode(n);
+    const finalChain = transformAccessChain(accessChain, options);
+    return accessChainToNode<T>(finalChain);
+  }
 
-    let result!: ReturnType<typeof $.expr | typeof $.attr>;
-
-    for (let index = 0; index < chain.length; index++) {
-      const currentNode = chain[index]!;
-
-      const transformed = currentNode.accessPattern?.(
-        currentNode,
-        {
-          context: 'runtime',
-          ...options,
-        },
-        {
-          chain,
-          index,
-          isLeaf: index === chain.length - 1,
-          isRoot: index === 0,
-          length: chain.length,
-        },
-      ) as typeof result | undefined;
-
-      if (index === 0) {
-        result = transformed || $(currentNode.name);
-      } else {
-        result = result.attr(transformed?.name || currentNode.name);
-      }
+  /**
+   * Build an example.
+   *
+   * @param node - The node to generate an example for
+   * @param options - Example options
+   * @returns Full example string
+   *
+   * @example
+   * ```ts
+   * ctx.example(node, { moduleName: 'my-sdk' }); // → Full example string
+   * ```
+   */
+  example(
+    node: TsDsl,
+    options: ExampleOptions | undefined,
+    astOptions?: Parameters<typeof TypeScriptRenderer.astToString>[0],
+  ): string {
+    if (astOptions) {
+      return TypeScriptRenderer.astToString(astOptions);
     }
 
-    return result as T;
-  },
-};
+    if (!options) {
+      throw new Error('Example options are required.');
+    }
+
+    const accessChain = getAccessChainForNode(node);
+    if (options.importName) {
+      accessChain[0]!.name.set(options.importName);
+    }
+    const importNode = $(accessChain[0]!.name.toString()); // must store name before transform
+    const finalChain = transformAccessChain(accessChain, {
+      context: 'example',
+    });
+
+    const setupNode = options.importSetup
+      ? typeof options.importSetup === 'function'
+        ? options.importSetup(importNode)
+        : options.importSetup
+      : (finalChain[0]! as TsDsl<ts.Expression>);
+    const setupName = options.setupName;
+    const payload =
+      options.payload instanceof Array
+        ? options.payload
+        : options.payload
+          ? [options.payload]
+          : [];
+
+    let nodes: Array<TsDsl> = [];
+    if (setupName) {
+      nodes = [
+        $.const(setupName).assign(setupNode),
+        accessChainToNode([$(setupName), ...finalChain.slice(1)]).call(
+          ...payload,
+        ),
+      ];
+    } else {
+      nodes = [
+        accessChainToNode([setupNode, ...finalChain.slice(1)]).call(...payload),
+      ];
+    }
+
+    const localName = importNode.name.toString();
+    return TypeScriptRenderer.astToString({
+      imports: [
+        [
+          {
+            imports:
+              !options.importKind || options.importKind === 'named'
+                ? [
+                    {
+                      isTypeOnly: false,
+                      localName,
+                      sourceName: localName,
+                    },
+                  ]
+                : [],
+            isTypeOnly: false,
+            kind: options.importKind ?? 'named',
+            localName: options.importKind !== 'named' ? localName : undefined,
+            modulePath: options.moduleName,
+          },
+        ],
+      ],
+      nodes,
+      trailingNewline: false,
+    });
+  }
+}

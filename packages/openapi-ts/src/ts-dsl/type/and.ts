@@ -1,6 +1,5 @@
 import type {
   AnalysisContext,
-  AstContext,
   NodeName,
   NodeScope,
   Ref,
@@ -38,11 +37,11 @@ export class TypeAndTsDsl extends Mixed {
     return this;
   }
 
-  override toAst(ctx: AstContext) {
+  override toAst() {
     const flat: Array<ts.TypeNode> = [];
 
     for (const node of this._types) {
-      const type = this.$type(ctx, node);
+      const type = this.$type(node);
       if (ts.isIntersectionTypeNode(type)) {
         flat.push(...type.types);
       } else {

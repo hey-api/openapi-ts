@@ -198,7 +198,7 @@ export const createInfiniteQueryOptions = ({
 
   const awaitSdkFn = $.lazy((ctx) =>
     ctx
-      .getAccess<ReturnType<typeof $>>(
+      .access(
         plugin.referenceSymbol({
           category: 'sdk',
           resource: 'operation',

@@ -1,8 +1,4 @@
-import type {
-  AnalysisContext,
-  AstContext,
-  NodeName,
-} from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl } from '../base';
@@ -78,23 +74,23 @@ export class TryTsDsl extends Mixed {
     return this;
   }
 
-  override toAst(ctx: AstContext) {
+  override toAst() {
     if (!this._try?.length) throw new Error('Missing try block');
 
     const catchParam = this._catchArg
-      ? (this.$node(ctx, this._catchArg) as ts.BindingName)
+      ? (this.$node(this._catchArg) as ts.BindingName)
       : undefined;
 
     return ts.factory.createTryStatement(
-      this.$node(ctx, new BlockTsDsl(...this._try).pretty()),
+      this.$node(new BlockTsDsl(...this._try).pretty()),
       ts.factory.createCatchClause(
         catchParam
           ? ts.factory.createVariableDeclaration(catchParam)
           : undefined,
-        this.$node(ctx, new BlockTsDsl(...(this._catch ?? [])).pretty()),
+        this.$node(new BlockTsDsl(...(this._catch ?? [])).pretty()),
       ),
       this._finally
-        ? this.$node(ctx, new BlockTsDsl(...this._finally).pretty())
+        ? this.$node(new BlockTsDsl(...this._finally).pretty())
         : undefined,
     );
   }

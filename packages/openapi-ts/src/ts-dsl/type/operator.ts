@@ -1,8 +1,4 @@
-import type {
-  AnalysisContext,
-  AstContext,
-  NodeScope,
-} from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeScope } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -75,12 +71,9 @@ export class TypeOperatorTsDsl extends Mixed {
     return this;
   }
 
-  override toAst(ctx: AstContext) {
+  override toAst() {
     this.$validate();
-    return ts.factory.createTypeOperatorNode(
-      this._op,
-      this.$type(ctx, this._type),
-    );
+    return ts.factory.createTypeOperatorNode(this._op, this.$type(this._type));
   }
 
   /** Throws if required fields are not set. */

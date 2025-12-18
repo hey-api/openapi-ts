@@ -1,4 +1,4 @@
-import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
+import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeArray } from '../base';
@@ -53,7 +53,7 @@ export class PatternTsDsl extends Mixed {
     return this;
   }
 
-  override toAst(ctx: AstContext) {
+  override toAst() {
     if (!this.pattern) {
       throw new Error('PatternTsDsl requires object() or array() pattern');
     }
@@ -70,7 +70,7 @@ export class PatternTsDsl extends Mixed {
               )
             : ts.factory.createBindingElement(undefined, key, alias, undefined),
       );
-      const spread = this.createSpread(ctx);
+      const spread = this.createSpread();
       if (spread) elements.push(spread);
       return ts.factory.createObjectBindingPattern(elements);
     }
@@ -79,7 +79,7 @@ export class PatternTsDsl extends Mixed {
       const elements = this.pattern.values.map((p) =>
         ts.factory.createBindingElement(undefined, undefined, p, undefined),
       );
-      const spread = this.createSpread(ctx);
+      const spread = this.createSpread();
       if (spread) elements.push(spread);
       return ts.factory.createArrayBindingPattern(elements);
     }
@@ -87,12 +87,12 @@ export class PatternTsDsl extends Mixed {
     throw new Error('PatternTsDsl requires object() or array() pattern');
   }
 
-  private createSpread(ctx: AstContext): ts.BindingElement | undefined {
+  private createSpread(): ts.BindingElement | undefined {
     return this._spread
       ? ts.factory.createBindingElement(
-          this.$node(ctx, new TokenTsDsl().spread()),
+          this.$node(new TokenTsDsl().spread()),
           undefined,
-          this.$node(ctx, new IdTsDsl(this._spread)),
+          this.$node(new IdTsDsl(this._spread)),
         )
       : undefined;
   }

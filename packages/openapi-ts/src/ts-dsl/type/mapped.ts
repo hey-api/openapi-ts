@@ -1,6 +1,5 @@
 import type {
   AnalysisContext,
-  AstContext,
   NodeName,
   NodeScope,
 } from '@hey-api/codegen-core';
@@ -83,19 +82,19 @@ export class TypeMappedTsDsl extends Mixed {
     return this;
   }
 
-  override toAst(ctx: AstContext) {
+  override toAst() {
     this.$validate();
     return ts.factory.createMappedTypeNode(
-      this.$node(ctx, this.readonlyToken),
+      this.$node(this.readonlyToken),
       ts.factory.createTypeParameterDeclaration(
         undefined,
-        this.$node(ctx, this.name) as ts.Identifier,
-        this.$type(ctx, this._key),
+        this.$node(this.name) as ts.Identifier,
+        this.$type(this._key),
         undefined,
       ),
       undefined,
-      this.$node(ctx, this.questionToken),
-      this.$type(ctx, this._type),
+      this.$node(this.questionToken),
+      this.$type(this._type),
       undefined,
     );
   }

@@ -1,5 +1,5 @@
 import { isNodeRef, isSymbolRef } from '../guards';
-import type { INode, StructuralRelationship } from '../nodes/node';
+import type { INode, NodeRelationship } from '../nodes/node';
 import { fromRef, isRef, ref } from '../refs/refs';
 import type { Ref } from '../refs/types';
 import type { Symbol } from '../symbols/symbol';
@@ -35,10 +35,7 @@ export class AnalysisContext implements IAnalysisContext {
   /**
    * Register a child node under the current parent.
    */
-  addChild(
-    child: INode,
-    relationship: StructuralRelationship = 'container',
-  ): void {
+  addChild(child: INode, relationship: NodeRelationship = 'container'): void {
     const parent = this.currentParent;
     if (!parent) return;
 

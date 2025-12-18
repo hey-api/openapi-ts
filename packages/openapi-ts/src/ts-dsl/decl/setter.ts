@@ -1,8 +1,4 @@
-import type {
-  AnalysisContext,
-  AstContext,
-  NodeName,
-} from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl } from '../base';
@@ -60,13 +56,13 @@ export class SetterTsDsl extends Mixed {
     }
   }
 
-  override toAst(ctx: AstContext) {
+  override toAst() {
     const node = ts.factory.createSetAccessorDeclaration(
-      [...this.$decorators(ctx), ...this.modifiers],
-      this.$node(ctx, this.name) as ts.PropertyName,
-      this.$params(ctx),
-      this.$node(ctx, new BlockTsDsl(...this._do).pretty()),
+      [...this.$decorators(), ...this.modifiers],
+      this.$node(this.name) as ts.PropertyName,
+      this.$params(),
+      this.$node(new BlockTsDsl(...this._do).pretty()),
     );
-    return this.$docs(ctx, node);
+    return this.$docs(node);
   }
 }

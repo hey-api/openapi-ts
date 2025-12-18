@@ -1,4 +1,4 @@
-import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
+import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl } from '../base';
@@ -20,8 +20,8 @@ export class StmtTsDsl extends Mixed {
     ctx.analyze(this._inner);
   }
 
-  override toAst(ctx: AstContext) {
-    const node = this.$node(ctx, this._inner);
+  override toAst() {
+    const node = this.$node(this._inner);
     return ts.isStatement(node)
       ? node
       : ts.factory.createExpressionStatement(node);
