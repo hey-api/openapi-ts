@@ -402,8 +402,8 @@ const parseAllOf = ({
   // Collect discriminator information to add after all compositions are processed
   type DiscriminatorInfo = {
     discriminator: NonNullable<SchemaObject['discriminator']>;
-    values: string[];
     isRequired: boolean;
+    values: ReadonlyArray<string>;
   };
   const discriminatorsToAdd: DiscriminatorInfo[] = [];
   const addedDiscriminators = new Set<string>();
@@ -486,8 +486,8 @@ const parseAllOf = ({
 
             discriminatorsToAdd.push({
               discriminator,
-              values,
               isRequired,
+              values,
             });
             addedDiscriminators.add(discriminator.propertyName);
           }
@@ -497,7 +497,7 @@ const parseAllOf = ({
   }
 
   // Now add discriminators after all compositions have been processed
-  for (const { discriminator, values, isRequired } of discriminatorsToAdd) {
+  for (const { discriminator, isRequired, values } of discriminatorsToAdd) {
     // Get all discriminator values including children for union types
     const allValues = getAllDiscriminatorValues({
       context,
@@ -528,6 +528,9 @@ const parseAllOf = ({
     let inlineSchema: IR.SchemaObject | undefined;
     for (let i = schemaItems.length - 1; i >= 0; i--) {
       const item = schemaItems[i];
+      if (!item) {
+        continue;
+      }
       // Check if this is not a $ref schema by looking for properties or checking if it came from an inline schema
       if (item.type === 'object' || item.properties) {
         inlineSchema = item;
@@ -548,7 +551,10 @@ const parseAllOf = ({
           inlineSchema.required = [];
         }
         if (!inlineSchema.required.includes(discriminator.propertyName)) {
-          inlineSchema.required.push(discriminator.propertyName);
+          inlineSchema.required = [
+            ...inlineSchema.required,
+            discriminator.propertyName,
+          ];
         }
       }
     } else {
