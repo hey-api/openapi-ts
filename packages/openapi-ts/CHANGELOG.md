@@ -1,5 +1,21 @@
 # @hey-api/openapi-ts
 
+## 0.89.1
+
+### Patch Changes
+
+- **parser**: expose OpenAPI extension keywords ([#3119](https://github.com/hey-api/openapi-ts/pull/3119)) ([`c50190b`](https://github.com/hey-api/openapi-ts/commit/c50190b02ef2a6b77703a2dbf84b826c4432d56e)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(@hey-api/client-axios)**: use `query` option when no `paramsSerializer` is provided ([#3062](https://github.com/hey-api/openapi-ts/pull/3062)) ([`4dcc210`](https://github.com/hey-api/openapi-ts/commit/4dcc2100b7a96799f36cc64833f7ab69f09d1c54)) by [@JanST123GS](https://github.com/JanST123GS)
+
+- **plugin(@hey-api/sdk)**: lazily initialize sub-resources to improve performance ([#3099](https://github.com/hey-api/openapi-ts/pull/3099)) ([`f481f5c`](https://github.com/hey-api/openapi-ts/commit/f481f5cb11f9a8a5e0b1a0baee367f07dd327730)) by [@mrlubos](https://github.com/mrlubos)
+
+- **output**: sanitize reserved names with underscore suffix instead of prefix ([#3102](https://github.com/hey-api/openapi-ts/pull/3102)) ([`9116082`](https://github.com/hey-api/openapi-ts/commit/91160826f3c1d0b87090395140d163d930399639)) by [@mrlubos](https://github.com/mrlubos)
+
+- **parser**: improve discriminator support in nested `allOf` fields ([#3117](https://github.com/hey-api/openapi-ts/pull/3117)) ([`ec1224d`](https://github.com/hey-api/openapi-ts/commit/ec1224d97d2a8f97d66327bdd372dc82fa794955)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **output**: default to `.js` extension when module resolution is set to `node16` ([#3115](https://github.com/hey-api/openapi-ts/pull/3115)) ([`18d218a`](https://github.com/hey-api/openapi-ts/commit/18d218a69f7b2b1b899ad29d3f3892374edf2910)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
 ## 0.89.0
 
 ### Minor Changes
