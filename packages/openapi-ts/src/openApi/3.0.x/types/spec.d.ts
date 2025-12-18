@@ -55,11 +55,11 @@ export interface OpenApiV3_0_X extends SpecificationExtensions {
  *
  * TODO: examples
  */
-export interface CallbackObject {
+export interface CallbackObject extends SpecificationExtensions {
   /**
    * A Path Item Object used to define a callback request and expected responses. A {@link https://learn.openapis.org/examples/v3.0/callback-example.html complete example} is available.
    */
-  [expression: string]: PathItemObject | ReferenceObject;
+  [expression: string]: PathItemObject | ReferenceObject | unknown;
 }
 
 /**
@@ -688,11 +688,11 @@ export interface PathItemObject extends SpecificationExtensions {
  *
  * TODO: examples
  */
-export interface PathsObject {
+export interface PathsObject extends SpecificationExtensions {
   /**
    * A relative path to an individual endpoint. The field name MUST begin with a forward slash (`/`). The path is **appended** (no relative URL resolution) to the expanded URL from the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#server-object Server Object}'s `url` field in order to construct the full URL. {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#path-templating Path templating} is allowed. When matching URLs, concrete (non-templated) paths would be matched before their templated counterparts. Templated paths with the same hierarchy but different templated names MUST NOT exist as they are identical. In case of ambiguous matching, it's up to the tooling to decide which one to use.
    */
-  [path: string]: PathItemObject;
+  [path: `/${string}`]: PathItemObject | unknown;
 }
 
 /**
@@ -790,11 +790,15 @@ export interface ResponseObject extends SpecificationExtensions {
  *
  * TODO: examples
  */
-export interface ResponsesObject {
+export interface ResponsesObject extends SpecificationExtensions {
   /**
    * Any {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#http-status-codes HTTP status code} can be used as the property name, but only one property per code, to describe the expected response for that HTTP status code. A {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#reference-object Reference Object} can link to a response that is defined in the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#components-responses OpenAPI Object's `components.responses`} section. This field MUST be enclosed in quotation marks (for example, "200") for compatibility between JSON and YAML. To define a range of response codes, this field MAY contain the uppercase wildcard character `X`. For example, `2XX` represents all response codes between `200` and `299`. Only the following range definitions are allowed: `1XX`, `2XX`, `3XX`, `4XX`, and `5XX`. If a response is defined using an explicit code, the explicit code definition takes precedence over the range definition for that code.
    */
-  [httpStatusCode: string]: ResponseObject | ReferenceObject | undefined;
+  [httpStatusCode: string]:
+    | ResponseObject
+    | ReferenceObject
+    | undefined
+    | unknown;
   /**
    * The documentation of responses other than the ones declared for specific HTTP response codes. Use this field to cover undeclared responses. A {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#reference-object Reference Object} can link to a response that the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#components-responses OpenAPI Object's `components.responses`} section defines.
    */
