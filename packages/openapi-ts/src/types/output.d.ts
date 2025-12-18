@@ -70,8 +70,8 @@ export type UserOutput = {
   /**
    * If specified, this will be the file extension used when importing
    * other modules. By default, we don't add a file extension and let the
-   * runtime resolve it. If you're using moduleResolution `nodenext`, we
-   * default to `.js`.
+   * runtime resolve it. If you're using moduleResolution `nodenext` or
+   * `node16`, we default to `.js`.
    *
    * @default undefined
    */
@@ -170,8 +170,8 @@ export type Output = {
   /**
    * If specified, this will be the file extension used when importing
    * other modules. By default, we don't add a file extension and let the
-   * runtime resolve it. If you're using moduleResolution `nodenext`, we
-   * default to `.js`.
+   * runtime resolve it. If you're using moduleResolution `nodenext` or
+   * `node16`, we default to `.js`.
    */
   importFileExtension: ImportFileExtensions | (string & {}) | null | undefined;
   /**

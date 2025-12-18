@@ -50,8 +50,10 @@ export const getOutput = (userConfig: UserConfig): Config['output'] => {
   output.tsConfig = loadTsConfig(findTsConfigPath(output.tsConfigPath));
   if (
     output.importFileExtension === undefined &&
-    output.tsConfig?.options.moduleResolution ===
-      ts.ModuleResolutionKind.NodeNext
+    (output.tsConfig?.options.moduleResolution ===
+      ts.ModuleResolutionKind.NodeNext ||
+      output.tsConfig?.options.moduleResolution ===
+        ts.ModuleResolutionKind.Node16)
   ) {
     output.importFileExtension = '.js';
   }

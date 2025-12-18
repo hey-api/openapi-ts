@@ -1,0 +1,9 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "declaration": false,
+    "moduleResolution": "node16",
+    "resolveJsonModule": true,
+    "skipLibCheck": true
+  }
+}
