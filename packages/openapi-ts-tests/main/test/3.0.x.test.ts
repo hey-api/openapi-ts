@@ -210,6 +210,13 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'discriminator-allof-nested.json',
+        output: 'discriminator-allof-nested',
+      }),
+      description: 'handles nested allOf with discriminators',
+    },
+    {
+      config: createConfig({
         input: 'enum-escape.json',
         output: 'enum-escape',
       }),

@@ -241,6 +241,13 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'discriminator-allof-nested.json',
+        output: 'discriminator-allof-nested',
+      }),
+      description: 'handles nested allOf with discriminators',
+    },
+    {
+      config: createConfig({
         input: 'duplicate-null.json',
         output: 'duplicate-null',
       }),
