@@ -10,15 +10,13 @@ export type VehicleDto = {
 };
 
 export type CarDto = VehicleDto & {
-    $type: 'Car';
-} & {
     modelName: string;
+    $type: 'Car' | 'Volvo';
 };
 
 export type VolvoDto = CarDto & {
-    $type: 'Volvo';
-} & {
     seatbeltCount: number;
+    $type: 'Volvo';
 };
 
 export type GetCarsData = {

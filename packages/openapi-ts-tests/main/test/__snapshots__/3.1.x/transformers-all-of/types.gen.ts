@@ -14,12 +14,11 @@ export type Bar = {
 };
 
 export type Baz = Qux & {
-    id: 'Baz';
-} & {
     foo: number;
     bar: Date;
     baz: 'foo' | 'bar' | 'baz';
     qux: number;
+    id: 'Baz';
 };
 
 export type Qux = {
