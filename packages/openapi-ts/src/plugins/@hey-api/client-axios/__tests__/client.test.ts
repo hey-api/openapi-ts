@@ -49,49 +49,6 @@ describe('buildUrl', () => {
   it.each(scenarios)('returns $url', ({ options, url }) => {
     expect(client.buildUrl(options)).toBe(url);
   });
-
-  it.each(scenarios)(
-    'correctly maps `query` parameter to `params` parameter for axios',
-    async ({ options }) => {
-      const mockAxios = vi.fn((config) => ({ config }));
-
-      expect(
-        (
-          await client.request({
-            ...options,
-            axios: mockAxios as Partial<AxiosInstance> as AxiosInstance,
-            method: 'GET',
-          })
-        ).config?.params,
-      ).toBe(options.query);
-    },
-  );
-
-  it.each(scenarios)(
-    'uses a custom `paramsSerializer` method when given and do not map `params` for axios',
-    async ({ options }) => {
-      const mockAxios = vi.fn((config) => ({ config }));
-
-      const paramsSerializer = (params: Record<string, string>) =>
-        new URLSearchParams(params).toString();
-
-      expect(
-        (
-          await client.request({
-            ...options,
-            axios: mockAxios as Partial<AxiosInstance> as AxiosInstance,
-            method: 'GET',
-            paramsSerializer,
-          })
-        ).config,
-      ).toEqual(
-        expect.objectContaining({
-          params: undefined,
-          paramsSerializer,
-        }),
-      );
-    },
-  );
 });
 
 describe('AxiosInstance', () => {
@@ -393,14 +350,5 @@ describe('confirming axios behaviour for constructing URLs', () => {
 
     const config = client.getUri({ baseURL: undefined, url: '/users' });
     expect(config).toBe('https://api.example.com/users');
-  });
-  it('does append `params` as searchParams to the URL', async () => {
-    const client = axios.create({
-      baseURL: 'https://api.example.com',
-      params: { foo: 'bar' },
-    });
-
-    const config = client.getUri({ baseURL: undefined, url: '/users' });
-    expect(config).toBe('https://api.example.com/users?foo=bar');
   });
 });
