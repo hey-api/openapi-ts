@@ -8,17 +8,17 @@ export type Foo = {
     id: string;
 };
 
-export type Bar = Foo & {
+export type Bar = Omit<Foo, 'id'> & {
     bar?: string;
     id: 'Bar';
 };
 
-export type Baz = Foo & {
+export type Baz = Omit<Foo, 'id'> & {
     baz?: string;
     id: 'Baz';
 };
 
-export type Qux = Foo & {
+export type Qux = Omit<Foo, 'id'> & {
     qux?: boolean;
     id: 'Qux';
 };
@@ -27,17 +27,17 @@ export type FooMapped = {
     id: string;
 };
 
-export type BarMapped = FooMapped & {
+export type BarMapped = Omit<FooMapped, 'id'> & {
     bar?: string;
     id: 'bar';
 };
 
-export type BazMapped = FooMapped & {
+export type BazMapped = Omit<FooMapped, 'id'> & {
     baz?: string;
     id: 'baz';
 };
 
-export type QuxMapped = FooMapped & {
+export type QuxMapped = Omit<FooMapped, 'id'> & {
     qux?: boolean;
     id: 'QuxMapped';
 };
