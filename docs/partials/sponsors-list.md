@@ -4,10 +4,10 @@
   <li>
     <a href="https://kutt.it/pkEZyc" style="height: 50px;" target="_blank">
       <picture>
-        <source srcset="/images/stainless-logo-wordmark-480w.webp" media="(max-width: 480px)" type="image/webp" />
-        <source srcset="/images/stainless-logo-wordmark-768w.webp" media="(max-width: 768px)" type="image/webp" />
-        <source srcset="/images/stainless-logo-wordmark-1200w.webp" media="(min-width: 769px)" type="image/webp" />
-        <img alt="Stainless logo" loading="lazy" src="/images/stainless-logo-wordmark-1200w.png" />
+        <source srcset="/assets/.gen/stainless-logo-wordmark-480w.webp" media="(max-width: 480px)" type="image/webp" />
+        <source srcset="/assets/.gen/stainless-logo-wordmark-768w.webp" media="(max-width: 768px)" type="image/webp" />
+        <source srcset="/assets/.gen/stainless-logo-wordmark-1200w.webp" media="(min-width: 769px)" type="image/webp" />
+        <img alt="Stainless logo" loading="lazy" src="/assets/.gen/stainless-logo-wordmark-1200w.png" />
       </picture>
     </a>
     <p>
@@ -57,10 +57,10 @@
   <li>
     <a href="https://kutt.it/YpaKsX" style="height: 20px;" target="_blank">
       <picture>
-        <source srcset="/images/kinde-logo-wordmark-480w.webp" media="(max-width: 480px)" type="image/webp" />
-        <source srcset="/images/kinde-logo-wordmark-768w.webp" media="(max-width: 768px)" type="image/webp" />
-        <source srcset="/images/kinde-logo-wordmark-1200w.webp" media="(min-width: 769px)" type="image/webp" />
-        <img alt="Kinde logo" loading="lazy" src="/images/kinde-logo-wordmark-1200w.png" />
+        <source srcset="/assets/.gen/kinde-logo-wordmark-480w.webp" media="(max-width: 480px)" type="image/webp" />
+        <source srcset="/assets/.gen/kinde-logo-wordmark-768w.webp" media="(max-width: 768px)" type="image/webp" />
+        <source srcset="/assets/.gen/kinde-logo-wordmark-1200w.webp" media="(min-width: 769px)" type="image/webp" />
+        <img alt="Kinde logo" loading="lazy" src="/assets/.gen/kinde-logo-wordmark-1200w.png" />
       </picture>
     </a>
   </li>
