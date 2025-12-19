@@ -183,6 +183,11 @@ interface IRSchemaObject
    */
   logicalOperator?: 'and' | 'or';
   /**
+   * When used with `$ref` or `symbolRef`, specifies properties to omit from the referenced schema.
+   * Useful for handling discriminator property conflicts in allOf compositions.
+   */
+  omit?: ReadonlyArray<string>;
+  /**
    * When type is `object`, `patternProperties` can be used to define a schema
    * for properties that match a specific regex pattern.
    */
