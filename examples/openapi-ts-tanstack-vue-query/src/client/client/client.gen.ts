@@ -247,6 +247,7 @@ export const createClient = (config: Config = {}): Client => {
         }
         return request
       },
+      serializedBody: getValidRequestBody(opts) as BodyInit | null | undefined,
       url
     })
   }
