@@ -2,7 +2,7 @@ import { defineConfig } from 'vitepress';
 
 export default defineConfig({
   description:
-    '🚀 The OpenAPI to TypeScript codegen. Generate clients, SDKs, validators, and more.',
+    '🌀 OpenAPI to TypeScript code generator. Generate API clients, SDKs, validators, and more.',
   lang: 'en-US',
   themeConfig: {
     editLink: {
