@@ -1,5 +1,13 @@
 # @hey-api/openapi-ts
 
+## 0.89.2
+
+### Patch Changes
+
+- **plugin(@hey-api/typescript)**: improve type narrowing in discriminated types ([#3120](https://github.com/hey-api/openapi-ts/pull/3120)) ([`6f8a43c`](https://github.com/hey-api/openapi-ts/commit/6f8a43c7ffcc8685700c3789c6339aabbac07d2b)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(@hey-api/client-axios)**: revert use `query` option when no `paramsSerializer` is provided ([#3125](https://github.com/hey-api/openapi-ts/pull/3125)) ([`34c9a92`](https://github.com/hey-api/openapi-ts/commit/34c9a9214008ede461251f46ab750de37da96bbb)) by [@mrlubos](https://github.com/mrlubos)
+
 ## 0.89.1
 
 ### Patch Changes
