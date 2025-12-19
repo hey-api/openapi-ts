@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vitepress';
 import VueSelect from 'vue3-select-component';
+import 'vue3-select-component/styles';
 
 type Option = {
   label: string;
