@@ -690,3 +690,99 @@ describe('createSseClient', () => {
     expect(result).toEqual([1, 2, 3]);
   });
 });
+
+describe('serialized request body handling', () => {
+  let fetchMock: any;
+
+  beforeEach(() => {
+    fetchMock = vi.fn();
+    global.fetch = fetchMock;
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('sends serialized JSON body in SSE request', async () => {
+    fetchMock.mockResolvedValue({
+      body: makeStream(['data: ok\n\n']),
+      ok: true,
+    });
+
+    const jsonBody = { key: 'value' };
+    const serializedBody = JSON.stringify(jsonBody);
+
+    const { stream } = createSseClient({
+      body: jsonBody as any,
+      method: 'POST',
+      serializedBody,
+      url: 'http://localhost/sse',
+    });
+
+    const iter = stream[Symbol.asyncIterator]();
+    await iter.next();
+    await iter.return?.();
+
+    expect(fetchMock).toHaveBeenCalled();
+    const request = fetchMock.mock.calls[0]![0];
+    expect(request).toBeInstanceOf(Request);
+    await expect(request.text()).resolves.toBe(serializedBody);
+  });
+
+  it('handles empty string serializedBody', async () => {
+    fetchMock.mockResolvedValue({
+      body: makeStream(['data: ok\n\n']),
+      ok: true,
+    });
+
+    const { stream } = createSseClient({
+      body: '' as any,
+      method: 'POST',
+      serializedBody: '',
+      url: 'http://localhost/sse',
+    });
+
+    const iter = stream[Symbol.asyncIterator]();
+    await iter.next();
+    await iter.return?.();
+
+    expect(fetchMock).toHaveBeenCalled();
+    const request = fetchMock.mock.calls[0]![0];
+    expect(request).toBeInstanceOf(Request);
+    await expect(request.text()).resolves.toBe('');
+  });
+
+  it('provides serialized body to onRequest hook', async () => {
+    fetchMock.mockResolvedValue({
+      body: makeStream(['data: ok\n\n']),
+      ok: true,
+    });
+
+    const jsonBody = { key: 'value' };
+    const serializedBody = JSON.stringify(jsonBody);
+    const onRequest = vi.fn(async (url: string, init: RequestInit) => {
+      expect(init.body).toBe(serializedBody);
+      return toRequest(url, init);
+    });
+
+    const { stream } = createSseClient({
+      body: jsonBody as any,
+      method: 'POST',
+      onRequest,
+      serializedBody,
+      url: 'http://localhost/sse',
+    });
+
+    const iter = stream[Symbol.asyncIterator]();
+    await iter.next();
+    await iter.return?.();
+
+    expect(onRequest).toHaveBeenCalledWith(
+      'http://localhost/sse',
+      expect.objectContaining({
+        body: serializedBody,
+        method: 'POST',
+      }),
+    );
+  });
+});
