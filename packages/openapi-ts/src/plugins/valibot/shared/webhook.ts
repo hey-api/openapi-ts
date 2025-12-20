@@ -1,7 +1,7 @@
 import { fromRef } from '@hey-api/codegen-core';
 
 import type { IR } from '~/ir/types';
-import { buildName } from '~/openApi/shared/utils/name';
+import { applyNaming } from '~/utils/naming';
 
 import { exportAst } from './export';
 import type { Ast, IrSchemaToAstOptions } from './types';
@@ -117,21 +117,20 @@ export const irWebhookToAst = ({
     schemaData.required = [...requiredProperties];
 
     const ast = getAst(schemaData, fromRef(state.path));
-    const symbol = plugin.registerSymbol({
-      meta: {
-        category: 'schema',
-        path: fromRef(state.path),
-        resource: 'webhook',
-        resourceId: operation.id,
-        role: 'data',
-        tags: fromRef(state.tags),
-        tool: 'valibot',
+    const symbol = plugin.symbol(
+      applyNaming(operation.id, plugin.config.webhooks),
+      {
+        meta: {
+          category: 'schema',
+          path: fromRef(state.path),
+          resource: 'webhook',
+          resourceId: operation.id,
+          role: 'data',
+          tags: fromRef(state.tags),
+          tool: 'valibot',
+        },
       },
-      name: buildName({
-        config: plugin.config.webhooks,
-        name: operation.id,
-      }),
-    });
+    );
     exportAst({
       ast,
       plugin,

@@ -3,8 +3,8 @@ import type ts from 'typescript';
 
 import { createOperationKey, operationResponsesMap } from '~/ir/operation';
 import type { IR } from '~/ir/types';
-import { buildName } from '~/openApi/shared/utils/name';
 import { $ } from '~/ts-dsl';
+import { applyNaming } from '~/utils/naming';
 import { refToName } from '~/utils/ref';
 
 import type { HeyApiTransformersPlugin } from './types';
@@ -62,12 +62,9 @@ const processSchemaType = ({
     const symbol =
       plugin.getSymbol(query) ??
       plugin.symbol(
-        buildName({
-          config: {
-            case: 'camelCase',
-            name: '{{name}}SchemaResponseTransformer',
-          },
-          name: refToName(schema.$ref),
+        applyNaming(refToName(schema.$ref), {
+          case: 'camelCase',
+          name: '{{name}}SchemaResponseTransformer',
         }),
         {
           meta: query,
@@ -311,21 +308,20 @@ export const handler: HeyApiTransformersPlugin['Handler'] = ({ plugin }) => {
         schema: response,
       });
       if (!nodes.length) return;
-      const symbol = plugin.registerSymbol({
-        meta: {
-          category: 'transform',
-          resource: 'operation',
-          resourceId: operation.id,
-          role: 'response',
-        },
-        name: buildName({
-          config: {
-            case: 'camelCase',
-            name: '{{name}}ResponseTransformer',
-          },
-          name: operation.id,
+      const symbol = plugin.symbol(
+        applyNaming(operation.id, {
+          case: 'camelCase',
+          name: '{{name}}ResponseTransformer',
         }),
-      });
+        {
+          meta: {
+            category: 'transform',
+            resource: 'operation',
+            resourceId: operation.id,
+            role: 'response',
+          },
+        },
+      );
       const value = $.const(symbol)
         .export()
         .assign(

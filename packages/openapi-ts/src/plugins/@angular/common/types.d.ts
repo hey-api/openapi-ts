@@ -1,5 +1,5 @@
 import type { DefinePlugin, Plugin } from '~/plugins';
-import type { StringName } from '~/types/case';
+import type { NameTransformer } from '~/utils/naming';
 
 export type UserConfig = Plugin.Name<'@angular/common'> &
   Plugin.Hooks & {
@@ -28,7 +28,7 @@ export type UserConfig = Plugin.Name<'@angular/common'> &
            * Builds the class name for the generated resource.
            * By default, the class name is suffixed with "Resources".
            */
-          classNameBuilder?: StringName;
+          classNameBuilder?: NameTransformer;
           /**
            * Whether or not to create HTTP Request instances.
            *
@@ -59,7 +59,7 @@ export type UserConfig = Plugin.Name<'@angular/common'> &
            * Builds the class name for the generated resource.
            * By default, the class name is suffixed with "Resources".
            */
-          classNameBuilder?: StringName;
+          classNameBuilder?: NameTransformer;
           /**
            * Whether or not to create HTTP resource APIs.
            *
@@ -98,7 +98,7 @@ export type Config = Plugin.Name<'@angular/common'> &
        * Builds the class name for the generated resource.
        * By default, the class name is suffixed with "Resources".
        */
-      classNameBuilder: StringName;
+      classNameBuilder: NameTransformer;
       /**
        * Whether or not to create HTTP Request instances.
        *
@@ -125,7 +125,7 @@ export type Config = Plugin.Name<'@angular/common'> &
        * Builds the class name for the generated resource.
        * By default, the class name is suffixed with "Resources".
        */
-      classNameBuilder: StringName;
+      classNameBuilder: NameTransformer;
       /**
        * Whether or not to create HTTP resource APIs.
        *

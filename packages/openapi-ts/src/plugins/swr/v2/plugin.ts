@@ -2,7 +2,7 @@ import type { SwrPlugin } from '../types';
 import { createUseSwr } from './useSwr';
 
 export const handlerV2: SwrPlugin['Handler'] = ({ plugin }) => {
-  plugin.registerSymbol({
+  plugin.symbol('useSWR', {
     external: 'swr',
     importKind: 'default',
     kind: 'function',
@@ -10,7 +10,6 @@ export const handlerV2: SwrPlugin['Handler'] = ({ plugin }) => {
       category: 'external',
       resource: 'swr',
     },
-    name: 'useSWR',
   });
 
   plugin.forEach(

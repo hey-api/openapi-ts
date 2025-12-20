@@ -2,7 +2,7 @@ import { fromRef } from '@hey-api/codegen-core';
 
 import { operationResponsesMap } from '~/ir/operation';
 import type { IR } from '~/ir/types';
-import { buildName } from '~/openApi/shared/utils/name';
+import { applyNaming } from '~/utils/naming';
 
 import { exportAst } from './export';
 import type { Ast, IrSchemaToAstOptions } from './types';
@@ -119,10 +119,7 @@ export const irOperationToAst = ({
 
     const ast = getAst(schemaData, fromRef(state.path));
     const symbol = plugin.symbol(
-      buildName({
-        config: plugin.config.requests,
-        name: operation.id,
-      }),
+      applyNaming(operation.id, plugin.config.requests),
       {
         meta: {
           category: 'schema',
@@ -137,10 +134,7 @@ export const irOperationToAst = ({
     );
     const typeInferSymbol = plugin.config.requests.types.infer.enabled
       ? plugin.symbol(
-          buildName({
-            config: plugin.config.requests.types.infer,
-            name: operation.id,
-          }),
+          applyNaming(operation.id, plugin.config.requests.types.infer),
           {
             meta: {
               category: 'type',
@@ -172,10 +166,7 @@ export const irOperationToAst = ({
         const path = [...fromRef(state.path), 'responses'];
         const ast = getAst(response, path);
         const symbol = plugin.symbol(
-          buildName({
-            config: plugin.config.responses,
-            name: operation.id,
-          }),
+          applyNaming(operation.id, plugin.config.responses),
           {
             meta: {
               category: 'schema',
@@ -190,10 +181,7 @@ export const irOperationToAst = ({
         );
         const typeInferSymbol = plugin.config.responses.types.infer.enabled
           ? plugin.symbol(
-              buildName({
-                config: plugin.config.responses.types.infer,
-                name: operation.id,
-              }),
+              applyNaming(operation.id, plugin.config.responses.types.infer),
               {
                 meta: {
                   category: 'type',

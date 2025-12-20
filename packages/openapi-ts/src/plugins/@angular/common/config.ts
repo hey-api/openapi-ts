@@ -26,7 +26,7 @@ export const defaultConfig: AngularCommonPlugin['Config'] = {
     if (!plugin.config.httpRequests.methodNameBuilder) {
       const { asClass } = plugin.config.httpRequests;
       plugin.config.httpRequests.methodNameBuilder = (operation) =>
-        asClass ? String(operation.id) : `${String(operation.id)}Request`;
+        asClass ? `${operation.id}` : `${operation.id}Request`;
     }
 
     plugin.config.httpResources = context.valueToObject({
@@ -44,7 +44,7 @@ export const defaultConfig: AngularCommonPlugin['Config'] = {
     if (!plugin.config.httpResources.methodNameBuilder) {
       const { asClass } = plugin.config.httpResources;
       plugin.config.httpResources.methodNameBuilder = (operation) =>
-        asClass ? String(operation.id) : `${String(operation.id)}Resource`;
+        asClass ? `${operation.id}` : `${operation.id}Resource`;
     }
   },
 };

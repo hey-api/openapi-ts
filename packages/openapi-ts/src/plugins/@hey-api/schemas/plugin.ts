@@ -367,14 +367,13 @@ const schemasV2_0_X = ({
 
   for (const name in context.spec.definitions) {
     const schema = context.spec.definitions[name]!;
-    const symbol = plugin.registerSymbol({
+    const symbol = plugin.symbol(schemaName({ name, plugin, schema }), {
       meta: {
         category: 'schema',
         resource: 'definition',
         resourceId: name,
         tool: 'json-schema',
       },
-      name: schemaName({ name, plugin, schema }),
     });
     const obj = schemaToJsonSchemaDraft_04({
       context,
@@ -407,14 +406,13 @@ const schemasV3_0_X = ({
 
   for (const name in context.spec.components.schemas) {
     const schema = context.spec.components.schemas[name]!;
-    const symbol = plugin.registerSymbol({
+    const symbol = plugin.symbol(schemaName({ name, plugin, schema }), {
       meta: {
         category: 'schema',
         resource: 'definition',
         resourceId: name,
         tool: 'json-schema',
       },
-      name: schemaName({ name, plugin, schema }),
     });
     const obj = schemaToJsonSchemaDraft_05({
       context,
@@ -447,14 +445,13 @@ const schemasV3_1_X = ({
 
   for (const name in context.spec.components.schemas) {
     const schema = context.spec.components.schemas[name]!;
-    const symbol = plugin.registerSymbol({
+    const symbol = plugin.symbol(schemaName({ name, plugin, schema }), {
       meta: {
         category: 'schema',
         resource: 'definition',
         resourceId: name,
         tool: 'json-schema',
       },
-      name: schemaName({ name, plugin, schema }),
     });
     const obj = schemaToJsonSchema2020_12({
       context,

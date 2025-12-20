@@ -1,5 +1,5 @@
 import type { DefinePlugin, Plugin } from '~/plugins';
-import type { StringCase, StringName } from '~/types/case';
+import type { Casing, NameTransformer } from '~/utils/naming';
 
 import type { IApi } from './api';
 
@@ -10,7 +10,7 @@ export type UserConfig = Plugin.Name<'arktype'> &
      *
      * @default 'PascalCase'
      */
-    case?: StringCase;
+    case?: Casing;
     /**
      * Add comments from input to the generated Arktype schemas?
      *
@@ -30,14 +30,14 @@ export type UserConfig = Plugin.Name<'arktype'> &
      */
     definitions?:
       | boolean
-      | StringName
+      | NameTransformer
       | {
           /**
            * The casing convention to use for generated names.
            *
            * @default 'PascalCase'
            */
-          case?: StringCase;
+          case?: Casing;
           /**
            * Whether to generate Arktype schemas for reusable definitions.
            *
@@ -50,7 +50,7 @@ export type UserConfig = Plugin.Name<'arktype'> &
            *
            * @default '{{name}}'
            */
-          name?: StringName;
+          name?: NameTransformer;
           /**
            * Configuration for TypeScript type generation from Arktype schemas.
            *
@@ -69,14 +69,14 @@ export type UserConfig = Plugin.Name<'arktype'> &
              */
             infer?:
               | boolean
-              | StringName
+              | NameTransformer
               | {
                   /**
                    * The casing convention to use for generated type names.
                    *
                    * @default 'PascalCase'
                    */
-                  case?: StringCase;
+                  case?: Casing;
                   /**
                    * Whether to generate TypeScript types from Arktype schemas.
                    *
@@ -89,7 +89,7 @@ export type UserConfig = Plugin.Name<'arktype'> &
                    *
                    * @default '{{name}}'
                    */
-                  name?: StringName;
+                  name?: NameTransformer;
                 };
           };
         };
@@ -123,14 +123,14 @@ export type UserConfig = Plugin.Name<'arktype'> &
      */
     requests?:
       | boolean
-      | StringName
+      | NameTransformer
       | {
           /**
            * The casing convention to use for generated names.
            *
            * @default 'PascalCase'
            */
-          case?: StringCase;
+          case?: Casing;
           /**
            * Whether to generate Arktype schemas for request definitions.
            *
@@ -143,7 +143,7 @@ export type UserConfig = Plugin.Name<'arktype'> &
            *
            * @default '{{name}}Data'
            */
-          name?: StringName;
+          name?: NameTransformer;
           /**
            * Configuration for TypeScript type generation from Arktype schemas.
            *
@@ -162,14 +162,14 @@ export type UserConfig = Plugin.Name<'arktype'> &
              */
             infer?:
               | boolean
-              | StringName
+              | NameTransformer
               | {
                   /**
                    * The casing convention to use for generated type names.
                    *
                    * @default 'PascalCase'
                    */
-                  case?: StringCase;
+                  case?: Casing;
                   /**
                    * Whether to generate TypeScript types from Arktype schemas.
                    *
@@ -182,7 +182,7 @@ export type UserConfig = Plugin.Name<'arktype'> &
                    *
                    * @default '{{name}}Data'
                    */
-                  name?: StringName;
+                  name?: NameTransformer;
                 };
           };
         };
@@ -201,14 +201,14 @@ export type UserConfig = Plugin.Name<'arktype'> &
      */
     responses?:
       | boolean
-      | StringName
+      | NameTransformer
       | {
           /**
            * The casing convention to use for generated names.
            *
            * @default 'PascalCase'
            */
-          case?: StringCase;
+          case?: Casing;
           /**
            * Whether to generate Arktype schemas for response definitions.
            *
@@ -221,7 +221,7 @@ export type UserConfig = Plugin.Name<'arktype'> &
            *
            * @default '{{name}}Response'
            */
-          name?: StringName;
+          name?: NameTransformer;
           /**
            * Configuration for TypeScript type generation from Arktype schemas.
            *
@@ -240,14 +240,14 @@ export type UserConfig = Plugin.Name<'arktype'> &
              */
             infer?:
               | boolean
-              | StringName
+              | NameTransformer
               | {
                   /**
                    * The casing convention to use for generated type names.
                    *
                    * @default 'PascalCase'
                    */
-                  case?: StringCase;
+                  case?: Casing;
                   /**
                    * Whether to generate TypeScript types from Arktype schemas.
                    *
@@ -260,7 +260,7 @@ export type UserConfig = Plugin.Name<'arktype'> &
                    *
                    * @default '{{name}}Response'
                    */
-                  name?: StringName;
+                  name?: NameTransformer;
                 };
           };
         };
@@ -282,14 +282,14 @@ export type UserConfig = Plugin.Name<'arktype'> &
        */
       infer?:
         | boolean
-        | StringName
+        | NameTransformer
         | {
             /**
              * The casing convention to use for generated type names.
              *
              * @default 'PascalCase'
              */
-            case?: StringCase;
+            case?: Casing;
             /**
              * Whether to generate TypeScript types from Arktype schemas.
              *
@@ -312,14 +312,14 @@ export type UserConfig = Plugin.Name<'arktype'> &
      */
     webhooks?:
       | boolean
-      | StringName
+      | NameTransformer
       | {
           /**
            * The casing convention to use for generated names.
            *
            * @default 'PascalCase'
            */
-          case?: StringCase;
+          case?: Casing;
           /**
            * Whether to generate Arktype schemas for webhook definitions.
            *
@@ -332,7 +332,7 @@ export type UserConfig = Plugin.Name<'arktype'> &
            *
            * @default '{{name}}WebhookRequest'
            */
-          name?: StringName;
+          name?: NameTransformer;
           /**
            * Configuration for TypeScript type generation from Arktype schemas.
            *
@@ -351,14 +351,14 @@ export type UserConfig = Plugin.Name<'arktype'> &
              */
             infer?:
               | boolean
-              | StringName
+              | NameTransformer
               | {
                   /**
                    * The casing convention to use for generated type names.
                    *
                    * @default 'PascalCase'
                    */
-                  case?: StringCase;
+                  case?: Casing;
                   /**
                    * Whether to generate TypeScript types from Arktype schemas.
                    *
@@ -371,7 +371,7 @@ export type UserConfig = Plugin.Name<'arktype'> &
                    *
                    * @default '{{name}}WebhookRequest'
                    */
-                  name?: StringName;
+                  name?: NameTransformer;
                 };
           };
         };
@@ -384,7 +384,7 @@ export type Config = Plugin.Name<'arktype'> &
      *
      * @default 'PascalCase'
      */
-    case: StringCase;
+    case: Casing;
     /**
      * Add comments from input to the generated Arktype schemas?
      *
@@ -403,7 +403,7 @@ export type Config = Plugin.Name<'arktype'> &
        *
        * @default 'PascalCase'
        */
-      case: StringCase;
+      case: Casing;
       /**
        * Whether to generate Arktype schemas for reusable definitions.
        *
@@ -416,7 +416,7 @@ export type Config = Plugin.Name<'arktype'> &
        *
        * @default '{{name}}'
        */
-      name: StringName;
+      name: NameTransformer;
       /**
        * Configuration for TypeScript type generation from Arktype schemas.
        *
@@ -432,7 +432,7 @@ export type Config = Plugin.Name<'arktype'> &
            *
            * @default 'PascalCase'
            */
-          case: StringCase;
+          case: Casing;
           /**
            * Whether to generate TypeScript types from Arktype schemas.
            *
@@ -445,7 +445,7 @@ export type Config = Plugin.Name<'arktype'> &
            *
            * @default '{{name}}'
            */
-          name: StringName;
+          name: NameTransformer;
         };
       };
     };
@@ -476,7 +476,7 @@ export type Config = Plugin.Name<'arktype'> &
        *
        * @default 'PascalCase'
        */
-      case: StringCase;
+      case: Casing;
       /**
        * Whether to generate Arktype schemas for request definitions.
        *
@@ -489,7 +489,7 @@ export type Config = Plugin.Name<'arktype'> &
        *
        * @default '{{name}}Data'
        */
-      name: StringName;
+      name: NameTransformer;
       /**
        * Configuration for TypeScript type generation from Arktype schemas.
        *
@@ -505,7 +505,7 @@ export type Config = Plugin.Name<'arktype'> &
            *
            * @default 'PascalCase'
            */
-          case: StringCase;
+          case: Casing;
           /**
            * Whether to generate TypeScript types from Arktype schemas.
            *
@@ -518,7 +518,7 @@ export type Config = Plugin.Name<'arktype'> &
            *
            * @default '{{name}}Data'
            */
-          name: StringName;
+          name: NameTransformer;
         };
       };
     };
@@ -534,7 +534,7 @@ export type Config = Plugin.Name<'arktype'> &
        *
        * @default 'PascalCase'
        */
-      case: StringCase;
+      case: Casing;
       /**
        * Whether to generate Arktype schemas for response definitions.
        *
@@ -547,7 +547,7 @@ export type Config = Plugin.Name<'arktype'> &
        *
        * @default '{{name}}Response'
        */
-      name: StringName;
+      name: NameTransformer;
       /**
        * Configuration for TypeScript type generation from Arktype schemas.
        *
@@ -563,7 +563,7 @@ export type Config = Plugin.Name<'arktype'> &
            *
            * @default 'PascalCase'
            */
-          case: StringCase;
+          case: Casing;
           /**
            * Whether to generate TypeScript types from Arktype schemas.
            *
@@ -576,7 +576,7 @@ export type Config = Plugin.Name<'arktype'> &
            *
            * @default '{{name}}Response'
            */
-          name: StringName;
+          name: NameTransformer;
         };
       };
     };
@@ -595,7 +595,7 @@ export type Config = Plugin.Name<'arktype'> &
          *
          * @default 'PascalCase'
          */
-        case: StringCase;
+        case: Casing;
         /**
          * Whether to generate TypeScript types from Arktype schemas.
          *
@@ -615,7 +615,7 @@ export type Config = Plugin.Name<'arktype'> &
        *
        * @default 'PascalCase'
        */
-      case: StringCase;
+      case: Casing;
       /**
        * Whether to generate Arktype schemas for webhook definitions.
        *
@@ -628,7 +628,7 @@ export type Config = Plugin.Name<'arktype'> &
        *
        * @default '{{name}}WebhookRequest'
        */
-      name: StringName;
+      name: NameTransformer;
       /**
        * Configuration for TypeScript type generation from Arktype schemas.
        *
@@ -644,7 +644,7 @@ export type Config = Plugin.Name<'arktype'> &
            *
            * @default 'PascalCase'
            */
-          case: StringCase;
+          case: Casing;
           /**
            * Whether to generate TypeScript types from Arktype schemas.
            *
@@ -657,7 +657,7 @@ export type Config = Plugin.Name<'arktype'> &
            *
            * @default '{{name}}WebhookRequest'
            */
-          name: StringName;
+          name: NameTransformer;
         };
       };
     };

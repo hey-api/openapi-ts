@@ -6,7 +6,7 @@ import type { IR } from '~/ir/types';
 import { sanitizeNamespaceIdentifier } from '~/openApi/common/parser/sanitize';
 import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
 import { $ } from '~/ts-dsl';
-import { toCase } from '~/utils/to-case';
+import { toCase } from '~/utils/naming';
 
 import type { Field, Fields } from '../../client-core/bundle/params';
 import type { HeyApiSdkPlugin } from '../types';
@@ -30,6 +30,9 @@ interface ClassNameEntry {
   path: ReadonlyArray<string>;
 }
 
+/**
+ * @deprecated
+ */
 export const operationClassName = ({
   plugin,
   value,
@@ -46,6 +49,9 @@ export const operationClassName = ({
   );
 };
 
+/**
+ * @deprecated
+ */
 export const operationMethodName = ({
   operation,
   plugin,
@@ -60,7 +66,8 @@ export const operationMethodName = ({
   return (
     (typeof plugin.config.methodNameBuilder === 'string'
       ? plugin.config.methodNameBuilder.replace('{{name}}', name)
-      : plugin.config.methodNameBuilder?.(name, operation)) || name
+      : // @ts-expect-error TODO: remove
+        plugin.config.methodNameBuilder?.(name, operation)) || name
   );
 };
 
