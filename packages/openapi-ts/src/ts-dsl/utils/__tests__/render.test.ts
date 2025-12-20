@@ -48,16 +48,16 @@ describe('TypeScriptRenderer', () => {
       imports: [
         {
           isTypeOnly: false,
-          kind: 'named',
           localName: 'A',
           sourceName: 'A',
         },
       ],
       isTypeOnly: false,
+      kind: 'named',
+      localName: undefined,
       modulePath: 'foo',
-      namespaceImport: undefined,
     };
-    const node = renderer['renderImport'](group);
+    const node = TypeScriptRenderer.toImportAst(group);
     expect(ts.isImportDeclaration(node)).toBe(true);
   });
 
@@ -76,7 +76,7 @@ describe('TypeScriptRenderer', () => {
       modulePath: 'bar',
       namespaceExport: undefined,
     };
-    const node = renderer['renderExport'](group);
+    const node = TypeScriptRenderer.toExportAst(group);
     expect(ts.isExportDeclaration(node)).toBe(true);
   });
 });
