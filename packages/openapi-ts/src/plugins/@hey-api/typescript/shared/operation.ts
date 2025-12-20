@@ -3,8 +3,8 @@ import { fromRef } from '@hey-api/codegen-core';
 import { operationResponsesMap } from '~/ir/operation';
 import { deduplicateSchema } from '~/ir/schema';
 import type { IR } from '~/ir/types';
-import { buildName } from '~/openApi/shared/utils/name';
 import { $ } from '~/ts-dsl';
+import { applyNaming } from '~/utils/naming';
 
 import { irSchemaToAst } from '../v1/plugin';
 import type { IrSchemaToAstOptions } from './types';
@@ -122,21 +122,20 @@ const operationToDataType = ({
 
   data.required = dataRequired;
 
-  const symbol = plugin.registerSymbol({
-    meta: {
-      category: 'type',
-      path: fromRef(state.path),
-      resource: 'operation',
-      resourceId: operation.id,
-      role: 'data',
-      tags: fromRef(state.tags),
-      tool: 'typescript',
+  const symbol = plugin.symbol(
+    applyNaming(operation.id, plugin.config.requests),
+    {
+      meta: {
+        category: 'type',
+        path: fromRef(state.path),
+        resource: 'operation',
+        resourceId: operation.id,
+        role: 'data',
+        tags: fromRef(state.tags),
+        tool: 'typescript',
+      },
     },
-    name: buildName({
-      config: plugin.config.requests,
-      name: operation.id,
-    }),
-  });
+  );
   const node = $.type
     .alias(symbol)
     .export()
@@ -163,21 +162,20 @@ export const operationToType = ({
     operationResponsesMap(operation);
 
   if (errors) {
-    const symbolErrors = plugin.registerSymbol({
-      meta: {
-        category: 'type',
-        path: fromRef(state.path),
-        resource: 'operation',
-        resourceId: operation.id,
-        role: 'errors',
-        tags: fromRef(state.tags),
-        tool: 'typescript',
+    const symbolErrors = plugin.symbol(
+      applyNaming(operation.id, plugin.config.errors),
+      {
+        meta: {
+          category: 'type',
+          path: fromRef(state.path),
+          resource: 'operation',
+          resourceId: operation.id,
+          role: 'errors',
+          tags: fromRef(state.tags),
+          tool: 'typescript',
+        },
       },
-      name: buildName({
-        config: plugin.config.errors,
-        name: operation.id,
-      }),
-    });
+    );
     const node = $.type
       .alias(symbolErrors)
       .export()
@@ -191,24 +189,23 @@ export const operationToType = ({
     plugin.node(node);
 
     if (error) {
-      const symbol = plugin.registerSymbol({
-        meta: {
-          category: 'type',
-          path: fromRef(state.path),
-          resource: 'operation',
-          resourceId: operation.id,
-          role: 'error',
-          tags: fromRef(state.tags),
-          tool: 'typescript',
-        },
-        name: buildName({
-          config: {
-            case: plugin.config.errors.case,
-            name: plugin.config.errors.error,
-          },
-          name: operation.id,
+      const symbol = plugin.symbol(
+        applyNaming(operation.id, {
+          case: plugin.config.errors.case,
+          name: plugin.config.errors.error,
         }),
-      });
+        {
+          meta: {
+            category: 'type',
+            path: fromRef(state.path),
+            resource: 'operation',
+            resourceId: operation.id,
+            role: 'error',
+            tags: fromRef(state.tags),
+            tool: 'typescript',
+          },
+        },
+      );
       const node = $.type
         .alias(symbol)
         .export()
@@ -218,21 +215,20 @@ export const operationToType = ({
   }
 
   if (responses) {
-    const symbolResponses = plugin.registerSymbol({
-      meta: {
-        category: 'type',
-        path: fromRef(state.path),
-        resource: 'operation',
-        resourceId: operation.id,
-        role: 'responses',
-        tags: fromRef(state.tags),
-        tool: 'typescript',
+    const symbolResponses = plugin.symbol(
+      applyNaming(operation.id, plugin.config.responses),
+      {
+        meta: {
+          category: 'type',
+          path: fromRef(state.path),
+          resource: 'operation',
+          resourceId: operation.id,
+          role: 'responses',
+          tags: fromRef(state.tags),
+          tool: 'typescript',
+        },
       },
-      name: buildName({
-        config: plugin.config.responses,
-        name: operation.id,
-      }),
-    });
+    );
     const node = $.type
       .alias(symbolResponses)
       .export()
@@ -246,24 +242,23 @@ export const operationToType = ({
     plugin.node(node);
 
     if (response) {
-      const symbol = plugin.registerSymbol({
-        meta: {
-          category: 'type',
-          path: fromRef(state.path),
-          resource: 'operation',
-          resourceId: operation.id,
-          role: 'response',
-          tags: fromRef(state.tags),
-          tool: 'typescript',
-        },
-        name: buildName({
-          config: {
-            case: plugin.config.responses.case,
-            name: plugin.config.responses.response,
-          },
-          name: operation.id,
+      const symbol = plugin.symbol(
+        applyNaming(operation.id, {
+          case: plugin.config.responses.case,
+          name: plugin.config.responses.response,
         }),
-      });
+        {
+          meta: {
+            category: 'type',
+            path: fromRef(state.path),
+            resource: 'operation',
+            resourceId: operation.id,
+            role: 'response',
+            tags: fromRef(state.tags),
+            tool: 'typescript',
+          },
+        },
+      );
       const node = $.type
         .alias(symbol)
         .export()

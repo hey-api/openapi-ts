@@ -14,12 +14,11 @@ export const createTypeOptions = ({
   const client = getClientPlugin(plugin.context.config);
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
 
-  const symbolTDataShape = plugin.registerSymbol({
+  const symbolTDataShape = plugin.symbol('TDataShape', {
     external: clientModule,
     kind: 'type',
-    name: 'TDataShape',
   });
-  const symbolClient = plugin.registerSymbol({
+  const symbolClient = plugin.symbol('Client', {
     external: clientModule,
     kind: 'type',
     meta: {
@@ -27,20 +26,17 @@ export const createTypeOptions = ({
       resource: 'client.Client',
       tool: client.name,
     },
-    name: 'Client',
   });
-  const symbolClientOptions = plugin.registerSymbol({
+  const symbolClientOptions = plugin.symbol('Options', {
     external: clientModule,
     kind: 'type',
-    name: 'Options',
   });
-  const symbolOptions = plugin.registerSymbol({
+  const symbolOptions = plugin.symbol('Options', {
     meta: {
       category: 'type',
       resource: 'client-options',
       tool: 'sdk',
     },
-    name: 'Options',
   });
 
   const typeOptions = $.type

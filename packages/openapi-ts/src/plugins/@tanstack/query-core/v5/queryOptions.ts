@@ -1,5 +1,4 @@
 import type { IR } from '~/ir/types';
-import { buildName } from '~/openApi/shared/utils/name';
 import {
   createOperationComment,
   hasOperationSse,
@@ -7,6 +6,7 @@ import {
 } from '~/plugins/shared/utils/operation';
 import type { TsDsl } from '~/ts-dsl';
 import { $ } from '~/ts-dsl';
+import { applyNaming } from '~/utils/naming';
 
 import {
   createQueryKeyFunction,
@@ -51,12 +51,9 @@ export const createQueryOptions = ({
     resource: `${plugin.name}.queryOptions`,
   });
 
-  const symbolQueryKey = plugin.registerSymbol({
-    name: buildName({
-      config: plugin.config.queryKeys,
-      name: operation.id,
-    }),
-  });
+  const symbolQueryKey = plugin.symbol(
+    applyNaming(operation.id, plugin.config.queryKeys),
+  );
   const node = queryKeyStatement({
     isInfinite: false,
     operation,
@@ -110,19 +107,18 @@ export const createQueryOptions = ({
       o.prop('meta', v),
     );
 
-  const symbolQueryOptionsFn = plugin.registerSymbol({
-    meta: {
-      category: 'hook',
-      resource: 'operation',
-      resourceId: operation.id,
-      role: 'queryOptions',
-      tool: plugin.name,
+  const symbolQueryOptionsFn = plugin.symbol(
+    applyNaming(operation.id, plugin.config.queryOptions),
+    {
+      meta: {
+        category: 'hook',
+        resource: 'operation',
+        resourceId: operation.id,
+        role: 'queryOptions',
+        tool: plugin.name,
+      },
     },
-    name: buildName({
-      config: plugin.config.queryOptions,
-      name: operation.id,
-    }),
-  });
+  );
   // TODO: add type error
   // TODO: AxiosError<PutSubmissionMetaError>
   const statement = $.const(symbolQueryOptionsFn)

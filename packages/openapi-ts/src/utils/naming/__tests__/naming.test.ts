@@ -1,10 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
-import type { StringCase } from '~/types/case';
+import { toCase } from '../naming';
+import type { Casing } from '../types';
 
-import { toCase } from '../to-case';
-
-const cases: ReadonlyArray<StringCase> = [
+const cases: ReadonlyArray<Casing> = [
   'camelCase',
   'PascalCase',
   'SCREAMING_SNAKE_CASE',

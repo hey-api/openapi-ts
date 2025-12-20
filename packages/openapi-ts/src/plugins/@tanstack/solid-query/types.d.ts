@@ -1,6 +1,6 @@
 import type { IR } from '~/ir/types';
 import type { DefinePlugin, Plugin } from '~/plugins';
-import type { StringCase, StringName } from '~/types/case';
+import type { Casing, NameTransformer } from '~/utils/naming';
 
 export type UserConfig = Plugin.Name<'@tanstack/solid-query'> &
   Plugin.Hooks & {
@@ -9,7 +9,7 @@ export type UserConfig = Plugin.Name<'@tanstack/solid-query'> &
      *
      * @default 'camelCase'
      */
-    case?: StringCase;
+    case?: Casing;
     /**
      * Add comments from SDK functions to the generated TanStack Query code?
      *
@@ -41,14 +41,14 @@ export type UserConfig = Plugin.Name<'@tanstack/solid-query'> &
      */
     infiniteQueryKeys?:
       | boolean
-      | StringName
+      | NameTransformer
       | {
           /**
            * The casing convention to use for generated names.
            *
            * @default 'camelCase'
            */
-          case?: StringCase;
+          case?: Casing;
           /**
            * Whether to generate infinite query key helpers.
            *
@@ -62,7 +62,7 @@ export type UserConfig = Plugin.Name<'@tanstack/solid-query'> &
            * @default '{{name}}InfiniteQueryKey'
            * @see https://tanstack.com/query/v5/docs/framework/solid/reference/createInfiniteQuery
            */
-          name?: StringName;
+          name?: NameTransformer;
           /**
            * Whether to include operation tags in infinite query keys.
            * This will make query keys larger but provides better cache invalidation capabilities.
@@ -85,14 +85,14 @@ export type UserConfig = Plugin.Name<'@tanstack/solid-query'> &
      */
     infiniteQueryOptions?:
       | boolean
-      | StringName
+      | NameTransformer
       | {
           /**
            * The casing convention to use for generated names.
            *
            * @default 'camelCase'
            */
-          case?: StringCase;
+          case?: Casing;
           /**
            * Whether to generate infinite query options helpers.
            *
@@ -129,7 +129,7 @@ export type UserConfig = Plugin.Name<'@tanstack/solid-query'> &
            * @default '{{name}}InfiniteOptions'
            * @see https://tanstack.com/query/v5/docs/framework/solid/reference/createInfiniteQuery
            */
-          name?: StringName;
+          name?: NameTransformer;
         };
     /**
      * Configuration for generated mutation options helpers.
@@ -145,14 +145,14 @@ export type UserConfig = Plugin.Name<'@tanstack/solid-query'> &
      */
     mutationOptions?:
       | boolean
-      | StringName
+      | NameTransformer
       | {
           /**
            * The casing convention to use for generated names.
            *
            * @default 'camelCase'
            */
-          case?: StringCase;
+          case?: Casing;
           /**
            * Whether to generate mutation options helpers.
            *
@@ -188,7 +188,7 @@ export type UserConfig = Plugin.Name<'@tanstack/solid-query'> &
            * @default '{{name}}Mutation'
            * @see https://tanstack.com/query/v5/docs/framework/solid/reference/createMutation
            */
-          name?: StringName;
+          name?: NameTransformer;
         };
     /**
      * Configuration for generated query keys.
@@ -204,14 +204,14 @@ export type UserConfig = Plugin.Name<'@tanstack/solid-query'> &
      */
     queryKeys?:
       | boolean
-      | StringName
+      | NameTransformer
       | {
           /**
            * The casing convention to use for generated names.
            *
            * @default 'camelCase'
            */
-          case?: StringCase;
+          case?: Casing;
           /**
            * Whether to generate query keys.
            *
@@ -225,7 +225,7 @@ export type UserConfig = Plugin.Name<'@tanstack/solid-query'> &
            * @default '{{name}}QueryKey'
            * @see https://tanstack.com/query/v5/docs/framework/solid/reference/queryKey
            */
-          name?: StringName;
+          name?: NameTransformer;
           /**
            * Whether to include operation tags in query keys.
            * This will make query keys larger but provides better cache invalidation capabilities.
@@ -248,14 +248,14 @@ export type UserConfig = Plugin.Name<'@tanstack/solid-query'> &
      */
     queryOptions?:
       | boolean
-      | StringName
+      | NameTransformer
       | {
           /**
            * The casing convention to use for generated names.
            *
            * @default 'camelCase'
            */
-          case?: StringCase;
+          case?: Casing;
           /**
            * Whether to generate query options helpers.
            *
@@ -297,7 +297,7 @@ export type UserConfig = Plugin.Name<'@tanstack/solid-query'> &
            * @default '{{name}}Options'
            * @see https://tanstack.com/query/v5/docs/framework/solid/reference/createQuery
            */
-          name?: StringName;
+          name?: NameTransformer;
         };
   };
 
@@ -308,7 +308,7 @@ export type Config = Plugin.Name<'@tanstack/solid-query'> &
      *
      * @default 'camelCase'
      */
-    case: StringCase;
+    case: Casing;
     /**
      * Add comments from SDK functions to the generated TanStack Query code?
      *
@@ -332,7 +332,7 @@ export type Config = Plugin.Name<'@tanstack/solid-query'> &
        *
        * @default 'camelCase'
        */
-      case: StringCase;
+      case: Casing;
       /**
        * Whether to generate infinite query key helpers.
        *
@@ -346,7 +346,7 @@ export type Config = Plugin.Name<'@tanstack/solid-query'> &
        * @default '{{name}}InfiniteQueryKey'
        * @see https://tanstack.com/query/v5/docs/framework/solid/reference/createInfiniteQuery
        */
-      name: StringName;
+      name: NameTransformer;
       /**
        * Whether to include operation tags in infinite query keys.
        * This will make query keys larger but provides better cache invalidation capabilities.
@@ -366,7 +366,7 @@ export type Config = Plugin.Name<'@tanstack/solid-query'> &
        *
        * @default 'camelCase'
        */
-      case: StringCase;
+      case: Casing;
       /**
        * Whether to generate infinite query options helpers.
        *
@@ -402,7 +402,7 @@ export type Config = Plugin.Name<'@tanstack/solid-query'> &
        * @default '{{name}}InfiniteOptions'
        * @see https://tanstack.com/query/v5/docs/framework/solid/reference/createInfiniteQuery
        */
-      name: StringName;
+      name: NameTransformer;
     };
     /**
      * Resolved configuration for generated mutation options helpers.
@@ -415,7 +415,7 @@ export type Config = Plugin.Name<'@tanstack/solid-query'> &
        *
        * @default 'camelCase'
        */
-      case: StringCase;
+      case: Casing;
       /**
        * Whether to generate mutation options helpers.
        *
@@ -451,7 +451,7 @@ export type Config = Plugin.Name<'@tanstack/solid-query'> &
        * @default '{{name}}Mutation'
        * @see https://tanstack.com/query/v5/docs/framework/solid/reference/createMutation
        */
-      name: StringName;
+      name: NameTransformer;
     };
     /**
      * Resolved configuration for generated query keys.
@@ -464,7 +464,7 @@ export type Config = Plugin.Name<'@tanstack/solid-query'> &
        *
        * @default 'camelCase'
        */
-      case: StringCase;
+      case: Casing;
       /**
        * Whether to generate query keys.
        *
@@ -478,7 +478,7 @@ export type Config = Plugin.Name<'@tanstack/solid-query'> &
        * @default '{{name}}QueryKey'
        * @see https://tanstack.com/query/v5/docs/framework/solid/reference/queryKey
        */
-      name: StringName;
+      name: NameTransformer;
       /**
        * Whether to include operation tags in query keys.
        * This will make query keys larger but provides better cache invalidation capabilities.
@@ -498,7 +498,7 @@ export type Config = Plugin.Name<'@tanstack/solid-query'> &
        *
        * @default 'camelCase'
        */
-      case: StringCase;
+      case: Casing;
       /**
        * Whether to generate query options helpers.
        *
@@ -540,7 +540,7 @@ export type Config = Plugin.Name<'@tanstack/solid-query'> &
        * @default '{{name}}Options'
        * @see https://tanstack.com/query/v5/docs/framework/solid/reference/createQuery
        */
-      name: StringName;
+      name: NameTransformer;
     };
   };
 

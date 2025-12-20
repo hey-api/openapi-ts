@@ -41,6 +41,15 @@ export type { IProject } from './project/types';
 export { fromRef, fromRefs, isRef, ref, refs } from './refs/refs';
 export type { FromRef, FromRefs, Ref, Refs } from './refs/types';
 export type { RenderContext, Renderer } from './renderer';
+export { StructureModel } from './structure/model';
+export { StructureNode } from './structure/node';
+export type {
+  StructureInsert,
+  StructureItem,
+  StructureLocation,
+  StructureShell,
+  StructureShellResult,
+} from './structure/types';
 export { Symbol } from './symbols/symbol';
 export type {
   BindingKind,

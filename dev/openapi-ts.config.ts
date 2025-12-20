@@ -39,8 +39,8 @@ export default defineConfig(() => {
           path: path.resolve(
             getSpecsPath(),
             // '2.0.x',
-            '3.0.x',
-            // '3.1.x',
+            // '3.0.x',
+            '3.1.x',
             // 'circular.yaml',
             // 'dutchie.json',
             // 'enum-names-values.yaml',
@@ -49,11 +49,11 @@ export default defineConfig(() => {
             // 'invalid',
             // 'object-property-names.yaml',
             // 'openai.yaml',
-            // 'opencode.yaml',
+            'opencode.yaml',
             // 'pagination-ref.yaml',
             // 'schema-const.yaml',
             // 'sdk-instance.yaml',
-            'sdk-method-class-conflict.yaml',
+            // 'sdk-method-class-conflict.yaml',
             // 'sdk-nested-classes.yaml',
             // 'sdk-nested-conflict.yaml',
             // 'string-with-format.yaml',
@@ -241,7 +241,7 @@ export default defineConfig(() => {
         {
           // baseUrl: false,
           // exportFromIndex: true,
-          // name: '@hey-api/client-nuxt',
+          // name: '@hey-api/client-angular',
           // runtimeConfigPath: path.resolve(__dirname, 'hey-api.ts'),
           // runtimeConfigPath: './src/hey-api.ts',
           // strictBaseUrl: true,
@@ -275,7 +275,7 @@ export default defineConfig(() => {
           // },
         },
         {
-          // asClass: true,
+          asClass: true,
           // auth: false,
           // classNameBuilder: '{{name}}Service',
           // classStructure: 'off',
@@ -285,7 +285,7 @@ export default defineConfig(() => {
           //   fields.unwrap('path')
           // },
           // include...
-          // instance: 'OpencodeClient',
+          instance: 'OpencodeClient',
           // methodNameBuilder: '{{name}}',
           name: '@hey-api/sdk',
           // operationId: false,
@@ -294,6 +294,12 @@ export default defineConfig(() => {
           // signature: 'auto',
           // signature: 'client',
           // signature: 'object',
+          structure: {
+            operations: {
+              containerName: 'OpencodeClient',
+              strategy: 'single',
+            },
+          },
           // transformer: '@hey-api/transformers',
           // transformer: true,
           // validator: 'valibot',
@@ -601,16 +607,18 @@ export default defineConfig(() => {
           exportFromIndex: true,
           httpRequests: {
             asClass: true,
+            // enabled: false,
           },
           httpResources: {
-            asClass: true,
+            // asClass: true,
+            enabled: false,
           },
           // name: '@angular/common',
         },
         {
           exportFromIndex: true,
           // mutationOptions: '{{name}}Mutationssss',
-          name: '@pinia/colada',
+          // name: '@pinia/colada',
           // queryOptions: {
           //   name: '{{name}}Queryyyyy',
           // },
