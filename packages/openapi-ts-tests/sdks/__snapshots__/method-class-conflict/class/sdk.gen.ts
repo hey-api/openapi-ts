@@ -18,7 +18,81 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
     meta?: Record<string, unknown>;
 };
 
+export class AccountingCompanies {
+    public static $count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataAccountingCompaniesCountData, ThrowOnError>) {
+        return (options?.client ?? client).get<ApiVVersionApiVersionOdataAccountingCompaniesCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/AccountingCompanies/$count', ...options });
+    }
+}
+
+export class Odata {
+    public static accountingCompanies<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataAccountingCompaniesData, ThrowOnError>) {
+        return (options?.client ?? client).get<ApiVVersionApiVersionOdataAccountingCompaniesResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/AccountingCompanies', ...options });
+    }
+    
+    static accountingCompanies2 = AccountingCompanies;
+}
+
+export class VVersionApiVersion {
+    static odata = Odata;
+}
+
+export class Api {
+    static vVersionApiVersion = VVersionApiVersion;
+}
+
+export class AccountingCompanies2 {
+    public static postApiV1AccountingCompanies<ThrowOnError extends boolean = false>(options?: Options<PostApiV1AccountingCompaniesData, ThrowOnError>) {
+        return (options?.client ?? client).post<PostApiV1AccountingCompaniesResponses, unknown, ThrowOnError>({
+            url: '/api/v1/accounting-companies',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
+                ...options?.headers
+            }
+        });
+    }
+    
+    public static deleteApiV1AccountingCompaniesById<ThrowOnError extends boolean = false>(options: Options<DeleteApiV1AccountingCompaniesByIdData, ThrowOnError>) {
+        return (options.client ?? client).delete<DeleteApiV1AccountingCompaniesByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/accounting-companies/{id}', ...options });
+    }
+    
+    public static postApiV1AccountingCompaniesById<ThrowOnError extends boolean = false>(options: Options<PostApiV1AccountingCompaniesByIdData, ThrowOnError>) {
+        return (options.client ?? client).post<PostApiV1AccountingCompaniesByIdResponses, unknown, ThrowOnError>({
+            url: '/api/v1/accounting-companies/{id}',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
+                ...options.headers
+            }
+        });
+    }
+    
+    static api = Api;
+}
+
 export class AccountingCompanyMemberships {
+    public static $count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataAccountingCompanyMembershipsCountData, ThrowOnError>) {
+        return (options?.client ?? client).get<ApiVVersionApiVersionOdataAccountingCompanyMembershipsCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/AccountingCompanyMemberships/$count', ...options });
+    }
+}
+
+export class Odata2 {
+    public static accountingCompanyMemberships<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataAccountingCompanyMembershipsData, ThrowOnError>) {
+        return (options?.client ?? client).get<ApiVVersionApiVersionOdataAccountingCompanyMembershipsResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/AccountingCompanyMemberships', ...options });
+    }
+    
+    static accountingCompanyMemberships2 = AccountingCompanyMemberships;
+}
+
+export class VVersionApiVersion2 {
+    static odata = Odata2;
+}
+
+export class Api2 {
+    static vVersionApiVersion = VVersionApiVersion2;
+}
+
+export class AccountingCompanyMemberships2 {
     public static putApiV1AccountingCompanyMemberships<ThrowOnError extends boolean = false>(options?: Options<PutApiV1AccountingCompanyMembershipsData, ThrowOnError>) {
         return (options?.client ?? client).put<PutApiV1AccountingCompanyMembershipsResponses, unknown, ThrowOnError>({
             url: '/api/v1/accounting-company-memberships',
@@ -34,16 +108,32 @@ export class AccountingCompanyMemberships {
         return (options.client ?? client).delete<DeleteApiV1AccountingCompanyMembershipsByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/accounting-company-memberships/{id}', ...options });
     }
     
-    public static count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataAccountingCompanyMembershipsCountData, ThrowOnError>) {
-        return (options?.client ?? client).get<ApiVVersionApiVersionOdataAccountingCompanyMembershipsCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/AccountingCompanyMemberships/$count', ...options });
-    }
-    
-    public static get api() {
-        return Api;
-    }
+    static api = Api2;
 }
 
 export class BankAccounts {
+    public static $count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBankAccountsCountData, ThrowOnError>) {
+        return (options?.client ?? client).get<ApiVVersionApiVersionOdataBankAccountsCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/BankAccounts/$count', ...options });
+    }
+}
+
+export class Odata3 {
+    public static bankAccounts<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBankAccountsData, ThrowOnError>) {
+        return (options?.client ?? client).get<ApiVVersionApiVersionOdataBankAccountsResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/BankAccounts', ...options });
+    }
+    
+    static bankAccounts2 = BankAccounts;
+}
+
+export class VVersionApiVersion3 {
+    static odata = Odata3;
+}
+
+export class Api3 {
+    static vVersionApiVersion = VVersionApiVersion3;
+}
+
+export class BankAccounts2 {
     public static putApiV1BankAccounts<ThrowOnError extends boolean = false>(options?: Options<PutApiV1BankAccountsData, ThrowOnError>) {
         return (options?.client ?? client).put<PutApiV1BankAccountsResponses, unknown, ThrowOnError>({
             url: '/api/v1/bank-accounts',
@@ -59,16 +149,32 @@ export class BankAccounts {
         return (options.client ?? client).delete<DeleteApiV1BankAccountsByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/bank-accounts/{id}', ...options });
     }
     
-    public static count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBankAccountsCountData, ThrowOnError>) {
-        return (options?.client ?? client).get<ApiVVersionApiVersionOdataBankAccountsCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/BankAccounts/$count', ...options });
-    }
-    
-    public static get api() {
-        return Api;
-    }
+    static api = Api3;
 }
 
 export class BusinessAccountantAssignments {
+    public static $count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessAccountantAssignmentsCountData, ThrowOnError>) {
+        return (options?.client ?? client).get<ApiVVersionApiVersionOdataBusinessAccountantAssignmentsCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/BusinessAccountantAssignments/$count', ...options });
+    }
+}
+
+export class Odata4 {
+    public static businessAccountantAssignments<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessAccountantAssignmentsData, ThrowOnError>) {
+        return (options?.client ?? client).get<ApiVVersionApiVersionOdataBusinessAccountantAssignmentsResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/BusinessAccountantAssignments', ...options });
+    }
+    
+    static businessAccountantAssignments2 = BusinessAccountantAssignments;
+}
+
+export class VVersionApiVersion4 {
+    static odata = Odata4;
+}
+
+export class Api4 {
+    static vVersionApiVersion = VVersionApiVersion4;
+}
+
+export class BusinessAccountantAssignments2 {
     public static putApiV1BusinessAccountantAssignments<ThrowOnError extends boolean = false>(options?: Options<PutApiV1BusinessAccountantAssignmentsData, ThrowOnError>) {
         return (options?.client ?? client).put<PutApiV1BusinessAccountantAssignmentsResponses, unknown, ThrowOnError>({
             url: '/api/v1/business-accountant-assignments',
@@ -84,22 +190,44 @@ export class BusinessAccountantAssignments {
         return (options.client ?? client).delete<DeleteApiV1BusinessAccountantAssignmentsByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/business-accountant-assignments/{id}', ...options });
     }
     
-    public static count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessAccountantAssignmentsCountData, ThrowOnError>) {
-        return (options?.client ?? client).get<ApiVVersionApiVersionOdataBusinessAccountantAssignmentsCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/BusinessAccountantAssignments/$count', ...options });
-    }
-    
-    public static get api() {
-        return Api;
-    }
+    static api = Api4;
 }
 
 export class BusinessDocumentActivities {
-    public static count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessDocumentActivitiesCountData, ThrowOnError>) {
+    public static $count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessDocumentActivitiesCountData, ThrowOnError>) {
         return (options?.client ?? client).get<ApiVVersionApiVersionOdataBusinessDocumentActivitiesCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/BusinessDocumentActivities/$count', ...options });
     }
 }
 
 export class BusinessDocuments {
+    public static $count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessDocumentsCountData, ThrowOnError>) {
+        return (options?.client ?? client).get<ApiVVersionApiVersionOdataBusinessDocumentsCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/BusinessDocuments/$count', ...options });
+    }
+}
+
+export class Odata5 {
+    public static businessDocumentActivities<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessDocumentActivitiesData, ThrowOnError>) {
+        return (options?.client ?? client).get<ApiVVersionApiVersionOdataBusinessDocumentActivitiesResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/BusinessDocumentActivities', ...options });
+    }
+    
+    public static businessDocuments<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessDocumentsData, ThrowOnError>) {
+        return (options?.client ?? client).get<ApiVVersionApiVersionOdataBusinessDocumentsResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/BusinessDocuments', ...options });
+    }
+    
+    static businessDocumentActivities2 = BusinessDocumentActivities;
+    
+    static businessDocuments2 = BusinessDocuments;
+}
+
+export class VVersionApiVersion5 {
+    static odata = Odata5;
+}
+
+export class Api5 {
+    static vVersionApiVersion = VVersionApiVersion5;
+}
+
+export class BusinessDocuments2 {
     public static getApiV1BusinessDocumentsByIdRaw<ThrowOnError extends boolean = false>(options: Options<GetApiV1BusinessDocumentsByIdRawData, ThrowOnError>) {
         return (options.client ?? client).get<GetApiV1BusinessDocumentsByIdRawResponses, unknown, ThrowOnError>({ url: '/api/v1/business-documents/{id}/raw', ...options });
     }
@@ -154,29 +282,72 @@ export class BusinessDocuments {
         });
     }
     
-    public static count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessDocumentsCountData, ThrowOnError>) {
-        return (options?.client ?? client).get<ApiVVersionApiVersionOdataBusinessDocumentsCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/BusinessDocuments/$count', ...options });
-    }
-    
-    public static get api() {
-        return Api;
-    }
+    static api = Api5;
 }
 
 export class BusinessDocumentsSummaries {
     /**
      * @deprecated
      */
-    public static count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessDocumentsSummariesCountData, ThrowOnError>) {
+    public static $count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessDocumentsSummariesCountData, ThrowOnError>) {
         return (options?.client ?? client).get<ApiVVersionApiVersionOdataBusinessDocumentsSummariesCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/BusinessDocumentsSummaries/$count', ...options });
-    }
-    
-    public static get api() {
-        return Api;
     }
 }
 
+export class Odata6 {
+    /**
+     * @deprecated
+     */
+    public static businessDocumentsSummaries<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessDocumentsSummariesData, ThrowOnError>) {
+        return (options?.client ?? client).get<ApiVVersionApiVersionOdataBusinessDocumentsSummariesResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/BusinessDocumentsSummaries', ...options });
+    }
+    
+    static businessDocumentsSummaries2 = BusinessDocumentsSummaries;
+}
+
+export class VVersionApiVersion6 {
+    static odata = Odata6;
+}
+
+export class Api6 {
+    static vVersionApiVersion = VVersionApiVersion6;
+}
+
+export class BusinessDocumentsSummaries2 {
+    static api = Api6;
+}
+
 export class Businesses {
+    public static $count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessesCountData, ThrowOnError>) {
+        return (options?.client ?? client).get<ApiVVersionApiVersionOdataBusinessesCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Businesses/$count', ...options });
+    }
+    
+    public static key<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessesKey2Data, ThrowOnError>) {
+        return (options?.client ?? client).get<ApiVVersionApiVersionOdataBusinessesKey2Responses, unknown, ThrowOnError>({ url: '/api/v1/odata/Businesses/{key}', ...options });
+    }
+}
+
+export class Odata7 {
+    public static businesses<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessesData, ThrowOnError>) {
+        return (options?.client ?? client).get<ApiVVersionApiVersionOdataBusinessesResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Businesses', ...options });
+    }
+    
+    public static businessesKey<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessesKeyData, ThrowOnError>) {
+        return (options?.client ?? client).get<ApiVVersionApiVersionOdataBusinessesKeyResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Businesses({key})', ...options });
+    }
+    
+    static businesses2 = Businesses;
+}
+
+export class VVersionApiVersion7 {
+    static odata = Odata7;
+}
+
+export class Api7 {
+    static vVersionApiVersion = VVersionApiVersion7;
+}
+
+export class Businesses2 {
     public static getApiV1BusinessesByIdDocumentTypesSummary<ThrowOnError extends boolean = false>(options: Options<GetApiV1BusinessesByIdDocumentTypesSummaryData, ThrowOnError>) {
         return (options.client ?? client).get<GetApiV1BusinessesByIdDocumentTypesSummaryResponses, unknown, ThrowOnError>({ url: '/api/v1/businesses/{id}/document-types-summary', ...options });
     }
@@ -222,30 +393,71 @@ export class Businesses {
         return (options.client ?? client).post<PostApiV1BusinessesByIdDisconnectResponses, unknown, ThrowOnError>({ url: '/api/v1/businesses/{id}/disconnect', ...options });
     }
     
-    public static count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessesCountData, ThrowOnError>) {
-        return (options?.client ?? client).get<ApiVVersionApiVersionOdataBusinessesCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Businesses/$count', ...options });
-    }
-    
-    public static key<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessesKey2Data, ThrowOnError>) {
-        return (options?.client ?? client).get<ApiVVersionApiVersionOdataBusinessesKey2Responses, unknown, ThrowOnError>({ url: '/api/v1/odata/Businesses/{key}', ...options });
-    }
-    
-    public static get api() {
-        return Api;
+    static api = Api7;
+}
+
+export class BusinessesMemberships {
+    public static putApiV1BusinessMemberships<ThrowOnError extends boolean = false>(options?: Options<PutApiV1BusinessMembershipsData, ThrowOnError>) {
+        return (options?.client ?? client).put<PutApiV1BusinessMembershipsResponses, unknown, ThrowOnError>({
+            url: '/api/v1/business-memberships',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
+                ...options?.headers
+            }
+        });
     }
 }
 
 export class BusinessSummaries {
-    public static count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessSummariesCountData, ThrowOnError>) {
+    public static $count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessSummariesCountData, ThrowOnError>) {
         return (options?.client ?? client).get<ApiVVersionApiVersionOdataBusinessSummariesCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/BusinessSummaries/$count', ...options });
-    }
-    
-    public static get api() {
-        return Api;
     }
 }
 
+export class Odata8 {
+    public static businessSummaries<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessSummariesData, ThrowOnError>) {
+        return (options?.client ?? client).get<ApiVVersionApiVersionOdataBusinessSummariesResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/BusinessSummaries', ...options });
+    }
+    
+    static businessSummaries2 = BusinessSummaries;
+}
+
+export class VVersionApiVersion8 {
+    static odata = Odata8;
+}
+
+export class Api8 {
+    static vVersionApiVersion = VVersionApiVersion8;
+}
+
+export class BusinessSummaries2 {
+    static api = Api8;
+}
+
 export class Counterparties {
+    public static $count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataCounterpartiesCountData, ThrowOnError>) {
+        return (options?.client ?? client).get<ApiVVersionApiVersionOdataCounterpartiesCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Counterparties/$count', ...options });
+    }
+}
+
+export class Odata9 {
+    public static counterparties<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataCounterpartiesData, ThrowOnError>) {
+        return (options?.client ?? client).get<ApiVVersionApiVersionOdataCounterpartiesResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Counterparties', ...options });
+    }
+    
+    static counterparties2 = Counterparties;
+}
+
+export class VVersionApiVersion9 {
+    static odata = Odata9;
+}
+
+export class Api9 {
+    static vVersionApiVersion = VVersionApiVersion9;
+}
+
+export class Counterparties2 {
     public static postApiV1Counterparties<ThrowOnError extends boolean = false>(options?: Options<PostApiV1CounterpartiesData, ThrowOnError>) {
         return (options?.client ?? client).post<PostApiV1CounterpartiesResponses, unknown, ThrowOnError>({
             url: '/api/v1/counterparties',
@@ -272,16 +484,32 @@ export class Counterparties {
         });
     }
     
-    public static count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataCounterpartiesCountData, ThrowOnError>) {
-        return (options?.client ?? client).get<ApiVVersionApiVersionOdataCounterpartiesCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Counterparties/$count', ...options });
-    }
-    
-    public static get api() {
-        return Api;
-    }
+    static api = Api9;
 }
 
 export class DataBoxCredentials {
+    public static $count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataDataBoxCredentialsCountData, ThrowOnError>) {
+        return (options?.client ?? client).get<ApiVVersionApiVersionOdataDataBoxCredentialsCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/DataBoxCredentials/$count', ...options });
+    }
+}
+
+export class Odata10 {
+    public static dataBoxCredentials<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataDataBoxCredentialsData, ThrowOnError>) {
+        return (options?.client ?? client).get<ApiVVersionApiVersionOdataDataBoxCredentialsResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/DataBoxCredentials', ...options });
+    }
+    
+    static dataBoxCredentials2 = DataBoxCredentials;
+}
+
+export class VVersionApiVersion10 {
+    static odata = Odata10;
+}
+
+export class Api10 {
+    static vVersionApiVersion = VVersionApiVersion10;
+}
+
+export class DataBoxCredentials2 {
     public static putApiV1DataBoxCredentials<ThrowOnError extends boolean = false>(options?: Options<PutApiV1DataBoxCredentialsData, ThrowOnError>) {
         return (options?.client ?? client).put<PutApiV1DataBoxCredentialsResponses, unknown, ThrowOnError>({
             url: '/api/v1/data-box-credentials',
@@ -297,26 +525,149 @@ export class DataBoxCredentials {
         return (options.client ?? client).delete<DeleteApiV1DataBoxCredentialsByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/data-box-credentials/{id}', ...options });
     }
     
-    public static count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataDataBoxCredentialsCountData, ThrowOnError>) {
-        return (options?.client ?? client).get<ApiVVersionApiVersionOdataDataBoxCredentialsCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/DataBoxCredentials/$count', ...options });
+    static api = Api10;
+}
+
+export class Dev {
+    public static getApiDev<ThrowOnError extends boolean = false>(options?: Options<GetApiDevData, ThrowOnError>) {
+        return (options?.client ?? client).get<GetApiDevResponses, unknown, ThrowOnError>({ url: '/api/dev', ...options });
     }
     
-    public static get api() {
-        return Api;
+    public static getApiDevReseedDb<ThrowOnError extends boolean = false>(options?: Options<GetApiDevReseedDbData, ThrowOnError>) {
+        return (options?.client ?? client).get<GetApiDevReseedDbResponses, unknown, ThrowOnError>({ url: '/api/dev/reseed-db', ...options });
+    }
+    
+    public static getApiDevDbReset<ThrowOnError extends boolean = false>(options?: Options<GetApiDevDbResetData, ThrowOnError>) {
+        return (options?.client ?? client).get<GetApiDevDbResetResponses, unknown, ThrowOnError>({ url: '/api/dev/db-reset', ...options });
+    }
+    
+    public static getApiDevDbReset2<ThrowOnError extends boolean = false>(options?: Options<GetApiDevDbReset2Data, ThrowOnError>) {
+        return (options?.client ?? client).get<GetApiDevDbReset2Responses, unknown, ThrowOnError>({ url: '/api/dev/db/reset', ...options });
+    }
+    
+    public static getApiDevDbCreate<ThrowOnError extends boolean = false>(options?: Options<GetApiDevDbCreateData, ThrowOnError>) {
+        return (options?.client ?? client).get<GetApiDevDbCreateResponses, unknown, ThrowOnError>({ url: '/api/dev/db/create', ...options });
+    }
+    
+    public static getApiDevDbTouch<ThrowOnError extends boolean = false>(options?: Options<GetApiDevDbTouchData, ThrowOnError>) {
+        return (options?.client ?? client).get<GetApiDevDbTouchResponses, unknown, ThrowOnError>({ url: '/api/dev/db/touch', ...options });
+    }
+    
+    public static getApiDevSeed<ThrowOnError extends boolean = false>(options?: Options<GetApiDevSeedData, ThrowOnError>) {
+        return (options?.client ?? client).get<GetApiDevSeedResponses, unknown, ThrowOnError>({ url: '/api/dev/seed', ...options });
+    }
+    
+    public static getApiDevSeedAll<ThrowOnError extends boolean = false>(options?: Options<GetApiDevSeedAllData, ThrowOnError>) {
+        return (options?.client ?? client).get<GetApiDevSeedAllResponses, unknown, ThrowOnError>({ url: '/api/dev/seed-all', ...options });
+    }
+    
+    public static getApiDevSeedProd<ThrowOnError extends boolean = false>(options?: Options<GetApiDevSeedProdData, ThrowOnError>) {
+        return (options?.client ?? client).get<GetApiDevSeedProdResponses, unknown, ThrowOnError>({ url: '/api/dev/seed-prod', ...options });
+    }
+    
+    public static getApiDevJobProcessRecurringTasks<ThrowOnError extends boolean = false>(options?: Options<GetApiDevJobProcessRecurringTasksData, ThrowOnError>) {
+        return (options?.client ?? client).get<GetApiDevJobProcessRecurringTasksResponses, unknown, ThrowOnError>({ url: '/api/dev/job/process-recurring-tasks', ...options });
+    }
+    
+    public static getApiDevNotificationsSendTest<ThrowOnError extends boolean = false>(options?: Options<GetApiDevNotificationsSendTestData, ThrowOnError>) {
+        return (options?.client ?? client).get<GetApiDevNotificationsSendTestResponses, unknown, ThrowOnError>({ url: '/api/dev/notifications/send-test', ...options });
+    }
+    
+    public static getApiDevConfirmEmail<ThrowOnError extends boolean = false>(options?: Options<GetApiDevConfirmEmailData, ThrowOnError>) {
+        return (options?.client ?? client).get<GetApiDevConfirmEmailResponses, unknown, ThrowOnError>({ url: '/api/dev/confirm-email', ...options });
+    }
+    
+    public static getApiDevEmailSendTest<ThrowOnError extends boolean = false>(options?: Options<GetApiDevEmailSendTestData, ThrowOnError>) {
+        return (options?.client ?? client).get<GetApiDevEmailSendTestResponses, unknown, ThrowOnError>({ url: '/api/dev/email/send-test', ...options });
+    }
+}
+
+export class DeviceTokens {
+    public static deleteApiV1NotificationsDeviceTokens<ThrowOnError extends boolean = false>(options?: Options<DeleteApiV1NotificationsDeviceTokensData, ThrowOnError>) {
+        return (options?.client ?? client).delete<DeleteApiV1NotificationsDeviceTokensResponses, unknown, ThrowOnError>({
+            url: '/api/v1/notifications/device-tokens',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
+                ...options?.headers
+            }
+        });
+    }
+    
+    public static putApiV1NotificationsDeviceTokens<ThrowOnError extends boolean = false>(options?: Options<PutApiV1NotificationsDeviceTokensData, ThrowOnError>) {
+        return (options?.client ?? client).put<PutApiV1NotificationsDeviceTokensResponses, unknown, ThrowOnError>({
+            url: '/api/v1/notifications/device-tokens',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
+                ...options?.headers
+            }
+        });
     }
 }
 
 export class DocumentTypes {
-    public static count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataDocumentTypesCountData, ThrowOnError>) {
+    public static $count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataDocumentTypesCountData, ThrowOnError>) {
         return (options?.client ?? client).get<ApiVVersionApiVersionOdataDocumentTypesCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/DocumentTypes/$count', ...options });
     }
+}
+
+export class Odata11 {
+    public static documentTypes<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataDocumentTypesData, ThrowOnError>) {
+        return (options?.client ?? client).get<ApiVVersionApiVersionOdataDocumentTypesResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/DocumentTypes', ...options });
+    }
     
-    public static get api() {
-        return Api;
+    static documentTypes2 = DocumentTypes;
+}
+
+export class VVersionApiVersion11 {
+    static odata = Odata11;
+}
+
+export class Api11 {
+    static vVersionApiVersion = VVersionApiVersion11;
+}
+
+export class DocumentTypes2 {
+    static api = Api11;
+}
+
+export class Feedback {
+    public static postApiV1Feedback<ThrowOnError extends boolean = false>(options?: Options<PostApiV1FeedbackData, ThrowOnError>) {
+        return (options?.client ?? client).post<PostApiV1FeedbackResponses, unknown, ThrowOnError>({
+            url: '/api/v1/feedback',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
+                ...options?.headers
+            }
+        });
     }
 }
 
 export class Invitations {
+    public static $count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataInvitationsCountData, ThrowOnError>) {
+        return (options?.client ?? client).get<ApiVVersionApiVersionOdataInvitationsCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Invitations/$count', ...options });
+    }
+}
+
+export class Odata12 {
+    public static invitations<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataInvitationsData, ThrowOnError>) {
+        return (options?.client ?? client).get<ApiVVersionApiVersionOdataInvitationsResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Invitations', ...options });
+    }
+    
+    static invitations2 = Invitations;
+}
+
+export class VVersionApiVersion12 {
+    static odata = Odata12;
+}
+
+export class Api12 {
+    static vVersionApiVersion = VVersionApiVersion12;
+}
+
+export class Invitations2 {
     public static postApiV1Invitations<ThrowOnError extends boolean = false>(options?: Options<PostApiV1InvitationsData, ThrowOnError>) {
         return (options?.client ?? client).post<PostApiV1InvitationsResponses, unknown, ThrowOnError>({
             url: '/api/v1/invitations',
@@ -358,16 +709,32 @@ export class Invitations {
         });
     }
     
-    public static count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataInvitationsCountData, ThrowOnError>) {
-        return (options?.client ?? client).get<ApiVVersionApiVersionOdataInvitationsCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Invitations/$count', ...options });
-    }
-    
-    public static get api() {
-        return Api;
-    }
+    static api = Api12;
 }
 
 export class Invoices {
+    public static $count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataInvoicesCountData, ThrowOnError>) {
+        return (options?.client ?? client).get<ApiVVersionApiVersionOdataInvoicesCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Invoices/$count', ...options });
+    }
+}
+
+export class Odata13 {
+    public static invoices<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataInvoicesData, ThrowOnError>) {
+        return (options?.client ?? client).get<ApiVVersionApiVersionOdataInvoicesResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Invoices', ...options });
+    }
+    
+    static invoices2 = Invoices;
+}
+
+export class VVersionApiVersion13 {
+    static odata = Odata13;
+}
+
+export class Api13 {
+    static vVersionApiVersion = VVersionApiVersion13;
+}
+
+export class Invoices2 {
     public static postApiV1Invoices<ThrowOnError extends boolean = false>(options?: Options<PostApiV1InvoicesData, ThrowOnError>) {
         return (options?.client ?? client).post<PostApiV1InvoicesResponses, unknown, ThrowOnError>({
             url: '/api/v1/invoices',
@@ -413,16 +780,32 @@ export class Invoices {
         return (options.client ?? client).post<PostApiV1InvoicesByIdSnapshotResponses, unknown, ThrowOnError>({ url: '/api/v1/invoices/{id}/snapshot', ...options });
     }
     
-    public static count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataInvoicesCountData, ThrowOnError>) {
-        return (options?.client ?? client).get<ApiVVersionApiVersionOdataInvoicesCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Invoices/$count', ...options });
-    }
-    
-    public static get api() {
-        return Api;
-    }
+    static api = Api13;
 }
 
 export class InvoiceSettings {
+    public static $count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataInvoiceSettingsCountData, ThrowOnError>) {
+        return (options?.client ?? client).get<ApiVVersionApiVersionOdataInvoiceSettingsCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/InvoiceSettings/$count', ...options });
+    }
+}
+
+export class Odata14 {
+    public static invoiceSettings<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataInvoiceSettingsData, ThrowOnError>) {
+        return (options?.client ?? client).get<ApiVVersionApiVersionOdataInvoiceSettingsResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/InvoiceSettings', ...options });
+    }
+    
+    static invoiceSettings2 = InvoiceSettings;
+}
+
+export class VVersionApiVersion14 {
+    static odata = Odata14;
+}
+
+export class Api14 {
+    static vVersionApiVersion = VVersionApiVersion14;
+}
+
+export class InvoiceSettings2 {
     public static putApiV1InvoiceSettings<ThrowOnError extends boolean = false>(options?: Options<PutApiV1InvoiceSettingsData, ThrowOnError>) {
         return (options?.client ?? client).put<PutApiV1InvoiceSettingsResponses, unknown, ThrowOnError>({
             url: '/api/v1/invoice-settings',
@@ -434,26 +817,71 @@ export class InvoiceSettings {
         });
     }
     
-    public static count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataInvoiceSettingsCountData, ThrowOnError>) {
-        return (options?.client ?? client).get<ApiVVersionApiVersionOdataInvoiceSettingsCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/InvoiceSettings/$count', ...options });
-    }
-    
-    public static get api() {
-        return Api;
-    }
+    static api = Api14;
 }
 
 export class Licenses {
-    public static count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataLicensesCountData, ThrowOnError>) {
+    public static $count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataLicensesCountData, ThrowOnError>) {
         return (options?.client ?? client).get<ApiVVersionApiVersionOdataLicensesCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Licenses/$count', ...options });
     }
+}
+
+export class Odata15 {
+    public static licenses<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataLicensesData, ThrowOnError>) {
+        return (options?.client ?? client).get<ApiVVersionApiVersionOdataLicensesResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Licenses', ...options });
+    }
     
-    public static get api() {
-        return Api;
+    static licenses2 = Licenses;
+}
+
+export class VVersionApiVersion15 {
+    static odata = Odata15;
+}
+
+export class Api15 {
+    static vVersionApiVersion = VVersionApiVersion15;
+}
+
+export class Licenses2 {
+    static api = Api15;
+}
+
+export class Notifications {
+    public static postApiV1NotificationsTest<ThrowOnError extends boolean = false>(options?: Options<PostApiV1NotificationsTestData, ThrowOnError>) {
+        return (options?.client ?? client).post<PostApiV1NotificationsTestResponses, unknown, ThrowOnError>({
+            url: '/api/v1/notifications/test',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
+                ...options?.headers
+            }
+        });
     }
 }
 
 export class PersonalDocuments {
+    public static $count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataPersonalDocumentsCountData, ThrowOnError>) {
+        return (options?.client ?? client).get<ApiVVersionApiVersionOdataPersonalDocumentsCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/PersonalDocuments/$count', ...options });
+    }
+}
+
+export class Odata16 {
+    public static personalDocuments<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataPersonalDocumentsData, ThrowOnError>) {
+        return (options?.client ?? client).get<ApiVVersionApiVersionOdataPersonalDocumentsResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/PersonalDocuments', ...options });
+    }
+    
+    static personalDocuments2 = PersonalDocuments;
+}
+
+export class VVersionApiVersion16 {
+    static odata = Odata16;
+}
+
+export class Api16 {
+    static vVersionApiVersion = VVersionApiVersion16;
+}
+
+export class PersonalDocuments2 {
     public static getApiV1PersonalDocumentsByIdRaw<ThrowOnError extends boolean = false>(options: Options<GetApiV1PersonalDocumentsByIdRawData, ThrowOnError>) {
         return (options.client ?? client).get<GetApiV1PersonalDocumentsByIdRawResponses, unknown, ThrowOnError>({ url: '/api/v1/personal-documents/{id}/raw', ...options });
     }
@@ -489,16 +917,32 @@ export class PersonalDocuments {
         return (options?.client ?? client).get<GetApiV1PersonalDocumentsSummaryResponses, unknown, ThrowOnError>({ url: '/api/v1/personal-documents/summary', ...options });
     }
     
-    public static count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataPersonalDocumentsCountData, ThrowOnError>) {
-        return (options?.client ?? client).get<ApiVVersionApiVersionOdataPersonalDocumentsCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/PersonalDocuments/$count', ...options });
-    }
-    
-    public static get api() {
-        return Api;
-    }
+    static api = Api16;
 }
 
 export class RecurringTasks {
+    public static $count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataRecurringTasksCountData, ThrowOnError>) {
+        return (options?.client ?? client).get<ApiVVersionApiVersionOdataRecurringTasksCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/RecurringTasks/$count', ...options });
+    }
+}
+
+export class Odata17 {
+    public static recurringTasks<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataRecurringTasksData, ThrowOnError>) {
+        return (options?.client ?? client).get<ApiVVersionApiVersionOdataRecurringTasksResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/RecurringTasks', ...options });
+    }
+    
+    static recurringTasks2 = RecurringTasks;
+}
+
+export class VVersionApiVersion17 {
+    static odata = Odata17;
+}
+
+export class Api17 {
+    static vVersionApiVersion = VVersionApiVersion17;
+}
+
+export class RecurringTasks2 {
     public static postApiV1RecurringTasks<ThrowOnError extends boolean = false>(options?: Options<PostApiV1RecurringTasksData, ThrowOnError>) {
         return (options?.client ?? client).post<PostApiV1RecurringTasksResponses, unknown, ThrowOnError>({
             url: '/api/v1/recurring-tasks',
@@ -525,16 +969,46 @@ export class RecurringTasks {
         });
     }
     
-    public static count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataRecurringTasksCountData, ThrowOnError>) {
-        return (options?.client ?? client).get<ApiVVersionApiVersionOdataRecurringTasksCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/RecurringTasks/$count', ...options });
-    }
-    
-    public static get api() {
-        return Api;
+    static api = Api17;
+}
+
+export class Root {
+    public static get<ThrowOnError extends boolean = false>(options?: Options<GetData, ThrowOnError>) {
+        return (options?.client ?? client).get<GetResponses, unknown, ThrowOnError>({ url: '/', ...options });
     }
 }
 
 export class Tasks {
+    public static $count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataTasksCountData, ThrowOnError>) {
+        return (options?.client ?? client).get<ApiVVersionApiVersionOdataTasksCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Tasks/$count', ...options });
+    }
+    
+    public static key<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataTasksKey2Data, ThrowOnError>) {
+        return (options?.client ?? client).get<ApiVVersionApiVersionOdataTasksKey2Responses, unknown, ThrowOnError>({ url: '/api/v1/odata/Tasks/{key}', ...options });
+    }
+}
+
+export class Odata18 {
+    public static tasks<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataTasksData, ThrowOnError>) {
+        return (options?.client ?? client).get<ApiVVersionApiVersionOdataTasksResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Tasks', ...options });
+    }
+    
+    public static tasksKey<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataTasksKeyData, ThrowOnError>) {
+        return (options?.client ?? client).get<ApiVVersionApiVersionOdataTasksKeyResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Tasks({key})', ...options });
+    }
+    
+    static tasks2 = Tasks;
+}
+
+export class VVersionApiVersion18 {
+    static odata = Odata18;
+}
+
+export class Api18 {
+    static vVersionApiVersion = VVersionApiVersion18;
+}
+
+export class Tasks2 {
     public static postApiV1Tasks<ThrowOnError extends boolean = false>(options?: Options<PostApiV1TasksData, ThrowOnError>) {
         return (options?.client ?? client).post<PostApiV1TasksResponses, unknown, ThrowOnError>({
             url: '/api/v1/tasks',
@@ -591,155 +1065,28 @@ export class Tasks {
         return (options.client ?? client).get<GetApiV1TasksByIdDocumentsResponses, unknown, ThrowOnError>({ url: '/api/v1/tasks/{id}/documents', ...options });
     }
     
-    public static count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataTasksCountData, ThrowOnError>) {
-        return (options?.client ?? client).get<ApiVVersionApiVersionOdataTasksCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Tasks/$count', ...options });
-    }
-    
-    public static key<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataTasksKey2Data, ThrowOnError>) {
-        return (options?.client ?? client).get<ApiVVersionApiVersionOdataTasksKey2Responses, unknown, ThrowOnError>({ url: '/api/v1/odata/Tasks/{key}', ...options });
-    }
-    
-    public static get api() {
-        return Api;
-    }
-}
-
-export class Odata {
-    public static accountingCompanies<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataAccountingCompaniesData, ThrowOnError>) {
-        return (options?.client ?? client).get<ApiVVersionApiVersionOdataAccountingCompaniesResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/AccountingCompanies', ...options });
-    }
-    
-    public static accountingCompanyMemberships<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataAccountingCompanyMembershipsData, ThrowOnError>) {
-        return (options?.client ?? client).get<ApiVVersionApiVersionOdataAccountingCompanyMembershipsResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/AccountingCompanyMemberships', ...options });
-    }
-    
-    public static bankAccounts<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBankAccountsData, ThrowOnError>) {
-        return (options?.client ?? client).get<ApiVVersionApiVersionOdataBankAccountsResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/BankAccounts', ...options });
-    }
-    
-    public static businessAccountantAssignments<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessAccountantAssignmentsData, ThrowOnError>) {
-        return (options?.client ?? client).get<ApiVVersionApiVersionOdataBusinessAccountantAssignmentsResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/BusinessAccountantAssignments', ...options });
-    }
-    
-    public static businessDocumentActivities<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessDocumentActivitiesData, ThrowOnError>) {
-        return (options?.client ?? client).get<ApiVVersionApiVersionOdataBusinessDocumentActivitiesResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/BusinessDocumentActivities', ...options });
-    }
-    
-    public static businessDocuments<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessDocumentsData, ThrowOnError>) {
-        return (options?.client ?? client).get<ApiVVersionApiVersionOdataBusinessDocumentsResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/BusinessDocuments', ...options });
-    }
-    
-    /**
-     * @deprecated
-     */
-    public static businessDocumentsSummaries<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessDocumentsSummariesData, ThrowOnError>) {
-        return (options?.client ?? client).get<ApiVVersionApiVersionOdataBusinessDocumentsSummariesResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/BusinessDocumentsSummaries', ...options });
-    }
-    
-    public static businesses<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessesData, ThrowOnError>) {
-        return (options?.client ?? client).get<ApiVVersionApiVersionOdataBusinessesResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Businesses', ...options });
-    }
-    
-    public static businessesKey<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessesKeyData, ThrowOnError>) {
-        return (options?.client ?? client).get<ApiVVersionApiVersionOdataBusinessesKeyResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Businesses({key})', ...options });
-    }
-    
-    public static businessSummaries<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessSummariesData, ThrowOnError>) {
-        return (options?.client ?? client).get<ApiVVersionApiVersionOdataBusinessSummariesResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/BusinessSummaries', ...options });
-    }
-    
-    public static counterparties<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataCounterpartiesData, ThrowOnError>) {
-        return (options?.client ?? client).get<ApiVVersionApiVersionOdataCounterpartiesResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Counterparties', ...options });
-    }
-    
-    public static dataBoxCredentials<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataDataBoxCredentialsData, ThrowOnError>) {
-        return (options?.client ?? client).get<ApiVVersionApiVersionOdataDataBoxCredentialsResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/DataBoxCredentials', ...options });
-    }
-    
-    public static documentTypes<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataDocumentTypesData, ThrowOnError>) {
-        return (options?.client ?? client).get<ApiVVersionApiVersionOdataDocumentTypesResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/DocumentTypes', ...options });
-    }
-    
-    public static invitations<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataInvitationsData, ThrowOnError>) {
-        return (options?.client ?? client).get<ApiVVersionApiVersionOdataInvitationsResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Invitations', ...options });
-    }
-    
-    public static invoices<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataInvoicesData, ThrowOnError>) {
-        return (options?.client ?? client).get<ApiVVersionApiVersionOdataInvoicesResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Invoices', ...options });
-    }
-    
-    public static invoiceSettings<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataInvoiceSettingsData, ThrowOnError>) {
-        return (options?.client ?? client).get<ApiVVersionApiVersionOdataInvoiceSettingsResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/InvoiceSettings', ...options });
-    }
-    
-    public static licenses<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataLicensesData, ThrowOnError>) {
-        return (options?.client ?? client).get<ApiVVersionApiVersionOdataLicensesResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Licenses', ...options });
-    }
-    
-    public static personalDocuments<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataPersonalDocumentsData, ThrowOnError>) {
-        return (options?.client ?? client).get<ApiVVersionApiVersionOdataPersonalDocumentsResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/PersonalDocuments', ...options });
-    }
-    
-    public static recurringTasks<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataRecurringTasksData, ThrowOnError>) {
-        return (options?.client ?? client).get<ApiVVersionApiVersionOdataRecurringTasksResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/RecurringTasks', ...options });
-    }
-    
-    public static tasks<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataTasksData, ThrowOnError>) {
-        return (options?.client ?? client).get<ApiVVersionApiVersionOdataTasksResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Tasks', ...options });
-    }
-    
-    public static tasksKey<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataTasksKeyData, ThrowOnError>) {
-        return (options?.client ?? client).get<ApiVVersionApiVersionOdataTasksKeyResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Tasks({key})', ...options });
-    }
-    
-    public static get accountingCompanies2() {
-        return AccountingCompanies;
-    }
-    
-    static accountingCompanyMemberships2 = AccountingCompanyMemberships;
-    
-    static bankAccounts2 = BankAccounts;
-    
-    static businessAccountantAssignments2 = BusinessAccountantAssignments;
-    
-    static businessDocumentActivities2 = BusinessDocumentActivities;
-    
-    static businessDocuments2 = BusinessDocuments;
-    
-    static businessDocumentsSummaries2 = BusinessDocumentsSummaries;
-    
-    static businesses2 = Businesses;
-    
-    static businessSummaries2 = BusinessSummaries;
-    
-    static counterparties2 = Counterparties;
-    
-    static dataBoxCredentials2 = DataBoxCredentials;
-    
-    static documentTypes2 = DocumentTypes;
-    
-    static invitations2 = Invitations;
-    
-    static invoices2 = Invoices;
-    
-    static invoiceSettings2 = InvoiceSettings;
-    
-    static licenses2 = Licenses;
-    
-    static personalDocuments2 = PersonalDocuments;
-    
-    static recurringTasks2 = RecurringTasks;
-    
-    static tasks2 = Tasks;
-}
-
-export class MapIdentityApi {
-    public static get api() {
-        return Api;
-    }
+    static api = Api18;
 }
 
 export class User {
+    public static confirmEmail<ThrowOnError extends boolean = false>(options: Options<MapIdentityApiApiVVersionApiVersionUserConfirmEmailData, ThrowOnError>) {
+        return (options.client ?? client).get<MapIdentityApiApiVVersionApiVersionUserConfirmEmailResponses, unknown, ThrowOnError>({ url: '/api/v1/user/confirmEmail', ...options });
+    }
+}
+
+export class VVersionApiVersion19 {
+    static user = User;
+}
+
+export class Api19 {
+    static vVersionApiVersion = VVersionApiVersion19;
+}
+
+export class MapIdentityApi {
+    static api = Api19;
+}
+
+export class User2 {
     public static postApiV1UserRegister<ThrowOnError extends boolean = false>(options: Options<PostApiV1UserRegisterData, ThrowOnError>) {
         return (options.client ?? client).post<PostApiV1UserRegisterResponses, PostApiV1UserRegisterErrors, ThrowOnError>({
             url: '/api/v1/user/register',
@@ -771,10 +1118,6 @@ export class User {
                 ...options.headers
             }
         });
-    }
-    
-    public static confirmEmail<ThrowOnError extends boolean = false>(options: Options<MapIdentityApiApiVVersionApiVersionUserConfirmEmailData, ThrowOnError>) {
-        return (options.client ?? client).get<MapIdentityApiApiVVersionApiVersionUserConfirmEmailResponses, unknown, ThrowOnError>({ url: '/api/v1/user/confirmEmail', ...options });
     }
     
     public static postApiV1UserResendConfirmationEmail<ThrowOnError extends boolean = false>(options: Options<PostApiV1UserResendConfirmationEmailData, ThrowOnError>) {
@@ -859,173 +1202,6 @@ export class User {
     }
     
     static mapIdentityApi = MapIdentityApi;
-}
-
-export class VVersionApiVersion {
-    static odata = Odata;
-    
-    static user = User;
-}
-
-export class Api {
-    static vVersionApiVersion = VVersionApiVersion;
-}
-
-export class AccountingCompanies {
-    public static postApiV1AccountingCompanies<ThrowOnError extends boolean = false>(options?: Options<PostApiV1AccountingCompaniesData, ThrowOnError>) {
-        return (options?.client ?? client).post<PostApiV1AccountingCompaniesResponses, unknown, ThrowOnError>({
-            url: '/api/v1/accounting-companies',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
-                ...options?.headers
-            }
-        });
-    }
-    
-    public static deleteApiV1AccountingCompaniesById<ThrowOnError extends boolean = false>(options: Options<DeleteApiV1AccountingCompaniesByIdData, ThrowOnError>) {
-        return (options.client ?? client).delete<DeleteApiV1AccountingCompaniesByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/accounting-companies/{id}', ...options });
-    }
-    
-    public static postApiV1AccountingCompaniesById<ThrowOnError extends boolean = false>(options: Options<PostApiV1AccountingCompaniesByIdData, ThrowOnError>) {
-        return (options.client ?? client).post<PostApiV1AccountingCompaniesByIdResponses, unknown, ThrowOnError>({
-            url: '/api/v1/accounting-companies/{id}',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
-                ...options.headers
-            }
-        });
-    }
-    
-    public static count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataAccountingCompaniesCountData, ThrowOnError>) {
-        return (options?.client ?? client).get<ApiVVersionApiVersionOdataAccountingCompaniesCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/AccountingCompanies/$count', ...options });
-    }
-    
-    static api = Api;
-}
-
-export class BusinessesMemberships {
-    public static putApiV1BusinessMemberships<ThrowOnError extends boolean = false>(options?: Options<PutApiV1BusinessMembershipsData, ThrowOnError>) {
-        return (options?.client ?? client).put<PutApiV1BusinessMembershipsResponses, unknown, ThrowOnError>({
-            url: '/api/v1/business-memberships',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
-                ...options?.headers
-            }
-        });
-    }
-}
-
-export class Dev {
-    public static getApiDev<ThrowOnError extends boolean = false>(options?: Options<GetApiDevData, ThrowOnError>) {
-        return (options?.client ?? client).get<GetApiDevResponses, unknown, ThrowOnError>({ url: '/api/dev', ...options });
-    }
-    
-    public static getApiDevReseedDb<ThrowOnError extends boolean = false>(options?: Options<GetApiDevReseedDbData, ThrowOnError>) {
-        return (options?.client ?? client).get<GetApiDevReseedDbResponses, unknown, ThrowOnError>({ url: '/api/dev/reseed-db', ...options });
-    }
-    
-    public static getApiDevDbReset<ThrowOnError extends boolean = false>(options?: Options<GetApiDevDbResetData, ThrowOnError>) {
-        return (options?.client ?? client).get<GetApiDevDbResetResponses, unknown, ThrowOnError>({ url: '/api/dev/db-reset', ...options });
-    }
-    
-    public static getApiDevDbReset2<ThrowOnError extends boolean = false>(options?: Options<GetApiDevDbReset2Data, ThrowOnError>) {
-        return (options?.client ?? client).get<GetApiDevDbReset2Responses, unknown, ThrowOnError>({ url: '/api/dev/db/reset', ...options });
-    }
-    
-    public static getApiDevDbCreate<ThrowOnError extends boolean = false>(options?: Options<GetApiDevDbCreateData, ThrowOnError>) {
-        return (options?.client ?? client).get<GetApiDevDbCreateResponses, unknown, ThrowOnError>({ url: '/api/dev/db/create', ...options });
-    }
-    
-    public static getApiDevDbTouch<ThrowOnError extends boolean = false>(options?: Options<GetApiDevDbTouchData, ThrowOnError>) {
-        return (options?.client ?? client).get<GetApiDevDbTouchResponses, unknown, ThrowOnError>({ url: '/api/dev/db/touch', ...options });
-    }
-    
-    public static getApiDevSeed<ThrowOnError extends boolean = false>(options?: Options<GetApiDevSeedData, ThrowOnError>) {
-        return (options?.client ?? client).get<GetApiDevSeedResponses, unknown, ThrowOnError>({ url: '/api/dev/seed', ...options });
-    }
-    
-    public static getApiDevSeedAll<ThrowOnError extends boolean = false>(options?: Options<GetApiDevSeedAllData, ThrowOnError>) {
-        return (options?.client ?? client).get<GetApiDevSeedAllResponses, unknown, ThrowOnError>({ url: '/api/dev/seed-all', ...options });
-    }
-    
-    public static getApiDevSeedProd<ThrowOnError extends boolean = false>(options?: Options<GetApiDevSeedProdData, ThrowOnError>) {
-        return (options?.client ?? client).get<GetApiDevSeedProdResponses, unknown, ThrowOnError>({ url: '/api/dev/seed-prod', ...options });
-    }
-    
-    public static getApiDevJobProcessRecurringTasks<ThrowOnError extends boolean = false>(options?: Options<GetApiDevJobProcessRecurringTasksData, ThrowOnError>) {
-        return (options?.client ?? client).get<GetApiDevJobProcessRecurringTasksResponses, unknown, ThrowOnError>({ url: '/api/dev/job/process-recurring-tasks', ...options });
-    }
-    
-    public static getApiDevNotificationsSendTest<ThrowOnError extends boolean = false>(options?: Options<GetApiDevNotificationsSendTestData, ThrowOnError>) {
-        return (options?.client ?? client).get<GetApiDevNotificationsSendTestResponses, unknown, ThrowOnError>({ url: '/api/dev/notifications/send-test', ...options });
-    }
-    
-    public static getApiDevConfirmEmail<ThrowOnError extends boolean = false>(options?: Options<GetApiDevConfirmEmailData, ThrowOnError>) {
-        return (options?.client ?? client).get<GetApiDevConfirmEmailResponses, unknown, ThrowOnError>({ url: '/api/dev/confirm-email', ...options });
-    }
-    
-    public static getApiDevEmailSendTest<ThrowOnError extends boolean = false>(options?: Options<GetApiDevEmailSendTestData, ThrowOnError>) {
-        return (options?.client ?? client).get<GetApiDevEmailSendTestResponses, unknown, ThrowOnError>({ url: '/api/dev/email/send-test', ...options });
-    }
-}
-
-export class DeviceTokens {
-    public static deleteApiV1NotificationsDeviceTokens<ThrowOnError extends boolean = false>(options?: Options<DeleteApiV1NotificationsDeviceTokensData, ThrowOnError>) {
-        return (options?.client ?? client).delete<DeleteApiV1NotificationsDeviceTokensResponses, unknown, ThrowOnError>({
-            url: '/api/v1/notifications/device-tokens',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
-                ...options?.headers
-            }
-        });
-    }
-    
-    public static putApiV1NotificationsDeviceTokens<ThrowOnError extends boolean = false>(options?: Options<PutApiV1NotificationsDeviceTokensData, ThrowOnError>) {
-        return (options?.client ?? client).put<PutApiV1NotificationsDeviceTokensResponses, unknown, ThrowOnError>({
-            url: '/api/v1/notifications/device-tokens',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
-                ...options?.headers
-            }
-        });
-    }
-}
-
-export class Feedback {
-    public static postApiV1Feedback<ThrowOnError extends boolean = false>(options?: Options<PostApiV1FeedbackData, ThrowOnError>) {
-        return (options?.client ?? client).post<PostApiV1FeedbackResponses, unknown, ThrowOnError>({
-            url: '/api/v1/feedback',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
-                ...options?.headers
-            }
-        });
-    }
-}
-
-export class Notifications {
-    public static postApiV1NotificationsTest<ThrowOnError extends boolean = false>(options?: Options<PostApiV1NotificationsTestData, ThrowOnError>) {
-        return (options?.client ?? client).post<PostApiV1NotificationsTestResponses, unknown, ThrowOnError>({
-            url: '/api/v1/notifications/test',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
-                ...options?.headers
-            }
-        });
-    }
-}
-
-export class Root {
-    public static get<ThrowOnError extends boolean = false>(options?: Options<GetData, ThrowOnError>) {
-        return (options?.client ?? client).get<GetResponses, unknown, ThrowOnError>({ url: '/', ...options });
-    }
 }
 
 export class Users {
