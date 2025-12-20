@@ -70,9 +70,7 @@ function getStructuralChainForNode(
   if (visited.has(node)) return [];
   visited.add(node);
 
-  if (node['~dsl'] === 'TemplateTsDsl' || node['~dsl'] === 'FuncTsDsl') {
-    return [];
-  }
+  if (isStopNode(node)) return [];
 
   if (node.structuralParents) {
     for (const [parent] of node.structuralParents) {
@@ -88,6 +86,18 @@ function getStructuralChainForNode(
   return [node];
 }
 
+function isAccessorNode(node: TsDsl): boolean {
+  return (
+    node['~dsl'] === 'FieldTsDsl' ||
+    node['~dsl'] === 'GetterTsDsl' ||
+    node['~dsl'] === 'MethodTsDsl'
+  );
+}
+
+function isStopNode(node: TsDsl): boolean {
+  return node['~dsl'] === 'FuncTsDsl' || node['~dsl'] === 'TemplateTsDsl';
+}
+
 /**
  * Fold a structural chain to an access chain by removing
  * non-accessor nodes.
@@ -98,11 +108,7 @@ function structuralToAccessChain(structuralChain: NodeChain): NodeChain {
     // assume first node is always included
     if (index === 0) {
       accessChain.push(node);
-    } else if (
-      node['~dsl'] === 'FieldTsDsl' ||
-      node['~dsl'] === 'GetterTsDsl' ||
-      node['~dsl'] === 'MethodTsDsl'
-    ) {
+    } else if (isAccessorNode(node)) {
       accessChain.push(node);
     }
   });
@@ -125,7 +131,7 @@ function transformAccessChain(
     if (index === 0) {
       if (node['~dsl'] === 'ClassTsDsl') {
         const nextNode = accessChain[index + 1];
-        if (nextNode?.['~dsl'] === 'FieldTsDsl') {
+        if (nextNode && isAccessorNode(nextNode)) {
           if ((nextNode as ReturnType<typeof $.field>).hasModifier('static')) {
             return $(node.name);
           }

@@ -91,7 +91,7 @@ export class SdkResourceModel {
       this.name &&
       plugin.config.classStructure === 'auto' &&
       operation.operationId
-        ? operation.operationId.split(/[./]/).slice(0, -1)
+        ? this.splitOperationId(operation.operationId).slice(0, -1)
         : [];
 
     // eslint-disable-next-line @typescript-eslint/no-this-alias
@@ -205,7 +205,10 @@ export class SdkResourceModel {
         plugin,
         value:
           extractFromOperationId && operation.operationId
-            ? toCase(operation.operationId.split(/[./]/).pop()!, 'camelCase')
+            ? toCase(
+                this.splitOperationId(operation.operationId).pop()!,
+                'camelCase',
+              )
             : operation.id,
       }),
       {
@@ -231,13 +234,13 @@ export class SdkResourceModel {
       resourceId: resource.getPath().join('.'),
       tool: 'sdk',
     });
-    const memberName = toCase(refChild.name, 'camelCase');
+    const memberNameStr = toCase(refChild.name, 'camelCase');
+    const memberName = plugin.symbol(memberNameStr);
     if (plugin.config.instance) {
-      const privateName = plugin.symbol(`_${memberName}`);
-      const getterName = plugin.symbol(memberName);
+      const privateName = plugin.symbol(`_${memberNameStr}`);
       return [
         $.field(privateName, (f) => f.private().optional().type(refChild)),
-        $.getter(getterName, (g) =>
+        $.getter(memberName, (g) =>
           g.returns(refChild).do(
             $('this')
               .attr(privateName)
@@ -440,5 +443,10 @@ export class SdkResourceModel {
       )
       .params(...opParameters.parameters)
       .do(...statements) as T;
+  }
+
+  private splitOperationId(operationId: string): Array<string> {
+    // TODO: expose this logic
+    return operationId.split(/[./]/).filter(Boolean);
   }
 }

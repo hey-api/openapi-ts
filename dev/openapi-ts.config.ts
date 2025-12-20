@@ -38,8 +38,9 @@ export default defineConfig(() => {
           // },
           path: path.resolve(
             getSpecsPath(),
-            // '3.0.x',
-            '3.1.x',
+            // '2.0.x',
+            '3.0.x',
+            // '3.1.x',
             // 'circular.yaml',
             // 'dutchie.json',
             // 'enum-names-values.yaml',
@@ -52,9 +53,9 @@ export default defineConfig(() => {
             // 'pagination-ref.yaml',
             // 'schema-const.yaml',
             // 'sdk-instance.yaml',
-            // 'sdk-method-class-conflict.yaml',
+            'sdk-method-class-conflict.yaml',
             // 'sdk-nested-classes.yaml',
-            'sdk-nested-conflict.yaml',
+            // 'sdk-nested-conflict.yaml',
             // 'string-with-format.yaml',
             // 'transformers.json',
             // 'transformers-recursive.json',
@@ -109,10 +110,10 @@ export default defineConfig(() => {
           // importFileExtension: '.js',
           // indexFile: false,
           // lint: 'eslint',
-          nameConflictResolver({ attempt, baseName }) {
-            // console.log('resolving conflict for:', { attempt, baseName });
-            return attempt === 0 ? baseName : `${baseName}_N${attempt + 1}`;
-          },
+          // nameConflictResolver({ attempt, baseName }) {
+          //   // console.log('resolving conflict for:', { attempt, baseName });
+          //   return attempt === 0 ? baseName : `${baseName}_N${attempt + 1}`;
+          // },
           path: path.resolve(__dirname, '.gen'),
           // preferExportAll: true,
           resolveModuleName: (moduleName) => {
@@ -260,7 +261,7 @@ export default defineConfig(() => {
           //   name: '你們_errors_{{name}}',
           // },
           // exportFromIndex: false,
-          name: '@hey-api/typescript',
+          // name: '@hey-api/typescript',
           // requests: '我們_data_{{name}}',
           // responses: {
           //   name: '我_responses_{{name}}',
@@ -274,9 +275,9 @@ export default defineConfig(() => {
           // },
         },
         {
-          asClass: true,
+          // asClass: true,
           // auth: false,
-          // classNameBuilder: '{{name}}',',
+          // classNameBuilder: '{{name}}Service',
           // classStructure: 'off',
           // client: false,
           // getSignature: ({ fields, signature, operation }) => {
@@ -284,7 +285,7 @@ export default defineConfig(() => {
           //   fields.unwrap('path')
           // },
           // include...
-          instance: 'OpencodeClient',
+          // instance: 'OpencodeClient',
           // methodNameBuilder: '{{name}}',
           name: '@hey-api/sdk',
           // operationId: false,
@@ -348,7 +349,7 @@ export default defineConfig(() => {
             // name: '{{name}}MO',
             // name: 'options',
           },
-          name: '@tanstack/react-query',
+          // name: '@tanstack/react-query',
           queryKeys: {
             // name: '{{name}}QK',
             // name: 'options',
@@ -490,7 +491,7 @@ export default defineConfig(() => {
           },
           exportFromIndex: true,
           metadata: true,
-          name: 'zod',
+          // name: 'zod',
           // requests: {
           //   // case: 'SCREAMING_SNAKE_CASE',
           //   // name: 'z{{name}}TestData',
@@ -609,7 +610,7 @@ export default defineConfig(() => {
         {
           exportFromIndex: true,
           // mutationOptions: '{{name}}Mutationssss',
-          // name: '@pinia/colada',
+          name: '@pinia/colada',
           // queryOptions: {
           //   name: '{{name}}Queryyyyy',
           // },
