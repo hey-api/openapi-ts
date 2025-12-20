@@ -1,7 +1,7 @@
 import type { IR } from '~/ir/types';
 import type { PluginInstance } from '~/plugins/shared/utils/instance';
+import { toCase } from '~/utils/naming';
 import { refToName } from '~/utils/ref';
-import { toCase } from '~/utils/to-case';
 
 import type { Field } from '../../client-core/bundle/params';
 

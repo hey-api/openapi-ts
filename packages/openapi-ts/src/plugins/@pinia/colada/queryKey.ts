@@ -3,12 +3,12 @@ import type { Symbol } from '@hey-api/codegen-core';
 import { clientFolderAbsolutePath } from '~/generate/client';
 import { hasOperationDataRequired } from '~/ir/operation';
 import type { IR } from '~/ir/types';
-import { buildName } from '~/openApi/shared/utils/name';
 import {
   getClientBaseUrlKey,
   getClientPlugin,
 } from '~/plugins/@hey-api/client-core/utils';
 import { $ } from '~/ts-dsl';
+import { applyNaming } from '~/utils/naming';
 
 import type { PiniaColadaPlugin } from './types';
 import { getPublicTypeData } from './utils';
@@ -20,19 +20,18 @@ export const createQueryKeyFunction = ({
 }: {
   plugin: PiniaColadaPlugin['Instance'];
 }) => {
-  const symbolCreateQueryKey = plugin.registerSymbol({
-    meta: {
-      category: 'utility',
-      resource: 'createQueryKey',
-      tool: plugin.name,
-    },
-    name: buildName({
-      config: {
-        case: plugin.config.case,
-      },
-      name: 'createQueryKey',
+  const symbolCreateQueryKey = plugin.symbol(
+    applyNaming('createQueryKey', {
+      case: plugin.config.case,
     }),
-  });
+    {
+      meta: {
+        category: 'utility',
+        resource: 'createQueryKey',
+        tool: plugin.name,
+      },
+    },
+  );
   const symbolQueryKeyType = plugin.referenceSymbol({
     category: 'type',
     resource: 'QueryKey',
@@ -57,13 +56,12 @@ export const createQueryKeyFunction = ({
   });
 
   const clientModule = clientFolderAbsolutePath(plugin.context.config);
-  const symbolSerializeQueryValue = plugin.registerSymbol({
+  const symbolSerializeQueryValue = plugin.symbol('serializeQueryKeyValue', {
     external: clientModule,
     meta: {
       category: 'external',
       resource: `${clientModule}.serializeQueryKeyValue`,
     },
-    name: 'serializeQueryKeyValue',
   });
 
   const fn = $.const(symbolCreateQueryKey).assign(
@@ -169,13 +167,12 @@ export const createQueryKeyType = ({
     resource: 'client-options',
     tool: 'sdk',
   });
-  const symbolQueryKeyType = plugin.registerSymbol({
+  const symbolQueryKeyType = plugin.symbol('QueryKey', {
     meta: {
       category: 'type',
       resource: 'QueryKey',
       tool: plugin.name,
     },
-    name: 'QueryKey',
   });
   const queryKeyType = $.type
     .alias(symbolQueryKeyType)

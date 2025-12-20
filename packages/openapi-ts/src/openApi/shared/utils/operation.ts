@@ -1,7 +1,7 @@
 import type { Context } from '~/ir/context';
 import { createOperationKey } from '~/ir/operation';
 import { sanitizeNamespaceIdentifier } from '~/openApi/common/parser/sanitize';
-import { toCase } from '~/utils/to-case';
+import { toCase } from '~/utils/naming';
 
 import type { State } from '../types/state';
 

@@ -2,9 +2,9 @@ import type { Symbol } from '@hey-api/codegen-core';
 import { fromRef } from '@hey-api/codegen-core';
 
 import type { IR } from '~/ir/types';
-import { buildName } from '~/openApi/shared/utils/name';
 import { createSchemaComment } from '~/plugins/shared/utils/schema';
 import { $ } from '~/ts-dsl';
+import { applyNaming } from '~/utils/naming';
 
 import { irSchemaToAst } from '../v1/plugin';
 import type { IrSchemaToAstOptions } from './types';
@@ -26,24 +26,23 @@ const operationToDataType = ({
   }
 
   if (operation.body) {
-    const symbolWebhookPayload = plugin.registerSymbol({
-      meta: {
-        category: 'type',
-        path: fromRef(state.path),
-        resource: 'webhook',
-        resourceId: operation.id,
-        role: 'data',
-        tags: fromRef(state.tags),
-        tool: 'typescript',
-      },
-      name: buildName({
-        config: {
-          case: plugin.config.webhooks.case,
-          name: plugin.config.webhooks.payload,
-        },
-        name: operation.id,
+    const symbolWebhookPayload = plugin.symbol(
+      applyNaming(operation.id, {
+        case: plugin.config.webhooks.case,
+        name: plugin.config.webhooks.payload,
       }),
-    });
+      {
+        meta: {
+          category: 'type',
+          path: fromRef(state.path),
+          resource: 'webhook',
+          resourceId: operation.id,
+          role: 'data',
+          tags: fromRef(state.tags),
+          tool: 'typescript',
+        },
+      },
+    );
     const node = $.type
       .alias(symbolWebhookPayload)
       .export()
@@ -74,21 +73,20 @@ const operationToDataType = ({
 
   data.required = dataRequired;
 
-  const symbolWebhookRequest = plugin.registerSymbol({
-    meta: {
-      category: 'type',
-      path: fromRef(state.path),
-      resource: 'webhook',
-      resourceId: operation.id,
-      role: 'data',
-      tags: fromRef(state.tags),
-      tool: 'typescript',
+  const symbolWebhookRequest = plugin.symbol(
+    applyNaming(operation.id, plugin.config.webhooks),
+    {
+      meta: {
+        category: 'type',
+        path: fromRef(state.path),
+        resource: 'webhook',
+        resourceId: operation.id,
+        role: 'data',
+        tags: fromRef(state.tags),
+        tool: 'typescript',
+      },
     },
-    name: buildName({
-      config: plugin.config.webhooks,
-      name: operation.id,
-    }),
-  });
+  );
   const node = $.type
     .alias(symbolWebhookRequest)
     .export()

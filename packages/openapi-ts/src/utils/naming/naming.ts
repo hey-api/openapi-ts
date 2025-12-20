@@ -1,4 +1,4 @@
-import type { StringCase } from '~/types/case';
+import type { Casing, NamingConfig, NamingRule } from './types';
 
 const uppercaseRegExp = /[\p{Lu}]/u;
 const lowercaseRegExp = /[\p{Ll}]/u;
@@ -15,7 +15,7 @@ const numbersAndIdentifierRegExp = new RegExp(
   'gu',
 );
 
-const preserveCase = (value: string, casing: StringCase) => {
+const preserveCase = (value: string, casing: Casing) => {
   let isLastCharLower = false;
   let isLastCharUpper = false;
   let isLastLastCharUpper = false;
@@ -84,7 +84,7 @@ const preserveCase = (value: string, casing: StringCase) => {
 };
 
 /**
- * Converts the given string to the specified casing.
+ * Convert a string to the specified casing.
  *
  * @param value - The string to convert
  * @param casing - The target casing
@@ -93,7 +93,7 @@ const preserveCase = (value: string, casing: StringCase) => {
  */
 export const toCase = (
   value: string,
-  casing: StringCase | undefined,
+  casing: Casing | undefined,
   options: {
     /**
      * If leading separators have a semantic meaning, we might not want to
@@ -188,3 +188,43 @@ export const toCase = (
 
   return result;
 };
+
+/**
+ * Normalize a NamingRule to NamingConfig.
+ */
+export function resolveNaming(rule: NamingRule | undefined): NamingConfig {
+  if (!rule) {
+    return {};
+  }
+  if (typeof rule === 'string' || typeof rule === 'function') {
+    return { name: rule };
+  }
+  return rule;
+}
+
+/**
+ * Apply naming configuration to a value.
+ *
+ * Casing is applied first, then transformation.
+ */
+export function applyNaming(value: string, config: NamingConfig): string {
+  let result = value;
+
+  const casing = config.casing ?? config.case;
+
+  if (config.name) {
+    if (typeof config.name === 'function') {
+      result = config.name(result);
+    } else {
+      // TODO: refactor so there's no need for separators?
+      const separator = casing === 'preserve' ? '' : '-';
+      result = config.name.replace(
+        '{{name}}',
+        `${separator}${result}${separator}`,
+      );
+    }
+  }
+
+  // TODO: apply case before name?
+  return toCase(result, casing);
+}

@@ -1,8 +1,8 @@
 import type { IR } from '~/ir/types';
-import { buildName } from '~/openApi/shared/utils/name';
 import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
 import { createOperationComment } from '~/plugins/shared/utils/operation';
 import { $ } from '~/ts-dsl';
+import { applyNaming } from '~/utils/naming';
 
 import { handleMeta } from './meta';
 import type { PiniaColadaPlugin } from './types';
@@ -75,12 +75,9 @@ export const createMutationOptions = ({
     .$if(handleMeta(plugin, operation, 'mutationOptions'), (o, v) =>
       o.prop('meta', v),
     );
-  const symbolMutationOptions = plugin.registerSymbol({
-    name: buildName({
-      config: plugin.config.mutationOptions,
-      name: operation.id,
-    }),
-  });
+  const symbolMutationOptions = plugin.symbol(
+    applyNaming(operation.id, plugin.config.mutationOptions),
+  );
   const statement = $.const(symbolMutationOptions)
     .export()
     .$if(plugin.config.comments && createOperationComment(operation), (c, v) =>

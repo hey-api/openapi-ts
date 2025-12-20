@@ -1,14 +1,11 @@
-import type { Symbol } from '@hey-api/codegen-core';
-
 import type { IR } from '~/ir/types';
-import { buildName } from '~/openApi/shared/utils/name';
 import { operationClasses } from '~/plugins/@hey-api/sdk/shared/operation';
 import {
   createOperationComment,
   isOperationOptionsRequired,
 } from '~/plugins/shared/utils/operation';
 import { $ } from '~/ts-dsl';
-import { toCase } from '~/utils/to-case';
+import { applyNaming, toCase } from '~/utils/naming';
 
 import type { AngularCommonPlugin } from './types';
 
@@ -20,13 +17,27 @@ interface AngularRequestClassEntry {
   root: boolean;
 }
 
-const generateAngularClassRequests = ({
+const generateClassRequests = ({
   plugin,
 }: {
   plugin: AngularCommonPlugin['Instance'];
 }) => {
   const requestClasses = new Map<string, AngularRequestClassEntry>();
   const generatedClasses = new Set<string>();
+
+  const symbolHttpRequest = plugin.referenceSymbol({
+    category: 'external',
+    resource: '@angular/common/http.HttpRequest',
+  });
+  const symbolOptions = plugin.referenceSymbol({
+    category: 'type',
+    resource: 'client-options',
+    tool: 'sdk',
+  });
+  const symbolInjectable = plugin.referenceSymbol({
+    category: 'external',
+    resource: '@angular/core.Injectable',
+  });
 
   const sdkPlugin = plugin.getPluginOrThrow('@hey-api/sdk');
 
@@ -73,12 +84,34 @@ const generateAngularClassRequests = ({
             return;
           }
 
-          const methodNode = generateAngularRequestMethod({
-            isRequiredOptions,
-            methodName: requestMethodName,
-            operation,
-            plugin,
+          const symbolDataType = plugin.querySymbol({
+            category: 'type',
+            resource: 'operation',
+            resourceId: operation.id,
+            role: 'data',
+            tool: 'typescript',
           });
+
+          const methodNode = $.method(requestMethodName)
+            .public()
+            .$if(createOperationComment(operation), (c, v) => c.doc(v))
+            .param('options', (p) =>
+              p.required(isRequiredOptions).type(
+                $.type(symbolOptions)
+                  .generic(symbolDataType ?? 'unknown')
+                  .generic('ThrowOnError'),
+              ),
+            )
+            .generic('ThrowOnError', (g) => g.extends('boolean').default(false))
+            .returns($.type(symbolHttpRequest).generic('unknown'))
+            .do(
+              $.return(
+                generateRequestCallExpression({
+                  operation,
+                  plugin,
+                }),
+              ),
+            );
 
           if (!currentClass.nodes.length) {
             currentClass.nodes.push(methodNode);
@@ -109,12 +142,9 @@ const generateAngularClassRequests = ({
         currentClass.nodes.push(
           $.field(toCase(childClass.className, 'camelCase')).assign(
             $.new(
-              buildName({
-                config: {
-                  case: 'preserve',
-                  name: plugin.config.httpRequests.classNameBuilder,
-                },
-                name: childClass.className,
+              applyNaming(childClass.className, {
+                case: 'preserve',
+                name: plugin.config.httpRequests.classNameBuilder,
               }),
             ),
           ),
@@ -122,25 +152,20 @@ const generateAngularClassRequests = ({
       }
     }
 
-    const symbolInjectable = plugin.referenceSymbol({
-      category: 'external',
-      resource: '@angular/core.Injectable',
-    });
-    const symbolClass = plugin.registerSymbol({
-      meta: {
-        category: 'utility',
-        resource: 'class',
-        resourceId: currentClass.className,
-        tool: 'angular',
-      },
-      name: buildName({
-        config: {
-          case: 'preserve',
-          name: plugin.config.httpRequests.classNameBuilder,
-        },
-        name: currentClass.className,
+    const symbolClass = plugin.symbol(
+      applyNaming(currentClass.className, {
+        case: 'preserve',
+        name: plugin.config.httpRequests.classNameBuilder,
       }),
-    });
+      {
+        meta: {
+          category: 'utility',
+          resource: 'class',
+          resourceId: currentClass.className,
+          tool: 'angular',
+        },
+      },
+    );
     const node = $.class(symbolClass)
       .export()
       .$if(currentClass.root, (c) =>
@@ -160,11 +185,21 @@ const generateAngularClassRequests = ({
   }
 };
 
-const generateAngularFunctionRequests = ({
+const generateFunctionRequests = ({
   plugin,
 }: {
   plugin: AngularCommonPlugin['Instance'];
 }) => {
+  const symbolHttpRequest = plugin.referenceSymbol({
+    category: 'external',
+    resource: '@angular/common/http.HttpRequest',
+  });
+  const symbolOptions = plugin.referenceSymbol({
+    category: 'type',
+    resource: 'client-options',
+    tool: 'sdk',
+  });
+
   plugin.forEach(
     'operation',
     ({ operation }) => {
@@ -173,22 +208,50 @@ const generateAngularFunctionRequests = ({
         operation,
       });
 
-      const symbol = plugin.registerSymbol({
-        meta: {
-          category: 'utility',
-          resource: 'operation',
-          resourceId: operation.id,
-          role: 'data',
-          tool: 'angular',
+      const symbol = plugin.symbol(
+        plugin.config.httpRequests.methodNameBuilder(operation),
+        {
+          meta: {
+            category: 'utility',
+            resource: 'operation',
+            resourceId: operation.id,
+            role: 'data',
+            tool: 'angular',
+          },
         },
-        name: plugin.config.httpRequests.methodNameBuilder(operation),
+      );
+
+      const symbolDataType = plugin.querySymbol({
+        category: 'type',
+        resource: 'operation',
+        resourceId: operation.id,
+        role: 'data',
+        tool: 'typescript',
       });
-      const node = generateAngularRequestFunction({
-        isRequiredOptions,
-        operation,
-        plugin,
-        symbol,
-      });
+
+      const node = $.const(symbol)
+        .export()
+        .$if(createOperationComment(operation), (c, v) => c.doc(v))
+        .assign(
+          $.func()
+            .param('options', (p) =>
+              p.required(isRequiredOptions).type(
+                $.type(symbolOptions)
+                  .generic(symbolDataType ?? 'unknown')
+                  .generic('ThrowOnError'),
+              ),
+            )
+            .generic('ThrowOnError', (g) => g.extends('boolean').default(false))
+            .returns($.type(symbolHttpRequest).generic('unknown'))
+            .do(
+              $.return(
+                generateRequestCallExpression({
+                  operation,
+                  plugin,
+                }),
+              ),
+            ),
+        );
       plugin.node(node);
     },
     {
@@ -224,119 +287,12 @@ const generateRequestCallExpression = ({
     );
 };
 
-const generateAngularRequestMethod = ({
-  isRequiredOptions,
-  methodName,
-  operation,
-  plugin,
-}: {
-  isRequiredOptions: boolean;
-  methodName: string;
-  operation: IR.OperationObject;
-  plugin: AngularCommonPlugin['Instance'];
-}) => {
-  const symbolHttpRequest = plugin.referenceSymbol({
-    category: 'external',
-    resource: '@angular/common/http.HttpRequest',
-  });
-
-  const symbolOptions = plugin.referenceSymbol({
-    category: 'type',
-    resource: 'client-options',
-    tool: 'sdk',
-  });
-
-  const symbolDataType = plugin.querySymbol({
-    category: 'type',
-    resource: 'operation',
-    resourceId: operation.id,
-    role: 'data',
-    tool: 'typescript',
-  });
-
-  return $.method(methodName)
-    .public()
-    .$if(createOperationComment(operation), (c, v) => c.doc(v))
-    .param('options', (p) =>
-      p.required(isRequiredOptions).type(
-        $.type(symbolOptions)
-          .generic(symbolDataType ?? 'unknown')
-          .generic('ThrowOnError'),
-      ),
-    )
-    .generic('ThrowOnError', (g) => g.extends('boolean').default(false))
-    .returns($.type(symbolHttpRequest).generic('unknown'))
-    .do(
-      $.return(
-        generateRequestCallExpression({
-          operation,
-          plugin,
-        }),
-      ),
-    );
-};
-
-const generateAngularRequestFunction = ({
-  isRequiredOptions,
-  operation,
-  plugin,
-  symbol,
-}: {
-  isRequiredOptions: boolean;
-  operation: IR.OperationObject;
-  plugin: AngularCommonPlugin['Instance'];
-  symbol: Symbol;
-}) => {
-  const symbolHttpRequest = plugin.referenceSymbol({
-    category: 'external',
-    resource: '@angular/common/http.HttpRequest',
-  });
-
-  const symbolOptions = plugin.referenceSymbol({
-    category: 'type',
-    resource: 'client-options',
-    tool: 'sdk',
-  });
-
-  const symbolDataType = plugin.querySymbol({
-    category: 'type',
-    resource: 'operation',
-    resourceId: operation.id,
-    role: 'data',
-    tool: 'typescript',
-  });
-
-  return $.const(symbol)
-    .export()
-    .$if(createOperationComment(operation), (c, v) => c.doc(v))
-    .assign(
-      $.func()
-        .param('options', (p) =>
-          p.required(isRequiredOptions).type(
-            $.type(symbolOptions)
-              .generic(symbolDataType ?? 'unknown')
-              .generic('ThrowOnError'),
-          ),
-        )
-        .generic('ThrowOnError', (g) => g.extends('boolean').default(false))
-        .returns($.type(symbolHttpRequest).generic('unknown'))
-        .do(
-          $.return(
-            generateRequestCallExpression({
-              operation,
-              plugin,
-            }),
-          ),
-        ),
-    );
-};
-
 export const createHttpRequests: AngularCommonPlugin['Handler'] = ({
   plugin,
 }) => {
   if (plugin.config.httpRequests.asClass) {
-    generateAngularClassRequests({ plugin });
+    generateClassRequests({ plugin });
   } else {
-    generateAngularFunctionRequests({ plugin });
+    generateFunctionRequests({ plugin });
   }
 };

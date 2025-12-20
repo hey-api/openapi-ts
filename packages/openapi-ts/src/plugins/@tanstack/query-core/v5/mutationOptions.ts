@@ -1,8 +1,8 @@
 import type { IR } from '~/ir/types';
-import { buildName } from '~/openApi/shared/utils/name';
 import { createOperationComment } from '~/plugins/shared/utils/operation';
 import type { TsDsl } from '~/ts-dsl';
 import { $ } from '~/ts-dsl';
+import { applyNaming } from '~/utils/naming';
 
 import { handleMeta } from '../shared/meta';
 import { useTypeData, useTypeError, useTypeResponse } from '../shared/useType';
@@ -58,10 +58,7 @@ export const createMutationOptions = ({
 
   const mutationOptionsFn = 'mutationOptions';
   const symbolMutationOptions = plugin.symbol(
-    buildName({
-      config: plugin.config.mutationOptions,
-      name: operation.id,
-    }),
+    applyNaming(operation.id, plugin.config.mutationOptions),
   );
   const statement = $.const(symbolMutationOptions)
     .export()

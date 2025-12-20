@@ -1,5 +1,4 @@
 import type { IR } from '~/ir/types';
-import { buildName } from '~/openApi/shared/utils/name';
 import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
 import {
   createOperationComment,
@@ -7,6 +6,7 @@ import {
   isOperationOptionsRequired,
 } from '~/plugins/shared/utils/operation';
 import { $ } from '~/ts-dsl';
+import { applyNaming } from '~/utils/naming';
 
 import { handleMeta } from './meta';
 import {
@@ -48,12 +48,9 @@ export const createQueryOptions = ({
 
   let keyExpression: ReturnType<typeof $.call>;
   if (plugin.config.queryKeys.enabled) {
-    const symbolQueryKey = plugin.registerSymbol({
-      name: buildName({
-        config: plugin.config.queryKeys,
-        name: operation.id,
-      }),
-    });
+    const symbolQueryKey = plugin.symbol(
+      applyNaming(operation.id, plugin.config.queryKeys),
+    );
     const node = queryKeyStatement({
       operation,
       plugin,
@@ -128,19 +125,18 @@ export const createQueryOptions = ({
       o.prop('meta', v),
     );
 
-  const symbolQueryOptionsFn = plugin.registerSymbol({
-    meta: {
-      category: 'hook',
-      resource: 'operation',
-      resourceId: operation.id,
-      role: 'queryOptions',
-      tool: plugin.name,
+  const symbolQueryOptionsFn = plugin.symbol(
+    applyNaming(operation.id, plugin.config.queryOptions),
+    {
+      meta: {
+        category: 'hook',
+        resource: 'operation',
+        resourceId: operation.id,
+        role: 'queryOptions',
+        tool: plugin.name,
+      },
     },
-    name: buildName({
-      config: plugin.config.queryOptions,
-      name: operation.id,
-    }),
-  });
+  );
   const symbolDefineQueryOptions = plugin.referenceSymbol({
     category: 'external',
     resource: `${plugin.name}.defineQueryOptions`,

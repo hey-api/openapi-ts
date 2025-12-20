@@ -3,10 +3,10 @@ import { fromRef, ref, refs } from '@hey-api/codegen-core';
 
 import { deduplicateSchema } from '~/ir/schema';
 import type { IR } from '~/ir/types';
-import { buildName } from '~/openApi/shared/utils/name';
 import type { SchemaWithType } from '~/plugins';
 import { maybeBigInt } from '~/plugins/shared/utils/coerce';
 import { $ } from '~/ts-dsl';
+import { applyNaming } from '~/utils/naming';
 import { pathToJsonPointer, refToName } from '~/utils/ref';
 
 import { identifiers } from '../constants';
@@ -178,36 +178,34 @@ const handleComponent = ({
   const $ref = pathToJsonPointer(fromRef(state.path));
   const ast = irSchemaToAst({ plugin, schema, state });
   const baseName = refToName($ref);
-  const symbol = plugin.registerSymbol({
-    meta: {
-      category: 'schema',
-      path: fromRef(state.path),
-      resource: 'definition',
-      resourceId: $ref,
-      tags: fromRef(state.tags),
-      tool: 'zod',
+  const symbol = plugin.symbol(
+    applyNaming(baseName, plugin.config.definitions),
+    {
+      meta: {
+        category: 'schema',
+        path: fromRef(state.path),
+        resource: 'definition',
+        resourceId: $ref,
+        tags: fromRef(state.tags),
+        tool: 'zod',
+      },
     },
-    name: buildName({
-      config: plugin.config.definitions,
-      name: baseName,
-    }),
-  });
+  );
   const typeInferSymbol = plugin.config.definitions.types.infer.enabled
-    ? plugin.registerSymbol({
-        meta: {
-          category: 'type',
-          path: fromRef(state.path),
-          resource: 'definition',
-          resourceId: $ref,
-          tags: fromRef(state.tags),
-          tool: 'zod',
-          variant: 'infer',
+    ? plugin.symbol(
+        applyNaming(baseName, plugin.config.definitions.types.infer),
+        {
+          meta: {
+            category: 'type',
+            path: fromRef(state.path),
+            resource: 'definition',
+            resourceId: $ref,
+            tags: fromRef(state.tags),
+            tool: 'zod',
+            variant: 'infer',
+          },
         },
-        name: buildName({
-          config: plugin.config.definitions.types.infer,
-          name: baseName,
-        }),
-      })
+      )
     : undefined;
   exportAst({
     ast,
@@ -219,13 +217,12 @@ const handleComponent = ({
 };
 
 export const handlerV4: ZodPlugin['Handler'] = ({ plugin }) => {
-  plugin.registerSymbol({
+  plugin.symbol('z', {
     external: getZodModule({ plugin }),
     meta: {
       category: 'external',
       resource: 'zod.z',
     },
-    name: 'z',
   });
 
   plugin.forEach(

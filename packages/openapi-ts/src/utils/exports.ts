@@ -1,6 +1,5 @@
-import type { StringCase } from '~/types/case';
-
-import { toCase } from './to-case';
+import type { Casing } from './naming';
+import { toCase } from './naming';
 
 /**
  * Utilities shared across the package.
@@ -14,7 +13,7 @@ export const utils = {
     stripLeadingSeparators,
     value,
   }: {
-    readonly case: StringCase | undefined;
+    readonly case: Casing | undefined;
     /**
      * If leading separators have a semantic meaning, we might not want to
      * remove them.

@@ -1,6 +1,6 @@
 import type { IR } from '~/ir/types';
 import type { DefinePlugin, Plugin } from '~/plugins';
-import type { StringCase, StringName } from '~/types/case';
+import type { Casing, NameTransformer } from '~/utils/naming';
 
 export type UserConfig = Plugin.Name<'swr'> &
   Plugin.Hooks & {
@@ -9,7 +9,7 @@ export type UserConfig = Plugin.Name<'swr'> &
      *
      * @default 'camelCase'
      */
-    case?: StringCase;
+    case?: Casing;
     /**
      * Add comments from SDK functions to the generated SWR code?
      *
@@ -42,14 +42,14 @@ export type UserConfig = Plugin.Name<'swr'> &
      */
     infiniteQueryKeys?:
       | boolean
-      | StringName
+      | NameTransformer
       | {
           /**
            * The casing convention to use for generated names.
            *
            * @default 'camelCase'
            */
-          case?: StringCase;
+          case?: Casing;
           /**
            * Whether to generate infinite query key helpers.
            *
@@ -64,7 +64,7 @@ export type UserConfig = Plugin.Name<'swr'> &
            *
            * @default '{{name}}InfiniteQueryKey'
            */
-          name?: StringName;
+          name?: NameTransformer;
           /**
            * Whether to include operation tags in infinite query keys.
            * This will make query keys larger but provides better cache invalidation capabilities.
@@ -87,14 +87,14 @@ export type UserConfig = Plugin.Name<'swr'> &
      */
     infiniteQueryOptions?:
       | boolean
-      | StringName
+      | NameTransformer
       | {
           /**
            * The casing convention to use for generated names.
            *
            * @default 'camelCase'
            */
-          case?: StringCase;
+          case?: Casing;
           /**
            * Whether to generate infinite query options helpers.
            *
@@ -132,7 +132,7 @@ export type UserConfig = Plugin.Name<'swr'> &
            *
            * @default '{{name}}InfiniteOptions'
            */
-          name?: StringName;
+          name?: NameTransformer;
         };
     /**
      * Configuration for generated mutation options helpers.
@@ -148,14 +148,14 @@ export type UserConfig = Plugin.Name<'swr'> &
      */
     mutationOptions?:
       | boolean
-      | StringName
+      | NameTransformer
       | {
           /**
            * The casing convention to use for generated names.
            *
            * @default 'camelCase'
            */
-          case?: StringCase;
+          case?: Casing;
           /**
            * Whether to generate mutation options helpers.
            *
@@ -193,7 +193,7 @@ export type UserConfig = Plugin.Name<'swr'> &
            *
            * @default '{{name}}Mutation'
            */
-          name?: StringName;
+          name?: NameTransformer;
         };
     /**
      * Configuration for generated query keys.
@@ -209,14 +209,14 @@ export type UserConfig = Plugin.Name<'swr'> &
      */
     queryKeys?:
       | boolean
-      | StringName
+      | NameTransformer
       | {
           /**
            * The casing convention to use for generated names.
            *
            * @default 'camelCase'
            */
-          case?: StringCase;
+          case?: Casing;
           /**
            * Whether to generate query keys.
            *
@@ -231,7 +231,7 @@ export type UserConfig = Plugin.Name<'swr'> &
            *
            * @default '{{name}}QueryKey'
            */
-          name?: StringName;
+          name?: NameTransformer;
           /**
            * Whether to include operation tags in query keys.
            * This will make query keys larger but provides better cache invalidation capabilities.
@@ -254,14 +254,14 @@ export type UserConfig = Plugin.Name<'swr'> &
      */
     queryOptions?:
       | boolean
-      | StringName
+      | NameTransformer
       | {
           /**
            * The casing convention to use for generated names.
            *
            * @default 'camelCase'
            */
-          case?: StringCase;
+          case?: Casing;
           /**
            * Whether to generate query options helpers.
            *
@@ -305,7 +305,7 @@ export type UserConfig = Plugin.Name<'swr'> &
            *
            * @default '{{name}}Options'
            */
-          name?: StringName;
+          name?: NameTransformer;
         };
     /**
      * Configuration for generated `useSwr()` function helpers.
@@ -321,14 +321,14 @@ export type UserConfig = Plugin.Name<'swr'> &
      */
     useSwr?:
       | boolean
-      | StringName
+      | NameTransformer
       | {
           /**
            * The casing convention to use for generated names.
            *
            * @default 'camelCase'
            */
-          case?: StringCase;
+          case?: Casing;
           /**
            * Whether to generate `useSwr()` function helpers.
            *
@@ -343,7 +343,7 @@ export type UserConfig = Plugin.Name<'swr'> &
            *
            * @default 'use{{name}}'
            */
-          name?: StringName;
+          name?: NameTransformer;
         };
   };
 
@@ -354,7 +354,7 @@ export type Config = Plugin.Name<'swr'> &
      *
      * @default 'camelCase'
      */
-    case: StringCase;
+    case: Casing;
     /**
      * Add comments from SDK functions to the generated SWR code?
      *
@@ -378,7 +378,7 @@ export type Config = Plugin.Name<'swr'> &
        *
        * @default 'camelCase'
        */
-      case: StringCase;
+      case: Casing;
       /**
        * Whether to generate infinite query key helpers.
        *
@@ -392,7 +392,7 @@ export type Config = Plugin.Name<'swr'> &
        *
        * @default '{{name}}InfiniteQueryKey'
        */
-      name: StringName;
+      name: NameTransformer;
       /**
        * Whether to include operation tags in infinite query keys.
        * This will make query keys larger but provides better cache invalidation capabilities.
@@ -412,7 +412,7 @@ export type Config = Plugin.Name<'swr'> &
        *
        * @default 'camelCase'
        */
-      case: StringCase;
+      case: Casing;
       /**
        * Whether to generate infinite query options helpers.
        *
@@ -449,7 +449,7 @@ export type Config = Plugin.Name<'swr'> &
        *
        * @default '{{name}}InfiniteOptions'
        */
-      name: StringName;
+      name: NameTransformer;
     };
     /**
      * Resolved configuration for generated mutation options helpers.
@@ -462,7 +462,7 @@ export type Config = Plugin.Name<'swr'> &
        *
        * @default 'camelCase'
        */
-      case: StringCase;
+      case: Casing;
       /**
        * Whether to generate mutation options helpers.
        *
@@ -499,7 +499,7 @@ export type Config = Plugin.Name<'swr'> &
        *
        * @default '{{name}}Mutation'
        */
-      name: StringName;
+      name: NameTransformer;
     };
     /**
      * Resolved configuration for generated query keys.
@@ -512,7 +512,7 @@ export type Config = Plugin.Name<'swr'> &
        *
        * @default 'camelCase'
        */
-      case: StringCase;
+      case: Casing;
       /**
        * Whether to generate query keys.
        *
@@ -526,7 +526,7 @@ export type Config = Plugin.Name<'swr'> &
        *
        * @default '{{name}}QueryKey'
        */
-      name: StringName;
+      name: NameTransformer;
       /**
        * Whether to include operation tags in query keys.
        * This will make query keys larger but provides better cache invalidation capabilities.
@@ -546,7 +546,7 @@ export type Config = Plugin.Name<'swr'> &
        *
        * @default 'camelCase'
        */
-      case: StringCase;
+      case: Casing;
       /**
        * Whether to generate query options helpers.
        *
@@ -589,7 +589,7 @@ export type Config = Plugin.Name<'swr'> &
        *
        * @default '{{name}}Options'
        */
-      name: StringName;
+      name: NameTransformer;
     };
     /**
      * Configuration for generated `useSwr()` function helpers.
@@ -602,7 +602,7 @@ export type Config = Plugin.Name<'swr'> &
        *
        * @default 'camelCase'
        */
-      case: StringCase;
+      case: Casing;
       /**
        * Whether to generate `useSwr()` function helpers.
        *
@@ -617,7 +617,7 @@ export type Config = Plugin.Name<'swr'> &
        *
        * @default 'use{{name}}'
        */
-      name: StringName;
+      name: NameTransformer;
     };
   };
 

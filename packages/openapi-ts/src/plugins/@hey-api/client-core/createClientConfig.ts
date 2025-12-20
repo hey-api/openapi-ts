@@ -12,19 +12,15 @@ export const createClientConfigType = ({
     resource: 'client',
     role: 'options',
   });
-  const symbolConfig = plugin.registerSymbol({
+  const symbolConfig = plugin.symbol('Config', {
     external: clientModule,
     kind: 'type',
-    name: 'Config',
   });
-  const symbolDefaultClientOptions = plugin.registerSymbol({
+  const symbolDefaultClientOptions = plugin.symbol('ClientOptions', {
     external: clientModule,
     kind: 'type',
-    name: 'ClientOptions',
   });
-  const symbolCreateClientConfig = plugin.registerSymbol({
-    name: 'CreateClientConfig',
-  });
+  const symbolCreateClientConfig = plugin.symbol('CreateClientConfig');
 
   const typeCreateClientConfig = $.type
     .alias(symbolCreateClientConfig)
