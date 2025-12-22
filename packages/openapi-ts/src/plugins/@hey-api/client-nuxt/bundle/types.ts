@@ -88,7 +88,7 @@ export interface RequestOptions<
        *
        * {@link https://developer.mozilla.org/docs/Web/API/fetch#body}
        */
-      body?: unknown | null;
+      body?: unknown;
       path?: FetchOptions<unknown>['query'];
       query?: FetchOptions<unknown>['query'];
       rawBody?: unknown;
