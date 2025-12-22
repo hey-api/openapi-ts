@@ -31,8 +31,14 @@ export type QuerySerializer = (
 
 type WithRefs<TData> = {
   [K in keyof TData]: NonNullable<TData[K]> extends object
-    ? WithRefs<NonNullable<TData[K]>> | Ref<NonNullable<TData[K]>>
-    : NonNullable<TData[K]> | Ref<NonNullable<TData[K]>>;
+    ?
+        | WithRefs<NonNullable<TData[K]>>
+        | Ref<NonNullable<TData[K]>>
+        | Extract<TData[K], null>
+    :
+        | NonNullable<TData[K]>
+        | Ref<NonNullable<TData[K]>>
+        | Extract<TData[K], null>;
 };
 
 // copied from Nuxt
