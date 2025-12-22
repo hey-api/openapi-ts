@@ -34,22 +34,15 @@ export type QuerySerializer = (
 type WithRefs<TData> = {
   [K in keyof TData]: 0 extends 1 & TData[K]
     ? TData[K] | Ref<TData[K]>
-    : [TData[K]] extends [null | infer U]
-      ? null extends TData[K]
-        ? [U] extends [never]
-          ? NonNullable<TData[K]> | Ref<NonNullable<TData[K]>>
-          : NonNullable<TData[K]> extends object
-            ?
-                | WithRefs<NonNullable<TData[K]>>
-                | Ref<NonNullable<TData[K]>>
-                | null
-            : NonNullable<TData[K]> | Ref<NonNullable<TData[K]>> | null
-        : NonNullable<TData[K]> extends object
-          ? WithRefs<NonNullable<TData[K]>> | Ref<NonNullable<TData[K]>>
-          : NonNullable<TData[K]> | Ref<NonNullable<TData[K]>>
-      : NonNullable<TData[K]> extends object
-        ? WithRefs<NonNullable<TData[K]>> | Ref<NonNullable<TData[K]>>
-        : NonNullable<TData[K]> | Ref<NonNullable<TData[K]>>;
+    : NonNullable<TData[K]> extends object
+      ?
+          | WithRefs<NonNullable<TData[K]>>
+          | Ref<NonNullable<TData[K]>>
+          | Extract<TData[K], null | undefined>
+      :
+          | NonNullable<TData[K]>
+          | Ref<NonNullable<TData[K]>>
+          | Extract<TData[K], null | undefined>;
 };
 
 // copied from Nuxt
@@ -63,11 +56,16 @@ export interface Config<T extends ClientOptions = ClientOptions>
       'baseURL' | 'body' | 'headers' | 'method' | 'query'
     >,
     WithRefs<Pick<FetchOptions<unknown>, 'query'>>,
-    Omit<CoreConfig, 'querySerializer'> {
+    Omit<CoreConfig, 'headers' | 'querySerializer'> {
   /**
    * Base URL for all requests made by this client.
    */
   baseURL?: T['baseURL'];
+  /**
+   * An object containing any HTTP headers that you want to pre-populate your
+   * `Headers` object with. Supports Vue Refs for reactive headers.
+   */
+  headers?: CoreConfig['headers'] | WithRefs<Record<string, unknown>>;
   /**
    * A function for serializing request query parameters. By default, arrays
    * will be exploded in form style, objects will be exploded in deepObject
