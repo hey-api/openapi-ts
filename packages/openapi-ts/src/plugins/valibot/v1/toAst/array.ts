@@ -54,7 +54,7 @@ export const arrayToAst = ({
       if (itemAst.hasLazyExpression) {
         result.hasLazyExpression = true;
       }
-      return pipesToAst({ pipes: itemAst.pipes, plugin });
+      return pipesToAst(itemAst.pipes, plugin);
     });
 
     if (itemExpressions.length === 1) {

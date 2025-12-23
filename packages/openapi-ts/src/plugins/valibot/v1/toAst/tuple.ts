@@ -48,7 +48,7 @@ export const tupleToAst = ({
       if (schemaPipes.hasLazyExpression) {
         result.hasLazyExpression = true;
       }
-      return pipesToAst({ pipes: schemaPipes.pipes, plugin });
+      return pipesToAst(schemaPipes.pipes, plugin);
     });
     result.pipes = [
       $(v)

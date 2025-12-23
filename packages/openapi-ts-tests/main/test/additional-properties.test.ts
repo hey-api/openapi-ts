@@ -1,13 +1,17 @@
 import * as v from 'valibot';
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { setupValibotTest } from '../../test-helper';
+import { setupValibotTest } from './test-helper';
 
+// TODO: further clean up
 describe('Object Additional Properties Tests', () => {
   let generatedSchemas: any;
 
   beforeAll(async () => {
-    generatedSchemas = await setupValibotTest();
+    generatedSchemas = await setupValibotTest(
+      'additional-properties.yaml',
+      'additional-properties',
+    );
   });
 
   describe('ObjectWithAdditionalPropertiesString', () => {

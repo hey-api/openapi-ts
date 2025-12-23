@@ -1,13 +1,17 @@
 import * as v from 'valibot';
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { setupValibotTest } from '../../test-helper';
+import { setupValibotTest } from './test-helper';
 
+// TODO: further clean up
 describe('Number Type Min/Max Constraints Tests', () => {
   let generatedSchemas: any;
 
   beforeAll(async () => {
-    generatedSchemas = await setupValibotTest();
+    generatedSchemas = await setupValibotTest(
+      'min-max-constraints.yaml',
+      'min-max-constraints',
+    );
   });
 
   describe('Basic Number Constraints', () => {

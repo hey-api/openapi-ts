@@ -1,4 +1,5 @@
 import type { SchemaWithType } from '~/plugins';
+import { shouldCoerceToBigInt } from '~/plugins/shared/utils/coerce';
 import type { $ } from '~/ts-dsl';
 
 import { pipesToAst } from '../../shared/pipesToAst';
@@ -28,13 +29,13 @@ export const irSchemaWithTypeToAst = ({
   switch (schema.type) {
     case 'array':
       return {
-        expression: pipesToAst({
-          pipes: arrayToAst({
+        expression: pipesToAst(
+          arrayToAst({
             ...args,
             schema: schema as SchemaWithType<'array'>,
           }).pipes,
-          plugin: args.plugin,
-        }),
+          args.plugin,
+        ),
       };
     case 'boolean':
       return {
@@ -74,39 +75,35 @@ export const irSchemaWithTypeToAst = ({
       };
     case 'object':
       return {
-        expression: pipesToAst({
-          pipes: objectToAst({
+        expression: pipesToAst(
+          objectToAst({
             ...args,
             schema: schema as SchemaWithType<'object'>,
           }).pipes,
-          plugin: args.plugin,
-        }),
+          args.plugin,
+        ),
       };
     case 'string':
-      // For string schemas with int64/uint64 formats, use number handler to generate union with transform
-      if (schema.format === 'int64' || schema.format === 'uint64') {
-        return {
-          expression: numberToAst({
-            ...args,
-            schema: schema as SchemaWithType<'integer' | 'number'>,
-          }),
-        };
-      }
       return {
-        expression: stringToAst({
-          ...args,
-          schema: schema as SchemaWithType<'string'>,
-        }),
+        expression: shouldCoerceToBigInt(schema.format)
+          ? numberToAst({
+              ...args,
+              schema: { ...schema, type: 'number' },
+            })
+          : stringToAst({
+              ...args,
+              schema: schema as SchemaWithType<'string'>,
+            }),
       };
     case 'tuple':
       return {
-        expression: pipesToAst({
-          pipes: tupleToAst({
+        expression: pipesToAst(
+          tupleToAst({
             ...args,
             schema: schema as SchemaWithType<'tuple'>,
           }).pipes,
-          plugin: args.plugin,
-        }),
+          args.plugin,
+        ),
       };
     case 'undefined':
       return {
