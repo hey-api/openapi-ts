@@ -16,14 +16,12 @@ export const fromValue = (
     return input as TsDsl<ts.Expression>;
   }
 
-  if (input === null) {
-    return new LiteralTsDsl(input);
-  }
-
   if (
+    input === null ||
     typeof input === 'number' ||
     typeof input === 'boolean' ||
-    typeof input === 'string'
+    typeof input === 'string' ||
+    typeof input === 'bigint'
   ) {
     return new LiteralTsDsl(input);
   }

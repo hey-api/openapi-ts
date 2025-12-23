@@ -1,4 +1,5 @@
 import type { SchemaWithType } from '~/plugins';
+import { shouldCoerceToBigInt } from '~/plugins/shared/utils/coerce';
 
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
 import { arrayToAst } from './array';
@@ -71,10 +72,15 @@ export const irSchemaWithTypeToAst = ({
       });
     case 'string':
       return {
-        expression: stringToAst({
-          ...args,
-          schema: schema as SchemaWithType<'string'>,
-        }),
+        expression: shouldCoerceToBigInt(schema.format)
+          ? numberToAst({
+              ...args,
+              schema: { ...schema, type: 'number' },
+            })
+          : stringToAst({
+              ...args,
+              schema: schema as SchemaWithType<'string'>,
+            }),
       };
     case 'tuple':
       return tupleToAst({

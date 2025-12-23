@@ -3,13 +3,10 @@ import { $ } from '~/ts-dsl';
 import type { ValibotPlugin } from '../types';
 import { identifiers } from '../v1/constants';
 
-export const pipesToAst = ({
-  pipes,
-  plugin,
-}: {
-  pipes: ReadonlyArray<ReturnType<typeof $.call | typeof $.expr>>;
-  plugin: ValibotPlugin['Instance'];
-}): ReturnType<typeof $.call | typeof $.expr> => {
+export const pipesToAst = (
+  pipes: ReadonlyArray<ReturnType<typeof $.call | typeof $.expr>>,
+  plugin: ValibotPlugin['Instance'],
+): ReturnType<typeof $.call | typeof $.expr> => {
   if (pipes.length === 1) {
     return pipes[0]!;
   }

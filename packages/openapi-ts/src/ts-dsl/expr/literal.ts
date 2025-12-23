@@ -5,14 +5,16 @@ import { TsDsl } from '../base';
 import { PrefixTsDsl } from '../expr/prefix';
 import { AsMixin } from '../mixins/as';
 
+export type LiteralValue = string | number | boolean | bigint | null;
+
 const Mixed = AsMixin(TsDsl<ts.LiteralTypeNode['literal']>);
 
 export class LiteralTsDsl extends Mixed {
   readonly '~dsl' = 'LiteralTsDsl';
 
-  protected value: string | number | boolean | null;
+  protected value: LiteralValue;
 
-  constructor(value: string | number | boolean | null) {
+  constructor(value: LiteralValue) {
     super();
     this.value = value;
   }
@@ -33,6 +35,9 @@ export class LiteralTsDsl extends Mixed {
     }
     if (typeof this.value === 'string') {
       return ts.factory.createStringLiteral(this.value, true);
+    }
+    if (typeof this.value === 'bigint') {
+      return ts.factory.createBigIntLiteral(this.value.toString());
     }
     if (this.value === null) {
       return ts.factory.createNull();
