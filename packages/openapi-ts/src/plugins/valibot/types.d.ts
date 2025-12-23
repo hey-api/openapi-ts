@@ -359,6 +359,29 @@ type ValidatorResolver = (
 
 type Resolvers = Plugin.Resolvers<{
   /**
+   * Resolvers for number schemas.
+   *
+   * Allows customization of how number types are rendered, including
+   * per-format handling.
+   */
+  number?: {
+    /**
+     * Resolvers for number formats (e.g., `float`, `double`, `int32`).
+     *
+     * Each key represents a specific format name with a custom
+     * resolver function that controls how that format is rendered.
+     *
+     * Example path: `~resolvers.number.formats.float`
+     *
+     * Returning `undefined` from a resolver will apply the default
+     * generation behavior for that format.
+     */
+    formats?: Record<
+      string,
+      (args: FormatResolverArgs) => boolean | number | undefined
+    >;
+  };
+  /**
    * Resolvers for object schemas.
    *
    * Allows customization of how object types are rendered.

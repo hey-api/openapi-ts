@@ -720,7 +720,7 @@ export const zCollectionFormatData = z.object({
 export const zTypesData = z.object({
     body: z.never().optional(),
     path: z.object({
-        id: z.number().int().optional()
+        id: z.number().int().min(-2147483648, { message: 'Invalid value: Expected int32 to be >= -2147483648' }).max(2147483647, { message: 'Invalid value: Expected int32 to be <= 2147483647' }).optional()
     }).optional(),
     query: z.object({
         parameterNumber: z.number().default(123),

@@ -5,11 +5,11 @@ import { deduplicateSchema } from '~/ir/schema';
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
 import type { SchemaWithType } from '~/plugins';
+import { maybeBigInt } from '~/plugins/shared/utils/coerce';
 import { $ } from '~/ts-dsl';
 import { pathToJsonPointer, refToName } from '~/utils/ref';
 
 import { exportAst } from '../shared/export';
-import { numberParameter } from '../shared/numbers';
 import { irOperationToAst } from '../shared/operation';
 import { pipesToAst } from '../shared/pipesToAst';
 import type { Ast, IrSchemaToAstOptions, PluginState } from '../shared/types';
@@ -87,7 +87,7 @@ export const irSchemaToAst = ({
             path: ref([...fromRef(state.path), 'items', index]),
           },
         });
-        return pipesToAst({ pipes: itemAst.pipes, plugin });
+        return pipesToAst(itemAst.pipes, plugin);
       });
 
       if (schema.logicalOperator === 'and') {
@@ -124,23 +124,22 @@ export const irSchemaToAst = ({
       ast.pipes.push(readonlyExpression);
     }
 
-    let callParameter: ReturnType<typeof $.fromValue> | undefined;
-
     if (schema.default !== undefined) {
-      const isBigInt = schema.type === 'integer' && schema.format === 'int64';
-      callParameter = numberParameter({ isBigInt, value: schema.default });
       ast.pipes = [
         $(v)
           .attr(identifiers.schemas.optional)
-          .call(pipesToAst({ pipes: ast.pipes, plugin }), callParameter),
+          .call(
+            pipesToAst(ast.pipes, plugin),
+            schema.type === 'integer' || schema.type === 'number'
+              ? maybeBigInt(schema.default, schema.format)
+              : $.fromValue(schema.default),
+          ),
       ];
-    }
-
-    if (optional && !callParameter) {
+    } else if (optional) {
       ast.pipes = [
         $(v)
           .attr(identifiers.schemas.optional)
-          .call(pipesToAst({ pipes: ast.pipes, plugin })),
+          .call(pipesToAst(ast.pipes, plugin)),
       ];
     }
   }

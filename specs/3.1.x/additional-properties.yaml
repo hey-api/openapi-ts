@@ -1,11 +1,9 @@
-openapi: '3.1.0'
+openapi: 3.1.0
 info:
-  title: Object Additional Properties Test API
-  version: '1.0.0'
-paths: {}
+  title: OpenAPI 3.1.0 additional properties example
+  version: '1'
 components:
   schemas:
-    # Test case from the issue: object with additionalProperties type string
     ObjectWithAdditionalPropertiesString:
       type: object
       properties:
@@ -13,26 +11,18 @@ components:
           type: object
           additionalProperties:
             type: string
-
-    # Object with no properties, only additionalProperties with string type
     ObjectOnlyAdditionalPropertiesString:
       type: object
       additionalProperties:
         type: string
-
-    # Object with no properties, only additionalProperties with number type
     ObjectOnlyAdditionalPropertiesNumber:
       type: object
       additionalProperties:
         type: number
-
-    # Object with no properties, only additionalProperties with boolean type
     ObjectOnlyAdditionalPropertiesBoolean:
       type: object
       additionalProperties:
         type: boolean
-
-    # Object with properties and additionalProperties number
     ObjectWithPropertiesAndAdditionalPropertiesNumber:
       type: object
       properties:
@@ -42,8 +32,6 @@ components:
           type: integer
       additionalProperties:
         type: number
-
-    # Object with additionalProperties as object type
     ObjectWithAdditionalPropertiesObject:
       type: object
       properties:
@@ -54,8 +42,6 @@ components:
             properties:
               value:
                 type: string
-
-    # Already working case: object with no properties and additionalProperties object
     ObjectOnlyAdditionalPropertiesObject:
       type: object
       additionalProperties:
@@ -63,8 +49,6 @@ components:
         properties:
           name:
             type: string
-
-    # Object with additionalProperties set to false (no additional properties allowed)
     ObjectWithAdditionalPropertiesFalse:
       type: object
       properties:
@@ -73,8 +57,6 @@ components:
         count:
           type: integer
       additionalProperties: false
-
-    # Object with nested object that has additionalProperties: false
     ObjectWithNestedAdditionalPropertiesFalse:
       type: object
       properties:

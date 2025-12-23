@@ -38,13 +38,13 @@ export default defineConfig(() => {
           // },
           path: path.resolve(
             getSpecsPath(),
-            '3.0.x',
-            // '3.1.x',
+            // '3.0.x',
+            '3.1.x',
             // 'circular.yaml',
             // 'dutchie.json',
             // 'enum-names-values.yaml',
             // 'full.yaml',
-            // 'integer-formats.yaml',
+            'integer-formats.yaml',
             // 'invalid',
             // 'object-property-names.yaml',
             // 'openai.yaml',
@@ -52,7 +52,7 @@ export default defineConfig(() => {
             // 'pagination-ref.yaml',
             // 'schema-const.yaml',
             // 'sdk-instance.yaml',
-            'sdk-method-class-conflict.yaml',
+            // 'sdk-method-class-conflict.yaml',
             // 'sdk-nested-classes.yaml',
             // 'sdk-nested-conflict.yaml',
             // 'string-with-format.yaml',
@@ -397,7 +397,7 @@ export default defineConfig(() => {
           definitions: 'z{{name}}',
           exportFromIndex: true,
           // metadata: true,
-          // name: 'valibot',
+          name: 'valibot',
           // requests: {
           //   case: 'PascalCase',
           //   name: '{{name}}Data',
@@ -467,7 +467,7 @@ export default defineConfig(() => {
         {
           // case: 'snake_case',
           // comments: false,
-          compatibilityVersion: 4,
+          compatibilityVersion: 3,
           dates: {
             // local: true,
             // offset: true,

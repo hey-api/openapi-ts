@@ -75,7 +75,7 @@ export const objectToAst = ({
     });
     if (propertyAst.hasLazyExpression) result.hasLazyExpression = true;
 
-    shape.prop(name, pipesToAst({ pipes: propertyAst.pipes, plugin }));
+    shape.prop(name, pipesToAst(propertyAst.pipes, plugin));
   }
 
   let additional: ReturnType<typeof $.call | typeof $.expr> | null | undefined;
@@ -92,7 +92,7 @@ export const objectToAst = ({
         },
       });
       if (additionalAst.hasLazyExpression) result.hasLazyExpression = true;
-      additional = pipesToAst({ pipes: additionalAst.pipes, plugin });
+      additional = pipesToAst(additionalAst.pipes, plugin);
     }
   }
 
@@ -107,6 +107,6 @@ export const objectToAst = ({
   const resolver = plugin.config['~resolvers']?.object?.base;
   if (!resolver?.(args)) defaultObjectBaseResolver(args);
 
-  result.pipes = [pipesToAst({ pipes, plugin })];
+  result.pipes = [pipesToAst(pipes, plugin)];
   return result as Omit<Ast, 'typeName'>;
 };

@@ -1,64 +1,65 @@
 import * as v from 'valibot';
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { setupValibotTest } from '../../test-helper';
+import { setupValibotTest } from './test-helper';
 
+// TODO: further clean up
 describe('Number Type Formats Tests', () => {
   let generatedSchemas: any;
 
   beforeAll(async () => {
-    generatedSchemas = await setupValibotTest();
+    generatedSchemas = await setupValibotTest('formats.yaml', 'formats');
   });
 
   // Format bounds and error messages from INTEGER_FORMATS
   const FORMAT_BOUNDS = {
     int16: {
       max: 32767,
-      maxError: 'Expected int16 to be <= 2^15-1',
+      maxError: 'Invalid value: Expected int16 to be <= 32767',
       min: -32768,
-      minError: 'Expected int16 to be >= -2^15',
+      minError: 'Invalid value: Expected int16 to be >= -32768',
     },
     int32: {
       max: 2147483647,
-      maxError: 'Expected int32 to be <= 2^31-1',
+      maxError: 'Invalid value: Expected int32 to be <= 2147483647',
       min: -2147483648,
-      minError: 'Expected int32 to be >= -2^31',
+      minError: 'Invalid value: Expected int32 to be >= -2147483648',
     },
     int64: {
       max: '9223372036854775807',
-      maxError: 'Expected int64 to be <= 2^63-1',
+      maxError: 'Invalid value: Expected int64 to be <= 9223372036854775807',
       min: '-9223372036854775808',
-      minError: 'Expected int64 to be >= -2^63',
+      minError: 'Invalid value: Expected int64 to be >= -9223372036854775808',
     },
     int8: {
       max: 127,
-      maxError: 'Expected int8 to be <= 2^7-1',
+      maxError: 'Invalid value: Expected int8 to be <= 127',
       min: -128,
-      minError: 'Expected int8 to be >= -2^7',
+      minError: 'Invalid value: Expected int8 to be >= -128',
     },
     uint16: {
       max: 65535,
-      maxError: 'Expected uint16 to be <= 2^16-1',
+      maxError: 'Invalid value: Expected uint16 to be <= 65535',
       min: 0,
-      minError: 'Expected uint16 to be >= 0',
+      minError: 'Invalid value: Expected uint16 to be >= 0',
     },
     uint32: {
       max: 4294967295,
-      maxError: 'Expected uint32 to be <= 2^32-1',
+      maxError: 'Invalid value: Expected uint32 to be <= 4294967295',
       min: 0,
-      minError: 'Expected uint32 to be >= 0',
+      minError: 'Invalid value: Expected uint32 to be >= 0',
     },
     uint64: {
       max: '18446744073709551615',
-      maxError: 'Expected uint64 to be <= 2^64-1',
+      maxError: 'Invalid value: Expected uint64 to be <= 18446744073709551615',
       min: '0',
-      minError: 'Expected uint64 to be >= 0',
+      minError: 'Invalid value: Expected uint64 to be >= 0',
     },
     uint8: {
       max: 255,
-      maxError: 'Expected uint8 to be <= 2^8-1',
+      maxError: 'Invalid value: Expected uint8 to be <= 255',
       min: 0,
-      minError: 'Expected uint8 to be >= 0',
+      minError: 'Invalid value: Expected uint8 to be >= 0',
     },
   };
 

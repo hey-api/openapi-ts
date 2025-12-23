@@ -1,7 +1,7 @@
-openapi: '3.1.0'
+openapi: 3.1.0
 info:
-  title: Integer Formats Test
-  version: '1.0.0'
+  title: OpenAPI 3.1.0 formats example
+  version: '1'
 components:
   schemas:
     NumberNoFormat:
