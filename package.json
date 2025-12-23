@@ -64,7 +64,7 @@
     "husky": "9.1.7",
     "lint-staged": "16.2.7",
     "prettier": "3.4.2",
-    "rollup": "4.53.3",
+    "rollup": "4.54.0",
     "rollup-plugin-dts": "6.1.1",
     "ts-node": "10.9.2",
     "tsdown": "0.17.3",
