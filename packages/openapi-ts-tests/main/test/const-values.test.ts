@@ -1,13 +1,17 @@
 import * as v from 'valibot';
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { setupValibotTest } from '../../test-helper';
+import { setupValibotTest } from './test-helper';
 
+// TODO: further clean up
 describe('Number Type Const Values Tests', () => {
   let generatedSchemas: any;
 
   beforeAll(async () => {
-    generatedSchemas = await setupValibotTest();
+    generatedSchemas = await setupValibotTest(
+      'const-values.yaml',
+      'const-values',
+    );
   });
 
   describe('Number Type Const Validation', () => {

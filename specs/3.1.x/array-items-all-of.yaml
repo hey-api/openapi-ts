@@ -4,7 +4,6 @@ info:
   version: '1'
 components:
   schemas:
-    # Test case 1: Array with allOf of object schemas
     ArrayWithAllOfObjects:
       type: array
       items:
@@ -17,14 +16,12 @@ components:
             properties:
               name:
                 type: string
-    # Test case 2: Array with allOf of primitives
     ArrayWithAllOfPrimitives:
       type: array
       items:
         allOf:
           - type: number
           - type: string
-    # Test case 3: Array with allOf including refs
     ArrayWithAllOfRefs:
       type: array
       items:

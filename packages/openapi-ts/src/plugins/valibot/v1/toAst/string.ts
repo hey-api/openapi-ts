@@ -43,20 +43,16 @@ export const stringToAst = ({
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'string'>;
 }): ReturnType<typeof $.call | typeof $.expr> => {
-  const pipes: Array<ReturnType<typeof $.call>> = [];
-
   const v = plugin.referenceSymbol({
     category: 'external',
     resource: 'valibot.v',
   });
 
   if (typeof schema.const === 'string') {
-    pipes.push(
-      $(v).attr(identifiers.schemas.literal).call($.literal(schema.const)),
-    );
-    return pipesToAst({ pipes, plugin });
+    return $(v).attr(identifiers.schemas.literal).call($.literal(schema.const));
   }
 
+  const pipes: Array<ReturnType<typeof $.call>> = [];
   pipes.push($(v).attr(identifiers.schemas.string).call());
 
   if (schema.format) {
@@ -94,5 +90,5 @@ export const stringToAst = ({
     );
   }
 
-  return pipesToAst({ pipes, plugin });
+  return pipesToAst(pipes, plugin);
 };

@@ -5,15 +5,17 @@ import { fileURLToPath } from 'node:url';
 import { createClient, type UserConfig } from '@hey-api/openapi-ts';
 import { describe, expect, it } from 'vitest';
 
-import { getFilePaths, getSpecsPath } from '../../../../utils';
+import { getFilePaths, getSpecsPath } from '../../utils';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-describe('TanStack Query Meta Function Customization', () => {
-  const version = '3.1.x';
-  const namespace = 'plugins';
+const version = '3.1.x';
+const namespace = 'plugins';
+const outputDir = path.join(__dirname, 'generated', version, namespace);
 
+// TODO: further clean up
+describe('TanStack Query Meta Function Customization', () => {
   const createConfig = (
     userConfig: Omit<UserConfig, 'input'> & Pick<Partial<UserConfig>, 'input'>,
   ): UserConfig => ({
@@ -57,12 +59,10 @@ describe('TanStack Query Meta Function Customization', () => {
   const scenarios = frameworks.map((framework) => ({
     config: createConfig({
       output: path.join(
-        __dirname,
-        'generated',
-        version,
-        namespace,
+        outputDir,
         '@tanstack',
-        `${framework.output}/meta-function`,
+        framework.output,
+        'meta-function',
       ),
       plugins: [
         {

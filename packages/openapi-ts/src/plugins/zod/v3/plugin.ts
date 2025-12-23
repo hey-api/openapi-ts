@@ -5,13 +5,13 @@ import { deduplicateSchema } from '~/ir/schema';
 import type { IR } from '~/ir/types';
 import { buildName } from '~/openApi/shared/utils/name';
 import type { SchemaWithType } from '~/plugins';
+import { maybeBigInt } from '~/plugins/shared/utils/coerce';
 import { $ } from '~/ts-dsl';
 import { pathToJsonPointer, refToName } from '~/utils/ref';
 
 import { identifiers } from '../constants';
 import { exportAst } from '../shared/export';
 import { getZodModule } from '../shared/module';
-import { numberParameter } from '../shared/numbers';
 import { irOperationToAst } from '../shared/operation';
 import type { Ast, IrSchemaToAstOptions, PluginState } from '../shared/types';
 import { irWebhookToAst } from '../shared/webhook';
@@ -139,13 +139,13 @@ export const irSchemaToAst = ({
     }
 
     if (schema.default !== undefined) {
-      const isBigInt = schema.type === 'integer' && schema.format === 'int64';
-      ast.expression = ast.expression.attr(identifiers.default).call(
-        numberParameter({
-          isBigInt,
-          value: schema.default,
-        }),
-      );
+      ast.expression = ast.expression
+        .attr(identifiers.default)
+        .call(
+          schema.type === 'integer' || schema.type === 'number'
+            ? maybeBigInt(schema.default, schema.format)
+            : $.fromValue(schema.default),
+        );
     }
   }
 

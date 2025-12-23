@@ -22,9 +22,9 @@ export const booleanToAst = ({
     pipes.push(
       $(v).attr(identifiers.schemas.literal).call($.literal(schema.const)),
     );
-    return pipesToAst({ pipes, plugin });
+    return pipesToAst(pipes, plugin);
   }
 
   pipes.push($(v).attr(identifiers.schemas.boolean).call());
-  return pipesToAst({ pipes, plugin });
+  return pipesToAst(pipes, plugin);
 };
