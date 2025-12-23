@@ -43,23 +43,8 @@ export const numberToAst = ({
 
   const checks: Array<ReturnType<typeof $.call>> = [];
 
-  const integerLimit = getIntegerLimit(schema.format);
-  if (integerLimit) {
-    checks.push(
-      $(z)
-        .attr(identifiers.minimum)
-        .call(
-          maybeBigInt(integerLimit.minValue, schema.format),
-          $.object().prop('error', $.literal(integerLimit.minError)),
-        ),
-      $(z)
-        .attr(identifiers.maximum)
-        .call(
-          maybeBigInt(integerLimit.maxValue, schema.format),
-          $.object().prop('error', $.literal(integerLimit.maxError)),
-        ),
-    );
-  }
+  let hasLowerBound = false;
+  let hasUpperBound = false;
 
   if (schema.exclusiveMinimum !== undefined) {
     checks.push(
@@ -67,12 +52,14 @@ export const numberToAst = ({
         .attr(identifiers.gt)
         .call(maybeBigInt(schema.exclusiveMinimum, schema.format)),
     );
+    hasLowerBound = true;
   } else if (schema.minimum !== undefined) {
     checks.push(
       $(z)
         .attr(identifiers.gte)
         .call(maybeBigInt(schema.minimum, schema.format)),
     );
+    hasLowerBound = true;
   }
 
   if (schema.exclusiveMaximum !== undefined) {
@@ -81,12 +68,41 @@ export const numberToAst = ({
         .attr(identifiers.lt)
         .call(maybeBigInt(schema.exclusiveMaximum, schema.format)),
     );
+    hasUpperBound = true;
   } else if (schema.maximum !== undefined) {
     checks.push(
       $(z)
         .attr(identifiers.lte)
         .call(maybeBigInt(schema.maximum, schema.format)),
     );
+    hasUpperBound = true;
+  }
+
+  const integerLimit = getIntegerLimit(schema.format);
+  if (integerLimit) {
+    if (!hasLowerBound) {
+      checks.push(
+        $(z)
+          .attr(identifiers.minimum)
+          .call(
+            maybeBigInt(integerLimit.minValue, schema.format),
+            $.object().prop('error', $.literal(integerLimit.minError)),
+          ),
+      );
+      hasLowerBound = true;
+    }
+
+    if (!hasUpperBound) {
+      checks.push(
+        $(z)
+          .attr(identifiers.maximum)
+          .call(
+            maybeBigInt(integerLimit.maxValue, schema.format),
+            $.object().prop('error', $.literal(integerLimit.maxError)),
+          ),
+      );
+      hasUpperBound = true;
+    }
   }
 
   if (checks.length) {

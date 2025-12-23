@@ -51,23 +51,8 @@ export const numberToAst = ({
     }
   }
 
-  const integerLimit = getIntegerLimit(schema.format);
-  if (integerLimit) {
-    pipes.push(
-      $(v)
-        .attr(identifiers.actions.minValue)
-        .call(
-          maybeBigInt(integerLimit.minValue, schema.format),
-          $.literal(integerLimit.minError),
-        ),
-      $(v)
-        .attr(identifiers.actions.maxValue)
-        .call(
-          maybeBigInt(integerLimit.maxValue, schema.format),
-          $.literal(integerLimit.maxError),
-        ),
-    );
-  }
+  let hasLowerBound = false;
+  let hasUpperBound = false;
 
   if (schema.exclusiveMinimum !== undefined) {
     pipes.push(
@@ -75,12 +60,14 @@ export const numberToAst = ({
         .attr(identifiers.actions.gtValue)
         .call(maybeBigInt(schema.exclusiveMinimum, schema.format)),
     );
+    hasLowerBound = true;
   } else if (schema.minimum !== undefined) {
     pipes.push(
       $(v)
         .attr(identifiers.actions.minValue)
         .call(maybeBigInt(schema.minimum, schema.format)),
     );
+    hasLowerBound = true;
   }
 
   if (schema.exclusiveMaximum !== undefined) {
@@ -89,12 +76,41 @@ export const numberToAst = ({
         .attr(identifiers.actions.ltValue)
         .call(maybeBigInt(schema.exclusiveMaximum, schema.format)),
     );
+    hasUpperBound = true;
   } else if (schema.maximum !== undefined) {
     pipes.push(
       $(v)
         .attr(identifiers.actions.maxValue)
         .call(maybeBigInt(schema.maximum, schema.format)),
     );
+    hasUpperBound = true;
+  }
+
+  const integerLimit = getIntegerLimit(schema.format);
+  if (integerLimit) {
+    if (!hasLowerBound) {
+      pipes.push(
+        $(v)
+          .attr(identifiers.actions.minValue)
+          .call(
+            maybeBigInt(integerLimit.minValue, schema.format),
+            $.literal(integerLimit.minError),
+          ),
+      );
+      hasLowerBound = true;
+    }
+
+    if (!hasUpperBound) {
+      pipes.push(
+        $(v)
+          .attr(identifiers.actions.maxValue)
+          .call(
+            maybeBigInt(integerLimit.maxValue, schema.format),
+            $.literal(integerLimit.maxError),
+          ),
+      );
+      hasUpperBound = true;
+    }
   }
 
   return pipesToAst(pipes, plugin);

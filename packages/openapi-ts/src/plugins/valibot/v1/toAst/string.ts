@@ -52,8 +52,7 @@ export const stringToAst = ({
     return $(v).attr(identifiers.schemas.literal).call($.literal(schema.const));
   }
 
-  const pipes: Array<ReturnType<typeof $.call>> = [];
-  pipes.push($(v).attr(identifiers.schemas.string).call());
+  const pipes = [$(v).attr(identifiers.schemas.string).call()];
 
   if (schema.format) {
     const args: FormatResolverArgs = { $, pipes, plugin, schema };

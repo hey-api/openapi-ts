@@ -41,39 +41,54 @@ export const numberToAst = ({
     }
   }
 
-  const integerLimit = getIntegerLimit(schema.format);
-  if (integerLimit) {
-    result.expression = result.expression
-      .attr(identifiers.min)
-      .call(
-        maybeBigInt(integerLimit.minValue, schema.format),
-        $.object().prop('error', $.literal(integerLimit.minError)),
-      )
-      .attr(identifiers.max)
-      .call(
-        maybeBigInt(integerLimit.maxValue, schema.format),
-        $.object().prop('error', $.literal(integerLimit.maxError)),
-      );
-  }
+  let hasLowerBound = false;
+  let hasUpperBound = false;
 
   if (schema.exclusiveMinimum !== undefined) {
     result.expression = result.expression
       .attr(identifiers.gt)
       .call(maybeBigInt(schema.exclusiveMinimum, schema.format));
+    hasLowerBound = true;
   } else if (schema.minimum !== undefined) {
     result.expression = result.expression
       .attr(identifiers.gte)
       .call(maybeBigInt(schema.minimum, schema.format));
+    hasLowerBound = true;
   }
 
   if (schema.exclusiveMaximum !== undefined) {
     result.expression = result.expression
       .attr(identifiers.lt)
       .call(maybeBigInt(schema.exclusiveMaximum, schema.format));
+    hasUpperBound = true;
   } else if (schema.maximum !== undefined) {
     result.expression = result.expression
       .attr(identifiers.lte)
       .call(maybeBigInt(schema.maximum, schema.format));
+    hasUpperBound = true;
+  }
+
+  const integerLimit = getIntegerLimit(schema.format);
+  if (integerLimit) {
+    if (!hasLowerBound) {
+      result.expression = result.expression
+        .attr(identifiers.min)
+        .call(
+          maybeBigInt(integerLimit.minValue, schema.format),
+          $.object().prop('error', $.literal(integerLimit.minError)),
+        );
+      hasLowerBound = true;
+    }
+
+    if (!hasUpperBound) {
+      result.expression = result.expression
+        .attr(identifiers.max)
+        .call(
+          maybeBigInt(integerLimit.maxValue, schema.format),
+          $.object().prop('error', $.literal(integerLimit.maxError)),
+        );
+      hasUpperBound = true;
+    }
   }
 
   return result as Omit<Ast, 'typeName'>;
