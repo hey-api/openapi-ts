@@ -3,5 +3,5 @@
 import { z } from 'zod';
 
 export const zFoo = z.object({
-    foo: z.optional(z.coerce.bigint().min(BigInt('-9223372036854775808'), { error: 'Invalid value: Expected int64 to be >= -9223372036854775808' }).max(BigInt('9223372036854775807'), { error: 'Invalid value: Expected int64 to be <= 9223372036854775807' }).gte(BigInt(0)).lte(BigInt(100)))
+    foo: z.optional(z.coerce.bigint().gte(BigInt(0)).lte(BigInt(100)))
 });

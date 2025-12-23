@@ -759,6 +759,7 @@ type SharedResolverArgs = DollarTsDsl & {
    */
   chain?: ReturnType<typeof $.call>;
   plugin: ZodPlugin['Instance'];
+  z: Symbol;
 };
 
 export type FormatResolverArgs = Required<SharedResolverArgs> & {
@@ -771,6 +772,8 @@ export type ObjectBaseResolverArgs = SharedResolverArgs & {
   schema: IR.SchemaObject;
   shape: ReturnType<typeof $.object>;
 };
+
+type ResolverResult = boolean | number;
 
 export type ValidatorResolverArgs = SharedResolverArgs & {
   operation: IR.Operation;
@@ -790,6 +793,12 @@ type Resolvers = Plugin.Resolvers<{
    */
   number?: {
     /**
+     * Controls the base segment for number schemas.
+     *
+     * Returning `undefined` will execute the default resolver logic.
+     */
+    base?: (args: FormatResolverArgs) => ResolverResult | undefined;
+    /**
      * Resolvers for number formats (e.g., `float`, `double`, `int32`).
      *
      * Each key represents a specific format name with a custom
@@ -802,7 +811,7 @@ type Resolvers = Plugin.Resolvers<{
      */
     formats?: Record<
       string,
-      (args: FormatResolverArgs) => boolean | number | undefined
+      (args: FormatResolverArgs) => ResolverResult | undefined
     >;
   };
   /**

@@ -22,12 +22,17 @@ export const createRequestValidatorMini = ({
   });
   if (!symbol) return;
 
+  const z = plugin.referenceSymbol({
+    category: 'external',
+    resource: 'zod.z',
+  });
   const args: ValidatorResolverArgs = {
     $,
     chain: undefined,
     operation,
     plugin,
     schema: symbol,
+    z,
   };
   const validator = plugin.config['~resolvers']?.validator;
   const resolver =
@@ -59,12 +64,17 @@ export const createResponseValidatorMini = ({
   });
   if (!symbol) return;
 
+  const z = plugin.referenceSymbol({
+    category: 'external',
+    resource: 'zod.z',
+  });
   const args: ValidatorResolverArgs = {
     $,
     chain: undefined,
     operation,
     plugin,
     schema: symbol,
+    z,
   };
   const validator = plugin.config['~resolvers']?.validator;
   const resolver =

@@ -62,7 +62,7 @@ export const stringToAst = ({
   chain = $(z).attr(identifiers.string).call();
 
   if (schema.format) {
-    const args: FormatResolverArgs = { $, chain, plugin, schema };
+    const args: FormatResolverArgs = { $, chain, plugin, schema, z };
     const resolver =
       plugin.config['~resolvers']?.string?.formats?.[schema.format];
     chain = resolver?.(args) ?? defaultFormatResolver(args);

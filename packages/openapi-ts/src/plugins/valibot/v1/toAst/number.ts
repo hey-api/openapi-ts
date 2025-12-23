@@ -8,27 +8,14 @@ import { $ } from '~/ts-dsl';
 
 import { pipesToAst } from '../../shared/pipesToAst';
 import type { IrSchemaToAstOptions } from '../../shared/types';
+import type { FormatResolverArgs } from '../../types';
 import { identifiers } from '../constants';
 
-export const numberToAst = ({
-  plugin,
+const defaultBaseResolver = ({
+  pipes,
   schema,
-}: IrSchemaToAstOptions & {
-  schema: SchemaWithType<'integer' | 'number'>;
-}) => {
-  const v = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'valibot.v',
-  });
-
-  if (schema.const !== undefined) {
-    return $(v)
-      .attr(identifiers.schemas.literal)
-      .call(maybeBigInt(schema.const, schema.format));
-  }
-
-  const pipes: Array<ReturnType<typeof $.call>> = [];
-
+  v,
+}: FormatResolverArgs): boolean | number => {
   if (shouldCoerceToBigInt(schema.format)) {
     pipes.push(
       $(v)
@@ -50,6 +37,32 @@ export const numberToAst = ({
       pipes.push($(v).attr(identifiers.actions.integer).call());
     }
   }
+
+  return true;
+};
+
+export const numberToAst = ({
+  plugin,
+  schema,
+}: IrSchemaToAstOptions & {
+  schema: SchemaWithType<'integer' | 'number'>;
+}) => {
+  const v = plugin.referenceSymbol({
+    category: 'external',
+    resource: 'valibot.v',
+  });
+
+  if (schema.const !== undefined) {
+    return $(v)
+      .attr(identifiers.schemas.literal)
+      .call(maybeBigInt(schema.const, schema.format));
+  }
+
+  const pipes: Array<ReturnType<typeof $.call>> = [];
+
+  const args: FormatResolverArgs = { $, pipes, plugin, schema, v };
+  const resolver = plugin.config['~resolvers']?.number?.base;
+  if (!resolver?.(args)) defaultBaseResolver(args);
 
   let hasLowerBound = false;
   let hasUpperBound = false;
