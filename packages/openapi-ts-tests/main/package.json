@@ -38,7 +38,7 @@
     "@tanstack/vue-query": "5.73.3",
     "@types/cross-spawn": "6.0.6",
     "ajv": "8.17.1",
-    "arktype": "2.1.28",
+    "arktype": "2.1.29",
     "axios": "1.13.2",
     "cross-spawn": "7.0.6",
     "eslint": "9.39.1",
