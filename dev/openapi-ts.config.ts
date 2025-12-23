@@ -431,6 +431,15 @@ export default defineConfig(() => {
             },
           },
           '~resolvers': {
+            number: {
+              // base({ $, pipes, v }) {
+              //   return pipes.push($(v).attr('test').call());
+              // },
+              formats: {
+                // date: ({ $, pipes }) => pipes.push($('v').attr('isoDateTime').call()),
+                // 'date-time': ({ $, pipes }) => pipes.push($('v').attr('isoDateTime').call()),
+              },
+            },
             object: {
               // base({ $, additional, pipes, shape }) {
               //   if (additional === undefined) {

@@ -8,16 +8,11 @@ import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
 import type { ObjectBaseResolverArgs } from '../../types';
 import { irSchemaToAst } from '../plugin';
 
-function defaultObjectBaseResolver({
+function defaultBaseResolver({
   additional,
-  plugin,
   shape,
+  z,
 }: ObjectBaseResolverArgs): ReturnType<typeof $.call> {
-  const z = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'zod.z',
-  });
-
   if (additional) {
     return $(z)
       .attr(identifiers.record)
@@ -34,6 +29,11 @@ export const objectToAst = ({
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'object'>;
 }): Omit<Ast, 'typeName'> => {
+  const z = plugin.referenceSymbol({
+    category: 'external',
+    resource: 'zod.z',
+  });
+
   const result: Partial<Omit<Ast, 'typeName'>> = {};
 
   // TODO: parser - handle constants
@@ -89,9 +89,10 @@ export const objectToAst = ({
     plugin,
     schema,
     shape,
+    z,
   };
   const resolver = plugin.config['~resolvers']?.object?.base;
-  const chain = resolver?.(args) ?? defaultObjectBaseResolver(args);
+  const chain = resolver?.(args) ?? defaultBaseResolver(args);
   result.expression = chain;
 
   return result as Omit<Ast, 'typeName'>;

@@ -9,12 +9,8 @@ const defaultFormatResolver = ({
   chain,
   plugin,
   schema,
+  z,
 }: FormatResolverArgs): ReturnType<typeof $.call> => {
-  const z = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'zod.z',
-  });
-
   switch (schema.format) {
     case 'date':
       return $(z).attr(identifiers.iso).attr(identifiers.date).call();
@@ -71,7 +67,7 @@ export const stringToAst = ({
   chain = $(z).attr(identifiers.string).call();
 
   if (schema.format) {
-    const args: FormatResolverArgs = { $, chain, plugin, schema };
+    const args: FormatResolverArgs = { $, chain, plugin, schema, z };
     const resolver =
       plugin.config['~resolvers']?.string?.formats?.[schema.format];
     chain = resolver?.(args) ?? defaultFormatResolver(args);

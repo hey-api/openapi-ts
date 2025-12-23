@@ -334,6 +334,7 @@ type SharedResolverArgs = DollarTsDsl & {
    */
   pipes: Array<ReturnType<typeof $.call>>;
   plugin: ValibotPlugin['Instance'];
+  v: Symbol;
 };
 
 export type FormatResolverArgs = SharedResolverArgs & {
@@ -347,10 +348,11 @@ export type ObjectBaseResolverArgs = SharedResolverArgs & {
   shape: ReturnType<typeof $.object>;
 };
 
+type ResolverResult = boolean | number;
+
 export type ValidatorResolverArgs = SharedResolverArgs & {
   operation: IR.Operation;
   schema: Symbol;
-  v: Symbol;
 };
 
 type ValidatorResolver = (
@@ -366,6 +368,12 @@ type Resolvers = Plugin.Resolvers<{
    */
   number?: {
     /**
+     * Controls the base segment for number schemas.
+     *
+     * Returning `undefined` will execute the default resolver logic.
+     */
+    base?: (args: FormatResolverArgs) => ResolverResult | undefined;
+    /**
      * Resolvers for number formats (e.g., `float`, `double`, `int32`).
      *
      * Each key represents a specific format name with a custom
@@ -378,7 +386,7 @@ type Resolvers = Plugin.Resolvers<{
      */
     formats?: Record<
       string,
-      (args: FormatResolverArgs) => boolean | number | undefined
+      (args: FormatResolverArgs) => ResolverResult | undefined
     >;
   };
   /**
@@ -401,9 +409,7 @@ type Resolvers = Plugin.Resolvers<{
      *
      * Returning `undefined` will execute the default resolver logic.
      */
-    base?: (
-      args: ObjectBaseResolverArgs,
-    ) => ReturnType<typeof $.call> | undefined;
+    base?: (args: ObjectBaseResolverArgs) => ResolverResult | undefined;
   };
   /**
    * Resolvers for string schemas.
@@ -425,7 +431,7 @@ type Resolvers = Plugin.Resolvers<{
      */
     formats?: Record<
       string,
-      (args: FormatResolverArgs) => boolean | number | undefined
+      (args: FormatResolverArgs) => ResolverResult | undefined
     >;
   };
   /**

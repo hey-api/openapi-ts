@@ -8,14 +8,9 @@ import { identifiers } from '../constants';
 
 const defaultFormatResolver = ({
   pipes,
-  plugin,
   schema,
+  v,
 }: FormatResolverArgs): boolean | number => {
-  const v = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'valibot.v',
-  });
-
   switch (schema.format) {
     case 'date':
       return pipes.push($(v).attr(identifiers.actions.isoDate).call());
@@ -55,7 +50,7 @@ export const stringToAst = ({
   const pipes = [$(v).attr(identifiers.schemas.string).call()];
 
   if (schema.format) {
-    const args: FormatResolverArgs = { $, pipes, plugin, schema };
+    const args: FormatResolverArgs = { $, pipes, plugin, schema, v };
     const resolver =
       plugin.config['~resolvers']?.string?.formats?.[schema.format];
     if (!resolver?.(args)) defaultFormatResolver(args);

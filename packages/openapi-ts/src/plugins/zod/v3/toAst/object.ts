@@ -8,16 +8,11 @@ import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
 import type { ObjectBaseResolverArgs } from '../../types';
 import { irSchemaToAst } from '../plugin';
 
-function defaultObjectBaseResolver({
+function defaultBaseResolver({
   additional,
-  plugin,
   shape,
+  z,
 }: ObjectBaseResolverArgs): ReturnType<typeof $.call> {
-  const z = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'zod.z',
-  });
-
   if (additional) {
     return $(z).attr(identifiers.record).call(additional);
   }
@@ -34,6 +29,11 @@ export const objectToAst = ({
 }): Omit<Ast, 'typeName'> & {
   anyType?: string;
 } => {
+  const z = plugin.referenceSymbol({
+    category: 'external',
+    resource: 'zod.z',
+  });
+
   let hasLazyExpression = false;
 
   // TODO: parser - handle constants
@@ -85,9 +85,10 @@ export const objectToAst = ({
     plugin,
     schema,
     shape,
+    z,
   };
   const resolver = plugin.config['~resolvers']?.object?.base;
-  const chain = resolver?.(args) ?? defaultObjectBaseResolver(args);
+  const chain = resolver?.(args) ?? defaultBaseResolver(args);
   result.expression = chain;
 
   return {

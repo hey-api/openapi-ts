@@ -707,8 +707,8 @@ export const zDefault = z.object({
 });
 
 export const zPageable = z.object({
-    page: z._default(z.optional(z.int().check(z.minimum(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' }), z.maximum(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' }), z.gte(0))), 0),
-    size: z.optional(z.int().check(z.minimum(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' }), z.maximum(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' }), z.gte(1))),
+    page: z._default(z.optional(z.int().check(z.gte(0), z.maximum(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' }))), 0),
+    size: z.optional(z.int().check(z.gte(1), z.maximum(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' }))),
     sort: z.optional(z.array(z.string()))
 });
 
@@ -1133,10 +1133,10 @@ export const zCompositionWithOneOfAndProperties = z.intersection(z.union([
     })
 ]), z.object({
     baz: z.union([
-        z.int().check(z.minimum(0, { error: 'Invalid value: Expected uint16 to be >= 0' }), z.maximum(65535, { error: 'Invalid value: Expected uint16 to be <= 65535' }), z.gte(0)),
+        z.int().check(z.gte(0), z.maximum(65535, { error: 'Invalid value: Expected uint16 to be <= 65535' })),
         z.null()
     ]),
-    qux: z.int().check(z.minimum(0, { error: 'Invalid value: Expected uint8 to be >= 0' }), z.maximum(255, { error: 'Invalid value: Expected uint8 to be <= 255' }), z.gte(0))
+    qux: z.int().check(z.gte(0), z.maximum(255, { error: 'Invalid value: Expected uint8 to be <= 255' }))
 }));
 
 export const zModelWithOneOfAndProperties = z.intersection(z.union([
@@ -1144,10 +1144,10 @@ export const zModelWithOneOfAndProperties = z.intersection(z.union([
     zNonAsciiStringæøåÆøÅöôêÊ字符串
 ]), z.object({
     baz: z.union([
-        z.int().check(z.minimum(0, { error: 'Invalid value: Expected uint16 to be >= 0' }), z.maximum(65535, { error: 'Invalid value: Expected uint16 to be <= 65535' }), z.gte(0)),
+        z.int().check(z.gte(0), z.maximum(65535, { error: 'Invalid value: Expected uint16 to be <= 65535' })),
         z.null()
     ]),
-    qux: z.int().check(z.minimum(0, { error: 'Invalid value: Expected uint8 to be >= 0' }), z.maximum(255, { error: 'Invalid value: Expected uint8 to be <= 255' }), z.gte(0))
+    qux: z.int().check(z.gte(0), z.maximum(255, { error: 'Invalid value: Expected uint8 to be <= 255' }))
 }));
 
 /**

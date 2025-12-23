@@ -9,17 +9,12 @@ import type { ObjectBaseResolverArgs } from '../../types';
 import { identifiers } from '../constants';
 import { irSchemaToAst } from '../plugin';
 
-function defaultObjectBaseResolver({
+function defaultBaseResolver({
   additional,
   pipes,
-  plugin,
   shape,
+  v,
 }: ObjectBaseResolverArgs): number {
-  const v = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'valibot.v',
-  });
-
   // Handle `additionalProperties: { type: 'never' }` → v.strictObject()
   if (additional === null) {
     return pipes.push($(v).attr(identifiers.schemas.strictObject).call(shape));
@@ -52,6 +47,11 @@ export const objectToAst = ({
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'object'>;
 }): Omit<Ast, 'typeName'> => {
+  const v = plugin.referenceSymbol({
+    category: 'external',
+    resource: 'valibot.v',
+  });
+
   const result: Partial<Omit<Ast, 'typeName'>> = {};
   const pipes: Array<ReturnType<typeof $.call>> = [];
 
@@ -103,9 +103,10 @@ export const objectToAst = ({
     plugin,
     schema,
     shape,
+    v,
   };
   const resolver = plugin.config['~resolvers']?.object?.base;
-  if (!resolver?.(args)) defaultObjectBaseResolver(args);
+  if (!resolver?.(args)) defaultBaseResolver(args);
 
   result.pipes = [pipesToAst(pipes, plugin)];
   return result as Omit<Ast, 'typeName'>;
