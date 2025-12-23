@@ -41,39 +41,54 @@ export const numberToAst = ({
     }
   }
 
-  const integerLimit = getIntegerLimit(schema.format);
-  if (integerLimit) {
-    numberExpression = numberExpression
-      .attr(identifiers.min)
-      .call(
-        maybeBigInt(integerLimit.minValue, schema.format),
-        $.object().prop('message', $.literal(integerLimit.minError)),
-      )
-      .attr(identifiers.max)
-      .call(
-        maybeBigInt(integerLimit.maxValue, schema.format),
-        $.object().prop('message', $.literal(integerLimit.maxError)),
-      );
-  }
+  let hasLowerBound = false;
+  let hasUpperBound = false;
 
   if (schema.exclusiveMinimum !== undefined) {
     numberExpression = numberExpression
       .attr(identifiers.gt)
       .call(maybeBigInt(schema.exclusiveMinimum, schema.format));
+    hasLowerBound = true;
   } else if (schema.minimum !== undefined) {
     numberExpression = numberExpression
       .attr(identifiers.gte)
       .call(maybeBigInt(schema.minimum, schema.format));
+    hasLowerBound = true;
   }
 
   if (schema.exclusiveMaximum !== undefined) {
     numberExpression = numberExpression
       .attr(identifiers.lt)
       .call(maybeBigInt(schema.exclusiveMaximum, schema.format));
+    hasUpperBound = true;
   } else if (schema.maximum !== undefined) {
     numberExpression = numberExpression
       .attr(identifiers.lte)
       .call(maybeBigInt(schema.maximum, schema.format));
+    hasUpperBound = true;
+  }
+
+  const integerLimit = getIntegerLimit(schema.format);
+  if (integerLimit) {
+    if (!hasLowerBound) {
+      numberExpression = numberExpression
+        .attr(identifiers.min)
+        .call(
+          maybeBigInt(integerLimit.minValue, schema.format),
+          $.object().prop('message', $.literal(integerLimit.minError)),
+        );
+      hasLowerBound = true;
+    }
+
+    if (!hasUpperBound) {
+      numberExpression = numberExpression
+        .attr(identifiers.max)
+        .call(
+          maybeBigInt(integerLimit.maxValue, schema.format),
+          $.object().prop('message', $.literal(integerLimit.maxError)),
+        );
+      hasUpperBound = true;
+    }
   }
 
   return numberExpression;
