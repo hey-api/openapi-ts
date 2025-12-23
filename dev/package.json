@@ -18,7 +18,7 @@
     "@tanstack/solid-query": "5.73.3",
     "@tanstack/svelte-query": "5.73.3",
     "@tanstack/vue-query": "5.73.3",
-    "arktype": "2.1.28",
+    "arktype": "2.1.29",
     "swr": "2.3.8",
     "typescript": "5.9.3",
     "valibot": "1.2.0",
