@@ -149,8 +149,8 @@ importers:
         specifier: 1.2.0
         version: 1.2.0(typescript@5.9.3)
       zod:
-        specifier: 4.1.12
-        version: 4.1.12
+        specifier: 4.2.1
+        version: 4.2.1
 
   docs:
     dependencies:
@@ -1528,8 +1528,8 @@ importers:
         specifier: 3.5.25
         version: 3.5.25(typescript@5.9.3)
       zod:
-        specifier: 4.1.12
-        version: 4.1.12
+        specifier: 4.2.1
+        version: 4.2.1
 
   packages/openapi-ts-tests/sdks:
     devDependencies:
@@ -1555,8 +1555,8 @@ importers:
         specifier: 5.9.3
         version: 5.9.3
       zod:
-        specifier: ^3.25.0
-        version: 3.25.3
+        specifier: ^4.0.0
+        version: 4.2.1
 
   packages/openapi-ts-tests/zod/v4:
     devDependencies:
@@ -1570,8 +1570,8 @@ importers:
         specifier: 5.9.3
         version: 5.9.3
       zod:
-        specifier: 4.1.12
-        version: 4.1.12
+        specifier: 4.2.1
+        version: 4.2.1
 
   packages/vite-plugin:
     devDependencies:
@@ -14533,8 +14533,8 @@ packages:
   zod@4.0.5:
     resolution: {integrity: sha512-/5UuuRPStvHXu7RS+gmvRf4NXrNxpSllGwDnCBcJZtQsKrviYXm54yDGV2KYNLT5kq0lHGcl7lqWJLgSaG+tgA==}
 
-  zod@4.1.12:
-    resolution: {integrity: sha512-JInaHOamG8pt5+Ey8kGmdcAcg3OL9reK8ltczgHTAwNhMys/6ThXHityHxVV2p3fkw/c+MAvBHFVYHFZDmjMCQ==}
+  zod@4.2.1:
+    resolution: {integrity: sha512-0wZ1IRqGGhMP76gLqz8EyfBXKk0J2qo2+H3fi4mcUP/KtTocoX08nmIAHl1Z2kJIZbZee8KOpBCSNPRgauucjw==}
 
   zone.js@0.15.1:
     resolution: {integrity: sha512-XE96n56IQpJM7NAoXswY3XRLcWFW83xe0BiAOeMD7K5k5xecOeul3Qcpx6GqEeeHNkW5DWL5zOyTbEfB4eti8w==}
@@ -31295,7 +31295,7 @@ snapshots:
 
   zod@4.0.5: {}
 
-  zod@4.1.12: {}
+  zod@4.2.1: {}
 
   zone.js@0.15.1: {}
 
