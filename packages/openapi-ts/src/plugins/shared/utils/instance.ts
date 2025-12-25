@@ -106,6 +106,17 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     this.package = props.context.package;
   }
 
+  external(
+    resource: Required<SymbolMeta>['resource'],
+    meta?: Omit<SymbolMeta, 'category' | 'resource'>,
+  ): Symbol {
+    return this.gen.symbols.reference({
+      ...meta,
+      category: 'external',
+      resource,
+    });
+  }
+
   /**
    * Iterates over various input elements as specified by the event types, in
    * a specific order: servers, schemas, parameters, request bodies, then
@@ -376,6 +387,16 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
       hook({ plugin: this, symbol: symbolOut });
     }
     return symbolOut;
+  }
+
+  /**
+   * Registers a symbol only if it does not already exist based on the provided
+   * metadata. This prevents duplicate symbols from being created in the project.
+   */
+  symbolOnce(name: SymbolIn['name'], symbol?: Omit<SymbolIn, 'name'>): Symbol {
+    const existing = symbol?.meta ? this.querySymbol(symbol.meta) : undefined;
+    if (existing) return existing;
+    return this.symbol(name, symbol);
   }
 
   private buildEventHooks(): EventHooks {

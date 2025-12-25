@@ -7,6 +7,10 @@ interface IntegerLimit {
   minValue: Range;
 }
 
+export type GetIntegerLimit = (
+  format: string | undefined,
+) => IntegerLimit | undefined;
+
 const rangeErrors = (format: string, range: [Range, Range]) => ({
   maxError: `Invalid value: Expected ${format} to be <= ${range[1]}`,
   minError: `Invalid value: Expected ${format} to be >= ${range[0]}`,
@@ -23,12 +27,10 @@ const integerRange: Record<string, [Range, Range]> = {
   uint8: [0, 255],
 };
 
-export function getIntegerLimit(
-  format: string | undefined,
-): IntegerLimit | undefined {
+export const getIntegerLimit: GetIntegerLimit = (format) => {
   if (!format) return;
   const range = integerRange[format];
   if (!range) return;
   const errors = rangeErrors(format, range);
   return { maxValue: range[1], minValue: range[0], ...errors };
-}
+};

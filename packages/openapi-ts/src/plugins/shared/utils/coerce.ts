@@ -1,12 +1,15 @@
 import { $ } from '~/ts-dsl';
 
-export const shouldCoerceToBigInt = (format: string | undefined): boolean =>
-  format === 'int64' || format === 'uint64';
-
-export const maybeBigInt = (
+export type MaybeBigInt = (
   value: unknown,
   format: string | undefined,
-): ReturnType<typeof $.fromValue> => {
+) => ReturnType<typeof $.fromValue>;
+export type ShouldCoerceToBigInt = (format: string | undefined) => boolean;
+
+export const shouldCoerceToBigInt: ShouldCoerceToBigInt = (format) =>
+  format === 'int64' || format === 'uint64';
+
+export const maybeBigInt: MaybeBigInt = (value, format) => {
   if (!shouldCoerceToBigInt(format)) {
     return $.fromValue(value);
   }
