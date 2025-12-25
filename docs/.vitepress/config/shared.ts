@@ -98,7 +98,7 @@ export default defineConfig({
         {
           content:
             pageData.frontmatter.description ||
-            '🌀 OpenAPI to TypeScript code generator. Generate API clients, SDKs, validators, and more.',
+            '🌀 OpenAPI to TypeScript codegen. Production-ready SDKs, Zod schemas, TanStack Query hooks, and 20+ plugins. Used by Vercel, OpenCode, and PayPal.',
           property: 'og:description',
         },
       ],
