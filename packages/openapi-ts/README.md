@@ -14,7 +14,7 @@
 <p align="center">
   <a href="https://stackblitz.com/edit/hey-api-example?file=openapi-ts.config.ts,src%2Fclient%2Fschemas.gen.ts,src%2Fclient%2Fsdk.gen.ts,src%2Fclient%2Ftypes.gen.ts">Demo</a>
   <span>&nbsp;•&nbsp;</span>
-  <a href="https://heyapi.dev">Docs</a>
+  <a href="https://heyapi.dev">Manual</a>
   <span>&nbsp;•&nbsp;</span>
   <a href="https://github.com/hey-api/openapi-ts/issues">Issues</a>
   <span>&nbsp;•&nbsp;</span>
@@ -23,21 +23,22 @@
 
 ## About
 
-[@hey-api/openapi-ts](https://github.com/hey-api/openapi-ts) is an [open source](https://github.com/hey-api/openapi-ts/blob/main/LICENSE.md) OpenAPI to TypeScript code generator trusted by companies like Google, Amazon, and PayPal to generate API clients, SDKs, validators, and more. We also build complementary tools and [services](https://app.heyapi.dev/) that help teams design, manage, and distribute APIs more effectively.
+The OpenAPI to TypeScript code generator used by Vercel, OpenCode, and PayPal.
+
+Generate production-ready SDKs, Zod schemas, TanStack Query hooks, or choose from 20+ other plugins.
+
+Part of the Hey API ecosystem.
 
 ## Features
 
-- runs in CLI, Node.js 20+, or npx
-- works with OpenAPI 2.0, 3.0, and 3.1
-- core plugins for types, SDKs, and schemas
-- clients for your runtime (Fetch API, Angular, Axios, Next.js, Nuxt, etc.)
-- plugin ecosystem to reduce third-party boilerplate
-- custom plugins and custom clients
-- [integration](https://heyapi.dev/openapi-ts/integrations) with Hey API Platform
-
-## Dashboard
-
-Access your projects and OpenAPI specifications in the [Hey API Platform](https://app.heyapi.dev/).
+- production-ready code that compiles
+- runs in any Node.js 20+ environment
+- accepts any OpenAPI specification
+- core plugins for SDKs, types, and schemas
+- HTTP clients for Fetch API, Angular, Axios, Next.js, Nuxt, and more
+- 20+ plugins to reduce third-party boilerplate
+- highly customizable via plugins
+- [sync with Hey API Registry](https://heyapi.dev/openapi-ts/integrations) for spec management
 
 ## Contributing
 
@@ -47,7 +48,7 @@ Start with our [Contributing](https://heyapi.dev/openapi-ts/community/contributi
 
 ## Sponsors
 
-Help Hey API stay around for the long haul by becoming a [sponsor](https://github.com/sponsors/hey-api).
+Hey API is sponsor-funded. If your team relies on Hey API in production, consider becoming a [sponsor](https://github.com/sponsors/hey-api) to accelerate the roadmap.
 
 <h3 align="center">Gold</h3>
 
