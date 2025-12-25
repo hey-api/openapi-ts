@@ -1,14 +1,21 @@
 import { $ } from '~/ts-dsl';
 
+import { pipes } from '../shared/pipes';
 import type { ValidatorArgs } from '../shared/types';
 import type { ValidatorResolverArgs } from '../types';
 import { identifiers } from './constants';
 
-const defaultValidatorResolver = ({
-  schema,
-  v,
-}: ValidatorResolverArgs): ReturnType<typeof $.return> =>
-  $(v).attr(identifiers.async.parseAsync).call(schema, 'data').await().return();
+const validatorResolver = (
+  ctx: ValidatorResolverArgs,
+): ReturnType<typeof $.return> => {
+  const { schema } = ctx;
+  const { v } = ctx.symbols;
+  return $(v)
+    .attr(identifiers.async.parseAsync)
+    .call(schema, 'data')
+    .await()
+    .return();
+};
 
 export const createRequestValidatorV1 = ({
   operation,
@@ -23,22 +30,21 @@ export const createRequestValidatorV1 = ({
   });
   if (!symbol) return;
 
-  const v = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'valibot.v',
-  });
   const args: ValidatorResolverArgs = {
     $,
     operation,
-    pipes: [],
+    pipes,
     plugin,
+    result: [],
     schema: symbol,
-    v,
+    symbols: {
+      v: plugin.external('valibot.v'),
+    },
   };
   const validator = plugin.config['~resolvers']?.validator;
   const resolver =
     typeof validator === 'function' ? validator : validator?.request;
-  const candidates = [resolver, defaultValidatorResolver];
+  const candidates = [resolver, validatorResolver];
   for (const candidate of candidates) {
     const statements = candidate?.(args);
     if (statements === null) return;
@@ -65,22 +71,21 @@ export const createResponseValidatorV1 = ({
   });
   if (!symbol) return;
 
-  const v = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'valibot.v',
-  });
   const args: ValidatorResolverArgs = {
     $,
     operation,
-    pipes: [],
+    pipes,
     plugin,
+    result: [],
     schema: symbol,
-    v,
+    symbols: {
+      v: plugin.external('valibot.v'),
+    },
   };
   const validator = plugin.config['~resolvers']?.validator;
   const resolver =
     typeof validator === 'function' ? validator : validator?.response;
-  const candidates = [resolver, defaultValidatorResolver];
+  const candidates = [resolver, validatorResolver];
   for (const candidate of candidates) {
     const statements = candidate?.(args);
     if (statements === null) return;

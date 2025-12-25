@@ -2,16 +2,16 @@ import type { SchemaWithType } from '~/plugins';
 import { shouldCoerceToBigInt } from '~/plugins/shared/utils/coerce';
 import type { $ } from '~/ts-dsl';
 
-import { pipesToAst } from '../../shared/pipesToAst';
+import { pipesToNode } from '../../shared/pipes';
 import type { IrSchemaToAstOptions } from '../../shared/types';
 import { arrayToAst } from './array';
 import { booleanToAst } from './boolean';
 import { enumToAst } from './enum';
 import { neverToAst } from './never';
 import { nullToAst } from './null';
-import { numberToAst } from './number';
+import { numberToNode } from './number';
 import { objectToAst } from './object';
-import { stringToAst } from './string';
+import { stringToNode } from './string';
 import { tupleToAst } from './tuple';
 import { undefinedToAst } from './undefined';
 import { unknownToAst } from './unknown';
@@ -29,7 +29,7 @@ export const irSchemaWithTypeToAst = ({
   switch (schema.type) {
     case 'array':
       return {
-        expression: pipesToAst(
+        expression: pipesToNode(
           arrayToAst({
             ...args,
             schema: schema as SchemaWithType<'array'>,
@@ -54,7 +54,7 @@ export const irSchemaWithTypeToAst = ({
     case 'integer':
     case 'number':
       return {
-        expression: numberToAst({
+        expression: numberToNode({
           ...args,
           schema: schema as SchemaWithType<'integer' | 'number'>,
         }),
@@ -75,7 +75,7 @@ export const irSchemaWithTypeToAst = ({
       };
     case 'object':
       return {
-        expression: pipesToAst(
+        expression: pipesToNode(
           objectToAst({
             ...args,
             schema: schema as SchemaWithType<'object'>,
@@ -86,18 +86,18 @@ export const irSchemaWithTypeToAst = ({
     case 'string':
       return {
         expression: shouldCoerceToBigInt(schema.format)
-          ? numberToAst({
+          ? numberToNode({
               ...args,
               schema: { ...schema, type: 'number' },
             })
-          : stringToAst({
+          : stringToNode({
               ...args,
               schema: schema as SchemaWithType<'string'>,
             }),
       };
     case 'tuple':
       return {
-        expression: pipesToAst(
+        expression: pipesToNode(
           tupleToAst({
             ...args,
             schema: schema as SchemaWithType<'tuple'>,

@@ -4,7 +4,7 @@ import { identifiers } from '../constants';
 import type { ValidatorArgs } from '../shared/types';
 import type { ValidatorResolverArgs } from '../types';
 
-const defaultValidatorResolver = ({
+const validatorResolver = ({
   schema,
 }: ValidatorResolverArgs): ReturnType<typeof $.return> =>
   $(schema).attr(identifiers.parseAsync).call('data').await().return();
@@ -37,7 +37,7 @@ export const createRequestValidatorV4 = ({
   const validator = plugin.config['~resolvers']?.validator;
   const resolver =
     typeof validator === 'function' ? validator : validator?.request;
-  const candidates = [resolver, defaultValidatorResolver];
+  const candidates = [resolver, validatorResolver];
   for (const candidate of candidates) {
     const statements = candidate?.(args);
     if (statements === null) return;
@@ -79,7 +79,7 @@ export const createResponseValidatorV4 = ({
   const validator = plugin.config['~resolvers']?.validator;
   const resolver =
     typeof validator === 'function' ? validator : validator?.response;
-  const candidates = [resolver, defaultValidatorResolver];
+  const candidates = [resolver, validatorResolver];
   for (const candidate of candidates) {
     const statements = candidate?.(args);
     if (statements === null) return;

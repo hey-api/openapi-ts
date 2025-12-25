@@ -431,29 +431,35 @@ export default defineConfig(() => {
             },
           },
           '~resolvers': {
-            number: {
-              // base({ $, pipes, v }) {
-              //   return pipes.push($(v).attr('test').call());
-              // },
-              formats: {
-                // date: ({ $, pipes }) => pipes.push($('v').attr('isoDateTime').call()),
-                // 'date-time': ({ $, pipes }) => pipes.push($('v').attr('isoDateTime').call()),
-              },
+            number(ctx) {
+              const { $, plugin } = ctx;
+              const { v } = ctx.symbols;
+              const big = plugin.symbolOnce('Big', {
+                external: 'big.js',
+                importKind: 'default',
+                meta: {
+                  category: 'external',
+                  resource: 'big.js',
+                },
+              });
+              return $(v).attr('instance').call(big);
             },
-            object: {
-              // base({ $, additional, pipes, shape }) {
-              //   if (additional === undefined) {
-              //     return pipes.push($('v').attr('looseObject').call(shape));
-              //   }
-              //   return;
-              // },
-            },
-            string: {
-              formats: {
-                // date: ({ $, pipes }) => pipes.push($('v').attr('isoDateTime').call()),
-                // 'date-time': ({ $, pipes }) => pipes.push($('v').attr('isoDateTime').call()),
-              },
-            },
+            // object(ctx) {
+            //   const { $ } = ctx;
+            //   const additional = ctx.nodes.additionalProperties(ctx);
+            //   const shape = ctx.nodes.shape(ctx);
+            //   if (additional === undefined) {
+            //     return $('v').attr('looseObject').call(shape);
+            //   }
+            //   return;
+            // },
+            // string(ctx) {
+            //   const { $, schema } = ctx;
+            //   if (schema.format === 'date' || schema.format === 'date-time') {
+            //     ctx.nodes.format = () => $('v').attr('isoDateTime').call();
+            //   }
+            //   return;
+            // },
             // validator({ $, plugin, schema, v }) {
             //   const vShadow = plugin.symbol('v');
             //   const test = plugin.symbol('test');
