@@ -1,5 +1,11 @@
 # @hey-api/codegen-core
 
+## 0.4.1
+
+### Patch Changes
+
+- **types**: document default values for `importKind` and `kind` ([#3147](https://github.com/hey-api/openapi-ts/pull/3147)) ([`ab80a4b`](https://github.com/hey-api/openapi-ts/commit/ab80a4b2c37423c522aa864afbcb688db76615ba)) by [@mrlubos](https://github.com/mrlubos)
+
 ## 0.4.0
 
 ### Minor Changes

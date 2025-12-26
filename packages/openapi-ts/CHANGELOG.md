@@ -1,5 +1,25 @@
 # @hey-api/openapi-ts
 
+## 0.90.0
+
+### Minor Changes
+
+- **plugin(valibot)**: **BREAKING:** standardize `~resolvers` API ([#3147](https://github.com/hey-api/openapi-ts/pull/3147)) ([`ab80a4b`](https://github.com/hey-api/openapi-ts/commit/ab80a4b2c37423c522aa864afbcb688db76615ba)) by [@mrlubos](https://github.com/mrlubos)
+
+The [Resolvers API](https://heyapi.dev/openapi-ts/plugins/concepts/resolvers) has been simplified and expanded to provide a more consistent behavior across plugins. You can view a few common examples on the [Resolvers](https://heyapi.dev/openapi-ts/plugins/concepts/resolvers) page.
+
+- **plugin(zod)**: **BREAKING:** standardize `~resolvers` API ([#3147](https://github.com/hey-api/openapi-ts/pull/3147)) ([`ab80a4b`](https://github.com/hey-api/openapi-ts/commit/ab80a4b2c37423c522aa864afbcb688db76615ba)) by [@mrlubos](https://github.com/mrlubos)
+
+The [Resolvers API](https://heyapi.dev/openapi-ts/plugins/concepts/resolvers) has been simplified and expanded to provide a more consistent behavior across plugins. You can view a few common examples on the [Resolvers](https://heyapi.dev/openapi-ts/plugins/concepts/resolvers) page.
+
+### Patch Changes
+
+- **plugin(zod)**: expand support for bigint types ([#3145](https://github.com/hey-api/openapi-ts/pull/3145)) ([`4a32dcf`](https://github.com/hey-api/openapi-ts/commit/4a32dcfae503e76db81fa21ca71c71f20ea28c34)) by [@mrlubos](https://github.com/mrlubos)
+
+### Updated Dependencies:
+
+- @hey-api/codegen-core@0.4.1
+
 ## 0.89.2
 
 ### Patch Changes
