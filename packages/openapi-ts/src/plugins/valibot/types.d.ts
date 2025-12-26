@@ -1,5 +1,4 @@
 import type { Refs, Symbol } from '@hey-api/codegen-core';
-import type ts from 'typescript';
 
 import type { IR } from '~/ir/types';
 import type { DefinePlugin, Plugin, SchemaWithType } from '~/plugins';
@@ -8,9 +7,8 @@ import type {
   ShouldCoerceToBigInt,
 } from '~/plugins/shared/utils/coerce';
 import type { GetIntegerLimit } from '~/plugins/shared/utils/formats';
-import type { $, DollarTsDsl, TsDsl } from '~/ts-dsl';
+import type { $, DollarTsDsl } from '~/ts-dsl';
 import type { StringCase, StringName } from '~/types/case';
-import type { MaybeArray } from '~/types/utils';
 
 import type { IApi } from './api';
 import type { Pipe, PipeResult, PipesUtils } from './shared/pipes';
@@ -328,31 +326,32 @@ export type Config = Plugin.Name<'valibot'> &
     };
   };
 
-type SharedResolverArgs = DollarTsDsl & {
+interface BaseResolverContext extends DollarTsDsl {
   /**
    * Functions for working with pipes.
    */
-  pipes: PipesUtils;
+  pipes: PipesUtils & {
+    /**
+     * The current builder state being processed by this resolver.
+     *
+     * In Valibot, this represents the current list of call expressions ("pipes")
+     * being assembled to form a schema definition.
+     *
+     * Each pipe can be extended, modified, or replaced to customize how the
+     * resulting schema is constructed.
+     */
+    current: Pipes;
+  };
   plugin: ValibotPlugin['Instance'];
-  /**
-   * The current builder state being processed by this resolver.
-   *
-   * In Valibot, this represents the current list of call expressions ("pipes")
-   * being assembled to form a schema definition.
-   *
-   * Each pipe can be extended, modified, or replaced to customize how the
-   * resulting schema is constructed.
-   */
-  result: Pipes;
   /**
    * Provides access to commonly used symbols within the Valibot plugin.
    */
   symbols: {
     v: Symbol;
   };
-};
+}
 
-export type NumberResolverContext = SharedResolverArgs & {
+export interface NumberResolverContext extends BaseResolverContext {
   /**
    * Nodes used to build different parts of the number schema.
    */
@@ -371,9 +370,9 @@ export type NumberResolverContext = SharedResolverArgs & {
     maybeBigInt: MaybeBigInt;
     shouldCoerceToBigInt: ShouldCoerceToBigInt;
   };
-};
+}
 
-export type ObjectResolverContext = SharedResolverArgs & {
+export interface ObjectResolverContext extends BaseResolverContext {
   /**
    * Nodes used to build different parts of the object schema.
    */
@@ -396,9 +395,9 @@ export type ObjectResolverContext = SharedResolverArgs & {
     ast: Partial<Omit<Ast, 'typeName'>>;
     state: Refs<PluginState>;
   };
-};
+}
 
-export type StringResolverContext = SharedResolverArgs & {
+export interface StringResolverContext extends BaseResolverContext {
   /**
    * Nodes used to build different parts of the string schema.
    */
@@ -412,16 +411,21 @@ export type StringResolverContext = SharedResolverArgs & {
     pattern: (ctx: StringResolverContext) => PipeResult | undefined;
   };
   schema: SchemaWithType<'string'>;
-};
+}
 
-export type ValidatorResolverArgs = SharedResolverArgs & {
+export interface ValidatorResolverContext extends BaseResolverContext {
   operation: IR.Operation;
-  schema: Symbol;
-};
+  /**
+   * Provides access to commonly used symbols within the Valibot plugin.
+   */
+  symbols: BaseResolverContext['symbols'] & {
+    schema: Symbol;
+  };
+}
 
 type ValidatorResolver = (
-  args: ValidatorResolverArgs,
-) => MaybeArray<TsDsl<ts.Statement>> | null | undefined;
+  args: ValidatorResolverContext,
+) => PipeResult | null | undefined;
 
 type Resolvers = Plugin.Resolvers<{
   /**
@@ -455,7 +459,7 @@ type Resolvers = Plugin.Resolvers<{
    *
    * Example path: `~resolvers.validator.request` or `~resolvers.validator.response`
    *
-   * Returning `undefined` from a resolver will apply the default generation logic.
+   * Returning `undefined` will execute the default resolver logic.
    */
   validator?:
     | ValidatorResolver
@@ -463,13 +467,13 @@ type Resolvers = Plugin.Resolvers<{
         /**
          * Controls how the request validator function body is generated.
          *
-         * Returning `undefined` will fall back to the default `.await().return()` logic.
+         * Returning `undefined` will execute the default resolver logic.
          */
         request?: ValidatorResolver;
         /**
          * Controls how the response validator function body is generated.
          *
-         * Returning `undefined` will fall back to the default `.await().return()` logic.
+         * Returning `undefined` will execute the default resolver logic.
          */
         response?: ValidatorResolver;
       };

@@ -431,18 +431,18 @@ export default defineConfig(() => {
             },
           },
           '~resolvers': {
-            number(ctx) {
-              const { $, plugin, symbols } = ctx;
-              const { v } = symbols;
-              // ctx.nodes.base = () => {
-              //   // implement custom base number resolver
-              // }
-              const big = plugin.symbolOnce('Big', {
-                external: 'big.js',
-                importKind: 'default',
-              });
-              return $(v).attr('instance').call(big);
-            },
+            // number(ctx) {
+            //   const { $, plugin, symbols } = ctx;
+            //   const { v } = symbols;
+            //   // ctx.nodes.base = () => {
+            //   //   // implement custom base number resolver
+            //   // }
+            //   const big = plugin.symbolOnce('Big', {
+            //     external: 'big.js',
+            //     importKind: 'default',
+            //   });
+            //   return $(v).attr('instance').call(big);
+            // },
             // object(ctx) {
             //   const { $ } = ctx;
             //   const additional = ctx.nodes.additionalProperties(ctx);
@@ -458,7 +458,9 @@ export default defineConfig(() => {
             //     ctx.nodes.format = () => $('v').attr('isoDateTime').call();
             //   }
             // },
-            // validator({ $, plugin, schema, v }) {
+            // validator(ctx) {
+            //   const { $, plugin, symbols } = ctx;
+            //   const { schema, v } = symbols;
             //   const vShadow = plugin.symbol('v');
             //   const test = plugin.symbol('test');
             //   const e = plugin.symbol('err');
