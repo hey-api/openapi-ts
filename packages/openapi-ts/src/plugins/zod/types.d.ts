@@ -3,6 +3,11 @@ import type ts from 'typescript';
 
 import type { IR } from '~/ir/types';
 import type { DefinePlugin, Plugin, SchemaWithType } from '~/plugins';
+import type {
+  MaybeBigInt,
+  ShouldCoerceToBigInt,
+} from '~/plugins/shared/utils/coerce';
+import type { GetIntegerLimit } from '~/plugins/shared/utils/formats';
 import type { $, DollarTsDsl, TsDsl } from '~/ts-dsl';
 import type { StringCase, StringName } from '~/types/case';
 import type { MaybeArray } from '~/types/utils';
@@ -777,6 +782,29 @@ interface BaseResolverContext extends DollarTsDsl {
   };
 }
 
+export interface NumberResolverContext extends BaseResolverContext {
+  /**
+   * Nodes used to build different parts of the number schema.
+   */
+  nodes: {
+    base: (ctx: NumberResolverContext) => Chain;
+    const: (ctx: NumberResolverContext) => Chain | undefined;
+    max: (ctx: NumberResolverContext) => Chain | undefined;
+    min: (ctx: NumberResolverContext) => Chain | undefined;
+  };
+  schema: SchemaWithType<'integer' | 'number'>;
+  /**
+   * Utility functions for number schema processing.
+   */
+  utils: {
+    ast: Partial<Omit<Ast, 'typeName'>>;
+    getIntegerLimit: GetIntegerLimit;
+    maybeBigInt: MaybeBigInt;
+    shouldCoerceToBigInt: ShouldCoerceToBigInt;
+    state: Refs<PluginState>;
+  };
+}
+
 export interface ObjectResolverContext extends BaseResolverContext {
   /**
    * Nodes used to build different parts of the object schema.
@@ -801,8 +829,6 @@ export interface ObjectResolverContext extends BaseResolverContext {
     state: Refs<PluginState>;
   };
 }
-
-type ResolverResult = boolean | number;
 
 export interface StringResolverContext extends BaseResolverContext {
   /**
@@ -842,29 +868,7 @@ type Resolvers = Plugin.Resolvers<{
    *
    * Returning `undefined` will execute the default resolver logic.
    */
-  number?: {
-    /**
-     * Controls the base segment for number schemas.
-     *
-     * Returning `undefined` will execute the default resolver logic.
-     */
-    base?: (ctx: StringResolverContext) => ResolverResult | undefined;
-    /**
-     * Resolvers for number formats (e.g., `float`, `double`, `int32`).
-     *
-     * Each key represents a specific format name with a custom
-     * resolver function that controls how that format is rendered.
-     *
-     * Example path: `~resolvers.number.formats.float`
-     *
-     * Returning `undefined` from a resolver will apply the default
-     * generation behavior for that format.
-     */
-    formats?: Record<
-      string,
-      (ctx: StringResolverContext) => ResolverResult | undefined
-    >;
-  };
+  number?: (ctx: NumberResolverContext) => Chain | undefined;
   /**
    * Resolver for object schemas.
    *

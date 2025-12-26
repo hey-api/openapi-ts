@@ -113,7 +113,7 @@ function stringResolver(ctx: StringResolverContext): Chain {
   const patternNode = ctx.nodes.pattern(ctx);
   if (patternNode) checks.push(patternNode);
 
-  if (checks.length) {
+  if (checks.length > 0) {
     ctx.chain.current = ctx.chain.current
       .attr(identifiers.check)
       .call(...checks);
