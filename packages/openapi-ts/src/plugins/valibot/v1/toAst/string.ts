@@ -20,8 +20,8 @@ function constNode(ctx: StringResolverContext): PipeResult | undefined {
 }
 
 function formatNode(ctx: StringResolverContext): PipeResult | undefined {
-  const { schema } = ctx;
-  const { v } = ctx.symbols;
+  const { schema, symbols } = ctx;
+  const { v } = symbols;
   switch (schema.format) {
     case 'date':
       return $(v).attr(identifiers.actions.isoDate).call();
@@ -44,8 +44,8 @@ function formatNode(ctx: StringResolverContext): PipeResult | undefined {
 }
 
 function lengthNode(ctx: StringResolverContext): PipeResult | undefined {
-  const { schema } = ctx;
-  const { v } = ctx.symbols;
+  const { schema, symbols } = ctx;
+  const { v } = symbols;
   if (schema.minLength === undefined || schema.minLength !== schema.maxLength)
     return;
   return $(v)
@@ -54,8 +54,8 @@ function lengthNode(ctx: StringResolverContext): PipeResult | undefined {
 }
 
 function maxLengthNode(ctx: StringResolverContext): PipeResult | undefined {
-  const { schema } = ctx;
-  const { v } = ctx.symbols;
+  const { schema, symbols } = ctx;
+  const { v } = symbols;
   if (schema.maxLength === undefined) return;
   return $(v)
     .attr(identifiers.actions.maxLength)
@@ -63,8 +63,8 @@ function maxLengthNode(ctx: StringResolverContext): PipeResult | undefined {
 }
 
 function minLengthNode(ctx: StringResolverContext): PipeResult | undefined {
-  const { schema } = ctx;
-  const { v } = ctx.symbols;
+  const { schema, symbols } = ctx;
+  const { v } = symbols;
   if (schema.minLength === undefined) return;
   return $(v)
     .attr(identifiers.actions.minLength)
@@ -72,8 +72,8 @@ function minLengthNode(ctx: StringResolverContext): PipeResult | undefined {
 }
 
 function patternNode(ctx: StringResolverContext): PipeResult | undefined {
-  const { schema } = ctx;
-  const { v } = ctx.symbols;
+  const { schema, symbols } = ctx;
+  const { v } = symbols;
   if (!schema.pattern) return;
   return $(v).attr(identifiers.actions.regex).call($.regexp(schema.pattern));
 }

@@ -8,8 +8,8 @@ import { identifiers } from './constants';
 const validatorResolver = (
   ctx: ValidatorResolverArgs,
 ): ReturnType<typeof $.return> => {
-  const { schema } = ctx;
-  const { v } = ctx.symbols;
+  const { schema, symbols } = ctx;
+  const { v } = symbols;
   return $(v)
     .attr(identifiers.async.parseAsync)
     .call(schema, 'data')

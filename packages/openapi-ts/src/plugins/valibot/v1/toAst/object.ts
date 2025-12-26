@@ -31,10 +31,11 @@ function additionalPropertiesNode(
 }
 
 function baseNode(ctx: ObjectResolverContext): PipeResult {
-  const { v } = ctx.symbols;
+  const { nodes, symbols } = ctx;
+  const { v } = symbols;
 
-  const additional = ctx.nodes.additionalProperties(ctx);
-  const shape = ctx.nodes.shape(ctx);
+  const additional = nodes.additionalProperties(ctx);
+  const shape = nodes.shape(ctx);
 
   if (additional === null) {
     return $(v).attr(identifiers.schemas.strictObject).call(shape);

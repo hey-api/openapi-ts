@@ -394,9 +394,16 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
    * metadata. This prevents duplicate symbols from being created in the project.
    */
   symbolOnce(name: SymbolIn['name'], symbol?: Omit<SymbolIn, 'name'>): Symbol {
-    const existing = symbol?.meta ? this.querySymbol(symbol.meta) : undefined;
+    const meta = {
+      ...symbol?.meta,
+    };
+    if (symbol?.external) {
+      meta.category = 'external';
+      meta.resource = symbol.external;
+    }
+    const existing = this.querySymbol(meta);
     if (existing) return existing;
-    return this.symbol(name, symbol);
+    return this.symbol(name, { ...symbol, meta });
   }
 
   private buildEventHooks(): EventHooks {

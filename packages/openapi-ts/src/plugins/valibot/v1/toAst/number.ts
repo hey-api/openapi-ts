@@ -13,8 +13,8 @@ import type { NumberResolverContext } from '../../types';
 import { identifiers } from '../constants';
 
 function baseNode(ctx: NumberResolverContext): PipeResult {
-  const { schema } = ctx;
-  const { v } = ctx.symbols;
+  const { schema, symbols } = ctx;
+  const { v } = symbols;
   if (ctx.utils.shouldCoerceToBigInt(schema.format)) {
     return [
       $(v)
@@ -40,8 +40,8 @@ function baseNode(ctx: NumberResolverContext): PipeResult {
 }
 
 function constNode(ctx: NumberResolverContext): PipeResult | undefined {
-  const { schema } = ctx;
-  const { v } = ctx.symbols;
+  const { schema, symbols } = ctx;
+  const { v } = symbols;
   if (schema.const === undefined) return;
   return $(v)
     .attr(identifiers.schemas.literal)
@@ -49,8 +49,8 @@ function constNode(ctx: NumberResolverContext): PipeResult | undefined {
 }
 
 function maxNode(ctx: NumberResolverContext): PipeResult | undefined {
-  const { schema } = ctx;
-  const { v } = ctx.symbols;
+  const { schema, symbols } = ctx;
+  const { v } = symbols;
   if (schema.exclusiveMaximum !== undefined) {
     return $(v)
       .attr(identifiers.actions.ltValue)
@@ -74,8 +74,8 @@ function maxNode(ctx: NumberResolverContext): PipeResult | undefined {
 }
 
 function minNode(ctx: NumberResolverContext): PipeResult | undefined {
-  const { schema } = ctx;
-  const { v } = ctx.symbols;
+  const { schema, symbols } = ctx;
+  const { v } = symbols;
   if (schema.exclusiveMinimum !== undefined) {
     return $(v)
       .attr(identifiers.actions.gtValue)
