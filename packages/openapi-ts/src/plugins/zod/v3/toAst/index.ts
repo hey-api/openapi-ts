@@ -9,7 +9,7 @@ import { neverToAst } from './never';
 import { nullToAst } from './null';
 import { numberToAst } from './number';
 import { objectToAst } from './object';
-import { stringToAst } from './string';
+import { stringToNode } from './string';
 import { tupleToAst } from './tuple';
 import { undefinedToAst } from './undefined';
 import { unknownToAst } from './unknown';
@@ -77,7 +77,7 @@ export const irSchemaWithTypeToAst = ({
               ...args,
               schema: { ...schema, type: 'number' },
             })
-          : stringToAst({
+          : stringToNode({
               ...args,
               schema: schema as SchemaWithType<'string'>,
             }),

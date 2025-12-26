@@ -332,19 +332,22 @@ interface BaseResolverContext extends DollarTsDsl {
    */
   pipes: PipesUtils & {
     /**
-     * The current builder state being processed by this resolver.
+     * The current pipe.
      *
-     * In Valibot, this represents the current list of call expressions ("pipes")
+     * In Valibot, this represents a list of call expressions ("pipes")
      * being assembled to form a schema definition.
      *
-     * Each pipe can be extended, modified, or replaced to customize how the
-     * resulting schema is constructed.
+     * Each pipe can be extended, modified, or replaced to customize
+     * the resulting schema.
      */
     current: Pipes;
   };
+  /**
+   * The plugin instance.
+   */
   plugin: ValibotPlugin['Instance'];
   /**
-   * Provides access to commonly used symbols within the Valibot plugin.
+   * Provides access to commonly used symbols within the plugin.
    */
   symbols: {
     v: Symbol;
@@ -416,7 +419,7 @@ export interface StringResolverContext extends BaseResolverContext {
 export interface ValidatorResolverContext extends BaseResolverContext {
   operation: IR.Operation;
   /**
-   * Provides access to commonly used symbols within the Valibot plugin.
+   * Provides access to commonly used symbols within the plugin.
    */
   symbols: BaseResolverContext['symbols'] & {
     schema: Symbol;
@@ -424,7 +427,7 @@ export interface ValidatorResolverContext extends BaseResolverContext {
 }
 
 type ValidatorResolver = (
-  args: ValidatorResolverContext,
+  ctx: ValidatorResolverContext,
 ) => PipeResult | null | undefined;
 
 type Resolvers = Plugin.Resolvers<{
@@ -435,7 +438,7 @@ type Resolvers = Plugin.Resolvers<{
    *
    * Returning `undefined` will execute the default resolver logic.
    */
-  number?: (args: NumberResolverContext) => PipeResult | undefined;
+  number?: (ctx: NumberResolverContext) => PipeResult | undefined;
   /**
    * Resolver for object schemas.
    *
