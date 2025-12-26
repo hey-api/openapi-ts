@@ -1,13 +1,13 @@
 ---
 title: Clients
-description: REST clients for Hey API. Compatible with all our features.
+description: HTTP clients for Hey API. Compatible with all our features.
 ---
 
 <script setup lang="ts">
 import { embedProject } from '../embed'
 </script>
 
-# REST Clients
+# HTTP Clients
 
 We all send HTTP requests in a slightly different way. Hey API doesn't force you to use any specific technology. What we do, however, is support your choice with great clients. All seamlessly integrated with our other features.
 

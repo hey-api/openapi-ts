@@ -443,15 +443,15 @@ export default defineConfig(() => {
             //   });
             //   return $(v).attr('instance').call(big);
             // },
-            // object(ctx) {
-            //   const { $, symbols } = ctx;
-            //   const { v } = symbols;
-            //   const additional = ctx.nodes.additionalProperties(ctx);
-            //   if (additional === undefined) {
-            //     const shape = ctx.nodes.shape(ctx);
-            //     ctx.nodes.base = () => $(v).attr('looseObject').call(shape);
-            //   }
-            // },
+            object(ctx) {
+              const { $, symbols } = ctx;
+              const { v } = symbols;
+              const additional = ctx.nodes.additionalProperties(ctx);
+              if (additional === undefined) {
+                const shape = ctx.nodes.shape(ctx);
+                ctx.nodes.base = () => $(v).attr('looseObject').call(shape);
+              }
+            },
             // string(ctx) {
             //   const { $, schema, symbols } = ctx;
             //   const { v } = symbols;
