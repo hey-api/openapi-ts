@@ -100,18 +100,18 @@ function minNode(ctx: NumberResolverContext): PipeResult | undefined {
 
 function numberResolver(ctx: NumberResolverContext): Pipes {
   const constNode = ctx.nodes.const(ctx);
-  if (constNode) return ctx.pipes.push(ctx.result, constNode);
+  if (constNode) return ctx.pipes.push(ctx.pipes.current, constNode);
 
   const baseNode = ctx.nodes.base(ctx);
-  if (baseNode) ctx.pipes.push(ctx.result, baseNode);
+  if (baseNode) ctx.pipes.push(ctx.pipes.current, baseNode);
 
   const minNode = ctx.nodes.min(ctx);
-  if (minNode) ctx.pipes.push(ctx.result, minNode);
+  if (minNode) ctx.pipes.push(ctx.pipes.current, minNode);
 
   const maxNode = ctx.nodes.max(ctx);
-  if (maxNode) ctx.pipes.push(ctx.result, maxNode);
+  if (maxNode) ctx.pipes.push(ctx.pipes.current, maxNode);
 
-  return ctx.result;
+  return ctx.pipes.current;
 }
 
 export const numberToNode = ({
@@ -128,9 +128,11 @@ export const numberToNode = ({
       max: maxNode,
       min: minNode,
     },
-    pipes,
+    pipes: {
+      ...pipes,
+      current: [],
+    },
     plugin,
-    result: [],
     schema,
     symbols: {
       v: plugin.external('valibot.v'),

@@ -80,29 +80,29 @@ function patternNode(ctx: StringResolverContext): PipeResult | undefined {
 
 function stringResolver(ctx: StringResolverContext): Pipes {
   const constNode = ctx.nodes.const(ctx);
-  if (constNode) return ctx.pipes.push(ctx.result, constNode);
+  if (constNode) return ctx.pipes.push(ctx.pipes.current, constNode);
 
   const baseNode = ctx.nodes.base(ctx);
-  if (baseNode) ctx.pipes.push(ctx.result, baseNode);
+  if (baseNode) ctx.pipes.push(ctx.pipes.current, baseNode);
 
   const formatNode = ctx.nodes.format(ctx);
-  if (formatNode) ctx.pipes.push(ctx.result, formatNode);
+  if (formatNode) ctx.pipes.push(ctx.pipes.current, formatNode);
 
   const lengthNode = ctx.nodes.length(ctx);
   if (lengthNode) {
-    ctx.pipes.push(ctx.result, lengthNode);
+    ctx.pipes.push(ctx.pipes.current, lengthNode);
   } else {
     const minLengthNode = ctx.nodes.minLength(ctx);
-    if (minLengthNode) ctx.pipes.push(ctx.result, minLengthNode);
+    if (minLengthNode) ctx.pipes.push(ctx.pipes.current, minLengthNode);
 
     const maxLengthNode = ctx.nodes.maxLength(ctx);
-    if (maxLengthNode) ctx.pipes.push(ctx.result, maxLengthNode);
+    if (maxLengthNode) ctx.pipes.push(ctx.pipes.current, maxLengthNode);
   }
 
   const patternNode = ctx.nodes.pattern(ctx);
-  if (patternNode) ctx.pipes.push(ctx.result, patternNode);
+  if (patternNode) ctx.pipes.push(ctx.pipes.current, patternNode);
 
-  return ctx.result;
+  return ctx.pipes.current;
 }
 
 export const stringToNode = ({
@@ -122,9 +122,11 @@ export const stringToNode = ({
       minLength: minLengthNode,
       pattern: patternNode,
     },
-    pipes,
+    pipes: {
+      ...pipes,
+      current: [],
+    },
     plugin,
-    result: [],
     schema,
     symbols: {
       v: plugin.external('valibot.v'),

@@ -33,7 +33,13 @@ export const pushPipes: PushPipes = (target, pipes) => {
 };
 
 export interface PipesUtils {
+  /**
+   * Push pipes into target array.
+   */
   push: PushPipes;
+  /**
+   * Convert pipes to a single node.
+   */
   toNode: PipesToNode;
 }
 
@@ -41,12 +47,6 @@ export interface PipesUtils {
  * Functions for working with pipes.
  */
 export const pipes: PipesUtils = {
-  /**
-   * Push pipes into target array.
-   */
   push: pushPipes,
-  /**
-   * Convert pipes to a single node.
-   */
   toNode: pipesToNode,
 };

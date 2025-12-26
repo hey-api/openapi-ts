@@ -98,9 +98,11 @@ export const objectToAst = ({
       base: baseNode,
       shape: shapeNode,
     },
-    pipes,
+    pipes: {
+      ...pipes,
+      current: [],
+    },
     plugin,
-    result: [],
     schema,
     symbols: {
       v: plugin.external('valibot.v'),

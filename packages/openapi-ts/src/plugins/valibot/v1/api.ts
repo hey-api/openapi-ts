@@ -2,14 +2,13 @@ import { $ } from '~/ts-dsl';
 
 import { pipes } from '../shared/pipes';
 import type { ValidatorArgs } from '../shared/types';
-import type { ValidatorResolverArgs } from '../types';
+import type { ValidatorResolverContext } from '../types';
 import { identifiers } from './constants';
 
 const validatorResolver = (
-  ctx: ValidatorResolverArgs,
+  ctx: ValidatorResolverContext,
 ): ReturnType<typeof $.return> => {
-  const { schema, symbols } = ctx;
-  const { v } = symbols;
+  const { schema, v } = ctx.symbols;
   return $(v)
     .attr(identifiers.async.parseAsync)
     .call(schema, 'data')
@@ -30,14 +29,16 @@ export const createRequestValidatorV1 = ({
   });
   if (!symbol) return;
 
-  const args: ValidatorResolverArgs = {
+  const ctx: ValidatorResolverContext = {
     $,
     operation,
-    pipes,
+    pipes: {
+      ...pipes,
+      current: [],
+    },
     plugin,
-    result: [],
-    schema: symbol,
     symbols: {
+      schema: symbol,
       v: plugin.external('valibot.v'),
     },
   };
@@ -46,7 +47,7 @@ export const createRequestValidatorV1 = ({
     typeof validator === 'function' ? validator : validator?.request;
   const candidates = [resolver, validatorResolver];
   for (const candidate of candidates) {
-    const statements = candidate?.(args);
+    const statements = candidate?.(ctx);
     if (statements === null) return;
     if (statements !== undefined) {
       return $.func()
@@ -71,14 +72,16 @@ export const createResponseValidatorV1 = ({
   });
   if (!symbol) return;
 
-  const args: ValidatorResolverArgs = {
+  const ctx: ValidatorResolverContext = {
     $,
     operation,
-    pipes,
+    pipes: {
+      ...pipes,
+      current: [],
+    },
     plugin,
-    result: [],
-    schema: symbol,
     symbols: {
+      schema: symbol,
       v: plugin.external('valibot.v'),
     },
   };
@@ -87,7 +90,7 @@ export const createResponseValidatorV1 = ({
     typeof validator === 'function' ? validator : validator?.response;
   const candidates = [resolver, validatorResolver];
   for (const candidate of candidates) {
-    const statements = candidate?.(args);
+    const statements = candidate?.(ctx);
     if (statements === null) return;
     if (statements !== undefined) {
       return $.func()
