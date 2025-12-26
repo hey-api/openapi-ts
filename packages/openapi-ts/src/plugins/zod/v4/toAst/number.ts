@@ -7,89 +7,134 @@ import { getIntegerLimit } from '~/plugins/shared/utils/formats';
 import { $ } from '~/ts-dsl';
 
 import { identifiers } from '../../constants';
+import type { Chain } from '../../shared/chain';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
+import type { NumberResolverContext } from '../../types';
 
-export const numberToAst = ({
+function baseNode(ctx: NumberResolverContext): Chain {
+  const { schema, symbols } = ctx;
+  const { z } = symbols;
+  if (ctx.utils.shouldCoerceToBigInt(schema.format)) {
+    return $(z).attr(identifiers.coerce).attr(identifiers.bigint).call();
+  }
+  let chain = $(z).attr(identifiers.number).call();
+  if (schema.type === 'integer') {
+    chain = $(z).attr(identifiers.int).call();
+  }
+  return chain;
+}
+
+function constNode(ctx: NumberResolverContext): Chain | undefined {
+  const { schema, symbols } = ctx;
+  const { z } = symbols;
+  if (schema.const === undefined) return;
+  return $(z)
+    .attr(identifiers.literal)
+    .call(ctx.utils.maybeBigInt(schema.const, schema.format));
+}
+
+function maxNode(ctx: NumberResolverContext): Chain | undefined {
+  const { chain, schema } = ctx;
+  if (schema.exclusiveMaximum !== undefined) {
+    return chain.current
+      .attr(identifiers.lt)
+      .call(ctx.utils.maybeBigInt(schema.exclusiveMaximum, schema.format));
+  }
+  if (schema.maximum !== undefined) {
+    return chain.current
+      .attr(identifiers.lte)
+      .call(ctx.utils.maybeBigInt(schema.maximum, schema.format));
+  }
+  const limit = ctx.utils.getIntegerLimit(schema.format);
+  if (limit) {
+    return chain.current
+      .attr(identifiers.max)
+      .call(
+        ctx.utils.maybeBigInt(limit.maxValue, schema.format),
+        $.object().prop('error', $.literal(limit.maxError)),
+      );
+  }
+  return;
+}
+
+function minNode(ctx: NumberResolverContext): Chain | undefined {
+  const { chain, schema } = ctx;
+  if (schema.exclusiveMinimum !== undefined) {
+    return chain.current
+      .attr(identifiers.gt)
+      .call(ctx.utils.maybeBigInt(schema.exclusiveMinimum, schema.format));
+  }
+  if (schema.minimum !== undefined) {
+    return chain.current
+      .attr(identifiers.gte)
+      .call(ctx.utils.maybeBigInt(schema.minimum, schema.format));
+  }
+  const limit = ctx.utils.getIntegerLimit(schema.format);
+  if (limit) {
+    return chain.current
+      .attr(identifiers.min)
+      .call(
+        ctx.utils.maybeBigInt(limit.minValue, schema.format),
+        $.object().prop('error', $.literal(limit.minError)),
+      );
+  }
+  return;
+}
+
+function numberResolver(ctx: NumberResolverContext): Chain {
+  const constNode = ctx.nodes.const(ctx);
+  if (constNode) {
+    ctx.chain.current = constNode;
+    return ctx.chain.current;
+  }
+
+  const baseNode = ctx.nodes.base(ctx);
+  if (baseNode) ctx.chain.current = baseNode;
+
+  const minNode = ctx.nodes.min(ctx);
+  if (minNode) ctx.chain.current = minNode;
+
+  const maxNode = ctx.nodes.max(ctx);
+  if (maxNode) ctx.chain.current = maxNode;
+
+  return ctx.chain.current;
+}
+
+export const numberToNode = ({
   plugin,
   schema,
+  state,
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'integer' | 'number'>;
 }): Omit<Ast, 'typeName'> => {
-  const result: Partial<Omit<Ast, 'typeName'>> = {};
-
-  const z = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'zod.z',
-  });
-
-  if (schema.const !== undefined) {
-    result.expression = $(z)
-      .attr(identifiers.literal)
-      .call(maybeBigInt(schema.const, schema.format));
-    return result as Omit<Ast, 'typeName'>;
-  }
-
-  if (shouldCoerceToBigInt(schema.format)) {
-    result.expression = $(z)
-      .attr(identifiers.coerce)
-      .attr(identifiers.bigint)
-      .call();
-  } else {
-    result.expression = $(z).attr(identifiers.number).call();
-    if (schema.type === 'integer') {
-      result.expression = $(z).attr(identifiers.int).call();
-    }
-  }
-
-  let hasLowerBound = false;
-  let hasUpperBound = false;
-
-  if (schema.exclusiveMinimum !== undefined) {
-    result.expression = result.expression
-      .attr(identifiers.gt)
-      .call(maybeBigInt(schema.exclusiveMinimum, schema.format));
-    hasLowerBound = true;
-  } else if (schema.minimum !== undefined) {
-    result.expression = result.expression
-      .attr(identifiers.gte)
-      .call(maybeBigInt(schema.minimum, schema.format));
-    hasLowerBound = true;
-  }
-
-  if (schema.exclusiveMaximum !== undefined) {
-    result.expression = result.expression
-      .attr(identifiers.lt)
-      .call(maybeBigInt(schema.exclusiveMaximum, schema.format));
-    hasUpperBound = true;
-  } else if (schema.maximum !== undefined) {
-    result.expression = result.expression
-      .attr(identifiers.lte)
-      .call(maybeBigInt(schema.maximum, schema.format));
-    hasUpperBound = true;
-  }
-
-  const integerLimit = getIntegerLimit(schema.format);
-  if (integerLimit) {
-    if (!hasLowerBound) {
-      result.expression = result.expression
-        .attr(identifiers.min)
-        .call(
-          maybeBigInt(integerLimit.minValue, schema.format),
-          $.object().prop('error', $.literal(integerLimit.minError)),
-        );
-      hasLowerBound = true;
-    }
-
-    if (!hasUpperBound) {
-      result.expression = result.expression
-        .attr(identifiers.max)
-        .call(
-          maybeBigInt(integerLimit.maxValue, schema.format),
-          $.object().prop('error', $.literal(integerLimit.maxError)),
-        );
-      hasUpperBound = true;
-    }
-  }
-
-  return result as Omit<Ast, 'typeName'>;
+  const ast: Partial<Omit<Ast, 'typeName'>> = {};
+  const z = plugin.external('zod.z');
+  const ctx: NumberResolverContext = {
+    $,
+    chain: {
+      current: $(z),
+    },
+    nodes: {
+      base: baseNode,
+      const: constNode,
+      max: maxNode,
+      min: minNode,
+    },
+    plugin,
+    schema,
+    symbols: {
+      z,
+    },
+    utils: {
+      ast,
+      getIntegerLimit,
+      maybeBigInt,
+      shouldCoerceToBigInt,
+      state,
+    },
+  };
+  const resolver = plugin.config['~resolvers']?.number;
+  const node = resolver?.(ctx) ?? numberResolver(ctx);
+  ast.expression = node;
+  return ast as Omit<Ast, 'typeName'>;
 };

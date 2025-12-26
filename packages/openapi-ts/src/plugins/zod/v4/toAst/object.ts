@@ -112,12 +112,5 @@ export const objectToAst = ({
   const resolver = plugin.config['~resolvers']?.object;
   const node = resolver?.(ctx) ?? objectResolver(ctx);
   ast.expression = node;
-  // Return with typeName for circular references
-  if (ast.hasLazyExpression) {
-    return {
-      ...ast,
-      typeName: 'ZodType',
-    } as Ast;
-  }
   return ast as Omit<Ast, 'typeName'>;
 };
