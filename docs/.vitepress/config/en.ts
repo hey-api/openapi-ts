@@ -259,6 +259,16 @@ export default defineConfig({
             collapsed: true,
             items: [
               {
+                link: '/openapi-ts/plugins/concepts/resolvers',
+                text: 'Resolvers',
+              },
+            ],
+            text: 'Concepts',
+          },
+          {
+            collapsed: true,
+            items: [
+              {
                 link: '/openapi-ts/plugins/custom',
                 text: 'Plugin',
               },

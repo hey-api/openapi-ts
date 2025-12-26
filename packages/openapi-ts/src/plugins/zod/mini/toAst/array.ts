@@ -112,7 +112,7 @@ export const arrayToAst = ({
     }
   }
 
-  if (checks.length) {
+  if (checks.length > 0) {
     result.expression = result.expression
       .attr(identifiers.check)
       .call(...checks);

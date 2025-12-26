@@ -7,9 +7,9 @@ import { booleanToAst } from './boolean';
 import { enumToAst } from './enum';
 import { neverToAst } from './never';
 import { nullToAst } from './null';
-import { numberToAst } from './number';
+import { numberToNode } from './number';
 import { objectToAst } from './object';
-import { stringToAst } from './string';
+import { stringToNode } from './string';
 import { tupleToAst } from './tuple';
 import { undefinedToAst } from './undefined';
 import { unknownToAst } from './unknown';
@@ -46,7 +46,7 @@ export const irSchemaWithTypeToAst = ({
     case 'integer':
     case 'number':
       return {
-        expression: numberToAst({
+        expression: numberToNode({
           ...args,
           schema: schema as SchemaWithType<'integer' | 'number'>,
         }),
@@ -73,11 +73,11 @@ export const irSchemaWithTypeToAst = ({
     case 'string':
       return {
         expression: shouldCoerceToBigInt(schema.format)
-          ? numberToAst({
+          ? numberToNode({
               ...args,
               schema: { ...schema, type: 'number' },
             })
-          : stringToAst({
+          : stringToNode({
               ...args,
               schema: schema as SchemaWithType<'string'>,
             }),

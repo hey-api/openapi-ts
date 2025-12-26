@@ -7,74 +7,133 @@ import { getIntegerLimit } from '~/plugins/shared/utils/formats';
 import { $ } from '~/ts-dsl';
 
 import { identifiers } from '../../constants';
-import type { IrSchemaToAstOptions } from '../../shared/types';
+import type { Chain } from '../../shared/chain';
+import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
+import type { NumberResolverContext } from '../../types';
 
-export const numberToAst = ({
-  plugin,
-  schema,
-}: IrSchemaToAstOptions & {
-  schema: SchemaWithType<'integer' | 'number'>;
-}) => {
-  const z = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'zod.z',
-  });
-
-  if (schema.const !== undefined) {
-    const expression = $(z)
-      .attr(identifiers.literal)
-      .call(maybeBigInt(schema.const, schema.format));
-    return expression;
+function baseNode(ctx: NumberResolverContext): Chain {
+  const { schema, symbols } = ctx;
+  const { z } = symbols;
+  if (ctx.utils.shouldCoerceToBigInt(schema.format)) {
+    return $(z).attr(identifiers.coerce).attr(identifiers.bigint).call();
   }
-
-  let numberExpression: ReturnType<typeof $.call>;
-
-  if (shouldCoerceToBigInt(schema.format)) {
-    numberExpression = $(z)
-      .attr(identifiers.coerce)
-      .attr(identifiers.bigint)
-      .call();
-  } else {
-    numberExpression = $(z).attr(identifiers.number).call();
-    if (schema.type === 'integer') {
-      numberExpression = numberExpression.attr(identifiers.int).call();
-    }
+  let chain = $(z).attr(identifiers.number).call();
+  if (schema.type === 'integer') {
+    chain = chain.attr(identifiers.int).call();
   }
+  return chain;
+}
 
-  const integerLimit = getIntegerLimit(schema.format);
-  if (integerLimit) {
-    numberExpression = numberExpression
-      .attr(identifiers.min)
-      .call(
-        maybeBigInt(integerLimit.minValue, schema.format),
-        $.object().prop('message', $.literal(integerLimit.minError)),
-      )
+function constNode(ctx: NumberResolverContext): Chain | undefined {
+  const { schema, symbols } = ctx;
+  const { z } = symbols;
+  if (schema.const === undefined) return;
+  return $(z)
+    .attr(identifiers.literal)
+    .call(ctx.utils.maybeBigInt(schema.const, schema.format));
+}
+
+function maxNode(ctx: NumberResolverContext): Chain | undefined {
+  const { chain, schema } = ctx;
+  if (schema.exclusiveMaximum !== undefined) {
+    return chain.current
+      .attr(identifiers.lt)
+      .call(ctx.utils.maybeBigInt(schema.exclusiveMaximum, schema.format));
+  }
+  if (schema.maximum !== undefined) {
+    return chain.current
+      .attr(identifiers.lte)
+      .call(ctx.utils.maybeBigInt(schema.maximum, schema.format));
+  }
+  const limit = ctx.utils.getIntegerLimit(schema.format);
+  if (limit) {
+    return chain.current
       .attr(identifiers.max)
       .call(
-        maybeBigInt(integerLimit.maxValue, schema.format),
-        $.object().prop('message', $.literal(integerLimit.maxError)),
+        ctx.utils.maybeBigInt(limit.maxValue, schema.format),
+        $.object().prop('message', $.literal(limit.maxError)),
       );
   }
+  return;
+}
 
+function minNode(ctx: NumberResolverContext): Chain | undefined {
+  const { chain, schema } = ctx;
   if (schema.exclusiveMinimum !== undefined) {
-    numberExpression = numberExpression
+    return chain.current
       .attr(identifiers.gt)
-      .call(maybeBigInt(schema.exclusiveMinimum, schema.format));
-  } else if (schema.minimum !== undefined) {
-    numberExpression = numberExpression
+      .call(ctx.utils.maybeBigInt(schema.exclusiveMinimum, schema.format));
+  }
+  if (schema.minimum !== undefined) {
+    return chain.current
       .attr(identifiers.gte)
-      .call(maybeBigInt(schema.minimum, schema.format));
+      .call(ctx.utils.maybeBigInt(schema.minimum, schema.format));
+  }
+  const limit = ctx.utils.getIntegerLimit(schema.format);
+  if (limit) {
+    return chain.current
+      .attr(identifiers.min)
+      .call(
+        ctx.utils.maybeBigInt(limit.minValue, schema.format),
+        $.object().prop('message', $.literal(limit.minError)),
+      );
+  }
+  return;
+}
+
+function numberResolver(ctx: NumberResolverContext): Chain {
+  const constNode = ctx.nodes.const(ctx);
+  if (constNode) {
+    ctx.chain.current = constNode;
+    return ctx.chain.current;
   }
 
-  if (schema.exclusiveMaximum !== undefined) {
-    numberExpression = numberExpression
-      .attr(identifiers.lt)
-      .call(maybeBigInt(schema.exclusiveMaximum, schema.format));
-  } else if (schema.maximum !== undefined) {
-    numberExpression = numberExpression
-      .attr(identifiers.lte)
-      .call(maybeBigInt(schema.maximum, schema.format));
-  }
+  const baseNode = ctx.nodes.base(ctx);
+  if (baseNode) ctx.chain.current = baseNode;
 
-  return numberExpression;
+  const minNode = ctx.nodes.min(ctx);
+  if (minNode) ctx.chain.current = minNode;
+
+  const maxNode = ctx.nodes.max(ctx);
+  if (maxNode) ctx.chain.current = maxNode;
+
+  return ctx.chain.current;
+}
+
+export const numberToNode = ({
+  plugin,
+  schema,
+  state,
+}: IrSchemaToAstOptions & {
+  schema: SchemaWithType<'integer' | 'number'>;
+}): Chain => {
+  const ast: Partial<Omit<Ast, 'typeName'>> = {};
+  const z = plugin.external('zod.z');
+  const ctx: NumberResolverContext = {
+    $,
+    chain: {
+      current: $(z),
+    },
+    nodes: {
+      base: baseNode,
+      const: constNode,
+      max: maxNode,
+      min: minNode,
+    },
+    plugin,
+    schema,
+    symbols: {
+      z,
+    },
+    utils: {
+      ast,
+      getIntegerLimit,
+      maybeBigInt,
+      shouldCoerceToBigInt,
+      state,
+    },
+  };
+  const resolver = plugin.config['~resolvers']?.number;
+  const node = resolver?.(ctx) ?? numberResolver(ctx);
+  return node;
 };

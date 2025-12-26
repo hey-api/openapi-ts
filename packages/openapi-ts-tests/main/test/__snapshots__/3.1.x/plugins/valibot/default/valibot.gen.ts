@@ -630,8 +630,8 @@ export const vDefault = v.object({
 });
 
 export const vPageable = v.object({
-    page: v.optional(v.pipe(v.number(), v.integer(), v.minValue(-2147483648, 'Invalid value: Expected int32 to be >= -2147483648'), v.maxValue(2147483647, 'Invalid value: Expected int32 to be <= 2147483647'), v.minValue(0)), 0),
-    size: v.optional(v.pipe(v.number(), v.integer(), v.minValue(-2147483648, 'Invalid value: Expected int32 to be >= -2147483648'), v.maxValue(2147483647, 'Invalid value: Expected int32 to be <= 2147483647'), v.minValue(1))),
+    page: v.optional(v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(2147483647, 'Invalid value: Expected int32 to be <= 2147483647')), 0),
+    size: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(2147483647, 'Invalid value: Expected int32 to be <= 2147483647'))),
     sort: v.optional(v.array(v.string()))
 });
 
@@ -972,13 +972,13 @@ export const vCompositionWithOneOfAndProperties = v.intersect([v.union([v.strict
         }), v.strictObject({
             bar: vNonAsciiStringæøåÆøÅöôêÊ字符串
         })]), v.object({
-        baz: v.union([v.pipe(v.number(), v.integer(), v.minValue(0, 'Invalid value: Expected uint16 to be >= 0'), v.maxValue(65535, 'Invalid value: Expected uint16 to be <= 65535'), v.minValue(0)), v.null()]),
-        qux: v.pipe(v.number(), v.integer(), v.minValue(0, 'Invalid value: Expected uint8 to be >= 0'), v.maxValue(255, 'Invalid value: Expected uint8 to be <= 255'), v.minValue(0))
+        baz: v.union([v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(65535, 'Invalid value: Expected uint16 to be <= 65535')), v.null()]),
+        qux: v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(255, 'Invalid value: Expected uint8 to be <= 255'))
     })]);
 
 export const vModelWithOneOfAndProperties = v.intersect([v.union([vSimpleParameter, vNonAsciiStringæøåÆøÅöôêÊ字符串]), v.object({
-        baz: v.union([v.pipe(v.number(), v.integer(), v.minValue(0, 'Invalid value: Expected uint16 to be >= 0'), v.maxValue(65535, 'Invalid value: Expected uint16 to be <= 65535'), v.minValue(0)), v.null()]),
-        qux: v.pipe(v.number(), v.integer(), v.minValue(0, 'Invalid value: Expected uint8 to be >= 0'), v.maxValue(255, 'Invalid value: Expected uint8 to be <= 255'), v.minValue(0))
+        baz: v.union([v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(65535, 'Invalid value: Expected uint16 to be <= 65535')), v.null()]),
+        qux: v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(255, 'Invalid value: Expected uint8 to be <= 255'))
     })]);
 
 /**

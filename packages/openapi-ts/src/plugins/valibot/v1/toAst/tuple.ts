@@ -3,7 +3,7 @@ import { fromRef, ref } from '@hey-api/codegen-core';
 import type { SchemaWithType } from '~/plugins';
 import { $ } from '~/ts-dsl';
 
-import { pipesToAst } from '../../shared/pipesToAst';
+import { pipesToNode } from '../../shared/pipes';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
 import { identifiers } from '../constants';
 import { irSchemaToAst } from '../plugin';
@@ -48,7 +48,7 @@ export const tupleToAst = ({
       if (schemaPipes.hasLazyExpression) {
         result.hasLazyExpression = true;
       }
-      return pipesToAst(schemaPipes.pipes, plugin);
+      return pipesToNode(schemaPipes.pipes, plugin);
     });
     result.pipes = [
       $(v)

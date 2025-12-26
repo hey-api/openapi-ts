@@ -1,13 +1,18 @@
-import type { Symbol } from '@hey-api/codegen-core';
-import type ts from 'typescript';
+import type { Refs, Symbol } from '@hey-api/codegen-core';
 
 import type { IR } from '~/ir/types';
-import type { DefinePlugin, Plugin } from '~/plugins';
-import type { $, DollarTsDsl, TsDsl } from '~/ts-dsl';
+import type { DefinePlugin, Plugin, SchemaWithType } from '~/plugins';
+import type {
+  MaybeBigInt,
+  ShouldCoerceToBigInt,
+} from '~/plugins/shared/utils/coerce';
+import type { GetIntegerLimit } from '~/plugins/shared/utils/formats';
+import type { $, DollarTsDsl } from '~/ts-dsl';
 import type { StringCase, StringName } from '~/types/case';
-import type { MaybeArray } from '~/types/utils';
 
 import type { IApi } from './api';
+import type { Pipe, PipeResult, PipesUtils } from './shared/pipes';
+import type { Ast, PluginState } from './shared/types';
 
 export type UserConfig = Plugin.Name<'valibot'> &
   Plugin.Hooks &
@@ -321,113 +326,135 @@ export type Config = Plugin.Name<'valibot'> &
     };
   };
 
-type SharedResolverArgs = DollarTsDsl & {
+interface BaseResolverContext extends DollarTsDsl {
   /**
-   * The current builder state being processed by this resolver.
-   *
-   * In Valibot, this represents the current list of call expressions ("pipes")
-   * being assembled to form a schema definition.
-   *
-   * Each pipe can be extended, modified, or replaced to customize how the
-   * resulting schema is constructed. Returning `undefined` from a resolver will
-   * use the default generation behavior.
+   * Functions for working with pipes.
    */
-  pipes: Array<ReturnType<typeof $.call>>;
+  pipes: PipesUtils & {
+    /**
+     * The current pipe.
+     *
+     * In Valibot, this represents a list of call expressions ("pipes")
+     * being assembled to form a schema definition.
+     *
+     * Each pipe can be extended, modified, or replaced to customize
+     * the resulting schema.
+     */
+    current: Pipes;
+  };
+  /**
+   * The plugin instance.
+   */
   plugin: ValibotPlugin['Instance'];
-};
+  /**
+   * Provides access to commonly used symbols within the plugin.
+   */
+  symbols: {
+    v: Symbol;
+  };
+}
 
-export type FormatResolverArgs = SharedResolverArgs & {
-  schema: IR.SchemaObject;
-};
+export interface NumberResolverContext extends BaseResolverContext {
+  /**
+   * Nodes used to build different parts of the number schema.
+   */
+  nodes: {
+    base: (ctx: NumberResolverContext) => PipeResult;
+    const: (ctx: NumberResolverContext) => PipeResult | undefined;
+    max: (ctx: NumberResolverContext) => PipeResult | undefined;
+    min: (ctx: NumberResolverContext) => PipeResult | undefined;
+  };
+  schema: SchemaWithType<'integer' | 'number'>;
+  /**
+   * Utility functions for number schema processing.
+   */
+  utils: {
+    getIntegerLimit: GetIntegerLimit;
+    maybeBigInt: MaybeBigInt;
+    shouldCoerceToBigInt: ShouldCoerceToBigInt;
+  };
+}
 
-export type ObjectBaseResolverArgs = SharedResolverArgs & {
-  /** Null = never */
-  additional?: ReturnType<typeof $.call | typeof $.expr> | null;
-  schema: IR.SchemaObject;
-  shape: ReturnType<typeof $.object>;
-};
+export interface ObjectResolverContext extends BaseResolverContext {
+  /**
+   * Nodes used to build different parts of the object schema.
+   */
+  nodes: {
+    /**
+     * If `additionalProperties` is `false` or `{ type: 'never' }`, returns `null`
+     * to indicate no additional properties are allowed.
+     */
+    additionalProperties: (
+      ctx: ObjectResolverContext,
+    ) => Pipe | null | undefined;
+    base: (ctx: ObjectResolverContext) => PipeResult;
+    shape: (ctx: ObjectResolverContext) => ReturnType<typeof $.object>;
+  };
+  schema: SchemaWithType<'object'>;
+  /**
+   * Utility functions for object schema processing.
+   */
+  utils: {
+    ast: Partial<Omit<Ast, 'typeName'>>;
+    state: Refs<PluginState>;
+  };
+}
 
-export type ValidatorResolverArgs = SharedResolverArgs & {
+export interface StringResolverContext extends BaseResolverContext {
+  /**
+   * Nodes used to build different parts of the string schema.
+   */
+  nodes: {
+    base: (ctx: StringResolverContext) => PipeResult;
+    const: (ctx: StringResolverContext) => PipeResult | undefined;
+    format: (ctx: StringResolverContext) => PipeResult | undefined;
+    length: (ctx: StringResolverContext) => PipeResult | undefined;
+    maxLength: (ctx: StringResolverContext) => PipeResult | undefined;
+    minLength: (ctx: StringResolverContext) => PipeResult | undefined;
+    pattern: (ctx: StringResolverContext) => PipeResult | undefined;
+  };
+  schema: SchemaWithType<'string'>;
+}
+
+export interface ValidatorResolverContext extends BaseResolverContext {
   operation: IR.Operation;
-  schema: Symbol;
-  v: Symbol;
-};
+  /**
+   * Provides access to commonly used symbols within the plugin.
+   */
+  symbols: BaseResolverContext['symbols'] & {
+    schema: Symbol;
+  };
+}
 
 type ValidatorResolver = (
-  args: ValidatorResolverArgs,
-) => MaybeArray<TsDsl<ts.Statement>> | null | undefined;
+  ctx: ValidatorResolverContext,
+) => PipeResult | null | undefined;
 
 type Resolvers = Plugin.Resolvers<{
   /**
-   * Resolvers for number schemas.
+   * Resolver for number schemas.
    *
-   * Allows customization of how number types are rendered, including
-   * per-format handling.
+   * Allows customization of how number types are rendered.
+   *
+   * Returning `undefined` will execute the default resolver logic.
    */
-  number?: {
-    /**
-     * Resolvers for number formats (e.g., `float`, `double`, `int32`).
-     *
-     * Each key represents a specific format name with a custom
-     * resolver function that controls how that format is rendered.
-     *
-     * Example path: `~resolvers.number.formats.float`
-     *
-     * Returning `undefined` from a resolver will apply the default
-     * generation behavior for that format.
-     */
-    formats?: Record<
-      string,
-      (args: FormatResolverArgs) => boolean | number | undefined
-    >;
-  };
+  number?: (ctx: NumberResolverContext) => PipeResult | undefined;
   /**
-   * Resolvers for object schemas.
+   * Resolver for object schemas.
    *
    * Allows customization of how object types are rendered.
    *
-   * Example path: `~resolvers.object.base`
-   *
-   * Returning `undefined` from a resolver will apply the default
-   * generation behavior for the object schema.
+   * Returning `undefined` will execute the default resolver logic.
    */
-  object?: {
-    /**
-     * Controls how object schemas are constructed.
-     *
-     * Called with the fully assembled shape (properties) and any additional
-     * property schema, allowing the resolver to choose the correct Valibot
-     * base constructor and modify the schema chain if needed.
-     *
-     * Returning `undefined` will execute the default resolver logic.
-     */
-    base?: (
-      args: ObjectBaseResolverArgs,
-    ) => ReturnType<typeof $.call> | undefined;
-  };
+  object?: (ctx: ObjectResolverContext) => PipeResult | undefined;
   /**
-   * Resolvers for string schemas.
+   * Resolver for string schemas.
    *
-   * Allows customization of how string types are rendered, including
-   * per-format handling.
+   * Allows customization of how string types are rendered.
+   *
+   * Returning `undefined` will execute the default resolver logic.
    */
-  string?: {
-    /**
-     * Resolvers for string formats (e.g., `uuid`, `email`, `date-time`).
-     *
-     * Each key represents a specific format name with a custom
-     * resolver function that controls how that format is rendered.
-     *
-     * Example path: `~resolvers.string.formats.uuid`
-     *
-     * Returning `undefined` from a resolver will apply the default
-     * generation behavior for that format.
-     */
-    formats?: Record<
-      string,
-      (args: FormatResolverArgs) => boolean | number | undefined
-    >;
-  };
+  string?: (ctx: StringResolverContext) => PipeResult | undefined;
   /**
    * Resolvers for request and response validators.
    *
@@ -435,7 +462,7 @@ type Resolvers = Plugin.Resolvers<{
    *
    * Example path: `~resolvers.validator.request` or `~resolvers.validator.response`
    *
-   * Returning `undefined` from a resolver will apply the default generation logic.
+   * Returning `undefined` will execute the default resolver logic.
    */
   validator?:
     | ValidatorResolver
@@ -443,13 +470,13 @@ type Resolvers = Plugin.Resolvers<{
         /**
          * Controls how the request validator function body is generated.
          *
-         * Returning `undefined` will fall back to the default `.await().return()` logic.
+         * Returning `undefined` will execute the default resolver logic.
          */
         request?: ValidatorResolver;
         /**
          * Controls how the response validator function body is generated.
          *
-         * Returning `undefined` will fall back to the default `.await().return()` logic.
+         * Returning `undefined` will execute the default resolver logic.
          */
         response?: ValidatorResolver;
       };

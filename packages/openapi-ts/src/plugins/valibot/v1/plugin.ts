@@ -11,7 +11,7 @@ import { pathToJsonPointer, refToName } from '~/utils/ref';
 
 import { exportAst } from '../shared/export';
 import { irOperationToAst } from '../shared/operation';
-import { pipesToAst } from '../shared/pipesToAst';
+import { pipesToNode } from '../shared/pipes';
 import type { Ast, IrSchemaToAstOptions, PluginState } from '../shared/types';
 import { irWebhookToAst } from '../shared/webhook';
 import type { ValibotPlugin } from '../types';
@@ -87,7 +87,7 @@ export const irSchemaToAst = ({
             path: ref([...fromRef(state.path), 'items', index]),
           },
         });
-        return pipesToAst(itemAst.pipes, plugin);
+        return pipesToNode(itemAst.pipes, plugin);
       });
 
       if (schema.logicalOperator === 'and') {
@@ -129,7 +129,7 @@ export const irSchemaToAst = ({
         $(v)
           .attr(identifiers.schemas.optional)
           .call(
-            pipesToAst(ast.pipes, plugin),
+            pipesToNode(ast.pipes, plugin),
             schema.type === 'integer' || schema.type === 'number'
               ? maybeBigInt(schema.default, schema.format)
               : $.fromValue(schema.default),
@@ -139,7 +139,7 @@ export const irSchemaToAst = ({
       ast.pipes = [
         $(v)
           .attr(identifiers.schemas.optional)
-          .call(pipesToAst(ast.pipes, plugin)),
+          .call(pipesToNode(ast.pipes, plugin)),
       ];
     }
   }

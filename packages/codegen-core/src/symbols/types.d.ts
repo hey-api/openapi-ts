@@ -44,10 +44,14 @@ export type ISymbolIn = {
   getFilePath?: Symbol['getFilePath'];
   /**
    * Kind of import if this symbol represents an import.
+   *
+   * @default 'named'
    */
   importKind?: BindingKind;
   /**
    * Kind of symbol.
+   *
+   * @default 'var'
    */
   kind?: SymbolKind;
   /**
