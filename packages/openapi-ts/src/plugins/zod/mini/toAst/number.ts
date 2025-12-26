@@ -7,6 +7,7 @@ import { getIntegerLimit } from '~/plugins/shared/utils/formats';
 import { $ } from '~/ts-dsl';
 
 import { identifiers } from '../../constants';
+import type { Chain } from '../../shared/chain';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
 
 export const numberToAst = ({
@@ -41,7 +42,7 @@ export const numberToAst = ({
     }
   }
 
-  const checks: Array<ReturnType<typeof $.call>> = [];
+  const checks: Array<Chain> = [];
 
   let hasLowerBound = false;
   let hasUpperBound = false;

@@ -1,13 +1,15 @@
-import type { Symbol } from '@hey-api/codegen-core';
+import type { Refs, Symbol } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import type { IR } from '~/ir/types';
-import type { DefinePlugin, Plugin } from '~/plugins';
+import type { DefinePlugin, Plugin, SchemaWithType } from '~/plugins';
 import type { $, DollarTsDsl, TsDsl } from '~/ts-dsl';
 import type { StringCase, StringName } from '~/types/case';
 import type { MaybeArray } from '~/types/utils';
 
 import type { IApi } from './api';
+import type { Chain } from './shared/chain';
+import type { Ast, PluginState } from './shared/types';
 
 export type UserConfig = Plugin.Name<'zod'> &
   Plugin.Hooks &
@@ -747,49 +749,98 @@ export type Config = Plugin.Name<'zod'> &
     };
   };
 
-type SharedResolverArgs = DollarTsDsl & {
+interface BaseResolverContext extends DollarTsDsl {
   /**
-   * The current fluent builder chain under construction for this resolver.
-   *
-   * Represents the in-progress call sequence (e.g., a Zod or DSL chain)
-   * that defines the current schema or expression being generated.
-   *
-   * This chain can be extended, transformed, or replaced entirely to customize
-   * the resulting output of the resolver.
+   * Functions for working with chains.
    */
-  chain?: ReturnType<typeof $.call>;
+  chain: {
+    /**
+     * The current chain.
+     *
+     * In Zod, this represents a chain of call expressions ("chains")
+     * being assembled to form a schema definition.
+     *
+     * Each chain can be extended, modified, or replaced to customize
+     * the resulting schema.
+     */
+    current: Chain;
+  };
+  /**
+   * The plugin instance.
+   */
   plugin: ZodPlugin['Instance'];
-  z: Symbol;
-};
+  /**
+   * Provides access to commonly used symbols within the plugin.
+   */
+  symbols: {
+    z: Symbol;
+  };
+}
 
-export type FormatResolverArgs = Required<SharedResolverArgs> & {
-  schema: IR.SchemaObject;
-};
-
-export type ObjectBaseResolverArgs = SharedResolverArgs & {
-  /** Null = never */
-  additional?: ReturnType<typeof $.call | typeof $.expr> | null;
-  schema: IR.SchemaObject;
-  shape: ReturnType<typeof $.object>;
-};
+export interface ObjectResolverContext extends BaseResolverContext {
+  /**
+   * Nodes used to build different parts of the object schema.
+   */
+  nodes: {
+    /**
+     * If `additionalProperties` is `false` or `{ type: 'never' }`, returns `null`
+     * to indicate no additional properties are allowed.
+     */
+    additionalProperties: (
+      ctx: ObjectResolverContext,
+    ) => Chain | null | undefined;
+    base: (ctx: ObjectResolverContext) => Chain;
+    shape: (ctx: ObjectResolverContext) => ReturnType<typeof $.object>;
+  };
+  schema: SchemaWithType<'object'>;
+  /**
+   * Utility functions for object schema processing.
+   */
+  utils: {
+    ast: Partial<Omit<Ast, 'typeName'>>;
+    state: Refs<PluginState>;
+  };
+}
 
 type ResolverResult = boolean | number;
 
-export type ValidatorResolverArgs = SharedResolverArgs & {
+export interface StringResolverContext extends BaseResolverContext {
+  /**
+   * Nodes used to build different parts of the string schema.
+   */
+  nodes: {
+    base: (ctx: StringResolverContext) => Chain;
+    const: (ctx: StringResolverContext) => Chain | undefined;
+    format: (ctx: StringResolverContext) => Chain | undefined;
+    length: (ctx: StringResolverContext) => Chain | undefined;
+    maxLength: (ctx: StringResolverContext) => Chain | undefined;
+    minLength: (ctx: StringResolverContext) => Chain | undefined;
+    pattern: (ctx: StringResolverContext) => Chain | undefined;
+  };
+  schema: SchemaWithType<'string'>;
+}
+
+export interface ValidatorResolverContext extends BaseResolverContext {
   operation: IR.Operation;
-  schema: Symbol;
-};
+  /**
+   * Provides access to commonly used symbols within the plugin.
+   */
+  symbols: BaseResolverContext['symbols'] & {
+    schema: Symbol;
+  };
+}
 
 type ValidatorResolver = (
-  args: ValidatorResolverArgs,
+  ctx: ValidatorResolverContext,
 ) => MaybeArray<TsDsl<ts.Statement>> | null | undefined;
 
 type Resolvers = Plugin.Resolvers<{
   /**
-   * Resolvers for number schemas.
+   * Resolver for number schemas.
    *
-   * Allows customization of how number types are rendered, including
-   * per-format handling.
+   * Allows customization of how number types are rendered.
+   *
+   * Returning `undefined` will execute the default resolver logic.
    */
   number?: {
     /**
@@ -797,7 +848,7 @@ type Resolvers = Plugin.Resolvers<{
      *
      * Returning `undefined` will execute the default resolver logic.
      */
-    base?: (args: FormatResolverArgs) => ResolverResult | undefined;
+    base?: (ctx: StringResolverContext) => ResolverResult | undefined;
     /**
      * Resolvers for number formats (e.g., `float`, `double`, `int32`).
      *
@@ -811,56 +862,25 @@ type Resolvers = Plugin.Resolvers<{
      */
     formats?: Record<
       string,
-      (args: FormatResolverArgs) => ResolverResult | undefined
+      (ctx: StringResolverContext) => ResolverResult | undefined
     >;
   };
   /**
-   * Resolvers for object schemas.
+   * Resolver for object schemas.
    *
    * Allows customization of how object types are rendered.
    *
-   * Example path: `~resolvers.object.base`
-   *
-   * Returning `undefined` from a resolver will apply the default
-   * generation behavior for the object schema.
+   * Returning `undefined` will execute the default resolver logic.
    */
-  object?: {
-    /**
-     * Controls how object schemas are constructed.
-     *
-     * Called with the fully assembled shape (properties) and any additional
-     * property schema, allowing the resolver to choose the correct Zod
-     * base constructor and modify the schema chain if needed.
-     *
-     * Returning `undefined` will execute the default resolver logic.
-     */
-    base?: (
-      args: ObjectBaseResolverArgs,
-    ) => ReturnType<typeof $.call> | undefined;
-  };
+  object?: (ctx: ObjectResolverContext) => Chain | undefined;
   /**
-   * Resolvers for string schemas.
+   * Resolver for string schemas.
    *
-   * Allows customization of how string types are rendered, including
-   * per-format handling.
+   * Allows customization of how string types are rendered.
+   *
+   * Returning `undefined` will execute the default resolver logic.
    */
-  string?: {
-    /**
-     * Resolvers for string formats (e.g., `uuid`, `email`, `date-time`).
-     *
-     * Each key represents a specific format name with a custom
-     * resolver function that controls how that format is rendered.
-     *
-     * Example path: `~resolvers.string.formats.uuid`
-     *
-     * Returning `undefined` from a resolver will apply the default
-     * generation logic for that format.
-     */
-    formats?: Record<
-      string,
-      (args: FormatResolverArgs) => ReturnType<typeof $.call> | undefined
-    >;
-  };
+  string?: (ctx: StringResolverContext) => Chain | undefined;
   /**
    * Resolvers for request and response validators.
    *
@@ -868,7 +888,7 @@ type Resolvers = Plugin.Resolvers<{
    *
    * Example path: `~resolvers.validator.request` or `~resolvers.validator.response`
    *
-   * Returning `undefined` from a resolver will apply the default generation logic.
+   * Returning `undefined` will execute the default resolver logic.
    */
   validator?:
     | ValidatorResolver
@@ -876,13 +896,13 @@ type Resolvers = Plugin.Resolvers<{
         /**
          * Controls how the request validator function body is generated.
          *
-         * Returning `undefined` will fall back to the default `.await().return()` logic.
+         * Returning `undefined` will execute the default resolver logic.
          */
         request?: ValidatorResolver;
         /**
          * Controls how the response validator function body is generated.
          *
-         * Returning `undefined` will fall back to the default `.await().return()` logic.
+         * Returning `undefined` will execute the default resolver logic.
          */
         response?: ValidatorResolver;
       };

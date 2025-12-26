@@ -444,18 +444,19 @@ export default defineConfig(() => {
             //   return $(v).attr('instance').call(big);
             // },
             // object(ctx) {
-            //   const { $ } = ctx;
+            //   const { $, symbols } = ctx;
+            //   const { v } = symbols;
             //   const additional = ctx.nodes.additionalProperties(ctx);
-            //   const shape = ctx.nodes.shape(ctx);
             //   if (additional === undefined) {
-            //     return $('v').attr('looseObject').call(shape);
+            //     const shape = ctx.nodes.shape(ctx);
+            //     ctx.nodes.base = () => $(v).attr('looseObject').call(shape);
             //   }
-            //   return;
             // },
             // string(ctx) {
-            //   const { $, schema } = ctx;
+            //   const { $, schema, symbols } = ctx;
+            //   const { v } = symbols;
             //   if (schema.format === 'date' || schema.format === 'date-time') {
-            //     ctx.nodes.format = () => $('v').attr('isoDateTime').call();
+            //     ctx.nodes.format = () => $(v).attr('isoDateTime').call();
             //   }
             // },
             // validator(ctx) {
@@ -482,7 +483,7 @@ export default defineConfig(() => {
         {
           // case: 'snake_case',
           // comments: false,
-          compatibilityVersion: 3,
+          compatibilityVersion: 'mini',
           dates: {
             // local: true,
             // offset: true,
@@ -531,31 +532,48 @@ export default defineConfig(() => {
             },
           },
           '~resolvers': {
-            object: {
-              // base({ $, additional, shape }) {
-              //   if (!additional) {
-              //     // return $('z').attr('object').call(shape).attr('passthrough').call()
-              //     return $('z').attr('object').call(shape).attr('strict').call();
-              //   }
-              //   return;
-              // },
+            object(ctx) {
+              const { $, symbols } = ctx;
+              const { z } = symbols;
+              const additional = ctx.nodes.additionalProperties(ctx);
+              if (additional === undefined) {
+                const shape = ctx.nodes.shape(ctx);
+                // return $('z').attr('object').call(shape).attr('passthrough').call()
+                ctx.nodes.base = () =>
+                  $(z).attr('object').call(shape).attr('strict').call();
+              }
             },
-            string: {
-              formats: {
-                // date: ({ $ }) => $('z').attr('date').call(),
-                // 'date-time': ({ $ }) => $('z').attr('date').call(),
-                // int64: ({ $ }) => $('z').attr('string').call().attr('refine').call(
-                //   $.func().param('val').do(
-                //     $.try(
-                //       $('z').attr('int64').call().attr('parse').call($('BigInt').call('val')),
-                //       $.return($.literal(true))
-                //     ).catch(
-                //       $.return($.literal(false))
-                //     ),
-                //   ),
-                //   $.object().prop('message', $.literal('Must be a valid int64 string'))
-                // ),
-              },
+            string(ctx) {
+              const { $, schema, symbols } = ctx;
+              const { z } = symbols;
+              if (schema.format === 'date' || schema.format === 'date-time') {
+                ctx.nodes.format = () => $(z).attr('date').call();
+              }
+              if (schema.format === 'int64') {
+                ctx.nodes.format = () =>
+                  $(z)
+                    .attr('string')
+                    .call()
+                    .attr('refine')
+                    .call(
+                      $.func()
+                        .param('val')
+                        .do(
+                          $.try(
+                            $(z)
+                              .attr('int64')
+                              .call()
+                              .attr('parse')
+                              .call($('BigInt').call('val')),
+                            $.return($.literal(true)),
+                          ).catch($.return($.literal(false))),
+                        ),
+                      $.object().prop(
+                        'message',
+                        $.literal('Must be a valid int64 string'),
+                      ),
+                    );
+              }
             },
             // validator({ $, schema }) {
             //   return [

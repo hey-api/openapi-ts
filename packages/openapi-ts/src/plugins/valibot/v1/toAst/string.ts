@@ -13,8 +13,8 @@ function baseNode(ctx: StringResolverContext): PipeResult {
 }
 
 function constNode(ctx: StringResolverContext): PipeResult | undefined {
-  const { schema } = ctx;
-  const { v } = ctx.symbols;
+  const { schema, symbols } = ctx;
+  const { v } = symbols;
   if (typeof schema.const !== 'string') return;
   return $(v).attr(identifiers.schemas.literal).call($.literal(schema.const));
 }

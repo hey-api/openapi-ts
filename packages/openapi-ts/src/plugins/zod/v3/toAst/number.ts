@@ -7,6 +7,7 @@ import { getIntegerLimit } from '~/plugins/shared/utils/formats';
 import { $ } from '~/ts-dsl';
 
 import { identifiers } from '../../constants';
+import type { Chain } from '../../shared/chain';
 import type { IrSchemaToAstOptions } from '../../shared/types';
 
 export const numberToAst = ({
@@ -27,7 +28,7 @@ export const numberToAst = ({
     return expression;
   }
 
-  let numberExpression: ReturnType<typeof $.call>;
+  let numberExpression: Chain;
 
   if (shouldCoerceToBigInt(schema.format)) {
     numberExpression = $(z)

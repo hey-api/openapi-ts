@@ -4,15 +4,41 @@ import type { SchemaWithType } from '~/plugins';
 import { $ } from '~/ts-dsl';
 
 import { identifiers } from '../../constants';
+import type { Chain } from '../../shared/chain';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
-import type { ObjectBaseResolverArgs } from '../../types';
+import type { ObjectResolverContext } from '../../types';
 import { irSchemaToAst } from '../plugin';
 
-function defaultBaseResolver({
-  additional,
-  shape,
-  z,
-}: ObjectBaseResolverArgs): ReturnType<typeof $.call> {
+function additionalPropertiesNode(
+  ctx: ObjectResolverContext,
+): Chain | null | undefined {
+  const { plugin, schema } = ctx;
+
+  if (
+    !schema.additionalProperties ||
+    (schema.properties && Object.keys(schema.properties).length > 0)
+  )
+    return;
+
+  const additionalAst = irSchemaToAst({
+    plugin,
+    schema: schema.additionalProperties,
+    state: {
+      ...ctx.utils.state,
+      path: ref([...fromRef(ctx.utils.state.path), 'additionalProperties']),
+    },
+  });
+  if (additionalAst.hasLazyExpression) ctx.utils.ast.hasLazyExpression = true;
+  return additionalAst.expression;
+}
+
+function baseNode(ctx: ObjectResolverContext): Chain {
+  const { nodes, symbols } = ctx;
+  const { z } = symbols;
+
+  const additional = nodes.additionalProperties(ctx);
+  const shape = nodes.shape(ctx);
+
   if (additional) {
     return $(z)
       .attr(identifiers.record)
@@ -22,6 +48,38 @@ function defaultBaseResolver({
   return $(z).attr(identifiers.object).call(shape);
 }
 
+function objectResolver(ctx: ObjectResolverContext): Chain {
+  // TODO: parser - handle constants
+  return ctx.nodes.base(ctx);
+}
+
+function shapeNode(ctx: ObjectResolverContext): ReturnType<typeof $.object> {
+  const { plugin, schema } = ctx;
+  const shape = $.object().pretty();
+
+  for (const name in schema.properties) {
+    const property = schema.properties[name]!;
+
+    const propertyAst = irSchemaToAst({
+      optional: !schema.required?.includes(name),
+      plugin,
+      schema: property,
+      state: {
+        ...ctx.utils.state,
+        path: ref([...fromRef(ctx.utils.state.path), 'properties', name]),
+      },
+    });
+    if (propertyAst.hasLazyExpression) {
+      ctx.utils.ast.hasLazyExpression = true;
+      shape.getter(name, propertyAst.expression.return());
+    } else {
+      shape.prop(name, propertyAst.expression);
+    }
+  }
+
+  return shape;
+}
+
 export const objectToAst = ({
   plugin,
   schema,
@@ -29,71 +87,30 @@ export const objectToAst = ({
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'object'>;
 }): Omit<Ast, 'typeName'> => {
-  const z = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'zod.z',
-  });
-
-  const result: Partial<Omit<Ast, 'typeName'>> = {};
-
-  // TODO: parser - handle constants
-
-  const shape = $.object().pretty();
-  const required = schema.required ?? [];
-
-  for (const name in schema.properties) {
-    const property = schema.properties[name]!;
-    const isRequired = required.includes(name);
-
-    const propertyAst = irSchemaToAst({
-      optional: !isRequired,
-      plugin,
-      schema: property,
-      state: {
-        ...state,
-        path: ref([...fromRef(state.path), 'properties', name]),
-      },
-    });
-    if (propertyAst.hasLazyExpression) {
-      result.hasLazyExpression = true;
-    }
-
-    if (propertyAst.hasLazyExpression) {
-      shape.getter(name, propertyAst.expression.return());
-    } else {
-      shape.prop(name, propertyAst.expression);
-    }
-  }
-
-  let additional: ReturnType<typeof $.call | typeof $.expr> | null | undefined;
-  if (
-    schema.additionalProperties &&
-    (!schema.properties || !Object.keys(schema.properties).length)
-  ) {
-    const additionalAst = irSchemaToAst({
-      plugin,
-      schema: schema.additionalProperties,
-      state: {
-        ...state,
-        path: ref([...fromRef(state.path), 'additionalProperties']),
-      },
-    });
-    if (additionalAst.hasLazyExpression) result.hasLazyExpression = true;
-    additional = additionalAst.expression;
-  }
-
-  const args: ObjectBaseResolverArgs = {
+  const ast: Partial<Omit<Ast, 'typeName'>> = {};
+  const z = plugin.external('zod.z');
+  const ctx: ObjectResolverContext = {
     $,
-    additional,
-    chain: undefined,
+    chain: {
+      current: $(z),
+    },
+    nodes: {
+      additionalProperties: additionalPropertiesNode,
+      base: baseNode,
+      shape: shapeNode,
+    },
     plugin,
     schema,
-    shape,
-    z,
+    symbols: {
+      z,
+    },
+    utils: {
+      ast,
+      state,
+    },
   };
-  const resolver = plugin.config['~resolvers']?.object?.base;
-  const chain = resolver?.(args) ?? defaultBaseResolver(args);
-  result.expression = chain;
-
-  return result as Omit<Ast, 'typeName'>;
+  const resolver = plugin.config['~resolvers']?.object;
+  const node = resolver?.(ctx) ?? objectResolver(ctx);
+  ast.expression = node;
+  return ast as Omit<Ast, 'typeName'>;
 };
