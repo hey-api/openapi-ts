@@ -4,7 +4,7 @@ import { deduplicateSchema } from '~/ir/schema';
 import type { SchemaWithType } from '~/plugins';
 import { $ } from '~/ts-dsl';
 
-import { pipesToAst } from '../../shared/pipesToAst';
+import { pipesToNode } from '../../shared/pipes';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
 import { identifiers } from '../constants';
 import { irSchemaToAst } from '../plugin';
@@ -54,7 +54,7 @@ export const arrayToAst = ({
       if (itemAst.hasLazyExpression) {
         result.hasLazyExpression = true;
       }
-      return pipesToAst(itemAst.pipes, plugin);
+      return pipesToNode(itemAst.pipes, plugin);
     });
 
     if (itemExpressions.length === 1) {
