@@ -10,6 +10,7 @@ import { reactive, ref, watch } from 'vue';
 
 import { createSseClient } from '../core/serverSentEvents.gen.js';
 import type { HttpMethod } from '../core/types.gen.js';
+import { getValidRequestBody } from '../core/utils.gen.js';
 import type { Client, Config, RequestOptions } from './types.gen.js';
 import {
   buildUrl,
@@ -195,6 +196,10 @@ export const createClient = (config: Config = {}): Client => {
         body: opts.body as BodyInit | null | undefined,
         method,
         onRequest: undefined,
+        serializedBody: getValidRequestBody(opts) as
+          | BodyInit
+          | null
+          | undefined,
         signal: unwrapRefs(opts.signal) as AbortSignal,
         url,
       });

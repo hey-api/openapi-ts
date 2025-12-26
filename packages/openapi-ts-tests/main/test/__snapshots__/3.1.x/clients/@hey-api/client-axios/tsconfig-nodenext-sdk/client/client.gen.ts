@@ -127,6 +127,10 @@ export const createClient = (config: Config = {}): Client => {
         body: opts.body as BodyInit | null | undefined,
         headers: opts.headers as Record<string, string>,
         method,
+        serializedBody: getValidRequestBody(opts) as
+          | BodyInit
+          | null
+          | undefined,
         // @ts-expect-error
         signal: opts.signal,
         url,
