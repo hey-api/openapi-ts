@@ -432,15 +432,14 @@ export default defineConfig(() => {
           },
           '~resolvers': {
             number(ctx) {
-              const { $, plugin } = ctx;
-              const { v } = ctx.symbols;
+              const { $, plugin, symbols } = ctx;
+              const { v } = symbols;
+              // ctx.nodes.base = () => {
+              //   // implement custom base number resolver
+              // }
               const big = plugin.symbolOnce('Big', {
                 external: 'big.js',
                 importKind: 'default',
-                meta: {
-                  category: 'external',
-                  resource: 'big.js',
-                },
               });
               return $(v).attr('instance').call(big);
             },
@@ -458,7 +457,6 @@ export default defineConfig(() => {
             //   if (schema.format === 'date' || schema.format === 'date-time') {
             //     ctx.nodes.format = () => $('v').attr('isoDateTime').call();
             //   }
-            //   return;
             // },
             // validator({ $, plugin, schema, v }) {
             //   const vShadow = plugin.symbol('v');
