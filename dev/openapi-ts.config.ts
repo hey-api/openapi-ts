@@ -107,6 +107,7 @@ export default defineConfig(() => {
           //   suffix: '.meh',
           // },
           // format: 'prettier',
+          header: null,
           // importFileExtension: '.js',
           // indexFile: false,
           // lint: 'eslint',

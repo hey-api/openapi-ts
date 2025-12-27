@@ -88,6 +88,7 @@ export class Context<Spec extends Record<string, any> = any> {
         : undefined,
       renderers: [
         new TypeScriptRenderer({
+          header: config.output.header,
           preferExportAll: config.output.preferExportAll,
           preferFileExtension: config.output.importFileExtension || undefined,
           resolveModuleName: config.output.resolveModuleName,
