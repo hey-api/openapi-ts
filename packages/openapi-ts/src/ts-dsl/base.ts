@@ -24,7 +24,17 @@ import ts from 'typescript';
 
 import type { AccessOptions } from './utils/context';
 
+/**
+ * Accepts a value or a readonly array of values of type T.
+ */
 export type MaybeArray<T> = T | ReadonlyArray<T>;
+
+/**
+ * Accepts a value or a function returning a value.
+ */
+export type MaybeFunc<T extends (...args: Array<any>) => any> =
+  | T
+  | ReturnType<T>;
 
 export abstract class TsDsl<T extends ts.Node = ts.Node> implements Node<T> {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

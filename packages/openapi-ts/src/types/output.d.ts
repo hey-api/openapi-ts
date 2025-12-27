@@ -1,13 +1,22 @@
-import type { NameConflictResolver } from '@hey-api/codegen-core';
+import type {
+  NameConflictResolver,
+  RenderContext,
+} from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import type { Casing, NameTransformer } from '~/utils/naming';
+
+import type { MaybeArray, MaybeFunc } from './utils';
 
 export type Formatters = 'biome' | 'prettier';
 
 export type Linters = 'biome' | 'eslint' | 'oxlint';
 
 type ImportFileExtensions = '.js' | '.ts';
+
+type Header = MaybeFunc<
+  (ctx: RenderContext) => MaybeArray<string> | null | undefined
+>;
 
 export type UserOutput = {
   /**
@@ -67,6 +76,10 @@ export type UserOutput = {
    * @default null
    */
   format?: Formatters | null;
+  /**
+   * Text to include at the top of every generated file.
+   */
+  header?: Header;
   /**
    * If specified, this will be the file extension used when importing
    * other modules. By default, we don't add a file extension and let the
@@ -167,6 +180,10 @@ export type Output = {
    * Which formatter to use to process output folder?
    */
   format: Formatters | null;
+  /**
+   * Text to include at the top of every generated file.
+   */
+  header: Header;
   /**
    * If specified, this will be the file extension used when importing
    * other modules. By default, we don't add a file extension and let the
