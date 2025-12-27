@@ -1,9 +1,4 @@
-import type {
-  AnalysisContext,
-  AstContext,
-  Ref,
-  Symbol,
-} from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName, Ref } from '@hey-api/codegen-core';
 import { ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
@@ -15,8 +10,8 @@ import { DocMixin } from '../mixins/doc';
 import { safePropName } from '../utils/name';
 import { IdTsDsl } from './id';
 
-type Expr = Symbol | string | MaybeTsDsl<ts.Expression>;
-type Stmt = Symbol | string | MaybeTsDsl<ts.Statement>;
+type Expr = NodeName | MaybeTsDsl<ts.Expression>;
+type Stmt = NodeName | MaybeTsDsl<ts.Statement>;
 type Kind = 'computed' | 'getter' | 'prop' | 'setter' | 'spread';
 
 type Meta =
@@ -58,9 +53,9 @@ export class ObjectPropTsDsl extends Mixed {
     return this;
   }
 
-  override toAst(ctx: AstContext) {
+  override toAst() {
     this.$validate();
-    const node = this.$node(ctx, this._value);
+    const node = this.$node(this._value);
     if (this.meta.kind === 'spread') {
       if (ts.isStatement(node)) {
         throw new Error(
@@ -68,27 +63,23 @@ export class ObjectPropTsDsl extends Mixed {
         );
       }
       const result = ts.factory.createSpreadAssignment(node);
-      return this.$docs(ctx, result);
+      return this.$docs(result);
     }
     if (this.meta.kind === 'getter') {
-      const getter = new GetterTsDsl(
-        this.$node(ctx, safePropName(this.meta.name)),
-      ).do(node);
-      const result = this.$node(ctx, getter);
-      return this.$docs(ctx, result);
+      const getter = new GetterTsDsl(this.meta.name).do(node);
+      const result = this.$node(getter);
+      return this.$docs(result);
     }
     if (this.meta.kind === 'setter') {
-      const setter = new SetterTsDsl(
-        this.$node(ctx, safePropName(this.meta.name)),
-      ).do(node);
-      const result = this.$node(ctx, setter);
-      return this.$docs(ctx, result);
+      const setter = new SetterTsDsl(this.meta.name).do(node);
+      const result = this.$node(setter);
+      return this.$docs(result);
     }
     if (ts.isIdentifier(node) && node.text === this.meta.name) {
       const result = ts.factory.createShorthandPropertyAssignment(
         this.meta.name,
       );
-      return this.$docs(ctx, result);
+      return this.$docs(result);
     }
     if (ts.isStatement(node)) {
       throw new Error(
@@ -98,12 +89,12 @@ export class ObjectPropTsDsl extends Mixed {
     const result = ts.factory.createPropertyAssignment(
       this.meta.kind === 'computed'
         ? ts.factory.createComputedPropertyName(
-            this.$node(ctx, new IdTsDsl(this.meta.name)),
+            this.$node(new IdTsDsl(this.meta.name)),
           )
-        : this.$node(ctx, safePropName(this.meta.name)),
+        : this.$node(safePropName(this.meta.name)),
       node,
     );
-    return this.$docs(ctx, result);
+    return this.$docs(result);
   }
 
   $validate(): asserts this is this & {

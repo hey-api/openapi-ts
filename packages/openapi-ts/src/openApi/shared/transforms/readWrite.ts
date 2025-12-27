@@ -1,11 +1,11 @@
 import type { Graph } from '~/graph';
 import type { Logger } from '~/utils/logger';
+import { applyNaming } from '~/utils/naming';
 import { jsonPointerToPath } from '~/utils/ref';
 
 import type { Config } from '../../../types/config';
 import deepEqual from '../utils/deepEqual';
 import { buildGraph, type Scope } from '../utils/graph';
-import { buildName } from '../utils/name';
 import { deepClone } from '../utils/schema';
 import { childSchemaRelationships } from '../utils/schemaChildRelationships';
 import {
@@ -404,10 +404,7 @@ export const splitSchemas = ({
     // read variant
     const readSchema = deepClone<unknown>(nodeInfo.node);
     pruneSchemaByScope(graph, readSchema, 'writeOnly');
-    const readBase = buildName({
-      config: config.responses,
-      name,
-    });
+    const readBase = applyNaming(name, config.responses);
     const readName =
       readBase === name
         ? readBase
@@ -448,10 +445,7 @@ export const splitSchemas = ({
     ) {
       continue;
     }
-    const writeBase = buildName({
-      config: config.requests,
-      name,
-    });
+    const writeBase = applyNaming(name, config.requests);
     const writeName =
       writeBase === name && writeBase !== readName
         ? writeBase

@@ -1,4 +1,4 @@
-import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
+import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -26,8 +26,8 @@ export class TypeOfExprTsDsl extends Mixed {
     ctx.analyze(this._expr);
   }
 
-  override toAst(ctx: AstContext) {
-    return ts.factory.createTypeOfExpression(this.$node(ctx, this._expr));
+  override toAst() {
+    return ts.factory.createTypeOfExpression(this.$node(this._expr));
   }
 }
 

@@ -1,7 +1,7 @@
+import { applyNaming } from '~/utils/naming';
 import { jsonPointerToPath } from '~/utils/ref';
 
 import type { Config } from '../../../types/config';
-import { buildName } from '../utils/name';
 import { deepClone } from '../utils/schema';
 import { childSchemaRelationships } from '../utils/schemaChildRelationships';
 import { getSchemasObject } from '../utils/transforms';
@@ -215,16 +215,15 @@ const rootMode = ({ config, spec }: { config: EnumsConfig; spec: unknown }) => {
     }
 
     // Generate a unique name for the new root enum using config
-    const base = buildName({
-      config,
-      name:
-        typeof node === 'object' &&
+    const base = applyNaming(
+      typeof node === 'object' &&
         node &&
         'title' in node &&
         typeof node.title === 'string'
-          ? node.title
-          : String(key),
-    });
+        ? node.title
+        : String(key),
+      config,
+    );
     const name = getUniqueComponentName({
       base,
       components: schemasObj,

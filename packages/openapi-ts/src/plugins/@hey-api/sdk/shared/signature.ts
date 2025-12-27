@@ -1,7 +1,7 @@
 import type { IR } from '~/ir/types';
 import type { PluginInstance } from '~/plugins/shared/utils/instance';
+import { toCase } from '~/utils/naming';
 import { refToName } from '~/utils/ref';
-import { stringCase } from '~/utils/stringCase';
 
 import type { Field } from '../../client-core/bundle/params';
 
@@ -83,7 +83,7 @@ export const getSignatureParameters = ({
     } else if (operation.body.schema.$ref) {
       // alias body for more ergonomic naming, e.g. user if the type is User
       const name = refToName(operation.body.schema.$ref);
-      const key = stringCase({ case: 'camelCase', value: name });
+      const key = toCase(name, 'camelCase');
       addParameter(key, 'body');
     } else {
       addParameter('body', 'body');
@@ -157,7 +157,7 @@ export const getSignatureParameters = ({
       }
     } else if (operation.body.schema.$ref) {
       const value = refToName(operation.body.schema.$ref);
-      const originalName = stringCase({ case: 'camelCase', value });
+      const originalName = toCase(value, 'camelCase');
       const name = conflicts.has(originalName)
         ? `${location}_${originalName}`
         : originalName;

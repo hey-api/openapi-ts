@@ -38,17 +38,18 @@ export default defineConfig(() => {
           // },
           path: path.resolve(
             getSpecsPath(),
+            // '2.0.x',
             // '3.0.x',
             '3.1.x',
             // 'circular.yaml',
             // 'dutchie.json',
             // 'enum-names-values.yaml',
             // 'full.yaml',
-            'integer-formats.yaml',
+            // 'integer-formats.yaml',
             // 'invalid',
             // 'object-property-names.yaml',
             // 'openai.yaml',
-            // 'opencode.yaml',
+            'opencode.yaml',
             // 'pagination-ref.yaml',
             // 'schema-const.yaml',
             // 'sdk-instance.yaml',
@@ -106,13 +107,14 @@ export default defineConfig(() => {
           //   suffix: '.meh',
           // },
           // format: 'prettier',
+          header: null,
           // importFileExtension: '.js',
           // indexFile: false,
           // lint: 'eslint',
-          nameConflictResolver({ attempt, baseName }) {
-            // console.log('resolving conflict for:', { attempt, baseName });
-            return attempt === 0 ? baseName : `${baseName}_N${attempt + 1}`;
-          },
+          // nameConflictResolver({ attempt, baseName }) {
+          //   // console.log('resolving conflict for:', { attempt, baseName });
+          //   return attempt === 0 ? baseName : `${baseName}_N${attempt + 1}`;
+          // },
           path: path.resolve(__dirname, '.gen'),
           // preferExportAll: true,
           resolveModuleName: (moduleName) => {
@@ -260,7 +262,7 @@ export default defineConfig(() => {
           //   name: '你們_errors_{{name}}',
           // },
           // exportFromIndex: false,
-          name: '@hey-api/typescript',
+          // name: '@hey-api/typescript',
           // requests: '我們_data_{{name}}',
           // responses: {
           //   name: '我_responses_{{name}}',
@@ -274,9 +276,8 @@ export default defineConfig(() => {
           // },
         },
         {
-          // asClass: true,
+          asClass: true,
           // auth: false,
-          // classNameBuilder: '{{name}}',
           // classNameBuilder: '{{name}}Service',
           // classStructure: 'off',
           // client: false,
@@ -285,7 +286,8 @@ export default defineConfig(() => {
           //   fields.unwrap('path')
           // },
           // include...
-          instance: true,
+          instance: 'OpencodeClient',
+          // methodNameBuilder: '{{name}}',
           name: '@hey-api/sdk',
           // operationId: false,
           // paramsStructure: 'flat',
@@ -293,6 +295,12 @@ export default defineConfig(() => {
           // signature: 'auto',
           // signature: 'client',
           // signature: 'object',
+          structure: {
+            operations: {
+              containerName: 'OpencodeClient',
+              strategy: 'single',
+            },
+          },
           // transformer: '@hey-api/transformers',
           // transformer: true,
           // validator: 'valibot',
@@ -304,10 +312,7 @@ export default defineConfig(() => {
             symbols: {
               // getFilePath: (symbol) => {
               //   if (symbol.name) {
-              //     return utils.stringCase({
-              //       case: 'camelCase',
-              //       value: symbol.name,
-              //     });
+              //     return utils.toCase(symbol.name, 'camelCase');
               //   }
               //   return;
               // },
@@ -351,7 +356,7 @@ export default defineConfig(() => {
             // name: '{{name}}MO',
             // name: 'options',
           },
-          name: '@tanstack/react-query',
+          // name: '@tanstack/react-query',
           queryKeys: {
             // name: '{{name}}QK',
             // name: 'options',
@@ -421,10 +426,7 @@ export default defineConfig(() => {
             symbols: {
               // getFilePath: (symbol) => {
               //   if (symbol.name) {
-              //     return utils.stringCase({
-              //       case: 'camelCase',
-              //       value: symbol.name,
-              //     });
+              //     return utils.toCase(symbol.name, 'camelCase');
               //   }
               //   return;
               // },
@@ -496,7 +498,7 @@ export default defineConfig(() => {
           },
           exportFromIndex: true,
           metadata: true,
-          name: 'zod',
+          // name: 'zod',
           // requests: {
           //   // case: 'SCREAMING_SNAKE_CASE',
           //   // name: 'z{{name}}TestData',
@@ -606,16 +608,18 @@ export default defineConfig(() => {
           exportFromIndex: true,
           httpRequests: {
             asClass: true,
+            // enabled: false,
           },
           httpResources: {
-            asClass: true,
+            // asClass: true,
+            enabled: false,
           },
           // name: '@angular/common',
         },
         {
           exportFromIndex: true,
           // mutationOptions: '{{name}}Mutationssss',
-          name: '@pinia/colada',
+          // name: '@pinia/colada',
           // queryOptions: {
           //   name: '{{name}}Queryyyyy',
           // },

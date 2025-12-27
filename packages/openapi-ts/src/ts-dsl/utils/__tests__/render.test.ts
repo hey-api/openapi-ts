@@ -3,8 +3,10 @@ import { Project } from '@hey-api/codegen-core';
 import ts from 'typescript';
 import { describe, expect, it } from 'vitest';
 
-import { TypeScriptRenderer } from '../typescript';
-import type { ModuleExport, ModuleImport } from '../utils';
+import type { TsDsl } from '~/ts-dsl';
+
+import { TypeScriptRenderer } from '../render';
+import type { ModuleExport, ModuleImport } from '../render-utils';
 
 describe('TypeScriptRenderer', () => {
   const renderer = new TypeScriptRenderer();
@@ -20,12 +22,7 @@ describe('TypeScriptRenderer', () => {
   const mockCtx = (
     fileOverrides = {},
     projectOverrides = {},
-  ): RenderContext => ({
-    astContext: {
-      getAccess(node) {
-        return node;
-      },
-    },
+  ): RenderContext<TsDsl> => ({
     file: mockFile(fileOverrides),
     project: new Project({
       root: '/root',
@@ -47,26 +44,24 @@ describe('TypeScriptRenderer', () => {
   });
 
   it('renderImport() generates named and namespace imports correctly', () => {
-    const ctx = mockCtx();
     const group: ModuleImport = {
       imports: [
         {
           isTypeOnly: false,
-          kind: 'named',
           localName: 'A',
           sourceName: 'A',
         },
       ],
       isTypeOnly: false,
+      kind: 'named',
+      localName: undefined,
       modulePath: 'foo',
-      namespaceImport: undefined,
     };
-    const node = renderer['renderImport'](ctx, group);
+    const node = TypeScriptRenderer.toImportAst(group);
     expect(ts.isImportDeclaration(node)).toBe(true);
   });
 
   it('renderExport() generates named and namespace exports correctly', () => {
-    const ctx = mockCtx();
     const group: ModuleExport = {
       canExportAll: false,
       exports: [
@@ -81,7 +76,7 @@ describe('TypeScriptRenderer', () => {
       modulePath: 'bar',
       namespaceExport: undefined,
     };
-    const node = renderer['renderExport'](ctx, group);
+    const node = TypeScriptRenderer.toExportAst(group);
     expect(ts.isExportDeclaration(node)).toBe(true);
   });
 });

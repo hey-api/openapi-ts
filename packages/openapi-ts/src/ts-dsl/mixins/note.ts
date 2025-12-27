@@ -1,4 +1,4 @@
-import type { AnalysisContext, AstContext, Node } from '@hey-api/codegen-core';
+import type { AnalysisContext, Node } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import type { NoteFn, NoteLines } from '../layout/note';
@@ -6,7 +6,7 @@ import { NoteTsDsl } from '../layout/note';
 import type { BaseCtor, MixinCtor } from './types';
 
 export interface NoteMethods extends Node {
-  $note<T extends ts.Node>(ctx: AstContext, node: T): T;
+  $note<T extends ts.Node>(node: T): T;
   note(lines?: NoteLines, fn?: NoteFn): this;
 }
 
@@ -25,8 +25,8 @@ export function NoteMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
       return this;
     }
 
-    protected $note<T extends ts.Node>(ctx: AstContext, node: T): T {
-      return this._note ? this._note.apply(ctx, node) : node;
+    protected $note<T extends ts.Node>(node: T): T {
+      return this._note ? this._note.apply(node) : node;
     }
   }
 
