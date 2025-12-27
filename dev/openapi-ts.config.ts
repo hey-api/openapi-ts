@@ -276,7 +276,7 @@ export default defineConfig(() => {
           // },
         },
         {
-          asClass: true,
+          // asClass: true,
           // auth: false,
           // classNameBuilder: '{{name}}Service',
           // classStructure: 'off',
@@ -286,10 +286,11 @@ export default defineConfig(() => {
           //   fields.unwrap('path')
           // },
           // include...
-          instance: 'OpencodeClient',
+          // instance: true,
+          // instance: 'OpencodeClient',
           // methodNameBuilder: '{{name}}',
           name: '@hey-api/sdk',
-          // operationId: false,
+          // operationId: true,
           // paramsStructure: 'flat',
           // responseStyle: 'data',
           // signature: 'auto',
@@ -297,8 +298,20 @@ export default defineConfig(() => {
           // signature: 'object',
           structure: {
             operations: {
-              containerName: 'OpencodeClient',
-              strategy: 'single',
+              // container: 'object',
+              containerName: {
+                // casing: 'snake_case',
+                // name: 'OpencodeClient'
+              },
+              methodName: {
+                // casing: 'SCREAMING_SNAKE_CASE',
+                name: '{{name}}Yummy',
+              },
+              methods: 'static',
+              nesting: 'id',
+              segmentName: '{{name}}Seggy',
+              strategy: 'byTags',
+              strategyDefaultTag: 'DaxLikedThis',
             },
           },
           // transformer: '@hey-api/transformers',
@@ -614,7 +627,7 @@ export default defineConfig(() => {
             // asClass: true,
             enabled: false,
           },
-          // name: '@angular/common',
+          name: '@angular/common',
         },
         {
           exportFromIndex: true,

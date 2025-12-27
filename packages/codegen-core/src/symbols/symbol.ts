@@ -1,7 +1,7 @@
 import { symbolBrand } from '../brands';
-import { debug } from '../debug';
 import type { ISymbolMeta } from '../extensions';
 import type { File } from '../files/file';
+import { log } from '../log';
 import type { INode } from '../nodes/node';
 import type { BindingKind, ISymbolIn, SymbolKind } from './types';
 
@@ -142,7 +142,7 @@ export class Symbol<Node extends INode = INode> {
   get finalName(): string {
     if (!this.canonical._finalName) {
       const message = `Symbol finalName has not been resolved yet for ${this.canonical.toString()}`;
-      debug(message, 'symbol');
+      log.debug(message, 'symbol');
       throw new Error(message);
     }
     return this.canonical._finalName;
@@ -238,7 +238,7 @@ export class Symbol<Node extends INode = INode> {
     this.assertCanonical();
     if (this._file && this._file !== file) {
       const message = `Symbol ${this.canonical.toString()} is already assigned to a different file.`;
-      debug(message, 'symbol');
+      log.debug(message, 'symbol');
       throw new Error(message);
     }
     this._file = file;
@@ -253,7 +253,7 @@ export class Symbol<Node extends INode = INode> {
     this.assertCanonical();
     if (this._finalName && this._finalName !== name) {
       const message = `Symbol finalName has already been resolved for ${this.canonical.toString()}.`;
-      debug(message, 'symbol');
+      log.debug(message, 'symbol');
       throw new Error(message);
     }
     this._finalName = name;
@@ -298,7 +298,7 @@ export class Symbol<Node extends INode = INode> {
     this.assertCanonical();
     if (this._node && this._node !== node) {
       const message = `Symbol ${this.canonical.toString()} is already bound to a different node.`;
-      debug(message, 'symbol');
+      log.debug(message, 'symbol');
       throw new Error(message);
     }
     this._node = node;
@@ -329,7 +329,7 @@ export class Symbol<Node extends INode = INode> {
   private assertCanonical(): void {
     if (this._canonical && this._canonical !== this) {
       const message = `Illegal mutation of stub symbol ${this.toString()} → canonical: ${this._canonical.toString()}`;
-      debug(message, 'symbol');
+      log.debug(message, 'symbol');
       throw new Error(message);
     }
   }

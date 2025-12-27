@@ -1,15 +1,6 @@
-import type { StructureLocation, StructureShell } from '@hey-api/codegen-core';
+import type { StructureLocation } from '@hey-api/codegen-core';
 
 import type { IR } from '~/ir/types';
-
-/**
- * A function that determines where an operation appears in the structure.
- *
- * Returns one or more locations, each with a full path and optional shell.
- */
-export type OperationLocationStrategy = (
-  operation: IR.OperationObject,
-) => ReadonlyArray<StructureLocation>;
 
 /**
  * A function that derives path segments from an operation.
@@ -21,9 +12,18 @@ export type OperationPathStrategy = (
 ) => ReadonlyArray<string>;
 
 /**
- * Built-in location strategies for operations.
+ * A function that determines where an operation appears in the structure.
+ *
+ * Returns one or more locations, each with a full path.
  */
-export const OperationLocations = {
+export type OperationStructureStrategy = (
+  operation: IR.OperationObject,
+) => ReadonlyArray<StructureLocation['path']>;
+
+/**
+ * Built-in strategies for operations.
+ */
+export const OperationStrategies = {
   /**
    * Creates one root container per operation tag.
    *
@@ -39,33 +39,20 @@ export const OperationLocations = {
     (config: {
       /**
        * Root name for operations without tags.
-       *
-       * @default 'default'
        */
-      fallback?: string;
+      fallback: string;
       /**
        * Derives path segments from the operation.
-       *
-       * @default OperationPath.fromOperationId()
        */
-      path?: OperationPathStrategy;
-      /**
-       * Shell to apply to all created nodes.
-       */
-      shell: StructureShell;
-    }): OperationLocationStrategy =>
+      path: OperationPathStrategy;
+    }): OperationStructureStrategy =>
     (operation) => {
       const tags =
         operation.tags && operation.tags.length > 0
           ? operation.tags
-          : [config.fallback ?? 'default'];
-      const pathSegments = (config.path ?? OperationPath.fromOperationId())(
-        operation,
-      );
-      return tags.map((tag) => ({
-        path: [tag, ...pathSegments],
-        shell: config.shell,
-      }));
+          : [config.fallback];
+      const pathSegments = config.path(operation);
+      return tags.map((tag) => [tag, ...pathSegments]);
     },
 
   /**
@@ -79,19 +66,16 @@ export const OperationLocations = {
    * // Result: [{ path: ['getUsers'] }]
    */
   flat:
-    (config?: {
+    (config: {
       /**
-       * Derives the function name from the operation.
-       *
-       * @default operation.id
+       * Derives path segments within the root from the operation.
        */
-      name?: (operation: IR.OperationObject) => string;
-    }): OperationLocationStrategy =>
-    (operation) => [
-      {
-        path: [(config?.name ?? ((operation) => operation.id))(operation)],
-      },
-    ],
+      path: OperationPathStrategy;
+    }): OperationStructureStrategy =>
+    (operation) => {
+      const pathSegments = config.path(operation);
+      return [[pathSegments[pathSegments.length - 1]!]];
+    },
 
   /**
    * Places all operations under a single root container.
@@ -104,28 +88,17 @@ export const OperationLocations = {
     (config: {
       /**
        * Derives path segments within the root from the operation.
-       *
-       * @default OperationPath.fromOperationId()
        */
-      path?: OperationPathStrategy;
+      path: OperationPathStrategy;
       /**
        * Name of the container.
        */
       root: string;
-      /**
-       * Shell to apply to all created nodes.
-       */
-      shell: StructureShell;
-    }): OperationLocationStrategy =>
-    (operation) => [
-      {
-        path: [
-          config.root,
-          ...(config.path ?? OperationPath.fromOperationId())(operation),
-        ],
-        shell: config.shell,
-      },
-    ],
+    }): OperationStructureStrategy =>
+    (operation) => {
+      const pathSegments = config.path(operation);
+      return [[config.root, ...pathSegments]];
+    },
 };
 
 /**
@@ -147,18 +120,16 @@ export const OperationPath = {
    * // Result: ['users', 'accounts', 'getAll']
    */
   fromOperationId:
-    (config?: {
+    (config: {
       /**
        * Pattern to split operationId.
-       *
-       * @default /[./]/
        */
       delimiters: RegExp;
     }): OperationPathStrategy =>
     (operation) => {
       if (!operation.operationId) return [operation.id];
       const segments = operation.operationId
-        .split(config?.delimiters ?? /[./]/)
+        .split(config.delimiters)
         .filter(Boolean);
       return segments.length > 0 ? segments : [operation.id];
     },

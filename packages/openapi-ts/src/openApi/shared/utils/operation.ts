@@ -20,6 +20,8 @@ export const httpMethods = [
  * Returns an operation ID to use across the application. By default, we try
  * to use the provided ID. If it's not provided or the SDK is configured
  * to exclude it, we generate operation ID from its location.
+ *
+ * @deprecated
  */
 export const operationToId = ({
   context,
@@ -47,7 +49,14 @@ export const operationToId = ({
   if (
     id &&
     (!context.config.plugins['@hey-api/sdk'] ||
-      context.config.plugins['@hey-api/sdk'].config.operationId)
+      // TODO: needs to be refactored...
+      (context.config.plugins['@hey-api/sdk'].config.structure?.operations &&
+        typeof context.config.plugins['@hey-api/sdk'].config.structure
+          ?.operations !== 'function' &&
+        typeof context.config.plugins['@hey-api/sdk'].config.structure
+          ?.operations === 'object' &&
+        context.config.plugins['@hey-api/sdk'].config.structure?.operations
+          .nesting === 'operationId'))
   ) {
     result = toCase(sanitizeNamespaceIdentifier(id), targetCase);
   } else {

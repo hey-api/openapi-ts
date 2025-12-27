@@ -5,7 +5,6 @@ export type {
   ImportModule,
 } from './bindings';
 export { nodeBrand, symbolBrand } from './brands';
-export { debug } from './debug';
 export type {
   IProjectRenderMeta as ProjectRenderMeta,
   ISymbolMeta as SymbolMeta,
@@ -20,6 +19,7 @@ export type {
   Language,
   NameConflictResolvers,
 } from './languages/types';
+export { log } from './log';
 export type {
   INode as Node,
   NodeName,

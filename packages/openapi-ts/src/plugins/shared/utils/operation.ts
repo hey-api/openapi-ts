@@ -2,6 +2,8 @@ import type { Context } from '~/ir/context';
 import { hasOperationDataRequired } from '~/ir/operation';
 import type { IR } from '~/ir/types';
 import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
+import type { HeyApiSdkPlugin } from '~/plugins/@hey-api/sdk';
+import { isInstance } from '~/plugins/@hey-api/sdk/v1/plugin';
 import { escapeComment } from '~/utils/escape';
 
 export const createOperationComment = (
@@ -32,6 +34,11 @@ export const createOperationComment = (
   return comments.length ? comments : undefined;
 };
 
+/**
+ * TODO: replace with plugin logic...
+ *
+ * @deprecated this needs to be refactored
+ */
 export const isOperationOptionsRequired = ({
   context,
   operation,
@@ -43,7 +50,10 @@ export const isOperationOptionsRequired = ({
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
   const plugin = context.config.plugins['@hey-api/sdk'];
   if (plugin) {
-    if (!plugin.config.client && !plugin.config.instance) {
+    if (
+      !plugin.config.client &&
+      !isInstance(plugin as unknown as HeyApiSdkPlugin['Instance'])
+    ) {
       return true;
     }
     if (plugin.config.paramsStructure === 'flat') {

@@ -3,6 +3,7 @@ import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
 import { $ } from '~/ts-dsl';
 
 import type { HeyApiSdkPlugin } from '../types';
+import { isInstance } from '../v1/plugin';
 import { nuxtTypeDefault, nuxtTypeResponse } from './constants';
 
 export const createTypeOptions = ({
@@ -91,7 +92,7 @@ export const createTypeOptions = ({
                 'individual options. This might be also useful if you want to implement a',
                 'custom client.',
               ])
-              .required(!plugin.config.client && !plugin.config.instance)
+              .required(!plugin.config.client && !isInstance(plugin))
               .type(symbolClient),
           )
           .prop('meta', (p) =>
