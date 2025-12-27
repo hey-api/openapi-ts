@@ -25,6 +25,6 @@ export const definePluginConfig =
  */
 export const mappers = {
   boolean: (enabled: boolean) => ({ enabled }),
-  function: (name: (...args: any[]) => any) => ({ name }),
+  function: (name: (...args: Array<any>) => any) => ({ name }),
   string: (name: string) => ({ name }),
 } as const;
