@@ -217,7 +217,7 @@ export function applyNaming(value: string, config: NamingConfig): string {
       result = config.name(result);
     } else {
       // TODO: refactor so there's no need for separators?
-      const separator = casing === 'preserve' ? '' : '-';
+      const separator = !casing || casing === 'preserve' ? '' : '-';
       result = config.name.replace(
         '{{name}}',
         `${separator}${result}${separator}`,

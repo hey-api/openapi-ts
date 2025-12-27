@@ -8,28 +8,19 @@ import { StructureModel } from '@hey-api/codegen-core';
 
 import { clientFolderAbsolutePath } from '~/generate/client';
 import type { IR } from '~/ir/types';
-import {
-  OperationLocations,
-  type OperationLocationStrategy,
-  OperationPath,
-} from '~/openApi/shared/locations';
 import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
 import {
   createOperationComment,
   isOperationOptionsRequired,
 } from '~/plugins/shared/utils/operation';
 import { $ } from '~/ts-dsl';
-import { toCase } from '~/utils/naming';
+import { applyNaming, toCase } from '~/utils/naming';
 
 import { createClientClass, createRegistryClass } from '../shared/class';
 import { nuxtTypeComposable, nuxtTypeDefault } from '../shared/constants';
-import {
-  operationClassName,
-  operationMethodName,
-  operationParameters,
-  operationStatements,
-} from '../shared/operation';
+import { operationParameters, operationStatements } from '../shared/operation';
 import { createTypeOptions } from '../shared/typeOptions';
+import { resolveStrategy } from '../structure/resolve';
 import type { HeyApiSdkPlugin } from '../types';
 
 interface OperationItem {
@@ -52,13 +43,9 @@ function createFnSymbol(
   item: StructureItem & { data: OperationItem },
 ): Symbol {
   const { operation, path, tags } = item.data;
-  const name = item.location[item.location.length - 1];
+  const name = item.location[item.location.length - 1]!;
   return plugin.symbol(
-    operationMethodName({
-      operation,
-      plugin,
-      value: name,
-    }),
+    applyNaming(name, plugin.config.structure.operations.methodName),
     {
       meta: {
         category: 'sdk',
@@ -84,7 +71,7 @@ function childToNode(
   });
   const memberNameStr = toCase(refChild.name, 'camelCase');
   const memberName = plugin.symbol(memberNameStr);
-  if (plugin.config.instance) {
+  if (isInstance(plugin)) {
     const privateName = plugin.symbol(`_${memberNameStr}`);
     return [
       $.field(privateName, (f) => f.private().optional().type(refChild)),
@@ -305,7 +292,7 @@ function toNode(
             operation,
           })
             .public()
-            .static(!isAngularClient && !plugin.config.instance),
+            .static(!isAngularClient && !isInstance(plugin)),
         ),
         operation,
         plugin,
@@ -333,7 +320,12 @@ function createShell(plugin: HeyApiSdkPlugin['Instance']): StructureShell {
   return {
     define: (node) => {
       const symbol = plugin.symbol(
-        operationClassName({ plugin, value: node.name }),
+        applyNaming(
+          node.name,
+          node.isRoot
+            ? plugin.config.structure.operations.containerName
+            : plugin.config.structure.operations.segmentName,
+        ),
         {
           meta: {
             category: 'utility',
@@ -345,7 +337,7 @@ function createShell(plugin: HeyApiSdkPlugin['Instance']): StructureShell {
       );
       const c = $.class(symbol)
         .export()
-        .$if(plugin.config.instance, (c) =>
+        .$if(isInstance(plugin), (c) =>
           c.extends(
             plugin.referenceSymbol({
               category: 'utility',
@@ -367,7 +359,7 @@ function createShell(plugin: HeyApiSdkPlugin['Instance']): StructureShell {
 
       const dependencies: Array<ReturnType<typeof $.class>> = [];
 
-      if (node.isRoot && plugin.config.instance) {
+      if (node.isRoot && isInstance(plugin)) {
         enrichRootClass({
           dependencies,
           node: c,
@@ -381,32 +373,13 @@ function createShell(plugin: HeyApiSdkPlugin['Instance']): StructureShell {
   };
 }
 
-function resolveLocationStrategy(
-  plugin: HeyApiSdkPlugin['Instance'],
-): OperationLocationStrategy {
-  const shell = createShell(plugin);
-  const path =
-    plugin.config.classStructure === 'auto'
-      ? OperationPath.fromOperationId()
-      : OperationPath.id();
-
-  if (!plugin.config.asClass) {
-    return OperationLocations.flat();
-  }
-
-  if (plugin.config.instance) {
-    return OperationLocations.single({
-      path,
-      root: plugin.config.instance,
-      shell,
-    });
-  }
-
-  return OperationLocations.byTags({
-    fallback: 'default',
-    path,
-    shell,
-  });
+export function isInstance(plugin: HeyApiSdkPlugin['Instance']): boolean {
+  const config = plugin.config.structure.operations;
+  return (
+    config.container === 'class' &&
+    config.methods === 'instance' &&
+    config.strategy !== 'flat'
+  );
 }
 
 export const handlerV1: HeyApiSdkPlugin['Handler'] = ({ plugin }) => {
@@ -450,7 +423,11 @@ export const handlerV1: HeyApiSdkPlugin['Handler'] = ({ plugin }) => {
       },
     });
   }
-  if (isAngularClient && plugin.config.asClass) {
+  if (
+    isAngularClient &&
+    plugin.config.structure.operations.container === 'class' &&
+    plugin.config.structure.operations.strategy !== 'flat'
+  ) {
     plugin.symbol('Injectable', {
       external: '@angular/core',
       meta: {
@@ -463,7 +440,8 @@ export const handlerV1: HeyApiSdkPlugin['Handler'] = ({ plugin }) => {
   createTypeOptions({ plugin });
 
   const structure = new StructureModel();
-  const locationStrategy = resolveLocationStrategy(plugin);
+  const shell = createShell(plugin);
+  const strategy = resolveStrategy(plugin);
 
   plugin.forEach(
     'operation',
@@ -474,8 +452,7 @@ export const handlerV1: HeyApiSdkPlugin['Handler'] = ({ plugin }) => {
           path: event._path,
           tags: event.tags,
         } satisfies OperationItem,
-        // TODO: expose this logic
-        locations: locationStrategy(event.operation),
+        locations: strategy(event.operation).map((path) => ({ path, shell })),
         source,
       });
     },

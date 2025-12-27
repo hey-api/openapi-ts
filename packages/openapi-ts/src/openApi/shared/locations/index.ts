@@ -1,5 +1,5 @@
 export type {
-  OperationLocationStrategy,
   OperationPathStrategy,
+  OperationStructureStrategy,
 } from './operation';
-export { OperationLocations, OperationPath } from './operation';
+export { OperationPath, OperationStrategies } from './operation';

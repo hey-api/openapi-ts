@@ -1,3 +1,5 @@
+import type { MaybeFunc } from '~/types/utils';
+
 /**
  * Available casing strategies.
  */
@@ -13,7 +15,7 @@ export type Casing =
  *
  * Template supports `{{name}}` variable.
  */
-export type NameTransformer = string | ((name: string) => string);
+export type NameTransformer = MaybeFunc<(name: string) => string>;
 
 /**
  * Full naming configuration.

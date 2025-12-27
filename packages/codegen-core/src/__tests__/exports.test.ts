@@ -3,7 +3,6 @@ import { describe, expect, it } from 'vitest';
 import * as index from '../index';
 
 const constExports = [
-  'debug',
   'defaultExtensions',
   'defaultNameConflictResolvers',
   'File',
@@ -14,6 +13,7 @@ const constExports = [
   'isRef',
   'isSymbol',
   'isSymbolRef',
+  'log',
   'nodeBrand',
   'Project',
   'ref',

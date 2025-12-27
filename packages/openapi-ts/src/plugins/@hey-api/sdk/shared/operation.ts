@@ -10,6 +10,7 @@ import { toCase } from '~/utils/naming';
 
 import type { Field, Fields } from '../../client-core/bundle/params';
 import type { HeyApiSdkPlugin } from '../types';
+import { isInstance } from '../v1/plugin';
 import { operationAuth } from './auth';
 import { nuxtTypeComposable, nuxtTypeDefault } from './constants';
 import { getSignatureParameters } from './signature';
@@ -33,7 +34,7 @@ interface ClassNameEntry {
 /**
  * @deprecated
  */
-export const operationClassName = ({
+const operationClassName = ({
   plugin,
   value,
 }: {
@@ -52,7 +53,7 @@ export const operationClassName = ({
 /**
  * @deprecated
  */
-export const operationMethodName = ({
+const operationMethodName = ({
   operation,
   plugin,
   value,
@@ -584,7 +585,7 @@ export const operationStatements = ({
 
   let clientExpression: ReturnType<typeof $.attr | typeof $.binary>;
   const optionsClient = $('options').attr('client').required(isRequiredOptions);
-  if (plugin.config.instance) {
+  if (isInstance(plugin)) {
     clientExpression = optionsClient.coalesce($('this').attr('client'));
   } else if (symbolClient) {
     clientExpression = optionsClient.coalesce(symbolClient);

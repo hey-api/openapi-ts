@@ -1,16 +1,14 @@
-import type { IR } from '~/ir/types';
-import type { OperationPathStrategy } from '~/openApi/shared/locations';
+import type {
+  OperationPathStrategy,
+  OperationStructureStrategy,
+} from '~/openApi/shared/locations';
 import type { NamingConfig, NamingRule } from '~/utils/naming';
-
-type CustomStructureStrategy = (
-  operation: IR.OperationObject,
-) => ReadonlyArray<ReadonlyArray<string>>;
 
 export type StructureStrategy =
   | 'byTags'
   | 'flat'
   | 'single'
-  | CustomStructureStrategy;
+  | OperationStructureStrategy;
 
 export interface UserStructureConfig {
   /**
@@ -46,22 +44,6 @@ export interface UserStructureConfig {
    */
   containerName?: NamingRule;
   /**
-   * Default container name for operations without tags.
-   *
-   * Only applies when `strategy` is `'byTags'`.
-   *
-   * @default 'default'
-   */
-  defaultTag?: string;
-  /**
-   * Delimiters for splitting operationId.
-   *
-   * Only applies when `nesting` is `'operationId'`.
-   *
-   * @default /[./]/
-   */
-  delimiters?: RegExp;
-  /**
    * Customize method/function names.
    *
    * Applied to the final segment of the path (the method name).
@@ -91,6 +73,14 @@ export interface UserStructureConfig {
    */
   nesting?: 'operationId' | 'id' | OperationPathStrategy;
   /**
+   * Delimiters for splitting operationId.
+   *
+   * Only applies when `nesting` is `'operationId'`.
+   *
+   * @default /[./]/
+   */
+  nestingDelimiters?: RegExp;
+  /**
    * Customize nesting segment names.
    *
    * Applied to intermediate path segments (not the method name).
@@ -107,6 +97,14 @@ export interface UserStructureConfig {
    * @default 'flat'
    */
   strategy?: StructureStrategy;
+  /**
+   * Default container name for operations without tags.
+   *
+   * Only applies when `strategy` is `'byTags'`.
+   *
+   * @default 'default'
+   */
+  strategyDefaultTag?: string;
 }
 
 export interface StructureConfig {
@@ -141,18 +139,6 @@ export interface StructureConfig {
    */
   containerName: NamingConfig;
   /**
-   * Default container name for operations without tags.
-   *
-   * Only applies when `strategy` is `'byTags'`.
-   */
-  defaultTag: string;
-  /**
-   * Delimiters for splitting operationId.
-   *
-   * Only applies when `nesting` is `'operationId'`.
-   */
-  delimiters: RegExp;
-  /**
    * Customize method/function names.
    *
    * Applied to the final segment of the path (the method name).
@@ -178,6 +164,12 @@ export interface StructureConfig {
    */
   nesting: 'operationId' | 'id' | OperationPathStrategy;
   /**
+   * Delimiters for splitting operationId.
+   *
+   * Only applies when `nesting` is `'operationId'`.
+   */
+  nestingDelimiters: RegExp;
+  /**
    * Customize nesting segment names.
    *
    * Applied to intermediate path segments (not the method name).
@@ -192,4 +184,10 @@ export interface StructureConfig {
    * - Custom function for full control
    */
   strategy: StructureStrategy;
+  /**
+   * Default container name for operations without tags.
+   *
+   * Only applies when `strategy` is `'byTags'`.
+   */
+  strategyDefaultTag: string;
 }

@@ -2,8 +2,8 @@ import path from 'node:path';
 
 import type { ExportModule, ImportModule } from '../bindings';
 import { fileBrand } from '../brands';
-import { debug } from '../debug';
 import type { Language } from '../languages/types';
+import { log } from '../log';
 import type { INode } from '../nodes/node';
 import type { NameScopes } from '../planner/scope';
 import type { IProject } from '../project/types';
@@ -135,7 +135,7 @@ export class File<Node extends INode = INode> {
     const name = this._logicalFilePath.split('/').pop();
     if (name) return name;
     const message = `File ${this.toString()} has no name`;
-    debug(message, 'file');
+    log.debug(message, 'file');
     throw new Error(message);
   }
 

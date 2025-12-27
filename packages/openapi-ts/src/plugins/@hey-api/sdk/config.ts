@@ -16,12 +16,6 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
 
     // Deprecated - kept for backward compatibility
     // eslint-disable-next-line sort-keys-fix/sort-keys-fix
-    asClass: false,
-    classNameBuilder: '{{name}}',
-    classStructure: 'auto',
-    instance: '',
-    methodNameBuilder: '{{name}}',
-    operationId: true,
     response: 'body',
   },
   dependencies: ['@hey-api/typescript'],
@@ -77,7 +71,9 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
       plugin.config.validator.response = false;
     }
 
-    plugin.config.structure = resolveStructure(plugin.config, context);
+    plugin.config.structure = {
+      operations: resolveStructure(plugin.config, context),
+    };
   },
 };
 
