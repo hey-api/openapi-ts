@@ -1,13 +1,10 @@
 import { log } from '@hey-api/codegen-core';
 
+import type { OperationsStrategy } from '~/openApi/shared/locations';
 import type { PluginContext } from '~/plugins/types';
 
 import type { UserConfig } from '../types';
-import type {
-  OperationsConfig,
-  OperationsStrategy,
-  UserOperationsConfig,
-} from './types';
+import type { OperationsConfig, UserOperationsConfig } from './types';
 
 type Config = Omit<UserConfig, 'name'>;
 
@@ -151,14 +148,6 @@ function normalizeConfig(
 }
 
 function mapLegacyToConfig(config: Config): Partial<OperationsConfig> {
-  // TODO: refactor...
-  // Set default classNameBuilder based on client type
-  if (config.classNameBuilder === '{{name}}') {
-    if (config.client === '@hey-api/client-angular') {
-      config.classNameBuilder = '{{name}}Service';
-    }
-  }
-
   let strategy: OperationsConfig['strategy'] | undefined;
   if (config.instance) {
     strategy = 'single';

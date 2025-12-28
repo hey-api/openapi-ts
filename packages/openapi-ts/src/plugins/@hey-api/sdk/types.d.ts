@@ -1,12 +1,9 @@
+import type { OperationsStrategy } from '~/openApi/shared/locations';
 import type { DefinePlugin, Plugin } from '~/plugins';
 import type { PluginClientNames, PluginValidatorNames } from '~/plugins/types';
 import type { NameTransformer } from '~/utils/naming';
 
-import type {
-  OperationsConfig,
-  OperationsStrategy,
-  UserOperationsConfig,
-} from './operations';
+import type { OperationsConfig, UserOperationsConfig } from './operations';
 
 export type UserConfig = Plugin.Name<'@hey-api/sdk'> &
   Plugin.Hooks & {

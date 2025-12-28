@@ -1,6 +1,3 @@
 export { resolveOperations } from './config';
-export type {
-  OperationsConfig,
-  OperationsStrategy,
-  UserOperationsConfig,
-} from './types';
+export { resolveStrategy } from './resolve';
+export type { OperationsConfig, UserOperationsConfig } from './types';

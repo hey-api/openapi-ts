@@ -3,7 +3,7 @@ import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
 import { $ } from '~/ts-dsl';
 
 import type { HeyApiSdkPlugin } from '../types';
-import { isInstance } from '../v1/plugin';
+import { isInstance } from '../v1/node';
 import { nuxtTypeDefault, nuxtTypeResponse } from './constants';
 
 export const createTypeOptions = ({

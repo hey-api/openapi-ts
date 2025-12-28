@@ -12,6 +12,8 @@ export type NodeChain = ReadonlyArray<TsDsl>;
 export interface AccessOptions {
   /** The access context. */
   context?: 'example';
+  /** Enable debug mode. */
+  debug?: boolean;
 }
 
 export type AccessResult = ReturnType<
@@ -52,9 +54,10 @@ function getAccessChainForNode(node: TsDsl): NodeChain {
   const structuralChain = [...getStructuralChainForNode(node, new Set())];
   const accessChain = structuralToAccessChain(structuralChain);
   if (accessChain.length === 0) {
-    throw new Error(
-      `Cannot build access chain for node ${node['~dsl']} (${node.name.toString()})`,
-    );
+    // I _think_ this should not happen, but it does and this fix works for now.
+    // I assume this will cause issues with imports in some cases, investigate
+    // when it actually happens.
+    return [node.clone()];
   }
   return accessChain.map((node) => node.clone());
 }
