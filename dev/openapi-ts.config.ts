@@ -291,29 +291,27 @@ export default defineConfig(() => {
           // methodNameBuilder: '{{name}}',
           name: '@hey-api/sdk',
           // operationId: true,
+          operations: {
+            // container: 'object',
+            containerName: {
+              // casing: 'snake_case',
+              // name: 'OpencodeClient'
+            },
+            methodName: {
+              // casing: 'SCREAMING_SNAKE_CASE',
+              name: '{{name}}Yummy',
+            },
+            methods: 'static',
+            nesting: 'id',
+            segmentName: '{{name}}Seggy',
+            strategy: 'byTags',
+            strategyDefaultTag: 'DaxLikedThis',
+          },
           // paramsStructure: 'flat',
           // responseStyle: 'data',
           // signature: 'auto',
           // signature: 'client',
           // signature: 'object',
-          structure: {
-            operations: {
-              // container: 'object',
-              containerName: {
-                // casing: 'snake_case',
-                // name: 'OpencodeClient'
-              },
-              methodName: {
-                // casing: 'SCREAMING_SNAKE_CASE',
-                name: '{{name}}Yummy',
-              },
-              methods: 'static',
-              nesting: 'id',
-              segmentName: '{{name}}Seggy',
-              strategy: 'byTags',
-              strategyDefaultTag: 'DaxLikedThis',
-            },
-          },
           // transformer: '@hey-api/transformers',
           // transformer: true,
           // validator: 'valibot',
@@ -620,8 +618,8 @@ export default defineConfig(() => {
         {
           exportFromIndex: true,
           httpRequests: {
-            asClass: true,
-            // enabled: false,
+            // asClass: true,
+            enabled: false,
           },
           httpResources: {
             // asClass: true,

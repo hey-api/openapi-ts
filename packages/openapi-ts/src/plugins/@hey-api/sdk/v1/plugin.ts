@@ -16,11 +16,11 @@ import {
 import { $ } from '~/ts-dsl';
 import { applyNaming, toCase } from '~/utils/naming';
 
+import { resolveStrategy } from '../operations/resolve';
 import { createClientClass, createRegistryClass } from '../shared/class';
 import { nuxtTypeComposable, nuxtTypeDefault } from '../shared/constants';
 import { operationParameters, operationStatements } from '../shared/operation';
 import { createTypeOptions } from '../shared/typeOptions';
-import { resolveStrategy } from '../structure/resolve';
 import type { HeyApiSdkPlugin } from '../types';
 
 interface OperationItem {
@@ -44,19 +44,16 @@ function createFnSymbol(
 ): Symbol {
   const { operation, path, tags } = item.data;
   const name = item.location[item.location.length - 1]!;
-  return plugin.symbol(
-    applyNaming(name, plugin.config.structure.operations.methodName),
-    {
-      meta: {
-        category: 'sdk',
-        path,
-        resource: 'operation',
-        resourceId: operation.id,
-        tags,
-        tool: 'sdk',
-      },
+  return plugin.symbol(applyNaming(name, plugin.config.operations.methodName), {
+    meta: {
+      category: 'sdk',
+      path,
+      resource: 'operation',
+      resourceId: operation.id,
+      tags,
+      tool: 'sdk',
     },
-  );
+  });
 }
 
 function childToNode(
@@ -323,8 +320,8 @@ function createShell(plugin: HeyApiSdkPlugin['Instance']): StructureShell {
         applyNaming(
           node.name,
           node.isRoot
-            ? plugin.config.structure.operations.containerName
-            : plugin.config.structure.operations.segmentName,
+            ? plugin.config.operations.containerName
+            : plugin.config.operations.segmentName,
         ),
         {
           meta: {
@@ -374,7 +371,7 @@ function createShell(plugin: HeyApiSdkPlugin['Instance']): StructureShell {
 }
 
 export function isInstance(plugin: HeyApiSdkPlugin['Instance']): boolean {
-  const config = plugin.config.structure.operations;
+  const config = plugin.config.operations;
   return (
     config.container === 'class' &&
     config.methods === 'instance' &&
@@ -425,8 +422,8 @@ export const handlerV1: HeyApiSdkPlugin['Handler'] = ({ plugin }) => {
   }
   if (
     isAngularClient &&
-    plugin.config.structure.operations.container === 'class' &&
-    plugin.config.structure.operations.strategy !== 'flat'
+    plugin.config.operations.container === 'class' &&
+    plugin.config.operations.strategy !== 'flat'
   ) {
     plugin.symbol('Injectable', {
       external: '@angular/core',

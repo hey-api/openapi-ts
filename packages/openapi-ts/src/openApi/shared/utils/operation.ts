@@ -50,13 +50,13 @@ export const operationToId = ({
     id &&
     (!context.config.plugins['@hey-api/sdk'] ||
       // TODO: needs to be refactored...
-      (context.config.plugins['@hey-api/sdk'].config.structure?.operations &&
-        typeof context.config.plugins['@hey-api/sdk'].config.structure
-          ?.operations !== 'function' &&
-        typeof context.config.plugins['@hey-api/sdk'].config.structure
-          ?.operations === 'object' &&
-        context.config.plugins['@hey-api/sdk'].config.structure?.operations
-          .nesting === 'operationId'))
+      (context.config.plugins['@hey-api/sdk'].config.operations &&
+        typeof context.config.plugins['@hey-api/sdk'].config.operations !==
+          'function' &&
+        typeof context.config.plugins['@hey-api/sdk'].config.operations ===
+          'object' &&
+        context.config.plugins['@hey-api/sdk'].config.operations.nesting ===
+          'operationId'))
   ) {
     result = toCase(sanitizeNamespaceIdentifier(id), targetCase);
   } else {
