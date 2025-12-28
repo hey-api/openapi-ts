@@ -3,139 +3,16 @@ import { refs } from '@hey-api/codegen-core';
 
 import { statusCodeToGroup } from '~/ir/operation';
 import type { IR } from '~/ir/types';
-import { sanitizeNamespaceIdentifier } from '~/openApi/common/parser/sanitize';
 import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
 import { $ } from '~/ts-dsl';
-import { toCase } from '~/utils/naming';
 
 import type { Field, Fields } from '../../client-core/bundle/params';
 import type { HeyApiSdkPlugin } from '../types';
-import { isInstance } from '../v1/plugin';
+import { isInstance } from '../v1/node';
 import { operationAuth } from './auth';
 import { nuxtTypeComposable, nuxtTypeDefault } from './constants';
 import { getSignatureParameters } from './signature';
 import { createRequestValidator, createResponseValidator } from './validator';
-
-interface ClassNameEntry {
-  /**
-   * Name of the class where this function appears.
-   */
-  className: string;
-  /**
-   * Name of the function within the class.
-   */
-  methodName: string;
-  /**
-   * JSONPath-like array to class location.
-   */
-  path: ReadonlyArray<string>;
-}
-
-/**
- * @deprecated
- */
-const operationClassName = ({
-  plugin,
-  value,
-}: {
-  plugin: HeyApiSdkPlugin['Instance'];
-  value: string;
-}) => {
-  // TODO: expose casing option
-  const name = toCase(value, 'PascalCase');
-  return (
-    // @ts-expect-error
-    (typeof plugin.config.classNameBuilder === 'string'
-      ? // @ts-expect-error
-        plugin.config.classNameBuilder.replace('{{name}}', name)
-      : // @ts-expect-error
-        plugin.config.classNameBuilder(name)) || name
-  );
-};
-
-/**
- * @deprecated
- */
-const operationMethodName = ({
-  operation,
-  plugin,
-  value,
-}: {
-  operation: IR.OperationObject;
-  plugin: HeyApiSdkPlugin['Instance'];
-  value?: string;
-}) => {
-  // TODO: expose casing option
-  const name = toCase(value || operation.id, 'camelCase');
-  return (
-    // @ts-expect-error
-    (typeof plugin.config.methodNameBuilder === 'string'
-      ? // @ts-expect-error
-        plugin.config.methodNameBuilder.replace('{{name}}', name)
-      : // @ts-expect-error TODO: remove
-        plugin.config.methodNameBuilder?.(name, operation)) || name
-  );
-};
-
-/**
- * Returns a list of classes where this operation appears in the generated SDK.
- *
- * @deprecated
- */
-export const operationClasses = ({
-  operation,
-  plugin,
-}: {
-  operation: IR.OperationObject;
-  plugin: HeyApiSdkPlugin['Instance'];
-}): Map<string, ClassNameEntry> => {
-  const classNames = new Map<string, ClassNameEntry>();
-
-  let className: string | undefined;
-  let methodName: string | undefined;
-  let classCandidates: Array<string> = [];
-
-  // @ts-expect-error
-  if (plugin.config.classStructure === 'auto' && operation.operationId) {
-    classCandidates = operation.operationId.split(/[./]/).filter(Boolean);
-    if (classCandidates.length >= 2) {
-      const methodCandidate = classCandidates.pop()!;
-      methodName = toCase(
-        sanitizeNamespaceIdentifier(methodCandidate),
-        'camelCase',
-      );
-      className = classCandidates.pop()!;
-    }
-  }
-
-  // @ts-expect-error
-  const rootClasses = plugin.config.instance
-    ? // @ts-expect-error
-      [plugin.config.instance]
-    : (operation.tags ?? ['default']);
-
-  for (const rootClass of rootClasses) {
-    // Default path
-    let path = [rootClass];
-    if (className) {
-      // If root class is already within classCandidates or the same as className
-      // do not add it again as this will cause a recursion issue.
-      if (classCandidates.includes(rootClass) || rootClass === className) {
-        path = [...classCandidates, className];
-      } else {
-        path = [rootClass, ...classCandidates, className];
-      }
-    }
-
-    classNames.set(rootClass, {
-      className: operationClassName({ plugin, value: className || rootClass }),
-      methodName: methodName || operationMethodName({ operation, plugin }),
-      path: path.map((value) => operationClassName({ plugin, value })),
-    });
-  }
-
-  return classNames;
-};
 
 /** TODO: needs complete refactor */
 export const operationOptionsType = ({

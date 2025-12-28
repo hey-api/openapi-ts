@@ -3,7 +3,7 @@ import { hasOperationDataRequired } from '~/ir/operation';
 import type { IR } from '~/ir/types';
 import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
 import type { HeyApiSdkPlugin } from '~/plugins/@hey-api/sdk';
-import { isInstance } from '~/plugins/@hey-api/sdk/v1/plugin';
+import { isInstance } from '~/plugins/@hey-api/sdk/v1/node';
 import { escapeComment } from '~/utils/escape';
 
 export const createOperationComment = (

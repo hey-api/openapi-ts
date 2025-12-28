@@ -242,7 +242,7 @@ export default defineConfig(() => {
         {
           // baseUrl: false,
           // exportFromIndex: true,
-          // name: '@hey-api/client-angular',
+          name: '@hey-api/client-angular',
           // runtimeConfigPath: path.resolve(__dirname, 'hey-api.ts'),
           // runtimeConfigPath: './src/hey-api.ts',
           // strictBaseUrl: true,
@@ -295,7 +295,7 @@ export default defineConfig(() => {
             // container: 'object',
             containerName: {
               // casing: 'snake_case',
-              // name: 'OpencodeClient'
+              name: 'OpencodeClient',
             },
             methodName: {
               // casing: 'SCREAMING_SNAKE_CASE',
@@ -304,8 +304,8 @@ export default defineConfig(() => {
             methods: 'static',
             nesting: 'id',
             segmentName: '{{name}}Seggy',
-            strategy: 'byTags',
-            strategyDefaultTag: 'DaxLikedThis',
+            strategy: 'flat',
+            // strategyDefaultTag: 'DaxLikedThis',
           },
           // paramsStructure: 'flat',
           // responseStyle: 'data',
@@ -618,12 +618,14 @@ export default defineConfig(() => {
         {
           exportFromIndex: true,
           httpRequests: {
-            // asClass: true,
-            enabled: false,
+            // enabled: false,
+            containerName: 'AngularTest',
+            segmentName: '{{name}}Seggy',
+            strategy: 'single',
           },
           httpResources: {
             // asClass: true,
-            enabled: false,
+            // enabled: false,
           },
           name: '@angular/common',
         },

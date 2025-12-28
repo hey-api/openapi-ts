@@ -20,6 +20,12 @@ export type OperationStructureStrategy = (
   operation: IR.OperationObject,
 ) => ReadonlyArray<StructureLocation['path']>;
 
+export type OperationsStrategy =
+  | 'byTags'
+  | 'flat'
+  | 'single'
+  | OperationStructureStrategy;
+
 /**
  * Built-in strategies for operations.
  */

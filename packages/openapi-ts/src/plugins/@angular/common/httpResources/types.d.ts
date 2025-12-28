@@ -4,7 +4,7 @@ import type {
 } from '~/openApi/shared/locations';
 import type { NamingConfig, NamingRule } from '~/utils/naming';
 
-export interface UserOperationsConfig {
+export interface UserHttpResourcesConfig {
   /**
    * Type of container for grouped operations.
    *
@@ -15,8 +15,6 @@ export interface UserOperationsConfig {
    * @default 'class'
    */
   container?: 'class';
-  // * - `'object'` - Plain object literal
-  // container?: 'class' | 'object';
   /**
    * Customize container names.
    *
@@ -35,9 +33,15 @@ export interface UserOperationsConfig {
    *
    * @example
    * // With casing
-   * containerName: { name: '{{name}}Service', casing: 'PascalCase' }
+   * containerName: { name: '{{name}}Service', case: 'PascalCase' }
    */
   containerName?: NamingRule;
+  /**
+   * Whether or not to create HTTP resource APIs.
+   *
+   * @default true
+   */
+  enabled?: boolean;
   /**
    * Customize method/function names.
    *
@@ -50,11 +54,10 @@ export interface UserOperationsConfig {
    * Only applies when `container` is `'class'`.
    *
    * - `'static'` - Static methods, no instantiation required
-   * - `'instance'` - Instance methods, requires `new ClassName(config)`
    *
-   * @default 'instance'
+   * @default 'static'
    */
-  methods?: 'instance' | 'static';
+  methods?: 'static';
   /**
    * How to derive nesting structure from operations.
    *
@@ -102,7 +105,7 @@ export interface UserOperationsConfig {
   strategyDefaultTag?: string;
 }
 
-export interface OperationsConfig {
+export interface HttpResourcesConfig {
   /**
    * Type of container for grouped operations.
    *
@@ -111,8 +114,6 @@ export interface OperationsConfig {
    * - `'class'` - Class with methods
    */
   container: 'class';
-  // * - `'object'` - Plain object literal
-  // container: 'class' | 'object';
   /**
    * Customize container names.
    *
@@ -135,6 +136,10 @@ export interface OperationsConfig {
    */
   containerName: NamingConfig;
   /**
+   * Whether or not to create HTTP resource APIs.
+   */
+  enabled: boolean;
+  /**
    * Customize method/function names.
    *
    * Applied to the final segment of the path (the method name).
@@ -146,9 +151,8 @@ export interface OperationsConfig {
    * Only applies when `container` is `'class'`.
    *
    * - `'static'` - Static methods, no instantiation required
-   * - `'instance'` - Instance methods, requires `new ClassName(config)`
    */
-  methods: 'instance' | 'static';
+  methods: 'static';
   /**
    * How to derive nesting structure from operations.
    *
