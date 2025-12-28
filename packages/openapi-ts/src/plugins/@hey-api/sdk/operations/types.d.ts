@@ -4,13 +4,13 @@ import type {
 } from '~/openApi/shared/locations';
 import type { NamingConfig, NamingRule } from '~/utils/naming';
 
-export type StructureStrategy =
+export type OperationsStrategy =
   | 'byTags'
   | 'flat'
   | 'single'
   | OperationStructureStrategy;
 
-export interface UserStructureConfig {
+export interface UserOperationsConfig {
   /**
    * Type of container for grouped operations.
    *
@@ -96,7 +96,7 @@ export interface UserStructureConfig {
    *
    * @default 'flat'
    */
-  strategy?: StructureStrategy;
+  strategy?: OperationsStrategy;
   /**
    * Default container name for operations without tags.
    *
@@ -107,7 +107,7 @@ export interface UserStructureConfig {
   strategyDefaultTag?: string;
 }
 
-export interface StructureConfig {
+export interface OperationsConfig {
   /**
    * Type of container for grouped operations.
    *
@@ -183,7 +183,7 @@ export interface StructureConfig {
    * - `'single'` - All operations in one container
    * - Custom function for full control
    */
-  strategy: StructureStrategy;
+  strategy: OperationsStrategy;
   /**
    * Default container name for operations without tags.
    *

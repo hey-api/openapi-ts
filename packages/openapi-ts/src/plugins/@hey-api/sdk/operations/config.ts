@@ -4,24 +4,24 @@ import type { PluginContext } from '~/plugins/types';
 
 import type { UserConfig } from '../types';
 import type {
-  StructureConfig,
-  StructureStrategy,
-  UserStructureConfig,
+  OperationsConfig,
+  OperationsStrategy,
+  UserOperationsConfig,
 } from './types';
 
 type Config = Omit<UserConfig, 'name'>;
 
-export function resolveStructure(
+export function resolveOperations(
   config: Config,
   context: PluginContext,
-): StructureConfig {
+): OperationsConfig {
   if (config.asClass !== undefined) {
     log.warnDeprecated({
       context: '@hey-api/sdk',
       field: 'asClass',
       replacement: [
-        'structure.operations: { strategy: "byTags" }',
-        'structure.operations: { strategy: "single" }',
+        'operations: { strategy: "byTags" }',
+        'operations: { strategy: "single" }',
       ],
     });
   }
@@ -30,7 +30,7 @@ export function resolveStructure(
     log.warnDeprecated({
       context: '@hey-api/sdk',
       field: 'classNameBuilder',
-      replacement: 'structure.operations: { containerName: "..." }',
+      replacement: 'operations: { containerName: "..." }',
     });
   }
 
@@ -39,8 +39,8 @@ export function resolveStructure(
       context: '@hey-api/sdk',
       field: 'classStructure',
       replacement: [
-        'structure.operations: { nesting: "operationId" }',
-        'structure.operations: { nesting: "id" }',
+        'operations: { nesting: "operationId" }',
+        'operations: { nesting: "id" }',
       ],
     });
   }
@@ -49,7 +49,7 @@ export function resolveStructure(
     log.warnDeprecated({
       context: '@hey-api/sdk',
       field: 'instance',
-      replacement: `structure.operations: { strategy: "single", containerName: "${config.instance || 'Name'}", methods: "instance" }`,
+      replacement: `operations: { strategy: "single", containerName: "${config.instance || 'Name'}", methods: "instance" }`,
     });
   }
 
@@ -57,7 +57,7 @@ export function resolveStructure(
     log.warnDeprecated({
       context: '@hey-api/sdk',
       field: 'methodNameBuilder',
-      replacement: 'structure.operations: { methodName: "..." }',
+      replacement: 'operations: { methodName: "..." }',
     });
   }
 
@@ -66,15 +66,15 @@ export function resolveStructure(
       context: '@hey-api/sdk',
       field: 'operationId',
       replacement: [
-        'structure.operations: { nesting: "operationId" }',
-        'structure.operations: { nesting: "id" }',
+        'operations: { nesting: "operationId" }',
+        'operations: { nesting: "id" }',
       ],
     });
   }
 
   const legacy = mapLegacyToConfig(config);
-  return config.structure?.operations
-    ? normalizeStructureConfig(config.structure.operations, legacy, context)
+  return config.operations
+    ? normalizeConfig(config.operations, legacy, context)
     : context.valueToObject({
         defaultValue: {
           container: 'class',
@@ -87,15 +87,15 @@ export function resolveStructure(
           strategy: 'flat',
           strategyDefaultTag: 'default',
         },
-        value: legacy as StructureConfig,
+        value: legacy as OperationsConfig,
       });
 }
 
-function normalizeStructureConfig(
-  input: StructureStrategy | UserStructureConfig,
-  legacy: Partial<StructureConfig>,
+function normalizeConfig(
+  input: OperationsStrategy | UserOperationsConfig,
+  legacy: Partial<OperationsConfig>,
   context: PluginContext,
-): StructureConfig {
+): OperationsConfig {
   if (typeof input === 'string' || typeof input === 'function') {
     input = { strategy: input };
   }
@@ -146,11 +146,11 @@ function normalizeStructureConfig(
     value: {
       ...legacy,
       ...input,
-    } as UserStructureConfig,
-  }) as StructureConfig;
+    } as UserOperationsConfig,
+  }) as OperationsConfig;
 }
 
-function mapLegacyToConfig(config: Config): Partial<StructureConfig> {
+function mapLegacyToConfig(config: Config): Partial<OperationsConfig> {
   // TODO: refactor...
   // Set default classNameBuilder based on client type
   if (config.classNameBuilder === '{{name}}') {
@@ -159,7 +159,7 @@ function mapLegacyToConfig(config: Config): Partial<StructureConfig> {
     }
   }
 
-  let strategy: StructureConfig['strategy'] | undefined;
+  let strategy: OperationsConfig['strategy'] | undefined;
   if (config.instance) {
     strategy = 'single';
   } else if (config.asClass) {
@@ -168,8 +168,8 @@ function mapLegacyToConfig(config: Config): Partial<StructureConfig> {
     strategy = 'flat';
   }
 
-  let containerName: StructureConfig['containerName'] | undefined;
-  let segmentName: StructureConfig['segmentName'] | undefined;
+  let containerName: OperationsConfig['containerName'] | undefined;
+  let segmentName: OperationsConfig['segmentName'] | undefined;
   if (config.instance) {
     let name = typeof config.instance === 'string' ? config.instance : 'Sdk';
     segmentName = { casing: 'PascalCase' };
@@ -193,21 +193,21 @@ function mapLegacyToConfig(config: Config): Partial<StructureConfig> {
     segmentName = { ...containerName };
   }
 
-  let methods: StructureConfig['methods'] | undefined;
+  let methods: OperationsConfig['methods'] | undefined;
   if (config.instance) {
     methods = 'instance';
   } else if (config.asClass) {
     methods = 'static';
   }
 
-  let nesting: StructureConfig['nesting'] | undefined;
+  let nesting: OperationsConfig['nesting'] | undefined;
   if (config.classStructure === 'off' || config.operationId === false) {
     nesting = 'id';
   } else if (config.classStructure === 'auto') {
     nesting = 'operationId';
   }
 
-  let methodName: StructureConfig['methodName'] | undefined;
+  let methodName: OperationsConfig['methodName'] | undefined;
   if (config.methodNameBuilder) {
     methodName = {
       casing: 'camelCase',

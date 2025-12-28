@@ -44,9 +44,12 @@ const operationClassName = ({
   // TODO: expose casing option
   const name = toCase(value, 'PascalCase');
   return (
+    // @ts-expect-error
     (typeof plugin.config.classNameBuilder === 'string'
-      ? plugin.config.classNameBuilder.replace('{{name}}', name)
-      : plugin.config.classNameBuilder(name)) || name
+      ? // @ts-expect-error
+        plugin.config.classNameBuilder.replace('{{name}}', name)
+      : // @ts-expect-error
+        plugin.config.classNameBuilder(name)) || name
   );
 };
 
@@ -65,8 +68,10 @@ const operationMethodName = ({
   // TODO: expose casing option
   const name = toCase(value || operation.id, 'camelCase');
   return (
+    // @ts-expect-error
     (typeof plugin.config.methodNameBuilder === 'string'
-      ? plugin.config.methodNameBuilder.replace('{{name}}', name)
+      ? // @ts-expect-error
+        plugin.config.methodNameBuilder.replace('{{name}}', name)
       : // @ts-expect-error TODO: remove
         plugin.config.methodNameBuilder?.(name, operation)) || name
   );
@@ -90,6 +95,7 @@ export const operationClasses = ({
   let methodName: string | undefined;
   let classCandidates: Array<string> = [];
 
+  // @ts-expect-error
   if (plugin.config.classStructure === 'auto' && operation.operationId) {
     classCandidates = operation.operationId.split(/[./]/).filter(Boolean);
     if (classCandidates.length >= 2) {
@@ -102,8 +108,10 @@ export const operationClasses = ({
     }
   }
 
+  // @ts-expect-error
   const rootClasses = plugin.config.instance
-    ? [plugin.config.instance]
+    ? // @ts-expect-error
+      [plugin.config.instance]
     : (operation.tags ?? ['default']);
 
   for (const rootClass of rootClasses) {

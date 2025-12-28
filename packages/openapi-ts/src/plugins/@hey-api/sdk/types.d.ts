@@ -3,10 +3,10 @@ import type { PluginClientNames, PluginValidatorNames } from '~/plugins/types';
 import type { NameTransformer } from '~/utils/naming';
 
 import type {
-  StructureConfig,
-  StructureStrategy,
-  UserStructureConfig,
-} from './structure';
+  OperationsConfig,
+  OperationsStrategy,
+  UserOperationsConfig,
+} from './operations';
 
 export type UserConfig = Plugin.Name<'@hey-api/sdk'> &
   Plugin.Hooks & {
@@ -38,6 +38,20 @@ export type UserConfig = Plugin.Name<'@hey-api/sdk'> &
      */
     exportFromIndex?: boolean;
     /**
+     * Define the structure of generated SDK operations.
+     *
+     * String shorthand:
+     * - `'byTags'` – one container per operation tag
+     * - `'flat'` – standalone functions, no container
+     * - `'single'` – all operations in a single container
+     * - custom function for full control
+     *
+     * Use the object form for advanced configuration.
+     *
+     * @default 'flat'
+     */
+    operations?: OperationsStrategy | UserOperationsConfig;
+    /**
      * Define how request parameters are structured in generated SDK methods.
      *
      * - `'flat'` merges parameters into a single object.
@@ -56,25 +70,6 @@ export type UserConfig = Plugin.Name<'@hey-api/sdk'> &
      * @default 'fields'
      */
     responseStyle?: 'data' | 'fields';
-    /**
-     * Define how generated outputs are structurally organized.
-     */
-    structure?: {
-      /**
-       * Define the structure of generated SDK operations.
-       *
-       * String shorthand:
-       * - `'flat'` – standalone functions, no container
-       * - `'byTags'` – one container per operation tag
-       * - `'single'` – all operations in a single container
-       * - custom function for full control
-       *
-       * Use the object form for advanced configuration.
-       *
-       * @default 'flat'
-       */
-      operations?: StructureStrategy | UserStructureConfig;
-    };
     /**
      * Transform response data before returning. This is useful if you want to
      * convert for example ISO strings into Date objects. However, transformation
@@ -140,7 +135,7 @@ export type UserConfig = Plugin.Name<'@hey-api/sdk'> &
      * support {@link https://developer.mozilla.org/docs/Glossary/Tree_shaking tree-shaking}.
      * For this reason, it is disabled by default.
      *
-     * @deprecated Use `grouping: 'byTags'` or `grouping: 'single'` instead.
+     * @deprecated Use `operations: { strategy: "byTags" }` or `operations: { strategy: "single" }` instead.
      * @default false
      */
     // eslint-disable-next-line typescript-sort-keys/interface
@@ -151,7 +146,7 @@ export type UserConfig = Plugin.Name<'@hey-api/sdk'> &
      *
      * This option has no effect if `sdk.asClass` is `false`.
      *
-     * @deprecated Use `grouping.containerName` instead.
+     * @deprecated Use `operations: { containerName: "..." }` instead.
      */
     classNameBuilder?: NameTransformer;
     /**
@@ -159,7 +154,7 @@ export type UserConfig = Plugin.Name<'@hey-api/sdk'> &
      * structure using `operationId` keywords. If you prefer a flatter structure,
      * you can set `classStructure` to `off` to disable this behavior.
      *
-     * @deprecated Use `grouping: { nesting: 'operationId' }` or `grouping: { nesting: 'id' }` instead.
+     * @deprecated Use `operations: { nesting: "operationId" }` or `operations: { nesting: "id" }` instead.
      * @default 'auto'
      */
     classStructure?: 'auto' | 'off';
@@ -168,7 +163,7 @@ export type UserConfig = Plugin.Name<'@hey-api/sdk'> &
      * default instance name; in practice, you want to define your own by passing
      * a string value.
      *
-     * @deprecated Use `grouping: { strategy: 'single', as: 'Name', methods: 'instance' }` instead.
+     * @deprecated Use `operations: { strategy: "single", containerName: "Name", methods: "instance" }` instead.
      * @default false
      */
     instance?: string | boolean;
@@ -176,13 +171,13 @@ export type UserConfig = Plugin.Name<'@hey-api/sdk'> &
      * Customise the name of methods within the service. By default,
      * `operation.id` is used.
      *
-     * @deprecated Use `grouping.methodName` instead.
+     * @deprecated Use `operations: { methodName: "..." }` instead.
      */
     methodNameBuilder?: NameTransformer;
     /**
      * Use operation ID to generate operation names?
      *
-     * @deprecated Use `grouping.nesting: 'operationId'` or `grouping.nesting: 'id'` instead.
+     * @deprecated Use `operations: { nesting: "operationId" }` or `operations: { nesting: "id" }` instead.
      * @default true
      */
     operationId?: boolean;
@@ -225,6 +220,10 @@ export type Config = Plugin.Name<'@hey-api/sdk'> &
      */
     exportFromIndex: boolean;
     /**
+     * Define the structure of generated SDK operations.
+     */
+    operations: OperationsConfig;
+    /**
      * Define how request parameters are structured in generated SDK methods.
      *
      * - `'flat'` merges parameters into a single object.
@@ -243,15 +242,6 @@ export type Config = Plugin.Name<'@hey-api/sdk'> &
      * @default 'fields'
      */
     responseStyle: 'data' | 'fields';
-    /**
-     * Define how generated outputs are structurally organized.
-     */
-    structure: {
-      /**
-       * Define the structure of generated SDK operations.
-       */
-      operations: StructureConfig;
-    };
     /**
      * Transform response data before returning. This is useful if you want to
      * convert for example ISO strings into Date objects. However, transformation
@@ -288,65 +278,12 @@ export type Config = Plugin.Name<'@hey-api/sdk'> &
     // DEPRECATED OPTIONS BELOW
 
     /**
-     * Group operation methods into classes? When enabled, you can select which
-     * classes to export with `sdk.include` and/or transform their names with
-     * `sdk.classNameBuilder`.
-     *
-     * Note that by enabling this option, your SDKs will **NOT**
-     * support {@link https://developer.mozilla.org/docs/Glossary/Tree_shaking tree-shaking}.
-     * For this reason, it is disabled by default.
-     *
-     * @deprecated Use `grouping: 'byTags'` or `grouping: 'single'` instead.
-     * @default false
-     */
-    // eslint-disable-next-line typescript-sort-keys/interface
-    asClass: boolean;
-    /**
-     * Customize the generated class names. The name variable is obtained from
-     * your OpenAPI specification tags or `instance` value.
-     *
-     * This option has no effect if `sdk.asClass` is `false`.
-     *
-     * @deprecated Use `grouping.containerName` instead.
-     */
-    classNameBuilder: NameTransformer;
-    /**
-     * How should we structure your SDK? By default, we try to infer the ideal
-     * structure using `operationId` keywords. If you prefer a flatter structure,
-     * you can set `classStructure` to `off` to disable this behavior.
-     *
-     * @deprecated Use `grouping: { nesting: 'operationId' }` or `grouping: { nesting: 'id' }` instead.
-     * @default 'auto'
-     */
-    classStructure: 'auto' | 'off';
-    /**
-     * Set `instance` to create an instantiable SDK. Using `true` will use the
-     * default instance name; in practice, you want to define your own by passing
-     * a string value.
-     *
-     * @deprecated Use `grouping: { strategy: 'single', as: 'Name', methods: 'instance' }` instead.
-     */
-    instance: string;
-    /**
-     * Customise the name of methods within the service. By default,
-     * `operation.id` is used.
-     *
-     * @deprecated Use `grouping.methodName` instead.
-     */
-    methodNameBuilder: NameTransformer;
-    /**
-     * Use operation ID to generate operation names?
-     *
-     * @deprecated Use `grouping.nesting: 'operationId'` or `grouping.nesting: 'id'` instead.
-     * @default true
-     */
-    operationId: boolean;
-    /**
      * Define shape of returned value from service calls
      *
      * @deprecated
      * @default 'body'
      */
+    // eslint-disable-next-line typescript-sort-keys/interface
     response: 'body' | 'response';
   };
 

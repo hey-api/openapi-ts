@@ -1,5 +1,5 @@
-import { createHttpRequests } from './httpRequests';
-import { createHttpResources } from './httpResources';
+import { createHttpRequests } from './shared/httpRequests';
+import { createHttpResources } from './shared/httpResources';
 import type { AngularCommonPlugin } from './types';
 
 export const handler: AngularCommonPlugin['Handler'] = ({ plugin }) => {

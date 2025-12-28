@@ -7,7 +7,7 @@ import {
 import { $ } from '~/ts-dsl';
 import { applyNaming, toCase } from '~/utils/naming';
 
-import type { AngularCommonPlugin } from './types';
+import type { AngularCommonPlugin } from '../types';
 
 interface AngularServiceClassEntry {
   className: string;
