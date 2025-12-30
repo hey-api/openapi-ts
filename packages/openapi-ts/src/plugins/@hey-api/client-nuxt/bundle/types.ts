@@ -74,15 +74,8 @@ export interface RequestOptions<
   Url extends string = string,
 > extends Config,
     WithRefs<{
-      /**
-       * Any body that you want to add to your request.
-       *
-       * {@link https://developer.mozilla.org/docs/Web/API/fetch#body}
-       */
-      body?: unknown;
       path?: FetchOptions<unknown>['query'];
       query?: FetchOptions<unknown>['query'];
-      rawBody?: unknown;
     }>,
     Pick<
       ServerSentEventsOptions<ResT>,
@@ -93,8 +86,15 @@ export interface RequestOptions<
       | 'sseMaxRetryDelay'
     > {
   asyncDataOptions?: AsyncDataOptions<ResT, ResT, KeysOf<ResT>, DefaultT>;
+  /**
+   * Any body that you want to add to your request.
+   *
+   * {@link https://developer.mozilla.org/docs/Web/API/fetch#body}
+   */
+  body?: NonNullable<unknown> | Ref<NonNullable<unknown>> | null;
   composable?: TComposable;
   key?: string;
+  rawBody?: NonNullable<unknown> | Ref<NonNullable<unknown>> | null;
   /**
    * Security mechanism(s) to use for the request.
    */
