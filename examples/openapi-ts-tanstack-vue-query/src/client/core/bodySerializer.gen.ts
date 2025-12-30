@@ -7,9 +7,9 @@ export type QuerySerializer = (query: Record<string, unknown>) => string
 export type BodySerializer = (body: any) => any
 
 type QuerySerializerOptionsObject = {
-  allowReserved?: boolean
-  array?: Partial<SerializerOptions<ArrayStyle>>
-  object?: Partial<SerializerOptions<ObjectStyle>>
+  allowReserved?: boolean | undefined
+  array?: Partial<SerializerOptions<ArrayStyle>> | undefined
+  object?: Partial<SerializerOptions<ObjectStyle>> | undefined
 }
 
 export type QuerySerializerOptions = QuerySerializerOptionsObject & {
@@ -17,7 +17,7 @@ export type QuerySerializerOptions = QuerySerializerOptionsObject & {
    * Per-parameter serialization overrides. When provided, these settings
    * override the global array/object settings for specific parameter names.
    */
-  parameters?: Record<string, QuerySerializerOptionsObject>
+  parameters?: Record<string, QuerySerializerOptionsObject> | undefined
 }
 
 const serializeFormDataPair = (data: FormData, key: string, value: unknown): void => {

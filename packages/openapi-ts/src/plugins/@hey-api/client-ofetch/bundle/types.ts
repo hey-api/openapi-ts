@@ -166,7 +166,7 @@ export interface ResolvedRequestOptions<
   ThrowOnError extends boolean = boolean,
   Url extends string = string,
 > extends RequestOptions<unknown, TResponseStyle, ThrowOnError, Url> {
-  serializedBody?: string;
+  serializedBody?: string | undefined;
 }
 
 export type RequestResult<

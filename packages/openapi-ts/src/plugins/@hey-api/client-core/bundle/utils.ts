@@ -112,9 +112,9 @@ export const getUrl = ({
 };
 
 export function getValidRequestBody(options: {
-  body?: unknown;
-  bodySerializer?: BodySerializer | null;
-  serializedBody?: unknown;
+  body?: unknown | undefined;
+  bodySerializer?: BodySerializer | null | undefined;
+  serializedBody?: unknown | undefined;
 }) {
   const hasBody = options.body !== undefined;
   const isSerializedBody = hasBody && options.bodySerializer;

@@ -17,12 +17,19 @@ import type { HeyApiTypeScriptPlugin } from '../types';
 import { irSchemaWithTypeToAst } from './toAst';
 
 export const irSchemaToAst = ({
+  optional,
   plugin,
   schema,
   state,
 }: IrSchemaToAstOptions & {
   schema: IR.SchemaObject;
 }): MaybeTsDsl<TypeTsDsl> => {
+  if (optional) {
+    return $.type.or(
+      irSchemaToAst({ plugin, schema, state }),
+      $.type('undefined'),
+    );
+  }
   if (schema.symbolRef) {
     const baseType = $.type(schema.symbolRef);
     if (schema.omit && schema.omit.length > 0) {
