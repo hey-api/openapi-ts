@@ -48,7 +48,7 @@ Start with our [Contributing](https://heyapi.dev/openapi-ts/community/contributi
 
 ## Sponsors
 
-Hey API is sponsor-funded. If your team relies on Hey API in production, consider becoming a [sponsor](https://github.com/sponsors/hey-api) to accelerate the roadmap.
+Hey API is sponsor-funded. If you rely on Hey API in production, consider becoming a [sponsor](https://github.com/sponsors/hey-api) to accelerate the roadmap.
 
 <h3 align="center">Gold</h3>
 
