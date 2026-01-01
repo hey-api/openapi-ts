@@ -36,7 +36,6 @@ export class ClassTsDsl extends Mixed {
     this.name.set(name);
     if (isSymbol(name)) {
       name.setKind('class');
-      name.setNode(this);
     }
   }
 

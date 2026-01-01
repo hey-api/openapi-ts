@@ -114,9 +114,6 @@ export const OperationPath = {
   /**
    * Splits operationId by delimiters to create nested paths.
    *
-   * The last segment is converted to camelCase.
-   * Falls back to operation.id if operationId is missing.
-   *
    * @example
    * // operationId: 'users.accounts.list'
    * // Result: ['users', 'accounts', 'list']
@@ -131,22 +128,58 @@ export const OperationPath = {
        * Pattern to split operationId.
        */
       delimiters: RegExp;
+      /**
+       * Fallback strategy if operationId is missing.
+       */
+      fallback: OperationPathStrategy;
     }): OperationPathStrategy =>
     (operation) => {
-      let segments: Array<string> = [];
-      if (operation.operationId) {
-        segments = operation.operationId
-          .split(config.delimiters)
-          .filter(Boolean);
-      }
-      if (segments.length === 0) {
-        segments = operation.path.split(config.delimiters).filter(Boolean);
-        if (segments.length > 0) {
+      if (!operation.operationId) return config.fallback(operation);
+      const segments = operation.operationId
+        .split(config.delimiters)
+        .filter(Boolean);
+      return segments.length === 0 ? config.fallback(operation) : segments;
+    },
+
+  /**
+   * Splits path by delimiters to create nested paths.
+   *
+   * Can include the method as a prefix or suffix segment.
+   *
+   * @example
+   * // path: '/users/{id}/accounts', method: 'get', delimiters: /[\/{}]+/, methodPosition: 'none'
+   * // Result: ['users', 'id', 'accounts']
+   *
+   * @example
+   * // path: '/users/{id}/accounts', method: 'get', delimiters: /[\/{}]+/, methodPosition: 'prefix'
+   * // Result: ['get', 'users', 'id', 'accounts']
+   *
+   * @example
+   * // path: '/users/{id}/accounts', method: 'get', delimiters: /[\/{}]+/, methodPosition: 'suffix'
+   * // Result: ['users', 'id', 'accounts', 'get']
+   */
+  fromPath:
+    (config: {
+      /**
+       * Pattern to split the path.
+       */
+      delimiters: RegExp;
+      /**
+       * Position of the method segment.
+       */
+      methodPosition: 'prefix' | 'suffix' | 'none';
+    }): OperationPathStrategy =>
+    (operation) => {
+      const segments = operation.path.split(config.delimiters).filter(Boolean);
+      switch (config.methodPosition) {
+        case 'prefix':
+          segments.unshift(operation.method.toLowerCase());
+          break;
+        case 'suffix':
           segments.push(operation.method.toLowerCase());
-        }
-      }
-      if (segments.length === 0) {
-        return OperationPath.id()(operation);
+          break;
+        case 'none':
+          break;
       }
       return segments;
     },

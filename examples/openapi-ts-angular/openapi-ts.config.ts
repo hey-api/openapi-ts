@@ -12,8 +12,11 @@ export default defineConfig({
     '@hey-api/client-angular',
     '@hey-api/schemas',
     {
-      asClass: true,
       name: '@hey-api/sdk',
+      operations: {
+        containerName: '{{name}}Service',
+        strategy: 'byTags',
+      },
     },
     {
       enums: 'javascript',

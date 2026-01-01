@@ -3,7 +3,7 @@
 import { type DefaultError, queryOptions } from '@tanstack/react-query';
 
 import { client } from '../client.gen';
-import { barGet, fooGet, type Options } from '../sdk.gen';
+import { getBar, getFoo, type Options } from '../sdk.gen';
 import type { GetBarData, GetFooData } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
@@ -43,7 +43,7 @@ export const getFooQueryKey = (options?: Options<GetFooData>) => createQueryKey(
 
 export const getFooOptions = (options?: Options<GetFooData>) => queryOptions<unknown, DefaultError, unknown, ReturnType<typeof getFooQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
-        const { data } = await fooGet({
+        const { data } = await getFoo({
             ...options,
             ...queryKey[0],
             signal,
@@ -63,7 +63,7 @@ export const getBarQueryKey = (options?: Options<GetBarData>) => createQueryKey(
 
 export const getBarOptions = (options?: Options<GetBarData>) => queryOptions<unknown, DefaultError, unknown, ReturnType<typeof getBarQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
-        const { data } = await barGet({
+        const { data } = await getBar({
             ...options,
             ...queryKey[0],
             signal,

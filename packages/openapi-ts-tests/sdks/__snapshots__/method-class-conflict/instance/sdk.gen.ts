@@ -46,1125 +46,38 @@ class HeyApiRegistry<T> {
     }
 }
 
-export class Id extends HeyApiClient {
-    public delete<ThrowOnError extends boolean = false>(options: Options<DeleteApiV1AccountingCompaniesByIdData, ThrowOnError>) {
-        return (options.client ?? this.client).delete<DeleteApiV1AccountingCompaniesByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/accounting-companies/{id}', ...options });
-    }
-    
-    public post<ThrowOnError extends boolean = false>(options: Options<PostApiV1AccountingCompaniesByIdData, ThrowOnError>) {
-        return (options.client ?? this.client).post<PostApiV1AccountingCompaniesByIdResponses, unknown, ThrowOnError>({
-            url: '/api/v1/accounting-companies/{id}',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
-                ...options.headers
-            }
-        });
-    }
-}
-
 export class AccountingCompanies extends HeyApiClient {
-    public post<ThrowOnError extends boolean = false>(options?: Options<PostApiV1AccountingCompaniesData, ThrowOnError>) {
-        return (options?.client ?? this.client).post<PostApiV1AccountingCompaniesResponses, unknown, ThrowOnError>({
-            url: '/api/v1/accounting-companies',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
-                ...options?.headers
-            }
-        });
-    }
-    
-    private _id?: Id;
-    get id(): Id {
-        return this._id ??= new Id({ client: this.client });
-    }
-}
-
-export class Id2 extends HeyApiClient {
-    public delete<ThrowOnError extends boolean = false>(options: Options<DeleteApiV1AccountingCompanyMembershipsByIdData, ThrowOnError>) {
-        return (options.client ?? this.client).delete<DeleteApiV1AccountingCompanyMembershipsByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/accounting-company-memberships/{id}', ...options });
-    }
-}
-
-export class AccountingCompanyMemberships extends HeyApiClient {
-    public put<ThrowOnError extends boolean = false>(options?: Options<PutApiV1AccountingCompanyMembershipsData, ThrowOnError>) {
-        return (options?.client ?? this.client).put<PutApiV1AccountingCompanyMembershipsResponses, unknown, ThrowOnError>({
-            url: '/api/v1/accounting-company-memberships',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
-                ...options?.headers
-            }
-        });
-    }
-    
-    private _id?: Id2;
-    get id(): Id2 {
-        return this._id ??= new Id2({ client: this.client });
-    }
-}
-
-export class Id3 extends HeyApiClient {
-    public delete<ThrowOnError extends boolean = false>(options: Options<DeleteApiV1BankAccountsByIdData, ThrowOnError>) {
-        return (options.client ?? this.client).delete<DeleteApiV1BankAccountsByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/bank-accounts/{id}', ...options });
-    }
-}
-
-export class BankAccounts extends HeyApiClient {
-    public put<ThrowOnError extends boolean = false>(options?: Options<PutApiV1BankAccountsData, ThrowOnError>) {
-        return (options?.client ?? this.client).put<PutApiV1BankAccountsResponses, unknown, ThrowOnError>({
-            url: '/api/v1/bank-accounts',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
-                ...options?.headers
-            }
-        });
-    }
-    
-    private _id?: Id3;
-    get id(): Id3 {
-        return this._id ??= new Id3({ client: this.client });
-    }
-}
-
-export class Id4 extends HeyApiClient {
-    public delete<ThrowOnError extends boolean = false>(options: Options<DeleteApiV1BusinessAccountantAssignmentsByIdData, ThrowOnError>) {
-        return (options.client ?? this.client).delete<DeleteApiV1BusinessAccountantAssignmentsByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/business-accountant-assignments/{id}', ...options });
-    }
-}
-
-export class BusinessAccountantAssignments extends HeyApiClient {
-    public put<ThrowOnError extends boolean = false>(options?: Options<PutApiV1BusinessAccountantAssignmentsData, ThrowOnError>) {
-        return (options?.client ?? this.client).put<PutApiV1BusinessAccountantAssignmentsResponses, unknown, ThrowOnError>({
-            url: '/api/v1/business-accountant-assignments',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
-                ...options?.headers
-            }
-        });
-    }
-    
-    private _id?: Id4;
-    get id(): Id4 {
-        return this._id ??= new Id4({ client: this.client });
-    }
-}
-
-export class Raw extends HeyApiClient {
-    public get<ThrowOnError extends boolean = false>(options: Options<GetApiV1BusinessDocumentsByIdRawData, ThrowOnError>) {
-        return (options.client ?? this.client).get<GetApiV1BusinessDocumentsByIdRawResponses, unknown, ThrowOnError>({ url: '/api/v1/business-documents/{id}/raw', ...options });
-    }
-}
-
-export class Approve extends HeyApiClient {
-    public post<ThrowOnError extends boolean = false>(options: Options<PostApiV1BusinessDocumentsByIdApproveData, ThrowOnError>) {
-        return (options.client ?? this.client).post<PostApiV1BusinessDocumentsByIdApproveResponses, unknown, ThrowOnError>({ url: '/api/v1/business-documents/{id}/approve', ...options });
-    }
-}
-
-export class Unapprove extends HeyApiClient {
-    public post<ThrowOnError extends boolean = false>(options: Options<PostApiV1BusinessDocumentsByIdUnapproveData, ThrowOnError>) {
-        return (options.client ?? this.client).post<PostApiV1BusinessDocumentsByIdUnapproveResponses, unknown, ThrowOnError>({ url: '/api/v1/business-documents/{id}/unapprove', ...options });
-    }
-}
-
-export class MoveToPersonal extends HeyApiClient {
-    public post<ThrowOnError extends boolean = false>(options: Options<PostApiV1BusinessDocumentsByIdMoveToPersonalData, ThrowOnError>) {
-        return (options.client ?? this.client).post<PostApiV1BusinessDocumentsByIdMoveToPersonalResponses, unknown, ThrowOnError>({ url: '/api/v1/business-documents/{id}/move-to-personal', ...options });
-    }
-}
-
-export class MoveToBusiness extends HeyApiClient {
-    public post<ThrowOnError extends boolean = false>(options: Options<PostApiV1BusinessDocumentsByIdMoveToBusinessData, ThrowOnError>) {
-        return (options.client ?? this.client).post<PostApiV1BusinessDocumentsByIdMoveToBusinessResponses, unknown, ThrowOnError>({
-            url: '/api/v1/business-documents/{id}/move-to-business',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
-                ...options.headers
-            }
-        });
-    }
-}
-
-export class Id5 extends HeyApiClient {
-    public delete<ThrowOnError extends boolean = false>(options: Options<DeleteApiV1BusinessDocumentsByIdData, ThrowOnError>) {
-        return (options.client ?? this.client).delete<DeleteApiV1BusinessDocumentsByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/business-documents/{id}', ...options });
-    }
-    
-    public put<ThrowOnError extends boolean = false>(options: Options<PutApiV1BusinessDocumentsByIdData, ThrowOnError>) {
-        return (options.client ?? this.client).put<PutApiV1BusinessDocumentsByIdResponses, unknown, ThrowOnError>({
-            url: '/api/v1/business-documents/{id}',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
-                ...options.headers
-            }
-        });
-    }
-    
-    private _raw?: Raw;
-    get raw(): Raw {
-        return this._raw ??= new Raw({ client: this.client });
-    }
-    
-    private _approve?: Approve;
-    get approve(): Approve {
-        return this._approve ??= new Approve({ client: this.client });
-    }
-    
-    private _unapprove?: Unapprove;
-    get unapprove(): Unapprove {
-        return this._unapprove ??= new Unapprove({ client: this.client });
-    }
-    
-    private _moveToPersonal?: MoveToPersonal;
-    get moveToPersonal(): MoveToPersonal {
-        return this._moveToPersonal ??= new MoveToPersonal({ client: this.client });
-    }
-    
-    private _moveToBusiness?: MoveToBusiness;
-    get moveToBusiness(): MoveToBusiness {
-        return this._moveToBusiness ??= new MoveToBusiness({ client: this.client });
-    }
-}
-
-export class BusinessDocuments extends HeyApiClient {
-    public post<ThrowOnError extends boolean = false>(options?: Options<PostApiV1BusinessDocumentsData, ThrowOnError>) {
-        return (options?.client ?? this.client).post<PostApiV1BusinessDocumentsResponses, unknown, ThrowOnError>({
-            ...formDataBodySerializer,
-            url: '/api/v1/business-documents',
-            ...options,
-            headers: {
-                'Content-Type': null,
-                ...options?.headers
-            }
-        });
-    }
-    
-    private _id?: Id5;
-    get id(): Id5 {
-        return this._id ??= new Id5({ client: this.client });
-    }
-}
-
-export class DocumentTypesSummary extends HeyApiClient {
-    public get<ThrowOnError extends boolean = false>(options: Options<GetApiV1BusinessesByIdDocumentTypesSummaryData, ThrowOnError>) {
-        return (options.client ?? this.client).get<GetApiV1BusinessesByIdDocumentTypesSummaryResponses, unknown, ThrowOnError>({ url: '/api/v1/businesses/{id}/document-types-summary', ...options });
-    }
-}
-
-export class Contact extends HeyApiClient {
-    public put<ThrowOnError extends boolean = false>(options: Options<PutApiV1BusinessesByIdContactData, ThrowOnError>) {
-        return (options.client ?? this.client).put<PutApiV1BusinessesByIdContactResponses, unknown, ThrowOnError>({
-            url: '/api/v1/businesses/{id}/contact',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
-                ...options.headers
-            }
-        });
-    }
-}
-
-export class Disconnect extends HeyApiClient {
-    public post<ThrowOnError extends boolean = false>(options: Options<PostApiV1BusinessesByIdDisconnectData, ThrowOnError>) {
-        return (options.client ?? this.client).post<PostApiV1BusinessesByIdDisconnectResponses, unknown, ThrowOnError>({ url: '/api/v1/businesses/{id}/disconnect', ...options });
-    }
-}
-
-export class Id6 extends HeyApiClient {
-    public delete<ThrowOnError extends boolean = false>(options: Options<DeleteApiV1BusinessesByIdData, ThrowOnError>) {
-        return (options.client ?? this.client).delete<DeleteApiV1BusinessesByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/businesses/{id}', ...options });
-    }
-    
-    public put<ThrowOnError extends boolean = false>(options: Options<PutApiV1BusinessesByIdData, ThrowOnError>) {
-        return (options.client ?? this.client).put<PutApiV1BusinessesByIdResponses, unknown, ThrowOnError>({
-            url: '/api/v1/businesses/{id}',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
-                ...options.headers
-            }
-        });
-    }
-    
-    private _documentTypesSummary?: DocumentTypesSummary;
-    get documentTypesSummary(): DocumentTypesSummary {
-        return this._documentTypesSummary ??= new DocumentTypesSummary({ client: this.client });
-    }
-    
-    private _contact?: Contact;
-    get contact(): Contact {
-        return this._contact ??= new Contact({ client: this.client });
-    }
-    
-    private _disconnect?: Disconnect;
-    get disconnect(): Disconnect {
-        return this._disconnect ??= new Disconnect({ client: this.client });
-    }
-}
-
-export class Businesses extends HeyApiClient {
-    public post<ThrowOnError extends boolean = false>(options?: Options<PostApiV1BusinessesData, ThrowOnError>) {
-        return (options?.client ?? this.client).post<PostApiV1BusinessesResponses, unknown, ThrowOnError>({
-            url: '/api/v1/businesses',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
-                ...options?.headers
-            }
-        });
-    }
-    
-    private _id?: Id6;
-    get id(): Id6 {
-        return this._id ??= new Id6({ client: this.client });
-    }
-}
-
-export class BusinessMemberships extends HeyApiClient {
-    public put<ThrowOnError extends boolean = false>(options?: Options<PutApiV1BusinessMembershipsData, ThrowOnError>) {
-        return (options?.client ?? this.client).put<PutApiV1BusinessMembershipsResponses, unknown, ThrowOnError>({
-            url: '/api/v1/business-memberships',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
-                ...options?.headers
-            }
-        });
-    }
-}
-
-export class Id7 extends HeyApiClient {
-    public delete<ThrowOnError extends boolean = false>(options: Options<DeleteApiV1CounterpartiesByIdData, ThrowOnError>) {
-        return (options.client ?? this.client).delete<DeleteApiV1CounterpartiesByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/counterparties/{id}', ...options });
-    }
-    
-    public patch<ThrowOnError extends boolean = false>(options: Options<PatchApiV1CounterpartiesByIdData, ThrowOnError>) {
-        return (options.client ?? this.client).patch<PatchApiV1CounterpartiesByIdResponses, unknown, ThrowOnError>({
-            url: '/api/v1/counterparties/{id}',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
-                ...options.headers
-            }
-        });
-    }
-}
-
-export class Counterparties extends HeyApiClient {
-    public post<ThrowOnError extends boolean = false>(options?: Options<PostApiV1CounterpartiesData, ThrowOnError>) {
-        return (options?.client ?? this.client).post<PostApiV1CounterpartiesResponses, unknown, ThrowOnError>({
-            url: '/api/v1/counterparties',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
-                ...options?.headers
-            }
-        });
-    }
-    
-    private _id?: Id7;
-    get id(): Id7 {
-        return this._id ??= new Id7({ client: this.client });
-    }
-}
-
-export class Id8 extends HeyApiClient {
-    public delete<ThrowOnError extends boolean = false>(options: Options<DeleteApiV1DataBoxCredentialsByIdData, ThrowOnError>) {
-        return (options.client ?? this.client).delete<DeleteApiV1DataBoxCredentialsByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/data-box-credentials/{id}', ...options });
-    }
-}
-
-export class DataBoxCredentials extends HeyApiClient {
-    public put<ThrowOnError extends boolean = false>(options?: Options<PutApiV1DataBoxCredentialsData, ThrowOnError>) {
-        return (options?.client ?? this.client).put<PutApiV1DataBoxCredentialsResponses, unknown, ThrowOnError>({
-            url: '/api/v1/data-box-credentials',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
-                ...options?.headers
-            }
-        });
-    }
-    
-    private _id?: Id8;
-    get id(): Id8 {
-        return this._id ??= new Id8({ client: this.client });
-    }
-}
-
-export class DeviceTokens extends HeyApiClient {
-    public delete<ThrowOnError extends boolean = false>(options?: Options<DeleteApiV1NotificationsDeviceTokensData, ThrowOnError>) {
-        return (options?.client ?? this.client).delete<DeleteApiV1NotificationsDeviceTokensResponses, unknown, ThrowOnError>({
-            url: '/api/v1/notifications/device-tokens',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
-                ...options?.headers
-            }
-        });
-    }
-    
-    public put<ThrowOnError extends boolean = false>(options?: Options<PutApiV1NotificationsDeviceTokensData, ThrowOnError>) {
-        return (options?.client ?? this.client).put<PutApiV1NotificationsDeviceTokensResponses, unknown, ThrowOnError>({
-            url: '/api/v1/notifications/device-tokens',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
-                ...options?.headers
-            }
-        });
-    }
-}
-
-export class Test extends HeyApiClient {
-    public post<ThrowOnError extends boolean = false>(options?: Options<PostApiV1NotificationsTestData, ThrowOnError>) {
-        return (options?.client ?? this.client).post<PostApiV1NotificationsTestResponses, unknown, ThrowOnError>({
-            url: '/api/v1/notifications/test',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
-                ...options?.headers
-            }
-        });
-    }
-}
-
-export class Notifications extends HeyApiClient {
-    private _deviceTokens?: DeviceTokens;
-    get deviceTokens(): DeviceTokens {
-        return this._deviceTokens ??= new DeviceTokens({ client: this.client });
-    }
-    
-    private _test?: Test;
-    get test(): Test {
-        return this._test ??= new Test({ client: this.client });
-    }
-}
-
-export class Feedback extends HeyApiClient {
-    public post<ThrowOnError extends boolean = false>(options?: Options<PostApiV1FeedbackData, ThrowOnError>) {
-        return (options?.client ?? this.client).post<PostApiV1FeedbackResponses, unknown, ThrowOnError>({
-            url: '/api/v1/feedback',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
-                ...options?.headers
-            }
-        });
-    }
-}
-
-export class Accept extends HeyApiClient {
-    public post<ThrowOnError extends boolean = false>(options: Options<PostApiV1InvitationsByIdAcceptData, ThrowOnError>) {
-        return (options.client ?? this.client).post<PostApiV1InvitationsByIdAcceptResponses, unknown, ThrowOnError>({
-            url: '/api/v1/invitations/{id}/accept',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
-                ...options.headers
-            }
-        });
-    }
-}
-
-export class Reject extends HeyApiClient {
-    public post<ThrowOnError extends boolean = false>(options: Options<PostApiV1InvitationsByIdRejectData, ThrowOnError>) {
-        return (options.client ?? this.client).post<PostApiV1InvitationsByIdRejectResponses, unknown, ThrowOnError>({ url: '/api/v1/invitations/{id}/reject', ...options });
-    }
-}
-
-export class Id9 extends HeyApiClient {
-    public delete<ThrowOnError extends boolean = false>(options: Options<DeleteApiV1InvitationsByIdData, ThrowOnError>) {
-        return (options.client ?? this.client).delete<DeleteApiV1InvitationsByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/invitations/{id}', ...options });
-    }
-    
-    public patch<ThrowOnError extends boolean = false>(options: Options<PatchApiV1InvitationsByIdData, ThrowOnError>) {
-        return (options.client ?? this.client).patch<PatchApiV1InvitationsByIdResponses, unknown, ThrowOnError>({
-            url: '/api/v1/invitations/{id}',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
-                ...options.headers
-            }
-        });
-    }
-    
-    private _accept?: Accept;
-    get accept(): Accept {
-        return this._accept ??= new Accept({ client: this.client });
-    }
-    
-    private _reject?: Reject;
-    get reject(): Reject {
-        return this._reject ??= new Reject({ client: this.client });
-    }
-}
-
-export class Invitations extends HeyApiClient {
-    public post<ThrowOnError extends boolean = false>(options?: Options<PostApiV1InvitationsData, ThrowOnError>) {
-        return (options?.client ?? this.client).post<PostApiV1InvitationsResponses, unknown, ThrowOnError>({
-            url: '/api/v1/invitations',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
-                ...options?.headers
-            }
-        });
-    }
-    
-    private _id?: Id9;
-    get id(): Id9 {
-        return this._id ??= new Id9({ client: this.client });
-    }
-}
-
-export class Preview extends HeyApiClient {
-    public get<ThrowOnError extends boolean = false>(options: Options<GetApiV1InvoicesByIdPreviewData, ThrowOnError>) {
-        return (options.client ?? this.client).get<GetApiV1InvoicesByIdPreviewResponses, unknown, ThrowOnError>({ url: '/api/v1/invoices/{id}/preview', ...options });
-    }
-}
-
-export class Send extends HeyApiClient {
-    public post<ThrowOnError extends boolean = false>(options: Options<PostApiV1InvoicesByIdSendData, ThrowOnError>) {
-        return (options.client ?? this.client).post<PostApiV1InvoicesByIdSendResponses, unknown, ThrowOnError>({
-            url: '/api/v1/invoices/{id}/send',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
-                ...options.headers
-            }
-        });
-    }
-}
-
-export class Snapshot extends HeyApiClient {
-    public post<ThrowOnError extends boolean = false>(options: Options<PostApiV1InvoicesByIdSnapshotData, ThrowOnError>) {
-        return (options.client ?? this.client).post<PostApiV1InvoicesByIdSnapshotResponses, unknown, ThrowOnError>({ url: '/api/v1/invoices/{id}/snapshot', ...options });
-    }
-}
-
-export class Id10 extends HeyApiClient {
-    public delete<ThrowOnError extends boolean = false>(options: Options<DeleteApiV1InvoicesByIdData, ThrowOnError>) {
-        return (options.client ?? this.client).delete<DeleteApiV1InvoicesByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/invoices/{id}', ...options });
-    }
-    
-    public patch<ThrowOnError extends boolean = false>(options: Options<PatchApiV1InvoicesByIdData, ThrowOnError>) {
-        return (options.client ?? this.client).patch<PatchApiV1InvoicesByIdResponses, unknown, ThrowOnError>({
-            url: '/api/v1/invoices/{id}',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
-                ...options.headers
-            }
-        });
-    }
-    
-    private _preview?: Preview;
-    get preview(): Preview {
-        return this._preview ??= new Preview({ client: this.client });
-    }
-    
-    private _send?: Send;
-    get send(): Send {
-        return this._send ??= new Send({ client: this.client });
-    }
-    
-    private _snapshot?: Snapshot;
-    get snapshot(): Snapshot {
-        return this._snapshot ??= new Snapshot({ client: this.client });
-    }
-}
-
-export class Invoices extends HeyApiClient {
-    public post<ThrowOnError extends boolean = false>(options?: Options<PostApiV1InvoicesData, ThrowOnError>) {
-        return (options?.client ?? this.client).post<PostApiV1InvoicesResponses, unknown, ThrowOnError>({
-            url: '/api/v1/invoices',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
-                ...options?.headers
-            }
-        });
-    }
-    
-    private _id?: Id10;
-    get id(): Id10 {
-        return this._id ??= new Id10({ client: this.client });
-    }
-}
-
-export class InvoiceSettings extends HeyApiClient {
-    public put<ThrowOnError extends boolean = false>(options?: Options<PutApiV1InvoiceSettingsData, ThrowOnError>) {
-        return (options?.client ?? this.client).put<PutApiV1InvoiceSettingsResponses, unknown, ThrowOnError>({
-            url: '/api/v1/invoice-settings',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
-                ...options?.headers
-            }
-        });
-    }
-}
-
-export class Raw2 extends HeyApiClient {
-    public get<ThrowOnError extends boolean = false>(options: Options<GetApiV1PersonalDocumentsByIdRawData, ThrowOnError>) {
-        return (options.client ?? this.client).get<GetApiV1PersonalDocumentsByIdRawResponses, unknown, ThrowOnError>({ url: '/api/v1/personal-documents/{id}/raw', ...options });
-    }
-}
-
-export class MoveToBusiness2 extends HeyApiClient {
-    public post<ThrowOnError extends boolean = false>(options: Options<PostApiV1PersonalDocumentsByIdMoveToBusinessData, ThrowOnError>) {
-        return (options.client ?? this.client).post<PostApiV1PersonalDocumentsByIdMoveToBusinessResponses, unknown, ThrowOnError>({
-            url: '/api/v1/personal-documents/{id}/move-to-business',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
-                ...options.headers
-            }
-        });
-    }
-}
-
-export class Id11 extends HeyApiClient {
-    public delete<ThrowOnError extends boolean = false>(options: Options<DeleteApiV1PersonalDocumentsByIdData, ThrowOnError>) {
-        return (options.client ?? this.client).delete<DeleteApiV1PersonalDocumentsByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/personal-documents/{id}', ...options });
-    }
-    
-    private _raw?: Raw2;
-    get raw(): Raw2 {
-        return this._raw ??= new Raw2({ client: this.client });
-    }
-    
-    private _moveToBusiness?: MoveToBusiness2;
-    get moveToBusiness(): MoveToBusiness2 {
-        return this._moveToBusiness ??= new MoveToBusiness2({ client: this.client });
-    }
-}
-
-export class Summary extends HeyApiClient {
-    public get<ThrowOnError extends boolean = false>(options?: Options<GetApiV1PersonalDocumentsSummaryData, ThrowOnError>) {
-        return (options?.client ?? this.client).get<GetApiV1PersonalDocumentsSummaryResponses, unknown, ThrowOnError>({ url: '/api/v1/personal-documents/summary', ...options });
-    }
-}
-
-export class PersonalDocuments extends HeyApiClient {
-    public post<ThrowOnError extends boolean = false>(options?: Options<PostApiV1PersonalDocumentsData, ThrowOnError>) {
-        return (options?.client ?? this.client).post<PostApiV1PersonalDocumentsResponses, unknown, ThrowOnError>({
-            ...formDataBodySerializer,
-            url: '/api/v1/personal-documents',
-            ...options,
-            headers: {
-                'Content-Type': null,
-                ...options?.headers
-            }
-        });
-    }
-    
-    private _id?: Id11;
-    get id(): Id11 {
-        return this._id ??= new Id11({ client: this.client });
-    }
-    
-    private _summary?: Summary;
-    get summary(): Summary {
-        return this._summary ??= new Summary({ client: this.client });
-    }
-}
-
-export class Id12 extends HeyApiClient {
-    public delete<ThrowOnError extends boolean = false>(options: Options<DeleteApiV1RecurringTasksByIdData, ThrowOnError>) {
-        return (options.client ?? this.client).delete<DeleteApiV1RecurringTasksByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/recurring-tasks/{id}', ...options });
-    }
-    
-    public patch<ThrowOnError extends boolean = false>(options: Options<PatchApiV1RecurringTasksByIdData, ThrowOnError>) {
-        return (options.client ?? this.client).patch<PatchApiV1RecurringTasksByIdResponses, unknown, ThrowOnError>({
-            url: '/api/v1/recurring-tasks/{id}',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
-                ...options.headers
-            }
-        });
-    }
-}
-
-export class RecurringTasks extends HeyApiClient {
-    public post<ThrowOnError extends boolean = false>(options?: Options<PostApiV1RecurringTasksData, ThrowOnError>) {
-        return (options?.client ?? this.client).post<PostApiV1RecurringTasksResponses, unknown, ThrowOnError>({
-            url: '/api/v1/recurring-tasks',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
-                ...options?.headers
-            }
-        });
-    }
-    
-    private _id?: Id12;
-    get id(): Id12 {
-        return this._id ??= new Id12({ client: this.client });
-    }
-}
-
-export class Submit extends HeyApiClient {
-    public post<ThrowOnError extends boolean = false>(options: Options<PostApiV1TasksByIdSubmitData, ThrowOnError>) {
-        return (options.client ?? this.client).post<PostApiV1TasksByIdSubmitResponses, unknown, ThrowOnError>({
-            url: '/api/v1/tasks/{id}/submit',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
-                ...options.headers
-            }
-        });
-    }
-}
-
-export class Approve2 extends HeyApiClient {
-    public post<ThrowOnError extends boolean = false>(options: Options<PostApiV1TasksByIdApproveData, ThrowOnError>) {
-        return (options.client ?? this.client).post<PostApiV1TasksByIdApproveResponses, unknown, ThrowOnError>({ url: '/api/v1/tasks/{id}/approve', ...options });
-    }
-}
-
-export class Reject2 extends HeyApiClient {
-    public post<ThrowOnError extends boolean = false>(options: Options<PostApiV1TasksByIdRejectData, ThrowOnError>) {
-        return (options.client ?? this.client).post<PostApiV1TasksByIdRejectResponses, unknown, ThrowOnError>({
-            url: '/api/v1/tasks/{id}/reject',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
-                ...options.headers
-            }
-        });
-    }
-}
-
-export class Comments extends HeyApiClient {
-    public get<ThrowOnError extends boolean = false>(options: Options<GetApiV1TasksByIdCommentsData, ThrowOnError>) {
-        return (options.client ?? this.client).get<GetApiV1TasksByIdCommentsResponses, unknown, ThrowOnError>({ url: '/api/v1/tasks/{id}/comments', ...options });
-    }
-}
-
-export class Documents extends HeyApiClient {
-    public get<ThrowOnError extends boolean = false>(options: Options<GetApiV1TasksByIdDocumentsData, ThrowOnError>) {
-        return (options.client ?? this.client).get<GetApiV1TasksByIdDocumentsResponses, unknown, ThrowOnError>({ url: '/api/v1/tasks/{id}/documents', ...options });
-    }
-}
-
-export class Id13 extends HeyApiClient {
-    public put<ThrowOnError extends boolean = false>(options: Options<PutApiV1TasksByIdData, ThrowOnError>) {
-        return (options.client ?? this.client).put<PutApiV1TasksByIdResponses, unknown, ThrowOnError>({
-            url: '/api/v1/tasks/{id}',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
-                ...options.headers
-            }
-        });
-    }
-    
-    private _submit?: Submit;
-    get submit(): Submit {
-        return this._submit ??= new Submit({ client: this.client });
-    }
-    
-    private _approve?: Approve2;
-    get approve(): Approve2 {
-        return this._approve ??= new Approve2({ client: this.client });
-    }
-    
-    private _reject?: Reject2;
-    get reject(): Reject2 {
-        return this._reject ??= new Reject2({ client: this.client });
-    }
-    
-    private _comments?: Comments;
-    get comments(): Comments {
-        return this._comments ??= new Comments({ client: this.client });
-    }
-    
-    private _documents?: Documents;
-    get documents(): Documents {
-        return this._documents ??= new Documents({ client: this.client });
-    }
-}
-
-export class Tasks extends HeyApiClient {
-    public post<ThrowOnError extends boolean = false>(options?: Options<PostApiV1TasksData, ThrowOnError>) {
-        return (options?.client ?? this.client).post<PostApiV1TasksResponses, unknown, ThrowOnError>({
-            url: '/api/v1/tasks',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
-                ...options?.headers
-            }
-        });
-    }
-    
-    private _id?: Id13;
-    get id(): Id13 {
-        return this._id ??= new Id13({ client: this.client });
-    }
-}
-
-export class Register extends HeyApiClient {
-    public post<ThrowOnError extends boolean = false>(options: Options<PostApiV1UserRegisterData, ThrowOnError>) {
-        return (options.client ?? this.client).post<PostApiV1UserRegisterResponses, PostApiV1UserRegisterErrors, ThrowOnError>({
-            url: '/api/v1/user/register',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json',
-                ...options.headers
-            }
-        });
-    }
-}
-
-export class Login extends HeyApiClient {
-    public post<ThrowOnError extends boolean = false>(options: Options<PostApiV1UserLoginData, ThrowOnError>) {
-        return (options.client ?? this.client).post<PostApiV1UserLoginResponses, unknown, ThrowOnError>({
-            url: '/api/v1/user/login',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json',
-                ...options.headers
-            }
-        });
-    }
-}
-
-export class Refresh extends HeyApiClient {
-    public post<ThrowOnError extends boolean = false>(options: Options<PostApiV1UserRefreshData, ThrowOnError>) {
-        return (options.client ?? this.client).post<PostApiV1UserRefreshResponses, unknown, ThrowOnError>({
-            url: '/api/v1/user/refresh',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json',
-                ...options.headers
-            }
-        });
-    }
-}
-
-export class ResendConfirmationEmail extends HeyApiClient {
-    public post<ThrowOnError extends boolean = false>(options: Options<PostApiV1UserResendConfirmationEmailData, ThrowOnError>) {
-        return (options.client ?? this.client).post<PostApiV1UserResendConfirmationEmailResponses, unknown, ThrowOnError>({
-            url: '/api/v1/user/resendConfirmationEmail',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json',
-                ...options.headers
-            }
-        });
-    }
-}
-
-export class ForgotPassword extends HeyApiClient {
-    public post<ThrowOnError extends boolean = false>(options: Options<PostApiV1UserForgotPasswordData, ThrowOnError>) {
-        return (options.client ?? this.client).post<PostApiV1UserForgotPasswordResponses, PostApiV1UserForgotPasswordErrors, ThrowOnError>({
-            url: '/api/v1/user/forgotPassword',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json',
-                ...options.headers
-            }
-        });
-    }
-}
-
-export class ResetPassword extends HeyApiClient {
-    public post<ThrowOnError extends boolean = false>(options: Options<PostApiV1UserResetPasswordData, ThrowOnError>) {
-        return (options.client ?? this.client).post<PostApiV1UserResetPasswordResponses, PostApiV1UserResetPasswordErrors, ThrowOnError>({
-            url: '/api/v1/user/resetPassword',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json',
-                ...options.headers
-            }
-        });
-    }
-}
-
-export class _2Fa extends HeyApiClient {
-    public post<ThrowOnError extends boolean = false>(options: Options<PostApiV1UserManage2FaData, ThrowOnError>) {
-        return (options.client ?? this.client).post<PostApiV1UserManage2FaResponses, PostApiV1UserManage2FaErrors, ThrowOnError>({
-            url: '/api/v1/user/manage/2fa',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json',
-                ...options.headers
-            }
-        });
-    }
-}
-
-export class Info extends HeyApiClient {
-    public get<ThrowOnError extends boolean = false>(options?: Options<GetApiV1UserManageInfoData, ThrowOnError>) {
-        return (options?.client ?? this.client).get<GetApiV1UserManageInfoResponses, GetApiV1UserManageInfoErrors, ThrowOnError>({ url: '/api/v1/user/manage/info', ...options });
-    }
-    
-    public post<ThrowOnError extends boolean = false>(options: Options<PostApiV1UserManageInfoData, ThrowOnError>) {
-        return (options.client ?? this.client).post<PostApiV1UserManageInfoResponses, PostApiV1UserManageInfoErrors, ThrowOnError>({
-            url: '/api/v1/user/manage/info',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json',
-                ...options.headers
-            }
-        });
-    }
-}
-
-export class Manage extends HeyApiClient {
-    private _2Fa?: _2Fa;
-    get '2Fa'(): _2Fa {
-        return this._2Fa ??= new _2Fa({ client: this.client });
-    }
-    
-    private _info?: Info;
-    get info(): Info {
-        return this._info ??= new Info({ client: this.client });
-    }
-}
-
-export class Logout extends HeyApiClient {
-    public post<ThrowOnError extends boolean = false>(options?: Options<PostApiV1UserLogoutData, ThrowOnError>) {
-        return (options?.client ?? this.client).post<PostApiV1UserLogoutResponses, unknown, ThrowOnError>({
-            url: '/api/v1/user/logout',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
-                ...options?.headers
-            }
-        });
-    }
-}
-
-export class DocumentsSummary extends HeyApiClient {
-    /**
-     * @deprecated
-     */
-    public get<ThrowOnError extends boolean = false>(options?: Options<GetApiV1UserDocumentsSummaryData, ThrowOnError>) {
-        return (options?.client ?? this.client).get<GetApiV1UserDocumentsSummaryResponses, unknown, ThrowOnError>({ url: '/api/v1/user/documents-summary', ...options });
-    }
-}
-
-export class User extends HeyApiClient {
-    public delete<ThrowOnError extends boolean = false>(options?: Options<DeleteApiV1UserData, ThrowOnError>) {
-        return (options?.client ?? this.client).delete<DeleteApiV1UserResponses, unknown, ThrowOnError>({ url: '/api/v1/user', ...options });
-    }
-    
-    private _register?: Register;
-    get register(): Register {
-        return this._register ??= new Register({ client: this.client });
-    }
-    
-    private _login?: Login;
-    get login(): Login {
-        return this._login ??= new Login({ client: this.client });
-    }
-    
-    private _refresh?: Refresh;
-    get refresh(): Refresh {
-        return this._refresh ??= new Refresh({ client: this.client });
-    }
-    
-    private _resendConfirmationEmail?: ResendConfirmationEmail;
-    get resendConfirmationEmail(): ResendConfirmationEmail {
-        return this._resendConfirmationEmail ??= new ResendConfirmationEmail({ client: this.client });
-    }
-    
-    private _forgotPassword?: ForgotPassword;
-    get forgotPassword(): ForgotPassword {
-        return this._forgotPassword ??= new ForgotPassword({ client: this.client });
-    }
-    
-    private _resetPassword?: ResetPassword;
-    get resetPassword(): ResetPassword {
-        return this._resetPassword ??= new ResetPassword({ client: this.client });
-    }
-    
-    private _manage?: Manage;
-    get manage(): Manage {
-        return this._manage ??= new Manage({ client: this.client });
-    }
-    
-    private _logout?: Logout;
-    get logout(): Logout {
-        return this._logout ??= new Logout({ client: this.client });
-    }
-    
-    private _documentsSummary?: DocumentsSummary;
-    get documentsSummary(): DocumentsSummary {
-        return this._documentsSummary ??= new DocumentsSummary({ client: this.client });
-    }
-}
-
-export class Me extends HeyApiClient {
-    public get<ThrowOnError extends boolean = false>(options?: Options<GetApiV1UsersMeData, ThrowOnError>) {
-        return (options?.client ?? this.client).get<GetApiV1UsersMeResponses, unknown, ThrowOnError>({ url: '/api/v1/users/me', ...options });
-    }
-}
-
-export class Id14 extends HeyApiClient {
-    public patch<ThrowOnError extends boolean = false>(options: Options<PatchApiV1UsersByIdData, ThrowOnError>) {
-        return (options.client ?? this.client).patch<PatchApiV1UsersByIdResponses, unknown, ThrowOnError>({
-            url: '/api/v1/users/{id}',
-            ...options,
-            headers: {
-                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
-                ...options.headers
-            }
-        });
-    }
-}
-
-export class Users extends HeyApiClient {
-    private _me?: Me;
-    get me(): Me {
-        return this._me ??= new Me({ client: this.client });
-    }
-    
-    private _id?: Id14;
-    get id(): Id14 {
-        return this._id ??= new Id14({ client: this.client });
-    }
-}
-
-export class V1 extends HeyApiClient {
-    private _accountingCompanies?: AccountingCompanies;
-    get accountingCompanies(): AccountingCompanies {
-        return this._accountingCompanies ??= new AccountingCompanies({ client: this.client });
-    }
-    
-    private _accountingCompanyMemberships?: AccountingCompanyMemberships;
-    get accountingCompanyMemberships(): AccountingCompanyMemberships {
-        return this._accountingCompanyMemberships ??= new AccountingCompanyMemberships({ client: this.client });
-    }
-    
-    private _bankAccounts?: BankAccounts;
-    get bankAccounts(): BankAccounts {
-        return this._bankAccounts ??= new BankAccounts({ client: this.client });
-    }
-    
-    private _businessAccountantAssignments?: BusinessAccountantAssignments;
-    get businessAccountantAssignments(): BusinessAccountantAssignments {
-        return this._businessAccountantAssignments ??= new BusinessAccountantAssignments({ client: this.client });
-    }
-    
-    private _businessDocuments?: BusinessDocuments;
-    get businessDocuments(): BusinessDocuments {
-        return this._businessDocuments ??= new BusinessDocuments({ client: this.client });
-    }
-    
-    private _businesses?: Businesses;
-    get businesses(): Businesses {
-        return this._businesses ??= new Businesses({ client: this.client });
-    }
-    
-    private _businessMemberships?: BusinessMemberships;
-    get businessMemberships(): BusinessMemberships {
-        return this._businessMemberships ??= new BusinessMemberships({ client: this.client });
-    }
-    
-    private _counterparties?: Counterparties;
-    get counterparties(): Counterparties {
-        return this._counterparties ??= new Counterparties({ client: this.client });
-    }
-    
-    private _dataBoxCredentials?: DataBoxCredentials;
-    get dataBoxCredentials(): DataBoxCredentials {
-        return this._dataBoxCredentials ??= new DataBoxCredentials({ client: this.client });
-    }
-    
-    private _notifications?: Notifications;
-    get notifications(): Notifications {
-        return this._notifications ??= new Notifications({ client: this.client });
-    }
-    
-    private _feedback?: Feedback;
-    get feedback(): Feedback {
-        return this._feedback ??= new Feedback({ client: this.client });
-    }
-    
-    private _invitations?: Invitations;
-    get invitations(): Invitations {
-        return this._invitations ??= new Invitations({ client: this.client });
-    }
-    
-    private _invoices?: Invoices;
-    get invoices(): Invoices {
-        return this._invoices ??= new Invoices({ client: this.client });
-    }
-    
-    private _invoiceSettings?: InvoiceSettings;
-    get invoiceSettings(): InvoiceSettings {
-        return this._invoiceSettings ??= new InvoiceSettings({ client: this.client });
-    }
-    
-    private _personalDocuments?: PersonalDocuments;
-    get personalDocuments(): PersonalDocuments {
-        return this._personalDocuments ??= new PersonalDocuments({ client: this.client });
-    }
-    
-    private _recurringTasks?: RecurringTasks;
-    get recurringTasks(): RecurringTasks {
-        return this._recurringTasks ??= new RecurringTasks({ client: this.client });
-    }
-    
-    private _tasks?: Tasks;
-    get tasks(): Tasks {
-        return this._tasks ??= new Tasks({ client: this.client });
-    }
-    
-    private _user?: User;
-    get user(): User {
-        return this._user ??= new User({ client: this.client });
-    }
-    
-    private _users?: Users;
-    get users(): Users {
-        return this._users ??= new Users({ client: this.client });
-    }
-}
-
-export class AccountingCompanies2 extends HeyApiClient {
-    public $count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataAccountingCompaniesCountData, ThrowOnError>) {
+    public count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataAccountingCompaniesCountData, ThrowOnError>) {
         return (options?.client ?? this.client).get<ApiVVersionApiVersionOdataAccountingCompaniesCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/AccountingCompanies/$count', ...options });
     }
 }
 
-export class AccountingCompanyMemberships2 extends HeyApiClient {
-    public $count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataAccountingCompanyMembershipsCountData, ThrowOnError>) {
+export class AccountingCompanyMemberships extends HeyApiClient {
+    public count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataAccountingCompanyMembershipsCountData, ThrowOnError>) {
         return (options?.client ?? this.client).get<ApiVVersionApiVersionOdataAccountingCompanyMembershipsCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/AccountingCompanyMemberships/$count', ...options });
     }
 }
 
-export class BankAccounts2 extends HeyApiClient {
-    public $count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBankAccountsCountData, ThrowOnError>) {
+export class BankAccounts extends HeyApiClient {
+    public count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBankAccountsCountData, ThrowOnError>) {
         return (options?.client ?? this.client).get<ApiVVersionApiVersionOdataBankAccountsCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/BankAccounts/$count', ...options });
     }
 }
 
-export class BusinessAccountantAssignments2 extends HeyApiClient {
-    public $count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessAccountantAssignmentsCountData, ThrowOnError>) {
+export class BusinessAccountantAssignments extends HeyApiClient {
+    public count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessAccountantAssignmentsCountData, ThrowOnError>) {
         return (options?.client ?? this.client).get<ApiVVersionApiVersionOdataBusinessAccountantAssignmentsCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/BusinessAccountantAssignments/$count', ...options });
     }
 }
 
 export class BusinessDocumentActivities extends HeyApiClient {
-    public $count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessDocumentActivitiesCountData, ThrowOnError>) {
+    public count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessDocumentActivitiesCountData, ThrowOnError>) {
         return (options?.client ?? this.client).get<ApiVVersionApiVersionOdataBusinessDocumentActivitiesCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/BusinessDocumentActivities/$count', ...options });
     }
 }
 
-export class BusinessDocuments2 extends HeyApiClient {
-    public $count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessDocumentsCountData, ThrowOnError>) {
+export class BusinessDocuments extends HeyApiClient {
+    public count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessDocumentsCountData, ThrowOnError>) {
         return (options?.client ?? this.client).get<ApiVVersionApiVersionOdataBusinessDocumentsCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/BusinessDocuments/$count', ...options });
     }
 }
@@ -1173,13 +86,13 @@ export class BusinessDocumentsSummaries extends HeyApiClient {
     /**
      * @deprecated
      */
-    public $count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessDocumentsSummariesCountData, ThrowOnError>) {
+    public count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessDocumentsSummariesCountData, ThrowOnError>) {
         return (options?.client ?? this.client).get<ApiVVersionApiVersionOdataBusinessDocumentsSummariesCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/BusinessDocumentsSummaries/$count', ...options });
     }
 }
 
-export class Businesses2 extends HeyApiClient {
-    public $count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessesCountData, ThrowOnError>) {
+export class Businesses extends HeyApiClient {
+    public count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessesCountData, ThrowOnError>) {
         return (options?.client ?? this.client).get<ApiVVersionApiVersionOdataBusinessesCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Businesses/$count', ...options });
     }
     
@@ -1189,67 +102,67 @@ export class Businesses2 extends HeyApiClient {
 }
 
 export class BusinessSummaries extends HeyApiClient {
-    public $count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessSummariesCountData, ThrowOnError>) {
+    public count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessSummariesCountData, ThrowOnError>) {
         return (options?.client ?? this.client).get<ApiVVersionApiVersionOdataBusinessSummariesCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/BusinessSummaries/$count', ...options });
     }
 }
 
-export class Counterparties2 extends HeyApiClient {
-    public $count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataCounterpartiesCountData, ThrowOnError>) {
+export class Counterparties extends HeyApiClient {
+    public count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataCounterpartiesCountData, ThrowOnError>) {
         return (options?.client ?? this.client).get<ApiVVersionApiVersionOdataCounterpartiesCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Counterparties/$count', ...options });
     }
 }
 
-export class DataBoxCredentials2 extends HeyApiClient {
-    public $count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataDataBoxCredentialsCountData, ThrowOnError>) {
+export class DataBoxCredentials extends HeyApiClient {
+    public count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataDataBoxCredentialsCountData, ThrowOnError>) {
         return (options?.client ?? this.client).get<ApiVVersionApiVersionOdataDataBoxCredentialsCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/DataBoxCredentials/$count', ...options });
     }
 }
 
 export class DocumentTypes extends HeyApiClient {
-    public $count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataDocumentTypesCountData, ThrowOnError>) {
+    public count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataDocumentTypesCountData, ThrowOnError>) {
         return (options?.client ?? this.client).get<ApiVVersionApiVersionOdataDocumentTypesCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/DocumentTypes/$count', ...options });
     }
 }
 
-export class Invitations2 extends HeyApiClient {
-    public $count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataInvitationsCountData, ThrowOnError>) {
+export class Invitations extends HeyApiClient {
+    public count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataInvitationsCountData, ThrowOnError>) {
         return (options?.client ?? this.client).get<ApiVVersionApiVersionOdataInvitationsCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Invitations/$count', ...options });
     }
 }
 
-export class Invoices2 extends HeyApiClient {
-    public $count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataInvoicesCountData, ThrowOnError>) {
+export class Invoices extends HeyApiClient {
+    public count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataInvoicesCountData, ThrowOnError>) {
         return (options?.client ?? this.client).get<ApiVVersionApiVersionOdataInvoicesCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Invoices/$count', ...options });
     }
 }
 
-export class InvoiceSettings2 extends HeyApiClient {
-    public $count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataInvoiceSettingsCountData, ThrowOnError>) {
+export class InvoiceSettings extends HeyApiClient {
+    public count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataInvoiceSettingsCountData, ThrowOnError>) {
         return (options?.client ?? this.client).get<ApiVVersionApiVersionOdataInvoiceSettingsCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/InvoiceSettings/$count', ...options });
     }
 }
 
 export class Licenses extends HeyApiClient {
-    public $count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataLicensesCountData, ThrowOnError>) {
+    public count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataLicensesCountData, ThrowOnError>) {
         return (options?.client ?? this.client).get<ApiVVersionApiVersionOdataLicensesCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Licenses/$count', ...options });
     }
 }
 
-export class PersonalDocuments2 extends HeyApiClient {
-    public $count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataPersonalDocumentsCountData, ThrowOnError>) {
+export class PersonalDocuments extends HeyApiClient {
+    public count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataPersonalDocumentsCountData, ThrowOnError>) {
         return (options?.client ?? this.client).get<ApiVVersionApiVersionOdataPersonalDocumentsCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/PersonalDocuments/$count', ...options });
     }
 }
 
-export class RecurringTasks2 extends HeyApiClient {
-    public $count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataRecurringTasksCountData, ThrowOnError>) {
+export class RecurringTasks extends HeyApiClient {
+    public count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataRecurringTasksCountData, ThrowOnError>) {
         return (options?.client ?? this.client).get<ApiVVersionApiVersionOdataRecurringTasksCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/RecurringTasks/$count', ...options });
     }
 }
 
-export class Tasks2 extends HeyApiClient {
-    public $count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataTasksCountData, ThrowOnError>) {
+export class Tasks extends HeyApiClient {
+    public count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataTasksCountData, ThrowOnError>) {
         return (options?.client ?? this.client).get<ApiVVersionApiVersionOdataTasksCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Tasks/$count', ...options });
     }
     
@@ -1346,24 +259,24 @@ export class Odata extends HeyApiClient {
         return (options?.client ?? this.client).get<ApiVVersionApiVersionOdataTasksKeyResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Tasks({key})', ...options });
     }
     
-    private _accountingCompanies?: AccountingCompanies2;
-    get accountingCompanies2(): AccountingCompanies2 {
-        return this._accountingCompanies ??= new AccountingCompanies2({ client: this.client });
+    private _accountingCompanies?: AccountingCompanies;
+    get accountingCompanies2(): AccountingCompanies {
+        return this._accountingCompanies ??= new AccountingCompanies({ client: this.client });
     }
     
-    private _accountingCompanyMemberships?: AccountingCompanyMemberships2;
-    get accountingCompanyMemberships2(): AccountingCompanyMemberships2 {
-        return this._accountingCompanyMemberships ??= new AccountingCompanyMemberships2({ client: this.client });
+    private _accountingCompanyMemberships?: AccountingCompanyMemberships;
+    get accountingCompanyMemberships2(): AccountingCompanyMemberships {
+        return this._accountingCompanyMemberships ??= new AccountingCompanyMemberships({ client: this.client });
     }
     
-    private _bankAccounts?: BankAccounts2;
-    get bankAccounts2(): BankAccounts2 {
-        return this._bankAccounts ??= new BankAccounts2({ client: this.client });
+    private _bankAccounts?: BankAccounts;
+    get bankAccounts2(): BankAccounts {
+        return this._bankAccounts ??= new BankAccounts({ client: this.client });
     }
     
-    private _businessAccountantAssignments?: BusinessAccountantAssignments2;
-    get businessAccountantAssignments2(): BusinessAccountantAssignments2 {
-        return this._businessAccountantAssignments ??= new BusinessAccountantAssignments2({ client: this.client });
+    private _businessAccountantAssignments?: BusinessAccountantAssignments;
+    get businessAccountantAssignments2(): BusinessAccountantAssignments {
+        return this._businessAccountantAssignments ??= new BusinessAccountantAssignments({ client: this.client });
     }
     
     private _businessDocumentActivities?: BusinessDocumentActivities;
@@ -1371,9 +284,9 @@ export class Odata extends HeyApiClient {
         return this._businessDocumentActivities ??= new BusinessDocumentActivities({ client: this.client });
     }
     
-    private _businessDocuments?: BusinessDocuments2;
-    get businessDocuments2(): BusinessDocuments2 {
-        return this._businessDocuments ??= new BusinessDocuments2({ client: this.client });
+    private _businessDocuments?: BusinessDocuments;
+    get businessDocuments2(): BusinessDocuments {
+        return this._businessDocuments ??= new BusinessDocuments({ client: this.client });
     }
     
     private _businessDocumentsSummaries?: BusinessDocumentsSummaries;
@@ -1381,9 +294,9 @@ export class Odata extends HeyApiClient {
         return this._businessDocumentsSummaries ??= new BusinessDocumentsSummaries({ client: this.client });
     }
     
-    private _businesses?: Businesses2;
-    get businesses2(): Businesses2 {
-        return this._businesses ??= new Businesses2({ client: this.client });
+    private _businesses?: Businesses;
+    get businesses2(): Businesses {
+        return this._businesses ??= new Businesses({ client: this.client });
     }
     
     private _businessSummaries?: BusinessSummaries;
@@ -1391,14 +304,14 @@ export class Odata extends HeyApiClient {
         return this._businessSummaries ??= new BusinessSummaries({ client: this.client });
     }
     
-    private _counterparties?: Counterparties2;
-    get counterparties2(): Counterparties2 {
-        return this._counterparties ??= new Counterparties2({ client: this.client });
+    private _counterparties?: Counterparties;
+    get counterparties2(): Counterparties {
+        return this._counterparties ??= new Counterparties({ client: this.client });
     }
     
-    private _dataBoxCredentials?: DataBoxCredentials2;
-    get dataBoxCredentials2(): DataBoxCredentials2 {
-        return this._dataBoxCredentials ??= new DataBoxCredentials2({ client: this.client });
+    private _dataBoxCredentials?: DataBoxCredentials;
+    get dataBoxCredentials2(): DataBoxCredentials {
+        return this._dataBoxCredentials ??= new DataBoxCredentials({ client: this.client });
     }
     
     private _documentTypes?: DocumentTypes;
@@ -1406,19 +319,19 @@ export class Odata extends HeyApiClient {
         return this._documentTypes ??= new DocumentTypes({ client: this.client });
     }
     
-    private _invitations?: Invitations2;
-    get invitations2(): Invitations2 {
-        return this._invitations ??= new Invitations2({ client: this.client });
+    private _invitations?: Invitations;
+    get invitations2(): Invitations {
+        return this._invitations ??= new Invitations({ client: this.client });
     }
     
-    private _invoices?: Invoices2;
-    get invoices2(): Invoices2 {
-        return this._invoices ??= new Invoices2({ client: this.client });
+    private _invoices?: Invoices;
+    get invoices2(): Invoices {
+        return this._invoices ??= new Invoices({ client: this.client });
     }
     
-    private _invoiceSettings?: InvoiceSettings2;
-    get invoiceSettings2(): InvoiceSettings2 {
-        return this._invoiceSettings ??= new InvoiceSettings2({ client: this.client });
+    private _invoiceSettings?: InvoiceSettings;
+    get invoiceSettings2(): InvoiceSettings {
+        return this._invoiceSettings ??= new InvoiceSettings({ client: this.client });
     }
     
     private _licenses?: Licenses;
@@ -1426,19 +339,19 @@ export class Odata extends HeyApiClient {
         return this._licenses ??= new Licenses({ client: this.client });
     }
     
-    private _personalDocuments?: PersonalDocuments2;
-    get personalDocuments2(): PersonalDocuments2 {
-        return this._personalDocuments ??= new PersonalDocuments2({ client: this.client });
+    private _personalDocuments?: PersonalDocuments;
+    get personalDocuments2(): PersonalDocuments {
+        return this._personalDocuments ??= new PersonalDocuments({ client: this.client });
     }
     
-    private _recurringTasks?: RecurringTasks2;
-    get recurringTasks2(): RecurringTasks2 {
-        return this._recurringTasks ??= new RecurringTasks2({ client: this.client });
+    private _recurringTasks?: RecurringTasks;
+    get recurringTasks2(): RecurringTasks {
+        return this._recurringTasks ??= new RecurringTasks({ client: this.client });
     }
     
-    private _tasks?: Tasks2;
-    get tasks2(): Tasks2 {
-        return this._tasks ??= new Tasks2({ client: this.client });
+    private _tasks?: Tasks;
+    get tasks2(): Tasks {
+        return this._tasks ??= new Tasks({ client: this.client });
     }
 }
 
@@ -1449,199 +362,23 @@ export class VVersionApiVersion extends HeyApiClient {
     }
 }
 
-export class ReseedDb extends HeyApiClient {
-    public get<ThrowOnError extends boolean = false>(options?: Options<GetApiDevReseedDbData, ThrowOnError>) {
-        return (options?.client ?? this.client).get<GetApiDevReseedDbResponses, unknown, ThrowOnError>({ url: '/api/dev/reseed-db', ...options });
-    }
-}
-
-export class DbReset extends HeyApiClient {
-    public get<ThrowOnError extends boolean = false>(options?: Options<GetApiDevDbResetData, ThrowOnError>) {
-        return (options?.client ?? this.client).get<GetApiDevDbResetResponses, unknown, ThrowOnError>({ url: '/api/dev/db-reset', ...options });
-    }
-}
-
-export class Reset extends HeyApiClient {
-    public get<ThrowOnError extends boolean = false>(options?: Options<GetApiDevDbReset2Data, ThrowOnError>) {
-        return (options?.client ?? this.client).get<GetApiDevDbReset2Responses, unknown, ThrowOnError>({ url: '/api/dev/db/reset', ...options });
-    }
-}
-
-export class Create extends HeyApiClient {
-    public get<ThrowOnError extends boolean = false>(options?: Options<GetApiDevDbCreateData, ThrowOnError>) {
-        return (options?.client ?? this.client).get<GetApiDevDbCreateResponses, unknown, ThrowOnError>({ url: '/api/dev/db/create', ...options });
-    }
-}
-
-export class Touch extends HeyApiClient {
-    public get<ThrowOnError extends boolean = false>(options?: Options<GetApiDevDbTouchData, ThrowOnError>) {
-        return (options?.client ?? this.client).get<GetApiDevDbTouchResponses, unknown, ThrowOnError>({ url: '/api/dev/db/touch', ...options });
-    }
-}
-
-export class Db extends HeyApiClient {
-    private _reset?: Reset;
-    get reset(): Reset {
-        return this._reset ??= new Reset({ client: this.client });
-    }
-    
-    private _create?: Create;
-    get create(): Create {
-        return this._create ??= new Create({ client: this.client });
-    }
-    
-    private _touch?: Touch;
-    get touch(): Touch {
-        return this._touch ??= new Touch({ client: this.client });
-    }
-}
-
-export class Seed extends HeyApiClient {
-    public get<ThrowOnError extends boolean = false>(options?: Options<GetApiDevSeedData, ThrowOnError>) {
-        return (options?.client ?? this.client).get<GetApiDevSeedResponses, unknown, ThrowOnError>({ url: '/api/dev/seed', ...options });
-    }
-}
-
-export class SeedAll extends HeyApiClient {
-    public get<ThrowOnError extends boolean = false>(options?: Options<GetApiDevSeedAllData, ThrowOnError>) {
-        return (options?.client ?? this.client).get<GetApiDevSeedAllResponses, unknown, ThrowOnError>({ url: '/api/dev/seed-all', ...options });
-    }
-}
-
-export class SeedProd extends HeyApiClient {
-    public get<ThrowOnError extends boolean = false>(options?: Options<GetApiDevSeedProdData, ThrowOnError>) {
-        return (options?.client ?? this.client).get<GetApiDevSeedProdResponses, unknown, ThrowOnError>({ url: '/api/dev/seed-prod', ...options });
-    }
-}
-
-export class ProcessRecurringTasks extends HeyApiClient {
-    public get<ThrowOnError extends boolean = false>(options?: Options<GetApiDevJobProcessRecurringTasksData, ThrowOnError>) {
-        return (options?.client ?? this.client).get<GetApiDevJobProcessRecurringTasksResponses, unknown, ThrowOnError>({ url: '/api/dev/job/process-recurring-tasks', ...options });
-    }
-}
-
-export class Job extends HeyApiClient {
-    private _processRecurringTasks?: ProcessRecurringTasks;
-    get processRecurringTasks(): ProcessRecurringTasks {
-        return this._processRecurringTasks ??= new ProcessRecurringTasks({ client: this.client });
-    }
-}
-
-export class SendTest extends HeyApiClient {
-    public get<ThrowOnError extends boolean = false>(options?: Options<GetApiDevNotificationsSendTestData, ThrowOnError>) {
-        return (options?.client ?? this.client).get<GetApiDevNotificationsSendTestResponses, unknown, ThrowOnError>({ url: '/api/dev/notifications/send-test', ...options });
-    }
-}
-
-export class Notifications2 extends HeyApiClient {
-    private _sendTest?: SendTest;
-    get sendTest(): SendTest {
-        return this._sendTest ??= new SendTest({ client: this.client });
-    }
-}
-
-export class ConfirmEmail extends HeyApiClient {
-    public get<ThrowOnError extends boolean = false>(options?: Options<GetApiDevConfirmEmailData, ThrowOnError>) {
-        return (options?.client ?? this.client).get<GetApiDevConfirmEmailResponses, unknown, ThrowOnError>({ url: '/api/dev/confirm-email', ...options });
-    }
-}
-
-export class SendTest2 extends HeyApiClient {
-    public get<ThrowOnError extends boolean = false>(options?: Options<GetApiDevEmailSendTestData, ThrowOnError>) {
-        return (options?.client ?? this.client).get<GetApiDevEmailSendTestResponses, unknown, ThrowOnError>({ url: '/api/dev/email/send-test', ...options });
-    }
-}
-
-export class Email extends HeyApiClient {
-    private _sendTest?: SendTest2;
-    get sendTest(): SendTest2 {
-        return this._sendTest ??= new SendTest2({ client: this.client });
-    }
-}
-
-export class Dev extends HeyApiClient {
-    public get<ThrowOnError extends boolean = false>(options?: Options<GetApiDevData, ThrowOnError>) {
-        return (options?.client ?? this.client).get<GetApiDevResponses, unknown, ThrowOnError>({ url: '/api/dev', ...options });
-    }
-    
-    private _reseedDb?: ReseedDb;
-    get reseedDb(): ReseedDb {
-        return this._reseedDb ??= new ReseedDb({ client: this.client });
-    }
-    
-    private _dbReset?: DbReset;
-    get dbReset(): DbReset {
-        return this._dbReset ??= new DbReset({ client: this.client });
-    }
-    
-    private _db?: Db;
-    get db(): Db {
-        return this._db ??= new Db({ client: this.client });
-    }
-    
-    private _seed?: Seed;
-    get seed(): Seed {
-        return this._seed ??= new Seed({ client: this.client });
-    }
-    
-    private _seedAll?: SeedAll;
-    get seedAll(): SeedAll {
-        return this._seedAll ??= new SeedAll({ client: this.client });
-    }
-    
-    private _seedProd?: SeedProd;
-    get seedProd(): SeedProd {
-        return this._seedProd ??= new SeedProd({ client: this.client });
-    }
-    
-    private _job?: Job;
-    get job(): Job {
-        return this._job ??= new Job({ client: this.client });
-    }
-    
-    private _notifications?: Notifications2;
-    get notifications(): Notifications2 {
-        return this._notifications ??= new Notifications2({ client: this.client });
-    }
-    
-    private _confirmEmail?: ConfirmEmail;
-    get confirmEmail(): ConfirmEmail {
-        return this._confirmEmail ??= new ConfirmEmail({ client: this.client });
-    }
-    
-    private _email?: Email;
-    get email(): Email {
-        return this._email ??= new Email({ client: this.client });
-    }
-}
-
 export class Api extends HeyApiClient {
-    private _v1?: V1;
-    get v1(): V1 {
-        return this._v1 ??= new V1({ client: this.client });
-    }
-    
     private _vVersionApiVersion?: VVersionApiVersion;
     get vVersionApiVersion(): VVersionApiVersion {
         return this._vVersionApiVersion ??= new VVersionApiVersion({ client: this.client });
     }
-    
-    private _dev?: Dev;
-    get dev(): Dev {
-        return this._dev ??= new Dev({ client: this.client });
-    }
 }
 
-export class User2 extends HeyApiClient {
+export class User extends HeyApiClient {
     public confirmEmail<ThrowOnError extends boolean = false>(options: Options<MapIdentityApiApiVVersionApiVersionUserConfirmEmailData, ThrowOnError>) {
         return (options.client ?? this.client).get<MapIdentityApiApiVVersionApiVersionUserConfirmEmailResponses, unknown, ThrowOnError>({ url: '/api/v1/user/confirmEmail', ...options });
     }
 }
 
 export class VVersionApiVersion2 extends HeyApiClient {
-    private _user?: User2;
-    get user(): User2 {
-        return this._user ??= new User2({ client: this.client });
+    private _user?: User;
+    get user(): User {
+        return this._user ??= new User({ client: this.client });
     }
 }
 
@@ -1670,8 +407,669 @@ export class Sdk extends HeyApiClient {
         Sdk.__registry.set(this, args?.key);
     }
     
+    public postApiV1AccountingCompanies<ThrowOnError extends boolean = false>(options?: Options<PostApiV1AccountingCompaniesData, ThrowOnError>) {
+        return (options?.client ?? this.client).post<PostApiV1AccountingCompaniesResponses, unknown, ThrowOnError>({
+            url: '/api/v1/accounting-companies',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
+                ...options?.headers
+            }
+        });
+    }
+    
+    public deleteApiV1AccountingCompaniesById<ThrowOnError extends boolean = false>(options: Options<DeleteApiV1AccountingCompaniesByIdData, ThrowOnError>) {
+        return (options.client ?? this.client).delete<DeleteApiV1AccountingCompaniesByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/accounting-companies/{id}', ...options });
+    }
+    
+    public postApiV1AccountingCompaniesById<ThrowOnError extends boolean = false>(options: Options<PostApiV1AccountingCompaniesByIdData, ThrowOnError>) {
+        return (options.client ?? this.client).post<PostApiV1AccountingCompaniesByIdResponses, unknown, ThrowOnError>({
+            url: '/api/v1/accounting-companies/{id}',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
+                ...options.headers
+            }
+        });
+    }
+    
+    public putApiV1AccountingCompanyMemberships<ThrowOnError extends boolean = false>(options?: Options<PutApiV1AccountingCompanyMembershipsData, ThrowOnError>) {
+        return (options?.client ?? this.client).put<PutApiV1AccountingCompanyMembershipsResponses, unknown, ThrowOnError>({
+            url: '/api/v1/accounting-company-memberships',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
+                ...options?.headers
+            }
+        });
+    }
+    
+    public deleteApiV1AccountingCompanyMembershipsById<ThrowOnError extends boolean = false>(options: Options<DeleteApiV1AccountingCompanyMembershipsByIdData, ThrowOnError>) {
+        return (options.client ?? this.client).delete<DeleteApiV1AccountingCompanyMembershipsByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/accounting-company-memberships/{id}', ...options });
+    }
+    
+    public putApiV1BankAccounts<ThrowOnError extends boolean = false>(options?: Options<PutApiV1BankAccountsData, ThrowOnError>) {
+        return (options?.client ?? this.client).put<PutApiV1BankAccountsResponses, unknown, ThrowOnError>({
+            url: '/api/v1/bank-accounts',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
+                ...options?.headers
+            }
+        });
+    }
+    
+    public deleteApiV1BankAccountsById<ThrowOnError extends boolean = false>(options: Options<DeleteApiV1BankAccountsByIdData, ThrowOnError>) {
+        return (options.client ?? this.client).delete<DeleteApiV1BankAccountsByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/bank-accounts/{id}', ...options });
+    }
+    
+    public putApiV1BusinessAccountantAssignments<ThrowOnError extends boolean = false>(options?: Options<PutApiV1BusinessAccountantAssignmentsData, ThrowOnError>) {
+        return (options?.client ?? this.client).put<PutApiV1BusinessAccountantAssignmentsResponses, unknown, ThrowOnError>({
+            url: '/api/v1/business-accountant-assignments',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
+                ...options?.headers
+            }
+        });
+    }
+    
+    public deleteApiV1BusinessAccountantAssignmentsById<ThrowOnError extends boolean = false>(options: Options<DeleteApiV1BusinessAccountantAssignmentsByIdData, ThrowOnError>) {
+        return (options.client ?? this.client).delete<DeleteApiV1BusinessAccountantAssignmentsByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/business-accountant-assignments/{id}', ...options });
+    }
+    
+    public getApiV1BusinessDocumentsByIdRaw<ThrowOnError extends boolean = false>(options: Options<GetApiV1BusinessDocumentsByIdRawData, ThrowOnError>) {
+        return (options.client ?? this.client).get<GetApiV1BusinessDocumentsByIdRawResponses, unknown, ThrowOnError>({ url: '/api/v1/business-documents/{id}/raw', ...options });
+    }
+    
+    public postApiV1BusinessDocuments<ThrowOnError extends boolean = false>(options?: Options<PostApiV1BusinessDocumentsData, ThrowOnError>) {
+        return (options?.client ?? this.client).post<PostApiV1BusinessDocumentsResponses, unknown, ThrowOnError>({
+            ...formDataBodySerializer,
+            url: '/api/v1/business-documents',
+            ...options,
+            headers: {
+                'Content-Type': null,
+                ...options?.headers
+            }
+        });
+    }
+    
+    public deleteApiV1BusinessDocumentsById<ThrowOnError extends boolean = false>(options: Options<DeleteApiV1BusinessDocumentsByIdData, ThrowOnError>) {
+        return (options.client ?? this.client).delete<DeleteApiV1BusinessDocumentsByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/business-documents/{id}', ...options });
+    }
+    
+    public putApiV1BusinessDocumentsById<ThrowOnError extends boolean = false>(options: Options<PutApiV1BusinessDocumentsByIdData, ThrowOnError>) {
+        return (options.client ?? this.client).put<PutApiV1BusinessDocumentsByIdResponses, unknown, ThrowOnError>({
+            url: '/api/v1/business-documents/{id}',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
+                ...options.headers
+            }
+        });
+    }
+    
+    public postApiV1BusinessDocumentsByIdApprove<ThrowOnError extends boolean = false>(options: Options<PostApiV1BusinessDocumentsByIdApproveData, ThrowOnError>) {
+        return (options.client ?? this.client).post<PostApiV1BusinessDocumentsByIdApproveResponses, unknown, ThrowOnError>({ url: '/api/v1/business-documents/{id}/approve', ...options });
+    }
+    
+    public postApiV1BusinessDocumentsByIdUnapprove<ThrowOnError extends boolean = false>(options: Options<PostApiV1BusinessDocumentsByIdUnapproveData, ThrowOnError>) {
+        return (options.client ?? this.client).post<PostApiV1BusinessDocumentsByIdUnapproveResponses, unknown, ThrowOnError>({ url: '/api/v1/business-documents/{id}/unapprove', ...options });
+    }
+    
+    public postApiV1BusinessDocumentsByIdMoveToPersonal<ThrowOnError extends boolean = false>(options: Options<PostApiV1BusinessDocumentsByIdMoveToPersonalData, ThrowOnError>) {
+        return (options.client ?? this.client).post<PostApiV1BusinessDocumentsByIdMoveToPersonalResponses, unknown, ThrowOnError>({ url: '/api/v1/business-documents/{id}/move-to-personal', ...options });
+    }
+    
+    public postApiV1BusinessDocumentsByIdMoveToBusiness<ThrowOnError extends boolean = false>(options: Options<PostApiV1BusinessDocumentsByIdMoveToBusinessData, ThrowOnError>) {
+        return (options.client ?? this.client).post<PostApiV1BusinessDocumentsByIdMoveToBusinessResponses, unknown, ThrowOnError>({
+            url: '/api/v1/business-documents/{id}/move-to-business',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
+                ...options.headers
+            }
+        });
+    }
+    
+    public getApiV1BusinessesByIdDocumentTypesSummary<ThrowOnError extends boolean = false>(options: Options<GetApiV1BusinessesByIdDocumentTypesSummaryData, ThrowOnError>) {
+        return (options.client ?? this.client).get<GetApiV1BusinessesByIdDocumentTypesSummaryResponses, unknown, ThrowOnError>({ url: '/api/v1/businesses/{id}/document-types-summary', ...options });
+    }
+    
+    public postApiV1Businesses<ThrowOnError extends boolean = false>(options?: Options<PostApiV1BusinessesData, ThrowOnError>) {
+        return (options?.client ?? this.client).post<PostApiV1BusinessesResponses, unknown, ThrowOnError>({
+            url: '/api/v1/businesses',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
+                ...options?.headers
+            }
+        });
+    }
+    
+    public deleteApiV1BusinessesById<ThrowOnError extends boolean = false>(options: Options<DeleteApiV1BusinessesByIdData, ThrowOnError>) {
+        return (options.client ?? this.client).delete<DeleteApiV1BusinessesByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/businesses/{id}', ...options });
+    }
+    
+    public putApiV1BusinessesById<ThrowOnError extends boolean = false>(options: Options<PutApiV1BusinessesByIdData, ThrowOnError>) {
+        return (options.client ?? this.client).put<PutApiV1BusinessesByIdResponses, unknown, ThrowOnError>({
+            url: '/api/v1/businesses/{id}',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
+                ...options.headers
+            }
+        });
+    }
+    
+    public putApiV1BusinessesByIdContact<ThrowOnError extends boolean = false>(options: Options<PutApiV1BusinessesByIdContactData, ThrowOnError>) {
+        return (options.client ?? this.client).put<PutApiV1BusinessesByIdContactResponses, unknown, ThrowOnError>({
+            url: '/api/v1/businesses/{id}/contact',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
+                ...options.headers
+            }
+        });
+    }
+    
+    public postApiV1BusinessesByIdDisconnect<ThrowOnError extends boolean = false>(options: Options<PostApiV1BusinessesByIdDisconnectData, ThrowOnError>) {
+        return (options.client ?? this.client).post<PostApiV1BusinessesByIdDisconnectResponses, unknown, ThrowOnError>({ url: '/api/v1/businesses/{id}/disconnect', ...options });
+    }
+    
+    public putApiV1BusinessMemberships<ThrowOnError extends boolean = false>(options?: Options<PutApiV1BusinessMembershipsData, ThrowOnError>) {
+        return (options?.client ?? this.client).put<PutApiV1BusinessMembershipsResponses, unknown, ThrowOnError>({
+            url: '/api/v1/business-memberships',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
+                ...options?.headers
+            }
+        });
+    }
+    
+    public postApiV1Counterparties<ThrowOnError extends boolean = false>(options?: Options<PostApiV1CounterpartiesData, ThrowOnError>) {
+        return (options?.client ?? this.client).post<PostApiV1CounterpartiesResponses, unknown, ThrowOnError>({
+            url: '/api/v1/counterparties',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
+                ...options?.headers
+            }
+        });
+    }
+    
+    public deleteApiV1CounterpartiesById<ThrowOnError extends boolean = false>(options: Options<DeleteApiV1CounterpartiesByIdData, ThrowOnError>) {
+        return (options.client ?? this.client).delete<DeleteApiV1CounterpartiesByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/counterparties/{id}', ...options });
+    }
+    
+    public patchApiV1CounterpartiesById<ThrowOnError extends boolean = false>(options: Options<PatchApiV1CounterpartiesByIdData, ThrowOnError>) {
+        return (options.client ?? this.client).patch<PatchApiV1CounterpartiesByIdResponses, unknown, ThrowOnError>({
+            url: '/api/v1/counterparties/{id}',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
+                ...options.headers
+            }
+        });
+    }
+    
+    public putApiV1DataBoxCredentials<ThrowOnError extends boolean = false>(options?: Options<PutApiV1DataBoxCredentialsData, ThrowOnError>) {
+        return (options?.client ?? this.client).put<PutApiV1DataBoxCredentialsResponses, unknown, ThrowOnError>({
+            url: '/api/v1/data-box-credentials',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
+                ...options?.headers
+            }
+        });
+    }
+    
+    public deleteApiV1DataBoxCredentialsById<ThrowOnError extends boolean = false>(options: Options<DeleteApiV1DataBoxCredentialsByIdData, ThrowOnError>) {
+        return (options.client ?? this.client).delete<DeleteApiV1DataBoxCredentialsByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/data-box-credentials/{id}', ...options });
+    }
+    
+    public getApiDev<ThrowOnError extends boolean = false>(options?: Options<GetApiDevData, ThrowOnError>) {
+        return (options?.client ?? this.client).get<GetApiDevResponses, unknown, ThrowOnError>({ url: '/api/dev', ...options });
+    }
+    
+    public getApiDevReseedDb<ThrowOnError extends boolean = false>(options?: Options<GetApiDevReseedDbData, ThrowOnError>) {
+        return (options?.client ?? this.client).get<GetApiDevReseedDbResponses, unknown, ThrowOnError>({ url: '/api/dev/reseed-db', ...options });
+    }
+    
+    public getApiDevDbReset<ThrowOnError extends boolean = false>(options?: Options<GetApiDevDbResetData, ThrowOnError>) {
+        return (options?.client ?? this.client).get<GetApiDevDbResetResponses, unknown, ThrowOnError>({ url: '/api/dev/db-reset', ...options });
+    }
+    
+    public getApiDevDbReset2<ThrowOnError extends boolean = false>(options?: Options<GetApiDevDbReset2Data, ThrowOnError>) {
+        return (options?.client ?? this.client).get<GetApiDevDbReset2Responses, unknown, ThrowOnError>({ url: '/api/dev/db/reset', ...options });
+    }
+    
+    public getApiDevDbCreate<ThrowOnError extends boolean = false>(options?: Options<GetApiDevDbCreateData, ThrowOnError>) {
+        return (options?.client ?? this.client).get<GetApiDevDbCreateResponses, unknown, ThrowOnError>({ url: '/api/dev/db/create', ...options });
+    }
+    
+    public getApiDevDbTouch<ThrowOnError extends boolean = false>(options?: Options<GetApiDevDbTouchData, ThrowOnError>) {
+        return (options?.client ?? this.client).get<GetApiDevDbTouchResponses, unknown, ThrowOnError>({ url: '/api/dev/db/touch', ...options });
+    }
+    
+    public getApiDevSeed<ThrowOnError extends boolean = false>(options?: Options<GetApiDevSeedData, ThrowOnError>) {
+        return (options?.client ?? this.client).get<GetApiDevSeedResponses, unknown, ThrowOnError>({ url: '/api/dev/seed', ...options });
+    }
+    
+    public getApiDevSeedAll<ThrowOnError extends boolean = false>(options?: Options<GetApiDevSeedAllData, ThrowOnError>) {
+        return (options?.client ?? this.client).get<GetApiDevSeedAllResponses, unknown, ThrowOnError>({ url: '/api/dev/seed-all', ...options });
+    }
+    
+    public getApiDevSeedProd<ThrowOnError extends boolean = false>(options?: Options<GetApiDevSeedProdData, ThrowOnError>) {
+        return (options?.client ?? this.client).get<GetApiDevSeedProdResponses, unknown, ThrowOnError>({ url: '/api/dev/seed-prod', ...options });
+    }
+    
+    public getApiDevJobProcessRecurringTasks<ThrowOnError extends boolean = false>(options?: Options<GetApiDevJobProcessRecurringTasksData, ThrowOnError>) {
+        return (options?.client ?? this.client).get<GetApiDevJobProcessRecurringTasksResponses, unknown, ThrowOnError>({ url: '/api/dev/job/process-recurring-tasks', ...options });
+    }
+    
+    public getApiDevNotificationsSendTest<ThrowOnError extends boolean = false>(options?: Options<GetApiDevNotificationsSendTestData, ThrowOnError>) {
+        return (options?.client ?? this.client).get<GetApiDevNotificationsSendTestResponses, unknown, ThrowOnError>({ url: '/api/dev/notifications/send-test', ...options });
+    }
+    
+    public getApiDevConfirmEmail<ThrowOnError extends boolean = false>(options?: Options<GetApiDevConfirmEmailData, ThrowOnError>) {
+        return (options?.client ?? this.client).get<GetApiDevConfirmEmailResponses, unknown, ThrowOnError>({ url: '/api/dev/confirm-email', ...options });
+    }
+    
+    public getApiDevEmailSendTest<ThrowOnError extends boolean = false>(options?: Options<GetApiDevEmailSendTestData, ThrowOnError>) {
+        return (options?.client ?? this.client).get<GetApiDevEmailSendTestResponses, unknown, ThrowOnError>({ url: '/api/dev/email/send-test', ...options });
+    }
+    
+    public deleteApiV1NotificationsDeviceTokens<ThrowOnError extends boolean = false>(options?: Options<DeleteApiV1NotificationsDeviceTokensData, ThrowOnError>) {
+        return (options?.client ?? this.client).delete<DeleteApiV1NotificationsDeviceTokensResponses, unknown, ThrowOnError>({
+            url: '/api/v1/notifications/device-tokens',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
+                ...options?.headers
+            }
+        });
+    }
+    
+    public putApiV1NotificationsDeviceTokens<ThrowOnError extends boolean = false>(options?: Options<PutApiV1NotificationsDeviceTokensData, ThrowOnError>) {
+        return (options?.client ?? this.client).put<PutApiV1NotificationsDeviceTokensResponses, unknown, ThrowOnError>({
+            url: '/api/v1/notifications/device-tokens',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
+                ...options?.headers
+            }
+        });
+    }
+    
+    public postApiV1Feedback<ThrowOnError extends boolean = false>(options?: Options<PostApiV1FeedbackData, ThrowOnError>) {
+        return (options?.client ?? this.client).post<PostApiV1FeedbackResponses, unknown, ThrowOnError>({
+            url: '/api/v1/feedback',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
+                ...options?.headers
+            }
+        });
+    }
+    
+    public postApiV1Invitations<ThrowOnError extends boolean = false>(options?: Options<PostApiV1InvitationsData, ThrowOnError>) {
+        return (options?.client ?? this.client).post<PostApiV1InvitationsResponses, unknown, ThrowOnError>({
+            url: '/api/v1/invitations',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
+                ...options?.headers
+            }
+        });
+    }
+    
+    public postApiV1InvitationsByIdAccept<ThrowOnError extends boolean = false>(options: Options<PostApiV1InvitationsByIdAcceptData, ThrowOnError>) {
+        return (options.client ?? this.client).post<PostApiV1InvitationsByIdAcceptResponses, unknown, ThrowOnError>({
+            url: '/api/v1/invitations/{id}/accept',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
+                ...options.headers
+            }
+        });
+    }
+    
+    public postApiV1InvitationsByIdReject<ThrowOnError extends boolean = false>(options: Options<PostApiV1InvitationsByIdRejectData, ThrowOnError>) {
+        return (options.client ?? this.client).post<PostApiV1InvitationsByIdRejectResponses, unknown, ThrowOnError>({ url: '/api/v1/invitations/{id}/reject', ...options });
+    }
+    
+    public deleteApiV1InvitationsById<ThrowOnError extends boolean = false>(options: Options<DeleteApiV1InvitationsByIdData, ThrowOnError>) {
+        return (options.client ?? this.client).delete<DeleteApiV1InvitationsByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/invitations/{id}', ...options });
+    }
+    
+    public patchApiV1InvitationsById<ThrowOnError extends boolean = false>(options: Options<PatchApiV1InvitationsByIdData, ThrowOnError>) {
+        return (options.client ?? this.client).patch<PatchApiV1InvitationsByIdResponses, unknown, ThrowOnError>({
+            url: '/api/v1/invitations/{id}',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
+                ...options.headers
+            }
+        });
+    }
+    
+    public postApiV1Invoices<ThrowOnError extends boolean = false>(options?: Options<PostApiV1InvoicesData, ThrowOnError>) {
+        return (options?.client ?? this.client).post<PostApiV1InvoicesResponses, unknown, ThrowOnError>({
+            url: '/api/v1/invoices',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
+                ...options?.headers
+            }
+        });
+    }
+    
+    public deleteApiV1InvoicesById<ThrowOnError extends boolean = false>(options: Options<DeleteApiV1InvoicesByIdData, ThrowOnError>) {
+        return (options.client ?? this.client).delete<DeleteApiV1InvoicesByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/invoices/{id}', ...options });
+    }
+    
+    public patchApiV1InvoicesById<ThrowOnError extends boolean = false>(options: Options<PatchApiV1InvoicesByIdData, ThrowOnError>) {
+        return (options.client ?? this.client).patch<PatchApiV1InvoicesByIdResponses, unknown, ThrowOnError>({
+            url: '/api/v1/invoices/{id}',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
+                ...options.headers
+            }
+        });
+    }
+    
+    public getApiV1InvoicesByIdPreview<ThrowOnError extends boolean = false>(options: Options<GetApiV1InvoicesByIdPreviewData, ThrowOnError>) {
+        return (options.client ?? this.client).get<GetApiV1InvoicesByIdPreviewResponses, unknown, ThrowOnError>({ url: '/api/v1/invoices/{id}/preview', ...options });
+    }
+    
+    public postApiV1InvoicesByIdSend<ThrowOnError extends boolean = false>(options: Options<PostApiV1InvoicesByIdSendData, ThrowOnError>) {
+        return (options.client ?? this.client).post<PostApiV1InvoicesByIdSendResponses, unknown, ThrowOnError>({
+            url: '/api/v1/invoices/{id}/send',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
+                ...options.headers
+            }
+        });
+    }
+    
+    public postApiV1InvoicesByIdSnapshot<ThrowOnError extends boolean = false>(options: Options<PostApiV1InvoicesByIdSnapshotData, ThrowOnError>) {
+        return (options.client ?? this.client).post<PostApiV1InvoicesByIdSnapshotResponses, unknown, ThrowOnError>({ url: '/api/v1/invoices/{id}/snapshot', ...options });
+    }
+    
+    public putApiV1InvoiceSettings<ThrowOnError extends boolean = false>(options?: Options<PutApiV1InvoiceSettingsData, ThrowOnError>) {
+        return (options?.client ?? this.client).put<PutApiV1InvoiceSettingsResponses, unknown, ThrowOnError>({
+            url: '/api/v1/invoice-settings',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
+                ...options?.headers
+            }
+        });
+    }
+    
+    public postApiV1NotificationsTest<ThrowOnError extends boolean = false>(options?: Options<PostApiV1NotificationsTestData, ThrowOnError>) {
+        return (options?.client ?? this.client).post<PostApiV1NotificationsTestResponses, unknown, ThrowOnError>({
+            url: '/api/v1/notifications/test',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
+                ...options?.headers
+            }
+        });
+    }
+    
+    public getApiV1PersonalDocumentsByIdRaw<ThrowOnError extends boolean = false>(options: Options<GetApiV1PersonalDocumentsByIdRawData, ThrowOnError>) {
+        return (options.client ?? this.client).get<GetApiV1PersonalDocumentsByIdRawResponses, unknown, ThrowOnError>({ url: '/api/v1/personal-documents/{id}/raw', ...options });
+    }
+    
+    public postApiV1PersonalDocuments<ThrowOnError extends boolean = false>(options?: Options<PostApiV1PersonalDocumentsData, ThrowOnError>) {
+        return (options?.client ?? this.client).post<PostApiV1PersonalDocumentsResponses, unknown, ThrowOnError>({
+            ...formDataBodySerializer,
+            url: '/api/v1/personal-documents',
+            ...options,
+            headers: {
+                'Content-Type': null,
+                ...options?.headers
+            }
+        });
+    }
+    
+    public postApiV1PersonalDocumentsByIdMoveToBusiness<ThrowOnError extends boolean = false>(options: Options<PostApiV1PersonalDocumentsByIdMoveToBusinessData, ThrowOnError>) {
+        return (options.client ?? this.client).post<PostApiV1PersonalDocumentsByIdMoveToBusinessResponses, unknown, ThrowOnError>({
+            url: '/api/v1/personal-documents/{id}/move-to-business',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
+                ...options.headers
+            }
+        });
+    }
+    
+    public deleteApiV1PersonalDocumentsById<ThrowOnError extends boolean = false>(options: Options<DeleteApiV1PersonalDocumentsByIdData, ThrowOnError>) {
+        return (options.client ?? this.client).delete<DeleteApiV1PersonalDocumentsByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/personal-documents/{id}', ...options });
+    }
+    
+    public getApiV1PersonalDocumentsSummary<ThrowOnError extends boolean = false>(options?: Options<GetApiV1PersonalDocumentsSummaryData, ThrowOnError>) {
+        return (options?.client ?? this.client).get<GetApiV1PersonalDocumentsSummaryResponses, unknown, ThrowOnError>({ url: '/api/v1/personal-documents/summary', ...options });
+    }
+    
+    public postApiV1RecurringTasks<ThrowOnError extends boolean = false>(options?: Options<PostApiV1RecurringTasksData, ThrowOnError>) {
+        return (options?.client ?? this.client).post<PostApiV1RecurringTasksResponses, unknown, ThrowOnError>({
+            url: '/api/v1/recurring-tasks',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
+                ...options?.headers
+            }
+        });
+    }
+    
+    public deleteApiV1RecurringTasksById<ThrowOnError extends boolean = false>(options: Options<DeleteApiV1RecurringTasksByIdData, ThrowOnError>) {
+        return (options.client ?? this.client).delete<DeleteApiV1RecurringTasksByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/recurring-tasks/{id}', ...options });
+    }
+    
+    public patchApiV1RecurringTasksById<ThrowOnError extends boolean = false>(options: Options<PatchApiV1RecurringTasksByIdData, ThrowOnError>) {
+        return (options.client ?? this.client).patch<PatchApiV1RecurringTasksByIdResponses, unknown, ThrowOnError>({
+            url: '/api/v1/recurring-tasks/{id}',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
+                ...options.headers
+            }
+        });
+    }
+    
     public get<ThrowOnError extends boolean = false>(options?: Options<GetData, ThrowOnError>) {
         return (options?.client ?? this.client).get<GetResponses, unknown, ThrowOnError>({ url: '/', ...options });
+    }
+    
+    public postApiV1Tasks<ThrowOnError extends boolean = false>(options?: Options<PostApiV1TasksData, ThrowOnError>) {
+        return (options?.client ?? this.client).post<PostApiV1TasksResponses, unknown, ThrowOnError>({
+            url: '/api/v1/tasks',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
+                ...options?.headers
+            }
+        });
+    }
+    
+    public putApiV1TasksById<ThrowOnError extends boolean = false>(options: Options<PutApiV1TasksByIdData, ThrowOnError>) {
+        return (options.client ?? this.client).put<PutApiV1TasksByIdResponses, unknown, ThrowOnError>({
+            url: '/api/v1/tasks/{id}',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
+                ...options.headers
+            }
+        });
+    }
+    
+    public postApiV1TasksByIdSubmit<ThrowOnError extends boolean = false>(options: Options<PostApiV1TasksByIdSubmitData, ThrowOnError>) {
+        return (options.client ?? this.client).post<PostApiV1TasksByIdSubmitResponses, unknown, ThrowOnError>({
+            url: '/api/v1/tasks/{id}/submit',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
+                ...options.headers
+            }
+        });
+    }
+    
+    public postApiV1TasksByIdApprove<ThrowOnError extends boolean = false>(options: Options<PostApiV1TasksByIdApproveData, ThrowOnError>) {
+        return (options.client ?? this.client).post<PostApiV1TasksByIdApproveResponses, unknown, ThrowOnError>({ url: '/api/v1/tasks/{id}/approve', ...options });
+    }
+    
+    public postApiV1TasksByIdReject<ThrowOnError extends boolean = false>(options: Options<PostApiV1TasksByIdRejectData, ThrowOnError>) {
+        return (options.client ?? this.client).post<PostApiV1TasksByIdRejectResponses, unknown, ThrowOnError>({
+            url: '/api/v1/tasks/{id}/reject',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
+                ...options.headers
+            }
+        });
+    }
+    
+    public getApiV1TasksByIdComments<ThrowOnError extends boolean = false>(options: Options<GetApiV1TasksByIdCommentsData, ThrowOnError>) {
+        return (options.client ?? this.client).get<GetApiV1TasksByIdCommentsResponses, unknown, ThrowOnError>({ url: '/api/v1/tasks/{id}/comments', ...options });
+    }
+    
+    public getApiV1TasksByIdDocuments<ThrowOnError extends boolean = false>(options: Options<GetApiV1TasksByIdDocumentsData, ThrowOnError>) {
+        return (options.client ?? this.client).get<GetApiV1TasksByIdDocumentsResponses, unknown, ThrowOnError>({ url: '/api/v1/tasks/{id}/documents', ...options });
+    }
+    
+    public postApiV1UserRegister<ThrowOnError extends boolean = false>(options: Options<PostApiV1UserRegisterData, ThrowOnError>) {
+        return (options.client ?? this.client).post<PostApiV1UserRegisterResponses, PostApiV1UserRegisterErrors, ThrowOnError>({
+            url: '/api/v1/user/register',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    public postApiV1UserLogin<ThrowOnError extends boolean = false>(options: Options<PostApiV1UserLoginData, ThrowOnError>) {
+        return (options.client ?? this.client).post<PostApiV1UserLoginResponses, unknown, ThrowOnError>({
+            url: '/api/v1/user/login',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    public postApiV1UserRefresh<ThrowOnError extends boolean = false>(options: Options<PostApiV1UserRefreshData, ThrowOnError>) {
+        return (options.client ?? this.client).post<PostApiV1UserRefreshResponses, unknown, ThrowOnError>({
+            url: '/api/v1/user/refresh',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    public postApiV1UserResendConfirmationEmail<ThrowOnError extends boolean = false>(options: Options<PostApiV1UserResendConfirmationEmailData, ThrowOnError>) {
+        return (options.client ?? this.client).post<PostApiV1UserResendConfirmationEmailResponses, unknown, ThrowOnError>({
+            url: '/api/v1/user/resendConfirmationEmail',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    public postApiV1UserForgotPassword<ThrowOnError extends boolean = false>(options: Options<PostApiV1UserForgotPasswordData, ThrowOnError>) {
+        return (options.client ?? this.client).post<PostApiV1UserForgotPasswordResponses, PostApiV1UserForgotPasswordErrors, ThrowOnError>({
+            url: '/api/v1/user/forgotPassword',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    public postApiV1UserResetPassword<ThrowOnError extends boolean = false>(options: Options<PostApiV1UserResetPasswordData, ThrowOnError>) {
+        return (options.client ?? this.client).post<PostApiV1UserResetPasswordResponses, PostApiV1UserResetPasswordErrors, ThrowOnError>({
+            url: '/api/v1/user/resetPassword',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    public postApiV1UserManage2Fa<ThrowOnError extends boolean = false>(options: Options<PostApiV1UserManage2FaData, ThrowOnError>) {
+        return (options.client ?? this.client).post<PostApiV1UserManage2FaResponses, PostApiV1UserManage2FaErrors, ThrowOnError>({
+            url: '/api/v1/user/manage/2fa',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    public getApiV1UserManageInfo<ThrowOnError extends boolean = false>(options?: Options<GetApiV1UserManageInfoData, ThrowOnError>) {
+        return (options?.client ?? this.client).get<GetApiV1UserManageInfoResponses, GetApiV1UserManageInfoErrors, ThrowOnError>({ url: '/api/v1/user/manage/info', ...options });
+    }
+    
+    public postApiV1UserManageInfo<ThrowOnError extends boolean = false>(options: Options<PostApiV1UserManageInfoData, ThrowOnError>) {
+        return (options.client ?? this.client).post<PostApiV1UserManageInfoResponses, PostApiV1UserManageInfoErrors, ThrowOnError>({
+            url: '/api/v1/user/manage/info',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    public postApiV1UserLogout<ThrowOnError extends boolean = false>(options?: Options<PostApiV1UserLogoutData, ThrowOnError>) {
+        return (options?.client ?? this.client).post<PostApiV1UserLogoutResponses, unknown, ThrowOnError>({
+            url: '/api/v1/user/logout',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
+                ...options?.headers
+            }
+        });
+    }
+    
+    /**
+     * @deprecated
+     */
+    public getApiV1UserDocumentsSummary<ThrowOnError extends boolean = false>(options?: Options<GetApiV1UserDocumentsSummaryData, ThrowOnError>) {
+        return (options?.client ?? this.client).get<GetApiV1UserDocumentsSummaryResponses, unknown, ThrowOnError>({ url: '/api/v1/user/documents-summary', ...options });
+    }
+    
+    public deleteApiV1User<ThrowOnError extends boolean = false>(options?: Options<DeleteApiV1UserData, ThrowOnError>) {
+        return (options?.client ?? this.client).delete<DeleteApiV1UserResponses, unknown, ThrowOnError>({ url: '/api/v1/user', ...options });
+    }
+    
+    public getApiV1UsersMe<ThrowOnError extends boolean = false>(options?: Options<GetApiV1UsersMeData, ThrowOnError>) {
+        return (options?.client ?? this.client).get<GetApiV1UsersMeResponses, unknown, ThrowOnError>({ url: '/api/v1/users/me', ...options });
+    }
+    
+    public patchApiV1UsersById<ThrowOnError extends boolean = false>(options: Options<PatchApiV1UsersByIdData, ThrowOnError>) {
+        return (options.client ?? this.client).patch<PatchApiV1UsersByIdResponses, unknown, ThrowOnError>({
+            url: '/api/v1/users/{id}',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json;odata.metadata=minimal;odata.streaming=true',
+                ...options.headers
+            }
+        });
     }
     
     private _api?: Api;

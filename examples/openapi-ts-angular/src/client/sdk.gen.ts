@@ -82,7 +82,7 @@ export type Options<
 };
 
 @Injectable({ providedIn: 'root' })
-export class Pet {
+export class PetService {
   /**
    * Add a new pet to the store.
    *
@@ -252,7 +252,8 @@ export class Pet {
   }
 }
 
-export class Store {
+@Injectable({ providedIn: 'root' })
+export class StoreService {
   /**
    * Returns pet inventories by status.
    *
@@ -325,7 +326,8 @@ export class Store {
   }
 }
 
-export class User {
+@Injectable({ providedIn: 'root' })
+export class UserService {
   /**
    * Create user.
    *
