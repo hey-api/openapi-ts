@@ -68,7 +68,7 @@
     "rollup-plugin-dts": "6.1.1",
     "ts-node": "10.9.2",
     "tsdown": "0.18.3",
-    "turbo": "2.7.0",
+    "turbo": "2.7.2",
     "typescript": "5.9.3",
     "typescript-eslint": "8.29.1",
     "vitest": "3.2.4"
