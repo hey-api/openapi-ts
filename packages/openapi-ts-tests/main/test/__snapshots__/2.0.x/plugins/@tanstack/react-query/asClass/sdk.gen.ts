@@ -29,10 +29,6 @@ export class BarService {
 }
 
 export class FooService {
-    public static get<ThrowOnError extends boolean = false>(options?: Options<GetFooData, ThrowOnError>) {
-        return (options?.client ?? client).get<GetFooResponses, unknown, ThrowOnError>({ url: '/foo', ...options });
-    }
-    
     public static post<ThrowOnError extends boolean = false>(options?: Options<FooPostData, ThrowOnError>) {
         return (options?.client ?? client).post<FooPostResponses, unknown, ThrowOnError>({ url: '/foo', ...options });
     }
@@ -45,14 +41,14 @@ export class FooService {
 }
 
 export class FooBazService {
+    public static getFoo<ThrowOnError extends boolean = false>(options?: Options<GetFooData, ThrowOnError>) {
+        return (options?.client ?? client).get<GetFooResponses, unknown, ThrowOnError>({ url: '/foo', ...options });
+    }
+    
     static fooService = FooService;
 }
 
 export class BarService2 {
-    public static get<ThrowOnError extends boolean = false>(options?: Options<GetFooBarData, ThrowOnError>) {
-        return (options?.client ?? client).get<GetFooBarResponses, unknown, ThrowOnError>({ url: '/foo/bar', ...options });
-    }
-    
     public static post<ThrowOnError extends boolean = false>(options?: Options<FooBarPostData, ThrowOnError>) {
         return (options?.client ?? client).post<FooBarPostResponses, unknown, ThrowOnError>({ url: '/foo/bar', ...options });
     }
@@ -67,5 +63,9 @@ export class FooService2 {
 }
 
 export class BarBazService {
+    public static getFooBar<ThrowOnError extends boolean = false>(options?: Options<GetFooBarData, ThrowOnError>) {
+        return (options?.client ?? client).get<GetFooBarResponses, unknown, ThrowOnError>({ url: '/foo/bar', ...options });
+    }
+    
     static fooService = FooService2;
 }

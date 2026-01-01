@@ -20,7 +20,7 @@ export type Options<TComposable extends Composable = '$fetch', TData extends TDa
 
 export const export_ = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, ExportData, unknown, DefaultT>) => (options.client ?? client).get<TComposable, unknown | DefaultT, unknown, DefaultT>({ url: '/api/v{api-version}/no+tag', ...options });
 
-export const apiVApiVersionNo_tagPatch = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, PatchApiVbyApiVersionNoTagData, unknown, DefaultT>) => (options.client ?? client).patch<TComposable, unknown | DefaultT, unknown, DefaultT>({ url: '/api/v{api-version}/no+tag', ...options });
+export const patchApiVbyApiVersionNoTag = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, PatchApiVbyApiVersionNoTagData, unknown, DefaultT>) => (options.client ?? client).patch<TComposable, unknown | DefaultT, unknown, DefaultT>({ url: '/api/v{api-version}/no+tag', ...options });
 
 export const import_ = <TComposable extends Composable = '$fetch', DefaultT extends ImportResponse = ImportResponse>(options: Options<TComposable, ImportData, ImportResponse, DefaultT>) => (options.client ?? client).post<TComposable, ImportResponse | DefaultT, unknown, DefaultT>({
     url: '/api/v{api-version}/no+tag',
@@ -31,11 +31,11 @@ export const import_ = <TComposable extends Composable = '$fetch', DefaultT exte
     }
 });
 
-export const foo_Wow = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, FooWowData, unknown, DefaultT>) => (options.client ?? client).put<TComposable, unknown | DefaultT, unknown, DefaultT>({ url: '/api/v{api-version}/no+tag', ...options });
+export const fooWow = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, FooWowData, unknown, DefaultT>) => (options.client ?? client).put<TComposable, unknown | DefaultT, unknown, DefaultT>({ url: '/api/v{api-version}/no+tag', ...options });
 
-export const apiVVersionODataController__count = <TComposable extends Composable = '$fetch', DefaultT extends ApiVVersionODataControllerCountResponse = ApiVVersionODataControllerCountResponse>(options: Options<TComposable, ApiVVersionODataControllerCountData, ApiVVersionODataControllerCountResponse, DefaultT>) => (options.client ?? client).get<TComposable, ApiVVersionODataControllerCountResponse | DefaultT, unknown, DefaultT>({ url: '/api/v{api-version}/simple/$count', ...options });
+export const apiVVersionODataControllerCount = <TComposable extends Composable = '$fetch', DefaultT extends ApiVVersionODataControllerCountResponse = ApiVVersionODataControllerCountResponse>(options: Options<TComposable, ApiVVersionODataControllerCountData, ApiVVersionODataControllerCountResponse, DefaultT>) => (options.client ?? client).get<TComposable, ApiVVersionODataControllerCountResponse | DefaultT, unknown, DefaultT>({ url: '/api/v{api-version}/simple/$count', ...options });
 
-export const apiVApiVersionSimpleOperationGet = <TComposable extends Composable = '$fetch', DefaultT extends GetApiVbyApiVersionSimpleOperationResponse = GetApiVbyApiVersionSimpleOperationResponse>(options: Options<TComposable, GetApiVbyApiVersionSimpleOperationData, GetApiVbyApiVersionSimpleOperationResponse, DefaultT>) => (options.client ?? client).get<TComposable, GetApiVbyApiVersionSimpleOperationResponse | DefaultT, GetApiVbyApiVersionSimpleOperationError, DefaultT>({ url: '/api/v{api-version}/simple:operation', ...options });
+export const getApiVbyApiVersionSimpleOperation = <TComposable extends Composable = '$fetch', DefaultT extends GetApiVbyApiVersionSimpleOperationResponse = GetApiVbyApiVersionSimpleOperationResponse>(options: Options<TComposable, GetApiVbyApiVersionSimpleOperationData, GetApiVbyApiVersionSimpleOperationResponse, DefaultT>) => (options.client ?? client).get<TComposable, GetApiVbyApiVersionSimpleOperationResponse | DefaultT, GetApiVbyApiVersionSimpleOperationError, DefaultT>({ url: '/api/v{api-version}/simple:operation', ...options });
 
 export const deleteCallWithoutParametersAndResponse = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, DeleteCallWithoutParametersAndResponseData, unknown, DefaultT>) => (options.client ?? client).delete<TComposable, unknown | DefaultT, unknown, DefaultT>({ url: '/api/v{api-version}/simple', ...options });
 
@@ -96,7 +96,7 @@ export const postCallWithOptionalParam = <TComposable extends Composable = '$fet
     }
 });
 
-export const apiVApiVersionRequestBodyPost = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, PostApiVbyApiVersionRequestBodyData, unknown, DefaultT>) => (options.client ?? client).post<TComposable, unknown | DefaultT, unknown, DefaultT>({
+export const postApiVbyApiVersionRequestBody = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, PostApiVbyApiVersionRequestBodyData, unknown, DefaultT>) => (options.client ?? client).post<TComposable, unknown | DefaultT, unknown, DefaultT>({
     url: '/api/v{api-version}/requestBody',
     ...options,
     headers: {
@@ -105,7 +105,7 @@ export const apiVApiVersionRequestBodyPost = <TComposable extends Composable = '
     }
 });
 
-export const apiVApiVersionFormDataPost = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, PostApiVbyApiVersionFormDataData, unknown, DefaultT>) => (options.client ?? client).post<TComposable, unknown | DefaultT, unknown, DefaultT>({
+export const postApiVbyApiVersionFormData = <TComposable extends Composable = '$fetch', DefaultT = undefined>(options: Options<TComposable, PostApiVbyApiVersionFormDataData, unknown, DefaultT>) => (options.client ?? client).post<TComposable, unknown | DefaultT, unknown, DefaultT>({
     ...formDataBodySerializer,
     url: '/api/v{api-version}/formData',
     ...options,

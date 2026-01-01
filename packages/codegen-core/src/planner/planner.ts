@@ -3,7 +3,7 @@ import path from 'node:path';
 import type { ExportModule, ImportModule } from '../bindings';
 import type { IProjectRenderMeta } from '../extensions';
 import type { File } from '../files/file';
-import type { IFileIn } from '../files/types';
+import type { INode } from '../nodes/node';
 import { canShareName } from '../project/namespace';
 import type { IProject } from '../project/types';
 import { fromRef } from '../refs/refs';
@@ -48,7 +48,12 @@ export class Planner {
       const symbol = node.symbol;
       if (!symbol) return;
 
-      const file = this.project.files.register(this.symbolToFileIn(symbol));
+      const file = this.project.files.register({
+        external: false,
+        language: node.language,
+        logicalFilePath:
+          symbol.getFilePath?.(symbol) || this.project.defaultFileName,
+      });
       file.addNode(node);
       symbol.setFile(file);
       for (const exportFrom of symbol.exportFrom) {
@@ -61,7 +66,11 @@ export class Planner {
       ctx.walkScopes((dependency) => {
         const dep = fromRef(dependency);
         if (dep.external && dep.isCanonical && !dep.file) {
-          const file = this.project.files.register(this.symbolToFileIn(dep));
+          const file = this.project.files.register({
+            external: true,
+            language: dep.node?.language,
+            logicalFilePath: dep.external,
+          });
           dep.setFile(file);
         }
       });
@@ -77,7 +86,7 @@ export class Planner {
     this.analyzer.analyze(this.project.nodes.all(), (ctx, node) => {
       const symbol = node.symbol;
       if (!symbol) return;
-      this.assignTopLevelName({ ctx, symbol });
+      this.assignTopLevelName({ ctx, node, symbol });
     });
 
     this.analyzer.analyze(this.project.nodes.all(), (ctx, node) => {
@@ -87,6 +96,7 @@ export class Planner {
         const dep = fromRef(dependency);
         // top-level or external symbol
         if (dep.file) return;
+        // TODO: pass node
         this.assignLocalName({
           ctx,
           file,
@@ -106,7 +116,10 @@ export class Planner {
    */
   private resolveFilePaths(meta?: IProjectRenderMeta): void {
     for (const file of this.project.files.registered()) {
-      if (file.external) continue;
+      if (file.external) {
+        file.setFinalPath(file.logicalFilePath);
+        continue;
+      }
       const finalName = this.project.fileName?.(file.name) || file.name;
       file.setName(finalName);
       const finalPath = file.finalPath;
@@ -166,6 +179,7 @@ export class Planner {
         });
         exp.setFile(target);
         sourceFile.set(exp.id, file);
+        // TODO: pass node
         this.assignTopLevelName({ ctx, symbol: exp });
 
         let entry = fileMap.get(exp.finalName);
@@ -253,6 +267,7 @@ export class Planner {
         if (!dep.file || dep.file.id === file.id) return;
 
         if (dep.external) {
+          // TODO: pass node
           this.assignTopLevelName({ ctx, symbol: dep });
         }
 
@@ -272,6 +287,7 @@ export class Planner {
             name: dep.finalName,
           });
           imp.setFile(file);
+          // TODO: pass node
           this.assignTopLevelName({
             ctx,
             scope: createScope({ localNames: imp.file!.allNames }),
@@ -342,6 +358,7 @@ export class Planner {
   private assignTopLevelName(
     args: Partial<AssignOptions> & {
       ctx: AnalysisContext;
+      node?: INode;
       symbol: Symbol;
     },
   ): void {
@@ -373,6 +390,7 @@ export class Planner {
         ctx: AnalysisContext;
         /** The file the symbol belongs to. */
         file: File;
+        node?: INode;
         symbol: Symbol;
       },
   ): void {
@@ -394,14 +412,18 @@ export class Planner {
       ctx: AnalysisContext;
       /** The file the symbol belongs to. */
       file: File;
+      node?: INode;
       symbol: Symbol;
     },
   ): void {
-    const { ctx, file, scope, scopesToUpdate, symbol } = args;
+    const { ctx, file, node, scope, scopesToUpdate, symbol } = args;
     if (this.cacheResolvedNames.has(symbol.id)) return;
 
     const baseName = symbol.name;
-    let finalName = symbol.node?.nameSanitizer?.(baseName) ?? baseName;
+    let finalName =
+      node?.nameSanitizer?.(baseName) ??
+      symbol.node?.nameSanitizer?.(baseName) ??
+      baseName;
     let attempt = 1;
 
     const localNames = ctx.localNames(scope);
@@ -411,7 +433,7 @@ export class Planner {
       const ok = kinds.every((kind) => canShareName(symbol.kind, kind));
       if (ok) break;
 
-      const language = symbol.node?.language || file.language;
+      const language = node?.language || symbol.node?.language || file.language;
       const resolver =
         (language ? this.project.nameConflictResolvers[language] : undefined) ??
         this.project.defaultNameConflictResolver;
@@ -420,7 +442,10 @@ export class Planner {
         throw new Error(`Unresolvable name conflict: ${symbol.toString()}`);
       }
 
-      finalName = symbol.node?.nameSanitizer?.(resolvedName) ?? resolvedName;
+      finalName =
+        node?.nameSanitizer?.(resolvedName) ??
+        symbol.node?.nameSanitizer?.(resolvedName) ??
+        resolvedName;
       attempt = attempt + 1;
     }
 
@@ -442,16 +467,5 @@ export class Planner {
     const cache = scope.localNames.get(name) ?? new Set();
     cache.add(symbol.kind);
     scope.localNames.set(name, cache);
-  }
-
-  private symbolToFileIn(symbol: Symbol): IFileIn {
-    return {
-      external: Boolean(symbol.external),
-      language: symbol.node?.language,
-      logicalFilePath:
-        symbol.external ||
-        symbol.getFilePath?.(symbol) ||
-        this.project.defaultFileName,
-    } satisfies IFileIn;
   }
 }

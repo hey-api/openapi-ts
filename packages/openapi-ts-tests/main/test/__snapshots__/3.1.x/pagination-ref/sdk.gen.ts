@@ -18,9 +18,9 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
     meta?: Record<string, unknown>;
 };
 
-export const fooGet = <ThrowOnError extends boolean = false>(options: Options<GetFooData, ThrowOnError>) => (options.client ?? client).get<GetFooResponses, unknown, ThrowOnError>({ url: '/foo', ...options });
+export const getFoo = <ThrowOnError extends boolean = false>(options: Options<GetFooData, ThrowOnError>) => (options.client ?? client).get<GetFooResponses, unknown, ThrowOnError>({ url: '/foo', ...options });
 
-export const fooPost = <ThrowOnError extends boolean = false>(options: Options<PostFooData, ThrowOnError>) => (options.client ?? client).post<PostFooResponses, unknown, ThrowOnError>({
+export const postFoo = <ThrowOnError extends boolean = false>(options: Options<PostFooData, ThrowOnError>) => (options.client ?? client).post<PostFooResponses, unknown, ThrowOnError>({
     url: '/foo',
     ...options,
     headers: {

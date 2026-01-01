@@ -58,8 +58,6 @@ export interface UserOperationsConfig {
   /**
    * How to derive nesting structure from operations.
    *
-   * Ignored when `strategy` is `'flat'`.
-   *
    * - `'operationId'` - Split operationId by delimiters (e.g., `users.list` → `Users.list()`)
    * - `'id'` - Use operation id as-is, no nesting
    * - Custom function for full control
@@ -151,8 +149,6 @@ export interface OperationsConfig {
   methods: 'instance' | 'static';
   /**
    * How to derive nesting structure from operations.
-   *
-   * Ignored when `strategy` is `'flat'`.
    *
    * - `'operationId'` - Split operationId by delimiters (e.g., `users.list` → `Users.list()`)
    * - `'id'` - Use operation id as-is, no nesting

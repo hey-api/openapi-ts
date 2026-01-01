@@ -54,10 +54,6 @@ export class Domains extends HeyApiClient {
     public post<ThrowOnError extends boolean = false>(options?: Options<BusinessProvidersDomainsPostData, ThrowOnError>) {
         return (options?.client ?? this.client).post<BusinessProvidersDomainsPostResponses, unknown, ThrowOnError>({ url: '/business/providers/domains', ...options });
     }
-    
-    public put<ThrowOnError extends boolean = false>(options?: Options<PutBusinessProvidersDomainsData, ThrowOnError>) {
-        return (options?.client ?? this.client).put<PutBusinessProvidersDomainsResponses, unknown, ThrowOnError>({ url: '/business/providers/domains', ...options });
-    }
 }
 
 export class Providers extends HeyApiClient {
@@ -87,6 +83,10 @@ export class NestedSdkWithInstance extends HeyApiClient {
     }) {
         super(args);
         NestedSdkWithInstance.__registry.set(this, args?.key);
+    }
+    
+    public putBusinessProvidersDomains<ThrowOnError extends boolean = false>(options?: Options<PutBusinessProvidersDomainsData, ThrowOnError>) {
+        return (options?.client ?? this.client).put<PutBusinessProvidersDomainsResponses, unknown, ThrowOnError>({ url: '/business/providers/domains', ...options });
     }
     
     public get<ThrowOnError extends boolean = false>(options?: Options<GetData, ThrowOnError>) {

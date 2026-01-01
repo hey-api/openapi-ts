@@ -74,10 +74,6 @@ export class Domains3 {
     public static post<ThrowOnError extends boolean = false>(options?: Options<BusinessProvidersDomainsPostData, ThrowOnError>) {
         return (options?.client ?? client).post<BusinessProvidersDomainsPostResponses, unknown, ThrowOnError>({ url: '/business/providers/domains', ...options });
     }
-    
-    public static put<ThrowOnError extends boolean = false>(options?: Options<PutBusinessProvidersDomainsData, ThrowOnError>) {
-        return (options?.client ?? client).put<PutBusinessProvidersDomainsResponses, unknown, ThrowOnError>({ url: '/business/providers/domains', ...options });
-    }
 }
 
 export class Providers4 {
@@ -89,6 +85,10 @@ export class Business4 {
 }
 
 export class Domains4 {
+    public static putBusinessProvidersDomains<ThrowOnError extends boolean = false>(options?: Options<PutBusinessProvidersDomainsData, ThrowOnError>) {
+        return (options?.client ?? client).put<PutBusinessProvidersDomainsResponses, unknown, ThrowOnError>({ url: '/business/providers/domains', ...options });
+    }
+    
     static business = Business4;
 }
 

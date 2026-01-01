@@ -116,7 +116,7 @@ export default defineConfig(() => {
           // },
           // format: 'prettier',
           header: null,
-          importFileExtension: '.js',
+          // importFileExtension: '.js',
           // indexFile: false,
           // lint: 'eslint',
           // nameConflictResolver({ attempt, baseName }) {
@@ -310,9 +310,9 @@ export default defineConfig(() => {
             //   name: '{{name}}Yummy',
             // },
             // methods: 'static',
-            // nesting: 'operationId',
+            // nesting: 'id',
             // segmentName: '{{name}}Seggy',
-            strategy: 'byTags',
+            strategy: 'flat',
             // strategy(operation) {
             //   const locations = OperationStrategy.byTags({
             //     fallback: 'default',

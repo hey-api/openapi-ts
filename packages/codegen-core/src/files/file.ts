@@ -81,6 +81,7 @@ export class File<Node extends INode = INode> {
    * Read-only accessor for the file extension.
    */
   get extension(): string | undefined {
+    if (this.external) return;
     if (this._extension) return this._extension;
     const language = this.language;
     const extension = language ? this.project.extensions[language] : undefined;
@@ -99,8 +100,7 @@ export class File<Node extends INode = INode> {
     const dirs = this._logicalFilePath
       ? this._logicalFilePath.split('/').slice(0, -1)
       : [];
-    const extension = this.external ? '' : (this.extension ?? '');
-    return [...dirs, `${this.name}${extension}`].join('/');
+    return [...dirs, `${this.name}${this.extension ?? ''}`].join('/');
   }
 
   /**

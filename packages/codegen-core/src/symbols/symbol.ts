@@ -299,7 +299,9 @@ export class Symbol<Node extends INode = INode> {
     if (this._node && this._node !== node) {
       const message = `Symbol ${this.canonical.toString()} is already bound to a different node.`;
       log.debug(message, 'symbol');
-      throw new Error(message);
+      // TODO: symbol <> node relationship needs to be refactor to 1:many
+      // disabled in the meantime or it would throw
+      // throw new Error(message);
     }
     this._node = node;
     node.symbol = this;

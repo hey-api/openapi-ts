@@ -18,7 +18,7 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
     meta?: Record<string, unknown>;
 };
 
-export const apiV1AccountingCompaniesPost = <ThrowOnError extends boolean = false>(options?: Options<PostApiV1AccountingCompaniesData, ThrowOnError>) => (options?.client ?? client).post<PostApiV1AccountingCompaniesResponses, unknown, ThrowOnError>({
+export const postApiV1AccountingCompanies = <ThrowOnError extends boolean = false>(options?: Options<PostApiV1AccountingCompaniesData, ThrowOnError>) => (options?.client ?? client).post<PostApiV1AccountingCompaniesResponses, unknown, ThrowOnError>({
     url: '/api/v1/accounting-companies',
     ...options,
     headers: {
@@ -27,9 +27,9 @@ export const apiV1AccountingCompaniesPost = <ThrowOnError extends boolean = fals
     }
 });
 
-export const apiV1AccountingCompaniesIdDelete = <ThrowOnError extends boolean = false>(options: Options<DeleteApiV1AccountingCompaniesByIdData, ThrowOnError>) => (options.client ?? client).delete<DeleteApiV1AccountingCompaniesByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/accounting-companies/{id}', ...options });
+export const deleteApiV1AccountingCompaniesById = <ThrowOnError extends boolean = false>(options: Options<DeleteApiV1AccountingCompaniesByIdData, ThrowOnError>) => (options.client ?? client).delete<DeleteApiV1AccountingCompaniesByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/accounting-companies/{id}', ...options });
 
-export const apiV1AccountingCompaniesIdPost = <ThrowOnError extends boolean = false>(options: Options<PostApiV1AccountingCompaniesByIdData, ThrowOnError>) => (options.client ?? client).post<PostApiV1AccountingCompaniesByIdResponses, unknown, ThrowOnError>({
+export const postApiV1AccountingCompaniesById = <ThrowOnError extends boolean = false>(options: Options<PostApiV1AccountingCompaniesByIdData, ThrowOnError>) => (options.client ?? client).post<PostApiV1AccountingCompaniesByIdResponses, unknown, ThrowOnError>({
     url: '/api/v1/accounting-companies/{id}',
     ...options,
     headers: {
@@ -40,9 +40,9 @@ export const apiV1AccountingCompaniesIdPost = <ThrowOnError extends boolean = fa
 
 export const apiVVersionApiVersionOdataAccountingCompanies = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataAccountingCompaniesData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataAccountingCompaniesResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/AccountingCompanies', ...options });
 
-export const apiVVersionApiVersionOdataAccountingCompanies__count = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataAccountingCompaniesCountData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataAccountingCompaniesCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/AccountingCompanies/$count', ...options });
+export const apiVVersionApiVersionOdataAccountingCompaniesCount = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataAccountingCompaniesCountData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataAccountingCompaniesCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/AccountingCompanies/$count', ...options });
 
-export const apiV1AccountingCompanyMembershipsPut = <ThrowOnError extends boolean = false>(options?: Options<PutApiV1AccountingCompanyMembershipsData, ThrowOnError>) => (options?.client ?? client).put<PutApiV1AccountingCompanyMembershipsResponses, unknown, ThrowOnError>({
+export const putApiV1AccountingCompanyMemberships = <ThrowOnError extends boolean = false>(options?: Options<PutApiV1AccountingCompanyMembershipsData, ThrowOnError>) => (options?.client ?? client).put<PutApiV1AccountingCompanyMembershipsResponses, unknown, ThrowOnError>({
     url: '/api/v1/accounting-company-memberships',
     ...options,
     headers: {
@@ -51,13 +51,13 @@ export const apiV1AccountingCompanyMembershipsPut = <ThrowOnError extends boolea
     }
 });
 
-export const apiV1AccountingCompanyMembershipsIdDelete = <ThrowOnError extends boolean = false>(options: Options<DeleteApiV1AccountingCompanyMembershipsByIdData, ThrowOnError>) => (options.client ?? client).delete<DeleteApiV1AccountingCompanyMembershipsByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/accounting-company-memberships/{id}', ...options });
+export const deleteApiV1AccountingCompanyMembershipsById = <ThrowOnError extends boolean = false>(options: Options<DeleteApiV1AccountingCompanyMembershipsByIdData, ThrowOnError>) => (options.client ?? client).delete<DeleteApiV1AccountingCompanyMembershipsByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/accounting-company-memberships/{id}', ...options });
 
 export const apiVVersionApiVersionOdataAccountingCompanyMemberships = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataAccountingCompanyMembershipsData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataAccountingCompanyMembershipsResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/AccountingCompanyMemberships', ...options });
 
-export const apiVVersionApiVersionOdataAccountingCompanyMemberships__count = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataAccountingCompanyMembershipsCountData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataAccountingCompanyMembershipsCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/AccountingCompanyMemberships/$count', ...options });
+export const apiVVersionApiVersionOdataAccountingCompanyMembershipsCount = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataAccountingCompanyMembershipsCountData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataAccountingCompanyMembershipsCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/AccountingCompanyMemberships/$count', ...options });
 
-export const apiV1BankAccountsPut = <ThrowOnError extends boolean = false>(options?: Options<PutApiV1BankAccountsData, ThrowOnError>) => (options?.client ?? client).put<PutApiV1BankAccountsResponses, unknown, ThrowOnError>({
+export const putApiV1BankAccounts = <ThrowOnError extends boolean = false>(options?: Options<PutApiV1BankAccountsData, ThrowOnError>) => (options?.client ?? client).put<PutApiV1BankAccountsResponses, unknown, ThrowOnError>({
     url: '/api/v1/bank-accounts',
     ...options,
     headers: {
@@ -66,13 +66,13 @@ export const apiV1BankAccountsPut = <ThrowOnError extends boolean = false>(optio
     }
 });
 
-export const apiV1BankAccountsIdDelete = <ThrowOnError extends boolean = false>(options: Options<DeleteApiV1BankAccountsByIdData, ThrowOnError>) => (options.client ?? client).delete<DeleteApiV1BankAccountsByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/bank-accounts/{id}', ...options });
+export const deleteApiV1BankAccountsById = <ThrowOnError extends boolean = false>(options: Options<DeleteApiV1BankAccountsByIdData, ThrowOnError>) => (options.client ?? client).delete<DeleteApiV1BankAccountsByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/bank-accounts/{id}', ...options });
 
 export const apiVVersionApiVersionOdataBankAccounts = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBankAccountsData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataBankAccountsResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/BankAccounts', ...options });
 
-export const apiVVersionApiVersionOdataBankAccounts__count = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBankAccountsCountData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataBankAccountsCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/BankAccounts/$count', ...options });
+export const apiVVersionApiVersionOdataBankAccountsCount = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBankAccountsCountData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataBankAccountsCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/BankAccounts/$count', ...options });
 
-export const apiV1BusinessAccountantAssignmentsPut = <ThrowOnError extends boolean = false>(options?: Options<PutApiV1BusinessAccountantAssignmentsData, ThrowOnError>) => (options?.client ?? client).put<PutApiV1BusinessAccountantAssignmentsResponses, unknown, ThrowOnError>({
+export const putApiV1BusinessAccountantAssignments = <ThrowOnError extends boolean = false>(options?: Options<PutApiV1BusinessAccountantAssignmentsData, ThrowOnError>) => (options?.client ?? client).put<PutApiV1BusinessAccountantAssignmentsResponses, unknown, ThrowOnError>({
     url: '/api/v1/business-accountant-assignments',
     ...options,
     headers: {
@@ -81,15 +81,15 @@ export const apiV1BusinessAccountantAssignmentsPut = <ThrowOnError extends boole
     }
 });
 
-export const apiV1BusinessAccountantAssignmentsIdDelete = <ThrowOnError extends boolean = false>(options: Options<DeleteApiV1BusinessAccountantAssignmentsByIdData, ThrowOnError>) => (options.client ?? client).delete<DeleteApiV1BusinessAccountantAssignmentsByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/business-accountant-assignments/{id}', ...options });
+export const deleteApiV1BusinessAccountantAssignmentsById = <ThrowOnError extends boolean = false>(options: Options<DeleteApiV1BusinessAccountantAssignmentsByIdData, ThrowOnError>) => (options.client ?? client).delete<DeleteApiV1BusinessAccountantAssignmentsByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/business-accountant-assignments/{id}', ...options });
 
 export const apiVVersionApiVersionOdataBusinessAccountantAssignments = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessAccountantAssignmentsData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataBusinessAccountantAssignmentsResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/BusinessAccountantAssignments', ...options });
 
-export const apiVVersionApiVersionOdataBusinessAccountantAssignments__count = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessAccountantAssignmentsCountData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataBusinessAccountantAssignmentsCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/BusinessAccountantAssignments/$count', ...options });
+export const apiVVersionApiVersionOdataBusinessAccountantAssignmentsCount = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessAccountantAssignmentsCountData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataBusinessAccountantAssignmentsCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/BusinessAccountantAssignments/$count', ...options });
 
-export const apiV1BusinessDocumentsIdRawGet = <ThrowOnError extends boolean = false>(options: Options<GetApiV1BusinessDocumentsByIdRawData, ThrowOnError>) => (options.client ?? client).get<GetApiV1BusinessDocumentsByIdRawResponses, unknown, ThrowOnError>({ url: '/api/v1/business-documents/{id}/raw', ...options });
+export const getApiV1BusinessDocumentsByIdRaw = <ThrowOnError extends boolean = false>(options: Options<GetApiV1BusinessDocumentsByIdRawData, ThrowOnError>) => (options.client ?? client).get<GetApiV1BusinessDocumentsByIdRawResponses, unknown, ThrowOnError>({ url: '/api/v1/business-documents/{id}/raw', ...options });
 
-export const apiV1BusinessDocumentsPost = <ThrowOnError extends boolean = false>(options?: Options<PostApiV1BusinessDocumentsData, ThrowOnError>) => (options?.client ?? client).post<PostApiV1BusinessDocumentsResponses, unknown, ThrowOnError>({
+export const postApiV1BusinessDocuments = <ThrowOnError extends boolean = false>(options?: Options<PostApiV1BusinessDocumentsData, ThrowOnError>) => (options?.client ?? client).post<PostApiV1BusinessDocumentsResponses, unknown, ThrowOnError>({
     ...formDataBodySerializer,
     url: '/api/v1/business-documents',
     ...options,
@@ -99,9 +99,9 @@ export const apiV1BusinessDocumentsPost = <ThrowOnError extends boolean = false>
     }
 });
 
-export const apiV1BusinessDocumentsIdDelete = <ThrowOnError extends boolean = false>(options: Options<DeleteApiV1BusinessDocumentsByIdData, ThrowOnError>) => (options.client ?? client).delete<DeleteApiV1BusinessDocumentsByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/business-documents/{id}', ...options });
+export const deleteApiV1BusinessDocumentsById = <ThrowOnError extends boolean = false>(options: Options<DeleteApiV1BusinessDocumentsByIdData, ThrowOnError>) => (options.client ?? client).delete<DeleteApiV1BusinessDocumentsByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/business-documents/{id}', ...options });
 
-export const apiV1BusinessDocumentsIdPut = <ThrowOnError extends boolean = false>(options: Options<PutApiV1BusinessDocumentsByIdData, ThrowOnError>) => (options.client ?? client).put<PutApiV1BusinessDocumentsByIdResponses, unknown, ThrowOnError>({
+export const putApiV1BusinessDocumentsById = <ThrowOnError extends boolean = false>(options: Options<PutApiV1BusinessDocumentsByIdData, ThrowOnError>) => (options.client ?? client).put<PutApiV1BusinessDocumentsByIdResponses, unknown, ThrowOnError>({
     url: '/api/v1/business-documents/{id}',
     ...options,
     headers: {
@@ -110,13 +110,13 @@ export const apiV1BusinessDocumentsIdPut = <ThrowOnError extends boolean = false
     }
 });
 
-export const apiV1BusinessDocumentsIdApprovePost = <ThrowOnError extends boolean = false>(options: Options<PostApiV1BusinessDocumentsByIdApproveData, ThrowOnError>) => (options.client ?? client).post<PostApiV1BusinessDocumentsByIdApproveResponses, unknown, ThrowOnError>({ url: '/api/v1/business-documents/{id}/approve', ...options });
+export const postApiV1BusinessDocumentsByIdApprove = <ThrowOnError extends boolean = false>(options: Options<PostApiV1BusinessDocumentsByIdApproveData, ThrowOnError>) => (options.client ?? client).post<PostApiV1BusinessDocumentsByIdApproveResponses, unknown, ThrowOnError>({ url: '/api/v1/business-documents/{id}/approve', ...options });
 
-export const apiV1BusinessDocumentsIdUnapprovePost = <ThrowOnError extends boolean = false>(options: Options<PostApiV1BusinessDocumentsByIdUnapproveData, ThrowOnError>) => (options.client ?? client).post<PostApiV1BusinessDocumentsByIdUnapproveResponses, unknown, ThrowOnError>({ url: '/api/v1/business-documents/{id}/unapprove', ...options });
+export const postApiV1BusinessDocumentsByIdUnapprove = <ThrowOnError extends boolean = false>(options: Options<PostApiV1BusinessDocumentsByIdUnapproveData, ThrowOnError>) => (options.client ?? client).post<PostApiV1BusinessDocumentsByIdUnapproveResponses, unknown, ThrowOnError>({ url: '/api/v1/business-documents/{id}/unapprove', ...options });
 
-export const apiV1BusinessDocumentsIdMoveToPersonalPost = <ThrowOnError extends boolean = false>(options: Options<PostApiV1BusinessDocumentsByIdMoveToPersonalData, ThrowOnError>) => (options.client ?? client).post<PostApiV1BusinessDocumentsByIdMoveToPersonalResponses, unknown, ThrowOnError>({ url: '/api/v1/business-documents/{id}/move-to-personal', ...options });
+export const postApiV1BusinessDocumentsByIdMoveToPersonal = <ThrowOnError extends boolean = false>(options: Options<PostApiV1BusinessDocumentsByIdMoveToPersonalData, ThrowOnError>) => (options.client ?? client).post<PostApiV1BusinessDocumentsByIdMoveToPersonalResponses, unknown, ThrowOnError>({ url: '/api/v1/business-documents/{id}/move-to-personal', ...options });
 
-export const apiV1BusinessDocumentsIdMoveToBusinessPost = <ThrowOnError extends boolean = false>(options: Options<PostApiV1BusinessDocumentsByIdMoveToBusinessData, ThrowOnError>) => (options.client ?? client).post<PostApiV1BusinessDocumentsByIdMoveToBusinessResponses, unknown, ThrowOnError>({
+export const postApiV1BusinessDocumentsByIdMoveToBusiness = <ThrowOnError extends boolean = false>(options: Options<PostApiV1BusinessDocumentsByIdMoveToBusinessData, ThrowOnError>) => (options.client ?? client).post<PostApiV1BusinessDocumentsByIdMoveToBusinessResponses, unknown, ThrowOnError>({
     url: '/api/v1/business-documents/{id}/move-to-business',
     ...options,
     headers: {
@@ -127,11 +127,11 @@ export const apiV1BusinessDocumentsIdMoveToBusinessPost = <ThrowOnError extends 
 
 export const apiVVersionApiVersionOdataBusinessDocumentActivities = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessDocumentActivitiesData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataBusinessDocumentActivitiesResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/BusinessDocumentActivities', ...options });
 
-export const apiVVersionApiVersionOdataBusinessDocumentActivities__count = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessDocumentActivitiesCountData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataBusinessDocumentActivitiesCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/BusinessDocumentActivities/$count', ...options });
+export const apiVVersionApiVersionOdataBusinessDocumentActivitiesCount = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessDocumentActivitiesCountData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataBusinessDocumentActivitiesCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/BusinessDocumentActivities/$count', ...options });
 
 export const apiVVersionApiVersionOdataBusinessDocuments = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessDocumentsData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataBusinessDocumentsResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/BusinessDocuments', ...options });
 
-export const apiVVersionApiVersionOdataBusinessDocuments__count = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessDocumentsCountData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataBusinessDocumentsCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/BusinessDocuments/$count', ...options });
+export const apiVVersionApiVersionOdataBusinessDocumentsCount = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessDocumentsCountData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataBusinessDocumentsCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/BusinessDocuments/$count', ...options });
 
 /**
  * @deprecated
@@ -141,11 +141,11 @@ export const apiVVersionApiVersionOdataBusinessDocumentsSummaries = <ThrowOnErro
 /**
  * @deprecated
  */
-export const apiVVersionApiVersionOdataBusinessDocumentsSummaries__count = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessDocumentsSummariesCountData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataBusinessDocumentsSummariesCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/BusinessDocumentsSummaries/$count', ...options });
+export const apiVVersionApiVersionOdataBusinessDocumentsSummariesCount = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessDocumentsSummariesCountData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataBusinessDocumentsSummariesCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/BusinessDocumentsSummaries/$count', ...options });
 
-export const apiV1BusinessesIdDocumentTypesSummaryGet = <ThrowOnError extends boolean = false>(options: Options<GetApiV1BusinessesByIdDocumentTypesSummaryData, ThrowOnError>) => (options.client ?? client).get<GetApiV1BusinessesByIdDocumentTypesSummaryResponses, unknown, ThrowOnError>({ url: '/api/v1/businesses/{id}/document-types-summary', ...options });
+export const getApiV1BusinessesByIdDocumentTypesSummary = <ThrowOnError extends boolean = false>(options: Options<GetApiV1BusinessesByIdDocumentTypesSummaryData, ThrowOnError>) => (options.client ?? client).get<GetApiV1BusinessesByIdDocumentTypesSummaryResponses, unknown, ThrowOnError>({ url: '/api/v1/businesses/{id}/document-types-summary', ...options });
 
-export const apiV1BusinessesPost = <ThrowOnError extends boolean = false>(options?: Options<PostApiV1BusinessesData, ThrowOnError>) => (options?.client ?? client).post<PostApiV1BusinessesResponses, unknown, ThrowOnError>({
+export const postApiV1Businesses = <ThrowOnError extends boolean = false>(options?: Options<PostApiV1BusinessesData, ThrowOnError>) => (options?.client ?? client).post<PostApiV1BusinessesResponses, unknown, ThrowOnError>({
     url: '/api/v1/businesses',
     ...options,
     headers: {
@@ -154,9 +154,9 @@ export const apiV1BusinessesPost = <ThrowOnError extends boolean = false>(option
     }
 });
 
-export const apiV1BusinessesIdDelete = <ThrowOnError extends boolean = false>(options: Options<DeleteApiV1BusinessesByIdData, ThrowOnError>) => (options.client ?? client).delete<DeleteApiV1BusinessesByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/businesses/{id}', ...options });
+export const deleteApiV1BusinessesById = <ThrowOnError extends boolean = false>(options: Options<DeleteApiV1BusinessesByIdData, ThrowOnError>) => (options.client ?? client).delete<DeleteApiV1BusinessesByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/businesses/{id}', ...options });
 
-export const apiV1BusinessesIdPut = <ThrowOnError extends boolean = false>(options: Options<PutApiV1BusinessesByIdData, ThrowOnError>) => (options.client ?? client).put<PutApiV1BusinessesByIdResponses, unknown, ThrowOnError>({
+export const putApiV1BusinessesById = <ThrowOnError extends boolean = false>(options: Options<PutApiV1BusinessesByIdData, ThrowOnError>) => (options.client ?? client).put<PutApiV1BusinessesByIdResponses, unknown, ThrowOnError>({
     url: '/api/v1/businesses/{id}',
     ...options,
     headers: {
@@ -165,7 +165,7 @@ export const apiV1BusinessesIdPut = <ThrowOnError extends boolean = false>(optio
     }
 });
 
-export const apiV1BusinessesIdContactPut = <ThrowOnError extends boolean = false>(options: Options<PutApiV1BusinessesByIdContactData, ThrowOnError>) => (options.client ?? client).put<PutApiV1BusinessesByIdContactResponses, unknown, ThrowOnError>({
+export const putApiV1BusinessesByIdContact = <ThrowOnError extends boolean = false>(options: Options<PutApiV1BusinessesByIdContactData, ThrowOnError>) => (options.client ?? client).put<PutApiV1BusinessesByIdContactResponses, unknown, ThrowOnError>({
     url: '/api/v1/businesses/{id}/contact',
     ...options,
     headers: {
@@ -174,17 +174,17 @@ export const apiV1BusinessesIdContactPut = <ThrowOnError extends boolean = false
     }
 });
 
-export const apiV1BusinessesIdDisconnectPost = <ThrowOnError extends boolean = false>(options: Options<PostApiV1BusinessesByIdDisconnectData, ThrowOnError>) => (options.client ?? client).post<PostApiV1BusinessesByIdDisconnectResponses, unknown, ThrowOnError>({ url: '/api/v1/businesses/{id}/disconnect', ...options });
+export const postApiV1BusinessesByIdDisconnect = <ThrowOnError extends boolean = false>(options: Options<PostApiV1BusinessesByIdDisconnectData, ThrowOnError>) => (options.client ?? client).post<PostApiV1BusinessesByIdDisconnectResponses, unknown, ThrowOnError>({ url: '/api/v1/businesses/{id}/disconnect', ...options });
 
 export const apiVVersionApiVersionOdataBusinesses = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessesData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataBusinessesResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Businesses', ...options });
 
-export const apiVVersionApiVersionOdataBusinesses__count = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessesCountData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataBusinessesCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Businesses/$count', ...options });
+export const apiVVersionApiVersionOdataBusinessesCount = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessesCountData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataBusinessesCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Businesses/$count', ...options });
 
 export const apiVVersionApiVersionOdataBusinessesKey = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessesKeyData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataBusinessesKeyResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Businesses({key})', ...options });
 
 export const apiVVersionApiVersionOdataBusinessesKey2 = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessesKey2Data, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataBusinessesKey2Responses, unknown, ThrowOnError>({ url: '/api/v1/odata/Businesses/{key}', ...options });
 
-export const apiV1BusinessMembershipsPut = <ThrowOnError extends boolean = false>(options?: Options<PutApiV1BusinessMembershipsData, ThrowOnError>) => (options?.client ?? client).put<PutApiV1BusinessMembershipsResponses, unknown, ThrowOnError>({
+export const putApiV1BusinessMemberships = <ThrowOnError extends boolean = false>(options?: Options<PutApiV1BusinessMembershipsData, ThrowOnError>) => (options?.client ?? client).put<PutApiV1BusinessMembershipsResponses, unknown, ThrowOnError>({
     url: '/api/v1/business-memberships',
     ...options,
     headers: {
@@ -195,9 +195,9 @@ export const apiV1BusinessMembershipsPut = <ThrowOnError extends boolean = false
 
 export const apiVVersionApiVersionOdataBusinessSummaries = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessSummariesData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataBusinessSummariesResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/BusinessSummaries', ...options });
 
-export const apiVVersionApiVersionOdataBusinessSummaries__count = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessSummariesCountData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataBusinessSummariesCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/BusinessSummaries/$count', ...options });
+export const apiVVersionApiVersionOdataBusinessSummariesCount = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataBusinessSummariesCountData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataBusinessSummariesCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/BusinessSummaries/$count', ...options });
 
-export const apiV1CounterpartiesPost = <ThrowOnError extends boolean = false>(options?: Options<PostApiV1CounterpartiesData, ThrowOnError>) => (options?.client ?? client).post<PostApiV1CounterpartiesResponses, unknown, ThrowOnError>({
+export const postApiV1Counterparties = <ThrowOnError extends boolean = false>(options?: Options<PostApiV1CounterpartiesData, ThrowOnError>) => (options?.client ?? client).post<PostApiV1CounterpartiesResponses, unknown, ThrowOnError>({
     url: '/api/v1/counterparties',
     ...options,
     headers: {
@@ -206,9 +206,9 @@ export const apiV1CounterpartiesPost = <ThrowOnError extends boolean = false>(op
     }
 });
 
-export const apiV1CounterpartiesIdDelete = <ThrowOnError extends boolean = false>(options: Options<DeleteApiV1CounterpartiesByIdData, ThrowOnError>) => (options.client ?? client).delete<DeleteApiV1CounterpartiesByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/counterparties/{id}', ...options });
+export const deleteApiV1CounterpartiesById = <ThrowOnError extends boolean = false>(options: Options<DeleteApiV1CounterpartiesByIdData, ThrowOnError>) => (options.client ?? client).delete<DeleteApiV1CounterpartiesByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/counterparties/{id}', ...options });
 
-export const apiV1CounterpartiesIdPatch = <ThrowOnError extends boolean = false>(options: Options<PatchApiV1CounterpartiesByIdData, ThrowOnError>) => (options.client ?? client).patch<PatchApiV1CounterpartiesByIdResponses, unknown, ThrowOnError>({
+export const patchApiV1CounterpartiesById = <ThrowOnError extends boolean = false>(options: Options<PatchApiV1CounterpartiesByIdData, ThrowOnError>) => (options.client ?? client).patch<PatchApiV1CounterpartiesByIdResponses, unknown, ThrowOnError>({
     url: '/api/v1/counterparties/{id}',
     ...options,
     headers: {
@@ -219,9 +219,9 @@ export const apiV1CounterpartiesIdPatch = <ThrowOnError extends boolean = false>
 
 export const apiVVersionApiVersionOdataCounterparties = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataCounterpartiesData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataCounterpartiesResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Counterparties', ...options });
 
-export const apiVVersionApiVersionOdataCounterparties__count = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataCounterpartiesCountData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataCounterpartiesCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Counterparties/$count', ...options });
+export const apiVVersionApiVersionOdataCounterpartiesCount = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataCounterpartiesCountData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataCounterpartiesCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Counterparties/$count', ...options });
 
-export const apiV1DataBoxCredentialsPut = <ThrowOnError extends boolean = false>(options?: Options<PutApiV1DataBoxCredentialsData, ThrowOnError>) => (options?.client ?? client).put<PutApiV1DataBoxCredentialsResponses, unknown, ThrowOnError>({
+export const putApiV1DataBoxCredentials = <ThrowOnError extends boolean = false>(options?: Options<PutApiV1DataBoxCredentialsData, ThrowOnError>) => (options?.client ?? client).put<PutApiV1DataBoxCredentialsResponses, unknown, ThrowOnError>({
     url: '/api/v1/data-box-credentials',
     ...options,
     headers: {
@@ -230,39 +230,39 @@ export const apiV1DataBoxCredentialsPut = <ThrowOnError extends boolean = false>
     }
 });
 
-export const apiV1DataBoxCredentialsIdDelete = <ThrowOnError extends boolean = false>(options: Options<DeleteApiV1DataBoxCredentialsByIdData, ThrowOnError>) => (options.client ?? client).delete<DeleteApiV1DataBoxCredentialsByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/data-box-credentials/{id}', ...options });
+export const deleteApiV1DataBoxCredentialsById = <ThrowOnError extends boolean = false>(options: Options<DeleteApiV1DataBoxCredentialsByIdData, ThrowOnError>) => (options.client ?? client).delete<DeleteApiV1DataBoxCredentialsByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/data-box-credentials/{id}', ...options });
 
 export const apiVVersionApiVersionOdataDataBoxCredentials = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataDataBoxCredentialsData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataDataBoxCredentialsResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/DataBoxCredentials', ...options });
 
-export const apiVVersionApiVersionOdataDataBoxCredentials__count = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataDataBoxCredentialsCountData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataDataBoxCredentialsCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/DataBoxCredentials/$count', ...options });
+export const apiVVersionApiVersionOdataDataBoxCredentialsCount = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataDataBoxCredentialsCountData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataDataBoxCredentialsCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/DataBoxCredentials/$count', ...options });
 
-export const apiDevGet = <ThrowOnError extends boolean = false>(options?: Options<GetApiDevData, ThrowOnError>) => (options?.client ?? client).get<GetApiDevResponses, unknown, ThrowOnError>({ url: '/api/dev', ...options });
+export const getApiDev = <ThrowOnError extends boolean = false>(options?: Options<GetApiDevData, ThrowOnError>) => (options?.client ?? client).get<GetApiDevResponses, unknown, ThrowOnError>({ url: '/api/dev', ...options });
 
-export const apiDevReseedDbGet = <ThrowOnError extends boolean = false>(options?: Options<GetApiDevReseedDbData, ThrowOnError>) => (options?.client ?? client).get<GetApiDevReseedDbResponses, unknown, ThrowOnError>({ url: '/api/dev/reseed-db', ...options });
+export const getApiDevReseedDb = <ThrowOnError extends boolean = false>(options?: Options<GetApiDevReseedDbData, ThrowOnError>) => (options?.client ?? client).get<GetApiDevReseedDbResponses, unknown, ThrowOnError>({ url: '/api/dev/reseed-db', ...options });
 
-export const apiDevDbResetGet = <ThrowOnError extends boolean = false>(options?: Options<GetApiDevDbResetData, ThrowOnError>) => (options?.client ?? client).get<GetApiDevDbResetResponses, unknown, ThrowOnError>({ url: '/api/dev/db-reset', ...options });
+export const getApiDevDbReset = <ThrowOnError extends boolean = false>(options?: Options<GetApiDevDbResetData, ThrowOnError>) => (options?.client ?? client).get<GetApiDevDbResetResponses, unknown, ThrowOnError>({ url: '/api/dev/db-reset', ...options });
 
-export const apiDevDbResetGet2 = <ThrowOnError extends boolean = false>(options?: Options<GetApiDevDbReset2Data, ThrowOnError>) => (options?.client ?? client).get<GetApiDevDbReset2Responses, unknown, ThrowOnError>({ url: '/api/dev/db/reset', ...options });
+export const getApiDevDbReset2 = <ThrowOnError extends boolean = false>(options?: Options<GetApiDevDbReset2Data, ThrowOnError>) => (options?.client ?? client).get<GetApiDevDbReset2Responses, unknown, ThrowOnError>({ url: '/api/dev/db/reset', ...options });
 
-export const apiDevDbCreateGet = <ThrowOnError extends boolean = false>(options?: Options<GetApiDevDbCreateData, ThrowOnError>) => (options?.client ?? client).get<GetApiDevDbCreateResponses, unknown, ThrowOnError>({ url: '/api/dev/db/create', ...options });
+export const getApiDevDbCreate = <ThrowOnError extends boolean = false>(options?: Options<GetApiDevDbCreateData, ThrowOnError>) => (options?.client ?? client).get<GetApiDevDbCreateResponses, unknown, ThrowOnError>({ url: '/api/dev/db/create', ...options });
 
-export const apiDevDbTouchGet = <ThrowOnError extends boolean = false>(options?: Options<GetApiDevDbTouchData, ThrowOnError>) => (options?.client ?? client).get<GetApiDevDbTouchResponses, unknown, ThrowOnError>({ url: '/api/dev/db/touch', ...options });
+export const getApiDevDbTouch = <ThrowOnError extends boolean = false>(options?: Options<GetApiDevDbTouchData, ThrowOnError>) => (options?.client ?? client).get<GetApiDevDbTouchResponses, unknown, ThrowOnError>({ url: '/api/dev/db/touch', ...options });
 
-export const apiDevSeedGet = <ThrowOnError extends boolean = false>(options?: Options<GetApiDevSeedData, ThrowOnError>) => (options?.client ?? client).get<GetApiDevSeedResponses, unknown, ThrowOnError>({ url: '/api/dev/seed', ...options });
+export const getApiDevSeed = <ThrowOnError extends boolean = false>(options?: Options<GetApiDevSeedData, ThrowOnError>) => (options?.client ?? client).get<GetApiDevSeedResponses, unknown, ThrowOnError>({ url: '/api/dev/seed', ...options });
 
-export const apiDevSeedAllGet = <ThrowOnError extends boolean = false>(options?: Options<GetApiDevSeedAllData, ThrowOnError>) => (options?.client ?? client).get<GetApiDevSeedAllResponses, unknown, ThrowOnError>({ url: '/api/dev/seed-all', ...options });
+export const getApiDevSeedAll = <ThrowOnError extends boolean = false>(options?: Options<GetApiDevSeedAllData, ThrowOnError>) => (options?.client ?? client).get<GetApiDevSeedAllResponses, unknown, ThrowOnError>({ url: '/api/dev/seed-all', ...options });
 
-export const apiDevSeedProdGet = <ThrowOnError extends boolean = false>(options?: Options<GetApiDevSeedProdData, ThrowOnError>) => (options?.client ?? client).get<GetApiDevSeedProdResponses, unknown, ThrowOnError>({ url: '/api/dev/seed-prod', ...options });
+export const getApiDevSeedProd = <ThrowOnError extends boolean = false>(options?: Options<GetApiDevSeedProdData, ThrowOnError>) => (options?.client ?? client).get<GetApiDevSeedProdResponses, unknown, ThrowOnError>({ url: '/api/dev/seed-prod', ...options });
 
-export const apiDevJobProcessRecurringTasksGet = <ThrowOnError extends boolean = false>(options?: Options<GetApiDevJobProcessRecurringTasksData, ThrowOnError>) => (options?.client ?? client).get<GetApiDevJobProcessRecurringTasksResponses, unknown, ThrowOnError>({ url: '/api/dev/job/process-recurring-tasks', ...options });
+export const getApiDevJobProcessRecurringTasks = <ThrowOnError extends boolean = false>(options?: Options<GetApiDevJobProcessRecurringTasksData, ThrowOnError>) => (options?.client ?? client).get<GetApiDevJobProcessRecurringTasksResponses, unknown, ThrowOnError>({ url: '/api/dev/job/process-recurring-tasks', ...options });
 
-export const apiDevNotificationsSendTestGet = <ThrowOnError extends boolean = false>(options?: Options<GetApiDevNotificationsSendTestData, ThrowOnError>) => (options?.client ?? client).get<GetApiDevNotificationsSendTestResponses, unknown, ThrowOnError>({ url: '/api/dev/notifications/send-test', ...options });
+export const getApiDevNotificationsSendTest = <ThrowOnError extends boolean = false>(options?: Options<GetApiDevNotificationsSendTestData, ThrowOnError>) => (options?.client ?? client).get<GetApiDevNotificationsSendTestResponses, unknown, ThrowOnError>({ url: '/api/dev/notifications/send-test', ...options });
 
-export const apiDevConfirmEmailGet = <ThrowOnError extends boolean = false>(options?: Options<GetApiDevConfirmEmailData, ThrowOnError>) => (options?.client ?? client).get<GetApiDevConfirmEmailResponses, unknown, ThrowOnError>({ url: '/api/dev/confirm-email', ...options });
+export const getApiDevConfirmEmail = <ThrowOnError extends boolean = false>(options?: Options<GetApiDevConfirmEmailData, ThrowOnError>) => (options?.client ?? client).get<GetApiDevConfirmEmailResponses, unknown, ThrowOnError>({ url: '/api/dev/confirm-email', ...options });
 
-export const apiDevEmailSendTestGet = <ThrowOnError extends boolean = false>(options?: Options<GetApiDevEmailSendTestData, ThrowOnError>) => (options?.client ?? client).get<GetApiDevEmailSendTestResponses, unknown, ThrowOnError>({ url: '/api/dev/email/send-test', ...options });
+export const getApiDevEmailSendTest = <ThrowOnError extends boolean = false>(options?: Options<GetApiDevEmailSendTestData, ThrowOnError>) => (options?.client ?? client).get<GetApiDevEmailSendTestResponses, unknown, ThrowOnError>({ url: '/api/dev/email/send-test', ...options });
 
-export const apiV1NotificationsDeviceTokensDelete = <ThrowOnError extends boolean = false>(options?: Options<DeleteApiV1NotificationsDeviceTokensData, ThrowOnError>) => (options?.client ?? client).delete<DeleteApiV1NotificationsDeviceTokensResponses, unknown, ThrowOnError>({
+export const deleteApiV1NotificationsDeviceTokens = <ThrowOnError extends boolean = false>(options?: Options<DeleteApiV1NotificationsDeviceTokensData, ThrowOnError>) => (options?.client ?? client).delete<DeleteApiV1NotificationsDeviceTokensResponses, unknown, ThrowOnError>({
     url: '/api/v1/notifications/device-tokens',
     ...options,
     headers: {
@@ -271,7 +271,7 @@ export const apiV1NotificationsDeviceTokensDelete = <ThrowOnError extends boolea
     }
 });
 
-export const apiV1NotificationsDeviceTokensPut = <ThrowOnError extends boolean = false>(options?: Options<PutApiV1NotificationsDeviceTokensData, ThrowOnError>) => (options?.client ?? client).put<PutApiV1NotificationsDeviceTokensResponses, unknown, ThrowOnError>({
+export const putApiV1NotificationsDeviceTokens = <ThrowOnError extends boolean = false>(options?: Options<PutApiV1NotificationsDeviceTokensData, ThrowOnError>) => (options?.client ?? client).put<PutApiV1NotificationsDeviceTokensResponses, unknown, ThrowOnError>({
     url: '/api/v1/notifications/device-tokens',
     ...options,
     headers: {
@@ -282,9 +282,9 @@ export const apiV1NotificationsDeviceTokensPut = <ThrowOnError extends boolean =
 
 export const apiVVersionApiVersionOdataDocumentTypes = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataDocumentTypesData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataDocumentTypesResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/DocumentTypes', ...options });
 
-export const apiVVersionApiVersionOdataDocumentTypes__count = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataDocumentTypesCountData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataDocumentTypesCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/DocumentTypes/$count', ...options });
+export const apiVVersionApiVersionOdataDocumentTypesCount = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataDocumentTypesCountData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataDocumentTypesCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/DocumentTypes/$count', ...options });
 
-export const apiV1FeedbackPost = <ThrowOnError extends boolean = false>(options?: Options<PostApiV1FeedbackData, ThrowOnError>) => (options?.client ?? client).post<PostApiV1FeedbackResponses, unknown, ThrowOnError>({
+export const postApiV1Feedback = <ThrowOnError extends boolean = false>(options?: Options<PostApiV1FeedbackData, ThrowOnError>) => (options?.client ?? client).post<PostApiV1FeedbackResponses, unknown, ThrowOnError>({
     url: '/api/v1/feedback',
     ...options,
     headers: {
@@ -293,7 +293,7 @@ export const apiV1FeedbackPost = <ThrowOnError extends boolean = false>(options?
     }
 });
 
-export const apiV1InvitationsPost = <ThrowOnError extends boolean = false>(options?: Options<PostApiV1InvitationsData, ThrowOnError>) => (options?.client ?? client).post<PostApiV1InvitationsResponses, unknown, ThrowOnError>({
+export const postApiV1Invitations = <ThrowOnError extends boolean = false>(options?: Options<PostApiV1InvitationsData, ThrowOnError>) => (options?.client ?? client).post<PostApiV1InvitationsResponses, unknown, ThrowOnError>({
     url: '/api/v1/invitations',
     ...options,
     headers: {
@@ -302,7 +302,7 @@ export const apiV1InvitationsPost = <ThrowOnError extends boolean = false>(optio
     }
 });
 
-export const apiV1InvitationsIdAcceptPost = <ThrowOnError extends boolean = false>(options: Options<PostApiV1InvitationsByIdAcceptData, ThrowOnError>) => (options.client ?? client).post<PostApiV1InvitationsByIdAcceptResponses, unknown, ThrowOnError>({
+export const postApiV1InvitationsByIdAccept = <ThrowOnError extends boolean = false>(options: Options<PostApiV1InvitationsByIdAcceptData, ThrowOnError>) => (options.client ?? client).post<PostApiV1InvitationsByIdAcceptResponses, unknown, ThrowOnError>({
     url: '/api/v1/invitations/{id}/accept',
     ...options,
     headers: {
@@ -311,11 +311,11 @@ export const apiV1InvitationsIdAcceptPost = <ThrowOnError extends boolean = fals
     }
 });
 
-export const apiV1InvitationsIdRejectPost = <ThrowOnError extends boolean = false>(options: Options<PostApiV1InvitationsByIdRejectData, ThrowOnError>) => (options.client ?? client).post<PostApiV1InvitationsByIdRejectResponses, unknown, ThrowOnError>({ url: '/api/v1/invitations/{id}/reject', ...options });
+export const postApiV1InvitationsByIdReject = <ThrowOnError extends boolean = false>(options: Options<PostApiV1InvitationsByIdRejectData, ThrowOnError>) => (options.client ?? client).post<PostApiV1InvitationsByIdRejectResponses, unknown, ThrowOnError>({ url: '/api/v1/invitations/{id}/reject', ...options });
 
-export const apiV1InvitationsIdDelete = <ThrowOnError extends boolean = false>(options: Options<DeleteApiV1InvitationsByIdData, ThrowOnError>) => (options.client ?? client).delete<DeleteApiV1InvitationsByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/invitations/{id}', ...options });
+export const deleteApiV1InvitationsById = <ThrowOnError extends boolean = false>(options: Options<DeleteApiV1InvitationsByIdData, ThrowOnError>) => (options.client ?? client).delete<DeleteApiV1InvitationsByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/invitations/{id}', ...options });
 
-export const apiV1InvitationsIdPatch = <ThrowOnError extends boolean = false>(options: Options<PatchApiV1InvitationsByIdData, ThrowOnError>) => (options.client ?? client).patch<PatchApiV1InvitationsByIdResponses, unknown, ThrowOnError>({
+export const patchApiV1InvitationsById = <ThrowOnError extends boolean = false>(options: Options<PatchApiV1InvitationsByIdData, ThrowOnError>) => (options.client ?? client).patch<PatchApiV1InvitationsByIdResponses, unknown, ThrowOnError>({
     url: '/api/v1/invitations/{id}',
     ...options,
     headers: {
@@ -326,9 +326,9 @@ export const apiV1InvitationsIdPatch = <ThrowOnError extends boolean = false>(op
 
 export const apiVVersionApiVersionOdataInvitations = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataInvitationsData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataInvitationsResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Invitations', ...options });
 
-export const apiVVersionApiVersionOdataInvitations__count = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataInvitationsCountData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataInvitationsCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Invitations/$count', ...options });
+export const apiVVersionApiVersionOdataInvitationsCount = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataInvitationsCountData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataInvitationsCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Invitations/$count', ...options });
 
-export const apiV1InvoicesPost = <ThrowOnError extends boolean = false>(options?: Options<PostApiV1InvoicesData, ThrowOnError>) => (options?.client ?? client).post<PostApiV1InvoicesResponses, unknown, ThrowOnError>({
+export const postApiV1Invoices = <ThrowOnError extends boolean = false>(options?: Options<PostApiV1InvoicesData, ThrowOnError>) => (options?.client ?? client).post<PostApiV1InvoicesResponses, unknown, ThrowOnError>({
     url: '/api/v1/invoices',
     ...options,
     headers: {
@@ -337,9 +337,9 @@ export const apiV1InvoicesPost = <ThrowOnError extends boolean = false>(options?
     }
 });
 
-export const apiV1InvoicesIdDelete = <ThrowOnError extends boolean = false>(options: Options<DeleteApiV1InvoicesByIdData, ThrowOnError>) => (options.client ?? client).delete<DeleteApiV1InvoicesByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/invoices/{id}', ...options });
+export const deleteApiV1InvoicesById = <ThrowOnError extends boolean = false>(options: Options<DeleteApiV1InvoicesByIdData, ThrowOnError>) => (options.client ?? client).delete<DeleteApiV1InvoicesByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/invoices/{id}', ...options });
 
-export const apiV1InvoicesIdPatch = <ThrowOnError extends boolean = false>(options: Options<PatchApiV1InvoicesByIdData, ThrowOnError>) => (options.client ?? client).patch<PatchApiV1InvoicesByIdResponses, unknown, ThrowOnError>({
+export const patchApiV1InvoicesById = <ThrowOnError extends boolean = false>(options: Options<PatchApiV1InvoicesByIdData, ThrowOnError>) => (options.client ?? client).patch<PatchApiV1InvoicesByIdResponses, unknown, ThrowOnError>({
     url: '/api/v1/invoices/{id}',
     ...options,
     headers: {
@@ -348,9 +348,9 @@ export const apiV1InvoicesIdPatch = <ThrowOnError extends boolean = false>(optio
     }
 });
 
-export const apiV1InvoicesIdPreviewGet = <ThrowOnError extends boolean = false>(options: Options<GetApiV1InvoicesByIdPreviewData, ThrowOnError>) => (options.client ?? client).get<GetApiV1InvoicesByIdPreviewResponses, unknown, ThrowOnError>({ url: '/api/v1/invoices/{id}/preview', ...options });
+export const getApiV1InvoicesByIdPreview = <ThrowOnError extends boolean = false>(options: Options<GetApiV1InvoicesByIdPreviewData, ThrowOnError>) => (options.client ?? client).get<GetApiV1InvoicesByIdPreviewResponses, unknown, ThrowOnError>({ url: '/api/v1/invoices/{id}/preview', ...options });
 
-export const apiV1InvoicesIdSendPost = <ThrowOnError extends boolean = false>(options: Options<PostApiV1InvoicesByIdSendData, ThrowOnError>) => (options.client ?? client).post<PostApiV1InvoicesByIdSendResponses, unknown, ThrowOnError>({
+export const postApiV1InvoicesByIdSend = <ThrowOnError extends boolean = false>(options: Options<PostApiV1InvoicesByIdSendData, ThrowOnError>) => (options.client ?? client).post<PostApiV1InvoicesByIdSendResponses, unknown, ThrowOnError>({
     url: '/api/v1/invoices/{id}/send',
     ...options,
     headers: {
@@ -359,13 +359,13 @@ export const apiV1InvoicesIdSendPost = <ThrowOnError extends boolean = false>(op
     }
 });
 
-export const apiV1InvoicesIdSnapshotPost = <ThrowOnError extends boolean = false>(options: Options<PostApiV1InvoicesByIdSnapshotData, ThrowOnError>) => (options.client ?? client).post<PostApiV1InvoicesByIdSnapshotResponses, unknown, ThrowOnError>({ url: '/api/v1/invoices/{id}/snapshot', ...options });
+export const postApiV1InvoicesByIdSnapshot = <ThrowOnError extends boolean = false>(options: Options<PostApiV1InvoicesByIdSnapshotData, ThrowOnError>) => (options.client ?? client).post<PostApiV1InvoicesByIdSnapshotResponses, unknown, ThrowOnError>({ url: '/api/v1/invoices/{id}/snapshot', ...options });
 
 export const apiVVersionApiVersionOdataInvoices = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataInvoicesData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataInvoicesResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Invoices', ...options });
 
-export const apiVVersionApiVersionOdataInvoices__count = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataInvoicesCountData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataInvoicesCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Invoices/$count', ...options });
+export const apiVVersionApiVersionOdataInvoicesCount = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataInvoicesCountData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataInvoicesCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Invoices/$count', ...options });
 
-export const apiV1InvoiceSettingsPut = <ThrowOnError extends boolean = false>(options?: Options<PutApiV1InvoiceSettingsData, ThrowOnError>) => (options?.client ?? client).put<PutApiV1InvoiceSettingsResponses, unknown, ThrowOnError>({
+export const putApiV1InvoiceSettings = <ThrowOnError extends boolean = false>(options?: Options<PutApiV1InvoiceSettingsData, ThrowOnError>) => (options?.client ?? client).put<PutApiV1InvoiceSettingsResponses, unknown, ThrowOnError>({
     url: '/api/v1/invoice-settings',
     ...options,
     headers: {
@@ -376,13 +376,13 @@ export const apiV1InvoiceSettingsPut = <ThrowOnError extends boolean = false>(op
 
 export const apiVVersionApiVersionOdataInvoiceSettings = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataInvoiceSettingsData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataInvoiceSettingsResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/InvoiceSettings', ...options });
 
-export const apiVVersionApiVersionOdataInvoiceSettings__count = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataInvoiceSettingsCountData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataInvoiceSettingsCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/InvoiceSettings/$count', ...options });
+export const apiVVersionApiVersionOdataInvoiceSettingsCount = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataInvoiceSettingsCountData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataInvoiceSettingsCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/InvoiceSettings/$count', ...options });
 
 export const apiVVersionApiVersionOdataLicenses = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataLicensesData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataLicensesResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Licenses', ...options });
 
-export const apiVVersionApiVersionOdataLicenses__count = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataLicensesCountData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataLicensesCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Licenses/$count', ...options });
+export const apiVVersionApiVersionOdataLicensesCount = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataLicensesCountData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataLicensesCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Licenses/$count', ...options });
 
-export const apiV1NotificationsTestPost = <ThrowOnError extends boolean = false>(options?: Options<PostApiV1NotificationsTestData, ThrowOnError>) => (options?.client ?? client).post<PostApiV1NotificationsTestResponses, unknown, ThrowOnError>({
+export const postApiV1NotificationsTest = <ThrowOnError extends boolean = false>(options?: Options<PostApiV1NotificationsTestData, ThrowOnError>) => (options?.client ?? client).post<PostApiV1NotificationsTestResponses, unknown, ThrowOnError>({
     url: '/api/v1/notifications/test',
     ...options,
     headers: {
@@ -391,9 +391,9 @@ export const apiV1NotificationsTestPost = <ThrowOnError extends boolean = false>
     }
 });
 
-export const apiV1PersonalDocumentsIdRawGet = <ThrowOnError extends boolean = false>(options: Options<GetApiV1PersonalDocumentsByIdRawData, ThrowOnError>) => (options.client ?? client).get<GetApiV1PersonalDocumentsByIdRawResponses, unknown, ThrowOnError>({ url: '/api/v1/personal-documents/{id}/raw', ...options });
+export const getApiV1PersonalDocumentsByIdRaw = <ThrowOnError extends boolean = false>(options: Options<GetApiV1PersonalDocumentsByIdRawData, ThrowOnError>) => (options.client ?? client).get<GetApiV1PersonalDocumentsByIdRawResponses, unknown, ThrowOnError>({ url: '/api/v1/personal-documents/{id}/raw', ...options });
 
-export const apiV1PersonalDocumentsPost = <ThrowOnError extends boolean = false>(options?: Options<PostApiV1PersonalDocumentsData, ThrowOnError>) => (options?.client ?? client).post<PostApiV1PersonalDocumentsResponses, unknown, ThrowOnError>({
+export const postApiV1PersonalDocuments = <ThrowOnError extends boolean = false>(options?: Options<PostApiV1PersonalDocumentsData, ThrowOnError>) => (options?.client ?? client).post<PostApiV1PersonalDocumentsResponses, unknown, ThrowOnError>({
     ...formDataBodySerializer,
     url: '/api/v1/personal-documents',
     ...options,
@@ -403,7 +403,7 @@ export const apiV1PersonalDocumentsPost = <ThrowOnError extends boolean = false>
     }
 });
 
-export const apiV1PersonalDocumentsIdMoveToBusinessPost = <ThrowOnError extends boolean = false>(options: Options<PostApiV1PersonalDocumentsByIdMoveToBusinessData, ThrowOnError>) => (options.client ?? client).post<PostApiV1PersonalDocumentsByIdMoveToBusinessResponses, unknown, ThrowOnError>({
+export const postApiV1PersonalDocumentsByIdMoveToBusiness = <ThrowOnError extends boolean = false>(options: Options<PostApiV1PersonalDocumentsByIdMoveToBusinessData, ThrowOnError>) => (options.client ?? client).post<PostApiV1PersonalDocumentsByIdMoveToBusinessResponses, unknown, ThrowOnError>({
     url: '/api/v1/personal-documents/{id}/move-to-business',
     ...options,
     headers: {
@@ -412,15 +412,15 @@ export const apiV1PersonalDocumentsIdMoveToBusinessPost = <ThrowOnError extends 
     }
 });
 
-export const apiV1PersonalDocumentsIdDelete = <ThrowOnError extends boolean = false>(options: Options<DeleteApiV1PersonalDocumentsByIdData, ThrowOnError>) => (options.client ?? client).delete<DeleteApiV1PersonalDocumentsByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/personal-documents/{id}', ...options });
+export const deleteApiV1PersonalDocumentsById = <ThrowOnError extends boolean = false>(options: Options<DeleteApiV1PersonalDocumentsByIdData, ThrowOnError>) => (options.client ?? client).delete<DeleteApiV1PersonalDocumentsByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/personal-documents/{id}', ...options });
 
-export const apiV1PersonalDocumentsSummaryGet = <ThrowOnError extends boolean = false>(options?: Options<GetApiV1PersonalDocumentsSummaryData, ThrowOnError>) => (options?.client ?? client).get<GetApiV1PersonalDocumentsSummaryResponses, unknown, ThrowOnError>({ url: '/api/v1/personal-documents/summary', ...options });
+export const getApiV1PersonalDocumentsSummary = <ThrowOnError extends boolean = false>(options?: Options<GetApiV1PersonalDocumentsSummaryData, ThrowOnError>) => (options?.client ?? client).get<GetApiV1PersonalDocumentsSummaryResponses, unknown, ThrowOnError>({ url: '/api/v1/personal-documents/summary', ...options });
 
 export const apiVVersionApiVersionOdataPersonalDocuments = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataPersonalDocumentsData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataPersonalDocumentsResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/PersonalDocuments', ...options });
 
-export const apiVVersionApiVersionOdataPersonalDocuments__count = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataPersonalDocumentsCountData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataPersonalDocumentsCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/PersonalDocuments/$count', ...options });
+export const apiVVersionApiVersionOdataPersonalDocumentsCount = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataPersonalDocumentsCountData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataPersonalDocumentsCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/PersonalDocuments/$count', ...options });
 
-export const apiV1RecurringTasksPost = <ThrowOnError extends boolean = false>(options?: Options<PostApiV1RecurringTasksData, ThrowOnError>) => (options?.client ?? client).post<PostApiV1RecurringTasksResponses, unknown, ThrowOnError>({
+export const postApiV1RecurringTasks = <ThrowOnError extends boolean = false>(options?: Options<PostApiV1RecurringTasksData, ThrowOnError>) => (options?.client ?? client).post<PostApiV1RecurringTasksResponses, unknown, ThrowOnError>({
     url: '/api/v1/recurring-tasks',
     ...options,
     headers: {
@@ -429,9 +429,9 @@ export const apiV1RecurringTasksPost = <ThrowOnError extends boolean = false>(op
     }
 });
 
-export const apiV1RecurringTasksIdDelete = <ThrowOnError extends boolean = false>(options: Options<DeleteApiV1RecurringTasksByIdData, ThrowOnError>) => (options.client ?? client).delete<DeleteApiV1RecurringTasksByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/recurring-tasks/{id}', ...options });
+export const deleteApiV1RecurringTasksById = <ThrowOnError extends boolean = false>(options: Options<DeleteApiV1RecurringTasksByIdData, ThrowOnError>) => (options.client ?? client).delete<DeleteApiV1RecurringTasksByIdResponses, unknown, ThrowOnError>({ url: '/api/v1/recurring-tasks/{id}', ...options });
 
-export const apiV1RecurringTasksIdPatch = <ThrowOnError extends boolean = false>(options: Options<PatchApiV1RecurringTasksByIdData, ThrowOnError>) => (options.client ?? client).patch<PatchApiV1RecurringTasksByIdResponses, unknown, ThrowOnError>({
+export const patchApiV1RecurringTasksById = <ThrowOnError extends boolean = false>(options: Options<PatchApiV1RecurringTasksByIdData, ThrowOnError>) => (options.client ?? client).patch<PatchApiV1RecurringTasksByIdResponses, unknown, ThrowOnError>({
     url: '/api/v1/recurring-tasks/{id}',
     ...options,
     headers: {
@@ -442,11 +442,11 @@ export const apiV1RecurringTasksIdPatch = <ThrowOnError extends boolean = false>
 
 export const apiVVersionApiVersionOdataRecurringTasks = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataRecurringTasksData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataRecurringTasksResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/RecurringTasks', ...options });
 
-export const apiVVersionApiVersionOdataRecurringTasks__count = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataRecurringTasksCountData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataRecurringTasksCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/RecurringTasks/$count', ...options });
+export const apiVVersionApiVersionOdataRecurringTasksCount = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataRecurringTasksCountData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataRecurringTasksCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/RecurringTasks/$count', ...options });
 
 export const get = <ThrowOnError extends boolean = false>(options?: Options<GetData, ThrowOnError>) => (options?.client ?? client).get<GetResponses, unknown, ThrowOnError>({ url: '/', ...options });
 
-export const apiV1TasksPost = <ThrowOnError extends boolean = false>(options?: Options<PostApiV1TasksData, ThrowOnError>) => (options?.client ?? client).post<PostApiV1TasksResponses, unknown, ThrowOnError>({
+export const postApiV1Tasks = <ThrowOnError extends boolean = false>(options?: Options<PostApiV1TasksData, ThrowOnError>) => (options?.client ?? client).post<PostApiV1TasksResponses, unknown, ThrowOnError>({
     url: '/api/v1/tasks',
     ...options,
     headers: {
@@ -455,7 +455,7 @@ export const apiV1TasksPost = <ThrowOnError extends boolean = false>(options?: O
     }
 });
 
-export const apiV1TasksIdPut = <ThrowOnError extends boolean = false>(options: Options<PutApiV1TasksByIdData, ThrowOnError>) => (options.client ?? client).put<PutApiV1TasksByIdResponses, unknown, ThrowOnError>({
+export const putApiV1TasksById = <ThrowOnError extends boolean = false>(options: Options<PutApiV1TasksByIdData, ThrowOnError>) => (options.client ?? client).put<PutApiV1TasksByIdResponses, unknown, ThrowOnError>({
     url: '/api/v1/tasks/{id}',
     ...options,
     headers: {
@@ -464,7 +464,7 @@ export const apiV1TasksIdPut = <ThrowOnError extends boolean = false>(options: O
     }
 });
 
-export const apiV1TasksIdSubmitPost = <ThrowOnError extends boolean = false>(options: Options<PostApiV1TasksByIdSubmitData, ThrowOnError>) => (options.client ?? client).post<PostApiV1TasksByIdSubmitResponses, unknown, ThrowOnError>({
+export const postApiV1TasksByIdSubmit = <ThrowOnError extends boolean = false>(options: Options<PostApiV1TasksByIdSubmitData, ThrowOnError>) => (options.client ?? client).post<PostApiV1TasksByIdSubmitResponses, unknown, ThrowOnError>({
     url: '/api/v1/tasks/{id}/submit',
     ...options,
     headers: {
@@ -473,9 +473,9 @@ export const apiV1TasksIdSubmitPost = <ThrowOnError extends boolean = false>(opt
     }
 });
 
-export const apiV1TasksIdApprovePost = <ThrowOnError extends boolean = false>(options: Options<PostApiV1TasksByIdApproveData, ThrowOnError>) => (options.client ?? client).post<PostApiV1TasksByIdApproveResponses, unknown, ThrowOnError>({ url: '/api/v1/tasks/{id}/approve', ...options });
+export const postApiV1TasksByIdApprove = <ThrowOnError extends boolean = false>(options: Options<PostApiV1TasksByIdApproveData, ThrowOnError>) => (options.client ?? client).post<PostApiV1TasksByIdApproveResponses, unknown, ThrowOnError>({ url: '/api/v1/tasks/{id}/approve', ...options });
 
-export const apiV1TasksIdRejectPost = <ThrowOnError extends boolean = false>(options: Options<PostApiV1TasksByIdRejectData, ThrowOnError>) => (options.client ?? client).post<PostApiV1TasksByIdRejectResponses, unknown, ThrowOnError>({
+export const postApiV1TasksByIdReject = <ThrowOnError extends boolean = false>(options: Options<PostApiV1TasksByIdRejectData, ThrowOnError>) => (options.client ?? client).post<PostApiV1TasksByIdRejectResponses, unknown, ThrowOnError>({
     url: '/api/v1/tasks/{id}/reject',
     ...options,
     headers: {
@@ -484,19 +484,19 @@ export const apiV1TasksIdRejectPost = <ThrowOnError extends boolean = false>(opt
     }
 });
 
-export const apiV1TasksIdCommentsGet = <ThrowOnError extends boolean = false>(options: Options<GetApiV1TasksByIdCommentsData, ThrowOnError>) => (options.client ?? client).get<GetApiV1TasksByIdCommentsResponses, unknown, ThrowOnError>({ url: '/api/v1/tasks/{id}/comments', ...options });
+export const getApiV1TasksByIdComments = <ThrowOnError extends boolean = false>(options: Options<GetApiV1TasksByIdCommentsData, ThrowOnError>) => (options.client ?? client).get<GetApiV1TasksByIdCommentsResponses, unknown, ThrowOnError>({ url: '/api/v1/tasks/{id}/comments', ...options });
 
-export const apiV1TasksIdDocumentsGet = <ThrowOnError extends boolean = false>(options: Options<GetApiV1TasksByIdDocumentsData, ThrowOnError>) => (options.client ?? client).get<GetApiV1TasksByIdDocumentsResponses, unknown, ThrowOnError>({ url: '/api/v1/tasks/{id}/documents', ...options });
+export const getApiV1TasksByIdDocuments = <ThrowOnError extends boolean = false>(options: Options<GetApiV1TasksByIdDocumentsData, ThrowOnError>) => (options.client ?? client).get<GetApiV1TasksByIdDocumentsResponses, unknown, ThrowOnError>({ url: '/api/v1/tasks/{id}/documents', ...options });
 
 export const apiVVersionApiVersionOdataTasks = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataTasksData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataTasksResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Tasks', ...options });
 
-export const apiVVersionApiVersionOdataTasks__count = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataTasksCountData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataTasksCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Tasks/$count', ...options });
+export const apiVVersionApiVersionOdataTasksCount = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataTasksCountData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataTasksCountResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Tasks/$count', ...options });
 
 export const apiVVersionApiVersionOdataTasksKey = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataTasksKeyData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataTasksKeyResponses, unknown, ThrowOnError>({ url: '/api/v1/odata/Tasks({key})', ...options });
 
 export const apiVVersionApiVersionOdataTasksKey2 = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionApiVersionOdataTasksKey2Data, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionApiVersionOdataTasksKey2Responses, unknown, ThrowOnError>({ url: '/api/v1/odata/Tasks/{key}', ...options });
 
-export const apiV1UserRegisterPost = <ThrowOnError extends boolean = false>(options: Options<PostApiV1UserRegisterData, ThrowOnError>) => (options.client ?? client).post<PostApiV1UserRegisterResponses, PostApiV1UserRegisterErrors, ThrowOnError>({
+export const postApiV1UserRegister = <ThrowOnError extends boolean = false>(options: Options<PostApiV1UserRegisterData, ThrowOnError>) => (options.client ?? client).post<PostApiV1UserRegisterResponses, PostApiV1UserRegisterErrors, ThrowOnError>({
     url: '/api/v1/user/register',
     ...options,
     headers: {
@@ -505,7 +505,7 @@ export const apiV1UserRegisterPost = <ThrowOnError extends boolean = false>(opti
     }
 });
 
-export const apiV1UserLoginPost = <ThrowOnError extends boolean = false>(options: Options<PostApiV1UserLoginData, ThrowOnError>) => (options.client ?? client).post<PostApiV1UserLoginResponses, unknown, ThrowOnError>({
+export const postApiV1UserLogin = <ThrowOnError extends boolean = false>(options: Options<PostApiV1UserLoginData, ThrowOnError>) => (options.client ?? client).post<PostApiV1UserLoginResponses, unknown, ThrowOnError>({
     url: '/api/v1/user/login',
     ...options,
     headers: {
@@ -514,7 +514,7 @@ export const apiV1UserLoginPost = <ThrowOnError extends boolean = false>(options
     }
 });
 
-export const apiV1UserRefreshPost = <ThrowOnError extends boolean = false>(options: Options<PostApiV1UserRefreshData, ThrowOnError>) => (options.client ?? client).post<PostApiV1UserRefreshResponses, unknown, ThrowOnError>({
+export const postApiV1UserRefresh = <ThrowOnError extends boolean = false>(options: Options<PostApiV1UserRefreshData, ThrowOnError>) => (options.client ?? client).post<PostApiV1UserRefreshResponses, unknown, ThrowOnError>({
     url: '/api/v1/user/refresh',
     ...options,
     headers: {
@@ -525,7 +525,7 @@ export const apiV1UserRefreshPost = <ThrowOnError extends boolean = false>(optio
 
 export const mapIdentityApiApiVVersionApiVersionUserConfirmEmail = <ThrowOnError extends boolean = false>(options: Options<MapIdentityApiApiVVersionApiVersionUserConfirmEmailData, ThrowOnError>) => (options.client ?? client).get<MapIdentityApiApiVVersionApiVersionUserConfirmEmailResponses, unknown, ThrowOnError>({ url: '/api/v1/user/confirmEmail', ...options });
 
-export const apiV1UserResendConfirmationEmailPost = <ThrowOnError extends boolean = false>(options: Options<PostApiV1UserResendConfirmationEmailData, ThrowOnError>) => (options.client ?? client).post<PostApiV1UserResendConfirmationEmailResponses, unknown, ThrowOnError>({
+export const postApiV1UserResendConfirmationEmail = <ThrowOnError extends boolean = false>(options: Options<PostApiV1UserResendConfirmationEmailData, ThrowOnError>) => (options.client ?? client).post<PostApiV1UserResendConfirmationEmailResponses, unknown, ThrowOnError>({
     url: '/api/v1/user/resendConfirmationEmail',
     ...options,
     headers: {
@@ -534,7 +534,7 @@ export const apiV1UserResendConfirmationEmailPost = <ThrowOnError extends boolea
     }
 });
 
-export const apiV1UserForgotPasswordPost = <ThrowOnError extends boolean = false>(options: Options<PostApiV1UserForgotPasswordData, ThrowOnError>) => (options.client ?? client).post<PostApiV1UserForgotPasswordResponses, PostApiV1UserForgotPasswordErrors, ThrowOnError>({
+export const postApiV1UserForgotPassword = <ThrowOnError extends boolean = false>(options: Options<PostApiV1UserForgotPasswordData, ThrowOnError>) => (options.client ?? client).post<PostApiV1UserForgotPasswordResponses, PostApiV1UserForgotPasswordErrors, ThrowOnError>({
     url: '/api/v1/user/forgotPassword',
     ...options,
     headers: {
@@ -543,7 +543,7 @@ export const apiV1UserForgotPasswordPost = <ThrowOnError extends boolean = false
     }
 });
 
-export const apiV1UserResetPasswordPost = <ThrowOnError extends boolean = false>(options: Options<PostApiV1UserResetPasswordData, ThrowOnError>) => (options.client ?? client).post<PostApiV1UserResetPasswordResponses, PostApiV1UserResetPasswordErrors, ThrowOnError>({
+export const postApiV1UserResetPassword = <ThrowOnError extends boolean = false>(options: Options<PostApiV1UserResetPasswordData, ThrowOnError>) => (options.client ?? client).post<PostApiV1UserResetPasswordResponses, PostApiV1UserResetPasswordErrors, ThrowOnError>({
     url: '/api/v1/user/resetPassword',
     ...options,
     headers: {
@@ -552,7 +552,7 @@ export const apiV1UserResetPasswordPost = <ThrowOnError extends boolean = false>
     }
 });
 
-export const apiV1UserManage2FaPost = <ThrowOnError extends boolean = false>(options: Options<PostApiV1UserManage2FaData, ThrowOnError>) => (options.client ?? client).post<PostApiV1UserManage2FaResponses, PostApiV1UserManage2FaErrors, ThrowOnError>({
+export const postApiV1UserManage2Fa = <ThrowOnError extends boolean = false>(options: Options<PostApiV1UserManage2FaData, ThrowOnError>) => (options.client ?? client).post<PostApiV1UserManage2FaResponses, PostApiV1UserManage2FaErrors, ThrowOnError>({
     url: '/api/v1/user/manage/2fa',
     ...options,
     headers: {
@@ -561,9 +561,9 @@ export const apiV1UserManage2FaPost = <ThrowOnError extends boolean = false>(opt
     }
 });
 
-export const apiV1UserManageInfoGet = <ThrowOnError extends boolean = false>(options?: Options<GetApiV1UserManageInfoData, ThrowOnError>) => (options?.client ?? client).get<GetApiV1UserManageInfoResponses, GetApiV1UserManageInfoErrors, ThrowOnError>({ url: '/api/v1/user/manage/info', ...options });
+export const getApiV1UserManageInfo = <ThrowOnError extends boolean = false>(options?: Options<GetApiV1UserManageInfoData, ThrowOnError>) => (options?.client ?? client).get<GetApiV1UserManageInfoResponses, GetApiV1UserManageInfoErrors, ThrowOnError>({ url: '/api/v1/user/manage/info', ...options });
 
-export const apiV1UserManageInfoPost = <ThrowOnError extends boolean = false>(options: Options<PostApiV1UserManageInfoData, ThrowOnError>) => (options.client ?? client).post<PostApiV1UserManageInfoResponses, PostApiV1UserManageInfoErrors, ThrowOnError>({
+export const postApiV1UserManageInfo = <ThrowOnError extends boolean = false>(options: Options<PostApiV1UserManageInfoData, ThrowOnError>) => (options.client ?? client).post<PostApiV1UserManageInfoResponses, PostApiV1UserManageInfoErrors, ThrowOnError>({
     url: '/api/v1/user/manage/info',
     ...options,
     headers: {
@@ -572,7 +572,7 @@ export const apiV1UserManageInfoPost = <ThrowOnError extends boolean = false>(op
     }
 });
 
-export const apiV1UserLogoutPost = <ThrowOnError extends boolean = false>(options?: Options<PostApiV1UserLogoutData, ThrowOnError>) => (options?.client ?? client).post<PostApiV1UserLogoutResponses, unknown, ThrowOnError>({
+export const postApiV1UserLogout = <ThrowOnError extends boolean = false>(options?: Options<PostApiV1UserLogoutData, ThrowOnError>) => (options?.client ?? client).post<PostApiV1UserLogoutResponses, unknown, ThrowOnError>({
     url: '/api/v1/user/logout',
     ...options,
     headers: {
@@ -584,13 +584,13 @@ export const apiV1UserLogoutPost = <ThrowOnError extends boolean = false>(option
 /**
  * @deprecated
  */
-export const apiV1UserDocumentsSummaryGet = <ThrowOnError extends boolean = false>(options?: Options<GetApiV1UserDocumentsSummaryData, ThrowOnError>) => (options?.client ?? client).get<GetApiV1UserDocumentsSummaryResponses, unknown, ThrowOnError>({ url: '/api/v1/user/documents-summary', ...options });
+export const getApiV1UserDocumentsSummary = <ThrowOnError extends boolean = false>(options?: Options<GetApiV1UserDocumentsSummaryData, ThrowOnError>) => (options?.client ?? client).get<GetApiV1UserDocumentsSummaryResponses, unknown, ThrowOnError>({ url: '/api/v1/user/documents-summary', ...options });
 
-export const apiV1UserDelete = <ThrowOnError extends boolean = false>(options?: Options<DeleteApiV1UserData, ThrowOnError>) => (options?.client ?? client).delete<DeleteApiV1UserResponses, unknown, ThrowOnError>({ url: '/api/v1/user', ...options });
+export const deleteApiV1User = <ThrowOnError extends boolean = false>(options?: Options<DeleteApiV1UserData, ThrowOnError>) => (options?.client ?? client).delete<DeleteApiV1UserResponses, unknown, ThrowOnError>({ url: '/api/v1/user', ...options });
 
-export const apiV1UsersMeGet = <ThrowOnError extends boolean = false>(options?: Options<GetApiV1UsersMeData, ThrowOnError>) => (options?.client ?? client).get<GetApiV1UsersMeResponses, unknown, ThrowOnError>({ url: '/api/v1/users/me', ...options });
+export const getApiV1UsersMe = <ThrowOnError extends boolean = false>(options?: Options<GetApiV1UsersMeData, ThrowOnError>) => (options?.client ?? client).get<GetApiV1UsersMeResponses, unknown, ThrowOnError>({ url: '/api/v1/users/me', ...options });
 
-export const apiV1UsersIdPatch = <ThrowOnError extends boolean = false>(options: Options<PatchApiV1UsersByIdData, ThrowOnError>) => (options.client ?? client).patch<PatchApiV1UsersByIdResponses, unknown, ThrowOnError>({
+export const patchApiV1UsersById = <ThrowOnError extends boolean = false>(options: Options<PatchApiV1UsersByIdData, ThrowOnError>) => (options.client ?? client).patch<PatchApiV1UsersByIdResponses, unknown, ThrowOnError>({
     url: '/api/v1/users/{id}',
     ...options,
     headers: {

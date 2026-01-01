@@ -18,7 +18,7 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
     meta?: Record<string, unknown>;
 };
 
-export const v1FooPost = <ThrowOnError extends boolean = false>(options: Options<PostV1FooData, ThrowOnError>) => (options.client ?? client).post<PostV1FooResponses, unknown, ThrowOnError>({
+export const postV1Foo = <ThrowOnError extends boolean = false>(options: Options<PostV1FooData, ThrowOnError>) => (options.client ?? client).post<PostV1FooResponses, unknown, ThrowOnError>({
     ...formDataBodySerializer,
     url: '/v1/foo',
     ...options,

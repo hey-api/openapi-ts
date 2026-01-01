@@ -16,6 +16,7 @@ function resolvePath(
   if (plugin.config.httpResources.nesting === 'operationId') {
     return OperationPath.fromOperationId({
       delimiters: plugin.config.httpResources.nestingDelimiters,
+      fallback: OperationPath.id(),
     });
   }
 

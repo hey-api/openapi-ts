@@ -31,7 +31,6 @@ export class VarTsDsl extends Mixed {
     if (name) this.name.set(name);
     if (isSymbol(name)) {
       name.setKind('var');
-      name.setNode(this);
     }
   }
 

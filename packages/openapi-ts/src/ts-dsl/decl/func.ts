@@ -72,7 +72,6 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends Mixed {
       this.name.set(name);
       if (isSymbol(name)) {
         name.setKind('function');
-        name.setNode(this);
       }
       fn?.(this as unknown as FuncTsDsl<'decl'>);
     }

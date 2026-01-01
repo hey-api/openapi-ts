@@ -154,7 +154,7 @@ export function createHttpRequestShell(
 
       const c = $.class(symbol)
         .export()
-        .$if(isAngularClient && node.isRoot, (c) =>
+        .$if(isAngularClient, (c) =>
           c.decorator(
             symbolInjectable,
             $.object().prop('providedIn', $.literal('root')),
@@ -187,11 +187,9 @@ export function createHttpResourceShell(
 
       const c = $.class(symbol)
         .export()
-        .$if(node.isRoot, (c) =>
-          c.decorator(
-            symbolInjectable,
-            $.object().prop('providedIn', $.literal('root')),
-          ),
+        .decorator(
+          symbolInjectable,
+          $.object().prop('providedIn', $.literal('root')),
         );
 
       return { dependencies: [], node: c };

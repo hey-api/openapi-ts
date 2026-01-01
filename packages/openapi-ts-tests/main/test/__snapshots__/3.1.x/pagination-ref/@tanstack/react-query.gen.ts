@@ -3,7 +3,7 @@
 import { type DefaultError, type InfiniteData, infiniteQueryOptions, queryOptions, type UseMutationOptions } from '@tanstack/react-query';
 
 import { client } from '../client.gen';
-import { fooGet, fooPost, type Options } from '../sdk.gen';
+import { getFoo, type Options, postFoo } from '../sdk.gen';
 import type { GetFooData, GetFooResponse, PostFooData } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
@@ -43,7 +43,7 @@ export const getFooQueryKey = (options: Options<GetFooData>) => createQueryKey('
 
 export const getFooOptions = (options: Options<GetFooData>) => queryOptions<GetFooResponse, DefaultError, GetFooResponse, ReturnType<typeof getFooQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
-        const { data } = await fooGet({
+        const { data } = await getFoo({
             ...options,
             ...queryKey[0],
             signal,
@@ -96,7 +96,7 @@ export const getFooInfiniteOptions = (options: Options<GetFooData>) => infiniteQ
             }
         };
         const params = createInfiniteParams(queryKey, page);
-        const { data } = await fooGet({
+        const { data } = await getFoo({
             ...options,
             ...params,
             signal,
@@ -110,7 +110,7 @@ export const getFooInfiniteOptions = (options: Options<GetFooData>) => infiniteQ
 export const postFooMutation = (options?: Partial<Options<PostFooData>>): UseMutationOptions<unknown, DefaultError, Options<PostFooData>> => {
     const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<PostFooData>> = {
         mutationFn: async (fnOptions) => {
-            const { data } = await fooPost({
+            const { data } = await postFoo({
                 ...options,
                 ...fnOptions,
                 throwOnError: true

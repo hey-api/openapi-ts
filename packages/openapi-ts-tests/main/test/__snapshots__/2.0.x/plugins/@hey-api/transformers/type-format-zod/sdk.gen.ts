@@ -20,7 +20,7 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
     meta?: Record<string, unknown>;
 };
 
-export const fooPost = <ThrowOnError extends boolean = false>(options?: Options<PostFooData, ThrowOnError>) => (options?.client ?? client).post<PostFooResponses, unknown, ThrowOnError>({
+export const postFoo = <ThrowOnError extends boolean = false>(options?: Options<PostFooData, ThrowOnError>) => (options?.client ?? client).post<PostFooResponses, unknown, ThrowOnError>({
     requestValidator: async (data) => await zPostFooData.parseAsync(data),
     responseTransformer: postFooResponseTransformer,
     responseValidator: async (data) => await zPostFooResponse.parseAsync(data),

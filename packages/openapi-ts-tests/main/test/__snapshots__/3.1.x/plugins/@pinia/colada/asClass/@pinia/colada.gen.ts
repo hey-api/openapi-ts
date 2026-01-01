@@ -4,7 +4,7 @@ import { type _JSONValue, defineQueryOptions, type UseMutationOptions } from '@p
 
 import { serializeQueryKeyValue } from '../client';
 import { client } from '../client.gen';
-import { BarBazService, FooBazService, type Options } from '../sdk.gen';
+import { BarBazService, BarService, FooBazService, FooService, type Options } from '../sdk.gen';
 import type { FooBarPostData, FooBarPostResponse, FooBarPutData, FooBarPutResponse, FooPostData, FooPostResponse, FooPutData, FooPutResponse, GetFooBarData, GetFooData } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
@@ -47,7 +47,7 @@ export const getFooQueryKey = (options?: Options<GetFooData>) => createQueryKey(
 export const getFooQuery = defineQueryOptions((options?: Options<GetFooData>) => ({
     key: getFooQueryKey(options),
     query: async (context) => {
-        const { data } = await FooBazService.fooService.get({
+        const { data } = await FooBazService.getFoo({
             ...options,
             ...context,
             throwOnError: true
@@ -58,7 +58,7 @@ export const getFooQuery = defineQueryOptions((options?: Options<GetFooData>) =>
 
 export const fooPostMutation = (options?: Partial<Options<FooPostData>>): UseMutationOptions<FooPostResponse, Options<FooPostData>, Error> => ({
     mutation: async (vars) => {
-        const { data } = await FooBazService.fooService.post({
+        const { data } = await FooService.post({
             ...options,
             ...vars,
             throwOnError: true
@@ -69,7 +69,7 @@ export const fooPostMutation = (options?: Partial<Options<FooPostData>>): UseMut
 
 export const fooPutMutation = (options?: Partial<Options<FooPutData>>): UseMutationOptions<FooPutResponse, Options<FooPutData>, Error> => ({
     mutation: async (vars) => {
-        const { data } = await FooBazService.fooService.put({
+        const { data } = await FooService.put({
             ...options,
             ...vars,
             throwOnError: true
@@ -83,7 +83,7 @@ export const getFooBarQueryKey = (options?: Options<GetFooBarData>) => createQue
 export const getFooBarQuery = defineQueryOptions((options?: Options<GetFooBarData>) => ({
     key: getFooBarQueryKey(options),
     query: async (context) => {
-        const { data } = await BarBazService.fooService.barService.get({
+        const { data } = await BarBazService.getFooBar({
             ...options,
             ...context,
             throwOnError: true
@@ -94,7 +94,7 @@ export const getFooBarQuery = defineQueryOptions((options?: Options<GetFooBarDat
 
 export const fooBarPostMutation = (options?: Partial<Options<FooBarPostData>>): UseMutationOptions<FooBarPostResponse, Options<FooBarPostData>, Error> => ({
     mutation: async (vars) => {
-        const { data } = await FooBazService.fooService.barService.post({
+        const { data } = await BarService.post({
             ...options,
             ...vars,
             throwOnError: true
@@ -105,7 +105,7 @@ export const fooBarPostMutation = (options?: Partial<Options<FooBarPostData>>): 
 
 export const fooBarPutMutation = (options?: Partial<Options<FooBarPutData>>): UseMutationOptions<FooBarPutResponse, Options<FooBarPutData>, Error> => ({
     mutation: async (vars) => {
-        const { data } = await FooBazService.fooService.barService.put({
+        const { data } = await BarService.put({
             ...options,
             ...vars,
             throwOnError: true

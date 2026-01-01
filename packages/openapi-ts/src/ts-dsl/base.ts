@@ -51,6 +51,9 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements Node<T> {
       ...this._name,
       set: (value) => {
         this._name = ref(value);
+        if (isSymbol(value)) {
+          value.setNode(this);
+        }
       },
       toString: () => (this._name ? this.$name(this._name) : ''),
     } as Node['name'];

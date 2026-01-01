@@ -61,7 +61,7 @@ export class Project implements IProject {
     new Planner(this).plan(meta);
     const files: Array<IOutput> = [];
     for (const file of this.files.registered()) {
-      if (file.finalPath && file.renderer) {
+      if (!file.external && file.finalPath && file.renderer) {
         const content = file.renderer.render({ file, meta, project: this });
         files.push({ content, path: file.finalPath });
       }

@@ -443,6 +443,7 @@ export class PetServiceResources {
   }
 }
 
+@Injectable({ providedIn: 'root' })
 export class StoreServiceResources {
   /**
    * Returns pet inventories by status.
@@ -501,6 +502,7 @@ export class StoreServiceResources {
   }
 }
 
+@Injectable({ providedIn: 'root' })
 export class UserServiceResources {
   /**
    * Create user.
