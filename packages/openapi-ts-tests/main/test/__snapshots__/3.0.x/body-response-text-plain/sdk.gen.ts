@@ -18,7 +18,7 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
     meta?: Record<string, unknown>;
 };
 
-export const postFoo = <ThrowOnError extends boolean = false>(options: Options<PostFooData, ThrowOnError>) => (options.client ?? client).post<PostFooResponses, unknown, ThrowOnError>({
+export const fooPost = <ThrowOnError extends boolean = false>(options: Options<PostFooData, ThrowOnError>) => (options.client ?? client).post<PostFooResponses, unknown, ThrowOnError>({
     bodySerializer: null,
     url: '/foo',
     ...options,

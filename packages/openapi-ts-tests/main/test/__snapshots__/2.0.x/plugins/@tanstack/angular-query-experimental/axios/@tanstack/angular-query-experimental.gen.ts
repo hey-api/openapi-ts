@@ -4,7 +4,7 @@ import { type DefaultError, type MutationOptions, queryOptions } from '@tanstack
 import type { AxiosError } from 'axios';
 
 import { client } from '../client.gen';
-import { callToTestOrderOfParams, callWithDefaultOptionalParameters, callWithDefaultParameters, callWithDescriptions, callWithDuplicateResponses, callWithNoContentResponse, callWithParameters, callWithResponse, callWithResponseAndNoContentResponse, callWithResponses, callWithResultFromHeader, callWithWeirdParameterNames, collectionFormat, complexTypes, deleteCallWithoutParametersAndResponse, dummyA, dummyB, duplicateName, duplicateName2, duplicateName3, duplicateName4, fooWow, getCallWithoutParametersAndResponse, nonAsciiæøåÆøÅöôêÊ字符串, type Options, patchApiVbyApiVersionNoTag, patchCallWithoutParametersAndResponse, postApiVbyApiVersionBody, postCallWithoutParametersAndResponse, putCallWithoutParametersAndResponse, serviceWithEmptyTag, testErrorCode, types } from '../sdk.gen';
+import { apiVApiVersionBodyPost, apiVApiVersionNo_tagPatch, callToTestOrderOfParams, callWithDefaultOptionalParameters, callWithDefaultParameters, callWithDescriptions, callWithDuplicateResponses, callWithNoContentResponse, callWithParameters, callWithResponse, callWithResponseAndNoContentResponse, callWithResponses, callWithResultFromHeader, callWithWeirdParameterNames, collectionFormat, complexTypes, deleteCallWithoutParametersAndResponse, dummyA, dummyB, duplicateName, duplicateName2, duplicateName3, duplicateName4, foo_Wow, getCallWithoutParametersAndResponse, nonAsciiæøåÆøÅöôêÊ字符串, type Options, patchCallWithoutParametersAndResponse, postCallWithoutParametersAndResponse, putCallWithoutParametersAndResponse, serviceWithEmptyTag, testErrorCode, types } from '../sdk.gen';
 import type { CallToTestOrderOfParamsData, CallWithDefaultOptionalParametersData, CallWithDefaultParametersData, CallWithDescriptionsData, CallWithDuplicateResponsesData, CallWithDuplicateResponsesError, CallWithDuplicateResponsesResponse, CallWithNoContentResponseData, CallWithParametersData, CallWithResponseAndNoContentResponseData, CallWithResponseAndNoContentResponseResponse, CallWithResponseData, CallWithResponseResponse, CallWithResponsesData, CallWithResponsesError, CallWithResponsesResponse, CallWithResultFromHeaderData, CallWithWeirdParameterNamesData, CollectionFormatData, ComplexTypesData, ComplexTypesResponse, DeleteCallWithoutParametersAndResponseData, DummyAData, DummyBData, DuplicateName2Data, DuplicateName3Data, DuplicateName4Data, DuplicateNameData, FooWowData, GetCallWithoutParametersAndResponseData, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, PatchApiVbyApiVersionNoTagData, PatchCallWithoutParametersAndResponseData, PostApiVbyApiVersionBodyData, PostApiVbyApiVersionBodyError, PostApiVbyApiVersionBodyResponse, PostCallWithoutParametersAndResponseData, PutCallWithoutParametersAndResponseData, ServiceWithEmptyTagData, TestErrorCodeData, TypesData, TypesResponse } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
@@ -58,7 +58,7 @@ export const serviceWithEmptyTagOptions = (options?: Options<ServiceWithEmptyTag
 export const patchApiVbyApiVersionNoTagMutation = (options?: Partial<Options<PatchApiVbyApiVersionNoTagData>>): MutationOptions<unknown, AxiosError<DefaultError>, Options<PatchApiVbyApiVersionNoTagData>> => {
     const mutationOptions: MutationOptions<unknown, AxiosError<DefaultError>, Options<PatchApiVbyApiVersionNoTagData>> = {
         mutationFn: async (fnOptions) => {
-            const { data } = await patchApiVbyApiVersionNoTag({
+            const { data } = await apiVApiVersionNo_tagPatch({
                 ...options,
                 ...fnOptions,
                 throwOnError: true
@@ -72,7 +72,7 @@ export const patchApiVbyApiVersionNoTagMutation = (options?: Partial<Options<Pat
 export const fooWowMutation = (options?: Partial<Options<FooWowData>>): MutationOptions<unknown, AxiosError<DefaultError>, Options<FooWowData>> => {
     const mutationOptions: MutationOptions<unknown, AxiosError<DefaultError>, Options<FooWowData>> = {
         mutationFn: async (fnOptions) => {
-            const { data } = await fooWow({
+            const { data } = await foo_Wow({
                 ...options,
                 ...fnOptions,
                 throwOnError: true
@@ -494,7 +494,7 @@ export const nonAsciiæøåÆøÅöôêÊ字符串Mutation = (options?: Partial<
 export const postApiVbyApiVersionBodyMutation = (options?: Partial<Options<PostApiVbyApiVersionBodyData>>): MutationOptions<PostApiVbyApiVersionBodyResponse, AxiosError<PostApiVbyApiVersionBodyError>, Options<PostApiVbyApiVersionBodyData>> => {
     const mutationOptions: MutationOptions<PostApiVbyApiVersionBodyResponse, AxiosError<PostApiVbyApiVersionBodyError>, Options<PostApiVbyApiVersionBodyData>> = {
         mutationFn: async (fnOptions) => {
-            const { data } = await postApiVbyApiVersionBody({
+            const { data } = await apiVApiVersionBodyPost({
                 ...options,
                 ...fnOptions,
                 throwOnError: true

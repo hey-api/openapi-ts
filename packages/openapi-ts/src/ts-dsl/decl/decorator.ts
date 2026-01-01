@@ -1,4 +1,5 @@
 import type { AnalysisContext, NodeName } from '@hey-api/codegen-core';
+import { isSymbol } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -18,6 +19,9 @@ export class DecoratorTsDsl extends Mixed {
   ) {
     super();
     this.name.set(name);
+    if (isSymbol(name)) {
+      name.setNode(this);
+    }
     this.args(...args);
   }
 

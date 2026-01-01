@@ -4,8 +4,16 @@ import path from 'node:path';
 
 // @ts-ignore
 import { customClientPlugin } from '@hey-api/custom-client/plugin';
-// @ts-ignore
-import { defineConfig, reserved, utils } from '@hey-api/openapi-ts';
+import {
+  defineConfig,
+  // @ts-ignore
+  OperationPath,
+  // @ts-ignore
+  OperationStrategy,
+  reserved,
+  // @ts-ignore
+  utils,
+} from '@hey-api/openapi-ts';
 
 // @ts-ignore
 import { myClientPlugin } from '../packages/openapi-ts-tests/main/test/custom/client/plugin';
@@ -39,8 +47,8 @@ export default defineConfig(() => {
           path: path.resolve(
             getSpecsPath(),
             // '2.0.x',
-            // '3.0.x',
-            '3.1.x',
+            '3.0.x',
+            // '3.1.x',
             // 'circular.yaml',
             // 'dutchie.json',
             // 'enum-names-values.yaml',
@@ -49,11 +57,11 @@ export default defineConfig(() => {
             // 'invalid',
             // 'object-property-names.yaml',
             // 'openai.yaml',
-            'opencode.yaml',
+            // 'opencode.yaml',
             // 'pagination-ref.yaml',
             // 'schema-const.yaml',
             // 'sdk-instance.yaml',
-            // 'sdk-method-class-conflict.yaml',
+            'sdk-method-class-conflict.yaml',
             // 'sdk-nested-classes.yaml',
             // 'sdk-nested-conflict.yaml',
             // 'string-with-format.yaml',
@@ -108,7 +116,7 @@ export default defineConfig(() => {
           // },
           // format: 'prettier',
           header: null,
-          // importFileExtension: '.js',
+          importFileExtension: '.js',
           // indexFile: false,
           // lint: 'eslint',
           // nameConflictResolver({ attempt, baseName }) {
@@ -293,18 +301,32 @@ export default defineConfig(() => {
           // operationId: true,
           operations: {
             // container: 'object',
-            containerName: {
-              // casing: 'snake_case',
-              name: 'OpencodeClient',
-            },
-            methodName: {
-              // casing: 'SCREAMING_SNAKE_CASE',
-              name: '{{name}}Yummy',
-            },
-            methods: 'static',
-            nesting: 'id',
-            segmentName: '{{name}}Seggy',
-            strategy: 'flat',
+            // containerName: {
+            //   // casing: 'snake_case',
+            //   name: 'OpencodeClient',
+            // },
+            // methodName: {
+            //   // casing: 'SCREAMING_SNAKE_CASE',
+            //   name: '{{name}}Yummy',
+            // },
+            // methods: 'static',
+            // nesting: 'operationId',
+            // segmentName: '{{name}}Seggy',
+            strategy: 'byTags',
+            // strategy(operation) {
+            //   const locations = OperationStrategy.byTags({
+            //     fallback: 'default',
+            //     path: OperationPath.fromOperationId({
+            //       delimiters: /[./]/,
+            //     }),
+            //   })(operation)
+            //   return locations.map((loc) => {
+            //     if (loc[0] && loc[1] && loc[0] === loc[1]) {
+            //       return loc.slice(1);
+            //     }
+            //     return loc;
+            //   });
+            // },
             // strategyDefaultTag: 'DaxLikedThis',
           },
           // paramsStructure: 'flat',
@@ -314,7 +336,7 @@ export default defineConfig(() => {
           // signature: 'object',
           // transformer: '@hey-api/transformers',
           // transformer: true,
-          // validator: 'valibot',
+          validator: 'valibot',
           // validator: {
           //   request: 'zod',
           //   response: 'zod',
@@ -619,13 +641,14 @@ export default defineConfig(() => {
           exportFromIndex: true,
           httpRequests: {
             // enabled: false,
-            containerName: 'AngularTest',
+            // containerName: 'AngularTest',
             segmentName: '{{name}}Seggy',
             strategy: 'single',
           },
           httpResources: {
-            // asClass: true,
             // enabled: false,
+            segmentName: '{{name}}Seggy',
+            strategy: 'single',
           },
           name: '@angular/common',
         },

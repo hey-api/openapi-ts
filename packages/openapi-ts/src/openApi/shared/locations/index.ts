@@ -3,4 +3,4 @@ export type {
   OperationsStrategy,
   OperationStructureStrategy,
 } from './operation';
-export { OperationPath, OperationStrategies } from './operation';
+export { OperationPath, OperationStrategy } from './operation';

@@ -335,7 +335,7 @@ export class PetServiceResources {
    *
    * Add a new pet to the store.
    */
-  public addPet<ThrowOnError extends boolean = false>(
+  public static addPet<ThrowOnError extends boolean = false>(
     options: () => Options<AddPetData, ThrowOnError> | undefined,
   ) {
     return httpResource<AddPetResponse>(() => {
@@ -349,7 +349,7 @@ export class PetServiceResources {
    *
    * Update an existing pet by Id.
    */
-  public updatePet<ThrowOnError extends boolean = false>(
+  public static updatePet<ThrowOnError extends boolean = false>(
     options: () => Options<UpdatePetData, ThrowOnError> | undefined,
   ) {
     return httpResource<UpdatePetResponse>(() => {
@@ -363,7 +363,7 @@ export class PetServiceResources {
    *
    * Multiple status values can be provided with comma separated strings.
    */
-  public findPetsByStatus<ThrowOnError extends boolean = false>(
+  public static findPetsByStatus<ThrowOnError extends boolean = false>(
     options: () => Options<FindPetsByStatusData, ThrowOnError> | undefined,
   ) {
     return httpResource<FindPetsByStatusResponse>(() => {
@@ -377,7 +377,7 @@ export class PetServiceResources {
    *
    * Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.
    */
-  public findPetsByTags<ThrowOnError extends boolean = false>(
+  public static findPetsByTags<ThrowOnError extends boolean = false>(
     options: () => Options<FindPetsByTagsData, ThrowOnError> | undefined,
   ) {
     return httpResource<FindPetsByTagsResponse>(() => {
@@ -391,7 +391,7 @@ export class PetServiceResources {
    *
    * Delete a pet.
    */
-  public deletePet<ThrowOnError extends boolean = false>(
+  public static deletePet<ThrowOnError extends boolean = false>(
     options: () => Options<DeletePetData, ThrowOnError> | undefined,
   ) {
     return httpResource<unknown>(() => {
@@ -405,7 +405,7 @@ export class PetServiceResources {
    *
    * Returns a single pet.
    */
-  public getPetById<ThrowOnError extends boolean = false>(
+  public static getPetById<ThrowOnError extends boolean = false>(
     options: () => Options<GetPetByIdData, ThrowOnError> | undefined,
   ) {
     return httpResource<GetPetByIdResponse>(() => {
@@ -419,7 +419,7 @@ export class PetServiceResources {
    *
    * Updates a pet resource based on the form data.
    */
-  public updatePetWithForm<ThrowOnError extends boolean = false>(
+  public static updatePetWithForm<ThrowOnError extends boolean = false>(
     options: () => Options<UpdatePetWithFormData, ThrowOnError> | undefined,
   ) {
     return httpResource<UpdatePetWithFormResponse>(() => {
@@ -433,7 +433,7 @@ export class PetServiceResources {
    *
    * Upload image of the pet.
    */
-  public uploadFile<ThrowOnError extends boolean = false>(
+  public static uploadFile<ThrowOnError extends boolean = false>(
     options: () => Options<UploadFileData, ThrowOnError> | undefined,
   ) {
     return httpResource<UploadFileResponse>(() => {
@@ -443,14 +443,13 @@ export class PetServiceResources {
   }
 }
 
-@Injectable({ providedIn: 'root' })
 export class StoreServiceResources {
   /**
    * Returns pet inventories by status.
    *
    * Returns a map of status codes to quantities.
    */
-  public getInventory<ThrowOnError extends boolean = false>(
+  public static getInventory<ThrowOnError extends boolean = false>(
     options?: () => Options<GetInventoryData, ThrowOnError> | undefined,
   ) {
     return httpResource<GetInventoryResponse>(() => {
@@ -464,7 +463,7 @@ export class StoreServiceResources {
    *
    * Place a new order in the store.
    */
-  public placeOrder<ThrowOnError extends boolean = false>(
+  public static placeOrder<ThrowOnError extends boolean = false>(
     options?: () => Options<PlaceOrderData, ThrowOnError> | undefined,
   ) {
     return httpResource<PlaceOrderResponse>(() => {
@@ -478,7 +477,7 @@ export class StoreServiceResources {
    *
    * For valid response try integer IDs with value < 1000. Anything above 1000 or non-integers will generate API errors.
    */
-  public deleteOrder<ThrowOnError extends boolean = false>(
+  public static deleteOrder<ThrowOnError extends boolean = false>(
     options: () => Options<DeleteOrderData, ThrowOnError> | undefined,
   ) {
     return httpResource<unknown>(() => {
@@ -492,7 +491,7 @@ export class StoreServiceResources {
    *
    * For valid response try integer IDs with value <= 5 or > 10. Other values will generate exceptions.
    */
-  public getOrderById<ThrowOnError extends boolean = false>(
+  public static getOrderById<ThrowOnError extends boolean = false>(
     options: () => Options<GetOrderByIdData, ThrowOnError> | undefined,
   ) {
     return httpResource<GetOrderByIdResponse>(() => {
@@ -502,14 +501,13 @@ export class StoreServiceResources {
   }
 }
 
-@Injectable({ providedIn: 'root' })
 export class UserServiceResources {
   /**
    * Create user.
    *
    * This can only be done by the logged in user.
    */
-  public createUser<ThrowOnError extends boolean = false>(
+  public static createUser<ThrowOnError extends boolean = false>(
     options?: () => Options<CreateUserData, ThrowOnError> | undefined,
   ) {
     return httpResource<CreateUserResponse>(() => {
@@ -523,7 +521,7 @@ export class UserServiceResources {
    *
    * Creates list of users with given input array.
    */
-  public createUsersWithListInput<ThrowOnError extends boolean = false>(
+  public static createUsersWithListInput<ThrowOnError extends boolean = false>(
     options?: () =>
       | Options<CreateUsersWithListInputData, ThrowOnError>
       | undefined,
@@ -539,7 +537,7 @@ export class UserServiceResources {
    *
    * Log into the system.
    */
-  public loginUser<ThrowOnError extends boolean = false>(
+  public static loginUser<ThrowOnError extends boolean = false>(
     options?: () => Options<LoginUserData, ThrowOnError> | undefined,
   ) {
     return httpResource<LoginUserResponse>(() => {
@@ -553,7 +551,7 @@ export class UserServiceResources {
    *
    * Log user out of the system.
    */
-  public logoutUser<ThrowOnError extends boolean = false>(
+  public static logoutUser<ThrowOnError extends boolean = false>(
     options?: () => Options<LogoutUserData, ThrowOnError> | undefined,
   ) {
     return httpResource<unknown>(() => {
@@ -567,7 +565,7 @@ export class UserServiceResources {
    *
    * This can only be done by the logged in user.
    */
-  public deleteUser<ThrowOnError extends boolean = false>(
+  public static deleteUser<ThrowOnError extends boolean = false>(
     options: () => Options<DeleteUserData, ThrowOnError> | undefined,
   ) {
     return httpResource<unknown>(() => {
@@ -581,7 +579,7 @@ export class UserServiceResources {
    *
    * Get user detail based on username.
    */
-  public getUserByName<ThrowOnError extends boolean = false>(
+  public static getUserByName<ThrowOnError extends boolean = false>(
     options: () => Options<GetUserByNameData, ThrowOnError> | undefined,
   ) {
     return httpResource<GetUserByNameResponse>(() => {
@@ -595,7 +593,7 @@ export class UserServiceResources {
    *
    * This can only be done by the logged in user.
    */
-  public updateUser<ThrowOnError extends boolean = false>(
+  public static updateUser<ThrowOnError extends boolean = false>(
     options: () => Options<UpdateUserData, ThrowOnError> | undefined,
   ) {
     return httpResource<unknown>(() => {

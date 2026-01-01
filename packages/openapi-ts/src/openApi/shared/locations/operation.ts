@@ -29,7 +29,7 @@ export type OperationsStrategy =
 /**
  * Built-in strategies for operations.
  */
-export const OperationStrategies = {
+export const OperationStrategy = {
   /**
    * Creates one root container per operation tag.
    *
@@ -133,11 +133,22 @@ export const OperationPath = {
       delimiters: RegExp;
     }): OperationPathStrategy =>
     (operation) => {
-      if (!operation.operationId) return [operation.id];
-      const segments = operation.operationId
-        .split(config.delimiters)
-        .filter(Boolean);
-      return segments.length > 0 ? segments : [operation.id];
+      let segments: Array<string> = [];
+      if (operation.operationId) {
+        segments = operation.operationId
+          .split(config.delimiters)
+          .filter(Boolean);
+      }
+      if (segments.length === 0) {
+        segments = operation.path.split(config.delimiters).filter(Boolean);
+        if (segments.length > 0) {
+          segments.push(operation.method.toLowerCase());
+        }
+      }
+      if (segments.length === 0) {
+        return OperationPath.id()(operation);
+      }
+      return segments;
     },
 
   /**

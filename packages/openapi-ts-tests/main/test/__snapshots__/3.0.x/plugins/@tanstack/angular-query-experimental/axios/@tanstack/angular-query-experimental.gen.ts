@@ -4,7 +4,7 @@ import { type DefaultError, type InfiniteData, infiniteQueryOptions, type Mutati
 import type { AxiosError } from 'axios';
 
 import { client } from '../client.gen';
-import { apiVVersionODataControllerCount, callToTestOrderOfParams, callWithDefaultOptionalParameters, callWithDefaultParameters, callWithDescriptions, callWithDuplicateResponses, callWithNoContentResponse, callWithParameters, callWithResponse, callWithResponseAndNoContentResponse, callWithResponses, callWithResultFromHeader, callWithWeirdParameterNames, collectionFormat, complexParams, complexTypes, deleteCallWithoutParametersAndResponse, deleteFoo, deprecatedCall, dummyA, dummyB, duplicateName, duplicateName2, duplicateName3, duplicateName4, export_, fileResponse, fooWow, getApiVbyApiVersionSimpleOperation, getCallWithOptionalParam, getCallWithoutParametersAndResponse, import_, multipartRequest, multipartResponse, nonAsciiæøåÆøÅöôêÊ字符串, type Options, patchApiVbyApiVersionNoTag, patchCallWithoutParametersAndResponse, postApiVbyApiVersionFormData, postApiVbyApiVersionRequestBody, postCallWithOptionalParam, postCallWithoutParametersAndResponse, putCallWithoutParametersAndResponse, putWithFormUrlEncoded, testErrorCode, types, uploadFile } from '../sdk.gen';
+import { apiVApiVersionFormDataPost, apiVApiVersionNo_tagPatch, apiVApiVersionRequestBodyPost, apiVApiVersionSimpleOperationGet, apiVVersionODataController__count, callToTestOrderOfParams, callWithDefaultOptionalParameters, callWithDefaultParameters, callWithDescriptions, callWithDuplicateResponses, callWithNoContentResponse, callWithParameters, callWithResponse, callWithResponseAndNoContentResponse, callWithResponses, callWithResultFromHeader, callWithWeirdParameterNames, collectionFormat, complexParams, complexTypes, deleteCallWithoutParametersAndResponse, deleteFoo, deprecatedCall, dummyA, dummyB, duplicateName, duplicateName2, duplicateName3, duplicateName4, export_, fileResponse, foo_Wow, getCallWithOptionalParam, getCallWithoutParametersAndResponse, import_, multipartRequest, multipartResponse, nonAsciiæøåÆøÅöôêÊ字符串, type Options, patchCallWithoutParametersAndResponse, postCallWithOptionalParam, postCallWithoutParametersAndResponse, putCallWithoutParametersAndResponse, putWithFormUrlEncoded, testErrorCode, types, uploadFile } from '../sdk.gen';
 import type { ApiVVersionODataControllerCountData, ApiVVersionODataControllerCountResponse, CallToTestOrderOfParamsData, CallWithDefaultOptionalParametersData, CallWithDefaultParametersData, CallWithDescriptionsData, CallWithDuplicateResponsesData, CallWithDuplicateResponsesError, CallWithDuplicateResponsesResponse, CallWithNoContentResponseData, CallWithNoContentResponseResponse, CallWithParametersData, CallWithResponseAndNoContentResponseData, CallWithResponseAndNoContentResponseResponse, CallWithResponseData, CallWithResponseResponse, CallWithResponsesData, CallWithResponsesError, CallWithResponsesResponse, CallWithResultFromHeaderData, CallWithWeirdParameterNamesData, CollectionFormatData, ComplexParamsData, ComplexParamsResponse, ComplexTypesData, ComplexTypesResponse, DeleteCallWithoutParametersAndResponseData, DeleteFooData3, DeprecatedCallData, DummyAData, DummyAResponse, DummyBData, DummyBResponse, DuplicateName2Data, DuplicateName3Data, DuplicateName4Data, DuplicateNameData, ExportData, FileResponseData, FileResponseResponse, FooWowData, GetApiVbyApiVersionSimpleOperationData, GetApiVbyApiVersionSimpleOperationError, GetApiVbyApiVersionSimpleOperationResponse, GetCallWithOptionalParamData, GetCallWithoutParametersAndResponseData, ImportData, ImportResponse, MultipartRequestData, MultipartResponseData, MultipartResponseResponse, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, PatchApiVbyApiVersionNoTagData, PatchCallWithoutParametersAndResponseData, PostApiVbyApiVersionFormDataData, PostApiVbyApiVersionRequestBodyData, PostCallWithOptionalParamData, PostCallWithOptionalParamResponse, PostCallWithoutParametersAndResponseData, PutCallWithoutParametersAndResponseData, PutWithFormUrlEncodedData, TestErrorCodeData, TypesData, TypesResponse, UploadFileData, UploadFileResponse } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
@@ -58,7 +58,7 @@ export const exportOptions = (options?: Options<ExportData>) => queryOptions<unk
 export const patchApiVbyApiVersionNoTagMutation = (options?: Partial<Options<PatchApiVbyApiVersionNoTagData>>): MutationOptions<unknown, AxiosError<DefaultError>, Options<PatchApiVbyApiVersionNoTagData>> => {
     const mutationOptions: MutationOptions<unknown, AxiosError<DefaultError>, Options<PatchApiVbyApiVersionNoTagData>> = {
         mutationFn: async (fnOptions) => {
-            const { data } = await patchApiVbyApiVersionNoTag({
+            const { data } = await apiVApiVersionNo_tagPatch({
                 ...options,
                 ...fnOptions,
                 throwOnError: true
@@ -86,7 +86,7 @@ export const importMutation = (options?: Partial<Options<ImportData>>): Mutation
 export const fooWowMutation = (options?: Partial<Options<FooWowData>>): MutationOptions<unknown, AxiosError<DefaultError>, Options<FooWowData>> => {
     const mutationOptions: MutationOptions<unknown, AxiosError<DefaultError>, Options<FooWowData>> = {
         mutationFn: async (fnOptions) => {
-            const { data } = await fooWow({
+            const { data } = await foo_Wow({
                 ...options,
                 ...fnOptions,
                 throwOnError: true
@@ -101,7 +101,7 @@ export const apiVVersionODataControllerCountQueryKey = (options?: Options<ApiVVe
 
 export const apiVVersionODataControllerCountOptions = (options?: Options<ApiVVersionODataControllerCountData>) => queryOptions<ApiVVersionODataControllerCountResponse, AxiosError<DefaultError>, ApiVVersionODataControllerCountResponse, ReturnType<typeof apiVVersionODataControllerCountQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
-        const { data } = await apiVVersionODataControllerCount({
+        const { data } = await apiVVersionODataController__count({
             ...options,
             ...queryKey[0],
             signal,
@@ -116,7 +116,7 @@ export const getApiVbyApiVersionSimpleOperationQueryKey = (options: Options<GetA
 
 export const getApiVbyApiVersionSimpleOperationOptions = (options: Options<GetApiVbyApiVersionSimpleOperationData>) => queryOptions<GetApiVbyApiVersionSimpleOperationResponse, AxiosError<GetApiVbyApiVersionSimpleOperationError>, GetApiVbyApiVersionSimpleOperationResponse, ReturnType<typeof getApiVbyApiVersionSimpleOperationQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
-        const { data } = await getApiVbyApiVersionSimpleOperation({
+        const { data } = await apiVApiVersionSimpleOperationGet({
             ...options,
             ...queryKey[0],
             signal,
@@ -356,7 +356,7 @@ export const postCallWithOptionalParamMutation = (options?: Partial<Options<Post
 export const postApiVbyApiVersionRequestBodyMutation = (options?: Partial<Options<PostApiVbyApiVersionRequestBodyData>>): MutationOptions<unknown, AxiosError<DefaultError>, Options<PostApiVbyApiVersionRequestBodyData>> => {
     const mutationOptions: MutationOptions<unknown, AxiosError<DefaultError>, Options<PostApiVbyApiVersionRequestBodyData>> = {
         mutationFn: async (fnOptions) => {
-            const { data } = await postApiVbyApiVersionRequestBody({
+            const { data } = await apiVApiVersionRequestBodyPost({
                 ...options,
                 ...fnOptions,
                 throwOnError: true
@@ -370,7 +370,7 @@ export const postApiVbyApiVersionRequestBodyMutation = (options?: Partial<Option
 export const postApiVbyApiVersionFormDataMutation = (options?: Partial<Options<PostApiVbyApiVersionFormDataData>>): MutationOptions<unknown, AxiosError<DefaultError>, Options<PostApiVbyApiVersionFormDataData>> => {
     const mutationOptions: MutationOptions<unknown, AxiosError<DefaultError>, Options<PostApiVbyApiVersionFormDataData>> = {
         mutationFn: async (fnOptions) => {
-            const { data } = await postApiVbyApiVersionFormData({
+            const { data } = await apiVApiVersionFormDataPost({
                 ...options,
                 ...fnOptions,
                 throwOnError: true

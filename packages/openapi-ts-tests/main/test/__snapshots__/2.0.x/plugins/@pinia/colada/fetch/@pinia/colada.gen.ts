@@ -4,7 +4,7 @@ import { type _JSONValue, defineQueryOptions, type UseMutationOptions } from '@p
 
 import { serializeQueryKeyValue } from '../client';
 import { client } from '../client.gen';
-import { callToTestOrderOfParams, callWithDefaultOptionalParameters, callWithDefaultParameters, callWithDescriptions, callWithDuplicateResponses, callWithNoContentResponse, callWithParameters, callWithResponse, callWithResponseAndNoContentResponse, callWithResponses, callWithResultFromHeader, callWithWeirdParameterNames, collectionFormat, complexTypes, deleteCallWithoutParametersAndResponse, dummyA, dummyB, duplicateName, duplicateName2, duplicateName3, duplicateName4, fooWow, getCallWithoutParametersAndResponse, nonAsciiæøåÆøÅöôêÊ字符串, type Options, patchApiVbyApiVersionNoTag, patchCallWithoutParametersAndResponse, postApiVbyApiVersionBody, postCallWithoutParametersAndResponse, putCallWithoutParametersAndResponse, serviceWithEmptyTag, testErrorCode, types } from '../sdk.gen';
+import { apiVApiVersionBodyPost, apiVApiVersionNo_tagPatch, callToTestOrderOfParams, callWithDefaultOptionalParameters, callWithDefaultParameters, callWithDescriptions, callWithDuplicateResponses, callWithNoContentResponse, callWithParameters, callWithResponse, callWithResponseAndNoContentResponse, callWithResponses, callWithResultFromHeader, callWithWeirdParameterNames, collectionFormat, complexTypes, deleteCallWithoutParametersAndResponse, dummyA, dummyB, duplicateName, duplicateName2, duplicateName3, duplicateName4, foo_Wow, getCallWithoutParametersAndResponse, nonAsciiæøåÆøÅöôêÊ字符串, type Options, patchCallWithoutParametersAndResponse, postCallWithoutParametersAndResponse, putCallWithoutParametersAndResponse, serviceWithEmptyTag, testErrorCode, types } from '../sdk.gen';
 import type { CallToTestOrderOfParamsData, CallWithDefaultOptionalParametersData, CallWithDefaultParametersData, CallWithDescriptionsData, CallWithDuplicateResponsesData, CallWithDuplicateResponsesError, CallWithDuplicateResponsesResponse, CallWithNoContentResponseData, CallWithParametersData, CallWithResponseAndNoContentResponseData, CallWithResponseData, CallWithResponsesData, CallWithResponsesError, CallWithResponsesResponse, CallWithResultFromHeaderData, CallWithWeirdParameterNamesData, CollectionFormatData, ComplexTypesData, DeleteCallWithoutParametersAndResponseData, DummyAData, DummyBData, DuplicateName2Data, DuplicateName3Data, DuplicateName4Data, DuplicateNameData, FooWowData, GetCallWithoutParametersAndResponseData, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, PatchApiVbyApiVersionNoTagData, PatchCallWithoutParametersAndResponseData, PostApiVbyApiVersionBodyData, PostApiVbyApiVersionBodyError, PostApiVbyApiVersionBodyResponse, PostCallWithoutParametersAndResponseData, PutCallWithoutParametersAndResponseData, ServiceWithEmptyTagData, TestErrorCodeData, TypesData } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
@@ -58,7 +58,7 @@ export const serviceWithEmptyTagQuery = defineQueryOptions((options?: Options<Se
 
 export const patchApiVbyApiVersionNoTagMutation = (options?: Partial<Options<PatchApiVbyApiVersionNoTagData>>): UseMutationOptions<unknown, Options<PatchApiVbyApiVersionNoTagData>, Error> => ({
     mutation: async (vars) => {
-        const { data } = await patchApiVbyApiVersionNoTag({
+        const { data } = await apiVApiVersionNo_tagPatch({
             ...options,
             ...vars,
             throwOnError: true
@@ -69,7 +69,7 @@ export const patchApiVbyApiVersionNoTagMutation = (options?: Partial<Options<Pat
 
 export const fooWowMutation = (options?: Partial<Options<FooWowData>>): UseMutationOptions<unknown, Options<FooWowData>, Error> => ({
     mutation: async (vars) => {
-        const { data } = await fooWow({
+        const { data } = await foo_Wow({
             ...options,
             ...vars,
             throwOnError: true
@@ -426,7 +426,7 @@ export const nonAsciiæøåÆøÅöôêÊ字符串Mutation = (options?: Partial<
  */
 export const postApiVbyApiVersionBodyMutation = (options?: Partial<Options<PostApiVbyApiVersionBodyData>>): UseMutationOptions<PostApiVbyApiVersionBodyResponse, Options<PostApiVbyApiVersionBodyData>, PostApiVbyApiVersionBodyError> => ({
     mutation: async (vars) => {
-        const { data } = await postApiVbyApiVersionBody({
+        const { data } = await apiVApiVersionBodyPost({
             ...options,
             ...vars,
             throwOnError: true

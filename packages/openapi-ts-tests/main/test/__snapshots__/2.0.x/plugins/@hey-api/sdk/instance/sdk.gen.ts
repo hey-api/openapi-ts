@@ -47,6 +47,10 @@ class HeyApiRegistry<T> {
 }
 
 export class Bar extends HeyApiClient {
+    public get<ThrowOnError extends boolean = false>(options?: Options<GetFooBarData, ThrowOnError>) {
+        return (options?.client ?? this.client).get<GetFooBarResponses, unknown, ThrowOnError>({ url: '/foo/bar', ...options });
+    }
+    
     public post<ThrowOnError extends boolean = false>(options?: Options<FooBarPostData, ThrowOnError>) {
         return (options?.client ?? this.client).post<FooBarPostResponses, unknown, ThrowOnError>({ url: '/foo/bar', ...options });
     }
@@ -57,6 +61,10 @@ export class Bar extends HeyApiClient {
 }
 
 export class Foo extends HeyApiClient {
+    public get<ThrowOnError extends boolean = false>(options?: Options<GetFooData, ThrowOnError>) {
+        return (options?.client ?? this.client).get<GetFooResponses, unknown, ThrowOnError>({ url: '/foo', ...options });
+    }
+    
     public post<ThrowOnError extends boolean = false>(options?: Options<FooPostData, ThrowOnError>) {
         return (options?.client ?? this.client).post<FooPostResponses, unknown, ThrowOnError>({ url: '/foo', ...options });
     }
@@ -80,14 +88,6 @@ export class Sdk extends HeyApiClient {
     }) {
         super(args);
         Sdk.__registry.set(this, args?.key);
-    }
-    
-    public getFoo<ThrowOnError extends boolean = false>(options?: Options<GetFooData, ThrowOnError>) {
-        return (options?.client ?? this.client).get<GetFooResponses, unknown, ThrowOnError>({ url: '/foo', ...options });
-    }
-    
-    public getFooBar<ThrowOnError extends boolean = false>(options?: Options<GetFooBarData, ThrowOnError>) {
-        return (options?.client ?? this.client).get<GetFooBarResponses, unknown, ThrowOnError>({ url: '/foo/bar', ...options });
     }
     
     private _foo?: Foo;
