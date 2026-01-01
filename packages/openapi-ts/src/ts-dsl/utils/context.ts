@@ -14,6 +14,8 @@ export interface AccessOptions {
   context?: 'example';
   /** Enable debug mode. */
   debug?: boolean;
+  /** Transform function for each node in the access chain. */
+  transform?: (node: TsDsl, index: number, chain: NodeChain) => TsDsl;
 }
 
 export type AccessResult = ReturnType<
@@ -123,6 +125,8 @@ function transformAccessChain(
   options: AccessOptions = {},
 ): NodeChain {
   return accessChain.map((node, index) => {
+    const transformedNode = options.transform?.(node, index, accessChain);
+    if (transformedNode) return transformedNode;
     const accessNode = node.toAccessNode?.(node, options, {
       chain: accessChain,
       index,

@@ -22,7 +22,7 @@ export function resolveHttpRequests(
     defaultValue: {
       container: 'class',
       enabled: true,
-      methods: 'static',
+      methods: 'instance',
       nesting: 'operationId',
       nestingDelimiters: /[./]/,
       strategy,
