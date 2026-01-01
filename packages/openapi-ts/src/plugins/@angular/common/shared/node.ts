@@ -105,11 +105,19 @@ function childToHttpRequestNode(
   const refChild = plugin.referenceSymbol(createHttpRequestShellMeta(resource));
   const memberNameStr = toCase(refChild.name, 'camelCase');
   const memberName = plugin.symbol(memberNameStr);
-  if (plugin.isSymbolRegistered(refChild.id)) {
-    return [$.field(memberName, (f) => f.static().assign($(refChild)))];
-  }
+  const privateName = plugin.symbol(`_${memberNameStr}`);
   return [
-    $.getter(memberName, (g) => g.public().static().do($.return(refChild))),
+    $.field(privateName, (f) => f.private().optional().type(refChild)),
+    $.getter(memberName, (g) =>
+      g
+        .returns(refChild)
+        .do(
+          $('this')
+            .attr(privateName)
+            .nullishAssign($.new(refChild).args())
+            .return(),
+        ),
+    ),
   ];
 }
 
@@ -122,11 +130,19 @@ function childToHttpResourceNode(
   );
   const memberNameStr = toCase(refChild.name, 'camelCase');
   const memberName = plugin.symbol(memberNameStr);
-  if (plugin.isSymbolRegistered(refChild.id)) {
-    return [$.field(memberName, (f) => f.static().assign($(refChild)))];
-  }
+  const privateName = plugin.symbol(`_${memberNameStr}`);
   return [
-    $.getter(memberName, (g) => g.public().static().do($.return(refChild))),
+    $.field(privateName, (f) => f.private().optional().type(refChild)),
+    $.getter(memberName, (g) =>
+      g
+        .returns(refChild)
+        .do(
+          $('this')
+            .attr(privateName)
+            .nullishAssign($.new(refChild).args())
+            .return(),
+        ),
+    ),
   ];
 }
 
@@ -154,7 +170,7 @@ export function createHttpRequestShell(
 
       const c = $.class(symbol)
         .export()
-        .$if(isAngularClient, (c) =>
+        .$if(isAngularClient && node.isRoot, (c) =>
           c.decorator(
             symbolInjectable,
             $.object().prop('providedIn', $.literal('root')),
@@ -169,6 +185,9 @@ export function createHttpRequestShell(
 export function createHttpResourceShell(
   plugin: AngularCommonPlugin['Instance'],
 ): StructureShell {
+  const client = getClientPlugin(plugin.context.config);
+  const isAngularClient = client.name === '@hey-api/client-angular';
+
   const symbolInjectable = plugin.external('@angular/core.Injectable');
 
   return {
@@ -187,9 +206,11 @@ export function createHttpResourceShell(
 
       const c = $.class(symbol)
         .export()
-        .decorator(
-          symbolInjectable,
-          $.object().prop('providedIn', $.literal('root')),
+        .$if(isAngularClient && node.isRoot, (c) =>
+          c.decorator(
+            symbolInjectable,
+            $.object().prop('providedIn', $.literal('root')),
+          ),
         );
 
       return { dependencies: [], node: c };
@@ -269,6 +290,7 @@ function implementHttpResourceFn<
   const symbolHttpResource = plugin.external(
     '@angular/common/http.httpResource',
   );
+  const symbolInject = plugin.external('@angular/core.inject');
   const symbolOptions = plugin.referenceSymbol({
     category: 'type',
     resource: 'client-options',
@@ -321,6 +343,14 @@ function implementHttpResourceFn<
                           plugin.referenceSymbol(
                             createHttpRequestFnMeta(operation),
                           ),
+                          {
+                            transform: (node, index) =>
+                              index === 0
+                                ? node['~dsl'] === 'ClassTsDsl'
+                                  ? $(symbolInject).call($(node.name))
+                                  : $(node.name)
+                                : node,
+                          },
                         )
                         .call('opts'),
                     ),
@@ -379,9 +409,7 @@ export function toHttpRequestNode(
           attachComment({
             node: m,
             operation,
-          })
-            .public()
-            .static(),
+          }).public(),
         ),
         operation,
         plugin,
@@ -448,9 +476,7 @@ export function toHttpResourceNode(
           attachComment({
             node: m,
             operation,
-          })
-            .public()
-            .static(),
+          }).public(),
         ),
         operation,
         plugin,

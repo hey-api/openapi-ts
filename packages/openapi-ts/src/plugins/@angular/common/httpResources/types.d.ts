@@ -53,11 +53,11 @@ export interface UserHttpResourcesConfig {
    *
    * Only applies when `container` is `'class'`.
    *
-   * - `'static'` - Static methods, no instantiation required
+   * - `'instance'` - Instance methods, requires `new ClassName(config)`
    *
-   * @default 'static'
+   * @default 'instance'
    */
-  methods?: 'static';
+  methods?: 'instance';
   /**
    * How to derive nesting structure from operations.
    *
@@ -148,9 +148,9 @@ export interface HttpResourcesConfig {
    *
    * Only applies when `container` is `'class'`.
    *
-   * - `'static'` - Static methods, no instantiation required
+   * - `'instance'` - Instance methods, requires `new ClassName(config)`
    */
-  methods: 'static';
+  methods: 'instance';
   /**
    * How to derive nesting structure from operations.
    *
