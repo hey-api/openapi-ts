@@ -18,9 +18,9 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
     meta?: Record<string, unknown>;
 };
 
-export const getFoo = <ThrowOnError extends boolean = false>(options: Options<GetFooData, ThrowOnError>) => (options.client ?? client).get<GetFooResponses, unknown, ThrowOnError>({ url: '/foo', ...options });
+export const fooGet = <ThrowOnError extends boolean = false>(options: Options<GetFooData, ThrowOnError>) => (options.client ?? client).get<GetFooResponses, unknown, ThrowOnError>({ url: '/foo', ...options });
 
-export const patchFoo = <ThrowOnError extends boolean = false>(options?: Options<PatchFooData, ThrowOnError>) => (options?.client ?? client).patch<PatchFooResponses, unknown, ThrowOnError>({
+export const fooPatch = <ThrowOnError extends boolean = false>(options?: Options<PatchFooData, ThrowOnError>) => (options?.client ?? client).patch<PatchFooResponses, unknown, ThrowOnError>({
     url: '/foo',
     ...options,
     headers: {
@@ -29,7 +29,7 @@ export const patchFoo = <ThrowOnError extends boolean = false>(options?: Options
     }
 });
 
-export const postFoo = <ThrowOnError extends boolean = false>(options: Options<PostFooData, ThrowOnError>) => (options.client ?? client).post<PostFooResponses, unknown, ThrowOnError>({
+export const fooPost = <ThrowOnError extends boolean = false>(options: Options<PostFooData, ThrowOnError>) => (options.client ?? client).post<PostFooResponses, unknown, ThrowOnError>({
     url: '/foo',
     ...options,
     headers: {
@@ -38,7 +38,7 @@ export const postFoo = <ThrowOnError extends boolean = false>(options: Options<P
     }
 });
 
-export const putFoo = <ThrowOnError extends boolean = false>(options: Options<PutFooData, ThrowOnError>) => (options.client ?? client).put<PutFooResponses, unknown, ThrowOnError>({
+export const fooPut = <ThrowOnError extends boolean = false>(options: Options<PutFooData, ThrowOnError>) => (options.client ?? client).put<PutFooResponses, unknown, ThrowOnError>({
     url: '/foo',
     ...options,
     headers: {

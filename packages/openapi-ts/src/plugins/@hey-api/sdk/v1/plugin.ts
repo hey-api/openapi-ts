@@ -51,11 +51,7 @@ export const handlerV1: HeyApiSdkPlugin['Handler'] = ({ plugin }) => {
       },
     });
   }
-  if (
-    isAngularClient &&
-    plugin.config.operations.container === 'class' &&
-    plugin.config.operations.strategy !== 'flat'
-  ) {
+  if (isAngularClient) {
     plugin.symbol('Injectable', {
       external: '@angular/core',
       meta: {

@@ -20,7 +20,7 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
 
 export const export_ = <ThrowOnError extends boolean = false>(options?: Options<ExportData, ThrowOnError>) => (options?.client ?? client).get<unknown, unknown, ThrowOnError>({ url: '/api/v{api-version}/no+tag', ...options });
 
-export const patchApiVbyApiVersionNoTag = <ThrowOnError extends boolean = false>(options?: Options<PatchApiVbyApiVersionNoTagData, ThrowOnError>) => (options?.client ?? client).patch<PatchApiVbyApiVersionNoTagResponses, unknown, ThrowOnError>({ url: '/api/v{api-version}/no+tag', ...options });
+export const apiVApiVersionNo_tagPatch = <ThrowOnError extends boolean = false>(options?: Options<PatchApiVbyApiVersionNoTagData, ThrowOnError>) => (options?.client ?? client).patch<PatchApiVbyApiVersionNoTagResponses, unknown, ThrowOnError>({ url: '/api/v{api-version}/no+tag', ...options });
 
 export const import_ = <ThrowOnError extends boolean = false>(options: Options<ImportData, ThrowOnError>) => (options.client ?? client).post<ImportResponses, unknown, ThrowOnError>({
     url: '/api/v{api-version}/no+tag',
@@ -31,11 +31,11 @@ export const import_ = <ThrowOnError extends boolean = false>(options: Options<I
     }
 });
 
-export const fooWow = <ThrowOnError extends boolean = false>(options?: Options<FooWowData, ThrowOnError>) => (options?.client ?? client).put<FooWowResponses, unknown, ThrowOnError>({ url: '/api/v{api-version}/no+tag', ...options });
+export const foo_Wow = <ThrowOnError extends boolean = false>(options?: Options<FooWowData, ThrowOnError>) => (options?.client ?? client).put<FooWowResponses, unknown, ThrowOnError>({ url: '/api/v{api-version}/no+tag', ...options });
 
-export const apiVVersionODataControllerCount = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionODataControllerCountData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionODataControllerCountResponses, unknown, ThrowOnError>({ url: '/api/v{api-version}/simple/$count', ...options });
+export const apiVVersionODataController__count = <ThrowOnError extends boolean = false>(options?: Options<ApiVVersionODataControllerCountData, ThrowOnError>) => (options?.client ?? client).get<ApiVVersionODataControllerCountResponses, unknown, ThrowOnError>({ url: '/api/v{api-version}/simple/$count', ...options });
 
-export const getApiVbyApiVersionSimpleOperation = <ThrowOnError extends boolean = false>(options: Options<GetApiVbyApiVersionSimpleOperationData, ThrowOnError>) => (options.client ?? client).get<GetApiVbyApiVersionSimpleOperationResponses, GetApiVbyApiVersionSimpleOperationErrors, ThrowOnError>({ url: '/api/v{api-version}/simple:operation', ...options });
+export const apiVApiVersionSimpleOperationGet = <ThrowOnError extends boolean = false>(options: Options<GetApiVbyApiVersionSimpleOperationData, ThrowOnError>) => (options.client ?? client).get<GetApiVbyApiVersionSimpleOperationResponses, GetApiVbyApiVersionSimpleOperationErrors, ThrowOnError>({ url: '/api/v{api-version}/simple:operation', ...options });
 
 export const deleteCallWithoutParametersAndResponse = <ThrowOnError extends boolean = false>(options?: Options<DeleteCallWithoutParametersAndResponseData, ThrowOnError>) => (options?.client ?? client).delete<unknown, unknown, ThrowOnError>({ url: '/api/v{api-version}/simple', ...options });
 
@@ -96,7 +96,7 @@ export const postCallWithOptionalParam = <ThrowOnError extends boolean = false>(
     }
 });
 
-export const postApiVbyApiVersionRequestBody = <ThrowOnError extends boolean = false>(options?: Options<PostApiVbyApiVersionRequestBodyData, ThrowOnError>) => (options?.client ?? client).post<unknown, unknown, ThrowOnError>({
+export const apiVApiVersionRequestBodyPost = <ThrowOnError extends boolean = false>(options?: Options<PostApiVbyApiVersionRequestBodyData, ThrowOnError>) => (options?.client ?? client).post<unknown, unknown, ThrowOnError>({
     url: '/api/v{api-version}/requestBody',
     ...options,
     headers: {
@@ -105,7 +105,7 @@ export const postApiVbyApiVersionRequestBody = <ThrowOnError extends boolean = f
     }
 });
 
-export const postApiVbyApiVersionFormData = <ThrowOnError extends boolean = false>(options?: Options<PostApiVbyApiVersionFormDataData, ThrowOnError>) => (options?.client ?? client).post<unknown, unknown, ThrowOnError>({
+export const apiVApiVersionFormDataPost = <ThrowOnError extends boolean = false>(options?: Options<PostApiVbyApiVersionFormDataData, ThrowOnError>) => (options?.client ?? client).post<unknown, unknown, ThrowOnError>({
     ...formDataBodySerializer,
     url: '/api/v{api-version}/formData',
     ...options,

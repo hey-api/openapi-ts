@@ -23,7 +23,7 @@ export function resolveHttpResources(
       container: 'class',
       enabled: true,
       methods: 'static',
-      nesting: strategy === 'flat' ? 'id' : 'operationId',
+      nesting: 'operationId',
       nestingDelimiters: /[./]/,
       strategy,
       strategyDefaultTag: 'default',

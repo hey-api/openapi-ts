@@ -47,7 +47,7 @@ export const getFooQueryKey = (options?: Options<GetFooData>) => createQueryKey(
 export const getFooQuery = defineQueryOptions((options?: Options<GetFooData>) => ({
     key: getFooQueryKey(options),
     query: async (context) => {
-        const { data } = await FooBazService.getFoo({
+        const { data } = await FooBazService.fooService.get({
             ...options,
             ...context,
             throwOnError: true
@@ -83,7 +83,7 @@ export const getFooBarQueryKey = (options?: Options<GetFooBarData>) => createQue
 export const getFooBarQuery = defineQueryOptions((options?: Options<GetFooBarData>) => ({
     key: getFooBarQueryKey(options),
     query: async (context) => {
-        const { data } = await BarBazService.getFooBar({
+        const { data } = await BarBazService.fooService.barService.get({
             ...options,
             ...context,
             throwOnError: true

@@ -3,7 +3,7 @@
 import { type DefaultError, queryOptions, type UseMutationOptions } from '@tanstack/react-query';
 
 import { client } from '../client.gen';
-import { fooBarPost, fooBarPut, fooPost, fooPut, getFoo, getFooBar, type Options } from '../sdk.gen';
+import { fooBarGet, fooBarPost, fooBarPut, fooGet, fooPost, fooPut, type Options } from '../sdk.gen';
 import type { FooBarPostData, FooBarPostResponse, FooBarPutData, FooBarPutResponse, FooPostData, FooPostResponse, FooPutData, FooPutResponse, GetFooBarData, GetFooBarResponse, GetFooData, GetFooResponse } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
@@ -43,7 +43,7 @@ export const getFooD = (options?: Options<GetFooData>) => createQueryKey('getFoo
 
 export const getFooE = (options?: Options<GetFooData>) => queryOptions<GetFooResponse, DefaultError, GetFooResponse, ReturnType<typeof getFooD>>({
     queryFn: async ({ queryKey, signal }) => {
-        const { data } = await getFoo({
+        const { data } = await fooGet({
             ...options,
             ...queryKey[0],
             signal,
@@ -86,7 +86,7 @@ export const getFooBarD = (options?: Options<GetFooBarData>) => createQueryKey('
 
 export const getFooBarE = (options?: Options<GetFooBarData>) => queryOptions<GetFooBarResponse, DefaultError, GetFooBarResponse, ReturnType<typeof getFooBarD>>({
     queryFn: async ({ queryKey, signal }) => {
-        const { data } = await getFooBar({
+        const { data } = await fooBarGet({
             ...options,
             ...queryKey[0],
             signal,

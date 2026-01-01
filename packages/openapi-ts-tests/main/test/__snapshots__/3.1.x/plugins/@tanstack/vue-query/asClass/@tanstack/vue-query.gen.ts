@@ -43,7 +43,7 @@ export const getFooQueryKey = (options?: Options<GetFooData>) => createQueryKey(
 
 export const getFooOptions = (options?: Options<GetFooData>) => queryOptions<GetFooResponse, DefaultError, GetFooResponse, ReturnType<typeof getFooQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
-        const { data } = await FooBazService.getFoo({
+        const { data } = await FooBazService.fooService.get({
             ...options,
             ...queryKey[0],
             signal,
@@ -86,7 +86,7 @@ export const getFooBarQueryKey = (options?: Options<GetFooBarData>) => createQue
 
 export const getFooBarOptions = (options?: Options<GetFooBarData>) => queryOptions<GetFooBarResponse, DefaultError, GetFooBarResponse, ReturnType<typeof getFooBarQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
-        const { data } = await BarBazService.getFooBar({
+        const { data } = await BarBazService.fooService.barService.get({
             ...options,
             ...queryKey[0],
             signal,

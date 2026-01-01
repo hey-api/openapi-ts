@@ -1,4 +1,5 @@
 import type { AnalysisContext, NodeName } from '@hey-api/codegen-core';
+import { isSymbol } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl, TypeTsDsl } from '../base';
@@ -15,6 +16,7 @@ import { OptionalMixin } from '../mixins/optional';
 import { ValueMixin } from '../mixins/value';
 import { TokenTsDsl } from '../token';
 import { TypeExprTsDsl } from '../type/expr';
+import { safeAccessorName } from '../utils/name';
 
 export type FieldType = NodeName | TypeTsDsl;
 
@@ -36,12 +38,16 @@ const Mixed = DecoratorMixin(
 
 export class FieldTsDsl extends Mixed {
   readonly '~dsl' = 'FieldTsDsl';
+  override readonly nameSanitizer = safeAccessorName;
 
   protected _type?: TypeTsDsl;
 
   constructor(name: NodeName, fn?: (f: FieldTsDsl) => void) {
     super();
     this.name.set(name);
+    if (isSymbol(name)) {
+      name.setNode(this);
+    }
     fn?.(this);
   }
 

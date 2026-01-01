@@ -99,7 +99,8 @@ export class File<Node extends INode = INode> {
     const dirs = this._logicalFilePath
       ? this._logicalFilePath.split('/').slice(0, -1)
       : [];
-    return [...dirs, `${this.name}${this.extension ?? ''}`].join('/');
+    const extension = this.external ? '' : (this.extension ?? '');
+    return [...dirs, `${this.name}${extension}`].join('/');
   }
 
   /**

@@ -70,40 +70,27 @@ export function resolveOperations(
   }
 
   const legacy = mapLegacyToConfig(config);
-  return config.operations
-    ? normalizeConfig(config.operations, legacy, context)
-    : context.valueToObject({
-        defaultValue: {
-          container: 'class',
-          containerName: {},
-          methodName: {},
-          methods: 'instance',
-          nesting: 'operationId',
-          nestingDelimiters: /[./]/,
-          segmentName: {},
-          strategy: 'flat',
-          strategyDefaultTag: 'default',
-        },
-        value: legacy as OperationsConfig,
-      });
+  return normalizeConfig(config.operations, legacy, context);
 }
 
 function normalizeConfig(
-  input: OperationsStrategy | UserOperationsConfig,
+  input: OperationsStrategy | UserOperationsConfig | undefined,
   legacy: Partial<OperationsConfig>,
   context: PluginContext,
 ): OperationsConfig {
-  if (typeof input === 'string' || typeof input === 'function') {
+  if (!input || typeof input === 'string' || typeof input === 'function') {
     input = { strategy: input };
   }
 
   const strategy = legacy.strategy ?? input.strategy ?? 'flat';
+  const methods: OperationsConfig['methods'] =
+    strategy === 'single' ? 'instance' : 'static';
 
   return context.valueToObject({
     defaultValue: {
       container: 'class',
-      methods: 'instance',
-      nesting: strategy === 'flat' ? 'id' : 'operationId',
+      methods,
+      nesting: 'operationId',
       nestingDelimiters: /[./]/,
       strategy,
       strategyDefaultTag: 'default',

@@ -1,4 +1,5 @@
 import type { AnalysisContext, NodeName } from '@hey-api/codegen-core';
+import { isSymbol } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl } from '../base';
@@ -47,6 +48,9 @@ export class GetterTsDsl extends Mixed {
   constructor(name: NodeName, fn?: (g: GetterTsDsl) => void) {
     super();
     this.name.set(name);
+    if (isSymbol(name)) {
+      name.setNode(this);
+    }
     fn?.(this);
   }
 

@@ -2,7 +2,7 @@ import type {
   OperationPathStrategy,
   OperationStructureStrategy,
 } from '~/openApi/shared/locations';
-import { OperationPath, OperationStrategies } from '~/openApi/shared/locations';
+import { OperationPath, OperationStrategy } from '~/openApi/shared/locations';
 
 import type { AngularCommonPlugin } from '../types';
 
@@ -26,21 +26,21 @@ export function resolveHttpRequestsStrategy(
   plugin: AngularCommonPlugin['Instance'],
 ): OperationStructureStrategy {
   if (plugin.config.httpRequests.strategy === 'flat') {
-    return OperationStrategies.flat({
-      path: resolvePath(plugin),
+    return OperationStrategy.flat({
+      path: (operation) => [resolvePath(plugin)(operation).join('.')],
     });
   }
 
   if (plugin.config.httpRequests.strategy === 'single') {
     const root = plugin.config.httpRequests.containerName;
-    return OperationStrategies.single({
+    return OperationStrategy.single({
       path: resolvePath(plugin),
       root: typeof root.name === 'string' ? root.name : (root.name?.('') ?? ''),
     });
   }
 
   if (plugin.config.httpRequests.strategy === 'byTags') {
-    return OperationStrategies.byTags({
+    return OperationStrategy.byTags({
       fallback: plugin.config.httpRequests.strategyDefaultTag,
       path: resolvePath(plugin),
     });
