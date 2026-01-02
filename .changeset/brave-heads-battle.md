@@ -1,5 +1,5 @@
 ---
-'@hey-api/openapi-ts': minor
+'@hey-api/openapi-ts': patch
 ---
 
-Fix body serialization for sse client
+**plugin(@hey-api/client-nuxt)**: use serialized body in SSE requests
