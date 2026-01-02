@@ -1,9 +1,4 @@
-import type {
-  AnalysisContext,
-  AstContext,
-  Ref,
-  Symbol,
-} from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName, Ref } from '@hey-api/codegen-core';
 import { ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
@@ -12,7 +7,7 @@ import { TsDsl } from '../base';
 import { ExprMixin } from '../mixins/expr';
 import { f } from '../utils/factories';
 
-export type AwaitExpr = Symbol | string | MaybeTsDsl<ts.Expression>;
+export type AwaitExpr = NodeName | MaybeTsDsl<ts.Expression>;
 export type AwaitCtor = (expr: AwaitExpr) => AwaitTsDsl;
 
 const Mixed = ExprMixin(TsDsl<ts.AwaitExpression>);
@@ -32,8 +27,8 @@ export class AwaitTsDsl extends Mixed {
     ctx.analyze(this._awaitExpr);
   }
 
-  override toAst(ctx: AstContext) {
-    return ts.factory.createAwaitExpression(this.$node(ctx, this._awaitExpr));
+  override toAst() {
+    return ts.factory.createAwaitExpression(this.$node(this._awaitExpr));
   }
 }
 

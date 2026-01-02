@@ -1,14 +1,14 @@
-import type { AnalysisContext, AstContext, Node } from '@hey-api/codegen-core';
+import type { AnalysisContext, Node, NodeName } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import type { ParamCtor, ParamName } from '../decl/param';
+import type { ParamCtor } from '../decl/param';
 import { ParamTsDsl } from '../decl/param';
 import type { BaseCtor, MixinCtor } from './types';
 
 export interface ParamMethods extends Node {
   /** Renders the parameters into an array of `ParameterDeclaration`s. */
-  $params(ast: AstContext): ReadonlyArray<ts.ParameterDeclaration>;
+  $params(): ReadonlyArray<ts.ParameterDeclaration>;
   /** Adds a parameter. */
   param(...args: Parameters<ParamCtor>): this;
   /** Adds multiple parameters. */
@@ -29,7 +29,7 @@ export function ParamMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
     }
 
     protected param(
-      name: ParamName | ((p: ParamTsDsl) => void),
+      name: NodeName | ((p: ParamTsDsl) => void),
       fn?: (p: ParamTsDsl) => void,
     ): this {
       const p = new ParamTsDsl(name, fn);
@@ -44,8 +44,8 @@ export function ParamMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
       return this;
     }
 
-    protected $params(ctx: AstContext): ReadonlyArray<ts.ParameterDeclaration> {
-      return this.$node(ctx, this._params);
+    protected $params(): ReadonlyArray<ts.ParameterDeclaration> {
+      return this.$node(this._params);
     }
   }
 

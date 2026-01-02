@@ -25,6 +25,7 @@ import type { OpenApi } from '~/openApi/types';
 import type { Hooks } from '~/parser/types/hooks';
 import type { Plugin } from '~/plugins';
 import type { PluginConfigMap } from '~/plugins/config';
+import type { TsDsl } from '~/ts-dsl';
 import { jsonPointerToPath } from '~/utils/ref';
 
 import type { BaseEvent, WalkEvent } from '../types/instance';
@@ -334,19 +335,19 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     return result as T extends number ? void : number;
   }
 
-  querySymbol(filter: SymbolMeta): Symbol | undefined {
-    return this.gen.symbols.query(filter)[0];
+  querySymbol(filter: SymbolMeta): Symbol<TsDsl> | undefined {
+    return this.gen.symbols.query(filter)[0] as Symbol<TsDsl> | undefined;
   }
 
-  referenceSymbol(meta: SymbolMeta): Symbol {
-    return this.gen.symbols.reference(meta);
+  referenceSymbol(meta: SymbolMeta): Symbol<TsDsl> {
+    return this.gen.symbols.reference(meta) as Symbol<TsDsl>;
   }
 
   /**
    * @deprecated use `plugin.symbol()` instead
    */
-  registerSymbol(symbol: SymbolIn): Symbol {
-    return this.symbol(symbol.name, symbol);
+  registerSymbol(symbol: SymbolIn): Symbol<TsDsl> {
+    return this.symbol(symbol.name, symbol) as Symbol<TsDsl>;
   }
 
   /**
@@ -362,7 +363,10 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     }
   }
 
-  symbol(name: SymbolIn['name'], symbol?: Omit<SymbolIn, 'name'>): Symbol {
+  symbol(
+    name: SymbolIn['name'],
+    symbol?: Omit<SymbolIn, 'name'>,
+  ): Symbol<TsDsl> {
     const symbolIn: SymbolIn = {
       ...symbol,
       exportFrom:
@@ -386,7 +390,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     for (const hook of this.eventHooks['symbol:register:after']) {
       hook({ plugin: this, symbol: symbolOut });
     }
-    return symbolOut;
+    return symbolOut as Symbol<TsDsl>;
   }
 
   /**

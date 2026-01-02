@@ -8,7 +8,7 @@
  * console.log(num['~ref']); // 42
  * ```
  */
-export type Ref<T> = { '~ref': T };
+export type Ref<T> = T extends { ['~ref']: unknown } ? T : { '~ref': T };
 
 /**
  * Maps every property of `T` to a `Ref` of that property.
@@ -33,7 +33,7 @@ export type Refs<T> = {
  * type N = FromRef<{ '~ref': number }>; // number
  * ```
  */
-export type FromRef<T> = T extends Ref<infer V> ? V : T;
+export type FromRef<T> = T extends { '~ref': infer U } ? U : T;
 
 /**
  * Maps every property of a Ref-wrapped object back to its plain value.
@@ -46,5 +46,5 @@ export type FromRef<T> = T extends Ref<infer V> ? V : T;
  * ```
  */
 export type FromRefs<T> = {
-  [K in keyof T]: T[K] extends Ref<infer V> ? V : T[K];
+  [K in keyof T]: T[K] extends Ref<infer U> ? U : T[K];
 };

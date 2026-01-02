@@ -9,8 +9,8 @@ import type {
 } from '~/plugins/shared/utils/coerce';
 import type { GetIntegerLimit } from '~/plugins/shared/utils/formats';
 import type { $, DollarTsDsl, TsDsl } from '~/ts-dsl';
-import type { StringCase, StringName } from '~/types/case';
 import type { MaybeArray } from '~/types/utils';
+import type { Casing, NameTransformer } from '~/utils/naming';
 
 import type { IApi } from './api';
 import type { Chain } from './shared/chain';
@@ -24,7 +24,7 @@ export type UserConfig = Plugin.Name<'zod'> &
      *
      * @default 'camelCase'
      */
-    case?: StringCase;
+    case?: Casing;
     /**
      * Add comments from input to the generated Zod schemas?
      *
@@ -83,14 +83,14 @@ export type UserConfig = Plugin.Name<'zod'> &
      */
     definitions?:
       | boolean
-      | StringName
+      | NameTransformer
       | {
           /**
            * The casing convention to use for generated names.
            *
            * @default 'camelCase'
            */
-          case?: StringCase;
+          case?: Casing;
           /**
            * Whether to generate Zod schemas for reusable definitions.
            *
@@ -103,7 +103,7 @@ export type UserConfig = Plugin.Name<'zod'> &
            *
            * @default 'z{{name}}'
            */
-          name?: StringName;
+          name?: NameTransformer;
           /**
            * Configuration for TypeScript type generation from Zod schemas.
            *
@@ -122,14 +122,14 @@ export type UserConfig = Plugin.Name<'zod'> &
              */
             infer?:
               | boolean
-              | StringName
+              | NameTransformer
               | {
                   /**
                    * The casing convention to use for generated type names.
                    *
                    * @default 'PascalCase'
                    */
-                  case?: StringCase;
+                  case?: Casing;
                   /**
                    * Whether to generate TypeScript types from Zod schemas.
                    *
@@ -142,7 +142,7 @@ export type UserConfig = Plugin.Name<'zod'> &
                    *
                    * @default '{{name}}ZodType'
                    */
-                  name?: StringName;
+                  name?: NameTransformer;
                 };
           };
         };
@@ -176,14 +176,14 @@ export type UserConfig = Plugin.Name<'zod'> &
      */
     requests?:
       | boolean
-      | StringName
+      | NameTransformer
       | {
           /**
            * The casing convention to use for generated names.
            *
            * @default 'camelCase'
            */
-          case?: StringCase;
+          case?: Casing;
           /**
            * Whether to generate Zod schemas for request definitions.
            *
@@ -196,7 +196,7 @@ export type UserConfig = Plugin.Name<'zod'> &
            *
            * @default 'z{{name}}Data'
            */
-          name?: StringName;
+          name?: NameTransformer;
           /**
            * Configuration for TypeScript type generation from Zod schemas.
            *
@@ -215,14 +215,14 @@ export type UserConfig = Plugin.Name<'zod'> &
              */
             infer?:
               | boolean
-              | StringName
+              | NameTransformer
               | {
                   /**
                    * The casing convention to use for generated type names.
                    *
                    * @default 'PascalCase'
                    */
-                  case?: StringCase;
+                  case?: Casing;
                   /**
                    * Whether to generate TypeScript types from Zod schemas.
                    *
@@ -235,7 +235,7 @@ export type UserConfig = Plugin.Name<'zod'> &
                    *
                    * @default '{{name}}DataZodType'
                    */
-                  name?: StringName;
+                  name?: NameTransformer;
                 };
           };
         };
@@ -254,14 +254,14 @@ export type UserConfig = Plugin.Name<'zod'> &
      */
     responses?:
       | boolean
-      | StringName
+      | NameTransformer
       | {
           /**
            * The casing convention to use for generated names.
            *
            * @default 'camelCase'
            */
-          case?: StringCase;
+          case?: Casing;
           /**
            * Whether to generate Zod schemas for response definitions.
            *
@@ -274,7 +274,7 @@ export type UserConfig = Plugin.Name<'zod'> &
            *
            * @default 'z{{name}}Response'
            */
-          name?: StringName;
+          name?: NameTransformer;
           /**
            * Configuration for TypeScript type generation from Zod schemas.
            *
@@ -293,14 +293,14 @@ export type UserConfig = Plugin.Name<'zod'> &
              */
             infer?:
               | boolean
-              | StringName
+              | NameTransformer
               | {
                   /**
                    * The casing convention to use for generated type names.
                    *
                    * @default 'PascalCase'
                    */
-                  case?: StringCase;
+                  case?: Casing;
                   /**
                    * Whether to generate TypeScript types from Zod schemas.
                    *
@@ -313,7 +313,7 @@ export type UserConfig = Plugin.Name<'zod'> &
                    *
                    * @default '{{name}}ResponseZodType'
                    */
-                  name?: StringName;
+                  name?: NameTransformer;
                 };
           };
         };
@@ -335,14 +335,14 @@ export type UserConfig = Plugin.Name<'zod'> &
        */
       infer?:
         | boolean
-        | StringName
+        | NameTransformer
         | {
             /**
              * The casing convention to use for generated type names.
              *
              * @default 'PascalCase'
              */
-            case?: StringCase;
+            case?: Casing;
             /**
              * Whether to generate TypeScript types from Zod schemas.
              *
@@ -365,14 +365,14 @@ export type UserConfig = Plugin.Name<'zod'> &
      */
     webhooks?:
       | boolean
-      | StringName
+      | NameTransformer
       | {
           /**
            * The casing convention to use for generated names.
            *
            * @default 'camelCase'
            */
-          case?: StringCase;
+          case?: Casing;
           /**
            * Whether to generate Zod schemas for webhook definitions.
            *
@@ -385,7 +385,7 @@ export type UserConfig = Plugin.Name<'zod'> &
            *
            * @default 'z{{name}}WebhookRequest'
            */
-          name?: StringName;
+          name?: NameTransformer;
           /**
            * Configuration for TypeScript type generation from Zod schemas.
            *
@@ -404,14 +404,14 @@ export type UserConfig = Plugin.Name<'zod'> &
              */
             infer?:
               | boolean
-              | StringName
+              | NameTransformer
               | {
                   /**
                    * The casing convention to use for generated type names.
                    *
                    * @default 'PascalCase'
                    */
-                  case?: StringCase;
+                  case?: Casing;
                   /**
                    * Whether to generate TypeScript types from Zod schemas.
                    *
@@ -424,7 +424,7 @@ export type UserConfig = Plugin.Name<'zod'> &
                    *
                    * @default '{{name}}WebhookRequestZodType'
                    */
-                  name?: StringName;
+                  name?: NameTransformer;
                 };
           };
         };
@@ -438,7 +438,7 @@ export type Config = Plugin.Name<'zod'> &
      *
      * @default 'camelCase'
      */
-    case: StringCase;
+    case: Casing;
     /**
      * Add comments from input to the generated Zod schemas?
      *
@@ -494,7 +494,7 @@ export type Config = Plugin.Name<'zod'> &
        *
        * @default 'camelCase'
        */
-      case: StringCase;
+      case: Casing;
       /**
        * Whether to generate Zod schemas for reusable definitions.
        *
@@ -507,7 +507,7 @@ export type Config = Plugin.Name<'zod'> &
        *
        * @default 'z{{name}}'
        */
-      name: StringName;
+      name: NameTransformer;
       /**
        * Configuration for TypeScript type generation from Zod schemas.
        *
@@ -523,7 +523,7 @@ export type Config = Plugin.Name<'zod'> &
            *
            * @default 'PascalCase'
            */
-          case: StringCase;
+          case: Casing;
           /**
            * Whether to generate TypeScript types from Zod schemas.
            *
@@ -536,7 +536,7 @@ export type Config = Plugin.Name<'zod'> &
            *
            * @default '{{name}}ZodType'
            */
-          name: StringName;
+          name: NameTransformer;
         };
       };
     };
@@ -567,7 +567,7 @@ export type Config = Plugin.Name<'zod'> &
        *
        * @default 'camelCase'
        */
-      case: StringCase;
+      case: Casing;
       /**
        * Whether to generate Zod schemas for request definitions.
        *
@@ -580,7 +580,7 @@ export type Config = Plugin.Name<'zod'> &
        *
        * @default 'z{{name}}Data'
        */
-      name: StringName;
+      name: NameTransformer;
       /**
        * Configuration for TypeScript type generation from Zod schemas.
        *
@@ -596,7 +596,7 @@ export type Config = Plugin.Name<'zod'> &
            *
            * @default 'PascalCase'
            */
-          case: StringCase;
+          case: Casing;
           /**
            * Whether to generate TypeScript types from Zod schemas.
            *
@@ -609,7 +609,7 @@ export type Config = Plugin.Name<'zod'> &
            *
            * @default '{{name}}DataZodType'
            */
-          name: StringName;
+          name: NameTransformer;
         };
       };
     };
@@ -625,7 +625,7 @@ export type Config = Plugin.Name<'zod'> &
        *
        * @default 'camelCase'
        */
-      case: StringCase;
+      case: Casing;
       /**
        * Whether to generate Zod schemas for response definitions.
        *
@@ -638,7 +638,7 @@ export type Config = Plugin.Name<'zod'> &
        *
        * @default 'z{{name}}Response'
        */
-      name: StringName;
+      name: NameTransformer;
       /**
        * Configuration for TypeScript type generation from Zod schemas.
        *
@@ -654,7 +654,7 @@ export type Config = Plugin.Name<'zod'> &
            *
            * @default 'PascalCase'
            */
-          case: StringCase;
+          case: Casing;
           /**
            * Whether to generate TypeScript types from Zod schemas.
            *
@@ -667,7 +667,7 @@ export type Config = Plugin.Name<'zod'> &
            *
            * @default '{{name}}ResponseZodType'
            */
-          name: StringName;
+          name: NameTransformer;
         };
       };
     };
@@ -686,7 +686,7 @@ export type Config = Plugin.Name<'zod'> &
          *
          * @default 'PascalCase'
          */
-        case: StringCase;
+        case: Casing;
         /**
          * Whether to generate TypeScript types from Zod schemas.
          *
@@ -706,7 +706,7 @@ export type Config = Plugin.Name<'zod'> &
        *
        * @default 'camelCase'
        */
-      case: StringCase;
+      case: Casing;
       /**
        * Whether to generate Zod schemas for webhook definitions.
        *
@@ -719,7 +719,7 @@ export type Config = Plugin.Name<'zod'> &
        *
        * @default 'z{{name}}WebhookRequest'
        */
-      name: StringName;
+      name: NameTransformer;
       /**
        * Configuration for TypeScript type generation from Zod schemas.
        *
@@ -735,7 +735,7 @@ export type Config = Plugin.Name<'zod'> &
            *
            * @default 'PascalCase'
            */
-          case: StringCase;
+          case: Casing;
           /**
            * Whether to generate TypeScript types from Zod schemas.
            *
@@ -748,7 +748,7 @@ export type Config = Plugin.Name<'zod'> &
            *
            * @default '{{name}}WebhookRequestZodType'
            */
-          name: StringName;
+          name: NameTransformer;
         };
       };
     };

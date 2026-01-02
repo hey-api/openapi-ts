@@ -1,10 +1,5 @@
-import type {
-  AnalysisContext,
-  AstContext,
-  Ref,
-  Symbol,
-} from '@hey-api/codegen-core';
-import { ref } from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName, Ref } from '@hey-api/codegen-core';
+import { isNode, isSymbol, ref } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -14,7 +9,7 @@ import { ExprMixin } from '../mixins/expr';
 import { OperatorMixin } from '../mixins/operator';
 import { TypeExprMixin } from '../mixins/type-expr';
 
-type Id = Symbol | string | MaybeTsDsl<ts.Expression>;
+type Id = NodeName | MaybeTsDsl<ts.Expression>;
 
 const Mixed = AsMixin(
   ExprMixin(OperatorMixin(TypeExprMixin(TsDsl<ts.Expression>))),
@@ -28,6 +23,11 @@ export class ExprTsDsl extends Mixed {
   constructor(id: Id) {
     super();
     this._exprInput = ref(id);
+    if (typeof id === 'string' || isSymbol(id)) {
+      this.name.set(id);
+    } else if (isNode(id)) {
+      this.name.set(id.name);
+    }
   }
 
   override analyze(ctx: AnalysisContext): void {
@@ -35,7 +35,7 @@ export class ExprTsDsl extends Mixed {
     ctx.analyze(this._exprInput);
   }
 
-  override toAst(ctx: AstContext) {
-    return this.$node(ctx, this._exprInput);
+  override toAst() {
+    return this.$node(this._exprInput);
   }
 }

@@ -1,8 +1,8 @@
 import type { IR } from '~/ir/types';
-import { buildName } from '~/openApi/shared/utils/name';
 import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
 import { createOperationComment } from '~/plugins/shared/utils/operation';
 import { $ } from '~/ts-dsl';
+import { applyNaming } from '~/utils/naming';
 
 import { handleMeta } from './meta';
 import type { PiniaColadaPlugin } from './types';
@@ -12,11 +12,9 @@ import { getPublicTypeData } from './utils';
 export const createMutationOptions = ({
   operation,
   plugin,
-  queryFn,
 }: {
   operation: IR.OperationObject;
   plugin: PiniaColadaPlugin['Instance'];
-  queryFn: ReturnType<typeof $.expr | typeof $.call | typeof $.attr>;
 }): void => {
   const symbolMutationOptionsType = plugin.referenceSymbol({
     category: 'external',
@@ -31,8 +29,15 @@ export const createMutationOptions = ({
   const options = plugin.symbol('options');
   const fnOptions = plugin.symbol('vars');
 
-  const awaitSdkFn = $.lazy(() =>
-    $(queryFn)
+  const awaitSdkFn = $.lazy((ctx) =>
+    ctx
+      .access(
+        plugin.referenceSymbol({
+          category: 'sdk',
+          resource: 'operation',
+          resourceId: operation.id,
+        }),
+      )
       .call(
         $.object()
           .pretty()
@@ -70,12 +75,9 @@ export const createMutationOptions = ({
     .$if(handleMeta(plugin, operation, 'mutationOptions'), (o, v) =>
       o.prop('meta', v),
     );
-  const symbolMutationOptions = plugin.registerSymbol({
-    name: buildName({
-      config: plugin.config.mutationOptions,
-      name: operation.id,
-    }),
-  });
+  const symbolMutationOptions = plugin.symbol(
+    applyNaming(operation.id, plugin.config.mutationOptions),
+  );
   const statement = $.const(symbolMutationOptions)
     .export()
     .$if(plugin.config.comments && createOperationComment(operation), (c, v) =>

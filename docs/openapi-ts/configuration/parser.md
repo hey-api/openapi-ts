@@ -494,7 +494,7 @@ export default {
 
 ## Hooks
 
-Hooks affect runtime behavior but aren’t tied to any single plugin. They can be configured globally via `hooks` or per plugin through the `~hooks` property.
+Hooks affect runtime behavior but aren't tied to any single plugin. They can be configured globally via `hooks` or per plugin through the `~hooks` property.
 
 ::: code-group
 
@@ -527,7 +527,7 @@ We always use the first hook that returns a value. If a hook returns no value, w
 
 ### Operations {#hooks-operations}
 
-Each operation has a list of classifiers that can include `query`, `mutation`, both, or none. Plugins may use these values to decide whether to generate specific output. For example, you usually don’t want to generate [TanStack Query options](/openapi-ts/plugins/tanstack-query#queries) for PATCH operations.
+Each operation has a list of classifiers that can include `query`, `mutation`, both, or none. Plugins may use these values to decide whether to generate specific output. For example, you usually don't want to generate [TanStack Query options](/openapi-ts/plugins/tanstack-query#queries) for PATCH operations.
 
 #### Query operations {#hooks-query-operations}
 

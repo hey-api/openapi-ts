@@ -3,8 +3,8 @@ type ObjectType<T> =
     ? Record<string, any>
     : Extract<T, Record<string, any>>;
 
-type NotArray<T> = T extends any[] ? never : T;
-type NotFunction<T> = T extends (...args: any[]) => any ? never : T;
+type NotArray<T> = T extends Array<any> ? never : T;
+type NotFunction<T> = T extends (...args: Array<any>) => any ? never : T;
 type PlainObject<T> = T extends object
   ? NotFunction<T> extends never
     ? never
@@ -17,8 +17,8 @@ type MappersType<T> = {
   boolean: T extends boolean
     ? (value: boolean) => Partial<ObjectType<T>>
     : never;
-  function: T extends (...args: any[]) => any
-    ? (value: (...args: any[]) => any) => Partial<ObjectType<T>>
+  function: T extends (...args: Array<any>) => any
+    ? (value: (...args: Array<any>) => any) => Partial<ObjectType<T>>
     : never;
   number: T extends number ? (value: number) => Partial<ObjectType<T>> : never;
   object?: PlainObject<T> extends never
@@ -35,7 +35,7 @@ type MappersType<T> = {
 type IsObjectOnly<T> = T extends Record<string, any> | undefined
   ? Extract<
       T,
-      string | boolean | number | ((...args: any[]) => any)
+      string | boolean | number | ((...args: Array<any>) => any)
     > extends never
     ? true
     : false
@@ -47,7 +47,7 @@ export type ValueToObject = <
     | string
     | boolean
     | number
-    | ((...args: any[]) => any)
+    | ((...args: Array<any>) => any)
     | Record<string, any>,
 >(
   args: {
@@ -99,9 +99,12 @@ export const valueToObject: ValueToObject = ({
     case 'function':
       if (mappers && 'function' in mappers) {
         const mapper = mappers.function as (
-          value: (...args: any[]) => any,
+          value: (...args: Array<any>) => any,
         ) => Record<string, any>;
-        result = mergeResult(result, mapper(value as (...args: any[]) => any));
+        result = mergeResult(
+          result,
+          mapper(value as (...args: Array<any>) => any),
+        );
       }
       break;
     case 'number':

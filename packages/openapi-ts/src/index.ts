@@ -88,6 +88,7 @@ export const defineConfig = async <T extends MaybeArray<UserConfig>>(
 export { defaultPaginationKeywords } from '~/config/parser';
 export { defaultPlugins } from '~/config/plugins';
 export type { IR } from '~/ir/types';
+export { OperationPath, OperationStrategy } from '~/openApi/shared/locations';
 export type {
   OpenApi,
   OpenApiMetaObject,

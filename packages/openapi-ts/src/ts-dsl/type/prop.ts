@@ -1,8 +1,8 @@
 import type {
   AnalysisContext,
-  AstContext,
+  NodeName,
+  NodeScope,
   Ref,
-  Symbol,
 } from '@hey-api/codegen-core';
 import { ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
@@ -15,20 +15,19 @@ import { OptionalMixin } from '../mixins/optional';
 import { TokenTsDsl } from '../token';
 import { safePropName } from '../utils/name';
 
-export type TypePropName = string;
-export type TypePropType = Symbol | string | MaybeTsDsl<ts.TypeNode>;
+export type TypePropType = NodeName | MaybeTsDsl<ts.TypeNode>;
 
 const Mixed = DocMixin(OptionalMixin(ReadonlyMixin(TsDsl<ts.TypeElement>)));
 
 export class TypePropTsDsl extends Mixed {
   readonly '~dsl' = 'TypePropTsDsl';
+  override scope: NodeScope = 'type';
 
-  protected name: TypePropName;
   protected _type?: Ref<TypePropType>;
 
-  constructor(name: TypePropName, fn: (p: TypePropTsDsl) => void) {
+  constructor(name: NodeName, fn: (p: TypePropTsDsl) => void) {
     super();
-    this.name = name;
+    this.name.set(name);
     fn(this);
   }
 
@@ -43,16 +42,17 @@ export class TypePropTsDsl extends Mixed {
     return this;
   }
 
-  override toAst(ctx: AstContext) {
-    if (!this._type) {
-      throw new Error(`Type not specified for property '${this.name}'`);
+  override toAst() {
+    const name = this.name.toString();
+    if (!this._type || !name) {
+      throw new Error(`Type not specified for property '${name}'`);
     }
     const node = ts.factory.createPropertySignature(
       this.modifiers,
-      this.$node(ctx, safePropName(this.name)),
-      this._optional ? this.$node(ctx, new TokenTsDsl().optional()) : undefined,
-      this.$type(ctx, this._type),
+      this.$node(safePropName(name)),
+      this._optional ? this.$node(new TokenTsDsl().optional()) : undefined,
+      this.$type(this._type),
     );
-    return this.$docs(ctx, node);
+    return this.$docs(node);
   }
 }

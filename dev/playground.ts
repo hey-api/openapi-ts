@@ -1,6 +1,5 @@
 import type { DefinePlugin, IR } from '@hey-api/openapi-ts';
-
-import { authSet } from './.gen/index.ts';
+import { createOpencode } from '@opencode-ai/sdk';
 
 type MyPluginConfig = { readonly name: 'myplugin' };
 type MyPlugin = DefinePlugin<MyPluginConfig>;
@@ -15,14 +14,9 @@ export const handler: MyPlugin['Handler'] = ({ plugin }) => {
   });
 };
 
-console.log(
-  authSet({
-    auth: {
-      access: '',
-      expires: 1,
-      refresh: '',
-      type: 'oauth',
-    },
-    id: '123',
-  }),
-);
+async function run() {
+  const { client, server } = await createOpencode();
+  console.log(client, server);
+}
+
+run();

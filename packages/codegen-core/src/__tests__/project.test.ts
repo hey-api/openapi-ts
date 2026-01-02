@@ -48,7 +48,6 @@ describe('Project', () => {
     const renderer = file.renderer!;
 
     expect(renderer.render).toHaveBeenCalledWith({
-      astContext: expect.any(Object),
       file,
       meta: { hello: true },
       project: p,

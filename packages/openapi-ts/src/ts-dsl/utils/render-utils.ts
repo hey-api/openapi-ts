@@ -17,7 +17,7 @@ const blankFile = ts.createSourceFile(
 );
 
 /** Print a TypeScript node to a string. */
-export function nodeToString(node: ts.Node): string {
+export function astToString(node: ts.Node): string {
   const result = printer.printNode(ts.EmitHint.Unspecified, node, blankFile);
 
   try {

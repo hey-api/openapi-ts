@@ -3,13 +3,13 @@ import { Project } from '@hey-api/codegen-core';
 import type { Package } from '~/config/utils/package';
 import { packageFactory } from '~/config/utils/package';
 import type { Graph } from '~/graph';
-import { buildName } from '~/openApi/shared/utils/name';
 import type { PluginConfigMap } from '~/plugins/config';
 import { PluginInstance } from '~/plugins/shared/utils/instance';
 import type { PluginNames } from '~/plugins/types';
 import { TypeScriptRenderer } from '~/ts-dsl';
 import type { Config } from '~/types/config';
 import type { Logger } from '~/utils/logger';
+import { applyNaming } from '~/utils/naming';
 import { resolveRef } from '~/utils/ref';
 
 import type { IR } from './types';
@@ -72,10 +72,7 @@ export class Context<Spec extends Record<string, any> = any> {
     this.gen = new Project({
       defaultFileName: 'index',
       fileName: (base) => {
-        const name = buildName({
-          config: config.output.fileName,
-          name: base,
-        });
+        const name = applyNaming(base, config.output.fileName);
         const { suffix } = config.output.fileName;
         if (!suffix) {
           return name;
@@ -91,6 +88,7 @@ export class Context<Spec extends Record<string, any> = any> {
         : undefined,
       renderers: [
         new TypeScriptRenderer({
+          header: config.output.header,
           preferExportAll: config.output.preferExportAll,
           preferFileExtension: config.output.importFileExtension || undefined,
           resolveModuleName: config.output.resolveModuleName,

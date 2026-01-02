@@ -3,10 +3,10 @@ import { refs } from '@hey-api/codegen-core';
 
 import { deduplicateSchema } from '~/ir/schema';
 import type { IR } from '~/ir/types';
-import { buildName } from '~/openApi/shared/utils/name';
 import type { SchemaWithType } from '~/plugins';
 import type { MaybeTsDsl, TypeTsDsl } from '~/ts-dsl';
 import { $ } from '~/ts-dsl';
+import { applyNaming } from '~/utils/naming';
 
 import { createClientOptions } from '../shared/clientOptions';
 import { exportType } from '../shared/export';
@@ -175,11 +175,8 @@ export const handlerV1: HeyApiTypeScriptPlugin['Handler'] = ({ plugin }) => {
 
   if (webhooks.length > 0) {
     const symbol = plugin.symbol(
-      buildName({
-        config: {
-          case: plugin.config.case,
-        },
-        name: 'Webhooks',
+      applyNaming('Webhooks', {
+        case: plugin.config.case,
       }),
       {
         meta: {

@@ -1,10 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
-import type { StringCase } from '~/types/case';
+import { toCase } from '../naming';
+import type { Casing } from '../types';
 
-import { stringCase } from '../stringCase';
-
-const cases: ReadonlyArray<StringCase> = [
+const cases: ReadonlyArray<Casing> = [
   'camelCase',
   'PascalCase',
   'SCREAMING_SNAKE_CASE',
@@ -178,16 +177,16 @@ const scenarios: ReadonlyArray<{
   },
 ];
 
-describe('stringCase', () => {
-  describe.each(cases)('%s', (style) => {
-    switch (style) {
+describe('toCase', () => {
+  describe.each(cases)('%s', (casing) => {
+    switch (casing) {
       case 'PascalCase':
         it.each(scenarios)(
           '$value -> $PascalCase',
           ({ PascalCase, stripLeadingSeparators, value }) => {
-            expect(
-              stringCase({ case: style, stripLeadingSeparators, value }),
-            ).toBe(PascalCase);
+            expect(toCase(value, casing, { stripLeadingSeparators })).toBe(
+              PascalCase,
+            );
           },
         );
         break;
@@ -195,9 +194,9 @@ describe('stringCase', () => {
         it.each(scenarios)(
           '$value -> $camelCase',
           ({ camelCase, stripLeadingSeparators, value }) => {
-            expect(
-              stringCase({ case: style, stripLeadingSeparators, value }),
-            ).toBe(camelCase);
+            expect(toCase(value, casing, { stripLeadingSeparators })).toBe(
+              camelCase,
+            );
           },
         );
         break;
@@ -205,9 +204,9 @@ describe('stringCase', () => {
         it.each(scenarios)(
           '$value -> $SCREAMING_SNAKE_CASE',
           ({ SCREAMING_SNAKE_CASE, stripLeadingSeparators, value }) => {
-            expect(
-              stringCase({ case: style, stripLeadingSeparators, value }),
-            ).toBe(SCREAMING_SNAKE_CASE);
+            expect(toCase(value, casing, { stripLeadingSeparators })).toBe(
+              SCREAMING_SNAKE_CASE,
+            );
           },
         );
         break;
@@ -215,9 +214,9 @@ describe('stringCase', () => {
         it.each(scenarios)(
           '$value -> $snake_case',
           ({ snake_case, stripLeadingSeparators, value }) => {
-            expect(
-              stringCase({ case: style, stripLeadingSeparators, value }),
-            ).toBe(snake_case);
+            expect(toCase(value, casing, { stripLeadingSeparators })).toBe(
+              snake_case,
+            );
           },
         );
         break;
