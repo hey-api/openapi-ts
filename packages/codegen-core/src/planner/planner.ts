@@ -358,6 +358,7 @@ export class Planner {
   private assignTopLevelName(
     args: Partial<AssignOptions> & {
       ctx: AnalysisContext;
+      debug?: boolean;
       node?: INode;
       symbol: Symbol;
     },
@@ -388,6 +389,7 @@ export class Planner {
     args: Pick<Partial<AssignOptions>, 'scope'> &
       Pick<AssignOptions, 'scopesToUpdate'> & {
         ctx: AnalysisContext;
+        debug?: boolean;
         /** The file the symbol belongs to. */
         file: File;
         node?: INode;
@@ -410,6 +412,7 @@ export class Planner {
   private assignSymbolName(
     args: AssignOptions & {
       ctx: AnalysisContext;
+      debug?: boolean;
       /** The file the symbol belongs to. */
       file: File;
       node?: INode;
