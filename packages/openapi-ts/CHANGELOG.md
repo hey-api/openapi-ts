@@ -1,5 +1,61 @@
 # @hey-api/openapi-ts
 
+## 0.90.0
+
+### Minor Changes
+
+- **plugin(valibot)**: **BREAKING:** standardize `~resolvers` API ([#3147](https://github.com/hey-api/openapi-ts/pull/3147)) ([`ab80a4b`](https://github.com/hey-api/openapi-ts/commit/ab80a4b2c37423c522aa864afbcb688db76615ba)) by [@mrlubos](https://github.com/mrlubos)
+
+The [Resolvers API](https://heyapi.dev/openapi-ts/plugins/concepts/resolvers) has been simplified and expanded to provide a more consistent behavior across plugins. You can view a few common examples on the [Resolvers](https://heyapi.dev/openapi-ts/plugins/concepts/resolvers) page.
+
+- **plugin(sdk)**: **BREAKING**: Structure API ([#3109](https://github.com/hey-api/openapi-ts/pull/3109)) ([`815a3de`](https://github.com/hey-api/openapi-ts/commit/815a3de0af434c28ac6d13ff92b85ce1fc146999)) by [@mrlubos](https://github.com/mrlubos)
+
+### Structure API
+
+The [SDK plugin](https://heyapi.dev/openapi-ts/plugins/sdk) now implements the Structure API, enabling more complex structures and fixing several known issues.
+
+Some Structure APIs are incompatible with the previous configuration, most notably the `methodNameBuilder` function, which accepted the operation object as an argument. You can read the [SDK Output](https://heyapi.dev/openapi-ts/plugins/sdk#output) section to familiarize yourself with the Structure API.
+
+Please [open an issue](https://github.com/hey-api/openapi-ts/issues) if you're unable to migrate your configuration to the new syntax.
+
+- **plugin(zod)**: **BREAKING:** standardize `~resolvers` API ([#3147](https://github.com/hey-api/openapi-ts/pull/3147)) ([`ab80a4b`](https://github.com/hey-api/openapi-ts/commit/ab80a4b2c37423c522aa864afbcb688db76615ba)) by [@mrlubos](https://github.com/mrlubos)
+
+The [Resolvers API](https://heyapi.dev/openapi-ts/plugins/concepts/resolvers) has been simplified and expanded to provide a more consistent behavior across plugins. You can view a few common examples on the [Resolvers](https://heyapi.dev/openapi-ts/plugins/concepts/resolvers) page.
+
+- **plugin(@angular/common)**: **BREAKING**: Structure API ([#3109](https://github.com/hey-api/openapi-ts/pull/3109)) ([`815a3de`](https://github.com/hey-api/openapi-ts/commit/815a3de0af434c28ac6d13ff92b85ce1fc146999)) by [@mrlubos](https://github.com/mrlubos)
+
+### Structure API
+
+The [Angular plugin](https://heyapi.dev/openapi-ts/plugins/angular) now implements the Structure API, enabling more complex structures and fixing several known issues.
+
+Some Structure APIs are incompatible with the previous configuration, most notably the `methodNameBuilder` function, which accepted the operation object as an argument. You can read the [SDK Output](https://heyapi.dev/openapi-ts/plugins/sdk#output) section to familiarize yourself with the Structure API.
+
+Please [open an issue](https://github.com/hey-api/openapi-ts/issues) if you're unable to migrate your configuration to the new syntax.
+
+### Patch Changes
+
+- **plugin(@hey-api/client-nuxt)**: use serialized body in SSE requests ([#3123](https://github.com/hey-api/openapi-ts/pull/3123)) ([`6505659`](https://github.com/hey-api/openapi-ts/commit/6505659a5b776d03e943582e700a718eddcc2912)) by [@bilby91](https://github.com/bilby91)
+
+- **plugin(zod)**: expand support for bigint types ([#3145](https://github.com/hey-api/openapi-ts/pull/3145)) ([`4a32dcf`](https://github.com/hey-api/openapi-ts/commit/4a32dcfae503e76db81fa21ca71c71f20ea28c34)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@hey-api/client-angular)**: use serialized body in SSE requests ([#3171](https://github.com/hey-api/openapi-ts/pull/3171)) ([`e63f0cf`](https://github.com/hey-api/openapi-ts/commit/e63f0cf1018e3014c3c125189fe18ed3fa40d078)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@hey-api/client-next)**: use serialized body in SSE requests ([#3171](https://github.com/hey-api/openapi-ts/pull/3171)) ([`e63f0cf`](https://github.com/hey-api/openapi-ts/commit/e63f0cf1018e3014c3c125189fe18ed3fa40d078)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@hey-api/client-axios)**: use serialized body in SSE requests ([#3171](https://github.com/hey-api/openapi-ts/pull/3171)) ([`e63f0cf`](https://github.com/hey-api/openapi-ts/commit/e63f0cf1018e3014c3c125189fe18ed3fa40d078)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@hey-api/client-fetch)**: use serialized body in SSE requests ([#3171](https://github.com/hey-api/openapi-ts/pull/3171)) ([`e63f0cf`](https://github.com/hey-api/openapi-ts/commit/e63f0cf1018e3014c3c125189fe18ed3fa40d078)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@hey-api/client-nuxt)**: preserve null in `WithRefs` type for nullable fields ([#3131](https://github.com/hey-api/openapi-ts/pull/3131)) ([`3935034`](https://github.com/hey-api/openapi-ts/commit/39350343fe77b6a2700c2b57f03c5b838a92f09e)) by [@rigtigeEmil](https://github.com/rigtigeEmil)
+
+- **renderer**: correctly render default import ([#3109](https://github.com/hey-api/openapi-ts/pull/3109)) ([`815a3de`](https://github.com/hey-api/openapi-ts/commit/815a3de0af434c28ac6d13ff92b85ce1fc146999)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@hey-api/client-ky)**: use serialized body in SSE requests ([#3171](https://github.com/hey-api/openapi-ts/pull/3171)) ([`e63f0cf`](https://github.com/hey-api/openapi-ts/commit/e63f0cf1018e3014c3c125189fe18ed3fa40d078)) by [@mrlubos](https://github.com/mrlubos)
+
+### Updated Dependencies:
+
+- @hey-api/codegen-core@0.5.0
+
 ## 0.89.2
 
 ### Patch Changes
