@@ -48,10 +48,24 @@ export class FooBazService {
     static fooService = FooService;
 }
 
+export class BarService2 {
+    public static post<ThrowOnError extends boolean = false>(options?: Options<FooBarPostData, ThrowOnError>) {
+        return (options?.client ?? client).post<FooBarPostResponses, unknown, ThrowOnError>({ url: '/foo/bar', ...options });
+    }
+    
+    public static put<ThrowOnError extends boolean = false>(options?: Options<FooBarPutData, ThrowOnError>) {
+        return (options?.client ?? client).put<FooBarPutResponses, unknown, ThrowOnError>({ url: '/foo/bar', ...options });
+    }
+}
+
+export class FooService2 {
+    static barService = BarService2;
+}
+
 export class BarBazService {
     public static getFooBar<ThrowOnError extends boolean = false>(options?: Options<GetFooBarData, ThrowOnError>) {
         return (options?.client ?? client).get<GetFooBarResponses, unknown, ThrowOnError>({ url: '/foo/bar', ...options });
     }
     
-    static fooService = FooService;
+    static fooService = FooService2;
 }

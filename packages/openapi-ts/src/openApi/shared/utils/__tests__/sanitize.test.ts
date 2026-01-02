@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { sanitizeNamespaceIdentifier } from '../sanitize';
+import { sanitizeNamespaceIdentifier } from '../operation';
 
 describe('sanitizeNamespaceIdentifier', () => {
   it.each([

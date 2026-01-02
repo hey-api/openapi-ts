@@ -1,5 +1,5 @@
 {
-  "name": "@test/openapi-ts-playground",
+  "name": "@test/playground",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -10,8 +10,11 @@
     "dev": "ts-node ./playground.ts"
   },
   "devDependencies": {
+    "@angular/common": "19.2.17",
+    "@angular/core": "19.2.17",
     "@hey-api/codegen-core": "workspace:*",
     "@hey-api/openapi-ts": "workspace:*",
+    "@opencode-ai/sdk": "1.0.170",
     "@pinia/colada": "0.19.1",
     "@tanstack/angular-query-experimental": "5.73.3",
     "@tanstack/react-query": "5.73.3",
@@ -19,9 +22,11 @@
     "@tanstack/svelte-query": "5.73.3",
     "@tanstack/vue-query": "5.73.3",
     "arktype": "2.1.29",
+    "nuxt": "3.14.1592",
     "swr": "2.3.8",
     "typescript": "5.9.3",
     "valibot": "1.2.0",
+    "vue": "3.5.25",
     "zod": "4.1.12"
   }
 }

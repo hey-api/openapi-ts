@@ -1,8 +1,4 @@
-import type {
-  AnalysisContext,
-  AstContext,
-  Symbol,
-} from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl, TypeTsDsl } from '../base';
@@ -18,11 +14,10 @@ import {
 import { OptionalMixin } from '../mixins/optional';
 import { ValueMixin } from '../mixins/value';
 import { TokenTsDsl } from '../token';
-import type { TypeExprName } from '../type/expr';
 import { TypeExprTsDsl } from '../type/expr';
+import { safeAccessorName } from '../utils/name';
 
-export type FieldName = Symbol | string;
-export type FieldType = TypeExprName | TypeTsDsl;
+export type FieldType = NodeName | TypeTsDsl;
 
 const Mixed = DecoratorMixin(
   DocMixin(
@@ -42,18 +37,19 @@ const Mixed = DecoratorMixin(
 
 export class FieldTsDsl extends Mixed {
   readonly '~dsl' = 'FieldTsDsl';
+  override readonly nameSanitizer = safeAccessorName;
 
-  protected name: FieldName;
   protected _type?: TypeTsDsl;
 
-  constructor(name: FieldName, fn?: (f: FieldTsDsl) => void) {
+  constructor(name: NodeName, fn?: (f: FieldTsDsl) => void) {
     super();
-    this.name = name;
+    this.name.set(name);
     fn?.(this);
   }
 
   override analyze(ctx: AnalysisContext): void {
     super.analyze(ctx);
+    ctx.analyze(this.name);
     ctx.analyze(this._type);
   }
 
@@ -63,14 +59,14 @@ export class FieldTsDsl extends Mixed {
     return this;
   }
 
-  override toAst(ctx: AstContext) {
+  override toAst() {
     const node = ts.factory.createPropertyDeclaration(
-      [...this.$decorators(ctx), ...this.modifiers],
-      this.$node(ctx, this.name) as ts.PropertyName,
-      this._optional ? this.$node(ctx, new TokenTsDsl().optional()) : undefined,
-      this.$type(ctx, this._type),
-      this.$value(ctx),
+      [...this.$decorators(), ...this.modifiers],
+      this.$node(this.name) as ts.PropertyName,
+      this._optional ? this.$node(new TokenTsDsl().optional()) : undefined,
+      this.$type(this._type),
+      this.$value(),
     );
-    return this.$docs(ctx, node);
+    return this.$docs(node);
   }
 }

@@ -8,7 +8,7 @@ import type {
 } from '~/plugins/shared/utils/coerce';
 import type { GetIntegerLimit } from '~/plugins/shared/utils/formats';
 import type { $, DollarTsDsl } from '~/ts-dsl';
-import type { StringCase, StringName } from '~/types/case';
+import type { Casing, NameTransformer } from '~/utils/naming';
 
 import type { IApi } from './api';
 import type { Pipe, PipeResult, PipesUtils } from './shared/pipes';
@@ -22,7 +22,7 @@ export type UserConfig = Plugin.Name<'valibot'> &
      *
      * @default 'camelCase'
      */
-    case?: StringCase;
+    case?: Casing;
     /**
      * Add comments from input to the generated Valibot schemas?
      *
@@ -42,14 +42,14 @@ export type UserConfig = Plugin.Name<'valibot'> &
      */
     definitions?:
       | boolean
-      | StringName
+      | NameTransformer
       | {
           /**
            * The casing convention to use for generated names.
            *
            * @default 'camelCase'
            */
-          case?: StringCase;
+          case?: Casing;
           /**
            * Whether to generate Valibot schemas for reusable definitions.
            *
@@ -62,7 +62,7 @@ export type UserConfig = Plugin.Name<'valibot'> &
            *
            * @default 'v{{name}}'
            */
-          name?: StringName;
+          name?: NameTransformer;
         };
     /**
      * Should the exports from the generated files be re-exported in the index
@@ -92,14 +92,14 @@ export type UserConfig = Plugin.Name<'valibot'> &
      */
     requests?:
       | boolean
-      | StringName
+      | NameTransformer
       | {
           /**
            * The casing convention to use for generated names.
            *
            * @default 'camelCase'
            */
-          case?: StringCase;
+          case?: Casing;
           /**
            * Whether to generate Valibot schemas for request definitions.
            *
@@ -112,7 +112,7 @@ export type UserConfig = Plugin.Name<'valibot'> &
            *
            * @default 'v{{name}}Data'
            */
-          name?: StringName;
+          name?: NameTransformer;
         };
     /**
      * Configuration for response-specific Valibot schemas.
@@ -127,14 +127,14 @@ export type UserConfig = Plugin.Name<'valibot'> &
      */
     responses?:
       | boolean
-      | StringName
+      | NameTransformer
       | {
           /**
            * The casing convention to use for generated names.
            *
            * @default 'camelCase'
            */
-          case?: StringCase;
+          case?: Casing;
           /**
            * Whether to generate Valibot schemas for response definitions.
            *
@@ -147,7 +147,7 @@ export type UserConfig = Plugin.Name<'valibot'> &
            *
            * @default 'v{{name}}Response'
            */
-          name?: StringName;
+          name?: NameTransformer;
         };
     /**
      * Configuration for webhook-specific Valibot schemas.
@@ -163,14 +163,14 @@ export type UserConfig = Plugin.Name<'valibot'> &
      */
     webhooks?:
       | boolean
-      | StringName
+      | NameTransformer
       | {
           /**
            * The casing convention to use for generated names.
            *
            * @default 'camelCase'
            */
-          case?: StringCase;
+          case?: Casing;
           /**
            * Whether to generate Valibot schemas for webhook definitions.
            *
@@ -183,7 +183,7 @@ export type UserConfig = Plugin.Name<'valibot'> &
            *
            * @default 'v{{name}}WebhookRequest'
            */
-          name?: StringName;
+          name?: NameTransformer;
         };
   };
 
@@ -195,7 +195,7 @@ export type Config = Plugin.Name<'valibot'> &
      *
      * @default 'camelCase'
      */
-    case: StringCase;
+    case: Casing;
     /**
      * Add comments from input to the generated Valibot schemas?
      *
@@ -214,7 +214,7 @@ export type Config = Plugin.Name<'valibot'> &
        *
        * @default 'camelCase'
        */
-      case: StringCase;
+      case: Casing;
       /**
        * Whether to generate Valibot schemas for reusable definitions.
        *
@@ -227,7 +227,7 @@ export type Config = Plugin.Name<'valibot'> &
        *
        * @default 'v{{name}}'
        */
-      name: StringName;
+      name: NameTransformer;
     };
     /**
      * Should the exports from the generated files be re-exported in the index
@@ -256,7 +256,7 @@ export type Config = Plugin.Name<'valibot'> &
        *
        * @default 'camelCase'
        */
-      case: StringCase;
+      case: Casing;
       /**
        * Whether to generate Valibot schemas for request definitions.
        *
@@ -269,7 +269,7 @@ export type Config = Plugin.Name<'valibot'> &
        *
        * @default 'v{{name}}Data'
        */
-      name: StringName;
+      name: NameTransformer;
     };
     /**
      * Configuration for response-specific Valibot schemas.
@@ -283,7 +283,7 @@ export type Config = Plugin.Name<'valibot'> &
        *
        * @default 'camelCase'
        */
-      case: StringCase;
+      case: Casing;
       /**
        * Whether to generate Valibot schemas for response definitions.
        *
@@ -296,7 +296,7 @@ export type Config = Plugin.Name<'valibot'> &
        *
        * @default 'v{{name}}Response'
        */
-      name: StringName;
+      name: NameTransformer;
     };
     /**
      * Configuration for webhook-specific Valibot schemas.
@@ -309,7 +309,7 @@ export type Config = Plugin.Name<'valibot'> &
        *
        * @default 'camelCase'
        */
-      case: StringCase;
+      case: Casing;
       /**
        * Whether to generate Valibot schemas for webhook definitions.
        *
@@ -322,7 +322,7 @@ export type Config = Plugin.Name<'valibot'> &
        *
        * @default 'v{{name}}WebhookRequest'
        */
-      name: StringName;
+      name: NameTransformer;
     };
   };
 

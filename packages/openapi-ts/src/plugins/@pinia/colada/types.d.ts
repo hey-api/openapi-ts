@@ -1,6 +1,6 @@
 import type { IR } from '~/ir/types';
 import type { DefinePlugin, Plugin } from '~/plugins';
-import type { StringCase, StringName } from '~/types/case';
+import type { Casing, NameTransformer } from '~/utils/naming';
 
 export type UserConfig = Plugin.Name<'@pinia/colada'> &
   Plugin.Hooks & {
@@ -9,7 +9,7 @@ export type UserConfig = Plugin.Name<'@pinia/colada'> &
      *
      * @default 'camelCase'
      */
-    case?: StringCase;
+    case?: Casing;
     /**
      * Add comments from SDK functions to the generated Pinia Colada code?
      *
@@ -42,14 +42,14 @@ export type UserConfig = Plugin.Name<'@pinia/colada'> &
      */
     mutationOptions?:
       | boolean
-      | StringName
+      | NameTransformer
       | {
           /**
            * The casing convention to use for generated names.
            *
            * @default 'camelCase'
            */
-          case?: StringCase;
+          case?: Casing;
           /**
            * Whether to generate mutation options helpers.
            *
@@ -64,7 +64,7 @@ export type UserConfig = Plugin.Name<'@pinia/colada'> &
            * @returns A meta object with any properties you want to include
            *
            * @example
-           * ```typescript
+           * ```ts
            * meta: (operation) => ({
            *   customField: operation.id,
            *   isDeprecated: operation.deprecated,
@@ -85,7 +85,7 @@ export type UserConfig = Plugin.Name<'@pinia/colada'> &
            *
            * @default '{{name}}Mutation'
            */
-          name?: StringName;
+          name?: NameTransformer;
         };
     /**
      * Configuration for generated query keys.
@@ -101,14 +101,14 @@ export type UserConfig = Plugin.Name<'@pinia/colada'> &
      */
     queryKeys?:
       | boolean
-      | StringName
+      | NameTransformer
       | {
           /**
            * The casing convention to use for generated names.
            *
            * @default 'camelCase'
            */
-          case?: StringCase;
+          case?: Casing;
           /**
            * Whether to generate query keys.
            *
@@ -121,7 +121,7 @@ export type UserConfig = Plugin.Name<'@pinia/colada'> &
            *
            * @default '{{name}}QueryKey'
            */
-          name?: StringName;
+          name?: NameTransformer;
           /**
            * Whether to include operation tags in query keys.
            * This will make query keys larger but provides better cache invalidation capabilities.
@@ -144,14 +144,14 @@ export type UserConfig = Plugin.Name<'@pinia/colada'> &
      */
     queryOptions?:
       | boolean
-      | StringName
+      | NameTransformer
       | {
           /**
            * The casing convention to use for generated names.
            *
            * @default 'camelCase'
            */
-          case?: StringCase;
+          case?: Casing;
           /**
            * Whether to generate query options helpers.
            *
@@ -166,7 +166,7 @@ export type UserConfig = Plugin.Name<'@pinia/colada'> &
            * @returns A meta object with any properties you want to include
            *
            * @example
-           * ```typescript
+           * ```ts
            * meta: (operation) => ({
            *   customField: operation.id,
            *   isDeprecated: operation.deprecated,
@@ -187,7 +187,7 @@ export type UserConfig = Plugin.Name<'@pinia/colada'> &
            *
            * @default '{{name}}Query'
            */
-          name?: StringName;
+          name?: NameTransformer;
         };
   };
 
@@ -198,7 +198,7 @@ export type Config = Plugin.Name<'@pinia/colada'> &
      *
      * @default 'camelCase'
      */
-    case: StringCase;
+    case: Casing;
     /**
      * Add comments from SDK functions to the generated Pinia Colada code?
      *
@@ -220,7 +220,7 @@ export type Config = Plugin.Name<'@pinia/colada'> &
        *
        * @default 'camelCase'
        */
-      case: StringCase;
+      case: Casing;
       /**
        * Whether to generate mutation options helpers.
        *
@@ -235,7 +235,7 @@ export type Config = Plugin.Name<'@pinia/colada'> &
        * @returns A meta object with any properties you want to include
        *
        * @example
-       * ```typescript
+       * ```ts
        * meta: (operation) => ({
        *   customField: operation.id,
        *   isDeprecated: operation.deprecated,
@@ -258,7 +258,7 @@ export type Config = Plugin.Name<'@pinia/colada'> &
        *
        * @default '{{name}}Mutation'
        */
-      name: StringName;
+      name: NameTransformer;
     };
     /**
      * Resolved configuration for generated query keys.
@@ -271,7 +271,7 @@ export type Config = Plugin.Name<'@pinia/colada'> &
        *
        * @default 'camelCase'
        */
-      case: StringCase;
+      case: Casing;
       /**
        * Whether to generate query keys.
        *
@@ -284,7 +284,7 @@ export type Config = Plugin.Name<'@pinia/colada'> &
        *
        * @default '{{name}}QueryKey'
        */
-      name: StringName;
+      name: NameTransformer;
       /**
        * Whether to include operation tags in query keys.
        * This will make query keys larger but provides better cache invalidation capabilities.
@@ -304,7 +304,7 @@ export type Config = Plugin.Name<'@pinia/colada'> &
        *
        * @default 'camelCase'
        */
-      case: StringCase;
+      case: Casing;
       /**
        * Whether to generate query options helpers.
        *
@@ -319,7 +319,7 @@ export type Config = Plugin.Name<'@pinia/colada'> &
        * @returns A meta object with any properties you want to include
        *
        * @example
-       * ```typescript
+       * ```ts
        * meta: (operation) => ({
        *   customField: operation.id,
        *   isDeprecated: operation.deprecated,
@@ -342,7 +342,7 @@ export type Config = Plugin.Name<'@pinia/colada'> &
        *
        * @default '{{name}}Query'
        */
-      name: StringName;
+      name: NameTransformer;
     };
   };
 

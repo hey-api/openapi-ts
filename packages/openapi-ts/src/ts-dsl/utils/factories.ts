@@ -2,6 +2,7 @@ import type { AsCtor } from '../expr/as';
 import type { AttrCtor } from '../expr/attr';
 import type { AwaitCtor } from '../expr/await';
 import type { CallCtor } from '../expr/call';
+import type { NewCtor } from '../expr/new';
 import type { TypeOfExprCtor } from '../expr/typeof';
 import type { ReturnCtor } from '../stmt/return';
 import type { TypeExprCtor } from '../type/expr';
@@ -44,6 +45,9 @@ export const f = {
 
   /** Factory for creating function or method call expressions (e.g. `fn(arg)`). */
   call: createFactory<CallCtor>('call'),
+
+  /** Factory for creating new expressions (e.g. `new ClassName()`). */
+  new: createFactory<NewCtor>('new'),
 
   /** Factory for creating return statements. */
   return: createFactory<ReturnCtor>('return'),

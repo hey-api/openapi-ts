@@ -3,10 +3,10 @@ import type ts from 'typescript';
 
 import { hasOperationDataRequired } from '~/ir/operation';
 import type { IR } from '~/ir/types';
-import { buildName } from '~/openApi/shared/utils/name';
 import { getClientBaseUrlKey } from '~/plugins/@hey-api/client-core/utils';
 import type { TsDsl } from '~/ts-dsl';
 import { $ } from '~/ts-dsl';
+import { applyNaming } from '~/utils/naming';
 
 import { useTypeData } from './shared/useType';
 import type { PluginInstance } from './types';
@@ -18,19 +18,18 @@ export const createQueryKeyFunction = ({
 }: {
   plugin: PluginInstance;
 }) => {
-  const symbolCreateQueryKey = plugin.registerSymbol({
-    meta: {
-      category: 'utility',
-      resource: 'createQueryKey',
-      tool: plugin.name,
-    },
-    name: buildName({
-      config: {
-        case: plugin.config.case,
-      },
-      name: 'createQueryKey',
+  const symbolCreateQueryKey = plugin.symbol(
+    applyNaming('createQueryKey', {
+      case: plugin.config.case,
     }),
-  });
+    {
+      meta: {
+        category: 'utility',
+        resource: 'createQueryKey',
+        tool: plugin.name,
+      },
+    },
+  );
   const symbolQueryKeyType = plugin.referenceSymbol({
     category: 'type',
     resource: 'QueryKey',
@@ -140,13 +139,12 @@ export const createQueryKeyType = ({ plugin }: { plugin: PluginInstance }) => {
     resource: 'client-options',
     tool: 'sdk',
   });
-  const symbolQueryKeyType = plugin.registerSymbol({
+  const symbolQueryKeyType = plugin.symbol('QueryKey', {
     meta: {
       category: 'type',
       resource: 'QueryKey',
       tool: plugin.name,
     },
-    name: 'QueryKey',
   });
   const queryKeyType = $.type
     .alias(symbolQueryKeyType)

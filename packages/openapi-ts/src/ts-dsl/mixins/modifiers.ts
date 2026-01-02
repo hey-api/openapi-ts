@@ -4,18 +4,68 @@ import ts from 'typescript';
 import type { BaseCtor, MixinCtor } from './types';
 
 export type Modifiers = {
+  /**
+   * Checks if the specified modifier is present.
+   *
+   * @param modifier - The modifier to check.
+   * @returns True if the modifier is present, false otherwise.
+   */
+  hasModifier(modifier: Modifier): boolean;
   modifiers: Array<ts.Modifier>;
 };
+
+type Modifier =
+  | 'abstract'
+  | 'async'
+  | 'const'
+  | 'declare'
+  | 'default'
+  | 'export'
+  | 'override'
+  | 'private'
+  | 'protected'
+  | 'public'
+  | 'readonly'
+  | 'static';
 
 export interface ModifierMethods extends Modifiers {
   /**
    * Adds a modifier of the specified kind to the modifiers list if the condition is true.
    *
-   * @param kind - The syntax kind of the modifier to add.
+   * @param modifier - The modifier to add.
    * @param condition - Whether to add the modifier.
    * @returns The parent node for chaining.
    */
-  _m(kind: ts.ModifierSyntaxKind, condition: boolean): this;
+  _m(modifier: Modifier, condition: boolean): this;
+}
+
+function modifierToKind(modifier: Modifier): ts.ModifierSyntaxKind {
+  switch (modifier) {
+    case 'abstract':
+      return ts.SyntaxKind.AbstractKeyword;
+    case 'async':
+      return ts.SyntaxKind.AsyncKeyword;
+    case 'const':
+      return ts.SyntaxKind.ConstKeyword;
+    case 'declare':
+      return ts.SyntaxKind.DeclareKeyword;
+    case 'default':
+      return ts.SyntaxKind.DefaultKeyword;
+    case 'export':
+      return ts.SyntaxKind.ExportKeyword;
+    case 'override':
+      return ts.SyntaxKind.OverrideKeyword;
+    case 'private':
+      return ts.SyntaxKind.PrivateKeyword;
+    case 'protected':
+      return ts.SyntaxKind.ProtectedKeyword;
+    case 'public':
+      return ts.SyntaxKind.PublicKeyword;
+    case 'readonly':
+      return ts.SyntaxKind.ReadonlyKeyword;
+    case 'static':
+      return ts.SyntaxKind.StaticKeyword;
+  }
 }
 
 function ModifiersMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
@@ -28,8 +78,16 @@ function ModifiersMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
       super.analyze(ctx);
     }
 
-    protected _m(kind: ts.ModifierSyntaxKind, condition: boolean): this {
-      if (condition) this.modifiers.push(ts.factory.createModifier(kind));
+    protected hasModifier(modifier: Modifier): boolean {
+      const kind = modifierToKind(modifier);
+      return Boolean(this.modifiers.find((mod) => mod.kind === kind));
+    }
+
+    protected _m(modifier: Modifier, condition: boolean): this {
+      if (condition) {
+        const kind = modifierToKind(modifier);
+        this.modifiers.push(ts.factory.createModifier(kind));
+      }
       return this;
     }
   }
@@ -58,7 +116,7 @@ export function AbstractMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
   abstract class Abstract extends Mixed {
     protected abstract(condition?: boolean): this {
       const cond = arguments.length === 0 ? true : Boolean(condition);
-      return this._m(ts.SyntaxKind.AbstractKeyword, cond);
+      return this._m('abstract', cond);
     }
   }
 
@@ -86,7 +144,7 @@ export function AsyncMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
   abstract class Async extends Mixed {
     protected async(condition?: boolean): this {
       const cond = arguments.length === 0 ? true : Boolean(condition);
-      return this._m(ts.SyntaxKind.AsyncKeyword, cond);
+      return this._m('async', cond);
     }
   }
 
@@ -114,7 +172,7 @@ export function ConstMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
   abstract class Const extends Mixed {
     protected const(condition?: boolean): this {
       const cond = arguments.length === 0 ? true : Boolean(condition);
-      return this._m(ts.SyntaxKind.ConstKeyword, cond);
+      return this._m('const', cond);
     }
   }
 
@@ -142,7 +200,7 @@ export function DeclareMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
   abstract class Declare extends Mixed {
     protected declare(condition?: boolean): this {
       const cond = arguments.length === 0 ? true : Boolean(condition);
-      return this._m(ts.SyntaxKind.DeclareKeyword, cond);
+      return this._m('declare', cond);
     }
   }
 
@@ -176,7 +234,7 @@ export function DefaultMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
      */
     protected default(condition?: boolean): this {
       const cond = arguments.length === 0 ? true : Boolean(condition);
-      return this._m(ts.SyntaxKind.DefaultKeyword, cond);
+      return this._m('default', cond);
     }
   }
 
@@ -213,7 +271,7 @@ export function ExportMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
       this.exported = cond;
       // TODO: remove this side-effect once planner handles exported flag
       if (this.symbol) this.symbol.setExported(cond);
-      return this._m(ts.SyntaxKind.ExportKeyword, cond);
+      return this._m('export', cond);
     }
   }
 
@@ -241,7 +299,7 @@ export function OverrideMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
   abstract class Override extends Mixed {
     protected override(condition?: boolean): this {
       const cond = arguments.length === 0 ? true : Boolean(condition);
-      return this._m(ts.SyntaxKind.OverrideKeyword, cond);
+      return this._m('override', cond);
     }
   }
 
@@ -269,7 +327,7 @@ export function PrivateMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
   abstract class Private extends Mixed {
     protected private(condition?: boolean): this {
       const cond = arguments.length === 0 ? true : Boolean(condition);
-      return this._m(ts.SyntaxKind.PrivateKeyword, cond);
+      return this._m('private', cond);
     }
   }
 
@@ -297,7 +355,7 @@ export function ProtectedMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
   abstract class Protected extends Mixed {
     protected protected(condition?: boolean): this {
       const cond = arguments.length === 0 ? true : Boolean(condition);
-      return this._m(ts.SyntaxKind.ProtectedKeyword, cond);
+      return this._m('protected', cond);
     }
   }
 
@@ -325,7 +383,7 @@ export function PublicMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
   abstract class Public extends Mixed {
     protected public(condition?: boolean): this {
       const cond = arguments.length === 0 ? true : Boolean(condition);
-      return this._m(ts.SyntaxKind.PublicKeyword, cond);
+      return this._m('public', cond);
     }
   }
 
@@ -353,7 +411,7 @@ export function ReadonlyMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
   abstract class Readonly extends Mixed {
     protected readonly(condition?: boolean): this {
       const cond = arguments.length === 0 ? true : Boolean(condition);
-      return this._m(ts.SyntaxKind.ReadonlyKeyword, cond);
+      return this._m('readonly', cond);
     }
   }
 
@@ -381,7 +439,7 @@ export function StaticMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
   abstract class Static extends Mixed {
     protected static(condition?: boolean): this {
       const cond = arguments.length === 0 ? true : Boolean(condition);
-      return this._m(ts.SyntaxKind.StaticKeyword, cond);
+      return this._m('static', cond);
     }
   }
 

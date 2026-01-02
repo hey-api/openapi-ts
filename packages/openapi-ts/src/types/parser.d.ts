@@ -7,8 +7,7 @@ import type {
   OpenApiSchemaObject,
 } from '~/openApi/types';
 import type { Hooks } from '~/parser/types/hooks';
-
-import type { StringCase, StringName } from './case';
+import type { Casing, NameTransformer } from '~/utils/naming';
 
 type EnumsMode = 'inline' | 'root';
 
@@ -73,7 +72,7 @@ export type UserParser = {
            *
            * @default 'PascalCase'
            */
-          case?: StringCase;
+          case?: Casing;
           /**
            * Whether to transform all enums.
            *
@@ -92,7 +91,7 @@ export type UserParser = {
            *
            * @default '{{name}}Enum'
            */
-          name?: StringName;
+          name?: NameTransformer;
         };
     /**
      * By default, any object schema with a missing `required` keyword is
@@ -137,21 +136,21 @@ export type UserParser = {
            * @default '{{name}}Writable'
            */
           requests?:
-            | StringName
+            | NameTransformer
             | {
                 /**
                  * The casing convention to use for generated names.
                  *
                  * @default 'preserve'
                  */
-                case?: StringCase;
+                case?: Casing;
                 /**
                  * Customize the generated name of schemas used in requests or
                  * containing write-only fields.
                  *
                  * @default '{{name}}Writable'
                  */
-                name?: StringName;
+                name?: NameTransformer;
               };
           /**
            * Configuration for generated response-specific schemas.
@@ -163,14 +162,14 @@ export type UserParser = {
            * @default '{{name}}'
            */
           responses?:
-            | StringName
+            | NameTransformer
             | {
                 /**
                  * The casing convention to use for generated names.
                  *
                  * @default 'preserve'
                  */
-                case?: StringCase;
+                case?: Casing;
                 /**
                  * Customize the generated name of schemas used in responses or
                  * containing read-only fields. We default to the original name
@@ -178,7 +177,7 @@ export type UserParser = {
                  *
                  * @default '{{name}}'
                  */
-                name?: StringName;
+                name?: NameTransformer;
               };
         };
   };
@@ -250,7 +249,7 @@ export type Parser = {
        *
        * @default 'PascalCase'
        */
-      case: StringCase;
+      case: Casing;
       /**
        * Whether to transform all enums.
        *
@@ -269,7 +268,7 @@ export type Parser = {
        *
        * @default '{{name}}Enum'
        */
-      name: StringName;
+      name: NameTransformer;
     };
     /**
      * By default, any object schema with a missing `required` keyword is
@@ -309,14 +308,14 @@ export type Parser = {
          *
          * @default 'preserve'
          */
-        case: StringCase;
+        case: Casing;
         /**
          * Customize the generated name of schemas used in requests or
          * containing write-only fields.
          *
          * @default '{{name}}Writable'
          */
-        name: StringName;
+        name: NameTransformer;
       };
       /**
        * Configuration for generated response-specific schemas.
@@ -327,7 +326,7 @@ export type Parser = {
          *
          * @default 'preserve'
          */
-        case: StringCase;
+        case: Casing;
         /**
          * Customize the generated name of schemas used in responses or
          * containing read-only fields. We default to the original name
@@ -335,7 +334,7 @@ export type Parser = {
          *
          * @default '{{name}}'
          */
-        name: StringName;
+        name: NameTransformer;
       };
     };
   };

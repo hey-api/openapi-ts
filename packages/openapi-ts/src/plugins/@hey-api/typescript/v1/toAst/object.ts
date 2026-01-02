@@ -69,7 +69,7 @@ export const objectToAst = ({
     (!!addPropsObj && (addPropsObj.type !== 'never' || !indexSchemas.length));
 
   if (shouldCreateIndex) {
-    // only inject additionalProperties when it’s not "never"
+    // only inject additionalProperties when it's not "never"
     const addProps = addPropsObj;
     if (addProps && addProps.type !== 'never') {
       indexSchemas.unshift(addProps);

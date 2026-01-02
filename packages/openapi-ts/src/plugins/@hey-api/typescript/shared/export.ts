@@ -1,12 +1,11 @@
 import { fromRef } from '@hey-api/codegen-core';
 
 import type { IR } from '~/ir/types';
-import { buildName } from '~/openApi/shared/utils/name';
 import { createSchemaComment } from '~/plugins/shared/utils/schema';
 import type { MaybeTsDsl, TypeTsDsl } from '~/ts-dsl';
 import { $, regexp } from '~/ts-dsl';
+import { applyNaming, toCase } from '~/utils/naming';
 import { pathToJsonPointer, refToName } from '~/utils/ref';
-import { stringCase } from '~/utils/stringCase';
 
 import type { HeyApiTypeScriptPlugin } from '../types';
 import type { IrSchemaToAstOptions } from './types';
@@ -52,10 +51,8 @@ const schemaToEnumObject = ({
     }
 
     if (key) {
-      key = stringCase({
-        case: plugin.config.enums.case,
+      key = toCase(key, plugin.config.enums.case, {
         stripLeadingSeparators: false,
-        value: key,
       });
 
       regexp.number.lastIndex = 0;
@@ -108,20 +105,19 @@ export const exportType = ({
         );
       }
 
-      const symbolObject = plugin.registerSymbol({
-        meta: {
-          category: 'utility',
-          path: fromRef(state.path),
-          resource: 'definition',
-          resourceId: $ref,
-          tags: fromRef(state.tags),
-          tool: 'typescript',
+      const symbolObject = plugin.symbol(
+        applyNaming(refToName($ref), plugin.config.definitions),
+        {
+          meta: {
+            category: 'utility',
+            path: fromRef(state.path),
+            resource: 'definition',
+            resourceId: $ref,
+            tags: fromRef(state.tags),
+            tool: 'typescript',
+          },
         },
-        name: buildName({
-          config: plugin.config.definitions,
-          name: refToName($ref),
-        }),
-      });
+      );
       const objectNode = $.const(symbolObject)
         .export()
         .$if(createSchemaComment(schema), (c, v) => c.doc(v))
@@ -136,20 +132,19 @@ export const exportType = ({
         );
       plugin.node(objectNode);
 
-      const symbol = plugin.registerSymbol({
-        meta: {
-          category: 'type',
-          path: fromRef(state.path),
-          resource: 'definition',
-          resourceId: $ref,
-          tags: fromRef(state.tags),
-          tool: 'typescript',
+      const symbol = plugin.symbol(
+        applyNaming(refToName($ref), plugin.config.definitions),
+        {
+          meta: {
+            category: 'type',
+            path: fromRef(state.path),
+            resource: 'definition',
+            resourceId: $ref,
+            tags: fromRef(state.tags),
+            tool: 'typescript',
+          },
         },
-        name: buildName({
-          config: plugin.config.definitions,
-          name: refToName($ref),
-        }),
-      });
+      );
       const node = $.type
         .alias(symbol)
         .export()
@@ -168,20 +163,19 @@ export const exportType = ({
         (type) => type !== 'number' && type !== 'string',
       );
       if (shouldCreateTypeScriptEnum) {
-        const symbol = plugin.registerSymbol({
-          meta: {
-            category: 'type',
-            path: fromRef(state.path),
-            resource: 'definition',
-            resourceId: $ref,
-            tags: fromRef(state.tags),
-            tool: 'typescript',
+        const symbol = plugin.symbol(
+          applyNaming(refToName($ref), plugin.config.definitions),
+          {
+            meta: {
+              category: 'type',
+              path: fromRef(state.path),
+              resource: 'definition',
+              resourceId: $ref,
+              tags: fromRef(state.tags),
+              tool: 'typescript',
+            },
           },
-          name: buildName({
-            config: plugin.config.definitions,
-            name: refToName($ref),
-          }),
-        });
+        );
         const enumNode = $.enum(symbol)
           .export()
           .$if(createSchemaComment(schema), (e, v) => e.doc(v))
@@ -199,20 +193,19 @@ export const exportType = ({
     }
   }
 
-  const symbol = plugin.registerSymbol({
-    meta: {
-      category: 'type',
-      path: fromRef(state.path),
-      resource: 'definition',
-      resourceId: $ref,
-      tags: fromRef(state.tags),
-      tool: 'typescript',
+  const symbol = plugin.symbol(
+    applyNaming(refToName($ref), plugin.config.definitions),
+    {
+      meta: {
+        category: 'type',
+        path: fromRef(state.path),
+        resource: 'definition',
+        resourceId: $ref,
+        tags: fromRef(state.tags),
+        tool: 'typescript',
+      },
     },
-    name: buildName({
-      config: plugin.config.definitions,
-      name: refToName($ref),
-    }),
-  });
+  );
   const node = $.type
     .alias(symbol)
     .export()

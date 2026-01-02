@@ -1,22 +1,20 @@
 import type { IR } from '~/ir/types';
-import { buildName } from '~/openApi/shared/utils/name';
 import {
   createOperationComment,
   hasOperationSse,
 } from '~/plugins/shared/utils/operation';
 import type { TsDsl } from '~/ts-dsl';
 import { $ } from '~/ts-dsl';
+import { applyNaming } from '~/utils/naming';
 
 import type { SwrPlugin } from '../types';
 
 export const createUseSwr = ({
   operation,
   plugin,
-  queryFn,
 }: {
   operation: IR.OperationObject;
   plugin: SwrPlugin['Instance'];
-  queryFn: ReturnType<typeof $.expr | typeof $.call | typeof $.attr>;
 }): void => {
   if (hasOperationSse({ operation })) {
     return;
@@ -26,15 +24,19 @@ export const createUseSwr = ({
     category: 'external',
     resource: 'swr',
   });
-  const symbolUseQueryFn = plugin.registerSymbol({
-    name: buildName({
-      config: plugin.config.useSwr,
-      name: operation.id,
-    }),
-  });
+  const symbolUseQueryFn = plugin.symbol(
+    applyNaming(operation.id, plugin.config.useSwr),
+  );
 
-  const awaitSdkFn = $.lazy(() =>
-    $(queryFn)
+  const awaitSdkFn = $.lazy((ctx) =>
+    ctx
+      .access(
+        plugin.referenceSymbol({
+          category: 'sdk',
+          resource: 'operation',
+          resourceId: operation.id,
+        }),
+      )
       .call($.object().prop('throwOnError', $.literal(true)))
       .await(),
   );

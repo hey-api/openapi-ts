@@ -1,4 +1,4 @@
-import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
+import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl } from '../base';
@@ -20,8 +20,8 @@ export class BlockTsDsl extends Mixed {
     super.analyze(ctx);
   }
 
-  override toAst(ctx: AstContext) {
-    const statements = this.$do(ctx);
+  override toAst() {
+    const statements = this.$do();
     return ts.factory.createBlock(
       statements,
       this.$multiline(statements.length),

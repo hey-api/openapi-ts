@@ -1,5 +1,5 @@
 import type { DefinePlugin, Plugin } from '~/plugins';
-import type { StringCase, StringName } from '~/types/case';
+import type { Casing, NameTransformer } from '~/utils/naming';
 
 import type { IApi } from './api';
 
@@ -12,7 +12,7 @@ export type UserConfig = Plugin.Name<'@hey-api/typescript'> &
      *
      * @default 'PascalCase'
      */
-    case?: Exclude<StringCase, 'SCREAMING_SNAKE_CASE'>;
+    case?: Exclude<Casing, 'SCREAMING_SNAKE_CASE'>;
     /**
      * Configuration for reusable schema definitions.
      *
@@ -26,21 +26,21 @@ export type UserConfig = Plugin.Name<'@hey-api/typescript'> &
      * @default '{{name}}'
      */
     definitions?:
-      | StringName
+      | NameTransformer
       | {
           /**
            * The casing convention to use for generated definition names.
            *
            * @default 'PascalCase'
            */
-          case?: StringCase;
+          case?: Casing;
           /**
            * Custom naming pattern for generated definition names. The name variable
            * is obtained from the schema name.
            *
            * @default '{{name}}'
            */
-          name?: StringName;
+          name?: NameTransformer;
         };
     /**
      * By default, enums are emitted as types to preserve runtime-free output.
@@ -60,7 +60,7 @@ export type UserConfig = Plugin.Name<'@hey-api/typescript'> &
            *
            * @default 'SCREAMING_SNAKE_CASE'
            */
-          case?: StringCase;
+          case?: Casing;
           /**
            * When generating enums as JavaScript objects, they'll contain a null
            * value if they're nullable. This might be undesirable if you want to do
@@ -101,28 +101,28 @@ export type UserConfig = Plugin.Name<'@hey-api/typescript'> &
      * @default '{{name}}Errors'
      */
     errors?:
-      | StringName
+      | NameTransformer
       | {
           /**
            * The casing convention to use for generated error type names.
            *
            * @default 'PascalCase'
            */
-          case?: StringCase;
+          case?: Casing;
           /**
            * Custom naming pattern for generated error type names. The name
            * variable is obtained from the operation name.
            *
            * @default '{{name}}Error'
            */
-          error?: StringName;
+          error?: NameTransformer;
           /**
            * Custom naming pattern for generated error type names. The name
            * variable is obtained from the operation name.
            *
            * @default '{{name}}Errors'
            */
-          name?: StringName;
+          name?: NameTransformer;
         };
     /**
      * Should the exports from the generated files be re-exported in the index
@@ -144,21 +144,21 @@ export type UserConfig = Plugin.Name<'@hey-api/typescript'> &
      * @default '{{name}}Data'
      */
     requests?:
-      | StringName
+      | NameTransformer
       | {
           /**
            * The casing convention to use for generated request type names.
            *
            * @default 'PascalCase'
            */
-          case?: StringCase;
+          case?: Casing;
           /**
            * Custom naming pattern for generated request type names. The name
            * variable is obtained from the operation name.
            *
            * @default '{{name}}Data'
            */
-          name?: StringName;
+          name?: NameTransformer;
         };
     /**
      * Configuration for response-specific types.
@@ -172,28 +172,28 @@ export type UserConfig = Plugin.Name<'@hey-api/typescript'> &
      * @default '{{name}}Responses'
      */
     responses?:
-      | StringName
+      | NameTransformer
       | {
           /**
            * The casing convention to use for generated response type names.
            *
            * @default 'PascalCase'
            */
-          case?: StringCase;
+          case?: Casing;
           /**
            * Custom naming pattern for generated response type names. The name
            * variable is obtained from the operation name.
            *
            * @default '{{name}}Responses'
            */
-          name?: StringName;
+          name?: NameTransformer;
           /**
            * Custom naming pattern for generated response type names. The name
            * variable is obtained from the operation name.
            *
            * @default '{{name}}Response'
            */
-          response?: StringName;
+          response?: NameTransformer;
         };
     /**
      * The top type to use for untyped or unspecified schema values.
@@ -217,28 +217,28 @@ export type UserConfig = Plugin.Name<'@hey-api/typescript'> &
      * @default '{{name}}WebhookRequest'
      */
     webhooks?:
-      | StringName
+      | NameTransformer
       | {
           /**
            * The casing convention to use for generated webhook type names.
            *
            * @default 'PascalCase'
            */
-          case?: StringCase;
+          case?: Casing;
           /**
            * Custom naming pattern for generated webhook type names. The name
            * variable is obtained from the webhook key.
            *
            * @default '{{name}}WebhookRequest'
            */
-          name?: StringName;
+          name?: NameTransformer;
           /**
            * Custom naming pattern for generated webhook type names. The name
            * variable is obtained from the webhook key.
            *
            * @default '{{name}}WebhookPayload'
            */
-          payload?: StringName;
+          payload?: NameTransformer;
         };
   };
 
@@ -249,7 +249,7 @@ export type Config = Plugin.Name<'@hey-api/typescript'> &
      *
      * @default 'PascalCase'
      */
-    case: Exclude<StringCase, 'SCREAMING_SNAKE_CASE'>;
+    case: Exclude<Casing, 'SCREAMING_SNAKE_CASE'>;
     /**
      * Configuration for reusable schema definitions.
      *
@@ -262,14 +262,14 @@ export type Config = Plugin.Name<'@hey-api/typescript'> &
        *
        * @default 'PascalCase'
        */
-      case: StringCase;
+      case: Casing;
       /**
        * Custom naming pattern for generated definition names. The name variable
        * is obtained from the schema name.
        *
        * @default '{{name}}'
        */
-      name: StringName;
+      name: NameTransformer;
     };
     /**
      * By default, enums are emitted as types to preserve runtime-free output.
@@ -284,7 +284,7 @@ export type Config = Plugin.Name<'@hey-api/typescript'> &
        *
        * @default 'SCREAMING_SNAKE_CASE'
        */
-      case: StringCase;
+      case: Casing;
       /**
        * When generating enums as JavaScript objects, they'll contain a null
        * value if they're nullable. This might be undesirable if you want to do
@@ -328,21 +328,21 @@ export type Config = Plugin.Name<'@hey-api/typescript'> &
        *
        * @default 'PascalCase'
        */
-      case: StringCase;
+      case: Casing;
       /**
        * Custom naming pattern for generated error type names. The name
        * variable is obtained from the operation name.
        *
        * @default '{{name}}Error'
        */
-      error: StringName;
+      error: NameTransformer;
       /**
        * Custom naming pattern for generated error type names. The name
        * variable is obtained from the operation name.
        *
        * @default '{{name}}Errors'
        */
-      name: StringName;
+      name: NameTransformer;
     };
     /**
      * Should the exports from the generated files be re-exported in the index
@@ -363,14 +363,14 @@ export type Config = Plugin.Name<'@hey-api/typescript'> &
        *
        * @default 'PascalCase'
        */
-      case: StringCase;
+      case: Casing;
       /**
        * Custom naming pattern for generated request type names. The name
        * variable is obtained from the operation name.
        *
        * @default '{{name}}Data'
        */
-      name: StringName;
+      name: NameTransformer;
     };
     /**
      * Configuration for response-specific types.
@@ -383,21 +383,21 @@ export type Config = Plugin.Name<'@hey-api/typescript'> &
        *
        * @default 'PascalCase'
        */
-      case: StringCase;
+      case: Casing;
       /**
        * Custom naming pattern for generated response type names. The name
        * variable is obtained from the operation name.
        *
        * @default '{{name}}Responses'
        */
-      name: StringName;
+      name: NameTransformer;
       /**
        * Custom naming pattern for generated response type names. The name
        * variable is obtained from the operation name.
        *
        * @default '{{name}}Response'
        */
-      response: StringName;
+      response: NameTransformer;
     };
     /**
      * The top type to use for untyped or unspecified schema values.
@@ -416,21 +416,21 @@ export type Config = Plugin.Name<'@hey-api/typescript'> &
        *
        * @default 'PascalCase'
        */
-      case: StringCase;
+      case: Casing;
       /**
        * Custom naming pattern for generated webhook type names. The name
        * variable is obtained from the webhook key.
        *
        * @default '{{name}}WebhookRequest'
        */
-      name: StringName;
+      name: NameTransformer;
       /**
        * Custom naming pattern for generated webhook type names. The name
        * variable is obtained from the webhook key.
        *
        * @default '{{name}}WebhookPayload'
        */
-      payload: StringName;
+      payload: NameTransformer;
     };
   };
 

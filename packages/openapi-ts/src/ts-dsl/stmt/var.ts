@@ -1,10 +1,5 @@
-import type {
-  AnalysisContext,
-  AstContext,
-  Ref,
-  Symbol,
-} from '@hey-api/codegen-core';
-import { isSymbol, ref } from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName } from '@hey-api/codegen-core';
+import { isSymbol } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl, TypeTsDsl } from '../base';
@@ -16,8 +11,6 @@ import { ValueMixin } from '../mixins/value';
 import { TypeExprTsDsl } from '../type/expr';
 import { safeRuntimeName } from '../utils/name';
 
-export type VarName = Symbol | string;
-
 const Mixed = DefaultMixin(
   DocMixin(
     ExportMixin(
@@ -28,18 +21,16 @@ const Mixed = DefaultMixin(
 
 export class VarTsDsl extends Mixed {
   readonly '~dsl' = 'VarTsDsl';
+  override readonly nameSanitizer = safeRuntimeName;
 
   protected kind: ts.NodeFlags = ts.NodeFlags.None;
-  protected name?: Ref<VarName>;
   protected _type?: TypeTsDsl;
 
-  constructor(name?: VarName) {
+  constructor(name?: NodeName) {
     super();
-    if (name) this.name = ref(name);
+    if (name) this.name.set(name);
     if (isSymbol(name)) {
       name.setKind('var');
-      name.setNameSanitizer(safeRuntimeName);
-      name.setNode(this);
     }
   }
 
@@ -70,8 +61,8 @@ export class VarTsDsl extends Mixed {
     return this;
   }
 
-  override toAst(ctx: AstContext) {
-    const name = this.$pattern(ctx) ?? this.$node(ctx, this.name);
+  override toAst() {
+    const name = this.$pattern() ?? this.$node(this.name);
     if (!name)
       throw new Error('Var must have either a name or a destructuring pattern');
     const node = ts.factory.createVariableStatement(
@@ -81,13 +72,13 @@ export class VarTsDsl extends Mixed {
           ts.factory.createVariableDeclaration(
             name as ts.BindingName,
             undefined,
-            this.$type(ctx, this._type),
-            this.$value(ctx),
+            this.$type(this._type),
+            this.$value(),
           ),
         ],
         this.kind,
       ),
     );
-    return this.$docs(ctx, this.$hint(ctx, node));
+    return this.$docs(this.$hint(node));
   }
 }

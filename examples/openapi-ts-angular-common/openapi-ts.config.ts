@@ -17,7 +17,8 @@ export default defineConfig({
       exportFromIndex: true,
       httpRequests: true,
       httpResources: {
-        asClass: true,
+        containerName: '{{name}}ServiceResources',
+        strategy: 'byTags',
       },
       name: '@angular/common',
     },
