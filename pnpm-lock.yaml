@@ -95,8 +95,8 @@ importers:
         specifier: 10.9.2
         version: 10.9.2(@types/node@22.10.5)(typescript@5.9.3)
       tsdown:
-        specifier: 0.18.3
-        version: 0.18.3(@arethetypeswrong/core@0.18.2)(synckit@0.11.11)(typescript@5.9.3)
+        specifier: 0.18.4
+        version: 0.18.4(@arethetypeswrong/core@0.18.2)(synckit@0.11.11)(typescript@5.9.3)
       turbo:
         specifier: 2.7.2
         version: 2.7.2
@@ -13216,8 +13216,8 @@ packages:
   tsconfig-paths@3.15.0:
     resolution: {integrity: sha512-2Ac2RgzDe/cn48GvOe3M+o82pEFewD3UPbyoUHHdKasHwJKjds4fLXWf/Ux5kATBKN20oaFGu+jbElp1pos0mg==}
 
-  tsdown@0.18.3:
-    resolution: {integrity: sha512-OVFzktKDTglFAUh/WO8WamBUbZoBlJ9m7NgZZrVyIKe32BfXBeRZ+soFFpuOGVP8g8OU4tOLOpTyPTELWvcTFw==}
+  tsdown@0.18.4:
+    resolution: {integrity: sha512-J/tRS6hsZTkvqmt4+xdELUCkQYDuUCXgBv0fw3ImV09WPGbEKfsPD65E+WUjSu3E7Z6tji9XZ1iWs8rbGqB/ZA==}
     engines: {node: '>=20.19.0'}
     hasBin: true
     peerDependencies:
@@ -29496,7 +29496,7 @@ snapshots:
       minimist: 1.2.8
       strip-bom: 3.0.0
 
-  tsdown@0.18.3(@arethetypeswrong/core@0.18.2)(synckit@0.11.11)(typescript@5.9.3):
+  tsdown@0.18.4(@arethetypeswrong/core@0.18.2)(synckit@0.11.11)(typescript@5.9.3):
     dependencies:
       ansis: 4.2.0
       cac: 6.7.14
