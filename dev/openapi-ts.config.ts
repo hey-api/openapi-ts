@@ -342,7 +342,7 @@ export default defineConfig(() => {
           // signature: 'object',
           // transformer: '@hey-api/transformers',
           // transformer: true,
-          validator: 'valibot',
+          // validator: 'valibot',
           // validator: {
           //   request: 'zod',
           //   response: 'zod',
@@ -441,7 +441,7 @@ export default defineConfig(() => {
           // definitions: 'z{{name}}',
           exportFromIndex: true,
           // metadata: true,
-          name: 'valibot',
+          // name: 'valibot',
           // requests: {
           //   case: 'PascalCase',
           //   name: '{{name}}Data',
