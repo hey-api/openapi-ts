@@ -1,8 +1,8 @@
 import type { IR } from '~/ir/types';
-import { buildName } from '~/openApi/shared/utils/name';
 import { createOperationComment } from '~/plugins/shared/utils/operation';
 import type { TsDsl } from '~/ts-dsl';
 import { $ } from '~/ts-dsl';
+import { applyNaming } from '~/utils/naming';
 
 import { handleMeta } from '../shared/meta';
 import { useTypeData, useTypeError, useTypeResponse } from '../shared/useType';
@@ -11,11 +11,9 @@ import type { PluginInstance } from '../types';
 export const createMutationOptions = ({
   operation,
   plugin,
-  queryFn,
 }: {
   operation: IR.OperationObject;
   plugin: PluginInstance;
-  queryFn: ReturnType<typeof $.expr | typeof $.call | typeof $.attr>;
 }): void => {
   const symbolMutationOptionsType = plugin.referenceSymbol({
     category: 'external',
@@ -30,8 +28,15 @@ export const createMutationOptions = ({
 
   const fnOptions = 'fnOptions';
 
-  const awaitSdkFn = $.lazy(() =>
-    $(queryFn)
+  const awaitSdkFn = $.lazy((ctx) =>
+    ctx
+      .access(
+        plugin.referenceSymbol({
+          category: 'sdk',
+          resource: 'operation',
+          resourceId: operation.id,
+        }),
+      )
       .call(
         $.object()
           .spread('options')
@@ -52,12 +57,9 @@ export const createMutationOptions = ({
   }
 
   const mutationOptionsFn = 'mutationOptions';
-  const symbolMutationOptions = plugin.registerSymbol({
-    name: buildName({
-      config: plugin.config.mutationOptions,
-      name: operation.id,
-    }),
-  });
+  const symbolMutationOptions = plugin.symbol(
+    applyNaming(operation.id, plugin.config.mutationOptions),
+  );
   const statement = $.const(symbolMutationOptions)
     .export()
     .$if(plugin.config.comments && createOperationComment(operation), (c, v) =>

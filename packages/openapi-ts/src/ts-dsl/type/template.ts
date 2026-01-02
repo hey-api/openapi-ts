@@ -1,4 +1,4 @@
-import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeScope } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -8,6 +8,7 @@ const Mixed = TsDsl<ts.TemplateLiteralTypeNode>;
 
 export class TypeTemplateTsDsl extends Mixed {
   readonly '~dsl' = 'TypeTemplateTsDsl';
+  override scope: NodeScope = 'type';
 
   protected parts: Array<string | MaybeTsDsl<ts.TypeNode>> = [];
 
@@ -29,8 +30,8 @@ export class TypeTemplateTsDsl extends Mixed {
     return this;
   }
 
-  override toAst(ctx: AstContext) {
-    const parts = this.$node(ctx, this.parts);
+  override toAst() {
+    const parts = this.$node(this.parts);
 
     const normalized: Array<string | ts.TypeNode> = [];
     // merge consecutive string parts

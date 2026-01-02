@@ -7,7 +7,6 @@
   "scripts": {
     "build": "vitepress build",
     "dev": "vitepress dev",
-    "optimize-images": "node scripts/optimize-images.js",
     "preview": "vitepress preview"
   },
   "dependencies": {

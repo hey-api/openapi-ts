@@ -1,8 +1,4 @@
-import type {
-  AnalysisContext,
-  AstContext,
-  Symbol,
-} from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -13,8 +9,8 @@ import { HintMixin } from '../mixins/hint';
 import { LayoutMixin } from '../mixins/layout';
 import { ObjectPropTsDsl } from './prop';
 
-type Expr = Symbol | string | MaybeTsDsl<ts.Expression>;
-type Stmt = Symbol | string | MaybeTsDsl<ts.Statement>;
+type Expr = NodeName | MaybeTsDsl<ts.Expression>;
+type Stmt = NodeName | MaybeTsDsl<ts.Statement>;
 type ExprFn = Expr | ((p: ObjectPropTsDsl) => void);
 type StmtFn = Stmt | ((p: ObjectPropTsDsl) => void);
 
@@ -87,11 +83,11 @@ export class ObjectTsDsl extends Mixed {
     return this;
   }
 
-  override toAst(ctx: AstContext) {
+  override toAst() {
     const node = ts.factory.createObjectLiteralExpression(
-      this.$node(ctx, this._props),
+      this.$node(this._props),
       this.$multiline(this._props.length),
     );
-    return this.$hint(ctx, node);
+    return this.$hint(node);
   }
 }

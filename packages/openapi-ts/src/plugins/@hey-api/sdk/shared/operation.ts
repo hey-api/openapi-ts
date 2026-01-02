@@ -3,110 +3,16 @@ import { refs } from '@hey-api/codegen-core';
 
 import { statusCodeToGroup } from '~/ir/operation';
 import type { IR } from '~/ir/types';
-import { sanitizeNamespaceIdentifier } from '~/openApi/common/parser/sanitize';
 import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
 import { $ } from '~/ts-dsl';
-import { stringCase } from '~/utils/stringCase';
 
 import type { Field, Fields } from '../../client-core/bundle/params';
 import type { HeyApiSdkPlugin } from '../types';
+import { isInstance } from '../v1/node';
 import { operationAuth } from './auth';
 import { nuxtTypeComposable, nuxtTypeDefault } from './constants';
 import { getSignatureParameters } from './signature';
 import { createRequestValidator, createResponseValidator } from './validator';
-
-interface ClassNameEntry {
-  /**
-   * Name of the class where this function appears.
-   */
-  className: string;
-  /**
-   * Name of the function within the class.
-   */
-  methodName: string;
-  /**
-   * JSONPath-like array to class location.
-   */
-  path: ReadonlyArray<string>;
-}
-
-const operationClassName = ({
-  plugin,
-  value,
-}: {
-  plugin: HeyApiSdkPlugin['Instance'];
-  value: string;
-}) => {
-  const name = stringCase({ case: 'PascalCase', value });
-  return (
-    (typeof plugin.config.classNameBuilder === 'string'
-      ? plugin.config.classNameBuilder.replace('{{name}}', name)
-      : plugin.config.classNameBuilder(name)) || name
-  );
-};
-
-export const operationMethodName = ({
-  operation,
-  plugin,
-}: {
-  operation: IR.OperationObject;
-  plugin: HeyApiSdkPlugin['Instance'];
-}) => plugin.config.methodNameBuilder?.(operation) || operation.id;
-
-/**
- * Returns a list of classes where this operation appears in the generated SDK.
- */
-export const operationClasses = ({
-  operation,
-  plugin,
-}: {
-  operation: IR.OperationObject;
-  plugin: HeyApiSdkPlugin['Instance'];
-}): Map<string, ClassNameEntry> => {
-  const classNames = new Map<string, ClassNameEntry>();
-
-  let className: string | undefined;
-  let methodName: string | undefined;
-  let classCandidates: Array<string> = [];
-
-  if (plugin.config.classStructure === 'auto' && operation.operationId) {
-    classCandidates = operation.operationId.split(/[./]/).filter(Boolean);
-    if (classCandidates.length >= 2) {
-      const methodCandidate = classCandidates.pop()!;
-      methodName = stringCase({
-        case: 'camelCase',
-        value: sanitizeNamespaceIdentifier(methodCandidate),
-      });
-      className = classCandidates.pop()!;
-    }
-  }
-
-  const rootClasses = plugin.config.instance
-    ? [plugin.config.instance]
-    : (operation.tags ?? ['default']);
-
-  for (const rootClass of rootClasses) {
-    // Default path
-    let path = [rootClass];
-    if (className) {
-      // If root class is already within classCandidates or the same as className
-      // do not add it again as this will cause a recursion issue.
-      if (classCandidates.includes(rootClass) || rootClass === className) {
-        path = [...classCandidates, className];
-      } else {
-        path = [rootClass, ...classCandidates, className];
-      }
-    }
-
-    classNames.set(rootClass, {
-      className: operationClassName({ plugin, value: className || rootClass }),
-      methodName: methodName || operationMethodName({ operation, plugin }),
-      path: path.map((value) => operationClassName({ plugin, value })),
-    });
-  }
-
-  return classNames;
-};
 
 /** TODO: needs complete refactor */
 export const operationOptionsType = ({
@@ -564,7 +470,7 @@ export const operationStatements = ({
 
   let clientExpression: ReturnType<typeof $.attr | typeof $.binary>;
   const optionsClient = $('options').attr('client').required(isRequiredOptions);
-  if (plugin.config.instance) {
+  if (isInstance(plugin)) {
     clientExpression = optionsClient.coalesce($('this').attr('client'));
   } else if (symbolClient) {
     clientExpression = optionsClient.coalesce(symbolClient);

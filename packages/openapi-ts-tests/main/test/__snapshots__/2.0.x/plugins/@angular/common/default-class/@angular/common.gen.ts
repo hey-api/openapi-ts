@@ -587,7 +587,7 @@ export class NoContentServiceResources {
     public callWithResponseAndNoContentResponse<ThrowOnError extends boolean = false>(options?: () => Options<CallWithResponseAndNoContentResponseData, ThrowOnError> | undefined) {
         return httpResource<CallWithResponseAndNoContentResponseResponse>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(ResponseServiceRequests).callWithResponseAndNoContentResponse(opts) : undefined;
+            return opts ? inject(NoContentServiceRequests).callWithResponseAndNoContentResponse(opts) : undefined;
         });
     }
 }
@@ -597,7 +597,7 @@ export class ResponseServiceResources {
     public callWithResponseAndNoContentResponse<ThrowOnError extends boolean = false>(options?: () => Options<CallWithResponseAndNoContentResponseData, ThrowOnError> | undefined) {
         return httpResource<CallWithResponseAndNoContentResponseResponse>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(ResponseServiceRequests).callWithResponseAndNoContentResponse(opts) : undefined;
+            return opts ? inject(NoContentServiceRequests).callWithResponseAndNoContentResponse(opts) : undefined;
         });
     }
     

@@ -3,15 +3,15 @@ import { fromRef, ref, refs } from '@hey-api/codegen-core';
 
 import { deduplicateSchema } from '~/ir/schema';
 import type { IR } from '~/ir/types';
-import { buildName } from '~/openApi/shared/utils/name';
 import type { SchemaWithType } from '~/plugins';
+import { maybeBigInt } from '~/plugins/shared/utils/coerce';
 import { $ } from '~/ts-dsl';
+import { applyNaming } from '~/utils/naming';
 import { pathToJsonPointer, refToName } from '~/utils/ref';
 
 import { exportAst } from '../shared/export';
-import { numberParameter } from '../shared/numbers';
 import { irOperationToAst } from '../shared/operation';
-import { pipesToAst } from '../shared/pipesToAst';
+import { pipesToNode } from '../shared/pipes';
 import type { Ast, IrSchemaToAstOptions, PluginState } from '../shared/types';
 import { irWebhookToAst } from '../shared/webhook';
 import type { ValibotPlugin } from '../types';
@@ -87,7 +87,7 @@ export const irSchemaToAst = ({
             path: ref([...fromRef(state.path), 'items', index]),
           },
         });
-        return pipesToAst({ pipes: itemAst.pipes, plugin });
+        return pipesToNode(itemAst.pipes, plugin);
       });
 
       if (schema.logicalOperator === 'and') {
@@ -124,23 +124,22 @@ export const irSchemaToAst = ({
       ast.pipes.push(readonlyExpression);
     }
 
-    let callParameter: ReturnType<typeof $.fromValue> | undefined;
-
     if (schema.default !== undefined) {
-      const isBigInt = schema.type === 'integer' && schema.format === 'int64';
-      callParameter = numberParameter({ isBigInt, value: schema.default });
       ast.pipes = [
         $(v)
           .attr(identifiers.schemas.optional)
-          .call(pipesToAst({ pipes: ast.pipes, plugin }), callParameter),
+          .call(
+            pipesToNode(ast.pipes, plugin),
+            schema.type === 'integer' || schema.type === 'number'
+              ? maybeBigInt(schema.default, schema.format)
+              : $.fromValue(schema.default),
+          ),
       ];
-    }
-
-    if (optional && !callParameter) {
+    } else if (optional) {
       ast.pipes = [
         $(v)
           .attr(identifiers.schemas.optional)
-          .call(pipesToAst({ pipes: ast.pipes, plugin })),
+          .call(pipesToNode(ast.pipes, plugin)),
       ];
     }
   }
@@ -158,20 +157,19 @@ const handleComponent = ({
   const $ref = pathToJsonPointer(fromRef(state.path));
   const ast = irSchemaToAst({ plugin, schema, state });
   const baseName = refToName($ref);
-  const symbol = plugin.registerSymbol({
-    meta: {
-      category: 'schema',
-      path: fromRef(state.path),
-      resource: 'definition',
-      resourceId: $ref,
-      tags: fromRef(state.tags),
-      tool: 'valibot',
+  const symbol = plugin.symbol(
+    applyNaming(baseName, plugin.config.definitions),
+    {
+      meta: {
+        category: 'schema',
+        path: fromRef(state.path),
+        resource: 'definition',
+        resourceId: $ref,
+        tags: fromRef(state.tags),
+        tool: 'valibot',
+      },
     },
-    name: buildName({
-      config: plugin.config.definitions,
-      name: baseName,
-    }),
-  });
+  );
   exportAst({
     ast,
     plugin,
@@ -182,14 +180,13 @@ const handleComponent = ({
 };
 
 export const handlerV1: ValibotPlugin['Handler'] = ({ plugin }) => {
-  plugin.registerSymbol({
+  plugin.symbol('v', {
     external: 'valibot',
     importKind: 'namespace',
     meta: {
       category: 'external',
       resource: 'valibot.v',
     },
-    name: 'v',
   });
 
   plugin.forEach(

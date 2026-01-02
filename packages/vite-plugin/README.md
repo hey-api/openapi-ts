@@ -1,5 +1,5 @@
 <div align="center">
-  <img alt="Hey API logo" height="150" src="https://heyapi.dev/images/logo-astronaut-300w.png" width="150">
+  <img alt="Hey API logo" height="150" src="https://heyapi.dev/assets/.gen/logo-astronaut-300w.png" width="150">
   <h1 align="center"><b>Vite Plugin</b></h1>
   <p align="center">🚀 Vite plugin for <code>@hey-api/openapi-ts</code> codegen.</p>
 </div>
@@ -32,8 +32,8 @@ Help Hey API stay around for the long haul by becoming a [sponsor](https://githu
         <p>
           <a href="https://kutt.it/pkEZyc" target="_blank">
             <picture height="50px">
-              <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/images/stainless-logo-wordmark-480w.jpeg">
-              <img alt="Stainless logo" height="50px" src="https://heyapi.dev/images/stainless-logo-wordmark-480w.jpeg">
+              <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/.gen/stainless-logo-wordmark-480w.jpeg">
+              <img alt="Stainless logo" height="50px" src="https://heyapi.dev/assets/.gen/stainless-logo-wordmark-480w.jpeg">
             </picture>
           </a>
           <br/>
@@ -50,7 +50,8 @@ Help Hey API stay around for the long haul by becoming a [sponsor](https://githu
         <p>
           <a href="https://kutt.it/QM9Q2N" target="_blank">
             <picture height="50px">
-              <img alt="Opencode logo" height="50px" src="https://heyapi.dev/opencode-logo-wordmark.svg">
+              <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/opencode/logo-light.svg">
+              <img alt="Opencode logo" height="50px" src="https://heyapi.dev/assets/opencode/logo-dark.svg">
             </picture>
           </a>
           <br/>
@@ -74,8 +75,8 @@ Help Hey API stay around for the long haul by becoming a [sponsor](https://githu
       <td align="center">
         <a href="https://kutt.it/skQUVd" target="_blank">
           <picture height="40px">
-            <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/images/scalar-logo-wordmark-480w.jpeg">
-            <img alt="Scalar logo" height="40px" src="https://heyapi.dev/scalar-logo-wordmark.svg">
+            <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/scalar/logo-light.svg">
+            <img alt="Scalar logo" height="40px" src="https://heyapi.dev/assets/scalar/logo-dark.svg">
           </picture>
         </a>
         <br/>
@@ -86,7 +87,8 @@ Help Hey API stay around for the long haul by becoming a [sponsor](https://githu
       <td align="center">
         <a href="https://kutt.it/Dr9GuW" target="_blank">
           <picture height="40px">
-            <img alt="FastAPI logo" height="40px" src="https://heyapi.dev/fastapi-logo-wordmark.svg">
+            <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/fastapi/logo-light.svg">
+            <img alt="FastAPI logo" height="40px" src="https://heyapi.dev/assets/fastapi/logo-dark.svg">
           </picture>
         </a>
         <br/>
@@ -106,16 +108,16 @@ Help Hey API stay around for the long haul by becoming a [sponsor](https://githu
       <td align="center">
         <a href="https://kutt.it/YpaKsX" target="_blank">
           <picture height="34px">
-            <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/images/kinde-logo-wordmark-dark-480w.webp">
-            <img alt="Kinde logo" height="34px" src="https://heyapi.dev/images/kinde-logo-wordmark-480w.jpeg">
+            <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/.gen/kinde-logo-wordmark-dark-480w.webp">
+            <img alt="Kinde logo" height="34px" src="https://heyapi.dev/assets/.gen/kinde-logo-wordmark-480w.jpeg">
           </picture>
         </a>
       </td>
       <td align="center">
         <a href="https://kutt.it/KkqSaw" target="_blank">
           <picture height="34px">
-            <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/images/cella-logo-wordmark-480w.webp">
-            <img alt="Cella logo" height="34px" src="https://heyapi.dev/cella-logo-wordmark.svg">
+            <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/cella/logo-light.svg">
+            <img alt="Cella logo" height="34px" src="https://heyapi.dev/assets/cella/logo-dark.svg">
           </picture>
         </a>
       </td>

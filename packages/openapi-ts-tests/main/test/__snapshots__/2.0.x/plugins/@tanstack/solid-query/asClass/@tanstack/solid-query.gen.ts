@@ -3,7 +3,7 @@
 import { type DefaultError, type MutationOptions, queryOptions } from '@tanstack/solid-query';
 
 import { client } from '../client.gen';
-import { BarBazService, FooBazService, type Options } from '../sdk.gen';
+import { BarBazService, BarService, FooBazService, FooService, type Options } from '../sdk.gen';
 import type { FooBarPostData, FooBarPostResponse, FooBarPutData, FooBarPutResponse, FooPostData, FooPostResponse, FooPutData, FooPutResponse, GetFooBarData, GetFooBarResponse, GetFooData, GetFooResponse } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
@@ -57,7 +57,7 @@ export const getFooOptions = (options?: Options<GetFooData>) => queryOptions<Get
 export const fooPostMutation = (options?: Partial<Options<FooPostData>>): MutationOptions<FooPostResponse, DefaultError, Options<FooPostData>> => {
     const mutationOptions: MutationOptions<FooPostResponse, DefaultError, Options<FooPostData>> = {
         mutationFn: async (fnOptions) => {
-            const { data } = await FooBazService.fooService.post({
+            const { data } = await FooService.post({
                 ...options,
                 ...fnOptions,
                 throwOnError: true
@@ -71,7 +71,7 @@ export const fooPostMutation = (options?: Partial<Options<FooPostData>>): Mutati
 export const fooPutMutation = (options?: Partial<Options<FooPutData>>): MutationOptions<FooPutResponse, DefaultError, Options<FooPutData>> => {
     const mutationOptions: MutationOptions<FooPutResponse, DefaultError, Options<FooPutData>> = {
         mutationFn: async (fnOptions) => {
-            const { data } = await FooBazService.fooService.put({
+            const { data } = await FooService.put({
                 ...options,
                 ...fnOptions,
                 throwOnError: true
@@ -100,7 +100,7 @@ export const getFooBarOptions = (options?: Options<GetFooBarData>) => queryOptio
 export const fooBarPostMutation = (options?: Partial<Options<FooBarPostData>>): MutationOptions<FooBarPostResponse, DefaultError, Options<FooBarPostData>> => {
     const mutationOptions: MutationOptions<FooBarPostResponse, DefaultError, Options<FooBarPostData>> = {
         mutationFn: async (fnOptions) => {
-            const { data } = await FooBazService.fooService.barService.post({
+            const { data } = await BarService.post({
                 ...options,
                 ...fnOptions,
                 throwOnError: true
@@ -114,7 +114,7 @@ export const fooBarPostMutation = (options?: Partial<Options<FooBarPostData>>): 
 export const fooBarPutMutation = (options?: Partial<Options<FooBarPutData>>): MutationOptions<FooBarPutResponse, DefaultError, Options<FooBarPutData>> => {
     const mutationOptions: MutationOptions<FooBarPutResponse, DefaultError, Options<FooBarPutData>> = {
         mutationFn: async (fnOptions) => {
-            const { data } = await FooBazService.fooService.barService.put({
+            const { data } = await BarService.put({
                 ...options,
                 ...fnOptions,
                 throwOnError: true

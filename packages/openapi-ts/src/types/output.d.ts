@@ -1,13 +1,22 @@
-import type { NameConflictResolver } from '@hey-api/codegen-core';
+import type {
+  NameConflictResolver,
+  RenderContext,
+} from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
-import type { StringCase, StringName } from './case';
+import type { Casing, NameTransformer } from '~/utils/naming';
+
+import type { MaybeArray, MaybeFunc } from './utils';
 
 export type Formatters = 'biome' | 'prettier';
 
 export type Linters = 'biome' | 'eslint' | 'oxlint';
 
 type ImportFileExtensions = '.js' | '.ts';
+
+type Header = MaybeFunc<
+  (ctx: RenderContext) => MaybeArray<string> | null | undefined
+>;
 
 export type UserOutput = {
   /**
@@ -16,7 +25,7 @@ export type UserOutput = {
    *
    * @default undefined
    */
-  case?: StringCase;
+  case?: Casing;
   /**
    * Clean the `output` folder on every run? If disabled, this folder may
    * be used to store additional files. The default option is `true` to
@@ -34,20 +43,20 @@ export type UserOutput = {
    * @default '{{name}}'
    */
   fileName?:
-    | StringName
+    | NameTransformer
     | {
         /**
          * The casing convention to use for generated file names.
          *
          * @default 'preserve'
          */
-        case?: StringCase;
+        case?: Casing;
         /**
          * Custom naming pattern for generated file names.
          *
          * @default '{{name}}'
          */
-        name?: StringName;
+        name?: NameTransformer;
         /**
          * Suffix to append to file names (before the extension). For example,
          * with a suffix of `.gen`, `example.ts` becomes `example.gen.ts`.
@@ -67,6 +76,10 @@ export type UserOutput = {
    * @default null
    */
   format?: Formatters | null;
+  /**
+   * Text to include at the top of every generated file.
+   */
+  header?: Header;
   /**
    * If specified, this will be the file extension used when importing
    * other modules. By default, we don't add a file extension and let the
@@ -128,7 +141,7 @@ export type Output = {
    * Defines casing of the output fields. By default, we preserve `input`
    * values as data transforms incur a performance penalty at runtime.
    */
-  case: StringCase | undefined;
+  case: Casing | undefined;
   /**
    * Clean the `output` folder on every run? If disabled, this folder may
    * be used to store additional files. The default option is `true` to
@@ -146,11 +159,11 @@ export type Output = {
     /**
      * The casing convention to use for generated file names.
      */
-    case: StringCase;
+    case: Casing;
     /**
      * Custom naming pattern for generated file names.
      */
-    name: StringName;
+    name: NameTransformer;
     /**
      * Suffix to append to file names (before the extension). For example,
      * with a suffix of `.gen`, `example.ts` becomes `example.gen.ts`.
@@ -167,6 +180,10 @@ export type Output = {
    * Which formatter to use to process output folder?
    */
   format: Formatters | null;
+  /**
+   * Text to include at the top of every generated file.
+   */
+  header: Header;
   /**
    * If specified, this will be the file extension used when importing
    * other modules. By default, we don't add a file extension and let the

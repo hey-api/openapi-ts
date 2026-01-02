@@ -1,8 +1,8 @@
 import type {
   AnalysisContext,
-  AstContext,
+  NodeName,
+  NodeScope,
   Ref,
-  Symbol,
 } from '@hey-api/codegen-core';
 import { isNode, ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
@@ -13,11 +13,10 @@ import { TypeExprMixin } from '../mixins/type-expr';
 import { f } from '../utils/factories';
 import { TypeAttrTsDsl } from './attr';
 
-export type TypeExprName = Symbol | string;
-export type TypeExprExpr = TypeExprName | TypeAttrTsDsl;
+export type TypeExprExpr = NodeName | TypeAttrTsDsl;
 export type TypeExprFn = (t: TypeExprTsDsl) => void;
 export type TypeExprCtor = (
-  nameOrFn?: TypeExprName | TypeExprFn,
+  nameOrFn?: NodeName | TypeExprFn,
   fn?: TypeExprFn,
 ) => TypeExprTsDsl;
 
@@ -25,14 +24,15 @@ const Mixed = TypeArgsMixin(TypeExprMixin(TsDsl<ts.TypeReferenceNode>));
 
 export class TypeExprTsDsl extends Mixed {
   readonly '~dsl' = 'TypeExprTsDsl';
+  override scope: NodeScope = 'type';
 
   protected _exprInput?: Ref<TypeExprExpr>;
 
   constructor();
   constructor(fn: TypeExprFn);
-  constructor(name: TypeExprName);
-  constructor(name: TypeExprName, fn?: TypeExprFn);
-  constructor(name?: TypeExprName | TypeExprFn, fn?: TypeExprFn) {
+  constructor(name: NodeName);
+  constructor(name: NodeName, fn?: TypeExprFn);
+  constructor(name?: NodeName | TypeExprFn, fn?: TypeExprFn) {
     super();
     if (typeof name === 'function') {
       name(this);
@@ -55,11 +55,11 @@ export class TypeExprTsDsl extends Mixed {
     return this;
   }
 
-  override toAst(ctx: AstContext) {
+  override toAst() {
     if (!this._exprInput) throw new Error('TypeExpr must have an expression');
     return ts.factory.createTypeReferenceNode(
-      this.$type(ctx, this._exprInput) as ts.EntityName,
-      this.$generics(ctx),
+      this.$type(this._exprInput) as ts.EntityName,
+      this.$generics(),
     );
   }
 }

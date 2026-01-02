@@ -1,5 +1,14 @@
+import type { OperationsStrategy } from '~/openApi/shared/locations';
 import type { DefinePlugin, Plugin } from '~/plugins';
-import type { StringName } from '~/types/case';
+
+import type {
+  HttpRequestsConfig,
+  UserHttpRequestsConfig,
+} from './httpRequests';
+import type {
+  HttpResourcesConfig,
+  UserHttpResourcesConfig,
+} from './httpResources';
 
 export type UserConfig = Plugin.Name<'@angular/common'> &
   Plugin.Hooks & {
@@ -13,66 +22,15 @@ export type UserConfig = Plugin.Name<'@angular/common'> &
     /**
      * Options for generating HTTP Request instances.
      *
-     * @default true
+     * @default 'flat'
      */
-    httpRequests?:
-      | boolean
-      | {
-          /**
-           * Whether to generate the resource as a class.
-           *
-           * @default false
-           */
-          asClass?: boolean;
-          /**
-           * Builds the class name for the generated resource.
-           * By default, the class name is suffixed with "Resources".
-           */
-          classNameBuilder?: StringName;
-          /**
-           * Whether or not to create HTTP Request instances.
-           *
-           * @default true
-           */
-          enabled?: boolean;
-          /**
-           * Builds the method name for the generated resource.
-           *
-           * By default, the operation id is used, if `asClass` is false, the method is also suffixed with "Resource".
-           */
-          methodNameBuilder?: (operation: IR.OperationObject) => string;
-        };
+    httpRequests?: boolean | OperationsStrategy | UserHttpRequestsConfig;
     /**
      * Options for generating HTTP resource APIs.
      *
-     * @default true
+     * @default 'flat'
      */
-    httpResources?:
-      | boolean
-      | {
-          /**
-           * Whether to generate the resource as a class.
-           * @default false
-           */
-          asClass?: boolean;
-          /**
-           * Builds the class name for the generated resource.
-           * By default, the class name is suffixed with "Resources".
-           */
-          classNameBuilder?: StringName;
-          /**
-           * Whether or not to create HTTP resource APIs.
-           *
-           * @default true
-           */
-          enabled?: boolean;
-          /**
-           * Builds the method name for the generated resource.
-           *
-           * By default, the operation id is used, if `asClass` is false, the method is also suffixed with "Resource".
-           */
-          methodNameBuilder?: (operation: IR.OperationObject) => string;
-        };
+    httpResources?: boolean | OperationsStrategy | UserHttpResourcesConfig;
   };
 
 export type Config = Plugin.Name<'@angular/common'> &
@@ -87,57 +45,11 @@ export type Config = Plugin.Name<'@angular/common'> &
     /**
      * Options for generating HTTP Request instances.
      */
-    httpRequests: {
-      /**
-       * Whether to generate the resource as a class.
-       *
-       * @default false
-       */
-      asClass: boolean;
-      /**
-       * Builds the class name for the generated resource.
-       * By default, the class name is suffixed with "Resources".
-       */
-      classNameBuilder: StringName;
-      /**
-       * Whether or not to create HTTP Request instances.
-       *
-       * @default true
-       */
-      enabled: boolean;
-      /**
-       * Builds the method name for the generated resource.
-       * By default, the operation id is used, if `asClass` is false, the method is also suffixed with "Resource".
-       */
-      methodNameBuilder: (operation: IR.OperationObject) => string;
-    };
+    httpRequests: HttpRequestsConfig;
     /**
      * Options for generating HTTP resource APIs.
      */
-    httpResources: {
-      /**
-       * Whether to generate the resource as a class.
-       *
-       * @default false
-       */
-      asClass: boolean;
-      /**
-       * Builds the class name for the generated resource.
-       * By default, the class name is suffixed with "Resources".
-       */
-      classNameBuilder: StringName;
-      /**
-       * Whether or not to create HTTP resource APIs.
-       *
-       * @default true
-       */
-      enabled: boolean;
-      /**
-       * Builds the method name for the generated resource.
-       * By default, the operation id is used, if `asClass` is false, the method is also suffixed with "Resource".
-       */
-      methodNameBuilder: (operation: IR.OperationObject) => string;
-    };
+    httpResources: HttpResourcesConfig;
   };
 
 export type AngularCommonPlugin = DefinePlugin<UserConfig, Config>;

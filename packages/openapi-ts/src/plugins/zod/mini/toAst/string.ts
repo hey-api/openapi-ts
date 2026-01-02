@@ -2,18 +2,25 @@ import type { SchemaWithType } from '~/plugins';
 import { $ } from '~/ts-dsl';
 
 import { identifiers } from '../../constants';
+import type { Chain } from '../../shared/chain';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
-import type { FormatResolverArgs } from '../../types';
+import type { StringResolverContext } from '../../types';
 
-const defaultFormatResolver = ({
-  chain,
-  plugin,
-  schema,
-}: FormatResolverArgs): ReturnType<typeof $.call> => {
-  const z = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'zod.z',
-  });
+function baseNode(ctx: StringResolverContext): Chain {
+  const { z } = ctx.symbols;
+  return $(z).attr(identifiers.string).call();
+}
+
+function constNode(ctx: StringResolverContext): Chain | undefined {
+  const { schema, symbols } = ctx;
+  const { z } = symbols;
+  if (typeof schema.const !== 'string') return;
+  return $(z).attr(identifiers.literal).call($.literal(schema.const));
+}
+
+function formatNode(ctx: StringResolverContext): Chain | undefined {
+  const { plugin, schema, symbols } = ctx;
+  const { z } = symbols;
 
   switch (schema.format) {
     case 'date':
@@ -43,68 +50,108 @@ const defaultFormatResolver = ({
       return $(z).attr(identifiers.url).call();
     case 'uuid':
       return $(z).attr(identifiers.uuid).call();
-    default:
-      return chain;
   }
-};
 
-export const stringToAst = ({
+  return;
+}
+
+function lengthNode(ctx: StringResolverContext): Chain | undefined {
+  const { schema, symbols } = ctx;
+  const { z } = symbols;
+  if (schema.minLength === undefined || schema.minLength !== schema.maxLength)
+    return;
+  return $(z).attr(identifiers.length).call($.literal(schema.minLength));
+}
+
+function maxLengthNode(ctx: StringResolverContext): Chain | undefined {
+  const { schema, symbols } = ctx;
+  const { z } = symbols;
+  if (schema.maxLength === undefined) return;
+  return $(z).attr(identifiers.maxLength).call($.literal(schema.maxLength));
+}
+
+function minLengthNode(ctx: StringResolverContext): Chain | undefined {
+  const { schema, symbols } = ctx;
+  const { z } = symbols;
+  if (schema.minLength === undefined) return;
+  return $(z).attr(identifiers.minLength).call($.literal(schema.minLength));
+}
+
+function patternNode(ctx: StringResolverContext): Chain | undefined {
+  const { schema, symbols } = ctx;
+  const { z } = symbols;
+  if (!schema.pattern) return;
+  return $(z).attr(identifiers.regex).call($.regexp(schema.pattern));
+}
+
+function stringResolver(ctx: StringResolverContext): Chain {
+  const constNode = ctx.nodes.const(ctx);
+  if (constNode) {
+    ctx.chain.current = constNode;
+    return ctx.chain.current;
+  }
+
+  const baseNode = ctx.nodes.base(ctx);
+  if (baseNode) ctx.chain.current = baseNode;
+
+  const formatNode = ctx.nodes.format(ctx);
+  if (formatNode) ctx.chain.current = formatNode;
+
+  const checks: Array<Chain> = [];
+
+  const lengthNode = ctx.nodes.length(ctx);
+  if (lengthNode) {
+    checks.push(lengthNode);
+  } else {
+    const minLengthNode = ctx.nodes.minLength(ctx);
+    if (minLengthNode) checks.push(minLengthNode);
+
+    const maxLengthNode = ctx.nodes.maxLength(ctx);
+    if (maxLengthNode) checks.push(maxLengthNode);
+  }
+
+  const patternNode = ctx.nodes.pattern(ctx);
+  if (patternNode) checks.push(patternNode);
+
+  if (checks.length > 0) {
+    ctx.chain.current = ctx.chain.current
+      .attr(identifiers.check)
+      .call(...checks);
+  }
+
+  return ctx.chain.current;
+}
+
+export const stringToNode = ({
   plugin,
   schema,
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'string'>;
 }): Omit<Ast, 'typeName'> => {
-  const result: Partial<Omit<Ast, 'typeName'>> = {};
-  let chain: ReturnType<typeof $.call>;
-
-  const z = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'zod.z',
-  });
-
-  if (typeof schema.const === 'string') {
-    chain = $(z).attr(identifiers.literal).call($.literal(schema.const));
-    result.expression = chain;
-    return result as Omit<Ast, 'typeName'>;
-  }
-
-  chain = $(z).attr(identifiers.string).call();
-
-  if (schema.format) {
-    const args: FormatResolverArgs = { $, chain, plugin, schema };
-    const resolver =
-      plugin.config['~resolvers']?.string?.formats?.[schema.format];
-    chain = resolver?.(args) ?? defaultFormatResolver(args);
-  }
-
-  const checks: Array<ReturnType<typeof $.call>> = [];
-
-  if (schema.minLength === schema.maxLength && schema.minLength !== undefined) {
-    checks.push(
-      $(z).attr(identifiers.length).call($.literal(schema.minLength)),
-    );
-  } else {
-    if (schema.minLength !== undefined) {
-      checks.push(
-        $(z).attr(identifiers.minLength).call($.literal(schema.minLength)),
-      );
-    }
-
-    if (schema.maxLength !== undefined) {
-      checks.push(
-        $(z).attr(identifiers.maxLength).call($.literal(schema.maxLength)),
-      );
-    }
-  }
-
-  if (schema.pattern) {
-    checks.push($(z).attr(identifiers.regex).call($.regexp(schema.pattern)));
-  }
-
-  if (checks.length) {
-    chain = chain.attr(identifiers.check).call(...checks);
-  }
-
-  result.expression = chain;
-  return result as Omit<Ast, 'typeName'>;
+  const z = plugin.external('zod.z');
+  const ctx: StringResolverContext = {
+    $,
+    chain: {
+      current: $(z),
+    },
+    nodes: {
+      base: baseNode,
+      const: constNode,
+      format: formatNode,
+      length: lengthNode,
+      maxLength: maxLengthNode,
+      minLength: minLengthNode,
+      pattern: patternNode,
+    },
+    plugin,
+    schema,
+    symbols: {
+      z,
+    },
+  };
+  const resolver = plugin.config['~resolvers']?.string;
+  const node = resolver?.(ctx) ?? stringResolver(ctx);
+  return {
+    expression: node,
+  };
 };

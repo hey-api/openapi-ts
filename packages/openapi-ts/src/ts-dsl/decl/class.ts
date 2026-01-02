@@ -1,9 +1,4 @@
-import type {
-  AnalysisContext,
-  AstContext,
-  Ref,
-  Symbol,
-} from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName, Ref } from '@hey-api/codegen-core';
 import { isSymbol, ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
@@ -15,13 +10,10 @@ import { DocMixin } from '../mixins/doc';
 import { AbstractMixin, DefaultMixin, ExportMixin } from '../mixins/modifiers';
 import { TypeParamsMixin } from '../mixins/type-params';
 import { safeRuntimeName } from '../utils/name';
-import type { FieldName } from './field';
 import { FieldTsDsl } from './field';
 import { InitTsDsl } from './init';
 import { MethodTsDsl } from './method';
 
-type Base = Symbol | string;
-type Name = Symbol | string;
 type Body = Array<MaybeTsDsl<ts.ClassElement | ts.Node>>;
 
 const Mixed = AbstractMixin(
@@ -34,18 +26,16 @@ const Mixed = AbstractMixin(
 
 export class ClassTsDsl extends Mixed {
   readonly '~dsl' = 'ClassTsDsl';
+  override readonly nameSanitizer = safeRuntimeName;
 
-  protected baseClass?: Ref<Base>;
+  protected baseClass?: Ref<NodeName>;
   protected body: Body = [];
-  protected name: Ref<Name>;
 
-  constructor(name: Name) {
+  constructor(name: NodeName) {
     super();
-    this.name = ref(name);
+    this.name.set(name);
     if (isSymbol(name)) {
       name.setKind('class');
-      name.setNameSanitizer(safeRuntimeName);
-      name.setNode(this);
     }
   }
 
@@ -63,6 +53,11 @@ export class ClassTsDsl extends Mixed {
     }
   }
 
+  /** Returns true if the class has any members. */
+  get hasBody(): boolean {
+    return this.body.length > 0;
+  }
+
   /** Adds one or more class members (fields, methods, etc.). */
   do(...items: Body): this {
     this.body.push(...items);
@@ -70,27 +65,28 @@ export class ClassTsDsl extends Mixed {
   }
 
   /** Records a base class to extend from. */
-  extends(base?: Base): this {
+  extends(base?: NodeName): this {
     this.baseClass = base ? ref(base) : undefined;
     return this;
   }
 
   /** Adds a class field. */
-  field(name: FieldName, fn?: (f: FieldTsDsl) => void): this {
+  field(name: NodeName, fn?: (f: FieldTsDsl) => void): this {
     const f = new FieldTsDsl(name, fn);
     this.body.push(f);
     return this;
   }
 
   /** Adds a class constructor. */
-  init(fn?: (i: InitTsDsl) => void): this {
-    const i = new InitTsDsl(fn);
+  init(fn?: InitTsDsl | ((i: InitTsDsl) => void)): this {
+    const i =
+      typeof fn === 'function' ? new InitTsDsl(fn) : fn || new InitTsDsl();
     this.body.push(i);
     return this;
   }
 
   /** Adds a class method. */
-  method(name: string, fn?: (m: MethodTsDsl) => void): this {
+  method(name: NodeName, fn?: (m: MethodTsDsl) => void): this {
     const m = new MethodTsDsl(name, fn);
     this.body.push(m);
     return this;
@@ -102,21 +98,21 @@ export class ClassTsDsl extends Mixed {
     return this;
   }
 
-  override toAst(ctx: AstContext) {
-    const body = this.$node(ctx, this.body) as ReadonlyArray<ts.ClassElement>;
+  override toAst() {
+    const body = this.$node(this.body) as ReadonlyArray<ts.ClassElement>;
     const node = ts.factory.createClassDeclaration(
-      [...this.$decorators(ctx), ...this.modifiers],
-      this.$node(ctx, this.name) as ts.Identifier,
-      this.$generics(ctx),
-      this._heritage(ctx),
+      [...this.$decorators(), ...this.modifiers],
+      this.$node(this.name) as ts.Identifier,
+      this.$generics(),
+      this._heritage(),
       body,
     );
-    return this.$docs(ctx, node);
+    return this.$docs(node);
   }
 
   /** Builds heritage clauses (extends). */
-  private _heritage(ctx: AstContext): ReadonlyArray<ts.HeritageClause> {
-    const node = this.$node(ctx, this.baseClass);
+  private _heritage(): ReadonlyArray<ts.HeritageClause> {
+    const node = this.$node(this.baseClass);
     if (!node) return [];
     return [
       ts.factory.createHeritageClause(ts.SyntaxKind.ExtendsKeyword, [

@@ -5,7 +5,6 @@ export type {
   ImportModule,
 } from './bindings';
 export { nodeBrand, symbolBrand } from './brands';
-export { debug } from './debug';
 export type {
   IProjectRenderMeta as ProjectRenderMeta,
   ISymbolMeta as SymbolMeta,
@@ -20,8 +19,14 @@ export type {
   Language,
   NameConflictResolvers,
 } from './languages/types';
-export type { AstContext } from './nodes/context';
-export type { INode as Node } from './nodes/node';
+export { log } from './log';
+export type {
+  INode as Node,
+  NodeName,
+  NodeNameSanitizer,
+  NodeRelationship,
+  NodeScope,
+} from './nodes/node';
 export type { IOutput as Output } from './output';
 export {
   simpleNameConflictResolver,
@@ -36,6 +41,15 @@ export type { IProject } from './project/types';
 export { fromRef, fromRefs, isRef, ref, refs } from './refs/refs';
 export type { FromRef, FromRefs, Ref, Refs } from './refs/types';
 export type { RenderContext, Renderer } from './renderer';
+export { StructureModel } from './structure/model';
+export { StructureNode } from './structure/node';
+export type {
+  StructureInsert,
+  StructureItem,
+  StructureLocation,
+  StructureShell,
+  StructureShellResult,
+} from './structure/types';
 export { Symbol } from './symbols/symbol';
 export type {
   BindingKind,

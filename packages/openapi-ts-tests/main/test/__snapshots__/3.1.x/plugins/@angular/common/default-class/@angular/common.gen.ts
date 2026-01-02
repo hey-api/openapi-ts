@@ -55,8 +55,8 @@ export class DefaultServiceRequests {
     }
 }
 
-export class ODataControllerServiceRequests {
-    public apiVVersionODataControllerCount<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionODataControllerCountData, ThrowOnError>): HttpRequest<unknown> {
+export class ODataControllerService {
+    public count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionODataControllerCountData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions({
             responseStyle: 'data',
             method: 'GET',
@@ -66,12 +66,18 @@ export class ODataControllerServiceRequests {
     }
 }
 
-export class VVersionServiceRequests {
-    oDataControllerService = new ODataControllerServiceRequests();
+export class VVersionService {
+    private _oDataControllerService?: ODataControllerService;
+    get oDataControllerService(): ODataControllerService {
+        return this._oDataControllerService ??= new ODataControllerService();
+    }
 }
 
-export class ApiServiceRequests {
-    vVersionService = new VVersionServiceRequests();
+export class ApiService {
+    private _vVersionService?: VVersionService;
+    get vVersionService(): VVersionService {
+        return this._vVersionService ??= new VVersionService();
+    }
 }
 
 @Injectable({ providedIn: 'root' })
@@ -138,7 +144,11 @@ export class SimpleServiceRequests {
             ...options
         });
     }
-    apiService = new ApiServiceRequests();
+    
+    private _apiService?: ApiService;
+    get apiService(): ApiService {
+        return this._apiService ??= new ApiService();
+    }
 }
 
 @Injectable({ providedIn: 'root' })
@@ -281,7 +291,16 @@ export class DuplicateServiceRequests {
         });
     }
     
-    public duplicateName2<ThrowOnError extends boolean = false>(options?: Options<DuplicateName2Data, ThrowOnError>): HttpRequest<unknown> {
+    public duplicateName2<ThrowOnError extends boolean = false>(options?: Options<DuplicateNameData, ThrowOnError>): HttpRequest<unknown> {
+        return (options?.client ?? client).requestOptions({
+            responseStyle: 'data',
+            method: 'DELETE',
+            url: '/api/v{api-version}/duplicate',
+            ...options
+        });
+    }
+    
+    public duplicateName22<ThrowOnError extends boolean = false>(options?: Options<DuplicateName2Data, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions({
             responseStyle: 'data',
             method: 'GET',
@@ -316,15 +335,6 @@ export class NoContentServiceRequests {
             responseStyle: 'data',
             method: 'GET',
             url: '/api/v{api-version}/no-content',
-            ...options
-        });
-    }
-    
-    public callWithResponseAndNoContentResponse<ThrowOnError extends boolean = false>(options?: Options<CallWithResponseAndNoContentResponseData, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
-            responseStyle: 'data',
-            method: 'GET',
-            url: '/api/v{api-version}/multiple-tags/response-and-no-content',
             ...options
         });
     }
@@ -364,6 +374,18 @@ export class ResponseServiceRequests {
             responseStyle: 'data',
             method: 'PUT',
             url: '/api/v{api-version}/response',
+            ...options
+        });
+    }
+}
+
+@Injectable({ providedIn: 'root' })
+export class NoContentServiceRequests2 {
+    public callWithResponseAndNoContentResponse<ThrowOnError extends boolean = false>(options?: Options<CallWithResponseAndNoContentResponseData, ThrowOnError>): HttpRequest<unknown> {
+        return (options?.client ?? client).requestOptions({
+            responseStyle: 'data',
+            method: 'GET',
+            url: '/api/v{api-version}/multiple-tags/response-and-no-content',
             ...options
         });
     }
@@ -599,21 +621,27 @@ export class DefaultServiceResources {
     }
 }
 
-export class ODataControllerServiceResources {
-    public apiVVersionODataControllerCount<ThrowOnError extends boolean = false>(options?: () => Options<ApiVVersionODataControllerCountData, ThrowOnError> | undefined) {
+export class ODataControllerService2 {
+    public count<ThrowOnError extends boolean = false>(options?: () => Options<ApiVVersionODataControllerCountData, ThrowOnError> | undefined) {
         return httpResource<ApiVVersionODataControllerCountResponse>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(SimpleServiceRequests).apiService.vVersionService.oDataControllerService.apiVVersionODataControllerCount(opts) : undefined;
+            return opts ? inject(SimpleServiceRequests).apiService.vVersionService.oDataControllerService.count(opts) : undefined;
         });
     }
 }
 
-export class VVersionServiceResources {
-    oDataControllerService = new ODataControllerServiceResources();
+export class VVersionService2 {
+    private _oDataControllerService?: ODataControllerService2;
+    get oDataControllerService(): ODataControllerService2 {
+        return this._oDataControllerService ??= new ODataControllerService2();
+    }
 }
 
-export class ApiServiceResources {
-    vVersionService = new VVersionServiceResources();
+export class ApiService2 {
+    private _vVersionService?: VVersionService2;
+    get vVersionService(): VVersionService2 {
+        return this._vVersionService ??= new VVersionService2();
+    }
 }
 
 @Injectable({ providedIn: 'root' })
@@ -666,7 +694,11 @@ export class SimpleServiceResources {
             return opts ? inject(SimpleServiceRequests).putCallWithoutParametersAndResponse(opts) : undefined;
         });
     }
-    apiService = new ApiServiceResources();
+    
+    private _apiService?: ApiService2;
+    get apiService(): ApiService2 {
+        return this._apiService ??= new ApiService2();
+    }
 }
 
 @Injectable({ providedIn: 'root' })
@@ -783,10 +815,17 @@ export class DuplicateServiceResources {
         });
     }
     
-    public duplicateName2<ThrowOnError extends boolean = false>(options?: () => Options<DuplicateName2Data, ThrowOnError> | undefined) {
+    public duplicateName2<ThrowOnError extends boolean = false>(options?: () => Options<DuplicateNameData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
             const opts = options ? options() : undefined;
-            return opts ? inject(DuplicateServiceRequests).duplicateName2(opts) : undefined;
+            return opts ? inject(DuplicateServiceRequests).duplicateName(opts) : undefined;
+        });
+    }
+    
+    public duplicateName22<ThrowOnError extends boolean = false>(options?: () => Options<DuplicateName2Data, ThrowOnError> | undefined) {
+        return httpResource<unknown>(() => {
+            const opts = options ? options() : undefined;
+            return opts ? inject(DuplicateServiceRequests).duplicateName22(opts) : undefined;
         });
     }
     
@@ -811,13 +850,6 @@ export class NoContentServiceResources {
         return httpResource<CallWithNoContentResponseResponse>(() => {
             const opts = options ? options() : undefined;
             return opts ? inject(NoContentServiceRequests).callWithNoContentResponse(opts) : undefined;
-        });
-    }
-    
-    public callWithResponseAndNoContentResponse<ThrowOnError extends boolean = false>(options?: () => Options<CallWithResponseAndNoContentResponseData, ThrowOnError> | undefined) {
-        return httpResource<CallWithResponseAndNoContentResponseResponse>(() => {
-            const opts = options ? options() : undefined;
-            return opts ? inject(ResponseServiceRequests).callWithResponseAndNoContentResponse(opts) : undefined;
         });
     }
 }
@@ -849,6 +881,16 @@ export class ResponseServiceResources {
         return httpResource<CallWithResponsesResponse>(() => {
             const opts = options ? options() : undefined;
             return opts ? inject(ResponseServiceRequests).callWithResponses(opts) : undefined;
+        });
+    }
+}
+
+@Injectable({ providedIn: 'root' })
+export class NoContentServiceResources2 {
+    public callWithResponseAndNoContentResponse<ThrowOnError extends boolean = false>(options?: () => Options<CallWithResponseAndNoContentResponseData, ThrowOnError> | undefined) {
+        return httpResource<CallWithResponseAndNoContentResponseResponse>(() => {
+            const opts = options ? options() : undefined;
+            return opts ? inject(ResponseServiceRequests).callWithResponseAndNoContentResponse(opts) : undefined;
         });
     }
 }

@@ -2,13 +2,13 @@ import { ref } from '@hey-api/codegen-core';
 
 import { operationPagination } from '~/ir/operation';
 import type { IR } from '~/ir/types';
-import { buildName } from '~/openApi/shared/utils/name';
 import {
   createOperationComment,
   isOperationOptionsRequired,
 } from '~/plugins/shared/utils/operation';
 import type { TsDsl } from '~/ts-dsl';
 import { $ } from '~/ts-dsl';
+import { applyNaming } from '~/utils/naming';
 
 import {
   createQueryKeyFunction,
@@ -24,19 +24,18 @@ const createInfiniteParamsFunction = ({
 }: {
   plugin: PluginInstance;
 }) => {
-  const symbolCreateInfiniteParams = plugin.registerSymbol({
-    meta: {
-      category: 'utility',
-      resource: 'createInfiniteParams',
-      tool: plugin.name,
-    },
-    name: buildName({
-      config: {
-        case: plugin.config.case,
-      },
-      name: 'createInfiniteParams',
+  const symbolCreateInfiniteParams = plugin.symbol(
+    applyNaming('createInfiniteParams', {
+      case: plugin.config.case,
     }),
-  });
+    {
+      meta: {
+        category: 'utility',
+        resource: 'createInfiniteParams',
+        tool: plugin.name,
+      },
+    },
+  );
 
   const fn = $.const(symbolCreateInfiniteParams).assign(
     $.func()
@@ -106,11 +105,9 @@ const createInfiniteParamsFunction = ({
 export const createInfiniteQueryOptions = ({
   operation,
   plugin,
-  queryFn,
 }: {
   operation: IR.OperationObject;
   plugin: PluginInstance;
-  queryFn: ReturnType<typeof $.expr | typeof $.call | typeof $.attr>;
 }): void => {
   const pagination = operationPagination({
     context: plugin.context,
@@ -183,12 +180,9 @@ export const createInfiniteQueryOptions = ({
     },
   });
 
-  const symbolInfiniteQueryKey = plugin.registerSymbol({
-    name: buildName({
-      config: plugin.config.infiniteQueryKeys,
-      name: operation.id,
-    }),
-  });
+  const symbolInfiniteQueryKey = plugin.symbol(
+    applyNaming(operation.id, plugin.config.infiniteQueryKeys),
+  );
   const node = queryKeyStatement({
     isInfinite: true,
     operation,
@@ -198,8 +192,15 @@ export const createInfiniteQueryOptions = ({
   });
   plugin.node(node);
 
-  const awaitSdkFn = $.lazy(() =>
-    $(queryFn)
+  const awaitSdkFn = $.lazy((ctx) =>
+    ctx
+      .access(
+        plugin.referenceSymbol({
+          category: 'sdk',
+          resource: 'operation',
+          resourceId: operation.id,
+        }),
+      )
       .call(
         $.object()
           .spread('options')
@@ -246,12 +247,9 @@ export const createInfiniteQueryOptions = ({
     );
   }
 
-  const symbolInfiniteQueryOptionsFn = plugin.registerSymbol({
-    name: buildName({
-      config: plugin.config.infiniteQueryOptions,
-      name: operation.id,
-    }),
-  });
+  const symbolInfiniteQueryOptionsFn = plugin.symbol(
+    applyNaming(operation.id, plugin.config.infiniteQueryOptions),
+  );
   const statement = $.const(symbolInfiniteQueryOptionsFn)
     .export()
     .$if(plugin.config.comments && createOperationComment(operation), (c, v) =>

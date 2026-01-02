@@ -93,14 +93,6 @@ export const objectToAst = ({
       result.hasLazyExpression = true;
     }
 
-    // Return with typeName for circular references
-    if (result.hasLazyExpression) {
-      return {
-        ...result,
-        typeName: 'TODO',
-      } as Ast;
-    }
-
     return result as Omit<Ast, 'typeName'>;
   }
 

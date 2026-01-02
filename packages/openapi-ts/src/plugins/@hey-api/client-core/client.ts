@@ -29,13 +29,11 @@ const resolveBaseUrlString = ({
 
 export const createClient: PluginHandler = ({ plugin }) => {
   const clientModule = clientFolderAbsolutePath(plugin.context.config);
-  const symbolCreateClient = plugin.registerSymbol({
+  const symbolCreateClient = plugin.symbol('createClient', {
     external: clientModule,
-    name: 'createClient',
   });
-  const symbolCreateConfig = plugin.registerSymbol({
+  const symbolCreateConfig = plugin.symbol('createConfig', {
     external: clientModule,
-    name: 'createConfig',
   });
   const symbolClientOptions = plugin.referenceSymbol({
     category: 'type',
@@ -45,9 +43,8 @@ export const createClient: PluginHandler = ({ plugin }) => {
 
   const { runtimeConfigPath } = plugin.config;
   const symbolCreateClientConfig = runtimeConfigPath
-    ? plugin.registerSymbol({
+    ? plugin.symbol('createClientConfig', {
         external: runtimeConfigPath,
-        name: 'createClientConfig',
       })
     : undefined;
 
@@ -84,11 +81,10 @@ export const createClient: PluginHandler = ({ plugin }) => {
       .generic(symbolClientOptions),
   ];
 
-  const symbolClient = plugin.registerSymbol({
+  const symbolClient = plugin.symbol('client', {
     meta: {
       category: 'client',
     },
-    name: 'client',
   });
   const statement = $.const(symbolClient)
     .export()

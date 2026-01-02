@@ -14,8 +14,6 @@ export type SymbolKind =
   | 'type'
   | 'var';
 
-export type SymbolNameSanitizer = (name: string) => string;
-
 export type ISymbolIn = {
   /**
    * Array of file names (without extensions) from which this symbol is re-exported.
@@ -44,10 +42,14 @@ export type ISymbolIn = {
   getFilePath?: Symbol['getFilePath'];
   /**
    * Kind of import if this symbol represents an import.
+   *
+   * @default 'named'
    */
   importKind?: BindingKind;
   /**
    * Kind of symbol.
+   *
+   * @default 'var'
    */
   kind?: SymbolKind;
   /**

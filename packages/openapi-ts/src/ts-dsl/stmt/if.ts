@@ -1,4 +1,4 @@
-import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
+import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -47,15 +47,15 @@ export class IfTsDsl extends Mixed {
     return this;
   }
 
-  override toAst(ctx: AstContext) {
+  override toAst() {
     if (!this._condition) throw new Error('Missing condition in if');
     if (!this._do) throw new Error('Missing then block in if');
 
     return ts.factory.createIfStatement(
-      this.$node(ctx, this._condition),
-      this.$node(ctx, new BlockTsDsl(...this._do).pretty()),
+      this.$node(this._condition),
+      this.$node(new BlockTsDsl(...this._do).pretty()),
       this._else
-        ? this.$node(ctx, new BlockTsDsl(...this._else).pretty())
+        ? this.$node(new BlockTsDsl(...this._else).pretty())
         : undefined,
     );
   }

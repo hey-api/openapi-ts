@@ -64,14 +64,14 @@
     "husky": "9.1.7",
     "lint-staged": "16.2.7",
     "prettier": "3.4.2",
-    "rollup": "4.53.3",
+    "rollup": "4.54.0",
     "rollup-plugin-dts": "6.1.1",
     "ts-node": "10.9.2",
-    "tsdown": "0.17.3",
-    "turbo": "2.6.3",
+    "tsdown": "0.18.3",
+    "turbo": "2.7.2",
     "typescript": "5.9.3",
     "typescript-eslint": "8.29.1",
     "vitest": "3.2.4"
   },
-  "packageManager": "pnpm@10.25.0"
+  "packageManager": "pnpm@10.26.2"
 }

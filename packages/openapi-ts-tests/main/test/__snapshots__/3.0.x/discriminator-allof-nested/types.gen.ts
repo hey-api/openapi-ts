@@ -9,12 +9,12 @@ export type VehicleDto = {
     id: number;
 };
 
-export type CarDto = VehicleDto & {
+export type CarDto = Omit<VehicleDto, '$type'> & {
     modelName: string;
-    $type: 'Car' | 'Volvo';
+    $type: 'Car';
 };
 
-export type VolvoDto = CarDto & {
+export type VolvoDto = Omit<CarDto, '$type'> & {
     seatbeltCount: number;
     $type: 'Volvo';
 };

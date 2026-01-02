@@ -550,10 +550,14 @@ for (const version of versions) {
           plugins: [
             {
               httpRequests: {
-                asClass: true,
+                containerName: '{{name}}ServiceRequests',
+                segmentName: '{{name}}Service',
+                strategy: 'byTags',
               },
               httpResources: {
-                asClass: true,
+                containerName: '{{name}}ServiceResources',
+                segmentName: '{{name}}Service',
+                strategy: 'byTags',
               },
               name: '@angular/common',
             },

@@ -1,11 +1,11 @@
 import type { IR } from '~/ir/types';
-import { buildName } from '~/openApi/shared/utils/name';
 import {
   getClientBaseUrlKey,
   getClientPlugin,
 } from '~/plugins/@hey-api/client-core/utils';
 import type { TypeTsDsl } from '~/ts-dsl';
 import { $ } from '~/ts-dsl';
+import { applyNaming } from '~/utils/naming';
 import { parseUrl } from '~/utils/url';
 
 import type { HeyApiTypeScriptPlugin } from '../types';
@@ -50,11 +50,8 @@ export const createClientOptions = ({
   }
 
   const symbol = plugin.symbol(
-    buildName({
-      config: {
-        case: plugin.config.case,
-      },
-      name: 'ClientOptions',
+    applyNaming('ClientOptions', {
+      case: plugin.config.case,
     }),
     {
       meta: {

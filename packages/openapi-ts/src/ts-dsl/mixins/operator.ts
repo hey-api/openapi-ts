@@ -1,11 +1,11 @@
-import type { AnalysisContext, Node, Symbol } from '@hey-api/codegen-core';
+import type { AnalysisContext, Node, NodeName } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { BinaryTsDsl } from '../expr/binary';
 import type { BaseCtor, MixinCtor } from './types';
 
-type Expr = Symbol | string | MaybeTsDsl<ts.Expression>;
+type Expr = NodeName | MaybeTsDsl<ts.Expression>;
 
 export interface OperatorMethods extends Node {
   /** Logical AND — `this && expr` */
