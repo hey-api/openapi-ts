@@ -1,5 +1,17 @@
 # @hey-api/codegen-core
 
+## 0.5.0
+
+### Minor Changes
+
+- **core**: Structure API ([#3109](https://github.com/hey-api/openapi-ts/pull/3109)) ([`815a3de`](https://github.com/hey-api/openapi-ts/commit/815a3de0af434c28ac6d13ff92b85ce1fc146999)) by [@mrlubos](https://github.com/mrlubos)
+
+### Patch Changes
+
+- **types**: document default values for `importKind` and `kind` ([#3147](https://github.com/hey-api/openapi-ts/pull/3147)) ([`ab80a4b`](https://github.com/hey-api/openapi-ts/commit/ab80a4b2c37423c522aa864afbcb688db76615ba)) by [@mrlubos](https://github.com/mrlubos)
+
+- **fix**: simplify symbol merging logic ([#3169](https://github.com/hey-api/openapi-ts/pull/3169)) ([`77bf81a`](https://github.com/hey-api/openapi-ts/commit/77bf81a13e49a13b6d052ef81e663df0f3b60b5a)) by [@mrlubos](https://github.com/mrlubos)
+
 ## 0.4.0
 
 ### Minor Changes
