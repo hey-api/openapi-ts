@@ -1,179 +1,267 @@
 ---
-title: SDK
-description: Learn about files generated with @hey-api/openapi-ts.
+title: SDK Plugin
+description: Generate SDKs from OpenAPI with the SDK plugin for openapi-ts. Fully compatible with validators, transformers, and all core features.
 ---
 
-# SDKs
+# SDK
 
-SDKs are located in the `sdk.gen.ts` file. SDKs are abstractions on top of clients and serve the same purpose. By default, `@hey-api/openapi-ts` will generate a flat SDK layer. Your choice to use SDKs depends on personal preferences and bundle size considerations.
+### About
 
-### Flat SDKs
+The SDK plugin generates a high-level, ergonomic API layer on top of the low-level HTTP client.
 
-This is the default setting. Flat SDKs support tree-shaking and can lead to reduced bundle size over duplicated client calls. The function names are generated from operation IDs or operation location.
+It exposes typed functions or classes for each operation, with built-in auth handling and optional request and response validation.
 
-### Class SDKs
+## Features
 
-Class SDKs do not support tree-shaking which will lead to increased bundle sizes, but some people prefer this option for syntax reasons. The class names are generated from operation tags and method names are generated from operation IDs or operation location.
+- high-level SDK layer on top of the HTTP client
+- typed functions or classes per operation
+- built-in authentication handling
+- optional request and response validation
 
-### No SDKs
+## Installation
 
-If you prefer to use clients directly or do not need the SDK layer, define `plugins` manually and omit the `@hey-api/sdk` plugin. Type support for clients is currently limited due to popularity of other options. If you'd like to use this option and need better types, please [open an issue](https://github.com/hey-api/openapi-ts/issues).
+In your [configuration](/openapi-ts/get-started), add `@hey-api/sdk` to your plugins and you'll be ready to generate SDK artifacts. :tada:
 
-## Configuration
+```js
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    '@hey-api/sdk', // [!code ++]
+  ],
+};
+```
 
-You can modify the contents of `sdk.gen.ts` by configuring the `@hey-api/sdk` plugin. Note that you must specify the default plugins to preserve the default output.
+## Output
+
+The SDK plugin supports a wide range of configuration options. This guide focuses on two main SDK formats: tree-shakeable functions and instantiable classes, but you can apply the same concepts to create more advanced configurations.
+
+## Flat
+
+This is the default setting. Flat SDKs support tree-shaking, which can lead to a reduced bundle size. You select flat mode by setting `operations.strategy` to `flat`.
 
 ::: code-group
 
-```js [flat]
+```ts [example]
+import type { AddPetData } from './types.gen';
+
+export const addPet = (options: Options<AddPetData>) => {
+  /** ... */
+};
+```
+
+```js [config]
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
     // ...other plugins
     {
-      asClass: false, // default // [!code ++]
       name: '@hey-api/sdk',
+      operations: {
+        strategy: 'flat', // [!code ++]
+      },
     },
-  ],
-};
-```
-
-```js [class]
-export default {
-  input: 'hey-api/backend', // sign up at app.heyapi.dev
-  output: 'src/client',
-  plugins: [
-    // ...other plugins
-    {
-      asClass: true, // [!code ++]
-      name: '@hey-api/sdk',
-    },
-  ],
-};
-```
-
-```js [none]
-export default {
-  input: 'hey-api/backend', // sign up at app.heyapi.dev
-  output: 'src/client',
-  plugins: [
-    '@hey-api/typescript',
-    '@hey-api/sdk', // [!code --]
   ],
 };
 ```
 
 :::
 
-## Output
+## Instance
 
-Below are different outputs depending on your chosen style. No SDKs approach will not generate the `sdk.gen.ts` file.
+Class SDKs do not support tree-shaking, which results in a larger bundle size, but you may prefer their syntax. You select class mode by setting `operations.strategy` to `single`.
 
 ::: code-group
 
-```ts [flat]
-import type { Options } from './client';
-import { client as _heyApiClient } from './client.gen';
-import type { AddPetData, AddPetError, AddPetResponse } from './types.gen';
+```ts [example]
+import type { AddPetData } from './types.gen';
 
-export const addPet = (options: Options<AddPetData>) =>
-  (options?.client ?? _heyApiClient).post<AddPetResponse, AddPetError>({
-    url: '/pet',
-    ...options,
-  });
-```
-
-```ts [class]
-import type { Options } from './client';
-import { client as _heyApiClient } from './client.gen';
-import type { AddPetData, AddPetError, AddPetResponse } from './types.gen';
-
-export class PetService {
-  public static addPet(options: Options<AddPetData>) {
-    return (options?.client ?? _heyApiClient).post<AddPetResponse, AddPetError>(
-      {
-        url: '/pet',
-        ...options,
-      },
-    );
+export class Sdk extends HeyApiClient {
+  public addPet(options: Options<AddPetData>) {
+    /** ... */
   }
 }
 ```
 
-:::
-
-## Usage
-
-This is how you'd make the same request using each approach.
-
-::: code-group
-
-```ts [flat]
-import { addPet } from './client/sdk.gen';
-
-addPet({
-  body: {
-    name: 'Kitty',
-  },
-});
-```
-
-```ts [class]
-import { PetService } from './client/sdk.gen';
-
-PetService.addPet({
-  body: {
-    name: 'Kitty',
-  },
-});
-```
-
-```ts [none]
-import { client } from './client/client';
-
-client.post({
-  body: {
-    name: 'Kitty',
-  },
-  url: '/pet',
-});
-```
-
-:::
-
-## Validators
-
-There are two ways to configure validators. If you only want to add validators to your SDKs, set `sdk.validator` to a validator plugin name. This will implicitly add the selected plugin with default values.
-
-For a more granular approach, add a validator plugin and set `sdk.validator` to the plugin name or `true` to automatically select a plugin. Until you customize the validator plugin, both approaches will produce the same default output.
-
-::: code-group
-
-```js [sdk]
+```js [config]
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
+    // ...other plugins
     {
       name: '@hey-api/sdk',
-      validator: 'zod', // [!code ++]
+      operations: {
+        strategy: 'single', // [!code ++]
+      },
     },
   ],
 };
 ```
 
-```js [validator]
+:::
+
+### Name
+
+As shown above, by default our SDK class is called `Sdk`. The first thing you'll likely want to do is change this to your preferred name, which you can do using `operation.containerName`.
+
+::: code-group
+
+```ts [example]
+import { client } from './client.gen';
+import type { AddPetData, AddPetErrors, AddPetResponses } from './types.gen';
+
+export class PetStore extends HeyApiClient {
+  // [!code ++]
+  /** ... */
+}
+```
+
+```js [config]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: '@hey-api/sdk',
+      operations: {
+        containerName: 'PetStore', // [!code ++]
+        strategy: 'single',
+      },
+    },
+  ],
+};
+```
+
+:::
+
+### Structure
+
+While we try to infer the SDK structure from `operationId` fields, you'll likely want to customize it further. You can do this using `operations.nesting`.
+
+Similar to the `operations.strategy` option, we provide a few presets. However, you gain the most control by providing your own function.
+
+To demonstrate the power of this feature, let's nest a few endpoints inside a `Pet` class and rename them. Our original `addPet()` method will now become `pet.add()`. Notice that we use the built-in `OperationPath.fromOperationId()` helper to handle the remaining operations.
+
+::: code-group
+
+```ts [example]
+import { client } from './client.gen';
+import type { AddPetData, AddPetErrors, AddPetResponses } from './types.gen';
+
+export class Pet extends HeyApiClient {
+  public add(options: Options<PostPetData>) {
+    // [!code ++]
+    /** ... */
+  }
+}
+
+export class PetStore extends HeyApiClient {
+  get pet(): Pet {
+    // [!code ++]
+    /** ... */
+  }
+}
+```
+
+<!-- prettier-ignore-start -->
+```js [config]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: '@hey-api/sdk',
+      operations: {
+        containerName: 'PetStore',
+        nesting(operation) {
+          if (operation.path === '/pet/{petId}' || operation.path === '/pet') { // [!code ++]
+            return ['pet', operation.operationId?.replace(/Pet/, '') // [!code ++]
+              || operation.method.toLocaleLowerCase()]; // [!code ++]
+          } // [!code ++]
+          return OperationPath.fromOperationId()(operation); // [!code ++]
+        },
+        strategy: 'single',
+      },
+    },
+  ],
+};
+```
+<!-- prettier-ignore-end -->
+
+:::
+
+## Auth
+
+Most APIs require some form of authentication, which is why the SDK plugin provides built-in auth mechanisms by default. All you need to do is return the data from the `auth()` function, and the SDK will handle serialization and encoding for you. There are several ways to do this, for example on the client instance.
+
+::: code-group
+
+```ts [example]
+import { client } from './client.gen';
+
+client.setConfig({
+  auth() {
+    return '<token>';
+  },
+});
+```
+
+```js [config]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      auth: true, // [!code ++]
+      name: '@hey-api/sdk',
+    },
+  ],
+};
+```
+
+:::
+
+::: info
+The SDK plugin currently supports only the `bearer` and `basic` auth schemes. [Open an issue](https://github.com/hey-api/openapi-ts/issues) if you'd like support for additional mechanisms.
+:::
+
+## Validators
+
+Validating data at runtime comes with a performance cost, which is why it's not enabled by default. To enable validation, set `validator` to `zod` or one of the available [validator plugins](/openapi-ts/validators). This will implicitly add the selected plugin with default values.
+
+For a more granular approach, manually add a validator plugin and set `validator` to the plugin name or `true` to automatically select a compatible plugin. Until you customize the validator plugin, both approaches will produce the same default output.
+
+::: code-group
+
+```ts [example]
+import * as v from 'valibot';
+
+export const addPet = (options: Options<AddPetData>) =>
+  (options.client ?? client).post<AddPetResponses, AddPetErrors>({
+    requestValidator: async (data) => await v.parseAsync(vAddPetData, data), // [!code ++]
+    responseValidator: async (data) =>
+      await v.parseAsync(vAddPetResponse, data), // [!code ++]
+    /** ... */
+  });
+```
+
+```js [config]
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
     {
       name: '@hey-api/sdk',
-      validator: true, // or 'zod' // [!code ++]
+      validator: true, // or 'valibot' // [!code ++]
     },
     {
-      name: 'zod', // [!code ++]
+      name: 'valibot', // customize (optional) // [!code ++]
       // other options
     },
   ],

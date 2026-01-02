@@ -13,6 +13,14 @@ While we try to avoid breaking changes, sometimes it's unavoidable in order to o
 
 The [Resolvers API](/openapi-ts/plugins/concepts/resolvers) has been simplified and expanded to provide a more consistent behavior across plugins. You can view a few common examples on the [Resolvers](/openapi-ts/plugins/concepts/resolvers) page.
 
+### Structure API
+
+The [SDK plugin](/openapi-ts/plugins/sdk) and [Angular plugin](/openapi-ts/plugins/angular) now implement the Structure API, enabling more complex structures and fixing several known issues.
+
+Some Structure APIs are incompatible with the previous configuration, most notably the `methodNameBuilder` function, which accepted the operation object as an argument. You can read the [SDK Output](/openapi-ts/plugins/sdk#output) section to familiarize yourself with the Structure API.
+
+Please [open an issue](https://github.com/hey-api/openapi-ts/issues) if you're unable to migrate your configuration to the new syntax.
+
 ## v0.89.0
 
 ### Prefer named exports

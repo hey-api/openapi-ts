@@ -49,15 +49,18 @@ export const OperationStrategy = {
       fallback: string;
       /**
        * Derives path segments from the operation.
+       *
+       * @default OperationPath.id()
        */
-      path: OperationPathStrategy;
+      path?: OperationPathStrategy;
     }): OperationStructureStrategy =>
     (operation) => {
       const tags =
         operation.tags && operation.tags.length > 0
           ? operation.tags
           : [config.fallback];
-      const pathSegments = config.path(operation);
+      const path = config.path ?? OperationPath.id();
+      const pathSegments = path(operation);
       return tags.map((tag) => [tag, ...pathSegments]);
     },
 
@@ -72,14 +75,17 @@ export const OperationStrategy = {
    * // Result: [{ path: ['getUsers'] }]
    */
   flat:
-    (config: {
+    (config?: {
       /**
        * Derives path segments within the root from the operation.
+       *
+       * @default OperationPath.id()
        */
-      path: OperationPathStrategy;
+      path?: OperationPathStrategy;
     }): OperationStructureStrategy =>
     (operation) => {
-      const pathSegments = config.path(operation);
+      const path = config?.path ?? OperationPath.id();
+      const pathSegments = path(operation);
       return [[pathSegments[pathSegments.length - 1]!]];
     },
 
@@ -94,15 +100,18 @@ export const OperationStrategy = {
     (config: {
       /**
        * Derives path segments within the root from the operation.
+       *
+       * @default OperationPath.id()
        */
-      path: OperationPathStrategy;
+      path?: OperationPathStrategy;
       /**
        * Name of the container.
        */
       root: string;
     }): OperationStructureStrategy =>
     (operation) => {
-      const pathSegments = config.path(operation);
+      const path = config.path ?? OperationPath.id();
+      const pathSegments = path(operation);
       return [[config.root, ...pathSegments]];
     },
 };
@@ -123,22 +132,26 @@ export const OperationPath = {
    * // Result: ['users', 'accounts', 'getAll']
    */
   fromOperationId:
-    (config: {
+    (config?: {
       /**
        * Pattern to split operationId.
+       *
+       * @default /[./]/
        */
-      delimiters: RegExp;
+      delimiters?: RegExp;
       /**
        * Fallback strategy if operationId is missing.
+       *
+       * @default OperationPath.id()
        */
-      fallback: OperationPathStrategy;
+      fallback?: OperationPathStrategy;
     }): OperationPathStrategy =>
     (operation) => {
-      if (!operation.operationId) return config.fallback(operation);
-      const segments = operation.operationId
-        .split(config.delimiters)
-        .filter(Boolean);
-      return segments.length === 0 ? config.fallback(operation) : segments;
+      const fallback = config?.fallback ?? OperationPath.id();
+      if (!operation.operationId) return fallback(operation);
+      const delimiters = config?.delimiters ?? /[./]/;
+      const segments = operation.operationId.split(delimiters).filter(Boolean);
+      return segments.length === 0 ? fallback(operation) : segments;
     },
 
   /**
@@ -159,26 +172,31 @@ export const OperationPath = {
    * // Result: ['users', 'id', 'accounts', 'get']
    */
   fromPath:
-    (config: {
+    (config?: {
       /**
        * Pattern to split the path.
+       *
+       * @default /[./]/
        */
-      delimiters: RegExp;
+      delimiters?: RegExp;
       /**
        * Position of the method segment.
+       *
+       * @default 'none'
        */
-      methodPosition: 'prefix' | 'suffix' | 'none';
+      methodPosition?: 'prefix' | 'suffix';
     }): OperationPathStrategy =>
     (operation) => {
-      const segments = operation.path.split(config.delimiters).filter(Boolean);
-      switch (config.methodPosition) {
+      const delimiters = config?.delimiters ?? /[./]/;
+      const segments = operation.path.split(delimiters).filter(Boolean);
+      switch (config?.methodPosition) {
         case 'prefix':
           segments.unshift(operation.method.toLowerCase());
           break;
         case 'suffix':
           segments.push(operation.method.toLowerCase());
           break;
-        case 'none':
+        default:
           break;
       }
       return segments;
