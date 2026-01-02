@@ -9,7 +9,6 @@ npm-debug.log*
 temp
 yarn-debug.log*
 yarn-error.log*
-*.tsbuildinfo
 
 *.iml
 dist
