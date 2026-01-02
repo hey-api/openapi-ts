@@ -109,15 +109,16 @@ As shown above, by default our SDK class is called `Sdk`. The first thing you'll
 
 ::: code-group
 
+<!-- prettier-ignore-start -->
 ```ts [example]
 import { client } from './client.gen';
 import type { AddPetData, AddPetErrors, AddPetResponses } from './types.gen';
 
-export class PetStore extends HeyApiClient {
-  // [!code ++]
+export class PetStore extends HeyApiClient { // [!code ++]
   /** ... */
 }
 ```
+<!-- prettier-ignore-end -->
 
 ```js [config]
 export default {
@@ -148,25 +149,24 @@ To demonstrate the power of this feature, let's nest a few endpoints inside a `P
 
 ::: code-group
 
+<!-- prettier-ignore-start -->
 ```ts [example]
 import { client } from './client.gen';
 import type { AddPetData, AddPetErrors, AddPetResponses } from './types.gen';
 
 export class Pet extends HeyApiClient {
-  public add(options: Options<PostPetData>) {
-    // [!code ++]
+  public add(options: Options<PostPetData>) { // [!code ++]
     /** ... */
   }
 }
 
 export class PetStore extends HeyApiClient {
-  get pet(): Pet {
-    // [!code ++]
+  get pet(): Pet { // [!code ++]
     /** ... */
   }
 }
 ```
-
+<!-- prettier-ignore-end -->
 <!-- prettier-ignore-start -->
 ```js [config]
 export default {
@@ -239,17 +239,20 @@ For a more granular approach, manually add a validator plugin and set `validator
 
 ::: code-group
 
+<!-- prettier-ignore-start -->
 ```ts [example]
 import * as v from 'valibot';
 
 export const addPet = (options: Options<AddPetData>) =>
   (options.client ?? client).post<AddPetResponses, AddPetErrors>({
-    requestValidator: async (data) => await v.parseAsync(vAddPetData, data), // [!code ++]
-    responseValidator: async (data) =>
+    requestValidator: async (data) => // [!code ++]
+      await v.parseAsync(vAddPetData, data), // [!code ++]
+    responseValidator: async (data) => // [!code ++]
       await v.parseAsync(vAddPetResponse, data), // [!code ++]
     /** ... */
   });
 ```
+<!-- prettier-ignore-end -->
 
 ```js [config]
 export default {
