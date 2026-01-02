@@ -76,7 +76,10 @@ function childToNode(
   plugin: HeyApiSdkPlugin['Instance'],
 ): ReadonlyArray<ReturnType<typeof $.field | typeof $.getter>> {
   const refChild = plugin.referenceSymbol(createShellMeta(resource));
-  const memberNameStr = toCase(refChild.name, 'camelCase');
+  const memberNameStr = toCase(
+    refChild.name,
+    plugin.config.operations.methodName.casing ?? 'camelCase',
+  );
   const memberName = plugin.symbol(memberNameStr);
   if (isInstance(plugin)) {
     const privateName = plugin.symbol(`_${memberNameStr}`);
