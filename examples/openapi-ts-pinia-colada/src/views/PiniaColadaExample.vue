@@ -130,7 +130,7 @@ watch(error, (error) => {
           <img
             alt="Hey API logo"
             class="size-16 transition duration-300 will-change-auto"
-            src="https://heyapi.dev/logo.png"
+            src="https://heyapi.dev/assets/raw/logo.png"
           />
         </a>
 

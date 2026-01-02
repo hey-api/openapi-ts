@@ -207,6 +207,10 @@ export default {
 
 :::
 
+## Resolvers
+
+You can further customize this plugin's behavior using [resolvers](/openapi-ts/plugins/concepts/resolvers).
+
 ## API
 
 You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/valibot/types.d.ts) interface.

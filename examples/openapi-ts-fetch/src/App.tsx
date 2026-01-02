@@ -144,7 +144,7 @@ function App() {
         <Flex align="center">
           <a className="shrink-0" href="https://heyapi.dev/" target="_blank">
             <img
-              src="https://heyapi.dev/logo.png"
+              src="https://heyapi.dev/assets/raw/logo.png"
               className="h-16 w-16 transition duration-300 will-change-auto"
               alt="Hey API logo"
             />

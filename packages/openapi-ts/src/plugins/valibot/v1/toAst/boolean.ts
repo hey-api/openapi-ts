@@ -1,7 +1,7 @@
 import type { SchemaWithType } from '~/plugins';
 import { $ } from '~/ts-dsl';
 
-import { pipesToAst } from '../../shared/pipesToAst';
+import { pipesToNode } from '../../shared/pipes';
 import type { IrSchemaToAstOptions } from '../../shared/types';
 import { identifiers } from '../constants';
 
@@ -22,9 +22,9 @@ export const booleanToAst = ({
     pipes.push(
       $(v).attr(identifiers.schemas.literal).call($.literal(schema.const)),
     );
-    return pipesToAst({ pipes, plugin });
+    return pipesToNode(pipes, plugin);
   }
 
   pipes.push($(v).attr(identifiers.schemas.boolean).call());
-  return pipesToAst({ pipes, plugin });
+  return pipesToNode(pipes, plugin);
 };

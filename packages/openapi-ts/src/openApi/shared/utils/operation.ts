@@ -1,7 +1,6 @@
 import type { Context } from '~/ir/context';
 import { createOperationKey } from '~/ir/operation';
-import { sanitizeNamespaceIdentifier } from '~/openApi/common/parser/sanitize';
-import { stringCase } from '~/utils/stringCase';
+import { toCase } from '~/utils/naming';
 
 import type { State } from '../types/state';
 
@@ -17,9 +16,33 @@ export const httpMethods = [
 ] as const;
 
 /**
+ * Sanitizes namespace identifiers so they are valid TypeScript identifiers of a certain form.
+ *
+ * 1: Remove any leading characters that are illegal as starting character of a typescript identifier.
+ * 2: Replace illegal characters in remaining part of type name with hyphen (-).
+ *
+ * Step 1 should perhaps instead also replace illegal characters with underscore, or prefix with it, like sanitizeEnumName
+ * does. The way this is now one could perhaps end up removing all characters, if all are illegal start characters. It
+ * would be sort of a breaking change to do so, though, previously generated code might change then.
+ *
+ * JavaScript identifier regexp pattern retrieved from https://developer.mozilla.org/docs/Web/JavaScript/Reference/Lexical_grammar#identifiers
+ *
+ * The output of this is expected to be converted to PascalCase
+ *
+ * @deprecated
+ */
+export const sanitizeNamespaceIdentifier = (name: string) =>
+  name
+    .replace(/^[^\p{ID_Start}]+/u, '')
+    .replace(/[^$\u200c\u200d\p{ID_Continue}]/gu, '-')
+    .replace(/[$+]/g, '-');
+
+/**
  * Returns an operation ID to use across the application. By default, we try
  * to use the provided ID. If it's not provided or the SDK is configured
  * to exclude it, we generate operation ID from its location.
+ *
+ * @deprecated
  */
 export const operationToId = ({
   context,
@@ -47,22 +70,23 @@ export const operationToId = ({
   if (
     id &&
     (!context.config.plugins['@hey-api/sdk'] ||
-      context.config.plugins['@hey-api/sdk'].config.operationId)
+      // TODO: needs to be refactored...
+      (context.config.plugins['@hey-api/sdk'].config.operations &&
+        typeof context.config.plugins['@hey-api/sdk'].config.operations !==
+          'function' &&
+        typeof context.config.plugins['@hey-api/sdk'].config.operations ===
+          'object' &&
+        context.config.plugins['@hey-api/sdk'].config.operations.nesting ===
+          'operationId'))
   ) {
-    result = stringCase({
-      case: targetCase,
-      value: sanitizeNamespaceIdentifier(id),
-    });
+    result = toCase(sanitizeNamespaceIdentifier(id), targetCase);
   } else {
     const pathWithoutPlaceholders = path
       .replace(/{(.*?)}/g, 'by-$1')
       // replace slashes with hyphens for camelcase method at the end
       .replace(/[/:+]/g, '-');
 
-    result = stringCase({
-      case: targetCase,
-      value: `${method}-${pathWithoutPlaceholders}`,
-    });
+    result = toCase(`${method}-${pathWithoutPlaceholders}`, targetCase);
   }
 
   if (count > 1) {

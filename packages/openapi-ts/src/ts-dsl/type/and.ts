@@ -1,8 +1,8 @@
 import type {
   AnalysisContext,
-  AstContext,
+  NodeName,
+  NodeScope,
   Ref,
-  Symbol,
 } from '@hey-api/codegen-core';
 import { ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
@@ -10,12 +10,13 @@ import ts from 'typescript';
 import type { TypeTsDsl } from '../base';
 import { TsDsl } from '../base';
 
-type Type = Symbol | string | ts.TypeNode | TypeTsDsl;
+type Type = NodeName | ts.TypeNode | TypeTsDsl;
 
 const Mixed = TsDsl<ts.IntersectionTypeNode>;
 
 export class TypeAndTsDsl extends Mixed {
   readonly '~dsl' = 'TypeAndTsDsl';
+  override scope: NodeScope = 'type';
 
   protected _types: Array<Ref<Type>> = [];
 
@@ -36,11 +37,11 @@ export class TypeAndTsDsl extends Mixed {
     return this;
   }
 
-  override toAst(ctx: AstContext) {
+  override toAst() {
     const flat: Array<ts.TypeNode> = [];
 
     for (const node of this._types) {
-      const type = this.$type(ctx, node);
+      const type = this.$type(node);
       if (ts.isIntersectionTypeNode(type)) {
         flat.push(...type.types);
       } else {

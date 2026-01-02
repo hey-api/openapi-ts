@@ -7,20 +7,37 @@ import { regexp } from './regexp';
 import type { ReservedList } from './reserved';
 import { reserved } from './reserved';
 
-export const safeMemberName = (name: string): TsDsl<ts.PropertyName> => {
+export const safeAccessorName = (name: string): string => {
+  regexp.number.lastIndex = 0;
+  if (regexp.number.test(name)) {
+    return name.startsWith('-') ? `'${name}'` : name;
+  }
+
+  regexp.typeScriptIdentifier.lastIndex = 0;
+  if (regexp.typeScriptIdentifier.test(name)) {
+    return name;
+  }
+  return `'${name}'`;
+};
+
+export const safeMemberName = (
+  name: string,
+): TsDsl<ts.StringLiteral> | IdTsDsl => {
   regexp.typeScriptIdentifier.lastIndex = 0;
   if (regexp.typeScriptIdentifier.test(name)) {
     return new IdTsDsl(name);
   }
-  return new LiteralTsDsl(name) as TsDsl<ts.PropertyName>;
+  return new LiteralTsDsl(name) as TsDsl<ts.StringLiteral>;
 };
 
-export const safePropName = (name: string): TsDsl<ts.PropertyName> => {
+export const safePropName = (
+  name: string,
+): TsDsl<ts.StringLiteral | ts.NumericLiteral> | IdTsDsl => {
   regexp.number.lastIndex = 0;
   if (regexp.number.test(name)) {
     return name.startsWith('-')
-      ? (new LiteralTsDsl(name) as TsDsl<ts.PropertyName>)
-      : (new LiteralTsDsl(Number(name)) as TsDsl<ts.PropertyName>);
+      ? (new LiteralTsDsl(name) as TsDsl<ts.StringLiteral>)
+      : (new LiteralTsDsl(Number(name)) as TsDsl<ts.NumericLiteral>);
   }
 
   regexp.typeScriptIdentifier.lastIndex = 0;
@@ -28,7 +45,7 @@ export const safePropName = (name: string): TsDsl<ts.PropertyName> => {
     return new IdTsDsl(name);
   }
 
-  return new LiteralTsDsl(name) as TsDsl<ts.PropertyName>;
+  return new LiteralTsDsl(name) as TsDsl<ts.StringLiteral>;
 };
 
 const safeName = (name: string, reserved: ReservedList): string => {
@@ -58,7 +75,8 @@ const safeName = (name: string, reserved: ReservedList): string => {
   return sanitized || '_';
 };
 
-export const safeRuntimeName = (name: string) =>
+export const safeRuntimeName = (name: string): string =>
   safeName(name, reserved.runtime);
 
-export const safeTypeName = (name: string) => safeName(name, reserved.type);
+export const safeTypeName = (name: string): string =>
+  safeName(name, reserved.type);

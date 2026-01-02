@@ -130,7 +130,7 @@ const operationToRouteHandler = ({
 };
 
 export const handler: FastifyPlugin['Handler'] = ({ plugin }) => {
-  plugin.registerSymbol({
+  plugin.symbol('RouteHandler', {
     external: 'fastify',
     kind: 'type',
     meta: {
@@ -138,12 +138,9 @@ export const handler: FastifyPlugin['Handler'] = ({ plugin }) => {
       resource: 'route-handler',
       tool: 'fastify',
     },
-    name: 'RouteHandler',
   });
 
-  const symbolRouteHandlers = plugin.registerSymbol({
-    name: 'RouteHandlers',
-  });
+  const symbolRouteHandlers = plugin.symbol('RouteHandlers');
 
   const type = $.type.object();
 

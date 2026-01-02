@@ -1,16 +1,11 @@
-import type {
-  AnalysisContext,
-  AstContext,
-  Ref,
-  Symbol,
-} from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName, Ref } from '@hey-api/codegen-core';
 import { fromRef, isSymbol, ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
 
-export type TemplatePart = Symbol | string | MaybeTsDsl<ts.Expression>;
+export type TemplatePart = NodeName | MaybeTsDsl<ts.Expression>;
 
 const Mixed = TsDsl<ts.TemplateExpression | ts.NoSubstitutionTemplateLiteral>;
 
@@ -36,9 +31,8 @@ export class TemplateTsDsl extends Mixed {
     return this;
   }
 
-  override toAst(ctx: AstContext) {
+  override toAst() {
     const parts = this.$node(
-      ctx,
       this.parts.map((p) => {
         const part = fromRef(p);
         return isSymbol(part) ? part.finalName : part;
@@ -59,6 +53,8 @@ export class TemplateTsDsl extends Mixed {
           index++;
         }
         normalized.push(merged);
+      } else if (typeof current === 'number') {
+        normalized.push(String(current));
       } else {
         normalized.push(current);
       }

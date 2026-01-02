@@ -1,5 +1,5 @@
 <div align="center">
-  <img alt="Hey API presents openapi-ts" height="214" src="https://heyapi.dev/images/openapi-ts-hero-640w.png" width="438">
+  <img alt="Hey API presents openapi-ts" height="214" src="https://heyapi.dev/assets/.gen/openapi-ts-hero-640w.png" width="438">
   <h1><b>OpenAPI TypeScript</b></h1>
   <p><em>“OpenAPI codegen that just works.”</em><br/><sub>— Guillermo Rauch, CEO of Vercel</sub></p>
 </div>
@@ -14,7 +14,7 @@
 <p align="center">
   <a href="https://stackblitz.com/edit/hey-api-example?file=openapi-ts.config.ts,src%2Fclient%2Fschemas.gen.ts,src%2Fclient%2Fsdk.gen.ts,src%2Fclient%2Ftypes.gen.ts">Demo</a>
   <span>&nbsp;•&nbsp;</span>
-  <a href="https://heyapi.dev">Docs</a>
+  <a href="https://heyapi.dev">Manual</a>
   <span>&nbsp;•&nbsp;</span>
   <a href="https://github.com/hey-api/openapi-ts/issues">Issues</a>
   <span>&nbsp;•&nbsp;</span>
@@ -23,21 +23,22 @@
 
 ## About
 
-[@hey-api/openapi-ts](https://github.com/hey-api/openapi-ts) is an [open source](https://github.com/hey-api/openapi-ts/blob/main/LICENSE.md) OpenAPI to TypeScript code generator trusted by companies like Google, Amazon, and PayPal to generate API clients, SDKs, validators, and more. We also build complementary tools and [services](https://app.heyapi.dev/) that help teams design, manage, and distribute APIs more effectively.
+The OpenAPI to TypeScript code generator used by Vercel, OpenCode, and PayPal.
+
+Generate production-ready SDKs, Zod schemas, TanStack Query hooks, or choose from 20+ other plugins.
+
+Part of the Hey API ecosystem.
 
 ## Features
 
-- runs in CLI, Node.js 20+, or npx
-- works with OpenAPI 2.0, 3.0, and 3.1
-- core plugins for types, SDKs, and schemas
-- clients for your runtime (Fetch API, Angular, Axios, Next.js, Nuxt, etc.)
-- plugin ecosystem to reduce third-party boilerplate
-- custom plugins and custom clients
-- [integration](https://heyapi.dev/openapi-ts/integrations) with Hey API Platform
-
-## Dashboard
-
-Access your projects and OpenAPI specifications in the [Hey API Platform](https://app.heyapi.dev/).
+- production-ready code that compiles
+- runs in any Node.js 20+ environment
+- accepts any OpenAPI specification
+- core plugins for SDKs, types, and schemas
+- HTTP clients for Fetch API, Angular, Axios, Next.js, Nuxt, and more
+- 20+ plugins to reduce third-party boilerplate
+- highly customizable via plugins
+- [sync with Hey API Registry](https://heyapi.dev/openapi-ts/integrations) for spec management
 
 ## Contributing
 
@@ -47,7 +48,7 @@ Start with our [Contributing](https://heyapi.dev/openapi-ts/community/contributi
 
 ## Sponsors
 
-Help Hey API stay around for the long haul by becoming a [sponsor](https://github.com/sponsors/hey-api).
+Hey API is sponsor-funded. If you rely on Hey API in production, consider becoming a [sponsor](https://github.com/sponsors/hey-api) to accelerate the roadmap.
 
 <h3 align="center">Gold</h3>
 
@@ -59,8 +60,8 @@ Help Hey API stay around for the long haul by becoming a [sponsor](https://githu
         <p>
           <a href="https://kutt.it/pkEZyc" target="_blank">
             <picture height="50px">
-              <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/images/stainless-logo-wordmark-480w.jpeg">
-              <img alt="Stainless logo" height="50px" src="https://heyapi.dev/images/stainless-logo-wordmark-480w.jpeg">
+              <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/.gen/stainless-logo-wordmark-480w.jpeg">
+              <img alt="Stainless logo" height="50px" src="https://heyapi.dev/assets/.gen/stainless-logo-wordmark-480w.jpeg">
             </picture>
           </a>
           <br/>
@@ -77,7 +78,8 @@ Help Hey API stay around for the long haul by becoming a [sponsor](https://githu
         <p>
           <a href="https://kutt.it/QM9Q2N" target="_blank">
             <picture height="50px">
-              <img alt="Opencode logo" height="50px" src="https://heyapi.dev/opencode-logo-wordmark.svg">
+              <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/opencode/logo-light.svg">
+              <img alt="Opencode logo" height="50px" src="https://heyapi.dev/assets/opencode/logo-dark.svg">
             </picture>
           </a>
           <br/>
@@ -101,8 +103,8 @@ Help Hey API stay around for the long haul by becoming a [sponsor](https://githu
       <td align="center">
         <a href="https://kutt.it/skQUVd" target="_blank">
           <picture height="40px">
-            <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/images/scalar-logo-wordmark-480w.jpeg">
-            <img alt="Scalar logo" height="40px" src="https://heyapi.dev/scalar-logo-wordmark.svg">
+            <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/scalar/logo-light.svg">
+            <img alt="Scalar logo" height="40px" src="https://heyapi.dev/assets/scalar/logo-dark.svg">
           </picture>
         </a>
         <br/>
@@ -113,7 +115,8 @@ Help Hey API stay around for the long haul by becoming a [sponsor](https://githu
       <td align="center">
         <a href="https://kutt.it/Dr9GuW" target="_blank">
           <picture height="40px">
-            <img alt="FastAPI logo" height="40px" src="https://heyapi.dev/fastapi-logo-wordmark.svg">
+            <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/fastapi/logo-light.svg">
+            <img alt="FastAPI logo" height="40px" src="https://heyapi.dev/assets/fastapi/logo-dark.svg">
           </picture>
         </a>
         <br/>
@@ -133,16 +136,16 @@ Help Hey API stay around for the long haul by becoming a [sponsor](https://githu
       <td align="center">
         <a href="https://kutt.it/YpaKsX" target="_blank">
           <picture height="34px">
-            <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/images/kinde-logo-wordmark-dark-480w.webp">
-            <img alt="Kinde logo" height="34px" src="https://heyapi.dev/images/kinde-logo-wordmark-480w.jpeg">
+            <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/.gen/kinde-logo-wordmark-dark-480w.webp">
+            <img alt="Kinde logo" height="34px" src="https://heyapi.dev/assets/.gen/kinde-logo-wordmark-480w.jpeg">
           </picture>
         </a>
       </td>
       <td align="center">
         <a href="https://kutt.it/KkqSaw" target="_blank">
           <picture height="34px">
-            <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/images/cella-logo-wordmark-480w.webp">
-            <img alt="Cella logo" height="34px" src="https://heyapi.dev/cella-logo-wordmark.svg">
+            <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/cella/logo-light.svg">
+            <img alt="Cella logo" height="34px" src="https://heyapi.dev/assets/cella/logo-dark.svg">
           </picture>
         </a>
       </td>

@@ -84,15 +84,13 @@ const findDiscriminatorsInSchema = ({
 };
 
 /**
- * Gets all discriminator values for a schema and its children in the inheritance hierarchy.
- * For intermediate schemas (those that are extended by others), returns a union of all values.
+ * Gets the discriminator value for a schema.
+ * Returns only the schema's own discriminator value, not child values.
  */
 const getAllDiscriminatorValues = ({
-  context,
   discriminator,
   schemaRef,
 }: {
-  context: Context;
   discriminator: NonNullable<SchemaObject['discriminator']>;
   schemaRef: string;
 }): Array<string> => {
@@ -105,19 +103,6 @@ const getAllDiscriminatorValues = ({
     if (mappedSchemaRef === schemaRef) {
       // This is the current schema's own value
       values.push(value);
-      continue;
-    }
-
-    // Check if the mapped schema extends the current schema
-    const mappedSchema = context.resolveRef<SchemaObject>(mappedSchemaRef);
-    if (mappedSchema.allOf) {
-      for (const item of mappedSchema.allOf) {
-        if (item.$ref && item.$ref === schemaRef) {
-          // This schema extends the current schema, add its value
-          values.push(value);
-          break;
-        }
-      }
     }
   }
 
@@ -602,7 +587,6 @@ const parseAllOf = ({
   for (const { discriminator, isRequired, values } of discriminatorsToAdd) {
     // Get all discriminator values including children for union types
     const allValues = getAllDiscriminatorValues({
-      context,
       discriminator,
       schemaRef: state.$ref!,
     });
@@ -624,6 +608,46 @@ const parseAllOf = ({
             logicalOperator: 'or',
           }
         : valueSchemas[0]!;
+
+    // Check if any $ref schemas in schemaItems have this discriminator property
+    // If yes, mark them to omit it to avoid conflicts
+    for (const item of schemaItems) {
+      if (item.$ref || item.symbolRef) {
+        // Check if the referenced schema has this property
+        const hasProperty = (() => {
+          if (!item.$ref) return false;
+          try {
+            const refSchema = context.resolveRef<SchemaObject>(item.$ref);
+            // Check if the discriminator property exists in the ref schema
+            return (
+              refSchema.properties?.[discriminator.propertyName] !==
+                undefined ||
+              (refSchema.allOf &&
+                refSchema.allOf.some((allOfItem) => {
+                  const resolved = allOfItem.$ref
+                    ? context.resolveRef<SchemaObject>(allOfItem.$ref)
+                    : allOfItem;
+                  return (
+                    resolved.properties?.[discriminator.propertyName] !==
+                    undefined
+                  );
+                }))
+            );
+          } catch {
+            return false;
+          }
+        })();
+
+        if (hasProperty) {
+          // Mark this ref to omit the discriminator property
+          if (!item.omit) {
+            item.omit = [discriminator.propertyName];
+          } else if (!item.omit.includes(discriminator.propertyName)) {
+            item.omit = [...item.omit, discriminator.propertyName];
+          }
+        }
+      }
+    }
 
     // Find the inline schema (non-$ref) to merge the discriminator property into
     // The inline schema should be the last non-$ref item in schemaItems

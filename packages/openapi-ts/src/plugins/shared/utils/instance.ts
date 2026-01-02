@@ -25,6 +25,7 @@ import type { OpenApi } from '~/openApi/types';
 import type { Hooks } from '~/parser/types/hooks';
 import type { Plugin } from '~/plugins';
 import type { PluginConfigMap } from '~/plugins/config';
+import type { TsDsl } from '~/ts-dsl';
 import { jsonPointerToPath } from '~/utils/ref';
 
 import type { BaseEvent, WalkEvent } from '../types/instance';
@@ -104,6 +105,17 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     this.handler = props.handler;
     this.name = props.name;
     this.package = props.context.package;
+  }
+
+  external(
+    resource: Required<SymbolMeta>['resource'],
+    meta?: Omit<SymbolMeta, 'category' | 'resource'>,
+  ): Symbol {
+    return this.gen.symbols.reference({
+      ...meta,
+      category: 'external',
+      resource,
+    });
   }
 
   /**
@@ -323,19 +335,19 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     return result as T extends number ? void : number;
   }
 
-  querySymbol(filter: SymbolMeta): Symbol | undefined {
-    return this.gen.symbols.query(filter)[0];
+  querySymbol(filter: SymbolMeta): Symbol<TsDsl> | undefined {
+    return this.gen.symbols.query(filter)[0] as Symbol<TsDsl> | undefined;
   }
 
-  referenceSymbol(meta: SymbolMeta): Symbol {
-    return this.gen.symbols.reference(meta);
+  referenceSymbol(meta: SymbolMeta): Symbol<TsDsl> {
+    return this.gen.symbols.reference(meta) as Symbol<TsDsl>;
   }
 
   /**
    * @deprecated use `plugin.symbol()` instead
    */
-  registerSymbol(symbol: SymbolIn): Symbol {
-    return this.symbol(symbol.name, symbol);
+  registerSymbol(symbol: SymbolIn): Symbol<TsDsl> {
+    return this.symbol(symbol.name, symbol) as Symbol<TsDsl>;
   }
 
   /**
@@ -351,7 +363,10 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     }
   }
 
-  symbol(name: SymbolIn['name'], symbol?: Omit<SymbolIn, 'name'>): Symbol {
+  symbol(
+    name: SymbolIn['name'],
+    symbol?: Omit<SymbolIn, 'name'>,
+  ): Symbol<TsDsl> {
     const symbolIn: SymbolIn = {
       ...symbol,
       exportFrom:
@@ -375,7 +390,24 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     for (const hook of this.eventHooks['symbol:register:after']) {
       hook({ plugin: this, symbol: symbolOut });
     }
-    return symbolOut;
+    return symbolOut as Symbol<TsDsl>;
+  }
+
+  /**
+   * Registers a symbol only if it does not already exist based on the provided
+   * metadata. This prevents duplicate symbols from being created in the project.
+   */
+  symbolOnce(name: SymbolIn['name'], symbol?: Omit<SymbolIn, 'name'>): Symbol {
+    const meta = {
+      ...symbol?.meta,
+    };
+    if (symbol?.external) {
+      meta.category = 'external';
+      meta.resource = symbol.external;
+    }
+    const existing = this.querySymbol(meta);
+    if (existing) return existing;
+    return this.symbol(name, { ...symbol, meta });
   }
 
   private buildEventHooks(): EventHooks {

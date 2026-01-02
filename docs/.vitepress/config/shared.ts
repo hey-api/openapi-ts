@@ -3,6 +3,8 @@ import path from 'node:path';
 import { defineConfig, type HeadConfig } from 'vitepress';
 import llmstxt from 'vitepress-plugin-llms';
 
+import { processImages } from './scripts/optimize-images.js';
+
 const domain = process.env.SITE_DOMAIN || 'http://localhost:5173';
 
 export default defineConfig({
@@ -11,7 +13,7 @@ export default defineConfig({
     [
       'link',
       {
-        href: '/logo-dark.svg',
+        href: '/assets/icons/dark.svg',
         media: '(prefers-color-scheme: dark)',
         rel: 'icon',
         sizes: '16x16',
@@ -21,7 +23,7 @@ export default defineConfig({
     [
       'link',
       {
-        href: '/logo-light.svg',
+        href: '/assets/icons/light.svg',
         media: '(prefers-color-scheme: light)',
         rel: 'icon',
         sizes: '16x16',
@@ -49,8 +51,8 @@ export default defineConfig({
     externalLinkIcon: true,
     logo: {
       alt: 'Hey API logo',
-      dark: '/logo-dark.svg',
-      light: '/logo-light.svg',
+      dark: '/assets/icons/dark.svg',
+      light: '/assets/icons/light.svg',
     },
     search: {
       options: {
@@ -86,7 +88,7 @@ export default defineConfig({
       [
         'meta',
         {
-          content: `${domain}/images/openapi-ts-hero-640w.png`,
+          content: `${domain}/assets/.gen/openapi-ts-hero-640w.png`,
           property: 'og:image',
         },
       ],
@@ -96,7 +98,7 @@ export default defineConfig({
         {
           content:
             pageData.frontmatter.description ||
-            '🚀 The OpenAPI to TypeScript codegen. Generate clients, SDKs, validators, and more.',
+            '🌀 OpenAPI to TypeScript codegen. Production-ready SDKs, Zod schemas, TanStack Query hooks, and 20+ plugins. Used by Vercel, OpenCode, and PayPal.',
           property: 'og:description',
         },
       ],
@@ -111,6 +113,16 @@ export default defineConfig({
   },
   vite: {
     plugins: [
+      {
+        async buildStart() {
+          try {
+            await processImages();
+          } catch (error) {
+            console.error('❌ Error optimizing images:', error);
+          }
+        },
+        name: 'generate-images',
+      },
       llmstxt({
         experimental: {
           depth: 2,

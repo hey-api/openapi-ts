@@ -2,13 +2,13 @@ import type { Refs, SymbolMeta } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import type { IR } from '~/ir/types';
-import type { $ } from '~/ts-dsl';
 
 import type { ValibotPlugin } from '../types';
+import type { Pipes } from './pipes';
 
 export type Ast = {
   hasLazyExpression?: boolean;
-  pipes: Array<ReturnType<typeof $.call | typeof $.expr>>;
+  pipes: Pipes;
   typeName?: string | ts.Identifier;
 };
 

@@ -1,4 +1,4 @@
-import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
+import type { AnalysisContext } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import { TsDsl } from '../base';
@@ -11,7 +11,7 @@ export class NewlineTsDsl extends TsDsl<ts.Identifier> {
     super.analyze(ctx);
   }
 
-  override toAst(ctx: AstContext): ts.Identifier {
-    return this.$node(ctx, new IdTsDsl('\n'));
+  override toAst(): ts.Identifier {
+    return this.$node(new IdTsDsl('\n'));
   }
 }

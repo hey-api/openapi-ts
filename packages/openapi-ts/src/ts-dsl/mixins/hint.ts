@@ -1,4 +1,4 @@
-import type { AnalysisContext, AstContext, Node } from '@hey-api/codegen-core';
+import type { AnalysisContext, Node } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import type { HintFn, HintLines } from '../layout/hint';
@@ -6,7 +6,7 @@ import { HintTsDsl } from '../layout/hint';
 import type { BaseCtor, MixinCtor } from './types';
 
 export interface HintMethods extends Node {
-  $hint<T extends ts.Node>(ctx: AstContext, node: T): T;
+  $hint<T extends ts.Node>(node: T): T;
   hint(lines?: HintLines, fn?: HintFn): this;
 }
 
@@ -25,8 +25,8 @@ export function HintMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
       return this;
     }
 
-    protected $hint<T extends ts.Node>(ctx: AstContext, node: T): T {
-      return this._hint ? this._hint.apply(ctx, node) : node;
+    protected $hint<T extends ts.Node>(node: T): T {
+      return this._hint ? this._hint.apply(node) : node;
     }
   }
 

@@ -401,6 +401,10 @@ a.migration:focus {
 }
 
 @media (min-width: 640px) {
+  h1.heading .name {
+    max-width: 600px;
+  }
+
   .VPFeatures.VPHomeFeatures > .container > .items {
     gap: 1rem;
     padding: 0.4rem 0;

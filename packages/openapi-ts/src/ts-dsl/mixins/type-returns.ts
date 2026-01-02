@@ -1,16 +1,15 @@
-import type { AnalysisContext, AstContext, Node } from '@hey-api/codegen-core';
+import type { AnalysisContext, Node, NodeName } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import { TypeTsDsl } from '../base';
-import type { TypeExprName } from '../type/expr';
 import { TypeExprTsDsl } from '../type/expr';
 import type { BaseCtor, MixinCtor } from './types';
 
 export interface TypeReturnsMethods extends Node {
   /** Returns the return type node. */
-  $returns(ctx: AstContext): ts.TypeNode | undefined;
+  $returns(): ts.TypeNode | undefined;
   /** Sets the return type. */
-  returns(type: TypeExprName | TypeTsDsl): this;
+  returns(type: NodeName | TypeTsDsl): this;
 }
 
 export function TypeReturnsMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
@@ -24,14 +23,14 @@ export function TypeReturnsMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
       ctx.analyze(this._returns);
     }
 
-    protected returns(type: TypeExprName | TypeTsDsl): this {
+    protected returns(type: NodeName | TypeTsDsl): this {
       this._returns =
         type instanceof TypeTsDsl ? type : new TypeExprTsDsl(type);
       return this;
     }
 
-    protected $returns(ctx: AstContext): ts.TypeNode | undefined {
-      return this.$type(ctx, this._returns);
+    protected $returns(): ts.TypeNode | undefined {
+      return this.$type(this._returns);
     }
   }
 

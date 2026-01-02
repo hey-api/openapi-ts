@@ -5,7 +5,7 @@ import { createSchemaComment } from '~/plugins/shared/utils/schema';
 import { $ } from '~/ts-dsl';
 
 import { identifiers } from '../v1/constants';
-import { pipesToAst } from './pipesToAst';
+import { pipesToNode } from './pipes';
 import type { Ast, IrSchemaToAstOptions } from './types';
 
 export const exportAst = ({
@@ -32,6 +32,6 @@ export const exportAst = ({
     .$if(state.hasLazyExpression['~ref'], (c) =>
       c.type($.type(v).attr(ast.typeName || identifiers.types.GenericSchema)),
     )
-    .assign(pipesToAst({ pipes: ast.pipes, plugin }));
+    .assign(pipesToNode(ast.pipes, plugin));
   plugin.node(statement);
 };

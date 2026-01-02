@@ -710,8 +710,8 @@ export const zDefault = z.object({
 });
 
 export const zPageable = z.object({
-    page: z._default(z.optional(z.int().check(z.gte(0))), 0),
-    size: z.optional(z.int().check(z.gte(1))),
+    page: z._default(z.optional(z.int().check(z.gte(0), z.maximum(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' }))), 0),
+    size: z.optional(z.int().check(z.gte(1), z.maximum(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' }))),
     sort: z.optional(z.array(z.string()))
 });
 
@@ -1127,10 +1127,10 @@ export const zCompositionWithOneOfAndProperties = z.intersection(z.union([
     })
 ]), z.object({
     baz: z.union([
-        z.int().check(z.gte(0)),
+        z.int().check(z.gte(0), z.maximum(65535, { error: 'Invalid value: Expected uint16 to be <= 65535' })),
         z.null()
     ]),
-    qux: z.int().check(z.gte(0))
+    qux: z.int().check(z.gte(0), z.maximum(255, { error: 'Invalid value: Expected uint8 to be <= 255' }))
 }));
 
 export const zModelWithOneOfAndProperties = z.intersection(z.union([
@@ -1138,10 +1138,10 @@ export const zModelWithOneOfAndProperties = z.intersection(z.union([
     zNonAsciiStringæøåÆøÅöôêÊ字符串
 ]), z.object({
     baz: z.union([
-        z.int().check(z.gte(0)),
+        z.int().check(z.gte(0), z.maximum(65535, { error: 'Invalid value: Expected uint16 to be <= 65535' })),
         z.null()
     ]),
-    qux: z.int().check(z.gte(0))
+    qux: z.int().check(z.gte(0), z.maximum(255, { error: 'Invalid value: Expected uint8 to be <= 255' }))
 }));
 
 /**
@@ -1585,7 +1585,7 @@ export const zCollectionFormatData = z.object({
 export const zTypesData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.object({
-        id: z.optional(z.int())
+        id: z.optional(z.int().check(z.minimum(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' }), z.maximum(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' })))
     })),
     query: z.object({
         parameterNumber: z._default(z.number(), 123),
@@ -1731,7 +1731,7 @@ export const zComplexParamsData = z.object({
             zModelWithDictionary
         ]),
         user: z.optional(z.readonly(z.object({
-            id: z.optional(z.readonly(z.int())),
+            id: z.optional(z.readonly(z.int().check(z.minimum(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' }), z.maximum(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' })))),
             name: z.optional(z.readonly(z.union([
                 z.readonly(z.string()),
                 z.null()
@@ -1739,7 +1739,7 @@ export const zComplexParamsData = z.object({
         })))
     })),
     path: z.object({
-        id: z.int(),
+        id: z.int().check(z.minimum(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' }), z.maximum(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' })),
         'api-version': z.string()
     }),
     query: z.optional(z.never())

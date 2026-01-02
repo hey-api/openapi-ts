@@ -1,16 +1,11 @@
 import { symbolBrand } from '../brands';
-import { debug } from '../debug';
 import type { ISymbolMeta } from '../extensions';
 import type { File } from '../files/file';
+import { log } from '../log';
 import type { INode } from '../nodes/node';
-import type {
-  BindingKind,
-  ISymbolIn,
-  SymbolKind,
-  SymbolNameSanitizer,
-} from './types';
+import type { BindingKind, ISymbolIn, SymbolKind } from './types';
 
-export class Symbol {
+export class Symbol<Node extends INode = INode> {
   /**
    * Canonical symbol this stub resolves to, if any.
    *
@@ -79,15 +74,9 @@ export class Symbol {
    */
   private _name: string;
   /**
-   * Optional function to sanitize the symbol name.
-   *
-   * @default undefined
-   */
-  private _nameSanitizer?: SymbolNameSanitizer;
-  /**
    * Node that defines this symbol.
    */
-  private _node?: INode;
+  private _node?: Node;
 
   /** Brand used for identifying symbols. */
   readonly '~brand' = symbolBrand;
@@ -153,7 +142,7 @@ export class Symbol {
   get finalName(): string {
     if (!this.canonical._finalName) {
       const message = `Symbol finalName has not been resolved yet for ${this.canonical.toString()}`;
-      debug(message, 'symbol');
+      log.debug(message, 'symbol');
       throw new Error(message);
     }
     return this.canonical._finalName;
@@ -202,17 +191,10 @@ export class Symbol {
   }
 
   /**
-   * Optional function to sanitize the symbol name.
-   */
-  get nameSanitizer(): SymbolNameSanitizer | undefined {
-    return this.canonical._nameSanitizer;
-  }
-
-  /**
    * Read‑only accessor for the defining node.
    */
-  get node(): INode | undefined {
-    return this.canonical._node;
+  get node(): Node | undefined {
+    return this.canonical._node as Node | undefined;
   }
 
   /**
@@ -256,7 +238,7 @@ export class Symbol {
     this.assertCanonical();
     if (this._file && this._file !== file) {
       const message = `Symbol ${this.canonical.toString()} is already assigned to a different file.`;
-      debug(message, 'symbol');
+      log.debug(message, 'symbol');
       throw new Error(message);
     }
     this._file = file;
@@ -271,7 +253,7 @@ export class Symbol {
     this.assertCanonical();
     if (this._finalName && this._finalName !== name) {
       const message = `Symbol finalName has already been resolved for ${this.canonical.toString()}.`;
-      debug(message, 'symbol');
+      log.debug(message, 'symbol');
       throw new Error(message);
     }
     this._finalName = name;
@@ -308,26 +290,18 @@ export class Symbol {
   }
 
   /**
-   * Sets a custom function to sanitize the symbol's name.
-   *
-   * @param fn — The name sanitizer function to apply.
-   */
-  setNameSanitizer(fn: SymbolNameSanitizer): void {
-    this.assertCanonical();
-    this._nameSanitizer = fn;
-  }
-
-  /**
    * Binds the node that defines this symbol.
    *
    * This may only be set once.
    */
-  setNode(node: INode): void {
+  setNode(node: Node): void {
     this.assertCanonical();
     if (this._node && this._node !== node) {
       const message = `Symbol ${this.canonical.toString()} is already bound to a different node.`;
-      debug(message, 'symbol');
-      throw new Error(message);
+      log.debug(message, 'symbol');
+      // TODO: symbol <> node relationship needs to be refactor to 1:many
+      // disabled in the meantime or it would throw
+      // throw new Error(message);
     }
     this._node = node;
     node.symbol = this;
@@ -337,7 +311,11 @@ export class Symbol {
    * Returns a debug‑friendly string representation identifying the symbol.
    */
   toString(): string {
-    return `[Symbol ${this.name}#${this.id}]`;
+    const canonical = this.canonical;
+    if (canonical._finalName && canonical._finalName !== canonical._name) {
+      return `[Symbol ${canonical._name} → ${canonical._finalName}#${canonical.id}]`;
+    }
+    return `[Symbol ${canonical._name}#${canonical.id}]`;
   }
 
   /**
@@ -353,7 +331,7 @@ export class Symbol {
   private assertCanonical(): void {
     if (this._canonical && this._canonical !== this) {
       const message = `Illegal mutation of stub symbol ${this.toString()} → canonical: ${this._canonical.toString()}`;
-      debug(message, 'symbol');
+      log.debug(message, 'symbol');
       throw new Error(message);
     }
   }

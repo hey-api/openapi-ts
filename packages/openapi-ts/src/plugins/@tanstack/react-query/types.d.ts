@@ -1,6 +1,6 @@
 import type { IR } from '~/ir/types';
 import type { DefinePlugin, Plugin } from '~/plugins';
-import type { StringCase, StringName } from '~/types/case';
+import type { Casing, NameTransformer } from '~/utils/naming';
 
 export type UserConfig = Plugin.Name<'@tanstack/react-query'> &
   Plugin.Hooks & {
@@ -9,7 +9,7 @@ export type UserConfig = Plugin.Name<'@tanstack/react-query'> &
      *
      * @default 'camelCase'
      */
-    case?: StringCase;
+    case?: Casing;
     /**
      * Add comments from SDK functions to the generated TanStack Query code?
      *
@@ -42,14 +42,14 @@ export type UserConfig = Plugin.Name<'@tanstack/react-query'> &
      */
     infiniteQueryKeys?:
       | boolean
-      | StringName
+      | NameTransformer
       | {
           /**
            * The casing convention to use for generated names.
            *
            * @default 'camelCase'
            */
-          case?: StringCase;
+          case?: Casing;
           /**
            * Whether to generate infinite query key helpers.
            *
@@ -64,7 +64,7 @@ export type UserConfig = Plugin.Name<'@tanstack/react-query'> &
            *
            * @default '{{name}}InfiniteQueryKey'
            */
-          name?: StringName;
+          name?: NameTransformer;
           /**
            * Whether to include operation tags in infinite query keys.
            * This will make query keys larger but provides better cache invalidation capabilities.
@@ -87,14 +87,14 @@ export type UserConfig = Plugin.Name<'@tanstack/react-query'> &
      */
     infiniteQueryOptions?:
       | boolean
-      | StringName
+      | NameTransformer
       | {
           /**
            * The casing convention to use for generated names.
            *
            * @default 'camelCase'
            */
-          case?: StringCase;
+          case?: Casing;
           /**
            * Whether to generate infinite query options helpers.
            *
@@ -109,7 +109,7 @@ export type UserConfig = Plugin.Name<'@tanstack/react-query'> &
            * @returns A meta object with any properties you want to include
            *
            * @example
-           * ```typescript
+           * ```ts
            * meta: (operation) => ({
            *   customField: operation.id,
            *   isDeprecated: operation.deprecated,
@@ -132,7 +132,7 @@ export type UserConfig = Plugin.Name<'@tanstack/react-query'> &
            *
            * @default '{{name}}InfiniteOptions'
            */
-          name?: StringName;
+          name?: NameTransformer;
         };
     /**
      * Configuration for generated mutation options helpers.
@@ -148,14 +148,14 @@ export type UserConfig = Plugin.Name<'@tanstack/react-query'> &
      */
     mutationOptions?:
       | boolean
-      | StringName
+      | NameTransformer
       | {
           /**
            * The casing convention to use for generated names.
            *
            * @default 'camelCase'
            */
-          case?: StringCase;
+          case?: Casing;
           /**
            * Whether to generate mutation options helpers.
            *
@@ -170,7 +170,7 @@ export type UserConfig = Plugin.Name<'@tanstack/react-query'> &
            * @returns A meta object with any properties you want to include
            *
            * @example
-           * ```typescript
+           * ```ts
            * meta: (operation) => ({
            *   customField: operation.id,
            *   isDeprecated: operation.deprecated,
@@ -193,7 +193,7 @@ export type UserConfig = Plugin.Name<'@tanstack/react-query'> &
            *
            * @default '{{name}}Mutation'
            */
-          name?: StringName;
+          name?: NameTransformer;
         };
     /**
      * Configuration for generated query keys.
@@ -209,14 +209,14 @@ export type UserConfig = Plugin.Name<'@tanstack/react-query'> &
      */
     queryKeys?:
       | boolean
-      | StringName
+      | NameTransformer
       | {
           /**
            * The casing convention to use for generated names.
            *
            * @default 'camelCase'
            */
-          case?: StringCase;
+          case?: Casing;
           /**
            * Whether to generate query keys.
            *
@@ -231,7 +231,7 @@ export type UserConfig = Plugin.Name<'@tanstack/react-query'> &
            *
            * @default '{{name}}QueryKey'
            */
-          name?: StringName;
+          name?: NameTransformer;
           /**
            * Whether to include operation tags in query keys.
            * This will make query keys larger but provides better cache invalidation capabilities.
@@ -254,14 +254,14 @@ export type UserConfig = Plugin.Name<'@tanstack/react-query'> &
      */
     queryOptions?:
       | boolean
-      | StringName
+      | NameTransformer
       | {
           /**
            * The casing convention to use for generated names.
            *
            * @default 'camelCase'
            */
-          case?: StringCase;
+          case?: Casing;
           /**
            * Whether to generate query options helpers.
            *
@@ -282,7 +282,7 @@ export type UserConfig = Plugin.Name<'@tanstack/react-query'> &
            * @returns A meta object with any properties you want to include
            *
            * @example
-           * ```typescript
+           * ```ts
            * meta: (operation) => ({
            *   customField: operation.id,
            *   isDeprecated: operation.deprecated,
@@ -305,7 +305,7 @@ export type UserConfig = Plugin.Name<'@tanstack/react-query'> &
            *
            * @default '{{name}}Options'
            */
-          name?: StringName;
+          name?: NameTransformer;
         };
     /**
      * Configuration for generated `useQuery()` function helpers.
@@ -321,14 +321,14 @@ export type UserConfig = Plugin.Name<'@tanstack/react-query'> &
      */
     useQuery?:
       | boolean
-      | StringName
+      | NameTransformer
       | {
           /**
            * The casing convention to use for generated names.
            *
            * @default 'camelCase'
            */
-          case?: StringCase;
+          case?: Casing;
           /**
            * Whether to generate `useQuery()` function helpers.
            *
@@ -343,7 +343,7 @@ export type UserConfig = Plugin.Name<'@tanstack/react-query'> &
            *
            * @default 'use{{name}}Query'
            */
-          name?: StringName;
+          name?: NameTransformer;
         };
   };
 
@@ -354,7 +354,7 @@ export type Config = Plugin.Name<'@tanstack/react-query'> &
      *
      * @default 'camelCase'
      */
-    case: StringCase;
+    case: Casing;
     /**
      * Add comments from SDK functions to the generated TanStack Query code?
      *
@@ -378,7 +378,7 @@ export type Config = Plugin.Name<'@tanstack/react-query'> &
        *
        * @default 'camelCase'
        */
-      case: StringCase;
+      case: Casing;
       /**
        * Whether to generate infinite query key helpers.
        *
@@ -392,7 +392,7 @@ export type Config = Plugin.Name<'@tanstack/react-query'> &
        *
        * @default '{{name}}InfiniteQueryKey'
        */
-      name: StringName;
+      name: NameTransformer;
       /**
        * Whether to include operation tags in infinite query keys.
        * This will make query keys larger but provides better cache invalidation capabilities.
@@ -412,7 +412,7 @@ export type Config = Plugin.Name<'@tanstack/react-query'> &
        *
        * @default 'camelCase'
        */
-      case: StringCase;
+      case: Casing;
       /**
        * Whether to generate infinite query options helpers.
        *
@@ -427,7 +427,7 @@ export type Config = Plugin.Name<'@tanstack/react-query'> &
        * @returns A meta object with any properties you want to include
        *
        * @example
-       * ```typescript
+       * ```ts
        * meta: (operation) => ({
        *   customField: operation.id,
        *   isDeprecated: operation.deprecated,
@@ -449,7 +449,7 @@ export type Config = Plugin.Name<'@tanstack/react-query'> &
        *
        * @default '{{name}}InfiniteOptions'
        */
-      name: StringName;
+      name: NameTransformer;
     };
     /**
      * Resolved configuration for generated mutation options helpers.
@@ -462,7 +462,7 @@ export type Config = Plugin.Name<'@tanstack/react-query'> &
        *
        * @default 'camelCase'
        */
-      case: StringCase;
+      case: Casing;
       /**
        * Whether to generate mutation options helpers.
        *
@@ -477,7 +477,7 @@ export type Config = Plugin.Name<'@tanstack/react-query'> &
        * @returns A meta object with any properties you want to include
        *
        * @example
-       * ```typescript
+       * ```ts
        * meta: (operation) => ({
        *   customField: operation.id,
        *   isDeprecated: operation.deprecated,
@@ -499,7 +499,7 @@ export type Config = Plugin.Name<'@tanstack/react-query'> &
        *
        * @default '{{name}}Mutation'
        */
-      name: StringName;
+      name: NameTransformer;
     };
     /**
      * Resolved configuration for generated query keys.
@@ -512,7 +512,7 @@ export type Config = Plugin.Name<'@tanstack/react-query'> &
        *
        * @default 'camelCase'
        */
-      case: StringCase;
+      case: Casing;
       /**
        * Whether to generate query keys.
        *
@@ -526,7 +526,7 @@ export type Config = Plugin.Name<'@tanstack/react-query'> &
        *
        * @default '{{name}}QueryKey'
        */
-      name: StringName;
+      name: NameTransformer;
       /**
        * Whether to include operation tags in query keys.
        * This will make query keys larger but provides better cache invalidation capabilities.
@@ -546,7 +546,7 @@ export type Config = Plugin.Name<'@tanstack/react-query'> &
        *
        * @default 'camelCase'
        */
-      case: StringCase;
+      case: Casing;
       /**
        * Whether to generate query options helpers.
        *
@@ -567,7 +567,7 @@ export type Config = Plugin.Name<'@tanstack/react-query'> &
        * @returns A meta object with any properties you want to include
        *
        * @example
-       * ```typescript
+       * ```ts
        * meta: (operation) => ({
        *   customField: operation.id,
        *   isDeprecated: operation.deprecated,
@@ -589,7 +589,7 @@ export type Config = Plugin.Name<'@tanstack/react-query'> &
        *
        * @default '{{name}}Options'
        */
-      name: StringName;
+      name: NameTransformer;
     };
     /**
      * Configuration for generated `useQuery()` function helpers.
@@ -602,7 +602,7 @@ export type Config = Plugin.Name<'@tanstack/react-query'> &
        *
        * @default 'camelCase'
        */
-      case: StringCase;
+      case: Casing;
       /**
        * Whether to generate `useQuery()` function helpers.
        *
@@ -617,7 +617,7 @@ export type Config = Plugin.Name<'@tanstack/react-query'> &
        *
        * @default 'use{{name}}Query'
        */
-      name: StringName;
+      name: NameTransformer;
     };
   };
 

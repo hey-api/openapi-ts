@@ -3,10 +3,10 @@ import { refs } from '@hey-api/codegen-core';
 
 import { deduplicateSchema } from '~/ir/schema';
 import type { IR } from '~/ir/types';
-import { buildName } from '~/openApi/shared/utils/name';
 import type { SchemaWithType } from '~/plugins';
 import type { MaybeTsDsl, TypeTsDsl } from '~/ts-dsl';
 import { $ } from '~/ts-dsl';
+import { applyNaming } from '~/utils/naming';
 
 import { createClientOptions } from '../shared/clientOptions';
 import { exportType } from '../shared/export';
@@ -24,7 +24,16 @@ export const irSchemaToAst = ({
   schema: IR.SchemaObject;
 }): MaybeTsDsl<TypeTsDsl> => {
   if (schema.symbolRef) {
-    return $.type(schema.symbolRef);
+    const baseType = $.type(schema.symbolRef);
+    if (schema.omit && schema.omit.length > 0) {
+      // Render as Omit<Type, 'prop1' | 'prop2'>
+      const omittedKeys =
+        schema.omit.length === 1
+          ? $.type.literal(schema.omit[0]!)
+          : $.type.or(...schema.omit.map((key) => $.type.literal(key)));
+      return $.type('Omit').generics(baseType, omittedKeys);
+    }
+    return baseType;
   }
 
   if (schema.$ref) {
@@ -33,7 +42,16 @@ export const irSchemaToAst = ({
       resource: 'definition',
       resourceId: schema.$ref,
     });
-    return $.type(symbol);
+    const baseType = $.type(symbol);
+    if (schema.omit && schema.omit.length > 0) {
+      // Render as Omit<Type, 'prop1' | 'prop2'>
+      const omittedKeys =
+        schema.omit.length === 1
+          ? $.type.literal(schema.omit[0]!)
+          : $.type.or(...schema.omit.map((key) => $.type.literal(key)));
+      return $.type('Omit').generics(baseType, omittedKeys);
+    }
+    return baseType;
   }
 
   if (schema.type) {
@@ -157,11 +175,8 @@ export const handlerV1: HeyApiTypeScriptPlugin['Handler'] = ({ plugin }) => {
 
   if (webhooks.length > 0) {
     const symbol = plugin.symbol(
-      buildName({
-        config: {
-          case: plugin.config.case,
-        },
-        name: 'Webhooks',
+      applyNaming('Webhooks', {
+        case: plugin.config.case,
       }),
       {
         meta: {

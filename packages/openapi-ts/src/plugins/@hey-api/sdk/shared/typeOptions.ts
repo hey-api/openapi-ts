@@ -3,6 +3,7 @@ import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
 import { $ } from '~/ts-dsl';
 
 import type { HeyApiSdkPlugin } from '../types';
+import { isInstance } from '../v1/node';
 import { nuxtTypeDefault, nuxtTypeResponse } from './constants';
 
 export const createTypeOptions = ({
@@ -14,12 +15,11 @@ export const createTypeOptions = ({
   const client = getClientPlugin(plugin.context.config);
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
 
-  const symbolTDataShape = plugin.registerSymbol({
+  const symbolTDataShape = plugin.symbol('TDataShape', {
     external: clientModule,
     kind: 'type',
-    name: 'TDataShape',
   });
-  const symbolClient = plugin.registerSymbol({
+  const symbolClient = plugin.symbol('Client', {
     external: clientModule,
     kind: 'type',
     meta: {
@@ -27,20 +27,17 @@ export const createTypeOptions = ({
       resource: 'client.Client',
       tool: client.name,
     },
-    name: 'Client',
   });
-  const symbolClientOptions = plugin.registerSymbol({
+  const symbolClientOptions = plugin.symbol('Options', {
     external: clientModule,
     kind: 'type',
-    name: 'Options',
   });
-  const symbolOptions = plugin.registerSymbol({
+  const symbolOptions = plugin.symbol('Options', {
     meta: {
       category: 'type',
       resource: 'client-options',
       tool: 'sdk',
     },
-    name: 'Options',
   });
 
   const typeOptions = $.type
@@ -95,7 +92,7 @@ export const createTypeOptions = ({
                 'individual options. This might be also useful if you want to implement a',
                 'custom client.',
               ])
-              .required(!plugin.config.client && !plugin.config.instance)
+              .required(!plugin.config.client && !isInstance(plugin))
               .type(symbolClient),
           )
           .prop('meta', (p) =>

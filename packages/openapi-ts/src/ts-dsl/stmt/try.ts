@@ -1,8 +1,4 @@
-import type {
-  AnalysisContext,
-  AstContext,
-  Symbol,
-} from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl } from '../base';
@@ -11,13 +7,11 @@ import { BlockTsDsl } from './block';
 
 const Mixed = TsDsl<ts.TryStatement>;
 
-type CatchParam = Symbol | string;
-
 export class TryTsDsl extends Mixed {
   readonly '~dsl' = 'TryTsDsl';
 
   protected _catch?: Array<DoExpr>;
-  protected _catchArg?: CatchParam;
+  protected _catchArg?: NodeName;
   protected _finally?: Array<DoExpr>;
   protected _try?: Array<DoExpr>;
 
@@ -65,7 +59,7 @@ export class TryTsDsl extends Mixed {
     return this;
   }
 
-  catchArg(arg: CatchParam): this {
+  catchArg(arg: NodeName): this {
     this._catchArg = arg;
     return this;
   }
@@ -80,23 +74,23 @@ export class TryTsDsl extends Mixed {
     return this;
   }
 
-  override toAst(ctx: AstContext) {
+  override toAst() {
     if (!this._try?.length) throw new Error('Missing try block');
 
     const catchParam = this._catchArg
-      ? (this.$node(ctx, this._catchArg) as ts.BindingName)
+      ? (this.$node(this._catchArg) as ts.BindingName)
       : undefined;
 
     return ts.factory.createTryStatement(
-      this.$node(ctx, new BlockTsDsl(...this._try).pretty()),
+      this.$node(new BlockTsDsl(...this._try).pretty()),
       ts.factory.createCatchClause(
         catchParam
           ? ts.factory.createVariableDeclaration(catchParam)
           : undefined,
-        this.$node(ctx, new BlockTsDsl(...(this._catch ?? [])).pretty()),
+        this.$node(new BlockTsDsl(...(this._catch ?? [])).pretty()),
       ),
       this._finally
-        ? this.$node(ctx, new BlockTsDsl(...this._finally).pretty())
+        ? this.$node(new BlockTsDsl(...this._finally).pretty())
         : undefined,
     );
   }
