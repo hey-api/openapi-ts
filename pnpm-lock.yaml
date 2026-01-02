@@ -1329,7 +1329,7 @@ importers:
   packages/openapi-ts:
     dependencies:
       '@hey-api/codegen-core':
-        specifier: workspace:^0.4.0
+        specifier: workspace:^0.5.0
         version: link:../codegen-core
       '@hey-api/json-schema-ref-parser':
         specifier: 1.2.2
