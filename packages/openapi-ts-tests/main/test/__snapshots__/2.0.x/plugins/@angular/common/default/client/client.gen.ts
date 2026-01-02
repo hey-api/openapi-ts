@@ -214,6 +214,10 @@ export const createClient = (config: Config = {}): Client => {
         body: opts.body as BodyInit | null | undefined,
         headers: opts.headers as unknown as Record<string, string>,
         method,
+        serializedBody: getValidRequestBody(opts) as
+          | BodyInit
+          | null
+          | undefined,
         url,
       });
     };
