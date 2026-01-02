@@ -19,6 +19,8 @@ export type Options<TComposable extends Composable = '$fetch', TData extends TDa
 };
 
 /**
+ * Subscribe to events
+ *
  * Get events
  */
 export const eventSubscribe = <TComposable extends Composable = '$fetch', DefaultT extends EventSubscribeResponse = EventSubscribeResponse>(options: Options<TComposable, EventSubscribeData, EventSubscribeResponse, DefaultT>) => (options.client ?? client).sse.get<TComposable, EventSubscribeResponse | DefaultT, unknown, DefaultT>({ url: '/event', ...options });
