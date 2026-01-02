@@ -4,6 +4,16 @@ export type ClientOptions = {
     baseURL: `${string}://${string}` | (string & {});
 };
 
+export type PermissionAction = 'allow' | 'deny' | 'ask';
+
+export type PermissionRule = {
+    permission: string;
+    pattern: string;
+    action: PermissionAction;
+};
+
+export type PermissionRuleset = Array<PermissionRule>;
+
 export type Range = {
     start: {
         line: number;
@@ -36,24 +46,12 @@ export type FileSource = {
     path: string;
 };
 
-export type FilePartSource = ({
-    type: 'file';
-} & FileSource) | ({
-    type: 'symbol';
-} & SymbolSource);
+export type FilePartSource = FileSource | SymbolSource;
 
-export type EventIdeInstalled = {
-    type: 'ide.installed';
+export type EventGlobalDisposed = {
+    type: 'global.disposed';
     properties: {
-        ide: string;
-    };
-};
-
-export type EventFileWatcherUpdated = {
-    type: 'file.watcher.updated';
-    properties: {
-        file: string;
-        event: 'rename' | 'change';
+        [key: string]: unknown;
     };
 };
 
@@ -64,26 +62,88 @@ export type EventServerConnected = {
     };
 };
 
+export type EventPtyDeleted = {
+    type: 'pty.deleted';
+    properties: {
+        id: string;
+    };
+};
+
+export type EventPtyExited = {
+    type: 'pty.exited';
+    properties: {
+        id: string;
+        exitCode: number;
+    };
+};
+
+export type EventPtyUpdated = {
+    type: 'pty.updated';
+    properties: {
+        info: Pty;
+    };
+};
+
+export type Pty = {
+    id: string;
+    title: string;
+    command: string;
+    args: Array<string>;
+    cwd: string;
+    status: 'running' | 'exited';
+    pid: number;
+};
+
+export type EventPtyCreated = {
+    type: 'pty.created';
+    properties: {
+        info: Pty;
+    };
+};
+
+export type EventVcsBranchUpdated = {
+    type: 'vcs.branch.updated';
+    properties: {
+        branch?: string;
+    };
+};
+
+export type EventFileWatcherUpdated = {
+    type: 'file.watcher.updated';
+    properties: {
+        file: string;
+        event: 'add' | 'change' | 'unlink';
+    };
+};
+
 export type EventSessionError = {
     type: 'session.error';
     properties: {
         sessionID?: string;
-        error?: ({
-            name: 'ProviderAuthError';
-        } & ProviderAuthError) | ({
-            name: 'UnknownError';
-        } & UnknownError) | ({
-            name: 'MessageOutputLengthError';
-        } & MessageOutputLengthError) | ({
-            name: 'MessageAbortedError';
-        } & MessageAbortedError);
+        error?: ProviderAuthError | UnknownError | MessageOutputLengthError | MessageAbortedError | ApiError;
+    };
+};
+
+export type ApiError = {
+    name: 'APIError';
+    data: {
+        message: string;
+        statusCode?: number;
+        isRetryable: boolean;
+        responseHeaders?: {
+            [key: string]: string;
+        };
+        responseBody?: string;
+        metadata?: {
+            [key: string]: string;
+        };
     };
 };
 
 export type MessageAbortedError = {
     name: 'MessageAbortedError';
     data: {
-        [key: string]: unknown;
+        message: string;
     };
 };
 
@@ -109,11 +169,20 @@ export type ProviderAuthError = {
     };
 };
 
-export type EventSessionIdle = {
-    type: 'session.idle';
+export type EventSessionDiff = {
+    type: 'session.diff';
     properties: {
         sessionID: string;
+        diff: Array<FileDiff>;
     };
+};
+
+export type FileDiff = {
+    file: string;
+    before: string;
+    after: string;
+    additions: number;
+    deletions: number;
 };
 
 export type EventSessionDeleted = {
@@ -125,7 +194,15 @@ export type EventSessionDeleted = {
 
 export type Session = {
     id: string;
+    projectID: string;
+    directory: string;
     parentID?: string;
+    summary?: {
+        additions: number;
+        deletions: number;
+        files: number;
+        diffs?: Array<FileDiff>;
+    };
     share?: {
         url: string;
     };
@@ -134,7 +211,10 @@ export type Session = {
     time: {
         created: number;
         updated: number;
+        compacting?: number;
+        archived?: number;
     };
+    permission?: PermissionRuleset;
     revert?: {
         messageID: string;
         partID?: string;
@@ -150,6 +230,84 @@ export type EventSessionUpdated = {
     };
 };
 
+export type EventSessionCreated = {
+    type: 'session.created';
+    properties: {
+        info: Session;
+    };
+};
+
+export type EventCommandExecuted = {
+    type: 'command.executed';
+    properties: {
+        name: string;
+        sessionID: string;
+        arguments: string;
+        messageID: string;
+    };
+};
+
+export type EventMcpToolsChanged = {
+    type: 'mcp.tools.changed';
+    properties: {
+        server: string;
+    };
+};
+
+export type EventTuiToastShow = {
+    type: 'tui.toast.show';
+    properties: {
+        title?: string;
+        message: string;
+        variant: 'info' | 'success' | 'warning' | 'error';
+        /**
+         * Duration in milliseconds
+         */
+        duration?: number;
+    };
+};
+
+export type EventTuiCommandExecute = {
+    type: 'tui.command.execute';
+    properties: {
+        command: 'session.list' | 'session.new' | 'session.share' | 'session.interrupt' | 'session.compact' | 'session.page.up' | 'session.page.down' | 'session.half.page.up' | 'session.half.page.down' | 'session.first' | 'session.last' | 'prompt.clear' | 'prompt.submit' | 'agent.cycle' | string;
+    };
+};
+
+export type EventTuiPromptAppend = {
+    type: 'tui.prompt.append';
+    properties: {
+        text: string;
+    };
+};
+
+export type Todo = {
+    /**
+     * Brief description of the task
+     */
+    content: string;
+    /**
+     * Current status of the task: pending, in_progress, completed, cancelled
+     */
+    status: string;
+    /**
+     * Priority level of the task: high, medium, low
+     */
+    priority: string;
+    /**
+     * Unique identifier for the todo item
+     */
+    id: string;
+};
+
+export type EventTodoUpdated = {
+    type: 'todo.updated';
+    properties: {
+        sessionID: string;
+        todos: Array<Todo>;
+    };
+};
+
 export type EventFileEdited = {
     type: 'file.edited';
     properties: {
@@ -157,42 +315,66 @@ export type EventFileEdited = {
     };
 };
 
+export type EventSessionCompacted = {
+    type: 'session.compacted';
+    properties: {
+        sessionID: string;
+    };
+};
+
+export type EventSessionIdle = {
+    type: 'session.idle';
+    properties: {
+        sessionID: string;
+    };
+};
+
+export type SessionStatus = {
+    type: 'idle';
+} | {
+    type: 'retry';
+    attempt: number;
+    message: string;
+    next: number;
+} | {
+    type: 'busy';
+};
+
+export type EventSessionStatus = {
+    type: 'session.status';
+    properties: {
+        sessionID: string;
+        status: SessionStatus;
+    };
+};
+
 export type EventPermissionReplied = {
     type: 'permission.replied';
     properties: {
         sessionID: string;
-        permissionID: string;
-        response: string;
+        requestID: string;
+        reply: 'once' | 'always' | 'reject';
     };
 };
 
-export type Permission = {
+export type PermissionRequest = {
     id: string;
-    type: string;
-    pattern?: string;
     sessionID: string;
-    messageID: string;
-    callID?: string;
-    title: string;
+    permission: string;
+    patterns: Array<string>;
     metadata: {
         [key: string]: unknown;
     };
-    time: {
-        created: number;
+    always: Array<string>;
+    tool?: {
+        messageID: string;
+        callID: string;
     };
 };
 
-export type EventPermissionUpdated = {
-    type: 'permission.updated';
-    properties: Permission;
-};
-
-export type EventStorageWrite = {
-    type: 'storage.write';
-    properties: {
-        key: string;
-        content?: unknown;
-    };
+export type EventPermissionAsked = {
+    type: 'permission.asked';
+    properties: PermissionRequest;
 };
 
 export type EventMessagePartRemoved = {
@@ -201,6 +383,26 @@ export type EventMessagePartRemoved = {
         sessionID: string;
         messageID: string;
         partID: string;
+    };
+};
+
+export type CompactionPart = {
+    id: string;
+    sessionID: string;
+    messageID: string;
+    type: 'compaction';
+    auto: boolean;
+};
+
+export type RetryPart = {
+    id: string;
+    sessionID: string;
+    messageID: string;
+    type: 'retry';
+    attempt: number;
+    error: ApiError;
+    time: {
+        created: number;
     };
 };
 
@@ -239,6 +441,8 @@ export type StepFinishPart = {
     sessionID: string;
     messageID: string;
     type: 'step-finish';
+    reason: string;
+    snapshot?: string;
     cost: number;
     tokens: {
         input: number;
@@ -256,6 +460,7 @@ export type StepStartPart = {
     sessionID: string;
     messageID: string;
     type: 'step-start';
+    snapshot?: string;
 };
 
 export type ToolStateError = {
@@ -286,43 +491,9 @@ export type ToolStateCompleted = {
     time: {
         start: number;
         end: number;
+        compacted?: number;
     };
-};
-
-export type ToolStateRunning = {
-    status: 'running';
-    input?: unknown;
-    title?: string;
-    metadata?: {
-        [key: string]: unknown;
-    };
-    time: {
-        start: number;
-    };
-};
-
-export type ToolStatePending = {
-    status: 'pending';
-};
-
-export type ToolState = ({
-    status: 'pending';
-} & ToolStatePending) | ({
-    status: 'running';
-} & ToolStateRunning) | ({
-    status: 'completed';
-} & ToolStateCompleted) | ({
-    status: 'error';
-} & ToolStateError);
-
-export type ToolPart = {
-    id: string;
-    sessionID: string;
-    messageID: string;
-    type: 'tool';
-    callID: string;
-    tool: string;
-    state: ToolState;
+    attachments?: Array<FilePart>;
 };
 
 export type FilePart = {
@@ -334,6 +505,43 @@ export type FilePart = {
     filename?: string;
     url: string;
     source?: FilePartSource;
+};
+
+export type ToolStateRunning = {
+    status: 'running';
+    input: {
+        [key: string]: unknown;
+    };
+    title?: string;
+    metadata?: {
+        [key: string]: unknown;
+    };
+    time: {
+        start: number;
+    };
+};
+
+export type ToolStatePending = {
+    status: 'pending';
+    input: {
+        [key: string]: unknown;
+    };
+    raw: string;
+};
+
+export type ToolState = ToolStatePending | ToolStateRunning | ToolStateCompleted | ToolStateError;
+
+export type ToolPart = {
+    id: string;
+    sessionID: string;
+    messageID: string;
+    type: 'tool';
+    callID: string;
+    tool: string;
+    state: ToolState;
+    metadata?: {
+        [key: string]: unknown;
+    };
 };
 
 export type ReasoningPart = {
@@ -358,36 +566,32 @@ export type TextPart = {
     type: 'text';
     text: string;
     synthetic?: boolean;
+    ignored?: boolean;
     time?: {
         start: number;
         end?: number;
     };
+    metadata?: {
+        [key: string]: unknown;
+    };
 };
 
-export type Part = ({
-    type: 'text';
-} & TextPart) | ({
-    type: 'reasoning';
-} & ReasoningPart) | ({
-    type: 'file';
-} & FilePart) | ({
-    type: 'tool';
-} & ToolPart) | ({
-    type: 'step-start';
-} & StepStartPart) | ({
-    type: 'step-finish';
-} & StepFinishPart) | ({
-    type: 'snapshot';
-} & SnapshotPart) | ({
-    type: 'patch';
-} & PatchPart) | ({
-    type: 'agent';
-} & AgentPart);
+export type Part = TextPart | {
+    id: string;
+    sessionID: string;
+    messageID: string;
+    type: 'subtask';
+    prompt: string;
+    description: string;
+    agent: string;
+    command?: string;
+} | ReasoningPart | FilePart | ToolPart | StepStartPart | StepFinishPart | SnapshotPart | PatchPart | AgentPart | RetryPart | CompactionPart;
 
 export type EventMessagePartUpdated = {
     type: 'message.part.updated';
     properties: {
         part: Part;
+        delta?: string;
     };
 };
 
@@ -407,19 +611,12 @@ export type AssistantMessage = {
         created: number;
         completed?: number;
     };
-    error?: ({
-        name: 'ProviderAuthError';
-    } & ProviderAuthError) | ({
-        name: 'UnknownError';
-    } & UnknownError) | ({
-        name: 'MessageOutputLengthError';
-    } & MessageOutputLengthError) | ({
-        name: 'MessageAbortedError';
-    } & MessageAbortedError);
-    system: Array<string>;
+    error?: ProviderAuthError | UnknownError | MessageOutputLengthError | MessageAbortedError | ApiError;
+    parentID: string;
     modelID: string;
     providerID: string;
     mode: string;
+    agent: string;
     path: {
         cwd: string;
         root: string;
@@ -435,6 +632,7 @@ export type AssistantMessage = {
             write: number;
         };
     };
+    finish?: string;
 };
 
 export type UserMessage = {
@@ -444,18 +642,36 @@ export type UserMessage = {
     time: {
         created: number;
     };
+    summary?: {
+        title?: string;
+        body?: string;
+        diffs: Array<FileDiff>;
+    };
+    agent: string;
+    model: {
+        providerID: string;
+        modelID: string;
+    };
+    system?: string;
+    tools?: {
+        [key: string]: boolean;
+    };
+    variant?: string;
 };
 
-export type Message = ({
-    role: 'user';
-} & UserMessage) | ({
-    role: 'assistant';
-} & AssistantMessage);
+export type Message = UserMessage | AssistantMessage;
 
 export type EventMessageUpdated = {
     type: 'message.updated';
     properties: {
         info: Message;
+    };
+};
+
+export type EventLspUpdated = {
+    type: 'lsp.updated';
+    properties: {
+        [key: string]: unknown;
     };
 };
 
@@ -467,6 +683,41 @@ export type EventLspClientDiagnostics = {
     };
 };
 
+export type EventServerInstanceDisposed = {
+    type: 'server.instance.disposed';
+    properties: {
+        directory: string;
+    };
+};
+
+export type Project = {
+    id: string;
+    worktree: string;
+    vcs?: 'git';
+    name?: string;
+    icon?: {
+        url?: string;
+        color?: string;
+    };
+    time: {
+        created: number;
+        updated: number;
+        initialized?: number;
+    };
+};
+
+export type EventProjectUpdated = {
+    type: 'project.updated';
+    properties: Project;
+};
+
+export type EventInstallationUpdateAvailable = {
+    type: 'installation.update-available';
+    properties: {
+        version: string;
+    };
+};
+
 export type EventInstallationUpdated = {
     type: 'installation.updated';
     properties: {
@@ -474,46 +725,14 @@ export type EventInstallationUpdated = {
     };
 };
 
-export type Event = ({
-    type: 'installation.updated';
-} & EventInstallationUpdated) | ({
-    type: 'lsp.client.diagnostics';
-} & EventLspClientDiagnostics) | ({
-    type: 'message.updated';
-} & EventMessageUpdated) | ({
-    type: 'message.removed';
-} & EventMessageRemoved) | ({
-    type: 'message.part.updated';
-} & EventMessagePartUpdated) | ({
-    type: 'message.part.removed';
-} & EventMessagePartRemoved) | ({
-    type: 'storage.write';
-} & EventStorageWrite) | ({
-    type: 'permission.updated';
-} & EventPermissionUpdated) | ({
-    type: 'permission.replied';
-} & EventPermissionReplied) | ({
-    type: 'file.edited';
-} & EventFileEdited) | ({
-    type: 'session.updated';
-} & EventSessionUpdated) | ({
-    type: 'session.deleted';
-} & EventSessionDeleted) | ({
-    type: 'session.idle';
-} & EventSessionIdle) | ({
-    type: 'session.error';
-} & EventSessionError) | ({
-    type: 'server.connected';
-} & EventServerConnected) | ({
-    type: 'file.watcher.updated';
-} & EventFileWatcherUpdated) | ({
-    type: 'ide.installed';
-} & EventIdeInstalled);
+export type Event = EventInstallationUpdated | EventInstallationUpdateAvailable | EventProjectUpdated | EventServerInstanceDisposed | EventLspClientDiagnostics | EventLspUpdated | EventMessageUpdated | EventMessageRemoved | EventMessagePartUpdated | EventMessagePartRemoved | EventPermissionAsked | EventPermissionReplied | EventSessionStatus | EventSessionIdle | EventSessionCompacted | EventFileEdited | EventTodoUpdated | EventTuiPromptAppend | EventTuiCommandExecute | EventTuiToastShow | EventMcpToolsChanged | EventCommandExecuted | EventSessionCreated | EventSessionUpdated | EventSessionDeleted | EventSessionDiff | EventSessionError | EventFileWatcherUpdated | EventVcsBranchUpdated | EventPtyCreated | EventPtyUpdated | EventPtyExited | EventPtyDeleted | EventServerConnected | EventGlobalDisposed;
 
 export type EventSubscribeData = {
     body?: never;
     path?: never;
-    query?: never;
+    query?: {
+        directory?: string;
+    };
     url: '/event';
 };
 
