@@ -12,7 +12,7 @@ import {
   createOperationComment,
   isOperationOptionsRequired,
 } from '~/plugins/shared/utils/operation';
-import { $ } from '~/ts-dsl';
+import { $, ctx } from '~/ts-dsl';
 import { applyNaming, toCase } from '~/utils/naming';
 
 import { createClientClass, createRegistryClass } from '../shared/class';
@@ -238,6 +238,34 @@ function enrichRootClass(args: {
   );
 }
 
+function exampleIntent(
+  node: ReturnType<typeof $.method | typeof $.var>,
+  operation: IR.OperationObject,
+  plugin: HeyApiSdkPlugin['Instance'],
+): void {
+  const config = plugin.config.examples;
+  if (!config.enabled) return;
+  plugin.intent({
+    async run(context) {
+      const { payload } = config;
+      let example = ctx.example(node, {
+        ...config,
+        payload: (ctx) =>
+          typeof payload === 'function' ? payload(operation, ctx) : payload,
+      });
+      if (config.transform) {
+        example = await config.transform(example, operation);
+      }
+      if (example) {
+        context.setExample(operation, {
+          lang: config.language,
+          source: example,
+        });
+      }
+    },
+  });
+}
+
 function implementFn<
   T extends ReturnType<typeof $.func | typeof $.method>,
 >(args: {
@@ -322,6 +350,7 @@ export function toNode(
         );
       node = attachComment({ node, operation });
       nodes.push(node);
+      exampleIntent(node, operation, plugin);
     }
     return { nodes };
   }
@@ -345,20 +374,20 @@ export function toNode(
       // TODO: object
     } else {
       if (index > 0 || node.hasBody) node.newline();
-      node.do(
-        implementFn({
-          node: $.method(createFnSymbol(plugin, item), (m) =>
-            attachComment({
-              node: m,
-              operation,
-            })
-              .public()
-              .static(!isAngularClient && !isInstance(plugin)),
-          ),
-          operation,
-          plugin,
-        }),
-      );
+      const method = implementFn({
+        node: $.method(createFnSymbol(plugin, item), (m) =>
+          attachComment({
+            node: m,
+            operation,
+          })
+            .public()
+            .static(!isAngularClient && !isInstance(plugin)),
+        ),
+        operation,
+        plugin,
+      });
+      node.do(method);
+      exampleIntent(method, operation, plugin);
     }
     index += 1;
   }

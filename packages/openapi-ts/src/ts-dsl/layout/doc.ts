@@ -4,7 +4,8 @@ import ts from 'typescript';
 import type { MaybeArray } from '../base';
 import { TsDsl } from '../base';
 import { IdTsDsl } from '../expr/id';
-import { TsDslContext } from '../utils/context';
+import type { TsDslContext } from '../utils/context';
+import { ctx } from '../utils/context';
 
 type DocMaybeLazy<T> = ((ctx: TsDslContext) => T) | T;
 export type DocFn = (d: DocTsDsl) => void;
@@ -31,7 +32,6 @@ export class DocTsDsl extends TsDsl<ts.Node> {
   }
 
   apply<T extends ts.Node>(node: T): T {
-    const ctx = new TsDslContext();
     const lines = this._lines.reduce((lines: Array<string>, line: DocLines) => {
       if (typeof line === 'function') line = line(ctx);
       for (const l of typeof line === 'string' ? [line] : line) {

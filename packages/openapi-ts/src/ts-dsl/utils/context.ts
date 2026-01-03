@@ -2,9 +2,10 @@ import type { BindingKind, NodeScope, Symbol } from '@hey-api/codegen-core';
 import { isSymbol } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
+import type { DollarTsDsl } from '~/ts-dsl';
 import { $, TypeScriptRenderer } from '~/ts-dsl';
 
-import type { TsDsl } from '../base';
+import type { MaybeFunc, TsDsl } from '../base';
 import type { CallArgs } from '../expr/call';
 
 export type NodeChain = ReadonlyArray<TsDsl>;
@@ -28,13 +29,18 @@ export interface ExampleOptions {
   /** Import name for the root node. */
   importName?: string;
   /** Setup to run before calling the example. */
-  importSetup?:
-    | TsDsl<ts.Expression>
-    | ((imp: TsDsl<ts.Expression>) => TsDsl<ts.Expression>);
+  importSetup?: MaybeFunc<
+    (
+      ctx: DollarTsDsl & {
+        /** The imported expression. */
+        node: TsDsl<ts.Expression>;
+      },
+    ) => TsDsl<ts.Expression>
+  >;
   /** Module to import from. */
-  moduleName: string;
+  moduleName?: string;
   /** Example request payload. */
-  payload?: CallArgs | CallArgs[number];
+  payload?: MaybeFunc<(ctx: DollarTsDsl) => CallArgs | CallArgs[number]>;
   /** Variable name for setup node. */
   setupName?: string;
 }
@@ -191,16 +197,14 @@ export class TsDslContext {
    */
   example(
     node: TsDsl,
-    options: ExampleOptions | undefined,
+    options?: ExampleOptions,
     astOptions?: Parameters<typeof TypeScriptRenderer.astToString>[0],
   ): string {
     if (astOptions) {
       return TypeScriptRenderer.astToString(astOptions);
     }
 
-    if (!options) {
-      throw new Error('Example options are required.');
-    }
+    options ||= {};
 
     const accessChain = getAccessChainForNode(node);
     if (options.importName) {
@@ -213,28 +217,33 @@ export class TsDslContext {
 
     const setupNode = options.importSetup
       ? typeof options.importSetup === 'function'
-        ? options.importSetup(importNode)
+        ? options.importSetup({ $, node: importNode })
         : options.importSetup
       : (finalChain[0]! as TsDsl<ts.Expression>);
     const setupName = options.setupName;
-    const payload =
-      options.payload instanceof Array
-        ? options.payload
-        : options.payload
-          ? [options.payload]
-          : [];
+    let payload =
+      typeof options.payload === 'function'
+        ? options.payload({ $ })
+        : options.payload;
+    payload = payload instanceof Array ? payload : payload ? [payload] : [];
 
     let nodes: Array<TsDsl> = [];
     if (setupName) {
       nodes = [
         $.const(setupName).assign(setupNode),
-        accessChainToNode([$(setupName), ...finalChain.slice(1)]).call(
-          ...payload,
+        $.await(
+          accessChainToNode([$(setupName), ...finalChain.slice(1)]).call(
+            ...payload,
+          ),
         ),
       ];
     } else {
       nodes = [
-        accessChainToNode([setupNode, ...finalChain.slice(1)]).call(...payload),
+        $.await(
+          accessChainToNode([setupNode, ...finalChain.slice(1)]).call(
+            ...payload,
+          ),
+        ),
       ];
     }
 
@@ -256,7 +265,7 @@ export class TsDslContext {
             isTypeOnly: false,
             kind: options.importKind ?? 'named',
             localName: options.importKind !== 'named' ? localName : undefined,
-            modulePath: options.moduleName,
+            modulePath: options.moduleName ?? 'your-package',
           },
         ],
       ],
@@ -265,3 +274,5 @@ export class TsDslContext {
     });
   }
 }
+
+export const ctx = new TsDslContext();

@@ -1,10 +1,10 @@
+import type { Output, UserOutput } from '~/config/output';
 import type { Plugin } from '~/plugins';
 import type { PluginConfigMap } from '~/plugins/config';
 import type { PluginNames } from '~/plugins/types';
 
 import type { Input, UserInput, Watch } from './input';
 import type { Logs } from './logs';
-import type { Output, UserOutput } from './output';
 import type { Parser, UserParser } from './parser';
 import type { MaybeArray } from './utils';
 
