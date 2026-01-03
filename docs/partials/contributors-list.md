@@ -53,6 +53,7 @@
 - [Malcolm Kee](https://github.com/malcolm-kee)
 - [Marcel Richter](https://github.com/mrclrchtr)
 - [Marek Lukáš](https://github.com/tajnymag)
+- [Martín Fernández](https://github.com/bilby91)
 - [Matsu](https://github.com/Matsuuu)
 - [Maurici Abad Gutierrez](https://github.com/mauriciabad)
 - [Max Scopp](https://github.com/max-scopp)
