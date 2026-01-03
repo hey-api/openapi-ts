@@ -46,40 +46,40 @@ export default defineConfig(() => {
           //   openapi: '3.1.0',
           //   paths: {},
           // },
-          path: path.resolve(
-            getSpecsPath(),
-            // '2.0.x',
-            // '3.0.x',
-            '3.1.x',
-            // 'circular.yaml',
-            // 'dutchie.json',
-            // 'enum-names-values.yaml',
-            // 'full.yaml',
-            // 'integer-formats.yaml',
-            // 'invalid',
-            // 'object-property-names.yaml',
-            // 'openai.yaml',
-            'opencode.yaml',
-            // 'pagination-ref.yaml',
-            // 'schema-const.yaml',
-            // 'sdk-instance.yaml',
-            // 'sdk-method-class-conflict.yaml',
-            // 'sdk-nested-classes.yaml',
-            // 'sdk-nested-conflict.yaml',
-            // 'string-with-format.yaml',
-            // 'transformers.json',
-            // 'transformers-recursive.json',
-            // 'type-format.yaml',
-            // 'validators.yaml',
-            // 'validators-circular-ref.json',
-            // 'validators-circular-ref-2.yaml',
-            // 'zoom-video-sdk.json',
-          ),
+          // path: path.resolve(
+          //   getSpecsPath(),
+          //   // '2.0.x',
+          //   // '3.0.x',
+          //   '3.1.x',
+          //   // 'circular.yaml',
+          //   // 'dutchie.json',
+          //   // 'enum-names-values.yaml',
+          //   // 'full.yaml',
+          //   // 'integer-formats.yaml',
+          //   // 'invalid',
+          //   // 'object-property-names.yaml',
+          //   // 'openai.yaml',
+          //   'opencode.yaml',
+          //   // 'pagination-ref.yaml',
+          //   // 'schema-const.yaml',
+          //   // 'sdk-instance.yaml',
+          //   // 'sdk-method-class-conflict.yaml',
+          //   // 'sdk-nested-classes.yaml',
+          //   // 'sdk-nested-conflict.yaml',
+          //   // 'string-with-format.yaml',
+          //   // 'transformers.json',
+          //   // 'transformers-recursive.json',
+          //   // 'type-format.yaml',
+          //   // 'validators.yaml',
+          //   // 'validators-circular-ref.json',
+          //   // 'validators-circular-ref-2.yaml',
+          //   // 'zoom-video-sdk.json',
+          // ),
           // path: 'https://get.heyapi.dev/hey-api/backend?branch=main&version=1.0.0',
           // path: 'http://localhost:4000/',
           // path: 'http://localhost:8000/openapi.json',
           // path: 'https://mongodb-mms-prod-build-server.s3.amazonaws.com/openapi/2caffd88277a4e27c95dcefc7e3b6a63a3b03297-v2-2023-11-15.json',
-          // path: 'https://raw.githubusercontent.com/swagger-api/swagger-petstore/master/src/main/resources/openapi.yaml',
+          path: 'https://raw.githubusercontent.com/swagger-api/swagger-petstore/master/src/main/resources/openapi.yaml',
           // watch: {
           //   enabled: true,
           //   interval: 500,
@@ -136,6 +136,18 @@ export default defineConfig(() => {
               return 'valibot';
             }
             return;
+          },
+          source: {
+            // callback(source) {
+            //   console.log('Source generated, length:', source.length);
+            // },
+            // enabled: false,
+            // extension: 'yaml',
+            // fileName: 'spec',
+            // path: null,
+            // serialize(input) {
+            //   return JSON.stringify(input, null, 0);
+            // },
           },
           // tsConfigPath: path.resolve(
           //   __dirname,
@@ -292,6 +304,30 @@ export default defineConfig(() => {
         {
           auth: false,
           // client: false,
+          examples: {
+            // enabled: false,
+            importKind: 'default',
+            importName: 'CatStore',
+            importSetup: ({ $, node }) =>
+              $.new(
+                node.name,
+                $.object().pretty().prop('apiKey', $.literal('YOUR_API_KEY')),
+              ),
+            // language: 'TypeScript',
+            moduleName: '@petstore/client',
+            payload(operation, ctx) {
+              const { $ } = ctx;
+              if (
+                operation.path === '/pet/{petId}' ||
+                operation.path === '/pet'
+              ) {
+                return $.object().pretty().prop('petId', $.literal(1234));
+              }
+              return;
+            },
+            setupName: 'client',
+            // transform: (example) => example.replace(/\({}\)/, '({\n  ...\n})'),
+          },
           // getSignature: ({ fields, signature, operation }) => {
           //   // ...
           //   fields.unwrap('path')
@@ -304,7 +340,7 @@ export default defineConfig(() => {
             //   // casing: 'snake_case',
             //   name: 'OpencodeClient',
             // },
-            containerName: 'OpencodeClient',
+            containerName: 'PetStore',
             // nesting(operation) {
             //   if (operation.path === '/pet/{petId}' || operation.path === '/pet') {
             //     return ['pet', operation.operationId?.replace(/Pet/, '') || operation.method.toLocaleLowerCase()];

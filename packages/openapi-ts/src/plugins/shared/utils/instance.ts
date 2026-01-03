@@ -20,6 +20,7 @@ import {
   matchIrPointerToGroup,
   preferGroups,
 } from '~/ir/graph';
+import type { ExampleIntent } from '~/ir/intents';
 import type { IR } from '~/ir/types';
 import type { OpenApi } from '~/openApi/types';
 import type { Hooks } from '~/parser/types/hooks';
@@ -306,6 +307,16 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
         this.isOperationKind(operation, 'query'),
     },
   };
+
+  /**
+   * Registers an intent in the context's intent list.
+   *
+   * @param intent The intent to be registered.
+   * @returns void
+   */
+  intent(intent: ExampleIntent): void {
+    this.context.intents.push(intent);
+  }
 
   isSymbolRegistered(identifier: SymbolIdentifier): boolean {
     return this.gen.symbols.isRegistered(identifier);

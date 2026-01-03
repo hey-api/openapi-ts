@@ -168,6 +168,52 @@ If we detect a [TSConfig file](#tsconfig-path) with `moduleResolution` option se
 import foo from './foo.js';
 ```
 
+## Source
+
+Source is a copy of the input specification used to generate your output. It can be used to power documentation tools or to persist a stable snapshot alongside your generated files.
+
+Enabling the `source` option with `true` creates a `source.json` file in your output folder.
+
+```js
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: {
+    path: 'src/client',
+    source: true, // [!code ++]
+  },
+};
+```
+
+You can customize the file name and location using `fileName` and `path`. For example, this configuration will create an `openapi.json` file inside `src/client/source` directory.
+
+```js
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: {
+    path: 'src/client',
+    source: {
+      fileName: 'openapi', // [!code ++]
+      path: './source', // [!code ++]
+    },
+  },
+};
+```
+
+To use the source without writing it to disk, you can provide a `callback` function. This is useful for logging or integrating with external systems.
+
+```js
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: {
+    path: 'src/client',
+    source: {
+      callback: (source) => console.log(source), // [!code ++]
+      path: null, // [!code ++]
+    },
+  },
+};
+```
+
 ## Format
 
 To format your output folder contents, set `format` to a valid formatter.

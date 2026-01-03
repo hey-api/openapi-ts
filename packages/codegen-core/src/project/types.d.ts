@@ -37,6 +37,13 @@ export interface IProject {
   /** Centralized node registry for the project. */
   readonly nodes: INodeRegistry;
   /**
+   * Finalizes the project structure, resolving nodes, symbols, and dependencies.
+   *
+   * @param meta Arbitrary metadata.
+   * @returns void
+   */
+  plan(meta?: IProjectRenderMeta): void;
+  /**
    * Produces output representations for all files in the project.
    *
    * @param meta Arbitrary metadata.

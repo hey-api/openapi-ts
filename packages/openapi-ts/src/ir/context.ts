@@ -12,6 +12,7 @@ import type { Logger } from '~/utils/logger';
 import { applyNaming } from '~/utils/naming';
 import { resolveRef } from '~/utils/ref';
 
+import type { ExampleIntent } from './intents';
 import type { IR } from './types';
 
 export class Context<Spec extends Record<string, any> = any> {
@@ -28,6 +29,10 @@ export class Context<Spec extends Record<string, any> = any> {
    * The dependency graph built from the intermediate representation.
    */
   graph: Graph | undefined;
+  /**
+   * Intents declared by plugins.
+   */
+  intents: Array<ExampleIntent> = [];
   /**
    * Intermediate representation model obtained from `spec`.
    */

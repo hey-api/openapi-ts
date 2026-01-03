@@ -3,9 +3,10 @@ import ts from 'typescript';
 import { findTsConfigPath, loadTsConfig } from '~/generate/tsConfig';
 import type { Config, UserConfig } from '~/types/config';
 
-import { valueToObject } from './utils/config';
+import { valueToObject } from '../utils/config';
+import { resolveSource } from './source/config';
 
-export const getOutput = (userConfig: UserConfig): Config['output'] => {
+export function getOutput(userConfig: UserConfig): Config['output'] {
   if (userConfig.output instanceof Array) {
     throw new Error(
       'Unexpected array of outputs in user configuration. This should have been expanded already.',
@@ -64,5 +65,6 @@ export const getOutput = (userConfig: UserConfig): Config['output'] => {
   ) {
     output.importFileExtension = `.${output.importFileExtension}`;
   }
+  output.source = resolveSource(output);
   return output;
-};
+}

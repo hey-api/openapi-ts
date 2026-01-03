@@ -71,23 +71,6 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements Node<T> {
   }
   readonly '~brand' = nodeBrand;
 
-  /** Access patterns for this node. */
-  toAccessNode?(
-    node: this,
-    options: AccessOptions,
-    ctx: {
-      /** The full chain. */
-      chain: ReadonlyArray<TsDsl>;
-      /** Position in the chain (0 = root). */
-      index: number;
-      /** Is this the leaf node? */
-      isLeaf: boolean;
-      /** Is this the root node? */
-      isRoot: boolean;
-      /** Total length of the chain. */
-      length: number;
-    },
-  ): TsDsl | undefined;
   /** Branding property to identify the DSL class at runtime. */
   abstract readonly '~dsl': string & {};
 
@@ -165,6 +148,24 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements Node<T> {
     }
     return this;
   }
+
+  /** Access patterns for this node. */
+  toAccessNode?(
+    node: this,
+    options: AccessOptions,
+    ctx: {
+      /** The full chain. */
+      chain: ReadonlyArray<TsDsl>;
+      /** Position in the chain (0 = root). */
+      index: number;
+      /** Is this the leaf node? */
+      isLeaf: boolean;
+      /** Is this the root node? */
+      isRoot: boolean;
+      /** Total length of the chain. */
+      length: number;
+    },
+  ): TsDsl | undefined;
 
   protected $maybeId<T extends string | ts.Expression>(
     expr: T,

@@ -1,7 +1,6 @@
 import { sync } from 'cross-spawn';
 
-import type { Config } from '~/types/config';
-import type { Formatters, Linters } from '~/types/output';
+import type { Formatters, Linters, Output } from './types';
 
 type OutputProcessor = {
   args: (path: string) => ReadonlyArray<string>;
@@ -52,16 +51,16 @@ const linters: Record<Linters, OutputProcessor> = {
   },
 };
 
-export const processOutput = ({ config }: { config: Config }) => {
-  if (config.output.lint) {
-    const module = linters[config.output.lint];
+export const postprocessOutput = (config: Output): void => {
+  if (config.lint) {
+    const module = linters[config.lint];
     console.log(`✨ Running ${module.name}`);
-    sync(module.command, module.args(config.output.path));
+    sync(module.command, module.args(config.path));
   }
 
-  if (config.output.format) {
-    const module = formatters[config.output.format];
+  if (config.format) {
+    const module = formatters[config.format];
     console.log(`✨ Running ${module.name}`);
-    sync(module.command, module.args(config.output.path));
+    sync(module.command, module.args(config.path));
   }
 };
