@@ -3,13 +3,13 @@ import path from 'node:path';
 import { $RefParser } from '@hey-api/json-schema-ref-parser';
 import colors from 'ansi-colors';
 
+import { postprocessOutput } from '~/config/output';
 import { generateOutput } from '~/generate/output';
 import { getSpec } from '~/getSpec';
 import type { Context } from '~/ir/context';
 import { parseOpenApiSpec } from '~/openApi';
 import { buildGraph } from '~/openApi/shared/utils/graph';
 import { patchOpenApiSpec } from '~/openApi/shared/utils/patch';
-import { processOutput } from '~/processOutput';
 import type { Config } from '~/types/config';
 import type { Input } from '~/types/input';
 import type { WatchValues } from '~/types/types';
@@ -327,7 +327,7 @@ export const createClient = async ({
 
     const eventPostprocess = logger.timeEvent('postprocess');
     if (!config.dryRun) {
-      processOutput({ config });
+      postprocessOutput(config.output);
 
       if (config.logs.level !== 'silent') {
         const outputPath = process.env.INIT_CWD

@@ -15,6 +15,8 @@ import { SymbolRegistry } from '../symbols/registry';
 import type { IProject } from './types';
 
 export class Project implements IProject {
+  private _isPlanned = false;
+
   readonly files: FileRegistry;
   readonly nodes = new NodeRegistry();
   readonly symbols = new SymbolRegistry();
@@ -57,8 +59,14 @@ export class Project implements IProject {
     this.root = path.resolve(args.root).replace(/[/\\]+$/, '');
   }
 
-  render(meta?: IProjectRenderMeta): ReadonlyArray<IOutput> {
+  plan(meta?: IProjectRenderMeta): void {
+    if (this._isPlanned) return;
     new Planner(this).plan(meta);
+    this._isPlanned = true;
+  }
+
+  render(meta?: IProjectRenderMeta): ReadonlyArray<IOutput> {
+    if (!this._isPlanned) this.plan(meta);
     const files: Array<IOutput> = [];
     for (const file of this.files.registered()) {
       if (!file.external && file.finalPath && file.renderer) {

@@ -1,5 +1,6 @@
 import { definePluginConfig } from '~/plugins/shared/utils/config';
 
+import { resolveExamples } from './examples';
 import { resolveOperations } from './operations';
 import { handler } from './plugin';
 import type { HeyApiSdkPlugin } from './types';
@@ -71,6 +72,7 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
       plugin.config.validator.response = false;
     }
 
+    plugin.config.examples = resolveExamples(plugin.config, context);
     plugin.config.operations = resolveOperations(plugin.config, context);
   },
 };

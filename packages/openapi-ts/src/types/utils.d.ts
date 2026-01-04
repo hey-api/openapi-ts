@@ -19,7 +19,7 @@ export type DeepPartial<T> = {
 /**
  * Accepts a value, a function returning a value, or a function returning a promise of a value.
  */
-export type LazyOrAsync<T> = T | (() => T) | (() => Promise<T>);
+export type LazyOrAsync<T> = T | (() => MaybePromise<T>);
 
 /**
  * Accepts a value or a readonly array of values of type T.
@@ -32,6 +32,11 @@ export type MaybeArray<T> = T | ReadonlyArray<T>;
 export type MaybeFunc<T extends (...args: Array<any>) => any> =
   | T
   | ReturnType<T>;
+
+/**
+ * Accepts a value or a promise of a value.
+ */
+export type MaybePromise<T> = T | Promise<T>;
 
 /**
  * Converts all top-level Array properties to ReadonlyArray (shallow).

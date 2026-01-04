@@ -1,4 +1,4 @@
-import type { EnumExtensions } from '~/openApi/shared/types/openapi-spec-extensions';
+import type { EnumExtensions } from '~/openApi/shared/types';
 
 import type { MaybeArray } from '../../../types/utils';
 import type { SpecificationExtensions } from './spec';

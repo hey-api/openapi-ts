@@ -3,6 +3,7 @@ import type { DefinePlugin, Plugin } from '~/plugins';
 import type { PluginClientNames, PluginValidatorNames } from '~/plugins/types';
 import type { NameTransformer } from '~/utils/naming';
 
+import type { ExamplesConfig, UserExamplesConfig } from './examples';
 import type { OperationsConfig, UserOperationsConfig } from './operations';
 
 export type UserConfig = Plugin.Name<'@hey-api/sdk'> &
@@ -27,6 +28,16 @@ export type UserConfig = Plugin.Name<'@hey-api/sdk'> &
      * @default true
      */
     client?: PluginClientNames | boolean;
+    /**
+     * Generate code examples for SDK operations and attach them to the
+     * input source (e.g. via `x-codeSamples`).
+     *
+     * Set to `false` to disable example generation entirely, or provide an
+     * object for fine-grained control over the output and post-processing.
+     *
+     * @default false
+     */
+    examples?: boolean | UserExamplesConfig;
     /**
      * Should the exports from the generated files be re-exported in the index
      * barrel file?
@@ -209,6 +220,10 @@ export type Config = Plugin.Name<'@hey-api/sdk'> &
      * @default true
      */
     client: PluginClientNames | false;
+    /**
+     * Configuration for generating SDK code examples.
+     */
+    examples: ExamplesConfig;
     /**
      * Should the exports from the generated files be re-exported in the index
      * barrel file?
