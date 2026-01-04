@@ -3,7 +3,7 @@ interface SerializeOptions<T>
     SerializerOptions<T> {}
 
 interface SerializePrimitiveOptions {
-  allowReserved?: boolean;
+  allowReserved?: boolean | undefined;
   name: string;
 }
 

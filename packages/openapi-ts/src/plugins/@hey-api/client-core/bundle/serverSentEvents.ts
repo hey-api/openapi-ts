@@ -11,11 +11,13 @@ export type ServerSentEventsOptions<TData = unknown> = Omit<
      *
      * @default globalThis.fetch
      */
-    fetch?: typeof fetch;
+    fetch?: typeof fetch | undefined;
     /**
      * Implementing clients can call request interceptors inside this hook.
      */
-    onRequest?: (url: string, init: RequestInit) => Promise<Request>;
+    onRequest?:
+      | ((url: string, init: RequestInit) => Promise<Request>)
+      | undefined;
     /**
      * Callback invoked when a network or parsing error occurs during streaming.
      *
@@ -23,7 +25,7 @@ export type ServerSentEventsOptions<TData = unknown> = Omit<
      *
      * @param error The error that occurred.
      */
-    onSseError?: (error: unknown) => void;
+    onSseError?: ((error: unknown) => void) | undefined;
     /**
      * Callback invoked when an event is streamed from the server.
      *
@@ -32,8 +34,8 @@ export type ServerSentEventsOptions<TData = unknown> = Omit<
      * @param event Event streamed from the server.
      * @returns Nothing (void).
      */
-    onSseEvent?: (event: StreamEvent<TData>) => void;
-    serializedBody?: RequestInit['body'];
+    onSseEvent?: ((event: StreamEvent<TData>) => void) | undefined;
+    serializedBody?: RequestInit['body'] | undefined;
     /**
      * Default retry delay in milliseconds.
      *
@@ -41,11 +43,11 @@ export type ServerSentEventsOptions<TData = unknown> = Omit<
      *
      * @default 3000
      */
-    sseDefaultRetryDelay?: number;
+    sseDefaultRetryDelay?: number | undefined;
     /**
      * Maximum number of retry attempts before giving up.
      */
-    sseMaxRetryAttempts?: number;
+    sseMaxRetryAttempts?: number | undefined;
     /**
      * Maximum retry delay in milliseconds.
      *
@@ -55,21 +57,21 @@ export type ServerSentEventsOptions<TData = unknown> = Omit<
      *
      * @default 30000
      */
-    sseMaxRetryDelay?: number;
+    sseMaxRetryDelay?: number | undefined;
     /**
      * Optional sleep function for retry backoff.
      *
      * Defaults to using `setTimeout`.
      */
-    sseSleepFn?: (ms: number) => Promise<void>;
+    sseSleepFn?: ((ms: number) => Promise<void>) | undefined;
     url: string;
   };
 
 export interface StreamEvent<TData = unknown> {
   data: TData;
-  event?: string;
-  id?: string;
-  retry?: number;
+  event?: string | undefined;
+  id?: string | undefined;
+  retry?: number | undefined;
 }
 
 export type ServerSentEventsResult<
