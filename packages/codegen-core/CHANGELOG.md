@@ -1,5 +1,11 @@
 # @hey-api/codegen-core
 
+## 0.5.1
+
+### Patch Changes
+
+- **project**: expose `.plan()` method ([#3175](https://github.com/hey-api/openapi-ts/pull/3175)) ([`b985053`](https://github.com/hey-api/openapi-ts/commit/b985053ffa64accc4ff01b7c0f301bb5cd84ff48)) by [@mrlubos](https://github.com/mrlubos)
+
 ## 0.5.0
 
 ### Minor Changes

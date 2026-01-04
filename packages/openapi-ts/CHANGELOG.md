@@ -1,5 +1,25 @@
 # @hey-api/openapi-ts
 
+## 0.90.1
+
+### Patch Changes
+
+- **plugin(@hey-api/sdk)**: add `examples` option ([#3175](https://github.com/hey-api/openapi-ts/pull/3175)) ([`b985053`](https://github.com/hey-api/openapi-ts/commit/b985053ffa64accc4ff01b7c0f301bb5cd84ff48)) by [@mrlubos](https://github.com/mrlubos)
+
+The SDK plugin can generate ready-to-use code examples for each operation, showing how to call the SDK methods with proper parameters and setup.
+
+Learn how to generate examples on the [SDK plugin](https://heyapi.dev/openapi-ts/plugins/sdk#code-examples) page.
+
+- **output**: add `source` option ([#3175](https://github.com/hey-api/openapi-ts/pull/3175)) ([`b985053`](https://github.com/hey-api/openapi-ts/commit/b985053ffa64accc4ff01b7c0f301bb5cd84ff48)) by [@mrlubos](https://github.com/mrlubos)
+
+Source is a copy of the input specification used to generate your output. It can be used to power documentation tools or to persist a stable snapshot alongside your generated files.
+
+Learn how to use the source on the [Output](https://heyapi.dev/openapi-ts/configuration/output#source) page.
+
+### Updated Dependencies:
+
+- @hey-api/codegen-core@0.5.1
+
 ## 0.90.0
 
 ### Minor Changes
