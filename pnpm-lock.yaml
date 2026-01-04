@@ -125,8 +125,8 @@ importers:
         specifier: workspace:*
         version: link:../packages/openapi-ts
       '@opencode-ai/sdk':
-        specifier: 1.0.216
-        version: 1.0.216
+        specifier: 1.0.221
+        version: 1.0.221
       '@pinia/colada':
         specifier: 0.19.1
         version: 0.19.1(pinia@3.0.3(typescript@5.9.3)(vue@3.5.25(typescript@5.9.3)))(vue@3.5.25(typescript@5.9.3))
@@ -5051,8 +5051,8 @@ packages:
   '@one-ini/wasm@0.1.1':
     resolution: {integrity: sha512-XuySG1E38YScSJoMlqovLru4KTUNSjgVTIjyh7qMX6aNN5HY5Ct5LhRJdxO79JtTzKfzV/bnWpz+zquYrISsvw==}
 
-  '@opencode-ai/sdk@1.0.216':
-    resolution: {integrity: sha512-2oh6lqF1tD4s8B/R7Mm6zGaQJwefRAWOgLAy+twz4g9MUusPMCKe8Pj5wgJ3V1CLQni8rbfY5wsPw2NA1FQjKA==}
+  '@opencode-ai/sdk@1.0.221':
+    resolution: {integrity: sha512-midJuagLLYTQ5GzAyYn66W0f8VesB2PU17iYYUk5nqgvb8c9fXPG4ri/hGvTazge0crwEJXf4Ko1ybWAwVtwpg==}
 
   '@oxc-project/types@0.103.0':
     resolution: {integrity: sha512-bkiYX5kaXWwUessFRSoXFkGIQTmc6dLGdxuRTrC+h8PSnIdZyuXHHlLAeTmOue5Br/a0/a7dHH0Gca6eXn9MKg==}
@@ -19297,7 +19297,7 @@ snapshots:
 
   '@one-ini/wasm@0.1.1': {}
 
-  '@opencode-ai/sdk@1.0.216': {}
+  '@opencode-ai/sdk@1.0.221': {}
 
   '@oxc-project/types@0.103.0': {}
 
