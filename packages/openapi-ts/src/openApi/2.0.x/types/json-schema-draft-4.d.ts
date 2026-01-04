@@ -1,4 +1,4 @@
-import type { EnumExtensions } from '~/openApi/shared/types/openapi-spec-extensions';
+import type { EnumExtensions } from '~/openApi/shared/types';
 
 export interface JsonSchemaDraft4 extends EnumExtensions {
   /**

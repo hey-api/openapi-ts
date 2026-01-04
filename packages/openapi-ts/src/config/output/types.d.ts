@@ -4,9 +4,10 @@ import type {
 } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
+import type { MaybeArray, MaybeFunc } from '~/types/utils';
 import type { Casing, NameTransformer } from '~/utils/naming';
 
-import type { MaybeArray, MaybeFunc } from './utils';
+import type { SourceConfig, UserSourceConfig } from './source/types';
 
 export type Formatters = 'biome' | 'prettier';
 
@@ -126,6 +127,16 @@ export type UserOutput = {
    */
   resolveModuleName?: (moduleName: string) => string | undefined;
   /**
+   * Configuration for generating a copy of the input source used to produce this output.
+   *
+   * Set to `false` to skip generating the source, or `true` to use defaults.
+   *
+   * You can also provide a configuration object to further customize behavior.
+   *
+   * @default false
+   */
+  source?: boolean | UserSourceConfig;
+  /**
    * Relative or absolute path to the tsconfig file we should use to
    * generate the output. If a path to tsconfig file is not provided, we
    * attempt to find one starting from the location of the
@@ -219,6 +230,10 @@ export type Output = {
    * Optional function to transform module specifiers.
    */
   resolveModuleName: ((moduleName: string) => string | undefined) | undefined;
+  /**
+   * Configuration for generating a copy of the input source used to produce this output.
+   */
+  source: SourceConfig;
   /**
    * The parsed TypeScript configuration used to generate the output.
    * If no `tsconfig` file path was provided or found, this will be `null`.

@@ -1,3 +1,5 @@
+import type { CodeSampleObject } from '~/openApi/shared/types';
+
 import type { JsonSchemaDraft2020_12 } from './json-schema-draft-2020-12';
 
 /**
@@ -1103,6 +1105,10 @@ export interface OperationObject extends SpecificationExtensions {
    * A list of tags for API documentation control. Tags can be used for logical grouping of operations by resources or any other qualifier.
    */
   tags?: ReadonlyArray<string>;
+  /**
+   * A list of code samples associated with an operation.
+   */
+  'x-codeSamples'?: ReadonlyArray<CodeSampleObject>;
 }
 
 /**

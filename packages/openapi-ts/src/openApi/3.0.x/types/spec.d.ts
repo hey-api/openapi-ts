@@ -1,4 +1,4 @@
-import type { EnumExtensions } from '~/openApi/shared/types/openapi-spec-extensions';
+import type { CodeSampleObject, EnumExtensions } from '~/openApi/shared/types';
 
 /**
  * OpenAPI Specification Extensions.
@@ -509,6 +509,10 @@ export interface OperationObject extends SpecificationExtensions {
    * A list of tags for API documentation control. Tags can be used for logical grouping of operations by resources or any other qualifier.
    */
   tags?: ReadonlyArray<string>;
+  /**
+   * A list of code samples associated with an operation.
+   */
+  'x-codeSamples'?: ReadonlyArray<CodeSampleObject>;
 }
 
 /**
