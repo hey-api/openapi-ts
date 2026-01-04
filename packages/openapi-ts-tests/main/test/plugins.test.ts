@@ -566,6 +566,37 @@ for (const version of versions) {
         }),
         description: 'generate Angular requests and resources (class)',
       },
+      {
+        config: createConfig({
+          output: 'fetch',
+          plugins: ['swr', '@hey-api/client-fetch'],
+        }),
+        description: 'generate Fetch API client with SWR plugin',
+      },
+      {
+        config: createConfig({
+          output: 'axios',
+          plugins: ['swr', '@hey-api/client-axios'],
+        }),
+        description: 'generate Axios client with SWR plugin',
+      },
+      {
+        config: createConfig({
+          input: 'sdk-instance.yaml',
+          output: 'asClass',
+          plugins: [
+            'swr',
+            '@hey-api/client-fetch',
+            {
+              asClass: true,
+              classNameBuilder: '{{name}}Service',
+              name: '@hey-api/sdk',
+            },
+          ],
+        }),
+        description:
+          'generate Fetch API client with SWR plugin using class-based SDKs',
+      },
     ];
 
     it.each(scenarios)('$description', async ({ config }) => {
@@ -595,10 +626,12 @@ for (const version of versions) {
       const myPlugin: DefinePlugin<{
         customOption: boolean;
         name: any;
+        output: string;
       }>['Config'] = {
         api: undefined,
         config: {
           customOption: true,
+          output: 'my-plugin',
         },
         dependencies: ['@hey-api/typescript'],
         handler: vi.fn(),
@@ -620,9 +653,12 @@ for (const version of versions) {
     it('throws on invalid dependency', async () => {
       const myPlugin: DefinePlugin<{
         name: any;
+        output: string;
       }>['Config'] = {
         api: undefined,
-        config: {},
+        config: {
+          output: 'my-plugin',
+        },
         dependencies: ['@hey-api/oops'],
         handler: vi.fn(),
         name: 'my-plugin',

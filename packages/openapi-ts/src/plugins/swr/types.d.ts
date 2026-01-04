@@ -1,4 +1,3 @@
-import type { IR } from '~/ir/types';
 import type { DefinePlugin, Plugin } from '~/plugins';
 import type { Casing, NameTransformer } from '~/utils/naming';
 
@@ -28,51 +27,6 @@ export type UserConfig = Plugin.Name<'swr'> &
      * @default false
      */
     exportFromIndex?: boolean;
-    /**
-     * Configuration for generated infinite query key helpers.
-     *
-     * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/infiniteQueryOptions infiniteQueryOptions}
-     *
-     * Can be:
-     * - `boolean`: Shorthand for `{ enabled: boolean }`
-     * - `string` or `function`: Shorthand for `{ name: string | function }`
-     * - `object`: Full configuration object
-     *
-     * @default true
-     */
-    infiniteQueryKeys?:
-      | boolean
-      | NameTransformer
-      | {
-          /**
-           * The casing convention to use for generated names.
-           *
-           * @default 'camelCase'
-           */
-          case?: Casing;
-          /**
-           * Whether to generate infinite query key helpers.
-           *
-           * @default true
-           */
-          enabled?: boolean;
-          /**
-           * Custom naming pattern for generated infinite query key names. The name variable is
-           * obtained from the SDK function name.
-           *
-           * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/infiniteQueryOptions infiniteQueryOptions}
-           *
-           * @default '{{name}}InfiniteQueryKey'
-           */
-          name?: NameTransformer;
-          /**
-           * Whether to include operation tags in infinite query keys.
-           * This will make query keys larger but provides better cache invalidation capabilities.
-           *
-           * @default false
-           */
-          tags?: boolean;
-        };
     /**
      * Configuration for generated infinite query options helpers.
      *
@@ -301,16 +255,12 @@ export type UserConfig = Plugin.Name<'swr'> &
            * Custom naming pattern for generated query options names. The name variable is
            * obtained from the SDK function name.
            *
-           * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/queryOptions queryOptions}
-           *
-           * @default '{{name}}Options'
+           * @default '{{name}}Infinite'
            */
           name?: NameTransformer;
         };
     /**
-     * Configuration for generated `useSwr()` function helpers.
-     *
-     * See {@link https://swr.vercel.app/docs/api API}
+     * Configuration for generated useSWRInfinite options helpers.
      *
      * Can be:
      * - `boolean`: Shorthand for `{ enabled: boolean }`
@@ -319,7 +269,7 @@ export type UserConfig = Plugin.Name<'swr'> &
      *
      * @default true
      */
-    useSwr?:
+    swrInfiniteOptions?:
       | boolean
       | NameTransformer
       | {
@@ -330,18 +280,127 @@ export type UserConfig = Plugin.Name<'swr'> &
            */
           case?: Casing;
           /**
-           * Whether to generate `useSwr()` function helpers.
+           * Whether to generate infinite query key helpers.
            *
            * @default true
            */
           enabled?: boolean;
           /**
-           * Custom naming pattern for generated `useSwr()` function names. The name variable is
+           * Custom naming pattern for generated infinite query key names. The name variable is
            * obtained from the SDK function name.
            *
-           * See {@link https://swr.vercel.app/docs/api API}
+           * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/infiniteQueryOptions infiniteQueryOptions}
            *
-           * @default 'use{{name}}'
+           * @default '{{name}}InfiniteQueryKey'
+           */
+          name?: NameTransformer;
+          /**
+           * Whether to include operation tags in infinite query keys.
+           * This will make query keys larger but provides better cache invalidation capabilities.
+           *
+           * @default false
+           */
+          tags?: boolean;
+        };
+    /**
+     * Configuration for generated SWR keys.
+     *
+     * Can be:
+     * - `boolean`: Shorthand for `{ enabled: boolean }`
+     * - `string` or `function`: Shorthand for `{ name: string | function }`
+     * - `object`: Full configuration object
+     *
+     * @default true
+     */
+    swrKeys?:
+      | boolean
+      | NameTransformer
+      | {
+          /**
+           * The casing convention to use for generated names.
+           *
+           * @default 'camelCase'
+           */
+          case?: Casing;
+          /**
+           * Whether to generate SWR keys.
+           *
+           * @default true
+           */
+          enabled?: boolean;
+          /**
+           * Custom naming pattern for generated SWR key names. The name variable is
+           * obtained from the SDK function name.
+           *
+           * @default '{{name}}Key'
+           */
+          name?: StringName;
+        };
+    /**
+     * Configuration for generated useSWRMutation options helpers.
+     *
+     * Can be:
+     * - `boolean`: Shorthand for `{ enabled: boolean }`
+     * - `string` or `function`: Shorthand for `{ name: string | function }`
+     * - `object`: Full configuration object
+     *
+     * @default true
+     */
+    swrMutationOptions?:
+      | boolean
+      | StringName
+      | {
+          /**
+           * The casing convention to use for generated names.
+           *
+           * @default 'camelCase'
+           */
+          case?: StringCase;
+          /**
+           * Whether to generate useSWRMutation options helpers.
+           *
+           * @default true
+           */
+          enabled?: boolean;
+          /**
+           * Custom naming pattern for generated useSWRMutation options names. The name variable is
+           * obtained from the SDK function name.
+           *
+           * @default '{{name}}Mutation'
+           */
+          name?: StringName;
+        };
+    /**
+     * Configuration for generated useSWR options helpers.
+     *
+     * Can be:
+     * - `boolean`: Shorthand for `{ enabled: boolean }`
+     * - `string` or `function`: Shorthand for `{ name: string | function }`
+     * - `object`: Full configuration object
+     *
+     * @default true
+     */
+    swrOptions?:
+      | boolean
+      | StringName
+      | {
+          /**
+           * The casing convention to use for generated names.
+           *
+           * @default 'camelCase'
+           */
+          case?: StringCase;
+          /**
+           * Whether to generate useSWR options helpers.
+           *
+           * @default true
+           */
+          enabled?: boolean;
+          /**
+           * Custom naming pattern for generated useSWR options names. The name variable is
+           * obtained from the SDK function name.
+           *
+           * @default '{{name}}Options'
            */
           name?: NameTransformer;
         };
@@ -367,40 +426,6 @@ export type Config = Plugin.Name<'swr'> &
      * @default false
      */
     exportFromIndex: boolean;
-    /**
-     * Resolved configuration for generated infinite query key helpers.
-     *
-     * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/infiniteQueryOptions infiniteQueryOptions}
-     */
-    infiniteQueryKeys: {
-      /**
-       * The casing convention to use for generated names.
-       *
-       * @default 'camelCase'
-       */
-      case: Casing;
-      /**
-       * Whether to generate infinite query key helpers.
-       *
-       * @default true
-       */
-      enabled: boolean;
-      /**
-       * Custom naming pattern for generated infinite query key names. The name variable is obtained from the SDK function name.
-       *
-       * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/infiniteQueryOptions infiniteQueryOptions}
-       *
-       * @default '{{name}}InfiniteQueryKey'
-       */
-      name: NameTransformer;
-      /**
-       * Whether to include operation tags in infinite query keys.
-       * This will make query keys larger but provides better cache invalidation capabilities.
-       *
-       * @default false
-       */
-      tags: boolean;
-    };
     /**
      * Resolved configuration for generated infinite query options helpers.
      *
@@ -554,14 +579,7 @@ export type Config = Plugin.Name<'swr'> &
        */
       enabled: boolean;
       /**
-       * Whether to export generated symbols.
-       *
-       * @default true
-       */
-      exported: boolean;
-      /**
-       * Custom function to generate metadata for the operation.
-       * Can return any valid meta object that will be included in the generated query options.
+       * Custom naming pattern for generated useSWRInfinite options names. The name variable is obtained from the SDK function name.
        *
        * @param operation - The operation object containing all available metadata
        * @returns A meta object with any properties you want to include
@@ -592,11 +610,9 @@ export type Config = Plugin.Name<'swr'> &
       name: NameTransformer;
     };
     /**
-     * Configuration for generated `useSwr()` function helpers.
-     *
-     * See {@link https://swr.vercel.app/docs/api API}
+     * Resolved configuration for generated useSWRInfinite options helpers.
      */
-    useSwr: {
+    swrInfiniteOptions: {
       /**
        * The casing convention to use for generated names.
        *
@@ -604,18 +620,93 @@ export type Config = Plugin.Name<'swr'> &
        */
       case: Casing;
       /**
-       * Whether to generate `useSwr()` function helpers.
+       * Whether to generate infinite query key helpers.
        *
        * @default true
        */
       enabled: boolean;
       /**
-       * Custom naming pattern for generated `useSwr()` function names. The name variable is
-       * obtained from the SDK function name.
+       * Custom naming pattern for generated infinite query key names. The name variable is obtained from the SDK function name.
        *
-       * See {@link https://swr.vercel.app/docs/api API}
+       * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/infiniteQueryOptions infiniteQueryOptions}
        *
-       * @default 'use{{name}}'
+       * @default '{{name}}InfiniteQueryKey'
+       */
+      name: NameTransformer;
+      /**
+       * Whether to include operation tags in infinite query keys.
+       * This will make query keys larger but provides better cache invalidation capabilities.
+       *
+       * @default false
+       */
+      tags: boolean;
+    };
+    /**
+     * Resolved configuration for generated SWR keys.
+     */
+    swrKeys: {
+      /**
+       * The casing convention to use for generated names.
+       *
+       * @default 'camelCase'
+       */
+      case: Casing;
+      /**
+       * Whether to generate SWR keys.
+       *
+       * @default true
+       */
+      enabled: boolean;
+      /**
+       * Custom naming pattern for generated SWR key names. The name variable is obtained from the SDK function name.
+       *
+       * @default '{{name}}Key'
+       */
+      name: StringName;
+    };
+    /**
+     * Resolved configuration for generated useSWRMutation options helpers.
+     */
+    swrMutationOptions: {
+      /**
+       * The casing convention to use for generated names.
+       *
+       * @default 'camelCase'
+       */
+      case: StringCase;
+      /**
+       * Whether to generate useSWRMutation options helpers.
+       *
+       * @default true
+       */
+      enabled: boolean;
+      /**
+       * Custom naming pattern for generated useSWRMutation options names. The name variable is obtained from the SDK function name.
+       *
+       * @default '{{name}}Mutation'
+       */
+      name: StringName;
+    };
+    /**
+     * Resolved configuration for generated useSWR options helpers.
+     */
+    swrOptions: {
+      /**
+       * The casing convention to use for generated names.
+       *
+       * @default 'camelCase'
+       */
+      case: StringCase;
+      /**
+       * Whether to generate useSWR options helpers.
+       *
+       * @default true
+       */
+      enabled: boolean;
+      /**
+       * Custom naming pattern for generated useSWR options names. The name variable is obtained from the SDK function name.
+       *
+       * @default '{{name}}Options'
        */
       name: NameTransformer;
     };

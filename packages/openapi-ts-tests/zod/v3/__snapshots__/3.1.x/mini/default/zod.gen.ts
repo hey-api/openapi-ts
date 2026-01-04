@@ -445,10 +445,10 @@ export const zModelSquare = z.object({
  */
 export const zCompositionWithOneOfDiscriminator = z.union([
     z.intersection(z.object({
-        kind: z.literal('circle')
+        kind: z.literal("circle")
     }), zModelCircle),
     z.intersection(z.object({
-        kind: z.literal('square')
+        kind: z.literal("square")
     }), zModelSquare)
 ]);
 
@@ -489,7 +489,7 @@ export const zCompositionWithNestedAnyAndTypeNull = z.object({
 
 export const z3eNum1Период = z.enum(['Bird', 'Dog']);
 
-export const zConstValue = z.literal('ConstValue');
+export const zConstValue = z.literal("ConstValue");
 
 /**
  * This is a model with one property with a 'any of' relationship where the options are not $ref
@@ -728,10 +728,10 @@ export const zFreeFormObjectWithAdditionalPropertiesEqTrue = z.record(z.string()
 export const zFreeFormObjectWithAdditionalPropertiesEqEmptyObject = z.record(z.string(), z.unknown());
 
 export const zModelWithConst = z.object({
-    String: z.optional(z.literal('String')),
+    String: z.optional(z.literal("String")),
     number: z.optional(z.literal(0)),
     null: z.optional(z.null()),
-    withType: z.optional(z.literal('Some string'))
+    withType: z.optional(z.literal("Some string"))
 });
 
 /**
@@ -1625,9 +1625,9 @@ export const zTypesData = z.object({
             z.null()
         ]),
         parameterEnum: z.union([
-            z.literal('Success'),
-            z.literal('Warning'),
-            z.literal('Error'),
+            z.literal("Success"),
+            z.literal("Warning"),
+            z.literal("Error"),
             z.null()
         ])
     })
