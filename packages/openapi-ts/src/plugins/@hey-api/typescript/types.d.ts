@@ -1,3 +1,8 @@
+import type {
+  FeatureToggle,
+  IndexExportOption,
+  NamingOptions,
+} from '~/config/shared';
 import type { DefinePlugin, Plugin } from '~/plugins';
 import type { Casing, NameTransformer } from '~/utils/naming';
 
@@ -8,7 +13,7 @@ export type EnumsType = 'javascript' | 'typescript' | 'typescript-const';
 export type UserConfig = Plugin.Name<'@hey-api/typescript'> &
   Plugin.Hooks & {
     /**
-     * The casing convention to use for generated names.
+     * Casing convention for generated names.
      *
      * @default 'PascalCase'
      */
@@ -29,14 +34,13 @@ export type UserConfig = Plugin.Name<'@hey-api/typescript'> &
       | NameTransformer
       | {
           /**
-           * The casing convention to use for generated definition names.
+           * Casing convention for generated names.
            *
            * @default 'PascalCase'
            */
           case?: Casing;
           /**
-           * Custom naming pattern for generated definition names. The name variable
-           * is obtained from the schema name.
+           * Naming pattern for generated names.
            *
            * @default '{{name}}'
            */
@@ -56,7 +60,7 @@ export type UserConfig = Plugin.Name<'@hey-api/typescript'> &
       | EnumsType
       | {
           /**
-           * The casing convention to use for generated names.
+           * Casing convention for generated names.
            *
            * @default 'SCREAMING_SNAKE_CASE'
            */
@@ -72,7 +76,7 @@ export type UserConfig = Plugin.Name<'@hey-api/typescript'> &
            */
           constantsIgnoreNull?: boolean;
           /**
-           * Whether to generate runtime enums.
+           * Whether this feature is enabled.
            *
            * @default true
            */
@@ -104,29 +108,26 @@ export type UserConfig = Plugin.Name<'@hey-api/typescript'> &
       | NameTransformer
       | {
           /**
-           * The casing convention to use for generated error type names.
+           * Casing convention for generated names.
            *
            * @default 'PascalCase'
            */
           case?: Casing;
           /**
-           * Custom naming pattern for generated error type names. The name
-           * variable is obtained from the operation name.
+           * Naming pattern for generated names.
            *
            * @default '{{name}}Error'
            */
           error?: NameTransformer;
           /**
-           * Custom naming pattern for generated error type names. The name
-           * variable is obtained from the operation name.
+           * Naming pattern for generated names.
            *
            * @default '{{name}}Errors'
            */
           name?: NameTransformer;
         };
     /**
-     * Should the exports from the generated files be re-exported in the index
-     * barrel file?
+     * Whether exports should be re-exported in the index file.
      *
      * @default true
      */
@@ -147,14 +148,13 @@ export type UserConfig = Plugin.Name<'@hey-api/typescript'> &
       | NameTransformer
       | {
           /**
-           * The casing convention to use for generated request type names.
+           * Casing convention for generated names.
            *
            * @default 'PascalCase'
            */
           case?: Casing;
           /**
-           * Custom naming pattern for generated request type names. The name
-           * variable is obtained from the operation name.
+           * Naming pattern for generated names.
            *
            * @default '{{name}}Data'
            */
@@ -175,21 +175,19 @@ export type UserConfig = Plugin.Name<'@hey-api/typescript'> &
       | NameTransformer
       | {
           /**
-           * The casing convention to use for generated response type names.
+           * Casing convention for generated names.
            *
            * @default 'PascalCase'
            */
           case?: Casing;
           /**
-           * Custom naming pattern for generated response type names. The name
-           * variable is obtained from the operation name.
+           * Naming pattern for generated names.
            *
            * @default '{{name}}Responses'
            */
           name?: NameTransformer;
           /**
-           * Custom naming pattern for generated response type names. The name
-           * variable is obtained from the operation name.
+           * Naming pattern for generated names.
            *
            * @default '{{name}}Response'
            */
@@ -220,21 +218,19 @@ export type UserConfig = Plugin.Name<'@hey-api/typescript'> &
       | NameTransformer
       | {
           /**
-           * The casing convention to use for generated webhook type names.
+           * Casing convention for generated names.
            *
            * @default 'PascalCase'
            */
           case?: Casing;
           /**
-           * Custom naming pattern for generated webhook type names. The name
-           * variable is obtained from the webhook key.
+           * Naming pattern for generated names.
            *
            * @default '{{name}}WebhookRequest'
            */
           name?: NameTransformer;
           /**
-           * Custom naming pattern for generated webhook type names. The name
-           * variable is obtained from the webhook key.
+           * Naming pattern for generated names.
            *
            * @default '{{name}}WebhookPayload'
            */
@@ -243,11 +239,10 @@ export type UserConfig = Plugin.Name<'@hey-api/typescript'> &
   };
 
 export type Config = Plugin.Name<'@hey-api/typescript'> &
-  Plugin.Hooks & {
+  Plugin.Hooks &
+  IndexExportOption & {
     /**
-     * The casing convention to use for generated names.
-     *
-     * @default 'PascalCase'
+     * Casing convention for generated names.
      */
     case: Exclude<Casing, 'SCREAMING_SNAKE_CASE'>;
     /**
@@ -256,21 +251,7 @@ export type Config = Plugin.Name<'@hey-api/typescript'> &
      * Controls generation of shared types that can be referenced across
      * requests and responses.
      */
-    definitions: {
-      /**
-       * The casing convention to use for generated definition names.
-       *
-       * @default 'PascalCase'
-       */
-      case: Casing;
-      /**
-       * Custom naming pattern for generated definition names. The name variable
-       * is obtained from the schema name.
-       *
-       * @default '{{name}}'
-       */
-      name: NameTransformer;
-    };
+    definitions: NamingOptions;
     /**
      * By default, enums are emitted as types to preserve runtime-free output.
      *
@@ -278,11 +259,9 @@ export type Config = Plugin.Name<'@hey-api/typescript'> &
      * TypeScript enums for runtime usage, interoperability, or integration with
      * other tools.
      */
-    enums: {
+    enums: FeatureToggle & {
       /**
-       * The casing convention to use for generated names.
-       *
-       * @default 'SCREAMING_SNAKE_CASE'
+       * Casing convention for generated names.
        */
       case: Casing;
       /**
@@ -295,12 +274,6 @@ export type Config = Plugin.Name<'@hey-api/typescript'> &
        * @default false
        */
       constantsIgnoreNull: boolean;
-      /**
-       * Whether to generate runtime enums.
-       *
-       * @default false
-       */
-      enabled: boolean;
       /**
        * Specifies the output mode for generated enums.
        *
@@ -322,80 +295,27 @@ export type Config = Plugin.Name<'@hey-api/typescript'> &
      * - `string` or `function`: Shorthand for `{ name: string | function }`
      * - `object`: Full configuration object
      */
-    errors: {
+    errors: NamingOptions & {
       /**
-       * The casing convention to use for generated error type names.
-       *
-       * @default 'PascalCase'
-       */
-      case: Casing;
-      /**
-       * Custom naming pattern for generated error type names. The name
-       * variable is obtained from the operation name.
-       *
-       * @default '{{name}}Error'
+       * Naming pattern for generated names.
        */
       error: NameTransformer;
-      /**
-       * Custom naming pattern for generated error type names. The name
-       * variable is obtained from the operation name.
-       *
-       * @default '{{name}}Errors'
-       */
-      name: NameTransformer;
     };
-    /**
-     * Should the exports from the generated files be re-exported in the index
-     * barrel file?
-     *
-     * @default true
-     */
-    exportFromIndex: boolean;
     /**
      * Configuration for request-specific types.
      *
      * Controls generation of types for request bodies, query parameters, path
      * parameters, and headers.
      */
-    requests: {
-      /**
-       * The casing convention to use for generated request type names.
-       *
-       * @default 'PascalCase'
-       */
-      case: Casing;
-      /**
-       * Custom naming pattern for generated request type names. The name
-       * variable is obtained from the operation name.
-       *
-       * @default '{{name}}Data'
-       */
-      name: NameTransformer;
-    };
+    requests: NamingOptions;
     /**
      * Configuration for response-specific types.
      *
      * Controls generation of types for response bodies and status codes.
      */
-    responses: {
+    responses: NamingOptions & {
       /**
-       * The casing convention to use for generated response type names.
-       *
-       * @default 'PascalCase'
-       */
-      case: Casing;
-      /**
-       * Custom naming pattern for generated response type names. The name
-       * variable is obtained from the operation name.
-       *
-       * @default '{{name}}Responses'
-       */
-      name: NameTransformer;
-      /**
-       * Custom naming pattern for generated response type names. The name
-       * variable is obtained from the operation name.
-       *
-       * @default '{{name}}Response'
+       * Naming pattern for generated names.
        */
       response: NameTransformer;
     };
@@ -410,25 +330,9 @@ export type Config = Plugin.Name<'@hey-api/typescript'> &
      *
      * Controls generation of types for webhook payloads and webhook requests.
      */
-    webhooks: {
+    webhooks: NamingOptions & {
       /**
-       * The casing convention to use for generated webhook type names.
-       *
-       * @default 'PascalCase'
-       */
-      case: Casing;
-      /**
-       * Custom naming pattern for generated webhook type names. The name
-       * variable is obtained from the webhook key.
-       *
-       * @default '{{name}}WebhookRequest'
-       */
-      name: NameTransformer;
-      /**
-       * Custom naming pattern for generated webhook type names. The name
-       * variable is obtained from the webhook key.
-       *
-       * @default '{{name}}WebhookPayload'
+       * Naming pattern for generated names.
        */
       payload: NameTransformer;
     };

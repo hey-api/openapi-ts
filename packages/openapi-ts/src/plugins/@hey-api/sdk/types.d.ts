@@ -1,3 +1,4 @@
+import type { IndexExportOption } from '~/config/shared';
 import type { OperationsStrategy } from '~/openApi/shared/locations';
 import type { DefinePlugin, Plugin } from '~/plugins';
 import type { PluginClientNames, PluginValidatorNames } from '~/plugins/types';
@@ -39,8 +40,7 @@ export type UserConfig = Plugin.Name<'@hey-api/sdk'> &
      */
     examples?: boolean | UserExamplesConfig;
     /**
-     * Should the exports from the generated files be re-exported in the index
-     * barrel file?
+     * Whether exports should be re-exported in the index file.
      *
      * @default true
      */
@@ -199,7 +199,8 @@ export type UserConfig = Plugin.Name<'@hey-api/sdk'> &
   };
 
 export type Config = Plugin.Name<'@hey-api/sdk'> &
-  Plugin.Hooks & {
+  Plugin.Hooks &
+  IndexExportOption & {
     /**
      * Should the generated functions contain auth mechanisms? You may want to
      * disable this option if you're handling auth yourself or defining it
@@ -224,13 +225,6 @@ export type Config = Plugin.Name<'@hey-api/sdk'> &
      * Configuration for generating SDK code examples.
      */
     examples: ExamplesConfig;
-    /**
-     * Should the exports from the generated files be re-exported in the index
-     * barrel file?
-     *
-     * @default true
-     */
-    exportFromIndex: boolean;
     /**
      * Define the structure of generated SDK operations.
      */

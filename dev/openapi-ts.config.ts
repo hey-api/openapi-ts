@@ -141,7 +141,7 @@ export default defineConfig(() => {
             // callback(source) {
             //   console.log('Source generated, length:', source.length);
             // },
-            // enabled: false,
+            enabled: false,
             // extension: 'yaml',
             // fileName: 'spec',
             // path: null,

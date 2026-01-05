@@ -1,24 +1,19 @@
-import type { Refs, Symbol } from '@hey-api/codegen-core';
-
-import type { IR } from '~/ir/types';
-import type { DefinePlugin, Plugin, SchemaWithType } from '~/plugins';
 import type {
-  MaybeBigInt,
-  ShouldCoerceToBigInt,
-} from '~/plugins/shared/utils/coerce';
-import type { GetIntegerLimit } from '~/plugins/shared/utils/formats';
-import type { $, DollarTsDsl } from '~/ts-dsl';
+  FeatureToggle,
+  IndexExportOption,
+  NamingOptions,
+} from '~/config/shared';
+import type { DefinePlugin, Plugin } from '~/plugins';
 import type { Casing, NameTransformer } from '~/utils/naming';
 
 import type { IApi } from './api';
-import type { Pipe, PipeResult, PipesUtils } from './shared/pipes';
-import type { Ast, PluginState } from './shared/types';
+import type { Resolvers } from './resolvers';
 
 export type UserConfig = Plugin.Name<'valibot'> &
   Plugin.Hooks &
   Resolvers & {
     /**
-     * The casing convention to use for generated names.
+     * Casing convention for generated names.
      *
      * @default 'camelCase'
      */
@@ -45,28 +40,26 @@ export type UserConfig = Plugin.Name<'valibot'> &
       | NameTransformer
       | {
           /**
-           * The casing convention to use for generated names.
+           * Casing convention for generated names.
            *
            * @default 'camelCase'
            */
           case?: Casing;
           /**
-           * Whether to generate Valibot schemas for reusable definitions.
+           * Whether this feature is enabled.
            *
            * @default true
            */
           enabled?: boolean;
           /**
-           * Custom naming pattern for generated schema names. The name variable
-           * is obtained from the schema name.
+           * Naming pattern for generated names.
            *
            * @default 'v{{name}}'
            */
           name?: NameTransformer;
         };
     /**
-     * Should the exports from the generated files be re-exported in the index
-     * barrel file?
+     * Whether exports should be re-exported in the index file.
      *
      * @default false
      */
@@ -95,20 +88,19 @@ export type UserConfig = Plugin.Name<'valibot'> &
       | NameTransformer
       | {
           /**
-           * The casing convention to use for generated names.
+           * Casing convention for generated names.
            *
            * @default 'camelCase'
            */
           case?: Casing;
           /**
-           * Whether to generate Valibot schemas for request definitions.
+           * Whether this feature is enabled.
            *
            * @default true
            */
           enabled?: boolean;
           /**
-           * Custom naming pattern for generated schema names. The name variable
-           * is obtained from the operation name.
+           * Naming pattern for generated names.
            *
            * @default 'v{{name}}Data'
            */
@@ -130,20 +122,19 @@ export type UserConfig = Plugin.Name<'valibot'> &
       | NameTransformer
       | {
           /**
-           * The casing convention to use for generated names.
+           * Casing convention for generated names.
            *
            * @default 'camelCase'
            */
           case?: Casing;
           /**
-           * Whether to generate Valibot schemas for response definitions.
+           * Whether this feature is enabled.
            *
            * @default true
            */
           enabled?: boolean;
           /**
-           * Custom naming pattern for generated schema names. The name variable
-           * is obtained from the operation name.
+           * Naming pattern for generated names.
            *
            * @default 'v{{name}}Response'
            */
@@ -166,20 +157,19 @@ export type UserConfig = Plugin.Name<'valibot'> &
       | NameTransformer
       | {
           /**
-           * The casing convention to use for generated names.
+           * Casing convention for generated names.
            *
            * @default 'camelCase'
            */
           case?: Casing;
           /**
-           * Whether to generate Valibot schemas for webhook definitions.
+           * Whether this feature is enabled.
            *
            * @default true
            */
           enabled?: boolean;
           /**
-           * Custom naming pattern for generated schema names. The name variable
-           * is obtained from the webhook key.
+           * Naming pattern for generated names.
            *
            * @default 'v{{name}}WebhookRequest'
            */
@@ -189,11 +179,10 @@ export type UserConfig = Plugin.Name<'valibot'> &
 
 export type Config = Plugin.Name<'valibot'> &
   Plugin.Hooks &
-  Resolvers & {
+  Resolvers &
+  IndexExportOption & {
     /**
-     * The casing convention to use for generated names.
-     *
-     * @default 'camelCase'
+     * Casing convention for generated names.
      */
     case: Casing;
     /**
@@ -208,34 +197,7 @@ export type Config = Plugin.Name<'valibot'> &
      * Controls generation of shared Valibot schemas that can be referenced
      * across requests and responses.
      */
-    definitions: {
-      /**
-       * The casing convention to use for generated names.
-       *
-       * @default 'camelCase'
-       */
-      case: Casing;
-      /**
-       * Whether to generate Valibot schemas for reusable definitions.
-       *
-       * @default true
-       */
-      enabled: boolean;
-      /**
-       * Custom naming pattern for generated schema names. The name variable is
-       * obtained from the schema name.
-       *
-       * @default 'v{{name}}'
-       */
-      name: NameTransformer;
-    };
-    /**
-     * Should the exports from the generated files be re-exported in the index
-     * barrel file?
-     *
-     * @default false
-     */
-    exportFromIndex: boolean;
+    definitions: NamingOptions & FeatureToggle;
     /**
      * Enable Valibot metadata support? It's often useful to associate a schema
      * with some additional metadata for documentation, code generation, AI
@@ -250,236 +212,20 @@ export type Config = Plugin.Name<'valibot'> &
      * Controls generation of Valibot schemas for request bodies, query
      * parameters, path parameters, and headers.
      */
-    requests: {
-      /**
-       * The casing convention to use for generated names.
-       *
-       * @default 'camelCase'
-       */
-      case: Casing;
-      /**
-       * Whether to generate Valibot schemas for request definitions.
-       *
-       * @default true
-       */
-      enabled: boolean;
-      /**
-       * Custom naming pattern for generated schema names. The name variable is
-       * obtained from the operation name.
-       *
-       * @default 'v{{name}}Data'
-       */
-      name: NameTransformer;
-    };
+    requests: NamingOptions & FeatureToggle;
     /**
      * Configuration for response-specific Valibot schemas.
      *
      * Controls generation of Valibot schemas for response bodies, error
      * responses, and status codes.
      */
-    responses: {
-      /**
-       * The casing convention to use for generated names.
-       *
-       * @default 'camelCase'
-       */
-      case: Casing;
-      /**
-       * Whether to generate Valibot schemas for response definitions.
-       *
-       * @default true
-       */
-      enabled: boolean;
-      /**
-       * Custom naming pattern for generated schema names. The name variable is
-       * obtained from the operation name.
-       *
-       * @default 'v{{name}}Response'
-       */
-      name: NameTransformer;
-    };
+    responses: NamingOptions & FeatureToggle;
     /**
      * Configuration for webhook-specific Valibot schemas.
      *
      * Controls generation of Valibot schemas for webhook payloads.
      */
-    webhooks: {
-      /**
-       * The casing convention to use for generated names.
-       *
-       * @default 'camelCase'
-       */
-      case: Casing;
-      /**
-       * Whether to generate Valibot schemas for webhook definitions.
-       *
-       * @default true
-       */
-      enabled: boolean;
-      /**
-       * Custom naming pattern for generated schema names. The name variable
-       * is obtained from the webhook key.
-       *
-       * @default 'v{{name}}WebhookRequest'
-       */
-      name: NameTransformer;
-    };
+    webhooks: NamingOptions & FeatureToggle;
   };
-
-interface BaseResolverContext extends DollarTsDsl {
-  /**
-   * Functions for working with pipes.
-   */
-  pipes: PipesUtils & {
-    /**
-     * The current pipe.
-     *
-     * In Valibot, this represents a list of call expressions ("pipes")
-     * being assembled to form a schema definition.
-     *
-     * Each pipe can be extended, modified, or replaced to customize
-     * the resulting schema.
-     */
-    current: Pipes;
-  };
-  /**
-   * The plugin instance.
-   */
-  plugin: ValibotPlugin['Instance'];
-  /**
-   * Provides access to commonly used symbols within the plugin.
-   */
-  symbols: {
-    v: Symbol;
-  };
-}
-
-export interface NumberResolverContext extends BaseResolverContext {
-  /**
-   * Nodes used to build different parts of the number schema.
-   */
-  nodes: {
-    base: (ctx: NumberResolverContext) => PipeResult;
-    const: (ctx: NumberResolverContext) => PipeResult | undefined;
-    max: (ctx: NumberResolverContext) => PipeResult | undefined;
-    min: (ctx: NumberResolverContext) => PipeResult | undefined;
-  };
-  schema: SchemaWithType<'integer' | 'number'>;
-  /**
-   * Utility functions for number schema processing.
-   */
-  utils: {
-    getIntegerLimit: GetIntegerLimit;
-    maybeBigInt: MaybeBigInt;
-    shouldCoerceToBigInt: ShouldCoerceToBigInt;
-  };
-}
-
-export interface ObjectResolverContext extends BaseResolverContext {
-  /**
-   * Nodes used to build different parts of the object schema.
-   */
-  nodes: {
-    /**
-     * If `additionalProperties` is `false` or `{ type: 'never' }`, returns `null`
-     * to indicate no additional properties are allowed.
-     */
-    additionalProperties: (
-      ctx: ObjectResolverContext,
-    ) => Pipe | null | undefined;
-    base: (ctx: ObjectResolverContext) => PipeResult;
-    shape: (ctx: ObjectResolverContext) => ReturnType<typeof $.object>;
-  };
-  schema: SchemaWithType<'object'>;
-  /**
-   * Utility functions for object schema processing.
-   */
-  utils: {
-    ast: Partial<Omit<Ast, 'typeName'>>;
-    state: Refs<PluginState>;
-  };
-}
-
-export interface StringResolverContext extends BaseResolverContext {
-  /**
-   * Nodes used to build different parts of the string schema.
-   */
-  nodes: {
-    base: (ctx: StringResolverContext) => PipeResult;
-    const: (ctx: StringResolverContext) => PipeResult | undefined;
-    format: (ctx: StringResolverContext) => PipeResult | undefined;
-    length: (ctx: StringResolverContext) => PipeResult | undefined;
-    maxLength: (ctx: StringResolverContext) => PipeResult | undefined;
-    minLength: (ctx: StringResolverContext) => PipeResult | undefined;
-    pattern: (ctx: StringResolverContext) => PipeResult | undefined;
-  };
-  schema: SchemaWithType<'string'>;
-}
-
-export interface ValidatorResolverContext extends BaseResolverContext {
-  operation: IR.Operation;
-  /**
-   * Provides access to commonly used symbols within the plugin.
-   */
-  symbols: BaseResolverContext['symbols'] & {
-    schema: Symbol;
-  };
-}
-
-type ValidatorResolver = (
-  ctx: ValidatorResolverContext,
-) => PipeResult | null | undefined;
-
-type Resolvers = Plugin.Resolvers<{
-  /**
-   * Resolver for number schemas.
-   *
-   * Allows customization of how number types are rendered.
-   *
-   * Returning `undefined` will execute the default resolver logic.
-   */
-  number?: (ctx: NumberResolverContext) => PipeResult | undefined;
-  /**
-   * Resolver for object schemas.
-   *
-   * Allows customization of how object types are rendered.
-   *
-   * Returning `undefined` will execute the default resolver logic.
-   */
-  object?: (ctx: ObjectResolverContext) => PipeResult | undefined;
-  /**
-   * Resolver for string schemas.
-   *
-   * Allows customization of how string types are rendered.
-   *
-   * Returning `undefined` will execute the default resolver logic.
-   */
-  string?: (ctx: StringResolverContext) => PipeResult | undefined;
-  /**
-   * Resolvers for request and response validators.
-   *
-   * Allow customization of validator function bodies.
-   *
-   * Example path: `~resolvers.validator.request` or `~resolvers.validator.response`
-   *
-   * Returning `undefined` will execute the default resolver logic.
-   */
-  validator?:
-    | ValidatorResolver
-    | {
-        /**
-         * Controls how the request validator function body is generated.
-         *
-         * Returning `undefined` will execute the default resolver logic.
-         */
-        request?: ValidatorResolver;
-        /**
-         * Controls how the response validator function body is generated.
-         *
-         * Returning `undefined` will execute the default resolver logic.
-         */
-        response?: ValidatorResolver;
-      };
-}>;
 
 export type ValibotPlugin = DefinePlugin<UserConfig, Config, IApi>;

@@ -4,9 +4,9 @@ import type { SchemaWithType } from '~/plugins';
 import { $ } from '~/ts-dsl';
 
 import { identifiers } from '../../constants';
+import type { ObjectResolverContext } from '../../resolvers';
 import type { Chain } from '../../shared/chain';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
-import type { ObjectResolverContext } from '../../types';
 import { irSchemaToAst } from '../plugin';
 
 function additionalPropertiesNode(

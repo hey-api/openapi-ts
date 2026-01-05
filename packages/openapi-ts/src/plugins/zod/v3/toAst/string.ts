@@ -2,9 +2,9 @@ import type { SchemaWithType } from '~/plugins';
 import { $ } from '~/ts-dsl';
 
 import { identifiers } from '../../constants';
+import type { StringResolverContext } from '../../resolvers';
 import type { Chain } from '../../shared/chain';
 import type { IrSchemaToAstOptions } from '../../shared/types';
-import type { StringResolverContext } from '../../types';
 
 function baseNode(ctx: StringResolverContext): Chain {
   const { z } = ctx.symbols;

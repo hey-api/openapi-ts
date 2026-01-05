@@ -1,5 +1,7 @@
 import type { MaybePromise } from '~/types/utils';
 
+import type { FeatureToggle } from '../../shared';
+
 // TODO: json-schema-ref-parser needs to expose source extension so
 // we can default to it
 type SourceExtension = 'json';
@@ -16,9 +18,7 @@ export interface UserSourceConfig {
    */
   callback?: (source: string) => MaybePromise<void>;
   /**
-   * Whether the source should be generated at all.
-   *
-   * When `false`, no source file is created or processed.
+   * Whether this feature is enabled.
    *
    * @default true
    */
@@ -60,17 +60,13 @@ export interface UserSourceConfig {
   serialize?: (input: Record<string, any>) => MaybePromise<string>;
 }
 
-export interface SourceConfig {
+export type SourceConfig = FeatureToggle & {
   /**
    * Callback invoked with the serialized source string.
    *
    * Runs after the `serialize` function.
    */
   callback?: (source: string) => MaybePromise<void>;
-  /**
-   * Whether the source should be generated at all.
-   */
-  enabled: boolean;
   /**
    * File extension for the source file.
    */
@@ -87,4 +83,4 @@ export interface SourceConfig {
    * Function to serialize the input object into a string.
    */
   serialize: (input: Record<string, any>) => MaybePromise<string>;
-}
+};

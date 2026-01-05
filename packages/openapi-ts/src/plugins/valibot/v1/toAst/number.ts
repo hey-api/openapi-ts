@@ -6,10 +6,10 @@ import {
 import { getIntegerLimit } from '~/plugins/shared/utils/formats';
 import { $ } from '~/ts-dsl';
 
+import type { NumberResolverContext } from '../../resolvers';
 import type { Pipe, PipeResult, Pipes } from '../../shared/pipes';
 import { pipes } from '../../shared/pipes';
 import type { IrSchemaToAstOptions } from '../../shared/types';
-import type { NumberResolverContext } from '../../types';
 import { identifiers } from '../constants';
 
 function baseNode(ctx: NumberResolverContext): PipeResult {
