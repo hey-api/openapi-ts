@@ -1,3 +1,4 @@
+import type { FeatureToggle } from '~/config/shared';
 import type {
   OperationPathStrategy,
   OperationsStrategy,
@@ -37,7 +38,7 @@ export interface UserHttpResourcesConfig {
    */
   containerName?: NamingRule;
   /**
-   * Whether or not to create HTTP resource APIs.
+   * Whether this feature is enabled.
    *
    * @default true
    */
@@ -103,7 +104,7 @@ export interface UserHttpResourcesConfig {
   strategyDefaultTag?: string;
 }
 
-export interface HttpResourcesConfig {
+export type HttpResourcesConfig = FeatureToggle & {
   /**
    * Type of container for grouped operations.
    *
@@ -133,10 +134,6 @@ export interface HttpResourcesConfig {
    * containerName: { name: '{{name}}Service', case: 'PascalCase' }
    */
   containerName: NamingConfig;
-  /**
-   * Whether or not to create HTTP resource APIs.
-   */
-  enabled: boolean;
   /**
    * Customize method/function names.
    *
@@ -186,4 +183,4 @@ export interface HttpResourcesConfig {
    * Only applies when `strategy` is `'byTags'`.
    */
   strategyDefaultTag: string;
-}
+};

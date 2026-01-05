@@ -1,3 +1,8 @@
+import type {
+  FeatureToggle,
+  IndexExportOption,
+  NamingOptions,
+} from '~/config/shared';
 import type { IR } from '~/ir/types';
 import type { DefinePlugin, Plugin } from '~/plugins';
 import type { Casing, NameTransformer } from '~/utils/naming';
@@ -5,7 +10,7 @@ import type { Casing, NameTransformer } from '~/utils/naming';
 export type UserConfig = Plugin.Name<'@tanstack/vue-query'> &
   Plugin.Hooks & {
     /**
-     * The casing convention to use for generated names.
+     * Casing convention for generated names.
      *
      * @default 'camelCase'
      */
@@ -22,7 +27,7 @@ export type UserConfig = Plugin.Name<'@tanstack/vue-query'> &
      */
     comments?: boolean;
     /**
-     * Should the exports from the generated files be re-exported in the index barrel file?
+     * Whether exports should be re-exported in the index file.
      *
      * @default false
      */
@@ -44,20 +49,19 @@ export type UserConfig = Plugin.Name<'@tanstack/vue-query'> &
       | NameTransformer
       | {
           /**
-           * The casing convention to use for generated names.
+           * Casing convention for generated names.
            *
            * @default 'camelCase'
            */
           case?: Casing;
           /**
-           * Whether to generate infinite query key helpers.
+           * Whether this feature is enabled.
            *
            * @default true
            */
           enabled?: boolean;
           /**
-           * Custom naming pattern for generated infinite query key names. The name variable is
-           * obtained from the SDK function name.
+           * Naming pattern for generated names.
            *
            * @default '{{name}}InfiniteQueryKey'
            * @see https://tanstack.com/query/v5/docs/framework/vue/reference/infiniteQueryOptions
@@ -88,13 +92,13 @@ export type UserConfig = Plugin.Name<'@tanstack/vue-query'> &
       | NameTransformer
       | {
           /**
-           * The casing convention to use for generated names.
+           * Casing convention for generated names.
            *
            * @default 'camelCase'
            */
           case?: Casing;
           /**
-           * Whether to generate infinite query options helpers.
+           * Whether this feature is enabled.
            *
            * @default true
            */
@@ -123,8 +127,7 @@ export type UserConfig = Plugin.Name<'@tanstack/vue-query'> &
            */
           meta?: (operation: IR.OperationObject) => Record<string, unknown>;
           /**
-           * Custom naming pattern for generated infinite query options names. The name variable is
-           * obtained from the SDK function name.
+           * Naming pattern for generated names.
            *
            * @default '{{name}}InfiniteOptions'
            * @see https://tanstack.com/query/v5/docs/framework/vue/reference/infiniteQueryOptions
@@ -148,13 +151,13 @@ export type UserConfig = Plugin.Name<'@tanstack/vue-query'> &
       | NameTransformer
       | {
           /**
-           * The casing convention to use for generated names.
+           * Casing convention for generated names.
            *
            * @default 'camelCase'
            */
           case?: Casing;
           /**
-           * Whether to generate mutation options helpers.
+           * Whether this feature is enabled.
            *
            * @default true
            */
@@ -183,8 +186,7 @@ export type UserConfig = Plugin.Name<'@tanstack/vue-query'> &
            */
           meta?: (operation: IR.OperationObject) => Record<string, unknown>;
           /**
-           * Custom naming pattern for generated mutation options names. The name variable is
-           * obtained from the SDK function name.
+           * Naming pattern for generated names.
            *
            * @default '{{name}}Mutation'
            * @see https://tanstack.com/query/v5/docs/framework/vue/reference/useMutation
@@ -208,20 +210,19 @@ export type UserConfig = Plugin.Name<'@tanstack/vue-query'> &
       | NameTransformer
       | {
           /**
-           * The casing convention to use for generated names.
+           * Casing convention for generated names.
            *
            * @default 'camelCase'
            */
           case?: Casing;
           /**
-           * Whether to generate query keys.
+           * Whether this feature is enabled.
            *
            * @default true
            */
           enabled?: boolean;
           /**
-           * Custom naming pattern for generated query key names. The name variable is
-           * obtained from the SDK function name.
+           * Naming pattern for generated names.
            *
            * @default '{{name}}QueryKey'
            * @see https://tanstack.com/query/v5/docs/framework/vue/reference/queryKey
@@ -252,13 +253,13 @@ export type UserConfig = Plugin.Name<'@tanstack/vue-query'> &
       | NameTransformer
       | {
           /**
-           * The casing convention to use for generated names.
+           * Casing convention for generated names.
            *
            * @default 'camelCase'
            */
           case?: Casing;
           /**
-           * Whether to generate query options helpers.
+           * Whether this feature is enabled.
            *
            * @default true
            */
@@ -293,8 +294,7 @@ export type UserConfig = Plugin.Name<'@tanstack/vue-query'> &
            */
           meta?: (operation: IR.OperationObject) => Record<string, unknown>;
           /**
-           * Custom naming pattern for generated query options names. The name variable is
-           * obtained from the SDK function name.
+           * Naming pattern for generated names.
            *
            * @default '{{name}}Options'
            * @see https://tanstack.com/query/v5/docs/framework/vue/reference/queryOptions
@@ -304,11 +304,10 @@ export type UserConfig = Plugin.Name<'@tanstack/vue-query'> &
   };
 
 export type Config = Plugin.Name<'@tanstack/vue-query'> &
-  Plugin.Hooks & {
+  Plugin.Hooks &
+  IndexExportOption & {
     /**
-     * The casing convention to use for generated names.
-     *
-     * @default 'camelCase'
+     * Casing convention for generated names.
      */
     case: Casing;
     /**
@@ -318,235 +317,134 @@ export type Config = Plugin.Name<'@tanstack/vue-query'> &
      */
     comments: boolean;
     /**
-     * Should the exports from the generated files be re-exported in the index barrel file?
-     *
-     * @default false
-     */
-    exportFromIndex: boolean;
-    /**
      * Resolved configuration for generated infinite query key helpers.
      *
      * @see https://tanstack.com/query/v5/docs/framework/vue/reference/infiniteQueryOptions
      */
-    infiniteQueryKeys: {
-      /**
-       * The casing convention to use for generated names.
-       *
-       * @default 'camelCase'
-       */
-      case: Casing;
-      /**
-       * Whether to generate infinite query key helpers.
-       *
-       * @default true
-       */
-      enabled: boolean;
-      /**
-       * Custom naming pattern for generated infinite query key names. The name variable is
-       * obtained from the SDK function name.
-       *
-       * @default '{{name}}InfiniteQueryKey'
-       * @see https://tanstack.com/query/v5/docs/framework/vue/reference/infiniteQueryOptions
-       */
-      name: NameTransformer;
-      /**
-       * Whether to include operation tags in infinite query keys.
-       * This will make query keys larger but provides better cache invalidation capabilities.
-       *
-       * @default false
-       */
-      tags: boolean;
-    };
+    infiniteQueryKeys: NamingOptions &
+      FeatureToggle & {
+        /**
+         * Whether to include operation tags in infinite query keys.
+         * This will make query keys larger but provides better cache invalidation capabilities.
+         *
+         * @default false
+         */
+        tags: boolean;
+      };
     /**
      * Resolved configuration for generated infinite query options helpers.
      *
      * @see https://tanstack.com/query/v5/docs/framework/vue/reference/infiniteQueryOptions
      */
-    infiniteQueryOptions: {
-      /**
-       * The casing convention to use for generated names.
-       *
-       * @default 'camelCase'
-       */
-      case: Casing;
-      /**
-       * Whether to generate infinite query options helpers.
-       *
-       * @default true
-       */
-      enabled: boolean;
-      /**
-       * Custom function to generate metadata for the operation.
-       * Can return any valid meta object that will be included in the generated infinite query options.
-       *
-       * @param operation - The operation object containing all available metadata
-       * @returns A meta object with any properties you want to include
-       *
-       * @example
-       * ```ts
-       * meta: (operation) => ({
-       *   customField: operation.id,
-       *   isDeprecated: operation.deprecated,
-       *   tags: operation.tags,
-       *   customObject: {
-       *     method: operation.method,
-       *     path: operation.path
-       *   }
-       * })
-       * ```
-       *
-       * @default undefined
-       */
-      meta: (operation: IR.OperationObject) => Record<string, unknown>;
-      /**
-       * Custom naming pattern for generated infinite query options names. The name variable is
-       * obtained from the SDK function name.
-       *
-       * @default '{{name}}InfiniteOptions'
-       * @see https://tanstack.com/query/v5/docs/framework/vue/reference/infiniteQueryOptions
-       */
-      name: NameTransformer;
-    };
+    infiniteQueryOptions: NamingOptions &
+      FeatureToggle & {
+        /**
+         * Custom function to generate metadata for the operation.
+         * Can return any valid meta object that will be included in the generated infinite query options.
+         *
+         * @param operation - The operation object containing all available metadata
+         * @returns A meta object with any properties you want to include
+         *
+         * @example
+         * ```ts
+         * meta: (operation) => ({
+         *   customField: operation.id,
+         *   isDeprecated: operation.deprecated,
+         *   tags: operation.tags,
+         *   customObject: {
+         *     method: operation.method,
+         *     path: operation.path
+         *   }
+         * })
+         * ```
+         *
+         * @default undefined
+         */
+        meta: (operation: IR.OperationObject) => Record<string, unknown>;
+      };
     /**
      * Resolved configuration for generated mutation options helpers.
      *
      * @see https://tanstack.com/query/v5/docs/framework/vue/reference/useMutation
      */
-    mutationOptions: {
-      /**
-       * The casing convention to use for generated names.
-       *
-       * @default 'camelCase'
-       */
-      case: Casing;
-      /**
-       * Whether to generate mutation options helpers.
-       *
-       * @default true
-       */
-      enabled: boolean;
-      /**
-       * Custom function to generate metadata for the operation.
-       * Can return any valid meta object that will be included in the generated mutation options.
-       *
-       * @param operation - The operation object containing all available metadata
-       * @returns A meta object with any properties you want to include
-       *
-       * @example
-       * ```ts
-       * meta: (operation) => ({
-       *   customField: operation.id,
-       *   isDeprecated: operation.deprecated,
-       *   tags: operation.tags,
-       *   customObject: {
-       *     method: operation.method,
-       *     path: operation.path
-       *   }
-       * })
-       * ```
-       *
-       * @default undefined
-       */
-      meta: (operation: IR.OperationObject) => Record<string, unknown>;
-      /**
-       * Custom naming pattern for generated mutation options names. The name variable is
-       * obtained from the SDK function name.
-       *
-       * @default '{{name}}Mutation'
-       * @see https://tanstack.com/query/v5/docs/framework/vue/reference/useMutation
-       */
-      name: NameTransformer;
-    };
+    mutationOptions: NamingOptions &
+      FeatureToggle & {
+        /**
+         * Custom function to generate metadata for the operation.
+         * Can return any valid meta object that will be included in the generated mutation options.
+         *
+         * @param operation - The operation object containing all available metadata
+         * @returns A meta object with any properties you want to include
+         *
+         * @example
+         * ```ts
+         * meta: (operation) => ({
+         *   customField: operation.id,
+         *   isDeprecated: operation.deprecated,
+         *   tags: operation.tags,
+         *   customObject: {
+         *     method: operation.method,
+         *     path: operation.path
+         *   }
+         * })
+         * ```
+         *
+         * @default undefined
+         */
+        meta: (operation: IR.OperationObject) => Record<string, unknown>;
+      };
     /**
      * Resolved configuration for generated query keys.
      *
      * @see https://tanstack.com/query/v5/docs/framework/vue/reference/queryKey
      */
-    queryKeys: {
-      /**
-       * The casing convention to use for generated names.
-       *
-       * @default 'camelCase'
-       */
-      case: Casing;
-      /**
-       * Whether to generate query keys.
-       *
-       * @default true
-       */
-      enabled: boolean;
-      /**
-       * Custom naming pattern for generated query key names. The name variable is
-       * obtained from the SDK function name.
-       *
-       * @default '{{name}}QueryKey'
-       * @see https://tanstack.com/query/v5/docs/framework/vue/reference/queryKey
-       */
-      name: NameTransformer;
-      /**
-       * Whether to include operation tags in query keys.
-       * This will make query keys larger but provides better cache invalidation capabilities.
-       *
-       * @default false
-       */
-      tags: boolean;
-    };
+    queryKeys: NamingOptions &
+      FeatureToggle & {
+        /**
+         * Whether to include operation tags in query keys.
+         * This will make query keys larger but provides better cache invalidation capabilities.
+         *
+         * @default false
+         */
+        tags: boolean;
+      };
     /**
      * Resolved configuration for generated query options helpers.
      *
      * @see https://tanstack.com/query/v5/docs/framework/vue/reference/queryOptions
      */
-    queryOptions: {
-      /**
-       * The casing convention to use for generated names.
-       *
-       * @default 'camelCase'
-       */
-      case: Casing;
-      /**
-       * Whether to generate query options helpers.
-       *
-       * @default true
-       */
-      enabled: boolean;
-      /**
-       * Whether to export generated symbols.
-       *
-       * @default true
-       */
-      exported: boolean;
-      /**
-       * Custom function to generate metadata for the operation.
-       * Can return any valid meta object that will be included in the generated query options.
-       *
-       * @param operation - The operation object containing all available metadata
-       * @returns A meta object with any properties you want to include
-       *
-       * @example
-       * ```ts
-       * meta: (operation) => ({
-       *   customField: operation.id,
-       *   isDeprecated: operation.deprecated,
-       *   tags: operation.tags,
-       *   customObject: {
-       *     method: operation.method,
-       *     path: operation.path
-       *   }
-       * })
-       * ```
-       *
-       * @default undefined
-       */
-      meta: (operation: IR.OperationObject) => Record<string, unknown>;
-      /**
-       * Custom naming pattern for generated query options names. The name variable is
-       * obtained from the SDK function name.
-       *
-       * @default '{{name}}Options'
-       * @see https://tanstack.com/query/v5/docs/framework/vue/reference/queryOptions
-       */
-      name: NameTransformer;
-    };
+    queryOptions: NamingOptions &
+      FeatureToggle & {
+        /**
+         * Whether to export generated symbols.
+         *
+         * @default true
+         */
+        exported: boolean;
+        /**
+         * Custom function to generate metadata for the operation.
+         * Can return any valid meta object that will be included in the generated query options.
+         *
+         * @param operation - The operation object containing all available metadata
+         * @returns A meta object with any properties you want to include
+         *
+         * @example
+         * ```ts
+         * meta: (operation) => ({
+         *   customField: operation.id,
+         *   isDeprecated: operation.deprecated,
+         *   tags: operation.tags,
+         *   customObject: {
+         *     method: operation.method,
+         *     path: operation.path
+         *   }
+         * })
+         * ```
+         *
+         * @default undefined
+         */
+        meta: (operation: IR.OperationObject) => Record<string, unknown>;
+      };
   };
 
 export type TanStackVueQueryPlugin = DefinePlugin<UserConfig, Config>;

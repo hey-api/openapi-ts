@@ -7,9 +7,9 @@ import { getIntegerLimit } from '~/plugins/shared/utils/formats';
 import { $ } from '~/ts-dsl';
 
 import { identifiers } from '../../constants';
+import type { NumberResolverContext } from '../../resolvers';
 import type { Chain } from '../../shared/chain';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
-import type { NumberResolverContext } from '../../types';
 
 function baseNode(ctx: NumberResolverContext): Chain {
   const { schema, symbols } = ctx;

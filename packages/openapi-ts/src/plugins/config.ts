@@ -1,6 +1,8 @@
 import type { Plugin } from '~/plugins';
 import type { AngularCommonPlugin } from '~/plugins/@angular/common';
 import { defaultConfig as angularCommon } from '~/plugins/@angular/common';
+import type { FakerJsFakerPlugin } from '~/plugins/@faker-js/faker';
+import { defaultConfig as fakerJsFaker } from '~/plugins/@faker-js/faker';
 import type { HeyApiClientAngularPlugin } from '~/plugins/@hey-api/client-angular';
 import { defaultConfig as heyApiClientAngular } from '~/plugins/@hey-api/client-angular';
 import type { HeyApiClientAxiosPlugin } from '~/plugins/@hey-api/client-axios';
@@ -49,6 +51,7 @@ import { defaultConfig as zod } from '~/plugins/zod';
 
 export interface PluginConfigMap {
   '@angular/common': AngularCommonPlugin['Types'];
+  '@faker-js/faker': FakerJsFakerPlugin['Types'];
   '@hey-api/client-angular': HeyApiClientAngularPlugin['Types'];
   '@hey-api/client-axios': HeyApiClientAxiosPlugin['Types'];
   '@hey-api/client-fetch': HeyApiClientFetchPlugin['Types'];
@@ -77,6 +80,7 @@ export const defaultPluginConfigs: {
   [K in PluginNames]: Plugin.Config<PluginConfigMap[K]>;
 } = {
   '@angular/common': angularCommon,
+  '@faker-js/faker': fakerJsFaker,
   '@hey-api/client-angular': heyApiClientAngular,
   '@hey-api/client-axios': heyApiClientAxios,
   '@hey-api/client-fetch': heyApiClientFetch,

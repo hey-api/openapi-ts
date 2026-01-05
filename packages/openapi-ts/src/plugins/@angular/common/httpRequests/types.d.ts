@@ -1,3 +1,4 @@
+import type { FeatureToggle } from '~/config/shared';
 import type {
   OperationPathStrategy,
   OperationsStrategy,
@@ -37,7 +38,7 @@ export interface UserHttpRequestsConfig {
    */
   containerName?: NamingRule;
   /**
-   * Whether or not to create HTTP Request instances.
+   * Whether this feature is enabled.
    *
    * @default true
    */
@@ -103,7 +104,7 @@ export interface UserHttpRequestsConfig {
   strategyDefaultTag?: string;
 }
 
-export interface HttpRequestsConfig {
+export type HttpRequestsConfig = FeatureToggle & {
   /**
    * Type of container for grouped operations.
    *
@@ -133,10 +134,6 @@ export interface HttpRequestsConfig {
    * containerName: { name: '{{name}}Service', case: 'PascalCase' }
    */
   containerName: NamingConfig;
-  /**
-   * Whether or not to create HTTP Request instances.
-   */
-  enabled: boolean;
   /**
    * Customize method/function names.
    *
@@ -186,4 +183,4 @@ export interface HttpRequestsConfig {
    * Only applies when `strategy` is `'byTags'`.
    */
   strategyDefaultTag: string;
-}
+};
