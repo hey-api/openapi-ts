@@ -85,10 +85,7 @@ export const irSchemaWithTypeToAst = ({
     //   });
   }
 
-  const type = args.plugin.referenceSymbol({
-    category: 'external',
-    resource: 'arktype.type',
-  });
+  const type = args.plugin.external('arktype.type');
 
   const expression = $(type).call(
     $.object()

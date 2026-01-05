@@ -32,10 +32,7 @@ export const useTypeError = ({
   });
   const symbolError = symbolErrorType || 'Error';
   if (client.name === '@hey-api/client-axios') {
-    const symbol = plugin.referenceSymbol({
-      category: 'external',
-      resource: 'axios.AxiosError',
-    });
+    const symbol = plugin.external('axios.AxiosError');
     return $.type(symbol).generic(symbolError);
   }
   return $.type(symbolError);

@@ -9,11 +9,7 @@ export const unknownToAst = ({
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'unknown'>;
 }) => {
-  const v = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'valibot.v',
-  });
-
+  const v = plugin.external('valibot.v');
   const expression = $(v).attr(identifiers.schemas.unknown).call();
   return expression;
 };

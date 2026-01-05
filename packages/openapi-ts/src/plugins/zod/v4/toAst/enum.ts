@@ -14,10 +14,7 @@ export const enumToAst = ({
 }): Omit<Ast, 'typeName'> => {
   const result: Partial<Omit<Ast, 'typeName'>> = {};
 
-  const z = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'zod.z',
-  });
+  const z = plugin.external('zod.z');
 
   const enumMembers: Array<ReturnType<typeof $.literal>> = [];
   const literalMembers: Array<ReturnType<typeof $.call>> = [];

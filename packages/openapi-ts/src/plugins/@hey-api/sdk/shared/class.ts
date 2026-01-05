@@ -74,10 +74,7 @@ export const createClientClass = ({
 }): ReturnType<typeof $.class> => {
   const symClient = plugin.getSymbol({ category: 'client' });
   const optionalClient = Boolean(plugin.config.client && symClient);
-  const symbolClient = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'client.Client',
-  });
+  const symbolClient = plugin.external('client.Client');
   return $.class(symbol)
     .field('client', (f) => f.protected().type(symbolClient))
     .newline()

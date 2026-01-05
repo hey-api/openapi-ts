@@ -13,10 +13,7 @@ export const booleanToAst = ({
   const result: Partial<Omit<Ast, 'typeName'>> = {};
   let chain: ReturnType<typeof $.call>;
 
-  const z = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'zod.z',
-  });
+  const z = plugin.external('zod.z');
 
   if (typeof schema.const === 'boolean') {
     chain = $(z).attr(identifiers.literal).call($.literal(schema.const));

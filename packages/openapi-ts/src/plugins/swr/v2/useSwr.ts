@@ -20,10 +20,7 @@ export const createUseSwr = ({
     return;
   }
 
-  const symbolUseSwr = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'swr',
-  });
+  const symbolUseSwr = plugin.external('swr');
   const symbolUseQueryFn = plugin.symbol(
     applyNaming(operation.id, plugin.config.useSwr),
   );

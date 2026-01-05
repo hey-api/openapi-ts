@@ -16,10 +16,7 @@ export const arrayToAst = ({
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'array'>;
 }): Omit<Ast, 'typeName'> => {
-  const z = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'zod.z',
-  });
+  const z = plugin.external('zod.z');
 
   const result: Partial<Omit<Ast, 'typeName'>> = {};
 

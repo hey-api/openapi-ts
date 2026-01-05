@@ -9,10 +9,7 @@ export const voidToAst = ({
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'void'>;
 }) => {
-  const z = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'zod.z',
-  });
+  const z = plugin.external('zod.z');
   const expression = $(z).attr(identifiers.void).call();
   return expression;
 };
