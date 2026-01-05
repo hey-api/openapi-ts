@@ -3,10 +3,10 @@ import { fromRef, ref } from '@hey-api/codegen-core';
 import type { SchemaWithType } from '~/plugins';
 import { $ } from '~/ts-dsl';
 
+import type { ObjectResolverContext } from '../../resolvers';
 import type { Pipe, PipeResult } from '../../shared/pipes';
 import { pipes } from '../../shared/pipes';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
-import type { ObjectResolverContext } from '../../types';
 import { identifiers } from '../constants';
 import { irSchemaToAst } from '../plugin';
 

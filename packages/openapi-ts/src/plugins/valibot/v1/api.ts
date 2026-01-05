@@ -1,8 +1,8 @@
 import { $ } from '~/ts-dsl';
 
+import type { ValidatorResolverContext } from '../resolvers';
 import { pipes } from '../shared/pipes';
 import type { ValidatorArgs } from '../shared/types';
-import type { ValidatorResolverContext } from '../types';
 import { identifiers } from './constants';
 
 const validatorResolver = (

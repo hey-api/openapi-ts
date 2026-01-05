@@ -7,6 +7,7 @@ import type ts from 'typescript';
 import type { MaybeArray, MaybeFunc } from '~/types/utils';
 import type { Casing, NameTransformer } from '~/utils/naming';
 
+import type { NamingOptions } from '../shared';
 import type { SourceConfig, UserSourceConfig } from './source/types';
 
 export type Formatters = 'biome' | 'prettier';
@@ -47,13 +48,13 @@ export type UserOutput = {
     | NameTransformer
     | {
         /**
-         * The casing convention to use for generated file names.
+         * Casing convention for generated names.
          *
          * @default 'preserve'
          */
         case?: Casing;
         /**
-         * Custom naming pattern for generated file names.
+         * Naming pattern for generated names.
          *
          * @default '{{name}}'
          */
@@ -166,15 +167,7 @@ export type Output = {
    * @param name The original file name.
    * @returns The transformed file name.
    */
-  fileName: {
-    /**
-     * The casing convention to use for generated file names.
-     */
-    case: Casing;
-    /**
-     * Custom naming pattern for generated file names.
-     */
-    name: NameTransformer;
+  fileName: NamingOptions & {
     /**
      * Suffix to append to file names (before the extension). For example,
      * with a suffix of `.gen`, `example.ts` becomes `example.gen.ts`.

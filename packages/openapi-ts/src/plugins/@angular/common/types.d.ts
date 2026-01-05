@@ -1,3 +1,4 @@
+import type { IndexExportOption } from '~/config/shared';
 import type { OperationsStrategy } from '~/openApi/shared/locations';
 import type { DefinePlugin, Plugin } from '~/plugins';
 
@@ -13,8 +14,7 @@ import type {
 export type UserConfig = Plugin.Name<'@angular/common'> &
   Plugin.Hooks & {
     /**
-     * Should the exports from the generated files be re-exported in the index
-     * barrel file?
+     * Whether exports should be re-exported in the index file.
      *
      * @default false
      */
@@ -34,14 +34,8 @@ export type UserConfig = Plugin.Name<'@angular/common'> &
   };
 
 export type Config = Plugin.Name<'@angular/common'> &
-  Plugin.Hooks & {
-    /**
-     * Should the exports from the generated files be re-exported in the index
-     * barrel file?
-     *
-     * @default false
-     */
-    exportFromIndex: boolean;
+  Plugin.Hooks &
+  IndexExportOption & {
     /**
      * Options for generating HTTP Request instances.
      */

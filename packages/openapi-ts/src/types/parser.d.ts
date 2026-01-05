@@ -1,3 +1,4 @@
+import type { FeatureToggle, NamingOptions } from '~/config/shared';
 import type {
   OpenApiMetaObject,
   OpenApiOperationObject,
@@ -68,13 +69,13 @@ export type UserParser = {
       | EnumsMode
       | {
           /**
-           * The casing convention to use for generated names.
+           * Casing convention for generated names.
            *
            * @default 'PascalCase'
            */
           case?: Casing;
           /**
-           * Whether to transform all enums.
+           * Whether this feature is enabled.
            *
            * @default true
            */
@@ -121,7 +122,7 @@ export type UserParser = {
       | boolean
       | {
           /**
-           * Whether to split read-only and write-only schemas.
+           * Whether this feature is enabled.
            *
            * @default true
            */
@@ -139,7 +140,7 @@ export type UserParser = {
             | NameTransformer
             | {
                 /**
-                 * The casing convention to use for generated names.
+                 * Casing convention for generated names.
                  *
                  * @default 'preserve'
                  */
@@ -165,7 +166,7 @@ export type UserParser = {
             | NameTransformer
             | {
                 /**
-                 * The casing convention to use for generated names.
+                 * Casing convention for generated names.
                  *
                  * @default 'preserve'
                  */
@@ -243,33 +244,16 @@ export type Parser = {
      * plugin, set `enums` to `root`. Likewise, if you don't want to export any
      * enum types, set `enums` to `inline`.
      */
-    enums: {
-      /**
-       * The casing convention to use for generated names.
-       *
-       * @default 'PascalCase'
-       */
-      case: Casing;
-      /**
-       * Whether to transform all enums.
-       *
-       * @default true
-       */
-      enabled: boolean;
-      /**
-       * Controls whether enums are promoted to reusable root components
-       * ('root') or kept inline within schemas ('inline').
-       *
-       * @default 'root'
-       */
-      mode: EnumsMode;
-      /**
-       * Customize the generated name of enums.
-       *
-       * @default '{{name}}Enum'
-       */
-      name: NameTransformer;
-    };
+    enums: NamingOptions &
+      FeatureToggle & {
+        /**
+         * Controls whether enums are promoted to reusable root components
+         * ('root') or kept inline within schemas ('inline').
+         *
+         * @default 'root'
+         */
+        mode: EnumsMode;
+      };
     /**
      * By default, any object schema with a missing `required` keyword is
      * interpreted as "no properties are required." This is the correct
@@ -292,50 +276,15 @@ export type Parser = {
      * would result in such scenarios. You can still disable this
      * behavior if you prefer.
      */
-    readWrite: {
-      /**
-       * Whether to split read-only and write-only schemas.
-       *
-       * @default true
-       */
-      enabled: boolean;
+    readWrite: FeatureToggle & {
       /**
        * Configuration for generated request-specific schemas.
        */
-      requests: {
-        /**
-         * The casing convention to use for generated names.
-         *
-         * @default 'preserve'
-         */
-        case: Casing;
-        /**
-         * Customize the generated name of schemas used in requests or
-         * containing write-only fields.
-         *
-         * @default '{{name}}Writable'
-         */
-        name: NameTransformer;
-      };
+      requests: NamingOptions;
       /**
        * Configuration for generated response-specific schemas.
        */
-      responses: {
-        /**
-         * The casing convention to use for generated names.
-         *
-         * @default 'preserve'
-         */
-        case: Casing;
-        /**
-         * Customize the generated name of schemas used in responses or
-         * containing read-only fields. We default to the original name
-         * to avoid breaking output when a read-only field is added.
-         *
-         * @default '{{name}}'
-         */
-        name: NameTransformer;
-      };
+      responses: NamingOptions;
     };
   };
   /**
