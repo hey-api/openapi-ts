@@ -16,10 +16,9 @@ export const createMutationOptions = ({
   operation: IR.OperationObject;
   plugin: PiniaColadaPlugin['Instance'];
 }): void => {
-  const symbolMutationOptionsType = plugin.referenceSymbol({
-    category: 'external',
-    resource: `${plugin.name}.UseMutationOptions`,
-  });
+  const symbolMutationOptionsType = plugin.external(
+    `${plugin.name}.UseMutationOptions`,
+  );
 
   const client = getClientPlugin(plugin.context.config);
   const isNuxtClient = client.name === '@hey-api/client-nuxt';

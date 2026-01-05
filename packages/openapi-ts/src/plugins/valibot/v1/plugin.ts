@@ -36,10 +36,7 @@ export const irSchemaToAst = ({
     pipes: [],
   };
 
-  const v = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'valibot.v',
-  });
+  const v = plugin.external('valibot.v');
 
   if (schema.$ref) {
     const query: SymbolMeta = {

@@ -137,10 +137,9 @@ export const createQueryOptions = ({
       },
     },
   );
-  const symbolDefineQueryOptions = plugin.referenceSymbol({
-    category: 'external',
-    resource: `${plugin.name}.defineQueryOptions`,
-  });
+  const symbolDefineQueryOptions = plugin.external(
+    `${plugin.name}.defineQueryOptions`,
+  );
   const statement = $.const(symbolQueryOptionsFn)
     .export()
     .$if(plugin.config.comments && createOperationComment(operation), (c, v) =>

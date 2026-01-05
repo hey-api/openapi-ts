@@ -10,10 +10,7 @@ export const neverToAst = ({
   schema: SchemaWithType<'never'>;
 }): Omit<Ast, 'typeName'> => {
   const result: Partial<Omit<Ast, 'typeName'>> = {};
-  const z = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'zod.z',
-  });
+  const z = plugin.external('zod.z');
   result.expression = $(z).attr(identifiers.never).call();
   return result as Omit<Ast, 'typeName'>;
 };

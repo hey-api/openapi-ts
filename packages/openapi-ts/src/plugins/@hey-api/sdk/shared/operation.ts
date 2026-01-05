@@ -254,10 +254,7 @@ export const operationStatements = ({
   if (operation.body) {
     switch (operation.body.type) {
       case 'form-data': {
-        const symbol = plugin.referenceSymbol({
-          category: 'external',
-          resource: 'client.formDataBodySerializer',
-        });
+        const symbol = plugin.external('client.formDataBodySerializer');
         reqOptions.spread(symbol);
         break;
       }
@@ -270,10 +267,7 @@ export const operationStatements = ({
         reqOptions.prop('bodySerializer', $.literal(null));
         break;
       case 'url-search-params': {
-        const symbol = plugin.referenceSymbol({
-          category: 'external',
-          resource: 'client.urlSearchParamsBodySerializer',
-        });
+        const symbol = plugin.external('client.urlSearchParamsBodySerializer');
         reqOptions.spread(symbol);
         break;
       }
@@ -423,10 +417,7 @@ export const operationStatements = ({
       }
       config.push(shape);
     }
-    const symbol = plugin.referenceSymbol({
-      category: 'external',
-      resource: 'client.buildClientParams',
-    });
+    const symbol = plugin.external('client.buildClientParams');
     statements.push(
       $.const('params').assign(
         $(symbol).call(

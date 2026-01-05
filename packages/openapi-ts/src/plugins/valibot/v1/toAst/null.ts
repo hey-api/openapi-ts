@@ -9,10 +9,7 @@ export const nullToAst = ({
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'null'>;
 }) => {
-  const v = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'valibot.v',
-  });
+  const v = plugin.external('valibot.v');
   const expression = $(v).attr(identifiers.schemas.null).call();
   return expression;
 };

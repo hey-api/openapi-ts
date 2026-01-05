@@ -9,11 +9,7 @@ export const undefinedToAst = ({
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'undefined'>;
 }) => {
-  const v = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'valibot.v',
-  });
-
+  const v = plugin.external('valibot.v');
   const expression = $(v).attr(identifiers.schemas.undefined).call();
   return expression;
 };

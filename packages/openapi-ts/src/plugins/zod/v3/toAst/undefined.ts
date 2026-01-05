@@ -9,10 +9,7 @@ export const undefinedToAst = ({
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'undefined'>;
 }) => {
-  const z = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'zod.z',
-  });
+  const z = plugin.external('zod.z');
   const expression = $(z).attr(identifiers.undefined).call();
   return expression;
 };

@@ -19,11 +19,7 @@ export const exportAst = ({
   schema: IR.SchemaObject;
   symbol: Symbol;
 }): void => {
-  const v = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'valibot.v',
-  });
-
+  const v = plugin.external('valibot.v');
   const statement = $.const(symbol)
     .export()
     .$if(plugin.config.comments && createSchemaComment(schema), (c, v) =>

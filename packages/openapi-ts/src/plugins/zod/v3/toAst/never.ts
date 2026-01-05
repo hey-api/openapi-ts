@@ -9,10 +9,7 @@ export const neverToAst = ({
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'never'>;
 }) => {
-  const z = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'zod.z',
-  });
+  const z = plugin.external('zod.z');
   const expression = $(z).attr(identifiers.never).call();
   return expression;
 };

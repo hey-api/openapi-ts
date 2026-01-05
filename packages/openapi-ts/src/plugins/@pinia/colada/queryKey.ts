@@ -37,10 +37,7 @@ export const createQueryKeyFunction = ({
     resource: 'QueryKey',
     tool: plugin.name,
   });
-  const symbolJsonValue = plugin.referenceSymbol({
-    category: 'external',
-    resource: `${plugin.name}._JSONValue`,
-  });
+  const symbolJsonValue = plugin.external(`${plugin.name}._JSONValue`);
 
   const returnType = $.type(symbolQueryKeyType).generic(TOptionsType).idx(0);
 
@@ -157,10 +154,7 @@ export const createQueryKeyType = ({
 }: {
   plugin: PiniaColadaPlugin['Instance'];
 }) => {
-  const symbolJsonValue = plugin.referenceSymbol({
-    category: 'external',
-    resource: `${plugin.name}._JSONValue`,
-  });
+  const symbolJsonValue = plugin.external(`${plugin.name}._JSONValue`);
 
   const symbolOptions = plugin.referenceSymbol({
     category: 'type',

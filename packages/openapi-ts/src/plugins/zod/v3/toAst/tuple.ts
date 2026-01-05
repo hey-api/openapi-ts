@@ -16,10 +16,7 @@ export const tupleToAst = ({
 }): Omit<Ast, 'typeName'> & {
   anyType?: string;
 } => {
-  const z = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'zod.z',
-  });
+  const z = plugin.external('zod.z');
 
   let hasLazyExpression = false;
 
