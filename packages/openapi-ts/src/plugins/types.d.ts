@@ -12,10 +12,14 @@ export type PluginClientNames =
   | '@hey-api/client-nuxt'
   | '@hey-api/client-ofetch';
 
+export type PluginMockNames = '@faker-js/faker';
+
 export type PluginValidatorNames = 'arktype' | 'valibot' | 'zod';
 
 export type PluginNames =
   | PluginClientNames
+  | PluginMockNames
+  | PluginValidatorNames
   | '@angular/common'
   | '@hey-api/schemas'
   | '@hey-api/sdk'
@@ -28,12 +32,11 @@ export type PluginNames =
   | '@tanstack/svelte-query'
   | '@tanstack/vue-query'
   | 'fastify'
-  | 'swr'
-  | PluginValidatorNames;
+  | 'swr';
 
 export type AnyPluginName = PluginNames | (string & {});
 
-type PluginTag = 'client' | 'sdk' | 'transformer' | 'validator';
+type PluginTag = 'client' | 'mocker' | 'sdk' | 'transformer' | 'validator';
 
 export type PluginContext = {
   package: Package;
@@ -51,8 +54,7 @@ type BaseApi = Record<string, unknown>;
 
 type BaseConfig = {
   /**
-   * Should the exports from the plugin's file be re-exported in the index
-   * barrel file?
+   * Whether exports should be re-exported in the index file.
    */
   exportFromIndex?: boolean;
   name: AnyPluginName;

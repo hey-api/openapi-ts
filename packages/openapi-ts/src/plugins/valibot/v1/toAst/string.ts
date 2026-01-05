@@ -1,10 +1,10 @@
 import type { SchemaWithType } from '~/plugins';
 import { $ } from '~/ts-dsl';
 
+import type { StringResolverContext } from '../../resolvers';
 import type { Pipe, PipeResult, Pipes } from '../../shared/pipes';
 import { pipes } from '../../shared/pipes';
 import type { IrSchemaToAstOptions } from '../../shared/types';
-import type { StringResolverContext } from '../../types';
 import { identifiers } from '../constants';
 
 function baseNode(ctx: StringResolverContext): PipeResult {

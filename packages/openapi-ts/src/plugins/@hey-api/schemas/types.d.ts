@@ -6,8 +6,7 @@ import type { DefinePlugin, Plugin } from '~/plugins';
 export type UserConfig = Plugin.Name<'@hey-api/schemas'> &
   Plugin.Hooks & {
     /**
-     * Should the exports from the generated files be re-exported in the index
-     * barrel file?
+     * Whether exports should be re-exported in the index file.
      *
      * @default false
      */

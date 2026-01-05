@@ -1,26 +1,19 @@
-import type { Refs, Symbol } from '@hey-api/codegen-core';
-import type ts from 'typescript';
-
-import type { IR } from '~/ir/types';
-import type { DefinePlugin, Plugin, SchemaWithType } from '~/plugins';
 import type {
-  MaybeBigInt,
-  ShouldCoerceToBigInt,
-} from '~/plugins/shared/utils/coerce';
-import type { GetIntegerLimit } from '~/plugins/shared/utils/formats';
-import type { $, DollarTsDsl, TsDsl } from '~/ts-dsl';
-import type { MaybeArray } from '~/types/utils';
+  FeatureToggle,
+  IndexExportOption,
+  NamingOptions,
+} from '~/config/shared';
+import type { DefinePlugin, Plugin } from '~/plugins';
 import type { Casing, NameTransformer } from '~/utils/naming';
 
 import type { IApi } from './api';
-import type { Chain } from './shared/chain';
-import type { Ast, PluginState } from './shared/types';
+import type { Resolvers } from './resolvers';
 
 export type UserConfig = Plugin.Name<'zod'> &
   Plugin.Hooks &
   Resolvers & {
     /**
-     * The casing convention to use for generated names.
+     * Casing convention for generated names.
      *
      * @default 'camelCase'
      */
@@ -86,20 +79,19 @@ export type UserConfig = Plugin.Name<'zod'> &
       | NameTransformer
       | {
           /**
-           * The casing convention to use for generated names.
+           * Casing convention for generated names.
            *
            * @default 'camelCase'
            */
           case?: Casing;
           /**
-           * Whether to generate Zod schemas for reusable definitions.
+           * Whether this feature is enabled.
            *
            * @default true
            */
           enabled?: boolean;
           /**
-           * Custom naming pattern for generated schema names. The name variable
-           * is obtained from the schema name.
+           * Naming pattern for generated names.
            *
            * @default 'z{{name}}'
            */
@@ -125,20 +117,19 @@ export type UserConfig = Plugin.Name<'zod'> &
               | NameTransformer
               | {
                   /**
-                   * The casing convention to use for generated type names.
+                   * Casing convention for generated names.
                    *
                    * @default 'PascalCase'
                    */
                   case?: Casing;
                   /**
-                   * Whether to generate TypeScript types from Zod schemas.
+                   * Whether this feature is enabled.
                    *
                    * @default true
                    */
                   enabled?: boolean;
                   /**
-                   * Custom naming pattern for generated type names. The name variable is
-                   * obtained from the Zod schema name.
+                   * Naming pattern for generated names.
                    *
                    * @default '{{name}}ZodType'
                    */
@@ -147,8 +138,7 @@ export type UserConfig = Plugin.Name<'zod'> &
           };
         };
     /**
-     * Should the exports from the generated files be re-exported in the index
-     * barrel file?
+     * Whether exports should be re-exported in the index file.
      *
      * @default false
      */
@@ -179,20 +169,19 @@ export type UserConfig = Plugin.Name<'zod'> &
       | NameTransformer
       | {
           /**
-           * The casing convention to use for generated names.
+           * Casing convention for generated names.
            *
            * @default 'camelCase'
            */
           case?: Casing;
           /**
-           * Whether to generate Zod schemas for request definitions.
+           * Whether this feature is enabled.
            *
            * @default true
            */
           enabled?: boolean;
           /**
-           * Custom naming pattern for generated schema names. The name variable
-           * is obtained from the operation name.
+           * Naming pattern for generated names.
            *
            * @default 'z{{name}}Data'
            */
@@ -218,20 +207,19 @@ export type UserConfig = Plugin.Name<'zod'> &
               | NameTransformer
               | {
                   /**
-                   * The casing convention to use for generated type names.
+                   * Casing convention for generated names.
                    *
                    * @default 'PascalCase'
                    */
                   case?: Casing;
                   /**
-                   * Whether to generate TypeScript types from Zod schemas.
+                   * Whether this feature is enabled.
                    *
                    * @default true
                    */
                   enabled?: boolean;
                   /**
-                   * Custom naming pattern for generated type names. The name variable is
-                   * obtained from the Zod schema name.
+                   * Naming pattern for generated names.
                    *
                    * @default '{{name}}DataZodType'
                    */
@@ -257,20 +245,19 @@ export type UserConfig = Plugin.Name<'zod'> &
       | NameTransformer
       | {
           /**
-           * The casing convention to use for generated names.
+           * Casing convention for generated names.
            *
            * @default 'camelCase'
            */
           case?: Casing;
           /**
-           * Whether to generate Zod schemas for response definitions.
+           * Whether this feature is enabled.
            *
            * @default true
            */
           enabled?: boolean;
           /**
-           * Custom naming pattern for generated schema names. The name variable
-           * is obtained from the operation name.
+           * Naming pattern for generated names.
            *
            * @default 'z{{name}}Response'
            */
@@ -296,20 +283,19 @@ export type UserConfig = Plugin.Name<'zod'> &
               | NameTransformer
               | {
                   /**
-                   * The casing convention to use for generated type names.
+                   * Casing convention for generated names.
                    *
                    * @default 'PascalCase'
                    */
                   case?: Casing;
                   /**
-                   * Whether to generate TypeScript types from Zod schemas.
+                   * Whether this feature is enabled.
                    *
                    * @default true
                    */
                   enabled?: boolean;
                   /**
-                   * Custom naming pattern for generated type names. The name variable is
-                   * obtained from the Zod schema name.
+                   * Naming pattern for generated names.
                    *
                    * @default '{{name}}ResponseZodType'
                    */
@@ -338,13 +324,13 @@ export type UserConfig = Plugin.Name<'zod'> &
         | NameTransformer
         | {
             /**
-             * The casing convention to use for generated type names.
+             * Casing convention for generated names.
              *
              * @default 'PascalCase'
              */
             case?: Casing;
             /**
-             * Whether to generate TypeScript types from Zod schemas.
+             * Whether this feature is enabled.
              *
              * @default true
              */
@@ -368,20 +354,19 @@ export type UserConfig = Plugin.Name<'zod'> &
       | NameTransformer
       | {
           /**
-           * The casing convention to use for generated names.
+           * Casing convention for generated names.
            *
            * @default 'camelCase'
            */
           case?: Casing;
           /**
-           * Whether to generate Zod schemas for webhook definitions.
+           * Whether this feature is enabled.
            *
            * @default true
            */
           enabled?: boolean;
           /**
-           * Custom naming pattern for generated schema names. The name variable
-           * is obtained from the webhook key.
+           * Naming pattern for generated names.
            *
            * @default 'z{{name}}WebhookRequest'
            */
@@ -407,20 +392,19 @@ export type UserConfig = Plugin.Name<'zod'> &
               | NameTransformer
               | {
                   /**
-                   * The casing convention to use for generated type names.
+                   * Casing convention for generated names.
                    *
                    * @default 'PascalCase'
                    */
                   case?: Casing;
                   /**
-                   * Whether to generate TypeScript types from Zod schemas.
+                   * Whether this feature is enabled.
                    *
                    * @default true
                    */
                   enabled?: boolean;
                   /**
-                   * Custom naming pattern for generated type names. The name variable is
-                   * obtained from the Zod schema name.
+                   * Naming pattern for generated names.
                    *
                    * @default '{{name}}WebhookRequestZodType'
                    */
@@ -432,11 +416,10 @@ export type UserConfig = Plugin.Name<'zod'> &
 
 export type Config = Plugin.Name<'zod'> &
   Plugin.Hooks &
-  Resolvers & {
+  Resolvers &
+  IndexExportOption & {
     /**
-     * The casing convention to use for generated names.
-     *
-     * @default 'camelCase'
+     * Casing convention for generated names.
      */
     case: Casing;
     /**
@@ -488,65 +471,20 @@ export type Config = Plugin.Name<'zod'> &
      * Controls generation of shared Zod schemas that can be referenced across
      * requests and responses.
      */
-    definitions: {
-      /**
-       * The casing convention to use for generated names.
-       *
-       * @default 'camelCase'
-       */
-      case: Casing;
-      /**
-       * Whether to generate Zod schemas for reusable definitions.
-       *
-       * @default true
-       */
-      enabled: boolean;
-      /**
-       * Custom naming pattern for generated schema names. The name variable is
-       * obtained from the schema name.
-       *
-       * @default 'z{{name}}'
-       */
-      name: NameTransformer;
-      /**
-       * Configuration for TypeScript type generation from Zod schemas.
-       *
-       * Controls generation of TypeScript types based on the generated Zod schemas.
-       */
-      types: {
+    definitions: NamingOptions &
+      FeatureToggle & {
         /**
-         * Configuration for `infer` types.
+         * Configuration for TypeScript type generation from Zod schemas.
+         *
+         * Controls generation of TypeScript types based on the generated Zod schemas.
          */
-        infer: {
+        types: {
           /**
-           * The casing convention to use for generated type names.
-           *
-           * @default 'PascalCase'
+           * Configuration for `infer` types.
            */
-          case: Casing;
-          /**
-           * Whether to generate TypeScript types from Zod schemas.
-           *
-           * @default true
-           */
-          enabled: boolean;
-          /**
-           * Custom naming pattern for generated type names. The name variable is
-           * obtained from the Zod schema name.
-           *
-           * @default '{{name}}ZodType'
-           */
-          name: NameTransformer;
+          infer: NamingOptions & FeatureToggle;
         };
       };
-    };
-    /**
-     * Should the exports from the generated files be re-exported in the index
-     * barrel file?
-     *
-     * @default false
-     */
-    exportFromIndex: boolean;
     /**
      * Enable Zod metadata support? It's often useful to associate a schema with
      * some additional metadata for documentation, code generation, AI
@@ -561,116 +499,40 @@ export type Config = Plugin.Name<'zod'> &
      * Controls generation of Zod schemas for request bodies, query parameters, path
      * parameters, and headers.
      */
-    requests: {
-      /**
-       * The casing convention to use for generated names.
-       *
-       * @default 'camelCase'
-       */
-      case: Casing;
-      /**
-       * Whether to generate Zod schemas for request definitions.
-       *
-       * @default true
-       */
-      enabled: boolean;
-      /**
-       * Custom naming pattern for generated schema names. The name variable is
-       * obtained from the operation name.
-       *
-       * @default 'z{{name}}Data'
-       */
-      name: NameTransformer;
-      /**
-       * Configuration for TypeScript type generation from Zod schemas.
-       *
-       * Controls generation of TypeScript types based on the generated Zod schemas.
-       */
-      types: {
+    requests: NamingOptions &
+      FeatureToggle & {
         /**
-         * Configuration for `infer` types.
+         * Configuration for TypeScript type generation from Zod schemas.
+         *
+         * Controls generation of TypeScript types based on the generated Zod schemas.
          */
-        infer: {
+        types: {
           /**
-           * The casing convention to use for generated type names.
-           *
-           * @default 'PascalCase'
+           * Configuration for `infer` types.
            */
-          case: Casing;
-          /**
-           * Whether to generate TypeScript types from Zod schemas.
-           *
-           * @default true
-           */
-          enabled: boolean;
-          /**
-           * Custom naming pattern for generated type names. The name variable is
-           * obtained from the Zod schema name.
-           *
-           * @default '{{name}}DataZodType'
-           */
-          name: NameTransformer;
+          infer: NamingOptions & FeatureToggle;
         };
       };
-    };
     /**
      * Configuration for response-specific Zod schemas.
      *
      * Controls generation of Zod schemas for response bodies, error responses,
      * and status codes.
      */
-    responses: {
-      /**
-       * The casing convention to use for generated names.
-       *
-       * @default 'camelCase'
-       */
-      case: Casing;
-      /**
-       * Whether to generate Zod schemas for response definitions.
-       *
-       * @default true
-       */
-      enabled: boolean;
-      /**
-       * Custom naming pattern for generated schema names. The name variable is
-       * obtained from the operation name.
-       *
-       * @default 'z{{name}}Response'
-       */
-      name: NameTransformer;
-      /**
-       * Configuration for TypeScript type generation from Zod schemas.
-       *
-       * Controls generation of TypeScript types based on the generated Zod schemas.
-       */
-      types: {
+    responses: NamingOptions &
+      FeatureToggle & {
         /**
-         * Configuration for `infer` types.
+         * Configuration for TypeScript type generation from Zod schemas.
+         *
+         * Controls generation of TypeScript types based on the generated Zod schemas.
          */
-        infer: {
+        types: {
           /**
-           * The casing convention to use for generated type names.
-           *
-           * @default 'PascalCase'
+           * Configuration for `infer` types.
            */
-          case: Casing;
-          /**
-           * Whether to generate TypeScript types from Zod schemas.
-           *
-           * @default true
-           */
-          enabled: boolean;
-          /**
-           * Custom naming pattern for generated type names. The name variable is
-           * obtained from the Zod schema name.
-           *
-           * @default '{{name}}ResponseZodType'
-           */
-          name: NameTransformer;
+          infer: NamingOptions & FeatureToggle;
         };
       };
-    };
     /**
      * Configuration for TypeScript type generation from Zod schemas.
      *
@@ -680,19 +542,11 @@ export type Config = Plugin.Name<'zod'> &
       /**
        * Configuration for `infer` types.
        */
-      infer: {
+      infer: FeatureToggle & {
         /**
-         * The casing convention to use for generated type names.
-         *
-         * @default 'PascalCase'
+         * Casing convention for generated names.
          */
         case: Casing;
-        /**
-         * Whether to generate TypeScript types from Zod schemas.
-         *
-         * @default true
-         */
-        enabled: boolean;
       };
     };
     /**
@@ -700,216 +554,20 @@ export type Config = Plugin.Name<'zod'> &
      *
      * Controls generation of Zod schemas for webhook payloads.
      */
-    webhooks: {
-      /**
-       * The casing convention to use for generated names.
-       *
-       * @default 'camelCase'
-       */
-      case: Casing;
-      /**
-       * Whether to generate Zod schemas for webhook definitions.
-       *
-       * @default true
-       */
-      enabled: boolean;
-      /**
-       * Custom naming pattern for generated schema names. The name variable is
-       * is obtained from the webhook key.
-       *
-       * @default 'z{{name}}WebhookRequest'
-       */
-      name: NameTransformer;
-      /**
-       * Configuration for TypeScript type generation from Zod schemas.
-       *
-       * Controls generation of TypeScript types based on the generated Zod schemas.
-       */
-      types: {
+    webhooks: NamingOptions &
+      FeatureToggle & {
         /**
-         * Configuration for `infer` types.
+         * Configuration for TypeScript type generation from Zod schemas.
+         *
+         * Controls generation of TypeScript types based on the generated Zod schemas.
          */
-        infer: {
+        types: {
           /**
-           * The casing convention to use for generated type names.
-           *
-           * @default 'PascalCase'
+           * Configuration for `infer` types.
            */
-          case: Casing;
-          /**
-           * Whether to generate TypeScript types from Zod schemas.
-           *
-           * @default true
-           */
-          enabled: boolean;
-          /**
-           * Custom naming pattern for generated type names. The name variable is
-           * obtained from the Zod schema name.
-           *
-           * @default '{{name}}WebhookRequestZodType'
-           */
-          name: NameTransformer;
+          infer: NamingOptions & FeatureToggle;
         };
       };
-    };
   };
-
-interface BaseResolverContext extends DollarTsDsl {
-  /**
-   * Functions for working with chains.
-   */
-  chain: {
-    /**
-     * The current chain.
-     *
-     * In Zod, this represents a chain of call expressions ("chains")
-     * being assembled to form a schema definition.
-     *
-     * Each chain can be extended, modified, or replaced to customize
-     * the resulting schema.
-     */
-    current: Chain;
-  };
-  /**
-   * The plugin instance.
-   */
-  plugin: ZodPlugin['Instance'];
-  /**
-   * Provides access to commonly used symbols within the plugin.
-   */
-  symbols: {
-    z: Symbol;
-  };
-}
-
-export interface NumberResolverContext extends BaseResolverContext {
-  /**
-   * Nodes used to build different parts of the number schema.
-   */
-  nodes: {
-    base: (ctx: NumberResolverContext) => Chain;
-    const: (ctx: NumberResolverContext) => Chain | undefined;
-    max: (ctx: NumberResolverContext) => Chain | undefined;
-    min: (ctx: NumberResolverContext) => Chain | undefined;
-  };
-  schema: SchemaWithType<'integer' | 'number'>;
-  /**
-   * Utility functions for number schema processing.
-   */
-  utils: {
-    ast: Partial<Omit<Ast, 'typeName'>>;
-    getIntegerLimit: GetIntegerLimit;
-    maybeBigInt: MaybeBigInt;
-    shouldCoerceToBigInt: ShouldCoerceToBigInt;
-    state: Refs<PluginState>;
-  };
-}
-
-export interface ObjectResolverContext extends BaseResolverContext {
-  /**
-   * Nodes used to build different parts of the object schema.
-   */
-  nodes: {
-    /**
-     * If `additionalProperties` is `false` or `{ type: 'never' }`, returns `null`
-     * to indicate no additional properties are allowed.
-     */
-    additionalProperties: (
-      ctx: ObjectResolverContext,
-    ) => Chain | null | undefined;
-    base: (ctx: ObjectResolverContext) => Chain;
-    shape: (ctx: ObjectResolverContext) => ReturnType<typeof $.object>;
-  };
-  schema: SchemaWithType<'object'>;
-  /**
-   * Utility functions for object schema processing.
-   */
-  utils: {
-    ast: Partial<Omit<Ast, 'typeName'>>;
-    state: Refs<PluginState>;
-  };
-}
-
-export interface StringResolverContext extends BaseResolverContext {
-  /**
-   * Nodes used to build different parts of the string schema.
-   */
-  nodes: {
-    base: (ctx: StringResolverContext) => Chain;
-    const: (ctx: StringResolverContext) => Chain | undefined;
-    format: (ctx: StringResolverContext) => Chain | undefined;
-    length: (ctx: StringResolverContext) => Chain | undefined;
-    maxLength: (ctx: StringResolverContext) => Chain | undefined;
-    minLength: (ctx: StringResolverContext) => Chain | undefined;
-    pattern: (ctx: StringResolverContext) => Chain | undefined;
-  };
-  schema: SchemaWithType<'string'>;
-}
-
-export interface ValidatorResolverContext extends BaseResolverContext {
-  operation: IR.Operation;
-  /**
-   * Provides access to commonly used symbols within the plugin.
-   */
-  symbols: BaseResolverContext['symbols'] & {
-    schema: Symbol;
-  };
-}
-
-type ValidatorResolver = (
-  ctx: ValidatorResolverContext,
-) => MaybeArray<TsDsl<ts.Statement>> | null | undefined;
-
-type Resolvers = Plugin.Resolvers<{
-  /**
-   * Resolver for number schemas.
-   *
-   * Allows customization of how number types are rendered.
-   *
-   * Returning `undefined` will execute the default resolver logic.
-   */
-  number?: (ctx: NumberResolverContext) => Chain | undefined;
-  /**
-   * Resolver for object schemas.
-   *
-   * Allows customization of how object types are rendered.
-   *
-   * Returning `undefined` will execute the default resolver logic.
-   */
-  object?: (ctx: ObjectResolverContext) => Chain | undefined;
-  /**
-   * Resolver for string schemas.
-   *
-   * Allows customization of how string types are rendered.
-   *
-   * Returning `undefined` will execute the default resolver logic.
-   */
-  string?: (ctx: StringResolverContext) => Chain | undefined;
-  /**
-   * Resolvers for request and response validators.
-   *
-   * Allow customization of validator function bodies.
-   *
-   * Example path: `~resolvers.validator.request` or `~resolvers.validator.response`
-   *
-   * Returning `undefined` will execute the default resolver logic.
-   */
-  validator?:
-    | ValidatorResolver
-    | {
-        /**
-         * Controls how the request validator function body is generated.
-         *
-         * Returning `undefined` will execute the default resolver logic.
-         */
-        request?: ValidatorResolver;
-        /**
-         * Controls how the response validator function body is generated.
-         *
-         * Returning `undefined` will execute the default resolver logic.
-         */
-        response?: ValidatorResolver;
-      };
-}>;
 
 export type ZodPlugin = DefinePlugin<UserConfig, Config, IApi>;

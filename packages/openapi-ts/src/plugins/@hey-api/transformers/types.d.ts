@@ -1,5 +1,6 @@
 import type ts from 'typescript';
 
+import type { IndexExportOption } from '~/config/shared';
 import type { IR } from '~/ir/types';
 import type { DefinePlugin, Plugin } from '~/plugins';
 
@@ -30,8 +31,7 @@ export type UserConfig = Plugin.Name<'@hey-api/transformers'> &
      */
     dates?: boolean;
     /**
-     * Should the exports from the generated files be re-exported in the index
-     * barrel file?
+     * Whether exports should be re-exported in the index file.
      *
      * @default false
      */
@@ -47,7 +47,8 @@ export type UserConfig = Plugin.Name<'@hey-api/transformers'> &
   };
 
 export type Config = Plugin.Name<'@hey-api/transformers'> &
-  Plugin.Hooks & {
+  Plugin.Hooks &
+  IndexExportOption & {
     /**
      * Convert long integers into BigInt values?
      *
@@ -60,13 +61,6 @@ export type Config = Plugin.Name<'@hey-api/transformers'> &
      * @default true
      */
     dates: boolean;
-    /**
-     * Should the exports from the generated files be re-exported in the index
-     * barrel file?
-     *
-     * @default false
-     */
-    exportFromIndex: boolean;
     /**
      * Custom transforms to apply to the generated code.
      */

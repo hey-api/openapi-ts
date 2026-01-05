@@ -170,7 +170,7 @@ export type Input = {
 
 export type Watch = {
   /**
-   * Regenerate the client when the input file changes?
+   * Whether this feature is enabled.
    *
    * @default false
    */

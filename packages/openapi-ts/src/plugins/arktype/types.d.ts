@@ -1,3 +1,8 @@
+import type {
+  FeatureToggle,
+  IndexExportOption,
+  NamingOptions,
+} from '~/config/shared';
 import type { DefinePlugin, Plugin } from '~/plugins';
 import type { Casing, NameTransformer } from '~/utils/naming';
 
@@ -6,7 +11,7 @@ import type { IApi } from './api';
 export type UserConfig = Plugin.Name<'arktype'> &
   Plugin.Hooks & {
     /**
-     * The casing convention to use for generated names.
+     * Casing convention for generated names.
      *
      * @default 'PascalCase'
      */
@@ -33,20 +38,19 @@ export type UserConfig = Plugin.Name<'arktype'> &
       | NameTransformer
       | {
           /**
-           * The casing convention to use for generated names.
+           * Casing convention for generated names.
            *
            * @default 'PascalCase'
            */
           case?: Casing;
           /**
-           * Whether to generate Arktype schemas for reusable definitions.
+           * Whether this feature is enabled.
            *
            * @default true
            */
           enabled?: boolean;
           /**
-           * Custom naming pattern for generated schema names. The name variable
-           * is obtained from the schema name.
+           * Naming pattern for generated names.
            *
            * @default '{{name}}'
            */
@@ -72,20 +76,19 @@ export type UserConfig = Plugin.Name<'arktype'> &
               | NameTransformer
               | {
                   /**
-                   * The casing convention to use for generated type names.
+                   * Casing convention for generated names.
                    *
                    * @default 'PascalCase'
                    */
                   case?: Casing;
                   /**
-                   * Whether to generate TypeScript types from Arktype schemas.
+                   * Whether this feature is enabled.
                    *
                    * @default true
                    */
                   enabled?: boolean;
                   /**
-                   * Custom naming pattern for generated type names. The name variable is
-                   * obtained from the Arktype schema name.
+                   * Naming pattern for generated names.
                    *
                    * @default '{{name}}'
                    */
@@ -94,8 +97,7 @@ export type UserConfig = Plugin.Name<'arktype'> &
           };
         };
     /**
-     * Should the exports from the generated files be re-exported in the index
-     * barrel file?
+     * Whether exports should be re-exported in the index file.
      *
      * @default false
      */
@@ -126,20 +128,19 @@ export type UserConfig = Plugin.Name<'arktype'> &
       | NameTransformer
       | {
           /**
-           * The casing convention to use for generated names.
+           * Casing convention for generated names.
            *
            * @default 'PascalCase'
            */
           case?: Casing;
           /**
-           * Whether to generate Arktype schemas for request definitions.
+           * Whether this feature is enabled.
            *
            * @default true
            */
           enabled?: boolean;
           /**
-           * Custom naming pattern for generated schema names. The name variable
-           * is obtained from the operation name.
+           * Naming pattern for generated names.
            *
            * @default '{{name}}Data'
            */
@@ -165,20 +166,19 @@ export type UserConfig = Plugin.Name<'arktype'> &
               | NameTransformer
               | {
                   /**
-                   * The casing convention to use for generated type names.
+                   * Casing convention for generated names.
                    *
                    * @default 'PascalCase'
                    */
                   case?: Casing;
                   /**
-                   * Whether to generate TypeScript types from Arktype schemas.
+                   * Whether this feature is enabled.
                    *
                    * @default true
                    */
                   enabled?: boolean;
                   /**
-                   * Custom naming pattern for generated type names. The name variable is
-                   * obtained from the Arktype schema name.
+                   * Naming pattern for generated names.
                    *
                    * @default '{{name}}Data'
                    */
@@ -204,20 +204,19 @@ export type UserConfig = Plugin.Name<'arktype'> &
       | NameTransformer
       | {
           /**
-           * The casing convention to use for generated names.
+           * Casing convention for generated names.
            *
            * @default 'PascalCase'
            */
           case?: Casing;
           /**
-           * Whether to generate Arktype schemas for response definitions.
+           * Whether this feature is enabled.
            *
            * @default true
            */
           enabled?: boolean;
           /**
-           * Custom naming pattern for generated schema names. The name variable
-           * is obtained from the operation name.
+           * Naming pattern for generated names.
            *
            * @default '{{name}}Response'
            */
@@ -243,20 +242,19 @@ export type UserConfig = Plugin.Name<'arktype'> &
               | NameTransformer
               | {
                   /**
-                   * The casing convention to use for generated type names.
+                   * Casing convention for generated names.
                    *
                    * @default 'PascalCase'
                    */
                   case?: Casing;
                   /**
-                   * Whether to generate TypeScript types from Arktype schemas.
+                   * Whether this feature is enabled.
                    *
                    * @default true
                    */
                   enabled?: boolean;
                   /**
-                   * Custom naming pattern for generated type names. The name variable is
-                   * obtained from the Arktype schema name.
+                   * Naming pattern for generated names.
                    *
                    * @default '{{name}}Response'
                    */
@@ -285,13 +283,13 @@ export type UserConfig = Plugin.Name<'arktype'> &
         | NameTransformer
         | {
             /**
-             * The casing convention to use for generated type names.
+             * Casing convention for generated names.
              *
              * @default 'PascalCase'
              */
             case?: Casing;
             /**
-             * Whether to generate TypeScript types from Arktype schemas.
+             * Whether this feature is enabled.
              *
              * @default true
              */
@@ -315,20 +313,19 @@ export type UserConfig = Plugin.Name<'arktype'> &
       | NameTransformer
       | {
           /**
-           * The casing convention to use for generated names.
+           * Casing convention for generated names.
            *
            * @default 'PascalCase'
            */
           case?: Casing;
           /**
-           * Whether to generate Arktype schemas for webhook definitions.
+           * Whether this feature is enabled.
            *
            * @default true
            */
           enabled?: boolean;
           /**
-           * Custom naming pattern for generated schema names. The name variable
-           * is obtained from the webhook key.
+           * Naming pattern for generated names.
            *
            * @default '{{name}}WebhookRequest'
            */
@@ -354,20 +351,19 @@ export type UserConfig = Plugin.Name<'arktype'> &
               | NameTransformer
               | {
                   /**
-                   * The casing convention to use for generated type names.
+                   * Casing convention for generated names.
                    *
                    * @default 'PascalCase'
                    */
                   case?: Casing;
                   /**
-                   * Whether to generate TypeScript types from Arktype schemas.
+                   * Whether this feature is enabled.
                    *
                    * @default true
                    */
                   enabled?: boolean;
                   /**
-                   * Custom naming pattern for generated type names. The name variable is
-                   * obtained from the Arktype schema name.
+                   * Naming pattern for generated names.
                    *
                    * @default '{{name}}WebhookRequest'
                    */
@@ -378,11 +374,10 @@ export type UserConfig = Plugin.Name<'arktype'> &
   };
 
 export type Config = Plugin.Name<'arktype'> &
-  Plugin.Hooks & {
+  Plugin.Hooks &
+  IndexExportOption & {
     /**
-     * The casing convention to use for generated names.
-     *
-     * @default 'PascalCase'
+     * Casing convention for generated names.
      */
     case: Casing;
     /**
@@ -397,65 +392,20 @@ export type Config = Plugin.Name<'arktype'> &
      * Controls generation of shared Arktype schemas that can be referenced across
      * requests and responses.
      */
-    definitions: {
-      /**
-       * The casing convention to use for generated names.
-       *
-       * @default 'PascalCase'
-       */
-      case: Casing;
-      /**
-       * Whether to generate Arktype schemas for reusable definitions.
-       *
-       * @default true
-       */
-      enabled: boolean;
-      /**
-       * Custom naming pattern for generated schema names. The name variable is
-       * obtained from the schema name.
-       *
-       * @default '{{name}}'
-       */
-      name: NameTransformer;
-      /**
-       * Configuration for TypeScript type generation from Arktype schemas.
-       *
-       * Controls generation of TypeScript types based on the generated Arktype schemas.
-       */
-      types: {
+    definitions: NamingOptions &
+      FeatureToggle & {
         /**
-         * Configuration for `infer` types.
+         * Configuration for TypeScript type generation from Arktype schemas.
+         *
+         * Controls generation of TypeScript types based on the generated Arktype schemas.
          */
-        infer: {
+        types: {
           /**
-           * The casing convention to use for generated type names.
-           *
-           * @default 'PascalCase'
+           * Configuration for `infer` types.
            */
-          case: Casing;
-          /**
-           * Whether to generate TypeScript types from Arktype schemas.
-           *
-           * @default true
-           */
-          enabled: boolean;
-          /**
-           * Custom naming pattern for generated type names. The name variable is
-           * obtained from the Arktype schema name.
-           *
-           * @default '{{name}}'
-           */
-          name: NameTransformer;
+          infer: NamingOptions & FeatureToggle;
         };
       };
-    };
-    /**
-     * Should the exports from the generated files be re-exported in the index
-     * barrel file?
-     *
-     * @default false
-     */
-    exportFromIndex: boolean;
     /**
      * Enable Arktype metadata support? It's often useful to associate a schema with
      * some additional metadata for documentation, code generation, AI
@@ -470,116 +420,40 @@ export type Config = Plugin.Name<'arktype'> &
      * Controls generation of Arktype schemas for request bodies, query parameters, path
      * parameters, and headers.
      */
-    requests: {
-      /**
-       * The casing convention to use for generated names.
-       *
-       * @default 'PascalCase'
-       */
-      case: Casing;
-      /**
-       * Whether to generate Arktype schemas for request definitions.
-       *
-       * @default true
-       */
-      enabled: boolean;
-      /**
-       * Custom naming pattern for generated schema names. The name variable is
-       * obtained from the operation name.
-       *
-       * @default '{{name}}Data'
-       */
-      name: NameTransformer;
-      /**
-       * Configuration for TypeScript type generation from Arktype schemas.
-       *
-       * Controls generation of TypeScript types based on the generated Arktype schemas.
-       */
-      types: {
+    requests: NamingOptions &
+      FeatureToggle & {
         /**
-         * Configuration for `infer` types.
+         * Configuration for TypeScript type generation from Arktype schemas.
+         *
+         * Controls generation of TypeScript types based on the generated Arktype schemas.
          */
-        infer: {
+        types: {
           /**
-           * The casing convention to use for generated type names.
-           *
-           * @default 'PascalCase'
+           * Configuration for `infer` types.
            */
-          case: Casing;
-          /**
-           * Whether to generate TypeScript types from Arktype schemas.
-           *
-           * @default true
-           */
-          enabled: boolean;
-          /**
-           * Custom naming pattern for generated type names. The name variable is
-           * obtained from the Arktype schema name.
-           *
-           * @default '{{name}}Data'
-           */
-          name: NameTransformer;
+          infer: NamingOptions & FeatureToggle;
         };
       };
-    };
     /**
      * Configuration for response-specific Arktype schemas.
      *
      * Controls generation of Arktype schemas for response bodies, error responses,
      * and status codes.
      */
-    responses: {
-      /**
-       * The casing convention to use for generated names.
-       *
-       * @default 'PascalCase'
-       */
-      case: Casing;
-      /**
-       * Whether to generate Arktype schemas for response definitions.
-       *
-       * @default true
-       */
-      enabled: boolean;
-      /**
-       * Custom naming pattern for generated schema names. The name variable is
-       * obtained from the operation name.
-       *
-       * @default '{{name}}Response'
-       */
-      name: NameTransformer;
-      /**
-       * Configuration for TypeScript type generation from Arktype schemas.
-       *
-       * Controls generation of TypeScript types based on the generated Arktype schemas.
-       */
-      types: {
+    responses: NamingOptions &
+      FeatureToggle & {
         /**
-         * Configuration for `infer` types.
+         * Configuration for TypeScript type generation from Arktype schemas.
+         *
+         * Controls generation of TypeScript types based on the generated Arktype schemas.
          */
-        infer: {
+        types: {
           /**
-           * The casing convention to use for generated type names.
-           *
-           * @default 'PascalCase'
+           * Configuration for `infer` types.
            */
-          case: Casing;
-          /**
-           * Whether to generate TypeScript types from Arktype schemas.
-           *
-           * @default true
-           */
-          enabled: boolean;
-          /**
-           * Custom naming pattern for generated type names. The name variable is
-           * obtained from the Arktype schema name.
-           *
-           * @default '{{name}}Response'
-           */
-          name: NameTransformer;
+          infer: NamingOptions & FeatureToggle;
         };
       };
-    };
     /**
      * Configuration for TypeScript type generation from Arktype schemas.
      *
@@ -589,19 +463,11 @@ export type Config = Plugin.Name<'arktype'> &
       /**
        * Configuration for `infer` types.
        */
-      infer: {
+      infer: FeatureToggle & {
         /**
-         * The casing convention to use for generated type names.
-         *
-         * @default 'PascalCase'
+         * Casing convention for generated names.
          */
         case: Casing;
-        /**
-         * Whether to generate TypeScript types from Arktype schemas.
-         *
-         * @default true
-         */
-        enabled: boolean;
       };
     };
     /**
@@ -609,58 +475,20 @@ export type Config = Plugin.Name<'arktype'> &
      *
      * Controls generation of Arktype schemas for webhook payloads.
      */
-    webhooks: {
-      /**
-       * The casing convention to use for generated names.
-       *
-       * @default 'PascalCase'
-       */
-      case: Casing;
-      /**
-       * Whether to generate Arktype schemas for webhook definitions.
-       *
-       * @default true
-       */
-      enabled: boolean;
-      /**
-       * Custom naming pattern for generated schema names. The name variable is
-       * is obtained from the webhook key.
-       *
-       * @default '{{name}}WebhookRequest'
-       */
-      name: NameTransformer;
-      /**
-       * Configuration for TypeScript type generation from Arktype schemas.
-       *
-       * Controls generation of TypeScript types based on the generated Arktype schemas.
-       */
-      types: {
+    webhooks: NamingOptions &
+      FeatureToggle & {
         /**
-         * Configuration for `infer` types.
+         * Configuration for TypeScript type generation from Arktype schemas.
+         *
+         * Controls generation of TypeScript types based on the generated Arktype schemas.
          */
-        infer: {
+        types: {
           /**
-           * The casing convention to use for generated type names.
-           *
-           * @default 'PascalCase'
+           * Configuration for `infer` types.
            */
-          case: Casing;
-          /**
-           * Whether to generate TypeScript types from Arktype schemas.
-           *
-           * @default true
-           */
-          enabled: boolean;
-          /**
-           * Custom naming pattern for generated type names. The name variable is
-           * obtained from the Arktype schema name.
-           *
-           * @default '{{name}}WebhookRequest'
-           */
-          name: NameTransformer;
+          infer: NamingOptions & FeatureToggle;
         };
       };
-    };
   };
 
 export type ArktypePlugin = DefinePlugin<UserConfig, Config, IApi>;
