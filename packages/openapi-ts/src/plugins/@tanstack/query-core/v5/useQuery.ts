@@ -31,10 +31,7 @@ export const createUseQuery = ({
     applyNaming(operation.id, plugin.config.useQuery),
   );
 
-  const symbolUseQuery = plugin.referenceSymbol({
-    category: 'external',
-    resource: `${plugin.name}.useQuery`,
-  });
+  const symbolUseQuery = plugin.external(`${plugin.name}.useQuery`);
 
   const isRequiredOptions = isOperationOptionsRequired({
     context: plugin.context,

@@ -49,12 +49,7 @@ export const createTypeOptions = ({
         t
           .generic('TComposable', (g) =>
             g
-              .extends(
-                plugin.referenceSymbol({
-                  category: 'external',
-                  resource: 'client.Composable',
-                }),
-              )
+              .extends(plugin.external('client.Composable'))
               .default($.type.literal('$fetch')),
           )
           .generic('TData', (g) =>

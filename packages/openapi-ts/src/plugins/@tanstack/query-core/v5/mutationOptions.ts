@@ -15,10 +15,9 @@ export const createMutationOptions = ({
   operation: IR.OperationObject;
   plugin: PluginInstance;
 }): void => {
-  const symbolMutationOptionsType = plugin.referenceSymbol({
-    category: 'external',
-    resource: `${plugin.name}.MutationOptions`,
-  });
+  const symbolMutationOptionsType = plugin.external(
+    `${plugin.name}.MutationOptions`,
+  );
 
   const typeData = useTypeData({ operation, plugin });
   const mutationType = $.type(symbolMutationOptionsType)

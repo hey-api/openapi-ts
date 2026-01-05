@@ -46,10 +46,7 @@ export const createQueryOptions = ({
     createQueryKeyFunction({ plugin });
   }
 
-  const symbolQueryOptions = plugin.referenceSymbol({
-    category: 'external',
-    resource: `${plugin.name}.queryOptions`,
-  });
+  const symbolQueryOptions = plugin.external(`${plugin.name}.queryOptions`);
 
   const symbolQueryKey = plugin.symbol(
     applyNaming(operation.id, plugin.config.queryKeys),

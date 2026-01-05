@@ -9,11 +9,7 @@ export const voidToAst = ({
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'void'>;
 }) => {
-  const v = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'valibot.v',
-  });
-
+  const v = plugin.external('valibot.v');
   const expression = $(v).attr(identifiers.schemas.void).call();
   return expression;
 };

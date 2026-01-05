@@ -21,10 +21,7 @@ export const exportAst = ({
   symbol: Symbol;
   typeInferSymbol: Symbol | undefined;
 }): void => {
-  const type = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'arktype.type',
-  });
+  const type = plugin.external('arktype.type');
 
   const statement = $.const(symbol)
     .export()
