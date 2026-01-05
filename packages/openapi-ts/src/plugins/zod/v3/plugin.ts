@@ -34,10 +34,7 @@ export const irSchemaToAst = ({
 }): Ast => {
   let ast: Partial<Ast> = {};
 
-  const z = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'zod.z',
-  });
+  const z = plugin.external('zod.z');
 
   if (schema.$ref) {
     const query: SymbolMeta = {

@@ -21,10 +21,7 @@ export const exportAst = ({
   symbol: Symbol;
   typeInferSymbol: Symbol | undefined;
 }): void => {
-  const z = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'zod.z',
-  });
+  const z = plugin.external('zod.z');
 
   const statement = $.const(symbol)
     .export()

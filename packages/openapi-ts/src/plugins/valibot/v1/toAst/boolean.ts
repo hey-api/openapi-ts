@@ -13,10 +13,7 @@ export const booleanToAst = ({
 }): ReturnType<typeof $.call | typeof $.expr> => {
   const pipes: Array<ReturnType<typeof $.call>> = [];
 
-  const v = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'valibot.v',
-  });
+  const v = plugin.external('valibot.v');
 
   if (typeof schema.const === 'boolean') {
     pipes.push(

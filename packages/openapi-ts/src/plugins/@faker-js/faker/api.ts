@@ -7,25 +7,38 @@ export type IApi = {
   /**
    * Generate a Faker expression for a schema.
    *
-   * Returns an expression that, when executed, produces a valid instance.
-   */
-  generateValue(schema: IR.SchemaObject): Expression;
-  /**
-   * Get a reference to an exported generator function.
+   * Returns an expression that produces a valid instance when executed.
+   * Use when you need one-off generation without referencing shared artifacts.
    *
-   * Returns an identifier that can be called, e.g., `fakeUser()`
+   * @example
+   * ```ts
+   * {
+   *   name: faker.person.fullName(),
+   *   email: faker.internet.email()
+   * }
+   * ```
    */
-  getGeneratorRef(schema: IR.SchemaObject): Expression;
+  toNode(schema: IR.SchemaObject): Expression;
+  /**
+   * Get a reference to a generated Faker expression for a schema.
+   *
+   * Returns a call expression referencing the shared artifact.
+   * If the artifact doesn't exist, it will be created.
+   *
+   * @example
+   * // Returns: fakeUser()
+   */
+  toNodeRef(schema: IR.SchemaObject): Expression;
 };
 
 export class Api implements IApi {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  generateValue(_schema: IR.SchemaObject): Expression {
+  toNode(_schema: IR.SchemaObject): Expression {
     return undefined as any;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  getGeneratorRef(_schema: IR.SchemaObject): Expression {
+  toNodeRef(_schema: IR.SchemaObject): Expression {
     return undefined as any;
   }
 }

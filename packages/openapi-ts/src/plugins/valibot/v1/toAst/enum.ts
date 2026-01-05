@@ -35,10 +35,7 @@ export const enumToAst = ({
     });
   }
 
-  const v = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'valibot.v',
-  });
+  const v = plugin.external('valibot.v');
 
   let resultExpression = $(v)
     .attr(identifiers.schemas.picklist)

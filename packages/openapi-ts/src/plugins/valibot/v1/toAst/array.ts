@@ -21,10 +21,7 @@ export const arrayToAst = ({
     pipes: [],
   };
 
-  const v = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'valibot.v',
-  });
+  const v = plugin.external('valibot.v');
   const functionName = $(v).attr(identifiers.schemas.array);
 
   if (!schema.items) {

@@ -144,14 +144,10 @@ export const createInfiniteQueryOptions = ({
     createInfiniteParamsFunction({ plugin });
   }
 
-  const symbolInfiniteQueryOptions = plugin.referenceSymbol({
-    category: 'external',
-    resource: `${plugin.name}.infiniteQueryOptions`,
-  });
-  const symbolInfiniteDataType = plugin.referenceSymbol({
-    category: 'external',
-    resource: `${plugin.name}.InfiniteData`,
-  });
+  const symbolInfiniteQueryOptions = plugin.external(
+    `${plugin.name}.infiniteQueryOptions`,
+  );
+  const symbolInfiniteDataType = plugin.external(`${plugin.name}.InfiniteData`);
 
   const typeData = useTypeData({ operation, plugin });
   const typeResponse = useTypeResponse({ operation, plugin });
