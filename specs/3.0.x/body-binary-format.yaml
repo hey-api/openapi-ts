@@ -1,0 +1,47 @@
+openapi: 3.0.0
+info:
+  title: OpenAPI 3.0.0 binary format body example
+  version: 1
+paths:
+  /upload-zip:
+    post:
+      summary: Upload a zip file
+      operationId: uploadZip
+      requestBody:
+        required: true
+        content:
+          application/zip:
+            schema:
+              type: string
+              format: binary
+      responses:
+        '204':
+          description: Successfully uploaded
+  /upload-pdf:
+    post:
+      summary: Upload a PDF file
+      operationId: uploadPdf
+      requestBody:
+        required: true
+        content:
+          application/pdf:
+            schema:
+              type: string
+              format: binary
+      responses:
+        '204':
+          description: Successfully uploaded
+  /upload-binary:
+    post:
+      summary: Upload binary data
+      operationId: uploadBinary
+      requestBody:
+        required: true
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+      responses:
+        '204':
+          description: Successfully uploaded
