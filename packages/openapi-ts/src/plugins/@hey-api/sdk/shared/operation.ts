@@ -253,7 +253,7 @@ export const operationStatements = ({
 
   if (operation.body) {
     // Check if body has binary format - if so, don't use JSON serializer
-    const isBinaryFormat = operation.body.schema.format === 'binary';
+    const isBinaryFormat = operation.body.schema?.format === 'binary';
 
     switch (operation.body.type) {
       case 'form-data': {
