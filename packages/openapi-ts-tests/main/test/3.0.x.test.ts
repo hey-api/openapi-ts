@@ -170,6 +170,18 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'body-binary-format.yaml',
+        output: 'body-binary-format',
+        plugins: [
+          '@hey-api/client-fetch',
+          '@hey-api/typescript',
+          '@hey-api/sdk',
+        ],
+      }),
+      description: 'handles binary format request body',
+    },
+    {
+      config: createConfig({
         input: 'content-types.yaml',
         output: 'content-types',
         plugins: [
