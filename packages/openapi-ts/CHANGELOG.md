@@ -1,5 +1,17 @@
 # @hey-api/openapi-ts
 
+## 0.90.2
+
+### Patch Changes
+
+- **build**: do not minify bundles for better code readability and debugging ([#3186](https://github.com/hey-api/openapi-ts/pull/3186)) ([`4d46130`](https://github.com/hey-api/openapi-ts/commit/4d46130b53d9d8d5d3c178343a1b4fc3645b2628)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(@hey-api/sdk)**: fix: do not use bodySerializer if format is binary ([#3190](https://github.com/hey-api/openapi-ts/pull/3190)) ([`dc28c4c`](https://github.com/hey-api/openapi-ts/commit/dc28c4c6504724104bdef01332b9e3eb52ba3333)) by [@mrlubos](https://github.com/mrlubos)
+
+### Updated Dependencies:
+
+- @hey-api/codegen-core@0.5.2
+
 ## 0.90.1
 
 ### Patch Changes
