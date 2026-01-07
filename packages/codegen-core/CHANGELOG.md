@@ -1,5 +1,11 @@
 # @hey-api/codegen-core
 
+## 0.5.2
+
+### Patch Changes
+
+- **build**: do not minify bundles for better code readability and debugging ([#3186](https://github.com/hey-api/openapi-ts/pull/3186)) ([`4d46130`](https://github.com/hey-api/openapi-ts/commit/4d46130b53d9d8d5d3c178343a1b4fc3645b2628)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
 ## 0.5.1
 
 ### Patch Changes
