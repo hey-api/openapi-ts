@@ -252,6 +252,9 @@ export const operationStatements = ({
   const reqOptions = $.object();
 
   if (operation.body) {
+    // Check if body has binary format - if so, don't use JSON serializer
+    const isBinaryFormat = operation.body.schema.format === 'binary';
+
     switch (operation.body.type) {
       case 'form-data': {
         const symbol = plugin.external('client.formDataBodySerializer');
@@ -260,6 +263,10 @@ export const operationStatements = ({
       }
       case 'json':
         // jsonBodySerializer is the default, no need to specify
+        // unless the schema has binary format
+        if (isBinaryFormat) {
+          reqOptions.prop('bodySerializer', $.literal(null));
+        }
         break;
       case 'text':
       case 'octet-stream':
@@ -271,6 +278,12 @@ export const operationStatements = ({
         reqOptions.spread(symbol);
         break;
       }
+      default:
+        // For unrecognized media types with binary format, don't use JSON serializer
+        if (isBinaryFormat) {
+          reqOptions.prop('bodySerializer', $.literal(null));
+        }
+        break;
     }
   }
 
