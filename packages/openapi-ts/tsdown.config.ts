@@ -13,7 +13,7 @@ const replaceCoreImports = (filePath: string) => {
   fs.writeFileSync(filePath, content, 'utf8');
 };
 
-export default defineConfig((options) => ({
+export default defineConfig({
   banner(ctx) {
     /**
      * fix dynamic require in ESM
@@ -31,7 +31,7 @@ export default defineConfig((options) => ({
   dts: true,
   entry: ['./src/{index,internal,run}.ts'],
   format: ['cjs', 'esm'],
-  minify: !options.watch,
+  minify: false,
   onSuccess: async () => {
     // Copy client files to dist folder for runtime access
     const pluginNames = [
@@ -74,4 +74,4 @@ export default defineConfig((options) => ({
   shims: false,
   sourcemap: true,
   treeshake: true,
-}));
+});
