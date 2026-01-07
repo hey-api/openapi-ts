@@ -1,2 +1,544 @@
-const e=async(e,t)=>{let n=typeof t==`function`?await t(e):t;if(n)return e.scheme===`bearer`?`Bearer ${n}`:e.scheme===`basic`?`Basic ${btoa(n)}`:n},t=(e,t,n)=>{typeof n==`string`||n instanceof Blob?e.append(t,n):e.append(t,JSON.stringify(n))},n=(e,t,n)=>{typeof n==`string`?e.append(t,n):e.append(t,JSON.stringify(n))},r={bodySerializer:e=>{let n=new FormData;return Object.entries(e).forEach(([e,r])=>{r!=null&&(Array.isArray(r)?r.forEach(r=>t(n,e,r)):t(n,e,r))}),n}},i={bodySerializer:e=>JSON.stringify(e,(e,t)=>typeof t==`bigint`?t.toString():t)},a={bodySerializer:e=>{let t=new URLSearchParams;return Object.entries(e).forEach(([e,r])=>{r!=null&&(Array.isArray(r)?r.forEach(r=>n(t,e,r)):n(t,e,r))}),t.toString()}},o=e=>{switch(e){case`label`:return`.`;case`matrix`:return`;`;case`simple`:return`,`;default:return`&`}},s=e=>{switch(e){case`form`:return`,`;case`pipeDelimited`:return`|`;case`spaceDelimited`:return`%20`;default:return`,`}},c=e=>{switch(e){case`label`:return`.`;case`matrix`:return`;`;case`simple`:return`,`;default:return`&`}},l=({allowReserved:e,explode:t,name:n,style:r,value:i})=>{if(!t){let t=(e?i:i.map(e=>encodeURIComponent(e))).join(s(r));switch(r){case`label`:return`.${t}`;case`matrix`:return`;${n}=${t}`;case`simple`:return t;default:return`${n}=${t}`}}let a=o(r),c=i.map(t=>r===`label`||r===`simple`?e?t:encodeURIComponent(t):u({allowReserved:e,name:n,value:t})).join(a);return r===`label`||r===`matrix`?a+c:c},u=({allowReserved:e,name:t,value:n})=>{if(n==null)return``;if(typeof n==`object`)throw Error("Deeply-nested arrays/objects aren’t supported. Provide your own `querySerializer()` to handle these.");return`${t}=${e?n:encodeURIComponent(n)}`},d=({allowReserved:e,explode:t,name:n,style:r,value:i,valueOnly:a})=>{if(i instanceof Date)return a?i.toISOString():`${n}=${i.toISOString()}`;if(r!==`deepObject`&&!t){let t=[];Object.entries(i).forEach(([n,r])=>{t=[...t,n,e?r:encodeURIComponent(r)]});let a=t.join(`,`);switch(r){case`form`:return`${n}=${a}`;case`label`:return`.${a}`;case`matrix`:return`;${n}=${a}`;default:return a}}let o=c(r),s=Object.entries(i).map(([t,i])=>u({allowReserved:e,name:r===`deepObject`?`${n}[${t}]`:t,value:i})).join(o);return r===`label`||r===`matrix`?o+s:s},f=/\{[^{}]+\}/g,p=({path:e,url:t})=>{let n=t,r=t.match(f);if(r)for(let t of r){let r=!1,i=t.substring(1,t.length-1),a=`simple`;i.endsWith(`*`)&&(r=!0,i=i.substring(0,i.length-1)),i.startsWith(`.`)?(i=i.substring(1),a=`label`):i.startsWith(`;`)&&(i=i.substring(1),a=`matrix`);let o=e[i];if(o==null)continue;if(Array.isArray(o)){n=n.replace(t,l({explode:r,name:i,style:a,value:o}));continue}if(typeof o==`object`){n=n.replace(t,d({explode:r,name:i,style:a,value:o,valueOnly:!0}));continue}if(a===`matrix`){n=n.replace(t,`;${u({name:i,value:o})}`);continue}let s=encodeURIComponent(a===`label`?`.${o}`:o);n=n.replace(t,s)}return n},m=({allowReserved:e,array:t,object:n}={})=>r=>{let i=[];if(r&&typeof r==`object`)for(let a in r){let o=r[a];if(o!=null)if(Array.isArray(o)){let n=l({allowReserved:e,explode:!0,name:a,style:`form`,value:o,...t});n&&i.push(n)}else if(typeof o==`object`){let t=d({allowReserved:e,explode:!0,name:a,style:`deepObject`,value:o,...n});t&&i.push(t)}else{let t=u({allowReserved:e,name:a,value:o});t&&i.push(t)}}return i.join(`&`)},h=e=>{if(!e)return`stream`;let t=e.split(`;`)[0]?.trim();if(t){if(t.startsWith(`application/json`)||t.endsWith(`+json`))return`json`;if(t===`multipart/form-data`)return`formData`;if([`application/`,`audio/`,`image/`,`video/`].some(e=>t.startsWith(e)))return`blob`;if(t.startsWith(`text/`))return`text`}},g=(e,t)=>t?!!(e.headers.has(t)||e.query?.[t]||e.headers.get(`Cookie`)?.includes(`${t}=`)):!1,_=async({security:t,...n})=>{for(let r of t){if(g(n,r.name))continue;let t=await e(r,n.auth);if(!t)continue;let i=r.name??`Authorization`;switch(r.in){case`query`:n.query||={},n.query[i]=t;break;case`cookie`:n.headers.append(`Cookie`,`${i}=${t}`);break;case`header`:default:n.headers.set(i,t);break}}},v=e=>y({baseUrl:e.baseUrl,path:e.path,query:e.query,querySerializer:typeof e.querySerializer==`function`?e.querySerializer:m(e.querySerializer),url:e.url}),y=({baseUrl:e,path:t,query:n,querySerializer:r,url:i})=>{let a=i.startsWith(`/`)?i:`/${i}`,o=(e??``)+a;t&&(o=p({path:t,url:o}));let s=n?r(n):``;return s.startsWith(`?`)&&(s=s.substring(1)),s&&(o+=`?${s}`),o},b=(e,t)=>{let n={...e,...t};return n.baseUrl?.endsWith(`/`)&&(n.baseUrl=n.baseUrl.substring(0,n.baseUrl.length-1)),n.headers=x(e.headers,t.headers),n},x=(...e)=>{let t=new Headers;for(let n of e){if(!n||typeof n!=`object`)continue;let e=n instanceof Headers?n.entries():Object.entries(n);for(let[n,r]of e)if(r===null)t.delete(n);else if(Array.isArray(r))for(let e of r)t.append(n,e);else r!==void 0&&t.set(n,typeof r==`object`?JSON.stringify(r):r)}return t};var S=class{fns=[];clear(){this.fns=[]}eject(e){let t=this.getInterceptorIndex(e);this.fns[t]&&(this.fns[t]=null)}exists(e){let t=this.getInterceptorIndex(e);return!!this.fns[t]}getInterceptorIndex(e){return typeof e==`number`?this.fns[e]?e:-1:this.fns.indexOf(e)}update(e,t){let n=this.getInterceptorIndex(e);return this.fns[n]?(this.fns[n]=t,e):!1}use(e){return this.fns.push(e),this.fns.length-1}};const C=()=>({error:new S,request:new S,response:new S}),w=m({allowReserved:!1,array:{explode:!0,style:`form`},object:{explode:!0,style:`deepObject`}}),T={"Content-Type":`application/json`},E=(e={})=>({...i,headers:T,parseAs:`auto`,querySerializer:w,...e}),D=(e={})=>{let t=b(E(),e),n=()=>({...t}),r=e=>(t=b(t,e),n()),i=C(),a=async e=>{let n={...t,...e,fetch:e.fetch??t.fetch??globalThis.fetch,headers:x(t.headers,e.headers)};n.security&&await _({...n,security:n.security}),n.requestValidator&&await n.requestValidator(n),n.body&&n.bodySerializer&&(n.body=n.bodySerializer(n.body)),(n.body===void 0||n.body===``)&&n.headers.delete(`Content-Type`);let r=v(n),a={redirect:`follow`,...n},o=new Request(r,a);for(let e of i.request.fns)e&&(o=await e(o,n));let s=n.fetch,c=await s(o);for(let e of i.response.fns)e&&(c=await e(c,o,n));let l={request:o,response:c};if(c.ok){if(c.status===204||c.headers.get(`Content-Length`)===`0`)return{data:{},...l};let e=(n.parseAs===`auto`?h(c.headers.get(`Content-Type`)):n.parseAs)??`json`,t;switch(e){case`arrayBuffer`:case`blob`:case`formData`:case`json`:case`text`:t=await c[e]();break;case`stream`:return{data:c.body,...l}}return e===`json`&&(n.responseValidator&&await n.responseValidator(t),n.responseTransformer&&(t=await n.responseTransformer(t))),{data:t,...l}}let u=await c.text();try{u=JSON.parse(u)}catch{}let d=u;for(let e of i.error.fns)e&&(d=await e(u,c,o,n));if(d||={},n.throwOnError)throw d;return{error:d,...l}};return{buildUrl:v,connect:e=>a({...e,method:`CONNECT`}),delete:e=>a({...e,method:`DELETE`}),get:e=>a({...e,method:`GET`}),getConfig:n,head:e=>a({...e,method:`HEAD`}),interceptors:i,options:e=>a({...e,method:`OPTIONS`}),patch:e=>a({...e,method:`PATCH`}),post:e=>a({...e,method:`POST`}),put:e=>a({...e,method:`PUT`}),request:a,setConfig:r,trace:e=>a({...e,method:`TRACE`})}},O=Object.entries({$body_:`body`,$headers_:`headers`,$path_:`path`,$query_:`query`}),k=(e,t)=>{t||=new Map;for(let n of e)`in`in n?n.key&&t.set(n.key,{in:n.in,map:n.map}):n.args&&k(n.args,t);return t},A=e=>{for(let[t,n]of Object.entries(e))n&&typeof n==`object`&&!Object.keys(n).length&&delete e[t]},j=(e,t)=>{let n={body:{},headers:{},path:{},query:{}},r=k(t),i;for(let[a,o]of e.entries())if(t[a]&&(i=t[a]),i)if(`in`in i)if(i.key){let e=r.get(i.key),t=e.map||i.key;n[e.in][t]=o}else n.body=o;else for(let[e,t]of Object.entries(o??{})){let a=r.get(e);if(a){let r=a.map||e;n[a.in][r]=t}else{let r=O.find(([t])=>e.startsWith(t));if(r){let[i,a]=r;n[a][e.slice(i.length)]=t}else for(let[r,a]of Object.entries(i.allowExtra??{}))if(a){n[r][e]=t;break}}}return A(n),n};exports.buildClientParams=j,exports.createClient=D,exports.createConfig=E,exports.formDataBodySerializer=r,exports.jsonBodySerializer=i,exports.urlSearchParamsBodySerializer=a;
+
+//#region src/core/auth.ts
+const getAuthToken = async (auth, callback) => {
+	const token = typeof callback === "function" ? await callback(auth) : callback;
+	if (!token) return;
+	if (auth.scheme === "bearer") return `Bearer ${token}`;
+	if (auth.scheme === "basic") return `Basic ${btoa(token)}`;
+	return token;
+};
+
+//#endregion
+//#region src/core/bodySerializer.ts
+const serializeFormDataPair = (data, key, value) => {
+	if (typeof value === "string" || value instanceof Blob) data.append(key, value);
+	else data.append(key, JSON.stringify(value));
+};
+const serializeUrlSearchParamsPair = (data, key, value) => {
+	if (typeof value === "string") data.append(key, value);
+	else data.append(key, JSON.stringify(value));
+};
+const formDataBodySerializer = { bodySerializer: (body) => {
+	const data = new FormData();
+	Object.entries(body).forEach(([key, value]) => {
+		if (value === void 0 || value === null) return;
+		if (Array.isArray(value)) value.forEach((v) => serializeFormDataPair(data, key, v));
+		else serializeFormDataPair(data, key, value);
+	});
+	return data;
+} };
+const jsonBodySerializer = { bodySerializer: (body) => JSON.stringify(body, (_key, value) => typeof value === "bigint" ? value.toString() : value) };
+const urlSearchParamsBodySerializer = { bodySerializer: (body) => {
+	const data = new URLSearchParams();
+	Object.entries(body).forEach(([key, value]) => {
+		if (value === void 0 || value === null) return;
+		if (Array.isArray(value)) value.forEach((v) => serializeUrlSearchParamsPair(data, key, v));
+		else serializeUrlSearchParamsPair(data, key, value);
+	});
+	return data.toString();
+} };
+
+//#endregion
+//#region src/core/pathSerializer.ts
+const separatorArrayExplode = (style) => {
+	switch (style) {
+		case "label": return ".";
+		case "matrix": return ";";
+		case "simple": return ",";
+		default: return "&";
+	}
+};
+const separatorArrayNoExplode = (style) => {
+	switch (style) {
+		case "form": return ",";
+		case "pipeDelimited": return "|";
+		case "spaceDelimited": return "%20";
+		default: return ",";
+	}
+};
+const separatorObjectExplode = (style) => {
+	switch (style) {
+		case "label": return ".";
+		case "matrix": return ";";
+		case "simple": return ",";
+		default: return "&";
+	}
+};
+const serializeArrayParam = ({ allowReserved, explode, name, style, value }) => {
+	if (!explode) {
+		const joinedValues$1 = (allowReserved ? value : value.map((v) => encodeURIComponent(v))).join(separatorArrayNoExplode(style));
+		switch (style) {
+			case "label": return `.${joinedValues$1}`;
+			case "matrix": return `;${name}=${joinedValues$1}`;
+			case "simple": return joinedValues$1;
+			default: return `${name}=${joinedValues$1}`;
+		}
+	}
+	const separator = separatorArrayExplode(style);
+	const joinedValues = value.map((v) => {
+		if (style === "label" || style === "simple") return allowReserved ? v : encodeURIComponent(v);
+		return serializePrimitiveParam({
+			allowReserved,
+			name,
+			value: v
+		});
+	}).join(separator);
+	return style === "label" || style === "matrix" ? separator + joinedValues : joinedValues;
+};
+const serializePrimitiveParam = ({ allowReserved, name, value }) => {
+	if (value === void 0 || value === null) return "";
+	if (typeof value === "object") throw new Error("Deeply-nested arrays/objects aren’t supported. Provide your own `querySerializer()` to handle these.");
+	return `${name}=${allowReserved ? value : encodeURIComponent(value)}`;
+};
+const serializeObjectParam = ({ allowReserved, explode, name, style, value, valueOnly }) => {
+	if (value instanceof Date) return valueOnly ? value.toISOString() : `${name}=${value.toISOString()}`;
+	if (style !== "deepObject" && !explode) {
+		let values = [];
+		Object.entries(value).forEach(([key, v]) => {
+			values = [
+				...values,
+				key,
+				allowReserved ? v : encodeURIComponent(v)
+			];
+		});
+		const joinedValues$1 = values.join(",");
+		switch (style) {
+			case "form": return `${name}=${joinedValues$1}`;
+			case "label": return `.${joinedValues$1}`;
+			case "matrix": return `;${name}=${joinedValues$1}`;
+			default: return joinedValues$1;
+		}
+	}
+	const separator = separatorObjectExplode(style);
+	const joinedValues = Object.entries(value).map(([key, v]) => serializePrimitiveParam({
+		allowReserved,
+		name: style === "deepObject" ? `${name}[${key}]` : key,
+		value: v
+	})).join(separator);
+	return style === "label" || style === "matrix" ? separator + joinedValues : joinedValues;
+};
+
+//#endregion
+//#region src/utils.ts
+const PATH_PARAM_RE = /\{[^{}]+\}/g;
+const defaultPathSerializer = ({ path, url: _url }) => {
+	let url = _url;
+	const matches = _url.match(PATH_PARAM_RE);
+	if (matches) for (const match of matches) {
+		let explode = false;
+		let name = match.substring(1, match.length - 1);
+		let style = "simple";
+		if (name.endsWith("*")) {
+			explode = true;
+			name = name.substring(0, name.length - 1);
+		}
+		if (name.startsWith(".")) {
+			name = name.substring(1);
+			style = "label";
+		} else if (name.startsWith(";")) {
+			name = name.substring(1);
+			style = "matrix";
+		}
+		const value = path[name];
+		if (value === void 0 || value === null) continue;
+		if (Array.isArray(value)) {
+			url = url.replace(match, serializeArrayParam({
+				explode,
+				name,
+				style,
+				value
+			}));
+			continue;
+		}
+		if (typeof value === "object") {
+			url = url.replace(match, serializeObjectParam({
+				explode,
+				name,
+				style,
+				value,
+				valueOnly: true
+			}));
+			continue;
+		}
+		if (style === "matrix") {
+			url = url.replace(match, `;${serializePrimitiveParam({
+				name,
+				value
+			})}`);
+			continue;
+		}
+		const replaceValue = encodeURIComponent(style === "label" ? `.${value}` : value);
+		url = url.replace(match, replaceValue);
+	}
+	return url;
+};
+const createQuerySerializer = ({ allowReserved, array, object } = {}) => {
+	const querySerializer = (queryParams) => {
+		const search = [];
+		if (queryParams && typeof queryParams === "object") for (const name in queryParams) {
+			const value = queryParams[name];
+			if (value === void 0 || value === null) continue;
+			if (Array.isArray(value)) {
+				const serializedArray = serializeArrayParam({
+					allowReserved,
+					explode: true,
+					name,
+					style: "form",
+					value,
+					...array
+				});
+				if (serializedArray) search.push(serializedArray);
+			} else if (typeof value === "object") {
+				const serializedObject = serializeObjectParam({
+					allowReserved,
+					explode: true,
+					name,
+					style: "deepObject",
+					value,
+					...object
+				});
+				if (serializedObject) search.push(serializedObject);
+			} else {
+				const serializedPrimitive = serializePrimitiveParam({
+					allowReserved,
+					name,
+					value
+				});
+				if (serializedPrimitive) search.push(serializedPrimitive);
+			}
+		}
+		return search.join("&");
+	};
+	return querySerializer;
+};
+/**
+* Infers parseAs value from provided Content-Type header.
+*/
+const getParseAs = (contentType) => {
+	if (!contentType) return "stream";
+	const cleanContent = contentType.split(";")[0]?.trim();
+	if (!cleanContent) return;
+	if (cleanContent.startsWith("application/json") || cleanContent.endsWith("+json")) return "json";
+	if (cleanContent === "multipart/form-data") return "formData";
+	if ([
+		"application/",
+		"audio/",
+		"image/",
+		"video/"
+	].some((type) => cleanContent.startsWith(type))) return "blob";
+	if (cleanContent.startsWith("text/")) return "text";
+};
+const checkForExistence = (options, name) => {
+	if (!name) return false;
+	if (options.headers.has(name) || options.query?.[name] || options.headers.get("Cookie")?.includes(`${name}=`)) return true;
+	return false;
+};
+const setAuthParams = async ({ security, ...options }) => {
+	for (const auth of security) {
+		if (checkForExistence(options, auth.name)) continue;
+		const token = await getAuthToken(auth, options.auth);
+		if (!token) continue;
+		const name = auth.name ?? "Authorization";
+		switch (auth.in) {
+			case "query":
+				if (!options.query) options.query = {};
+				options.query[name] = token;
+				break;
+			case "cookie":
+				options.headers.append("Cookie", `${name}=${token}`);
+				break;
+			case "header":
+			default:
+				options.headers.set(name, token);
+				break;
+		}
+	}
+};
+const buildUrl = (options) => {
+	return getUrl({
+		baseUrl: options.baseUrl,
+		path: options.path,
+		query: options.query,
+		querySerializer: typeof options.querySerializer === "function" ? options.querySerializer : createQuerySerializer(options.querySerializer),
+		url: options.url
+	});
+};
+const getUrl = ({ baseUrl, path, query, querySerializer, url: _url }) => {
+	const pathUrl = _url.startsWith("/") ? _url : `/${_url}`;
+	let url = (baseUrl ?? "") + pathUrl;
+	if (path) url = defaultPathSerializer({
+		path,
+		url
+	});
+	let search = query ? querySerializer(query) : "";
+	if (search.startsWith("?")) search = search.substring(1);
+	if (search) url += `?${search}`;
+	return url;
+};
+const mergeConfigs = (a, b) => {
+	const config = {
+		...a,
+		...b
+	};
+	if (config.baseUrl?.endsWith("/")) config.baseUrl = config.baseUrl.substring(0, config.baseUrl.length - 1);
+	config.headers = mergeHeaders(a.headers, b.headers);
+	return config;
+};
+const mergeHeaders = (...headers) => {
+	const mergedHeaders = new Headers();
+	for (const header of headers) {
+		if (!header || typeof header !== "object") continue;
+		const iterator = header instanceof Headers ? header.entries() : Object.entries(header);
+		for (const [key, value] of iterator) if (value === null) mergedHeaders.delete(key);
+		else if (Array.isArray(value)) for (const v of value) mergedHeaders.append(key, v);
+		else if (value !== void 0) mergedHeaders.set(key, typeof value === "object" ? JSON.stringify(value) : value);
+	}
+	return mergedHeaders;
+};
+var Interceptors = class {
+	fns = [];
+	clear() {
+		this.fns = [];
+	}
+	eject(id) {
+		const index = this.getInterceptorIndex(id);
+		if (this.fns[index]) this.fns[index] = null;
+	}
+	exists(id) {
+		const index = this.getInterceptorIndex(id);
+		return Boolean(this.fns[index]);
+	}
+	getInterceptorIndex(id) {
+		if (typeof id === "number") return this.fns[id] ? id : -1;
+		return this.fns.indexOf(id);
+	}
+	update(id, fn) {
+		const index = this.getInterceptorIndex(id);
+		if (this.fns[index]) {
+			this.fns[index] = fn;
+			return id;
+		}
+		return false;
+	}
+	use(fn) {
+		this.fns.push(fn);
+		return this.fns.length - 1;
+	}
+};
+const createInterceptors = () => ({
+	error: new Interceptors(),
+	request: new Interceptors(),
+	response: new Interceptors()
+});
+const defaultQuerySerializer = createQuerySerializer({
+	allowReserved: false,
+	array: {
+		explode: true,
+		style: "form"
+	},
+	object: {
+		explode: true,
+		style: "deepObject"
+	}
+});
+const defaultHeaders = { "Content-Type": "application/json" };
+const createConfig = (override = {}) => ({
+	...jsonBodySerializer,
+	headers: defaultHeaders,
+	parseAs: "auto",
+	querySerializer: defaultQuerySerializer,
+	...override
+});
+
+//#endregion
+//#region src/client.ts
+const createClient = (config = {}) => {
+	let _config = mergeConfigs(createConfig(), config);
+	const getConfig = () => ({ ..._config });
+	const setConfig = (config$1) => {
+		_config = mergeConfigs(_config, config$1);
+		return getConfig();
+	};
+	const interceptors = createInterceptors();
+	const request = async (options) => {
+		const opts = {
+			..._config,
+			...options,
+			fetch: options.fetch ?? _config.fetch ?? globalThis.fetch,
+			headers: mergeHeaders(_config.headers, options.headers)
+		};
+		if (opts.security) await setAuthParams({
+			...opts,
+			security: opts.security
+		});
+		if (opts.requestValidator) await opts.requestValidator(opts);
+		if (opts.body && opts.bodySerializer) opts.body = opts.bodySerializer(opts.body);
+		if (opts.body === void 0 || opts.body === "") opts.headers.delete("Content-Type");
+		const url = buildUrl(opts);
+		const requestInit = {
+			redirect: "follow",
+			...opts
+		};
+		let request$1 = new Request(url, requestInit);
+		for (const fn of interceptors.request.fns) if (fn) request$1 = await fn(request$1, opts);
+		const _fetch = opts.fetch;
+		let response = await _fetch(request$1);
+		for (const fn of interceptors.response.fns) if (fn) response = await fn(response, request$1, opts);
+		const result = {
+			request: request$1,
+			response
+		};
+		if (response.ok) {
+			if (response.status === 204 || response.headers.get("Content-Length") === "0") return {
+				data: {},
+				...result
+			};
+			const parseAs = (opts.parseAs === "auto" ? getParseAs(response.headers.get("Content-Type")) : opts.parseAs) ?? "json";
+			let data;
+			switch (parseAs) {
+				case "arrayBuffer":
+				case "blob":
+				case "formData":
+				case "json":
+				case "text":
+					data = await response[parseAs]();
+					break;
+				case "stream": return {
+					data: response.body,
+					...result
+				};
+			}
+			if (parseAs === "json") {
+				if (opts.responseValidator) await opts.responseValidator(data);
+				if (opts.responseTransformer) data = await opts.responseTransformer(data);
+			}
+			return {
+				data,
+				...result
+			};
+		}
+		let error = await response.text();
+		try {
+			error = JSON.parse(error);
+		} catch {}
+		let finalError = error;
+		for (const fn of interceptors.error.fns) if (fn) finalError = await fn(error, response, request$1, opts);
+		finalError = finalError || {};
+		if (opts.throwOnError) throw finalError;
+		return {
+			error: finalError,
+			...result
+		};
+	};
+	return {
+		buildUrl,
+		connect: (options) => request({
+			...options,
+			method: "CONNECT"
+		}),
+		delete: (options) => request({
+			...options,
+			method: "DELETE"
+		}),
+		get: (options) => request({
+			...options,
+			method: "GET"
+		}),
+		getConfig,
+		head: (options) => request({
+			...options,
+			method: "HEAD"
+		}),
+		interceptors,
+		options: (options) => request({
+			...options,
+			method: "OPTIONS"
+		}),
+		patch: (options) => request({
+			...options,
+			method: "PATCH"
+		}),
+		post: (options) => request({
+			...options,
+			method: "POST"
+		}),
+		put: (options) => request({
+			...options,
+			method: "PUT"
+		}),
+		request,
+		setConfig,
+		trace: (options) => request({
+			...options,
+			method: "TRACE"
+		})
+	};
+};
+
+//#endregion
+//#region src/core/params.ts
+const extraPrefixes = Object.entries({
+	$body_: "body",
+	$headers_: "headers",
+	$path_: "path",
+	$query_: "query"
+});
+const buildKeyMap = (fields, map) => {
+	if (!map) map = /* @__PURE__ */ new Map();
+	for (const config of fields) if ("in" in config) {
+		if (config.key) map.set(config.key, {
+			in: config.in,
+			map: config.map
+		});
+	} else if (config.args) buildKeyMap(config.args, map);
+	return map;
+};
+const stripEmptySlots = (params) => {
+	for (const [slot, value] of Object.entries(params)) if (value && typeof value === "object" && !Object.keys(value).length) delete params[slot];
+};
+const buildClientParams = (args, fields) => {
+	const params = {
+		body: {},
+		headers: {},
+		path: {},
+		query: {}
+	};
+	const map = buildKeyMap(fields);
+	let config;
+	for (const [index, arg] of args.entries()) {
+		if (fields[index]) config = fields[index];
+		if (!config) continue;
+		if ("in" in config) if (config.key) {
+			const field = map.get(config.key);
+			const name = field.map || config.key;
+			params[field.in][name] = arg;
+		} else params.body = arg;
+		else for (const [key, value] of Object.entries(arg ?? {})) {
+			const field = map.get(key);
+			if (field) {
+				const name = field.map || key;
+				params[field.in][name] = value;
+			} else {
+				const extra = extraPrefixes.find(([prefix]) => key.startsWith(prefix));
+				if (extra) {
+					const [prefix, slot] = extra;
+					params[slot][key.slice(prefix.length)] = value;
+				} else for (const [slot, allowed] of Object.entries(config.allowExtra ?? {})) if (allowed) {
+					params[slot][key] = value;
+					break;
+				}
+			}
+		}
+	}
+	stripEmptySlots(params);
+	return params;
+};
+
+//#endregion
+exports.buildClientParams = buildClientParams;
+exports.createClient = createClient;
+exports.createConfig = createConfig;
+exports.formDataBodySerializer = formDataBodySerializer;
+exports.jsonBodySerializer = jsonBodySerializer;
+exports.urlSearchParamsBodySerializer = urlSearchParamsBodySerializer;
 //# sourceMappingURL=index.cjs.map
