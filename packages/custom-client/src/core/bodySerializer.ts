@@ -50,6 +50,10 @@ export const formDataBodySerializer = {
   bodySerializer: <T extends Record<string, any> | Array<Record<string, any>>>(
     body: T,
   ): FormData => {
+    if (body instanceof FormData) {
+      return body;
+    }
+    
     const data = new FormData();
 
     Object.entries(body).forEach(([key, value]) => {
