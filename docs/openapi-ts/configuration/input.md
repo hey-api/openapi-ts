@@ -164,5 +164,19 @@ npx @hey-api/openapi-ts \
 
 :::
 
+If your server doesn't support `HEAD` requests for incremental checks, you can pass an object to `input.watch` and disable them explicitly:
+
+```js
+export default {
+  input: {
+    path: 'https://api.example.com/openapi.json',
+    watch: {
+      enabled: true,
+      isHeadMethodSupported: false,
+    },
+  },
+};
+```
+
 <!--@include: ../../partials/examples.md-->
 <!--@include: ../../partials/sponsors.md-->

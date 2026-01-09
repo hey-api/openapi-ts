@@ -250,9 +250,19 @@ export const createClient = async ({
 }): Promise<Context | undefined> => {
   const watches: ReadonlyArray<WatchValues> =
     _watches ||
-    Array.from({ length: config.input.length }, () => ({
-      headers: new Headers(),
-    }));
+    Array.from({ length: config.input.length }, (_, index) => {
+      const watchValues: WatchValues = {
+        headers: new Headers(),
+      };
+
+      const isHeadMethodSupported =
+        config.input[index]?.watch.isHeadMethodSupported;
+      if (isHeadMethodSupported !== undefined) {
+        watchValues.isHeadMethodSupported = isHeadMethodSupported;
+      }
+
+      return watchValues;
+    });
 
   const inputPaths = config.input.map((input) => compileInputPath(input));
 
