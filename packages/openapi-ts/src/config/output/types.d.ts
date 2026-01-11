@@ -8,11 +8,14 @@ import type { MaybeArray, MaybeFunc } from '~/types/utils';
 import type { Casing, NameTransformer } from '~/utils/naming';
 
 import type { NamingOptions } from '../shared';
+import type {
+  Formatters,
+  Linters,
+  PostProcessor,
+  PostProcessorPreset,
+  UserPostProcessor,
+} from './postprocess';
 import type { SourceConfig, UserSourceConfig } from './source/types';
-
-export type Formatters = 'biome' | 'prettier';
-
-export type Linters = 'biome' | 'eslint' | 'oxlint';
 
 type ImportFileExtensions = '.js' | '.ts';
 
@@ -76,6 +79,7 @@ export type UserOutput = {
    * Which formatter to use to process output folder?
    *
    * @default null
+   * @deprecated Use `postProcess` instead.
    */
   format?: Formatters | null;
   /**
@@ -103,6 +107,7 @@ export type UserOutput = {
    * Which linter to use to process output folder?
    *
    * @default null
+   * @deprecated Use `postProcess` instead.
    */
   lint?: Linters | null;
   /**
@@ -114,6 +119,18 @@ export type UserOutput = {
    * The absolute path to the output folder.
    */
   path: string;
+  /**
+   * Post-processing commands to run on the output folder, executed in order.
+   *
+   * Use preset strings for common tools, or provide custom configurations.
+   *
+   * @example ['biome:lint', 'prettier']
+   * @example [{ command: 'dprint', args: ['fmt', '{{path}}'] }]
+   * @example ['eslint', { command: 'prettier', args: ['{{path}}', '--write'] }]
+   *
+   * @default []
+   */
+  postProcess?: ReadonlyArray<PostProcessorPreset | UserPostProcessor>;
   /**
    * Whether `export * from 'module'` should be used when possible
    * instead of named exports.
@@ -214,6 +231,10 @@ export type Output = {
    * The absolute path to the output folder.
    */
   path: string;
+  /**
+   * Post-processing commands to run on the output folder, executed in order.
+   */
+  postProcess: ReadonlyArray<PostProcessor>;
   /**
    * Whether `export * from 'module'` should be used when possible
    * instead of named exports.

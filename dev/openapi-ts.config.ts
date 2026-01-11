@@ -116,7 +116,6 @@ export default defineConfig(() => {
           //   // name: '{{name}}.renamed',
           //   suffix: '.meh',
           // },
-          // format: 'prettier',
           // header: null,
           header: [
             '/* eslint-disable */',
@@ -124,12 +123,12 @@ export default defineConfig(() => {
           ],
           // importFileExtension: '.js',
           // indexFile: false,
-          // lint: 'eslint',
           // nameConflictResolver({ attempt, baseName }) {
           //   // console.log('resolving conflict for:', { attempt, baseName });
           //   return attempt === 0 ? baseName : `${baseName}_N${attempt + 1}`;
           // },
           path: path.resolve(__dirname, '.gen'),
+          postProcess: ['eslint'],
           // preferExportAll: true,
           resolveModuleName: (moduleName) => {
             if (moduleName === 'valibot') {
