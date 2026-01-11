@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.90.3
+
+### Patch Changes
+
+- **output**: add `oxfmt` preset ([#3197](https://github.com/hey-api/openapi-ts/pull/3197)) ([`701a69c`](https://github.com/hey-api/openapi-ts/commit/701a69cae24d3068235d80561e2cf9d18d7ccac9)) by [@mrlubos](https://github.com/mrlubos)
+
 ## 0.90.2
 
 ### Patch Changes
