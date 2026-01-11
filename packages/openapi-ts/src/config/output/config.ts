@@ -1,10 +1,14 @@
+import { log } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { findTsConfigPath, loadTsConfig } from '~/generate/tsConfig';
 import type { Config, UserConfig } from '~/types/config';
 
 import { valueToObject } from '../utils/config';
+import type { PostProcessor, UserPostProcessor } from './postprocess';
+import { postProcessors } from './postprocess';
 import { resolveSource } from './source/config';
+import type { UserOutput } from './types';
 
 export function getOutput(userConfig: UserConfig): Config['output'] {
   if (userConfig.output instanceof Array) {
@@ -12,6 +16,13 @@ export function getOutput(userConfig: UserConfig): Config['output'] {
       'Unexpected array of outputs in user configuration. This should have been expanded already.',
     );
   }
+
+  const userOutput =
+    typeof userConfig.output === 'string'
+      ? { path: userConfig.output }
+      : (userConfig.output ?? {});
+
+  const legacyPostProcess = resolveLegacyPostProcess(userOutput);
 
   const output = valueToObject({
     defaultValue: {
@@ -26,6 +37,7 @@ export function getOutput(userConfig: UserConfig): Config['output'] {
       indexFile: true,
       lint: null,
       path: '',
+      postProcess: [],
       preferExportAll: false,
     },
     mappers: {
@@ -45,9 +57,8 @@ export function getOutput(userConfig: UserConfig): Config['output'] {
           value: fields.fileName,
         }),
       }),
-      string: (path) => ({ path }),
     },
-    value: userConfig.output,
+    value: userOutput,
   }) as Config['output'];
   output.tsConfig = loadTsConfig(findTsConfigPath(output.tsConfigPath));
   if (
@@ -65,6 +76,69 @@ export function getOutput(userConfig: UserConfig): Config['output'] {
   ) {
     output.importFileExtension = `.${output.importFileExtension}`;
   }
+  output.postProcess = normalizePostProcess(
+    userOutput.postProcess ?? legacyPostProcess,
+  );
   output.source = resolveSource(output);
   return output;
+}
+
+function resolveLegacyPostProcess(
+  config: Partial<UserOutput>,
+): ReadonlyArray<UserPostProcessor> {
+  const result: Array<UserPostProcessor> = [];
+
+  if (config.lint !== undefined) {
+    let processor: PostProcessor | undefined;
+    let preset: keyof typeof postProcessors | undefined;
+    if (config.lint) {
+      preset = config.lint === 'biome' ? 'biome:lint' : config.lint;
+      processor = postProcessors[preset];
+      if (processor) result.push(processor);
+    }
+
+    log.warnDeprecated({
+      context: 'output',
+      field: 'lint',
+      replacement: `postProcess: [${processor && preset ? `'${preset}'` : ''}]`,
+    });
+  }
+
+  if (config.format !== undefined) {
+    let processor: PostProcessor | undefined;
+    let preset: keyof typeof postProcessors | undefined;
+    if (config.format) {
+      preset = config.format === 'biome' ? 'biome:format' : config.format;
+      processor = postProcessors[preset];
+      if (processor) result.push(processor);
+    }
+
+    log.warnDeprecated({
+      context: 'output',
+      field: 'format',
+      replacement: `postProcess: [${processor && preset ? `'${preset}'` : ''}]`,
+    });
+  }
+
+  return result;
+}
+
+function normalizePostProcess(
+  input: UserOutput['postProcess'],
+): ReadonlyArray<PostProcessor> {
+  if (!input) return [];
+
+  return input.map((item) => {
+    if (typeof item === 'string') {
+      const preset = postProcessors[item];
+      if (!preset) {
+        throw new Error(`Unknown post-processor preset: "${item}"`);
+      }
+      return preset;
+    }
+    return {
+      name: item.name ?? item.command,
+      ...item,
+    };
+  });
 }

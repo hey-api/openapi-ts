@@ -1506,7 +1506,7 @@ This command is now called `openapi-ts`.
 
 ### Removed `indent`
 
-This config option has been removed. Use a [code formatter](/openapi-ts/configuration#formatting) to modify the generated files code style according to your preferences.
+This config option has been removed. Use a [code formatter](/openapi-ts/configuration/output#post-process) to modify the generated files code style according to your preferences.
 
 ## v0.27.24
 

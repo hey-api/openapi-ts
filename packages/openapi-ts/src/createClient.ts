@@ -327,13 +327,13 @@ export const createClient = async ({
 
     const eventPostprocess = logger.timeEvent('postprocess');
     if (!config.dryRun) {
-      postprocessOutput(config.output);
+      const jobPrefix = colors.gray(`[Job ${jobIndex + 1}] `);
+      postprocessOutput(config.output, jobPrefix);
 
       if (config.logs.level !== 'silent') {
         const outputPath = process.env.INIT_CWD
           ? `./${path.relative(process.env.INIT_CWD, config.output.path)}`
           : config.output.path;
-        const jobPrefix = colors.gray(`[Job ${jobIndex + 1}] `);
         console.log(
           `${jobPrefix}${colors.green('✅ Done!')} Your output is in ${colors.cyanBright(outputPath)}`,
         );
