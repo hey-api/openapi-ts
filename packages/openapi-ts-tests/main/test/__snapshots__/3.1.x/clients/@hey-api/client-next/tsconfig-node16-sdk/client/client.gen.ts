@@ -19,11 +19,6 @@ import {
   setAuthParams,
 } from './utils.gen.js';
 
-type ReqInit = Omit<RequestInit, 'body' | 'headers'> & {
-  body?: any;
-  headers: ReturnType<typeof mergeHeaders>;
-};
-
 export const createClient = (config: Config = {}): Client => {
   let _config = mergeConfigs(createConfig(), config);
 
@@ -88,9 +83,9 @@ export const createClient = (config: Config = {}): Client => {
     // fetch must be assigned here, otherwise it would throw the error:
     // TypeError: Failed to execute 'fetch' on 'Window': Illegal invocation
     const _fetch = opts.fetch!;
-    const requestInit: ReqInit = {
+    const requestInit: RequestInit = {
       ...opts,
-      body: getValidRequestBody(opts),
+      body: getValidRequestBody(opts) as RequestInit['body'],
     };
 
     let response = await _fetch(url, requestInit);

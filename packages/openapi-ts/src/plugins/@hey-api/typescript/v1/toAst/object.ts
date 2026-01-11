@@ -25,6 +25,7 @@ export const objectToAst = ({
   for (const name in schema.properties) {
     const property = schema.properties[name]!;
     const propertyType = irSchemaToAst({
+      optional: !required,
       plugin,
       schema: property,
       state: {
