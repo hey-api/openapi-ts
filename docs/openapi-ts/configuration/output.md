@@ -214,58 +214,34 @@ export default {
 };
 ```
 
-## Format
+## Post Process
 
-To format your output folder contents, set `format` to a valid formatter.
+Post-processing allows you to run commands on the generated output folder after files are written. This is typically used to run formatters, linters, or other cleanup tools.
 
-::: code-group
+Commands are executed in order, and each command receives the output path via the `path` placeholder.
 
-```js [disabled]
-export default {
-  input: 'hey-api/backend', // sign up at app.heyapi.dev
-  output: {
-    format: null, // [!code ++]
-    path: 'src/client',
-  },
-};
-```
+### Presets
 
-```js [prettier]
-export default {
-  input: 'hey-api/backend', // sign up at app.heyapi.dev
-  output: {
-    format: 'prettier', // [!code ++]
-    path: 'src/client',
-  },
-};
-```
-
-```js [biome]
-export default {
-  input: 'hey-api/backend', // sign up at app.heyapi.dev
-  output: {
-    format: 'biome', // [!code ++]
-    path: 'src/client',
-  },
-};
-```
-
-:::
-
-You can also prevent your output from being formatted by adding your output path to the formatter's ignore file.
-
-## Lint
-
-To lint your output folder contents, set `lint` to a valid linter.
+You can use built-in presets for common tools:
 
 ::: code-group
 
-```js [disabled]
+```js [biome:format]
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: {
-    lint: null, // [!code ++]
     path: 'src/client',
+    postProcess: ['biome:format'], // [!code ++]
+  },
+};
+```
+
+```js [biome:lint]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: {
+    path: 'src/client',
+    postProcess: ['biome:lint'], // [!code ++]
   },
 };
 ```
@@ -274,18 +250,18 @@ export default {
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: {
-    lint: 'eslint', // [!code ++]
     path: 'src/client',
+    postProcess: ['eslint'], // [!code ++]
   },
 };
 ```
 
-```js [biome]
+```js [oxfmt]
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: {
-    lint: 'biome', // [!code ++]
     path: 'src/client',
+    postProcess: ['oxfmt'], // [!code ++]
   },
 };
 ```
@@ -294,15 +270,44 @@ export default {
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: {
-    lint: 'oxlint', // [!code ++]
     path: 'src/client',
+    postProcess: ['oxlint'], // [!code ++]
+  },
+};
+```
+
+```js [prettier]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: {
+    path: 'src/client',
+    postProcess: ['prettier'], // [!code ++]
   },
 };
 ```
 
 :::
 
-You can also prevent your output from being linted by adding your output path to the linter's ignore file.
+### Custom
+
+You can also provide custom post processors:
+
+<!-- prettier-ignore-start -->
+```js
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: {
+    path: 'src/client',
+    postProcess: [{ // [!code ++]
+      command: 'dprint', // [!code ++]
+      args: ['fmt', '{{path}}'], // [!code ++]
+    }], // [!code ++]
+  },
+};
+```
+<!-- prettier-ignore-end -->
+
+You can skip processing by adding the output path to the tool’s ignore file (for example `.eslintignore` or `.prettierignore`).
 
 ## Name Conflicts
 
