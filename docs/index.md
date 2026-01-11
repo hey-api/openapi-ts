@@ -11,7 +11,7 @@ hero:
     - link: https://stackblitz.com/edit/hey-api-example?file=openapi-ts.config.ts,src%2Fclient%2Fschemas.gen.ts,src%2Fclient%2Fsdk.gen.ts,src%2Fclient%2Ftypes.gen.ts
       text: View Demo
       theme: alt
-    - link: https://github.com/orgs/hey-api/discussions/1495
+    - link: https://github.com/orgs/hey-api/discussions/3159
       text: Roadmap
       theme: alt
   image:
