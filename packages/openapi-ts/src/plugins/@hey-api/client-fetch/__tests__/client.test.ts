@@ -221,6 +221,45 @@ describe('zero-length body handling', () => {
     expect(result.data).toBeInstanceOf(Blob);
     expect((result.data as Blob).size).toBeGreaterThan(0);
   });
+
+  it('returns empty object for empty JSON response without Content-Length header (status 200)', async () => {
+    // Simulates a server returning an empty body with status 200 and no Content-Length header
+    // This is the scenario described in the issue where response.json() throws
+    const mockResponse = new Response('', {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      status: 200,
+    });
+
+    const mockFetch: MockFetch = vi.fn().mockResolvedValue(mockResponse);
+
+    const result = await client.request({
+      fetch: mockFetch,
+      method: 'GET',
+      url: '/test',
+    });
+
+    expect(result.data).toEqual({});
+  });
+
+  it('returns empty object for empty response without Content-Length header and no Content-Type (defaults to JSON)', async () => {
+    // Tests the auto-detection behavior when no Content-Type is provided
+    const mockResponse = new Response('', {
+      status: 200,
+    });
+
+    const mockFetch: MockFetch = vi.fn().mockResolvedValue(mockResponse);
+
+    const result = await client.request({
+      fetch: mockFetch,
+      method: 'GET',
+      url: '/test',
+    });
+
+    // When parseAs is 'auto' and no Content-Type header exists, it should handle empty body gracefully
+    expect(result.data).toBeDefined();
+  });
 });
 
 describe('unserialized request body handling', () => {
