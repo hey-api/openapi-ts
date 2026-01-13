@@ -399,10 +399,14 @@ const createClient = (config = {}) => {
 				case "arrayBuffer":
 				case "blob":
 				case "formData":
-				case "json":
 				case "text":
 					data = await response[parseAs]();
 					break;
+				case "json": {
+					const text = await response.text();
+					data = text ? JSON.parse(text) : {};
+					break;
+				}
 				case "stream": return {
 					data: response.body,
 					...result
