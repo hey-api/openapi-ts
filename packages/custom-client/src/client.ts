@@ -111,10 +111,20 @@ export const createClient = (config: Config = {}): Client => {
         case 'arrayBuffer':
         case 'blob':
         case 'formData':
-        case 'json':
         case 'text':
           data = await response[parseAs]();
           break;
+        case 'json': {
+          // Some servers return 200 with no Content-Length and empty body.
+          // response.json() would throw; detect empty via clone().text() first.
+          const txt = await response.clone().text();
+          if (!txt) {
+            data = {};
+          } else {
+            data = await response.json();
+          }
+          break;
+        }
         case 'stream':
           return {
             data: response.body,
