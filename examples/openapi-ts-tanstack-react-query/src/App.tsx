@@ -14,11 +14,17 @@ import {
   Text,
   TextField,
 } from '@radix-ui/themes';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useSuspenseInfiniteQuery,
+} from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 
 import {
   addPetMutation,
+  findPetsByTagsInfiniteOptions,
   getPetByIdOptions,
   updatePetMutation,
 } from './client/@tanstack/react-query.gen';
@@ -88,6 +94,28 @@ function App() {
       },
     }),
     enabled: Boolean(petId),
+  });
+
+  useInfiniteQuery({
+    ...findPetsByTagsInfiniteOptions({
+      client: localClient,
+      query: {
+        tags: [],
+      },
+    }),
+    getNextPageParam: (lastPage) => lastPage.map(({ name }) => name),
+    initialPageParam: { query: { tags: [] } },
+  });
+
+  useSuspenseInfiniteQuery({
+    ...findPetsByTagsInfiniteOptions({
+      client: localClient,
+      query: {
+        tags: [],
+      },
+    }),
+    getNextPageParam: (lastPage) => lastPage.map(({ name }) => name),
+    initialPageParam: { query: { tags: [] } },
   });
 
   const onAddPet = async (formData: FormData) => {

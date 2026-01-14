@@ -33,10 +33,14 @@ export class AsTsDsl extends Mixed {
   }
 
   override toAst() {
-    return ts.factory.createAsExpression(
-      this.$node(this.expr),
-      this.$type(this.type),
-    );
+    const exprNode = this.$node(this.expr);
+    // Wrap function expressions in parentheses to ensure correct precedence
+    // e.g., (() => {}) as any instead of () => {} as any
+    const wrappedExpr =
+      ts.isArrowFunction(exprNode) || ts.isFunctionExpression(exprNode)
+        ? ts.factory.createParenthesizedExpression(exprNode)
+        : exprNode;
+    return ts.factory.createAsExpression(wrappedExpr, this.$type(this.type));
   }
 }
 

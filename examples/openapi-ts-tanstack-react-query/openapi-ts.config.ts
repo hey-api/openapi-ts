@@ -8,6 +8,11 @@ export default defineConfig({
     lint: 'eslint',
     path: './src/client',
   },
+  parser: {
+    pagination: {
+      keywords: ['tags', 'limit', 'offset', 'cursor', 'after', 'before'],
+    },
+  },
   plugins: [
     '@hey-api/client-fetch',
     '@hey-api/schemas',
@@ -19,6 +24,9 @@ export default defineConfig({
       enums: 'javascript',
       name: '@hey-api/typescript',
     },
-    '@tanstack/react-query',
+    {
+      infiniteQueryOptions: true,
+      name: '@tanstack/react-query',
+    },
   ],
 });
