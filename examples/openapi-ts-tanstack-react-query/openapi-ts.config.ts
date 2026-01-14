@@ -10,7 +10,7 @@ export default defineConfig({
   },
   parser: {
     pagination: {
-      keywords: ['tags', 'limit', 'offset', 'cursor', 'after', 'before'],
+      keywords: ['tags'],
     },
   },
   plugins: [
