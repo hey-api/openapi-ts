@@ -16,6 +16,7 @@ This page demonstrates resolvers through a few common scenarios.
 1. [Handle arbitrary schema formats](#example-1)
 2. [Validate high precision numbers](#example-2)
 3. [Replace default base](#example-3)
+4. [Create permissive enums](#example-4)
 
 ## Terminology
 
@@ -170,6 +171,57 @@ export const vUser = v.looseObject({
 export const vUser = v.object({
   age: v.number(),
 });
+```
+
+:::
+
+## Example 4
+
+### Create permissive enums
+
+By default, enum schemas are strict and will reject unknown values.
+
+```js
+export const zStatus = z.enum(['active', 'inactive', 'pending']);
+```
+
+You might want to accept unknown enum values, for example when the API adds new values that haven't been added to the spec yet. You can use the enum resolver to create a permissive union.
+
+```js
+{
+  name: 'zod',
+  '~resolvers': {
+    enum(ctx) {
+      const { $, symbols } = ctx;
+      const { z } = symbols;
+      const { allStrings, enumMembers, literalMembers } = ctx.nodes.items(ctx);
+
+      if (!allStrings || !enumMembers.length) {
+        return;
+      }
+
+      const enumSchema = $(z).attr('enum').call($.array(...enumMembers));
+      return $(z).attr('union').call(
+        $.array(enumSchema, $(z).attr('string').call())
+      );
+    }
+  }
+}
+```
+
+This resolver creates a union that accepts both the known enum values and any other string.
+
+::: code-group
+
+```js [after]
+export const zStatus = z.union([
+  z.enum(['active', 'inactive', 'pending']),
+  z.string(),
+]);
+```
+
+```js [before]
+export const zStatus = z.enum(['active', 'inactive', 'pending']);
 ```
 
 :::
