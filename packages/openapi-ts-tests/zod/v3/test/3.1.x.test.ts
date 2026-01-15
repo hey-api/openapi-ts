@@ -145,6 +145,37 @@ for (const zodVersion of zodVersions) {
         }),
         description: 'validator schemas with string constraints union',
       },
+      {
+        config: createConfig({
+          input: 'enum-null.json',
+          output: 'enum-resolver-permissive',
+          plugins: [
+            {
+              compatibilityVersion: zodVersion.compatibilityVersion,
+              name: 'zod',
+              '~resolvers': {
+                enum(ctx) {
+                  const { $, symbols } = ctx;
+                  const { z } = symbols;
+                  const { allStrings, enumMembers } = ctx.nodes.items(ctx);
+
+                  if (!allStrings || !enumMembers.length) {
+                    return;
+                  }
+
+                  const enumSchema = $(z)
+                    .attr('enum')
+                    .call($.array(...enumMembers));
+                  return $(z)
+                    .attr('union')
+                    .call($.array(enumSchema, $(z).attr('string').call()));
+                },
+              },
+            },
+          ],
+        }),
+        description: 'generates permissive enums with enum resolver',
+      },
     ];
 
     it.each(scenarios)('$description', async ({ config }) => {
