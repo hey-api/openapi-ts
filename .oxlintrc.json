@@ -8,13 +8,16 @@
     {
       "name": "local-paths",
       "specifier": "./eslint-rules/local-paths.js"
+    },
+    {
+      "name": "object-shorthand-custom",
+      "specifier": "./eslint-rules/object-shorthand.js"
     }
   ],
   "plugins": ["unicorn", "typescript", "oxc"],
   "rules": {
     "arrow-body-style": "error",
     "no-prototype-builtins": "off",
-    "object-shorthand": "error",
     "sort-imports": "off",
     "typescript/ban-ts-comment": "off",
     "typescript/consistent-type-imports": "warn",
@@ -30,7 +33,8 @@
     "sort-keys-fix/sort-keys-fix": "warn",
     "typescript-sort-keys/interface": "warn",
     "typescript-sort-keys/string-enum": "warn",
-    "local-paths/enforce-local-paths": "error"
+    "local-paths/enforce-local-paths": "error",
+    "object-shorthand-custom/enforce": "error"
   },
   "env": {
     "builtin": true
