@@ -15,6 +15,14 @@ import type { ValibotPlugin } from '../types';
 
 export type Resolvers = Plugin.Resolvers<{
   /**
+   * Resolver for enum schemas.
+   *
+   * Allows customization of how enum types are rendered.
+   *
+   * Returning `undefined` will execute the default resolver logic.
+   */
+  enum?: (ctx: EnumResolverContext) => PipeResult | undefined;
+  /**
    * Resolver for number schemas.
    *
    * Allows customization of how number types are rendered.
@@ -94,6 +102,42 @@ interface BaseContext extends DollarTsDsl {
    */
   symbols: {
     v: Symbol;
+  };
+}
+
+export interface EnumResolverContext extends BaseContext {
+  /**
+   * Nodes used to build different parts of the enum schema.
+   */
+  nodes: {
+    /**
+     * Returns the base enum expression (v.picklist([...])).
+     */
+    base: (ctx: EnumResolverContext) => PipeResult;
+    /**
+     * Returns parsed enum items with metadata about the enum members.
+     */
+    items: (ctx: EnumResolverContext) => {
+      /**
+       * String literal values for use with v.picklist([...]).
+       */
+      enumMembers: Array<ReturnType<typeof $.literal>>;
+      /**
+       * Whether the enum includes a null value.
+       */
+      isNullable: boolean;
+    };
+    /**
+     * Returns a nullable wrapper if the enum includes null, undefined otherwise.
+     */
+    nullable: (ctx: EnumResolverContext) => PipeResult | undefined;
+  };
+  schema: SchemaWithType<'enum'>;
+  /**
+   * Utility functions for enum schema processing.
+   */
+  utils: {
+    state: Refs<PluginState>;
   };
 }
 
