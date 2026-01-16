@@ -9,9 +9,8 @@ const loggerStub = {
 
 describe('buildGraph', () => {
   it('computes referenced and transitive dependencies for validators-circular-ref.json', async () => {
-    const mod = await import(
-      '../../../../../../../specs/3.1.x/validators-circular-ref.json'
-    );
+    const mod =
+      await import('../../../../../../../specs/3.1.x/validators-circular-ref.json');
     const spec = (mod as any).default ?? mod;
 
     const { graph } = buildGraph(spec, loggerStub);

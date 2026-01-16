@@ -20,8 +20,7 @@ import type { Middleware } from './utils.gen';
 export type ResponseStyle = 'data' | 'fields';
 
 export interface Config<T extends ClientOptions = ClientOptions>
-  extends Omit<RequestInit, 'body' | 'headers' | 'method'>,
-    CoreConfig {
+  extends Omit<RequestInit, 'body' | 'headers' | 'method'>, CoreConfig {
   /**
    * HTTP(S) agent configuration (Node.js only). Passed through to ofetch.
    */
@@ -136,7 +135,9 @@ export interface RequestOptions<
   TResponseStyle extends ResponseStyle = 'fields',
   ThrowOnError extends boolean = boolean,
   Url extends string = string,
-> extends Config<{
+>
+  extends
+    Config<{
       responseStyle: TResponseStyle;
       throwOnError: ThrowOnError;
     }>,

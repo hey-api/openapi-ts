@@ -12,8 +12,7 @@ import type { Middleware } from './utils';
 export type ResponseStyle = 'data' | 'fields';
 
 export interface Config<T extends ClientOptions = ClientOptions>
-  extends Omit<RequestInit, 'body' | 'headers' | 'method'>,
-    CoreConfig {
+  extends Omit<RequestInit, 'body' | 'headers' | 'method'>, CoreConfig {
   /**
    * Base URL for all requests made by this client.
    */
@@ -67,7 +66,9 @@ export interface RequestOptions<
   TResponseStyle extends ResponseStyle = 'fields',
   ThrowOnError extends boolean = boolean,
   Url extends string = string,
-> extends Config<{
+>
+  extends
+    Config<{
       responseStyle: TResponseStyle;
       throwOnError: ThrowOnError;
     }>,

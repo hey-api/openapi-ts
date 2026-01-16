@@ -57,6 +57,8 @@
     "**/.svelte-kit/",
     "**/.vitepress/cache",
     "**/.vitepress/dist",
-    "**/.angular"
+    "**/.angular",
+    "**/*.svelte",
+    "**/*.vue"
   ]
 }

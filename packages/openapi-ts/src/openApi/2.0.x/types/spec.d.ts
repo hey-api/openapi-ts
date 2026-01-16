@@ -194,8 +194,7 @@ export interface ExternalDocumentationObject {
  * ```
  */
 export interface HeaderObject
-  extends EnumExtensions,
-    OpenApiV2_0_X_Nullable_Extensions {
+  extends EnumExtensions, OpenApiV2_0_X_Nullable_Extensions {
   /**
    * Allows extensions to the Swagger Schema. The field name MUST begin with `x-`, for example, `x-internal-id`. The value can be `null`, a primitive, an array or an object. See {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/2.0.md#specification-extensions Vendor Extensions} for further details.
    */
@@ -382,8 +381,7 @@ export interface InfoObject {
  * ```
  */
 export interface ItemsObject
-  extends EnumExtensions,
-    OpenApiV2_0_X_Nullable_Extensions {
+  extends EnumExtensions, OpenApiV2_0_X_Nullable_Extensions {
   /**
    * Allows extensions to the Swagger Schema. The field name MUST begin with `x-`, for example, `x-internal-id`. The value can be `null`, a primitive, an array or an object. See {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/2.0.md#specification-extensions Vendor Extensions} for further details.
    */
@@ -1308,8 +1306,7 @@ export interface ResponsesObject {
  * ```
  */
 export interface SchemaObject
-  extends JsonSchemaDraft4,
-    OpenApiV2_0_X_Nullable_Extensions {
+  extends JsonSchemaDraft4, OpenApiV2_0_X_Nullable_Extensions {
   /**
    * Allows extensions to the Swagger Schema. The field name MUST begin with `x-`, for example, `x-internal-id`. The value can be `null`, a primitive, an array or an object. See {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/2.0.md#specification-extensions Vendor Extensions} for further details.
    */

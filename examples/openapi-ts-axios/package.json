@@ -1,7 +1,7 @@
 {
   "name": "@example/openapi-ts-axios",
-  "private": true,
   "version": "0.0.35",
+  "private": true,
   "type": "module",
   "scripts": {
     "build": "tsc && vite build",
@@ -22,8 +22,8 @@
   "devDependencies": {
     "@config/vite-base": "workspace:*",
     "@hey-api/openapi-ts": "workspace:*",
-    "@types/react-dom": "19.0.1",
     "@types/react": "19.0.1",
+    "@types/react-dom": "19.0.1",
     "@typescript-eslint/eslint-plugin": "8.29.1",
     "@typescript-eslint/parser": "8.29.1",
     "@vitejs/plugin-react": "4.4.0-beta.1",

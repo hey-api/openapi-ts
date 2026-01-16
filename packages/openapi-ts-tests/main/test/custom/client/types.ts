@@ -3,8 +3,7 @@ import type { Client as CoreClient, Config as CoreConfig } from './core/types';
 import type { Middleware } from './utils';
 
 export interface Config<T extends ClientOptions = ClientOptions>
-  extends Omit<RequestInit, 'body' | 'headers' | 'method'>,
-    CoreConfig {
+  extends Omit<RequestInit, 'body' | 'headers' | 'method'>, CoreConfig {
   /**
    * Base URL for all requests made by this client.
    */
@@ -44,8 +43,8 @@ export interface RequestOptions<
   ThrowOnError extends boolean = boolean,
   Url extends string = string,
 > extends Config<{
-    throwOnError: ThrowOnError;
-  }> {
+  throwOnError: ThrowOnError;
+}> {
   /**
    * Any body that you want to add to your request.
    *

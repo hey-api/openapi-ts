@@ -149,9 +149,8 @@ describe('walkTopological', () => {
   });
 
   it('matches ordering for validators-circular-ref spec', async () => {
-    const specModule = await import(
-      '../../../../../specs/3.1.x/validators-circular-ref.json'
-    );
+    const specModule =
+      await import('../../../../../specs/3.1.x/validators-circular-ref.json');
     const spec = specModule.default ?? specModule;
     const { graph } = buildGraph(spec, loggerStub);
 

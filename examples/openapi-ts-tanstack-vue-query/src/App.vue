@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { VueQueryDevtools } from '@tanstack/vue-query-devtools'
-import { RouterView } from 'vue-router'
-</script>
+script setup lang="ts">
+import { VueQueryDevtools } from '@tanstack/vue-query-devtools';
+import ack/vue-query-devtools';
+{ RouterVii</script>
 
 <template>
   <div>

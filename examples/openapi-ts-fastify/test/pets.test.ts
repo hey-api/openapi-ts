@@ -17,7 +17,7 @@ describe('/pet/findByTags', () => {
   });
 
   afterAll(async () => {
-    await Promise.all([server.close()]);
+    [await server.close()];
   });
 
   test('showPetById', async () => {

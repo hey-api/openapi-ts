@@ -2,21 +2,6 @@
   "name": "@hey-api/openapi-ts",
   "version": "0.89.1",
   "description": "🌀 OpenAPI to TypeScript code generator. Generate API clients, SDKs, validators, and more.",
-  "homepage": "https://heyapi.dev/",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/hey-api/openapi-ts.git"
-  },
-  "bugs": {
-    "url": "https://github.com/hey-api/openapi-ts/issues"
-  },
-  "license": "MIT",
-  "author": {
-    "email": "lubos@heyapi.dev",
-    "name": "Hey API",
-    "url": "https://heyapi.dev"
-  },
-  "funding": "https://github.com/sponsors/hey-api",
   "keywords": [
     "angular",
     "axios",
@@ -37,6 +22,30 @@
     "typescript",
     "xhr",
     "yaml"
+  ],
+  "homepage": "https://heyapi.dev/",
+  "bugs": {
+    "url": "https://github.com/hey-api/openapi-ts/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Hey API",
+    "email": "lubos@heyapi.dev",
+    "url": "https://heyapi.dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hey-api/openapi-ts.git"
+  },
+  "funding": "https://github.com/sponsors/hey-api",
+  "bin": {
+    "openapi-ts": "./bin/run.js"
+  },
+  "files": [
+    "bin",
+    "dist",
+    "LICENSE.md",
+    "README.md"
   ],
   "type": "module",
   "main": "./dist/index.cjs",
@@ -65,15 +74,6 @@
     },
     "./package.json": "./package.json"
   },
-  "bin": {
-    "openapi-ts": "./bin/run.js"
-  },
-  "files": [
-    "bin",
-    "dist",
-    "LICENSE.md",
-    "README.md"
-  ],
   "scripts": {
     "build": "tsdown && pnpm check-exports",
     "check-exports": "attw --pack . --profile node16",
@@ -85,9 +85,6 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
-  "engines": {
-    "node": ">=20.19.0"
-  },
   "dependencies": {
     "@hey-api/codegen-core": "workspace:^0.4.0",
     "@hey-api/json-schema-ref-parser": "1.2.2",
@@ -97,9 +94,6 @@
     "commander": "14.0.2",
     "open": "11.0.0",
     "semver": "7.7.3"
-  },
-  "peerDependencies": {
-    "typescript": ">=5.5.3"
   },
   "devDependencies": {
     "@angular/common": "19.2.17",
@@ -125,5 +119,11 @@
     "vue": "3.5.25",
     "yaml": "2.8.2",
     "zone.js": "0.16.0"
+  },
+  "peerDependencies": {
+    "typescript": ">=5.5.3"
+  },
+  "engines": {
+    "node": ">=20.19.0"
   }
 }

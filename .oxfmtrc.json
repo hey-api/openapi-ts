@@ -16,6 +16,8 @@
     "**/test/generated",
     "**/__snapshots__",
     "**/CHANGELOG.md",
-    "pnpm-lock.yaml"
+    "pnpm-lock.yaml",
+    "**/*.vue",
+    "**/*.svelte"
   ]
 }

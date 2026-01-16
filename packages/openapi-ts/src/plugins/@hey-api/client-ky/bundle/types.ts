@@ -35,7 +35,8 @@ export interface RetryOptions {
 }
 
 export interface Config<T extends ClientOptions = ClientOptions>
-  extends Omit<
+  extends
+    Omit<
       import('ky').Options,
       'body' | 'headers' | 'method' | 'prefixUrl' | 'retry' | 'throwHttpErrors'
     >,
@@ -99,7 +100,9 @@ export interface RequestOptions<
   TResponseStyle extends ResponseStyle = 'fields',
   ThrowOnError extends boolean = boolean,
   Url extends string = string,
-> extends Config<{
+>
+  extends
+    Config<{
       responseStyle: TResponseStyle;
       throwOnError: ThrowOnError;
     }>,
