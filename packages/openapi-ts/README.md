@@ -92,6 +92,26 @@ Hey API is sponsor-funded. If you rely on Hey API in production, consider becomi
         <p></p>
       </td>
     </tr>
+    <tr>
+      <td align="center">
+        <p></p>
+        <p>
+          <a href="https://kutt.it/6vrYy9" target="_blank">
+            <picture height="50px">
+              <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/mintlify/logo-light.svg">
+              <img alt="Mintlify logo" height="50px" src="https://heyapi.dev/assets/mintlify/logo-dark.svg">
+            </picture>
+          </a>
+          <br/>
+          The intelligent knowledge platform.
+          <br/>
+          <a href="https://kutt.it/6vrYy9" style="text-decoration:none;" target="_blank">
+            mintlify.com
+          </a>
+        </p>
+        <p></p>
+      </td>
+    </tr>
   </tbody>
 </table>
 
