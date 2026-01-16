@@ -7,13 +7,13 @@ export type ClientOptions = {
 export type Order = {
   complete?: boolean;
   id?: number;
+  petId?: number;
   quantity?: number;
   shipDate?: string;
   /**
    * Order Status
    */
   status?: 'placed' | 'approved' | 'delivered';
-  petId?: number;
 };
 
 export type Category = {
@@ -24,15 +24,15 @@ export type Category = {
 export type User = {
   email?: string;
   firstName?: string;
-  username?: string;
-  lastName?: string;
   id?: number;
+  lastName?: string;
   password?: string;
   phone?: string;
   /**
    * User Status
    */
   userStatus?: number;
+  username?: string;
 };
 
 export type Tag = {

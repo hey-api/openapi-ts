@@ -1,24 +1,17 @@
 <script lang="ts" setup>
-{ useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
-import m '@tanstack/vue-query';
-{ computed,
-
-script lang="ts" setup>
-import type 
-{
+import type { Pet } from '@/client'
+import { createClient } from '@/client/client'
+import { PetSchema } from '@/client/schemas.gen'
+import {
   addPetMutation,
   getPetByIdOptions,
-  updatePetMutation,
-} from '@/client/@tanstack/vue-query.gen';
-import tanstack/vue-query.gen';
-, watch } from 'vue';
-import type { RequestOptions }
-Pet } from '@/client';
-import { createClient }
-{ PetSchema } from '@/client/schemas.gen';
-import  '@/client/schemas.gen';
+  updatePetMutation
+} from '@/client/@tanstack/vue-query.gen'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
+import { computed, ref, watch } from 'vue'
+import type { RequestOptions } from '@/client/client'
 
-const queryClient = useQueryClient();
+const queryClient = useQueryClient()
 
 const localClient = createClient({
   // set default base url for requests made by this client
@@ -29,88 +22,81 @@ const localClient = createClient({
    * internal service client.
    */
   headers: {
-    Authorization: 'Bearer <token_from_local_client>',
-  },
-});
+    Authorization: 'Bearer <token_from_local_client>'
+  }
+})
 
-localClient.interceptors.request.use(
-  (request: Request, options: RequestOptions) => {
-    // Middleware is great for adding authorization tokens to requests made to
-    // protected paths. Headers are set randomly here to allow surfacing the
-    // default headers, too.
-    if (
-      options.url === '/pet/{petId}' &&
-      options.method === 'GET' &&
-      Math.random() < 0.5
-    ) {
-      request.headers.set('Authorization', 'Bearer <token_from_interceptor>');
-    }
-    return request;
-  },
-);
+localClient.interceptors.request.use((request: Request, options: RequestOptions) => {
+  // Middleware is great for adding authorization tokens to requests made to
+  // protected paths. Headers are set randomly here to allow surfacing the
+  // default headers, too.
+  if (options.url === '/pet/{petId}' && options.method === 'GET' && Math.random() < 0.5) {
+    request.headers.set('Authorization', 'Bearer <token_from_interceptor>')
+  }
+  return request
+})
 
-const pet = ref<Pet>();
-const petId = ref<number>();
+const pet = ref<Pet>()
+const petId = ref<number>()
 
-const petInput = ref({ Input = ref(, 
-const p });
+const petInput = ref({ name: '', category: '' })
 
 const addPet = useMutation({
   ...addPetMutation(),
   onError: (error) => {
-    console.log(error);
+    console.log(error)
   },
   onSuccess: (data) => {
-    pet.value = data;
-    petId.value = data.id ?? petId.value;
+    pet.value = data
+    petId.value = data.id ?? petId.value
 
     if (typeof data?.id === 'number') {
       queryClient.invalidateQueries({
-        queryKey: getPetByIdOptions({ path: { petId: data.id } }).queryKey,
-      });
+        queryKey: getPetByIdOptions({ path: { petId: data.id } }).queryKey
+      })
     }
-  },
-});
+  }
+})
 
 const updatePet = useMutation({
   ...updatePetMutation(),
   onError: (error) => {
-    console.log(error);
+    console.log(error)
   },
   onSuccess: (data) => {
-    pet.value = data;
-    petId.value = data.id ?? petId.value;
+    pet.value = data
+    petId.value = data.id ?? petId.value
 
     if (typeof data?.id === 'number') {
       queryClient.invalidateQueries({
-        queryKey: getPetByIdOptions({ path: { petId: data.id } }).queryKey,
-      });
+        queryKey: getPetByIdOptions({ path: { petId: data.id } }).queryKey
+      })
     }
-  },
-});
+  }
+})
 
 const { data, error } = useQuery(
   computed(() => ({
     ...getPetByIdOptions({
       client: localClient,
       path: {
-        petId: petId.value!,
-      },
+        petId: petId.value!
+      }
     }),
-    enabled: Boolean(petId.value),
-  })),
-);
+    enabled: Boolean(petId.value)
+  }))
+)
 
 const handleAddPet = async () => {
   if (PetSchema.required.includes('name') && !petInput.value?.name?.length) {
-    return;
+    return
   }
 
   addPet.mutate({
     body: {
       category: {
         id: 0,
-        name: petInput.value.category,
+        name: petInput.value.category
       },
       id: 0,
       name: petInput.value?.name,
@@ -119,16 +105,16 @@ const handleAddPet = async () => {
       tags: [
         {
           id: 0,
-          name: 'string',
-        },
-      ],
-    },
-  });
-};
+          name: 'string'
+        }
+      ]
+    }
+  })
+}
 
 function setRandomPetId() {
   // random id 1-10
-  petId.value = Math.floor(Math.random() * (10 - 1 + 1) + 1);
+  petId.value = Math.floor(Math.random() * (10 - 1 + 1) + 1)
 }
 
 const handleUpdatePet = async () => {
@@ -136,7 +122,7 @@ const handleUpdatePet = async () => {
     body: {
       category: {
         id: pet.value?.category?.id ?? 0,
-        name: petInput.value.category,
+        name: petInput.value.category
       },
       id: pet.value?.id ?? 0,
       name: petInput.value.name,
@@ -145,24 +131,24 @@ const handleUpdatePet = async () => {
       tags: [
         {
           id: 0,
-          name: 'string',
-        },
-      ],
+          name: 'string'
+        }
+      ]
     },
     // setting headers per request
     headers: {
-      Authorization: 'Bearer <token_from_method>',
-    },
-  });
-};
+      Authorization: 'Bearer <token_from_method>'
+    }
+  })
+}
 
 watch(data, () => {
-  pet.value = data.value;
-});
+  pet.value = data.value
+})
 
 watch(error, (error) => {
-  console.log(error);
-});
+  console.log(error)
+})
 </script>
 
 <template>
@@ -177,9 +163,7 @@ watch(error, (error) => {
           />
         </a>
 
-        <h1 class="text-2xl font-bold text-white">
-          @hey-api/openapi-ts 🤝 TanStack Vue Query
-        </h1>
+        <h1 class="text-2xl font-bold text-white">@hey-api/openapi-ts 🤝 TanStack Vue Query</h1>
       </div>
 
       <div class="flex flex-col gap-2">
@@ -195,13 +179,9 @@ watch(error, (error) => {
           </div>
 
           <div>
-            <p class="text-sm font-bold text-white">
-              Name: {{ pet?.name || 'N/A' }}
-            </p>
+            <p class="text-sm font-bold text-white">Name: {{ pet?.name || 'N/A' }}</p>
 
-            <p class="text-sm text-[#f1f7feb5]">
-              Category: {{ pet?.category?.name || 'N/A' }}
-            </p>
+            <p class="text-sm text-[#f1f7feb5]">Category: {{ pet?.category?.name || 'N/A' }}</p>
           </div>
         </div>
 
@@ -240,10 +220,7 @@ watch(error, (error) => {
         </div>
 
         <div class="flex gap-2">
-          <button
-            class="rounded bg-[#3e63dd] p-2 text-sm font-medium text-white"
-            type="submit"
-          >
+          <button class="rounded bg-[#3e63dd] p-2 text-sm font-medium text-white" type="submit">
             Add Pet
           </button>
 

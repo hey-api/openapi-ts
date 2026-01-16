@@ -1,11 +1,12 @@
 <script setup lang="ts">
-script setup lang="ts">
 import { client } from '#hey-api/client.gen';
 
 // configure internal service client
-client.setConfig(m // configure internal service client
 client.setConfig({
-  auth: () => undefined,
+  auth: () => {
+    // fetch auth token
+    return undefined;
+  },
   // set default base url for requests
   baseURL: 'https://petstore3.swagger.io/api/v3',
   // set default headers for requests

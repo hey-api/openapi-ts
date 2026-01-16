@@ -1,6 +1,6 @@
 <script setup lang="ts">
-script setup lang="ts">
-import { RouterVii</script>
+import { RouterView } from 'vue-router'
+</script>
 
 <template>
   <div>

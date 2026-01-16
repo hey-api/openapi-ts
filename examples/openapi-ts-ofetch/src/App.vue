@@ -1,19 +1,13 @@
 <script setup lang="ts">
-script setup lang="ts">
-import port 
+import { ref } from 'vue';
 
-{ ref } from 'vue';
+import { createClient } from './client/client';
+import { PetSchema } from './client/schemas.gen';
+import { addPet, getPetById, updatePet } from './client/sdk.gen';
+import type { Pet } from './client/types.gen';
 
-import { createClient }
-{ PetSchema } from './client/schemas.gen';
-import  './client/schemas.gen';
-{ addPet, getPetById, updatePet } from './client/sdk.gen';
-import type from './client/sdk.gen';
-{ Pet } from './client/types.gen';
-
-const pet = refom './client/types.gen';undefined>();
-const petInput = ref({ Input = ref(, 
-const p });
+const pet = ref<Pet | undefined>();
+const petInput = ref({ name: '', category: '' });
 const isPetNameRequired = PetSchema.required.includes('name');
 
 const localClient = createClient({
