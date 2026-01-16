@@ -1,0 +1,14 @@
+{
+  "jsPlugins": [
+    "./node_modules/eslint-plugin-simple-import-sort/index.js",
+    { "name": "local-paths", "specifier": "./eslint-rules/local-paths.js" }
+  ],
+  "plugins": ["unicorn", "typescript", "oxc"],
+  "rules": {
+    "arrow-body-style": "error",
+    "typescript/consistent-type-imports": "warn",
+    "simple-import-sort/imports": "error",
+    "simple-import-sort/exports": "error",
+    "local-paths/enforce-local-paths": "error"
+  }
+}
