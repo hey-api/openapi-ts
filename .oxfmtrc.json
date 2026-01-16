@@ -1,0 +1,21 @@
+{
+  "semi": true,
+  "singleQuote": true,
+  "printWidth": 80,
+  "ignorePatterns": [
+    "**/.changeset/*.md",
+    "**/node_modules",
+    "**/templates",
+    "**/dist",
+    "**/.next",
+    "**/.nuxt",
+    "**/.output",
+    "**/.svelte-kit",
+    "**/.vitepress/cache",
+    "**/.vitepress/dist",
+    "**/test/generated",
+    "**/__snapshots__",
+    "**/CHANGELOG.md",
+    "pnpm-lock.yaml"
+  ]
+}
