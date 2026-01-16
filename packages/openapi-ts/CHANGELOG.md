@@ -1,5 +1,19 @@
 # @hey-api/openapi-ts
 
+## 0.90.4
+
+### Patch Changes
+
+- **plugin(@hey-api/client-next)**: fix: JSON parsing error on empty response bodies without Content-Length header ([#3201](https://github.com/hey-api/openapi-ts/pull/3201)) ([`8428ca5`](https://github.com/hey-api/openapi-ts/commit/8428ca5152c66d393bcfee9570a6c1d7ad1155c7)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(@hey-api/client-fetch)**: fix: JSON parsing error on empty response bodies without Content-Length header ([#3201](https://github.com/hey-api/openapi-ts/pull/3201)) ([`2af4d9a`](https://github.com/hey-api/openapi-ts/commit/2af4d9ab56293c042459e6ae31787cd628be6037)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(@hey-api/client-ky)**: fix: JSON parsing error on empty response bodies without Content-Length header ([#3201](https://github.com/hey-api/openapi-ts/pull/3201)) ([`c0563fb`](https://github.com/hey-api/openapi-ts/commit/c0563fbd0f0ec66d25e5316bda0274380ac26639)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(valibot)**: add `enum` resolver ([#3209](https://github.com/hey-api/openapi-ts/pull/3209)) ([`f6723eb`](https://github.com/hey-api/openapi-ts/commit/f6723eb59cba4b2c2ffbdbddce3fc26d668e2d4a)) by [@thyming](https://github.com/thyming)
+
+- **plugin(zod)**: add `enum` resolver ([#3209](https://github.com/hey-api/openapi-ts/pull/3209)) ([`57334d8`](https://github.com/hey-api/openapi-ts/commit/57334d8c9c83169773a626193ca4c661b3957d37)) by [@thyming](https://github.com/thyming)
+
 ## 0.90.3
 
 ### Patch Changes

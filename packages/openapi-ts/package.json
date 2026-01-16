@@ -1,6 +1,6 @@
 {
   "name": "@hey-api/openapi-ts",
-  "version": "0.90.3",
+  "version": "0.90.4",
   "description": "🌀 OpenAPI to TypeScript codegen. Production-ready SDKs, Zod schemas, TanStack Query hooks, and 20+ plugins. Used by Vercel, OpenCode, and PayPal.",
   "homepage": "https://heyapi.dev/",
   "repository": {
