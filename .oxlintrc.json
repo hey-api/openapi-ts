@@ -1,0 +1,62 @@
+{
+  "$schema": "https://oxc.rs/schemas/oxlintrc.json",
+  "jsPlugins": [
+    "eslint-plugin-simple-import-sort",
+    "eslint-plugin-sort-destructure-keys",
+    "eslint-plugin-sort-keys-fix",
+    "eslint-plugin-typescript-sort-keys",
+    {
+      "name": "local-paths",
+      "specifier": "./eslint-rules/local-paths.js"
+    },
+    {
+      "name": "object-shorthand-custom",
+      "specifier": "./eslint-rules/object-shorthand.js"
+    }
+  ],
+  "plugins": ["unicorn", "typescript", "oxc"],
+  "rules": {
+    "arrow-body-style": "error",
+    "no-prototype-builtins": "off",
+    "sort-imports": "off",
+    "typescript/ban-ts-comment": "off",
+    "typescript/consistent-type-imports": "warn",
+    "typescript/explicit-function-return-type": "off",
+    "typescript/explicit-module-boundary-types": "off",
+    "typescript/no-explicit-any": "off",
+    "typescript/no-non-null-assertion": "off",
+    "typescript/no-require-imports": "off",
+    "typescript/no-var-requires": "off",
+    "simple-import-sort/exports": "error",
+    "simple-import-sort/imports": "error",
+    "sort-destructure-keys/sort-destructure-keys": "warn",
+    "sort-keys-fix/sort-keys-fix": "warn",
+    "typescript-sort-keys/interface": "warn",
+    "typescript-sort-keys/string-enum": "warn",
+    "local-paths/enforce-local-paths": "error",
+    "object-shorthand-custom/enforce": "error"
+  },
+  "env": {
+    "builtin": true
+  },
+  "globals": {
+    "NodeJS": true
+  },
+  "ignorePatterns": [
+    "**/.tsdown/",
+    "**/dist/",
+    "**/node_modules/",
+    "temp/",
+    "dev/.gen/",
+    "examples/openapi-ts-openai/src/client/**/*.ts",
+    "**/test/generated/",
+    "**/__snapshots__/",
+    "**/.next/",
+    "**/.nuxt/",
+    "**/.output/",
+    "**/.svelte-kit/",
+    "**/.vitepress/cache",
+    "**/.vitepress/dist",
+    "**/.angular"
+  ]
+}
