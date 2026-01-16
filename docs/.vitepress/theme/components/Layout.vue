@@ -1,7 +1,8 @@
 <script setup lang="ts">
+script setup lang="ts">
 import DefaultTheme from 'vitepress/theme';
 
-const { Layout } = DefaultTheme;
+const  from 'vitepress/theme';aultTheme;
 </script>
 
 <template>

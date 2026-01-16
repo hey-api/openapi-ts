@@ -41,7 +41,8 @@ export type KeysOf<T> = Array<
 >;
 
 export interface Config<T extends ClientOptions = ClientOptions>
-  extends Omit<
+  extends
+    Omit<
       FetchOptions<unknown>,
       'baseURL' | 'body' | 'headers' | 'method' | 'query'
     >,
@@ -66,7 +67,9 @@ export interface RequestOptions<
   ResT = unknown,
   DefaultT = undefined,
   Url extends string = string,
-> extends Config,
+>
+  extends
+    Config,
     WithRefs<{
       /**
        * Any body that you want to add to your request.

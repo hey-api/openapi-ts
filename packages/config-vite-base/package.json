@@ -1,12 +1,13 @@
 {
   "name": "@config/vite-base",
   "version": "0.0.1",
+  "private": true,
   "description": "Base configuration for Vite and Vitest",
+  "license": "MIT",
+  "type": "module",
   "main": "dist/index.mjs",
   "module": "dist/index.mjs",
   "types": "dist/index.d.mts",
-  "license": "MIT",
-  "type": "module",
   "scripts": {
     "build": "tsdown"
   },
@@ -16,6 +17,5 @@
   },
   "devDependencies": {
     "typescript": "^5.9.2"
-  },
-  "private": true
+  }
 }

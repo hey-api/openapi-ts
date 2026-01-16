@@ -16,7 +16,8 @@ import { paginationField } from './pagination';
 import { parseExtensions, schemaToIrSchema } from './schema';
 
 interface Operation
-  extends Omit<OperationObject, 'parameters'>,
+  extends
+    Omit<OperationObject, 'parameters'>,
     Pick<IR.OperationObject, 'parameters'> {}
 
 const parseOperationJsDoc = ({

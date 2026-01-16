@@ -59,16 +59,15 @@ export class PatternTsDsl extends Mixed {
     }
 
     if (this.pattern.kind === 'object') {
-      const elements = Object.entries(this.pattern.values).map(
-        ([key, alias]) =>
-          key === alias
-            ? ts.factory.createBindingElement(
-                undefined,
-                undefined,
-                key,
-                undefined,
-              )
-            : ts.factory.createBindingElement(undefined, key, alias, undefined),
+      const elements = Object.entries(this.pattern.values).map(([key, alias]) =>
+        key === alias
+          ? ts.factory.createBindingElement(
+              undefined,
+              undefined,
+              key,
+              undefined,
+            )
+          : ts.factory.createBindingElement(undefined, key, alias, undefined),
       );
       const spread = this.createSpread(ctx);
       if (spread) elements.push(spread);

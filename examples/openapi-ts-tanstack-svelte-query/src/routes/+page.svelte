@@ -1,11 +1,18 @@
 <script>
+	{ createMutation,createQuery } from '@tanstack/svelte-query';
+
+	const query = createQuery(-query';
+
+me.png';
+e.webp';
+
+{ addPetMutation,getPetByIdOptions } from '../client/@tanstack/svelte-query.gen';
+	import ry.gen';
+>
 	import Counter from './Counter.svelte';
 	import welcome from '$lib/images/svelte-welcome.webp';
 	import welcome_fallback from '$lib/images/svelte-welcome.png';
-	import { getPetByIdOptions, addPetMutation } from '../client/@tanstack/svelte-query.gen';
-	import { createQuery, createMutation } from '@tanstack/svelte-query';
-
-	const query = createQuery({
+	import svelte'; query = createQuery({
 		...getPetByIdOptions({
 			path: {
 				petId: 3

@@ -1,27 +1,12 @@
 /**
  * Custom ESLint rule for object-shorthand
  * Enforces the use of shorthand syntax for object properties and methods
- * 
+ *
  * This rule can be contributed back to Oxlint as it's a general-purpose rule
  * not specific to this repository.
  */
 
 const rule = {
-  meta: {
-    type: 'suggestion',
-    docs: {
-      description: 'Enforce the use of shorthand syntax for object properties and methods',
-      category: 'ECMAScript 6',
-      recommended: false,
-    },
-    fixable: 'code',
-    schema: [],
-    messages: {
-      expectedPropertyShorthand: 'Expected property shorthand.',
-      expectedMethodShorthand: 'Expected method shorthand.',
-    },
-  },
-
   create(context) {
     const sourceCode = context.sourceCode || context.getSourceCode();
 
@@ -41,14 +26,14 @@ const rule = {
           !node.method
         ) {
           context.report({
-            node,
             messageId: 'expectedPropertyShorthand',
+            node,
             fix(fixer) {
               // Replace "key: value" with "key"
               const keyText = sourceCode.getText(node.key);
               return fixer.replaceTextRange(
                 [node.key.range[0], node.value.range[1]],
-                keyText
+                keyText,
               );
             },
           });
@@ -63,19 +48,38 @@ const rule = {
           node.key.type === 'Identifier'
         ) {
           context.report({
-            node,
             messageId: 'expectedMethodShorthand',
+            node,
             fix(fixer) {
               const keyText = sourceCode.getText(node.key);
-              const params = sourceCode.getText(node.value).match(/function\s*\((.*?)\)/)?.[1] || '';
+              const params =
+                sourceCode
+                  .getText(node.value)
+                  .match(/function\s*\((.*?)\)/)?.[1] || '';
               const body = sourceCode.getText(node.value.body);
-              
+
               return fixer.replaceText(node, `${keyText}(${params}) ${body}`);
             },
           });
         }
       },
     };
+  },
+
+  meta: {
+    docs: {
+      description:
+        'Enforce the use of shorthand syntax for object properties and methods',
+      category: 'ECMAScript 6',
+      recommended: false,
+    },
+    type: 'suggestion',
+    fixable: 'code',
+    messages: {
+      expectedPropertyShorthand: 'Expected property shorthand.',
+      expectedMethodShorthand: 'Expected method shorthand.',
+    },
+    schema: [],
   },
 };
 
@@ -85,7 +89,7 @@ const plugin = {
     version: '1.0.0',
   },
   rules: {
-    'enforce': rule,
+    enforce: rule,
   },
 };
 

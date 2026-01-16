@@ -375,17 +375,17 @@ export const hasFilters = (config: Config['parser']['filters']): boolean => {
 
   return Boolean(
     config.operations?.exclude?.length ||
-      config.operations?.include?.length ||
-      config.parameters?.exclude?.length ||
-      config.parameters?.include?.length ||
-      config.requestBodies?.exclude?.length ||
-      config.requestBodies?.include?.length ||
-      config.responses?.exclude?.length ||
-      config.responses?.include?.length ||
-      config.schemas?.exclude?.length ||
-      config.schemas?.include?.length ||
-      config.tags?.exclude?.length ||
-      config.tags?.include?.length,
+    config.operations?.include?.length ||
+    config.parameters?.exclude?.length ||
+    config.parameters?.include?.length ||
+    config.requestBodies?.exclude?.length ||
+    config.requestBodies?.include?.length ||
+    config.responses?.exclude?.length ||
+    config.responses?.include?.length ||
+    config.schemas?.exclude?.length ||
+    config.schemas?.include?.length ||
+    config.tags?.exclude?.length ||
+    config.tags?.include?.length,
   );
 };
 

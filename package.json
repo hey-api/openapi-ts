@@ -1,21 +1,21 @@
 {
   "name": "openapi-ts-monorepo",
   "version": "0.1.0",
-  "description": "Public @hey-api monorepo",
   "private": true,
+  "description": "Public @hey-api monorepo",
   "homepage": "https://heyapi.dev",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/hey-api/openapi-ts.git"
-  },
   "bugs": {
     "url": "https://github.com/hey-api/openapi-ts/issues"
   },
   "license": "MIT",
   "author": {
-    "email": "lubos@heyapi.dev",
     "name": "Hey API",
+    "email": "lubos@heyapi.dev",
     "url": "https://heyapi.dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hey-api/openapi-ts.git"
   },
   "funding": "https://github.com/sponsors/hey-api",
   "type": "module",
@@ -35,9 +35,6 @@
     "test:watch": "turbo run test:watch",
     "test": "turbo run test",
     "typecheck": "turbo run typecheck"
-  },
-  "engines": {
-    "node": ">=20.19.0"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "0.18.2",
@@ -68,6 +65,9 @@
     "typescript": "5.9.3",
     "typescript-eslint": "8.29.1",
     "vitest": "3.2.4"
+  },
+  "engines": {
+    "node": ">=20.19.0"
   },
   "packageManager": "pnpm@10.25.0"
 }

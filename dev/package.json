@@ -3,9 +3,6 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "engines": {
-    "node": ">=20.19.0"
-  },
   "scripts": {
     "dev": "ts-node ./playground.ts"
   },
@@ -23,5 +20,8 @@
     "typescript": "5.9.3",
     "valibot": "1.2.0",
     "zod": "4.1.12"
+  },
+  "engines": {
+    "node": ">=20.19.0"
   }
 }

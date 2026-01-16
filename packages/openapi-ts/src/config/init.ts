@@ -34,10 +34,10 @@ export type Configs = {
 export const detectInteractiveSession = (): boolean =>
   Boolean(
     process.stdin.isTTY &&
-      process.stdout.isTTY &&
-      !process.env.CI &&
-      !process.env.NO_INTERACTIVE &&
-      !process.env.NO_INTERACTION,
+    process.stdout.isTTY &&
+    !process.env.CI &&
+    !process.env.NO_INTERACTIVE &&
+    !process.env.NO_INTERACTION,
   );
 
 /**
