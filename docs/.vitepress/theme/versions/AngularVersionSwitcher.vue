@@ -1,9 +1,8 @@
 <script setup lang="ts">
-script setup lang="ts">
 import VersionSwitcher from '@components/VersionSwitcher.vue';
 
 const versions = [
-  ts/VersionSwitcher.vue';
+  {
     label: 'Angular 20',
     short: 'v20',
     value: 'v20',
