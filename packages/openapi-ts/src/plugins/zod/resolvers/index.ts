@@ -1,4 +1,5 @@
 export type {
+  EnumResolverContext,
   NumberResolverContext,
   ObjectResolverContext,
   Resolvers,

@@ -17,6 +17,14 @@ import type { ZodPlugin } from '../types';
 
 export type Resolvers = Plugin.Resolvers<{
   /**
+   * Resolver for enum schemas.
+   *
+   * Allows customization of how enum types are rendered.
+   *
+   * Returning `undefined` will execute the default resolver logic.
+   */
+  enum?: (ctx: EnumResolverContext) => Chain | undefined;
+  /**
    * Resolver for number schemas.
    *
    * Allows customization of how number types are rendered.
@@ -96,6 +104,51 @@ interface BaseContext extends DollarTsDsl {
    */
   symbols: {
     z: Symbol;
+  };
+}
+
+export interface EnumResolverContext extends BaseContext {
+  /**
+   * Nodes used to build different parts of the enum schema.
+   */
+  nodes: {
+    /**
+     * Returns the base enum expression (z.enum([...]) or z.union([...]) for mixed types).
+     */
+    base: (ctx: EnumResolverContext) => Chain;
+    /**
+     * Returns parsed enum items with metadata about the enum members.
+     */
+    items: (ctx: EnumResolverContext) => {
+      /**
+       * Whether all enum items are strings (determines if z.enum can be used).
+       */
+      allStrings: boolean;
+      /**
+       * String literal values for use with z.enum([...]).
+       */
+      enumMembers: Array<ReturnType<typeof $.literal>>;
+      /**
+       * Whether the enum includes a null value.
+       */
+      isNullable: boolean;
+      /**
+       * z.literal(...) expressions for each non-null enum value.
+       */
+      literalMembers: Array<Chain>;
+    };
+    /**
+     * Returns a nullable wrapper if the enum includes null, undefined otherwise.
+     */
+    nullable: (ctx: EnumResolverContext) => Chain | undefined;
+  };
+  schema: SchemaWithType<'enum'>;
+  /**
+   * Utility functions for enum schema processing.
+   */
+  utils: {
+    ast: Partial<Omit<Ast, 'typeName'>>;
+    state: Refs<PluginState>;
   };
 }
 
