@@ -8,10 +8,6 @@ export type Baz = {
     baz?: string;
 };
 
-export type QuxAllRead = {
-    readonly baz?: string;
-};
-
 export type ReadableFooRead = ReadableBarRead & {
     readonly foo?: string;
 };
@@ -24,9 +20,17 @@ export type ReadableBarRead = Baz & {
 
 export type WritableBarRead = Baz;
 
+export type ReadableQuxAllRead = {
+    readonly baz?: string;
+};
+
+export type WritableQuxAllRead = {
+    [key: string]: unknown;
+};
+
 export type ReadableQuux = {
     baz?: Array<Baz>;
-    qux?: QuxAllRead;
+    qux?: ReadableQuxAllRead;
 };
 
 export type WritableQuux = {

@@ -915,6 +915,11 @@ export const vModelWithReferenceWritable = v.object({
 });
 
 /**
+ * This is a model with one nested property
+ */
+export const vModelWithNestedPropertiesWritable = v.record(v.string(), v.unknown());
+
+/**
  * This is a model that contains a some patterns
  */
 export const vModelWithPatternWritable = v.object({

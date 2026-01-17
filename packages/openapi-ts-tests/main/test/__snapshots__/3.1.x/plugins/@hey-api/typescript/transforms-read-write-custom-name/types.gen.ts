@@ -8,14 +8,6 @@ export type Baz = {
     baz?: string;
 };
 
-export type QuxAllWrite = {
-    baz?: string;
-};
-
-export type QuxAllRead = {
-    readonly baz?: string;
-};
-
 export type ReadableFooReadWrite = ReadableBarRead;
 
 export type WritableFooReadWrite = WritableBarRead & {
@@ -34,21 +26,37 @@ export type WritableFooWrite = WritableBarWrite & {
     foo?: string;
 };
 
-export type ReadableBarRead = Baz | QuxAllRead | {
+export type ReadableBarRead = Baz | ReadableQuxAllRead | {
     readonly bar?: string;
 };
 
-export type WritableBarRead = Baz | QuxAllWrite;
+export type WritableBarRead = Baz | WritableQuxAllWrite;
 
-export type ReadableBarWrite = Baz | QuxAllRead;
+export type ReadableBarWrite = Baz | ReadableQuxAllRead;
 
-export type WritableBarWrite = Baz | QuxAllWrite | {
+export type WritableBarWrite = Baz | WritableQuxAllWrite | {
     bar?: string;
+};
+
+export type ReadableQuxAllWrite = {
+    [key: string]: unknown;
+};
+
+export type WritableQuxAllWrite = {
+    baz?: string;
+};
+
+export type ReadableQuxAllRead = {
+    readonly baz?: string;
+};
+
+export type WritableQuxAllRead = {
+    [key: string]: unknown;
 };
 
 export type ReadableQuux = {
     baz?: Array<Baz>;
-    qux?: QuxAllRead;
+    qux?: ReadableQuxAllRead;
 };
 
 export type WritableQuux = {
