@@ -2108,6 +2108,7 @@ export const Generic_Schema_Duplicate_Issue_1_System_Boolean_Schema = {
         },
         data: {
             type: 'object',
+            properties: {},
             additionalProperties: false
         }
     },
@@ -2148,16 +2149,6 @@ export const external_shared_ExternalSharedModelSchema = {
     ]
 } as const;
 
-export const ModelWithReferenceWritableSchema = {
-    description: 'This is a model with one property containing a reference',
-    type: 'object',
-    properties: {
-        prop: {
-            $ref: '#/components/schemas/ModelWithPropertiesWritable'
-        }
-    }
-} as const;
-
 export const ModelWithArrayReadOnlyAndWriteOnlyWritableSchema = {
     description: 'This is a model with one property containing an array',
     type: 'object',
@@ -2180,105 +2171,6 @@ export const ModelWithArrayReadOnlyAndWriteOnlyWritableSchema = {
             items: {
                 type: 'number'
             }
-        }
-    }
-} as const;
-
-export const ModelWithPropertiesWritableSchema = {
-    description: 'This is a model with one nested property',
-    type: 'object',
-    required: [
-        'required',
-        'requiredAndNullable'
-    ],
-    properties: {
-        required: {
-            type: 'string'
-        },
-        requiredAndNullable: {
-            type: 'string',
-            nullable: true
-        },
-        string: {
-            type: 'string'
-        },
-        number: {
-            type: 'number'
-        },
-        boolean: {
-            type: 'boolean'
-        },
-        reference: {
-            $ref: '#/components/schemas/ModelWithString'
-        },
-        'property with space': {
-            type: 'string'
-        },
-        default: {
-            type: 'string'
-        },
-        try: {
-            type: 'string'
-        }
-    }
-} as const;
-
-export const ModelWithNestedPropertiesWritableSchema = {
-    description: 'This is a model with one nested property',
-    type: 'object'
-} as const;
-
-export const ModelWithPatternWritableSchema = {
-    description: 'This is a model that contains a some patterns',
-    type: 'object',
-    required: [
-        'key',
-        'name'
-    ],
-    properties: {
-        key: {
-            maxLength: 64,
-            pattern: '^[a-zA-Z0-9_]*$',
-            type: 'string'
-        },
-        name: {
-            maxLength: 255,
-            type: 'string'
-        },
-        id: {
-            type: 'string',
-            pattern: '^\\d{2}-\\d{3}-\\d{4}$'
-        },
-        text: {
-            type: 'string',
-            pattern: '^\\w+$'
-        },
-        patternWithSingleQuotes: {
-            type: 'string',
-            pattern: '^[a-zA-Z0-9\']*$'
-        },
-        patternWithNewline: {
-            type: 'string',
-            pattern: 'aaa\\nbbb'
-        },
-        patternWithBacktick: {
-            type: 'string',
-            pattern: 'aaa`bbb'
-        }
-    }
-} as const;
-
-export const FileWritableSchema = {
-    required: [
-        'mime'
-    ],
-    type: 'object',
-    properties: {
-        mime: {
-            title: 'Mime',
-            type: 'string',
-            maxLength: 24,
-            minLength: 1
         }
     }
 } as const;
@@ -2353,37 +2245,4 @@ export const OneOfAllOfIssueWritableSchema = {
             $ref: '#/components/schemas/Generic.Schema.Duplicate.Issue`1[System.String]'
         }
     ]
-} as const;
-
-export const Generic_Schema_Duplicate_Issue_1_System_Boolean_WritableSchema = {
-    type: 'object',
-    properties: {
-        item: {
-            type: 'boolean'
-        },
-        error: {
-            type: 'string',
-            nullable: true
-        },
-        data: {
-            type: 'object',
-            additionalProperties: false
-        }
-    },
-    additionalProperties: false
-} as const;
-
-export const Generic_Schema_Duplicate_Issue_1_System_String_WritableSchema = {
-    type: 'object',
-    properties: {
-        item: {
-            type: 'string',
-            nullable: true
-        },
-        error: {
-            type: 'string',
-            nullable: true
-        }
-    },
-    additionalProperties: false
 } as const;

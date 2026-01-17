@@ -392,11 +392,13 @@ export const splitSchemas = ({
 
   for (const [pointer, nodeInfo] of graph.nodes) {
     const name = pointerToSchema(pointer);
-    // Only split top-level schemas with read-only or write-only scopes.
-    // Includes schemas with all readOnly/writeOnly properties.
+    // Only split top-level schemas that have BOTH read and write scopes.
+    // This means they have a mix of readOnly and writeOnly properties.
+    // Schemas with only readOnly OR only writeOnly properties are not split.
     if (
       !name ||
-      !(nodeInfo.scopes?.has('read') || nodeInfo.scopes?.has('write'))
+      !nodeInfo.scopes?.has('read') ||
+      !nodeInfo.scopes?.has('write')
     ) {
       continue;
     }
@@ -422,15 +424,14 @@ export const splitSchemas = ({
 
     // Check if this schema (or any of its descendants) references any schema that
     // will need read/write variants. This is determined by checking transitive
-    // dependencies for schemas with read or write scopes (regardless of 'normal' scope presence).
+    // dependencies for schemas with BOTH read AND write scopes.
     const transitiveDeps =
       graph.transitiveDependencies.get(pointer) || new Set();
     const referencesReadWriteSchemas = Array.from(transitiveDeps).some(
       (depPointer) => {
         const depNodeInfo = graph.nodes.get(depPointer);
         return (
-          depNodeInfo?.scopes &&
-          (depNodeInfo.scopes.has('read') || depNodeInfo.scopes.has('write'))
+          depNodeInfo?.scopes?.has('read') && depNodeInfo.scopes.has('write')
         );
       },
     );
