@@ -48,6 +48,7 @@
 - [Leo Developer](https://github.com/Le0Developer)
 - [Louis Duchemin](https://github.com/lsdch)
 - [Lubos](https://github.com/mrlubos)
+- [Luke Rohde](https://github.com/thyming)
 - [Maarten Knijnenberg](https://github.com/mknijnenberg)
 - [Mads Hougesen](https://github.com/hougesen)
 - [Malcolm Kee](https://github.com/malcolm-kee)
