@@ -4,55 +4,39 @@ export type ClientOptions = {
     baseUrl: `${string}://${string}` | (string & {});
 };
 
+export type FooRead = BarRead & {
+    readonly foo?: string;
+};
+
+export type FooWrite = BarWrite & {
+    foo?: string;
+};
+
+export type BarRead = Baz | {
+    readonly bar?: string;
+};
+
+export type BarWrite = Baz | {
+    bar?: string;
+};
+
 export type Baz = {
     baz?: string;
 };
 
-export type ReadableFooReadWrite = ReadableBarRead;
-
-export type WritableFooReadWrite = WritableBarRead & {
-    foo?: string;
-};
-
-export type ReadableFooRead = ReadableBarRead & {
-    readonly foo?: string;
-};
-
-export type WritableFooRead = WritableBarRead;
-
-export type ReadableFooWrite = ReadableBarWrite;
-
-export type WritableFooWrite = WritableBarWrite & {
-    foo?: string;
-};
-
-export type ReadableBarRead = Baz | {
-    readonly bar?: string;
-};
-
-export type WritableBarRead = Baz;
-
-export type ReadableBarWrite = Baz;
-
-export type WritableBarWrite = Baz | {
-    bar?: string;
-};
-
-export type ReadableQuxAllRead = {
+export type QuxAllRead = {
     readonly baz?: string;
 };
 
-export type WritableQuxAllRead = {
-    [key: string]: unknown;
+export type Quux = {
+    baz?: Array<Baz>;
+    qux?: QuxAllRead;
 };
 
-export type ReadableQuux = {
-    baz?: Array<Baz>;
-    qux?: ReadableQuxAllRead;
-};
+export type ReadableFooReadWrite = BarRead;
 
-export type WritableQuux = {
-    baz?: Array<Baz>;
+export type WritableFooReadWrite = BarRead & {
+    foo?: string;
 };
 
 export type ReadableCorge = {
@@ -84,7 +68,7 @@ export type PostFooReadWriteResponses = {
 export type PostFooReadWriteResponse = PostFooReadWriteResponses[keyof PostFooReadWriteResponses];
 
 export type PostFooReadData = {
-    body: WritableFooRead;
+    body: FooRead;
     path?: never;
     query?: never;
     url: '/foo-read';
@@ -94,13 +78,13 @@ export type PostFooReadResponses = {
     /**
      * OK
      */
-    200: ReadableFooRead;
+    200: FooRead;
 };
 
 export type PostFooReadResponse = PostFooReadResponses[keyof PostFooReadResponses];
 
 export type PostFooWriteData = {
-    body: WritableFooWrite;
+    body: FooWrite;
     path?: never;
     query?: never;
     url: '/foo-write';
@@ -110,7 +94,7 @@ export type PostFooWriteResponses = {
     /**
      * OK
      */
-    200: ReadableFooWrite;
+    200: FooWrite;
 };
 
 export type PostFooWriteResponse = PostFooWriteResponses[keyof PostFooWriteResponses];
