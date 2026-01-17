@@ -2,6 +2,8 @@
 
 import {
   type DefaultError,
+  type InfiniteData,
+  infiniteQueryOptions,
   queryOptions,
   type UseMutationOptions,
 } from '@tanstack/react-query';
@@ -193,6 +195,91 @@ export const findPetsByTagsOptions = (options: Options<FindPetsByTagsData>) =>
       return data;
     },
     queryKey: findPetsByTagsQueryKey(options),
+  });
+
+const createInfiniteParams = <
+  K extends Pick<QueryKey<Options>[0], 'body' | 'headers' | 'path' | 'query'>,
+>(
+  queryKey: QueryKey<Options>,
+  page: K,
+) => {
+  const params = { ...queryKey[0] };
+  if (page.body) {
+    params.body = {
+      ...(queryKey[0].body as any),
+      ...(page.body as any),
+    };
+  }
+  if (page.headers) {
+    params.headers = {
+      ...queryKey[0].headers,
+      ...page.headers,
+    };
+  }
+  if (page.path) {
+    params.path = {
+      ...(queryKey[0].path as any),
+      ...(page.path as any),
+    };
+  }
+  if (page.query) {
+    params.query = {
+      ...(queryKey[0].query as any),
+      ...(page.query as any),
+    };
+  }
+  return params as unknown as typeof page;
+};
+
+export const findPetsByTagsInfiniteQueryKey = (
+  options: Options<FindPetsByTagsData>,
+): QueryKey<Options<FindPetsByTagsData>> =>
+  createQueryKey('findPetsByTags', options, true);
+
+/**
+ * Finds Pets by tags.
+ *
+ * Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.
+ */
+export const findPetsByTagsInfiniteOptions = (
+  options: Options<FindPetsByTagsData>,
+) =>
+  infiniteQueryOptions<
+    FindPetsByTagsResponse,
+    DefaultError,
+    InfiniteData<FindPetsByTagsResponse>,
+    QueryKey<Options<FindPetsByTagsData>>,
+    | Array<string>
+    | Pick<
+        QueryKey<Options<FindPetsByTagsData>>[0],
+        'body' | 'headers' | 'path' | 'query'
+      >
+  >({
+    getNextPageParam: (() => {}) as any,
+    initialPageParam: {} as any,
+    queryFn: async ({ pageParam, queryKey, signal }) => {
+      // @ts-ignore
+      const page: Pick<
+        QueryKey<Options<FindPetsByTagsData>>[0],
+        'body' | 'headers' | 'path' | 'query'
+      > =
+        typeof pageParam === 'object'
+          ? pageParam
+          : {
+              query: {
+                tags: pageParam,
+              },
+            };
+      const params = createInfiniteParams(queryKey, page);
+      const { data } = await Sdk.__registry.get().findPetsByTags({
+        ...options,
+        ...params,
+        signal,
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: findPetsByTagsInfiniteQueryKey(options),
   });
 
 /**
