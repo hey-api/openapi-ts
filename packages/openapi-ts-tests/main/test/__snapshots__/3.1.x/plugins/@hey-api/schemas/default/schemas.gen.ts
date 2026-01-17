@@ -2270,6 +2270,11 @@ export const ModelWithPropertiesWritableSchema = {
     }
 } as const;
 
+export const ModelWithNestedPropertiesWritableSchema = {
+    description: 'This is a model with one nested property',
+    type: 'object'
+} as const;
+
 export const ModelWithPatternWritableSchema = {
     description: 'This is a model that contains a some patterns',
     type: 'object',

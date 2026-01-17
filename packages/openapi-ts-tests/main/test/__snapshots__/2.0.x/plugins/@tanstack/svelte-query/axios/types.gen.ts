@@ -441,6 +441,13 @@ export type ModelWithPropertiesWritable = {
 };
 
 /**
+ * This is a model with one nested property
+ */
+export type ModelWithNestedPropertiesWritable = {
+    [key: string]: unknown;
+};
+
+/**
  * This is a model that contains a some patterns
  */
 export type ModelWithPatternWritable = {
