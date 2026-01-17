@@ -11,15 +11,15 @@ export type Field =
        * Field mapped name. This is the name we want to use in the request.
        * If omitted, we use the same value as `key`.
        */
-      map?: string;
+      map?: string | undefined;
     }
   | {
       in: Extract<Slot, 'body'>;
       /**
        * Key isn't required for bodies.
        */
-      key?: string;
-      map?: string;
+      key?: string | undefined;
+      map?: string | undefined;
     }
   | {
       /**
@@ -34,8 +34,8 @@ export type Field =
     };
 
 export interface Fields {
-  allowExtra?: Partial<Record<Slot, boolean>>;
-  args?: ReadonlyArray<Field>;
+  allowExtra?: Partial<Record<Slot, boolean>> | undefined;
+  args?: ReadonlyArray<Field> | undefined;
 }
 
 export type FieldsConfig = ReadonlyArray<Field | Fields>;
@@ -52,7 +52,7 @@ type KeyMap = Map<
   string,
   | {
       in: Slot;
-      map?: string;
+      map?: string | undefined;
     }
   | {
       in?: never;
