@@ -1,0 +1,56 @@
+openapi: 3.1.1
+info:
+  title: Test for all readOnly/writeOnly properties
+  version: 1.0.0
+paths:
+  /token:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenObtain'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenObtain'
+          description: OK
+components:
+  schemas:
+    TokenObtain:
+      type: object
+      properties:
+        email:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+        expires_at:
+          type: integer
+          readOnly: true
+        user_id:
+          type: string
+          format: uuid
+          readOnly: true
+        refresh_token:
+          type: string
+          readOnly: true
+        access_token:
+          type: string
+          readOnly: true
+        token_type:
+          type: string
+          readOnly: true
+          default: Bearer
+      required:
+        - access_token
+        - email
+        - expires_at
+        - password
+        - refresh_token
+        - token_type
+        - user_id
