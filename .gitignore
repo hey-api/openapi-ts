@@ -23,6 +23,7 @@ coverage
 # test files
 .gen/
 test/generated
+test-output-*
 
 # debug files
 openapi-ts-debug-*
