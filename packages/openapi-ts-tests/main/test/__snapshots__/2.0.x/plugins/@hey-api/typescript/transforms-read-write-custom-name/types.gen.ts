@@ -4,14 +4,6 @@ export type ClientOptions = {
     baseUrl: string;
 };
 
-export type FooRead = BarRead & {
-    readonly foo?: string;
-};
-
-export type BarRead = Baz & {
-    readonly bar?: string;
-};
-
 export type Baz = {
     baz?: string;
 };
@@ -20,20 +12,40 @@ export type QuxAllRead = {
     readonly baz?: string;
 };
 
-export type Quux = {
+export type ReadableFooRead = ReadableBarRead & {
+    readonly foo?: string;
+};
+
+export type WritableFooRead = WritableBarRead;
+
+export type ReadableBarRead = Baz & {
+    readonly bar?: string;
+};
+
+export type WritableBarRead = Baz;
+
+export type ReadableQuux = {
     baz?: Array<Baz>;
     qux?: QuxAllRead;
 };
 
-export type Corge = {
+export type WritableQuux = {
+    baz?: Array<Baz>;
+};
+
+export type ReadableCorge = {
     foo?: string;
     bar?: {
         readonly baz?: boolean;
     };
 };
 
+export type WritableCorge = {
+    foo?: string;
+};
+
 export type PostFooReadData = {
-    body: FooRead;
+    body: WritableFooRead;
     path?: never;
     query?: never;
     url: '/foo-read';
@@ -43,7 +55,7 @@ export type PostFooReadResponses = {
     /**
      * OK
      */
-    200: FooRead;
+    200: ReadableFooRead;
 };
 
 export type PostFooReadResponse = PostFooReadResponses[keyof PostFooReadResponses];

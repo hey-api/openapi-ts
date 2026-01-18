@@ -419,6 +419,40 @@ export type ExternalSharedExternalSharedModel = {
     name?: string;
 };
 
+/**
+ * This is a model with one property containing a reference
+ */
+export type ModelWithReferenceWritable = {
+    prop?: ModelWithPropertiesWritable;
+};
+
+/**
+ * This is a model with one nested property
+ */
+export type ModelWithPropertiesWritable = {
+    required: string;
+    string?: string;
+    number?: number;
+    boolean?: boolean;
+    reference?: ModelWithString;
+    'property with space'?: string;
+    default?: string;
+    try?: string;
+};
+
+/**
+ * This is a model that contains a some patterns
+ */
+export type ModelWithPatternWritable = {
+    key: string;
+    name: string;
+    id?: string;
+    text?: string;
+    patternWithSingleQuotes?: string;
+    patternWithNewline?: string;
+    patternWithBacktick?: string;
+};
+
 export type ServiceWithEmptyTagData = {
     body?: never;
     path?: never;
