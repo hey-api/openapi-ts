@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.90.5
+
+### Patch Changes
+
+- **plugin(@hey-api/sdk)**: do not warn on mutualTLS security schemes ([#3218](https://github.com/hey-api/openapi-ts/pull/3218)) ([`97c0a2e`](https://github.com/hey-api/openapi-ts/commit/97c0a2ec60490f135f4ad438108e36a4229d2c35)) by [@mrlubos](https://github.com/mrlubos)
+
 ## 0.90.4
 
 ### Patch Changes
