@@ -5,10 +5,11 @@
 </div>
 
 <p align="center">
-  <a href="https://npmjs.com/package/@hey-api/openapi-ts" rel="nofollow"><img src="https://img.shields.io/npm/dm/%40hey-api%2Fopenapi-ts?label=npm" alt="npm downloads"></a>
+  <a href="https://www.devtrends.dev/trends?c=v1.kZIBIg"><img src="https://api.devtrends.dev/badge/npm/%40hey-api%2Fopenapi-ts?period=month&style=flat&view=value" alt="DevTrends badge for @hey-api/openapi-ts" /></a>
+  <a href="https://www.devtrends.dev/trends?c=v1.kZIBIg&v=change"><img src="https://api.devtrends.dev/badge/npm/%40hey-api%2Fopenapi-ts?period=year&style=flat&view=change" alt="DevTrends badge for @hey-api/openapi-ts" /></a>
   <a href="https://github.com/hey-api/openapi-ts/actions?query=branch%3Amain"><img src="https://github.com/hey-api/openapi-ts/actions/workflows/ci.yml/badge.svg?event=push&branch=main" alt="CI status" /></a>
-  <a href="https://github.com/hey-api/openapi-ts" rel="nofollow"><img src="https://img.shields.io/github/stars/hey-api/openapi-ts?style=flat&logo=github&label=GitHub&color=54C82D" alt="GitHub stars" /></a>
-  <a href="https://github.com/hey-api/openapi-ts/blob/main/LICENSE.md" rel="nofollow"><img src="https://img.shields.io/github/license/hey-api/openapi-ts" alt="MIT License"></a>
+  <a href="https://github.com/hey-api/openapi-ts"><img src="https://img.shields.io/github/stars/hey-api/openapi-ts?style=flat&logo=github&label=GitHub&color=54C82D" alt="GitHub stars" /></a>
+  <a href="https://github.com/hey-api/openapi-ts/blob/main/LICENSE.md"><img src="https://img.shields.io/github/license/hey-api/openapi-ts" alt="MIT License"></a>
 </p>
 
 <p align="center">
