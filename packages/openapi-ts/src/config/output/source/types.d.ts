@@ -1,4 +1,4 @@
-import type { MaybePromise } from '~/types/utils';
+import type { MaybePromise } from '@hey-api/types';
 
 import type { FeatureToggle } from '../../shared';
 

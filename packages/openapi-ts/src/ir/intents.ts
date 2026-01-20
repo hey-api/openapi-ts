@@ -1,5 +1,6 @@
+import type { MaybePromise } from '@hey-api/types';
+
 import type { CodeSampleObject } from '~/openApi/shared/types';
-import type { MaybePromise } from '~/types/utils';
 
 import type { IR } from './types';
 

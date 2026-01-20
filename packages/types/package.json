@@ -1,0 +1,10 @@
+{
+  "name": "@hey-api/types",
+  "private": true,
+  "description": "Shared utility types.",
+  "type": "module",
+  "types": "./src/index.ts",
+  "files": [
+    "src"
+  ]
+}
