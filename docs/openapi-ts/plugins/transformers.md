@@ -79,7 +79,15 @@ export default {
 };
 ```
 
-This will generate types that use `Date` instead of `string` and appropriate transformers. Note that third-party date packages are not supported at the moment.
+This will generate types that use `Date` instead of `string` and appropriate transformers for fields with `format: "date-time"`. Fields with `format: "date"` will remain as strings since they represent date-only values (e.g., `2024-01-20`) without time information.
+
+::: tip
+The OpenAPI specification defines two date formats:
+- `date-time`: Full timestamp with time and timezone (e.g., `2024-01-20T15:30:00Z`) - **converted to `Date`**
+- `date`: Date only without time (e.g., `2024-01-20`) - **kept as `string`**
+:::
+
+Note that third-party date packages are not supported at the moment.
 
 ## BigInt
 

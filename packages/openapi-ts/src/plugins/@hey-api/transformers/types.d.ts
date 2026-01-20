@@ -25,7 +25,8 @@ export type UserConfig = Plugin.Name<'@hey-api/transformers'> &
      */
     bigInt?: boolean;
     /**
-     * Convert date strings into Date objects?
+     * Convert date-time strings into Date objects?
+     * Only affects fields with format "date-time", not "date".
      *
      * @default true
      */
@@ -56,7 +57,8 @@ export type Config = Plugin.Name<'@hey-api/transformers'> &
      */
     bigInt: boolean;
     /**
-     * Convert date strings into Date objects?
+     * Convert date-time strings into Date objects?
+     * Only affects fields with format "date-time", not "date".
      *
      * @default true
      */
