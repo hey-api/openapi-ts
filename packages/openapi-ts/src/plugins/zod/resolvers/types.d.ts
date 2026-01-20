@@ -1,4 +1,5 @@
 import type { Refs, Symbol } from '@hey-api/codegen-core';
+import type { MaybeArray } from '@hey-api/types';
 import type ts from 'typescript';
 
 import type { IR } from '~/ir/types';
@@ -9,7 +10,6 @@ import type {
 } from '~/plugins/shared/utils/coerce';
 import type { GetIntegerLimit } from '~/plugins/shared/utils/formats';
 import type { $, DollarTsDsl, TsDsl } from '~/ts-dsl';
-import type { MaybeArray } from '~/types/utils';
 
 import type { Chain } from '../shared/chain';
 import type { Ast, PluginState } from '../shared/types';

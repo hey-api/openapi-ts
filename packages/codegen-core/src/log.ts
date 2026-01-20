@@ -1,20 +1,9 @@
+import type { MaybeArray, MaybeFunc } from '@hey-api/types';
 import colors from 'ansi-colors';
 // @ts-expect-error
 import colorSupport from 'color-support';
 
 colors.enabled = colorSupport().hasBasic;
-
-/**
- * Accepts a value or a readonly array of values of type T.
- */
-export type MaybeArray<T> = T | ReadonlyArray<T>;
-
-/**
- * Accepts a value or a function returning a value.
- */
-export type MaybeFunc<T extends (...args: Array<any>) => any> =
-  | T
-  | ReturnType<T>;
 
 const DEBUG_NAMESPACE = 'heyapi';
 

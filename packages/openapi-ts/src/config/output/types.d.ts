@@ -2,9 +2,9 @@ import type {
   NameConflictResolver,
   RenderContext,
 } from '@hey-api/codegen-core';
+import type { MaybeArray, MaybeFunc } from '@hey-api/types';
 import type ts from 'typescript';
 
-import type { MaybeArray, MaybeFunc } from '~/types/utils';
 import type { Casing, NameTransformer } from '~/utils/naming';
 
 import type { NamingOptions } from '../shared';
