@@ -1,10 +1,14 @@
 {
   "name": "@hey-api/types",
-  "private": true,
+  "version": "0.1.0",
   "description": "Shared utility types.",
   "type": "module",
   "types": "./src/index.ts",
   "files": [
     "src"
-  ]
+  ],
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
 }

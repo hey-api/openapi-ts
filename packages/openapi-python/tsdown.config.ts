@@ -19,7 +19,6 @@ export default defineConfig({
   entry: ['./src/{index,run}.ts'],
   format: ['cjs', 'esm'],
   minify: false,
-  noExternal: ['@hey-api/types'],
   shims: false,
   sourcemap: true,
   treeshake: true,
