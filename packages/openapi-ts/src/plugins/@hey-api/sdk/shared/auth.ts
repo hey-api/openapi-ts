@@ -90,7 +90,7 @@ export const operationAuth = ({
     });
     if (authObject) {
       auth.push(authObject);
-    } else {
+    } else if (securitySchemeObject.type !== 'mutualTLS') {
       console.warn(
         `❗️ SDK warning: unsupported security scheme. Please open an issue if you'd like it added https://github.com/hey-api/openapi-ts/issues\n${JSON.stringify(securitySchemeObject, null, 2)}`,
       );

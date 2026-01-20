@@ -1,0 +1,29 @@
+openapi: 3.0.4
+info:
+  title: OpenAPI 3.0.4 security api key example
+  version: '1'
+paths:
+  /foo:
+    get:
+      responses:
+        '200':
+          description: OK
+      security:
+        - foo: []
+  /bar:
+    get:
+      responses:
+        '200':
+          description: OK
+      security:
+        - bar: []
+components:
+  securitySchemes:
+    foo:
+      in: query
+      name: foo
+      type: apiKey
+    bar:
+      in: cookie
+      name: bar
+      type: apiKey
