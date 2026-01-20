@@ -1,13 +1,4 @@
-import type { MaybeArray } from '@hey-api/types';
-
-import type { Output, UserOutput } from '~/config/output';
-import type { Plugin } from '~/plugins';
-import type { PluginConfigMap } from '~/plugins/config';
-import type { PluginNames } from '~/plugins/types';
-
-import type { Input, UserInput, Watch } from './input';
-import type { Logs } from './logs';
-import type { Parser, UserParser } from './parser';
+// import { MaybeArray } from "@hey-api/types";
 
 export interface UserConfig {
   /**
@@ -36,7 +27,7 @@ export interface UserConfig {
    * inputs. If you define an array of outputs with the same length, we will
    * generate multiple outputs, one for each input.
    */
-  input: MaybeArray<UserInput | Required<UserInput>['path']>;
+  // input: MaybeArray<UserInput | Required<UserInput>['path']>;
   /**
    * Show an interactive error reporting tool when the program crashes? You
    * generally want to keep this disabled (default).
@@ -49,60 +40,32 @@ export interface UserConfig {
    *
    * @default process.cwd()
    */
-  logs?: string | Logs;
+  // logs?: string | Logs;
   /**
    * Path to the output folder.
    *
    * If you define an array of outputs with the same length as inputs, we will
    * generate multiple outputs, one for each input.
    */
-  output: MaybeArray<string | UserOutput>;
+  // output: MaybeArray<string | UserOutput>;
   /**
    * Customize how the input is parsed and transformed before it's passed to
    * plugins.
    */
-  parser?: UserParser;
+  // parser?: UserParser;
   /**
    * Plugins generate artifacts from `input`. By default, we generate SDK
    * functions and TypeScript interfaces. If you manually define `plugins`,
    * you need to include the default plugins if you wish to use them.
    *
-   * @default ['@hey-api/typescript', '@hey-api/sdk']
+   * @default ['@hey-api/sdk']
    */
-  plugins?: ReadonlyArray<
-    | PluginNames
-    | {
-        [K in PluginNames]: PluginConfigMap[K]['config'] & {
-          name: K;
-        };
-      }[PluginNames]
-  >;
-  /**
-   * @deprecated use `input.watch` instead
-   */
-  watch?: boolean | number | Watch;
+  // plugins?: ReadonlyArray<
+  //   | PluginNames
+  //   | {
+  //       [K in PluginNames]: PluginConfigMap[K]['config'] & {
+  //         name: K;
+  //       };
+  //     }[PluginNames]
+  // >;
 }
-
-export type Config = Omit<
-  Required<UserConfig>,
-  'input' | 'logs' | 'output' | 'parser' | 'plugins' | 'watch'
-> & {
-  /**
-   * Path to the input specification.
-   */
-  input: ReadonlyArray<Input>;
-  logs: Logs;
-  /**
-   * Path to the output folder.
-   */
-  output: Output;
-  /**
-   * Customize how the input is parsed and transformed before it's passed to
-   * plugins.
-   */
-  parser: Parser;
-  pluginOrder: ReadonlyArray<keyof PluginConfigMap>;
-  plugins: {
-    [K in PluginNames]?: Plugin.Config<PluginConfigMap[K]>;
-  };
-};

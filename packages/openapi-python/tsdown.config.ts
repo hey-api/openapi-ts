@@ -16,7 +16,7 @@ export default defineConfig({
   },
   clean: true,
   dts: true,
-  entry: ['src/index.ts'],
+  entry: ['./src/{index,run}.ts'],
   format: ['cjs', 'esm'],
   minify: false,
   noExternal: ['@hey-api/types'],

@@ -1,3 +1,5 @@
+import type { LazyOrAsync, MaybeArray } from '@hey-api/types';
+
 import { checkNodeVersion } from '~/config/engine';
 import type { Configs } from '~/config/init';
 import { initConfigs } from '~/config/init';
@@ -13,7 +15,6 @@ import {
 } from '~/error';
 import type { Context } from '~/ir/context';
 import type { UserConfig } from '~/types/config';
-import type { LazyOrAsync, MaybeArray } from '~/types/utils';
 import { printCliIntro } from '~/utils/cli';
 import { Logger } from '~/utils/logger';
 

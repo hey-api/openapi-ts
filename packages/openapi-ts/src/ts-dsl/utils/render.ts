@@ -1,10 +1,10 @@
 import type { RenderContext, Renderer } from '@hey-api/codegen-core';
+import type { MaybeArray, MaybeFunc } from '@hey-api/types';
 import ts from 'typescript';
 
 import type { TsDsl } from '~/ts-dsl';
 import { $ } from '~/ts-dsl';
 
-import type { MaybeArray, MaybeFunc } from '../base';
 import type {
   ModuleExport,
   ModuleImport,

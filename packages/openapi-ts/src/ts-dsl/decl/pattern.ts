@@ -1,7 +1,7 @@
 import type { AnalysisContext } from '@hey-api/codegen-core';
+import type { MaybeArray } from '@hey-api/types';
 import ts from 'typescript';
 
-import type { MaybeArray } from '../base';
 import { TsDsl } from '../base';
 import { IdTsDsl } from '../expr/id';
 import { TokenTsDsl } from '../token';

@@ -1,7 +1,7 @@
 import type { AnalysisContext, Node } from '@hey-api/codegen-core';
+import type { MaybeArray } from '@hey-api/types';
 import type ts from 'typescript';
 
-import type { MaybeArray } from '../base';
 import { PatternTsDsl } from '../decl/pattern';
 import type { BaseCtor, MixinCtor } from './types';
 

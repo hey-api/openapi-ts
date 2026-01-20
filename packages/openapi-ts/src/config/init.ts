@@ -1,10 +1,10 @@
 import path from 'node:path';
 
+import type { ArrayOnly } from '@hey-api/types';
 import colors from 'ansi-colors';
 
 import { ConfigError } from '~/error';
 import type { Config, UserConfig } from '~/types/config';
-import type { ArrayOnly } from '~/types/utils';
 import type { Logger } from '~/utils/logger';
 
 import { getInput } from './input';
