@@ -7,8 +7,13 @@
   "files": [
     "src"
   ],
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  }
+  "homepage": "https://heyapi.dev/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hey-api/openapi-ts.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hey-api/openapi-ts/issues"
+  },
+  "license": "MIT"
 }
