@@ -710,7 +710,7 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'security-api-key.json',
+        input: 'security-api-key.yaml',
         output: 'security-api-key',
         plugins: [
           '@hey-api/client-fetch',
