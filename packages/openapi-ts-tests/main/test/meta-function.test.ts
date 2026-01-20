@@ -19,7 +19,7 @@ describe('TanStack Query Meta Function Customization', () => {
   const createConfig = (
     userConfig: Omit<UserConfig, 'input'> & Pick<Partial<UserConfig>, 'input'>,
   ): UserConfig => ({
-    input: path.join(getSpecsPath(), version, 'security-api-key.json'),
+    input: path.join(getSpecsPath(), version, 'security-api-key.yaml'),
     logs: {
       level: 'silent',
     },
