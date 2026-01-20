@@ -1,4 +1,4 @@
-import type { MaybeFunc } from '~/types/utils';
+import type { MaybeFunc } from '@hey-api/types';
 
 /**
  * Available casing strategies.

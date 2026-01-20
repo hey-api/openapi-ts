@@ -32,6 +32,7 @@ export default defineConfig({
   entry: ['./src/{index,internal,run}.ts'],
   format: ['cjs', 'esm'],
   minify: false,
+  noExternal: ['@hey-api/types'],
   onSuccess: async () => {
     // Copy client files to dist folder for runtime access
     const pluginNames = [
