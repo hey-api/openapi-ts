@@ -40,11 +40,14 @@ const asciiToLines = (
   return { lines, maxLineLength };
 };
 
-export function printCliIntro() {
+// TODO: show ascii logo only in `--help` and `--version` commands
+export function printCliIntro(showLogo: boolean = false): void {
   const packageJson = loadPackageJson();
-  const text = asciiToLines(textAscii, { padding: 1 });
-  for (const line of text.lines) {
-    console.log(colors.cyan(line));
+  if (showLogo) {
+    const text = asciiToLines(textAscii, { padding: 1 });
+    for (const line of text.lines) {
+      console.log(colors.cyan(line));
+    }
   }
   console.log(colors.gray(`${packageJson.name} v${packageJson.version}`));
   console.log('');
