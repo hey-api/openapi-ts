@@ -1,5 +1,17 @@
 # @hey-api/openapi-ts
 
+## 0.90.8
+
+### Patch Changes
+
+- **internal**: move logger to codegen-core ([#3235](https://github.com/hey-api/openapi-ts/pull/3235)) ([`88532f0`](https://github.com/hey-api/openapi-ts/commit/88532f01200e1111818e82a4af7bd5cf8cf26e3b)) by [@mrlubos](https://github.com/mrlubos)
+
+- **cli**: do not show ascii logo on generate command ([#3238](https://github.com/hey-api/openapi-ts/pull/3238)) ([`72e17f3`](https://github.com/hey-api/openapi-ts/commit/72e17f39d6e2d00eff24671e7f2b88801443489a)) by [@mrlubos](https://github.com/mrlubos)
+
+### Updated Dependencies:
+
+- @hey-api/codegen-core@0.5.4
+
 ## 0.90.7
 
 ### Patch Changes

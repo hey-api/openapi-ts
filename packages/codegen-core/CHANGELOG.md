@@ -1,5 +1,11 @@
 # @hey-api/codegen-core
 
+## 0.5.4
+
+### Patch Changes
+
+- **internal**: move logger to codegen-core ([#3235](https://github.com/hey-api/openapi-ts/pull/3235)) ([`88532f0`](https://github.com/hey-api/openapi-ts/commit/88532f01200e1111818e82a4af7bd5cf8cf26e3b)) by [@mrlubos](https://github.com/mrlubos)
+
 ## 0.5.3
 
 ### Patch Changes
