@@ -20,6 +20,7 @@ export type {
   NameConflictResolvers,
 } from './languages/types';
 export { log } from './log';
+export { Logger } from './logger';
 export type {
   INode as Node,
   NodeName,

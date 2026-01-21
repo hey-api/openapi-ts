@@ -1,7 +1,8 @@
-import type { Config, UserConfig } from '~/types/config';
 import type { Input, Watch } from '~/types/input';
 import { inputToApiRegistry } from '~/utils/input';
 import { heyApiRegistryBaseUrl } from '~/utils/input/heyApi';
+
+import type { Config, UserConfig } from './types';
 
 const defaultWatch: Watch = {
   enabled: false,

@@ -1,13 +1,13 @@
 import type { MaybeArray } from '@hey-api/types';
 
-import type { Output, UserOutput } from '~/config/output';
 import type { Plugin } from '~/plugins';
 import type { PluginConfigMap } from '~/plugins/config';
 import type { PluginNames } from '~/plugins/types';
+import type { Input, UserInput, Watch } from '~/types/input';
+import type { Logs } from '~/types/logs';
+import type { Parser, UserParser } from '~/types/parser';
 
-import type { Input, UserInput, Watch } from './input';
-import type { Logs } from './logs';
-import type { Parser, UserParser } from './parser';
+import type { Output, UserOutput } from './output';
 
 export interface UserConfig {
   /**

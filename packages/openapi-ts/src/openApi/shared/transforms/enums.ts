@@ -1,7 +1,7 @@
+import type { Config } from '~/config/types';
 import { applyNaming } from '~/utils/naming';
 import { jsonPointerToPath } from '~/utils/ref';
 
-import type { Config } from '../../../types/config';
 import { deepClone } from '../utils/schema';
 import { childSchemaRelationships } from '../utils/schemaChildRelationships';
 import { getSchemasObject } from '../utils/transforms';
