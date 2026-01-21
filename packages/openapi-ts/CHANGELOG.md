@@ -1,5 +1,15 @@
 # @hey-api/openapi-ts
 
+## 0.90.7
+
+### Patch Changes
+
+- **deps**: move @hey-api/types to dependencies to fix broken types ([#3232](https://github.com/hey-api/openapi-ts/pull/3232)) ([`edfce48`](https://github.com/hey-api/openapi-ts/commit/edfce4875cb9279d3ab8bfd438ff177e8ba7845c)) by [@mrlubos](https://github.com/mrlubos)
+
+### Updated Dependencies:
+
+- @hey-api/codegen-core@0.5.3
+
 ## 0.90.6
 
 ### Patch Changes
