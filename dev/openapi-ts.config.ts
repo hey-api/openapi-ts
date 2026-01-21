@@ -49,8 +49,8 @@ export default defineConfig(() => {
           path: path.resolve(
             getSpecsPath(),
             // '2.0.x',
-            // '3.0.x',
-            '3.1.x',
+            '3.0.x',
+            // '3.1.x',
             // 'circular.yaml',
             // 'dutchie.json',
             // 'enum-names-values.yaml',
@@ -66,8 +66,9 @@ export default defineConfig(() => {
             // 'sdk-method-class-conflict.yaml',
             // 'sdk-nested-classes.yaml',
             // 'sdk-nested-conflict.yaml',
-            'security-api-key.yaml',
+            // 'security-api-key.yaml',
             // 'string-with-format.yaml',
+            'broken.yaml',
             // 'transformers.json',
             // 'transformers-recursive.json',
             // 'type-format.yaml',
@@ -288,7 +289,7 @@ export default defineConfig(() => {
           //   name: '你們_errors_{{name}}',
           // },
           // exportFromIndex: false,
-          // name: '@hey-api/typescript',
+          name: '@hey-api/typescript',
           // requests: '我們_data_{{name}}',
           // responses: {
           //   name: '我_responses_{{name}}',
@@ -333,7 +334,7 @@ export default defineConfig(() => {
           //   fields.unwrap('path')
           // },
           // include...
-          name: '@hey-api/sdk',
+          // name: '@hey-api/sdk',
           operations: {
             // container: 'object',
             // containerName: {
