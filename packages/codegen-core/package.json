@@ -1,6 +1,6 @@
 {
   "name": "@hey-api/codegen-core",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "description": "🧱 TypeScript framework for generating files.",
   "homepage": "https://heyapi.dev/",
   "repository": {
