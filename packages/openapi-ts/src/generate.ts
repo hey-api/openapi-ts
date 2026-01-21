@@ -1,9 +1,11 @@
+import { Logger } from '@hey-api/codegen-core';
 import type { LazyOrAsync, MaybeArray } from '@hey-api/types';
 
 import { checkNodeVersion } from '~/config/engine';
 import type { Configs } from '~/config/init';
 import { initConfigs } from '~/config/init';
 import { getLogs } from '~/config/logs';
+import type { UserConfig } from '~/config/types';
 import { createClient as pCreateClient } from '~/createClient';
 import {
   ConfigValidationError,
@@ -14,9 +16,7 @@ import {
   shouldReportCrash,
 } from '~/error';
 import type { Context } from '~/ir/context';
-import type { UserConfig } from '~/types/config';
 import { printCliIntro } from '~/utils/cli';
-import { Logger } from '~/utils/logger';
 
 /**
  * Generate a client from the provided configuration.

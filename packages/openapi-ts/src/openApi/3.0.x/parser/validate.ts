@@ -1,10 +1,11 @@
+import type { Logger } from '@hey-api/codegen-core';
+
 import { createOperationKey } from '~/ir/operation';
 import { httpMethods } from '~/openApi/shared/utils/operation';
 import type {
   ValidatorIssue,
   ValidatorResult,
 } from '~/openApi/shared/utils/validator';
-import type { Logger } from '~/utils/logger';
 
 import type { OpenApiV3_0_X, PathItemObject, PathsObject } from '../types/spec';
 

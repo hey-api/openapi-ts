@@ -1,11 +1,10 @@
 import path from 'node:path';
 
+import type { Logger } from '@hey-api/codegen-core';
 import type { ArrayOnly } from '@hey-api/types';
 import colors from 'ansi-colors';
 
 import { ConfigError } from '~/error';
-import type { Config, UserConfig } from '~/types/config';
-import type { Logger } from '~/utils/logger';
 
 import { getInput } from './input';
 import { getLogs } from './logs';
@@ -14,6 +13,7 @@ import { getOutput } from './output';
 import { getProjectDependencies } from './packages';
 import { getParser } from './parser';
 import { getPlugins } from './plugins';
+import type { Config, UserConfig } from './types';
 
 type ConfigResult = {
   config: Config;
