@@ -1,11 +1,12 @@
+import type { Logger } from '@hey-api/codegen-core';
+
+import type { Config } from '~/config/types';
 import { satisfies } from '~/config/utils/package';
 import { Context } from '~/ir/context';
 import { parseV2_0_X } from '~/openApi/2.0.x';
 import { parseV3_0_X } from '~/openApi/3.0.x';
 import { parseV3_1_X } from '~/openApi/3.1.x';
 import type { OpenApi } from '~/openApi/types';
-import type { Config } from '~/types/config';
-import type { Logger } from '~/utils/logger';
 
 /**
  * @internal

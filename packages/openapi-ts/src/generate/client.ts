@@ -4,10 +4,10 @@ import { fileURLToPath } from 'node:url';
 
 import type { IProject, ProjectRenderMeta } from '@hey-api/codegen-core';
 
+import type { Config } from '~/config/types';
 import type { DefinePlugin } from '~/plugins';
 import type { Client } from '~/plugins/@hey-api/client-core/types';
 import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
-import type { Config } from '~/types/config';
 
 import { ensureDirSync } from './utils';
 

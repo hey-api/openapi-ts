@@ -7,6 +7,8 @@ import { customClientPlugin } from '@hey-api/custom-client/plugin';
 import {
   // @ts-ignore
   defineConfig,
+} from '@hey-api/openapi-python';
+import {
   // @ts-ignore
   OperationPath,
   // @ts-ignore
@@ -24,6 +26,8 @@ import { getSpecsPath } from '../packages/openapi-ts-tests/utils';
 
 reserved.runtime.set((list) => [...list, 'Agent']);
 reserved.type.set((list) => [...list, 'Agent']);
+
+console.log('yo');
 
 // @ts-ignore
 export default defineConfig(() => {

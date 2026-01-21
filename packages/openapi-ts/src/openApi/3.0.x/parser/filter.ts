@@ -1,7 +1,8 @@
+import type { Logger } from '@hey-api/codegen-core';
+
 import { createOperationKey } from '~/ir/operation';
 import { addNamespace, removeNamespace } from '~/openApi/shared/utils/filter';
 import { httpMethods } from '~/openApi/shared/utils/operation';
-import type { Logger } from '~/utils/logger';
 
 import type { OpenApiV3_0_X, PathItemObject, PathsObject } from '../types/spec';
 
