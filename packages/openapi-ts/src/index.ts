@@ -72,7 +72,7 @@ import colors from 'ansi-colors';
 // @ts-expect-error
 import colorSupport from 'color-support';
 
-import type { UserConfig } from '~/types/config';
+import type { UserConfig } from '~/config/types';
 
 colors.enabled = colorSupport().hasBasic;
 
@@ -85,8 +85,10 @@ export const defineConfig = async <T extends MaybeArray<UserConfig>>(
   config: LazyOrAsync<T>,
 ): Promise<T> => (typeof config === 'function' ? await config() : config);
 
+export { Logger } from '@hey-api/codegen-core';
 export { defaultPaginationKeywords } from '~/config/parser';
 export { defaultPlugins } from '~/config/plugins';
+export type { UserConfig } from '~/config/types';
 export type { IR } from '~/ir/types';
 export { OperationPath, OperationStrategy } from '~/openApi/shared/locations';
 export type {
@@ -115,6 +117,4 @@ export type { ExpressionTransformer } from '~/plugins/@hey-api/transformers/expr
 export type { TypeTransformer } from '~/plugins/@hey-api/transformers/types';
 export { definePluginConfig } from '~/plugins/shared/utils/config';
 export * from '~/ts-dsl';
-export type { UserConfig } from '~/types/config';
 export { utils } from '~/utils/exports';
-export { Logger } from '~/utils/logger';

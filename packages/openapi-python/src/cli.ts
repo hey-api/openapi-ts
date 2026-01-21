@@ -1,7 +1,8 @@
 import type { OptionValues } from 'commander';
 import { Command } from 'commander';
 
-// import { createClient } from '~/index';
+import { createClient } from '~/index';
+
 import pkg from '../package.json' assert { type: 'json' };
 
 const stringToBoolean = (
@@ -103,17 +104,16 @@ export const runCli = async (): Promise<void> => {
       delete userConfig.logs;
     }
 
-    // const context = await createClient(
-    //   userConfig as unknown as Required<Parameters<typeof createClient>>[0],
-    // );
-    // if (
-    //   !context[0]?.config.input.some(
-    //     (input) => input.watch && input.watch.enabled,
-    //   )
-    // ) {
-    //   process.exit(0);
-    // }
-    process.exit(0);
+    const context = await createClient(
+      userConfig as unknown as Required<Parameters<typeof createClient>>[0],
+    );
+    if (
+      !context[0]?.config.input.some(
+        (input) => input.watch && input.watch.enabled,
+      )
+    ) {
+      process.exit(0);
+    }
   } catch {
     process.exit(1);
   }

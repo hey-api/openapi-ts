@@ -1,6 +1,7 @@
+import type { Logger } from '@hey-api/codegen-core';
+
 import type { Graph } from '~/graph';
 import { createOperationKey } from '~/ir/operation';
-import type { Logger } from '~/utils/logger';
 import { jsonPointerToPath } from '~/utils/ref';
 
 import { addNamespace, stringToNamespace } from '../utils/filter';

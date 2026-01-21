@@ -14,6 +14,7 @@ const constExports = [
   'isSymbol',
   'isSymbolRef',
   'log',
+  'Logger',
   'nodeBrand',
   'Project',
   'ref',
