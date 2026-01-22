@@ -214,15 +214,9 @@ bun add @hey-api/openapi-ts -D -E
 
 ### Versioning
 
-This package does NOT follow the [semantic versioning](https://semver.org/) strategy. Please pin an exact version so you can safely upgrade when you're ready.
+This package is in [initial development](https://semver.org/#spec-item-4). Please pin an exact version so you can safely upgrade when you're ready.
 
-Due to the nature of the package, we use the following versioning strategy.
-
-- `1.x.x`: significant breaking changes, reserved for v1 release
-- `x.1.x`: breaking changes
-- `x.x.1`: new features, bug fixes, and non-breaking changes
-
-We publish [migration notes](https://heyapi.dev/openapi-ts/migrating) for every breaking release. You might not be impacted by a breaking release if you don't use the affected plugin(s).
+We publish [migration notes](https://heyapi.dev/openapi-ts/migrating) for every breaking release. You might not be impacted by a breaking change if you don't use the affected features.
 
 ## Usage
 
