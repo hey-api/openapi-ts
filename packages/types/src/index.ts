@@ -1,8 +1,13 @@
 /**
+ * An object with string keys and unknown values.
+ */
+export type AnyObject = Record<string, unknown>;
+
+/**
  * Converts all top-level ReadonlyArray properties to Array (shallow).
  */
 export type ArrayOnly<T> = {
-  [K in keyof T]: T[K] extends ReadonlyArray<infer U> ? Array<U> : T[K];
+  [K in keyof T]: ToArray<T[K]>;
 };
 
 /**
@@ -42,5 +47,16 @@ export type MaybePromise<T> = T | Promise<T>;
  * Converts all top-level Array properties to ReadonlyArray (shallow).
  */
 export type ReadonlyArrayOnly<T> = {
-  [K in keyof T]: T[K] extends Array<infer U> ? ReadonlyArray<U> : T[K];
+  [K in keyof T]: ToReadonlyArray<T[K]>;
 };
+
+/**
+ * Converts ReadonlyArray<T> to Array<T>, preserving unions.
+ */
+export type ToArray<T> = T extends ReadonlyArray<infer U> ? Array<U> : T;
+
+/**
+ * Converts Array<T> to ReadonlyArray<T>, preserving unions.
+ */
+export type ToReadonlyArray<T> =
+  T extends ReadonlyArray<infer U> ? ReadonlyArray<U> : T;

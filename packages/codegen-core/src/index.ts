@@ -5,6 +5,9 @@ export type {
   ImportModule,
 } from './bindings';
 export { nodeBrand, symbolBrand } from './brands';
+export { detectInteractiveSession } from './config/interactive';
+export { loadConfigFile } from './config/load';
+export { mergeConfigs } from './config/merge';
 export type {
   IProjectRenderMeta as ProjectRenderMeta,
   ISymbolMeta as SymbolMeta,
