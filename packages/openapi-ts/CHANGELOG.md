@@ -1,5 +1,22 @@
 # @hey-api/openapi-ts
 
+## 0.90.9
+
+### Patch Changes
+
+- **ts-dsl**: allow removing object properties by passing `null` ([#3247](https://github.com/hey-api/openapi-ts/pull/3247)) ([`7be1561`](https://github.com/hey-api/openapi-ts/commit/7be1561a862d2bb217703003d5e6cbc4a6a09586)) by [@mrlubos](https://github.com/mrlubos)
+
+- **cli**: clean up interface ([#3244](https://github.com/hey-api/openapi-ts/pull/3244)) ([`4f52bce`](https://github.com/hey-api/openapi-ts/commit/4f52bce79d8ac6573472f32a05b7f70913b90605)) by [@mrlubos](https://github.com/mrlubos)
+
+- **ts-dsl**: override object properties when called multiple times with the same name ([#3247](https://github.com/hey-api/openapi-ts/pull/3247)) ([`7be1561`](https://github.com/hey-api/openapi-ts/commit/7be1561a862d2bb217703003d5e6cbc4a6a09586)) by [@mrlubos](https://github.com/mrlubos)
+
+- **config**: move `loadConfigFile` function to `@hey-api/codegen-core` ([#3244](https://github.com/hey-api/openapi-ts/pull/3244)) ([`4f52bce`](https://github.com/hey-api/openapi-ts/commit/4f52bce79d8ac6573472f32a05b7f70913b90605)) by [@mrlubos](https://github.com/mrlubos)
+
+### Updated Dependencies:
+
+- @hey-api/types@0.1.2
+- @hey-api/codegen-core@0.5.5
+
 ## 0.90.8
 
 ### Patch Changes

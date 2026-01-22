@@ -1,6 +1,6 @@
 {
   "name": "@hey-api/openapi-python",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": true,
   "description": "🐍 OpenAPI to Python codegen.",
   "homepage": "https://heyapi.dev/",
@@ -73,7 +73,7 @@
     "node": ">=20.19.0"
   },
   "dependencies": {
-    "@hey-api/codegen-core": "workspace:^0.5.2",
+    "@hey-api/codegen-core": "workspace:^0.5.5",
     "@hey-api/json-schema-ref-parser": "1.2.2",
     "@hey-api/types": "workspace:*",
     "ansi-colors": "4.1.3",
