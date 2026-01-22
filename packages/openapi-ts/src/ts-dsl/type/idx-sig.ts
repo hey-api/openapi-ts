@@ -11,6 +11,7 @@ import { DocMixin } from '../mixins/doc';
 import { ReadonlyMixin } from '../mixins/modifiers';
 
 export type TypeIdxSigType = string | MaybeTsDsl<ts.TypeNode>;
+export type TypeIdxSigKind = 'idxSig';
 
 const Mixed = DocMixin(ReadonlyMixin(TsDsl<ts.IndexSignatureDeclaration>));
 
@@ -25,6 +26,16 @@ export class TypeIdxSigTsDsl extends Mixed {
     super();
     this.name.set(name);
     fn?.(this);
+  }
+
+  /** Element kind. */
+  get kind(): TypeIdxSigKind {
+    return 'idxSig';
+  }
+
+  /** Index signature parameter name. */
+  get propName(): string {
+    return this.name.toString();
   }
 
   override analyze(ctx: AnalysisContext): void {
