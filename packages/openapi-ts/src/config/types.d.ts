@@ -9,7 +9,7 @@ import type { Parser, UserParser } from '~/types/parser';
 
 import type { Output, UserOutput } from './output';
 
-export interface UserConfig {
+export type UserConfig = {
   /**
    * Path to the config file. Set this value if you don't use the default
    * config file name, or it's not located in the project root.
@@ -81,7 +81,7 @@ export interface UserConfig {
    * @deprecated use `input.watch` instead
    */
   watch?: boolean | number | Watch;
-}
+};
 
 export type Config = Omit<
   Required<UserConfig>,
