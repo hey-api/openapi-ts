@@ -16,6 +16,7 @@ import { TokenTsDsl } from '../token';
 import { safePropName } from '../utils/name';
 
 export type TypePropType = NodeName | MaybeTsDsl<ts.TypeNode>;
+export type TypePropKind = 'prop';
 
 const Mixed = DocMixin(OptionalMixin(ReadonlyMixin(TsDsl<ts.TypeElement>)));
 
@@ -29,6 +30,16 @@ export class TypePropTsDsl extends Mixed {
     super();
     this.name.set(name);
     fn(this);
+  }
+
+  /** Element kind. */
+  get kind(): TypePropKind {
+    return 'prop';
+  }
+
+  /** Property name. */
+  get propName(): string {
+    return this.name.toString();
   }
 
   override analyze(ctx: AnalysisContext): void {
