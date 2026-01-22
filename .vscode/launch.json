@@ -16,6 +16,7 @@
       "cwd": "${workspaceFolder}/dev",
       "runtimeExecutable": "node",
       "program": "${workspaceFolder}/packages/openapi-ts/dist/run.mjs",
+      "args": [],
       "env": {
         "DEBUG": "false"
       }
@@ -28,6 +29,7 @@
       "cwd": "${workspaceFolder}/dev",
       "runtimeExecutable": "node",
       "program": "${workspaceFolder}/packages/openapi-python/dist/run.mjs",
+      "args": [],
       "env": {
         "DEBUG": "false"
       }

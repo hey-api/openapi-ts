@@ -1,3 +1,3 @@
-export { initConfigs } from './config/init';
+export { resolveJobs as initConfigs } from './config/init';
 export { getSpec } from './getSpec';
 export { parseOpenApiSpec } from './openApi';

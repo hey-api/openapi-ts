@@ -79,11 +79,13 @@ colors.enabled = colorSupport().hasBasic;
 export { createClient } from '~/generate';
 
 /**
- * Type helper for openapi-ts.config.ts, returns {@link MaybeArray<UserConfig>} object(s)
+ * Type helper for configuration object, returns {@link MaybeArray<UserConfig>} object(s)
  */
-export const defineConfig = async <T extends MaybeArray<UserConfig>>(
+export async function defineConfig<T extends MaybeArray<UserConfig>>(
   config: LazyOrAsync<T>,
-): Promise<T> => (typeof config === 'function' ? await config() : config);
+): Promise<T> {
+  return typeof config === 'function' ? await config() : config;
+}
 
 export { Logger } from '@hey-api/codegen-core';
 export { defaultPaginationKeywords } from '~/config/parser';
