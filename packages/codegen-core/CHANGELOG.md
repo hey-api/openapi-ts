@@ -1,5 +1,15 @@
 # @hey-api/codegen-core
 
+## 0.5.5
+
+### Patch Changes
+
+- **config**: export `loadConfigFile` function (moved from `@hey-api/openapi-ts`) ([#3244](https://github.com/hey-api/openapi-ts/pull/3244)) ([`4f52bce`](https://github.com/hey-api/openapi-ts/commit/4f52bce79d8ac6573472f32a05b7f70913b90605)) by [@mrlubos](https://github.com/mrlubos)
+
+### Updated Dependencies:
+
+- @hey-api/types@0.1.2
+
 ## 0.5.4
 
 ### Patch Changes
