@@ -1,4 +1,5 @@
-import type { SchemaWithType } from '~/plugins';
+import type { SchemaWithType } from '@hey-api/shared';
+
 import { shouldCoerceToBigInt } from '~/plugins/shared/utils/coerce';
 import type { $ } from '~/ts-dsl';
 

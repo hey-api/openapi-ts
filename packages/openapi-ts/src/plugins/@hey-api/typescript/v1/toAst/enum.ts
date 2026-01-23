@@ -1,4 +1,5 @@
-import type { SchemaWithType } from '~/plugins';
+import type { SchemaWithType } from '@hey-api/shared';
+
 import type { MaybeTsDsl, TypeTsDsl } from '~/ts-dsl';
 
 import type { IrSchemaToAstOptions } from '../../shared/types';

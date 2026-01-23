@@ -1,4 +1,4 @@
-// import type { ToArray } from '@hey-api/types';
+import type { ToArray } from '@hey-api/types';
 
 import type { UserConfig } from '~/config/types';
 
@@ -12,12 +12,12 @@ export const cliToConfig = (cli: CliOptions): Partial<UserConfig> => {
   if (cli.file) config.configFile = cli.file;
   if (cli.dryRun !== undefined) config.dryRun = cli.dryRun;
 
-  // const plugins: ToArray<UserConfig['plugins']> = [];
-  // if (cli.plugins instanceof Array && cli.plugins.length > 0) {
-  //   plugins.push(...cli.plugins);
-  // }
+  const plugins: ToArray<UserConfig['plugins']> = [];
+  if (cli.plugins instanceof Array && cli.plugins.length > 0) {
+    plugins.push(...cli.plugins);
+  }
   // if (cli.client) plugins.push(cli.client);
-  // if (plugins.length > 0) config.plugins = plugins;
+  if (plugins.length > 0) config.plugins = plugins;
 
   if (cli.debug || cli.silent || cli.logs || cli.logFile !== undefined) {
     config.logs = {

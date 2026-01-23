@@ -1,10 +1,10 @@
 import type { Symbol } from '@hey-api/codegen-core';
 import { fromRef } from '@hey-api/codegen-core';
+import type { IR } from '@hey-api/shared';
+import { applyNaming } from '@hey-api/shared';
 
-import type { IR } from '~/ir/types';
 import { createSchemaComment } from '~/plugins/shared/utils/schema';
 import { $ } from '~/ts-dsl';
-import { applyNaming } from '~/utils/naming';
 
 import { irSchemaToAst } from '../v1/plugin';
 import type { IrSchemaToAstOptions } from './types';

@@ -20,6 +20,7 @@ import {
   nodeBrand,
   ref,
 } from '@hey-api/codegen-core';
+import type { AnyString } from '@hey-api/types';
 import ts from 'typescript';
 
 import type { AccessOptions } from './utils/context';
@@ -60,7 +61,7 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements Node<T> {
   readonly '~brand' = nodeBrand;
 
   /** Branding property to identify the DSL class at runtime. */
-  abstract readonly '~dsl': string & {};
+  abstract readonly '~dsl': AnyString;
 
   /** Conditionally applies a callback to this builder. */
   $if<T extends TsDsl, V, R extends TsDsl = T>(

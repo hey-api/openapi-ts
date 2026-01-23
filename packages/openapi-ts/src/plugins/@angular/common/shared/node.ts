@@ -5,15 +5,16 @@ import type {
   Symbol,
   SymbolMeta,
 } from '@hey-api/codegen-core';
+import type { IR } from '@hey-api/shared';
+import { applyNaming, toCase } from '@hey-api/shared';
 
-import type { IR } from '~/ir/types';
+import { getTypedConfig } from '~/config/utils';
 import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
 import {
   createOperationComment,
   isOperationOptionsRequired,
 } from '~/plugins/shared/utils/operation';
 import { $ } from '~/ts-dsl';
-import { applyNaming, toCase } from '~/utils/naming';
 
 import type { AngularCommonPlugin } from '../types';
 
@@ -149,7 +150,7 @@ function childToHttpResourceNode(
 export function createHttpRequestShell(
   plugin: AngularCommonPlugin['Instance'],
 ): StructureShell {
-  const client = getClientPlugin(plugin.context.config);
+  const client = getClientPlugin(getTypedConfig(plugin));
   const isAngularClient = client.name === '@hey-api/client-angular';
 
   const symbolInjectable = plugin.external('@angular/core.Injectable');
@@ -185,7 +186,7 @@ export function createHttpRequestShell(
 export function createHttpResourceShell(
   plugin: AngularCommonPlugin['Instance'],
 ): StructureShell {
-  const client = getClientPlugin(plugin.context.config);
+  const client = getClientPlugin(getTypedConfig(plugin));
   const isAngularClient = client.name === '@hey-api/client-angular';
 
   const symbolInjectable = plugin.external('@angular/core.Injectable');

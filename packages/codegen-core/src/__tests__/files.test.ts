@@ -1,5 +1,3 @@
-import { describe, expect, it } from 'vitest';
-
 import { File } from '../files/file';
 import { FileRegistry } from '../files/registry';
 

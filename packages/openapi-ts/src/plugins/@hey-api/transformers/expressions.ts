@@ -1,6 +1,6 @@
+import type { IR } from '@hey-api/shared';
 import type ts from 'typescript';
 
-import type { IR } from '~/ir/types';
 import { $ } from '~/ts-dsl';
 
 import type { UserConfig } from './types';

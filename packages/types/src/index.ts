@@ -4,6 +4,11 @@
 export type AnyObject = Record<string, unknown>;
 
 /**
+ * An arbitrary string type.
+ */
+export type AnyString = string & {};
+
+/**
  * Converts all top-level ReadonlyArray properties to Array (shallow).
  */
 export type ArrayOnly<T> = {

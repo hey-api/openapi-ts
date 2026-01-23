@@ -1,14 +1,14 @@
-import type { Context } from '~/ir/context';
-import { hasOperationDataRequired } from '~/ir/operation';
-import type { IR } from '~/ir/types';
+import type { Context, IR } from '@hey-api/shared';
+import { escapeComment, hasOperationDataRequired } from '@hey-api/shared';
+
+import { getTypedConfig } from '~/config/utils';
 import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
 import type { HeyApiSdkPlugin } from '~/plugins/@hey-api/sdk';
 import { isInstance } from '~/plugins/@hey-api/sdk/v1/node';
-import { escapeComment } from '~/utils/escape';
 
-export const createOperationComment = (
+export function createOperationComment(
   operation: IR.OperationObject,
-): ReadonlyArray<string> | undefined => {
+): ReadonlyArray<string> | undefined {
   const comments: Array<string> = [];
 
   if (operation.summary) {
@@ -32,23 +32,24 @@ export const createOperationComment = (
   }
 
   return comments.length ? comments : undefined;
-};
+}
 
 /**
  * TODO: replace with plugin logic...
  *
  * @deprecated this needs to be refactored
  */
-export const isOperationOptionsRequired = ({
+export function isOperationOptionsRequired({
   context,
   operation,
 }: {
   context: Context;
   operation: IR.OperationObject;
-}): boolean => {
-  const client = getClientPlugin(context.config);
+}): boolean {
+  const config = getTypedConfig(context);
+  const client = getClientPlugin(config);
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
-  const plugin = context.config.plugins['@hey-api/sdk'];
+  const plugin = config.plugins['@hey-api/sdk'];
   if (plugin) {
     if (
       !plugin.config.client &&
@@ -61,13 +62,13 @@ export const isOperationOptionsRequired = ({
     }
   }
   return isNuxtClient || hasOperationDataRequired(operation);
-};
+}
 
-export const hasOperationSse = ({
+export function hasOperationSse({
   operation,
 }: {
   operation: IR.OperationObject;
-}): boolean => {
+}): boolean {
   for (const statusCode in operation.responses) {
     const response = operation.responses[statusCode]!;
     if (response.mediaType === 'text/event-stream') {
@@ -75,4 +76,4 @@ export const hasOperationSse = ({
     }
   }
   return false;
-};
+}

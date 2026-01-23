@@ -1,4 +1,5 @@
-import type { SchemaWithType } from '~/plugins';
+import type { SchemaWithType } from '@hey-api/shared';
+
 import { $ } from '~/ts-dsl';
 
 import type { EnumResolverContext } from '../../resolvers';

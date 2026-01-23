@@ -1,4 +1,4 @@
-import { definePluginConfig } from '~/plugins/shared/utils/config';
+import { definePluginConfig } from '@hey-api/shared';
 
 import { resolveHttpRequests } from './httpRequests';
 import { resolveHttpResources } from './httpResources';

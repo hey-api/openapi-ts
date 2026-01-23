@@ -1,22 +1,28 @@
-import { Logger } from '@hey-api/codegen-core';
-import type { LazyOrAsync, MaybeArray } from '@hey-api/types';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-import { checkNodeVersion } from '~/config/engine';
-import type { Configs } from '~/config/init';
-import { resolveJobs } from '~/config/init';
-import { getLogs } from '~/config/logs';
-import type { UserConfig } from '~/config/types';
-import { createClient as pCreateClient } from '~/createClient';
+import { Logger } from '@hey-api/codegen-core';
+import type { Context } from '@hey-api/shared';
 import {
+  checkNodeVersion,
   ConfigValidationError,
+  getLogs,
   JobError,
   logCrashReport,
   openGitHubIssueWithCrashReport,
+  printCliIntro,
   printCrashReport,
   shouldReportCrash,
-} from '~/error';
-import type { Context } from '~/ir/context';
-import { printCliIntro } from '~/utils/cli';
+} from '@hey-api/shared';
+import type { LazyOrAsync, MaybeArray } from '@hey-api/types';
+
+import type { Configs } from '~/config/init';
+import { resolveJobs } from '~/config/init';
+import type { UserConfig } from '~/config/types';
+import { createClient as pCreateClient } from '~/createClient';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 /**
  * Generate a client from the provided configuration.
@@ -36,10 +42,10 @@ export async function createClient(
     : [];
 
   let rawLogs = userConfigs.find(
-    (config) => getLogs(config).level !== 'silent',
+    (config) => getLogs(config.logs).level !== 'silent',
   )?.logs;
   if (typeof rawLogs === 'string') {
-    rawLogs = getLogs({ logs: rawLogs });
+    rawLogs = getLogs(rawLogs);
   }
 
   let jobs: Configs['jobs'] = [];
@@ -54,7 +60,7 @@ export async function createClient(
     const dependencies = resolved.dependencies;
     jobs = resolved.jobs;
     const printIntro = jobs.some((job) => job.config.logs.level !== 'silent');
-    if (printIntro) printCliIntro();
+    if (printIntro) printCliIntro(__dirname);
     eventConfig.timeEnd();
 
     const configErrors = jobs.flatMap((job) =>
@@ -74,10 +80,12 @@ export async function createClient(
             logger,
           });
         } catch (error) {
-          throw new JobError('', {
-            error,
-            jobIndex: job.index,
-          });
+          if (error instanceof Error) {
+            throw new JobError('', {
+              error,
+              jobIndex: job.index,
+            });
+          }
         }
       }),
     );
@@ -108,7 +116,7 @@ export async function createClient(
         userConfigs.some((config) => config.interactive) ??
         false;
       if (await shouldReportCrash({ error, isInteractive })) {
-        await openGitHubIssueWithCrashReport(error);
+        await openGitHubIssueWithCrashReport(error, __dirname);
       }
     }
 

@@ -1,5 +1,3 @@
-import { describe, expect, it } from 'vitest';
-
 import type { FieldsConfig } from '../bundle/params';
 import { buildClientParams } from '../bundle/params';
 

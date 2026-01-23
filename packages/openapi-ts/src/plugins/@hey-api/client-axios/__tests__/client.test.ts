@@ -1,6 +1,5 @@
 import type { AxiosInstance } from 'axios';
 import axios from 'axios';
-import { describe, expect, it, vi } from 'vitest';
 
 import { createClient } from '../bundle/client';
 

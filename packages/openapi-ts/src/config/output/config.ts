@@ -1,16 +1,26 @@
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
 import { log } from '@hey-api/codegen-core';
+import type { PostProcessor, UserPostProcessor } from '@hey-api/shared';
+import {
+  findTsConfigPath,
+  loadTsConfig,
+  resolveSource,
+  valueToObject,
+} from '@hey-api/shared';
+import type { MaybeArray } from '@hey-api/types';
 import ts from 'typescript';
 
-import { findTsConfigPath, loadTsConfig } from '~/generate/tsConfig';
-
-import type { Config, UserConfig } from '../types';
-import { valueToObject } from '../utils/config';
-import type { PostProcessor, UserPostProcessor } from './postprocess';
 import { postProcessors } from './postprocess';
-import { resolveSource } from './source/config';
-import type { UserOutput } from './types';
+import type { Output, UserOutput } from './types';
 
-export function getOutput(userConfig: UserConfig): Config['output'] {
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export function getOutput(userConfig: {
+  output: MaybeArray<string | UserOutput>;
+}): Output {
   if (userConfig.output instanceof Array) {
     throw new Error(
       'Unexpected array of outputs in user configuration. This should have been expanded already.',
@@ -59,8 +69,10 @@ export function getOutput(userConfig: UserConfig): Config['output'] {
       }),
     },
     value: userOutput,
-  }) as Config['output'];
-  output.tsConfig = loadTsConfig(findTsConfigPath(output.tsConfigPath));
+  }) as Output;
+  output.tsConfig = loadTsConfig(
+    findTsConfigPath(__dirname, output.tsConfigPath),
+  );
   if (
     output.importFileExtension === undefined &&
     (output.tsConfig?.options.moduleResolution ===

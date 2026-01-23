@@ -8,7 +8,7 @@
     "build": "run-p typecheck \"build-only {@}\" --",
     "dev": "vite",
     "format": "prettier --write src/",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+    "lint": "eslint . --fix",
     "openapi-ts": "openapi-ts",
     "preview": "vite preview",
     "test:unit": "vitest",

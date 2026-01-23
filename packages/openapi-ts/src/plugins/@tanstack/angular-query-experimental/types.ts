@@ -1,0 +1,445 @@
+import type {
+  Casing,
+  FeatureToggle,
+  IndexExportOption,
+  NameTransformer,
+  NamingOptions,
+} from '@hey-api/shared';
+import type { IR } from '@hey-api/shared';
+import type { DefinePlugin, Plugin } from '@hey-api/shared';
+
+export type UserConfig = Plugin.Name<'@tanstack/angular-query-experimental'> &
+  Plugin.Hooks & {
+    /**
+     * Casing convention for generated names.
+     *
+     * @default 'camelCase'
+     */
+    case?: Casing;
+    /**
+     * Add comments from SDK functions to the generated TanStack Query code?
+     *
+     * Duplicating comments this way is useful so you don't need to drill into
+     * the underlying SDK function to learn what it does or whether it's
+     * deprecated. You can set this option to `false` if you prefer less
+     * comment duplication.
+     *
+     * @default true
+     */
+    comments?: boolean;
+    /**
+     * Whether exports should be re-exported in the index file.
+     *
+     * @default false
+     */
+    exportFromIndex?: boolean;
+    /**
+     * Configuration for generated infinite query key helpers.
+     *
+     * See {@link https://tanstack.com/query/v5/docs/framework/angular/reference/infiniteQueryOptions}
+     *
+     * Can be:
+     * - `boolean`: Shorthand for `{ enabled: boolean }`
+     * - `string` or `function`: Shorthand for `{ name: string | function }`
+     * - `object`: Full configuration object
+     *
+     * @default true
+     */
+    infiniteQueryKeys?:
+      | boolean
+      | NameTransformer
+      | {
+          /**
+           * Casing convention for generated names.
+           *
+           * @default 'camelCase'
+           */
+          case?: Casing;
+          /**
+           * Whether this feature is enabled.
+           *
+           * @default true
+           */
+          enabled?: boolean;
+          /**
+           * Naming pattern for generated names.
+           *
+           * @default '{{name}}InfiniteQueryKey'
+           * @see https://tanstack.com/query/v5/docs/framework/angular/reference/infiniteQueryOptions
+           */
+          name?: NameTransformer;
+          /**
+           * Whether to include operation tags in infinite query keys.
+           * This will make query keys larger but provides better cache invalidation capabilities.
+           *
+           * @default false
+           */
+          tags?: boolean;
+        };
+    /**
+     * Configuration for generated infinite query options helpers.
+     *
+     * See {@link https://tanstack.com/query/v5/docs/framework/angular/reference/infiniteQueryOptions}
+     *
+     * Can be:
+     * - `boolean`: Shorthand for `{ enabled: boolean }`
+     * - `string` or `function`: Shorthand for `{ name: string | function }`
+     * - `object`: Full configuration object
+     *
+     * @default true
+     */
+    infiniteQueryOptions?:
+      | boolean
+      | NameTransformer
+      | {
+          /**
+           * Casing convention for generated names.
+           *
+           * @default 'camelCase'
+           */
+          case?: Casing;
+          /**
+           * Whether this feature is enabled.
+           *
+           * @default true
+           */
+          enabled?: boolean;
+          /**
+           * Custom function to generate metadata for the operation.
+           * Can return any valid meta object that will be included in the generated infinite query options.
+           * @param operation - The operation object containing all available metadata
+           * @returns A meta object with any properties you want to include
+           *
+           * @example
+           * ```ts
+           * meta: (operation) => ({
+           *   customField: operation.id,
+           *   isDeprecated: operation.deprecated,
+           *   tags: operation.tags,
+           *   customObject: {
+           *     method: operation.method,
+           *     path: operation.path
+           *   }
+           * })
+           * ```
+           *
+           * @default undefined
+           */
+          meta?: (operation: IR.OperationObject) => Record<string, unknown>;
+          /**
+           * Naming pattern for generated names.
+           *
+           * @default '{{name}}InfiniteOptions'
+           * @see https://tanstack.com/query/v5/docs/framework/angular/reference/infiniteQueryOptions
+           */
+          name?: NameTransformer;
+        };
+    /**
+     * Configuration for generated mutation options helpers.
+     *
+     * See {@link https://tanstack.com/query/v5/docs/framework/angular/reference/useMutation}
+     *
+     * Can be:
+     * - `boolean`: Shorthand for `{ enabled: boolean }`
+     * - `string` or `function`: Shorthand for `{ name: string | function }`
+     * - `object`: Full configuration object
+     *
+     * @default true
+     */
+    mutationOptions?:
+      | boolean
+      | NameTransformer
+      | {
+          /**
+           * Casing convention for generated names.
+           *
+           * @default 'camelCase'
+           */
+          case?: Casing;
+          /**
+           * Whether this feature is enabled.
+           *
+           * @default true
+           */
+          enabled?: boolean;
+          /**
+           * Custom function to generate metadata for the operation.
+           * Can return any valid meta object that will be included in the generated mutation options.
+           * @param operation - The operation object containing all available metadata
+           * @returns A meta object with any properties you want to include
+           *
+           * @example
+           * ```ts
+           * meta: (operation) => ({
+           *   customField: operation.id,
+           *   isDeprecated: operation.deprecated,
+           *   tags: operation.tags,
+           *   customObject: {
+           *     method: operation.method,
+           *     path: operation.path
+           *   }
+           * })
+           * ```
+           *
+           * @default undefined
+           */
+          meta?: (operation: IR.OperationObject) => Record<string, unknown>;
+          /**
+           * Naming pattern for generated names.
+           *
+           * @default '{{name}}Mutation'
+           * @see https://tanstack.com/query/v5/docs/framework/angular/reference/useMutation
+           */
+          name?: NameTransformer;
+        };
+    /**
+     * Configuration for generated query keys.
+     *
+     * See {@link https://tanstack.com/query/v5/docs/framework/angular/reference/queryKey}
+     *
+     * Can be:
+     * - `boolean`: Shorthand for `{ enabled: boolean }`
+     * - `string` or `function`: Shorthand for `{ name: string | function }`
+     * - `object`: Full configuration object
+     *
+     * @default true
+     */
+    queryKeys?:
+      | boolean
+      | NameTransformer
+      | {
+          /**
+           * Casing convention for generated names.
+           *
+           * @default 'camelCase'
+           */
+          case?: Casing;
+          /**
+           * Whether this feature is enabled.
+           *
+           * @default true
+           */
+          enabled?: boolean;
+          /**
+           * Naming pattern for generated names.
+           *
+           * @default '{{name}}QueryKey'
+           * @see https://tanstack.com/query/v5/docs/framework/angular/reference/queryKey
+           */
+          name?: NameTransformer;
+          /**
+           * Whether to include operation tags in query keys.
+           * This will make query keys larger but provides better cache invalidation capabilities.
+           *
+           * @default false
+           */
+          tags?: boolean;
+        };
+    /**
+     * Configuration for generated query options helpers.
+     *
+     * See {@link https://tanstack.com/query/v5/docs/framework/angular/reference/queryOptions}
+     *
+     * Can be:
+     * - `boolean`: Shorthand for `{ enabled: boolean }`
+     * - `string` or `function`: Shorthand for `{ name: string | function }`
+     * - `object`: Full configuration object
+     *
+     * @default true
+     */
+    queryOptions?:
+      | boolean
+      | NameTransformer
+      | {
+          /**
+           * Casing convention for generated names.
+           *
+           * @default 'camelCase'
+           */
+          case?: Casing;
+          /**
+           * Whether this feature is enabled.
+           *
+           * @default true
+           */
+          enabled?: boolean;
+          /**
+           * Whether to export generated symbols.
+           *
+           * @default true
+           */
+          exported?: boolean;
+          /**
+           * Custom function to generate metadata for the operation.
+           * Can return any valid meta object that will be included in the generated query options.
+           * @param operation - The operation object containing all available metadata
+           * @returns A meta object with any properties you want to include
+           *
+           * @example
+           * ```ts
+           * meta: (operation) => ({
+           *   customField: operation.id,
+           *   isDeprecated: operation.deprecated,
+           *   tags: operation.tags,
+           *   customObject: {
+           *     method: operation.method,
+           *     path: operation.path
+           *   }
+           * })
+           * ```
+           *
+           * @default undefined
+           */
+          meta?: (operation: IR.OperationObject) => Record<string, unknown>;
+          /**
+           * Naming pattern for generated names.
+           *
+           * @default '{{name}}Options'
+           * @see https://tanstack.com/query/v5/docs/framework/angular/reference/queryOptions
+           */
+          name?: NameTransformer;
+        };
+  };
+
+export type Config = Plugin.Name<'@tanstack/angular-query-experimental'> &
+  Plugin.Hooks &
+  IndexExportOption & {
+    /**
+     * Casing convention for generated names.
+     */
+    case: Casing;
+    /**
+     * Add comments from SDK functions to the generated TanStack Query code?
+     *
+     * @default true
+     */
+    comments: boolean;
+    /**
+     * Resolved configuration for generated infinite query key helpers.
+     *
+     * @see https://tanstack.com/query/v5/docs/framework/angular/reference/infiniteQueryOptions
+     */
+    infiniteQueryKeys: NamingOptions &
+      FeatureToggle & {
+        /**
+         * Whether to include operation tags in infinite query keys.
+         * This will make query keys larger but provides better cache invalidation capabilities.
+         *
+         * @default false
+         */
+        tags: boolean;
+      };
+    /**
+     * Resolved configuration for generated infinite query options helpers.
+     *
+     * @see https://tanstack.com/query/v5/docs/framework/angular/reference/infiniteQueryOptions
+     */
+    infiniteQueryOptions: NamingOptions &
+      FeatureToggle & {
+        /**
+         * Custom function to generate metadata for the operation.
+         * Can return any valid meta object that will be included in the generated infinite query options.
+         * @param operation - The operation object containing all available metadata
+         * @returns A meta object with any properties you want to include
+         *
+         * @example
+         * ```ts
+         * meta: (operation) => ({
+         *   customField: operation.id,
+         *   isDeprecated: operation.deprecated,
+         *   tags: operation.tags,
+         *   customObject: {
+         *     method: operation.method,
+         *     path: operation.path
+         *   }
+         * })
+         * ```
+         *
+         * @default undefined
+         */
+        meta: (operation: IR.OperationObject) => Record<string, unknown>;
+      };
+    /**
+     * Resolved configuration for generated mutation options helpers.
+     *
+     * @see https://tanstack.com/query/v5/docs/framework/angular/reference/useMutation
+     */
+    mutationOptions: NamingOptions &
+      FeatureToggle & {
+        /**
+         * Custom function to generate metadata for the operation.
+         * Can return any valid meta object that will be included in the generated mutation options.
+         * @param operation - The operation object containing all available metadata
+         * @returns A meta object with any properties you want to include
+         *
+         * @example
+         * ```ts
+         * meta: (operation) => ({
+         *   customField: operation.id,
+         *   isDeprecated: operation.deprecated,
+         *   tags: operation.tags,
+         *   customObject: {
+         *     method: operation.method,
+         *     path: operation.path
+         *   }
+         * })
+         * ```
+         *
+         * @default undefined
+         */
+        meta: (operation: IR.OperationObject) => Record<string, unknown>;
+      };
+    /**
+     * Resolved configuration for generated query keys.
+     *
+     * @see https://tanstack.com/query/v5/docs/framework/angular/reference/queryKey
+     */
+    queryKeys: NamingOptions &
+      FeatureToggle & {
+        /**
+         * Whether to include operation tags in query keys.
+         * This will make query keys larger but provides better cache invalidation capabilities.
+         *
+         * @default false
+         */
+        tags: boolean;
+      };
+    /**
+     * Resolved configuration for generated query options helpers.
+     *
+     * @see https://tanstack.com/query/v5/docs/framework/angular/reference/queryOptions
+     */
+    queryOptions: NamingOptions &
+      FeatureToggle & {
+        /**
+         * Whether to export generated symbols.
+         *
+         * @default true
+         */
+        exported: boolean;
+        /**
+         * Custom function to generate metadata for the operation.
+         * Can return any valid meta object that will be included in the generated query options.
+         * @param operation - The operation object containing all available metadata
+         * @returns A meta object with any properties you want to include
+         *
+         * @example
+         * ```ts
+         * meta: (operation) => ({
+         *   customField: operation.id,
+         *   isDeprecated: operation.deprecated,
+         *   tags: operation.tags,
+         *   customObject: {
+         *     method: operation.method,
+         *     path: operation.path
+         *   }
+         * })
+         * ```
+         *
+         * @default undefined
+         */
+        meta: (operation: IR.OperationObject) => Record<string, unknown>;
+      };
+  };
+
+export type TanStackAngularQueryPlugin = DefinePlugin<UserConfig, Config>;

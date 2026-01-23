@@ -1,7 +1,5 @@
-import type { IR } from '~/ir/types';
-import type { PluginInstance } from '~/plugins/shared/utils/instance';
-import { toCase } from '~/utils/naming';
-import { refToName } from '~/utils/ref';
+import type { IR, PluginInstance } from '@hey-api/shared';
+import { refToName, toCase } from '@hey-api/shared';
 
 import type { Field } from '../../client-core/bundle/params';
 

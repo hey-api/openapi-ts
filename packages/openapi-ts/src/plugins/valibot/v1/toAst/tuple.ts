@@ -1,6 +1,6 @@
 import { fromRef, ref } from '@hey-api/codegen-core';
+import type { SchemaWithType } from '@hey-api/shared';
 
-import type { SchemaWithType } from '~/plugins';
 import { $ } from '~/ts-dsl';
 
 import { pipesToNode } from '../../shared/pipes';
