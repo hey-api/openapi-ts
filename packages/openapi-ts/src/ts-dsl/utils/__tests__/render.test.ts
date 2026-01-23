@@ -1,7 +1,6 @@
 import type { RenderContext } from '@hey-api/codegen-core';
 import { Project } from '@hey-api/codegen-core';
 import ts from 'typescript';
-import { describe, expect, it } from 'vitest';
 
 import type { TsDsl } from '~/ts-dsl';
 

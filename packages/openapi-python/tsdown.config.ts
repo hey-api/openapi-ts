@@ -1,25 +1,21 @@
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
 import { defineConfig } from 'tsdown';
 
-export default defineConfig({
-  banner(ctx) {
-    /**
-     * fix dynamic require in ESM
-     * @link https://github.com/hey-api/openapi-ts/issues/1079
-     */
-    if (ctx.format === 'esm') {
-      return {
-        js: `import { createRequire } from 'module'; const require = createRequire(import.${'meta'}.url);`,
-      };
-    }
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-    return;
+export default defineConfig({
+  alias: {
+    '~': path.resolve(__dirname, 'src'),
   },
   clean: true,
-  dts: true,
+  dts: {
+    build: true,
+  },
   entry: ['./src/{index,run}.ts'],
-  format: ['cjs', 'esm'],
+  format: ['esm'],
   minify: false,
-  shims: false,
   sourcemap: true,
   treeshake: true,
 });

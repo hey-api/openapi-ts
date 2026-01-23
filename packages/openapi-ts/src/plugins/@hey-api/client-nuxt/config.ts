@@ -1,16 +1,17 @@
+import { definePluginConfig } from '@hey-api/shared';
+
 import {
   clientDefaultConfig,
   clientDefaultMeta,
 } from '~/plugins/@hey-api/client-core/config';
 import { clientPluginHandler } from '~/plugins/@hey-api/client-core/plugin';
-import { definePluginConfig } from '~/plugins/shared/utils/config';
 
 import type { HeyApiClientNuxtPlugin } from './types';
 
 export const defaultConfig: HeyApiClientNuxtPlugin['Config'] = {
   ...clientDefaultMeta,
   config: clientDefaultConfig,
-  handler: clientPluginHandler,
+  handler: clientPluginHandler as unknown as HeyApiClientNuxtPlugin['Handler'],
   name: '@hey-api/client-nuxt',
 };
 

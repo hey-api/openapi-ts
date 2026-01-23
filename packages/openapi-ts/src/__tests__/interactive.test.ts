@@ -3,7 +3,6 @@ import {
   Logger,
   mergeConfigs,
 } from '@hey-api/codegen-core';
-import { afterEach, describe, expect, it } from 'vitest';
 
 import { resolveJobs } from '~/config/init';
 

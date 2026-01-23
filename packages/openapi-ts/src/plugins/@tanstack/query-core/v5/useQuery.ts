@@ -1,11 +1,12 @@
-import type { IR } from '~/ir/types';
+import type { IR } from '@hey-api/shared';
+import { applyNaming } from '@hey-api/shared';
+
 import {
   createOperationComment,
   hasOperationSse,
   isOperationOptionsRequired,
 } from '~/plugins/shared/utils/operation';
 import { $ } from '~/ts-dsl';
-import { applyNaming } from '~/utils/naming';
 
 import { useTypeData } from '../shared/useType';
 import type { PluginInstance } from '../types';

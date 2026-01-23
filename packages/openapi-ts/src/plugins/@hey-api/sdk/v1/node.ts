@@ -5,15 +5,16 @@ import type {
   Symbol,
   SymbolMeta,
 } from '@hey-api/codegen-core';
+import type { IR } from '@hey-api/shared';
+import { applyNaming, toCase } from '@hey-api/shared';
 
-import type { IR } from '~/ir/types';
+import { getTypedConfig } from '~/config/utils';
 import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
 import {
   createOperationComment,
   isOperationOptionsRequired,
 } from '~/plugins/shared/utils/operation';
 import { $, ctx } from '~/ts-dsl';
-import { applyNaming, toCase } from '~/utils/naming';
 
 import { createClientClass, createRegistryClass } from '../shared/class';
 import { nuxtTypeComposable, nuxtTypeDefault } from '../shared/constants';
@@ -110,7 +111,7 @@ function childToNode(
 export function createShell(
   plugin: HeyApiSdkPlugin['Instance'],
 ): StructureShell {
-  const client = getClientPlugin(plugin.context.config);
+  const client = getClientPlugin(getTypedConfig(plugin));
   const isAngularClient = client.name === '@hey-api/client-angular';
   return {
     define: (node) => {
@@ -274,7 +275,7 @@ function implementFn<
   plugin: HeyApiSdkPlugin['Instance'];
 }): T {
   const { node, operation, plugin } = args;
-  const client = getClientPlugin(plugin.context.config);
+  const client = getClientPlugin(getTypedConfig(plugin));
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
   const isRequiredOptions = isOperationOptionsRequired({
     context: plugin.context,
@@ -361,7 +362,7 @@ export function toNode(
 
   const nodes: Array<ReturnType<typeof $.class | typeof $.var>> = [];
 
-  const client = getClientPlugin(plugin.context.config);
+  const client = getClientPlugin(getTypedConfig(plugin));
   const isAngularClient = client.name === '@hey-api/client-angular';
 
   const shell = model.shell.define(model);

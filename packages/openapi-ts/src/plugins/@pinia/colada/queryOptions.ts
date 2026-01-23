@@ -1,4 +1,7 @@
-import type { IR } from '~/ir/types';
+import type { IR } from '@hey-api/shared';
+import { applyNaming } from '@hey-api/shared';
+
+import { getTypedConfig } from '~/config/utils';
 import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
 import {
   createOperationComment,
@@ -6,7 +9,6 @@ import {
   isOperationOptionsRequired,
 } from '~/plugins/shared/utils/operation';
 import { $ } from '~/ts-dsl';
-import { applyNaming } from '~/utils/naming';
 
 import { handleMeta } from './meta';
 import {
@@ -80,7 +82,7 @@ export const createQueryOptions = ({
     );
   }
 
-  const client = getClientPlugin(plugin.context.config);
+  const client = getClientPlugin(getTypedConfig(plugin));
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
   const typeData = getPublicTypeData({ isNuxtClient, operation, plugin });
   const awaitSdkFn = $.lazy((ctx) =>

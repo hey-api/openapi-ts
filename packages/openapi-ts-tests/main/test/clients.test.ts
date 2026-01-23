@@ -4,7 +4,6 @@ import { fileURLToPath } from 'node:url';
 
 import { customClientPlugin } from '@hey-api/custom-client/plugin';
 import { createClient, type UserConfig } from '@hey-api/openapi-ts';
-import { describe, expect, it } from 'vitest';
 
 import type { PluginClientNames } from '../../../openapi-ts/src/plugins/types';
 import { getFilePaths, getSpecsPath } from '../../utils';

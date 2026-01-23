@@ -1,5 +1,3 @@
-import { describe, expect, it, vi } from 'vitest';
-
 import { createClient } from '../client';
 
 describe('buildUrl', () => {

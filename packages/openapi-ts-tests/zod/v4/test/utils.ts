@@ -45,6 +45,7 @@ export const createZodConfig =
             },
       logs: {
         level: 'silent',
+        path: './logs',
       },
       output: path.join(
         outputDir,

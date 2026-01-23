@@ -8,6 +8,7 @@ module.exports = {
     '@vue/eslint-config-typescript',
     '@vue/eslint-config-prettier/skip-formatting'
   ],
+  files: ['**/*.{vue,js,jsx,cjs,mjs,ts,tsx,cts,mts}'],
   parserOptions: {
     ecmaVersion: 'latest'
   }

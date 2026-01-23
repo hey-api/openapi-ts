@@ -1,8 +1,8 @@
 import type {
   OperationPathStrategy,
   OperationStructureStrategy,
-} from '~/openApi/shared/locations';
-import { OperationPath, OperationStrategy } from '~/openApi/shared/locations';
+} from '@hey-api/shared';
+import { OperationPath, OperationStrategy } from '@hey-api/shared';
 
 import type { AngularCommonPlugin } from '../types';
 

@@ -1,6 +1,7 @@
 // OVERRIDES
 // hard-coded here because build process doesn't pick up overrides from separate files
 import '@hey-api/codegen-core';
+import '@hey-api/shared';
 
 declare module '@hey-api/codegen-core' {
   interface ProjectRenderMeta {
@@ -11,7 +12,7 @@ declare module '@hey-api/codegen-core' {
      *
      * @default null
      */
-    importFileExtension?: (string & {}) | null;
+    importFileExtension?: AnyString | null;
   }
 
   interface SymbolMeta {
@@ -24,7 +25,7 @@ declare module '@hey-api/codegen-core' {
       | 'transform'
       | 'type'
       | 'utility'
-      | (string & {});
+      | AnyString;
     /**
      * Path to the resource this symbol represents.
      */
@@ -33,12 +34,7 @@ declare module '@hey-api/codegen-core' {
      * Name of the plugin that registered this symbol.
      */
     pluginName?: string;
-    resource?:
-      | 'client'
-      | 'definition'
-      | 'operation'
-      | 'webhook'
-      | (string & {});
+    resource?: 'client' | 'definition' | 'operation' | 'webhook' | AnyString;
     resourceId?: string;
     role?:
       | 'data'
@@ -47,7 +43,7 @@ declare module '@hey-api/codegen-core' {
       | 'options'
       | 'response'
       | 'responses'
-      | (string & {});
+      | AnyString;
     /**
      * Tags associated with this symbol.
      */
@@ -61,18 +57,25 @@ declare module '@hey-api/codegen-core' {
       | 'typescript'
       | 'valibot'
       | 'zod'
-      | (string & {});
-    variant?: 'container' | (string & {});
+      | AnyString;
+    variant?: 'container' | AnyString;
+  }
+}
+
+declare module '@hey-api/shared' {
+  interface PluginConfigMap {
+    '@hey-api/sdk': HeyApiSdkPlugin['Types'];
   }
 }
 // END OVERRIDES
 
-import type { LazyOrAsync, MaybeArray } from '@hey-api/types';
+import type { AnyString, LazyOrAsync, MaybeArray } from '@hey-api/types';
 import colors from 'ansi-colors';
 // @ts-expect-error
 import colorSupport from 'color-support';
 
 import type { UserConfig } from '~/config/types';
+import type { HeyApiSdkPlugin } from '~/plugins/@hey-api/sdk';
 
 colors.enabled = colorSupport().hasBasic;
 
@@ -88,28 +91,24 @@ export async function defineConfig<T extends MaybeArray<UserConfig>>(
 }
 
 export { Logger } from '@hey-api/codegen-core';
-// export { defaultPaginationKeywords } from '~/config/parser';
-// export { defaultPlugins } from '~/config/plugins';
+export type {
+  DefinePlugin,
+  IR,
+  OpenApi,
+  OpenApiMetaObject,
+  OpenApiOperationObject,
+  OpenApiParameterObject,
+  OpenApiRequestBodyObject,
+  OpenApiResponseObject,
+  OpenApiSchemaObject,
+  Plugin,
+} from '@hey-api/shared';
+export {
+  defaultPaginationKeywords,
+  definePluginConfig,
+  OperationPath,
+  OperationStrategy,
+  utils,
+} from '@hey-api/shared';
+export { defaultPlugins } from '~/config/plugins';
 export type { UserConfig } from '~/config/types';
-// export type { IR } from '~/ir/types';
-// export { OperationPath, OperationStrategy } from '~/openApi/shared/locations';
-// export type {
-//   OpenApi,
-//   OpenApiMetaObject,
-//   OpenApiOperationObject,
-//   OpenApiParameterObject,
-//   OpenApiRequestBodyObject,
-//   OpenApiResponseObject,
-//   OpenApiSchemaObject,
-// } from '~/openApi/types';
-// export type { DefinePlugin, Plugin } from '~/plugins';
-// export {
-//   clientDefaultConfig,
-//   clientDefaultMeta,
-// } from '~/plugins/@hey-api/client-core/config';
-// export { clientPluginHandler } from '~/plugins/@hey-api/client-core/plugin';
-// export type { Client } from '~/plugins/@hey-api/client-core/types';
-// export type { FetchClient } from '~/plugins/@hey-api/client-fetch';
-// export { definePluginConfig } from '~/plugins/shared/utils/config';
-// export * from '~/ts-dsl';
-// export { utils } from '~/utils/exports';

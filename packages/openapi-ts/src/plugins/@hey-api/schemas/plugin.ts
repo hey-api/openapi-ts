@@ -1,9 +1,12 @@
-import { satisfies } from '~/config/utils/package';
-import type { Context } from '~/ir/context';
-import type { OpenApiV2_0_XTypes } from '~/openApi/2.0.x';
-import type { OpenApiV3_0_XTypes } from '~/openApi/3.0.x';
-import type { OpenApiV3_1_XTypes } from '~/openApi/3.1.x';
-import type { OpenApi } from '~/openApi/types';
+import type {
+  Context,
+  OpenApi,
+  OpenApiV2_0_XTypes,
+  OpenApiV3_0_XTypes,
+  OpenApiV3_1_XTypes,
+} from '@hey-api/shared';
+import { satisfies } from '@hey-api/shared';
+
 import { $ } from '~/ts-dsl';
 
 import type { HeyApiSchemasPlugin } from './types';
