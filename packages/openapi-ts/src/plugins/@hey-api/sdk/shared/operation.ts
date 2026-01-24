@@ -76,7 +76,7 @@ type OperationParameters = {
   parameters: Array<ReturnType<typeof $.param>>;
 };
 
-export const operationParameters = ({
+export function operationParameters({
   isRequiredOptions,
   operation,
   plugin,
@@ -84,7 +84,7 @@ export const operationParameters = ({
   isRequiredOptions: boolean;
   operation: IR.OperationObject;
   plugin: HeyApiSdkPlugin['Instance'];
-}): OperationParameters => {
+}): OperationParameters {
   const result: OperationParameters = {
     argNames: [],
     fields: [],
@@ -147,7 +147,7 @@ export const operationParameters = ({
   );
 
   return result;
-};
+}
 
 /**
  * Infers `responseType` value from provided response content type. This is
@@ -205,7 +205,7 @@ const getResponseType = (
   return;
 };
 
-export const operationStatements = ({
+export function operationStatements({
   isRequiredOptions,
   opParameters,
   operation,
@@ -215,7 +215,7 @@ export const operationStatements = ({
   opParameters: OperationParameters;
   operation: IR.OperationObject;
   plugin: HeyApiSdkPlugin['Instance'];
-}): Array<ReturnType<typeof $.return | typeof $.const>> => {
+}): Array<ReturnType<typeof $.return | typeof $.const>> {
   const client = getClientPlugin(plugin.context.config);
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
 
@@ -514,4 +514,4 @@ export const operationStatements = ({
   );
 
   return statements;
-};
+}
