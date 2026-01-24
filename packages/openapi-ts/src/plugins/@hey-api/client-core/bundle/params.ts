@@ -145,8 +145,6 @@ export const buildClientParams = (
           } else {
             params[field.map] = value;
           }
-        } else if (key === 'body') {
-          params.body = value;
         } else {
           const extra = extraPrefixes.find(([prefix]) =>
             key.startsWith(prefix),

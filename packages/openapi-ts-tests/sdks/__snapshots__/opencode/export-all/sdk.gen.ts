@@ -1703,7 +1703,7 @@ export const tuiPublish = <ThrowOnError extends boolean = false>(parameters?: {
     directory?: string;
     body?: EventTuiPromptAppend | EventTuiCommandExecute | EventTuiToastShow;
 }, options?: Options<never, ThrowOnError>) => {
-    const params = buildClientParams([parameters], [{ args: [{ in: 'query', key: 'directory' }, { in: 'body' }] }]);
+    const params = buildClientParams([parameters], [{ args: [{ in: 'query', key: 'directory' }, { key: 'body', map: 'body' }] }]);
     return (options?.client ?? client).post<TuiPublishResponses, TuiPublishErrors, ThrowOnError>({
         url: '/tui/publish',
         ...options,
@@ -1741,7 +1741,7 @@ export const tuiControlResponse = <ThrowOnError extends boolean = false>(paramet
     directory?: string;
     body?: unknown;
 }, options?: Options<never, ThrowOnError>) => {
-    const params = buildClientParams([parameters], [{ args: [{ in: 'query', key: 'directory' }, { in: 'body' }] }]);
+    const params = buildClientParams([parameters], [{ args: [{ in: 'query', key: 'directory' }, { key: 'body', map: 'body' }] }]);
     return (options?.client ?? client).post<TuiControlResponseResponses, unknown, ThrowOnError>({
         url: '/tui/control/response',
         ...options,

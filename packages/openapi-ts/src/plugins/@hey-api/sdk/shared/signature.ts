@@ -38,12 +38,12 @@ type Signature = {
  * - Prefixes all conflicting names with their location (e.g. path_foo, query_foo)
  * - Returns a flat map of resolved parameter names to their metadata
  */
-export const getSignatureParameters = ({
+export function getSignatureParameters({
   operation,
 }: {
   operation: IR.OperationObject;
   plugin: PluginInstance;
-}): Signature | undefined => {
+}): Signature | undefined {
   // TODO: add cookies
   const locations = [
     'header',
@@ -181,7 +181,10 @@ export const getSignatureParameters = ({
         name: 'body',
         schema: operation.body.schema,
       };
-      fields.push({ in: 'body' });
+      fields.push({
+        key: 'body',
+        map: 'body',
+      });
     }
   }
 
@@ -190,4 +193,4 @@ export const getSignatureParameters = ({
   }
 
   return { fields, parameters: signatureParameters };
-};
+}
