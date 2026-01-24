@@ -1,0 +1,64 @@
+openapi: 3.0.0
+info:
+  title: OpenAPI 3.0.0 ref deep example
+  version: '1'
+paths:
+  /foo:
+    get:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    foo:
+                      type: integer
+                    bar:
+                      type: string
+    post:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  foo:
+                    $ref: '#/paths/~1foo/get/responses/200/content/application~1json/schema/items'
+                  bar:
+                    type: string
+components:
+  schemas:
+    Foo:
+      type: object
+      properties:
+        foo:
+          type: array
+          items:
+            type: object
+            properties:
+              baz:
+                type: string
+        bar:
+          type: array
+          items:
+            type: object
+            properties:
+              baz:
+                type: string
+    Bar:
+      type: object
+      properties:
+        foo:
+          type: array
+          items:
+            $ref: '#/components/schemas/Foo/properties/foo/items'
+        bar:
+          type: array
+          items:
+            $ref: '#/components/schemas/Foo/properties/bar/items'
