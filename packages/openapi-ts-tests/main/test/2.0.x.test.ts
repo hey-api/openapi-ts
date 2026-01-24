@@ -294,6 +294,14 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'ref-deep.yaml',
+        output: 'ref-deep',
+        plugins: ['@hey-api/typescript'],
+      }),
+      description: 'handles deep references',
+    },
+    {
+      config: createConfig({
         input: 'transforms-read-write.yaml',
         output: 'transforms-read-write',
         plugins: ['@hey-api/client-fetch', '@hey-api/typescript'],
