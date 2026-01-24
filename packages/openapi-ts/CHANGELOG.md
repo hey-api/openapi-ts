@@ -1,5 +1,23 @@
 # @hey-api/openapi-ts
 
+## 0.90.10
+
+### Patch Changes
+
+- **plugin(@tanstack/solid-query)**: index mutation options symbol ([#3253](https://github.com/hey-api/openapi-ts/pull/3253)) ([`c5f379e`](https://github.com/hey-api/openapi-ts/commit/c5f379ea5534272d63a423c671427ff1ef13197a)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@tanstack/svelte-query)**: index mutation options symbol ([#3253](https://github.com/hey-api/openapi-ts/pull/3253)) ([`c5f379e`](https://github.com/hey-api/openapi-ts/commit/c5f379ea5534272d63a423c671427ff1ef13197a)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@tanstack/vue-query)**: index mutation options symbol ([#3253](https://github.com/hey-api/openapi-ts/pull/3253)) ([`c5f379e`](https://github.com/hey-api/openapi-ts/commit/c5f379ea5534272d63a423c671427ff1ef13197a)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@tanstack/react-query)**: index mutation options symbol ([#3253](https://github.com/hey-api/openapi-ts/pull/3253)) ([`c5f379e`](https://github.com/hey-api/openapi-ts/commit/c5f379ea5534272d63a423c671427ff1ef13197a)) by [@mrlubos](https://github.com/mrlubos)
+
+- **parser**: inline deep path `$ref` references ([#3242](https://github.com/hey-api/openapi-ts/pull/3242)) ([`00cfaed`](https://github.com/hey-api/openapi-ts/commit/00cfaed32a3b1d2a7bbd5c4c2a946a9f7be262b2)) by [@chrg1001](https://github.com/chrg1001)
+
+- **plugin(@tanstack/angular-query-experimental)**: index mutation options symbol ([#3249](https://github.com/hey-api/openapi-ts/pull/3249)) ([`5977f56`](https://github.com/hey-api/openapi-ts/commit/5977f56362351a9e4f1e9715c141a8e37130a4bb)) by [@j-ibarra](https://github.com/j-ibarra)
+
+- **plugin(@hey-api/sdk)**: correctly map body keys in flat mode ([#3255](https://github.com/hey-api/openapi-ts/pull/3255)) ([`9ca5471`](https://github.com/hey-api/openapi-ts/commit/9ca547168c7a89acb0523bd05a5ee24aee7d8638)) by [@jsjames](https://github.com/jsjames)
+
 ## 0.90.9
 
 ### Patch Changes
