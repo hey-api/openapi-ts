@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@stackblitz/sdk": "1.11.0",
-    "vue3-select-component": "0.14.0"
+    "vue3-select-component": "0.14.1"
   },
   "devDependencies": {
     "sharp": "0.34.5",
