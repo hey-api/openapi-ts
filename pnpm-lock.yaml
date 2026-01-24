@@ -176,8 +176,8 @@ importers:
         specifier: 1.11.0
         version: 1.11.0
       vue3-select-component:
-        specifier: 0.14.0
-        version: 0.14.0(vue@3.5.25(typescript@5.9.3))
+        specifier: 0.14.1
+        version: 0.14.1(vue@3.5.25(typescript@5.9.3))
     devDependencies:
       sharp:
         specifier: 0.34.5
@@ -6336,11 +6336,6 @@ packages:
 
   '@rollup/rollup-linux-x64-gnu@4.50.0':
     resolution: {integrity: sha512-8PrJJA7/VU8ToHVEPu14FzuSAqVKyo5gg/J8xUerMbyNkWkO9j2ExBho/68RnJsMGNJq4zH114iAttgm7BZVkA==}
-    cpu: [x64]
-    os: [linux]
-
-  '@rollup/rollup-linux-x64-gnu@4.52.5':
-    resolution: {integrity: sha512-hXGLYpdhiNElzN770+H2nlx+jRog8TyynpTVzdlc6bndktjKWyZyiCsuDAlpd+j+W+WNqfcyAWz9HxxIGfZm1Q==}
     cpu: [x64]
     os: [linux]
 
@@ -14263,8 +14258,8 @@ packages:
     peerDependencies:
       typescript: '>=5.0.0'
 
-  vue3-select-component@0.14.0:
-    resolution: {integrity: sha512-E7S2OCn395asQeg6sxMLmGx7+wrkcJeueQ/0g7hq8nkwXjvBOWAFbk2Z1elVFQunhV033jtzkv2yVKview++sw==}
+  vue3-select-component@0.14.1:
+    resolution: {integrity: sha512-Z2QRUgaGznAqSDFSAMCY8qG+IDZIPwhC/SfFcIOAWKQbDPrfDL/GczYQv5JAFK0+Tk6Y2TkCZoOM03GxQIa6qQ==}
     peerDependencies:
       vue: ^3.5.0
 
@@ -20441,9 +20436,6 @@ snapshots:
     optional: true
 
   '@rollup/rollup-linux-x64-gnu@4.50.0':
-    optional: true
-
-  '@rollup/rollup-linux-x64-gnu@4.52.5':
     optional: true
 
   '@rollup/rollup-linux-x64-gnu@4.55.1':
@@ -30896,12 +30888,12 @@ snapshots:
       '@vue/language-core': 3.0.8(typescript@5.8.3)
       typescript: 5.8.3
 
-  vue3-select-component@0.14.0(vue@3.5.25(typescript@5.9.3)):
+  vue3-select-component@0.14.1(vue@3.5.25(typescript@5.9.3)):
     dependencies:
       '@floating-ui/vue': 1.1.9(vue@3.5.25(typescript@5.9.3))
       vue: 3.5.25(typescript@5.9.3)
     optionalDependencies:
-      '@rollup/rollup-linux-x64-gnu': 4.52.5
+      '@rollup/rollup-linux-x64-gnu': 4.55.1
     transitivePeerDependencies:
       - '@vue/composition-api'
 
