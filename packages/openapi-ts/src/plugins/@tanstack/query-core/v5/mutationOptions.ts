@@ -58,6 +58,15 @@ export const createMutationOptions = ({
   const mutationOptionsFn = 'mutationOptions';
   const symbolMutationOptions = plugin.symbol(
     applyNaming(operation.id, plugin.config.mutationOptions),
+    {
+      meta: {
+        category: 'hook',
+        resource: 'operation',
+        resourceId: operation.id,
+        role: 'mutationOptions',
+        tool: plugin.name,
+      },
+    },
   );
   const statement = $.const(symbolMutationOptions)
     .export()

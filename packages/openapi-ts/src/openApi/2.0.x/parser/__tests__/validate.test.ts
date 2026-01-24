@@ -1,11 +1,11 @@
 import path from 'node:path';
 
+import { Logger } from '@hey-api/codegen-core';
 import { describe, expect, it } from 'vitest';
 
 import { getSpecsPath, specFileToJson } from '~/openApi/__tests__/utils';
 import type { ValidatorResult } from '~/openApi/shared/utils/validator';
 
-import { Logger } from '../../../../utils/logger';
 import { validateOpenApiSpec } from '../validate';
 
 const specsFolder = path.join(getSpecsPath(), '2.0.x', 'invalid');

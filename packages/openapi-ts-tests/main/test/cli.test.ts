@@ -15,7 +15,6 @@ describe('bin', () => {
       '--output',
       path.resolve(__dirname, '.gen'),
       '--dry-run',
-      'true',
     ]);
     expect(result.error).toBeFalsy();
     expect(result.status).toBe(0);

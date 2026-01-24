@@ -1,9 +1,10 @@
+import type { Logger } from '@hey-api/codegen-core';
+
+import type { Config } from '~/config/types';
 import { createOperationKey } from '~/ir/operation';
 import type { PathItemObject, PathsObject } from '~/openApi/3.1.x/types/spec';
 import type { OpenApi } from '~/openApi/types';
-import type { Logger } from '~/utils/logger';
 
-import type { Config } from '../../../types/config';
 import type { ResourceMetadata } from '../graph/meta';
 import { httpMethods } from './operation';
 

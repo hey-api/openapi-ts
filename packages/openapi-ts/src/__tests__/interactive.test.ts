@@ -1,12 +1,15 @@
+import {
+  detectInteractiveSession,
+  Logger,
+  mergeConfigs,
+} from '@hey-api/codegen-core';
 import { afterEach, describe, expect, it } from 'vitest';
 
-import { detectInteractiveSession, initConfigs } from '~/config/init';
-import { mergeConfigs } from '~/config/merge';
-import { Logger } from '~/utils/logger';
+import { resolveJobs } from '~/config/init';
 
 describe('interactive config', () => {
   it('should use detectInteractiveSession when not provided', async () => {
-    const result = await initConfigs({
+    const result = await resolveJobs({
       logger: new Logger(),
       userConfigs: [
         {
@@ -17,11 +20,11 @@ describe('interactive config', () => {
     });
 
     // In test environment, TTY is typically not available, so it should be false
-    expect(result.results[0]?.config.interactive).toBe(false);
+    expect(result.jobs[0]?.config.interactive).toBe(false);
   });
 
   it('should respect user config when set to true', async () => {
-    const result = await initConfigs({
+    const result = await resolveJobs({
       logger: new Logger(),
       userConfigs: [
         {
@@ -32,11 +35,11 @@ describe('interactive config', () => {
       ],
     });
 
-    expect(result.results[0]?.config.interactive).toBe(true);
+    expect(result.jobs[0]?.config.interactive).toBe(true);
   });
 
   it('should respect user config when set to false', async () => {
-    const result = await initConfigs({
+    const result = await resolveJobs({
       logger: new Logger(),
       userConfigs: [
         {
@@ -47,7 +50,7 @@ describe('interactive config', () => {
       ],
     });
 
-    expect(result.results[0]?.config.interactive).toBe(false);
+    expect(result.jobs[0]?.config.interactive).toBe(false);
   });
 
   it('should allow file config to set interactive when CLI does not provide it', () => {
@@ -76,7 +79,10 @@ describe('interactive config', () => {
     };
 
     // After fix: file config's interactive should be preserved
-    const mergedCorrect = mergeConfigs(fileConfig, cliConfigWithoutInteractive);
+    const mergedCorrect = mergeConfigs<Partial<typeof fileConfig>>(
+      fileConfig,
+      cliConfigWithoutInteractive,
+    );
     expect(mergedCorrect.interactive).toBe(false);
 
     // Before fix: CLI's auto-detected interactive would override file config

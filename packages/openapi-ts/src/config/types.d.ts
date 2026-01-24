@@ -1,15 +1,15 @@
 import type { MaybeArray } from '@hey-api/types';
 
-import type { Output, UserOutput } from '~/config/output';
 import type { Plugin } from '~/plugins';
 import type { PluginConfigMap } from '~/plugins/config';
 import type { PluginNames } from '~/plugins/types';
+import type { Input, UserInput, Watch } from '~/types/input';
+import type { Logs } from '~/types/logs';
+import type { Parser, UserParser } from '~/types/parser';
 
-import type { Input, UserInput, Watch } from './input';
-import type { Logs } from './logs';
-import type { Parser, UserParser } from './parser';
+import type { Output, UserOutput } from './output';
 
-export interface UserConfig {
+export type UserConfig = {
   /**
    * Path to the config file. Set this value if you don't use the default
    * config file name, or it's not located in the project root.
@@ -81,7 +81,7 @@ export interface UserConfig {
    * @deprecated use `input.watch` instead
    */
   watch?: boolean | number | Watch;
-}
+};
 
 export type Config = Omit<
   Required<UserConfig>,

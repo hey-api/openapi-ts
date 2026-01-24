@@ -1,9 +1,11 @@
+import { Logger } from '@hey-api/codegen-core';
 import type { LazyOrAsync, MaybeArray } from '@hey-api/types';
 
 import { checkNodeVersion } from '~/config/engine';
 import type { Configs } from '~/config/init';
-import { initConfigs } from '~/config/init';
+import { resolveJobs } from '~/config/init';
 import { getLogs } from '~/config/logs';
+import type { UserConfig } from '~/config/types';
 import { createClient as pCreateClient } from '~/createClient';
 import {
   ConfigValidationError,
@@ -14,19 +16,17 @@ import {
   shouldReportCrash,
 } from '~/error';
 import type { Context } from '~/ir/context';
-import type { UserConfig } from '~/types/config';
 import { printCliIntro } from '~/utils/cli';
-import { Logger } from '~/utils/logger';
 
 /**
  * Generate a client from the provided configuration.
  *
  * @param userConfig User provided {@link UserConfig} configuration(s).
  */
-export const createClient = async (
+export async function createClient(
   userConfig?: LazyOrAsync<MaybeArray<UserConfig>>,
   logger = new Logger(),
-): Promise<ReadonlyArray<Context>> => {
+): Promise<ReadonlyArray<Context>> {
   const resolvedConfig =
     typeof userConfig === 'function' ? await userConfig() : userConfig;
   const userConfigs = resolvedConfig
@@ -42,7 +42,7 @@ export const createClient = async (
     rawLogs = getLogs({ logs: rawLogs });
   }
 
-  let configs: Configs | undefined;
+  let jobs: Configs['jobs'] = [];
 
   try {
     checkNodeVersion();
@@ -50,61 +50,51 @@ export const createClient = async (
     const eventCreateClient = logger.timeEvent('createClient');
 
     const eventConfig = logger.timeEvent('config');
-    configs = await initConfigs({ logger, userConfigs });
-    const printIntro = configs.results.some(
-      (result) => result.config.logs.level !== 'silent',
-    );
-    if (printIntro) {
-      printCliIntro();
-    }
+    const resolved = await resolveJobs({ logger, userConfigs });
+    const dependencies = resolved.dependencies;
+    jobs = resolved.jobs;
+    const printIntro = jobs.some((job) => job.config.logs.level !== 'silent');
+    if (printIntro) printCliIntro();
     eventConfig.timeEnd();
 
-    const allConfigErrors = configs.results.flatMap((result) =>
-      result.errors.map((error) => ({ error, jobIndex: result.jobIndex })),
+    const configErrors = jobs.flatMap((job) =>
+      job.errors.map((error) => ({ error, jobIndex: job.index })),
     );
-    if (allConfigErrors.length) {
-      throw new ConfigValidationError(allConfigErrors);
+    if (configErrors.length > 0) {
+      throw new ConfigValidationError(configErrors);
     }
 
-    const clients = await Promise.all(
-      configs.results.map(async (result) => {
+    const outputs = await Promise.all(
+      jobs.map(async (job) => {
         try {
           return await pCreateClient({
-            config: result.config,
-            dependencies: configs!.dependencies,
-            jobIndex: result.jobIndex,
+            config: job.config,
+            dependencies,
+            jobIndex: job.index,
             logger,
           });
         } catch (error) {
           throw new JobError('', {
             error,
-            jobIndex: result.jobIndex,
+            jobIndex: job.index,
           });
         }
       }),
     );
-    const result = clients.filter((client) =>
-      Boolean(client),
-    ) as ReadonlyArray<Context>;
+    const contexts = outputs.filter((ctx): ctx is Context => ctx !== undefined);
 
     eventCreateClient.timeEnd();
 
-    const printLogs = configs.results.some(
-      (result) => result.config.logs.level === 'debug',
-    );
-    logger.report(printLogs);
+    logger.report(jobs.some((job) => job.config.logs.level === 'debug'));
 
-    return result;
+    return contexts;
   } catch (error) {
-    const results = configs?.results ?? [];
-
     const logs =
-      results.find((result) => result.config.logs.level !== 'silent')?.config
-        .logs ??
-      results[0]?.config.logs ??
+      jobs.find((job) => job.config.logs.level !== 'silent')?.config.logs ??
+      jobs[0]?.config.logs ??
       rawLogs;
     const dryRun =
-      results.some((result) => result.config.dryRun) ??
+      jobs.some((job) => job.config.dryRun) ??
       userConfigs.some((config) => config.dryRun) ??
       false;
     const logPath =
@@ -114,7 +104,7 @@ export const createClient = async (
     if (!logs || logs.level !== 'silent') {
       printCrashReport({ error, logPath });
       const isInteractive =
-        results.some((result) => result.config.interactive) ??
+        jobs.some((job) => job.config.interactive) ??
         userConfigs.some((config) => config.interactive) ??
         false;
       if (await shouldReportCrash({ error, isInteractive })) {
@@ -124,4 +114,4 @@ export const createClient = async (
 
     throw error;
   }
-};
+}

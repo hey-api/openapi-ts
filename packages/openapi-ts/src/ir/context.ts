@@ -1,5 +1,7 @@
+import type { Logger } from '@hey-api/codegen-core';
 import { Project } from '@hey-api/codegen-core';
 
+import type { Config } from '~/config/types';
 import type { Package } from '~/config/utils/package';
 import { packageFactory } from '~/config/utils/package';
 import type { Graph } from '~/graph';
@@ -7,8 +9,6 @@ import type { PluginConfigMap } from '~/plugins/config';
 import { PluginInstance } from '~/plugins/shared/utils/instance';
 import type { PluginNames } from '~/plugins/types';
 import { TypeScriptRenderer } from '~/ts-dsl';
-import type { Config } from '~/types/config';
-import type { Logger } from '~/utils/logger';
 import { applyNaming } from '~/utils/naming';
 import { resolveRef } from '~/utils/ref';
 

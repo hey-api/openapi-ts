@@ -2,8 +2,8 @@ import { log } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { findTsConfigPath, loadTsConfig } from '~/generate/tsConfig';
-import type { Config, UserConfig } from '~/types/config';
 
+import type { Config, UserConfig } from '../types';
 import { valueToObject } from '../utils/config';
 import type { PostProcessor, UserPostProcessor } from './postprocess';
 import { postProcessors } from './postprocess';

@@ -1,9 +1,10 @@
+import type { Logger } from '@hey-api/codegen-core';
+
+import type { Config } from '~/config/types';
 import type { Graph } from '~/graph';
-import type { Logger } from '~/utils/logger';
 import { applyNaming } from '~/utils/naming';
 import { jsonPointerToPath } from '~/utils/ref';
 
-import type { Config } from '../../../types/config';
 import deepEqual from '../utils/deepEqual';
 import { buildGraph, type Scope } from '../utils/graph';
 import { deepClone } from '../utils/schema';

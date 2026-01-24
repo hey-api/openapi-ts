@@ -1,11 +1,11 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import type { Config } from '~/config/types';
 import type { OpenApiV3_0_X } from '~/openApi/3.0.x';
 import { parseV3_0_X } from '~/openApi/3.0.x';
 import type { OpenApiV3_1_X } from '~/openApi/3.1.x';
 import { parseV3_1_X } from '~/openApi/3.1.x';
 
-import type { Config } from '../../types/config';
 import { parseOpenApiSpec } from '..';
 
 vi.mock('../3.0.x', () => ({

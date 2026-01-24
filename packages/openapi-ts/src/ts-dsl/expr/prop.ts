@@ -12,7 +12,13 @@ import { IdTsDsl } from './id';
 
 type Expr = NodeName | MaybeTsDsl<ts.Expression>;
 type Stmt = NodeName | MaybeTsDsl<ts.Statement>;
-type Kind = 'computed' | 'getter' | 'prop' | 'setter' | 'spread';
+
+export type ObjectPropKind =
+  | 'computed'
+  | 'getter'
+  | 'prop'
+  | 'setter'
+  | 'spread';
 
 type Meta =
   | { kind: 'computed'; name: string }
@@ -27,11 +33,19 @@ export class ObjectPropTsDsl extends Mixed {
   readonly '~dsl' = 'ObjectPropTsDsl';
 
   protected _value?: Ref<Expr | Stmt>;
-  protected meta: Meta;
+  protected _meta: Meta;
 
   constructor(meta: Meta) {
     super();
-    this.meta = meta;
+    this._meta = meta;
+  }
+
+  get kind(): ObjectPropKind {
+    return this._meta.kind;
+  }
+
+  get propName(): string | undefined {
+    return this._meta.name;
   }
 
   override analyze(ctx: AnalysisContext): void {
@@ -39,7 +53,6 @@ export class ObjectPropTsDsl extends Mixed {
     ctx.analyze(this._value);
   }
 
-  /** Returns true when all required builder calls are present. */
   get isValid(): boolean {
     return this.missingRequiredCalls().length === 0;
   }
@@ -56,7 +69,7 @@ export class ObjectPropTsDsl extends Mixed {
   override toAst() {
     this.$validate();
     const node = this.$node(this._value);
-    if (this.meta.kind === 'spread') {
+    if (this._meta.kind === 'spread') {
       if (ts.isStatement(node)) {
         throw new Error(
           'Invalid spread: object spread must be an expression, not a statement.',
@@ -65,19 +78,19 @@ export class ObjectPropTsDsl extends Mixed {
       const result = ts.factory.createSpreadAssignment(node);
       return this.$docs(result);
     }
-    if (this.meta.kind === 'getter') {
-      const getter = new GetterTsDsl(this.meta.name).do(node);
+    if (this._meta.kind === 'getter') {
+      const getter = new GetterTsDsl(this._meta.name).do(node);
       const result = this.$node(getter);
       return this.$docs(result);
     }
-    if (this.meta.kind === 'setter') {
-      const setter = new SetterTsDsl(this.meta.name).do(node);
+    if (this._meta.kind === 'setter') {
+      const setter = new SetterTsDsl(this._meta.name).do(node);
       const result = this.$node(setter);
       return this.$docs(result);
     }
-    if (ts.isIdentifier(node) && node.text === this.meta.name) {
+    if (ts.isIdentifier(node) && node.text === this._meta.name) {
       const result = ts.factory.createShorthandPropertyAssignment(
-        this.meta.name,
+        this._meta.name,
       );
       return this.$docs(result);
     }
@@ -87,11 +100,11 @@ export class ObjectPropTsDsl extends Mixed {
       );
     }
     const result = ts.factory.createPropertyAssignment(
-      this.meta.kind === 'computed'
+      this._meta.kind === 'computed'
         ? ts.factory.createComputedPropertyName(
-            this.$node(new IdTsDsl(this.meta.name)),
+            this.$node(new IdTsDsl(this._meta.name)),
           )
-        : this.$node(safePropName(this.meta.name)),
+        : this.$node(safePropName(this._meta.name)),
       node,
     );
     return this.$docs(result);
@@ -99,12 +112,12 @@ export class ObjectPropTsDsl extends Mixed {
 
   $validate(): asserts this is this & {
     _value: Expr | Stmt;
-    kind: Kind;
+    kind: ObjectPropKind;
   } {
     const missing = this.missingRequiredCalls();
     if (missing.length === 0) return;
     throw new Error(
-      `Object property${this.meta.name ? ` "${this.meta.name}"` : ''} missing ${missing.join(' and ')}`,
+      `Object property${this._meta.name ? ` "${this._meta.name}"` : ''} missing ${missing.join(' and ')}`,
     );
   }
 
