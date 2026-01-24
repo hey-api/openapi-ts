@@ -47,7 +47,7 @@ jobs:
           private-key: ${{ secrets.GIT_APP_PRIVATE_KEY }}
 
       - name: Create Release Pull Request
-        uses: changesets/action@v1.5.3
+        uses: changesets/action@v1.6.0
         with:
           commit: 'ci: release'
           publish: pnpm changeset publish
