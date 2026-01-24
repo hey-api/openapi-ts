@@ -1,5 +1,44 @@
 # @hey-api/openapi-ts
 
+## 0.90.9
+
+### Patch Changes
+
+- **ts-dsl**: allow removing object properties by passing `null` ([#3247](https://github.com/hey-api/openapi-ts/pull/3247)) ([`7be1561`](https://github.com/hey-api/openapi-ts/commit/7be1561a862d2bb217703003d5e6cbc4a6a09586)) by [@mrlubos](https://github.com/mrlubos)
+
+- **cli**: clean up interface ([#3244](https://github.com/hey-api/openapi-ts/pull/3244)) ([`4f52bce`](https://github.com/hey-api/openapi-ts/commit/4f52bce79d8ac6573472f32a05b7f70913b90605)) by [@mrlubos](https://github.com/mrlubos)
+
+- **ts-dsl**: override object properties when called multiple times with the same name ([#3247](https://github.com/hey-api/openapi-ts/pull/3247)) ([`7be1561`](https://github.com/hey-api/openapi-ts/commit/7be1561a862d2bb217703003d5e6cbc4a6a09586)) by [@mrlubos](https://github.com/mrlubos)
+
+- **config**: move `loadConfigFile` function to `@hey-api/codegen-core` ([#3244](https://github.com/hey-api/openapi-ts/pull/3244)) ([`4f52bce`](https://github.com/hey-api/openapi-ts/commit/4f52bce79d8ac6573472f32a05b7f70913b90605)) by [@mrlubos](https://github.com/mrlubos)
+
+### Updated Dependencies:
+
+- @hey-api/types@0.1.2
+- @hey-api/codegen-core@0.5.5
+
+## 0.90.8
+
+### Patch Changes
+
+- **internal**: move logger to codegen-core ([#3235](https://github.com/hey-api/openapi-ts/pull/3235)) ([`88532f0`](https://github.com/hey-api/openapi-ts/commit/88532f01200e1111818e82a4af7bd5cf8cf26e3b)) by [@mrlubos](https://github.com/mrlubos)
+
+- **cli**: do not show ascii logo on generate command ([#3238](https://github.com/hey-api/openapi-ts/pull/3238)) ([`72e17f3`](https://github.com/hey-api/openapi-ts/commit/72e17f39d6e2d00eff24671e7f2b88801443489a)) by [@mrlubos](https://github.com/mrlubos)
+
+### Updated Dependencies:
+
+- @hey-api/codegen-core@0.5.4
+
+## 0.90.7
+
+### Patch Changes
+
+- **deps**: move @hey-api/types to dependencies to fix broken types ([#3232](https://github.com/hey-api/openapi-ts/pull/3232)) ([`edfce48`](https://github.com/hey-api/openapi-ts/commit/edfce4875cb9279d3ab8bfd438ff177e8ba7845c)) by [@mrlubos](https://github.com/mrlubos)
+
+### Updated Dependencies:
+
+- @hey-api/codegen-core@0.5.3
+
 ## 0.90.6
 
 ### Patch Changes

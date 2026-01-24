@@ -30,7 +30,6 @@ export default defineConfig(() => {
   // ...
   return [
     {
-      // experimentalParser: false,
       input: [
         {
           // fetch: {
@@ -108,7 +107,6 @@ export default defineConfig(() => {
         // level: 'debug',
         path: './logs',
       },
-      // name: 'foo',
       output: [
         {
           // case: 'snake_case',
@@ -478,7 +476,7 @@ export default defineConfig(() => {
           // definitions: 'z{{name}}',
           exportFromIndex: true,
           // metadata: true,
-          // name: 'valibot',
+          name: 'valibot',
           // requests: {
           //   case: 'PascalCase',
           //   name: '{{name}}Data',
@@ -527,6 +525,7 @@ export default defineConfig(() => {
               const additional = ctx.nodes.additionalProperties(ctx);
               if (additional === undefined) {
                 const shape = ctx.nodes.shape(ctx);
+                shape.prop('body', $(v).attr('never').call());
                 ctx.nodes.base = () => $(v).attr('looseObject').call(shape);
               }
             },

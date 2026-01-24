@@ -1,4 +1,4 @@
-// import { MaybeArray } from "@hey-api/types";
+import type { MaybeArray } from '@hey-api/types';
 
 export interface UserConfig {
   /**
@@ -28,6 +28,7 @@ export interface UserConfig {
    * generate multiple outputs, one for each input.
    */
   // input: MaybeArray<UserInput | Required<UserInput>['path']>;
+  input: MaybeArray<string>;
   /**
    * Show an interactive error reporting tool when the program crashes? You
    * generally want to keep this disabled (default).
@@ -41,6 +42,11 @@ export interface UserConfig {
    * @default process.cwd()
    */
   // logs?: string | Logs;
+  logs?:
+    | string
+    | {
+        level?: 'debug' | 'info' | 'warn' | 'error' | 'silent';
+      };
   /**
    * Path to the output folder.
    *
@@ -48,6 +54,7 @@ export interface UserConfig {
    * generate multiple outputs, one for each input.
    */
   // output: MaybeArray<string | UserOutput>;
+  output: MaybeArray<string>;
   /**
    * Customize how the input is parsed and transformed before it's passed to
    * plugins.
@@ -68,4 +75,8 @@ export interface UserConfig {
   //       };
   //     }[PluginNames]
   // >;
+  /**
+   * @deprecated use `input.watch` instead
+   */
+  watch?: boolean | number;
 }

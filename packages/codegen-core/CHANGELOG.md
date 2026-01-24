@@ -1,5 +1,27 @@
 # @hey-api/codegen-core
 
+## 0.5.5
+
+### Patch Changes
+
+- **config**: export `loadConfigFile` function (moved from `@hey-api/openapi-ts`) ([#3244](https://github.com/hey-api/openapi-ts/pull/3244)) ([`4f52bce`](https://github.com/hey-api/openapi-ts/commit/4f52bce79d8ac6573472f32a05b7f70913b90605)) by [@mrlubos](https://github.com/mrlubos)
+
+### Updated Dependencies:
+
+- @hey-api/types@0.1.2
+
+## 0.5.4
+
+### Patch Changes
+
+- **internal**: move logger to codegen-core ([#3235](https://github.com/hey-api/openapi-ts/pull/3235)) ([`88532f0`](https://github.com/hey-api/openapi-ts/commit/88532f01200e1111818e82a4af7bd5cf8cf26e3b)) by [@mrlubos](https://github.com/mrlubos)
+
+## 0.5.3
+
+### Patch Changes
+
+- **deps**: move @hey-api/types to dependencies to fix broken types ([#3232](https://github.com/hey-api/openapi-ts/pull/3232)) ([`edfce48`](https://github.com/hey-api/openapi-ts/commit/edfce4875cb9279d3ab8bfd438ff177e8ba7845c)) by [@mrlubos](https://github.com/mrlubos)
+
 ## 0.5.2
 
 ### Patch Changes

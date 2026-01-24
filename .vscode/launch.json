@@ -16,6 +16,20 @@
       "cwd": "${workspaceFolder}/dev",
       "runtimeExecutable": "node",
       "program": "${workspaceFolder}/packages/openapi-ts/dist/run.mjs",
+      "args": [],
+      "env": {
+        "DEBUG": "false"
+      }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "openapi-python",
+      "skipFiles": ["<node_internals>/**"],
+      "cwd": "${workspaceFolder}/dev",
+      "runtimeExecutable": "node",
+      "program": "${workspaceFolder}/packages/openapi-python/dist/run.mjs",
+      "args": [],
       "env": {
         "DEBUG": "false"
       }

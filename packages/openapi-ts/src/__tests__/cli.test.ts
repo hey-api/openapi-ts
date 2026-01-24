@@ -53,11 +53,11 @@ describe('cli', () => {
       process.argv = originalArgv;
     }
     expect(spy).toHaveBeenCalledWith({
-      input: 'foo.json',
+      input: ['foo.json'],
       logs: {
         file: true,
       },
-      output: 'bar',
+      output: ['bar'],
     });
   });
 
@@ -77,7 +77,6 @@ describe('cli', () => {
       logs: {
         file: true,
       },
-      plugins: [],
     });
   });
 
@@ -102,7 +101,7 @@ describe('cli', () => {
     });
   });
 
-  it('with default plugins', async () => {
+  it('with client plugin', async () => {
     const originalArgv = process.argv.slice();
     try {
       process.argv = [
@@ -119,7 +118,7 @@ describe('cli', () => {
       logs: {
         file: true,
       },
-      plugins: ['@hey-api/typescript', '@hey-api/sdk', 'foo'],
+      plugins: ['foo'],
     });
   });
 
@@ -214,12 +213,12 @@ describe('cli', () => {
     expect(spy).toHaveBeenCalledWith({
       configFile: 'bar',
       dryRun: true,
-      input: 'baz',
+      input: ['baz'],
       logs: {
         file: true,
         path: 'qux',
       },
-      output: 'quux',
+      output: ['quux'],
       plugins: ['foo'],
       watch: true,
     });
