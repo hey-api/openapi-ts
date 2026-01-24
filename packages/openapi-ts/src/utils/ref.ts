@@ -94,6 +94,35 @@ export const pathToJsonPointer = (
   return '#' + (segments ? `/${segments}` : '');
 };
 
+/**
+ * Checks if a $ref points to a top-level component (not a deep path reference).
+ *
+ * Top-level component references:
+ * - OpenAPI 3.x: #/components/{type}/{name} (3 segments)
+ * - OpenAPI 2.0: #/definitions/{name} (2 segments)
+ *
+ * Deep path references (4+ segments for 3.x, 3+ for 2.0) should be inlined
+ * because they don't have corresponding registered symbols.
+ *
+ * @param $ref - The $ref string to check
+ * @returns true if the ref points to a top-level component, false otherwise
+ */
+export const isTopLevelComponentRef = ($ref: string): boolean => {
+  const path = jsonPointerToPath($ref);
+
+  // OpenAPI 3.x: #/components/{type}/{name} = 3 segments
+  if (path[0] === 'components') {
+    return path.length === 3;
+  }
+
+  // OpenAPI 2.0: #/definitions/{name} = 2 segments
+  if (path[0] === 'definitions') {
+    return path.length === 2;
+  }
+
+  return false;
+};
+
 export const resolveRef = <T>({
   $ref,
   spec,
