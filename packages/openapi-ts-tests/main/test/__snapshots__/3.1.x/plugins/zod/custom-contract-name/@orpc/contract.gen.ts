@@ -96,16 +96,19 @@ export const getPostByIdRpc = base.route({
     tags: ['posts']
 }).input(zGetPostByIdData).output(zGetPostByIdResponse);
 
-export const router = { users: {
+export const router = {
+    users: {
         get: getUsersRpc,
         create: createUserRpc,
         delete: deleteUserRpc,
         getById: getUserByIdRpc,
         update: updateUserRpc
-    }, posts: {
+    },
+    posts: {
         get: getPostsRpc,
         create: createPostRpc,
         getById: getPostByIdRpc
-    } };
+    }
+};
 
 export type Router = typeof router;

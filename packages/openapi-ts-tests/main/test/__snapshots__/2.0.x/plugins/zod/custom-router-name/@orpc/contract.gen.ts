@@ -46,13 +46,15 @@ export const fooBarPutContract = base.route({
     tags: ['fooBaz', 'barBaz']
 }).output(zFooBarPutResponse);
 
-export const contract = { foo: {
+export const contract = {
+    foo: {
         get: getFooContract,
         fooPost: fooPostContract,
         fooPut: fooPutContract,
         getBar: getFooBarContract,
         fooBarPost: fooBarPostContract,
         fooBarPut: fooBarPutContract
-    } };
+    }
+};
 
 export type Contract = typeof contract;
