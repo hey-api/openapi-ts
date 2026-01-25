@@ -65,14 +65,12 @@ export const defaultConfig: OrpcPlugin['Config'] = {
     exportFromIndex: false,
     groupKeyBuilder: defaultGroupKeyBuilder,
     operationKeyBuilder: defaultOperationKeyBuilder,
-    output: 'orpc',
     routerName: 'router',
   },
   dependencies: ['zod'],
   handler,
   name: '@orpc/contract',
   resolveConfig: (plugin) => {
-    plugin.config.output ??= 'orpc';
     plugin.config.exportFromIndex ??= false;
     plugin.config.contractNameBuilder ??= (id: string) => `${id}Contract`;
     plugin.config.defaultTag ??= 'default';

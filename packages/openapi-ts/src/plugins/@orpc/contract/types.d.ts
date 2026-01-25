@@ -35,12 +35,6 @@ export type UserConfig = Plugin.Name<'@orpc/contract'> &
      */
     operationKeyBuilder?: (operationId: string, groupKey: string) => string;
     /**
-     * Name of the generated file.
-     *
-     * @default 'orpc'
-     */
-    output?: string;
-    /**
      * Name of the router export.
      * The type export will be the capitalized version (e.g., 'router' → 'Router').
      *
