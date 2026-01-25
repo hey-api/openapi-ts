@@ -24,7 +24,9 @@ function hasInput(operation: IR.OperationObject): boolean {
 
 function getSuccessResponse(
   operation: IR.OperationObject,
-): { hasOutput: true; statusCode: number } | { hasOutput: false } {
+):
+  | { hasOutput: true; statusCode: number }
+  | { hasOutput: false; statusCode?: undefined } {
   if (operation.responses) {
     for (const [statusCode, response] of Object.entries(operation.responses)) {
       const statusCodeNumber = Number.parseInt(statusCode, 10);
@@ -38,7 +40,7 @@ function getSuccessResponse(
       }
     }
   }
-  return { hasOutput: false };
+  return { hasOutput: false, statusCode: undefined };
 }
 
 function getTags(operation: IR.OperationObject, defaultTag: string): string[] {
@@ -125,26 +127,21 @@ export const handler: OrpcPlugin['Handler'] = ({ plugin }) => {
     const method = op.method.toUpperCase();
     const routeConfig = $.object()
       .prop('method', $.literal(method))
-      .prop('path', $.literal(op.path as string));
-
-    if (op.operationId) {
-      routeConfig.prop('operationId', $.literal(op.operationId));
-    }
-    if (op.summary) {
-      routeConfig.prop('summary', $.literal(op.summary));
-    }
-    if (op.description) {
-      routeConfig.prop('description', $.literal(op.description));
-    }
-    if (op.deprecated) {
-      routeConfig.prop('deprecated', $.literal(true));
-    }
-    if (tags.length > 0) {
-      routeConfig.prop('tags', $.fromValue(tags));
-    }
-    if (successResponse.hasOutput && successResponse.statusCode !== 200) {
-      routeConfig.prop('successStatus', $.literal(successResponse.statusCode));
-    }
+      .prop('path', $.literal(op.path as string))
+      .$if(op.operationId, (node) =>
+        node.prop('operationId', $.literal(op.operationId!)),
+      )
+      .$if(op.summary, (node) => node.prop('summary', $.literal(op.summary!)))
+      .$if(op.description, (node) =>
+        node.prop('description', $.literal(op.description!)),
+      )
+      .$if(op.deprecated, (node) => node.prop('deprecated', $.literal(true)))
+      .$if(tags.length > 0, (node) => node.prop('tags', $.fromValue(tags)))
+      .$if(
+        successResponse.hasOutput && successResponse.statusCode !== 200,
+        (node) =>
+          node.prop('successStatus', $.literal(successResponse.statusCode!)),
+      );
 
     // Build the call chain: base.route({...}).input(...).output(...)
     let expression = $(baseSymbol).attr('route').call(routeConfig);
