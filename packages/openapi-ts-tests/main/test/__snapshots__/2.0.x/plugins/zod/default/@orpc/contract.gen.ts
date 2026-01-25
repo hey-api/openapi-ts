@@ -47,14 +47,10 @@ export const fooBarPutContract = base.route({
 }).output(zFooBarPutResponse);
 
 export const router = {
-    foo: {
-        get: getFooContract,
-        fooPost: fooPostContract,
-        fooPut: fooPutContract,
-        getBar: getFooBarContract,
-        fooBarPost: fooBarPostContract,
-        fooBarPut: fooBarPutContract
-    }
+    getFoo: getFooContract,
+    post: fooBarPostContract,
+    put: fooBarPutContract,
+    getFooBar: getFooBarContract
 };
 
 export type Router = typeof router;
