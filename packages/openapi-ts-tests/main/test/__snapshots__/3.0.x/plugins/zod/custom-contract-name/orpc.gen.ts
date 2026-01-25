@@ -11,41 +11,41 @@ export const getFooRpc = base.route({
     method: 'GET',
     path: '/foo',
     tags: ['fooBaz']
-}).output(z.object({ body: zGetFooResponse, status: z.literal(200) }));
+}).output(z.object({ body: zGetFooResponse }));
 
 export const fooPostRpc = base.route({
     method: 'POST',
     path: '/foo',
     operationId: 'foo.-post',
     tags: ['fooBaz']
-}).output(z.object({ body: zFooPostResponse, status: z.literal(200) }));
+}).output(z.object({ body: zFooPostResponse }));
 
 export const fooPutRpc = base.route({
     method: 'PUT',
     path: '/foo',
     operationId: '/foo/-put/',
     tags: ['fooBaz']
-}).output(z.object({ body: zFooPutResponse, status: z.literal(200) }));
+}).output(z.object({ body: zFooPutResponse }));
 
 export const getFooBarRpc = base.route({
     method: 'GET',
     path: '/foo/bar',
     tags: ['barBaz']
-}).output(z.object({ body: zGetFooBarResponse, status: z.literal(200) }));
+}).output(z.object({ body: zGetFooBarResponse }));
 
 export const fooBarPostRpc = base.route({
     method: 'POST',
     path: '/foo/bar',
     operationId: 'foo.bar.post',
     tags: ['fooBaz', 'barBaz']
-}).output(z.object({ body: zFooBarPostResponse, status: z.literal(200) }));
+}).output(z.object({ body: zFooBarPostResponse }));
 
 export const fooBarPutRpc = base.route({
     method: 'PUT',
     path: '/foo/bar',
     operationId: '/foo/bar/put/',
     tags: ['fooBaz', 'barBaz']
-}).output(z.object({ body: zFooBarPutResponse, status: z.literal(200) }));
+}).output(z.object({ body: zFooBarPutResponse }));
 
 export const router = { foo: {
         get: getFooRpc,
