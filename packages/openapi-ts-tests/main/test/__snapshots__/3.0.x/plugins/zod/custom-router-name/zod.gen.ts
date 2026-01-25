@@ -2,68 +2,153 @@
 
 import { z } from 'zod';
 
-export const zGetFooData = z.object({
+export const zUser = z.object({
+    id: z.string(),
+    email: z.email(),
+    name: z.string(),
+    createdAt: z.optional(z.iso.datetime())
+});
+
+export const zCreateUserInput = z.object({
+    email: z.email(),
+    name: z.string(),
+    password: z.optional(z.string().min(8))
+});
+
+export const zUpdateUserInput = z.object({
+    email: z.optional(z.email()),
+    name: z.optional(z.string())
+});
+
+export const zPost = z.object({
+    id: z.string(),
+    title: z.string(),
+    content: z.string(),
+    authorId: z.string(),
+    status: z.optional(z.enum([
+        'draft',
+        'published',
+        'archived'
+    ])),
+    createdAt: z.optional(z.iso.datetime())
+});
+
+export const zCreatePostInput = z.object({
+    title: z.string(),
+    content: z.string(),
+    status: z.optional(z.enum(['draft', 'published']))
+});
+
+export const zGetUsersData = z.object({
     body: z.optional(z.never()),
+    path: z.optional(z.never()),
+    query: z.optional(z.object({
+        limit: z.optional(z.int()).default(10),
+        offset: z.optional(z.int()).default(0)
+    }))
+});
+
+/**
+ * List of users
+ */
+export const zGetUsersResponse = z.array(zUser);
+
+export const zCreateUserData = z.object({
+    body: zCreateUserInput,
     path: z.optional(z.never()),
     query: z.optional(z.never())
 });
 
 /**
- * OK
+ * User created
  */
-export const zGetFooResponse = z.string();
+export const zCreateUserResponse = zUser;
 
-export const zFooPostData = z.object({
+export const zDeleteUserData = z.object({
     body: z.optional(z.never()),
-    path: z.optional(z.never()),
+    path: z.object({
+        userId: z.string()
+    }),
+    query: z.optional(z.never()),
+    headers: z.optional(z.object({
+        'X-Request-Id': z.optional(z.string())
+    }))
+});
+
+/**
+ * User deleted
+ */
+export const zDeleteUserResponse = z.void();
+
+export const zGetUserByIdData = z.object({
+    body: z.optional(z.never()),
+    path: z.object({
+        userId: z.string()
+    }),
     query: z.optional(z.never())
 });
 
 /**
- * OK
+ * User found
  */
-export const zFooPostResponse = z.string();
+export const zGetUserByIdResponse = zUser;
 
-export const zFooPutData = z.object({
-    body: z.optional(z.never()),
-    path: z.optional(z.never()),
+export const zUpdateUserData = z.object({
+    body: zUpdateUserInput,
+    path: z.object({
+        userId: z.string()
+    }),
     query: z.optional(z.never())
 });
 
 /**
- * OK
+ * User updated
  */
-export const zFooPutResponse = z.string();
+export const zUpdateUserResponse = zUser;
 
-export const zGetFooBarData = z.object({
+export const zGetPostsData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
-    query: z.optional(z.never())
+    query: z.optional(z.object({
+        authorId: z.optional(z.string()),
+        status: z.optional(z.enum([
+            'draft',
+            'published',
+            'archived'
+        ]))
+    }))
 });
 
 /**
- * OK
+ * List of posts
  */
-export const zGetFooBarResponse = z.string();
+export const zGetPostsResponse = z.array(zPost);
 
-export const zFooBarPostData = z.object({
-    body: z.optional(z.never()),
+export const zCreatePostData = z.object({
+    body: zCreatePostInput,
     path: z.optional(z.never()),
-    query: z.optional(z.never())
+    query: z.optional(z.never()),
+    headers: z.object({
+        'X-Author-Id': z.string()
+    })
 });
 
 /**
- * OK
+ * Post created
  */
-export const zFooBarPostResponse = z.string();
+export const zCreatePostResponse = zPost;
 
-export const zFooBarPutData = z.object({
+export const zGetPostByIdData = z.object({
     body: z.optional(z.never()),
-    path: z.optional(z.never()),
-    query: z.optional(z.never())
+    path: z.object({
+        postId: z.string()
+    }),
+    query: z.optional(z.object({
+        includeComments: z.optional(z.boolean()).default(false)
+    }))
 });
 
 /**
- * OK
+ * Post found
  */
-export const zFooBarPutResponse = z.string();
+export const zGetPostByIdResponse = zPost;

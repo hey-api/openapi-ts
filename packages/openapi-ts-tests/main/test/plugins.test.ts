@@ -568,7 +568,8 @@ for (const version of versions) {
       },
       {
         config: createConfig({
-          input: 'sdk-instance.yaml',
+          input:
+            version === '2.0.x' ? 'sdk-instance.yaml' : 'orpc-contract.yaml',
           output: 'default',
           plugins: ['zod', '@orpc/contract'],
         }),
@@ -576,7 +577,8 @@ for (const version of versions) {
       },
       {
         config: createConfig({
-          input: 'sdk-instance.yaml',
+          input:
+            version === '2.0.x' ? 'sdk-instance.yaml' : 'orpc-contract.yaml',
           output: 'custom-contract-name',
           plugins: [
             'zod',
@@ -591,7 +593,8 @@ for (const version of versions) {
       },
       {
         config: createConfig({
-          input: 'sdk-instance.yaml',
+          input:
+            version === '2.0.x' ? 'sdk-instance.yaml' : 'orpc-contract.yaml',
           output: 'custom-group-key',
           plugins: [
             'zod',
@@ -605,7 +608,8 @@ for (const version of versions) {
       },
       {
         config: createConfig({
-          input: 'sdk-instance.yaml',
+          input:
+            version === '2.0.x' ? 'sdk-instance.yaml' : 'orpc-contract.yaml',
           output: 'custom-router-name',
           plugins: [
             'zod',
