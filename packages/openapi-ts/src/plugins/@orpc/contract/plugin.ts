@@ -76,16 +76,6 @@ export const handler: OrpcPlugin['Handler'] = ({ plugin }) => {
     external: '@orpc/contract',
   });
 
-  // TODO: handle this more correctly
-  const validatorExternalMap = {
-    arktype: 'type',
-    valibot: 'v',
-    zod: 'z',
-  } as const;
-  const symbolValidator = plugin.external(
-    `${validator}.${validatorExternalMap[validator]}`,
-  );
-
   // Create base contract symbol
   const baseSymbol = plugin.symbol('base', {
     exported: true,
@@ -101,11 +91,7 @@ export const handler: OrpcPlugin['Handler'] = ({ plugin }) => {
     .assign(
       $(symbolOc)
         .attr('$route')
-        .call(
-          $.object()
-            .prop('inputStructure', $.literal('detailed'))
-            .prop('outputStructure', $.literal('detailed')),
-        ),
+        .call($.object().prop('inputStructure', $.literal('detailed'))),
     );
   plugin.node(baseNode);
 
@@ -171,7 +157,8 @@ export const handler: OrpcPlugin['Handler'] = ({ plugin }) => {
       }
     }
 
-    // .output(v.object({ body: responseSchema, status: v.literal(200) })) if has output (detailed outputStructure)
+    // TODO: support outputStructure detailed
+    // .output(responseSchema) if has output
     if (successResponse.hasOutput) {
       // Reference response schema symbol dynamically from validator plugin
       const responseSymbol = plugin.referenceSymbol({
@@ -182,20 +169,7 @@ export const handler: OrpcPlugin['Handler'] = ({ plugin }) => {
         tool: validator,
       });
       if (responseSymbol) {
-        const outputObject = $.object().prop('body', $(responseSymbol));
-
-        if (successResponse.statusCode !== 200) {
-          outputObject.prop(
-            'status',
-            $(symbolValidator)
-              .attr('literal')
-              .call($.literal(successResponse.statusCode)),
-          );
-        }
-
-        expression = expression
-          .attr('output')
-          .call($(symbolValidator).attr('object').call(outputObject));
+        expression = expression.attr('output').call($(responseSymbol));
       }
     }
 
