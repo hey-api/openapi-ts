@@ -68,7 +68,7 @@ export const defaultConfig: OrpcPlugin['Config'] = {
     output: 'orpc',
     routerName: 'router',
   },
-  dependencies: ['@hey-api/typescript', 'zod'],
+  dependencies: ['zod'],
   handler,
   name: '@orpc/contract',
   resolveConfig: (plugin) => {
