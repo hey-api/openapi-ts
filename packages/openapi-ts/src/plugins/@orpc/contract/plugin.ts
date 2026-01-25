@@ -1,9 +1,13 @@
+import type { NodeName } from '@hey-api/codegen-core';
+
 import type { IR } from '~/ir/types';
+import { OperationPath, OperationStrategy } from '~/openApi/shared/locations';
 import { createOperationComment } from '~/plugins/shared/utils/operation';
 import { $ } from '~/ts-dsl';
+import type { ObjectTsDsl } from '~/ts-dsl/expr/object';
 import { applyNaming, toCase } from '~/utils/naming';
 
-import type { OrpcContractPlugin } from './types';
+import type { OrpcContractPlugin, RouterConfig } from './types';
 
 function hasInput(operation: IR.OperationObject): boolean {
   const hasPathParams = Boolean(
@@ -49,15 +53,61 @@ function getTags(operation: IR.OperationObject, defaultTag: string): string[] {
     : [defaultTag];
 }
 
+function getOperationPaths(
+  operation: IR.OperationObject,
+  routerConfig: RouterConfig,
+): ReadonlyArray<ReadonlyArray<string>> {
+  const { nesting, nestingDelimiters, strategy, strategyDefaultTag } =
+    routerConfig;
+
+  // Get path derivation function
+  let pathFn = OperationPath.id();
+  if (typeof nesting === 'function') {
+    pathFn = nesting;
+  } else if (nesting === 'operationId') {
+    pathFn = OperationPath.fromOperationId({ delimiters: nestingDelimiters });
+  }
+
+  // Get structure strategy function
+  let strategyFn;
+  if (typeof strategy === 'function') {
+    strategyFn = strategy;
+  } else if (strategy === 'byTags') {
+    strategyFn = OperationStrategy.byTags({
+      fallback: strategyDefaultTag,
+      path: pathFn,
+    });
+  } else if (strategy === 'single') {
+    strategyFn = OperationStrategy.single({
+      path: pathFn,
+      root: strategyDefaultTag,
+    });
+  } else {
+    // flat
+    strategyFn = OperationStrategy.flat({ path: pathFn });
+  }
+
+  return strategyFn(operation);
+}
+
+type NestedLeaf = { type: 'leaf'; value: NodeName };
+type NestedNode = { children: Map<string, NestedValue>; type: 'node' };
+type NestedValue = NestedLeaf | NestedNode;
+
+function buildNestedObject(node: NestedNode): ObjectTsDsl {
+  const obj = $.object();
+  for (const [key, child] of node.children) {
+    if (child.type === 'leaf') {
+      obj.prop(key, $(child.value));
+    } else {
+      obj.prop(key, buildNestedObject(child));
+    }
+  }
+  return obj;
+}
+
 export const handler: OrpcContractPlugin['Handler'] = ({ plugin }) => {
-  const {
-    contractNameBuilder,
-    defaultTag,
-    groupKeyBuilder,
-    operationKeyBuilder,
-    routerName,
-    validator,
-  } = plugin.config;
+  const { contractNameBuilder, router, routerName, validator } = plugin.config;
 
   const operations: IR.OperationObject[] = [];
 
@@ -96,7 +146,7 @@ export const handler: OrpcContractPlugin['Handler'] = ({ plugin }) => {
 
   for (const op of operations) {
     const contractName = contractNameBuilder(op.id);
-    const tags = getTags(op, defaultTag);
+    const tags = getTags(op, router.strategyDefaultTag);
     const successResponse = getSuccessResponse(op);
 
     const contractSymbol = plugin.symbol(contractName, {
@@ -180,30 +230,44 @@ export const handler: OrpcContractPlugin['Handler'] = ({ plugin }) => {
     },
   });
 
-  const operationsByGroup = new Map<string, IR.OperationObject[]>();
+  // Build nested structure using a tree
+  const root: NestedNode = { children: new Map(), type: 'node' };
+
   for (const op of operations) {
-    const groupKey = groupKeyBuilder(op);
-    if (!operationsByGroup.has(groupKey)) {
-      operationsByGroup.set(groupKey, []);
-    }
-    operationsByGroup.get(groupKey)!.push(op);
-  }
+    const contractSymbol = contractSymbols[op.id];
+    if (contractSymbol) {
+      const paths = getOperationPaths(op, router);
+      for (const path of paths) {
+        let current: NestedNode = root;
+        for (let i = 0; i < path.length; i++) {
+          const isLast = i === path.length - 1;
+          const segment = isLast
+            ? applyNaming(path[i]!, router.keyName)
+            : applyNaming(path[i]!, router.segmentName);
 
-  const contractsObject = $.object().pretty();
-  for (const [groupKey, groupOps] of operationsByGroup) {
-    const groupObject = $.object();
-
-    for (const op of groupOps) {
-      const contractSymbol = contractSymbols[op.id];
-      if (contractSymbol) {
-        const key = operationKeyBuilder(op.id, groupKey);
-        groupObject.prop(key, $(contractSymbol));
+          if (isLast) {
+            current.children.set(segment, {
+              type: 'leaf',
+              value: contractSymbol,
+            });
+          } else {
+            if (!current.children.has(segment)) {
+              current.children.set(segment, {
+                children: new Map(),
+                type: 'node',
+              });
+            }
+            const next = current.children.get(segment)!;
+            if (next.type === 'node') {
+              current = next;
+            }
+          }
+        }
       }
     }
-
-    contractsObject.prop(groupKey, groupObject);
   }
 
+  const contractsObject = buildNestedObject(root).pretty();
   const contractsNode = $.const(contractsSymbol)
     .export()
     .assign(contractsObject);

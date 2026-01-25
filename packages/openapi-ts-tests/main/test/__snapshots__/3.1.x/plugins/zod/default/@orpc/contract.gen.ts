@@ -97,18 +97,14 @@ export const getPostByIdContract = base.route({
 }).input(zGetPostByIdData).output(zGetPostByIdResponse);
 
 export const router = {
-    users: {
-        get: getUsersContract,
-        create: createUserContract,
-        delete: deleteUserContract,
-        getById: getUserByIdContract,
-        update: updateUserContract
-    },
-    posts: {
-        get: getPostsContract,
-        create: createPostContract,
-        getById: getPostByIdContract
-    }
+    getUsers: getUsersContract,
+    createUser: createUserContract,
+    deleteUser: deleteUserContract,
+    getUserById: getUserByIdContract,
+    updateUser: updateUserContract,
+    getPosts: getPostsContract,
+    createPost: createPostContract,
+    getPostById: getPostByIdContract
 };
 
 export type Router = typeof router;

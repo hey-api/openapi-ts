@@ -1,81 +1,78 @@
-import type { IR } from '~/ir/types';
+import type { OperationsStrategy } from '~/openApi/shared/locations';
 import { definePluginConfig } from '~/plugins/shared/utils/config';
-import { resolveNaming, toCase } from '~/utils/naming';
+import type { PluginContext } from '~/plugins/types';
+import { resolveNaming } from '~/utils/naming';
 
 import { handler } from './plugin';
-import type { OrpcContractPlugin } from './types';
+import type {
+  OrpcContractPlugin,
+  RouterConfig,
+  UserRouterConfig,
+} from './types';
 
-// Default: extract first path segment and convert to camelCase
-// "/chat-messages/{id}" → "chatMessages"
-function defaultGroupKeyBuilder(operation: IR.OperationObject): string {
-  const segment = operation.path.split('/').filter(Boolean)[0] || 'common';
-  return toCase(segment, 'camelCase');
-}
-
-// Build patterns from segment name (camelCase group key)
-// "chatMessages" → ["ChatMessages", "ChatMessage"]
-function buildGroupPatterns(groupKey: string): string[] {
-  const patterns: string[] = [];
-  const pascalKey = toCase(groupKey, 'PascalCase');
-  patterns.push(pascalKey);
-
-  // Singular form: "ChatMessages" → "ChatMessage"
-  if (pascalKey.endsWith('s') && !pascalKey.endsWith('ss')) {
-    patterns.push(pascalKey.slice(0, -1));
+function resolveRouter(
+  input: OperationsStrategy | UserRouterConfig | undefined,
+  context: PluginContext,
+): RouterConfig {
+  if (!input || typeof input === 'string' || typeof input === 'function') {
+    input = { strategy: input };
   }
 
-  return patterns;
-}
+  const strategy = input.strategy ?? 'flat';
 
-// Default: simplify operationId by removing redundant group-based patterns
-// e.g., "sendChatMessage" with groupKey "chatMessages" → "send"
-// e.g., "getConversationsList" with groupKey "conversations" → "getList"
-function defaultOperationKeyBuilder(
-  operationId: string,
-  groupKey: string,
-): string {
-  const patternsToRemove = buildGroupPatterns(groupKey);
-
-  let simplified = operationId;
-
-  // Remove patterns iteratively
-  for (const pattern of patternsToRemove) {
-    const regex = new RegExp(pattern, 'g');
-    const result = simplified.replace(regex, '');
-    if (result !== simplified && result.length > 0) {
-      simplified = result;
-    }
-  }
-
-  // Ensure first char is lowercase
-  simplified = simplified.charAt(0).toLowerCase() + simplified.slice(1);
-
-  // Handle edge cases where we end up with just HTTP method or too short
-  if (!simplified || simplified.length < 2) {
-    return operationId.charAt(0).toLowerCase() + operationId.slice(1);
-  }
-
-  return simplified;
+  return context.valueToObject({
+    defaultValue: {
+      nesting: 'operationId',
+      nestingDelimiters: /[./]/,
+      strategy,
+      strategyDefaultTag: 'default',
+    },
+    mappers: {
+      object(value) {
+        value.keyName = context.valueToObject({
+          defaultValue: { casing: 'camelCase' },
+          mappers: {
+            function: (name) => ({ name }),
+            string: (name) => ({ name }),
+          },
+          value: value.keyName,
+        });
+        value.segmentName = context.valueToObject({
+          defaultValue: { casing: 'camelCase' },
+          mappers: {
+            function: (name) => ({ name }),
+            string: (name) => ({ name }),
+          },
+          value: value.segmentName,
+        });
+        return value;
+      },
+    },
+    value: input,
+  }) as RouterConfig;
 }
 
 export const defaultConfig: OrpcContractPlugin['Config'] = {
   config: {
     contractNameBuilder: (id: string) => `${id}Contract`,
-    defaultTag: 'default',
     exportFromIndex: false,
-    groupKeyBuilder: defaultGroupKeyBuilder,
-    operationKeyBuilder: defaultOperationKeyBuilder,
+    router: {
+      keyName: { casing: 'camelCase' },
+      nesting: 'operationId',
+      nestingDelimiters: /[./]/,
+      segmentName: { casing: 'camelCase' },
+      strategy: 'flat',
+      strategyDefaultTag: 'default',
+    },
     routerName: { name: 'router' },
     validator: 'zod',
   },
   handler,
   name: '@orpc/contract',
-  resolveConfig: (plugin) => {
+  resolveConfig: (plugin, context) => {
     plugin.config.exportFromIndex ??= false;
     plugin.config.contractNameBuilder ??= (id: string) => `${id}Contract`;
-    plugin.config.defaultTag ??= 'default';
-    plugin.config.groupKeyBuilder ??= defaultGroupKeyBuilder;
-    plugin.config.operationKeyBuilder ??= defaultOperationKeyBuilder;
+    plugin.config.router = resolveRouter(plugin.config.router, context);
     plugin.config.routerName = resolveNaming(plugin.config.routerName);
     if (!plugin.config.routerName.name) {
       plugin.config.routerName.name = 'router';

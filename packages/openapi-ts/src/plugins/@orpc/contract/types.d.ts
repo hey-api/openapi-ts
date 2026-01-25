@@ -1,7 +1,106 @@
-import type { IR } from '~/ir/types';
+import type {
+  OperationPathStrategy,
+  OperationsStrategy,
+} from '~/openApi/shared/locations';
 import type { DefinePlugin, Plugin } from '~/plugins';
 import type { PluginValidatorNames } from '~/plugins/types';
 import type { NamingConfig, NamingRule } from '~/utils/naming';
+
+export interface UserRouterConfig {
+  /**
+   * Customize key names for operations in the router.
+   *
+   * Applied to the final segment of the path (the key name).
+   */
+  keyName?: NamingRule;
+  /**
+   * How to derive nesting structure from operations.
+   *
+   * - `'operationId'` - Split operationId by delimiters (e.g., `users.list` → `{ users: { list } }`)
+   * - `'id'` - Use operation id as-is, no nesting
+   * - Custom function for full control
+   *
+   * @default 'operationId'
+   */
+  nesting?: 'id' | 'operationId' | OperationPathStrategy;
+  /**
+   * Delimiters for splitting operationId.
+   *
+   * Only applies when `nesting` is `'operationId'`.
+   *
+   * @default /[./]/
+   */
+  nestingDelimiters?: RegExp;
+  /**
+   * Customize segment names for nested groups.
+   *
+   * Applied to intermediate path segments (not the key name).
+   */
+  segmentName?: NamingRule;
+  /**
+   * Grouping strategy.
+   *
+   * - `'flat'` - No grouping, all contracts at root level
+   * - `'byTags'` - One group per operation tag
+   * - `'single'` - All operations in one group
+   * - Custom function for full control
+   *
+   * @default 'flat'
+   */
+  strategy?: OperationsStrategy;
+  /**
+   * Default group name for operations without tags.
+   *
+   * Only applies when `strategy` is `'byTags'`.
+   *
+   * @default 'default'
+   */
+  strategyDefaultTag?: string;
+}
+
+export interface RouterConfig {
+  /**
+   * Customize key names for operations in the router.
+   *
+   * Applied to the final segment of the path (the key name).
+   */
+  keyName: NamingConfig;
+  /**
+   * How to derive nesting structure from operations.
+   *
+   * - `'operationId'` - Split operationId by delimiters (e.g., `users.list` → `{ users: { list } }`)
+   * - `'id'` - Use operation id as-is, no nesting
+   * - Custom function for full control
+   */
+  nesting: 'id' | 'operationId' | OperationPathStrategy;
+  /**
+   * Delimiters for splitting operationId.
+   *
+   * Only applies when `nesting` is `'operationId'`.
+   */
+  nestingDelimiters: RegExp;
+  /**
+   * Customize segment names for nested groups.
+   *
+   * Applied to intermediate path segments (not the key name).
+   */
+  segmentName: NamingConfig;
+  /**
+   * Grouping strategy.
+   *
+   * - `'flat'` - No grouping, all contracts at root level
+   * - `'byTags'` - One group per operation tag
+   * - `'single'` - All operations in one group
+   * - Custom function for full control
+   */
+  strategy: OperationsStrategy;
+  /**
+   * Default group name for operations without tags.
+   *
+   * Only applies when `strategy` is `'byTags'`.
+   */
+  strategyDefaultTag: string;
+}
 
 export type UserConfig = Plugin.Name<'@orpc/contract'> &
   Plugin.Hooks & {
@@ -12,30 +111,32 @@ export type UserConfig = Plugin.Name<'@orpc/contract'> &
      */
     contractNameBuilder?: (operationId: string) => string;
     /**
-     * Default tag name for operations without tags.
-     *
-     * @default 'default'
-     */
-    defaultTag?: string;
-    /**
      * Whether exports should be re-exported in the index file.
      *
      * @default false
      */
     exportFromIndex?: boolean;
     /**
-     * Custom function to extract group key for router grouping.
-     * Receives the full IR.OperationObject.
+     * Router configuration for grouping and nesting operations.
      *
-     * @default extracts first path segment as camelCase
-     */
-    groupKeyBuilder?: (operation: IR.OperationObject) => string;
-    /**
-     * Custom function to generate operation key within a group.
+     * Can be a strategy string for simple cases, or an object for full control.
      *
-     * @default (operationId, groupKey) => simplified operationId
+     * @default { strategy: 'flat' }
+     *
+     * @example
+     * // Simple: just set strategy
+     * router: 'byTags'
+     *
+     * @example
+     * // Full control
+     * router: {
+     *   strategy: 'byTags',
+     *   nesting: 'operationId',
+     *   segmentName: { casing: 'camelCase' },
+     *   keyName: { casing: 'camelCase' },
+     * }
      */
-    operationKeyBuilder?: (operationId: string, groupKey: string) => string;
+    router?: OperationsStrategy | UserRouterConfig;
     /**
      * Naming rule for the router export.
      * The type export will be the PascalCase version (e.g., 'router' → 'Router').
@@ -69,11 +170,9 @@ export type UserConfig = Plugin.Name<'@orpc/contract'> &
 export type Config = Plugin.Name<'@orpc/contract'> &
   Plugin.Hooks & {
     contractNameBuilder: (operationId: string) => string;
-    defaultTag: string;
     exportFromIndex: boolean;
-    groupKeyBuilder: (operation: IR.OperationObject) => string;
-    operationKeyBuilder: (operationId: string, groupKey: string) => string;
     output: string;
+    router: RouterConfig;
     routerName: NamingConfig;
     validator: PluginValidatorNames;
   };
