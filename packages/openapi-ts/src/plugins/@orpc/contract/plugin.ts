@@ -204,7 +204,7 @@ export const handler: OrpcPlugin['Handler'] = ({ plugin }) => {
   }
 
   // Build nested contracts object
-  const contractsObject = $.object();
+  const contractsObject = $.object().pretty();
   for (const [groupKey, groupOps] of operationsByGroup) {
     const groupObject = $.object();
 
