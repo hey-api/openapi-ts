@@ -566,6 +566,43 @@ for (const version of versions) {
         }),
         description: 'generate Angular requests and resources (class)',
       },
+      {
+        config: createConfig({
+          input: 'sdk-instance.yaml',
+          output: 'default',
+          plugins: ['zod', 'orpc'],
+        }),
+        description: 'generate oRPC contracts with Zod schemas',
+      },
+      {
+        config: createConfig({
+          input: 'sdk-instance.yaml',
+          output: 'custom-contract-name',
+          plugins: [
+            'zod',
+            {
+              contractNameBuilder: (id: string) => `${id}Rpc`,
+              name: 'orpc',
+            },
+          ],
+        }),
+        description:
+          'generate oRPC contracts with custom contract name builder',
+      },
+      {
+        config: createConfig({
+          input: 'sdk-instance.yaml',
+          output: 'custom-group-key',
+          plugins: [
+            'zod',
+            {
+              groupKeyBuilder: (operation) => operation.method,
+              name: 'orpc',
+            },
+          ],
+        }),
+        description: 'generate oRPC contracts with custom group key builder',
+      },
     ];
 
     it.each(scenarios)('$description', async ({ config }) => {
