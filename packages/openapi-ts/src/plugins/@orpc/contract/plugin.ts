@@ -61,7 +61,6 @@ export const handler: OrpcContractPlugin['Handler'] = ({ plugin }) => {
 
   const operations: IR.OperationObject[] = [];
 
-  // Collect all operations using hey-api's forEach
   plugin.forEach(
     'operation',
     (event) => {
@@ -70,13 +69,11 @@ export const handler: OrpcContractPlugin['Handler'] = ({ plugin }) => {
     { order: 'declarations' },
   );
 
-  // Register external symbols for imports
   const symbolOc = plugin.symbol('oc', {
     exported: false,
     external: '@orpc/contract',
   });
 
-  // Create base contract symbol
   const baseSymbol = plugin.symbol('base', {
     exported: true,
     meta: {
@@ -95,8 +92,6 @@ export const handler: OrpcContractPlugin['Handler'] = ({ plugin }) => {
     );
   plugin.node(baseNode);
 
-  // Create contract for each operation
-  // Store symbols for later use in contracts object
   const contractSymbols: Record<string, ReturnType<typeof plugin.symbol>> = {};
 
   for (const op of operations) {
@@ -118,8 +113,6 @@ export const handler: OrpcContractPlugin['Handler'] = ({ plugin }) => {
     });
     contractSymbols[op.id] = contractSymbol;
 
-    // Build the route config object following Route interface order:
-    // method, path, operationId, summary, description, deprecated, tags, successStatus, successDescription
     const method = op.method.toUpperCase();
     const routeConfig = $.object()
       .prop('method', $.literal(method))
@@ -139,12 +132,9 @@ export const handler: OrpcContractPlugin['Handler'] = ({ plugin }) => {
           node.prop('successStatus', $.literal(successResponse.statusCode!)),
       );
 
-    // Build the call chain: base.route({...}).input(...).output(...)
     let expression = $(baseSymbol).attr('route').call(routeConfig);
 
-    // .input(dataSchema) if has input
     if (hasInput(op)) {
-      // Reference schema symbol dynamically from validator plugin
       const dataSymbol = plugin.referenceSymbol({
         category: 'schema',
         resource: 'operation',
@@ -157,10 +147,8 @@ export const handler: OrpcContractPlugin['Handler'] = ({ plugin }) => {
       }
     }
 
-    // TODO: support outputStructure detailed
-    // .output(responseSchema) if has output
     if (successResponse.hasOutput) {
-      // Reference response schema symbol dynamically from validator plugin
+      // TODO: support outputStructure detailed
       const responseSymbol = plugin.referenceSymbol({
         category: 'schema',
         resource: 'operation',
@@ -182,7 +170,6 @@ export const handler: OrpcContractPlugin['Handler'] = ({ plugin }) => {
     plugin.node(contractNode);
   }
 
-  // Create contracts object export grouped by API path segment (in separate router file)
   const routerExportName = applyNaming('router', routerName);
   const contractsSymbol = plugin.symbol(routerExportName, {
     exported: true,
@@ -193,7 +180,6 @@ export const handler: OrpcContractPlugin['Handler'] = ({ plugin }) => {
     },
   });
 
-  // Group operations by group key
   const operationsByGroup = new Map<string, IR.OperationObject[]>();
   for (const op of operations) {
     const groupKey = groupKeyBuilder(op);
@@ -203,7 +189,6 @@ export const handler: OrpcContractPlugin['Handler'] = ({ plugin }) => {
     operationsByGroup.get(groupKey)!.push(op);
   }
 
-  // Build nested contracts object
   const contractsObject = $.object().pretty();
   for (const [groupKey, groupOps] of operationsByGroup) {
     const groupObject = $.object();
@@ -224,8 +209,6 @@ export const handler: OrpcContractPlugin['Handler'] = ({ plugin }) => {
     .assign(contractsObject);
   plugin.node(contractsNode);
 
-  // Create type export: export type Router = typeof router (in separate router file)
-  // Capitalize the router name for the type (e.g., 'router' → 'Router', 'contract' → 'Contract')
   const routerTypeName = toCase(routerExportName, 'PascalCase');
   const routerTypeSymbol = plugin.symbol(routerTypeName, {
     exported: true,
