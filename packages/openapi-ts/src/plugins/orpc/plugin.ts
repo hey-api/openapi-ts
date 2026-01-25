@@ -1,8 +1,8 @@
 import type { IR } from '~/ir/types';
 import { $ } from '~/ts-dsl';
+import { toCase } from '~/utils/naming';
 
 import type { OrpcPlugin } from './types';
-import { capitalizeFirst } from './utils';
 
 function hasInput(operation: IR.OperationObject): boolean {
   const hasPathParams = Boolean(
@@ -260,7 +260,7 @@ export const handler: OrpcPlugin['Handler'] = ({ plugin }) => {
 
   // Create type export: export type Router = typeof router (in separate router file)
   // Capitalize the router name for the type (e.g., 'router' → 'Router', 'contract' → 'Contract')
-  const routerTypeName = capitalizeFirst(routerName);
+  const routerTypeName = toCase(routerName, 'PascalCase');
   const routerTypeSymbol = plugin.symbol(routerTypeName, {
     exported: true,
     meta: {
