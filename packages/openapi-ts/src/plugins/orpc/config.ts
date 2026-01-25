@@ -1,22 +1,22 @@
 import type { IR } from '~/ir/types';
 import { definePluginConfig } from '~/plugins/shared/utils/config';
+import { toCase } from '~/utils/naming';
 
 import { handler } from './plugin';
 import type { OrpcPlugin } from './types';
-import { capitalizeFirst, toCamelCase } from './utils';
 
 // Default: extract first path segment and convert to camelCase
 // "/chat-messages/{id}" → "chatMessages"
 function defaultGroupKeyBuilder(operation: IR.OperationObject): string {
   const segment = operation.path.split('/').filter(Boolean)[0] || 'common';
-  return toCamelCase(segment);
+  return toCase(segment, 'camelCase');
 }
 
 // Build patterns from segment name (camelCase group key)
 // "chatMessages" → ["ChatMessages", "ChatMessage"]
 function buildGroupPatterns(groupKey: string): string[] {
   const patterns: string[] = [];
-  const pascalKey = capitalizeFirst(groupKey);
+  const pascalKey = toCase(groupKey, 'PascalCase');
   patterns.push(pascalKey);
 
   // Singular form: "ChatMessages" → "ChatMessage"
