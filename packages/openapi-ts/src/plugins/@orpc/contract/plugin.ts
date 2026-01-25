@@ -56,6 +56,7 @@ export const handler: OrpcPlugin['Handler'] = ({ plugin }) => {
     groupKeyBuilder,
     operationKeyBuilder,
     routerName,
+    validator,
   } = plugin.config;
 
   const operations: IR.OperationObject[] = [];
@@ -74,7 +75,14 @@ export const handler: OrpcPlugin['Handler'] = ({ plugin }) => {
     exported: false,
     external: '@orpc/contract',
   });
-  const symbolZ = plugin.external('zod.z');
+  const validatorExternalMap = {
+    arktype: 'type',
+    valibot: 'v',
+    zod: 'z',
+  } as const;
+  const symbolValidator = plugin.external(
+    `${validator}.${validatorExternalMap[validator]}`,
+  );
 
   // Create base contract symbol
   const baseSymbol = plugin.symbol('base', {
@@ -146,38 +154,38 @@ export const handler: OrpcPlugin['Handler'] = ({ plugin }) => {
     // Build the call chain: base.route({...}).input(...).output(...)
     let expression = $(baseSymbol).attr('route').call(routeConfig);
 
-    // .input(zodDataSchema) if has input
+    // .input(dataSchema) if has input
     if (hasInput(op)) {
-      // Reference zod schema symbol dynamically from zod plugin
-      const zodDataSymbol = plugin.referenceSymbol({
+      // Reference schema symbol dynamically from validator plugin
+      const dataSymbol = plugin.referenceSymbol({
         category: 'schema',
         resource: 'operation',
         resourceId: op.id,
         role: 'data',
-        tool: 'zod',
+        tool: validator,
       });
-      if (zodDataSymbol) {
-        expression = expression.attr('input').call($(zodDataSymbol));
+      if (dataSymbol) {
+        expression = expression.attr('input').call($(dataSymbol));
       }
     }
 
-    // .output(z.object({ body: zodResponseSchema, status: z.literal(200) })) if has output (detailed outputStructure)
+    // .output(v.object({ body: responseSchema, status: v.literal(200) })) if has output (detailed outputStructure)
     if (successResponse.hasOutput) {
-      // Reference zod response schema symbol dynamically from zod plugin
-      const zodResponseSymbol = plugin.referenceSymbol({
+      // Reference response schema symbol dynamically from validator plugin
+      const responseSymbol = plugin.referenceSymbol({
         category: 'schema',
         resource: 'operation',
         resourceId: op.id,
         role: 'responses',
-        tool: 'zod',
+        tool: validator,
       });
-      if (zodResponseSymbol) {
-        const outputObject = $.object().prop('body', $(zodResponseSymbol));
+      if (responseSymbol) {
+        const outputObject = $.object().prop('body', $(responseSymbol));
 
         if (successResponse.statusCode !== 200) {
           outputObject.prop(
             'status',
-            $(symbolZ)
+            $(symbolValidator)
               .attr('literal')
               .call($.literal(successResponse.statusCode)),
           );
@@ -185,7 +193,7 @@ export const handler: OrpcPlugin['Handler'] = ({ plugin }) => {
 
         expression = expression
           .attr('output')
-          .call($(symbolZ).attr('object').call(outputObject));
+          .call($(symbolValidator).attr('object').call(outputObject));
       }
     }
 

@@ -66,8 +66,8 @@ export const defaultConfig: OrpcPlugin['Config'] = {
     groupKeyBuilder: defaultGroupKeyBuilder,
     operationKeyBuilder: defaultOperationKeyBuilder,
     routerName: 'router',
+    validator: 'zod',
   },
-  dependencies: ['zod'],
   handler,
   name: '@orpc/contract',
   resolveConfig: (plugin) => {
@@ -77,6 +77,9 @@ export const defaultConfig: OrpcPlugin['Config'] = {
     plugin.config.groupKeyBuilder ??= defaultGroupKeyBuilder;
     plugin.config.operationKeyBuilder ??= defaultOperationKeyBuilder;
     plugin.config.routerName ??= 'router';
+
+    plugin.config.validator ??= 'zod';
+    plugin.dependencies.add(plugin.config.validator);
   },
   tags: ['client'],
 };
