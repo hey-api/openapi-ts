@@ -3,57 +3,110 @@
 import { oc } from '@orpc/contract';
 import { z } from 'zod';
 
-import { zFooBarPostResponse, zFooBarPutResponse, zFooPostResponse, zFooPutResponse, zGetFooBarResponse, zGetFooResponse } from '../zod.gen';
+import { zCreatePostData, zCreatePostResponse, zCreateUserData, zCreateUserResponse, zDeleteUserData, zGetPostByIdData, zGetPostByIdResponse, zGetPostsData, zGetPostsResponse, zGetUserByIdData, zGetUserByIdResponse, zGetUsersData, zGetUsersResponse, zUpdateUserData, zUpdateUserResponse } from '../zod.gen';
 
 export const base = oc.$route({ inputStructure: 'detailed', outputStructure: 'detailed' });
 
-export const getFooContract = base.route({
+/**
+ * Get all users
+ */
+export const getUsersContract = base.route({
     method: 'GET',
-    path: '/foo',
-    tags: ['fooBaz']
-}).output(z.object({ body: zGetFooResponse }));
+    path: '/users',
+    operationId: 'getUsers',
+    summary: 'Get all users',
+    tags: ['users']
+}).input(zGetUsersData).output(z.object({ body: zGetUsersResponse }));
 
-export const fooPostContract = base.route({
+/**
+ * Create a new user
+ */
+export const createUserContract = base.route({
     method: 'POST',
-    path: '/foo',
-    operationId: 'foo.-post',
-    tags: ['fooBaz']
-}).output(z.object({ body: zFooPostResponse }));
+    path: '/users',
+    operationId: 'createUser',
+    summary: 'Create a new user',
+    tags: ['users'],
+    successStatus: 201
+}).input(zCreateUserData).output(z.object({ body: zCreateUserResponse, status: z.literal(201) }));
 
-export const fooPutContract = base.route({
-    method: 'PUT',
-    path: '/foo',
-    operationId: '/foo/-put/',
-    tags: ['fooBaz']
-}).output(z.object({ body: zFooPutResponse }));
+/**
+ * Delete a user
+ */
+export const deleteUserContract = base.route({
+    method: 'DELETE',
+    path: '/users/{userId}',
+    operationId: 'deleteUser',
+    summary: 'Delete a user',
+    tags: ['users']
+}).input(zDeleteUserData);
 
-export const getFooBarContract = base.route({
+/**
+ * Get a user by ID
+ */
+export const getUserByIdContract = base.route({
     method: 'GET',
-    path: '/foo/bar',
-    tags: ['barBaz']
-}).output(z.object({ body: zGetFooBarResponse }));
+    path: '/users/{userId}',
+    operationId: 'getUserById',
+    summary: 'Get a user by ID',
+    tags: ['users']
+}).input(zGetUserByIdData).output(z.object({ body: zGetUserByIdResponse }));
 
-export const fooBarPostContract = base.route({
-    method: 'POST',
-    path: '/foo/bar',
-    operationId: 'foo.bar.post',
-    tags: ['fooBaz', 'barBaz']
-}).output(z.object({ body: zFooBarPostResponse }));
-
-export const fooBarPutContract = base.route({
+/**
+ * Update a user
+ */
+export const updateUserContract = base.route({
     method: 'PUT',
-    path: '/foo/bar',
-    operationId: '/foo/bar/put/',
-    tags: ['fooBaz', 'barBaz']
-}).output(z.object({ body: zFooBarPutResponse }));
+    path: '/users/{userId}',
+    operationId: 'updateUser',
+    summary: 'Update a user',
+    tags: ['users']
+}).input(zUpdateUserData).output(z.object({ body: zUpdateUserResponse }));
 
-export const router = { foo: {
-        get: getFooContract,
-        fooPost: fooPostContract,
-        fooPut: fooPutContract,
-        getBar: getFooBarContract,
-        fooBarPost: fooBarPostContract,
-        fooBarPut: fooBarPutContract
+/**
+ * Get all posts
+ */
+export const getPostsContract = base.route({
+    method: 'GET',
+    path: '/posts',
+    operationId: 'getPosts',
+    summary: 'Get all posts',
+    tags: ['posts']
+}).input(zGetPostsData).output(z.object({ body: zGetPostsResponse }));
+
+/**
+ * Create a new post
+ */
+export const createPostContract = base.route({
+    method: 'POST',
+    path: '/posts',
+    operationId: 'createPost',
+    summary: 'Create a new post',
+    tags: ['posts'],
+    successStatus: 201
+}).input(zCreatePostData).output(z.object({ body: zCreatePostResponse, status: z.literal(201) }));
+
+/**
+ * Get a post by ID
+ */
+export const getPostByIdContract = base.route({
+    method: 'GET',
+    path: '/posts/{postId}',
+    operationId: 'getPostById',
+    summary: 'Get a post by ID',
+    tags: ['posts']
+}).input(zGetPostByIdData).output(z.object({ body: zGetPostByIdResponse }));
+
+export const router = { users: {
+        get: getUsersContract,
+        create: createUserContract,
+        delete: deleteUserContract,
+        getById: getUserByIdContract,
+        update: updateUserContract
+    }, posts: {
+        get: getPostsContract,
+        create: createPostContract,
+        getById: getPostByIdContract
     } };
 
 export type Router = typeof router;
