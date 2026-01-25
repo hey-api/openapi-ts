@@ -58,9 +58,13 @@ export const handler: OrpcPlugin['Handler'] = ({ plugin }) => {
   const operations: IR.OperationObject[] = [];
 
   // Collect all operations using hey-api's forEach
-  plugin.forEach('operation', (event) => {
-    operations.push(event.operation);
-  });
+  plugin.forEach(
+    'operation',
+    (event) => {
+      operations.push(event.operation);
+    },
+    { order: 'declarations' },
+  );
 
   // Register external symbols for imports
   const symbolOc = plugin.symbol('oc', {
@@ -137,15 +141,8 @@ export const handler: OrpcPlugin['Handler'] = ({ plugin }) => {
     if (tags.length > 0) {
       routeConfig.prop('tags', $.fromValue(tags));
     }
-    if (successResponse.hasOutput) {
-      if (successResponse.statusCode !== 200) {
-        routeConfig.prop(
-          'successStatus',
-          $.literal(successResponse.statusCode),
-        );
-      }
-      // TODO: Add successDescription from OpenAPI description if available
-      // routeConfig.prop('successDescription', $.literal('OK'));
+    if (successResponse.hasOutput && successResponse.statusCode !== 200) {
+      routeConfig.prop('successStatus', $.literal(successResponse.statusCode));
     }
 
     // Build the call chain: base.route({...}).input(...).output(...)
@@ -161,7 +158,9 @@ export const handler: OrpcPlugin['Handler'] = ({ plugin }) => {
         role: 'data',
         tool: 'zod',
       });
-      expression = expression.attr('input').call($(zodDataSymbol));
+      if (zodDataSymbol) {
+        expression = expression.attr('input').call($(zodDataSymbol));
+      }
     }
 
     // .output(z.object({ body: zodResponseSchema, status: z.literal(200) })) if has output (detailed outputStructure)
@@ -174,21 +173,22 @@ export const handler: OrpcPlugin['Handler'] = ({ plugin }) => {
         role: 'responses',
         tool: 'zod',
       });
-      const outputObject = $.object().prop('body', $(zodResponseSymbol));
+      if (zodResponseSymbol) {
+        const outputObject = $.object().prop('body', $(zodResponseSymbol));
 
-      // Add status code if available
-      if (successResponse.statusCode) {
-        outputObject.prop(
-          'status',
-          $(symbolZ)
-            .attr('literal')
-            .call($.literal(successResponse.statusCode)),
-        );
+        if (successResponse.statusCode !== 200) {
+          outputObject.prop(
+            'status',
+            $(symbolZ)
+              .attr('literal')
+              .call($.literal(successResponse.statusCode)),
+          );
+        }
+
+        expression = expression
+          .attr('output')
+          .call($(symbolZ).attr('object').call(outputObject));
       }
-
-      expression = expression
-        .attr('output')
-        .call($(symbolZ).attr('object').call(outputObject));
     }
 
     const contractNode = $.const(contractSymbol)
