@@ -1,6 +1,6 @@
 import type { IR } from '~/ir/types';
 import { definePluginConfig } from '~/plugins/shared/utils/config';
-import { toCase } from '~/utils/naming';
+import { resolveNaming, toCase } from '~/utils/naming';
 
 import { handler } from './plugin';
 import type { OrpcPlugin } from './types';
@@ -65,7 +65,7 @@ export const defaultConfig: OrpcPlugin['Config'] = {
     exportFromIndex: false,
     groupKeyBuilder: defaultGroupKeyBuilder,
     operationKeyBuilder: defaultOperationKeyBuilder,
-    routerName: 'router',
+    routerName: { name: 'router' },
     validator: 'zod',
   },
   handler,
@@ -76,7 +76,10 @@ export const defaultConfig: OrpcPlugin['Config'] = {
     plugin.config.defaultTag ??= 'default';
     plugin.config.groupKeyBuilder ??= defaultGroupKeyBuilder;
     plugin.config.operationKeyBuilder ??= defaultOperationKeyBuilder;
-    plugin.config.routerName ??= 'router';
+    plugin.config.routerName = resolveNaming(plugin.config.routerName);
+    if (!plugin.config.routerName.name) {
+      plugin.config.routerName.name = 'router';
+    }
 
     plugin.config.validator ??= 'zod';
     plugin.dependencies.add(plugin.config.validator);

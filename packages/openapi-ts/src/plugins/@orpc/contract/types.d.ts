@@ -1,6 +1,7 @@
 import type { IR } from '~/ir/types';
 import type { DefinePlugin, Plugin } from '~/plugins';
 import type { PluginValidatorNames } from '~/plugins/types';
+import type { NamingConfig, NamingRule } from '~/utils/naming';
 
 export type UserConfig = Plugin.Name<'@orpc/contract'> &
   Plugin.Hooks & {
@@ -36,12 +37,24 @@ export type UserConfig = Plugin.Name<'@orpc/contract'> &
      */
     operationKeyBuilder?: (operationId: string, groupKey: string) => string;
     /**
-     * Name of the router export.
-     * The type export will be the capitalized version (e.g., 'router' → 'Router').
+     * Naming rule for the router export.
+     * The type export will be the PascalCase version (e.g., 'router' → 'Router').
      *
      * @default 'router'
+     *
+     * @example
+     * // Simple string
+     * routerName: 'contract'
+     *
+     * @example
+     * // Template string
+     * routerName: '{{name}}Contract'
+     *
+     * @example
+     * // With casing
+     * routerName: { name: '{{name}}Contract', casing: 'camelCase' }
      */
-    routerName?: string;
+    routerName?: NamingRule;
     /**
      * Validator plugin to use for input/output schemas.
      *
@@ -61,7 +74,7 @@ export type Config = Plugin.Name<'@orpc/contract'> &
     groupKeyBuilder: (operation: IR.OperationObject) => string;
     operationKeyBuilder: (operationId: string, groupKey: string) => string;
     output: string;
-    routerName: string;
+    routerName: NamingConfig;
     validator: PluginValidatorNames;
   };
 

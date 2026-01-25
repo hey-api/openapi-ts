@@ -1,7 +1,7 @@
 import type { IR } from '~/ir/types';
 import { createOperationComment } from '~/plugins/shared/utils/operation';
 import { $ } from '~/ts-dsl';
-import { toCase } from '~/utils/naming';
+import { applyNaming, toCase } from '~/utils/naming';
 
 import type { OrpcPlugin } from './types';
 
@@ -183,7 +183,8 @@ export const handler: OrpcPlugin['Handler'] = ({ plugin }) => {
   }
 
   // Create contracts object export grouped by API path segment (in separate router file)
-  const contractsSymbol = plugin.symbol(routerName, {
+  const routerExportName = applyNaming('router', routerName);
+  const contractsSymbol = plugin.symbol(routerExportName, {
     exported: true,
     meta: {
       category: 'contract',
@@ -225,7 +226,7 @@ export const handler: OrpcPlugin['Handler'] = ({ plugin }) => {
 
   // Create type export: export type Router = typeof router (in separate router file)
   // Capitalize the router name for the type (e.g., 'router' → 'Router', 'contract' → 'Contract')
-  const routerTypeName = toCase(routerName, 'PascalCase');
+  const routerTypeName = toCase(routerExportName, 'PascalCase');
   const routerTypeSymbol = plugin.symbol(routerTypeName, {
     exported: true,
     meta: {
