@@ -70,7 +70,7 @@ export const defaultConfig: OrpcPlugin['Config'] = {
   },
   dependencies: ['@hey-api/typescript', 'zod'],
   handler,
-  name: 'orpc',
+  name: '@orpc/contract',
   resolveConfig: (plugin) => {
     plugin.config.output ??= 'orpc';
     plugin.config.exportFromIndex ??= false;

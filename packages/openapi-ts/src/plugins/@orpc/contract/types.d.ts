@@ -1,7 +1,7 @@
 import type { IR } from '~/ir/types';
 import type { DefinePlugin, Plugin } from '~/plugins';
 
-export type UserConfig = Plugin.Name<'orpc'> &
+export type UserConfig = Plugin.Name<'@orpc/contract'> &
   Plugin.Hooks & {
     /**
      * Custom naming function for contract symbols.
@@ -49,7 +49,7 @@ export type UserConfig = Plugin.Name<'orpc'> &
     routerName?: string;
   };
 
-export type Config = Plugin.Name<'orpc'> &
+export type Config = Plugin.Name<'@orpc/contract'> &
   Plugin.Hooks & {
     contractNameBuilder: (operationId: string) => string;
     defaultTag: string;

@@ -570,7 +570,7 @@ for (const version of versions) {
         config: createConfig({
           input: 'sdk-instance.yaml',
           output: 'default',
-          plugins: ['zod', 'orpc'],
+          plugins: ['zod', '@orpc/contract'],
         }),
         description: 'generate oRPC contracts with Zod schemas',
       },
@@ -582,7 +582,7 @@ for (const version of versions) {
             'zod',
             {
               contractNameBuilder: (id: string) => `${id}Rpc`,
-              name: 'orpc',
+              name: '@orpc/contract',
             },
           ],
         }),
@@ -597,7 +597,7 @@ for (const version of versions) {
             'zod',
             {
               groupKeyBuilder: (operation) => operation.method,
-              name: 'orpc',
+              name: '@orpc/contract',
             },
           ],
         }),
@@ -610,7 +610,7 @@ for (const version of versions) {
           plugins: [
             'zod',
             {
-              name: 'orpc',
+              name: '@orpc/contract',
               routerName: 'contract',
             },
           ],
