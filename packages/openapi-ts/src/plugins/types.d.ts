@@ -32,6 +32,7 @@ export type PluginNames =
   | '@tanstack/svelte-query'
   | '@tanstack/vue-query'
   | 'fastify'
+  | 'orpc'
   | 'swr';
 
 export type AnyPluginName = PluginNames | (string & {});
