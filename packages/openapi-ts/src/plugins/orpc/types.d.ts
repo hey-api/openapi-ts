@@ -40,6 +40,13 @@ export type UserConfig = Plugin.Name<'orpc'> &
      * @default 'orpc'
      */
     output?: string;
+    /**
+     * Name of the router export.
+     * The type export will be the capitalized version (e.g., 'router' → 'Router').
+     *
+     * @default 'router'
+     */
+    routerName?: string;
   };
 
 export type Config = Plugin.Name<'orpc'> &
@@ -50,6 +57,7 @@ export type Config = Plugin.Name<'orpc'> &
     groupKeyBuilder: (operation: IR.OperationObject) => string;
     operationKeyBuilder: (operationId: string, groupKey: string) => string;
     output: string;
+    routerName: string;
   };
 
 export type OrpcPlugin = DefinePlugin<UserConfig, Config>;

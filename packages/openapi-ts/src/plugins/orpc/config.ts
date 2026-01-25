@@ -3,15 +3,7 @@ import { definePluginConfig } from '~/plugins/shared/utils/config';
 
 import { handler } from './plugin';
 import type { OrpcPlugin } from './types';
-
-function capitalizeFirst(str: string): string {
-  return str.charAt(0).toUpperCase() + str.slice(1);
-}
-
-// Convert kebab-case to camelCase: "chat-messages" → "chatMessages"
-function toCamelCase(str: string): string {
-  return str.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
-}
+import { capitalizeFirst, toCamelCase } from './utils';
 
 // Default: extract first path segment and convert to camelCase
 // "/chat-messages/{id}" → "chatMessages"
@@ -74,6 +66,7 @@ export const defaultConfig: OrpcPlugin['Config'] = {
     groupKeyBuilder: defaultGroupKeyBuilder,
     operationKeyBuilder: defaultOperationKeyBuilder,
     output: 'orpc',
+    routerName: 'router',
   },
   dependencies: ['@hey-api/typescript', 'zod'],
   handler,
@@ -85,6 +78,7 @@ export const defaultConfig: OrpcPlugin['Config'] = {
     plugin.config.defaultTag ??= 'default';
     plugin.config.groupKeyBuilder ??= defaultGroupKeyBuilder;
     plugin.config.operationKeyBuilder ??= defaultOperationKeyBuilder;
+    plugin.config.routerName ??= 'router';
   },
   tags: ['client'],
 };

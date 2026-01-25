@@ -603,6 +603,20 @@ for (const version of versions) {
         }),
         description: 'generate oRPC contracts with custom group key builder',
       },
+      {
+        config: createConfig({
+          input: 'sdk-instance.yaml',
+          output: 'custom-router-name',
+          plugins: [
+            'zod',
+            {
+              name: 'orpc',
+              routerName: 'contract',
+            },
+          ],
+        }),
+        description: 'generate oRPC contracts with custom router name',
+      },
     ];
 
     it.each(scenarios)('$description', async ({ config }) => {
