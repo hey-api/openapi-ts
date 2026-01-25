@@ -3,7 +3,7 @@ import { definePluginConfig } from '~/plugins/shared/utils/config';
 import { resolveNaming, toCase } from '~/utils/naming';
 
 import { handler } from './plugin';
-import type { OrpcPlugin } from './types';
+import type { OrpcContractPlugin } from './types';
 
 // Default: extract first path segment and convert to camelCase
 // "/chat-messages/{id}" → "chatMessages"
@@ -58,7 +58,7 @@ function defaultOperationKeyBuilder(
   return simplified;
 }
 
-export const defaultConfig: OrpcPlugin['Config'] = {
+export const defaultConfig: OrpcContractPlugin['Config'] = {
   config: {
     contractNameBuilder: (id: string) => `${id}Contract`,
     defaultTag: 'default',

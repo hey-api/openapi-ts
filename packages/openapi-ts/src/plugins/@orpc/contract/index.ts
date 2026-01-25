@@ -1,2 +1,2 @@
 export { defaultConfig, defineConfig } from './config';
-export type { OrpcPlugin } from './types';
+export type { OrpcContractPlugin } from './types';
