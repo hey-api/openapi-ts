@@ -1,4 +1,5 @@
 import type { IR } from '~/ir/types';
+import { createOperationComment } from '~/plugins/shared/utils/operation';
 import { $ } from '~/ts-dsl';
 import { toCase } from '~/utils/naming';
 
@@ -191,27 +192,10 @@ export const handler: OrpcPlugin['Handler'] = ({ plugin }) => {
       }
     }
 
+    const comments = createOperationComment(op);
     const contractNode = $.const(contractSymbol)
       .export()
-      .$if(op.summary || op.description || op.deprecated, (node) => {
-        const docLines: string[] = [];
-        if (op.summary) {
-          docLines.push(op.summary);
-        }
-        if (op.description && op.description !== op.summary) {
-          if (op.summary) {
-            docLines.push('');
-          }
-          docLines.push(op.description);
-        }
-        if (op.deprecated) {
-          if (docLines.length > 0) {
-            docLines.push('');
-          }
-          docLines.push('@deprecated');
-        }
-        return node.doc(docLines);
-      })
+      .$if(comments, (node) => node.doc(comments))
       .assign(expression);
 
     plugin.node(contractNode);
