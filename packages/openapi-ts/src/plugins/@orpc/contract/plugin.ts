@@ -242,7 +242,7 @@ export const handler: OrpcContractPlugin['Handler'] = ({ plugin }) => {
         for (let i = 0; i < path.length; i++) {
           const isLast = i === path.length - 1;
           const segment = isLast
-            ? applyNaming(path[i]!, router.keyName)
+            ? applyNaming(path[i]!, router.methodName)
             : applyNaming(path[i]!, router.segmentName);
 
           if (isLast) {

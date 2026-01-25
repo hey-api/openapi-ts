@@ -29,13 +29,13 @@ function resolveRouter(
     },
     mappers: {
       object(value) {
-        value.keyName = context.valueToObject({
+        value.methodName = context.valueToObject({
           defaultValue: { casing: 'camelCase' },
           mappers: {
             function: (name) => ({ name }),
             string: (name) => ({ name }),
           },
-          value: value.keyName,
+          value: value.methodName,
         });
         value.segmentName = context.valueToObject({
           defaultValue: { casing: 'camelCase' },
@@ -57,7 +57,7 @@ export const defaultConfig: OrpcContractPlugin['Config'] = {
     contractNameBuilder: (id: string) => `${id}Contract`,
     exportFromIndex: false,
     router: {
-      keyName: { casing: 'camelCase' },
+      methodName: { casing: 'camelCase' },
       nesting: 'operationId',
       nestingDelimiters: /[./]/,
       segmentName: { casing: 'camelCase' },

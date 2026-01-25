@@ -8,11 +8,11 @@ import type { NamingConfig, NamingRule } from '~/utils/naming';
 
 export interface UserRouterConfig {
   /**
-   * Customize key names for operations in the router.
+   * Customize method/key names for operations in the router.
    *
-   * Applied to the final segment of the path (the key name).
+   * Applied to the final segment of the path.
    */
-  keyName?: NamingRule;
+  methodName?: NamingRule;
   /**
    * How to derive nesting structure from operations.
    *
@@ -60,11 +60,11 @@ export interface UserRouterConfig {
 
 export interface RouterConfig {
   /**
-   * Customize key names for operations in the router.
+   * Customize method/key names for operations in the router.
    *
-   * Applied to the final segment of the path (the key name).
+   * Applied to the final segment of the path.
    */
-  keyName: NamingConfig;
+  methodName: NamingConfig;
   /**
    * How to derive nesting structure from operations.
    *
@@ -133,7 +133,7 @@ export type UserConfig = Plugin.Name<'@orpc/contract'> &
      *   strategy: 'byTags',
      *   nesting: 'operationId',
      *   segmentName: { casing: 'camelCase' },
-     *   keyName: { casing: 'camelCase' },
+     *   methodName: { casing: 'camelCase' },
      * }
      */
     router?: OperationsStrategy | UserRouterConfig;
