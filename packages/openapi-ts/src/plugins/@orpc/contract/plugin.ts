@@ -75,6 +75,8 @@ export const handler: OrpcPlugin['Handler'] = ({ plugin }) => {
     exported: false,
     external: '@orpc/contract',
   });
+
+  // TODO: handle this more correctly
   const validatorExternalMap = {
     arktype: 'type',
     valibot: 'v',
