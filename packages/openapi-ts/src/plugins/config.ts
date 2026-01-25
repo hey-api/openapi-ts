@@ -25,7 +25,7 @@ import type { HeyApiTransformersPlugin } from '~/plugins/@hey-api/transformers';
 import { defaultConfig as heyApiTransformers } from '~/plugins/@hey-api/transformers';
 import type { HeyApiTypeScriptPlugin } from '~/plugins/@hey-api/typescript';
 import { defaultConfig as heyApiTypeScript } from '~/plugins/@hey-api/typescript';
-import type { OrpcPlugin } from '~/plugins/@orpc/contract';
+import type { OrpcContractPlugin } from '~/plugins/@orpc/contract';
 import { defaultConfig as orpcContract } from '~/plugins/@orpc/contract';
 import type { PiniaColadaPlugin } from '~/plugins/@pinia/colada';
 import { defaultConfig as piniaColada } from '~/plugins/@pinia/colada';
@@ -65,7 +65,7 @@ export interface PluginConfigMap {
   '@hey-api/sdk': HeyApiSdkPlugin['Types'];
   '@hey-api/transformers': HeyApiTransformersPlugin['Types'];
   '@hey-api/typescript': HeyApiTypeScriptPlugin['Types'];
-  '@orpc/contract': OrpcPlugin['Types'];
+  '@orpc/contract': OrpcContractPlugin['Types'];
   '@pinia/colada': PiniaColadaPlugin['Types'];
   '@tanstack/angular-query-experimental': TanStackAngularQueryPlugin['Types'];
   '@tanstack/react-query': TanStackReactQueryPlugin['Types'];

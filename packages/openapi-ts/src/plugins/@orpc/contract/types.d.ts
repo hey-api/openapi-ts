@@ -78,4 +78,4 @@ export type Config = Plugin.Name<'@orpc/contract'> &
     validator: PluginValidatorNames;
   };
 
-export type OrpcPlugin = DefinePlugin<UserConfig, Config>;
+export type OrpcContractPlugin = DefinePlugin<UserConfig, Config>;

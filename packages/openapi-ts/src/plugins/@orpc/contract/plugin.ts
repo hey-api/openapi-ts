@@ -3,7 +3,7 @@ import { createOperationComment } from '~/plugins/shared/utils/operation';
 import { $ } from '~/ts-dsl';
 import { applyNaming, toCase } from '~/utils/naming';
 
-import type { OrpcPlugin } from './types';
+import type { OrpcContractPlugin } from './types';
 
 function hasInput(operation: IR.OperationObject): boolean {
   const hasPathParams = Boolean(
@@ -49,7 +49,7 @@ function getTags(operation: IR.OperationObject, defaultTag: string): string[] {
     : [defaultTag];
 }
 
-export const handler: OrpcPlugin['Handler'] = ({ plugin }) => {
+export const handler: OrpcContractPlugin['Handler'] = ({ plugin }) => {
   const {
     contractNameBuilder,
     defaultTag,
