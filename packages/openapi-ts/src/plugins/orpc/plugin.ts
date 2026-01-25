@@ -2,6 +2,7 @@ import type { IR } from '~/ir/types';
 import { $ } from '~/ts-dsl';
 
 import type { OrpcPlugin } from './types';
+import { capitalizeFirst } from './utils';
 
 function hasInput(operation: IR.OperationObject): boolean {
   const hasPathParams = Boolean(
@@ -51,6 +52,7 @@ export const handler: OrpcPlugin['Handler'] = ({ plugin }) => {
     defaultTag,
     groupKeyBuilder,
     operationKeyBuilder,
+    routerName,
   } = plugin.config;
 
   const operations: IR.OperationObject[] = [];
@@ -216,7 +218,7 @@ export const handler: OrpcPlugin['Handler'] = ({ plugin }) => {
   }
 
   // Create contracts object export grouped by API path segment (in separate router file)
-  const contractsSymbol = plugin.symbol('router', {
+  const contractsSymbol = plugin.symbol(routerName, {
     exported: true,
     meta: {
       category: 'contract',
@@ -257,7 +259,9 @@ export const handler: OrpcPlugin['Handler'] = ({ plugin }) => {
   plugin.node(contractsNode);
 
   // Create type export: export type Router = typeof router (in separate router file)
-  const routerTypeSymbol = plugin.symbol('Router', {
+  // Capitalize the router name for the type (e.g., 'router' → 'Router', 'contract' → 'Contract')
+  const routerTypeName = capitalizeFirst(routerName);
+  const routerTypeSymbol = plugin.symbol(routerTypeName, {
     exported: true,
     meta: {
       category: 'type',
