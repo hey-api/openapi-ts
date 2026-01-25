@@ -1,5 +1,6 @@
 import type { IR } from '~/ir/types';
 import type { DefinePlugin, Plugin } from '~/plugins';
+import type { PluginValidatorNames } from '~/plugins/types';
 
 export type UserConfig = Plugin.Name<'@orpc/contract'> &
   Plugin.Hooks & {
@@ -41,6 +42,15 @@ export type UserConfig = Plugin.Name<'@orpc/contract'> &
      * @default 'router'
      */
     routerName?: string;
+    /**
+     * Validator plugin to use for input/output schemas.
+     *
+     * Ensure you have declared the selected library as a dependency to avoid
+     * errors.
+     *
+     * @default 'zod'
+     */
+    validator?: PluginValidatorNames;
   };
 
 export type Config = Plugin.Name<'@orpc/contract'> &
@@ -52,6 +62,7 @@ export type Config = Plugin.Name<'@orpc/contract'> &
     operationKeyBuilder: (operationId: string, groupKey: string) => string;
     output: string;
     routerName: string;
+    validator: PluginValidatorNames;
   };
 
 export type OrpcPlugin = DefinePlugin<UserConfig, Config>;
