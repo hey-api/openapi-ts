@@ -30,6 +30,7 @@
     "@hey-api/codegen-core": "workspace:*",
     "@hey-api/custom-client": "workspace:*",
     "@hey-api/openapi-ts": "workspace:*",
+    "@orpc/contract": "1.13.4",
     "@pinia/colada": "0.19.1",
     "@tanstack/angular-query-experimental": "5.73.3",
     "@tanstack/react-query": "5.73.3",

@@ -566,6 +566,61 @@ for (const version of versions) {
         }),
         description: 'generate Angular requests and resources (class)',
       },
+      {
+        config: createConfig({
+          input:
+            version === '2.0.x' ? 'sdk-instance.yaml' : 'orpc-contract.yaml',
+          output: 'default',
+          plugins: ['zod', '@orpc/contract'],
+        }),
+        description: 'generate oRPC contracts with Zod schemas',
+      },
+      {
+        config: createConfig({
+          input:
+            version === '2.0.x' ? 'sdk-instance.yaml' : 'orpc-contract.yaml',
+          output: 'custom-contract-name',
+          plugins: [
+            'zod',
+            {
+              contractNameBuilder: (id: string) => `${id}Rpc`,
+              name: '@orpc/contract',
+            },
+          ],
+        }),
+        description:
+          'generate oRPC contracts with custom contract name builder',
+      },
+      {
+        config: createConfig({
+          input:
+            version === '2.0.x' ? 'sdk-instance.yaml' : 'orpc-contract.yaml',
+          output: 'custom-group-key',
+          plugins: [
+            'zod',
+            {
+              groupKeyBuilder: (operation) => operation.method,
+              name: '@orpc/contract',
+            },
+          ],
+        }),
+        description: 'generate oRPC contracts with custom group key builder',
+      },
+      {
+        config: createConfig({
+          input:
+            version === '2.0.x' ? 'sdk-instance.yaml' : 'orpc-contract.yaml',
+          output: 'custom-router-name',
+          plugins: [
+            'zod',
+            {
+              name: '@orpc/contract',
+              routerName: 'contract',
+            },
+          ],
+        }),
+        description: 'generate oRPC contracts with custom router name',
+      },
     ];
 
     it.each(scenarios)('$description', async ({ config }) => {
