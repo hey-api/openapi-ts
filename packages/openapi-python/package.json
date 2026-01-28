@@ -66,7 +66,7 @@
     "node": ">=20.19.0"
   },
   "dependencies": {
-    "@hey-api/codegen-core": "workspace:^0.5.5",
+    "@hey-api/codegen-core": "workspace:*",
     "@hey-api/json-schema-ref-parser": "1.2.3",
     "@hey-api/shared": "workspace:*",
     "@hey-api/types": "workspace:*",
