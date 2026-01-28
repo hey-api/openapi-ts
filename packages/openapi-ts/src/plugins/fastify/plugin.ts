@@ -1,6 +1,9 @@
-import { operationResponsesMap } from '~/ir/operation';
-import { hasParameterGroupObjectRequired } from '~/ir/parameter';
-import type { IR } from '~/ir/types';
+import type { IR } from '@hey-api/shared';
+import {
+  hasParameterGroupObjectRequired,
+  operationResponsesMap,
+} from '@hey-api/shared';
+
 import { $ } from '~/ts-dsl';
 
 import type { FastifyPlugin } from './types';

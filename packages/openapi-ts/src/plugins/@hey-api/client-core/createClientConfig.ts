@@ -1,3 +1,4 @@
+import { getTypedConfig } from '~/config/utils';
 import { clientFolderAbsolutePath } from '~/generate/client';
 import { $ } from '~/ts-dsl';
 
@@ -6,7 +7,7 @@ import type { PluginHandler } from './types';
 export const createClientConfigType = ({
   plugin,
 }: Parameters<PluginHandler>[0]) => {
-  const clientModule = clientFolderAbsolutePath(plugin.context.config);
+  const clientModule = clientFolderAbsolutePath(getTypedConfig(plugin));
   const symbolClientOptions = plugin.referenceSymbol({
     category: 'type',
     resource: 'client',

@@ -1,9 +1,5 @@
 {
   "extends": "../tsconfig.base.json",
-  "compilerOptions": {
-    "declaration": false,
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "skipLibCheck": true
-  }
+  "include": ["test/**/*", "__snapshots__/**/*"],
+  "exclude": [".gen/**/*"]
 }

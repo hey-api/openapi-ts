@@ -1,3 +1,4 @@
+import { getTypedConfig } from '~/config/utils';
 import { clientFolderAbsolutePath } from '~/generate/client';
 import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
 import { $ } from '~/ts-dsl';
@@ -11,8 +12,8 @@ export const createTypeOptions = ({
 }: {
   plugin: HeyApiSdkPlugin['Instance'];
 }) => {
-  const clientModule = clientFolderAbsolutePath(plugin.context.config);
-  const client = getClientPlugin(plugin.context.config);
+  const clientModule = clientFolderAbsolutePath(getTypedConfig(plugin));
+  const client = getClientPlugin(getTypedConfig(plugin));
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
 
   const symbolTDataShape = plugin.symbol('TDataShape', {

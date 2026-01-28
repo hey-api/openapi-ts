@@ -1,5 +1,6 @@
+import { definePluginConfig } from '@hey-api/shared';
+
 import { handler } from '~/plugins/@tanstack/query-core/plugin';
-import { definePluginConfig } from '~/plugins/shared/utils/config';
 
 import type { TanStackSvelteQueryPlugin } from './types';
 

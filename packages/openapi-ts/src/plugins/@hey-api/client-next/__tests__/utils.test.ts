@@ -1,5 +1,3 @@
-import { describe, expect, it, vi } from 'vitest';
-
 import type { Auth } from '../../client-core/bundle/auth';
 import { getParseAs, setAuthParams } from '../bundle/utils';
 

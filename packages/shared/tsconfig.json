@@ -1,0 +1,11 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "outDir": "dist",
+    "rootDir": "src",
+    "types": ["bun", "vitest/globals"]
+  },
+  "include": ["src"],
+  "references": [{ "path": "../types" }, { "path": "../codegen-core" }]
+}

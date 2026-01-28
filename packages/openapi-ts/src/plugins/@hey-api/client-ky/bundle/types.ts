@@ -1,3 +1,6 @@
+import type { Options as KyOptions } from 'ky';
+import type ky from 'ky';
+
 import type { Auth } from '../../client-core/bundle/auth';
 import type {
   ServerSentEventsOptions,
@@ -36,7 +39,7 @@ export interface RetryOptions {
 
 export interface Config<T extends ClientOptions = ClientOptions>
   extends Omit<
-      import('ky').Options,
+      KyOptions,
       'body' | 'headers' | 'method' | 'prefixUrl' | 'retry' | 'throwHttpErrors'
     >,
     CoreConfig {
@@ -48,12 +51,12 @@ export interface Config<T extends ClientOptions = ClientOptions>
    * Ky instance to use. You can use this option to provide a custom
    * ky instance.
    */
-  ky?: typeof import('ky').default;
+  ky?: typeof ky;
   /**
    * Additional ky-specific options that will be passed directly to ky.
    * This allows you to use any ky option not explicitly exposed in the config.
    */
-  kyOptions?: Omit<import('ky').Options, 'method' | 'prefixUrl'>;
+  kyOptions?: Omit<KyOptions, 'method' | 'prefixUrl'>;
   /**
    * Return the response data parsed in a specified format. By default, `auto`
    * will infer the appropriate method from the `Content-Type` response header.

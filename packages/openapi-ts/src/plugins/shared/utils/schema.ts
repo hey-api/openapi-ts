@@ -1,5 +1,4 @@
-import type { IR } from '~/ir/types';
-import { escapeComment } from '~/utils/escape';
+import { escapeComment, type IR } from '@hey-api/shared';
 
 export const createSchemaComment = (
   schema: IR.SchemaObject,

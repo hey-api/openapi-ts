@@ -1,5 +1,3 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
-
 import type { QuerySerializer } from '../../client-core/bundle/bodySerializer';
 
 describe('buildUrl', () => {

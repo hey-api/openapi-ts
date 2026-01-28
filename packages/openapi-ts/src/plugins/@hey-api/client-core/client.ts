@@ -1,6 +1,8 @@
+import { parseUrl } from '@hey-api/shared';
+
+import { getTypedConfig } from '~/config/utils';
 import { clientFolderAbsolutePath } from '~/generate/client';
 import { $ } from '~/ts-dsl';
-import { parseUrl } from '~/utils/url';
 
 import type { PluginHandler } from './types';
 import { getClientBaseUrlKey } from './utils';
@@ -28,7 +30,7 @@ const resolveBaseUrlString = ({
 };
 
 export const createClient: PluginHandler = ({ plugin }) => {
-  const clientModule = clientFolderAbsolutePath(plugin.context.config);
+  const clientModule = clientFolderAbsolutePath(getTypedConfig(plugin));
   const symbolCreateClient = plugin.symbol('createClient', {
     external: clientModule,
   });
@@ -57,7 +59,7 @@ export const createClient: PluginHandler = ({ plugin }) => {
     const url = parseUrl(resolvedBaseUrl);
     if (url.protocol && url.host && !resolvedBaseUrl.includes('{')) {
       defaultVals.prop(
-        getClientBaseUrlKey(plugin.context.config),
+        getClientBaseUrlKey(getTypedConfig(plugin)),
         $.literal(resolvedBaseUrl),
       );
     } else if (resolvedBaseUrl !== '/' && resolvedBaseUrl.startsWith('/')) {
@@ -65,7 +67,7 @@ export const createClient: PluginHandler = ({ plugin }) => {
         ? resolvedBaseUrl.slice(0, -1)
         : resolvedBaseUrl;
       defaultVals.prop(
-        getClientBaseUrlKey(plugin.context.config),
+        getClientBaseUrlKey(getTypedConfig(plugin)),
         $.literal(baseUrl),
       );
     }

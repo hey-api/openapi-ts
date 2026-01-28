@@ -13,6 +13,7 @@ export const createSdkConfig =
       ...userConfig,
       logs: {
         level: 'silent',
+        path: './logs',
       },
       output:
         typeof userConfig.output === 'string'

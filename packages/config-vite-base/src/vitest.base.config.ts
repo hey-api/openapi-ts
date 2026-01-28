@@ -16,6 +16,7 @@ export function createVitestConfig(
         provider: 'v8',
       },
       exclude: [...configDefaults.exclude],
+      globals: true,
       pool: platform() === 'win32' ? 'threads' : 'forks',
       poolOptions: {
         forks: {

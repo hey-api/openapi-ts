@@ -1,4 +1,5 @@
-import type { IR } from '~/ir/types';
+import type { IR } from '@hey-api/shared';
+
 import { $ } from '~/ts-dsl';
 
 import type { PluginInstance } from '../types';

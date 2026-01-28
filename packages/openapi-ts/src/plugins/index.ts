@@ -1,2 +1,1 @@
-export type { SchemaWithType } from './shared/types/schema';
-export type { DefinePlugin, Plugin } from './types';
+export type { DefinePlugin, Plugin, SchemaWithType } from '@hey-api/shared';

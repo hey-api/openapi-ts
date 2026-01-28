@@ -1,12 +1,12 @@
 import type { Symbol } from '@hey-api/codegen-core';
+import type { IR } from '@hey-api/shared';
+import { applyNaming, hasOperationDataRequired } from '@hey-api/shared';
 import type ts from 'typescript';
 
-import { hasOperationDataRequired } from '~/ir/operation';
-import type { IR } from '~/ir/types';
+import { getTypedConfig } from '~/config/utils';
 import { getClientBaseUrlKey } from '~/plugins/@hey-api/client-core/utils';
 import type { TsDsl } from '~/ts-dsl';
 import { $ } from '~/ts-dsl';
-import { applyNaming } from '~/utils/naming';
 
 import { useTypeData } from './shared/useType';
 import type { PluginInstance } from './types';
@@ -36,7 +36,7 @@ export const createQueryKeyFunction = ({
     tool: plugin.name,
   });
 
-  const baseUrlKey = getClientBaseUrlKey(plugin.context.config);
+  const baseUrlKey = getClientBaseUrlKey(getTypedConfig(plugin));
 
   const symbolClient = plugin.getSymbol({
     category: 'client',
@@ -154,7 +154,7 @@ export const createQueryKeyType = ({ plugin }: { plugin: PluginInstance }) => {
       $.type.tuple(
         $.type.and(
           $.type(
-            `Pick<${TOptionsType}, '${getClientBaseUrlKey(plugin.context.config)}' | 'body' | 'headers' | 'path' | 'query'>`,
+            `Pick<${TOptionsType}, '${getClientBaseUrlKey(getTypedConfig(plugin))}' | 'body' | 'headers' | 'path' | 'query'>`,
           ),
           $.type
             .object()

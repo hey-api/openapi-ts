@@ -1,6 +1,5 @@
 import type { KyInstance } from 'ky';
 import { HTTPError } from 'ky';
-import { describe, expect, it, vi } from 'vitest';
 
 import type { ResolvedRequestOptions } from '../bundle';
 import { createClient } from '../bundle/client';

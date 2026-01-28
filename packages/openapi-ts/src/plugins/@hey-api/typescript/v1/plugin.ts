@@ -1,12 +1,12 @@
 import type { Symbol } from '@hey-api/codegen-core';
 import { refs } from '@hey-api/codegen-core';
+import type { IR } from '@hey-api/shared';
+import type { SchemaWithType } from '@hey-api/shared';
+import { applyNaming } from '@hey-api/shared';
+import { deduplicateSchema } from '@hey-api/shared';
 
-import { deduplicateSchema } from '~/ir/schema';
-import type { IR } from '~/ir/types';
-import type { SchemaWithType } from '~/plugins';
 import type { MaybeTsDsl, TypeTsDsl } from '~/ts-dsl';
 import { $ } from '~/ts-dsl';
-import { applyNaming } from '~/utils/naming';
 
 import { createClientOptions } from '../shared/clientOptions';
 import { exportType } from '../shared/export';

@@ -1,7 +1,5 @@
 import { log } from '@hey-api/codegen-core';
-
-import type { OperationsStrategy } from '~/openApi/shared/locations';
-import type { PluginContext } from '~/plugins/types';
+import type { OperationsStrategy, PluginContext } from '@hey-api/shared';
 
 import type { UserConfig } from '../types';
 import type { OperationsConfig, UserOperationsConfig } from './types';

@@ -1,8 +1,10 @@
-import type { IR } from '~/ir/types';
+import type { IR } from '@hey-api/shared';
+import { applyNaming } from '@hey-api/shared';
+
+import { getTypedConfig } from '~/config/utils';
 import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
 import { createOperationComment } from '~/plugins/shared/utils/operation';
 import { $ } from '~/ts-dsl';
-import { applyNaming } from '~/utils/naming';
 
 import { handleMeta } from './meta';
 import type { PiniaColadaPlugin } from './types';
@@ -20,7 +22,7 @@ export const createMutationOptions = ({
     `${plugin.name}.UseMutationOptions`,
   );
 
-  const client = getClientPlugin(plugin.context.config);
+  const client = getClientPlugin(getTypedConfig(plugin));
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
 
   const typeData = getPublicTypeData({ isNuxtClient, operation, plugin });

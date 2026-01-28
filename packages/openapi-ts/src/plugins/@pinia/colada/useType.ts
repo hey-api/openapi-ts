@@ -1,4 +1,6 @@
-import type { IR } from '~/ir/types';
+import type { IR } from '@hey-api/shared';
+
+import { getTypedConfig } from '~/config/utils';
 import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
 import { operationOptionsType } from '~/plugins/@hey-api/sdk/shared/operation';
 import { $ } from '~/ts-dsl';
@@ -23,7 +25,7 @@ export const useTypeError = ({
   operation: IR.OperationObject;
   plugin: PiniaColadaPlugin['Instance'];
 }): ReturnType<typeof $.type> => {
-  const client = getClientPlugin(plugin.context.config);
+  const client = getClientPlugin(getTypedConfig(plugin));
   const symbolErrorType = plugin.querySymbol({
     category: 'type',
     resource: 'operation',

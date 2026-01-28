@@ -1,4 +1,4 @@
-import { definePluginConfig } from '~/plugins/shared/utils/config';
+import { definePluginConfig } from '@hey-api/shared';
 
 import { handler } from './plugin';
 import type { HeyApiSchemasPlugin } from './types';

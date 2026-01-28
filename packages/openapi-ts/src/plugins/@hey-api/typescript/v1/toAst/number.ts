@@ -1,4 +1,5 @@
-import type { SchemaWithType } from '~/plugins';
+import type { SchemaWithType } from '@hey-api/shared';
+
 import type { TypeTsDsl } from '~/ts-dsl';
 import { $ } from '~/ts-dsl';
 

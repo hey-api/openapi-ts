@@ -1,5 +1,4 @@
 import type { Mock } from 'vitest';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { runCli } from '~/cli';
 import { createClient } from '~/index';

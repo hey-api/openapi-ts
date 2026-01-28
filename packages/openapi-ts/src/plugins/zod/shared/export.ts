@@ -1,6 +1,6 @@
 import type { Symbol } from '@hey-api/codegen-core';
+import type { IR } from '@hey-api/shared';
 
-import type { IR } from '~/ir/types';
 import { createSchemaComment } from '~/plugins/shared/utils/schema';
 import { $ } from '~/ts-dsl';
 

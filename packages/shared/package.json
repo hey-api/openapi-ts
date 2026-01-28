@@ -1,0 +1,71 @@
+{
+  "name": "@hey-api/shared",
+  "version": "0.0.1",
+  "description": "Temporary home for cross-package utilities. Contents will migrate to proper packages as architecture stabilizes.",
+  "homepage": "https://heyapi.dev/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hey-api/openapi-ts.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hey-api/openapi-ts/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "email": "lubos@heyapi.dev",
+    "name": "Hey API",
+    "url": "https://heyapi.dev"
+  },
+  "funding": "https://github.com/sponsors/hey-api",
+  "type": "module",
+  "main": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "LICENSE.md",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsdown && pnpm check-exports",
+    "check-exports": "attw --pack . --profile esm-only --ignore-rules cjs-resolves-to-esm",
+    "dev": "tsdown --watch",
+    "prepublishOnly": "pnpm build",
+    "test:coverage": "vitest run --coverage",
+    "test:update": "vitest watch --update",
+    "test:watch": "vitest watch",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "dependencies": {
+    "@hey-api/codegen-core": "workspace:^0.5.5",
+    "@hey-api/json-schema-ref-parser": "1.2.2",
+    "@hey-api/types": "workspace:*",
+    "ansi-colors": "4.1.3",
+    "cross-spawn": "7.0.6",
+    "open": "11.0.0",
+    "semver": "7.7.3"
+  },
+  "peerDependencies": {
+    "typescript": ">=5.5.3"
+  },
+  "devDependencies": {
+    "@config/vite-base": "workspace:*",
+    "@types/bun": "1.3.5",
+    "@types/cross-spawn": "6.0.6",
+    "@types/semver": "7.7.1",
+    "eslint": "9.39.1",
+    "prettier": "3.4.2",
+    "typescript": "5.9.3",
+    "yaml": "2.8.2"
+  }
+}

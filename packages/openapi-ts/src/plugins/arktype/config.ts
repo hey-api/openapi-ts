@@ -1,4 +1,4 @@
-import { definePluginConfig, mappers } from '~/plugins/shared/utils/config';
+import { definePluginConfig, mappers } from '@hey-api/shared';
 
 import { Api } from './api';
 import { handler } from './plugin';

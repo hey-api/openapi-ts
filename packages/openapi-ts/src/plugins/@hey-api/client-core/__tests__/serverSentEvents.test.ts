@@ -1,5 +1,3 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-
 import { createSseClient } from '../bundle/serverSentEvents';
 
 function makeStream(chunks: string[]) {

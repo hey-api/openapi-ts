@@ -1,6 +1,7 @@
-import type { Logger } from '@hey-api/codegen-core';
 import type { AnyObject, MaybeArray } from '@hey-api/types';
+import { loadConfig } from 'c12';
 
+import type { Logger } from '../logger';
 import { mergeConfigs } from './merge';
 
 export async function loadConfigFile<T extends AnyObject>({
@@ -19,9 +20,6 @@ export async function loadConfigFile<T extends AnyObject>({
   foundConfig: boolean;
 }> {
   const eventC12 = logger.timeEvent('c12');
-  // c12 is ESM-only since v3
-  const { loadConfig } = await import('c12');
-
   const { config: fileConfig, configFile: loadedConfigFile } = await loadConfig<
     MaybeArray<T>
   >({

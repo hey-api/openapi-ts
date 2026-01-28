@@ -1,4 +1,6 @@
-import type { IR } from '~/ir/types';
+import type { IR } from '@hey-api/shared';
+import { applyNaming } from '@hey-api/shared';
+
 import {
   createOperationComment,
   hasOperationSse,
@@ -6,7 +8,6 @@ import {
 } from '~/plugins/shared/utils/operation';
 import type { TsDsl } from '~/ts-dsl';
 import { $ } from '~/ts-dsl';
-import { applyNaming } from '~/utils/naming';
 
 import {
   createQueryKeyFunction,

@@ -1,13 +1,15 @@
 import type { SymbolMeta } from '@hey-api/codegen-core';
 import { fromRef, ref, refs } from '@hey-api/codegen-core';
+import type { IR, SchemaWithType } from '@hey-api/shared';
+import {
+  applyNaming,
+  deduplicateSchema,
+  pathToJsonPointer,
+  refToName,
+} from '@hey-api/shared';
 
-import { deduplicateSchema } from '~/ir/schema';
-import type { IR } from '~/ir/types';
-import type { SchemaWithType } from '~/plugins';
 import { maybeBigInt } from '~/plugins/shared/utils/coerce';
 import { $ } from '~/ts-dsl';
-import { applyNaming } from '~/utils/naming';
-import { pathToJsonPointer, refToName } from '~/utils/ref';
 
 import { exportAst } from '../shared/export';
 import { irOperationToAst } from '../shared/operation';

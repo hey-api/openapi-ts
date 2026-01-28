@@ -1,5 +1,3 @@
-import { describe, expect, it, vi } from 'vitest';
-
 import type { ResolvedRequestOptions } from '../bundle';
 import { createClient } from '../bundle/client';
 
