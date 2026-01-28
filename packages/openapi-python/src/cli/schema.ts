@@ -1,9 +1,10 @@
+import type { PluginNames } from '@hey-api/shared';
 import type { MaybeArray } from '@hey-api/types';
 
-// import type { PluginClientNames, PluginNames } from "~/plugins/types";
+import type { PluginClientNames } from '~/plugins/types';
 
 export interface CliOptions {
-  // client?: PluginClientNames;
+  client?: PluginClientNames;
   debug?: boolean;
   dryRun?: boolean;
   file?: string;
@@ -11,7 +12,7 @@ export interface CliOptions {
   logFile?: boolean;
   logs?: string;
   output?: MaybeArray<string>;
-  // plugins?: ReadonlyArray<PluginNames>;
+  plugins?: ReadonlyArray<PluginNames>;
   silent?: boolean;
   watch?: boolean | string;
 }

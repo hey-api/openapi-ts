@@ -1,9 +1,9 @@
 import type { SymbolMeta } from '@hey-api/codegen-core';
+import type { SchemaWithType } from '@hey-api/shared';
+import { toCase } from '@hey-api/shared';
 
-import type { SchemaWithType } from '~/plugins';
 import type { TypeTsDsl } from '~/ts-dsl';
 import { $ } from '~/ts-dsl';
-import { toCase } from '~/utils/naming';
 
 import type { IrSchemaToAstOptions } from '../../shared/types';
 

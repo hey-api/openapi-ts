@@ -1,9 +1,10 @@
+import { definePluginConfig } from '@hey-api/shared';
+
 import {
   clientDefaultConfig,
   clientDefaultMeta,
 } from '~/plugins/@hey-api/client-core/config';
 import { clientPluginHandler } from '~/plugins/@hey-api/client-core/plugin';
-import { definePluginConfig } from '~/plugins/shared/utils/config';
 
 import type { HeyApiClientKyPlugin } from './types';
 
@@ -13,7 +14,7 @@ export const defaultConfig: HeyApiClientKyPlugin['Config'] = {
     ...clientDefaultConfig,
     throwOnError: false,
   },
-  handler: clientPluginHandler,
+  handler: clientPluginHandler as unknown as HeyApiClientKyPlugin['Handler'],
   name: '@hey-api/client-ky',
 };
 

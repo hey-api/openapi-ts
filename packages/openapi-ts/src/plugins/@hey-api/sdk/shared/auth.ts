@@ -1,5 +1,4 @@
-import type { Context } from '~/ir/context';
-import type { IR } from '~/ir/types';
+import type { Context, IR } from '@hey-api/shared';
 
 import type { Auth } from '../../client-core/bundle/auth';
 import type { HeyApiSdkPlugin } from '../types';

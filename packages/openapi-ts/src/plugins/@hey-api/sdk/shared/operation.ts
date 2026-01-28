@@ -1,8 +1,9 @@
 import type { SymbolMeta } from '@hey-api/codegen-core';
 import { refs } from '@hey-api/codegen-core';
+import type { IR } from '@hey-api/shared';
+import { statusCodeToGroup } from '@hey-api/shared';
 
-import { statusCodeToGroup } from '~/ir/operation';
-import type { IR } from '~/ir/types';
+import { getTypedConfig } from '~/config/utils';
 import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
 import { $ } from '~/ts-dsl';
 
@@ -26,7 +27,7 @@ export const operationOptionsType = ({
   plugin: HeyApiSdkPlugin['Instance'];
   throwOnError?: string;
 }): ReturnType<typeof $.type> => {
-  const client = getClientPlugin(plugin.context.config);
+  const client = getClientPlugin(getTypedConfig(plugin));
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
 
   const symbolDataType = isDataAllowed
@@ -92,7 +93,7 @@ export function operationParameters({
   };
 
   const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
-  const client = getClientPlugin(plugin.context.config);
+  const client = getClientPlugin(getTypedConfig(plugin));
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
 
   if (plugin.config.paramsStructure === 'flat') {
@@ -216,7 +217,7 @@ export function operationStatements({
   operation: IR.OperationObject;
   plugin: HeyApiSdkPlugin['Instance'];
 }): Array<ReturnType<typeof $.return | typeof $.const>> {
-  const client = getClientPlugin(plugin.context.config);
+  const client = getClientPlugin(getTypedConfig(plugin));
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
 
   const symbolResponseType = plugin.querySymbol({

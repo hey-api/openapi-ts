@@ -1,10 +1,10 @@
 import { fromRef } from '@hey-api/codegen-core';
+import type { IR } from '@hey-api/shared';
+import { applyNaming } from '@hey-api/shared';
+import { operationResponsesMap } from '@hey-api/shared';
+import { deduplicateSchema } from '@hey-api/shared';
 
-import { operationResponsesMap } from '~/ir/operation';
-import { deduplicateSchema } from '~/ir/schema';
-import type { IR } from '~/ir/types';
 import { $ } from '~/ts-dsl';
-import { applyNaming } from '~/utils/naming';
 
 import { irSchemaToAst } from '../v1/plugin';
 import type { IrSchemaToAstOptions } from './types';

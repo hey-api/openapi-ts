@@ -3,9 +3,15 @@
   "version": "0.1.2",
   "description": "Shared utility types.",
   "type": "module",
-  "types": "./src/index.ts",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts"
+    },
+    "./package.json": "./package.json"
+  },
   "files": [
-    "src"
+    "dist"
   ],
   "homepage": "https://heyapi.dev/",
   "repository": {
@@ -15,5 +21,17 @@
   "bugs": {
     "url": "https://github.com/hey-api/openapi-ts/issues"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc --build",
+    "dev": "tsc --build --watch",
+    "prepublishOnly": "pnpm build",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "typescript": ">=5.5.3"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3"
+  }
 }

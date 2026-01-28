@@ -1,12 +1,13 @@
-import type { IR } from '~/ir/types';
+import type { IR } from '@hey-api/shared';
+import { applyNaming, parseUrl } from '@hey-api/shared';
+
+import { getTypedConfig } from '~/config/utils';
 import {
   getClientBaseUrlKey,
   getClientPlugin,
 } from '~/plugins/@hey-api/client-core/utils';
 import type { TypeTsDsl } from '~/ts-dsl';
 import { $ } from '~/ts-dsl';
-import { applyNaming } from '~/utils/naming';
-import { parseUrl } from '~/utils/url';
 
 import type { HeyApiTypeScriptPlugin } from '../types';
 
@@ -35,7 +36,7 @@ export const createClientOptions = ({
   plugin: HeyApiTypeScriptPlugin['Instance'];
   servers: ReadonlyArray<IR.ServerObject>;
 }) => {
-  const client = getClientPlugin(plugin.context.config);
+  const client = getClientPlugin(getTypedConfig(plugin));
 
   const types: Array<TypeTsDsl> = servers.map((server) =>
     serverToBaseUrlType({ server }),
@@ -69,7 +70,7 @@ export const createClientOptions = ({
     .type(
       $.type
         .object()
-        .prop(getClientBaseUrlKey(plugin.context.config), (p) =>
+        .prop(getClientBaseUrlKey(getTypedConfig(plugin)), (p) =>
           p.type($.type.or(...types)),
         ),
     );

@@ -1,11 +1,14 @@
 import type { SymbolMeta } from '@hey-api/codegen-core';
+import type { IR } from '@hey-api/shared';
+import {
+  applyNaming,
+  createOperationKey,
+  operationResponsesMap,
+  refToName,
+} from '@hey-api/shared';
 import type ts from 'typescript';
 
-import { createOperationKey, operationResponsesMap } from '~/ir/operation';
-import type { IR } from '~/ir/types';
 import { $ } from '~/ts-dsl';
-import { applyNaming } from '~/utils/naming';
-import { refToName } from '~/utils/ref';
 
 import type { HeyApiTransformersPlugin } from './types';
 

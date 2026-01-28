@@ -1,14 +1,13 @@
 import { ref } from '@hey-api/codegen-core';
+import type { IR } from '@hey-api/shared';
+import { applyNaming, operationPagination } from '@hey-api/shared';
 
-import { operationPagination } from '~/ir/operation';
-import type { IR } from '~/ir/types';
 import {
   createOperationComment,
   isOperationOptionsRequired,
 } from '~/plugins/shared/utils/operation';
 import type { TsDsl } from '~/ts-dsl';
 import { $ } from '~/ts-dsl';
-import { applyNaming } from '~/utils/naming';
 
 import {
   createQueryKeyFunction,

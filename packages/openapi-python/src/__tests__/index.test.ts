@@ -1,5 +1,3 @@
-import { describe, expect, it } from 'vitest';
-
 // import { createClient } from '~/index';
 
 // type Config = Parameters<typeof createClient>[0];
@@ -19,7 +17,7 @@ describe('createClient', () => {
   //       level: 'silent',
   //     },
   //     output: 'output',
-  //     plugins: ['@hey-api/typescript'],
+  //     plugins: ['@hey-api/sdk'],
   //   };
 
   //   const results = await createClient(config);
@@ -44,7 +42,7 @@ describe('createClient', () => {
   //       level: 'silent',
   //     },
   //     output: 'output',
-  //     plugins: ['@hey-api/typescript'],
+  //     plugins: ['@hey-api/sdk'],
   //   };
 
   //   const results = await createClient(config);
@@ -69,7 +67,7 @@ describe('createClient', () => {
   //       level: 'silent',
   //     },
   //     output: ['output', 'output2'],
-  //     plugins: ['@hey-api/typescript'],
+  //     plugins: ['@hey-api/sdk'],
   //   };
 
   //   const results = await createClient(config);
@@ -88,7 +86,7 @@ describe('createClient', () => {
   //         level: 'silent',
   //       },
   //       output: 'output',
-  //       plugins: ['@hey-api/typescript'],
+  //       plugins: ['@hey-api/sdk'],
   //     },
   //     {
   //       dryRun: true,
@@ -100,7 +98,7 @@ describe('createClient', () => {
   //         level: 'silent',
   //       },
   //       output: 'output2',
-  //       plugins: ['@hey-api/typescript'],
+  //       plugins: ['@hey-api/sdk'],
   //     },
   //   ];
 
@@ -127,7 +125,7 @@ describe('createClient', () => {
   //         level: 'silent',
   //       },
   //       output: ['output', 'output2'],
-  //       plugins: ['@hey-api/typescript'],
+  //       plugins: ['@hey-api/sdk'],
   //     },
   //     {
   //       dryRun: true,
@@ -146,7 +144,7 @@ describe('createClient', () => {
   //         level: 'silent',
   //       },
   //       output: ['output3', 'output4'],
-  //       plugins: ['@hey-api/typescript'],
+  //       plugins: ['@hey-api/sdk'],
   //     },
   //   ];
 

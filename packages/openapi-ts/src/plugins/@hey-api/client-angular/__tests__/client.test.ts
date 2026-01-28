@@ -1,6 +1,5 @@
 import type { HttpClient } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
-import { describe, expect, it, vi } from 'vitest';
 
 import { createClient } from '../bundle/client';
 

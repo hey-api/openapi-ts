@@ -1,4 +1,4 @@
-import { definePluginConfig } from '~/plugins/shared/utils/config';
+import { definePluginConfig } from '@hey-api/shared';
 
 import { bigIntExpressions, dateExpressions } from './expressions';
 import { handler } from './plugin';

@@ -34,7 +34,11 @@
     "test:update": "turbo run test:update",
     "test:watch": "turbo run test:watch",
     "test": "turbo run test",
-    "typecheck": "turbo run typecheck"
+    "typecheck": "turbo run typecheck",
+    "tt": "turbo run test --filter",
+    "tw": "turbo run test:watch --filter",
+    "tu": "turbo run test:update --filter",
+    "tb": "turbo run build --filter"
   },
   "engines": {
     "node": ">=20.19.0"

@@ -1,5 +1,3 @@
-import { describe, expect, it } from 'vitest';
-
 describe('internal entry index', () => {
   it('should be exported', async () => {
     const internal = await import('../internal');

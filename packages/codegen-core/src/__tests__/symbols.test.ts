@@ -1,5 +1,3 @@
-import { describe, expect, it } from 'vitest';
-
 import { SymbolRegistry } from '../symbols/registry';
 import { Symbol } from '../symbols/symbol';
 

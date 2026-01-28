@@ -1,14 +1,14 @@
 import type { Symbol } from '@hey-api/codegen-core';
+import type { IR } from '@hey-api/shared';
+import { applyNaming, hasOperationDataRequired } from '@hey-api/shared';
 
+import { getTypedConfig } from '~/config/utils';
 import { clientFolderAbsolutePath } from '~/generate/client';
-import { hasOperationDataRequired } from '~/ir/operation';
-import type { IR } from '~/ir/types';
 import {
   getClientBaseUrlKey,
   getClientPlugin,
 } from '~/plugins/@hey-api/client-core/utils';
 import { $ } from '~/ts-dsl';
-import { applyNaming } from '~/utils/naming';
 
 import type { PiniaColadaPlugin } from './types';
 import { getPublicTypeData } from './utils';
@@ -41,7 +41,7 @@ export const createQueryKeyFunction = ({
 
   const returnType = $.type(symbolQueryKeyType).generic(TOptionsType).idx(0);
 
-  const baseUrlKey = getClientBaseUrlKey(plugin.context.config);
+  const baseUrlKey = getClientBaseUrlKey(getTypedConfig(plugin));
 
   const symbolOptions = plugin.referenceSymbol({
     category: 'type',
@@ -52,7 +52,7 @@ export const createQueryKeyFunction = ({
     category: 'client',
   });
 
-  const clientModule = clientFolderAbsolutePath(plugin.context.config);
+  const clientModule = clientFolderAbsolutePath(getTypedConfig(plugin));
   const symbolSerializeQueryValue = plugin.symbol('serializeQueryKeyValue', {
     external: clientModule,
     meta: {
@@ -179,7 +179,7 @@ export const createQueryKeyType = ({
           $.type
             .object()
             .prop('_id', (p) => p.type('string'))
-            .prop(getClientBaseUrlKey(plugin.context.config), (p) =>
+            .prop(getClientBaseUrlKey(getTypedConfig(plugin)), (p) =>
               p.optional().type(symbolJsonValue),
             )
             .prop('body', (p) => p.optional().type(symbolJsonValue))
@@ -200,7 +200,7 @@ export const queryKeyStatement = ({
   plugin: PiniaColadaPlugin['Instance'];
   symbol: Symbol;
 }) => {
-  const client = getClientPlugin(plugin.context.config);
+  const client = getClientPlugin(getTypedConfig(plugin));
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
   const statement = $.const(symbol)
     .export()

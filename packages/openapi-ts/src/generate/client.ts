@@ -3,13 +3,12 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import type { IProject, ProjectRenderMeta } from '@hey-api/codegen-core';
+import type { DefinePlugin } from '@hey-api/shared';
+import { ensureDirSync } from '@hey-api/shared';
 
 import type { Config } from '~/config/types';
-import type { DefinePlugin } from '~/plugins';
 import type { Client } from '~/plugins/@hey-api/client-core/types';
 import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
-
-import { ensureDirSync } from './utils';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

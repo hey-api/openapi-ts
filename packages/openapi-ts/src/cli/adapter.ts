@@ -4,7 +4,7 @@ import type { UserConfig } from '~/config/types';
 
 import type { CliOptions } from './schema';
 
-export const cliToConfig = (cli: CliOptions): Partial<UserConfig> => {
+export function cliToConfig(cli: CliOptions): Partial<UserConfig> {
   const config: Partial<UserConfig> = {};
 
   if (cli.input) config.input = cli.input;
@@ -37,4 +37,4 @@ export const cliToConfig = (cli: CliOptions): Partial<UserConfig> => {
   }
 
   return config;
-};
+}

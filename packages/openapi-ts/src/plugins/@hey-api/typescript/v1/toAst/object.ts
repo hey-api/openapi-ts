@@ -1,7 +1,7 @@
 import { fromRef, ref } from '@hey-api/codegen-core';
+import type { IR } from '@hey-api/shared';
+import type { SchemaWithType } from '@hey-api/shared';
 
-import type { IR } from '~/ir/types';
-import type { SchemaWithType } from '~/plugins';
 import { createSchemaComment } from '~/plugins/shared/utils/schema';
 import type { TypeTsDsl } from '~/ts-dsl';
 import { $ } from '~/ts-dsl';

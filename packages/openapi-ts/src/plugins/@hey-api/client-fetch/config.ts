@@ -1,9 +1,10 @@
+import { definePluginConfig } from '@hey-api/shared';
+
 import {
   clientDefaultConfig,
   clientDefaultMeta,
 } from '~/plugins/@hey-api/client-core/config';
 import { clientPluginHandler } from '~/plugins/@hey-api/client-core/plugin';
-import { definePluginConfig } from '~/plugins/shared/utils/config';
 
 import type { HeyApiClientFetchPlugin } from './types';
 
@@ -13,7 +14,7 @@ export const defaultConfig: HeyApiClientFetchPlugin['Config'] = {
     ...clientDefaultConfig,
     throwOnError: false,
   },
-  handler: clientPluginHandler,
+  handler: clientPluginHandler as unknown as HeyApiClientFetchPlugin['Handler'],
   name: '@hey-api/client-fetch',
 };
 

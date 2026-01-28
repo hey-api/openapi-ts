@@ -11,17 +11,17 @@ on:
       - docs/**
 
 concurrency:
-  group: ${{ github.workflow }}=${{ github.head_ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   upload:
     name: Upload
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-        node-version: ['24.10.0']
+    runs-on: ubuntu-latest
+    env:
+      TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+      TURBO_TELEMETRY_DISABLED: 1
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
     steps:
       - uses: actions/checkout@v6.0.2
 
@@ -29,17 +29,14 @@ jobs:
 
       - uses: actions/setup-node@v6
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version-file: '.nvmrc'
           cache: pnpm
 
       - name: Install dependencies
-        run: pnpm install
-
-      - name: Build packages
-        run: pnpm build --filter="@hey-api/**"
+        run: pnpm install --frozen-lockfile
 
       - name: Run test coverage
-        run: pnpm test:coverage
+        run: pnpm turbo run test:coverage
 
       - name: Upload code coverage to codecov.io
         uses: codecov/codecov-action@v5

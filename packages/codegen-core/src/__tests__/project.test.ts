@@ -1,5 +1,3 @@
-import { describe, expect, it, vi } from 'vitest';
-
 import { Project } from '../project/project';
 
 // Mock Planner so we control what files appear in project.files
