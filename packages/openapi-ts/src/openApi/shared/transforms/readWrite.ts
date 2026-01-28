@@ -393,44 +393,46 @@ export const splitSchemas = ({
 
   for (const [pointer, nodeInfo] of graph.nodes) {
     const name = pointerToSchema(pointer);
-    // Only split top-level schemas, with either read-only or write-only scopes (or both).
+    // Only split top-level schemas with read-only or write-only scopes.
+    // Includes schemas with all readOnly/writeOnly properties.
     if (
       !name ||
-      !(nodeInfo.scopes?.has('read') || nodeInfo.scopes?.has('write')) ||
-      !nodeInfo.scopes?.has('normal')
+      !(nodeInfo.scopes?.has('read') || nodeInfo.scopes?.has('write'))
     ) {
       continue;
     }
 
     // read variant
     const readSchema = deepClone<unknown>(nodeInfo.node);
-    pruneSchemaByScope(graph, readSchema, 'writeOnly');
-    const readBase = applyNaming(name, config.responses);
-    const readName =
-      readBase === name
-        ? readBase
-        : getUniqueComponentName({
-            base: readBase,
-            components: existingNames,
-          });
-    existingNames.add(readName);
-    split.schemas[readName] = readSchema;
-    const readPointer = `${schemasPointerNamespace}${readName}`;
+    const readShouldBeRemoved = pruneSchemaByScope(
+      graph,
+      readSchema,
+      'writeOnly',
+    );
 
     // write variant
     const writeSchema = deepClone<unknown>(nodeInfo.node);
-    pruneSchemaByScope(graph, writeSchema, 'readOnly');
+    const writeShouldBeRemoved = pruneSchemaByScope(
+      graph,
+      writeSchema,
+      'readOnly',
+    );
+
+    // If either variant should be removed (empty after pruning), skip splitting
+    if (readShouldBeRemoved || writeShouldBeRemoved) {
+      continue;
+    }
 
     // Check if this schema (or any of its descendants) references any schema that
     // will need read/write variants. This is determined by checking transitive
-    // dependencies for schemas with both 'normal' and ('read' or 'write') scopes.
+    // dependencies for schemas with read or write scopes (regardless of 'normal' scope presence).
     const transitiveDeps =
       graph.transitiveDependencies.get(pointer) || new Set();
     const referencesReadWriteSchemas = Array.from(transitiveDeps).some(
       (depPointer) => {
         const depNodeInfo = graph.nodes.get(depPointer);
         return (
-          depNodeInfo?.scopes?.has('normal') &&
+          depNodeInfo?.scopes &&
           (depNodeInfo.scopes.has('read') || depNodeInfo.scopes.has('write'))
         );
       },
@@ -446,6 +448,19 @@ export const splitSchemas = ({
     ) {
       continue;
     }
+
+    const readBase = applyNaming(name, config.responses);
+    const readName =
+      readBase === name
+        ? readBase
+        : getUniqueComponentName({
+            base: readBase,
+            components: existingNames,
+          });
+    existingNames.add(readName);
+    split.schemas[readName] = readSchema;
+    const readPointer = `${schemasPointerNamespace}${readName}`;
+
     const writeBase = applyNaming(name, config.requests);
     const writeName =
       writeBase === name && writeBase !== readName
