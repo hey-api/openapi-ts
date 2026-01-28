@@ -11,7 +11,6 @@ import type {
   Config,
   RequestOptions,
   ResolvedRequestOptions,
-  RetryOptions,
 } from './types.gen';
 import type { Middleware } from './utils.gen';
 import {
@@ -131,40 +130,12 @@ export const createClient = (config: Config = {}): Client => {
     const validBody = getValidRequestBody(opts);
 
     const kyOptions: KyOptions = {
+      ...opts,
       body: validBody as BodyInit,
-      cache: opts.cache,
-      credentials: opts.credentials,
-      headers: opts.headers,
-      integrity: opts.integrity,
-      keepalive: opts.keepalive,
       method: opts.method as KyOptions['method'],
-      mode: opts.mode,
       redirect: 'follow',
-      referrer: opts.referrer,
-      referrerPolicy: opts.referrerPolicy,
-      signal: opts.signal,
       throwHttpErrors: opts.throwOnError ?? false,
-      timeout: opts.timeout,
-      ...opts.kyOptions,
     };
-
-    if (opts.retry && typeof opts.retry === 'object') {
-      const retryOpts = opts.retry as RetryOptions;
-      kyOptions.retry = {
-        limit: retryOpts.limit ?? 2,
-        methods: retryOpts.methods as Array<
-          | 'get'
-          | 'post'
-          | 'put'
-          | 'patch'
-          | 'head'
-          | 'delete'
-          | 'options'
-          | 'trace'
-        >,
-        statusCodes: retryOpts.statusCodes,
-      };
-    }
 
     let request = new Request(url, {
       body: kyOptions.body as BodyInit,
