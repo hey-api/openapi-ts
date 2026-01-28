@@ -1,5 +1,11 @@
 # @hey-api/types
 
+## 0.1.3
+
+### Patch Changes
+
+- **types**: add `AnyString` utility type ([#3251](https://github.com/hey-api/openapi-ts/pull/3251)) ([`7f19d59`](https://github.com/hey-api/openapi-ts/commit/7f19d5921dadfa96ecae84a5298b7aee1daee56d)) by [@mrlubos](https://github.com/mrlubos)
+
 ## 0.1.2
 
 ### Patch Changes

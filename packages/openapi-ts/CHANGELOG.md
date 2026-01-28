@@ -1,5 +1,43 @@
 # @hey-api/openapi-ts
 
+## 0.91.0
+
+### Minor Changes
+
+- **BREAKING**: Drop CommonJS (CJS) support. This package is now **ESM-only**. ([#3251](https://github.com/hey-api/openapi-ts/pull/3251)) ([`7f19d59`](https://github.com/hey-api/openapi-ts/commit/7f19d5921dadfa96ecae84a5298b7aee1daee56d)) by [@mrlubos](https://github.com/mrlubos)
+
+### Removed CommonJS (CJS) support
+
+`@hey-api/openapi-ts` is now ESM-only. This change simplifies the codebase, improves tree-shaking, and enables better integration with modern bundlers and TypeScript tooling.
+
+CommonJS entry points (`require()`, `module.exports`) are no longer supported. If you are in a CJS environment, you can still load the package dynamically using `import()` like:
+
+```js
+const { defineConfig } = await import('@hey-api/openapi-ts');
+```
+
+If you have previously written:
+
+```js
+const { defineConfig } = require('@hey-api/openapi-ts');
+```
+
+Migrate by updating your static imports:
+
+```js
+import { defineConfig } from '@hey-api/openapi-ts';
+```
+
+If your environment cannot use ESM, pin to a previous version.
+
+### Patch Changes
+
+### Updated Dependencies:
+
+- @hey-api/shared@0.1.0
+- @hey-api/codegen-core@0.6.0
+- @hey-api/types@0.1.3
+
 ## 0.90.10
 
 ### Patch Changes
