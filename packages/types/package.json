@@ -1,6 +1,6 @@
 {
   "name": "@hey-api/types",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Shared utility types.",
   "type": "module",
   "types": "./dist/index.d.ts",
