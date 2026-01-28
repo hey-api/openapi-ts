@@ -8,14 +8,14 @@ export interface Auth {
    *
    * @default 'header'
    */
-  in?: 'header' | 'query' | 'cookie';
+  in?: 'header' | 'query' | 'cookie' | undefined;
   /**
    * Header or query parameter name.
    *
    * @default 'Authorization'
    */
-  name?: string;
-  scheme?: 'basic' | 'bearer';
+  name?: string | undefined;
+  scheme?: 'basic' | 'bearer' | undefined;
   type: 'apiKey' | 'http';
 }
 

@@ -19,11 +19,6 @@ import {
   setAuthParams,
 } from './utils.gen.js';
 
-type ReqInit = Omit<RequestInit, 'body' | 'headers'> & {
-  body?: any;
-  headers: ReturnType<typeof mergeHeaders>;
-};
-
 export const createClient = (config: Config = {}): Client => {
   let _config = mergeConfigs(createConfig(), config);
 
@@ -78,10 +73,10 @@ export const createClient = (config: Config = {}): Client => {
   const request: Client['request'] = async (options) => {
     // @ts-expect-error
     const { opts, url } = await beforeRequest(options);
-    const requestInit: ReqInit = {
-      redirect: 'follow',
+    const requestInit = {
+      redirect: 'follow' as const,
       ...opts,
-      body: getValidRequestBody(opts),
+      body: getValidRequestBody(opts) as RequestInit['body'],
     };
 
     let request = new Request(url, requestInit);
