@@ -48,10 +48,7 @@ export const dateExpressions: ExpressionTransformer = ({
   dataExpression,
   schema,
 }) => {
-  if (
-    schema.type !== 'string' ||
-    !(schema.format === 'date' || schema.format === 'date-time')
-  ) {
+  if (schema.type !== 'string' || schema.format !== 'date-time') {
     return;
   }
 
