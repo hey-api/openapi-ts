@@ -18,24 +18,17 @@ export type IrTopLevelKind = (typeof irTopLevelKinds)[number];
  * @param kind - (Optional) The component kind to check
  * @returns { matched: true, kind: IrTopLevelKind } | { matched: false } - Whether it matched, and the matched kind if so
  */
-export const matchIrPointerToGroup: MatchPointerToGroupFn<IrTopLevelKind> = (
-  pointer,
-  kind,
-) => {
+export const matchIrPointerToGroup: MatchPointerToGroupFn<IrTopLevelKind> = (pointer, kind) => {
   const patterns: Record<IrTopLevelKind, RegExp> = {
-    operation:
-      /^#\/paths\/[^/]+\/(get|put|post|delete|options|head|patch|trace)$/,
+    operation: /^#\/paths\/[^/]+\/(get|put|post|delete|options|head|patch|trace)$/,
     parameter: /^#\/components\/parameters\/[^/]+$/,
     requestBody: /^#\/components\/requestBodies\/[^/]+$/,
     schema: /^#\/components\/schemas\/[^/]+$/,
     server: /^#\/servers\/(\d+|[^/]+)$/,
-    webhook:
-      /^#\/webhooks\/[^/]+\/(get|put|post|delete|options|head|patch|trace)$/,
+    webhook: /^#\/webhooks\/[^/]+\/(get|put|post|delete|options|head|patch|trace)$/,
   };
   if (kind) {
-    return patterns[kind].test(pointer)
-      ? { kind, matched: true }
-      : { matched: false };
+    return patterns[kind].test(pointer) ? { kind, matched: true } : { matched: false };
   }
   for (const key of Object.keys(patterns)) {
     const kind = key as IrTopLevelKind;

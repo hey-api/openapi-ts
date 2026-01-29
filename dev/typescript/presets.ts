@@ -1,10 +1,4 @@
-import {
-  sdk,
-  tanstackReactQuery,
-  transformers,
-  typescript,
-  zod,
-} from './plugins';
+import { sdk, tanstackReactQuery, transformers, typescript, zod } from './plugins';
 
 export const presets = {
   full: () => [
@@ -40,14 +34,10 @@ export const presets = {
 
 export type PresetKey = keyof typeof presets;
 
-export function getPreset(
-  key: PresetKey = (process.env.PRESET as PresetKey) || 'sdk',
-) {
+export function getPreset(key: PresetKey = (process.env.PRESET as PresetKey) || 'sdk') {
   const preset = presets[key];
   if (!preset) {
-    throw new Error(
-      `Unknown preset: ${key}. Available: ${Object.keys(presets).join(', ')}`,
-    );
+    throw new Error(`Unknown preset: ${key}. Available: ${Object.keys(presets).join(', ')}`);
   }
   return preset();
 }

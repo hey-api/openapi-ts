@@ -42,10 +42,7 @@ export class TypeIdxTsDsl extends Mixed {
   }
 
   override toAst() {
-    return ts.factory.createIndexedAccessTypeNode(
-      this.$type(this._base),
-      this.$type(this._index),
-    );
+    return ts.factory.createIndexedAccessTypeNode(this.$type(this._base), this.$type(this._index));
   }
 }
 

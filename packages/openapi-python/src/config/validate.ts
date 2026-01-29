@@ -8,9 +8,7 @@ export type ValidationResult = {
   job: Job;
 };
 
-export function validateJobs(
-  jobs: ReadonlyArray<Job>,
-): ReadonlyArray<ValidationResult> {
+export function validateJobs(jobs: ReadonlyArray<Job>): ReadonlyArray<ValidationResult> {
   return jobs.map((job) => {
     const errors: Array<ConfigError> = [];
     const { config } = job;
@@ -26,11 +24,7 @@ export function validateJobs(
 
     const output = getOutput(config);
     if (!output.path) {
-      errors.push(
-        new ConfigError(
-          'missing output - where should we generate your output?',
-        ),
-      );
+      errors.push(new ConfigError('missing output - where should we generate your output?'));
     }
 
     return { errors, job };

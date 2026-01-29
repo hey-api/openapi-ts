@@ -81,11 +81,7 @@
                           "participant": {
                             "type": "object",
                             "description": "Information about the invited user.",
-                            "required": [
-                              "invitee_name",
-                              "phone_number",
-                              "from_number"
-                            ],
+                            "required": ["invitee_name", "phone_number", "from_number"],
                             "properties": {
                               "invitee_name": {
                                 "type": "string",
@@ -193,11 +189,7 @@
                             "participant": {
                               "type": "object",
                               "description": "Information about the invited user.",
-                              "required": [
-                                "invitee_name",
-                                "phone_number",
-                                "from_number"
-                              ],
+                              "required": ["invitee_name", "phone_number", "from_number"],
                               "properties": {
                                 "invitee_name": {
                                   "type": "string",
@@ -888,11 +880,7 @@
                           "live_streaming": {
                             "type": "object",
                             "description": "Information about the participant.",
-                            "required": [
-                              "service",
-                              "custom_live_streaming_settings",
-                              "date_time"
-                            ],
+                            "required": ["service", "custom_live_streaming_settings", "date_time"],
                             "properties": {
                               "service": {
                                 "type": "string",
@@ -907,11 +895,7 @@
                               "custom_live_streaming_settings": {
                                 "type": "object",
                                 "description": "The live stream settings.",
-                                "required": [
-                                  "stream_url",
-                                  "stream_key",
-                                  "page_url"
-                                ],
+                                "required": ["stream_url", "stream_key", "page_url"],
                                 "properties": {
                                   "stream_url": {
                                     "type": "string",
@@ -1037,11 +1021,7 @@
                                 "custom_live_streaming_settings": {
                                   "type": "object",
                                   "description": "The live stream settings.",
-                                  "required": [
-                                    "stream_url",
-                                    "stream_key",
-                                    "page_url"
-                                  ],
+                                  "required": ["stream_url", "stream_key", "page_url"],
                                   "properties": {
                                     "stream_url": {
                                       "type": "string",
@@ -1122,11 +1102,7 @@
                       "object": {
                         "type": "object",
                         "description": "Information about the session.",
-                        "required": [
-                          "session_id",
-                          "session_name",
-                          "stream_ingestion"
-                        ],
+                        "required": ["session_id", "session_name", "stream_ingestion"],
                         "properties": {
                           "session_id": {
                             "type": "string",
@@ -1224,11 +1200,7 @@
                         "object": {
                           "type": "object",
                           "description": "Information about the session.",
-                          "required": [
-                            "session_id",
-                            "session_name",
-                            "stream_ingestion"
-                          ],
+                          "required": ["session_id", "session_name", "stream_ingestion"],
                           "properties": {
                             "session_id": {
                               "type": "string",
@@ -1544,12 +1516,7 @@
                       "object": {
                         "type": "object",
                         "description": "Information about the session. This object only returns updated properties.",
-                        "required": [
-                          "id",
-                          "session_id",
-                          "session_name",
-                          "issues"
-                        ],
+                        "required": ["id", "session_id", "session_name", "issues"],
                         "properties": {
                           "id": {
                             "type": "string",
@@ -1628,12 +1595,7 @@
                         "object": {
                           "type": "object",
                           "description": "Information about the session. This object only returns updated properties.",
-                          "required": [
-                            "id",
-                            "session_id",
-                            "session_name",
-                            "issues"
-                          ],
+                          "required": ["id", "session_id", "session_name", "issues"],
                           "properties": {
                             "id": {
                               "type": "string",
@@ -1719,12 +1681,7 @@
                       "object": {
                         "type": "object",
                         "description": "Information about the session. This object only returns updated properties.",
-                        "required": [
-                          "id",
-                          "session_id",
-                          "session_name",
-                          "user"
-                        ],
+                        "required": ["id", "session_id", "session_name", "user"],
                         "properties": {
                           "id": {
                             "type": "string",
@@ -1768,12 +1725,7 @@
                                   "content": {
                                     "type": "string",
                                     "description": "The type of shared content:\n* application — An application. For example, a web browser.\n* whiteboard — The Zoom [whiteboard](https://support.zoom.us/hc/en-us/articles/205677665-Sharing-a-whiteboard).\n* desktop — A user's desktop.\n* unknown — An unrecognized application, such as a third party app.",
-                                    "enum": [
-                                      "application",
-                                      "whiteboard",
-                                      "desktop",
-                                      "unknown"
-                                    ]
+                                    "enum": ["application", "whiteboard", "desktop", "unknown"]
                                   },
                                   "date_time": {
                                     "type": "string",
@@ -1833,12 +1785,7 @@
                         "object": {
                           "type": "object",
                           "description": "Information about the session. This object only returns updated properties.",
-                          "required": [
-                            "id",
-                            "session_id",
-                            "session_name",
-                            "user"
-                          ],
+                          "required": ["id", "session_id", "session_name", "user"],
                           "properties": {
                             "id": {
                               "type": "string",
@@ -1882,12 +1829,7 @@
                                     "content": {
                                       "type": "string",
                                       "description": "The type of shared content:\n* application — An application. For example, a web browser.\n* whiteboard — The Zoom [whiteboard](https://support.zoom.us/hc/en-us/articles/205677665-Sharing-a-whiteboard).\n* desktop — A user's desktop.\n* unknown — An unrecognized application, such as a third party app.",
-                                      "enum": [
-                                        "application",
-                                        "whiteboard",
-                                        "desktop",
-                                        "unknown"
-                                      ]
+                                      "enum": ["application", "whiteboard", "desktop", "unknown"]
                                     },
                                     "date_time": {
                                       "type": "string",
@@ -2141,13 +2083,7 @@
                       "object": {
                         "type": "object",
                         "description": "Information about the session.",
-                        "required": [
-                          "id",
-                          "session_id",
-                          "session_name",
-                          "start_time",
-                          "end_time"
-                        ],
+                        "required": ["id", "session_id", "session_name", "start_time", "end_time"],
                         "properties": {
                           "id": {
                             "type": "string",
@@ -2312,12 +2248,7 @@
                       "object": {
                         "type": "object",
                         "description": "Information about the session.",
-                        "required": [
-                          "id",
-                          "session_id",
-                          "session_name",
-                          "start_time"
-                        ],
+                        "required": ["id", "session_id", "session_name", "start_time"],
                         "properties": {
                           "id": {
                             "type": "string",
@@ -2388,12 +2319,7 @@
                         "object": {
                           "type": "object",
                           "description": "Information about the session.",
-                          "required": [
-                            "id",
-                            "session_id",
-                            "session_name",
-                            "start_time"
-                          ],
+                          "required": ["id", "session_id", "session_name", "start_time"],
                           "properties": {
                             "id": {
                               "type": "string",
@@ -2471,11 +2397,7 @@
                       "object": {
                         "type": "object",
                         "description": "Information about the session.",
-                        "required": [
-                          "session_id",
-                          "session_name",
-                          "stream_ingestion"
-                        ],
+                        "required": ["session_id", "session_name", "stream_ingestion"],
                         "properties": {
                           "session_id": {
                             "type": "string",
@@ -2573,11 +2495,7 @@
                         "object": {
                           "type": "object",
                           "description": "Information about the session.",
-                          "required": [
-                            "session_id",
-                            "session_name",
-                            "stream_ingestion"
-                          ],
+                          "required": ["session_id", "session_name", "stream_ingestion"],
                           "properties": {
                             "session_id": {
                               "type": "string",
@@ -2715,11 +2633,7 @@
                           "live_streaming": {
                             "type": "object",
                             "description": "Information about the participant.",
-                            "required": [
-                              "service",
-                              "custom_live_streaming_settings",
-                              "date_time"
-                            ],
+                            "required": ["service", "custom_live_streaming_settings", "date_time"],
                             "properties": {
                               "service": {
                                 "type": "string",
@@ -2734,11 +2648,7 @@
                               "custom_live_streaming_settings": {
                                 "type": "object",
                                 "description": "The live stream settings.",
-                                "required": [
-                                  "stream_url",
-                                  "stream_key",
-                                  "page_url"
-                                ],
+                                "required": ["stream_url", "stream_key", "page_url"],
                                 "properties": {
                                   "stream_url": {
                                     "type": "string",
@@ -2864,11 +2774,7 @@
                                 "custom_live_streaming_settings": {
                                   "type": "object",
                                   "description": "The live stream settings.",
-                                  "required": [
-                                    "stream_url",
-                                    "stream_key",
-                                    "page_url"
-                                  ],
+                                  "required": ["stream_url", "stream_key", "page_url"],
                                   "properties": {
                                     "stream_url": {
                                       "type": "string",
@@ -3202,11 +3108,7 @@
                           "participant": {
                             "type": "object",
                             "description": "Information about the invited participant.",
-                            "required": [
-                              "invitee_name",
-                              "phone_number",
-                              "from_number"
-                            ],
+                            "required": ["invitee_name", "phone_number", "from_number"],
                             "properties": {
                               "invitee_name": {
                                 "type": "string",
@@ -3314,11 +3216,7 @@
                             "participant": {
                               "type": "object",
                               "description": "Information about the invited participant.",
-                              "required": [
-                                "invitee_name",
-                                "phone_number",
-                                "from_number"
-                              ],
+                              "required": ["invitee_name", "phone_number", "from_number"],
                               "properties": {
                                 "invitee_name": {
                                   "type": "string",
@@ -3391,12 +3289,7 @@
                       "object": {
                         "type": "object",
                         "description": "Information about the session. This object only returns updated properties.",
-                        "required": [
-                          "id",
-                          "session_id",
-                          "session_name",
-                          "user"
-                        ],
+                        "required": ["id", "session_id", "session_name", "user"],
                         "properties": {
                           "id": {
                             "type": "string",
@@ -3417,12 +3310,7 @@
                           "user": {
                             "type": "object",
                             "description": "Information about the user.",
-                            "required": [
-                              "id",
-                              "name",
-                              "leave_time",
-                              "participant_uuid"
-                            ],
+                            "required": ["id", "name", "leave_time", "participant_uuid"],
                             "properties": {
                               "id": {
                                 "type": "string",
@@ -3517,12 +3405,7 @@
                         "object": {
                           "type": "object",
                           "description": "Information about the session. This object only returns updated properties.",
-                          "required": [
-                            "id",
-                            "session_id",
-                            "session_name",
-                            "user"
-                          ],
+                          "required": ["id", "session_id", "session_name", "user"],
                           "properties": {
                             "id": {
                               "type": "string",
@@ -3543,12 +3426,7 @@
                             "user": {
                               "type": "object",
                               "description": "Information about the user.",
-                              "required": [
-                                "id",
-                                "name",
-                                "leave_time",
-                                "participant_uuid"
-                              ],
+                              "required": ["id", "name", "leave_time", "participant_uuid"],
                               "properties": {
                                 "id": {
                                   "type": "string",
@@ -3650,12 +3528,7 @@
                       "object": {
                         "type": "object",
                         "description": "Information about the session. This object only returns updated properties.",
-                        "required": [
-                          "id",
-                          "session_id",
-                          "session_name",
-                          "user"
-                        ],
+                        "required": ["id", "session_id", "session_name", "user"],
                         "properties": {
                           "id": {
                             "type": "string",
@@ -3698,12 +3571,7 @@
                                   "content": {
                                     "type": "string",
                                     "description": "The type of shared content:\n* application — An application. For example, a web browser.\n* whiteboard — The Zoom [whiteboard](https://support.zoom.us/hc/en-us/articles/205677665-Sharing-a-whiteboard).\n* desktop — A user's desktop.\n* unknown — An unrecognized application, such as a third party app.",
-                                    "enum": [
-                                      "application",
-                                      "whiteboard",
-                                      "desktop",
-                                      "unknown"
-                                    ]
+                                    "enum": ["application", "whiteboard", "desktop", "unknown"]
                                   },
                                   "date_time": {
                                     "type": "string",
@@ -3763,12 +3631,7 @@
                         "object": {
                           "type": "object",
                           "description": "Information about the session. This object only returns updated properties.",
-                          "required": [
-                            "id",
-                            "session_id",
-                            "session_name",
-                            "user"
-                          ],
+                          "required": ["id", "session_id", "session_name", "user"],
                           "properties": {
                             "id": {
                               "type": "string",
@@ -3811,12 +3674,7 @@
                                     "content": {
                                       "type": "string",
                                       "description": "The type of shared content:\n* application — An application. For example, a web browser.\n* whiteboard — The Zoom [whiteboard](https://support.zoom.us/hc/en-us/articles/205677665-Sharing-a-whiteboard).\n* desktop — A user's desktop.\n* unknown — An unrecognized application, such as a third party app.",
-                                      "enum": [
-                                        "application",
-                                        "whiteboard",
-                                        "desktop",
-                                        "unknown"
-                                      ]
+                                      "enum": ["application", "whiteboard", "desktop", "unknown"]
                                     },
                                     "date_time": {
                                       "type": "string",
@@ -3909,11 +3767,7 @@
                           "participant": {
                             "type": "object",
                             "description": "Information about the invited participant.",
-                            "required": [
-                              "invitee_name",
-                              "phone_number",
-                              "from_number"
-                            ],
+                            "required": ["invitee_name", "phone_number", "from_number"],
                             "properties": {
                               "invitee_name": {
                                 "type": "string",
@@ -4005,11 +3859,7 @@
                             "participant": {
                               "type": "object",
                               "description": "Information about the invited participant.",
-                              "required": [
-                                "invitee_name",
-                                "phone_number",
-                                "from_number"
-                              ],
+                              "required": ["invitee_name", "phone_number", "from_number"],
                               "properties": {
                                 "invitee_name": {
                                   "type": "string",
@@ -4165,15 +4015,7 @@
                                 "file_extension": {
                                   "type": "string",
                                   "description": "The archived file's file extension.",
-                                  "enum": [
-                                    "MP4",
-                                    "M4A",
-                                    "TXT",
-                                    "VTT",
-                                    "CSV",
-                                    "JSON",
-                                    "JPG"
-                                  ]
+                                  "enum": ["MP4", "M4A", "TXT", "VTT", "CSV", "JSON", "JPG"]
                                 },
                                 "download_url": {
                                   "type": "string",
@@ -4234,12 +4076,7 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "required": [
-                    "event",
-                    "event_ts",
-                    "download_token",
-                    "payload"
-                  ],
+                  "required": ["event", "event_ts", "download_token", "payload"],
                   "properties": {
                     "event": {
                       "type": "string",
@@ -4345,15 +4182,7 @@
                                   "file_extension": {
                                     "type": "string",
                                     "description": "The archived file's file extension.",
-                                    "enum": [
-                                      "MP4",
-                                      "M4A",
-                                      "TXT",
-                                      "VTT",
-                                      "CSV",
-                                      "JSON",
-                                      "JPG"
-                                    ]
+                                    "enum": ["MP4", "M4A", "TXT", "VTT", "CSV", "JSON", "JPG"]
                                   },
                                   "download_url": {
                                     "type": "string",
@@ -4435,12 +4264,7 @@
                   },
                   "payload": {
                     "type": "object",
-                    "required": [
-                      "account_id",
-                      "operator",
-                      "operator_id",
-                      "object"
-                    ],
+                    "required": ["account_id", "operator", "operator_id", "object"],
                     "properties": {
                       "account_id": {
                         "type": "string",
@@ -4525,12 +4349,7 @@
                     },
                     "payload": {
                       "type": "object",
-                      "required": [
-                        "account_id",
-                        "operator",
-                        "operator_id",
-                        "object"
-                      ],
+                      "required": ["account_id", "operator", "operator_id", "object"],
                       "properties": {
                         "account_id": {
                           "type": "string",
@@ -4782,9 +4601,7 @@
                             "reason_type": {
                               "type": "integer",
                               "description": "reason type for failure: \n* 1 — Encryption_Fail. \n* 2 — Disconnected_By_Remote. \n* 3 — Retry. \n* 4 — Bad_Seq. \n* 5 — Call_Limit. \n* 6 — Not_Registered. \n* 7 — Timeout. \n* 8 — Bad_Addr. \n* 9 — Unreachable \n* 10 — Disconnect_By_Local \n* 11 — Server_Internal_Error \n* 12 — Exceed_Free_Port \n* 13 — Connect_Error \n* 14 — Proxy_Connect_Error \n* 0 — Other_Failed_Reason.",
-                              "enum": [
-                                0, 1, 2, 3, 4, 7, 8, 9, 10, 11, 12, 13, 14
-                              ]
+                              "enum": [0, 1, 2, 3, 4, 7, 8, 9, 10, 11, 12, 13, 14]
                             },
                             "participant": {
                               "type": "object",
@@ -4938,15 +4755,7 @@
                                 "file_extension": {
                                   "type": "string",
                                   "description": "The archived file's file extension.",
-                                  "enum": [
-                                    "MP4",
-                                    "M4A",
-                                    "TXT",
-                                    "VTT",
-                                    "CSV",
-                                    "JSON",
-                                    "JPG"
-                                  ]
+                                  "enum": ["MP4", "M4A", "TXT", "VTT", "CSV", "JSON", "JPG"]
                                 },
                                 "download_url": {
                                   "type": "string",
@@ -5031,15 +4840,7 @@
                                 "file_extension": {
                                   "type": "string",
                                   "description": "The archived file's file extension.",
-                                  "enum": [
-                                    "MP4",
-                                    "M4A",
-                                    "TXT",
-                                    "VTT",
-                                    "CSV",
-                                    "JSON",
-                                    "JPG"
-                                  ]
+                                  "enum": ["MP4", "M4A", "TXT", "VTT", "CSV", "JSON", "JPG"]
                                 },
                                 "download_url": {
                                   "type": "string",
@@ -5137,10 +4938,7 @@
                                 "recording_type": {
                                   "type": "string",
                                   "description": "The recording type. The value of this field can be one of the following:<br>shared_screen_with_speaker_view(CC)<br>shared_screen_with_speaker_view<br>shared_screen_with_gallery_view<br>speaker_view<br>gallery_view<br>shared_screen<br>audio_only<br>audio_transcript<br>chat_file<br>active_speaker<br>poll<br>timeline<br>closed_caption",
-                                  "enum": [
-                                    "individual_user",
-                                    "individual_shared_screen"
-                                  ]
+                                  "enum": ["individual_user", "individual_shared_screen"]
                                 },
                                 "user_id": {
                                   "type": "string",
@@ -5177,12 +4975,7 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "required": [
-                    "event",
-                    "event_ts",
-                    "download_token",
-                    "payload"
-                  ],
+                  "required": ["event", "event_ts", "download_token", "payload"],
                   "properties": {
                     "event": {
                       "type": "string",
@@ -5287,15 +5080,7 @@
                                   "file_extension": {
                                     "type": "string",
                                     "description": "The archived file's file extension.",
-                                    "enum": [
-                                      "MP4",
-                                      "M4A",
-                                      "TXT",
-                                      "VTT",
-                                      "CSV",
-                                      "JSON",
-                                      "JPG"
-                                    ]
+                                    "enum": ["MP4", "M4A", "TXT", "VTT", "CSV", "JSON", "JPG"]
                                   },
                                   "download_url": {
                                     "type": "string",
@@ -5380,15 +5165,7 @@
                                   "file_extension": {
                                     "type": "string",
                                     "description": "The archived file's file extension.",
-                                    "enum": [
-                                      "MP4",
-                                      "M4A",
-                                      "TXT",
-                                      "VTT",
-                                      "CSV",
-                                      "JSON",
-                                      "JPG"
-                                    ]
+                                    "enum": ["MP4", "M4A", "TXT", "VTT", "CSV", "JSON", "JPG"]
                                   },
                                   "download_url": {
                                     "type": "string",
@@ -5486,10 +5263,7 @@
                                   "recording_type": {
                                     "type": "string",
                                     "description": "The recording type. The value of this field can be one of the following:<br>shared_screen_with_speaker_view(CC)<br>shared_screen_with_speaker_view<br>shared_screen_with_gallery_view<br>speaker_view<br>gallery_view<br>shared_screen<br>audio_only<br>audio_transcript<br>chat_file<br>active_speaker<br>poll<br>timeline<br>closed_caption",
-                                    "enum": [
-                                      "individual_user",
-                                      "individual_shared_screen"
-                                    ]
+                                    "enum": ["individual_user", "individual_shared_screen"]
                                   },
                                   "user_id": {
                                     "type": "string",
@@ -5706,12 +5480,7 @@
                   },
                   "payload": {
                     "type": "object",
-                    "required": [
-                      "account_id",
-                      "operator",
-                      "operator_id",
-                      "object"
-                    ],
+                    "required": ["account_id", "operator", "operator_id", "object"],
                     "properties": {
                       "account_id": {
                         "type": "string",
@@ -5796,12 +5565,7 @@
                     },
                     "payload": {
                       "type": "object",
-                      "required": [
-                        "account_id",
-                        "operator",
-                        "operator_id",
-                        "object"
-                      ],
+                      "required": ["account_id", "operator", "operator_id", "object"],
                       "properties": {
                         "account_id": {
                           "type": "string",
@@ -5902,12 +5666,7 @@
                       "object": {
                         "type": "object",
                         "description": "Information about the session. This object only returns updated properties.",
-                        "required": [
-                          "id",
-                          "session_id",
-                          "session_name",
-                          "user"
-                        ],
+                        "required": ["id", "session_id", "session_name", "user"],
                         "properties": {
                           "id": {
                             "type": "string",
@@ -5928,12 +5687,7 @@
                           "user": {
                             "type": "object",
                             "description": "Information about the user.",
-                            "required": [
-                              "id",
-                              "name",
-                              "join_time",
-                              "participant_uuid"
-                            ],
+                            "required": ["id", "name", "join_time", "participant_uuid"],
                             "properties": {
                               "id": {
                                 "type": "string",
@@ -6010,12 +5764,7 @@
                         "object": {
                           "type": "object",
                           "description": "Information about the session. This object only returns updated properties.",
-                          "required": [
-                            "id",
-                            "session_id",
-                            "session_name",
-                            "user"
-                          ],
+                          "required": ["id", "session_id", "session_name", "user"],
                           "properties": {
                             "id": {
                               "type": "string",
@@ -6036,12 +5785,7 @@
                             "user": {
                               "type": "object",
                               "description": "Information about the user.",
-                              "required": [
-                                "id",
-                                "name",
-                                "join_time",
-                                "participant_uuid"
-                              ],
+                              "required": ["id", "name", "join_time", "participant_uuid"],
                               "properties": {
                                 "id": {
                                   "type": "string",
@@ -6125,11 +5869,7 @@
                       "object": {
                         "type": "object",
                         "description": "Information about the session.",
-                        "required": [
-                          "session_id",
-                          "session_name",
-                          "stream_ingestion"
-                        ],
+                        "required": ["session_id", "session_name", "stream_ingestion"],
                         "properties": {
                           "session_id": {
                             "type": "string",
@@ -6227,11 +5967,7 @@
                         "object": {
                           "type": "object",
                           "description": "Information about the session.",
-                          "required": [
-                            "session_id",
-                            "session_name",
-                            "stream_ingestion"
-                          ],
+                          "required": ["session_id", "session_name", "stream_ingestion"],
                           "properties": {
                             "session_id": {
                               "type": "string",
@@ -6336,11 +6072,7 @@
                       "object": {
                         "type": "object",
                         "description": "Information about the session.",
-                        "required": [
-                          "session_id",
-                          "session_name",
-                          "stream_ingestion"
-                        ],
+                        "required": ["session_id", "session_name", "stream_ingestion"],
                         "properties": {
                           "session_id": {
                             "type": "string",
@@ -6438,11 +6170,7 @@
                         "object": {
                           "type": "object",
                           "description": "Information about the session.",
-                          "required": [
-                            "session_id",
-                            "session_name",
-                            "stream_ingestion"
-                          ],
+                          "required": ["session_id", "session_name", "stream_ingestion"],
                           "properties": {
                             "session_id": {
                               "type": "string",
@@ -6547,11 +6275,7 @@
                       "object": {
                         "type": "object",
                         "description": "Information about the session.",
-                        "required": [
-                          "session_id",
-                          "session_name",
-                          "stream_ingestion"
-                        ],
+                        "required": ["session_id", "session_name", "stream_ingestion"],
                         "properties": {
                           "session_id": {
                             "type": "string",
@@ -6649,11 +6373,7 @@
                         "object": {
                           "type": "object",
                           "description": "Information about the session.",
-                          "required": [
-                            "session_id",
-                            "session_name",
-                            "stream_ingestion"
-                          ],
+                          "required": ["session_id", "session_name", "stream_ingestion"],
                           "properties": {
                             "session_id": {
                               "type": "string",
@@ -6749,12 +6469,7 @@
                   },
                   "payload": {
                     "type": "object",
-                    "required": [
-                      "account_id",
-                      "operator",
-                      "operator_id",
-                      "object"
-                    ],
+                    "required": ["account_id", "operator", "operator_id", "object"],
                     "properties": {
                       "account_id": {
                         "type": "string",
@@ -6839,12 +6554,7 @@
                     },
                     "payload": {
                       "type": "object",
-                      "required": [
-                        "account_id",
-                        "operator",
-                        "operator_id",
-                        "object"
-                      ],
+                      "required": ["account_id", "operator", "operator_id", "object"],
                       "properties": {
                         "account_id": {
                           "type": "string",
@@ -6987,11 +6697,7 @@
                           "participant": {
                             "type": "object",
                             "description": "Information about the invited user.",
-                            "required": [
-                              "invitee_name",
-                              "phone_number",
-                              "from_number"
-                            ],
+                            "required": ["invitee_name", "phone_number", "from_number"],
                             "properties": {
                               "invitee_name": {
                                 "type": "string",
@@ -7099,11 +6805,7 @@
                             "participant": {
                               "type": "object",
                               "description": "Information about the invited user.",
-                              "required": [
-                                "invitee_name",
-                                "phone_number",
-                                "from_number"
-                              ],
+                              "required": ["invitee_name", "phone_number", "from_number"],
                               "properties": {
                                 "invitee_name": {
                                   "type": "string",
@@ -7218,11 +6920,7 @@
                           "participant": {
                             "type": "object",
                             "description": "Information about the invited user.",
-                            "required": [
-                              "invitee_name",
-                              "phone_number",
-                              "from_number"
-                            ],
+                            "required": ["invitee_name", "phone_number", "from_number"],
                             "properties": {
                               "invitee_name": {
                                 "type": "string",
@@ -7330,11 +7028,7 @@
                             "participant": {
                               "type": "object",
                               "description": "Information about the invited user.",
-                              "required": [
-                                "invitee_name",
-                                "phone_number",
-                                "from_number"
-                              ],
+                              "required": ["invitee_name", "phone_number", "from_number"],
                               "properties": {
                                 "invitee_name": {
                                   "type": "string",

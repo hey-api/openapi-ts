@@ -25,9 +25,7 @@ export function canShareName(a: SymbolKind, b: SymbolKind): boolean {
     case 'interface':
       return b === 'class' || b === 'interface';
     case 'namespace':
-      return (
-        b === 'class' || b === 'enum' || b === 'function' || b === 'namespace'
-      );
+      return b === 'class' || b === 'enum' || b === 'function' || b === 'namespace';
     case 'type':
       // type can only merge with value-only declarations
       return b === 'function' || b === 'var';

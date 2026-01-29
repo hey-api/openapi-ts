@@ -1,6 +1,7 @@
 {
   "name": "@example/openapi-ts-tanstack-angular-query-experimental",
   "version": "0.0.28",
+  "private": true,
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -9,7 +10,6 @@
     "openapi-ts": "openapi-ts",
     "typecheck": "tsc --project tsconfig.app.json --noEmit"
   },
-  "private": true,
   "dependencies": {
     "@angular/animations": "^19.2.14",
     "@angular/cdk": "^19.2.19",

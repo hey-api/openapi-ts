@@ -1,8 +1,4 @@
-import type {
-  BaseOutput,
-  BaseUserOutput,
-  UserPostProcessor,
-} from '@hey-api/shared';
+import type { BaseOutput, BaseUserOutput, UserPostProcessor } from '@hey-api/shared';
 import type { AnyString } from '@hey-api/types';
 import type ts from 'typescript';
 

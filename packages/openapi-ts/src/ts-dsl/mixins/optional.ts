@@ -11,9 +11,7 @@ export interface OptionalMethods extends Node {
   required(condition?: boolean): this;
 }
 
-export function OptionalMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
-  Base: TBase,
-) {
+export function OptionalMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base: TBase) {
   abstract class Optional extends Base {
     protected _optional?: boolean;
 

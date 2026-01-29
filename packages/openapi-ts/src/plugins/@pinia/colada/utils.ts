@@ -14,7 +14,5 @@ export const getPublicTypeData = ({
   plugin: PiniaColadaPlugin['Instance'];
 }) => {
   const typeData = useTypeData({ operation, plugin });
-  return isNuxtClient
-    ? $.type('Omit').generic(typeData).generic('composable')
-    : typeData;
+  return isNuxtClient ? $.type('Omit').generic(typeData).generic('composable') : typeData;
 };

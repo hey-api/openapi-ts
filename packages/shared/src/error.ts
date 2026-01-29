@@ -30,9 +30,7 @@ export class ConfigValidationError extends Error {
   readonly errors: ReadonlyArray<IJobError>;
 
   constructor(errors: Array<IJobError>) {
-    super(
-      `Found ${errors.length} configuration ${errors.length === 1 ? 'error' : 'errors'}.`,
-    );
+    super(`Found ${errors.length} configuration ${errors.length === 1 ? 'error' : 'errors'}.`);
     this.name = 'ConfigValidationError';
     this.errors = errors;
   }
@@ -83,10 +81,7 @@ export class HeyApiError extends Error {
   }
 }
 
-export function logCrashReport(
-  error: unknown,
-  logsDir: string,
-): string | undefined {
+export function logCrashReport(error: unknown, logsDir: string): string | undefined {
   if (error instanceof ConfigError || error instanceof ConfigValidationError) {
     return;
   }
@@ -209,9 +204,7 @@ export function printCrashReport({
 
   if (logPath) {
     const jobPrefix = colors.gray('[root] ');
-    console.error(
-      `${jobPrefix}${colors.cyan('📄 Crash log saved to:')} ${colors.gray(logPath)}`,
-    );
+    console.error(`${jobPrefix}${colors.cyan('📄 Crash log saved to:')} ${colors.gray(logPath)}`);
   }
 }
 
@@ -222,11 +215,7 @@ export async function shouldReportCrash({
   error: unknown;
   isInteractive: boolean | undefined;
 }): Promise<boolean> {
-  if (
-    !isInteractive ||
-    error instanceof ConfigError ||
-    error instanceof ConfigValidationError
-  ) {
+  if (!isInteractive || error instanceof ConfigError || error instanceof ConfigValidationError) {
     return false;
   }
 

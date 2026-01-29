@@ -17,11 +17,7 @@ import { MethodTsDsl } from './method';
 type Body = Array<MaybeTsDsl<ts.ClassElement | ts.Node>>;
 
 const Mixed = AbstractMixin(
-  DecoratorMixin(
-    DefaultMixin(
-      DocMixin(ExportMixin(TypeParamsMixin(TsDsl<ts.ClassDeclaration>))),
-    ),
-  ),
+  DecoratorMixin(DefaultMixin(DocMixin(ExportMixin(TypeParamsMixin(TsDsl<ts.ClassDeclaration>))))),
 );
 
 export class ClassTsDsl extends Mixed {
@@ -79,8 +75,7 @@ export class ClassTsDsl extends Mixed {
 
   /** Adds a class constructor. */
   init(fn?: InitTsDsl | ((i: InitTsDsl) => void)): this {
-    const i =
-      typeof fn === 'function' ? new InitTsDsl(fn) : fn || new InitTsDsl();
+    const i = typeof fn === 'function' ? new InitTsDsl(fn) : fn || new InitTsDsl();
     this.body.push(i);
     return this;
   }

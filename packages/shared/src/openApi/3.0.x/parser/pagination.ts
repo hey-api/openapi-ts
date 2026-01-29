@@ -1,18 +1,12 @@
 import type { Context } from '../../../ir/context';
 import { getPaginationKeywordsRegExp } from '../../../ir/pagination';
 import type { SchemaType } from '../../../openApi/shared/types/schema';
-import type {
-  ParameterObject,
-  ReferenceObject,
-  RequestBodyObject,
-} from '../types/spec';
+import type { ParameterObject, ReferenceObject, RequestBodyObject } from '../types/spec';
 import type { SchemaObject } from '../types/spec';
 import { mediaTypeObjects } from './mediaType';
 import { getSchemaType } from './schema';
 
-const isPaginationType = (
-  schemaType: SchemaType<SchemaObject> | undefined,
-): boolean =>
+const isPaginationType = (schemaType: SchemaType<SchemaObject> | undefined): boolean =>
   schemaType === 'boolean' ||
   schemaType === 'integer' ||
   schemaType === 'number' ||
@@ -28,17 +22,13 @@ export const paginationField = ({
   name: string;
   schema: SchemaObject | ReferenceObject;
 }): boolean | string => {
-  const paginationRegExp = getPaginationKeywordsRegExp(
-    context.config.parser.pagination,
-  );
+  const paginationRegExp = getPaginationKeywordsRegExp(context.config.parser.pagination);
   if (paginationRegExp.test(name)) {
     return true;
   }
 
   if ('$ref' in schema) {
-    const ref = context.resolveRef<
-      ParameterObject | RequestBodyObject | SchemaObject
-    >(schema.$ref);
+    const ref = context.resolveRef<ParameterObject | RequestBodyObject | SchemaObject>(schema.$ref);
 
     if ('content' in ref || 'in' in ref) {
       let refSchema: SchemaObject | ReferenceObject | undefined;
@@ -51,8 +41,7 @@ export const paginationField = ({
         // parameter or body
         const contents = mediaTypeObjects({ content: ref.content });
         // TODO: add support for multiple content types, for now prefer JSON
-        const content =
-          contents.find((content) => content.type === 'json') || contents[0];
+        const content = contents.find((content) => content.type === 'json') || contents[0];
         if (content?.schema) {
           refSchema = content.schema;
         }
@@ -77,9 +66,7 @@ export const paginationField = ({
   }
 
   for (const name in schema.properties) {
-    const paginationRegExp = getPaginationKeywordsRegExp(
-      context.config.parser.pagination,
-    );
+    const paginationRegExp = getPaginationKeywordsRegExp(context.config.parser.pagination);
 
     if (paginationRegExp.test(name)) {
       const property = schema.properties[name]!;

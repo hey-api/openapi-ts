@@ -1,7 +1,4 @@
-type Obj =
-  | Record<string, unknown>
-  | Set<string>
-  | ReadonlyArray<string | undefined>;
+type Obj = Record<string, unknown> | Set<string> | ReadonlyArray<string | undefined>;
 
 const hasName = (obj: Obj, value: string): boolean => {
   if (obj instanceof Set) {
@@ -30,10 +27,7 @@ export const getUniqueComponentName = ({
 }): string => {
   let index = 2;
   let name = base;
-  while (
-    hasName(components, name) ||
-    (extraComponents && hasName(extraComponents, name))
-  ) {
+  while (hasName(components, name) || (extraComponents && hasName(extraComponents, name))) {
     name = `${base}${index}`;
     index += 1;
   }

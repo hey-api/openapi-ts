@@ -6,7 +6,8 @@ import type { OpenApiSchemaExtensions } from './spec-extensions';
 
 // TODO: left out some keywords related to structuring a complex schema and declaring a dialect
 export interface JsonSchemaDraft2020_12
-  extends ArrayKeywords,
+  extends
+    ArrayKeywords,
     NumberKeywords,
     ObjectKeywords,
     StringKeywords,
@@ -357,11 +358,4 @@ type JsonSchemaFormats =
   | 'uuid'
   | AnyString;
 
-type JsonSchemaTypes =
-  | 'array'
-  | 'boolean'
-  | 'integer'
-  | 'null'
-  | 'number'
-  | 'object'
-  | 'string';
+type JsonSchemaTypes = 'array' | 'boolean' | 'integer' | 'null' | 'number' | 'object' | 'string';

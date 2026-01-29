@@ -3,9 +3,7 @@ import type { UserConfig } from '@hey-api/openapi-ts';
 type PluginConfig = NonNullable<NonNullable<UserConfig['plugins']>[number]>;
 
 export function typescript(
-  options?: Partial<
-    Omit<Extract<PluginConfig, { name: '@hey-api/typescript' }>, 'name'>
-  >,
+  options?: Partial<Omit<Extract<PluginConfig, { name: '@hey-api/typescript' }>, 'name'>>,
 ) {
   return {
     name: '@hey-api/typescript' as const,
@@ -14,9 +12,7 @@ export function typescript(
 }
 
 export function sdk(
-  options?: Partial<
-    Omit<Extract<PluginConfig, { name: '@hey-api/sdk' }>, 'name'>
-  >,
+  options?: Partial<Omit<Extract<PluginConfig, { name: '@hey-api/sdk' }>, 'name'>>,
 ) {
   return {
     name: '@hey-api/sdk' as const,
@@ -24,9 +20,7 @@ export function sdk(
   };
 }
 
-export function zod(
-  options?: Partial<Omit<Extract<PluginConfig, { name: 'zod' }>, 'name'>>,
-) {
+export function zod(options?: Partial<Omit<Extract<PluginConfig, { name: 'zod' }>, 'name'>>) {
   return {
     name: 'zod' as const,
     ...options,
@@ -43,9 +37,7 @@ export function valibot(
 }
 
 export function tanstackReactQuery(
-  options?: Partial<
-    Omit<Extract<PluginConfig, { name: '@tanstack/react-query' }>, 'name'>
-  >,
+  options?: Partial<Omit<Extract<PluginConfig, { name: '@tanstack/react-query' }>, 'name'>>,
 ) {
   return {
     name: '@tanstack/react-query' as const,
@@ -54,9 +46,7 @@ export function tanstackReactQuery(
 }
 
 export function transformers(
-  options?: Partial<
-    Omit<Extract<PluginConfig, { name: '@hey-api/transformers' }>, 'name'>
-  >,
+  options?: Partial<Omit<Extract<PluginConfig, { name: '@hey-api/transformers' }>, 'name'>>,
 ) {
   return {
     name: '@hey-api/transformers' as const,

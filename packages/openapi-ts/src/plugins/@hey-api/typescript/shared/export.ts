@@ -17,14 +17,7 @@ const schemaToEnumObject = ({
   schema: IR.SchemaObject;
 }) => {
   const typeofItems: Array<
-    | 'bigint'
-    | 'boolean'
-    | 'function'
-    | 'number'
-    | 'object'
-    | 'string'
-    | 'symbol'
-    | 'undefined'
+    'bigint' | 'boolean' | 'function' | 'number' | 'object' | 'string' | 'symbol' | 'undefined'
   > = [];
 
   const obj = (schema.items ?? []).map((item, index) => {
@@ -95,28 +88,20 @@ export const exportType = ({
 
     if (plugin.config.enums.mode === 'javascript') {
       // JavaScript enums might want to ignore null values
-      if (
-        plugin.config.enums.constantsIgnoreNull &&
-        enumObject.typeofItems.includes('object')
-      ) {
-        enumObject.obj = enumObject.obj.filter(
-          (item) => item.schema.const !== null,
-        );
+      if (plugin.config.enums.constantsIgnoreNull && enumObject.typeofItems.includes('object')) {
+        enumObject.obj = enumObject.obj.filter((item) => item.schema.const !== null);
       }
 
-      const symbolObject = plugin.symbol(
-        applyNaming(refToName($ref), plugin.config.definitions),
-        {
-          meta: {
-            category: 'utility',
-            path: fromRef(state.path),
-            resource: 'definition',
-            resourceId: $ref,
-            tags: fromRef(state.tags),
-            tool: 'typescript',
-          },
+      const symbolObject = plugin.symbol(applyNaming(refToName($ref), plugin.config.definitions), {
+        meta: {
+          category: 'utility',
+          path: fromRef(state.path),
+          resource: 'definition',
+          resourceId: $ref,
+          tags: fromRef(state.tags),
+          tool: 'typescript',
         },
-      );
+      });
       const objectNode = $.const(symbolObject)
         .export()
         .$if(createSchemaComment(schema), (c, v) => c.doc(v))
@@ -131,26 +116,21 @@ export const exportType = ({
         );
       plugin.node(objectNode);
 
-      const symbol = plugin.symbol(
-        applyNaming(refToName($ref), plugin.config.definitions),
-        {
-          meta: {
-            category: 'type',
-            path: fromRef(state.path),
-            resource: 'definition',
-            resourceId: $ref,
-            tags: fromRef(state.tags),
-            tool: 'typescript',
-          },
+      const symbol = plugin.symbol(applyNaming(refToName($ref), plugin.config.definitions), {
+        meta: {
+          category: 'type',
+          path: fromRef(state.path),
+          resource: 'definition',
+          resourceId: $ref,
+          tags: fromRef(state.tags),
+          tool: 'typescript',
         },
-      );
+      });
       const node = $.type
         .alias(symbol)
         .export()
         .$if(createSchemaComment(schema), (t, v) => t.doc(v))
-        .type(
-          $.type(symbol).idx($.type(symbol).typeofType().keyof()).typeofType(),
-        );
+        .type($.type(symbol).idx($.type(symbol).typeofType().keyof()).typeofType());
       plugin.node(node);
       return;
     } else if (
@@ -162,19 +142,16 @@ export const exportType = ({
         (type) => type !== 'number' && type !== 'string',
       );
       if (shouldCreateTypeScriptEnum) {
-        const symbol = plugin.symbol(
-          applyNaming(refToName($ref), plugin.config.definitions),
-          {
-            meta: {
-              category: 'type',
-              path: fromRef(state.path),
-              resource: 'definition',
-              resourceId: $ref,
-              tags: fromRef(state.tags),
-              tool: 'typescript',
-            },
+        const symbol = plugin.symbol(applyNaming(refToName($ref), plugin.config.definitions), {
+          meta: {
+            category: 'type',
+            path: fromRef(state.path),
+            resource: 'definition',
+            resourceId: $ref,
+            tags: fromRef(state.tags),
+            tool: 'typescript',
           },
-        );
+        });
         const enumNode = $.enum(symbol)
           .export()
           .$if(createSchemaComment(schema), (e, v) => e.doc(v))
@@ -192,19 +169,16 @@ export const exportType = ({
     }
   }
 
-  const symbol = plugin.symbol(
-    applyNaming(refToName($ref), plugin.config.definitions),
-    {
-      meta: {
-        category: 'type',
-        path: fromRef(state.path),
-        resource: 'definition',
-        resourceId: $ref,
-        tags: fromRef(state.tags),
-        tool: 'typescript',
-      },
+  const symbol = plugin.symbol(applyNaming(refToName($ref), plugin.config.definitions), {
+    meta: {
+      category: 'type',
+      path: fromRef(state.path),
+      resource: 'definition',
+      resourceId: $ref,
+      tags: fromRef(state.tags),
+      tool: 'typescript',
     },
-  );
+  });
   const node = $.type
     .alias(symbol)
     .export()

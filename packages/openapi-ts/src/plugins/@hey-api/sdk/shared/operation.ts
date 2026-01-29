@@ -126,9 +126,7 @@ export function operationParameters({
       }
 
       result.parameters.push(
-        $.param('parameters', (p) =>
-          p.required(isParametersRequired).type(flatParams),
-        ),
+        $.param('parameters', (p) => p.required(isParametersRequired).type(flatParams)),
       );
     }
   }
@@ -160,14 +158,7 @@ export function operationParameters({
  */
 const getResponseType = (
   contentType: string | null | undefined,
-):
-  | 'arraybuffer'
-  | 'blob'
-  | 'document'
-  | 'json'
-  | 'stream'
-  | 'text'
-  | undefined => {
+): 'arraybuffer' | 'blob' | 'document' | 'json' | 'stream' | 'text' | undefined => {
   if (!contentType) {
     return;
   }
@@ -178,10 +169,7 @@ const getResponseType = (
     return;
   }
 
-  if (
-    cleanContent.startsWith('application/json') ||
-    cleanContent.endsWith('+json')
-  ) {
+  if (cleanContent.startsWith('application/json') || cleanContent.endsWith('+json')) {
     return 'json';
   }
 
@@ -191,9 +179,7 @@ const getResponseType = (
   // }
 
   if (
-    ['application/', 'audio/', 'image/', 'video/'].some((type) =>
-      cleanContent.startsWith(type),
-    )
+    ['application/', 'audio/', 'image/', 'video/'].some((type) => cleanContent.startsWith(type))
   ) {
     return 'blob';
   }
@@ -296,10 +282,7 @@ export function operationStatements({
   for (const name in operation.parameters?.query) {
     const parameter = operation.parameters.query[name]!;
 
-    if (
-      parameter.schema.type === 'array' ||
-      parameter.schema.type === 'tuple'
-    ) {
+    if (parameter.schema.type === 'array' || parameter.schema.type === 'tuple') {
       if (parameter.style !== 'form' || !parameter.explode) {
         // override the default settings for array serialization
         paramSerializers.prop(
@@ -310,9 +293,7 @@ export function operationStatements({
               .$if(parameter.explode === false, (o) =>
                 o.prop('explode', $.literal(parameter.explode)),
               )
-              .$if(parameter.style !== 'form', (o) =>
-                o.prop('style', $.literal(parameter.style)),
-              ),
+              .$if(parameter.style !== 'form', (o) => o.prop('style', $.literal(parameter.style))),
           ),
         );
       }
@@ -339,10 +320,7 @@ export function operationStatements({
   if (paramSerializers.hasProps()) {
     // TODO: if all parameters have the same serialization,
     // apply it globally to reduce output size
-    reqOptions.prop(
-      'querySerializer',
-      $.object().prop('parameters', paramSerializers),
-    );
+    reqOptions.prop('querySerializer', $.object().prop('parameters', paramSerializers));
   }
 
   const requestValidator = createRequestValidator({ operation, plugin });
@@ -433,10 +411,7 @@ export function operationStatements({
     const symbol = plugin.external('client.buildClientParams');
     statements.push(
       $.const('params').assign(
-        $(symbol).call(
-          $.array(...args),
-          $.array($.object().prop('args', $.array(...config))),
-        ),
+        $(symbol).call($.array(...args), $.array($.object().prop('args', $.array(...config)))),
       ),
     );
     reqOptions.spread('params');
@@ -452,11 +427,7 @@ export function operationStatements({
         // form-data does not need Content-Type header, browser will set it automatically
         .prop(
           parameterContentType?.name ?? 'Content-Type',
-          $.literal(
-            operation.body.type === 'form-data'
-              ? null
-              : operation.body.mediaType,
-          ),
+          $.literal(operation.body.type === 'form-data' ? null : operation.body.mediaType),
         )
         .spread($('options').attr('headers').required(isRequiredOptions));
       if (hasParams) {
@@ -482,9 +453,7 @@ export function operationStatements({
     clientExpression = optionsClient;
   }
 
-  let functionName = hasServerSentEvents
-    ? clientExpression.attr('sse')
-    : clientExpression;
+  let functionName = hasServerSentEvents ? clientExpression.attr('sse') : clientExpression;
   functionName = functionName.attr(operation.method);
 
   statements.push(
@@ -496,9 +465,7 @@ export function operationStatements({
           (f) =>
             f
               .generic(nuxtTypeComposable)
-              .generic(
-                $.type.or(symbolResponseType ?? 'unknown', nuxtTypeDefault),
-              )
+              .generic($.type.or(symbolResponseType ?? 'unknown', nuxtTypeDefault))
               .generic(symbolErrorType ?? 'unknown')
               .generic(nuxtTypeDefault),
           (f) =>

@@ -4,11 +4,7 @@ import path from 'node:path';
 import { createClient } from '@hey-api/openapi-ts';
 
 import { getFilePaths, getSpecsPath } from '../../utils';
-import {
-  createSdkConfig,
-  getSnapshotsPath,
-  getTempSnapshotsPath,
-} from './utils';
+import { createSdkConfig, getSnapshotsPath, getTempSnapshotsPath } from './utils';
 
 const namespace = 'opencode';
 

@@ -29,27 +29,24 @@ describe('buildUrl', () => {
         url: '/some-url',
       },
     },
-  ])(
-    'passes correct parameters to getUrl $description',
-    async ({ expectedUrl, inputOptions }) => {
-      const getUrlMock = vi.fn().mockReturnValue(expectedUrl);
-      vi.doMock('../../client-core/bundle/utils', async () => ({
-        getUrl: getUrlMock,
-      }));
+  ])('passes correct parameters to getUrl $description', async ({ expectedUrl, inputOptions }) => {
+    const getUrlMock = vi.fn().mockReturnValue(expectedUrl);
+    vi.doMock('../../client-core/bundle/utils', async () => ({
+      getUrl: getUrlMock,
+    }));
 
-      const { buildUrl } = await import('../bundle/utils');
+    const { buildUrl } = await import('../bundle/utils');
 
-      const builtUrl = buildUrl(inputOptions);
+    const builtUrl = buildUrl(inputOptions);
 
-      expect(builtUrl).toBe(expectedUrl);
+    expect(builtUrl).toBe(expectedUrl);
 
-      expect(getUrlMock).toHaveBeenCalledExactlyOnceWith({
-        baseUrl: inputOptions.baseURL,
-        path: inputOptions.path,
-        query: inputOptions.query,
-        querySerializer: inputOptions.querySerializer,
-        url: inputOptions.url,
-      });
-    },
-  );
+    expect(getUrlMock).toHaveBeenCalledExactlyOnceWith({
+      baseUrl: inputOptions.baseURL,
+      path: inputOptions.path,
+      query: inputOptions.query,
+      querySerializer: inputOptions.querySerializer,
+      url: inputOptions.url,
+    });
+  });
 });

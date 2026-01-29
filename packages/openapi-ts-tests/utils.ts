@@ -19,5 +19,4 @@ export const getFilePaths = (dirPath: string): Array<string> => {
   return filePaths;
 };
 
-export const getSpecsPath = (): string =>
-  path.join(__dirname, '..', '..', 'specs');
+export const getSpecsPath = (): string => path.join(__dirname, '..', '..', 'specs');

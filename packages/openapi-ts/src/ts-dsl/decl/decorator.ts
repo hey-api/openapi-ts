@@ -12,10 +12,7 @@ export class DecoratorTsDsl extends Mixed {
   readonly '~dsl' = 'DecoratorTsDsl';
   override readonly nameSanitizer = safeRuntimeName;
 
-  constructor(
-    name: NodeName,
-    ...args: ReadonlyArray<string | MaybeTsDsl<ts.Expression>>
-  ) {
+  constructor(name: NodeName, ...args: ReadonlyArray<string | MaybeTsDsl<ts.Expression>>) {
     super();
     this.name.set(name);
     this.args(...args);
@@ -30,9 +27,7 @@ export class DecoratorTsDsl extends Mixed {
     const target = this.$node(this.name);
     const args = this.$args();
     return ts.factory.createDecorator(
-      args.length
-        ? ts.factory.createCallExpression(target, undefined, args)
-        : target,
+      args.length ? ts.factory.createCallExpression(target, undefined, args) : target,
     );
   }
 }

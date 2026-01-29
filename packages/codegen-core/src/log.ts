@@ -7,9 +7,7 @@ colors.enabled = colorSupport().hasBasic;
 
 const DEBUG_NAMESPACE = 'heyapi';
 
-const NO_WARNINGS = /^(1|true|yes|on)$/i.test(
-  process.env.HEYAPI_DISABLE_WARNINGS ?? '',
-);
+const NO_WARNINGS = /^(1|true|yes|on)$/i.test(process.env.HEYAPI_DISABLE_WARNINGS ?? '');
 
 const DebugGroups = {
   analyzer: colors.greenBright,
@@ -28,9 +26,7 @@ function getDebugGroups(): Set<string> {
   if (cachedDebugGroups) return cachedDebugGroups;
 
   const value = process.env.DEBUG;
-  cachedDebugGroups = new Set(
-    value ? value.split(',').map((x) => x.trim().toLowerCase()) : [],
-  );
+  cachedDebugGroups = new Set(value ? value.split(',').map((x) => x.trim().toLowerCase()) : []);
 
   return cachedDebugGroups;
 }
@@ -86,8 +82,7 @@ function warnDeprecated({
   let message = `\`${field}\` is deprecated.`;
 
   if (replacement) {
-    const reps =
-      typeof replacement === 'function' ? replacement(field) : replacement;
+    const reps = typeof replacement === 'function' ? replacement(field) : replacement;
     const repArray = reps instanceof Array ? reps : [reps];
     const repString = repArray.map((r) => `\`${r}\``).join(' or ');
     message += ` Use ${repString} instead.`;

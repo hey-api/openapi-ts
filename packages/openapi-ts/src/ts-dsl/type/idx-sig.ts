@@ -1,8 +1,4 @@
-import type {
-  AnalysisContext,
-  NodeName,
-  NodeScope,
-} from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName, NodeScope } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -86,9 +82,7 @@ export class TypeIdxSigTsDsl extends Mixed {
     const missing = this.missingRequiredCalls();
     if (missing.length === 0) return;
     const name = this.name.toString();
-    throw new Error(
-      `Index signature${name ? ` "${name}"` : ''} missing ${missing.join(' and ')}`,
-    );
+    throw new Error(`Index signature${name ? ` "${name}"` : ''} missing ${missing.join(' and ')}`);
   }
 
   private missingRequiredCalls(): ReadonlyArray<string> {

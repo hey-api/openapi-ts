@@ -1,8 +1,4 @@
-import {
-  isTopLevelComponentRef,
-  jsonPointerToPath,
-  pathToJsonPointer,
-} from '../ref';
+import { isTopLevelComponentRef, jsonPointerToPath, pathToJsonPointer } from '../ref';
 
 describe('jsonPointerToPath', () => {
   it('parses root pointer', () => {
@@ -11,17 +7,18 @@ describe('jsonPointerToPath', () => {
   });
 
   it('parses component ref', () => {
-    expect(jsonPointerToPath('#/components/schemas/Foo')).toEqual([
-      'components',
-      'schemas',
-      'Foo',
-    ]);
+    expect(jsonPointerToPath('#/components/schemas/Foo')).toEqual(['components', 'schemas', 'Foo']);
   });
 
   it('parses deep path ref', () => {
-    expect(
-      jsonPointerToPath('#/components/schemas/Foo/properties/bar/items'),
-    ).toEqual(['components', 'schemas', 'Foo', 'properties', 'bar', 'items']);
+    expect(jsonPointerToPath('#/components/schemas/Foo/properties/bar/items')).toEqual([
+      'components',
+      'schemas',
+      'Foo',
+      'properties',
+      'bar',
+      'items',
+    ]);
   });
 });
 
@@ -31,9 +28,7 @@ describe('pathToJsonPointer', () => {
   });
 
   it('converts path to pointer', () => {
-    expect(pathToJsonPointer(['components', 'schemas', 'Foo'])).toBe(
-      '#/components/schemas/Foo',
-    );
+    expect(pathToJsonPointer(['components', 'schemas', 'Foo'])).toBe('#/components/schemas/Foo');
   });
 });
 
@@ -43,21 +38,13 @@ describe('isTopLevelComponentRef', () => {
       expect(isTopLevelComponentRef('#/components/schemas/Foo')).toBe(true);
       expect(isTopLevelComponentRef('#/components/parameters/Bar')).toBe(true);
       expect(isTopLevelComponentRef('#/components/responses/Error')).toBe(true);
-      expect(isTopLevelComponentRef('#/components/requestBodies/Body')).toBe(
-        true,
-      );
+      expect(isTopLevelComponentRef('#/components/requestBodies/Body')).toBe(true);
     });
 
     it('returns false for deep path refs', () => {
-      expect(
-        isTopLevelComponentRef('#/components/schemas/Foo/properties/bar'),
-      ).toBe(false);
-      expect(
-        isTopLevelComponentRef('#/components/schemas/Foo/properties/bar/items'),
-      ).toBe(false);
-      expect(isTopLevelComponentRef('#/components/schemas/Foo/allOf/0')).toBe(
-        false,
-      );
+      expect(isTopLevelComponentRef('#/components/schemas/Foo/properties/bar')).toBe(false);
+      expect(isTopLevelComponentRef('#/components/schemas/Foo/properties/bar/items')).toBe(false);
+      expect(isTopLevelComponentRef('#/components/schemas/Foo/allOf/0')).toBe(false);
     });
   });
 
@@ -68,12 +55,8 @@ describe('isTopLevelComponentRef', () => {
     });
 
     it('returns false for deep path refs', () => {
-      expect(isTopLevelComponentRef('#/definitions/Foo/properties/bar')).toBe(
-        false,
-      );
-      expect(
-        isTopLevelComponentRef('#/definitions/Foo/properties/bar/items'),
-      ).toBe(false);
+      expect(isTopLevelComponentRef('#/definitions/Foo/properties/bar')).toBe(false);
+      expect(isTopLevelComponentRef('#/definitions/Foo/properties/bar/items')).toBe(false);
     });
   });
 

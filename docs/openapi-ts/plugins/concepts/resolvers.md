@@ -214,10 +214,7 @@ This resolver creates a union that accepts both the known enum values and any ot
 ::: code-group
 
 ```js [after]
-export const zStatus = z.union([
-  z.enum(['active', 'inactive', 'pending']),
-  z.string(),
-]);
+export const zStatus = z.union([z.enum(['active', 'inactive', 'pending']), z.string()]);
 ```
 
 ```js [before]

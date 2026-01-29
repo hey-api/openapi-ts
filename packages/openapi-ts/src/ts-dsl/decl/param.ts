@@ -23,10 +23,7 @@ export class ParamTsDsl extends Mixed {
 
   protected _type?: TypeTsDsl;
 
-  constructor(
-    name: NodeName | ((p: ParamTsDsl) => void),
-    fn?: (p: ParamTsDsl) => void,
-  ) {
+  constructor(name: NodeName | ((p: ParamTsDsl) => void), fn?: (p: ParamTsDsl) => void) {
     super();
     if (typeof name === 'function') {
       name(this);
@@ -51,9 +48,7 @@ export class ParamTsDsl extends Mixed {
   override toAst() {
     const name = this.$pattern() || this.name.toString();
     if (!name) {
-      throw new Error(
-        'Param must have either a name or a destructuring pattern',
-      );
+      throw new Error('Param must have either a name or a destructuring pattern');
     }
     return ts.factory.createParameterDeclaration(
       this.$decorators(),

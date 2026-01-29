@@ -25,23 +25,13 @@ const clients: ReadonlyArray<PluginClientNames> = [
 for (const client of clients) {
   const namespace = 'clients';
 
-  const outputDir = path.join(
-    __dirname,
-    'generated',
-    '3.1.x',
-    namespace,
-    client,
-  );
+  const outputDir = path.join(__dirname, 'generated', '3.1.x', namespace, client);
 
   describe(client, () => {
     const createConfig = (
-      userConfig: Omit<UserConfig, 'input'> &
-        Pick<Partial<UserConfig>, 'input'>,
+      userConfig: Omit<UserConfig, 'input'> & Pick<Partial<UserConfig>, 'input'>,
     ) => {
-      const output =
-        userConfig.output instanceof Array
-          ? userConfig.output[0]
-          : userConfig.output;
+      const output = userConfig.output instanceof Array ? userConfig.output[0] : userConfig.output;
       return {
         ...userConfig,
         input: path.join(getSpecsPath(), '3.1.x', 'full.yaml'),
@@ -148,11 +138,7 @@ for (const client of clients) {
         config: createConfig({
           output: {
             path: 'tsconfig-nodenext-sdk',
-            tsConfigPath: path.join(
-              __dirname,
-              'tsconfig',
-              'tsconfig.nodenext.json',
-            ),
+            tsConfigPath: path.join(__dirname, 'tsconfig', 'tsconfig.nodenext.json'),
           },
           plugins: [client, '@hey-api/sdk'],
         }),
@@ -162,11 +148,7 @@ for (const client of clients) {
         config: createConfig({
           output: {
             path: 'tsconfig-node16-sdk',
-            tsConfigPath: path.join(
-              __dirname,
-              'tsconfig',
-              'tsconfig.node16.json',
-            ),
+            tsConfigPath: path.join(__dirname, 'tsconfig', 'tsconfig.node16.json'),
           },
           plugins: [client, '@hey-api/sdk'],
         }),
@@ -200,8 +182,7 @@ for (const client of clients) {
         await createClient(config);
       }
 
-      const outputPath =
-        typeof config.output === 'string' ? config.output : config.output.path;
+      const outputPath = typeof config.output === 'string' ? config.output : config.output.path;
       const filePaths = getFilePaths(outputPath);
 
       await Promise.all(
@@ -237,13 +218,7 @@ for (const client of clients) {
 describe('custom-client', () => {
   const namespace = 'clients';
 
-  const outputDir = path.join(
-    __dirname,
-    'generated',
-    '3.1.x',
-    namespace,
-    'client-custom',
-  );
+  const outputDir = path.join(__dirname, 'generated', '3.1.x', namespace, 'client-custom');
 
   const createConfig = (
     userConfig: Omit<UserConfig, 'input'> & Pick<Partial<UserConfig>, 'input'>,
@@ -254,10 +229,7 @@ describe('custom-client', () => {
       logs: {
         level: 'silent',
       },
-      output: path.join(
-        outputDir,
-        typeof userConfig.output === 'string' ? userConfig.output : '',
-      ),
+      output: path.join(outputDir, typeof userConfig.output === 'string' ? userConfig.output : ''),
     }) as const satisfies UserConfig;
 
   const scenarios = [
@@ -382,13 +354,7 @@ describe('custom-client', () => {
 describe('my-client', () => {
   const namespace = 'clients';
 
-  const outputDir = path.join(
-    __dirname,
-    'generated',
-    '3.1.x',
-    namespace,
-    'my-client',
-  );
+  const outputDir = path.join(__dirname, 'generated', '3.1.x', namespace, 'my-client');
 
   const createConfig = (
     userConfig: Omit<UserConfig, 'input'> & Pick<Partial<UserConfig>, 'input'>,
@@ -399,10 +365,7 @@ describe('my-client', () => {
       logs: {
         level: 'silent',
       },
-      output: path.join(
-        outputDir,
-        typeof userConfig.output === 'string' ? userConfig.output : '',
-      ),
+      output: path.join(outputDir, typeof userConfig.output === 'string' ? userConfig.output : ''),
     }) as const satisfies UserConfig;
 
   const scenarios = [

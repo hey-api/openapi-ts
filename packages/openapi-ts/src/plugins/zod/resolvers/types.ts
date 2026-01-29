@@ -4,10 +4,7 @@ import type { MaybeArray } from '@hey-api/types';
 import type ts from 'typescript';
 
 import type { Plugin, SchemaWithType } from '../../../plugins';
-import type {
-  MaybeBigInt,
-  ShouldCoerceToBigInt,
-} from '../../../plugins/shared/utils/coerce';
+import type { MaybeBigInt, ShouldCoerceToBigInt } from '../../../plugins/shared/utils/coerce';
 import type { GetIntegerLimit } from '../../../plugins/shared/utils/formats';
 import type { $, DollarTsDsl, TsDsl } from '../../../ts-dsl';
 import type { Chain } from '../shared/chain';
@@ -183,9 +180,7 @@ export interface ObjectResolverContext extends BaseContext {
      * If `additionalProperties` is `false` or `{ type: 'never' }`, returns `null`
      * to indicate no additional properties are allowed.
      */
-    additionalProperties: (
-      ctx: ObjectResolverContext,
-    ) => Chain | null | undefined;
+    additionalProperties: (ctx: ObjectResolverContext) => Chain | null | undefined;
     base: (ctx: ObjectResolverContext) => Chain;
     shape: (ctx: ObjectResolverContext) => ReturnType<typeof $.object>;
   };

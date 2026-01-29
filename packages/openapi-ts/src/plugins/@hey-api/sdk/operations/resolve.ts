@@ -1,14 +1,9 @@
-import type {
-  OperationPathStrategy,
-  OperationStructureStrategy,
-} from '@hey-api/shared';
+import type { OperationPathStrategy, OperationStructureStrategy } from '@hey-api/shared';
 import { OperationPath, OperationStrategy } from '@hey-api/shared';
 
 import type { HeyApiSdkPlugin } from '../types';
 
-function resolvePath(
-  plugin: HeyApiSdkPlugin['Instance'],
-): OperationPathStrategy {
+function resolvePath(plugin: HeyApiSdkPlugin['Instance']): OperationPathStrategy {
   if (plugin.config.operations.nesting === 'id') {
     return OperationPath.id();
   }
@@ -23,9 +18,7 @@ function resolvePath(
   return plugin.config.operations.nesting;
 }
 
-export function resolveStrategy(
-  plugin: HeyApiSdkPlugin['Instance'],
-): OperationStructureStrategy {
+export function resolveStrategy(plugin: HeyApiSdkPlugin['Instance']): OperationStructureStrategy {
   if (plugin.config.operations.strategy === 'flat') {
     return OperationStrategy.flat({
       path: (operation) => [resolvePath(plugin)(operation).join('.')],

@@ -52,9 +52,7 @@ export function jsonPointerToPath(pointer: string): ReadonlyArray<string> {
   }
   return clean
     .split('/')
-    .map((part) =>
-      part.replace(jsonPointerSlash, '/').replace(jsonPointerTilde, '~'),
-    );
+    .map((part) => part.replace(jsonPointerSlash, '/').replace(jsonPointerTilde, '~'));
 }
 
 /**
@@ -88,9 +86,7 @@ export function normalizeJsonPointer(pointer: string): string {
  * @param path
  * @returns
  */
-export function pathToJsonPointer(
-  path: ReadonlyArray<string | number>,
-): string {
+export function pathToJsonPointer(path: ReadonlyArray<string | number>): string {
   const segments = path.map(encodeJsonPointerSegment).join('/');
   return '#' + (segments ? `/${segments}` : '');
 }
@@ -124,13 +120,7 @@ export function isTopLevelComponentRef($ref: string): boolean {
   return false;
 }
 
-export function resolveRef<T>({
-  $ref,
-  spec,
-}: {
-  $ref: string;
-  spec: Record<string, any>;
-}): T {
+export function resolveRef<T>({ $ref, spec }: { $ref: string; spec: Record<string, any> }): T {
   // refs using unicode characters become encoded, didn't investigate why
   // but the suspicion is this comes from `@hey-api/json-schema-ref-parser`
   const path = jsonPointerToPath(decodeURI($ref));

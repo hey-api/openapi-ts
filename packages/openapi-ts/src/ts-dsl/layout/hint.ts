@@ -32,25 +32,17 @@ export class HintTsDsl extends TsDsl<ts.Node> {
   }
 
   apply<T extends ts.Node>(node: T): T {
-    const lines = this._lines.reduce(
-      (lines: Array<string>, line: HintLines) => {
-        if (typeof line === 'function') line = line(ctx);
-        for (const l of typeof line === 'string' ? [line] : line) {
-          if (l || l === '') lines.push(l);
-        }
-        return lines;
-      },
-      [],
-    );
+    const lines = this._lines.reduce((lines: Array<string>, line: HintLines) => {
+      if (typeof line === 'function') line = line(ctx);
+      for (const l of typeof line === 'string' ? [line] : line) {
+        if (l || l === '') lines.push(l);
+      }
+      return lines;
+    }, []);
     if (!lines.length) return node;
 
     for (const line of lines) {
-      ts.addSyntheticLeadingComment(
-        node,
-        ts.SyntaxKind.SingleLineCommentTrivia,
-        ` ${line}`,
-        false,
-      );
+      ts.addSyntheticLeadingComment(node, ts.SyntaxKind.SingleLineCommentTrivia, ` ${line}`, false);
     }
 
     return node;

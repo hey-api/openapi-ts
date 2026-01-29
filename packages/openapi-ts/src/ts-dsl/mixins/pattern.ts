@@ -11,9 +11,7 @@ export interface PatternMethods extends Node {
   /** Defines an array binding pattern. */
   array(...props: ReadonlyArray<string> | [ReadonlyArray<string>]): this;
   /** Defines an object binding pattern. */
-  object(
-    ...props: ReadonlyArray<MaybeArray<string> | Record<string, string>>
-  ): this;
+  object(...props: ReadonlyArray<MaybeArray<string> | Record<string, string>>): this;
   /** Adds a spread element (e.g. `...args`, `...options`) to the pattern. */
   spread(name: string): this;
 }
@@ -21,9 +19,7 @@ export interface PatternMethods extends Node {
 /**
  * Mixin providing `.array()`, `.object()`, and `.spread()` methods for defining destructuring patterns.
  */
-export function PatternMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
-  Base: TBase,
-) {
+export function PatternMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base: TBase) {
   abstract class Pattern extends Base {
     protected pattern?: PatternTsDsl;
 
@@ -32,16 +28,12 @@ export function PatternMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
       ctx.analyze(this.pattern);
     }
 
-    protected array(
-      ...props: ReadonlyArray<string> | [ReadonlyArray<string>]
-    ): this {
+    protected array(...props: ReadonlyArray<string> | [ReadonlyArray<string>]): this {
       (this.pattern ??= new PatternTsDsl()).array(...props);
       return this;
     }
 
-    protected object(
-      ...props: ReadonlyArray<MaybeArray<string> | Record<string, string>>
-    ): this {
+    protected object(...props: ReadonlyArray<MaybeArray<string> | Record<string, string>>): this {
       (this.pattern ??= new PatternTsDsl()).object(...props);
       return this;
     }

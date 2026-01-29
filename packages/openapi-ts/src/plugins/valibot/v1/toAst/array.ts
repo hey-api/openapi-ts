@@ -81,9 +81,7 @@ export const arrayToAst = ({
   }
 
   if (schema.minItems === schema.maxItems && schema.minItems !== undefined) {
-    const expression = $(v)
-      .attr(identifiers.actions.length)
-      .call($.fromValue(schema.minItems));
+    const expression = $(v).attr(identifiers.actions.length).call($.fromValue(schema.minItems));
     result.pipes.push(expression);
   } else {
     if (schema.minItems !== undefined) {

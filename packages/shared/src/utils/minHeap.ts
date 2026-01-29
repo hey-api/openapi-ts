@@ -45,14 +45,12 @@ export class MinHeap {
       if (left < len) {
         const leftVal = heap[left]!;
         const smallestVal = heap[smallest]!;
-        if (this.declIndex.get(leftVal)! < this.declIndex.get(smallestVal)!)
-          smallest = left;
+        if (this.declIndex.get(leftVal)! < this.declIndex.get(smallestVal)!) smallest = left;
       }
       if (right < len) {
         const rightVal = heap[right]!;
         const smallestVal = heap[smallest]!;
-        if (this.declIndex.get(rightVal)! < this.declIndex.get(smallestVal)!)
-          smallest = right;
+        if (this.declIndex.get(rightVal)! < this.declIndex.get(smallestVal)!) smallest = right;
       }
       if (smallest === index) break;
       const tmp = heap[smallest]!;

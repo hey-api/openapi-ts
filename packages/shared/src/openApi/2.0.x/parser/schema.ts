@@ -129,11 +129,7 @@ const parseArray = ({
       state,
     });
 
-    if (
-      !schemaItems.length &&
-      schema.maxItems &&
-      schema.maxItems === schema.minItems
-    ) {
+    if (!schemaItems.length && schema.maxItems && schema.maxItems === schema.minItems) {
       schemaItems = Array(schema.maxItems).fill(irItemsSchema);
     } else {
       if ('$ref' in schema.items) {
@@ -269,27 +265,15 @@ const parseString = ({
   return irSchema;
 };
 
-export const parseExtensions = ({
-  source,
-  target,
-}: {
-  source: object;
-  target: object;
-}) => {
+export const parseExtensions = ({ source, target }: { source: object; target: object }) => {
   for (const key in source) {
     if (key.startsWith('x-')) {
-      (target as Record<string, unknown>)[key] = (
-        source as Record<string, unknown>
-      )[key];
+      (target as Record<string, unknown>)[key] = (source as Record<string, unknown>)[key];
     }
   }
 };
 
-const initIrSchema = ({
-  schema,
-}: {
-  schema: SchemaObject;
-}): IR.SchemaObject => {
+const initIrSchema = ({ schema }: { schema: SchemaObject }): IR.SchemaObject => {
   const irSchema: IR.SchemaObject = {};
 
   parseSchemaJsDoc({
@@ -339,10 +323,7 @@ const parseAllOf = ({
 
     if (schema.required) {
       if (irCompositionSchema.required) {
-        irCompositionSchema.required = [
-          ...irCompositionSchema.required,
-          ...schema.required,
-        ];
+        irCompositionSchema.required = [...irCompositionSchema.required, ...schema.required];
       } else {
         irCompositionSchema.required = schema.required;
       }
@@ -355,12 +336,10 @@ const parseAllOf = ({
       // `$ref` should be passed from the root `parseSchema()` call
       if (ref.discriminator && state.$ref) {
         const values = discriminatorValues(state.$ref);
-        const valueSchemas: ReadonlyArray<IR.SchemaObject> = values.map(
-          (value) => ({
-            const: value,
-            type: 'string',
-          }),
-        );
+        const valueSchemas: ReadonlyArray<IR.SchemaObject> = values.map((value) => ({
+          const: value,
+          type: 'string',
+        }));
         const irDiscriminatorSchema: IR.SchemaObject = {
           properties: {
             [ref.discriminator]:
@@ -400,9 +379,7 @@ const parseAllOf = ({
               ? context.resolveRef<SchemaObject>(compositionSchema.$ref)
               : compositionSchema;
 
-            if (
-              getSchemaType({ schema: finalCompositionSchema }) === 'object'
-            ) {
+            if (getSchemaType({ schema: finalCompositionSchema }) === 'object') {
               const irCompositionSchema = parseOneType({
                 context,
                 schema: {
@@ -513,8 +490,7 @@ const parseEnum = ({
       context,
       schema: {
         description: schema['x-enum-descriptions']?.[index],
-        title:
-          schema['x-enum-varnames']?.[index] ?? schema['x-enumNames']?.[index],
+        title: schema['x-enum-varnames']?.[index] ?? schema['x-enumNames']?.[index],
         // cast enum to string temporarily
         type: enumType === 'null' ? 'string' : enumType,
       },
@@ -578,10 +554,7 @@ const parseRef = ({
 
   // rewrite definitions refs as the internal schema follows OpenAPI 3.x syntax
   // and stores all definitions as reusable schemas
-  irSchema.$ref = irSchema.$ref.replace(
-    /#\/definitions\/([^/]+)/g,
-    '#/components/schemas/$1',
-  );
+  irSchema.$ref = irSchema.$ref.replace(/#\/definitions\/([^/]+)/g, '#/components/schemas/$1');
 
   if (!state.circularReferenceTracker.has(schema.$ref)) {
     const refSchema = context.resolveRef<SchemaObject>(schema.$ref);

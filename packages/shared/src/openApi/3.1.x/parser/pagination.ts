@@ -6,9 +6,7 @@ import type { SchemaObject } from '../types/spec';
 import { mediaTypeObjects } from './mediaType';
 import { getSchemaTypes } from './schema';
 
-const isPaginationType = (
-  schemaTypes: ReadonlyArray<SchemaType<SchemaObject>>,
-): boolean =>
+const isPaginationType = (schemaTypes: ReadonlyArray<SchemaType<SchemaObject>>): boolean =>
   schemaTypes.includes('boolean') ||
   schemaTypes.includes('integer') ||
   schemaTypes.includes('number') ||
@@ -24,17 +22,13 @@ export const paginationField = ({
   name: string;
   schema: SchemaObject;
 }): boolean | string => {
-  const paginationRegExp = getPaginationKeywordsRegExp(
-    context.config.parser.pagination,
-  );
+  const paginationRegExp = getPaginationKeywordsRegExp(context.config.parser.pagination);
   if (paginationRegExp.test(name)) {
     return true;
   }
 
   if (schema.$ref) {
-    const ref = context.resolveRef<
-      ParameterObject | RequestBodyObject | SchemaObject
-    >(schema.$ref);
+    const ref = context.resolveRef<ParameterObject | RequestBodyObject | SchemaObject>(schema.$ref);
 
     if ('content' in ref || 'in' in ref) {
       let refSchema: SchemaObject | undefined;
@@ -47,8 +41,7 @@ export const paginationField = ({
         // parameter or body
         const contents = mediaTypeObjects({ content: ref.content });
         // TODO: add support for multiple content types, for now prefer JSON
-        const content =
-          contents.find((content) => content.type === 'json') || contents[0];
+        const content = contents.find((content) => content.type === 'json') || contents[0];
         if (content?.schema) {
           refSchema = content.schema;
         }
@@ -73,9 +66,7 @@ export const paginationField = ({
   }
 
   for (const name in schema.properties) {
-    const paginationRegExp = getPaginationKeywordsRegExp(
-      context.config.parser.pagination,
-    );
+    const paginationRegExp = getPaginationKeywordsRegExp(context.config.parser.pagination);
 
     if (paginationRegExp.test(name)) {
       const property = schema.properties[name]!;

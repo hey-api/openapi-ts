@@ -18,11 +18,7 @@ export type AttrCtor = (left: AttrLeft, right: NodeName) => AttrTsDsl;
 
 const Mixed = AsMixin(
   ExprMixin(
-    OperatorMixin(
-      OptionalMixin(
-        TsDsl<ts.PropertyAccessExpression | ts.ElementAccessExpression>,
-      ),
-    ),
+    OperatorMixin(OptionalMixin(TsDsl<ts.PropertyAccessExpression | ts.ElementAccessExpression>)),
   ),
 );
 

@@ -16,9 +16,7 @@ export const booleanToAst = ({
   const v = plugin.external('valibot.v');
 
   if (typeof schema.const === 'boolean') {
-    pipes.push(
-      $(v).attr(identifiers.schemas.literal).call($.literal(schema.const)),
-    );
+    pipes.push($(v).attr(identifiers.schemas.literal).call($.literal(schema.const)));
     return pipesToNode(pipes, plugin);
   }
 

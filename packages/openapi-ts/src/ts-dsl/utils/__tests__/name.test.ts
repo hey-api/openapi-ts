@@ -351,10 +351,7 @@ describe('safeRuntimeName', () => {
     },
   ];
 
-  it.each(scenarios)(
-    'transforms $name -> $output',
-    async ({ name, output }) => {
-      expect(safeRuntimeName(name)).toEqual(output);
-    },
-  );
+  it.each(scenarios)('transforms $name -> $output', async ({ name, output }) => {
+    expect(safeRuntimeName(name)).toEqual(output);
+  });
 });

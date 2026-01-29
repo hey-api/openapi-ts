@@ -1,8 +1,8 @@
 {
   "name": "@docs/openapi-ts",
   "version": "0.10.4",
-  "description": "Documentation for OpenAPI TypeScript.",
   "private": true,
+  "description": "Documentation for OpenAPI TypeScript.",
   "type": "module",
   "scripts": {
     "build": "vitepress build",

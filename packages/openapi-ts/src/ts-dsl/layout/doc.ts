@@ -41,32 +41,21 @@ export class DocTsDsl extends TsDsl<ts.Node> {
     }, []);
     if (!lines.length) return node;
 
-    const jsdocTexts = lines.map((line) =>
-      ts.factory.createJSDocText(`${line}\n`),
-    );
+    const jsdocTexts = lines.map((line) => ts.factory.createJSDocText(`${line}\n`));
 
-    const jsdoc = ts.factory.createJSDocComment(
-      ts.factory.createNodeArray(jsdocTexts),
-      undefined,
-    );
+    const jsdoc = ts.factory.createJSDocComment(ts.factory.createNodeArray(jsdocTexts), undefined);
 
     const cleanedJsdoc = ts
       .createPrinter()
       .printNode(
         ts.EmitHint.Unspecified,
         jsdoc,
-        node.getSourceFile?.() ??
-          ts.createSourceFile('', '', ts.ScriptTarget.Latest),
+        node.getSourceFile?.() ?? ts.createSourceFile('', '', ts.ScriptTarget.Latest),
       )
       .replace('/*', '')
       .replace('*  */', '');
 
-    ts.addSyntheticLeadingComment(
-      node,
-      ts.SyntaxKind.MultiLineCommentTrivia,
-      cleanedJsdoc,
-      true,
-    );
+    ts.addSyntheticLeadingComment(node, ts.SyntaxKind.MultiLineCommentTrivia, cleanedJsdoc, true);
 
     return node;
   }

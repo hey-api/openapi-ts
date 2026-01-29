@@ -7,9 +7,7 @@ import { ParamMixin } from '../mixins/param';
 import { TypeParamsMixin } from '../mixins/type-params';
 import { TypeReturnsMixin } from '../mixins/type-returns';
 
-const Mixed = DocMixin(
-  ParamMixin(TypeParamsMixin(TypeReturnsMixin(TsDsl<ts.FunctionTypeNode>))),
-);
+const Mixed = DocMixin(ParamMixin(TypeParamsMixin(TypeReturnsMixin(TsDsl<ts.FunctionTypeNode>))));
 
 export class TypeFuncTsDsl extends Mixed {
   readonly '~dsl' = 'TypeFuncTsDsl';
@@ -24,11 +22,7 @@ export class TypeFuncTsDsl extends Mixed {
     if (returns === undefined) {
       throw new Error('Missing return type in function type DSL');
     }
-    const node = ts.factory.createFunctionTypeNode(
-      this.$generics(),
-      this.$params(),
-      returns,
-    );
+    const node = ts.factory.createFunctionTypeNode(this.$generics(), this.$params(), returns);
     return this.$docs(node);
   }
 }

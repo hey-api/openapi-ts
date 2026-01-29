@@ -12,11 +12,7 @@ import { TypeExprTsDsl } from '../type/expr';
 import { safeRuntimeName } from '../utils/name';
 
 const Mixed = DefaultMixin(
-  DocMixin(
-    ExportMixin(
-      HintMixin(PatternMixin(ValueMixin(TsDsl<ts.VariableStatement>))),
-    ),
-  ),
+  DocMixin(ExportMixin(HintMixin(PatternMixin(ValueMixin(TsDsl<ts.VariableStatement>))))),
 );
 
 export class VarTsDsl extends Mixed {
@@ -63,8 +59,7 @@ export class VarTsDsl extends Mixed {
 
   override toAst() {
     const name = this.$pattern() ?? this.$node(this.name);
-    if (!name)
-      throw new Error('Var must have either a name or a destructuring pattern');
+    if (!name) throw new Error('Var must have either a name or a destructuring pattern');
     const node = ts.factory.createVariableStatement(
       this.modifiers,
       ts.factory.createVariableDeclarationList(

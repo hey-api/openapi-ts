@@ -12,11 +12,7 @@ import type { PluginInstance } from './types';
 
 const TOptionsType = 'TOptions';
 
-export const createQueryKeyFunction = ({
-  plugin,
-}: {
-  plugin: PluginInstance;
-}) => {
+export const createQueryKeyFunction = ({ plugin }: { plugin: PluginInstance }) => {
   const symbolCreateQueryKey = plugin.symbol(
     applyNaming('createQueryKey', {
       case: plugin.config.case,
@@ -111,9 +107,7 @@ const createQueryKeyLiteral = ({
   operation: IR.OperationObject;
   plugin: PluginInstance;
 }) => {
-  const config = isInfinite
-    ? plugin.config.infiniteQueryKeys
-    : plugin.config.queryKeys;
+  const config = isInfinite ? plugin.config.infiniteQueryKeys : plugin.config.queryKeys;
   let tagsArray: TsDsl<ts.ArrayLiteralExpression> | undefined;
   if (config.tags && operation.tags && operation.tags.length > 0) {
     tagsArray = $.array().elements(...operation.tags);
@@ -184,9 +178,7 @@ export const queryKeyStatement = ({
     .export()
     .assign(
       $.func()
-        .param('options', (p) =>
-          p.required(hasOperationDataRequired(operation)).type(typeData),
-        )
+        .param('options', (p) => p.required(hasOperationDataRequired(operation)).type(typeData))
         .$if(isInfinite && typeQueryKey, (f, v) => f.returns(v))
         .do(
           createQueryKeyLiteral({

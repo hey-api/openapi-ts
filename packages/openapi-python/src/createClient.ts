@@ -66,17 +66,13 @@ export async function createClient({
     // if in watch mode, subsequent errors won't throw to gracefully handle
     // cases where server might be reloading
     if (error && !_watches) {
-      throw new Error(
-        `Request failed with status ${response.status}: ${response.statusText}`,
-      );
+      throw new Error(`Request failed with status ${response.status}: ${response.statusText}`);
     }
 
     return { arrayBuffer, resolvedInput };
   };
   const specData = (
-    await Promise.all(
-      config.input.map((input, index) => getSpecData(input, index)),
-    )
+    await Promise.all(config.input.map((input, index) => getSpecData(input, index)))
   ).filter((data) => data.arrayBuffer || data.resolvedInput);
 
   let context: Context | undefined;
@@ -117,9 +113,7 @@ export async function createClient({
         if (!suffix) {
           return name;
         }
-        return name === 'index' || name.endsWith(suffix)
-          ? name
-          : `${name}${suffix}`;
+        return name === 'index' || name.endsWith(suffix) ? name : `${name}${suffix}`;
       },
       nameConflictResolvers: config.output.nameConflictResolver
         ? {
@@ -137,10 +131,7 @@ export async function createClient({
       ],
       root: config.output.path,
     });
-    context = new Context<
-      OpenApi.V2_0_X | OpenApi.V3_0_X | OpenApi.V3_1_X,
-      Config
-    >({
+    context = new Context<OpenApi.V2_0_X | OpenApi.V3_0_X | OpenApi.V3_1_X, Config>({
       config,
       dependencies,
       logger,
@@ -173,8 +164,7 @@ export async function createClient({
   }
 
   const watchedInput = config.input.find(
-    (input, index) =>
-      input.watch.enabled && typeof inputPaths[index]!.path === 'string',
+    (input, index) => input.watch.enabled && typeof inputPaths[index]!.path === 'string',
   );
 
   if (watchedInput) {

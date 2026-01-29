@@ -1,8 +1,7 @@
 <script setup lang="ts">
 const name = ref('foo');
 const petId = ref(BigInt(8));
-const status =
-  ref<NonNullable<FindPetsByStatusData['query']>['status']>('available');
+const status = ref<NonNullable<FindPetsByStatusData['query']>['status']>('available');
 
 function incrementPetId() {
   petId.value++;

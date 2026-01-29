@@ -40,10 +40,7 @@ const securitySchemeObjectToAuthObject = ({
       };
     }
 
-    if (
-      securitySchemeObject.in === 'query' ||
-      securitySchemeObject.in == 'cookie'
-    ) {
+    if (securitySchemeObject.in === 'query' || securitySchemeObject.in == 'cookie') {
       return {
         in: securitySchemeObject.in,
         name: securitySchemeObject.name,

@@ -27,12 +27,9 @@ export type Dependency = {
   ) => boolean;
 };
 
-export const satisfies: typeof semver.satisfies = (...args) =>
-  semver.satisfies(...args);
+export const satisfies: typeof semver.satisfies = (...args) => semver.satisfies(...args);
 
-export function dependencyFactory(
-  dependencies: Record<string, string>,
-): Dependency {
+export function dependencyFactory(dependencies: Record<string, string>): Dependency {
   return {
     getVersion: (name) => {
       const version = dependencies[name];
@@ -54,9 +51,7 @@ export function dependencyFactory(
     isInstalled: (name) => Boolean(dependencies[name]),
     satisfies: (nameOrVersion, range, optionsOrLoose) => {
       const version =
-        typeof nameOrVersion === 'string'
-          ? dependencies[nameOrVersion]
-          : nameOrVersion;
+        typeof nameOrVersion === 'string' ? dependencies[nameOrVersion] : nameOrVersion;
       return version ? satisfies(version, range, optionsOrLoose) : false;
     },
   };

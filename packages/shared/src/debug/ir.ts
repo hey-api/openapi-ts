@@ -29,8 +29,7 @@ export interface PrintOptions {
 
 const indent = (level: number) => '  '.repeat(level);
 
-const log = (message: string, level?: number) =>
-  console.log(`${indent(level ?? 0)}${message}`);
+const log = (message: string, level?: number) => console.log(`${indent(level ?? 0)}${message}`);
 
 const print = (ir: IR.Model, options: PrintOptions = {}) => {
   const { depth = 2, section = 'all', verbosity = 'summary' } = options;
@@ -77,23 +76,18 @@ const print = (ir: IR.Model, options: PrintOptions = {}) => {
       );
 
       if (operation.body) printObject(operation.body, base + 1, 'requestBody');
-      if (operation.responses)
-        printObject(operation.responses, base + 1, 'responses');
+      if (operation.responses) printObject(operation.responses, base + 1, 'responses');
     }
   };
 
   const sections =
-    section === 'all'
-      ? (Object.keys(ir) as unknown as ReadonlyArray<keyof IR.Model>)
-      : [section];
+    section === 'all' ? (Object.keys(ir) as unknown as ReadonlyArray<keyof IR.Model>) : [section];
 
   for (const section of sections) {
     switch (section) {
       case 'components':
         if (ir.components?.schemas) {
-          log(
-            `Components: ${Object.keys(ir.components.schemas).length} schemas`,
-          );
+          log(`Components: ${Object.keys(ir.components.schemas).length} schemas`);
           for (const [, schema] of Object.entries(ir.components.schemas)) {
             printObject(schema, 1, 'schema');
           }

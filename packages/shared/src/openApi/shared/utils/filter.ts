@@ -2,28 +2,17 @@ import type { Logger } from '@hey-api/codegen-core';
 
 import type { Parser } from '../../../config/parser/types';
 import { createOperationKey } from '../../../ir/operation';
-import type {
-  PathItemObject,
-  PathsObject,
-} from '../../../openApi/3.1.x/types/spec';
+import type { PathItemObject, PathsObject } from '../../../openApi/3.1.x/types/spec';
 import type { OpenApi } from '../../../openApi/types';
 import type { ResourceMetadata } from '../graph/meta';
 import { httpMethods } from './operation';
 
-type FilterNamespace =
-  | 'body'
-  | 'operation'
-  | 'parameter'
-  | 'response'
-  | 'schema'
-  | 'unknown';
+type FilterNamespace = 'body' | 'operation' | 'parameter' | 'response' | 'schema' | 'unknown';
 
 const namespaceNeedle = '/';
 
-export const addNamespace = (
-  namespace: FilterNamespace,
-  value: string = '',
-): string => `${namespace}${namespaceNeedle}${value}`;
+export const addNamespace = (namespace: FilterNamespace, value: string = ''): string =>
+  `${namespace}${namespaceNeedle}${value}`;
 
 export const removeNamespace = (
   key: string,
@@ -118,10 +107,7 @@ const collectFiltersSetFromRegExpsOpenApiV2 = ({
 }: CollectFiltersSetFromRegExps & {
   spec: OpenApi.V2_0_X;
 }) => {
-  if (
-    (excludeOperations.regexps.length || includeOperations.regexps.length) &&
-    spec.paths
-  ) {
+  if ((excludeOperations.regexps.length || includeOperations.regexps.length) && spec.paths) {
     for (const entry of Object.entries(spec.paths)) {
       const path = entry[0] as keyof PathsObject;
       const pathItem = entry[1] as PathItemObject;
@@ -173,10 +159,7 @@ const collectFiltersSetFromRegExpsOpenApiV3 = ({
 }: CollectFiltersSetFromRegExps & {
   spec: OpenApi.V3_0_X | OpenApi.V3_1_X;
 }) => {
-  if (
-    (excludeOperations.regexps.length || includeOperations.regexps.length) &&
-    spec.paths
-  ) {
+  if ((excludeOperations.regexps.length || includeOperations.regexps.length) && spec.paths) {
     for (const entry of Object.entries(spec.paths)) {
       const path = entry[0] as keyof PathsObject;
       const pathItem = entry[1] as PathItemObject;
@@ -213,8 +196,7 @@ const collectFiltersSetFromRegExpsOpenApiV3 = ({
     }
 
     if (
-      (excludeRequestBodies.regexps.length ||
-        includeRequestBodies.regexps.length) &&
+      (excludeRequestBodies.regexps.length || includeRequestBodies.regexps.length) &&
       spec.components.requestBodies
     ) {
       for (const key of Object.keys(spec.components.requestBodies)) {
@@ -276,46 +258,16 @@ export const createFilters = (
   logger: Logger,
 ): Filters => {
   const eventCreateFilters = logger.timeEvent('create-filters');
-  const excludeOperations = createFiltersSetAndRegExps(
-    'operation',
-    config?.operations?.exclude,
-  );
-  const includeOperations = createFiltersSetAndRegExps(
-    'operation',
-    config?.operations?.include,
-  );
-  const excludeParameters = createFiltersSetAndRegExps(
-    'parameter',
-    config?.parameters?.exclude,
-  );
-  const includeParameters = createFiltersSetAndRegExps(
-    'parameter',
-    config?.parameters?.include,
-  );
-  const excludeRequestBodies = createFiltersSetAndRegExps(
-    'body',
-    config?.requestBodies?.exclude,
-  );
-  const includeRequestBodies = createFiltersSetAndRegExps(
-    'body',
-    config?.requestBodies?.include,
-  );
-  const excludeResponses = createFiltersSetAndRegExps(
-    'response',
-    config?.responses?.exclude,
-  );
-  const includeResponses = createFiltersSetAndRegExps(
-    'response',
-    config?.responses?.include,
-  );
-  const excludeSchemas = createFiltersSetAndRegExps(
-    'schema',
-    config?.schemas?.exclude,
-  );
-  const includeSchemas = createFiltersSetAndRegExps(
-    'schema',
-    config?.schemas?.include,
-  );
+  const excludeOperations = createFiltersSetAndRegExps('operation', config?.operations?.exclude);
+  const includeOperations = createFiltersSetAndRegExps('operation', config?.operations?.include);
+  const excludeParameters = createFiltersSetAndRegExps('parameter', config?.parameters?.exclude);
+  const includeParameters = createFiltersSetAndRegExps('parameter', config?.parameters?.include);
+  const excludeRequestBodies = createFiltersSetAndRegExps('body', config?.requestBodies?.exclude);
+  const includeRequestBodies = createFiltersSetAndRegExps('body', config?.requestBodies?.include);
+  const excludeResponses = createFiltersSetAndRegExps('response', config?.responses?.exclude);
+  const includeResponses = createFiltersSetAndRegExps('response', config?.responses?.include);
+  const excludeSchemas = createFiltersSetAndRegExps('schema', config?.schemas?.exclude);
+  const includeSchemas = createFiltersSetAndRegExps('schema', config?.schemas?.include);
 
   collectFiltersSetFromRegExps({
     excludeOperations,
@@ -376,17 +328,17 @@ export const hasFilters = (config: Parser['filters']): boolean => {
 
   return Boolean(
     config.operations?.exclude?.length ||
-      config.operations?.include?.length ||
-      config.parameters?.exclude?.length ||
-      config.parameters?.include?.length ||
-      config.requestBodies?.exclude?.length ||
-      config.requestBodies?.include?.length ||
-      config.responses?.exclude?.length ||
-      config.responses?.include?.length ||
-      config.schemas?.exclude?.length ||
-      config.schemas?.include?.length ||
-      config.tags?.exclude?.length ||
-      config.tags?.include?.length,
+    config.operations?.include?.length ||
+    config.parameters?.exclude?.length ||
+    config.parameters?.include?.length ||
+    config.requestBodies?.exclude?.length ||
+    config.requestBodies?.include?.length ||
+    config.responses?.exclude?.length ||
+    config.responses?.include?.length ||
+    config.schemas?.exclude?.length ||
+    config.schemas?.include?.length ||
+    config.tags?.exclude?.length ||
+    config.tags?.include?.length,
   );
 };
 
@@ -442,8 +394,7 @@ const collectOperations = ({
 
     if (
       filters.tags.include.size &&
-      !new Set([...filters.tags.include].filter((tag) => node.tags.has(tag)))
-        .size
+      !new Set([...filters.tags.include].filter((tag) => node.tags.has(tag))).size
     ) {
       continue;
     }
@@ -719,10 +670,7 @@ const collectSchemas = ({
       const { namespace } = removeNamespace(dependency);
       switch (namespace) {
         case 'schema': {
-          if (
-            !finalSet.has(dependency) &&
-            !filters.schemas.exclude.has(dependency)
-          ) {
+          if (!finalSet.has(dependency) && !filters.schemas.exclude.has(dependency)) {
             stack.push(dependency);
           }
           break;
@@ -963,9 +911,7 @@ export const createFilteredDependencies = ({
   responses: Set<string>;
   schemas: Set<string>;
 } => {
-  const eventCreateFilteredDependencies = logger.timeEvent(
-    'create-filtered-dependencies',
-  );
+  const eventCreateFilteredDependencies = logger.timeEvent('create-filtered-dependencies');
   const { schemas } = collectSchemas({ filters, resourceMetadata });
   const { parameters } = collectParameters({
     filters,

@@ -262,10 +262,7 @@ export type BaseUserConfig<TOutput extends BaseUserOutput> = {
 /**
  * Core configuration shared across all packages.
  */
-export type BaseConfig<
-  TUserConfig extends object,
-  TOutput extends BaseOutput,
-> = Omit<
+export type BaseConfig<TUserConfig extends object, TOutput extends BaseOutput> = Omit<
   Required<TUserConfig>,
   'input' | 'logs' | 'output' | 'parser' | 'plugins' | 'watch'
 > & {

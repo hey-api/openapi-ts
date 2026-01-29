@@ -7,13 +7,7 @@ import { createSseClient } from '../core/serverSentEvents.gen.js';
 import type { HttpMethod } from '../core/types.gen.js';
 import { getValidRequestBody } from '../core/utils.gen.js';
 import type { Client, Config, RequestOptions } from './types.gen.js';
-import {
-  buildUrl,
-  createConfig,
-  mergeConfigs,
-  mergeHeaders,
-  setAuthParams,
-} from './utils.gen.js';
+import { buildUrl, createConfig, mergeConfigs, mergeHeaders, setAuthParams } from './utils.gen.js';
 
 export const createClient = (config: Config = {}): Client => {
   let _config = mergeConfigs(createConfig(), config);
@@ -115,27 +109,22 @@ export const createClient = (config: Config = {}): Client => {
     }
   };
 
-  const makeMethodFn =
-    (method: Uppercase<HttpMethod>) => (options: RequestOptions) =>
-      request({ ...options, method });
+  const makeMethodFn = (method: Uppercase<HttpMethod>) => (options: RequestOptions) =>
+    request({ ...options, method });
 
-  const makeSseFn =
-    (method: Uppercase<HttpMethod>) => async (options: RequestOptions) => {
-      const { opts, url } = await beforeRequest(options);
-      return createSseClient({
-        ...opts,
-        body: opts.body as BodyInit | null | undefined,
-        headers: opts.headers as Record<string, string>,
-        method,
-        serializedBody: getValidRequestBody(opts) as
-          | BodyInit
-          | null
-          | undefined,
-        // @ts-expect-error
-        signal: opts.signal,
-        url,
-      });
-    };
+  const makeSseFn = (method: Uppercase<HttpMethod>) => async (options: RequestOptions) => {
+    const { opts, url } = await beforeRequest(options);
+    return createSseClient({
+      ...opts,
+      body: opts.body as BodyInit | null | undefined,
+      headers: opts.headers as Record<string, string>,
+      method,
+      serializedBody: getValidRequestBody(opts) as BodyInit | null | undefined,
+      // @ts-expect-error
+      signal: opts.signal,
+      url,
+    });
+  };
 
   return {
     buildUrl,

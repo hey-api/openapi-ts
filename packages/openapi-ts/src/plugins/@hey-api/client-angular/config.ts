@@ -13,8 +13,7 @@ export const defaultConfig: HeyApiClientAngularPlugin['Config'] = {
     ...clientDefaultConfig,
     throwOnError: false,
   },
-  handler:
-    clientPluginHandler as unknown as HeyApiClientAngularPlugin['Handler'],
+  handler: clientPluginHandler as unknown as HeyApiClientAngularPlugin['Handler'],
   name: '@hey-api/client-angular',
 };
 

@@ -64,12 +64,8 @@ export const irSchemaToAst = ({
   if (schema.items) {
     schema = deduplicateSchema({ detectFormat: false, schema });
     if (schema.items) {
-      const itemTypes = schema.items.map((item) =>
-        irSchemaToAst({ plugin, schema: item, state }),
-      );
-      return schema.logicalOperator === 'and'
-        ? $.type.and(...itemTypes)
-        : $.type.or(...itemTypes);
+      const itemTypes = schema.items.map((item) => irSchemaToAst({ plugin, schema: item, state }));
+      return schema.logicalOperator === 'and' ? $.type.and(...itemTypes) : $.type.or(...itemTypes);
     }
 
     return irSchemaToAst({ plugin, schema, state });
