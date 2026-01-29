@@ -258,7 +258,8 @@ export const createInfiniteQueryOptions = ({
               .call(
                 $.object()
                   .pretty()
-                  .hint('@ts-ignore')
+                  .prop('initialPageParam', $.object().pretty().as('any'))
+                  .prop('getNextPageParam', $.func().as('any'))
                   .prop(
                     'queryFn',
                     $.func()
