@@ -42,10 +42,7 @@ export const defaultPathSerializer = ({ path, url: _url }: PathSerializer) => {
       }
 
       if (Array.isArray(value)) {
-        url = url.replace(
-          match,
-          serializeArrayParam({ explode, name, style, value }),
-        );
+        url = url.replace(match, serializeArrayParam({ explode, name, style, value }));
         continue;
       }
 

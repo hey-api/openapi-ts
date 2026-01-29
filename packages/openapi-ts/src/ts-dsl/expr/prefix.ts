@@ -12,10 +12,7 @@ export class PrefixTsDsl extends Mixed {
   protected _expr?: string | MaybeTsDsl<ts.Expression>;
   protected _op?: ts.PrefixUnaryOperator;
 
-  constructor(
-    expr?: string | MaybeTsDsl<ts.Expression>,
-    op?: ts.PrefixUnaryOperator,
-  ) {
+  constructor(expr?: string | MaybeTsDsl<ts.Expression>, op?: ts.PrefixUnaryOperator) {
     super();
     this._expr = expr;
     this._op = op;
@@ -57,9 +54,6 @@ export class PrefixTsDsl extends Mixed {
     if (!this._op) {
       throw new Error('Missing operator for prefix unary expression');
     }
-    return ts.factory.createPrefixUnaryExpression(
-      this._op,
-      this.$node(this._expr),
-    );
+    return ts.factory.createPrefixUnaryExpression(this._op, this.$node(this._expr));
   }
 }

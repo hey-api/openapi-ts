@@ -166,34 +166,28 @@ const handleComponent = ({
   const $ref = pathToJsonPointer(fromRef(state.path));
   const ast = irSchemaToAst({ plugin, schema, state });
   const baseName = refToName($ref);
-  const symbol = plugin.symbol(
-    applyNaming(baseName, plugin.config.definitions),
-    {
-      meta: {
-        category: 'schema',
-        path: fromRef(state.path),
-        resource: 'definition',
-        resourceId: $ref,
-        tags: fromRef(state.tags),
-        tool: 'zod',
-      },
+  const symbol = plugin.symbol(applyNaming(baseName, plugin.config.definitions), {
+    meta: {
+      category: 'schema',
+      path: fromRef(state.path),
+      resource: 'definition',
+      resourceId: $ref,
+      tags: fromRef(state.tags),
+      tool: 'zod',
     },
-  );
+  });
   const typeInferSymbol = plugin.config.definitions.types.infer.enabled
-    ? plugin.symbol(
-        applyNaming(baseName, plugin.config.definitions.types.infer),
-        {
-          meta: {
-            category: 'type',
-            path: fromRef(state.path),
-            resource: 'definition',
-            resourceId: $ref,
-            tags: fromRef(state.tags),
-            tool: 'zod',
-            variant: 'infer',
-          },
+    ? plugin.symbol(applyNaming(baseName, plugin.config.definitions.types.infer), {
+        meta: {
+          category: 'type',
+          path: fromRef(state.path),
+          resource: 'definition',
+          resourceId: $ref,
+          tags: fromRef(state.tags),
+          tool: 'zod',
+          variant: 'infer',
         },
-      )
+      })
     : undefined;
   exportAst({
     ast,
@@ -213,71 +207,64 @@ export const handlerV3: ZodPlugin['Handler'] = ({ plugin }) => {
     },
   });
 
-  plugin.forEach(
-    'operation',
-    'parameter',
-    'requestBody',
-    'schema',
-    'webhook',
-    (event) => {
-      const state = refs<PluginState>({
-        hasLazyExpression: false,
-        path: event._path,
-        tags: event.tags,
-      });
-      switch (event.type) {
-        case 'operation':
-          irOperationToAst({
-            getAst: (schema, path) => {
-              const state = refs<PluginState>({
-                hasLazyExpression: false,
-                path,
-                tags: event.tags,
-              });
-              return irSchemaToAst({ plugin, schema, state });
-            },
-            operation: event.operation,
-            plugin,
-            state,
-          });
-          break;
-        case 'parameter':
-          handleComponent({
-            plugin,
-            schema: event.parameter.schema,
-            state,
-          });
-          break;
-        case 'requestBody':
-          handleComponent({
-            plugin,
-            schema: event.requestBody.schema,
-            state,
-          });
-          break;
-        case 'schema':
-          handleComponent({
-            plugin,
-            schema: event.schema,
-            state,
-          });
-          break;
-        case 'webhook':
-          irWebhookToAst({
-            getAst: (schema, path) => {
-              const state = refs<PluginState>({
-                hasLazyExpression: false,
-                path,
-                tags: event.tags,
-              });
-              return irSchemaToAst({ plugin, schema, state });
-            },
-            operation: event.operation,
-            plugin,
-            state,
-          });
-          break;
-      }
-    },
-  );
+  plugin.forEach('operation', 'parameter', 'requestBody', 'schema', 'webhook', (event) => {
+    const state = refs<PluginState>({
+      hasLazyExpression: false,
+      path: event._path,
+      tags: event.tags,
+    });
+    switch (event.type) {
+      case 'operation':
+        irOperationToAst({
+          getAst: (schema, path) => {
+            const state = refs<PluginState>({
+              hasLazyExpression: false,
+              path,
+              tags: event.tags,
+            });
+            return irSchemaToAst({ plugin, schema, state });
+          },
+          operation: event.operation,
+          plugin,
+          state,
+        });
+        break;
+      case 'parameter':
+        handleComponent({
+          plugin,
+          schema: event.parameter.schema,
+          state,
+        });
+        break;
+      case 'requestBody':
+        handleComponent({
+          plugin,
+          schema: event.requestBody.schema,
+          state,
+        });
+        break;
+      case 'schema':
+        handleComponent({
+          plugin,
+          schema: event.schema,
+          state,
+        });
+        break;
+      case 'webhook':
+        irWebhookToAst({
+          getAst: (schema, path) => {
+            const state = refs<PluginState>({
+              hasLazyExpression: false,
+              path,
+              tags: event.tags,
+            });
+            return irSchemaToAst({ plugin, schema, state });
+          },
+          operation: event.operation,
+          plugin,
+          state,
+        });
+        break;
+    }
+  });
 };

@@ -1,16 +1,11 @@
 import type { Context } from './context';
 import type { Pagination } from './pagination';
-import {
-  hasParametersObjectRequired,
-  parameterWithPagination,
-} from './parameter';
+import { hasParametersObjectRequired, parameterWithPagination } from './parameter';
 import { deduplicateSchema } from './schema';
 import type { IR } from './types';
 import { addItemsToSchema } from './utils';
 
-export const hasOperationDataRequired = (
-  operation: IR.OperationObject,
-): boolean => {
+export const hasOperationDataRequired = (operation: IR.OperationObject): boolean => {
   if (hasParametersObjectRequired(operation.parameters)) {
     return true;
   }
@@ -22,13 +17,8 @@ export const hasOperationDataRequired = (
   return false;
 };
 
-export const createOperationKey = ({
-  method,
-  path,
-}: {
-  method: string;
-  path: string;
-}) => `${method.toUpperCase()} ${path}`;
+export const createOperationKey = ({ method, path }: { method: string; path: string }) =>
+  `${method.toUpperCase()} ${path}`;
 
 export const operationPagination = ({
   context,
@@ -59,8 +49,7 @@ export const operationPagination = ({
     ? context.resolveIrRef<IR.RequestBodyObject | IR.SchemaObject>(schema.$ref)
     : schema;
 
-  const finalSchema =
-    'schema' in resolvedSchema ? resolvedSchema.schema : resolvedSchema;
+  const finalSchema = 'schema' in resolvedSchema ? resolvedSchema.schema : resolvedSchema;
   const paginationProp = finalSchema?.properties?.[body.pagination];
 
   if (!paginationProp) {
@@ -79,11 +68,7 @@ export const operationPagination = ({
 
 type StatusGroup = '1XX' | '2XX' | '3XX' | '4XX' | '5XX' | 'default';
 
-export const statusCodeToGroup = ({
-  statusCode,
-}: {
-  statusCode: string;
-}): StatusGroup => {
+export const statusCodeToGroup = ({ statusCode }: { statusCode: string }): StatusGroup => {
   switch (statusCode) {
     case '1XX':
       return '1XX';
@@ -121,9 +106,7 @@ interface OperationResponsesMap {
   responses?: IR.SchemaObject;
 }
 
-export const operationResponsesMap = (
-  operation: IR.OperationObject,
-): OperationResponsesMap => {
+export const operationResponsesMap = (operation: IR.OperationObject): OperationResponsesMap => {
   const result: OperationResponsesMap = {};
 
   if (!operation.responses) {
@@ -176,17 +159,13 @@ export const operationResponsesMap = (
       inferred = true;
     }
 
-    const description = (
-      defaultResponse.schema.description ?? ''
-    ).toLocaleLowerCase();
+    const description = (defaultResponse.schema.description ?? '').toLocaleLowerCase();
     const $ref = (defaultResponse.schema.$ref ?? '').toLocaleLowerCase();
 
     // TODO: parser - this could be rewritten using regular expressions
     const successKeywords = ['success'];
     if (
-      successKeywords.some(
-        (keyword) => description.includes(keyword) || $ref.includes(keyword),
-      )
+      successKeywords.some((keyword) => description.includes(keyword) || $ref.includes(keyword))
     ) {
       responses.properties.default = defaultResponse.schema;
       inferred = true;
@@ -194,11 +173,7 @@ export const operationResponsesMap = (
 
     // TODO: parser - this could be rewritten using regular expressions
     const errorKeywords = ['error', 'problem'];
-    if (
-      errorKeywords.some(
-        (keyword) => description.includes(keyword) || $ref.includes(keyword),
-      )
-    ) {
+    if (errorKeywords.some((keyword) => description.includes(keyword) || $ref.includes(keyword))) {
       errors.properties.default = defaultResponse.schema;
       inferred = true;
     }

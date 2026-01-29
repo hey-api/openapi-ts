@@ -68,9 +68,7 @@ function modifierToKind(modifier: Modifier): ts.ModifierSyntaxKind {
   }
 }
 
-function ModifiersMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
-  Base: TBase,
-) {
+function ModifiersMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base: TBase) {
   abstract class Modifiers extends Base {
     protected modifiers: Array<ts.Modifier> = [];
 
@@ -108,9 +106,7 @@ export interface AbstractMethods extends Modifiers {
 /**
  * Mixin that adds an `abstract` modifier to a node.
  */
-export function AbstractMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
-  Base: TBase,
-) {
+export function AbstractMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base: TBase) {
   const Mixed = ModifiersMixin(Base as BaseCtor<T>);
 
   abstract class Abstract extends Mixed {
@@ -136,9 +132,7 @@ export interface AsyncMethods extends Modifiers {
 /**
  * Mixin that adds an `async` modifier to a node.
  */
-export function AsyncMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
-  Base: TBase,
-) {
+export function AsyncMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base: TBase) {
   const Mixed = ModifiersMixin(Base as BaseCtor<T>);
 
   abstract class Async extends Mixed {
@@ -164,9 +158,7 @@ export interface ConstMethods extends Modifiers {
 /**
  * Mixin that adds a `const` modifier to a node.
  */
-export function ConstMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
-  Base: TBase,
-) {
+export function ConstMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base: TBase) {
   const Mixed = ModifiersMixin(Base as BaseCtor<T>);
 
   abstract class Const extends Mixed {
@@ -192,9 +184,7 @@ export interface DeclareMethods extends Modifiers {
 /**
  * Mixin that adds a `declare` modifier to a node.
  */
-export function DeclareMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
-  Base: TBase,
-) {
+export function DeclareMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base: TBase) {
   const Mixed = ModifiersMixin(Base as BaseCtor<T>);
 
   abstract class Declare extends Mixed {
@@ -220,9 +210,7 @@ export interface DefaultMethods extends Modifiers {
 /**
  * Mixin that adds a `default` modifier to a node.
  */
-export function DefaultMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
-  Base: TBase,
-) {
+export function DefaultMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base: TBase) {
   const Mixed = ModifiersMixin(Base as BaseCtor<T>);
 
   abstract class Default extends Mixed {
@@ -254,9 +242,7 @@ export interface ExportMethods extends Modifiers {
 /**
  * Mixin that adds an `export` modifier to a node.
  */
-export function ExportMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
-  Base: TBase,
-) {
+export function ExportMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base: TBase) {
   const Mixed = ModifiersMixin(Base as BaseCtor<T>);
 
   abstract class Export extends Mixed {
@@ -291,9 +277,7 @@ export interface OverrideMethods extends Modifiers {
 /**
  * Mixin that adds an `override` modifier to a node.
  */
-export function OverrideMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
-  Base: TBase,
-) {
+export function OverrideMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base: TBase) {
   const Mixed = ModifiersMixin(Base as BaseCtor<T>);
 
   abstract class Override extends Mixed {
@@ -319,9 +303,7 @@ export interface PrivateMethods extends Modifiers {
 /**
  * Mixin that adds a `private` modifier to a node.
  */
-export function PrivateMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
-  Base: TBase,
-) {
+export function PrivateMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base: TBase) {
   const Mixed = ModifiersMixin(Base as BaseCtor<T>);
 
   abstract class Private extends Mixed {
@@ -347,9 +329,7 @@ export interface ProtectedMethods extends Modifiers {
 /**
  * Mixin that adds a `protected` modifier to a node.
  */
-export function ProtectedMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
-  Base: TBase,
-) {
+export function ProtectedMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base: TBase) {
   const Mixed = ModifiersMixin(Base as BaseCtor<T>);
 
   abstract class Protected extends Mixed {
@@ -375,9 +355,7 @@ export interface PublicMethods extends Modifiers {
 /**
  * Mixin that adds a `public` modifier to a node.
  */
-export function PublicMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
-  Base: TBase,
-) {
+export function PublicMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base: TBase) {
   const Mixed = ModifiersMixin(Base as BaseCtor<T>);
 
   abstract class Public extends Mixed {
@@ -403,9 +381,7 @@ export interface ReadonlyMethods extends Modifiers {
 /**
  * Mixin that adds a `readonly` modifier to a node.
  */
-export function ReadonlyMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
-  Base: TBase,
-) {
+export function ReadonlyMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base: TBase) {
   const Mixed = ModifiersMixin(Base as BaseCtor<T>);
 
   abstract class Readonly extends Mixed {
@@ -431,9 +407,7 @@ export interface StaticMethods extends Modifiers {
 /**
  * Mixin that adds a `static` modifier to a node.
  */
-export function StaticMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
-  Base: TBase,
-) {
+export function StaticMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base: TBase) {
   const Mixed = ModifiersMixin(Base as BaseCtor<T>);
 
   abstract class Static extends Mixed {

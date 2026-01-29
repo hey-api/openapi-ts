@@ -62,9 +62,13 @@ describe('query key helpers', () => {
 
     it('normalizes arrays', () => {
       const date = new Date('2025-03-04T05:06:07.000Z');
-      expect(
-        serializeQueryKeyValue([1n, date, undefined, () => {}, 'ok']),
-      ).toEqual(['1', date.toISOString(), null, null, 'ok']);
+      expect(serializeQueryKeyValue([1n, date, undefined, () => {}, 'ok'])).toEqual([
+        '1',
+        date.toISOString(),
+        null,
+        null,
+        'ok',
+      ]);
     });
 
     it('normalizes plain objects', () => {

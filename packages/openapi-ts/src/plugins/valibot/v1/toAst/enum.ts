@@ -8,9 +8,7 @@ import type { IrSchemaToAstOptions } from '../../shared/types';
 import { identifiers } from '../constants';
 import { unknownToAst } from './unknown';
 
-function itemsNode(
-  ctx: EnumResolverContext,
-): ReturnType<EnumResolverContext['nodes']['items']> {
+function itemsNode(ctx: EnumResolverContext): ReturnType<EnumResolverContext['nodes']['items']> {
   const { schema } = ctx;
 
   const enumMembers: Array<ReturnType<typeof $.literal>> = [];

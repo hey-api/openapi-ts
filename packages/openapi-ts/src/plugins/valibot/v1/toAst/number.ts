@@ -1,9 +1,6 @@
 import type { SchemaWithType } from '@hey-api/shared';
 
-import {
-  maybeBigInt,
-  shouldCoerceToBigInt,
-} from '../../../../plugins/shared/utils/coerce';
+import { maybeBigInt, shouldCoerceToBigInt } from '../../../../plugins/shared/utils/coerce';
 import { getIntegerLimit } from '../../../../plugins/shared/utils/formats';
 import { $ } from '../../../../ts-dsl';
 import type { NumberResolverContext } from '../../resolvers';
@@ -65,10 +62,7 @@ function maxNode(ctx: NumberResolverContext): PipeResult | undefined {
   if (limit) {
     return $(v)
       .attr(identifiers.actions.maxValue)
-      .call(
-        ctx.utils.maybeBigInt(limit.maxValue, schema.format),
-        $.literal(limit.maxError),
-      );
+      .call(ctx.utils.maybeBigInt(limit.maxValue, schema.format), $.literal(limit.maxError));
   }
   return;
 }
@@ -90,10 +84,7 @@ function minNode(ctx: NumberResolverContext): PipeResult | undefined {
   if (limit) {
     return $(v)
       .attr(identifiers.actions.minValue)
-      .call(
-        ctx.utils.maybeBigInt(limit.minValue, schema.format),
-        $.literal(limit.minError),
-      );
+      .call(ctx.utils.maybeBigInt(limit.minValue, schema.format), $.literal(limit.minError));
   }
   return;
 }

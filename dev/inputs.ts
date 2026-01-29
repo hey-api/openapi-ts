@@ -16,14 +16,10 @@ export const inputs = {
 
 export type InputKey = keyof typeof inputs;
 
-export function getInput(
-  key: InputKey = (process.env.INPUT as InputKey) || 'opencode',
-) {
+export function getInput(key: InputKey = (process.env.INPUT as InputKey) || 'opencode') {
   const input = inputs[key];
   if (!input) {
-    throw new Error(
-      `Unknown input: ${key}. Available: ${Object.keys(inputs).join(', ')}`,
-    );
+    throw new Error(`Unknown input: ${key}. Available: ${Object.keys(inputs).join(', ')}`);
   }
   return input;
 }

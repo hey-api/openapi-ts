@@ -142,9 +142,7 @@ export function getParser(userConfig: { parser?: UserParser }): Parser {
           value: fields.transforms,
         }),
         validate_EXPERIMENTAL:
-          fields.validate_EXPERIMENTAL === true
-            ? 'warn'
-            : fields.validate_EXPERIMENTAL,
+          fields.validate_EXPERIMENTAL === true ? 'warn' : fields.validate_EXPERIMENTAL,
       }),
     },
     value: userConfig.parser,

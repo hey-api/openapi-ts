@@ -18,11 +18,7 @@ const localClient = createClient({
 });
 
 localClient.interceptors.request.use((request, options) => {
-  if (
-    options.url === '/pet/{petId}' &&
-    options.method === 'GET' &&
-    Math.random() < 0.5
-  ) {
+  if (options.url === '/pet/{petId}' && options.method === 'GET' && Math.random() < 0.5) {
     request.headers.set('Authorization', 'Bearer <token_from_interceptor>');
   }
   return request;
@@ -105,9 +101,7 @@ async function handleUpdatePet() {
           />
         </a>
 
-        <h1 class="text-2xl font-bold text-white">
-          @hey-api/openapi-ts 🤝 ofetch
-        </h1>
+        <h1 class="text-2xl font-bold text-white">@hey-api/openapi-ts 🤝 ofetch</h1>
       </div>
 
       <div class="flex flex-col gap-2">
@@ -123,13 +117,9 @@ async function handleUpdatePet() {
           </div>
 
           <div>
-            <p class="text-sm font-bold text-white">
-              Name: {{ pet?.name || 'N/A' }}
-            </p>
+            <p class="text-sm font-bold text-white">Name: {{ pet?.name || 'N/A' }}</p>
 
-            <p class="text-sm text-[#f1f7feb5]">
-              Category: {{ pet?.category?.name || 'N/A' }}
-            </p>
+            <p class="text-sm text-[#f1f7feb5]">Category: {{ pet?.category?.name || 'N/A' }}</p>
           </div>
         </div>
 
@@ -168,10 +158,7 @@ async function handleUpdatePet() {
         </div>
 
         <div class="flex gap-2">
-          <button
-            class="rounded bg-[#3e63dd] p-2 text-sm font-medium text-white"
-            type="submit"
-          >
+          <button class="rounded bg-[#3e63dd] p-2 text-sm font-medium text-white" type="submit">
             Add Pet
           </button>
 

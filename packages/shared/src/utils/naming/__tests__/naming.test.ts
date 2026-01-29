@@ -144,8 +144,7 @@ const scenarios: ReadonlyArray<{
   },
   {
     PascalCase: 'GetApiVApiVersionUsersUserIdLocationLocationId',
-    SCREAMING_SNAKE_CASE:
-      'GET_API_V_API_VERSION_USERS_USER_ID_LOCATION_LOCATION_ID',
+    SCREAMING_SNAKE_CASE: 'GET_API_V_API_VERSION_USERS_USER_ID_LOCATION_LOCATION_ID',
     camelCase: 'getApiVApiVersionUsersUserIdLocationLocationId',
     snake_case: 'get_api_v_api_version_users_user_id_location_location_id',
     value: 'GET /api/v{api-version}/users/{userId}/location/{locationId}',
@@ -182,9 +181,7 @@ describe('toCase', () => {
         it.each(scenarios)(
           '$value -> $PascalCase',
           ({ PascalCase, stripLeadingSeparators, value }) => {
-            expect(toCase(value, casing, { stripLeadingSeparators })).toBe(
-              PascalCase,
-            );
+            expect(toCase(value, casing, { stripLeadingSeparators })).toBe(PascalCase);
           },
         );
         break;
@@ -192,9 +189,7 @@ describe('toCase', () => {
         it.each(scenarios)(
           '$value -> $camelCase',
           ({ camelCase, stripLeadingSeparators, value }) => {
-            expect(toCase(value, casing, { stripLeadingSeparators })).toBe(
-              camelCase,
-            );
+            expect(toCase(value, casing, { stripLeadingSeparators })).toBe(camelCase);
           },
         );
         break;
@@ -202,9 +197,7 @@ describe('toCase', () => {
         it.each(scenarios)(
           '$value -> $SCREAMING_SNAKE_CASE',
           ({ SCREAMING_SNAKE_CASE, stripLeadingSeparators, value }) => {
-            expect(toCase(value, casing, { stripLeadingSeparators })).toBe(
-              SCREAMING_SNAKE_CASE,
-            );
+            expect(toCase(value, casing, { stripLeadingSeparators })).toBe(SCREAMING_SNAKE_CASE);
           },
         );
         break;
@@ -212,9 +205,7 @@ describe('toCase', () => {
         it.each(scenarios)(
           '$value -> $snake_case',
           ({ snake_case, stripLeadingSeparators, value }) => {
-            expect(toCase(value, casing, { stripLeadingSeparators })).toBe(
-              snake_case,
-            );
+            expect(toCase(value, casing, { stripLeadingSeparators })).toBe(snake_case);
           },
         );
         break;

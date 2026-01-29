@@ -3,22 +3,12 @@ const fileLikeRegExp =
 const jsonMimeRegExp = /^application\/(.*\+)?json(;.*)?$/i;
 const multipartFormDataMimeRegExp = /^multipart\/form-data(;.*)?$/i;
 const textMimeRegExp = /^text\/[a-z0-9.+-]+(;.*)?$/i;
-const xWwwFormUrlEncodedMimeRegExp =
-  /^application\/x-www-form-urlencoded(;.*)?$/i;
+const xWwwFormUrlEncodedMimeRegExp = /^application\/x-www-form-urlencoded(;.*)?$/i;
 const octetStreamMimeRegExp = /^application\/octet-stream(;.*)?$/i;
 
-export type IRMediaType =
-  | 'form-data'
-  | 'json'
-  | 'text'
-  | 'url-search-params'
-  | 'octet-stream';
+export type IRMediaType = 'form-data' | 'json' | 'text' | 'url-search-params' | 'octet-stream';
 
-export const isMediaTypeFileLike = ({
-  mediaType,
-}: {
-  mediaType: string;
-}): boolean => {
+export const isMediaTypeFileLike = ({ mediaType }: { mediaType: string }): boolean => {
   fileLikeRegExp.lastIndex = 0;
   return fileLikeRegExp.test(mediaType);
 };

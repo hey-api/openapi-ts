@@ -92,10 +92,7 @@ export const handlerV1: HeyApiSdkPlugin['Handler'] = ({ plugin }) => {
     allNodes.push(...nodes);
   }
 
-  const uniqueDependencies = new Map<
-    number,
-    ReturnType<typeof $.class | typeof $.var>
-  >();
+  const uniqueDependencies = new Map<number, ReturnType<typeof $.class | typeof $.var>>();
   for (const dep of allDependencies) {
     if (dep.symbol) uniqueDependencies.set(dep.symbol.id, dep);
   }

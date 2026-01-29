@@ -73,10 +73,7 @@ const schemaToJsonSchemaDraft_04 = ({
 
   stripSchema({ plugin, schema });
 
-  if (
-    schema.additionalProperties &&
-    typeof schema.additionalProperties !== 'boolean'
-  ) {
+  if (schema.additionalProperties && typeof schema.additionalProperties !== 'boolean') {
     schema.additionalProperties = schemaToJsonSchemaDraft_04({
       context,
       plugin,
@@ -126,12 +123,8 @@ const schemaToJsonSchemaDraft_05 = ({
 }: {
   context: Context;
   plugin: HeyApiSchemasPlugin['Instance'];
-  schema:
-    | OpenApiV3_0_XTypes['SchemaObject']
-    | OpenApiV3_0_XTypes['ReferenceObject'];
-}):
-  | OpenApiV3_0_XTypes['SchemaObject']
-  | OpenApiV3_0_XTypes['ReferenceObject'] => {
+  schema: OpenApiV3_0_XTypes['SchemaObject'] | OpenApiV3_0_XTypes['ReferenceObject'];
+}): OpenApiV3_0_XTypes['SchemaObject'] | OpenApiV3_0_XTypes['ReferenceObject'] => {
   if (Array.isArray(_schema)) {
     return _schema.map((item) =>
       schemaToJsonSchemaDraft_05({
@@ -139,9 +132,7 @@ const schemaToJsonSchemaDraft_05 = ({
         plugin,
         schema: item,
       }),
-    ) as unknown as
-      | OpenApiV3_0_XTypes['SchemaObject']
-      | OpenApiV3_0_XTypes['ReferenceObject'];
+    ) as unknown as OpenApiV3_0_XTypes['SchemaObject'] | OpenApiV3_0_XTypes['ReferenceObject'];
   }
 
   const schema = structuredClone(_schema);
@@ -155,10 +146,7 @@ const schemaToJsonSchemaDraft_05 = ({
 
   stripSchema({ plugin, schema });
 
-  if (
-    schema.additionalProperties &&
-    typeof schema.additionalProperties !== 'boolean'
-  ) {
+  if (schema.additionalProperties && typeof schema.additionalProperties !== 'boolean') {
     schema.additionalProperties = schemaToJsonSchemaDraft_05({
       context,
       plugin,
@@ -250,10 +238,7 @@ const schemaToJsonSchema2020_12 = ({
     schema.$ref = decodeURI(schema.$ref);
   }
 
-  if (
-    schema.additionalProperties &&
-    typeof schema.additionalProperties !== 'boolean'
-  ) {
+  if (schema.additionalProperties && typeof schema.additionalProperties !== 'boolean') {
     schema.additionalProperties = schemaToJsonSchema2020_12({
       context,
       plugin,

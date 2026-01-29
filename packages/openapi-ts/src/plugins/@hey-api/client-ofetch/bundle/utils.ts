@@ -1,7 +1,4 @@
-import type {
-  FetchOptions as OfetchOptions,
-  ResponseType as OfetchResponseType,
-} from 'ofetch';
+import type { FetchOptions as OfetchOptions, ResponseType as OfetchResponseType } from 'ofetch';
 
 import { getAuthToken } from '../../client-core/bundle/auth';
 import type { QuerySerializerOptions } from '../../client-core/bundle/bodySerializer';
@@ -75,9 +72,7 @@ export const createQuerySerializer = <T = unknown>({
 /**
  * Infers parseAs value from provided Content-Type header.
  */
-export const getParseAs = (
-  contentType: string | null,
-): Exclude<Config['parseAs'], 'auto'> => {
+export const getParseAs = (contentType: string | null): Exclude<Config['parseAs'], 'auto'> => {
   if (!contentType) {
     // If no Content-Type header is provided, the best we can do is return the raw response body,
     // which is effectively the same as the 'stream' option.
@@ -90,10 +85,7 @@ export const getParseAs = (
     return;
   }
 
-  if (
-    cleanContent.startsWith('application/json') ||
-    cleanContent.endsWith('+json')
-  ) {
+  if (cleanContent.startsWith('application/json') || cleanContent.endsWith('+json')) {
     return 'json';
   }
 
@@ -102,9 +94,7 @@ export const getParseAs = (
   }
 
   if (
-    ['application/', 'audio/', 'image/', 'video/'].some((type) =>
-      cleanContent.startsWith(type),
-    )
+    ['application/', 'audio/', 'image/', 'video/'].some((type) => cleanContent.startsWith(type))
   ) {
     return 'blob';
   }
@@ -233,10 +223,7 @@ export const mergeHeaders = (
       continue;
     }
 
-    const iterator =
-      header instanceof Headers
-        ? headersEntries(header)
-        : Object.entries(header);
+    const iterator = header instanceof Headers ? headersEntries(header) : Object.entries(header);
 
     for (const [key, value] of iterator) {
       if (value === null) {
@@ -264,17 +251,13 @@ export const mergeHeaders = (
 export const isRepeatableBody = (body: unknown): boolean => {
   if (body == null) return true; // undefined/null treated as no-body
   if (typeof body === 'string') return true;
-  if (typeof URLSearchParams !== 'undefined' && body instanceof URLSearchParams)
-    return true;
-  if (typeof Uint8Array !== 'undefined' && body instanceof Uint8Array)
-    return true;
-  if (typeof ArrayBuffer !== 'undefined' && body instanceof ArrayBuffer)
-    return true;
+  if (typeof URLSearchParams !== 'undefined' && body instanceof URLSearchParams) return true;
+  if (typeof Uint8Array !== 'undefined' && body instanceof Uint8Array) return true;
+  if (typeof ArrayBuffer !== 'undefined' && body instanceof ArrayBuffer) return true;
   if (typeof Blob !== 'undefined' && body instanceof Blob) return true;
   if (typeof FormData !== 'undefined' && body instanceof FormData) return true;
   // Streams are not repeatable
-  if (typeof ReadableStream !== 'undefined' && body instanceof ReadableStream)
-    return false;
+  if (typeof ReadableStream !== 'undefined' && body instanceof ReadableStream) return false;
   // Default: assume non-repeatable for unknown structured bodies
   return false;
 };
@@ -286,13 +269,8 @@ export const wrapDataReturn = <T>(
   data: T,
   result: { request: Request; response: Response },
   responseStyle: ResponseStyle | undefined,
-):
-  | T
-  | ((T extends Record<string, unknown> ? { data: T } : { data: T }) &
-      typeof result) =>
-  (responseStyle ?? 'fields') === 'data'
-    ? (data as any)
-    : ({ data, ...result } as any);
+): T | ((T extends Record<string, unknown> ? { data: T } : { data: T }) & typeof result) =>
+  (responseStyle ?? 'fields') === 'data' ? (data as any) : ({ data, ...result } as any);
 
 /**
  * Small helper to unify error vs fields return style.
@@ -303,11 +281,8 @@ export const wrapErrorReturn = <E>(
   responseStyle: ResponseStyle | undefined,
 ):
   | undefined
-  | ((E extends Record<string, unknown> ? { error: E } : { error: E }) &
-      typeof result) =>
-  (responseStyle ?? 'fields') === 'data'
-    ? undefined
-    : ({ error, ...result } as any);
+  | ((E extends Record<string, unknown> ? { error: E } : { error: E }) & typeof result) =>
+  (responseStyle ?? 'fields') === 'data' ? undefined : ({ error, ...result } as any);
 
 /**
  * Build options for $ofetch.raw from our resolved opts and body.
@@ -324,9 +299,7 @@ export const buildOfetchOptions = (
     credentials: opts.credentials as OfetchOptions['credentials'],
     dispatcher: opts.dispatcher as OfetchOptions['dispatcher'],
     headers: opts.headers as Headers,
-    ignoreResponseError:
-      (opts.ignoreResponseError as OfetchOptions['ignoreResponseError']) ??
-      true,
+    ignoreResponseError: (opts.ignoreResponseError as OfetchOptions['ignoreResponseError']) ?? true,
     method: opts.method,
     onRequest: opts.onRequest as OfetchOptions['onRequest'],
     onRequestError: opts.onRequestError as OfetchOptions['onRequestError'],
@@ -338,8 +311,7 @@ export const buildOfetchOptions = (
     responseType,
     retry: retryOverride ?? (opts.retry as OfetchOptions['retry']),
     retryDelay: opts.retryDelay as OfetchOptions['retryDelay'],
-    retryStatusCodes:
-      opts.retryStatusCodes as OfetchOptions['retryStatusCodes'],
+    retryStatusCodes: opts.retryStatusCodes as OfetchOptions['retryStatusCodes'],
     signal: opts.signal,
     timeout: opts.timeout as number | undefined,
   }) as OfetchOptions;
@@ -358,15 +330,11 @@ export const parseSuccess = async (
   }
 
   const inferredParseAs =
-    (opts.parseAs === 'auto'
-      ? getParseAs(response.headers.get('Content-Type'))
-      : opts.parseAs) ?? 'json';
+    (opts.parseAs === 'auto' ? getParseAs(response.headers.get('Content-Type')) : opts.parseAs) ??
+    'json';
 
   // Handle empty responses
-  if (
-    response.status === 204 ||
-    response.headers.get('Content-Length') === '0'
-  ) {
+  if (response.status === 204 || response.headers.get('Content-Length') === '0') {
     switch (inferredParseAs) {
       case 'arrayBuffer':
       case 'blob':
@@ -442,10 +410,7 @@ type ErrInterceptor<Err, Res, Req, Options> = (
   options: Options,
 ) => Err | Promise<Err>;
 
-type ReqInterceptor<Req, Options> = (
-  request: Req,
-  options: Options,
-) => Req | Promise<Req>;
+type ReqInterceptor<Req, Options> = (request: Req, options: Options) => Req | Promise<Req>;
 
 type ResInterceptor<Res, Req, Options> = (
   response: Res,
@@ -479,10 +444,7 @@ class Interceptors<Interceptor> {
     return this.fns.indexOf(id);
   }
 
-  update(
-    id: number | Interceptor,
-    fn: Interceptor,
-  ): number | Interceptor | false {
+  update(id: number | Interceptor, fn: Interceptor): number | Interceptor | false {
     const index = this.getInterceptorIndex(id);
     if (this.fns[index]) {
       this.fns[index] = fn;

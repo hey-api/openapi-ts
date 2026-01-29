@@ -7,10 +7,7 @@ export const request = <T>(
   options: ApiRequestOptions<T>,
 ): CancelablePromise<T> =>
   new CancelablePromise((resolve, reject, onCancel) => {
-    const url = `${config.BASE}${options.path}`.replace(
-      '{api-version}',
-      config.VERSION,
-    );
+    const url = `${config.BASE}${options.path}`.replace('{api-version}', config.VERSION);
 
     try {
       // Do your request...

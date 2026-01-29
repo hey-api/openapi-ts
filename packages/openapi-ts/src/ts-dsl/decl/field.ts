@@ -24,11 +24,7 @@ const Mixed = DecoratorMixin(
     OptionalMixin(
       PrivateMixin(
         ProtectedMixin(
-          PublicMixin(
-            ReadonlyMixin(
-              StaticMixin(ValueMixin(TsDsl<ts.PropertyDeclaration>)),
-            ),
-          ),
+          PublicMixin(ReadonlyMixin(StaticMixin(ValueMixin(TsDsl<ts.PropertyDeclaration>)))),
         ),
       ),
     ),

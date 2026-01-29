@@ -1,10 +1,7 @@
 import type { Logger } from '@hey-api/codegen-core';
 
 import { createOperationKey } from '../../../ir/operation';
-import {
-  addNamespace,
-  removeNamespace,
-} from '../../../openApi/shared/utils/filter';
+import { addNamespace, removeNamespace } from '../../../openApi/shared/utils/filter';
 import { httpMethods } from '../../../openApi/shared/utils/operation';
 import type { OpenApiV3_0_X, PathItemObject, PathsObject } from '../types/spec';
 
@@ -36,9 +33,7 @@ export const filterSpec = ({
       const filtered: typeof spec.components.parameters = {};
 
       if (preserveOrder) {
-        for (const [name, source] of Object.entries(
-          spec.components.parameters,
-        )) {
+        for (const [name, source] of Object.entries(spec.components.parameters)) {
           if (parameters.has(addNamespace('parameter', name))) {
             filtered[name] = source;
           }
@@ -60,9 +55,7 @@ export const filterSpec = ({
       const filtered: typeof spec.components.requestBodies = {};
 
       if (preserveOrder) {
-        for (const [name, source] of Object.entries(
-          spec.components.requestBodies,
-        )) {
+        for (const [name, source] of Object.entries(spec.components.requestBodies)) {
           if (requestBodies.has(addNamespace('body', name))) {
             filtered[name] = source;
           }
@@ -84,9 +77,7 @@ export const filterSpec = ({
       const filtered: typeof spec.components.responses = {};
 
       if (preserveOrder) {
-        for (const [name, source] of Object.entries(
-          spec.components.responses,
-        )) {
+        for (const [name, source] of Object.entries(spec.components.responses)) {
           if (responses.has(addNamespace('response', name))) {
             filtered[name] = source;
           }
@@ -138,10 +129,7 @@ export const filterSpec = ({
           continue;
         }
 
-        const key = addNamespace(
-          'operation',
-          createOperationKey({ method, path }),
-        );
+        const key = addNamespace('operation', createOperationKey({ method, path }));
         if (!operations.has(key)) {
           delete pathItem[method];
         }

@@ -51,16 +51,13 @@ export function postprocessOutput(
   jobPrefix: string,
 ): void {
   for (const processor of config.postProcess) {
-    const resolved =
-      typeof processor === 'string' ? postProcessors[processor] : processor;
+    const resolved = typeof processor === 'string' ? postProcessors[processor] : processor;
 
     // TODO: show warning
     if (!resolved) continue;
 
     const name = resolved.name ?? resolved.command;
-    const args = resolved.args.map((arg) =>
-      arg.replace('{{path}}', config.path),
-    );
+    const args = resolved.args.map((arg) => arg.replace('{{path}}', config.path));
 
     console.log(`${jobPrefix}🧹 Running ${colors.cyanBright(name)}`);
     sync(resolved.command, args);

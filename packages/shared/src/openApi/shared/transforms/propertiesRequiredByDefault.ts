@@ -30,10 +30,7 @@ const walkSchemas = ({
 
   const value = node as Record<string, unknown>;
 
-  if (
-    'type' in value ||
-    childSchemaRelationships.some(([keyword]) => keyword in value)
-  ) {
+  if ('type' in value || childSchemaRelationships.some(([keyword]) => keyword in value)) {
     visitor({ key, node, parent, path });
   }
 
@@ -67,11 +64,7 @@ const walkSchemas = ({
  *
  * @param spec - The OpenAPI spec object to transform
  */
-export const propertiesRequiredByDefaultTransform = ({
-  spec,
-}: {
-  spec: unknown;
-}) => {
+export const propertiesRequiredByDefaultTransform = ({ spec }: { spec: unknown }) => {
   walkSchemas({
     key: null,
     node: spec,
@@ -88,9 +81,7 @@ export const propertiesRequiredByDefaultTransform = ({
         typeof nodeInfo.node.properties === 'object' &&
         !('required' in nodeInfo.node)
       ) {
-        const propKeys = Object.keys(
-          nodeInfo.node.properties as Record<string, unknown>,
-        );
+        const propKeys = Object.keys(nodeInfo.node.properties as Record<string, unknown>);
         if (propKeys.length > 0) {
           (nodeInfo.node as Record<string, unknown>).required = propKeys;
         }

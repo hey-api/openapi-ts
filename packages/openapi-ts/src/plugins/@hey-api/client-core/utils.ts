@@ -3,10 +3,7 @@ import type { PluginClientNames } from '../../../plugins/types';
 
 export const getClientBaseUrlKey = (config: Config) => {
   const client = getClientPlugin(config);
-  if (
-    client.name === '@hey-api/client-axios' ||
-    client.name === '@hey-api/client-nuxt'
-  ) {
+  if (client.name === '@hey-api/client-axios' || client.name === '@hey-api/client-nuxt') {
     return 'baseURL';
   }
   return 'baseUrl';

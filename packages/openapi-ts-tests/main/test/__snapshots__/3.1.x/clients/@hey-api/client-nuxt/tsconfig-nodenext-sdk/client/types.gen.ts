@@ -16,10 +16,7 @@ import type {
   ServerSentEventsOptions,
   ServerSentEventsResult,
 } from '../core/serverSentEvents.gen.js';
-import type {
-  Client as CoreClient,
-  Config as CoreConfig,
-} from '../core/types.gen.js';
+import type { Client as CoreClient, Config as CoreConfig } from '../core/types.gen.js';
 
 export type ArraySeparatorStyle = ArrayStyle | MatrixStyle;
 type ArrayStyle = 'form' | 'spaceDelimited' | 'pipeDelimited';
@@ -27,32 +24,20 @@ type MatrixStyle = 'label' | 'matrix' | 'simple';
 export type ObjectSeparatorStyle = ObjectStyle | MatrixStyle;
 type ObjectStyle = 'form' | 'deepObject';
 
-export type QuerySerializer = (
-  query: Parameters<Client['buildUrl']>[0]['query'],
-) => string;
+export type QuerySerializer = (query: Parameters<Client['buildUrl']>[0]['query']) => string;
 
 type WithRefs<TData> = {
   [K in keyof TData]: NonNullable<TData[K]> extends object
-    ?
-        | WithRefs<NonNullable<TData[K]>>
-        | Ref<NonNullable<TData[K]>>
-        | Extract<TData[K], null>
-    :
-        | NonNullable<TData[K]>
-        | Ref<NonNullable<TData[K]>>
-        | Extract<TData[K], null>;
+    ? WithRefs<NonNullable<TData[K]>> | Ref<NonNullable<TData[K]>> | Extract<TData[K], null>
+    : NonNullable<TData[K]> | Ref<NonNullable<TData[K]>> | Extract<TData[K], null>;
 };
 
 // copied from Nuxt
-export type KeysOf<T> = Array<
-  T extends T ? (keyof T extends string ? keyof T : never) : never
->;
+export type KeysOf<T> = Array<T extends T ? (keyof T extends string ? keyof T : never) : never>;
 
 export interface Config<T extends ClientOptions = ClientOptions>
-  extends Omit<
-      FetchOptions<unknown>,
-      'baseURL' | 'body' | 'headers' | 'method' | 'query'
-    >,
+  extends
+    Omit<FetchOptions<unknown>, 'baseURL' | 'body' | 'headers' | 'method' | 'query'>,
     WithRefs<Pick<FetchOptions<unknown>, 'query'>>,
     Omit<CoreConfig, 'querySerializer'> {
   /**
@@ -74,7 +59,9 @@ export interface RequestOptions<
   ResT = unknown,
   DefaultT = undefined,
   Url extends string = string,
-> extends Config,
+>
+  extends
+    Config,
     WithRefs<{
       path?: FetchOptions<unknown>['query'];
       query?: FetchOptions<unknown>['query'];
@@ -191,16 +178,10 @@ export type Options<
   TData extends TDataShape = TDataShape,
   ResT = unknown,
   DefaultT = undefined,
-> = OmitKeys<
-  RequestOptions<TComposable, ResT, DefaultT>,
-  'body' | 'path' | 'query' | 'url'
-> &
+> = OmitKeys<RequestOptions<TComposable, ResT, DefaultT>, 'body' | 'path' | 'query' | 'url'> &
   ([TData] extends [never] ? unknown : WithRefs<Omit<TData, 'url'>>);
 
-type FetchOptions<TData> = Omit<
-  UseFetchOptions<TData, TData>,
-  keyof AsyncDataOptions<TData>
->;
+type FetchOptions<TData> = Omit<UseFetchOptions<TData, TData>, keyof AsyncDataOptions<TData>>;
 
 export type Composable =
   | '$fetch'

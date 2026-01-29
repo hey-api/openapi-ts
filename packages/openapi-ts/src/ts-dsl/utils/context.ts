@@ -19,9 +19,7 @@ export interface AccessOptions {
   transform?: (node: TsDsl, index: number, chain: NodeChain) => TsDsl;
 }
 
-export type AccessResult = ReturnType<
-  typeof $.expr | typeof $.attr | typeof $.call | typeof $.new
->;
+export type AccessResult = ReturnType<typeof $.expr | typeof $.attr | typeof $.call | typeof $.new>;
 
 export interface ExampleOptions {
   /** Import kind for the root node. */
@@ -74,10 +72,7 @@ function getScope(node: TsDsl): NodeScope {
   return node.scope ?? 'value';
 }
 
-function getStructuralChainForNode(
-  node: TsDsl,
-  visited: Set<TsDsl>,
-): NodeChain {
+function getStructuralChainForNode(node: TsDsl, visited: Set<TsDsl>): NodeChain {
   if (visited.has(node)) return [];
   visited.add(node);
 
@@ -126,10 +121,7 @@ function structuralToAccessChain(structuralChain: NodeChain): NodeChain {
   return accessChain;
 }
 
-function transformAccessChain(
-  accessChain: NodeChain,
-  options: AccessOptions = {},
-): NodeChain {
+function transformAccessChain(accessChain: NodeChain, options: AccessOptions = {}): NodeChain {
   return accessChain.map((node, index) => {
     const transformedNode = options.transform?.(node, index, accessChain);
     if (transformedNode) return transformedNode;
@@ -170,10 +162,7 @@ export class TsDslContext {
    * ctx.access(node); // → Expression for accessing the node
    * ```
    */
-  access<T = AccessResult>(
-    node: TsDsl | Symbol<TsDsl>,
-    options?: AccessOptions,
-  ): T {
+  access<T = AccessResult>(node: TsDsl | Symbol<TsDsl>, options?: AccessOptions): T {
     const n = isSymbol(node) ? node.node : node;
     if (!n) {
       throw new Error(`Symbol ${node.name} is not resolved to a node.`);
@@ -221,30 +210,17 @@ export class TsDslContext {
         : options.importSetup
       : (finalChain[0]! as TsDsl<ts.Expression>);
     const setupName = options.setupName;
-    let payload =
-      typeof options.payload === 'function'
-        ? options.payload({ $ })
-        : options.payload;
+    let payload = typeof options.payload === 'function' ? options.payload({ $ }) : options.payload;
     payload = payload instanceof Array ? payload : payload ? [payload] : [];
 
     let nodes: Array<TsDsl> = [];
     if (setupName) {
       nodes = [
         $.const(setupName).assign(setupNode),
-        $.await(
-          accessChainToNode([$(setupName), ...finalChain.slice(1)]).call(
-            ...payload,
-          ),
-        ),
+        $.await(accessChainToNode([$(setupName), ...finalChain.slice(1)]).call(...payload)),
       ];
     } else {
-      nodes = [
-        $.await(
-          accessChainToNode([setupNode, ...finalChain.slice(1)]).call(
-            ...payload,
-          ),
-        ),
-      ];
+      nodes = [$.await(accessChainToNode([setupNode, ...finalChain.slice(1)]).call(...payload))];
     }
 
     const localName = importNode.name.toString();

@@ -2,16 +2,10 @@ import type { Logger } from '@hey-api/codegen-core';
 
 import { createOperationKey } from '../../../ir/operation';
 import { httpMethods } from '../../../openApi/shared/utils/operation';
-import type {
-  ValidatorIssue,
-  ValidatorResult,
-} from '../../../openApi/shared/utils/validator';
+import type { ValidatorIssue, ValidatorResult } from '../../../openApi/shared/utils/validator';
 import type { OpenApiV3_1_X, PathItemObject, PathsObject } from '../types/spec';
 
-export const validateOpenApiSpec = (
-  spec: OpenApiV3_1_X,
-  logger: Logger,
-): ValidatorResult => {
+export const validateOpenApiSpec = (spec: OpenApiV3_1_X, logger: Logger): ValidatorResult => {
   const eventValidate = logger.timeEvent('validate');
   const issues: Array<ValidatorIssue> = [];
   const operationIds = new Map();
@@ -38,8 +32,7 @@ export const validateOpenApiSpec = (
                 key: 'operationId',
                 value: operation.operationId,
               },
-              message:
-                'Duplicate `operationId` found. Each `operationId` must be unique.',
+              message: 'Duplicate `operationId` found. Each `operationId` must be unique.',
               path: ['paths', path, method, 'operationId'],
               severity: 'error',
             });

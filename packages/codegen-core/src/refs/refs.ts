@@ -49,9 +49,8 @@ export const refs = <T extends Record<string, unknown>>(obj: T): Refs<T> => {
  * console.log(n); // 42
  * ```
  */
-export const fromRef = <T extends Ref<unknown> | undefined>(
-  ref: T,
-): FromRef<T> => ref?.['~ref'] as FromRef<T>;
+export const fromRef = <T extends Ref<unknown> | undefined>(ref: T): FromRef<T> =>
+  ref?.['~ref'] as FromRef<T>;
 
 /**
  * Converts an object of Refs back to a plain object (unwraps all refs).
@@ -62,9 +61,7 @@ export const fromRef = <T extends Ref<unknown> | undefined>(
  * const plain = fromRefs(refs); // { a: 1, b: "x" }
  * ```
  */
-export const fromRefs = <T extends Refs<Record<string, unknown>>>(
-  obj: T,
-): FromRefs<T> => {
+export const fromRefs = <T extends Refs<Record<string, unknown>>>(obj: T): FromRefs<T> => {
   const result = {} as FromRefs<T>;
   for (const key in obj) {
     if (Object.prototype.hasOwnProperty.call(obj, key)) {

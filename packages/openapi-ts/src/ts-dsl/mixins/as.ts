@@ -9,17 +9,13 @@ export interface AsMethods extends Node {
   as(...args: DropFirst<Parameters<typeof f.as>>): ReturnType<typeof f.as>;
 }
 
-export function AsMixin<T extends ts.Expression, TBase extends BaseCtor<T>>(
-  Base: TBase,
-) {
+export function AsMixin<T extends ts.Expression, TBase extends BaseCtor<T>>(Base: TBase) {
   abstract class As extends Base {
     override analyze(ctx: AnalysisContext): void {
       super.analyze(ctx);
     }
 
-    protected as(
-      ...args: DropFirst<Parameters<typeof f.as>>
-    ): ReturnType<typeof f.as> {
+    protected as(...args: DropFirst<Parameters<typeof f.as>>): ReturnType<typeof f.as> {
       return f.as(this, ...args);
     }
   }

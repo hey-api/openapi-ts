@@ -269,39 +269,36 @@ describe('unserialized request body handling', () => {
     { body: '', textValue: '' },
   ];
 
-  it.each(scenarios)(
-    'handles plain text body with $body value',
-    async ({ body, textValue }) => {
-      const mockResponse = new Response(JSON.stringify({ success: true }), {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        status: 200,
-      });
+  it.each(scenarios)('handles plain text body with $body value', async ({ body, textValue }) => {
+    const mockResponse = new Response(JSON.stringify({ success: true }), {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      status: 200,
+    });
 
-      const mockKy = vi.fn().mockResolvedValueOnce(mockResponse);
+    const mockKy = vi.fn().mockResolvedValueOnce(mockResponse);
 
-      const result = await client.post({
-        body,
-        bodySerializer: null,
-        headers: {
-          'Content-Type': 'text/plain',
-        },
-        ky: mockKy as Partial<KyInstance> as KyInstance,
-        url: '/test',
-      });
+    const result = await client.post({
+      body,
+      bodySerializer: null,
+      headers: {
+        'Content-Type': 'text/plain',
+      },
+      ky: mockKy as Partial<KyInstance> as KyInstance,
+      url: '/test',
+    });
 
-      expect(mockKy).toHaveBeenCalledWith(
-        expect.objectContaining({
-          body: expect.any(ReadableStream),
-        }),
-        expect.any(Object),
-      );
+    expect(mockKy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        body: expect.any(ReadableStream),
+      }),
+      expect.any(Object),
+    );
 
-      await expect(result.request.text()).resolves.toEqual(textValue);
-      expect(result.request.headers.get('Content-Type')).toEqual('text/plain');
-    },
-  );
+    await expect(result.request.text()).resolves.toEqual(textValue);
+    expect(result.request.headers.get('Content-Type')).toEqual('text/plain');
+  });
 });
 
 describe('serialized request body handling', () => {
@@ -340,13 +337,7 @@ describe('serialized request body handling', () => {
 
   it.each(scenarios)(
     'handles $serializedBody serializedBody value',
-    async ({
-      body,
-      expectBodyValue,
-      expectContentHeader,
-      serializedBody,
-      textValue,
-    }) => {
+    async ({ body, expectBodyValue, expectContentHeader, serializedBody, textValue }) => {
       const mockResponse = new Response(JSON.stringify({ success: true }), {
         headers: {
           'Content-Type': 'application/json',
@@ -415,18 +406,14 @@ describe('request interceptor', () => {
 
       const mockRequestInterceptor = vi
         .fn()
-        .mockImplementation(
-          (request: Request, options: ResolvedRequestOptions) => {
-            expect(options.serializedBody).toBe(expectedSerializedValue);
-            expect(options.body).toBe(body);
+        .mockImplementation((request: Request, options: ResolvedRequestOptions) => {
+          expect(options.serializedBody).toBe(expectedSerializedValue);
+          expect(options.body).toBe(body);
 
-            return request;
-          },
-        );
+          return request;
+        });
 
-      const interceptorId = client.interceptors.request.use(
-        mockRequestInterceptor,
-      );
+      const interceptorId = client.interceptors.request.use(mockRequestInterceptor);
 
       await client.post({
         body,
@@ -458,16 +445,12 @@ describe('response interceptor', () => {
 
     const mockKy = vi.fn().mockResolvedValue(mockResponse);
 
-    const mockResponseInterceptor = vi
-      .fn()
-      .mockImplementation((response: Response) => {
-        expect(response).toBe(mockResponse);
-        return response;
-      });
+    const mockResponseInterceptor = vi.fn().mockImplementation((response: Response) => {
+      expect(response).toBe(mockResponse);
+      return response;
+    });
 
-    const interceptorId = client.interceptors.response.use(
-      mockResponseInterceptor,
-    );
+    const interceptorId = client.interceptors.response.use(mockResponseInterceptor);
 
     await client.get({
       ky: mockKy as Partial<KyInstance> as KyInstance,
@@ -484,15 +467,12 @@ describe('error handling', () => {
   const client = createClient({ baseUrl: 'https://example.com' });
 
   it('handles HTTP errors with throwOnError: false', async () => {
-    const errorResponse = new Response(
-      JSON.stringify({ message: 'Not found' }),
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        status: 404,
+    const errorResponse = new Response(JSON.stringify({ message: 'Not found' }), {
+      headers: {
+        'Content-Type': 'application/json',
       },
-    );
+      status: 404,
+    });
 
     const mockKy = vi.fn().mockRejectedValue(
       new HTTPError(errorResponse, new Request('https://example.com/test'), {
@@ -511,15 +491,12 @@ describe('error handling', () => {
   });
 
   it('throws HTTP errors with throwOnError: true', async () => {
-    const errorResponse = new Response(
-      JSON.stringify({ message: 'Not found' }),
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        status: 404,
+    const errorResponse = new Response(JSON.stringify({ message: 'Not found' }), {
+      headers: {
+        'Content-Type': 'application/json',
       },
-    );
+      status: 404,
+    });
 
     const mockKy = vi.fn().mockRejectedValue(
       new HTTPError(errorResponse, new Request('https://example.com/test'), {
@@ -562,15 +539,12 @@ describe('error interceptor', () => {
   const client = createClient({ baseUrl: 'https://example.com' });
 
   it('allows error transformation', async () => {
-    const errorResponse = new Response(
-      JSON.stringify({ message: 'Not found' }),
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        status: 404,
+    const errorResponse = new Response(JSON.stringify({ message: 'Not found' }), {
+      headers: {
+        'Content-Type': 'application/json',
       },
-    );
+      status: 404,
+    });
 
     const mockKy = vi.fn().mockRejectedValue(
       new HTTPError(errorResponse, new Request('https://example.com/test'), {
@@ -660,15 +634,12 @@ describe('responseStyle configuration', () => {
   });
 
   it('returns undefined for errors when responseStyle is "data"', async () => {
-    const errorResponse = new Response(
-      JSON.stringify({ message: 'Not found' }),
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        status: 404,
+    const errorResponse = new Response(JSON.stringify({ message: 'Not found' }), {
+      headers: {
+        'Content-Type': 'application/json',
       },
-    );
+      status: 404,
+    });
 
     const mockKy = vi.fn().mockRejectedValue(
       new HTTPError(errorResponse, new Request('https://example.com/test'), {

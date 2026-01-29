@@ -21,9 +21,7 @@ export const exportAst = ({
   const v = plugin.external('valibot.v');
   const statement = $.const(symbol)
     .export()
-    .$if(plugin.config.comments && createSchemaComment(schema), (c, v) =>
-      c.doc(v),
-    )
+    .$if(plugin.config.comments && createSchemaComment(schema), (c, v) => c.doc(v))
     .$if(state.hasLazyExpression['~ref'], (c) =>
       c.type($.type(v).attr(ast.typeName || identifiers.types.GenericSchema)),
     )

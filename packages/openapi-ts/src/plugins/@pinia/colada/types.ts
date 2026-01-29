@@ -233,9 +233,7 @@ export type Config = Plugin.Name<'@pinia/colada'> &
          *
          * @default undefined
          */
-        meta:
-          | ((operation: IR.OperationObject) => Record<string, unknown>)
-          | undefined;
+        meta: ((operation: IR.OperationObject) => Record<string, unknown>) | undefined;
       };
     /**
      * Resolved configuration for generated query keys.
@@ -281,9 +279,7 @@ export type Config = Plugin.Name<'@pinia/colada'> &
          *
          * @default undefined
          */
-        meta:
-          | ((operation: IR.OperationObject) => Record<string, unknown>)
-          | undefined;
+        meta: ((operation: IR.OperationObject) => Record<string, unknown>) | undefined;
       };
   };
 

@@ -6,11 +6,7 @@ import type { HeyApiSdkPlugin } from '../types';
 import { isInstance } from '../v1/node';
 import { nuxtTypeDefault, nuxtTypeResponse } from './constants';
 
-export const createTypeOptions = ({
-  plugin,
-}: {
-  plugin: HeyApiSdkPlugin['Instance'];
-}) => {
+export const createTypeOptions = ({ plugin }: { plugin: HeyApiSdkPlugin['Instance'] }) => {
   const clientModule = clientFolderAbsolutePath(getTypedConfig(plugin));
   const client = getClientPlugin(getTypedConfig(plugin));
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
@@ -48,23 +44,15 @@ export const createTypeOptions = ({
       (t) =>
         t
           .generic('TComposable', (g) =>
-            g
-              .extends(plugin.external('client.Composable'))
-              .default($.type.literal('$fetch')),
+            g.extends(plugin.external('client.Composable')).default($.type.literal('$fetch')),
           )
-          .generic('TData', (g) =>
-            g.extends(symbolTDataShape).default(symbolTDataShape),
-          )
+          .generic('TData', (g) => g.extends(symbolTDataShape).default(symbolTDataShape))
           .generic(nuxtTypeResponse, (g) => g.default('unknown'))
           .generic(nuxtTypeDefault, (g) => g.default('undefined')),
       (t) =>
         t
-          .generic('TData', (g) =>
-            g.extends(symbolTDataShape).default(symbolTDataShape),
-          )
-          .generic('ThrowOnError', (g) =>
-            g.extends('boolean').default('boolean'),
-          ),
+          .generic('TData', (g) => g.extends(symbolTDataShape).default(symbolTDataShape))
+          .generic('ThrowOnError', (g) => g.extends('boolean').default('boolean')),
     )
     .type(
       $.type.and(

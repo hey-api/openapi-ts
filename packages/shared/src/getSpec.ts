@@ -15,10 +15,7 @@ const headersEntries = (headers: Headers): Array<[string, string]> => {
 const mergeHeaders = (
   ...headers: Array<
     | RequestInit['headers']
-    | Record<
-        string,
-        MaybeArray<string | number | boolean> | null | undefined | unknown
-      >
+    | Record<string, MaybeArray<string | number | boolean> | null | undefined | unknown>
     | undefined
   >
 ): Headers => {
@@ -28,10 +25,7 @@ const mergeHeaders = (
       continue;
     }
 
-    const iterator =
-      header instanceof Headers
-        ? headersEntries(header)
-        : Object.entries(header);
+    const iterator = header instanceof Headers ? headersEntries(header) : Object.entries(header);
 
     for (const [key, value] of iterator) {
       if (value === null) {
@@ -113,9 +107,7 @@ export async function getSpec({
       } catch (error) {
         return {
           error: 'not-ok',
-          response: new Response(
-            error instanceof Error ? error.message : String(error),
-          ),
+          response: new Response(error instanceof Error ? error.message : String(error)),
         };
       }
 
@@ -191,9 +183,7 @@ export async function getSpec({
     } catch (error) {
       return {
         error: 'not-ok',
-        response: new Response(
-          error instanceof Error ? error.message : String(error),
-        ),
+        response: new Response(error instanceof Error ? error.message : String(error)),
       };
     }
 
@@ -206,9 +196,7 @@ export async function getSpec({
       };
     }
 
-    arrayBuffer = response.body
-      ? await response.arrayBuffer()
-      : new ArrayBuffer(0);
+    arrayBuffer = response.body ? await response.arrayBuffer() : new ArrayBuffer(0);
 
     if (hasChanged === undefined) {
       const content = new TextDecoder().decode(arrayBuffer);

@@ -19,9 +19,7 @@ const asciiToLines = (
   },
 ) => {
   const lines: Array<string> = [];
-  const padding = Array.from<string>({ length: options?.padding ?? 0 }).fill(
-    '',
-  );
+  const padding = Array.from<string>({ length: options?.padding ?? 0 }).fill('');
   lines.push(...padding);
   let maxLineLength = 0;
   let line = '';
@@ -41,10 +39,7 @@ const asciiToLines = (
 };
 
 // TODO: show ascii logo only in `--help` and `--version` commands
-export function printCliIntro(
-  initialDir: string,
-  showLogo: boolean = false,
-): void {
+export function printCliIntro(initialDir: string, showLogo: boolean = false): void {
   const packageJson = loadPackageJson(initialDir);
   if (packageJson) {
     if (showLogo) {

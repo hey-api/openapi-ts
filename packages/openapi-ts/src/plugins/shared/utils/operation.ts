@@ -51,10 +51,7 @@ export function isOperationOptionsRequired({
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
   const plugin = config.plugins['@hey-api/sdk'];
   if (plugin) {
-    if (
-      !plugin.config.client &&
-      !isInstance(plugin as unknown as HeyApiSdkPlugin['Instance'])
-    ) {
+    if (!plugin.config.client && !isInstance(plugin as unknown as HeyApiSdkPlugin['Instance'])) {
       return true;
     }
     if (plugin.config.paramsStructure === 'flat') {
@@ -64,11 +61,7 @@ export function isOperationOptionsRequired({
   return isNuxtClient || hasOperationDataRequired(operation);
 }
 
-export function hasOperationSse({
-  operation,
-}: {
-  operation: IR.OperationObject;
-}): boolean {
+export function hasOperationSse({ operation }: { operation: IR.OperationObject }): boolean {
   for (const statusCode in operation.responses) {
     const response = operation.responses[statusCode]!;
     if (response.mediaType === 'text/event-stream') {

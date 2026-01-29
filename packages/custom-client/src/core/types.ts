@@ -1,16 +1,7 @@
 import type { Auth, AuthToken } from './auth';
-import type {
-  BodySerializer,
-  QuerySerializer,
-  QuerySerializerOptions,
-} from './bodySerializer';
+import type { BodySerializer, QuerySerializer, QuerySerializerOptions } from './bodySerializer';
 
-export interface Client<
-  RequestFn = never,
-  Config = unknown,
-  MethodFn = never,
-  BuildUrlFn = never,
-> {
+export interface Client<RequestFn = never, Config = unknown, MethodFn = never, BuildUrlFn = never> {
   /**
    * Returns the final request URL.
    */
@@ -50,29 +41,14 @@ export interface Config {
     | RequestInit['headers']
     | Record<
         string,
-        | string
-        | number
-        | boolean
-        | (string | number | boolean)[]
-        | null
-        | undefined
-        | unknown
+        string | number | boolean | (string | number | boolean)[] | null | undefined | unknown
       >;
   /**
    * The request method.
    *
    * {@link https://developer.mozilla.org/docs/Web/API/fetch#method See more}
    */
-  method?:
-    | 'CONNECT'
-    | 'DELETE'
-    | 'GET'
-    | 'HEAD'
-    | 'OPTIONS'
-    | 'PATCH'
-    | 'POST'
-    | 'PUT'
-    | 'TRACE';
+  method?: 'CONNECT' | 'DELETE' | 'GET' | 'HEAD' | 'OPTIONS' | 'PATCH' | 'POST' | 'PUT' | 'TRACE';
   /**
    * A function for serializing request query parameters. By default, arrays
    * will be exploded in form style, objects will be exploded in deepObject
@@ -112,7 +88,5 @@ type IsExactlyNeverOrNeverUndefined<T> = [T] extends [never]
     : false;
 
 export type OmitNever<T extends Record<string, unknown>> = {
-  [K in keyof T as IsExactlyNeverOrNeverUndefined<T[K]> extends true
-    ? never
-    : K]: T[K];
+  [K in keyof T as IsExactlyNeverOrNeverUndefined<T[K]> extends true ? never : K]: T[K];
 };

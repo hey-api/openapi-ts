@@ -4,11 +4,7 @@ import { jsonPointerToPath } from '../../../utils/ref';
 import { deepClone } from '../utils/schema';
 import { childSchemaRelationships } from '../utils/schemaChildRelationships';
 import { getSchemasObject } from '../utils/transforms';
-import {
-  getUniqueComponentName,
-  isPathRootSchema,
-  specToSchemasPointerNamespace,
-} from './utils';
+import { getUniqueComponentName, isPathRootSchema, specToSchemasPointerNamespace } from './utils';
 
 type EnumsConfig = Parser['transforms']['enums'];
 
@@ -215,10 +211,7 @@ const rootMode = ({ config, spec }: { config: EnumsConfig; spec: unknown }) => {
 
     // Generate a unique name for the new root enum using config
     const base = applyNaming(
-      typeof node === 'object' &&
-        node &&
-        'title' in node &&
-        typeof node.title === 'string'
+      typeof node === 'object' && node && 'title' in node && typeof node.title === 'string'
         ? node.title
         : String(key),
       config,
@@ -262,13 +255,7 @@ const rootMode = ({ config, spec }: { config: EnumsConfig; spec: unknown }) => {
  * @param config - The enums transform config
  * @param spec - The OpenAPI spec object to transform
  */
-export const enumsTransform = ({
-  config,
-  spec,
-}: {
-  config: EnumsConfig;
-  spec: unknown;
-}) => {
+export const enumsTransform = ({ config, spec }: { config: EnumsConfig; spec: unknown }) => {
   if (config.mode === 'inline') {
     inlineMode({ spec });
     return;

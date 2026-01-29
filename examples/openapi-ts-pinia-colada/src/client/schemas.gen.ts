@@ -3,186 +3,186 @@
 export const OrderSchema = {
   properties: {
     complete: {
-      type: 'boolean'
+      type: 'boolean',
     },
     id: {
       example: 10,
       format: 'int64',
-      type: 'integer'
+      type: 'integer',
     },
     petId: {
       example: 198772,
       format: 'int64',
-      type: 'integer'
+      type: 'integer',
     },
     quantity: {
       example: 7,
       format: 'int32',
-      type: 'integer'
+      type: 'integer',
     },
     shipDate: {
       format: 'date-time',
-      type: 'string'
+      type: 'string',
     },
     status: {
       description: 'Order Status',
       enum: ['placed', 'approved', 'delivered'],
       example: 'approved',
-      type: 'string'
-    }
+      type: 'string',
+    },
   },
   type: 'object',
   'x-swagger-router-model': 'io.swagger.petstore.model.Order',
   xml: {
-    name: 'order'
-  }
-} as const
+    name: 'order',
+  },
+} as const;
 
 export const CategorySchema = {
   properties: {
     id: {
       example: 1,
       format: 'int64',
-      type: 'integer'
+      type: 'integer',
     },
     name: {
       example: 'Dogs',
-      type: 'string'
-    }
+      type: 'string',
+    },
   },
   type: 'object',
   'x-swagger-router-model': 'io.swagger.petstore.model.Category',
   xml: {
-    name: 'category'
-  }
-} as const
+    name: 'category',
+  },
+} as const;
 
 export const UserSchema = {
   properties: {
     email: {
       example: 'john@email.com',
-      type: 'string'
+      type: 'string',
     },
     firstName: {
       example: 'John',
-      type: 'string'
+      type: 'string',
     },
     id: {
       example: 10,
       format: 'int64',
-      type: 'integer'
+      type: 'integer',
     },
     lastName: {
       example: 'James',
-      type: 'string'
+      type: 'string',
     },
     password: {
       example: '12345',
-      type: 'string'
+      type: 'string',
     },
     phone: {
       example: '12345',
-      type: 'string'
+      type: 'string',
     },
     userStatus: {
       description: 'User Status',
       example: 1,
       format: 'int32',
-      type: 'integer'
+      type: 'integer',
     },
     username: {
       example: 'theUser',
-      type: 'string'
-    }
+      type: 'string',
+    },
   },
   type: 'object',
   'x-swagger-router-model': 'io.swagger.petstore.model.User',
   xml: {
-    name: 'user'
-  }
-} as const
+    name: 'user',
+  },
+} as const;
 
 export const TagSchema = {
   properties: {
     id: {
       format: 'int64',
-      type: 'integer'
+      type: 'integer',
     },
     name: {
-      type: 'string'
-    }
+      type: 'string',
+    },
   },
   type: 'object',
   'x-swagger-router-model': 'io.swagger.petstore.model.Tag',
   xml: {
-    name: 'tag'
-  }
-} as const
+    name: 'tag',
+  },
+} as const;
 
 export const PetSchema = {
   properties: {
     category: {
-      $ref: '#/components/schemas/Category'
+      $ref: '#/components/schemas/Category',
     },
     id: {
       example: 10,
       format: 'int64',
-      type: 'integer'
+      type: 'integer',
     },
     name: {
       example: 'doggie',
-      type: 'string'
+      type: 'string',
     },
     photoUrls: {
       items: {
         type: 'string',
         xml: {
-          name: 'photoUrl'
-        }
+          name: 'photoUrl',
+        },
       },
       type: 'array',
       xml: {
-        wrapped: true
-      }
+        wrapped: true,
+      },
     },
     status: {
       description: 'pet status in the store',
       enum: ['available', 'pending', 'sold'],
-      type: 'string'
+      type: 'string',
     },
     tags: {
       items: {
-        $ref: '#/components/schemas/Tag'
+        $ref: '#/components/schemas/Tag',
       },
       type: 'array',
       xml: {
-        wrapped: true
-      }
-    }
+        wrapped: true,
+      },
+    },
   },
   required: ['name', 'photoUrls'],
   type: 'object',
   'x-swagger-router-model': 'io.swagger.petstore.model.Pet',
   xml: {
-    name: 'pet'
-  }
-} as const
+    name: 'pet',
+  },
+} as const;
 
 export const ApiResponseSchema = {
   properties: {
     code: {
       format: 'int32',
-      type: 'integer'
+      type: 'integer',
     },
     message: {
-      type: 'string'
+      type: 'string',
     },
     type: {
-      type: 'string'
-    }
+      type: 'string',
+    },
   },
   type: 'object',
   xml: {
-    name: '##default'
-  }
-} as const
+    name: '##default',
+  },
+} as const;

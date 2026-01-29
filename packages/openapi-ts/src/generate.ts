@@ -33,17 +33,14 @@ export async function createClient(
   userConfig?: LazyOrAsync<MaybeArray<UserConfig>>,
   logger = new Logger(),
 ): Promise<ReadonlyArray<Context>> {
-  const resolvedConfig =
-    typeof userConfig === 'function' ? await userConfig() : userConfig;
+  const resolvedConfig = typeof userConfig === 'function' ? await userConfig() : userConfig;
   const userConfigs = resolvedConfig
     ? resolvedConfig instanceof Array
       ? resolvedConfig
       : [resolvedConfig]
     : [];
 
-  let rawLogs = userConfigs.find(
-    (config) => getLogs(config.logs).level !== 'silent',
-  )?.logs;
+  let rawLogs = userConfigs.find((config) => getLogs(config.logs).level !== 'silent')?.logs;
   if (typeof rawLogs === 'string') {
     rawLogs = getLogs(rawLogs);
   }
@@ -102,13 +99,8 @@ export async function createClient(
       jobs[0]?.config.logs ??
       rawLogs;
     const dryRun =
-      jobs.some((job) => job.config.dryRun) ??
-      userConfigs.some((config) => config.dryRun) ??
-      false;
-    const logPath =
-      logs?.file && !dryRun
-        ? logCrashReport(error, logs.path ?? '')
-        : undefined;
+      jobs.some((job) => job.config.dryRun) ?? userConfigs.some((config) => config.dryRun) ?? false;
+    const logPath = logs?.file && !dryRun ? logCrashReport(error, logs.path ?? '') : undefined;
     if (!logs || logs.level !== 'silent') {
       printCrashReport({ error, logPath });
       const isInteractive =

@@ -1,14 +1,9 @@
-import type {
-  OperationPathStrategy,
-  OperationStructureStrategy,
-} from '@hey-api/shared';
+import type { OperationPathStrategy, OperationStructureStrategy } from '@hey-api/shared';
 import { OperationPath, OperationStrategy } from '@hey-api/shared';
 
 import type { AngularCommonPlugin } from '../types';
 
-function resolvePath(
-  plugin: AngularCommonPlugin['Instance'],
-): OperationPathStrategy {
+function resolvePath(plugin: AngularCommonPlugin['Instance']): OperationPathStrategy {
   if (plugin.config.httpResources.nesting === 'id') {
     return OperationPath.id();
   }

@@ -16,10 +16,7 @@ export type Patch = {
    * @param meta The OpenAPI meta object for the current version.
    */
   meta?: (
-    meta:
-      | OpenApiMetaObject.V2_0_X
-      | OpenApiMetaObject.V3_0_X
-      | OpenApiMetaObject.V3_1_X,
+    meta: OpenApiMetaObject.V2_0_X | OpenApiMetaObject.V3_0_X | OpenApiMetaObject.V3_1_X,
   ) => void;
   /**
    * Patch OpenAPI operations in place. The key is the operation method and operation path, and the function receives the operation object to modify directly.
@@ -52,9 +49,7 @@ export type Patch = {
    */
   parameters?: Record<
     string,
-    (
-      parameter: OpenApiParameterObject.V3_0_X | OpenApiParameterObject.V3_1_X,
-    ) => void
+    (parameter: OpenApiParameterObject.V3_0_X | OpenApiParameterObject.V3_1_X) => void
   >;
   /**
    * Patch OpenAPI request bodies in place. The key is the request body name, and the function receives the request body object to modify directly.
@@ -68,11 +63,7 @@ export type Patch = {
    */
   requestBodies?: Record<
     string,
-    (
-      requestBody:
-        | OpenApiRequestBodyObject.V3_0_X
-        | OpenApiRequestBodyObject.V3_1_X,
-    ) => void
+    (requestBody: OpenApiRequestBodyObject.V3_0_X | OpenApiRequestBodyObject.V3_1_X) => void
   >;
   /**
    * Patch OpenAPI responses in place. The key is the response name, and the function receives the response object to modify directly.
@@ -86,9 +77,7 @@ export type Patch = {
    */
   responses?: Record<
     string,
-    (
-      response: OpenApiResponseObject.V3_0_X | OpenApiResponseObject.V3_1_X,
-    ) => void
+    (response: OpenApiResponseObject.V3_0_X | OpenApiResponseObject.V3_1_X) => void
   >;
   /**
    * Each function receives the schema object to be modified in place. Common
@@ -121,10 +110,7 @@ export type Patch = {
   schemas?: Record<
     string,
     (
-      schema:
-        | OpenApiSchemaObject.V2_0_X
-        | OpenApiSchemaObject.V3_0_X
-        | OpenApiSchemaObject.V3_1_X,
+      schema: OpenApiSchemaObject.V2_0_X | OpenApiSchemaObject.V3_0_X | OpenApiSchemaObject.V3_1_X,
     ) => void
   >;
   /**

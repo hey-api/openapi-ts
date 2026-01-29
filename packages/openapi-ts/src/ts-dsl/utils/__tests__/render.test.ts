@@ -17,10 +17,7 @@ describe('TypeScriptRenderer', () => {
     ...overrides,
   });
 
-  const mockCtx = (
-    fileOverrides = {},
-    projectOverrides = {},
-  ): RenderContext<TsDsl> => ({
+  const mockCtx = (fileOverrides = {}, projectOverrides = {}): RenderContext<TsDsl> => ({
     file: mockFile(fileOverrides),
     project: new Project({
       root: '/root',

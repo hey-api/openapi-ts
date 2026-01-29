@@ -8,13 +8,7 @@ const printer = ts.createPrinter({
   removeComments: false,
 });
 
-const blankFile = ts.createSourceFile(
-  '',
-  '',
-  ts.ScriptTarget.ESNext,
-  false,
-  ts.ScriptKind.TS,
-);
+const blankFile = ts.createSourceFile('', '', ts.ScriptTarget.ESNext, false, ts.ScriptKind.TS);
 
 /** Print a TypeScript node to a string. */
 export function astToString(node: ts.Node): string {
@@ -126,9 +120,7 @@ export const moduleSortKey = ({
     parentCount = 0;
   } else {
     modulePath = `${rel}/${fromFile.name}${fromFile.extension ?? ''}`;
-    parentCount = rel
-      .split(path.sep)
-      .filter((segment) => segment === '..').length;
+    parentCount = rel.split(path.sep).filter((segment) => segment === '..').length;
   }
 
   if (modulePath.endsWith('.ts')) {

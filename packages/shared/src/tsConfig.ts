@@ -53,15 +53,8 @@ export function loadPackageJson(initialDir: string): PackageJson | undefined {
       safePackage.version = packageJson.version;
     }
 
-    if (
-      'bugs' in packageJson &&
-      packageJson.bugs &&
-      typeof packageJson.bugs === 'object'
-    ) {
-      if (
-        'url' in packageJson.bugs &&
-        typeof packageJson.bugs.url === 'string'
-      ) {
+    if ('bugs' in packageJson && packageJson.bugs && typeof packageJson.bugs === 'object') {
+      if ('url' in packageJson.bugs && typeof packageJson.bugs.url === 'string') {
         safePackage.bugs.url = packageJson.bugs.url;
         if (safePackage.bugs.url && !safePackage.bugs.url.endsWith('/')) {
           safePackage.bugs.url += '/';
@@ -75,10 +68,7 @@ export function loadPackageJson(initialDir: string): PackageJson | undefined {
   return safePackage;
 }
 
-export function findTsConfigPath(
-  baseDir: string,
-  tsConfigPath?: AnyString | null,
-): string | null {
+export function findTsConfigPath(baseDir: string, tsConfigPath?: AnyString | null): string | null {
   if (tsConfigPath === null) {
     return null;
   }
@@ -107,9 +97,7 @@ export function findTsConfigPath(
   return null;
 }
 
-export function loadTsConfig(
-  configPath: string | null,
-): ts.ParsedCommandLine | null {
+export function loadTsConfig(configPath: string | null): ts.ParsedCommandLine | null {
   if (!configPath) {
     return null;
   }
@@ -120,9 +108,5 @@ export function loadTsConfig(
     throw new Error(`Couldn't read tsconfig from path: ${configPath}`);
   }
 
-  return ts.parseJsonConfigFileContent(
-    raw.config,
-    ts.sys,
-    path.dirname(configPath),
-  );
+  return ts.parseJsonConfigFileContent(raw.config, ts.sys, path.dirname(configPath));
 }

@@ -88,11 +88,7 @@ export function inputToHeyApiPath(
 ): Partial<Input> {
   const parsed = parseShorthand(input);
   return {
-    path: getRegistryUrl(
-      parsed.organization,
-      parsed.project,
-      parsed.queryParams,
-    ),
+    path: getRegistryUrl(parsed.organization, parsed.project, parsed.queryParams),
     registry: 'hey-api',
   };
 }

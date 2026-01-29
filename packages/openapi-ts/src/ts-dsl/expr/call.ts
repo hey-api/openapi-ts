@@ -14,9 +14,7 @@ export type CallArgs = ReadonlyArray<CallExpr | undefined>;
 export type CallExpr = NodeName | MaybeTsDsl<ts.Expression>;
 export type CallCtor = (expr: CallExpr, ...args: CallArgs) => CallTsDsl;
 
-const Mixed = ArgsMixin(
-  AsMixin(ExprMixin(TypeArgsMixin(TsDsl<ts.CallExpression>))),
-);
+const Mixed = ArgsMixin(AsMixin(ExprMixin(TypeArgsMixin(TsDsl<ts.CallExpression>))));
 
 export class CallTsDsl extends Mixed {
   readonly '~dsl' = 'CallTsDsl';

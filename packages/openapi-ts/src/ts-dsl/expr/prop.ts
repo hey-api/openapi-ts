@@ -13,12 +13,7 @@ import { IdTsDsl } from './id';
 type Expr = NodeName | MaybeTsDsl<ts.Expression>;
 type Stmt = NodeName | MaybeTsDsl<ts.Statement>;
 
-export type ObjectPropKind =
-  | 'computed'
-  | 'getter'
-  | 'prop'
-  | 'setter'
-  | 'spread';
+export type ObjectPropKind = 'computed' | 'getter' | 'prop' | 'setter' | 'spread';
 
 type Meta =
   | { kind: 'computed'; name: string }
@@ -71,9 +66,7 @@ export class ObjectPropTsDsl extends Mixed {
     const node = this.$node(this._value);
     if (this._meta.kind === 'spread') {
       if (ts.isStatement(node)) {
-        throw new Error(
-          'Invalid spread: object spread must be an expression, not a statement.',
-        );
+        throw new Error('Invalid spread: object spread must be an expression, not a statement.');
       }
       const result = ts.factory.createSpreadAssignment(node);
       return this.$docs(result);
@@ -89,9 +82,7 @@ export class ObjectPropTsDsl extends Mixed {
       return this.$docs(result);
     }
     if (ts.isIdentifier(node) && node.text === this._meta.name) {
-      const result = ts.factory.createShorthandPropertyAssignment(
-        this._meta.name,
-      );
+      const result = ts.factory.createShorthandPropertyAssignment(this._meta.name);
       return this.$docs(result);
     }
     if (ts.isStatement(node)) {
@@ -101,9 +92,7 @@ export class ObjectPropTsDsl extends Mixed {
     }
     const result = ts.factory.createPropertyAssignment(
       this._meta.kind === 'computed'
-        ? ts.factory.createComputedPropertyName(
-            this.$node(new IdTsDsl(this._meta.name)),
-          )
+        ? ts.factory.createComputedPropertyName(this.$node(new IdTsDsl(this._meta.name)))
         : this.$node(safePropName(this._meta.name)),
       node,
     );

@@ -39,9 +39,7 @@ export type MaybeArray<T> = T | ReadonlyArray<T>;
 /**
  * Accepts a value or a function returning a value.
  */
-export type MaybeFunc<T extends (...args: Array<any>) => any> =
-  | T
-  | ReturnType<T>;
+export type MaybeFunc<T extends (...args: Array<any>) => any> = T | ReturnType<T>;
 
 /**
  * Accepts a value or a promise of a value.
@@ -63,5 +61,4 @@ export type ToArray<T> = T extends ReadonlyArray<infer U> ? Array<U> : T;
 /**
  * Converts Array<T> to ReadonlyArray<T>, preserving unions.
  */
-export type ToReadonlyArray<T> =
-  T extends ReadonlyArray<infer U> ? ReadonlyArray<U> : T;
+export type ToReadonlyArray<T> = T extends ReadonlyArray<infer U> ? ReadonlyArray<U> : T;

@@ -5,10 +5,7 @@ import type { HttpResourcesConfig, UserHttpResourcesConfig } from './types';
 
 type Config = Omit<UserConfig, 'name'>;
 
-export function resolveHttpResources(
-  config: Config,
-  context: PluginContext,
-): HttpResourcesConfig {
+export function resolveHttpResources(config: Config, context: PluginContext): HttpResourcesConfig {
   let input = config.httpResources;
   if (typeof input === 'string' || typeof input === 'function') {
     input = { strategy: input };

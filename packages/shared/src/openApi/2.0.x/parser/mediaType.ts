@@ -1,13 +1,6 @@
 import type { IRMediaType } from '../../../ir/mediaType';
-import {
-  isMediaTypeFileLike,
-  mediaTypeToIrMediaType,
-} from '../../../ir/mediaType';
-import type {
-  ReferenceObject,
-  ResponseObject,
-  SchemaObject,
-} from '../types/spec';
+import { isMediaTypeFileLike, mediaTypeToIrMediaType } from '../../../ir/mediaType';
+import type { ReferenceObject, ResponseObject, SchemaObject } from '../types/spec';
 
 interface Content {
   mediaType: string;
@@ -15,11 +8,7 @@ interface Content {
   type: IRMediaType | undefined;
 }
 
-export const contentToSchema = ({
-  content,
-}: {
-  content: Content;
-}): SchemaObject | undefined => {
+export const contentToSchema = ({ content }: { content: Content }): SchemaObject | undefined => {
   const { mediaType, schema } = content;
 
   if (schema && '$ref' in schema) {
@@ -38,11 +27,7 @@ export const contentToSchema = ({
     return;
   }
 
-  if (
-    schema.type === 'string' &&
-    !schema.format &&
-    isMediaTypeFileLike({ mediaType })
-  ) {
+  if (schema.type === 'string' && !schema.format && isMediaTypeFileLike({ mediaType })) {
     return {
       ...schema,
       format: 'binary',

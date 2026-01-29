@@ -543,45 +543,39 @@ paths:
             type: string
         - name: expand
           in: query
-          description:
-            Indicates the related entities to be represented inline. The
+          description: Indicates the related entities to be represented inline. The
             maximum depth is 2.
           schema:
             type: string
         - name: filter
           in: query
-          description:
-            'Restricts the set of items returned. The maximum number of
+          description: 'Restricts the set of items returned. The maximum number of
             expressions is 100. The allowed functions are: allfunctions.'
           schema:
             type: string
         - name: orderby
           in: query
-          description:
-            Specifies the order in which items are returned. The maximum number
+          description: Specifies the order in which items are returned. The maximum number
             of expressions is 5.
           schema:
             type: string
         - name: top
           in: query
-          description:
-            Limits the number of items returned from a collection. The maximum
+          description: Limits the number of items returned from a collection. The maximum
             value is 100.
           schema:
             type: integer
             format: int32
         - name: skip
           in: query
-          description:
-            Excludes the specified number of items of the queried collection
+          description: Excludes the specified number of items of the queried collection
             from the result.
           schema:
             type: integer
             format: int32
         - name: count
           in: query
-          description:
-            Indicates whether the total count of items within a collection are
+          description: Indicates whether the total count of items within a collection are
             returned in the result.
           schema:
             type: boolean
@@ -803,45 +797,39 @@ paths:
             type: string
         - name: expand
           in: query
-          description:
-            Indicates the related entities to be represented inline. The
+          description: Indicates the related entities to be represented inline. The
             maximum depth is 2.
           schema:
             type: string
         - name: filter
           in: query
-          description:
-            'Restricts the set of items returned. The maximum number of
+          description: 'Restricts the set of items returned. The maximum number of
             expressions is 100. The allowed functions are: allfunctions.'
           schema:
             type: string
         - name: orderby
           in: query
-          description:
-            Specifies the order in which items are returned. The maximum number
+          description: Specifies the order in which items are returned. The maximum number
             of expressions is 5.
           schema:
             type: string
         - name: top
           in: query
-          description:
-            Limits the number of items returned from a collection. The maximum
+          description: Limits the number of items returned from a collection. The maximum
             value is 100.
           schema:
             type: integer
             format: int32
         - name: skip
           in: query
-          description:
-            Excludes the specified number of items of the queried collection
+          description: Excludes the specified number of items of the queried collection
             from the result.
           schema:
             type: integer
             format: int32
         - name: count
           in: query
-          description:
-            Indicates whether the total count of items within a collection are
+          description: Indicates whether the total count of items within a collection are
             returned in the result.
           schema:
             type: boolean
@@ -1330,45 +1318,39 @@ paths:
             type: string
         - name: expand
           in: query
-          description:
-            Indicates the related entities to be represented inline. The
+          description: Indicates the related entities to be represented inline. The
             maximum depth is 2.
           schema:
             type: string
         - name: filter
           in: query
-          description:
-            'Restricts the set of items returned. The maximum number of
+          description: 'Restricts the set of items returned. The maximum number of
             expressions is 100. The allowed functions are: allfunctions.'
           schema:
             type: string
         - name: orderby
           in: query
-          description:
-            Specifies the order in which items are returned. The maximum number
+          description: Specifies the order in which items are returned. The maximum number
             of expressions is 5.
           schema:
             type: string
         - name: top
           in: query
-          description:
-            Limits the number of items returned from a collection. The maximum
+          description: Limits the number of items returned from a collection. The maximum
             value is 100.
           schema:
             type: integer
             format: int32
         - name: skip
           in: query
-          description:
-            Excludes the specified number of items of the queried collection
+          description: Excludes the specified number of items of the queried collection
             from the result.
           schema:
             type: integer
             format: int32
         - name: count
           in: query
-          description:
-            Indicates whether the total count of items within a collection are
+          description: Indicates whether the total count of items within a collection are
             returned in the result.
           schema:
             type: boolean
@@ -1590,45 +1572,39 @@ paths:
             type: string
         - name: expand
           in: query
-          description:
-            Indicates the related entities to be represented inline. The
+          description: Indicates the related entities to be represented inline. The
             maximum depth is 2.
           schema:
             type: string
         - name: filter
           in: query
-          description:
-            'Restricts the set of items returned. The maximum number of
+          description: 'Restricts the set of items returned. The maximum number of
             expressions is 100. The allowed functions are: allfunctions.'
           schema:
             type: string
         - name: orderby
           in: query
-          description:
-            Specifies the order in which items are returned. The maximum number
+          description: Specifies the order in which items are returned. The maximum number
             of expressions is 5.
           schema:
             type: string
         - name: top
           in: query
-          description:
-            Limits the number of items returned from a collection. The maximum
+          description: Limits the number of items returned from a collection. The maximum
             value is 100.
           schema:
             type: integer
             format: int32
         - name: skip
           in: query
-          description:
-            Excludes the specified number of items of the queried collection
+          description: Excludes the specified number of items of the queried collection
             from the result.
           schema:
             type: integer
             format: int32
         - name: count
           in: query
-          description:
-            Indicates whether the total count of items within a collection are
+          description: Indicates whether the total count of items within a collection are
             returned in the result.
           schema:
             type: boolean
@@ -2117,45 +2093,39 @@ paths:
             type: string
         - name: expand
           in: query
-          description:
-            Indicates the related entities to be represented inline. The
+          description: Indicates the related entities to be represented inline. The
             maximum depth is 2.
           schema:
             type: string
         - name: filter
           in: query
-          description:
-            'Restricts the set of items returned. The maximum number of
+          description: 'Restricts the set of items returned. The maximum number of
             expressions is 100. The allowed functions are: allfunctions.'
           schema:
             type: string
         - name: orderby
           in: query
-          description:
-            Specifies the order in which items are returned. The maximum number
+          description: Specifies the order in which items are returned. The maximum number
             of expressions is 5.
           schema:
             type: string
         - name: top
           in: query
-          description:
-            Limits the number of items returned from a collection. The maximum
+          description: Limits the number of items returned from a collection. The maximum
             value is 100.
           schema:
             type: integer
             format: int32
         - name: skip
           in: query
-          description:
-            Excludes the specified number of items of the queried collection
+          description: Excludes the specified number of items of the queried collection
             from the result.
           schema:
             type: integer
             format: int32
         - name: count
           in: query
-          description:
-            Indicates whether the total count of items within a collection are
+          description: Indicates whether the total count of items within a collection are
             returned in the result.
           schema:
             type: boolean
@@ -2377,45 +2347,39 @@ paths:
             type: string
         - name: expand
           in: query
-          description:
-            Indicates the related entities to be represented inline. The
+          description: Indicates the related entities to be represented inline. The
             maximum depth is 2.
           schema:
             type: string
         - name: filter
           in: query
-          description:
-            'Restricts the set of items returned. The maximum number of
+          description: 'Restricts the set of items returned. The maximum number of
             expressions is 100. The allowed functions are: allfunctions.'
           schema:
             type: string
         - name: orderby
           in: query
-          description:
-            Specifies the order in which items are returned. The maximum number
+          description: Specifies the order in which items are returned. The maximum number
             of expressions is 5.
           schema:
             type: string
         - name: top
           in: query
-          description:
-            Limits the number of items returned from a collection. The maximum
+          description: Limits the number of items returned from a collection. The maximum
             value is 100.
           schema:
             type: integer
             format: int32
         - name: skip
           in: query
-          description:
-            Excludes the specified number of items of the queried collection
+          description: Excludes the specified number of items of the queried collection
             from the result.
           schema:
             type: integer
             format: int32
         - name: count
           in: query
-          description:
-            Indicates whether the total count of items within a collection are
+          description: Indicates whether the total count of items within a collection are
             returned in the result.
           schema:
             type: boolean
@@ -2904,45 +2868,39 @@ paths:
             type: string
         - name: expand
           in: query
-          description:
-            Indicates the related entities to be represented inline. The
+          description: Indicates the related entities to be represented inline. The
             maximum depth is 2.
           schema:
             type: string
         - name: filter
           in: query
-          description:
-            'Restricts the set of items returned. The maximum number of
+          description: 'Restricts the set of items returned. The maximum number of
             expressions is 100. The allowed functions are: allfunctions.'
           schema:
             type: string
         - name: orderby
           in: query
-          description:
-            Specifies the order in which items are returned. The maximum number
+          description: Specifies the order in which items are returned. The maximum number
             of expressions is 5.
           schema:
             type: string
         - name: top
           in: query
-          description:
-            Limits the number of items returned from a collection. The maximum
+          description: Limits the number of items returned from a collection. The maximum
             value is 100.
           schema:
             type: integer
             format: int32
         - name: skip
           in: query
-          description:
-            Excludes the specified number of items of the queried collection
+          description: Excludes the specified number of items of the queried collection
             from the result.
           schema:
             type: integer
             format: int32
         - name: count
           in: query
-          description:
-            Indicates whether the total count of items within a collection are
+          description: Indicates whether the total count of items within a collection are
             returned in the result.
           schema:
             type: boolean
@@ -3164,45 +3122,39 @@ paths:
             type: string
         - name: expand
           in: query
-          description:
-            Indicates the related entities to be represented inline. The
+          description: Indicates the related entities to be represented inline. The
             maximum depth is 2.
           schema:
             type: string
         - name: filter
           in: query
-          description:
-            'Restricts the set of items returned. The maximum number of
+          description: 'Restricts the set of items returned. The maximum number of
             expressions is 100. The allowed functions are: allfunctions.'
           schema:
             type: string
         - name: orderby
           in: query
-          description:
-            Specifies the order in which items are returned. The maximum number
+          description: Specifies the order in which items are returned. The maximum number
             of expressions is 5.
           schema:
             type: string
         - name: top
           in: query
-          description:
-            Limits the number of items returned from a collection. The maximum
+          description: Limits the number of items returned from a collection. The maximum
             value is 100.
           schema:
             type: integer
             format: int32
         - name: skip
           in: query
-          description:
-            Excludes the specified number of items of the queried collection
+          description: Excludes the specified number of items of the queried collection
             from the result.
           schema:
             type: integer
             format: int32
         - name: count
           in: query
-          description:
-            Indicates whether the total count of items within a collection are
+          description: Indicates whether the total count of items within a collection are
             returned in the result.
           schema:
             type: boolean
@@ -4551,45 +4503,39 @@ paths:
             type: string
         - name: expand
           in: query
-          description:
-            Indicates the related entities to be represented inline. The
+          description: Indicates the related entities to be represented inline. The
             maximum depth is 2.
           schema:
             type: string
         - name: filter
           in: query
-          description:
-            'Restricts the set of items returned. The maximum number of
+          description: 'Restricts the set of items returned. The maximum number of
             expressions is 100. The allowed functions are: allfunctions.'
           schema:
             type: string
         - name: orderby
           in: query
-          description:
-            Specifies the order in which items are returned. The maximum number
+          description: Specifies the order in which items are returned. The maximum number
             of expressions is 5.
           schema:
             type: string
         - name: top
           in: query
-          description:
-            Limits the number of items returned from a collection. The maximum
+          description: Limits the number of items returned from a collection. The maximum
             value is 100.
           schema:
             type: integer
             format: int32
         - name: skip
           in: query
-          description:
-            Excludes the specified number of items of the queried collection
+          description: Excludes the specified number of items of the queried collection
             from the result.
           schema:
             type: integer
             format: int32
         - name: count
           in: query
-          description:
-            Indicates whether the total count of items within a collection are
+          description: Indicates whether the total count of items within a collection are
             returned in the result.
           schema:
             type: boolean
@@ -4818,45 +4764,39 @@ paths:
             type: string
         - name: expand
           in: query
-          description:
-            Indicates the related entities to be represented inline. The
+          description: Indicates the related entities to be represented inline. The
             maximum depth is 2.
           schema:
             type: string
         - name: filter
           in: query
-          description:
-            'Restricts the set of items returned. The maximum number of
+          description: 'Restricts the set of items returned. The maximum number of
             expressions is 100. The allowed functions are: allfunctions.'
           schema:
             type: string
         - name: orderby
           in: query
-          description:
-            Specifies the order in which items are returned. The maximum number
+          description: Specifies the order in which items are returned. The maximum number
             of expressions is 5.
           schema:
             type: string
         - name: top
           in: query
-          description:
-            Limits the number of items returned from a collection. The maximum
+          description: Limits the number of items returned from a collection. The maximum
             value is 100.
           schema:
             type: integer
             format: int32
         - name: skip
           in: query
-          description:
-            Excludes the specified number of items of the queried collection
+          description: Excludes the specified number of items of the queried collection
             from the result.
           schema:
             type: integer
             format: int32
         - name: count
           in: query
-          description:
-            Indicates whether the total count of items within a collection are
+          description: Indicates whether the total count of items within a collection are
             returned in the result.
           schema:
             type: boolean
@@ -5085,45 +5025,39 @@ paths:
             type: string
         - name: expand
           in: query
-          description:
-            Indicates the related entities to be represented inline. The
+          description: Indicates the related entities to be represented inline. The
             maximum depth is 2.
           schema:
             type: string
         - name: filter
           in: query
-          description:
-            'Restricts the set of items returned. The maximum number of
+          description: 'Restricts the set of items returned. The maximum number of
             expressions is 100. The allowed functions are: allfunctions.'
           schema:
             type: string
         - name: orderby
           in: query
-          description:
-            Specifies the order in which items are returned. The maximum number
+          description: Specifies the order in which items are returned. The maximum number
             of expressions is 5.
           schema:
             type: string
         - name: top
           in: query
-          description:
-            Limits the number of items returned from a collection. The maximum
+          description: Limits the number of items returned from a collection. The maximum
             value is 100.
           schema:
             type: integer
             format: int32
         - name: skip
           in: query
-          description:
-            Excludes the specified number of items of the queried collection
+          description: Excludes the specified number of items of the queried collection
             from the result.
           schema:
             type: integer
             format: int32
         - name: count
           in: query
-          description:
-            Indicates whether the total count of items within a collection are
+          description: Indicates whether the total count of items within a collection are
             returned in the result.
           schema:
             type: boolean
@@ -5352,45 +5286,39 @@ paths:
             type: string
         - name: expand
           in: query
-          description:
-            Indicates the related entities to be represented inline. The
+          description: Indicates the related entities to be represented inline. The
             maximum depth is 2.
           schema:
             type: string
         - name: filter
           in: query
-          description:
-            'Restricts the set of items returned. The maximum number of
+          description: 'Restricts the set of items returned. The maximum number of
             expressions is 100. The allowed functions are: allfunctions.'
           schema:
             type: string
         - name: orderby
           in: query
-          description:
-            Specifies the order in which items are returned. The maximum number
+          description: Specifies the order in which items are returned. The maximum number
             of expressions is 5.
           schema:
             type: string
         - name: top
           in: query
-          description:
-            Limits the number of items returned from a collection. The maximum
+          description: Limits the number of items returned from a collection. The maximum
             value is 100.
           schema:
             type: integer
             format: int32
         - name: skip
           in: query
-          description:
-            Excludes the specified number of items of the queried collection
+          description: Excludes the specified number of items of the queried collection
             from the result.
           schema:
             type: integer
             format: int32
         - name: count
           in: query
-          description:
-            Indicates whether the total count of items within a collection are
+          description: Indicates whether the total count of items within a collection are
             returned in the result.
           schema:
             type: boolean
@@ -5619,45 +5547,39 @@ paths:
             type: string
         - name: expand
           in: query
-          description:
-            Indicates the related entities to be represented inline. The
+          description: Indicates the related entities to be represented inline. The
             maximum depth is 2.
           schema:
             type: string
         - name: filter
           in: query
-          description:
-            'Restricts the set of items returned. The maximum number of
+          description: 'Restricts the set of items returned. The maximum number of
             expressions is 100. The allowed functions are: allfunctions.'
           schema:
             type: string
         - name: orderby
           in: query
-          description:
-            Specifies the order in which items are returned. The maximum number
+          description: Specifies the order in which items are returned. The maximum number
             of expressions is 5.
           schema:
             type: string
         - name: top
           in: query
-          description:
-            Limits the number of items returned from a collection. The maximum
+          description: Limits the number of items returned from a collection. The maximum
             value is 100.
           schema:
             type: integer
             format: int32
         - name: skip
           in: query
-          description:
-            Excludes the specified number of items of the queried collection
+          description: Excludes the specified number of items of the queried collection
             from the result.
           schema:
             type: integer
             format: int32
         - name: count
           in: query
-          description:
-            Indicates whether the total count of items within a collection are
+          description: Indicates whether the total count of items within a collection are
             returned in the result.
           schema:
             type: boolean
@@ -5887,45 +5809,39 @@ paths:
             type: string
         - name: expand
           in: query
-          description:
-            Indicates the related entities to be represented inline. The
+          description: Indicates the related entities to be represented inline. The
             maximum depth is 2.
           schema:
             type: string
         - name: filter
           in: query
-          description:
-            'Restricts the set of items returned. The maximum number of
+          description: 'Restricts the set of items returned. The maximum number of
             expressions is 100. The allowed functions are: allfunctions.'
           schema:
             type: string
         - name: orderby
           in: query
-          description:
-            Specifies the order in which items are returned. The maximum number
+          description: Specifies the order in which items are returned. The maximum number
             of expressions is 5.
           schema:
             type: string
         - name: top
           in: query
-          description:
-            Limits the number of items returned from a collection. The maximum
+          description: Limits the number of items returned from a collection. The maximum
             value is 100.
           schema:
             type: integer
             format: int32
         - name: skip
           in: query
-          description:
-            Excludes the specified number of items of the queried collection
+          description: Excludes the specified number of items of the queried collection
             from the result.
           schema:
             type: integer
             format: int32
         - name: count
           in: query
-          description:
-            Indicates whether the total count of items within a collection are
+          description: Indicates whether the total count of items within a collection are
             returned in the result.
           schema:
             type: boolean
@@ -7170,45 +7086,39 @@ paths:
             type: string
         - name: expand
           in: query
-          description:
-            Indicates the related entities to be represented inline. The
+          description: Indicates the related entities to be represented inline. The
             maximum depth is 2.
           schema:
             type: string
         - name: filter
           in: query
-          description:
-            'Restricts the set of items returned. The maximum number of
+          description: 'Restricts the set of items returned. The maximum number of
             expressions is 100. The allowed functions are: allfunctions.'
           schema:
             type: string
         - name: orderby
           in: query
-          description:
-            Specifies the order in which items are returned. The maximum number
+          description: Specifies the order in which items are returned. The maximum number
             of expressions is 5.
           schema:
             type: string
         - name: top
           in: query
-          description:
-            Limits the number of items returned from a collection. The maximum
+          description: Limits the number of items returned from a collection. The maximum
             value is 100.
           schema:
             type: integer
             format: int32
         - name: skip
           in: query
-          description:
-            Excludes the specified number of items of the queried collection
+          description: Excludes the specified number of items of the queried collection
             from the result.
           schema:
             type: integer
             format: int32
         - name: count
           in: query
-          description:
-            Indicates whether the total count of items within a collection are
+          description: Indicates whether the total count of items within a collection are
             returned in the result.
           schema:
             type: boolean
@@ -7437,45 +7347,39 @@ paths:
             type: string
         - name: expand
           in: query
-          description:
-            Indicates the related entities to be represented inline. The
+          description: Indicates the related entities to be represented inline. The
             maximum depth is 2.
           schema:
             type: string
         - name: filter
           in: query
-          description:
-            'Restricts the set of items returned. The maximum number of
+          description: 'Restricts the set of items returned. The maximum number of
             expressions is 100. The allowed functions are: allfunctions.'
           schema:
             type: string
         - name: orderby
           in: query
-          description:
-            Specifies the order in which items are returned. The maximum number
+          description: Specifies the order in which items are returned. The maximum number
             of expressions is 5.
           schema:
             type: string
         - name: top
           in: query
-          description:
-            Limits the number of items returned from a collection. The maximum
+          description: Limits the number of items returned from a collection. The maximum
             value is 100.
           schema:
             type: integer
             format: int32
         - name: skip
           in: query
-          description:
-            Excludes the specified number of items of the queried collection
+          description: Excludes the specified number of items of the queried collection
             from the result.
           schema:
             type: integer
             format: int32
         - name: count
           in: query
-          description:
-            Indicates whether the total count of items within a collection are
+          description: Indicates whether the total count of items within a collection are
             returned in the result.
           schema:
             type: boolean
@@ -7702,8 +7606,7 @@ paths:
             type: string
         - name: expand
           in: query
-          description:
-            Indicates the related entities to be represented inline. The
+          description: Indicates the related entities to be represented inline. The
             maximum depth is 2.
           schema:
             type: string
@@ -7849,8 +7752,7 @@ paths:
             type: string
         - name: expand
           in: query
-          description:
-            Indicates the related entities to be represented inline. The
+          description: Indicates the related entities to be represented inline. The
             maximum depth is 2.
           schema:
             type: string
@@ -8255,45 +8157,39 @@ paths:
             type: string
         - name: expand
           in: query
-          description:
-            Indicates the related entities to be represented inline. The
+          description: Indicates the related entities to be represented inline. The
             maximum depth is 2.
           schema:
             type: string
         - name: filter
           in: query
-          description:
-            'Restricts the set of items returned. The maximum number of
+          description: 'Restricts the set of items returned. The maximum number of
             expressions is 100. The allowed functions are: allfunctions.'
           schema:
             type: string
         - name: orderby
           in: query
-          description:
-            Specifies the order in which items are returned. The maximum number
+          description: Specifies the order in which items are returned. The maximum number
             of expressions is 5.
           schema:
             type: string
         - name: top
           in: query
-          description:
-            Limits the number of items returned from a collection. The maximum
+          description: Limits the number of items returned from a collection. The maximum
             value is 100.
           schema:
             type: integer
             format: int32
         - name: skip
           in: query
-          description:
-            Excludes the specified number of items of the queried collection
+          description: Excludes the specified number of items of the queried collection
             from the result.
           schema:
             type: integer
             format: int32
         - name: count
           in: query
-          description:
-            Indicates whether the total count of items within a collection are
+          description: Indicates whether the total count of items within a collection are
             returned in the result.
           schema:
             type: boolean
@@ -8526,45 +8422,39 @@ paths:
             type: string
         - name: expand
           in: query
-          description:
-            Indicates the related entities to be represented inline. The
+          description: Indicates the related entities to be represented inline. The
             maximum depth is 2.
           schema:
             type: string
         - name: filter
           in: query
-          description:
-            'Restricts the set of items returned. The maximum number of
+          description: 'Restricts the set of items returned. The maximum number of
             expressions is 100. The allowed functions are: allfunctions.'
           schema:
             type: string
         - name: orderby
           in: query
-          description:
-            Specifies the order in which items are returned. The maximum number
+          description: Specifies the order in which items are returned. The maximum number
             of expressions is 5.
           schema:
             type: string
         - name: top
           in: query
-          description:
-            Limits the number of items returned from a collection. The maximum
+          description: Limits the number of items returned from a collection. The maximum
             value is 100.
           schema:
             type: integer
             format: int32
         - name: skip
           in: query
-          description:
-            Excludes the specified number of items of the queried collection
+          description: Excludes the specified number of items of the queried collection
             from the result.
           schema:
             type: integer
             format: int32
         - name: count
           in: query
-          description:
-            Indicates whether the total count of items within a collection are
+          description: Indicates whether the total count of items within a collection are
             returned in the result.
           schema:
             type: boolean
@@ -9312,45 +9202,39 @@ paths:
             type: string
         - name: expand
           in: query
-          description:
-            Indicates the related entities to be represented inline. The
+          description: Indicates the related entities to be represented inline. The
             maximum depth is 2.
           schema:
             type: string
         - name: filter
           in: query
-          description:
-            'Restricts the set of items returned. The maximum number of
+          description: 'Restricts the set of items returned. The maximum number of
             expressions is 100. The allowed functions are: allfunctions.'
           schema:
             type: string
         - name: orderby
           in: query
-          description:
-            Specifies the order in which items are returned. The maximum number
+          description: Specifies the order in which items are returned. The maximum number
             of expressions is 5.
           schema:
             type: string
         - name: top
           in: query
-          description:
-            Limits the number of items returned from a collection. The maximum
+          description: Limits the number of items returned from a collection. The maximum
             value is 100.
           schema:
             type: integer
             format: int32
         - name: skip
           in: query
-          description:
-            Excludes the specified number of items of the queried collection
+          description: Excludes the specified number of items of the queried collection
             from the result.
           schema:
             type: integer
             format: int32
         - name: count
           in: query
-          description:
-            Indicates whether the total count of items within a collection are
+          description: Indicates whether the total count of items within a collection are
             returned in the result.
           schema:
             type: boolean
@@ -9572,45 +9456,39 @@ paths:
             type: string
         - name: expand
           in: query
-          description:
-            Indicates the related entities to be represented inline. The
+          description: Indicates the related entities to be represented inline. The
             maximum depth is 2.
           schema:
             type: string
         - name: filter
           in: query
-          description:
-            'Restricts the set of items returned. The maximum number of
+          description: 'Restricts the set of items returned. The maximum number of
             expressions is 100. The allowed functions are: allfunctions.'
           schema:
             type: string
         - name: orderby
           in: query
-          description:
-            Specifies the order in which items are returned. The maximum number
+          description: Specifies the order in which items are returned. The maximum number
             of expressions is 5.
           schema:
             type: string
         - name: top
           in: query
-          description:
-            Limits the number of items returned from a collection. The maximum
+          description: Limits the number of items returned from a collection. The maximum
             value is 100.
           schema:
             type: integer
             format: int32
         - name: skip
           in: query
-          description:
-            Excludes the specified number of items of the queried collection
+          description: Excludes the specified number of items of the queried collection
             from the result.
           schema:
             type: integer
             format: int32
         - name: count
           in: query
-          description:
-            Indicates whether the total count of items within a collection are
+          description: Indicates whether the total count of items within a collection are
             returned in the result.
           schema:
             type: boolean
@@ -10103,45 +9981,39 @@ paths:
             type: string
         - name: expand
           in: query
-          description:
-            Indicates the related entities to be represented inline. The
+          description: Indicates the related entities to be represented inline. The
             maximum depth is 2.
           schema:
             type: string
         - name: filter
           in: query
-          description:
-            'Restricts the set of items returned. The maximum number of
+          description: 'Restricts the set of items returned. The maximum number of
             expressions is 100. The allowed functions are: allfunctions.'
           schema:
             type: string
         - name: orderby
           in: query
-          description:
-            Specifies the order in which items are returned. The maximum number
+          description: Specifies the order in which items are returned. The maximum number
             of expressions is 5.
           schema:
             type: string
         - name: top
           in: query
-          description:
-            Limits the number of items returned from a collection. The maximum
+          description: Limits the number of items returned from a collection. The maximum
             value is 100.
           schema:
             type: integer
             format: int32
         - name: skip
           in: query
-          description:
-            Excludes the specified number of items of the queried collection
+          description: Excludes the specified number of items of the queried collection
             from the result.
           schema:
             type: integer
             format: int32
         - name: count
           in: query
-          description:
-            Indicates whether the total count of items within a collection are
+          description: Indicates whether the total count of items within a collection are
             returned in the result.
           schema:
             type: boolean
@@ -10367,45 +10239,39 @@ paths:
             type: string
         - name: expand
           in: query
-          description:
-            Indicates the related entities to be represented inline. The
+          description: Indicates the related entities to be represented inline. The
             maximum depth is 2.
           schema:
             type: string
         - name: filter
           in: query
-          description:
-            'Restricts the set of items returned. The maximum number of
+          description: 'Restricts the set of items returned. The maximum number of
             expressions is 100. The allowed functions are: allfunctions.'
           schema:
             type: string
         - name: orderby
           in: query
-          description:
-            Specifies the order in which items are returned. The maximum number
+          description: Specifies the order in which items are returned. The maximum number
             of expressions is 5.
           schema:
             type: string
         - name: top
           in: query
-          description:
-            Limits the number of items returned from a collection. The maximum
+          description: Limits the number of items returned from a collection. The maximum
             value is 100.
           schema:
             type: integer
             format: int32
         - name: skip
           in: query
-          description:
-            Excludes the specified number of items of the queried collection
+          description: Excludes the specified number of items of the queried collection
             from the result.
           schema:
             type: integer
             format: int32
         - name: count
           in: query
-          description:
-            Indicates whether the total count of items within a collection are
+          description: Indicates whether the total count of items within a collection are
             returned in the result.
           schema:
             type: boolean
@@ -11013,45 +10879,39 @@ paths:
             type: string
         - name: expand
           in: query
-          description:
-            Indicates the related entities to be represented inline. The
+          description: Indicates the related entities to be represented inline. The
             maximum depth is 2.
           schema:
             type: string
         - name: filter
           in: query
-          description:
-            'Restricts the set of items returned. The maximum number of
+          description: 'Restricts the set of items returned. The maximum number of
             expressions is 100. The allowed functions are: allfunctions.'
           schema:
             type: string
         - name: orderby
           in: query
-          description:
-            Specifies the order in which items are returned. The maximum number
+          description: Specifies the order in which items are returned. The maximum number
             of expressions is 5.
           schema:
             type: string
         - name: top
           in: query
-          description:
-            Limits the number of items returned from a collection. The maximum
+          description: Limits the number of items returned from a collection. The maximum
             value is 100.
           schema:
             type: integer
             format: int32
         - name: skip
           in: query
-          description:
-            Excludes the specified number of items of the queried collection
+          description: Excludes the specified number of items of the queried collection
             from the result.
           schema:
             type: integer
             format: int32
         - name: count
           in: query
-          description:
-            Indicates whether the total count of items within a collection are
+          description: Indicates whether the total count of items within a collection are
             returned in the result.
           schema:
             type: boolean
@@ -11273,45 +11133,39 @@ paths:
             type: string
         - name: expand
           in: query
-          description:
-            Indicates the related entities to be represented inline. The
+          description: Indicates the related entities to be represented inline. The
             maximum depth is 2.
           schema:
             type: string
         - name: filter
           in: query
-          description:
-            'Restricts the set of items returned. The maximum number of
+          description: 'Restricts the set of items returned. The maximum number of
             expressions is 100. The allowed functions are: allfunctions.'
           schema:
             type: string
         - name: orderby
           in: query
-          description:
-            Specifies the order in which items are returned. The maximum number
+          description: Specifies the order in which items are returned. The maximum number
             of expressions is 5.
           schema:
             type: string
         - name: top
           in: query
-          description:
-            Limits the number of items returned from a collection. The maximum
+          description: Limits the number of items returned from a collection. The maximum
             value is 100.
           schema:
             type: integer
             format: int32
         - name: skip
           in: query
-          description:
-            Excludes the specified number of items of the queried collection
+          description: Excludes the specified number of items of the queried collection
             from the result.
           schema:
             type: integer
             format: int32
         - name: count
           in: query
-          description:
-            Indicates whether the total count of items within a collection are
+          description: Indicates whether the total count of items within a collection are
             returned in the result.
           schema:
             type: boolean
@@ -12344,45 +12198,39 @@ paths:
             type: string
         - name: expand
           in: query
-          description:
-            Indicates the related entities to be represented inline. The
+          description: Indicates the related entities to be represented inline. The
             maximum depth is 2.
           schema:
             type: string
         - name: filter
           in: query
-          description:
-            'Restricts the set of items returned. The maximum number of
+          description: 'Restricts the set of items returned. The maximum number of
             expressions is 100. The allowed functions are: allfunctions.'
           schema:
             type: string
         - name: orderby
           in: query
-          description:
-            Specifies the order in which items are returned. The maximum number
+          description: Specifies the order in which items are returned. The maximum number
             of expressions is 5.
           schema:
             type: string
         - name: top
           in: query
-          description:
-            Limits the number of items returned from a collection. The maximum
+          description: Limits the number of items returned from a collection. The maximum
             value is 100.
           schema:
             type: integer
             format: int32
         - name: skip
           in: query
-          description:
-            Excludes the specified number of items of the queried collection
+          description: Excludes the specified number of items of the queried collection
             from the result.
           schema:
             type: integer
             format: int32
         - name: count
           in: query
-          description:
-            Indicates whether the total count of items within a collection are
+          description: Indicates whether the total count of items within a collection are
             returned in the result.
           schema:
             type: boolean
@@ -12604,45 +12452,39 @@ paths:
             type: string
         - name: expand
           in: query
-          description:
-            Indicates the related entities to be represented inline. The
+          description: Indicates the related entities to be represented inline. The
             maximum depth is 2.
           schema:
             type: string
         - name: filter
           in: query
-          description:
-            'Restricts the set of items returned. The maximum number of
+          description: 'Restricts the set of items returned. The maximum number of
             expressions is 100. The allowed functions are: allfunctions.'
           schema:
             type: string
         - name: orderby
           in: query
-          description:
-            Specifies the order in which items are returned. The maximum number
+          description: Specifies the order in which items are returned. The maximum number
             of expressions is 5.
           schema:
             type: string
         - name: top
           in: query
-          description:
-            Limits the number of items returned from a collection. The maximum
+          description: Limits the number of items returned from a collection. The maximum
             value is 100.
           schema:
             type: integer
             format: int32
         - name: skip
           in: query
-          description:
-            Excludes the specified number of items of the queried collection
+          description: Excludes the specified number of items of the queried collection
             from the result.
           schema:
             type: integer
             format: int32
         - name: count
           in: query
-          description:
-            Indicates whether the total count of items within a collection are
+          description: Indicates whether the total count of items within a collection are
             returned in the result.
           schema:
             type: boolean
@@ -13799,45 +13641,39 @@ paths:
             type: string
         - name: expand
           in: query
-          description:
-            Indicates the related entities to be represented inline. The
+          description: Indicates the related entities to be represented inline. The
             maximum depth is 2.
           schema:
             type: string
         - name: filter
           in: query
-          description:
-            'Restricts the set of items returned. The maximum number of
+          description: 'Restricts the set of items returned. The maximum number of
             expressions is 100. The allowed functions are: allfunctions.'
           schema:
             type: string
         - name: orderby
           in: query
-          description:
-            Specifies the order in which items are returned. The maximum number
+          description: Specifies the order in which items are returned. The maximum number
             of expressions is 5.
           schema:
             type: string
         - name: top
           in: query
-          description:
-            Limits the number of items returned from a collection. The maximum
+          description: Limits the number of items returned from a collection. The maximum
             value is 100.
           schema:
             type: integer
             format: int32
         - name: skip
           in: query
-          description:
-            Excludes the specified number of items of the queried collection
+          description: Excludes the specified number of items of the queried collection
             from the result.
           schema:
             type: integer
             format: int32
         - name: count
           in: query
-          description:
-            Indicates whether the total count of items within a collection are
+          description: Indicates whether the total count of items within a collection are
             returned in the result.
           schema:
             type: boolean
@@ -14059,45 +13895,39 @@ paths:
             type: string
         - name: expand
           in: query
-          description:
-            Indicates the related entities to be represented inline. The
+          description: Indicates the related entities to be represented inline. The
             maximum depth is 2.
           schema:
             type: string
         - name: filter
           in: query
-          description:
-            'Restricts the set of items returned. The maximum number of
+          description: 'Restricts the set of items returned. The maximum number of
             expressions is 100. The allowed functions are: allfunctions.'
           schema:
             type: string
         - name: orderby
           in: query
-          description:
-            Specifies the order in which items are returned. The maximum number
+          description: Specifies the order in which items are returned. The maximum number
             of expressions is 5.
           schema:
             type: string
         - name: top
           in: query
-          description:
-            Limits the number of items returned from a collection. The maximum
+          description: Limits the number of items returned from a collection. The maximum
             value is 100.
           schema:
             type: integer
             format: int32
         - name: skip
           in: query
-          description:
-            Excludes the specified number of items of the queried collection
+          description: Excludes the specified number of items of the queried collection
             from the result.
           schema:
             type: integer
             format: int32
         - name: count
           in: query
-          description:
-            Indicates whether the total count of items within a collection are
+          description: Indicates whether the total count of items within a collection are
             returned in the result.
           schema:
             type: boolean
@@ -14572,45 +14402,39 @@ paths:
             type: string
         - name: expand
           in: query
-          description:
-            Indicates the related entities to be represented inline. The
+          description: Indicates the related entities to be represented inline. The
             maximum depth is 2.
           schema:
             type: string
         - name: filter
           in: query
-          description:
-            'Restricts the set of items returned. The maximum number of
+          description: 'Restricts the set of items returned. The maximum number of
             expressions is 100. The allowed functions are: allfunctions.'
           schema:
             type: string
         - name: orderby
           in: query
-          description:
-            Specifies the order in which items are returned. The maximum number
+          description: Specifies the order in which items are returned. The maximum number
             of expressions is 5.
           schema:
             type: string
         - name: top
           in: query
-          description:
-            Limits the number of items returned from a collection. The maximum
+          description: Limits the number of items returned from a collection. The maximum
             value is 100.
           schema:
             type: integer
             format: int32
         - name: skip
           in: query
-          description:
-            Excludes the specified number of items of the queried collection
+          description: Excludes the specified number of items of the queried collection
             from the result.
           schema:
             type: integer
             format: int32
         - name: count
           in: query
-          description:
-            Indicates whether the total count of items within a collection are
+          description: Indicates whether the total count of items within a collection are
             returned in the result.
           schema:
             type: boolean
@@ -14832,45 +14656,39 @@ paths:
             type: string
         - name: expand
           in: query
-          description:
-            Indicates the related entities to be represented inline. The
+          description: Indicates the related entities to be represented inline. The
             maximum depth is 2.
           schema:
             type: string
         - name: filter
           in: query
-          description:
-            'Restricts the set of items returned. The maximum number of
+          description: 'Restricts the set of items returned. The maximum number of
             expressions is 100. The allowed functions are: allfunctions.'
           schema:
             type: string
         - name: orderby
           in: query
-          description:
-            Specifies the order in which items are returned. The maximum number
+          description: Specifies the order in which items are returned. The maximum number
             of expressions is 5.
           schema:
             type: string
         - name: top
           in: query
-          description:
-            Limits the number of items returned from a collection. The maximum
+          description: Limits the number of items returned from a collection. The maximum
             value is 100.
           schema:
             type: integer
             format: int32
         - name: skip
           in: query
-          description:
-            Excludes the specified number of items of the queried collection
+          description: Excludes the specified number of items of the queried collection
             from the result.
           schema:
             type: integer
             format: int32
         - name: count
           in: query
-          description:
-            Indicates whether the total count of items within a collection are
+          description: Indicates whether the total count of items within a collection are
             returned in the result.
           schema:
             type: boolean
@@ -15092,45 +14910,39 @@ paths:
             type: string
         - name: expand
           in: query
-          description:
-            Indicates the related entities to be represented inline. The
+          description: Indicates the related entities to be represented inline. The
             maximum depth is 2.
           schema:
             type: string
         - name: filter
           in: query
-          description:
-            'Restricts the set of items returned. The maximum number of
+          description: 'Restricts the set of items returned. The maximum number of
             expressions is 100. The allowed functions are: allfunctions.'
           schema:
             type: string
         - name: orderby
           in: query
-          description:
-            Specifies the order in which items are returned. The maximum number
+          description: Specifies the order in which items are returned. The maximum number
             of expressions is 5.
           schema:
             type: string
         - name: top
           in: query
-          description:
-            Limits the number of items returned from a collection. The maximum
+          description: Limits the number of items returned from a collection. The maximum
             value is 100.
           schema:
             type: integer
             format: int32
         - name: skip
           in: query
-          description:
-            Excludes the specified number of items of the queried collection
+          description: Excludes the specified number of items of the queried collection
             from the result.
           schema:
             type: integer
             format: int32
         - name: count
           in: query
-          description:
-            Indicates whether the total count of items within a collection are
+          description: Indicates whether the total count of items within a collection are
             returned in the result.
           schema:
             type: boolean
@@ -15352,45 +15164,39 @@ paths:
             type: string
         - name: expand
           in: query
-          description:
-            Indicates the related entities to be represented inline. The
+          description: Indicates the related entities to be represented inline. The
             maximum depth is 2.
           schema:
             type: string
         - name: filter
           in: query
-          description:
-            'Restricts the set of items returned. The maximum number of
+          description: 'Restricts the set of items returned. The maximum number of
             expressions is 100. The allowed functions are: allfunctions.'
           schema:
             type: string
         - name: orderby
           in: query
-          description:
-            Specifies the order in which items are returned. The maximum number
+          description: Specifies the order in which items are returned. The maximum number
             of expressions is 5.
           schema:
             type: string
         - name: top
           in: query
-          description:
-            Limits the number of items returned from a collection. The maximum
+          description: Limits the number of items returned from a collection. The maximum
             value is 100.
           schema:
             type: integer
             format: int32
         - name: skip
           in: query
-          description:
-            Excludes the specified number of items of the queried collection
+          description: Excludes the specified number of items of the queried collection
             from the result.
           schema:
             type: integer
             format: int32
         - name: count
           in: query
-          description:
-            Indicates whether the total count of items within a collection are
+          description: Indicates whether the total count of items within a collection are
             returned in the result.
           schema:
             type: boolean
@@ -16310,45 +16116,39 @@ paths:
             type: string
         - name: expand
           in: query
-          description:
-            Indicates the related entities to be represented inline. The
+          description: Indicates the related entities to be represented inline. The
             maximum depth is 2.
           schema:
             type: string
         - name: filter
           in: query
-          description:
-            'Restricts the set of items returned. The maximum number of
+          description: 'Restricts the set of items returned. The maximum number of
             expressions is 100. The allowed functions are: allfunctions.'
           schema:
             type: string
         - name: orderby
           in: query
-          description:
-            Specifies the order in which items are returned. The maximum number
+          description: Specifies the order in which items are returned. The maximum number
             of expressions is 5.
           schema:
             type: string
         - name: top
           in: query
-          description:
-            Limits the number of items returned from a collection. The maximum
+          description: Limits the number of items returned from a collection. The maximum
             value is 100.
           schema:
             type: integer
             format: int32
         - name: skip
           in: query
-          description:
-            Excludes the specified number of items of the queried collection
+          description: Excludes the specified number of items of the queried collection
             from the result.
           schema:
             type: integer
             format: int32
         - name: count
           in: query
-          description:
-            Indicates whether the total count of items within a collection are
+          description: Indicates whether the total count of items within a collection are
             returned in the result.
           schema:
             type: boolean
@@ -16570,45 +16370,39 @@ paths:
             type: string
         - name: expand
           in: query
-          description:
-            Indicates the related entities to be represented inline. The
+          description: Indicates the related entities to be represented inline. The
             maximum depth is 2.
           schema:
             type: string
         - name: filter
           in: query
-          description:
-            'Restricts the set of items returned. The maximum number of
+          description: 'Restricts the set of items returned. The maximum number of
             expressions is 100. The allowed functions are: allfunctions.'
           schema:
             type: string
         - name: orderby
           in: query
-          description:
-            Specifies the order in which items are returned. The maximum number
+          description: Specifies the order in which items are returned. The maximum number
             of expressions is 5.
           schema:
             type: string
         - name: top
           in: query
-          description:
-            Limits the number of items returned from a collection. The maximum
+          description: Limits the number of items returned from a collection. The maximum
             value is 100.
           schema:
             type: integer
             format: int32
         - name: skip
           in: query
-          description:
-            Excludes the specified number of items of the queried collection
+          description: Excludes the specified number of items of the queried collection
             from the result.
           schema:
             type: integer
             format: int32
         - name: count
           in: query
-          description:
-            Indicates whether the total count of items within a collection are
+          description: Indicates whether the total count of items within a collection are
             returned in the result.
           schema:
             type: boolean
@@ -17356,45 +17150,39 @@ paths:
             type: string
         - name: expand
           in: query
-          description:
-            Indicates the related entities to be represented inline. The
+          description: Indicates the related entities to be represented inline. The
             maximum depth is 2.
           schema:
             type: string
         - name: filter
           in: query
-          description:
-            'Restricts the set of items returned. The maximum number of
+          description: 'Restricts the set of items returned. The maximum number of
             expressions is 100. The allowed functions are: allfunctions.'
           schema:
             type: string
         - name: orderby
           in: query
-          description:
-            Specifies the order in which items are returned. The maximum number
+          description: Specifies the order in which items are returned. The maximum number
             of expressions is 5.
           schema:
             type: string
         - name: top
           in: query
-          description:
-            Limits the number of items returned from a collection. The maximum
+          description: Limits the number of items returned from a collection. The maximum
             value is 100.
           schema:
             type: integer
             format: int32
         - name: skip
           in: query
-          description:
-            Excludes the specified number of items of the queried collection
+          description: Excludes the specified number of items of the queried collection
             from the result.
           schema:
             type: integer
             format: int32
         - name: count
           in: query
-          description:
-            Indicates whether the total count of items within a collection are
+          description: Indicates whether the total count of items within a collection are
             returned in the result.
           schema:
             type: boolean
@@ -17616,45 +17404,39 @@ paths:
             type: string
         - name: expand
           in: query
-          description:
-            Indicates the related entities to be represented inline. The
+          description: Indicates the related entities to be represented inline. The
             maximum depth is 2.
           schema:
             type: string
         - name: filter
           in: query
-          description:
-            'Restricts the set of items returned. The maximum number of
+          description: 'Restricts the set of items returned. The maximum number of
             expressions is 100. The allowed functions are: allfunctions.'
           schema:
             type: string
         - name: orderby
           in: query
-          description:
-            Specifies the order in which items are returned. The maximum number
+          description: Specifies the order in which items are returned. The maximum number
             of expressions is 5.
           schema:
             type: string
         - name: top
           in: query
-          description:
-            Limits the number of items returned from a collection. The maximum
+          description: Limits the number of items returned from a collection. The maximum
             value is 100.
           schema:
             type: integer
             format: int32
         - name: skip
           in: query
-          description:
-            Excludes the specified number of items of the queried collection
+          description: Excludes the specified number of items of the queried collection
             from the result.
           schema:
             type: integer
             format: int32
         - name: count
           in: query
-          description:
-            Indicates whether the total count of items within a collection are
+          description: Indicates whether the total count of items within a collection are
             returned in the result.
           schema:
             type: boolean
@@ -19568,45 +19350,39 @@ paths:
             type: string
         - name: expand
           in: query
-          description:
-            Indicates the related entities to be represented inline. The
+          description: Indicates the related entities to be represented inline. The
             maximum depth is 2.
           schema:
             type: string
         - name: filter
           in: query
-          description:
-            'Restricts the set of items returned. The maximum number of
+          description: 'Restricts the set of items returned. The maximum number of
             expressions is 100. The allowed functions are: allfunctions.'
           schema:
             type: string
         - name: orderby
           in: query
-          description:
-            Specifies the order in which items are returned. The maximum number
+          description: Specifies the order in which items are returned. The maximum number
             of expressions is 5.
           schema:
             type: string
         - name: top
           in: query
-          description:
-            Limits the number of items returned from a collection. The maximum
+          description: Limits the number of items returned from a collection. The maximum
             value is 100.
           schema:
             type: integer
             format: int32
         - name: skip
           in: query
-          description:
-            Excludes the specified number of items of the queried collection
+          description: Excludes the specified number of items of the queried collection
             from the result.
           schema:
             type: integer
             format: int32
         - name: count
           in: query
-          description:
-            Indicates whether the total count of items within a collection are
+          description: Indicates whether the total count of items within a collection are
             returned in the result.
           schema:
             type: boolean
@@ -19835,45 +19611,39 @@ paths:
             type: string
         - name: expand
           in: query
-          description:
-            Indicates the related entities to be represented inline. The
+          description: Indicates the related entities to be represented inline. The
             maximum depth is 2.
           schema:
             type: string
         - name: filter
           in: query
-          description:
-            'Restricts the set of items returned. The maximum number of
+          description: 'Restricts the set of items returned. The maximum number of
             expressions is 100. The allowed functions are: allfunctions.'
           schema:
             type: string
         - name: orderby
           in: query
-          description:
-            Specifies the order in which items are returned. The maximum number
+          description: Specifies the order in which items are returned. The maximum number
             of expressions is 5.
           schema:
             type: string
         - name: top
           in: query
-          description:
-            Limits the number of items returned from a collection. The maximum
+          description: Limits the number of items returned from a collection. The maximum
             value is 100.
           schema:
             type: integer
             format: int32
         - name: skip
           in: query
-          description:
-            Excludes the specified number of items of the queried collection
+          description: Excludes the specified number of items of the queried collection
             from the result.
           schema:
             type: integer
             format: int32
         - name: count
           in: query
-          description:
-            Indicates whether the total count of items within a collection are
+          description: Indicates whether the total count of items within a collection are
             returned in the result.
           schema:
             type: boolean
@@ -20100,8 +19870,7 @@ paths:
             type: string
         - name: expand
           in: query
-          description:
-            Indicates the related entities to be represented inline. The
+          description: Indicates the related entities to be represented inline. The
             maximum depth is 2.
           schema:
             type: string
@@ -20247,8 +20016,7 @@ paths:
             type: string
         - name: expand
           in: query
-          description:
-            Indicates the related entities to be represented inline. The
+          description: Indicates the related entities to be represented inline. The
             maximum depth is 2.
           schema:
             type: string

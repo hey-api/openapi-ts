@@ -1,10 +1,4 @@
-const browserGlobals = [
-  'document',
-  'history',
-  'location',
-  'navigator',
-  'window',
-];
+const browserGlobals = ['document', 'history', 'location', 'navigator', 'window'];
 
 const javaScriptGlobals = [
   'console',

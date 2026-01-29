@@ -1,9 +1,4 @@
-import {
-  getRegistryUrl,
-  inputToScalarPath,
-  type Parsed,
-  parseShorthand,
-} from '../scalar';
+import { getRegistryUrl, inputToScalarPath, type Parsed, parseShorthand } from '../scalar';
 
 describe('readme utils', () => {
   describe('parseShorthand', () => {
@@ -24,39 +19,23 @@ describe('readme utils', () => {
     });
 
     it('should throw error for invalid formats', () => {
-      expect(() => parseShorthand('')).toThrow(
-        'Invalid Scalar shorthand format',
-      );
-      expect(() => parseShorthand('@org')).toThrow(
-        'Invalid Scalar shorthand format',
-      );
-      expect(() => parseShorthand('@org/project#')).toThrow(
-        'Invalid Scalar shorthand format',
-      );
+      expect(() => parseShorthand('')).toThrow('Invalid Scalar shorthand format');
+      expect(() => parseShorthand('@org')).toThrow('Invalid Scalar shorthand format');
+      expect(() => parseShorthand('@org/project#')).toThrow('Invalid Scalar shorthand format');
       expect(() => parseShorthand('https://example.com')).toThrow(
         'Invalid Scalar shorthand format',
       );
     });
 
     it('should throw error for invalid UUID characters', () => {
-      expect(() => parseShorthand('abc@123')).toThrow(
-        'Invalid Scalar shorthand format',
-      );
-      expect(() => parseShorthand('abc/123')).toThrow(
-        'Invalid Scalar shorthand format',
-      );
-      expect(() => parseShorthand('abc#123')).toThrow(
-        'Invalid Scalar shorthand format',
-      );
-      expect(() => parseShorthand('abc 123')).toThrow(
-        'Invalid Scalar shorthand format',
-      );
+      expect(() => parseShorthand('abc@123')).toThrow('Invalid Scalar shorthand format');
+      expect(() => parseShorthand('abc/123')).toThrow('Invalid Scalar shorthand format');
+      expect(() => parseShorthand('abc#123')).toThrow('Invalid Scalar shorthand format');
+      expect(() => parseShorthand('abc 123')).toThrow('Invalid Scalar shorthand format');
     });
 
     it('should handle empty UUID', () => {
-      expect(() => parseShorthand('@org/project#')).toThrow(
-        'Invalid Scalar shorthand format',
-      );
+      expect(() => parseShorthand('@org/project#')).toThrow('Invalid Scalar shorthand format');
     });
   });
 
@@ -83,12 +62,8 @@ describe('readme utils', () => {
     });
 
     it('should throw error for invalid inputs', () => {
-      expect(() => inputToScalarPath('invalid')).toThrow(
-        'Invalid Scalar shorthand format',
-      );
-      expect(() => inputToScalarPath('')).toThrow(
-        'Invalid Scalar shorthand format',
-      );
+      expect(() => inputToScalarPath('invalid')).toThrow('Invalid Scalar shorthand format');
+      expect(() => inputToScalarPath('')).toThrow('Invalid Scalar shorthand format');
     });
   });
 
@@ -107,18 +82,15 @@ describe('readme utils', () => {
       },
     ];
 
-    it.each(validInputs)(
-      'should handle $input correctly',
-      ({ expected, input }) => {
-        expect(parseShorthand(input)).toEqual(expected);
-        expect(inputToScalarPath(`scalar:${input}`)).toEqual({
-          organization: expected.organization,
-          path: `https://registry.scalar.com/${expected.organization}/apis/${expected.project}/latest?format=json`,
-          project: expected.project,
-          registry: 'scalar',
-        });
-      },
-    );
+    it.each(validInputs)('should handle $input correctly', ({ expected, input }) => {
+      expect(parseShorthand(input)).toEqual(expected);
+      expect(inputToScalarPath(`scalar:${input}`)).toEqual({
+        organization: expected.organization,
+        path: `https://registry.scalar.com/${expected.organization}/apis/${expected.project}/latest?format=json`,
+        project: expected.project,
+        registry: 'scalar',
+      });
+    });
 
     const invalidInputs = [
       '',

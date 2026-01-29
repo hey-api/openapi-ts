@@ -22,8 +22,6 @@ export class TypeLiteralTsDsl extends Mixed {
   }
 
   override toAst() {
-    return ts.factory.createLiteralTypeNode(
-      this.$node(new LiteralTsDsl(this.value)),
-    );
+    return ts.factory.createLiteralTypeNode(this.$node(new LiteralTsDsl(this.value)));
   }
 }

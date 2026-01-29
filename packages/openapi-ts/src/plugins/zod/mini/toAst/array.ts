@@ -91,27 +91,19 @@ export const arrayToAst = ({
   const checks: Array<ReturnType<typeof $.call>> = [];
 
   if (schema.minItems === schema.maxItems && schema.minItems !== undefined) {
-    checks.push(
-      $(z).attr(identifiers.length).call($.fromValue(schema.minItems)),
-    );
+    checks.push($(z).attr(identifiers.length).call($.fromValue(schema.minItems)));
   } else {
     if (schema.minItems !== undefined) {
-      checks.push(
-        $(z).attr(identifiers.minLength).call($.fromValue(schema.minItems)),
-      );
+      checks.push($(z).attr(identifiers.minLength).call($.fromValue(schema.minItems)));
     }
 
     if (schema.maxItems !== undefined) {
-      checks.push(
-        $(z).attr(identifiers.maxLength).call($.fromValue(schema.maxItems)),
-      );
+      checks.push($(z).attr(identifiers.maxLength).call($.fromValue(schema.maxItems)));
     }
   }
 
   if (checks.length > 0) {
-    result.expression = result.expression
-      .attr(identifiers.check)
-      .call(...checks);
+    result.expression = result.expression.attr(identifiers.check).call(...checks);
   }
 
   return result as Omit<Ast, 'typeName'>;

@@ -5,9 +5,7 @@ import type { MaybeArray } from '@hey-api/types';
 import { postProcessors } from './postprocess';
 import type { Output, UserOutput } from './types';
 
-export function getOutput(userConfig: {
-  output: MaybeArray<string | UserOutput>;
-}): Output {
+export function getOutput(userConfig: { output: MaybeArray<string | UserOutput> }): Output {
   if (userConfig.output instanceof Array) {
     throw new Error(
       'Unexpected array of outputs in user configuration. This should have been expanded already.',
@@ -15,9 +13,7 @@ export function getOutput(userConfig: {
   }
 
   const userOutput =
-    typeof userConfig.output === 'string'
-      ? { path: userConfig.output }
-      : (userConfig.output ?? {});
+    typeof userConfig.output === 'string' ? { path: userConfig.output } : (userConfig.output ?? {});
 
   const output = valueToObject({
     defaultValue: {
@@ -53,10 +49,7 @@ export function getOutput(userConfig: {
     },
     value: userOutput,
   }) as Output;
-  if (
-    output.importFileExtension &&
-    !output.importFileExtension.startsWith('.')
-  ) {
+  if (output.importFileExtension && !output.importFileExtension.startsWith('.')) {
     output.importFileExtension = `.${output.importFileExtension}`;
   }
   output.postProcess = normalizePostProcess(userOutput.postProcess);
@@ -64,9 +57,7 @@ export function getOutput(userConfig: {
   return output;
 }
 
-function normalizePostProcess(
-  input: UserOutput['postProcess'],
-): ReadonlyArray<PostProcessor> {
+function normalizePostProcess(input: UserOutput['postProcess']): ReadonlyArray<PostProcessor> {
   if (!input) return [];
 
   return input.map((item) => {

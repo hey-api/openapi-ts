@@ -14,29 +14,21 @@ type PlainObject<T> = T extends object
   : never;
 
 type MappersType<T> = {
-  boolean: T extends boolean
-    ? (value: boolean) => Partial<ObjectType<T>>
-    : never;
+  boolean: T extends boolean ? (value: boolean) => Partial<ObjectType<T>> : never;
   function: T extends (...args: Array<any>) => any
     ? (value: (...args: Array<any>) => any) => Partial<ObjectType<T>>
     : never;
   number: T extends number ? (value: number) => Partial<ObjectType<T>> : never;
   object?: PlainObject<T> extends never
     ? never
-    : (
-        value: Partial<PlainObject<T>>,
-        defaultValue: PlainObject<T>,
-      ) => Partial<ObjectType<T>>;
+    : (value: Partial<PlainObject<T>>, defaultValue: PlainObject<T>) => Partial<ObjectType<T>>;
   string: T extends string ? (value: string) => Partial<ObjectType<T>> : never;
 } extends infer U
   ? { [K in keyof U as U[K] extends never ? never : K]: U[K] }
   : never;
 
 type IsObjectOnly<T> = T extends Record<string, any> | undefined
-  ? Extract<
-      T,
-      string | boolean | number | ((...args: Array<any>) => any)
-    > extends never
+  ? Extract<T, string | boolean | number | ((...args: Array<any>) => any)> extends never
     ? true
     : false
   : false;
@@ -68,10 +60,7 @@ const isPlainObject = (value: unknown): value is Record<string, any> =>
   !Array.isArray(value) &&
   typeof value !== 'function';
 
-const mergeResult = <T>(
-  result: ObjectType<T>,
-  mapped: Record<string, any>,
-): ObjectType<T> => {
+const mergeResult = <T>(result: ObjectType<T>, mapped: Record<string, any>): ObjectType<T> => {
   for (const [key, value] of Object.entries(mapped)) {
     if (value !== undefined && value !== '') {
       (result as Record<string, any>)[key] = value;
@@ -80,19 +69,13 @@ const mergeResult = <T>(
   return result;
 };
 
-export const valueToObject: ValueToObject = ({
-  defaultValue,
-  mappers,
-  value,
-}) => {
+export const valueToObject: ValueToObject = ({ defaultValue, mappers, value }) => {
   let result = { ...defaultValue };
 
   switch (typeof value) {
     case 'boolean':
       if (mappers && 'boolean' in mappers) {
-        const mapper = mappers.boolean as (
-          value: boolean,
-        ) => Record<string, any>;
+        const mapper = mappers.boolean as (value: boolean) => Record<string, any>;
         result = mergeResult(result, mapper(value));
       }
       break;
@@ -101,10 +84,7 @@ export const valueToObject: ValueToObject = ({
         const mapper = mappers.function as (
           value: (...args: Array<any>) => any,
         ) => Record<string, any>;
-        result = mergeResult(
-          result,
-          mapper(value as (...args: Array<any>) => any),
-        );
+        result = mergeResult(result, mapper(value as (...args: Array<any>) => any));
       }
       break;
     case 'number':
@@ -121,11 +101,7 @@ export const valueToObject: ValueToObject = ({
       break;
     case 'object':
       if (isPlainObject(value)) {
-        if (
-          mappers &&
-          'object' in mappers &&
-          typeof mappers.object === 'function'
-        ) {
+        if (mappers && 'object' in mappers && typeof mappers.object === 'function') {
           const mapper = mappers.object as (
             value: Record<string, any>,
             defaultValue: ObjectType<any>,

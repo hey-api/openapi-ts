@@ -1,7 +1,7 @@
 {
   "name": "@example/openapi-ts-angular-common",
-  "private": true,
   "version": "0.0.0",
+  "private": true,
   "scripts": {
     "build": "ng build",
     "dev": "ng serve",

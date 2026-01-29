@@ -1,17 +1,9 @@
 import type { Logger } from '@hey-api/codegen-core';
 
 import { createOperationKey } from '../../../ir/operation';
-import {
-  addNamespace,
-  removeNamespace,
-} from '../../../openApi/shared/utils/filter';
+import { addNamespace, removeNamespace } from '../../../openApi/shared/utils/filter';
 import { httpMethods } from '../../../openApi/shared/utils/operation';
-import type {
-  OpenApiV2_0_X,
-  OperationObject,
-  PathItemObject,
-  PathsObject,
-} from '../types/spec';
+import type { OpenApiV2_0_X, OperationObject, PathItemObject, PathsObject } from '../types/spec';
 
 /**
  * Replace source spec with filtered version.
@@ -67,10 +59,7 @@ export const filterSpec = ({
           continue;
         }
 
-        const key = addNamespace(
-          'operation',
-          createOperationKey({ method, path }),
-        );
+        const key = addNamespace('operation', createOperationKey({ method, path }));
         if (!operations.has(key)) {
           // @ts-expect-error
           delete pathItem[method];

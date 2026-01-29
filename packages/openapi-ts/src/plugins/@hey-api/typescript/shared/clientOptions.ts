@@ -37,15 +37,11 @@ export const createClientOptions = ({
 }) => {
   const client = getClientPlugin(getTypedConfig(plugin));
 
-  const types: Array<TypeTsDsl> = servers.map((server) =>
-    serverToBaseUrlType({ server }),
-  );
+  const types: Array<TypeTsDsl> = servers.map((server) => serverToBaseUrlType({ server }));
 
   if (!servers.length) {
     types.push($.type('string'));
-  } else if (
-    !('strictBaseUrl' in client.config && client.config.strictBaseUrl)
-  ) {
+  } else if (!('strictBaseUrl' in client.config && client.config.strictBaseUrl)) {
     types.push($.type.and($.type('string'), $.type.object()));
   }
 
@@ -69,9 +65,7 @@ export const createClientOptions = ({
     .type(
       $.type
         .object()
-        .prop(getClientBaseUrlKey(getTypedConfig(plugin)), (p) =>
-          p.type($.type.or(...types)),
-        ),
+        .prop(getClientBaseUrlKey(getTypedConfig(plugin)), (p) => p.type($.type.or(...types))),
     );
   plugin.node(node, nodeIndex);
 };

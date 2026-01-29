@@ -8,16 +8,13 @@ export interface Job {
   index: number;
 }
 
-export function expandToJobs(
-  configs: ReadonlyArray<UserConfig>,
-): ReadonlyArray<Job> {
+export function expandToJobs(configs: ReadonlyArray<UserConfig>): ReadonlyArray<Job> {
   const jobs: Array<Job> = [];
   let jobIndex = 0;
 
   for (const config of configs) {
     const inputs = getInput(config);
-    const outputs =
-      config.output instanceof Array ? config.output : [config.output];
+    const outputs = config.output instanceof Array ? config.output : [config.output];
 
     if (outputs.length === 1) {
       jobs.push({

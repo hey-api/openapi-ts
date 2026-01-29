@@ -55,19 +55,14 @@ export const stringToAst = ({
             .alias(symbolTypeId)
             .export()
             .generic('T', (g) => g.extends('string'))
-            .type(
-              $.type.template().add($.type('T')).add('_').add($.type('string')),
-            );
+            .type($.type.template().add($.type('T')).add('_').add($.type('string')));
           plugin.node(nodeTypeId);
         }
 
         const symbolTypeId = plugin.referenceSymbol(queryTypeId);
-        const symbolTypeName = plugin.symbol(
-          toCase(`${type}_id`, plugin.config.case),
-          {
-            meta: query,
-          },
-        );
+        const symbolTypeName = plugin.symbol(toCase(`${type}_id`, plugin.config.case), {
+          meta: query,
+        });
         const node = $.type
           .alias(symbolTypeName)
           .export()

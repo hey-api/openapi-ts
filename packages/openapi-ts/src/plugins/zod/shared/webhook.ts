@@ -11,10 +11,7 @@ export const irWebhookToAst = ({
   plugin,
   state,
 }: IrSchemaToAstOptions & {
-  getAst: (
-    schema: IR.SchemaObject,
-    path: ReadonlyArray<string | number>,
-  ) => Ast;
+  getAst: (schema: IR.SchemaObject, path: ReadonlyArray<string | number>) => Ast;
   operation: IR.OperationObject;
 }) => {
   if (plugin.config.webhooks.enabled) {
@@ -116,36 +113,30 @@ export const irWebhookToAst = ({
     schemaData.required = [...requiredProperties];
 
     const ast = getAst(schemaData, fromRef(state.path));
-    const symbol = plugin.symbol(
-      applyNaming(operation.id, plugin.config.webhooks),
-      {
-        meta: {
-          category: 'schema',
-          path: fromRef(state.path),
-          resource: 'webhook',
-          resourceId: operation.id,
-          role: 'data',
-          tags: fromRef(state.tags),
-          tool: 'zod',
-        },
+    const symbol = plugin.symbol(applyNaming(operation.id, plugin.config.webhooks), {
+      meta: {
+        category: 'schema',
+        path: fromRef(state.path),
+        resource: 'webhook',
+        resourceId: operation.id,
+        role: 'data',
+        tags: fromRef(state.tags),
+        tool: 'zod',
       },
-    );
+    });
     const typeInferSymbol = plugin.config.webhooks.types.infer.enabled
-      ? plugin.symbol(
-          applyNaming(operation.id, plugin.config.webhooks.types.infer),
-          {
-            meta: {
-              category: 'type',
-              path: fromRef(state.path),
-              resource: 'webhook',
-              resourceId: operation.id,
-              role: 'data',
-              tags: fromRef(state.tags),
-              tool: 'zod',
-              variant: 'infer',
-            },
+      ? plugin.symbol(applyNaming(operation.id, plugin.config.webhooks.types.infer), {
+          meta: {
+            category: 'type',
+            path: fromRef(state.path),
+            resource: 'webhook',
+            resourceId: operation.id,
+            role: 'data',
+            tags: fromRef(state.tags),
+            tool: 'zod',
+            variant: 'infer',
           },
-        )
+        })
       : undefined;
     exportAst({
       ast,

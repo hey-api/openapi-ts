@@ -1,10 +1,6 @@
 import type { ZodPlugin } from '../types';
 
-export const getZodModule = ({
-  plugin,
-}: {
-  plugin: ZodPlugin['Instance'];
-}): string => {
+export const getZodModule = ({ plugin }: { plugin: ZodPlugin['Instance'] }): string => {
   const version = plugin.package.getVersion('zod');
 
   if (version) {

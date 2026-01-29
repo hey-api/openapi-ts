@@ -9,12 +9,7 @@ const { Layout } = DefaultTheme;
     <template #layout-top>
       <div class="announcement">
         <span>Host your specs. Generate from anywhere.</span>
-        <a
-          href="https://app.heyapi.dev/"
-          rel="noopener noreferrer"
-          target="_blank"
-          >Get started</a
-        >
+        <a href="https://app.heyapi.dev/" rel="noopener noreferrer" target="_blank">Get started</a>
       </div>
     </template>
     <!-- <template #home-features-before>

@@ -3,12 +3,7 @@ import { fileURLToPath } from 'node:url';
 
 import { log } from '@hey-api/codegen-core';
 import type { PostProcessor, UserPostProcessor } from '@hey-api/shared';
-import {
-  findTsConfigPath,
-  loadTsConfig,
-  resolveSource,
-  valueToObject,
-} from '@hey-api/shared';
+import { findTsConfigPath, loadTsConfig, resolveSource, valueToObject } from '@hey-api/shared';
 import type { MaybeArray } from '@hey-api/types';
 import ts from 'typescript';
 
@@ -18,9 +13,7 @@ import type { Output, UserOutput } from './types';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export function getOutput(userConfig: {
-  output: MaybeArray<string | UserOutput>;
-}): Output {
+export function getOutput(userConfig: { output: MaybeArray<string | UserOutput> }): Output {
   if (userConfig.output instanceof Array) {
     throw new Error(
       'Unexpected array of outputs in user configuration. This should have been expanded already.',
@@ -28,9 +21,7 @@ export function getOutput(userConfig: {
   }
 
   const userOutput =
-    typeof userConfig.output === 'string'
-      ? { path: userConfig.output }
-      : (userConfig.output ?? {});
+    typeof userConfig.output === 'string' ? { path: userConfig.output } : (userConfig.output ?? {});
 
   const legacyPostProcess = resolveLegacyPostProcess(userOutput);
 
@@ -70,34 +61,23 @@ export function getOutput(userConfig: {
     },
     value: userOutput,
   }) as Output;
-  output.tsConfig = loadTsConfig(
-    findTsConfigPath(__dirname, output.tsConfigPath),
-  );
+  output.tsConfig = loadTsConfig(findTsConfigPath(__dirname, output.tsConfigPath));
   if (
     output.importFileExtension === undefined &&
-    (output.tsConfig?.options.moduleResolution ===
-      ts.ModuleResolutionKind.NodeNext ||
-      output.tsConfig?.options.moduleResolution ===
-        ts.ModuleResolutionKind.Node16)
+    (output.tsConfig?.options.moduleResolution === ts.ModuleResolutionKind.NodeNext ||
+      output.tsConfig?.options.moduleResolution === ts.ModuleResolutionKind.Node16)
   ) {
     output.importFileExtension = '.js';
   }
-  if (
-    output.importFileExtension &&
-    !output.importFileExtension.startsWith('.')
-  ) {
+  if (output.importFileExtension && !output.importFileExtension.startsWith('.')) {
     output.importFileExtension = `.${output.importFileExtension}`;
   }
-  output.postProcess = normalizePostProcess(
-    userOutput.postProcess ?? legacyPostProcess,
-  );
+  output.postProcess = normalizePostProcess(userOutput.postProcess ?? legacyPostProcess);
   output.source = resolveSource(output);
   return output;
 }
 
-function resolveLegacyPostProcess(
-  config: Partial<UserOutput>,
-): ReadonlyArray<UserPostProcessor> {
+function resolveLegacyPostProcess(config: Partial<UserOutput>): ReadonlyArray<UserPostProcessor> {
   const result: Array<UserPostProcessor> = [];
 
   if (config.lint !== undefined) {
@@ -135,9 +115,7 @@ function resolveLegacyPostProcess(
   return result;
 }
 
-function normalizePostProcess(
-  input: UserOutput['postProcess'],
-): ReadonlyArray<PostProcessor> {
+function normalizePostProcess(input: UserOutput['postProcess']): ReadonlyArray<PostProcessor> {
   if (!input) return [];
 
   return input.map((item) => {

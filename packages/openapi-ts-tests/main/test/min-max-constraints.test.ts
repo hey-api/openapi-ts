@@ -7,10 +7,7 @@ describe('Number Type Min/Max Constraints Tests', () => {
   let generatedSchemas: any;
 
   beforeAll(async () => {
-    generatedSchemas = await setupValibotTest(
-      'min-max-constraints.yaml',
-      'min-max-constraints',
-    );
+    generatedSchemas = await setupValibotTest('min-max-constraints.yaml', 'min-max-constraints');
   });
 
   describe('Basic Number Constraints', () => {
@@ -142,10 +139,7 @@ describe('Number Type Min/Max Constraints Tests', () => {
   describe('Exclusive Constraints', () => {
     describe('NumberWithExclusiveMin', () => {
       it('should accept values above exclusive minimum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vNumberWithExclusiveMin,
-          0.1,
-        );
+        const result = v.safeParse(generatedSchemas.vNumberWithExclusiveMin, 0.1);
         expect(result.success).toBe(true);
       });
 
@@ -155,140 +149,92 @@ describe('Number Type Min/Max Constraints Tests', () => {
       });
 
       it('should reject values below exclusive minimum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vNumberWithExclusiveMin,
-          -1,
-        );
+        const result = v.safeParse(generatedSchemas.vNumberWithExclusiveMin, -1);
         expect(result.success).toBe(false);
       });
     });
 
     describe('NumberWithExclusiveMax', () => {
       it('should accept values below exclusive maximum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vNumberWithExclusiveMax,
-          99.9,
-        );
+        const result = v.safeParse(generatedSchemas.vNumberWithExclusiveMax, 99.9);
         expect(result.success).toBe(true);
       });
 
       it('should reject values at exclusive maximum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vNumberWithExclusiveMax,
-          100,
-        );
+        const result = v.safeParse(generatedSchemas.vNumberWithExclusiveMax, 100);
         expect(result.success).toBe(false);
       });
 
       it('should reject values above exclusive maximum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vNumberWithExclusiveMax,
-          101,
-        );
+        const result = v.safeParse(generatedSchemas.vNumberWithExclusiveMax, 101);
         expect(result.success).toBe(false);
       });
     });
 
     describe('NumberWithExclusiveMinMax', () => {
       it('should accept values within exclusive range', () => {
-        const result = v.safeParse(
-          generatedSchemas.vNumberWithExclusiveMinMax,
-          0.5,
-        );
+        const result = v.safeParse(generatedSchemas.vNumberWithExclusiveMinMax, 0.5);
         expect(result.success).toBe(true);
       });
 
       it('should reject values at exclusive minimum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vNumberWithExclusiveMinMax,
-          0,
-        );
+        const result = v.safeParse(generatedSchemas.vNumberWithExclusiveMinMax, 0);
         expect(result.success).toBe(false);
       });
 
       it('should reject values at exclusive maximum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vNumberWithExclusiveMinMax,
-          1,
-        );
+        const result = v.safeParse(generatedSchemas.vNumberWithExclusiveMinMax, 1);
         expect(result.success).toBe(false);
       });
     });
 
     describe('IntegerWithExclusiveMin', () => {
       it('should accept values above exclusive minimum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vIntegerWithExclusiveMin,
-          11,
-        );
+        const result = v.safeParse(generatedSchemas.vIntegerWithExclusiveMin, 11);
         expect(result.success).toBe(true);
       });
 
       it('should reject values at exclusive minimum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vIntegerWithExclusiveMin,
-          10,
-        );
+        const result = v.safeParse(generatedSchemas.vIntegerWithExclusiveMin, 10);
         expect(result.success).toBe(false);
       });
 
       it('should reject values below exclusive minimum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vIntegerWithExclusiveMin,
-          9,
-        );
+        const result = v.safeParse(generatedSchemas.vIntegerWithExclusiveMin, 9);
         expect(result.success).toBe(false);
       });
     });
 
     describe('IntegerWithExclusiveMax', () => {
       it('should accept values below exclusive maximum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vIntegerWithExclusiveMax,
-          49,
-        );
+        const result = v.safeParse(generatedSchemas.vIntegerWithExclusiveMax, 49);
         expect(result.success).toBe(true);
       });
 
       it('should reject values at exclusive maximum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vIntegerWithExclusiveMax,
-          50,
-        );
+        const result = v.safeParse(generatedSchemas.vIntegerWithExclusiveMax, 50);
         expect(result.success).toBe(false);
       });
 
       it('should reject values above exclusive maximum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vIntegerWithExclusiveMax,
-          51,
-        );
+        const result = v.safeParse(generatedSchemas.vIntegerWithExclusiveMax, 51);
         expect(result.success).toBe(false);
       });
     });
 
     describe('IntegerWithExclusiveMinMax', () => {
       it('should accept values within exclusive range', () => {
-        const result = v.safeParse(
-          generatedSchemas.vIntegerWithExclusiveMinMax,
-          10,
-        );
+        const result = v.safeParse(generatedSchemas.vIntegerWithExclusiveMinMax, 10);
         expect(result.success).toBe(true);
       });
 
       it('should reject values at exclusive minimum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vIntegerWithExclusiveMinMax,
-          5,
-        );
+        const result = v.safeParse(generatedSchemas.vIntegerWithExclusiveMinMax, 5);
         expect(result.success).toBe(false);
       });
 
       it('should reject values at exclusive maximum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vIntegerWithExclusiveMinMax,
-          15,
-        );
+        const result = v.safeParse(generatedSchemas.vIntegerWithExclusiveMinMax, 15);
         expect(result.success).toBe(false);
       });
     });
@@ -297,136 +243,88 @@ describe('Number Type Min/Max Constraints Tests', () => {
   describe('Mixed Constraints', () => {
     describe('NumberWithExclusiveMinInclusiveMax', () => {
       it('should accept values above exclusive minimum and at inclusive maximum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vNumberWithExclusiveMinInclusiveMax,
-          90,
-        );
+        const result = v.safeParse(generatedSchemas.vNumberWithExclusiveMinInclusiveMax, 90);
         expect(result.success).toBe(true);
       });
 
       it('should accept values above exclusive minimum and below inclusive maximum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vNumberWithExclusiveMinInclusiveMax,
-          50,
-        );
+        const result = v.safeParse(generatedSchemas.vNumberWithExclusiveMinInclusiveMax, 50);
         expect(result.success).toBe(true);
       });
 
       it('should reject values at exclusive minimum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vNumberWithExclusiveMinInclusiveMax,
-          10,
-        );
+        const result = v.safeParse(generatedSchemas.vNumberWithExclusiveMinInclusiveMax, 10);
         expect(result.success).toBe(false);
       });
 
       it('should reject values above inclusive maximum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vNumberWithExclusiveMinInclusiveMax,
-          91,
-        );
+        const result = v.safeParse(generatedSchemas.vNumberWithExclusiveMinInclusiveMax, 91);
         expect(result.success).toBe(false);
       });
     });
 
     describe('NumberWithInclusiveMinExclusiveMax', () => {
       it('should accept values at inclusive minimum and below exclusive maximum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vNumberWithInclusiveMinExclusiveMax,
-          20,
-        );
+        const result = v.safeParse(generatedSchemas.vNumberWithInclusiveMinExclusiveMax, 20);
         expect(result.success).toBe(true);
       });
 
       it('should accept values above inclusive minimum and below exclusive maximum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vNumberWithInclusiveMinExclusiveMax,
-          50,
-        );
+        const result = v.safeParse(generatedSchemas.vNumberWithInclusiveMinExclusiveMax, 50);
         expect(result.success).toBe(true);
       });
 
       it('should reject values below inclusive minimum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vNumberWithInclusiveMinExclusiveMax,
-          19,
-        );
+        const result = v.safeParse(generatedSchemas.vNumberWithInclusiveMinExclusiveMax, 19);
         expect(result.success).toBe(false);
       });
 
       it('should reject values at exclusive maximum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vNumberWithInclusiveMinExclusiveMax,
-          80,
-        );
+        const result = v.safeParse(generatedSchemas.vNumberWithInclusiveMinExclusiveMax, 80);
         expect(result.success).toBe(false);
       });
     });
 
     describe('IntegerWithExclusiveMinInclusiveMax', () => {
       it('should accept values above exclusive minimum and at inclusive maximum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vIntegerWithExclusiveMinInclusiveMax,
-          50,
-        );
+        const result = v.safeParse(generatedSchemas.vIntegerWithExclusiveMinInclusiveMax, 50);
         expect(result.success).toBe(true);
       });
 
       it('should accept values above exclusive minimum and below inclusive maximum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vIntegerWithExclusiveMinInclusiveMax,
-          25,
-        );
+        const result = v.safeParse(generatedSchemas.vIntegerWithExclusiveMinInclusiveMax, 25);
         expect(result.success).toBe(true);
       });
 
       it('should reject values at exclusive minimum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vIntegerWithExclusiveMinInclusiveMax,
-          5,
-        );
+        const result = v.safeParse(generatedSchemas.vIntegerWithExclusiveMinInclusiveMax, 5);
         expect(result.success).toBe(false);
       });
 
       it('should reject values above inclusive maximum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vIntegerWithExclusiveMinInclusiveMax,
-          51,
-        );
+        const result = v.safeParse(generatedSchemas.vIntegerWithExclusiveMinInclusiveMax, 51);
         expect(result.success).toBe(false);
       });
     });
 
     describe('IntegerWithInclusiveMinExclusiveMax', () => {
       it('should accept values at inclusive minimum and below exclusive maximum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vIntegerWithInclusiveMinExclusiveMax,
-          10,
-        );
+        const result = v.safeParse(generatedSchemas.vIntegerWithInclusiveMinExclusiveMax, 10);
         expect(result.success).toBe(true);
       });
 
       it('should accept values above inclusive minimum and below exclusive maximum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vIntegerWithInclusiveMinExclusiveMax,
-          55,
-        );
+        const result = v.safeParse(generatedSchemas.vIntegerWithInclusiveMinExclusiveMax, 55);
         expect(result.success).toBe(true);
       });
 
       it('should reject values below inclusive minimum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vIntegerWithInclusiveMinExclusiveMax,
-          9,
-        );
+        const result = v.safeParse(generatedSchemas.vIntegerWithInclusiveMinExclusiveMax, 9);
         expect(result.success).toBe(false);
       });
 
       it('should reject values at exclusive maximum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vIntegerWithInclusiveMinExclusiveMax,
-          100,
-        );
+        const result = v.safeParse(generatedSchemas.vIntegerWithInclusiveMinExclusiveMax, 100);
         expect(result.success).toBe(false);
       });
     });
@@ -435,94 +333,61 @@ describe('Number Type Min/Max Constraints Tests', () => {
   describe('Format-Specific Constraints (Int64)', () => {
     describe('Int64WithMinimum', () => {
       it('should accept BigInt values at minimum boundary', () => {
-        const result = v.safeParse(
-          generatedSchemas.vInt64WithMinimum,
-          BigInt('-5000000000000'),
-        );
+        const result = v.safeParse(generatedSchemas.vInt64WithMinimum, BigInt('-5000000000000'));
         expect(result.success).toBe(true);
       });
 
       it('should accept BigInt values above minimum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vInt64WithMinimum,
-          BigInt('0'),
-        );
+        const result = v.safeParse(generatedSchemas.vInt64WithMinimum, BigInt('0'));
         expect(result.success).toBe(true);
       });
 
       it('should reject BigInt values below minimum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vInt64WithMinimum,
-          BigInt('-5000000000001'),
-        );
+        const result = v.safeParse(generatedSchemas.vInt64WithMinimum, BigInt('-5000000000001'));
         expect(result.success).toBe(false);
       });
     });
 
     describe('Int64WithMaximum', () => {
       it('should accept BigInt values at maximum boundary', () => {
-        const result = v.safeParse(
-          generatedSchemas.vInt64WithMaximum,
-          BigInt('5000000000000'),
-        );
+        const result = v.safeParse(generatedSchemas.vInt64WithMaximum, BigInt('5000000000000'));
         expect(result.success).toBe(true);
       });
 
       it('should accept BigInt values below maximum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vInt64WithMaximum,
-          BigInt('1000000000000'),
-        );
+        const result = v.safeParse(generatedSchemas.vInt64WithMaximum, BigInt('1000000000000'));
         expect(result.success).toBe(true);
       });
 
       it('should reject BigInt values above maximum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vInt64WithMaximum,
-          BigInt('5000000000001'),
-        );
+        const result = v.safeParse(generatedSchemas.vInt64WithMaximum, BigInt('5000000000001'));
         expect(result.success).toBe(false);
       });
     });
 
     describe('Int64WithMinMax', () => {
       it('should accept BigInt values within range', () => {
-        const result = v.safeParse(
-          generatedSchemas.vInt64WithMinMax,
-          BigInt('0'),
-        );
+        const result = v.safeParse(generatedSchemas.vInt64WithMinMax, BigInt('0'));
         expect(result.success).toBe(true);
       });
 
       it('should accept BigInt values at minimum boundary', () => {
-        const result = v.safeParse(
-          generatedSchemas.vInt64WithMinMax,
-          BigInt('-4000000000000'),
-        );
+        const result = v.safeParse(generatedSchemas.vInt64WithMinMax, BigInt('-4000000000000'));
         expect(result.success).toBe(true);
       });
 
       it('should accept BigInt values at maximum boundary', () => {
-        const result = v.safeParse(
-          generatedSchemas.vInt64WithMinMax,
-          BigInt('4000000000000'),
-        );
+        const result = v.safeParse(generatedSchemas.vInt64WithMinMax, BigInt('4000000000000'));
         expect(result.success).toBe(true);
       });
 
       it('should reject BigInt values below minimum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vInt64WithMinMax,
-          BigInt('-4000000000001'),
-        );
+        const result = v.safeParse(generatedSchemas.vInt64WithMinMax, BigInt('-4000000000001'));
         expect(result.success).toBe(false);
       });
 
       it('should reject BigInt values above maximum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vInt64WithMinMax,
-          BigInt('4000000000001'),
-        );
+        const result = v.safeParse(generatedSchemas.vInt64WithMinMax, BigInt('4000000000001'));
         expect(result.success).toBe(false);
       });
     });
@@ -565,10 +430,7 @@ describe('Number Type Min/Max Constraints Tests', () => {
 
     describe('Int64WithExclusiveMinMax', () => {
       it('should accept BigInt values within exclusive range', () => {
-        const result = v.safeParse(
-          generatedSchemas.vInt64WithExclusiveMinMax,
-          BigInt('0'),
-        );
+        const result = v.safeParse(generatedSchemas.vInt64WithExclusiveMinMax, BigInt('0'));
         expect(result.success).toBe(true);
       });
 
@@ -661,94 +523,61 @@ describe('Number Type Min/Max Constraints Tests', () => {
   describe('Format-Specific Constraints (UInt64)', () => {
     describe('UInt64WithMinimum', () => {
       it('should accept BigInt values at minimum boundary', () => {
-        const result = v.safeParse(
-          generatedSchemas.vUInt64WithMinimum,
-          BigInt('5000000000000'),
-        );
+        const result = v.safeParse(generatedSchemas.vUInt64WithMinimum, BigInt('5000000000000'));
         expect(result.success).toBe(true);
       });
 
       it('should accept BigInt values above minimum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vUInt64WithMinimum,
-          BigInt('8000000000000'),
-        );
+        const result = v.safeParse(generatedSchemas.vUInt64WithMinimum, BigInt('8000000000000'));
         expect(result.success).toBe(true);
       });
 
       it('should reject BigInt values below minimum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vUInt64WithMinimum,
-          BigInt('4999999999999'),
-        );
+        const result = v.safeParse(generatedSchemas.vUInt64WithMinimum, BigInt('4999999999999'));
         expect(result.success).toBe(false);
       });
     });
 
     describe('UInt64WithMaximum', () => {
       it('should accept BigInt values at maximum boundary', () => {
-        const result = v.safeParse(
-          generatedSchemas.vUInt64WithMaximum,
-          BigInt('15000000000000'),
-        );
+        const result = v.safeParse(generatedSchemas.vUInt64WithMaximum, BigInt('15000000000000'));
         expect(result.success).toBe(true);
       });
 
       it('should accept BigInt values below maximum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vUInt64WithMaximum,
-          BigInt('10000000000000'),
-        );
+        const result = v.safeParse(generatedSchemas.vUInt64WithMaximum, BigInt('10000000000000'));
         expect(result.success).toBe(true);
       });
 
       it('should reject BigInt values above maximum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vUInt64WithMaximum,
-          BigInt('15000000000001'),
-        );
+        const result = v.safeParse(generatedSchemas.vUInt64WithMaximum, BigInt('15000000000001'));
         expect(result.success).toBe(false);
       });
     });
 
     describe('UInt64WithMinMax', () => {
       it('should accept BigInt values within range', () => {
-        const result = v.safeParse(
-          generatedSchemas.vUInt64WithMinMax,
-          BigInt('5000000000000'),
-        );
+        const result = v.safeParse(generatedSchemas.vUInt64WithMinMax, BigInt('5000000000000'));
         expect(result.success).toBe(true);
       });
 
       it('should accept BigInt values at minimum boundary', () => {
-        const result = v.safeParse(
-          generatedSchemas.vUInt64WithMinMax,
-          BigInt('1000000000000'),
-        );
+        const result = v.safeParse(generatedSchemas.vUInt64WithMinMax, BigInt('1000000000000'));
         expect(result.success).toBe(true);
       });
 
       it('should accept BigInt values at maximum boundary', () => {
-        const result = v.safeParse(
-          generatedSchemas.vUInt64WithMinMax,
-          BigInt('10000000000000'),
-        );
+        const result = v.safeParse(generatedSchemas.vUInt64WithMinMax, BigInt('10000000000000'));
         expect(result.success).toBe(true);
       });
 
       it('should reject BigInt values below minimum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vUInt64WithMinMax,
-          BigInt('999999999999'),
-        );
+        const result = v.safeParse(generatedSchemas.vUInt64WithMinMax, BigInt('999999999999'));
         expect(result.success).toBe(false);
       });
 
       it('should reject BigInt values above maximum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vUInt64WithMinMax,
-          BigInt('10000000000001'),
-        );
+        const result = v.safeParse(generatedSchemas.vUInt64WithMinMax, BigInt('10000000000001'));
         expect(result.success).toBe(false);
       });
     });

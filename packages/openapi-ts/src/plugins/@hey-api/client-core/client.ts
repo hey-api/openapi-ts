@@ -6,9 +6,7 @@ import { $ } from '../../../ts-dsl';
 import type { PluginHandler } from './types';
 import { getClientBaseUrlKey } from './utils';
 
-const resolveBaseUrlString = ({
-  plugin,
-}: Parameters<PluginHandler>[0]): string | undefined => {
+const resolveBaseUrlString = ({ plugin }: Parameters<PluginHandler>[0]): string | undefined => {
   const { baseUrl } = plugin.config;
 
   if (baseUrl === false) {
@@ -57,18 +55,12 @@ export const createClient: PluginHandler = ({ plugin }) => {
   if (resolvedBaseUrl) {
     const url = parseUrl(resolvedBaseUrl);
     if (url.protocol && url.host && !resolvedBaseUrl.includes('{')) {
-      defaultVals.prop(
-        getClientBaseUrlKey(getTypedConfig(plugin)),
-        $.literal(resolvedBaseUrl),
-      );
+      defaultVals.prop(getClientBaseUrlKey(getTypedConfig(plugin)), $.literal(resolvedBaseUrl));
     } else if (resolvedBaseUrl !== '/' && resolvedBaseUrl.startsWith('/')) {
       const baseUrl = resolvedBaseUrl.endsWith('/')
         ? resolvedBaseUrl.slice(0, -1)
         : resolvedBaseUrl;
-      defaultVals.prop(
-        getClientBaseUrlKey(getTypedConfig(plugin)),
-        $.literal(baseUrl),
-      );
+      defaultVals.prop(getClientBaseUrlKey(getTypedConfig(plugin)), $.literal(baseUrl));
     }
   }
 

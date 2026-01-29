@@ -7,9 +7,7 @@ import type { IR } from '../../../ir/types';
  *
  * Used by location strategies to build paths within containers.
  */
-export type OperationPathStrategy = (
-  operation: IR.OperationObject,
-) => ReadonlyArray<string>;
+export type OperationPathStrategy = (operation: IR.OperationObject) => ReadonlyArray<string>;
 
 /**
  * A function that determines where an operation appears in the structure.
@@ -20,11 +18,7 @@ export type OperationStructureStrategy = (
   operation: IR.OperationObject,
 ) => ReadonlyArray<StructureLocation['path']>;
 
-export type OperationsStrategy =
-  | 'byTags'
-  | 'flat'
-  | 'single'
-  | OperationStructureStrategy;
+export type OperationsStrategy = 'byTags' | 'flat' | 'single' | OperationStructureStrategy;
 
 /**
  * Built-in strategies for operations.
@@ -55,10 +49,7 @@ export const OperationStrategy = {
       path?: OperationPathStrategy;
     }): OperationStructureStrategy =>
     (operation) => {
-      const tags =
-        operation.tags && operation.tags.length > 0
-          ? operation.tags
-          : [config.fallback];
+      const tags = operation.tags && operation.tags.length > 0 ? operation.tags : [config.fallback];
       const path = config.path ?? OperationPath.id();
       const pathSegments = path(operation);
       return tags.map((tag) => [tag, ...pathSegments]);
