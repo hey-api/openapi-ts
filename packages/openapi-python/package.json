@@ -60,7 +60,8 @@
     "test:update": "vitest watch --update",
     "test:watch": "vitest watch",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "typecheck:next": "tsc --noEmit && uv run mypy src/ts-python/__snapshots__"
   },
   "dependencies": {
     "@hey-api/codegen-core": "workspace:*",

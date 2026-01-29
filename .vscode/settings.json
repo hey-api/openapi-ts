@@ -10,6 +10,14 @@
   "eslint.nodePath": "./node_modules",
   "eslint.workingDirectories": [{ "pattern": "./packages/*/" }],
   "oxc.fmt.configPath": ".oxfmtrc.json",
+  "search.exclude": {
+    "**/*-lock.yaml": true,
+    "**/*.log": true,
+    "**/*.map": true,
+    "**/*.mjs": true,
+    "**/*.mts": true,
+    "**/*.tsbuildinfo": true
+  },
   "typescript.preferences.autoImportFileExcludePatterns": ["dist/**"],
   "typescript.preferences.autoImportSpecifierExcludeRegexes": ["^(node:)?os$"],
   "typescript.tsdk": "node_modules/typescript/lib",
