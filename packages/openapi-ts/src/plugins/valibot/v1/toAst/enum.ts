@@ -1,7 +1,6 @@
 import type { SchemaWithType } from '@hey-api/shared';
 
-import { $ } from '~/ts-dsl';
-
+import { $ } from '../../../../ts-dsl';
 import type { EnumResolverContext } from '../../resolvers';
 import type { Pipe, PipeResult } from '../../shared/pipes';
 import { pipes } from '../../shared/pipes';

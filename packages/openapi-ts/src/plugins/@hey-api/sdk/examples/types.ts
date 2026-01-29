@@ -1,7 +1,7 @@
 import type { FeatureToggle, IR, LinguistLanguages } from '@hey-api/shared';
 import type { MaybeFunc } from '@hey-api/types';
 
-import type { CallArgs, DollarTsDsl, ExampleOptions } from '~/ts-dsl';
+import type { CallArgs, DollarTsDsl, ExampleOptions } from '../../../../ts-dsl';
 
 export type UserExamplesConfig = Omit<ExampleOptions, 'payload'> & {
   /**

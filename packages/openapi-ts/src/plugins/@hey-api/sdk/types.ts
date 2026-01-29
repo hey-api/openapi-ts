@@ -2,8 +2,10 @@ import type { IndexExportOption, NameTransformer } from '@hey-api/shared';
 import type { DefinePlugin, Plugin } from '@hey-api/shared';
 import type { OperationsStrategy } from '@hey-api/shared';
 
-import type { PluginClientNames, PluginValidatorNames } from '~/plugins/types';
-
+import type {
+  PluginClientNames,
+  PluginValidatorNames,
+} from '../../../plugins/types';
 import type { ExamplesConfig, UserExamplesConfig } from './examples';
 import type { OperationsConfig, UserOperationsConfig } from './operations';
 

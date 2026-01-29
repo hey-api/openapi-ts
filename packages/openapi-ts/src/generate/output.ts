@@ -4,9 +4,8 @@ import path from 'node:path';
 import type { Context } from '@hey-api/shared';
 import { IntentContext } from '@hey-api/shared';
 
-import { getTypedConfig } from '~/config/utils';
-import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
-
+import { getTypedConfig } from '../config/utils';
+import { getClientPlugin } from '../plugins/@hey-api/client-core/utils';
 import { generateClientBundle } from './client';
 
 export const generateOutput = async ({ context }: { context: Context }) => {

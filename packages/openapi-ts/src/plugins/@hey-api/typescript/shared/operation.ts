@@ -4,8 +4,7 @@ import { applyNaming } from '@hey-api/shared';
 import { operationResponsesMap } from '@hey-api/shared';
 import { deduplicateSchema } from '@hey-api/shared';
 
-import { $ } from '~/ts-dsl';
-
+import { $ } from '../../../../ts-dsl';
 import { irSchemaToAst } from '../v1/plugin';
 import type { IrSchemaToAstOptions } from './types';
 

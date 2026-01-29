@@ -4,7 +4,7 @@ import {
   mergeConfigs,
 } from '@hey-api/codegen-core';
 
-import { resolveJobs } from '~/config/init';
+import { resolveJobs } from '../config/init';
 
 describe('interactive config', () => {
   it('should use detectInteractiveSession when not provided', async () => {

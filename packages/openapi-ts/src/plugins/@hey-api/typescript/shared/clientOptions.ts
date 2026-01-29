@@ -1,14 +1,13 @@
 import type { IR } from '@hey-api/shared';
 import { applyNaming, parseUrl } from '@hey-api/shared';
 
-import { getTypedConfig } from '~/config/utils';
+import { getTypedConfig } from '../../../../config/utils';
 import {
   getClientBaseUrlKey,
   getClientPlugin,
-} from '~/plugins/@hey-api/client-core/utils';
-import type { TypeTsDsl } from '~/ts-dsl';
-import { $ } from '~/ts-dsl';
-
+} from '../../../../plugins/@hey-api/client-core/utils';
+import type { TypeTsDsl } from '../../../../ts-dsl';
+import { $ } from '../../../../ts-dsl';
 import type { HeyApiTypeScriptPlugin } from '../types';
 
 const serverToBaseUrlType = ({ server }: { server: IR.ServerObject }) => {

@@ -1,11 +1,10 @@
 import type { IR } from '@hey-api/shared';
 import { applyNaming } from '@hey-api/shared';
 
-import { getTypedConfig } from '~/config/utils';
-import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
-import { createOperationComment } from '~/plugins/shared/utils/operation';
-import { $ } from '~/ts-dsl';
-
+import { getTypedConfig } from '../../../config/utils';
+import { getClientPlugin } from '../../../plugins/@hey-api/client-core/utils';
+import { createOperationComment } from '../../../plugins/shared/utils/operation';
+import { $ } from '../../../ts-dsl';
 import { handleMeta } from './meta';
 import type { PiniaColadaPlugin } from './types';
 import { useTypeError, useTypeResponse } from './useType';

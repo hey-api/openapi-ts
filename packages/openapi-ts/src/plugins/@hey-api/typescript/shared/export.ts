@@ -3,10 +3,9 @@ import type { IR } from '@hey-api/shared';
 import { applyNaming, toCase } from '@hey-api/shared';
 import { pathToJsonPointer, refToName } from '@hey-api/shared';
 
-import { createSchemaComment } from '~/plugins/shared/utils/schema';
-import type { MaybeTsDsl, TypeTsDsl } from '~/ts-dsl';
-import { $, regexp } from '~/ts-dsl';
-
+import { createSchemaComment } from '../../../../plugins/shared/utils/schema';
+import type { MaybeTsDsl, TypeTsDsl } from '../../../../ts-dsl';
+import { $, regexp } from '../../../../ts-dsl';
 import type { HeyApiTypeScriptPlugin } from '../types';
 import type { IrSchemaToAstOptions } from './types';
 

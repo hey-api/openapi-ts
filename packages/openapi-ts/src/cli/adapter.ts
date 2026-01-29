@@ -1,7 +1,6 @@
 import type { ToArray } from '@hey-api/types';
 
-import type { UserConfig } from '~/config/types';
-
+import type { UserConfig } from '../config/types';
 import type { CliOptions } from './schema';
 
 export function cliToConfig(cli: CliOptions): Partial<UserConfig> {

@@ -1,14 +1,13 @@
 import type { Refs, Symbol } from '@hey-api/codegen-core';
 import type { IR } from '@hey-api/shared';
 
-import type { Plugin, SchemaWithType } from '~/plugins';
+import type { Plugin, SchemaWithType } from '../../../plugins';
 import type {
   MaybeBigInt,
   ShouldCoerceToBigInt,
-} from '~/plugins/shared/utils/coerce';
-import type { GetIntegerLimit } from '~/plugins/shared/utils/formats';
-import type { $, DollarTsDsl } from '~/ts-dsl';
-
+} from '../../../plugins/shared/utils/coerce';
+import type { GetIntegerLimit } from '../../../plugins/shared/utils/formats';
+import type { $, DollarTsDsl } from '../../../ts-dsl';
 import type { Pipe, PipeResult, Pipes, PipesUtils } from '../shared/pipes';
 import type { Ast, PluginState } from '../shared/types';
 import type { ValibotPlugin } from '../types';

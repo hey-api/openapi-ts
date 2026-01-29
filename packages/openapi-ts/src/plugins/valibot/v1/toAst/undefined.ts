@@ -1,7 +1,6 @@
 import type { SchemaWithType } from '@hey-api/shared';
 
-import { $ } from '~/ts-dsl';
-
+import { $ } from '../../../../ts-dsl';
 import type { IrSchemaToAstOptions } from '../../shared/types';
 import { identifiers } from '../constants';
 
