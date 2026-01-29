@@ -142,7 +142,7 @@ export async function createClient({
     eventParser.timeEnd();
 
     const eventGenerator = logger.timeEvent('generator');
-    await generateOutput({ context });
+    await generateOutput(context);
     eventGenerator.timeEnd();
 
     const eventPostprocess = logger.timeEvent('postprocess');

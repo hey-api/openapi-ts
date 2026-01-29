@@ -20,7 +20,7 @@ import colors from 'ansi-colors';
 
 import { postProcessors } from './config/output/postprocess';
 import type { Config } from './config/types';
-// import { generateOutput } from './generate/output';
+import { generateOutput } from './generate/output';
 // import { TypeScriptRenderer } from './ts-dsl';
 
 export async function createClient({
@@ -143,7 +143,7 @@ export async function createClient({
     eventParser.timeEnd();
 
     const eventGenerator = logger.timeEvent('generator');
-    // await generateOutput({ context });
+    await generateOutput(context);
     eventGenerator.timeEnd();
 
     const eventPostprocess = logger.timeEvent('postprocess');
