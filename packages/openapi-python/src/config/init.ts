@@ -1,12 +1,12 @@
 import type { Logger } from '@hey-api/codegen-core';
 import { loadConfigFile } from '@hey-api/codegen-core';
 
-// import { expandToJobs } from './expand';
+import { expandToJobs } from './expand';
 // import { getProjectDependencies } from './packages';
 import type { ResolvedJob } from './resolve';
-// import { resolveConfig } from './resolve';
+import { resolveConfig } from './resolve';
 import type { UserConfig } from './types';
-// import { validateJobs } from './validate';
+import { validateJobs } from './validate';
 
 export type Configs = {
   dependencies: Record<string, string>;
@@ -38,12 +38,13 @@ export async function resolveJobs({
     const loaded = await loadConfigFile<UserConfig>({
       configFile,
       logger,
-      name: 'openapi-ts',
+      name: 'openapi-python',
       userConfig,
     });
 
     if (!Object.keys(dependencies).length) {
       // TODO: handle dependencies for multiple configs properly?
+      // TODO: collect Python dependencies
       // dependencies = getProjectDependencies(
       //   loaded.foundConfig ? loaded.configFile : undefined,
       // );
@@ -54,15 +55,12 @@ export async function resolveJobs({
   eventLoad.timeEnd();
 
   const eventBuild = logger.timeEvent('build');
-  // const jobs = validateJobs(expandToJobs(configs));
-  // const resolvedJobs = jobs.map((validated) =>
-  //   resolveConfig(validated, dependencies),
-  // );
+  const jobs = validateJobs(expandToJobs(configs));
+  const resolvedJobs = jobs.map((validated) => resolveConfig(validated, dependencies));
   eventBuild.timeEnd();
 
   return {
     dependencies,
-    jobs: [],
-    // jobs: resolvedJobs,
+    jobs: resolvedJobs,
   };
 }

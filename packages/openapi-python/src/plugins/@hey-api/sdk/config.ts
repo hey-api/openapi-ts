@@ -19,59 +19,50 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
     // eslint-disable-next-line sort-keys-fix/sort-keys-fix
     response: 'body',
   },
-  dependencies: ['@hey-api/typescript'],
   handler,
   name: '@hey-api/python-sdk',
-  resolveConfig: (plugin, context) => {
-    if (plugin.config.client) {
-      if (typeof plugin.config.client === 'boolean') {
-        plugin.config.client = context.pluginByTag('client', {
-          defaultPlugin: '@hey-api/client-httpx',
-        });
-      }
-
-      plugin.dependencies.add(plugin.config.client!);
-    } else {
-      plugin.config.client = false;
-    }
-
-    if (plugin.config.transformer) {
-      if (typeof plugin.config.transformer === 'boolean') {
-        plugin.config.transformer = context.pluginByTag('transformer');
-      }
-
-      plugin.dependencies.add(plugin.config.transformer!);
-    } else {
-      plugin.config.transformer = false;
-    }
-
-    if (typeof plugin.config.validator !== 'object') {
-      plugin.config.validator = {
-        request: plugin.config.validator,
-        response: plugin.config.validator,
-      };
-    }
-
-    if (plugin.config.validator.request) {
-      if (typeof plugin.config.validator.request === 'boolean') {
-        plugin.config.validator.request = context.pluginByTag('validator');
-      }
-
-      plugin.dependencies.add(plugin.config.validator.request!);
-    } else {
-      plugin.config.validator.request = false;
-    }
-
-    if (plugin.config.validator.response) {
-      if (typeof plugin.config.validator.response === 'boolean') {
-        plugin.config.validator.response = context.pluginByTag('validator');
-      }
-
-      plugin.dependencies.add(plugin.config.validator.response!);
-    } else {
-      plugin.config.validator.response = false;
-    }
-
+  // resolveConfig: (plugin, context) => {
+  resolveConfig: () => {
+    // if (plugin.config.client) {
+    //   if (typeof plugin.config.client === 'boolean') {
+    //     plugin.config.client = context.pluginByTag('client', {
+    //       defaultPlugin: '@hey-api/client-httpx',
+    //     });
+    //   }
+    //   plugin.dependencies.add(plugin.config.client!);
+    // } else {
+    //   plugin.config.client = false;
+    // }
+    // if (plugin.config.transformer) {
+    //   if (typeof plugin.config.transformer === 'boolean') {
+    //     plugin.config.transformer = context.pluginByTag('transformer');
+    //   }
+    //   plugin.dependencies.add(plugin.config.transformer!);
+    // } else {
+    //   plugin.config.transformer = false;
+    // }
+    // if (typeof plugin.config.validator !== 'object') {
+    //   plugin.config.validator = {
+    //     request: plugin.config.validator,
+    //     response: plugin.config.validator,
+    //   };
+    // }
+    // if (plugin.config.validator.request) {
+    //   if (typeof plugin.config.validator.request === 'boolean') {
+    //     plugin.config.validator.request = context.pluginByTag('validator');
+    //   }
+    //   plugin.dependencies.add(plugin.config.validator.request!);
+    // } else {
+    //   plugin.config.validator.request = false;
+    // }
+    // if (plugin.config.validator.response) {
+    //   if (typeof plugin.config.validator.response === 'boolean') {
+    //     plugin.config.validator.response = context.pluginByTag('validator');
+    //   }
+    //   plugin.dependencies.add(plugin.config.validator.response!);
+    // } else {
+    //   plugin.config.validator.response = false;
+    // }
     // plugin.config.examples = resolveExamples(plugin.config, context);
     // plugin.config.operations = resolveOperations(plugin.config, context);
   },
