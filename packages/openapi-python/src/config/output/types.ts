@@ -20,9 +20,8 @@ export type UserOutput = BaseUserOutput & {
    *
    * Use preset strings for common tools, or provide custom configurations.
    *
-   * @example ['biome:lint', 'prettier']
-   * @example [{ command: 'dprint', args: ['fmt', '{{path}}'] }]
-   * @example ['eslint', { command: 'prettier', args: ['{{path}}', '--write'] }]
+   * @example ['ruff:lint', 'ruff:format']
+   * @example [{ command: 'flake8', args: ['{{path}}'] }]
    *
    * @default []
    */
