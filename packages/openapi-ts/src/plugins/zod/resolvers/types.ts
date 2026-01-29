@@ -3,14 +3,13 @@ import type { IR } from '@hey-api/shared';
 import type { MaybeArray } from '@hey-api/types';
 import type ts from 'typescript';
 
-import type { Plugin, SchemaWithType } from '~/plugins';
+import type { Plugin, SchemaWithType } from '../../../plugins';
 import type {
   MaybeBigInt,
   ShouldCoerceToBigInt,
-} from '~/plugins/shared/utils/coerce';
-import type { GetIntegerLimit } from '~/plugins/shared/utils/formats';
-import type { $, DollarTsDsl, TsDsl } from '~/ts-dsl';
-
+} from '../../../plugins/shared/utils/coerce';
+import type { GetIntegerLimit } from '../../../plugins/shared/utils/formats';
+import type { $, DollarTsDsl, TsDsl } from '../../../ts-dsl';
 import type { Chain } from '../shared/chain';
 import type { Ast, PluginState } from '../shared/types';
 import type { ZodPlugin } from '../types';

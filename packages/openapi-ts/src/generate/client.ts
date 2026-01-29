@@ -6,17 +6,48 @@ import type { IProject, ProjectRenderMeta } from '@hey-api/codegen-core';
 import type { DefinePlugin } from '@hey-api/shared';
 import { ensureDirSync } from '@hey-api/shared';
 
-import type { Config } from '~/config/types';
-import type { Client } from '~/plugins/@hey-api/client-core/types';
-import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
+import type { Config } from '../config/types';
+import type { Client } from '../plugins/@hey-api/client-core/types';
+import { getClientPlugin } from '../plugins/@hey-api/client-core/utils';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+function isDevMode(): boolean {
+  // In dev: __dirname = .../packages/openapi-ts/src/generate
+  // In prod: __dirname = .../packages/openapi-ts/dist/generate
+  return __dirname.includes(`${path.sep}src${path.sep}`);
+}
+
+/**
+ * Returns paths to client bundle files based on execution context
+ */
+function getClientBundlePaths(pluginName: string): {
+  clientPath: string;
+  corePath: string;
+} {
+  const clientName = pluginName.slice('@hey-api/client-'.length);
+
+  if (isDevMode()) {
+    // Dev: source bundle folders at src/plugins/@hey-api/{client}/bundle
+    const pluginsDir = path.resolve(__dirname, '..', 'plugins', '@hey-api');
+    return {
+      clientPath: path.resolve(pluginsDir, `client-${clientName}`, 'bundle'),
+      corePath: path.resolve(pluginsDir, 'client-core', 'bundle'),
+    };
+  }
+
+  // Prod: copied to dist/clients/{clientName}
+  return {
+    clientPath: path.resolve(__dirname, 'clients', clientName),
+    corePath: path.resolve(__dirname, 'clients', 'core'),
+  };
+}
+
 /**
  * Returns absolute path to the client folder. This is hard-coded for now.
  */
-export const clientFolderAbsolutePath = (config: Config): string => {
+export function clientFolderAbsolutePath(config: Config): string {
   const client = getClientPlugin(config);
 
   if ('bundle' in client.config && client.config.bundle) {
@@ -32,14 +63,14 @@ export const clientFolderAbsolutePath = (config: Config): string => {
   }
 
   return client.name;
-};
+}
 
 /**
  * Recursively copies files and directories.
  * This is a PnP-compatible alternative to fs.cpSync that works with Yarn PnP's
  * virtualized filesystem.
  */
-const copyRecursivePnP = (src: string, dest: string) => {
+function copyRecursivePnP(src: string, dest: string): void {
   const stat = fs.statSync(src);
 
   if (stat.isDirectory()) {
@@ -55,9 +86,9 @@ const copyRecursivePnP = (src: string, dest: string) => {
     const content = fs.readFileSync(src);
     fs.writeFileSync(dest, content);
   }
-};
+}
 
-const renameFile = ({
+function renameFile({
   filePath,
   project,
   renamed,
@@ -65,7 +96,7 @@ const renameFile = ({
   filePath: string;
   project: IProject;
   renamed: Map<string, string>;
-}) => {
+}): void {
   const extension = path.extname(filePath);
   const name = path.basename(filePath, extension);
   const renamedName = project.fileName?.(name) || name;
@@ -77,18 +108,34 @@ const renameFile = ({
     );
     renamed.set(name, renamedName);
   }
-};
+}
 
-const replaceImports = ({
+function replaceImports({
   filePath,
+  isDevMode,
   meta,
   renamed,
 }: {
   filePath: string;
+  isDevMode?: boolean;
   meta: ProjectRenderMeta;
   renamed: Map<string, string>;
-}) => {
+}): void {
   let content = fs.readFileSync(filePath, 'utf8');
+
+  // Dev mode: rewrite source bundle imports to match output structure
+  if (isDevMode) {
+    // ../../client-core/bundle/foo -> ../core/foo
+    content = content.replace(
+      /from\s+['"]\.\.\/\.\.\/client-core\/bundle\//g,
+      "from '../core/",
+    );
+    // ../../client-core/bundle' (index import)
+    content = content.replace(
+      /from\s+['"]\.\.\/\.\.\/client-core\/bundle['"]/g,
+      "from '../core'",
+    );
+  }
 
   content = content.replace(
     /from\s+['"](\.\.?\/[^'"]*?)['"]/g,
@@ -113,12 +160,12 @@ const replaceImports = ({
   content = `${header}${content}`;
 
   fs.writeFileSync(filePath, content, 'utf8');
-};
+}
 
 /**
  * Creates a `client` folder containing the same modules as the client package.
  */
-export const generateClientBundle = ({
+export function generateClientBundle({
   meta,
   outputPath,
   plugin,
@@ -128,28 +175,24 @@ export const generateClientBundle = ({
   outputPath: string;
   plugin: DefinePlugin<Client.Config & { name: string }>['Config'];
   project?: IProject;
-}): Map<string, string> | undefined => {
+}): Map<string, string> | undefined {
   const renamed = new Map<string, string>();
+  const devMode = isDevMode();
 
   // copy Hey API clients to output
   const isHeyApiClientPlugin = plugin.name.startsWith('@hey-api/client-');
   if (isHeyApiClientPlugin) {
+    const { clientPath, corePath } = getClientBundlePaths(plugin.name);
+
     // copy client core
     const coreOutputPath = path.resolve(outputPath, 'core');
     ensureDirSync(coreOutputPath);
-    const coreDistPath = path.resolve(__dirname, 'clients', 'core');
-    copyRecursivePnP(coreDistPath, coreOutputPath);
+    copyRecursivePnP(corePath, coreOutputPath);
 
     // copy client bundle
     const clientOutputPath = path.resolve(outputPath, 'client');
     ensureDirSync(clientOutputPath);
-    const clientDistFolderName = plugin.name.slice('@hey-api/client-'.length);
-    const clientDistPath = path.resolve(
-      __dirname,
-      'clients',
-      clientDistFolderName,
-    );
-    copyRecursivePnP(clientDistPath, clientOutputPath);
+    copyRecursivePnP(clientPath, clientOutputPath);
 
     if (project) {
       const copiedCoreFiles = fs.readdirSync(coreOutputPath);
@@ -175,6 +218,7 @@ export const generateClientBundle = ({
     for (const file of coreFiles) {
       replaceImports({
         filePath: path.resolve(coreOutputPath, file),
+        isDevMode: devMode,
         meta,
         renamed,
       });
@@ -184,6 +228,7 @@ export const generateClientBundle = ({
     for (const file of clientFiles) {
       replaceImports({
         filePath: path.resolve(clientOutputPath, file),
+        isDevMode: devMode,
         meta,
         renamed,
       });
@@ -223,4 +268,4 @@ export const generateClientBundle = ({
   }
 
   return;
-};
+}

@@ -1,7 +1,6 @@
 import type { SchemaWithType } from '@hey-api/shared';
 
-import { shouldCoerceToBigInt } from '~/plugins/shared/utils/coerce';
-
+import { shouldCoerceToBigInt } from '../../../../plugins/shared/utils/coerce';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
 import { arrayToAst } from './array';
 import { booleanToAst } from './boolean';

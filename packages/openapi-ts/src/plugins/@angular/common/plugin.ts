@@ -1,7 +1,6 @@
 import { StructureModel } from '@hey-api/codegen-core';
 
-import type { $ } from '~/ts-dsl';
-
+import type { $ } from '../../../ts-dsl';
 import { resolveHttpRequestsStrategy } from './httpRequests';
 import { resolveHttpResourcesStrategy } from './httpResources';
 import type { OperationItem } from './shared/node';

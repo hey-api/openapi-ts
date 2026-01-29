@@ -8,8 +8,7 @@ import {
 } from '@hey-api/shared';
 import type ts from 'typescript';
 
-import { $ } from '~/ts-dsl';
-
+import { $ } from '../../../ts-dsl';
 import type { HeyApiTransformersPlugin } from './types';
 
 const dataVariableName = 'data';

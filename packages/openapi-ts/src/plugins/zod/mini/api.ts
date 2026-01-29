@@ -1,5 +1,4 @@
-import { $ } from '~/ts-dsl';
-
+import { $ } from '../../../ts-dsl';
 import { identifiers } from '../constants';
 import type { ValidatorResolverContext } from '../resolvers';
 import type { ValidatorArgs } from '../shared/types';

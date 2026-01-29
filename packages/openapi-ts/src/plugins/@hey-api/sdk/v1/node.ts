@@ -8,14 +8,13 @@ import type {
 import type { IR } from '@hey-api/shared';
 import { applyNaming, toCase } from '@hey-api/shared';
 
-import { getTypedConfig } from '~/config/utils';
-import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
+import { getTypedConfig } from '../../../../config/utils';
+import { getClientPlugin } from '../../../../plugins/@hey-api/client-core/utils';
 import {
   createOperationComment,
   isOperationOptionsRequired,
-} from '~/plugins/shared/utils/operation';
-import { $, ctx } from '~/ts-dsl';
-
+} from '../../../../plugins/shared/utils/operation';
+import { $, ctx } from '../../../../ts-dsl';
 import { createClientClass, createRegistryClass } from '../shared/class';
 import { nuxtTypeComposable, nuxtTypeDefault } from '../shared/constants';
 import { operationParameters, operationStatements } from '../shared/operation';

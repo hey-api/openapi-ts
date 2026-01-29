@@ -1,4 +1,4 @@
-import { $ } from '~/ts-dsl';
+import { $ } from '../../../ts-dsl';
 
 export type MaybeBigInt = (
   value: unknown,

@@ -1,10 +1,9 @@
 import type { IR } from '@hey-api/shared';
 
-import { getTypedConfig } from '~/config/utils';
-import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
-import { operationOptionsType } from '~/plugins/@hey-api/sdk/shared/operation';
-import { $ } from '~/ts-dsl';
-
+import { getTypedConfig } from '../../../config/utils';
+import { getClientPlugin } from '../../../plugins/@hey-api/client-core/utils';
+import { operationOptionsType } from '../../../plugins/@hey-api/sdk/shared/operation';
+import { $ } from '../../../ts-dsl';
 import type { PiniaColadaPlugin } from './types';
 
 export const useTypeData = ({

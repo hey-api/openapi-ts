@@ -1,7 +1,6 @@
 import type { IR } from '@hey-api/shared';
 
-import { $ } from '~/ts-dsl';
-
+import { $ } from '../../../../ts-dsl';
 import type { PluginInstance } from '../types';
 
 export const handleMeta = (

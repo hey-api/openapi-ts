@@ -5,9 +5,8 @@ import {
   createOperationComment,
   hasOperationSse,
   isOperationOptionsRequired,
-} from '~/plugins/shared/utils/operation';
-import { $ } from '~/ts-dsl';
-
+} from '../../../../plugins/shared/utils/operation';
+import { $ } from '../../../../ts-dsl';
 import { useTypeData } from '../shared/useType';
 import type { PluginInstance } from '../types';
 

@@ -5,8 +5,7 @@ import type {
 } from '@hey-api/shared';
 import { dependencyFactory, valueToObject } from '@hey-api/shared';
 
-import { defaultPluginConfigs } from '~/plugins/config';
-
+import { defaultPluginConfigs } from '../plugins/config';
 import type { Config, UserConfig } from './types';
 
 /**

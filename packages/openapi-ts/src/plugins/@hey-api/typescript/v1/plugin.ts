@@ -5,9 +5,8 @@ import type { SchemaWithType } from '@hey-api/shared';
 import { applyNaming } from '@hey-api/shared';
 import { deduplicateSchema } from '@hey-api/shared';
 
-import type { MaybeTsDsl, TypeTsDsl } from '~/ts-dsl';
-import { $ } from '~/ts-dsl';
-
+import type { MaybeTsDsl, TypeTsDsl } from '../../../../ts-dsl';
+import { $ } from '../../../../ts-dsl';
 import { createClientOptions } from '../shared/clientOptions';
 import { exportType } from '../shared/export';
 import { operationToType } from '../shared/operation';

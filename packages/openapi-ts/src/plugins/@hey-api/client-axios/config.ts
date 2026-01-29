@@ -3,9 +3,8 @@ import { definePluginConfig } from '@hey-api/shared';
 import {
   clientDefaultConfig,
   clientDefaultMeta,
-} from '~/plugins/@hey-api/client-core/config';
-import { clientPluginHandler } from '~/plugins/@hey-api/client-core/plugin';
-
+} from '../../../plugins/@hey-api/client-core/config';
+import { clientPluginHandler } from '../../../plugins/@hey-api/client-core/plugin';
 import type { HeyApiClientAxiosPlugin } from './types';
 
 export const defaultConfig: HeyApiClientAxiosPlugin['Config'] = {

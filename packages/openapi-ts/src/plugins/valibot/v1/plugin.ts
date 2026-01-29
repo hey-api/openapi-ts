@@ -8,9 +8,8 @@ import {
   refToName,
 } from '@hey-api/shared';
 
-import { maybeBigInt } from '~/plugins/shared/utils/coerce';
-import { $ } from '~/ts-dsl';
-
+import { maybeBigInt } from '../../../plugins/shared/utils/coerce';
+import { $ } from '../../../ts-dsl';
 import { exportAst } from '../shared/export';
 import { irOperationToAst } from '../shared/operation';
 import { pipesToNode } from '../shared/pipes';

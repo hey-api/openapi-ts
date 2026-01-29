@@ -14,7 +14,7 @@ export type UserConfig = BaseUserConfig<UserOutput> & {
    * functions and TypeScript interfaces. If you manually define `plugins`,
    * you need to include the default plugins if you wish to use them.
    *
-   * @default ['@hey-api/sdk']
+   * @default ['@hey-api/python-sdk']
    */
   plugins?: ReadonlyArray<
     | PluginNames

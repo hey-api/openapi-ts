@@ -9,30 +9,20 @@
       "skipFiles": ["<node_internals>/**"]
     },
     {
+      "name": "TS: Debug",
       "type": "node",
       "request": "launch",
-      "name": "openapi-ts",
-      "skipFiles": ["<node_internals>/**"],
-      "cwd": "${workspaceFolder}/dev",
-      "runtimeExecutable": "node",
+      "preLaunchTask": "build:openapi-ts",
       "program": "${workspaceFolder}/packages/openapi-ts/dist/run.mjs",
-      "args": [],
-      "env": {
-        "DEBUG": "false"
-      }
+      "cwd": "${workspaceFolder}/dev"
     },
     {
+      "name": "Python: Debug",
       "type": "node",
       "request": "launch",
-      "name": "openapi-python",
-      "skipFiles": ["<node_internals>/**"],
-      "cwd": "${workspaceFolder}/dev",
-      "runtimeExecutable": "node",
+      "preLaunchTask": "build:openapi-python",
       "program": "${workspaceFolder}/packages/openapi-python/dist/run.mjs",
-      "args": [],
-      "env": {
-        "DEBUG": "false"
-      }
+      "cwd": "${workspaceFolder}/dev"
     }
   ]
 }

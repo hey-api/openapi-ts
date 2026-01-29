@@ -3,9 +3,8 @@ import { fromRef } from '@hey-api/codegen-core';
 import type { IR } from '@hey-api/shared';
 import { applyNaming } from '@hey-api/shared';
 
-import { createSchemaComment } from '~/plugins/shared/utils/schema';
-import { $ } from '~/ts-dsl';
-
+import { createSchemaComment } from '../../../../plugins/shared/utils/schema';
+import { $ } from '../../../../ts-dsl';
 import { irSchemaToAst } from '../v1/plugin';
 import type { IrSchemaToAstOptions } from './types';
 

@@ -1,7 +1,6 @@
 import type { SchemaWithType } from '@hey-api/shared';
 
-import { $ } from '~/ts-dsl';
-
+import { $ } from '../../../../ts-dsl';
 import { identifiers } from '../../constants';
 import type { EnumResolverContext } from '../../resolvers';
 import type { Chain } from '../../shared/chain';

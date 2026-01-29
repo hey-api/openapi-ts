@@ -1,9 +1,8 @@
 import { parseUrl } from '@hey-api/shared';
 
-import { getTypedConfig } from '~/config/utils';
-import { clientFolderAbsolutePath } from '~/generate/client';
-import { $ } from '~/ts-dsl';
-
+import { getTypedConfig } from '../../../config/utils';
+import { clientFolderAbsolutePath } from '../../../generate/client';
+import { $ } from '../../../ts-dsl';
 import type { PluginHandler } from './types';
 import { getClientBaseUrlKey } from './utils';
 

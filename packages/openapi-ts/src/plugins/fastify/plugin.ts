@@ -4,8 +4,7 @@ import {
   operationResponsesMap,
 } from '@hey-api/shared';
 
-import { $ } from '~/ts-dsl';
-
+import { $ } from '../../ts-dsl';
 import type { FastifyPlugin } from './types';
 
 const operationToRouteHandler = ({

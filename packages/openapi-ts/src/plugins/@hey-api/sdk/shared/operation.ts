@@ -3,10 +3,9 @@ import { refs } from '@hey-api/codegen-core';
 import type { IR } from '@hey-api/shared';
 import { statusCodeToGroup } from '@hey-api/shared';
 
-import { getTypedConfig } from '~/config/utils';
-import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
-import { $ } from '~/ts-dsl';
-
+import { getTypedConfig } from '../../../../config/utils';
+import { getClientPlugin } from '../../../../plugins/@hey-api/client-core/utils';
+import { $ } from '../../../../ts-dsl';
 import type { Field, Fields } from '../../client-core/bundle/params';
 import type { HeyApiSdkPlugin } from '../types';
 import { isInstance } from '../v1/node';

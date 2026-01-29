@@ -1,9 +1,9 @@
 import type { Mock } from 'vitest';
 
-import { runCli } from '~/cli';
-import { createClient } from '~/index';
+import { runCli } from '../cli';
+import { createClient } from '../index';
 
-vi.mock('~/index', () => {
+vi.mock('../index', () => {
   const result: Awaited<ReturnType<typeof createClient>> = [];
   return {
     createClient: vi.fn().mockResolvedValue(result),

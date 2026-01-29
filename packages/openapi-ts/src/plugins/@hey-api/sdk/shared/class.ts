@@ -1,7 +1,6 @@
 import type { Symbol } from '@hey-api/codegen-core';
 
-import { $ } from '~/ts-dsl';
-
+import { $ } from '../../../../ts-dsl';
 import type { HeyApiSdkPlugin } from '../types';
 
 export const createRegistryClass = ({

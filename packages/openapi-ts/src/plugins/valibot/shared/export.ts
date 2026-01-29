@@ -1,9 +1,8 @@
 import type { Symbol } from '@hey-api/codegen-core';
 import type { IR } from '@hey-api/shared';
 
-import { createSchemaComment } from '~/plugins/shared/utils/schema';
-import { $ } from '~/ts-dsl';
-
+import { createSchemaComment } from '../../../plugins/shared/utils/schema';
+import { $ } from '../../../ts-dsl';
 import { identifiers } from '../v1/constants';
 import { pipesToNode } from './pipes';
 import type { Ast, IrSchemaToAstOptions } from './types';

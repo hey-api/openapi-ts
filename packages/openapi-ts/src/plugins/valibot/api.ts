@@ -1,5 +1,4 @@
-import type { $ } from '~/ts-dsl';
-
+import type { $ } from '../../ts-dsl';
 import type { ValidatorArgs } from './shared/types';
 import { createRequestValidatorV1, createResponseValidatorV1 } from './v1/api';
 
