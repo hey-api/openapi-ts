@@ -52,13 +52,15 @@ describe('createSseClient', () => {
     const result: any[] = [];
     for await (const ev of stream) result.push(ev);
 
-    expect(result).toEqual([{ foo: 'bar' }]);
-    expect(onEvent).toHaveBeenCalledWith({
+    const expectedEvent = {
       data: { foo: 'bar' },
       event: 'test',
       id: '1',
       retry: 3000,
-    });
+    };
+
+    expect(result).toEqual([expectedEvent]);
+    expect(onEvent).toHaveBeenCalledWith(expectedEvent);
   });
 
   it('falls back to raw string if not valid JSON', async () => {
@@ -71,7 +73,9 @@ describe('createSseClient', () => {
     const result: any[] = [];
     for await (const ev of stream) result.push(ev);
 
-    expect(result).toEqual(['hello']);
+    expect(result).toEqual([
+      { data: 'hello', event: undefined, id: undefined, retry: 3000 },
+    ]);
   });
 
   it('calls onSseError when response not ok', async () => {
@@ -135,7 +139,11 @@ describe('createSseClient', () => {
     const { stream } = createSseClient({ url: 'http://localhost/sse' });
     const result: any[] = [];
     for await (const ev of stream) result.push(ev);
-    expect(result).toEqual([1, 2, 3]);
+    expect(result).toEqual([
+      { data: 1, event: undefined, id: undefined, retry: 3000 },
+      { data: 2, event: undefined, id: undefined, retry: 3000 },
+      { data: 3, event: undefined, id: undefined, retry: 3000 },
+    ]);
   });
 
   it('handles partial chunks correctly', async () => {
@@ -147,7 +155,9 @@ describe('createSseClient', () => {
     const { stream } = createSseClient({ url: 'http://localhost/sse' });
     const result: any[] = [];
     for await (const ev of stream) result.push(ev);
-    expect(result).toEqual(['partial']);
+    expect(result).toEqual([
+      { data: 'partial', event: undefined, id: undefined, retry: 3000 },
+    ]);
   });
 
   it('sets Last-Event-ID header on reconnect', async () => {
@@ -194,7 +204,10 @@ describe('createSseClient', () => {
 
     const iter = stream[Symbol.asyncIterator]();
     const first = await iter.next();
-    expect(first).toEqual({ done: false, value: 'stop' });
+    expect(first).toEqual({
+      done: false,
+      value: { data: 'stop', event: undefined, id: undefined, retry: 3000 },
+    });
 
     controller.abort();
     const second = await iter.next();
@@ -214,7 +227,11 @@ describe('createSseClient', () => {
     const { stream } = createSseClient({ url: 'http://localhost/sse' });
     const result: any[] = [];
     for await (const ev of stream) result.push(ev);
-    expect(result).toEqual([{ foo: 1 }, 'bar', { baz: 2 }]);
+    expect(result).toEqual([
+      { data: { foo: 1 }, event: undefined, id: undefined, retry: 3000 },
+      { data: 'bar', event: undefined, id: undefined, retry: 3000 },
+      { data: { baz: 2 }, event: undefined, id: undefined, retry: 3000 },
+    ]);
   });
 
   it('passes custom headers', async () => {
@@ -251,7 +268,9 @@ describe('createSseClient', () => {
     const { stream } = createSseClient({ url: 'http://localhost/sse' });
     const result: any[] = [];
     for await (const ev of stream) result.push(ev);
-    expect(result).toEqual([{ foo: 'bar' }]);
+    expect(result).toEqual([
+      { data: { foo: 'bar' }, event: undefined, id: undefined, retry: 3000 },
+    ]);
   });
 
   it('handles empty stream', async () => {
@@ -284,7 +303,9 @@ describe('createSseClient', () => {
     for await (const ev of stream) result.push(ev);
 
     expect(onError).toHaveBeenCalled();
-    expect(result).toEqual(['ok']);
+    expect(result).toEqual([
+      { data: 'ok', event: undefined, id: undefined, retry: 0 },
+    ]);
   });
 
   it('ignores invalid retry values', async () => {
@@ -300,7 +321,12 @@ describe('createSseClient', () => {
     });
     const iter = stream[Symbol.asyncIterator]();
     const ev = await iter.next();
-    expect(ev.value).toBe('x');
+    expect(ev.value).toEqual({
+      data: 'x',
+      event: undefined,
+      id: undefined,
+      retry: 3000,
+    });
     expect(onEvent.mock.calls[0]![0].retry).toBe(3000); // default
   });
 
@@ -341,7 +367,12 @@ describe('createSseClient', () => {
     });
     const iter = stream[Symbol.asyncIterator]();
     const ev = await iter.next();
-    expect(ev.value).toBe('{"foo": unquoted}');
+    expect(ev.value).toEqual({
+      data: '{"foo": unquoted}',
+      event: undefined,
+      id: undefined,
+      retry: 3000,
+    });
     expect(onError).not.toHaveBeenCalled();
   });
 
@@ -426,7 +457,12 @@ describe('createSseClient', () => {
 
     const iter = stream[Symbol.asyncIterator]();
     const first = await iter.next();
-    expect(first.value).toBe('x');
+    expect(first.value).toEqual({
+      data: 'x',
+      event: undefined,
+      id: undefined,
+      retry: 3000,
+    });
 
     controller.abort();
     const second = await iter.next();
@@ -505,7 +541,12 @@ describe('createSseClient', () => {
 
     const ev = await iter.next();
 
-    expect(ev.value).toBe('ok');
+    expect(ev.value).toEqual({
+      data: 'ok',
+      event: undefined,
+      id: undefined,
+      retry: 10,
+    });
     expect(onError).toHaveBeenCalledTimes(2);
     expect(attempt).toBe(3);
   });
@@ -550,7 +591,9 @@ describe('createSseClient', () => {
     const result: any[] = [];
     for await (const ev of stream) result.push(ev);
 
-    expect(result).toEqual([{ foo: 'bar' }]);
+    expect(result).toEqual([
+      { data: { foo: 'bar' }, event: undefined, id: undefined, retry: 3000 },
+    ]);
     expect(validator).toHaveBeenCalledTimes(1);
   });
 
@@ -572,7 +615,9 @@ describe('createSseClient', () => {
     const result: any[] = [];
     for await (const ev of stream) result.push(ev);
 
-    expect(result).toEqual([{ doubled: 4 }]);
+    expect(result).toEqual([
+      { data: { doubled: 4 }, event: undefined, id: undefined, retry: 3000 },
+    ]);
     expect(transformer).toHaveBeenCalledTimes(1);
   });
 
@@ -623,7 +668,9 @@ describe('createSseClient', () => {
     const result: any[] = [];
     for await (const ev of stream) result.push(ev);
 
-    expect(result).toEqual(['rawstring']);
+    expect(result).toEqual([
+      { data: 'rawstring', event: undefined, id: undefined, retry: 3000 },
+    ]);
     expect(validator).not.toHaveBeenCalled();
     expect(transformer).not.toHaveBeenCalled();
   });
