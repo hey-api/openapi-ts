@@ -2,13 +2,21 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
   },
+  "editor.defaultFormatter": "oxc.oxc-vscode",
   "editor.quickSuggestions": {
     "strings": "on"
   },
   "eslint.format.enable": true,
   "eslint.nodePath": "./node_modules",
   "eslint.workingDirectories": [{ "pattern": "./packages/*/" }],
+  "oxc.fmt.configPath": ".oxfmtrc.json",
   "typescript.preferences.autoImportFileExcludePatterns": ["dist/**"],
   "typescript.preferences.autoImportSpecifierExcludeRegexes": ["^(node:)?os$"],
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "[javascript]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  }
 }
