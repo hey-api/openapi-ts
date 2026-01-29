@@ -7,8 +7,7 @@ import type {
 } from '@hey-api/shared';
 import { satisfies } from '@hey-api/shared';
 
-import { $ } from '~/ts-dsl';
-
+import { $ } from '../../../ts-dsl';
 import type { HeyApiSchemasPlugin } from './types';
 
 const stripSchema = ({

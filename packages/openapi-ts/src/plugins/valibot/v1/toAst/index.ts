@@ -1,8 +1,7 @@
 import type { SchemaWithType } from '@hey-api/shared';
 
-import { shouldCoerceToBigInt } from '~/plugins/shared/utils/coerce';
-import type { $ } from '~/ts-dsl';
-
+import { shouldCoerceToBigInt } from '../../../../plugins/shared/utils/coerce';
+import type { $ } from '../../../../ts-dsl';
 import { pipesToNode } from '../../shared/pipes';
 import type { IrSchemaToAstOptions } from '../../shared/types';
 import { arrayToAst } from './array';

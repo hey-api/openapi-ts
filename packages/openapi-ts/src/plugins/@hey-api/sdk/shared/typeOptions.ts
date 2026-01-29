@@ -1,8 +1,7 @@
-import { getTypedConfig } from '~/config/utils';
-import { clientFolderAbsolutePath } from '~/generate/client';
-import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
-import { $ } from '~/ts-dsl';
-
+import { getTypedConfig } from '../../../../config/utils';
+import { clientFolderAbsolutePath } from '../../../../generate/client';
+import { getClientPlugin } from '../../../../plugins/@hey-api/client-core/utils';
+import { $ } from '../../../../ts-dsl';
 import type { HeyApiSdkPlugin } from '../types';
 import { isInstance } from '../v1/node';
 import { nuxtTypeDefault, nuxtTypeResponse } from './constants';

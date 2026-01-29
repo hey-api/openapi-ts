@@ -1,5 +1,5 @@
-import type { Config } from '~/config/types';
-import type { PluginClientNames } from '~/plugins/types';
+import type { Config } from '../../../config/types';
+import type { PluginClientNames } from '../../../plugins/types';
 
 export const getClientBaseUrlKey = (config: Config) => {
   const client = getClientPlugin(config);

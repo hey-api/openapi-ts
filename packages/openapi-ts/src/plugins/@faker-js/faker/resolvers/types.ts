@@ -1,9 +1,8 @@
 // TODO: later
 import type { Symbol } from '@hey-api/codegen-core';
 
-import type { Plugin, SchemaWithType } from '~/plugins';
-import type { $, DollarTsDsl } from '~/ts-dsl';
-
+import type { Plugin, SchemaWithType } from '../../../../plugins';
+import type { $, DollarTsDsl } from '../../../../ts-dsl';
 import type { FakerJsFakerPlugin } from '../types';
 
 type Expression = ReturnType<typeof $.expr>;

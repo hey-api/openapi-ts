@@ -18,10 +18,10 @@ import {
 } from '@hey-api/shared';
 import colors from 'ansi-colors';
 
-import { postProcessors } from '~/config/output/postprocess';
-import type { Config } from '~/config/types';
-import { generateOutput } from '~/generate/output';
-import { TypeScriptRenderer } from '~/ts-dsl';
+import { postProcessors } from './config/output/postprocess';
+import type { Config } from './config/types';
+import { generateOutput } from './generate/output';
+import { TypeScriptRenderer } from './ts-dsl';
 
 export async function createClient({
   config,

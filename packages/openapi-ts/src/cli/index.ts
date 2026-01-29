@@ -1,8 +1,7 @@
 import { Command, CommanderError } from 'commander';
 
-import { createClient } from '~/index';
-
 import pkg from '../../package.json';
+import { createClient } from '../index';
 import { cliToConfig } from './adapter';
 
 const binName = Object.keys(pkg.bin)[0]!;

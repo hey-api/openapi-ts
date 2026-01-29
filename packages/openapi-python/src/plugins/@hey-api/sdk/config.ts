@@ -21,7 +21,7 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
   },
   dependencies: ['@hey-api/typescript'],
   handler,
-  name: '@hey-api/sdk',
+  name: '@hey-api/python-sdk',
   resolveConfig: (plugin, context) => {
     if (plugin.config.client) {
       if (typeof plugin.config.client === 'boolean') {
@@ -78,6 +78,6 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
 };
 
 /**
- * Type helper for `@hey-api/sdk` plugin, returns {@link Plugin.Config} object
+ * Type helper for `@hey-api/python-sdk` plugin, returns {@link Plugin.Config} object
  */
 export const defineConfig = definePluginConfig(defaultConfig);

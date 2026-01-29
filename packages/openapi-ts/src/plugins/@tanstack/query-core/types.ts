@@ -1,8 +1,8 @@
-import type { TanStackAngularQueryPlugin } from '~/plugins/@tanstack/angular-query-experimental/types';
-import type { TanStackReactQueryPlugin } from '~/plugins/@tanstack/react-query/types';
-import type { TanStackSolidQueryPlugin } from '~/plugins/@tanstack/solid-query/types';
-import type { TanStackSvelteQueryPlugin } from '~/plugins/@tanstack/svelte-query/types';
-import type { TanStackVueQueryPlugin } from '~/plugins/@tanstack/vue-query/types';
+import type { TanStackAngularQueryPlugin } from '../../../plugins/@tanstack/angular-query-experimental/types';
+import type { TanStackReactQueryPlugin } from '../../../plugins/@tanstack/react-query/types';
+import type { TanStackSolidQueryPlugin } from '../../../plugins/@tanstack/solid-query/types';
+import type { TanStackSvelteQueryPlugin } from '../../../plugins/@tanstack/svelte-query/types';
+import type { TanStackVueQueryPlugin } from '../../../plugins/@tanstack/vue-query/types';
 
 export interface PluginHandler {
   (...args: Parameters<TanStackAngularQueryPlugin['Handler']>): void;

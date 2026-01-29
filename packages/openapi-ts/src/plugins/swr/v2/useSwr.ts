@@ -4,10 +4,9 @@ import { applyNaming } from '@hey-api/shared';
 import {
   createOperationComment,
   hasOperationSse,
-} from '~/plugins/shared/utils/operation';
-import type { TsDsl } from '~/ts-dsl';
-import { $ } from '~/ts-dsl';
-
+} from '../../../plugins/shared/utils/operation';
+import type { TsDsl } from '../../../ts-dsl';
+import { $ } from '../../../ts-dsl';
 import type { SwrPlugin } from '../types';
 
 export const createUseSwr = ({

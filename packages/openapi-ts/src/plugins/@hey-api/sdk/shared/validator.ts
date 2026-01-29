@@ -1,7 +1,6 @@
 import type { IR } from '@hey-api/shared';
 
-import type { $ } from '~/ts-dsl';
-
+import type { $ } from '../../../../ts-dsl';
 import type { HeyApiSdkPlugin } from '../types';
 
 interface ValidatorProps {

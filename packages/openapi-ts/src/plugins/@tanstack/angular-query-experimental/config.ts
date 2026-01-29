@@ -1,7 +1,6 @@
 import { definePluginConfig } from '@hey-api/shared';
 
-import { handler } from '~/plugins/@tanstack/query-core/plugin';
-
+import { handler } from '../../../plugins/@tanstack/query-core/plugin';
 import type { TanStackAngularQueryPlugin } from './types';
 
 export const defaultConfig: TanStackAngularQueryPlugin['Config'] = {

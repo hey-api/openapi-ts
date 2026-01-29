@@ -1,10 +1,9 @@
 import { StructureModel } from '@hey-api/codegen-core';
 
-import { getTypedConfig } from '~/config/utils';
-import { clientFolderAbsolutePath } from '~/generate/client';
-import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
-import type { $ } from '~/ts-dsl';
-
+import { getTypedConfig } from '../../../../config/utils';
+import { clientFolderAbsolutePath } from '../../../../generate/client';
+import { getClientPlugin } from '../../../../plugins/@hey-api/client-core/utils';
+import type { $ } from '../../../../ts-dsl';
 import { resolveStrategy } from '../operations';
 import { createTypeOptions } from '../shared/typeOptions';
 import type { HeyApiSdkPlugin } from '../types';

@@ -5,15 +5,14 @@ import type {
 } from '@hey-api/shared';
 import { dependencyFactory, valueToObject } from '@hey-api/shared';
 
-import { defaultPluginConfigs } from '~/plugins/config';
-
+import { defaultPluginConfigs } from '../plugins/config';
 import type { Config, UserConfig } from './types';
 
 /**
  * Default plugins used to generate artifacts if plugins aren't specified.
  */
 export const defaultPlugins = [
-  '@hey-api/sdk',
+  '@hey-api/python-sdk',
 ] as const satisfies ReadonlyArray<PluginNames>;
 
 function getPluginsConfig({

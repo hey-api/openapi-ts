@@ -4,10 +4,6 @@
     "composite": true,
     "rootDir": "src",
     "outDir": "dist",
-    "baseUrl": "src",
-    "paths": {
-      "~/*": ["./*"]
-    },
     "types": ["vitest/globals"]
   },
   "include": ["src"],

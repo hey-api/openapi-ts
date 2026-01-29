@@ -1,10 +1,10 @@
 import type { Context, IR } from '@hey-api/shared';
 import { escapeComment, hasOperationDataRequired } from '@hey-api/shared';
 
-import { getTypedConfig } from '~/config/utils';
-import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
-import type { HeyApiSdkPlugin } from '~/plugins/@hey-api/sdk';
-import { isInstance } from '~/plugins/@hey-api/sdk/v1/node';
+import { getTypedConfig } from '../../../config/utils';
+import { getClientPlugin } from '../../../plugins/@hey-api/client-core/utils';
+import type { HeyApiSdkPlugin } from '../../../plugins/@hey-api/sdk';
+import { isInstance } from '../../../plugins/@hey-api/sdk/v1/node';
 
 export function createOperationComment(
   operation: IR.OperationObject,

@@ -38,7 +38,9 @@
     "tt": "turbo run test --filter",
     "tw": "turbo run test:watch --filter",
     "tu": "turbo run test:update --filter",
-    "tb": "turbo run build --filter"
+    "tb": "turbo run build --filter",
+    "dev:ts": "cd dev && tsx watch --clear-screen=false ../packages/openapi-ts/src/run.ts",
+    "dev:py": "cd dev && tsx watch --clear-screen=false ../packages/openapi-python/src/run.ts"
   },
   "engines": {
     "node": ">=20.19.0"
@@ -72,6 +74,7 @@
     "rollup-plugin-dts": "6.1.1",
     "ts-node": "10.9.2",
     "tsdown": "0.18.4",
+    "tsx": "4.21.0",
     "turbo": "2.8.0",
     "typescript": "5.9.3",
     "typescript-eslint": "8.29.1",

@@ -5,10 +5,9 @@ import {
   createOperationComment,
   hasOperationSse,
   isOperationOptionsRequired,
-} from '~/plugins/shared/utils/operation';
-import type { TsDsl } from '~/ts-dsl';
-import { $ } from '~/ts-dsl';
-
+} from '../../../../plugins/shared/utils/operation';
+import type { TsDsl } from '../../../../ts-dsl';
+import { $ } from '../../../../ts-dsl';
 import {
   createQueryKeyFunction,
   createQueryKeyType,

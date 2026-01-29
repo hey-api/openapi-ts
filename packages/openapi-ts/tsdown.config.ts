@@ -17,9 +17,6 @@ const replaceCoreImports = (filePath: string) => {
 };
 
 export default defineConfig({
-  alias: {
-    '~': path.resolve(__dirname, 'src'),
-  },
   clean: true,
   dts: {
     build: true,

@@ -64,7 +64,7 @@ declare module '@hey-api/codegen-core' {
 
 declare module '@hey-api/shared' {
   interface PluginConfigMap {
-    '@hey-api/sdk': HeyApiSdkPlugin['Types'];
+    '@hey-api/python-sdk': HeyApiSdkPlugin['Types'];
   }
 }
 // END OVERRIDES
@@ -74,12 +74,12 @@ import colors from 'ansi-colors';
 // @ts-expect-error
 import colorSupport from 'color-support';
 
-import type { UserConfig } from '~/config/types';
-import type { HeyApiSdkPlugin } from '~/plugins/@hey-api/sdk';
+import type { UserConfig } from './config/types';
+import type { HeyApiSdkPlugin } from './plugins/@hey-api/sdk';
 
 colors.enabled = colorSupport().hasBasic;
 
-export { createClient } from '~/generate';
+export { createClient } from './generate';
 
 /**
  * Type helper for configuration object, returns {@link MaybeArray<UserConfig>} object(s)
@@ -90,6 +90,8 @@ export async function defineConfig<T extends MaybeArray<UserConfig>>(
   return typeof config === 'function' ? await config() : config;
 }
 
+export { defaultPlugins } from './config/plugins';
+export type { UserConfig } from './config/types';
 export { Logger } from '@hey-api/codegen-core';
 export type {
   DefinePlugin,
@@ -110,5 +112,3 @@ export {
   OperationStrategy,
   utils,
 } from '@hey-api/shared';
-export { defaultPlugins } from '~/config/plugins';
-export type { UserConfig } from '~/config/types';

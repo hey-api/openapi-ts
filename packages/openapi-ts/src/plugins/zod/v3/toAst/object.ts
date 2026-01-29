@@ -1,8 +1,7 @@
 import { fromRef, ref } from '@hey-api/codegen-core';
 import type { SchemaWithType } from '@hey-api/shared';
 
-import { $ } from '~/ts-dsl';
-
+import { $ } from '../../../../ts-dsl';
 import { identifiers } from '../../constants';
 import type { ObjectResolverContext } from '../../resolvers';
 import type { Chain } from '../../shared/chain';
