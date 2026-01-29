@@ -2,14 +2,13 @@ import type { Symbol } from '@hey-api/codegen-core';
 import type { IR } from '@hey-api/shared';
 import { applyNaming, hasOperationDataRequired } from '@hey-api/shared';
 
-import { getTypedConfig } from '~/config/utils';
-import { clientFolderAbsolutePath } from '~/generate/client';
+import { getTypedConfig } from '../../../config/utils';
+import { clientFolderAbsolutePath } from '../../../generate/client';
 import {
   getClientBaseUrlKey,
   getClientPlugin,
-} from '~/plugins/@hey-api/client-core/utils';
-import { $ } from '~/ts-dsl';
-
+} from '../../../plugins/@hey-api/client-core/utils';
+import { $ } from '../../../ts-dsl';
 import type { PiniaColadaPlugin } from './types';
 import { getPublicTypeData } from './utils';
 

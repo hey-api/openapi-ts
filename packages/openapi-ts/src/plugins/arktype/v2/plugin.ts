@@ -5,9 +5,8 @@ import { applyNaming } from '@hey-api/shared';
 import { deduplicateSchema } from '@hey-api/shared';
 import { pathToJsonPointer, refToName } from '@hey-api/shared';
 
-import type { SchemaWithType } from '~/plugins';
-import { $ } from '~/ts-dsl';
-
+import type { SchemaWithType } from '../../../plugins';
+import { $ } from '../../../ts-dsl';
 import { exportAst } from '../shared/export';
 import type { Ast, IrSchemaToAstOptions, PluginState } from '../shared/types';
 import type { ArktypePlugin } from '../types';

@@ -3,11 +3,10 @@ import type { IR } from '@hey-api/shared';
 import { applyNaming, hasOperationDataRequired } from '@hey-api/shared';
 import type ts from 'typescript';
 
-import { getTypedConfig } from '~/config/utils';
-import { getClientBaseUrlKey } from '~/plugins/@hey-api/client-core/utils';
-import type { TsDsl } from '~/ts-dsl';
-import { $ } from '~/ts-dsl';
-
+import { getTypedConfig } from '../../../config/utils';
+import { getClientBaseUrlKey } from '../../../plugins/@hey-api/client-core/utils';
+import type { TsDsl } from '../../../ts-dsl';
+import { $ } from '../../../ts-dsl';
 import { useTypeData } from './shared/useType';
 import type { PluginInstance } from './types';
 

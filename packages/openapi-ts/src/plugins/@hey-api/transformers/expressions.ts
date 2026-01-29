@@ -1,8 +1,7 @@
 import type { IR } from '@hey-api/shared';
 import type ts from 'typescript';
 
-import { $ } from '~/ts-dsl';
-
+import { $ } from '../../../ts-dsl';
 import type { UserConfig } from './types';
 
 export type ExpressionTransformer = ({

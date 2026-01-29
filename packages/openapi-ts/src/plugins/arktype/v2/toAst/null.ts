@@ -1,5 +1,4 @@
-import type { SchemaWithType } from '~/plugins';
-
+import type { SchemaWithType } from '../../../../plugins';
 import { identifiers } from '../../constants';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
 

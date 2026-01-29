@@ -1,5 +1,4 @@
-import type { $ } from '~/ts-dsl';
-
+import type { $ } from '../../ts-dsl';
 import {
   createRequestValidatorMini,
   createResponseValidatorMini,

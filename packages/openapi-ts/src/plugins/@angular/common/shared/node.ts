@@ -8,14 +8,13 @@ import type {
 import type { IR } from '@hey-api/shared';
 import { applyNaming, toCase } from '@hey-api/shared';
 
-import { getTypedConfig } from '~/config/utils';
-import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
+import { getTypedConfig } from '../../../../config/utils';
+import { getClientPlugin } from '../../../../plugins/@hey-api/client-core/utils';
 import {
   createOperationComment,
   isOperationOptionsRequired,
-} from '~/plugins/shared/utils/operation';
-import { $ } from '~/ts-dsl';
-
+} from '../../../../plugins/shared/utils/operation';
+import { $ } from '../../../../ts-dsl';
 import type { AngularCommonPlugin } from '../types';
 
 export interface OperationItem {

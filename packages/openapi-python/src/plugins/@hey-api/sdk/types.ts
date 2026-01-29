@@ -2,12 +2,15 @@ import type { IndexExportOption, NameTransformer } from '@hey-api/shared';
 import type { DefinePlugin, Plugin } from '@hey-api/shared';
 
 // import type { OperationsStrategy } from '@hey-api/shared';
-import type { PluginClientNames, PluginValidatorNames } from '~/plugins/types';
+import type {
+  PluginClientNames,
+  PluginValidatorNames,
+} from '../../../plugins/types';
 
 // import type { ExamplesConfig, UserExamplesConfig } from './examples';
 // import type { OperationsConfig, UserOperationsConfig } from './operations';
 
-export type UserConfig = Plugin.Name<'@hey-api/sdk'> &
+export type UserConfig = Plugin.Name<'@hey-api/python-sdk'> &
   Plugin.Hooks & {
     /**
      * Should the generated functions contain auth mechanisms? You may want to
@@ -198,7 +201,7 @@ export type UserConfig = Plugin.Name<'@hey-api/sdk'> &
     response?: 'body' | 'response';
   };
 
-export type Config = Plugin.Name<'@hey-api/sdk'> &
+export type Config = Plugin.Name<'@hey-api/python-sdk'> &
   Plugin.Hooks &
   IndexExportOption & {
     /**

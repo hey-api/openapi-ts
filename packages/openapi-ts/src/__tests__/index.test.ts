@@ -1,4 +1,4 @@
-import { createClient } from '~/index';
+import { createClient } from '../index';
 
 type Config = Parameters<typeof createClient>[0];
 

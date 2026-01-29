@@ -1,5 +1,4 @@
-import { $ } from '~/ts-dsl';
-
+import { $ } from '../../../ts-dsl';
 import type { ValibotPlugin } from '../types';
 import { identifiers } from '../v1/constants';
 

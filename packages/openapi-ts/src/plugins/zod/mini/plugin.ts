@@ -6,9 +6,8 @@ import { applyNaming } from '@hey-api/shared';
 import { deduplicateSchema } from '@hey-api/shared';
 import { pathToJsonPointer, refToName } from '@hey-api/shared';
 
-import { maybeBigInt } from '~/plugins/shared/utils/coerce';
-import { $ } from '~/ts-dsl';
-
+import { maybeBigInt } from '../../../plugins/shared/utils/coerce';
+import { $ } from '../../../ts-dsl';
 import { identifiers } from '../constants';
 import { exportAst } from '../shared/export';
 import { getZodModule } from '../shared/module';

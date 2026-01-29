@@ -2,8 +2,7 @@ import type { Refs, SymbolMeta } from '@hey-api/codegen-core';
 import type { IR } from '@hey-api/shared';
 import type ts from 'typescript';
 
-import type { $ } from '~/ts-dsl';
-
+import type { $ } from '../../../ts-dsl';
 import type { ArktypePlugin } from '../types';
 
 export type Ast = {

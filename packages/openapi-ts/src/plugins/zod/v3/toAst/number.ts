@@ -3,10 +3,9 @@ import type { SchemaWithType } from '@hey-api/shared';
 import {
   maybeBigInt,
   shouldCoerceToBigInt,
-} from '~/plugins/shared/utils/coerce';
-import { getIntegerLimit } from '~/plugins/shared/utils/formats';
-import { $ } from '~/ts-dsl';
-
+} from '../../../../plugins/shared/utils/coerce';
+import { getIntegerLimit } from '../../../../plugins/shared/utils/formats';
+import { $ } from '../../../../ts-dsl';
 import { identifiers } from '../../constants';
 import type { NumberResolverContext } from '../../resolvers';
 import type { Chain } from '../../shared/chain';

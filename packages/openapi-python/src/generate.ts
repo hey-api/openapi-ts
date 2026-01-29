@@ -16,10 +16,10 @@ import {
 } from '@hey-api/shared';
 import type { LazyOrAsync, MaybeArray } from '@hey-api/types';
 
-import type { Configs } from '~/config/init';
-import { resolveJobs } from '~/config/init';
-import type { UserConfig } from '~/config/types';
-import { createClient as pCreateClient } from '~/createClient';
+import type { Configs } from './config/init';
+import { resolveJobs } from './config/init';
+import type { UserConfig } from './config/types';
+import { createClient as pCreateClient } from './createClient';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

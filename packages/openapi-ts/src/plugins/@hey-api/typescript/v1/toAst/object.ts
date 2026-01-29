@@ -2,10 +2,9 @@ import { fromRef, ref } from '@hey-api/codegen-core';
 import type { IR } from '@hey-api/shared';
 import type { SchemaWithType } from '@hey-api/shared';
 
-import { createSchemaComment } from '~/plugins/shared/utils/schema';
-import type { TypeTsDsl } from '~/ts-dsl';
-import { $ } from '~/ts-dsl';
-
+import { createSchemaComment } from '../../../../../plugins/shared/utils/schema';
+import type { TypeTsDsl } from '../../../../../ts-dsl';
+import { $ } from '../../../../../ts-dsl';
 import type { IrSchemaToAstOptions } from '../../shared/types';
 import { irSchemaToAst } from '../plugin';
 

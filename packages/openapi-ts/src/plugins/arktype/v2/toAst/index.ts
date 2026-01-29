@@ -1,6 +1,5 @@
-import type { SchemaWithType } from '~/plugins';
-import { $ } from '~/ts-dsl';
-
+import type { SchemaWithType } from '../../../../plugins';
+import { $ } from '../../../../ts-dsl';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
 import { nullToAst } from './null';
 import { objectToAst } from './object';
