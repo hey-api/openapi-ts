@@ -41,7 +41,14 @@
     },
     "typecheck": {
       "dependsOn": ["^build"],
-      "inputs": ["src/**", "test/**", "*.config.*", "package.json", "tsconfig.json"]
+      "inputs": [
+        "src/**",
+        "test/**",
+        "*.config.*",
+        "package.json",
+        "tsconfig.json",
+        "pyproject.toml"
+      ]
     }
   }
 }

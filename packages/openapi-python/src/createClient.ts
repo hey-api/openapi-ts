@@ -21,7 +21,7 @@ import colors from 'ansi-colors';
 import { postProcessors } from './config/output/postprocess';
 import type { Config } from './config/types';
 import { generateOutput } from './generate/output';
-// import { TypeScriptRenderer } from './ts-dsl';
+// import { TypeScriptRenderer } from './py-dsl';
 
 export async function createClient({
   config,
