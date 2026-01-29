@@ -1,0 +1,23 @@
+[project]
+name = "hey-api-dev"
+version = "0.0.0"
+requires-python = ">=3.10"
+
+[dependency-groups]
+dev = ["mypy>=1.15", "ruff>=0.11"]
+
+[tool.mypy]
+python_version = "3.10"
+strict = false
+warn_return_any = true
+warn_unused_configs = true
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.format]
+exclude = ["**/__snapshots__/**"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
