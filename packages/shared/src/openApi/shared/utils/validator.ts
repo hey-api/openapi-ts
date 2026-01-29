@@ -50,16 +50,13 @@ const formatPath = (path: ReadonlyArray<string | number>): string =>
         return segment;
       }
 
-      return isSimpleKey(segment)
-        ? `.${segment}`
-        : `['${segment.replace(/"/g, "\\'")}']`;
+      return isSimpleKey(segment) ? `.${segment}` : `['${segment.replace(/"/g, "\\'")}']`;
     })
     .join('');
 
 const formatValidatorIssue = (issue: ValidatorIssue): string => {
   const pathStr = formatPath(issue.path);
-  const level =
-    issue.severity === 'error' ? colors.bold.red : colors.bold.yellow;
+  const level = issue.severity === 'error' ? colors.bold.red : colors.bold.yellow;
 
   const highlightedMessage = issue.message.replace(/`([^`]+)`/g, (_, code) =>
     colors.yellow(`\`${code}\``),
@@ -68,13 +65,7 @@ const formatValidatorIssue = (issue: ValidatorIssue): string => {
   return `${level(`[${issue.severity.toUpperCase()}]`)} ${colors.cyan(pathStr)}: ${highlightedMessage}`;
 };
 
-const shouldPrint = ({
-  context,
-  issue,
-}: {
-  context: Context;
-  issue: ValidatorIssue;
-}) => {
+const shouldPrint = ({ context, issue }: { context: Context; issue: ValidatorIssue }) => {
   if (context.config.logs.level === 'silent') {
     return false;
   }

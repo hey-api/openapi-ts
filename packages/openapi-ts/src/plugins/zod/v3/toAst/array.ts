@@ -92,20 +92,14 @@ export const arrayToAst = ({
   }
 
   if (schema.minItems === schema.maxItems && schema.minItems !== undefined) {
-    arrayExpression = arrayExpression
-      .attr(identifiers.length)
-      .call($.fromValue(schema.minItems));
+    arrayExpression = arrayExpression.attr(identifiers.length).call($.fromValue(schema.minItems));
   } else {
     if (schema.minItems !== undefined) {
-      arrayExpression = arrayExpression
-        .attr(identifiers.min)
-        .call($.fromValue(schema.minItems));
+      arrayExpression = arrayExpression.attr(identifiers.min).call($.fromValue(schema.minItems));
     }
 
     if (schema.maxItems !== undefined) {
-      arrayExpression = arrayExpression
-        .attr(identifiers.max)
-        .call($.fromValue(schema.maxItems));
+      arrayExpression = arrayExpression.attr(identifiers.max).call($.fromValue(schema.maxItems));
     }
   }
 

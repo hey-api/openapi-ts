@@ -5,8 +5,8 @@ import { defineConfig } from '@hey-api/openapi-ts';
 export default defineConfig({
   input: path.resolve('..', '..', 'specs', '3.1.x', 'openai.yaml'),
   output: {
-    format: 'prettier',
     path: './src/client',
+    postProcess: ['oxfmt'],
   },
   plugins: [
     '@hey-api/client-fetch',

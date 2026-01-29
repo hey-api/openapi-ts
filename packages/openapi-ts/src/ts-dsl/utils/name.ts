@@ -20,9 +20,7 @@ export const safeAccessorName = (name: string): string => {
   return `'${name}'`;
 };
 
-export const safeMemberName = (
-  name: string,
-): TsDsl<ts.StringLiteral> | IdTsDsl => {
+export const safeMemberName = (name: string): TsDsl<ts.StringLiteral> | IdTsDsl => {
   regexp.typeScriptIdentifier.lastIndex = 0;
   if (regexp.typeScriptIdentifier.test(name)) {
     return new IdTsDsl(name);
@@ -75,8 +73,6 @@ const safeName = (name: string, reserved: ReservedList): string => {
   return sanitized || '_';
 };
 
-export const safeRuntimeName = (name: string): string =>
-  safeName(name, reserved.runtime);
+export const safeRuntimeName = (name: string): string => safeName(name, reserved.runtime);
 
-export const safeTypeName = (name: string): string =>
-  safeName(name, reserved.type);
+export const safeTypeName = (name: string): string => safeName(name, reserved.type);

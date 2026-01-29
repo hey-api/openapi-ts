@@ -95,8 +95,7 @@ A single function is generated for each endpoint. It returns a result from [`htt
 ::: code-group
 
 ```ts [example]
-export const addPetResource = (options) =>
-  httpResource(() => addPetRequest(options()));
+export const addPetResource = (options) => httpResource(() => addPetRequest(options()));
 ```
 
 ```js [config]

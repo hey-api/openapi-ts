@@ -1,8 +1,4 @@
-import type {
-  AnalysisContext,
-  NodeName,
-  NodeScope,
-} from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName, NodeScope } from '@hey-api/codegen-core';
 import { isSymbol } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
@@ -15,9 +11,7 @@ import { safeTypeName } from '../utils/name';
 
 type Value = MaybeTsDsl<ts.TypeNode>;
 
-const Mixed = DocMixin(
-  ExportMixin(TypeParamsMixin(TsDsl<ts.TypeAliasDeclaration>)),
-);
+const Mixed = DocMixin(ExportMixin(TypeParamsMixin(TsDsl<ts.TypeAliasDeclaration>)));
 
 export class TypeAliasTsDsl extends Mixed {
   readonly '~dsl' = 'TypeAliasTsDsl';
@@ -49,9 +43,7 @@ export class TypeAliasTsDsl extends Mixed {
 
   override toAst() {
     if (!this.value)
-      throw new Error(
-        `Type alias '${this.name.toString()}' is missing a type definition`,
-      );
+      throw new Error(`Type alias '${this.name.toString()}' is missing a type definition`);
     const node = ts.factory.createTypeAliasDeclaration(
       this.modifiers,
       this.$node(this.name) as ts.Identifier,

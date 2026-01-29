@@ -117,9 +117,7 @@ export type Hooks = {
      * }
      * ```
      */
-    getKind?: (
-      operation: IROperationObject,
-    ) => ReadonlyArray<'mutation' | 'query'> | undefined;
+    getKind?: (operation: IROperationObject) => ReadonlyArray<'mutation' | 'query'> | undefined;
     /**
      * Check if the given operation should be treated as a mutation.
      *

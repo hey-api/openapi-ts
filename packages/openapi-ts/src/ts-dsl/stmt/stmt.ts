@@ -22,8 +22,6 @@ export class StmtTsDsl extends Mixed {
 
   override toAst() {
     const node = this.$node(this._inner);
-    return ts.isStatement(node)
-      ? node
-      : ts.factory.createExpressionStatement(node);
+    return ts.isStatement(node) ? node : ts.factory.createExpressionStatement(node);
   }
 }

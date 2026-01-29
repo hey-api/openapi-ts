@@ -73,14 +73,11 @@ export function operationToId({
       // @ts-expect-error
       (context.config.plugins['@hey-api/sdk'].config.operations &&
         // @ts-expect-error
-        typeof context.config.plugins['@hey-api/sdk'].config.operations !==
-          'function' &&
+        typeof context.config.plugins['@hey-api/sdk'].config.operations !== 'function' &&
         // @ts-expect-error
-        typeof context.config.plugins['@hey-api/sdk'].config.operations ===
-          'object' &&
+        typeof context.config.plugins['@hey-api/sdk'].config.operations === 'object' &&
         // @ts-expect-error
-        context.config.plugins['@hey-api/sdk'].config.operations.nesting ===
-          'operationId'))
+        context.config.plugins['@hey-api/sdk'].config.operations.nesting === 'operationId'))
   ) {
     result = toCase(sanitizeNamespaceIdentifier(id), targetCase);
   } else {

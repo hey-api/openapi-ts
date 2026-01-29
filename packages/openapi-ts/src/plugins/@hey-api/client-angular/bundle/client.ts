@@ -1,10 +1,5 @@
 import type { HttpResponse } from '@angular/common/http';
-import {
-  HttpClient,
-  HttpErrorResponse,
-  HttpEventType,
-  HttpRequest,
-} from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpEventType, HttpRequest } from '@angular/common/http';
 import {
   assertInInjectionContext,
   inject,
@@ -73,9 +68,7 @@ export const createClient = (config: Config = {}): Client => {
 
     if (!opts.httpClient) {
       if (opts.injector) {
-        opts.httpClient = runInInjectionContext(opts.injector, () =>
-          inject(HttpClient),
-        );
+        opts.httpClient = runInInjectionContext(opts.injector, () => inject(HttpClient));
       } else {
         assertInInjectionContext(requestOptions);
         opts.httpClient = inject(HttpClient);
@@ -93,15 +86,10 @@ export const createClient = (config: Config = {}): Client => {
 
     const url = buildUrl(opts as any);
 
-    const req = new HttpRequest<unknown>(
-      opts.method ?? 'GET',
-      url,
-      getValidRequestBody(opts),
-      {
-        redirect: 'follow',
-        ...opts,
-      },
-    );
+    const req = new HttpRequest<unknown>(opts.method ?? 'GET', url, getValidRequestBody(opts), {
+      redirect: 'follow',
+      ...opts,
+    });
 
     return { opts, req, url };
   };
@@ -166,9 +154,7 @@ export const createClient = (config: Config = {}): Client => {
         bodyResponse = await opts.responseTransformer(bodyResponse);
       }
 
-      return opts.responseStyle === 'data'
-        ? bodyResponse
-        : { data: bodyResponse, ...result };
+      return opts.responseStyle === 'data' ? bodyResponse : { data: bodyResponse, ...result };
     } catch (error) {
       if (error instanceof HttpErrorResponse) {
         result.response = error;
@@ -178,12 +164,7 @@ export const createClient = (config: Config = {}): Client => {
 
       for (const fn of interceptors.error.fns) {
         if (fn) {
-          finalError = (await fn(
-            finalError,
-            result.response as any,
-            req,
-            opts as any,
-          )) as string;
+          finalError = (await fn(finalError, result.response as any, req, opts as any)) as string;
         }
       }
 
@@ -200,25 +181,20 @@ export const createClient = (config: Config = {}): Client => {
     }
   };
 
-  const makeMethodFn =
-    (method: Uppercase<HttpMethod>) => (options: RequestOptions) =>
-      request({ ...options, method });
+  const makeMethodFn = (method: Uppercase<HttpMethod>) => (options: RequestOptions) =>
+    request({ ...options, method });
 
-  const makeSseFn =
-    (method: Uppercase<HttpMethod>) => async (options: RequestOptions) => {
-      const { opts, url } = await beforeRequest(options);
-      return createSseClient({
-        ...opts,
-        body: opts.body as BodyInit | null | undefined,
-        headers: opts.headers as unknown as Record<string, string>,
-        method,
-        serializedBody: getValidRequestBody(opts) as
-          | BodyInit
-          | null
-          | undefined,
-        url,
-      });
-    };
+  const makeSseFn = (method: Uppercase<HttpMethod>) => async (options: RequestOptions) => {
+    const { opts, url } = await beforeRequest(options);
+    return createSseClient({
+      ...opts,
+      body: opts.body as BodyInit | null | undefined,
+      headers: opts.headers as unknown as Record<string, string>,
+      method,
+      serializedBody: getValidRequestBody(opts) as BodyInit | null | undefined,
+      url,
+    });
+  };
 
   return {
     buildUrl,
@@ -239,9 +215,7 @@ export const createClient = (config: Config = {}): Client => {
       }
 
       if (options.requestValidator) {
-        throw new Error(
-          'Request validation is not supported in requestOptions',
-        );
+        throw new Error('Request validation is not supported in requestOptions');
       }
 
       return requestOptions(options).req;

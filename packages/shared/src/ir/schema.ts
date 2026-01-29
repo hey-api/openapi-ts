@@ -38,10 +38,7 @@ export function deduplicateSchema<T extends IR.SchemaObject>({
       // const needs namespace to handle empty string values, otherwise
       // fallback would equal an actual value and we would skip an item
       const constant = item.const !== undefined ? `const-${item.const}` : '';
-      const format =
-        item.format !== undefined && detectFormat
-          ? `format-${item.format}`
-          : '';
+      const format = item.format !== undefined && detectFormat ? `format-${item.format}` : '';
 
       // Include validation constraints in the type ID to avoid incorrect deduplication
       const constraints = [
@@ -49,12 +46,8 @@ export function deduplicateSchema<T extends IR.SchemaObject>({
         item.maxLength !== undefined ? `maxLength-${item.maxLength}` : '',
         item.minimum !== undefined ? `minimum-${item.minimum}` : '',
         item.maximum !== undefined ? `maximum-${item.maximum}` : '',
-        item.exclusiveMinimum !== undefined
-          ? `exclusiveMinimum-${item.exclusiveMinimum}`
-          : '',
-        item.exclusiveMaximum !== undefined
-          ? `exclusiveMaximum-${item.exclusiveMaximum}`
-          : '',
+        item.exclusiveMinimum !== undefined ? `exclusiveMinimum-${item.exclusiveMinimum}` : '',
+        item.exclusiveMaximum !== undefined ? `exclusiveMaximum-${item.exclusiveMaximum}` : '',
         item.minItems !== undefined ? `minItems-${item.minItems}` : '',
         item.maxItems !== undefined ? `maxItems-${item.maxItems}` : '',
         item.pattern !== undefined ? `pattern-${item.pattern}` : '',

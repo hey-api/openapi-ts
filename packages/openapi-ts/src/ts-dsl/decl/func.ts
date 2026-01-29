@@ -33,11 +33,7 @@ const Mixed = AbstractMixin(
               PrivateMixin(
                 ProtectedMixin(
                   PublicMixin(
-                    StaticMixin(
-                      TypeParamsMixin(
-                        TypeReturnsMixin(TsDsl<ts.ArrowFunction>),
-                      ),
-                    ),
+                    StaticMixin(TypeParamsMixin(TypeReturnsMixin(TsDsl<ts.ArrowFunction>))),
                   ),
                 ),
               ),

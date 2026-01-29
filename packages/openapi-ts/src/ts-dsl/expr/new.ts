@@ -14,9 +14,7 @@ export type NewArgs = ReadonlyArray<NewExpr | undefined>;
 export type NewExpr = NodeName | MaybeTsDsl<ts.Expression>;
 export type NewCtor = (expr: NewExpr, ...args: NewArgs) => NewTsDsl;
 
-const Mixed = ArgsMixin(
-  AsMixin(ExprMixin(TypeArgsMixin(TsDsl<ts.NewExpression>))),
-);
+const Mixed = ArgsMixin(AsMixin(ExprMixin(TypeArgsMixin(TsDsl<ts.NewExpression>))));
 
 export class NewTsDsl extends Mixed {
   readonly '~dsl' = 'NewTsDsl';

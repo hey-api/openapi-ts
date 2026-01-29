@@ -10,9 +10,7 @@ export interface NoteMethods extends Node {
   note(lines?: NoteLines, fn?: NoteFn): this;
 }
 
-export function NoteMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
-  Base: TBase,
-) {
+export function NoteMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base: TBase) {
   abstract class Note extends Base {
     private _note?: NoteTsDsl;
 

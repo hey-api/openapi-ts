@@ -1,9 +1,7 @@
 import { valueToObject } from '../../utils/config';
 import type { SourceConfig, UserSourceConfig } from './types';
 
-export function resolveSource(config: {
-  source?: boolean | UserSourceConfig;
-}): SourceConfig {
+export function resolveSource(config: { source?: boolean | UserSourceConfig }): SourceConfig {
   const source = valueToObject({
     defaultValue: {
       enabled: Boolean(config.source),

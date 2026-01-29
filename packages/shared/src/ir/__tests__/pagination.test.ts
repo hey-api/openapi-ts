@@ -44,15 +44,12 @@ describe('paginationKeywordsRegExp', () => {
     },
   ];
 
-  it.each(defaultScenarios)(
-    'is $value pagination param? $output',
-    async ({ result, value }) => {
-      const paginationRegExp = getPaginationKeywordsRegExp({
-        keywords: defaultPaginationKeywords,
-      });
-      expect(paginationRegExp.test(value)).toEqual(result);
-    },
-  );
+  it.each(defaultScenarios)('is $value pagination param? $output', async ({ result, value }) => {
+    const paginationRegExp = getPaginationKeywordsRegExp({
+      keywords: defaultPaginationKeywords,
+    });
+    expect(paginationRegExp.test(value)).toEqual(result);
+  });
 
   const customScenarios: ReadonlyArray<{
     result: boolean;
@@ -152,9 +149,7 @@ describe('operationPagination', () => {
       expect(Boolean(pagination)).toEqual(hasPagination);
       if (pagination && pagination.in !== 'body') {
         const parameter =
-          operation.parameters?.[pagination.in]?.[
-            pagination.name.toLocaleLowerCase()
-          ];
+          operation.parameters?.[pagination.in]?.[pagination.name.toLocaleLowerCase()];
         if (parameter) {
           expect(pagination.name).toBe(parameter.name);
         }
@@ -240,9 +235,7 @@ describe('operationPagination', () => {
 
     const result = operationPagination({ context, operation });
 
-    expect(context.resolveIrRef).toHaveBeenCalledWith(
-      '#/components/schemas/PaginationBody',
-    );
+    expect(context.resolveIrRef).toHaveBeenCalledWith('#/components/schemas/PaginationBody');
     expect(result?.in).toEqual('body');
     expect(result?.name).toEqual('pagination');
     expect(result?.schema?.type).toEqual('object');

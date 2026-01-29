@@ -110,24 +110,15 @@ const collectPointerDependencies = ({
       subtreeDependencies: cache.subtreeDependencies.get(childPointer),
       transitiveDependencies: cache.transitiveDependencies.get(childPointer),
     };
-    if (
-      !childResult.subtreeDependencies ||
-      !childResult.transitiveDependencies
-    ) {
+    if (!childResult.subtreeDependencies || !childResult.transitiveDependencies) {
       childResult = collectPointerDependencies({
         cache,
         graph,
         pointer: childPointer,
         visited,
       });
-      cache.transitiveDependencies.set(
-        childPointer,
-        childResult.transitiveDependencies!,
-      );
-      cache.subtreeDependencies.set(
-        childPointer,
-        childResult.subtreeDependencies!,
-      );
+      cache.transitiveDependencies.set(childPointer, childResult.transitiveDependencies!);
+      cache.subtreeDependencies.set(childPointer, childResult.subtreeDependencies!);
     }
     for (const dependency of childResult.transitiveDependencies!) {
       transitiveDependencies.add(dependency);
@@ -175,11 +166,7 @@ export const propagateScopes = (graph: Graph): void => {
    * @param nodeInfo - The NodeInfo of the node
    * @param childPointer - (Optional) The pointer of the child, used to detect combinator parents
    */
-  const notifyAllDependents = (
-    pointer: string,
-    nodeInfo: NodeInfo,
-    childPointer?: string,
-  ) => {
+  const notifyAllDependents = (pointer: string, nodeInfo: NodeInfo, childPointer?: string) => {
     if (nodeInfo.parentPointer) {
       worklist.add(nodeInfo.parentPointer);
     }
@@ -191,9 +178,7 @@ export const propagateScopes = (graph: Graph): void => {
     }
     if (childPointer) {
       // If this is a combinator child, notify the combinator parent
-      const combinatorChildMatch = childPointer.match(
-        /(.*)\/(allOf|anyOf|oneOf)\/\d+$/,
-      );
+      const combinatorChildMatch = childPointer.match(/(.*)\/(allOf|anyOf|oneOf)\/\d+$/);
       if (combinatorChildMatch) {
         const combinatorParentPointer = combinatorChildMatch[1];
         if (combinatorParentPointer) {
@@ -257,11 +242,7 @@ export const propagateScopes = (graph: Graph): void => {
           const childPointer = `${pointer}/${keyword}/${key}`;
           propagateChildScopes(pointer, nodeInfo, childPointer);
         }
-      } else if (
-        type === 'single' &&
-        typeof value === 'object' &&
-        value !== null
-      ) {
+      } else if (type === 'single' && typeof value === 'object' && value !== null) {
         const childPointer = `${pointer}/${keyword}`;
         propagateChildScopes(pointer, nodeInfo, childPointer);
       } else if (type === 'singleOrArray') {
@@ -313,10 +294,7 @@ export const propagateScopes = (graph: Graph): void => {
  * @param toNodeInfo - The node to propagate scopes to
  * @returns boolean - Whether any scopes were added
  */
-const propagateScopesToNode = (
-  fromNodeInfo: NodeInfo,
-  toNodeInfo: NodeInfo,
-): boolean => {
+const propagateScopesToNode = (fromNodeInfo: NodeInfo, toNodeInfo: NodeInfo): boolean => {
   if (!fromNodeInfo.scopes) {
     return false;
   }

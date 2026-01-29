@@ -5,10 +5,7 @@ import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
 import { f } from '../utils/factories';
 
-type Op =
-  | ts.SyntaxKind.KeyOfKeyword
-  | ts.SyntaxKind.ReadonlyKeyword
-  | ts.SyntaxKind.UniqueKeyword;
+type Op = ts.SyntaxKind.KeyOfKeyword | ts.SyntaxKind.ReadonlyKeyword | ts.SyntaxKind.UniqueKeyword;
 type Type = string | MaybeTsDsl<ts.TypeNode>;
 export type TypeOperatorCtor = () => TypeOperatorTsDsl;
 

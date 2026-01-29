@@ -121,9 +121,7 @@ const bazSchemaResponseTransformer = (data: any) => {
   return data;
 };
 
-export const getFooResponseTransformer = async (
-  data: any,
-): Promise<GetFooResponse> => {
+export const getFooResponseTransformer = async (data: any): Promise<GetFooResponse> => {
   data = bazSchemaResponseTransformer(data);
   return data;
 };

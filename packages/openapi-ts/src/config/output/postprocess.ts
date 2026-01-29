@@ -37,13 +37,7 @@ export const postProcessors = {
     name: 'Oxlint',
   },
   prettier: {
-    args: [
-      '--ignore-unknown',
-      '{{path}}',
-      '--write',
-      '--ignore-path',
-      './.prettierignore',
-    ],
+    args: ['--ignore-unknown', '{{path}}', '--write', '--ignore-path', './.prettierignore'],
     command: 'prettier',
     name: 'Prettier',
   },

@@ -60,8 +60,7 @@ interface IRParametersObject {
 }
 
 interface IRParameterObject
-  extends Pick<JsonSchemaDraft2020_12, 'deprecated' | 'description'>,
-    SpecificationExtensions {
+  extends Pick<JsonSchemaDraft2020_12, 'deprecated' | 'description'>, SpecificationExtensions {
   /**
    * Determines whether the parameter value SHOULD allow reserved characters, as defined by RFC3986 `:/?#[]@!$&'()*+,;=` to be included without percent-encoding. The default value is `false`. This property SHALL be ignored if the request body media type is not `application/x-www-form-urlencoded` or `multipart/form-data`. If a value is explicitly defined, then the value of `contentType` (implicit or explicit) SHALL be ignored.
    */
@@ -85,14 +84,7 @@ interface IRParameterObject
   /**
    * Describes how the parameter value will be serialized depending on the type of the parameter value. Default values (based on value of `in`): for `query` - `form`; for `path` - `simple`; for `header` - `simple`; for `cookie` - `form`.
    */
-  style:
-    | 'deepObject'
-    | 'form'
-    | 'label'
-    | 'matrix'
-    | 'pipeDelimited'
-    | 'simple'
-    | 'spaceDelimited';
+  style: 'deepObject' | 'form' | 'label' | 'matrix' | 'pipeDelimited' | 'simple' | 'spaceDelimited';
 }
 
 interface IRPathsObject {
@@ -110,8 +102,7 @@ interface IRPathItemObject {
   trace?: IROperationObject;
 }
 
-interface IRRequestBodyObject
-  extends Pick<JsonSchemaDraft2020_12, 'description'> {
+interface IRRequestBodyObject extends Pick<JsonSchemaDraft2020_12, 'description'> {
   required?: boolean;
   schema: IRSchemaObject;
 }
@@ -134,7 +125,8 @@ interface IRResponseObject {
 }
 
 interface IRSchemaObject
-  extends Pick<
+  extends
+    Pick<
       JsonSchemaDraft2020_12,
       | '$ref'
       | 'const'

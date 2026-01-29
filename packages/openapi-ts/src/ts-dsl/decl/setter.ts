@@ -24,9 +24,7 @@ const Mixed = AbstractMixin(
         DocMixin(
           ParamMixin(
             PrivateMixin(
-              ProtectedMixin(
-                PublicMixin(StaticMixin(TsDsl<ts.SetAccessorDeclaration>)),
-              ),
+              ProtectedMixin(PublicMixin(StaticMixin(TsDsl<ts.SetAccessorDeclaration>))),
             ),
           ),
         ),

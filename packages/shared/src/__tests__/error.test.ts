@@ -23,9 +23,7 @@ describe('shouldReportCrash', () => {
     const setEncodingSpy = vi
       .spyOn(process.stdin, 'setEncoding')
       .mockImplementation(() => process.stdin as any);
-    const onceSpy = vi
-      .spyOn(process.stdin, 'once')
-      .mockImplementation(() => process.stdin);
+    const onceSpy = vi.spyOn(process.stdin, 'once').mockImplementation(() => process.stdin);
 
     const result = await shouldReportCrash({
       error: new Error('test error'),
@@ -48,15 +46,13 @@ describe('shouldReportCrash', () => {
     const setEncodingSpy = vi
       .spyOn(process.stdin, 'setEncoding')
       .mockImplementation(() => process.stdin as any);
-    const onceSpy = vi
-      .spyOn(process.stdin, 'once')
-      .mockImplementation((_event, callback) => {
-        // Simulate user typing 'n'
-        setTimeout(() => {
-          (callback as any)('n');
-        }, 0);
-        return process.stdin;
-      });
+    const onceSpy = vi.spyOn(process.stdin, 'once').mockImplementation((_event, callback) => {
+      // Simulate user typing 'n'
+      setTimeout(() => {
+        (callback as any)('n');
+      }, 0);
+      return process.stdin;
+    });
 
     const result = await shouldReportCrash({
       error: new Error('test error'),
@@ -79,15 +75,13 @@ describe('shouldReportCrash', () => {
     const setEncodingSpy = vi
       .spyOn(process.stdin, 'setEncoding')
       .mockImplementation(() => process.stdin as any);
-    const onceSpy = vi
-      .spyOn(process.stdin, 'once')
-      .mockImplementation((_event, callback) => {
-        // Simulate user typing 'y'
-        setTimeout(() => {
-          (callback as any)('y');
-        }, 0);
-        return process.stdin;
-      });
+    const onceSpy = vi.spyOn(process.stdin, 'once').mockImplementation((_event, callback) => {
+      // Simulate user typing 'y'
+      setTimeout(() => {
+        (callback as any)('y');
+      }, 0);
+      return process.stdin;
+    });
 
     const result = await shouldReportCrash({
       error: new Error('test error'),

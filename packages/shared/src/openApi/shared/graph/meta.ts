@@ -55,9 +55,7 @@ export const buildResourceMetadata = (
 ): {
   resourceMetadata: ResourceMetadata;
 } => {
-  const eventBuildResourceMetadata = logger.timeEvent(
-    'build-resource-metadata',
-  );
+  const eventBuildResourceMetadata = logger.timeEvent('build-resource-metadata');
   const resourceMetadata: ResourceMetadata = {
     operations: new Map(),
     parameters: new Map(),
@@ -128,10 +126,7 @@ export const buildResourceMetadata = (
     }
 
     if (path[0] === 'paths') {
-      if (
-        path.length === 3 &&
-        httpMethods.includes(path[2] as (typeof httpMethods)[number])
-      ) {
+      if (path.length === 3 && httpMethods.includes(path[2] as (typeof httpMethods)[number])) {
         // Operation: #/paths/{path}/{method}
         const method = path[path.length - 1]!;
         const operationPath = path.slice(1, -1).join('/');
@@ -139,14 +134,11 @@ export const buildResourceMetadata = (
           method,
           path: operationPath,
         });
-        resourceMetadata.operations.set(
-          addNamespace('operation', operationKey),
-          {
-            dependencies: getDependencies(pointer),
-            deprecated: nodeInfo.deprecated ?? false,
-            tags: nodeInfo.tags ?? new Set(),
-          },
-        );
+        resourceMetadata.operations.set(addNamespace('operation', operationKey), {
+          dependencies: getDependencies(pointer),
+          deprecated: nodeInfo.deprecated ?? false,
+          tags: nodeInfo.tags ?? new Set(),
+        });
       }
       continue;
     }

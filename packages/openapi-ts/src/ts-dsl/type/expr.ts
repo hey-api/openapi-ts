@@ -1,9 +1,4 @@
-import type {
-  AnalysisContext,
-  NodeName,
-  NodeScope,
-  Ref,
-} from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName, NodeScope, Ref } from '@hey-api/codegen-core';
 import { isNode, ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
@@ -15,10 +10,7 @@ import { TypeAttrTsDsl } from './attr';
 
 export type TypeExprExpr = NodeName | TypeAttrTsDsl;
 export type TypeExprFn = (t: TypeExprTsDsl) => void;
-export type TypeExprCtor = (
-  nameOrFn?: NodeName | TypeExprFn,
-  fn?: TypeExprFn,
-) => TypeExprTsDsl;
+export type TypeExprCtor = (nameOrFn?: NodeName | TypeExprFn, fn?: TypeExprFn) => TypeExprTsDsl;
 
 const Mixed = TypeArgsMixin(TypeExprMixin(TsDsl<ts.TypeReferenceNode>));
 
@@ -65,6 +57,5 @@ export class TypeExprTsDsl extends Mixed {
 }
 
 f.type.expr.set(
-  (...args) =>
-    new TypeExprTsDsl(...(args as ConstructorParameters<typeof TypeExprTsDsl>)),
+  (...args) => new TypeExprTsDsl(...(args as ConstructorParameters<typeof TypeExprTsDsl>)),
 );

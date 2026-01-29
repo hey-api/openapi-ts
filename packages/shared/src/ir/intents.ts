@@ -14,10 +14,7 @@ export class IntentContext<Spec extends Record<string, any> = any> {
     this.spec = spec;
   }
 
-  private getOperation(
-    path: string,
-    method: string,
-  ): Record<string, any> | undefined {
+  private getOperation(path: string, method: string): Record<string, any> | undefined {
     const paths = (this.spec as any).paths;
     if (!paths) return;
     return paths[path]?.[method];

@@ -7,5 +7,4 @@ export type IrSchemaToAstOptions = {
   state: Refs<PluginState>;
 };
 
-export type PluginState = Pick<Required<SymbolMeta>, 'path'> &
-  Pick<Partial<SymbolMeta>, 'tags'>;
+export type PluginState = Pick<Required<SymbolMeta>, 'path'> & Pick<Partial<SymbolMeta>, 'tags'>;

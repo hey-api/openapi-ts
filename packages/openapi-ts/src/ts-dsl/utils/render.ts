@@ -4,13 +4,7 @@ import ts from 'typescript';
 
 import type { TsDsl } from '../../ts-dsl';
 import { $ } from '../../ts-dsl';
-import type {
-  ModuleExport,
-  ModuleImport,
-  SortGroup,
-  SortKey,
-  SortModule,
-} from './render-utils';
+import type { ModuleExport, ModuleImport, SortGroup, SortKey, SortModule } from './render-utils';
 import { astToString, moduleSortKey } from './render-utils';
 
 type Exports = ReadonlyArray<ReadonlyArray<ModuleExport>>;
@@ -74,8 +68,7 @@ export class TypeScriptRenderer implements Renderer {
   }
 
   render(ctx: RenderContext<TsDsl>): string {
-    const header =
-      typeof this._header === 'function' ? this._header(ctx) : this._header;
+    const header = typeof this._header === 'function' ? this._header(ctx) : this._header;
     return TypeScriptRenderer.astToString({
       exports: this.getExports(ctx),
       exportsOptions: {
@@ -141,16 +134,11 @@ export class TypeScriptRenderer implements Renderer {
     return text;
   }
 
-  static toExportAst(
-    group: ModuleExport,
-    options?: ExportsOptions,
-  ): ts.ExportDeclaration {
+  static toExportAst(group: ModuleExport, options?: ExportsOptions): ts.ExportDeclaration {
     const specifiers = group.exports.map((exp) => {
       const specifier = ts.factory.createExportSpecifier(
         exp.isTypeOnly,
-        exp.sourceName !== exp.exportedName
-          ? $.id(exp.sourceName).toAst()
-          : undefined,
+        exp.sourceName !== exp.exportedName ? $.id(exp.sourceName).toAst() : undefined,
         $.id(exp.exportedName).toAst(),
       );
       return specifier;
@@ -172,18 +160,14 @@ export class TypeScriptRenderer implements Renderer {
     const specifiers = group.imports.map((imp) => {
       const specifier = ts.factory.createImportSpecifier(
         imp.isTypeOnly,
-        imp.sourceName !== imp.localName
-          ? $.id(imp.sourceName).toAst()
-          : undefined,
+        imp.sourceName !== imp.localName ? $.id(imp.sourceName).toAst() : undefined,
         $.id(imp.localName).toAst(),
       );
       return specifier;
     });
     const importClause = ts.factory.createImportClause(
       group.isTypeOnly,
-      group.kind === 'default'
-        ? $.id(group.localName ?? '').toAst()
-        : undefined,
+      group.kind === 'default' ? $.id(group.localName ?? '').toAst() : undefined,
       group.kind === 'namespace'
         ? ts.factory.createNamespaceImport($.id(group.localName ?? '').toAst())
         : specifiers.length > 0
@@ -239,9 +223,7 @@ export class TypeScriptRenderer implements Renderer {
 
         entries.sort((a, b) => {
           const d = a.sortKey[1] - b.sortKey[1];
-          return d !== 0
-            ? d
-            : a.group.modulePath.localeCompare(b.group.modulePath);
+          return d !== 0 ? d : a.group.modulePath.localeCompare(b.group.modulePath);
         });
 
         return entries.map((e) => {
@@ -256,9 +238,7 @@ export class TypeScriptRenderer implements Renderer {
                 exp.isTypeOnly = false;
               }
             }
-            group.exports.sort((a, b) =>
-              a.exportedName.localeCompare(b.exportedName),
-            );
+            group.exports.sort((a, b) => a.exportedName.localeCompare(b.exportedName));
           }
           return group;
         });
@@ -319,9 +299,7 @@ export class TypeScriptRenderer implements Renderer {
 
         entries.sort((a, b) => {
           const d = a.sortKey[1] - b.sortKey[1];
-          return d !== 0
-            ? d
-            : a.group.modulePath.localeCompare(b.group.modulePath);
+          return d !== 0 ? d : a.group.modulePath.localeCompare(b.group.modulePath);
         });
 
         return entries.map((e) => {
@@ -336,9 +314,7 @@ export class TypeScriptRenderer implements Renderer {
                 imp.isTypeOnly = false;
               }
             }
-            group.imports.sort((a, b) =>
-              a.localName.localeCompare(b.localName),
-            );
+            group.imports.sort((a, b) => a.localName.localeCompare(b.localName));
           }
           return group;
         });

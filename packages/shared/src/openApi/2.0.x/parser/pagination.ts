@@ -5,9 +5,7 @@ import type { ParameterObject, ReferenceObject } from '../types/spec';
 import type { SchemaObject } from '../types/spec';
 import { getSchemaType } from './schema';
 
-const isPaginationType = (
-  schemaType: SchemaType<SchemaObject> | undefined,
-): boolean =>
+const isPaginationType = (schemaType: SchemaType<SchemaObject> | undefined): boolean =>
   schemaType === 'boolean' ||
   schemaType === 'integer' ||
   schemaType === 'number' ||
@@ -29,17 +27,13 @@ export const paginationField = ({
         in: undefined;
       };
 }): boolean | string => {
-  const paginationRegExp = getPaginationKeywordsRegExp(
-    context.config.parser.pagination,
-  );
+  const paginationRegExp = getPaginationKeywordsRegExp(context.config.parser.pagination);
   if (paginationRegExp.test(name)) {
     return true;
   }
 
   if ('$ref' in schema) {
-    const ref = context.resolveRef<ParameterObject | SchemaObject>(
-      schema.$ref ?? '',
-    );
+    const ref = context.resolveRef<ParameterObject | SchemaObject>(schema.$ref ?? '');
 
     if ('in' in ref && ref.in) {
       const refSchema =
@@ -85,9 +79,7 @@ export const paginationField = ({
   }
 
   for (const name in schema.properties) {
-    const paginationRegExp = getPaginationKeywordsRegExp(
-      context.config.parser.pagination,
-    );
+    const paginationRegExp = getPaginationKeywordsRegExp(context.config.parser.pagination);
 
     if (paginationRegExp.test(name)) {
       const property = schema.properties[name]!;

@@ -7,9 +7,7 @@ import type { Chain } from '../../shared/chain';
 import type { IrSchemaToAstOptions } from '../../shared/types';
 import { unknownToAst } from './unknown';
 
-function itemsNode(
-  ctx: EnumResolverContext,
-): ReturnType<EnumResolverContext['nodes']['items']> {
+function itemsNode(ctx: EnumResolverContext): ReturnType<EnumResolverContext['nodes']['items']> {
   const { schema, symbols } = ctx;
   const { z } = symbols;
 

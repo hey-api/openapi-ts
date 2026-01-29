@@ -1,32 +1,25 @@
 import type { Auth } from '../../client-core/bundle/auth';
-import {
-  axiosHeadersKeywords,
-  mergeHeaders,
-  setAuthParams,
-} from '../bundle/utils';
+import { axiosHeadersKeywords, mergeHeaders, setAuthParams } from '../bundle/utils';
 
 describe('mergeHeaders', () => {
-  it.each(axiosHeadersKeywords)(
-    'handles "%s" Axios special keyword',
-    (keyword) => {
-      const headers = mergeHeaders(
-        {
-          foo: 'foo',
-        },
-        {
-          [keyword]: {
-            foo: 'foo',
-          },
-        },
-      );
-      expect(headers).toEqual({
+  it.each(axiosHeadersKeywords)('handles "%s" Axios special keyword', (keyword) => {
+    const headers = mergeHeaders(
+      {
         foo: 'foo',
+      },
+      {
         [keyword]: {
           foo: 'foo',
         },
-      });
-    },
-  );
+      },
+    );
+    expect(headers).toEqual({
+      foo: 'foo',
+      [keyword]: {
+        foo: 'foo',
+      },
+    });
+  });
 });
 
 describe('setAuthParams', () => {

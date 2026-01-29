@@ -55,9 +55,7 @@ const defaultGetFilePath = (symbol: Symbol): string | undefined => {
   return symbol.meta.pluginName;
 };
 
-const defaultGetKind: Required<Required<Hooks>['operations']>['getKind'] = (
-  operation,
-) => {
+const defaultGetKind: Required<Required<Hooks>['operations']>['getKind'] = (operation) => {
   switch (operation.method) {
     case 'delete':
     case 'patch':
@@ -95,10 +93,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
   package: Dependency;
 
   constructor(
-    props: Pick<
-      Required<Plugin.Config<T>>,
-      'config' | 'dependencies' | 'handler'
-    > & {
+    props: Pick<Required<Plugin.Config<T>>, 'config' | 'dependencies' | 'handler'> & {
       api?: T['api'];
       context: Context;
       gen: IProject;
@@ -150,10 +145,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
    * });
    */
   forEach<TKind extends IrTopLevelKind = IrTopLevelKind>(
-    ...args: [
-      ...events: ReadonlyArray<TKind>,
-      callback: (event: WalkEvent<TKind>) => void,
-    ]
+    ...args: [...events: ReadonlyArray<TKind>, callback: (event: WalkEvent<TKind>) => void]
   ): void;
   forEach<TKind extends IrTopLevelKind = IrTopLevelKind>(
     ...args: [
@@ -179,8 +171,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
       getPointerPriority: getIrPointerPriority,
       // default functions operate on the full union of kinds; cast them
       // to the WalkOptions generic to keep strict typing for callers.
-      matchPointerToGroup:
-        matchIrPointerToGroup as unknown as MatchPointerToGroupFn<TKind>,
+      matchPointerToGroup: matchIrPointerToGroup as unknown as MatchPointerToGroupFn<TKind>,
       order: 'topological',
       preferGroups: preferGroups as unknown as ReadonlyArray<TKind>,
     };
@@ -281,9 +272,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
    */
   getPlugin<TName extends keyof PluginConfigMap>(
     name: TName,
-  ): TName extends any
-    ? PluginInstance<PluginConfigMap[TName]> | undefined
-    : never {
+  ): TName extends any ? PluginInstance<PluginConfigMap[TName]> | undefined : never {
     return this.context.plugins[name] as any;
   }
 
@@ -311,8 +300,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     operation: {
       isMutation: (operation: IR.OperationObject): boolean =>
         this.isOperationKind(operation, 'mutation'),
-      isQuery: (operation: IR.OperationObject): boolean =>
-        this.isOperationKind(operation, 'query'),
+      isQuery: (operation: IR.OperationObject): boolean => this.isOperationKind(operation, 'query'),
     },
   };
 
@@ -345,9 +333,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
       hook({ node, plugin: this as any });
     }
     const result =
-      index !== undefined
-        ? this.gen.nodes.update(index, node)
-        : this.gen.nodes.add(node);
+      index !== undefined ? this.gen.nodes.update(index, node) : this.gen.nodes.add(node);
     for (const hook of this.eventHooks['node:set:after']) {
       hook({ node, plugin: this as any });
     }
@@ -355,9 +341,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
   }
 
   querySymbol(filter: SymbolMeta): Symbol<ResolvedNode> | undefined {
-    return this.gen.symbols.query(filter)[0] as
-      | Symbol<ResolvedNode>
-      | undefined;
+    return this.gen.symbols.query(filter)[0] as Symbol<ResolvedNode> | undefined;
   }
 
   referenceSymbol(meta: SymbolMeta): Symbol<ResolvedNode> {
@@ -384,17 +368,12 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     }
   }
 
-  symbol(
-    name: SymbolIn['name'],
-    symbol?: Omit<SymbolIn, 'name'>,
-  ): Symbol<ResolvedNode> {
+  symbol(name: SymbolIn['name'], symbol?: Omit<SymbolIn, 'name'>): Symbol<ResolvedNode> {
     const symbolIn: SymbolIn = {
       ...symbol,
       exportFrom:
         symbol?.exportFrom ??
-        (!symbol?.external &&
-        this.context.config.output.indexFile &&
-        this.config.exportFromIndex
+        (!symbol?.external && this.context.config.output.indexFile && this.config.exportFromIndex
           ? ['index']
           : undefined),
       getFilePath: symbol?.getFilePath ?? this.getSymbolFilePath.bind(this),
@@ -440,10 +419,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
       'symbol:register:after': [],
       'symbol:register:before': [],
     };
-    const scopes = [
-      this.config['~hooks']?.events,
-      this.context.config.parser.hooks.events,
-    ];
+    const scopes = [this.config['~hooks']?.events, this.context.config.parser.hooks.events];
     for (const scope of scopes) {
       if (!scope) continue;
       for (const [key, value] of Object.entries(scope)) {
@@ -456,8 +432,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
   }
 
   private forEachError(error: unknown, event: WalkEvent) {
-    const originalError =
-      error instanceof Error ? error : new Error(String(error));
+    const originalError = error instanceof Error ? error : new Error(String(error));
     throw new HeyApiError({
       args: [event],
       error: originalError,
@@ -468,10 +443,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
   }
 
   private getSymbolFilePath(symbol: Symbol): string | undefined {
-    const hooks = [
-      this.config['~hooks']?.symbols,
-      this.context.config.parser.hooks.symbols,
-    ];
+    const hooks = [this.config['~hooks']?.symbols, this.context.config.parser.hooks.symbols];
     for (const hook of hooks) {
       const result = hook?.getFilePath?.(symbol);
       if (result !== undefined) return result;
@@ -479,10 +451,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     return defaultGetFilePath(symbol);
   }
 
-  private isOperationKind(
-    operation: IR.OperationObject,
-    kind: 'mutation' | 'query',
-  ): boolean {
+  private isOperationKind(operation: IR.OperationObject, kind: 'mutation' | 'query'): boolean {
     const method = kind === 'query' ? 'isQuery' : 'isMutation';
     const hooks = [
       this.config['~hooks']?.operations?.[method],

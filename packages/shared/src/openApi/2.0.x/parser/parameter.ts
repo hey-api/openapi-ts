@@ -14,9 +14,7 @@ type Parameter = Exclude<ParameterObject, { in: 'body' }>;
 /**
  * Returns default parameter `explode` based on value of `collectionFormat`.
  */
-const defaultExplode = (
-  collectionFormat: Parameter['collectionFormat'],
-): boolean => {
+const defaultExplode = (collectionFormat: Parameter['collectionFormat']): boolean => {
   switch (collectionFormat) {
     case 'multi':
       return true;
@@ -32,9 +30,7 @@ const defaultExplode = (
 /**
  * Returns default parameter `style` based on value of `in`.
  */
-const defaultStyle = (
-  _in: Parameter['in'],
-): Required<IR.ParameterObject>['style'] => {
+const defaultStyle = (_in: Parameter['in']): Required<IR.ParameterObject>['style'] => {
   switch (_in) {
     case 'header':
     case 'path':
@@ -84,12 +80,11 @@ export const parametersArrayToObject = ({
     }
 
     // lowercase keys for case insensitive access
-    parametersObject[parameter.in]![parameter.name.toLocaleLowerCase()] =
-      parameterToIrParameter({
-        $ref: `#/todo/real/path/to/parameter/${parameter.name}`,
-        context,
-        parameter,
-      });
+    parametersObject[parameter.in]![parameter.name.toLocaleLowerCase()] = parameterToIrParameter({
+      $ref: `#/todo/real/path/to/parameter/${parameter.name}`,
+      context,
+      parameter,
+    });
   }
 
   return parametersObject;

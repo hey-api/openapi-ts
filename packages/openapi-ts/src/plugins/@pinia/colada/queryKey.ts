@@ -4,21 +4,14 @@ import { applyNaming, hasOperationDataRequired } from '@hey-api/shared';
 
 import { getTypedConfig } from '../../../config/utils';
 import { clientFolderAbsolutePath } from '../../../generate/client';
-import {
-  getClientBaseUrlKey,
-  getClientPlugin,
-} from '../../../plugins/@hey-api/client-core/utils';
+import { getClientBaseUrlKey, getClientPlugin } from '../../../plugins/@hey-api/client-core/utils';
 import { $ } from '../../../ts-dsl';
 import type { PiniaColadaPlugin } from './types';
 import { getPublicTypeData } from './utils';
 
 const TOptionsType = 'TOptions';
 
-export const createQueryKeyFunction = ({
-  plugin,
-}: {
-  plugin: PiniaColadaPlugin['Instance'];
-}) => {
+export const createQueryKeyFunction = ({ plugin }: { plugin: PiniaColadaPlugin['Instance'] }) => {
   const symbolCreateQueryKey = plugin.symbol(
     applyNaming('createQueryKey', {
       case: plugin.config.case,
@@ -91,9 +84,7 @@ export const createQueryKeyFunction = ({
               .as(returnType),
           ),
         $.if('tags').do(
-          $('params')
-            .attr('tags')
-            .assign($('tags').as('unknown').as(symbolJsonValue)),
+          $('params').attr('tags').assign($('tags').as('unknown').as(symbolJsonValue)),
         ),
         $.if($('options').attr('body').optional().neq($.id('undefined'))).do(
           $.const('normalizedBody').assign(
@@ -148,11 +139,7 @@ const createQueryKeyLiteral = ({
   return createQueryKeyCallExpression;
 };
 
-export const createQueryKeyType = ({
-  plugin,
-}: {
-  plugin: PiniaColadaPlugin['Instance'];
-}) => {
+export const createQueryKeyType = ({ plugin }: { plugin: PiniaColadaPlugin['Instance'] }) => {
   const symbolJsonValue = plugin.external(`${plugin.name}._JSONValue`);
 
   const symbolOptions = plugin.referenceSymbol({

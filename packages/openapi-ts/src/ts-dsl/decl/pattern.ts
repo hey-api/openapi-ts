@@ -25,18 +25,13 @@ export class PatternTsDsl extends Mixed {
 
   /** Defines an array pattern (e.g. `[a, b, c]`). */
   array(...props: ReadonlyArray<string> | [ReadonlyArray<string>]): this {
-    const values =
-      props[0] instanceof Array
-        ? [...props[0]]
-        : (props as ReadonlyArray<string>);
+    const values = props[0] instanceof Array ? [...props[0]] : (props as ReadonlyArray<string>);
     this.pattern = { kind: 'array', values };
     return this;
   }
 
   /** Defines an object pattern (e.g. `{ a, b: alias }`). */
-  object(
-    ...props: ReadonlyArray<MaybeArray<string> | Record<string, string>>
-  ): this {
+  object(...props: ReadonlyArray<MaybeArray<string> | Record<string, string>>): this {
     const entries: Record<string, string> = {};
     for (const p of props) {
       if (typeof p === 'string') entries[p] = p;
@@ -59,16 +54,10 @@ export class PatternTsDsl extends Mixed {
     }
 
     if (this.pattern.kind === 'object') {
-      const elements = Object.entries(this.pattern.values).map(
-        ([key, alias]) =>
-          key === alias
-            ? ts.factory.createBindingElement(
-                undefined,
-                undefined,
-                key,
-                undefined,
-              )
-            : ts.factory.createBindingElement(undefined, key, alias, undefined),
+      const elements = Object.entries(this.pattern.values).map(([key, alias]) =>
+        key === alias
+          ? ts.factory.createBindingElement(undefined, undefined, key, undefined)
+          : ts.factory.createBindingElement(undefined, key, alias, undefined),
       );
       const spread = this.createSpread();
       if (spread) elements.push(spread);

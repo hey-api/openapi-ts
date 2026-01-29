@@ -1,7 +1,4 @@
-import type {
-  CodeSampleObject,
-  EnumExtensions,
-} from '../../../openApi/shared/types';
+import type { CodeSampleObject, EnumExtensions } from '../../../openApi/shared/types';
 import type { JsonSchemaDraft4 } from './json-schema-draft-4';
 import type { OpenApiV2_0_X_Nullable_Extensions } from './openapi-spec-extensions';
 
@@ -195,9 +192,7 @@ export interface ExternalDocumentationObject {
  * type: integer
  * ```
  */
-export interface HeaderObject
-  extends EnumExtensions,
-    OpenApiV2_0_X_Nullable_Extensions {
+export interface HeaderObject extends EnumExtensions, OpenApiV2_0_X_Nullable_Extensions {
   /**
    * Allows extensions to the Swagger Schema. The field name MUST begin with `x-`, for example, `x-internal-id`. The value can be `null`, a primitive, an array or an object. See {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/2.0.md#specification-extensions Vendor Extensions} for further details.
    */
@@ -383,9 +378,7 @@ export interface InfoObject {
  *   maximum: 63
  * ```
  */
-export interface ItemsObject
-  extends EnumExtensions,
-    OpenApiV2_0_X_Nullable_Extensions {
+export interface ItemsObject extends EnumExtensions, OpenApiV2_0_X_Nullable_Extensions {
   /**
    * Allows extensions to the Swagger Schema. The field name MUST begin with `x-`, for example, `x-internal-id`. The value can be `null`, a primitive, an array or an object. See {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/2.0.md#specification-extensions Vendor Extensions} for further details.
    */
@@ -1313,9 +1306,7 @@ export interface ResponsesObject {
  *       - packSize
  * ```
  */
-export interface SchemaObject
-  extends JsonSchemaDraft4,
-    OpenApiV2_0_X_Nullable_Extensions {
+export interface SchemaObject extends JsonSchemaDraft4, OpenApiV2_0_X_Nullable_Extensions {
   /**
    * Allows extensions to the Swagger Schema. The field name MUST begin with `x-`, for example, `x-internal-id`. The value can be `null`, a primitive, an array or an object. See {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/2.0.md#specification-extensions Vendor Extensions} for further details.
    */

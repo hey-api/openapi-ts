@@ -8,9 +8,7 @@ import type { Chain } from '../../shared/chain';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
 import { irSchemaToAst } from '../plugin';
 
-function additionalPropertiesNode(
-  ctx: ObjectResolverContext,
-): Chain | null | undefined {
+function additionalPropertiesNode(ctx: ObjectResolverContext): Chain | null | undefined {
   const { plugin, schema } = ctx;
 
   if (
@@ -39,9 +37,7 @@ function baseNode(ctx: ObjectResolverContext): Chain {
   const shape = nodes.shape(ctx);
 
   if (additional) {
-    return $(z)
-      .attr(identifiers.record)
-      .call($(z).attr(identifiers.string).call(), additional);
+    return $(z).attr(identifiers.record).call($(z).attr(identifiers.string).call(), additional);
   }
 
   return $(z).attr(identifiers.object).call(shape);

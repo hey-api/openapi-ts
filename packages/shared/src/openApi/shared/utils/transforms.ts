@@ -1,6 +1,4 @@
-export const getSchemasObject = (
-  spec: unknown,
-): Record<string, unknown> | undefined => {
+export const getSchemasObject = (spec: unknown): Record<string, unknown> | undefined => {
   if (hasComponentsSchemasObject(spec)) {
     return (spec as any).components.schemas;
   }

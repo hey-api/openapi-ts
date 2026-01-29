@@ -10,17 +10,11 @@ export type ExpressionTransformer = ({
   schema,
 }: {
   config: Omit<UserConfig, 'name'>;
-  dataExpression?:
-    | ts.Expression
-    | ReturnType<typeof $.expr | typeof $.attr>
-    | string;
+  dataExpression?: ts.Expression | ReturnType<typeof $.expr | typeof $.attr> | string;
   schema: IR.SchemaObject;
 }) => Array<ReturnType<typeof $.fromValue>> | undefined;
 
-export const bigIntExpressions: ExpressionTransformer = ({
-  dataExpression,
-  schema,
-}) => {
+export const bigIntExpressions: ExpressionTransformer = ({ dataExpression, schema }) => {
   if (schema.type !== 'integer' || schema.format !== 'int64') {
     return;
   }
@@ -43,14 +37,8 @@ export const bigIntExpressions: ExpressionTransformer = ({
   return;
 };
 
-export const dateExpressions: ExpressionTransformer = ({
-  dataExpression,
-  schema,
-}) => {
-  if (
-    schema.type !== 'string' ||
-    !(schema.format === 'date' || schema.format === 'date-time')
-  ) {
+export const dateExpressions: ExpressionTransformer = ({ dataExpression, schema }) => {
+  if (schema.type !== 'string' || !(schema.format === 'date' || schema.format === 'date-time')) {
     return;
   }
 

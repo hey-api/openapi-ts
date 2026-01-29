@@ -10,9 +10,7 @@ export interface HintMethods extends Node {
   hint(lines?: HintLines, fn?: HintFn): this;
 }
 
-export function HintMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
-  Base: TBase,
-) {
+export function HintMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base: TBase) {
   abstract class Hint extends Base {
     private _hint?: HintTsDsl;
 

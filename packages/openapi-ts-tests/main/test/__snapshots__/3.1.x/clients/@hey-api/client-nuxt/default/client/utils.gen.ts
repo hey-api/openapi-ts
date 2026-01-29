@@ -49,19 +49,14 @@ const defaultPathSerializer = ({ path, url: _url }: PathSerializer) => {
         style = 'matrix';
       }
 
-      const value = toValue(
-        (toValue(path) as Record<string, unknown> | undefined)?.[name],
-      );
+      const value = toValue((toValue(path) as Record<string, unknown> | undefined)?.[name]);
 
       if (value === undefined || value === null) {
         continue;
       }
 
       if (Array.isArray(value)) {
-        url = url.replace(
-          match,
-          serializeArrayParam({ explode, name, style, value }),
-        );
+        url = url.replace(match, serializeArrayParam({ explode, name, style, value }));
         continue;
       }
 
@@ -194,9 +189,7 @@ export const setAuthParams = async ({
         if (!options.query) {
           options.query = {};
         }
-        const queryValue = toValue(options.query) as
-          | Record<string, unknown>
-          | undefined;
+        const queryValue = toValue(options.query) as Record<string, unknown> | undefined;
         if (queryValue) {
           queryValue[name] = token;
         }
@@ -284,9 +277,7 @@ export const mergeHeaders = (
     }
 
     const iterator =
-      h instanceof Headers
-        ? headersEntries(h)
-        : Object.entries(h as Record<string, unknown>);
+      h instanceof Headers ? headersEntries(h) : Object.entries(h as Record<string, unknown>);
 
     for (const [key, value] of iterator) {
       if (value === null) {
@@ -299,10 +290,7 @@ export const mergeHeaders = (
         const v = unwrapRefs(value);
         // assume object headers are meant to be JSON stringified, i.e. their
         // content value in OpenAPI specification is 'application/json'
-        mergedHeaders.set(
-          key,
-          typeof v === 'object' ? JSON.stringify(v) : (v as string),
-        );
+        mergedHeaders.set(key, typeof v === 'object' ? JSON.stringify(v) : (v as string));
       }
     }
   }

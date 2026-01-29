@@ -38,8 +38,7 @@ export function getInput(userConfig: {
   input: MaybeArray<UserInput | Required<UserInput>['path']>;
   watch?: UserWatch;
 }): ReadonlyArray<Input> {
-  const userInputs =
-    userConfig.input instanceof Array ? userConfig.input : [userConfig.input];
+  const userInputs = userConfig.input instanceof Array ? userConfig.input : [userConfig.input];
 
   const inputs: Array<Input> = [];
 

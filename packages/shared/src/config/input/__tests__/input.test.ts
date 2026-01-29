@@ -25,9 +25,7 @@ describe('input config', () => {
       };
 
       const result = getInput(userConfig)[0]!;
-      expect(result.path).toBe(
-        'https://dash.readme.com/api/v1/api-registry/abc123',
-      );
+      expect(result.path).toBe('https://dash.readme.com/api/v1/api-registry/abc123');
     });
 
     it('should transform ReadMe full format input', () => {
@@ -36,9 +34,7 @@ describe('input config', () => {
       };
 
       const result = getInput(userConfig)[0]!;
-      expect(result.path).toBe(
-        'https://dash.readme.com/api/v1/api-registry/uuid123',
-      );
+      expect(result.path).toBe('https://dash.readme.com/api/v1/api-registry/uuid123');
     });
 
     it('should handle ReadMe input with hyphens', () => {
@@ -47,9 +43,7 @@ describe('input config', () => {
       };
 
       const result = getInput(userConfig)[0]!;
-      expect(result.path).toBe(
-        'https://dash.readme.com/api/v1/api-registry/test-uuid-123',
-      );
+      expect(result.path).toBe('https://dash.readme.com/api/v1/api-registry/test-uuid-123');
     });
 
     it('should handle object input with ReadMe path', () => {
@@ -65,9 +59,7 @@ describe('input config', () => {
       };
 
       const result = getInput(userConfig)[0]!;
-      expect(result.path).toBe(
-        'https://dash.readme.com/api/v1/api-registry/abc123',
-      );
+      expect(result.path).toBe('https://dash.readme.com/api/v1/api-registry/abc123');
     });
 
     it('should handle object input with ReadMe full format path', () => {
@@ -79,9 +71,7 @@ describe('input config', () => {
       };
 
       const result = getInput(userConfig)[0]!;
-      expect(result.path).toBe(
-        'https://dash.readme.com/api/v1/api-registry/uuid',
-      );
+      expect(result.path).toBe('https://dash.readme.com/api/v1/api-registry/uuid');
       expect(result.watch.enabled).toBe(true);
     });
 
@@ -137,9 +127,7 @@ describe('input config', () => {
       };
 
       const result = getInput(userConfig)[0]!;
-      expect(result.path).toBe(
-        'https://dash.readme.com/api/v1/api-registry/abc123',
-      );
+      expect(result.path).toBe('https://dash.readme.com/api/v1/api-registry/abc123');
       expect(result.watch.enabled).toBe(true);
       expect(result.watch.interval).toBe(2000);
     });
@@ -156,9 +144,7 @@ describe('input config', () => {
       };
 
       const result = getInput(userConfig)[0]!;
-      expect(result.path).toBe(
-        'https://dash.readme.com/api/v1/api-registry/test123',
-      );
+      expect(result.path).toBe('https://dash.readme.com/api/v1/api-registry/test123');
       // Note: fetch options are preserved in the input object, not in the result
       // The watch options should be processed separately
       expect(result.watch.enabled).toBe(true);
@@ -172,9 +158,7 @@ describe('input config', () => {
         input: 'readme:',
       };
 
-      expect(() => getInput(userConfig)).toThrow(
-        'Invalid ReadMe shorthand format',
-      );
+      expect(() => getInput(userConfig)).toThrow('Invalid ReadMe shorthand format');
     });
 
     it('should throw error for invalid ReadMe UUID', () => {
@@ -182,9 +166,7 @@ describe('input config', () => {
         input: 'readme:invalid uuid with spaces',
       };
 
-      expect(() => getInput(userConfig)).toThrow(
-        'Invalid ReadMe shorthand format',
-      );
+      expect(() => getInput(userConfig)).toThrow('Invalid ReadMe shorthand format');
     });
 
     it('should throw error for invalid ReadMe format in object input', () => {
@@ -194,9 +176,7 @@ describe('input config', () => {
         },
       };
 
-      expect(() => getInput(userConfig)).toThrow(
-        'Invalid ReadMe shorthand format',
-      );
+      expect(() => getInput(userConfig)).toThrow('Invalid ReadMe shorthand format');
     });
   });
 });

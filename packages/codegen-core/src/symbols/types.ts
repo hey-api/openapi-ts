@@ -5,14 +5,7 @@ export type BindingKind = 'default' | 'named' | 'namespace';
 
 export type ISymbolIdentifier = number | ISymbolMeta;
 
-export type SymbolKind =
-  | 'class'
-  | 'enum'
-  | 'function'
-  | 'interface'
-  | 'namespace'
-  | 'type'
-  | 'var';
+export type SymbolKind = 'class' | 'enum' | 'function' | 'interface' | 'namespace' | 'type' | 'var';
 
 export type ISymbolIn = {
   /**

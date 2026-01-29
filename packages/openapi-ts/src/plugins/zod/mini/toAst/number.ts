@@ -1,9 +1,6 @@
 import type { SchemaWithType } from '@hey-api/shared';
 
-import {
-  maybeBigInt,
-  shouldCoerceToBigInt,
-} from '../../../../plugins/shared/utils/coerce';
+import { maybeBigInt, shouldCoerceToBigInt } from '../../../../plugins/shared/utils/coerce';
 import { getIntegerLimit } from '../../../../plugins/shared/utils/formats';
 import { $ } from '../../../../ts-dsl';
 import { identifiers } from '../../constants';
@@ -28,9 +25,7 @@ function constNode(ctx: NumberResolverContext): Chain | undefined {
   const { schema, symbols } = ctx;
   const { z } = symbols;
   if (schema.const === undefined) return;
-  return $(z)
-    .attr(identifiers.literal)
-    .call(ctx.utils.maybeBigInt(schema.const, schema.format));
+  return $(z).attr(identifiers.literal).call(ctx.utils.maybeBigInt(schema.const, schema.format));
 }
 
 function maxNode(ctx: NumberResolverContext): Chain | undefined {
@@ -42,9 +37,7 @@ function maxNode(ctx: NumberResolverContext): Chain | undefined {
       .call(ctx.utils.maybeBigInt(schema.exclusiveMaximum, schema.format));
   }
   if (schema.maximum !== undefined) {
-    return $(z)
-      .attr(identifiers.lte)
-      .call(ctx.utils.maybeBigInt(schema.maximum, schema.format));
+    return $(z).attr(identifiers.lte).call(ctx.utils.maybeBigInt(schema.maximum, schema.format));
   }
   const limit = ctx.utils.getIntegerLimit(schema.format);
   if (limit) {
@@ -67,9 +60,7 @@ function minNode(ctx: NumberResolverContext): Chain | undefined {
       .call(ctx.utils.maybeBigInt(schema.exclusiveMinimum, schema.format));
   }
   if (schema.minimum !== undefined) {
-    return $(z)
-      .attr(identifiers.gte)
-      .call(ctx.utils.maybeBigInt(schema.minimum, schema.format));
+    return $(z).attr(identifiers.gte).call(ctx.utils.maybeBigInt(schema.minimum, schema.format));
   }
   const limit = ctx.utils.getIntegerLimit(schema.format);
   if (limit) {
@@ -102,9 +93,7 @@ function numberResolver(ctx: NumberResolverContext): Chain {
   if (maxNode) checks.push(maxNode);
 
   if (checks.length > 0) {
-    ctx.chain.current = ctx.chain.current
-      .attr(identifiers.check)
-      .call(...checks);
+    ctx.chain.current = ctx.chain.current.attr(identifiers.check).call(...checks);
   }
 
   return ctx.chain.current;

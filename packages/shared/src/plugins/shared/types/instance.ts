@@ -51,7 +51,4 @@ type WalkEvents = BaseEvent &
       }
   );
 
-export type WalkEvent<T extends IrTopLevelKind = IrTopLevelKind> = Extract<
-  WalkEvents,
-  { type: T }
->;
+export type WalkEvent<T extends IrTopLevelKind = IrTopLevelKind> = Extract<WalkEvents, { type: T }>;

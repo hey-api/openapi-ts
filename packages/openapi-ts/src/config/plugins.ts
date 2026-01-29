@@ -1,8 +1,4 @@
-import type {
-  AnyPluginName,
-  PluginContext,
-  PluginNames,
-} from '@hey-api/shared';
+import type { AnyPluginName, PluginContext, PluginNames } from '@hey-api/shared';
 import { dependencyFactory, valueToObject } from '@hey-api/shared';
 
 import { defaultPluginConfigs } from '../plugins/config';
@@ -72,11 +68,7 @@ function getPluginsConfig({
             const defaultConfig =
               defaultPluginConfigs[userPlugin as PluginNames] ||
               userPluginsConfig[userPlugin as PluginNames];
-            if (
-              defaultConfig &&
-              defaultConfig.tags?.includes(tag) &&
-              userPlugin !== name
-            ) {
+            if (defaultConfig && defaultConfig.tags?.includes(tag) && userPlugin !== name) {
               return userPlugin as any;
             }
           }
@@ -85,19 +77,12 @@ function getPluginsConfig({
             const defaultConfig =
               defaultPluginConfigs[defaultPlugin as PluginNames] ||
               userPluginsConfig[defaultPlugin as PluginNames];
-            if (
-              defaultConfig &&
-              defaultConfig.tags?.includes(tag) &&
-              defaultPlugin !== name
-            ) {
+            if (defaultConfig && defaultConfig.tags?.includes(tag) && defaultPlugin !== name) {
               return defaultPlugin;
             }
           }
 
-          throw new Error(
-            errorMessage ||
-              `missing plugin - no plugin with tag "${tag}" found`,
-          );
+          throw new Error(errorMessage || `missing plugin - no plugin with tag "${tag}" found`);
         },
         valueToObject,
       };
@@ -126,9 +111,7 @@ function getPluginsConfig({
   };
 }
 
-function isPluginClient(
-  plugin: Required<UserConfig>['plugins'][number],
-): boolean {
+function isPluginClient(plugin: Required<UserConfig>['plugins'][number]): boolean {
   if (typeof plugin === 'string') {
     return plugin.startsWith('@hey-api/client');
   }
@@ -154,13 +137,9 @@ export function getPlugins({
   if (userConfig.plugins) {
     userConfig.plugins = userConfig.plugins.filter(
       (plugin) =>
-        (typeof plugin === 'string' && plugin) ||
-        (typeof plugin !== 'string' && plugin.name),
+        (typeof plugin === 'string' && plugin) || (typeof plugin !== 'string' && plugin.name),
     );
-    if (
-      userConfig.plugins.length === 1 &&
-      isPluginClient(userConfig.plugins[0]!)
-    ) {
+    if (userConfig.plugins.length === 1 && isPluginClient(userConfig.plugins[0]!)) {
       definedPlugins = [...defaultPlugins, ...userConfig.plugins];
     } else {
       definedPlugins = userConfig.plugins;

@@ -48,13 +48,9 @@ export namespace OpenApiRequestBodyObject {
 }
 
 export namespace OpenApiResponseObject {
-  export type V3_0_X =
-    | OpenApiV3_0_XTypes['ResponseObject']
-    | OpenApiV3_0_XTypes['ReferenceObject'];
+  export type V3_0_X = OpenApiV3_0_XTypes['ResponseObject'] | OpenApiV3_0_XTypes['ReferenceObject'];
 
-  export type V3_1_X =
-    | OpenApiV3_1_XTypes['ResponseObject']
-    | OpenApiV3_1_XTypes['ReferenceObject'];
+  export type V3_1_X = OpenApiV3_1_XTypes['ResponseObject'] | OpenApiV3_1_XTypes['ReferenceObject'];
 }
 
 export namespace OpenApiSchemaObject {

@@ -7,10 +7,7 @@ describe('Number Type Const Values Tests', () => {
   let generatedSchemas: any;
 
   beforeAll(async () => {
-    generatedSchemas = await setupValibotTest(
-      'const-values.yaml',
-      'const-values',
-    );
+    generatedSchemas = await setupValibotTest('const-values.yaml', 'const-values');
   });
 
   describe('Number Type Const Validation', () => {
@@ -57,18 +54,12 @@ describe('Number Type Const Values Tests', () => {
     });
 
     it('should accept NumberInt64 exact const value', () => {
-      const result = v.safeParse(
-        generatedSchemas.vNumberInt64,
-        BigInt('1000000000000'),
-      );
+      const result = v.safeParse(generatedSchemas.vNumberInt64, BigInt('1000000000000'));
       expect(result.success).toBe(true);
     });
 
     it('should reject NumberInt64 non-matching values', () => {
-      const result = v.safeParse(
-        generatedSchemas.vNumberInt64,
-        BigInt('1000000000001'),
-      );
+      const result = v.safeParse(generatedSchemas.vNumberInt64, BigInt('1000000000001'));
       expect(result.success).toBe(false);
     });
 
@@ -103,18 +94,12 @@ describe('Number Type Const Values Tests', () => {
     });
 
     it('should accept NumberUint64 exact const value', () => {
-      const result = v.safeParse(
-        generatedSchemas.vNumberUint64,
-        BigInt('18000000000000000000'),
-      );
+      const result = v.safeParse(generatedSchemas.vNumberUint64, BigInt('18000000000000000000'));
       expect(result.success).toBe(true);
     });
 
     it('should reject NumberUint64 non-matching values', () => {
-      const result = v.safeParse(
-        generatedSchemas.vNumberUint64,
-        BigInt('18000000000000000001'),
-      );
+      const result = v.safeParse(generatedSchemas.vNumberUint64, BigInt('18000000000000000001'));
       expect(result.success).toBe(false);
     });
   });
@@ -163,18 +148,12 @@ describe('Number Type Const Values Tests', () => {
     });
 
     it('should accept IntegerInt64 exact const value', () => {
-      const result = v.safeParse(
-        generatedSchemas.vIntegerInt64,
-        BigInt('-1000000000000'),
-      );
+      const result = v.safeParse(generatedSchemas.vIntegerInt64, BigInt('-1000000000000'));
       expect(result.success).toBe(true);
     });
 
     it('should reject IntegerInt64 non-matching values', () => {
-      const result = v.safeParse(
-        generatedSchemas.vIntegerInt64,
-        BigInt('-999999999999'),
-      );
+      const result = v.safeParse(generatedSchemas.vIntegerInt64, BigInt('-999999999999'));
       expect(result.success).toBe(false);
     });
 
@@ -209,86 +188,56 @@ describe('Number Type Const Values Tests', () => {
     });
 
     it('should accept IntegerUint64 exact const value', () => {
-      const result = v.safeParse(
-        generatedSchemas.vIntegerUint64,
-        BigInt('1000000000000'),
-      );
+      const result = v.safeParse(generatedSchemas.vIntegerUint64, BigInt('1000000000000'));
       expect(result.success).toBe(true);
     });
 
     it('should reject IntegerUint64 non-matching values', () => {
-      const result = v.safeParse(
-        generatedSchemas.vIntegerUint64,
-        BigInt('1000000000001'),
-      );
+      const result = v.safeParse(generatedSchemas.vIntegerUint64, BigInt('1000000000001'));
       expect(result.success).toBe(false);
     });
   });
 
   describe('String Type Format Const Validation', () => {
     it('should accept StringInt64 exact const value', () => {
-      const result = v.safeParse(
-        generatedSchemas.vStringInt64,
-        BigInt('-9223372036854775808'),
-      );
+      const result = v.safeParse(generatedSchemas.vStringInt64, BigInt('-9223372036854775808'));
       expect(result.success).toBe(true);
     });
 
     it('should reject StringInt64 non-matching values', () => {
-      const result = v.safeParse(
-        generatedSchemas.vStringInt64,
-        BigInt('-9223372036854775807'),
-      );
+      const result = v.safeParse(generatedSchemas.vStringInt64, BigInt('-9223372036854775807'));
       expect(result.success).toBe(false);
     });
 
     it('should accept StringUint64 exact const value', () => {
-      const result = v.safeParse(
-        generatedSchemas.vStringUint64,
-        BigInt('18446744073709551615'),
-      );
+      const result = v.safeParse(generatedSchemas.vStringUint64, BigInt('18446744073709551615'));
       expect(result.success).toBe(true);
     });
 
     it('should reject StringUint64 non-matching values', () => {
-      const result = v.safeParse(
-        generatedSchemas.vStringUint64,
-        BigInt('18446744073709551614'),
-      );
+      const result = v.safeParse(generatedSchemas.vStringUint64, BigInt('18446744073709551614'));
       expect(result.success).toBe(false);
     });
   });
 
   describe('String Type Format Const Validation (BigInt Literal)', () => {
     it('should accept StringInt64n exact const value', () => {
-      const result = v.safeParse(
-        generatedSchemas.vStringInt64n,
-        BigInt('-9223372036854775808'),
-      );
+      const result = v.safeParse(generatedSchemas.vStringInt64n, BigInt('-9223372036854775808'));
       expect(result.success).toBe(true);
     });
 
     it('should reject StringInt64n non-matching values', () => {
-      const result = v.safeParse(
-        generatedSchemas.vStringInt64n,
-        BigInt('-9223372036854775807'),
-      );
+      const result = v.safeParse(generatedSchemas.vStringInt64n, BigInt('-9223372036854775807'));
       expect(result.success).toBe(false);
     });
 
     it('should accept StringUint64n exact const value', () => {
-      const result = v.safeParse(
-        generatedSchemas.vStringUint64n,
-        BigInt('18446744073709551615'),
-      );
+      const result = v.safeParse(generatedSchemas.vStringUint64n, BigInt('18446744073709551615'));
       expect(result.success).toBe(true);
     });
 
     it('should reject StringUint64n non-matching values', () => {
-      const result = v.safeParse(
-        generatedSchemas.vStringUint64n,
-        BigInt('18446744073709551614'),
-      );
+      const result = v.safeParse(generatedSchemas.vStringUint64n, BigInt('18446744073709551614'));
       expect(result.success).toBe(false);
     });
   });

@@ -18,9 +18,7 @@ export interface DoMethods extends Node {
 /**
  * Adds `.do()` for appending statements or expressions to a body.
  */
-export function DoMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
-  Base: TBase,
-) {
+export function DoMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base: TBase) {
   abstract class Do extends Base {
     protected _do: Array<DoExpr> = [];
 

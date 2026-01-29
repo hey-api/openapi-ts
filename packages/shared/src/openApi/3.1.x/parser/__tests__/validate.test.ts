@@ -71,8 +71,7 @@ describe('validate', () => {
             key: 'operationId',
             value: 'foo',
           },
-          message:
-            'Duplicate `operationId` found. Each `operationId` must be unique.',
+          message: 'Duplicate `operationId` found. Each `operationId` must be unique.',
           path: ['paths', '/foo', 'post', 'operationId'],
           severity: 'error',
         },

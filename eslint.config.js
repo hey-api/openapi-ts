@@ -1,5 +1,4 @@
 import eslint from '@eslint/js';
-import configPrettier from 'eslint-config-prettier';
 import pluginSimpleImportSort from 'eslint-plugin-simple-import-sort';
 import pluginSortDestructureKeys from 'eslint-plugin-sort-destructure-keys';
 import pluginSortKeysFix from 'eslint-plugin-sort-keys-fix';
@@ -53,7 +52,6 @@ export default tseslint.config(
       '@typescript-eslint/no-require-imports': 'off',
     },
   },
-  configPrettier,
   {
     ignores: [
       '**/.tsdown/',

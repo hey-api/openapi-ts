@@ -32,16 +32,13 @@ export class NoteTsDsl extends TsDsl<ts.Node> {
   }
 
   apply<T extends ts.Node>(node: T): T {
-    const lines = this._lines.reduce(
-      (lines: Array<string>, line: NoteLines) => {
-        if (typeof line === 'function') line = line(ctx);
-        for (const l of typeof line === 'string' ? [line] : line) {
-          if (l || l === '') lines.push(l);
-        }
-        return lines;
-      },
-      [],
-    );
+    const lines = this._lines.reduce((lines: Array<string>, line: NoteLines) => {
+      if (typeof line === 'function') line = line(ctx);
+      for (const l of typeof line === 'string' ? [line] : line) {
+        if (l || l === '') lines.push(l);
+      }
+      return lines;
+    }, []);
     if (!lines.length) return node;
 
     ts.addSyntheticLeadingComment(

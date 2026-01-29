@@ -57,12 +57,7 @@ describe('TanStack Query Meta Function Customization', () => {
   // Generate scenarios for each framework
   const scenarios = frameworks.map((framework) => ({
     config: createConfig({
-      output: path.join(
-        outputDir,
-        '@tanstack',
-        framework.output,
-        'meta-function',
-      ),
+      output: path.join(outputDir, '@tanstack', framework.output, 'meta-function'),
       plugins: [
         {
           infiniteQueryOptions: {

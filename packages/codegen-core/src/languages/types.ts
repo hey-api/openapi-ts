@@ -34,6 +34,4 @@ export type Language =
   | 'yaml'
   | AnyString; // other/custom language
 
-export type NameConflictResolvers = Partial<
-  Record<Language, NameConflictResolver>
->;
+export type NameConflictResolvers = Partial<Record<Language, NameConflictResolver>>;

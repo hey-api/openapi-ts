@@ -2,10 +2,7 @@ import type { Refs, Symbol } from '@hey-api/codegen-core';
 import type { IR } from '@hey-api/shared';
 
 import type { Plugin, SchemaWithType } from '../../../plugins';
-import type {
-  MaybeBigInt,
-  ShouldCoerceToBigInt,
-} from '../../../plugins/shared/utils/coerce';
+import type { MaybeBigInt, ShouldCoerceToBigInt } from '../../../plugins/shared/utils/coerce';
 import type { GetIntegerLimit } from '../../../plugins/shared/utils/formats';
 import type { $, DollarTsDsl } from '../../../ts-dsl';
 import type { Pipe, PipeResult, Pipes, PipesUtils } from '../shared/pipes';
@@ -72,9 +69,7 @@ export type Resolvers = Plugin.Resolvers<{
       };
 }>;
 
-type ValidatorResolver = (
-  ctx: ValidatorResolverContext,
-) => PipeResult | null | undefined;
+type ValidatorResolver = (ctx: ValidatorResolverContext) => PipeResult | null | undefined;
 
 interface BaseContext extends DollarTsDsl {
   /**
@@ -170,9 +165,7 @@ export interface ObjectResolverContext extends BaseContext {
      * If `additionalProperties` is `false` or `{ type: 'never' }`, returns `null`
      * to indicate no additional properties are allowed.
      */
-    additionalProperties: (
-      ctx: ObjectResolverContext,
-    ) => Pipe | null | undefined;
+    additionalProperties: (ctx: ObjectResolverContext) => Pipe | null | undefined;
     base: (ctx: ObjectResolverContext) => PipeResult;
     shape: (ctx: ObjectResolverContext) => ReturnType<typeof $.object>;
   };
