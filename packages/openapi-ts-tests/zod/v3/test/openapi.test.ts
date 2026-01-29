@@ -4,27 +4,14 @@ import path from 'node:path';
 import { createClient } from '@hey-api/openapi-ts';
 
 import { getFilePaths } from '../../../utils';
-import {
-  createZodConfig,
-  getSnapshotsPath,
-  getTempSnapshotsPath,
-  zodVersions,
-} from './utils';
+import { createZodConfig, getSnapshotsPath, getTempSnapshotsPath, zodVersions } from './utils';
 
 const versions = ['2.0.x', '3.0.x', '3.1.x'];
 
 for (const version of versions) {
   for (const zodVersion of zodVersions) {
-    const outputDir = path.join(
-      getTempSnapshotsPath(),
-      version,
-      zodVersion.folder,
-    );
-    const snapshotsDir = path.join(
-      getSnapshotsPath(),
-      version,
-      zodVersion.folder,
-    );
+    const outputDir = path.join(getTempSnapshotsPath(), version, zodVersion.folder);
+    const snapshotsDir = path.join(getSnapshotsPath(), version, zodVersion.folder);
 
     describe(`OpenAPI ${version}`, () => {
       const createConfig = createZodConfig({
@@ -39,8 +26,7 @@ for (const version of versions) {
             input: 'array-items-all-of.yaml',
             output: 'array-items-all-of',
           }),
-          description:
-            'generates correct array when items use allOf (intersection)',
+          description: 'generates correct array when items use allOf (intersection)',
         },
         {
           config: createConfig({

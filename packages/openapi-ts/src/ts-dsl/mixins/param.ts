@@ -15,9 +15,7 @@ export interface ParamMethods extends Node {
   params(...params: ReadonlyArray<MaybeTsDsl<ts.ParameterDeclaration>>): this;
 }
 
-export function ParamMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
-  Base: TBase,
-) {
+export function ParamMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base: TBase) {
   abstract class Param extends Base {
     protected _params: Array<MaybeTsDsl<ts.ParameterDeclaration>> = [];
 
@@ -37,9 +35,7 @@ export function ParamMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
       return this;
     }
 
-    protected params(
-      ...params: ReadonlyArray<MaybeTsDsl<ts.ParameterDeclaration>>
-    ): this {
+    protected params(...params: ReadonlyArray<MaybeTsDsl<ts.ParameterDeclaration>>): this {
       this._params.push(...params);
       return this;
     }

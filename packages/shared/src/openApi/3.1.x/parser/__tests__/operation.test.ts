@@ -53,10 +53,7 @@ describe('operation', () => {
     };
     const securitySchemesMap = new Map<string, SecuritySchemeObject>([
       ['apiKeyAuth', { in: 'header', name: 'Auth', type: 'apiKey' }],
-      [
-        'basicAuthRule',
-        { description: 'Basic Auth', scheme: 'basic', type: 'http' },
-      ],
+      ['basicAuthRule', { description: 'Basic Auth', scheme: 'basic', type: 'http' }],
       ['oauthRule', oauth2],
     ]);
     const state: ParseOperationProps['state'] = {

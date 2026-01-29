@@ -13,11 +13,7 @@ import {
   hasComponentsSchemasObject,
   hasDefinitionsObject,
 } from '../utils/transforms';
-import {
-  getUniqueComponentName,
-  isPathRootSchema,
-  specToSchemasPointerNamespace,
-} from './utils';
+import { getUniqueComponentName, isPathRootSchema, specToSchemasPointerNamespace } from './utils';
 
 type OriginalSchemas = Record<string, unknown>;
 
@@ -50,9 +46,7 @@ const schemaKeys = new Set([
   'schema',
 ]);
 
-const getComponentContext = (
-  path: ReadonlyArray<string | number>,
-): Scope | undefined => {
+const getComponentContext = (path: ReadonlyArray<string | number>): Scope | undefined => {
   // OpenAPI 3.x: #/components/{type}/{name}
   if (path.length === 3 && path[0] === 'components') {
     const type = path[1];
@@ -75,16 +69,11 @@ const getComponentContext = (
  * This is used to safely remove only the true originals after splitting,
  * even if names are swapped or overwritten by split variants.
  */
-const captureOriginalSchemas = (
-  spec: unknown,
-  logger: Logger,
-): OriginalSchemas => {
+const captureOriginalSchemas = (spec: unknown, logger: Logger): OriginalSchemas => {
   const event = logger.timeEvent('capture-original-schemas');
   const originals: OriginalSchemas = {};
   if (hasComponentsSchemasObject(spec)) {
-    for (const [name, obj] of Object.entries(
-      (spec as any).components.schemas,
-    )) {
+    for (const [name, obj] of Object.entries((spec as any).components.schemas)) {
       originals[`#/components/schemas/${name}`] = obj;
     }
   } else if (hasDefinitionsObject(spec)) {
@@ -148,18 +137,12 @@ const pruneSchemaByScope = (
         // Only remove $ref if the referenced schema is *exclusively* the excluded scope.
         // This ensures 'normal' or multi-scope schemas are always kept.
         if (
-          (scope === 'writeOnly' &&
-            nodeInfo.scopes.size === 1 &&
-            nodeInfo.scopes.has('write')) ||
-          (scope === 'readOnly' &&
-            nodeInfo.scopes.size === 1 &&
-            nodeInfo.scopes.has('read'))
+          (scope === 'writeOnly' && nodeInfo.scopes.size === 1 && nodeInfo.scopes.has('write')) ||
+          (scope === 'readOnly' && nodeInfo.scopes.size === 1 && nodeInfo.scopes.has('read'))
         ) {
           delete (schema as Record<string, unknown>)['$ref'];
           // If the schema is now empty, remove it
-          if (
-            !childSchemaRelationships.some(([keyword]) => keyword in schema)
-          ) {
+          if (!childSchemaRelationships.some(([keyword]) => keyword in schema)) {
             return true;
           }
         }
@@ -229,11 +212,8 @@ const pruneSchemaByScope = (
           'required' in schema &&
           Array.isArray((schema as Record<string, unknown>).required)
         ) {
-          const required = (schema as Record<string, unknown>)
-            .required as string[];
-          const filteredRequired = required.filter(
-            (prop) => !removedProperties.has(prop),
-          );
+          const required = (schema as Record<string, unknown>).required as string[];
+          const filteredRequired = required.filter((prop) => !removedProperties.has(prop));
 
           if (!filteredRequired.length) {
             delete (schema as Record<string, unknown>).required;
@@ -245,11 +225,7 @@ const pruneSchemaByScope = (
         if (!Object.keys(objMap).length) {
           delete (schema as Record<string, unknown>)[keyword];
         }
-      } else if (
-        type === 'single' &&
-        typeof value === 'object' &&
-        value !== null
-      ) {
+      } else if (type === 'single' && typeof value === 'object' && value !== null) {
         if ((value as Record<string, unknown>)[scope] === true) {
           delete (schema as Record<string, unknown>)[keyword];
         } else {
@@ -365,8 +341,7 @@ export const splitSchemas = ({
   };
 
   const schemasPointerNamespace = specToSchemasPointerNamespace(spec);
-  const schemasNamespaceSegments =
-    schemasPointerNamespace.split('/').length - 1;
+  const schemasNamespaceSegments = schemasPointerNamespace.split('/').length - 1;
 
   /**
    * Extracts the schema name from pointer, but only if it's a top-level schema
@@ -423,17 +398,14 @@ export const splitSchemas = ({
     // Check if this schema (or any of its descendants) references any schema that
     // will need read/write variants. This is determined by checking transitive
     // dependencies for schemas with both 'normal' and ('read' or 'write') scopes.
-    const transitiveDeps =
-      graph.transitiveDependencies.get(pointer) || new Set();
-    const referencesReadWriteSchemas = Array.from(transitiveDeps).some(
-      (depPointer) => {
-        const depNodeInfo = graph.nodes.get(depPointer);
-        return (
-          depNodeInfo?.scopes?.has('normal') &&
-          (depNodeInfo.scopes.has('read') || depNodeInfo.scopes.has('write'))
-        );
-      },
-    );
+    const transitiveDeps = graph.transitiveDependencies.get(pointer) || new Set();
+    const referencesReadWriteSchemas = Array.from(transitiveDeps).some((depPointer) => {
+      const depNodeInfo = graph.nodes.get(depPointer);
+      return (
+        depNodeInfo?.scopes?.has('normal') &&
+        (depNodeInfo.scopes.has('read') || depNodeInfo.scopes.has('write'))
+      );
+    });
 
     // If pruning did not change anything (both variants equal and equal to original),
     // and the schema doesn't reference any schemas that will have read/write variants,
@@ -616,11 +588,7 @@ export const updateRefsInSpec = ({
             continue;
           }
           // OpenAPI 3.x: headers in responses
-          if (
-            key === 'headers' &&
-            typeof value === 'object' &&
-            value !== null
-          ) {
+          if (key === 'headers' && typeof value === 'object' && value !== null) {
             for (const headerKey in value) {
               if (!Object.prototype.hasOwnProperty.call(value, headerKey)) {
                 continue;

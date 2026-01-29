@@ -466,9 +466,7 @@ export default {
         importKind: 'default', // [!code ++]
         importName: 'CatStore', // [!code ++]
         importSetup: ({ $, node }) =>
-          $(node.name).call(
-            $.object().pretty().prop('apiKey', $.literal('YOUR_API_KEY')),
-          ),
+          $(node.name).call($.object().pretty().prop('apiKey', $.literal('YOUR_API_KEY'))),
         moduleName: '@petstore/client',
         setupName: 'client',
       },

@@ -3,36 +3,16 @@ import { matchIrPointerToGroup } from '../graph';
 
 describe('matchIrPointerToGroup', () => {
   const cases: Array<
-    [
-      string,
-      IrTopLevelKind | undefined,
-      { kind?: IrTopLevelKind; matched: boolean },
-    ]
+    [string, IrTopLevelKind | undefined, { kind?: IrTopLevelKind; matched: boolean }]
   > = [
     ['#/components/schemas/Foo', undefined, { kind: 'schema', matched: true }],
     ['#/components/schemas/Foo', 'schema', { kind: 'schema', matched: true }],
     ['#/components/schemas/Foo', 'parameter', { matched: false }],
-    [
-      '#/components/parameters/Bar',
-      undefined,
-      { kind: 'parameter', matched: true },
-    ],
-    [
-      '#/components/parameters/Bar',
-      'parameter',
-      { kind: 'parameter', matched: true },
-    ],
+    ['#/components/parameters/Bar', undefined, { kind: 'parameter', matched: true }],
+    ['#/components/parameters/Bar', 'parameter', { kind: 'parameter', matched: true }],
     ['#/components/parameters/Bar', 'schema', { matched: false }],
-    [
-      '#/components/requestBodies/Baz',
-      undefined,
-      { kind: 'requestBody', matched: true },
-    ],
-    [
-      '#/components/requestBodies/Baz',
-      'requestBody',
-      { kind: 'requestBody', matched: true },
-    ],
+    ['#/components/requestBodies/Baz', undefined, { kind: 'requestBody', matched: true }],
+    ['#/components/requestBodies/Baz', 'requestBody', { kind: 'requestBody', matched: true }],
     ['#/components/requestBodies/Baz', 'schema', { matched: false }],
     ['#/servers/0', undefined, { kind: 'server', matched: true }],
     ['#/servers/foo', undefined, { kind: 'server', matched: true }],

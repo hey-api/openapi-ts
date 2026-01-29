@@ -14,9 +14,7 @@ type Stmt = NodeName | MaybeTsDsl<ts.Statement>;
 type ExprFn = Expr | ((p: ObjectPropTsDsl) => void);
 type StmtFn = Stmt | ((p: ObjectPropTsDsl) => void);
 
-const Mixed = AsMixin(
-  ExprMixin(HintMixin(LayoutMixin(TsDsl<ts.ObjectLiteralExpression>))),
-);
+const Mixed = AsMixin(ExprMixin(HintMixin(LayoutMixin(TsDsl<ts.ObjectLiteralExpression>))));
 
 export class ObjectTsDsl extends Mixed {
   readonly '~dsl' = 'ObjectTsDsl';
@@ -62,10 +60,7 @@ export class ObjectTsDsl extends Mixed {
     if (stmt === null) {
       this._props.delete(`getter:${name}`);
     } else {
-      this._props.set(
-        `getter:${name}`,
-        new ObjectPropTsDsl({ kind: 'getter', name }).value(stmt),
-      );
+      this._props.set(`getter:${name}`, new ObjectPropTsDsl({ kind: 'getter', name }).value(stmt));
     }
     return this;
   }
@@ -85,10 +80,7 @@ export class ObjectTsDsl extends Mixed {
     if (expr === null) {
       this._props.delete(`prop:${name}`);
     } else {
-      this._props.set(
-        `prop:${name}`,
-        new ObjectPropTsDsl({ kind: 'prop', name }).value(expr),
-      );
+      this._props.set(`prop:${name}`, new ObjectPropTsDsl({ kind: 'prop', name }).value(expr));
     }
     return this;
   }
@@ -106,10 +98,7 @@ export class ObjectTsDsl extends Mixed {
     if (stmt === null) {
       this._props.delete(`setter:${name}`);
     } else {
-      this._props.set(
-        `setter:${name}`,
-        new ObjectPropTsDsl({ kind: 'setter', name }).value(stmt),
-      );
+      this._props.set(`setter:${name}`, new ObjectPropTsDsl({ kind: 'setter', name }).value(stmt));
     }
     return this;
   }

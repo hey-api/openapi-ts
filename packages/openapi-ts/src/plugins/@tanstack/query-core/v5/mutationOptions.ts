@@ -15,9 +15,7 @@ export const createMutationOptions = ({
   operation: IR.OperationObject;
   plugin: PluginInstance;
 }): void => {
-  const symbolMutationOptionsType = plugin.external(
-    `${plugin.name}.MutationOptions`,
-  );
+  const symbolMutationOptionsType = plugin.external(`${plugin.name}.MutationOptions`);
 
   const typeData = useTypeData({ operation, plugin });
   const mutationType = $.type(symbolMutationOptionsType)
@@ -36,12 +34,7 @@ export const createMutationOptions = ({
           resourceId: operation.id,
         }),
       )
-      .call(
-        $.object()
-          .spread('options')
-          .spread(fnOptions)
-          .prop('throwOnError', $.literal(true)),
-      )
+      .call($.object().spread('options').spread(fnOptions).prop('throwOnError', $.literal(true)))
       .await(),
   );
 
@@ -49,10 +42,7 @@ export const createMutationOptions = ({
   if (plugin.getPluginOrThrow('@hey-api/sdk').config.responseStyle === 'data') {
     statements.push($.return(awaitSdkFn));
   } else {
-    statements.push(
-      $.const().object('data').assign(awaitSdkFn),
-      $.return('data'),
-    );
+    statements.push($.const().object('data').assign(awaitSdkFn), $.return('data'));
   }
 
   const mutationOptionsFn = 'mutationOptions';
@@ -70,14 +60,10 @@ export const createMutationOptions = ({
   );
   const statement = $.const(symbolMutationOptions)
     .export()
-    .$if(plugin.config.comments && createOperationComment(operation), (c, v) =>
-      c.doc(v),
-    )
+    .$if(plugin.config.comments && createOperationComment(operation), (c, v) => c.doc(v))
     .assign(
       $.func()
-        .param('options', (p) =>
-          p.optional().type($.type('Partial').generic(typeData)),
-        )
+        .param('options', (p) => p.optional().type($.type('Partial').generic(typeData)))
         .returns(mutationType)
         .do(
           $.const(mutationOptionsFn)
@@ -92,9 +78,7 @@ export const createMutationOptions = ({
                     .param(fnOptions)
                     .do(...statements),
                 )
-                .$if(handleMeta(plugin, operation, 'mutationOptions'), (c, v) =>
-                  c.prop('meta', v),
-                ),
+                .$if(handleMeta(plugin, operation, 'mutationOptions'), (c, v) => c.prop('meta', v)),
             ),
           $(mutationOptionsFn).return(),
         ),

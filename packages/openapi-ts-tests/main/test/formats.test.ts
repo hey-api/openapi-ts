@@ -79,17 +79,13 @@ describe('Number Type Formats Tests', () => {
       it('should reject values below int8 minimum', () => {
         const result = v.safeParse(generatedSchemas.vNumberInt8, -129);
         expect(result.success).toBe(false);
-        expect(result.issues![0].message).toContain(
-          FORMAT_BOUNDS.int8.minError,
-        );
+        expect(result.issues![0].message).toContain(FORMAT_BOUNDS.int8.minError);
       });
 
       it('should reject values above int8 maximum', () => {
         const result = v.safeParse(generatedSchemas.vNumberInt8, 128);
         expect(result.success).toBe(false);
-        expect(result.issues![0].message).toContain(
-          FORMAT_BOUNDS.int8.maxError,
-        );
+        expect(result.issues![0].message).toContain(FORMAT_BOUNDS.int8.maxError);
       });
     });
 
@@ -102,17 +98,13 @@ describe('Number Type Formats Tests', () => {
       it('should reject values below int16 minimum', () => {
         const result = v.safeParse(generatedSchemas.vNumberInt16, -32769);
         expect(result.success).toBe(false);
-        expect(result.issues![0].message).toContain(
-          FORMAT_BOUNDS.int16.minError,
-        );
+        expect(result.issues![0].message).toContain(FORMAT_BOUNDS.int16.minError);
       });
 
       it('should reject values above int16 maximum', () => {
         const result = v.safeParse(generatedSchemas.vNumberInt16, 32768);
         expect(result.success).toBe(false);
-        expect(result.issues![0].message).toContain(
-          FORMAT_BOUNDS.int16.maxError,
-        );
+        expect(result.issues![0].message).toContain(FORMAT_BOUNDS.int16.maxError);
       });
     });
 
@@ -125,48 +117,33 @@ describe('Number Type Formats Tests', () => {
       it('should reject values below int32 minimum', () => {
         const result = v.safeParse(generatedSchemas.vNumberInt32, -2147483649);
         expect(result.success).toBe(false);
-        expect(result.issues![0].message).toContain(
-          FORMAT_BOUNDS.int32.minError,
-        );
+        expect(result.issues![0].message).toContain(FORMAT_BOUNDS.int32.minError);
       });
 
       it('should reject values above int32 maximum', () => {
         const result = v.safeParse(generatedSchemas.vNumberInt32, 2147483648);
         expect(result.success).toBe(false);
-        expect(result.issues![0].message).toContain(
-          FORMAT_BOUNDS.int32.maxError,
-        );
+        expect(result.issues![0].message).toContain(FORMAT_BOUNDS.int32.maxError);
       });
     });
 
     describe('numberInt64', () => {
       it('should validate values within int64 range and convert to BigInt', () => {
-        const result = v.safeParse(
-          generatedSchemas.vNumberInt64,
-          1000000000000,
-        );
+        const result = v.safeParse(generatedSchemas.vNumberInt64, 1000000000000);
         expect(result.success).toBe(true);
         expect(typeof result.output).toBe('bigint');
       });
 
       it('should validate string values within int64 range', () => {
-        const result = v.safeParse(
-          generatedSchemas.vNumberInt64,
-          '1000000000000',
-        );
+        const result = v.safeParse(generatedSchemas.vNumberInt64, '1000000000000');
         expect(result.success).toBe(true);
         expect(typeof result.output).toBe('bigint');
       });
 
       it('should reject values above int64 maximum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vNumberInt64,
-          '9223372036854775808',
-        );
+        const result = v.safeParse(generatedSchemas.vNumberInt64, '9223372036854775808');
         expect(result.success).toBe(false);
-        expect(result.issues![0].message).toContain(
-          FORMAT_BOUNDS.int64.maxError,
-        );
+        expect(result.issues![0].message).toContain(FORMAT_BOUNDS.int64.maxError);
       });
     });
 
@@ -179,17 +156,13 @@ describe('Number Type Formats Tests', () => {
       it('should reject negative values', () => {
         const result = v.safeParse(generatedSchemas.vNumberUint8, -1);
         expect(result.success).toBe(false);
-        expect(result.issues![0].message).toContain(
-          FORMAT_BOUNDS.uint8.minError,
-        );
+        expect(result.issues![0].message).toContain(FORMAT_BOUNDS.uint8.minError);
       });
 
       it('should reject values above uint8 maximum', () => {
         const result = v.safeParse(generatedSchemas.vNumberUint8, 256);
         expect(result.success).toBe(false);
-        expect(result.issues![0].message).toContain(
-          FORMAT_BOUNDS.uint8.maxError,
-        );
+        expect(result.issues![0].message).toContain(FORMAT_BOUNDS.uint8.maxError);
       });
     });
 
@@ -202,17 +175,13 @@ describe('Number Type Formats Tests', () => {
       it('should reject negative values', () => {
         const result = v.safeParse(generatedSchemas.vNumberUint16, -1);
         expect(result.success).toBe(false);
-        expect(result.issues![0].message).toContain(
-          FORMAT_BOUNDS.uint16.minError,
-        );
+        expect(result.issues![0].message).toContain(FORMAT_BOUNDS.uint16.minError);
       });
 
       it('should reject values above uint16 maximum', () => {
         const result = v.safeParse(generatedSchemas.vNumberUint16, 65536);
         expect(result.success).toBe(false);
-        expect(result.issues![0].message).toContain(
-          FORMAT_BOUNDS.uint16.maxError,
-        );
+        expect(result.issues![0].message).toContain(FORMAT_BOUNDS.uint16.maxError);
       });
     });
 
@@ -225,26 +194,19 @@ describe('Number Type Formats Tests', () => {
       it('should reject negative values', () => {
         const result = v.safeParse(generatedSchemas.vNumberUint32, -1);
         expect(result.success).toBe(false);
-        expect(result.issues![0].message).toContain(
-          FORMAT_BOUNDS.uint32.minError,
-        );
+        expect(result.issues![0].message).toContain(FORMAT_BOUNDS.uint32.minError);
       });
 
       it('should reject values above uint32 maximum', () => {
         const result = v.safeParse(generatedSchemas.vNumberUint32, 4294967296);
         expect(result.success).toBe(false);
-        expect(result.issues![0].message).toContain(
-          FORMAT_BOUNDS.uint32.maxError,
-        );
+        expect(result.issues![0].message).toContain(FORMAT_BOUNDS.uint32.maxError);
       });
     });
 
     describe('numberUint64', () => {
       it('should validate values within uint64 range and convert to BigInt', () => {
-        const result = v.safeParse(
-          generatedSchemas.vNumberUint64,
-          1000000000000,
-        );
+        const result = v.safeParse(generatedSchemas.vNumberUint64, 1000000000000);
         expect(result.success).toBe(true);
         expect(typeof result.output).toBe('bigint');
       });
@@ -252,20 +214,13 @@ describe('Number Type Formats Tests', () => {
       it('should reject negative values', () => {
         const result = v.safeParse(generatedSchemas.vNumberUint64, -1);
         expect(result.success).toBe(false);
-        expect(result.issues![0].message).toContain(
-          FORMAT_BOUNDS.uint64.minError,
-        );
+        expect(result.issues![0].message).toContain(FORMAT_BOUNDS.uint64.minError);
       });
 
       it('should reject values above uint64 maximum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vNumberUint64,
-          '18446744073709551616',
-        );
+        const result = v.safeParse(generatedSchemas.vNumberUint64, '18446744073709551616');
         expect(result.success).toBe(false);
-        expect(result.issues![0].message).toContain(
-          FORMAT_BOUNDS.uint64.maxError,
-        );
+        expect(result.issues![0].message).toContain(FORMAT_BOUNDS.uint64.maxError);
       });
     });
   });
@@ -292,17 +247,13 @@ describe('Number Type Formats Tests', () => {
       it('should reject values below int8 minimum', () => {
         const result = v.safeParse(generatedSchemas.vIntegerInt8, -129);
         expect(result.success).toBe(false);
-        expect(result.issues![0].message).toContain(
-          FORMAT_BOUNDS.int8.minError,
-        );
+        expect(result.issues![0].message).toContain(FORMAT_BOUNDS.int8.minError);
       });
 
       it('should reject values above int8 maximum', () => {
         const result = v.safeParse(generatedSchemas.vIntegerInt8, 128);
         expect(result.success).toBe(false);
-        expect(result.issues![0].message).toContain(
-          FORMAT_BOUNDS.int8.maxError,
-        );
+        expect(result.issues![0].message).toContain(FORMAT_BOUNDS.int8.maxError);
       });
     });
 
@@ -315,17 +266,13 @@ describe('Number Type Formats Tests', () => {
       it('should reject values below int16 minimum', () => {
         const result = v.safeParse(generatedSchemas.vIntegerInt16, -32769);
         expect(result.success).toBe(false);
-        expect(result.issues![0].message).toContain(
-          FORMAT_BOUNDS.int16.minError,
-        );
+        expect(result.issues![0].message).toContain(FORMAT_BOUNDS.int16.minError);
       });
 
       it('should reject values above int16 maximum', () => {
         const result = v.safeParse(generatedSchemas.vIntegerInt16, 32768);
         expect(result.success).toBe(false);
-        expect(result.issues![0].message).toContain(
-          FORMAT_BOUNDS.int16.maxError,
-        );
+        expect(result.issues![0].message).toContain(FORMAT_BOUNDS.int16.maxError);
       });
     });
 
@@ -338,48 +285,33 @@ describe('Number Type Formats Tests', () => {
       it('should reject values below int32 minimum', () => {
         const result = v.safeParse(generatedSchemas.vIntegerInt32, -2147483649);
         expect(result.success).toBe(false);
-        expect(result.issues![0].message).toContain(
-          FORMAT_BOUNDS.int32.minError,
-        );
+        expect(result.issues![0].message).toContain(FORMAT_BOUNDS.int32.minError);
       });
 
       it('should reject values above int32 maximum', () => {
         const result = v.safeParse(generatedSchemas.vIntegerInt32, 2147483648);
         expect(result.success).toBe(false);
-        expect(result.issues![0].message).toContain(
-          FORMAT_BOUNDS.int32.maxError,
-        );
+        expect(result.issues![0].message).toContain(FORMAT_BOUNDS.int32.maxError);
       });
     });
 
     describe('integerInt64', () => {
       it('should validate values within int64 range and convert to BigInt', () => {
-        const result = v.safeParse(
-          generatedSchemas.vIntegerInt64,
-          1000000000000,
-        );
+        const result = v.safeParse(generatedSchemas.vIntegerInt64, 1000000000000);
         expect(result.success).toBe(true);
         expect(typeof result.output).toBe('bigint');
       });
 
       it('should validate string values within int64 range', () => {
-        const result = v.safeParse(
-          generatedSchemas.vIntegerInt64,
-          '1000000000000',
-        );
+        const result = v.safeParse(generatedSchemas.vIntegerInt64, '1000000000000');
         expect(result.success).toBe(true);
         expect(typeof result.output).toBe('bigint');
       });
 
       it('should reject values above int64 maximum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vIntegerInt64,
-          '9223372036854775808',
-        );
+        const result = v.safeParse(generatedSchemas.vIntegerInt64, '9223372036854775808');
         expect(result.success).toBe(false);
-        expect(result.issues![0].message).toContain(
-          FORMAT_BOUNDS.int64.maxError,
-        );
+        expect(result.issues![0].message).toContain(FORMAT_BOUNDS.int64.maxError);
       });
     });
 
@@ -392,17 +324,13 @@ describe('Number Type Formats Tests', () => {
       it('should reject negative values', () => {
         const result = v.safeParse(generatedSchemas.vIntegerUint8, -1);
         expect(result.success).toBe(false);
-        expect(result.issues![0].message).toContain(
-          FORMAT_BOUNDS.uint8.minError,
-        );
+        expect(result.issues![0].message).toContain(FORMAT_BOUNDS.uint8.minError);
       });
 
       it('should reject values above uint8 maximum', () => {
         const result = v.safeParse(generatedSchemas.vIntegerUint8, 256);
         expect(result.success).toBe(false);
-        expect(result.issues![0].message).toContain(
-          FORMAT_BOUNDS.uint8.maxError,
-        );
+        expect(result.issues![0].message).toContain(FORMAT_BOUNDS.uint8.maxError);
       });
     });
 
@@ -415,17 +343,13 @@ describe('Number Type Formats Tests', () => {
       it('should reject negative values', () => {
         const result = v.safeParse(generatedSchemas.vIntegerUint16, -1);
         expect(result.success).toBe(false);
-        expect(result.issues![0].message).toContain(
-          FORMAT_BOUNDS.uint16.minError,
-        );
+        expect(result.issues![0].message).toContain(FORMAT_BOUNDS.uint16.minError);
       });
 
       it('should reject values above uint16 maximum', () => {
         const result = v.safeParse(generatedSchemas.vIntegerUint16, 65536);
         expect(result.success).toBe(false);
-        expect(result.issues![0].message).toContain(
-          FORMAT_BOUNDS.uint16.maxError,
-        );
+        expect(result.issues![0].message).toContain(FORMAT_BOUNDS.uint16.maxError);
       });
     });
 
@@ -438,26 +362,19 @@ describe('Number Type Formats Tests', () => {
       it('should reject negative values', () => {
         const result = v.safeParse(generatedSchemas.vIntegerUint32, -1);
         expect(result.success).toBe(false);
-        expect(result.issues![0].message).toContain(
-          FORMAT_BOUNDS.uint32.minError,
-        );
+        expect(result.issues![0].message).toContain(FORMAT_BOUNDS.uint32.minError);
       });
 
       it('should reject values above uint32 maximum', () => {
         const result = v.safeParse(generatedSchemas.vIntegerUint32, 4294967296);
         expect(result.success).toBe(false);
-        expect(result.issues![0].message).toContain(
-          FORMAT_BOUNDS.uint32.maxError,
-        );
+        expect(result.issues![0].message).toContain(FORMAT_BOUNDS.uint32.maxError);
       });
     });
 
     describe('integerUint64', () => {
       it('should validate values within uint64 range and convert to BigInt', () => {
-        const result = v.safeParse(
-          generatedSchemas.vIntegerUint64,
-          1000000000000,
-        );
+        const result = v.safeParse(generatedSchemas.vIntegerUint64, 1000000000000);
         expect(result.success).toBe(true);
         expect(typeof result.output).toBe('bigint');
       });
@@ -465,20 +382,13 @@ describe('Number Type Formats Tests', () => {
       it('should reject negative values', () => {
         const result = v.safeParse(generatedSchemas.vIntegerUint64, -1);
         expect(result.success).toBe(false);
-        expect(result.issues![0].message).toContain(
-          FORMAT_BOUNDS.uint64.minError,
-        );
+        expect(result.issues![0].message).toContain(FORMAT_BOUNDS.uint64.minError);
       });
 
       it('should reject values above uint64 maximum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vIntegerUint64,
-          '18446744073709551616',
-        );
+        const result = v.safeParse(generatedSchemas.vIntegerUint64, '18446744073709551616');
         expect(result.success).toBe(false);
-        expect(result.issues![0].message).toContain(
-          FORMAT_BOUNDS.uint64.maxError,
-        );
+        expect(result.issues![0].message).toContain(FORMAT_BOUNDS.uint64.maxError);
       });
     });
   });
@@ -486,43 +396,27 @@ describe('Number Type Formats Tests', () => {
   describe('String Type Format Validation', () => {
     describe('stringInt64', () => {
       it('should validate string values within int64 range and convert to BigInt', () => {
-        const result = v.safeParse(
-          generatedSchemas.vStringInt64,
-          '1000000000000',
-        );
+        const result = v.safeParse(generatedSchemas.vStringInt64, '1000000000000');
         expect(result.success).toBe(true);
         expect(typeof result.output).toBe('bigint');
       });
 
       it('should reject values below int64 minimum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vStringInt64,
-          '-9223372036854775809',
-        );
+        const result = v.safeParse(generatedSchemas.vStringInt64, '-9223372036854775809');
         expect(result.success).toBe(false);
-        expect(result.issues![0].message).toContain(
-          FORMAT_BOUNDS.int64.minError,
-        );
+        expect(result.issues![0].message).toContain(FORMAT_BOUNDS.int64.minError);
       });
 
       it('should reject values above int64 maximum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vStringInt64,
-          '9223372036854775808',
-        );
+        const result = v.safeParse(generatedSchemas.vStringInt64, '9223372036854775808');
         expect(result.success).toBe(false);
-        expect(result.issues![0].message).toContain(
-          FORMAT_BOUNDS.int64.maxError,
-        );
+        expect(result.issues![0].message).toContain(FORMAT_BOUNDS.int64.maxError);
       });
     });
 
     describe('stringUint64', () => {
       it('should validate string values within uint64 range and convert to BigInt', () => {
-        const result = v.safeParse(
-          generatedSchemas.vStringUint64,
-          '1000000000000',
-        );
+        const result = v.safeParse(generatedSchemas.vStringUint64, '1000000000000');
         expect(result.success).toBe(true);
         expect(typeof result.output).toBe('bigint');
       });
@@ -530,20 +424,13 @@ describe('Number Type Formats Tests', () => {
       it('should reject negative values', () => {
         const result = v.safeParse(generatedSchemas.vStringUint64, '-1');
         expect(result.success).toBe(false);
-        expect(result.issues![0].message).toContain(
-          FORMAT_BOUNDS.uint64.minError,
-        );
+        expect(result.issues![0].message).toContain(FORMAT_BOUNDS.uint64.minError);
       });
 
       it('should reject values above uint64 maximum', () => {
-        const result = v.safeParse(
-          generatedSchemas.vStringUint64,
-          '18446744073709551616',
-        );
+        const result = v.safeParse(generatedSchemas.vStringUint64, '18446744073709551616');
         expect(result.success).toBe(false);
-        expect(result.issues![0].message).toContain(
-          FORMAT_BOUNDS.uint64.maxError,
-        );
+        expect(result.issues![0].message).toContain(FORMAT_BOUNDS.uint64.maxError);
       });
     });
   });

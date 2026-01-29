@@ -1,9 +1,4 @@
-import type {
-  AnalysisContext,
-  Node,
-  NodeName,
-  Ref,
-} from '@hey-api/codegen-core';
+import type { AnalysisContext, Node, NodeName, Ref } from '@hey-api/codegen-core';
 import { ref } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
@@ -24,9 +19,7 @@ export interface ArgsMethods extends Node {
 /**
  * Adds `.arg()` and `.args()` for managing expression arguments in call-like nodes.
  */
-export function ArgsMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
-  Base: TBase,
-) {
+export function ArgsMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base: TBase) {
   abstract class Args extends Base {
     protected _args: Array<Ref<Arg>> = [];
 
@@ -44,9 +37,7 @@ export function ArgsMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
 
     protected args(...args: ReadonlyArray<Arg | undefined>): this {
       this._args.push(
-        ...args
-          .filter((a): a is NonNullable<typeof a> => a !== undefined)
-          .map((a) => ref(a)),
+        ...args.filter((a): a is NonNullable<typeof a> => a !== undefined).map((a) => ref(a)),
       );
       return this;
     }

@@ -35,11 +35,7 @@ export const parseV3_1_X = (context: Context<OpenApiV3_1_X>) => {
 
   const shouldFilterSpec = hasFilters(context.config.parser.filters);
   if (shouldFilterSpec) {
-    const filters = createFilters(
-      context.config.parser.filters,
-      context.spec,
-      context.logger,
-    );
+    const filters = createFilters(context.config.parser.filters, context.spec, context.logger);
     const { graph } = buildGraph(context.spec, context.logger);
     const { resourceMetadata } = buildResourceMetadata(graph, context.logger);
     const sets = createFilteredDependencies({
@@ -65,8 +61,7 @@ export const parseV3_1_X = (context: Context<OpenApiV3_1_X>) => {
   // TODO: parser - handle more component types, old parser handles only parameters and schemas
   if (context.spec.components) {
     for (const name in context.spec.components.securitySchemes) {
-      const securityOrReference =
-        context.spec.components.securitySchemes[name]!;
+      const securityOrReference = context.spec.components.securitySchemes[name]!;
       const securitySchemeObject =
         '$ref' in securityOrReference
           ? context.resolveRef<SecuritySchemeObject>(securityOrReference.$ref)
@@ -91,8 +86,7 @@ export const parseV3_1_X = (context: Context<OpenApiV3_1_X>) => {
 
     for (const name in context.spec.components.requestBodies) {
       const $ref = `#/components/requestBodies/${name}`;
-      const requestBodyOrReference =
-        context.spec.components.requestBodies[name]!;
+      const requestBodyOrReference = context.spec.components.requestBodies[name]!;
       const requestBody =
         '$ref' in requestBodyOrReference
           ? context.resolveRef<RequestBodyObject>(requestBodyOrReference.$ref)
@@ -121,9 +115,7 @@ export const parseV3_1_X = (context: Context<OpenApiV3_1_X>) => {
 
   for (const path in context.spec.paths) {
     if (path.startsWith('x-')) continue;
-    const pathItem = context.spec.paths[
-      path as keyof PathsObject
-    ]! as PathItemObject;
+    const pathItem = context.spec.paths[path as keyof PathsObject]! as PathItemObject;
 
     const finalPathItem = pathItem.$ref
       ? {
@@ -132,10 +124,7 @@ export const parseV3_1_X = (context: Context<OpenApiV3_1_X>) => {
         }
       : pathItem;
 
-    const operationArgs: Omit<
-      Parameters<typeof parsePathOperation>[0],
-      'method'
-    > = {
+    const operationArgs: Omit<Parameters<typeof parsePathOperation>[0], 'method'> = {
       context,
       operation: {
         description: finalPathItem.description,

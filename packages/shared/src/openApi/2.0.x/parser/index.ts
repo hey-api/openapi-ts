@@ -24,8 +24,11 @@ import { parseSchema } from './schema';
 import { parseServers } from './server';
 import { validateOpenApiSpec } from './validate';
 
-type PathKeys<T extends keyof PathsObject = keyof PathsObject> =
-  keyof T extends infer K ? (K extends `/${string}` ? K : never) : never;
+type PathKeys<T extends keyof PathsObject = keyof PathsObject> = keyof T extends infer K
+  ? K extends `/${string}`
+    ? K
+    : never
+  : never;
 
 export const parseV2_0_X = (context: Context<OpenApiV2_0_X>) => {
   if (context.config.parser.validate_EXPERIMENTAL) {
@@ -35,11 +38,7 @@ export const parseV2_0_X = (context: Context<OpenApiV2_0_X>) => {
 
   const shouldFilterSpec = hasFilters(context.config.parser.filters);
   if (shouldFilterSpec) {
-    const filters = createFilters(
-      context.config.parser.filters,
-      context.spec,
-      context.logger,
-    );
+    const filters = createFilters(context.config.parser.filters, context.spec, context.logger);
     const { graph } = buildGraph(context.spec, context.logger);
     const { resourceMetadata } = buildResourceMetadata(graph, context.logger);
     const sets = createFilteredDependencies({
@@ -99,10 +98,7 @@ export const parseV2_0_X = (context: Context<OpenApiV2_0_X>) => {
       responses: {},
       security: context.spec.security,
     };
-    const operationArgs: Omit<
-      Parameters<typeof parsePathOperation>[0],
-      'method'
-    > = {
+    const operationArgs: Omit<Parameters<typeof parsePathOperation>[0], 'method'> = {
       context,
       operation: {
         ...commonOperation,

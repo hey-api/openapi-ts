@@ -10,10 +10,7 @@ const separatorsAndIdentifierRegExp = new RegExp(
   `${separatorsRegExp.source}${identifierRegExp.source}`,
   'gu',
 );
-const numbersAndIdentifierRegExp = new RegExp(
-  `\\d+${identifierRegExp.source}`,
-  'gu',
-);
+const numbersAndIdentifierRegExp = new RegExp(`\\d+${identifierRegExp.source}`, 'gu');
 
 const preserveCase = (value: string, casing: Casing) => {
   let isLastCharLower = false;
@@ -21,8 +18,7 @@ const preserveCase = (value: string, casing: Casing) => {
   let isLastLastCharUpper = false;
   let isLastLastCharPreserved = false;
 
-  const separator =
-    casing === 'snake_case' || casing === 'SCREAMING_SNAKE_CASE' ? '_' : '-';
+  const separator = casing === 'snake_case' || casing === 'SCREAMING_SNAKE_CASE' ? '_' : '-';
 
   for (let index = 0; index < value.length; index++) {
     const character = value[index]!;
@@ -73,10 +69,8 @@ const preserveCase = (value: string, casing: Casing) => {
       const characterLower = character.toLocaleLowerCase();
       const characterUpper = character.toLocaleUpperCase();
       isLastLastCharUpper = isLastCharUpper;
-      isLastCharLower =
-        characterLower === character && characterUpper !== character;
-      isLastCharUpper =
-        characterUpper === character && characterLower !== character;
+      isLastCharLower = characterLower === character && characterUpper !== character;
+      isLastCharUpper = characterUpper === character && characterLower !== character;
     }
   }
 
@@ -132,24 +126,19 @@ export function toCase(
   }
 
   result =
-    casing === 'SCREAMING_SNAKE_CASE'
-      ? result.toLocaleUpperCase()
-      : result.toLocaleLowerCase();
+    casing === 'SCREAMING_SNAKE_CASE' ? result.toLocaleUpperCase() : result.toLocaleLowerCase();
 
   if (casing === 'PascalCase') {
     result = `${result.charAt(0).toLocaleUpperCase()}${result.slice(1)}`;
   }
 
   if (casing === 'snake_case' || casing === 'SCREAMING_SNAKE_CASE') {
-    result = result.replaceAll(
-      separatorsAndIdentifierRegExp,
-      (match, identifier, offset) => {
-        if (offset === 0 && !stripLeadingSeparators) {
-          return match;
-        }
-        return `_${identifier}`;
-      },
-    );
+    result = result.replaceAll(separatorsAndIdentifierRegExp, (match, identifier, offset) => {
+      if (offset === 0 && !stripLeadingSeparators) {
+        return match;
+      }
+      return `_${identifier}`;
+    });
 
     if (result[result.length - 1] === '_') {
       // strip trailing underscore
@@ -159,31 +148,20 @@ export function toCase(
     separatorsAndIdentifierRegExp.lastIndex = 0;
     numbersAndIdentifierRegExp.lastIndex = 0;
 
-    result = result.replaceAll(
-      numbersAndIdentifierRegExp,
-      (match, _, offset) => {
-        if (['_', '-', '.'].includes(result.charAt(offset + match.length))) {
-          return match;
-        }
+    result = result.replaceAll(numbersAndIdentifierRegExp, (match, _, offset) => {
+      if (['_', '-', '.'].includes(result.charAt(offset + match.length))) {
+        return match;
+      }
 
-        return match.toLocaleUpperCase();
-      },
-    );
+      return match.toLocaleUpperCase();
+    });
 
-    result = result.replaceAll(
-      separatorsAndIdentifierRegExp,
-      (match, identifier, offset) => {
-        if (
-          offset === 0 &&
-          !stripLeadingSeparators &&
-          match[0] &&
-          value.startsWith(match[0])
-        ) {
-          return match;
-        }
-        return identifier.toLocaleUpperCase();
-      },
-    );
+    result = result.replaceAll(separatorsAndIdentifierRegExp, (match, identifier, offset) => {
+      if (offset === 0 && !stripLeadingSeparators && match[0] && value.startsWith(match[0])) {
+        return match;
+      }
+      return identifier.toLocaleUpperCase();
+    });
   }
 
   return result;
@@ -218,10 +196,7 @@ export function applyNaming(value: string, config: NamingConfig): string {
     } else {
       // TODO: refactor so there's no need for separators?
       const separator = !casing || casing === 'preserve' ? '' : '-';
-      result = config.name.replace(
-        '{{name}}',
-        `${separator}${result}${separator}`,
-      );
+      result = config.name.replace('{{name}}', `${separator}${result}${separator}`);
     }
   }
 

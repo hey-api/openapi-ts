@@ -5,9 +5,7 @@ import { Api } from './api';
 import { handler } from './plugin';
 import type { ZodPlugin } from './types';
 
-type CompatibilityVersion = NonNullable<
-  ZodPlugin['Config']['config']['compatibilityVersion']
->;
+type CompatibilityVersion = NonNullable<ZodPlugin['Config']['config']['compatibilityVersion']>;
 
 export const defaultConfig: ZodPlugin['Config'] = {
   api: new Api(),

@@ -9,9 +9,7 @@ vi.mock('../index', () => {
     createClient: vi.fn().mockResolvedValue(result),
   };
 });
-const spyExit = vi
-  .spyOn(process, 'exit')
-  .mockImplementation(() => ({}) as never);
+const spyExit = vi.spyOn(process, 'exit').mockImplementation(() => ({}) as never);
 
 const spy = createClient as Mock;
 
@@ -63,11 +61,7 @@ describe('cli', () => {
   it('with no plugins', async () => {
     const originalArgv = process.argv.slice();
     try {
-      process.argv = [
-        String(process.argv[0]),
-        String(process.argv[1]),
-        '--plugins',
-      ];
+      process.argv = [String(process.argv[0]), String(process.argv[1]), '--plugins'];
       await runCli();
     } finally {
       process.argv = originalArgv;
@@ -82,12 +76,7 @@ describe('cli', () => {
   it('with plugins', async () => {
     const originalArgv = process.argv.slice();
     try {
-      process.argv = [
-        String(process.argv[0]),
-        String(process.argv[1]),
-        '--plugins',
-        'foo',
-      ];
+      process.argv = [String(process.argv[0]), String(process.argv[1]), '--plugins', 'foo'];
       await runCli();
     } finally {
       process.argv = originalArgv;
@@ -103,12 +92,7 @@ describe('cli', () => {
   it('with client plugin', async () => {
     const originalArgv = process.argv.slice();
     try {
-      process.argv = [
-        String(process.argv[0]),
-        String(process.argv[1]),
-        '--client',
-        'foo',
-      ];
+      process.argv = [String(process.argv[0]), String(process.argv[1]), '--client', 'foo'];
       await runCli();
     } finally {
       process.argv = originalArgv;
@@ -125,11 +109,7 @@ describe('cli', () => {
     it('debug', async () => {
       const originalArgv = process.argv.slice();
       try {
-        process.argv = [
-          String(process.argv[0]),
-          String(process.argv[1]),
-          '--debug',
-        ];
+        process.argv = [String(process.argv[0]), String(process.argv[1]), '--debug'];
         await runCli();
       } finally {
         process.argv = originalArgv;
@@ -145,11 +125,7 @@ describe('cli', () => {
     it('silent', async () => {
       const originalArgv = process.argv.slice();
       try {
-        process.argv = [
-          String(process.argv[0]),
-          String(process.argv[1]),
-          '--silent',
-        ];
+        process.argv = [String(process.argv[0]), String(process.argv[1]), '--silent'];
         await runCli();
       } finally {
         process.argv = originalArgv;
@@ -165,11 +141,7 @@ describe('cli', () => {
     it('no log file', async () => {
       const originalArgv = process.argv.slice();
       try {
-        process.argv = [
-          String(process.argv[0]),
-          String(process.argv[1]),
-          '--no-log-file',
-        ];
+        process.argv = [String(process.argv[0]), String(process.argv[1]), '--no-log-file'];
         await runCli();
       } finally {
         process.argv = originalArgv;

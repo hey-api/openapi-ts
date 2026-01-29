@@ -15,8 +15,7 @@ import { paginationField } from './pagination';
 import { parseExtensions, schemaToIrSchema } from './schema';
 
 interface Operation
-  extends Omit<OperationObject, 'parameters'>,
-    Pick<IR.OperationObject, 'parameters'> {}
+  extends Omit<OperationObject, 'parameters'>, Pick<IR.OperationObject, 'parameters'> {}
 
 const parseOperationJsDoc = ({
   irOperation,
@@ -114,8 +113,7 @@ const operationToIrOperation = ({
         : operation.requestBody;
     const contents = mediaTypeObjects({ content: requestBody.content });
     // TODO: add support for multiple content types, for now prefer JSON
-    const content =
-      contents.find((content) => content.type === 'json') || contents[0];
+    const content = contents.find((content) => content.type === 'json') || contents[0];
 
     if (content) {
       const pagination = paginationField({
@@ -133,9 +131,7 @@ const operationToIrOperation = ({
           context,
           schema: {
             description: requestBody.description,
-            ...('$ref' in operation.requestBody
-              ? operation.requestBody
-              : content.schema),
+            ...('$ref' in operation.requestBody ? operation.requestBody : content.schema),
           },
           state: undefined,
         }),
@@ -162,17 +158,12 @@ const operationToIrOperation = ({
       irOperation.responses = {};
     }
 
-    const response = operation.responses[name]! as
-      | ResponseObject
-      | ReferenceObject;
+    const response = operation.responses[name]! as ResponseObject | ReferenceObject;
     const responseObject =
-      '$ref' in response
-        ? context.resolveRef<ResponseObject>(response.$ref)
-        : response;
+      '$ref' in response ? context.resolveRef<ResponseObject>(response.$ref) : response;
     const contents = mediaTypeObjects({ content: responseObject.content });
     // TODO: add support for multiple content types, for now prefer JSON
-    const content =
-      contents.find((content) => content.type === 'json') || contents[0];
+    const content = contents.find((content) => content.type === 'json') || contents[0];
 
     if (content) {
       irOperation.responses[name] = {

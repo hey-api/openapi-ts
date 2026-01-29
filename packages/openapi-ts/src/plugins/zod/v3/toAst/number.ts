@@ -1,9 +1,6 @@
 import type { SchemaWithType } from '@hey-api/shared';
 
-import {
-  maybeBigInt,
-  shouldCoerceToBigInt,
-} from '../../../../plugins/shared/utils/coerce';
+import { maybeBigInt, shouldCoerceToBigInt } from '../../../../plugins/shared/utils/coerce';
 import { getIntegerLimit } from '../../../../plugins/shared/utils/formats';
 import { $ } from '../../../../ts-dsl';
 import { identifiers } from '../../constants';
@@ -28,9 +25,7 @@ function constNode(ctx: NumberResolverContext): Chain | undefined {
   const { schema, symbols } = ctx;
   const { z } = symbols;
   if (schema.const === undefined) return;
-  return $(z)
-    .attr(identifiers.literal)
-    .call(ctx.utils.maybeBigInt(schema.const, schema.format));
+  return $(z).attr(identifiers.literal).call(ctx.utils.maybeBigInt(schema.const, schema.format));
 }
 
 function maxNode(ctx: NumberResolverContext): Chain | undefined {

@@ -21,10 +21,7 @@ describe('Object Additional Properties Tests', () => {
           'Content-Type': 'application/json',
         },
       };
-      const result = v.safeParse(
-        generatedSchemas.vObjectWithAdditionalPropertiesString,
-        input,
-      );
+      const result = v.safeParse(generatedSchemas.vObjectWithAdditionalPropertiesString, input);
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.output.headers).toEqual({
@@ -41,10 +38,7 @@ describe('Object Additional Properties Tests', () => {
           Count: 123, // Invalid: should be string
         },
       };
-      const result = v.safeParse(
-        generatedSchemas.vObjectWithAdditionalPropertiesString,
-        input,
-      );
+      const result = v.safeParse(generatedSchemas.vObjectWithAdditionalPropertiesString, input);
       expect(result.success).toBe(false);
     });
 
@@ -52,10 +46,7 @@ describe('Object Additional Properties Tests', () => {
       const input = {
         headers: {},
       };
-      const result = v.safeParse(
-        generatedSchemas.vObjectWithAdditionalPropertiesString,
-        input,
-      );
+      const result = v.safeParse(generatedSchemas.vObjectWithAdditionalPropertiesString, input);
       expect(result.success).toBe(true);
     });
   });
@@ -67,10 +58,7 @@ describe('Object Additional Properties Tests', () => {
         key2: 'value2',
         key3: 'value3',
       };
-      const result = v.safeParse(
-        generatedSchemas.vObjectOnlyAdditionalPropertiesString,
-        input,
-      );
+      const result = v.safeParse(generatedSchemas.vObjectOnlyAdditionalPropertiesString, input);
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.output).toEqual(input);
@@ -82,10 +70,7 @@ describe('Object Additional Properties Tests', () => {
         key1: 'value1',
         key2: 123, // Invalid: should be string
       };
-      const result = v.safeParse(
-        generatedSchemas.vObjectOnlyAdditionalPropertiesString,
-        input,
-      );
+      const result = v.safeParse(generatedSchemas.vObjectOnlyAdditionalPropertiesString, input);
       expect(result.success).toBe(false);
     });
   });
@@ -97,10 +82,7 @@ describe('Object Additional Properties Tests', () => {
         score2: 95.5,
         score3: 0,
       };
-      const result = v.safeParse(
-        generatedSchemas.vObjectOnlyAdditionalPropertiesNumber,
-        input,
-      );
+      const result = v.safeParse(generatedSchemas.vObjectOnlyAdditionalPropertiesNumber, input);
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.output).toEqual(input);
@@ -112,10 +94,7 @@ describe('Object Additional Properties Tests', () => {
         score1: 100,
         score2: 'invalid', // Invalid: should be number
       };
-      const result = v.safeParse(
-        generatedSchemas.vObjectOnlyAdditionalPropertiesNumber,
-        input,
-      );
+      const result = v.safeParse(generatedSchemas.vObjectOnlyAdditionalPropertiesNumber, input);
       expect(result.success).toBe(false);
     });
   });
@@ -127,10 +106,7 @@ describe('Object Additional Properties Tests', () => {
         flag2: false,
         flag3: true,
       };
-      const result = v.safeParse(
-        generatedSchemas.vObjectOnlyAdditionalPropertiesBoolean,
-        input,
-      );
+      const result = v.safeParse(generatedSchemas.vObjectOnlyAdditionalPropertiesBoolean, input);
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.output).toEqual(input);
@@ -142,10 +118,7 @@ describe('Object Additional Properties Tests', () => {
         flag1: true,
         flag2: 'true', // Invalid: should be boolean
       };
-      const result = v.safeParse(
-        generatedSchemas.vObjectOnlyAdditionalPropertiesBoolean,
-        input,
-      );
+      const result = v.safeParse(generatedSchemas.vObjectOnlyAdditionalPropertiesBoolean, input);
       expect(result.success).toBe(false);
     });
   });
@@ -205,10 +178,7 @@ describe('Object Additional Properties Tests', () => {
           field2: { value: 'test2' },
         },
       };
-      const result = v.safeParse(
-        generatedSchemas.vObjectWithAdditionalPropertiesObject,
-        input,
-      );
+      const result = v.safeParse(generatedSchemas.vObjectWithAdditionalPropertiesObject, input);
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.output.metadata).toEqual({
@@ -225,10 +195,7 @@ describe('Object Additional Properties Tests', () => {
           field2: { invalidKey: 'test2' }, // Object without required structure
         },
       };
-      const result = v.safeParse(
-        generatedSchemas.vObjectWithAdditionalPropertiesObject,
-        input,
-      );
+      const result = v.safeParse(generatedSchemas.vObjectWithAdditionalPropertiesObject, input);
       // Should succeed as the nested object properties are optional
       expect(result.success).toBe(true);
     });
@@ -240,10 +207,7 @@ describe('Object Additional Properties Tests', () => {
         item1: { name: 'Item 1' },
         item2: { name: 'Item 2' },
       };
-      const result = v.safeParse(
-        generatedSchemas.vObjectOnlyAdditionalPropertiesObject,
-        input,
-      );
+      const result = v.safeParse(generatedSchemas.vObjectOnlyAdditionalPropertiesObject, input);
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.output).toEqual(input);
@@ -257,10 +221,7 @@ describe('Object Additional Properties Tests', () => {
         count: 42,
         id: 'abc123',
       };
-      const result = v.safeParse(
-        generatedSchemas.vObjectWithAdditionalPropertiesFalse,
-        input,
-      );
+      const result = v.safeParse(generatedSchemas.vObjectWithAdditionalPropertiesFalse, input);
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.output).toEqual(input);
@@ -273,10 +234,7 @@ describe('Object Additional Properties Tests', () => {
         extra: 'not allowed',
         id: 'abc123',
       };
-      const result = v.safeParse(
-        generatedSchemas.vObjectWithAdditionalPropertiesFalse,
-        input,
-      );
+      const result = v.safeParse(generatedSchemas.vObjectWithAdditionalPropertiesFalse, input);
       expect(result.success).toBe(false);
     });
   });

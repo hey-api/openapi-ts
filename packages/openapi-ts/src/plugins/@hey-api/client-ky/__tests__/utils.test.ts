@@ -78,12 +78,9 @@ describe('getParseAs', () => {
     },
   ];
 
-  it.each(scenarios)(
-    'detects $content as $parseAs',
-    async ({ content, parseAs }) => {
-      expect(getParseAs(content)).toEqual(parseAs);
-    },
-  );
+  it.each(scenarios)('detects $content as $parseAs', async ({ content, parseAs }) => {
+    expect(getParseAs(content)).toEqual(parseAs);
+  });
 });
 
 describe('setAuthParams', () => {

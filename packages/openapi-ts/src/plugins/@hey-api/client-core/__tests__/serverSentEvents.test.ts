@@ -16,9 +16,7 @@ function makeStream(chunks: string[]) {
 
 function toRequest(input: RequestInfo, init?: RequestInit): Request {
   if (input instanceof Request) {
-    const url = input.url.startsWith('http')
-      ? input.url
-      : `http://localhost${input.url}`;
+    const url = input.url.startsWith('http') ? input.url : `http://localhost${input.url}`;
     return new Request(url, input);
   }
   const url = input.startsWith('http') ? input : `http://localhost${input}`;
@@ -152,16 +150,14 @@ describe('createSseClient', () => {
 
   it('sets Last-Event-ID header on reconnect', async () => {
     let headersSeen: string | null | undefined;
-    fetchMock.mockImplementation(
-      async (input: RequestInfo, init?: RequestInit) => {
-        const req = toRequest(input, init);
-        headersSeen = req.headers.get('Last-Event-ID');
-        return {
-          body: makeStream(['data: a\n\n']),
-          ok: true,
-        };
-      },
-    );
+    fetchMock.mockImplementation(async (input: RequestInfo, init?: RequestInit) => {
+      const req = toRequest(input, init);
+      headersSeen = req.headers.get('Last-Event-ID');
+      return {
+        body: makeStream(['data: a\n\n']),
+        ok: true,
+      };
+    });
 
     const onEvent = vi.fn();
     const { stream } = createSseClient({
@@ -203,11 +199,7 @@ describe('createSseClient', () => {
 
   it('handles mixed JSON and raw string events', async () => {
     fetchMock.mockResolvedValue({
-      body: makeStream([
-        'data: {"foo":1}\n\n',
-        'data: bar\n\n',
-        'data: {"baz":2}\n\n',
-      ]),
+      body: makeStream(['data: {"foo":1}\n\n', 'data: bar\n\n', 'data: {"baz":2}\n\n']),
       ok: true,
     });
 
@@ -219,16 +211,14 @@ describe('createSseClient', () => {
 
   it('passes custom headers', async () => {
     let headersSeen: string | null | undefined;
-    fetchMock.mockImplementation(
-      async (input: RequestInfo, init?: RequestInit) => {
-        const req = toRequest(input, init);
-        headersSeen = req.headers.get('X-Custom');
-        return {
-          body: makeStream([]),
-          ok: true,
-        };
-      },
-    );
+    fetchMock.mockImplementation(async (input: RequestInfo, init?: RequestInit) => {
+      const req = toRequest(input, init);
+      headersSeen = req.headers.get('X-Custom');
+      return {
+        body: makeStream([]),
+        ok: true,
+      };
+    });
 
     const { stream } = createSseClient({
       headers: { 'X-Custom': 'abc' },
@@ -390,16 +380,14 @@ describe('createSseClient', () => {
 
   it('respects custom HTTP method', async () => {
     let methodSeen: string | undefined;
-    fetchMock.mockImplementation(
-      async (input: RequestInfo, init?: RequestInit) => {
-        const req = toRequest(input, init);
-        methodSeen = req.method;
-        return {
-          body: makeStream(['data: ok\n\n']),
-          ok: true,
-        };
-      },
-    );
+    fetchMock.mockImplementation(async (input: RequestInfo, init?: RequestInit) => {
+      const req = toRequest(input, init);
+      methodSeen = req.method;
+      return {
+        body: makeStream(['data: ok\n\n']),
+        ok: true,
+      };
+    });
 
     const { stream } = createSseClient({
       method: 'POST',

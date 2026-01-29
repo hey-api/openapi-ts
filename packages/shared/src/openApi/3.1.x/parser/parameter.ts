@@ -1,11 +1,7 @@
 import type { Context } from '../../../ir/context';
 import type { IR } from '../../../ir/types';
 import { refToName } from '../../../utils/ref';
-import type {
-  ParameterObject,
-  ReferenceObject,
-  SchemaObject,
-} from '../types/spec';
+import type { ParameterObject, ReferenceObject, SchemaObject } from '../types/spec';
 import { mediaTypeObjects } from './mediaType';
 import { paginationField } from './pagination';
 import { parseExtensions, schemaToIrSchema } from './schema';
@@ -13,9 +9,7 @@ import { parseExtensions, schemaToIrSchema } from './schema';
 /**
  * Returns default parameter `allowReserved` based on value of `in`.
  */
-const defaultAllowReserved = (
-  _in: ParameterObject['in'],
-): boolean | undefined => {
+const defaultAllowReserved = (_in: ParameterObject['in']): boolean | undefined => {
   switch (_in) {
     // this keyword only applies to parameters with an `in` value of `query`
     case 'query':
@@ -43,9 +37,7 @@ const defaultExplode = (style: Required<ParameterObject>['style']): boolean => {
 /**
  * Returns default parameter `style` based on value of `in`.
  */
-const defaultStyle = (
-  _in: ParameterObject['in'],
-): Required<ParameterObject>['style'] => {
+const defaultStyle = (_in: ParameterObject['in']): Required<ParameterObject>['style'] => {
   switch (_in) {
     case 'header':
     case 'path':
@@ -80,12 +72,11 @@ export const parametersArrayToObject = ({
     }
 
     // lowercase keys for case insensitive access
-    parametersObject[parameter.in]![parameter.name.toLocaleLowerCase()] =
-      parameterToIrParameter({
-        $ref: `#/todo/real/path/to/parameter/${parameter.name}`,
-        context,
-        parameter,
-      });
+    parametersObject[parameter.in]![parameter.name.toLocaleLowerCase()] = parameterToIrParameter({
+      $ref: `#/todo/real/path/to/parameter/${parameter.name}`,
+      context,
+      parameter,
+    });
   }
 
   return parametersObject;
@@ -106,8 +97,7 @@ const parameterToIrParameter = ({
   if (!schema) {
     const contents = mediaTypeObjects({ content: parameter.content });
     // TODO: add support for multiple content types, for now prefer JSON
-    const content =
-      contents.find((content) => content.type === 'json') || contents[0];
+    const content = contents.find((content) => content.type === 'json') || contents[0];
     if (content) {
       schema = content.schema;
     }
@@ -126,8 +116,7 @@ const parameterToIrParameter = ({
   });
 
   const style = parameter.style || defaultStyle(parameter.in);
-  const explode =
-    parameter.explode !== undefined ? parameter.explode : defaultExplode(style);
+  const explode = parameter.explode !== undefined ? parameter.explode : defaultExplode(style);
   const allowReserved =
     parameter.allowReserved !== undefined
       ? parameter.allowReserved

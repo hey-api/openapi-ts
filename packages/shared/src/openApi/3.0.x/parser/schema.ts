@@ -60,9 +60,7 @@ const findDiscriminatorsInSchema = ({
     for (const compositionSchema of schema.allOf) {
       let resolvedSchema: SchemaObject;
       if ('$ref' in compositionSchema) {
-        resolvedSchema = context.resolveRef<SchemaObject>(
-          compositionSchema.$ref,
-        );
+        resolvedSchema = context.resolveRef<SchemaObject>(compositionSchema.$ref);
       } else {
         resolvedSchema = compositionSchema;
       }
@@ -92,9 +90,7 @@ const getAllDiscriminatorValues = ({
   const values: Array<string> = [];
 
   // Check each entry in the discriminator mapping
-  for (const [value, mappedSchemaRef] of Object.entries(
-    discriminator.mapping || {},
-  )) {
+  for (const [value, mappedSchemaRef] of Object.entries(discriminator.mapping || {})) {
     if (mappedSchemaRef === schemaRef) {
       // This is the current schema's own value
       values.push(value);
@@ -212,18 +208,13 @@ const parseArray = ({
       state,
     });
 
-    if (
-      !schemaItems.length &&
-      schema.maxItems &&
-      schema.maxItems === schema.minItems
-    ) {
+    if (!schemaItems.length && schema.maxItems && schema.maxItems === schema.minItems) {
       schemaItems = Array(schema.maxItems).fill(irItemsSchema);
     } else {
       if ('$ref' in schema.items) {
         schemaItems.push(irItemsSchema);
       } else {
-        const ofArray =
-          schema.items.allOf || schema.items.anyOf || schema.items.oneOf;
+        const ofArray = schema.items.allOf || schema.items.anyOf || schema.items.oneOf;
         if (ofArray && ofArray.length > 1 && !schema.items.nullable) {
           // bring composition up to avoid incorrectly nested arrays
           irSchema = {
@@ -352,27 +343,15 @@ const parseString = ({
   return irSchema;
 };
 
-export const parseExtensions = ({
-  source,
-  target,
-}: {
-  source: object;
-  target: object;
-}) => {
+export const parseExtensions = ({ source, target }: { source: object; target: object }) => {
   for (const key in source) {
     if (key.startsWith('x-')) {
-      (target as Record<string, unknown>)[key] = (
-        source as Record<string, unknown>
-      )[key];
+      (target as Record<string, unknown>)[key] = (source as Record<string, unknown>)[key];
     }
   }
 };
 
-const initIrSchema = ({
-  schema,
-}: {
-  schema: SchemaObject;
-}): IR.SchemaObject => {
+const initIrSchema = ({ schema }: { schema: SchemaObject }): IR.SchemaObject => {
   const irSchema: IR.SchemaObject = {};
 
   parseSchemaJsDoc({
@@ -431,10 +410,7 @@ const parseAllOf = ({
 
     if (schema.required) {
       if (irCompositionSchema.required) {
-        irCompositionSchema.required = [
-          ...irCompositionSchema.required,
-          ...schema.required,
-        ];
+        irCompositionSchema.required = [...irCompositionSchema.required, ...schema.required];
       } else {
         irCompositionSchema.required = schema.required;
       }
@@ -465,9 +441,7 @@ const parseAllOf = ({
             // If the ref has oneOf, we only use the schema name as the value
             // only if current schema is part of the oneOf. Else it is extending
             // the ref schema
-            oneOf
-              ? () => oneOf.some((o) => '$ref' in o && o.$ref === state.$ref)
-              : undefined,
+            oneOf ? () => oneOf.some((o) => '$ref' in o && o.$ref === state.$ref) : undefined,
           );
 
           if (values.length > 0) {
@@ -480,12 +454,8 @@ const parseAllOf = ({
                   (ref.allOf &&
                     ref.allOf.some((item) => {
                       const resolvedItem =
-                        '$ref' in item
-                          ? context.resolveRef<SchemaObject>(item.$ref)
-                          : item;
-                      return resolvedItem.required?.includes(
-                        d.discriminator.propertyName,
-                      );
+                        '$ref' in item ? context.resolveRef<SchemaObject>(item.$ref) : item;
+                      return resolvedItem.required?.includes(d.discriminator.propertyName);
                     }))),
             );
 
@@ -512,12 +482,10 @@ const parseAllOf = ({
     // Use allValues if we found children, otherwise use the original values
     const finalValues = allValues.length > 0 ? allValues : values;
 
-    const valueSchemas: ReadonlyArray<IR.SchemaObject> = finalValues.map(
-      (value) => ({
-        const: value,
-        type: 'string',
-      }),
-    );
+    const valueSchemas: ReadonlyArray<IR.SchemaObject> = finalValues.map((value) => ({
+      const: value,
+      type: 'string',
+    }));
 
     const discriminatorProperty: IR.SchemaObject =
       valueSchemas.length > 1
@@ -538,18 +506,14 @@ const parseAllOf = ({
             const refSchema = context.resolveRef<SchemaObject>(item.$ref);
             // Check if the discriminator property exists in the ref schema
             return (
-              refSchema.properties?.[discriminator.propertyName] !==
-                undefined ||
+              refSchema.properties?.[discriminator.propertyName] !== undefined ||
               (refSchema.allOf &&
                 refSchema.allOf.some((allOfItem) => {
                   const resolved =
                     '$ref' in allOfItem
                       ? context.resolveRef<SchemaObject>(allOfItem.$ref)
                       : allOfItem;
-                  return (
-                    resolved.properties?.[discriminator.propertyName] !==
-                    undefined
-                  );
+                  return resolved.properties?.[discriminator.propertyName] !== undefined;
                 }))
             );
           } catch {
@@ -585,18 +549,14 @@ const parseAllOf = ({
       if (!inlineSchema.properties) {
         inlineSchema.properties = {};
       }
-      inlineSchema.properties[discriminator.propertyName] =
-        discriminatorProperty;
+      inlineSchema.properties[discriminator.propertyName] = discriminatorProperty;
 
       if (isRequired) {
         if (!inlineSchema.required) {
           inlineSchema.required = [];
         }
         if (!inlineSchema.required.includes(discriminator.propertyName)) {
-          inlineSchema.required = [
-            ...inlineSchema.required,
-            discriminator.propertyName,
-          ];
+          inlineSchema.required = [...inlineSchema.required, discriminator.propertyName];
         }
       }
     } else {
@@ -635,9 +595,7 @@ const parseAllOf = ({
                 ? context.resolveRef<SchemaObject>(compositionSchema.$ref)
                 : compositionSchema;
 
-            if (
-              getSchemaType({ schema: finalCompositionSchema }) === 'object'
-            ) {
+            if (getSchemaType({ schema: finalCompositionSchema }) === 'object') {
               const irCompositionSchema = parseOneType({
                 context,
                 schema: {
@@ -725,16 +683,11 @@ const parseAnyOf = ({
 
     // `$ref` should be defined with discriminators
     if (schema.discriminator && irCompositionSchema.$ref != null) {
-      const values = discriminatorValues(
-        irCompositionSchema.$ref,
-        schema.discriminator.mapping,
-      );
-      const valueSchemas: ReadonlyArray<IR.SchemaObject> = values.map(
-        (value) => ({
-          const: value,
-          type: 'string',
-        }),
-      );
+      const values = discriminatorValues(irCompositionSchema.$ref, schema.discriminator.mapping);
+      const valueSchemas: ReadonlyArray<IR.SchemaObject> = values.map((value) => ({
+        const: value,
+        type: 'string',
+      }));
       const irDiscriminatorSchema: IR.SchemaObject = {
         properties: {
           [schema.discriminator.propertyName]:
@@ -836,8 +789,7 @@ const parseEnum = ({
       context,
       schema: {
         description: schema['x-enum-descriptions']?.[index],
-        title:
-          schema['x-enum-varnames']?.[index] ?? schema['x-enumNames']?.[index],
+        title: schema['x-enum-varnames']?.[index] ?? schema['x-enumNames']?.[index],
         // cast enum to string temporarily
         type: enumType === 'null' ? 'string' : enumType,
       },
@@ -891,16 +843,11 @@ const parseOneOf = ({
 
     // `$ref` should be defined with discriminators
     if (schema.discriminator && irCompositionSchema.$ref != null) {
-      const values = discriminatorValues(
-        irCompositionSchema.$ref,
-        schema.discriminator.mapping,
-      );
-      const valueSchemas: ReadonlyArray<IR.SchemaObject> = values.map(
-        (value) => ({
-          const: value,
-          type: 'string',
-        }),
-      );
+      const values = discriminatorValues(irCompositionSchema.$ref, schema.discriminator.mapping);
+      const valueSchemas: ReadonlyArray<IR.SchemaObject> = values.map((value) => ({
+        const: value,
+        type: 'string',
+      }));
       const irDiscriminatorSchema: IR.SchemaObject = {
         properties: {
           [schema.discriminator.propertyName]:

@@ -1,11 +1,6 @@
 import type { SymbolMeta } from '@hey-api/codegen-core';
 import type { IR } from '@hey-api/shared';
-import {
-  applyNaming,
-  createOperationKey,
-  operationResponsesMap,
-  refToName,
-} from '@hey-api/shared';
+import { applyNaming, createOperationKey, operationResponsesMap, refToName } from '@hey-api/shared';
 import type ts from 'typescript';
 
 import { $ } from '../../../ts-dsl';
@@ -48,10 +43,7 @@ const processSchemaType = ({
   plugin,
   schema,
 }: {
-  dataExpression?:
-    | ts.Expression
-    | string
-    | ReturnType<typeof $.attr | typeof $.expr>;
+  dataExpression?: ts.Expression | string | ReturnType<typeof $.attr | typeof $.expr>;
   plugin: HeyApiTransformersPlugin['Instance'];
   schema: IR.SchemaObject;
 }): Array<Expr> => {
@@ -80,9 +72,7 @@ const processSchemaType = ({
     if (!symbol.node && !buildingSymbols.has(symbol.id)) {
       buildingSymbols.add(symbol.id);
       try {
-        const refSchema = plugin.context.resolveIrRef<IR.SchemaObject>(
-          schema.$ref,
-        );
+        const refSchema = plugin.context.resolveIrRef<IR.SchemaObject>(schema.$ref);
         const nodes = schemaResponseTransformerNodes({
           plugin,
           schema: refSchema,
@@ -152,9 +142,7 @@ const processSchemaType = ({
     // TODO: remove
     // Ensure the map callback has a return statement for the item
     const mapCallbackStatements: Array<Expr> = nodes;
-    const hasReturnStatement = mapCallbackStatements.some((stmt) =>
-      isNodeReturnStatement(stmt),
-    );
+    const hasReturnStatement = mapCallbackStatements.some((stmt) => isNodeReturnStatement(stmt));
 
     if (!hasReturnStatement) {
       mapCallbackStatements.push($.return('item'));
@@ -179,9 +167,7 @@ const processSchemaType = ({
 
     for (const name in schema.properties) {
       const property = schema.properties[name]!;
-      const propertyAccessExpression = $(
-        dataExpression || dataVariableName,
-      ).attr(name);
+      const propertyAccessExpression = $(dataExpression || dataVariableName).attr(name);
       const propertyNodes = processSchemaType({
         dataExpression: propertyAccessExpression,
         plugin,
@@ -190,9 +176,7 @@ const processSchemaType = ({
       if (!propertyNodes.length) {
         continue;
       }
-      const noNullableTypesInSchema = !property.items?.find(
-        (x) => x.type === 'null',
-      );
+      const noNullableTypesInSchema = !property.items?.find((x) => x.type === 'null');
       const requiredField = required.includes(name);
       // Cannot fully rely on required fields
       // Such value has to be present, but it doesn't guarantee that this value is not nullish
@@ -225,9 +209,7 @@ const processSchemaType = ({
     if (
       schema.logicalOperator === 'and' ||
       (schema.items.length === 2 &&
-        schema.items.find(
-          (item) => item.type === 'null' || item.type === 'void',
-        ))
+        schema.items.find((item) => item.type === 'null' || item.type === 'void'))
     ) {
       for (const item of schema.items) {
         const nodes = processSchemaType({
@@ -252,9 +234,7 @@ const processSchemaType = ({
       if (
         !(schema.items ?? []).every((item) =>
           (
-            ['boolean', 'integer', 'null', 'number', 'string'] as ReadonlyArray<
-              typeof item.type
-            >
+            ['boolean', 'integer', 'null', 'number', 'string'] as ReadonlyArray<typeof item.type>
           ).includes(item.type),
         )
       ) {

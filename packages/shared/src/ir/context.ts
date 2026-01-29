@@ -10,10 +10,7 @@ import { resolveRef } from '../utils/ref';
 import type { ExampleIntent } from './intents';
 import type { IR } from './types';
 
-export class Context<
-  Spec extends Record<string, any> = any,
-  Config extends AnyConfig = AnyConfig,
-> {
+export class Context<Spec extends Record<string, any> = any, Config extends AnyConfig = AnyConfig> {
   /**
    * Configuration for parsing and generating the output. This
    * is a mix of user-provided and default values.
@@ -51,9 +48,8 @@ export class Context<
    * registered through the `registerPlugin` method and can be accessed by
    * their configured name from the config.
    */
-  plugins: Partial<
-    Record<PluginNames, PluginInstance<PluginConfigMap[keyof PluginConfigMap]>>
-  > = {};
+  plugins: Partial<Record<PluginNames, PluginInstance<PluginConfigMap[keyof PluginConfigMap]>>> =
+    {};
   /**
    * Resolved specification from `input`.
    */
@@ -101,14 +97,10 @@ export class Context<
    */
   private registerPlugin<T extends PluginNames>(
     name: T,
-  ): T extends keyof PluginConfigMap
-    ? PluginInstance<PluginConfigMap[T]>
-    : PluginInstance {
+  ): T extends keyof PluginConfigMap ? PluginInstance<PluginConfigMap[T]> : PluginInstance {
     // Cast to a loose type internally - the config structure is guaranteed
     // by the config resolution layer, not by this method
-    const plugin = (
-      this.config.plugins as Record<string, Plugin.Config<Plugin.Types>>
-    )[name]!;
+    const plugin = (this.config.plugins as Record<string, Plugin.Config<Plugin.Types>>)[name]!;
     const instance = new PluginInstance({
       api: plugin.api,
       config: plugin.config as any,

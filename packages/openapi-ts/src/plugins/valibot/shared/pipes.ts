@@ -7,10 +7,7 @@ export type Pipes = Array<Pipe>;
 export type PipeResult = Pipes | Pipe;
 
 type PushPipes = (target: Pipes, pipes: PipeResult) => Pipes;
-type PipesToNode = (
-  pipes: PipeResult,
-  plugin: ValibotPlugin['Instance'],
-) => Pipe;
+type PipesToNode = (pipes: PipeResult, plugin: ValibotPlugin['Instance']) => Pipe;
 
 export const pipesToNode: PipesToNode = (pipes, plugin) => {
   if (!(pipes instanceof Array)) return pipes;

@@ -56,8 +56,7 @@ export const generateOutput = async ({ context }: { context: Context }) => {
 
   const { source } = context.config.output;
   if (source.enabled) {
-    const sourcePath =
-      source.path === null ? undefined : path.resolve(outputPath, source.path);
+    const sourcePath = source.path === null ? undefined : path.resolve(outputPath, source.path);
     if (!context.config.dryRun && sourcePath && sourcePath !== outputPath) {
       fs.mkdirSync(sourcePath, { recursive: true });
     }

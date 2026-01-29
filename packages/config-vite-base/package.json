@@ -1,8 +1,13 @@
 {
   "name": "@config/vite-base",
   "version": "0.0.1",
+  "private": true,
   "description": "Base configuration for Vite and Vitest",
   "license": "MIT",
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
@@ -20,10 +25,6 @@
     },
     "./package.json": "./package.json"
   },
-  "files": [
-    "dist",
-    "README.md"
-  ],
   "scripts": {
     "build": "tsdown"
   },
@@ -33,6 +34,5 @@
   },
   "devDependencies": {
     "typescript": "^5.9.2"
-  },
-  "private": true
+  }
 }

@@ -2,11 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import {
-  createClient,
-  type DefinePlugin,
-  type UserConfig,
-} from '@hey-api/openapi-ts';
+import { createClient, type DefinePlugin, type UserConfig } from '@hey-api/openapi-ts';
 
 import { getFilePaths, getSpecsPath } from '../../utils';
 
@@ -50,37 +46,30 @@ for (const version of versions) {
       {
         config: createConfig({
           output: 'fetch',
-          plugins: [
-            '@tanstack/angular-query-experimental',
-            '@hey-api/client-fetch',
-          ],
+          plugins: ['@tanstack/angular-query-experimental', '@hey-api/client-fetch'],
         }),
-        description:
-          'generate Fetch API client with TanStack Angular Query Experimental plugin',
+        description: 'generate Fetch API client with TanStack Angular Query Experimental plugin',
       },
       {
         config: createConfig({
           output: 'fetch',
           plugins: ['@tanstack/react-query', '@hey-api/client-fetch'],
         }),
-        description:
-          'generate Fetch API client with TanStack React Query plugin',
+        description: 'generate Fetch API client with TanStack React Query plugin',
       },
       {
         config: createConfig({
           output: 'fetch',
           plugins: ['@tanstack/solid-query', '@hey-api/client-fetch'],
         }),
-        description:
-          'generate Fetch API client with TanStack Solid Query plugin',
+        description: 'generate Fetch API client with TanStack Solid Query plugin',
       },
       {
         config: createConfig({
           output: 'fetch',
           plugins: ['@tanstack/svelte-query', '@hey-api/client-fetch'],
         }),
-        description:
-          'generate Fetch API client with TanStack Svelte Query plugin',
+        description: 'generate Fetch API client with TanStack Svelte Query plugin',
       },
       {
         config: createConfig({
@@ -92,13 +81,9 @@ for (const version of versions) {
       {
         config: createConfig({
           output: 'axios',
-          plugins: [
-            '@tanstack/angular-query-experimental',
-            '@hey-api/client-axios',
-          ],
+          plugins: ['@tanstack/angular-query-experimental', '@hey-api/client-axios'],
         }),
-        description:
-          'generate Axios client with TanStack Angular Query Experimental plugin',
+        description: 'generate Axios client with TanStack Angular Query Experimental plugin',
       },
       {
         config: createConfig({
@@ -270,8 +255,7 @@ for (const version of versions) {
             '@hey-api/sdk',
           ],
         }),
-        description:
-          'generate Fetch API client with TanStack React Query plugin with custom names',
+        description: 'generate Fetch API client with TanStack React Query plugin with custom names',
       },
       {
         config: createConfig({
@@ -300,8 +284,7 @@ for (const version of versions) {
             '@hey-api/sdk',
           ],
         }),
-        description:
-          'generate Fetch API client with TanStack Solid Query plugin with custom names',
+        description: 'generate Fetch API client with TanStack Solid Query plugin with custom names',
       },
       {
         config: createConfig({
@@ -360,8 +343,7 @@ for (const version of versions) {
             '@hey-api/sdk',
           ],
         }),
-        description:
-          'generate Fetch API client with TanStack Vue Query plugin with custom names',
+        description: 'generate Fetch API client with TanStack Vue Query plugin with custom names',
       },
       {
         config: createConfig({
@@ -533,8 +515,7 @@ for (const version of versions) {
             },
           ],
         }),
-        description:
-          'generate Fetch API client with Pinia Colada plugin using class-based SDKs',
+        description: 'generate Fetch API client with Pinia Colada plugin using class-based SDKs',
       },
       {
         config: createConfig({

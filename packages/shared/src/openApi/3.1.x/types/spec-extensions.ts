@@ -1,8 +1,4 @@
-import type {
-  DiscriminatorObject,
-  ExternalDocumentationObject,
-  XMLObject,
-} from './spec';
+import type { DiscriminatorObject, ExternalDocumentationObject, XMLObject } from './spec';
 
 export interface OpenApiSchemaExtensions {
   /**

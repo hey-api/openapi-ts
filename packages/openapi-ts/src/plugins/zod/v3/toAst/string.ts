@@ -26,15 +26,9 @@ function formatNode(ctx: StringResolverContext): Chain | undefined {
       return chain.current.attr(identifiers.date).call();
     case 'date-time': {
       const obj = $.object()
-        .$if(plugin.config.dates.offset, (o) =>
-          o.prop('offset', $.literal(true)),
-        )
-        .$if(plugin.config.dates.local, (o) =>
-          o.prop('local', $.literal(true)),
-        );
-      return chain.current
-        .attr(identifiers.datetime)
-        .call(obj.hasProps() ? obj : undefined);
+        .$if(plugin.config.dates.offset, (o) => o.prop('offset', $.literal(true)))
+        .$if(plugin.config.dates.local, (o) => o.prop('local', $.literal(true)));
+      return chain.current.attr(identifiers.datetime).call(obj.hasProps() ? obj : undefined);
     }
     case 'email':
       return chain.current.attr(identifiers.email).call();
@@ -54,11 +48,8 @@ function formatNode(ctx: StringResolverContext): Chain | undefined {
 
 function lengthNode(ctx: StringResolverContext): Chain | undefined {
   const { chain, schema } = ctx;
-  if (schema.minLength === undefined || schema.minLength !== schema.maxLength)
-    return;
-  return chain.current
-    .attr(identifiers.length)
-    .call($.literal(schema.minLength));
+  if (schema.minLength === undefined || schema.minLength !== schema.maxLength) return;
+  return chain.current.attr(identifiers.length).call($.literal(schema.minLength));
 }
 
 function maxLengthNode(ctx: StringResolverContext): Chain | undefined {

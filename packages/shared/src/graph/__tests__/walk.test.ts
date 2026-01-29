@@ -1,8 +1,4 @@
-import {
-  getIrPointerPriority,
-  matchIrPointerToGroup,
-  preferGroups,
-} from '../../ir/graph';
+import { getIrPointerPriority, matchIrPointerToGroup, preferGroups } from '../../ir/graph';
 import { buildGraph } from '../../openApi/shared/utils/graph';
 import type { Graph } from '../types/graph';
 import { walk } from '../walk';
@@ -12,10 +8,7 @@ const loggerStub = {
 } as any;
 
 describe('walkTopological', () => {
-  const makeGraph = (
-    deps: Array<[string, Array<string>]>,
-    nodes: Array<string>,
-  ) => {
+  const makeGraph = (deps: Array<[string, Array<string>]>, nodes: Array<string>) => {
     const nodeDependencies = new Map<string, Set<string>>();
     const subtreeDependencies = new Map<string, Set<string>>();
     const reverseNodeDependencies = new Map<string, Set<string>>();
@@ -30,8 +23,7 @@ describe('walkTopological', () => {
       nodeDependencies.set(from, s);
       subtreeDependencies.set(from, new Set<string>(toList));
       for (const to of toList) {
-        if (!reverseNodeDependencies.has(to))
-          reverseNodeDependencies.set(to, new Set());
+        if (!reverseNodeDependencies.has(to)) reverseNodeDependencies.set(to, new Set());
         reverseNodeDependencies.get(to)!.add(from);
       }
     }
@@ -146,9 +138,7 @@ describe('walkTopological', () => {
   });
 
   it('matches ordering for validators-circular-ref spec', async () => {
-    const specModule = await import(
-      '../../../../../specs/3.1.x/validators-circular-ref.json'
-    );
+    const specModule = await import('../../../../../specs/3.1.x/validators-circular-ref.json');
     const spec = specModule.default ?? specModule;
     const { graph } = buildGraph(spec, loggerStub);
 
@@ -195,8 +185,7 @@ describe('walkTopological', () => {
     const subtreeDependencies = new Map<string, Set<string>>();
     const reverseNodeDependencies = new Map<string, Set<string>>();
     const nodesMap = new Map<string, any>();
-    for (const n of nodes)
-      nodesMap.set(n, { key: null, node: {}, parentPointer: null });
+    for (const n of nodes) nodesMap.set(n, { key: null, node: {}, parentPointer: null });
     const graph = {
       nodeDependencies,
       nodes: nodesMap,
@@ -221,8 +210,7 @@ describe('walkTopological', () => {
     nodeDependencies.set(bar, new Set([foo]));
 
     const nodesMap = new Map<string, any>();
-    for (const n of nodes)
-      nodesMap.set(n, { key: null, node: {}, parentPointer: null });
+    for (const n of nodes) nodesMap.set(n, { key: null, node: {}, parentPointer: null });
 
     const graph = {
       nodeDependencies,
@@ -247,8 +235,7 @@ describe('walkTopological', () => {
     subtreeDependencies.set(parent, new Set([child]));
 
     const nodesMap = new Map<string, any>();
-    for (const n of nodes)
-      nodesMap.set(n, { key: null, node: {}, parentPointer: null });
+    for (const n of nodes) nodesMap.set(n, { key: null, node: {}, parentPointer: null });
 
     const graph = {
       nodeDependencies,

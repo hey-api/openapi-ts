@@ -1,9 +1,4 @@
-import {
-  getRegistryUrl,
-  inputToReadmePath,
-  type Parsed,
-  parseShorthand,
-} from '../readme';
+import { getRegistryUrl, inputToReadmePath, type Parsed, parseShorthand } from '../readme';
 
 describe('readme utils', () => {
   describe('parseShorthand', () => {
@@ -36,50 +31,30 @@ describe('readme utils', () => {
     });
 
     it('should throw error for invalid formats', () => {
-      expect(() => parseShorthand('')).toThrow(
-        'Invalid ReadMe shorthand format',
-      );
-      expect(() => parseShorthand('@org')).toThrow(
-        'Invalid ReadMe shorthand format',
-      );
-      expect(() => parseShorthand('@org/project')).toThrow(
-        'Invalid ReadMe shorthand format',
-      );
-      expect(() => parseShorthand('@org/project#')).toThrow(
-        'Invalid ReadMe shorthand format',
-      );
+      expect(() => parseShorthand('')).toThrow('Invalid ReadMe shorthand format');
+      expect(() => parseShorthand('@org')).toThrow('Invalid ReadMe shorthand format');
+      expect(() => parseShorthand('@org/project')).toThrow('Invalid ReadMe shorthand format');
+      expect(() => parseShorthand('@org/project#')).toThrow('Invalid ReadMe shorthand format');
       expect(() => parseShorthand('https://example.com')).toThrow(
         'Invalid ReadMe shorthand format',
       );
     });
 
     it('should throw error for invalid UUID characters', () => {
-      expect(() => parseShorthand('abc@123')).toThrow(
-        'Invalid ReadMe shorthand format',
-      );
-      expect(() => parseShorthand('abc/123')).toThrow(
-        'Invalid ReadMe shorthand format',
-      );
-      expect(() => parseShorthand('abc#123')).toThrow(
-        'Invalid ReadMe shorthand format',
-      );
-      expect(() => parseShorthand('abc 123')).toThrow(
-        'Invalid ReadMe shorthand format',
-      );
+      expect(() => parseShorthand('abc@123')).toThrow('Invalid ReadMe shorthand format');
+      expect(() => parseShorthand('abc/123')).toThrow('Invalid ReadMe shorthand format');
+      expect(() => parseShorthand('abc#123')).toThrow('Invalid ReadMe shorthand format');
+      expect(() => parseShorthand('abc 123')).toThrow('Invalid ReadMe shorthand format');
     });
 
     it('should handle empty UUID', () => {
-      expect(() => parseShorthand('@org/project#')).toThrow(
-        'Invalid ReadMe shorthand format',
-      );
+      expect(() => parseShorthand('@org/project#')).toThrow('Invalid ReadMe shorthand format');
     });
   });
 
   describe('getRegistryUrl', () => {
     it('should generate correct URL', () => {
-      expect(getRegistryUrl('abc123')).toBe(
-        'https://dash.readme.com/api/v1/api-registry/abc123',
-      );
+      expect(getRegistryUrl('abc123')).toBe('https://dash.readme.com/api/v1/api-registry/abc123');
       expect(getRegistryUrl('test-uuid-with-hyphens')).toBe(
         'https://dash.readme.com/api/v1/api-registry/test-uuid-with-hyphens',
       );
@@ -108,12 +83,8 @@ describe('readme utils', () => {
     });
 
     it('should throw error for invalid inputs', () => {
-      expect(() => inputToReadmePath('invalid')).toThrow(
-        'Invalid ReadMe shorthand format',
-      );
-      expect(() => inputToReadmePath('')).toThrow(
-        'Invalid ReadMe shorthand format',
-      );
+      expect(() => inputToReadmePath('invalid')).toThrow('Invalid ReadMe shorthand format');
+      expect(() => inputToReadmePath('')).toThrow('Invalid ReadMe shorthand format');
     });
   });
 
@@ -139,19 +110,16 @@ describe('readme utils', () => {
       },
     ];
 
-    it.each(validInputs)(
-      'should handle $input correctly',
-      ({ expected, input }) => {
-        expect(parseShorthand(input)).toEqual(expected);
-        expect(inputToReadmePath(`readme:${input}`)).toEqual({
-          organization: expected.organization,
-          path: `https://dash.readme.com/api/v1/api-registry/${expected.uuid}`,
-          project: expected.project,
-          registry: 'readme',
-          uuid: expected.uuid,
-        });
-      },
-    );
+    it.each(validInputs)('should handle $input correctly', ({ expected, input }) => {
+      expect(parseShorthand(input)).toEqual(expected);
+      expect(inputToReadmePath(`readme:${input}`)).toEqual({
+        organization: expected.organization,
+        path: `https://dash.readme.com/api/v1/api-registry/${expected.uuid}`,
+        project: expected.project,
+        registry: 'readme',
+        uuid: expected.uuid,
+      });
+    });
 
     const invalidInputs = [
       '',

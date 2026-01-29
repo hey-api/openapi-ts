@@ -72,20 +72,17 @@ const operationToDataType = ({
 
   data.required = dataRequired;
 
-  const symbolWebhookRequest = plugin.symbol(
-    applyNaming(operation.id, plugin.config.webhooks),
-    {
-      meta: {
-        category: 'type',
-        path: fromRef(state.path),
-        resource: 'webhook',
-        resourceId: operation.id,
-        role: 'data',
-        tags: fromRef(state.tags),
-        tool: 'typescript',
-      },
+  const symbolWebhookRequest = plugin.symbol(applyNaming(operation.id, plugin.config.webhooks), {
+    meta: {
+      category: 'type',
+      path: fromRef(state.path),
+      resource: 'webhook',
+      resourceId: operation.id,
+      role: 'data',
+      tags: fromRef(state.tags),
+      tool: 'typescript',
     },
-  );
+  });
   const node = $.type
     .alias(symbolWebhookRequest)
     .export()

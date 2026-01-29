@@ -77,21 +77,15 @@ export class TryTsDsl extends Mixed {
   override toAst() {
     if (!this._try?.length) throw new Error('Missing try block');
 
-    const catchParam = this._catchArg
-      ? (this.$node(this._catchArg) as ts.BindingName)
-      : undefined;
+    const catchParam = this._catchArg ? (this.$node(this._catchArg) as ts.BindingName) : undefined;
 
     return ts.factory.createTryStatement(
       this.$node(new BlockTsDsl(...this._try).pretty()),
       ts.factory.createCatchClause(
-        catchParam
-          ? ts.factory.createVariableDeclaration(catchParam)
-          : undefined,
+        catchParam ? ts.factory.createVariableDeclaration(catchParam) : undefined,
         this.$node(new BlockTsDsl(...(this._catch ?? [])).pretty()),
       ),
-      this._finally
-        ? this.$node(new BlockTsDsl(...this._finally).pretty())
-        : undefined,
+      this._finally ? this.$node(new BlockTsDsl(...this._finally).pretty()) : undefined,
     );
   }
 }

@@ -46,29 +46,22 @@ function formatNode(ctx: StringResolverContext): PipeResult | undefined {
 function lengthNode(ctx: StringResolverContext): PipeResult | undefined {
   const { schema, symbols } = ctx;
   const { v } = symbols;
-  if (schema.minLength === undefined || schema.minLength !== schema.maxLength)
-    return;
-  return $(v)
-    .attr(identifiers.actions.length)
-    .call($.literal(schema.minLength));
+  if (schema.minLength === undefined || schema.minLength !== schema.maxLength) return;
+  return $(v).attr(identifiers.actions.length).call($.literal(schema.minLength));
 }
 
 function maxLengthNode(ctx: StringResolverContext): PipeResult | undefined {
   const { schema, symbols } = ctx;
   const { v } = symbols;
   if (schema.maxLength === undefined) return;
-  return $(v)
-    .attr(identifiers.actions.maxLength)
-    .call($.literal(schema.maxLength));
+  return $(v).attr(identifiers.actions.maxLength).call($.literal(schema.maxLength));
 }
 
 function minLengthNode(ctx: StringResolverContext): PipeResult | undefined {
   const { schema, symbols } = ctx;
   const { v } = symbols;
   if (schema.minLength === undefined) return;
-  return $(v)
-    .attr(identifiers.actions.minLength)
-    .call($.literal(schema.minLength));
+  return $(v).attr(identifiers.actions.minLength).call($.literal(schema.minLength));
 }
 
 function patternNode(ctx: StringResolverContext): PipeResult | undefined {

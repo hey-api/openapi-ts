@@ -78,44 +78,34 @@ describe('AxiosInstance', () => {
 
     expect(client.instance).toBe(axiosInstance);
     expect(client.instance.defaults.baseURL).toBe('test-url');
-    expect((client.instance.interceptors.request as any).handlers.length).toBe(
-      1,
-    );
+    expect((client.instance.interceptors.request as any).handlers.length).toBe(1);
   });
 });
 
 describe('unserialized request body handling', () => {
   const client = createClient({ baseURL: 'https://example.com' });
 
-  const scenarios = [
-    { body: 0 },
-    { body: false },
-    { body: 'test string' },
-    { body: '' },
-  ];
+  const scenarios = [{ body: 0 }, { body: false }, { body: 'test string' }, { body: '' }];
 
-  it.each(scenarios)(
-    'handles plain text body with $body value',
-    async ({ body }) => {
-      const mockAxios = vi.fn();
+  it.each(scenarios)('handles plain text body with $body value', async ({ body }) => {
+    const mockAxios = vi.fn();
 
-      await client.post({
-        axios: mockAxios as Partial<AxiosInstance> as AxiosInstance,
-        body,
-        bodySerializer: null,
-        headers: {
-          'Content-Type': 'text/plain',
-        },
-        url: '/test',
-      });
+    await client.post({
+      axios: mockAxios as Partial<AxiosInstance> as AxiosInstance,
+      body,
+      bodySerializer: null,
+      headers: {
+        'Content-Type': 'text/plain',
+      },
+      url: '/test',
+    });
 
-      expect(mockAxios).toHaveBeenCalledWith(
-        expect.objectContaining({
-          data: body,
-        }),
-      );
-    },
-  );
+    expect(mockAxios).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: body,
+      }),
+    );
+  });
 });
 
 describe('serialized request body handling', () => {

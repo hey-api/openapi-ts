@@ -36,15 +36,12 @@ function loadGeneratedSchemas(generatedPath: string): any {
     }
 
     // Create evaluation code that returns an object with all exports
-    const schemaNames = exportMatches.map((match: string) =>
-      match.replace('export const ', ''),
-    );
+    const schemaNames = exportMatches.map((match: string) => match.replace('export const ', ''));
     const evalCode =
       generatedCode
         .replace(/import \* as v from 'valibot';/, '')
         .replace(/export const/g, 'const')
-        .replace(/v\./g, 'vModule.') +
-      `\n\nreturn { ${schemaNames.join(', ')} };`;
+        .replace(/v\./g, 'vModule.') + `\n\nreturn { ${schemaNames.join(', ')} };`;
 
     // Wrap in a function to capture the return value
     const schemaFunction = new Function('vModule', evalCode);
@@ -58,10 +55,7 @@ function loadGeneratedSchemas(generatedPath: string): any {
 }
 
 // TODO: further clean up
-export async function setupValibotTest(
-  input: string,
-  output: string,
-): Promise<any> {
+export async function setupValibotTest(input: string, output: string): Promise<any> {
   const inputPath = path.join(getSpecsPath(), version, input);
   const outputPath = path.join(outputDir, output);
 

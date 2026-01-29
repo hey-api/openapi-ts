@@ -17,8 +17,7 @@ const requestBodyToIrRequestBody = ({
   // TODO: parser - fix
   const contents = mediaTypeObjects({ content: requestBody.content });
   // TODO: add support for multiple content types, for now prefer JSON
-  const content =
-    contents.find((content) => content.type === 'json') || contents[0];
+  const content = contents.find((content) => content.type === 'json') || contents[0];
   const schema = content ? content.schema : undefined;
 
   const finalSchema: SchemaObject = {
@@ -65,10 +64,9 @@ export const parseRequestBody = ({
     context.ir.components.requestBodies = {};
   }
 
-  context.ir.components.requestBodies[refToName($ref)] =
-    requestBodyToIrRequestBody({
-      $ref,
-      context,
-      requestBody,
-    });
+  context.ir.components.requestBodies[refToName($ref)] = requestBodyToIrRequestBody({
+    $ref,
+    context,
+    requestBody,
+  });
 };

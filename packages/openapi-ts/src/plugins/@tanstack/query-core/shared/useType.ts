@@ -31,8 +31,7 @@ export const useTypeError = ({
     resourceId: operation.id,
     role: 'error',
   });
-  const symbolError =
-    symbolErrorType || plugin.external(`${plugin.name}.DefaultError`);
+  const symbolError = symbolErrorType || plugin.external(`${plugin.name}.DefaultError`);
   if (client.name === '@hey-api/client-axios') {
     const symbol = plugin.external('axios.AxiosError');
     return $.type(symbol).generic(symbolError);

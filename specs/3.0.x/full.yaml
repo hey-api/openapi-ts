@@ -165,29 +165,25 @@ paths:
           in: query
           schema:
             type: string
-        - description:
-            "Testing slashes in string: \\backwards\\\\\\ and /forwards///
+        - description: "Testing slashes in string: \\backwards\\\\\\ and /forwards///
             should work"
           name: parameterWithSlashes
           in: query
           schema:
             type: string
-        - description:
-            'Testing expression placeholders in string: ${expression} should
+        - description: 'Testing expression placeholders in string: ${expression} should
             work'
           name: parameterWithExpressionPlaceholders
           in: query
           schema:
             type: string
-        - description:
-            'Testing quotes in string: ''single quote'''''' and "double
+        - description: 'Testing quotes in string: ''single quote'''''' and "double
             quotes""" should work'
           name: parameterWithQuotes
           in: query
           schema:
             type: string
-        - description:
-            'Testing reserved characters in string: /* inline */ and /** inline
+        - description: 'Testing reserved characters in string: /* inline */ and /** inline
             **/ should work'
           name: parameterWithReservedCharacters
           in: query
@@ -794,8 +790,7 @@ paths:
             items:
               type: string
           collectionFormat: pipes
-        - description:
-            This is an array parameter that is sent as multi format (multiple
+        - description: This is an array parameter that is sent as multi format (multiple
             parameter instances)
           name: parameterArrayMulti
           in: query
@@ -1262,13 +1257,11 @@ components:
         backticks``` should work'
       type: integer
     CommentWithBackticksAndQuotes:
-      description:
-        'Testing backticks and quotes in string: `backticks`, ''quotes'',
+      description: 'Testing backticks and quotes in string: `backticks`, ''quotes'',
         "double quotes" and ```multiple backticks``` should work'
       type: integer
     CommentWithSlashes:
-      description:
-        "Testing slashes in string: \\backwards\\\\\\ and /forwards///
+      description: "Testing slashes in string: \\backwards\\\\\\ and /forwards///
         should work"
       type: integer
     CommentWithExpressionPlaceholders:
@@ -1279,8 +1272,7 @@ components:
         quotes""" should work'
       type: integer
     CommentWithReservedCharacters:
-      description:
-        'Testing reserved characters in string: /* inline */ and /** inline
+      description: 'Testing reserved characters in string: /* inline */ and /** inline
         **/ should work'
       type: integer
     SimpleInteger:
@@ -1293,8 +1285,7 @@ components:
       description: This is a simple string
       type: string
     NonAsciiStringæøåÆØÅöôêÊ字符串:
-      description:
-        A string with non-ascii (unicode) characters valid in typescript
+      description: A string with non-ascii (unicode) characters valid in typescript
         identifiers (æøåÆØÅöÔèÈ字符串)
       type: string
     SimpleFile:
@@ -1521,8 +1512,7 @@ components:
           description: This is a simple string property
           type: string
     Model-From.Zendesk:
-      description:
-        "`Comment` or `VoiceComment`. The JSON object for adding voice
+      description: "`Comment` or `VoiceComment`. The JSON object for adding voice
         comments to tickets is different. See [Adding voice comments to
         tickets](/documentation/ticketing/managing-tickets/adding-voice-comment\
         s-to-tickets)"
@@ -1709,8 +1699,7 @@ components:
             - $ref: '#/components/schemas/ModelWithArray'
             - $ref: '#/components/schemas/ModelWithDictionary'
     CompositionWithOneOfAnonymous:
-      description:
-        This is a model with one property with a 'one of' relationship
+      description: This is a model with one property with a 'one of' relationship
         where the options are not $ref
       type: object
       properties:
@@ -1747,8 +1736,7 @@ components:
         sideLength:
           type: number
     CompositionWithOneOfDiscriminator:
-      description:
-        This is a model with one property with a 'one of' relationship
+      description: This is a model with one property with a 'one of' relationship
         where the options are not $ref
       type: object
       oneOf:
@@ -1771,8 +1759,7 @@ components:
             - $ref: '#/components/schemas/ModelWithArray'
             - $ref: '#/components/schemas/ModelWithDictionary'
     CompositionWithAnyOfAnonymous:
-      description:
-        This is a model with one property with a 'any of' relationship
+      description: This is a model with one property with a 'any of' relationship
         where the options are not $ref
       type: object
       properties:
@@ -1815,8 +1802,7 @@ components:
         - ConstValue
       type: string
     CompositionWithNestedAnyOfAndNull:
-      description:
-        This is a model with one property with a 'any of' relationship
+      description: This is a model with one property with a 'any of' relationship
         where the options are not $ref
       type: object
       properties:
@@ -1855,8 +1841,7 @@ components:
               additionalProperties:
                 type: number
     CompositionWithOneOfAndSimpleArrayDictionary:
-      description:
-        This is a model that contains a dictionary of simple arrays within
+      description: This is a model that contains a dictionary of simple arrays within
         composition
       type: object
       properties:
@@ -2513,8 +2498,7 @@ components:
         preconditions:
           allOf:
             - $ref: '#/components/schemas/io.k8s.apimachinery.pkg.apis.meta.v1.Preconditions'
-          description:
-            Must be fulfilled before a deletion is carried out. If not
+          description: Must be fulfilled before a deletion is carried out. If not
             possible, a 409 Conflict status will be returned.
       type: object
     io.k8s.apimachinery.pkg.apis.meta.v1.Preconditions:

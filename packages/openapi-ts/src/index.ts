@@ -36,14 +36,7 @@ declare module '@hey-api/codegen-core' {
     pluginName?: string;
     resource?: 'client' | 'definition' | 'operation' | 'webhook' | AnyString;
     resourceId?: string;
-    role?:
-      | 'data'
-      | 'error'
-      | 'errors'
-      | 'options'
-      | 'response'
-      | 'responses'
-      | AnyString;
+    role?: 'data' | 'error' | 'errors' | 'options' | 'response' | 'responses' | AnyString;
     /**
      * Tags associated with this symbol.
      */
@@ -145,10 +138,7 @@ export { defaultPlugins } from './config/plugins';
 export type { UserConfig } from './config/types';
 export type { AngularClient } from './plugins/@hey-api/client-angular';
 export type { AxiosClient } from './plugins/@hey-api/client-axios';
-export {
-  clientDefaultConfig,
-  clientDefaultMeta,
-} from './plugins/@hey-api/client-core/config';
+export { clientDefaultConfig, clientDefaultMeta } from './plugins/@hey-api/client-core/config';
 export { clientPluginHandler } from './plugins/@hey-api/client-core/plugin';
 export type { Client } from './plugins/@hey-api/client-core/types';
 export type { FetchClient } from './plugins/@hey-api/client-fetch';

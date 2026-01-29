@@ -121,20 +121,17 @@ const operationToDataType = ({
 
   data.required = dataRequired;
 
-  const symbol = plugin.symbol(
-    applyNaming(operation.id, plugin.config.requests),
-    {
-      meta: {
-        category: 'type',
-        path: fromRef(state.path),
-        resource: 'operation',
-        resourceId: operation.id,
-        role: 'data',
-        tags: fromRef(state.tags),
-        tool: 'typescript',
-      },
+  const symbol = plugin.symbol(applyNaming(operation.id, plugin.config.requests), {
+    meta: {
+      category: 'type',
+      path: fromRef(state.path),
+      resource: 'operation',
+      resourceId: operation.id,
+      role: 'data',
+      tags: fromRef(state.tags),
+      tool: 'typescript',
     },
-  );
+  });
   const node = $.type
     .alias(symbol)
     .export()
@@ -157,24 +154,20 @@ export const operationToType = ({
 }) => {
   operationToDataType({ operation, plugin, state });
 
-  const { error, errors, response, responses } =
-    operationResponsesMap(operation);
+  const { error, errors, response, responses } = operationResponsesMap(operation);
 
   if (errors) {
-    const symbolErrors = plugin.symbol(
-      applyNaming(operation.id, plugin.config.errors),
-      {
-        meta: {
-          category: 'type',
-          path: fromRef(state.path),
-          resource: 'operation',
-          resourceId: operation.id,
-          role: 'errors',
-          tags: fromRef(state.tags),
-          tool: 'typescript',
-        },
+    const symbolErrors = plugin.symbol(applyNaming(operation.id, plugin.config.errors), {
+      meta: {
+        category: 'type',
+        path: fromRef(state.path),
+        resource: 'operation',
+        resourceId: operation.id,
+        role: 'errors',
+        tags: fromRef(state.tags),
+        tool: 'typescript',
       },
-    );
+    });
     const node = $.type
       .alias(symbolErrors)
       .export()
@@ -214,20 +207,17 @@ export const operationToType = ({
   }
 
   if (responses) {
-    const symbolResponses = plugin.symbol(
-      applyNaming(operation.id, plugin.config.responses),
-      {
-        meta: {
-          category: 'type',
-          path: fromRef(state.path),
-          resource: 'operation',
-          resourceId: operation.id,
-          role: 'responses',
-          tags: fromRef(state.tags),
-          tool: 'typescript',
-        },
+    const symbolResponses = plugin.symbol(applyNaming(operation.id, plugin.config.responses), {
+      meta: {
+        category: 'type',
+        path: fromRef(state.path),
+        resource: 'operation',
+        resourceId: operation.id,
+        role: 'responses',
+        tags: fromRef(state.tags),
+        tool: 'typescript',
       },
-    );
+    });
     const node = $.type
       .alias(symbolResponses)
       .export()

@@ -9,9 +9,7 @@ import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
 import { identifiers } from '../constants';
 import { irSchemaToAst } from '../plugin';
 
-function additionalPropertiesNode(
-  ctx: ObjectResolverContext,
-): Pipe | null | undefined {
+function additionalPropertiesNode(ctx: ObjectResolverContext): Pipe | null | undefined {
   const { plugin, schema } = ctx;
 
   if (!schema.additionalProperties || !schema.additionalProperties.type) return;
@@ -47,9 +45,7 @@ function baseNode(ctx: ObjectResolverContext): PipeResult {
         .call($(v).attr(identifiers.schemas.string).call(), additional);
     }
 
-    return $(v)
-      .attr(identifiers.schemas.objectWithRest)
-      .call(shape, additional);
+    return $(v).attr(identifiers.schemas.objectWithRest).call(shape, additional);
   }
 
   return $(v).attr(identifiers.schemas.object).call(shape);

@@ -99,10 +99,7 @@ describe('mediaTypeToIrMediaType', () => {
     },
   ];
 
-  it.each(scenarios)(
-    'ir media type for $mediaType: $response',
-    async ({ mediaType, response }) => {
-      expect(mediaTypeToIrMediaType({ mediaType })).toEqual(response);
-    },
-  );
+  it.each(scenarios)('ir media type for $mediaType: $response', async ({ mediaType, response }) => {
+    expect(mediaTypeToIrMediaType({ mediaType })).toEqual(response);
+  });
 });

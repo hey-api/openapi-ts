@@ -12,9 +12,7 @@ export interface TypeReturnsMethods extends Node {
   returns(type: NodeName | TypeTsDsl): this;
 }
 
-export function TypeReturnsMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
-  Base: TBase,
-) {
+export function TypeReturnsMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base: TBase) {
   abstract class TypeReturns extends Base {
     protected _returns?: TypeTsDsl;
 
@@ -24,8 +22,7 @@ export function TypeReturnsMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
     }
 
     protected returns(type: NodeName | TypeTsDsl): this {
-      this._returns =
-        type instanceof TypeTsDsl ? type : new TypeExprTsDsl(type);
+      this._returns = type instanceof TypeTsDsl ? type : new TypeExprTsDsl(type);
       return this;
     }
 

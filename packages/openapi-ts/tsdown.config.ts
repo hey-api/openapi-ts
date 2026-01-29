@@ -9,10 +9,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const replaceCoreImports = (filePath: string) => {
   let content = fs.readFileSync(filePath, 'utf8');
   // Replace '../../client-core/bundle' with '../core'
-  content = content.replace(
-    /from ['"]\.\.\/\.\.\/client-core\/bundle/g,
-    "from '../core",
-  );
+  content = content.replace(/from ['"]\.\.\/\.\.\/client-core\/bundle/g, "from '../core");
   fs.writeFileSync(filePath, content, 'utf8');
 };
 
@@ -38,14 +35,7 @@ export default defineConfig({
     ];
 
     for (const pluginName of pluginNames) {
-      const srcPath = path.resolve(
-        __dirname,
-        'src',
-        'plugins',
-        '@hey-api',
-        pluginName,
-        'bundle',
-      );
+      const srcPath = path.resolve(__dirname, 'src', 'plugins', '@hey-api', pluginName, 'bundle');
       const destPath = path.resolve(
         __dirname,
         'dist',

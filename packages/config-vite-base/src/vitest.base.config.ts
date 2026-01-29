@@ -3,10 +3,7 @@ import { platform } from 'node:os';
 import type { ViteUserConfig } from 'vitest/config';
 import { configDefaults, defineConfig, mergeConfig } from 'vitest/config';
 
-export function createVitestConfig(
-  root: string,
-  config: ViteUserConfig = {},
-): ViteUserConfig {
+export function createVitestConfig(root: string, config: ViteUserConfig = {}): ViteUserConfig {
   const baseConfig = defineConfig({
     plugins: [],
     test: {

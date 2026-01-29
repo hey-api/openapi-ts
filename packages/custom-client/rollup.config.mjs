@@ -9,9 +9,7 @@ export default files.map((file) =>
   defineConfig({
     external: (id) => {
       const normalizedId = id.split(path.sep).join('/');
-      return (
-        !normalizedId.startsWith('/') && !/^[a-zA-Z]:\//.test(normalizedId)
-      );
+      return !normalizedId.startsWith('/') && !/^[a-zA-Z]:\//.test(normalizedId);
     },
     input: `./dist/${file}`,
     output: {

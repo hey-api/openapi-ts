@@ -4,13 +4,7 @@ import ky from 'ky';
 import { createSseClient } from '../../client-core/bundle/serverSentEvents';
 import type { HttpMethod } from '../../client-core/bundle/types';
 import { getValidRequestBody } from '../../client-core/bundle/utils';
-import type {
-  Client,
-  Config,
-  RequestOptions,
-  ResolvedRequestOptions,
-  RetryOptions,
-} from './types';
+import type { Client, Config, RequestOptions, ResolvedRequestOptions, RetryOptions } from './types';
 import type { Middleware } from './utils';
 import {
   buildUrl,
@@ -32,12 +26,7 @@ export const createClient = (config: Config = {}): Client => {
     return getConfig();
   };
 
-  const interceptors = createInterceptors<
-    Request,
-    Response,
-    unknown,
-    ResolvedRequestOptions
-  >();
+  const interceptors = createInterceptors<Request, Response, unknown, ResolvedRequestOptions>();
 
   const beforeRequest = async (options: RequestOptions) => {
     const opts = {
@@ -76,12 +65,7 @@ export const createClient = (config: Config = {}): Client => {
     response: Response,
     request: Request,
     opts: ResolvedRequestOptions,
-    interceptorsMiddleware: Middleware<
-      Request,
-      Response,
-      unknown,
-      ResolvedRequestOptions
-    >,
+    interceptorsMiddleware: Middleware<Request, Response, unknown, ResolvedRequestOptions>,
   ) => {
     const result = {
       request,
@@ -151,14 +135,7 @@ export const createClient = (config: Config = {}): Client => {
       kyOptions.retry = {
         limit: retryOpts.limit ?? 2,
         methods: retryOpts.methods as Array<
-          | 'get'
-          | 'post'
-          | 'put'
-          | 'patch'
-          | 'head'
-          | 'delete'
-          | 'options'
-          | 'trace'
+          'get' | 'post' | 'put' | 'patch' | 'head' | 'delete' | 'options' | 'trace'
         >,
         statusCodes: retryOpts.statusCodes,
       };
@@ -214,10 +191,7 @@ export const createClient = (config: Config = {}): Client => {
           ? getParseAs(response.headers.get('Content-Type'))
           : opts.parseAs) ?? 'json';
 
-      if (
-        response.status === 204 ||
-        response.headers.get('Content-Length') === '0'
-      ) {
+      if (response.status === 204 || response.headers.get('Content-Length') === '0') {
         let emptyData: any;
         switch (parseAs) {
           case 'arrayBuffer':
@@ -289,35 +263,30 @@ export const createClient = (config: Config = {}): Client => {
     return parseErrorResponse(response, request, opts, interceptors);
   };
 
-  const makeMethodFn =
-    (method: Uppercase<HttpMethod>) => (options: RequestOptions) =>
-      request({ ...options, method });
+  const makeMethodFn = (method: Uppercase<HttpMethod>) => (options: RequestOptions) =>
+    request({ ...options, method });
 
-  const makeSseFn =
-    (method: Uppercase<HttpMethod>) => async (options: RequestOptions) => {
-      const { opts, url } = await beforeRequest(options);
-      return createSseClient({
-        ...opts,
-        body: opts.body as BodyInit | null | undefined,
-        fetch: globalThis.fetch,
-        headers: opts.headers as unknown as Record<string, string>,
-        method,
-        onRequest: async (url, init) => {
-          let request = new Request(url, init);
-          for (const fn of interceptors.request.fns) {
-            if (fn) {
-              request = await fn(request, opts);
-            }
+  const makeSseFn = (method: Uppercase<HttpMethod>) => async (options: RequestOptions) => {
+    const { opts, url } = await beforeRequest(options);
+    return createSseClient({
+      ...opts,
+      body: opts.body as BodyInit | null | undefined,
+      fetch: globalThis.fetch,
+      headers: opts.headers as unknown as Record<string, string>,
+      method,
+      onRequest: async (url, init) => {
+        let request = new Request(url, init);
+        for (const fn of interceptors.request.fns) {
+          if (fn) {
+            request = await fn(request, opts);
           }
-          return request;
-        },
-        serializedBody: getValidRequestBody(opts) as
-          | BodyInit
-          | null
-          | undefined,
-        url,
-      });
-    };
+        }
+        return request;
+      },
+      serializedBody: getValidRequestBody(opts) as BodyInit | null | undefined,
+      url,
+    });
+  };
 
   return {
     buildUrl,

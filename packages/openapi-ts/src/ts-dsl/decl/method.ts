@@ -31,11 +31,7 @@ const Mixed = AbstractMixin(
               PrivateMixin(
                 ProtectedMixin(
                   PublicMixin(
-                    StaticMixin(
-                      TypeParamsMixin(
-                        TypeReturnsMixin(TsDsl<ts.MethodDeclaration>),
-                      ),
-                    ),
+                    StaticMixin(TypeParamsMixin(TypeReturnsMixin(TsDsl<ts.MethodDeclaration>))),
                   ),
                 ),
               ),

@@ -36,14 +36,7 @@ declare module '@hey-api/codegen-core' {
     pluginName?: string;
     resource?: 'client' | 'definition' | 'operation' | 'webhook' | AnyString;
     resourceId?: string;
-    role?:
-      | 'data'
-      | 'error'
-      | 'errors'
-      | 'options'
-      | 'response'
-      | 'responses'
-      | AnyString;
+    role?: 'data' | 'error' | 'errors' | 'options' | 'response' | 'responses' | AnyString;
     /**
      * Tags associated with this symbol.
      */

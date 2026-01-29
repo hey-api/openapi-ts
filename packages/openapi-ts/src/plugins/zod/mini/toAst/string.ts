@@ -27,12 +27,8 @@ function formatNode(ctx: StringResolverContext): Chain | undefined {
       return $(z).attr(identifiers.iso).attr(identifiers.date).call();
     case 'date-time': {
       const obj = $.object()
-        .$if(plugin.config.dates.offset, (o) =>
-          o.prop('offset', $.literal(true)),
-        )
-        .$if(plugin.config.dates.local, (o) =>
-          o.prop('local', $.literal(true)),
-        );
+        .$if(plugin.config.dates.offset, (o) => o.prop('offset', $.literal(true)))
+        .$if(plugin.config.dates.local, (o) => o.prop('local', $.literal(true)));
       return $(z)
         .attr(identifiers.iso)
         .attr(identifiers.datetime)
@@ -58,8 +54,7 @@ function formatNode(ctx: StringResolverContext): Chain | undefined {
 function lengthNode(ctx: StringResolverContext): Chain | undefined {
   const { schema, symbols } = ctx;
   const { z } = symbols;
-  if (schema.minLength === undefined || schema.minLength !== schema.maxLength)
-    return;
+  if (schema.minLength === undefined || schema.minLength !== schema.maxLength) return;
   return $(z).attr(identifiers.length).call($.literal(schema.minLength));
 }
 
@@ -114,9 +109,7 @@ function stringResolver(ctx: StringResolverContext): Chain {
   if (patternNode) checks.push(patternNode);
 
   if (checks.length > 0) {
-    ctx.chain.current = ctx.chain.current
-      .attr(identifiers.check)
-      .call(...checks);
+    ctx.chain.current = ctx.chain.current.attr(identifiers.check).call(...checks);
   }
 
   return ctx.chain.current;

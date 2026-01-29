@@ -24,9 +24,7 @@ export const exportAst = ({
 
   const statement = $.const(symbol)
     .export()
-    .$if(plugin.config.comments && createSchemaComment(schema), (c, v) =>
-      c.doc(v),
-    )
+    .$if(plugin.config.comments && createSchemaComment(schema), (c, v) => c.doc(v))
     .$if(ast.typeName, (c, v) => c.type($.type(z).attr(v)))
     .assign(ast.expression);
   plugin.node(statement);

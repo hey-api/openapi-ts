@@ -8,11 +8,7 @@ import {
 } from '../../../../plugins/shared/utils/operation';
 import type { TsDsl } from '../../../../ts-dsl';
 import { $ } from '../../../../ts-dsl';
-import {
-  createQueryKeyFunction,
-  createQueryKeyType,
-  queryKeyStatement,
-} from '../queryKey';
+import { createQueryKeyFunction, createQueryKeyType, queryKeyStatement } from '../queryKey';
 import { handleMeta } from '../shared/meta';
 import { useTypeData, useTypeError, useTypeResponse } from '../shared/useType';
 import type { PluginInstance } from '../types';
@@ -48,9 +44,7 @@ export const createQueryOptions = ({
 
   const symbolQueryOptions = plugin.external(`${plugin.name}.queryOptions`);
 
-  const symbolQueryKey = plugin.symbol(
-    applyNaming(operation.id, plugin.config.queryKeys),
-  );
+  const symbolQueryKey = plugin.symbol(applyNaming(operation.id, plugin.config.queryKeys));
   const node = queryKeyStatement({
     isInfinite: false,
     operation,
@@ -84,10 +78,7 @@ export const createQueryOptions = ({
   if (plugin.getPluginOrThrow('@hey-api/sdk').config.responseStyle === 'data') {
     statements.push($.return(awaitSdkFn));
   } else {
-    statements.push(
-      $.const().object('data').assign(awaitSdkFn),
-      $.return('data'),
-    );
+    statements.push($.const().object('data').assign(awaitSdkFn), $.return('data'));
   }
 
   const queryOptionsObj = $.object()
@@ -100,9 +91,7 @@ export const createQueryOptions = ({
         .do(...statements),
     )
     .prop('queryKey', $(symbolQueryKey).call(optionsParamName))
-    .$if(handleMeta(plugin, operation, 'queryOptions'), (o, v) =>
-      o.prop('meta', v),
-    );
+    .$if(handleMeta(plugin, operation, 'queryOptions'), (o, v) => o.prop('meta', v));
 
   const symbolQueryOptionsFn = plugin.symbol(
     applyNaming(operation.id, plugin.config.queryOptions),
@@ -120,15 +109,11 @@ export const createQueryOptions = ({
   // TODO: AxiosError<PutSubmissionMetaError>
   const statement = $.const(symbolQueryOptionsFn)
     .export(plugin.config.queryOptions.exported)
-    .$if(plugin.config.comments && createOperationComment(operation), (c, v) =>
-      c.doc(v),
-    )
+    .$if(plugin.config.comments && createOperationComment(operation), (c, v) => c.doc(v))
     .assign(
       $.func()
         .param(optionsParamName, (p) =>
-          p
-            .required(isRequiredOptions)
-            .type(useTypeData({ operation, plugin })),
+          p.required(isRequiredOptions).type(useTypeData({ operation, plugin })),
         )
         .do(
           $(symbolQueryOptions)

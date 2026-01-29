@@ -8,9 +8,7 @@ import type { Chain } from '../../shared/chain';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
 import { irSchemaToAst } from '../plugin';
 
-function additionalPropertiesNode(
-  ctx: ObjectResolverContext,
-): Chain | null | undefined {
+function additionalPropertiesNode(ctx: ObjectResolverContext): Chain | null | undefined {
   const { plugin, schema } = ctx;
 
   if (

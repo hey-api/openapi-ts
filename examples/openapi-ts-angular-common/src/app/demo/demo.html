@@ -20,16 +20,12 @@
         class="pet-image"
       />
       } @else {
-      <div class="pet-placeholder">
-        {{ pet.value()?.name?.slice(0, 1) || 'N' }}
-      </div>
+      <div class="pet-placeholder">{{ pet.value()?.name?.slice(0, 1) || 'N' }}</div>
       }
     </div>
     <div class="pet-details">
       <div class="pet-name">Name: {{ pet.value()?.name || 'N/A' }}</div>
-      <div class="pet-category">
-        Category: {{ pet.value()?.category?.name || 'N/A' }}
-      </div>
+      <div class="pet-category">Category: {{ pet.value()?.category?.name || 'N/A' }}</div>
     </div>
   </div>
 </div>

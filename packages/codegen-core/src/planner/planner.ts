@@ -15,8 +15,7 @@ import { Analyzer } from './analyzer';
 import type { AssignOptions, Scope } from './scope';
 import { createScope } from './scope';
 
-const isTypeOnlyKind = (kind: SymbolKind) =>
-  kind === 'type' || kind === 'interface';
+const isTypeOnlyKind = (kind: SymbolKind) => kind === 'type' || kind === 'interface';
 
 export class Planner {
   private readonly analyzer = new Analyzer();
@@ -51,8 +50,7 @@ export class Planner {
       const file = this.project.files.register({
         external: false,
         language: node.language,
-        logicalFilePath:
-          symbol.getFilePath?.(symbol) || this.project.defaultFileName,
+        logicalFilePath: symbol.getFilePath?.(symbol) || this.project.defaultFileName,
       });
       file.addNode(node);
       symbol.setFile(file);
@@ -141,10 +139,7 @@ export class Planner {
    * distinguishing type-only exports based on symbol kinds.
    */
   private planExports(): void {
-    const seenByFile = new Map<
-      File,
-      Map<string, { kinds: Set<SymbolKind>; symbol: Symbol }>
-    >();
+    const seenByFile = new Map<File, Map<string, { kinds: Set<SymbolKind>; symbol: Symbol }>>();
     const sourceFile = new Map<number, File>();
 
     this.analyzer.analyze(this.project.nodes.all(), (ctx, node) => {
@@ -204,9 +199,7 @@ export class Planner {
             isTypeOnly: true,
           };
         }
-        const isTypeOnly = [...entry.kinds].every((kind) =>
-          isTypeOnlyKind(kind),
-        );
+        const isTypeOnly = [...entry.kinds].every((kind) => isTypeOnlyKind(kind));
         const exportedName = entry.symbol.finalName;
         exp.exports.push({
           exportedName,
@@ -319,9 +312,7 @@ export class Planner {
             kind: 'named',
           };
         }
-        const isTypeOnly = [...entry.kinds].every((kind) =>
-          isTypeOnlyKind(kind),
-        );
+        const isTypeOnly = [...entry.kinds].every((kind) => isTypeOnlyKind(kind));
         if (entry.symbol.importKind === 'namespace') {
           imp.imports = [];
           imp.kind = 'namespace';
@@ -367,9 +358,7 @@ export class Planner {
     this.assignSymbolName({
       ...args,
       file: args.symbol.file,
-      scope:
-        args?.scope ??
-        createScope({ localNames: args.symbol.file.topLevelNames }),
+      scope: args?.scope ?? createScope({ localNames: args.symbol.file.topLevelNames }),
       scopesToUpdate: [
         createScope({ localNames: args.symbol.file.allNames }),
         args.ctx.scopes,
@@ -424,9 +413,7 @@ export class Planner {
 
     const baseName = symbol.name;
     let finalName =
-      node?.nameSanitizer?.(baseName) ??
-      symbol.node?.nameSanitizer?.(baseName) ??
-      baseName;
+      node?.nameSanitizer?.(baseName) ?? symbol.node?.nameSanitizer?.(baseName) ?? baseName;
     let attempt = 1;
 
     const localNames = ctx.localNames(scope);

@@ -3,9 +3,7 @@ import { clientFolderAbsolutePath } from '../../../generate/client';
 import { $ } from '../../../ts-dsl';
 import type { PluginHandler } from './types';
 
-export const createClientConfigType = ({
-  plugin,
-}: Parameters<PluginHandler>[0]) => {
+export const createClientConfigType = ({ plugin }: Parameters<PluginHandler>[0]) => {
   const clientModule = clientFolderAbsolutePath(getTypedConfig(plugin));
   const symbolClientOptions = plugin.referenceSymbol({
     category: 'type',
@@ -33,27 +31,18 @@ export const createClientConfigType = ({
       "`setConfig()`. This is useful for example if you're using Next.js",
       'to ensure your client always has the correct values.',
     ])
-    .generic('T', (g) =>
-      g.extends(symbolDefaultClientOptions).default(symbolClientOptions),
-    )
+    .generic('T', (g) => g.extends(symbolDefaultClientOptions).default(symbolClientOptions))
     .type(
       $.type
         .func()
         .param('override', (p) =>
           p
             .optional()
-            .type(
-              $.type(symbolConfig).generic(
-                $.type.and(symbolDefaultClientOptions, 'T'),
-              ),
-            ),
+            .type($.type(symbolConfig).generic($.type.and(symbolDefaultClientOptions, 'T'))),
         )
         .returns(
           $.type(symbolConfig).generic(
-            $.type.and(
-              $.type('Required').generic(symbolDefaultClientOptions),
-              'T',
-            ),
+            $.type.and($.type('Required').generic(symbolDefaultClientOptions), 'T'),
           ),
         ),
     );

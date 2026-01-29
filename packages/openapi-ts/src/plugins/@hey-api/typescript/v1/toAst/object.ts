@@ -55,29 +55,20 @@ export const objectToAst = ({
   }
 
   const hasPatterns =
-    !!schema.patternProperties &&
-    Object.keys(schema.patternProperties).length > 0;
+    !!schema.patternProperties && Object.keys(schema.patternProperties).length > 0;
 
   const addPropsRaw = schema.additionalProperties;
   const addPropsObj =
-    addPropsRaw !== false && addPropsRaw
-      ? (addPropsRaw as IR.SchemaObject)
-      : undefined;
+    addPropsRaw !== false && addPropsRaw ? (addPropsRaw as IR.SchemaObject) : undefined;
   const shouldCreateIndex =
-    hasPatterns ||
-    (!!addPropsObj && (addPropsObj.type !== 'never' || !indexSchemas.length));
+    hasPatterns || (!!addPropsObj && (addPropsObj.type !== 'never' || !indexSchemas.length));
 
   if (shouldCreateIndex) {
     // only inject additionalProperties when it's not "never"
     const addProps = addPropsObj;
     if (addProps && addProps.type !== 'never') {
       indexSchemas.unshift(addProps);
-    } else if (
-      !hasPatterns &&
-      !indexSchemas.length &&
-      addProps &&
-      addProps.type === 'never'
-    ) {
+    } else if (!hasPatterns && !indexSchemas.length && addProps && addProps.type === 'never') {
       // keep "never" only when there are NO patterns and NO explicit properties
       indexSchemas = [addProps];
     }

@@ -15,11 +15,7 @@ export const fromValue = (input: unknown): TsDsl<ts.TypeNode> => {
     return new TypeLiteralTsDsl(input);
   }
 
-  if (
-    typeof input === 'number' ||
-    typeof input === 'boolean' ||
-    typeof input === 'string'
-  ) {
+  if (typeof input === 'number' || typeof input === 'boolean' || typeof input === 'string') {
     return new TypeLiteralTsDsl(input);
   }
 
@@ -37,7 +33,5 @@ export const fromValue = (input: unknown): TsDsl<ts.TypeNode> => {
     return obj;
   }
 
-  throw new Error(
-    `$.type.fromValue(): Unsupported input type ${String(input)}`,
-  );
+  throw new Error(`$.type.fromValue(): Unsupported input type ${String(input)}`);
 };

@@ -2,14 +2,8 @@ import type { IndexExportOption } from '@hey-api/shared';
 import type { DefinePlugin, Plugin } from '@hey-api/shared';
 import type { OperationsStrategy } from '@hey-api/shared';
 
-import type {
-  HttpRequestsConfig,
-  UserHttpRequestsConfig,
-} from './httpRequests';
-import type {
-  HttpResourcesConfig,
-  UserHttpResourcesConfig,
-} from './httpResources';
+import type { HttpRequestsConfig, UserHttpRequestsConfig } from './httpRequests';
+import type { HttpResourcesConfig, UserHttpResourcesConfig } from './httpResources';
 
 export type UserConfig = Plugin.Name<'@angular/common'> &
   Plugin.Hooks & {

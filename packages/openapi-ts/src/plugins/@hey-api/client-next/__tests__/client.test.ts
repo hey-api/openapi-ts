@@ -118,45 +118,37 @@ describe('zero-length body handling', () => {
 describe('unserialized request body handling', () => {
   const client = createClient({ baseUrl: 'https://example.com' });
 
-  const scenarios = [
-    { body: 0 },
-    { body: false },
-    { body: 'test string' },
-    { body: '' },
-  ];
+  const scenarios = [{ body: 0 }, { body: false }, { body: 'test string' }, { body: '' }];
 
-  it.each(scenarios)(
-    'handles plain text body with $body value',
-    async ({ body }) => {
-      const mockResponse = new Response(JSON.stringify({ success: true }), {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        status: 200,
-      });
+  it.each(scenarios)('handles plain text body with $body value', async ({ body }) => {
+    const mockResponse = new Response(JSON.stringify({ success: true }), {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      status: 200,
+    });
 
-      const mockFetch: MockFetch = vi.fn().mockResolvedValueOnce(mockResponse);
-      const headers = new Headers({ 'Content-Type': 'text/plain' });
+    const mockFetch: MockFetch = vi.fn().mockResolvedValueOnce(mockResponse);
+    const headers = new Headers({ 'Content-Type': 'text/plain' });
 
-      await client.post({
+    await client.post({
+      body,
+      bodySerializer: null,
+      fetch: mockFetch,
+      headers: {
+        'Content-Type': 'text/plain',
+      },
+      url: '/test',
+    });
+
+    expect(mockFetch).toHaveBeenCalledExactlyOnceWith(
+      expect.any(String),
+      expect.objectContaining({
         body,
-        bodySerializer: null,
-        fetch: mockFetch,
-        headers: {
-          'Content-Type': 'text/plain',
-        },
-        url: '/test',
-      });
-
-      expect(mockFetch).toHaveBeenCalledExactlyOnceWith(
-        expect.any(String),
-        expect.objectContaining({
-          body,
-          headers,
-        }),
-      );
-    },
-  );
+        headers,
+      }),
+    );
+  });
 });
 
 describe('serialized request body handling', () => {
@@ -264,9 +256,7 @@ describe('request interceptor', () => {
           return options;
         });
 
-      const interceptorId = client.interceptors.request.use(
-        mockRequestInterceptor,
-      );
+      const interceptorId = client.interceptors.request.use(mockRequestInterceptor);
 
       await client.post({
         body,

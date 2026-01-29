@@ -133,10 +133,7 @@ export const handler: MyPlugin['Handler'] = ({ plugin }) => {
   );
   const node = ts.factory.createVariableStatement(
     [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
-    ts.factory.createVariableDeclarationList(
-      [variableDeclaration],
-      ts.NodeFlags.Const,
-    ),
+    ts.factory.createVariableDeclarationList([variableDeclaration], ts.NodeFlags.Const),
   );
 
   // add a node to our file

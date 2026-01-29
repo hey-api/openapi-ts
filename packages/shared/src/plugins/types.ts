@@ -9,9 +9,7 @@ import type { PluginInstance } from './shared/utils/instance';
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface PluginConfigMap {}
 
-export type PluginNames = keyof PluginConfigMap extends never
-  ? string
-  : keyof PluginConfigMap;
+export type PluginNames = keyof PluginConfigMap extends never ? string : keyof PluginConfigMap;
 
 export type AnyPluginName = PluginNames | AnyString;
 
@@ -93,9 +91,7 @@ export namespace Plugin {
    * where plugins can define how specific schema constructs
    * should be resolved or overridden.
    */
-  export type Resolvers<
-    T extends Record<string, unknown> = Record<string, unknown>,
-  > = {
+  export type Resolvers<T extends Record<string, unknown> = Record<string, unknown>> = {
     /**
      * Custom behavior resolvers for a plugin.
      *
@@ -121,9 +117,7 @@ export type DefinePlugin<
   Api extends BaseApi = never,
 > = {
   Config: Plugin.Config<Plugin.Types<Config, ResolvedConfig, Api>>;
-  Handler: (args: {
-    plugin: PluginInstance<Plugin.Types<Config, ResolvedConfig, Api>>;
-  }) => void;
+  Handler: (args: { plugin: PluginInstance<Plugin.Types<Config, ResolvedConfig, Api>> }) => void;
   Instance: PluginInstance<Plugin.Types<Config, ResolvedConfig, Api>>;
   Types: Plugin.Types<Config, ResolvedConfig, Api>;
 };

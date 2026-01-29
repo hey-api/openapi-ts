@@ -4,10 +4,7 @@ import type { NameScopes, Scope } from './scope';
 
 export type Input = Ref<object> | object | string | number | undefined;
 
-export type NameConflictResolver = (args: {
-  attempt: number;
-  baseName: string;
-}) => string | null;
+export type NameConflictResolver = (args: { attempt: number; baseName: string }) => string | null;
 
 export interface IAnalysisContext {
   /** Register a dependency on another symbol. */
@@ -27,8 +24,5 @@ export interface IAnalysisContext {
   /** Top-level symbol for the current analysis pass. */
   symbol?: Symbol;
   /** Walks all symbols in the scope tree in depth-first order. */
-  walkScopes(
-    callback: (symbol: Ref<Symbol>, scope: Scope) => void,
-    scope?: Scope,
-  ): void;
+  walkScopes(callback: (symbol: Ref<Symbol>, scope: Scope) => void, scope?: Scope): void;
 }

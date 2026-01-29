@@ -23,10 +23,7 @@ export type UserExamplesConfig = Omit<ExampleOptions, 'payload'> & {
    * Example request payload.
    */
   payload?: MaybeFunc<
-    (
-      operation: IR.OperationObject,
-      ctx: DollarTsDsl,
-    ) => CallArgs | CallArgs[number]
+    (operation: IR.OperationObject, ctx: DollarTsDsl) => CallArgs | CallArgs[number]
   >;
   /**
    * Transform the generated example string.
@@ -51,10 +48,7 @@ export type ExamplesConfig = Omit<ExampleOptions, 'payload'> &
      * Example request payload.
      */
     payload?: MaybeFunc<
-      (
-        operation: IR.OperationObject,
-        ctx: DollarTsDsl,
-      ) => CallArgs | CallArgs[number]
+      (operation: IR.OperationObject, ctx: DollarTsDsl) => CallArgs | CallArgs[number]
     >;
     /**
      * Transform the generated example string.

@@ -25,10 +25,7 @@ export const parseWebhooks = ({
           }
         : webhook;
 
-    const operationArgs: Omit<
-      Parameters<typeof parseWebhookOperation>[0],
-      'method'
-    > = {
+    const operationArgs: Omit<Parameters<typeof parseWebhookOperation>[0], 'method'> = {
       context,
       key,
       operation: {

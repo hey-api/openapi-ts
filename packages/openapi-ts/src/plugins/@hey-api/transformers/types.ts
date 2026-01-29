@@ -9,11 +9,7 @@ import type { ExpressionTransformer } from './expressions';
  * Returns the TypeScript type node for a schema with a specific format.
  * If undefined is returned, the default type will be used.
  */
-export type TypeTransformer = ({
-  schema,
-}: {
-  schema: IR.SchemaObject;
-}) => ts.TypeNode | undefined;
+export type TypeTransformer = ({ schema }: { schema: IR.SchemaObject }) => ts.TypeNode | undefined;
 
 export type UserConfig = Plugin.Name<'@hey-api/transformers'> &
   Plugin.Hooks & {

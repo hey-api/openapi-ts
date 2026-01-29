@@ -1,9 +1,4 @@
-import type {
-  AnalysisContext,
-  NodeName,
-  NodeScope,
-  Ref,
-} from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName, NodeScope, Ref } from '@hey-api/codegen-core';
 import { isRef, ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
@@ -64,9 +59,6 @@ export class TypeAttrTsDsl extends Mixed {
     if (!ts.isEntityName(left)) {
       throw new Error('TypeAttrTsDsl: base must be an EntityName');
     }
-    return ts.factory.createQualifiedName(
-      left,
-      this.$node(this._right) as ts.Identifier,
-    );
+    return ts.factory.createQualifiedName(left, this.$node(this._right) as ts.Identifier);
   }
 }

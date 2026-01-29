@@ -1,9 +1,4 @@
-import {
-  useAsyncData,
-  useFetch,
-  useLazyAsyncData,
-  useLazyFetch,
-} from 'nuxt/app';
+import { useAsyncData, useFetch, useLazyAsyncData, useLazyFetch } from 'nuxt/app';
 import { reactive, ref, watch } from 'vue';
 
 import { createSseClient } from '../../client-core/bundle/serverSentEvents';
@@ -58,11 +53,7 @@ export const createClient = (config: Config = {}): Client => {
     return { opts, url };
   };
 
-  const request: Client['request'] = ({
-    asyncDataOptions,
-    composable = '$fetch',
-    ...options
-  }) => {
+  const request: Client['request'] = ({ asyncDataOptions, composable = '$fetch', ...options }) => {
     const key = options.key;
     const opts = {
       ..._config,
@@ -73,12 +64,7 @@ export const createClient = (config: Config = {}): Client => {
       onResponse: mergeInterceptors(_config.onResponse, options.onResponse),
     };
 
-    const {
-      requestValidator,
-      responseTransformer,
-      responseValidator,
-      security,
-    } = opts;
+    const { requestValidator, responseTransformer, responseValidator, security } = opts;
     if (requestValidator || security) {
       // auth must happen in interceptors otherwise we'd need to require
       // asyncContext enabled
@@ -182,26 +168,21 @@ export const createClient = (config: Config = {}): Client => {
     return undefined as any;
   };
 
-  const makeMethodFn =
-    (method: Uppercase<HttpMethod>) => (options: RequestOptions) =>
-      request({ ...options, method });
+  const makeMethodFn = (method: Uppercase<HttpMethod>) => (options: RequestOptions) =>
+    request({ ...options, method });
 
-  const makeSseFn =
-    (method: Uppercase<HttpMethod>) => async (options: RequestOptions) => {
-      const { opts, url } = await beforeRequest(options);
-      return createSseClient({
-        ...unwrapRefs(opts),
-        body: opts.body as BodyInit | null | undefined,
-        method,
-        onRequest: undefined,
-        serializedBody: getValidRequestBody(opts) as
-          | BodyInit
-          | null
-          | undefined,
-        signal: unwrapRefs(opts.signal) as AbortSignal,
-        url,
-      });
-    };
+  const makeSseFn = (method: Uppercase<HttpMethod>) => async (options: RequestOptions) => {
+    const { opts, url } = await beforeRequest(options);
+    return createSseClient({
+      ...unwrapRefs(opts),
+      body: opts.body as BodyInit | null | undefined,
+      method,
+      onRequest: undefined,
+      serializedBody: getValidRequestBody(opts) as BodyInit | null | undefined,
+      signal: unwrapRefs(opts.signal) as AbortSignal,
+      url,
+    });
+  };
 
   return {
     buildUrl,

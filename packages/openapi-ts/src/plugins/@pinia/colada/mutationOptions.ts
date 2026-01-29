@@ -17,9 +17,7 @@ export const createMutationOptions = ({
   operation: IR.OperationObject;
   plugin: PiniaColadaPlugin['Instance'];
 }): void => {
-  const symbolMutationOptionsType = plugin.external(
-    `${plugin.name}.UseMutationOptions`,
-  );
+  const symbolMutationOptionsType = plugin.external(`${plugin.name}.UseMutationOptions`);
 
   const client = getClientPlugin(getTypedConfig(plugin));
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
@@ -39,11 +37,7 @@ export const createMutationOptions = ({
         }),
       )
       .call(
-        $.object()
-          .pretty()
-          .spread(options)
-          .spread(fnOptions)
-          .prop('throwOnError', $.literal(true)),
+        $.object().pretty().spread(options).spread(fnOptions).prop('throwOnError', $.literal(true)),
       )
       .await(),
   );
@@ -53,10 +47,7 @@ export const createMutationOptions = ({
   if (plugin.getPluginOrThrow('@hey-api/sdk').config.responseStyle === 'data') {
     statements.push($.return(awaitSdkFn));
   } else {
-    statements.push(
-      $.const().object('data').assign(awaitSdkFn),
-      $.return('data'),
-    );
+    statements.push($.const().object('data').assign(awaitSdkFn), $.return('data'));
   }
 
   const mutationOpts = $.object()
@@ -66,28 +57,20 @@ export const createMutationOptions = ({
       $.func()
         .async()
         .param(fnOptions, (p) =>
-          p.$if(isNuxtClient, (f) =>
-            f.type($.type('Partial').generic(typeData)),
-          ),
+          p.$if(isNuxtClient, (f) => f.type($.type('Partial').generic(typeData))),
         )
         .do(...statements),
     )
-    .$if(handleMeta(plugin, operation, 'mutationOptions'), (o, v) =>
-      o.prop('meta', v),
-    );
+    .$if(handleMeta(plugin, operation, 'mutationOptions'), (o, v) => o.prop('meta', v));
   const symbolMutationOptions = plugin.symbol(
     applyNaming(operation.id, plugin.config.mutationOptions),
   );
   const statement = $.const(symbolMutationOptions)
     .export()
-    .$if(plugin.config.comments && createOperationComment(operation), (c, v) =>
-      c.doc(v),
-    )
+    .$if(plugin.config.comments && createOperationComment(operation), (c, v) => c.doc(v))
     .assign(
       $.func()
-        .param(options, (p) =>
-          p.optional().type($.type('Partial').generic(typeData)),
-        )
+        .param(options, (p) => p.optional().type($.type('Partial').generic(typeData)))
         .returns(
           $.type(symbolMutationOptionsType)
             .generic(useTypeResponse({ operation, plugin }))

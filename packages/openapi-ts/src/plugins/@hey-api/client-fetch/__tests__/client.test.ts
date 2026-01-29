@@ -270,38 +270,35 @@ describe('unserialized request body handling', () => {
     { body: '', textValue: '' },
   ];
 
-  it.each(scenarios)(
-    'handles plain text body with $body value',
-    async ({ body, textValue }) => {
-      const mockResponse = new Response(JSON.stringify({ success: true }), {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        status: 200,
-      });
+  it.each(scenarios)('handles plain text body with $body value', async ({ body, textValue }) => {
+    const mockResponse = new Response(JSON.stringify({ success: true }), {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      status: 200,
+    });
 
-      const mockFetch: MockFetch = vi.fn().mockResolvedValueOnce(mockResponse);
+    const mockFetch: MockFetch = vi.fn().mockResolvedValueOnce(mockResponse);
 
-      const result = await client.post({
-        body,
-        bodySerializer: null,
-        fetch: mockFetch,
-        headers: {
-          'Content-Type': 'text/plain',
-        },
-        url: '/test',
-      });
+    const result = await client.post({
+      body,
+      bodySerializer: null,
+      fetch: mockFetch,
+      headers: {
+        'Content-Type': 'text/plain',
+      },
+      url: '/test',
+    });
 
-      expect(mockFetch).toHaveBeenCalledWith(
-        expect.objectContaining({
-          body: expect.any(ReadableStream),
-        }),
-      );
+    expect(mockFetch).toHaveBeenCalledWith(
+      expect.objectContaining({
+        body: expect.any(ReadableStream),
+      }),
+    );
 
-      await expect(result.request.text()).resolves.toEqual(textValue);
-      expect(result.request.headers.get('Content-Type')).toEqual('text/plain');
-    },
-  );
+    await expect(result.request.text()).resolves.toEqual(textValue);
+    expect(result.request.headers.get('Content-Type')).toEqual('text/plain');
+  });
 });
 
 describe('serialized request body handling', () => {
@@ -340,13 +337,7 @@ describe('serialized request body handling', () => {
 
   it.each(scenarios)(
     'handles $serializedBody serializedBody value',
-    async ({
-      body,
-      expectBodyValue,
-      expectContentHeader,
-      serializedBody,
-      textValue,
-    }) => {
+    async ({ body, expectBodyValue, expectContentHeader, serializedBody, textValue }) => {
       const mockResponse = new Response(JSON.stringify({ success: true }), {
         headers: {
           'Content-Type': 'application/json',
@@ -414,18 +405,14 @@ describe('request interceptor', () => {
 
       const mockRequestInterceptor = vi
         .fn()
-        .mockImplementation(
-          (request: Request, options: ResolvedRequestOptions) => {
-            expect(options.serializedBody).toBe(expectedSerializedValue);
-            expect(options.body).toBe(body);
+        .mockImplementation((request: Request, options: ResolvedRequestOptions) => {
+          expect(options.serializedBody).toBe(expectedSerializedValue);
+          expect(options.body).toBe(body);
 
-            return request;
-          },
-        );
+          return request;
+        });
 
-      const interceptorId = client.interceptors.request.use(
-        mockRequestInterceptor,
-      );
+      const interceptorId = client.interceptors.request.use(mockRequestInterceptor);
 
       await client.post({
         body,
@@ -448,10 +435,7 @@ describe('error interceptor for fetch exceptions', () => {
   it('intercepts AbortError when fetch is aborted', async () => {
     const client = createClient({ baseUrl: 'https://example.com' });
 
-    const abortError = new DOMException(
-      'The operation was aborted',
-      'AbortError',
-    );
+    const abortError = new DOMException('The operation was aborted', 'AbortError');
     const mockFetch: MockFetch = vi.fn().mockRejectedValue(abortError);
 
     const mockErrorInterceptor = vi.fn().mockImplementation((error) => {
@@ -505,10 +489,7 @@ describe('error interceptor for fetch exceptions', () => {
   it('throws AbortError when throwOnError is true', async () => {
     const client = createClient({ baseUrl: 'https://example.com' });
 
-    const abortError = new DOMException(
-      'The operation was aborted',
-      'AbortError',
-    );
+    const abortError = new DOMException('The operation was aborted', 'AbortError');
     const mockFetch: MockFetch = vi.fn().mockRejectedValue(abortError);
 
     const mockErrorInterceptor = vi.fn().mockImplementation(() => ({
@@ -534,10 +515,7 @@ describe('error interceptor for fetch exceptions', () => {
   it('handles fetch exceptions without error interceptor', async () => {
     const client = createClient({ baseUrl: 'https://example.com' });
 
-    const abortError = new DOMException(
-      'The operation was aborted',
-      'AbortError',
-    );
+    const abortError = new DOMException('The operation was aborted', 'AbortError');
     const mockFetch: MockFetch = vi.fn().mockRejectedValue(abortError);
 
     const result = await client.get({

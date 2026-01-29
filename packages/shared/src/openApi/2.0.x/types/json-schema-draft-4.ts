@@ -143,19 +143,6 @@ export interface JsonSchemaDraft4 extends EnumExtensions {
   uniqueItems?: boolean;
 }
 
-type JsonSchemaFormats =
-  | 'date-time'
-  | 'email'
-  | 'hostname'
-  | 'ipv4'
-  | 'ipv6'
-  | 'uri'
-  | AnyString;
+type JsonSchemaFormats = 'date-time' | 'email' | 'hostname' | 'ipv4' | 'ipv6' | 'uri' | AnyString;
 
-type JsonSchemaTypes =
-  | 'array'
-  | 'boolean'
-  | 'integer'
-  | 'number'
-  | 'object'
-  | 'string';
+type JsonSchemaTypes = 'array' | 'boolean' | 'integer' | 'number' | 'object' | 'string';

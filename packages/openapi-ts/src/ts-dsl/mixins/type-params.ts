@@ -15,9 +15,7 @@ export interface TypeParamsMethods extends Node {
   generics(...args: ReadonlyArray<NodeName | MaybeTsDsl<TypeParamTsDsl>>): this;
 }
 
-export function TypeParamsMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
-  Base: TBase,
-) {
+export function TypeParamsMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base: TBase) {
   abstract class TypeParams extends Base {
     protected _generics: Array<MaybeTsDsl<TypeParamTsDsl>> = [];
 
@@ -28,24 +26,15 @@ export function TypeParamsMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
       }
     }
 
-    protected generic(
-      ...args: ConstructorParameters<typeof TypeParamTsDsl>
-    ): this {
+    protected generic(...args: ConstructorParameters<typeof TypeParamTsDsl>): this {
       const g = new TypeParamTsDsl(...args);
       this._generics.push(g);
       return this;
     }
 
-    protected generics(
-      ...args: ReadonlyArray<NodeName | MaybeTsDsl<TypeParamTsDsl>>
-    ): this {
+    protected generics(...args: ReadonlyArray<NodeName | MaybeTsDsl<TypeParamTsDsl>>): this {
       for (let arg of args) {
-        if (
-          typeof arg === 'string' ||
-          typeof arg === 'number' ||
-          isSymbol(arg) ||
-          isRef(arg)
-        ) {
+        if (typeof arg === 'string' || typeof arg === 'number' || isSymbol(arg) || isRef(arg)) {
           arg = new TypeParamTsDsl(arg);
         }
         this._generics.push(arg);
@@ -53,9 +42,7 @@ export function TypeParamsMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
       return this;
     }
 
-    protected $generics():
-      | ReadonlyArray<ts.TypeParameterDeclaration>
-      | undefined {
+    protected $generics(): ReadonlyArray<ts.TypeParameterDeclaration> | undefined {
       return this.$node(this._generics);
     }
   }

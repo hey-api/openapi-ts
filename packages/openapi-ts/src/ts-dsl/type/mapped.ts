@@ -1,8 +1,4 @@
-import type {
-  AnalysisContext,
-  NodeName,
-  NodeScope,
-} from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName, NodeScope } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -16,14 +12,10 @@ export class TypeMappedTsDsl extends Mixed {
   override scope: NodeScope = 'type';
 
   protected questionToken?: TokenTsDsl<
-    | ts.SyntaxKind.QuestionToken
-    | ts.SyntaxKind.PlusToken
-    | ts.SyntaxKind.MinusToken
+    ts.SyntaxKind.QuestionToken | ts.SyntaxKind.PlusToken | ts.SyntaxKind.MinusToken
   >;
   protected readonlyToken?: TokenTsDsl<
-    | ts.SyntaxKind.ReadonlyKeyword
-    | ts.SyntaxKind.MinusToken
-    | ts.SyntaxKind.PlusToken
+    ts.SyntaxKind.ReadonlyKeyword | ts.SyntaxKind.MinusToken | ts.SyntaxKind.PlusToken
   >;
   protected _key?: string | MaybeTsDsl<ts.TypeNode>;
   protected _type?: string | MaybeTsDsl<ts.TypeNode>;
@@ -106,9 +98,7 @@ export class TypeMappedTsDsl extends Mixed {
     const missing = this.missingRequiredCalls();
     if (missing.length === 0) return;
     const name = this.name.toString();
-    throw new Error(
-      `Mapped type${name ? ` "${name}"` : ''} missing ${missing.join(' and ')}`,
-    );
+    throw new Error(`Mapped type${name ? ` "${name}"` : ''} missing ${missing.join(' and ')}`);
   }
 
   private missingRequiredCalls(): ReadonlyArray<string> {

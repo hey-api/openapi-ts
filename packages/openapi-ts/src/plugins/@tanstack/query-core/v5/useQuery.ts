@@ -27,9 +27,7 @@ export const createUseQuery = ({
     return;
   }
 
-  const symbolUseQueryFn = plugin.symbol(
-    applyNaming(operation.id, plugin.config.useQuery),
-  );
+  const symbolUseQueryFn = plugin.symbol(applyNaming(operation.id, plugin.config.useQuery));
 
   const symbolUseQuery = plugin.external(`${plugin.name}.useQuery`);
 
@@ -48,19 +46,11 @@ export const createUseQuery = ({
   });
   const statement = $.const(symbolUseQueryFn)
     .export()
-    .$if(plugin.config.comments && createOperationComment(operation), (c, v) =>
-      c.doc(v),
-    )
+    .$if(plugin.config.comments && createOperationComment(operation), (c, v) => c.doc(v))
     .assign(
       $.func()
-        .param(optionsParamName, (p) =>
-          p.required(isRequiredOptions).type(typeData),
-        )
-        .do(
-          $(symbolUseQuery)
-            .call($(symbolQueryOptionsFn).call(optionsParamName))
-            .return(),
-        ),
+        .param(optionsParamName, (p) => p.required(isRequiredOptions).type(typeData))
+        .do($(symbolUseQuery).call($(symbolQueryOptionsFn).call(optionsParamName)).return()),
     );
   plugin.node(statement);
 };

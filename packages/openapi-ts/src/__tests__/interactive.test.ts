@@ -1,8 +1,4 @@
-import {
-  detectInteractiveSession,
-  Logger,
-  mergeConfigs,
-} from '@hey-api/codegen-core';
+import { detectInteractiveSession, Logger, mergeConfigs } from '@hey-api/codegen-core';
 
 import { resolveJobs } from '../config/init';
 

@@ -10,8 +10,7 @@ export interface StructureInsert {
   source: symbol;
 }
 
-export interface StructureItem
-  extends Pick<StructureInsert, 'data' | 'source'> {
+export interface StructureItem extends Pick<StructureInsert, 'data' | 'source'> {
   /** Location of this item within the structure. */
   location: ReadonlyArray<string>;
 }

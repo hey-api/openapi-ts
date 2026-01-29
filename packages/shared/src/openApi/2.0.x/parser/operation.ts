@@ -15,8 +15,7 @@ import { paginationField } from './pagination';
 import { parseExtensions, schemaToIrSchema } from './schema';
 
 interface Operation
-  extends Omit<OperationObject, 'parameters'>,
-    Pick<IR.OperationObject, 'parameters'> {
+  extends Omit<OperationObject, 'parameters'>, Pick<IR.OperationObject, 'parameters'> {
   requestBody?: OperationObject['parameters'];
 }
 
@@ -122,8 +121,7 @@ const operationToIrOperation = ({
 
   // Check if there are any body parameters (not formData) to determine default media type
   const hasBodyParameter = operation.requestBody?.some((param) => {
-    const resolvedParam =
-      '$ref' in param ? context.resolveRef<ParameterObject>(param.$ref) : param;
+    const resolvedParam = '$ref' in param ? context.resolveRef<ParameterObject>(param.$ref) : param;
     return resolvedParam.in === 'body';
   });
 
@@ -154,8 +152,7 @@ const operationToIrOperation = ({
       response: { schema },
     });
     // TODO: add support for multiple content types, for now prefer JSON
-    const content =
-      contents.find((content) => content.type === 'json') || contents[0];
+    const content = contents.find((content) => content.type === 'json') || contents[0];
 
     if (content) {
       const pagination = paginationField({
@@ -245,17 +242,14 @@ const operationToIrOperation = ({
 
     const response = operation.responses[name]!;
     const responseObject =
-      '$ref' in response
-        ? context.resolveRef<ResponseObject>(response.$ref)
-        : response;
+      '$ref' in response ? context.resolveRef<ResponseObject>(response.$ref) : response;
     const contents = mediaTypeObjects({
       // assume JSON by default
       mimeTypes: operation.produces ? operation.produces : ['application/json'],
       response: responseObject,
     });
     // TODO: add support for multiple content types, for now prefer JSON
-    const content =
-      contents.find((content) => content.type === 'json') || contents[0];
+    const content = contents.find((content) => content.type === 'json') || contents[0];
 
     if (content) {
       irOperation.responses[name] = {

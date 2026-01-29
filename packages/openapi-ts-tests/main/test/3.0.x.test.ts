@@ -15,10 +15,7 @@ const outputDir = path.join(__dirname, 'generated', version);
 
 describe(`OpenAPI ${version}`, () => {
   const createConfig = (userConfig: UserConfig) => {
-    const input =
-      userConfig.input instanceof Array
-        ? userConfig.input[0]
-        : userConfig.input;
+    const input = userConfig.input instanceof Array ? userConfig.input[0] : userConfig.input;
     const inputPath = path.join(
       getSpecsPath(),
       version,
@@ -37,10 +34,7 @@ describe(`OpenAPI ${version}`, () => {
       logs: {
         level: 'silent',
       },
-      output: path.join(
-        outputDir,
-        typeof userConfig.output === 'string' ? userConfig.output : '',
-      ),
+      output: path.join(outputDir, typeof userConfig.output === 'string' ? userConfig.output : ''),
     } as const satisfies UserConfig;
   };
 
@@ -79,8 +73,7 @@ describe(`OpenAPI ${version}`, () => {
         output: 'array-items-one-of-length-1',
         plugins: ['@hey-api/typescript', 'valibot'],
       }),
-      description:
-        'generates correct array when items are oneOf array with single item',
+      description: 'generates correct array when items are oneOf array with single item',
     },
     {
       config: createConfig({
@@ -93,11 +86,7 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'body-response-text-plain.yaml',
         output: 'body-response-text-plain',
-        plugins: [
-          '@hey-api/client-fetch',
-          '@hey-api/typescript',
-          '@hey-api/sdk',
-        ],
+        plugins: ['@hey-api/client-fetch', '@hey-api/typescript', '@hey-api/sdk'],
       }),
       description: 'handle text/plain content type',
     },
@@ -171,11 +160,7 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'body-binary-format.yaml',
         output: 'body-binary-format',
-        plugins: [
-          '@hey-api/client-fetch',
-          '@hey-api/typescript',
-          '@hey-api/sdk',
-        ],
+        plugins: ['@hey-api/client-fetch', '@hey-api/typescript', '@hey-api/sdk'],
       }),
       description: 'handles binary format request body',
     },
@@ -183,11 +168,7 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'content-types.yaml',
         output: 'content-types',
-        plugins: [
-          '@hey-api/client-axios',
-          '@hey-api/typescript',
-          '@hey-api/sdk',
-        ],
+        plugins: ['@hey-api/client-axios', '@hey-api/typescript', '@hey-api/sdk'],
       }),
       description: 'handles content types',
     },
@@ -303,8 +284,7 @@ describe(`OpenAPI ${version}`, () => {
           },
         ],
       }),
-      description:
-        'handles various enum names and values (JavaScript, SCREAMING_SNAKE_CASE)',
+      description: 'handles various enum names and values (JavaScript, SCREAMING_SNAKE_CASE)',
     },
     {
       config: createConfig({
@@ -320,8 +300,7 @@ describe(`OpenAPI ${version}`, () => {
           },
         ],
       }),
-      description:
-        'handles various enum names and values (JavaScript, PascalCase)',
+      description: 'handles various enum names and values (JavaScript, PascalCase)',
     },
     {
       config: createConfig({
@@ -337,8 +316,7 @@ describe(`OpenAPI ${version}`, () => {
           },
         ],
       }),
-      description:
-        'handles various enum names and values (JavaScript, camelCase)',
+      description: 'handles various enum names and values (JavaScript, camelCase)',
     },
     {
       config: createConfig({
@@ -354,8 +332,7 @@ describe(`OpenAPI ${version}`, () => {
           },
         ],
       }),
-      description:
-        'handles various enum names and values (JavaScript, snake_case)',
+      description: 'handles various enum names and values (JavaScript, snake_case)',
     },
     {
       config: createConfig({
@@ -371,8 +348,7 @@ describe(`OpenAPI ${version}`, () => {
           },
         ],
       }),
-      description:
-        'handles various enum names and values (JavaScript, preserve)',
+      description: 'handles various enum names and values (JavaScript, preserve)',
     },
     {
       config: createConfig({
@@ -389,8 +365,7 @@ describe(`OpenAPI ${version}`, () => {
           },
         ],
       }),
-      description:
-        'handles various enum names and values (JavaScript, preserve, ignore null)',
+      description: 'handles various enum names and values (JavaScript, preserve, ignore null)',
     },
     {
       config: createConfig({
@@ -406,8 +381,7 @@ describe(`OpenAPI ${version}`, () => {
           },
         ],
       }),
-      description:
-        'handles various enum names and values (TypeScript, SCREAMING_SNAKE_CASE)',
+      description: 'handles various enum names and values (TypeScript, SCREAMING_SNAKE_CASE)',
     },
     {
       config: createConfig({
@@ -423,8 +397,7 @@ describe(`OpenAPI ${version}`, () => {
           },
         ],
       }),
-      description:
-        'handles various enum names and values (TypeScript, PascalCase)',
+      description: 'handles various enum names and values (TypeScript, PascalCase)',
     },
     {
       config: createConfig({
@@ -440,8 +413,7 @@ describe(`OpenAPI ${version}`, () => {
           },
         ],
       }),
-      description:
-        'handles various enum names and values (TypeScript, camelCase)',
+      description: 'handles various enum names and values (TypeScript, camelCase)',
     },
     {
       config: createConfig({
@@ -457,8 +429,7 @@ describe(`OpenAPI ${version}`, () => {
           },
         ],
       }),
-      description:
-        'handles various enum names and values (TypeScript, snake_case)',
+      description: 'handles various enum names and values (TypeScript, snake_case)',
     },
     {
       config: createConfig({
@@ -474,8 +445,7 @@ describe(`OpenAPI ${version}`, () => {
           },
         ],
       }),
-      description:
-        'handles various enum names and values (TypeScript, preserve)',
+      description: 'handles various enum names and values (TypeScript, preserve)',
     },
     {
       config: createConfig({
@@ -519,8 +489,7 @@ describe(`OpenAPI ${version}`, () => {
         output: 'internal-name-conflict',
         plugins: ['@hey-api/client-fetch', '@tanstack/react-query'],
       }),
-      description:
-        'handles conflict between generated code and internal artifacts',
+      description: 'handles conflict between generated code and internal artifacts',
     },
     {
       config: createConfig({
@@ -710,12 +679,7 @@ describe(`OpenAPI ${version}`, () => {
       filePaths.map(async (filePath) => {
         const fileContent = fs.readFileSync(filePath, 'utf-8');
         await expect(fileContent).toMatchFileSnapshot(
-          path.join(
-            __dirname,
-            '__snapshots__',
-            version,
-            filePath.slice(outputDir.length + 1),
-          ),
+          path.join(__dirname, '__snapshots__', version, filePath.slice(outputDir.length + 1)),
         );
       }),
     );

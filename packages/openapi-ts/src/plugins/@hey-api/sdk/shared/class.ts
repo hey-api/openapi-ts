@@ -16,16 +16,10 @@ export const createRegistryClass = ({
   const symbolInstances = plugin.symbol('instances');
   return $.class(symbol)
     .generic('T')
-    .field(symbolDefaultKey, (f) =>
-      f.private().readonly().assign($.literal('default')),
-    )
+    .field(symbolDefaultKey, (f) => f.private().readonly().assign($.literal('default')))
     .newline()
     .field(symbolInstances, (f) =>
-      f
-        .private()
-        .readonly()
-        .type($.type('Map').generics('string', 'T'))
-        .assign($.new('Map')),
+      f.private().readonly().type($.type('Map').generics('string', 'T')).assign($.new('Map')),
     )
     .newline()
     .method('get', (m) =>
@@ -83,11 +77,7 @@ export const createClientClass = ({
           p
             .optional(optionalClient)
             .type(
-              $.type
-                .object()
-                .prop('client', (p) =>
-                  p.optional(optionalClient).type(symbolClient),
-                ),
+              $.type.object().prop('client', (p) => p.optional(optionalClient).type(symbolClient)),
             ),
         )
         .do(
