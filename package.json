@@ -1,21 +1,21 @@
 {
   "name": "openapi-ts-monorepo",
   "version": "0.1.0",
-  "description": "Public @hey-api monorepo",
   "private": true,
+  "description": "Public @hey-api monorepo",
   "homepage": "https://heyapi.dev",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/hey-api/openapi-ts.git"
-  },
   "bugs": {
     "url": "https://github.com/hey-api/openapi-ts/issues"
   },
   "license": "MIT",
   "author": {
-    "email": "lubos@heyapi.dev",
     "name": "Hey API",
+    "email": "lubos@heyapi.dev",
     "url": "https://heyapi.dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hey-api/openapi-ts.git"
   },
   "funding": "https://github.com/sponsors/hey-api",
   "type": "module",
@@ -24,9 +24,9 @@
     "changeset": "changeset",
     "examples:check": "sh ./scripts/examples-check.sh",
     "examples:generate": "sh ./scripts/examples-generate.sh",
-    "format": "prettier --write .",
-    "lint:fix": "prettier --check --write . && eslint . --fix",
-    "lint": "prettier --check . && eslint .",
+    "format": "oxfmt .",
+    "lint:fix": "oxfmt . && eslint . --fix",
+    "lint": "oxfmt --check . && eslint .",
     "prepare": "husky",
     "test:changelog": "vitest run __tests__/*.test.ts",
     "test:changelog:watch": "vitest watch __tests__/*.test.ts",
@@ -41,9 +41,6 @@
     "tb": "turbo run build --filter",
     "dev:ts": "cd dev && tsx watch --clear-screen=false ../packages/openapi-ts/src/run.ts",
     "dev:py": "cd dev && tsx watch --clear-screen=false ../packages/openapi-python/src/run.ts"
-  },
-  "engines": {
-    "node": ">=20.19.0"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "0.18.2",
@@ -60,7 +57,6 @@
     "@vitest/coverage-v8": "3.2.4",
     "dotenv": "17.2.3",
     "eslint": "9.39.1",
-    "eslint-config-prettier": "9.1.2",
     "eslint-plugin-simple-import-sort": "12.1.1",
     "eslint-plugin-sort-destructure-keys": "2.0.0",
     "eslint-plugin-sort-keys-fix": "1.1.2",
@@ -69,7 +65,7 @@
     "globals": "16.5.0",
     "husky": "9.1.7",
     "lint-staged": "16.2.7",
-    "prettier": "3.4.2",
+    "oxfmt": "0.27.0",
     "rollup": "4.56.0",
     "rollup-plugin-dts": "6.1.1",
     "ts-node": "10.9.2",
@@ -79,6 +75,9 @@
     "typescript": "5.9.3",
     "typescript-eslint": "8.29.1",
     "vitest": "3.2.4"
+  },
+  "engines": {
+    "node": ">=20.19.0"
   },
   "packageManager": "pnpm@10.28.2"
 }

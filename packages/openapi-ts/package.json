@@ -2,21 +2,6 @@
   "name": "@hey-api/openapi-ts",
   "version": "0.91.0",
   "description": "🌀 OpenAPI to TypeScript codegen. Production-ready SDKs, Zod schemas, TanStack Query hooks, and 20+ plugins. Used by Vercel, OpenCode, and PayPal.",
-  "homepage": "https://heyapi.dev/",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/hey-api/openapi-ts.git"
-  },
-  "bugs": {
-    "url": "https://github.com/hey-api/openapi-ts/issues"
-  },
-  "license": "MIT",
-  "author": {
-    "email": "lubos@heyapi.dev",
-    "name": "Hey API",
-    "url": "https://heyapi.dev"
-  },
-  "funding": "https://github.com/sponsors/hey-api",
   "keywords": [
     "angular",
     "axios",
@@ -38,6 +23,30 @@
     "xhr",
     "yaml"
   ],
+  "homepage": "https://heyapi.dev/",
+  "bugs": {
+    "url": "https://github.com/hey-api/openapi-ts/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Hey API",
+    "email": "lubos@heyapi.dev",
+    "url": "https://heyapi.dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hey-api/openapi-ts.git"
+  },
+  "funding": "https://github.com/sponsors/hey-api",
+  "bin": {
+    "openapi-ts": "./bin/run.js"
+  },
+  "files": [
+    "bin",
+    "dist",
+    "LICENSE.md",
+    "README.md"
+  ],
   "type": "module",
   "main": "./dist/index.mjs",
   "types": "./dist/index.d.mts",
@@ -52,15 +61,6 @@
     },
     "./package.json": "./package.json"
   },
-  "bin": {
-    "openapi-ts": "./bin/run.js"
-  },
-  "files": [
-    "bin",
-    "dist",
-    "LICENSE.md",
-    "README.md"
-  ],
   "scripts": {
     "build": "tsdown && pnpm check-exports",
     "check-exports": "attw --pack . --profile esm-only --ignore-rules cjs-resolves-to-esm",
@@ -72,9 +72,6 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
-  "engines": {
-    "node": ">=20.19.0"
-  },
   "dependencies": {
     "@hey-api/codegen-core": "workspace:*",
     "@hey-api/json-schema-ref-parser": "1.2.3",
@@ -83,9 +80,6 @@
     "ansi-colors": "4.1.3",
     "color-support": "1.1.3",
     "commander": "14.0.2"
-  },
-  "peerDependencies": {
-    "typescript": ">=5.5.3"
   },
   "devDependencies": {
     "@angular/common": "19.2.17",
@@ -101,11 +95,16 @@
     "ky": "1.14.2",
     "nuxt": "3.14.1592",
     "ofetch": "1.5.1",
-    "prettier": "3.4.2",
     "rxjs": "7.8.2",
     "typescript": "5.9.3",
     "vue": "3.5.25",
     "yaml": "2.8.2",
     "zone.js": "0.16.0"
+  },
+  "peerDependencies": {
+    "typescript": ">=5.5.3"
+  },
+  "engines": {
+    "node": ">=20.19.0"
   }
 }
