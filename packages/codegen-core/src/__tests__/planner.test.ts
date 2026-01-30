@@ -37,7 +37,7 @@ const createMockNode = (args: {
         ctx.addDependency(ref(dep));
       }
     },
-    clone () {
+    clone() {
       return this;
     },
     exported: true,
@@ -141,7 +141,7 @@ describe('Planner imports deduplication', () => {
         ctx.addDependency(ref(sourceSymbol));
         ctx.addDependency(ref(sourceSymbol));
       },
-      clone () {
+      clone() {
         return this;
       },
       exported: true,
@@ -190,7 +190,7 @@ describe('Planner imports deduplication', () => {
         ctx.addDependency(ref(sourceSymbol));
         ctx.addDependency(ref(sourceSymbol));
       },
-      clone () {
+      clone() {
         return this;
       },
       exported: true,
@@ -247,7 +247,7 @@ describe('Planner imports deduplication', () => {
         ctx.addDependency(ref(typeSymbol));
         ctx.addDependency(ref(valueSymbol));
       },
-      clone () {
+      clone() {
         return this;
       },
       exported: true,

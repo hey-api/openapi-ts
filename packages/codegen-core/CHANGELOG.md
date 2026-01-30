@@ -1,5 +1,11 @@
 # @hey-api/codegen-core
 
+## 0.6.1
+
+### Patch Changes
+
+- **planner**: fix duplicate import when same symbol is imported as both type and value ([#3291](https://github.com/hey-api/openapi-ts/pull/3291)) ([`3c08e38`](https://github.com/hey-api/openapi-ts/commit/3c08e38b4daa5c1f4829bdfb7f088d73b0e0f1f1)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
 ## 0.6.0
 
 ### Minor Changes
@@ -13,19 +19,19 @@
 CommonJS entry points (`require()`, `module.exports`) are no longer supported. If you are in a CJS environment, you can still load the package dynamically using `import()` like:
 
 ```js
-const { Project } = await import('@hey-api/codegen-core');
+const { Project } = await import("@hey-api/codegen-core");
 ```
 
 If you have previously written:
 
 ```js
-const { Project } = require('@hey-api/codegen-core');
+const { Project } = require("@hey-api/codegen-core");
 ```
 
 Migrate by updating your static imports:
 
 ```js
-import { Project } from '@hey-api/codegen-core';
+import { Project } from "@hey-api/codegen-core";
 ```
 
 If your environment cannot use ESM, pin to a previous version.
