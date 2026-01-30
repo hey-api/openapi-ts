@@ -267,9 +267,6 @@ export class Planner {
         const fromFileId = dep.file.id;
         const importedName = dep.finalName;
         const kind = dep.importKind;
-        // Exclude isTypeOnly from the key so that type and value imports with the same name
-        // are merged into a single entry. This prevents duplicate imports when the same symbol
-        // is imported both as a type and as a value.
         const key = `${fromFileId}|${importedName}|${kind}`;
 
         let entry = fileMap.get(key);
@@ -295,7 +292,6 @@ export class Planner {
           };
           fileMap.set(key, entry);
         }
-        // Always add the current kind to track all usages (type vs value)
         entry.kinds.add(dep.kind);
 
         dependency['~ref'] = entry.symbol;
