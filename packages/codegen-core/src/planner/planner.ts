@@ -266,9 +266,8 @@ export class Planner {
 
         const fromFileId = dep.file.id;
         const importedName = dep.finalName;
-        const isTypeOnly = isTypeOnlyKind(dep.kind);
         const kind = dep.importKind;
-        const key = `${fromFileId}|${importedName}|${kind}|${isTypeOnly}`;
+        const key = `${fromFileId}|${importedName}|${kind}`;
 
         let entry = fileMap.get(key);
         if (!entry) {
@@ -292,8 +291,8 @@ export class Planner {
             symbol: imp,
           };
           fileMap.set(key, entry);
-          entry.kinds.add(imp.kind);
         }
+        entry.kinds.add(dep.kind);
 
         dependency['~ref'] = entry.symbol;
       });
