@@ -7,7 +7,7 @@ export const defaultConfig: PiniaColadaPlugin['Config'] = {
   config: {
     case: 'camelCase',
     comments: true,
-    exportFromIndex: false,
+    includeInEntry: false,
   },
   dependencies: ['@hey-api/typescript', '@hey-api/sdk'],
   handler: handler as PiniaColadaPlugin['Handler'],

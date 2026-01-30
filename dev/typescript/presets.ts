@@ -16,7 +16,12 @@ export const presets = {
   sdk: () => [
     /** SDK with types */
     typescript(),
-    sdk(),
+    sdk({
+      operations: {
+        containerName: 'OpenCode',
+        strategy: 'single',
+      },
+    }),
   ],
   tanstack: () => [
     /** SDK + TanStack Query */

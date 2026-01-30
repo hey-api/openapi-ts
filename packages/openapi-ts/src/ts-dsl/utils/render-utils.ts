@@ -80,17 +80,17 @@ export type ModuleImport = Omit<ImportModule, 'from'> & {
   modulePath: string;
 };
 
-export const moduleSortKey = ({
+export function moduleSortKey({
   file,
   fromFile,
   preferFileExtension,
   root,
 }: {
-  file: File;
-  fromFile: File;
+  file: Pick<File, 'finalPath'>;
+  fromFile: Pick<File, 'finalPath' | 'extension' | 'external' | 'name'>;
   preferFileExtension: string;
   root: string;
-}): SortKey => {
+}): SortKey {
   const filePath = file.finalPath!.split(path.sep).join('/');
   let modulePath = fromFile.finalPath!.split(path.sep).join('/');
 
@@ -133,4 +133,4 @@ export const moduleSortKey = ({
   }
 
   return [2, parentCount, modulePath];
-};
+}

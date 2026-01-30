@@ -1,15 +1,10 @@
-import type {
-  Casing,
-  FeatureToggle,
-  IndexExportOption,
-  NameTransformer,
-  NamingOptions,
-} from '@hey-api/shared';
+import type { Casing, FeatureToggle, NameTransformer, NamingOptions } from '@hey-api/shared';
 import type { IR } from '@hey-api/shared';
 import type { DefinePlugin, Plugin } from '@hey-api/shared';
 
 export type UserConfig = Plugin.Name<'@pinia/colada'> &
-  Plugin.Hooks & {
+  Plugin.Hooks &
+  Plugin.UserExports & {
     /**
      * Casing convention for generated names.
      *
@@ -27,12 +22,6 @@ export type UserConfig = Plugin.Name<'@pinia/colada'> &
      * @default true
      */
     comments?: boolean;
-    /**
-     * Whether exports should be re-exported in the index file.
-     *
-     * @default false
-     */
-    exportFromIndex?: boolean;
     /**
      * Configuration for generated mutation options helpers.
      *
@@ -195,7 +184,7 @@ export type UserConfig = Plugin.Name<'@pinia/colada'> &
 
 export type Config = Plugin.Name<'@pinia/colada'> &
   Plugin.Hooks &
-  IndexExportOption & {
+  Plugin.Exports & {
     /**
      * Casing convention for generated names.
      */

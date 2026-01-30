@@ -42,6 +42,11 @@ export class TypePropTsDsl extends Mixed {
     ctx.analyze(this._type);
   }
 
+  /** Returns true when all required builder calls are present. */
+  get isValid(): boolean {
+    return this.missingRequiredCalls().length === 0;
+  }
+
   /** Sets the property type. */
   type(type: TypePropType): this {
     this._type = ref(type);
@@ -49,10 +54,8 @@ export class TypePropTsDsl extends Mixed {
   }
 
   override toAst() {
+    this.$validate();
     const name = this.name.toString();
-    if (!this._type || !name) {
-      throw new Error(`Type not specified for property '${name}'`);
-    }
     const node = ts.factory.createPropertySignature(
       this.modifiers,
       this.$node(safePropName(name)),
@@ -60,5 +63,20 @@ export class TypePropTsDsl extends Mixed {
       this.$type(this._type),
     );
     return this.$docs(node);
+  }
+
+  $validate(): asserts this is this & {
+    _type: Ref<TypePropType>;
+  } {
+    const missing = this.missingRequiredCalls();
+    if (missing.length === 0) return;
+    const name = this.name.toString();
+    throw new Error(`Type property${name ? ` "${name}"` : ''} missing ${missing.join(' and ')}`);
+  }
+
+  private missingRequiredCalls(): ReadonlyArray<string> {
+    const missing: Array<string> = [];
+    if (!this._type) missing.push('.type()');
+    return missing;
   }
 }

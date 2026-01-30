@@ -7,7 +7,7 @@ export const defaultConfig: TanStackSvelteQueryPlugin['Config'] = {
   config: {
     case: 'camelCase',
     comments: true,
-    exportFromIndex: false,
+    includeInEntry: false,
   },
   dependencies: ['@hey-api/sdk', '@hey-api/typescript'],
   handler: handler as TanStackSvelteQueryPlugin['Handler'],

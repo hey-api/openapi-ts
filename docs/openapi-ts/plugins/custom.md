@@ -92,7 +92,7 @@ export const defineConfig = definePluginConfig(defaultConfig);
 
 In the file above, we define a `my-plugin` plugin which will generate a `my-plugin.gen.ts` file. We also demonstrate declaring `@hey-api/typescript` as a dependency for our plugin, so we can safely import artifacts from `types.gen.ts`.
 
-By default, your plugin output won't be re-exported from the `index.ts` file. To enable this feature, add `exportFromIndex: true` to your `config.ts` file.
+By default, your plugin output won't be re-exported from the `index.ts` file. To enable this feature, add `includeInEntry: true` to your `config.ts` file.
 
 ::: warning
 Re-exporting your plugin from index file may result in broken output due to naming conflicts. Ensure your exported identifiers are unique.

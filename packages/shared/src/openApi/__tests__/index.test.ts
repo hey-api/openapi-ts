@@ -47,7 +47,7 @@ describe('OpenAPI parser', () => {
         // @ts-expect-error
         output: {
           case: undefined,
-          indexFile: false,
+          entryFile: false,
           path: '',
         },
         // @ts-expect-error
@@ -79,7 +79,7 @@ describe('OpenAPI parser', () => {
         // @ts-expect-error
         output: {
           case: undefined,
-          indexFile: false,
+          entryFile: false,
           path: '',
         },
         // @ts-expect-error
@@ -111,7 +111,7 @@ describe('OpenAPI parser', () => {
         // @ts-expect-error
         output: {
           case: undefined,
-          indexFile: false,
+          entryFile: false,
           path: '',
         },
         // @ts-expect-error
@@ -143,7 +143,7 @@ describe('OpenAPI parser', () => {
         // @ts-expect-error
         output: {
           case: undefined,
-          indexFile: false,
+          entryFile: false,
           path: '',
         },
         // @ts-expect-error
@@ -175,7 +175,7 @@ describe('OpenAPI parser', () => {
         // @ts-expect-error
         output: {
           case: undefined,
-          indexFile: false,
+          entryFile: false,
           path: '',
         },
         // @ts-expect-error
@@ -206,7 +206,7 @@ describe('OpenAPI parser', () => {
         // @ts-expect-error
         output: {
           case: undefined,
-          indexFile: false,
+          entryFile: false,
           path: '',
         },
         // @ts-expect-error
@@ -237,7 +237,7 @@ describe('OpenAPI parser', () => {
         // @ts-expect-error
         output: {
           case: undefined,
-          indexFile: false,
+          entryFile: false,
           path: '',
         },
         // @ts-expect-error

@@ -1,5 +1,5 @@
 {
-  "name": "@docs/openapi-ts",
+  "name": "docs",
   "version": "0.10.4",
   "private": true,
   "description": "Documentation for OpenAPI TypeScript.",

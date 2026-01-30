@@ -371,18 +371,18 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
   symbol(name: SymbolIn['name'], symbol?: Omit<SymbolIn, 'name'>): Symbol<ResolvedNode> {
     const symbolIn: SymbolIn = {
       ...symbol,
-      exportFrom:
-        symbol?.exportFrom ??
-        (!symbol?.external && this.context.config.output.indexFile && this.config.exportFromIndex
-          ? ['index']
-          : undefined),
-      getFilePath: symbol?.getFilePath ?? this.getSymbolFilePath.bind(this),
       meta: {
         pluginName: path.isAbsolute(this.name) ? 'custom' : this.name,
         ...symbol?.meta,
       },
       name,
     };
+    if (symbolIn.getExportFromFilePath === undefined) {
+      symbolIn.getExportFromFilePath = this.getSymbolExportFromFilePath.bind(this);
+    }
+    if (symbolIn.getFilePath === undefined) {
+      symbolIn.getFilePath = this.getSymbolFilePath.bind(this);
+    }
     for (const hook of this.eventHooks['symbol:register:before']) {
       hook({ plugin: this as any, symbol: symbolIn });
     }
@@ -440,6 +440,34 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
       name: 'Error',
       pluginName: this.name,
     });
+  }
+
+  private getSymbolExportFromFilePath(symbol: Symbol): ReadonlyArray<string> | undefined {
+    const hooks = [this.config['~hooks']?.symbols, this.context.config.parser.hooks.symbols];
+    for (const hook of hooks) {
+      const result = hook?.getExportFromFilePath?.(symbol);
+      if (result !== undefined) return result;
+    }
+
+    // default logic below
+    const entryFile = this.context.config.output.indexFile ?? this.context.config.output.entryFile;
+    if (symbol.external || !entryFile) return;
+
+    const includeInEntry = this.config.exportFromIndex ?? this.config.includeInEntry;
+    if (
+      (typeof includeInEntry === 'boolean' && !includeInEntry) ||
+      (typeof includeInEntry === 'function' && !includeInEntry(symbol))
+    ) {
+      return;
+    }
+
+    const language = symbol.node?.language;
+    if (!language) return;
+
+    const moduleEntryName = this.gen.moduleEntryNames[language];
+    if (!moduleEntryName) return;
+
+    return [moduleEntryName];
   }
 
   private getSymbolFilePath(symbol: Symbol): string | undefined {

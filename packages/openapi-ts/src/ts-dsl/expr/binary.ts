@@ -50,6 +50,11 @@ export class BinaryTsDsl extends Mixed {
     ctx.analyze(this._expr);
   }
 
+  /** Returns true when all required builder calls are present. */
+  get isValid(): boolean {
+    return this.missingRequiredCalls().length === 0;
+  }
+
   /** Logical AND — `this && expr` */
   and(expr: Expr): this {
     return this.opAndExpr('&&', expr);
@@ -136,16 +141,26 @@ export class BinaryTsDsl extends Mixed {
   }
 
   override toAst() {
-    if (!this._op) {
-      throw new Error('BinaryTsDsl: missing operator');
-    }
-    const expr = this.$node(this._expr);
-    if (!expr) {
-      throw new Error('BinaryTsDsl: missing right-hand expression');
-    }
+    this.$validate();
     const base = this.$node(this._base);
     const operator = typeof this._op === 'string' ? this.opToToken(this._op) : this._op;
-    return ts.factory.createBinaryExpression(base, operator, expr);
+    return ts.factory.createBinaryExpression(base, operator, this.$node(this._expr));
+  }
+
+  $validate(): asserts this is this & {
+    _expr: Ref<Expr>;
+    _op: Op;
+  } {
+    const missing = this.missingRequiredCalls();
+    if (missing.length === 0) return;
+    throw new Error(`Binary expression missing ${missing.join(' and ')}`);
+  }
+
+  private missingRequiredCalls(): ReadonlyArray<string> {
+    const missing: Array<string> = [];
+    if (!this._op) missing.push('operator (e.g., .eq(), .plus())');
+    if (!this._expr) missing.push('right-hand expression');
+    return missing;
   }
 
   /** Sets the binary operator and right-hand operand for this expression. */

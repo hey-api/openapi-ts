@@ -23,7 +23,7 @@ describe(`SDK: ${namespace}`, () => {
       config: createConfig({
         input: specPath,
         output: {
-          indexFile: false,
+          entryFile: false,
           path: 'class',
         },
         plugins: [
@@ -40,7 +40,7 @@ describe(`SDK: ${namespace}`, () => {
       config: createConfig({
         input: specPath,
         output: {
-          indexFile: false,
+          entryFile: false,
           path: 'flat',
         },
         plugins: [
@@ -57,7 +57,7 @@ describe(`SDK: ${namespace}`, () => {
       config: createConfig({
         input: specPath,
         output: {
-          indexFile: false,
+          entryFile: false,
           path: 'instance',
         },
         plugins: [

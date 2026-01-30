@@ -1,4 +1,4 @@
-import type { NameConflictResolver } from '@hey-api/codegen-core';
+import type { NameConflictResolver, Symbol } from '@hey-api/codegen-core';
 import type { MaybeArray } from '@hey-api/types';
 
 import type { Plugin } from '../plugins/types';
@@ -17,11 +17,40 @@ export type FeatureToggle = {
   enabled: boolean;
 };
 
+export type UserIndexExportOption = {
+  /**
+   * Whether exports should be re-exported from the entry file.
+   *
+   * - `true` — include all exports
+   * - `false` — exclude all exports
+   * - `(symbol) => boolean` — include exports matching the predicate
+   *
+   * @default false
+   * @deprecated use `includeInEntry` instead
+   */
+  exportFromIndex?: boolean | ((symbol: Symbol) => boolean);
+  /**
+   * Whether exports should be re-exported from the entry file.
+   *
+   * - `true` — include all exports
+   * - `false` — exclude all exports
+   * - `(symbol) => boolean` — include exports matching the predicate
+   *
+   * @default false
+   */
+  includeInEntry?: boolean | ((symbol: Symbol) => boolean);
+};
 export type IndexExportOption = {
   /**
-   * Whether exports should be re-exported in the index file.
+   * Whether exports should be re-exported from the entry file.
+   *
+   * @deprecated use `includeInEntry` instead
    */
-  exportFromIndex: boolean;
+  exportFromIndex: boolean | ((symbol: Symbol) => boolean);
+  /**
+   * Whether exports should be re-exported from the entry file.
+   */
+  includeInEntry: boolean | ((symbol: Symbol) => boolean);
 };
 
 export type NamingOptions = {
@@ -55,6 +84,14 @@ export interface BaseUserOutput {
    * @default true
    */
   clean?: boolean;
+  /**
+   * Whether to generate an entry file that re-exports symbols for convenient imports.
+   *
+   * Plugins control their inclusion via `includeInEntry`.
+   *
+   * @default true
+   */
+  entryFile?: boolean;
   /**
    * Optional function to transform file names before they are used.
    *
@@ -95,11 +132,12 @@ export interface BaseUserOutput {
    */
   header?: OutputHeader;
   /**
-   * Should the exports from plugin files be re-exported in the index
-   * barrel file? By default, this is enabled and only default plugins
-   * are re-exported.
+   * Whether to generate an entry file that re-exports symbols for convenient imports.
+   *
+   * Plugins control their inclusion via `includeInEntry`.
    *
    * @default true
+   * @deprecated use `entryFile` instead
    */
   indexFile?: boolean;
   /**
@@ -146,6 +184,10 @@ export interface BaseOutput {
    */
   clean: boolean;
   /**
+   * Whether to generate an entry file that re-exports symbols for convenient imports.
+   */
+  entryFile: boolean;
+  /**
    * Optional function to transform file names before they are used.
    *
    * @param name The original file name.
@@ -169,9 +211,9 @@ export interface BaseOutput {
    */
   header: OutputHeader;
   /**
-   * Should the exports from plugin files be re-exported in the index
-   * barrel file? By default, this is enabled and only default plugins
-   * are re-exported.
+   * Whether to generate an entry file that re-exports symbols for convenient imports.
+   *
+   * @deprecated use `entryFile` instead
    */
   indexFile: boolean;
   /**

@@ -3,7 +3,16 @@ import { sdk } from './plugins';
 export const presets = {
   sdk: () => [
     /** SDK */
-    sdk(),
+    sdk({
+      '~hooks': {
+        symbols: {
+          // getExportFromFilePath(symbol) {
+          //   console.log(symbol.toString());
+          //   return undefined;
+          // },
+        },
+      },
+    }),
   ],
 } as const;
 

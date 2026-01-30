@@ -5,7 +5,7 @@ import type { HeyApiSchemasPlugin } from './types';
 
 export const defaultConfig: HeyApiSchemasPlugin['Config'] = {
   config: {
-    exportFromIndex: false,
+    includeInEntry: false,
     nameBuilder: (name) => `${name}Schema`,
     type: 'json',
   },
