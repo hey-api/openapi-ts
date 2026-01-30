@@ -37,6 +37,11 @@ export class IfTsDsl extends Mixed {
     }
   }
 
+  /** Returns true when all required builder calls are present. */
+  get isValid(): boolean {
+    return this.missingRequiredCalls().length === 0;
+  }
+
   condition(condition: IfCondition): this {
     this._condition = condition;
     return this;
@@ -48,13 +53,26 @@ export class IfTsDsl extends Mixed {
   }
 
   override toAst() {
-    if (!this._condition) throw new Error('Missing condition in if');
-    if (!this._do) throw new Error('Missing then block in if');
-
+    this.$validate();
     return ts.factory.createIfStatement(
       this.$node(this._condition),
       this.$node(new BlockTsDsl(...this._do).pretty()),
       this._else ? this.$node(new BlockTsDsl(...this._else).pretty()) : undefined,
     );
+  }
+
+  $validate(): asserts this is this & {
+    _condition: IfCondition;
+  } {
+    const missing = this.missingRequiredCalls();
+    if (missing.length === 0) return;
+    throw new Error(`If statement missing ${missing.join(' and ')}`);
+  }
+
+  private missingRequiredCalls(): ReadonlyArray<string> {
+    const missing: Array<string> = [];
+    if (!this._condition) missing.push('.condition()');
+    if (this._do.length === 0) missing.push('.do()');
+    return missing;
   }
 }

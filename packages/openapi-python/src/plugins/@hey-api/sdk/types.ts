@@ -1,14 +1,13 @@
-import type { IndexExportOption, NameTransformer } from '@hey-api/shared';
-import type { DefinePlugin, Plugin } from '@hey-api/shared';
+import type { DefinePlugin, OperationsStrategy, Plugin } from '@hey-api/shared';
 
-// import type { OperationsStrategy } from '@hey-api/shared';
-import type { PluginClientNames, PluginValidatorNames } from '../../../plugins/types';
-
-// import type { ExamplesConfig, UserExamplesConfig } from './examples';
-// import type { OperationsConfig, UserOperationsConfig } from './operations';
+import type { PluginClientNames } from '../../../plugins/types';
+// import type { PluginClientNames, PluginValidatorNames } from '../../../plugins/types';
+import type { ExamplesConfig, UserExamplesConfig } from './examples';
+import type { OperationsConfig, UserOperationsConfig } from './operations';
 
 export type UserConfig = Plugin.Name<'@hey-api/python-sdk'> &
-  Plugin.Hooks & {
+  Plugin.Hooks &
+  Plugin.UserExports & {
     /**
      * Should the generated functions contain auth mechanisms? You may want to
      * disable this option if you're handling auth yourself or defining it
@@ -16,7 +15,7 @@ export type UserConfig = Plugin.Name<'@hey-api/python-sdk'> &
      *
      * @default true
      */
-    auth?: boolean;
+    // auth?: boolean;
     /**
      * Use an internal client instance to send HTTP requests? This is useful if
      * you don't want to manually pass the client to each SDK function.
@@ -24,7 +23,7 @@ export type UserConfig = Plugin.Name<'@hey-api/python-sdk'> &
      * You can customize the selected client output through its plugin. You can
      * also set `client` to `true` to automatically choose the client from your
      * defined plugins. If we can't detect a client plugin when using `true`, we
-     * will default to `@hey-api/client-fetch`.
+     * will default to `@hey-api/client-httpx`.
      *
      * @default true
      */
@@ -38,27 +37,20 @@ export type UserConfig = Plugin.Name<'@hey-api/python-sdk'> &
      *
      * @default false
      */
-    // examples?: boolean | UserExamplesConfig;
-    /**
-     * Whether exports should be re-exported in the index file.
-     *
-     * @default true
-     */
-    exportFromIndex?: boolean;
+    examples?: boolean | UserExamplesConfig;
     /**
      * Define the structure of generated SDK operations.
      *
      * String shorthand:
      * - `'byTags'` – one container per operation tag
-     * - `'flat'` – standalone functions, no container
      * - `'single'` – all operations in a single container
      * - custom function for full control
      *
      * Use the object form for advanced configuration.
      *
-     * @default 'flat'
+     * @default 'single'
      */
-    // operations?: OperationsStrategy | UserOperationsConfig;
+    operations?: Exclude<OperationsStrategy, 'flat'> | UserOperationsConfig;
     /**
      * Define how request parameters are structured in generated SDK methods.
      *
@@ -77,7 +69,7 @@ export type UserConfig = Plugin.Name<'@hey-api/python-sdk'> &
      *
      * @default 'fields'
      */
-    responseStyle?: 'data' | 'fields';
+    // responseStyle?: 'data' | 'fields';
     /**
      * Transform response data before returning. This is useful if you want to
      * convert for example ISO strings into Date objects. However, transformation
@@ -89,7 +81,7 @@ export type UserConfig = Plugin.Name<'@hey-api/python-sdk'> &
      *
      * @default false
      */
-    transformer?: '@hey-api/transformers' | boolean;
+    // transformer?: PluginTransformerNames | boolean;
     /**
      * Validate request and/or response data against schema before returning.
      * This is useful if you want to ensure the request and/or response conforms
@@ -108,99 +100,34 @@ export type UserConfig = Plugin.Name<'@hey-api/python-sdk'> &
      *
      * @default false
      */
-    validator?:
-      | PluginValidatorNames
-      | boolean
-      | {
-          /**
-           * Validate request data against schema before sending.
-           *
-           * Can be a validator plugin name or boolean (true to auto-select, false
-           * to disable).
-           *
-           * @default false
-           */
-          request?: PluginValidatorNames | boolean;
-          /**
-           * Validate response data against schema before returning.
-           *
-           * Can be a validator plugin name or boolean (true to auto-select, false
-           * to disable).
-           *
-           * @default false
-           */
-          response?: PluginValidatorNames | boolean;
-        };
-
-    // DEPRECATED OPTIONS BELOW
-
-    /**
-     * Group operation methods into classes? When enabled, you can select which
-     * classes to export with `sdk.include` and/or transform their names with
-     * `sdk.classNameBuilder`.
-     *
-     * Note that by enabling this option, your SDKs will **NOT**
-     * support {@link https://developer.mozilla.org/docs/Glossary/Tree_shaking tree-shaking}.
-     * For this reason, it is disabled by default.
-     *
-     * @deprecated Use `operations: { strategy: "byTags" }` or `operations: { strategy: "single" }` instead.
-     * @default false
-     */
-    // eslint-disable-next-line typescript-sort-keys/interface
-    asClass?: boolean;
-    /**
-     * Customize the generated class names. The name variable is obtained from
-     * your OpenAPI specification tags or `instance` value.
-     *
-     * This option has no effect if `sdk.asClass` is `false`.
-     *
-     * @deprecated Use `operations: { containerName: "..." }` instead.
-     */
-    classNameBuilder?: NameTransformer;
-    /**
-     * How should we structure your SDK? By default, we try to infer the ideal
-     * structure using `operationId` keywords. If you prefer a flatter structure,
-     * you can set `classStructure` to `off` to disable this behavior.
-     *
-     * @deprecated Use `operations: { nesting: "operationId" }` or `operations: { nesting: "id" }` instead.
-     * @default 'auto'
-     */
-    classStructure?: 'auto' | 'off';
-    /**
-     * Set `instance` to create an instantiable SDK. Using `true` will use the
-     * default instance name; in practice, you want to define your own by passing
-     * a string value.
-     *
-     * @deprecated Use `operations: { strategy: "single", containerName: "Name", methods: "instance" }` instead.
-     * @default false
-     */
-    instance?: string | boolean;
-    /**
-     * Customise the name of methods within the service. By default,
-     * `operation.id` is used.
-     *
-     * @deprecated Use `operations: { methodName: "..." }` instead.
-     */
-    methodNameBuilder?: NameTransformer;
-    /**
-     * Use operation ID to generate operation names?
-     *
-     * @deprecated Use `operations: { nesting: "operationId" }` or `operations: { nesting: "id" }` instead.
-     * @default true
-     */
-    operationId?: boolean;
-    /**
-     * Define shape of returned value from service calls
-     *
-     * @deprecated
-     * @default 'body'
-     */
-    response?: 'body' | 'response';
+    // validator?:
+    //   | PluginValidatorNames
+    //   | boolean
+    //   | {
+    //       /**
+    //        * Validate request data against schema before sending.
+    //        *
+    //        * Can be a validator plugin name or boolean (true to auto-select, false
+    //        * to disable).
+    //        *
+    //        * @default false
+    //        */
+    //       request?: PluginValidatorNames | boolean;
+    //       /**
+    //        * Validate response data against schema before returning.
+    //        *
+    //        * Can be a validator plugin name or boolean (true to auto-select, false
+    //        * to disable).
+    //        *
+    //        * @default false
+    //        */
+    //       response?: PluginValidatorNames | boolean;
+    //     };
   };
 
 export type Config = Plugin.Name<'@hey-api/python-sdk'> &
   Plugin.Hooks &
-  IndexExportOption & {
+  Plugin.Exports & {
     /**
      * Should the generated functions contain auth mechanisms? You may want to
      * disable this option if you're handling auth yourself or defining it
@@ -208,7 +135,7 @@ export type Config = Plugin.Name<'@hey-api/python-sdk'> &
      *
      * @default true
      */
-    auth: boolean;
+    // auth: boolean;
     /**
      * Use an internal client instance to send HTTP requests? This is useful if
      * you don't want to manually pass the client to each SDK function.
@@ -216,7 +143,7 @@ export type Config = Plugin.Name<'@hey-api/python-sdk'> &
      * You can customize the selected client output through its plugin. You can
      * also set `client` to `true` to automatically choose the client from your
      * defined plugins. If we can't detect a client plugin when using `true`, we
-     * will default to `@hey-api/client-fetch`.
+     * will default to `@hey-api/client-httpx`.
      *
      * @default true
      */
@@ -224,11 +151,11 @@ export type Config = Plugin.Name<'@hey-api/python-sdk'> &
     /**
      * Configuration for generating SDK code examples.
      */
-    // examples: ExamplesConfig;
+    examples: ExamplesConfig;
     /**
      * Define the structure of generated SDK operations.
      */
-    // operations: OperationsConfig;
+    operations: OperationsConfig;
     /**
      * Define how request parameters are structured in generated SDK methods.
      *
@@ -247,7 +174,7 @@ export type Config = Plugin.Name<'@hey-api/python-sdk'> &
      *
      * @default 'fields'
      */
-    responseStyle: 'data' | 'fields';
+    // responseStyle: 'data' | 'fields';
     /**
      * Transform response data before returning. This is useful if you want to
      * convert for example ISO strings into Date objects. However, transformation
@@ -259,38 +186,27 @@ export type Config = Plugin.Name<'@hey-api/python-sdk'> &
      *
      * @default false
      */
-    transformer: '@hey-api/transformers' | false;
+    // transformer: PluginTransformerNames | false;
     /**
      * Validate request and/or response data against schema before returning.
      * This is useful if you want to ensure the request and/or response conforms
      * to a desired shape. However, validation adds runtime overhead, so it's
      * not recommended to use unless absolutely necessary.
      */
-    validator: {
-      /**
-       * The validator plugin to use for request validation, or false to disable.
-       *
-       * @default false
-       */
-      request: PluginValidatorNames | false;
-      /**
-       * The validator plugin to use for response validation, or false to disable.
-       *
-       * @default false
-       */
-      response: PluginValidatorNames | false;
-    };
-
-    // DEPRECATED OPTIONS BELOW
-
-    /**
-     * Define shape of returned value from service calls
-     *
-     * @deprecated
-     * @default 'body'
-     */
-    // eslint-disable-next-line typescript-sort-keys/interface
-    response: 'body' | 'response';
+    // validator: {
+    //   /**
+    //    * The validator plugin to use for request validation, or false to disable.
+    //    *
+    //    * @default false
+    //    */
+    //   request: PluginValidatorNames | false;
+    //   /**
+    //    * The validator plugin to use for response validation, or false to disable.
+    //    *
+    //    * @default false
+    //    */
+    //   response: PluginValidatorNames | false;
+    // };
   };
 
 export type HeyApiSdkPlugin = DefinePlugin<UserConfig, Config>;

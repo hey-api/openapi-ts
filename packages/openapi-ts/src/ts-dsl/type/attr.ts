@@ -37,6 +37,11 @@ export class TypeAttrTsDsl extends Mixed {
     ctx.analyze(this._right);
   }
 
+  /** Returns true when all required builder calls are present. */
+  get isValid(): boolean {
+    return this.missingRequiredCalls().length === 0;
+  }
+
   base(base?: Base | Ref<Base>): this {
     if (isRef(base)) {
       this._base = base;
@@ -52,13 +57,27 @@ export class TypeAttrTsDsl extends Mixed {
   }
 
   override toAst() {
-    if (!this._base) {
-      throw new Error('TypeAttrTsDsl: missing base for qualified name');
-    }
+    this.$validate();
     const left = this.$node(this._base);
     if (!ts.isEntityName(left)) {
       throw new Error('TypeAttrTsDsl: base must be an EntityName');
     }
     return ts.factory.createQualifiedName(left, this.$node(this._right) as ts.Identifier);
+  }
+
+  $validate(): asserts this is this & {
+    _base: Ref<Base>;
+    _right: Ref<Right>;
+  } {
+    const missing = this.missingRequiredCalls();
+    if (missing.length === 0) return;
+    throw new Error(`Type attribute missing ${missing.join(' and ')}`);
+  }
+
+  private missingRequiredCalls(): ReadonlyArray<string> {
+    const missing: Array<string> = [];
+    if (!this._base) missing.push('.base()');
+    if (!this._right) missing.push('.right()');
+    return missing;
   }
 }

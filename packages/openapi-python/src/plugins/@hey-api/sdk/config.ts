@@ -1,38 +1,32 @@
 import { definePluginConfig } from '@hey-api/shared';
 
-// import { resolveExamples } from './examples';
-// import { resolveOperations } from './operations';
+import { resolveOperations } from './operations';
 import { handler } from './plugin';
 import type { HeyApiSdkPlugin } from './types';
 
 export const defaultConfig: HeyApiSdkPlugin['Config'] = {
   config: {
-    auth: true,
+    // auth: true,
     client: true,
-    exportFromIndex: true,
+    includeInEntry: true,
     paramsStructure: 'grouped',
-    responseStyle: 'fields',
-    transformer: false,
-    validator: false,
-
-    // Deprecated - kept for backward compatibility
-    // eslint-disable-next-line sort-keys-fix/sort-keys-fix
-    response: 'body',
+    // responseStyle: 'fields',
+    // transformer: false,
+    // validator: false,
   },
   handler,
   name: '@hey-api/python-sdk',
-  // resolveConfig: (plugin, context) => {
-  resolveConfig: () => {
-    // if (plugin.config.client) {
-    //   if (typeof plugin.config.client === 'boolean') {
-    //     plugin.config.client = context.pluginByTag('client', {
-    //       defaultPlugin: '@hey-api/client-httpx',
-    //     });
-    //   }
-    //   plugin.dependencies.add(plugin.config.client!);
-    // } else {
-    //   plugin.config.client = false;
-    // }
+  resolveConfig: (plugin, context) => {
+    if (plugin.config.client) {
+      if (typeof plugin.config.client === 'boolean') {
+        plugin.config.client = context.pluginByTag('client', {
+          defaultPlugin: '@hey-api/client-httpx',
+        });
+      }
+      plugin.dependencies.add(plugin.config.client!);
+    } else {
+      plugin.config.client = false;
+    }
     // if (plugin.config.transformer) {
     //   if (typeof plugin.config.transformer === 'boolean') {
     //     plugin.config.transformer = context.pluginByTag('transformer');
@@ -64,7 +58,7 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
     //   plugin.config.validator.response = false;
     // }
     // plugin.config.examples = resolveExamples(plugin.config, context);
-    // plugin.config.operations = resolveOperations(plugin.config, context);
+    plugin.config.operations = resolveOperations(plugin.config, context);
   },
 };
 

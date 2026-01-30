@@ -1,7 +1,7 @@
 // TODO: later
 import type { Symbol } from '@hey-api/codegen-core';
+import type { Plugin, SchemaWithType } from '@hey-api/shared';
 
-import type { Plugin, SchemaWithType } from '../../../../plugins';
 import type { $, DollarTsDsl } from '../../../../ts-dsl';
 import type { FakerJsFakerPlugin } from '../types';
 

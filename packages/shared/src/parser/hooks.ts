@@ -174,7 +174,15 @@ export type Hooks = {
     /**
      * Optional output strategy to override default plugin behavior.
      *
-     * Use this to route generated symbols to specific files.
+     * Use this to re-export symbols from specific files.
+     *
+     * @returns The file path(s) that re-export this symbol, or undefined to fallback to default behavior.
+     */
+    getExportFromFilePath?: (symbol: Symbol) => ReadonlyArray<string> | undefined;
+    /**
+     * Optional output strategy to override default plugin behavior.
+     *
+     * Use this to route symbols to specific files.
      *
      * @returns The file path to output the symbol to, or undefined to fallback to default behavior.
      */

@@ -11,8 +11,14 @@ export { File } from './files/file';
 export type { IFileIn as FileIn } from './files/types';
 export { isNode, isNodeRef, isSymbol, isSymbolRef } from './guards';
 export { defaultExtensions } from './languages/extensions';
+export { defaultModuleEntryNames } from './languages/modules';
 export { defaultNameConflictResolvers } from './languages/resolvers';
-export type { Extensions, Language, NameConflictResolvers } from './languages/types';
+export type {
+  Extensions,
+  Language,
+  ModuleEntryNames,
+  NameConflictResolvers,
+} from './languages/types';
 export { log } from './log';
 export { Logger } from './logger';
 export type {

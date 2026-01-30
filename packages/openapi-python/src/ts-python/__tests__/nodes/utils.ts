@@ -1,10 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { expect } from 'vitest';
-
 import { py } from '../../index';
-import type { PySourceFile } from '../../nodes/structure/sourceFile';
 import { snapshotsDir, tmpDir } from '../constants';
 
 function getCallerFile(): string {
@@ -38,7 +35,7 @@ function ensureInitFiles(dir: string, rootDir: string): void {
 }
 
 export async function assertPrintedMatchesSnapshot(
-  file: PySourceFile,
+  file: py.SourceFile,
   filename: string,
 ): Promise<void> {
   const result = py.createPrinter().printFile(file);

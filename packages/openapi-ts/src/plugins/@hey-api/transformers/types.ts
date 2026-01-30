@@ -1,4 +1,3 @@
-import type { IndexExportOption } from '@hey-api/shared';
 import type { IR } from '@hey-api/shared';
 import type { DefinePlugin, Plugin } from '@hey-api/shared';
 import type ts from 'typescript';
@@ -12,7 +11,8 @@ import type { ExpressionTransformer } from './expressions';
 export type TypeTransformer = ({ schema }: { schema: IR.SchemaObject }) => ts.TypeNode | undefined;
 
 export type UserConfig = Plugin.Name<'@hey-api/transformers'> &
-  Plugin.Hooks & {
+  Plugin.Hooks &
+  Plugin.UserExports & {
     /**
      * Convert long integers into BigInt values?
      *
@@ -26,12 +26,6 @@ export type UserConfig = Plugin.Name<'@hey-api/transformers'> &
      */
     dates?: boolean;
     /**
-     * Whether exports should be re-exported in the index file.
-     *
-     * @default false
-     */
-    exportFromIndex?: boolean;
-    /**
      * Custom transforms to apply to the generated code.
      */
     transformers?: ReadonlyArray<ExpressionTransformer>;
@@ -43,7 +37,7 @@ export type UserConfig = Plugin.Name<'@hey-api/transformers'> &
 
 export type Config = Plugin.Name<'@hey-api/transformers'> &
   Plugin.Hooks &
-  IndexExportOption & {
+  Plugin.Exports & {
     /**
      * Convert long integers into BigInt values?
      *

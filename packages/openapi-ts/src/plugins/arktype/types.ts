@@ -1,16 +1,17 @@
 import type {
   Casing,
+  DefinePlugin,
   FeatureToggle,
-  IndexExportOption,
   NameTransformer,
   NamingOptions,
+  Plugin,
 } from '@hey-api/shared';
-import type { DefinePlugin, Plugin } from '@hey-api/shared';
 
 import type { IApi } from './api';
 
 export type UserConfig = Plugin.Name<'arktype'> &
-  Plugin.Hooks & {
+  Plugin.Hooks &
+  Plugin.UserExports & {
     /**
      * Casing convention for generated names.
      *
@@ -97,12 +98,6 @@ export type UserConfig = Plugin.Name<'arktype'> &
                 };
           };
         };
-    /**
-     * Whether exports should be re-exported in the index file.
-     *
-     * @default false
-     */
-    exportFromIndex?: boolean;
     /**
      * Enable Arktype metadata support? It's often useful to associate a schema
      * with some additional metadata for documentation, code generation, AI
@@ -376,7 +371,7 @@ export type UserConfig = Plugin.Name<'arktype'> &
 
 export type Config = Plugin.Name<'arktype'> &
   Plugin.Hooks &
-  IndexExportOption & {
+  Plugin.Exports & {
     /**
      * Casing convention for generated names.
      */

@@ -7,13 +7,8 @@ import type {
 } from '@hey-api/shared';
 
 export type UserConfig = Plugin.Name<'@hey-api/schemas'> &
-  Plugin.Hooks & {
-    /**
-     * Whether exports should be re-exported in the index file.
-     *
-     * @default false
-     */
-    exportFromIndex?: boolean;
+  Plugin.Hooks &
+  Plugin.UserExports & {
     /**
      * Customise the schema name. By default, `{{name}}Schema` is used. `name` is a
      * valid JavaScript/TypeScript identifier, e.g. if your schema name is

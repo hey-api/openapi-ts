@@ -83,6 +83,11 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends Mixed {
     }
   }
 
+  /** Returns true when all required builder calls are present. */
+  get isValid(): boolean {
+    return this.missingRequiredCalls().length === 0;
+  }
+
   /** Switches the function to an arrow function form. */
   arrow(): FuncTsDsl<'arrow'> {
     this.mode = 'arrow';
@@ -107,11 +112,10 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends Mixed {
     : M extends 'expr'
       ? ts.FunctionExpression
       : ts.ArrowFunction {
+    this.$validate();
     const body = this.$node(new BlockTsDsl(...this._do).pretty());
 
     if (this.mode === 'decl') {
-      const name = this.name.toString();
-      if (!name) throw new Error('Function declaration requires a name');
       const node = ts.factory.createFunctionDeclaration(
         [...this.$decorators(), ...this.modifiers],
         undefined,
@@ -150,6 +154,18 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends Mixed {
         : body,
     ) as any;
     return this.$docs(node);
+  }
+
+  $validate(): asserts this {
+    const missing = this.missingRequiredCalls();
+    if (missing.length === 0) return;
+    throw new Error(`Function ${this.mode} missing ${missing.join(' and ')}`);
+  }
+
+  private missingRequiredCalls(): ReadonlyArray<string> {
+    const missing: Array<string> = [];
+    if (this.mode === 'decl' && !this.name.toString()) missing.push('name');
+    return missing;
   }
 }
 

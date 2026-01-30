@@ -6,4 +6,6 @@ export type PluginClientNames =
 
 export type PluginMockNames = 'factory_boy' | 'faker' | 'mimesis';
 
+export type PluginTransformerNames = never;
+
 export type PluginValidatorNames = 'attrs' | 'dataclasses' | 'marshmallow' | 'pydantic';

@@ -9,7 +9,7 @@ export const defaultConfig: ValibotPlugin['Config'] = {
   config: {
     case: 'camelCase',
     comments: true,
-    exportFromIndex: false,
+    includeInEntry: false,
     metadata: false,
   },
   handler,

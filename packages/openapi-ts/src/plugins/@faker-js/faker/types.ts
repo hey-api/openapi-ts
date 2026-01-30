@@ -1,16 +1,11 @@
-import type {
-  Casing,
-  FeatureToggle,
-  IndexExportOption,
-  NameTransformer,
-  NamingOptions,
-} from '@hey-api/shared';
+import type { Casing, FeatureToggle, NameTransformer, NamingOptions } from '@hey-api/shared';
 import type { DefinePlugin, Plugin } from '@hey-api/shared';
 
 import type { IApi } from './api';
 
 export type UserConfig = Plugin.Name<'@faker-js/faker'> &
-  Plugin.Hooks & {
+  Plugin.Hooks &
+  Plugin.UserExports & {
     // Resolvers & {
     /**
      * Casing convention for generated names.
@@ -50,12 +45,6 @@ export type UserConfig = Plugin.Name<'@faker-js/faker'> &
           name?: NameTransformer;
         };
     /**
-     * Whether exports should be re-exported in the index file.
-     *
-     * @default false
-     */
-    exportFromIndex?: boolean;
-    /**
      * Faker locale for generated data.
      *
      * @default 'en'
@@ -70,7 +59,7 @@ export type UserConfig = Plugin.Name<'@faker-js/faker'> &
 
 export type Config = Plugin.Name<'@faker-js/faker'> &
   Plugin.Hooks &
-  IndexExportOption & {
+  Plugin.Exports & {
     // Resolvers & {
     /**
      * Casing convention for generated names.

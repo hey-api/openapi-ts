@@ -1,6 +1,6 @@
 import type { IProjectRenderMeta } from '../extensions';
 import type { IFileRegistry } from '../files/types';
-import type { Extensions, NameConflictResolvers } from '../languages/types';
+import type { Extensions, ModuleEntryNames, NameConflictResolvers } from '../languages/types';
 import type { INodeRegistry } from '../nodes/types';
 import type { IOutput } from '../output';
 import type { NameConflictResolver } from '../planner/types';
@@ -21,7 +21,17 @@ export interface IProject {
   readonly defaultFileName: string;
   /** Default name conflict resolver used when a file has no specific resolver. */
   readonly defaultNameConflictResolver: NameConflictResolver;
-  /** Maps language to array of extensions. First element is used by default. */
+  /**
+   * Maps language to array of extensions. First element is used by default.
+   *
+   * @example
+   * ```ts
+   * const exts: Extensions = {
+   *   typescript: ['.ts', '.tsx'],
+   *   python: ['.py'],
+   * };
+   * ```
+   */
   readonly extensions: Extensions;
   /**
    * Function to transform file names before they are used.
@@ -32,7 +42,29 @@ export interface IProject {
   readonly fileName?: (name: string) => string;
   /** Centralized file registry for the project. */
   readonly files: IFileRegistry;
-  /** Map of language-specific name conflict resolvers for files in the project. */
+  /**
+   * Map of module entry names for each language.
+   *
+   * @example
+   * ```ts
+   * const entries: ModuleEntryNames = {
+   *   typescript: 'index',
+   *   python: '__init__',
+   * };
+   * ```
+   */
+  readonly moduleEntryNames: ModuleEntryNames;
+  /**
+   * Map of language-specific name conflict resolvers for files in the project.
+   *
+   * @example
+   * ```ts
+   * const resolvers: NameConflictResolvers = {
+   *   typescript: myTypeScriptResolver,
+   *   python: myPythonResolver,
+   * };
+   * ```
+   */
   readonly nameConflictResolvers: NameConflictResolvers;
   /** Centralized node registry for the project. */
   readonly nodes: INodeRegistry;

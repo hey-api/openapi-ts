@@ -22,6 +22,7 @@ export type {
   FeatureToggle,
   IndexExportOption,
   NamingOptions,
+  UserIndexExportOption,
 } from './config/shared';
 export type { ValueToObject } from './config/utils/config';
 export { valueToObject } from './config/utils/config';

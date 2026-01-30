@@ -10,7 +10,7 @@ export function createPrinter(options?: PyPrinterOptions) {
 
   let indentLevel = 0;
 
-  function processComments(
+  function printComments(
     parts: Array<string>,
     lines: ReadonlyArray<string>,
     indent?: boolean,
@@ -20,7 +20,21 @@ export function createPrinter(options?: PyPrinterOptions) {
     if (indent) indentLevel -= 1;
   }
 
+  function printDocstring(docstring: string): Array<string> {
+    const lines = docstring.split('\n');
+    const parts: Array<string> = [];
+    if (lines.length === 1) {
+      parts.push(printLine(`"""${lines[0]}"""`), '');
+    } else {
+      parts.push(printLine(`"""`));
+      parts.push(...lines.map((line) => printLine(line)));
+      parts.push(printLine(`"""`), '');
+    }
+    return parts;
+  }
+
   function printLine(line: string): string {
+    if (line === '') return '';
     return ' '.repeat(indentLevel * indentSize) + line;
   }
 
@@ -28,7 +42,7 @@ export function createPrinter(options?: PyPrinterOptions) {
     const parts: Array<string> = [];
 
     if (node.leadingComments) {
-      processComments(parts, node.leadingComments);
+      printComments(parts, node.leadingComments);
     }
 
     let indentTrailingComments = false;
@@ -85,7 +99,7 @@ export function createPrinter(options?: PyPrinterOptions) {
         parts.push(printLine(`class ${node.name}${bases}:`));
         if (node.docstring) {
           indentLevel += 1;
-          parts.push(printLine(`"""${node.docstring}"""`), '');
+          parts.push(...printDocstring(node.docstring));
           indentLevel -= 1;
         }
         parts.push(printNode(node.body));
@@ -165,7 +179,7 @@ export function createPrinter(options?: PyPrinterOptions) {
         );
         if (node.docstring) {
           indentLevel += 1;
-          parts.push(printLine(`"""${node.docstring}"""`), '');
+          parts.push(...printDocstring(node.docstring));
           indentLevel -= 1;
         }
         parts.push(printNode(node.body));
@@ -309,7 +323,7 @@ export function createPrinter(options?: PyPrinterOptions) {
 
       case PyNodeKind.SourceFile:
         if (node.docstring) {
-          parts.push(printLine(`"""${node.docstring}"""`), '');
+          parts.push(...printDocstring(node.docstring));
         }
         parts.push(...node.statements.map(printNode));
         break;
@@ -382,7 +396,7 @@ export function createPrinter(options?: PyPrinterOptions) {
     }
 
     if (node.trailingComments) {
-      processComments(parts, node.trailingComments, indentTrailingComments);
+      printComments(parts, node.trailingComments, indentTrailingComments);
     }
 
     return parts.join('\n');

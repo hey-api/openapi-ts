@@ -9,7 +9,7 @@ export const defaultConfig: ArktypePlugin['Config'] = {
   config: {
     case: 'PascalCase',
     comments: true,
-    exportFromIndex: false,
+    includeInEntry: false,
     metadata: false,
   },
   handler,

@@ -31,6 +31,11 @@ export class TypeIdxTsDsl extends Mixed {
     ctx.analyze(this._index);
   }
 
+  /** Returns true when all required builder calls are present. */
+  get isValid(): boolean {
+    return this.missingRequiredCalls().length === 0;
+  }
+
   base(base: Base): this {
     this._base = base;
     return this;
@@ -42,7 +47,24 @@ export class TypeIdxTsDsl extends Mixed {
   }
 
   override toAst() {
+    this.$validate();
     return ts.factory.createIndexedAccessTypeNode(this.$type(this._base), this.$type(this._index));
+  }
+
+  $validate(): asserts this is this & {
+    _base: Base;
+    _index: Index;
+  } {
+    const missing = this.missingRequiredCalls();
+    if (missing.length === 0) return;
+    throw new Error(`Indexed access type missing ${missing.join(' and ')}`);
+  }
+
+  private missingRequiredCalls(): ReadonlyArray<string> {
+    const missing: Array<string> = [];
+    if (this._base === undefined) missing.push('.base()');
+    if (this._index === undefined) missing.push('.index()');
+    return missing;
   }
 }
 

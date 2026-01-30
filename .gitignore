@@ -1,5 +1,6 @@
 .DS_Store
 .cache
+.mypy_cache
 .idea
 .tmp
 junit.xml

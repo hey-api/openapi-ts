@@ -8,7 +8,7 @@ export const defaultConfig: FakerJsFakerPlugin['Config'] = {
   api: new Api(),
   config: {
     case: 'camelCase',
-    exportFromIndex: false,
+    includeInEntry: false,
   },
   // handler,
   handler: () => {},
