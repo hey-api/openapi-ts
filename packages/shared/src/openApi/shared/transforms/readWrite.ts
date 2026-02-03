@@ -17,15 +17,17 @@ import { getUniqueComponentName, isPathRootSchema, specToSchemasPointerNamespace
 
 type OriginalSchemas = Record<string, unknown>;
 
+type SplitMapping = Record<
+  string,
+  {
+    read?: string;
+    write?: string;
+  }
+>;
+
 type SplitSchemas = {
   /** Key is the original schema pointer. */
-  mapping: Record<
-    string,
-    {
-      read?: string;
-      write?: string;
-    }
-  >;
+  mapping: SplitMapping;
   /** splitPointer -> originalPointer */
   reverseMapping: Record<string, string>;
   /** name -> schema object */
@@ -313,6 +315,186 @@ const removeOriginalSplitSchemas = ({
 };
 
 /**
+ * Create writable variants of parent schemas that have discriminators
+ * and are referenced by split schemas.
+ */
+function splitDiscriminatorSchemas({
+  config,
+  existingNames,
+  schemasPointerNamespace,
+  spec,
+  split,
+}: {
+  config: ReadWriteConfig;
+  existingNames: Set<string>;
+  schemasPointerNamespace: string;
+  spec: unknown;
+  split: SplitSchemas;
+}) {
+  const schemasObj = getSchemasObject(spec);
+  if (!schemasObj) return;
+
+  const parentSchemasToSplit = new Map<string, Set<Scope>>();
+
+  // First pass: identify parent schemas that need writable variants
+  for (const [name, schema] of Object.entries(split.schemas)) {
+    const pointer = `${schemasPointerNamespace}${name}`;
+    const originalPointer = split.reverseMapping[pointer];
+
+    if (originalPointer) {
+      const mapping = split.mapping[originalPointer];
+      if (mapping) {
+        const contextVariant: Scope | null =
+          mapping.read === pointer ? 'read' : mapping.write === pointer ? 'write' : null;
+
+        // Check allOf for $refs to schemas with discriminators
+        if (
+          contextVariant &&
+          schema &&
+          typeof schema === 'object' &&
+          'allOf' in schema &&
+          schema.allOf instanceof Array
+        ) {
+          for (const comp of schema.allOf) {
+            if (
+              comp &&
+              typeof comp === 'object' &&
+              '$ref' in comp &&
+              typeof comp.$ref === 'string'
+            ) {
+              const refPath = jsonPointerToPath(comp.$ref);
+              const schemaName = refPath[refPath.length - 1];
+
+              if (typeof schemaName === 'string' && schemaName in schemasObj) {
+                const resolvedSchema = schemasObj[schemaName];
+
+                // Check if this schema has a discriminator with mapping
+                if (
+                  resolvedSchema &&
+                  typeof resolvedSchema === 'object' &&
+                  'discriminator' in resolvedSchema &&
+                  resolvedSchema.discriminator &&
+                  typeof resolvedSchema.discriminator === 'object' &&
+                  'mapping' in resolvedSchema.discriminator &&
+                  resolvedSchema.discriminator.mapping &&
+                  typeof resolvedSchema.discriminator.mapping === 'object'
+                ) {
+                  // This parent schema needs a variant for this context
+                  if (!parentSchemasToSplit.has(comp.$ref)) {
+                    parentSchemasToSplit.set(comp.$ref, new Set());
+                  }
+                  parentSchemasToSplit.get(comp.$ref)!.add(contextVariant);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Second pass: create writable variants of parent schemas and update their discriminator mappings
+  const parentSchemaVariants = new Map<string, SplitMapping[keyof SplitMapping]>();
+
+  for (const [parentRef, contexts] of parentSchemasToSplit) {
+    const refPath = jsonPointerToPath(parentRef);
+    const parentName = refPath[refPath.length - 1];
+
+    if (typeof parentName !== 'string' || !(parentName in schemasObj)) continue;
+
+    const parentSchema = schemasObj[parentName];
+    if (!parentSchema || typeof parentSchema !== 'object') continue;
+
+    const variants: SplitMapping[keyof SplitMapping] = {};
+
+    // Create variants for each context
+    for (const context of contexts) {
+      const variantSchema = deepClone(parentSchema);
+
+      // Update discriminator mapping in the variant
+      if (
+        'discriminator' in variantSchema &&
+        variantSchema.discriminator &&
+        typeof variantSchema.discriminator === 'object' &&
+        'mapping' in variantSchema.discriminator &&
+        variantSchema.discriminator.mapping &&
+        typeof variantSchema.discriminator.mapping === 'object'
+      ) {
+        const mapping = variantSchema.discriminator.mapping;
+        const updatedMapping: Record<string, string> = {};
+
+        for (const [discriminatorValue, originalRef] of Object.entries(mapping)) {
+          const map = split.mapping[originalRef];
+          if (map) {
+            if (context === 'read' && map.read) {
+              updatedMapping[discriminatorValue] = map.read;
+            } else if (context === 'write' && map.write) {
+              updatedMapping[discriminatorValue] = map.write;
+            } else {
+              updatedMapping[discriminatorValue] = originalRef;
+            }
+          } else {
+            updatedMapping[discriminatorValue] = originalRef;
+          }
+        }
+
+        variantSchema.discriminator.mapping = updatedMapping;
+      }
+
+      // Add the variant to split.schemas with an appropriate name
+      if (context === 'write') {
+        const writeBase = applyNaming(parentName, config.requests);
+        const writeName = getUniqueComponentName({
+          base: writeBase,
+          components: existingNames,
+        });
+        existingNames.add(writeName);
+        split.schemas[writeName] = variantSchema;
+        variants.write = `${schemasPointerNamespace}${writeName}`;
+      }
+      // We could create read variants too, but typically they're not needed
+      // since the original schema serves as the read variant
+    }
+
+    parentSchemaVariants.set(parentRef, variants);
+  }
+
+  // Third pass: update $refs in split schemas to point to the parent variants
+  for (const [name, schema] of Object.entries(split.schemas)) {
+    const pointer = `${schemasPointerNamespace}${name}`;
+    const originalPointer = split.reverseMapping[pointer];
+    if (!originalPointer) continue;
+
+    const mapping = split.mapping[originalPointer];
+    if (!mapping) continue;
+
+    const contextVariant: Scope | null =
+      mapping.read === pointer ? 'read' : mapping.write === pointer ? 'write' : null;
+
+    if (contextVariant && schema && typeof schema === 'object') {
+      // Update $refs in allOf
+      if ('allOf' in schema && schema.allOf instanceof Array) {
+        for (let i = 0; i < schema.allOf.length; i++) {
+          const comp = schema.allOf[i];
+
+          if (comp && typeof comp === 'object' && '$ref' in comp && typeof comp.$ref === 'string') {
+            const variants = parentSchemaVariants.get(comp.$ref);
+
+            if (variants) {
+              if (contextVariant === 'write' && variants.write) {
+                comp.$ref = variants.write;
+              } else if (contextVariant === 'read' && variants.read) {
+                comp.$ref = variants.read;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
  * Splits schemas with both 'read' and 'write' scopes into read/write variants.
  * Returns the new schemas and a mapping from original pointer to new variant pointers.
  *
@@ -436,6 +618,14 @@ export const splitSchemas = ({
     split.reverseMapping[readPointer] = pointer;
     split.reverseMapping[writePointer] = pointer;
   }
+
+  splitDiscriminatorSchemas({
+    config,
+    existingNames,
+    schemasPointerNamespace,
+    spec,
+    split,
+  });
 
   event.timeEnd();
   return split;
@@ -630,6 +820,37 @@ export const updateRefsInSpec = ({
               (node as Record<string, unknown>)[key] = map.read;
             }
           }
+        } else if (key === 'discriminator' && typeof value === 'object' && value !== null) {
+          // Update discriminator mappings to point to the correct read/write variants
+          if ('mapping' in value && value.mapping && typeof value.mapping === 'object') {
+            const updatedMapping: Record<string, string> = {};
+            for (const [discriminatorValue, originalRef] of Object.entries(value.mapping)) {
+              const map = split.mapping[originalRef];
+              if (map) {
+                if (nextContext === 'read' && map.read) {
+                  updatedMapping[discriminatorValue] = map.read;
+                } else if (nextContext === 'write' && map.write) {
+                  updatedMapping[discriminatorValue] = map.write;
+                } else {
+                  // For schemas with no context, don't update the mapping.
+                  // This preserves the original mapping for base schemas.
+                  updatedMapping[discriminatorValue] = originalRef;
+                }
+              } else {
+                updatedMapping[discriminatorValue] = originalRef;
+              }
+            }
+            value.mapping = updatedMapping;
+          }
+          // Continue walking the discriminator object for other properties
+          walk({
+            context: nextContext,
+            currentPointer: nextPointer,
+            inSchema,
+            node: value,
+            path: [...path, key],
+            visited,
+          });
         } else {
           walk({
             context: nextContext,
