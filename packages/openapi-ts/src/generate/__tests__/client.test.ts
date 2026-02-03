@@ -27,12 +27,19 @@ describe('isDevMode logic', () => {
       description: 'returns false when src is in project path (pnpm case from issue)',
       expected: false,
       mockPath:
-        '/home/Huliiiiii/src/thcdb/worktree/schema-gen/web/node_modules/.pnpm/@hey-api+openapi-ts@0.91.1/node_modules/@hey-api/openapi-ts/dist/generate',
+        '/home/user/src/thcdb/worktree/schema-gen/web/node_modules/.pnpm/@hey-api+openapi-ts@0.91.1/node_modules/@hey-api/openapi-ts/dist/generate',
+    },
+    {
+      description:
+        'returns false when src is in project path with plugins path (exact error from issue)',
+      expected: false,
+      mockPath:
+        '/home/user/src/thcdb/worktree/schema-gen/web/node_modules/.pnpm/@hey-api+openapi-ts@0.91.1_magicast@0.5.1_typescript@5.9.3/node_modules/@hey-api/openapi-ts/plugins/@hey-api/client-core/bundle',
     },
     {
       description: 'returns true only when ending with src/generate',
       expected: true,
-      mockPath: '/var/src/backup/packages/openapi-ts/src/generate',
+      mockPath: '/home/user/src/backup/packages/openapi-ts/src/generate',
     },
     {
       description: 'returns false when not ending with generate',
