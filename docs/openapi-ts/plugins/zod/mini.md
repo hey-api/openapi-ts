@@ -318,7 +318,7 @@ You can further customize this plugin's behavior using [resolvers](/openapi-ts/p
 
 ## API
 
-You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/zod/types.d.ts) interface.
+You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/zod/types.ts) interface.
 
 <!--@include: ../../../partials/examples.md-->
 <!--@include: ../../../partials/sponsors.md-->
