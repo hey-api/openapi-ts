@@ -16,6 +16,12 @@
     "**/*.map": true,
     "**/*.mjs": true,
     "**/*.mts": true,
+    "**/.vitepress/dist": true,
+    "**/.mypy_cache": true,
+    "**/__snapshots__": true,
+    "**/coverage": true,
+    "**/openapi-ts-tests/**/generated": true,
+    "**/openapi-ts-tests/**/.gen": true,
     "**/*.tsbuildinfo": true
   },
   "typescript.preferences.autoImportFileExcludePatterns": ["dist/**"],

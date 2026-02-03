@@ -544,7 +544,7 @@ Enabling examples does not produce visible output on its own. Examples are writt
 
 ## API
 
-You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/@hey-api/sdk/types.d.ts) interface.
+You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/@hey-api/sdk/types.ts) interface.
 
 <!--@include: ../../partials/examples.md-->
 <!--@include: ../../partials/sponsors.md-->
