@@ -46,13 +46,14 @@ describe('isDevMode logic', () => {
     },
   ];
 
-  it.each(scenarios)('$description', async ({ expected, mockPath }) => {
+  it.each(scenarios)('$description', ({ expected, mockPath }) => {
     // Test the isDevMode logic
     const normalized = mockPath.split(path.sep);
     const srcIndex = normalized.lastIndexOf('src');
     const distIndex = normalized.lastIndexOf('dist');
 
     const result =
+      srcIndex !== -1 &&
       srcIndex > distIndex &&
       srcIndex === normalized.length - 2 &&
       normalized[srcIndex + 1] === 'generate';
