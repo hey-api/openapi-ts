@@ -48,6 +48,20 @@ for (const zodVersion of zodVersions) {
         }),
         description: 'generates validator schemas',
       },
+      {
+        config: createConfig({
+          input: 'validators.json',
+          output: 'validators-nullish',
+          plugins: [
+            {
+              compatibilityVersion: zodVersion.compatibilityVersion,
+              name: 'zod',
+              useNullish: true,
+            },
+          ],
+        }),
+        description: 'generates validator schemas with nullish',
+      },
     ];
 
     it.each(scenarios)('$description', async ({ config }) => {

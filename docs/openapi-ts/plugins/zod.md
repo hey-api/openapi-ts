@@ -236,6 +236,34 @@ export default {
 
 :::
 
+## Nullish
+
+By default, non-required object properties generate `.optional()`, which accepts `undefined` values. If you'd like non-required properties to also accept `null`, you can set `useNullish` to `true`. This generates `.nullish()` instead of `.optional()`.
+
+::: code-group
+
+```ts [example]
+const zFoo = z.object({
+  bar: z.nullish(z.string()),
+});
+```
+
+```js [config]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: 'zod',
+      useNullish: true, // [!code ++]
+    },
+  ],
+};
+```
+
+:::
+
 ## Metadata
 
 It's often useful to associate a schema with some additional [metadata](https://zod.dev/metadata) for documentation, code generation, AI structured outputs, form validation, and other purposes. If this is your use case, you can set `metadata` to `true` to generate additional metadata about schemas.

@@ -142,8 +142,9 @@ export const irSchemaToAst = ({
     }
 
     if (optional) {
-      ast.expression = $(z).attr(identifiers.optional).call(ast.expression);
-      ast.typeName = identifiers.ZodOptional;
+      const method = plugin.config.useNullish ? identifiers.nullish : identifiers.optional;
+      ast.expression = $(z).attr(method).call(ast.expression);
+      ast.typeName = plugin.config.useNullish ? identifiers.ZodNullish : identifiers.ZodOptional;
     }
 
     if (schema.default !== undefined) {

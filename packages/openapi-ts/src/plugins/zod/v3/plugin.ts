@@ -131,7 +131,8 @@ export const irSchemaToAst = ({
     }
 
     if (optional) {
-      ast.expression = ast.expression.attr(identifiers.optional).call();
+      const method = plugin.config.useNullish ? identifiers.nullish : identifiers.optional;
+      ast.expression = ast.expression.attr(method).call();
     }
 
     if (schema.default !== undefined) {

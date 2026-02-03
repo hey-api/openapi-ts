@@ -51,6 +51,20 @@ for (const zodVersion of zodVersions) {
       {
         config: createConfig({
           input: 'validators.yaml',
+          output: 'validators-nullish',
+          plugins: [
+            {
+              compatibilityVersion: zodVersion.compatibilityVersion,
+              name: 'zod',
+              useNullish: true,
+            },
+          ],
+        }),
+        description: 'generates validator schemas with nullish',
+      },
+      {
+        config: createConfig({
+          input: 'validators.yaml',
           output: 'validators-dates',
           plugins: [
             {
