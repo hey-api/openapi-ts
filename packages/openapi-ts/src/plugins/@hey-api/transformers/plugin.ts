@@ -8,6 +8,114 @@ import type { HeyApiTransformersPlugin } from './types';
 
 const dataVariableName = 'data';
 
+/**
+ * Information about a discriminated union variant
+ */
+interface DiscriminatedVariant {
+  discriminatorValue: unknown;
+  variantSchema: IR.SchemaObject;
+}
+
+/**
+ * Information about a discriminated union schema
+ */
+interface DiscriminatedUnionInfo {
+  discriminatorProperty: string;
+  variants: ReadonlyArray<DiscriminatedVariant>;
+}
+
+/**
+ * Detects if a schema is a discriminated union pattern.
+ * A discriminated union has logicalOperator: 'or' (or default) with items where
+ * each item is a logicalOperator: 'and' composition containing a discriminator
+ * schema (with const property) and a variant schema ($ref or inline).
+ */
+const detectDiscriminatedUnion = (schema: IR.SchemaObject): DiscriminatedUnionInfo | null => {
+  // Must have items array
+  if (!schema.items || schema.items.length === 0) {
+    return null;
+  }
+
+  // logicalOperator must be 'or' (default) - not 'and'
+  if (schema.logicalOperator === 'and') {
+    return null;
+  }
+
+  let discriminatorProperty: string | null = null;
+  const variants: Array<DiscriminatedVariant> = [];
+
+  for (const item of schema.items) {
+    // Each variant should be an 'and' composition with items
+    if (item.logicalOperator !== 'and' || !item.items || item.items.length < 2) {
+      // If this item is directly a $ref without discriminator info, skip detection
+      return null;
+    }
+
+    // Find the discriminator schema (object with const property)
+    // and the variant schema ($ref or object type)
+    let discriminatorSchema: IR.SchemaObject | null = null;
+    let variantSchema: IR.SchemaObject | null = null;
+
+    for (const subItem of item.items) {
+      if (subItem.type === 'object' && subItem.properties) {
+        // Check if this has a property with const value (discriminator pattern)
+        const propEntries = Object.entries(subItem.properties);
+        const constProp = propEntries.find(([, propSchema]) => propSchema.const !== undefined);
+
+        if (constProp) {
+          // This is the discriminator schema
+          discriminatorSchema = subItem;
+        } else if (!variantSchema) {
+          // This might be the variant if no const was found
+          variantSchema = subItem;
+        }
+      } else if (subItem.$ref) {
+        // This is the variant schema
+        variantSchema = subItem;
+      } else if (!discriminatorSchema && !variantSchema) {
+        // Might be another type of schema
+        variantSchema = subItem;
+      }
+    }
+
+    if (!discriminatorSchema || !variantSchema) {
+      return null;
+    }
+
+    // Extract discriminator property name and value
+    const propEntries = Object.entries(discriminatorSchema.properties || {});
+    const constProp = propEntries.find(([, propSchema]) => propSchema.const !== undefined);
+
+    if (!constProp) {
+      return null;
+    }
+
+    const [propName, propSchema] = constProp;
+
+    // Verify all variants use the same discriminator property
+    if (discriminatorProperty === null) {
+      discriminatorProperty = propName;
+    } else if (discriminatorProperty !== propName) {
+      // Different discriminator properties found, not a valid discriminated union
+      return null;
+    }
+
+    variants.push({
+      discriminatorValue: propSchema.const,
+      variantSchema,
+    });
+  }
+
+  if (!discriminatorProperty || variants.length === 0) {
+    return null;
+  }
+
+  return {
+    discriminatorProperty,
+    variants,
+  };
+};
+
 // Track symbols that are currently being built so recursive references
 // can emit calls to transformers that will be implemented later.
 const buildingSymbols = new Set<number>();
@@ -15,6 +123,79 @@ const buildingSymbols = new Set<number>();
 type Expr = ReturnType<typeof $.fromValue | typeof $.return | typeof $.if>;
 
 const isNodeReturnStatement = (node: Expr) => node['~dsl'] === 'ReturnTsDsl';
+
+/**
+ * Processes a discriminated union schema and generates transformer code
+ * that uses if-else statements to switch on the discriminator property value.
+ */
+const processDiscriminatedUnion = ({
+  dataExpression,
+  discriminatedUnion,
+  plugin,
+}: {
+  dataExpression?: ts.Expression | string | ReturnType<typeof $.attr | typeof $.expr>;
+  discriminatedUnion: DiscriminatedUnionInfo;
+  plugin: HeyApiTransformersPlugin['Instance'];
+}): Array<Expr> => {
+  const { discriminatorProperty, variants } = discriminatedUnion;
+
+  // Build transformers for each variant and track which ones have transformers
+  const variantTransformers: Array<{
+    discriminatorValue: unknown;
+    transformerNodes: Array<Expr>;
+  }> = [];
+
+  for (const variant of variants) {
+    // Process the variant schema to get its transformer nodes
+    const variantNodes = processSchemaType({
+      dataExpression: dataExpression || dataVariableName,
+      plugin,
+      schema: variant.variantSchema,
+    });
+
+    if (variantNodes.length > 0) {
+      variantTransformers.push({
+        discriminatorValue: variant.discriminatorValue,
+        transformerNodes: variantNodes,
+      });
+    }
+  }
+
+  // If no variants need transformation, return empty
+  if (variantTransformers.length === 0) {
+    return [];
+  }
+
+  // Build the discriminator access expression
+  const discriminatorAccess = $(dataExpression || dataVariableName).attr(discriminatorProperty);
+
+  // Build nested if-else chain
+  // We need to build from the last variant to the first to create proper nesting
+  let currentNode: Expr | undefined;
+
+  for (let i = variantTransformers.length - 1; i >= 0; i--) {
+    const { discriminatorValue, transformerNodes } = variantTransformers[i]!;
+
+    // Build condition: data.discriminatorProperty === 'value'
+    const condition = $(discriminatorAccess).eq($.fromValue(discriminatorValue));
+
+    // The body of this if branch is the transformer nodes
+    const ifNode = $.if(condition).do(...transformerNodes);
+
+    if (currentNode) {
+      // Add else branch with the accumulated else chain
+      ifNode.otherwise(currentNode);
+    }
+
+    currentNode = ifNode;
+  }
+
+  if (currentNode) {
+    return [currentNode];
+  }
+
+  return [];
+};
 
 const schemaResponseTransformerNodes = ({
   plugin,
@@ -227,6 +408,19 @@ const processSchemaType = ({
         }
       }
       return arrayNodes;
+    }
+
+    // Check for discriminated union pattern
+    const discriminatedUnion = detectDiscriminatedUnion(schema);
+    if (discriminatedUnion) {
+      const discriminatedUnionNodes = processDiscriminatedUnion({
+        dataExpression,
+        discriminatedUnion,
+        plugin,
+      });
+      if (discriminatedUnionNodes.length) {
+        return discriminatedUnionNodes;
+      }
     }
 
     // assume enums do not contain transformable values
