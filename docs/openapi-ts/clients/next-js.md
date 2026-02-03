@@ -290,7 +290,7 @@ You can use any of the approaches mentioned in [Configuration](#configuration), 
 
 ## API
 
-You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/@hey-api/client-next/types.d.ts) interface.
+You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/@hey-api/client-next/types.ts) interface.
 
 <!--@include: ../../partials/examples.md-->
 <!--@include: ../../partials/sponsors.md-->
