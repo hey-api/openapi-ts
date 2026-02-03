@@ -437,6 +437,76 @@ export const splitSchemas = ({
     split.reverseMapping[writePointer] = pointer;
   }
 
+  // Helper function to update discriminator mappings in a schema
+  const updateDiscriminatorMappingsInSchema = (
+    schema: unknown,
+    contextVariant: 'read' | 'write',
+  ) => {
+    if (schema && typeof schema === 'object') {
+      // If this schema has a discriminator with a mapping
+      if (
+        'discriminator' in schema &&
+        schema.discriminator &&
+        typeof schema.discriminator === 'object' &&
+        'mapping' in schema.discriminator &&
+        schema.discriminator.mapping &&
+        typeof schema.discriminator.mapping === 'object'
+      ) {
+        const mapping = schema.discriminator.mapping as Record<string, string>;
+        const updatedMapping: Record<string, string> = {};
+
+        for (const [discriminatorValue, originalRef] of Object.entries(mapping)) {
+          const map = split.mapping[originalRef];
+          if (map) {
+            // Update to the appropriate variant
+            if (contextVariant === 'read' && map.read) {
+              updatedMapping[discriminatorValue] = map.read;
+            } else if (contextVariant === 'write' && map.write) {
+              updatedMapping[discriminatorValue] = map.write;
+            } else {
+              updatedMapping[discriminatorValue] = originalRef;
+            }
+          } else {
+            updatedMapping[discriminatorValue] = originalRef;
+          }
+        }
+
+        (schema.discriminator as Record<string, unknown>).mapping = updatedMapping;
+      }
+
+      // Recursively update discriminators in allOf, oneOf, anyOf
+      for (const key of ['allOf', 'oneOf', 'anyOf'] as const) {
+        if (key in schema && Array.isArray((schema as Record<string, unknown>)[key])) {
+          const compositions = (schema as Record<string, unknown>)[key] as Array<unknown>;
+          for (const comp of compositions) {
+            updateDiscriminatorMappingsInSchema(comp, contextVariant);
+          }
+        }
+      }
+    }
+  };
+
+  // Update discriminator mappings in all split schemas
+  for (const [name, schema] of Object.entries(split.schemas)) {
+    const pointer = `${schemasPointerNamespace}${name}`;
+    const originalPointer = split.reverseMapping[pointer];
+
+    if (originalPointer) {
+      const mapping = split.mapping[originalPointer];
+      if (mapping) {
+        // Determine if this is a read or write variant
+        const isRead = mapping.read === pointer;
+        const isWrite = mapping.write === pointer;
+
+        if (isRead) {
+          updateDiscriminatorMappingsInSchema(schema, 'read');
+        } else if (isWrite) {
+          updateDiscriminatorMappingsInSchema(schema, 'write');
+        }
+      }
+    }
+  }
+
   event.timeEnd();
   return split;
 };
@@ -630,6 +700,39 @@ export const updateRefsInSpec = ({
               (node as Record<string, unknown>)[key] = map.read;
             }
           }
+        } else if (key === 'discriminator' && typeof value === 'object' && value !== null) {
+          // Update discriminator mappings to point to the correct read/write variants
+          const discriminator = value as Record<string, unknown>;
+          if (discriminator.mapping && typeof discriminator.mapping === 'object') {
+            const mapping = discriminator.mapping as Record<string, string>;
+            const updatedMapping: Record<string, string> = {};
+            for (const [discriminatorValue, originalRef] of Object.entries(mapping)) {
+              const map = split.mapping[originalRef];
+              if (map) {
+                if (nextContext === 'read' && map.read) {
+                  updatedMapping[discriminatorValue] = map.read;
+                } else if (nextContext === 'write' && map.write) {
+                  updatedMapping[discriminatorValue] = map.write;
+                } else {
+                  // For schemas with no context, don't update the mapping.
+                  // This preserves the original mapping for base schemas.
+                  updatedMapping[discriminatorValue] = originalRef;
+                }
+              } else {
+                updatedMapping[discriminatorValue] = originalRef;
+              }
+            }
+            discriminator.mapping = updatedMapping;
+          }
+          // Continue walking the discriminator object for other properties
+          walk({
+            context: nextContext,
+            currentPointer: nextPointer,
+            inSchema,
+            node: value,
+            path: [...path, key],
+            visited,
+          });
         } else {
           walk({
             context: nextContext,
