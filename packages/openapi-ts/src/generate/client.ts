@@ -16,7 +16,17 @@ const __dirname = path.dirname(__filename);
 function isDevMode(): boolean {
   // In dev: __dirname = .../packages/openapi-ts/src/generate
   // In prod: __dirname = .../packages/openapi-ts/dist/generate
-  return __dirname.includes(`${path.sep}src${path.sep}`);
+  // Check if we're in a 'src' directory followed by 'generate', not just anywhere in path
+  const normalized = __dirname.split(path.sep);
+  const srcIndex = normalized.lastIndexOf('src');
+  const distIndex = normalized.lastIndexOf('dist');
+
+  // If 'src' appears after 'dist' (or dist doesn't exist), and 'generate' follows 'src', we're in dev mode
+  return (
+    srcIndex > distIndex &&
+    srcIndex === normalized.length - 2 &&
+    normalized[srcIndex + 1] === 'generate'
+  );
 }
 
 /**
