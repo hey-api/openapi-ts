@@ -229,6 +229,13 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'discriminator-one-of-read-write.yaml',
+        output: 'discriminator-one-of-read-write',
+      }),
+      description: 'handles discriminator with oneOf and read/write transforms',
+    },
+    {
+      config: createConfig({
         input: 'duplicate-null.json',
         output: 'duplicate-null',
       }),
