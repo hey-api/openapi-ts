@@ -1,0 +1,54 @@
+openapi: 3.1.0
+info:
+  title: Test readWrite transform with Zod
+  version: 1.0.0
+paths:
+  /items:
+    get:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemList'
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemList'
+      responses:
+        '201':
+          description: Created
+components:
+  schemas:
+    ItemList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Item'
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+    Item:
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+        name:
+          type: string
+        description:
+          type: string
+          writeOnly: true
+    Metadata:
+      type: object
+      properties:
+        total:
+          type: integer
+          readOnly: true
+        offset:
+          type: integer
