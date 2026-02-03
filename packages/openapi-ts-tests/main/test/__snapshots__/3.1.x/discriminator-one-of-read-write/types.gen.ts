@@ -41,16 +41,16 @@ export type CreatePetResponse = {
     } & CatPayload);
 };
 
-export type DogPayloadWritable = Omit<AnimalPayload, 'typeDiscriminator'> & {
+export type DogPayloadWritable = Omit<AnimalPayloadWritable, 'typeDiscriminator'> & {
     breed: string;
     canFetch: boolean;
-    typeDiscriminator: 'DogPayloadWritable';
+    typeDiscriminator: 'dog';
 };
 
-export type CatPayloadWritable = Omit<AnimalPayload, 'typeDiscriminator'> & {
+export type CatPayloadWritable = Omit<AnimalPayloadWritable, 'typeDiscriminator'> & {
     breed: string;
     livesRemaining: number;
-    typeDiscriminator: 'CatPayloadWritable';
+    typeDiscriminator: 'cat';
 };
 
 export type CreatePetRequestWritable = {
@@ -70,6 +70,10 @@ export type CreatePetResponseWritable = {
     } & DogPayloadWritable) | ({
         typeDiscriminator: 'cat';
     } & CatPayloadWritable);
+};
+
+export type AnimalPayloadWritable = {
+    typeDiscriminator: string;
 };
 
 export type PostPetsData = {
