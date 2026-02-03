@@ -822,11 +822,9 @@ export const updateRefsInSpec = ({
           }
         } else if (key === 'discriminator' && typeof value === 'object' && value !== null) {
           // Update discriminator mappings to point to the correct read/write variants
-          const discriminator = value as Record<string, unknown>;
-          if (discriminator.mapping && typeof discriminator.mapping === 'object') {
-            const mapping = discriminator.mapping as Record<string, string>;
+          if ('mapping' in value && value.mapping && typeof value.mapping === 'object') {
             const updatedMapping: Record<string, string> = {};
-            for (const [discriminatorValue, originalRef] of Object.entries(mapping)) {
+            for (const [discriminatorValue, originalRef] of Object.entries(value.mapping)) {
               const map = split.mapping[originalRef];
               if (map) {
                 if (nextContext === 'read' && map.read) {
@@ -842,7 +840,7 @@ export const updateRefsInSpec = ({
                 updatedMapping[discriminatorValue] = originalRef;
               }
             }
-            discriminator.mapping = updatedMapping;
+            value.mapping = updatedMapping;
           }
           // Continue walking the discriminator object for other properties
           walk({
