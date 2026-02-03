@@ -23,6 +23,7 @@ function isDevMode(): boolean {
 
   // If 'src' appears after 'dist' (or dist doesn't exist), and 'generate' follows 'src', we're in dev mode
   return (
+    srcIndex !== -1 &&
     srcIndex > distIndex &&
     srcIndex === normalized.length - 2 &&
     normalized[srcIndex + 1] === 'generate'
