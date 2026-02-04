@@ -74,7 +74,7 @@
   },
   "dependencies": {
     "@hey-api/codegen-core": "workspace:*",
-    "@hey-api/json-schema-ref-parser": "1.2.3",
+    "@hey-api/json-schema-ref-parser": "1.2.4",
     "@hey-api/shared": "workspace:*",
     "@hey-api/types": "workspace:*",
     "ansi-colors": "4.1.3",
