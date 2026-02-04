@@ -1,26 +1,32 @@
-import type { ITsDsl, MaybeArray } from '../base';
-import { HintTsDsl } from '../hint';
+import type { AnalysisContext, Node } from '@hey-api/codegen-core';
+import type ts from 'typescript';
 
-export function HintMixin<
-  TBase extends new (...args: ReadonlyArray<any>) => ITsDsl,
->(Base: TBase) {
-  const Mixin = class extends Base {
-    _hint?: HintTsDsl;
+import type { HintFn, HintLines } from '../layout/hint';
+import { HintTsDsl } from '../layout/hint';
+import type { BaseCtor, MixinCtor } from './types';
 
-    hint(lines?: MaybeArray<string>, fn?: (h: HintTsDsl) => void): this {
+export interface HintMethods extends Node {
+  $hint<T extends ts.Node>(node: T): T;
+  hint(lines?: HintLines, fn?: HintFn): this;
+}
+
+export function HintMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base: TBase) {
+  abstract class Hint extends Base {
+    private _hint?: HintTsDsl;
+
+    override analyze(ctx: AnalysisContext): void {
+      super.analyze(ctx);
+    }
+
+    protected hint(lines?: HintLines, fn?: HintFn): this {
       this._hint = new HintTsDsl(lines, fn);
       return this;
     }
-  };
 
-  const originalFn = Base.prototype.$render;
+    protected $hint<T extends ts.Node>(node: T): T {
+      return this._hint ? this._hint.apply(node) : node;
+    }
+  }
 
-  Mixin.prototype.$render = function (...args: Parameters<ITsDsl['$render']>) {
-    const node = originalFn.apply(this, args);
-    return this._hint ? this._hint.apply(node) : node;
-  };
-
-  return Mixin;
+  return Hint as unknown as MixinCtor<TBase, HintMethods>;
 }
-
-export type HintMixin = InstanceType<ReturnType<typeof HintMixin>>;

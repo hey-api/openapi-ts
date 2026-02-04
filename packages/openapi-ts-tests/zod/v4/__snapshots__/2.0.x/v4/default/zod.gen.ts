@@ -77,7 +77,7 @@ export const zEnumWithStrings = z.enum([
     'Success',
     'Warning',
     'Error',
-    "'Single Quote'",
+    '\'Single Quote\'',
     '"Double Quotes"',
     'Non-ascii: øæåôöØÆÅÔÖ字符串'
 ]);
@@ -576,9 +576,7 @@ export const zCallWithDefaultParametersData = z.object({
         ]),
         parameterModel: z.object({
             prop: z.optional(z.string())
-        }).default({
-            prop: 'Hello World!'
-        })
+        }).default({ prop: 'Hello World!' })
     })
 });
 
@@ -724,7 +722,7 @@ export const zCollectionFormatData = z.object({
 export const zTypesData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.object({
-        id: z.optional(z.int())
+        id: z.optional(z.int().min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' }).max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' }))
     })),
     query: z.object({
         parameterNumber: z.number().default(123),
@@ -787,7 +785,7 @@ export const zNonAsciiæøåÆøÅöôêÊ字符串Data = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
     query: z.object({
-        'nonAsciiParamæøåÆØÅöôêÊ': z.int()
+        nonAsciiParamæøåÆØÅöôêÊ: z.int()
     })
 });
 

@@ -1,12 +1,13 @@
-import { satisfies } from '~/config/utils/package';
-import type { Context } from '~/ir/context';
-import type { OpenApiV2_0_XTypes } from '~/openApi/2.0.x';
-import type { OpenApiV3_0_XTypes } from '~/openApi/3.0.x';
-import type { OpenApiV3_1_XTypes } from '~/openApi/3.1.x';
-import { ensureValidIdentifier } from '~/openApi/shared/utils/identifier';
-import type { OpenApi } from '~/openApi/types';
-import { tsc } from '~/tsc';
+import type {
+  Context,
+  OpenApi,
+  OpenApiV2_0_XTypes,
+  OpenApiV3_0_XTypes,
+  OpenApiV3_1_XTypes,
+} from '@hey-api/shared';
+import { satisfies } from '@hey-api/shared';
 
+import { $ } from '../../../ts-dsl';
 import type { HeyApiSchemasPlugin } from './types';
 
 const stripSchema = ({
@@ -72,10 +73,7 @@ const schemaToJsonSchemaDraft_04 = ({
 
   stripSchema({ plugin, schema });
 
-  if (
-    schema.additionalProperties &&
-    typeof schema.additionalProperties !== 'boolean'
-  ) {
+  if (schema.additionalProperties && typeof schema.additionalProperties !== 'boolean') {
     schema.additionalProperties = schemaToJsonSchemaDraft_04({
       context,
       plugin,
@@ -125,12 +123,8 @@ const schemaToJsonSchemaDraft_05 = ({
 }: {
   context: Context;
   plugin: HeyApiSchemasPlugin['Instance'];
-  schema:
-    | OpenApiV3_0_XTypes['SchemaObject']
-    | OpenApiV3_0_XTypes['ReferenceObject'];
-}):
-  | OpenApiV3_0_XTypes['SchemaObject']
-  | OpenApiV3_0_XTypes['ReferenceObject'] => {
+  schema: OpenApiV3_0_XTypes['SchemaObject'] | OpenApiV3_0_XTypes['ReferenceObject'];
+}): OpenApiV3_0_XTypes['SchemaObject'] | OpenApiV3_0_XTypes['ReferenceObject'] => {
   if (Array.isArray(_schema)) {
     return _schema.map((item) =>
       schemaToJsonSchemaDraft_05({
@@ -138,9 +132,7 @@ const schemaToJsonSchemaDraft_05 = ({
         plugin,
         schema: item,
       }),
-    ) as
-      | OpenApiV3_0_XTypes['SchemaObject']
-      | OpenApiV3_0_XTypes['ReferenceObject'];
+    ) as unknown as OpenApiV3_0_XTypes['SchemaObject'] | OpenApiV3_0_XTypes['ReferenceObject'];
   }
 
   const schema = structuredClone(_schema);
@@ -154,10 +146,7 @@ const schemaToJsonSchemaDraft_05 = ({
 
   stripSchema({ plugin, schema });
 
-  if (
-    schema.additionalProperties &&
-    typeof schema.additionalProperties !== 'boolean'
-  ) {
+  if (schema.additionalProperties && typeof schema.additionalProperties !== 'boolean') {
     schema.additionalProperties = schemaToJsonSchemaDraft_05({
       context,
       plugin,
@@ -236,7 +225,7 @@ const schemaToJsonSchema2020_12 = ({
         plugin,
         schema: item,
       }),
-    ) as OpenApiV3_1_XTypes['SchemaObject'];
+    ) as unknown as OpenApiV3_1_XTypes['SchemaObject'];
   }
 
   const schema = structuredClone(_schema);
@@ -249,10 +238,7 @@ const schemaToJsonSchema2020_12 = ({
     schema.$ref = decodeURI(schema.$ref);
   }
 
-  if (
-    schema.additionalProperties &&
-    typeof schema.additionalProperties !== 'boolean'
-  ) {
+  if (schema.additionalProperties && typeof schema.additionalProperties !== 'boolean') {
     schema.additionalProperties = schemaToJsonSchema2020_12({
       context,
       plugin,
@@ -352,7 +338,7 @@ const schemaName = ({
     customName = `${name}Schema`;
   }
 
-  return ensureValidIdentifier(customName);
+  return customName;
 };
 
 const schemasV2_0_X = ({
@@ -368,28 +354,29 @@ const schemasV2_0_X = ({
 
   for (const name in context.spec.definitions) {
     const schema = context.spec.definitions[name]!;
-    const symbol = plugin.registerSymbol({
-      exported: true,
+    const symbol = plugin.symbol(schemaName({ name, plugin, schema }), {
       meta: {
         category: 'schema',
         resource: 'definition',
         resourceId: name,
         tool: 'json-schema',
       },
-      name: schemaName({ name, plugin, schema }),
     });
     const obj = schemaToJsonSchemaDraft_04({
       context,
       plugin,
       schema,
     });
-    const statement = tsc.constVariable({
-      assertion: 'const',
-      exportConst: symbol.exported,
-      expression: tsc.objectExpression({ obj }),
-      name: symbol.placeholder,
-    });
-    plugin.setSymbolValue(symbol, statement);
+    const statement = $.const(symbol)
+      .export()
+      .assign(
+        $(
+          $.fromValue(obj, {
+            layout: 'pretty',
+          }),
+        ).as('const'),
+      );
+    plugin.node(statement);
   }
 };
 
@@ -406,28 +393,29 @@ const schemasV3_0_X = ({
 
   for (const name in context.spec.components.schemas) {
     const schema = context.spec.components.schemas[name]!;
-    const symbol = plugin.registerSymbol({
-      exported: true,
+    const symbol = plugin.symbol(schemaName({ name, plugin, schema }), {
       meta: {
         category: 'schema',
         resource: 'definition',
         resourceId: name,
         tool: 'json-schema',
       },
-      name: schemaName({ name, plugin, schema }),
     });
     const obj = schemaToJsonSchemaDraft_05({
       context,
       plugin,
       schema,
     });
-    const statement = tsc.constVariable({
-      assertion: 'const',
-      exportConst: symbol.exported,
-      expression: tsc.objectExpression({ obj }),
-      name: symbol.placeholder,
-    });
-    plugin.setSymbolValue(symbol, statement);
+    const statement = $.const(symbol)
+      .export()
+      .assign(
+        $(
+          $.fromValue(obj, {
+            layout: 'pretty',
+          }),
+        ).as('const'),
+      );
+    plugin.node(statement);
   }
 };
 
@@ -444,28 +432,29 @@ const schemasV3_1_X = ({
 
   for (const name in context.spec.components.schemas) {
     const schema = context.spec.components.schemas[name]!;
-    const symbol = plugin.registerSymbol({
-      exported: true,
+    const symbol = plugin.symbol(schemaName({ name, plugin, schema }), {
       meta: {
         category: 'schema',
         resource: 'definition',
         resourceId: name,
         tool: 'json-schema',
       },
-      name: schemaName({ name, plugin, schema }),
     });
     const obj = schemaToJsonSchema2020_12({
       context,
       plugin,
       schema,
     });
-    const statement = tsc.constVariable({
-      assertion: 'const',
-      exportConst: symbol.exported,
-      expression: tsc.objectExpression({ obj }),
-      name: symbol.placeholder,
-    });
-    plugin.setSymbolValue(symbol, statement);
+    const statement = $.const(symbol)
+      .export()
+      .assign(
+        $(
+          $.fromValue(obj, {
+            layout: 'pretty',
+          }),
+        ).as('const'),
+      );
+    plugin.node(statement);
   }
 };
 

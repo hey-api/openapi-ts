@@ -1,33 +1,51 @@
+import type { AnalysisContext, Node, NodeName, Ref } from '@hey-api/codegen-core';
+import { ref } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
-import type { MaybeTsDsl, WithString } from '../base';
-import { TsDsl } from '../base';
+import type { MaybeTsDsl } from '../base';
+import type { BaseCtor, MixinCtor } from './types';
+
+type Arg = NodeName | MaybeTsDsl<ts.Expression>;
+
+export interface ArgsMethods extends Node {
+  /** Renders the arguments into an array of `Expression`s. */
+  $args(): ReadonlyArray<ts.Expression>;
+  /** Adds a single expression argument. */
+  arg(arg: Arg | undefined): this;
+  /** Adds one or more expression arguments. */
+  args(...args: ReadonlyArray<Arg | undefined>): this;
+}
 
 /**
  * Adds `.arg()` and `.args()` for managing expression arguments in call-like nodes.
  */
-export class ArgsMixin extends TsDsl {
-  private _args?: Array<MaybeTsDsl<WithString>>;
+export function ArgsMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base: TBase) {
+  abstract class Args extends Base {
+    protected _args: Array<Ref<Arg>> = [];
 
-  /** Adds a single expression argument. */
-  arg(arg: MaybeTsDsl<WithString>): this {
-    (this._args ??= []).push(arg);
-    return this;
+    override analyze(ctx: AnalysisContext): void {
+      super.analyze(ctx);
+      for (const arg of this._args) {
+        ctx.analyze(arg);
+      }
+    }
+
+    protected arg(arg: Arg | undefined): this {
+      if (arg !== undefined) this._args.push(ref(arg));
+      return this;
+    }
+
+    protected args(...args: ReadonlyArray<Arg | undefined>): this {
+      this._args.push(
+        ...args.filter((a): a is NonNullable<typeof a> => a !== undefined).map((a) => ref(a)),
+      );
+      return this;
+    }
+
+    protected $args(): ReadonlyArray<ts.Expression> {
+      return this.$node(this._args).map((arg) => this.$node(arg));
+    }
   }
 
-  /** Adds one or more expression arguments. */
-  args(...args: ReadonlyArray<MaybeTsDsl<WithString>>): this {
-    (this._args ??= []).push(...args);
-    return this;
-  }
-
-  /** Renders the arguments into an array of `Expression`s. */
-  protected $args(): ReadonlyArray<ts.Expression> {
-    if (!this._args) return [];
-    return this.$node(this._args).map((arg) => this.$expr(arg));
-  }
-
-  $render(): ts.Node {
-    throw new Error('noop');
-  }
+  return Args as unknown as MixinCtor<TBase, ArgsMethods>;
 }

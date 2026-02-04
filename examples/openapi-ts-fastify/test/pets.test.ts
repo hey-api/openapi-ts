@@ -2,7 +2,6 @@ import { type FastifyInstance } from 'fastify';
 import { showPetById } from 'src/client';
 import { client } from 'src/client/client.gen';
 import { buildServer } from 'src/server';
-import { afterAll, beforeAll, describe, expect, test } from 'vitest';
 
 describe('/pet/findByTags', () => {
   let server: FastifyInstance;

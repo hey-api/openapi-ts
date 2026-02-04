@@ -3,7 +3,7 @@
 import * as z from 'zod/mini';
 
 export const zFoo = z.object({
-    foo: z.optional(z.literal("foo")),
+    foo: z.optional(z.literal('foo')),
     bar: z.optional(z.literal(3.2)),
     baz: z.optional(z.literal(-1)),
     qux: z.optional(z.literal(true)),
@@ -15,23 +15,23 @@ export const zFoo = z.object({
         z.literal(true)
     ])),
     corge: z.optional(z.record(z.string(), z.unknown())),
-    garply: z.optional(z.coerce.bigint()),
+    garply: z.optional(z.literal(BigInt('10'))),
     numberInt8: z.optional(z.literal(100)),
     numberInt16: z.optional(z.literal(1000)),
     numberInt32: z.optional(z.literal(100000)),
-    numberInt64: z.optional(z.literal(1000000000000)),
+    numberInt64: z.optional(z.literal(BigInt(1000000000000))),
     numberUint8: z.optional(z.literal(200)),
     numberUint16: z.optional(z.literal(50000)),
     numberUint32: z.optional(z.literal(3000000000)),
-    numberUint64: z.optional(z.literal(18000000000000000000)),
+    numberUint64: z.optional(z.literal(BigInt(18000000000000000000))),
     integerInt8: z.optional(z.literal(-100)),
     integerInt16: z.optional(z.literal(-1000)),
     integerInt32: z.optional(z.literal(-100000)),
-    integerInt64: z.optional(z.literal(-1000000000000)),
+    integerInt64: z.optional(z.literal(BigInt(-1000000000000))),
     integerUint8: z.optional(z.literal(255)),
     integerUint16: z.optional(z.literal(65535)),
     integerUint32: z.optional(z.literal(4294967295)),
-    integerUint64: z.optional(z.int()),
-    stringInt64: z.optional(z.literal("-9223372036854775808")),
-    stringUint64: z.optional(z.literal("18446744073709551615"))
+    integerUint64: z.optional(z.literal(BigInt('18446744073709551615'))),
+    stringInt64: z.optional(z.literal(BigInt('-9223372036854775808'))),
+    stringUint64: z.optional(z.literal(BigInt('18446744073709551615')))
 });

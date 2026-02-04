@@ -1,8 +1,7 @@
+import type { IR } from '@hey-api/shared';
 import type ts from 'typescript';
 
-import type { IR } from '~/ir/types';
-import { tsc } from '~/tsc';
-
+import { $ } from '../../../ts-dsl';
 import type { UserConfig } from './types';
 
 export type ExpressionTransformer = ({
@@ -11,31 +10,18 @@ export type ExpressionTransformer = ({
   schema,
 }: {
   config: Omit<UserConfig, 'name'>;
-  dataExpression?: ts.Expression | string;
+  dataExpression?: ts.Expression | ReturnType<typeof $.expr | typeof $.attr> | string;
   schema: IR.SchemaObject;
-}) => Array<ts.Expression> | undefined;
+}) => Array<ReturnType<typeof $.fromValue>> | undefined;
 
-export const bigIntExpressions: ExpressionTransformer = ({
-  dataExpression,
-  schema,
-}) => {
+export const bigIntExpressions: ExpressionTransformer = ({ dataExpression, schema }) => {
   if (schema.type !== 'integer' || schema.format !== 'int64') {
     return;
   }
 
   const bigIntCallExpression =
     dataExpression !== undefined
-      ? tsc.callExpression({
-          functionName: 'BigInt',
-          parameters: [
-            tsc.callExpression({
-              functionName: tsc.propertyAccessExpression({
-                expression: dataExpression,
-                name: 'toString',
-              }),
-            }),
-          ],
-        })
+      ? $('BigInt').call($.expr(dataExpression).attr('toString').call())
       : undefined;
 
   if (bigIntCallExpression) {
@@ -44,50 +30,24 @@ export const bigIntExpressions: ExpressionTransformer = ({
     }
 
     if (dataExpression) {
-      return [
-        tsc.assignment({
-          left: dataExpression,
-          right: bigIntCallExpression,
-        }),
-      ];
+      return [$.expr(dataExpression).assign(bigIntCallExpression)];
     }
   }
 
   return;
 };
 
-export const dateExpressions: ExpressionTransformer = ({
-  dataExpression,
-  schema,
-}) => {
-  if (
-    schema.type !== 'string' ||
-    !(schema.format === 'date' || schema.format === 'date-time')
-  ) {
+export const dateExpressions: ExpressionTransformer = ({ dataExpression, schema }) => {
+  if (schema.type !== 'string' || !(schema.format === 'date' || schema.format === 'date-time')) {
     return;
   }
 
-  const identifierDate = tsc.identifier({ text: 'Date' });
-
   if (typeof dataExpression === 'string') {
-    return [
-      tsc.newExpression({
-        argumentsArray: [tsc.identifier({ text: dataExpression })],
-        expression: identifierDate,
-      }),
-    ];
+    return [$.new('Date').arg(dataExpression)];
   }
 
   if (dataExpression) {
-    return [
-      tsc.assignment({
-        left: dataExpression,
-        right: tsc.newExpression({
-          argumentsArray: [dataExpression],
-          expression: identifierDate,
-        }),
-      }),
-    ];
+    return [$.expr(dataExpression).assign($.new('Date').arg(dataExpression))];
   }
 
   return;

@@ -7,27 +7,21 @@ export const _400Schema = {
 
 export const ExternalRefASchema = {
     description: 'External ref to shared model (A)',
-    '$ref': '#/components/schemas/external-shared_ExternalSharedModel'
+    $ref: '#/components/schemas/external-shared_ExternalSharedModel'
 } as const;
 
 export const ExternalRefBSchema = {
     description: 'External ref to shared model (B)',
-    '$ref': '#/components/schemas/external-shared_ExternalSharedModel'
+    $ref: '#/components/schemas/external-shared_ExternalSharedModel'
 } as const;
 
 export const camelCaseCommentWithBreaksSchema = {
-    description: `Testing multiline comments in string: First line
-Second line
-
-Fourth line`,
+    description: 'Testing multiline comments in string: First line\nSecond line\n\nFourth line',
     type: 'integer'
 } as const;
 
 export const CommentWithBreaksSchema = {
-    description: `Testing multiline comments in string: First line
-Second line
-
-Fourth line`,
+    description: 'Testing multiline comments in string: First line\nSecond line\n\nFourth line',
     type: 'integer'
 } as const;
 
@@ -37,7 +31,7 @@ export const CommentWithBackticksSchema = {
 } as const;
 
 export const CommentWithBackticksAndQuotesSchema = {
-    description: `Testing backticks and quotes in string: \`backticks\`, 'quotes', "double quotes" and \`\`\`multiple backticks\`\`\` should work`,
+    description: 'Testing backticks and quotes in string: `backticks`, \'quotes\', "double quotes" and ```multiple backticks``` should work',
     type: 'integer'
 } as const;
 
@@ -52,7 +46,7 @@ export const CommentWithExpressionPlaceholdersSchema = {
 } as const;
 
 export const CommentWithQuotesSchema = {
-    description: `Testing quotes in string: 'single quote''' and "double quotes""" should work`,
+    description: 'Testing quotes in string: \'single quote\'\'\' and "double quotes""" should work',
     type: 'integer'
 } as const;
 
@@ -91,7 +85,7 @@ export const SimpleReferenceSchema = {
     description: 'This is a simple reference',
     allOf: [
         {
-            '$ref': '#/components/schemas/ModelWithString'
+            $ref: '#/components/schemas/ModelWithString'
         }
     ]
 } as const;
@@ -106,17 +100,46 @@ export const SimpleStringWithPatternSchema = {
 
 export const EnumWithStringsSchema = {
     description: 'This is a simple enum with strings',
-    enum: ['Success', 'Warning', 'Error', "'Single Quote'", '"Double Quotes"', 'Non-ascii: øæåôöØÆÅÔÖ字符串']
+    enum: [
+        'Success',
+        'Warning',
+        'Error',
+        '\'Single Quote\'',
+        '"Double Quotes"',
+        'Non-ascii: øæåôöØÆÅÔÖ字符串'
+    ]
 } as const;
 
 export const EnumWithReplacedCharactersSchema = {
-    enum: ["'Single Quote'", '"Double Quotes"', 'øæåôöØÆÅÔÖ字符串', 3.1, ''],
+    enum: [
+        '\'Single Quote\'',
+        '"Double Quotes"',
+        'øæåôöØÆÅÔÖ字符串',
+        3.1,
+        ''
+    ],
     type: 'string'
 } as const;
 
 export const EnumWithNumbersSchema = {
     description: 'This is a simple enum with numbers',
-    enum: [1, 2, 3, 1.1, 1.2, 1.3, 100, 200, 300, -100, -200, -300, -1.1, -1.2, -1.3],
+    enum: [
+        1,
+        2,
+        3,
+        1.1,
+        1.2,
+        1.3,
+        100,
+        200,
+        300,
+        -100,
+        -200,
+        -300,
+        -1.1,
+        -1.2,
+        -1.3
+    ],
     default: 200
 } as const;
 
@@ -127,14 +150,34 @@ export const EnumFromDescriptionSchema = {
 
 export const EnumWithExtensionsSchema = {
     description: 'This is a simple enum with numbers',
-    enum: [200, 400, 500],
-    'x-enum-varnames': ['CUSTOM_SUCCESS', 'CUSTOM_WARNING', 'CUSTOM_ERROR'],
-    'x-enum-descriptions': ['Used when the status of something is successful', 'Used when the status of something has a warning', 'Used when the status of something has an error']
+    enum: [
+        200,
+        400,
+        500
+    ],
+    'x-enum-varnames': [
+        'CUSTOM_SUCCESS',
+        'CUSTOM_WARNING',
+        'CUSTOM_ERROR'
+    ],
+    'x-enum-descriptions': [
+        'Used when the status of something is successful',
+        'Used when the status of something has a warning',
+        'Used when the status of something has an error'
+    ]
 } as const;
 
 export const EnumWithXEnumNamesSchema = {
-    enum: [0, 1, 2],
-    'x-enumNames': ['zero', 'one', 'two']
+    enum: [
+        0,
+        1,
+        2
+    ],
+    'x-enumNames': [
+        'zero',
+        'one',
+        'two'
+    ]
 } as const;
 
 export const ArrayWithNumbersSchema = {
@@ -159,14 +202,16 @@ export const ArrayWithStringsSchema = {
     items: {
         type: 'string'
     },
-    default: ['test']
+    default: [
+        'test'
+    ]
 } as const;
 
 export const ArrayWithReferencesSchema = {
     description: 'This is a simple array with references',
     type: 'array',
     items: {
-        '$ref': '#/components/schemas/ModelWithString'
+        $ref: '#/components/schemas/ModelWithString'
     }
 } as const;
 
@@ -176,7 +221,7 @@ export const ArrayWithArraySchema = {
     items: {
         type: 'array',
         items: {
-            '$ref': '#/components/schemas/ModelWithString'
+            $ref: '#/components/schemas/ModelWithString'
         }
     }
 } as const;
@@ -188,7 +233,7 @@ export const ArrayWithPropertiesSchema = {
         type: 'object',
         properties: {
             '16x16': {
-                '$ref': '#/components/schemas/camelCaseCommentWithBreaks'
+                $ref: '#/components/schemas/camelCaseCommentWithBreaks'
             },
             bar: {
                 type: 'string'
@@ -294,7 +339,7 @@ export const DictionaryWithReferenceSchema = {
     description: 'This is a string reference',
     type: 'object',
     additionalProperties: {
-        '$ref': '#/components/schemas/ModelWithString'
+        $ref: '#/components/schemas/ModelWithString'
     }
 } as const;
 
@@ -304,7 +349,7 @@ export const DictionaryWithArraySchema = {
     additionalProperties: {
         type: 'array',
         items: {
-            '$ref': '#/components/schemas/ModelWithString'
+            $ref: '#/components/schemas/ModelWithString'
         }
     }
 } as const;
@@ -381,14 +426,17 @@ export const ModelWithStringErrorSchema = {
 } as const;
 
 export const Model_From_ZendeskSchema = {
-    description: `\`Comment\` or \`VoiceComment\`. The JSON object for adding voice comments to tickets is different. See [Adding voice comments to tickets](/documentation/ticketing/managing-tickets/adding-voice-comments-to-tickets)`,
+    description: '`Comment` or `VoiceComment`. The JSON object for adding voice comments to tickets is different. See [Adding voice comments to tickets](/documentation/ticketing/managing-tickets/adding-voice-comments-to-tickets)',
     type: 'string'
 } as const;
 
 export const ModelWithNullableStringSchema = {
     description: 'This is a model with one string property',
     type: 'object',
-    required: ['nullableRequiredProp1', 'nullableRequiredProp2'],
+    required: [
+        'nullableRequiredProp1',
+        'nullableRequiredProp2'
+    ],
     properties: {
         nullableProp1: {
             description: 'This is a simple string property',
@@ -412,7 +460,12 @@ export const ModelWithNullableStringSchema = {
         },
         'foo_bar-enum': {
             description: 'This is a simple enum with strings',
-            enum: ['Success', 'Warning', 'Error', 'ØÆÅ字符串']
+            enum: [
+                'Success',
+                'Warning',
+                'Error',
+                'ØÆÅ字符串'
+            ]
         }
     }
 } as const;
@@ -423,16 +476,30 @@ export const ModelWithEnumSchema = {
     properties: {
         'foo_bar-enum': {
             description: 'This is a simple enum with strings',
-            enum: ['Success', 'Warning', 'Error', 'ØÆÅ字符串']
+            enum: [
+                'Success',
+                'Warning',
+                'Error',
+                'ØÆÅ字符串'
+            ]
         },
         statusCode: {
             description: 'These are the HTTP error code enums',
-            enum: ['100', '200 FOO', '300 FOO_BAR', '400 foo-bar', '500 foo.bar', '600 foo&bar']
+            enum: [
+                '100',
+                '200 FOO',
+                '300 FOO_BAR',
+                '400 foo-bar',
+                '500 foo.bar',
+                '600 foo&bar'
+            ]
         },
         bool: {
             description: 'Simple boolean enum',
             type: 'boolean',
-            enum: [true]
+            enum: [
+                true
+            ]
         }
     }
 } as const;
@@ -443,7 +510,9 @@ export const ModelWithEnumWithHyphenSchema = {
     properties: {
         'foo-bar-baz-qux': {
             type: 'string',
-            enum: ['3.0'],
+            enum: [
+                '3.0'
+            ],
             title: 'Foo-Bar-Baz-Qux',
             default: '3.0'
         }
@@ -468,7 +537,11 @@ export const ModelWithNestedEnumsSchema = {
         dictionaryWithEnum: {
             type: 'object',
             additionalProperties: {
-                enum: ['Success', 'Warning', 'Error']
+                enum: [
+                    'Success',
+                    'Warning',
+                    'Error'
+                ]
             }
         },
         dictionaryWithEnumFromDescription: {
@@ -481,7 +554,11 @@ export const ModelWithNestedEnumsSchema = {
         arrayWithEnum: {
             type: 'array',
             items: {
-                enum: ['Success', 'Warning', 'Error']
+                enum: [
+                    'Success',
+                    'Warning',
+                    'Error'
+                ]
             }
         },
         arrayWithDescription: {
@@ -493,7 +570,12 @@ export const ModelWithNestedEnumsSchema = {
         },
         'foo_bar-enum': {
             description: 'This is a simple enum with strings',
-            enum: ['Success', 'Warning', 'Error', 'ØÆÅ字符串']
+            enum: [
+                'Success',
+                'Warning',
+                'Error',
+                'ØÆÅ字符串'
+            ]
         }
     }
 } as const;
@@ -503,7 +585,7 @@ export const ModelWithReferenceSchema = {
     type: 'object',
     properties: {
         prop: {
-            '$ref': '#/components/schemas/ModelWithProperties'
+            $ref: '#/components/schemas/ModelWithProperties'
         }
     }
 } as const;
@@ -515,7 +597,7 @@ export const ModelWithArrayReadOnlyAndWriteOnlySchema = {
         prop: {
             type: 'array',
             items: {
-                '$ref': '#/components/schemas/ModelWithReadOnlyAndWriteOnly'
+                $ref: '#/components/schemas/ModelWithReadOnlyAndWriteOnly'
             }
         },
         propWithFile: {
@@ -541,7 +623,7 @@ export const ModelWithArraySchema = {
         prop: {
             type: 'array',
             items: {
-                '$ref': '#/components/schemas/ModelWithString'
+                $ref: '#/components/schemas/ModelWithString'
             }
         },
         propWithFile: {
@@ -591,29 +673,29 @@ export const ModelWithCircularReferenceSchema = {
     type: 'object',
     properties: {
         prop: {
-            '$ref': '#/components/schemas/ModelWithCircularReference'
+            $ref: '#/components/schemas/ModelWithCircularReference'
         }
     }
 } as const;
 
 export const CompositionWithOneOfSchema = {
-    description: "This is a model with one property with a 'one of' relationship",
+    description: 'This is a model with one property with a \'one of\' relationship',
     type: 'object',
     properties: {
         propA: {
             type: 'object',
             oneOf: [
                 {
-                    '$ref': '#/components/schemas/ModelWithString'
+                    $ref: '#/components/schemas/ModelWithString'
                 },
                 {
-                    '$ref': '#/components/schemas/ModelWithEnum'
+                    $ref: '#/components/schemas/ModelWithEnum'
                 },
                 {
-                    '$ref': '#/components/schemas/ModelWithArray'
+                    $ref: '#/components/schemas/ModelWithArray'
                 },
                 {
-                    '$ref': '#/components/schemas/ModelWithDictionary'
+                    $ref: '#/components/schemas/ModelWithDictionary'
                 }
             ]
         }
@@ -621,7 +703,7 @@ export const CompositionWithOneOfSchema = {
 } as const;
 
 export const CompositionWithOneOfAnonymousSchema = {
-    description: "This is a model with one property with a 'one of' relationship where the options are not $ref",
+    description: 'This is a model with one property with a \'one of\' relationship where the options are not $ref',
     type: 'object',
     properties: {
         propA: {
@@ -652,7 +734,9 @@ export const CompositionWithOneOfAnonymousSchema = {
 export const ModelCircleSchema = {
     description: 'Circle',
     type: 'object',
-    required: ['kind'],
+    required: [
+        'kind'
+    ],
     properties: {
         kind: {
             type: 'string'
@@ -666,7 +750,9 @@ export const ModelCircleSchema = {
 export const ModelSquareSchema = {
     description: 'Square',
     type: 'object',
-    required: ['kind'],
+    required: [
+        'kind'
+    ],
     properties: {
         kind: {
             type: 'string'
@@ -678,14 +764,14 @@ export const ModelSquareSchema = {
 } as const;
 
 export const CompositionWithOneOfDiscriminatorSchema = {
-    description: "This is a model with one property with a 'one of' relationship where the options are not $ref",
+    description: 'This is a model with one property with a \'one of\' relationship where the options are not $ref',
     type: 'object',
     oneOf: [
         {
-            '$ref': '#/components/schemas/ModelCircle'
+            $ref: '#/components/schemas/ModelCircle'
         },
         {
-            '$ref': '#/components/schemas/ModelSquare'
+            $ref: '#/components/schemas/ModelSquare'
         }
     ],
     discriminator: {
@@ -698,23 +784,23 @@ export const CompositionWithOneOfDiscriminatorSchema = {
 } as const;
 
 export const CompositionWithAnyOfSchema = {
-    description: "This is a model with one property with a 'any of' relationship",
+    description: 'This is a model with one property with a \'any of\' relationship',
     type: 'object',
     properties: {
         propA: {
             type: 'object',
             anyOf: [
                 {
-                    '$ref': '#/components/schemas/ModelWithString'
+                    $ref: '#/components/schemas/ModelWithString'
                 },
                 {
-                    '$ref': '#/components/schemas/ModelWithEnum'
+                    $ref: '#/components/schemas/ModelWithEnum'
                 },
                 {
-                    '$ref': '#/components/schemas/ModelWithArray'
+                    $ref: '#/components/schemas/ModelWithArray'
                 },
                 {
-                    '$ref': '#/components/schemas/ModelWithDictionary'
+                    $ref: '#/components/schemas/ModelWithDictionary'
                 }
             ]
         }
@@ -722,7 +808,7 @@ export const CompositionWithAnyOfSchema = {
 } as const;
 
 export const CompositionWithAnyOfAnonymousSchema = {
-    description: "This is a model with one property with a 'any of' relationship where the options are not $ref",
+    description: 'This is a model with one property with a \'any of\' relationship where the options are not $ref',
     type: 'object',
     properties: {
         propA: {
@@ -751,7 +837,7 @@ export const CompositionWithAnyOfAnonymousSchema = {
 } as const;
 
 export const CompositionWithNestedAnyAndTypeNullSchema = {
-    description: "This is a model with nested 'any of' property with a type null",
+    description: 'This is a model with nested \'any of\' property with a type null',
     type: 'object',
     properties: {
         propA: {
@@ -762,7 +848,7 @@ export const CompositionWithNestedAnyAndTypeNullSchema = {
                         nullable: true,
                         allOf: [
                             {
-                                '$ref': '#/components/schemas/ModelWithDictionary'
+                                $ref: '#/components/schemas/ModelWithDictionary'
                             }
                         ]
                     },
@@ -773,7 +859,7 @@ export const CompositionWithNestedAnyAndTypeNullSchema = {
                         nullable: true,
                         allOf: [
                             {
-                                '$ref': '#/components/schemas/ModelWithArray'
+                                $ref: '#/components/schemas/ModelWithArray'
                             }
                         ]
                     },
@@ -785,17 +871,22 @@ export const CompositionWithNestedAnyAndTypeNullSchema = {
 } as const;
 
 export const _3e_num_1ПериодSchema = {
-    enum: ['Bird', 'Dog'],
+    enum: [
+        'Bird',
+        'Dog'
+    ],
     type: 'string'
 } as const;
 
 export const ConstValueSchema = {
-    enum: ['ConstValue'],
+    enum: [
+        'ConstValue'
+    ],
     type: 'string'
 } as const;
 
 export const CompositionWithNestedAnyOfAndNullSchema = {
-    description: "This is a model with one property with a 'any of' relationship where the options are not $ref",
+    description: 'This is a model with one property with a \'any of\' relationship where the options are not $ref',
     type: 'object',
     properties: {
         propA: {
@@ -805,10 +896,10 @@ export const CompositionWithNestedAnyOfAndNullSchema = {
                     items: {
                         anyOf: [
                             {
-                                '$ref': '#/components/schemas/3e-num_1Период'
+                                $ref: '#/components/schemas/3e-num_1Период'
                             },
                             {
-                                '$ref': '#/components/schemas/ConstValue'
+                                $ref: '#/components/schemas/ConstValue'
                             }
                         ]
                     },
@@ -821,7 +912,7 @@ export const CompositionWithNestedAnyOfAndNullSchema = {
 } as const;
 
 export const CompositionWithOneOfAndNullableSchema = {
-    description: "This is a model with one property with a 'one of' relationship",
+    description: 'This is a model with one property with a \'one of\' relationship',
     type: 'object',
     properties: {
         propA: {
@@ -837,13 +928,13 @@ export const CompositionWithOneOfAndNullableSchema = {
                     }
                 },
                 {
-                    '$ref': '#/components/schemas/ModelWithEnum'
+                    $ref: '#/components/schemas/ModelWithEnum'
                 },
                 {
-                    '$ref': '#/components/schemas/ModelWithArray'
+                    $ref: '#/components/schemas/ModelWithArray'
                 },
                 {
-                    '$ref': '#/components/schemas/ModelWithDictionary'
+                    $ref: '#/components/schemas/ModelWithDictionary'
                 }
             ]
         }
@@ -924,7 +1015,7 @@ export const CompositionWithOneOfAndComplexArrayDictionarySchema = {
 } as const;
 
 export const CompositionWithAllOfAndNullableSchema = {
-    description: "This is a model with one property with a 'all of' relationship",
+    description: 'This is a model with one property with a \'all of\' relationship',
     type: 'object',
     properties: {
         propA: {
@@ -940,13 +1031,13 @@ export const CompositionWithAllOfAndNullableSchema = {
                     }
                 },
                 {
-                    '$ref': '#/components/schemas/ModelWithEnum'
+                    $ref: '#/components/schemas/ModelWithEnum'
                 },
                 {
-                    '$ref': '#/components/schemas/ModelWithArray'
+                    $ref: '#/components/schemas/ModelWithArray'
                 },
                 {
-                    '$ref': '#/components/schemas/ModelWithDictionary'
+                    $ref: '#/components/schemas/ModelWithDictionary'
                 }
             ]
         }
@@ -954,7 +1045,7 @@ export const CompositionWithAllOfAndNullableSchema = {
 } as const;
 
 export const CompositionWithAnyOfAndNullableSchema = {
-    description: "This is a model with one property with a 'any of' relationship",
+    description: 'This is a model with one property with a \'any of\' relationship',
     type: 'object',
     properties: {
         propA: {
@@ -970,13 +1061,13 @@ export const CompositionWithAnyOfAndNullableSchema = {
                     }
                 },
                 {
-                    '$ref': '#/components/schemas/ModelWithEnum'
+                    $ref: '#/components/schemas/ModelWithEnum'
                 },
                 {
-                    '$ref': '#/components/schemas/ModelWithArray'
+                    $ref: '#/components/schemas/ModelWithArray'
                 },
                 {
-                    '$ref': '#/components/schemas/ModelWithDictionary'
+                    $ref: '#/components/schemas/ModelWithDictionary'
                 }
             ]
         }
@@ -1001,7 +1092,7 @@ export const CompositionExtendedModelSchema = {
     type: 'object',
     allOf: [
         {
-            '$ref': '#/components/schemas/CompositionBaseModel'
+            $ref: '#/components/schemas/CompositionBaseModel'
         }
     ],
     properties: {
@@ -1009,13 +1100,21 @@ export const CompositionExtendedModelSchema = {
             type: 'number'
         }
     },
-    required: ['firstName', 'lastname', 'age']
+    required: [
+        'firstName',
+        'lastname',
+        'age'
+    ]
 } as const;
 
 export const ModelWithPropertiesSchema = {
     description: 'This is a model with one nested property',
     type: 'object',
-    required: ['required', 'requiredAndReadOnly', 'requiredAndNullable'],
+    required: [
+        'required',
+        'requiredAndReadOnly',
+        'requiredAndNullable'
+    ],
     properties: {
         required: {
             type: 'string'
@@ -1038,7 +1137,7 @@ export const ModelWithPropertiesSchema = {
             type: 'boolean'
         },
         reference: {
-            '$ref': '#/components/schemas/ModelWithString'
+            $ref: '#/components/schemas/ModelWithString'
         },
         'property with space': {
             type: 'string'
@@ -1063,17 +1162,23 @@ export const ModelWithPropertiesSchema = {
 export const ModelWithNestedPropertiesSchema = {
     description: 'This is a model with one nested property',
     type: 'object',
-    required: ['first'],
+    required: [
+        'first'
+    ],
     properties: {
         first: {
             type: 'object',
-            required: ['second'],
+            required: [
+                'second'
+            ],
             readOnly: true,
             nullable: true,
             properties: {
                 second: {
                     type: 'object',
-                    required: ['third'],
+                    required: [
+                        'third'
+                    ],
                     readOnly: true,
                     nullable: true,
                     properties: {
@@ -1095,7 +1200,7 @@ export const ModelWithDuplicatePropertiesSchema = {
     type: 'object',
     properties: {
         prop: {
-            '$ref': '#/components/schemas/ModelWithString'
+            $ref: '#/components/schemas/ModelWithString'
         }
     }
 } as const;
@@ -1121,13 +1226,13 @@ export const ModelWithDuplicateImportsSchema = {
     type: 'object',
     properties: {
         propA: {
-            '$ref': '#/components/schemas/ModelWithString'
+            $ref: '#/components/schemas/ModelWithString'
         },
         propB: {
-            '$ref': '#/components/schemas/ModelWithString'
+            $ref: '#/components/schemas/ModelWithString'
         },
         propC: {
-            '$ref': '#/components/schemas/ModelWithString'
+            $ref: '#/components/schemas/ModelWithString'
         }
     }
 } as const;
@@ -1137,7 +1242,7 @@ export const ModelThatExtendsSchema = {
     type: 'object',
     allOf: [
         {
-            '$ref': '#/components/schemas/ModelWithString'
+            $ref: '#/components/schemas/ModelWithString'
         },
         {
             type: 'object',
@@ -1146,7 +1251,7 @@ export const ModelThatExtendsSchema = {
                     type: 'string'
                 },
                 propExtendsB: {
-                    '$ref': '#/components/schemas/ModelWithString'
+                    $ref: '#/components/schemas/ModelWithString'
                 }
             }
         }
@@ -1158,10 +1263,10 @@ export const ModelThatExtendsExtendsSchema = {
     type: 'object',
     allOf: [
         {
-            '$ref': '#/components/schemas/ModelWithString'
+            $ref: '#/components/schemas/ModelWithString'
         },
         {
-            '$ref': '#/components/schemas/ModelThatExtends'
+            $ref: '#/components/schemas/ModelThatExtends'
         },
         {
             type: 'object',
@@ -1170,7 +1275,7 @@ export const ModelThatExtendsExtendsSchema = {
                     type: 'string'
                 },
                 propExtendsD: {
-                    '$ref': '#/components/schemas/ModelWithString'
+                    $ref: '#/components/schemas/ModelWithString'
                 }
             }
         }
@@ -1180,7 +1285,10 @@ export const ModelThatExtendsExtendsSchema = {
 export const ModelWithPatternSchema = {
     description: 'This is a model that contains a some patterns',
     type: 'object',
-    required: ['key', 'name'],
+    required: [
+        'key',
+        'name'
+    ],
     properties: {
         key: {
             maxLength: 64,
@@ -1210,7 +1318,7 @@ export const ModelWithPatternSchema = {
         },
         patternWithSingleQuotes: {
             type: 'string',
-            pattern: "^[a-zA-Z0-9']*$"
+            pattern: '^[a-zA-Z0-9\']*$'
         },
         patternWithNewline: {
             type: 'string',
@@ -1224,7 +1332,9 @@ export const ModelWithPatternSchema = {
 } as const;
 
 export const FileSchema = {
-    required: ['mime'],
+    required: [
+        'mime'
+    ],
     type: 'object',
     properties: {
         id: {
@@ -1313,18 +1423,24 @@ export const ModelWithConstSchema = {
     type: 'object',
     properties: {
         String: {
-            enum: ['String'],
+            enum: [
+                'String'
+            ],
             type: 'string'
         },
         number: {
-            enum: [0],
+            enum: [
+                0
+            ],
             type: 'number'
         },
         null: {
             nullable: true
         },
         withType: {
-            enum: ['Some string'],
+            enum: [
+                'Some string'
+            ],
             type: 'string'
         }
     }
@@ -1371,26 +1487,33 @@ export const CompositionWithOneOfAndPropertiesSchema = {
     oneOf: [
         {
             type: 'object',
-            required: ['foo'],
+            required: [
+                'foo'
+            ],
             properties: {
                 foo: {
-                    '$ref': '#/components/parameters/SimpleParameter'
+                    $ref: '#/components/parameters/SimpleParameter'
                 }
             },
             additionalProperties: false
         },
         {
             type: 'object',
-            required: ['bar'],
+            required: [
+                'bar'
+            ],
             properties: {
                 bar: {
-                    '$ref': '#/components/schemas/NonAsciiStringæøåÆØÅöôêÊ字符串'
+                    $ref: '#/components/schemas/NonAsciiStringæøåÆØÅöôêÊ字符串'
                 }
             },
             additionalProperties: false
         }
     ],
-    required: ['baz', 'qux'],
+    required: [
+        'baz',
+        'qux'
+    ],
     properties: {
         baz: {
             type: 'integer',
@@ -1427,7 +1550,7 @@ export const ModelWithNullableObjectSchema = {
     type: 'object',
     properties: {
         data: {
-            '$ref': '#/components/schemas/NullableObject'
+            $ref: '#/components/schemas/NullableObject'
         }
     }
 } as const;
@@ -1436,37 +1559,52 @@ export const ModelWithOneOfEnumSchema = {
     oneOf: [
         {
             type: 'object',
-            required: ['foo'],
+            required: [
+                'foo'
+            ],
             properties: {
                 foo: {
                     type: 'string',
-                    enum: ['Bar']
+                    enum: [
+                        'Bar'
+                    ]
                 }
             }
         },
         {
             type: 'object',
-            required: ['foo'],
+            required: [
+                'foo'
+            ],
             properties: {
                 foo: {
                     type: 'string',
-                    enum: ['Baz']
+                    enum: [
+                        'Baz'
+                    ]
                 }
             }
         },
         {
             type: 'object',
-            required: ['foo'],
+            required: [
+                'foo'
+            ],
             properties: {
                 foo: {
                     type: 'string',
-                    enum: ['Qux']
+                    enum: [
+                        'Qux'
+                    ]
                 }
             }
         },
         {
             type: 'object',
-            required: ['content', 'foo'],
+            required: [
+                'content',
+                'foo'
+            ],
             properties: {
                 content: {
                     type: 'string',
@@ -1474,13 +1612,18 @@ export const ModelWithOneOfEnumSchema = {
                 },
                 foo: {
                     type: 'string',
-                    enum: ['Quux']
+                    enum: [
+                        'Quux'
+                    ]
                 }
             }
         },
         {
             type: 'object',
-            required: ['content', 'foo'],
+            required: [
+                'content',
+                'foo'
+            ],
             properties: {
                 content: {
                     type: 'array',
@@ -1493,7 +1636,9 @@ export const ModelWithOneOfEnumSchema = {
                 },
                 foo: {
                     type: 'string',
-                    enum: ['Corge']
+                    enum: [
+                        'Corge'
+                    ]
                 }
             }
         }
@@ -1501,12 +1646,18 @@ export const ModelWithOneOfEnumSchema = {
 } as const;
 
 export const ModelWithNestedArrayEnumsDataFooSchema = {
-    enum: ['foo', 'bar'],
+    enum: [
+        'foo',
+        'bar'
+    ],
     type: 'string'
 } as const;
 
 export const ModelWithNestedArrayEnumsDataBarSchema = {
-    enum: ['baz', 'qux'],
+    enum: [
+        'baz',
+        'qux'
+    ],
     type: 'string'
 } as const;
 
@@ -1516,13 +1667,13 @@ export const ModelWithNestedArrayEnumsDataSchema = {
         foo: {
             type: 'array',
             items: {
-                '$ref': '#/components/schemas/ModelWithNestedArrayEnumsDataFoo'
+                $ref: '#/components/schemas/ModelWithNestedArrayEnumsDataFoo'
             }
         },
         bar: {
             type: 'array',
             items: {
-                '$ref': '#/components/schemas/ModelWithNestedArrayEnumsDataBar'
+                $ref: '#/components/schemas/ModelWithNestedArrayEnumsDataBar'
             }
         }
     }
@@ -1540,7 +1691,7 @@ export const ModelWithNestedArrayEnumsSchema = {
         data: {
             allOf: [
                 {
-                    '$ref': '#/components/schemas/ModelWithNestedArrayEnumsData'
+                    $ref: '#/components/schemas/ModelWithNestedArrayEnumsData'
                 }
             ]
         }
@@ -1553,7 +1704,7 @@ export const ModelWithNestedCompositionEnumsSchema = {
         foo: {
             allOf: [
                 {
-                    '$ref': '#/components/schemas/ModelWithNestedArrayEnumsDataFoo'
+                    $ref: '#/components/schemas/ModelWithNestedArrayEnumsDataFoo'
                 }
             ]
         }
@@ -1562,7 +1713,10 @@ export const ModelWithNestedCompositionEnumsSchema = {
 
 export const ModelWithReadOnlyAndWriteOnlySchema = {
     type: 'object',
-    required: ['foo', 'bar'],
+    required: [
+        'foo',
+        'bar'
+    ],
     properties: {
         foo: {
             type: 'string'
@@ -1604,7 +1758,7 @@ export const ModelWithPrefixItemsConstantSizeArraySchema = {
     items: {
         oneOf: [
             {
-                '$ref': '#/components/schemas/ModelWithInteger'
+                $ref: '#/components/schemas/ModelWithInteger'
             },
             {
                 type: 'number'
@@ -1641,7 +1795,7 @@ export const ModelWithAnyOfConstantSizeArrayWithNSizeAndOptionsSchema = {
                 type: 'number'
             },
             {
-                '$ref': '#/components/schemas/import'
+                $ref: '#/components/schemas/import'
             }
         ]
     },
@@ -1671,7 +1825,15 @@ export const ModelWithNumericEnumUnionSchema = {
         value: {
             type: 'number',
             description: 'Период',
-            enum: [-10, -1, 0, 1, 3, 6, 12]
+            enum: [
+                -10,
+                -1,
+                0,
+                1,
+                3,
+                6,
+                12
+            ]
         }
     }
 } as const;
@@ -1682,33 +1844,7 @@ export const ModelWithBackticksInDescriptionSchema = {
     properties: {
         template: {
             type: 'string',
-            description: `The template \`that\` should be used for parsing and importing the contents of the CSV file.
-
-<br/><p>There is one placeholder currently supported:<ul>     <li><b>\${x}</b> - refers to the n-th column in the CSV file, e.g. \${1}, \${2}, ...)</li></ul><p>Example of a correct JSON template:</p>
-<pre>
-[
-  {
-    "resourceType": "Asset",
-    "identifier": {
-      "name": "\${1}",
-      "domain": {
-        "name": "\${2}",
-        "community": {
-          "name": "Some Community"
-        }
-      }
-    },
-    "attributes" : {
-      "00000000-0000-0000-0000-000000003115" : [ {
-        "value" : "\${3}"
-      } ],
-      "00000000-0000-0000-0000-000000000222" : [ {
-        "value" : "\${4}"
-      } ]
-    }
-  }
-]
-</pre>`
+            description: 'The template `that` should be used for parsing and importing the contents of the CSV file.\n\n<br/><p>There is one placeholder currently supported:<ul>     <li><b>${x}</b> - refers to the n-th column in the CSV file, e.g. ${1}, ${2}, ...)</li></ul><p>Example of a correct JSON template:</p>\n<pre>\n[\n  {\n    "resourceType": "Asset",\n    "identifier": {\n      "name": "${1}",\n      "domain": {\n        "name": "${2}",\n        "community": {\n          "name": "Some Community"\n        }\n      }\n    },\n    "attributes" : {\n      "00000000-0000-0000-0000-000000003115" : [ {\n        "value" : "${3}"\n      } ],\n      "00000000-0000-0000-0000-000000000222" : [ {\n        "value" : "${4}"\n      } ]\n    }\n  }\n]\n</pre>'
         }
     }
 } as const;
@@ -1717,13 +1853,16 @@ export const ModelWithOneOfAndPropertiesSchema = {
     type: 'object',
     oneOf: [
         {
-            '$ref': '#/components/parameters/SimpleParameter'
+            $ref: '#/components/parameters/SimpleParameter'
         },
         {
-            '$ref': '#/components/schemas/NonAsciiStringæøåÆØÅöôêÊ字符串'
+            $ref: '#/components/schemas/NonAsciiStringæøåÆØÅöôêÊ字符串'
         }
     ],
-    required: ['baz', 'qux'],
+    required: [
+        'baz',
+        'qux'
+    ],
     properties: {
         baz: {
             type: 'integer',
@@ -1838,7 +1977,7 @@ export const io_k8s_apimachinery_pkg_apis_meta_v1_DeleteOptionsSchema = {
         preconditions: {
             allOf: [
                 {
-                    '$ref': '#/components/schemas/io.k8s.apimachinery.pkg.apis.meta.v1.Preconditions'
+                    $ref: '#/components/schemas/io.k8s.apimachinery.pkg.apis.meta.v1.Preconditions'
                 }
             ],
             description: 'Must be fulfilled before a deletion is carried out. If not possible, a 409 Conflict status will be returned.'
@@ -1898,12 +2037,14 @@ export const AdditionalPropertiesUnknownIssue3Schema = {
         },
         {
             type: 'object',
-            required: ['entries'],
+            required: [
+                'entries'
+            ],
             properties: {
                 entries: {
                     type: 'object',
                     additionalProperties: {
-                        '$ref': '#/components/schemas/AdditionalPropertiesUnknownIssue'
+                        $ref: '#/components/schemas/AdditionalPropertiesUnknownIssue'
                     }
                 }
             }
@@ -1913,7 +2054,9 @@ export const AdditionalPropertiesUnknownIssue3Schema = {
 
 export const AdditionalPropertiesIntegerIssueSchema = {
     type: 'object',
-    required: ['value'],
+    required: [
+        'value'
+    ],
     properties: {
         value: {
             type: 'integer'
@@ -1931,20 +2074,20 @@ export const OneOfAllOfIssueSchema = {
                 {
                     oneOf: [
                         {
-                            '$ref': '#/components/schemas/ConstValue'
+                            $ref: '#/components/schemas/ConstValue'
                         },
                         {
-                            '$ref': '#/components/schemas/Generic.Schema.Duplicate.Issue`1[System.Boolean]'
+                            $ref: '#/components/schemas/Generic.Schema.Duplicate.Issue`1[System.Boolean]'
                         }
                     ]
                 },
                 {
-                    '$ref': '#/components/schemas/3e-num_1Период'
+                    $ref: '#/components/schemas/3e-num_1Период'
                 }
             ]
         },
         {
-            '$ref': '#/components/schemas/Generic.Schema.Duplicate.Issue`1[System.String]'
+            $ref: '#/components/schemas/Generic.Schema.Duplicate.Issue`1[System.String]'
         }
     ]
 } as const;
@@ -2000,7 +2143,9 @@ export const external_shared_ExternalSharedModelSchema = {
             type: 'string'
         }
     },
-    required: ['id']
+    required: [
+        'id'
+    ]
 } as const;
 
 export const ModelWithReferenceWritableSchema = {
@@ -2008,7 +2153,7 @@ export const ModelWithReferenceWritableSchema = {
     type: 'object',
     properties: {
         prop: {
-            '$ref': '#/components/schemas/ModelWithPropertiesWritable'
+            $ref: '#/components/schemas/ModelWithPropertiesWritable'
         }
     }
 } as const;
@@ -2020,7 +2165,7 @@ export const ModelWithArrayReadOnlyAndWriteOnlyWritableSchema = {
         prop: {
             type: 'array',
             items: {
-                '$ref': '#/components/schemas/ModelWithReadOnlyAndWriteOnlyWritable'
+                $ref: '#/components/schemas/ModelWithReadOnlyAndWriteOnlyWritable'
             }
         },
         propWithFile: {
@@ -2042,7 +2187,10 @@ export const ModelWithArrayReadOnlyAndWriteOnlyWritableSchema = {
 export const ModelWithPropertiesWritableSchema = {
     description: 'This is a model with one nested property',
     type: 'object',
-    required: ['required', 'requiredAndNullable'],
+    required: [
+        'required',
+        'requiredAndNullable'
+    ],
     properties: {
         required: {
             type: 'string'
@@ -2061,7 +2209,7 @@ export const ModelWithPropertiesWritableSchema = {
             type: 'boolean'
         },
         reference: {
-            '$ref': '#/components/schemas/ModelWithString'
+            $ref: '#/components/schemas/ModelWithString'
         },
         'property with space': {
             type: 'string'
@@ -2078,7 +2226,10 @@ export const ModelWithPropertiesWritableSchema = {
 export const ModelWithPatternWritableSchema = {
     description: 'This is a model that contains a some patterns',
     type: 'object',
-    required: ['key', 'name'],
+    required: [
+        'key',
+        'name'
+    ],
     properties: {
         key: {
             maxLength: 64,
@@ -2099,7 +2250,7 @@ export const ModelWithPatternWritableSchema = {
         },
         patternWithSingleQuotes: {
             type: 'string',
-            pattern: "^[a-zA-Z0-9']*$"
+            pattern: '^[a-zA-Z0-9\']*$'
         },
         patternWithNewline: {
             type: 'string',
@@ -2113,7 +2264,9 @@ export const ModelWithPatternWritableSchema = {
 } as const;
 
 export const FileWritableSchema = {
-    required: ['mime'],
+    required: [
+        'mime'
+    ],
     type: 'object',
     properties: {
         mime: {
@@ -2127,7 +2280,10 @@ export const FileWritableSchema = {
 
 export const ModelWithReadOnlyAndWriteOnlyWritableSchema = {
     type: 'object',
-    required: ['foo', 'baz'],
+    required: [
+        'foo',
+        'baz'
+    ],
     properties: {
         foo: {
             type: 'string'
@@ -2147,7 +2303,7 @@ export const ModelWithAnyOfConstantSizeArrayWithNSizeAndOptionsWritableSchema = 
                 type: 'number'
             },
             {
-                '$ref': '#/components/schemas/import'
+                $ref: '#/components/schemas/import'
             }
         ]
     },
@@ -2176,20 +2332,20 @@ export const OneOfAllOfIssueWritableSchema = {
                 {
                     oneOf: [
                         {
-                            '$ref': '#/components/schemas/ConstValue'
+                            $ref: '#/components/schemas/ConstValue'
                         },
                         {
-                            '$ref': '#/components/schemas/Generic.Schema.Duplicate.Issue`1[System.Boolean]'
+                            $ref: '#/components/schemas/Generic.Schema.Duplicate.Issue`1[System.Boolean]'
                         }
                     ]
                 },
                 {
-                    '$ref': '#/components/schemas/3e-num_1Период'
+                    $ref: '#/components/schemas/3e-num_1Период'
                 }
             ]
         },
         {
-            '$ref': '#/components/schemas/Generic.Schema.Duplicate.Issue`1[System.String]'
+            $ref: '#/components/schemas/Generic.Schema.Duplicate.Issue`1[System.String]'
         }
     ]
 } as const;

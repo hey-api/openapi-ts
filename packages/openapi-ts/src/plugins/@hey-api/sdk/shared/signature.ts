@@ -1,7 +1,5 @@
-import type { IR } from '~/ir/types';
-import type { PluginInstance } from '~/plugins/shared/utils/instance';
-import { refToName } from '~/utils/ref';
-import { stringCase } from '~/utils/stringCase';
+import type { IR, PluginInstance } from '@hey-api/shared';
+import { refToName, toCase } from '@hey-api/shared';
 
 import type { Field } from '../../client-core/bundle/params';
 
@@ -38,18 +36,14 @@ type Signature = {
  * - Prefixes all conflicting names with their location (e.g. path_foo, query_foo)
  * - Returns a flat map of resolved parameter names to their metadata
  */
-export const getSignatureParameters = ({
+export function getSignatureParameters({
   operation,
 }: {
   operation: IR.OperationObject;
   plugin: PluginInstance;
-}): Signature | undefined => {
+}): Signature | undefined {
   // TODO: add cookies
-  const locations = [
-    'header',
-    'path',
-    'query',
-  ] as const satisfies ReadonlyArray<Location>;
+  const locations = ['header', 'path', 'query'] as const satisfies ReadonlyArray<Location>;
   const nameToLocations: Record<string, Set<Location>> = {};
 
   const addParameter = (name: string, location: Location): void => {
@@ -83,7 +77,7 @@ export const getSignatureParameters = ({
     } else if (operation.body.schema.$ref) {
       // alias body for more ergonomic naming, e.g. user if the type is User
       const name = refToName(operation.body.schema.$ref);
-      const key = stringCase({ case: 'camelCase', value: name });
+      const key = toCase(name, 'camelCase');
       addParameter(key, 'body');
     } else {
       addParameter('body', 'body');
@@ -106,9 +100,7 @@ export const getSignatureParameters = ({
       for (const key in parameters) {
         const parameter = parameters[key]!;
         const originalName = parameter.name;
-        const name = conflicts.has(originalName)
-          ? `${location}_${originalName}`
-          : originalName;
+        const name = conflicts.has(originalName) ? `${location}_${originalName}` : originalName;
         const signatureParameter: SignatureParameter = {
           isRequired: parameter.required ?? false,
           name,
@@ -137,9 +129,7 @@ export const getSignatureParameters = ({
       const properties = operation.body.schema.properties;
       for (const originalName in properties) {
         const property = properties[originalName]!;
-        const name = conflicts.has(originalName)
-          ? `${location}_${originalName}`
-          : originalName;
+        const name = conflicts.has(originalName) ? `${location}_${originalName}` : originalName;
         const signatureParameter: SignatureParameter = {
           isRequired: property.required?.includes(originalName) ?? false,
           name,
@@ -157,10 +147,8 @@ export const getSignatureParameters = ({
       }
     } else if (operation.body.schema.$ref) {
       const value = refToName(operation.body.schema.$ref);
-      const originalName = stringCase({ case: 'camelCase', value });
-      const name = conflicts.has(originalName)
-        ? `${location}_${originalName}`
-        : originalName;
+      const originalName = toCase(value, 'camelCase');
+      const name = conflicts.has(originalName) ? `${location}_${originalName}` : originalName;
       const signatureParameter: SignatureParameter = {
         isRequired: operation.body.required ?? false,
         name,
@@ -181,7 +169,10 @@ export const getSignatureParameters = ({
         name: 'body',
         schema: operation.body.schema,
       };
-      fields.push({ in: 'body' });
+      fields.push({
+        key: 'body',
+        map: 'body',
+      });
     }
   }
 
@@ -190,4 +181,4 @@ export const getSignatureParameters = ({
   }
 
   return { fields, parameters: signatureParameters };
-};
+}

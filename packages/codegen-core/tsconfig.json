@@ -1,9 +1,11 @@
 {
-  "extends": "./tsconfig.base.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "declaration": false,
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "skipLibCheck": true
-  }
+    "composite": true,
+    "outDir": "dist",
+    "rootDir": "src",
+    "types": ["vitest/globals"]
+  },
+  "include": ["src"],
+  "references": [{ "path": "../types" }]
 }

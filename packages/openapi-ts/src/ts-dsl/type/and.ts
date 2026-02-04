@@ -1,30 +1,46 @@
+import type { AnalysisContext, NodeName, NodeScope, Ref } from '@hey-api/codegen-core';
+import { ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
-import type { WithString } from '../base';
-import { TypeTsDsl } from '../base';
+import type { TypeTsDsl } from '../base';
+import { TsDsl } from '../base';
 
-export class TypeAndTsDsl extends TypeTsDsl<ts.IntersectionTypeNode> {
-  private _types: Array<WithString<ts.TypeNode> | TypeTsDsl> = [];
+type Type = NodeName | ts.TypeNode | TypeTsDsl;
 
-  constructor(...nodes: Array<WithString<ts.TypeNode> | TypeTsDsl>) {
+const Mixed = TsDsl<ts.IntersectionTypeNode>;
+
+export class TypeAndTsDsl extends Mixed {
+  readonly '~dsl' = 'TypeAndTsDsl';
+  override scope: NodeScope = 'type';
+
+  protected _types: Array<Ref<Type>> = [];
+
+  constructor(...nodes: Array<Type>) {
     super();
     this.types(...nodes);
   }
 
-  types(...nodes: Array<WithString<ts.TypeNode> | TypeTsDsl>): this {
-    this._types.push(...nodes);
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    for (const type of this._types) {
+      ctx.analyze(type);
+    }
+  }
+
+  types(...nodes: Array<Type>): this {
+    this._types.push(...nodes.map((n) => ref(n)));
     return this;
   }
 
-  $render(): ts.IntersectionTypeNode {
+  override toAst() {
     const flat: Array<ts.TypeNode> = [];
 
-    for (const n of this._types) {
-      const t = this.$type(n);
-      if (ts.isIntersectionTypeNode(t)) {
-        flat.push(...t.types);
+    for (const node of this._types) {
+      const type = this.$type(node);
+      if (ts.isIntersectionTypeNode(type)) {
+        flat.push(...type.types);
       } else {
-        flat.push(t);
+        flat.push(type);
       }
     }
 

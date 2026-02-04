@@ -1,14 +1,15 @@
-import type { SchemaWithType } from '~/plugins';
+import type { SchemaWithType } from '@hey-api/shared';
 
+import { shouldCoerceToBigInt } from '../../../../plugins/shared/utils/coerce';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
 import { arrayToAst } from './array';
 import { booleanToAst } from './boolean';
 import { enumToAst } from './enum';
 import { neverToAst } from './never';
 import { nullToAst } from './null';
-import { numberToAst } from './number';
+import { numberToNode } from './number';
 import { objectToAst } from './object';
-import { stringToAst } from './string';
+import { stringToNode } from './string';
 import { tupleToAst } from './tuple';
 import { undefinedToAst } from './undefined';
 import { unknownToAst } from './unknown';
@@ -45,7 +46,7 @@ export const irSchemaWithTypeToAst = ({
     case 'integer':
     case 'number':
       return {
-        expression: numberToAst({
+        expression: numberToNode({
           ...args,
           schema: schema as SchemaWithType<'integer' | 'number'>,
         }),
@@ -71,10 +72,15 @@ export const irSchemaWithTypeToAst = ({
       });
     case 'string':
       return {
-        expression: stringToAst({
-          ...args,
-          schema: schema as SchemaWithType<'string'>,
-        }),
+        expression: shouldCoerceToBigInt(schema.format)
+          ? numberToNode({
+              ...args,
+              schema: { ...schema, type: 'number' },
+            })
+          : stringToNode({
+              ...args,
+              schema: schema as SchemaWithType<'string'>,
+            }),
       };
     case 'tuple':
       return tupleToAst({

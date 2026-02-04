@@ -1,78 +1,71 @@
-import type { Symbol } from '@hey-api/codegen-core';
-import ts from 'typescript';
+import type { IR } from '@hey-api/shared';
+import { applyNaming, parseUrl } from '@hey-api/shared';
 
-import type { IR } from '~/ir/types';
+import { getTypedConfig } from '../../../../config/utils';
 import {
   getClientBaseUrlKey,
   getClientPlugin,
-} from '~/plugins/@hey-api/client-core/utils';
-import { tsc } from '~/tsc';
-import { parseUrl } from '~/utils/url';
-
+} from '../../../../plugins/@hey-api/client-core/utils';
+import type { TypeTsDsl } from '../../../../ts-dsl';
+import { $ } from '../../../../ts-dsl';
 import type { HeyApiTypeScriptPlugin } from '../types';
-
-const stringType = tsc.keywordTypeNode({ keyword: 'string' });
 
 const serverToBaseUrlType = ({ server }: { server: IR.ServerObject }) => {
   const url = parseUrl(server.url);
 
   if (url.protocol && url.host) {
-    return tsc.literalTypeNode({
-      literal: tsc.stringLiteral({ text: server.url }),
-    });
+    return $.type.literal(server.url);
   }
 
-  return tsc.templateLiteralType({
-    value: [
-      url.protocol || stringType,
-      '://',
-      url.host || stringType,
-      url.port ? `:${url.port}` : '',
-      url.path || '',
-    ],
-  });
+  return $.type
+    .template()
+    .add(url.protocol || $.type('string'))
+    .add('://')
+    .add(url.host || $.type('string'))
+    .add(url.port ? `:${url.port}` : '')
+    .add(url.path || '');
 };
 
 export const createClientOptions = ({
+  nodeIndex,
   plugin,
   servers,
-  symbolClientOptions,
 }: {
+  nodeIndex: number;
   plugin: HeyApiTypeScriptPlugin['Instance'];
   servers: ReadonlyArray<IR.ServerObject>;
-  symbolClientOptions: Symbol;
 }) => {
-  const client = getClientPlugin(plugin.context.config);
+  const client = getClientPlugin(getTypedConfig(plugin));
 
-  const types: Array<ts.TypeNode> = servers.map((server) =>
-    serverToBaseUrlType({ server }),
-  );
+  const types: Array<TypeTsDsl> = servers.map((server) => serverToBaseUrlType({ server }));
 
   if (!servers.length) {
-    types.push(stringType);
-  } else if (
-    !('strictBaseUrl' in client.config && client.config.strictBaseUrl)
-  ) {
-    types.push(
-      tsc.typeIntersectionNode({
-        types: [stringType, ts.factory.createTypeLiteralNode([])],
-      }),
-    );
+    types.push($.type('string'));
+  } else if (!('strictBaseUrl' in client.config && client.config.strictBaseUrl)) {
+    types.push($.type.and($.type('string'), $.type.object()));
   }
 
-  const type = tsc.typeInterfaceNode({
-    properties: [
-      {
-        name: getClientBaseUrlKey(plugin.context.config),
-        type: tsc.typeUnionNode({ types }),
+  const symbol = plugin.symbol(
+    applyNaming('ClientOptions', {
+      case: plugin.config.case,
+    }),
+    {
+      meta: {
+        category: 'type',
+        resource: 'client',
+        role: 'options',
+        tool: 'typescript',
       },
-    ],
-    useLegacyResolution: false,
-  });
-  const node = tsc.typeAliasDeclaration({
-    exportType: symbolClientOptions.exported,
-    name: symbolClientOptions.placeholder,
-    type,
-  });
-  plugin.setSymbolValue(symbolClientOptions, node);
+    },
+  );
+
+  const node = $.type
+    .alias(symbol)
+    .export()
+    .type(
+      $.type
+        .object()
+        .prop(getClientBaseUrlKey(getTypedConfig(plugin)), (p) => p.type($.type.or(...types))),
+    );
+  plugin.node(node, nodeIndex);
 };

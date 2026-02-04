@@ -8,13 +8,8 @@ const { Layout } = DefaultTheme;
   <Layout>
     <template #layout-top>
       <div class="announcement">
-        <span>Build better APIs with Hey API Platform</span>
-        <a
-          href="https://app.heyapi.dev/"
-          rel="noopener noreferrer"
-          target="_blank"
-          >Dashboard</a
-        >
+        <span>Host your specs. Generate from anywhere.</span>
+        <a href="https://app.heyapi.dev/" rel="noopener noreferrer" target="_blank">Get started</a>
       </div>
     </template>
     <!-- <template #home-features-before>

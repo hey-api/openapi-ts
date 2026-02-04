@@ -1,5 +1,4 @@
-import type { Context } from '~/ir/context';
-import type { IR } from '~/ir/types';
+import type { Context, IR } from '@hey-api/shared';
 
 import type { Auth } from '../../client-core/bundle/auth';
 import type { HeyApiSdkPlugin } from '../types';
@@ -41,10 +40,7 @@ const securitySchemeObjectToAuthObject = ({
       };
     }
 
-    if (
-      securitySchemeObject.in === 'query' ||
-      securitySchemeObject.in == 'cookie'
-    ) {
+    if (securitySchemeObject.in === 'query' || securitySchemeObject.in == 'cookie') {
       return {
         in: securitySchemeObject.in,
         name: securitySchemeObject.name,
@@ -90,7 +86,7 @@ export const operationAuth = ({
     });
     if (authObject) {
       auth.push(authObject);
-    } else {
+    } else if (securitySchemeObject.type !== 'mutualTLS') {
       console.warn(
         `❗️ SDK warning: unsupported security scheme. Please open an issue if you'd like it added https://github.com/hey-api/openapi-ts/issues\n${JSON.stringify(securitySchemeObject, null, 2)}`,
       );

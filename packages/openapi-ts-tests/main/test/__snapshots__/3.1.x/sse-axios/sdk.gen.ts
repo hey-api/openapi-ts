@@ -19,12 +19,12 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
 };
 
 /**
+ * Subscribe to events
+ *
  * Get events
  */
-export const eventSubscribe = <ThrowOnError extends boolean = false>(options?: Options<EventSubscribeData, ThrowOnError>) => {
-    return (options?.client ?? client).sse.get<EventSubscribeResponses, unknown, ThrowOnError>({
-        responseType: 'text',
-        url: '/event',
-        ...options
-    });
-};
+export const eventSubscribe = <ThrowOnError extends boolean = false>(options?: Options<EventSubscribeData, ThrowOnError>) => (options?.client ?? client).sse.get<EventSubscribeResponses, unknown, ThrowOnError>({
+    responseType: 'text',
+    url: '/event',
+    ...options
+});

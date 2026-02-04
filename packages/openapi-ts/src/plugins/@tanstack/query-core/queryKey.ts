@@ -1,43 +1,37 @@
 import type { Symbol } from '@hey-api/codegen-core';
+import type { IR } from '@hey-api/shared';
+import { applyNaming, hasOperationDataRequired } from '@hey-api/shared';
 import type ts from 'typescript';
 
-import { hasOperationDataRequired } from '~/ir/operation';
-import type { IR } from '~/ir/types';
-import { buildName } from '~/openApi/shared/utils/name';
-import { getClientBaseUrlKey } from '~/plugins/@hey-api/client-core/utils';
-import type { TsDsl } from '~/ts-dsl';
-import { $ } from '~/ts-dsl';
-
+import { getTypedConfig } from '../../../config/utils';
+import { getClientBaseUrlKey } from '../../../plugins/@hey-api/client-core/utils';
+import type { TsDsl } from '../../../ts-dsl';
+import { $ } from '../../../ts-dsl';
 import { useTypeData } from './shared/useType';
 import type { PluginInstance } from './types';
 
 const TOptionsType = 'TOptions';
 
-export const createQueryKeyFunction = ({
-  plugin,
-}: {
-  plugin: PluginInstance;
-}) => {
-  const symbolCreateQueryKey = plugin.registerSymbol({
-    meta: {
-      category: 'utility',
-      resource: 'createQueryKey',
-      tool: plugin.name,
-    },
-    name: buildName({
-      config: {
-        case: plugin.config.case,
-      },
-      name: 'createQueryKey',
+export const createQueryKeyFunction = ({ plugin }: { plugin: PluginInstance }) => {
+  const symbolCreateQueryKey = plugin.symbol(
+    applyNaming('createQueryKey', {
+      case: plugin.config.case,
     }),
-  });
+    {
+      meta: {
+        category: 'utility',
+        resource: 'createQueryKey',
+        tool: plugin.name,
+      },
+    },
+  );
   const symbolQueryKeyType = plugin.referenceSymbol({
     category: 'type',
     resource: 'QueryKey',
     tool: plugin.name,
   });
 
-  const baseUrlKey = getClientBaseUrlKey(plugin.context.config);
+  const baseUrlKey = getClientBaseUrlKey(getTypedConfig(plugin));
 
   const symbolClient = plugin.getSymbol({
     category: 'client',
@@ -49,17 +43,15 @@ export const createQueryKeyFunction = ({
     tool: 'sdk',
   });
 
-  const returnType = $.type(symbolQueryKeyType.placeholder)
-    .generic(TOptionsType)
-    .idx(0);
+  const returnType = $.type(symbolQueryKeyType).generic(TOptionsType).idx(0);
 
-  const fn = $.const(symbolCreateQueryKey.placeholder).assign(
+  const fn = $.const(symbolCreateQueryKey).assign(
     $.func()
       .param('id', (p) => p.type('string'))
       .param('options', (p) => p.optional().type(TOptionsType))
       .param('infinite', (p) => p.optional().type('boolean'))
       .param('tags', (p) => p.optional().type('ReadonlyArray<string>'))
-      .generic(TOptionsType, (g) => g.extends(symbolOptions.placeholder))
+      .generic(TOptionsType, (g) => g.extends(symbolOptions))
       .returns($.type.tuple(returnType))
       .do(
         $.const('params')
@@ -69,7 +61,18 @@ export const createQueryKeyFunction = ({
               .prop('_id', 'id')
               .prop(
                 baseUrlKey,
-                `options?.${baseUrlKey} || (options?.client ?? ${symbolClient?.placeholder}).getConfig().${baseUrlKey}`,
+                $('options')
+                  .attr(baseUrlKey)
+                  .optional()
+                  .or(
+                    $('options')
+                      .attr('client')
+                      .optional()
+                      .$if(symbolClient, (a, v) => a.coalesce(v))
+                      .attr('getConfig')
+                      .call()
+                      .attr(baseUrlKey),
+                  ),
               )
               .as(returnType),
           ),
@@ -90,7 +93,7 @@ export const createQueryKeyFunction = ({
         $.return($.array().element($('params'))),
       ),
   );
-  plugin.setSymbolValue(symbolCreateQueryKey, fn);
+  plugin.node(fn);
 };
 
 const createQueryKeyLiteral = ({
@@ -104,9 +107,7 @@ const createQueryKeyLiteral = ({
   operation: IR.OperationObject;
   plugin: PluginInstance;
 }) => {
-  const config = isInfinite
-    ? plugin.config.infiniteQueryKeys
-    : plugin.config.queryKeys;
+  const config = isInfinite ? plugin.config.infiniteQueryKeys : plugin.config.queryKeys;
   let tagsArray: TsDsl<ts.ArrayLiteralExpression> | undefined;
   if (config.tags && operation.tags && operation.tags.length > 0) {
     tagsArray = $.array().elements(...operation.tags);
@@ -116,7 +117,7 @@ const createQueryKeyLiteral = ({
     resource: 'createQueryKey',
     tool: plugin.name,
   });
-  const createQueryKeyCallExpression = $(symbolCreateQueryKey.placeholder).call(
+  const createQueryKeyCallExpression = $(symbolCreateQueryKey).call(
     $.literal(id),
     'options',
     isInfinite || tagsArray ? $.literal(Boolean(isInfinite)) : undefined,
@@ -131,25 +132,22 @@ export const createQueryKeyType = ({ plugin }: { plugin: PluginInstance }) => {
     resource: 'client-options',
     tool: 'sdk',
   });
-  const symbolQueryKeyType = plugin.registerSymbol({
-    exported: true,
-    kind: 'type',
+  const symbolQueryKeyType = plugin.symbol('QueryKey', {
     meta: {
       category: 'type',
       resource: 'QueryKey',
       tool: plugin.name,
     },
-    name: 'QueryKey',
   });
   const queryKeyType = $.type
-    .alias(symbolQueryKeyType.placeholder)
-    .export(symbolQueryKeyType.exported)
-    .generic(TOptionsType, (g) => g.extends(symbolOptions.placeholder))
+    .alias(symbolQueryKeyType)
+    .export()
+    .generic(TOptionsType, (g) => g.extends(symbolOptions))
     .type(
       $.type.tuple(
         $.type.and(
           $.type(
-            `Pick<${TOptionsType}, '${getClientBaseUrlKey(plugin.context.config)}' | 'body' | 'headers' | 'path' | 'query'>`,
+            `Pick<${TOptionsType}, '${getClientBaseUrlKey(getTypedConfig(plugin))}' | 'body' | 'headers' | 'path' | 'query'>`,
           ),
           $.type
             .object()
@@ -159,7 +157,7 @@ export const createQueryKeyType = ({ plugin }: { plugin: PluginInstance }) => {
         ),
       ),
     );
-  plugin.setSymbolValue(symbolQueryKeyType, queryKeyType);
+  plugin.node(queryKeyType);
 };
 
 export const queryKeyStatement = ({
@@ -173,16 +171,14 @@ export const queryKeyStatement = ({
   operation: IR.OperationObject;
   plugin: PluginInstance;
   symbol: Symbol;
-  typeQueryKey?: string;
+  typeQueryKey?: ReturnType<typeof $.type>;
 }) => {
   const typeData = useTypeData({ operation, plugin });
-  const statement = $.const(symbol.placeholder)
-    .export(symbol.exported)
+  const statement = $.const(symbol)
+    .export()
     .assign(
       $.func()
-        .param('options', (p) =>
-          p.optional(!hasOperationDataRequired(operation)).type(typeData),
-        )
+        .param('options', (p) => p.required(hasOperationDataRequired(operation)).type(typeData))
         .$if(isInfinite && typeQueryKey, (f, v) => f.returns(v))
         .do(
           createQueryKeyLiteral({

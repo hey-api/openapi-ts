@@ -1,8 +1,7 @@
-import type ts from 'typescript';
+import type { SchemaWithType } from '@hey-api/shared';
 
-import type { SchemaWithType } from '~/plugins';
-import { tsc } from '~/tsc';
-
+import type { TypeTsDsl } from '../../../../../ts-dsl';
+import { $ } from '../../../../../ts-dsl';
 import type { IrSchemaToAstOptions } from '../../shared/types';
 
 export const voidToAst = (
@@ -10,9 +9,7 @@ export const voidToAst = (
   _args: IrSchemaToAstOptions & {
     schema: SchemaWithType<'void'>;
   },
-): ts.TypeNode => {
-  const node = tsc.keywordTypeNode({
-    keyword: 'void',
-  });
+): TypeTsDsl => {
+  const node = $.type('void');
   return node;
 };

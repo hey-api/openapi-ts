@@ -1,7 +1,9 @@
-import type { IR } from '~/ir/types';
-import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
-import { operationOptionsType } from '~/plugins/@hey-api/sdk/shared/operation';
+import type { IR } from '@hey-api/shared';
 
+import { getTypedConfig } from '../../../config/utils';
+import { getClientPlugin } from '../../../plugins/@hey-api/client-core/utils';
+import { operationOptionsType } from '../../../plugins/@hey-api/sdk/shared/operation';
+import { $ } from '../../../ts-dsl';
 import type { PiniaColadaPlugin } from './types';
 
 export const useTypeData = ({
@@ -10,10 +12,9 @@ export const useTypeData = ({
 }: {
   operation: IR.OperationObject;
   plugin: PiniaColadaPlugin['Instance'];
-}): string => {
+}): ReturnType<typeof $.type> => {
   const pluginSdk = plugin.getPluginOrThrow('@hey-api/sdk');
-  const typeData = operationOptionsType({ operation, plugin: pluginSdk });
-  return typeData;
+  return operationOptionsType({ operation, plugin: pluginSdk });
 };
 
 export const useTypeError = ({
@@ -22,28 +23,20 @@ export const useTypeError = ({
 }: {
   operation: IR.OperationObject;
   plugin: PiniaColadaPlugin['Instance'];
-}): string => {
-  const client = getClientPlugin(plugin.context.config);
-
+}): ReturnType<typeof $.type> => {
+  const client = getClientPlugin(getTypedConfig(plugin));
   const symbolErrorType = plugin.querySymbol({
     category: 'type',
     resource: 'operation',
     resourceId: operation.id,
     role: 'error',
   });
-
-  let typeErrorName: string | undefined = symbolErrorType?.placeholder;
-  if (!typeErrorName) {
-    typeErrorName = 'Error';
-  }
+  const symbolError = symbolErrorType || 'Error';
   if (client.name === '@hey-api/client-axios') {
-    const symbol = plugin.referenceSymbol({
-      category: 'external',
-      resource: 'axios.AxiosError',
-    });
-    typeErrorName = `${symbol.placeholder}<${typeErrorName}>`;
+    const symbol = plugin.external('axios.AxiosError');
+    return $.type(symbol).generic(symbolError);
   }
-  return typeErrorName;
+  return $.type(symbolError);
 };
 
 export const useTypeResponse = ({
@@ -52,12 +45,12 @@ export const useTypeResponse = ({
 }: {
   operation: IR.OperationObject;
   plugin: PiniaColadaPlugin['Instance'];
-}): string => {
+}): ReturnType<typeof $.type> => {
   const symbolResponseType = plugin.querySymbol({
     category: 'type',
     resource: 'operation',
     resourceId: operation.id,
     role: 'response',
   });
-  return symbolResponseType?.placeholder || 'unknown';
+  return $.type(symbolResponseType ?? 'unknown');
 };

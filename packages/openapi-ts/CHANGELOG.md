@@ -1,5 +1,335 @@
 # @hey-api/openapi-ts
 
+## 0.91.1
+
+### Patch Changes
+
+### Updated Dependencies:
+
+- @hey-api/codegen-core@0.6.1
+- @hey-api/shared@0.1.1
+
+## 0.91.0
+
+### Minor Changes
+
+- **BREAKING**: Drop CommonJS (CJS) support. This package is now **ESM-only**. ([#3251](https://github.com/hey-api/openapi-ts/pull/3251)) ([`7f19d59`](https://github.com/hey-api/openapi-ts/commit/7f19d5921dadfa96ecae84a5298b7aee1daee56d)) by [@mrlubos](https://github.com/mrlubos)
+
+### Removed CommonJS (CJS) support
+
+`@hey-api/openapi-ts` is now ESM-only. This change simplifies the codebase, improves tree-shaking, and enables better integration with modern bundlers and TypeScript tooling.
+
+CommonJS entry points (`require()`, `module.exports`) are no longer supported. If you are in a CJS environment, you can still load the package dynamically using `import()` like:
+
+```js
+const { defineConfig } = await import("@hey-api/openapi-ts");
+```
+
+If you have previously written:
+
+```js
+const { defineConfig } = require("@hey-api/openapi-ts");
+```
+
+Migrate by updating your static imports:
+
+```js
+import { defineConfig } from "@hey-api/openapi-ts";
+```
+
+If your environment cannot use ESM, pin to a previous version.
+
+### Patch Changes
+
+### Updated Dependencies:
+
+- @hey-api/shared@0.1.0
+- @hey-api/codegen-core@0.6.0
+- @hey-api/types@0.1.3
+
+## 0.90.10
+
+### Patch Changes
+
+- **plugin(@tanstack/solid-query)**: index mutation options symbol ([#3253](https://github.com/hey-api/openapi-ts/pull/3253)) ([`c5f379e`](https://github.com/hey-api/openapi-ts/commit/c5f379ea5534272d63a423c671427ff1ef13197a)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@tanstack/svelte-query)**: index mutation options symbol ([#3253](https://github.com/hey-api/openapi-ts/pull/3253)) ([`c5f379e`](https://github.com/hey-api/openapi-ts/commit/c5f379ea5534272d63a423c671427ff1ef13197a)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@tanstack/vue-query)**: index mutation options symbol ([#3253](https://github.com/hey-api/openapi-ts/pull/3253)) ([`c5f379e`](https://github.com/hey-api/openapi-ts/commit/c5f379ea5534272d63a423c671427ff1ef13197a)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@tanstack/react-query)**: index mutation options symbol ([#3253](https://github.com/hey-api/openapi-ts/pull/3253)) ([`c5f379e`](https://github.com/hey-api/openapi-ts/commit/c5f379ea5534272d63a423c671427ff1ef13197a)) by [@mrlubos](https://github.com/mrlubos)
+
+- **parser**: inline deep path `$ref` references ([#3242](https://github.com/hey-api/openapi-ts/pull/3242)) ([`00cfaed`](https://github.com/hey-api/openapi-ts/commit/00cfaed32a3b1d2a7bbd5c4c2a946a9f7be262b2)) by [@chrg1001](https://github.com/chrg1001)
+
+- **plugin(@tanstack/angular-query-experimental)**: index mutation options symbol ([#3249](https://github.com/hey-api/openapi-ts/pull/3249)) ([`5977f56`](https://github.com/hey-api/openapi-ts/commit/5977f56362351a9e4f1e9715c141a8e37130a4bb)) by [@j-ibarra](https://github.com/j-ibarra)
+
+- **plugin(@hey-api/sdk)**: correctly map body keys in flat mode ([#3255](https://github.com/hey-api/openapi-ts/pull/3255)) ([`9ca5471`](https://github.com/hey-api/openapi-ts/commit/9ca547168c7a89acb0523bd05a5ee24aee7d8638)) by [@jsjames](https://github.com/jsjames)
+
+## 0.90.9
+
+### Patch Changes
+
+- **ts-dsl**: allow removing object properties by passing `null` ([#3247](https://github.com/hey-api/openapi-ts/pull/3247)) ([`7be1561`](https://github.com/hey-api/openapi-ts/commit/7be1561a862d2bb217703003d5e6cbc4a6a09586)) by [@mrlubos](https://github.com/mrlubos)
+
+- **cli**: clean up interface ([#3244](https://github.com/hey-api/openapi-ts/pull/3244)) ([`4f52bce`](https://github.com/hey-api/openapi-ts/commit/4f52bce79d8ac6573472f32a05b7f70913b90605)) by [@mrlubos](https://github.com/mrlubos)
+
+- **ts-dsl**: override object properties when called multiple times with the same name ([#3247](https://github.com/hey-api/openapi-ts/pull/3247)) ([`7be1561`](https://github.com/hey-api/openapi-ts/commit/7be1561a862d2bb217703003d5e6cbc4a6a09586)) by [@mrlubos](https://github.com/mrlubos)
+
+- **config**: move `loadConfigFile` function to `@hey-api/codegen-core` ([#3244](https://github.com/hey-api/openapi-ts/pull/3244)) ([`4f52bce`](https://github.com/hey-api/openapi-ts/commit/4f52bce79d8ac6573472f32a05b7f70913b90605)) by [@mrlubos](https://github.com/mrlubos)
+
+### Updated Dependencies:
+
+- @hey-api/types@0.1.2
+- @hey-api/codegen-core@0.5.5
+
+## 0.90.8
+
+### Patch Changes
+
+- **internal**: move logger to codegen-core ([#3235](https://github.com/hey-api/openapi-ts/pull/3235)) ([`88532f0`](https://github.com/hey-api/openapi-ts/commit/88532f01200e1111818e82a4af7bd5cf8cf26e3b)) by [@mrlubos](https://github.com/mrlubos)
+
+- **cli**: do not show ascii logo on generate command ([#3238](https://github.com/hey-api/openapi-ts/pull/3238)) ([`72e17f3`](https://github.com/hey-api/openapi-ts/commit/72e17f39d6e2d00eff24671e7f2b88801443489a)) by [@mrlubos](https://github.com/mrlubos)
+
+### Updated Dependencies:
+
+- @hey-api/codegen-core@0.5.4
+
+## 0.90.7
+
+### Patch Changes
+
+- **deps**: move @hey-api/types to dependencies to fix broken types ([#3232](https://github.com/hey-api/openapi-ts/pull/3232)) ([`edfce48`](https://github.com/hey-api/openapi-ts/commit/edfce4875cb9279d3ab8bfd438ff177e8ba7845c)) by [@mrlubos](https://github.com/mrlubos)
+
+### Updated Dependencies:
+
+- @hey-api/codegen-core@0.5.3
+
+## 0.90.6
+
+### Patch Changes
+
+- **plugin(@hey-api/sdk)**: do not warn on mutualTLS security schemes ([#3227](https://github.com/hey-api/openapi-ts/pull/3227)) ([`384e52f`](https://github.com/hey-api/openapi-ts/commit/384e52fdc06c99872b4ad5551acf8bcad616e024)) by [@mrlubos](https://github.com/mrlubos)
+
+## 0.90.5
+
+### Patch Changes
+
+- **plugin(@hey-api/sdk)**: do not warn on mutualTLS security schemes ([#3218](https://github.com/hey-api/openapi-ts/pull/3218)) ([`97c0a2e`](https://github.com/hey-api/openapi-ts/commit/97c0a2ec60490f135f4ad438108e36a4229d2c35)) by [@mrlubos](https://github.com/mrlubos)
+
+## 0.90.4
+
+### Patch Changes
+
+- **plugin(@hey-api/client-next)**: fix: JSON parsing error on empty response bodies without Content-Length header ([#3201](https://github.com/hey-api/openapi-ts/pull/3201)) ([`8428ca5`](https://github.com/hey-api/openapi-ts/commit/8428ca5152c66d393bcfee9570a6c1d7ad1155c7)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(@hey-api/client-fetch)**: fix: JSON parsing error on empty response bodies without Content-Length header ([#3201](https://github.com/hey-api/openapi-ts/pull/3201)) ([`2af4d9a`](https://github.com/hey-api/openapi-ts/commit/2af4d9ab56293c042459e6ae31787cd628be6037)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(@hey-api/client-ky)**: fix: JSON parsing error on empty response bodies without Content-Length header ([#3201](https://github.com/hey-api/openapi-ts/pull/3201)) ([`c0563fb`](https://github.com/hey-api/openapi-ts/commit/c0563fbd0f0ec66d25e5316bda0274380ac26639)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(valibot)**: add `enum` resolver ([#3209](https://github.com/hey-api/openapi-ts/pull/3209)) ([`f6723eb`](https://github.com/hey-api/openapi-ts/commit/f6723eb59cba4b2c2ffbdbddce3fc26d668e2d4a)) by [@thyming](https://github.com/thyming)
+
+- **plugin(zod)**: add `enum` resolver ([#3209](https://github.com/hey-api/openapi-ts/pull/3209)) ([`57334d8`](https://github.com/hey-api/openapi-ts/commit/57334d8c9c83169773a626193ca4c661b3957d37)) by [@thyming](https://github.com/thyming)
+
+## 0.90.3
+
+### Patch Changes
+
+- **output**: add `oxfmt` preset ([#3197](https://github.com/hey-api/openapi-ts/pull/3197)) ([`701a69c`](https://github.com/hey-api/openapi-ts/commit/701a69cae24d3068235d80561e2cf9d18d7ccac9)) by [@mrlubos](https://github.com/mrlubos)
+
+## 0.90.2
+
+### Patch Changes
+
+- **build**: do not minify bundles for better code readability and debugging ([#3186](https://github.com/hey-api/openapi-ts/pull/3186)) ([`4d46130`](https://github.com/hey-api/openapi-ts/commit/4d46130b53d9d8d5d3c178343a1b4fc3645b2628)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(@hey-api/sdk)**: fix: do not use bodySerializer if format is binary ([#3190](https://github.com/hey-api/openapi-ts/pull/3190)) ([`dc28c4c`](https://github.com/hey-api/openapi-ts/commit/dc28c4c6504724104bdef01332b9e3eb52ba3333)) by [@mrlubos](https://github.com/mrlubos)
+
+### Updated Dependencies:
+
+- @hey-api/codegen-core@0.5.2
+
+## 0.90.1
+
+### Patch Changes
+
+- **plugin(@hey-api/sdk)**: add `examples` option ([#3175](https://github.com/hey-api/openapi-ts/pull/3175)) ([`b985053`](https://github.com/hey-api/openapi-ts/commit/b985053ffa64accc4ff01b7c0f301bb5cd84ff48)) by [@mrlubos](https://github.com/mrlubos)
+
+The SDK plugin can generate ready-to-use code examples for each operation, showing how to call the SDK methods with proper parameters and setup.
+
+Learn how to generate examples on the [SDK plugin](https://heyapi.dev/openapi-ts/plugins/sdk#code-examples) page.
+
+- **output**: add `source` option ([#3175](https://github.com/hey-api/openapi-ts/pull/3175)) ([`b985053`](https://github.com/hey-api/openapi-ts/commit/b985053ffa64accc4ff01b7c0f301bb5cd84ff48)) by [@mrlubos](https://github.com/mrlubos)
+
+Source is a copy of the input specification used to generate your output. It can be used to power documentation tools or to persist a stable snapshot alongside your generated files.
+
+Learn how to use the source on the [Output](https://heyapi.dev/openapi-ts/configuration/output#source) page.
+
+### Updated Dependencies:
+
+- @hey-api/codegen-core@0.5.1
+
+## 0.90.0
+
+### Minor Changes
+
+- **plugin(valibot)**: **BREAKING:** standardize `~resolvers` API ([#3147](https://github.com/hey-api/openapi-ts/pull/3147)) ([`ab80a4b`](https://github.com/hey-api/openapi-ts/commit/ab80a4b2c37423c522aa864afbcb688db76615ba)) by [@mrlubos](https://github.com/mrlubos)
+
+The [Resolvers API](https://heyapi.dev/openapi-ts/plugins/concepts/resolvers) has been simplified and expanded to provide a more consistent behavior across plugins. You can view a few common examples on the [Resolvers](https://heyapi.dev/openapi-ts/plugins/concepts/resolvers) page.
+
+- **plugin(sdk)**: **BREAKING**: Structure API ([#3109](https://github.com/hey-api/openapi-ts/pull/3109)) ([`815a3de`](https://github.com/hey-api/openapi-ts/commit/815a3de0af434c28ac6d13ff92b85ce1fc146999)) by [@mrlubos](https://github.com/mrlubos)
+
+### Structure API
+
+The [SDK plugin](https://heyapi.dev/openapi-ts/plugins/sdk) now implements the Structure API, enabling more complex structures and fixing several known issues.
+
+Some Structure APIs are incompatible with the previous configuration, most notably the `methodNameBuilder` function, which accepted the operation object as an argument. You can read the [SDK Output](https://heyapi.dev/openapi-ts/plugins/sdk#output) section to familiarize yourself with the Structure API.
+
+Please [open an issue](https://github.com/hey-api/openapi-ts/issues) if you're unable to migrate your configuration to the new syntax.
+
+- **plugin(zod)**: **BREAKING:** standardize `~resolvers` API ([#3147](https://github.com/hey-api/openapi-ts/pull/3147)) ([`ab80a4b`](https://github.com/hey-api/openapi-ts/commit/ab80a4b2c37423c522aa864afbcb688db76615ba)) by [@mrlubos](https://github.com/mrlubos)
+
+The [Resolvers API](https://heyapi.dev/openapi-ts/plugins/concepts/resolvers) has been simplified and expanded to provide a more consistent behavior across plugins. You can view a few common examples on the [Resolvers](https://heyapi.dev/openapi-ts/plugins/concepts/resolvers) page.
+
+- **plugin(@angular/common)**: **BREAKING**: Structure API ([#3109](https://github.com/hey-api/openapi-ts/pull/3109)) ([`815a3de`](https://github.com/hey-api/openapi-ts/commit/815a3de0af434c28ac6d13ff92b85ce1fc146999)) by [@mrlubos](https://github.com/mrlubos)
+
+### Structure API
+
+The [Angular plugin](https://heyapi.dev/openapi-ts/plugins/angular) now implements the Structure API, enabling more complex structures and fixing several known issues.
+
+Some Structure APIs are incompatible with the previous configuration, most notably the `methodNameBuilder` function, which accepted the operation object as an argument. You can read the [SDK Output](https://heyapi.dev/openapi-ts/plugins/sdk#output) section to familiarize yourself with the Structure API.
+
+Please [open an issue](https://github.com/hey-api/openapi-ts/issues) if you're unable to migrate your configuration to the new syntax.
+
+### Patch Changes
+
+- **plugin(@hey-api/client-nuxt)**: use serialized body in SSE requests ([#3123](https://github.com/hey-api/openapi-ts/pull/3123)) ([`6505659`](https://github.com/hey-api/openapi-ts/commit/6505659a5b776d03e943582e700a718eddcc2912)) by [@bilby91](https://github.com/bilby91)
+
+- **plugin(zod)**: expand support for bigint types ([#3145](https://github.com/hey-api/openapi-ts/pull/3145)) ([`4a32dcf`](https://github.com/hey-api/openapi-ts/commit/4a32dcfae503e76db81fa21ca71c71f20ea28c34)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@hey-api/client-angular)**: use serialized body in SSE requests ([#3171](https://github.com/hey-api/openapi-ts/pull/3171)) ([`e63f0cf`](https://github.com/hey-api/openapi-ts/commit/e63f0cf1018e3014c3c125189fe18ed3fa40d078)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@hey-api/client-next)**: use serialized body in SSE requests ([#3171](https://github.com/hey-api/openapi-ts/pull/3171)) ([`e63f0cf`](https://github.com/hey-api/openapi-ts/commit/e63f0cf1018e3014c3c125189fe18ed3fa40d078)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@hey-api/client-axios)**: use serialized body in SSE requests ([#3171](https://github.com/hey-api/openapi-ts/pull/3171)) ([`e63f0cf`](https://github.com/hey-api/openapi-ts/commit/e63f0cf1018e3014c3c125189fe18ed3fa40d078)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@hey-api/client-fetch)**: use serialized body in SSE requests ([#3171](https://github.com/hey-api/openapi-ts/pull/3171)) ([`e63f0cf`](https://github.com/hey-api/openapi-ts/commit/e63f0cf1018e3014c3c125189fe18ed3fa40d078)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@hey-api/client-nuxt)**: preserve null in `WithRefs` type for nullable fields ([#3131](https://github.com/hey-api/openapi-ts/pull/3131)) ([`3935034`](https://github.com/hey-api/openapi-ts/commit/39350343fe77b6a2700c2b57f03c5b838a92f09e)) by [@rigtigeEmil](https://github.com/rigtigeEmil)
+
+- **renderer**: correctly render default import ([#3109](https://github.com/hey-api/openapi-ts/pull/3109)) ([`815a3de`](https://github.com/hey-api/openapi-ts/commit/815a3de0af434c28ac6d13ff92b85ce1fc146999)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@hey-api/client-ky)**: use serialized body in SSE requests ([#3171](https://github.com/hey-api/openapi-ts/pull/3171)) ([`e63f0cf`](https://github.com/hey-api/openapi-ts/commit/e63f0cf1018e3014c3c125189fe18ed3fa40d078)) by [@mrlubos](https://github.com/mrlubos)
+
+### Updated Dependencies:
+
+- @hey-api/codegen-core@0.5.0
+
+## 0.89.2
+
+### Patch Changes
+
+- **plugin(@hey-api/typescript)**: improve type narrowing in discriminated types ([#3120](https://github.com/hey-api/openapi-ts/pull/3120)) ([`6f8a43c`](https://github.com/hey-api/openapi-ts/commit/6f8a43c7ffcc8685700c3789c6339aabbac07d2b)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(@hey-api/client-axios)**: revert use `query` option when no `paramsSerializer` is provided ([#3125](https://github.com/hey-api/openapi-ts/pull/3125)) ([`34c9a92`](https://github.com/hey-api/openapi-ts/commit/34c9a9214008ede461251f46ab750de37da96bbb)) by [@mrlubos](https://github.com/mrlubos)
+
+## 0.89.1
+
+### Patch Changes
+
+- **parser**: expose OpenAPI extension keywords ([#3119](https://github.com/hey-api/openapi-ts/pull/3119)) ([`c50190b`](https://github.com/hey-api/openapi-ts/commit/c50190b02ef2a6b77703a2dbf84b826c4432d56e)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(@hey-api/client-axios)**: use `query` option when no `paramsSerializer` is provided ([#3062](https://github.com/hey-api/openapi-ts/pull/3062)) ([`4dcc210`](https://github.com/hey-api/openapi-ts/commit/4dcc2100b7a96799f36cc64833f7ab69f09d1c54)) by [@JanST123GS](https://github.com/JanST123GS)
+
+- **plugin(@hey-api/sdk)**: lazily initialize sub-resources to improve performance ([#3099](https://github.com/hey-api/openapi-ts/pull/3099)) ([`f481f5c`](https://github.com/hey-api/openapi-ts/commit/f481f5cb11f9a8a5e0b1a0baee367f07dd327730)) by [@mrlubos](https://github.com/mrlubos)
+
+- **output**: sanitize reserved names with underscore suffix instead of prefix ([#3102](https://github.com/hey-api/openapi-ts/pull/3102)) ([`9116082`](https://github.com/hey-api/openapi-ts/commit/91160826f3c1d0b87090395140d163d930399639)) by [@mrlubos](https://github.com/mrlubos)
+
+- **parser**: improve discriminator support in nested `allOf` fields ([#3117](https://github.com/hey-api/openapi-ts/pull/3117)) ([`ec1224d`](https://github.com/hey-api/openapi-ts/commit/ec1224d97d2a8f97d66327bdd372dc82fa794955)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **output**: default to `.js` extension when module resolution is set to `node16` ([#3115](https://github.com/hey-api/openapi-ts/pull/3115)) ([`18d218a`](https://github.com/hey-api/openapi-ts/commit/18d218a69f7b2b1b899ad29d3f3892374edf2910)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+## 0.89.0
+
+### Minor Changes
+
+- **output**: add `preferExportAll` option ([#2990](https://github.com/hey-api/openapi-ts/pull/2990)) ([`c3a81e8`](https://github.com/hey-api/openapi-ts/commit/c3a81e89ba5ed3f373409582c5f814e1d10cae06)) by [@mrlubos](https://github.com/mrlubos)
+
+### Prefer named exports
+
+This release changes the default for `index.ts` to prefer named exports. Named exports may lead to better IDE and bundler performance compared to asterisk (`*`) as your tooling doesn't have to inspect the underlying module to discover exports.
+
+While this change is merely cosmetic, you can set `output.preferExportAll` to `true` if you prefer to use the asterisk.
+
+```js
+export default {
+  input: "hey-api/backend", // sign up at app.heyapi.dev
+  output: {
+    path: "src/client",
+    preferExportAll: true,
+  },
+};
+```
+
+- **parser**: removed `symbol:setValue:*` events ([#2990](https://github.com/hey-api/openapi-ts/pull/2990)) ([`c3a81e8`](https://github.com/hey-api/openapi-ts/commit/c3a81e89ba5ed3f373409582c5f814e1d10cae06)) by [@mrlubos](https://github.com/mrlubos)
+
+### Removed `symbol:setValue:*` events
+
+These events have been removed in favor of `node:set:*` events.
+
+### Patch Changes
+
+- **output**: add `nameConflictResolver` option ([#2990](https://github.com/hey-api/openapi-ts/pull/2990)) ([`c3a81e8`](https://github.com/hey-api/openapi-ts/commit/c3a81e89ba5ed3f373409582c5f814e1d10cae06)) by [@mrlubos](https://github.com/mrlubos)
+
+## Name Conflicts
+
+As your project grows, the chances of name conflicts increase. We use a simple conflict resolver that appends numeric suffixes to duplicate identifiers. If you prefer a different strategy, you can provide your own `nameConflictResolver` function.
+
+```js
+export default {
+  input: "hey-api/backend", // sign up at app.heyapi.dev
+  output: {
+    nameConflictResolver({ attempt, baseName }) {
+      return attempt === 0 ? baseName : `${baseName}_N${attempt + 1}`;
+    },
+    path: "src/client",
+  },
+};
+```
+
+Example output:
+
+```ts
+export type ChatCompletion = string;
+
+export type ChatCompletion_N2 = number;
+```
+
+### Updated Dependencies:
+
+- @hey-api/codegen-core@0.4.0
+
+## 0.88.2
+
+### Patch Changes
+
+- **clients**: handle CR and CRLF line endings in SSE ([#3055](https://github.com/hey-api/openapi-ts/pull/3055)) ([`d663232`](https://github.com/hey-api/openapi-ts/commit/d663232d8f10cb29744beeba073532e2f6b3b27a)) by [@nachogarcia](https://github.com/nachogarcia)
+
+## 0.88.1
+
+### Patch Changes
+
+- **@hey-api/sdk**: correctly map flat parameters ([#3047](https://github.com/hey-api/openapi-ts/pull/3047)) ([`55ef279`](https://github.com/hey-api/openapi-ts/commit/55ef27994740ba0af0bc8db17b3e71bfb5c11714)) by [@mrlubos](https://github.com/mrlubos)
+
+## 0.88.0
+
+### Minor Changes
+
+- **output**: use TypeScript DSL ([#2986](https://github.com/hey-api/openapi-ts/pull/2986)) ([`37ff4ab`](https://github.com/hey-api/openapi-ts/commit/37ff4ab6bc89463778bf3709687ab84d3dab0618)) by [@mrlubos](https://github.com/mrlubos)
+
+### Removed `compiler` and `tsc` exports
+
+This release removes the `compiler` utility functions. Instead, it introduces a new TypeScript DSL exposed under the `$` symbol. All plugins now use this interface, so you may notice slight changes in the generated output.
+
 ## 0.87.5
 
 ### Patch Changes
@@ -206,11 +536,11 @@ We made the `output` configuration more consistent by using `null` to represent 
 
 ```js
 export default {
-  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  input: "hey-api/backend", // sign up at app.heyapi.dev
   output: {
     format: null,
     lint: null,
-    path: 'src/client',
+    path: "src/client",
     tsConfigPath: null,
   },
 };
@@ -339,10 +669,10 @@ You can customize the naming and casing pattern for files using the `fileName` o
 
 ```js
 export default {
-  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  input: "hey-api/backend", // sign up at app.heyapi.dev
   output: {
-    fileName: '{{name}}',
-    path: 'src/client',
+    fileName: "{{name}}",
+    path: "src/client",
   },
 };
 ```
@@ -351,12 +681,12 @@ By default, we append every file name with a `.gen` suffix to highlight it's aut
 
 ```js
 export default {
-  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  input: "hey-api/backend", // sign up at app.heyapi.dev
   output: {
     fileName: {
-      suffix: '.gen',
+      suffix: ".gen",
     },
-    path: 'src/client',
+    path: "src/client",
   },
 };
 ```
@@ -461,12 +791,12 @@ This release adds the [Hooks API](https://heyapi.dev/openapi-ts/configuration/pa
 
 ```js
 export default {
-  input: 'hey-api/backend', // sign up at app.heyapi.dev
-  output: 'src/client',
+  input: "hey-api/backend", // sign up at app.heyapi.dev
+  output: "src/client",
   parser: {
     hooks: {
       operations: {
-        isQuery: (op) => (op.method === 'post' ? true : undefined),
+        isQuery: (op) => (op.method === "post" ? true : undefined),
       },
     },
   },
@@ -653,12 +983,12 @@ export default {
 
   ```js
   export default {
-    input: 'hey-api/backend', // sign up at app.heyapi.dev
-    output: 'src/client',
+    input: "hey-api/backend", // sign up at app.heyapi.dev
+    output: "src/client",
     plugins: [
       // ...other plugins
       {
-        name: 'zod',
+        name: "zod",
         compatibilityVersion: 3,
       },
     ],
@@ -667,13 +997,13 @@ export default {
 
   ```js
   export default {
-    input: 'hey-api/backend', // sign up at app.heyapi.dev
-    output: 'src/client',
+    input: "hey-api/backend", // sign up at app.heyapi.dev
+    output: "src/client",
     plugins: [
       // ...other plugins
       {
-        name: 'zod',
-        compatibilityVersion: 'mini',
+        name: "zod",
+        compatibilityVersion: "mini",
       },
     ],
   };
@@ -798,12 +1128,12 @@ export default {
 
   ```js
   export default {
-    input: 'hey-api/backend', // sign up at app.heyapi.dev
-    output: 'src/client',
+    input: "hey-api/backend", // sign up at app.heyapi.dev
+    output: "src/client",
     plugins: [
       // ...other plugins
       {
-        name: '@hey-api/sdk',
+        name: "@hey-api/sdk",
         validator: {
           request: false,
           response: true,
@@ -833,7 +1163,7 @@ export default {
       v.object({
         foo: v.optional(v.string()),
         bar: v.optional(v.union([v.number(), v.null()])),
-      }),
+      })
     ),
     headers: v.optional(v.never()),
     path: v.object({
@@ -862,7 +1192,7 @@ export default {
   This method replaces the `.subscribe()` method. Additionally, `.forEach()` is executed immediately, which means we don't need the `before` and `after` events – simply move your code before and after the `.forEach()` block.
 
   ```ts
-  plugin.forEach('operation', 'schema', (event) => {
+  plugin.forEach("operation", "schema", (event) => {
     // do something with event
   });
   ```
@@ -975,13 +1305,13 @@ export default {
 
   ```js
   export default {
-    input: 'hey-api/backend', // sign up at app.heyapi.dev
-    output: 'src/client',
+    input: "hey-api/backend", // sign up at app.heyapi.dev
+    output: "src/client",
     plugins: [
       // ...other plugins
       {
-        classStructure: 'off',
-        name: '@hey-api/sdk',
+        classStructure: "off",
+        name: "@hey-api/sdk",
       },
     ],
   };
@@ -1162,10 +1492,10 @@ export default {
 
   ```js
   export default {
-    input: 'hey-api/backend', // sign up at app.heyapi.dev
+    input: "hey-api/backend", // sign up at app.heyapi.dev
     output: {
-      path: 'src/client',
-      tsConfigPath: 'off',
+      path: "src/client",
+      tsConfigPath: "off",
     },
   };
   ```
@@ -1254,13 +1584,13 @@ export default {
 
   ```js
   export default {
-    input: 'hey-api/backend', // sign up at app.heyapi.dev
-    output: 'src/client',
+    input: "hey-api/backend", // sign up at app.heyapi.dev
+    output: "src/client",
     plugins: [
       // ...other plugins
       {
-        name: '@hey-api/typescript',
-        readOnlyWriteOnlyBehavior: 'off', // [!code ++]
+        name: "@hey-api/typescript",
+        readOnlyWriteOnlyBehavior: "off", // [!code ++]
       },
     ],
   };
@@ -1392,12 +1722,12 @@ export default {
 
   ```js
   export default {
-    input: 'path/to/openapi.json',
-    output: 'src/client',
+    input: "path/to/openapi.json",
+    output: "src/client",
     plugins: [
       {
         baseUrl: false, // [!code ++]
-        name: '@hey-api/client-fetch',
+        name: "@hey-api/client-fetch",
       },
     ],
   };
@@ -1444,10 +1774,10 @@ export default {
 
   ```js
   export default {
-    client: '@hey-api/client-fetch', // [!code --]
-    input: 'path/to/openapi.json',
-    output: 'src/client',
-    plugins: ['@hey-api/client-fetch'], // [!code ++]
+    client: "@hey-api/client-fetch", // [!code --]
+    input: "path/to/openapi.json",
+    output: "src/client",
+    plugins: ["@hey-api/client-fetch"], // [!code ++]
   };
   ```
 
@@ -1461,15 +1791,15 @@ export default {
 
   ```js
   export default {
-    input: 'path/to/openapi.json',
-    output: 'src/client',
+    input: "path/to/openapi.json",
+    output: "src/client",
     plugins: [
       {
-        name: '@hey-api/client-fetch',
+        name: "@hey-api/client-fetch",
         throwOnError: true, // [!code ++]
       },
       {
-        name: '@hey-api/sdk',
+        name: "@hey-api/sdk",
         throwOnError: true, // [!code --]
       },
     ],
@@ -1483,8 +1813,8 @@ export default {
   The internal `client` instance previously located in `sdk.gen.ts` is now defined in `client.gen.ts`. If you're importing it in your code, update the import module.
 
   ```js
-  import { client } from 'client/sdk.gen'; // [!code --]
-  import { client } from 'client/client.gen'; // [!code ++]
+  import { client } from "client/sdk.gen"; // [!code --]
+  import { client } from "client/client.gen"; // [!code ++]
   ```
 
 - [#1626](https://github.com/hey-api/openapi-ts/pull/1626) [`8eba19d`](https://github.com/hey-api/openapi-ts/commit/8eba19d4092fc0903572ab9fdadf0b4c26928ba2) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: throw if inferred plugin not found
@@ -1569,9 +1899,9 @@ export default {
 
   ```js
   export default {
-    client: '@hey-api/client-fetch',
-    input: 'path/to/openapi.json',
-    output: 'src/client',
+    client: "@hey-api/client-fetch",
+    input: "path/to/openapi.json",
+    output: "src/client",
     watch: true,
   };
   ```
@@ -1627,20 +1957,20 @@ export default {
   When generating SDKs, you now have to specify `transformer` in order to modify response data. By default, adding `@hey-api/transformers` to your plugins will only produce additional output. To preserve the previous functionality, set `sdk.transformer` to `true`.
 
   ```js
-  import { defaultPlugins } from '@hey-api/openapi-ts';
+  import { defaultPlugins } from "@hey-api/openapi-ts";
 
   export default {
-    client: '@hey-api/client-fetch',
-    input: 'path/to/openapi.json',
-    output: 'src/client',
+    client: "@hey-api/client-fetch",
+    input: "path/to/openapi.json",
+    output: "src/client",
     plugins: [
       ...defaultPlugins,
       {
         dates: true,
-        name: '@hey-api/transformers',
+        name: "@hey-api/transformers",
       },
       {
-        name: '@hey-api/sdk',
+        name: "@hey-api/sdk",
         transformer: true, // [!code ++]
       },
     ],
@@ -1685,13 +2015,13 @@ export default {
 
   ```js
   export default {
-    client: '@hey-api/client-fetch',
+    client: "@hey-api/client-fetch",
     debug: true, // [!code --]
-    input: 'path/to/openapi.json',
+    input: "path/to/openapi.json",
     logs: {
-      level: 'debug', // [!code ++]
+      level: "debug", // [!code ++]
     },
-    output: 'src/client',
+    output: "src/client",
   };
   ```
 
@@ -1702,16 +2032,16 @@ export default {
   `@hey-api/schemas` has been removed from the default plugins. To continue using it, add it to your plugins array.
 
   ```js
-  import { defaultPlugins } from '@hey-api/openapi-ts';
+  import { defaultPlugins } from "@hey-api/openapi-ts";
 
   export default {
-    client: '@hey-api/client-fetch',
+    client: "@hey-api/client-fetch",
     experimentalParser: true,
-    input: 'path/to/openapi.json',
-    output: 'src/client',
+    input: "path/to/openapi.json",
+    output: "src/client",
     plugins: [
       ...defaultPlugins,
-      '@hey-api/schemas', // [!code ++]
+      "@hey-api/schemas", // [!code ++]
     ],
   };
   ```
@@ -1742,15 +2072,15 @@ export default {
 
   ```js
   export default {
-    client: '@hey-api/client-fetch',
+    client: "@hey-api/client-fetch",
     experimentalParser: true,
-    input: 'path/to/openapi.json',
-    output: 'src/client',
+    input: "path/to/openapi.json",
+    output: "src/client",
     plugins: [
       // ...other plugins
       {
-        identifierCase: 'preserve', // [!code ++]
-        name: '@hey-api/typescript',
+        identifierCase: "preserve", // [!code ++]
+        name: "@hey-api/typescript",
       },
     ],
   };
@@ -1763,8 +2093,8 @@ export default {
   `index.ts` will no longer re-export `schemas.gen.ts` to reduce the chance of producing broken output. Please update your code to import from `schemas.gen.ts` directly.
 
   ```js
-  import { mySchema } from 'client'; // [!code --]
-  import { mySchema } from 'client/schemas.gen'; // [!code ++]
+  import { mySchema } from "client"; // [!code --]
+  import { mySchema } from "client/schemas.gen"; // [!code ++]
   ```
 
   ### Removed `transformers.gen.ts` re-export
@@ -1772,8 +2102,8 @@ export default {
   `index.ts` will no longer re-export `transformers.gen.ts` to reduce the chance of producing broken output. Please update your code to import from `transformers.gen.ts` directly.
 
   ```js
-  import { myTransformer } from 'client'; // [!code --]
-  import { myTransformer } from 'client/transformers.gen'; // [!code ++]
+  import { myTransformer } from "client"; // [!code --]
+  import { myTransformer } from "client/transformers.gen"; // [!code ++]
   ```
 
 - [#1360](https://github.com/hey-api/openapi-ts/pull/1360) [`5f6ddd7`](https://github.com/hey-api/openapi-ts/commit/5f6ddd796f0ce77bcca55fd13981f2a8481aecd3) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: add output.clean option
@@ -1784,11 +2114,11 @@ export default {
 
   ```js
   export default {
-    client: '@hey-api/client-fetch',
-    input: 'path/to/openapi.json',
+    client: "@hey-api/client-fetch",
+    input: "path/to/openapi.json",
     output: {
       clean: false, // [!code ++]
-      path: 'src/client',
+      path: "src/client",
     },
   };
   ```
@@ -1834,8 +2164,8 @@ export default {
   To align with the updated name, the `@hey-api/sdk` plugin will generate an `sdk.gen.ts` file. This will result in a breaking change if you're importing from `services.gen.ts`. Please update your imports to reflect this change.
 
   ```js
-  import { client } from 'client/services.gen'; // [!code --]
-  import { client } from 'client/sdk.gen'; // [!code ++]
+  import { client } from "client/services.gen"; // [!code --]
+  import { client } from "client/sdk.gen"; // [!code ++]
   ```
 
   ### Renamed `@hey-api/types` plugin
@@ -1852,15 +2182,15 @@ export default {
 
   ```js
   export default {
-    client: '@hey-api/client-fetch',
+    client: "@hey-api/client-fetch",
     experimentalParser: true,
-    input: 'path/to/openapi.json',
-    output: 'src/client',
+    input: "path/to/openapi.json",
+    output: "src/client",
     plugins: [
       // ...other plugins
       {
         exportInlineEnums: true, // [!code ++]
-        name: '@hey-api/typescript',
+        name: "@hey-api/typescript",
       },
     ],
   };
@@ -1958,9 +2288,9 @@ export default {
 
   ```js
   export default {
-    client: '@hey-api/client-fetch',
-    input: 'path/to/openapi.json',
-    output: 'src/client',
+    client: "@hey-api/client-fetch",
+    input: "path/to/openapi.json",
+    output: "src/client",
     experimentalParser: true,
   };
   ```
@@ -1987,9 +2317,9 @@ export default {
 
   ```js
   export default {
-    client: '@hey-api/client-fetch',
-    input: 'path/to/openapi.json',
-    output: 'src/client',
+    client: "@hey-api/client-fetch",
+    input: "path/to/openapi.json",
+    output: "src/client",
     experimentalParser: true,
   };
   ```
@@ -2038,23 +2368,23 @@ export default {
 
   ```js [shorthand]
   export default {
-    client: '@hey-api/client-fetch',
-    input: 'path/to/openapi.json',
-    output: 'src/client',
+    client: "@hey-api/client-fetch",
+    input: "path/to/openapi.json",
+    output: "src/client",
     schemas: false, // [!code --]
-    plugins: ['@hey-api/types', '@hey-api/services'], // [!code ++]
+    plugins: ["@hey-api/types", "@hey-api/services"], // [!code ++]
   };
   ```
 
   ```js [*.export]
   export default {
-    client: '@hey-api/client-fetch',
-    input: 'path/to/openapi.json',
-    output: 'src/client',
+    client: "@hey-api/client-fetch",
+    input: "path/to/openapi.json",
+    output: "src/client",
     schemas: {
       export: false, // [!code --]
     },
-    plugins: ['@hey-api/types', '@hey-api/services'], // [!code ++]
+    plugins: ["@hey-api/types", "@hey-api/services"], // [!code ++]
   };
   ```
 
@@ -2066,9 +2396,9 @@ export default {
 
   ```js
   export default {
-    client: '@hey-api/client-fetch',
-    input: 'path/to/openapi.json',
-    output: 'src/client',
+    client: "@hey-api/client-fetch",
+    input: "path/to/openapi.json",
+    output: "src/client",
     schemas: {
       name: (name) => `${name}Schema`, // [!code --]
     },
@@ -2076,7 +2406,7 @@ export default {
       // ...other plugins
       {
         nameBuilder: (name) => `${name}Schema`, // [!code ++]
-        name: '@hey-api/schemas',
+        name: "@hey-api/schemas",
       },
     ],
   };
@@ -2088,15 +2418,15 @@ export default {
 
   ```js
   export default {
-    client: '@hey-api/client-fetch',
-    input: 'path/to/openapi.json',
-    output: 'src/client',
-    services: '^MySchema', // [!code --]
+    client: "@hey-api/client-fetch",
+    input: "path/to/openapi.json",
+    output: "src/client",
+    services: "^MySchema", // [!code --]
     plugins: [
       // ...other plugins
       {
-        include: '^MySchema', // [!code ++]
-        name: '@hey-api/services',
+        include: "^MySchema", // [!code ++]
+        name: "@hey-api/services",
       },
     ],
   };
@@ -2108,17 +2438,17 @@ export default {
 
   ```js
   export default {
-    client: '@hey-api/client-fetch',
-    input: 'path/to/openapi.json',
-    output: 'src/client',
+    client: "@hey-api/client-fetch",
+    input: "path/to/openapi.json",
+    output: "src/client",
     services: {
-      name: '{{name}}Service', // [!code --]
+      name: "{{name}}Service", // [!code --]
     },
     plugins: [
       // ...other plugins
       {
-        serviceNameBuilder: '{{name}}Service', // [!code ++]
-        name: '@hey-api/services',
+        serviceNameBuilder: "{{name}}Service", // [!code ++]
+        name: "@hey-api/services",
       },
     ],
   };
@@ -2130,17 +2460,17 @@ export default {
 
   ```js
   export default {
-    client: '@hey-api/client-fetch',
-    input: 'path/to/openapi.json',
-    output: 'src/client',
+    client: "@hey-api/client-fetch",
+    input: "path/to/openapi.json",
+    output: "src/client",
     types: {
-      dates: 'types+transform', // [!code --]
+      dates: "types+transform", // [!code --]
     },
     plugins: [
       // ...other plugins
       {
         dates: true, // [!code ++]
-        name: '@hey-api/transformers',
+        name: "@hey-api/transformers",
       },
     ],
   };
@@ -2152,15 +2482,15 @@ export default {
 
   ```js
   export default {
-    client: '@hey-api/client-fetch',
-    input: 'path/to/openapi.json',
-    output: 'src/client',
-    types: '^MySchema', // [!code --]
+    client: "@hey-api/client-fetch",
+    input: "path/to/openapi.json",
+    output: "src/client",
+    types: "^MySchema", // [!code --]
     plugins: [
       // ...other plugins
       {
-        include: '^MySchema', // [!code ++]
-        name: '@hey-api/types',
+        include: "^MySchema", // [!code ++]
+        name: "@hey-api/types",
       },
     ],
   };
@@ -2172,17 +2502,17 @@ export default {
 
   ```js
   export default {
-    client: '@hey-api/client-fetch',
-    input: 'path/to/openapi.json',
-    output: 'src/client',
+    client: "@hey-api/client-fetch",
+    input: "path/to/openapi.json",
+    output: "src/client",
     types: {
-      name: 'PascalCase', // [!code --]
+      name: "PascalCase", // [!code --]
     },
     plugins: [
       // ...other plugins
       {
-        name: '@hey-api/types',
-        style: 'PascalCase', // [!code ++]
+        name: "@hey-api/types",
+        style: "PascalCase", // [!code ++]
       },
     ],
   };
@@ -3463,10 +3793,10 @@ export default {
 
   ```js
   export default {
-    input: 'hey-api/backend', // sign up at app.heyapi.dev
+    input: "hey-api/backend", // sign up at app.heyapi.dev
     output: {
-      path: 'src/client',
-      tsConfigPath: 'off',
+      path: "src/client",
+      tsConfigPath: "off",
     },
   };
   ```
@@ -3555,13 +3885,13 @@ export default {
 
   ```js
   export default {
-    input: 'hey-api/backend', // sign up at app.heyapi.dev
-    output: 'src/client',
+    input: "hey-api/backend", // sign up at app.heyapi.dev
+    output: "src/client",
     plugins: [
       // ...other plugins
       {
-        name: '@hey-api/typescript',
-        readOnlyWriteOnlyBehavior: 'off', // [!code ++]
+        name: "@hey-api/typescript",
+        readOnlyWriteOnlyBehavior: "off", // [!code ++]
       },
     ],
   };
@@ -3693,12 +4023,12 @@ export default {
 
   ```js
   export default {
-    input: 'path/to/openapi.json',
-    output: 'src/client',
+    input: "path/to/openapi.json",
+    output: "src/client",
     plugins: [
       {
         baseUrl: false, // [!code ++]
-        name: '@hey-api/client-fetch',
+        name: "@hey-api/client-fetch",
       },
     ],
   };
@@ -3745,10 +4075,10 @@ export default {
 
   ```js
   export default {
-    client: '@hey-api/client-fetch', // [!code --]
-    input: 'path/to/openapi.json',
-    output: 'src/client',
-    plugins: ['@hey-api/client-fetch'], // [!code ++]
+    client: "@hey-api/client-fetch", // [!code --]
+    input: "path/to/openapi.json",
+    output: "src/client",
+    plugins: ["@hey-api/client-fetch"], // [!code ++]
   };
   ```
 
@@ -3762,15 +4092,15 @@ export default {
 
   ```js
   export default {
-    input: 'path/to/openapi.json',
-    output: 'src/client',
+    input: "path/to/openapi.json",
+    output: "src/client",
     plugins: [
       {
-        name: '@hey-api/client-fetch',
+        name: "@hey-api/client-fetch",
         throwOnError: true, // [!code ++]
       },
       {
-        name: '@hey-api/sdk',
+        name: "@hey-api/sdk",
         throwOnError: true, // [!code --]
       },
     ],
@@ -3784,8 +4114,8 @@ export default {
   The internal `client` instance previously located in `sdk.gen.ts` is now defined in `client.gen.ts`. If you're importing it in your code, update the import module.
 
   ```js
-  import { client } from 'client/sdk.gen'; // [!code --]
-  import { client } from 'client/client.gen'; // [!code ++]
+  import { client } from "client/sdk.gen"; // [!code --]
+  import { client } from "client/client.gen"; // [!code ++]
   ```
 
 - [#1626](https://github.com/hey-api/openapi-ts/pull/1626) [`8eba19d`](https://github.com/hey-api/openapi-ts/commit/8eba19d4092fc0903572ab9fdadf0b4c26928ba2) Thanks [@mrlubos](https://github.com/mrlubos)! - fix: throw if inferred plugin not found
@@ -3870,9 +4200,9 @@ export default {
 
   ```js
   export default {
-    client: '@hey-api/client-fetch',
-    input: 'path/to/openapi.json',
-    output: 'src/client',
+    client: "@hey-api/client-fetch",
+    input: "path/to/openapi.json",
+    output: "src/client",
     watch: true,
   };
   ```
@@ -3928,20 +4258,20 @@ export default {
   When generating SDKs, you now have to specify `transformer` in order to modify response data. By default, adding `@hey-api/transformers` to your plugins will only produce additional output. To preserve the previous functionality, set `sdk.transformer` to `true`.
 
   ```js
-  import { defaultPlugins } from '@hey-api/openapi-ts';
+  import { defaultPlugins } from "@hey-api/openapi-ts";
 
   export default {
-    client: '@hey-api/client-fetch',
-    input: 'path/to/openapi.json',
-    output: 'src/client',
+    client: "@hey-api/client-fetch",
+    input: "path/to/openapi.json",
+    output: "src/client",
     plugins: [
       ...defaultPlugins,
       {
         dates: true,
-        name: '@hey-api/transformers',
+        name: "@hey-api/transformers",
       },
       {
-        name: '@hey-api/sdk',
+        name: "@hey-api/sdk",
         transformer: true, // [!code ++]
       },
     ],
@@ -3986,13 +4316,13 @@ export default {
 
   ```js
   export default {
-    client: '@hey-api/client-fetch',
+    client: "@hey-api/client-fetch",
     debug: true, // [!code --]
-    input: 'path/to/openapi.json',
+    input: "path/to/openapi.json",
     logs: {
-      level: 'debug', // [!code ++]
+      level: "debug", // [!code ++]
     },
-    output: 'src/client',
+    output: "src/client",
   };
   ```
 
@@ -4003,16 +4333,16 @@ export default {
   `@hey-api/schemas` has been removed from the default plugins. To continue using it, add it to your plugins array.
 
   ```js
-  import { defaultPlugins } from '@hey-api/openapi-ts';
+  import { defaultPlugins } from "@hey-api/openapi-ts";
 
   export default {
-    client: '@hey-api/client-fetch',
+    client: "@hey-api/client-fetch",
     experimentalParser: true,
-    input: 'path/to/openapi.json',
-    output: 'src/client',
+    input: "path/to/openapi.json",
+    output: "src/client",
     plugins: [
       ...defaultPlugins,
-      '@hey-api/schemas', // [!code ++]
+      "@hey-api/schemas", // [!code ++]
     ],
   };
   ```
@@ -4043,15 +4373,15 @@ export default {
 
   ```js
   export default {
-    client: '@hey-api/client-fetch',
+    client: "@hey-api/client-fetch",
     experimentalParser: true,
-    input: 'path/to/openapi.json',
-    output: 'src/client',
+    input: "path/to/openapi.json",
+    output: "src/client",
     plugins: [
       // ...other plugins
       {
-        identifierCase: 'preserve', // [!code ++]
-        name: '@hey-api/typescript',
+        identifierCase: "preserve", // [!code ++]
+        name: "@hey-api/typescript",
       },
     ],
   };
@@ -4064,8 +4394,8 @@ export default {
   `index.ts` will no longer re-export `schemas.gen.ts` to reduce the chance of producing broken output. Please update your code to import from `schemas.gen.ts` directly.
 
   ```js
-  import { mySchema } from 'client'; // [!code --]
-  import { mySchema } from 'client/schemas.gen'; // [!code ++]
+  import { mySchema } from "client"; // [!code --]
+  import { mySchema } from "client/schemas.gen"; // [!code ++]
   ```
 
   ### Removed `transformers.gen.ts` re-export
@@ -4073,8 +4403,8 @@ export default {
   `index.ts` will no longer re-export `transformers.gen.ts` to reduce the chance of producing broken output. Please update your code to import from `transformers.gen.ts` directly.
 
   ```js
-  import { myTransformer } from 'client'; // [!code --]
-  import { myTransformer } from 'client/transformers.gen'; // [!code ++]
+  import { myTransformer } from "client"; // [!code --]
+  import { myTransformer } from "client/transformers.gen"; // [!code ++]
   ```
 
 - [#1360](https://github.com/hey-api/openapi-ts/pull/1360) [`5f6ddd7`](https://github.com/hey-api/openapi-ts/commit/5f6ddd796f0ce77bcca55fd13981f2a8481aecd3) Thanks [@mrlubos](https://github.com/mrlubos)! - feat: add output.clean option
@@ -4085,11 +4415,11 @@ export default {
 
   ```js
   export default {
-    client: '@hey-api/client-fetch',
-    input: 'path/to/openapi.json',
+    client: "@hey-api/client-fetch",
+    input: "path/to/openapi.json",
     output: {
       clean: false, // [!code ++]
-      path: 'src/client',
+      path: "src/client",
     },
   };
   ```
@@ -4135,8 +4465,8 @@ export default {
   To align with the updated name, the `@hey-api/sdk` plugin will generate an `sdk.gen.ts` file. This will result in a breaking change if you're importing from `services.gen.ts`. Please update your imports to reflect this change.
 
   ```js
-  import { client } from 'client/services.gen'; // [!code --]
-  import { client } from 'client/sdk.gen'; // [!code ++]
+  import { client } from "client/services.gen"; // [!code --]
+  import { client } from "client/sdk.gen"; // [!code ++]
   ```
 
   ### Renamed `@hey-api/types` plugin
@@ -4153,15 +4483,15 @@ export default {
 
   ```js
   export default {
-    client: '@hey-api/client-fetch',
+    client: "@hey-api/client-fetch",
     experimentalParser: true,
-    input: 'path/to/openapi.json',
-    output: 'src/client',
+    input: "path/to/openapi.json",
+    output: "src/client",
     plugins: [
       // ...other plugins
       {
         exportInlineEnums: true, // [!code ++]
-        name: '@hey-api/typescript',
+        name: "@hey-api/typescript",
       },
     ],
   };
@@ -4259,9 +4589,9 @@ export default {
 
   ```js
   export default {
-    client: '@hey-api/client-fetch',
-    input: 'path/to/openapi.json',
-    output: 'src/client',
+    client: "@hey-api/client-fetch",
+    input: "path/to/openapi.json",
+    output: "src/client",
     experimentalParser: true,
   };
   ```
@@ -4288,9 +4618,9 @@ export default {
 
   ```js
   export default {
-    client: '@hey-api/client-fetch',
-    input: 'path/to/openapi.json',
-    output: 'src/client',
+    client: "@hey-api/client-fetch",
+    input: "path/to/openapi.json",
+    output: "src/client",
     experimentalParser: true,
   };
   ```
@@ -4339,23 +4669,23 @@ export default {
 
   ```js [shorthand]
   export default {
-    client: '@hey-api/client-fetch',
-    input: 'path/to/openapi.json',
-    output: 'src/client',
+    client: "@hey-api/client-fetch",
+    input: "path/to/openapi.json",
+    output: "src/client",
     schemas: false, // [!code --]
-    plugins: ['@hey-api/types', '@hey-api/services'], // [!code ++]
+    plugins: ["@hey-api/types", "@hey-api/services"], // [!code ++]
   };
   ```
 
   ```js [*.export]
   export default {
-    client: '@hey-api/client-fetch',
-    input: 'path/to/openapi.json',
-    output: 'src/client',
+    client: "@hey-api/client-fetch",
+    input: "path/to/openapi.json",
+    output: "src/client",
     schemas: {
       export: false, // [!code --]
     },
-    plugins: ['@hey-api/types', '@hey-api/services'], // [!code ++]
+    plugins: ["@hey-api/types", "@hey-api/services"], // [!code ++]
   };
   ```
 
@@ -4367,9 +4697,9 @@ export default {
 
   ```js
   export default {
-    client: '@hey-api/client-fetch',
-    input: 'path/to/openapi.json',
-    output: 'src/client',
+    client: "@hey-api/client-fetch",
+    input: "path/to/openapi.json",
+    output: "src/client",
     schemas: {
       name: (name) => `${name}Schema`, // [!code --]
     },
@@ -4377,7 +4707,7 @@ export default {
       // ...other plugins
       {
         nameBuilder: (name) => `${name}Schema`, // [!code ++]
-        name: '@hey-api/schemas',
+        name: "@hey-api/schemas",
       },
     ],
   };
@@ -4389,15 +4719,15 @@ export default {
 
   ```js
   export default {
-    client: '@hey-api/client-fetch',
-    input: 'path/to/openapi.json',
-    output: 'src/client',
-    services: '^MySchema', // [!code --]
+    client: "@hey-api/client-fetch",
+    input: "path/to/openapi.json",
+    output: "src/client",
+    services: "^MySchema", // [!code --]
     plugins: [
       // ...other plugins
       {
-        include: '^MySchema', // [!code ++]
-        name: '@hey-api/services',
+        include: "^MySchema", // [!code ++]
+        name: "@hey-api/services",
       },
     ],
   };
@@ -4409,17 +4739,17 @@ export default {
 
   ```js
   export default {
-    client: '@hey-api/client-fetch',
-    input: 'path/to/openapi.json',
-    output: 'src/client',
+    client: "@hey-api/client-fetch",
+    input: "path/to/openapi.json",
+    output: "src/client",
     services: {
-      name: '{{name}}Service', // [!code --]
+      name: "{{name}}Service", // [!code --]
     },
     plugins: [
       // ...other plugins
       {
-        serviceNameBuilder: '{{name}}Service', // [!code ++]
-        name: '@hey-api/services',
+        serviceNameBuilder: "{{name}}Service", // [!code ++]
+        name: "@hey-api/services",
       },
     ],
   };
@@ -4431,17 +4761,17 @@ export default {
 
   ```js
   export default {
-    client: '@hey-api/client-fetch',
-    input: 'path/to/openapi.json',
-    output: 'src/client',
+    client: "@hey-api/client-fetch",
+    input: "path/to/openapi.json",
+    output: "src/client",
     types: {
-      dates: 'types+transform', // [!code --]
+      dates: "types+transform", // [!code --]
     },
     plugins: [
       // ...other plugins
       {
         dates: true, // [!code ++]
-        name: '@hey-api/transformers',
+        name: "@hey-api/transformers",
       },
     ],
   };
@@ -4453,15 +4783,15 @@ export default {
 
   ```js
   export default {
-    client: '@hey-api/client-fetch',
-    input: 'path/to/openapi.json',
-    output: 'src/client',
-    types: '^MySchema', // [!code --]
+    client: "@hey-api/client-fetch",
+    input: "path/to/openapi.json",
+    output: "src/client",
+    types: "^MySchema", // [!code --]
     plugins: [
       // ...other plugins
       {
-        include: '^MySchema', // [!code ++]
-        name: '@hey-api/types',
+        include: "^MySchema", // [!code ++]
+        name: "@hey-api/types",
       },
     ],
   };
@@ -4473,17 +4803,17 @@ export default {
 
   ```js
   export default {
-    client: '@hey-api/client-fetch',
-    input: 'path/to/openapi.json',
-    output: 'src/client',
+    client: "@hey-api/client-fetch",
+    input: "path/to/openapi.json",
+    output: "src/client",
     types: {
-      name: 'PascalCase', // [!code --]
+      name: "PascalCase", // [!code --]
     },
     plugins: [
       // ...other plugins
       {
-        name: '@hey-api/types',
-        style: 'PascalCase', // [!code ++]
+        name: "@hey-api/types",
+        style: "PascalCase", // [!code ++]
       },
     ],
   };

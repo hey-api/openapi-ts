@@ -1,9 +1,9 @@
-import { deduplicateSchema } from '~/ir/schema';
-import type { SchemaWithType } from '~/plugins';
-import { toRef } from '~/plugins/shared/utils/refs';
-import { tsc } from '~/tsc';
+import { fromRef, ref } from '@hey-api/codegen-core';
+import type { SchemaWithType } from '@hey-api/shared';
+import { deduplicateSchema } from '@hey-api/shared';
 
-import { pipesToAst } from '../../shared/pipesToAst';
+import { $ } from '../../../../ts-dsl';
+import { pipesToNode } from '../../shared/pipes';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
 import { identifiers } from '../constants';
 import { irSchemaToAst } from '../plugin';
@@ -20,28 +20,19 @@ export const arrayToAst = ({
     pipes: [],
   };
 
-  const v = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'valibot.v',
-  });
-  const functionName = tsc.propertyAccessExpression({
-    expression: v.placeholder,
-    name: identifiers.schemas.array,
-  });
+  const v = plugin.external('valibot.v');
+  const functionName = $(v).attr(identifiers.schemas.array);
 
   if (!schema.items) {
-    const expression = tsc.callExpression({
-      functionName,
-      parameters: [
-        unknownToAst({
-          plugin,
-          schema: {
-            type: 'unknown',
-          },
-          state,
-        }),
-      ],
-    });
+    const expression = functionName.call(
+      unknownToAst({
+        plugin,
+        schema: {
+          type: 'unknown',
+        },
+        state,
+      }),
+    );
     result.pipes.push(expression);
   } else {
     schema = deduplicateSchema({ schema });
@@ -53,20 +44,17 @@ export const arrayToAst = ({
         schema: item,
         state: {
           ...state,
-          path: toRef([...state.path.value, 'items', index]),
+          path: ref([...fromRef(state.path), 'items', index]),
         },
       });
       if (itemAst.hasLazyExpression) {
         result.hasLazyExpression = true;
       }
-      return pipesToAst({ pipes: itemAst.pipes, plugin });
+      return pipesToNode(itemAst.pipes, plugin);
     });
 
     if (itemExpressions.length === 1) {
-      const expression = tsc.callExpression({
-        functionName,
-        parameters: itemExpressions,
-      });
+      const expression = functionName.call(...itemExpressions);
       result.pipes.push(expression);
     } else {
       if (schema.logicalOperator === 'and') {
@@ -79,51 +67,34 @@ export const arrayToAst = ({
       // TODO: parser - handle union
       // return tsc.typeArrayNode(tsc.typeUnionNode({ types: itemExpressions }));
 
-      const expression = tsc.callExpression({
-        functionName,
-        parameters: [
-          unknownToAst({
-            plugin,
-            schema: {
-              type: 'unknown',
-            },
-            state,
-          }),
-        ],
-      });
+      const expression = functionName.call(
+        unknownToAst({
+          plugin,
+          schema: {
+            type: 'unknown',
+          },
+          state,
+        }),
+      );
       result.pipes.push(expression);
     }
   }
 
   if (schema.minItems === schema.maxItems && schema.minItems !== undefined) {
-    const expression = tsc.callExpression({
-      functionName: tsc.propertyAccessExpression({
-        expression: v.placeholder,
-        name: identifiers.actions.length,
-      }),
-      parameters: [tsc.valueToExpression({ value: schema.minItems })],
-    });
+    const expression = $(v).attr(identifiers.actions.length).call($.fromValue(schema.minItems));
     result.pipes.push(expression);
   } else {
     if (schema.minItems !== undefined) {
-      const expression = tsc.callExpression({
-        functionName: tsc.propertyAccessExpression({
-          expression: v.placeholder,
-          name: identifiers.actions.minLength,
-        }),
-        parameters: [tsc.valueToExpression({ value: schema.minItems })],
-      });
+      const expression = $(v)
+        .attr(identifiers.actions.minLength)
+        .call($.fromValue(schema.minItems));
       result.pipes.push(expression);
     }
 
     if (schema.maxItems !== undefined) {
-      const expression = tsc.callExpression({
-        functionName: tsc.propertyAccessExpression({
-          expression: v.placeholder,
-          name: identifiers.actions.maxLength,
-        }),
-        parameters: [tsc.valueToExpression({ value: schema.maxItems })],
-      });
+      const expression = $(v)
+        .attr(identifiers.actions.maxLength)
+        .call($.fromValue(schema.maxItems));
       result.pipes.push(expression);
     }
   }

@@ -3,7 +3,7 @@
 import { type DefaultError, queryOptions, type UseMutationOptions } from '@tanstack/react-query';
 
 import { client } from '../client.gen';
-import { BarBazService, FooBazService, type Options } from '../sdk.gen';
+import { BarBazService, BarService, FooBazService, FooService, type Options } from '../sdk.gen';
 import type { FooBarPostData, FooBarPostResponse, FooBarPutData, FooBarPutResponse, FooPostData, FooPostResponse, FooPutData, FooPutResponse, GetFooBarData, GetFooBarResponse, GetFooData, GetFooResponse } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
@@ -39,7 +39,7 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
     return [params];
 };
 
-export const getFooQueryKey = (options?: Options<GetFooData>) => createQueryKey("getFoo", options);
+export const getFooQueryKey = (options?: Options<GetFooData>) => createQueryKey('getFoo', options);
 
 export const getFooOptions = (options?: Options<GetFooData>) => queryOptions<GetFooResponse, DefaultError, GetFooResponse, ReturnType<typeof getFooQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
@@ -57,7 +57,7 @@ export const getFooOptions = (options?: Options<GetFooData>) => queryOptions<Get
 export const fooPostMutation = (options?: Partial<Options<FooPostData>>): UseMutationOptions<FooPostResponse, DefaultError, Options<FooPostData>> => {
     const mutationOptions: UseMutationOptions<FooPostResponse, DefaultError, Options<FooPostData>> = {
         mutationFn: async (fnOptions) => {
-            const { data } = await FooBazService.fooService.post({
+            const { data } = await FooService.post({
                 ...options,
                 ...fnOptions,
                 throwOnError: true
@@ -71,7 +71,7 @@ export const fooPostMutation = (options?: Partial<Options<FooPostData>>): UseMut
 export const fooPutMutation = (options?: Partial<Options<FooPutData>>): UseMutationOptions<FooPutResponse, DefaultError, Options<FooPutData>> => {
     const mutationOptions: UseMutationOptions<FooPutResponse, DefaultError, Options<FooPutData>> = {
         mutationFn: async (fnOptions) => {
-            const { data } = await FooBazService.fooService.put({
+            const { data } = await FooService.put({
                 ...options,
                 ...fnOptions,
                 throwOnError: true
@@ -82,7 +82,7 @@ export const fooPutMutation = (options?: Partial<Options<FooPutData>>): UseMutat
     return mutationOptions;
 };
 
-export const getFooBarQueryKey = (options?: Options<GetFooBarData>) => createQueryKey("getFooBar", options);
+export const getFooBarQueryKey = (options?: Options<GetFooBarData>) => createQueryKey('getFooBar', options);
 
 export const getFooBarOptions = (options?: Options<GetFooBarData>) => queryOptions<GetFooBarResponse, DefaultError, GetFooBarResponse, ReturnType<typeof getFooBarQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
@@ -100,7 +100,7 @@ export const getFooBarOptions = (options?: Options<GetFooBarData>) => queryOptio
 export const fooBarPostMutation = (options?: Partial<Options<FooBarPostData>>): UseMutationOptions<FooBarPostResponse, DefaultError, Options<FooBarPostData>> => {
     const mutationOptions: UseMutationOptions<FooBarPostResponse, DefaultError, Options<FooBarPostData>> = {
         mutationFn: async (fnOptions) => {
-            const { data } = await FooBazService.fooService.barService.post({
+            const { data } = await BarService.post({
                 ...options,
                 ...fnOptions,
                 throwOnError: true
@@ -114,7 +114,7 @@ export const fooBarPostMutation = (options?: Partial<Options<FooBarPostData>>): 
 export const fooBarPutMutation = (options?: Partial<Options<FooBarPutData>>): UseMutationOptions<FooBarPutResponse, DefaultError, Options<FooBarPutData>> => {
     const mutationOptions: UseMutationOptions<FooBarPutResponse, DefaultError, Options<FooBarPutData>> = {
         mutationFn: async (fnOptions) => {
-            const { data } = await FooBazService.fooService.barService.put({
+            const { data } = await BarService.put({
                 ...options,
                 ...fnOptions,
                 throwOnError: true

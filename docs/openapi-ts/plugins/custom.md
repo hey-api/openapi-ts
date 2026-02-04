@@ -30,11 +30,11 @@ export type { MyPlugin } from './types';
 
 ## TypeScript
 
-`index.ts` references two files, so we need to create them. `types.d.ts` contains the TypeScript interface for your plugin options. It must have the reserved `name` and `output` fields, everything else will become user-configurable options.
+`index.ts` references two files, so we need to create them. `types.ts` contains the TypeScript interface for your plugin options. It must have the reserved `name` and `output` fields, everything else will become user-configurable options.
 
 ::: code-group
 
-```ts [types.d.ts]
+```ts [types.ts]
 import type { DefinePlugin } from '@hey-api/openapi-ts';
 
 export type UserConfig = {
@@ -133,10 +133,7 @@ export const handler: MyPlugin['Handler'] = ({ plugin }) => {
   );
   const node = ts.factory.createVariableStatement(
     [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
-    ts.factory.createVariableDeclarationList(
-      [variableDeclaration],
-      ts.NodeFlags.Const,
-    ),
+    ts.factory.createVariableDeclarationList([variableDeclaration], ts.NodeFlags.Const),
   );
 
   // add a node to our file

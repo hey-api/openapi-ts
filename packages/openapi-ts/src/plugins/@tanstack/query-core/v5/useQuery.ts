@@ -1,12 +1,12 @@
-import type { IR } from '~/ir/types';
-import { buildName } from '~/openApi/shared/utils/name';
+import type { IR } from '@hey-api/shared';
+import { applyNaming } from '@hey-api/shared';
+
 import {
   createOperationComment,
   hasOperationSse,
   isOperationOptionsRequired,
-} from '~/plugins/shared/utils/operation';
-import { $ } from '~/ts-dsl';
-
+} from '../../../../plugins/shared/utils/operation';
+import { $ } from '../../../../ts-dsl';
 import { useTypeData } from '../shared/useType';
 import type { PluginInstance } from '../types';
 
@@ -27,18 +27,9 @@ export const createUseQuery = ({
     return;
   }
 
-  const symbolUseQueryFn = plugin.registerSymbol({
-    exported: true,
-    name: buildName({
-      config: plugin.config.useQuery,
-      name: operation.id,
-    }),
-  });
+  const symbolUseQueryFn = plugin.symbol(applyNaming(operation.id, plugin.config.useQuery));
 
-  const symbolUseQuery = plugin.referenceSymbol({
-    category: 'external',
-    resource: `${plugin.name}.useQuery`,
-  });
+  const symbolUseQuery = plugin.external(`${plugin.name}.useQuery`);
 
   const isRequiredOptions = isOperationOptionsRequired({
     context: plugin.context,
@@ -53,22 +44,13 @@ export const createUseQuery = ({
     role: 'queryOptions',
     tool: plugin.name,
   });
-  const statement = $.const(symbolUseQueryFn.placeholder)
-    .export(symbolUseQueryFn.exported)
-    .$if(
-      plugin.config.comments && createOperationComment({ operation }),
-      (c, v) => c.doc(v as ReadonlyArray<string>),
-    )
+  const statement = $.const(symbolUseQueryFn)
+    .export()
+    .$if(plugin.config.comments && createOperationComment(operation), (c, v) => c.doc(v))
     .assign(
       $.func()
-        .param(optionsParamName, (p) =>
-          p.optional(!isRequiredOptions).type(typeData),
-        )
-        .do(
-          $(symbolUseQuery.placeholder)
-            .call($(symbolQueryOptionsFn.placeholder).call(optionsParamName))
-            .return(),
-        ),
+        .param(optionsParamName, (p) => p.required(isRequiredOptions).type(typeData))
+        .do($(symbolUseQuery).call($(symbolQueryOptionsFn).call(optionsParamName)).return()),
     );
-  plugin.setSymbolValue(symbolUseQueryFn, statement);
+  plugin.node(statement);
 };

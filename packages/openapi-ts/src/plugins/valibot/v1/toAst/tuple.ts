@@ -1,8 +1,8 @@
-import type { SchemaWithType } from '~/plugins';
-import { toRef } from '~/plugins/shared/utils/refs';
-import { tsc } from '~/tsc';
+import { fromRef, ref } from '@hey-api/codegen-core';
+import type { SchemaWithType } from '@hey-api/shared';
 
-import { pipesToAst } from '../../shared/pipesToAst';
+import { $ } from '../../../../ts-dsl';
+import { pipesToNode } from '../../shared/pipes';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
 import { identifiers } from '../constants';
 import { irSchemaToAst } from '../plugin';
@@ -17,33 +17,16 @@ export const tupleToAst = ({
 }): Omit<Ast, 'typeName'> => {
   const result: Partial<Omit<Ast, 'typeName'>> = {};
 
-  const v = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'valibot.v',
-  });
+  const v = plugin.external('valibot.v');
 
   if (schema.const && Array.isArray(schema.const)) {
     const tupleElements = schema.const.map((value) =>
-      tsc.callExpression({
-        functionName: tsc.propertyAccessExpression({
-          expression: v.placeholder,
-          name: identifiers.schemas.literal,
-        }),
-        parameters: [tsc.valueToExpression({ value })],
-      }),
+      $(v).attr(identifiers.schemas.literal).call($.fromValue(value)),
     );
     result.pipes = [
-      tsc.callExpression({
-        functionName: tsc.propertyAccessExpression({
-          expression: v.placeholder,
-          name: identifiers.schemas.tuple,
-        }),
-        parameters: [
-          tsc.arrayLiteralExpression({
-            elements: tupleElements,
-          }),
-        ],
-      }),
+      $(v)
+        .attr(identifiers.schemas.tuple)
+        .call($.array(...tupleElements)),
     ];
     return result as Omit<Ast, 'typeName'>;
   }
@@ -55,26 +38,18 @@ export const tupleToAst = ({
         schema: item,
         state: {
           ...state,
-          path: toRef([...state.path.value, 'items', index]),
+          path: ref([...fromRef(state.path), 'items', index]),
         },
       });
       if (schemaPipes.hasLazyExpression) {
         result.hasLazyExpression = true;
       }
-      return pipesToAst({ pipes: schemaPipes.pipes, plugin });
+      return pipesToNode(schemaPipes.pipes, plugin);
     });
     result.pipes = [
-      tsc.callExpression({
-        functionName: tsc.propertyAccessExpression({
-          expression: v.placeholder,
-          name: identifiers.schemas.tuple,
-        }),
-        parameters: [
-          tsc.arrayLiteralExpression({
-            elements: tupleElements,
-          }),
-        ],
-      }),
+      $(v)
+        .attr(identifiers.schemas.tuple)
+        .call($.array(...tupleElements)),
     ];
     return result as Omit<Ast, 'typeName'>;
   }

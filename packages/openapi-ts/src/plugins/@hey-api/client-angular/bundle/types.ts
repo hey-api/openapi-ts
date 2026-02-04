@@ -12,17 +12,13 @@ import type {
   ServerSentEventsOptions,
   ServerSentEventsResult,
 } from '../../client-core/bundle/serverSentEvents';
-import type {
-  Client as CoreClient,
-  Config as CoreConfig,
-} from '../../client-core/bundle/types';
+import type { Client as CoreClient, Config as CoreConfig } from '../../client-core/bundle/types';
 import type { Middleware } from './utils';
 
 export type ResponseStyle = 'data' | 'fields';
 
 export interface Config<T extends ClientOptions = ClientOptions>
-  extends Omit<RequestInit, 'body' | 'headers' | 'method'>,
-    Omit<CoreConfig, 'headers'> {
+  extends Omit<RequestInit, 'body' | 'headers' | 'method'>, Omit<CoreConfig, 'headers'> {
   /**
    * Base URL for all requests made by this client.
    */
@@ -37,13 +33,7 @@ export interface Config<T extends ClientOptions = ClientOptions>
     | HttpHeaders
     | Record<
         string,
-        | string
-        | number
-        | boolean
-        | (string | number | boolean)[]
-        | null
-        | undefined
-        | unknown
+        string | number | boolean | (string | number | boolean)[] | null | undefined | unknown
       >;
   /**
    * The HTTP client to use for making requests.
@@ -69,7 +59,9 @@ export interface RequestOptions<
   TResponseStyle extends ResponseStyle = 'fields',
   ThrowOnError extends boolean = boolean,
   Url extends string = string,
-> extends Config<{
+>
+  extends
+    Config<{
       responseStyle: TResponseStyle;
       throwOnError: ThrowOnError;
     }>,
@@ -120,21 +112,15 @@ export type RequestResult<
         ? TData[keyof TData]
         : TData
       : {
-          data: TData extends Record<string, unknown>
-            ? TData[keyof TData]
-            : TData;
+          data: TData extends Record<string, unknown> ? TData[keyof TData] : TData;
           request: HttpRequest<unknown>;
           response: HttpResponse<TData>;
         }
     : TResponseStyle extends 'data'
-      ?
-          | (TData extends Record<string, unknown> ? TData[keyof TData] : TData)
-          | undefined
+      ? (TData extends Record<string, unknown> ? TData[keyof TData] : TData) | undefined
       :
           | {
-              data: TData extends Record<string, unknown>
-                ? TData[keyof TData]
-                : TData;
+              data: TData extends Record<string, unknown> ? TData[keyof TData] : TData;
               error: undefined;
               request: HttpRequest<unknown>;
               response: HttpResponse<TData>;
@@ -180,10 +166,7 @@ type RequestFn = <
   TResponseStyle extends ResponseStyle = 'fields',
 >(
   options: Omit<RequestOptions<TData, TResponseStyle, ThrowOnError>, 'method'> &
-    Pick<
-      Required<RequestOptions<TData, TResponseStyle, ThrowOnError>>,
-      'method'
-    >,
+    Pick<Required<RequestOptions<TData, TResponseStyle, ThrowOnError>>, 'method'>,
 ) => RequestResult<TData, TError, ThrowOnError, TResponseStyle>;
 
 type RequestOptionsFn = <
@@ -204,13 +187,7 @@ type BuildUrlFn = <
   options: TData & Options<TData>,
 ) => string;
 
-export type Client = CoreClient<
-  RequestFn,
-  Config,
-  MethodFn,
-  BuildUrlFn,
-  SseFn
-> & {
+export type Client = CoreClient<RequestFn, Config, MethodFn, BuildUrlFn, SseFn> & {
   interceptors: Middleware<
     HttpRequest<unknown>,
     HttpResponse<unknown>,

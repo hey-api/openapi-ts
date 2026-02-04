@@ -2,14 +2,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import { createClient } from '@hey-api/openapi-ts';
-import { describe, expect, it } from 'vitest';
 
 import { getFilePaths, getSpecsPath } from '../../utils';
-import {
-  createSdkConfig,
-  getSnapshotsPath,
-  getTempSnapshotsPath,
-} from './utils';
+import { createSdkConfig, getSnapshotsPath, getTempSnapshotsPath } from './utils';
 
 const namespace = 'opencode';
 
@@ -24,6 +19,22 @@ describe(`SDK: ${namespace}`, () => {
   });
 
   const scenarios = [
+    {
+      config: createConfig({
+        input: specPath,
+        output: {
+          path: 'export-all',
+          preferExportAll: true,
+        },
+        plugins: [
+          {
+            name: '@hey-api/sdk',
+            paramsStructure: 'flat',
+          },
+        ],
+      }),
+      description: 'export all',
+    },
     {
       config: createConfig({
         input: specPath,

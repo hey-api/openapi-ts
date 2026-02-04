@@ -1,10 +1,9 @@
 import type { SymbolMeta } from '@hey-api/codegen-core';
-import type ts from 'typescript';
+import type { SchemaWithType } from '@hey-api/shared';
+import { toCase } from '@hey-api/shared';
 
-import type { SchemaWithType } from '~/plugins';
-import { tsc } from '~/tsc';
-import { stringCase } from '~/utils/stringCase';
-
+import type { TypeTsDsl } from '../../../../../ts-dsl';
+import { $ } from '../../../../../ts-dsl';
 import type { IrSchemaToAstOptions } from '../../shared/types';
 
 export const stringToAst = ({
@@ -12,31 +11,20 @@ export const stringToAst = ({
   schema,
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'string'>;
-}): ts.TypeNode => {
+}): TypeTsDsl => {
   if (schema.const !== undefined) {
-    return tsc.literalTypeNode({
-      literal: tsc.stringLiteral({ text: schema.const as string }),
-    });
+    return $.type.literal(schema.const as string);
   }
 
   if (schema.format) {
     if (schema.format === 'binary') {
-      return tsc.typeUnionNode({
-        types: [
-          tsc.typeReferenceNode({
-            typeName: 'Blob',
-          }),
-          tsc.typeReferenceNode({
-            typeName: 'File',
-          }),
-        ],
-      });
+      return $.type.or($.type('Blob'), $.type('File'));
     }
 
     if (schema.format === 'date-time' || schema.format === 'date') {
       // TODO: parser - add ability to skip type transformers
       if (plugin.getPlugin('@hey-api/transformers')?.config.dates) {
-        return tsc.typeReferenceNode({ typeName: 'Date' });
+        return $.type('Date');
       }
     }
 
@@ -60,64 +48,31 @@ export const stringToAst = ({
         };
 
         if (!plugin.getSymbol(queryTypeId)) {
-          const symbolTypeId = plugin.registerSymbol({
-            exported: true,
-            kind: 'type',
+          const symbolTypeId = plugin.symbol('TypeID', {
             meta: queryTypeId,
-            name: 'TypeID',
           });
-          const nodeTypeId = tsc.typeAliasDeclaration({
-            exportType: symbolTypeId.exported,
-            name: symbolTypeId.placeholder,
-            type: tsc.templateLiteralType({
-              value: [
-                tsc.typeReferenceNode({ typeName: 'T' }),
-                '_',
-                tsc.keywordTypeNode({ keyword: 'string' }),
-              ],
-            }),
-            typeParameters: [
-              tsc.typeParameterDeclaration({
-                constraint: tsc.keywordTypeNode({
-                  keyword: 'string',
-                }),
-                name: 'T',
-              }),
-            ],
-          });
-          plugin.setSymbolValue(symbolTypeId, nodeTypeId);
+          const nodeTypeId = $.type
+            .alias(symbolTypeId)
+            .export()
+            .generic('T', (g) => g.extends('string'))
+            .type($.type.template().add($.type('T')).add('_').add($.type('string')));
+          plugin.node(nodeTypeId);
         }
 
         const symbolTypeId = plugin.referenceSymbol(queryTypeId);
-        const symbolTypeName = plugin.registerSymbol({
-          exported: true,
-          kind: 'type',
+        const symbolTypeName = plugin.symbol(toCase(`${type}_id`, plugin.config.case), {
           meta: query,
-          name: stringCase({
-            case: plugin.config.case,
-            value: `${type}_id`,
-          }),
         });
-        const node = tsc.typeAliasDeclaration({
-          exportType: symbolTypeName.exported,
-          name: symbolTypeName.placeholder,
-          type: tsc.typeReferenceNode({
-            typeArguments: [
-              tsc.literalTypeNode({
-                literal: tsc.stringLiteral({ text: type }),
-              }),
-            ],
-            typeName: symbolTypeId.placeholder,
-          }),
-        });
-        plugin.setSymbolValue(symbolTypeName, node);
+        const node = $.type
+          .alias(symbolTypeName)
+          .export()
+          .type($.type(symbolTypeId).generic($.type.literal(type)));
+        plugin.node(node);
       }
       const symbol = plugin.referenceSymbol(query);
-      return tsc.typeReferenceNode({ typeName: symbol.placeholder });
+      return $.type(symbol);
     }
   }
 
-  return tsc.keywordTypeNode({
-    keyword: 'string',
-  });
+  return $.type('string');
 };

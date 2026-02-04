@@ -81,7 +81,7 @@ export type SimpleStringWithPattern = string;
 /**
  * This is a simple enum with strings
  */
-export type EnumWithStrings = 'Success' | 'Warning' | 'Error' | "'Single Quote'" | '"Double Quotes"' | 'Non-ascii: øæåôöØÆÅÔÖ字符串';
+export type EnumWithStrings = 'Success' | 'Warning' | 'Error' | '\'Single Quote\'' | '"Double Quotes"' | 'Non-ascii: øæåôöØÆÅÔÖ字符串';
 
 /**
  * This is a simple enum with numbers
@@ -174,7 +174,7 @@ export type DictionaryWithProperties = {
 /**
  * This is a type-only model that defines Date as a string
  */
-export type _Date = string;
+export type Date = string;
 
 /**
  * This is a model with one number property

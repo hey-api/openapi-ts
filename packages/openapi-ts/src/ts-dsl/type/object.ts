@@ -1,55 +1,66 @@
-/* eslint-disable @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging */
+import type { AnalysisContext, NodeScope } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
-import type { WithString } from '../base';
-import { TypeTsDsl } from '../base';
-import { mixin } from '../mixins/apply';
-import { OptionalMixin } from '../mixins/optional';
+import { TsDsl } from '../base';
+import { TypeIdxSigTsDsl } from './idx-sig';
+import { TypePropTsDsl } from './prop';
 
-export class TypeObjectTsDsl extends TypeTsDsl<ts.TypeNode> {
-  private props: Array<TypePropTsDsl> = [];
+const Mixed = TsDsl<ts.TypeNode>;
 
-  /** Adds a property signature (returns property builder). */
-  prop(name: string, fn: (p: TypePropTsDsl) => void): this {
-    const propTsDsl = new TypePropTsDsl(name, fn);
-    this.props.push(propTsDsl);
-    return this;
-  }
+export class TypeObjectTsDsl extends Mixed {
+  readonly '~dsl' = 'TypeObjectTsDsl';
+  override scope: NodeScope = 'type';
 
-  $render(): ts.TypeNode {
-    return ts.factory.createTypeLiteralNode(this.$node(this.props));
-  }
-}
+  protected _props = new Map<string, TypePropTsDsl | TypeIdxSigTsDsl>();
 
-class TypePropTsDsl extends TypeTsDsl<ts.TypeElement> {
-  private name: string;
-  private typeInput?: WithString<ts.TypeNode>;
-
-  constructor(name: string, fn: (p: TypePropTsDsl) => void) {
-    super();
-    this.name = name;
-    fn(this);
-  }
-
-  /** Sets the property type. */
-  type(type: WithString<ts.TypeNode>): this {
-    this.typeInput = type;
-    return this;
-  }
-
-  /** Builds and returns the property signature. */
-  $render(): ts.TypeElement {
-    if (!this.typeInput) {
-      throw new Error(`Type not specified for property '${this.name}'`);
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    for (const prop of this._props.values()) {
+      ctx.analyze(prop);
     }
-    return ts.factory.createPropertySignature(
-      undefined,
-      this.$expr(this.name),
-      this.questionToken,
-      this.$type(this.typeInput),
-    );
+  }
+
+  /** Returns true if object has at least one property or index signature. */
+  hasProps(): boolean {
+    return this._props.size > 0;
+  }
+
+  /** Adds an index signature to the object type, or removes if fn is null. */
+  idxSig(name: string, fn: ((i: TypeIdxSigTsDsl) => void) | null): this {
+    const key = `idxSig:${name}`;
+    if (fn === null) {
+      this._props.delete(key);
+    } else {
+      this._props.set(key, new TypeIdxSigTsDsl(name, fn));
+    }
+    return this;
+  }
+
+  /** Returns true if object has no properties or index signatures. */
+  get isEmpty(): boolean {
+    return this._props.size === 0;
+  }
+
+  /** Adds a property signature, or removes if fn is null. */
+  prop(name: string, fn: ((p: TypePropTsDsl) => void) | null): this {
+    const key = `prop:${name}`;
+    if (fn === null) {
+      this._props.delete(key);
+    } else {
+      this._props.set(key, new TypePropTsDsl(name, fn));
+    }
+    return this;
+  }
+
+  /** Adds multiple properties/index signatures. */
+  props(...members: ReadonlyArray<TypePropTsDsl | TypeIdxSigTsDsl>): this {
+    for (const member of members) {
+      this._props.set(`${member.kind}:${member.propName}`, member);
+    }
+    return this;
+  }
+
+  override toAst() {
+    return ts.factory.createTypeLiteralNode(this.$node([...this._props.values()]));
   }
 }
-
-interface TypePropTsDsl extends OptionalMixin {}
-mixin(TypePropTsDsl, OptionalMixin);

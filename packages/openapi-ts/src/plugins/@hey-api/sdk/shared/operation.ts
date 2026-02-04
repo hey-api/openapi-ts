@@ -1,153 +1,18 @@
 import type { SymbolMeta } from '@hey-api/codegen-core';
-import type ts from 'typescript';
+import { refs } from '@hey-api/codegen-core';
+import type { IR } from '@hey-api/shared';
+import { statusCodeToGroup } from '@hey-api/shared';
 
-import type { Context } from '~/ir/context';
-import { statusCodeToGroup } from '~/ir/operation';
-import type { IR } from '~/ir/types';
-import { sanitizeNamespaceIdentifier } from '~/openApi/common/parser/sanitize';
-import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
-import { toRefs } from '~/plugins/shared/utils/refs';
-import type { Property } from '~/tsc';
-import { tsc } from '~/tsc';
-import type { FunctionParameter, ObjectValue } from '~/tsc/types';
-import { reservedJavaScriptKeywordsRegExp } from '~/utils/regexp';
-import { stringCase } from '~/utils/stringCase';
-import { transformClassName } from '~/utils/transform';
-
+import { getTypedConfig } from '../../../../config/utils';
+import { getClientPlugin } from '../../../../plugins/@hey-api/client-core/utils';
+import { $ } from '../../../../ts-dsl';
 import type { Field, Fields } from '../../client-core/bundle/params';
 import type { HeyApiSdkPlugin } from '../types';
+import { isInstance } from '../v1/node';
 import { operationAuth } from './auth';
 import { nuxtTypeComposable, nuxtTypeDefault } from './constants';
 import { getSignatureParameters } from './signature';
 import { createRequestValidator, createResponseValidator } from './validator';
-
-interface ClassNameEntry {
-  /**
-   * Name of the class where this function appears.
-   */
-  className: string;
-  /**
-   * Name of the function within the class.
-   */
-  methodName: string;
-  /**
-   * JSONPath-like array to class location.
-   */
-  path: ReadonlyArray<string>;
-}
-
-const operationClassName = ({
-  context,
-  value,
-}: {
-  context: Context;
-  value: string;
-}) => {
-  const name = stringCase({
-    case: 'PascalCase',
-    value: sanitizeNamespaceIdentifier(value),
-  });
-  return transformClassName({
-    config: context.config,
-    name,
-  });
-};
-
-const getOperationMethodName = ({
-  operation,
-  plugin,
-}: {
-  operation: IR.OperationObject;
-  plugin: {
-    config: Pick<
-      HeyApiSdkPlugin['Instance']['config'],
-      'asClass' | 'methodNameBuilder'
-    >;
-  };
-}) => {
-  if (plugin.config.methodNameBuilder) {
-    return plugin.config.methodNameBuilder(operation);
-  }
-
-  const handleIllegal = !plugin.config.asClass;
-  if (handleIllegal && operation.id.match(reservedJavaScriptKeywordsRegExp)) {
-    return `${operation.id}_`;
-  }
-
-  return operation.id;
-};
-
-/**
- * Returns a list of classes where this operation appears in the generated SDK.
- */
-export const operationClasses = ({
-  context,
-  operation,
-  plugin,
-}: {
-  context: Context;
-  operation: IR.OperationObject;
-  plugin: {
-    config: Pick<
-      HeyApiSdkPlugin['Instance']['config'],
-      'asClass' | 'classStructure' | 'instance'
-    >;
-  };
-}): Map<string, ClassNameEntry> => {
-  const classNames = new Map<string, ClassNameEntry>();
-
-  let className: string | undefined;
-  let methodName: string | undefined;
-  let classCandidates: Array<string> = [];
-
-  if (plugin.config.classStructure === 'auto' && operation.operationId) {
-    classCandidates = operation.operationId.split(/[./]/).filter(Boolean);
-    if (classCandidates.length > 1) {
-      const methodCandidate = classCandidates.pop()!;
-      methodName = stringCase({
-        case: 'camelCase',
-        value: sanitizeNamespaceIdentifier(methodCandidate),
-      });
-      className = classCandidates.pop()!;
-    }
-  }
-
-  const rootClasses = plugin.config.instance
-    ? [plugin.config.instance as string]
-    : (operation.tags ?? ['default']);
-
-  for (const rootClass of rootClasses) {
-    const finalClassName = operationClassName({
-      context,
-      value: className || rootClass,
-    });
-
-    // Default path
-    let path = [rootClass];
-    if (className) {
-      // If root class is already within classCandidates or the same as className
-      // do not add it again as this will cause a recursion issue.
-      if (classCandidates.includes(rootClass) || rootClass === className) {
-        path = [...classCandidates, className];
-      } else {
-        path = [rootClass, ...classCandidates, className];
-      }
-    }
-
-    classNames.set(rootClass, {
-      className: finalClassName,
-      methodName: methodName || getOperationMethodName({ operation, plugin }),
-      path: path.map((value) =>
-        operationClassName({
-          context,
-          value,
-        }),
-      ),
-    });
-  }
-
-  return classNames;
-};
 
 /** TODO: needs complete refactor */
 export const operationOptionsType = ({
@@ -160,8 +25,8 @@ export const operationOptionsType = ({
   operation: IR.OperationObject;
   plugin: HeyApiSdkPlugin['Instance'];
   throwOnError?: string;
-}) => {
-  const client = getClientPlugin(plugin.context.config);
+}): ReturnType<typeof $.type> => {
+  const client = getClientPlugin(getTypedConfig(plugin));
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
 
   const symbolDataType = isDataAllowed
@@ -187,33 +52,31 @@ export const operationOptionsType = ({
       resourceId: operation.id,
       role: 'response',
     });
-    const dataType = isDataAllowed
-      ? symbolDataType?.placeholder || 'unknown'
-      : 'never';
-    const responseType = symbolResponseType?.placeholder || 'unknown';
-    return `${symbolOptions.placeholder}<${nuxtTypeComposable}, ${dataType}, ${responseType}, ${nuxtTypeDefault}>`;
+    return $.type(symbolOptions)
+      .generic(nuxtTypeComposable)
+      .generic(isDataAllowed ? (symbolDataType ?? 'unknown') : 'never')
+      .generic(symbolResponseType ?? 'unknown')
+      .generic(nuxtTypeDefault);
   }
 
   // TODO: refactor this to be more generic, works for now
   if (throwOnError) {
-    const dataType = isDataAllowed
-      ? symbolDataType?.placeholder || 'unknown'
-      : 'never';
-    return `${symbolOptions.placeholder}<${dataType}, ${throwOnError}>`;
+    return $.type(symbolOptions)
+      .generic(isDataAllowed ? (symbolDataType ?? 'unknown') : 'never')
+      .generic(throwOnError);
   }
-  const dataType = isDataAllowed ? symbolDataType?.placeholder : 'never';
-  return dataType
-    ? `${symbolOptions.placeholder}<${dataType}>`
-    : symbolOptions.placeholder;
+  return $.type(symbolOptions).$if(!isDataAllowed || symbolDataType, (t) =>
+    t.generic(isDataAllowed ? symbolDataType! : 'never'),
+  );
 };
 
 type OperationParameters = {
   argNames: Array<string>;
   fields: Array<Field | Fields>;
-  parameters: Array<FunctionParameter>;
+  parameters: Array<ReturnType<typeof $.param>>;
 };
 
-export const operationParameters = ({
+export function operationParameters({
   isRequiredOptions,
   operation,
   plugin,
@@ -221,7 +84,7 @@ export const operationParameters = ({
   isRequiredOptions: boolean;
   operation: IR.OperationObject;
   plugin: HeyApiSdkPlugin['Instance'];
-}): OperationParameters => {
+}): OperationParameters {
   const result: OperationParameters = {
     argNames: [],
     fields: [],
@@ -229,12 +92,12 @@ export const operationParameters = ({
   };
 
   const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
-  const client = getClientPlugin(plugin.context.config);
+  const client = getClientPlugin(getTypedConfig(plugin));
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
 
   if (plugin.config.paramsStructure === 'flat') {
     const signature = getSignatureParameters({ operation, plugin });
-    const flatParamsTypeProperties: Array<Property> = [];
+    const flatParams = $.type.object();
 
     if (signature) {
       let isParametersRequired = false;
@@ -244,17 +107,17 @@ export const operationParameters = ({
         if (parameter.isRequired) {
           isParametersRequired = true;
         }
-        flatParamsTypeProperties.push({
-          isRequired: parameter.isRequired,
-          name: parameter.name,
-          type: pluginTypeScript.api.schemaToType({
-            plugin: pluginTypeScript,
-            schema: parameter.schema,
-            state: toRefs({
-              path: [],
+        flatParams.prop(parameter.name, (p) =>
+          p.required(parameter.isRequired).type(
+            pluginTypeScript.api.schemaToType({
+              plugin: pluginTypeScript,
+              schema: parameter.schema,
+              state: refs({
+                path: [],
+              }),
             }),
-          }),
-        });
+          ),
+        );
       }
 
       result.argNames.push('parameters');
@@ -262,30 +125,27 @@ export const operationParameters = ({
         result.fields.push(field);
       }
 
-      result.parameters.push({
-        isRequired: isParametersRequired,
-        name: 'parameters',
-        type: tsc.typeInterfaceNode({
-          properties: flatParamsTypeProperties,
-          useLegacyResolution: false,
-        }),
-      });
+      result.parameters.push(
+        $.param('parameters', (p) => p.required(isParametersRequired).type(flatParams)),
+      );
     }
   }
 
-  result.parameters.push({
-    isRequired: isRequiredOptions,
-    name: 'options',
-    type: operationOptionsType({
-      isDataAllowed: plugin.config.paramsStructure === 'grouped',
-      operation,
-      plugin,
-      throwOnError: isNuxtClient ? undefined : 'ThrowOnError',
-    }),
-  });
+  result.parameters.push(
+    $.param('options', (p) =>
+      p.required(isRequiredOptions).type(
+        operationOptionsType({
+          isDataAllowed: plugin.config.paramsStructure === 'grouped',
+          operation,
+          plugin,
+          throwOnError: isNuxtClient ? undefined : 'ThrowOnError',
+        }),
+      ),
+    ),
+  );
 
   return result;
-};
+}
 
 /**
  * Infers `responseType` value from provided response content type. This is
@@ -298,14 +158,7 @@ export const operationParameters = ({
  */
 const getResponseType = (
   contentType: string | null | undefined,
-):
-  | 'arraybuffer'
-  | 'blob'
-  | 'document'
-  | 'json'
-  | 'stream'
-  | 'text'
-  | undefined => {
+): 'arraybuffer' | 'blob' | 'document' | 'json' | 'stream' | 'text' | undefined => {
   if (!contentType) {
     return;
   }
@@ -316,10 +169,7 @@ const getResponseType = (
     return;
   }
 
-  if (
-    cleanContent.startsWith('application/json') ||
-    cleanContent.endsWith('+json')
-  ) {
+  if (cleanContent.startsWith('application/json') || cleanContent.endsWith('+json')) {
     return 'json';
   }
 
@@ -329,9 +179,7 @@ const getResponseType = (
   // }
 
   if (
-    ['application/', 'audio/', 'image/', 'video/'].some((type) =>
-      cleanContent.startsWith(type),
-    )
+    ['application/', 'audio/', 'image/', 'video/'].some((type) => cleanContent.startsWith(type))
   ) {
     return 'blob';
   }
@@ -343,7 +191,7 @@ const getResponseType = (
   return;
 };
 
-export const operationStatements = ({
+export function operationStatements({
   isRequiredOptions,
   opParameters,
   operation,
@@ -353,8 +201,8 @@ export const operationStatements = ({
   opParameters: OperationParameters;
   operation: IR.OperationObject;
   plugin: HeyApiSdkPlugin['Instance'];
-}): Array<ts.Statement> => {
-  const client = getClientPlugin(plugin.context.config);
+}): Array<ReturnType<typeof $.return | typeof $.const>> {
+  const client = getClientPlugin(getTypedConfig(plugin));
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
 
   const symbolResponseType = plugin.querySymbol({
@@ -363,7 +211,6 @@ export const operationStatements = ({
     resourceId: operation.id,
     role: isNuxtClient ? 'response' : 'responses',
   });
-  const responseType = symbolResponseType?.placeholder || 'unknown';
 
   const symbolErrorType = plugin.querySymbol({
     category: 'type',
@@ -371,7 +218,6 @@ export const operationStatements = ({
     resourceId: operation.id,
     role: isNuxtClient ? 'error' : 'errors',
   });
-  const errorType = symbolErrorType?.placeholder || 'unknown';
 
   // TODO: transform parameters
   // const query = {
@@ -389,37 +235,41 @@ export const operationStatements = ({
   //   }
   // }
 
-  const requestOptions: Array<ObjectValue> = [];
+  const reqOptions = $.object();
 
   if (operation.body) {
+    // Check if body has binary format - if so, don't use JSON serializer
+    const isBinaryFormat = operation.body.schema?.format === 'binary';
+
     switch (operation.body.type) {
       case 'form-data': {
-        const symbol = plugin.referenceSymbol({
-          category: 'external',
-          resource: 'client.formDataBodySerializer',
-        });
-        requestOptions.push({ spread: symbol.placeholder });
+        const symbol = plugin.external('client.formDataBodySerializer');
+        reqOptions.spread(symbol);
         break;
       }
       case 'json':
         // jsonBodySerializer is the default, no need to specify
+        // unless the schema has binary format
+        if (isBinaryFormat) {
+          reqOptions.prop('bodySerializer', $.literal(null));
+        }
         break;
       case 'text':
       case 'octet-stream':
         // ensure we don't use any serializer by default
-        requestOptions.push({
-          key: 'bodySerializer',
-          value: null,
-        });
+        reqOptions.prop('bodySerializer', $.literal(null));
         break;
       case 'url-search-params': {
-        const symbol = plugin.referenceSymbol({
-          category: 'external',
-          resource: 'client.urlSearchParamsBodySerializer',
-        });
-        requestOptions.push({ spread: symbol.placeholder });
+        const symbol = plugin.external('client.urlSearchParamsBodySerializer');
+        reqOptions.spread(symbol);
         break;
       }
+      default:
+        // For unrecognized media types with binary format, don't use JSON serializer
+        if (isBinaryFormat) {
+          reqOptions.prop('bodySerializer', $.literal(null));
+        }
+        break;
     }
   }
 
@@ -427,88 +277,56 @@ export const operationStatements = ({
   // content type. currently impossible because successes do not contain
   // header information
 
-  const parameterSerializers: Array<ObjectValue> = [];
+  const paramSerializers = $.object();
 
   for (const name in operation.parameters?.query) {
     const parameter = operation.parameters.query[name]!;
 
-    if (
-      parameter.schema.type === 'array' ||
-      parameter.schema.type === 'tuple'
-    ) {
+    if (parameter.schema.type === 'array' || parameter.schema.type === 'tuple') {
       if (parameter.style !== 'form' || !parameter.explode) {
         // override the default settings for array serialization
-        parameterSerializers.push({
-          key: parameter.name,
-          value: [
-            {
-              key: 'array',
-              value: [
-                {
-                  key: 'explode',
-                  value:
-                    parameter.explode !== true ? parameter.explode : undefined,
-                },
-                {
-                  key: 'style',
-                  value:
-                    parameter.style !== 'form' ? parameter.style : undefined,
-                },
-              ].filter(({ value }) => value !== undefined),
-            },
-          ],
-        });
+        paramSerializers.prop(
+          parameter.name,
+          $.object().prop(
+            'array',
+            $.object()
+              .$if(parameter.explode === false, (o) =>
+                o.prop('explode', $.literal(parameter.explode)),
+              )
+              .$if(parameter.style !== 'form', (o) => o.prop('style', $.literal(parameter.style))),
+          ),
+        );
       }
     } else if (parameter.schema.type === 'object') {
       if (parameter.style !== 'deepObject' || !parameter.explode) {
         // override the default settings for object serialization
-        parameterSerializers.push({
-          key: parameter.name,
-          value: [
-            {
-              key: 'object',
-              value: [
-                {
-                  key: 'explode',
-                  value:
-                    parameter.explode !== true ? parameter.explode : undefined,
-                },
-                {
-                  key: 'style',
-                  value:
-                    parameter.style !== 'deepObject'
-                      ? parameter.style
-                      : undefined,
-                },
-              ].filter(({ value }) => value !== undefined),
-            },
-          ],
-        });
+        paramSerializers.prop(
+          parameter.name,
+          $.object().prop(
+            'object',
+            $.object()
+              .$if(parameter.explode === false, (o) =>
+                o.prop('explode', $.literal(parameter.explode)),
+              )
+              .$if(parameter.style !== 'deepObject', (o) =>
+                o.prop('style', $.literal(parameter.style)),
+              ),
+          ),
+        );
       }
     }
   }
 
-  if (parameterSerializers.length) {
+  if (paramSerializers.hasProps()) {
     // TODO: if all parameters have the same serialization,
     // apply it globally to reduce output size
-    requestOptions.push({
-      key: 'querySerializer',
-      value: [
-        {
-          key: 'parameters',
-          value: parameterSerializers,
-        },
-      ],
-    });
+    reqOptions.prop('querySerializer', $.object().prop('parameters', paramSerializers));
   }
 
   const requestValidator = createRequestValidator({ operation, plugin });
   const responseValidator = createResponseValidator({ operation, plugin });
   if (requestValidator) {
-    requestOptions.push({
-      key: 'requestValidator',
-      value: requestValidator.$render(),
-    });
+    reqOptions.prop('requestValidator', requestValidator.arrow());
   }
 
   if (plugin.config.transformer) {
@@ -520,10 +338,7 @@ export const operationStatements = ({
     };
     if (plugin.isSymbolRegistered(query)) {
       const ref = plugin.referenceSymbol(query);
-      requestOptions.push({
-        key: 'responseTransformer',
-        value: ref.placeholder,
-      });
+      reqOptions.prop('responseTransformer', $(ref));
     }
   }
 
@@ -541,10 +356,7 @@ export const operationStatements = ({
       if (statusCodeToGroup({ statusCode }) === '2XX') {
         responseTypeValue = getResponseType(response.mediaType);
         if (responseTypeValue) {
-          requestOptions.push({
-            key: 'responseType',
-            value: responseTypeValue,
-          });
+          reqOptions.prop('responseType', $.literal(responseTypeValue));
         }
       }
     }
@@ -555,83 +367,54 @@ export const operationStatements = ({
   }
 
   if (responseValidator) {
-    requestOptions.push({
-      key: 'responseValidator',
-      value: responseValidator.$render(),
-    });
+    reqOptions.prop('responseValidator', responseValidator.arrow());
   }
 
   if (plugin.config.responseStyle === 'data') {
-    requestOptions.push({
-      key: 'responseStyle',
-      value: plugin.config.responseStyle,
-    });
+    reqOptions.prop('responseStyle', $.literal(plugin.config.responseStyle));
   }
 
   const auth = operationAuth({ context: plugin.context, operation, plugin });
   if (auth.length) {
-    requestOptions.push({
-      key: 'security',
-      value: tsc.arrayLiteralExpression({ elements: auth }),
-    });
+    reqOptions.prop('security', $.fromValue(auth));
   }
 
-  requestOptions.push({
-    key: 'url',
-    value: operation.path,
-  });
+  reqOptions.prop('url', $.literal(operation.path));
 
   // options must go last to allow overriding parameters above
-  requestOptions.push({ spread: 'options' });
+  reqOptions.spread('options');
 
-  const statements: Array<ts.Statement> = [];
+  const statements: Array<ReturnType<typeof $.return | typeof $.const>> = [];
   const hasParams = opParameters.argNames.length;
 
   if (hasParams) {
-    const args: Array<unknown> = [];
-    const config: Array<unknown> = [];
+    const args: Array<ReturnType<typeof $.expr>> = [];
+    const config: Array<ReturnType<typeof $.object>> = [];
     for (const argName of opParameters.argNames) {
-      args.push(tsc.identifier({ text: argName }));
+      args.push($(argName));
     }
     for (const field of opParameters.fields) {
-      const obj: Array<Record<string, unknown>> = [];
+      const shape = $.object();
       if ('in' in field) {
-        obj.push({
-          key: 'in',
-          value: field.in,
-        });
+        shape.prop('in', $.literal(field.in));
+      }
+      if ('key' in field) {
         if (field.key) {
-          obj.push({
-            key: 'key',
-            value: field.key,
-          });
+          shape.prop('key', $.literal(field.key));
         }
         if (field.map) {
-          obj.push({
-            key: 'map',
-            value: field.map,
-          });
+          shape.prop('map', $.literal(field.map));
         }
       }
-      config.push(tsc.objectExpression({ obj }));
+      config.push(shape);
     }
-    const symbol = plugin.referenceSymbol({
-      category: 'external',
-      resource: 'client.buildClientParams',
-    });
+    const symbol = plugin.external('client.buildClientParams');
     statements.push(
-      tsc.constVariable({
-        expression: tsc.callExpression({
-          functionName: symbol.placeholder,
-          parameters: [
-            tsc.arrayLiteralExpression({ elements: args }),
-            tsc.arrayLiteralExpression({ elements: config }),
-          ],
-        }),
-        name: 'params',
-      }),
+      $.const('params').assign(
+        $(symbol).call($.array(...args), $.array($.object().prop('args', $.array(...config)))),
+      ),
     );
-    requestOptions.push({ spread: 'params' });
+    reqOptions.spread('params');
   }
 
   if (operation.body) {
@@ -639,35 +422,18 @@ export const operationStatements = ({
     const hasRequiredContentType = Boolean(parameterContentType?.required);
     // spreading required Content-Type on generated header would throw a TypeScript error
     if (!hasRequiredContentType) {
-      const headersValue: Array<unknown> = [
-        {
-          key: parameterContentType?.name ?? 'Content-Type',
-          // form-data does not need Content-Type header, browser will set it automatically
-          value:
-            operation.body.type === 'form-data'
-              ? null
-              : operation.body.mediaType,
-        },
-        {
-          spread: tsc.propertyAccessExpression({
-            expression: tsc.identifier({ text: 'options' }),
-            isOptional: !isRequiredOptions,
-            name: 'headers',
-          }),
-        },
-      ];
+      const headers = $.object()
+        .pretty()
+        // form-data does not need Content-Type header, browser will set it automatically
+        .prop(
+          parameterContentType?.name ?? 'Content-Type',
+          $.literal(operation.body.type === 'form-data' ? null : operation.body.mediaType),
+        )
+        .spread($('options').attr('headers').required(isRequiredOptions));
       if (hasParams) {
-        headersValue.push({
-          spread: tsc.propertyAccessExpression({
-            expression: tsc.identifier({ text: 'params' }),
-            name: 'headers',
-          }),
-        });
+        headers.spread($('params').attr('headers'));
       }
-      requestOptions.push({
-        key: 'headers',
-        value: headersValue,
-      });
+      reqOptions.prop('headers', headers);
     }
   }
 
@@ -677,72 +443,42 @@ export const operationStatements = ({
       })
     : undefined;
 
-  const optionsClient = tsc.propertyAccessExpression({
-    expression: tsc.identifier({ text: 'options' }),
-    isOptional: !isRequiredOptions,
-    name: 'client',
-  });
-
-  let clientExpression: ts.Expression;
-  if (plugin.config.instance) {
-    clientExpression = tsc.binaryExpression({
-      left: optionsClient,
-      operator: '??',
-      right: tsc.propertyAccessExpression({
-        expression: tsc.this(),
-        name: 'client',
-      }),
-    });
+  let clientExpression: ReturnType<typeof $.attr | typeof $.binary>;
+  const optionsClient = $('options').attr('client').required(isRequiredOptions);
+  if (isInstance(plugin)) {
+    clientExpression = optionsClient.coalesce($('this').attr('client'));
   } else if (symbolClient) {
-    clientExpression = tsc.binaryExpression({
-      left: optionsClient,
-      operator: '??',
-      right: symbolClient.placeholder,
-    });
+    clientExpression = optionsClient.coalesce(symbolClient);
   } else {
     clientExpression = optionsClient;
   }
 
-  const types: Array<string | ts.StringLiteral> = [];
-  if (isNuxtClient) {
-    types.push(
-      nuxtTypeComposable,
-      `${responseType} | ${nuxtTypeDefault}`,
-      errorType,
-      nuxtTypeDefault,
-    );
-  } else {
-    types.push(responseType, errorType, 'ThrowOnError');
-  }
-
-  if (plugin.config.responseStyle === 'data') {
-    types.push(tsc.stringLiteral({ text: plugin.config.responseStyle }));
-  }
-
-  let functionName = hasServerSentEvents
-    ? tsc.propertyAccessExpression({
-        expression: clientExpression,
-        name: tsc.identifier({ text: 'sse' }),
-      })
-    : clientExpression;
-
-  functionName = tsc.propertyAccessExpression({
-    expression: functionName,
-    name: tsc.identifier({ text: operation.method }),
-  });
+  let functionName = hasServerSentEvents ? clientExpression.attr('sse') : clientExpression;
+  functionName = functionName.attr(operation.method);
 
   statements.push(
-    tsc.returnFunctionCall({
-      args: [
-        tsc.objectExpression({
-          identifiers: ['responseTransformer'],
-          obj: requestOptions,
-        }),
-      ],
-      name: functionName,
-      types,
-    }),
+    $.return(
+      functionName
+        .call(reqOptions)
+        .$if(
+          isNuxtClient,
+          (f) =>
+            f
+              .generic(nuxtTypeComposable)
+              .generic($.type.or(symbolResponseType ?? 'unknown', nuxtTypeDefault))
+              .generic(symbolErrorType ?? 'unknown')
+              .generic(nuxtTypeDefault),
+          (f) =>
+            f
+              .generic(symbolResponseType ?? 'unknown')
+              .generic(symbolErrorType ?? 'unknown')
+              .generic('ThrowOnError'),
+        )
+        .$if(plugin.config.responseStyle === 'data', (f) =>
+          f.generic($.type.literal(plugin.config.responseStyle)),
+        ),
+    ),
   );
 
   return statements;
-};
+}

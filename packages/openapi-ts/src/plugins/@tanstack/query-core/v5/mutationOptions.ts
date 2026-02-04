@@ -1,9 +1,9 @@
-import type { IR } from '~/ir/types';
-import { buildName } from '~/openApi/shared/utils/name';
-import { createOperationComment } from '~/plugins/shared/utils/operation';
-import type { TsDsl } from '~/ts-dsl';
-import { $ } from '~/ts-dsl';
+import type { IR } from '@hey-api/shared';
+import { applyNaming } from '@hey-api/shared';
 
+import { createOperationComment } from '../../../../plugins/shared/utils/operation';
+import type { TsDsl } from '../../../../ts-dsl';
+import { $ } from '../../../../ts-dsl';
 import { handleMeta } from '../shared/meta';
 import { useTypeData, useTypeError, useTypeResponse } from '../shared/useType';
 import type { PluginInstance } from '../types';
@@ -11,62 +11,59 @@ import type { PluginInstance } from '../types';
 export const createMutationOptions = ({
   operation,
   plugin,
-  queryFn,
 }: {
   operation: IR.OperationObject;
   plugin: PluginInstance;
-  queryFn: string;
 }): void => {
-  const symbolMutationOptionsType = plugin.referenceSymbol({
-    category: 'external',
-    resource: `${plugin.name}.MutationOptions`,
-  });
+  const symbolMutationOptionsType = plugin.external(`${plugin.name}.MutationOptions`);
 
   const typeData = useTypeData({ operation, plugin });
-  const typeError = useTypeError({ operation, plugin });
-  const typeResponse = useTypeResponse({ operation, plugin });
-  // TODO: better types syntax
-  const mutationType = `${symbolMutationOptionsType.placeholder}<${typeResponse}, ${typeError}, ${typeData}>`;
+  const mutationType = $.type(symbolMutationOptionsType)
+    .generic(useTypeResponse({ operation, plugin }))
+    .generic(useTypeError({ operation, plugin }))
+    .generic(typeData);
 
   const fnOptions = 'fnOptions';
 
-  const awaitSdkFn = $(queryFn)
-    .call(
-      $.object()
-        .spread('options')
-        .spread(fnOptions)
-        .prop('throwOnError', $.literal(true)),
-    )
-    .await();
+  const awaitSdkFn = $.lazy((ctx) =>
+    ctx
+      .access(
+        plugin.referenceSymbol({
+          category: 'sdk',
+          resource: 'operation',
+          resourceId: operation.id,
+        }),
+      )
+      .call($.object().spread('options').spread(fnOptions).prop('throwOnError', $.literal(true)))
+      .await(),
+  );
 
   const statements: Array<TsDsl<any>> = [];
   if (plugin.getPluginOrThrow('@hey-api/sdk').config.responseStyle === 'data') {
     statements.push($.return(awaitSdkFn));
   } else {
-    statements.push(
-      $.const().object('data').assign(awaitSdkFn),
-      $.return('data'),
-    );
+    statements.push($.const().object('data').assign(awaitSdkFn), $.return('data'));
   }
 
-  const meta = handleMeta(plugin, operation, 'mutationOptions');
   const mutationOptionsFn = 'mutationOptions';
-  const symbolMutationOptions = plugin.registerSymbol({
-    exported: true,
-    name: buildName({
-      config: plugin.config.mutationOptions,
-      name: operation.id,
-    }),
-  });
-  const statement = $.const(symbolMutationOptions.placeholder)
-    .export(symbolMutationOptions.exported)
-    .$if(
-      plugin.config.comments && createOperationComment({ operation }),
-      (c, v) => c.doc(v as ReadonlyArray<string>),
-    )
+  const symbolMutationOptions = plugin.symbol(
+    applyNaming(operation.id, plugin.config.mutationOptions),
+    {
+      meta: {
+        category: 'hook',
+        resource: 'operation',
+        resourceId: operation.id,
+        role: 'mutationOptions',
+        tool: plugin.name,
+      },
+    },
+  );
+  const statement = $.const(symbolMutationOptions)
+    .export()
+    .$if(plugin.config.comments && createOperationComment(operation), (c, v) => c.doc(v))
     .assign(
       $.func()
-        .param('options', (p) => p.optional().type(`Partial<${typeData}>`))
+        .param('options', (p) => p.optional().type($.type('Partial').generic(typeData)))
         .returns(mutationType)
         .do(
           $.const(mutationOptionsFn)
@@ -81,10 +78,10 @@ export const createMutationOptions = ({
                     .param(fnOptions)
                     .do(...statements),
                 )
-                .$if(meta, (c, v) => c.prop('meta', v)),
+                .$if(handleMeta(plugin, operation, 'mutationOptions'), (c, v) => c.prop('meta', v)),
             ),
           $(mutationOptionsFn).return(),
         ),
     );
-  plugin.setSymbolValue(symbolMutationOptions, statement);
+  plugin.node(statement);
 };

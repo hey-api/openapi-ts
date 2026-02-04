@@ -1,7 +1,7 @@
 {
   "name": "@example/openapi-ts-next",
-  "private": true,
   "version": "0.1.13",
+  "private": true,
   "scripts": {
     "build": "next build",
     "dev": "next dev",

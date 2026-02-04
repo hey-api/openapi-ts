@@ -1,6 +1,6 @@
-import type { IR } from '~/ir/types';
-import type { TsDsl } from '~/ts-dsl';
+import type { IR } from '@hey-api/shared';
 
+import type { $ } from '../../../../ts-dsl';
 import type { HeyApiSdkPlugin } from '../types';
 
 interface ValidatorProps {
@@ -11,7 +11,7 @@ interface ValidatorProps {
 export const createRequestValidator = ({
   operation,
   plugin,
-}: ValidatorProps): TsDsl | undefined => {
+}: ValidatorProps): ReturnType<typeof $.func> | undefined => {
   if (!plugin.config.validator.request) return;
 
   const validator = plugin.getPluginOrThrow(plugin.config.validator.request);
@@ -27,7 +27,7 @@ export const createRequestValidator = ({
 export const createResponseValidator = ({
   operation,
   plugin,
-}: ValidatorProps): TsDsl | undefined => {
+}: ValidatorProps): ReturnType<typeof $.func> | undefined => {
   if (!plugin.config.validator.response) return;
 
   const validator = plugin.getPluginOrThrow(plugin.config.validator.response);

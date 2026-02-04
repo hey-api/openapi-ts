@@ -4,46 +4,45 @@ export type ClientOptions = {
     baseUrl: `${string}://${string}` | (string & {});
 };
 
-export type Event = ({
-    type: 'installation.updated';
-} & EventInstallationUpdated) | ({
-    type: 'lsp.client.diagnostics';
-} & EventLspClientDiagnostics) | ({
-    type: 'message.updated';
-} & EventMessageUpdated) | ({
-    type: 'message.removed';
-} & EventMessageRemoved) | ({
-    type: 'message.part.updated';
-} & EventMessagePartUpdated) | ({
-    type: 'message.part.removed';
-} & EventMessagePartRemoved) | ({
-    type: 'storage.write';
-} & EventStorageWrite) | ({
-    type: 'permission.updated';
-} & EventPermissionUpdated) | ({
-    type: 'permission.replied';
-} & EventPermissionReplied) | ({
-    type: 'file.edited';
-} & EventFileEdited) | ({
-    type: 'session.updated';
-} & EventSessionUpdated) | ({
-    type: 'session.deleted';
-} & EventSessionDeleted) | ({
-    type: 'session.idle';
-} & EventSessionIdle) | ({
-    type: 'session.error';
-} & EventSessionError) | ({
-    type: 'server.connected';
-} & EventServerConnected) | ({
-    type: 'file.watcher.updated';
-} & EventFileWatcherUpdated) | ({
-    type: 'ide.installed';
-} & EventIdeInstalled);
-
 export type EventInstallationUpdated = {
     type: 'installation.updated';
     properties: {
         version: string;
+    };
+};
+
+export type EventInstallationUpdateAvailable = {
+    type: 'installation.update-available';
+    properties: {
+        version: string;
+    };
+};
+
+export type Project = {
+    id: string;
+    worktree: string;
+    vcs?: 'git';
+    name?: string;
+    icon?: {
+        url?: string;
+        color?: string;
+    };
+    time: {
+        created: number;
+        updated: number;
+        initialized?: number;
+    };
+};
+
+export type EventProjectUpdated = {
+    type: 'project.updated';
+    properties: Project;
+};
+
+export type EventServerInstanceDisposed = {
+    type: 'server.instance.disposed';
+    properties: {
+        directory: string;
     };
 };
 
@@ -55,18 +54,20 @@ export type EventLspClientDiagnostics = {
     };
 };
 
-export type EventMessageUpdated = {
-    type: 'message.updated';
+export type EventLspUpdated = {
+    type: 'lsp.updated';
     properties: {
-        info: Message;
+        [key: string]: unknown;
     };
 };
 
-export type Message = ({
-    role: 'user';
-} & UserMessage) | ({
-    role: 'assistant';
-} & AssistantMessage);
+export type FileDiff = {
+    file: string;
+    before: string;
+    after: string;
+    additions: number;
+    deletions: number;
+};
 
 export type UserMessage = {
     id: string;
@@ -75,44 +76,21 @@ export type UserMessage = {
     time: {
         created: number;
     };
-};
-
-export type AssistantMessage = {
-    id: string;
-    sessionID: string;
-    role: 'assistant';
-    time: {
-        created: number;
-        completed?: number;
+    summary?: {
+        title?: string;
+        body?: string;
+        diffs: Array<FileDiff>;
     };
-    error?: ({
-        name: 'ProviderAuthError';
-    } & ProviderAuthError) | ({
-        name: 'UnknownError';
-    } & UnknownError) | ({
-        name: 'MessageOutputLengthError';
-    } & MessageOutputLengthError) | ({
-        name: 'MessageAbortedError';
-    } & MessageAbortedError);
-    system: Array<string>;
-    modelID: string;
-    providerID: string;
-    mode: string;
-    path: {
-        cwd: string;
-        root: string;
+    agent: string;
+    model: {
+        providerID: string;
+        modelID: string;
     };
-    summary?: boolean;
-    cost: number;
-    tokens: {
-        input: number;
-        output: number;
-        reasoning: number;
-        cache: {
-            read: number;
-            write: number;
-        };
+    system?: string;
+    tools?: {
+        [key: string]: boolean;
     };
+    variant?: string;
 };
 
 export type ProviderAuthError = {
@@ -140,7 +118,64 @@ export type MessageOutputLengthError = {
 export type MessageAbortedError = {
     name: 'MessageAbortedError';
     data: {
-        [key: string]: unknown;
+        message: string;
+    };
+};
+
+export type ApiError = {
+    name: 'APIError';
+    data: {
+        message: string;
+        statusCode?: number;
+        isRetryable: boolean;
+        responseHeaders?: {
+            [key: string]: string;
+        };
+        responseBody?: string;
+        metadata?: {
+            [key: string]: string;
+        };
+    };
+};
+
+export type AssistantMessage = {
+    id: string;
+    sessionID: string;
+    role: 'assistant';
+    time: {
+        created: number;
+        completed?: number;
+    };
+    error?: ProviderAuthError | UnknownError | MessageOutputLengthError | MessageAbortedError | ApiError;
+    parentID: string;
+    modelID: string;
+    providerID: string;
+    mode: string;
+    agent: string;
+    path: {
+        cwd: string;
+        root: string;
+    };
+    summary?: boolean;
+    cost: number;
+    tokens: {
+        input: number;
+        output: number;
+        reasoning: number;
+        cache: {
+            read: number;
+            write: number;
+        };
+    };
+    finish?: string;
+};
+
+export type Message = UserMessage | AssistantMessage;
+
+export type EventMessageUpdated = {
+    type: 'message.updated';
+    properties: {
+        info: Message;
     };
 };
 
@@ -152,33 +187,6 @@ export type EventMessageRemoved = {
     };
 };
 
-export type EventMessagePartUpdated = {
-    type: 'message.part.updated';
-    properties: {
-        part: Part;
-    };
-};
-
-export type Part = ({
-    type: 'text';
-} & TextPart) | ({
-    type: 'reasoning';
-} & ReasoningPart) | ({
-    type: 'file';
-} & FilePart) | ({
-    type: 'tool';
-} & ToolPart) | ({
-    type: 'step-start';
-} & StepStartPart) | ({
-    type: 'step-finish';
-} & StepFinishPart) | ({
-    type: 'snapshot';
-} & SnapshotPart) | ({
-    type: 'patch';
-} & PatchPart) | ({
-    type: 'agent';
-} & AgentPart);
-
 export type TextPart = {
     id: string;
     sessionID: string;
@@ -186,9 +194,13 @@ export type TextPart = {
     type: 'text';
     text: string;
     synthetic?: boolean;
+    ignored?: boolean;
     time?: {
         start: number;
         end?: number;
+    };
+    metadata?: {
+        [key: string]: unknown;
     };
 };
 
@@ -207,42 +219,16 @@ export type ReasoningPart = {
     };
 };
 
-export type FilePart = {
-    id: string;
-    sessionID: string;
-    messageID: string;
-    type: 'file';
-    mime: string;
-    filename?: string;
-    url: string;
-    source?: FilePartSource;
-};
-
-export type FilePartSource = ({
-    type: 'file';
-} & FileSource) | ({
-    type: 'symbol';
-} & SymbolSource);
-
-export type FileSource = {
-    text: FilePartSourceText;
-    type: 'file';
-    path: string;
-};
-
 export type FilePartSourceText = {
     value: string;
     start: number;
     end: number;
 };
 
-export type SymbolSource = {
+export type FileSource = {
     text: FilePartSourceText;
-    type: 'symbol';
+    type: 'file';
     path: string;
-    range: Range;
-    name: string;
-    kind: number;
 };
 
 export type Range = {
@@ -256,33 +242,41 @@ export type Range = {
     };
 };
 
-export type ToolPart = {
+export type SymbolSource = {
+    text: FilePartSourceText;
+    type: 'symbol';
+    path: string;
+    range: Range;
+    name: string;
+    kind: number;
+};
+
+export type FilePartSource = FileSource | SymbolSource;
+
+export type FilePart = {
     id: string;
     sessionID: string;
     messageID: string;
-    type: 'tool';
-    callID: string;
-    tool: string;
-    state: ToolState;
+    type: 'file';
+    mime: string;
+    filename?: string;
+    url: string;
+    source?: FilePartSource;
 };
-
-export type ToolState = ({
-    status: 'pending';
-} & ToolStatePending) | ({
-    status: 'running';
-} & ToolStateRunning) | ({
-    status: 'completed';
-} & ToolStateCompleted) | ({
-    status: 'error';
-} & ToolStateError);
 
 export type ToolStatePending = {
     status: 'pending';
+    input: {
+        [key: string]: unknown;
+    };
+    raw: string;
 };
 
 export type ToolStateRunning = {
     status: 'running';
-    input?: unknown;
+    input: {
+        [key: string]: unknown;
+    };
     title?: string;
     metadata?: {
         [key: string]: unknown;
@@ -305,7 +299,9 @@ export type ToolStateCompleted = {
     time: {
         start: number;
         end: number;
+        compacted?: number;
     };
+    attachments?: Array<FilePart>;
 };
 
 export type ToolStateError = {
@@ -323,11 +319,27 @@ export type ToolStateError = {
     };
 };
 
+export type ToolState = ToolStatePending | ToolStateRunning | ToolStateCompleted | ToolStateError;
+
+export type ToolPart = {
+    id: string;
+    sessionID: string;
+    messageID: string;
+    type: 'tool';
+    callID: string;
+    tool: string;
+    state: ToolState;
+    metadata?: {
+        [key: string]: unknown;
+    };
+};
+
 export type StepStartPart = {
     id: string;
     sessionID: string;
     messageID: string;
     type: 'step-start';
+    snapshot?: string;
 };
 
 export type StepFinishPart = {
@@ -335,6 +347,8 @@ export type StepFinishPart = {
     sessionID: string;
     messageID: string;
     type: 'step-finish';
+    reason: string;
+    snapshot?: string;
     cost: number;
     tokens: {
         input: number;
@@ -377,6 +391,45 @@ export type AgentPart = {
     };
 };
 
+export type RetryPart = {
+    id: string;
+    sessionID: string;
+    messageID: string;
+    type: 'retry';
+    attempt: number;
+    error: ApiError;
+    time: {
+        created: number;
+    };
+};
+
+export type CompactionPart = {
+    id: string;
+    sessionID: string;
+    messageID: string;
+    type: 'compaction';
+    auto: boolean;
+};
+
+export type Part = TextPart | {
+    id: string;
+    sessionID: string;
+    messageID: string;
+    type: 'subtask';
+    prompt: string;
+    description: string;
+    agent: string;
+    command?: string;
+} | ReasoningPart | FilePart | ToolPart | StepStartPart | StepFinishPart | SnapshotPart | PatchPart | AgentPart | RetryPart | CompactionPart;
+
+export type EventMessagePartUpdated = {
+    type: 'message.part.updated';
+    properties: {
+        part: Part;
+        delta?: string;
+    };
+};
+
 export type EventMessagePartRemoved = {
     type: 'message.part.removed';
     properties: {
@@ -386,82 +439,51 @@ export type EventMessagePartRemoved = {
     };
 };
 
-export type EventStorageWrite = {
-    type: 'storage.write';
-    properties: {
-        key: string;
-        content?: unknown;
-    };
-};
-
-export type EventPermissionUpdated = {
-    type: 'permission.updated';
-    properties: Permission;
-};
-
-export type Permission = {
+export type PermissionRequest = {
     id: string;
-    type: string;
-    pattern?: string;
     sessionID: string;
-    messageID: string;
-    callID?: string;
-    title: string;
+    permission: string;
+    patterns: Array<string>;
     metadata: {
         [key: string]: unknown;
     };
-    time: {
-        created: number;
+    always: Array<string>;
+    tool?: {
+        messageID: string;
+        callID: string;
     };
+};
+
+export type EventPermissionAsked = {
+    type: 'permission.asked';
+    properties: PermissionRequest;
 };
 
 export type EventPermissionReplied = {
     type: 'permission.replied';
     properties: {
         sessionID: string;
-        permissionID: string;
-        response: string;
+        requestID: string;
+        reply: 'once' | 'always' | 'reject';
     };
 };
 
-export type EventFileEdited = {
-    type: 'file.edited';
+export type SessionStatus = {
+    type: 'idle';
+} | {
+    type: 'retry';
+    attempt: number;
+    message: string;
+    next: number;
+} | {
+    type: 'busy';
+};
+
+export type EventSessionStatus = {
+    type: 'session.status';
     properties: {
-        file: string;
-    };
-};
-
-export type EventSessionUpdated = {
-    type: 'session.updated';
-    properties: {
-        info: Session;
-    };
-};
-
-export type Session = {
-    id: string;
-    parentID?: string;
-    share?: {
-        url: string;
-    };
-    title: string;
-    version: string;
-    time: {
-        created: number;
-        updated: number;
-    };
-    revert?: {
-        messageID: string;
-        partID?: string;
-        snapshot?: string;
-        diff?: string;
-    };
-};
-
-export type EventSessionDeleted = {
-    type: 'session.deleted';
-    properties: {
-        info: Session;
+        sessionID: string;
+        status: SessionStatus;
     };
 };
 
@@ -472,19 +494,220 @@ export type EventSessionIdle = {
     };
 };
 
+export type EventSessionCompacted = {
+    type: 'session.compacted';
+    properties: {
+        sessionID: string;
+    };
+};
+
+export type EventFileEdited = {
+    type: 'file.edited';
+    properties: {
+        file: string;
+    };
+};
+
+export type Todo = {
+    /**
+     * Brief description of the task
+     */
+    content: string;
+    /**
+     * Current status of the task: pending, in_progress, completed, cancelled
+     */
+    status: string;
+    /**
+     * Priority level of the task: high, medium, low
+     */
+    priority: string;
+    /**
+     * Unique identifier for the todo item
+     */
+    id: string;
+};
+
+export type EventTodoUpdated = {
+    type: 'todo.updated';
+    properties: {
+        sessionID: string;
+        todos: Array<Todo>;
+    };
+};
+
+export type EventTuiPromptAppend = {
+    type: 'tui.prompt.append';
+    properties: {
+        text: string;
+    };
+};
+
+export type EventTuiCommandExecute = {
+    type: 'tui.command.execute';
+    properties: {
+        command: 'session.list' | 'session.new' | 'session.share' | 'session.interrupt' | 'session.compact' | 'session.page.up' | 'session.page.down' | 'session.half.page.up' | 'session.half.page.down' | 'session.first' | 'session.last' | 'prompt.clear' | 'prompt.submit' | 'agent.cycle' | string;
+    };
+};
+
+export type EventTuiToastShow = {
+    type: 'tui.toast.show';
+    properties: {
+        title?: string;
+        message: string;
+        variant: 'info' | 'success' | 'warning' | 'error';
+        /**
+         * Duration in milliseconds
+         */
+        duration?: number;
+    };
+};
+
+export type EventMcpToolsChanged = {
+    type: 'mcp.tools.changed';
+    properties: {
+        server: string;
+    };
+};
+
+export type EventCommandExecuted = {
+    type: 'command.executed';
+    properties: {
+        name: string;
+        sessionID: string;
+        arguments: string;
+        messageID: string;
+    };
+};
+
+export type PermissionAction = 'allow' | 'deny' | 'ask';
+
+export type PermissionRule = {
+    permission: string;
+    pattern: string;
+    action: PermissionAction;
+};
+
+export type PermissionRuleset = Array<PermissionRule>;
+
+export type Session = {
+    id: string;
+    projectID: string;
+    directory: string;
+    parentID?: string;
+    summary?: {
+        additions: number;
+        deletions: number;
+        files: number;
+        diffs?: Array<FileDiff>;
+    };
+    share?: {
+        url: string;
+    };
+    title: string;
+    version: string;
+    time: {
+        created: number;
+        updated: number;
+        compacting?: number;
+        archived?: number;
+    };
+    permission?: PermissionRuleset;
+    revert?: {
+        messageID: string;
+        partID?: string;
+        snapshot?: string;
+        diff?: string;
+    };
+};
+
+export type EventSessionCreated = {
+    type: 'session.created';
+    properties: {
+        info: Session;
+    };
+};
+
+export type EventSessionUpdated = {
+    type: 'session.updated';
+    properties: {
+        info: Session;
+    };
+};
+
+export type EventSessionDeleted = {
+    type: 'session.deleted';
+    properties: {
+        info: Session;
+    };
+};
+
+export type EventSessionDiff = {
+    type: 'session.diff';
+    properties: {
+        sessionID: string;
+        diff: Array<FileDiff>;
+    };
+};
+
 export type EventSessionError = {
     type: 'session.error';
     properties: {
         sessionID?: string;
-        error?: ({
-            name: 'ProviderAuthError';
-        } & ProviderAuthError) | ({
-            name: 'UnknownError';
-        } & UnknownError) | ({
-            name: 'MessageOutputLengthError';
-        } & MessageOutputLengthError) | ({
-            name: 'MessageAbortedError';
-        } & MessageAbortedError);
+        error?: ProviderAuthError | UnknownError | MessageOutputLengthError | MessageAbortedError | ApiError;
+    };
+};
+
+export type EventFileWatcherUpdated = {
+    type: 'file.watcher.updated';
+    properties: {
+        file: string;
+        event: 'add' | 'change' | 'unlink';
+    };
+};
+
+export type EventVcsBranchUpdated = {
+    type: 'vcs.branch.updated';
+    properties: {
+        branch?: string;
+    };
+};
+
+export type Pty = {
+    id: string;
+    title: string;
+    command: string;
+    args: Array<string>;
+    cwd: string;
+    status: 'running' | 'exited';
+    pid: number;
+};
+
+export type EventPtyCreated = {
+    type: 'pty.created';
+    properties: {
+        info: Pty;
+    };
+};
+
+export type EventPtyUpdated = {
+    type: 'pty.updated';
+    properties: {
+        info: Pty;
+    };
+};
+
+export type EventPtyExited = {
+    type: 'pty.exited';
+    properties: {
+        id: string;
+        exitCode: number;
+    };
+};
+
+export type EventPtyDeleted = {
+    type: 'pty.deleted';
+    properties: {
+        id: string;
     };
 };
 
@@ -495,423 +718,451 @@ export type EventServerConnected = {
     };
 };
 
-export type EventFileWatcherUpdated = {
-    type: 'file.watcher.updated';
+export type EventGlobalDisposed = {
+    type: 'global.disposed';
     properties: {
-        file: string;
-        event: 'rename' | 'change';
+        [key: string]: unknown;
     };
 };
 
-export type EventIdeInstalled = {
-    type: 'ide.installed';
-    properties: {
-        ide: string;
+export type Event = EventInstallationUpdated | EventInstallationUpdateAvailable | EventProjectUpdated | EventServerInstanceDisposed | EventLspClientDiagnostics | EventLspUpdated | EventMessageUpdated | EventMessageRemoved | EventMessagePartUpdated | EventMessagePartRemoved | EventPermissionAsked | EventPermissionReplied | EventSessionStatus | EventSessionIdle | EventSessionCompacted | EventFileEdited | EventTodoUpdated | EventTuiPromptAppend | EventTuiCommandExecute | EventTuiToastShow | EventMcpToolsChanged | EventCommandExecuted | EventSessionCreated | EventSessionUpdated | EventSessionDeleted | EventSessionDiff | EventSessionError | EventFileWatcherUpdated | EventVcsBranchUpdated | EventPtyCreated | EventPtyUpdated | EventPtyExited | EventPtyDeleted | EventServerConnected | EventGlobalDisposed;
+
+export type GlobalEvent = {
+    directory: string;
+    payload: Event;
+};
+
+export type BadRequestError = {
+    data: unknown;
+    errors: Array<{
+        [key: string]: unknown;
+    }>;
+    success: false;
+};
+
+export type NotFoundError = {
+    name: 'NotFoundError';
+    data: {
+        message: string;
     };
 };
 
-export type App = {
-    hostname: string;
-    git: boolean;
-    path: {
-        config: string;
-        data: string;
-        root: string;
-        cwd: string;
-        state: string;
-    };
-    time: {
-        initialized?: number;
-    };
-};
-
-export type Config = {
-    /**
-     * JSON schema reference for configuration validation
-     */
-    $schema?: string;
-    /**
-     * Theme name to use for the interface
-     */
-    theme?: string;
-    /**
-     * Custom keybind configurations
-     */
-    keybinds?: KeybindsConfig;
-    /**
-     * TUI specific settings
-     */
-    tui?: {
-        /**
-         * TUI scroll speed
-         */
-        scroll_speed: number;
-    };
-    plugin?: Array<string>;
-    snapshot?: boolean;
-    /**
-     * Control sharing behavior:'manual' allows manual sharing via commands, 'auto' enables automatic sharing, 'disabled' disables all sharing
-     */
-    share?: 'manual' | 'auto' | 'disabled';
-    /**
-     * @deprecated Use 'share' field instead. Share newly created sessions automatically
-     */
-    autoshare?: boolean;
-    /**
-     * Automatically update to the latest version
-     */
-    autoupdate?: boolean;
-    /**
-     * Disable providers that are loaded automatically
-     */
-    disabled_providers?: Array<string>;
-    /**
-     * Model to use in the format of provider/model, eg anthropic/claude-2
-     */
-    model?: string;
-    /**
-     * Small model to use for tasks like title generation in the format of provider/model
-     */
-    small_model?: string;
-    /**
-     * Custom username to display in conversations instead of system username
-     */
-    username?: string;
-    /**
-     * @deprecated Use `agent` field instead.
-     */
-    mode?: {
-        build?: AgentConfig;
-        plan?: AgentConfig;
-        [key: string]: AgentConfig | undefined;
-    };
-    /**
-     * Agent configuration, see https://opencode.ai/docs/agent
-     */
-    agent?: {
-        plan?: AgentConfig;
-        build?: AgentConfig;
-        general?: AgentConfig;
-        [key: string]: AgentConfig | undefined;
-    };
-    /**
-     * Custom provider configurations and model overrides
-     */
-    provider?: {
-        [key: string]: {
-            api?: string;
-            name?: string;
-            env?: Array<string>;
-            id?: string;
-            npm?: string;
-            models?: {
-                [key: string]: {
-                    id?: string;
-                    name?: string;
-                    release_date?: string;
-                    attachment?: boolean;
-                    reasoning?: boolean;
-                    temperature?: boolean;
-                    tool_call?: boolean;
-                    cost?: {
-                        input: number;
-                        output: number;
-                        cache_read?: number;
-                        cache_write?: number;
-                    };
-                    limit?: {
-                        context: number;
-                        output: number;
-                    };
-                    options?: {
-                        [key: string]: unknown;
-                    };
-                };
-            };
-            options?: {
-                apiKey?: string;
-                baseURL?: string;
-                [key: string]: unknown | string | undefined;
-            };
-        };
-    };
-    /**
-     * MCP (Model Context Protocol) server configurations
-     */
-    mcp?: {
-        [key: string]: ({
-            type: 'local';
-        } & McpLocalConfig) | ({
-            type: 'remote';
-        } & McpRemoteConfig);
-    };
-    formatter?: {
-        [key: string]: {
-            disabled?: boolean;
-            command?: Array<string>;
-            environment?: {
-                [key: string]: string;
-            };
-            extensions?: Array<string>;
-        };
-    };
-    lsp?: {
-        [key: string]: {
-            disabled: true;
-        } | {
-            command: Array<string>;
-            extensions?: Array<string>;
-            disabled?: boolean;
-            env?: {
-                [key: string]: string;
-            };
-            initialization?: {
-                [key: string]: unknown;
-            };
-        };
-    };
-    /**
-     * Additional instruction files or patterns to include
-     */
-    instructions?: Array<string>;
-    /**
-     * @deprecated Always uses stretch layout.
-     */
-    layout?: LayoutConfig;
-    permission?: {
-        edit?: 'ask' | 'allow' | 'deny';
-        bash?: 'ask' | 'allow' | 'deny' | {
-            [key: string]: 'ask' | 'allow' | 'deny';
-        };
-        webfetch?: 'ask' | 'allow' | 'deny';
-    };
-    tools?: {
-        [key: string]: boolean;
-    };
-    experimental?: {
-        hook?: {
-            file_edited?: {
-                [key: string]: Array<{
-                    command: Array<string>;
-                    environment?: {
-                        [key: string]: string;
-                    };
-                }>;
-            };
-            session_completed?: Array<{
-                command: Array<string>;
-                environment?: {
-                    [key: string]: string;
-                };
-            }>;
-        };
-    };
-};
-
+/**
+ * Custom keybind configurations
+ */
 export type KeybindsConfig = {
     /**
      * Leader key for keybind combinations
      */
-    leader: string;
-    /**
-     * Show help dialog
-     */
-    app_help: string;
+    leader?: string;
     /**
      * Exit the application
      */
-    app_exit: string;
+    app_exit?: string;
     /**
      * Open external editor
      */
-    editor_open: string;
+    editor_open?: string;
     /**
      * List available themes
      */
-    theme_list: string;
+    theme_list?: string;
     /**
-     * Create/update AGENTS.md
+     * Toggle sidebar
      */
-    project_init: string;
+    sidebar_toggle?: string;
     /**
-     * Toggle tool details
+     * Toggle session scrollbar
      */
-    tool_details: string;
+    scrollbar_toggle?: string;
     /**
-     * Toggle thinking blocks
+     * Toggle username visibility
      */
-    thinking_blocks: string;
+    username_toggle?: string;
+    /**
+     * View status
+     */
+    status_view?: string;
     /**
      * Export session to editor
      */
-    session_export: string;
+    session_export?: string;
     /**
      * Create a new session
      */
-    session_new: string;
+    session_new?: string;
     /**
      * List all sessions
      */
-    session_list: string;
+    session_list?: string;
     /**
      * Show session timeline
      */
-    session_timeline: string;
+    session_timeline?: string;
+    /**
+     * Fork session from message
+     */
+    session_fork?: string;
+    /**
+     * Rename session
+     */
+    session_rename?: string;
     /**
      * Share current session
      */
-    session_share: string;
+    session_share?: string;
     /**
      * Unshare current session
      */
-    session_unshare: string;
+    session_unshare?: string;
     /**
      * Interrupt current session
      */
-    session_interrupt: string;
+    session_interrupt?: string;
     /**
      * Compact the session
      */
-    session_compact: string;
-    /**
-     * Cycle to next child session
-     */
-    session_child_cycle: string;
-    /**
-     * Cycle to previous child session
-     */
-    session_child_cycle_reverse: string;
+    session_compact?: string;
     /**
      * Scroll messages up by one page
      */
-    messages_page_up: string;
+    messages_page_up?: string;
     /**
      * Scroll messages down by one page
      */
-    messages_page_down: string;
+    messages_page_down?: string;
     /**
      * Scroll messages up by half page
      */
-    messages_half_page_up: string;
+    messages_half_page_up?: string;
     /**
      * Scroll messages down by half page
      */
-    messages_half_page_down: string;
+    messages_half_page_down?: string;
     /**
      * Navigate to first message
      */
-    messages_first: string;
+    messages_first?: string;
     /**
      * Navigate to last message
      */
-    messages_last: string;
+    messages_last?: string;
+    /**
+     * Navigate to next message
+     */
+    messages_next?: string;
+    /**
+     * Navigate to previous message
+     */
+    messages_previous?: string;
+    /**
+     * Navigate to last user message
+     */
+    messages_last_user?: string;
     /**
      * Copy message
      */
-    messages_copy: string;
+    messages_copy?: string;
     /**
      * Undo message
      */
-    messages_undo: string;
+    messages_undo?: string;
     /**
      * Redo message
      */
-    messages_redo: string;
+    messages_redo?: string;
+    /**
+     * Toggle code block concealment in messages
+     */
+    messages_toggle_conceal?: string;
+    /**
+     * Toggle tool details visibility
+     */
+    tool_details?: string;
     /**
      * List available models
      */
-    model_list: string;
+    model_list?: string;
     /**
-     * Next recent model
+     * Next recently used model
      */
-    model_cycle_recent: string;
+    model_cycle_recent?: string;
     /**
-     * Previous recent model
+     * Previous recently used model
      */
-    model_cycle_recent_reverse: string;
+    model_cycle_recent_reverse?: string;
+    /**
+     * Next favorite model
+     */
+    model_cycle_favorite?: string;
+    /**
+     * Previous favorite model
+     */
+    model_cycle_favorite_reverse?: string;
+    /**
+     * List available commands
+     */
+    command_list?: string;
     /**
      * List agents
      */
-    agent_list: string;
+    agent_list?: string;
     /**
      * Next agent
      */
-    agent_cycle: string;
+    agent_cycle?: string;
     /**
      * Previous agent
      */
-    agent_cycle_reverse: string;
+    agent_cycle_reverse?: string;
+    /**
+     * Cycle model variants
+     */
+    variant_cycle?: string;
     /**
      * Clear input field
      */
-    input_clear: string;
+    input_clear?: string;
     /**
      * Paste from clipboard
      */
-    input_paste: string;
+    input_paste?: string;
     /**
      * Submit input
      */
-    input_submit: string;
+    input_submit?: string;
     /**
      * Insert newline in input
      */
-    input_newline: string;
+    input_newline?: string;
     /**
-     * @deprecated use agent_cycle. Next mode
+     * Move cursor left in input
      */
-    switch_mode: string;
+    input_move_left?: string;
     /**
-     * @deprecated use agent_cycle_reverse. Previous mode
+     * Move cursor right in input
      */
-    switch_mode_reverse: string;
+    input_move_right?: string;
     /**
-     * @deprecated use agent_cycle. Next agent
+     * Move cursor up in input
      */
-    switch_agent: string;
+    input_move_up?: string;
     /**
-     * @deprecated use agent_cycle_reverse. Previous agent
+     * Move cursor down in input
      */
-    switch_agent_reverse: string;
+    input_move_down?: string;
     /**
-     * @deprecated Currently not available. List files
+     * Select left in input
      */
-    file_list: string;
+    input_select_left?: string;
     /**
-     * @deprecated Close file
+     * Select right in input
      */
-    file_close: string;
+    input_select_right?: string;
     /**
-     * @deprecated Search file
+     * Select up in input
      */
-    file_search: string;
+    input_select_up?: string;
     /**
-     * @deprecated Split/unified diff
+     * Select down in input
      */
-    file_diff_toggle: string;
+    input_select_down?: string;
     /**
-     * @deprecated Navigate to previous message
+     * Move to start of line in input
      */
-    messages_previous: string;
+    input_line_home?: string;
     /**
-     * @deprecated Navigate to next message
+     * Move to end of line in input
      */
-    messages_next: string;
+    input_line_end?: string;
     /**
-     * @deprecated Toggle layout
+     * Select to start of line in input
      */
-    messages_layout_toggle: string;
+    input_select_line_home?: string;
     /**
-     * @deprecated use messages_undo. Revert message
+     * Select to end of line in input
      */
-    messages_revert: string;
+    input_select_line_end?: string;
+    /**
+     * Move to start of visual line in input
+     */
+    input_visual_line_home?: string;
+    /**
+     * Move to end of visual line in input
+     */
+    input_visual_line_end?: string;
+    /**
+     * Select to start of visual line in input
+     */
+    input_select_visual_line_home?: string;
+    /**
+     * Select to end of visual line in input
+     */
+    input_select_visual_line_end?: string;
+    /**
+     * Move to start of buffer in input
+     */
+    input_buffer_home?: string;
+    /**
+     * Move to end of buffer in input
+     */
+    input_buffer_end?: string;
+    /**
+     * Select to start of buffer in input
+     */
+    input_select_buffer_home?: string;
+    /**
+     * Select to end of buffer in input
+     */
+    input_select_buffer_end?: string;
+    /**
+     * Delete line in input
+     */
+    input_delete_line?: string;
+    /**
+     * Delete to end of line in input
+     */
+    input_delete_to_line_end?: string;
+    /**
+     * Delete to start of line in input
+     */
+    input_delete_to_line_start?: string;
+    /**
+     * Backspace in input
+     */
+    input_backspace?: string;
+    /**
+     * Delete character in input
+     */
+    input_delete?: string;
+    /**
+     * Undo in input
+     */
+    input_undo?: string;
+    /**
+     * Redo in input
+     */
+    input_redo?: string;
+    /**
+     * Move word forward in input
+     */
+    input_word_forward?: string;
+    /**
+     * Move word backward in input
+     */
+    input_word_backward?: string;
+    /**
+     * Select word forward in input
+     */
+    input_select_word_forward?: string;
+    /**
+     * Select word backward in input
+     */
+    input_select_word_backward?: string;
+    /**
+     * Delete word forward in input
+     */
+    input_delete_word_forward?: string;
+    /**
+     * Delete word backward in input
+     */
+    input_delete_word_backward?: string;
+    /**
+     * Previous history item
+     */
+    history_previous?: string;
+    /**
+     * Next history item
+     */
+    history_next?: string;
+    /**
+     * Next child session
+     */
+    session_child_cycle?: string;
+    /**
+     * Previous child session
+     */
+    session_child_cycle_reverse?: string;
+    /**
+     * Go to parent session
+     */
+    session_parent?: string;
+    /**
+     * Suspend terminal
+     */
+    terminal_suspend?: string;
+    /**
+     * Toggle terminal title
+     */
+    terminal_title_toggle?: string;
+    /**
+     * Toggle tips on home screen
+     */
+    tips_toggle?: string;
 };
+
+/**
+ * Log level
+ */
+export type LogLevel = 'DEBUG' | 'INFO' | 'WARN' | 'ERROR';
+
+/**
+ * Server configuration for opencode serve and web commands
+ */
+export type ServerConfig = {
+    /**
+     * Port to listen on
+     */
+    port?: number;
+    /**
+     * Hostname to listen on
+     */
+    hostname?: string;
+    /**
+     * Enable mDNS service discovery
+     */
+    mdns?: boolean;
+    /**
+     * Additional domains to allow for CORS
+     */
+    cors?: Array<string>;
+};
+
+export type PermissionActionConfig = 'ask' | 'allow' | 'deny';
+
+export type PermissionObjectConfig = {
+    [key: string]: PermissionActionConfig;
+};
+
+export type PermissionRuleConfig = PermissionActionConfig | PermissionObjectConfig;
+
+export type PermissionConfig = {
+    read?: PermissionRuleConfig;
+    edit?: PermissionRuleConfig;
+    glob?: PermissionRuleConfig;
+    grep?: PermissionRuleConfig;
+    list?: PermissionRuleConfig;
+    bash?: PermissionRuleConfig;
+    task?: PermissionRuleConfig;
+    external_directory?: PermissionRuleConfig;
+    todowrite?: PermissionActionConfig;
+    todoread?: PermissionActionConfig;
+    webfetch?: PermissionActionConfig;
+    websearch?: PermissionActionConfig;
+    codesearch?: PermissionActionConfig;
+    lsp?: PermissionRuleConfig;
+    doom_loop?: PermissionActionConfig;
+    [key: string]: PermissionRuleConfig | PermissionActionConfig | undefined;
+} | PermissionActionConfig;
 
 export type AgentConfig = {
     model?: string;
     temperature?: number;
     top_p?: number;
     prompt?: string;
+    /**
+     * @deprecated Use 'permission' field instead
+     */
     tools?: {
         [key: string]: boolean;
     };
@@ -921,55 +1172,111 @@ export type AgentConfig = {
      */
     description?: string;
     mode?: 'subagent' | 'primary' | 'all';
-    permission?: {
-        edit?: 'ask' | 'allow' | 'deny';
-        bash?: 'ask' | 'allow' | 'deny' | {
-            [key: string]: 'ask' | 'allow' | 'deny';
-        };
-        webfetch?: 'ask' | 'allow' | 'deny';
+    options?: {
+        [key: string]: unknown;
     };
+    /**
+     * Hex color code for the agent (e.g., #FF5733)
+     */
+    color?: string;
+    /**
+     * Maximum number of agentic iterations before forcing text-only response
+     */
+    steps?: number;
+    /**
+     * @deprecated Use 'steps' field instead.
+     */
+    maxSteps?: number;
+    permission?: PermissionConfig;
     [key: string]: unknown | string | number | {
         [key: string]: boolean;
     } | boolean | 'subagent' | 'primary' | 'all' | {
-        edit?: 'ask' | 'allow' | 'deny';
-        bash?: 'ask' | 'allow' | 'deny' | {
-            [key: string]: 'ask' | 'allow' | 'deny';
-        };
-        webfetch?: 'ask' | 'allow' | 'deny';
-    } | undefined;
-};
-
-export type Provider = {
-    api?: string;
-    name: string;
-    env: Array<string>;
-    id: string;
-    npm?: string;
-    models: {
-        [key: string]: Model;
-    };
-};
-
-export type Model = {
-    id: string;
-    name: string;
-    release_date: string;
-    attachment: boolean;
-    reasoning: boolean;
-    temperature: boolean;
-    tool_call: boolean;
-    cost: {
-        input: number;
-        output: number;
-        cache_read?: number;
-        cache_write?: number;
-    };
-    limit: {
-        context: number;
-        output: number;
-    };
-    options: {
         [key: string]: unknown;
+    } | string | number | PermissionConfig | undefined;
+};
+
+export type ProviderConfig = {
+    api?: string;
+    name?: string;
+    env?: Array<string>;
+    id?: string;
+    npm?: string;
+    models?: {
+        [key: string]: {
+            id?: string;
+            name?: string;
+            family?: string;
+            release_date?: string;
+            attachment?: boolean;
+            reasoning?: boolean;
+            temperature?: boolean;
+            tool_call?: boolean;
+            interleaved?: true | {
+                field: 'reasoning_content' | 'reasoning_details';
+            };
+            cost?: {
+                input: number;
+                output: number;
+                cache_read?: number;
+                cache_write?: number;
+                context_over_200k?: {
+                    input: number;
+                    output: number;
+                    cache_read?: number;
+                    cache_write?: number;
+                };
+            };
+            limit?: {
+                context: number;
+                output: number;
+            };
+            modalities?: {
+                input: Array<'text' | 'audio' | 'image' | 'video' | 'pdf'>;
+                output: Array<'text' | 'audio' | 'image' | 'video' | 'pdf'>;
+            };
+            experimental?: boolean;
+            status?: 'alpha' | 'beta' | 'deprecated';
+            options?: {
+                [key: string]: unknown;
+            };
+            headers?: {
+                [key: string]: string;
+            };
+            provider?: {
+                npm: string;
+            };
+            /**
+             * Variant-specific configuration
+             */
+            variants?: {
+                [key: string]: {
+                    /**
+                     * Disable this variant for the model
+                     */
+                    disabled?: boolean;
+                    [key: string]: unknown | boolean | undefined;
+                };
+            };
+        };
+    };
+    whitelist?: Array<string>;
+    blacklist?: Array<string>;
+    options?: {
+        apiKey?: string;
+        baseURL?: string;
+        /**
+         * GitHub Enterprise URL for copilot authentication
+         */
+        enterpriseUrl?: string;
+        /**
+         * Enable promptCacheKey for this provider (default false)
+         */
+        setCacheKey?: boolean;
+        /**
+         * Timeout in milliseconds for requests to this provider. Default is 300000 (5 minutes). Set to false to disable timeout.
+         */
+        timeout?: number | false;
+        [key: string]: unknown | string | boolean | number | false | undefined;
     };
 };
 
@@ -992,6 +1299,25 @@ export type McpLocalConfig = {
      * Enable or disable the MCP server on startup
      */
     enabled?: boolean;
+    /**
+     * Timeout in ms for fetching tools from the MCP server. Defaults to 5000 (5 seconds) if not specified.
+     */
+    timeout?: number;
+};
+
+export type McpOAuthConfig = {
+    /**
+     * OAuth client ID. If not provided, dynamic client registration (RFC 7591) will be attempted.
+     */
+    clientId?: string;
+    /**
+     * OAuth client secret (if required by the authorization server)
+     */
+    clientSecret?: string;
+    /**
+     * OAuth scopes to request during authorization
+     */
+    scope?: string;
 };
 
 export type McpRemoteConfig = {
@@ -1013,14 +1339,256 @@ export type McpRemoteConfig = {
     headers?: {
         [key: string]: string;
     };
+    /**
+     * OAuth authentication configuration for the MCP server. Set to false to disable OAuth auto-detection.
+     */
+    oauth?: McpOAuthConfig | false;
+    /**
+     * Timeout in ms for fetching tools from the MCP server. Defaults to 5000 (5 seconds) if not specified.
+     */
+    timeout?: number;
 };
 
+/**
+ * @deprecated Always uses stretch layout.
+ */
 export type LayoutConfig = 'auto' | 'stretch';
 
-export type _Error = {
-    data: {
-        [key: string]: unknown;
+export type Config = {
+    /**
+     * JSON schema reference for configuration validation
+     */
+    $schema?: string;
+    /**
+     * Theme name to use for the interface
+     */
+    theme?: string;
+    keybinds?: KeybindsConfig;
+    logLevel?: LogLevel;
+    /**
+     * TUI specific settings
+     */
+    tui?: {
+        /**
+         * TUI scroll speed
+         */
+        scroll_speed?: number;
+        /**
+         * Scroll acceleration settings
+         */
+        scroll_acceleration?: {
+            /**
+             * Enable scroll acceleration
+             */
+            enabled: boolean;
+        };
+        /**
+         * Control diff rendering style: 'auto' adapts to terminal width, 'stacked' always shows single column
+         */
+        diff_style?: 'auto' | 'stacked';
     };
+    server?: ServerConfig;
+    /**
+     * Command configuration, see https://opencode.ai/docs/commands
+     */
+    command?: {
+        [key: string]: {
+            template: string;
+            description?: string;
+            agent?: string;
+            model?: string;
+            subtask?: boolean;
+        };
+    };
+    watcher?: {
+        ignore?: Array<string>;
+    };
+    plugin?: Array<string>;
+    snapshot?: boolean;
+    /**
+     * Control sharing behavior:'manual' allows manual sharing via commands, 'auto' enables automatic sharing, 'disabled' disables all sharing
+     */
+    share?: 'manual' | 'auto' | 'disabled';
+    /**
+     * @deprecated Use 'share' field instead. Share newly created sessions automatically
+     */
+    autoshare?: boolean;
+    /**
+     * Automatically update to the latest version. Set to true to auto-update, false to disable, or 'notify' to show update notifications
+     */
+    autoupdate?: boolean | 'notify';
+    /**
+     * Disable providers that are loaded automatically
+     */
+    disabled_providers?: Array<string>;
+    /**
+     * When set, ONLY these providers will be enabled. All other providers will be ignored
+     */
+    enabled_providers?: Array<string>;
+    /**
+     * Model to use in the format of provider/model, eg anthropic/claude-2
+     */
+    model?: string;
+    /**
+     * Small model to use for tasks like title generation in the format of provider/model
+     */
+    small_model?: string;
+    /**
+     * Default agent to use when none is specified. Must be a primary agent. Falls back to 'build' if not set or if the specified agent is invalid.
+     */
+    default_agent?: string;
+    /**
+     * Custom username to display in conversations instead of system username
+     */
+    username?: string;
+    /**
+     * @deprecated Use `agent` field instead.
+     */
+    mode?: {
+        build?: AgentConfig;
+        plan?: AgentConfig;
+        [key: string]: AgentConfig | undefined;
+    };
+    /**
+     * Agent configuration, see https://opencode.ai/docs/agent
+     */
+    agent?: {
+        plan?: AgentConfig;
+        build?: AgentConfig;
+        general?: AgentConfig;
+        explore?: AgentConfig;
+        title?: AgentConfig;
+        summary?: AgentConfig;
+        compaction?: AgentConfig;
+        [key: string]: AgentConfig | undefined;
+    };
+    /**
+     * Custom provider configurations and model overrides
+     */
+    provider?: {
+        [key: string]: ProviderConfig;
+    };
+    /**
+     * MCP (Model Context Protocol) server configurations
+     */
+    mcp?: {
+        [key: string]: McpLocalConfig | McpRemoteConfig;
+    };
+    formatter?: false | {
+        [key: string]: {
+            disabled?: boolean;
+            command?: Array<string>;
+            environment?: {
+                [key: string]: string;
+            };
+            extensions?: Array<string>;
+        };
+    };
+    lsp?: false | {
+        [key: string]: {
+            disabled: true;
+        } | {
+            command: Array<string>;
+            extensions?: Array<string>;
+            disabled?: boolean;
+            env?: {
+                [key: string]: string;
+            };
+            initialization?: {
+                [key: string]: unknown;
+            };
+        };
+    };
+    /**
+     * Additional instruction files or patterns to include
+     */
+    instructions?: Array<string>;
+    layout?: LayoutConfig;
+    permission?: PermissionConfig;
+    tools?: {
+        [key: string]: boolean;
+    };
+    enterprise?: {
+        /**
+         * Enterprise URL
+         */
+        url?: string;
+    };
+    compaction?: {
+        /**
+         * Enable automatic compaction when context is full (default: true)
+         */
+        auto?: boolean;
+        /**
+         * Enable pruning of old tool outputs (default: true)
+         */
+        prune?: boolean;
+    };
+    experimental?: {
+        hook?: {
+            file_edited?: {
+                [key: string]: Array<{
+                    command: Array<string>;
+                    environment?: {
+                        [key: string]: string;
+                    };
+                }>;
+            };
+            session_completed?: Array<{
+                command: Array<string>;
+                environment?: {
+                    [key: string]: string;
+                };
+            }>;
+        };
+        /**
+         * Number of retries for chat completions on failure
+         */
+        chatMaxRetries?: number;
+        disable_paste_summary?: boolean;
+        /**
+         * Enable the batch tool
+         */
+        batch_tool?: boolean;
+        /**
+         * Enable OpenTelemetry spans for AI SDK calls (using the 'experimental_telemetry' flag)
+         */
+        openTelemetry?: boolean;
+        /**
+         * Tools that should only be available to primary agents.
+         */
+        primary_tools?: Array<string>;
+        /**
+         * Continue the agent loop when a tool call is denied
+         */
+        continue_loop_on_deny?: boolean;
+        /**
+         * Timeout in milliseconds for model context protocol (MCP) requests
+         */
+        mcp_timeout?: number;
+    };
+};
+
+export type ToolIds = Array<string>;
+
+export type ToolListItem = {
+    id: string;
+    description: string;
+    parameters: unknown;
+};
+
+export type ToolList = Array<ToolListItem>;
+
+export type Path = {
+    home: string;
+    state: string;
+    config: string;
+    worktree: string;
+    directory: string;
+};
+
+export type VcsInfo = {
+    branch: string;
 };
 
 export type TextPartInput = {
@@ -1028,9 +1596,13 @@ export type TextPartInput = {
     type: 'text';
     text: string;
     synthetic?: boolean;
+    ignored?: boolean;
     time?: {
         start: number;
         end?: number;
+    };
+    metadata?: {
+        [key: string]: unknown;
     };
 };
 
@@ -1054,6 +1626,119 @@ export type AgentPartInput = {
     };
 };
 
+export type SubtaskPartInput = {
+    id?: string;
+    type: 'subtask';
+    prompt: string;
+    description: string;
+    agent: string;
+    command?: string;
+};
+
+export type Command = {
+    name: string;
+    description?: string;
+    agent?: string;
+    model?: string;
+    mcp?: boolean;
+    template: string;
+    subtask?: boolean;
+    hints: Array<string>;
+};
+
+export type Model = {
+    id: string;
+    providerID: string;
+    api: {
+        id: string;
+        url: string;
+        npm: string;
+    };
+    name: string;
+    family?: string;
+    capabilities: {
+        temperature: boolean;
+        reasoning: boolean;
+        attachment: boolean;
+        toolcall: boolean;
+        input: {
+            text: boolean;
+            audio: boolean;
+            image: boolean;
+            video: boolean;
+            pdf: boolean;
+        };
+        output: {
+            text: boolean;
+            audio: boolean;
+            image: boolean;
+            video: boolean;
+            pdf: boolean;
+        };
+        interleaved: boolean | {
+            field: 'reasoning_content' | 'reasoning_details';
+        };
+    };
+    cost: {
+        input: number;
+        output: number;
+        cache: {
+            read: number;
+            write: number;
+        };
+        experimentalOver200K?: {
+            input: number;
+            output: number;
+            cache: {
+                read: number;
+                write: number;
+            };
+        };
+    };
+    limit: {
+        context: number;
+        output: number;
+    };
+    status: 'alpha' | 'beta' | 'deprecated' | 'active';
+    options: {
+        [key: string]: unknown;
+    };
+    headers: {
+        [key: string]: string;
+    };
+    release_date: string;
+    variants?: {
+        [key: string]: {
+            [key: string]: unknown;
+        };
+    };
+};
+
+export type Provider = {
+    id: string;
+    name: string;
+    source: 'env' | 'config' | 'custom' | 'api';
+    env: Array<string>;
+    key?: string;
+    options: {
+        [key: string]: unknown;
+    };
+    models: {
+        [key: string]: Model;
+    };
+};
+
+export type ProviderAuthMethod = {
+    type: 'oauth' | 'api';
+    label: string;
+};
+
+export type ProviderAuthAuthorization = {
+    url: string;
+    method: 'auto' | 'code';
+    instructions: string;
+};
+
 export type Symbol = {
     name: string;
     kind: number;
@@ -1061,6 +1746,36 @@ export type Symbol = {
         uri: string;
         range: Range;
     };
+};
+
+export type FileNode = {
+    name: string;
+    path: string;
+    absolute: string;
+    type: 'file' | 'directory';
+    ignored: boolean;
+};
+
+export type FileContent = {
+    type: 'text';
+    content: string;
+    diff?: string;
+    patch?: {
+        oldFileName: string;
+        newFileName: string;
+        oldHeader?: string;
+        newHeader?: string;
+        hunks: Array<{
+            oldStart: number;
+            oldLines: number;
+            newStart: number;
+            newLines: number;
+            lines: Array<string>;
+        }>;
+        index?: string;
+    };
+    encoding?: 'base64';
+    mimeType?: string;
 };
 
 export type File = {
@@ -1074,42 +1789,66 @@ export type Agent = {
     name: string;
     description?: string;
     mode: 'subagent' | 'primary' | 'all';
-    builtIn: boolean;
+    native?: boolean;
+    hidden?: boolean;
     topP?: number;
     temperature?: number;
-    permission: {
-        edit: 'ask' | 'allow' | 'deny';
-        bash: {
-            [key: string]: 'ask' | 'allow' | 'deny';
-        };
-        webfetch?: 'ask' | 'allow' | 'deny';
-    };
+    color?: string;
+    permission: PermissionRuleset;
     model?: {
         modelID: string;
         providerID: string;
     };
     prompt?: string;
-    tools: {
-        [key: string]: boolean;
-    };
     options: {
         [key: string]: unknown;
     };
+    steps?: number;
 };
 
-export type Auth = ({
-    type: 'oauth';
-} & OAuth) | ({
-    type: 'api';
-} & ApiAuth) | ({
-    type: 'wellknown';
-} & WellKnownAuth);
+export type McpStatusConnected = {
+    status: 'connected';
+};
+
+export type McpStatusDisabled = {
+    status: 'disabled';
+};
+
+export type McpStatusFailed = {
+    status: 'failed';
+    error: string;
+};
+
+export type McpStatusNeedsAuth = {
+    status: 'needs_auth';
+};
+
+export type McpStatusNeedsClientRegistration = {
+    status: 'needs_client_registration';
+    error: string;
+};
+
+export type McpStatus = McpStatusConnected | McpStatusDisabled | McpStatusFailed | McpStatusNeedsAuth | McpStatusNeedsClientRegistration;
+
+export type LspStatus = {
+    id: string;
+    name: string;
+    root: string;
+    status: 'connected' | 'error';
+};
+
+export type FormatterStatus = {
+    name: string;
+    extensions: Array<string>;
+    enabled: boolean;
+};
 
 export type OAuth = {
     type: 'oauth';
     refresh: string;
     access: string;
     expires: number;
+    enterpriseUrl?: string;
 };
 
 export type ApiAuth = {
@@ -1123,58 +1862,315 @@ export type WellKnownAuth = {
     token: string;
 };
 
-export type EventSubscribeData = {
+export type Auth = OAuth | ApiAuth | WellKnownAuth;
+
+export type GlobalHealthData = {
     body?: never;
     path?: never;
     query?: never;
-    url: '/event';
+    url: '/global/health';
 };
 
-export type EventSubscribeResponses = {
+export type GlobalHealthResponses = {
+    /**
+     * Health information
+     */
+    200: {
+        healthy: true;
+        version: string;
+    };
+};
+
+export type GlobalHealthResponse = GlobalHealthResponses[keyof GlobalHealthResponses];
+
+export type GlobalEventData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/global/event';
+};
+
+export type GlobalEventResponses = {
     /**
      * Event stream
      */
-    200: Event;
+    200: GlobalEvent;
 };
 
-export type EventSubscribeResponse = EventSubscribeResponses[keyof EventSubscribeResponses];
+export type GlobalEventResponse = GlobalEventResponses[keyof GlobalEventResponses];
 
-export type AppGetData = {
+export type GlobalDisposeData = {
     body?: never;
     path?: never;
     query?: never;
-    url: '/app';
+    url: '/global/dispose';
 };
 
-export type AppGetResponses = {
+export type GlobalDisposeResponses = {
     /**
-     * 200
-     */
-    200: App;
-};
-
-export type AppGetResponse = AppGetResponses[keyof AppGetResponses];
-
-export type AppInitData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/app/init';
-};
-
-export type AppInitResponses = {
-    /**
-     * Initialize the app
+     * Global disposed
      */
     200: boolean;
 };
 
-export type AppInitResponse = AppInitResponses[keyof AppInitResponses];
+export type GlobalDisposeResponse = GlobalDisposeResponses[keyof GlobalDisposeResponses];
+
+export type ProjectListData = {
+    body?: never;
+    path?: never;
+    query?: {
+        directory?: string;
+    };
+    url: '/project';
+};
+
+export type ProjectListResponses = {
+    /**
+     * List of projects
+     */
+    200: Array<Project>;
+};
+
+export type ProjectListResponse = ProjectListResponses[keyof ProjectListResponses];
+
+export type ProjectCurrentData = {
+    body?: never;
+    path?: never;
+    query?: {
+        directory?: string;
+    };
+    url: '/project/current';
+};
+
+export type ProjectCurrentResponses = {
+    /**
+     * Current project information
+     */
+    200: Project;
+};
+
+export type ProjectCurrentResponse = ProjectCurrentResponses[keyof ProjectCurrentResponses];
+
+export type ProjectUpdateData = {
+    body?: {
+        name?: string;
+        icon?: {
+            url?: string;
+            color?: string;
+        };
+    };
+    path: {
+        projectID: string;
+    };
+    query?: {
+        directory?: string;
+    };
+    url: '/project/{projectID}';
+};
+
+export type ProjectUpdateErrors = {
+    /**
+     * Bad request
+     */
+    400: BadRequestError;
+    /**
+     * Not found
+     */
+    404: NotFoundError;
+};
+
+export type ProjectUpdateError = ProjectUpdateErrors[keyof ProjectUpdateErrors];
+
+export type ProjectUpdateResponses = {
+    /**
+     * Updated project information
+     */
+    200: Project;
+};
+
+export type ProjectUpdateResponse = ProjectUpdateResponses[keyof ProjectUpdateResponses];
+
+export type PtyListData = {
+    body?: never;
+    path?: never;
+    query?: {
+        directory?: string;
+    };
+    url: '/pty';
+};
+
+export type PtyListResponses = {
+    /**
+     * List of sessions
+     */
+    200: Array<Pty>;
+};
+
+export type PtyListResponse = PtyListResponses[keyof PtyListResponses];
+
+export type PtyCreateData = {
+    body?: {
+        command?: string;
+        args?: Array<string>;
+        cwd?: string;
+        title?: string;
+        env?: {
+            [key: string]: string;
+        };
+    };
+    path?: never;
+    query?: {
+        directory?: string;
+    };
+    url: '/pty';
+};
+
+export type PtyCreateErrors = {
+    /**
+     * Bad request
+     */
+    400: BadRequestError;
+};
+
+export type PtyCreateError = PtyCreateErrors[keyof PtyCreateErrors];
+
+export type PtyCreateResponses = {
+    /**
+     * Created session
+     */
+    200: Pty;
+};
+
+export type PtyCreateResponse = PtyCreateResponses[keyof PtyCreateResponses];
+
+export type PtyRemoveData = {
+    body?: never;
+    path: {
+        ptyID: string;
+    };
+    query?: {
+        directory?: string;
+    };
+    url: '/pty/{ptyID}';
+};
+
+export type PtyRemoveErrors = {
+    /**
+     * Not found
+     */
+    404: NotFoundError;
+};
+
+export type PtyRemoveError = PtyRemoveErrors[keyof PtyRemoveErrors];
+
+export type PtyRemoveResponses = {
+    /**
+     * Session removed
+     */
+    200: boolean;
+};
+
+export type PtyRemoveResponse = PtyRemoveResponses[keyof PtyRemoveResponses];
+
+export type PtyGetData = {
+    body?: never;
+    path: {
+        ptyID: string;
+    };
+    query?: {
+        directory?: string;
+    };
+    url: '/pty/{ptyID}';
+};
+
+export type PtyGetErrors = {
+    /**
+     * Not found
+     */
+    404: NotFoundError;
+};
+
+export type PtyGetError = PtyGetErrors[keyof PtyGetErrors];
+
+export type PtyGetResponses = {
+    /**
+     * Session info
+     */
+    200: Pty;
+};
+
+export type PtyGetResponse = PtyGetResponses[keyof PtyGetResponses];
+
+export type PtyUpdateData = {
+    body?: {
+        title?: string;
+        size?: {
+            rows: number;
+            cols: number;
+        };
+    };
+    path: {
+        ptyID: string;
+    };
+    query?: {
+        directory?: string;
+    };
+    url: '/pty/{ptyID}';
+};
+
+export type PtyUpdateErrors = {
+    /**
+     * Bad request
+     */
+    400: BadRequestError;
+};
+
+export type PtyUpdateError = PtyUpdateErrors[keyof PtyUpdateErrors];
+
+export type PtyUpdateResponses = {
+    /**
+     * Updated session
+     */
+    200: Pty;
+};
+
+export type PtyUpdateResponse = PtyUpdateResponses[keyof PtyUpdateResponses];
+
+export type PtyConnectData = {
+    body?: never;
+    path: {
+        ptyID: string;
+    };
+    query?: {
+        directory?: string;
+    };
+    url: '/pty/{ptyID}/connect';
+};
+
+export type PtyConnectErrors = {
+    /**
+     * Not found
+     */
+    404: NotFoundError;
+};
+
+export type PtyConnectError = PtyConnectErrors[keyof PtyConnectErrors];
+
+export type PtyConnectResponses = {
+    /**
+     * Connected session
+     */
+    200: boolean;
+};
+
+export type PtyConnectResponse = PtyConnectResponses[keyof PtyConnectResponses];
 
 export type ConfigGetData = {
     body?: never;
     path?: never;
-    query?: never;
+    query?: {
+        directory?: string;
+    };
     url: '/config';
 };
 
@@ -1187,10 +2183,149 @@ export type ConfigGetResponses = {
 
 export type ConfigGetResponse = ConfigGetResponses[keyof ConfigGetResponses];
 
+export type ConfigUpdateData = {
+    body?: Config;
+    path?: never;
+    query?: {
+        directory?: string;
+    };
+    url: '/config';
+};
+
+export type ConfigUpdateErrors = {
+    /**
+     * Bad request
+     */
+    400: BadRequestError;
+};
+
+export type ConfigUpdateError = ConfigUpdateErrors[keyof ConfigUpdateErrors];
+
+export type ConfigUpdateResponses = {
+    /**
+     * Successfully updated config
+     */
+    200: Config;
+};
+
+export type ConfigUpdateResponse = ConfigUpdateResponses[keyof ConfigUpdateResponses];
+
+export type ToolIdsData = {
+    body?: never;
+    path?: never;
+    query?: {
+        directory?: string;
+    };
+    url: '/experimental/tool/ids';
+};
+
+export type ToolIdsErrors = {
+    /**
+     * Bad request
+     */
+    400: BadRequestError;
+};
+
+export type ToolIdsError = ToolIdsErrors[keyof ToolIdsErrors];
+
+export type ToolIdsResponses = {
+    /**
+     * Tool IDs
+     */
+    200: ToolIds;
+};
+
+export type ToolIdsResponse = ToolIdsResponses[keyof ToolIdsResponses];
+
+export type ToolListData = {
+    body?: never;
+    path?: never;
+    query: {
+        directory?: string;
+        provider: string;
+        model: string;
+    };
+    url: '/experimental/tool';
+};
+
+export type ToolListErrors = {
+    /**
+     * Bad request
+     */
+    400: BadRequestError;
+};
+
+export type ToolListError = ToolListErrors[keyof ToolListErrors];
+
+export type ToolListResponses = {
+    /**
+     * Tools
+     */
+    200: ToolList;
+};
+
+export type ToolListResponse = ToolListResponses[keyof ToolListResponses];
+
+export type InstanceDisposeData = {
+    body?: never;
+    path?: never;
+    query?: {
+        directory?: string;
+    };
+    url: '/instance/dispose';
+};
+
+export type InstanceDisposeResponses = {
+    /**
+     * Instance disposed
+     */
+    200: boolean;
+};
+
+export type InstanceDisposeResponse = InstanceDisposeResponses[keyof InstanceDisposeResponses];
+
+export type PathGetData = {
+    body?: never;
+    path?: never;
+    query?: {
+        directory?: string;
+    };
+    url: '/path';
+};
+
+export type PathGetResponses = {
+    /**
+     * Path
+     */
+    200: Path;
+};
+
+export type PathGetResponse = PathGetResponses[keyof PathGetResponses];
+
+export type VcsGetData = {
+    body?: never;
+    path?: never;
+    query?: {
+        directory?: string;
+    };
+    url: '/vcs';
+};
+
+export type VcsGetResponses = {
+    /**
+     * VCS info
+     */
+    200: VcsInfo;
+};
+
+export type VcsGetResponse = VcsGetResponses[keyof VcsGetResponses];
+
 export type SessionListData = {
     body?: never;
     path?: never;
-    query?: never;
+    query?: {
+        directory?: string;
+    };
     url: '/session';
 };
 
@@ -1207,9 +2342,12 @@ export type SessionCreateData = {
     body?: {
         parentID?: string;
         title?: string;
+        permission?: PermissionRuleset;
     };
     path?: never;
-    query?: never;
+    query?: {
+        directory?: string;
+    };
     url: '/session';
 };
 
@@ -1217,7 +2355,7 @@ export type SessionCreateErrors = {
     /**
      * Bad request
      */
-    400: _Error;
+    400: BadRequestError;
 };
 
 export type SessionCreateError = SessionCreateErrors[keyof SessionCreateErrors];
@@ -1231,14 +2369,58 @@ export type SessionCreateResponses = {
 
 export type SessionCreateResponse = SessionCreateResponses[keyof SessionCreateResponses];
 
+export type SessionStatusData = {
+    body?: never;
+    path?: never;
+    query?: {
+        directory?: string;
+    };
+    url: '/session/status';
+};
+
+export type SessionStatusErrors = {
+    /**
+     * Bad request
+     */
+    400: BadRequestError;
+};
+
+export type SessionStatusError = SessionStatusErrors[keyof SessionStatusErrors];
+
+export type SessionStatusResponses = {
+    /**
+     * Get session status
+     */
+    200: {
+        [key: string]: SessionStatus;
+    };
+};
+
+export type SessionStatusResponse = SessionStatusResponses[keyof SessionStatusResponses];
+
 export type SessionDeleteData = {
     body?: never;
     path: {
-        id: string;
+        sessionID: string;
     };
-    query?: never;
-    url: '/session/{id}';
+    query?: {
+        directory?: string;
+    };
+    url: '/session/{sessionID}';
 };
+
+export type SessionDeleteErrors = {
+    /**
+     * Bad request
+     */
+    400: BadRequestError;
+    /**
+     * Not found
+     */
+    404: NotFoundError;
+};
+
+export type SessionDeleteError = SessionDeleteErrors[keyof SessionDeleteErrors];
 
 export type SessionDeleteResponses = {
     /**
@@ -1252,11 +2434,26 @@ export type SessionDeleteResponse = SessionDeleteResponses[keyof SessionDeleteRe
 export type SessionGetData = {
     body?: never;
     path: {
-        id: string;
+        sessionID: string;
     };
-    query?: never;
-    url: '/session/{id}';
+    query?: {
+        directory?: string;
+    };
+    url: '/session/{sessionID}';
 };
+
+export type SessionGetErrors = {
+    /**
+     * Bad request
+     */
+    400: BadRequestError;
+    /**
+     * Not found
+     */
+    404: NotFoundError;
+};
+
+export type SessionGetError = SessionGetErrors[keyof SessionGetErrors];
 
 export type SessionGetResponses = {
     /**
@@ -1270,13 +2467,31 @@ export type SessionGetResponse = SessionGetResponses[keyof SessionGetResponses];
 export type SessionUpdateData = {
     body?: {
         title?: string;
+        time?: {
+            archived?: number;
+        };
     };
     path: {
-        id: string;
+        sessionID: string;
     };
-    query?: never;
-    url: '/session/{id}';
+    query?: {
+        directory?: string;
+    };
+    url: '/session/{sessionID}';
 };
+
+export type SessionUpdateErrors = {
+    /**
+     * Bad request
+     */
+    400: BadRequestError;
+    /**
+     * Not found
+     */
+    404: NotFoundError;
+};
+
+export type SessionUpdateError = SessionUpdateErrors[keyof SessionUpdateErrors];
 
 export type SessionUpdateResponses = {
     /**
@@ -1290,11 +2505,26 @@ export type SessionUpdateResponse = SessionUpdateResponses[keyof SessionUpdateRe
 export type SessionChildrenData = {
     body?: never;
     path: {
-        id: string;
+        sessionID: string;
     };
-    query?: never;
-    url: '/session/{id}/children';
+    query?: {
+        directory?: string;
+    };
+    url: '/session/{sessionID}/children';
 };
+
+export type SessionChildrenErrors = {
+    /**
+     * Bad request
+     */
+    400: BadRequestError;
+    /**
+     * Not found
+     */
+    404: NotFoundError;
+};
+
+export type SessionChildrenError = SessionChildrenErrors[keyof SessionChildrenErrors];
 
 export type SessionChildrenResponses = {
     /**
@@ -1305,21 +2535,72 @@ export type SessionChildrenResponses = {
 
 export type SessionChildrenResponse = SessionChildrenResponses[keyof SessionChildrenResponses];
 
+export type SessionTodoData = {
+    body?: never;
+    path: {
+        /**
+         * Session ID
+         */
+        sessionID: string;
+    };
+    query?: {
+        directory?: string;
+    };
+    url: '/session/{sessionID}/todo';
+};
+
+export type SessionTodoErrors = {
+    /**
+     * Bad request
+     */
+    400: BadRequestError;
+    /**
+     * Not found
+     */
+    404: NotFoundError;
+};
+
+export type SessionTodoError = SessionTodoErrors[keyof SessionTodoErrors];
+
+export type SessionTodoResponses = {
+    /**
+     * Todo list
+     */
+    200: Array<Todo>;
+};
+
+export type SessionTodoResponse = SessionTodoResponses[keyof SessionTodoResponses];
+
 export type SessionInitData = {
     body?: {
-        messageID: string;
-        providerID: string;
         modelID: string;
+        providerID: string;
+        messageID: string;
     };
     path: {
         /**
          * Session ID
          */
-        id: string;
+        sessionID: string;
     };
-    query?: never;
-    url: '/session/{id}/init';
+    query?: {
+        directory?: string;
+    };
+    url: '/session/{sessionID}/init';
 };
+
+export type SessionInitErrors = {
+    /**
+     * Bad request
+     */
+    400: BadRequestError;
+    /**
+     * Not found
+     */
+    404: NotFoundError;
+};
+
+export type SessionInitError = SessionInitErrors[keyof SessionInitErrors];
 
 export type SessionInitResponses = {
     /**
@@ -1330,14 +2611,51 @@ export type SessionInitResponses = {
 
 export type SessionInitResponse = SessionInitResponses[keyof SessionInitResponses];
 
+export type SessionForkData = {
+    body?: {
+        messageID?: string;
+    };
+    path: {
+        sessionID: string;
+    };
+    query?: {
+        directory?: string;
+    };
+    url: '/session/{sessionID}/fork';
+};
+
+export type SessionForkResponses = {
+    /**
+     * 200
+     */
+    200: Session;
+};
+
+export type SessionForkResponse = SessionForkResponses[keyof SessionForkResponses];
+
 export type SessionAbortData = {
     body?: never;
     path: {
-        id: string;
+        sessionID: string;
     };
-    query?: never;
-    url: '/session/{id}/abort';
+    query?: {
+        directory?: string;
+    };
+    url: '/session/{sessionID}/abort';
 };
+
+export type SessionAbortErrors = {
+    /**
+     * Bad request
+     */
+    400: BadRequestError;
+    /**
+     * Not found
+     */
+    404: NotFoundError;
+};
+
+export type SessionAbortError = SessionAbortErrors[keyof SessionAbortErrors];
 
 export type SessionAbortResponses = {
     /**
@@ -1351,11 +2669,26 @@ export type SessionAbortResponse = SessionAbortResponses[keyof SessionAbortRespo
 export type SessionUnshareData = {
     body?: never;
     path: {
-        id: string;
+        sessionID: string;
     };
-    query?: never;
-    url: '/session/{id}/share';
+    query?: {
+        directory?: string;
+    };
+    url: '/session/{sessionID}/share';
 };
+
+export type SessionUnshareErrors = {
+    /**
+     * Bad request
+     */
+    400: BadRequestError;
+    /**
+     * Not found
+     */
+    404: NotFoundError;
+};
+
+export type SessionUnshareError = SessionUnshareErrors[keyof SessionUnshareErrors];
 
 export type SessionUnshareResponses = {
     /**
@@ -1369,11 +2702,26 @@ export type SessionUnshareResponse = SessionUnshareResponses[keyof SessionUnshar
 export type SessionShareData = {
     body?: never;
     path: {
-        id: string;
+        sessionID: string;
     };
-    query?: never;
-    url: '/session/{id}/share';
+    query?: {
+        directory?: string;
+    };
+    url: '/session/{sessionID}/share';
 };
+
+export type SessionShareErrors = {
+    /**
+     * Bad request
+     */
+    400: BadRequestError;
+    /**
+     * Not found
+     */
+    404: NotFoundError;
+};
+
+export type SessionShareError = SessionShareErrors[keyof SessionShareErrors];
 
 export type SessionShareResponses = {
     /**
@@ -1384,20 +2732,73 @@ export type SessionShareResponses = {
 
 export type SessionShareResponse = SessionShareResponses[keyof SessionShareResponses];
 
+export type SessionDiffData = {
+    body?: never;
+    path: {
+        /**
+         * Session ID
+         */
+        sessionID: string;
+    };
+    query?: {
+        directory?: string;
+        messageID?: string;
+    };
+    url: '/session/{sessionID}/diff';
+};
+
+export type SessionDiffErrors = {
+    /**
+     * Bad request
+     */
+    400: BadRequestError;
+    /**
+     * Not found
+     */
+    404: NotFoundError;
+};
+
+export type SessionDiffError = SessionDiffErrors[keyof SessionDiffErrors];
+
+export type SessionDiffResponses = {
+    /**
+     * List of diffs
+     */
+    200: Array<FileDiff>;
+};
+
+export type SessionDiffResponse = SessionDiffResponses[keyof SessionDiffResponses];
+
 export type SessionSummarizeData = {
     body?: {
         providerID: string;
         modelID: string;
+        auto?: boolean;
     };
     path: {
         /**
          * Session ID
          */
-        id: string;
+        sessionID: string;
     };
-    query?: never;
-    url: '/session/{id}/summarize';
+    query?: {
+        directory?: string;
+    };
+    url: '/session/{sessionID}/summarize';
 };
+
+export type SessionSummarizeErrors = {
+    /**
+     * Bad request
+     */
+    400: BadRequestError;
+    /**
+     * Not found
+     */
+    404: NotFoundError;
+};
+
+export type SessionSummarizeError = SessionSummarizeErrors[keyof SessionSummarizeErrors];
 
 export type SessionSummarizeResponses = {
     /**
@@ -1414,11 +2815,27 @@ export type SessionMessagesData = {
         /**
          * Session ID
          */
-        id: string;
+        sessionID: string;
     };
-    query?: never;
-    url: '/session/{id}/message';
+    query?: {
+        directory?: string;
+        limit?: number;
+    };
+    url: '/session/{sessionID}/message';
 };
+
+export type SessionMessagesErrors = {
+    /**
+     * Bad request
+     */
+    400: BadRequestError;
+    /**
+     * Not found
+     */
+    404: NotFoundError;
+};
+
+export type SessionMessagesError = SessionMessagesErrors[keyof SessionMessagesErrors];
 
 export type SessionMessagesResponses = {
     /**
@@ -1432,35 +2849,51 @@ export type SessionMessagesResponses = {
 
 export type SessionMessagesResponse = SessionMessagesResponses[keyof SessionMessagesResponses];
 
-export type SessionChatData = {
+export type SessionPromptData = {
     body?: {
         messageID?: string;
-        providerID: string;
-        modelID: string;
+        model?: {
+            providerID: string;
+            modelID: string;
+        };
         agent?: string;
-        system?: string;
+        noReply?: boolean;
+        /**
+         * @deprecated tools and permissions have been merged, you can set permissions on the session itself now
+         */
         tools?: {
             [key: string]: boolean;
         };
-        parts: Array<({
-            type: 'text';
-        } & TextPartInput) | ({
-            type: 'file';
-        } & FilePartInput) | ({
-            type: 'agent';
-        } & AgentPartInput)>;
+        system?: string;
+        variant?: string;
+        parts: Array<TextPartInput | FilePartInput | AgentPartInput | SubtaskPartInput>;
     };
     path: {
         /**
          * Session ID
          */
-        id: string;
+        sessionID: string;
     };
-    query?: never;
-    url: '/session/{id}/message';
+    query?: {
+        directory?: string;
+    };
+    url: '/session/{sessionID}/message';
 };
 
-export type SessionChatResponses = {
+export type SessionPromptErrors = {
+    /**
+     * Bad request
+     */
+    400: BadRequestError;
+    /**
+     * Not found
+     */
+    404: NotFoundError;
+};
+
+export type SessionPromptError = SessionPromptErrors[keyof SessionPromptErrors];
+
+export type SessionPromptResponses = {
     /**
      * Created message
      */
@@ -1470,7 +2903,7 @@ export type SessionChatResponses = {
     };
 };
 
-export type SessionChatResponse = SessionChatResponses[keyof SessionChatResponses];
+export type SessionPromptResponse = SessionPromptResponses[keyof SessionPromptResponses];
 
 export type SessionMessageData = {
     body?: never;
@@ -1478,15 +2911,30 @@ export type SessionMessageData = {
         /**
          * Session ID
          */
-        id: string;
+        sessionID: string;
         /**
          * Message ID
          */
         messageID: string;
     };
-    query?: never;
-    url: '/session/{id}/message/{messageID}';
+    query?: {
+        directory?: string;
+    };
+    url: '/session/{sessionID}/message/{messageID}';
 };
+
+export type SessionMessageErrors = {
+    /**
+     * Bad request
+     */
+    400: BadRequestError;
+    /**
+     * Not found
+     */
+    404: NotFoundError;
+};
+
+export type SessionMessageError = SessionMessageErrors[keyof SessionMessageErrors];
 
 export type SessionMessageResponses = {
     /**
@@ -1500,20 +2948,226 @@ export type SessionMessageResponses = {
 
 export type SessionMessageResponse = SessionMessageResponses[keyof SessionMessageResponses];
 
+export type PartDeleteData = {
+    body?: never;
+    path: {
+        /**
+         * Session ID
+         */
+        sessionID: string;
+        /**
+         * Message ID
+         */
+        messageID: string;
+        /**
+         * Part ID
+         */
+        partID: string;
+    };
+    query?: {
+        directory?: string;
+    };
+    url: '/session/{sessionID}/message/{messageID}/part/{partID}';
+};
+
+export type PartDeleteErrors = {
+    /**
+     * Bad request
+     */
+    400: BadRequestError;
+    /**
+     * Not found
+     */
+    404: NotFoundError;
+};
+
+export type PartDeleteError = PartDeleteErrors[keyof PartDeleteErrors];
+
+export type PartDeleteResponses = {
+    /**
+     * Successfully deleted part
+     */
+    200: boolean;
+};
+
+export type PartDeleteResponse = PartDeleteResponses[keyof PartDeleteResponses];
+
+export type PartUpdateData = {
+    body?: Part;
+    path: {
+        /**
+         * Session ID
+         */
+        sessionID: string;
+        /**
+         * Message ID
+         */
+        messageID: string;
+        /**
+         * Part ID
+         */
+        partID: string;
+    };
+    query?: {
+        directory?: string;
+    };
+    url: '/session/{sessionID}/message/{messageID}/part/{partID}';
+};
+
+export type PartUpdateErrors = {
+    /**
+     * Bad request
+     */
+    400: BadRequestError;
+    /**
+     * Not found
+     */
+    404: NotFoundError;
+};
+
+export type PartUpdateError = PartUpdateErrors[keyof PartUpdateErrors];
+
+export type PartUpdateResponses = {
+    /**
+     * Successfully updated part
+     */
+    200: Part;
+};
+
+export type PartUpdateResponse = PartUpdateResponses[keyof PartUpdateResponses];
+
+export type SessionPromptAsyncData = {
+    body?: {
+        messageID?: string;
+        model?: {
+            providerID: string;
+            modelID: string;
+        };
+        agent?: string;
+        noReply?: boolean;
+        /**
+         * @deprecated tools and permissions have been merged, you can set permissions on the session itself now
+         */
+        tools?: {
+            [key: string]: boolean;
+        };
+        system?: string;
+        variant?: string;
+        parts: Array<TextPartInput | FilePartInput | AgentPartInput | SubtaskPartInput>;
+    };
+    path: {
+        /**
+         * Session ID
+         */
+        sessionID: string;
+    };
+    query?: {
+        directory?: string;
+    };
+    url: '/session/{sessionID}/prompt_async';
+};
+
+export type SessionPromptAsyncErrors = {
+    /**
+     * Bad request
+     */
+    400: BadRequestError;
+    /**
+     * Not found
+     */
+    404: NotFoundError;
+};
+
+export type SessionPromptAsyncError = SessionPromptAsyncErrors[keyof SessionPromptAsyncErrors];
+
+export type SessionPromptAsyncResponses = {
+    /**
+     * Prompt accepted
+     */
+    204: void;
+};
+
+export type SessionPromptAsyncResponse = SessionPromptAsyncResponses[keyof SessionPromptAsyncResponses];
+
+export type SessionCommandData = {
+    body?: {
+        messageID?: string;
+        agent?: string;
+        model?: string;
+        arguments: string;
+        command: string;
+        variant?: string;
+    };
+    path: {
+        /**
+         * Session ID
+         */
+        sessionID: string;
+    };
+    query?: {
+        directory?: string;
+    };
+    url: '/session/{sessionID}/command';
+};
+
+export type SessionCommandErrors = {
+    /**
+     * Bad request
+     */
+    400: BadRequestError;
+    /**
+     * Not found
+     */
+    404: NotFoundError;
+};
+
+export type SessionCommandError = SessionCommandErrors[keyof SessionCommandErrors];
+
+export type SessionCommandResponses = {
+    /**
+     * Created message
+     */
+    200: {
+        info: AssistantMessage;
+        parts: Array<Part>;
+    };
+};
+
+export type SessionCommandResponse = SessionCommandResponses[keyof SessionCommandResponses];
+
 export type SessionShellData = {
     body?: {
         agent: string;
+        model?: {
+            providerID: string;
+            modelID: string;
+        };
         command: string;
     };
     path: {
         /**
          * Session ID
          */
-        id: string;
+        sessionID: string;
     };
-    query?: never;
-    url: '/session/{id}/shell';
+    query?: {
+        directory?: string;
+    };
+    url: '/session/{sessionID}/shell';
 };
+
+export type SessionShellErrors = {
+    /**
+     * Bad request
+     */
+    400: BadRequestError;
+    /**
+     * Not found
+     */
+    404: NotFoundError;
+};
+
+export type SessionShellError = SessionShellErrors[keyof SessionShellErrors];
 
 export type SessionShellResponses = {
     /**
@@ -1530,11 +3184,26 @@ export type SessionRevertData = {
         partID?: string;
     };
     path: {
-        id: string;
+        sessionID: string;
     };
-    query?: never;
-    url: '/session/{id}/revert';
+    query?: {
+        directory?: string;
+    };
+    url: '/session/{sessionID}/revert';
 };
+
+export type SessionRevertErrors = {
+    /**
+     * Bad request
+     */
+    400: BadRequestError;
+    /**
+     * Not found
+     */
+    404: NotFoundError;
+};
+
+export type SessionRevertError = SessionRevertErrors[keyof SessionRevertErrors];
 
 export type SessionRevertResponses = {
     /**
@@ -1548,11 +3217,26 @@ export type SessionRevertResponse = SessionRevertResponses[keyof SessionRevertRe
 export type SessionUnrevertData = {
     body?: never;
     path: {
-        id: string;
+        sessionID: string;
     };
-    query?: never;
-    url: '/session/{id}/unrevert';
+    query?: {
+        directory?: string;
+    };
+    url: '/session/{sessionID}/unrevert';
 };
+
+export type SessionUnrevertErrors = {
+    /**
+     * Bad request
+     */
+    400: BadRequestError;
+    /**
+     * Not found
+     */
+    404: NotFoundError;
+};
+
+export type SessionUnrevertError = SessionUnrevertErrors[keyof SessionUnrevertErrors];
 
 export type SessionUnrevertResponses = {
     /**
@@ -1563,31 +3247,119 @@ export type SessionUnrevertResponses = {
 
 export type SessionUnrevertResponse = SessionUnrevertResponses[keyof SessionUnrevertResponses];
 
-export type PostSessionByIdPermissionsByPermissionIdData = {
+export type PermissionRespondData = {
     body?: {
         response: 'once' | 'always' | 'reject';
     };
     path: {
-        id: string;
+        sessionID: string;
         permissionID: string;
     };
-    query?: never;
-    url: '/session/{id}/permissions/{permissionID}';
+    query?: {
+        directory?: string;
+    };
+    url: '/session/{sessionID}/permissions/{permissionID}';
 };
 
-export type PostSessionByIdPermissionsByPermissionIdResponses = {
+export type PermissionRespondErrors = {
+    /**
+     * Bad request
+     */
+    400: BadRequestError;
+    /**
+     * Not found
+     */
+    404: NotFoundError;
+};
+
+export type PermissionRespondError = PermissionRespondErrors[keyof PermissionRespondErrors];
+
+export type PermissionRespondResponses = {
     /**
      * Permission processed successfully
      */
     200: boolean;
 };
 
-export type PostSessionByIdPermissionsByPermissionIdResponse = PostSessionByIdPermissionsByPermissionIdResponses[keyof PostSessionByIdPermissionsByPermissionIdResponses];
+export type PermissionRespondResponse = PermissionRespondResponses[keyof PermissionRespondResponses];
+
+export type PermissionReplyData = {
+    body?: {
+        reply: 'once' | 'always' | 'reject';
+    };
+    path: {
+        requestID: string;
+    };
+    query?: {
+        directory?: string;
+    };
+    url: '/permission/{requestID}/reply';
+};
+
+export type PermissionReplyErrors = {
+    /**
+     * Bad request
+     */
+    400: BadRequestError;
+    /**
+     * Not found
+     */
+    404: NotFoundError;
+};
+
+export type PermissionReplyError = PermissionReplyErrors[keyof PermissionReplyErrors];
+
+export type PermissionReplyResponses = {
+    /**
+     * Permission processed successfully
+     */
+    200: boolean;
+};
+
+export type PermissionReplyResponse = PermissionReplyResponses[keyof PermissionReplyResponses];
+
+export type PermissionListData = {
+    body?: never;
+    path?: never;
+    query?: {
+        directory?: string;
+    };
+    url: '/permission';
+};
+
+export type PermissionListResponses = {
+    /**
+     * List of pending permissions
+     */
+    200: Array<PermissionRequest>;
+};
+
+export type PermissionListResponse = PermissionListResponses[keyof PermissionListResponses];
+
+export type CommandListData = {
+    body?: never;
+    path?: never;
+    query?: {
+        directory?: string;
+    };
+    url: '/command';
+};
+
+export type CommandListResponses = {
+    /**
+     * List of commands
+     */
+    200: Array<Command>;
+};
+
+export type CommandListResponse = CommandListResponses[keyof CommandListResponses];
 
 export type ConfigProvidersData = {
     body?: never;
     path?: never;
-    query?: never;
+    query?: {
+        directory?: string;
+    };
     url: '/config/providers';
 };
 
@@ -1605,10 +3377,190 @@ export type ConfigProvidersResponses = {
 
 export type ConfigProvidersResponse = ConfigProvidersResponses[keyof ConfigProvidersResponses];
 
+export type ProviderListData = {
+    body?: never;
+    path?: never;
+    query?: {
+        directory?: string;
+    };
+    url: '/provider';
+};
+
+export type ProviderListResponses = {
+    /**
+     * List of providers
+     */
+    200: {
+        all: Array<{
+            api?: string;
+            name: string;
+            env: Array<string>;
+            id: string;
+            npm?: string;
+            models: {
+                [key: string]: {
+                    id: string;
+                    name: string;
+                    family?: string;
+                    release_date: string;
+                    attachment: boolean;
+                    reasoning: boolean;
+                    temperature: boolean;
+                    tool_call: boolean;
+                    interleaved?: true | {
+                        field: 'reasoning_content' | 'reasoning_details';
+                    };
+                    cost?: {
+                        input: number;
+                        output: number;
+                        cache_read?: number;
+                        cache_write?: number;
+                        context_over_200k?: {
+                            input: number;
+                            output: number;
+                            cache_read?: number;
+                            cache_write?: number;
+                        };
+                    };
+                    limit: {
+                        context: number;
+                        output: number;
+                    };
+                    modalities?: {
+                        input: Array<'text' | 'audio' | 'image' | 'video' | 'pdf'>;
+                        output: Array<'text' | 'audio' | 'image' | 'video' | 'pdf'>;
+                    };
+                    experimental?: boolean;
+                    status?: 'alpha' | 'beta' | 'deprecated';
+                    options: {
+                        [key: string]: unknown;
+                    };
+                    headers?: {
+                        [key: string]: string;
+                    };
+                    provider?: {
+                        npm: string;
+                    };
+                    variants?: {
+                        [key: string]: {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+            };
+        }>;
+        default: {
+            [key: string]: string;
+        };
+        connected: Array<string>;
+    };
+};
+
+export type ProviderListResponse = ProviderListResponses[keyof ProviderListResponses];
+
+export type ProviderAuthData = {
+    body?: never;
+    path?: never;
+    query?: {
+        directory?: string;
+    };
+    url: '/provider/auth';
+};
+
+export type ProviderAuthResponses = {
+    /**
+     * Provider auth methods
+     */
+    200: {
+        [key: string]: Array<ProviderAuthMethod>;
+    };
+};
+
+export type ProviderAuthResponse = ProviderAuthResponses[keyof ProviderAuthResponses];
+
+export type ProviderOauthAuthorizeData = {
+    body?: {
+        /**
+         * Auth method index
+         */
+        method: number;
+    };
+    path: {
+        /**
+         * Provider ID
+         */
+        providerID: string;
+    };
+    query?: {
+        directory?: string;
+    };
+    url: '/provider/{providerID}/oauth/authorize';
+};
+
+export type ProviderOauthAuthorizeErrors = {
+    /**
+     * Bad request
+     */
+    400: BadRequestError;
+};
+
+export type ProviderOauthAuthorizeError = ProviderOauthAuthorizeErrors[keyof ProviderOauthAuthorizeErrors];
+
+export type ProviderOauthAuthorizeResponses = {
+    /**
+     * Authorization URL and method
+     */
+    200: ProviderAuthAuthorization;
+};
+
+export type ProviderOauthAuthorizeResponse = ProviderOauthAuthorizeResponses[keyof ProviderOauthAuthorizeResponses];
+
+export type ProviderOauthCallbackData = {
+    body?: {
+        /**
+         * Auth method index
+         */
+        method: number;
+        /**
+         * OAuth authorization code
+         */
+        code?: string;
+    };
+    path: {
+        /**
+         * Provider ID
+         */
+        providerID: string;
+    };
+    query?: {
+        directory?: string;
+    };
+    url: '/provider/{providerID}/oauth/callback';
+};
+
+export type ProviderOauthCallbackErrors = {
+    /**
+     * Bad request
+     */
+    400: BadRequestError;
+};
+
+export type ProviderOauthCallbackError = ProviderOauthCallbackErrors[keyof ProviderOauthCallbackErrors];
+
+export type ProviderOauthCallbackResponses = {
+    /**
+     * OAuth callback processed successfully
+     */
+    200: boolean;
+};
+
+export type ProviderOauthCallbackResponse = ProviderOauthCallbackResponses[keyof ProviderOauthCallbackResponses];
+
 export type FindTextData = {
     body?: never;
     path?: never;
     query: {
+        directory?: string;
         pattern: string;
     };
     url: '/find';
@@ -1643,7 +3595,11 @@ export type FindFilesData = {
     body?: never;
     path?: never;
     query: {
+        directory?: string;
         query: string;
+        dirs?: 'true' | 'false';
+        type?: 'file' | 'directory';
+        limit?: number;
     };
     url: '/find/file';
 };
@@ -1661,6 +3617,7 @@ export type FindSymbolsData = {
     body?: never;
     path?: never;
     query: {
+        directory?: string;
         query: string;
     };
     url: '/find/symbol';
@@ -1675,23 +3632,40 @@ export type FindSymbolsResponses = {
 
 export type FindSymbolsResponse = FindSymbolsResponses[keyof FindSymbolsResponses];
 
+export type FileListData = {
+    body?: never;
+    path?: never;
+    query: {
+        directory?: string;
+        path: string;
+    };
+    url: '/file';
+};
+
+export type FileListResponses = {
+    /**
+     * Files and directories
+     */
+    200: Array<FileNode>;
+};
+
+export type FileListResponse = FileListResponses[keyof FileListResponses];
+
 export type FileReadData = {
     body?: never;
     path?: never;
     query: {
+        directory?: string;
         path: string;
     };
-    url: '/file';
+    url: '/file/content';
 };
 
 export type FileReadResponses = {
     /**
      * File content
      */
-    200: {
-        type: 'raw' | 'patch';
-        content: string;
-    };
+    200: FileContent;
 };
 
 export type FileReadResponse = FileReadResponses[keyof FileReadResponses];
@@ -1699,7 +3673,9 @@ export type FileReadResponse = FileReadResponses[keyof FileReadResponses];
 export type FileStatusData = {
     body?: never;
     path?: never;
-    query?: never;
+    query?: {
+        directory?: string;
+    };
     url: '/file/status';
 };
 
@@ -1734,9 +3710,20 @@ export type AppLogData = {
         };
     };
     path?: never;
-    query?: never;
+    query?: {
+        directory?: string;
+    };
     url: '/log';
 };
+
+export type AppLogErrors = {
+    /**
+     * Bad request
+     */
+    400: BadRequestError;
+};
+
+export type AppLogError = AppLogErrors[keyof AppLogErrors];
 
 export type AppLogResponses = {
     /**
@@ -1750,7 +3737,9 @@ export type AppLogResponse = AppLogResponses[keyof AppLogResponses];
 export type AppAgentsData = {
     body?: never;
     path?: never;
-    query?: never;
+    query?: {
+        directory?: string;
+    };
     url: '/agent';
 };
 
@@ -1763,14 +3752,293 @@ export type AppAgentsResponses = {
 
 export type AppAgentsResponse = AppAgentsResponses[keyof AppAgentsResponses];
 
+export type McpStatusData = {
+    body?: never;
+    path?: never;
+    query?: {
+        directory?: string;
+    };
+    url: '/mcp';
+};
+
+export type McpStatusResponses = {
+    /**
+     * MCP server status
+     */
+    200: {
+        [key: string]: McpStatus;
+    };
+};
+
+export type McpStatusResponse = McpStatusResponses[keyof McpStatusResponses];
+
+export type McpAddData = {
+    body?: {
+        name: string;
+        config: McpLocalConfig | McpRemoteConfig;
+    };
+    path?: never;
+    query?: {
+        directory?: string;
+    };
+    url: '/mcp';
+};
+
+export type McpAddErrors = {
+    /**
+     * Bad request
+     */
+    400: BadRequestError;
+};
+
+export type McpAddError = McpAddErrors[keyof McpAddErrors];
+
+export type McpAddResponses = {
+    /**
+     * MCP server added successfully
+     */
+    200: {
+        [key: string]: McpStatus;
+    };
+};
+
+export type McpAddResponse = McpAddResponses[keyof McpAddResponses];
+
+export type McpAuthRemoveData = {
+    body?: never;
+    path: {
+        name: string;
+    };
+    query?: {
+        directory?: string;
+    };
+    url: '/mcp/{name}/auth';
+};
+
+export type McpAuthRemoveErrors = {
+    /**
+     * Not found
+     */
+    404: NotFoundError;
+};
+
+export type McpAuthRemoveError = McpAuthRemoveErrors[keyof McpAuthRemoveErrors];
+
+export type McpAuthRemoveResponses = {
+    /**
+     * OAuth credentials removed
+     */
+    200: {
+        success: true;
+    };
+};
+
+export type McpAuthRemoveResponse = McpAuthRemoveResponses[keyof McpAuthRemoveResponses];
+
+export type McpAuthStartData = {
+    body?: never;
+    path: {
+        name: string;
+    };
+    query?: {
+        directory?: string;
+    };
+    url: '/mcp/{name}/auth';
+};
+
+export type McpAuthStartErrors = {
+    /**
+     * Bad request
+     */
+    400: BadRequestError;
+    /**
+     * Not found
+     */
+    404: NotFoundError;
+};
+
+export type McpAuthStartError = McpAuthStartErrors[keyof McpAuthStartErrors];
+
+export type McpAuthStartResponses = {
+    /**
+     * OAuth flow started
+     */
+    200: {
+        /**
+         * URL to open in browser for authorization
+         */
+        authorizationUrl: string;
+    };
+};
+
+export type McpAuthStartResponse = McpAuthStartResponses[keyof McpAuthStartResponses];
+
+export type McpAuthCallbackData = {
+    body?: {
+        /**
+         * Authorization code from OAuth callback
+         */
+        code: string;
+    };
+    path: {
+        name: string;
+    };
+    query?: {
+        directory?: string;
+    };
+    url: '/mcp/{name}/auth/callback';
+};
+
+export type McpAuthCallbackErrors = {
+    /**
+     * Bad request
+     */
+    400: BadRequestError;
+    /**
+     * Not found
+     */
+    404: NotFoundError;
+};
+
+export type McpAuthCallbackError = McpAuthCallbackErrors[keyof McpAuthCallbackErrors];
+
+export type McpAuthCallbackResponses = {
+    /**
+     * OAuth authentication completed
+     */
+    200: McpStatus;
+};
+
+export type McpAuthCallbackResponse = McpAuthCallbackResponses[keyof McpAuthCallbackResponses];
+
+export type McpAuthAuthenticateData = {
+    body?: never;
+    path: {
+        name: string;
+    };
+    query?: {
+        directory?: string;
+    };
+    url: '/mcp/{name}/auth/authenticate';
+};
+
+export type McpAuthAuthenticateErrors = {
+    /**
+     * Bad request
+     */
+    400: BadRequestError;
+    /**
+     * Not found
+     */
+    404: NotFoundError;
+};
+
+export type McpAuthAuthenticateError = McpAuthAuthenticateErrors[keyof McpAuthAuthenticateErrors];
+
+export type McpAuthAuthenticateResponses = {
+    /**
+     * OAuth authentication completed
+     */
+    200: McpStatus;
+};
+
+export type McpAuthAuthenticateResponse = McpAuthAuthenticateResponses[keyof McpAuthAuthenticateResponses];
+
+export type McpConnectData = {
+    body?: never;
+    path: {
+        name: string;
+    };
+    query?: {
+        directory?: string;
+    };
+    url: '/mcp/{name}/connect';
+};
+
+export type McpConnectResponses = {
+    /**
+     * MCP server connected successfully
+     */
+    200: boolean;
+};
+
+export type McpConnectResponse = McpConnectResponses[keyof McpConnectResponses];
+
+export type McpDisconnectData = {
+    body?: never;
+    path: {
+        name: string;
+    };
+    query?: {
+        directory?: string;
+    };
+    url: '/mcp/{name}/disconnect';
+};
+
+export type McpDisconnectResponses = {
+    /**
+     * MCP server disconnected successfully
+     */
+    200: boolean;
+};
+
+export type McpDisconnectResponse = McpDisconnectResponses[keyof McpDisconnectResponses];
+
+export type LspStatusData = {
+    body?: never;
+    path?: never;
+    query?: {
+        directory?: string;
+    };
+    url: '/lsp';
+};
+
+export type LspStatusResponses = {
+    /**
+     * LSP server status
+     */
+    200: Array<LspStatus>;
+};
+
+export type LspStatusResponse = LspStatusResponses[keyof LspStatusResponses];
+
+export type FormatterStatusData = {
+    body?: never;
+    path?: never;
+    query?: {
+        directory?: string;
+    };
+    url: '/formatter';
+};
+
+export type FormatterStatusResponses = {
+    /**
+     * Formatter status
+     */
+    200: Array<FormatterStatus>;
+};
+
+export type FormatterStatusResponse = FormatterStatusResponses[keyof FormatterStatusResponses];
+
 export type TuiAppendPromptData = {
     body?: {
         text: string;
     };
     path?: never;
-    query?: never;
+    query?: {
+        directory?: string;
+    };
     url: '/tui/append-prompt';
 };
+
+export type TuiAppendPromptErrors = {
+    /**
+     * Bad request
+     */
+    400: BadRequestError;
+};
+
+export type TuiAppendPromptError = TuiAppendPromptErrors[keyof TuiAppendPromptErrors];
 
 export type TuiAppendPromptResponses = {
     /**
@@ -1784,7 +4052,9 @@ export type TuiAppendPromptResponse = TuiAppendPromptResponses[keyof TuiAppendPr
 export type TuiOpenHelpData = {
     body?: never;
     path?: never;
-    query?: never;
+    query?: {
+        directory?: string;
+    };
     url: '/tui/open-help';
 };
 
@@ -1800,7 +4070,9 @@ export type TuiOpenHelpResponse = TuiOpenHelpResponses[keyof TuiOpenHelpResponse
 export type TuiOpenSessionsData = {
     body?: never;
     path?: never;
-    query?: never;
+    query?: {
+        directory?: string;
+    };
     url: '/tui/open-sessions';
 };
 
@@ -1816,7 +4088,9 @@ export type TuiOpenSessionsResponse = TuiOpenSessionsResponses[keyof TuiOpenSess
 export type TuiOpenThemesData = {
     body?: never;
     path?: never;
-    query?: never;
+    query?: {
+        directory?: string;
+    };
     url: '/tui/open-themes';
 };
 
@@ -1832,7 +4106,9 @@ export type TuiOpenThemesResponse = TuiOpenThemesResponses[keyof TuiOpenThemesRe
 export type TuiOpenModelsData = {
     body?: never;
     path?: never;
-    query?: never;
+    query?: {
+        directory?: string;
+    };
     url: '/tui/open-models';
 };
 
@@ -1848,7 +4124,9 @@ export type TuiOpenModelsResponse = TuiOpenModelsResponses[keyof TuiOpenModelsRe
 export type TuiSubmitPromptData = {
     body?: never;
     path?: never;
-    query?: never;
+    query?: {
+        directory?: string;
+    };
     url: '/tui/submit-prompt';
 };
 
@@ -1864,7 +4142,9 @@ export type TuiSubmitPromptResponse = TuiSubmitPromptResponses[keyof TuiSubmitPr
 export type TuiClearPromptData = {
     body?: never;
     path?: never;
-    query?: never;
+    query?: {
+        directory?: string;
+    };
     url: '/tui/clear-prompt';
 };
 
@@ -1882,9 +4162,20 @@ export type TuiExecuteCommandData = {
         command: string;
     };
     path?: never;
-    query?: never;
+    query?: {
+        directory?: string;
+    };
     url: '/tui/execute-command';
 };
+
+export type TuiExecuteCommandErrors = {
+    /**
+     * Bad request
+     */
+    400: BadRequestError;
+};
+
+export type TuiExecuteCommandError = TuiExecuteCommandErrors[keyof TuiExecuteCommandErrors];
 
 export type TuiExecuteCommandResponses = {
     /**
@@ -1900,9 +4191,15 @@ export type TuiShowToastData = {
         title?: string;
         message: string;
         variant: 'info' | 'success' | 'warning' | 'error';
+        /**
+         * Duration in milliseconds
+         */
+        duration?: number;
     };
     path?: never;
-    query?: never;
+    query?: {
+        directory?: string;
+    };
     url: '/tui/show-toast';
 };
 
@@ -1915,20 +4212,88 @@ export type TuiShowToastResponses = {
 
 export type TuiShowToastResponse = TuiShowToastResponses[keyof TuiShowToastResponses];
 
+export type TuiPublishData = {
+    body?: EventTuiPromptAppend | EventTuiCommandExecute | EventTuiToastShow;
+    path?: never;
+    query?: {
+        directory?: string;
+    };
+    url: '/tui/publish';
+};
+
+export type TuiPublishErrors = {
+    /**
+     * Bad request
+     */
+    400: BadRequestError;
+};
+
+export type TuiPublishError = TuiPublishErrors[keyof TuiPublishErrors];
+
+export type TuiPublishResponses = {
+    /**
+     * Event published successfully
+     */
+    200: boolean;
+};
+
+export type TuiPublishResponse = TuiPublishResponses[keyof TuiPublishResponses];
+
+export type TuiControlNextData = {
+    body?: never;
+    path?: never;
+    query?: {
+        directory?: string;
+    };
+    url: '/tui/control/next';
+};
+
+export type TuiControlNextResponses = {
+    /**
+     * Next TUI request
+     */
+    200: {
+        path: string;
+        body: unknown;
+    };
+};
+
+export type TuiControlNextResponse = TuiControlNextResponses[keyof TuiControlNextResponses];
+
+export type TuiControlResponseData = {
+    body?: unknown;
+    path?: never;
+    query?: {
+        directory?: string;
+    };
+    url: '/tui/control/response';
+};
+
+export type TuiControlResponseResponses = {
+    /**
+     * Response submitted successfully
+     */
+    200: boolean;
+};
+
+export type TuiControlResponseResponse = TuiControlResponseResponses[keyof TuiControlResponseResponses];
+
 export type AuthSetData = {
     body?: Auth;
     path: {
-        id: string;
+        providerID: string;
     };
-    query?: never;
-    url: '/auth/{id}';
+    query?: {
+        directory?: string;
+    };
+    url: '/auth/{providerID}';
 };
 
 export type AuthSetErrors = {
     /**
      * Bad request
      */
-    400: _Error;
+    400: BadRequestError;
 };
 
 export type AuthSetError = AuthSetErrors[keyof AuthSetErrors];
@@ -1941,3 +4306,21 @@ export type AuthSetResponses = {
 };
 
 export type AuthSetResponse = AuthSetResponses[keyof AuthSetResponses];
+
+export type EventSubscribeData = {
+    body?: never;
+    path?: never;
+    query?: {
+        directory?: string;
+    };
+    url: '/event';
+};
+
+export type EventSubscribeResponses = {
+    /**
+     * Event stream
+     */
+    200: Event;
+};
+
+export type EventSubscribeResponse = EventSubscribeResponses[keyof EventSubscribeResponses];

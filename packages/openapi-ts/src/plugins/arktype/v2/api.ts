@@ -1,12 +1,10 @@
-import type { TsDsl } from '~/ts-dsl';
-import { $ } from '~/ts-dsl';
-
+import { $ } from '../../../ts-dsl';
 import type { ValidatorArgs } from '../shared/types';
 
 export const createRequestValidatorV2 = ({
   operation,
   plugin,
-}: ValidatorArgs): TsDsl | undefined => {
+}: ValidatorArgs): ReturnType<typeof $.func> | undefined => {
   const symbol = plugin.getSymbol({
     category: 'schema',
     resource: 'operation',
@@ -34,19 +32,13 @@ export const createRequestValidatorV2 = ({
   return $.func()
     .async()
     .param(dataParameterName)
-    .do(
-      $(symbol.placeholder)
-        .attr('parseAsync')
-        .call(dataParameterName)
-        .await()
-        .return(),
-    );
+    .do($(symbol).attr('parseAsync').call(dataParameterName).await().return());
 };
 
 export const createResponseValidatorV2 = ({
   operation,
   plugin,
-}: ValidatorArgs): TsDsl | undefined => {
+}: ValidatorArgs): ReturnType<typeof $.func> | undefined => {
   const symbol = plugin.getSymbol({
     category: 'schema',
     resource: 'operation',
@@ -60,11 +52,5 @@ export const createResponseValidatorV2 = ({
   return $.func()
     .async()
     .param(dataParameterName)
-    .do(
-      $(symbol.placeholder)
-        .attr('parseAsync')
-        .call(dataParameterName)
-        .await()
-        .return(),
-    );
+    .do($(symbol).attr('parseAsync').call(dataParameterName).await().return());
 };

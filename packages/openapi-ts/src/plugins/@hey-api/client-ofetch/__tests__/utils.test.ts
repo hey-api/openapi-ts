@@ -1,12 +1,6 @@
-import { describe, expect, it, vi } from 'vitest';
-
 import type { Auth } from '../../client-core/bundle/auth';
 import type { ResolvedRequestOptions } from '../bundle/types';
-import {
-  buildOfetchOptions,
-  mergeHeaders,
-  setAuthParams,
-} from '../bundle/utils';
+import { buildOfetchOptions, mergeHeaders, setAuthParams } from '../bundle/utils';
 
 describe('mergeHeaders', () => {
   it('merges plain objects into Headers', () => {
@@ -235,11 +229,7 @@ describe('buildOfetchOptions', () => {
   });
 
   it('passes through different credential values', () => {
-    const testCases: Array<RequestCredentials> = [
-      'omit',
-      'same-origin',
-      'include',
-    ];
+    const testCases: Array<RequestCredentials> = ['omit', 'same-origin', 'include'];
 
     testCases.forEach((credentialValue) => {
       const opts: ResolvedRequestOptions = {

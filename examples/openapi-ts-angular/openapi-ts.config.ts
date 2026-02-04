@@ -4,16 +4,18 @@ export default defineConfig({
   input:
     'https://raw.githubusercontent.com/swagger-api/swagger-petstore/master/src/main/resources/openapi.yaml',
   output: {
-    format: 'prettier',
-    lint: 'eslint',
     path: './src/client',
+    postProcess: ['oxfmt', 'eslint'],
   },
   plugins: [
     '@hey-api/client-angular',
     '@hey-api/schemas',
     {
-      asClass: true,
       name: '@hey-api/sdk',
+      operations: {
+        containerName: '{{name}}Service',
+        strategy: 'byTags',
+      },
     },
     {
       enums: 'javascript',

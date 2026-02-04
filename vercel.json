@@ -1,0 +1,47 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "pnpm --filter @docs/openapi-ts build",
+  "cleanUrls": true,
+  "devCommand": "pnpm --filter @docs/openapi-ts dev",
+  "framework": "vitepress",
+  "installCommand": "pnpm install --filter @docs/openapi-ts",
+  "outputDirectory": "docs/.vitepress/dist",
+  "redirects": [
+    {
+      "source": "/openapi-ts",
+      "destination": "/openapi-ts/get-started",
+      "permanent": true
+    },
+    {
+      "source": "/openapi-ts/custom-plugin",
+      "destination": "/openapi-ts/plugins/custom",
+      "permanent": true
+    },
+    {
+      "source": "/openapi-ts/plugins",
+      "destination": "/openapi-ts/core",
+      "permanent": true
+    },
+    {
+      "source": "/openapi-ts/output/json-schema",
+      "destination": "/openapi-ts/plugins/schemas",
+      "permanent": true
+    },
+    {
+      "source": "/openapi-ts/output/sdk",
+      "destination": "/openapi-ts/plugins/sdk",
+      "permanent": true
+    },
+    {
+      "source": "/openapi-ts/transformers",
+      "destination": "/openapi-ts/plugins/transformers",
+      "permanent": true
+    },
+    {
+      "source": "/openapi-ts/output/typescript",
+      "destination": "/openapi-ts/plugins/typescript",
+      "permanent": true
+    }
+  ],
+  "trailingSlash": false
+}

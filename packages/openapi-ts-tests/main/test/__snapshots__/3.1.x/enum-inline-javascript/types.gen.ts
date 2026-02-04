@@ -12,23 +12,15 @@ export type Bar = {
     type?: Baz;
 };
 
-export const Baz = {
-    QUX: 'qux',
-    QUUX: 'quux'
-} as const;
+export const Baz = { QUX: 'qux', QUUX: 'quux' } as const;
 
 export type Baz = typeof Baz[keyof typeof Baz];
 
-export const FooEnum = {
-    FOO: 'foo',
-    BAR: 'bar'
-} as const;
+export const FooEnum = { FOO: 'foo', BAR: 'bar' } as const;
 
 export type FooEnum = typeof FooEnum[keyof typeof FooEnum];
 
-export const FooEnum2 = {
-    BAZ: 'baz'
-} as const;
+export const FooEnum2 = { BAZ: 'baz' } as const;
 
 export type FooEnum2 = typeof FooEnum2[keyof typeof FooEnum2];
 

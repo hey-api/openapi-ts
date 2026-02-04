@@ -1,37 +1,50 @@
+import type { AnalysisContext, NodeName, NodeScope, Ref } from '@hey-api/codegen-core';
+import { ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
-import type { MaybeTsDsl, WithString } from '../base';
-import { TypeTsDsl } from '../base';
+import type { MaybeTsDsl, TypeTsDsl } from '../base';
+import { TsDsl } from '../base';
 
-export class TypeParamTsDsl extends TypeTsDsl<ts.TypeParameterDeclaration> {
-  protected name?: WithString<ts.Identifier>;
-  protected constraint?: WithString<MaybeTsDsl<TypeTsDsl>> | boolean;
-  protected defaultValue?: WithString<MaybeTsDsl<TypeTsDsl>> | boolean;
+export type TypeParamExpr = NodeName | boolean | MaybeTsDsl<TypeTsDsl>;
 
-  constructor(
-    name?: WithString<ts.Identifier>,
-    fn?: (name: TypeParamTsDsl) => void,
-  ) {
+const Mixed = TsDsl<ts.TypeParameterDeclaration>;
+
+export class TypeParamTsDsl extends Mixed {
+  readonly '~dsl' = 'TypeParamTsDsl';
+  override scope: NodeScope = 'type';
+
+  protected constraint?: Ref<TypeParamExpr>;
+  protected defaultValue?: Ref<TypeParamExpr>;
+
+  constructor(name?: NodeName, fn?: (name: TypeParamTsDsl) => void) {
     super();
-    this.name = name;
+    if (name) this.name.set(name);
     fn?.(this);
   }
 
-  default(value: WithString<MaybeTsDsl<TypeTsDsl>> | boolean): this {
-    this.defaultValue = value;
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    ctx.analyze(this.name);
+    ctx.analyze(this.constraint);
+    ctx.analyze(this.defaultValue);
+  }
+
+  default(value: TypeParamExpr): this {
+    this.defaultValue = ref(value);
     return this;
   }
 
-  extends(constraint: WithString<MaybeTsDsl<TypeTsDsl>> | boolean): this {
-    this.constraint = constraint;
+  extends(constraint: TypeParamExpr): this {
+    this.constraint = ref(constraint);
     return this;
   }
 
-  $render(): ts.TypeParameterDeclaration {
-    if (!this.name) throw new Error('Missing type name');
+  override toAst() {
+    const name = this.name.toString();
+    if (!name) throw new Error('Missing type name');
     return ts.factory.createTypeParameterDeclaration(
       undefined,
-      this.$expr(this.name),
+      this.$node(this.name) as ts.Identifier,
       this.$type(this.constraint),
       this.$type(this.defaultValue),
     );

@@ -1,9 +1,10 @@
-import { operationResponsesMap } from '~/ir/operation';
-import { deduplicateSchema } from '~/ir/schema';
-import type { IR } from '~/ir/types';
-import { buildName } from '~/openApi/shared/utils/name';
-import { tsc } from '~/tsc';
+import { fromRef } from '@hey-api/codegen-core';
+import type { IR } from '@hey-api/shared';
+import { applyNaming } from '@hey-api/shared';
+import { operationResponsesMap } from '@hey-api/shared';
+import { deduplicateSchema } from '@hey-api/shared';
 
+import { $ } from '../../../../ts-dsl';
 import { irSchemaToAst } from '../v1/plugin';
 import type { IrSchemaToAstOptions } from './types';
 
@@ -120,34 +121,28 @@ const operationToDataType = ({
 
   data.required = dataRequired;
 
-  const symbol = plugin.registerSymbol({
-    exported: true,
-    kind: 'type',
+  const symbol = plugin.symbol(applyNaming(operation.id, plugin.config.requests), {
     meta: {
       category: 'type',
-      path: state.path.value,
+      path: fromRef(state.path),
       resource: 'operation',
       resourceId: operation.id,
       role: 'data',
-      tags: state.tags?.value,
+      tags: fromRef(state.tags),
       tool: 'typescript',
     },
-    name: buildName({
-      config: plugin.config.requests,
-      name: operation.id,
-    }),
   });
-  const type = irSchemaToAst({
-    plugin,
-    schema: data,
-    state,
-  });
-  const node = tsc.typeAliasDeclaration({
-    exportType: symbol.exported,
-    name: symbol.placeholder,
-    type,
-  });
-  plugin.setSymbolValue(symbol, node);
+  const node = $.type
+    .alias(symbol)
+    .export()
+    .type(
+      irSchemaToAst({
+        plugin,
+        schema: data,
+        state,
+      }),
+    );
+  plugin.node(node);
 };
 
 export const operationToType = ({
@@ -159,146 +154,105 @@ export const operationToType = ({
 }) => {
   operationToDataType({ operation, plugin, state });
 
-  const { error, errors, response, responses } =
-    operationResponsesMap(operation);
+  const { error, errors, response, responses } = operationResponsesMap(operation);
 
   if (errors) {
-    const symbolErrors = plugin.registerSymbol({
-      exported: true,
-      kind: 'type',
+    const symbolErrors = plugin.symbol(applyNaming(operation.id, plugin.config.errors), {
       meta: {
         category: 'type',
-        path: state.path.value,
+        path: fromRef(state.path),
         resource: 'operation',
         resourceId: operation.id,
         role: 'errors',
-        tags: state.tags?.value,
+        tags: fromRef(state.tags),
         tool: 'typescript',
       },
-      name: buildName({
-        config: plugin.config.errors,
-        name: operation.id,
-      }),
     });
-    const type = irSchemaToAst({
-      plugin,
-      schema: errors,
-      state,
-    });
-    const node = tsc.typeAliasDeclaration({
-      exportType: symbolErrors.exported,
-      name: symbolErrors.placeholder,
-      type,
-    });
-    plugin.setSymbolValue(symbolErrors, node);
+    const node = $.type
+      .alias(symbolErrors)
+      .export()
+      .type(
+        irSchemaToAst({
+          plugin,
+          schema: errors,
+          state,
+        }),
+      );
+    plugin.node(node);
 
     if (error) {
-      const symbol = plugin.registerSymbol({
-        exported: true,
-        kind: 'type',
-        meta: {
-          category: 'type',
-          path: state.path.value,
-          resource: 'operation',
-          resourceId: operation.id,
-          role: 'error',
-          tags: state.tags?.value,
-          tool: 'typescript',
-        },
-        name: buildName({
-          config: {
-            case: plugin.config.errors.case,
-            name: plugin.config.errors.error,
+      const symbol = plugin.symbol(
+        applyNaming(operation.id, {
+          case: plugin.config.errors.case,
+          name: plugin.config.errors.error,
+        }),
+        {
+          meta: {
+            category: 'type',
+            path: fromRef(state.path),
+            resource: 'operation',
+            resourceId: operation.id,
+            role: 'error',
+            tags: fromRef(state.tags),
+            tool: 'typescript',
           },
-          name: operation.id,
-        }),
-      });
-      const type = tsc.indexedAccessTypeNode({
-        indexType: tsc.typeOperatorNode({
-          operator: 'keyof',
-          type: tsc.typeReferenceNode({ typeName: symbolErrors.placeholder }),
-        }),
-        objectType: tsc.typeReferenceNode({
-          typeName: symbolErrors.placeholder,
-        }),
-      });
-      const node = tsc.typeAliasDeclaration({
-        exportType: symbol.exported,
-        name: symbol.placeholder,
-        type,
-      });
-      plugin.setSymbolValue(symbol, node);
+        },
+      );
+      const node = $.type
+        .alias(symbol)
+        .export()
+        .type($.type(symbolErrors).idx($.type(symbolErrors).keyof()));
+      plugin.node(node);
     }
   }
 
   if (responses) {
-    const symbolResponses = plugin.registerSymbol({
-      exported: true,
-      kind: 'type',
+    const symbolResponses = plugin.symbol(applyNaming(operation.id, plugin.config.responses), {
       meta: {
         category: 'type',
-        path: state.path.value,
+        path: fromRef(state.path),
         resource: 'operation',
         resourceId: operation.id,
         role: 'responses',
-        tags: state.tags?.value,
+        tags: fromRef(state.tags),
         tool: 'typescript',
       },
-      name: buildName({
-        config: plugin.config.responses,
-        name: operation.id,
-      }),
     });
-    const type = irSchemaToAst({
-      plugin,
-      schema: responses,
-      state,
-    });
-    const node = tsc.typeAliasDeclaration({
-      exportType: symbolResponses.exported,
-      name: symbolResponses.placeholder,
-      type,
-    });
-    plugin.setSymbolValue(symbolResponses, node);
+    const node = $.type
+      .alias(symbolResponses)
+      .export()
+      .type(
+        irSchemaToAst({
+          plugin,
+          schema: responses,
+          state,
+        }),
+      );
+    plugin.node(node);
 
     if (response) {
-      const symbol = plugin.registerSymbol({
-        exported: true,
-        kind: 'type',
-        meta: {
-          category: 'type',
-          path: state.path.value,
-          resource: 'operation',
-          resourceId: operation.id,
-          role: 'response',
-          tags: state.tags?.value,
-          tool: 'typescript',
-        },
-        name: buildName({
-          config: {
-            case: plugin.config.responses.case,
-            name: plugin.config.responses.response,
+      const symbol = plugin.symbol(
+        applyNaming(operation.id, {
+          case: plugin.config.responses.case,
+          name: plugin.config.responses.response,
+        }),
+        {
+          meta: {
+            category: 'type',
+            path: fromRef(state.path),
+            resource: 'operation',
+            resourceId: operation.id,
+            role: 'response',
+            tags: fromRef(state.tags),
+            tool: 'typescript',
           },
-          name: operation.id,
-        }),
-      });
-      const type = tsc.indexedAccessTypeNode({
-        indexType: tsc.typeOperatorNode({
-          operator: 'keyof',
-          type: tsc.typeReferenceNode({
-            typeName: symbolResponses.placeholder,
-          }),
-        }),
-        objectType: tsc.typeReferenceNode({
-          typeName: symbolResponses.placeholder,
-        }),
-      });
-      const node = tsc.typeAliasDeclaration({
-        exportType: symbol.exported,
-        name: symbol.placeholder,
-        type,
-      });
-      plugin.setSymbolValue(symbol, node);
+        },
+      );
+      const node = $.type
+        .alias(symbol)
+        .export()
+        .type($.type(symbolResponses).idx($.type(symbolResponses).keyof()));
+      plugin.node(node);
     }
   }
 };

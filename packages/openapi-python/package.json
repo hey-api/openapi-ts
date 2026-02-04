@@ -1,0 +1,87 @@
+{
+  "name": "@hey-api/openapi-python",
+  "version": "0.0.4",
+  "private": true,
+  "description": "🐍 OpenAPI to Python codegen.",
+  "keywords": [
+    "codegen",
+    "generator",
+    "http",
+    "javascript",
+    "json",
+    "node",
+    "openapi",
+    "python",
+    "rest",
+    "swagger",
+    "typescript",
+    "yaml"
+  ],
+  "homepage": "https://heyapi.dev/",
+  "bugs": {
+    "url": "https://github.com/hey-api/openapi-ts/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Hey API",
+    "email": "lubos@heyapi.dev",
+    "url": "https://heyapi.dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hey-api/openapi-ts.git"
+  },
+  "funding": "https://github.com/sponsors/hey-api",
+  "bin": {
+    "openapi-python": "./bin/run.js"
+  },
+  "files": [
+    "bin",
+    "dist",
+    "LICENSE.md",
+    "README.md"
+  ],
+  "type": "module",
+  "main": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "tsdown && pnpm check-exports",
+    "check-exports": "attw --pack . --profile esm-only --ignore-rules cjs-resolves-to-esm",
+    "dev": "tsdown --watch",
+    "prepublishOnly": "pnpm build",
+    "test:coverage": "vitest run --coverage",
+    "test:update": "vitest watch --update",
+    "test:watch": "vitest watch",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "typecheck:next": "tsc --noEmit && uv run mypy src/ts-python/__snapshots__"
+  },
+  "dependencies": {
+    "@hey-api/codegen-core": "workspace:*",
+    "@hey-api/json-schema-ref-parser": "1.2.4",
+    "@hey-api/shared": "workspace:*",
+    "@hey-api/types": "workspace:*",
+    "ansi-colors": "4.1.3",
+    "color-support": "1.1.3",
+    "commander": "14.0.2"
+  },
+  "devDependencies": {
+    "@config/vite-base": "workspace:*",
+    "eslint": "9.39.1",
+    "typescript": "5.9.3",
+    "yaml": "2.8.2"
+  },
+  "peerDependencies": {
+    "typescript": ">=5.5.3"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}

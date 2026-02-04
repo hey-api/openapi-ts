@@ -1,62 +1,51 @@
-import type { IR } from '~/ir/types';
-import { buildName } from '~/openApi/shared/utils/name';
-import {
-  createOperationComment,
-  hasOperationSse,
-} from '~/plugins/shared/utils/operation';
-import type { TsDsl } from '~/ts-dsl';
-import { $ } from '~/ts-dsl';
+import type { IR } from '@hey-api/shared';
+import { applyNaming } from '@hey-api/shared';
 
+import { createOperationComment, hasOperationSse } from '../../../plugins/shared/utils/operation';
+import type { TsDsl } from '../../../ts-dsl';
+import { $ } from '../../../ts-dsl';
 import type { SwrPlugin } from '../types';
 
 export const createUseSwr = ({
   operation,
   plugin,
-  queryFn,
 }: {
   operation: IR.OperationObject;
   plugin: SwrPlugin['Instance'];
-  queryFn: string;
 }): void => {
   if (hasOperationSse({ operation })) {
     return;
   }
 
-  const symbolUseSwr = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'swr',
-  });
-  const symbolUseQueryFn = plugin.registerSymbol({
-    exported: true,
-    name: buildName({
-      config: plugin.config.useSwr,
-      name: operation.id,
-    }),
-  });
+  const symbolUseSwr = plugin.external('swr');
+  const symbolUseQueryFn = plugin.symbol(applyNaming(operation.id, plugin.config.useSwr));
 
-  const awaitSdkFn = $(queryFn)
-    .call($.object().prop('throwOnError', $.literal(true)))
-    .await();
+  const awaitSdkFn = $.lazy((ctx) =>
+    ctx
+      .access(
+        plugin.referenceSymbol({
+          category: 'sdk',
+          resource: 'operation',
+          resourceId: operation.id,
+        }),
+      )
+      .call($.object().prop('throwOnError', $.literal(true)))
+      .await(),
+  );
 
   const statements: Array<TsDsl<any>> = [];
   if (plugin.getPluginOrThrow('@hey-api/sdk').config.responseStyle === 'data') {
     statements.push($.return(awaitSdkFn));
   } else {
-    statements.push(
-      $.const().object('data').assign(awaitSdkFn),
-      $.return('data'),
-    );
+    statements.push($.const().object('data').assign(awaitSdkFn), $.return('data'));
   }
 
-  const statement = $.const(symbolUseQueryFn.placeholder)
-    .export(symbolUseQueryFn.exported)
-    .$if(
-      plugin.config.comments && createOperationComment({ operation }),
-      (c, v) => c.doc(v as ReadonlyArray<string>),
-    )
+  const statement = $.const(symbolUseQueryFn)
+    .export()
+    .$if(plugin.config.comments && createOperationComment(operation), (c, v) => c.doc(v))
     .assign(
       $.func().do(
-        $(symbolUseSwr.placeholder)
+        $(symbolUseSwr)
           .call(
             $.literal(operation.path),
             $.func()
@@ -66,5 +55,5 @@ export const createUseSwr = ({
           .return(),
       ),
     );
-  plugin.setSymbolValue(symbolUseQueryFn, statement);
+  plugin.node(statement);
 };

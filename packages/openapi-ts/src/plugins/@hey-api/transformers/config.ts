@@ -1,4 +1,4 @@
-import { definePluginConfig } from '~/plugins/shared/utils/config';
+import { definePluginConfig } from '@hey-api/shared';
 
 import { bigIntExpressions, dateExpressions } from './expressions';
 import { handler } from './plugin';
@@ -21,17 +21,11 @@ export const defaultConfig: HeyApiTransformersPlugin['Config'] = {
     }
 
     if (plugin.config.dates) {
-      plugin.config.transformers = [
-        ...plugin.config.transformers,
-        dateExpressions,
-      ];
+      plugin.config.transformers = [...plugin.config.transformers, dateExpressions];
     }
 
     if (plugin.config.bigInt) {
-      plugin.config.transformers = [
-        ...plugin.config.transformers,
-        bigIntExpressions,
-      ];
+      plugin.config.transformers = [...plugin.config.transformers, bigIntExpressions];
     }
   },
   tags: ['transformer'],

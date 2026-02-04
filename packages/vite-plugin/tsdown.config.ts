@@ -1,6 +1,6 @@
 import { defineConfig } from 'tsdown';
 
-export default defineConfig((options) => ({
+export default defineConfig({
   banner(ctx) {
     /**
      * fix dynamic require in ESM
@@ -8,7 +8,7 @@ export default defineConfig((options) => ({
      */
     if (ctx.format === 'esm') {
       return {
-        js: "import { createRequire } from 'module'; const require = createRequire(import.meta.url);",
+        js: `import { createRequire } from 'module'; const require = createRequire(import.${'meta'}.url);`,
       };
     }
   },
@@ -16,8 +16,8 @@ export default defineConfig((options) => ({
   dts: true,
   entry: ['src/index.ts'],
   format: ['cjs', 'esm'],
-  minify: !options.watch,
+  minify: false,
   shims: false,
   sourcemap: true,
   treeshake: true,
-}));
+});

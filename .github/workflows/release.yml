@@ -17,37 +17,36 @@ concurrency: ${{ github.workflow }}-${{ github.ref }}
 jobs:
   release:
     name: Release
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-        node-version: ['24.10.0']
+    runs-on: ubuntu-latest
+    env:
+      TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+      TURBO_TELEMETRY_DISABLED: 1
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
     steps:
-      - uses: actions/checkout@v5.0.0
+      - uses: actions/checkout@v6.0.2
 
       - uses: pnpm/action-setup@v4.2.0
 
       - uses: actions/setup-node@v6
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version-file: '.nvmrc'
           cache: pnpm
 
       - name: Install Dependencies
-        # prevent lockfile mismatch error
         run: pnpm install --frozen-lockfile
 
       - name: Build packages
-        run: pnpm build --filter="@hey-api/**"
+        run: pnpm turbo run build --filter="@hey-api/**"
 
       - name: Generate GitHub App Token
         id: app-token
-        uses: actions/create-github-app-token@v2.1.4
+        uses: actions/create-github-app-token@v2.2.1
         with:
           app-id: ${{ secrets.GIT_APP_CLIENT_ID }}
           private-key: ${{ secrets.GIT_APP_PRIVATE_KEY }}
 
       - name: Create Release Pull Request
-        uses: changesets/action@v1.5.3
+        uses: changesets/action@v1.6.0
         with:
           commit: 'ci: release'
           publish: pnpm changeset publish
@@ -67,7 +66,7 @@ jobs:
 
       - name: Commit lock file
         if: env.CURRENT_BRANCH == 'changeset-release/main'
-        uses: stefanzweifel/git-auto-commit-action@v7.0.0
+        uses: stefanzweifel/git-auto-commit-action@v7.1.0
         with:
           branch: ${{ env.CURRENT_BRANCH }}
           commit_message: 'chore: update lock file'

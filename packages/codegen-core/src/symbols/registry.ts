@@ -1,11 +1,6 @@
-import type { ISymbolMeta } from '../extensions/types';
-import { wrapId } from '../renderer/utils';
-import type {
-  ISymbolIdentifier,
-  ISymbolIn,
-  ISymbolOut,
-  ISymbolRegistry,
-} from './types';
+import type { ISymbolMeta } from '../extensions';
+import { Symbol } from './symbol';
+import type { ISymbolIdentifier, ISymbolIn, ISymbolRegistry } from './types';
 
 type IndexEntry = [string, unknown];
 type IndexKeySpace = ReadonlyArray<IndexEntry>;
@@ -14,45 +9,34 @@ type SymbolId = number;
 
 export class SymbolRegistry implements ISymbolRegistry {
   private _id: SymbolId = 0;
-  private indices: Map<IndexEntry[0], Map<IndexEntry[1], Set<SymbolId>>> =
-    new Map();
-  private nodes: Map<SymbolId, unknown> = new Map();
-  private queryCache: Map<QueryCacheKey, ReadonlyArray<SymbolId>> = new Map();
-  private queryCacheDependencies: Map<QueryCacheKey, Set<QueryCacheKey>> =
-    new Map();
-  private registerOrder: Set<SymbolId> = new Set();
-  private stubCache: Map<QueryCacheKey, SymbolId> = new Map();
-  private stubs: Set<SymbolId> = new Set();
-  private values: Map<SymbolId, ISymbolOut> = new Map();
+  private _indices: Map<IndexEntry[0], Map<IndexEntry[1], Set<SymbolId>>> = new Map();
+  private _queryCache: Map<QueryCacheKey, ReadonlyArray<SymbolId>> = new Map();
+  private _queryCacheDependencies: Map<QueryCacheKey, Set<QueryCacheKey>> = new Map();
+  private _registered: Set<SymbolId> = new Set();
+  private _stubs: Set<SymbolId> = new Set();
+  private _stubCache: Map<QueryCacheKey, SymbolId> = new Map();
+  private _values: Map<SymbolId, Symbol> = new Map();
 
-  get(identifier: ISymbolIdentifier): ISymbolOut | undefined {
+  get(identifier: ISymbolIdentifier): Symbol | undefined {
     return typeof identifier === 'number'
-      ? this.values.get(identifier)
+      ? this._values.get(identifier)
       : this.query(identifier)[0];
-  }
-
-  getValue(symbolId: SymbolId): unknown {
-    return this.nodes.get(symbolId);
-  }
-
-  hasValue(symbolId: SymbolId): boolean {
-    return this.nodes.has(symbolId);
-  }
-
-  get id(): SymbolId {
-    return this._id++;
   }
 
   isRegistered(identifier: ISymbolIdentifier): boolean {
     const symbol = this.get(identifier);
-    return symbol ? this.registerOrder.has(symbol.id) : false;
+    return symbol ? this._registered.has(symbol.id) : false;
   }
 
-  query(filter: ISymbolMeta): ReadonlyArray<ISymbolOut> {
+  get nextId(): SymbolId {
+    return this._id++;
+  }
+
+  query(filter: ISymbolMeta): ReadonlyArray<Symbol> {
     const cacheKey = this.buildCacheKey(filter);
-    const cachedIds = this.queryCache.get(cacheKey);
+    const cachedIds = this._queryCache.get(cacheKey);
     if (cachedIds) {
-      return cachedIds.map((symbolId) => this.values.get(symbolId)!);
+      return cachedIds.map((symbolId) => this._values.get(symbolId)!);
     }
     const sets: Array<Set<SymbolId>> = [];
     const indexKeySpace = this.buildIndexKeySpace(filter);
@@ -60,7 +44,7 @@ export class SymbolRegistry implements ISymbolRegistry {
     let missed = false;
     for (const indexEntry of indexKeySpace) {
       cacheDependencies.add(this.serializeIndexEntry(indexEntry));
-      const values = this.indices.get(indexEntry[0]);
+      const values = this._indices.get(indexEntry[0]);
       if (!values) {
         missed = true;
         break;
@@ -73,8 +57,8 @@ export class SymbolRegistry implements ISymbolRegistry {
       sets.push(set);
     }
     if (missed || !sets.length) {
-      this.queryCacheDependencies.set(cacheKey, cacheDependencies);
-      this.queryCache.set(cacheKey, []);
+      this._queryCacheDependencies.set(cacheKey, cacheDependencies);
+      this._queryCache.set(cacheKey, []);
       return [];
     }
     let result = new Set(sets[0]);
@@ -82,55 +66,47 @@ export class SymbolRegistry implements ISymbolRegistry {
       result = new Set([...result].filter((symbolId) => set.has(symbolId)));
     }
     const resultIds = [...result];
-    this.queryCacheDependencies.set(cacheKey, cacheDependencies);
-    this.queryCache.set(cacheKey, resultIds);
-    return resultIds.map((symbolId) => this.values.get(symbolId)!);
+    this._queryCacheDependencies.set(cacheKey, cacheDependencies);
+    this._queryCache.set(cacheKey, resultIds);
+    return resultIds.map((symbolId) => this._values.get(symbolId)!);
   }
 
-  reference(meta: ISymbolMeta): ISymbolOut {
+  reference(meta: ISymbolMeta): Symbol {
     const [registered] = this.query(meta);
     if (registered) return registered;
+
     const cacheKey = this.buildCacheKey(meta);
-    const cachedId = this.stubCache.get(cacheKey);
-    if (cachedId !== undefined) return this.values.get(cachedId)!;
-    const id = this.id;
-    const stub: ISymbolOut = {
-      id,
-      meta,
-      placeholder: wrapId(String(id)),
-    };
-    this.values.set(stub.id, stub);
-    this.stubs.add(stub.id);
-    this.stubCache.set(cacheKey, stub.id);
+    const cachedId = this._stubCache.get(cacheKey);
+    if (cachedId !== undefined) return this._values.get(cachedId)!;
+
+    const stub = new Symbol({ meta, name: '' }, this.nextId);
+
+    this._values.set(stub.id, stub);
+    this._stubs.add(stub.id);
+    this._stubCache.set(cacheKey, stub.id);
     return stub;
   }
 
-  register(symbol: ISymbolIn): ISymbolOut {
-    const id = symbol.id !== undefined ? symbol.id : this.id;
-    const result: ISymbolOut = {
-      ...symbol, // clone to avoid mutation
-      id,
-      placeholder: symbol.placeholder ?? wrapId(String(id)),
-    };
-    this.values.set(result.id, result);
-    this.registerOrder.add(result.id);
+  register(symbol: ISymbolIn): Symbol {
+    const result = new Symbol(symbol, this.nextId);
+
+    this._values.set(result.id, result);
+    this._registered.add(result.id);
+
     if (result.meta) {
       const indexKeySpace = this.buildIndexKeySpace(result.meta);
       this.indexSymbol(result.id, indexKeySpace);
       this.invalidateCache(indexKeySpace);
       this.replaceStubs(result, indexKeySpace);
     }
+
     return result;
   }
 
-  *registered(): IterableIterator<ISymbolOut> {
-    for (const id of this.registerOrder.values()) {
-      yield this.values.get(id)!;
+  *registered(): IterableIterator<Symbol> {
+    for (const id of this._registered.values()) {
+      yield this._values.get(id)!;
     }
-  }
-
-  setValue(symbolId: SymbolId, value: unknown): Map<SymbolId, unknown> {
-    return this.nodes.set(symbolId, value);
   }
 
   private buildCacheKey(filter: ISymbolMeta): QueryCacheKey {
@@ -156,8 +132,8 @@ export class SymbolRegistry implements ISymbolRegistry {
 
   private indexSymbol(symbolId: SymbolId, indexKeySpace: IndexKeySpace): void {
     for (const [key, value] of indexKeySpace) {
-      if (!this.indices.has(key)) this.indices.set(key, new Map());
-      const values = this.indices.get(key)!;
+      if (!this._indices.has(key)) this._indices.set(key, new Map());
+      const values = this._indices.get(key)!;
       const set = values.get(value) ?? new Set();
       set.add(symbolId);
       values.set(value, set);
@@ -165,17 +141,12 @@ export class SymbolRegistry implements ISymbolRegistry {
   }
 
   private invalidateCache(indexKeySpace: IndexKeySpace): void {
-    const changed = indexKeySpace.map((indexEntry) =>
-      this.serializeIndexEntry(indexEntry),
-    );
-    for (const [
-      cacheKey,
-      cacheDependencies,
-    ] of this.queryCacheDependencies.entries()) {
+    const changed = indexKeySpace.map((indexEntry) => this.serializeIndexEntry(indexEntry));
+    for (const [cacheKey, cacheDependencies] of this._queryCacheDependencies.entries()) {
       for (const key of changed) {
         if (cacheDependencies.has(key)) {
-          this.queryCacheDependencies.delete(cacheKey);
-          this.queryCache.delete(cacheKey);
+          this._queryCacheDependencies.delete(cacheKey);
+          this._queryCache.delete(cacheKey);
           break;
         }
       }
@@ -192,17 +163,14 @@ export class SymbolRegistry implements ISymbolRegistry {
     return true;
   }
 
-  private replaceStubs(symbol: ISymbolOut, indexKeySpace: IndexKeySpace): void {
-    for (const stubId of this.stubs.values()) {
-      const stub = this.values.get(stubId);
-      if (
-        stub?.meta &&
-        this.isSubset(this.buildIndexKeySpace(stub.meta), indexKeySpace)
-      ) {
+  private replaceStubs(symbol: Symbol, indexKeySpace: IndexKeySpace): void {
+    for (const stubId of this._stubs.values()) {
+      const stub = this._values.get(stubId);
+      if (stub?.meta && this.isSubset(this.buildIndexKeySpace(stub.meta), indexKeySpace)) {
         const cacheKey = this.buildCacheKey(stub.meta);
-        this.stubCache.delete(cacheKey);
-        this.values.set(stubId, Object.assign(stub, symbol));
-        this.stubs.delete(stubId);
+        this._stubCache.delete(cacheKey);
+        this._stubs.delete(stubId);
+        stub.setCanonical(symbol);
       }
     }
   }

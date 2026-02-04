@@ -1,21 +1,21 @@
 {
   "name": "openapi-ts-monorepo",
   "version": "0.1.0",
-  "description": "Public @hey-api monorepo",
   "private": true,
+  "description": "Public @hey-api monorepo",
   "homepage": "https://heyapi.dev",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/hey-api/openapi-ts.git"
-  },
   "bugs": {
     "url": "https://github.com/hey-api/openapi-ts/issues"
   },
   "license": "MIT",
   "author": {
-    "email": "lubos@heyapi.dev",
     "name": "Hey API",
+    "email": "lubos@heyapi.dev",
     "url": "https://heyapi.dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hey-api/openapi-ts.git"
   },
   "funding": "https://github.com/sponsors/hey-api",
   "type": "module",
@@ -24,9 +24,12 @@
     "changeset": "changeset",
     "examples:check": "sh ./scripts/examples-check.sh",
     "examples:generate": "sh ./scripts/examples-generate.sh",
-    "format": "prettier --write .",
-    "lint:fix": "prettier --check --write . && eslint . --fix",
-    "lint": "prettier --check . && eslint .",
+    "format": "oxfmt .",
+    "format:next": "oxfmt . && uv run ruff format packages/openapi-python/src/ts-python/__snapshots__",
+    "lint": "oxfmt --check . && eslint .",
+    "lint:next": "oxfmt --check . && eslint . && uv run ruff check packages/openapi-python/src/ts-python/__snapshots__",
+    "lint:fix": "oxfmt . && eslint . --fix",
+    "lint:fix:next": "oxfmt . && eslint . --fix && uv run ruff check --fix packages/openapi-python/src/ts-python/__snapshots__",
     "prepare": "husky",
     "test:changelog": "vitest run __tests__/*.test.ts",
     "test:changelog:watch": "vitest watch __tests__/*.test.ts",
@@ -34,44 +37,51 @@
     "test:update": "turbo run test:update",
     "test:watch": "turbo run test:watch",
     "test": "turbo run test",
-    "typecheck": "turbo run typecheck"
-  },
-  "engines": {
-    "node": ">=20.19.0"
+    "typecheck": "turbo run typecheck",
+    "tt": "turbo run test --filter",
+    "tw": "turbo run test:watch --filter",
+    "tu": "turbo run test:update --filter",
+    "tb": "turbo run build --filter",
+    "ty": "turbo run typecheck --filter",
+    "dev:ts": "cd dev && tsx watch --clear-screen=false ../packages/openapi-ts/src/run.ts",
+    "dev:py": "cd dev && tsx watch --clear-screen=false ../packages/openapi-python/src/run.ts"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "0.18.2",
-    "@changesets/cli": "2.29.7",
-    "@changesets/get-github-info": "0.6.0",
-    "@changesets/parse": "0.4.1",
+    "@changesets/cli": "2.29.8",
+    "@changesets/get-github-info": "0.7.0",
+    "@changesets/parse": "0.4.2",
     "@changesets/types": "6.1.0",
     "@config/vite-base": "workspace:*",
-    "@eslint/js": "9.32.0",
+    "@eslint/js": "9.39.1",
     "@hey-api/custom-client": "workspace:*",
     "@hey-api/openapi-ts": "workspace:*",
     "@types/node": "22.10.5",
     "@typescript-eslint/eslint-plugin": "8.29.1",
-    "@vitest/coverage-v8": "3.1.1",
+    "@vitest/coverage-v8": "3.2.4",
     "dotenv": "17.2.3",
-    "eslint": "9.17.0",
-    "eslint-config-prettier": "9.1.2",
+    "eslint": "9.39.1",
     "eslint-plugin-simple-import-sort": "12.1.1",
     "eslint-plugin-sort-destructure-keys": "2.0.0",
     "eslint-plugin-sort-keys-fix": "1.1.2",
     "eslint-plugin-typescript-sort-keys": "3.3.0",
-    "eslint-plugin-vue": "9.32.0",
-    "globals": "16.4.0",
+    "eslint-plugin-vue": "9.33.0",
+    "globals": "16.5.0",
     "husky": "9.1.7",
-    "lint-staged": "16.2.6",
-    "prettier": "3.4.2",
-    "rollup": "4.31.0",
+    "lint-staged": "16.2.7",
+    "oxfmt": "0.27.0",
+    "rollup": "4.56.0",
     "rollup-plugin-dts": "6.1.1",
     "ts-node": "10.9.2",
-    "tsdown": "0.15.12",
-    "turbo": "2.5.8",
+    "tsdown": "0.18.4",
+    "tsx": "4.21.0",
+    "turbo": "2.8.0",
     "typescript": "5.9.3",
     "typescript-eslint": "8.29.1",
-    "vitest": "3.1.1"
+    "vitest": "3.2.4"
   },
-  "packageManager": "pnpm@10.22.0"
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "packageManager": "pnpm@10.28.2"
 }

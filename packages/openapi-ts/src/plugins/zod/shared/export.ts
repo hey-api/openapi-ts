@@ -1,9 +1,8 @@
 import type { Symbol } from '@hey-api/codegen-core';
+import type { IR } from '@hey-api/shared';
 
-import type { IR } from '~/ir/types';
-import { createSchemaComment } from '~/plugins/shared/utils/schema';
-import { $ } from '~/ts-dsl';
-
+import { createSchemaComment } from '../../../plugins/shared/utils/schema';
+import { $ } from '../../../ts-dsl';
 import { identifiers } from '../constants';
 import type { ZodPlugin } from '../types';
 import type { Ast } from './types';
@@ -21,29 +20,20 @@ export const exportAst = ({
   symbol: Symbol;
   typeInferSymbol: Symbol | undefined;
 }): void => {
-  const z = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'zod.z',
-  });
+  const z = plugin.external('zod.z');
 
-  const statement = $.const(symbol.placeholder)
-    .export(symbol.exported)
-    .$if(plugin.config.comments && createSchemaComment({ schema }), (c, v) =>
-      c.doc(v as ReadonlyArray<string>),
-    )
-    .$if(ast.typeName, (c, v) => c.type($.type(z.placeholder).attr(v)))
+  const statement = $.const(symbol)
+    .export()
+    .$if(plugin.config.comments && createSchemaComment(schema), (c, v) => c.doc(v))
+    .$if(ast.typeName, (c, v) => c.type($.type(z).attr(v)))
     .assign(ast.expression);
-  plugin.setSymbolValue(symbol, statement);
+  plugin.node(statement);
 
   if (typeInferSymbol) {
     const inferType = $.type
-      .alias(typeInferSymbol.placeholder)
-      .export(typeInferSymbol.exported)
-      .type(
-        $.type(z.placeholder)
-          .attr(identifiers.infer)
-          .generic($(symbol.placeholder).typeofType()),
-      );
-    plugin.setSymbolValue(typeInferSymbol, inferType);
+      .alias(typeInferSymbol)
+      .export()
+      .type($.type(z).attr(identifiers.infer).generic($(symbol).typeofType()));
+    plugin.node(inferType);
   }
 };

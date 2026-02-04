@@ -37,11 +37,7 @@ export type Options<
 export const listPets = <ThrowOnError extends boolean = false>(
   options?: Options<ListPetsData, ThrowOnError>,
 ) =>
-  (options?.client ?? client).get<
-    ListPetsResponses,
-    ListPetsErrors,
-    ThrowOnError
-  >({
+  (options?.client ?? client).get<ListPetsResponses, ListPetsErrors, ThrowOnError>({
     url: '/pets',
     ...options,
   });
@@ -52,11 +48,7 @@ export const listPets = <ThrowOnError extends boolean = false>(
 export const createPets = <ThrowOnError extends boolean = false>(
   options?: Options<CreatePetsData, ThrowOnError>,
 ) =>
-  (options?.client ?? client).post<
-    CreatePetsResponses,
-    CreatePetsErrors,
-    ThrowOnError
-  >({
+  (options?.client ?? client).post<CreatePetsResponses, CreatePetsErrors, ThrowOnError>({
     url: '/pets',
     ...options,
   });
@@ -67,11 +59,7 @@ export const createPets = <ThrowOnError extends boolean = false>(
 export const showPetById = <ThrowOnError extends boolean = false>(
   options: Options<ShowPetByIdData, ThrowOnError>,
 ) =>
-  (options.client ?? client).get<
-    ShowPetByIdResponses,
-    ShowPetByIdErrors,
-    ThrowOnError
-  >({
+  (options.client ?? client).get<ShowPetByIdResponses, ShowPetByIdErrors, ThrowOnError>({
     url: '/pets/{petId}',
     ...options,
   });

@@ -1,11 +1,94 @@
-import type ts from 'typescript';
+import type { SchemaWithType } from '@hey-api/shared';
 
-import type { SchemaWithType } from '~/plugins';
-import { tsc } from '~/tsc';
-
+import { $ } from '../../../../ts-dsl';
 import { identifiers } from '../../constants';
+import type { EnumResolverContext } from '../../resolvers';
+import type { Chain } from '../../shared/chain';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
 import { unknownToAst } from './unknown';
+
+function itemsNode(ctx: EnumResolverContext): ReturnType<EnumResolverContext['nodes']['items']> {
+  const { schema, symbols } = ctx;
+  const { z } = symbols;
+
+  const enumMembers: Array<ReturnType<typeof $.literal>> = [];
+  const literalMembers: Array<Chain> = [];
+
+  let isNullable = false;
+  let allStrings = true;
+
+  for (const item of schema.items ?? []) {
+    if (item.type === 'string' && typeof item.const === 'string') {
+      const literal = $.literal(item.const);
+      enumMembers.push(literal);
+      literalMembers.push($(z).attr(identifiers.literal).call(literal));
+    } else if (
+      (item.type === 'number' || item.type === 'integer') &&
+      typeof item.const === 'number'
+    ) {
+      allStrings = false;
+      const literal = $.literal(item.const);
+      literalMembers.push($(z).attr(identifiers.literal).call(literal));
+    } else if (item.type === 'boolean' && typeof item.const === 'boolean') {
+      allStrings = false;
+      const literal = $.literal(item.const);
+      literalMembers.push($(z).attr(identifiers.literal).call(literal));
+    } else if (item.type === 'null' || item.const === null) {
+      isNullable = true;
+    }
+  }
+
+  return {
+    allStrings,
+    enumMembers,
+    isNullable,
+    literalMembers,
+  };
+}
+
+function baseNode(ctx: EnumResolverContext): Chain {
+  const { symbols } = ctx;
+  const { z } = symbols;
+  const { allStrings, enumMembers, literalMembers } = ctx.nodes.items(ctx);
+
+  if (allStrings && enumMembers.length > 0) {
+    return $(z)
+      .attr(identifiers.enum)
+      .call($.array(...enumMembers));
+  } else if (literalMembers.length === 1) {
+    return literalMembers[0]!;
+  } else {
+    return $(z)
+      .attr(identifiers.union)
+      .call($.array(...literalMembers));
+  }
+}
+
+function nullableNode(ctx: EnumResolverContext): Chain | undefined {
+  const { chain, symbols } = ctx;
+  const { z } = symbols;
+  const { isNullable } = ctx.nodes.items(ctx);
+  if (!isNullable) return;
+  return $(z).attr(identifiers.nullable).call(chain.current);
+}
+
+function enumResolver(ctx: EnumResolverContext): Chain {
+  const { literalMembers } = ctx.nodes.items(ctx);
+
+  if (!literalMembers.length) {
+    return ctx.chain.current;
+  }
+
+  const baseExpression = ctx.nodes.base(ctx);
+  ctx.chain.current = baseExpression;
+
+  const nullableExpression = ctx.nodes.nullable(ctx);
+  if (nullableExpression) {
+    ctx.chain.current = nullableExpression;
+  }
+
+  return ctx.chain.current;
+}
 
 export const enumToAst = ({
   plugin,
@@ -14,66 +97,17 @@ export const enumToAst = ({
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'enum'>;
 }): Omit<Ast, 'typeName'> => {
-  const z = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'zod.z',
+  const z = plugin.external('zod.z');
+
+  const { literalMembers } = itemsNode({
+    $,
+    chain: { current: $(z) },
+    nodes: { base: baseNode, items: itemsNode, nullable: nullableNode },
+    plugin,
+    schema,
+    symbols: { z },
+    utils: { ast: {}, state },
   });
-
-  const result: Partial<Omit<Ast, 'typeName'>> = {};
-
-  const enumMembers: Array<ts.LiteralExpression> = [];
-  const literalMembers: Array<ts.CallExpression> = [];
-
-  let isNullable = false;
-  let allStrings = true;
-
-  for (const item of schema.items ?? []) {
-    // Zod supports string, number, and boolean enums
-    if (item.type === 'string' && typeof item.const === 'string') {
-      const stringLiteral = tsc.stringLiteral({
-        text: item.const,
-      });
-      enumMembers.push(stringLiteral);
-      literalMembers.push(
-        tsc.callExpression({
-          functionName: tsc.propertyAccessExpression({
-            expression: z.placeholder,
-            name: identifiers.literal,
-          }),
-          parameters: [stringLiteral],
-        }),
-      );
-    } else if (
-      (item.type === 'number' || item.type === 'integer') &&
-      typeof item.const === 'number'
-    ) {
-      allStrings = false;
-      const numberLiteral = tsc.ots.number(item.const);
-      literalMembers.push(
-        tsc.callExpression({
-          functionName: tsc.propertyAccessExpression({
-            expression: z.placeholder,
-            name: identifiers.literal,
-          }),
-          parameters: [numberLiteral],
-        }),
-      );
-    } else if (item.type === 'boolean' && typeof item.const === 'boolean') {
-      allStrings = false;
-      const booleanLiteral = tsc.ots.boolean(item.const);
-      literalMembers.push(
-        tsc.callExpression({
-          functionName: tsc.propertyAccessExpression({
-            expression: z.placeholder,
-            name: identifiers.literal,
-          }),
-          parameters: [booleanLiteral],
-        }),
-      );
-    } else if (item.type === 'null' || item.const === null) {
-      isNullable = true;
-    }
-  }
 
   if (!literalMembers.length) {
     return unknownToAst({
@@ -85,47 +119,31 @@ export const enumToAst = ({
     });
   }
 
-  // Use z.enum() for pure string enums, z.union() for mixed or non-string types
-  if (allStrings && enumMembers.length > 0) {
-    result.expression = tsc.callExpression({
-      functionName: tsc.propertyAccessExpression({
-        expression: z.placeholder,
-        name: identifiers.enum,
-      }),
-      parameters: [
-        tsc.arrayLiteralExpression({
-          elements: enumMembers,
-          multiLine: false,
-        }),
-      ],
-    });
-  } else if (literalMembers.length === 1) {
-    // For single-member unions, use the member directly instead of wrapping in z.union()
-    result.expression = literalMembers[0];
-  } else {
-    result.expression = tsc.callExpression({
-      functionName: tsc.propertyAccessExpression({
-        expression: z.placeholder,
-        name: identifiers.union,
-      }),
-      parameters: [
-        tsc.arrayLiteralExpression({
-          elements: literalMembers,
-          multiLine: literalMembers.length > 3,
-        }),
-      ],
-    });
-  }
+  const ctx: EnumResolverContext = {
+    $,
+    chain: {
+      current: $(z),
+    },
+    nodes: {
+      base: baseNode,
+      items: itemsNode,
+      nullable: nullableNode,
+    },
+    plugin,
+    schema,
+    symbols: {
+      z,
+    },
+    utils: {
+      ast: {},
+      state,
+    },
+  };
 
-  if (isNullable) {
-    result.expression = tsc.callExpression({
-      functionName: tsc.propertyAccessExpression({
-        expression: z.placeholder,
-        name: identifiers.nullable,
-      }),
-      parameters: [result.expression],
-    });
-  }
+  const resolver = plugin.config['~resolvers']?.enum;
+  const node = resolver?.(ctx) ?? enumResolver(ctx);
 
-  return result as Omit<Ast, 'typeName'>;
+  return {
+    expression: node,
+  };
 };

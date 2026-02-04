@@ -1,0 +1,25 @@
+openapi: 3.1.1
+info:
+  title: OpenAPI 3.1.1 sdk nested conflict example
+  version: 1
+paths:
+  /v1/providers:
+    get:
+      operationId: providers.list
+      summary: List Providers
+      tags:
+        - providers
+  /v1/tenants/{tenantId}/providers:
+    get:
+      operationId: tenants.providers.list
+      summary: List Tenant Providers
+      tags:
+        - tenants
+        - tenantProviders
+      parameters:
+        - name: tenantId
+          in: path
+          required: true
+          schema:
+            type: string
+            description: Tenant ID

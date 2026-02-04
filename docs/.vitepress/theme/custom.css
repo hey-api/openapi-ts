@@ -170,6 +170,7 @@ h3#demo + button {
 .sponsors-list > ul {
   display: flex;
   flex-direction: column;
+  flex-wrap: wrap;
   padding: 0;
 }
 
@@ -259,14 +260,7 @@ html.dark .sponsors-list > ul li.fastapi svg > g > path {
 .sponsors-list > ul li.openstatus svg > g > g > path:not(:first-of-type) {
   fill: white !important;
 }
-html.dark
-  .sponsors-list
-  > ul
-  li.openstatus
-  svg
-  > g
-  > g
-  > path:not(:first-of-type) {
+html.dark .sponsors-list > ul li.openstatus svg > g > g > path:not(:first-of-type) {
   fill: var(--vp-button-brand-bg) !important;
 }
 
@@ -305,8 +299,7 @@ html.dark .sponsors-list li {
   background-color: var(--vp-button-brand-bg);
 }
 
-.sponsors-list li > :is(.vp-doc a[href*='://'], .vp-doc a[target='_blank'])::after
-{
+.sponsors-list li > :is(.vp-doc a[href*='://'], .vp-doc a[target='_blank'])::after {
   display: none;
 }
 
@@ -371,9 +364,7 @@ a.migration:focus {
 .vue-select .control .indicators-container button.dropdown-icon {
   height: 100%;
   padding: var(--vs-padding);
-  width: calc(
-    var(--vs-indicator-icon-size) + var(--vs-padding-x) + var(--vs-padding-x)
-  );
+  width: calc(var(--vs-indicator-icon-size) + var(--vs-padding-x) + var(--vs-padding-x));
 }
 
 .vue-select .menu {
@@ -401,6 +392,10 @@ a.migration:focus {
 }
 
 @media (min-width: 640px) {
+  h1.heading .name {
+    max-width: 600px;
+  }
+
   .VPFeatures.VPHomeFeatures > .container > .items {
     gap: 1rem;
     padding: 0.4rem 0;

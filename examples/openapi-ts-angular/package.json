@@ -1,11 +1,11 @@
 {
   "name": "@example/openapi-ts-angular",
-  "private": true,
   "version": "0.0.0",
+  "private": true,
   "scripts": {
     "build": "ng build",
     "dev": "ng serve",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
     "ng": "ng",
     "openapi-ts": "openapi-ts",
     "serve:ssr:angular": "node dist/angular/server/server.mjs",

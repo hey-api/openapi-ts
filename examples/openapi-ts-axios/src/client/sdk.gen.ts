@@ -89,12 +89,7 @@ export const addPet = <ThrowOnError extends boolean = false>(
 ) =>
   (options.client ?? client).post<AddPetResponses, AddPetErrors, ThrowOnError>({
     responseType: 'json',
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
+    security: [{ scheme: 'bearer', type: 'http' }],
     url: '/pet',
     ...options,
     headers: {
@@ -111,18 +106,9 @@ export const addPet = <ThrowOnError extends boolean = false>(
 export const updatePet = <ThrowOnError extends boolean = false>(
   options: Options<UpdatePetData, ThrowOnError>,
 ) =>
-  (options.client ?? client).put<
-    UpdatePetResponses,
-    UpdatePetErrors,
-    ThrowOnError
-  >({
+  (options.client ?? client).put<UpdatePetResponses, UpdatePetErrors, ThrowOnError>({
     responseType: 'json',
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
+    security: [{ scheme: 'bearer', type: 'http' }],
     url: '/pet',
     ...options,
     headers: {
@@ -139,18 +125,9 @@ export const updatePet = <ThrowOnError extends boolean = false>(
 export const findPetsByStatus = <ThrowOnError extends boolean = false>(
   options: Options<FindPetsByStatusData, ThrowOnError>,
 ) =>
-  (options.client ?? client).get<
-    FindPetsByStatusResponses,
-    FindPetsByStatusErrors,
-    ThrowOnError
-  >({
+  (options.client ?? client).get<FindPetsByStatusResponses, FindPetsByStatusErrors, ThrowOnError>({
     responseType: 'json',
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
+    security: [{ scheme: 'bearer', type: 'http' }],
     url: '/pet/findByStatus',
     ...options,
   });
@@ -163,18 +140,9 @@ export const findPetsByStatus = <ThrowOnError extends boolean = false>(
 export const findPetsByTags = <ThrowOnError extends boolean = false>(
   options: Options<FindPetsByTagsData, ThrowOnError>,
 ) =>
-  (options.client ?? client).get<
-    FindPetsByTagsResponses,
-    FindPetsByTagsErrors,
-    ThrowOnError
-  >({
+  (options.client ?? client).get<FindPetsByTagsResponses, FindPetsByTagsErrors, ThrowOnError>({
     responseType: 'json',
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
+    security: [{ scheme: 'bearer', type: 'http' }],
     url: '/pet/findByTags',
     ...options,
   });
@@ -187,17 +155,8 @@ export const findPetsByTags = <ThrowOnError extends boolean = false>(
 export const deletePet = <ThrowOnError extends boolean = false>(
   options: Options<DeletePetData, ThrowOnError>,
 ) =>
-  (options.client ?? client).delete<
-    DeletePetResponses,
-    DeletePetErrors,
-    ThrowOnError
-  >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
+  (options.client ?? client).delete<DeletePetResponses, DeletePetErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
     url: '/pet/{petId}',
     ...options,
   });
@@ -210,21 +169,11 @@ export const deletePet = <ThrowOnError extends boolean = false>(
 export const getPetById = <ThrowOnError extends boolean = false>(
   options: Options<GetPetByIdData, ThrowOnError>,
 ) =>
-  (options.client ?? client).get<
-    GetPetByIdResponses,
-    GetPetByIdErrors,
-    ThrowOnError
-  >({
+  (options.client ?? client).get<GetPetByIdResponses, GetPetByIdErrors, ThrowOnError>({
     responseType: 'json',
     security: [
-      {
-        name: 'api_key',
-        type: 'apiKey',
-      },
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
+      { name: 'api_key', type: 'apiKey' },
+      { scheme: 'bearer', type: 'http' },
     ],
     url: '/pet/{petId}',
     ...options,
@@ -244,12 +193,7 @@ export const updatePetWithForm = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     responseType: 'json',
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
+    security: [{ scheme: 'bearer', type: 'http' }],
     url: '/pet/{petId}',
     ...options,
   });
@@ -262,19 +206,10 @@ export const updatePetWithForm = <ThrowOnError extends boolean = false>(
 export const uploadFile = <ThrowOnError extends boolean = false>(
   options: Options<UploadFileData, ThrowOnError>,
 ) =>
-  (options.client ?? client).post<
-    UploadFileResponses,
-    UploadFileErrors,
-    ThrowOnError
-  >({
+  (options.client ?? client).post<UploadFileResponses, UploadFileErrors, ThrowOnError>({
     bodySerializer: null,
     responseType: 'json',
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
+    security: [{ scheme: 'bearer', type: 'http' }],
     url: '/pet/{petId}/uploadImage',
     ...options,
     headers: {
@@ -291,18 +226,9 @@ export const uploadFile = <ThrowOnError extends boolean = false>(
 export const getInventory = <ThrowOnError extends boolean = false>(
   options?: Options<GetInventoryData, ThrowOnError>,
 ) =>
-  (options?.client ?? client).get<
-    GetInventoryResponses,
-    GetInventoryErrors,
-    ThrowOnError
-  >({
+  (options?.client ?? client).get<GetInventoryResponses, GetInventoryErrors, ThrowOnError>({
     responseType: 'json',
-    security: [
-      {
-        name: 'api_key',
-        type: 'apiKey',
-      },
-    ],
+    security: [{ name: 'api_key', type: 'apiKey' }],
     url: '/store/inventory',
     ...options,
   });
@@ -315,11 +241,7 @@ export const getInventory = <ThrowOnError extends boolean = false>(
 export const placeOrder = <ThrowOnError extends boolean = false>(
   options?: Options<PlaceOrderData, ThrowOnError>,
 ) =>
-  (options?.client ?? client).post<
-    PlaceOrderResponses,
-    PlaceOrderErrors,
-    ThrowOnError
-  >({
+  (options?.client ?? client).post<PlaceOrderResponses, PlaceOrderErrors, ThrowOnError>({
     responseType: 'json',
     url: '/store/order',
     ...options,
@@ -337,11 +259,7 @@ export const placeOrder = <ThrowOnError extends boolean = false>(
 export const deleteOrder = <ThrowOnError extends boolean = false>(
   options: Options<DeleteOrderData, ThrowOnError>,
 ) =>
-  (options.client ?? client).delete<
-    DeleteOrderResponses,
-    DeleteOrderErrors,
-    ThrowOnError
-  >({
+  (options.client ?? client).delete<DeleteOrderResponses, DeleteOrderErrors, ThrowOnError>({
     url: '/store/order/{orderId}',
     ...options,
   });
@@ -354,11 +272,7 @@ export const deleteOrder = <ThrowOnError extends boolean = false>(
 export const getOrderById = <ThrowOnError extends boolean = false>(
   options: Options<GetOrderByIdData, ThrowOnError>,
 ) =>
-  (options.client ?? client).get<
-    GetOrderByIdResponses,
-    GetOrderByIdErrors,
-    ThrowOnError
-  >({
+  (options.client ?? client).get<GetOrderByIdResponses, GetOrderByIdErrors, ThrowOnError>({
     responseType: 'json',
     url: '/store/order/{orderId}',
     ...options,
@@ -372,11 +286,7 @@ export const getOrderById = <ThrowOnError extends boolean = false>(
 export const createUser = <ThrowOnError extends boolean = false>(
   options?: Options<CreateUserData, ThrowOnError>,
 ) =>
-  (options?.client ?? client).post<
-    CreateUserResponses,
-    CreateUserErrors,
-    ThrowOnError
-  >({
+  (options?.client ?? client).post<CreateUserResponses, CreateUserErrors, ThrowOnError>({
     responseType: 'json',
     url: '/user',
     ...options,
@@ -416,11 +326,7 @@ export const createUsersWithListInput = <ThrowOnError extends boolean = false>(
 export const loginUser = <ThrowOnError extends boolean = false>(
   options?: Options<LoginUserData, ThrowOnError>,
 ) =>
-  (options?.client ?? client).get<
-    LoginUserResponses,
-    LoginUserErrors,
-    ThrowOnError
-  >({
+  (options?.client ?? client).get<LoginUserResponses, LoginUserErrors, ThrowOnError>({
     responseType: 'json',
     url: '/user/login',
     ...options,
@@ -434,11 +340,7 @@ export const loginUser = <ThrowOnError extends boolean = false>(
 export const logoutUser = <ThrowOnError extends boolean = false>(
   options?: Options<LogoutUserData, ThrowOnError>,
 ) =>
-  (options?.client ?? client).get<
-    LogoutUserResponses,
-    LogoutUserErrors,
-    ThrowOnError
-  >({
+  (options?.client ?? client).get<LogoutUserResponses, LogoutUserErrors, ThrowOnError>({
     url: '/user/logout',
     ...options,
   });
@@ -451,11 +353,7 @@ export const logoutUser = <ThrowOnError extends boolean = false>(
 export const deleteUser = <ThrowOnError extends boolean = false>(
   options: Options<DeleteUserData, ThrowOnError>,
 ) =>
-  (options.client ?? client).delete<
-    DeleteUserResponses,
-    DeleteUserErrors,
-    ThrowOnError
-  >({
+  (options.client ?? client).delete<DeleteUserResponses, DeleteUserErrors, ThrowOnError>({
     url: '/user/{username}',
     ...options,
   });
@@ -468,11 +366,7 @@ export const deleteUser = <ThrowOnError extends boolean = false>(
 export const getUserByName = <ThrowOnError extends boolean = false>(
   options: Options<GetUserByNameData, ThrowOnError>,
 ) =>
-  (options.client ?? client).get<
-    GetUserByNameResponses,
-    GetUserByNameErrors,
-    ThrowOnError
-  >({
+  (options.client ?? client).get<GetUserByNameResponses, GetUserByNameErrors, ThrowOnError>({
     responseType: 'json',
     url: '/user/{username}',
     ...options,
@@ -486,11 +380,7 @@ export const getUserByName = <ThrowOnError extends boolean = false>(
 export const updateUser = <ThrowOnError extends boolean = false>(
   options: Options<UpdateUserData, ThrowOnError>,
 ) =>
-  (options.client ?? client).put<
-    UpdateUserResponses,
-    UpdateUserErrors,
-    ThrowOnError
-  >({
+  (options.client ?? client).put<UpdateUserResponses, UpdateUserErrors, ThrowOnError>({
     url: '/user/{username}',
     ...options,
     headers: {

@@ -121,9 +121,7 @@ const bazSchemaResponseTransformer = (data: any) => {
   return data;
 };
 
-export const getFooResponseTransformer = async (
-  data: any,
-): Promise<GetFooResponse> => {
+export const getFooResponseTransformer = async (data: any): Promise<GetFooResponse> => {
   data = bazSchemaResponseTransformer(data);
   return data;
 };
@@ -153,6 +151,6 @@ export type GetFooResponse = Baz;
 
 ## API
 
-You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/@hey-api/transformers/types.d.ts) interface.
+You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/@hey-api/transformers/types.ts) interface.
 
 <!--@include: ../partials/sponsors.md-->

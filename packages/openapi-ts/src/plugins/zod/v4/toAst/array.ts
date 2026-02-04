@@ -1,10 +1,8 @@
-import type ts from 'typescript';
+import { fromRef, ref } from '@hey-api/codegen-core';
+import type { SchemaWithType } from '@hey-api/shared';
+import { deduplicateSchema } from '@hey-api/shared';
 
-import { deduplicateSchema } from '~/ir/schema';
-import type { SchemaWithType } from '~/plugins';
-import { toRef } from '~/plugins/shared/utils/refs';
-import { tsc } from '~/tsc';
-
+import { $ } from '../../../../ts-dsl';
 import { identifiers } from '../../constants';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
 import { irSchemaToAst } from '../plugin';
@@ -19,29 +17,20 @@ export const arrayToAst = ({
 }): Omit<Ast, 'typeName'> => {
   const result: Partial<Omit<Ast, 'typeName'>> = {};
 
-  const z = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'zod.z',
-  });
+  const z = plugin.external('zod.z');
 
-  const functionName = tsc.propertyAccessExpression({
-    expression: z.placeholder,
-    name: identifiers.array,
-  });
+  const functionName = $(z).attr(identifiers.array);
 
   if (!schema.items) {
-    result.expression = tsc.callExpression({
-      functionName,
-      parameters: [
-        unknownToAst({
-          plugin,
-          schema: {
-            type: 'unknown',
-          },
-          state,
-        }).expression,
-      ],
-    });
+    result.expression = functionName.call(
+      unknownToAst({
+        plugin,
+        schema: {
+          type: 'unknown',
+        },
+        state,
+      }).expression,
+    );
   } else {
     schema = deduplicateSchema({ schema });
 
@@ -52,7 +41,7 @@ export const arrayToAst = ({
         schema: item,
         state: {
           ...state,
-          path: toRef([...state.path.value, 'items', index]),
+          path: ref([...fromRef(state.path), 'items', index]),
         },
       });
       if (itemAst.hasLazyExpression) {
@@ -62,96 +51,58 @@ export const arrayToAst = ({
     });
 
     if (itemExpressions.length === 1) {
-      result.expression = tsc.callExpression({
-        functionName,
-        parameters: itemExpressions,
-      });
+      result.expression = functionName.call(...itemExpressions);
     } else {
       if (schema.logicalOperator === 'and') {
         const firstSchema = schema.items![0]!;
         // we want to add an intersection, but not every schema can use the same API.
         // if the first item contains another array or not an object, we cannot use
         // `.and()` as that does not exist on `.union()` and non-object schemas.
-        let intersectionExpression: ts.Expression;
+        let intersectionExpression: ReturnType<typeof $.call | typeof $.expr>;
         if (
           firstSchema.logicalOperator === 'or' ||
           (firstSchema.type && firstSchema.type !== 'object')
         ) {
-          intersectionExpression = tsc.callExpression({
-            functionName: tsc.propertyAccessExpression({
-              expression: z.placeholder,
-              name: identifiers.intersection,
-            }),
-            parameters: itemExpressions,
-          });
+          intersectionExpression = $(z)
+            .attr(identifiers.intersection)
+            .call(...itemExpressions);
         } else {
           intersectionExpression = itemExpressions[0]!;
           for (let i = 1; i < itemExpressions.length; i++) {
-            intersectionExpression = tsc.callExpression({
-              functionName: tsc.propertyAccessExpression({
-                expression: intersectionExpression,
-                name: identifiers.and,
-              }),
-              parameters: [itemExpressions[i]!],
-            });
+            intersectionExpression = intersectionExpression
+              .attr(identifiers.and)
+              .call(itemExpressions[i]);
           }
         }
 
-        result.expression = tsc.callExpression({
-          functionName,
-          parameters: [intersectionExpression],
-        });
+        result.expression = functionName.call(intersectionExpression);
       } else {
-        result.expression = tsc.callExpression({
-          functionName: tsc.propertyAccessExpression({
-            expression: z.placeholder,
-            name: identifiers.array,
-          }),
-          parameters: [
-            tsc.callExpression({
-              functionName: tsc.propertyAccessExpression({
-                expression: z.placeholder,
-                name: identifiers.union,
-              }),
-              parameters: [
-                tsc.arrayLiteralExpression({
-                  elements: itemExpressions,
-                }),
-              ],
-            }),
-          ],
-        });
+        result.expression = $(z)
+          .attr(identifiers.array)
+          .call(
+            $(z)
+              .attr(identifiers.union)
+              .call($.array(...itemExpressions)),
+          );
       }
     }
   }
 
   if (schema.minItems === schema.maxItems && schema.minItems !== undefined) {
-    result.expression = tsc.callExpression({
-      functionName: tsc.propertyAccessExpression({
-        expression: result.expression,
-        name: identifiers.length,
-      }),
-      parameters: [tsc.valueToExpression({ value: schema.minItems })],
-    });
+    result.expression = result.expression
+      .attr(identifiers.length)
+      .call($.fromValue(schema.minItems));
   } else {
     if (schema.minItems !== undefined) {
-      result.expression = tsc.callExpression({
-        functionName: tsc.propertyAccessExpression({
-          expression: result.expression,
-          name: identifiers.min,
-        }),
-        parameters: [tsc.valueToExpression({ value: schema.minItems })],
-      });
+      result.expression = result.expression
+        .attr(identifiers.min)
+        .call($.fromValue(schema.minItems));
     }
 
     if (schema.maxItems !== undefined) {
-      result.expression = tsc.callExpression({
-        functionName: tsc.propertyAccessExpression({
-          expression: result.expression,
-          name: identifiers.max,
-        }),
-        parameters: [tsc.valueToExpression({ value: schema.maxItems })],
-      });
+      result.expression = result.expression
+        .attr(identifiers.max)
+        .call($.fromValue(schema.maxItems));
     }
   }
 

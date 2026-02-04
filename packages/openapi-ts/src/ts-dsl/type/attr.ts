@@ -1,37 +1,57 @@
+import type { AnalysisContext, NodeName, NodeScope, Ref } from '@hey-api/codegen-core';
+import { isRef, ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
-import type { MaybeTsDsl, WithString } from '../base';
+import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
+import { TypeExprMixin } from '../mixins/type-expr';
 
-export class TypeAttrTsDsl extends TsDsl<ts.QualifiedName> {
-  private _base?: WithString<MaybeTsDsl<ts.EntityName>>;
-  private right: WithString<ts.Identifier>;
+type Base = NodeName | MaybeTsDsl<ts.EntityName>;
+type Right = NodeName | ts.Identifier;
 
-  constructor(
-    base: WithString<MaybeTsDsl<ts.EntityName>>,
-    right: WithString<ts.Identifier>,
-  );
-  constructor(right: WithString<ts.Identifier>);
-  constructor(
-    baseOrRight: WithString<MaybeTsDsl<ts.EntityName>>,
-    maybeRight?: WithString<ts.Identifier>,
-  ) {
+const Mixed = TypeExprMixin(TsDsl<ts.QualifiedName>);
+
+export class TypeAttrTsDsl extends Mixed {
+  readonly '~dsl' = 'TypeAttrTsDsl';
+  override scope: NodeScope = 'type';
+
+  protected _base?: Ref<Base>;
+  protected _right!: Ref<Right>;
+
+  constructor(base: Base | Ref<Base>, right: string | ts.Identifier);
+  constructor(right: Right);
+  constructor(base: Base | Ref<Base>, right?: Right) {
     super();
-    if (maybeRight) {
-      this.base(baseOrRight);
-      this.right = maybeRight;
+    if (right) {
+      this.base(base);
+      this.right(right);
     } else {
-      this.base(undefined);
-      this.right = baseOrRight as WithString<ts.Identifier>;
+      this.base();
+      this.right(base as Right);
     }
   }
 
-  base(base?: WithString<MaybeTsDsl<ts.EntityName>>): this {
-    this._base = base;
+  override analyze(ctx: AnalysisContext): void {
+    super.analyze(ctx);
+    ctx.analyze(this._base);
+    ctx.analyze(this._right);
+  }
+
+  base(base?: Base | Ref<Base>): this {
+    if (isRef(base)) {
+      this._base = base;
+    } else {
+      this._base = base ? ref(base) : undefined;
+    }
     return this;
   }
 
-  $render(): ts.QualifiedName {
+  right(right: Right): this {
+    this._right = ref(right);
+    return this;
+  }
+
+  override toAst() {
     if (!this._base) {
       throw new Error('TypeAttrTsDsl: missing base for qualified name');
     }
@@ -39,7 +59,6 @@ export class TypeAttrTsDsl extends TsDsl<ts.QualifiedName> {
     if (!ts.isEntityName(left)) {
       throw new Error('TypeAttrTsDsl: base must be an EntityName');
     }
-    const right = this.$expr(this.right);
-    return ts.factory.createQualifiedName(left, right);
+    return ts.factory.createQualifiedName(left, this.$node(this._right) as ts.Identifier);
   }
 }

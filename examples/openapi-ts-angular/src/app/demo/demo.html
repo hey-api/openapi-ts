@@ -1,7 +1,5 @@
 <button (click)="onGetPetById()" type="button">Get Random Pet</button>
-<button (click)="onGetPetByIdLocalClient()" type="button">
-  Get Random Pet (local client)
-</button>
+<button (click)="onGetPetByIdLocalClient()" type="button">Get Random Pet (local client)</button>
 
 <!-- Error Display -->
 @if (error()) {
@@ -17,20 +15,14 @@
   <div class="pet-info">
     <div class="pet-avatar">
       @if (pet()?.photoUrls?.[0]) {
-      <img
-        [src]="pet()?.photoUrls?.[0]"
-        [alt]="pet()?.name || 'Pet'"
-        class="pet-image"
-      />
+      <img [src]="pet()?.photoUrls?.[0]" [alt]="pet()?.name || 'Pet'" class="pet-image" />
       } @else {
       <div class="pet-placeholder">{{ pet()?.name?.slice(0, 1) || 'N' }}</div>
       }
     </div>
     <div class="pet-details">
       <div class="pet-name">Name: {{ pet()?.name || 'N/A' }}</div>
-      <div class="pet-category">
-        Category: {{ pet()?.category?.name || 'N/A' }}
-      </div>
+      <div class="pet-category">Category: {{ pet()?.category?.name || 'N/A' }}</div>
     </div>
   </div>
 </div>

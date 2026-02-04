@@ -93,13 +93,13 @@ export const zEnumWithStrings = z.enum([
     'Success',
     'Warning',
     'Error',
-    "'Single Quote'",
+    '\'Single Quote\'',
     '"Double Quotes"',
     'Non-ascii: øæåôöØÆÅÔÖ字符串'
 ]);
 
 export const zEnumWithReplacedCharacters = z.union([
-    z.literal("'Single Quote'"),
+    z.literal('\'Single Quote\''),
     z.literal('"Double Quotes"'),
     z.literal('øæåôöØÆÅÔÖ字符串'),
     z.literal(3.1),
@@ -173,14 +173,11 @@ export const zArrayWithProperties = z.array(z.object({
 /**
  * This is a simple array with any of properties
  */
-export const zArrayWithAnyOfProperties = z.array(z.union([
-    z.object({
+export const zArrayWithAnyOfProperties = z.array(z.union([z.object({
         foo: z.string().optional().default('test')
-    }),
-    z.object({
+    }), z.object({
         bar: z.string().optional()
-    })
-]));
+    })]));
 
 export const zAnyOfAnyAndNull = z.object({
     data: z.union([
@@ -193,14 +190,11 @@ export const zAnyOfAnyAndNull = z.object({
  * This is a simple array with any of properties
  */
 export const zAnyOfArrays = z.object({
-    results: z.array(z.union([
-        z.object({
+    results: z.array(z.union([z.object({
             foo: z.string().optional()
-        }),
-        z.object({
+        }), z.object({
             bar: z.string().optional()
-        })
-    ])).optional()
+        })])).optional()
 });
 
 /**
@@ -337,9 +331,7 @@ export const zModelWithEnum = z.object({
  * This is a model with one enum with escaped name
  */
 export const zModelWithEnumWithHyphen = z.object({
-    'foo-bar-baz-qux': z.enum([
-        '3.0'
-    ]).optional()
+    'foo-bar-baz-qux': z.enum(['3.0']).optional()
 });
 
 /**
@@ -451,10 +443,10 @@ export const zModelSquare = z.object({
  */
 export const zCompositionWithOneOfDiscriminator = z.union([
     z.object({
-        kind: z.literal("circle")
+        kind: z.literal('circle')
     }).and(zModelCircle),
     z.object({
-        kind: z.literal("square")
+        kind: z.literal('square')
     }).and(zModelSquare)
 ]);
 
@@ -488,33 +480,21 @@ export const zCompositionWithAnyOfAnonymous = z.object({
  */
 export const zCompositionWithNestedAnyAndTypeNull = z.object({
     propA: z.union([
-        z.array(z.union([
-            zModelWithDictionary,
-            z.null()
-        ])),
-        z.array(z.union([
-            zModelWithArray,
-            z.null()
-        ]))
+        z.array(z.union([zModelWithDictionary, z.null()])),
+        z.array(z.union([zModelWithArray, z.null()]))
     ]).optional()
 });
 
-export const z3eNum1Период = z.enum([
-    'Bird',
-    'Dog'
-]);
+export const z3eNum1Период = z.enum(['Bird', 'Dog']);
 
-export const zConstValue = z.literal("ConstValue");
+export const zConstValue = z.literal('ConstValue');
 
 /**
  * This is a model with one property with a 'any of' relationship where the options are not $ref
  */
 export const zCompositionWithNestedAnyOfAndNull = z.object({
     propA: z.union([
-        z.array(z.union([
-            z3eNum1Период,
-            zConstValue
-        ])),
+        z.array(z.union([z3eNum1Период, zConstValue])),
         z.null()
     ]).optional()
 });
@@ -560,10 +540,7 @@ export const zCompositionWithOneOfAndSimpleArrayDictionary = z.object({
 export const zCompositionWithOneOfAndComplexArrayDictionary = z.object({
     propA: z.union([
         z.boolean(),
-        z.record(z.array(z.union([
-            z.number(),
-            z.string()
-        ])))
+        z.record(z.array(z.union([z.number(), z.string()])))
     ]).optional()
 });
 
@@ -728,8 +705,8 @@ export const zDefault = z.object({
 });
 
 export const zPageable = z.object({
-    page: z.number().int().gte(0).optional().default(0),
-    size: z.number().int().gte(1).optional(),
+    page: z.number().int().gte(0).max(2147483647, { message: 'Invalid value: Expected int32 to be <= 2147483647' }).optional().default(0),
+    size: z.number().int().gte(1).max(2147483647, { message: 'Invalid value: Expected int32 to be <= 2147483647' }).optional(),
     sort: z.array(z.string()).optional()
 });
 
@@ -749,10 +726,10 @@ export const zFreeFormObjectWithAdditionalPropertiesEqTrue = z.record(z.unknown(
 export const zFreeFormObjectWithAdditionalPropertiesEqEmptyObject = z.record(z.unknown());
 
 export const zModelWithConst = z.object({
-    String: z.literal("String").optional(),
+    String: z.literal('String').optional(),
     number: z.literal(0).optional(),
     null: z.null().optional(),
-    withType: z.literal("Some string").optional()
+    withType: z.literal('Some string').optional()
 });
 
 /**
@@ -764,10 +741,7 @@ export const zModelWithAdditionalPropertiesEqTrue = z.object({
 
 export const zNestedAnyOfArraysNullable = z.object({
     nullableArray: z.union([
-        z.array(z.union([
-            z.string(),
-            z.boolean()
-        ])),
+        z.array(z.union([z.string(), z.boolean()])),
         z.null()
     ]).optional()
 });
@@ -793,46 +767,27 @@ export const zModelWithNullableObject = z.object({
 
 export const zModelWithOneOfEnum = z.union([
     z.object({
-        foo: z.enum([
-            'Bar'
-        ])
+        foo: z.enum(['Bar'])
     }),
     z.object({
-        foo: z.enum([
-            'Baz'
-        ])
+        foo: z.enum(['Baz'])
     }),
     z.object({
-        foo: z.enum([
-            'Qux'
-        ])
+        foo: z.enum(['Qux'])
     }),
     z.object({
         content: z.string().datetime(),
-        foo: z.enum([
-            'Quux'
-        ])
+        foo: z.enum(['Quux'])
     }),
     z.object({
-        content: z.tuple([
-            z.string().datetime(),
-            z.string()
-        ]),
-        foo: z.enum([
-            'Corge'
-        ])
+        content: z.tuple([z.string().datetime(), z.string()]),
+        foo: z.enum(['Corge'])
     })
 ]);
 
-export const zModelWithNestedArrayEnumsDataFoo = z.enum([
-    'foo',
-    'bar'
-]);
+export const zModelWithNestedArrayEnumsDataFoo = z.enum(['foo', 'bar']);
 
-export const zModelWithNestedArrayEnumsDataBar = z.enum([
-    'baz',
-    'qux'
-]);
+export const zModelWithNestedArrayEnumsDataBar = z.enum(['baz', 'qux']);
 
 export const zModelWithNestedArrayEnumsData = z.object({
     foo: z.array(zModelWithNestedArrayEnumsDataFoo).optional(),
@@ -862,10 +817,7 @@ export const zModelWithArrayReadOnlyAndWriteOnly = z.object({
     propWithNumber: z.array(z.number()).optional()
 });
 
-export const zModelWithConstantSizeArray = z.tuple([
-    z.number(),
-    z.number()
-]);
+export const zModelWithConstantSizeArray = z.tuple([z.number(), z.number()]);
 
 export const zModelWithAnyOfConstantSizeArray = z.tuple([
     z.union([
@@ -909,10 +861,7 @@ export const zModelWithAnyOfConstantSizeArrayNullable = z.tuple([
     ])
 ]);
 
-export const zModelWithAnyOfConstantSizeArrayAndIntersect = z.tuple([
-    z.intersection(z.number(), z.string()),
-    z.intersection(z.number(), z.string())
-]);
+export const zModelWithAnyOfConstantSizeArrayAndIntersect = z.tuple([z.intersection(z.number(), z.string()), z.intersection(z.number(), z.string())]);
 
 export const zModelWithNumericEnumUnion = z.object({
     value: z.union([
@@ -963,16 +912,13 @@ export const zDeleteFooData2 = z.string();
  */
 export const zImport = z.string();
 
-export const zModelWithAnyOfConstantSizeArrayWithNSizeAndOptions = z.tuple([
-    z.union([
+export const zModelWithAnyOfConstantSizeArrayWithNSizeAndOptions = z.tuple([z.union([
         z.number(),
         zImport
-    ]),
-    z.union([
+    ]), z.union([
         z.number(),
         zImport
-    ])
-]);
+    ])]);
 
 export const zSchemaWithFormRestrictedKeys = z.object({
     description: z.string().optional(),
@@ -1130,16 +1076,13 @@ export const zModelWithArrayReadOnlyAndWriteOnlyWritable = z.object({
     propWithNumber: z.array(z.number()).optional()
 });
 
-export const zModelWithAnyOfConstantSizeArrayWithNSizeAndOptionsWritable = z.tuple([
-    z.union([
+export const zModelWithAnyOfConstantSizeArrayWithNSizeAndOptionsWritable = z.tuple([z.union([
         z.number(),
         zImport
-    ]),
-    z.union([
+    ]), z.union([
         z.number(),
         zImport
-    ])
-]);
+    ])]);
 
 export const zAdditionalPropertiesUnknownIssueWritable = z.record(z.union([
     z.string(),
@@ -1188,10 +1131,10 @@ export const zCompositionWithOneOfAndProperties = z.intersection(z.union([
     })
 ]), z.object({
     baz: z.union([
-        z.number().int().gte(0),
+        z.number().int().gte(0).max(65535, { message: 'Invalid value: Expected uint16 to be <= 65535' }),
         z.null()
     ]),
-    qux: z.number().int().gte(0)
+    qux: z.number().int().gte(0).max(255, { message: 'Invalid value: Expected uint8 to be <= 255' })
 }));
 
 export const zModelWithOneOfAndProperties = z.intersection(z.union([
@@ -1199,10 +1142,10 @@ export const zModelWithOneOfAndProperties = z.intersection(z.union([
     zNonAsciiStringæøåÆøÅöôêÊ字符串
 ]), z.object({
     baz: z.union([
-        z.number().int().gte(0),
+        z.number().int().gte(0).max(65535, { message: 'Invalid value: Expected uint16 to be <= 65535' }),
         z.null()
     ]),
-    qux: z.number().int().gte(0)
+    qux: z.number().int().gte(0).max(255, { message: 'Invalid value: Expected uint8 to be <= 255' })
 }));
 
 /**
@@ -1482,9 +1425,7 @@ export const zCallWithDefaultParametersData = z.object({
             'Error'
         ]).optional(),
         parameterModel: z.union([
-            zModelWithString.default({
-                prop: 'Hello World!'
-            }),
+            zModelWithString.default({ prop: 'Hello World!' }),
             z.null()
         ]).optional()
     }).optional()
@@ -1502,9 +1443,7 @@ export const zCallWithDefaultOptionalParametersData = z.object({
             'Warning',
             'Error'
         ]).optional(),
-        parameterModel: zModelWithString.optional().default({
-            prop: 'Hello World!'
-        })
+        parameterModel: zModelWithString.optional().default({ prop: 'Hello World!' })
     }).optional()
 });
 
@@ -1659,7 +1598,7 @@ export const zCollectionFormatData = z.object({
 export const zTypesData = z.object({
     body: z.never().optional(),
     path: z.object({
-        id: z.number().int().optional()
+        id: z.number().int().min(-2147483648, { message: 'Invalid value: Expected int32 to be >= -2147483648' }).max(2147483647, { message: 'Invalid value: Expected int32 to be <= 2147483647' }).optional()
     }).optional(),
     query: z.object({
         parameterNumber: z.number().default(123),
@@ -1684,9 +1623,9 @@ export const zTypesData = z.object({
             z.null()
         ]),
         parameterEnum: z.union([
-            z.literal("Success"),
-            z.literal("Warning"),
-            z.literal("Error"),
+            z.literal('Success'),
+            z.literal('Warning'),
+            z.literal('Error'),
             z.null()
         ])
     })
@@ -1806,7 +1745,7 @@ export const zComplexParamsData = z.object({
             zModelWithDictionary
         ]),
         user: z.object({
-            id: z.number().int().readonly().optional(),
+            id: z.number().int().min(-2147483648, { message: 'Invalid value: Expected int32 to be >= -2147483648' }).max(2147483647, { message: 'Invalid value: Expected int32 to be <= 2147483647' }).readonly().optional(),
             name: z.union([
                 z.string().readonly(),
                 z.null()
@@ -1814,7 +1753,7 @@ export const zComplexParamsData = z.object({
         }).readonly().optional()
     }).optional(),
     path: z.object({
-        id: z.number().int(),
+        id: z.number().int().min(-2147483648, { message: 'Invalid value: Expected int32 to be >= -2147483648' }).max(2147483647, { message: 'Invalid value: Expected int32 to be <= 2147483647' }),
         'api-version': z.string()
     }),
     query: z.never().optional()
@@ -1843,7 +1782,7 @@ export const zNonAsciiæøåÆøÅöôêÊ字符串Data = z.object({
     body: z.never().optional(),
     path: z.never().optional(),
     query: z.object({
-        'nonAsciiParamæøåÆØÅöôêÊ': z.number().int()
+        nonAsciiParamæøåÆØÅöôêÊ: z.number().int()
     })
 });
 

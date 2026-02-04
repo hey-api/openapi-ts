@@ -2,8 +2,8 @@
   "$schema": "./node_modules/turbo/schema.json",
   "tasks": {
     "build": {
-      "cache": false,
       "dependsOn": ["^build"],
+      "inputs": ["src/**", "package.json", "tsconfig.json"],
       "outputs": [
         ".next/**",
         "!.next/cache/**",
@@ -17,25 +17,38 @@
       "cache": false,
       "persistent": true
     },
+    "lint": {
+      "dependsOn": ["^build"],
+      "inputs": ["src/**", "test/**", "*.config.*", "package.json"]
+    },
     "test": {
-      "cache": false,
-      "dependsOn": []
+      "dependsOn": ["^build"],
+      "inputs": ["src/**", "test/**", "*.config.*", "package.json"]
     },
     "test:coverage": {
-      "cache": false,
-      "dependsOn": []
+      "dependsOn": ["^build"],
+      "inputs": ["src/**", "test/**", "*.config.*", "package.json"],
+      "outputs": ["coverage/**"]
     },
     "test:update": {
       "cache": false,
-      "dependsOn": []
+      "dependsOn": ["^build"]
     },
     "test:watch": {
       "cache": false,
-      "dependsOn": []
+      "dependsOn": ["^build"],
+      "persistent": true
     },
     "typecheck": {
-      "cache": false,
-      "dependsOn": []
+      "dependsOn": ["^build"],
+      "inputs": [
+        "src/**",
+        "test/**",
+        "*.config.*",
+        "package.json",
+        "tsconfig.json",
+        "pyproject.toml"
+      ]
     }
   }
 }

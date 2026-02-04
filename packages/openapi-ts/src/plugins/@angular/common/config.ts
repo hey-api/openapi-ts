@@ -1,5 +1,7 @@
-import { definePluginConfig } from '~/plugins/shared/utils/config';
+import { definePluginConfig } from '@hey-api/shared';
 
+import { resolveHttpRequests } from './httpRequests';
+import { resolveHttpResources } from './httpResources';
 import { handler } from './plugin';
 import type { AngularCommonPlugin } from './types';
 
@@ -11,41 +13,8 @@ export const defaultConfig: AngularCommonPlugin['Config'] = {
   handler,
   name: '@angular/common',
   resolveConfig: (plugin, context) => {
-    plugin.config.httpRequests = context.valueToObject({
-      defaultValue: {
-        asClass: false,
-        classNameBuilder: '{{name}}Requests',
-        enabled: true,
-      },
-      mappers: {
-        boolean: (enabled) => ({ enabled }),
-      },
-      value: plugin.config.httpRequests,
-    });
-
-    if (!plugin.config.httpRequests.methodNameBuilder) {
-      const { asClass } = plugin.config.httpRequests;
-      plugin.config.httpRequests.methodNameBuilder = (operation) =>
-        asClass ? String(operation.id) : `${String(operation.id)}Request`;
-    }
-
-    plugin.config.httpResources = context.valueToObject({
-      defaultValue: {
-        asClass: false,
-        classNameBuilder: '{{name}}Resources',
-        enabled: true,
-      },
-      mappers: {
-        boolean: (enabled) => ({ enabled }),
-      },
-      value: plugin.config.httpResources,
-    });
-
-    if (!plugin.config.httpResources.methodNameBuilder) {
-      const { asClass } = plugin.config.httpResources;
-      plugin.config.httpResources.methodNameBuilder = (operation) =>
-        asClass ? String(operation.id) : `${String(operation.id)}Resource`;
-    }
+    plugin.config.httpRequests = resolveHttpRequests(plugin.config, context);
+    plugin.config.httpResources = resolveHttpResources(plugin.config, context);
   },
 };
 

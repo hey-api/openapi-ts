@@ -4,24 +4,15 @@ export type ClientOptions = {
     baseUrl: string;
 };
 
-export const _110 = {
-    '1_10': '1-10',
-    '11_20': '11-20'
-} as const;
+export const _110 = { '1_10': '1-10', '11_20': '11-20' } as const;
 
 export type _110 = typeof _110[keyof typeof _110];
 
-export const MyFoo = {
-    MY_FOO: 'myFoo',
-    MY_BAR: 'myBar'
-} as const;
+export const MyFoo = { MY_FOO: 'myFoo', MY_BAR: 'myBar' } as const;
 
 export type MyFoo = typeof MyFoo[keyof typeof MyFoo];
 
-export const MyFoo2 = {
-    MY_FOO: 'MyFoo',
-    MY_BAR: 'MyBar'
-} as const;
+export const MyFoo2 = { MY_FOO: 'MyFoo', MY_BAR: 'MyBar' } as const;
 
 export type MyFoo2 = typeof MyFoo2[keyof typeof MyFoo2];
 

@@ -81,10 +81,7 @@ export const vSimpleFile = v.string();
 /**
  * This is a simple string
  */
-export const vSimpleStringWithPattern = v.union([
-    v.pipe(v.string(), v.maxLength(64), v.regex(/^[a-zA-Z0-9_]*$/)),
-    v.null()
-]);
+export const vSimpleStringWithPattern = v.union([v.pipe(v.string(), v.maxLength(64), v.regex(/^[a-zA-Z0-9_]*$/)), v.null()]);
 
 /**
  * This is a simple enum with strings
@@ -93,13 +90,13 @@ export const vEnumWithStrings = v.picklist([
     'Success',
     'Warning',
     'Error',
-    "'Single Quote'",
+    '\'Single Quote\'',
     '"Double Quotes"',
     'Non-ascii: øæåôöØÆÅÔÖ字符串'
 ]);
 
 export const vEnumWithReplacedCharacters = v.picklist([
-    "'Single Quote'",
+    '\'Single Quote\'',
     '"Double Quotes"',
     'øæåôöØÆÅÔÖ字符串',
     ''
@@ -246,22 +243,10 @@ export const vModelFromZendesk = v.string();
  * This is a model with one string property
  */
 export const vModelWithNullableString = v.object({
-    nullableProp1: v.optional(v.union([
-        v.string(),
-        v.null()
-    ])),
-    nullableRequiredProp1: v.union([
-        v.string(),
-        v.null()
-    ]),
-    nullableProp2: v.optional(v.union([
-        v.string(),
-        v.null()
-    ])),
-    nullableRequiredProp2: v.union([
-        v.string(),
-        v.null()
-    ]),
+    nullableProp1: v.optional(v.union([v.string(), v.null()])),
+    nullableRequiredProp1: v.union([v.string(), v.null()]),
+    nullableProp2: v.optional(v.union([v.string(), v.null()])),
+    nullableRequiredProp2: v.union([v.string(), v.null()]),
     'foo_bar-enum': v.optional(v.picklist([
         'Success',
         'Warning',
@@ -295,9 +280,7 @@ export const vModelWithEnum = v.object({
  * This is a model with one enum with escaped name
  */
 export const vModelWithEnumWithHyphen = v.object({
-    'foo-bar-baz-qux': v.optional(v.picklist([
-        '3.0'
-    ]))
+    'foo-bar-baz-qux': v.optional(v.picklist(['3.0']))
 });
 
 /**
@@ -360,9 +343,7 @@ export const vDeprecatedModel = v.object({
  * This is a model with one property containing a circular reference
  */
 export const vModelWithCircularReference: v.GenericSchema = v.object({
-    prop: v.optional(v.lazy(() => {
-        return vModelWithCircularReference;
-    }))
+    prop: v.optional(v.lazy(() => vModelWithCircularReference))
 });
 
 /**
@@ -409,20 +390,11 @@ export const vModelSquare = v.object({
 /**
  * This is a model with one property with a 'one of' relationship where the options are not $ref
  */
-export const vCompositionWithOneOfDiscriminator = v.union([
-    v.intersect([
-        v.object({
-            kind: v.literal("circle")
-        }),
-        vModelCircle
-    ]),
-    v.intersect([
-        v.object({
-            kind: v.literal("square")
-        }),
-        vModelSquare
-    ])
-]);
+export const vCompositionWithOneOfDiscriminator = v.union([v.intersect([v.object({
+            kind: v.literal('circle')
+        }), vModelCircle]), v.intersect([v.object({
+            kind: v.literal('square')
+        }), vModelSquare])]);
 
 /**
  * This is a model with one property with a 'any of' relationship
@@ -453,35 +425,18 @@ export const vCompositionWithAnyOfAnonymous = v.object({
  * This is a model with nested 'any of' property with a type null
  */
 export const vCompositionWithNestedAnyAndTypeNull = v.object({
-    propA: v.optional(v.union([
-        v.array(v.union([
-            vModelWithDictionary,
-            v.null()
-        ])),
-        v.array(v.union([
-            vModelWithArray,
-            v.null()
-        ]))
-    ]))
+    propA: v.optional(v.union([v.array(v.union([vModelWithDictionary, v.null()])), v.array(v.union([vModelWithArray, v.null()]))]))
 });
 
-export const v3eNum1Период = v.picklist([
-    'Bird',
-    'Dog'
-]);
+export const v3eNum1Период = v.picklist(['Bird', 'Dog']);
 
-export const vConstValue = v.picklist([
-    'ConstValue'
-]);
+export const vConstValue = v.picklist(['ConstValue']);
 
 /**
  * This is a model with one property with a 'any of' relationship where the options are not $ref
  */
 export const vCompositionWithNestedAnyOfAndNull = v.object({
-    propA: v.optional(v.union([
-        v.array(v.unknown()),
-        v.null()
-    ]))
+    propA: v.optional(v.union([v.array(v.unknown()), v.null()]))
 });
 
 /**
@@ -503,47 +458,35 @@ export const vCompositionWithOneOfAndNullable = v.object({
  * This is a model that contains a simple dictionary within composition
  */
 export const vCompositionWithOneOfAndSimpleDictionary = v.object({
-    propA: v.optional(v.union([
-        v.boolean(),
-        v.record(v.string(), v.number())
-    ]))
+    propA: v.optional(v.union([v.boolean(), v.record(v.string(), v.number())]))
 });
 
 /**
  * This is a model that contains a dictionary of simple arrays within composition
  */
 export const vCompositionWithOneOfAndSimpleArrayDictionary = v.object({
-    propA: v.optional(v.union([
-        v.boolean(),
-        v.record(v.string(), v.array(v.boolean()))
-    ]))
+    propA: v.optional(v.union([v.boolean(), v.record(v.string(), v.array(v.boolean()))]))
 });
 
 /**
  * This is a model that contains a dictionary of complex arrays (composited) within composition
  */
 export const vCompositionWithOneOfAndComplexArrayDictionary = v.object({
-    propA: v.optional(v.union([
-        v.boolean(),
-        v.record(v.string(), v.array(v.unknown()))
-    ]))
+    propA: v.optional(v.union([v.boolean(), v.record(v.string(), v.array(v.unknown()))]))
 });
 
 /**
  * This is a model with one property with a 'all of' relationship
  */
 export const vCompositionWithAllOfAndNullable = v.object({
-    propA: v.optional(v.union([
-        v.intersect([
+    propA: v.optional(v.union([v.intersect([
             v.object({
                 boolean: v.optional(v.boolean())
             }),
             vModelWithEnum,
             vModelWithArray,
             vModelWithDictionary
-        ]),
-        v.null()
-    ]))
+        ]), v.null()]))
 });
 
 /**
@@ -572,14 +515,11 @@ export const vCompositionBaseModel = v.object({
 /**
  * This is a model that extends the base model
  */
-export const vCompositionExtendedModel = v.intersect([
-    vCompositionBaseModel,
-    v.object({
+export const vCompositionExtendedModel = v.intersect([vCompositionBaseModel, v.object({
         age: v.number(),
         firstName: v.string(),
         lastname: v.string()
-    })
-]);
+    })]);
 
 /**
  * This is a model with one nested property
@@ -587,10 +527,7 @@ export const vCompositionExtendedModel = v.intersect([
 export const vModelWithProperties = v.object({
     required: v.string(),
     requiredAndReadOnly: v.pipe(v.string(), v.readonly()),
-    requiredAndNullable: v.union([
-        v.string(),
-        v.null()
-    ]),
+    requiredAndNullable: v.union([v.string(), v.null()]),
     string: v.optional(v.string()),
     number: v.optional(v.number()),
     boolean: v.optional(v.boolean()),
@@ -613,20 +550,11 @@ export const vModelWithReference = v.object({
  * This is a model with one nested property
  */
 export const vModelWithNestedProperties = v.object({
-    first: v.pipe(v.union([
-        v.pipe(v.object({
-            second: v.pipe(v.union([
-                v.pipe(v.object({
-                    third: v.pipe(v.union([
-                        v.pipe(v.string(), v.readonly()),
-                        v.null()
-                    ]), v.readonly())
-                }), v.readonly()),
-                v.null()
-            ]), v.readonly())
-        }), v.readonly()),
-        v.null()
-    ]), v.readonly())
+    first: v.pipe(v.union([v.pipe(v.object({
+            second: v.pipe(v.union([v.pipe(v.object({
+                    third: v.pipe(v.union([v.pipe(v.string(), v.readonly()), v.null()]), v.readonly())
+                }), v.readonly()), v.null()]), v.readonly())
+        }), v.readonly()), v.null()]), v.readonly())
 });
 
 /**
@@ -657,13 +585,10 @@ export const vModelWithDuplicateImports = v.object({
 /**
  * This is a model that extends another model
  */
-export const vModelThatExtends = v.intersect([
-    vModelWithString,
-    v.object({
+export const vModelThatExtends = v.intersect([vModelWithString, v.object({
         propExtendsA: v.optional(v.string()),
         propExtendsB: v.optional(vModelWithString)
-    })
-]);
+    })]);
 
 /**
  * This is a model that extends another model
@@ -705,8 +630,8 @@ export const vDefault = v.object({
 });
 
 export const vPageable = v.object({
-    page: v.optional(v.pipe(v.number(), v.integer(), v.minValue(-2147483648, 'Invalid value: Expected int32 to be >= -2^31'), v.maxValue(2147483647, 'Invalid value: Expected int32 to be <= 2^31-1'), v.minValue(0)), 0),
-    size: v.optional(v.pipe(v.number(), v.integer(), v.minValue(-2147483648, 'Invalid value: Expected int32 to be >= -2^31'), v.maxValue(2147483647, 'Invalid value: Expected int32 to be <= 2^31-1'), v.minValue(1))),
+    page: v.optional(v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(2147483647, 'Invalid value: Expected int32 to be <= 2147483647')), 0),
+    size: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(2147483647, 'Invalid value: Expected int32 to be <= 2147483647'))),
     sort: v.optional(v.array(v.string()))
 });
 
@@ -726,14 +651,10 @@ export const vFreeFormObjectWithAdditionalPropertiesEqTrue = v.record(v.string()
 export const vFreeFormObjectWithAdditionalPropertiesEqEmptyObject = v.record(v.string(), v.unknown());
 
 export const vModelWithConst = v.object({
-    String: v.optional(v.picklist([
-        'String'
-    ])),
+    String: v.optional(v.picklist(['String'])),
     number: v.optional(v.unknown()),
     null: v.optional(v.unknown()),
-    withType: v.optional(v.picklist([
-        'Some string'
-    ]))
+    withType: v.optional(v.picklist(['Some string']))
 });
 
 /**
@@ -744,21 +665,15 @@ export const vModelWithAdditionalPropertiesEqTrue = v.objectWithRest({
 }, v.unknown());
 
 export const vNestedAnyOfArraysNullable = v.object({
-    nullableArray: v.optional(v.union([
-        v.array(v.unknown()),
-        v.null()
-    ]))
+    nullableArray: v.optional(v.union([v.array(v.unknown()), v.null()]))
 });
 
 /**
  * An object that can be null
  */
-export const vNullableObject = v.optional(v.union([
-    v.object({
+export const vNullableObject = v.optional(v.union([v.object({
         foo: v.optional(v.string())
-    }),
-    v.null()
-]), null);
+    }), v.null()]), null);
 
 /**
  * Some % character
@@ -771,46 +686,27 @@ export const vModelWithNullableObject = v.object({
 
 export const vModelWithOneOfEnum = v.union([
     v.object({
-        foo: v.picklist([
-            'Bar'
-        ])
+        foo: v.picklist(['Bar'])
     }),
     v.object({
-        foo: v.picklist([
-            'Baz'
-        ])
+        foo: v.picklist(['Baz'])
     }),
     v.object({
-        foo: v.picklist([
-            'Qux'
-        ])
+        foo: v.picklist(['Qux'])
     }),
     v.object({
         content: v.pipe(v.string(), v.isoTimestamp()),
-        foo: v.picklist([
-            'Quux'
-        ])
+        foo: v.picklist(['Quux'])
     }),
     v.object({
-        content: v.tuple([
-            v.pipe(v.string(), v.isoTimestamp()),
-            v.pipe(v.string(), v.isoTimestamp())
-        ]),
-        foo: v.picklist([
-            'Corge'
-        ])
+        content: v.tuple([v.pipe(v.string(), v.isoTimestamp()), v.pipe(v.string(), v.isoTimestamp())]),
+        foo: v.picklist(['Corge'])
     })
 ]);
 
-export const vModelWithNestedArrayEnumsDataFoo = v.picklist([
-    'foo',
-    'bar'
-]);
+export const vModelWithNestedArrayEnumsDataFoo = v.picklist(['foo', 'bar']);
 
-export const vModelWithNestedArrayEnumsDataBar = v.picklist([
-    'baz',
-    'qux'
-]);
+export const vModelWithNestedArrayEnumsDataBar = v.picklist(['baz', 'qux']);
 
 export const vModelWithNestedArrayEnumsData = v.object({
     foo: v.optional(v.array(vModelWithNestedArrayEnumsDataFoo)),
@@ -840,24 +736,12 @@ export const vModelWithArrayReadOnlyAndWriteOnly = v.object({
     propWithNumber: v.optional(v.array(v.number()))
 });
 
-export const vModelWithConstantSizeArray = v.tuple([
-    v.number(),
-    v.number()
-]);
+export const vModelWithConstantSizeArray = v.tuple([v.number(), v.number()]);
 
 export const vModelWithAnyOfConstantSizeArray = v.tuple([
-    v.union([
-        v.number(),
-        v.string()
-    ]),
-    v.union([
-        v.number(),
-        v.string()
-    ]),
-    v.union([
-        v.number(),
-        v.string()
-    ])
+    v.union([v.number(), v.string()]),
+    v.union([v.number(), v.string()]),
+    v.union([v.number(), v.string()])
 ]);
 
 export const vModelWithPrefixItemsConstantSizeArray = v.array(v.unknown());
@@ -880,16 +764,7 @@ export const vModelWithAnyOfConstantSizeArrayNullable = v.tuple([
     ])
 ]);
 
-export const vModelWithAnyOfConstantSizeArrayAndIntersect = v.tuple([
-    v.intersect([
-        v.number(),
-        v.string()
-    ]),
-    v.intersect([
-        v.number(),
-        v.string()
-    ])
-]);
+export const vModelWithAnyOfConstantSizeArrayAndIntersect = v.tuple([v.intersect([v.number(), v.string()]), v.intersect([v.number(), v.string()])]);
 
 export const vModelWithNumericEnumUnion = v.object({
     value: v.optional(v.unknown())
@@ -932,16 +807,7 @@ export const vDeleteFooData2 = v.string();
  */
 export const vImport = v.string();
 
-export const vModelWithAnyOfConstantSizeArrayWithNSizeAndOptions = v.tuple([
-    v.union([
-        v.number(),
-        vImport
-    ]),
-    v.union([
-        v.number(),
-        vImport
-    ])
-]);
+export const vModelWithAnyOfConstantSizeArrayWithNSizeAndOptions = v.tuple([v.union([v.number(), vImport]), v.union([v.number(), vImport])]);
 
 export const vSchemaWithFormRestrictedKeys = v.object({
     description: v.optional(v.string()),
@@ -984,12 +850,9 @@ export const vAdditionalPropertiesUnknownIssue = v.object({});
 
 export const vAdditionalPropertiesUnknownIssue2 = v.object({});
 
-export const vAdditionalPropertiesUnknownIssue3 = v.intersect([
-    v.string(),
-    v.object({
+export const vAdditionalPropertiesUnknownIssue3 = v.intersect([v.string(), v.object({
         entries: v.object({})
-    })
-]);
+    })]);
 
 export const vAdditionalPropertiesIntegerIssue = v.objectWithRest({
     value: v.pipe(v.number(), v.integer())
@@ -997,36 +860,18 @@ export const vAdditionalPropertiesIntegerIssue = v.objectWithRest({
 
 export const vGenericSchemaDuplicateIssue1SystemBoolean = v.strictObject({
     item: v.optional(v.boolean()),
-    error: v.optional(v.union([
-        v.string(),
-        v.null()
-    ])),
+    error: v.optional(v.union([v.string(), v.null()])),
     hasError: v.optional(v.pipe(v.boolean(), v.readonly())),
     data: v.optional(v.strictObject({}))
 });
 
 export const vGenericSchemaDuplicateIssue1SystemString = v.strictObject({
-    item: v.optional(v.union([
-        v.string(),
-        v.null()
-    ])),
-    error: v.optional(v.union([
-        v.string(),
-        v.null()
-    ])),
+    item: v.optional(v.union([v.string(), v.null()])),
+    error: v.optional(v.union([v.string(), v.null()])),
     hasError: v.optional(v.pipe(v.boolean(), v.readonly()))
 });
 
-export const vOneOfAllOfIssue = v.union([
-    v.intersect([
-        v.union([
-            vConstValue,
-            vGenericSchemaDuplicateIssue1SystemBoolean
-        ]),
-        v3eNum1Период
-    ]),
-    vGenericSchemaDuplicateIssue1SystemString
-]);
+export const vOneOfAllOfIssue = v.union([v.intersect([v.union([vConstValue, vGenericSchemaDuplicateIssue1SystemBoolean]), v3eNum1Период]), vGenericSchemaDuplicateIssue1SystemString]);
 
 export const vExternalSharedExternalSharedModel = v.object({
     id: v.string(),
@@ -1042,10 +887,7 @@ export const vExternalRefB = vExternalSharedExternalSharedModel;
  */
 export const vModelWithPropertiesWritable = v.object({
     required: v.string(),
-    requiredAndNullable: v.union([
-        v.string(),
-        v.null()
-    ]),
+    requiredAndNullable: v.union([v.string(), v.null()]),
     string: v.optional(v.string()),
     number: v.optional(v.number()),
     boolean: v.optional(v.boolean()),
@@ -1093,48 +935,21 @@ export const vModelWithArrayReadOnlyAndWriteOnlyWritable = v.object({
     propWithNumber: v.optional(v.array(v.number()))
 });
 
-export const vModelWithAnyOfConstantSizeArrayWithNSizeAndOptionsWritable = v.tuple([
-    v.union([
-        v.number(),
-        vImport
-    ]),
-    v.union([
-        v.number(),
-        vImport
-    ])
-]);
+export const vModelWithAnyOfConstantSizeArrayWithNSizeAndOptionsWritable = v.tuple([v.union([v.number(), vImport]), v.union([v.number(), vImport])]);
 
 export const vAdditionalPropertiesUnknownIssueWritable = v.object({});
 
-export const vOneOfAllOfIssueWritable = v.union([
-    v.intersect([
-        v.union([
-            vConstValue,
-            vGenericSchemaDuplicateIssue1SystemBoolean
-        ]),
-        v3eNum1Период
-    ]),
-    vGenericSchemaDuplicateIssue1SystemString
-]);
+export const vOneOfAllOfIssueWritable = v.union([v.intersect([v.union([vConstValue, vGenericSchemaDuplicateIssue1SystemBoolean]), v3eNum1Период]), vGenericSchemaDuplicateIssue1SystemString]);
 
 export const vGenericSchemaDuplicateIssue1SystemBooleanWritable = v.strictObject({
     item: v.optional(v.boolean()),
-    error: v.optional(v.union([
-        v.string(),
-        v.null()
-    ])),
+    error: v.optional(v.union([v.string(), v.null()])),
     data: v.optional(v.strictObject({}))
 });
 
 export const vGenericSchemaDuplicateIssue1SystemStringWritable = v.strictObject({
-    item: v.optional(v.union([
-        v.string(),
-        v.null()
-    ])),
-    error: v.optional(v.union([
-        v.string(),
-        v.null()
-    ]))
+    item: v.optional(v.union([v.string(), v.null()])),
+    error: v.optional(v.union([v.string(), v.null()]))
 });
 
 /**
@@ -1142,37 +957,19 @@ export const vGenericSchemaDuplicateIssue1SystemStringWritable = v.strictObject(
  */
 export const vSimpleParameter = v.string();
 
-export const vCompositionWithOneOfAndProperties = v.intersect([
-    v.union([
-        v.strictObject({
+export const vCompositionWithOneOfAndProperties = v.intersect([v.union([v.strictObject({
             foo: vSimpleParameter
-        }),
-        v.strictObject({
+        }), v.strictObject({
             bar: vNonAsciiStringæøåÆøÅöôêÊ字符串
-        })
-    ]),
-    v.object({
-        baz: v.union([
-            v.pipe(v.number(), v.integer(), v.minValue(0, 'Invalid value: Expected uint16 to be >= 0'), v.maxValue(65535, 'Invalid value: Expected uint16 to be <= 2^16-1'), v.minValue(0)),
-            v.null()
-        ]),
-        qux: v.pipe(v.number(), v.integer(), v.minValue(0, 'Invalid value: Expected uint8 to be >= 0'), v.maxValue(255, 'Invalid value: Expected uint8 to be <= 2^8-1'), v.minValue(0))
-    })
-]);
+        })]), v.object({
+        baz: v.union([v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(65535, 'Invalid value: Expected uint16 to be <= 65535')), v.null()]),
+        qux: v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(255, 'Invalid value: Expected uint8 to be <= 255'))
+    })]);
 
-export const vModelWithOneOfAndProperties = v.intersect([
-    v.union([
-        vSimpleParameter,
-        vNonAsciiStringæøåÆøÅöôêÊ字符串
-    ]),
-    v.object({
-        baz: v.union([
-            v.pipe(v.number(), v.integer(), v.minValue(0, 'Invalid value: Expected uint16 to be >= 0'), v.maxValue(65535, 'Invalid value: Expected uint16 to be <= 2^16-1'), v.minValue(0)),
-            v.null()
-        ]),
-        qux: v.pipe(v.number(), v.integer(), v.minValue(0, 'Invalid value: Expected uint8 to be >= 0'), v.maxValue(255, 'Invalid value: Expected uint8 to be <= 2^8-1'), v.minValue(0))
-    })
-]);
+export const vModelWithOneOfAndProperties = v.intersect([v.union([vSimpleParameter, vNonAsciiStringæøåÆøÅöôêÊ字符串]), v.object({
+        baz: v.union([v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(65535, 'Invalid value: Expected uint16 to be <= 65535')), v.null()]),
+        qux: v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(255, 'Invalid value: Expected uint8 to be <= 255'))
+    })]);
 
 /**
  * Parameter with illegal characters
@@ -1196,18 +993,12 @@ export const vPatchApiVbyApiVersionNoTagData = v.object({
 });
 
 export const vImportData = v.object({
-    body: v.union([
-        vModelWithReadOnlyAndWriteOnlyWritable,
-        vModelWithArrayReadOnlyAndWriteOnlyWritable
-    ]),
+    body: v.union([vModelWithReadOnlyAndWriteOnlyWritable, vModelWithArrayReadOnlyAndWriteOnlyWritable]),
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
 
-export const vImportResponse = v.union([
-    vModelFromZendesk,
-    vModelWithReadOnlyAndWriteOnly
-]);
+export const vImportResponse = v.union([vModelFromZendesk, vModelWithReadOnlyAndWriteOnly]);
 
 export const vFooWowData = v.object({
     body: v.optional(v.never()),
@@ -1311,70 +1102,40 @@ export const vDeprecatedCallData = v.object({
     path: v.optional(v.never()),
     query: v.optional(v.never()),
     headers: v.object({
-        parameter: v.union([
-            vDeprecatedModel,
-            v.null()
-        ])
+        parameter: v.union([vDeprecatedModel, v.null()])
     })
 });
 
 export const vCallWithParametersData = v.object({
-    body: v.union([
-        v.record(v.string(), v.unknown()),
-        v.null()
-    ]),
+    body: v.union([v.record(v.string(), v.unknown()), v.null()]),
     path: v.object({
-        parameterPath: v.union([
-            v.string(),
-            v.null()
-        ]),
-        'api-version': v.union([
-            v.string(),
-            v.null()
-        ])
+        parameterPath: v.union([v.string(), v.null()]),
+        'api-version': v.union([v.string(), v.null()])
     }),
     query: v.object({
         foo_ref_enum: v.optional(vModelWithNestedArrayEnumsDataFoo),
         foo_all_of_enum: vModelWithNestedArrayEnumsDataFoo,
-        cursor: v.union([
-            v.string(),
-            v.null()
-        ])
+        cursor: v.union([v.string(), v.null()])
     }),
     headers: v.object({
-        parameterHeader: v.union([
-            v.string(),
-            v.null()
-        ])
+        parameterHeader: v.union([v.string(), v.null()])
     })
 });
 
 export const vCallWithWeirdParameterNamesData = v.object({
-    body: v.union([
-        vModelWithString,
-        v.null()
-    ]),
+    body: v.union([vModelWithString, v.null()]),
     path: v.object({
         'parameter.path.1': v.optional(v.string()),
         'parameter-path-2': v.optional(v.string()),
         'PARAMETER-PATH-3': v.optional(v.string()),
-        'api-version': v.union([
-            v.string(),
-            v.null()
-        ])
+        'api-version': v.union([v.string(), v.null()])
     }),
     query: v.object({
         default: v.optional(v.string()),
-        'parameter-query': v.union([
-            v.string(),
-            v.null()
-        ])
+        'parameter-query': v.union([v.string(), v.null()])
     }),
     headers: v.object({
-        'parameter.header': v.union([
-            v.string(),
-            v.null()
-        ])
+        'parameter.header': v.union([v.string(), v.null()])
     })
 });
 
@@ -1388,10 +1149,7 @@ export const vGetCallWithOptionalParamData = v.object({
 
 export const vPostCallWithOptionalParamData = v.object({
     body: v.optional(v.object({
-        offset: v.optional(v.union([
-            v.number(),
-            v.null()
-        ]))
+        offset: v.optional(v.union([v.number(), v.null()]))
     })),
     path: v.optional(v.never()),
     query: v.object({
@@ -1399,10 +1157,7 @@ export const vPostCallWithOptionalParamData = v.object({
     })
 });
 
-export const vPostCallWithOptionalParamResponse = v.union([
-    v.number(),
-    v.void()
-]);
+export const vPostCallWithOptionalParamResponse = v.union([v.number(), v.void()]);
 
 export const vPostApiVbyApiVersionRequestBodyData = v.object({
     body: v.optional(vSimpleRequestBody),
@@ -1424,27 +1179,15 @@ export const vCallWithDefaultParametersData = v.object({
     body: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.optional(v.object({
-        parameterString: v.optional(v.union([
-            v.optional(v.string(), 'Hello World!'),
-            v.null()
-        ]), 'Hello World!'),
-        parameterNumber: v.optional(v.union([
-            v.optional(v.number(), 123),
-            v.null()
-        ]), 123),
-        parameterBoolean: v.optional(v.union([
-            v.optional(v.boolean(), true),
-            v.null()
-        ]), true),
+        parameterString: v.optional(v.union([v.optional(v.string(), 'Hello World!'), v.null()]), 'Hello World!'),
+        parameterNumber: v.optional(v.union([v.optional(v.number(), 123), v.null()]), 123),
+        parameterBoolean: v.optional(v.union([v.optional(v.boolean(), true), v.null()]), true),
         parameterEnum: v.optional(v.picklist([
             'Success',
             'Warning',
             'Error'
         ])),
-        parameterModel: v.optional(v.union([
-            vModelWithString,
-            v.null()
-        ]))
+        parameterModel: v.optional(v.union([vModelWithString, v.null()]))
     }))
 });
 
@@ -1474,14 +1217,8 @@ export const vCallToTestOrderOfParamsData = v.object({
         parameterStringWithDefault: v.optional(v.string(), 'Hello World!'),
         parameterStringWithEmptyDefault: v.optional(v.string(), ''),
         parameterStringWithNoDefault: v.string(),
-        parameterStringNullableWithNoDefault: v.optional(v.union([
-            v.string(),
-            v.null()
-        ])),
-        parameterStringNullableWithDefault: v.optional(v.union([
-            v.string(),
-            v.null()
-        ]), null)
+        parameterStringNullableWithNoDefault: v.optional(v.union([v.string(), v.null()])),
+        parameterStringNullableWithDefault: v.optional(v.union([v.string(), v.null()]), null)
     })
 });
 
@@ -1526,10 +1263,7 @@ export const vCallWithResponseAndNoContentResponseData = v.object({
     query: v.optional(v.never())
 });
 
-export const vCallWithResponseAndNoContentResponseResponse = v.union([
-    v.number(),
-    v.void()
-]);
+export const vCallWithResponseAndNoContentResponseResponse = v.union([v.number(), v.void()]);
 
 export const vDummyAData = v.object({
     body: v.optional(v.never()),
@@ -1564,13 +1298,7 @@ export const vCallWithDuplicateResponsesData = v.object({
     query: v.optional(v.never())
 });
 
-export const vCallWithDuplicateResponsesResponse = v.union([
-    v.intersect([
-        vModelWithBoolean,
-        vModelWithInteger
-    ]),
-    vModelWithString
-]);
+export const vCallWithDuplicateResponsesResponse = v.union([v.intersect([vModelWithBoolean, vModelWithInteger]), vModelWithString]);
 
 export const vCallWithResponsesData = v.object({
     body: v.optional(v.never()),
@@ -1592,56 +1320,26 @@ export const vCollectionFormatData = v.object({
     body: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.object({
-        parameterArrayCSV: v.union([
-            v.array(v.string()),
-            v.null()
-        ]),
-        parameterArraySSV: v.union([
-            v.array(v.string()),
-            v.null()
-        ]),
-        parameterArrayTSV: v.union([
-            v.array(v.string()),
-            v.null()
-        ]),
-        parameterArrayPipes: v.union([
-            v.array(v.string()),
-            v.null()
-        ]),
-        parameterArrayMulti: v.union([
-            v.array(v.string()),
-            v.null()
-        ])
+        parameterArrayCSV: v.union([v.array(v.string()), v.null()]),
+        parameterArraySSV: v.union([v.array(v.string()), v.null()]),
+        parameterArrayTSV: v.union([v.array(v.string()), v.null()]),
+        parameterArrayPipes: v.union([v.array(v.string()), v.null()]),
+        parameterArrayMulti: v.union([v.array(v.string()), v.null()])
     })
 });
 
 export const vTypesData = v.object({
     body: v.optional(v.never()),
     path: v.optional(v.object({
-        id: v.optional(v.pipe(v.number(), v.integer(), v.minValue(-2147483648, 'Invalid value: Expected int32 to be >= -2^31'), v.maxValue(2147483647, 'Invalid value: Expected int32 to be <= 2^31-1')))
+        id: v.optional(v.pipe(v.number(), v.integer(), v.minValue(-2147483648, 'Invalid value: Expected int32 to be >= -2147483648'), v.maxValue(2147483647, 'Invalid value: Expected int32 to be <= 2147483647')))
     })),
     query: v.object({
         parameterNumber: v.optional(v.number(), 123),
-        parameterString: v.optional(v.union([
-            v.optional(v.string(), 'default'),
-            v.null()
-        ]), 'default'),
-        parameterBoolean: v.optional(v.union([
-            v.optional(v.boolean(), true),
-            v.null()
-        ]), true),
-        parameterObject: v.optional(v.union([
-            v.record(v.string(), v.unknown()),
-            v.null()
-        ]), null),
-        parameterArray: v.union([
-            v.array(v.string()),
-            v.null()
-        ]),
-        parameterDictionary: v.union([
-            v.record(v.string(), v.unknown()),
-            v.null()
-        ]),
+        parameterString: v.optional(v.union([v.optional(v.string(), 'default'), v.null()]), 'default'),
+        parameterBoolean: v.optional(v.union([v.optional(v.boolean(), true), v.null()]), true),
+        parameterObject: v.optional(v.union([v.record(v.string(), v.unknown()), v.null()]), null),
+        parameterArray: v.union([v.array(v.string()), v.null()]),
+        parameterDictionary: v.union([v.record(v.string(), v.unknown()), v.null()]),
         parameterEnum: v.picklist([
             'Success',
             'Warning',
@@ -1660,10 +1358,7 @@ export const vTypesResponse = v.union([
 export const vUploadFileData = v.object({
     body: v.string(),
     path: v.object({
-        'api-version': v.union([
-            v.string(),
-            v.null()
-        ])
+        'api-version': v.union([v.string(), v.null()])
     }),
     query: v.optional(v.never())
 });
@@ -1724,10 +1419,7 @@ export const vMultipartResponseResponse = v.object({
 export const vMultipartRequestData = v.object({
     body: v.optional(v.object({
         content: v.optional(v.string()),
-        data: v.optional(v.union([
-            vModelWithString,
-            v.null()
-        ]))
+        data: v.optional(v.union([vModelWithString, v.null()]))
     })),
     path: v.optional(v.never()),
     query: v.optional(v.never())
@@ -1735,28 +1427,16 @@ export const vMultipartRequestData = v.object({
 
 export const vComplexParamsData = v.object({
     body: v.optional(v.object({
-        key: v.pipe(v.union([
-            v.pipe(v.pipe(v.string(), v.maxLength(64), v.regex(/^[a-zA-Z0-9_]*$/)), v.readonly()),
-            v.null()
-        ]), v.readonly()),
-        name: v.union([
-            v.pipe(v.string(), v.maxLength(255)),
-            v.null()
-        ]),
+        key: v.pipe(v.union([v.pipe(v.pipe(v.string(), v.maxLength(64), v.regex(/^[a-zA-Z0-9_]*$/)), v.readonly()), v.null()]), v.readonly()),
+        name: v.union([v.pipe(v.string(), v.maxLength(255)), v.null()]),
         enabled: v.optional(v.boolean(), true),
         type: v.picklist([
             'Monkey',
             'Horse',
             'Bird'
         ]),
-        listOfModels: v.optional(v.union([
-            v.array(vModelWithString),
-            v.null()
-        ])),
-        listOfStrings: v.optional(v.union([
-            v.array(v.string()),
-            v.null()
-        ])),
+        listOfModels: v.optional(v.union([v.array(vModelWithString), v.null()])),
+        listOfStrings: v.optional(v.union([v.array(v.string()), v.null()])),
         parameters: v.union([
             vModelWithString,
             vModelWithEnum,
@@ -1764,15 +1444,12 @@ export const vComplexParamsData = v.object({
             vModelWithDictionary
         ]),
         user: v.optional(v.pipe(v.object({
-            id: v.optional(v.pipe(v.pipe(v.number(), v.integer(), v.minValue(-2147483648, 'Invalid value: Expected int32 to be >= -2^31'), v.maxValue(2147483647, 'Invalid value: Expected int32 to be <= 2^31-1')), v.readonly())),
-            name: v.optional(v.pipe(v.union([
-                v.pipe(v.string(), v.readonly()),
-                v.null()
-            ]), v.readonly()))
+            id: v.optional(v.pipe(v.pipe(v.number(), v.integer(), v.minValue(-2147483648, 'Invalid value: Expected int32 to be >= -2147483648'), v.maxValue(2147483647, 'Invalid value: Expected int32 to be <= 2147483647')), v.readonly())),
+            name: v.optional(v.pipe(v.union([v.pipe(v.string(), v.readonly()), v.null()]), v.readonly()))
         }), v.readonly()))
     })),
     path: v.object({
-        id: v.pipe(v.number(), v.integer(), v.minValue(-2147483648, 'Invalid value: Expected int32 to be >= -2^31'), v.maxValue(2147483647, 'Invalid value: Expected int32 to be <= 2^31-1')),
+        id: v.pipe(v.number(), v.integer(), v.minValue(-2147483648, 'Invalid value: Expected int32 to be >= -2147483648'), v.maxValue(2147483647, 'Invalid value: Expected int32 to be <= 2147483647')),
         'api-version': v.string()
     }),
     query: v.optional(v.never())
@@ -1801,7 +1478,7 @@ export const vNonAsciiæøåÆøÅöôêÊ字符串Data = v.object({
     body: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.object({
-        'nonAsciiParamæøåÆØÅöôêÊ': v.pipe(v.number(), v.integer())
+        nonAsciiParamæøåÆØÅöôêÊ: v.pipe(v.number(), v.integer())
     })
 });
 

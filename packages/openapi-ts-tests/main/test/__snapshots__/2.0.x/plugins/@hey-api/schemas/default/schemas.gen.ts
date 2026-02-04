@@ -2,19 +2,16 @@
 
 export const ExternalRefASchema = {
     description: 'External ref to shared model (A)',
-    '$ref': '#/definitions/external-shared_ExternalSharedModel'
+    $ref: '#/definitions/external-shared_ExternalSharedModel'
 } as const;
 
 export const ExternalRefBSchema = {
     description: 'External ref to shared model (B)',
-    '$ref': '#/definitions/external-shared_ExternalSharedModel'
+    $ref: '#/definitions/external-shared_ExternalSharedModel'
 } as const;
 
 export const CommentWithBreaksSchema = {
-    description: `Testing multiline comments in string: First line
-Second line
-
-Fourth line`,
+    description: 'Testing multiline comments in string: First line\nSecond line\n\nFourth line',
     type: 'integer'
 } as const;
 
@@ -24,7 +21,7 @@ export const CommentWithBackticksSchema = {
 } as const;
 
 export const CommentWithBackticksAndQuotesSchema = {
-    description: `Testing backticks and quotes in string: \`backticks\`, 'quotes', "double quotes" and \`\`\`multiple backticks\`\`\` should work`,
+    description: 'Testing backticks and quotes in string: `backticks`, \'quotes\', "double quotes" and ```multiple backticks``` should work',
     type: 'integer'
 } as const;
 
@@ -39,7 +36,7 @@ export const CommentWithExpressionPlaceholdersSchema = {
 } as const;
 
 export const CommentWithQuotesSchema = {
-    description: `Testing quotes in string: 'single quote''' and "double quotes""" should work`,
+    description: 'Testing quotes in string: \'single quote\'\'\' and "double quotes""" should work',
     type: 'integer'
 } as const;
 
@@ -76,7 +73,7 @@ export const SimpleFileSchema = {
 
 export const SimpleReferenceSchema = {
     description: 'This is a simple reference',
-    '$ref': '#/definitions/ModelWithString'
+    $ref: '#/definitions/ModelWithString'
 } as const;
 
 export const SimpleStringWithPatternSchema = {
@@ -88,12 +85,35 @@ export const SimpleStringWithPatternSchema = {
 
 export const EnumWithStringsSchema = {
     description: 'This is a simple enum with strings',
-    enum: ['Success', 'Warning', 'Error', "'Single Quote'", '"Double Quotes"', 'Non-ascii: øæåôöØÆÅÔÖ字符串']
+    enum: [
+        'Success',
+        'Warning',
+        'Error',
+        '\'Single Quote\'',
+        '"Double Quotes"',
+        'Non-ascii: øæåôöØÆÅÔÖ字符串'
+    ]
 } as const;
 
 export const EnumWithNumbersSchema = {
     description: 'This is a simple enum with numbers',
-    enum: [1, 2, 3, 1.1, 1.2, 1.3, 100, 200, 300, -100, -200, -300, -1.1, -1.2, -1.3]
+    enum: [
+        1,
+        2,
+        3,
+        1.1,
+        1.2,
+        1.3,
+        100,
+        200,
+        300,
+        -100,
+        -200,
+        -300,
+        -1.1,
+        -1.2,
+        -1.3
+    ]
 } as const;
 
 export const EnumFromDescriptionSchema = {
@@ -103,9 +123,21 @@ export const EnumFromDescriptionSchema = {
 
 export const EnumWithExtensionsSchema = {
     description: 'This is a simple enum with numbers',
-    enum: [200, 400, 500],
-    'x-enum-varnames': ['CUSTOM_SUCCESS', 'CUSTOM_WARNING', 'CUSTOM_ERROR'],
-    'x-enum-descriptions': ['Used when the status of something is successful', 'Used when the status of something has a warning', 'Used when the status of something has an error']
+    enum: [
+        200,
+        400,
+        500
+    ],
+    'x-enum-varnames': [
+        'CUSTOM_SUCCESS',
+        'CUSTOM_WARNING',
+        'CUSTOM_ERROR'
+    ],
+    'x-enum-descriptions': [
+        'Used when the status of something is successful',
+        'Used when the status of something has a warning',
+        'Used when the status of something has an error'
+    ]
 } as const;
 
 export const ArrayWithNumbersSchema = {
@@ -136,7 +168,7 @@ export const ArrayWithReferencesSchema = {
     description: 'This is a simple array with references',
     type: 'array',
     items: {
-        '$ref': '#/definitions/ModelWithString'
+        $ref: '#/definitions/ModelWithString'
     }
 } as const;
 
@@ -146,7 +178,7 @@ export const ArrayWithArraySchema = {
     items: {
         type: 'array',
         items: {
-            '$ref': '#/definitions/ModelWithString'
+            $ref: '#/definitions/ModelWithString'
         }
     }
 } as const;
@@ -179,7 +211,7 @@ export const DictionaryWithReferenceSchema = {
     description: 'This is a string reference',
     type: 'object',
     additionalProperties: {
-        '$ref': '#/definitions/ModelWithString'
+        $ref: '#/definitions/ModelWithString'
     }
 } as const;
 
@@ -189,7 +221,7 @@ export const DictionaryWithArraySchema = {
     additionalProperties: {
         type: 'array',
         items: {
-            '$ref': '#/definitions/ModelWithString'
+            $ref: '#/definitions/ModelWithString'
         }
     }
 } as const;
@@ -273,7 +305,9 @@ export const ModelWithStringErrorSchema = {
 export const ModelWithNullableStringSchema = {
     description: 'This is a model with one string property',
     type: 'object',
-    required: ['nullableRequiredProp'],
+    required: [
+        'nullableRequiredProp'
+    ],
     properties: {
         nullableProp: {
             description: 'This is a simple string property',
@@ -294,16 +328,30 @@ export const ModelWithEnumSchema = {
     properties: {
         test: {
             description: 'This is a simple enum with strings',
-            enum: ['Success', 'Warning', 'Error', 'ØÆÅ字符串']
+            enum: [
+                'Success',
+                'Warning',
+                'Error',
+                'ØÆÅ字符串'
+            ]
         },
         statusCode: {
             description: 'These are the HTTP error code enums',
-            enum: ['100', '200 FOO', '300 FOO_BAR', '400 foo-bar', '500 foo.bar', '600 foo&bar']
+            enum: [
+                '100',
+                '200 FOO',
+                '300 FOO_BAR',
+                '400 foo-bar',
+                '500 foo.bar',
+                '600 foo&bar'
+            ]
         },
         bool: {
             description: 'Simple boolean enum',
             type: 'boolean',
-            enum: [true]
+            enum: [
+                true
+            ]
         }
     }
 } as const;
@@ -326,7 +374,11 @@ export const ModelWithNestedEnumsSchema = {
         dictionaryWithEnum: {
             type: 'object',
             additionalProperties: {
-                enum: ['Success', 'Warning', 'Error']
+                enum: [
+                    'Success',
+                    'Warning',
+                    'Error'
+                ]
             }
         },
         dictionaryWithEnumFromDescription: {
@@ -339,7 +391,11 @@ export const ModelWithNestedEnumsSchema = {
         arrayWithEnum: {
             type: 'array',
             items: {
-                enum: ['Success', 'Warning', 'Error']
+                enum: [
+                    'Success',
+                    'Warning',
+                    'Error'
+                ]
             }
         },
         arrayWithDescription: {
@@ -357,7 +413,7 @@ export const ModelWithReferenceSchema = {
     type: 'object',
     properties: {
         prop: {
-            '$ref': '#/definitions/ModelWithProperties'
+            $ref: '#/definitions/ModelWithProperties'
         }
     }
 } as const;
@@ -369,7 +425,7 @@ export const ModelWithArraySchema = {
         prop: {
             type: 'array',
             items: {
-                '$ref': '#/definitions/ModelWithString'
+                $ref: '#/definitions/ModelWithString'
             }
         },
         propWithFile: {
@@ -406,7 +462,7 @@ export const ModelWithCircularReferenceSchema = {
     type: 'object',
     properties: {
         prop: {
-            '$ref': '#/definitions/ModelWithCircularReference'
+            $ref: '#/definitions/ModelWithCircularReference'
         }
     }
 } as const;
@@ -414,7 +470,10 @@ export const ModelWithCircularReferenceSchema = {
 export const ModelWithPropertiesSchema = {
     description: 'This is a model with one nested property',
     type: 'object',
-    required: ['required', 'requiredAndReadOnly'],
+    required: [
+        'required',
+        'requiredAndReadOnly'
+    ],
     properties: {
         required: {
             type: 'string'
@@ -433,7 +492,7 @@ export const ModelWithPropertiesSchema = {
             type: 'boolean'
         },
         reference: {
-            '$ref': '#/definitions/ModelWithString'
+            $ref: '#/definitions/ModelWithString'
         },
         'property with space': {
             type: 'string'
@@ -458,16 +517,22 @@ export const ModelWithPropertiesSchema = {
 export const ModelWithNestedPropertiesSchema = {
     description: 'This is a model with one nested property',
     type: 'object',
-    required: ['first'],
+    required: [
+        'first'
+    ],
     properties: {
         first: {
             type: 'object',
-            required: ['second'],
+            required: [
+                'second'
+            ],
             readOnly: true,
             properties: {
                 second: {
                     type: 'object',
-                    required: ['third'],
+                    required: [
+                        'third'
+                    ],
                     readOnly: true,
                     properties: {
                         third: {
@@ -486,7 +551,7 @@ export const ModelWithDuplicatePropertiesSchema = {
     type: 'object',
     properties: {
         prop: {
-            '$ref': '#/definitions/ModelWithString'
+            $ref: '#/definitions/ModelWithString'
         }
     }
 } as const;
@@ -512,13 +577,13 @@ export const ModelWithDuplicateImportsSchema = {
     type: 'object',
     properties: {
         propA: {
-            '$ref': '#/definitions/ModelWithString'
+            $ref: '#/definitions/ModelWithString'
         },
         propB: {
-            '$ref': '#/definitions/ModelWithString'
+            $ref: '#/definitions/ModelWithString'
         },
         propC: {
-            '$ref': '#/definitions/ModelWithString'
+            $ref: '#/definitions/ModelWithString'
         }
     }
 } as const;
@@ -528,7 +593,7 @@ export const ModelThatExtendsSchema = {
     type: 'object',
     allOf: [
         {
-            '$ref': '#/definitions/ModelWithString'
+            $ref: '#/definitions/ModelWithString'
         },
         {
             type: 'object',
@@ -537,7 +602,7 @@ export const ModelThatExtendsSchema = {
                     type: 'string'
                 },
                 propExtendsB: {
-                    '$ref': '#/definitions/ModelWithString'
+                    $ref: '#/definitions/ModelWithString'
                 }
             }
         }
@@ -549,10 +614,10 @@ export const ModelThatExtendsExtendsSchema = {
     type: 'object',
     allOf: [
         {
-            '$ref': '#/definitions/ModelWithString'
+            $ref: '#/definitions/ModelWithString'
         },
         {
-            '$ref': '#/definitions/ModelThatExtends'
+            $ref: '#/definitions/ModelThatExtends'
         },
         {
             type: 'object',
@@ -561,7 +626,7 @@ export const ModelThatExtendsExtendsSchema = {
                     type: 'string'
                 },
                 propExtendsD: {
-                    '$ref': '#/definitions/ModelWithString'
+                    $ref: '#/definitions/ModelWithString'
                 }
             }
         }
@@ -580,7 +645,10 @@ export const defaultSchema = {
 export const ModelWithPatternSchema = {
     description: 'This is a model that contains a some patterns',
     type: 'object',
-    required: ['key', 'name'],
+    required: [
+        'key',
+        'name'
+    ],
     properties: {
         key: {
             maxLength: 64,
@@ -610,7 +678,7 @@ export const ModelWithPatternSchema = {
         },
         patternWithSingleQuotes: {
             type: 'string',
-            pattern: "^[a-zA-Z0-9']*$"
+            pattern: '^[a-zA-Z0-9\']*$'
         },
         patternWithNewline: {
             type: 'string',
@@ -690,7 +758,9 @@ export const external_shared_ExternalSharedModelSchema = {
             type: 'string'
         }
     },
-    required: ['id']
+    required: [
+        'id'
+    ]
 } as const;
 
 export const ModelWithReferenceWritableSchema = {
@@ -698,7 +768,7 @@ export const ModelWithReferenceWritableSchema = {
     type: 'object',
     properties: {
         prop: {
-            '$ref': '#/definitions/ModelWithPropertiesWritable'
+            $ref: '#/definitions/ModelWithPropertiesWritable'
         }
     }
 } as const;
@@ -706,7 +776,9 @@ export const ModelWithReferenceWritableSchema = {
 export const ModelWithPropertiesWritableSchema = {
     description: 'This is a model with one nested property',
     type: 'object',
-    required: ['required'],
+    required: [
+        'required'
+    ],
     properties: {
         required: {
             type: 'string'
@@ -721,7 +793,7 @@ export const ModelWithPropertiesWritableSchema = {
             type: 'boolean'
         },
         reference: {
-            '$ref': '#/definitions/ModelWithString'
+            $ref: '#/definitions/ModelWithString'
         },
         'property with space': {
             type: 'string'
@@ -738,7 +810,10 @@ export const ModelWithPropertiesWritableSchema = {
 export const ModelWithPatternWritableSchema = {
     description: 'This is a model that contains a some patterns',
     type: 'object',
-    required: ['key', 'name'],
+    required: [
+        'key',
+        'name'
+    ],
     properties: {
         key: {
             maxLength: 64,
@@ -759,7 +834,7 @@ export const ModelWithPatternWritableSchema = {
         },
         patternWithSingleQuotes: {
             type: 'string',
-            pattern: "^[a-zA-Z0-9']*$"
+            pattern: '^[a-zA-Z0-9\']*$'
         },
         patternWithNewline: {
             type: 'string',

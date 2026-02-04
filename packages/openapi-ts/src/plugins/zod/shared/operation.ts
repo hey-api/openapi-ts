@@ -1,6 +1,7 @@
-import { operationResponsesMap } from '~/ir/operation';
-import type { IR } from '~/ir/types';
-import { buildName } from '~/openApi/shared/utils/name';
+import { fromRef } from '@hey-api/codegen-core';
+import type { IR } from '@hey-api/shared';
+import { applyNaming } from '@hey-api/shared';
+import { operationResponsesMap } from '@hey-api/shared';
 
 import { exportAst } from './export';
 import type { Ast, IrSchemaToAstOptions } from './types';
@@ -11,10 +12,7 @@ export const irOperationToAst = ({
   plugin,
   state,
 }: IrSchemaToAstOptions & {
-  getAst: (
-    schema: IR.SchemaObject,
-    path: ReadonlyArray<string | number>,
-  ) => Ast;
+  getAst: (schema: IR.SchemaObject, path: ReadonlyArray<string | number>) => Ast;
   operation: IR.OperationObject;
 }): void => {
   if (plugin.config.requests.enabled) {
@@ -115,41 +113,30 @@ export const irOperationToAst = ({
 
     schemaData.required = [...requiredProperties];
 
-    const ast = getAst(schemaData, state.path.value);
-    const symbol = plugin.registerSymbol({
-      exported: true,
+    const ast = getAst(schemaData, fromRef(state.path));
+    const symbol = plugin.symbol(applyNaming(operation.id, plugin.config.requests), {
       meta: {
         category: 'schema',
-        path: state.path.value,
+        path: fromRef(state.path),
         resource: 'operation',
         resourceId: operation.id,
         role: 'data',
-        tags: state.tags?.value,
+        tags: fromRef(state.tags),
         tool: 'zod',
       },
-      name: buildName({
-        config: plugin.config.requests,
-        name: operation.id,
-      }),
     });
     const typeInferSymbol = plugin.config.requests.types.infer.enabled
-      ? plugin.registerSymbol({
-          exported: true,
-          kind: 'type',
+      ? plugin.symbol(applyNaming(operation.id, plugin.config.requests.types.infer), {
           meta: {
             category: 'type',
-            path: state.path.value,
+            path: fromRef(state.path),
             resource: 'operation',
             resourceId: operation.id,
             role: 'data',
-            tags: state.tags?.value,
+            tags: fromRef(state.tags),
             tool: 'zod',
             variant: 'infer',
           },
-          name: buildName({
-            config: plugin.config.requests.types.infer,
-            name: operation.id,
-          }),
         })
       : undefined;
     exportAst({
@@ -166,42 +153,31 @@ export const irOperationToAst = ({
       const { response } = operationResponsesMap(operation);
 
       if (response) {
-        const path = [...state.path.value, 'responses'];
+        const path = [...fromRef(state.path), 'responses'];
         const ast = getAst(response, path);
-        const symbol = plugin.registerSymbol({
-          exported: true,
+        const symbol = plugin.symbol(applyNaming(operation.id, plugin.config.responses), {
           meta: {
             category: 'schema',
             path,
             resource: 'operation',
             resourceId: operation.id,
             role: 'responses',
-            tags: state.tags?.value,
+            tags: fromRef(state.tags),
             tool: 'zod',
           },
-          name: buildName({
-            config: plugin.config.responses,
-            name: operation.id,
-          }),
         });
         const typeInferSymbol = plugin.config.responses.types.infer.enabled
-          ? plugin.registerSymbol({
-              exported: true,
-              kind: 'type',
+          ? plugin.symbol(applyNaming(operation.id, plugin.config.responses.types.infer), {
               meta: {
                 category: 'type',
                 path,
                 resource: 'operation',
                 resourceId: operation.id,
                 role: 'responses',
-                tags: state.tags?.value,
+                tags: fromRef(state.tags),
                 tool: 'zod',
                 variant: 'infer',
               },
-              name: buildName({
-                config: plugin.config.responses.types.infer,
-                name: operation.id,
-              }),
             })
           : undefined;
         exportAst({

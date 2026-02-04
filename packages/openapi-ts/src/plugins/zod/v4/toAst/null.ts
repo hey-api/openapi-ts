@@ -1,6 +1,6 @@
-import type { SchemaWithType } from '~/plugins';
-import { tsc } from '~/tsc';
+import type { SchemaWithType } from '@hey-api/shared';
 
+import { $ } from '../../../../ts-dsl';
 import { identifiers } from '../../constants';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
 
@@ -10,15 +10,7 @@ export const nullToAst = ({
   schema: SchemaWithType<'null'>;
 }): Omit<Ast, 'typeName'> => {
   const result: Partial<Omit<Ast, 'typeName'>> = {};
-  const z = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'zod.z',
-  });
-  result.expression = tsc.callExpression({
-    functionName: tsc.propertyAccessExpression({
-      expression: z.placeholder,
-      name: identifiers.null,
-    }),
-  });
+  const z = plugin.external('zod.z');
+  result.expression = $(z).attr(identifiers.null).call();
   return result as Omit<Ast, 'typeName'>;
 };

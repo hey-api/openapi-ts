@@ -1,3 +1,2 @@
-export { initConfigs } from './config/init';
-export { getSpec } from './getSpec';
-export { parseOpenApiSpec } from './openApi';
+export { resolveJobs as initConfigs } from './config/init';
+export { getSpec, parseOpenApiSpec } from '@hey-api/shared';

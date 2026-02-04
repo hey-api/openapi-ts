@@ -1,32 +1,38 @@
 {
   "name": "@hey-api/custom-client",
   "version": "0.1.1",
-  "description": "Custom client for `@hey-api/openapi-ts` codegen. Used for testing.",
   "private": true,
+  "description": "Custom client for `@hey-api/openapi-ts` codegen. Used for testing.",
   "homepage": "https://heyapi.dev/",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/hey-api/openapi-ts.git"
-  },
   "bugs": {
     "url": "https://github.com/hey-api/openapi-ts/issues"
   },
   "license": "MIT",
   "author": {
-    "email": "lubos@heyapi.dev",
     "name": "Hey API",
+    "email": "lubos@heyapi.dev",
     "url": "https://heyapi.dev"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hey-api/openapi-ts.git"
+  },
   "funding": "https://github.com/sponsors/hey-api",
+  "files": [
+    "dist",
+    "LICENSE.md",
+    "src"
+  ],
   "type": "module",
+  "sideEffects": false,
   "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
   "exports": {
     ".": {
       "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
       },
       "require": {
         "types": "./dist/index.d.cts",
@@ -35,8 +41,8 @@
     },
     "./plugin": {
       "import": {
-        "types": "./dist/plugin.d.ts",
-        "default": "./dist/plugin.js"
+        "types": "./dist/plugin.d.mts",
+        "default": "./dist/plugin.mjs"
       },
       "require": {
         "types": "./dist/plugin.d.cts",
@@ -45,12 +51,6 @@
     },
     "./package.json": "./package.json"
   },
-  "sideEffects": false,
-  "files": [
-    "dist",
-    "LICENSE.md",
-    "src"
-  ],
   "scripts": {
     "build": "tsdown && rollup -c && pnpm check-exports",
     "check-exports": "attw --profile node16 --pack .",
@@ -62,13 +62,13 @@
     "test": "vitest run",
     "typecheck": "vitest --typecheck --watch=false"
   },
-  "peerDependencies": {
-    "@hey-api/codegen-core": "<2",
-    "@hey-api/openapi-ts": "<2"
-  },
   "devDependencies": {
     "@config/vite-base": "workspace:*",
     "@hey-api/codegen-core": "workspace:*",
     "@hey-api/openapi-ts": "workspace:*"
+  },
+  "peerDependencies": {
+    "@hey-api/codegen-core": "<2",
+    "@hey-api/openapi-ts": "<2"
   }
 }

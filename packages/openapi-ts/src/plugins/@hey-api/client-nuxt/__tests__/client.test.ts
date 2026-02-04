@@ -1,5 +1,3 @@
-import { describe, expect, it, vi } from 'vitest';
-
 // Mock Nuxt composables with realistic return values
 vi.mock('nuxt/app', () => ({
   useAsyncData: vi.fn(() => ({

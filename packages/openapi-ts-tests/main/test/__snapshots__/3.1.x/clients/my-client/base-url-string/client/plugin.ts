@@ -19,7 +19,7 @@ export type MyClientPlugin = DefinePlugin<Config, Config>;
 export const defaultConfig: MyClientPlugin['Config'] = {
   ...clientDefaultMeta,
   config: clientDefaultConfig,
-  handler: clientPluginHandler,
+  handler: clientPluginHandler as MyClientPlugin['Handler'],
   name: __filename,
 };
 

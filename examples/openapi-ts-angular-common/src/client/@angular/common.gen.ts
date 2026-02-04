@@ -241,9 +241,7 @@ export const createUserRequest = <ThrowOnError extends boolean = false>(
  *
  * Creates list of users with given input array.
  */
-export const createUsersWithListInputRequest = <
-  ThrowOnError extends boolean = false,
->(
+export const createUsersWithListInputRequest = <ThrowOnError extends boolean = false>(
   options?: Options<CreateUsersWithListInputData, ThrowOnError>,
 ): HttpRequest<unknown> =>
   (options?.client ?? client).requestOptions({
@@ -328,9 +326,7 @@ export const updateUserRequest = <ThrowOnError extends boolean = false>(
     ...options,
   });
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class PetServiceResources {
   /**
    * Add a new pet to the store.
@@ -445,9 +441,7 @@ export class PetServiceResources {
   }
 }
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class StoreServiceResources {
   /**
    * Returns pet inventories by status.
@@ -506,9 +500,7 @@ export class StoreServiceResources {
   }
 }
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class UserServiceResources {
   /**
    * Create user.
@@ -530,9 +522,7 @@ export class UserServiceResources {
    * Creates list of users with given input array.
    */
   public createUsersWithListInput<ThrowOnError extends boolean = false>(
-    options?: () =>
-      | Options<CreateUsersWithListInputData, ThrowOnError>
-      | undefined,
+    options?: () => Options<CreateUsersWithListInputData, ThrowOnError> | undefined,
   ) {
     return httpResource<CreateUsersWithListInputResponse>(() => {
       const opts = options ? options() : undefined;

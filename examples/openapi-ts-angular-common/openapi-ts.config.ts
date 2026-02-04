@@ -4,9 +4,8 @@ export default defineConfig({
   input:
     'https://raw.githubusercontent.com/swagger-api/swagger-petstore/master/src/main/resources/openapi.yaml',
   output: {
-    format: 'prettier',
-    lint: 'eslint',
     path: './src/client',
+    postProcess: ['oxfmt', 'eslint'],
   },
   plugins: [
     {
@@ -17,7 +16,8 @@ export default defineConfig({
       exportFromIndex: true,
       httpRequests: true,
       httpResources: {
-        asClass: true,
+        containerName: '{{name}}ServiceResources',
+        strategy: 'byTags',
       },
       name: '@angular/common',
     },
