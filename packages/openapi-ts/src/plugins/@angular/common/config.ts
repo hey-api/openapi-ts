@@ -7,6 +7,7 @@ import type { AngularCommonPlugin } from './types';
 
 export const defaultConfig: AngularCommonPlugin['Config'] = {
   config: {
+    comments: true,
     includeInEntry: false,
   },
   dependencies: ['@hey-api/client-angular', '@hey-api/sdk'],

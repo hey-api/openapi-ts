@@ -11,6 +11,7 @@ import type { IApi } from './api';
 
 export type UserConfig = Plugin.Name<'arktype'> &
   Plugin.Hooks &
+  Plugin.UserComments &
   Plugin.UserExports & {
     /**
      * Casing convention for generated names.
@@ -18,12 +19,6 @@ export type UserConfig = Plugin.Name<'arktype'> &
      * @default 'PascalCase'
      */
     case?: Casing;
-    /**
-     * Add comments from input to the generated Arktype schemas?
-     *
-     * @default true
-     */
-    comments?: boolean;
     /**
      * Configuration for reusable schema definitions.
      *
@@ -371,17 +366,12 @@ export type UserConfig = Plugin.Name<'arktype'> &
 
 export type Config = Plugin.Name<'arktype'> &
   Plugin.Hooks &
+  Plugin.Comments &
   Plugin.Exports & {
     /**
      * Casing convention for generated names.
      */
     case: Casing;
-    /**
-     * Add comments from input to the generated Arktype schemas?
-     *
-     * @default true
-     */
-    comments: boolean;
     /**
      * Configuration for reusable schema definitions.
      *

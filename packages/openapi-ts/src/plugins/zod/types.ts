@@ -12,6 +12,7 @@ import type { Resolvers } from './resolvers';
 
 export type UserConfig = Plugin.Name<'zod'> &
   Plugin.Hooks &
+  Plugin.UserComments &
   Plugin.UserExports &
   Resolvers & {
     /**
@@ -20,12 +21,6 @@ export type UserConfig = Plugin.Name<'zod'> &
      * @default 'camelCase'
      */
     case?: Casing;
-    /**
-     * Add comments from input to the generated Zod schemas?
-     *
-     * @default true
-     */
-    comments?: boolean;
     /**
      * The compatibility version to target for generated output.
      *
@@ -412,18 +407,13 @@ export type UserConfig = Plugin.Name<'zod'> &
 
 export type Config = Plugin.Name<'zod'> &
   Plugin.Hooks &
+  Plugin.Comments &
   Plugin.Exports &
   Resolvers & {
     /**
      * Casing convention for generated names.
      */
     case: Casing;
-    /**
-     * Add comments from input to the generated Zod schemas?
-     *
-     * @default true
-     */
-    comments: boolean;
     /**
      * The compatibility version to target for generated output.
      *

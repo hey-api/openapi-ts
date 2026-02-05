@@ -12,6 +12,7 @@ import type { Resolvers } from './resolvers';
 
 export type UserConfig = Plugin.Name<'valibot'> &
   Plugin.Hooks &
+  Plugin.UserComments &
   Plugin.UserExports &
   Resolvers & {
     /**
@@ -20,12 +21,6 @@ export type UserConfig = Plugin.Name<'valibot'> &
      * @default 'camelCase'
      */
     case?: Casing;
-    /**
-     * Add comments from input to the generated Valibot schemas?
-     *
-     * @default true
-     */
-    comments?: boolean;
     /**
      * Configuration for reusable schema definitions.
      *
@@ -175,18 +170,13 @@ export type UserConfig = Plugin.Name<'valibot'> &
 
 export type Config = Plugin.Name<'valibot'> &
   Plugin.Hooks &
+  Plugin.Comments &
   Plugin.Exports &
   Resolvers & {
     /**
      * Casing convention for generated names.
      */
     case: Casing;
-    /**
-     * Add comments from input to the generated Valibot schemas?
-     *
-     * @default true
-     */
-    comments: boolean;
     /**
      * Configuration for reusable schema definitions.
      *

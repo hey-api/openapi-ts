@@ -38,9 +38,12 @@ export function isInstance(plugin: HeyApiSdkPlugin['Instance']): boolean {
 function attachComment<T extends ReturnType<typeof $.var | typeof $.method>>(args: {
   node: T;
   operation: IR.OperationObject;
+  plugin: HeyApiSdkPlugin['Instance'];
 }): T {
-  const { node, operation } = args;
-  return node.$if(createOperationComment(operation), (n, v) => n.doc(v)) as T;
+  const { node, operation, plugin } = args;
+  return node.$if(plugin.config.comments && createOperationComment(operation), (n, v) =>
+    n.doc(v),
+  ) as T;
 }
 
 function createShellMeta(node: StructureNode): SymbolMeta {
@@ -327,7 +330,7 @@ export function toNode(
             plugin,
           }),
         );
-      node = attachComment({ node, operation });
+      node = attachComment({ node, operation, plugin });
       nodes.push(node);
       exampleIntent(node, operation, plugin);
     }
@@ -358,6 +361,7 @@ export function toNode(
           attachComment({
             node: m,
             operation,
+            plugin,
           })
             .public()
             .static(!isAngularClient && !isInstance(plugin)),
