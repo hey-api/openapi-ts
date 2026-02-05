@@ -4,9 +4,9 @@ import path from 'node:path';
 import type { Context } from '@hey-api/shared';
 import { IntentContext } from '@hey-api/shared';
 
-// import { getTypedConfig } from '../config/utils';
-// import { getClientPlugin } from '../plugins/@hey-api/client-core/utils';
-// import { generateClientBundle } from './client';
+import { getTypedConfig } from '../config/utils';
+import { getClientPlugin } from '../plugins/@hey-api/client-core/utils';
+import { generateClientBundle } from './client';
 
 export async function generateOutput(context: Context): Promise<void> {
   const outputPath = path.resolve(context.config.output.path);
@@ -17,22 +17,22 @@ export async function generateOutput(context: Context): Promise<void> {
     }
   }
 
-  // const config = getTypedConfig(context);
+  const config = getTypedConfig(context);
 
-  // const client = getClientPlugin(config);
-  // if ('bundle' in client.config && client.config.bundle && !config.dryRun) {
-  // not proud of this one
-  // // @ts-expect-error
-  // config._FRAGILE_CLIENT_BUNDLE_RENAMED = generateClientBundle({
-  //   meta: {
-  //     importFileExtension: config.output.importFileExtension,
-  //   },
-  //   outputPath,
-  //   // @ts-expect-error
-  //   plugin: client,
-  //   project: context.gen,
-  // });
-  // }
+  const client = getClientPlugin(config);
+  if ('bundle' in client.config && client.config.bundle && !config.dryRun) {
+    // not proud of this one
+    // @ts-expect-error
+    config._FRAGILE_CLIENT_BUNDLE_RENAMED = generateClientBundle({
+      meta: {
+        importFileExtension: config.output.importFileExtension,
+      },
+      outputPath,
+      // @ts-expect-error
+      plugin: client,
+      project: context.gen,
+    });
+  }
 
   for (const plugin of context.registerPlugins()) {
     await plugin.run();

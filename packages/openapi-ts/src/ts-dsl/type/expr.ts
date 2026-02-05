@@ -39,6 +39,11 @@ export class TypeExprTsDsl extends Mixed {
     ctx.analyze(this._exprInput);
   }
 
+  /** Returns true when all required builder calls are present. */
+  get isValid(): boolean {
+    return this.missingRequiredCalls().length === 0;
+  }
+
   /** Accesses a nested type (e.g. `Foo.Bar`). */
   attr(right: string | ts.Identifier | TypeAttrTsDsl): this {
     this._exprInput = isNode(right)
@@ -48,11 +53,25 @@ export class TypeExprTsDsl extends Mixed {
   }
 
   override toAst() {
-    if (!this._exprInput) throw new Error('TypeExpr must have an expression');
+    this.$validate();
     return ts.factory.createTypeReferenceNode(
       this.$type(this._exprInput) as ts.EntityName,
       this.$generics(),
     );
+  }
+
+  $validate(): asserts this is this & {
+    _exprInput: Ref<TypeExprExpr>;
+  } {
+    const missing = this.missingRequiredCalls();
+    if (missing.length === 0) return;
+    throw new Error(`Type expression missing ${missing.join(' and ')}`);
+  }
+
+  private missingRequiredCalls(): ReadonlyArray<string> {
+    const missing: Array<string> = [];
+    if (!this._exprInput) missing.push('name or .attr()');
+    return missing;
   }
 }
 

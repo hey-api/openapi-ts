@@ -57,6 +57,7 @@ declare module '@hey-api/codegen-core' {
 
 declare module '@hey-api/shared' {
   interface PluginConfigMap {
+    '@hey-api/client-httpx': HeyApiClientHttpxPlugin['Types'];
     '@hey-api/python-sdk': HeyApiSdkPlugin['Types'];
   }
 }
@@ -68,6 +69,7 @@ import colors from 'ansi-colors';
 import colorSupport from 'color-support';
 
 import type { UserConfig } from './config/types';
+import type { HeyApiClientHttpxPlugin } from './plugins/@hey-api/client-httpx';
 import type { HeyApiSdkPlugin } from './plugins/@hey-api/sdk';
 
 colors.enabled = colorSupport().hasBasic;
@@ -77,6 +79,10 @@ export { createClient } from './generate';
 /**
  * Type helper for configuration object, returns {@link MaybeArray<UserConfig>} object(s)
  */
+export function defineConfig(
+  config: LazyOrAsync<ReadonlyArray<UserConfig>>,
+): Promise<ReadonlyArray<UserConfig>>;
+export function defineConfig(config: LazyOrAsync<UserConfig>): Promise<UserConfig>;
 export async function defineConfig<T extends MaybeArray<UserConfig>>(
   config: LazyOrAsync<T>,
 ): Promise<T> {

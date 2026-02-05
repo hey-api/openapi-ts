@@ -39,6 +39,11 @@ export class ParamTsDsl extends Mixed {
     ctx.analyze(this._type);
   }
 
+  /** Returns true when all required builder calls are present. */
+  get isValid(): boolean {
+    return this.missingRequiredCalls().length === 0;
+  }
+
   /** Sets the parameter type. */
   type(type: string | TypeTsDsl): this {
     this._type = type instanceof TypeTsDsl ? type : new TypeExprTsDsl(type);
@@ -46,17 +51,27 @@ export class ParamTsDsl extends Mixed {
   }
 
   override toAst() {
-    const name = this.$pattern() || this.name.toString();
-    if (!name) {
-      throw new Error('Param must have either a name or a destructuring pattern');
-    }
+    this.$validate();
     return ts.factory.createParameterDeclaration(
       this.$decorators(),
       undefined,
-      name,
+      this.$pattern() ?? this.name.toString(),
       this._optional ? this.$node(new TokenTsDsl().optional()) : undefined,
       this.$type(this._type),
       this.$value(),
     );
+  }
+
+  $validate(): asserts this {
+    const missing = this.missingRequiredCalls();
+    if (missing.length === 0) return;
+    throw new Error(`Parameter missing ${missing.join(' and ')}`);
+  }
+
+  private missingRequiredCalls(): ReadonlyArray<string> {
+    const missing: Array<string> = [];
+    if (!this.$pattern() && !this.name.toString())
+      missing.push('name or pattern (.array()/.object())');
+    return missing;
   }
 }

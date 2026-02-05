@@ -1,10 +1,4 @@
-import type {
-  Casing,
-  FeatureToggle,
-  IndexExportOption,
-  NameTransformer,
-  NamingOptions,
-} from '@hey-api/shared';
+import type { Casing, FeatureToggle, NameTransformer, NamingOptions } from '@hey-api/shared';
 import type { DefinePlugin, Plugin } from '@hey-api/shared';
 
 import type { IApi } from './api';
@@ -12,7 +6,8 @@ import type { IApi } from './api';
 export type EnumsType = 'javascript' | 'typescript' | 'typescript-const';
 
 export type UserConfig = Plugin.Name<'@hey-api/typescript'> &
-  Plugin.Hooks & {
+  Plugin.Hooks &
+  Plugin.UserExports & {
     /**
      * Casing convention for generated names.
      *
@@ -128,12 +123,6 @@ export type UserConfig = Plugin.Name<'@hey-api/typescript'> &
           name?: NameTransformer;
         };
     /**
-     * Whether exports should be re-exported in the index file.
-     *
-     * @default true
-     */
-    exportFromIndex?: boolean;
-    /**
      * Configuration for request-specific types.
      *
      * Controls generation of types for request bodies, query parameters, path
@@ -241,7 +230,7 @@ export type UserConfig = Plugin.Name<'@hey-api/typescript'> &
 
 export type Config = Plugin.Name<'@hey-api/typescript'> &
   Plugin.Hooks &
-  IndexExportOption & {
+  Plugin.Exports & {
     /**
      * Casing convention for generated names.
      */

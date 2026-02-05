@@ -9,4 +9,6 @@ export type PluginClientNames =
 
 export type PluginMockNames = '@faker-js/faker';
 
+export type PluginTransformerNames = '@hey-api/transformers';
+
 export type PluginValidatorNames = 'arktype' | 'valibot' | 'zod';

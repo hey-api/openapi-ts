@@ -4,6 +4,9 @@ import { defineConfig } from '@hey-api/openapi-ts';
 
 export default defineConfig({
   input: path.resolve('..', '..', 'specs', '3.1.x', 'openai.yaml'),
+  logs: {
+    path: './logs',
+  },
   output: {
     path: './src/client',
     postProcess: ['oxfmt'],

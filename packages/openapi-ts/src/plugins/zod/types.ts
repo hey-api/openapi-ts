@@ -1,17 +1,18 @@
 import type {
   Casing,
+  DefinePlugin,
   FeatureToggle,
-  IndexExportOption,
   NameTransformer,
   NamingOptions,
+  Plugin,
 } from '@hey-api/shared';
-import type { DefinePlugin, Plugin } from '@hey-api/shared';
 
 import type { IApi } from './api';
 import type { Resolvers } from './resolvers';
 
 export type UserConfig = Plugin.Name<'zod'> &
   Plugin.Hooks &
+  Plugin.UserExports &
   Resolvers & {
     /**
      * Casing convention for generated names.
@@ -138,12 +139,6 @@ export type UserConfig = Plugin.Name<'zod'> &
                 };
           };
         };
-    /**
-     * Whether exports should be re-exported in the index file.
-     *
-     * @default false
-     */
-    exportFromIndex?: boolean;
     /**
      * Enable Zod metadata support? It's often useful to associate a schema with
      * some additional metadata for documentation, code generation, AI
@@ -417,8 +412,8 @@ export type UserConfig = Plugin.Name<'zod'> &
 
 export type Config = Plugin.Name<'zod'> &
   Plugin.Hooks &
-  Resolvers &
-  IndexExportOption & {
+  Plugin.Exports &
+  Resolvers & {
     /**
      * Casing convention for generated names.
      */

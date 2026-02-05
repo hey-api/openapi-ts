@@ -21,7 +21,7 @@ import colors from 'ansi-colors';
 import { postProcessors } from './config/output/postprocess';
 import type { Config } from './config/types';
 import { generateOutput } from './generate/output';
-// import { TypeScriptRenderer } from './py-dsl';
+import { PythonRenderer } from './py-dsl';
 
 export async function createClient({
   config,
@@ -106,14 +106,14 @@ export async function createClient({
     const eventParser = logger.timeEvent('parser');
     // TODO: allow overriding via config
     const project = new Project({
-      defaultFileName: 'index',
+      defaultFileName: '__init__',
       fileName: (base) => {
         const name = applyNaming(base, config.output.fileName);
         const { suffix } = config.output.fileName;
         if (!suffix) {
           return name;
         }
-        return name === 'index' || name.endsWith(suffix) ? name : `${name}${suffix}`;
+        return name === '__init__' || name.endsWith(suffix) ? name : `${name}${suffix}`;
       },
       nameConflictResolvers: config.output.nameConflictResolver
         ? {
@@ -121,13 +121,12 @@ export async function createClient({
           }
         : undefined,
       renderers: [
-        // TODO: attach renderer
-        // new TypeScriptRenderer({
-        //   header: config.output.header,
-        //   preferExportAll: config.output.preferExportAll,
-        //   preferFileExtension: config.output.importFileExtension || undefined,
-        //   resolveModuleName: config.output.resolveModuleName,
-        // }),
+        new PythonRenderer({
+          header: config.output.header,
+          preferExportAll: config.output.preferExportAll,
+          preferFileExtension: config.output.importFileExtension || undefined,
+          resolveModuleName: config.output.resolveModuleName,
+        }),
       ],
       root: config.output.path,
     });

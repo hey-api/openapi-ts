@@ -21,12 +21,6 @@ export class Symbol<Node extends INode = INode> {
    */
   private _exported: boolean;
   /**
-   * Names of files (without extension) from which this symbol is re-exported.
-   *
-   * @default []
-   */
-  private _exportFrom: ReadonlyArray<string>;
-  /**
    * External module name if this symbol is imported from a module not managed
    * by the project (e.g. "zod", "lodash").
    *
@@ -43,6 +37,12 @@ export class Symbol<Node extends INode = INode> {
    * The alias-resolved, conflict-free emitted name.
    */
   private _finalName?: string;
+  /**
+   * Custom strategy to determine from which file path(s) this symbol is re-exported.
+   *
+   * @returns The file path(s) that re-export this symbol, or undefined if none.
+   */
+  private _getExportFromFilePath?: (symbol: Symbol) => ReadonlyArray<string> | undefined;
   /**
    * Custom strategy to determine file output path.
    *
@@ -85,8 +85,8 @@ export class Symbol<Node extends INode = INode> {
 
   constructor(input: ISymbolIn, id: number) {
     this._exported = input.exported ?? false;
-    this._exportFrom = input.exportFrom ?? [];
     this._external = input.external;
+    this._getExportFromFilePath = input.getExportFromFilePath;
     this._getFilePath = input.getFilePath;
     this.id = id;
     this._importKind = input.importKind ?? 'named';
@@ -111,13 +111,6 @@ export class Symbol<Node extends INode = INode> {
    */
   get exported(): boolean {
     return this.canonical._exported;
-  }
-
-  /**
-   * Names of files (without extension) that re-export this symbol.
-   */
-  get exportFrom(): ReadonlyArray<string> {
-    return this.canonical._exportFrom;
   }
 
   /**
@@ -146,6 +139,13 @@ export class Symbol<Node extends INode = INode> {
       throw new Error(message);
     }
     return this.canonical._finalName;
+  }
+
+  /**
+   * Custom re-export file path resolver, if provided.
+   */
+  get getExportFromFilePath(): ((symbol: Symbol) => ReadonlyArray<string> | undefined) | undefined {
+    return this.canonical._getExportFromFilePath;
   }
 
   /**
@@ -217,16 +217,6 @@ export class Symbol<Node extends INode = INode> {
   setExported(exported: boolean): void {
     this.assertCanonical();
     this._exported = exported;
-  }
-
-  /**
-   * Records file names that re‑export this symbol.
-   *
-   * @param list — Source files re‑exporting this symbol.
-   */
-  setExportFrom(list: ReadonlyArray<string>): void {
-    this.assertCanonical();
-    this._exportFrom = list;
   }
 
   /**

@@ -17,12 +17,30 @@ export class TypeFuncTsDsl extends Mixed {
     super.analyze(ctx);
   }
 
+  /** Returns true when all required builder calls are present. */
+  get isValid(): boolean {
+    return this.missingRequiredCalls().length === 0;
+  }
+
   override toAst() {
-    const returns = this.$returns();
-    if (returns === undefined) {
-      throw new Error('Missing return type in function type DSL');
-    }
-    const node = ts.factory.createFunctionTypeNode(this.$generics(), this.$params(), returns);
+    this.$validate();
+    const node = ts.factory.createFunctionTypeNode(
+      this.$generics(),
+      this.$params(),
+      this.$returns()!,
+    );
     return this.$docs(node);
+  }
+
+  $validate(): asserts this {
+    const missing = this.missingRequiredCalls();
+    if (missing.length === 0) return;
+    throw new Error(`Function type missing ${missing.join(' and ')}`);
+  }
+
+  private missingRequiredCalls(): ReadonlyArray<string> {
+    const missing: Array<string> = [];
+    if (this.$returns() === undefined) missing.push('.returns()');
+    return missing;
   }
 }

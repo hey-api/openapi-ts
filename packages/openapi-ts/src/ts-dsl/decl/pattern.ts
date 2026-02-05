@@ -23,6 +23,11 @@ export class PatternTsDsl extends Mixed {
     super.analyze(ctx);
   }
 
+  /** Returns true when all required builder calls are present. */
+  get isValid(): boolean {
+    return this.missingRequiredCalls().length === 0;
+  }
+
   /** Defines an array pattern (e.g. `[a, b, c]`). */
   array(...props: ReadonlyArray<string> | [ReadonlyArray<string>]): this {
     const values = props[0] instanceof Array ? [...props[0]] : (props as ReadonlyArray<string>);
@@ -49,9 +54,7 @@ export class PatternTsDsl extends Mixed {
   }
 
   override toAst() {
-    if (!this.pattern) {
-      throw new Error('PatternTsDsl requires object() or array() pattern');
-    }
+    this.$validate();
 
     if (this.pattern.kind === 'object') {
       const elements = Object.entries(this.pattern.values).map(([key, alias]) =>
@@ -74,6 +77,22 @@ export class PatternTsDsl extends Mixed {
     }
 
     throw new Error('PatternTsDsl requires object() or array() pattern');
+  }
+
+  $validate(): asserts this is this & {
+    pattern:
+      | { kind: 'array'; values: ReadonlyArray<string> }
+      | { kind: 'object'; values: Record<string, string> };
+  } {
+    const missing = this.missingRequiredCalls();
+    if (missing.length === 0) return;
+    throw new Error(`Binding pattern missing ${missing.join(' and ')}`);
+  }
+
+  private missingRequiredCalls(): ReadonlyArray<string> {
+    const missing: Array<string> = [];
+    if (!this.pattern) missing.push('.array() or .object()');
+    return missing;
   }
 
   private createSpread(): ts.BindingElement | undefined {

@@ -2,6 +2,7 @@ import * as index from '../index';
 
 const constExports = [
   'defaultExtensions',
+  'defaultModuleEntryNames',
   'defaultNameConflictResolvers',
   'File',
   'fromRef',
@@ -41,6 +42,7 @@ export type _TypeExports = [
   index.ImportModule,
   index.IProject,
   index.Language,
+  index.ModuleEntryNames,
   index.NameConflictResolver,
   index.NameConflictResolvers,
   index.Node,

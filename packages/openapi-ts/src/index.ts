@@ -128,6 +128,10 @@ export { createClient } from './generate';
 /**
  * Type helper for configuration object, returns {@link MaybeArray<UserConfig>} object(s)
  */
+export function defineConfig(
+  config: LazyOrAsync<ReadonlyArray<UserConfig>>,
+): Promise<ReadonlyArray<UserConfig>>;
+export function defineConfig(config: LazyOrAsync<UserConfig>): Promise<UserConfig>;
 export async function defineConfig<T extends MaybeArray<UserConfig>>(
   config: LazyOrAsync<T>,
 ): Promise<T> {

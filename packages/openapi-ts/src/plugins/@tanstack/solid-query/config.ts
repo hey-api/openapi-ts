@@ -7,7 +7,7 @@ export const defaultConfig: TanStackSolidQueryPlugin['Config'] = {
   config: {
     case: 'camelCase',
     comments: true,
-    exportFromIndex: false,
+    includeInEntry: false,
   },
   dependencies: ['@hey-api/sdk', '@hey-api/typescript'],
   handler: handler as TanStackSolidQueryPlugin['Handler'],

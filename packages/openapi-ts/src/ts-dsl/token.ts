@@ -46,10 +46,27 @@ export class TokenTsDsl<K extends ts.SyntaxKind = never> extends TsDsl<ts.Token<
   }
 
   override toAst(): ts.Token<K> {
-    if (!this._kind) {
-      throw new Error(`Token missing \`.kind(kind)\``);
-    }
+    this.$validate();
     // @ts-expect-error
     return ts.factory.createToken(this._kind);
+  }
+
+  $validate(): asserts this is this & {
+    _kind: K;
+  } {
+    const missing = this.missingRequiredCalls();
+    if (missing.length === 0) return;
+    throw new Error(`Token missing ${missing.join(' and ')}`);
+  }
+
+  private missingRequiredCalls(): ReadonlyArray<string> {
+    const missing: Array<string> = [];
+    if (!this._kind) missing.push('.kind()');
+    return missing;
+  }
+
+  /** Returns true when all required builder calls are present. */
+  get isValid(): boolean {
+    return this.missingRequiredCalls().length === 0;
   }
 }
