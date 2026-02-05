@@ -145,6 +145,9 @@ Hey API is sponsor-funded. If you rely on Hey API in production, consider becomi
           fastapi.tiangolo.com
         </a>
       </td>
+      <td align="center" width="33%">
+        <!-- empty block for uniform width -->
+      </td>
     </tr>
   </tbody>
 </table>
@@ -169,6 +172,12 @@ Hey API is sponsor-funded. If you rely on Hey API in production, consider becomi
             <img alt="Cella logo" height="34px" src="https://heyapi.dev/assets/cella/logo-dark.svg">
           </picture>
         </a>
+      </td>
+      <td align="center" width="25%">
+        <!-- empty block for uniform width -->
+      </td>
+      <td align="center" width="25%">
+        <!-- empty block for uniform width -->
       </td>
     </tr>
   </tbody>

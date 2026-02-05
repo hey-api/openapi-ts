@@ -116,6 +116,9 @@ Help Hey API stay around for the long haul by becoming a [sponsor](https://githu
           fastapi.tiangolo.com
         </a>
       </td>
+      <td align="center" width="33%">
+        <!-- empty block for uniform width -->
+      </td>
     </tr>
   </tbody>
 </table>
@@ -140,6 +143,12 @@ Help Hey API stay around for the long haul by becoming a [sponsor](https://githu
             <img alt="Cella logo" height="34px" src="https://heyapi.dev/assets/cella/logo-dark.svg">
           </picture>
         </a>
+      </td>
+      <td align="center" width="25%">
+        <!-- empty block for uniform width -->
+      </td>
+      <td align="center" width="25%">
+        <!-- empty block for uniform width -->
       </td>
     </tr>
   </tbody>
