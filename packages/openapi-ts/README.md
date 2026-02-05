@@ -56,7 +56,7 @@ Hey API is sponsor-funded. If you rely on Hey API in production, consider becomi
 <table align="center" style="justify-content: center;align-items: center;display: flex;">
   <tbody>
     <tr>
-      <td align="center">
+      <td align="center" width="50%">
         <p></p>
         <p>
           <a href="https://kutt.it/pkEZyc" target="_blank">
@@ -74,7 +74,7 @@ Hey API is sponsor-funded. If you rely on Hey API in production, consider becomi
         </p>
         <p></p>
       </td>
-      <td align="center">
+      <td align="center" width="50%">
         <p></p>
         <p>
           <a href="https://kutt.it/QM9Q2N" target="_blank">
@@ -94,7 +94,7 @@ Hey API is sponsor-funded. If you rely on Hey API in production, consider becomi
       </td>
     </tr>
     <tr>
-      <td align="center">
+      <td align="center" width="50%">
         <p></p>
         <p>
           <a href="https://kutt.it/6vrYy9" target="_blank">
@@ -121,7 +121,7 @@ Hey API is sponsor-funded. If you rely on Hey API in production, consider becomi
 <table align="center" style="justify-content: center;align-items: center;display: flex;">
   <tbody>
     <tr>
-      <td align="center">
+      <td align="center" width="33%">
         <a href="https://kutt.it/skQUVd" target="_blank">
           <picture height="40px">
             <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/scalar/logo-light.svg">
@@ -133,7 +133,7 @@ Hey API is sponsor-funded. If you rely on Hey API in production, consider becomi
           scalar.com
         </a>
       </td>
-      <td align="center">
+      <td align="center" width="33%">
         <a href="https://kutt.it/Dr9GuW" target="_blank">
           <picture height="40px">
             <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/fastapi/logo-light.svg">
@@ -154,7 +154,7 @@ Hey API is sponsor-funded. If you rely on Hey API in production, consider becomi
 <table align="center" style="justify-content: center;align-items: center;display: flex;">
   <tbody>
     <tr>
-      <td align="center">
+      <td align="center" width="25%">
         <a href="https://kutt.it/YpaKsX" target="_blank">
           <picture height="34px">
             <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/.gen/kinde-logo-wordmark-dark-480w.webp">
@@ -162,7 +162,7 @@ Hey API is sponsor-funded. If you rely on Hey API in production, consider becomi
           </picture>
         </a>
       </td>
-      <td align="center">
+      <td align="center" width="25%">
         <a href="https://kutt.it/KkqSaw" target="_blank">
           <picture height="34px">
             <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/cella/logo-light.svg">
