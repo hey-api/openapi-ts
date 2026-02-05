@@ -1,6 +1,8 @@
 // TODO: this is inaccurate, it combines identifiers for all supported versions
 export const identifiers = {
+  ZodMiniNullish: 'ZodMiniNullish',
   ZodMiniOptional: 'ZodMiniOptional',
+  ZodNullish: 'ZodNullish',
   ZodOptional: 'ZodOptional',
   _default: '_default',
   and: 'and',
@@ -39,6 +41,7 @@ export const identifiers = {
   never: 'never',
   null: 'null',
   nullable: 'nullable',
+  nullish: 'nullish',
   number: 'number',
   object: 'object',
   optional: 'optional',

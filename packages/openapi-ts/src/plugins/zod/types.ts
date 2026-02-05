@@ -329,6 +329,14 @@ export type UserConfig = Plugin.Name<'zod'> &
           };
     };
     /**
+     * Use `.nullish()` instead of `.optional()` for non-required object
+     * properties? When enabled, non-required properties will accept both
+     * `null` and `undefined` values.
+     *
+     * @default false
+     */
+    useNullish?: boolean;
+    /**
      * Configuration for webhook-specific Zod schemas.
      *
      * Controls generation of Zod schemas for webhook payloads.
@@ -535,6 +543,14 @@ export type Config = Plugin.Name<'zod'> &
         case: Casing;
       };
     };
+    /**
+     * Use `.nullish()` instead of `.optional()` for non-required object
+     * properties? When enabled, non-required properties will accept both
+     * `null` and `undefined` values.
+     *
+     * @default false
+     */
+    useNullish: boolean;
     /**
      * Configuration for webhook-specific Zod schemas.
      *

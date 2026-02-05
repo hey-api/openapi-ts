@@ -14,6 +14,7 @@ export const defaultConfig: ZodPlugin['Config'] = {
     comments: true,
     includeInEntry: false,
     metadata: false,
+    useNullish: false,
   },
   handler,
   name: 'zod',
