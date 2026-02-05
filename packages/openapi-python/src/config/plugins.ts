@@ -83,6 +83,7 @@ function getPluginsConfig({
         },
         valueToObject,
       };
+      // @ts-expect-error
       plugin.resolveConfig(plugin, context);
     }
 
