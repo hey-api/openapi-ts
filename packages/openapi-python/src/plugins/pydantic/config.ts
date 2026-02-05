@@ -1,25 +1,23 @@
 import { definePluginConfig, mappers } from '@hey-api/shared';
 
-import { Api } from './api';
 import { handler } from './plugin';
-import type { ValibotPlugin } from './types';
+import type { PydanticPlugin } from './types';
 
-export const defaultConfig: ValibotPlugin['Config'] = {
-  api: new Api(),
+export const defaultConfig: PydanticPlugin['Config'] = {
   config: {
-    case: 'camelCase',
+    case: 'PascalCase',
     comments: true,
     includeInEntry: false,
-    metadata: false,
+    strict: false,
   },
   handler,
-  name: 'valibot',
+  name: 'pydantic',
   resolveConfig: (plugin, context) => {
     plugin.config.definitions = context.valueToObject({
       defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
+        case: plugin.config.case ?? 'PascalCase',
         enabled: true,
-        name: 'v{{name}}',
+        name: '{{name}}',
       },
       mappers,
       value: plugin.config.definitions,
@@ -27,9 +25,9 @@ export const defaultConfig: ValibotPlugin['Config'] = {
 
     plugin.config.requests = context.valueToObject({
       defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
+        case: plugin.config.case ?? 'PascalCase',
         enabled: true,
-        name: 'v{{name}}Data',
+        name: '{{name}}Request',
       },
       mappers,
       value: plugin.config.requests,
@@ -37,9 +35,9 @@ export const defaultConfig: ValibotPlugin['Config'] = {
 
     plugin.config.responses = context.valueToObject({
       defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
+        case: plugin.config.case ?? 'PascalCase',
         enabled: true,
-        name: 'v{{name}}Response',
+        name: '{{name}}Response',
       },
       mappers,
       value: plugin.config.responses,
@@ -47,9 +45,9 @@ export const defaultConfig: ValibotPlugin['Config'] = {
 
     plugin.config.webhooks = context.valueToObject({
       defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
+        case: plugin.config.case ?? 'PascalCase',
         enabled: true,
-        name: 'v{{name}}WebhookRequest',
+        name: '{{name}}Webhook',
       },
       mappers,
       value: plugin.config.webhooks,
@@ -59,6 +57,6 @@ export const defaultConfig: ValibotPlugin['Config'] = {
 };
 
 /**
- * Type helper for Valibot plugin, returns {@link Plugin.Config} object
+ * Type helper for Pydantic plugin, returns {@link Plugin.Config} object
  */
 export const defineConfig = definePluginConfig(defaultConfig);

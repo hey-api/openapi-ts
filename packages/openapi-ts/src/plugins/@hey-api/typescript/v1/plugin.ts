@@ -15,13 +15,13 @@ import { webhookToType } from '../shared/webhook';
 import type { HeyApiTypeScriptPlugin } from '../types';
 import { irSchemaWithTypeToAst } from './toAst';
 
-export const irSchemaToAst = ({
+export function irSchemaToAst({
   plugin,
   schema,
   state,
 }: IrSchemaToAstOptions & {
   schema: IR.SchemaObject;
-}): MaybeTsDsl<TypeTsDsl> => {
+}): MaybeTsDsl<TypeTsDsl> {
   if (schema.symbolRef) {
     const baseType = $.type(schema.symbolRef);
     if (schema.omit && schema.omit.length > 0) {
@@ -79,15 +79,15 @@ export const irSchemaToAst = ({
     },
     state,
   });
-};
+}
 
-const handleComponent = ({
+function handleComponent({
   plugin,
   schema,
   state,
 }: IrSchemaToAstOptions & {
   schema: IR.SchemaObject;
-}) => {
+}) {
   const type = irSchemaToAst({ plugin, schema, state });
   exportType({
     plugin,
@@ -95,7 +95,7 @@ const handleComponent = ({
     state,
     type,
   });
-};
+}
 
 export const handlerV1: HeyApiTypeScriptPlugin['Handler'] = ({ plugin }) => {
   // reserve node for ClientOptions

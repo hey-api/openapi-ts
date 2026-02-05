@@ -17,7 +17,7 @@ import { undefinedToAst } from './undefined';
 import { unknownToAst } from './unknown';
 import { voidToAst } from './void';
 
-export const irSchemaWithTypeToAst = ({
+export function irSchemaWithTypeToAst({
   schema,
   ...args
 }: IrSchemaToAstOptions & {
@@ -25,7 +25,7 @@ export const irSchemaWithTypeToAst = ({
 }): {
   anyType?: string;
   expression: ReturnType<typeof $.call | typeof $.expr>;
-} => {
+} {
   switch (schema.type) {
     case 'array':
       return {
@@ -127,4 +127,4 @@ export const irSchemaWithTypeToAst = ({
         }),
       };
   }
-};
+}
