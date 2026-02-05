@@ -35,6 +35,11 @@ export class TypeAliasTsDsl extends Mixed {
     ctx.analyze(this.value);
   }
 
+  /** Returns true when all required builder calls are present. */
+  get isValid(): boolean {
+    return this.missingRequiredCalls().length === 0;
+  }
+
   /** Sets the type expression on the right-hand side of `= ...`. */
   type(node: Value): this {
     this.value = node;
@@ -42,8 +47,7 @@ export class TypeAliasTsDsl extends Mixed {
   }
 
   override toAst() {
-    if (!this.value)
-      throw new Error(`Type alias '${this.name.toString()}' is missing a type definition`);
+    this.$validate();
     const node = ts.factory.createTypeAliasDeclaration(
       this.modifiers,
       this.$node(this.name) as ts.Identifier,
@@ -51,5 +55,20 @@ export class TypeAliasTsDsl extends Mixed {
       this.$type(this.value),
     );
     return this.$docs(node);
+  }
+
+  $validate(): asserts this is this & {
+    value: Value;
+  } {
+    const missing = this.missingRequiredCalls();
+    if (missing.length === 0) return;
+    const name = this.name.toString();
+    throw new Error(`Type alias${name ? ` "${name}"` : ''} missing ${missing.join(' and ')}`);
+  }
+
+  private missingRequiredCalls(): ReadonlyArray<string> {
+    const missing: Array<string> = [];
+    if (!this.value) missing.push('.type()');
+    return missing;
   }
 }

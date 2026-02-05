@@ -1,7 +1,6 @@
 import { fromRef } from '@hey-api/codegen-core';
 import type { IR } from '@hey-api/shared';
-import { applyNaming } from '@hey-api/shared';
-import { operationResponsesMap } from '@hey-api/shared';
+import { applyNaming, operationResponsesMap } from '@hey-api/shared';
 
 import { exportAst } from './export';
 import type { Ast, IrSchemaToAstOptions } from './types';

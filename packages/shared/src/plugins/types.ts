@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 import type { AnyString } from '@hey-api/types';
 
+import type { IndexExportOption, UserIndexExportOption } from '../config/shared';
 import type { ValueToObject } from '../config/utils/config';
 import type { Dependency } from '../config/utils/dependencies';
-import type { Hooks } from '../parser/hooks';
+import type { Hooks as ParserHooks } from '../parser/hooks';
 import type { PluginInstance } from './shared/utils/instance';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
@@ -29,11 +30,7 @@ export type PluginContext = {
 
 type BaseApi = Record<string, unknown>;
 
-type BaseConfig = {
-  /**
-   * Whether exports should be re-exported in the index file.
-   */
-  exportFromIndex?: boolean;
+type PluginBaseConfig = UserIndexExportOption & {
   name: AnyPluginName;
   /**
    * Optional hooks to override default plugin behavior.
@@ -41,7 +38,7 @@ type BaseConfig = {
    * Use these to classify resources, control which outputs are generated,
    * or provide custom behavior for specific resources.
    */
-  '~hooks'?: Hooks;
+  '~hooks'?: ParserHooks;
 };
 
 /**
@@ -75,10 +72,13 @@ export namespace Plugin {
     tags?: ReadonlyArray<PluginTag>;
   };
 
+  export type Exports = IndexExportOption;
+  export type UserExports = UserIndexExportOption;
+
   /**
    * Generic wrapper for plugin hooks.
    */
-  export type Hooks = Pick<BaseConfig, '~hooks'>;
+  export type Hooks = Pick<PluginBaseConfig, '~hooks'>;
 
   export interface Name<Name extends PluginNames> {
     name: Name;
@@ -102,8 +102,8 @@ export namespace Plugin {
   };
 
   export type Types<
-    Config extends BaseConfig = BaseConfig,
-    ResolvedConfig extends BaseConfig = Config,
+    Config extends PluginBaseConfig = PluginBaseConfig,
+    ResolvedConfig extends PluginBaseConfig = Config,
     Api extends BaseApi = never,
   > = ([Api] extends [never] ? { api?: BaseApi } : { api: Api }) & {
     config: Config;
@@ -112,8 +112,8 @@ export namespace Plugin {
 }
 
 export type DefinePlugin<
-  Config extends BaseConfig = BaseConfig,
-  ResolvedConfig extends BaseConfig = Config,
+  Config extends PluginBaseConfig = PluginBaseConfig,
+  ResolvedConfig extends PluginBaseConfig = Config,
   Api extends BaseApi = never,
 > = {
   Config: Plugin.Config<Plugin.Types<Config, ResolvedConfig, Api>>;

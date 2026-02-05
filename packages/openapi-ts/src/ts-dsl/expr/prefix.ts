@@ -23,6 +23,11 @@ export class PrefixTsDsl extends Mixed {
     ctx.analyze(this._expr);
   }
 
+  /** Returns true when all required builder calls are present. */
+  get isValid(): boolean {
+    return this.missingRequiredCalls().length === 0;
+  }
+
   /** Sets the operand (the expression being prefixed). */
   expr(expr: string | MaybeTsDsl<ts.Expression>): this {
     this._expr = expr;
@@ -48,12 +53,23 @@ export class PrefixTsDsl extends Mixed {
   }
 
   override toAst() {
-    if (!this._expr) {
-      throw new Error('Missing expression for prefix unary expression');
-    }
-    if (!this._op) {
-      throw new Error('Missing operator for prefix unary expression');
-    }
+    this.$validate();
     return ts.factory.createPrefixUnaryExpression(this._op, this.$node(this._expr));
+  }
+
+  $validate(): asserts this is this & {
+    _expr: string | MaybeTsDsl<ts.Expression>;
+    _op: ts.PrefixUnaryOperator;
+  } {
+    const missing = this.missingRequiredCalls();
+    if (missing.length === 0) return;
+    throw new Error(`Prefix unary expression missing ${missing.join(' and ')}`);
+  }
+
+  private missingRequiredCalls(): ReadonlyArray<string> {
+    const missing: Array<string> = [];
+    if (!this._expr) missing.push('.expr()');
+    if (!this._op) missing.push('operator (e.g., .not(), .neg())');
+    return missing;
   }
 }

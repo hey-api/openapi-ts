@@ -50,7 +50,7 @@ const safeName = (name: string, reserved: ReservedList): string => {
   let sanitized = '';
   let index: number;
 
-  const first = name[0]!;
+  const first = name[0] ?? '';
   regexp.illegalStartCharacters.lastIndex = 0;
   if (regexp.illegalStartCharacters.test(first)) {
     sanitized += '_';
@@ -61,7 +61,7 @@ const safeName = (name: string, reserved: ReservedList): string => {
   }
 
   while (index < name.length) {
-    const char = name[index]!;
+    const char = name[index] ?? '';
     sanitized += /^[\u200c\u200d\p{ID_Continue}]$/u.test(char) ? char : '_';
     index += 1;
   }

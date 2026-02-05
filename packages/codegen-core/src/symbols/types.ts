@@ -9,12 +9,6 @@ export type SymbolKind = 'class' | 'enum' | 'function' | 'interface' | 'namespac
 
 export type ISymbolIn = {
   /**
-   * Array of file names (without extensions) from which this symbol is re-exported.
-   *
-   * @default undefined
-   */
-  exportFrom?: ReadonlyArray<string>;
-  /**
    * Whether this symbol is exported from its own file.
    *
    * @default false
@@ -27,6 +21,12 @@ export type ISymbolIn = {
    * @default undefined
    */
   external?: string;
+  /**
+   * Optional output strategy to override default behavior.
+   *
+   * @returns The file path(s) that re-export this symbol, or undefined if none.
+   */
+  getExportFromFilePath?: Symbol['getExportFromFilePath'];
   /**
    * Optional output strategy to override default behavior.
    *

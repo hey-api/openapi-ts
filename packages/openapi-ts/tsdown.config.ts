@@ -15,9 +15,7 @@ const replaceCoreImports = (filePath: string) => {
 
 export default defineConfig({
   clean: true,
-  dts: {
-    build: true,
-  },
+  dts: true,
   entry: ['./src/{index,internal,run}.ts'],
   format: ['esm'],
   minify: false,

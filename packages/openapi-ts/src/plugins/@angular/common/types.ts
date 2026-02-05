@@ -1,18 +1,11 @@
-import type { IndexExportOption } from '@hey-api/shared';
-import type { DefinePlugin, Plugin } from '@hey-api/shared';
-import type { OperationsStrategy } from '@hey-api/shared';
+import type { DefinePlugin, OperationsStrategy, Plugin } from '@hey-api/shared';
 
 import type { HttpRequestsConfig, UserHttpRequestsConfig } from './httpRequests';
 import type { HttpResourcesConfig, UserHttpResourcesConfig } from './httpResources';
 
 export type UserConfig = Plugin.Name<'@angular/common'> &
-  Plugin.Hooks & {
-    /**
-     * Whether exports should be re-exported in the index file.
-     *
-     * @default false
-     */
-    exportFromIndex?: boolean;
+  Plugin.Hooks &
+  Plugin.UserExports & {
     /**
      * Options for generating HTTP Request instances.
      *
@@ -29,7 +22,7 @@ export type UserConfig = Plugin.Name<'@angular/common'> &
 
 export type Config = Plugin.Name<'@angular/common'> &
   Plugin.Hooks &
-  IndexExportOption & {
+  Plugin.Exports & {
     /**
      * Options for generating HTTP Request instances.
      */

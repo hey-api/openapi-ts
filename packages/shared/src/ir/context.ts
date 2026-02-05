@@ -98,8 +98,6 @@ export class Context<Spec extends Record<string, any> = any, Config extends AnyC
   private registerPlugin<T extends PluginNames>(
     name: T,
   ): T extends keyof PluginConfigMap ? PluginInstance<PluginConfigMap[T]> : PluginInstance {
-    // Cast to a loose type internally - the config structure is guaranteed
-    // by the config resolution layer, not by this method
     const plugin = (this.config.plugins as Record<string, Plugin.Config<Plugin.Types>>)[name]!;
     const instance = new PluginInstance({
       api: plugin.api,

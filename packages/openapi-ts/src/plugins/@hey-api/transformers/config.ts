@@ -8,7 +8,7 @@ export const defaultConfig: HeyApiTransformersPlugin['Config'] = {
   config: {
     bigInt: true,
     dates: true,
-    exportFromIndex: false,
+    includeInEntry: false,
     transformers: [],
     typeTransformers: [],
   },

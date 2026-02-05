@@ -54,11 +54,11 @@ export class Planner {
       });
       file.addNode(node);
       symbol.setFile(file);
-      for (const exportFrom of symbol.exportFrom) {
+      for (const logicalFilePath of symbol.getExportFromFilePath?.(symbol) ?? []) {
         this.project.files.register({
           external: false,
           language: file.language,
-          logicalFilePath: exportFrom,
+          logicalFilePath,
         });
       }
       ctx.walkScopes((dependency) => {
@@ -151,11 +151,11 @@ export class Planner {
       const file = node.file;
       if (!file) return;
 
-      for (const exportFrom of symbol.exportFrom) {
+      for (const logicalFilePath of symbol.getExportFromFilePath?.(symbol) ?? []) {
         const target = this.project.files.register({
           external: false,
           language: node.language,
-          logicalFilePath: exportFrom,
+          logicalFilePath,
         });
         if (target.id === file.id) continue;
 

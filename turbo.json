@@ -3,7 +3,7 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "inputs": ["src/**", "package.json", "tsconfig.json"],
+      "inputs": ["src/**", "package.json", "tsdown.config.ts", "tsconfig.json"],
       "outputs": [
         ".next/**",
         "!.next/cache/**",

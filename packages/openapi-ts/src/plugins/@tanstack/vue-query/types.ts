@@ -1,15 +1,16 @@
 import type {
   Casing,
+  DefinePlugin,
   FeatureToggle,
-  IndexExportOption,
+  IR,
   NameTransformer,
   NamingOptions,
+  Plugin,
 } from '@hey-api/shared';
-import type { IR } from '@hey-api/shared';
-import type { DefinePlugin, Plugin } from '@hey-api/shared';
 
 export type UserConfig = Plugin.Name<'@tanstack/vue-query'> &
-  Plugin.Hooks & {
+  Plugin.Hooks &
+  Plugin.UserExports & {
     /**
      * Casing convention for generated names.
      *
@@ -27,12 +28,6 @@ export type UserConfig = Plugin.Name<'@tanstack/vue-query'> &
      * @default true
      */
     comments?: boolean;
-    /**
-     * Whether exports should be re-exported in the index file.
-     *
-     * @default false
-     */
-    exportFromIndex?: boolean;
     /**
      * Configuration for generated infinite query key helpers.
      *
@@ -306,7 +301,7 @@ export type UserConfig = Plugin.Name<'@tanstack/vue-query'> &
 
 export type Config = Plugin.Name<'@tanstack/vue-query'> &
   Plugin.Hooks &
-  IndexExportOption & {
+  Plugin.Exports & {
     /**
      * Casing convention for generated names.
      */

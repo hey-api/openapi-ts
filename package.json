@@ -38,6 +38,7 @@
     "test:watch": "turbo run test:watch",
     "test": "turbo run test",
     "typecheck": "turbo run typecheck",
+    "td": "turbo run dev --filter",
     "tt": "turbo run test --filter",
     "tw": "turbo run test:watch --filter",
     "tu": "turbo run test:update --filter",

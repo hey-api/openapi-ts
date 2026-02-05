@@ -1,13 +1,16 @@
-import type { IndexExportOption, NameTransformer } from '@hey-api/shared';
-import type { DefinePlugin, Plugin } from '@hey-api/shared';
-import type { OperationsStrategy } from '@hey-api/shared';
+import type { DefinePlugin, NameTransformer, OperationsStrategy, Plugin } from '@hey-api/shared';
 
-import type { PluginClientNames, PluginValidatorNames } from '../../../plugins/types';
+import type {
+  PluginClientNames,
+  PluginTransformerNames,
+  PluginValidatorNames,
+} from '../../../plugins/types';
 import type { ExamplesConfig, UserExamplesConfig } from './examples';
 import type { OperationsConfig, UserOperationsConfig } from './operations';
 
 export type UserConfig = Plugin.Name<'@hey-api/sdk'> &
-  Plugin.Hooks & {
+  Plugin.Hooks &
+  Plugin.UserExports & {
     /**
      * Should the generated functions contain auth mechanisms? You may want to
      * disable this option if you're handling auth yourself or defining it
@@ -38,12 +41,6 @@ export type UserConfig = Plugin.Name<'@hey-api/sdk'> &
      * @default false
      */
     examples?: boolean | UserExamplesConfig;
-    /**
-     * Whether exports should be re-exported in the index file.
-     *
-     * @default true
-     */
-    exportFromIndex?: boolean;
     /**
      * Define the structure of generated SDK operations.
      *
@@ -88,7 +85,7 @@ export type UserConfig = Plugin.Name<'@hey-api/sdk'> &
      *
      * @default false
      */
-    transformer?: '@hey-api/transformers' | boolean;
+    transformer?: PluginTransformerNames | boolean;
     /**
      * Validate request and/or response data against schema before returning.
      * This is useful if you want to ensure the request and/or response conforms
@@ -199,7 +196,7 @@ export type UserConfig = Plugin.Name<'@hey-api/sdk'> &
 
 export type Config = Plugin.Name<'@hey-api/sdk'> &
   Plugin.Hooks &
-  IndexExportOption & {
+  Plugin.Exports & {
     /**
      * Should the generated functions contain auth mechanisms? You may want to
      * disable this option if you're handling auth yourself or defining it
@@ -258,7 +255,7 @@ export type Config = Plugin.Name<'@hey-api/sdk'> &
      *
      * @default false
      */
-    transformer: '@hey-api/transformers' | false;
+    transformer: PluginTransformerNames | false;
     /**
      * Validate request and/or response data against schema before returning.
      * This is useful if you want to ensure the request and/or response conforms
