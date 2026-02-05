@@ -1,5 +1,15 @@
 # @hey-api/codegen-core
 
+## 0.7.0
+
+### Minor Changes
+
+- **BREAKING:** **symbol**: replace `exportFrom` array with `getExportFromFilePath()` function ([#3312](https://github.com/hey-api/openapi-ts/pull/3312)) ([`cd44523`](https://github.com/hey-api/openapi-ts/commit/cd44523b9656dd7a29354ad7f815336642164bc8)) by [@mrlubos](https://github.com/mrlubos)
+
+### Updated Symbol interface
+
+The `exportFrom` property has been replaced with the `getExportFromFilePath()` function. This allows you to dynamically determine export paths based on symbol properties. This is a low-level feature, so you're most likely unaffected.
+
 ## 0.6.1
 
 ### Patch Changes
