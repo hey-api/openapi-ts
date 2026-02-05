@@ -12,7 +12,7 @@
     "@hey-api/codegen-core": "workspace:*",
     "@hey-api/openapi-python": "workspace:*",
     "@hey-api/openapi-ts": "workspace:*",
-    "@opencode-ai/sdk": "1.0.221",
+    "@opencode-ai/sdk": "1.1.48",
     "@pinia/colada": "0.19.1",
     "@tanstack/angular-query-experimental": "5.73.3",
     "@tanstack/react-query": "5.73.3",
