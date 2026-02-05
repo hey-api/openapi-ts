@@ -186,8 +186,8 @@ importers:
         specifier: 2.0.0-alpha.16
         version: 2.0.0-alpha.16(patch_hash=828e6d2347338f051e3210f9d54e3a79212e9afb26e6b8a746d7ad5f58e9385b)(@types/node@22.10.5)(axios@1.13.2)(jiti@2.6.1)(jwt-decode@4.0.0)(less@4.2.2)(postcss@8.5.6)(sass@1.85.0)(terser@5.43.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
       vitepress-plugin-llms:
-        specifier: 1.10.0
-        version: 1.10.0
+        specifier: 1.11.0
+        version: 1.11.0
       vue:
         specifier: 3.5.25
         version: 3.5.25(typescript@5.9.3)
@@ -14425,8 +14425,8 @@ packages:
       vite:
         optional: true
 
-  vitepress-plugin-llms@1.10.0:
-    resolution: {integrity: sha512-dgD5KV8D9vXlQtAf/KUjSgr3QymH1fHT7XkQ/UuIqvIjnKdzZI+0gT3puGxUBuqgvlFjYWA6f8k80tXl6gwWkw==}
+  vitepress-plugin-llms@1.11.0:
+    resolution: {integrity: sha512-n6fjWzBNKy40p8cij+d2cHiC2asNW1eQKdmc06gX9VAv7vWppIoVLH/f7Ht1bK0vSpGzzW2QimvNfbfv1oCdJw==}
 
   vitepress@2.0.0-alpha.16:
     resolution: {integrity: sha512-w1nwsefDVIsje7BZr2tsKxkZutDGjG0YoQ2yxO7+a9tvYVqfljYbwj5LMYkPy8Tb7YbPwa22HtIhk62jbrvuEQ==}
@@ -24240,7 +24240,7 @@ snapshots:
       eslint: 9.17.0(jiti@2.6.1)
       eslint-import-resolver-node: 0.3.9
       eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.29.1(eslint@9.17.0(jiti@2.6.1))(typescript@5.8.3))(eslint@9.17.0(jiti@2.6.1)))(eslint@9.17.0(jiti@2.6.1))
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.29.1(eslint@9.17.0(jiti@2.6.1))(typescript@5.8.3))(eslint-import-resolver-typescript@3.10.1)(eslint@9.17.0(jiti@2.6.1))
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.29.1(eslint@9.17.0(jiti@2.6.1))(typescript@5.8.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.29.1(eslint@9.17.0(jiti@2.6.1))(typescript@5.8.3))(eslint@9.17.0(jiti@2.6.1)))(eslint@9.17.0(jiti@2.6.1)))(eslint@9.17.0(jiti@2.6.1))
       eslint-plugin-jsx-a11y: 6.10.2(eslint@9.17.0(jiti@2.6.1))
       eslint-plugin-react: 7.37.5(eslint@9.17.0(jiti@2.6.1))
       eslint-plugin-react-hooks: 5.2.0(eslint@9.17.0(jiti@2.6.1))
@@ -24270,7 +24270,7 @@ snapshots:
       tinyglobby: 0.2.15
       unrs-resolver: 1.11.1
     optionalDependencies:
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.29.1(eslint@9.17.0(jiti@2.6.1))(typescript@5.8.3))(eslint-import-resolver-typescript@3.10.1)(eslint@9.17.0(jiti@2.6.1))
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.29.1(eslint@9.17.0(jiti@2.6.1))(typescript@5.8.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.29.1(eslint@9.17.0(jiti@2.6.1))(typescript@5.8.3))(eslint@9.17.0(jiti@2.6.1)))(eslint@9.17.0(jiti@2.6.1)))(eslint@9.17.0(jiti@2.6.1))
     transitivePeerDependencies:
       - supports-color
 
@@ -24285,7 +24285,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.29.1(eslint@9.17.0(jiti@2.6.1))(typescript@5.8.3))(eslint-import-resolver-typescript@3.10.1)(eslint@9.17.0(jiti@2.6.1)):
+  eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.29.1(eslint@9.17.0(jiti@2.6.1))(typescript@5.8.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.29.1(eslint@9.17.0(jiti@2.6.1))(typescript@5.8.3))(eslint@9.17.0(jiti@2.6.1)))(eslint@9.17.0(jiti@2.6.1)))(eslint@9.17.0(jiti@2.6.1)):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.9
@@ -31134,7 +31134,7 @@ snapshots:
     optionalDependencies:
       vite: 7.1.2(@types/node@22.10.5)(jiti@2.6.1)(less@4.2.2)(sass@1.85.0)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.2)
 
-  vitepress-plugin-llms@1.10.0:
+  vitepress-plugin-llms@1.11.0:
     dependencies:
       gray-matter: 4.0.3
       markdown-it: 14.1.0
