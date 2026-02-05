@@ -45,7 +45,7 @@ const operationToDataType = ({
     const node = $.type
       .alias(symbolWebhookPayload)
       .export()
-      .$if(createSchemaComment(operation.body.schema), (t, v) => t.doc(v))
+      .$if(plugin.config.comments && createSchemaComment(operation.body.schema), (t, v) => t.doc(v))
       .type(
         irSchemaToAst({
           plugin,

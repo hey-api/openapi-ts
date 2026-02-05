@@ -104,12 +104,12 @@ export const exportType = ({
       });
       const objectNode = $.const(symbolObject)
         .export()
-        .$if(createSchemaComment(schema), (c, v) => c.doc(v))
+        .$if(plugin.config.comments && createSchemaComment(schema), (c, v) => c.doc(v))
         .assign(
           $.object(
             ...enumObject.obj.map((item) =>
               $.prop({ kind: 'prop', name: item.key })
-                .$if(createSchemaComment(item.schema), (p, v) => p.doc(v))
+                .$if(plugin.config.comments && createSchemaComment(item.schema), (p, v) => p.doc(v))
                 .value($.fromValue(item.schema.const)),
             ),
           ).as('const'),
@@ -129,7 +129,7 @@ export const exportType = ({
       const node = $.type
         .alias(symbol)
         .export()
-        .$if(createSchemaComment(schema), (t, v) => t.doc(v))
+        .$if(plugin.config.comments && createSchemaComment(schema), (t, v) => t.doc(v))
         .type($.type(symbol).idx($.type(symbol).typeofType().keyof()).typeofType());
       plugin.node(node);
       return;
@@ -154,12 +154,12 @@ export const exportType = ({
         });
         const enumNode = $.enum(symbol)
           .export()
-          .$if(createSchemaComment(schema), (e, v) => e.doc(v))
+          .$if(plugin.config.comments && createSchemaComment(schema), (e, v) => e.doc(v))
           .const(plugin.config.enums.mode === 'typescript-const')
           .members(
             ...enumObject.obj.map((item) =>
               $.member(item.key)
-                .$if(createSchemaComment(item.schema), (m, v) => m.doc(v))
+                .$if(plugin.config.comments && createSchemaComment(item.schema), (m, v) => m.doc(v))
                 .value($.fromValue(item.schema.const)),
             ),
           );
@@ -182,7 +182,7 @@ export const exportType = ({
   const node = $.type
     .alias(symbol)
     .export()
-    .$if(createSchemaComment(schema), (t, v) => t.doc(v))
+    .$if(plugin.config.comments && createSchemaComment(schema), (t, v) => t.doc(v))
     .type(type);
   plugin.node(node);
 };

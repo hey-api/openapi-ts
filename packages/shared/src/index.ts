@@ -19,9 +19,11 @@ export type {
   BaseOutput,
   BaseUserConfig,
   BaseUserOutput,
+  CommentsOption,
   FeatureToggle,
   IndexExportOption,
   NamingOptions,
+  UserCommentsOption,
   UserIndexExportOption,
 } from './config/shared';
 export type { ValueToObject } from './config/utils/config';

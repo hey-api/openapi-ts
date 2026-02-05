@@ -10,6 +10,7 @@ import type { OperationsConfig, UserOperationsConfig } from './operations';
 
 export type UserConfig = Plugin.Name<'@hey-api/sdk'> &
   Plugin.Hooks &
+  Plugin.UserComments &
   Plugin.UserExports & {
     /**
      * Should the generated functions contain auth mechanisms? You may want to
@@ -196,6 +197,7 @@ export type UserConfig = Plugin.Name<'@hey-api/sdk'> &
 
 export type Config = Plugin.Name<'@hey-api/sdk'> &
   Plugin.Hooks &
+  Plugin.Comments &
   Plugin.Exports & {
     /**
      * Should the generated functions contain auth mechanisms? You may want to

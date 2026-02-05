@@ -53,6 +53,21 @@ export type IndexExportOption = {
   includeInEntry: boolean | ((symbol: Symbol) => boolean);
 };
 
+export type UserCommentsOption = {
+  /**
+   * Whether to add comments to the generated code.
+   *
+   * @default true
+   */
+  comments?: boolean;
+};
+export type CommentsOption = {
+  /**
+   * Whether to add comments to the generated code.
+   */
+  comments: boolean;
+};
+
 export type NamingOptions = {
   /**
    * Casing convention for generated names.

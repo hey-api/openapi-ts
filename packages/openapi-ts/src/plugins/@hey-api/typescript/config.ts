@@ -8,6 +8,7 @@ export const defaultConfig: HeyApiTypeScriptPlugin['Config'] = {
   api: new Api(),
   config: {
     case: 'PascalCase',
+    comments: true,
     includeInEntry: true,
     topType: 'unknown',
   },

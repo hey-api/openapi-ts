@@ -10,6 +10,7 @@ import type {
 
 export type UserConfig = Plugin.Name<'swr'> &
   Plugin.Hooks &
+  Plugin.UserComments &
   Plugin.UserExports & {
     /**
      * Casing convention for generated names.
@@ -17,17 +18,6 @@ export type UserConfig = Plugin.Name<'swr'> &
      * @default 'camelCase'
      */
     case?: Casing;
-    /**
-     * Add comments from SDK functions to the generated SWR code?
-     *
-     * Duplicating comments this way is useful so you don't need to drill into
-     * the underlying SDK function to learn what it does or whether it's
-     * deprecated. You can set this option to `false` if you prefer less
-     * comment duplication.
-     *
-     * @default true
-     */
-    comments?: boolean;
     /**
      * Configuration for generated infinite query key helpers.
      *
@@ -343,17 +333,12 @@ export type UserConfig = Plugin.Name<'swr'> &
 
 export type Config = Plugin.Name<'swr'> &
   Plugin.Hooks &
+  Plugin.Comments &
   Plugin.Exports & {
     /**
      * Casing convention for generated names.
      */
     case: Casing;
-    /**
-     * Add comments from SDK functions to the generated SWR code?
-     *
-     * @default true
-     */
-    comments: boolean;
     /**
      * Resolved configuration for generated infinite query key helpers.
      *

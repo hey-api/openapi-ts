@@ -23,9 +23,12 @@ export const source = globalThis.Symbol('@hey-api/python-sdk');
 function attachComment<T extends ReturnType<typeof $.func>>(args: {
   node: T;
   operation: IR.OperationObject;
+  plugin: HeyApiSdkPlugin['Instance'];
 }): T {
-  const { node, operation } = args;
-  return node.$if(createOperationComment(operation), (n, v) => n.doc(v)) as T;
+  const { node, operation, plugin } = args;
+  return node.$if(plugin.config.comments && createOperationComment(operation), (n, v) =>
+    n.doc(v),
+  ) as T;
 }
 
 function createShellMeta(node: StructureNode): SymbolMeta {
@@ -174,6 +177,7 @@ export function toNode(
           attachComment({
             node: m,
             operation,
+            plugin,
           }),
         ),
         operation,
