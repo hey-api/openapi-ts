@@ -5,6 +5,7 @@ import type { HttpResourcesConfig, UserHttpResourcesConfig } from './httpResourc
 
 export type UserConfig = Plugin.Name<'@angular/common'> &
   Plugin.Hooks &
+  Plugin.UserComments &
   Plugin.UserExports & {
     /**
      * Options for generating HTTP Request instances.
@@ -22,6 +23,7 @@ export type UserConfig = Plugin.Name<'@angular/common'> &
 
 export type Config = Plugin.Name<'@angular/common'> &
   Plugin.Hooks &
+  Plugin.Comments &
   Plugin.Exports & {
     /**
      * Options for generating HTTP Request instances.
