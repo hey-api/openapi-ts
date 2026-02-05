@@ -1,36 +1,5 @@
 # @hey-api/openapi-ts
 
-## 0.92.0
-
-### Minor Changes
-
-- **BREAKING:** **symbol**: replace `exportFrom` array with `getExportFromFilePath()` function ([#3312](https://github.com/hey-api/openapi-ts/pull/3312)) ([`cd44523`](https://github.com/hey-api/openapi-ts/commit/cd44523b9656dd7a29354ad7f815336642164bc8)) by [@mrlubos](https://github.com/mrlubos)
-
-### Updated Symbol interface
-
-The `exportFrom` property has been replaced with the `getExportFromFilePath()` function. This allows you to dynamically determine export paths based on symbol properties. This is a low-level feature, so you're most likely unaffected.
-
-### Patch Changes
-
-- **config**: rename `exportFromIndex` option to `includeInEntry` ([#3312](https://github.com/hey-api/openapi-ts/pull/3312)) ([`cd44523`](https://github.com/hey-api/openapi-ts/commit/cd44523b9656dd7a29354ad7f815336642164bc8)) by [@mrlubos](https://github.com/mrlubos)
-
-- **config**: `includeInEntry` accepts function in addition to primitive value ([#3312](https://github.com/hey-api/openapi-ts/pull/3312)) ([`cd44523`](https://github.com/hey-api/openapi-ts/commit/cd44523b9656dd7a29354ad7f815336642164bc8)) by [@mrlubos](https://github.com/mrlubos)
-
-- **parser**: add `getExportFromFilePath()` hook ([#3312](https://github.com/hey-api/openapi-ts/pull/3312)) ([`cd44523`](https://github.com/hey-api/openapi-ts/commit/cd44523b9656dd7a29354ad7f815336642164bc8)) by [@mrlubos](https://github.com/mrlubos)
-
-- **plugin**: add `comments` option to all plugins ([#3317](https://github.com/hey-api/openapi-ts/pull/3317)) ([`7b3c8f2`](https://github.com/hey-api/openapi-ts/commit/7b3c8f20a70115b7130807eb39410c0ba03c5275)) by [@mrlubos](https://github.com/mrlubos)
-
-- **types**: improve `defineConfig()` types ([#3312](https://github.com/hey-api/openapi-ts/pull/3312)) ([`cd44523`](https://github.com/hey-api/openapi-ts/commit/cd44523b9656dd7a29354ad7f815336642164bc8)) by [@mrlubos](https://github.com/mrlubos)
-
-- **config**: rename `output.indexFile` to `output.entryFile` ([#3312](https://github.com/hey-api/openapi-ts/pull/3312)) ([`cd44523`](https://github.com/hey-api/openapi-ts/commit/cd44523b9656dd7a29354ad7f815336642164bc8)) by [@mrlubos](https://github.com/mrlubos)
-
-- **fix**: improve dev mode detection causing builds to fail ([#3300](https://github.com/hey-api/openapi-ts/pull/3300)) ([`be2f3fb`](https://github.com/hey-api/openapi-ts/commit/be2f3fbaee1b3bcbd50efce057d68f206bbb8efb)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
-
-### Updated Dependencies:
-
-- @hey-api/shared@0.1.2
-- @hey-api/codegen-core@0.7.0
-
 ## 0.91.1
 
 ### Patch Changes
