@@ -1,7 +1,12 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 import type { AnyString } from '@hey-api/types';
 
-import type { IndexExportOption, UserIndexExportOption } from '../config/shared';
+import type {
+  CommentsOption,
+  IndexExportOption,
+  UserCommentsOption,
+  UserIndexExportOption,
+} from '../config/shared';
 import type { ValueToObject } from '../config/utils/config';
 import type { Dependency } from '../config/utils/dependencies';
 import type { Hooks as ParserHooks } from '../parser/hooks';
@@ -71,6 +76,9 @@ export namespace Plugin {
      */
     tags?: ReadonlyArray<PluginTag>;
   };
+
+  export type Comments = CommentsOption;
+  export type UserComments = UserCommentsOption;
 
   export type Exports = IndexExportOption;
   export type UserExports = UserIndexExportOption;

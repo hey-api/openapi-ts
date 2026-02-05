@@ -34,7 +34,7 @@ export const objectToAst = ({
     const isRequired = required.includes(name);
     shape.prop(name, (p) =>
       p
-        .$if(createSchemaComment(property), (p, v) => p.doc(v))
+        .$if(plugin.config.comments && createSchemaComment(property), (p, v) => p.doc(v))
         .readonly(property.accessScope === 'read')
         .required(isRequired)
         .type(propertyType),

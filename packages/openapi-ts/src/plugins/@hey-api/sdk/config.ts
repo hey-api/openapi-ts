@@ -9,6 +9,7 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
   config: {
     auth: true,
     client: true,
+    comments: true,
     includeInEntry: true,
     paramsStructure: 'grouped',
     responseStyle: 'fields',

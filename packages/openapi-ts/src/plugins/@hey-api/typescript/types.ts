@@ -7,6 +7,7 @@ export type EnumsType = 'javascript' | 'typescript' | 'typescript-const';
 
 export type UserConfig = Plugin.Name<'@hey-api/typescript'> &
   Plugin.Hooks &
+  Plugin.UserComments &
   Plugin.UserExports & {
     /**
      * Casing convention for generated names.
@@ -230,6 +231,7 @@ export type UserConfig = Plugin.Name<'@hey-api/typescript'> &
 
 export type Config = Plugin.Name<'@hey-api/typescript'> &
   Plugin.Hooks &
+  Plugin.Comments &
   Plugin.Exports & {
     /**
      * Casing convention for generated names.
