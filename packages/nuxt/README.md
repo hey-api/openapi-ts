@@ -41,7 +41,7 @@ Help Hey API stay around for the long haul by becoming a [sponsor](https://githu
 <table align="center" style="justify-content: center;align-items: center;display: flex;">
   <tbody>
     <tr>
-      <td align="center" width="50%">
+      <td align="center" width="336px">
         <p></p>
         <p>
           <a href="https://kutt.it/pkEZyc" target="_blank">
@@ -59,7 +59,7 @@ Help Hey API stay around for the long haul by becoming a [sponsor](https://githu
         </p>
         <p></p>
       </td>
-      <td align="center" width="50%">
+      <td align="center" width="336px">
         <p></p>
         <p>
           <a href="https://kutt.it/QM9Q2N" target="_blank">
@@ -79,7 +79,7 @@ Help Hey API stay around for the long haul by becoming a [sponsor](https://githu
       </td>
     </tr>
     <tr>
-      <td align="center" width="50%">
+      <td align="center" width="336px">
         <p></p>
         <p>
           <a href="https://kutt.it/6vrYy9" target="_blank">
@@ -106,7 +106,7 @@ Help Hey API stay around for the long haul by becoming a [sponsor](https://githu
 <table align="center" style="justify-content: center;align-items: center;display: flex;">
   <tbody>
     <tr>
-      <td align="center" width="33%">
+      <td align="center" width="172px">
         <a href="https://kutt.it/skQUVd" target="_blank">
           <picture height="40px">
             <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/scalar/logo-light.svg">
@@ -118,7 +118,7 @@ Help Hey API stay around for the long haul by becoming a [sponsor](https://githu
           scalar.com
         </a>
       </td>
-      <td align="center" width="33%">
+      <td align="center" width="172px">
         <a href="https://kutt.it/Dr9GuW" target="_blank">
           <picture height="40px">
             <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/fastapi/logo-light.svg">
@@ -130,9 +130,6 @@ Help Hey API stay around for the long haul by becoming a [sponsor](https://githu
           fastapi.tiangolo.com
         </a>
       </td>
-      <td align="center" width="33%">
-        <!-- empty block for uniform width -->
-      </td>
     </tr>
   </tbody>
 </table>
@@ -142,7 +139,7 @@ Help Hey API stay around for the long haul by becoming a [sponsor](https://githu
 <table align="center" style="justify-content: center;align-items: center;display: flex;">
   <tbody>
     <tr>
-      <td align="center" width="25%">
+      <td align="center" width="136px">
         <a href="https://kutt.it/YpaKsX" target="_blank">
           <picture height="34px">
             <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/.gen/kinde-logo-wordmark-dark-480w.webp">
@@ -150,19 +147,13 @@ Help Hey API stay around for the long haul by becoming a [sponsor](https://githu
           </picture>
         </a>
       </td>
-      <td align="center" width="25%">
+      <td align="center" width="136px">
         <a href="https://kutt.it/KkqSaw" target="_blank">
           <picture height="34px">
             <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/cella/logo-light.svg">
             <img alt="Cella logo" height="34px" src="https://heyapi.dev/assets/cella/logo-dark.svg">
           </picture>
         </a>
-      </td>
-      <td align="center" width="25%">
-        <!-- empty block for uniform width -->
-      </td>
-      <td align="center" width="25%">
-        <!-- empty block for uniform width -->
       </td>
     </tr>
   </tbody>
