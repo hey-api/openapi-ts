@@ -184,7 +184,7 @@ importers:
         version: 0.34.5
       vitepress:
         specifier: 2.0.0-alpha.16
-        version: 2.0.0-alpha.16(patch_hash=828e6d2347338f051e3210f9d54e3a79212e9afb26e6b8a746d7ad5f58e9385b)(@types/node@22.10.5)(axios@1.13.2)(jiti@2.6.1)(jwt-decode@4.0.0)(less@4.2.2)(postcss@8.5.6)(sass@1.85.0)(terser@5.43.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
+        version: 2.0.0-alpha.16(patch_hash=828e6d2347338f051e3210f9d54e3a79212e9afb26e6b8a746d7ad5f58e9385b)(@types/node@22.10.5)(axios@1.13.4)(jiti@2.6.1)(jwt-decode@4.0.0)(less@4.2.2)(postcss@8.5.6)(sass@1.85.0)(terser@5.43.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
       vitepress-plugin-llms:
         specifier: 1.10.0
         version: 1.10.0
@@ -1403,8 +1403,8 @@ importers:
         specifier: workspace:*
         version: link:../config-vite-base
       axios:
-        specifier: 1.13.2
-        version: 1.13.2
+        specifier: 1.13.4
+        version: 1.13.4
       eslint:
         specifier: 9.39.1
         version: 9.39.1(jiti@2.6.1)
@@ -1508,8 +1508,8 @@ importers:
         specifier: 2.1.29
         version: 2.1.29
       axios:
-        specifier: 1.13.2
-        version: 1.13.2
+        specifier: 1.13.4
+        version: 1.13.4
       cross-spawn:
         specifier: 7.0.6
         version: 7.0.6
@@ -8062,8 +8062,8 @@ packages:
     resolution: {integrity: sha512-Xm7bpRXnDSX2YE2YFfBk2FnF0ep6tmG7xPh8iHee8MIcrgq762Nkce856dYtJYLkuIoYZvGfTs/PbZhideTcEg==}
     engines: {node: '>=4'}
 
-  axios@1.13.2:
-    resolution: {integrity: sha512-VPk9ebNqPcy5lRGuSlKx752IlDatOjT9paPlm8A7yOuW2Fbvp4X3JznJtT4f0GzGLLiWE9W8onz51SqLYwzGaA==}
+  axios@1.13.4:
+    resolution: {integrity: sha512-1wVkUaAO6WyaYtCkcYCOx12ZgpGf9Zif+qXa4n+oYzK558YryKqiL6UWwd5DqiH3VRW0GYhTZQ/vlgJrCoNQlg==}
 
   axios@1.8.2:
     resolution: {integrity: sha512-ls4GYBm5aig9vWx8AWDSGLpnpDQRtWAfrjU+EuytuODrFBkqesN2RkOQCBzrA1RQNHw1SmRMSDDDSwzNAYQ6Rg==}
@@ -22310,13 +22310,13 @@ snapshots:
       '@vueuse/shared': 14.1.0(vue@3.5.27(typescript@5.9.3))
       vue: 3.5.27(typescript@5.9.3)
 
-  '@vueuse/integrations@14.1.0(axios@1.13.2)(focus-trap@7.8.0)(jwt-decode@4.0.0)(vue@3.5.27(typescript@5.9.3))':
+  '@vueuse/integrations@14.1.0(axios@1.13.4)(focus-trap@7.8.0)(jwt-decode@4.0.0)(vue@3.5.27(typescript@5.9.3))':
     dependencies:
       '@vueuse/core': 14.1.0(vue@3.5.27(typescript@5.9.3))
       '@vueuse/shared': 14.1.0(vue@3.5.27(typescript@5.9.3))
       vue: 3.5.27(typescript@5.9.3)
     optionalDependencies:
-      axios: 1.13.2
+      axios: 1.13.4
       focus-trap: 7.8.0
       jwt-decode: 4.0.0
 
@@ -22755,7 +22755,7 @@ snapshots:
 
   axe-core@4.10.3: {}
 
-  axios@1.13.2:
+  axios@1.13.4:
     dependencies:
       follow-redirects: 1.15.11(debug@4.4.3)
       form-data: 4.0.4
@@ -31131,7 +31131,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  vitepress@2.0.0-alpha.16(patch_hash=828e6d2347338f051e3210f9d54e3a79212e9afb26e6b8a746d7ad5f58e9385b)(@types/node@22.10.5)(axios@1.13.2)(jiti@2.6.1)(jwt-decode@4.0.0)(less@4.2.2)(postcss@8.5.6)(sass@1.85.0)(terser@5.43.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2):
+  vitepress@2.0.0-alpha.16(patch_hash=828e6d2347338f051e3210f9d54e3a79212e9afb26e6b8a746d7ad5f58e9385b)(@types/node@22.10.5)(axios@1.13.4)(jiti@2.6.1)(jwt-decode@4.0.0)(less@4.2.2)(postcss@8.5.6)(sass@1.85.0)(terser@5.43.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2):
     dependencies:
       '@docsearch/css': 4.5.3
       '@docsearch/js': 4.5.3
@@ -31145,7 +31145,7 @@ snapshots:
       '@vue/devtools-api': 8.0.5
       '@vue/shared': 3.5.27
       '@vueuse/core': 14.1.0(vue@3.5.27(typescript@5.9.3))
-      '@vueuse/integrations': 14.1.0(axios@1.13.2)(focus-trap@7.8.0)(jwt-decode@4.0.0)(vue@3.5.27(typescript@5.9.3))
+      '@vueuse/integrations': 14.1.0(axios@1.13.4)(focus-trap@7.8.0)(jwt-decode@4.0.0)(vue@3.5.27(typescript@5.9.3))
       focus-trap: 7.8.0
       mark.js: 8.11.1
       minisearch: 7.2.0
