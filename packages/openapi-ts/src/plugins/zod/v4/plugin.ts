@@ -202,6 +202,7 @@ const handleComponent = ({
 export const handlerV4: ZodPlugin['Handler'] = ({ plugin }) => {
   plugin.symbol('z', {
     external: getZodModule({ plugin }),
+    importKind: 'namespace',
     meta: {
       category: 'external',
       resource: 'zod.z',
