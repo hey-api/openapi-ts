@@ -1,14 +1,5 @@
 # @hey-api/openapi-ts
 
-## 0.92.1
-
-### Patch Changes
-
-### Updated Dependencies:
-
-- @hey-api/shared@0.1.2
-- @hey-api/codegen-core@0.7.0
-
 ## 0.92.0
 
 ### Minor Changes
