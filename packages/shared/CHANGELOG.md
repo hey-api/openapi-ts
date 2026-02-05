@@ -1,5 +1,19 @@
 # @hey-api/shared
 
+## 0.1.2
+
+### Patch Changes
+
+- **parser**: add `getExportFromFilePath()` hook ([#3318](https://github.com/hey-api/openapi-ts/pull/3318)) ([`fefa70e`](https://github.com/hey-api/openapi-ts/commit/fefa70e6810a539607441535289e98c69a604c0d)) by [@mrlubos](https://github.com/mrlubos)
+
+- **config**: `includeInEntry` accepts function in addition to primitive value ([#3318](https://github.com/hey-api/openapi-ts/pull/3318)) ([`fefa70e`](https://github.com/hey-api/openapi-ts/commit/fefa70e6810a539607441535289e98c69a604c0d)) by [@mrlubos](https://github.com/mrlubos)
+
+- **transform(read-write)**: improve discriminated schemas split ([#3318](https://github.com/hey-api/openapi-ts/pull/3318)) ([`fefa70e`](https://github.com/hey-api/openapi-ts/commit/fefa70e6810a539607441535289e98c69a604c0d)) by [@mrlubos](https://github.com/mrlubos)
+
+### Updated Dependencies:
+
+- @hey-api/codegen-core@0.7.0
+
 ## 0.1.1
 
 ### Patch Changes
