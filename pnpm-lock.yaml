@@ -1623,8 +1623,8 @@ importers:
         specifier: workspace:*
         version: link:../config-vite-base
       '@types/bun':
-        specifier: 1.3.5
-        version: 1.3.5
+        specifier: 1.3.8
+        version: 1.3.8
       '@types/cross-spawn':
         specifier: 6.0.6
         version: 6.0.6
@@ -6944,8 +6944,8 @@ packages:
   '@types/bonjour@3.5.13':
     resolution: {integrity: sha512-z9fJ5Im06zvUL548KvYNecEVlA7cVDkGUi6kZusb04mpyEFKCIZJvloCcmpmLaIahDpOQGHaHmG6imtPMmPXGQ==}
 
-  '@types/bun@1.3.5':
-    resolution: {integrity: sha512-RnygCqNrd3srIPEWBd5LFeUYG7plCoH2Yw9WaZGyNmdTEei+gWaHqydbaIRkIkcbXwhBT94q78QljxN0Sk838w==}
+  '@types/bun@1.3.8':
+    resolution: {integrity: sha512-3LvWJ2q5GerAXYxO2mffLTqOzEu5qnhEAlh48Vnu8WQfnmSwbgagjGZV6BoHKJztENYEDn6QmVd949W4uESRJA==}
 
   '@types/chai@5.2.2':
     resolution: {integrity: sha512-8kB30R7Hwqf40JPiKhVzodJs2Qc1ZJ5zuT3uzw5Hq/dhNCl3G3l83jfpdI1e20BP348+fV7VIL/+FxaXkqBmWg==}
@@ -8203,8 +8203,8 @@ packages:
     resolution: {integrity: sha512-zhaCDicdLuWN5UbN5IMnFqNMhNfo919sH85y2/ea+5Yg9TsTkeZxpL+JLbp6cgYFS4sRLp3YV4S6yDuqVWHYOw==}
     engines: {node: '>=6'}
 
-  bun-types@1.3.5:
-    resolution: {integrity: sha512-inmAYe2PFLs0SUbFOWSVD24sg1jFlMPxOjOSSCYqUgn4Hsc3rDc7dFvfVYjFPNHtov6kgUeulV4SxbuIV/stPw==}
+  bun-types@1.3.8:
+    resolution: {integrity: sha512-fL99nxdOWvV4LqjmC+8Q9kW3M4QTtTR1eePs94v5ctGqU8OeceWrSUaRw3JYb7tU3FkMIAjkueehrHPPPGKi5Q==}
 
   bundle-name@4.1.0:
     resolution: {integrity: sha512-tjwM5exMg6BGRI+kNmTntNsvdZS1X8BFYS6tnJ2hdH0kVxM6/eVZ2xy+FqStSWvYmtfFMDLIxurorHwDKfDz5Q==}
@@ -21202,9 +21202,9 @@ snapshots:
     dependencies:
       '@types/node': 22.10.5
 
-  '@types/bun@1.3.5':
+  '@types/bun@1.3.8':
     dependencies:
-      bun-types: 1.3.5
+      bun-types: 1.3.8
 
   '@types/chai@5.2.2':
     dependencies:
@@ -22968,7 +22968,7 @@ snapshots:
 
   builtin-modules@3.3.0: {}
 
-  bun-types@1.3.5:
+  bun-types@1.3.8:
     dependencies:
       '@types/node': 22.10.5
 
