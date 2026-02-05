@@ -10,3 +10,12 @@ export function sdk(
     ...options,
   };
 }
+
+export function pydantic(
+  options?: Partial<Omit<Extract<PluginConfig, { name: 'pydantic' }>, 'name'>>,
+) {
+  return {
+    name: 'pydantic' as const,
+    ...options,
+  };
+}

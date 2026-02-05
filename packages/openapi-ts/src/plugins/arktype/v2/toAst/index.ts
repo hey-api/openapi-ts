@@ -15,12 +15,12 @@ import { stringToAst } from './string';
 // import { unknownToAst } from "./unknown";
 // import { voidToAst } from "./void";
 
-export const irSchemaWithTypeToAst = ({
+export function irSchemaWithTypeToAst({
   schema,
   ...args
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType;
-}): Omit<Ast, 'typeName'> => {
+}): Omit<Ast, 'typeName'> {
   switch (schema.type) {
     // case 'array':
     //   return arrayToAst({
@@ -99,4 +99,4 @@ export const irSchemaWithTypeToAst = ({
     expression,
     hasLazyExpression: false,
   };
-};
+}

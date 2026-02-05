@@ -14,7 +14,7 @@ import type { ValibotPlugin } from '../types';
 import { identifiers } from './constants';
 import { irSchemaWithTypeToAst } from './toAst';
 
-export const irSchemaToAst = ({
+export function irSchemaToAst({
   optional,
   plugin,
   schema,
@@ -27,7 +27,7 @@ export const irSchemaToAst = ({
    */
   optional?: boolean;
   schema: IR.SchemaObject;
-}): Ast => {
+}): Ast {
   const ast: Ast = {
     pipes: [],
   };
@@ -134,15 +134,15 @@ export const irSchemaToAst = ({
   }
 
   return ast as Ast;
-};
+}
 
-const handleComponent = ({
+function handleComponent({
   plugin,
   schema,
   state,
 }: IrSchemaToAstOptions & {
   schema: IR.SchemaObject;
-}): void => {
+}): void {
   const $ref = pathToJsonPointer(fromRef(state.path));
   const ast = irSchemaToAst({ plugin, schema, state });
   const baseName = refToName($ref);
@@ -163,7 +163,7 @@ const handleComponent = ({
     state,
     symbol,
   });
-};
+}
 
 export const handlerV1: ValibotPlugin['Handler'] = ({ plugin }) => {
   plugin.symbol('v', {
