@@ -92,7 +92,7 @@
     "@config/vite-base": "workspace:*",
     "axios": "1.13.4",
     "eslint": "9.39.1",
-    "ky": "1.14.2",
+    "ky": "1.14.3",
     "nuxt": "3.14.1592",
     "ofetch": "1.5.1",
     "rxjs": "7.8.2",

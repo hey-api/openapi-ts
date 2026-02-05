@@ -1409,8 +1409,8 @@ importers:
         specifier: 9.39.1
         version: 9.39.1(jiti@2.6.1)
       ky:
-        specifier: 1.14.2
-        version: 1.14.2
+        specifier: 1.14.3
+        version: 1.14.3
       nuxt:
         specifier: 3.14.1592
         version: 3.14.1592(@netlify/blobs@9.1.2)(@parcel/watcher@2.5.1)(@types/node@22.10.5)(db0@0.3.2)(encoding@0.1.13)(eslint@9.39.1(jiti@2.6.1))(ioredis@5.7.0)(less@4.2.2)(magicast@0.3.5)(optionator@0.9.4)(rolldown@1.0.0-beta.57)(rollup@4.56.0)(sass@1.85.0)(terser@5.43.1)(typescript@5.9.3)(vite@7.1.2(@types/node@22.10.5)(jiti@2.6.1)(less@4.2.2)(sass@1.85.0)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.2))
@@ -1520,8 +1520,8 @@ importers:
         specifier: 5.6.2
         version: 5.6.2
       ky:
-        specifier: 1.14.2
-        version: 1.14.2
+        specifier: 1.14.3
+        version: 1.14.3
       node-fetch:
         specifier: 3.3.2
         version: 3.3.2
@@ -10733,8 +10733,8 @@ packages:
     resolution: {integrity: sha512-Rczb6FMM6JT0lvrOlP5WUOCB7s9XKxzwgErzhKlKde1bEV90FXplV1o87fpt4PU/asJFiqjYJxAJyzJhcrxOsQ==}
     engines: {node: '>=18'}
 
-  ky@1.14.2:
-    resolution: {integrity: sha512-q3RBbsO5A5zrPhB6CaCS8ZUv+NWCXv6JJT4Em0i264G9W0fdPB8YRfnnEi7Dm7X7omAkBIPojzYJ2D1oHTHqug==}
+  ky@1.14.3:
+    resolution: {integrity: sha512-9zy9lkjac+TR1c2tG+mkNSVlyOpInnWdSMiue4F+kq8TwJSgv6o8jhLRg8Ho6SnZ9wOYUq/yozts9qQCfk7bIw==}
     engines: {node: '>=18'}
 
   lambda-local@2.2.0:
@@ -26042,7 +26042,7 @@ snapshots:
 
   ky@1.14.0: {}
 
-  ky@1.14.2: {}
+  ky@1.14.3: {}
 
   lambda-local@2.2.0:
     dependencies:
