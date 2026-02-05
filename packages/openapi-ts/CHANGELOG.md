@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.92.3
+
+### Patch Changes
+
+- **plugin(zod)**: use namespace import for zod v4 ([#3325](https://github.com/hey-api/openapi-ts/pull/3325)) ([`e54db3e`](https://github.com/hey-api/openapi-ts/commit/e54db3e7e34e86c17d5c1fba90d9df9778c4b32d)) by [@mrlubos](https://github.com/mrlubos)
+
 ## 0.92.2
 
 ### Patch Changes
