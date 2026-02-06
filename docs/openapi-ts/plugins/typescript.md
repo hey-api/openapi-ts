@@ -135,7 +135,8 @@ We recommend exporting enums as plain JavaScript objects. [TypeScript enums](htt
 By default, `@hey-api/typescript` will include comments in the generated code based on descriptions from your OpenAPI specification. If you want to reduce the size of your generated files or prefer cleaner output, you can disable comments.
 
 ::: code-group
- [enabled]
+
+```js [enabled]
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
@@ -147,7 +148,9 @@ export default {
     },
   ],
 };
+```
 
+```js [disabled]
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
@@ -159,6 +162,9 @@ export default {
     },
   ],
 };
+```
+
+:::
 
 ## API
 
