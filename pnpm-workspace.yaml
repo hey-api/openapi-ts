@@ -3,6 +3,7 @@ packages:
   - dev/**
   - examples/**/*
   - packages/**/*
+  - '!examples/*/.output'
 
 patchedDependencies:
   vitepress: patches/vitepress.patch

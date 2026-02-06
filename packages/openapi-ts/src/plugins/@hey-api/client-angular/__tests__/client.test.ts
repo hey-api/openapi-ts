@@ -73,6 +73,10 @@ describe('buildUrl', () => {
 describe('unserialized request body handling', () => {
   const client = createClient({ baseUrl: 'https://example.com' });
 
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   const scenarios = [{ body: 0 }, { body: false }, { body: 'test string' }, { body: '' }];
 
   it.each(scenarios)('handles plain text body with $body value', async ({ body }) => {
@@ -97,6 +101,10 @@ describe('unserialized request body handling', () => {
 
 describe('requestOptions serialized request body handling', () => {
   const client = createClient({ baseUrl: 'https://example.com' });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
 
   const scenarios = [
     {
