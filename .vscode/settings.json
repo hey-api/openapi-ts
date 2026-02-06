@@ -12,6 +12,7 @@
   "oxc.fmt.configPath": ".oxfmtrc.json",
   "search.exclude": {
     "**/*-lock.yaml": true,
+    "**/*-lock.json": true,
     "**/*.log": true,
     "**/*.map": true,
     "**/*.mjs": true,
