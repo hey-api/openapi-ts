@@ -15,14 +15,14 @@ import { undefinedToAst } from './undefined';
 import { unknownToAst } from './unknown';
 import { voidToAst } from './void';
 
-export const irSchemaWithTypeToAst = ({
+export function irSchemaWithTypeToAst({
   schema,
   ...args
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType;
 }): Omit<Ast, 'typeName'> & {
   anyType?: string;
-} => {
+} {
   switch (schema.type) {
     case 'array':
       return arrayToAst({
@@ -109,4 +109,4 @@ export const irSchemaWithTypeToAst = ({
         }),
       };
   }
-};
+}

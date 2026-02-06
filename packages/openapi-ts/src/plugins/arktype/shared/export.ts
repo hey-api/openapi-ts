@@ -7,7 +7,7 @@ import { identifiers } from '../constants';
 import type { ArktypePlugin } from '../types';
 import type { Ast } from './types';
 
-export const exportAst = ({
+export function exportAst({
   ast,
   plugin,
   schema,
@@ -19,7 +19,7 @@ export const exportAst = ({
   schema: IR.SchemaObject;
   symbol: Symbol;
   typeInferSymbol: Symbol | undefined;
-}): void => {
+}): void {
   const type = plugin.external('arktype.type');
 
   const statement = $.const(symbol)
@@ -43,4 +43,4 @@ export const exportAst = ({
       .type($.type(symbol).attr(identifiers.type.infer).typeofType());
     plugin.node(inferType);
   }
-};
+}
