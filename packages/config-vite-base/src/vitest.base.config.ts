@@ -15,14 +15,6 @@ export function createVitestConfig(root: string, config: ViteUserConfig = {}): V
       exclude: [...configDefaults.exclude],
       globals: true,
       pool: platform() === 'win32' ? 'threads' : 'forks',
-      poolOptions: {
-        forks: {
-          singleFork: false,
-        },
-        threads: {
-          singleThread: false,
-        },
-      },
       root,
       testTimeout: platform() === 'win32' ? 10000 : 5000,
     },

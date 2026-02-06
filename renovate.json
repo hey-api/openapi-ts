@@ -2,6 +2,7 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "dependencyDashboardTitle": "Dependencies 📦",
   "extends": ["config:recommended"],
+  "ignorePaths": ["**/node_modules/**"],
   "minimumReleaseAge": "3 days",
   "packageRules": [
     {
