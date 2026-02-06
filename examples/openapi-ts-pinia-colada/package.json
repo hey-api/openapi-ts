@@ -44,7 +44,7 @@
     "typescript": "5.8.3",
     "vite": "7.1.2",
     "vite-plugin-vue-devtools": "8.0.2",
-    "vitest": "3.1.1",
+    "vitest": "4.0.18",
     "vue-tsc": "3.0.8"
   }
 }

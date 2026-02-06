@@ -1,5 +1,6 @@
 {
   "$schema": "./node_modules/turbo/schema.json",
+  "concurrency": "100%",
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
@@ -22,8 +23,10 @@
       "inputs": ["src/**", "test/**", "*.config.*", "package.json"]
     },
     "test": {
+      "cache": true,
       "dependsOn": ["^build"],
-      "inputs": ["src/**", "test/**", "*.config.*", "package.json"]
+      "inputs": ["src/**", "test/**", "*.config.*", "package.json"],
+      "outputs": ["coverage/**"]
     },
     "test:coverage": {
       "dependsOn": ["^build"],
