@@ -7,24 +7,20 @@ import type {
   Plugin,
 } from '@hey-api/shared';
 
-import type { IApi } from './api';
-import type { Resolvers } from './resolvers';
-
-export type UserConfig = Plugin.Name<'valibot'> &
+export type UserConfig = Plugin.Name<'pydantic'> &
   Plugin.Hooks &
   Plugin.UserComments &
-  Plugin.UserExports &
-  Resolvers & {
+  Plugin.UserExports & {
     /**
      * Casing convention for generated names.
      *
-     * @default 'camelCase'
+     * @default 'PascalCase'
      */
     case?: Casing;
     /**
      * Configuration for reusable schema definitions.
      *
-     * Controls generation of shared Valibot schemas that can be referenced
+     * Controls generation of shared Pydantic models that can be referenced
      * across requests and responses.
      *
      * Can be:
@@ -41,7 +37,7 @@ export type UserConfig = Plugin.Name<'valibot'> &
           /**
            * Casing convention for generated names.
            *
-           * @default 'camelCase'
+           * @default 'PascalCase'
            */
           case?: Casing;
           /**
@@ -53,23 +49,15 @@ export type UserConfig = Plugin.Name<'valibot'> &
           /**
            * Naming pattern for generated names.
            *
-           * @default 'v{{name}}'
+           * @default '{{name}}'
            */
           name?: NameTransformer;
         };
     /**
-     * Enable Valibot metadata support? It's often useful to associate a schema
-     * with some additional metadata for documentation, code generation, AI
-     * structured outputs, form validation, and other purposes.
+     * Configuration for request-specific Pydantic models.
      *
-     * @default false
-     */
-    metadata?: boolean;
-    /**
-     * Configuration for request-specific Valibot schemas.
-     *
-     * Controls generation of Valibot schemas for request bodies, query
-     * parameters, path parameters, and headers.
+     * Controls generation of Pydantic models for request bodies,
+     * query parameters, path parameters, and headers.
      *
      * Can be:
      * - `boolean`: Shorthand for `{ enabled: boolean }`
@@ -85,7 +73,7 @@ export type UserConfig = Plugin.Name<'valibot'> &
           /**
            * Casing convention for generated names.
            *
-           * @default 'camelCase'
+           * @default 'PascalCase'
            */
           case?: Casing;
           /**
@@ -97,15 +85,15 @@ export type UserConfig = Plugin.Name<'valibot'> &
           /**
            * Naming pattern for generated names.
            *
-           * @default 'v{{name}}Data'
+           * @default '{{name}}Request'
            */
           name?: NameTransformer;
         };
     /**
-     * Configuration for response-specific Valibot schemas.
+     * Configuration for response-specific Pydantic models.
      *
-     * Controls generation of Valibot schemas for response bodies, error
-     * responses, and status codes.
+     * Controls generation of Pydantic models for response bodies,
+     * error responses, and status codes.
      *
      * Can be:
      * - `boolean`: Shorthand for `{ enabled: boolean }`
@@ -121,7 +109,7 @@ export type UserConfig = Plugin.Name<'valibot'> &
           /**
            * Casing convention for generated names.
            *
-           * @default 'camelCase'
+           * @default 'PascalCase'
            */
           case?: Casing;
           /**
@@ -133,14 +121,25 @@ export type UserConfig = Plugin.Name<'valibot'> &
           /**
            * Naming pattern for generated names.
            *
-           * @default 'v{{name}}Response'
+           * @default '{{name}}Response'
            */
           name?: NameTransformer;
         };
     /**
-     * Configuration for webhook-specific Valibot schemas.
+     * Enable strict mode for Pydantic models?
      *
-     * Controls generation of Valibot schemas for webhook payloads.
+     * When enabled, extra fields not defined in the schema will be rejected.
+     *
+     * This adds `model_config = ConfigDict(extra='forbid')`
+     * to generated models.
+     *
+     * @default false
+     */
+    strict?: boolean;
+    /**
+     * Configuration for webhook-specific Pydantic models.
+     *
+     * Controls generation of Pydantic models for webhook payloads.
      *
      * Can be:
      * - `boolean`: Shorthand for `{ enabled: boolean }`
@@ -156,7 +155,7 @@ export type UserConfig = Plugin.Name<'valibot'> &
           /**
            * Casing convention for generated names.
            *
-           * @default 'camelCase'
+           * @default 'PascalCase'
            */
           case?: Casing;
           /**
@@ -168,29 +167,28 @@ export type UserConfig = Plugin.Name<'valibot'> &
           /**
            * Naming pattern for generated names.
            *
-           * @default 'v{{name}}WebhookRequest'
+           * @default '{{name}}Webhook'
            */
           name?: NameTransformer;
         };
   };
 
-export type Config = Plugin.Name<'valibot'> &
+export type Config = Plugin.Name<'pydantic'> &
   Plugin.Hooks &
   Plugin.Comments &
-  Plugin.Exports &
-  Resolvers & {
+  Plugin.Exports & {
     /** Casing convention for generated names. */
     case: Casing;
     /** Configuration for reusable schema definitions. */
     definitions: NamingOptions & FeatureToggle;
-    /** Enable Valibot metadata support? */
-    metadata: boolean;
-    /** Configuration for request-specific Valibot schemas. */
+    /** Configuration for request-specific Pydantic models. */
     requests: NamingOptions & FeatureToggle;
-    /** Configuration for response-specific Valibot schemas. */
+    /** Configuration for response-specific Pydantic models. */
     responses: NamingOptions & FeatureToggle;
-    /** Configuration for webhook-specific Valibot schemas. */
+    /** Enable strict mode for Pydantic models? */
+    strict: boolean;
+    /** Configuration for webhook-specific Pydantic models. */
     webhooks: NamingOptions & FeatureToggle;
   };
 
-export type ValibotPlugin = DefinePlugin<UserConfig, Config, IApi>;
+export type PydanticPlugin = DefinePlugin<UserConfig, Config>;

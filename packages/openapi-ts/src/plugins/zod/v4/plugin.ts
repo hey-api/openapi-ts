@@ -14,7 +14,7 @@ import { irWebhookToAst } from '../shared/webhook';
 import type { ZodPlugin } from '../types';
 import { irSchemaWithTypeToAst } from './toAst';
 
-export const irSchemaToAst = ({
+export function irSchemaToAst({
   optional,
   plugin,
   schema,
@@ -27,7 +27,7 @@ export const irSchemaToAst = ({
    */
   optional?: boolean;
   schema: IR.SchemaObject;
-}): Ast => {
+}): Ast {
   let ast: Partial<Ast> = {};
 
   const z = plugin.external('zod.z');
@@ -155,15 +155,15 @@ export const irSchemaToAst = ({
   }
 
   return ast as Ast;
-};
+}
 
-const handleComponent = ({
+function handleComponent({
   plugin,
   schema,
   state,
 }: IrSchemaToAstOptions & {
   schema: IR.SchemaObject;
-}): void => {
+}): void {
   const $ref = pathToJsonPointer(fromRef(state.path));
   const ast = irSchemaToAst({ plugin, schema, state });
   const baseName = refToName($ref);
@@ -197,7 +197,7 @@ const handleComponent = ({
     symbol,
     typeInferSymbol,
   });
-};
+}
 
 export const handlerV4: ZodPlugin['Handler'] = ({ plugin }) => {
   plugin.symbol('z', {

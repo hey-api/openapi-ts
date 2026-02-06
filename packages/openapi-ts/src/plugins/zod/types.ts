@@ -410,147 +410,60 @@ export type Config = Plugin.Name<'zod'> &
   Plugin.Comments &
   Plugin.Exports &
   Resolvers & {
-    /**
-     * Casing convention for generated names.
-     */
+    /** Casing convention for generated names. */
     case: Casing;
-    /**
-     * The compatibility version to target for generated output.
-     *
-     * Can be:
-     * - `4`: [Zod 4](https://zod.dev/packages/zod) (default).
-     * - `3`: [Zod 3](https://v3.zod.dev/).
-     * - `'mini'`: [Zod Mini](https://zod.dev/packages/mini).
-     *
-     * @default 4
-     */
+    /** The compatibility version to target for generated output. */
     compatibilityVersion: 3 | 4 | 'mini';
-    /**
-     * Configuration for date handling in generated Zod schemas.
-     *
-     * Controls how date values are processed and validated using Zod's
-     * date validation features.
-     */
+    /** Configuration for date handling in generated Zod schemas. */
     dates: {
-      /**
-       * Whether to allow unqualified (timezone-less) datetimes:
-       *
-       * When enabled, Zod will accept datetime strings without timezone information.
-       * When disabled, Zod will require timezone information in datetime strings.
-       *
-       * @default false
-       */
+      /** Whether to allow unqualified (timezone-less) datetimes. */
       local: boolean;
-      /**
-       * Whether to include timezone offset information when handling dates.
-       *
-       * When enabled, date strings will preserve timezone information.
-       * When disabled, dates will be treated as local time.
-       *
-       * @default false
-       */
+      /** Whether to include timezone offset information when handling dates. */
       offset: boolean;
     };
-    /**
-     * Configuration for reusable schema definitions.
-     *
-     * Controls generation of shared Zod schemas that can be referenced across
-     * requests and responses.
-     */
+    /** Configuration for reusable schema definitions. */
     definitions: NamingOptions &
       FeatureToggle & {
-        /**
-         * Configuration for TypeScript type generation from Zod schemas.
-         *
-         * Controls generation of TypeScript types based on the generated Zod schemas.
-         */
+        /** Configuration for TypeScript type generation from Zod schemas. */
         types: {
-          /**
-           * Configuration for `infer` types.
-           */
+          /** Configuration for `infer` types. */
           infer: NamingOptions & FeatureToggle;
         };
       };
-    /**
-     * Enable Zod metadata support? It's often useful to associate a schema with
-     * some additional metadata for documentation, code generation, AI
-     * structured outputs, form validation, and other purposes.
-     *
-     * @default false
-     */
+    /** Enable Zod metadata support? */
     metadata: boolean;
-    /**
-     * Configuration for request-specific Zod schemas.
-     *
-     * Controls generation of Zod schemas for request bodies, query parameters, path
-     * parameters, and headers.
-     */
+    /** Configuration for request-specific Zod schemas. */
     requests: NamingOptions &
       FeatureToggle & {
-        /**
-         * Configuration for TypeScript type generation from Zod schemas.
-         *
-         * Controls generation of TypeScript types based on the generated Zod schemas.
-         */
+        /** Configuration for TypeScript type generation from Zod schemas. */
         types: {
-          /**
-           * Configuration for `infer` types.
-           */
+          /** Configuration for `infer` types. */
           infer: NamingOptions & FeatureToggle;
         };
       };
-    /**
-     * Configuration for response-specific Zod schemas.
-     *
-     * Controls generation of Zod schemas for response bodies, error responses,
-     * and status codes.
-     */
+    /** Configuration for response-specific Zod schemas. */
     responses: NamingOptions &
       FeatureToggle & {
-        /**
-         * Configuration for TypeScript type generation from Zod schemas.
-         *
-         * Controls generation of TypeScript types based on the generated Zod schemas.
-         */
+        /** Configuration for TypeScript type generation from Zod schemas. */
         types: {
-          /**
-           * Configuration for `infer` types.
-           */
+          /** Configuration for `infer` types. */
           infer: NamingOptions & FeatureToggle;
         };
       };
-    /**
-     * Configuration for TypeScript type generation from Zod schemas.
-     *
-     * Controls generation of TypeScript types based on the generated Zod schemas.
-     */
+    /** Configuration for TypeScript type generation from Zod schemas. */
     types: {
-      /**
-       * Configuration for `infer` types.
-       */
+      /** Configuration for `infer` types. */
       infer: FeatureToggle & {
-        /**
-         * Casing convention for generated names.
-         */
+        /** Casing convention for generated names. */
         case: Casing;
       };
     };
-    /**
-     * Configuration for webhook-specific Zod schemas.
-     *
-     * Controls generation of Zod schemas for webhook payloads.
-     */
+    /** Configuration for webhook-specific Zod schemas. */
     webhooks: NamingOptions &
       FeatureToggle & {
-        /**
-         * Configuration for TypeScript type generation from Zod schemas.
-         *
-         * Controls generation of TypeScript types based on the generated Zod schemas.
-         */
+        /** Configuration for TypeScript type generation from Zod schemas. */
         types: {
-          /**
-           * Configuration for `infer` types.
-           */
+          /** Configuration for `infer` types. */
           infer: NamingOptions & FeatureToggle;
         };
       };
