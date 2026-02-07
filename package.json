@@ -74,7 +74,7 @@
     "ts-node": "10.9.2",
     "tsdown": "0.18.4",
     "tsx": "4.21.0",
-    "turbo": "2.8.1",
+    "turbo": "2.8.3",
     "typescript": "5.9.3",
     "typescript-eslint": "8.29.1",
     "vitest": "4.0.18"
