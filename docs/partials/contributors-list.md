@@ -11,6 +11,7 @@
 - [Björn Henriksson](https://github.com/bjornhenriksson)
 - [Bogdan ](https://github.com/BogdanMaier)
 - [Brian Tarricone](https://github.com/kelnos)
+- [Bryon Larrance](https://github.com/beelarr)
 - [Carl Kittelberger](https://github.com/icedream)
 - [Changwan](https://github.com/WooWan)
 - [Chris Wiggins](https://github.com/chriswiggins)
