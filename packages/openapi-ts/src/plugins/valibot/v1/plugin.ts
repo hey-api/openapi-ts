@@ -1,7 +1,13 @@
 import type { SymbolMeta } from '@hey-api/codegen-core';
 import { fromRef, ref, refs } from '@hey-api/codegen-core';
-import type { IR, SchemaWithType } from '@hey-api/shared';
-import { applyNaming, deduplicateSchema, pathToJsonPointer, refToName } from '@hey-api/shared';
+import type { IR, SchemaExtractor, SchemaWithType } from '@hey-api/shared';
+import {
+  applyNaming,
+  deduplicateSchema,
+  inlineSchema,
+  pathToJsonPointer,
+  refToName,
+} from '@hey-api/shared';
 
 import { maybeBigInt } from '../../../plugins/shared/utils/coerce';
 import { $ } from '../../../ts-dsl';
@@ -18,6 +24,7 @@ export function irSchemaToAst({
   optional,
   plugin,
   schema,
+  schemaExtractor = inlineSchema,
   state,
 }: IrSchemaToAstOptions & {
   /**
@@ -27,7 +34,15 @@ export function irSchemaToAst({
    */
   optional?: boolean;
   schema: IR.SchemaObject;
+  schemaExtractor?: SchemaExtractor;
 }): Ast {
+  if (!schema.$ref) {
+    const resolved = schemaExtractor({ path: fromRef(state.path), schema });
+    if (resolved !== schema) {
+      schema = resolved;
+    }
+  }
+
   const ast: Ast = {
     pipes: [],
   };
@@ -75,6 +90,7 @@ export function irSchemaToAst({
         const itemAst = irSchemaToAst({
           plugin,
           schema: item,
+          schemaExtractor,
           state: {
             ...state,
             path: ref([...fromRef(state.path), 'items', index]),

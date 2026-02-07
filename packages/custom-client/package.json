@@ -56,14 +56,9 @@
     "check-exports": "attw --profile node16 --pack .",
     "dev": "tsdown --watch",
     "prepublishOnly": "pnpm build",
-    "test:coverage": "vitest run --coverage",
-    "test:update": "vitest watch --update",
-    "test:watch": "vitest watch",
-    "test": "vitest run",
     "typecheck": "vitest --typecheck --watch=false"
   },
   "devDependencies": {
-    "@config/vite-base": "workspace:*",
     "@hey-api/codegen-core": "workspace:*",
     "@hey-api/openapi-ts": "workspace:*",
     "rollup": "4.56.0",

@@ -1,4 +1,4 @@
-import { sdk, tanstackReactQuery, transformers, typescript, zod } from './plugins';
+import { sdk, tanstackReactQuery, transformers, typescript, valibot, zod } from './plugins';
 
 export const presets = {
   full: () => [
@@ -33,6 +33,7 @@ export const presets = {
     /** SDK + Zod validation */
     typescript(),
     sdk({ validator: 'zod' }),
+    valibot({ metadata: true }),
     zod({ metadata: true }),
   ],
 } as const;

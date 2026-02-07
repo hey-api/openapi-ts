@@ -1,7 +1,5 @@
 import path from 'node:path';
 
-import { describe, expect, it } from 'vitest';
-
 describe('isDevMode logic', () => {
   const scenarios: ReadonlyArray<{
     description: string;

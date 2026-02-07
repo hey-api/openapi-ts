@@ -22,7 +22,6 @@
     "vue-router": "4.5.0"
   },
   "devDependencies": {
-    "@config/vite-base": "workspace:*",
     "@hey-api/openapi-ts": "workspace:*",
     "@rushstack/eslint-patch": "1.10.5",
     "@tsconfig/node24": "24.0.4",
