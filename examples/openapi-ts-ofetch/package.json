@@ -19,7 +19,7 @@
     "@config/vite-base": "workspace:*",
     "@hey-api/openapi-ts": "workspace:*",
     "@rushstack/eslint-patch": "1.10.5",
-    "@tsconfig/node20": "20.1.4",
+    "@tsconfig/node24": "24.0.4",
     "@types/jsdom": "21.1.7",
     "@types/node": "22.10.5",
     "@vitejs/plugin-vue": "6.0.1",
