@@ -58,7 +58,7 @@
     "@hey-api/custom-client": "workspace:*",
     "@hey-api/openapi-ts": "workspace:*",
     "@types/node": "22.10.5",
-    "@typescript-eslint/eslint-plugin": "8.29.1",
+    "@typescript-eslint/eslint-plugin": "8.54.0",
     "@vitest/coverage-v8": "4.0.18",
     "dotenv": "17.2.3",
     "eslint": "9.39.2",
@@ -76,7 +76,7 @@
     "tsx": "4.21.0",
     "turbo": "2.8.3",
     "typescript": "5.9.3",
-    "typescript-eslint": "8.29.1",
+    "typescript-eslint": "8.54.0",
     "vitest": "4.0.18"
   },
   "engines": {
