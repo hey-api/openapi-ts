@@ -19,7 +19,6 @@
     "@tanstack/svelte-query": "5.73.3"
   },
   "devDependencies": {
-    "@config/vite-base": "workspace:*",
     "@fontsource/fira-mono": "5.0.0",
     "@hey-api/openapi-ts": "workspace:*",
     "@neoconfetti/svelte": "2.0.0",

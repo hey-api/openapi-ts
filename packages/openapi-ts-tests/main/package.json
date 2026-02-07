@@ -4,11 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test:coverage": "vitest run --coverage",
     "test:types": "tsc -p tsconfig.test.json --noEmit",
-    "test:update": "vitest watch --update",
-    "test:watch": "vitest watch",
-    "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
@@ -23,7 +19,6 @@
     "@angular/platform-browser": "21.1.2",
     "@angular/platform-browser-dynamic": "21.1.2",
     "@angular/router": "21.1.2",
-    "@config/vite-base": "workspace:*",
     "@hey-api/codegen-core": "workspace:*",
     "@hey-api/custom-client": "workspace:*",
     "@hey-api/openapi-ts": "workspace:*",

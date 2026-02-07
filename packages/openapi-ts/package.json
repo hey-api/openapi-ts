@@ -66,10 +66,6 @@
     "check-exports": "attw --pack . --profile esm-only --ignore-rules cjs-resolves-to-esm",
     "dev": "tsdown --watch",
     "prepublishOnly": "pnpm build",
-    "test:coverage": "vitest run --coverage",
-    "test:update": "vitest watch --update",
-    "test:watch": "vitest watch",
-    "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -89,7 +85,6 @@
     "@angular/platform-browser": "21.1.2",
     "@angular/platform-browser-dynamic": "21.1.2",
     "@angular/router": "21.1.2",
-    "@config/vite-base": "workspace:*",
     "axios": "1.13.4",
     "eslint": "9.39.1",
     "ky": "1.14.3",
