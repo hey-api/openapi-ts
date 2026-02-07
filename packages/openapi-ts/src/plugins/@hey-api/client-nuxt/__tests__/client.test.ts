@@ -65,7 +65,7 @@ describe('useFetch with computed body', () => {
     const callArgs = vi.mocked(useFetch).mock.calls.at(-1)!;
     const opts = callArgs[1] as Record<string, unknown>;
     // body should be a ref containing the JSON-serialized value
-    expect((opts.body as { value: unknown }).value).toBe('{"search":"hello","page":1}');
+    expect((opts.body as { value: unknown }).value).toBe('{"page":1,"search":"hello"}');
   });
 
   it('does not throw when body is a plain Ref', () => {
