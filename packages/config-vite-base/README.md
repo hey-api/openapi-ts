@@ -21,18 +21,6 @@ export default createVitestConfig({
 });
 ```
 
-To use the base configuration in your vite.config.ts:
-
-```ts
-// vite.config.ts
-import { createViteConfig } from '@config/vite-base';
-
-export default createViteConfig({
-  // Your specific configuration
-  plugins: [react()], // Example
-});
-```
-
 ## Implementation
 
 To complete the implementation of this package in the workspace:

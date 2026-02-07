@@ -9,19 +9,12 @@
     "README.md"
   ],
   "type": "module",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.mjs",
+  "main": "./dist/index.mjs",
   "types": "./dist/index.d.mts",
   "exports": {
     ".": {
-      "import": {
-        "types": "./dist/index.d.mts",
-        "default": "./dist/index.mjs"
-      },
-      "require": {
-        "types": "./dist/index.d.cts",
-        "default": "./dist/index.cjs"
-      }
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs"
     },
     "./package.json": "./package.json"
   },
@@ -29,7 +22,7 @@
     "build": "tsdown"
   },
   "dependencies": {
-    "vite": "7.1.2",
+    "vite": "7.3.1",
     "vitest": "4.0.18"
   },
   "devDependencies": {
