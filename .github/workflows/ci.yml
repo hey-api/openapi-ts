@@ -67,7 +67,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build packages
-        run: pnpm turbo run build --filter="@hey-api/**"
+        run: pnpm tb "@hey-api/**"
 
       - name: Check examples generated code
         if: matrix.is-primary
@@ -75,20 +75,16 @@ jobs:
 
       - name: Build examples
         if: matrix.is-primary
-        run: pnpm turbo run build --filter="@example/**"
+        run: pnpm tb "@example/**"
 
       - name: Run linter
         run: pnpm turbo run lint
 
       - name: Run type check
-        run: pnpm turbo run typecheck
+        run: pnpm typecheck
 
-      - name: Test packages
-        run: pnpm turbo run test --filter="@hey-api/**" --filter="@test/**"
-
-      - name: Test examples
-        if: matrix.is-primary
-        run: pnpm turbo run test --filter="@example/**"
+      - name: Run tests
+        run: pnpm test
 
       - name: Publish preview packages
         if: matrix.is-primary && github.event_name == 'pull_request'

@@ -1,5 +1,7 @@
+import { fileURLToPath } from 'node:url';
+
 import { beforeAll } from 'vitest';
 
 beforeAll(() => {
-  process.chdir(new URL('.', import.meta.url).pathname);
+  process.chdir(fileURLToPath(new URL('.', import.meta.url)));
 });
