@@ -28,6 +28,7 @@
   "typescript.preferences.autoImportFileExcludePatterns": ["dist/**"],
   "typescript.preferences.autoImportSpecifierExcludeRegexes": ["^(node:)?os$"],
   "typescript.tsdk": "node_modules/typescript/lib",
+  "vitest.rootConfig": "vitest.config.ts",
   "[javascript]": {
     "editor.defaultFormatter": "oxc.oxc-vscode"
   },

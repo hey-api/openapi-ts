@@ -59,6 +59,8 @@ export {
 } from './ir/parameter';
 export { deduplicateSchema } from './ir/schema';
 export type { IR } from './ir/types';
+export type { SchemaExtractor, SchemaExtractorContext } from './ir/utils';
+export { addItemsToSchema, createSchemaExtractor, inlineSchema } from './ir/utils';
 export { parseOpenApiSpec } from './openApi';
 export type { OpenApiV2_0_X, OpenApiV2_0_XTypes } from './openApi/2.0.x';
 export { parseV2_0_X } from './openApi/2.0.x';

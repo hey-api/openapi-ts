@@ -19,7 +19,6 @@
     "react-dom": "19.0.0"
   },
   "devDependencies": {
-    "@config/vite-base": "workspace:*",
     "@hey-api/openapi-ts": "workspace:*",
     "@types/react": "19.0.1",
     "@types/react-dom": "19.0.1",

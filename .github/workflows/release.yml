@@ -36,7 +36,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build packages
-        run: pnpm turbo run build --filter="@hey-api/**"
+        run: pnpm tb "@hey-api/**"
 
       - name: Generate GitHub App Token
         id: app-token
@@ -93,7 +93,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build packages
-        run: pnpm turbo run build --filter="@hey-api/**"
+        run: pnpm tb "@hey-api/**"
 
       - name: Publish snapshot
         run: |

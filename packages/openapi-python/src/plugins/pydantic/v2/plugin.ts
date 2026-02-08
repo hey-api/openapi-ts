@@ -3,7 +3,7 @@ import { fromRef, ref, refs } from '@hey-api/codegen-core';
 import type { IR, SchemaWithType } from '@hey-api/shared';
 import { applyNaming, deduplicateSchema, pathToJsonPointer, refToName } from '@hey-api/shared';
 
-import { $ } from '../../../py-dsl';
+// import { $ } from '../../../py-dsl';
 import { exportAst } from '../shared/export';
 import type { Ast, IrSchemaToAstOptions, PluginState } from '../shared/types';
 import type { PydanticPlugin } from '../types';
@@ -29,10 +29,11 @@ export function irSchemaToAst({
     const refName = typeof refSymbol === 'string' ? refSymbol : refSymbol.name;
 
     return {
-      expression: $.expr(refName),
+      // expression: $.expr(refName),
       fieldConstraints: optional ? { default: null } : undefined,
       hasLazyExpression: !plugin.isSymbolRegistered(query),
-      pipes: [],
+      models: [],
+      // pipes: [],
       typeAnnotation: refName,
     };
   }
@@ -58,7 +59,7 @@ export function irSchemaToAst({
     return {
       ...typeAst,
       fieldConstraints: { ...typeAst.fieldConstraints, ...constraints },
-      pipes: [],
+      // pipes: [],
     };
   }
 
@@ -86,19 +87,21 @@ export function irSchemaToAst({
 
       const unionType = itemsAnnotations.join(' | ');
       return {
-        expression: $.expr(`list[${unionType}]`),
+        // expression: $.expr(`list[${unionType}]`),
         fieldConstraints: itemsConstraints.length > 0 ? itemsConstraints[0] : undefined,
         hasLazyExpression: false,
-        pipes: [],
+        models: [],
+        // pipes: [],
         typeAnnotation: `list[${unionType}]`,
       };
     }
   }
 
   return {
-    expression: $.expr('Any'),
+    // expression: $.expr('Any'),
     hasLazyExpression: false,
-    pipes: [],
+    models: [],
+    // pipes: [],
     typeAnnotation: 'Any',
   };
 }
@@ -111,7 +114,6 @@ function handleComponent({
   schema: IR.SchemaObject;
 }): void {
   const $ref = pathToJsonPointer(fromRef(state.path));
-  const ast = irSchemaToAst({ plugin, schema, state });
   const baseName = refToName($ref);
   const symbol = plugin.symbol(applyNaming(baseName, plugin.config.definitions), {
     meta: {
@@ -122,6 +124,11 @@ function handleComponent({
       tags: fromRef(state.tags),
       tool: 'pydantic',
     },
+  });
+  const ast = irSchemaToAst({
+    plugin,
+    schema,
+    state,
   });
   exportAst({
     ast,
@@ -192,6 +199,7 @@ export const handlerV2: PydanticPlugin['Handler'] = ({ plugin }) => {
     switch (event.type) {
       case 'parameter':
         handleComponent({
+          // baseName: event.name,
           plugin,
           schema: event.parameter.schema,
           state,
@@ -199,6 +207,7 @@ export const handlerV2: PydanticPlugin['Handler'] = ({ plugin }) => {
         break;
       case 'requestBody':
         handleComponent({
+          // baseName: event.name,
           plugin,
           schema: event.requestBody.schema,
           state,
@@ -206,6 +215,7 @@ export const handlerV2: PydanticPlugin['Handler'] = ({ plugin }) => {
         break;
       case 'schema':
         handleComponent({
+          // baseName: event.name,
           plugin,
           schema: event.schema,
           state,

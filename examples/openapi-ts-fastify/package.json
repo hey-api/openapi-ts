@@ -13,7 +13,6 @@
     "fastify-openapi-glue": "4.8.0"
   },
   "devDependencies": {
-    "@config/vite-base": "workspace:*",
     "@hey-api/openapi-ts": "workspace:*",
     "eslint": "9.17.0",
     "oxfmt": "0.27.0",

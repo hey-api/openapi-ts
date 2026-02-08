@@ -4,14 +4,14 @@ import type { TypeTsDsl } from '../../../../../ts-dsl';
 import { $ } from '../../../../../ts-dsl';
 import type { IrSchemaToAstOptions } from '../../shared/types';
 
-export const booleanToAst = ({
+export function booleanToAst({
   schema,
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'boolean'>;
-}): TypeTsDsl => {
+}): TypeTsDsl {
   if (schema.const !== undefined) {
     return $.type.literal(schema.const as boolean);
   }
 
   return $.type('boolean');
-};
+}

@@ -21,7 +21,6 @@
     "vue-router": "4.5.0"
   },
   "devDependencies": {
-    "@config/vite-base": "workspace:*",
     "@hey-api/openapi-ts": "workspace:*",
     "@pinia/colada-devtools": "0.1.6",
     "@rushstack/eslint-patch": "1.10.5",
