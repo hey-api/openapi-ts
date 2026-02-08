@@ -797,6 +797,14 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'transformers-discriminated-union.yaml',
+        output: 'transformers-discriminated-union',
+        plugins: ['@hey-api/client-fetch', '@hey-api/transformers'],
+      }),
+      description: 'transforms discriminated unions with date fields',
+    },
+    {
+      config: createConfig({
         input: 'type-invalid.json',
         output: 'type-invalid',
       }),

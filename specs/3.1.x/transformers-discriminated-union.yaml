@@ -1,0 +1,347 @@
+openapi: 3.1.0
+info:
+  title: OpenAPI 3.1.0 transformers discriminated union example
+  version: 1
+paths:
+  /entries:
+    get:
+      operationId: getEntries
+      responses:
+        '200':
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Entry'
+          description: OK
+  /entry:
+    get:
+      operationId: getEntry
+      responses:
+        '200':
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Entry'
+          description: OK
+  /nested-entry:
+    get:
+      operationId: getNestedEntry
+      responses:
+        '200':
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Container'
+          description: OK
+  /event:
+    get:
+      operationId: getEvent
+      responses:
+        '200':
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Event'
+          description: OK
+  /notification:
+    get:
+      operationId: getNotification
+      responses:
+        '200':
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Notification'
+          description: OK
+  /activity:
+    get:
+      operationId: getActivity
+      responses:
+        '200':
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Activity'
+          description: OK
+
+components:
+  schemas:
+    # Basic discriminated union with explicit mapping
+    TextEntry:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [text]
+        content:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required: [type, content, createdAt]
+
+    FileEntry:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [file]
+        fileId:
+          type: string
+        fileName:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        fileSize:
+          type: integer
+          format: int64
+      required: [type, fileId, fileName, createdAt]
+
+    ImageEntry:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [image]
+        imageUrl:
+          type: string
+        width:
+          type: integer
+        height:
+          type: integer
+        capturedAt:
+          type: string
+          format: date-time
+      required: [type, imageUrl, capturedAt]
+
+    Entry:
+      oneOf:
+        - $ref: '#/components/schemas/TextEntry'
+        - $ref: '#/components/schemas/FileEntry'
+        - $ref: '#/components/schemas/ImageEntry'
+      discriminator:
+        propertyName: type
+        mapping:
+          text: '#/components/schemas/TextEntry'
+          file: '#/components/schemas/FileEntry'
+          image: '#/components/schemas/ImageEntry'
+
+    # Container with nested discriminated union
+    Container:
+      type: object
+      properties:
+        id:
+          type: string
+        entry:
+          $ref: '#/components/schemas/Entry'
+        createdAt:
+          type: string
+          format: date-time
+        entries:
+          type: array
+          items:
+            $ref: '#/components/schemas/Entry'
+      required: [id, entry, createdAt]
+
+    # Discriminated union with nested objects containing dates
+    EmailEvent:
+      type: object
+      properties:
+        kind:
+          type: string
+          enum: [email]
+        emailDetails:
+          type: object
+          properties:
+            subject:
+              type: string
+            sentAt:
+              type: string
+              format: date-time
+            receivedAt:
+              type: string
+              format: date-time
+          required: [subject, sentAt]
+        timestamp:
+          type: string
+          format: date-time
+      required: [kind, emailDetails, timestamp]
+
+    PushEvent:
+      type: object
+      properties:
+        kind:
+          type: string
+          enum: [push]
+        pushDetails:
+          type: object
+          properties:
+            title:
+              type: string
+            deliveredAt:
+              type: string
+              format: date-time
+            expiresAt:
+              type: string
+              format: date-time
+          required: [title, deliveredAt]
+        timestamp:
+          type: string
+          format: date-time
+      required: [kind, pushDetails, timestamp]
+
+    SmsEvent:
+      type: object
+      properties:
+        kind:
+          type: string
+          enum: [sms]
+        smsDetails:
+          type: object
+          properties:
+            phoneNumber:
+              type: string
+            sentAt:
+              type: string
+              format: date-time
+          required: [phoneNumber, sentAt]
+        timestamp:
+          type: string
+          format: date-time
+      required: [kind, smsDetails, timestamp]
+
+    Event:
+      oneOf:
+        - $ref: '#/components/schemas/EmailEvent'
+        - $ref: '#/components/schemas/PushEvent'
+        - $ref: '#/components/schemas/SmsEvent'
+      discriminator:
+        propertyName: kind
+        mapping:
+          email: '#/components/schemas/EmailEvent'
+          push: '#/components/schemas/PushEvent'
+          sms: '#/components/schemas/SmsEvent'
+
+    # anyOf with discriminator
+    InfoNotification:
+      type: object
+      properties:
+        level:
+          type: string
+          enum: [info]
+        message:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required: [level, message, createdAt]
+
+    WarningNotification:
+      type: object
+      properties:
+        level:
+          type: string
+          enum: [warning]
+        message:
+          type: string
+        severity:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+      required: [level, message, createdAt]
+
+    ErrorNotification:
+      type: object
+      properties:
+        level:
+          type: string
+          enum: [error]
+        message:
+          type: string
+        errorCode:
+          type: string
+        occurredAt:
+          type: string
+          format: date-time
+        resolvedAt:
+          type: string
+          format: date-time
+      required: [level, message, errorCode, occurredAt]
+
+    Notification:
+      anyOf:
+        - $ref: '#/components/schemas/InfoNotification'
+        - $ref: '#/components/schemas/WarningNotification'
+        - $ref: '#/components/schemas/ErrorNotification'
+      discriminator:
+        propertyName: level
+        mapping:
+          info: '#/components/schemas/InfoNotification'
+          warning: '#/components/schemas/WarningNotification'
+          error: '#/components/schemas/ErrorNotification'
+
+    # Variant with optional dates
+    LoginActivity:
+      type: object
+      properties:
+        action:
+          type: string
+          enum: [login]
+        ipAddress:
+          type: string
+        loginTime:
+          type: string
+          format: date-time
+        lastSeenAt:
+          type: string
+          format: date-time
+      required: [action, ipAddress, loginTime]
+
+    LogoutActivity:
+      type: object
+      properties:
+        action:
+          type: string
+          enum: [logout]
+        reason:
+          type: string
+        logoutTime:
+          type: string
+          format: date-time
+        sessionDuration:
+          type: integer
+          format: int64
+      required: [action, logoutTime]
+
+    PasswordChangeActivity:
+      type: object
+      properties:
+        action:
+          type: string
+          enum: [password_change]
+        changedAt:
+          type: string
+          format: date-time
+        expiresAt:
+          type: string
+          format: date-time
+      required: [action, changedAt]
+
+    Activity:
+      oneOf:
+        - $ref: '#/components/schemas/LoginActivity'
+        - $ref: '#/components/schemas/LogoutActivity'
+        - $ref: '#/components/schemas/PasswordChangeActivity'
+      discriminator:
+        propertyName: action
+        mapping:
+          login: '#/components/schemas/LoginActivity'
+          logout: '#/components/schemas/LogoutActivity'
+          password_change: '#/components/schemas/PasswordChangeActivity'
