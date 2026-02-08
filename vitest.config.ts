@@ -25,6 +25,7 @@ export default defineConfig({
         test: {
           name: '@hey-api/openapi-python',
           root: 'packages/openapi-python',
+          setupFiles: ['./vitest.setup.ts'],
         },
       },
       {
