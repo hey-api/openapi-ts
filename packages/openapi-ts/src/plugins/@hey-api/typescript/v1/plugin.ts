@@ -1,9 +1,7 @@
 import type { Symbol } from '@hey-api/codegen-core';
-import { refs } from '@hey-api/codegen-core';
-import type { IR } from '@hey-api/shared';
-import type { SchemaWithType } from '@hey-api/shared';
-import { applyNaming } from '@hey-api/shared';
-import { deduplicateSchema } from '@hey-api/shared';
+import { fromRef, refs } from '@hey-api/codegen-core';
+import type { IR, SchemaWithType } from '@hey-api/shared';
+import { applyNaming, deduplicateSchema, pathToJsonPointer } from '@hey-api/shared';
 
 import type { MaybeTsDsl, TypeTsDsl } from '../../../../ts-dsl';
 import { $ } from '../../../../ts-dsl';
@@ -18,10 +16,23 @@ import { irSchemaWithTypeToAst } from './toAst';
 export function irSchemaToAst({
   plugin,
   schema,
+  schemaExtractor,
   state,
 }: IrSchemaToAstOptions & {
   schema: IR.SchemaObject;
 }): MaybeTsDsl<TypeTsDsl> {
+  if (schemaExtractor && !schema.$ref) {
+    const extracted = schemaExtractor({
+      meta: {
+        resource: 'definition',
+        resourceId: pathToJsonPointer(fromRef(state.path)),
+      },
+      path: fromRef(state.path),
+      schema,
+    });
+    if (extracted !== schema) schema = extracted;
+  }
+
   if (schema.symbolRef) {
     const baseType = $.type(schema.symbolRef);
     if (schema.omit && schema.omit.length > 0) {
