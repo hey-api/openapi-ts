@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.92.4
+
+### Patch Changes
+
+- **plugin(@hey-api/client-nuxt)**: unwrap `ComputedRef` body before initial serialization ([#3361](https://github.com/hey-api/openapi-ts/pull/3361)) ([`ca52649`](https://github.com/hey-api/openapi-ts/commit/ca52649a2f479478cc2842677c21c1bcfac69160)) by [@rigtigeEmil](https://github.com/rigtigeEmil)
+
 ## 0.92.3
 
 ### Patch Changes
