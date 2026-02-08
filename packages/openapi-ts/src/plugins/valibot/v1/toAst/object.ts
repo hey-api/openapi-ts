@@ -16,7 +16,7 @@ function additionalPropertiesNode(ctx: ObjectResolverContext): Pipe | null | und
   if (schema.additionalProperties.type === 'never') return null;
 
   const additionalAst = irSchemaToAst({
-    plugin,
+    ...ctx,
     schema: schema.additionalProperties,
     state: {
       ...ctx.utils.state,
@@ -64,8 +64,8 @@ function shapeNode(ctx: ObjectResolverContext): ReturnType<typeof $.object> {
     const property = schema.properties[name]!;
 
     const propertyAst = irSchemaToAst({
+      ...ctx,
       optional: !schema.required?.includes(name),
-      plugin,
       schema: property,
       state: {
         ...ctx.utils.state,
@@ -79,14 +79,14 @@ function shapeNode(ctx: ObjectResolverContext): ReturnType<typeof $.object> {
   return shape;
 }
 
-export const objectToAst = ({
-  plugin,
-  schema,
-  state,
-}: IrSchemaToAstOptions & {
-  schema: SchemaWithType<'object'>;
-}): Omit<Ast, 'typeName'> => {
+export function objectToAst(
+  options: IrSchemaToAstOptions & {
+    schema: SchemaWithType<'object'>;
+  },
+): Omit<Ast, 'typeName'> {
+  const { plugin } = options;
   const ctx: ObjectResolverContext = {
+    ...options,
     $,
     nodes: {
       additionalProperties: additionalPropertiesNode,
@@ -97,18 +97,16 @@ export const objectToAst = ({
       ...pipes,
       current: [],
     },
-    plugin,
-    schema,
     symbols: {
       v: plugin.external('valibot.v'),
     },
     utils: {
       ast: {},
-      state,
+      state: options.state,
     },
   };
   const resolver = plugin.config['~resolvers']?.object;
   const node = resolver?.(ctx) ?? objectResolver(ctx);
   ctx.utils.ast.pipes = [ctx.pipes.toNode(node, plugin)];
   return ctx.utils.ast as Omit<Ast, 'typeName'>;
-};
+}

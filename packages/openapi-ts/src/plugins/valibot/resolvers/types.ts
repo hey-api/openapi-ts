@@ -5,8 +5,7 @@ import type { MaybeBigInt, ShouldCoerceToBigInt } from '../../../plugins/shared/
 import type { GetIntegerLimit } from '../../../plugins/shared/utils/formats';
 import type { $, DollarTsDsl } from '../../../ts-dsl';
 import type { Pipe, PipeResult, Pipes, PipesUtils } from '../shared/pipes';
-import type { Ast, PluginState } from '../shared/types';
-import type { ValibotPlugin } from '../types';
+import type { Ast, IrSchemaToAstOptions, PluginState } from '../shared/types';
 
 export type Resolvers = Plugin.Resolvers<{
   /**
@@ -70,33 +69,30 @@ export type Resolvers = Plugin.Resolvers<{
 
 type ValidatorResolver = (ctx: ValidatorResolverContext) => PipeResult | null | undefined;
 
-interface BaseContext extends DollarTsDsl {
-  /**
-   * Functions for working with pipes.
-   */
-  pipes: PipesUtils & {
+type BaseContext = DollarTsDsl &
+  Pick<IrSchemaToAstOptions, 'plugin' | 'schemaExtractor'> & {
     /**
-     * The current pipe.
-     *
-     * In Valibot, this represents a list of call expressions ("pipes")
-     * being assembled to form a schema definition.
-     *
-     * Each pipe can be extended, modified, or replaced to customize
-     * the resulting schema.
+     * Functions for working with pipes.
      */
-    current: Pipes;
+    pipes: PipesUtils & {
+      /**
+       * The current pipe.
+       *
+       * In Valibot, this represents a list of call expressions ("pipes")
+       * being assembled to form a schema definition.
+       *
+       * Each pipe can be extended, modified, or replaced to customize
+       * the resulting schema.
+       */
+      current: Pipes;
+    };
+    /**
+     * Provides access to commonly used symbols within the plugin.
+     */
+    symbols: {
+      v: Symbol;
+    };
   };
-  /**
-   * The plugin instance.
-   */
-  plugin: ValibotPlugin['Instance'];
-  /**
-   * Provides access to commonly used symbols within the plugin.
-   */
-  symbols: {
-    v: Symbol;
-  };
-}
 
 export interface EnumResolverContext extends BaseContext {
   /**

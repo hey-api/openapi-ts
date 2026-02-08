@@ -7,7 +7,7 @@ import type {
   SchemaWithRequired,
 } from '../../../openApi/shared/types/schema';
 import { discriminatorValues } from '../../../openApi/shared/utils/discriminator';
-import { isTopLevelComponentRef, refToName } from '../../../utils/ref';
+import { isTopLevelComponent, refToName } from '../../../utils/ref';
 import type { SchemaObject } from '../types/spec';
 
 export const getSchemaTypes = ({
@@ -984,7 +984,7 @@ const parseRef = ({
 }): IR.SchemaObject => {
   // Inline non-component refs (e.g. #/paths/...) and deep path refs (e.g. #/components/schemas/Foo/properties/bar)
   // to avoid generating orphaned named types or referencing unregistered symbols
-  const isComponentsRef = isTopLevelComponentRef(schema.$ref);
+  const isComponentsRef = isTopLevelComponent(schema.$ref);
   if (!isComponentsRef) {
     if (!state.circularReferenceTracker.has(schema.$ref)) {
       const refSchema = context.resolveRef<SchemaObject>(schema.$ref);
