@@ -1,25 +1,10 @@
-import type { Refs, SymbolMeta } from '@hey-api/codegen-core';
+import type { Refs, Symbol, SymbolMeta } from '@hey-api/codegen-core';
 import type { IR } from '@hey-api/shared';
 
+import type { $ } from '../../../py-dsl';
 import type { PydanticPlugin } from '../types';
 
-/**
- * Shared types for Pydantic plugin
- */
-
-export type PluginState = Pick<Required<SymbolMeta>, 'path'> &
-  Pick<Partial<SymbolMeta>, 'tags'> & {
-    hasLazyExpression: boolean;
-  };
-
-/**
- * AST node representation for Pydantic models
- */
-export interface Ast {
-  /**
-   * Expression node for the type
-   */
-  expression: unknown;
+export type Ast = {
   /**
    * Field constraints for pydantic.Field()
    */
@@ -28,10 +13,11 @@ export interface Ast {
    * Whether this AST node has a lazy expression (forward reference)
    */
   hasLazyExpression?: boolean;
-  /**
-   * Pipes/chains for building the field definition (similar to Valibot pipes)
-   */
-  pipes?: Pipes;
+  models: Array<{
+    baseName: string;
+    expression: ReturnType<typeof $.class>;
+    symbol: Symbol;
+  }>;
   /**
    * Type annotation for the field
    */
@@ -40,26 +26,22 @@ export interface Ast {
    * Type name for the model class
    */
   typeName?: string;
-}
+};
+
+export type IrSchemaToAstOptions = {
+  plugin: PydanticPlugin['Instance'];
+  state: Refs<PluginState>;
+};
+
+export type PluginState = Pick<Required<SymbolMeta>, 'path'> &
+  Pick<Partial<SymbolMeta>, 'tags'> & {
+    hasLazyExpression: boolean;
+  };
 
 /**
  * Pipe system for building field constraints (similar to Valibot pattern)
  */
 export type Pipes = Array<unknown>;
-
-/**
- * Options for converting IR schema to AST
- */
-export interface IrSchemaToAstOptions {
-  /**
-   * The plugin instance
-   */
-  plugin: PydanticPlugin['Instance'];
-  /**
-   * Current plugin state
-   */
-  state: Refs<PluginState>;
-}
 
 /**
  * Context for type resolver functions

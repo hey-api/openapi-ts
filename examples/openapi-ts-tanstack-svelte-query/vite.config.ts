@@ -1,11 +1,9 @@
-import { fileURLToPath } from 'node:url';
-
-import { createVitestConfig } from '@config/vite-base';
 import { sveltekit } from '@sveltejs/kit/vite';
+import { defineProject } from 'vitest/config';
 
 export default async () => {
   const sveltekitPlugins = await sveltekit();
-  return createVitestConfig(fileURLToPath(new URL('./', import.meta.url)), {
+  return defineProject({
     plugins: [sveltekitPlugins],
     test: {
       include: ['src/**/*.{test,spec}.{js,ts}'],

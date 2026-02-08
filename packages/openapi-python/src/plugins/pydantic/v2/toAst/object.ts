@@ -5,18 +5,19 @@ import { $ } from '../../../../py-dsl';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
 // import { irSchemaToAst } from '../plugin';
 
-export const objectToAst = ({
+export function objectToAst({
   plugin,
   // schema,
   // state,
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'object'>;
-}): Ast => {
+}): Ast {
   const symbolBaseModel = plugin.external('pydantic.BaseModel');
   // const fieldSymbol = plugin.external('pydantic.Field');
   const symbolTemp = plugin.symbol('temp');
 
   const classDef = $.class(symbolTemp).extends(symbolBaseModel);
+  console.log(classDef);
 
   // if (schema.properties) {
   //   for (const name in schema.properties) {
@@ -51,11 +52,12 @@ export const objectToAst = ({
   // }
 
   return {
-    expression: classDef,
+    // expression: classDef,
     fieldConstraints: {},
     hasLazyExpression: false,
-    pipes: [],
+    models: [],
+    // pipes: [],
     typeAnnotation: 'DynamicModel',
     typeName: 'DynamicModel',
   };
-};
+}
