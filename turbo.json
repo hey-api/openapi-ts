@@ -23,22 +23,22 @@
     },
     "//#test": {
       "cache": true,
-      "dependsOn": ["build"],
+      "dependsOn": ["^build"],
       "inputs": ["src/**", "test/**", "*.config.*", "package.json", "vitest.config.ts"],
       "outputs": ["coverage/**"]
     },
     "//#test:coverage": {
-      "dependsOn": ["build"],
+      "dependsOn": ["^build"],
       "inputs": ["src/**", "test/**", "*.config.*", "package.json", "vitest.config.ts"],
       "outputs": ["coverage/**"]
     },
     "//#test:update": {
       "cache": false,
-      "dependsOn": ["build"]
+      "dependsOn": ["^build"]
     },
     "//#test:watch": {
       "cache": false,
-      "dependsOn": ["build"],
+      "dependsOn": ["^build"],
       "persistent": true
     },
     "typecheck": {

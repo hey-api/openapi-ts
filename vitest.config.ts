@@ -10,7 +10,6 @@ export default defineConfig({
       provider: 'v8',
     },
     globals: true,
-    pool: platform() === 'win32' ? 'threads' : 'forks',
     projects: [
       'examples/*/vitest.config.ts',
       {
