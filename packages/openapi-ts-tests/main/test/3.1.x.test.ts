@@ -773,6 +773,14 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'transformers-allof-response-wrapper.json',
+        output: 'transformers-allof-response-wrapper',
+        plugins: ['@hey-api/client-fetch', '@hey-api/transformers'],
+      }),
+      description: 'transforms dates in allOf response wrapper (paginated response)',
+    },
+    {
+      config: createConfig({
         input: 'transformers-any-of-null.json',
         output: 'transformers-any-of-null',
         plugins: ['@hey-api/client-fetch', '@hey-api/transformers'],
