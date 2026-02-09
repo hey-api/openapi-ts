@@ -1,0 +1,80 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Test Paginated Response",
+    "version": "1.0.0"
+  },
+  "components": {
+    "schemas": {
+      "PaginatedResponse": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "type": "object",
+            "properties": {
+              "page": { "type": "number" },
+              "limit": { "type": "number" },
+              "total": { "type": "number" },
+              "totalPages": { "type": "number" }
+            }
+          }
+        }
+      },
+      "RepositorySecret": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "number" },
+          "name": { "type": "string" },
+          "createdAt": { "format": "date-time", "type": "string" },
+          "updatedAt": { "format": "date-time", "type": "string" }
+        },
+        "required": ["id", "name", "createdAt", "updatedAt"]
+      }
+    }
+  },
+  "paths": {
+    "/secrets": {
+      "get": {
+        "operationId": "listSecrets",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "PaginatedResponseRepositorySecret",
+                  "allOf": [
+                    { "$ref": "#/components/schemas/PaginatedResponse" },
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": { "$ref": "#/components/schemas/RepositorySecret" }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/secrets/{id}": {
+      "post": {
+        "operationId": "createSecret",
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/RepositorySecret" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
