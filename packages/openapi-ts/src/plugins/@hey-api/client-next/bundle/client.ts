@@ -204,7 +204,9 @@ export const createClient = (config: Config = {}): Client => {
       method,
       onRequest: async (url, init) => {
         let request = new Request(url, init);
-        const requestInit = {
+        // Create options for interceptor with properly typed headers
+        const requestInit: Pick<ResolvedRequestOptions, 'headers' | 'method' | 'url'> &
+          RequestInit = {
           ...init,
           // Convert init.headers (HeadersInit) back to Headers for the interceptor
           headers: new Headers(init.headers),
@@ -213,7 +215,7 @@ export const createClient = (config: Config = {}): Client => {
         };
         for (const fn of interceptors.request.fns) {
           if (fn) {
-            // Type assertion: requestInit has headers: Headers, matching ResolvedRequestOptions
+            // requestInit structurally matches ResolvedRequestOptions for the interceptor
             await fn(requestInit as ResolvedRequestOptions);
             request = new Request(requestInit.url, requestInit);
           }
