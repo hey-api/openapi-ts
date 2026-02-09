@@ -4,6 +4,17 @@
     "title": "Test Paginated Response",
     "version": "1.0.0"
   },
+  "servers": [
+    {
+      "url": "{protocol}://specs",
+      "variables": {
+        "protocol": {
+          "default": "https",
+          "enum": ["http", "https"]
+        }
+      }
+    }
+  ],
   "components": {
     "schemas": {
       "PaginatedResponse": {
