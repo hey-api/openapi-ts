@@ -12,10 +12,18 @@
           "meta": {
             "type": "object",
             "properties": {
-              "page": { "type": "number" },
-              "limit": { "type": "number" },
-              "total": { "type": "number" },
-              "totalPages": { "type": "number" }
+              "page": {
+                "type": "number"
+              },
+              "limit": {
+                "type": "number"
+              },
+              "total": {
+                "type": "number"
+              },
+              "totalPages": {
+                "type": "number"
+              }
             }
           }
         }
@@ -23,10 +31,20 @@
       "RepositorySecret": {
         "type": "object",
         "properties": {
-          "id": { "type": "number" },
-          "name": { "type": "string" },
-          "createdAt": { "format": "date-time", "type": "string" },
-          "updatedAt": { "format": "date-time", "type": "string" }
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
         },
         "required": ["id", "name", "createdAt", "updatedAt"]
       }
@@ -44,12 +62,16 @@
                 "schema": {
                   "title": "PaginatedResponseRepositorySecret",
                   "allOf": [
-                    { "$ref": "#/components/schemas/PaginatedResponse" },
+                    {
+                      "$ref": "#/components/schemas/PaginatedResponse"
+                    },
                     {
                       "properties": {
                         "data": {
                           "type": "array",
-                          "items": { "$ref": "#/components/schemas/RepositorySecret" }
+                          "items": {
+                            "$ref": "#/components/schemas/RepositorySecret"
+                          }
                         }
                       }
                     }
@@ -69,12 +91,25 @@
             "description": "Created",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/RepositorySecret" }
+                "schema": {
+                  "$ref": "#/components/schemas/RepositorySecret"
+                }
               }
             }
           }
         }
       }
     }
-  }
+  },
+  "servers": [
+    {
+      "url": "{protocol}://specs",
+      "variables": {
+        "protocol": {
+          "default": "https",
+          "enum": ["http", "https"]
+        }
+      }
+    }
+  ]
 }
