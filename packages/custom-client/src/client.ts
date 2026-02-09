@@ -1,4 +1,4 @@
-import type { Client, Config, RequestOptions, ResolvedRequestOptions } from './types';
+import type { Client, Config, ResolvedRequestOptions } from './types';
 import {
   buildUrl,
   createConfig,
