@@ -8,6 +8,12 @@ export type Foo = {
     type?: TypeEnum;
 };
 
-export const TypeEnum = { FOO: 'foo', BAR: 'bar' } as const;
+export const TypeEnum = {
+    FOO: 'foo',
+    BAR: 'bar',
+    FOO_BAR: 'FooBar',
+    FOO_BAR2: 'fooBar',
+    FOO_BAR3: 'foo bar'
+} as const;
 
 export type TypeEnum = typeof TypeEnum[keyof typeof TypeEnum];

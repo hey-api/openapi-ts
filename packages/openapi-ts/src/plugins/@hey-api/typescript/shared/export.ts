@@ -16,6 +16,7 @@ const schemaToEnumObject = ({
   plugin: HeyApiTypeScriptPlugin['Instance'];
   schema: IR.SchemaObject;
 }) => {
+  const keyCounts: Record<string, number> = {};
   const typeofItems: Array<
     'bigint' | 'boolean' | 'function' | 'number' | 'object' | 'string' | 'symbol' | 'undefined'
   > = [];
@@ -57,8 +58,15 @@ const schemaToEnumObject = ({
       ) {
         key = `_${key}`;
       }
-    }
 
+      const keyCount = (keyCounts[key] ?? 0) + 1;
+      keyCounts[key] = keyCount;
+
+      // avoid collision
+      if (keyCount > 1) {
+        key = `${key}${keyCount}`;
+      }
+    }
     return {
       key,
       schema: item,

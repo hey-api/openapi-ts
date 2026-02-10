@@ -5,7 +5,7 @@ export type ClientOptions = {
 };
 
 export type Foo = {
-    type?: FooEnum;
+    type?: TypeEnum;
 };
 
 export type Bar = {
@@ -14,9 +14,11 @@ export type Bar = {
 
 export type Baz = 'qux' | 'quux';
 
-export type FooEnum = 'foo' | 'bar';
+export type FooEnum = 'foo' | 'bar' | 'FooBar' | 'fooBar' | 'foo bar';
 
 export type FooEnum2 = 'baz';
+
+export type TypeEnum = 'foo' | 'bar';
 
 export type GetFooData = {
     body?: never;
