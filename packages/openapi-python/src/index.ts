@@ -41,16 +41,7 @@ declare module '@hey-api/codegen-core' {
      * Tags associated with this symbol.
      */
     tags?: ReadonlyArray<string>;
-    tool?:
-      | 'angular'
-      | 'arktype'
-      | 'fastify'
-      | 'json-schema'
-      | 'sdk'
-      | 'typescript'
-      | 'valibot'
-      | 'zod'
-      | AnyString;
+    tool?: 'pydantic' | 'sdk' | AnyString;
     variant?: 'container' | AnyString;
   }
 }
@@ -59,6 +50,7 @@ declare module '@hey-api/shared' {
   interface PluginConfigMap {
     '@hey-api/client-httpx': HeyApiClientHttpxPlugin['Types'];
     '@hey-api/python-sdk': HeyApiSdkPlugin['Types'];
+    pydantic: PydanticPlugin['Types'];
   }
 }
 // END OVERRIDES
@@ -71,6 +63,7 @@ import colorSupport from 'color-support';
 import type { UserConfig } from './config/types';
 import type { HeyApiClientHttpxPlugin } from './plugins/@hey-api/client-httpx';
 import type { HeyApiSdkPlugin } from './plugins/@hey-api/sdk';
+import type { PydanticPlugin } from './plugins/pydantic';
 
 colors.enabled = colorSupport().hasBasic;
 
@@ -111,3 +104,10 @@ export {
   OperationStrategy,
   utils,
 } from '@hey-api/shared';
+
+// Pydantic plugin
+export type { PydanticPlugin } from './plugins/pydantic';
+export {
+  defaultConfig as defaultPydanticConfig,
+  defineConfig as definePydanticConfig,
+} from './plugins/pydantic';

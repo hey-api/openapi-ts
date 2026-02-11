@@ -5,7 +5,7 @@ export type ClientOptions = {
 };
 
 export type Foo = {
-    type?: FooEnum;
+    type?: TypeEnum;
 };
 
 export type Bar = {
@@ -19,11 +19,19 @@ export enum Baz {
 
 export enum FooEnum {
     FOO = 'foo',
-    BAR = 'bar'
+    BAR = 'bar',
+    FOO_BAR = 'FooBar',
+    FOO_BAR2 = 'fooBar',
+    FOO_BAR3 = 'foo bar'
 }
 
 export enum FooEnum2 {
     BAZ = 'baz'
+}
+
+export enum TypeEnum {
+    FOO = 'foo',
+    BAR = 'bar'
 }
 
 export type GetFooData = {

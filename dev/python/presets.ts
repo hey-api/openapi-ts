@@ -1,4 +1,4 @@
-import { sdk } from './plugins';
+import { pydantic, sdk } from './plugins';
 
 export const presets = {
   sdk: () => [
@@ -13,6 +13,11 @@ export const presets = {
         },
       },
     }),
+  ],
+  validated: () => [
+    /** SDK + Pydantic validation */
+    sdk(),
+    pydantic(),
   ],
 } as const;
 

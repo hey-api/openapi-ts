@@ -2,7 +2,25 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "dependencyDashboardTitle": "Dependencies 📦",
   "extends": ["config:recommended"],
+  "ignorePaths": ["**/node_modules/**"],
   "minimumReleaseAge": "3 days",
+  "packageRules": [
+    {
+      "matchPackageNames": ["zod"],
+      "matchFileNames": ["packages/openapi-ts-tests/zod/v3/**"],
+      "allowedVersions": "<4.0.0"
+    },
+    {
+      "matchFileNames": ["examples/**"],
+      "groupName": "examples",
+      "prPriority": -1
+    },
+    {
+      "matchFileNames": ["packages/**"],
+      "groupName": "core packages",
+      "prPriority": 10
+    }
+  ],
   "prConcurrentLimit": 4,
   "schedule": ["before 3am on Monday"],
   "updatePinnedDependencies": true

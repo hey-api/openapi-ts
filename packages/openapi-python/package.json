@@ -56,10 +56,6 @@
     "check-exports": "attw --pack . --profile esm-only --ignore-rules cjs-resolves-to-esm",
     "dev": "tsdown --watch",
     "prepublishOnly": "pnpm build",
-    "test:coverage": "vitest run --coverage",
-    "test:update": "vitest watch --update",
-    "test:watch": "vitest watch",
-    "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "typecheck:next": "tsc --noEmit && uv run mypy src/ts-python/__snapshots__"
   },
@@ -73,7 +69,6 @@
     "commander": "14.0.3"
   },
   "devDependencies": {
-    "@config/vite-base": "workspace:*",
     "eslint": "9.39.1",
     "typescript": "5.9.3",
     "yaml": "2.8.2"

@@ -1,0 +1,98 @@
+openapi: 3.1.1
+info:
+  title: Example API
+  version: 1.0.0
+
+paths:
+  /rules:
+    get:
+      operationId: listRules
+      responses:
+        '200':
+          description: Rules response
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - rules
+                properties:
+                  rules:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Rule'
+
+components:
+  schemas:
+    Rule:
+      type: object
+      required:
+        - id
+        - then
+      properties:
+        id:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        then:
+          $ref: '#/components/schemas/Then'
+
+    Then:
+      description: Action to take when rule conditions are met
+      oneOf:
+        - $ref: '#/components/schemas/DirectAction'
+        - $ref: '#/components/schemas/RoundRobinAction'
+        - $ref: '#/components/schemas/CategoryAction'
+        - $ref: '#/components/schemas/StatusAction'
+      discriminator:
+        propertyName: type
+        mapping:
+          direct: '#/components/schemas/DirectAction'
+          round-robin: '#/components/schemas/RoundRobinAction'
+          category: '#/components/schemas/CategoryAction'
+          status: '#/components/schemas/StatusAction'
+
+    DirectAction:
+      type: object
+      required: [type, assignee]
+      properties:
+        type:
+          type: string
+          const: direct
+        assignee:
+          type: string
+
+    RoundRobinAction:
+      type: object
+      required: [type, id, items]
+      properties:
+        type:
+          type: string
+          const: round-robin
+        id:
+          type: string
+        items:
+          type: array
+          items:
+            type: string
+
+    CategoryAction:
+      type: object
+      required: [type, category]
+      properties:
+        type:
+          type: string
+          const: category
+        category:
+          type: string
+
+    StatusAction:
+      type: object
+      required: [type, status]
+      properties:
+        type:
+          type: string
+          const: status
+        status:
+          type: string

@@ -15,12 +15,12 @@ import { undefinedToAst } from './undefined';
 import { unknownToAst } from './unknown';
 import { voidToAst } from './void';
 
-export const irSchemaWithTypeToAst = ({
+export function irSchemaWithTypeToAst({
   schema,
   ...args
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType;
-}): MaybeTsDsl<TypeTsDsl> => {
+}): MaybeTsDsl<TypeTsDsl> {
   const transformersPlugin = args.plugin.getPlugin('@hey-api/transformers');
   if (transformersPlugin?.config.typeTransformers) {
     for (const typeTransformer of transformersPlugin.config.typeTransformers) {
@@ -94,4 +94,4 @@ export const irSchemaWithTypeToAst = ({
         schema: schema as SchemaWithType<'void'>,
       });
   }
-};
+}

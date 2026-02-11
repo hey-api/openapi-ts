@@ -31,6 +31,8 @@ export type UserConfig = Plugin.Name<'valibot'> &
      * - `boolean`: Shorthand for `{ enabled: boolean }`
      * - `string` or `function`: Shorthand for `{ name: string | function }`
      * - `object`: Full configuration object
+     *
+     * @default true
      */
     definitions?:
       | boolean
@@ -73,6 +75,8 @@ export type UserConfig = Plugin.Name<'valibot'> &
      * - `boolean`: Shorthand for `{ enabled: boolean }`
      * - `string` or `function`: Shorthand for `{ name: string | function }`
      * - `object`: Full configuration object
+     *
+     * @default true
      */
     requests?:
       | boolean
@@ -107,6 +111,8 @@ export type UserConfig = Plugin.Name<'valibot'> &
      * - `boolean`: Shorthand for `{ enabled: boolean }`
      * - `string` or `function`: Shorthand for `{ name: string | function }`
      * - `object`: Full configuration object
+     *
+     * @default true
      */
     responses?:
       | boolean
@@ -173,44 +179,17 @@ export type Config = Plugin.Name<'valibot'> &
   Plugin.Comments &
   Plugin.Exports &
   Resolvers & {
-    /**
-     * Casing convention for generated names.
-     */
+    /** Casing convention for generated names. */
     case: Casing;
-    /**
-     * Configuration for reusable schema definitions.
-     *
-     * Controls generation of shared Valibot schemas that can be referenced
-     * across requests and responses.
-     */
+    /** Configuration for reusable schema definitions. */
     definitions: NamingOptions & FeatureToggle;
-    /**
-     * Enable Valibot metadata support? It's often useful to associate a schema
-     * with some additional metadata for documentation, code generation, AI
-     * structured outputs, form validation, and other purposes.
-     *
-     * @default false
-     */
+    /** Enable Valibot metadata support? */
     metadata: boolean;
-    /**
-     * Configuration for request-specific Valibot schemas.
-     *
-     * Controls generation of Valibot schemas for request bodies, query
-     * parameters, path parameters, and headers.
-     */
+    /** Configuration for request-specific Valibot schemas. */
     requests: NamingOptions & FeatureToggle;
-    /**
-     * Configuration for response-specific Valibot schemas.
-     *
-     * Controls generation of Valibot schemas for response bodies, error
-     * responses, and status codes.
-     */
+    /** Configuration for response-specific Valibot schemas. */
     responses: NamingOptions & FeatureToggle;
-    /**
-     * Configuration for webhook-specific Valibot schemas.
-     *
-     * Controls generation of Valibot schemas for webhook payloads.
-     */
+    /** Configuration for webhook-specific Valibot schemas. */
     webhooks: NamingOptions & FeatureToggle;
   };
 

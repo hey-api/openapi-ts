@@ -7,7 +7,7 @@ import { identifiers } from '../v1/constants';
 import { pipesToNode } from './pipes';
 import type { Ast, IrSchemaToAstOptions } from './types';
 
-export const exportAst = ({
+export function exportAst({
   ast,
   plugin,
   schema,
@@ -17,7 +17,7 @@ export const exportAst = ({
   ast: Ast;
   schema: IR.SchemaObject;
   symbol: Symbol;
-}): void => {
+}): void {
   const v = plugin.external('valibot.v');
   const statement = $.const(symbol)
     .export()
@@ -27,4 +27,4 @@ export const exportAst = ({
     )
     .assign(pipesToNode(ast.pipes, plugin));
   plugin.node(statement);
-};
+}

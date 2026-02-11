@@ -1,12 +1,11 @@
 import { JsonPipe } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
 
 import { PetServiceResources } from '../../client';
 
 @Component({
   host: { ngSkipHydration: 'true' },
-  imports: [RouterOutlet, JsonPipe],
+  imports: [JsonPipe],
   selector: 'app-demo',
   styleUrl: './demo.css',
   templateUrl: './demo.html',

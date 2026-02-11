@@ -1,4 +1,4 @@
-import { definePluginConfig } from '@hey-api/shared';
+import { definePluginConfig, mappers } from '@hey-api/shared';
 
 import { handler } from './plugin';
 import type { SwrPlugin } from './types';
@@ -20,11 +20,7 @@ export const defaultConfig: SwrPlugin['Config'] = {
         name: '{{name}}InfiniteQueryKey',
         tags: false,
       },
-      mappers: {
-        boolean: (enabled) => ({ enabled }),
-        function: (name) => ({ name }),
-        string: (name) => ({ name }),
-      },
+      mappers,
       value: plugin.config.infiniteQueryKeys,
     });
 
@@ -34,11 +30,7 @@ export const defaultConfig: SwrPlugin['Config'] = {
         enabled: true,
         name: '{{name}}InfiniteOptions',
       },
-      mappers: {
-        boolean: (enabled) => ({ enabled }),
-        function: (name) => ({ name }),
-        string: (name) => ({ name }),
-      },
+      mappers,
       value: plugin.config.infiniteQueryOptions,
     });
 
@@ -48,11 +40,7 @@ export const defaultConfig: SwrPlugin['Config'] = {
         enabled: true,
         name: '{{name}}Mutation',
       },
-      mappers: {
-        boolean: (enabled) => ({ enabled }),
-        function: (name) => ({ name }),
-        string: (name) => ({ name }),
-      },
+      mappers,
       value: plugin.config.mutationOptions,
     });
 
@@ -63,11 +51,7 @@ export const defaultConfig: SwrPlugin['Config'] = {
         name: '{{name}}QueryKey',
         tags: false,
       },
-      mappers: {
-        boolean: (enabled) => ({ enabled }),
-        function: (name) => ({ name }),
-        string: (name) => ({ name }),
-      },
+      mappers,
       value: plugin.config.queryKeys,
     });
 
@@ -78,11 +62,7 @@ export const defaultConfig: SwrPlugin['Config'] = {
         exported: true,
         name: '{{name}}Options',
       },
-      mappers: {
-        boolean: (enabled) => ({ enabled }),
-        function: (name) => ({ name }),
-        string: (name) => ({ name }),
-      },
+      mappers,
       value: plugin.config.queryOptions,
     });
 
