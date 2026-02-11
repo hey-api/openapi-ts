@@ -283,7 +283,7 @@ export const handler: HeyApiTransformersPlugin['Handler'] = ({ plugin }) => {
       const { response } = operationResponsesMap(operation);
       if (!response) return;
 
-      if (response.items && response.items.length > 1) {
+      if (response.items && response.items.length > 1 && response.logicalOperator !== 'and') {
         if (plugin.context.config.logs.level === 'debug') {
           console.warn(
             `❗️ Transformers warning: route ${createOperationKey(operation)} has ${response.items.length} non-void success responses. This is currently not handled and we will not generate a response transformer. Please open an issue if you'd like this feature https://github.com/hey-api/openapi-ts/issues`,
