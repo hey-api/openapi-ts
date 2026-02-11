@@ -1,7 +1,13 @@
 import type { SymbolMeta } from '@hey-api/codegen-core';
 import { fromRef, ref, refs } from '@hey-api/codegen-core';
-import type { IR, SchemaWithType } from '@hey-api/shared';
-import { applyNaming, deduplicateSchema, pathToJsonPointer, refToName } from '@hey-api/shared';
+import type { IR, SchemaExtractor, SchemaWithType } from '@hey-api/shared';
+import {
+  applyNaming,
+  deduplicateSchema,
+  inlineSchema,
+  pathToJsonPointer,
+  refToName,
+} from '@hey-api/shared';
 
 import { maybeBigInt } from '../../../plugins/shared/utils/coerce';
 import { $ } from '../../../ts-dsl';
@@ -14,10 +20,11 @@ import type { ValibotPlugin } from '../types';
 import { identifiers } from './constants';
 import { irSchemaWithTypeToAst } from './toAst';
 
-export const irSchemaToAst = ({
+export function irSchemaToAst({
   optional,
   plugin,
   schema,
+  schemaExtractor = inlineSchema,
   state,
 }: IrSchemaToAstOptions & {
   /**
@@ -27,7 +34,15 @@ export const irSchemaToAst = ({
    */
   optional?: boolean;
   schema: IR.SchemaObject;
-}): Ast => {
+  schemaExtractor?: SchemaExtractor;
+}): Ast {
+  if (!schema.$ref) {
+    const resolved = schemaExtractor({ path: fromRef(state.path), schema });
+    if (resolved !== schema) {
+      schema = resolved;
+    }
+  }
+
   const ast: Ast = {
     pipes: [],
   };
@@ -75,6 +90,7 @@ export const irSchemaToAst = ({
         const itemAst = irSchemaToAst({
           plugin,
           schema: item,
+          schemaExtractor,
           state: {
             ...state,
             path: ref([...fromRef(state.path), 'items', index]),
@@ -134,15 +150,15 @@ export const irSchemaToAst = ({
   }
 
   return ast as Ast;
-};
+}
 
-const handleComponent = ({
+function handleComponent({
   plugin,
   schema,
   state,
 }: IrSchemaToAstOptions & {
   schema: IR.SchemaObject;
-}): void => {
+}): void {
   const $ref = pathToJsonPointer(fromRef(state.path));
   const ast = irSchemaToAst({ plugin, schema, state });
   const baseName = refToName($ref);
@@ -163,7 +179,7 @@ const handleComponent = ({
     state,
     symbol,
   });
-};
+}
 
 export const handlerV1: ValibotPlugin['Handler'] = ({ plugin }) => {
   plugin.symbol('v', {

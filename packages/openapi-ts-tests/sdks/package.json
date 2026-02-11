@@ -4,14 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test:coverage": "vitest run --coverage",
-    "test:update": "vitest watch --update",
-    "test:watch": "vitest watch",
-    "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@config/vite-base": "workspace:*",
     "@hey-api/openapi-ts": "workspace:*",
     "typescript": "5.9.3"
   },

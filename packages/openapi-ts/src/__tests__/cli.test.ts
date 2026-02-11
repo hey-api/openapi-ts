@@ -164,8 +164,6 @@ describe('cli', () => {
         'foo',
         '--dry-run',
         'true',
-        '--experimental-parser',
-        'true',
         '--file',
         'bar',
         '--input',

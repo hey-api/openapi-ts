@@ -1,9 +1,9 @@
 import { Project } from '../project/project';
 
 // Mock Planner so we control what files appear in project.files
-vi.mock('../planner/planner', () => ({
-  Planner: vi.fn().mockImplementation((project) => ({
-    plan: vi.fn(() => {
+vi.mock('../planner/planner', () => {
+  const MockPlanner = vi.fn(function (this: any, project: Project) {
+    this.plan = vi.fn(() => {
       // planner is responsible for creating files
       const file = project.files.register({
         logicalFilePath: 'root/a',
@@ -13,9 +13,11 @@ vi.mock('../planner/planner', () => ({
         render: vi.fn(() => 'RENDERED'),
         supports: () => true,
       });
-    }),
-  })),
-}));
+    });
+  });
+
+  return { Planner: MockPlanner };
+});
 
 describe('Project', () => {
   const makeProject = (overrides: any = {}) =>

@@ -1,4 +1,4 @@
-import { definePluginConfig } from '@hey-api/shared';
+import { definePluginConfig, mappers } from '@hey-api/shared';
 
 import { Api } from './api';
 // import { handler } from './plugin';
@@ -20,11 +20,7 @@ export const defaultConfig: FakerJsFakerPlugin['Config'] = {
         enabled: true,
         name: 'v{{name}}',
       },
-      mappers: {
-        boolean: (enabled) => ({ enabled }),
-        function: (name) => ({ name }),
-        string: (name) => ({ name }),
-      },
+      mappers,
       value: plugin.config.definitions,
     });
   },
