@@ -219,6 +219,12 @@ function implementHttpRequestFn<T extends ReturnType<typeof $.func | typeof $.me
     role: 'data',
     tool: 'typescript',
   });
+  const symbolResponseType = plugin.querySymbol({
+    category: 'type',
+    resource: 'operation',
+    resourceId: operation.id,
+    role: 'response',
+  });
 
   return node
     .param('options', (p) =>
@@ -229,7 +235,7 @@ function implementHttpRequestFn<T extends ReturnType<typeof $.func | typeof $.me
       ),
     )
     .generic('ThrowOnError', (g) => g.extends('boolean').default(false))
-    .returns($.type(symbolHttpRequest).generic('unknown'))
+    .returns($.type(symbolHttpRequest).generic(symbolResponseType ?? 'unknown'))
     .do(
       $.return(
         $('options')
@@ -243,7 +249,9 @@ function implementHttpRequestFn<T extends ReturnType<typeof $.func | typeof $.me
               .prop('method', $.literal(operation.method.toUpperCase()))
               .prop('url', $.literal(operation.path))
               .spread('options'),
-          ),
+          )
+          .generic(symbolResponseType ?? 'unknown')
+          .generic('ThrowOnError'),
       ),
     ) as T;
 }
