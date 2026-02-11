@@ -10,7 +10,7 @@ import type { ApiVVersionODataControllerCountData, ApiVVersionODataControllerCou
 @Injectable({ providedIn: 'root' })
 export class DefaultServiceRequests {
     public export<ThrowOnError extends boolean = false>(options?: Options<ExportData, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+        return (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
             responseStyle: 'data',
             method: 'GET',
             url: '/api/v{api-version}/no+tag',
@@ -19,7 +19,7 @@ export class DefaultServiceRequests {
     }
     
     public patchApiVbyApiVersionNoTag<ThrowOnError extends boolean = false>(options?: Options<PatchApiVbyApiVersionNoTagData, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+        return (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
             responseStyle: 'data',
             method: 'PATCH',
             url: '/api/v{api-version}/no+tag',
@@ -27,8 +27,8 @@ export class DefaultServiceRequests {
         });
     }
     
-    public import<ThrowOnError extends boolean = false>(options: Options<ImportData, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+    public import<ThrowOnError extends boolean = false>(options: Options<ImportData, ThrowOnError>): HttpRequest<ImportResponse> {
+        return (options?.client ?? client).requestOptions<ImportResponse, ThrowOnError>({
             responseStyle: 'data',
             method: 'POST',
             url: '/api/v{api-version}/no+tag',
@@ -37,7 +37,7 @@ export class DefaultServiceRequests {
     }
     
     public fooWow<ThrowOnError extends boolean = false>(options?: Options<FooWowData, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+        return (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
             responseStyle: 'data',
             method: 'PUT',
             url: '/api/v{api-version}/no+tag',
@@ -45,8 +45,8 @@ export class DefaultServiceRequests {
         });
     }
     
-    public getApiVbyApiVersionSimpleOperation<ThrowOnError extends boolean = false>(options: Options<GetApiVbyApiVersionSimpleOperationData, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+    public getApiVbyApiVersionSimpleOperation<ThrowOnError extends boolean = false>(options: Options<GetApiVbyApiVersionSimpleOperationData, ThrowOnError>): HttpRequest<GetApiVbyApiVersionSimpleOperationResponse> {
+        return (options?.client ?? client).requestOptions<GetApiVbyApiVersionSimpleOperationResponse, ThrowOnError>({
             responseStyle: 'data',
             method: 'GET',
             url: '/api/v{api-version}/simple:operation',
@@ -56,8 +56,8 @@ export class DefaultServiceRequests {
 }
 
 export class ODataControllerService {
-    public count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionODataControllerCountData, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+    public count<ThrowOnError extends boolean = false>(options?: Options<ApiVVersionODataControllerCountData, ThrowOnError>): HttpRequest<ApiVVersionODataControllerCountResponse> {
+        return (options?.client ?? client).requestOptions<ApiVVersionODataControllerCountResponse, ThrowOnError>({
             responseStyle: 'data',
             method: 'GET',
             url: '/api/v{api-version}/simple/$count',
@@ -83,7 +83,7 @@ export class ApiService {
 @Injectable({ providedIn: 'root' })
 export class SimpleServiceRequests {
     public deleteCallWithoutParametersAndResponse<ThrowOnError extends boolean = false>(options?: Options<DeleteCallWithoutParametersAndResponseData, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+        return (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
             responseStyle: 'data',
             method: 'DELETE',
             url: '/api/v{api-version}/simple',
@@ -92,7 +92,7 @@ export class SimpleServiceRequests {
     }
     
     public getCallWithoutParametersAndResponse<ThrowOnError extends boolean = false>(options?: Options<GetCallWithoutParametersAndResponseData, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+        return (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
             responseStyle: 'data',
             method: 'GET',
             url: '/api/v{api-version}/simple',
@@ -101,7 +101,7 @@ export class SimpleServiceRequests {
     }
     
     public headCallWithoutParametersAndResponse<ThrowOnError extends boolean = false>(options?: Options<HeadCallWithoutParametersAndResponseData, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+        return (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
             responseStyle: 'data',
             method: 'HEAD',
             url: '/api/v{api-version}/simple',
@@ -110,7 +110,7 @@ export class SimpleServiceRequests {
     }
     
     public optionsCallWithoutParametersAndResponse<ThrowOnError extends boolean = false>(options?: Options<OptionsCallWithoutParametersAndResponseData, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+        return (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
             responseStyle: 'data',
             method: 'OPTIONS',
             url: '/api/v{api-version}/simple',
@@ -119,7 +119,7 @@ export class SimpleServiceRequests {
     }
     
     public patchCallWithoutParametersAndResponse<ThrowOnError extends boolean = false>(options?: Options<PatchCallWithoutParametersAndResponseData, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+        return (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
             responseStyle: 'data',
             method: 'PATCH',
             url: '/api/v{api-version}/simple',
@@ -128,7 +128,7 @@ export class SimpleServiceRequests {
     }
     
     public postCallWithoutParametersAndResponse<ThrowOnError extends boolean = false>(options?: Options<PostCallWithoutParametersAndResponseData, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+        return (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
             responseStyle: 'data',
             method: 'POST',
             url: '/api/v{api-version}/simple',
@@ -137,7 +137,7 @@ export class SimpleServiceRequests {
     }
     
     public putCallWithoutParametersAndResponse<ThrowOnError extends boolean = false>(options?: Options<PutCallWithoutParametersAndResponseData, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+        return (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
             responseStyle: 'data',
             method: 'PUT',
             url: '/api/v{api-version}/simple',
@@ -154,7 +154,7 @@ export class SimpleServiceRequests {
 @Injectable({ providedIn: 'root' })
 export class ParametersServiceRequests {
     public deleteFoo<ThrowOnError extends boolean = false>(options: Options<DeleteFooData3, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+        return (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
             responseStyle: 'data',
             method: 'DELETE',
             url: '/api/v{api-version}/foo/{foo_param}/bar/{BarParam}',
@@ -163,7 +163,7 @@ export class ParametersServiceRequests {
     }
     
     public callWithParameters<ThrowOnError extends boolean = false>(options: Options<CallWithParametersData, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+        return (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
             responseStyle: 'data',
             method: 'POST',
             url: '/api/v{api-version}/parameters/{parameterPath}',
@@ -172,7 +172,7 @@ export class ParametersServiceRequests {
     }
     
     public callWithWeirdParameterNames<ThrowOnError extends boolean = false>(options: Options<CallWithWeirdParameterNamesData, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+        return (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
             responseStyle: 'data',
             method: 'POST',
             url: '/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}',
@@ -181,7 +181,7 @@ export class ParametersServiceRequests {
     }
     
     public getCallWithOptionalParam<ThrowOnError extends boolean = false>(options: Options<GetCallWithOptionalParamData, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+        return (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
             responseStyle: 'data',
             method: 'GET',
             url: '/api/v{api-version}/parameters',
@@ -189,8 +189,8 @@ export class ParametersServiceRequests {
         });
     }
     
-    public postCallWithOptionalParam<ThrowOnError extends boolean = false>(options: Options<PostCallWithOptionalParamData, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+    public postCallWithOptionalParam<ThrowOnError extends boolean = false>(options: Options<PostCallWithOptionalParamData, ThrowOnError>): HttpRequest<PostCallWithOptionalParamResponse> {
+        return (options?.client ?? client).requestOptions<PostCallWithOptionalParamResponse, ThrowOnError>({
             responseStyle: 'data',
             method: 'POST',
             url: '/api/v{api-version}/parameters',
@@ -202,7 +202,7 @@ export class ParametersServiceRequests {
 @Injectable({ providedIn: 'root' })
 export class DescriptionsServiceRequests {
     public callWithDescriptions<ThrowOnError extends boolean = false>(options?: Options<CallWithDescriptionsData, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+        return (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
             responseStyle: 'data',
             method: 'POST',
             url: '/api/v{api-version}/descriptions',
@@ -217,7 +217,7 @@ export class DeprecatedServiceRequests {
      * @deprecated
      */
     public deprecatedCall<ThrowOnError extends boolean = false>(options: Options<DeprecatedCallData, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+        return (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
             responseStyle: 'data',
             method: 'POST',
             url: '/api/v{api-version}/parameters/deprecated',
@@ -229,7 +229,7 @@ export class DeprecatedServiceRequests {
 @Injectable({ providedIn: 'root' })
 export class RequestBodyServiceRequests {
     public postApiVbyApiVersionRequestBody<ThrowOnError extends boolean = false>(options?: Options<PostApiVbyApiVersionRequestBodyData, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+        return (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
             responseStyle: 'data',
             method: 'POST',
             url: '/api/v{api-version}/requestBody',
@@ -241,7 +241,7 @@ export class RequestBodyServiceRequests {
 @Injectable({ providedIn: 'root' })
 export class FormDataServiceRequests {
     public postApiVbyApiVersionFormData<ThrowOnError extends boolean = false>(options?: Options<PostApiVbyApiVersionFormDataData, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+        return (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
             responseStyle: 'data',
             method: 'POST',
             url: '/api/v{api-version}/formData',
@@ -253,7 +253,7 @@ export class FormDataServiceRequests {
 @Injectable({ providedIn: 'root' })
 export class DefaultsServiceRequests {
     public callWithDefaultParameters<ThrowOnError extends boolean = false>(options?: Options<CallWithDefaultParametersData, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+        return (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
             responseStyle: 'data',
             method: 'GET',
             url: '/api/v{api-version}/defaults',
@@ -262,7 +262,7 @@ export class DefaultsServiceRequests {
     }
     
     public callWithDefaultOptionalParameters<ThrowOnError extends boolean = false>(options?: Options<CallWithDefaultOptionalParametersData, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+        return (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
             responseStyle: 'data',
             method: 'POST',
             url: '/api/v{api-version}/defaults',
@@ -271,7 +271,7 @@ export class DefaultsServiceRequests {
     }
     
     public callToTestOrderOfParams<ThrowOnError extends boolean = false>(options: Options<CallToTestOrderOfParamsData, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+        return (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
             responseStyle: 'data',
             method: 'PUT',
             url: '/api/v{api-version}/defaults',
@@ -283,7 +283,7 @@ export class DefaultsServiceRequests {
 @Injectable({ providedIn: 'root' })
 export class DuplicateServiceRequests {
     public duplicateName<ThrowOnError extends boolean = false>(options?: Options<DuplicateNameData, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+        return (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
             responseStyle: 'data',
             method: 'DELETE',
             url: '/api/v{api-version}/duplicate',
@@ -292,7 +292,7 @@ export class DuplicateServiceRequests {
     }
     
     public duplicateName2<ThrowOnError extends boolean = false>(options?: Options<DuplicateName2Data, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+        return (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
             responseStyle: 'data',
             method: 'GET',
             url: '/api/v{api-version}/duplicate',
@@ -301,7 +301,7 @@ export class DuplicateServiceRequests {
     }
     
     public duplicateName3<ThrowOnError extends boolean = false>(options?: Options<DuplicateName3Data, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+        return (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
             responseStyle: 'data',
             method: 'POST',
             url: '/api/v{api-version}/duplicate',
@@ -310,7 +310,7 @@ export class DuplicateServiceRequests {
     }
     
     public duplicateName4<ThrowOnError extends boolean = false>(options?: Options<DuplicateName4Data, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+        return (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
             responseStyle: 'data',
             method: 'PUT',
             url: '/api/v{api-version}/duplicate',
@@ -321,8 +321,8 @@ export class DuplicateServiceRequests {
 
 @Injectable({ providedIn: 'root' })
 export class NoContentServiceRequests {
-    public callWithNoContentResponse<ThrowOnError extends boolean = false>(options?: Options<CallWithNoContentResponseData, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+    public callWithNoContentResponse<ThrowOnError extends boolean = false>(options?: Options<CallWithNoContentResponseData, ThrowOnError>): HttpRequest<CallWithNoContentResponseResponse> {
+        return (options?.client ?? client).requestOptions<CallWithNoContentResponseResponse, ThrowOnError>({
             responseStyle: 'data',
             method: 'GET',
             url: '/api/v{api-version}/no-content',
@@ -330,8 +330,8 @@ export class NoContentServiceRequests {
         });
     }
     
-    public callWithResponseAndNoContentResponse<ThrowOnError extends boolean = false>(options?: Options<CallWithResponseAndNoContentResponseData, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+    public callWithResponseAndNoContentResponse<ThrowOnError extends boolean = false>(options?: Options<CallWithResponseAndNoContentResponseData, ThrowOnError>): HttpRequest<CallWithResponseAndNoContentResponseResponse> {
+        return (options?.client ?? client).requestOptions<CallWithResponseAndNoContentResponseResponse, ThrowOnError>({
             responseStyle: 'data',
             method: 'GET',
             url: '/api/v{api-version}/multiple-tags/response-and-no-content',
@@ -342,8 +342,8 @@ export class NoContentServiceRequests {
 
 @Injectable({ providedIn: 'root' })
 export class ResponseServiceRequests {
-    public callWithResponseAndNoContentResponse<ThrowOnError extends boolean = false>(options?: Options<CallWithResponseAndNoContentResponseData, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+    public callWithResponseAndNoContentResponse<ThrowOnError extends boolean = false>(options?: Options<CallWithResponseAndNoContentResponseData, ThrowOnError>): HttpRequest<CallWithResponseAndNoContentResponseResponse> {
+        return (options?.client ?? client).requestOptions<CallWithResponseAndNoContentResponseResponse, ThrowOnError>({
             responseStyle: 'data',
             method: 'GET',
             url: '/api/v{api-version}/multiple-tags/response-and-no-content',
@@ -351,8 +351,8 @@ export class ResponseServiceRequests {
         });
     }
     
-    public callWithResponse<ThrowOnError extends boolean = false>(options?: Options<CallWithResponseData, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+    public callWithResponse<ThrowOnError extends boolean = false>(options?: Options<CallWithResponseData, ThrowOnError>): HttpRequest<CallWithResponseResponse> {
+        return (options?.client ?? client).requestOptions<CallWithResponseResponse, ThrowOnError>({
             responseStyle: 'data',
             method: 'GET',
             url: '/api/v{api-version}/response',
@@ -360,8 +360,8 @@ export class ResponseServiceRequests {
         });
     }
     
-    public callWithDuplicateResponses<ThrowOnError extends boolean = false>(options?: Options<CallWithDuplicateResponsesData, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+    public callWithDuplicateResponses<ThrowOnError extends boolean = false>(options?: Options<CallWithDuplicateResponsesData, ThrowOnError>): HttpRequest<CallWithDuplicateResponsesResponse> {
+        return (options?.client ?? client).requestOptions<CallWithDuplicateResponsesResponse, ThrowOnError>({
             responseStyle: 'data',
             method: 'POST',
             url: '/api/v{api-version}/response',
@@ -369,8 +369,8 @@ export class ResponseServiceRequests {
         });
     }
     
-    public callWithResponses<ThrowOnError extends boolean = false>(options?: Options<CallWithResponsesData, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+    public callWithResponses<ThrowOnError extends boolean = false>(options?: Options<CallWithResponsesData, ThrowOnError>): HttpRequest<CallWithResponsesResponse> {
+        return (options?.client ?? client).requestOptions<CallWithResponsesResponse, ThrowOnError>({
             responseStyle: 'data',
             method: 'PUT',
             url: '/api/v{api-version}/response',
@@ -381,8 +381,8 @@ export class ResponseServiceRequests {
 
 @Injectable({ providedIn: 'root' })
 export class MultipleTags1ServiceRequests {
-    public dummyA<ThrowOnError extends boolean = false>(options?: Options<DummyAData, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+    public dummyA<ThrowOnError extends boolean = false>(options?: Options<DummyAData, ThrowOnError>): HttpRequest<DummyAResponse> {
+        return (options?.client ?? client).requestOptions<DummyAResponse, ThrowOnError>({
             responseStyle: 'data',
             method: 'GET',
             url: '/api/v{api-version}/multiple-tags/a',
@@ -390,8 +390,8 @@ export class MultipleTags1ServiceRequests {
         });
     }
     
-    public dummyB<ThrowOnError extends boolean = false>(options?: Options<DummyBData, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+    public dummyB<ThrowOnError extends boolean = false>(options?: Options<DummyBData, ThrowOnError>): HttpRequest<DummyBResponse> {
+        return (options?.client ?? client).requestOptions<DummyBResponse, ThrowOnError>({
             responseStyle: 'data',
             method: 'GET',
             url: '/api/v{api-version}/multiple-tags/b',
@@ -402,8 +402,8 @@ export class MultipleTags1ServiceRequests {
 
 @Injectable({ providedIn: 'root' })
 export class MultipleTags2ServiceRequests {
-    public dummyA<ThrowOnError extends boolean = false>(options?: Options<DummyAData, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+    public dummyA<ThrowOnError extends boolean = false>(options?: Options<DummyAData, ThrowOnError>): HttpRequest<DummyAResponse> {
+        return (options?.client ?? client).requestOptions<DummyAResponse, ThrowOnError>({
             responseStyle: 'data',
             method: 'GET',
             url: '/api/v{api-version}/multiple-tags/a',
@@ -411,8 +411,8 @@ export class MultipleTags2ServiceRequests {
         });
     }
     
-    public dummyB<ThrowOnError extends boolean = false>(options?: Options<DummyBData, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+    public dummyB<ThrowOnError extends boolean = false>(options?: Options<DummyBData, ThrowOnError>): HttpRequest<DummyBResponse> {
+        return (options?.client ?? client).requestOptions<DummyBResponse, ThrowOnError>({
             responseStyle: 'data',
             method: 'GET',
             url: '/api/v{api-version}/multiple-tags/b',
@@ -423,8 +423,8 @@ export class MultipleTags2ServiceRequests {
 
 @Injectable({ providedIn: 'root' })
 export class MultipleTags3ServiceRequests {
-    public dummyB<ThrowOnError extends boolean = false>(options?: Options<DummyBData, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+    public dummyB<ThrowOnError extends boolean = false>(options?: Options<DummyBData, ThrowOnError>): HttpRequest<DummyBResponse> {
+        return (options?.client ?? client).requestOptions<DummyBResponse, ThrowOnError>({
             responseStyle: 'data',
             method: 'GET',
             url: '/api/v{api-version}/multiple-tags/b',
@@ -436,7 +436,7 @@ export class MultipleTags3ServiceRequests {
 @Injectable({ providedIn: 'root' })
 export class CollectionFormatServiceRequests {
     public collectionFormat<ThrowOnError extends boolean = false>(options: Options<CollectionFormatData, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+        return (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
             responseStyle: 'data',
             method: 'GET',
             url: '/api/v{api-version}/collectionFormat',
@@ -447,8 +447,8 @@ export class CollectionFormatServiceRequests {
 
 @Injectable({ providedIn: 'root' })
 export class TypesServiceRequests {
-    public types<ThrowOnError extends boolean = false>(options: Options<TypesData, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+    public types<ThrowOnError extends boolean = false>(options: Options<TypesData, ThrowOnError>): HttpRequest<TypesResponse> {
+        return (options?.client ?? client).requestOptions<TypesResponse, ThrowOnError>({
             responseStyle: 'data',
             method: 'GET',
             url: '/api/v{api-version}/types',
@@ -459,8 +459,8 @@ export class TypesServiceRequests {
 
 @Injectable({ providedIn: 'root' })
 export class UploadServiceRequests {
-    public uploadFile<ThrowOnError extends boolean = false>(options: Options<UploadFileData, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+    public uploadFile<ThrowOnError extends boolean = false>(options: Options<UploadFileData, ThrowOnError>): HttpRequest<UploadFileResponse> {
+        return (options?.client ?? client).requestOptions<UploadFileResponse, ThrowOnError>({
             responseStyle: 'data',
             method: 'POST',
             url: '/api/v{api-version}/upload',
@@ -471,8 +471,8 @@ export class UploadServiceRequests {
 
 @Injectable({ providedIn: 'root' })
 export class FileResponseServiceRequests {
-    public fileResponse<ThrowOnError extends boolean = false>(options: Options<FileResponseData, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+    public fileResponse<ThrowOnError extends boolean = false>(options: Options<FileResponseData, ThrowOnError>): HttpRequest<FileResponseResponse> {
+        return (options?.client ?? client).requestOptions<FileResponseResponse, ThrowOnError>({
             responseStyle: 'data',
             method: 'GET',
             url: '/api/v{api-version}/file/{id}',
@@ -483,8 +483,8 @@ export class FileResponseServiceRequests {
 
 @Injectable({ providedIn: 'root' })
 export class ComplexServiceRequests {
-    public complexTypes<ThrowOnError extends boolean = false>(options: Options<ComplexTypesData, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+    public complexTypes<ThrowOnError extends boolean = false>(options: Options<ComplexTypesData, ThrowOnError>): HttpRequest<ComplexTypesResponse> {
+        return (options?.client ?? client).requestOptions<ComplexTypesResponse, ThrowOnError>({
             responseStyle: 'data',
             method: 'GET',
             url: '/api/v{api-version}/complex',
@@ -492,8 +492,8 @@ export class ComplexServiceRequests {
         });
     }
     
-    public complexParams<ThrowOnError extends boolean = false>(options: Options<ComplexParamsData, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+    public complexParams<ThrowOnError extends boolean = false>(options: Options<ComplexParamsData, ThrowOnError>): HttpRequest<ComplexParamsResponse> {
+        return (options?.client ?? client).requestOptions<ComplexParamsResponse, ThrowOnError>({
             responseStyle: 'data',
             method: 'PUT',
             url: '/api/v{api-version}/complex/{id}',
@@ -504,8 +504,8 @@ export class ComplexServiceRequests {
 
 @Injectable({ providedIn: 'root' })
 export class MultipartServiceRequests {
-    public multipartResponse<ThrowOnError extends boolean = false>(options?: Options<MultipartResponseData, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+    public multipartResponse<ThrowOnError extends boolean = false>(options?: Options<MultipartResponseData, ThrowOnError>): HttpRequest<MultipartResponseResponse> {
+        return (options?.client ?? client).requestOptions<MultipartResponseResponse, ThrowOnError>({
             responseStyle: 'data',
             method: 'GET',
             url: '/api/v{api-version}/multipart',
@@ -514,7 +514,7 @@ export class MultipartServiceRequests {
     }
     
     public multipartRequest<ThrowOnError extends boolean = false>(options?: Options<MultipartRequestData, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+        return (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
             responseStyle: 'data',
             method: 'POST',
             url: '/api/v{api-version}/multipart',
@@ -526,7 +526,7 @@ export class MultipartServiceRequests {
 @Injectable({ providedIn: 'root' })
 export class HeaderServiceRequests {
     public callWithResultFromHeader<ThrowOnError extends boolean = false>(options?: Options<CallWithResultFromHeaderData, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+        return (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
             responseStyle: 'data',
             method: 'POST',
             url: '/api/v{api-version}/header',
@@ -538,7 +538,7 @@ export class HeaderServiceRequests {
 @Injectable({ providedIn: 'root' })
 export class ErrorServiceRequests {
     public testErrorCode<ThrowOnError extends boolean = false>(options: Options<TestErrorCodeData, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+        return (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
             responseStyle: 'data',
             method: 'POST',
             url: '/api/v{api-version}/error',
@@ -549,8 +549,8 @@ export class ErrorServiceRequests {
 
 @Injectable({ providedIn: 'root' })
 export class NonAsciiÆøåÆøÅöôêÊServiceRequests {
-    public nonAsciiæøåÆøÅöôêÊ字符串<ThrowOnError extends boolean = false>(options: Options<NonAsciiæøåÆøÅöôêÊ字符串Data, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+    public nonAsciiæøåÆøÅöôêÊ字符串<ThrowOnError extends boolean = false>(options: Options<NonAsciiæøåÆøÅöôêÊ字符串Data, ThrowOnError>): HttpRequest<NonAsciiæøåÆøÅöôêÊ字符串Response> {
+        return (options?.client ?? client).requestOptions<NonAsciiæøåÆøÅöôêÊ字符串Response, ThrowOnError>({
             responseStyle: 'data',
             method: 'POST',
             url: '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串',
@@ -562,7 +562,7 @@ export class NonAsciiÆøåÆøÅöôêÊServiceRequests {
      * Login User
      */
     public putWithFormUrlEncoded<ThrowOnError extends boolean = false>(options: Options<PutWithFormUrlEncodedData, ThrowOnError>): HttpRequest<unknown> {
-        return (options?.client ?? client).requestOptions({
+        return (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
             responseStyle: 'data',
             method: 'PUT',
             url: '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串',

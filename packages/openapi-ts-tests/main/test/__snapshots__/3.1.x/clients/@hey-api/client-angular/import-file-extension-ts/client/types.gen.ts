@@ -172,11 +172,12 @@ type RequestFn = <
 ) => RequestResult<TData, TError, ThrowOnError, TResponseStyle>;
 
 type RequestOptionsFn = <
+  T,
   ThrowOnError extends boolean = false,
   TResponseStyle extends ResponseStyle = 'fields',
 >(
-  options: RequestOptions<unknown, TResponseStyle, ThrowOnError>,
-) => HttpRequest<unknown>;
+  options: RequestOptions<T, TResponseStyle, ThrowOnError>,
+) => HttpRequest<T>;
 
 type BuildUrlFn = <
   TData extends {
