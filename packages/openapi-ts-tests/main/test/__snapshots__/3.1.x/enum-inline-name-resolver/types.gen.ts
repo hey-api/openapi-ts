@@ -12,27 +12,27 @@ export type Bar = {
     type?: Baz;
 };
 
-export enum Baz {
-    QUX = 'qux',
-    QUUX = 'quux'
-}
+export const Baz = { QUX: 'qux', QUUX: 'quux' } as const;
 
-export enum FooEnum {
-    FOO = 'foo',
-    BAR = 'bar',
-    FOO_BAR = 'FooBar',
-    FOO_BAR2 = 'fooBar',
-    FOO_BAR3 = 'foo bar'
-}
+export type Baz = typeof Baz[keyof typeof Baz];
 
-export enum FooEnum2 {
-    BAZ = 'baz'
-}
+export const FooEnum = {
+    FOO: 'foo',
+    BAR: 'bar',
+    FOO_BAR: 'FooBar',
+    FOO_BAR_N2: 'fooBar',
+    FOO_BAR_N3: 'foo bar'
+} as const;
 
-export enum TypeEnum {
-    FOO = 'foo',
-    BAR = 'bar'
-}
+export type FooEnum = typeof FooEnum[keyof typeof FooEnum];
+
+export const FooEnum2 = { BAZ: 'baz' } as const;
+
+export type FooEnum2 = typeof FooEnum2[keyof typeof FooEnum2];
+
+export const TypeEnum = { FOO: 'foo', BAR: 'bar' } as const;
+
+export type TypeEnum = typeof TypeEnum[keyof typeof TypeEnum];
 
 export type GetFooData = {
     body?: never;
