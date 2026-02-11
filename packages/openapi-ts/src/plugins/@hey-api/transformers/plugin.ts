@@ -231,13 +231,29 @@ const processSchemaType = ({
 
     // assume enums do not contain transformable values
     if (schema.type !== 'enum') {
-      if (
-        !(schema.items ?? []).every((item) =>
-          (
-            ['boolean', 'integer', 'null', 'number', 'string'] as ReadonlyArray<typeof item.type>
-          ).includes(item.type),
-        )
-      ) {
+      const hasSimpleTypes = (schema.items ?? []).every((item) =>
+        (
+          ['boolean', 'integer', 'null', 'number', 'string'] as ReadonlyArray<typeof item.type>
+        ).includes(item.type),
+      );
+
+      // Skip warning if items are processable through other mechanisms:
+      // 1. All items are $ref-based (e.g., discriminated oneOf/anyOf)
+      // 2. All items are nested allOf ($ref wrapped in allOf for discriminators)
+      // These patterns are handled correctly by recursive processing logic
+      const isProcessable = (schema.items ?? []).every((item) => {
+        // Direct $ref items are processable
+        if (item.$ref) {
+          return true;
+        }
+        // Nested allOf items (common in discriminated unions) are processable
+        if (item.logicalOperator === 'and' && item.items) {
+          return true;
+        }
+        return false;
+      });
+
+      if (!hasSimpleTypes && !isProcessable) {
         console.warn(
           `❗️ Transformers warning: schema ${JSON.stringify(schema)} is too complex and won't be currently processed. This will likely produce an incomplete transformer which is not what you want. Please open an issue if you'd like this improved https://github.com/hey-api/openapi-ts/issues`,
         );
