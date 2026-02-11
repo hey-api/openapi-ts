@@ -65,7 +65,9 @@ export function getOutput(userConfig: { output: MaybeArray<string | UserOutput> 
   if (
     output.importFileExtension === undefined &&
     (output.tsConfig?.options.moduleResolution === ts.ModuleResolutionKind.NodeNext ||
-      output.tsConfig?.options.moduleResolution === ts.ModuleResolutionKind.Node16)
+      output.tsConfig?.options.moduleResolution === ts.ModuleResolutionKind.Node16 ||
+      output.tsConfig?.options.module === ts.ModuleKind.NodeNext ||
+      output.tsConfig?.options.module === ts.ModuleKind.Node16)
   ) {
     output.importFileExtension = '.js';
   }
