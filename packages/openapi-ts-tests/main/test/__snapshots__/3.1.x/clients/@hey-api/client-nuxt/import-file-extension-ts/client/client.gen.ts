@@ -144,8 +144,8 @@ export const createClient = (config: Config = {}): Client => {
         body.value = serializeBody(changed);
       });
       return composable === 'useLazyFetch'
-        ? useLazyFetch(() => buildUrl(opts), opts)
-        : useFetch(() => buildUrl(opts), opts);
+        ? useLazyFetch(() => buildUrl(opts), { ...opts, ...asyncDataOptions })
+        : useFetch(() => buildUrl(opts), { ...opts, ...asyncDataOptions });
     }
 
     const handler: any = () =>
