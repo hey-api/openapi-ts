@@ -64,7 +64,20 @@ const schemaToEnumObject = ({
 
       // avoid collision
       if (keyCount > 1) {
-        key = `${key}${keyCount}`;
+        const nameConflictResolver = plugin.context.config.output?.nameConflictResolver;
+        if (nameConflictResolver) {
+          const resolvedName = nameConflictResolver({
+            attempt: keyCount - 1, // 0-based index
+            baseName: key,
+          });
+          if (resolvedName !== null) {
+            key = resolvedName;
+          } else {
+            key = `${key}${keyCount}`;
+          }
+        } else {
+          key = `${key}${keyCount}`;
+        }
       }
     }
     return {
