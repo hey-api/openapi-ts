@@ -7,6 +7,52 @@ description: Migrating to @hey-api/openapi-ts.
 
 While we try to avoid breaking changes, sometimes it's unavoidable in order to offer you the latest features. This page lists changes that require updates to your code. If you run into a problem with migration, please [open an issue](https://github.com/hey-api/openapi-ts/issues).
 
+## v0.92.0
+
+### Updated Symbol interface
+
+The `exportFrom` property has been replaced with the `getExportFromFilePath()` function. This allows you to dynamically determine export paths based on symbol properties. This is a low-level feature, so you're most likely unaffected.
+
+## v0.91.0
+
+### Removed CommonJS (CJS) support
+
+`@hey-api/openapi-ts` is now ESM-only. This change simplifies the codebase, improves tree-shaking, and enables better integration with modern bundlers and TypeScript tooling.
+
+CommonJS entry points (`require()`, `module.exports`) are no longer supported. If you are in a CJS environment, you can still load the package dynamically using `import()` like:
+
+```js
+const { defineConfig } = await import('@hey-api/openapi-ts');
+```
+
+If you have previously written:
+
+```js
+const { defineConfig } = require('@hey-api/openapi-ts');
+```
+
+Migrate by updating your static imports:
+
+```js
+import { defineConfig } from '@hey-api/openapi-ts';
+```
+
+If your environment cannot use ESM, pin to a previous version.
+
+## v0.90.0
+
+### Resolvers API
+
+The [Resolvers API](/openapi-ts/plugins/concepts/resolvers) has been simplified and expanded to provide a more consistent behavior across plugins. You can view a few common examples on the [Resolvers](/openapi-ts/plugins/concepts/resolvers) page.
+
+### Structure API
+
+The [SDK plugin](/openapi-ts/plugins/sdk) and [Angular plugin](/openapi-ts/plugins/angular) now implement the Structure API, enabling more complex structures and fixing several known issues.
+
+Some Structure APIs are incompatible with the previous configuration, most notably the `methodNameBuilder` function, which accepted the operation object as an argument. You can read the [SDK Output](/openapi-ts/plugins/sdk#output) section to familiarize yourself with the Structure API.
+
+Please [open an issue](https://github.com/hey-api/openapi-ts/issues) if you're unable to migrate your configuration to the new syntax.
+
 ## v0.89.0
 
 ### Prefer named exports
@@ -1492,7 +1538,7 @@ This command is now called `openapi-ts`.
 
 ### Removed `indent`
 
-This config option has been removed. Use a [code formatter](/openapi-ts/configuration#formatting) to modify the generated files code style according to your preferences.
+This config option has been removed. Use a [code formatter](/openapi-ts/configuration/output#post-process) to modify the generated files code style according to your preferences.
 
 ## v0.27.24
 

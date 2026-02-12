@@ -1,0 +1,71 @@
+openapi: 3.1.0
+info:
+  title: OpenAPI 3.1.0 additional properties example
+  version: '1'
+components:
+  schemas:
+    ObjectWithAdditionalPropertiesString:
+      type: object
+      properties:
+        headers:
+          type: object
+          additionalProperties:
+            type: string
+    ObjectOnlyAdditionalPropertiesString:
+      type: object
+      additionalProperties:
+        type: string
+    ObjectOnlyAdditionalPropertiesNumber:
+      type: object
+      additionalProperties:
+        type: number
+    ObjectOnlyAdditionalPropertiesBoolean:
+      type: object
+      additionalProperties:
+        type: boolean
+    ObjectWithPropertiesAndAdditionalPropertiesNumber:
+      type: object
+      properties:
+        id:
+          type: string
+        count:
+          type: integer
+      additionalProperties:
+        type: number
+    ObjectWithAdditionalPropertiesObject:
+      type: object
+      properties:
+        metadata:
+          type: object
+          additionalProperties:
+            type: object
+            properties:
+              value:
+                type: string
+    ObjectOnlyAdditionalPropertiesObject:
+      type: object
+      additionalProperties:
+        type: object
+        properties:
+          name:
+            type: string
+    ObjectWithAdditionalPropertiesFalse:
+      type: object
+      properties:
+        id:
+          type: string
+        count:
+          type: integer
+      additionalProperties: false
+    ObjectWithNestedAdditionalPropertiesFalse:
+      type: object
+      properties:
+        membership:
+          type: object
+          properties:
+            status:
+              type: string
+              enum: [approved, declined, pending]
+            calendar_membership_tier_id:
+              type: string
+          additionalProperties: false

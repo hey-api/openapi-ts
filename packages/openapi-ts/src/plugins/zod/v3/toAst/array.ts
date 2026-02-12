@@ -1,9 +1,8 @@
 import { fromRef, ref } from '@hey-api/codegen-core';
+import type { SchemaWithType } from '@hey-api/shared';
+import { deduplicateSchema } from '@hey-api/shared';
 
-import { deduplicateSchema } from '~/ir/schema';
-import type { SchemaWithType } from '~/plugins';
-import { $ } from '~/ts-dsl';
-
+import { $ } from '../../../../ts-dsl';
 import { identifiers } from '../../constants';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
 import { irSchemaToAst } from '../plugin';
@@ -18,10 +17,7 @@ export const arrayToAst = ({
 }): Omit<Ast, 'typeName'> & {
   anyType?: string;
 } => {
-  const z = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'zod.z',
-  });
+  const z = plugin.external('zod.z');
 
   const functionName = $(z).attr(identifiers.array);
 
@@ -96,20 +92,14 @@ export const arrayToAst = ({
   }
 
   if (schema.minItems === schema.maxItems && schema.minItems !== undefined) {
-    arrayExpression = arrayExpression
-      .attr(identifiers.length)
-      .call($.fromValue(schema.minItems));
+    arrayExpression = arrayExpression.attr(identifiers.length).call($.fromValue(schema.minItems));
   } else {
     if (schema.minItems !== undefined) {
-      arrayExpression = arrayExpression
-        .attr(identifiers.min)
-        .call($.fromValue(schema.minItems));
+      arrayExpression = arrayExpression.attr(identifiers.min).call($.fromValue(schema.minItems));
     }
 
     if (schema.maxItems !== undefined) {
-      arrayExpression = arrayExpression
-        .attr(identifiers.max)
-        .call($.fromValue(schema.maxItems));
+      arrayExpression = arrayExpression.attr(identifiers.max).call($.fromValue(schema.maxItems));
     }
   }
 

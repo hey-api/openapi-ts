@@ -32,8 +32,10 @@ export const identifiers = {
   lte: 'lte',
   max: 'max',
   maxLength: 'maxLength',
+  maximum: 'maximum', // Zod Mini
   min: 'min',
   minLength: 'minLength',
+  minimum: 'minimum', // Zod Mini
   never: 'never',
   null: 'null',
   nullable: 'nullable',

@@ -1,10 +1,9 @@
 import { fromRef, ref } from '@hey-api/codegen-core';
+import type { SchemaWithType } from '@hey-api/shared';
+import { deduplicateSchema } from '@hey-api/shared';
 
-import { deduplicateSchema } from '~/ir/schema';
-import type { SchemaWithType } from '~/plugins';
-import { $ } from '~/ts-dsl';
-
-import { pipesToAst } from '../../shared/pipesToAst';
+import { $ } from '../../../../ts-dsl';
+import { pipesToNode } from '../../shared/pipes';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
 import { identifiers } from '../constants';
 import { irSchemaToAst } from '../plugin';
@@ -21,10 +20,7 @@ export const arrayToAst = ({
     pipes: [],
   };
 
-  const v = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'valibot.v',
-  });
+  const v = plugin.external('valibot.v');
   const functionName = $(v).attr(identifiers.schemas.array);
 
   if (!schema.items) {
@@ -54,7 +50,7 @@ export const arrayToAst = ({
       if (itemAst.hasLazyExpression) {
         result.hasLazyExpression = true;
       }
-      return pipesToAst({ pipes: itemAst.pipes, plugin });
+      return pipesToNode(itemAst.pipes, plugin);
     });
 
     if (itemExpressions.length === 1) {
@@ -85,9 +81,7 @@ export const arrayToAst = ({
   }
 
   if (schema.minItems === schema.maxItems && schema.minItems !== undefined) {
-    const expression = $(v)
-      .attr(identifiers.actions.length)
-      .call($.fromValue(schema.minItems));
+    const expression = $(v).attr(identifiers.actions.length).call($.fromValue(schema.minItems));
     result.pipes.push(expression);
   } else {
     if (schema.minItems !== undefined) {

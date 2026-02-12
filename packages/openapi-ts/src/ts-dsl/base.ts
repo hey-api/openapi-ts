@@ -1,41 +1,60 @@
 // TODO: symbol should be protected, but needs to be public to satisfy types
 import type {
   AnalysisContext,
-  AstContext,
   File,
   FromRef,
   Language,
   Node,
+  NodeName,
+  NodeNameSanitizer,
+  NodeRelationship,
+  NodeScope,
+  Ref,
   Symbol,
 } from '@hey-api/codegen-core';
-import {
-  fromRef,
-  isNode,
-  isRef,
-  isSymbol,
-  nodeBrand,
-} from '@hey-api/codegen-core';
+import { fromRef, isNode, isRef, isSymbol, nodeBrand, ref } from '@hey-api/codegen-core';
+import type { AnyString } from '@hey-api/types';
 import ts from 'typescript';
 
-export type MaybeArray<T> = T | ReadonlyArray<T>;
+import type { AccessOptions } from './utils/context';
 
 export abstract class TsDsl<T extends ts.Node = ts.Node> implements Node<T> {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   analyze(_: AnalysisContext): void {}
+  clone(): this {
+    const cloned = Object.create(Object.getPrototypeOf(this));
+    Object.assign(cloned, this);
+    return cloned;
+  }
   exported?: boolean;
   file?: File;
+  get name(): Node['name'] {
+    return {
+      ...this._name,
+      set: (value) => {
+        this._name = ref(value);
+        if (isSymbol(value)) {
+          value.setNode(this);
+        }
+      },
+      toString: () => (this._name ? this.$name(this._name) : ''),
+    } as Node['name'];
+  }
+  readonly nameSanitizer?: NodeNameSanitizer;
   language: Language = 'typescript';
   parent?: Node;
-  root?: Node;
+  root: boolean = false;
+  scope?: NodeScope = 'value';
+  structuralChildren?: Map<TsDsl, NodeRelationship>;
+  structuralParents?: Map<TsDsl, NodeRelationship>;
   symbol?: Symbol;
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  toAst(_: AstContext): T {
+  toAst(): T {
     return undefined as unknown as T;
   }
   readonly '~brand' = nodeBrand;
 
   /** Branding property to identify the DSL class at runtime. */
-  abstract readonly '~dsl': string;
+  abstract readonly '~dsl': AnyString;
 
   /** Conditionally applies a callback to this builder. */
   $if<T extends TsDsl, V, R extends TsDsl = T>(
@@ -112,15 +131,45 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements Node<T> {
     return this;
   }
 
+  /** Access patterns for this node. */
+  toAccessNode?(
+    node: this,
+    options: AccessOptions,
+    ctx: {
+      /** The full chain. */
+      chain: ReadonlyArray<TsDsl>;
+      /** Position in the chain (0 = root). */
+      index: number;
+      /** Is this the leaf node? */
+      isLeaf: boolean;
+      /** Is this the root node? */
+      isRoot: boolean;
+      /** Total length of the chain. */
+      length: number;
+    },
+  ): TsDsl | undefined;
+
   protected $maybeId<T extends string | ts.Expression>(
     expr: T,
   ): T extends string ? ts.Identifier : T {
-    return (
-      typeof expr === 'string' ? ts.factory.createIdentifier(expr) : expr
-    ) as T extends string ? ts.Identifier : T;
+    return (typeof expr === 'string' ? ts.factory.createIdentifier(expr) : expr) as T extends string
+      ? ts.Identifier
+      : T;
   }
 
-  protected $node<I>(ctx: AstContext, value: I): NodeOfMaybe<I> {
+  protected $name(name: Ref<NodeName>): string {
+    const value = fromRef(name);
+    if (isSymbol(value)) {
+      try {
+        return value.finalName;
+      } catch {
+        return value.name;
+      }
+    }
+    return String(value);
+  }
+
+  protected $node<I>(value: I): NodeOfMaybe<I> {
     if (value === undefined) {
       return undefined as NodeOfMaybe<I>;
     }
@@ -135,35 +184,26 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements Node<T> {
     if (value instanceof Array) {
       return value.map((item) => {
         if (isRef(item)) item = fromRef(item);
-        return this.unwrap(item, ctx);
+        return this.unwrap(item);
       }) as NodeOfMaybe<I>;
     }
-    return this.unwrap(value as any, ctx) as NodeOfMaybe<I>;
+    return this.unwrap(value as any) as NodeOfMaybe<I>;
   }
 
-  protected $type<I>(
-    ctx: AstContext,
-    value: I,
-    args?: ReadonlyArray<ts.TypeNode>,
-  ): TypeOfMaybe<I> {
+  protected $type<I>(value: I, args?: ReadonlyArray<ts.TypeNode>): TypeOfMaybe<I> {
     if (value === undefined) {
       return undefined as TypeOfMaybe<I>;
     }
     // @ts-expect-error
     if (isRef(value)) value = fromRef(value);
     if (isSymbol(value)) {
-      return ts.factory.createTypeReferenceNode(
-        value.finalName,
-        args,
-      ) as TypeOfMaybe<I>;
+      return ts.factory.createTypeReferenceNode(value.finalName, args) as TypeOfMaybe<I>;
     }
     if (typeof value === 'string') {
       return ts.factory.createTypeReferenceNode(value, args) as TypeOfMaybe<I>;
     }
     if (typeof value === 'boolean') {
-      const literal = value
-        ? ts.factory.createTrue()
-        : ts.factory.createFalse();
+      const literal = value ? ts.factory.createTrue() : ts.factory.createFalse();
       return ts.factory.createLiteralTypeNode(literal) as TypeOfMaybe<I>;
     }
     if (typeof value === 'number') {
@@ -172,21 +212,16 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements Node<T> {
       ) as TypeOfMaybe<I>;
     }
     if (value instanceof Array) {
-      return value.map((item) => this.$type(ctx, item, args)) as TypeOfMaybe<I>;
+      return value.map((item) => this.$type(item, args)) as TypeOfMaybe<I>;
     }
-    return this.unwrap(value as any, ctx) as TypeOfMaybe<I>;
+    return this.unwrap(value as any) as TypeOfMaybe<I>;
   }
 
+  private _name?: Ref<NodeName>;
+
   /** Unwraps nested nodes into raw TypeScript AST. */
-  private unwrap<I>(
-    value: I,
-    ctx: AstContext,
-  ): I extends TsDsl<infer N> ? N : I {
-    return (isNode(value) ? value.toAst(ctx) : value) as I extends TsDsl<
-      infer N
-    >
-      ? N
-      : I;
+  private unwrap<I>(value: I): I extends TsDsl<infer N> ? N : I {
+    return (isNode(value) ? value.toAst() : value) as I extends TsDsl<infer N> ? N : I;
   }
 }
 
@@ -206,11 +241,7 @@ type NodeOf<I> =
           : never;
 
 export type MaybeTsDsl<T> =
-  T extends TsDsl<infer U>
-    ? U | TsDsl<U>
-    : T extends ts.Node
-      ? T | TsDsl<T>
-      : never;
+  T extends TsDsl<infer U> ? U | TsDsl<U> : T extends ts.Node ? T | TsDsl<T> : never;
 
 export abstract class TypeTsDsl<
   T extends

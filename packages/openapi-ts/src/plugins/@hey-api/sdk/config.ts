@@ -1,23 +1,24 @@
-import { definePluginConfig } from '~/plugins/shared/utils/config';
+import { definePluginConfig } from '@hey-api/shared';
 
+import { resolveExamples } from './examples';
+import { resolveOperations } from './operations';
 import { handler } from './plugin';
 import type { HeyApiSdkPlugin } from './types';
 
 export const defaultConfig: HeyApiSdkPlugin['Config'] = {
   config: {
-    asClass: false,
     auth: true,
-    classNameBuilder: '{{name}}',
-    classStructure: 'auto',
     client: true,
-    exportFromIndex: true,
-    instance: false,
-    operationId: true,
+    comments: true,
+    includeInEntry: true,
     paramsStructure: 'grouped',
-    response: 'body',
     responseStyle: 'fields',
     transformer: false,
     validator: false,
+
+    // Deprecated - kept for backward compatibility
+    // eslint-disable-next-line sort-keys-fix/sort-keys-fix
+    response: 'body',
   },
   dependencies: ['@hey-api/typescript'],
   handler,
@@ -72,22 +73,8 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
       plugin.config.validator.response = false;
     }
 
-    if (plugin.config.instance) {
-      if (typeof plugin.config.instance !== 'string') {
-        plugin.config.instance = 'Sdk';
-      }
-
-      plugin.config.asClass = true;
-    } else {
-      plugin.config.instance = false;
-    }
-
-    // Set default classNameBuilder based on client type
-    if (plugin.config.classNameBuilder === '{{name}}') {
-      if (plugin.config.client === '@hey-api/client-angular') {
-        plugin.config.classNameBuilder = '{{name}}Service';
-      }
-    }
+    plugin.config.examples = resolveExamples(plugin.config, context);
+    plugin.config.operations = resolveOperations(plugin.config, context);
   },
 };
 

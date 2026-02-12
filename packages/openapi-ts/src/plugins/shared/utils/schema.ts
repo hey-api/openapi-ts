@@ -1,9 +1,6 @@
-import type { IR } from '~/ir/types';
-import { escapeComment } from '~/utils/escape';
+import { escapeComment, type IR } from '@hey-api/shared';
 
-export const createSchemaComment = (
-  schema: IR.SchemaObject,
-): ReadonlyArray<string> | undefined => {
+export const createSchemaComment = (schema: IR.SchemaObject): ReadonlyArray<string> | undefined => {
   const comments: Array<string> = [];
 
   if (schema.title) {

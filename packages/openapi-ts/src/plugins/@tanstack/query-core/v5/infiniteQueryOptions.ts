@@ -1,42 +1,31 @@
 import { ref } from '@hey-api/codegen-core';
+import type { IR } from '@hey-api/shared';
+import { applyNaming, operationPagination } from '@hey-api/shared';
 
-import { operationPagination } from '~/ir/operation';
-import type { IR } from '~/ir/types';
-import { buildName } from '~/openApi/shared/utils/name';
 import {
   createOperationComment,
   isOperationOptionsRequired,
-} from '~/plugins/shared/utils/operation';
-import type { TsDsl } from '~/ts-dsl';
-import { $ } from '~/ts-dsl';
-
-import {
-  createQueryKeyFunction,
-  createQueryKeyType,
-  queryKeyStatement,
-} from '../queryKey';
+} from '../../../../plugins/shared/utils/operation';
+import type { TsDsl } from '../../../../ts-dsl';
+import { $ } from '../../../../ts-dsl';
+import { createQueryKeyFunction, createQueryKeyType, queryKeyStatement } from '../queryKey';
 import { handleMeta } from '../shared/meta';
 import { useTypeData, useTypeError, useTypeResponse } from '../shared/useType';
 import type { PluginInstance } from '../types';
 
-const createInfiniteParamsFunction = ({
-  plugin,
-}: {
-  plugin: PluginInstance;
-}) => {
-  const symbolCreateInfiniteParams = plugin.registerSymbol({
-    meta: {
-      category: 'utility',
-      resource: 'createInfiniteParams',
-      tool: plugin.name,
-    },
-    name: buildName({
-      config: {
-        case: plugin.config.case,
-      },
-      name: 'createInfiniteParams',
+const createInfiniteParamsFunction = ({ plugin }: { plugin: PluginInstance }) => {
+  const symbolCreateInfiniteParams = plugin.symbol(
+    applyNaming('createInfiniteParams', {
+      case: plugin.config.case,
     }),
-  });
+    {
+      meta: {
+        category: 'utility',
+        resource: 'createInfiniteParams',
+        tool: plugin.name,
+      },
+    },
+  );
 
   const fn = $.const(symbolCreateInfiniteParams).assign(
     $.func()
@@ -106,11 +95,9 @@ const createInfiniteParamsFunction = ({
 export const createInfiniteQueryOptions = ({
   operation,
   plugin,
-  queryFn,
 }: {
   operation: IR.OperationObject;
   plugin: PluginInstance;
-  queryFn: ReturnType<typeof $.expr | typeof $.call | typeof $.attr>;
 }): void => {
   const pagination = operationPagination({
     context: plugin.context,
@@ -147,14 +134,8 @@ export const createInfiniteQueryOptions = ({
     createInfiniteParamsFunction({ plugin });
   }
 
-  const symbolInfiniteQueryOptions = plugin.referenceSymbol({
-    category: 'external',
-    resource: `${plugin.name}.infiniteQueryOptions`,
-  });
-  const symbolInfiniteDataType = plugin.referenceSymbol({
-    category: 'external',
-    resource: `${plugin.name}.InfiniteData`,
-  });
+  const symbolInfiniteQueryOptions = plugin.external(`${plugin.name}.infiniteQueryOptions`);
+  const symbolInfiniteDataType = plugin.external(`${plugin.name}.InfiniteData`);
 
   const typeData = useTypeData({ operation, plugin });
   const typeResponse = useTypeResponse({ operation, plugin });
@@ -183,12 +164,9 @@ export const createInfiniteQueryOptions = ({
     },
   });
 
-  const symbolInfiniteQueryKey = plugin.registerSymbol({
-    name: buildName({
-      config: plugin.config.infiniteQueryKeys,
-      name: operation.id,
-    }),
-  });
+  const symbolInfiniteQueryKey = plugin.symbol(
+    applyNaming(operation.id, plugin.config.infiniteQueryKeys),
+  );
   const node = queryKeyStatement({
     isInfinite: true,
     operation,
@@ -198,8 +176,15 @@ export const createInfiniteQueryOptions = ({
   });
   plugin.node(node);
 
-  const awaitSdkFn = $.lazy(() =>
-    $(queryFn)
+  const awaitSdkFn = $.lazy((ctx) =>
+    ctx
+      .access(
+        plugin.referenceSymbol({
+          category: 'sdk',
+          resource: 'operation',
+          resourceId: operation.id,
+        }),
+      )
       .call(
         $.object()
           .spread('options')
@@ -226,37 +211,24 @@ export const createInfiniteQueryOptions = ({
           .otherwise(
             $.object()
               .pretty()
-              .prop(
-                pagination.in,
-                $.object().pretty().prop(pagination.name, $('pageParam')),
-              ),
+              .prop(pagination.in, $.object().pretty().prop(pagination.name, $('pageParam'))),
           ),
       ),
-    $.const('params').assign(
-      $(symbolCreateInfiniteParams).call('queryKey', 'page'),
-    ),
+    $.const('params').assign($(symbolCreateInfiniteParams).call('queryKey', 'page')),
   ];
 
   if (plugin.getPluginOrThrow('@hey-api/sdk').config.responseStyle === 'data') {
     statements.push($.return(awaitSdkFn));
   } else {
-    statements.push(
-      $.const().object('data').assign(awaitSdkFn),
-      $.return('data'),
-    );
+    statements.push($.const().object('data').assign(awaitSdkFn), $.return('data'));
   }
 
-  const symbolInfiniteQueryOptionsFn = plugin.registerSymbol({
-    name: buildName({
-      config: plugin.config.infiniteQueryOptions,
-      name: operation.id,
-    }),
-  });
+  const symbolInfiniteQueryOptionsFn = plugin.symbol(
+    applyNaming(operation.id, plugin.config.infiniteQueryOptions),
+  );
   const statement = $.const(symbolInfiniteQueryOptionsFn)
     .export()
-    .$if(plugin.config.comments && createOperationComment(operation), (c, v) =>
-      c.doc(v),
-    )
+    .$if(plugin.config.comments && createOperationComment(operation), (c, v) => c.doc(v))
     .assign(
       $.func()
         .param('options', (p) => p.required(isRequiredOptions).type(typeData))
@@ -275,9 +247,8 @@ export const createInfiniteQueryOptions = ({
                       .do(...statements),
                   )
                   .prop('queryKey', $(symbolInfiniteQueryKey).call('options'))
-                  .$if(
-                    handleMeta(plugin, operation, 'infiniteQueryOptions'),
-                    (o, v) => o.prop('meta', v),
+                  .$if(handleMeta(plugin, operation, 'infiniteQueryOptions'), (o, v) =>
+                    o.prop('meta', v),
                   ),
               )
               .generics(

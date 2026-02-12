@@ -1,8 +1,6 @@
 import { fromRef } from '@hey-api/codegen-core';
-
-import { operationResponsesMap } from '~/ir/operation';
-import type { IR } from '~/ir/types';
-import { buildName } from '~/openApi/shared/utils/name';
+import type { IR } from '@hey-api/shared';
+import { applyNaming, operationResponsesMap } from '@hey-api/shared';
 
 import { exportAst } from './export';
 import type { Ast, IrSchemaToAstOptions } from './types';
@@ -13,10 +11,7 @@ export const irOperationToAst = ({
   plugin,
   state,
 }: IrSchemaToAstOptions & {
-  getAst: (
-    schema: IR.SchemaObject,
-    path: ReadonlyArray<string | number>,
-  ) => Ast;
+  getAst: (schema: IR.SchemaObject, path: ReadonlyArray<string | number>) => Ast;
   operation: IR.OperationObject;
 }): void => {
   if (plugin.config.requests.enabled) {
@@ -118,42 +113,30 @@ export const irOperationToAst = ({
     schemaData.required = [...requiredProperties];
 
     const ast = getAst(schemaData, fromRef(state.path));
-    const symbol = plugin.symbol(
-      buildName({
-        config: plugin.config.requests,
-        name: operation.id,
-      }),
-      {
-        meta: {
-          category: 'schema',
-          path: fromRef(state.path),
-          resource: 'operation',
-          resourceId: operation.id,
-          role: 'data',
-          tags: fromRef(state.tags),
-          tool: 'zod',
-        },
+    const symbol = plugin.symbol(applyNaming(operation.id, plugin.config.requests), {
+      meta: {
+        category: 'schema',
+        path: fromRef(state.path),
+        resource: 'operation',
+        resourceId: operation.id,
+        role: 'data',
+        tags: fromRef(state.tags),
+        tool: 'zod',
       },
-    );
+    });
     const typeInferSymbol = plugin.config.requests.types.infer.enabled
-      ? plugin.symbol(
-          buildName({
-            config: plugin.config.requests.types.infer,
-            name: operation.id,
-          }),
-          {
-            meta: {
-              category: 'type',
-              path: fromRef(state.path),
-              resource: 'operation',
-              resourceId: operation.id,
-              role: 'data',
-              tags: fromRef(state.tags),
-              tool: 'zod',
-              variant: 'infer',
-            },
+      ? plugin.symbol(applyNaming(operation.id, plugin.config.requests.types.infer), {
+          meta: {
+            category: 'type',
+            path: fromRef(state.path),
+            resource: 'operation',
+            resourceId: operation.id,
+            role: 'data',
+            tags: fromRef(state.tags),
+            tool: 'zod',
+            variant: 'infer',
           },
-        )
+        })
       : undefined;
     exportAst({
       ast,
@@ -171,42 +154,30 @@ export const irOperationToAst = ({
       if (response) {
         const path = [...fromRef(state.path), 'responses'];
         const ast = getAst(response, path);
-        const symbol = plugin.symbol(
-          buildName({
-            config: plugin.config.responses,
-            name: operation.id,
-          }),
-          {
-            meta: {
-              category: 'schema',
-              path,
-              resource: 'operation',
-              resourceId: operation.id,
-              role: 'responses',
-              tags: fromRef(state.tags),
-              tool: 'zod',
-            },
+        const symbol = plugin.symbol(applyNaming(operation.id, plugin.config.responses), {
+          meta: {
+            category: 'schema',
+            path,
+            resource: 'operation',
+            resourceId: operation.id,
+            role: 'responses',
+            tags: fromRef(state.tags),
+            tool: 'zod',
           },
-        );
+        });
         const typeInferSymbol = plugin.config.responses.types.infer.enabled
-          ? plugin.symbol(
-              buildName({
-                config: plugin.config.responses.types.infer,
-                name: operation.id,
-              }),
-              {
-                meta: {
-                  category: 'type',
-                  path,
-                  resource: 'operation',
-                  resourceId: operation.id,
-                  role: 'responses',
-                  tags: fromRef(state.tags),
-                  tool: 'zod',
-                  variant: 'infer',
-                },
+          ? plugin.symbol(applyNaming(operation.id, plugin.config.responses.types.infer), {
+              meta: {
+                category: 'type',
+                path,
+                resource: 'operation',
+                resourceId: operation.id,
+                role: 'responses',
+                tags: fromRef(state.tags),
+                tool: 'zod',
+                variant: 'infer',
               },
-            )
+            })
           : undefined;
         exportAst({
           ast,

@@ -1,12 +1,9 @@
 import type { SymbolMeta } from '@hey-api/codegen-core';
+import type { IR } from '@hey-api/shared';
+import { applyNaming, createOperationKey, operationResponsesMap, refToName } from '@hey-api/shared';
 import type ts from 'typescript';
 
-import { createOperationKey, operationResponsesMap } from '~/ir/operation';
-import type { IR } from '~/ir/types';
-import { buildName } from '~/openApi/shared/utils/name';
-import { $ } from '~/ts-dsl';
-import { refToName } from '~/utils/ref';
-
+import { $ } from '../../../ts-dsl';
 import type { HeyApiTransformersPlugin } from './types';
 
 const dataVariableName = 'data';
@@ -46,10 +43,7 @@ const processSchemaType = ({
   plugin,
   schema,
 }: {
-  dataExpression?:
-    | ts.Expression
-    | string
-    | ReturnType<typeof $.attr | typeof $.expr>;
+  dataExpression?: ts.Expression | string | ReturnType<typeof $.attr | typeof $.expr>;
   plugin: HeyApiTransformersPlugin['Instance'];
   schema: IR.SchemaObject;
 }): Array<Expr> => {
@@ -62,12 +56,9 @@ const processSchemaType = ({
     const symbol =
       plugin.getSymbol(query) ??
       plugin.symbol(
-        buildName({
-          config: {
-            case: 'camelCase',
-            name: '{{name}}SchemaResponseTransformer',
-          },
-          name: refToName(schema.$ref),
+        applyNaming(refToName(schema.$ref), {
+          case: 'camelCase',
+          name: '{{name}}SchemaResponseTransformer',
         }),
         {
           meta: query,
@@ -81,9 +72,7 @@ const processSchemaType = ({
     if (!symbol.node && !buildingSymbols.has(symbol.id)) {
       buildingSymbols.add(symbol.id);
       try {
-        const refSchema = plugin.context.resolveIrRef<IR.SchemaObject>(
-          schema.$ref,
-        );
+        const refSchema = plugin.context.resolveIrRef<IR.SchemaObject>(schema.$ref);
         const nodes = schemaResponseTransformerNodes({
           plugin,
           schema: refSchema,
@@ -153,9 +142,7 @@ const processSchemaType = ({
     // TODO: remove
     // Ensure the map callback has a return statement for the item
     const mapCallbackStatements: Array<Expr> = nodes;
-    const hasReturnStatement = mapCallbackStatements.some((stmt) =>
-      isNodeReturnStatement(stmt),
-    );
+    const hasReturnStatement = mapCallbackStatements.some((stmt) => isNodeReturnStatement(stmt));
 
     if (!hasReturnStatement) {
       mapCallbackStatements.push($.return('item'));
@@ -180,9 +167,7 @@ const processSchemaType = ({
 
     for (const name in schema.properties) {
       const property = schema.properties[name]!;
-      const propertyAccessExpression = $(
-        dataExpression || dataVariableName,
-      ).attr(name);
+      const propertyAccessExpression = $(dataExpression || dataVariableName).attr(name);
       const propertyNodes = processSchemaType({
         dataExpression: propertyAccessExpression,
         plugin,
@@ -191,9 +176,7 @@ const processSchemaType = ({
       if (!propertyNodes.length) {
         continue;
       }
-      const noNullableTypesInSchema = !property.items?.find(
-        (x) => x.type === 'null',
-      );
+      const noNullableTypesInSchema = !property.items?.find((x) => x.type === 'null');
       const requiredField = required.includes(name);
       // Cannot fully rely on required fields
       // Such value has to be present, but it doesn't guarantee that this value is not nullish
@@ -226,9 +209,7 @@ const processSchemaType = ({
     if (
       schema.logicalOperator === 'and' ||
       (schema.items.length === 2 &&
-        schema.items.find(
-          (item) => item.type === 'null' || item.type === 'void',
-        ))
+        schema.items.find((item) => item.type === 'null' || item.type === 'void'))
     ) {
       for (const item of schema.items) {
         const nodes = processSchemaType({
@@ -250,15 +231,29 @@ const processSchemaType = ({
 
     // assume enums do not contain transformable values
     if (schema.type !== 'enum') {
-      if (
-        !(schema.items ?? []).every((item) =>
-          (
-            ['boolean', 'integer', 'null', 'number', 'string'] as ReadonlyArray<
-              typeof item.type
-            >
-          ).includes(item.type),
-        )
-      ) {
+      const hasSimpleTypes = (schema.items ?? []).every((item) =>
+        (
+          ['boolean', 'integer', 'null', 'number', 'string'] as ReadonlyArray<typeof item.type>
+        ).includes(item.type),
+      );
+
+      // Skip warning if items are processable through other mechanisms:
+      // 1. All items are $ref-based (e.g., discriminated oneOf/anyOf)
+      // 2. All items are nested allOf ($ref wrapped in allOf for discriminators)
+      // These patterns are handled correctly by recursive processing logic
+      const isProcessable = (schema.items ?? []).every((item) => {
+        // Direct $ref items are processable
+        if (item.$ref) {
+          return true;
+        }
+        // Nested allOf items (common in discriminated unions) are processable
+        if (item.logicalOperator === 'and' && item.items) {
+          return true;
+        }
+        return false;
+      });
+
+      if (!hasSimpleTypes && !isProcessable) {
         console.warn(
           `❗️ Transformers warning: schema ${JSON.stringify(schema)} is too complex and won't be currently processed. This will likely produce an incomplete transformer which is not what you want. Please open an issue if you'd like this improved https://github.com/hey-api/openapi-ts/issues`,
         );
@@ -288,7 +283,7 @@ export const handler: HeyApiTransformersPlugin['Handler'] = ({ plugin }) => {
       const { response } = operationResponsesMap(operation);
       if (!response) return;
 
-      if (response.items && response.items.length > 1) {
+      if (response.items && response.items.length > 1 && response.logicalOperator !== 'and') {
         if (plugin.context.config.logs.level === 'debug') {
           console.warn(
             `❗️ Transformers warning: route ${createOperationKey(operation)} has ${response.items.length} non-void success responses. This is currently not handled and we will not generate a response transformer. Please open an issue if you'd like this feature https://github.com/hey-api/openapi-ts/issues`,
@@ -311,21 +306,20 @@ export const handler: HeyApiTransformersPlugin['Handler'] = ({ plugin }) => {
         schema: response,
       });
       if (!nodes.length) return;
-      const symbol = plugin.registerSymbol({
-        meta: {
-          category: 'transform',
-          resource: 'operation',
-          resourceId: operation.id,
-          role: 'response',
-        },
-        name: buildName({
-          config: {
-            case: 'camelCase',
-            name: '{{name}}ResponseTransformer',
-          },
-          name: operation.id,
+      const symbol = plugin.symbol(
+        applyNaming(operation.id, {
+          case: 'camelCase',
+          name: '{{name}}ResponseTransformer',
         }),
-      });
+        {
+          meta: {
+            category: 'transform',
+            resource: 'operation',
+            resourceId: operation.id,
+            role: 'response',
+          },
+        },
+      );
       const value = $.const(symbol)
         .export()
         .assign(

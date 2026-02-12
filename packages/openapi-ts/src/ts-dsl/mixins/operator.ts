@@ -1,11 +1,11 @@
-import type { AnalysisContext, Node, Symbol } from '@hey-api/codegen-core';
+import type { AnalysisContext, Node, NodeName } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { BinaryTsDsl } from '../expr/binary';
 import type { BaseCtor, MixinCtor } from './types';
 
-type Expr = Symbol | string | MaybeTsDsl<ts.Expression>;
+type Expr = NodeName | MaybeTsDsl<ts.Expression>;
 
 export interface OperatorMethods extends Node {
   /** Logical AND — `this && expr` */
@@ -34,6 +34,8 @@ export interface OperatorMethods extends Node {
   minus(expr: Expr): BinaryTsDsl;
   /** Strict inequality — `this !== expr` */
   neq(expr: Expr): BinaryTsDsl;
+  /** Nullish assignment — `this ??= expr` */
+  nullishAssign(expr: Expr): BinaryTsDsl;
   /** Logical OR — `this || expr` */
   or(expr: Expr): BinaryTsDsl;
   /** Addition — `this + expr` */
@@ -42,10 +44,7 @@ export interface OperatorMethods extends Node {
   times(expr: Expr): BinaryTsDsl;
 }
 
-export function OperatorMixin<
-  T extends ts.Expression,
-  TBase extends BaseCtor<T>,
->(Base: TBase) {
+export function OperatorMixin<T extends ts.Expression, TBase extends BaseCtor<T>>(Base: TBase) {
   abstract class Operator extends Base {
     override analyze(ctx: AnalysisContext): void {
       super.analyze(ctx);
@@ -101,6 +100,10 @@ export function OperatorMixin<
 
     protected neq(expr: Expr): BinaryTsDsl {
       return new BinaryTsDsl(this).neq(expr);
+    }
+
+    protected nullishAssign(expr: Expr): BinaryTsDsl {
+      return new BinaryTsDsl(this).nullishAssign(expr);
     }
 
     protected or(expr: Expr): BinaryTsDsl {

@@ -1,30 +1,25 @@
-import type { SchemaWithType } from '~/plugins';
-import { $ } from '~/ts-dsl';
+import type { SchemaWithType } from '@hey-api/shared';
 
-import { pipesToAst } from '../../shared/pipesToAst';
+import { $ } from '../../../../ts-dsl';
+import { pipesToNode } from '../../shared/pipes';
 import type { IrSchemaToAstOptions } from '../../shared/types';
 import { identifiers } from '../constants';
 
-export const booleanToAst = ({
+export function booleanToAst({
   plugin,
   schema,
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'boolean'>;
-}): ReturnType<typeof $.call | typeof $.expr> => {
+}): ReturnType<typeof $.call | typeof $.expr> {
   const pipes: Array<ReturnType<typeof $.call>> = [];
 
-  const v = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'valibot.v',
-  });
+  const v = plugin.external('valibot.v');
 
   if (typeof schema.const === 'boolean') {
-    pipes.push(
-      $(v).attr(identifiers.schemas.literal).call($.literal(schema.const)),
-    );
-    return pipesToAst({ pipes, plugin });
+    pipes.push($(v).attr(identifiers.schemas.literal).call($.literal(schema.const)));
+    return pipesToNode(pipes, plugin);
   }
 
   pipes.push($(v).attr(identifiers.schemas.boolean).call());
-  return pipesToAst({ pipes, plugin });
-};
+  return pipesToNode(pipes, plugin);
+}

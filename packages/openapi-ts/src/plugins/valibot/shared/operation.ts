@@ -1,8 +1,6 @@
 import { fromRef } from '@hey-api/codegen-core';
-
-import { operationResponsesMap } from '~/ir/operation';
-import type { IR } from '~/ir/types';
-import { buildName } from '~/openApi/shared/utils/name';
+import type { IR } from '@hey-api/shared';
+import { applyNaming, operationResponsesMap } from '@hey-api/shared';
 
 import { exportAst } from './export';
 import type { Ast, IrSchemaToAstOptions } from './types';
@@ -13,10 +11,7 @@ export const irOperationToAst = ({
   plugin,
   state,
 }: IrSchemaToAstOptions & {
-  getAst: (
-    schema: IR.SchemaObject,
-    path: ReadonlyArray<string | number>,
-  ) => Ast;
+  getAst: (schema: IR.SchemaObject, path: ReadonlyArray<string | number>) => Ast;
   operation: IR.OperationObject;
 }) => {
   if (plugin.config.requests.enabled) {
@@ -118,7 +113,7 @@ export const irOperationToAst = ({
     schemaData.required = [...requiredProperties];
 
     const ast = getAst(schemaData, fromRef(state.path));
-    const symbol = plugin.registerSymbol({
+    const symbol = plugin.symbol(applyNaming(operation.id, plugin.config.requests), {
       meta: {
         category: 'schema',
         path: fromRef(state.path),
@@ -128,10 +123,6 @@ export const irOperationToAst = ({
         tags: fromRef(state.tags),
         tool: 'valibot',
       },
-      name: buildName({
-        config: plugin.config.requests,
-        name: operation.id,
-      }),
     });
     exportAst({
       ast,
@@ -149,7 +140,7 @@ export const irOperationToAst = ({
       if (response) {
         const path = [...fromRef(state.path), 'responses'];
         const ast = getAst(response, path);
-        const symbol = plugin.registerSymbol({
+        const symbol = plugin.symbol(applyNaming(operation.id, plugin.config.responses), {
           meta: {
             category: 'schema',
             path,
@@ -159,10 +150,6 @@ export const irOperationToAst = ({
             tags: fromRef(state.tags),
             tool: 'valibot',
           },
-          name: buildName({
-            config: plugin.config.responses,
-            name: operation.id,
-          }),
         });
         exportAst({
           ast,

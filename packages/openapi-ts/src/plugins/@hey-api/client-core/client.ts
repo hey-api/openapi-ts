@@ -1,13 +1,12 @@
-import { clientFolderAbsolutePath } from '~/generate/client';
-import { $ } from '~/ts-dsl';
-import { parseUrl } from '~/utils/url';
+import { parseUrl } from '@hey-api/shared';
 
+import { getTypedConfig } from '../../../config/utils';
+import { clientFolderAbsolutePath } from '../../../generate/client';
+import { $ } from '../../../ts-dsl';
 import type { PluginHandler } from './types';
 import { getClientBaseUrlKey } from './utils';
 
-const resolveBaseUrlString = ({
-  plugin,
-}: Parameters<PluginHandler>[0]): string | undefined => {
+const resolveBaseUrlString = ({ plugin }: Parameters<PluginHandler>[0]): string | undefined => {
   const { baseUrl } = plugin.config;
 
   if (baseUrl === false) {
@@ -28,14 +27,12 @@ const resolveBaseUrlString = ({
 };
 
 export const createClient: PluginHandler = ({ plugin }) => {
-  const clientModule = clientFolderAbsolutePath(plugin.context.config);
-  const symbolCreateClient = plugin.registerSymbol({
+  const clientModule = clientFolderAbsolutePath(getTypedConfig(plugin));
+  const symbolCreateClient = plugin.symbol('createClient', {
     external: clientModule,
-    name: 'createClient',
   });
-  const symbolCreateConfig = plugin.registerSymbol({
+  const symbolCreateConfig = plugin.symbol('createConfig', {
     external: clientModule,
-    name: 'createConfig',
   });
   const symbolClientOptions = plugin.referenceSymbol({
     category: 'type',
@@ -45,9 +42,8 @@ export const createClient: PluginHandler = ({ plugin }) => {
 
   const { runtimeConfigPath } = plugin.config;
   const symbolCreateClientConfig = runtimeConfigPath
-    ? plugin.registerSymbol({
+    ? plugin.symbol('createClientConfig', {
         external: runtimeConfigPath,
-        name: 'createClientConfig',
       })
     : undefined;
 
@@ -59,18 +55,12 @@ export const createClient: PluginHandler = ({ plugin }) => {
   if (resolvedBaseUrl) {
     const url = parseUrl(resolvedBaseUrl);
     if (url.protocol && url.host && !resolvedBaseUrl.includes('{')) {
-      defaultVals.prop(
-        getClientBaseUrlKey(plugin.context.config),
-        $.literal(resolvedBaseUrl),
-      );
+      defaultVals.prop(getClientBaseUrlKey(getTypedConfig(plugin)), $.literal(resolvedBaseUrl));
     } else if (resolvedBaseUrl !== '/' && resolvedBaseUrl.startsWith('/')) {
       const baseUrl = resolvedBaseUrl.endsWith('/')
         ? resolvedBaseUrl.slice(0, -1)
         : resolvedBaseUrl;
-      defaultVals.prop(
-        getClientBaseUrlKey(plugin.context.config),
-        $.literal(baseUrl),
-      );
+      defaultVals.prop(getClientBaseUrlKey(getTypedConfig(plugin)), $.literal(baseUrl));
     }
   }
 
@@ -84,11 +74,10 @@ export const createClient: PluginHandler = ({ plugin }) => {
       .generic(symbolClientOptions),
   ];
 
-  const symbolClient = plugin.registerSymbol({
+  const symbolClient = plugin.symbol('client', {
     meta: {
       category: 'client',
     },
-    name: 'client',
   });
   const statement = $.const(symbolClient)
     .export()

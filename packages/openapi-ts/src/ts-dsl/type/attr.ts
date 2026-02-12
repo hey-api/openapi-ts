@@ -1,23 +1,19 @@
-import type {
-  AnalysisContext,
-  AstContext,
-  Ref,
-  Symbol,
-} from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName, NodeScope, Ref } from '@hey-api/codegen-core';
 import { isRef, ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { TypeTsDsl } from '../base';
+import { TsDsl } from '../base';
 import { TypeExprMixin } from '../mixins/type-expr';
 
-type Base = Symbol | string | MaybeTsDsl<ts.EntityName>;
-type Right = Symbol | string | ts.Identifier;
+type Base = NodeName | MaybeTsDsl<ts.EntityName>;
+type Right = NodeName | ts.Identifier;
 
-const Mixed = TypeExprMixin(TypeTsDsl<ts.QualifiedName>);
+const Mixed = TypeExprMixin(TsDsl<ts.QualifiedName>);
 
 export class TypeAttrTsDsl extends Mixed {
   readonly '~dsl' = 'TypeAttrTsDsl';
+  override scope: NodeScope = 'type';
 
   protected _base?: Ref<Base>;
   protected _right!: Ref<Right>;
@@ -41,6 +37,11 @@ export class TypeAttrTsDsl extends Mixed {
     ctx.analyze(this._right);
   }
 
+  /** Returns true when all required builder calls are present. */
+  get isValid(): boolean {
+    return this.missingRequiredCalls().length === 0;
+  }
+
   base(base?: Base | Ref<Base>): this {
     if (isRef(base)) {
       this._base = base;
@@ -55,17 +56,28 @@ export class TypeAttrTsDsl extends Mixed {
     return this;
   }
 
-  override toAst(ctx: AstContext) {
-    if (!this._base) {
-      throw new Error('TypeAttrTsDsl: missing base for qualified name');
-    }
-    const left = this.$node(ctx, this._base);
+  override toAst() {
+    this.$validate();
+    const left = this.$node(this._base);
     if (!ts.isEntityName(left)) {
       throw new Error('TypeAttrTsDsl: base must be an EntityName');
     }
-    return ts.factory.createQualifiedName(
-      left,
-      this.$node(ctx, this._right) as ts.Identifier,
-    );
+    return ts.factory.createQualifiedName(left, this.$node(this._right) as ts.Identifier);
+  }
+
+  $validate(): asserts this is this & {
+    _base: Ref<Base>;
+    _right: Ref<Right>;
+  } {
+    const missing = this.missingRequiredCalls();
+    if (missing.length === 0) return;
+    throw new Error(`Type attribute missing ${missing.join(' and ')}`);
+  }
+
+  private missingRequiredCalls(): ReadonlyArray<string> {
+    const missing: Array<string> = [];
+    if (!this._base) missing.push('.base()');
+    if (!this._right) missing.push('.right()');
+    return missing;
   }
 }

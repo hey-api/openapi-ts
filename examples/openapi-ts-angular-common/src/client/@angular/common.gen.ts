@@ -241,9 +241,7 @@ export const createUserRequest = <ThrowOnError extends boolean = false>(
  *
  * Creates list of users with given input array.
  */
-export const createUsersWithListInputRequest = <
-  ThrowOnError extends boolean = false,
->(
+export const createUsersWithListInputRequest = <ThrowOnError extends boolean = false>(
   options?: Options<CreateUsersWithListInputData, ThrowOnError>,
 ): HttpRequest<unknown> =>
   (options?.client ?? client).requestOptions({
@@ -524,9 +522,7 @@ export class UserServiceResources {
    * Creates list of users with given input array.
    */
   public createUsersWithListInput<ThrowOnError extends boolean = false>(
-    options?: () =>
-      | Options<CreateUsersWithListInputData, ThrowOnError>
-      | undefined,
+    options?: () => Options<CreateUsersWithListInputData, ThrowOnError> | undefined,
   ) {
     return httpResource<CreateUsersWithListInputResponse>(() => {
       const opts = options ? options() : undefined;

@@ -1,118 +1,83 @@
 import type { AnalysisContext, Node } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
-import type { MaybeTsDsl, TsDsl, TypeTsDsl } from '../base';
-import type { TypeOfExprTsDsl } from '../expr/typeof';
-import type { TypeExprTsDsl } from '../type/expr';
-import type { TypeIdxTsDsl } from '../type/idx';
-import type { TypeOperatorTsDsl } from '../type/operator';
-import type { TypeQueryTsDsl } from '../type/query';
-import type { BaseCtor, MixinCtor } from './types';
-
-type TypeExprFactory = (
-  nameOrFn?: string | ((t: TypeExprTsDsl) => void),
-  fn?: (t: TypeExprTsDsl) => void,
-) => TypeExprTsDsl;
-let typeExprFactory: TypeExprFactory | undefined;
-/** Lazy register the factory to avoid circular imports. */
-export function setTypeExprFactory(factory: TypeExprFactory): void {
-  typeExprFactory = factory;
-}
-
-type TypeIdxFactory = (
-  expr: MaybeTsDsl<TypeTsDsl>,
-  index: string | number | MaybeTsDsl<ts.TypeNode>,
-) => TypeIdxTsDsl;
-let typeIdxFactory: TypeIdxFactory | undefined;
-/** Lazy register the factory to avoid circular imports. */
-export function setTypeIdxFactory(factory: TypeIdxFactory): void {
-  typeIdxFactory = factory;
-}
-
-type TypeOfExprFactory = (
-  expr: string | MaybeTsDsl<ts.Expression>,
-) => TypeOfExprTsDsl;
-let typeOfExprFactory: TypeOfExprFactory | undefined;
-/** Lazy register the factory to avoid circular imports. */
-export function setTypeOfExprFactory(factory: TypeOfExprFactory): void {
-  typeOfExprFactory = factory;
-}
-
-type TypeOperatorFactory = () => TypeOperatorTsDsl;
-let typeOperatorFactory: TypeOperatorFactory | undefined;
-/** Lazy register the factory to avoid circular imports. */
-export function setTypeOperatorFactory(factory: TypeOperatorFactory): void {
-  typeOperatorFactory = factory;
-}
-
-type TypeQueryFactory = (
-  expr: string | MaybeTsDsl<TypeTsDsl | ts.Expression>,
-) => TypeQueryTsDsl;
-let typeQueryFactory: TypeQueryFactory | undefined;
-/** Lazy register the factory to avoid circular imports. */
-export function setTypeQueryFactory(factory: TypeQueryFactory): void {
-  typeQueryFactory = factory;
-}
+import type { MaybeTsDsl, TypeTsDsl } from '../base';
+import { f } from '../utils/factories';
+import type { BaseCtor, DropFirst, MixinCtor } from './types';
 
 export interface TypeExprMethods extends Node {
   /** Creates an indexed-access type (e.g. `Foo<T>[K]`). */
   idx(
-    this: MaybeTsDsl<TypeTsDsl>,
-    index: string | number | MaybeTsDsl<ts.TypeNode>,
-  ): TypeIdxTsDsl;
+    this: Parameters<typeof f.type.idx>[0],
+    ...args: DropFirst<Parameters<typeof f.type.idx>>
+  ): ReturnType<typeof f.type.idx>;
   /** Shorthand: builds `keyof T`. */
-  keyof(this: MaybeTsDsl<TypeTsDsl>): TypeOperatorTsDsl;
+  keyof(this: MaybeTsDsl<TypeTsDsl>): ReturnType<typeof f.type.operator>;
   /** Shorthand: builds `readonly T`. */
-  readonly(this: MaybeTsDsl<TypeTsDsl>): TypeOperatorTsDsl;
+  readonly(this: MaybeTsDsl<TypeTsDsl>): ReturnType<typeof f.type.operator>;
   /** Create a TypeExpr node representing ReturnType<this>. */
-  returnType(this: MaybeTsDsl<ts.Expression>): TypeExprTsDsl;
+  returnType(
+    this: Parameters<typeof f.type.query>[0],
+    ...args: DropFirst<Parameters<typeof f.type.query>>
+  ): ReturnType<typeof f.type.expr>;
   /** Create a TypeOfExpr node representing typeof this. */
-  typeofExpr(this: MaybeTsDsl<ts.Expression>): TypeOfExprTsDsl;
+  typeofExpr(
+    this: Parameters<typeof f.typeofExpr>[0],
+    ...args: DropFirst<Parameters<typeof f.typeofExpr>>
+  ): ReturnType<typeof f.typeofExpr>;
   /** Create a TypeQuery node representing typeof this. */
-  typeofType(this: MaybeTsDsl<TypeTsDsl | ts.Expression>): TypeQueryTsDsl;
+  typeofType(
+    this: Parameters<typeof f.type.query>[0],
+    ...args: DropFirst<Parameters<typeof f.type.query>>
+  ): ReturnType<typeof f.type.query>;
   /** Shorthand: builds `unique T`. */
-  unique(this: MaybeTsDsl<TypeTsDsl>): TypeOperatorTsDsl;
+  unique(this: MaybeTsDsl<TypeTsDsl>): ReturnType<typeof f.type.operator>;
 }
 
-export function TypeExprMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
-  Base: TBase,
-) {
+export function TypeExprMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base: TBase) {
   abstract class TypeExpr extends Base {
     override analyze(ctx: AnalysisContext): void {
       super.analyze(ctx);
     }
 
     protected idx(
-      this: TypeTsDsl,
-      index: string | number | MaybeTsDsl<ts.TypeNode>,
-    ): TypeIdxTsDsl {
-      return typeIdxFactory!(this, index);
+      this: Parameters<typeof f.type.idx>[0],
+      ...args: DropFirst<Parameters<typeof f.type.idx>>
+    ): ReturnType<typeof f.type.idx> {
+      return f.type.idx(this, ...args);
     }
 
-    protected keyof(this: TypeTsDsl): TypeOperatorTsDsl {
-      return typeOperatorFactory!().keyof(this);
+    protected keyof(this: TypeTsDsl): ReturnType<typeof f.type.operator> {
+      return f.type.operator().keyof(this);
     }
 
-    protected readonly(this: TypeTsDsl): TypeOperatorTsDsl {
-      return typeOperatorFactory!().readonly(this);
+    protected readonly(this: TypeTsDsl): ReturnType<typeof f.type.operator> {
+      return f.type.operator().readonly(this);
     }
 
-    protected returnType(this: TsDsl<ts.Expression>): TypeExprTsDsl {
-      return typeExprFactory!('ReturnType').generic(typeQueryFactory!(this));
+    protected returnType(
+      this: Parameters<typeof f.type.query>[0],
+      ...args: DropFirst<Parameters<typeof f.type.query>>
+    ): ReturnType<typeof f.type.expr> {
+      return f.type.expr('ReturnType').generic(f.type.query(this, ...args));
     }
 
-    protected typeofExpr(this: TsDsl<ts.Expression>): TypeOfExprTsDsl {
-      return typeOfExprFactory!(this);
+    protected typeofExpr(
+      this: Parameters<typeof f.typeofExpr>[0],
+      ...args: DropFirst<Parameters<typeof f.typeofExpr>>
+    ): ReturnType<typeof f.typeofExpr> {
+      return f.typeofExpr(this, ...args);
     }
 
     protected typeofType(
-      this: TypeTsDsl | TsDsl<ts.Expression>,
-    ): TypeQueryTsDsl {
-      return typeQueryFactory!(this);
+      this: Parameters<typeof f.type.query>[0],
+      ...args: DropFirst<Parameters<typeof f.type.query>>
+    ): ReturnType<typeof f.type.query> {
+      return f.type.query(this, ...args);
     }
 
-    protected unique(this: TypeTsDsl): TypeOperatorTsDsl {
-      return typeOperatorFactory!().unique(this);
+    protected unique(this: TypeTsDsl): ReturnType<typeof f.type.operator> {
+      return f.type.operator().unique(this);
     }
   }
 

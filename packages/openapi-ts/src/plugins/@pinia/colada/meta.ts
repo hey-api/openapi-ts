@@ -1,6 +1,6 @@
-import type { IR } from '~/ir/types';
-import { $ } from '~/ts-dsl';
+import type { IR } from '@hey-api/shared';
 
+import { $ } from '../../../ts-dsl';
 import type { PiniaColadaPlugin } from './types';
 
 export const handleMeta = (

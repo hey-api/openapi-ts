@@ -1,98 +1,131 @@
-import type { SchemaWithType } from '~/plugins';
-import { $ } from '~/ts-dsl';
+import type { SchemaWithType } from '@hey-api/shared';
 
-import { pipesToAst } from '../../shared/pipesToAst';
+import { $ } from '../../../../ts-dsl';
+import type { StringResolverContext } from '../../resolvers';
+import type { Pipe, PipeResult, Pipes } from '../../shared/pipes';
+import { pipes } from '../../shared/pipes';
 import type { IrSchemaToAstOptions } from '../../shared/types';
-import type { FormatResolverArgs } from '../../types';
 import { identifiers } from '../constants';
 
-const defaultFormatResolver = ({
-  pipes,
-  plugin,
-  schema,
-}: FormatResolverArgs): boolean | number => {
-  const v = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'valibot.v',
-  });
+function baseNode(ctx: StringResolverContext): PipeResult {
+  const { v } = ctx.symbols;
+  return $(v).attr(identifiers.schemas.string).call();
+}
 
+function constNode(ctx: StringResolverContext): PipeResult | undefined {
+  const { schema, symbols } = ctx;
+  const { v } = symbols;
+  if (typeof schema.const !== 'string') return;
+  return $(v).attr(identifiers.schemas.literal).call($.literal(schema.const));
+}
+
+function formatNode(ctx: StringResolverContext): PipeResult | undefined {
+  const { schema, symbols } = ctx;
+  const { v } = symbols;
   switch (schema.format) {
     case 'date':
-      return pipes.push($(v).attr(identifiers.actions.isoDate).call());
+      return $(v).attr(identifiers.actions.isoDate).call();
     case 'date-time':
-      return pipes.push($(v).attr(identifiers.actions.isoTimestamp).call());
+      return $(v).attr(identifiers.actions.isoTimestamp).call();
     case 'email':
-      return pipes.push($(v).attr(identifiers.actions.email).call());
+      return $(v).attr(identifiers.actions.email).call();
     case 'ipv4':
     case 'ipv6':
-      return pipes.push($(v).attr(identifiers.actions.ip).call());
+      return $(v).attr(identifiers.actions.ip).call();
     case 'time':
-      return pipes.push($(v).attr(identifiers.actions.isoTimeSecond).call());
+      return $(v).attr(identifiers.actions.isoTimeSecond).call();
     case 'uri':
-      return pipes.push($(v).attr(identifiers.actions.url).call());
+      return $(v).attr(identifiers.actions.url).call();
     case 'uuid':
-      return pipes.push($(v).attr(identifiers.actions.uuid).call());
+      return $(v).attr(identifiers.actions.uuid).call();
   }
 
-  return true;
-};
+  return;
+}
 
-export const stringToAst = ({
+function lengthNode(ctx: StringResolverContext): PipeResult | undefined {
+  const { schema, symbols } = ctx;
+  const { v } = symbols;
+  if (schema.minLength === undefined || schema.minLength !== schema.maxLength) return;
+  return $(v).attr(identifiers.actions.length).call($.literal(schema.minLength));
+}
+
+function maxLengthNode(ctx: StringResolverContext): PipeResult | undefined {
+  const { schema, symbols } = ctx;
+  const { v } = symbols;
+  if (schema.maxLength === undefined) return;
+  return $(v).attr(identifiers.actions.maxLength).call($.literal(schema.maxLength));
+}
+
+function minLengthNode(ctx: StringResolverContext): PipeResult | undefined {
+  const { schema, symbols } = ctx;
+  const { v } = symbols;
+  if (schema.minLength === undefined) return;
+  return $(v).attr(identifiers.actions.minLength).call($.literal(schema.minLength));
+}
+
+function patternNode(ctx: StringResolverContext): PipeResult | undefined {
+  const { schema, symbols } = ctx;
+  const { v } = symbols;
+  if (!schema.pattern) return;
+  return $(v).attr(identifiers.actions.regex).call($.regexp(schema.pattern));
+}
+
+function stringResolver(ctx: StringResolverContext): Pipes {
+  const constNode = ctx.nodes.const(ctx);
+  if (constNode) return ctx.pipes.push(ctx.pipes.current, constNode);
+
+  const baseNode = ctx.nodes.base(ctx);
+  if (baseNode) ctx.pipes.push(ctx.pipes.current, baseNode);
+
+  const formatNode = ctx.nodes.format(ctx);
+  if (formatNode) ctx.pipes.push(ctx.pipes.current, formatNode);
+
+  const lengthNode = ctx.nodes.length(ctx);
+  if (lengthNode) {
+    ctx.pipes.push(ctx.pipes.current, lengthNode);
+  } else {
+    const minLengthNode = ctx.nodes.minLength(ctx);
+    if (minLengthNode) ctx.pipes.push(ctx.pipes.current, minLengthNode);
+
+    const maxLengthNode = ctx.nodes.maxLength(ctx);
+    if (maxLengthNode) ctx.pipes.push(ctx.pipes.current, maxLengthNode);
+  }
+
+  const patternNode = ctx.nodes.pattern(ctx);
+  if (patternNode) ctx.pipes.push(ctx.pipes.current, patternNode);
+
+  return ctx.pipes.current;
+}
+
+export const stringToNode = ({
   plugin,
   schema,
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'string'>;
-}): ReturnType<typeof $.call | typeof $.expr> => {
-  const pipes: Array<ReturnType<typeof $.call>> = [];
-
-  const v = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'valibot.v',
-  });
-
-  if (typeof schema.const === 'string') {
-    pipes.push(
-      $(v).attr(identifiers.schemas.literal).call($.literal(schema.const)),
-    );
-    return pipesToAst({ pipes, plugin });
-  }
-
-  pipes.push($(v).attr(identifiers.schemas.string).call());
-
-  if (schema.format) {
-    const args: FormatResolverArgs = { $, pipes, plugin, schema };
-    const resolver =
-      plugin.config['~resolvers']?.string?.formats?.[schema.format];
-    if (!resolver?.(args)) defaultFormatResolver(args);
-  }
-
-  if (schema.minLength === schema.maxLength && schema.minLength !== undefined) {
-    pipes.push(
-      $(v).attr(identifiers.actions.length).call($.literal(schema.minLength)),
-    );
-  } else {
-    if (schema.minLength !== undefined) {
-      pipes.push(
-        $(v)
-          .attr(identifiers.actions.minLength)
-          .call($.literal(schema.minLength)),
-      );
-    }
-
-    if (schema.maxLength !== undefined) {
-      pipes.push(
-        $(v)
-          .attr(identifiers.actions.maxLength)
-          .call($.literal(schema.maxLength)),
-      );
-    }
-  }
-
-  if (schema.pattern) {
-    pipes.push(
-      $(v).attr(identifiers.actions.regex).call($.regexp(schema.pattern)),
-    );
-  }
-
-  return pipesToAst({ pipes, plugin });
+}): Pipe => {
+  const ctx: StringResolverContext = {
+    $,
+    nodes: {
+      base: baseNode,
+      const: constNode,
+      format: formatNode,
+      length: lengthNode,
+      maxLength: maxLengthNode,
+      minLength: minLengthNode,
+      pattern: patternNode,
+    },
+    pipes: {
+      ...pipes,
+      current: [],
+    },
+    plugin,
+    schema,
+    symbols: {
+      v: plugin.external('valibot.v'),
+    },
+  };
+  const resolver = plugin.config['~resolvers']?.string;
+  const node = resolver?.(ctx) ?? stringResolver(ctx);
+  return ctx.pipes.toNode(node, plugin);
 };

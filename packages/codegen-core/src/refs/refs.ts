@@ -1,15 +1,24 @@
-import type { FromRefs, Ref, Refs } from './types';
+import type { FromRef, FromRefs, Ref, Refs } from './types';
 
 /**
  * Wraps a single value in a Ref object.
+ *
+ * If the value is already a Ref, returns it as-is (idempotent).
  *
  * @example
  * ```ts
  * const r = ref(123); // { '~ref': 123 }
  * console.log(r['~ref']); // 123
+ *
+ * const r2 = ref(r); // { '~ref': 123 } (not double-wrapped)
  * ```
  */
-export const ref = <T>(value: T): Ref<T> => ({ '~ref': value });
+export const ref = <T>(value: T): Ref<T> => {
+  if (isRef(value)) {
+    return value as Ref<T>;
+  }
+  return { '~ref': value } as Ref<T>;
+};
 
 /**
  * Converts a plain object to an object of Refs (deep, per property).
@@ -40,10 +49,8 @@ export const refs = <T extends Record<string, unknown>>(obj: T): Refs<T> => {
  * console.log(n); // 42
  * ```
  */
-export const fromRef = <T extends Ref<unknown> | undefined>(
-  ref: T,
-): T extends Ref<infer U> ? U : undefined =>
-  ref?.['~ref'] as T extends Ref<infer U> ? U : undefined;
+export const fromRef = <T extends Ref<unknown> | undefined>(ref: T): FromRef<T> =>
+  ref?.['~ref'] as FromRef<T>;
 
 /**
  * Converts an object of Refs back to a plain object (unwraps all refs).
@@ -54,9 +61,7 @@ export const fromRef = <T extends Ref<unknown> | undefined>(
  * const plain = fromRefs(refs); // { a: 1, b: "x" }
  * ```
  */
-export const fromRefs = <T extends Refs<Record<string, unknown>>>(
-  obj: T,
-): FromRefs<T> => {
+export const fromRefs = <T extends Refs<Record<string, unknown>>>(obj: T): FromRefs<T> => {
   const result = {} as FromRefs<T>;
   for (const key in obj) {
     if (Object.prototype.hasOwnProperty.call(obj, key)) {

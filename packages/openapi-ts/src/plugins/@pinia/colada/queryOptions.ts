@@ -1,19 +1,16 @@
-import type { IR } from '~/ir/types';
-import { buildName } from '~/openApi/shared/utils/name';
-import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
+import type { IR } from '@hey-api/shared';
+import { applyNaming } from '@hey-api/shared';
+
+import { getTypedConfig } from '../../../config/utils';
+import { getClientPlugin } from '../../../plugins/@hey-api/client-core/utils';
 import {
   createOperationComment,
   hasOperationSse,
   isOperationOptionsRequired,
-} from '~/plugins/shared/utils/operation';
-import { $ } from '~/ts-dsl';
-
+} from '../../../plugins/shared/utils/operation';
+import { $ } from '../../../ts-dsl';
 import { handleMeta } from './meta';
-import {
-  createQueryKeyFunction,
-  createQueryKeyType,
-  queryKeyStatement,
-} from './queryKey';
+import { createQueryKeyFunction, createQueryKeyType, queryKeyStatement } from './queryKey';
 import type { PiniaColadaPlugin } from './types';
 import { getPublicTypeData } from './utils';
 
@@ -23,11 +20,9 @@ const fnOptions = 'context';
 export const createQueryOptions = ({
   operation,
   plugin,
-  queryFn,
 }: {
   operation: IR.OperationObject;
   plugin: PiniaColadaPlugin['Instance'];
-  queryFn: ReturnType<typeof $.expr | typeof $.call | typeof $.attr>;
 }): void => {
   if (hasOperationSse({ operation })) {
     return;
@@ -50,12 +45,7 @@ export const createQueryOptions = ({
 
   let keyExpression: ReturnType<typeof $.call>;
   if (plugin.config.queryKeys.enabled) {
-    const symbolQueryKey = plugin.registerSymbol({
-      name: buildName({
-        config: plugin.config.queryKeys,
-        name: operation.id,
-      }),
-    });
+    const symbolQueryKey = plugin.symbol(applyNaming(operation.id, plugin.config.queryKeys));
     const node = queryKeyStatement({
       operation,
       plugin,
@@ -71,11 +61,7 @@ export const createQueryOptions = ({
     });
     // Optionally include tags when configured
     let tagsExpr: ReturnType<typeof $.array> | undefined;
-    if (
-      plugin.config.queryKeys.tags &&
-      operation.tags &&
-      operation.tags.length > 0
-    ) {
+    if (plugin.config.queryKeys.tags && operation.tags && operation.tags.length > 0) {
       tagsExpr = $.array(...operation.tags.map((t) => $.literal(t)));
     }
     keyExpression = $(symbolCreateQueryKey).call(
@@ -85,16 +71,20 @@ export const createQueryOptions = ({
     );
   }
 
-  const client = getClientPlugin(plugin.context.config);
+  const client = getClientPlugin(getTypedConfig(plugin));
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
   const typeData = getPublicTypeData({ isNuxtClient, operation, plugin });
-  const awaitSdkFn = $.lazy(() =>
-    $(queryFn)
+  const awaitSdkFn = $.lazy((ctx) =>
+    ctx
+      .access(
+        plugin.referenceSymbol({
+          category: 'sdk',
+          resource: 'operation',
+          resourceId: operation.id,
+        }),
+      )
       .call(
-        $.object()
-          .spread(optionsParamName)
-          .spread(fnOptions)
-          .prop('throwOnError', $.literal(true)),
+        $.object().spread(optionsParamName).spread(fnOptions).prop('throwOnError', $.literal(true)),
       )
       .await(),
   );
@@ -103,10 +93,7 @@ export const createQueryOptions = ({
   if (plugin.getPluginOrThrow('@hey-api/sdk').config.responseStyle === 'data') {
     statements.push($.return(awaitSdkFn));
   } else {
-    statements.push(
-      $.const().object('data').assign(awaitSdkFn),
-      $.return('data'),
-    );
+    statements.push($.const().object('data').assign(awaitSdkFn), $.return('data'));
   }
 
   const queryOpts = $.object()
@@ -119,38 +106,28 @@ export const createQueryOptions = ({
         .param(fnOptions)
         .do(...statements),
     )
-    .$if(handleMeta(plugin, operation, 'queryOptions'), (o, v) =>
-      o.prop('meta', v),
-    );
+    .$if(handleMeta(plugin, operation, 'queryOptions'), (o, v) => o.prop('meta', v));
 
-  const symbolQueryOptionsFn = plugin.registerSymbol({
-    meta: {
-      category: 'hook',
-      resource: 'operation',
-      resourceId: operation.id,
-      role: 'queryOptions',
-      tool: plugin.name,
+  const symbolQueryOptionsFn = plugin.symbol(
+    applyNaming(operation.id, plugin.config.queryOptions),
+    {
+      meta: {
+        category: 'hook',
+        resource: 'operation',
+        resourceId: operation.id,
+        role: 'queryOptions',
+        tool: plugin.name,
+      },
     },
-    name: buildName({
-      config: plugin.config.queryOptions,
-      name: operation.id,
-    }),
-  });
-  const symbolDefineQueryOptions = plugin.referenceSymbol({
-    category: 'external',
-    resource: `${plugin.name}.defineQueryOptions`,
-  });
+  );
+  const symbolDefineQueryOptions = plugin.external(`${plugin.name}.defineQueryOptions`);
   const statement = $.const(symbolQueryOptionsFn)
     .export()
-    .$if(plugin.config.comments && createOperationComment(operation), (c, v) =>
-      c.doc(v),
-    )
+    .$if(plugin.config.comments && createOperationComment(operation), (c, v) => c.doc(v))
     .assign(
       $(symbolDefineQueryOptions).call(
         $.func()
-          .param(optionsParamName, (p) =>
-            p.required(isRequiredOptions).type(typeData),
-          )
+          .param(optionsParamName, (p) => p.required(isRequiredOptions).type(typeData))
           .do($.return(queryOpts)),
       ),
     );

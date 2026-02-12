@@ -1,16 +1,13 @@
-import { fileURLToPath } from 'node:url'
+import { configDefaults, defineProject, mergeConfig } from 'vitest/config';
 
-import { createVitestConfig } from '@config/vite-base'
-import { configDefaults, mergeConfig } from 'vitest/config'
-
-import viteConfig from './vite.config'
+import viteConfig from './vite.config';
 
 export default mergeConfig(
   viteConfig,
-  createVitestConfig(fileURLToPath(new URL('./', import.meta.url)), {
+  defineProject({
     test: {
       environment: 'jsdom',
-      exclude: [...configDefaults.exclude, 'e2e/**']
-    }
-  })
-)
+      exclude: [...configDefaults.exclude, 'e2e/**'],
+    },
+  }),
+);

@@ -1,10 +1,9 @@
 import type { SymbolMeta } from '@hey-api/codegen-core';
+import type { SchemaWithType } from '@hey-api/shared';
+import { toCase } from '@hey-api/shared';
 
-import type { SchemaWithType } from '~/plugins';
-import type { TypeTsDsl } from '~/ts-dsl';
-import { $ } from '~/ts-dsl';
-import { stringCase } from '~/utils/stringCase';
-
+import type { TypeTsDsl } from '../../../../../ts-dsl';
+import { $ } from '../../../../../ts-dsl';
 import type { IrSchemaToAstOptions } from '../../shared/types';
 
 export const stringToAst = ({
@@ -49,27 +48,20 @@ export const stringToAst = ({
         };
 
         if (!plugin.getSymbol(queryTypeId)) {
-          const symbolTypeId = plugin.registerSymbol({
+          const symbolTypeId = plugin.symbol('TypeID', {
             meta: queryTypeId,
-            name: 'TypeID',
           });
           const nodeTypeId = $.type
             .alias(symbolTypeId)
             .export()
             .generic('T', (g) => g.extends('string'))
-            .type(
-              $.type.template().add($.type('T')).add('_').add($.type('string')),
-            );
+            .type($.type.template().add($.type('T')).add('_').add($.type('string')));
           plugin.node(nodeTypeId);
         }
 
         const symbolTypeId = plugin.referenceSymbol(queryTypeId);
-        const symbolTypeName = plugin.registerSymbol({
+        const symbolTypeName = plugin.symbol(toCase(`${type}_id`, plugin.config.case), {
           meta: query,
-          name: stringCase({
-            case: plugin.config.case,
-            value: `${type}_id`,
-          }),
         });
         const node = $.type
           .alias(symbolTypeName)

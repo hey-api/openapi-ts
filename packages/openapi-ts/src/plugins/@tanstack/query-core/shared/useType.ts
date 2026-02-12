@@ -1,8 +1,9 @@
-import type { IR } from '~/ir/types';
-import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
-import { operationOptionsType } from '~/plugins/@hey-api/sdk/shared/operation';
-import { $ } from '~/ts-dsl';
+import type { IR } from '@hey-api/shared';
 
+import { getTypedConfig } from '../../../../config/utils';
+import { getClientPlugin } from '../../../../plugins/@hey-api/client-core/utils';
+import { operationOptionsType } from '../../../../plugins/@hey-api/sdk/shared/operation';
+import { $ } from '../../../../ts-dsl';
 import type { PluginInstance } from '../types';
 
 export const useTypeData = ({
@@ -23,24 +24,16 @@ export const useTypeError = ({
   operation: IR.OperationObject;
   plugin: PluginInstance;
 }): ReturnType<typeof $.type> => {
-  const client = getClientPlugin(plugin.context.config);
+  const client = getClientPlugin(getTypedConfig(plugin));
   const symbolErrorType = plugin.querySymbol({
     category: 'type',
     resource: 'operation',
     resourceId: operation.id,
     role: 'error',
   });
-  const symbolError =
-    symbolErrorType ||
-    plugin.referenceSymbol({
-      category: 'external',
-      resource: `${plugin.name}.DefaultError`,
-    });
+  const symbolError = symbolErrorType || plugin.external(`${plugin.name}.DefaultError`);
   if (client.name === '@hey-api/client-axios') {
-    const symbol = plugin.referenceSymbol({
-      category: 'external',
-      resource: 'axios.AxiosError',
-    });
+    const symbol = plugin.external('axios.AxiosError');
     return $.type(symbol).generic(symbolError);
   }
   return $.type(symbolError);

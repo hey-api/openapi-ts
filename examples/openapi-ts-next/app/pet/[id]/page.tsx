@@ -23,11 +23,7 @@ async function getPet(id: string) {
   return pet;
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const pet = await getPet(id);
   return {
@@ -35,11 +31,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function Blog({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+export default async function Blog({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const pet = await getPet(id);
 
@@ -79,13 +71,7 @@ export default async function Blog({
           target="_blank"
           rel="noopener noreferrer"
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
+          <Image aria-hidden src="/file.svg" alt="File icon" width={16} height={16} />
           Learn
         </a>
         <a
@@ -94,13 +80,7 @@ export default async function Blog({
           target="_blank"
           rel="noopener noreferrer"
         >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
+          <Image aria-hidden src="/window.svg" alt="Window icon" width={16} height={16} />
           Examples
         </a>
         <a
@@ -109,13 +89,7 @@ export default async function Blog({
           target="_blank"
           rel="noopener noreferrer"
         >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
+          <Image aria-hidden src="/globe.svg" alt="Globe icon" width={16} height={16} />
           Go to nextjs.org →
         </a>
       </footer>

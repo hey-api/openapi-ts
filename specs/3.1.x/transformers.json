@@ -254,10 +254,7 @@
           "nullable-date": {
             "type": "array",
             "items": {
-              "anyOf": [
-                { "type": "string", "format": "date-time" },
-                { "type": "null" }
-              ]
+              "anyOf": [{ "type": "string", "format": "date-time" }, { "type": "null" }]
             }
           },
           "simpleItems": {

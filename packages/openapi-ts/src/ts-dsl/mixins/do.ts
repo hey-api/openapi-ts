@@ -1,4 +1,4 @@
-import type { AnalysisContext, AstContext, Node } from '@hey-api/codegen-core';
+import type { AnalysisContext, Node } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -9,7 +9,7 @@ export type DoExpr = MaybeTsDsl<ts.Expression | ts.Statement>;
 
 export interface DoMethods extends Node {
   /** Renders the collected `.do()` calls into an array of `Statement` nodes. */
-  $do(ctx: AstContext): ReadonlyArray<ts.Statement>;
+  $do(): ReadonlyArray<ts.Statement>;
   _do: Array<DoExpr>;
   /** Adds one or more expressions/statements to the body. */
   do(...items: ReadonlyArray<DoExpr>): this;
@@ -18,9 +18,7 @@ export interface DoMethods extends Node {
 /**
  * Adds `.do()` for appending statements or expressions to a body.
  */
-export function DoMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
-  Base: TBase,
-) {
+export function DoMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base: TBase) {
   abstract class Do extends Base {
     protected _do: Array<DoExpr> = [];
 
@@ -41,11 +39,8 @@ export function DoMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
       return this;
     }
 
-    protected $do(ctx: AstContext): ReadonlyArray<ts.Statement> {
-      return this.$node(
-        ctx,
-        this._do.map((item) => new StmtTsDsl(item)),
-      );
+    protected $do(): ReadonlyArray<ts.Statement> {
+      return this.$node(this._do.map((item) => new StmtTsDsl(item)));
     }
   }
 

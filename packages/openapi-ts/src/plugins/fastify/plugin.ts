@@ -1,8 +1,7 @@
-import { operationResponsesMap } from '~/ir/operation';
-import { hasParameterGroupObjectRequired } from '~/ir/parameter';
-import type { IR } from '~/ir/types';
-import { $ } from '~/ts-dsl';
+import type { IR } from '@hey-api/shared';
+import { hasParameterGroupObjectRequired, operationResponsesMap } from '@hey-api/shared';
 
+import { $ } from '../../ts-dsl';
 import type { FastifyPlugin } from './types';
 
 const operationToRouteHandler = ({
@@ -34,9 +33,7 @@ const operationToRouteHandler = ({
       if (operation.parameters.header) {
         type.prop('Headers', (p) =>
           p
-            .required(
-              hasParameterGroupObjectRequired(operation.parameters!.header),
-            )
+            .required(hasParameterGroupObjectRequired(operation.parameters!.header))
             .type($.type(symbolDataType).idx($.type.literal('headers'))),
         );
       }
@@ -44,9 +41,7 @@ const operationToRouteHandler = ({
       if (operation.parameters.path) {
         type.prop('Params', (p) =>
           p
-            .required(
-              hasParameterGroupObjectRequired(operation.parameters!.path),
-            )
+            .required(hasParameterGroupObjectRequired(operation.parameters!.path))
             .type($.type(symbolDataType).idx($.type.literal('path'))),
         );
       }
@@ -54,9 +49,7 @@ const operationToRouteHandler = ({
       if (operation.parameters.query) {
         type.prop('Querystring', (p) =>
           p
-            .required(
-              hasParameterGroupObjectRequired(operation.parameters!.query),
-            )
+            .required(hasParameterGroupObjectRequired(operation.parameters!.query))
             .type($.type(symbolDataType).idx($.type.literal('query'))),
         );
       }
@@ -130,7 +123,7 @@ const operationToRouteHandler = ({
 };
 
 export const handler: FastifyPlugin['Handler'] = ({ plugin }) => {
-  plugin.registerSymbol({
+  plugin.symbol('RouteHandler', {
     external: 'fastify',
     kind: 'type',
     meta: {
@@ -138,12 +131,9 @@ export const handler: FastifyPlugin['Handler'] = ({ plugin }) => {
       resource: 'route-handler',
       tool: 'fastify',
     },
-    name: 'RouteHandler',
   });
 
-  const symbolRouteHandlers = plugin.registerSymbol({
-    name: 'RouteHandlers',
-  });
+  const symbolRouteHandlers = plugin.symbol('RouteHandlers');
 
   const type = $.type.object();
 

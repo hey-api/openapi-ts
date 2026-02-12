@@ -1,4 +1,4 @@
-import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
+import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -25,6 +25,11 @@ export class TernaryTsDsl extends Mixed {
     ctx.analyze(this._else);
   }
 
+  /** Returns true when all required builder calls are present. */
+  get isValid(): boolean {
+    return this.missingRequiredCalls().length === 0;
+  }
+
   condition(condition: string | MaybeTsDsl<ts.Expression>) {
     this._condition = condition;
     return this;
@@ -40,17 +45,32 @@ export class TernaryTsDsl extends Mixed {
     return this;
   }
 
-  override toAst(ctx: AstContext) {
-    if (!this._condition) throw new Error('Missing condition in ternary');
-    if (!this._then) throw new Error('Missing then expression in ternary');
-    if (!this._else) throw new Error('Missing else expression in ternary');
-
+  override toAst() {
+    this.$validate();
     return ts.factory.createConditionalExpression(
-      this.$node(ctx, this._condition),
+      this.$node(this._condition),
       undefined,
-      this.$node(ctx, this._then),
+      this.$node(this._then),
       undefined,
-      this.$node(ctx, this._else),
+      this.$node(this._else),
     );
+  }
+
+  $validate(): asserts this is this & {
+    _condition: string | MaybeTsDsl<ts.Expression>;
+    _else: string | MaybeTsDsl<ts.Expression>;
+    _then: string | MaybeTsDsl<ts.Expression>;
+  } {
+    const missing = this.missingRequiredCalls();
+    if (missing.length === 0) return;
+    throw new Error(`Ternary expression missing ${missing.join(' and ')}`);
+  }
+
+  private missingRequiredCalls(): ReadonlyArray<string> {
+    const missing: Array<string> = [];
+    if (!this._condition) missing.push('.condition()');
+    if (!this._then) missing.push('.do()');
+    if (!this._else) missing.push('.otherwise()');
+    return missing;
   }
 }

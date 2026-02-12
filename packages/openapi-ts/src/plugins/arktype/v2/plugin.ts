@@ -1,19 +1,15 @@
 import type { SymbolMeta } from '@hey-api/codegen-core';
 import { fromRef, refs } from '@hey-api/codegen-core';
+import type { IR, SchemaWithType } from '@hey-api/shared';
+import { applyNaming, deduplicateSchema, pathToJsonPointer, refToName } from '@hey-api/shared';
 
-import { deduplicateSchema } from '~/ir/schema';
-import type { IR } from '~/ir/types';
-import { buildName } from '~/openApi/shared/utils/name';
-import type { SchemaWithType } from '~/plugins/shared/types/schema';
-import { $ } from '~/ts-dsl';
-import { pathToJsonPointer, refToName } from '~/utils/ref';
-
+import { $ } from '../../../ts-dsl';
 import { exportAst } from '../shared/export';
 import type { Ast, IrSchemaToAstOptions, PluginState } from '../shared/types';
 import type { ArktypePlugin } from '../types';
 import { irSchemaWithTypeToAst } from './toAst';
 
-export const irSchemaToAst = ({
+export function irSchemaToAst({
   // optional,
   plugin,
   schema,
@@ -26,7 +22,7 @@ export const irSchemaToAst = ({
    */
   optional?: boolean;
   schema: IR.SchemaObject;
-}): Ast => {
+}): Ast {
   let ast: Partial<Ast> = {};
 
   // const z = plugin.referenceSymbol({
@@ -230,19 +226,19 @@ export const irSchemaToAst = ({
   // }
 
   return ast as Ast;
-};
+}
 
-const handleComponent = ({
+function handleComponent({
   plugin,
   schema,
   state,
 }: IrSchemaToAstOptions & {
   schema: IR.SchemaObject;
-}): void => {
+}): void {
   const $ref = pathToJsonPointer(fromRef(state.path));
   const ast = irSchemaToAst({ plugin, schema, state });
   const baseName = refToName($ref);
-  const symbol = plugin.registerSymbol({
+  const symbol = plugin.symbol(applyNaming(baseName, plugin.config.definitions), {
     meta: {
       category: 'schema',
       path: fromRef(state.path),
@@ -251,13 +247,9 @@ const handleComponent = ({
       tags: fromRef(state.tags),
       tool: 'arktype',
     },
-    name: buildName({
-      config: plugin.config.definitions,
-      name: baseName,
-    }),
   });
   const typeInferSymbol = plugin.config.definitions.types.infer.enabled
-    ? plugin.registerSymbol({
+    ? plugin.symbol(applyNaming(baseName, plugin.config.definitions.types.infer), {
         meta: {
           category: 'type',
           path: fromRef(state.path),
@@ -266,10 +258,6 @@ const handleComponent = ({
           tool: 'arktype',
           variant: 'infer',
         },
-        name: buildName({
-          config: plugin.config.definitions.types.infer,
-          name: baseName,
-        }),
       })
     : undefined;
   exportAst({
@@ -279,81 +267,73 @@ const handleComponent = ({
     symbol,
     typeInferSymbol,
   });
-};
+}
 
 export const handlerV2: ArktypePlugin['Handler'] = ({ plugin }) => {
-  plugin.registerSymbol({
+  plugin.symbol('type', {
     external: 'arktype',
     meta: {
       category: 'external',
       resource: 'arktype.type',
     },
-    name: 'type',
   });
 
-  plugin.forEach(
-    'operation',
-    'parameter',
-    'requestBody',
-    'schema',
-    'webhook',
-    (event) => {
-      const state = refs<PluginState>({
-        hasLazyExpression: false,
-        path: event._path,
-        tags: event.tags,
-      });
-      switch (event.type) {
-        //   case 'operation':
-        //     operationToZodSchema({
-        //       getZodSchema: (schema) => {
-        //         const state: State = {
-        //           circularReferenceTracker: [],
-        //           currentReferenceTracker: [],
-        //           hasCircularReference: false,
-        //         };
-        //         return schemaToZodSchema({ plugin, schema, state });
-        //       },
-        //       operation: event.operation,
-        //       plugin,
-        //     });
-        //     break;
-        case 'parameter':
-          handleComponent({
-            plugin,
-            schema: event.parameter.schema,
-            state,
-          });
-          break;
-        case 'requestBody':
-          handleComponent({
-            plugin,
-            schema: event.requestBody.schema,
-            state,
-          });
-          break;
-        case 'schema':
-          handleComponent({
-            plugin,
-            schema: event.schema,
-            state,
-          });
-          break;
-        //   case 'webhook':
-        //     webhookToZodSchema({
-        //       getZodSchema: (schema) => {
-        //         const state: State = {
-        //           circularReferenceTracker: [],
-        //           currentReferenceTracker: [],
-        //           hasCircularReference: false,
-        //         };
-        //         return schemaToZodSchema({ plugin, schema, state });
-        //       },
-        //       operation: event.operation,
-        //       plugin,
-        //     });
-        //     break;
-      }
-    },
-  );
+  plugin.forEach('operation', 'parameter', 'requestBody', 'schema', 'webhook', (event) => {
+    const state = refs<PluginState>({
+      hasLazyExpression: false,
+      path: event._path,
+      tags: event.tags,
+    });
+    switch (event.type) {
+      //   case 'operation':
+      //     operationToZodSchema({
+      //       getZodSchema: (schema) => {
+      //         const state: State = {
+      //           circularReferenceTracker: [],
+      //           currentReferenceTracker: [],
+      //           hasCircularReference: false,
+      //         };
+      //         return schemaToZodSchema({ plugin, schema, state });
+      //       },
+      //       operation: event.operation,
+      //       plugin,
+      //     });
+      //     break;
+      case 'parameter':
+        handleComponent({
+          plugin,
+          schema: event.parameter.schema,
+          state,
+        });
+        break;
+      case 'requestBody':
+        handleComponent({
+          plugin,
+          schema: event.requestBody.schema,
+          state,
+        });
+        break;
+      case 'schema':
+        handleComponent({
+          plugin,
+          schema: event.schema,
+          state,
+        });
+        break;
+      //   case 'webhook':
+      //     webhookToZodSchema({
+      //       getZodSchema: (schema) => {
+      //         const state: State = {
+      //           circularReferenceTracker: [],
+      //           currentReferenceTracker: [],
+      //           hasCircularReference: false,
+      //         };
+      //         return schemaToZodSchema({ plugin, schema, state });
+      //       },
+      //       operation: event.operation,
+      //       plugin,
+      //     });
+      //     break;
+    }
+  });
 };

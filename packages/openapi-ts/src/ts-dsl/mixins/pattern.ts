@@ -1,19 +1,17 @@
-import type { AnalysisContext, AstContext, Node } from '@hey-api/codegen-core';
+import type { AnalysisContext, Node } from '@hey-api/codegen-core';
+import type { MaybeArray } from '@hey-api/types';
 import type ts from 'typescript';
 
-import type { MaybeArray } from '../base';
 import { PatternTsDsl } from '../decl/pattern';
 import type { BaseCtor, MixinCtor } from './types';
 
 export interface PatternMethods extends Node {
   /** Renders the pattern into a `BindingName`. */
-  $pattern(ctx: AstContext): ts.BindingName | undefined;
+  $pattern(): ts.BindingName | undefined;
   /** Defines an array binding pattern. */
   array(...props: ReadonlyArray<string> | [ReadonlyArray<string>]): this;
   /** Defines an object binding pattern. */
-  object(
-    ...props: ReadonlyArray<MaybeArray<string> | Record<string, string>>
-  ): this;
+  object(...props: ReadonlyArray<MaybeArray<string> | Record<string, string>>): this;
   /** Adds a spread element (e.g. `...args`, `...options`) to the pattern. */
   spread(name: string): this;
 }
@@ -21,9 +19,7 @@ export interface PatternMethods extends Node {
 /**
  * Mixin providing `.array()`, `.object()`, and `.spread()` methods for defining destructuring patterns.
  */
-export function PatternMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
-  Base: TBase,
-) {
+export function PatternMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base: TBase) {
   abstract class Pattern extends Base {
     protected pattern?: PatternTsDsl;
 
@@ -32,16 +28,12 @@ export function PatternMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
       ctx.analyze(this.pattern);
     }
 
-    protected array(
-      ...props: ReadonlyArray<string> | [ReadonlyArray<string>]
-    ): this {
+    protected array(...props: ReadonlyArray<string> | [ReadonlyArray<string>]): this {
       (this.pattern ??= new PatternTsDsl()).array(...props);
       return this;
     }
 
-    protected object(
-      ...props: ReadonlyArray<MaybeArray<string> | Record<string, string>>
-    ): this {
+    protected object(...props: ReadonlyArray<MaybeArray<string> | Record<string, string>>): this {
       (this.pattern ??= new PatternTsDsl()).object(...props);
       return this;
     }
@@ -53,9 +45,9 @@ export function PatternMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
     }
 
     /** Renders the pattern into a `BindingName`. */
-    protected $pattern(ctx: AstContext): ts.BindingName | undefined {
+    protected $pattern(): ts.BindingName | undefined {
       if (!this.pattern) return;
-      return this.$node(ctx, this.pattern);
+      return this.$node(this.pattern);
     }
   }
 

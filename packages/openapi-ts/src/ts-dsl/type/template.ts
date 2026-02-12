@@ -1,13 +1,14 @@
-import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeScope } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { TypeTsDsl } from '../base';
+import { TsDsl } from '../base';
 
-const Mixed = TypeTsDsl<ts.TemplateLiteralTypeNode>;
+const Mixed = TsDsl<ts.TemplateLiteralTypeNode>;
 
 export class TypeTemplateTsDsl extends Mixed {
   readonly '~dsl' = 'TypeTemplateTsDsl';
+  override scope: NodeScope = 'type';
 
   protected parts: Array<string | MaybeTsDsl<ts.TypeNode>> = [];
 
@@ -29,8 +30,8 @@ export class TypeTemplateTsDsl extends Mixed {
     return this;
   }
 
-  override toAst(ctx: AstContext) {
-    const parts = this.$node(ctx, this.parts);
+  override toAst() {
+    const parts = this.$node(this.parts);
 
     const normalized: Array<string | ts.TypeNode> = [];
     // merge consecutive string parts
@@ -38,10 +39,7 @@ export class TypeTemplateTsDsl extends Mixed {
       const current = parts[index]!;
       if (typeof current === 'string') {
         let merged = current;
-        while (
-          index + 1 < parts.length &&
-          typeof parts[index + 1] === 'string'
-        ) {
+        while (index + 1 < parts.length && typeof parts[index + 1] === 'string') {
           merged += parts[index + 1]!;
           index++;
         }
@@ -56,10 +54,7 @@ export class TypeTemplateTsDsl extends Mixed {
     }
 
     if (normalized.length === 1 && typeof normalized[0] === 'string') {
-      return ts.factory.createTemplateLiteralType(
-        ts.factory.createTemplateHead(normalized[0]),
-        [],
-      );
+      return ts.factory.createTemplateLiteralType(ts.factory.createTemplateHead(normalized[0]), []);
     }
 
     if (
@@ -67,15 +62,9 @@ export class TypeTemplateTsDsl extends Mixed {
       typeof normalized[0] === 'string' &&
       typeof normalized[1] !== 'string'
     ) {
-      return ts.factory.createTemplateLiteralType(
-        ts.factory.createTemplateHead(normalized[0]),
-        [
-          ts.factory.createTemplateLiteralTypeSpan(
-            normalized[1]!,
-            ts.factory.createTemplateTail(''),
-          ),
-        ],
-      );
+      return ts.factory.createTemplateLiteralType(ts.factory.createTemplateHead(normalized[0]), [
+        ts.factory.createTemplateLiteralTypeSpan(normalized[1]!, ts.factory.createTemplateTail('')),
+      ]);
     }
 
     const head = ts.factory.createTemplateHead(normalized.shift() as string);
@@ -83,15 +72,12 @@ export class TypeTemplateTsDsl extends Mixed {
 
     while (normalized.length) {
       const type = normalized.shift() as ts.TypeNode;
-      const next =
-        typeof normalized[0] === 'string' ? (normalized.shift() as string) : '';
+      const next = typeof normalized[0] === 'string' ? (normalized.shift() as string) : '';
       const isLast = normalized.length === 0;
       spans.push(
         ts.factory.createTemplateLiteralTypeSpan(
           type,
-          isLast
-            ? ts.factory.createTemplateTail(next)
-            : ts.factory.createTemplateMiddle(next),
+          isLast ? ts.factory.createTemplateTail(next) : ts.factory.createTemplateMiddle(next),
         ),
       );
     }

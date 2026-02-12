@@ -2,29 +2,15 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import { createClient } from '@hey-api/openapi-ts';
-import { describe, expect, it } from 'vitest';
 
 import { getFilePaths } from '../../../utils';
-import {
-  createZodConfig,
-  getSnapshotsPath,
-  getTempSnapshotsPath,
-  zodVersions,
-} from './utils';
+import { createZodConfig, getSnapshotsPath, getTempSnapshotsPath, zodVersions } from './utils';
 
 const version = '3.1.x';
 
 for (const zodVersion of zodVersions) {
-  const outputDir = path.join(
-    getTempSnapshotsPath(),
-    version,
-    zodVersion.folder,
-  );
-  const snapshotsDir = path.join(
-    getSnapshotsPath(),
-    version,
-    zodVersion.folder,
-  );
+  const outputDir = path.join(getTempSnapshotsPath(), version, zodVersion.folder);
+  const snapshotsDir = path.join(getSnapshotsPath(), version, zodVersion.folder);
 
   describe(`OpenAPI ${version}`, () => {
     const createConfig = createZodConfig({
@@ -39,8 +25,7 @@ for (const zodVersion of zodVersions) {
           input: 'array-items-one-of-length-1.yaml',
           output: 'array-items-one-of-length-1',
         }),
-        description:
-          'generates correct array when items are oneOf array with single item',
+        description: 'generates correct array when items are oneOf array with single item',
       },
       {
         config: createConfig({
@@ -142,8 +127,7 @@ for (const zodVersion of zodVersions) {
           input: 'validators-union-merge.json',
           output: 'validators-union-merge',
         }),
-        description:
-          "validator schemas with merged unions (can't use .merge())",
+        description: "validator schemas with merged unions (can't use .merge())",
       },
       {
         config: createConfig({
@@ -151,6 +135,37 @@ for (const zodVersion of zodVersions) {
           output: 'validators-string-constraints-union',
         }),
         description: 'validator schemas with string constraints union',
+      },
+      {
+        config: createConfig({
+          input: 'enum-null.json',
+          output: 'enum-resolver-permissive',
+          plugins: [
+            {
+              compatibilityVersion: zodVersion.compatibilityVersion,
+              name: 'zod',
+              '~resolvers': {
+                enum(ctx) {
+                  const { $, symbols } = ctx;
+                  const { z } = symbols;
+                  const { allStrings, enumMembers } = ctx.nodes.items(ctx);
+
+                  if (!allStrings || !enumMembers.length) {
+                    return;
+                  }
+
+                  const enumSchema = $(z)
+                    .attr('enum')
+                    .call($.array(...enumMembers));
+                  return $(z)
+                    .attr('union')
+                    .call($.array(enumSchema, $(z).attr('string').call()));
+                },
+              },
+            },
+          ],
+        }),
+        description: 'generates permissive enums with enum resolver',
       },
     ];
 

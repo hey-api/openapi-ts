@@ -1,5 +1,3 @@
-import { describe, expect, it, vi } from 'vitest';
-
 import { createClient } from '../bundle/client';
 import type { ResolvedRequestOptions } from '../bundle/types';
 
@@ -54,48 +52,103 @@ describe('buildUrl', () => {
   });
 });
 
+describe('zero-length body handling', () => {
+  const client = createClient({ baseUrl: 'https://example.com' });
+
+  it('returns empty object for zero-length JSON response', async () => {
+    const mockResponse = new Response(null, {
+      headers: {
+        'Content-Length': '0',
+        'Content-Type': 'application/json',
+      },
+      status: 200,
+    });
+
+    const mockFetch: MockFetch = vi.fn().mockResolvedValue(mockResponse);
+
+    const result = await client.request({
+      fetch: mockFetch,
+      method: 'GET',
+      url: '/test',
+    });
+
+    expect(result.data).toEqual({});
+  });
+
+  it('returns empty object for empty JSON response without Content-Length header (status 200)', async () => {
+    // Simulates a server returning an empty body with status 200 and no Content-Length header
+    // This is the scenario described in the issue where response.json() throws
+    const mockResponse = new Response('', {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      status: 200,
+    });
+
+    const mockFetch: MockFetch = vi.fn().mockResolvedValue(mockResponse);
+
+    const result = await client.request({
+      fetch: mockFetch,
+      method: 'GET',
+      url: '/test',
+    });
+
+    expect(result.data).toEqual({});
+  });
+
+  it('returns empty object for empty response without Content-Length header and no Content-Type (defaults to JSON)', async () => {
+    // Tests the auto-detection behavior when no Content-Type is provided
+    const mockResponse = new Response('', {
+      status: 200,
+    });
+
+    const mockFetch: MockFetch = vi.fn().mockResolvedValue(mockResponse);
+
+    const result = await client.request({
+      fetch: mockFetch,
+      method: 'GET',
+      url: '/test',
+    });
+
+    // When parseAs is 'auto' and no Content-Type header exists, it should handle empty body gracefully
+    expect(result.data).toBeDefined();
+  });
+});
+
 describe('unserialized request body handling', () => {
   const client = createClient({ baseUrl: 'https://example.com' });
 
-  const scenarios = [
-    { body: 0 },
-    { body: false },
-    { body: 'test string' },
-    { body: '' },
-  ];
+  const scenarios = [{ body: 0 }, { body: false }, { body: 'test string' }, { body: '' }];
 
-  it.each(scenarios)(
-    'handles plain text body with $body value',
-    async ({ body }) => {
-      const mockResponse = new Response(JSON.stringify({ success: true }), {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        status: 200,
-      });
+  it.each(scenarios)('handles plain text body with $body value', async ({ body }) => {
+    const mockResponse = new Response(JSON.stringify({ success: true }), {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      status: 200,
+    });
 
-      const mockFetch: MockFetch = vi.fn().mockResolvedValueOnce(mockResponse);
-      const headers = new Headers({ 'Content-Type': 'text/plain' });
+    const mockFetch: MockFetch = vi.fn().mockResolvedValueOnce(mockResponse);
+    const headers = new Headers({ 'Content-Type': 'text/plain' });
 
-      await client.post({
+    await client.post({
+      body,
+      bodySerializer: null,
+      fetch: mockFetch,
+      headers: {
+        'Content-Type': 'text/plain',
+      },
+      url: '/test',
+    });
+
+    expect(mockFetch).toHaveBeenCalledExactlyOnceWith(
+      expect.any(String),
+      expect.objectContaining({
         body,
-        bodySerializer: null,
-        fetch: mockFetch,
-        headers: {
-          'Content-Type': 'text/plain',
-        },
-        url: '/test',
-      });
-
-      expect(mockFetch).toHaveBeenCalledExactlyOnceWith(
-        expect.any(String),
-        expect.objectContaining({
-          body,
-          headers,
-        }),
-      );
-    },
-  );
+        headers,
+      }),
+    );
+  });
 });
 
 describe('serialized request body handling', () => {
@@ -203,9 +256,7 @@ describe('request interceptor', () => {
           return options;
         });
 
-      const interceptorId = client.interceptors.request.use(
-        mockRequestInterceptor,
-      );
+      const interceptorId = client.interceptors.request.use(mockRequestInterceptor);
 
       await client.post({
         body,

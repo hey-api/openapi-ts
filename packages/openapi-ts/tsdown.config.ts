@@ -1,37 +1,24 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import { defineConfig } from 'tsdown';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const replaceCoreImports = (filePath: string) => {
   let content = fs.readFileSync(filePath, 'utf8');
   // Replace '../../client-core/bundle' with '../core'
-  content = content.replace(
-    /from ['"]\.\.\/\.\.\/client-core\/bundle/g,
-    "from '../core",
-  );
+  content = content.replace(/from ['"]\.\.\/\.\.\/client-core\/bundle/g, "from '../core");
   fs.writeFileSync(filePath, content, 'utf8');
 };
 
-export default defineConfig((options) => ({
-  banner(ctx) {
-    /**
-     * fix dynamic require in ESM
-     * @link https://github.com/hey-api/openapi-ts/issues/1079
-     */
-    if (ctx.format === 'esm') {
-      return {
-        js: `import { createRequire } from 'module'; const require = createRequire(import.${'meta'}.url);`,
-      };
-    }
-
-    return;
-  },
+export default defineConfig({
   clean: true,
   dts: true,
   entry: ['./src/{index,internal,run}.ts'],
-  format: ['cjs', 'esm'],
-  minify: !options.watch,
+  format: ['esm'],
+  minify: false,
   onSuccess: async () => {
     // Copy client files to dist folder for runtime access
     const pluginNames = [
@@ -46,14 +33,9 @@ export default defineConfig((options) => ({
     ];
 
     for (const pluginName of pluginNames) {
-      const srcPath = path.resolve(
-        'src',
-        'plugins',
-        '@hey-api',
-        pluginName,
-        'bundle',
-      );
+      const srcPath = path.resolve(__dirname, 'src', 'plugins', '@hey-api', pluginName, 'bundle');
       const destPath = path.resolve(
+        __dirname,
         'dist',
         'clients',
         pluginName.slice('client-'.length),
@@ -71,7 +53,6 @@ export default defineConfig((options) => ({
       }
     }
   },
-  shims: false,
   sourcemap: true,
   treeshake: true,
-}));
+});

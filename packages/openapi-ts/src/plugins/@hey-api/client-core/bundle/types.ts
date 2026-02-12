@@ -1,9 +1,5 @@
 import type { Auth, AuthToken } from './auth';
-import type {
-  BodySerializer,
-  QuerySerializer,
-  QuerySerializerOptions,
-} from './bodySerializer';
+import type { BodySerializer, QuerySerializer, QuerySerializerOptions } from './bodySerializer';
 
 export type HttpMethod =
   | 'connect'
@@ -32,9 +28,7 @@ export type Client<
   setConfig: (config: Config) => Config;
 } & {
   [K in HttpMethod]: MethodFn;
-} & ([SseFn] extends [never]
-    ? { sse?: never }
-    : { sse: { [K in HttpMethod]: SseFn } });
+} & ([SseFn] extends [never] ? { sse?: never } : { sse: { [K in HttpMethod]: SseFn } });
 
 export interface Config {
   /**
@@ -57,13 +51,7 @@ export interface Config {
     | RequestInit['headers']
     | Record<
         string,
-        | string
-        | number
-        | boolean
-        | (string | number | boolean)[]
-        | null
-        | undefined
-        | unknown
+        string | number | boolean | (string | number | boolean)[] | null | undefined | unknown
       >;
   /**
    * The request method.
@@ -110,7 +98,5 @@ type IsExactlyNeverOrNeverUndefined<T> = [T] extends [never]
     : false;
 
 export type OmitNever<T extends Record<string, unknown>> = {
-  [K in keyof T as IsExactlyNeverOrNeverUndefined<T[K]> extends true
-    ? never
-    : K]: T[K];
+  [K in keyof T as IsExactlyNeverOrNeverUndefined<T[K]> extends true ? never : K]: T[K];
 };

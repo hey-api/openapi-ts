@@ -1,3 +1,3 @@
 {
-  "recommendations": ["Vue.volar", "dbaeumer.vscode-eslint", "esbenp.prettier-vscode"]
+  "recommendations": ["Vue.volar", "dbaeumer.vscode-eslint", "oxc.oxc-vscode"]
 }

@@ -1,9 +1,8 @@
 import { fromRef, ref } from '@hey-api/codegen-core';
+import type { SchemaWithType } from '@hey-api/shared';
 
-import type { SchemaWithType } from '~/plugins';
-import { $ } from '~/ts-dsl';
-
-import { pipesToAst } from '../../shared/pipesToAst';
+import { $ } from '../../../../ts-dsl';
+import { pipesToNode } from '../../shared/pipes';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
 import { identifiers } from '../constants';
 import { irSchemaToAst } from '../plugin';
@@ -18,10 +17,7 @@ export const tupleToAst = ({
 }): Omit<Ast, 'typeName'> => {
   const result: Partial<Omit<Ast, 'typeName'>> = {};
 
-  const v = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'valibot.v',
-  });
+  const v = plugin.external('valibot.v');
 
   if (schema.const && Array.isArray(schema.const)) {
     const tupleElements = schema.const.map((value) =>
@@ -48,7 +44,7 @@ export const tupleToAst = ({
       if (schemaPipes.hasLazyExpression) {
         result.hasLazyExpression = true;
       }
-      return pipesToAst({ pipes: schemaPipes.pipes, plugin });
+      return pipesToNode(schemaPipes.pipes, plugin);
     });
     result.pipes = [
       $(v)

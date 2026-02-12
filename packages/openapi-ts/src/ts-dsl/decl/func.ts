@@ -1,13 +1,8 @@
-import type {
-  AnalysisContext,
-  AstContext,
-  Ref,
-  Symbol,
-} from '@hey-api/codegen-core';
-import { isSymbol, ref } from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName } from '@hey-api/codegen-core';
+import { isSymbol } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
-import { TsDsl, TypeTsDsl } from '../base';
+import { TsDsl } from '../base';
 import { AsMixin } from '../mixins/as';
 import { DecoratorMixin } from '../mixins/decorator';
 import { DoMixin } from '../mixins/do';
@@ -22,12 +17,11 @@ import {
 } from '../mixins/modifiers';
 import { ParamMixin } from '../mixins/param';
 import { TypeParamsMixin } from '../mixins/type-params';
+import { TypeReturnsMixin } from '../mixins/type-returns';
 import { BlockTsDsl } from '../stmt/block';
-import { TypeExprTsDsl } from '../type/expr';
 import { safeRuntimeName } from '../utils/name';
 
 export type FuncMode = 'arrow' | 'decl' | 'expr';
-export type FuncName = Symbol | string;
 
 const Mixed = AbstractMixin(
   AsMixin(
@@ -39,7 +33,7 @@ const Mixed = AbstractMixin(
               PrivateMixin(
                 ProtectedMixin(
                   PublicMixin(
-                    StaticMixin(TypeParamsMixin(TsDsl<ts.ArrowFunction>)),
+                    StaticMixin(TypeParamsMixin(TypeReturnsMixin(TsDsl<ts.ArrowFunction>))),
                   ),
                 ),
               ),
@@ -53,17 +47,16 @@ const Mixed = AbstractMixin(
 
 class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends Mixed {
   readonly '~dsl' = 'FuncTsDsl';
+  override readonly nameSanitizer = safeRuntimeName;
 
   protected mode?: FuncMode;
-  protected name?: Ref<FuncName>;
-  protected _returns?: TypeTsDsl;
 
   constructor();
   constructor(fn: (f: ImplFuncTsDsl<'arrow'>) => void);
-  constructor(name: FuncName);
-  constructor(name: FuncName, fn: (f: ImplFuncTsDsl<'decl'>) => void);
+  constructor(name: NodeName);
+  constructor(name: NodeName, fn: (f: ImplFuncTsDsl<'decl'>) => void);
   constructor(
-    name?: FuncName | ((f: ImplFuncTsDsl<'arrow'>) => void),
+    name?: NodeName | ((f: ImplFuncTsDsl<'arrow'>) => void),
     fn?: (f: ImplFuncTsDsl<'decl'>) => void,
   ) {
     super();
@@ -72,11 +65,9 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends Mixed {
       name(this as unknown as FuncTsDsl<'arrow'>);
     } else if (name) {
       this.mode = 'decl';
-      this.name = ref(name);
+      this.name.set(name);
       if (isSymbol(name)) {
         name.setKind('function');
-        name.setNameSanitizer(safeRuntimeName);
-        name.setNode(this);
       }
       fn?.(this as unknown as FuncTsDsl<'decl'>);
     }
@@ -87,10 +78,14 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends Mixed {
     try {
       super.analyze(ctx);
       ctx.analyze(this.name);
-      ctx.analyze(this._returns);
     } finally {
       ctx.popScope();
     }
+  }
+
+  /** Returns true when all required builder calls are present. */
+  get isValid(): boolean {
+    return this.missingRequiredCalls().length === 0;
   }
 
   /** Switches the function to an arrow function form. */
@@ -111,54 +106,46 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends Mixed {
     return this as unknown as FuncTsDsl<'expr'>;
   }
 
-  /** Sets the return type. */
-  returns(type: string | TypeTsDsl): this {
-    this._returns = type instanceof TypeTsDsl ? type : new TypeExprTsDsl(type);
-    return this;
-  }
-
   // @ts-expect-error --- need to fix types ---
-  override toAst(
-    ctx: AstContext,
-  ): M extends 'decl'
+  override toAst(): M extends 'decl'
     ? ts.FunctionDeclaration
     : M extends 'expr'
       ? ts.FunctionExpression
       : ts.ArrowFunction {
-    const body = this.$node(ctx, new BlockTsDsl(...this._do).pretty());
+    this.$validate();
+    const body = this.$node(new BlockTsDsl(...this._do).pretty());
 
     if (this.mode === 'decl') {
-      if (!this.name) throw new Error('Function declaration requires a name');
       const node = ts.factory.createFunctionDeclaration(
-        [...this.$decorators(ctx), ...this.modifiers],
+        [...this.$decorators(), ...this.modifiers],
         undefined,
-        this.$node(ctx, this.name) as ts.Identifier,
-        this.$generics(ctx),
-        this.$params(ctx),
-        this.$type(ctx, this._returns),
+        this.$node(this.name) as ts.Identifier,
+        this.$generics(),
+        this.$params(),
+        this.$returns(),
         body,
       ) as any;
-      return this.$docs(ctx, node);
+      return this.$docs(node);
     }
 
     if (this.mode === 'expr') {
       const node = ts.factory.createFunctionExpression(
         this.modifiers,
         undefined,
-        this.$node(ctx, this.name) as ts.Identifier,
-        this.$generics(ctx),
-        this.$params(ctx),
-        this.$type(ctx, this._returns),
+        this.$node(this.name) as ts.Identifier,
+        this.$generics(),
+        this.$params(),
+        this.$returns(),
         body,
       ) as any;
-      return this.$docs(ctx, node);
+      return this.$docs(node);
     }
 
     const node = ts.factory.createArrowFunction(
       this.modifiers,
-      this.$generics(ctx),
-      this.$params(ctx),
-      this.$type(ctx, this._returns),
+      this.$generics(),
+      this.$params(),
+      this.$returns(),
       undefined,
       body.statements.length === 1 &&
         ts.isReturnStatement(body.statements[0]!) &&
@@ -166,14 +153,26 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends Mixed {
         ? body.statements[0].expression
         : body,
     ) as any;
-    return this.$docs(ctx, node);
+    return this.$docs(node);
+  }
+
+  $validate(): asserts this {
+    const missing = this.missingRequiredCalls();
+    if (missing.length === 0) return;
+    throw new Error(`Function ${this.mode} missing ${missing.join(' and ')}`);
+  }
+
+  private missingRequiredCalls(): ReadonlyArray<string> {
+    const missing: Array<string> = [];
+    if (this.mode === 'decl' && !this.name.toString()) missing.push('name');
+    return missing;
   }
 }
 
 export const FuncTsDsl = ImplFuncTsDsl as {
   new (): FuncTsDsl<'arrow'>;
   new (fn: (f: FuncTsDsl<'arrow'>) => void): FuncTsDsl<'arrow'>;
-  new (name: string): FuncTsDsl<'decl'>;
-  new (name: string, fn: (f: FuncTsDsl<'decl'>) => void): FuncTsDsl<'decl'>;
+  new (name: NodeName): FuncTsDsl<'decl'>;
+  new (name: NodeName, fn: (f: FuncTsDsl<'decl'>) => void): FuncTsDsl<'decl'>;
 } & typeof ImplFuncTsDsl;
 export type FuncTsDsl<M extends FuncMode = 'arrow'> = ImplFuncTsDsl<M>;

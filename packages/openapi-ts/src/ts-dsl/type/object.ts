@@ -1,49 +1,66 @@
-import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeScope } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
-import { TypeTsDsl } from '../base';
+import { TsDsl } from '../base';
 import { TypeIdxSigTsDsl } from './idx-sig';
 import { TypePropTsDsl } from './prop';
 
-const Mixed = TypeTsDsl<ts.TypeNode>;
+const Mixed = TsDsl<ts.TypeNode>;
 
 export class TypeObjectTsDsl extends Mixed {
   readonly '~dsl' = 'TypeObjectTsDsl';
+  override scope: NodeScope = 'type';
 
-  protected props: Array<TypePropTsDsl | TypeIdxSigTsDsl> = [];
+  protected _props = new Map<string, TypePropTsDsl | TypeIdxSigTsDsl>();
 
   override analyze(ctx: AnalysisContext): void {
     super.analyze(ctx);
-    for (const prop of this.props) {
+    for (const prop of this._props.values()) {
       ctx.analyze(prop);
     }
   }
 
-  /** Returns true if object has at least one property or spread. */
+  /** Returns true if object has at least one property or index signature. */
   hasProps(): boolean {
-    return this.props.length > 0;
+    return this._props.size > 0;
   }
 
-  /** Adds an index signature to the object type. */
-  idxSig(name: string, fn: (i: TypeIdxSigTsDsl) => void): this {
-    const idx = new TypeIdxSigTsDsl(name, fn);
-    this.props.push(idx);
+  /** Adds an index signature to the object type, or removes if fn is null. */
+  idxSig(name: string, fn: ((i: TypeIdxSigTsDsl) => void) | null): this {
+    const key = `idxSig:${name}`;
+    if (fn === null) {
+      this._props.delete(key);
+    } else {
+      this._props.set(key, new TypeIdxSigTsDsl(name, fn));
+    }
     return this;
   }
 
-  /** Returns true if object has no properties or spreads. */
+  /** Returns true if object has no properties or index signatures. */
   get isEmpty(): boolean {
-    return !this.props.length;
+    return this._props.size === 0;
   }
 
-  /** Adds a property signature (returns property builder). */
-  prop(name: string, fn: (p: TypePropTsDsl) => void): this {
-    const prop = new TypePropTsDsl(name, fn);
-    this.props.push(prop);
+  /** Adds a property signature, or removes if fn is null. */
+  prop(name: string, fn: ((p: TypePropTsDsl) => void) | null): this {
+    const key = `prop:${name}`;
+    if (fn === null) {
+      this._props.delete(key);
+    } else {
+      this._props.set(key, new TypePropTsDsl(name, fn));
+    }
     return this;
   }
 
-  override toAst(ctx: AstContext) {
-    return ts.factory.createTypeLiteralNode(this.$node(ctx, this.props));
+  /** Adds multiple properties/index signatures. */
+  props(...members: ReadonlyArray<TypePropTsDsl | TypeIdxSigTsDsl>): this {
+    for (const member of members) {
+      this._props.set(`${member.kind}:${member.propName}`, member);
+    }
+    return this;
+  }
+
+  override toAst() {
+    return ts.factory.createTypeLiteralNode(this.$node([...this._props.values()]));
   }
 }

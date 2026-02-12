@@ -1,9 +1,4 @@
-import type {
-  AnalysisContext,
-  AstContext,
-  Ref,
-  Symbol,
-} from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName, Ref } from '@hey-api/codegen-core';
 import { ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
@@ -12,7 +7,7 @@ import { TsDsl } from '../base';
 import { AsMixin } from '../mixins/as';
 import { ExprMixin } from '../mixins/expr';
 
-type Expr = Symbol | string | MaybeTsDsl<ts.Expression>;
+type Expr = NodeName | MaybeTsDsl<ts.Expression>;
 type Op = Operator | ts.BinaryOperator;
 type Operator =
   | '!='
@@ -30,6 +25,7 @@ type Operator =
   | '>'
   | '>='
   | '??'
+  | '??='
   | '||';
 
 const Mixed = AsMixin(ExprMixin(TsDsl<ts.BinaryExpression>));
@@ -52,6 +48,11 @@ export class BinaryTsDsl extends Mixed {
     super.analyze(ctx);
     ctx.analyze(this._base);
     ctx.analyze(this._expr);
+  }
+
+  /** Returns true when all required builder calls are present. */
+  get isValid(): boolean {
+    return this.missingRequiredCalls().length === 0;
   }
 
   /** Logical AND — `this && expr` */
@@ -119,6 +120,11 @@ export class BinaryTsDsl extends Mixed {
     return this.opAndExpr('!==', expr);
   }
 
+  /** Nullish assignment — `this ??= expr` */
+  nullishAssign(expr: Expr): this {
+    return this.opAndExpr('??=', expr);
+  }
+
   /** Logical OR — `this || expr` */
   or(expr: Expr): this {
     return this.opAndExpr('||', expr);
@@ -134,18 +140,27 @@ export class BinaryTsDsl extends Mixed {
     return this.opAndExpr('*', expr);
   }
 
-  override toAst(ctx: AstContext) {
-    if (!this._op) {
-      throw new Error('BinaryTsDsl: missing operator');
-    }
-    const expr = this.$node(ctx, this._expr);
-    if (!expr) {
-      throw new Error('BinaryTsDsl: missing right-hand expression');
-    }
-    const base = this.$node(ctx, this._base);
-    const operator =
-      typeof this._op === 'string' ? this.opToToken(this._op) : this._op;
-    return ts.factory.createBinaryExpression(base, operator, expr);
+  override toAst() {
+    this.$validate();
+    const base = this.$node(this._base);
+    const operator = typeof this._op === 'string' ? this.opToToken(this._op) : this._op;
+    return ts.factory.createBinaryExpression(base, operator, this.$node(this._expr));
+  }
+
+  $validate(): asserts this is this & {
+    _expr: Ref<Expr>;
+    _op: Op;
+  } {
+    const missing = this.missingRequiredCalls();
+    if (missing.length === 0) return;
+    throw new Error(`Binary expression missing ${missing.join(' and ')}`);
+  }
+
+  private missingRequiredCalls(): ReadonlyArray<string> {
+    const missing: Array<string> = [];
+    if (!this._op) missing.push('operator (e.g., .eq(), .plus())');
+    if (!this._expr) missing.push('right-hand expression');
+    return missing;
   }
 
   /** Sets the binary operator and right-hand operand for this expression. */
@@ -172,6 +187,7 @@ export class BinaryTsDsl extends Mixed {
       '>': ts.SyntaxKind.GreaterThanToken,
       '>=': ts.SyntaxKind.GreaterThanEqualsToken,
       '??': ts.SyntaxKind.QuestionQuestionToken,
+      '??=': ts.SyntaxKind.QuestionQuestionEqualsToken,
       '||': ts.SyntaxKind.BarBarToken,
     };
     const token = tokenMap[op];

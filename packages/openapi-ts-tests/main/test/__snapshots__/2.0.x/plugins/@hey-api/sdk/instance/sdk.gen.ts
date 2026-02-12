@@ -65,7 +65,10 @@ export class Foo extends HeyApiClient {
         return (options?.client ?? this.client).put<FooPutResponses, unknown, ThrowOnError>({ url: '/foo', ...options });
     }
     
-    bar = new Bar({ client: this.client });
+    private _bar?: Bar;
+    get bar(): Bar {
+        return this._bar ??= new Bar({ client: this.client });
+    }
 }
 
 export class Sdk extends HeyApiClient {
@@ -87,5 +90,8 @@ export class Sdk extends HeyApiClient {
         return (options?.client ?? this.client).get<GetFooBarResponses, unknown, ThrowOnError>({ url: '/foo/bar', ...options });
     }
     
-    foo = new Foo({ client: this.client });
+    private _foo?: Foo;
+    get foo(): Foo {
+        return this._foo ??= new Foo({ client: this.client });
+    }
 }

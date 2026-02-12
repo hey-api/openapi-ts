@@ -1,5 +1,5 @@
 <div align="center">
-  <img alt="Hey API logo" height="150" src="https://heyapi.dev/images/logo-astronaut-300w.png" width="150">
+  <img alt="Hey API logo" height="150" src="https://heyapi.dev/assets/.gen/logo-astronaut-300w.png" width="150">
   <h1 align="center"><b>Vite Plugin</b></h1>
   <p align="center">🚀 Vite plugin for <code>@hey-api/openapi-ts</code> codegen.</p>
 </div>
@@ -27,13 +27,13 @@ Help Hey API stay around for the long haul by becoming a [sponsor](https://githu
 <table align="center" style="justify-content: center;align-items: center;display: flex;">
   <tbody>
     <tr>
-      <td align="center">
+      <td align="center" width="336px">
         <p></p>
         <p>
           <a href="https://kutt.it/pkEZyc" target="_blank">
             <picture height="50px">
-              <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/images/stainless-logo-wordmark-480w.jpeg">
-              <img alt="Stainless logo" height="50px" src="https://heyapi.dev/images/stainless-logo-wordmark-480w.jpeg">
+              <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/.gen/stainless-logo-wordmark-480w.jpeg">
+              <img alt="Stainless logo" height="50px" src="https://heyapi.dev/assets/.gen/stainless-logo-wordmark-480w.jpeg">
             </picture>
           </a>
           <br/>
@@ -45,12 +45,13 @@ Help Hey API stay around for the long haul by becoming a [sponsor](https://githu
         </p>
         <p></p>
       </td>
-      <td align="center">
+      <td align="center" width="336px">
         <p></p>
         <p>
           <a href="https://kutt.it/QM9Q2N" target="_blank">
             <picture height="50px">
-              <img alt="Opencode logo" height="50px" src="https://heyapi.dev/opencode-logo-wordmark.svg">
+              <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/opencode/logo-light.svg">
+              <img alt="Opencode logo" height="50px" src="https://heyapi.dev/assets/opencode/logo-dark.svg">
             </picture>
           </a>
           <br/>
@@ -58,6 +59,26 @@ Help Hey API stay around for the long haul by becoming a [sponsor](https://githu
           <br/>
           <a href="https://kutt.it/QM9Q2N" style="text-decoration:none;" target="_blank">
             opencode.ai
+          </a>
+        </p>
+        <p></p>
+      </td>
+    </tr>
+    <tr>
+      <td align="center" width="336px">
+        <p></p>
+        <p>
+          <a href="https://kutt.it/6vrYy9" target="_blank">
+            <picture height="50px">
+              <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/mintlify/logo-light.svg">
+              <img alt="Mintlify logo" height="50px" src="https://heyapi.dev/assets/mintlify/logo-dark.svg">
+            </picture>
+          </a>
+          <br/>
+          The intelligent knowledge platform.
+          <br/>
+          <a href="https://kutt.it/6vrYy9" style="text-decoration:none;" target="_blank">
+            mintlify.com
           </a>
         </p>
         <p></p>
@@ -71,11 +92,11 @@ Help Hey API stay around for the long haul by becoming a [sponsor](https://githu
 <table align="center" style="justify-content: center;align-items: center;display: flex;">
   <tbody>
     <tr>
-      <td align="center">
+      <td align="center" width="172px">
         <a href="https://kutt.it/skQUVd" target="_blank">
           <picture height="40px">
-            <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/images/scalar-logo-wordmark-480w.jpeg">
-            <img alt="Scalar logo" height="40px" src="https://heyapi.dev/scalar-logo-wordmark.svg">
+            <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/scalar/logo-light.svg">
+            <img alt="Scalar logo" height="40px" src="https://heyapi.dev/assets/scalar/logo-dark.svg">
           </picture>
         </a>
         <br/>
@@ -83,10 +104,11 @@ Help Hey API stay around for the long haul by becoming a [sponsor](https://githu
           scalar.com
         </a>
       </td>
-      <td align="center">
+      <td align="center" width="172px">
         <a href="https://kutt.it/Dr9GuW" target="_blank">
           <picture height="40px">
-            <img alt="FastAPI logo" height="40px" src="https://heyapi.dev/fastapi-logo-wordmark.svg">
+            <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/fastapi/logo-light.svg">
+            <img alt="FastAPI logo" height="40px" src="https://heyapi.dev/assets/fastapi/logo-dark.svg">
           </picture>
         </a>
         <br/>
@@ -103,19 +125,19 @@ Help Hey API stay around for the long haul by becoming a [sponsor](https://githu
 <table align="center" style="justify-content: center;align-items: center;display: flex;">
   <tbody>
     <tr>
-      <td align="center">
+      <td align="center" width="136px">
         <a href="https://kutt.it/YpaKsX" target="_blank">
           <picture height="34px">
-            <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/images/kinde-logo-wordmark-dark-480w.webp">
-            <img alt="Kinde logo" height="34px" src="https://heyapi.dev/images/kinde-logo-wordmark-480w.jpeg">
+            <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/.gen/kinde-logo-wordmark-dark-480w.webp">
+            <img alt="Kinde logo" height="34px" src="https://heyapi.dev/assets/.gen/kinde-logo-wordmark-480w.jpeg">
           </picture>
         </a>
       </td>
-      <td align="center">
+      <td align="center" width="136px">
         <a href="https://kutt.it/KkqSaw" target="_blank">
           <picture height="34px">
-            <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/images/cella-logo-wordmark-480w.webp">
-            <img alt="Cella logo" height="34px" src="https://heyapi.dev/cella-logo-wordmark.svg">
+            <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/cella/logo-light.svg">
+            <img alt="Cella logo" height="34px" src="https://heyapi.dev/assets/cella/logo-dark.svg">
           </picture>
         </a>
       </td>

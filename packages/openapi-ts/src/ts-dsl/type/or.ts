@@ -1,20 +1,17 @@
-import type {
-  AnalysisContext,
-  AstContext,
-  Ref,
-  Symbol,
-} from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName, NodeScope, Ref } from '@hey-api/codegen-core';
 import { ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
-import { TypeTsDsl } from '../base';
+import type { TypeTsDsl } from '../base';
+import { TsDsl } from '../base';
 
-type Type = Symbol | string | ts.TypeNode | TypeTsDsl;
+type Type = NodeName | ts.TypeNode | TypeTsDsl;
 
-const Mixed = TypeTsDsl<ts.UnionTypeNode>;
+const Mixed = TsDsl<ts.UnionTypeNode>;
 
 export class TypeOrTsDsl extends Mixed {
   readonly '~dsl' = 'TypeOrTsDsl';
+  override scope: NodeScope = 'type';
 
   protected _types: Array<Ref<Type>> = [];
 
@@ -35,11 +32,11 @@ export class TypeOrTsDsl extends Mixed {
     return this;
   }
 
-  override toAst(ctx: AstContext) {
+  override toAst() {
     const flat: Array<ts.TypeNode> = [];
 
     for (const node of this._types) {
-      const type = this.$type(ctx, node);
+      const type = this.$type(node);
       if (ts.isUnionTypeNode(type)) {
         flat.push(...type.types);
       } else {

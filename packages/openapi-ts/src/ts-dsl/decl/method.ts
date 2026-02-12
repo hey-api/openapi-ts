@@ -1,7 +1,7 @@
-import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
-import { TsDsl, TypeTsDsl } from '../base';
+import { TsDsl } from '../base';
 import { DecoratorMixin } from '../mixins/decorator';
 import { DoMixin } from '../mixins/do';
 import { DocMixin } from '../mixins/doc';
@@ -16,9 +16,10 @@ import {
 import { OptionalMixin } from '../mixins/optional';
 import { ParamMixin } from '../mixins/param';
 import { TypeParamsMixin } from '../mixins/type-params';
+import { TypeReturnsMixin } from '../mixins/type-returns';
 import { BlockTsDsl } from '../stmt/block';
 import { TokenTsDsl } from '../token';
-import { TypeExprTsDsl } from '../type/expr';
+import { safeAccessorName } from '../utils/name';
 
 const Mixed = AbstractMixin(
   AsyncMixin(
@@ -30,7 +31,7 @@ const Mixed = AbstractMixin(
               PrivateMixin(
                 ProtectedMixin(
                   PublicMixin(
-                    StaticMixin(TypeParamsMixin(TsDsl<ts.MethodDeclaration>)),
+                    StaticMixin(TypeParamsMixin(TypeReturnsMixin(TsDsl<ts.MethodDeclaration>))),
                   ),
                 ),
               ),
@@ -44,43 +45,36 @@ const Mixed = AbstractMixin(
 
 export class MethodTsDsl extends Mixed {
   readonly '~dsl' = 'MethodTsDsl';
+  override readonly nameSanitizer = safeAccessorName;
 
-  protected name: string;
-  protected _returns?: TypeTsDsl;
-
-  constructor(name: string, fn?: (m: MethodTsDsl) => void) {
+  constructor(name: NodeName, fn?: (m: MethodTsDsl) => void) {
     super();
-    this.name = name;
+    this.name.set(name);
     fn?.(this);
   }
 
   override analyze(ctx: AnalysisContext): void {
+    ctx.analyze(this.name);
+
     ctx.pushScope();
     try {
       super.analyze(ctx);
-      ctx.analyze(this._returns);
     } finally {
       ctx.popScope();
     }
   }
 
-  /** Sets the return type. */
-  returns(type: string | TypeTsDsl): this {
-    this._returns = type instanceof TypeTsDsl ? type : new TypeExprTsDsl(type);
-    return this;
-  }
-
-  override toAst(ctx: AstContext) {
+  override toAst() {
     const node = ts.factory.createMethodDeclaration(
-      [...this.$decorators(ctx), ...this.modifiers],
+      [...this.$decorators(), ...this.modifiers],
       undefined,
-      this.name,
-      this._optional ? this.$node(ctx, new TokenTsDsl().optional()) : undefined,
-      this.$generics(ctx),
-      this.$params(ctx),
-      this.$type(ctx, this._returns),
-      this.$node(ctx, new BlockTsDsl(...this._do).pretty()),
+      this.$node(this.name) as ts.PropertyName,
+      this._optional ? this.$node(new TokenTsDsl().optional()) : undefined,
+      this.$generics(),
+      this.$params(),
+      this.$returns(),
+      this.$node(new BlockTsDsl(...this._do).pretty()),
     );
-    return this.$docs(ctx, node);
+    return this.$docs(node);
   }
 }

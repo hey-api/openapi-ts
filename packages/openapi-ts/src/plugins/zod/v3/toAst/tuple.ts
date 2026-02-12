@@ -1,8 +1,7 @@
 import { fromRef, ref } from '@hey-api/codegen-core';
+import type { SchemaWithType } from '@hey-api/shared';
 
-import type { SchemaWithType } from '~/plugins';
-import { $ } from '~/ts-dsl';
-
+import { $ } from '../../../../ts-dsl';
 import { identifiers } from '../../constants';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
 import { irSchemaToAst } from '../plugin';
@@ -16,10 +15,7 @@ export const tupleToAst = ({
 }): Omit<Ast, 'typeName'> & {
   anyType?: string;
 } => {
-  const z = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'zod.z',
-  });
+  const z = plugin.external('zod.z');
 
   let hasLazyExpression = false;
 
