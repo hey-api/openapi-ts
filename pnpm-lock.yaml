@@ -1228,6 +1228,25 @@ importers:
         specifier: 6.1.1
         version: 6.1.1(rollup@4.56.0)(typescript@5.9.3)
 
+  packages/json-schema-ref-parser:
+    dependencies:
+      '@jsdevtools/ono':
+        specifier: 7.1.3
+        version: 7.1.3
+      '@types/json-schema':
+        specifier: 7.0.15
+        version: 7.0.15
+      js-yaml:
+        specifier: 4.1.1
+        version: 4.1.1
+    devDependencies:
+      '@types/js-yaml':
+        specifier: 4.0.9
+        version: 4.0.9
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+
   packages/nuxt:
     dependencies:
       '@nuxt/kit':
@@ -1268,8 +1287,8 @@ importers:
         specifier: workspace:*
         version: link:../codegen-core
       '@hey-api/json-schema-ref-parser':
-        specifier: 1.2.4
-        version: 1.2.4
+        specifier: workspace:*
+        version: link:../json-schema-ref-parser
       '@hey-api/shared':
         specifier: workspace:*
         version: link:../shared
@@ -1302,8 +1321,8 @@ importers:
         specifier: workspace:*
         version: link:../codegen-core
       '@hey-api/json-schema-ref-parser':
-        specifier: 1.2.4
-        version: 1.2.4
+        specifier: workspace:*
+        version: link:../json-schema-ref-parser
       '@hey-api/shared':
         specifier: workspace:*
         version: link:../shared
@@ -1528,8 +1547,8 @@ importers:
         specifier: workspace:*
         version: link:../codegen-core
       '@hey-api/json-schema-ref-parser':
-        specifier: 1.2.4
-        version: 1.2.4
+        specifier: workspace:*
+        version: link:../json-schema-ref-parser
       '@hey-api/types':
         specifier: workspace:*
         version: link:../types
@@ -3791,10 +3810,6 @@ packages:
 
   '@fontsource/fira-mono@5.0.0':
     resolution: {integrity: sha512-IsinH/oLYJyv/sQv7SbKmjoAXZsSjm6Q1Tz5GBBXCXi3Jg9MzXmKvWm9bSLC8lFI6CDsi8GkH/DAgZ98t8bhTQ==}
-
-  '@hey-api/json-schema-ref-parser@1.2.4':
-    resolution: {integrity: sha512-uuOaZ6tStUgRJFUqnX3Xdbs792++ezxOLI5NMxuikVklpbFWk2wcvIZbeX+qTWDv6kiS1Ik2EVKQgeQFWHML4A==}
-    engines: {node: '>= 16'}
 
   '@hono/node-server@1.19.9':
     resolution: {integrity: sha512-vHL6w3ecZsky+8P5MD+eFfaGTyCeOHUIFYMGpQGbrBTSmNNoxv0if69rEZ5giu36weC5saFuznL411gRX7bJDw==}
@@ -6969,6 +6984,9 @@ packages:
 
   '@types/jasmine@5.1.9':
     resolution: {integrity: sha512-8t4HtkW4wxiPVedMpeZ63n3vlWxEIquo/zc1Tm8ElU+SqVV7+D3Na2PWaJUp179AzTragMWVwkMv7mvty0NfyQ==}
+
+  '@types/js-yaml@4.0.9':
+    resolution: {integrity: sha512-k4MGaQl5TGo/iipqb2UDG2UwjXziSWkh0uysQelTlJpX1qGlpUZYm8PnO4DxG1qBomtJUdYJ6qR6xdIah10JLg==}
 
   '@types/jsdom@27.0.0':
     resolution: {integrity: sha512-NZyFl/PViwKzdEkQg96gtnB8wm+1ljhdDay9ahn4hgb+SfVtPCbm3TlmDUFXTA+MGN3CijicnMhG18SI5H3rFw==}
@@ -11032,9 +11050,6 @@ packages:
 
   lodash.uniq@4.5.0:
     resolution: {integrity: sha512-xfBaXQd9ryd9dlSDvnvI0lvxfLJlYAZzXomUYzLKtUeOQvOP5piqAWuGtrhWeqaXK9hhoM/iyJc5AV+XfsX3HQ==}
-
-  lodash@4.17.21:
-    resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
 
   lodash@4.17.23:
     resolution: {integrity: sha512-LgVTMpQtIopCi79SJeDiP0TfWi5CNEc/L/aRdTh3yIvmZXTnheWpKjSZhnvMl8iXbC1tFg9gdHHDMLoV7CnG+w==}
@@ -17742,13 +17757,6 @@ snapshots:
 
   '@fontsource/fira-mono@5.0.0': {}
 
-  '@hey-api/json-schema-ref-parser@1.2.4':
-    dependencies:
-      '@jsdevtools/ono': 7.1.3
-      '@types/json-schema': 7.0.15
-      js-yaml: 4.1.1
-      lodash: 4.17.23
-
   '@hono/node-server@1.19.9(hono@4.11.8)':
     dependencies:
       hono: 4.11.8
@@ -21355,6 +21363,8 @@ snapshots:
       '@types/node': 24.10.10
 
   '@types/jasmine@5.1.9': {}
+
+  '@types/js-yaml@4.0.9': {}
 
   '@types/jsdom@27.0.0':
     dependencies:
@@ -26492,8 +26502,6 @@ snapshots:
   lodash.startcase@4.4.0: {}
 
   lodash.uniq@4.5.0: {}
-
-  lodash@4.17.21: {}
 
   lodash@4.17.23: {}
 
@@ -31935,7 +31943,7 @@ snapshots:
       eslint-visitor-keys: 3.4.3
       espree: 9.6.1
       esquery: 1.6.0
-      lodash: 4.17.21
+      lodash: 4.17.23
       semver: 7.7.3
     transitivePeerDependencies:
       - supports-color
