@@ -1,4 +1,4 @@
-import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
+import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -12,10 +12,7 @@ export class PrefixTsDsl extends Mixed {
   protected _expr?: string | MaybeTsDsl<ts.Expression>;
   protected _op?: ts.PrefixUnaryOperator;
 
-  constructor(
-    expr?: string | MaybeTsDsl<ts.Expression>,
-    op?: ts.PrefixUnaryOperator,
-  ) {
+  constructor(expr?: string | MaybeTsDsl<ts.Expression>, op?: ts.PrefixUnaryOperator) {
     super();
     this._expr = expr;
     this._op = op;
@@ -24,6 +21,11 @@ export class PrefixTsDsl extends Mixed {
   override analyze(ctx: AnalysisContext): void {
     super.analyze(ctx);
     ctx.analyze(this._expr);
+  }
+
+  /** Returns true when all required builder calls are present. */
+  get isValid(): boolean {
+    return this.missingRequiredCalls().length === 0;
   }
 
   /** Sets the operand (the expression being prefixed). */
@@ -50,16 +52,24 @@ export class PrefixTsDsl extends Mixed {
     return this;
   }
 
-  override toAst(ctx: AstContext) {
-    if (!this._expr) {
-      throw new Error('Missing expression for prefix unary expression');
-    }
-    if (!this._op) {
-      throw new Error('Missing operator for prefix unary expression');
-    }
-    return ts.factory.createPrefixUnaryExpression(
-      this._op,
-      this.$node(ctx, this._expr),
-    );
+  override toAst() {
+    this.$validate();
+    return ts.factory.createPrefixUnaryExpression(this._op, this.$node(this._expr));
+  }
+
+  $validate(): asserts this is this & {
+    _expr: string | MaybeTsDsl<ts.Expression>;
+    _op: ts.PrefixUnaryOperator;
+  } {
+    const missing = this.missingRequiredCalls();
+    if (missing.length === 0) return;
+    throw new Error(`Prefix unary expression missing ${missing.join(' and ')}`);
+  }
+
+  private missingRequiredCalls(): ReadonlyArray<string> {
+    const missing: Array<string> = [];
+    if (!this._expr) missing.push('.expr()');
+    if (!this._op) missing.push('operator (e.g., .not(), .neg())');
+    return missing;
   }
 }

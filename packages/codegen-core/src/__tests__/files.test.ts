@@ -1,5 +1,3 @@
-import { describe, expect, it } from 'vitest';
-
 import { File } from '../files/file';
 import { FileRegistry } from '../files/registry';
 
@@ -47,9 +45,7 @@ describe('FileRegistry', () => {
     const f = registry.register({ language: 'ts', logicalFilePath: 'get.ts' });
 
     expect(registry.get({ language: 'ts', logicalFilePath: 'get.ts' })).toBe(f);
-    expect(
-      registry.get({ language: 'ts', logicalFilePath: 'missing.ts' }),
-    ).toBeUndefined();
+    expect(registry.get({ language: 'ts', logicalFilePath: 'missing.ts' })).toBeUndefined();
   });
 
   it('isRegistered() returns true only for existing files', () => {
@@ -57,12 +53,8 @@ describe('FileRegistry', () => {
 
     registry.register({ language: 'ts', logicalFilePath: 'check.ts' });
 
-    expect(
-      registry.isRegistered({ language: 'ts', logicalFilePath: 'check.ts' }),
-    ).toBe(true);
-    expect(
-      registry.isRegistered({ language: 'ts', logicalFilePath: 'other.ts' }),
-    ).toBe(false);
+    expect(registry.isRegistered({ language: 'ts', logicalFilePath: 'check.ts' })).toBe(true);
+    expect(registry.isRegistered({ language: 'ts', logicalFilePath: 'other.ts' })).toBe(false);
   });
 
   it('registered() iterates over all files', () => {
@@ -121,11 +113,7 @@ describe('FileRegistry', () => {
     });
 
     expect(tsFile).not.toBe(jsFile);
-    expect(
-      registry.isRegistered({ language: 'ts', logicalFilePath: 'file' }),
-    ).toBe(true);
-    expect(
-      registry.isRegistered({ language: 'js', logicalFilePath: 'file' }),
-    ).toBe(true);
+    expect(registry.isRegistered({ language: 'ts', logicalFilePath: 'file' })).toBe(true);
+    expect(registry.isRegistered({ language: 'js', logicalFilePath: 'file' })).toBe(true);
   });
 });

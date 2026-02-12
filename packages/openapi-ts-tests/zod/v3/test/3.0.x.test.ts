@@ -2,29 +2,15 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import { createClient } from '@hey-api/openapi-ts';
-import { describe, expect, it } from 'vitest';
 
 import { getFilePaths } from '../../../utils';
-import {
-  createZodConfig,
-  getSnapshotsPath,
-  getTempSnapshotsPath,
-  zodVersions,
-} from './utils';
+import { createZodConfig, getSnapshotsPath, getTempSnapshotsPath, zodVersions } from './utils';
 
 const version = '3.0.x';
 
 for (const zodVersion of zodVersions) {
-  const outputDir = path.join(
-    getTempSnapshotsPath(),
-    version,
-    zodVersion.folder,
-  );
-  const snapshotsDir = path.join(
-    getSnapshotsPath(),
-    version,
-    zodVersion.folder,
-  );
+  const outputDir = path.join(getTempSnapshotsPath(), version, zodVersion.folder);
+  const snapshotsDir = path.join(getSnapshotsPath(), version, zodVersion.folder);
 
   describe(`OpenAPI ${version}`, () => {
     const createConfig = createZodConfig({
@@ -39,8 +25,7 @@ for (const zodVersion of zodVersions) {
           input: 'array-items-one-of-length-1.yaml',
           output: 'array-items-one-of-length-1',
         }),
-        description:
-          'generates correct array when items are oneOf array with single item',
+        description: 'generates correct array when items are oneOf array with single item',
       },
       {
         config: createConfig({

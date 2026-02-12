@@ -1,11 +1,13 @@
-import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
+import type { AnalysisContext } from '@hey-api/codegen-core';
+import type { MaybeArray } from '@hey-api/types';
 import ts from 'typescript';
 
-import type { MaybeArray } from '../base';
 import { TsDsl } from '../base';
 import { IdTsDsl } from '../expr/id';
+import type { TsDslContext } from '../utils/context';
+import { ctx } from '../utils/context';
 
-type DocMaybeLazy<T> = ((ctx: AstContext) => T) | T;
+type DocMaybeLazy<T> = ((ctx: TsDslContext) => T) | T;
 export type DocFn = (d: DocTsDsl) => void;
 export type DocLines = DocMaybeLazy<MaybeArray<string>>;
 
@@ -29,7 +31,7 @@ export class DocTsDsl extends TsDsl<ts.Node> {
     return this;
   }
 
-  apply<T extends ts.Node>(ctx: AstContext, node: T): T {
+  apply<T extends ts.Node>(node: T): T {
     const lines = this._lines.reduce((lines: Array<string>, line: DocLines) => {
       if (typeof line === 'function') line = line(ctx);
       for (const l of typeof line === 'string' ? [line] : line) {
@@ -39,40 +41,29 @@ export class DocTsDsl extends TsDsl<ts.Node> {
     }, []);
     if (!lines.length) return node;
 
-    const jsdocTexts = lines.map((line) =>
-      ts.factory.createJSDocText(`${line}\n`),
-    );
+    const jsdocTexts = lines.map((line) => ts.factory.createJSDocText(`${line}\n`));
 
-    const jsdoc = ts.factory.createJSDocComment(
-      ts.factory.createNodeArray(jsdocTexts),
-      undefined,
-    );
+    const jsdoc = ts.factory.createJSDocComment(ts.factory.createNodeArray(jsdocTexts), undefined);
 
     const cleanedJsdoc = ts
       .createPrinter()
       .printNode(
         ts.EmitHint.Unspecified,
         jsdoc,
-        node.getSourceFile?.() ??
-          ts.createSourceFile('', '', ts.ScriptTarget.Latest),
+        node.getSourceFile?.() ?? ts.createSourceFile('', '', ts.ScriptTarget.Latest),
       )
       .replace('/*', '')
       .replace('*  */', '');
 
-    ts.addSyntheticLeadingComment(
-      node,
-      ts.SyntaxKind.MultiLineCommentTrivia,
-      cleanedJsdoc,
-      true,
-    );
+    ts.addSyntheticLeadingComment(node, ts.SyntaxKind.MultiLineCommentTrivia, cleanedJsdoc, true);
 
     return node;
   }
 
-  override toAst(ctx: AstContext): ts.Node {
+  override toAst(): ts.Node {
     // this class does not build a standalone node;
     // it modifies other nodes via `apply()`.
     // Return a dummy comment node for compliance.
-    return this.$node(ctx, new IdTsDsl(''));
+    return this.$node(new IdTsDsl(''));
   }
 }

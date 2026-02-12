@@ -1,10 +1,4 @@
-import type {
-  AnalysisContext,
-  AstContext,
-  Ref,
-  Symbol,
-} from '@hey-api/codegen-core';
-import { fromRef, isSymbolRef, ref } from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl, TypeTsDsl } from '../base';
@@ -15,9 +9,8 @@ import { ValueMixin } from '../mixins/value';
 import { TokenTsDsl } from '../token';
 import { TypeExprTsDsl } from '../type/expr';
 
-export type ParamName = Symbol | string;
 export type ParamCtor = (
-  name: ParamName | ((p: ParamTsDsl) => void),
+  name: NodeName | ((p: ParamTsDsl) => void),
   fn?: (p: ParamTsDsl) => void,
 ) => ParamTsDsl;
 
@@ -28,18 +21,14 @@ const Mixed = DecoratorMixin(
 export class ParamTsDsl extends Mixed {
   readonly '~dsl' = 'ParamTsDsl';
 
-  protected name?: Ref<ParamName>;
   protected _type?: TypeTsDsl;
 
-  constructor(
-    name: ParamName | ((p: ParamTsDsl) => void),
-    fn?: (p: ParamTsDsl) => void,
-  ) {
+  constructor(name: NodeName | ((p: ParamTsDsl) => void), fn?: (p: ParamTsDsl) => void) {
     super();
     if (typeof name === 'function') {
       name(this);
     } else {
-      this.name = ref(name);
+      this.name.set(name);
       fn?.(this);
     }
   }
@@ -50,30 +39,39 @@ export class ParamTsDsl extends Mixed {
     ctx.analyze(this._type);
   }
 
+  /** Returns true when all required builder calls are present. */
+  get isValid(): boolean {
+    return this.missingRequiredCalls().length === 0;
+  }
+
   /** Sets the parameter type. */
   type(type: string | TypeTsDsl): this {
     this._type = type instanceof TypeTsDsl ? type : new TypeExprTsDsl(type);
     return this;
   }
 
-  override toAst(ctx: AstContext) {
-    let name: string | ReturnType<typeof this.$pattern> = this.$pattern(ctx);
-    if (!name && this.name) {
-      name = isSymbolRef(this.name)
-        ? fromRef(this.name).finalName
-        : (fromRef(this.name) as string);
-    }
-    if (!name)
-      throw new Error(
-        'Param must have either a name or a destructuring pattern',
-      );
+  override toAst() {
+    this.$validate();
     return ts.factory.createParameterDeclaration(
-      this.$decorators(ctx),
+      this.$decorators(),
       undefined,
-      name,
-      this._optional ? this.$node(ctx, new TokenTsDsl().optional()) : undefined,
-      this.$type(ctx, this._type),
-      this.$value(ctx),
+      this.$pattern() ?? this.name.toString(),
+      this._optional ? this.$node(new TokenTsDsl().optional()) : undefined,
+      this.$type(this._type),
+      this.$value(),
     );
+  }
+
+  $validate(): asserts this {
+    const missing = this.missingRequiredCalls();
+    if (missing.length === 0) return;
+    throw new Error(`Parameter missing ${missing.join(' and ')}`);
+  }
+
+  private missingRequiredCalls(): ReadonlyArray<string> {
+    const missing: Array<string> = [];
+    if (!this.$pattern() && !this.name.toString())
+      missing.push('name or pattern (.array()/.object())');
+    return missing;
   }
 }

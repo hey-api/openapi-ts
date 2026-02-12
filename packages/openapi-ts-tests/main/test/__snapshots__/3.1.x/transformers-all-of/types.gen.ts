@@ -13,13 +13,12 @@ export type Bar = {
     bar: 'foo' | 'bar' | 'baz';
 };
 
-export type Baz = Qux & {
-    id: 'Baz';
-} & {
+export type Baz = Omit<Qux, 'id'> & {
     foo: number;
     bar: Date;
     baz: 'foo' | 'bar' | 'baz';
     qux: number;
+    id: 'Baz';
 };
 
 export type Qux = {

@@ -1,18 +1,15 @@
 import type { Mock } from 'vitest';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { runCli } from '~/cli';
-import { createClient } from '~/index';
+import { runCli } from '../cli';
+import { createClient } from '../index';
 
-vi.mock('~/index', () => {
+vi.mock('../index', () => {
   const result: Awaited<ReturnType<typeof createClient>> = [];
   return {
     createClient: vi.fn().mockResolvedValue(result),
   };
 });
-const spyExit = vi
-  .spyOn(process, 'exit')
-  .mockImplementation(() => ({}) as never);
+const spyExit = vi.spyOn(process, 'exit').mockImplementation(() => ({}) as never);
 
 const spy = createClient as Mock;
 
@@ -53,22 +50,18 @@ describe('cli', () => {
       process.argv = originalArgv;
     }
     expect(spy).toHaveBeenCalledWith({
-      input: 'foo.json',
+      input: ['foo.json'],
       logs: {
         file: true,
       },
-      output: 'bar',
+      output: ['bar'],
     });
   });
 
   it('with no plugins', async () => {
     const originalArgv = process.argv.slice();
     try {
-      process.argv = [
-        String(process.argv[0]),
-        String(process.argv[1]),
-        '--plugins',
-      ];
+      process.argv = [String(process.argv[0]), String(process.argv[1]), '--plugins'];
       await runCli();
     } finally {
       process.argv = originalArgv;
@@ -77,19 +70,13 @@ describe('cli', () => {
       logs: {
         file: true,
       },
-      plugins: [],
     });
   });
 
   it('with plugins', async () => {
     const originalArgv = process.argv.slice();
     try {
-      process.argv = [
-        String(process.argv[0]),
-        String(process.argv[1]),
-        '--plugins',
-        'foo',
-      ];
+      process.argv = [String(process.argv[0]), String(process.argv[1]), '--plugins', 'foo'];
       await runCli();
     } finally {
       process.argv = originalArgv;
@@ -102,15 +89,10 @@ describe('cli', () => {
     });
   });
 
-  it('with default plugins', async () => {
+  it('with client plugin', async () => {
     const originalArgv = process.argv.slice();
     try {
-      process.argv = [
-        String(process.argv[0]),
-        String(process.argv[1]),
-        '--client',
-        'foo',
-      ];
+      process.argv = [String(process.argv[0]), String(process.argv[1]), '--client', 'foo'];
       await runCli();
     } finally {
       process.argv = originalArgv;
@@ -119,7 +101,7 @@ describe('cli', () => {
       logs: {
         file: true,
       },
-      plugins: ['@hey-api/typescript', '@hey-api/sdk', 'foo'],
+      plugins: ['foo'],
     });
   });
 
@@ -127,11 +109,7 @@ describe('cli', () => {
     it('debug', async () => {
       const originalArgv = process.argv.slice();
       try {
-        process.argv = [
-          String(process.argv[0]),
-          String(process.argv[1]),
-          '--debug',
-        ];
+        process.argv = [String(process.argv[0]), String(process.argv[1]), '--debug'];
         await runCli();
       } finally {
         process.argv = originalArgv;
@@ -147,11 +125,7 @@ describe('cli', () => {
     it('silent', async () => {
       const originalArgv = process.argv.slice();
       try {
-        process.argv = [
-          String(process.argv[0]),
-          String(process.argv[1]),
-          '--silent',
-        ];
+        process.argv = [String(process.argv[0]), String(process.argv[1]), '--silent'];
         await runCli();
       } finally {
         process.argv = originalArgv;
@@ -167,11 +141,7 @@ describe('cli', () => {
     it('no log file', async () => {
       const originalArgv = process.argv.slice();
       try {
-        process.argv = [
-          String(process.argv[0]),
-          String(process.argv[1]),
-          '--no-log-file',
-        ];
+        process.argv = [String(process.argv[0]), String(process.argv[1]), '--no-log-file'];
         await runCli();
       } finally {
         process.argv = originalArgv;
@@ -194,8 +164,6 @@ describe('cli', () => {
         'foo',
         '--dry-run',
         'true',
-        '--experimental-parser',
-        'true',
         '--file',
         'bar',
         '--input',
@@ -214,12 +182,12 @@ describe('cli', () => {
     expect(spy).toHaveBeenCalledWith({
       configFile: 'bar',
       dryRun: true,
-      input: 'baz',
+      input: ['baz'],
       logs: {
         file: true,
         path: 'qux',
       },
-      output: 'quux',
+      output: ['quux'],
       plugins: ['foo'],
       watch: true,
     });

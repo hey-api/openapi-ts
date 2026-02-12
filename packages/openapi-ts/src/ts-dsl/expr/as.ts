@@ -1,19 +1,15 @@
-import type {
-  AnalysisContext,
-  AstContext,
-  Ref,
-  Symbol,
-} from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName, Ref } from '@hey-api/codegen-core';
 import { ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl, TypeTsDsl } from '../base';
 import { TsDsl } from '../base';
-import { AsMixin, setAsFactory } from '../mixins/as';
+import { AsMixin } from '../mixins/as';
 import { ExprMixin } from '../mixins/expr';
+import { f } from '../utils/factories';
 
-export type AsExpr = Symbol | string | MaybeTsDsl<ts.Expression>;
-export type AsType = Symbol | string | TypeTsDsl;
+export type AsExpr = NodeName | MaybeTsDsl<ts.Expression>;
+export type AsType = NodeName | TypeTsDsl;
 export type AsCtor = (expr: AsExpr, type: AsType) => AsTsDsl;
 
 const Mixed = AsMixin(ExprMixin(TsDsl<ts.AsExpression>));
@@ -36,12 +32,9 @@ export class AsTsDsl extends Mixed {
     ctx.analyze(this.type);
   }
 
-  override toAst(ctx: AstContext) {
-    return ts.factory.createAsExpression(
-      this.$node(ctx, this.expr),
-      this.$type(ctx, this.type),
-    );
+  override toAst() {
+    return ts.factory.createAsExpression(this.$node(this.expr), this.$type(this.type));
   }
 }
 
-setAsFactory((...args) => new AsTsDsl(...args));
+f.as.set((...args) => new AsTsDsl(...args));

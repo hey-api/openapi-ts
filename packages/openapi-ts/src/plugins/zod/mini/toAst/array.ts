@@ -1,9 +1,8 @@
 import { fromRef, ref } from '@hey-api/codegen-core';
+import type { SchemaWithType } from '@hey-api/shared';
+import { deduplicateSchema } from '@hey-api/shared';
 
-import { deduplicateSchema } from '~/ir/schema';
-import type { SchemaWithType } from '~/plugins';
-import { $ } from '~/ts-dsl';
-
+import { $ } from '../../../../ts-dsl';
 import { identifiers } from '../../constants';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
 import { irSchemaToAst } from '../plugin';
@@ -16,10 +15,7 @@ export const arrayToAst = ({
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'array'>;
 }): Omit<Ast, 'typeName'> => {
-  const z = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'zod.z',
-  });
+  const z = plugin.external('zod.z');
 
   const result: Partial<Omit<Ast, 'typeName'>> = {};
 
@@ -95,27 +91,19 @@ export const arrayToAst = ({
   const checks: Array<ReturnType<typeof $.call>> = [];
 
   if (schema.minItems === schema.maxItems && schema.minItems !== undefined) {
-    checks.push(
-      $(z).attr(identifiers.length).call($.fromValue(schema.minItems)),
-    );
+    checks.push($(z).attr(identifiers.length).call($.fromValue(schema.minItems)));
   } else {
     if (schema.minItems !== undefined) {
-      checks.push(
-        $(z).attr(identifiers.minLength).call($.fromValue(schema.minItems)),
-      );
+      checks.push($(z).attr(identifiers.minLength).call($.fromValue(schema.minItems)));
     }
 
     if (schema.maxItems !== undefined) {
-      checks.push(
-        $(z).attr(identifiers.maxLength).call($.fromValue(schema.maxItems)),
-      );
+      checks.push($(z).attr(identifiers.maxLength).call($.fromValue(schema.maxItems)));
     }
   }
 
-  if (checks.length) {
-    result.expression = result.expression
-      .attr(identifiers.check)
-      .call(...checks);
+  if (checks.length > 0) {
+    result.expression = result.expression.attr(identifiers.check).call(...checks);
   }
 
   return result as Omit<Ast, 'typeName'>;

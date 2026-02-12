@@ -8,11 +8,9 @@ const Mixed = TsDsl<ts.Identifier>;
 export class IdTsDsl extends Mixed {
   readonly '~dsl' = 'IdTsDsl';
 
-  protected name: string;
-
   constructor(name: string) {
     super();
-    this.name = name;
+    this.name.set(name);
   }
 
   override analyze(ctx: AnalysisContext): void {
@@ -20,6 +18,6 @@ export class IdTsDsl extends Mixed {
   }
 
   override toAst() {
-    return ts.factory.createIdentifier(this.name);
+    return ts.factory.createIdentifier(this.name.toString());
   }
 }

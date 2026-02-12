@@ -1,5 +1,3 @@
-import { describe, expect, it, vi } from 'vitest';
-
 import type { Auth } from '../../client-core/bundle/auth';
 import type { Client } from '../bundle/types';
 import { buildUrl, getParseAs, setAuthParams } from '../bundle/utils';
@@ -80,12 +78,9 @@ describe('getParseAs', () => {
     },
   ];
 
-  it.each(scenarios)(
-    'detects $content as $parseAs',
-    async ({ content, parseAs }) => {
-      expect(getParseAs(content)).toEqual(parseAs);
-    },
-  );
+  it.each(scenarios)('detects $content as $parseAs', async ({ content, parseAs }) => {
+    expect(getParseAs(content)).toEqual(parseAs);
+  });
 });
 
 describe('setAuthParams', () => {

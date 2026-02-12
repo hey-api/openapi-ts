@@ -6,7 +6,8 @@
     "esModuleInterop": true,
     "noEmit": true,
     "resolveJsonModule": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "types": ["vitest/globals"]
   },
   "exclude": ["test/custom/request.ts", "test/generated/**"]
 }

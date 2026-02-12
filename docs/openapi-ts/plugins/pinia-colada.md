@@ -262,7 +262,7 @@ You can customize the naming and casing pattern for `mutationOptions` functions 
 
 ## API
 
-You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/@pinia/colada/types.d.ts) interface.
+You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/@pinia/colada/types.ts) interface.
 
 <!--@include: ../../partials/examples.md-->
 <!--@include: ../../partials/sponsors.md-->

@@ -1,41 +1,46 @@
-import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeScope } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
-import { TypeTsDsl } from '../base';
+import { TsDsl } from '../base';
 import { DocMixin } from '../mixins/doc';
 import { ParamMixin } from '../mixins/param';
 import { TypeParamsMixin } from '../mixins/type-params';
-import { TypeExprTsDsl } from './expr';
+import { TypeReturnsMixin } from '../mixins/type-returns';
 
-const Mixed = DocMixin(
-  ParamMixin(TypeParamsMixin(TypeTsDsl<ts.FunctionTypeNode>)),
-);
+const Mixed = DocMixin(ParamMixin(TypeParamsMixin(TypeReturnsMixin(TsDsl<ts.FunctionTypeNode>))));
 
 export class TypeFuncTsDsl extends Mixed {
   readonly '~dsl' = 'TypeFuncTsDsl';
-
-  protected _returns?: TypeTsDsl;
+  override scope: NodeScope = 'type';
 
   override analyze(ctx: AnalysisContext): void {
     super.analyze(ctx);
-    ctx.analyze(this._returns);
   }
 
-  /** Sets the return type. */
-  returns(type: string | TypeTsDsl): this {
-    this._returns = type instanceof TypeTsDsl ? type : new TypeExprTsDsl(type);
-    return this;
+  /** Returns true when all required builder calls are present. */
+  get isValid(): boolean {
+    return this.missingRequiredCalls().length === 0;
   }
 
-  override toAst(ctx: AstContext) {
-    if (this._returns === undefined) {
-      throw new Error('Missing return type in function type DSL');
-    }
+  override toAst() {
+    this.$validate();
     const node = ts.factory.createFunctionTypeNode(
-      this.$generics(ctx),
-      this.$params(ctx),
-      this.$type(ctx, this._returns),
+      this.$generics(),
+      this.$params(),
+      this.$returns()!,
     );
-    return this.$docs(ctx, node);
+    return this.$docs(node);
+  }
+
+  $validate(): asserts this {
+    const missing = this.missingRequiredCalls();
+    if (missing.length === 0) return;
+    throw new Error(`Function type missing ${missing.join(' and ')}`);
+  }
+
+  private missingRequiredCalls(): ReadonlyArray<string> {
+    const missing: Array<string> = [];
+    if (this.$returns() === undefined) missing.push('.returns()');
+    return missing;
   }
 }

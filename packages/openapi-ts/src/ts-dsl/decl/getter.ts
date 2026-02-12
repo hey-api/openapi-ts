@@ -1,4 +1,4 @@
-import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl } from '../base';
@@ -14,9 +14,9 @@ import {
   StaticMixin,
 } from '../mixins/modifiers';
 import { ParamMixin } from '../mixins/param';
+import { TypeReturnsMixin } from '../mixins/type-returns';
 import { BlockTsDsl } from '../stmt/block';
-
-export type GetterName = string | ts.PropertyName;
+import { safeAccessorName } from '../utils/name';
 
 const Mixed = AbstractMixin(
   AsyncMixin(
@@ -26,7 +26,7 @@ const Mixed = AbstractMixin(
           ParamMixin(
             PrivateMixin(
               ProtectedMixin(
-                PublicMixin(StaticMixin(TsDsl<ts.GetAccessorDeclaration>)),
+                PublicMixin(StaticMixin(TypeReturnsMixin(TsDsl<ts.GetAccessorDeclaration>))),
               ),
             ),
           ),
@@ -38,16 +38,17 @@ const Mixed = AbstractMixin(
 
 export class GetterTsDsl extends Mixed {
   readonly '~dsl' = 'GetterTsDsl';
+  override readonly nameSanitizer = safeAccessorName;
 
-  protected name: GetterName;
-
-  constructor(name: GetterName, fn?: (g: GetterTsDsl) => void) {
+  constructor(name: NodeName, fn?: (g: GetterTsDsl) => void) {
     super();
-    this.name = name;
+    this.name.set(name);
     fn?.(this);
   }
 
   override analyze(ctx: AnalysisContext): void {
+    ctx.analyze(this.name);
+
     ctx.pushScope();
     try {
       super.analyze(ctx);
@@ -56,14 +57,14 @@ export class GetterTsDsl extends Mixed {
     }
   }
 
-  override toAst(ctx: AstContext) {
+  override toAst() {
     const node = ts.factory.createGetAccessorDeclaration(
-      [...this.$decorators(ctx), ...this.modifiers],
-      this.name,
-      this.$params(ctx),
-      undefined,
-      this.$node(ctx, new BlockTsDsl(...this._do).pretty()),
+      [...this.$decorators(), ...this.modifiers],
+      this.$node(this.name) as ts.PropertyName,
+      this.$params(),
+      this.$returns(),
+      this.$node(new BlockTsDsl(...this._do).pretty()),
     );
-    return this.$docs(ctx, node);
+    return this.$docs(node);
   }
 }

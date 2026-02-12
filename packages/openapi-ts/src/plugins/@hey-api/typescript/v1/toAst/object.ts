@@ -1,11 +1,10 @@
 import { fromRef, ref } from '@hey-api/codegen-core';
+import type { IR } from '@hey-api/shared';
+import type { SchemaWithType } from '@hey-api/shared';
 
-import type { IR } from '~/ir/types';
-import type { SchemaWithType } from '~/plugins';
-import { createSchemaComment } from '~/plugins/shared/utils/schema';
-import type { TypeTsDsl } from '~/ts-dsl';
-import { $ } from '~/ts-dsl';
-
+import { createSchemaComment } from '../../../../../plugins/shared/utils/schema';
+import type { TypeTsDsl } from '../../../../../ts-dsl';
+import { $ } from '../../../../../ts-dsl';
 import type { IrSchemaToAstOptions } from '../../shared/types';
 import { irSchemaToAst } from '../plugin';
 
@@ -35,7 +34,7 @@ export const objectToAst = ({
     const isRequired = required.includes(name);
     shape.prop(name, (p) =>
       p
-        .$if(createSchemaComment(property), (p, v) => p.doc(v))
+        .$if(plugin.config.comments && createSchemaComment(property), (p, v) => p.doc(v))
         .readonly(property.accessScope === 'read')
         .required(isRequired)
         .type(propertyType),
@@ -56,29 +55,20 @@ export const objectToAst = ({
   }
 
   const hasPatterns =
-    !!schema.patternProperties &&
-    Object.keys(schema.patternProperties).length > 0;
+    !!schema.patternProperties && Object.keys(schema.patternProperties).length > 0;
 
   const addPropsRaw = schema.additionalProperties;
   const addPropsObj =
-    addPropsRaw !== false && addPropsRaw
-      ? (addPropsRaw as IR.SchemaObject)
-      : undefined;
+    addPropsRaw !== false && addPropsRaw ? (addPropsRaw as IR.SchemaObject) : undefined;
   const shouldCreateIndex =
-    hasPatterns ||
-    (!!addPropsObj && (addPropsObj.type !== 'never' || !indexSchemas.length));
+    hasPatterns || (!!addPropsObj && (addPropsObj.type !== 'never' || !indexSchemas.length));
 
   if (shouldCreateIndex) {
-    // only inject additionalProperties when it’s not "never"
+    // only inject additionalProperties when it's not "never"
     const addProps = addPropsObj;
     if (addProps && addProps.type !== 'never') {
       indexSchemas.unshift(addProps);
-    } else if (
-      !hasPatterns &&
-      !indexSchemas.length &&
-      addProps &&
-      addProps.type === 'never'
-    ) {
+    } else if (!hasPatterns && !indexSchemas.length && addProps && addProps.type === 'never') {
       // keep "never" only when there are NO patterns and NO explicit properties
       indexSchemas = [addProps];
     }

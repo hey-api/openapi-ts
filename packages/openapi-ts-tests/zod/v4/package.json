@@ -4,19 +4,14 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test:coverage": "vitest run --coverage",
-    "test:update": "vitest watch --update",
-    "test:watch": "vitest watch",
-    "test": "vitest run",
     "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@hey-api/openapi-ts": "workspace:*",
+    "typescript": "5.9.3",
+    "zod": "4.3.6"
   },
   "engines": {
     "node": ">=20.19.0"
-  },
-  "devDependencies": {
-    "@config/vite-base": "workspace:*",
-    "@hey-api/openapi-ts": "workspace:*",
-    "typescript": "5.9.3",
-    "zod": "4.1.12"
   }
 }

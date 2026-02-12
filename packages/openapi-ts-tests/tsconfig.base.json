@@ -1,17 +1,20 @@
 {
   "compilerOptions": {
-    "declaration": true,
     "esModuleInterop": true,
     "module": "ESNext",
     "moduleResolution": "Bundler",
+    "noEmit": true,
     "noImplicitAny": true,
     "noImplicitOverride": true,
     "noImplicitReturns": true,
     "noUncheckedIndexedAccess": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
     "strict": true,
     "target": "ES2022",
+    "types": ["vitest/globals"],
     "useUnknownInCatchVariables": false
   }
 }

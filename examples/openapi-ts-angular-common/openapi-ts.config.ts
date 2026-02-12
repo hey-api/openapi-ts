@@ -3,10 +3,12 @@ import { defineConfig } from '@hey-api/openapi-ts';
 export default defineConfig({
   input:
     'https://raw.githubusercontent.com/swagger-api/swagger-petstore/master/src/main/resources/openapi.yaml',
+  logs: {
+    path: './logs',
+  },
   output: {
-    format: 'prettier',
-    lint: 'eslint',
     path: './src/client',
+    postProcess: ['oxfmt', 'eslint'],
   },
   plugins: [
     {
@@ -14,11 +16,12 @@ export default defineConfig({
       throwOnError: true,
     },
     {
-      exportFromIndex: true,
       httpRequests: true,
       httpResources: {
-        asClass: true,
+        containerName: '{{name}}ServiceResources',
+        strategy: 'byTags',
       },
+      includeInEntry: true,
       name: '@angular/common',
     },
     '@hey-api/schemas',

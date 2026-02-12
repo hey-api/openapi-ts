@@ -2,8 +2,8 @@
   "$schema": "./node_modules/turbo/schema.json",
   "tasks": {
     "build": {
-      "cache": false,
       "dependsOn": ["^build"],
+      "inputs": ["src/**", "package.json", "tsdown.config.ts", "tsconfig.json"],
       "outputs": [
         ".next/**",
         "!.next/cache/**",
@@ -17,25 +17,40 @@
       "cache": false,
       "persistent": true
     },
-    "test": {
-      "cache": false,
-      "dependsOn": []
+    "lint": {
+      "dependsOn": ["^build"],
+      "inputs": ["src/**", "test/**", "*.config.*", "package.json"]
     },
-    "test:coverage": {
-      "cache": false,
-      "dependsOn": []
+    "//#test": {
+      "cache": true,
+      "dependsOn": ["^build"],
+      "inputs": ["src/**", "test/**", "*.config.*", "package.json", "vitest.config.ts"],
+      "outputs": ["coverage/**"]
     },
-    "test:update": {
-      "cache": false,
-      "dependsOn": []
+    "//#test:coverage": {
+      "dependsOn": ["^build"],
+      "inputs": ["src/**", "test/**", "*.config.*", "package.json", "vitest.config.ts"],
+      "outputs": ["coverage/**"]
     },
-    "test:watch": {
+    "//#test:update": {
       "cache": false,
-      "dependsOn": []
+      "dependsOn": ["^build"]
+    },
+    "//#test:watch": {
+      "cache": false,
+      "dependsOn": ["^build"],
+      "persistent": true
     },
     "typecheck": {
-      "cache": false,
-      "dependsOn": []
+      "dependsOn": ["^build"],
+      "inputs": [
+        "src/**",
+        "test/**",
+        "*.config.*",
+        "package.json",
+        "tsconfig.json",
+        "pyproject.toml"
+      ]
     }
   }
 }

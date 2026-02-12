@@ -1,49 +1,44 @@
-import type {
-  AnalysisContext,
-  AstContext,
-  Symbol,
-} from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName, Ref } from '@hey-api/codegen-core';
+import { ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
 import { ArgsMixin } from '../mixins/args';
 import { AsMixin } from '../mixins/as';
-import { ExprMixin, setCallFactory } from '../mixins/expr';
+import { ExprMixin } from '../mixins/expr';
 import { TypeArgsMixin } from '../mixins/type-args';
+import { f } from '../utils/factories';
 
-export type CallCallee = string | MaybeTsDsl<ts.Expression>;
-export type CallArg = Symbol | string | MaybeTsDsl<ts.Expression>;
-export type CallArgs = ReadonlyArray<CallArg | undefined>;
-export type CallCtor = (callee: CallCallee, ...args: CallArgs) => CallTsDsl;
+export type CallArgs = ReadonlyArray<CallExpr | undefined>;
+export type CallExpr = NodeName | MaybeTsDsl<ts.Expression>;
+export type CallCtor = (expr: CallExpr, ...args: CallArgs) => CallTsDsl;
 
-const Mixed = ArgsMixin(
-  AsMixin(ExprMixin(TypeArgsMixin(TsDsl<ts.CallExpression>))),
-);
+const Mixed = ArgsMixin(AsMixin(ExprMixin(TypeArgsMixin(TsDsl<ts.CallExpression>))));
 
 export class CallTsDsl extends Mixed {
   readonly '~dsl' = 'CallTsDsl';
 
-  protected _callee: CallCallee;
+  protected _callExpr: Ref<CallExpr>;
 
-  constructor(callee: CallCallee, ...args: CallArgs) {
+  constructor(expr: CallExpr, ...args: CallArgs) {
     super();
-    this._callee = callee;
+    this._callExpr = ref(expr);
     this.args(...args);
   }
 
   override analyze(ctx: AnalysisContext): void {
     super.analyze(ctx);
-    ctx.analyze(this._callee);
+    ctx.analyze(this._callExpr);
   }
 
-  override toAst(ctx: AstContext) {
+  override toAst() {
     return ts.factory.createCallExpression(
-      this.$node(ctx, this._callee),
-      this.$generics(ctx),
-      this.$args(ctx),
+      this.$node(this._callExpr),
+      this.$generics(),
+      this.$args(),
     );
   }
 }
 
-setCallFactory((...args) => new CallTsDsl(...args));
+f.call.set((...args) => new CallTsDsl(...args));

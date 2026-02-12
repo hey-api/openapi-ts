@@ -1,6 +1,6 @@
-import type { SchemaWithType } from '~/plugins';
-import { $ } from '~/ts-dsl';
+import type { SchemaWithType } from '@hey-api/shared';
 
+import { $ } from '../../../../ts-dsl';
 import { identifiers } from '../../constants';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
 
@@ -9,10 +9,7 @@ export const voidToAst = ({
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'void'>;
 }): Omit<Ast, 'typeName'> => {
-  const z = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'zod.z',
-  });
+  const z = plugin.external('zod.z');
   const result: Partial<Omit<Ast, 'typeName'>> = {};
   result.expression = $(z).attr(identifiers.void).call();
   return result as Omit<Ast, 'typeName'>;

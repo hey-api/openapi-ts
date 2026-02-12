@@ -1,48 +1,82 @@
 import { fromRef, ref } from '@hey-api/codegen-core';
+import type { SchemaWithType } from '@hey-api/shared';
 
-import type { SchemaWithType } from '~/plugins';
-import { $ } from '~/ts-dsl';
-
-import { pipesToAst } from '../../shared/pipesToAst';
+import { $ } from '../../../../ts-dsl';
+import type { ObjectResolverContext } from '../../resolvers';
+import type { Pipe, PipeResult } from '../../shared/pipes';
+import { pipes } from '../../shared/pipes';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
-import type { ObjectBaseResolverArgs } from '../../types';
 import { identifiers } from '../constants';
 import { irSchemaToAst } from '../plugin';
 
-function defaultObjectBaseResolver({
-  additional,
-  pipes,
-  plugin,
-  shape,
-}: ObjectBaseResolverArgs): number {
-  const v = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'valibot.v',
-  });
+function additionalPropertiesNode(ctx: ObjectResolverContext): Pipe | null | undefined {
+  const { plugin, schema } = ctx;
 
-  // Handle `additionalProperties: { type: 'never' }` → v.strictObject()
+  if (!schema.additionalProperties || !schema.additionalProperties.type) return;
+  if (schema.additionalProperties.type === 'never') return null;
+
+  const additionalAst = irSchemaToAst({
+    plugin,
+    schema: schema.additionalProperties,
+    state: {
+      ...ctx.utils.state,
+      path: ref([...fromRef(ctx.utils.state.path), 'additionalProperties']),
+    },
+  });
+  if (additionalAst.hasLazyExpression) ctx.utils.ast.hasLazyExpression = true;
+  return pipes.toNode(additionalAst.pipes, plugin);
+}
+
+function baseNode(ctx: ObjectResolverContext): PipeResult {
+  const { nodes, symbols } = ctx;
+  const { v } = symbols;
+
+  const additional = nodes.additionalProperties(ctx);
+  const shape = nodes.shape(ctx);
+
   if (additional === null) {
-    return pipes.push($(v).attr(identifiers.schemas.strictObject).call(shape));
+    return $(v).attr(identifiers.schemas.strictObject).call(shape);
   }
 
-  // Handle additionalProperties as schema → v.record() or v.objectWithRest()
   if (additional) {
     if (shape.isEmpty) {
-      return pipes.push(
-        $(v)
-          .attr(identifiers.schemas.record)
-          .call($(v).attr(identifiers.schemas.string).call(), additional),
-      );
+      return $(v)
+        .attr(identifiers.schemas.record)
+        .call($(v).attr(identifiers.schemas.string).call(), additional);
     }
 
-    // If there are named properties, use v.objectWithRest() to validate both
-    return pipes.push(
-      $(v).attr(identifiers.schemas.objectWithRest).call(shape, additional),
-    );
+    return $(v).attr(identifiers.schemas.objectWithRest).call(shape, additional);
   }
 
-  // Default case → v.object()
-  return pipes.push($(v).attr(identifiers.schemas.object).call(shape));
+  return $(v).attr(identifiers.schemas.object).call(shape);
+}
+
+function objectResolver(ctx: ObjectResolverContext): PipeResult {
+  // TODO: parser - handle constants
+  return ctx.nodes.base(ctx);
+}
+
+function shapeNode(ctx: ObjectResolverContext): ReturnType<typeof $.object> {
+  const { plugin, schema } = ctx;
+  const shape = $.object().pretty();
+
+  for (const name in schema.properties) {
+    const property = schema.properties[name]!;
+
+    const propertyAst = irSchemaToAst({
+      optional: !schema.required?.includes(name),
+      plugin,
+      schema: property,
+      state: {
+        ...ctx.utils.state,
+        path: ref([...fromRef(ctx.utils.state.path), 'properties', name]),
+      },
+    });
+    if (propertyAst.hasLazyExpression) ctx.utils.ast.hasLazyExpression = true;
+    shape.prop(name, pipes.toNode(propertyAst.pipes, plugin));
+  }
+
+  return shape;
 }
 
 export const objectToAst = ({
@@ -52,61 +86,29 @@ export const objectToAst = ({
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'object'>;
 }): Omit<Ast, 'typeName'> => {
-  const result: Partial<Omit<Ast, 'typeName'>> = {};
-  const pipes: Array<ReturnType<typeof $.call>> = [];
-
-  // TODO: parser - handle constants
-
-  const shape = $.object().pretty();
-  const required = schema.required ?? [];
-
-  for (const name in schema.properties) {
-    const property = schema.properties[name]!;
-    const isRequired = required.includes(name);
-
-    const propertyAst = irSchemaToAst({
-      optional: !isRequired,
-      plugin,
-      schema: property,
-      state: {
-        ...state,
-        path: ref([...fromRef(state.path), 'properties', name]),
-      },
-    });
-    if (propertyAst.hasLazyExpression) result.hasLazyExpression = true;
-
-    shape.prop(name, pipesToAst({ pipes: propertyAst.pipes, plugin }));
-  }
-
-  let additional: ReturnType<typeof $.call | typeof $.expr> | null | undefined;
-  if (schema.additionalProperties && schema.additionalProperties.type) {
-    if (schema.additionalProperties.type === 'never') {
-      additional = null;
-    } else {
-      const additionalAst = irSchemaToAst({
-        plugin,
-        schema: schema.additionalProperties,
-        state: {
-          ...state,
-          path: ref([...fromRef(state.path), 'additionalProperties']),
-        },
-      });
-      if (additionalAst.hasLazyExpression) result.hasLazyExpression = true;
-      additional = pipesToAst({ pipes: additionalAst.pipes, plugin });
-    }
-  }
-
-  const args: ObjectBaseResolverArgs = {
+  const ctx: ObjectResolverContext = {
     $,
-    additional,
-    pipes,
+    nodes: {
+      additionalProperties: additionalPropertiesNode,
+      base: baseNode,
+      shape: shapeNode,
+    },
+    pipes: {
+      ...pipes,
+      current: [],
+    },
     plugin,
     schema,
-    shape,
+    symbols: {
+      v: plugin.external('valibot.v'),
+    },
+    utils: {
+      ast: {},
+      state,
+    },
   };
-  const resolver = plugin.config['~resolvers']?.object?.base;
-  if (!resolver?.(args)) defaultObjectBaseResolver(args);
-
-  result.pipes = [pipesToAst({ pipes, plugin })];
-  return result as Omit<Ast, 'typeName'>;
+  const resolver = plugin.config['~resolvers']?.object;
+  const node = resolver?.(ctx) ?? objectResolver(ctx);
+  ctx.utils.ast.pipes = [ctx.pipes.toNode(node, plugin)];
+  return ctx.utils.ast as Omit<Ast, 'typeName'>;
 };

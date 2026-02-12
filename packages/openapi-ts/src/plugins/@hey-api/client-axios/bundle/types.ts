@@ -12,14 +12,10 @@ import type {
   ServerSentEventsOptions,
   ServerSentEventsResult,
 } from '../../client-core/bundle/serverSentEvents';
-import type {
-  Client as CoreClient,
-  Config as CoreConfig,
-} from '../../client-core/bundle/types';
+import type { Client as CoreClient, Config as CoreConfig } from '../../client-core/bundle/types';
 
 export interface Config<T extends ClientOptions = ClientOptions>
-  extends Omit<CreateAxiosDefaults, 'auth' | 'baseURL' | 'headers' | 'method'>,
-    CoreConfig {
+  extends Omit<CreateAxiosDefaults, 'auth' | 'baseURL' | 'headers' | 'method'>, CoreConfig {
   /**
    * Axios implementation. You can use this option to provide either an
    * `AxiosStatic` or an `AxiosInstance`.
@@ -41,13 +37,7 @@ export interface Config<T extends ClientOptions = ClientOptions>
     | AxiosRequestHeaders
     | Record<
         string,
-        | string
-        | number
-        | boolean
-        | (string | number | boolean)[]
-        | null
-        | undefined
-        | unknown
+        string | number | boolean | (string | number | boolean)[] | null | undefined | unknown
       >;
   /**
    * Throw an error instead of returning it in the response?
@@ -61,7 +51,9 @@ export interface RequestOptions<
   TData = unknown,
   ThrowOnError extends boolean = boolean,
   Url extends string = string,
-> extends Config<{
+>
+  extends
+    Config<{
       throwOnError: ThrowOnError;
     }>,
     Pick<
@@ -97,46 +89,26 @@ export type RequestResult<
   TError = unknown,
   ThrowOnError extends boolean = boolean,
 > = ThrowOnError extends true
-  ? Promise<
-      AxiosResponse<
-        TData extends Record<string, unknown> ? TData[keyof TData] : TData
-      >
-    >
+  ? Promise<AxiosResponse<TData extends Record<string, unknown> ? TData[keyof TData] : TData>>
   : Promise<
-      | (AxiosResponse<
-          TData extends Record<string, unknown> ? TData[keyof TData] : TData
-        > & { error: undefined })
-      | (AxiosError<
-          TError extends Record<string, unknown> ? TError[keyof TError] : TError
-        > & {
+      | (AxiosResponse<TData extends Record<string, unknown> ? TData[keyof TData] : TData> & {
+          error: undefined;
+        })
+      | (AxiosError<TError extends Record<string, unknown> ? TError[keyof TError] : TError> & {
           data: undefined;
-          error: TError extends Record<string, unknown>
-            ? TError[keyof TError]
-            : TError;
+          error: TError extends Record<string, unknown> ? TError[keyof TError] : TError;
         })
     >;
 
-type MethodFn = <
-  TData = unknown,
-  TError = unknown,
-  ThrowOnError extends boolean = false,
->(
+type MethodFn = <TData = unknown, TError = unknown, ThrowOnError extends boolean = false>(
   options: Omit<RequestOptions<TData, ThrowOnError>, 'method'>,
 ) => RequestResult<TData, TError, ThrowOnError>;
 
-type SseFn = <
-  TData = unknown,
-  TError = unknown,
-  ThrowOnError extends boolean = false,
->(
+type SseFn = <TData = unknown, TError = unknown, ThrowOnError extends boolean = false>(
   options: Omit<RequestOptions<TData, ThrowOnError>, 'method'>,
 ) => Promise<ServerSentEventsResult<TData, TError>>;
 
-type RequestFn = <
-  TData = unknown,
-  TError = unknown,
-  ThrowOnError extends boolean = false,
->(
+type RequestFn = <TData = unknown, TError = unknown, ThrowOnError extends boolean = false>(
   options: Omit<RequestOptions<TData, ThrowOnError>, 'method'> &
     Pick<Required<RequestOptions<TData, ThrowOnError>>, 'method'>,
 ) => RequestResult<TData, TError, ThrowOnError>;
@@ -152,13 +124,7 @@ type BuildUrlFn = <
   options: TData & Options<TData>,
 ) => string;
 
-export type Client = CoreClient<
-  RequestFn,
-  Config,
-  MethodFn,
-  BuildUrlFn,
-  SseFn
-> & {
+export type Client = CoreClient<RequestFn, Config, MethodFn, BuildUrlFn, SseFn> & {
   instance: AxiosInstance;
 };
 
@@ -188,8 +154,5 @@ export type Options<
   TData extends TDataShape = TDataShape,
   ThrowOnError extends boolean = boolean,
   TResponse = unknown,
-> = OmitKeys<
-  RequestOptions<TResponse, ThrowOnError>,
-  'body' | 'path' | 'query' | 'url'
-> &
+> = OmitKeys<RequestOptions<TResponse, ThrowOnError>, 'body' | 'path' | 'query' | 'url'> &
   ([TData] extends [never] ? unknown : Omit<TData, 'url'>);

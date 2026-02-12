@@ -3,8 +3,7 @@ import type { Client as CoreClient, Config as CoreConfig } from './core/types';
 import type { Middleware } from './utils';
 
 export interface Config<T extends ClientOptions = ClientOptions>
-  extends Omit<RequestInit, 'body' | 'headers' | 'method'>,
-    CoreConfig {
+  extends Omit<RequestInit, 'body' | 'headers' | 'method'>, CoreConfig {
   /**
    * Base URL for all requests made by this client.
    */
@@ -24,14 +23,7 @@ export interface Config<T extends ClientOptions = ClientOptions>
    *
    * @default 'auto'
    */
-  parseAs?:
-    | 'arrayBuffer'
-    | 'auto'
-    | 'blob'
-    | 'formData'
-    | 'json'
-    | 'stream'
-    | 'text';
+  parseAs?: 'arrayBuffer' | 'auto' | 'blob' | 'formData' | 'json' | 'stream' | 'text';
   /**
    * Throw an error instead of returning it in the response?
    *
@@ -44,8 +36,8 @@ export interface RequestOptions<
   ThrowOnError extends boolean = boolean,
   Url extends string = string,
 > extends Config<{
-    throwOnError: ThrowOnError;
-  }> {
+  throwOnError: ThrowOnError;
+}> {
   /**
    * Any body that you want to add to your request.
    *
@@ -72,10 +64,7 @@ export type RequestResult<
       response: Response;
     }>
   : Promise<
-      (
-        | { data: TData; error: undefined }
-        | { data: undefined; error: TError }
-      ) & {
+      ({ data: TData; error: undefined } | { data: undefined; error: TError }) & {
         request: Request;
         response: Response;
       }
@@ -86,19 +75,11 @@ export interface ClientOptions {
   throwOnError?: boolean;
 }
 
-type MethodFn = <
-  TData = unknown,
-  TError = unknown,
-  ThrowOnError extends boolean = false,
->(
+type MethodFn = <TData = unknown, TError = unknown, ThrowOnError extends boolean = false>(
   options: Omit<RequestOptions<ThrowOnError>, 'method'>,
 ) => RequestResult<TData, TError, ThrowOnError>;
 
-type RequestFn = <
-  TData = unknown,
-  TError = unknown,
-  ThrowOnError extends boolean = false,
->(
+type RequestFn = <TData = unknown, TError = unknown, ThrowOnError extends boolean = false>(
   options: Omit<RequestOptions<ThrowOnError>, 'method'> &
     Pick<Required<RequestOptions<ThrowOnError>>, 'method'>,
 ) => RequestResult<TData, TError, ThrowOnError>;
@@ -143,5 +124,4 @@ type OmitKeys<T, K> = Pick<T, Exclude<keyof T, K>>;
 export type Options<
   TData extends TDataShape = TDataShape,
   ThrowOnError extends boolean = boolean,
-> = OmitKeys<RequestOptions<ThrowOnError>, 'body' | 'path' | 'query' | 'url'> &
-  Omit<TData, 'url'>;
+> = OmitKeys<RequestOptions<ThrowOnError>, 'body' | 'path' | 'query' | 'url'> & Omit<TData, 'url'>;

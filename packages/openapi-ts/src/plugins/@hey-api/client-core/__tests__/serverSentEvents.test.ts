@@ -1,5 +1,3 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-
 import { createSseClient } from '../bundle/serverSentEvents';
 
 function makeStream(chunks: string[]) {
@@ -18,9 +16,7 @@ function makeStream(chunks: string[]) {
 
 function toRequest(input: RequestInfo, init?: RequestInit): Request {
   if (input instanceof Request) {
-    const url = input.url.startsWith('http')
-      ? input.url
-      : `http://localhost${input.url}`;
+    const url = input.url.startsWith('http') ? input.url : `http://localhost${input.url}`;
     return new Request(url, input);
   }
   const url = input.startsWith('http') ? input : `http://localhost${input}`;
@@ -154,16 +150,14 @@ describe('createSseClient', () => {
 
   it('sets Last-Event-ID header on reconnect', async () => {
     let headersSeen: string | null | undefined;
-    fetchMock.mockImplementation(
-      async (input: RequestInfo, init?: RequestInit) => {
-        const req = toRequest(input, init);
-        headersSeen = req.headers.get('Last-Event-ID');
-        return {
-          body: makeStream(['data: a\n\n']),
-          ok: true,
-        };
-      },
-    );
+    fetchMock.mockImplementation(async (input: RequestInfo, init?: RequestInit) => {
+      const req = toRequest(input, init);
+      headersSeen = req.headers.get('Last-Event-ID');
+      return {
+        body: makeStream(['data: a\n\n']),
+        ok: true,
+      };
+    });
 
     const onEvent = vi.fn();
     const { stream } = createSseClient({
@@ -205,11 +199,7 @@ describe('createSseClient', () => {
 
   it('handles mixed JSON and raw string events', async () => {
     fetchMock.mockResolvedValue({
-      body: makeStream([
-        'data: {"foo":1}\n\n',
-        'data: bar\n\n',
-        'data: {"baz":2}\n\n',
-      ]),
+      body: makeStream(['data: {"foo":1}\n\n', 'data: bar\n\n', 'data: {"baz":2}\n\n']),
       ok: true,
     });
 
@@ -221,16 +211,14 @@ describe('createSseClient', () => {
 
   it('passes custom headers', async () => {
     let headersSeen: string | null | undefined;
-    fetchMock.mockImplementation(
-      async (input: RequestInfo, init?: RequestInit) => {
-        const req = toRequest(input, init);
-        headersSeen = req.headers.get('X-Custom');
-        return {
-          body: makeStream([]),
-          ok: true,
-        };
-      },
-    );
+    fetchMock.mockImplementation(async (input: RequestInfo, init?: RequestInit) => {
+      const req = toRequest(input, init);
+      headersSeen = req.headers.get('X-Custom');
+      return {
+        body: makeStream([]),
+        ok: true,
+      };
+    });
 
     const { stream } = createSseClient({
       headers: { 'X-Custom': 'abc' },
@@ -392,16 +380,14 @@ describe('createSseClient', () => {
 
   it('respects custom HTTP method', async () => {
     let methodSeen: string | undefined;
-    fetchMock.mockImplementation(
-      async (input: RequestInfo, init?: RequestInit) => {
-        const req = toRequest(input, init);
-        methodSeen = req.method;
-        return {
-          body: makeStream(['data: ok\n\n']),
-          ok: true,
-        };
-      },
-    );
+    fetchMock.mockImplementation(async (input: RequestInfo, init?: RequestInit) => {
+      const req = toRequest(input, init);
+      methodSeen = req.method;
+      return {
+        body: makeStream(['data: ok\n\n']),
+        ok: true,
+      };
+    });
 
     const { stream } = createSseClient({
       method: 'POST',
@@ -688,5 +674,101 @@ describe('createSseClient', () => {
     const result: any[] = [];
     for await (const ev of stream) result.push(ev);
     expect(result).toEqual([1, 2, 3]);
+  });
+});
+
+describe('serialized request body handling', () => {
+  let fetchMock: any;
+
+  beforeEach(() => {
+    fetchMock = vi.fn();
+    global.fetch = fetchMock;
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('sends serialized JSON body in SSE request', async () => {
+    fetchMock.mockResolvedValue({
+      body: makeStream(['data: ok\n\n']),
+      ok: true,
+    });
+
+    const jsonBody = { key: 'value' };
+    const serializedBody = JSON.stringify(jsonBody);
+
+    const { stream } = createSseClient({
+      body: jsonBody as any,
+      method: 'POST',
+      serializedBody,
+      url: 'http://localhost/sse',
+    });
+
+    const iter = stream[Symbol.asyncIterator]();
+    await iter.next();
+    await iter.return?.();
+
+    expect(fetchMock).toHaveBeenCalled();
+    const request = fetchMock.mock.calls[0]![0];
+    expect(request).toBeInstanceOf(Request);
+    await expect(request.text()).resolves.toBe(serializedBody);
+  });
+
+  it('handles empty string serializedBody', async () => {
+    fetchMock.mockResolvedValue({
+      body: makeStream(['data: ok\n\n']),
+      ok: true,
+    });
+
+    const { stream } = createSseClient({
+      body: '' as any,
+      method: 'POST',
+      serializedBody: '',
+      url: 'http://localhost/sse',
+    });
+
+    const iter = stream[Symbol.asyncIterator]();
+    await iter.next();
+    await iter.return?.();
+
+    expect(fetchMock).toHaveBeenCalled();
+    const request = fetchMock.mock.calls[0]![0];
+    expect(request).toBeInstanceOf(Request);
+    await expect(request.text()).resolves.toBe('');
+  });
+
+  it('provides serialized body to onRequest hook', async () => {
+    fetchMock.mockResolvedValue({
+      body: makeStream(['data: ok\n\n']),
+      ok: true,
+    });
+
+    const jsonBody = { key: 'value' };
+    const serializedBody = JSON.stringify(jsonBody);
+    const onRequest = vi.fn(async (url: string, init: RequestInit) => {
+      expect(init.body).toBe(serializedBody);
+      return toRequest(url, init);
+    });
+
+    const { stream } = createSseClient({
+      body: jsonBody as any,
+      method: 'POST',
+      onRequest,
+      serializedBody,
+      url: 'http://localhost/sse',
+    });
+
+    const iter = stream[Symbol.asyncIterator]();
+    await iter.next();
+    await iter.return?.();
+
+    expect(onRequest).toHaveBeenCalledWith(
+      'http://localhost/sse',
+      expect.objectContaining({
+        body: serializedBody,
+        method: 'POST',
+      }),
+    );
   });
 });

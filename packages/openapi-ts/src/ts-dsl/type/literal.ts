@@ -1,13 +1,14 @@
-import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeScope } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
-import { TypeTsDsl } from '../base';
+import { TsDsl } from '../base';
 import { LiteralTsDsl } from '../expr/literal';
 
-const Mixed = TypeTsDsl<ts.LiteralTypeNode>;
+const Mixed = TsDsl<ts.LiteralTypeNode>;
 
 export class TypeLiteralTsDsl extends Mixed {
   readonly '~dsl' = 'TypeLiteralTsDsl';
+  override scope: NodeScope = 'type';
 
   protected value: string | number | boolean | null;
 
@@ -20,9 +21,7 @@ export class TypeLiteralTsDsl extends Mixed {
     super.analyze(ctx);
   }
 
-  override toAst(ctx: AstContext) {
-    return ts.factory.createLiteralTypeNode(
-      this.$node(ctx, new LiteralTsDsl(this.value)),
-    );
+  override toAst() {
+    return ts.factory.createLiteralTypeNode(this.$node(new LiteralTsDsl(this.value)));
   }
 }

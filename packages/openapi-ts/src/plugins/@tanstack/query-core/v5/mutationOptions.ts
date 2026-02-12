@@ -1,9 +1,9 @@
-import type { IR } from '~/ir/types';
-import { buildName } from '~/openApi/shared/utils/name';
-import { createOperationComment } from '~/plugins/shared/utils/operation';
-import type { TsDsl } from '~/ts-dsl';
-import { $ } from '~/ts-dsl';
+import type { IR } from '@hey-api/shared';
+import { applyNaming } from '@hey-api/shared';
 
+import { createOperationComment } from '../../../../plugins/shared/utils/operation';
+import type { TsDsl } from '../../../../ts-dsl';
+import { $ } from '../../../../ts-dsl';
 import { handleMeta } from '../shared/meta';
 import { useTypeData, useTypeError, useTypeResponse } from '../shared/useType';
 import type { PluginInstance } from '../types';
@@ -11,16 +11,11 @@ import type { PluginInstance } from '../types';
 export const createMutationOptions = ({
   operation,
   plugin,
-  queryFn,
 }: {
   operation: IR.OperationObject;
   plugin: PluginInstance;
-  queryFn: ReturnType<typeof $.expr | typeof $.call | typeof $.attr>;
 }): void => {
-  const symbolMutationOptionsType = plugin.referenceSymbol({
-    category: 'external',
-    resource: `${plugin.name}.MutationOptions`,
-  });
+  const symbolMutationOptionsType = plugin.external(`${plugin.name}.MutationOptions`);
 
   const typeData = useTypeData({ operation, plugin });
   const mutationType = $.type(symbolMutationOptionsType)
@@ -30,14 +25,16 @@ export const createMutationOptions = ({
 
   const fnOptions = 'fnOptions';
 
-  const awaitSdkFn = $.lazy(() =>
-    $(queryFn)
-      .call(
-        $.object()
-          .spread('options')
-          .spread(fnOptions)
-          .prop('throwOnError', $.literal(true)),
+  const awaitSdkFn = $.lazy((ctx) =>
+    ctx
+      .access(
+        plugin.referenceSymbol({
+          category: 'sdk',
+          resource: 'operation',
+          resourceId: operation.id,
+        }),
       )
+      .call($.object().spread('options').spread(fnOptions).prop('throwOnError', $.literal(true)))
       .await(),
   );
 
@@ -45,29 +42,28 @@ export const createMutationOptions = ({
   if (plugin.getPluginOrThrow('@hey-api/sdk').config.responseStyle === 'data') {
     statements.push($.return(awaitSdkFn));
   } else {
-    statements.push(
-      $.const().object('data').assign(awaitSdkFn),
-      $.return('data'),
-    );
+    statements.push($.const().object('data').assign(awaitSdkFn), $.return('data'));
   }
 
   const mutationOptionsFn = 'mutationOptions';
-  const symbolMutationOptions = plugin.registerSymbol({
-    name: buildName({
-      config: plugin.config.mutationOptions,
-      name: operation.id,
-    }),
-  });
+  const symbolMutationOptions = plugin.symbol(
+    applyNaming(operation.id, plugin.config.mutationOptions),
+    {
+      meta: {
+        category: 'hook',
+        resource: 'operation',
+        resourceId: operation.id,
+        role: 'mutationOptions',
+        tool: plugin.name,
+      },
+    },
+  );
   const statement = $.const(symbolMutationOptions)
     .export()
-    .$if(plugin.config.comments && createOperationComment(operation), (c, v) =>
-      c.doc(v),
-    )
+    .$if(plugin.config.comments && createOperationComment(operation), (c, v) => c.doc(v))
     .assign(
       $.func()
-        .param('options', (p) =>
-          p.optional().type($.type('Partial').generic(typeData)),
-        )
+        .param('options', (p) => p.optional().type($.type('Partial').generic(typeData)))
         .returns(mutationType)
         .do(
           $.const(mutationOptionsFn)
@@ -82,9 +78,7 @@ export const createMutationOptions = ({
                     .param(fnOptions)
                     .do(...statements),
                 )
-                .$if(handleMeta(plugin, operation, 'mutationOptions'), (c, v) =>
-                  c.prop('meta', v),
-                ),
+                .$if(handleMeta(plugin, operation, 'mutationOptions'), (c, v) => c.prop('meta', v)),
             ),
           $(mutationOptionsFn).return(),
         ),

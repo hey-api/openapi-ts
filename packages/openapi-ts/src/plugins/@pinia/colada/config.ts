@@ -1,4 +1,4 @@
-import { definePluginConfig } from '~/plugins/shared/utils/config';
+import { definePluginConfig, mappers } from '@hey-api/shared';
 
 import { handler } from './plugin';
 import type { PiniaColadaPlugin } from './types';
@@ -7,7 +7,7 @@ export const defaultConfig: PiniaColadaPlugin['Config'] = {
   config: {
     case: 'camelCase',
     comments: true,
-    exportFromIndex: false,
+    includeInEntry: false,
   },
   dependencies: ['@hey-api/typescript', '@hey-api/sdk'],
   handler: handler as PiniaColadaPlugin['Handler'],
@@ -19,11 +19,7 @@ export const defaultConfig: PiniaColadaPlugin['Config'] = {
         enabled: true,
         name: '{{name}}Mutation',
       },
-      mappers: {
-        boolean: (enabled) => ({ enabled }),
-        function: (name) => ({ name }),
-        string: (name) => ({ name }),
-      },
+      mappers,
       value: plugin.config.mutationOptions,
     });
 
@@ -34,11 +30,7 @@ export const defaultConfig: PiniaColadaPlugin['Config'] = {
         name: '{{name}}QueryKey',
         tags: false,
       },
-      mappers: {
-        boolean: (enabled) => ({ enabled }),
-        function: (name) => ({ name }),
-        string: (name) => ({ name }),
-      },
+      mappers,
       value: plugin.config.queryKeys,
     });
 
@@ -48,11 +40,7 @@ export const defaultConfig: PiniaColadaPlugin['Config'] = {
         enabled: true,
         name: '{{name}}Query',
       },
-      mappers: {
-        boolean: (enabled) => ({ enabled }),
-        function: (name) => ({ name }),
-        string: (name) => ({ name }),
-      },
+      mappers,
       value: plugin.config.queryOptions,
     });
   },

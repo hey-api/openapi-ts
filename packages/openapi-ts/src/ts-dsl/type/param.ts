@@ -1,30 +1,24 @@
-import type {
-  AnalysisContext,
-  AstContext,
-  Ref,
-  Symbol,
-} from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName, NodeScope, Ref } from '@hey-api/codegen-core';
 import { ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
-import type { MaybeTsDsl } from '../base';
-import { TypeTsDsl } from '../base';
+import type { MaybeTsDsl, TypeTsDsl } from '../base';
+import { TsDsl } from '../base';
 
-export type TypeParamName = Symbol | string;
-export type TypeParamExpr = Symbol | string | boolean | MaybeTsDsl<TypeTsDsl>;
+export type TypeParamExpr = NodeName | boolean | MaybeTsDsl<TypeTsDsl>;
 
-const Mixed = TypeTsDsl<ts.TypeParameterDeclaration>;
+const Mixed = TsDsl<ts.TypeParameterDeclaration>;
 
 export class TypeParamTsDsl extends Mixed {
   readonly '~dsl' = 'TypeParamTsDsl';
+  override scope: NodeScope = 'type';
 
   protected constraint?: Ref<TypeParamExpr>;
   protected defaultValue?: Ref<TypeParamExpr>;
-  protected name?: Ref<TypeParamName>;
 
-  constructor(name?: TypeParamName, fn?: (name: TypeParamTsDsl) => void) {
+  constructor(name?: NodeName, fn?: (name: TypeParamTsDsl) => void) {
     super();
-    if (name) this.name = ref(name);
+    if (name) this.name.set(name);
     fn?.(this);
   }
 
@@ -45,13 +39,14 @@ export class TypeParamTsDsl extends Mixed {
     return this;
   }
 
-  override toAst(ctx: AstContext) {
-    if (!this.name) throw new Error('Missing type name');
+  override toAst() {
+    const name = this.name.toString();
+    if (!name) throw new Error('Missing type name');
     return ts.factory.createTypeParameterDeclaration(
       undefined,
-      this.$node(ctx, this.name) as ts.Identifier,
-      this.$type(ctx, this.constraint),
-      this.$type(ctx, this.defaultValue),
+      this.$node(this.name) as ts.Identifier,
+      this.$type(this.constraint),
+      this.$type(this.defaultValue),
     );
   }
 }

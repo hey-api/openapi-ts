@@ -168,58 +168,80 @@ If we detect a [TSConfig file](#tsconfig-path) with `moduleResolution` option se
 import foo from './foo.js';
 ```
 
-## Format
+## Source
 
-To format your output folder contents, set `format` to a valid formatter.
+Source is a copy of the input specification used to generate your output. It can be used to power documentation tools or to persist a stable snapshot alongside your generated files.
+
+Enabling the `source` option with `true` creates a `source.json` file in your output folder.
+
+```js
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: {
+    path: 'src/client',
+    source: true, // [!code ++]
+  },
+};
+```
+
+You can customize the file name and location using `fileName` and `path`. For example, this configuration will create an `openapi.json` file inside `src/client/source` directory.
+
+```js
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: {
+    path: 'src/client',
+    source: {
+      fileName: 'openapi', // [!code ++]
+      path: './source', // [!code ++]
+    },
+  },
+};
+```
+
+To use the source without writing it to disk, you can provide a `callback` function. This is useful for logging or integrating with external systems.
+
+```js
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: {
+    path: 'src/client',
+    source: {
+      callback: (source) => console.log(source), // [!code ++]
+      path: null, // [!code ++]
+    },
+  },
+};
+```
+
+## Post Process
+
+Post-processing allows you to run commands on the generated output folder after files are written. This is typically used to run formatters, linters, or other cleanup tools.
+
+Commands are executed in order, and each command receives the output path via the `path` placeholder.
+
+### Presets
+
+You can use built-in presets for common tools:
 
 ::: code-group
 
-```js [disabled]
+```js [biome:format]
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: {
-    format: null, // [!code ++]
     path: 'src/client',
+    postProcess: ['biome:format'], // [!code ++]
   },
 };
 ```
 
-```js [prettier]
+```js [biome:lint]
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: {
-    format: 'prettier', // [!code ++]
     path: 'src/client',
-  },
-};
-```
-
-```js [biome]
-export default {
-  input: 'hey-api/backend', // sign up at app.heyapi.dev
-  output: {
-    format: 'biome', // [!code ++]
-    path: 'src/client',
-  },
-};
-```
-
-:::
-
-You can also prevent your output from being formatted by adding your output path to the formatter's ignore file.
-
-## Lint
-
-To lint your output folder contents, set `lint` to a valid linter.
-
-::: code-group
-
-```js [disabled]
-export default {
-  input: 'hey-api/backend', // sign up at app.heyapi.dev
-  output: {
-    lint: null, // [!code ++]
-    path: 'src/client',
+    postProcess: ['biome:lint'], // [!code ++]
   },
 };
 ```
@@ -228,18 +250,18 @@ export default {
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: {
-    lint: 'eslint', // [!code ++]
     path: 'src/client',
+    postProcess: ['eslint'], // [!code ++]
   },
 };
 ```
 
-```js [biome]
+```js [oxfmt]
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: {
-    lint: 'biome', // [!code ++]
     path: 'src/client',
+    postProcess: ['oxfmt'], // [!code ++]
   },
 };
 ```
@@ -248,15 +270,44 @@ export default {
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: {
-    lint: 'oxlint', // [!code ++]
     path: 'src/client',
+    postProcess: ['oxlint'], // [!code ++]
+  },
+};
+```
+
+```js [prettier]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: {
+    path: 'src/client',
+    postProcess: ['prettier'], // [!code ++]
   },
 };
 ```
 
 :::
 
-You can also prevent your output from being linted by adding your output path to the linter's ignore file.
+### Custom
+
+You can also provide custom post processors:
+
+<!-- prettier-ignore-start -->
+```js
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: {
+    path: 'src/client',
+    postProcess: [{ // [!code ++]
+      command: 'dprint', // [!code ++]
+      args: ['fmt', '{{path}}'], // [!code ++]
+    }], // [!code ++]
+  },
+};
+```
+<!-- prettier-ignore-end -->
+
+You can skip processing by adding the output path to the tool’s ignore file (for example `.eslintignore` or `.prettierignore`).
 
 ## Name Conflicts
 
@@ -282,6 +333,36 @@ export default {
 export type ChatCompletion = string;
 
 export type ChatCompletion_N2 = number;
+```
+
+:::
+
+## File Header
+
+The generated output includes a notice in every file warning that any modifications will be lost when the files are regenerated. You can customize or disable this notice using the `header` option.
+
+::: code-group
+
+<!-- prettier-ignore-start -->
+```js [config]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: {
+    header: [
+      '/* eslint-disable */', // [!code ++]
+      '// This file is auto-generated by @hey-api/openapi-ts', // [!code ++]
+    ],
+    path: 'src/client',
+  },
+};
+```
+<!-- prettier-ignore-end -->
+
+```ts [example]
+/* eslint-disable */
+// This file is auto-generated by @hey-api/openapi-ts
+
+/** ... */
 ```
 
 :::

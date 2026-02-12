@@ -1,6 +1,6 @@
-import type { SchemaWithType } from '~/plugins';
-import { $ } from '~/ts-dsl';
+import type { SchemaWithType } from '@hey-api/shared';
 
+import { $ } from '../../../../ts-dsl';
 import { identifiers } from '../../constants';
 import type { IrSchemaToAstOptions } from '../../shared/types';
 
@@ -9,10 +9,7 @@ export const nullToAst = ({
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'null'>;
 }) => {
-  const z = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'zod.z',
-  });
+  const z = plugin.external('zod.z');
   const expression = $(z).attr(identifiers.null).call();
   return expression;
 };

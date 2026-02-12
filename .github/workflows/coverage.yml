@@ -11,32 +11,29 @@ on:
       - docs/**
 
 concurrency:
-  group: ${{ github.workflow }}=${{ github.head_ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   upload:
     name: Upload
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-        node-version: ['24.10.0']
+    runs-on: ubuntu-latest
+    env:
+      TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+      TURBO_TELEMETRY_DISABLED: 1
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
     steps:
-      - uses: actions/checkout@v5.0.1
+      - uses: actions/checkout@v6.0.2
 
       - uses: pnpm/action-setup@v4.2.0
 
       - uses: actions/setup-node@v6
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version-file: '.nvmrc'
           cache: pnpm
 
       - name: Install dependencies
-        run: pnpm install
-
-      - name: Build packages
-        run: pnpm build --filter="@hey-api/**"
+        run: pnpm install --frozen-lockfile
 
       - name: Run test coverage
         run: pnpm test:coverage
@@ -45,6 +42,6 @@ jobs:
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          directory: ./packages/openapi-ts/coverage
+          directory: ./coverage
           flags: unittests
           fail_ci_if_error: true

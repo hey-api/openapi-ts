@@ -1,13 +1,13 @@
-import { handler } from '~/plugins/@tanstack/query-core/plugin';
-import { definePluginConfig } from '~/plugins/shared/utils/config';
+import { definePluginConfig, mappers } from '@hey-api/shared';
 
+import { handler } from '../../../plugins/@tanstack/query-core/plugin';
 import type { TanStackAngularQueryPlugin } from './types';
 
 export const defaultConfig: TanStackAngularQueryPlugin['Config'] = {
   config: {
     case: 'camelCase',
     comments: true,
-    exportFromIndex: false,
+    includeInEntry: false,
   },
   dependencies: ['@hey-api/sdk', '@hey-api/typescript'],
   handler: handler as TanStackAngularQueryPlugin['Handler'],
@@ -20,11 +20,7 @@ export const defaultConfig: TanStackAngularQueryPlugin['Config'] = {
         name: '{{name}}InfiniteQueryKey',
         tags: false,
       },
-      mappers: {
-        boolean: (enabled) => ({ enabled }),
-        function: (name) => ({ name }),
-        string: (name) => ({ name }),
-      },
+      mappers,
       value: plugin.config.infiniteQueryKeys,
     });
 
@@ -34,11 +30,7 @@ export const defaultConfig: TanStackAngularQueryPlugin['Config'] = {
         enabled: true,
         name: '{{name}}InfiniteOptions',
       },
-      mappers: {
-        boolean: (enabled) => ({ enabled }),
-        function: (name) => ({ name }),
-        string: (name) => ({ name }),
-      },
+      mappers,
       value: plugin.config.infiniteQueryOptions,
     });
 
@@ -48,11 +40,7 @@ export const defaultConfig: TanStackAngularQueryPlugin['Config'] = {
         enabled: true,
         name: '{{name}}Mutation',
       },
-      mappers: {
-        boolean: (enabled) => ({ enabled }),
-        function: (name) => ({ name }),
-        string: (name) => ({ name }),
-      },
+      mappers,
       value: plugin.config.mutationOptions,
     });
 
@@ -63,11 +51,7 @@ export const defaultConfig: TanStackAngularQueryPlugin['Config'] = {
         name: '{{name}}QueryKey',
         tags: false,
       },
-      mappers: {
-        boolean: (enabled) => ({ enabled }),
-        function: (name) => ({ name }),
-        string: (name) => ({ name }),
-      },
+      mappers,
       value: plugin.config.queryKeys,
     });
 
@@ -78,11 +62,7 @@ export const defaultConfig: TanStackAngularQueryPlugin['Config'] = {
         exported: true,
         name: '{{name}}Options',
       },
-      mappers: {
-        boolean: (enabled) => ({ enabled }),
-        function: (name) => ({ name }),
-        string: (name) => ({ name }),
-      },
+      mappers,
       value: plugin.config.queryOptions,
     });
   },

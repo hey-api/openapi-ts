@@ -1,24 +1,20 @@
 import type { SymbolMeta } from '@hey-api/codegen-core';
 import { fromRef, ref, refs } from '@hey-api/codegen-core';
+import type { IR, SchemaWithType } from '@hey-api/shared';
+import { applyNaming, deduplicateSchema, pathToJsonPointer, refToName } from '@hey-api/shared';
 
-import { deduplicateSchema } from '~/ir/schema';
-import type { IR } from '~/ir/types';
-import { buildName } from '~/openApi/shared/utils/name';
-import type { SchemaWithType } from '~/plugins';
-import { $ } from '~/ts-dsl';
-import { pathToJsonPointer, refToName } from '~/utils/ref';
-
+import { maybeBigInt } from '../../../plugins/shared/utils/coerce';
+import { $ } from '../../../ts-dsl';
 import { identifiers } from '../constants';
 import { exportAst } from '../shared/export';
 import { getZodModule } from '../shared/module';
-import { numberParameter } from '../shared/numbers';
 import { irOperationToAst } from '../shared/operation';
 import type { Ast, IrSchemaToAstOptions, PluginState } from '../shared/types';
 import { irWebhookToAst } from '../shared/webhook';
 import type { ZodPlugin } from '../types';
 import { irSchemaWithTypeToAst } from './toAst';
 
-export const irSchemaToAst = ({
+export function irSchemaToAst({
   optional,
   plugin,
   schema,
@@ -31,13 +27,10 @@ export const irSchemaToAst = ({
    */
   optional?: boolean;
   schema: IR.SchemaObject;
-}): Ast => {
+}): Ast {
   let ast: Partial<Ast> = {};
 
-  const z = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'zod.z',
-  });
+  const z = plugin.external('zod.z');
 
   if (schema.$ref) {
     const query: SymbolMeta = {
@@ -70,9 +63,7 @@ export const irSchemaToAst = ({
         .attr(identifiers.register)
         .call(
           $(z).attr(identifiers.globalRegistry),
-          $.object()
-            .pretty()
-            .prop('description', $.literal(schema.description)),
+          $.object().pretty().prop('description', $.literal(schema.description)),
         );
     }
   } else if (schema.items) {
@@ -109,9 +100,7 @@ export const irSchemaToAst = ({
               .expression!.attr(identifiers.and)
               .call(
                 schema.hasLazyExpression
-                  ? $(z)
-                      .attr(identifiers.lazy)
-                      .call($.func().do(schema.expression.return()))
+                  ? $(z).attr(identifiers.lazy).call($.func().do(schema.expression.return()))
                   : schema.expression,
               );
           });
@@ -155,30 +144,30 @@ export const irSchemaToAst = ({
     }
 
     if (schema.default !== undefined) {
-      const isBigInt = schema.type === 'integer' && schema.format === 'int64';
-      ast.expression = ast.expression.attr(identifiers.default).call(
-        numberParameter({
-          isBigInt,
-          value: schema.default,
-        }),
-      );
+      ast.expression = ast.expression
+        .attr(identifiers.default)
+        .call(
+          schema.type === 'integer' || schema.type === 'number'
+            ? maybeBigInt(schema.default, schema.format)
+            : $.fromValue(schema.default),
+        );
     }
   }
 
   return ast as Ast;
-};
+}
 
-const handleComponent = ({
+function handleComponent({
   plugin,
   schema,
   state,
 }: IrSchemaToAstOptions & {
   schema: IR.SchemaObject;
-}): void => {
+}): void {
   const $ref = pathToJsonPointer(fromRef(state.path));
   const ast = irSchemaToAst({ plugin, schema, state });
   const baseName = refToName($ref);
-  const symbol = plugin.registerSymbol({
+  const symbol = plugin.symbol(applyNaming(baseName, plugin.config.definitions), {
     meta: {
       category: 'schema',
       path: fromRef(state.path),
@@ -187,13 +176,9 @@ const handleComponent = ({
       tags: fromRef(state.tags),
       tool: 'zod',
     },
-    name: buildName({
-      config: plugin.config.definitions,
-      name: baseName,
-    }),
   });
   const typeInferSymbol = plugin.config.definitions.types.infer.enabled
-    ? plugin.registerSymbol({
+    ? plugin.symbol(applyNaming(baseName, plugin.config.definitions.types.infer), {
         meta: {
           category: 'type',
           path: fromRef(state.path),
@@ -203,10 +188,6 @@ const handleComponent = ({
           tool: 'zod',
           variant: 'infer',
         },
-        name: buildName({
-          config: plugin.config.definitions.types.infer,
-          name: baseName,
-        }),
       })
     : undefined;
   exportAst({
@@ -216,83 +197,76 @@ const handleComponent = ({
     symbol,
     typeInferSymbol,
   });
-};
+}
 
 export const handlerV4: ZodPlugin['Handler'] = ({ plugin }) => {
-  plugin.registerSymbol({
+  plugin.symbol('z', {
     external: getZodModule({ plugin }),
+    importKind: 'namespace',
     meta: {
       category: 'external',
       resource: 'zod.z',
     },
-    name: 'z',
   });
 
-  plugin.forEach(
-    'operation',
-    'parameter',
-    'requestBody',
-    'schema',
-    'webhook',
-    (event) => {
-      const state = refs<PluginState>({
-        hasLazyExpression: false,
-        path: event._path,
-        tags: event.tags,
-      });
-      switch (event.type) {
-        case 'operation':
-          irOperationToAst({
-            getAst: (schema, path) => {
-              const state = refs<PluginState>({
-                hasLazyExpression: false,
-                path,
-                tags: event.tags,
-              });
-              return irSchemaToAst({ plugin, schema, state });
-            },
-            operation: event.operation,
-            plugin,
-            state,
-          });
-          break;
-        case 'parameter':
-          handleComponent({
-            plugin,
-            schema: event.parameter.schema,
-            state,
-          });
-          break;
-        case 'requestBody':
-          handleComponent({
-            plugin,
-            schema: event.requestBody.schema,
-            state,
-          });
-          break;
-        case 'schema':
-          handleComponent({
-            plugin,
-            schema: event.schema,
-            state,
-          });
-          break;
-        case 'webhook':
-          irWebhookToAst({
-            getAst: (schema, path) => {
-              const state = refs<PluginState>({
-                hasLazyExpression: false,
-                path,
-                tags: event.tags,
-              });
-              return irSchemaToAst({ plugin, schema, state });
-            },
-            operation: event.operation,
-            plugin,
-            state,
-          });
-          break;
-      }
-    },
-  );
+  plugin.forEach('operation', 'parameter', 'requestBody', 'schema', 'webhook', (event) => {
+    const state = refs<PluginState>({
+      hasLazyExpression: false,
+      path: event._path,
+      tags: event.tags,
+    });
+    switch (event.type) {
+      case 'operation':
+        irOperationToAst({
+          getAst: (schema, path) => {
+            const state = refs<PluginState>({
+              hasLazyExpression: false,
+              path,
+              tags: event.tags,
+            });
+            return irSchemaToAst({ plugin, schema, state });
+          },
+          operation: event.operation,
+          plugin,
+          state,
+        });
+        break;
+      case 'parameter':
+        handleComponent({
+          plugin,
+          schema: event.parameter.schema,
+          state,
+        });
+        break;
+      case 'requestBody':
+        handleComponent({
+          plugin,
+          schema: event.requestBody.schema,
+          state,
+        });
+        break;
+      case 'schema':
+        handleComponent({
+          plugin,
+          schema: event.schema,
+          state,
+        });
+        break;
+      case 'webhook':
+        irWebhookToAst({
+          getAst: (schema, path) => {
+            const state = refs<PluginState>({
+              hasLazyExpression: false,
+              path,
+              tags: event.tags,
+            });
+            return irSchemaToAst({ plugin, schema, state });
+          },
+          operation: event.operation,
+          plugin,
+          state,
+        });
+        break;
+    }
+  });
 };

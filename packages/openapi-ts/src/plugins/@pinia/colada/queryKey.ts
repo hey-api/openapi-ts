@@ -1,51 +1,39 @@
 import type { Symbol } from '@hey-api/codegen-core';
+import type { IR } from '@hey-api/shared';
+import { applyNaming, hasOperationDataRequired } from '@hey-api/shared';
 
-import { clientFolderAbsolutePath } from '~/generate/client';
-import { hasOperationDataRequired } from '~/ir/operation';
-import type { IR } from '~/ir/types';
-import { buildName } from '~/openApi/shared/utils/name';
-import {
-  getClientBaseUrlKey,
-  getClientPlugin,
-} from '~/plugins/@hey-api/client-core/utils';
-import { $ } from '~/ts-dsl';
-
+import { getTypedConfig } from '../../../config/utils';
+import { clientFolderAbsolutePath } from '../../../generate/client';
+import { getClientBaseUrlKey, getClientPlugin } from '../../../plugins/@hey-api/client-core/utils';
+import { $ } from '../../../ts-dsl';
 import type { PiniaColadaPlugin } from './types';
 import { getPublicTypeData } from './utils';
 
 const TOptionsType = 'TOptions';
 
-export const createQueryKeyFunction = ({
-  plugin,
-}: {
-  plugin: PiniaColadaPlugin['Instance'];
-}) => {
-  const symbolCreateQueryKey = plugin.registerSymbol({
-    meta: {
-      category: 'utility',
-      resource: 'createQueryKey',
-      tool: plugin.name,
-    },
-    name: buildName({
-      config: {
-        case: plugin.config.case,
-      },
-      name: 'createQueryKey',
+export const createQueryKeyFunction = ({ plugin }: { plugin: PiniaColadaPlugin['Instance'] }) => {
+  const symbolCreateQueryKey = plugin.symbol(
+    applyNaming('createQueryKey', {
+      case: plugin.config.case,
     }),
-  });
+    {
+      meta: {
+        category: 'utility',
+        resource: 'createQueryKey',
+        tool: plugin.name,
+      },
+    },
+  );
   const symbolQueryKeyType = plugin.referenceSymbol({
     category: 'type',
     resource: 'QueryKey',
     tool: plugin.name,
   });
-  const symbolJsonValue = plugin.referenceSymbol({
-    category: 'external',
-    resource: `${plugin.name}._JSONValue`,
-  });
+  const symbolJsonValue = plugin.external(`${plugin.name}._JSONValue`);
 
   const returnType = $.type(symbolQueryKeyType).generic(TOptionsType).idx(0);
 
-  const baseUrlKey = getClientBaseUrlKey(plugin.context.config);
+  const baseUrlKey = getClientBaseUrlKey(getTypedConfig(plugin));
 
   const symbolOptions = plugin.referenceSymbol({
     category: 'type',
@@ -56,14 +44,13 @@ export const createQueryKeyFunction = ({
     category: 'client',
   });
 
-  const clientModule = clientFolderAbsolutePath(plugin.context.config);
-  const symbolSerializeQueryValue = plugin.registerSymbol({
+  const clientModule = clientFolderAbsolutePath(getTypedConfig(plugin));
+  const symbolSerializeQueryValue = plugin.symbol('serializeQueryKeyValue', {
     external: clientModule,
     meta: {
       category: 'external',
       resource: `${clientModule}.serializeQueryKeyValue`,
     },
-    name: 'serializeQueryKeyValue',
   });
 
   const fn = $.const(symbolCreateQueryKey).assign(
@@ -97,9 +84,7 @@ export const createQueryKeyFunction = ({
               .as(returnType),
           ),
         $.if('tags').do(
-          $('params')
-            .attr('tags')
-            .assign($('tags').as('unknown').as(symbolJsonValue)),
+          $('params').attr('tags').assign($('tags').as('unknown').as(symbolJsonValue)),
         ),
         $.if($('options').attr('body').optional().neq($.id('undefined'))).do(
           $.const('normalizedBody').assign(
@@ -154,28 +139,20 @@ const createQueryKeyLiteral = ({
   return createQueryKeyCallExpression;
 };
 
-export const createQueryKeyType = ({
-  plugin,
-}: {
-  plugin: PiniaColadaPlugin['Instance'];
-}) => {
-  const symbolJsonValue = plugin.referenceSymbol({
-    category: 'external',
-    resource: `${plugin.name}._JSONValue`,
-  });
+export const createQueryKeyType = ({ plugin }: { plugin: PiniaColadaPlugin['Instance'] }) => {
+  const symbolJsonValue = plugin.external(`${plugin.name}._JSONValue`);
 
   const symbolOptions = plugin.referenceSymbol({
     category: 'type',
     resource: 'client-options',
     tool: 'sdk',
   });
-  const symbolQueryKeyType = plugin.registerSymbol({
+  const symbolQueryKeyType = plugin.symbol('QueryKey', {
     meta: {
       category: 'type',
       resource: 'QueryKey',
       tool: plugin.name,
     },
-    name: 'QueryKey',
   });
   const queryKeyType = $.type
     .alias(symbolQueryKeyType)
@@ -188,7 +165,7 @@ export const createQueryKeyType = ({
           $.type
             .object()
             .prop('_id', (p) => p.type('string'))
-            .prop(getClientBaseUrlKey(plugin.context.config), (p) =>
+            .prop(getClientBaseUrlKey(getTypedConfig(plugin)), (p) =>
               p.optional().type(symbolJsonValue),
             )
             .prop('body', (p) => p.optional().type(symbolJsonValue))
@@ -209,7 +186,7 @@ export const queryKeyStatement = ({
   plugin: PiniaColadaPlugin['Instance'];
   symbol: Symbol;
 }) => {
-  const client = getClientPlugin(plugin.context.config);
+  const client = getClientPlugin(getTypedConfig(plugin));
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
   const statement = $.const(symbol)
     .export()

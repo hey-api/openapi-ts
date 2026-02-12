@@ -1,35 +1,30 @@
-import type {
-  AnalysisContext,
-  AstContext,
-  Ref,
-  Symbol,
-} from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName, NodeScope, Ref } from '@hey-api/codegen-core';
 import { isNode, ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
-import { TypeTsDsl } from '../base';
+import { TsDsl } from '../base';
 import { TypeArgsMixin } from '../mixins/type-args';
-import { setTypeExprFactory, TypeExprMixin } from '../mixins/type-expr';
+import { TypeExprMixin } from '../mixins/type-expr';
+import { f } from '../utils/factories';
 import { TypeAttrTsDsl } from './attr';
 
-export type TypeExprName = Symbol | string;
-export type TypeExprExpr = TypeExprName | TypeAttrTsDsl;
+export type TypeExprExpr = NodeName | TypeAttrTsDsl;
+export type TypeExprFn = (t: TypeExprTsDsl) => void;
+export type TypeExprCtor = (nameOrFn?: NodeName | TypeExprFn, fn?: TypeExprFn) => TypeExprTsDsl;
 
-const Mixed = TypeArgsMixin(TypeExprMixin(TypeTsDsl<ts.TypeReferenceNode>));
+const Mixed = TypeArgsMixin(TypeExprMixin(TsDsl<ts.TypeReferenceNode>));
 
 export class TypeExprTsDsl extends Mixed {
   readonly '~dsl' = 'TypeExprTsDsl';
+  override scope: NodeScope = 'type';
 
   protected _exprInput?: Ref<TypeExprExpr>;
 
   constructor();
-  constructor(fn: (t: TypeExprTsDsl) => void);
-  constructor(name: TypeExprName);
-  constructor(name: TypeExprName, fn?: (t: TypeExprTsDsl) => void);
-  constructor(
-    name?: TypeExprName | ((t: TypeExprTsDsl) => void),
-    fn?: (t: TypeExprTsDsl) => void,
-  ) {
+  constructor(fn: TypeExprFn);
+  constructor(name: NodeName);
+  constructor(name: NodeName, fn?: TypeExprFn);
+  constructor(name?: NodeName | TypeExprFn, fn?: TypeExprFn) {
     super();
     if (typeof name === 'function') {
       name(this);
@@ -44,6 +39,11 @@ export class TypeExprTsDsl extends Mixed {
     ctx.analyze(this._exprInput);
   }
 
+  /** Returns true when all required builder calls are present. */
+  get isValid(): boolean {
+    return this.missingRequiredCalls().length === 0;
+  }
+
   /** Accesses a nested type (e.g. `Foo.Bar`). */
   attr(right: string | ts.Identifier | TypeAttrTsDsl): this {
     this._exprInput = isNode(right)
@@ -52,16 +52,29 @@ export class TypeExprTsDsl extends Mixed {
     return this;
   }
 
-  override toAst(ctx: AstContext) {
-    if (!this._exprInput) throw new Error('TypeExpr must have an expression');
+  override toAst() {
+    this.$validate();
     return ts.factory.createTypeReferenceNode(
-      this.$type(ctx, this._exprInput) as ts.EntityName,
-      this.$generics(ctx),
+      this.$type(this._exprInput) as ts.EntityName,
+      this.$generics(),
     );
+  }
+
+  $validate(): asserts this is this & {
+    _exprInput: Ref<TypeExprExpr>;
+  } {
+    const missing = this.missingRequiredCalls();
+    if (missing.length === 0) return;
+    throw new Error(`Type expression missing ${missing.join(' and ')}`);
+  }
+
+  private missingRequiredCalls(): ReadonlyArray<string> {
+    const missing: Array<string> = [];
+    if (!this._exprInput) missing.push('name or .attr()');
+    return missing;
   }
 }
 
-setTypeExprFactory(
-  (...args) =>
-    new TypeExprTsDsl(...(args as ConstructorParameters<typeof TypeExprTsDsl>)),
+f.type.expr.set(
+  (...args) => new TypeExprTsDsl(...(args as ConstructorParameters<typeof TypeExprTsDsl>)),
 );

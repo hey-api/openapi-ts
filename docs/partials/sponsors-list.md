@@ -4,10 +4,10 @@
   <li>
     <a href="https://kutt.it/pkEZyc" style="height: 50px;" target="_blank">
       <picture>
-        <source srcset="/images/stainless-logo-wordmark-480w.webp" media="(max-width: 480px)" type="image/webp" />
-        <source srcset="/images/stainless-logo-wordmark-768w.webp" media="(max-width: 768px)" type="image/webp" />
-        <source srcset="/images/stainless-logo-wordmark-1200w.webp" media="(min-width: 769px)" type="image/webp" />
-        <img alt="Stainless logo" loading="lazy" src="/images/stainless-logo-wordmark-1200w.png" />
+        <source srcset="/assets/.gen/stainless-logo-wordmark-480w.webp" media="(max-width: 480px)" type="image/webp" />
+        <source srcset="/assets/.gen/stainless-logo-wordmark-768w.webp" media="(max-width: 768px)" type="image/webp" />
+        <source srcset="/assets/.gen/stainless-logo-wordmark-1200w.webp" media="(min-width: 769px)" type="image/webp" />
+        <img alt="Stainless logo" loading="lazy" src="/assets/.gen/stainless-logo-wordmark-1200w.png" />
       </picture>
     </a>
     <p>
@@ -26,6 +26,17 @@
     </p>
     <a href="https://kutt.it/QM9Q2N" target="_blank">
       opencode.ai
+    </a>
+  </li>
+  <li>
+    <a href="https://kutt.it/6vrYy9" style="height: 50px;" target="_blank">
+      <svg xmlns="http://www.w3.org/2000/svg" width="208" height="48" fill="none" viewBox="0 0 104 24"><path fill="currentColor" d="M18.473 9.605V3.914c0-.61-.496-1.098-1.098-1.098h-5.688c-.894 0-1.779.177-2.601.514a6.75 6.75 0 0 0-2.203 1.478l-.045.044a6.729 6.729 0 0 0-1.725 3.036 6.958 6.958 0 0 1 1.655-.221 6.744 6.744 0 0 1 4.131 1.354 6.695 6.695 0 0 1 2.327 3.16 6.784 6.784 0 0 1 .168 4 6.77 6.77 0 0 0 3.035-1.725l.044-.044a6.894 6.894 0 0 0 1.477-2.205 6.722 6.722 0 0 0 .514-2.602h.009Z"/><path fill="currentColor" d="M4.943 9.51a6.738 6.738 0 0 1 1.93-4.674L2.142 9.57c-.018.018-.036.027-.053.044a6.736 6.736 0 0 0-1.966 4.303 6.767 6.767 0 0 0 1.137 4.268c.08.12.3.159.423.044l2.9-2.892a3.313 3.313 0 0 0 .758-3.465 6.691 6.691 0 0 1-.397-2.364ZM16.445 14.412a6.779 6.779 0 0 1-3.28 1.781 6.794 6.794 0 0 1-3.727-.229H9.42a3.323 3.323 0 0 0-3.464.75l-2.9 2.892a.271.271 0 0 0 .044.423 6.815 6.815 0 0 0 4.266 1.138 6.75 6.75 0 0 0 4.301-1.967l.044-.044 4.734-4.735v-.009ZM96.236 23.5h-3.552l2.503-5.649-5.005-11.25h3.575l2.916 7.053a.299.299 0 0 0 .553-.001l2.894-7.051h3.599L96.236 23.5Z"/><path fill="currentColor" d="M85.448 18.519V9.462h-2.407v-2.86h2.407v-1.55c0-1.414.43-2.526 1.287-3.336C87.593.906 88.682.5 90.001.5c.81 0 1.501.087 2.073.262v2.884c-.381-.143-.826-.214-1.335-.214-.715 0-1.231.158-1.549.476-.318.302-.477.819-.477 1.55v1.144h3.361v2.86h-3.36v9.057h-3.266ZM80.12 4.647a2.03 2.03 0 0 1-1.453-.596 2.017 2.017 0 0 1-.62-1.477c0-.572.206-1.057.62-1.454.413-.413.897-.62 1.453-.62.588 0 1.08.207 1.478.62.413.397.62.882.62 1.454s-.207 1.064-.62 1.477c-.397.398-.89.596-1.478.596ZM78.5 18.52V6.602h3.265v11.917H78.5ZM72.813 18.518V.643h3.265v17.875h-3.266ZM69.126 18.662c-1.335 0-2.431-.365-3.29-1.096-.842-.747-1.263-1.82-1.263-3.218V9.462h-2.407v-2.86h2.407V3.289h3.266v3.313h3.36v2.86h-3.36v4.243c0 .73.158 1.255.476 1.573.318.301.834.452 1.55.452.508 0 .953-.071 1.334-.214V18.4c-.572.175-1.263.262-2.073.262ZM49.943 18.52V6.601h3.266v.871c0 .147.2.213.298.102.728-.823 1.764-1.235 3.11-1.235 1.43 0 2.55.477 3.36 1.43.827.937 1.24 2.193 1.24 3.766v6.983h-3.265v-6.435c0-.874-.183-1.55-.549-2.026-.365-.493-.881-.739-1.549-.739-.794 0-1.438.286-1.93.858-.477.572-.715 1.414-.715 2.527v5.815h-3.266ZM45.878 4.647a2.03 2.03 0 0 1-1.454-.596 2.018 2.018 0 0 1-.62-1.477c0-.572.207-1.057.62-1.454.413-.413.898-.62 1.454-.62.588 0 1.08.207 1.478.62.413.397.62.882.62 1.454s-.207 1.064-.62 1.477c-.397.398-.89.596-1.478.596Zm-1.62 13.872V6.602h3.265v11.917h-3.266ZM38.715 18.52v-6.365c0-1.89-.62-2.836-1.86-2.836-.714 0-1.286.27-1.715.81-.413.54-.636 1.343-.668 2.408v5.982h-3.265v-6.364c0-1.89-.62-2.836-1.86-2.836-.73 0-1.31.286-1.739.858-.429.572-.643 1.414-.643 2.527v5.815h-3.266V6.602h3.265v.88c0 .146.198.21.294.1.721-.828 1.68-1.242 2.876-1.242 1.573 0 2.757.649 3.553 1.947.063.103.217.101.28-.002a3.735 3.735 0 0 1 1.435-1.35c.699-.397 1.406-.595 2.121-.595 1.414 0 2.51.469 3.29 1.406.778.938 1.167 2.225 1.167 3.861v6.912h-3.265Z"/></svg>
+    </a>
+    <p>
+      The intelligent knowledge platform.
+    </p>
+    <a href="https://kutt.it/6vrYy9" target="_blank">
+      mintlify.com
     </a>
   </li>
 </ul>
@@ -57,10 +68,10 @@
   <li>
     <a href="https://kutt.it/YpaKsX" style="height: 20px;" target="_blank">
       <picture>
-        <source srcset="/images/kinde-logo-wordmark-480w.webp" media="(max-width: 480px)" type="image/webp" />
-        <source srcset="/images/kinde-logo-wordmark-768w.webp" media="(max-width: 768px)" type="image/webp" />
-        <source srcset="/images/kinde-logo-wordmark-1200w.webp" media="(min-width: 769px)" type="image/webp" />
-        <img alt="Kinde logo" loading="lazy" src="/images/kinde-logo-wordmark-1200w.png" />
+        <source srcset="/assets/.gen/kinde-logo-wordmark-480w.webp" media="(max-width: 480px)" type="image/webp" />
+        <source srcset="/assets/.gen/kinde-logo-wordmark-768w.webp" media="(max-width: 768px)" type="image/webp" />
+        <source srcset="/assets/.gen/kinde-logo-wordmark-1200w.webp" media="(min-width: 769px)" type="image/webp" />
+        <img alt="Kinde logo" loading="lazy" src="/assets/.gen/kinde-logo-wordmark-1200w.png" />
       </picture>
     </a>
   </li>

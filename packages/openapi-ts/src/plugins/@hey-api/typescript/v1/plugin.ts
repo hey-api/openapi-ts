@@ -1,13 +1,12 @@
 import type { Symbol } from '@hey-api/codegen-core';
 import { refs } from '@hey-api/codegen-core';
+import type { IR } from '@hey-api/shared';
+import type { SchemaWithType } from '@hey-api/shared';
+import { applyNaming } from '@hey-api/shared';
+import { deduplicateSchema } from '@hey-api/shared';
 
-import { deduplicateSchema } from '~/ir/schema';
-import type { IR } from '~/ir/types';
-import { buildName } from '~/openApi/shared/utils/name';
-import type { SchemaWithType } from '~/plugins';
-import type { MaybeTsDsl, TypeTsDsl } from '~/ts-dsl';
-import { $ } from '~/ts-dsl';
-
+import type { MaybeTsDsl, TypeTsDsl } from '../../../../ts-dsl';
+import { $ } from '../../../../ts-dsl';
 import { createClientOptions } from '../shared/clientOptions';
 import { exportType } from '../shared/export';
 import { operationToType } from '../shared/operation';
@@ -16,15 +15,24 @@ import { webhookToType } from '../shared/webhook';
 import type { HeyApiTypeScriptPlugin } from '../types';
 import { irSchemaWithTypeToAst } from './toAst';
 
-export const irSchemaToAst = ({
+export function irSchemaToAst({
   plugin,
   schema,
   state,
 }: IrSchemaToAstOptions & {
   schema: IR.SchemaObject;
-}): MaybeTsDsl<TypeTsDsl> => {
+}): MaybeTsDsl<TypeTsDsl> {
   if (schema.symbolRef) {
-    return $.type(schema.symbolRef);
+    const baseType = $.type(schema.symbolRef);
+    if (schema.omit && schema.omit.length > 0) {
+      // Render as Omit<Type, 'prop1' | 'prop2'>
+      const omittedKeys =
+        schema.omit.length === 1
+          ? $.type.literal(schema.omit[0]!)
+          : $.type.or(...schema.omit.map((key) => $.type.literal(key)));
+      return $.type('Omit').generics(baseType, omittedKeys);
+    }
+    return baseType;
   }
 
   if (schema.$ref) {
@@ -33,7 +41,16 @@ export const irSchemaToAst = ({
       resource: 'definition',
       resourceId: schema.$ref,
     });
-    return $.type(symbol);
+    const baseType = $.type(symbol);
+    if (schema.omit && schema.omit.length > 0) {
+      // Render as Omit<Type, 'prop1' | 'prop2'>
+      const omittedKeys =
+        schema.omit.length === 1
+          ? $.type.literal(schema.omit[0]!)
+          : $.type.or(...schema.omit.map((key) => $.type.literal(key)));
+      return $.type('Omit').generics(baseType, omittedKeys);
+    }
+    return baseType;
   }
 
   if (schema.type) {
@@ -47,12 +64,8 @@ export const irSchemaToAst = ({
   if (schema.items) {
     schema = deduplicateSchema({ detectFormat: false, schema });
     if (schema.items) {
-      const itemTypes = schema.items.map((item) =>
-        irSchemaToAst({ plugin, schema: item, state }),
-      );
-      return schema.logicalOperator === 'and'
-        ? $.type.and(...itemTypes)
-        : $.type.or(...itemTypes);
+      const itemTypes = schema.items.map((item) => irSchemaToAst({ plugin, schema: item, state }));
+      return schema.logicalOperator === 'and' ? $.type.and(...itemTypes) : $.type.or(...itemTypes);
     }
 
     return irSchemaToAst({ plugin, schema, state });
@@ -66,15 +79,15 @@ export const irSchemaToAst = ({
     },
     state,
   });
-};
+}
 
-const handleComponent = ({
+function handleComponent({
   plugin,
   schema,
   state,
 }: IrSchemaToAstOptions & {
   schema: IR.SchemaObject;
-}) => {
+}) {
   const type = irSchemaToAst({ plugin, schema, state });
   exportType({
     plugin,
@@ -82,7 +95,7 @@ const handleComponent = ({
     state,
     type,
   });
-};
+}
 
 export const handlerV1: HeyApiTypeScriptPlugin['Handler'] = ({ plugin }) => {
   // reserve node for ClientOptions
@@ -157,11 +170,8 @@ export const handlerV1: HeyApiTypeScriptPlugin['Handler'] = ({ plugin }) => {
 
   if (webhooks.length > 0) {
     const symbol = plugin.symbol(
-      buildName({
-        config: {
-          case: plugin.config.case,
-        },
-        name: 'Webhooks',
+      applyNaming('Webhooks', {
+        case: plugin.config.case,
       }),
       {
         meta: {

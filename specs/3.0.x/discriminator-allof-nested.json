@@ -1,0 +1,84 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Minimal Polymorphic Discriminator Reproduction",
+    "version": "1.0.0",
+    "description": "Demonstrates an issue where TypeScript type generation results in wrong discriminator for nested allOf inheritance with discriminators at multiple levels."
+  },
+  "paths": {
+    "/cars": {
+      "get": {
+        "summary": "Get cars",
+        "responses": {
+          "200": {
+            "description": "List of cars",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "oneOf": [
+                      { "$ref": "#/components/schemas/CarDto" },
+                      { "$ref": "#/components/schemas/VolvoDto" }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "VehicleDto": {
+        "type": "object",
+        "required": ["$type", "id"],
+        "properties": {
+          "$type": {
+            "type": "string"
+          },
+          "id": {
+            "type": "integer"
+          }
+        },
+        "discriminator": {
+          "propertyName": "$type",
+          "mapping": {
+            "Car": "#/components/schemas/CarDto",
+            "Volvo": "#/components/schemas/VolvoDto"
+          }
+        }
+      },
+      "CarDto": {
+        "allOf": [
+          { "$ref": "#/components/schemas/VehicleDto" },
+          {
+            "type": "object",
+            "required": ["modelName"],
+            "properties": {
+              "modelName": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "VolvoDto": {
+        "allOf": [
+          { "$ref": "#/components/schemas/CarDto" },
+          {
+            "type": "object",
+            "required": ["seatbeltCount"],
+            "properties": {
+              "seatbeltCount": {
+                "type": "integer"
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

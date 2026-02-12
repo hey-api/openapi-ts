@@ -1,4 +1,4 @@
-import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl } from '../base';
@@ -15,8 +15,7 @@ import {
 } from '../mixins/modifiers';
 import { ParamMixin } from '../mixins/param';
 import { BlockTsDsl } from '../stmt/block';
-
-export type SetterName = string | ts.PropertyName;
+import { safeAccessorName } from '../utils/name';
 
 const Mixed = AbstractMixin(
   AsyncMixin(
@@ -25,9 +24,7 @@ const Mixed = AbstractMixin(
         DocMixin(
           ParamMixin(
             PrivateMixin(
-              ProtectedMixin(
-                PublicMixin(StaticMixin(TsDsl<ts.SetAccessorDeclaration>)),
-              ),
+              ProtectedMixin(PublicMixin(StaticMixin(TsDsl<ts.SetAccessorDeclaration>))),
             ),
           ),
         ),
@@ -38,16 +35,17 @@ const Mixed = AbstractMixin(
 
 export class SetterTsDsl extends Mixed {
   readonly '~dsl' = 'SetterTsDsl';
+  override readonly nameSanitizer = safeAccessorName;
 
-  protected name: SetterName;
-
-  constructor(name: SetterName, fn?: (s: SetterTsDsl) => void) {
+  constructor(name: NodeName, fn?: (s: SetterTsDsl) => void) {
     super();
-    this.name = name;
+    this.name.set(name);
     fn?.(this);
   }
 
   override analyze(ctx: AnalysisContext): void {
+    ctx.analyze(this.name);
+
     ctx.pushScope();
     try {
       super.analyze(ctx);
@@ -56,13 +54,13 @@ export class SetterTsDsl extends Mixed {
     }
   }
 
-  override toAst(ctx: AstContext) {
+  override toAst() {
     const node = ts.factory.createSetAccessorDeclaration(
-      [...this.$decorators(ctx), ...this.modifiers],
-      this.name,
-      this.$params(ctx),
-      this.$node(ctx, new BlockTsDsl(...this._do).pretty()),
+      [...this.$decorators(), ...this.modifiers],
+      this.$node(this.name) as ts.PropertyName,
+      this.$params(),
+      this.$node(new BlockTsDsl(...this._do).pretty()),
     );
-    return this.$docs(ctx, node);
+    return this.$docs(node);
   }
 }

@@ -13,6 +13,7 @@ export const createSdkConfig =
       ...userConfig,
       logs: {
         level: 'silent',
+        path: './logs',
       },
       output:
         typeof userConfig.output === 'string'
@@ -21,15 +22,11 @@ export const createSdkConfig =
               ...userConfig.output,
               path: path.join(
                 outputDir,
-                userConfig.output instanceof Array
-                  ? ''
-                  : userConfig.output.path,
+                userConfig.output instanceof Array ? '' : userConfig.output.path,
               ),
             },
     }) as const satisfies UserConfig;
 
-export const getSnapshotsPath = (): string =>
-  path.join(__dirname, '..', '__snapshots__');
+export const getSnapshotsPath = (): string => path.join(__dirname, '..', '__snapshots__');
 
-export const getTempSnapshotsPath = (): string =>
-  path.join(__dirname, '..', '.gen', 'snapshots');
+export const getTempSnapshotsPath = (): string => path.join(__dirname, '..', '.gen', 'snapshots');

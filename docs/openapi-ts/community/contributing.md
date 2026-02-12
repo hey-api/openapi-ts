@@ -7,9 +7,9 @@ description: Learn how to contribute to Hey API.
 
 ## Foreword
 
-Hey API is building an OpenAPI to TypeScript code generator ecosystem. It’s trusted by thousands of companies – from YC startups to Fortune 500 enterprises – and powers products used by millions worldwide.
+Hey API is building an OpenAPI to TypeScript code generator ecosystem. It's trusted by thousands of companies – from YC startups to Fortune 500 enterprises – and powers products used by millions worldwide.
 
-We welcome contributors of all backgrounds and experience levels. Whether you’re fixing a typo or building a new feature, your input matters. If you need guidance, help with technical writing, or want to bring a feature idea to life, we’re here to support you.
+We welcome contributors of all backgrounds and experience levels. Whether you're fixing a typo or building a new feature, your input matters. If you need guidance, help with technical writing, or want to bring a feature idea to life, we're here to support you.
 
 ::: tip
 
@@ -39,4 +39,4 @@ These are some of the best ways not only to contribute to Hey API, but also to l
 
 Ready to write some code? We have dedicated guides to help you [build](/openapi-ts/community/contributing/building), [develop](/openapi-ts/community/contributing/developing), and [test](/openapi-ts/community/contributing/testing) your feature before it's released.
 
-We are excited to see what you’ll contribute!
+We are excited to see what you'll contribute!

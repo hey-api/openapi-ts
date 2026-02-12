@@ -9,7 +9,9 @@ import { embedProject } from '../embed'
 
 # Get Started
 
-[@hey-api/openapi-ts](https://github.com/hey-api/openapi-ts) is an [open source](/openapi-ts/license) OpenAPI to TypeScript code generator trusted by companies like Google, Amazon, and PayPal to generate API clients, SDKs, validators, and more. We also build complementary tools and [services](https://app.heyapi.dev/) that help teams design, manage, and distribute APIs more effectively.
+[@hey-api/openapi-ts](https://github.com/hey-api/openapi-ts) generates TypeScript code from OpenAPI specifications. Point it at your spec, pick your plugins, and get production-ready code in seconds.
+
+Used by companies like Vercel, OpenCode, and PayPal.
 
 > _“OpenAPI codegen that just works.”_
 >
@@ -23,13 +25,14 @@ Launch demo
 
 ## Features
 
-- runs in CLI, Node.js 20+, or npx
-- works with OpenAPI 2.0, 3.0, and 3.1
-- core plugins for types, SDKs, and schemas
-- clients for your runtime (Fetch API, Angular, Axios, Next.js, Nuxt, etc.)
-- plugin ecosystem to reduce third-party boilerplate
-- custom plugins and custom clients
-- [integration](/openapi-ts/integrations) with Hey API Platform
+- production-ready code that compiles
+- runs in any Node.js 20+ environment
+- accepts any OpenAPI specification
+- core plugins for SDKs, types, and schemas
+- HTTP clients for Fetch API, Angular, Axios, Next.js, Nuxt, and more
+- 20+ plugins to reduce third-party boilerplate
+- highly customizable via plugins
+- [sync with Hey API Registry](/openapi-ts/integrations) for spec management
 
 ## Quick Start
 
@@ -67,15 +70,9 @@ bun add @hey-api/openapi-ts -D -E
 
 ### Versioning
 
-This package does NOT follow the [semantic versioning](https://semver.org/) strategy. Please pin an exact version so you can safely upgrade when you're ready.
+This package is in [initial development](https://semver.org/#spec-item-4). Please pin an exact version so you can safely upgrade when you're ready.
 
-Due to the nature of the package, we use the following versioning strategy.
-
-- `1.x.x`: significant breaking changes, reserved for v1 release
-- `x.1.x`: breaking changes
-- `x.x.1`: new features, bug fixes, and non-breaking changes
-
-We publish [migration notes](/openapi-ts/migrating) for every breaking release. You might not be impacted by a breaking release if you don't use the affected plugin(s).
+We publish [migration notes](/openapi-ts/migrating) for every breaking release. You might not be impacted by a breaking change if you don't use the affected features.
 
 ## Usage
 

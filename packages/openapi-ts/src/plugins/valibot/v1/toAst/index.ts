@@ -1,22 +1,23 @@
-import type { SchemaWithType } from '~/plugins';
-import type { $ } from '~/ts-dsl';
+import type { SchemaWithType } from '@hey-api/shared';
 
-import { pipesToAst } from '../../shared/pipesToAst';
+import { shouldCoerceToBigInt } from '../../../../plugins/shared/utils/coerce';
+import type { $ } from '../../../../ts-dsl';
+import { pipesToNode } from '../../shared/pipes';
 import type { IrSchemaToAstOptions } from '../../shared/types';
 import { arrayToAst } from './array';
 import { booleanToAst } from './boolean';
 import { enumToAst } from './enum';
 import { neverToAst } from './never';
 import { nullToAst } from './null';
-import { numberToAst } from './number';
+import { numberToNode } from './number';
 import { objectToAst } from './object';
-import { stringToAst } from './string';
+import { stringToNode } from './string';
 import { tupleToAst } from './tuple';
 import { undefinedToAst } from './undefined';
 import { unknownToAst } from './unknown';
 import { voidToAst } from './void';
 
-export const irSchemaWithTypeToAst = ({
+export function irSchemaWithTypeToAst({
   schema,
   ...args
 }: IrSchemaToAstOptions & {
@@ -24,17 +25,17 @@ export const irSchemaWithTypeToAst = ({
 }): {
   anyType?: string;
   expression: ReturnType<typeof $.call | typeof $.expr>;
-} => {
+} {
   switch (schema.type) {
     case 'array':
       return {
-        expression: pipesToAst({
-          pipes: arrayToAst({
+        expression: pipesToNode(
+          arrayToAst({
             ...args,
             schema: schema as SchemaWithType<'array'>,
           }).pipes,
-          plugin: args.plugin,
-        }),
+          args.plugin,
+        ),
       };
     case 'boolean':
       return {
@@ -53,7 +54,7 @@ export const irSchemaWithTypeToAst = ({
     case 'integer':
     case 'number':
       return {
-        expression: numberToAst({
+        expression: numberToNode({
           ...args,
           schema: schema as SchemaWithType<'integer' | 'number'>,
         }),
@@ -74,39 +75,35 @@ export const irSchemaWithTypeToAst = ({
       };
     case 'object':
       return {
-        expression: pipesToAst({
-          pipes: objectToAst({
+        expression: pipesToNode(
+          objectToAst({
             ...args,
             schema: schema as SchemaWithType<'object'>,
           }).pipes,
-          plugin: args.plugin,
-        }),
+          args.plugin,
+        ),
       };
     case 'string':
-      // For string schemas with int64/uint64 formats, use number handler to generate union with transform
-      if (schema.format === 'int64' || schema.format === 'uint64') {
-        return {
-          expression: numberToAst({
-            ...args,
-            schema: schema as SchemaWithType<'integer' | 'number'>,
-          }),
-        };
-      }
       return {
-        expression: stringToAst({
-          ...args,
-          schema: schema as SchemaWithType<'string'>,
-        }),
+        expression: shouldCoerceToBigInt(schema.format)
+          ? numberToNode({
+              ...args,
+              schema: { ...schema, type: 'number' },
+            })
+          : stringToNode({
+              ...args,
+              schema: schema as SchemaWithType<'string'>,
+            }),
       };
     case 'tuple':
       return {
-        expression: pipesToAst({
-          pipes: tupleToAst({
+        expression: pipesToNode(
+          tupleToAst({
             ...args,
             schema: schema as SchemaWithType<'tuple'>,
           }).pipes,
-          plugin: args.plugin,
-        }),
+          args.plugin,
+        ),
       };
     case 'undefined':
       return {
@@ -130,4 +127,4 @@ export const irSchemaWithTypeToAst = ({
         }),
       };
   }
-};
+}

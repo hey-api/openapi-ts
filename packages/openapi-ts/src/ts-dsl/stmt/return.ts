@@ -1,17 +1,12 @@
-import type {
-  AnalysisContext,
-  AstContext,
-  Ref,
-  Symbol,
-} from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName, Ref } from '@hey-api/codegen-core';
 import { ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
-import { setReturnFactory } from '../mixins/expr';
+import { f } from '../utils/factories';
 
-export type ReturnExpr = Symbol | string | MaybeTsDsl<ts.Expression>;
+export type ReturnExpr = NodeName | MaybeTsDsl<ts.Expression>;
 export type ReturnCtor = (expr?: ReturnExpr) => ReturnTsDsl;
 
 const Mixed = TsDsl<ts.ReturnStatement>;
@@ -31,9 +26,9 @@ export class ReturnTsDsl extends Mixed {
     ctx.analyze(this._returnExpr);
   }
 
-  override toAst(ctx: AstContext) {
-    return ts.factory.createReturnStatement(this.$node(ctx, this._returnExpr));
+  override toAst() {
+    return ts.factory.createReturnStatement(this.$node(this._returnExpr));
   }
 }
 
-setReturnFactory((...args) => new ReturnTsDsl(...args));
+f.return.set((...args) => new ReturnTsDsl(...args));

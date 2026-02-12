@@ -1,13 +1,12 @@
-import { $ } from '~/ts-dsl';
-
+import { $ } from '../../../ts-dsl';
 import { identifiers } from '../constants';
+import type { ValidatorResolverContext } from '../resolvers';
 import type { ValidatorArgs } from '../shared/types';
-import type { ValidatorResolverArgs } from '../types';
 
-const defaultValidatorResolver = ({
-  schema,
-}: ValidatorResolverArgs): ReturnType<typeof $.return> =>
-  $(schema).attr(identifiers.parseAsync).call('data').await().return();
+const validatorResolver = (ctx: ValidatorResolverContext): ReturnType<typeof $.return> => {
+  const { schema } = ctx.symbols;
+  return $(schema).attr(identifiers.parseAsync).call('data').await().return();
+};
 
 export const createRequestValidatorV3 = ({
   operation,
@@ -22,19 +21,24 @@ export const createRequestValidatorV3 = ({
   });
   if (!symbol) return;
 
-  const args: ValidatorResolverArgs = {
+  const z = plugin.external('zod.z');
+  const ctx: ValidatorResolverContext = {
     $,
-    chain: undefined,
+    chain: {
+      current: $(z),
+    },
     operation,
     plugin,
-    schema: symbol,
+    symbols: {
+      schema: symbol,
+      z,
+    },
   };
   const validator = plugin.config['~resolvers']?.validator;
-  const resolver =
-    typeof validator === 'function' ? validator : validator?.request;
-  const candidates = [resolver, defaultValidatorResolver];
+  const resolver = typeof validator === 'function' ? validator : validator?.request;
+  const candidates = [resolver, validatorResolver];
   for (const candidate of candidates) {
-    const statements = candidate?.(args);
+    const statements = candidate?.(ctx);
     if (statements === null) return;
     if (statements !== undefined) {
       return $.func()
@@ -59,19 +63,24 @@ export const createResponseValidatorV3 = ({
   });
   if (!symbol) return;
 
-  const args: ValidatorResolverArgs = {
+  const z = plugin.external('zod.z');
+  const ctx: ValidatorResolverContext = {
     $,
-    chain: undefined,
+    chain: {
+      current: $(z),
+    },
     operation,
     plugin,
-    schema: symbol,
+    symbols: {
+      schema: symbol,
+      z,
+    },
   };
   const validator = plugin.config['~resolvers']?.validator;
-  const resolver =
-    typeof validator === 'function' ? validator : validator?.response;
-  const candidates = [resolver, defaultValidatorResolver];
+  const resolver = typeof validator === 'function' ? validator : validator?.response;
+  const candidates = [resolver, validatorResolver];
   for (const candidate of candidates) {
-    const statements = candidate?.(args);
+    const statements = candidate?.(ctx);
     if (statements === null) return;
     if (statements !== undefined) {
       return $.func()

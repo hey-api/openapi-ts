@@ -1,10 +1,5 @@
-import type {
-  AnalysisContext,
-  AstContext,
-  Ref,
-  Symbol,
-} from '@hey-api/codegen-core';
-import { fromRef, isSymbol, ref } from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName, NodeScope } from '@hey-api/codegen-core';
+import { isSymbol } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -14,26 +9,22 @@ import { ExportMixin } from '../mixins/modifiers';
 import { TypeParamsMixin } from '../mixins/type-params';
 import { safeTypeName } from '../utils/name';
 
-type Name = Symbol | string;
 type Value = MaybeTsDsl<ts.TypeNode>;
 
-const Mixed = DocMixin(
-  ExportMixin(TypeParamsMixin(TsDsl<ts.TypeAliasDeclaration>)),
-);
+const Mixed = DocMixin(ExportMixin(TypeParamsMixin(TsDsl<ts.TypeAliasDeclaration>)));
 
 export class TypeAliasTsDsl extends Mixed {
   readonly '~dsl' = 'TypeAliasTsDsl';
+  override readonly nameSanitizer = safeTypeName;
+  override scope: NodeScope = 'type';
 
-  protected name: Ref<Name>;
   protected value?: Value;
 
-  constructor(name: Name, fn?: (t: TypeAliasTsDsl) => void) {
+  constructor(name: NodeName, fn?: (t: TypeAliasTsDsl) => void) {
     super();
-    this.name = ref(name);
+    this.name.set(name);
     if (isSymbol(name)) {
       name.setKind('type');
-      name.setNameSanitizer(safeTypeName);
-      name.setNode(this);
     }
     fn?.(this);
   }
@@ -44,23 +35,40 @@ export class TypeAliasTsDsl extends Mixed {
     ctx.analyze(this.value);
   }
 
+  /** Returns true when all required builder calls are present. */
+  get isValid(): boolean {
+    return this.missingRequiredCalls().length === 0;
+  }
+
   /** Sets the type expression on the right-hand side of `= ...`. */
   type(node: Value): this {
     this.value = node;
     return this;
   }
 
-  override toAst(ctx: AstContext) {
-    if (!this.value)
-      throw new Error(
-        `Type alias '${fromRef(this.name)}' is missing a type definition`,
-      );
+  override toAst() {
+    this.$validate();
     const node = ts.factory.createTypeAliasDeclaration(
       this.modifiers,
-      this.$node(ctx, this.name) as ts.Identifier,
-      this.$generics(ctx),
-      this.$type(ctx, this.value),
+      this.$node(this.name) as ts.Identifier,
+      this.$generics(),
+      this.$type(this.value),
     );
-    return this.$docs(ctx, node);
+    return this.$docs(node);
+  }
+
+  $validate(): asserts this is this & {
+    value: Value;
+  } {
+    const missing = this.missingRequiredCalls();
+    if (missing.length === 0) return;
+    const name = this.name.toString();
+    throw new Error(`Type alias${name ? ` "${name}"` : ''} missing ${missing.join(' and ')}`);
+  }
+
+  private missingRequiredCalls(): ReadonlyArray<string> {
+    const missing: Array<string> = [];
+    if (!this.value) missing.push('.type()');
+    return missing;
   }
 }

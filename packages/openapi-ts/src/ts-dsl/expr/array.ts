@@ -1,4 +1,4 @@
-import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
+import type { AnalysisContext } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -17,9 +17,7 @@ export class ArrayTsDsl extends Mixed {
     | { expr: MaybeTsDsl<ts.Expression>; kind: 'spread' }
   > = [];
 
-  constructor(
-    ...exprs: Array<string | number | boolean | MaybeTsDsl<ts.Expression>>
-  ) {
+  constructor(...exprs: Array<string | number | boolean | MaybeTsDsl<ts.Expression>>) {
     super();
     this.elements(...exprs);
   }
@@ -34,9 +32,7 @@ export class ArrayTsDsl extends Mixed {
   /** Adds a single array element. */
   element(expr: string | number | boolean | MaybeTsDsl<ts.Expression>): this {
     const node =
-      typeof expr === 'string' ||
-      typeof expr === 'number' ||
-      typeof expr === 'boolean'
+      typeof expr === 'string' || typeof expr === 'number' || typeof expr === 'boolean'
         ? new LiteralTsDsl(expr)
         : expr;
     this._elements.push({ expr: node, kind: 'element' });
@@ -44,11 +40,7 @@ export class ArrayTsDsl extends Mixed {
   }
 
   /** Adds multiple array elements. */
-  elements(
-    ...exprs: ReadonlyArray<
-      string | number | boolean | MaybeTsDsl<ts.Expression>
-    >
-  ): this {
+  elements(...exprs: ReadonlyArray<string | number | boolean | MaybeTsDsl<ts.Expression>>): this {
     for (const expr of exprs) this.element(expr);
     return this;
   }
@@ -59,12 +51,10 @@ export class ArrayTsDsl extends Mixed {
     return this;
   }
 
-  override toAst(ctx: AstContext) {
+  override toAst() {
     const elements = this._elements.map((item) => {
-      const node = this.$node(ctx, item.expr);
-      return item.kind === 'spread'
-        ? ts.factory.createSpreadElement(node)
-        : node;
+      const node = this.$node(item.expr);
+      return item.kind === 'spread' ? ts.factory.createSpreadElement(node) : node;
     });
 
     return ts.factory.createArrayLiteralExpression(

@@ -2,15 +2,7 @@ import './App.css';
 
 import * as Form from '@radix-ui/react-form';
 import { PlusIcon } from '@radix-ui/react-icons';
-import {
-  Box,
-  Button,
-  Container,
-  Flex,
-  Heading,
-  Section,
-  TextField,
-} from '@radix-ui/themes';
+import { Box, Button, Container, Flex, Heading, Section, TextField } from '@radix-ui/themes';
 import OpenAI from 'openai';
 import { useState } from 'react';
 
@@ -61,15 +53,13 @@ function App() {
   };
 
   return (
-    <Box
-      style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}
-    >
+    <Box style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
       <Container size="1">
         <Section size="1" />
         <Flex align="center">
           <a className="shrink-0" href="https://heyapi.dev/" target="_blank">
             <img
-              src="https://heyapi.dev/logo.png"
+              src="https://heyapi.dev/assets/raw/logo.png"
               className="h-16 w-16 transition duration-300 will-change-auto"
               alt="Hey API logo"
             />
@@ -95,10 +85,7 @@ function App() {
                     Please enter a name
                   </Form.Message>
                 )}
-                <Form.Message
-                  className="text-[13px] text-white opacity-[0.8]"
-                  match="valueMissing"
-                >
+                <Form.Message className="text-[13px] text-white opacity-[0.8]" match="valueMissing">
                   Please enter an input
                 </Form.Message>
               </div>

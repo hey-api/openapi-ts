@@ -1,5 +1,4 @@
-import { $ } from '~/ts-dsl';
-
+import { $ } from '../../../ts-dsl';
 import type { ValidatorArgs } from '../shared/types';
 
 export const createRequestValidatorV2 = ({

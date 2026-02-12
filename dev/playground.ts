@@ -1,6 +1,7 @@
 import type { DefinePlugin, IR } from '@hey-api/openapi-ts';
 
-import { authSet } from './.gen/index.ts';
+// import { createOpencode } from '@opencode-ai/sdk';
+import { PetStore } from './.gen/sdk.gen.ts';
 
 type MyPluginConfig = { readonly name: 'myplugin' };
 type MyPlugin = DefinePlugin<MyPluginConfig>;
@@ -15,14 +16,20 @@ export const handler: MyPlugin['Handler'] = ({ plugin }) => {
   });
 };
 
-console.log(
-  authSet({
-    auth: {
-      access: '',
-      expires: 1,
-      refresh: '',
-      type: 'oauth',
+async function run() {
+  // const { client, server } = await createOpencode();
+  // console.log(client, server);
+  const client = new PetStore();
+  client.tui.publish({
+    body: {
+      properties: {
+        message: 'Hello from Hey API OpenAPI TS Playground!',
+        variant: 'success',
+      },
+      type: 'tui.toast.show',
     },
-    id: '123',
-  }),
-);
+    directory: 'main',
+  });
+}
+
+run();

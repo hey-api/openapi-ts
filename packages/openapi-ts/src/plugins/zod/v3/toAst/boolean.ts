@@ -1,21 +1,18 @@
-import type { SchemaWithType } from '~/plugins';
-import { $ } from '~/ts-dsl';
+import type { SchemaWithType } from '@hey-api/shared';
 
+import { $ } from '../../../../ts-dsl';
 import { identifiers } from '../../constants';
 import type { IrSchemaToAstOptions } from '../../shared/types';
 
-export const booleanToAst = ({
+export function booleanToAst({
   plugin,
   schema,
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'boolean'>;
-}): ReturnType<typeof $.call> => {
+}): ReturnType<typeof $.call> {
   let chain: ReturnType<typeof $.call>;
 
-  const z = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'zod.z',
-  });
+  const z = plugin.external('zod.z');
 
   if (typeof schema.const === 'boolean') {
     chain = $(z).attr(identifiers.literal).call($.literal(schema.const));
@@ -24,4 +21,4 @@ export const booleanToAst = ({
 
   chain = $(z).attr(identifiers.boolean).call();
   return chain;
-};
+}

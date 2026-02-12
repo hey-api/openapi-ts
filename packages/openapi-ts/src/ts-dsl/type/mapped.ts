@@ -1,32 +1,28 @@
-import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName, NodeScope } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { TypeTsDsl } from '../base';
+import { TsDsl } from '../base';
 import { TokenTsDsl } from '../token';
 
-const Mixed = TypeTsDsl<ts.MappedTypeNode>;
+const Mixed = TsDsl<ts.MappedTypeNode>;
 
 export class TypeMappedTsDsl extends Mixed {
   readonly '~dsl' = 'TypeMappedTsDsl';
+  override scope: NodeScope = 'type';
 
   protected questionToken?: TokenTsDsl<
-    | ts.SyntaxKind.QuestionToken
-    | ts.SyntaxKind.PlusToken
-    | ts.SyntaxKind.MinusToken
+    ts.SyntaxKind.QuestionToken | ts.SyntaxKind.PlusToken | ts.SyntaxKind.MinusToken
   >;
   protected readonlyToken?: TokenTsDsl<
-    | ts.SyntaxKind.ReadonlyKeyword
-    | ts.SyntaxKind.MinusToken
-    | ts.SyntaxKind.PlusToken
+    ts.SyntaxKind.ReadonlyKeyword | ts.SyntaxKind.MinusToken | ts.SyntaxKind.PlusToken
   >;
   protected _key?: string | MaybeTsDsl<ts.TypeNode>;
-  protected _name?: string;
   protected _type?: string | MaybeTsDsl<ts.TypeNode>;
 
-  constructor(name?: string) {
+  constructor(name?: NodeName) {
     super();
-    this.name(name);
+    if (name) this.name.set(name);
   }
 
   override analyze(ctx: AnalysisContext): void {
@@ -54,12 +50,6 @@ export class TypeMappedTsDsl extends Mixed {
     return this;
   }
 
-  /** Sets the parameter name: `{ [Name in keyof T]: U }` */
-  name(name?: string): this {
-    this._name = name;
-    return this;
-  }
-
   /** Makes `[K in X]?:` optional. */
   optional(): this {
     this.questionToken = new TokenTsDsl().optional();
@@ -84,39 +74,36 @@ export class TypeMappedTsDsl extends Mixed {
     return this;
   }
 
-  override toAst(ctx: AstContext) {
+  override toAst() {
     this.$validate();
     return ts.factory.createMappedTypeNode(
-      this.$node(ctx, this.readonlyToken),
+      this.$node(this.readonlyToken),
       ts.factory.createTypeParameterDeclaration(
         undefined,
-        this._name,
-        this.$type(ctx, this._key),
+        this.$node(this.name) as ts.Identifier,
+        this.$type(this._key),
         undefined,
       ),
       undefined,
-      this.$node(ctx, this.questionToken),
-      this.$type(ctx, this._type),
+      this.$node(this.questionToken),
+      this.$type(this._type),
       undefined,
     );
   }
 
   $validate(): asserts this is this & {
     _key: string | MaybeTsDsl<ts.TypeNode>;
-    _name: string;
     _type: string | MaybeTsDsl<ts.TypeNode>;
   } {
     const missing = this.missingRequiredCalls();
     if (missing.length === 0) return;
-    throw new Error(
-      `Mapped type${this._name ? ` "${this._name}"` : ''} missing ${missing.join(' and ')}`,
-    );
+    const name = this.name.toString();
+    throw new Error(`Mapped type${name ? ` "${name}"` : ''} missing ${missing.join(' and ')}`);
   }
 
   private missingRequiredCalls(): ReadonlyArray<string> {
     const missing: Array<string> = [];
     if (!this._key) missing.push('.key()');
-    if (!this._name) missing.push('.name()');
     if (!this._type) missing.push('.\u200Btype()');
     return missing;
   }

@@ -24,12 +24,7 @@ export const createClient = (config: Config = {}): Client => {
     return getConfig();
   };
 
-  const interceptors = createInterceptors<
-    Request,
-    Response,
-    unknown,
-    RequestOptions
-  >();
+  const interceptors = createInterceptors<Request, Response, unknown, RequestOptions>();
 
   // @ts-expect-error
   const request: Client['request'] = async (options) => {
@@ -91,10 +86,7 @@ export const createClient = (config: Config = {}): Client => {
     };
 
     if (response.ok) {
-      if (
-        response.status === 204 ||
-        response.headers.get('Content-Length') === '0'
-      ) {
+      if (response.status === 204 || response.headers.get('Content-Length') === '0') {
         return {
           data: {},
           ...result,
@@ -111,10 +103,16 @@ export const createClient = (config: Config = {}): Client => {
         case 'arrayBuffer':
         case 'blob':
         case 'formData':
-        case 'json':
         case 'text':
           data = await response[parseAs]();
           break;
+        case 'json': {
+          // Some servers return 200 with no Content-Length and empty body.
+          // response.json() would throw; read as text and parse if non-empty.
+          const text = await response.text();
+          data = text ? JSON.parse(text) : {};
+          break;
+        }
         case 'stream':
           return {
             data: response.body,

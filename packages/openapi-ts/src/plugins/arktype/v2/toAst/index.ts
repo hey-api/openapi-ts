@@ -1,6 +1,6 @@
-import type { SchemaWithType } from '~/plugins/shared/types/schema';
-import { $ } from '~/ts-dsl';
+import type { SchemaWithType } from '@hey-api/shared';
 
+import { $ } from '../../../../ts-dsl';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
 import { nullToAst } from './null';
 import { objectToAst } from './object';
@@ -15,12 +15,12 @@ import { stringToAst } from './string';
 // import { unknownToAst } from "./unknown";
 // import { voidToAst } from "./void";
 
-export const irSchemaWithTypeToAst = ({
+export function irSchemaWithTypeToAst({
   schema,
   ...args
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType;
-}): Omit<Ast, 'typeName'> => {
+}): Omit<Ast, 'typeName'> {
   switch (schema.type) {
     // case 'array':
     //   return arrayToAst({
@@ -85,10 +85,7 @@ export const irSchemaWithTypeToAst = ({
     //   });
   }
 
-  const type = args.plugin.referenceSymbol({
-    category: 'external',
-    resource: 'arktype.type',
-  });
+  const type = args.plugin.external('arktype.type');
 
   const expression = $(type).call(
     $.object()
@@ -102,4 +99,4 @@ export const irSchemaWithTypeToAst = ({
     expression,
     hasLazyExpression: false,
   };
-};
+}

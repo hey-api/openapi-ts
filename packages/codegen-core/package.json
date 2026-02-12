@@ -1,22 +1,7 @@
 {
   "name": "@hey-api/codegen-core",
-  "version": "0.4.0",
-  "description": "🧱 TypeScript framework for generating structured, multi-file source code from abstract syntax trees.",
-  "homepage": "https://heyapi.dev/",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/hey-api/openapi-ts.git"
-  },
-  "bugs": {
-    "url": "https://github.com/hey-api/openapi-ts/issues"
-  },
-  "license": "MIT",
-  "author": {
-    "email": "lubos@heyapi.dev",
-    "name": "Hey API",
-    "url": "https://heyapi.dev"
-  },
-  "funding": "https://github.com/sponsors/hey-api",
+  "version": "0.7.0",
+  "description": "🧱 TypeScript framework for generating files.",
   "keywords": [
     "codegen",
     "generator",
@@ -24,53 +9,57 @@
     "node",
     "typescript"
   ],
-  "type": "module",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.mts",
-  "exports": {
-    ".": {
-      "import": {
-        "types": "./dist/index.d.mts",
-        "default": "./dist/index.mjs"
-      },
-      "require": {
-        "types": "./dist/index.d.cts",
-        "default": "./dist/index.cjs"
-      }
-    },
-    "./package.json": "./package.json"
+  "homepage": "https://heyapi.dev/",
+  "bugs": {
+    "url": "https://github.com/hey-api/openapi-ts/issues"
   },
+  "license": "MIT",
+  "author": {
+    "name": "Hey API",
+    "email": "lubos@heyapi.dev",
+    "url": "https://heyapi.dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hey-api/openapi-ts.git"
+  },
+  "funding": "https://github.com/sponsors/hey-api",
   "files": [
     "dist",
     "LICENSE.md",
     "README.md"
   ],
+  "type": "module",
+  "main": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs"
+    },
+    "./package.json": "./package.json"
+  },
   "scripts": {
     "build": "tsdown && pnpm check-exports",
-    "check-exports": "attw --pack . --profile node16",
+    "check-exports": "attw --pack . --profile esm-only --ignore-rules cjs-resolves-to-esm",
     "dev": "tsdown --watch",
     "prepublishOnly": "pnpm build",
-    "test:coverage": "vitest run --coverage",
-    "test:update": "vitest watch --update",
-    "test:watch": "vitest watch",
-    "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
-  "engines": {
-    "node": ">=20.19.0"
-  },
   "dependencies": {
+    "@hey-api/types": "workspace:*",
     "ansi-colors": "4.1.3",
+    "c12": "3.3.3",
     "color-support": "1.1.3"
+  },
+  "devDependencies": {
+    "eslint": "9.39.1",
+    "typescript": "5.9.3"
   },
   "peerDependencies": {
     "typescript": ">=5.5.3"
   },
-  "devDependencies": {
-    "@config/vite-base": "workspace:*",
-    "eslint": "9.17.0",
-    "prettier": "3.4.2",
-    "typescript": "5.9.3"
+  "engines": {
+    "node": ">=20.19.0"
   }
 }

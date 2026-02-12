@@ -1,8 +1,4 @@
-import type {
-  AnalysisContext,
-  AstContext,
-  Symbol,
-} from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl } from '../base';
@@ -11,13 +7,11 @@ import { BlockTsDsl } from './block';
 
 const Mixed = TsDsl<ts.TryStatement>;
 
-type CatchParam = Symbol | string;
-
 export class TryTsDsl extends Mixed {
   readonly '~dsl' = 'TryTsDsl';
 
   protected _catch?: Array<DoExpr>;
-  protected _catchArg?: CatchParam;
+  protected _catchArg?: NodeName;
   protected _finally?: Array<DoExpr>;
   protected _try?: Array<DoExpr>;
 
@@ -60,12 +54,17 @@ export class TryTsDsl extends Mixed {
     }
   }
 
+  /** Returns true when all required builder calls are present. */
+  get isValid(): boolean {
+    return this.missingRequiredCalls().length === 0;
+  }
+
   catch(...items: Array<DoExpr>): this {
     this._catch = items;
     return this;
   }
 
-  catchArg(arg: CatchParam): this {
+  catchArg(arg: NodeName): this {
     this._catchArg = arg;
     return this;
   }
@@ -80,24 +79,31 @@ export class TryTsDsl extends Mixed {
     return this;
   }
 
-  override toAst(ctx: AstContext) {
-    if (!this._try?.length) throw new Error('Missing try block');
-
-    const catchParam = this._catchArg
-      ? (this.$node(ctx, this._catchArg) as ts.BindingName)
-      : undefined;
+  override toAst() {
+    this.$validate();
+    const catchParam = this._catchArg ? (this.$node(this._catchArg) as ts.BindingName) : undefined;
 
     return ts.factory.createTryStatement(
-      this.$node(ctx, new BlockTsDsl(...this._try).pretty()),
+      this.$node(new BlockTsDsl(...this._try).pretty()),
       ts.factory.createCatchClause(
-        catchParam
-          ? ts.factory.createVariableDeclaration(catchParam)
-          : undefined,
-        this.$node(ctx, new BlockTsDsl(...(this._catch ?? [])).pretty()),
+        catchParam ? ts.factory.createVariableDeclaration(catchParam) : undefined,
+        this.$node(new BlockTsDsl(...(this._catch ?? [])).pretty()),
       ),
-      this._finally
-        ? this.$node(ctx, new BlockTsDsl(...this._finally).pretty())
-        : undefined,
+      this._finally ? this.$node(new BlockTsDsl(...this._finally).pretty()) : undefined,
     );
+  }
+
+  $validate(): asserts this is this & {
+    _try: Array<DoExpr>;
+  } {
+    const missing = this.missingRequiredCalls();
+    if (missing.length === 0) return;
+    throw new Error(`Try statement missing ${missing.join(' and ')}`);
+  }
+
+  private missingRequiredCalls(): ReadonlyArray<string> {
+    const missing: Array<string> = [];
+    if (!this._try || this._try.length === 0) missing.push('.try()');
+    return missing;
   }
 }

@@ -2,7 +2,7 @@
 
 import { buildClientParams, type Client, type Options as Options2, type TDataShape } from './client';
 import { client } from './client.gen';
-import type { AgentPartInput, AppAgentsResponses, AppGetResponses, AppInitResponses, AppLogResponses, Auth, AuthSetErrors, AuthSetResponses, ConfigGetResponses, ConfigProvidersResponses, EventSubscribeResponses, FilePartInput, FileReadResponses, FileStatusResponses, FindFilesResponses, FindSymbolsResponses, FindTextResponses, PostSessionByIdPermissionsByPermissionIdResponses, SessionAbortResponses, SessionChatResponses, SessionChildrenResponses, SessionCreateErrors, SessionCreateResponses, SessionDeleteResponses, SessionGetResponses, SessionInitResponses, SessionListResponses, SessionMessageResponses, SessionMessagesResponses, SessionRevertResponses, SessionShareResponses, SessionShellResponses, SessionSummarizeResponses, SessionUnrevertResponses, SessionUnshareResponses, SessionUpdateResponses, TextPartInput, TuiAppendPromptResponses, TuiClearPromptResponses, TuiExecuteCommandResponses, TuiOpenHelpResponses, TuiOpenModelsResponses, TuiOpenSessionsResponses, TuiOpenThemesResponses, TuiShowToastResponses, TuiSubmitPromptResponses } from './types.gen';
+import type { AgentPartInput, AppAgentsResponses, AppLogErrors, AppLogResponses, Auth, AuthSetErrors, AuthSetResponses, CommandListResponses, Config, ConfigGetResponses, ConfigProvidersResponses, ConfigUpdateErrors, ConfigUpdateResponses, EventSubscribeResponses, EventTuiCommandExecute, EventTuiPromptAppend, EventTuiToastShow, FileListResponses, FilePartInput, FileReadResponses, FileStatusResponses, FindFilesResponses, FindSymbolsResponses, FindTextResponses, FormatterStatusResponses, GlobalDisposeResponses, GlobalEventResponses, GlobalHealthResponses, InstanceDisposeResponses, LspStatusResponses, McpAddErrors, McpAddResponses, McpAuthAuthenticateErrors, McpAuthAuthenticateResponses, McpAuthCallbackErrors, McpAuthCallbackResponses, McpAuthRemoveErrors, McpAuthRemoveResponses, McpAuthStartErrors, McpAuthStartResponses, McpConnectResponses, McpDisconnectResponses, McpLocalConfig, McpRemoteConfig, McpStatusResponses, Part, PartDeleteErrors, PartDeleteResponses, PartUpdateErrors, PartUpdateResponses, PathGetResponses, PermissionListResponses, PermissionReplyErrors, PermissionReplyResponses, PermissionRespondErrors, PermissionRespondResponses, PermissionRuleset, ProjectCurrentResponses, ProjectListResponses, ProjectUpdateErrors, ProjectUpdateResponses, ProviderAuthResponses, ProviderListResponses, ProviderOauthAuthorizeErrors, ProviderOauthAuthorizeResponses, ProviderOauthCallbackErrors, ProviderOauthCallbackResponses, PtyConnectErrors, PtyConnectResponses, PtyCreateErrors, PtyCreateResponses, PtyGetErrors, PtyGetResponses, PtyListResponses, PtyRemoveErrors, PtyRemoveResponses, PtyUpdateErrors, PtyUpdateResponses, SessionAbortErrors, SessionAbortResponses, SessionChildrenErrors, SessionChildrenResponses, SessionCommandErrors, SessionCommandResponses, SessionCreateErrors, SessionCreateResponses, SessionDeleteErrors, SessionDeleteResponses, SessionDiffErrors, SessionDiffResponses, SessionForkResponses, SessionGetErrors, SessionGetResponses, SessionInitErrors, SessionInitResponses, SessionListResponses, SessionMessageErrors, SessionMessageResponses, SessionMessagesErrors, SessionMessagesResponses, SessionPromptAsyncErrors, SessionPromptAsyncResponses, SessionPromptErrors, SessionPromptResponses, SessionRevertErrors, SessionRevertResponses, SessionShareErrors, SessionShareResponses, SessionShellErrors, SessionShellResponses, SessionStatusErrors, SessionStatusResponses, SessionSummarizeErrors, SessionSummarizeResponses, SessionTodoErrors, SessionTodoResponses, SessionUnrevertErrors, SessionUnrevertResponses, SessionUnshareErrors, SessionUnshareResponses, SessionUpdateErrors, SessionUpdateResponses, SubtaskPartInput, TextPartInput, ToolIdsErrors, ToolIdsResponses, ToolListErrors, ToolListResponses, TuiAppendPromptErrors, TuiAppendPromptResponses, TuiClearPromptResponses, TuiControlNextResponses, TuiControlResponseResponses, TuiExecuteCommandErrors, TuiExecuteCommandResponses, TuiOpenHelpResponses, TuiOpenModelsResponses, TuiOpenSessionsResponses, TuiOpenThemesResponses, TuiPublishErrors, TuiPublishResponses, TuiShowToastResponses, TuiSubmitPromptResponses, VcsGetResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -19,38 +19,381 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
 };
 
 /**
- * Get events
+ * Get health
+ *
+ * Get health information about the OpenCode server.
  */
-export const eventSubscribe = <ThrowOnError extends boolean = false>(options?: Options<never, ThrowOnError>) => (options?.client ?? client).sse.get<EventSubscribeResponses, unknown, ThrowOnError>({ url: '/event', ...options });
+export const globalHealth = <ThrowOnError extends boolean = false>(options?: Options<never, ThrowOnError>) => (options?.client ?? client).get<GlobalHealthResponses, unknown, ThrowOnError>({ url: '/global/health', ...options });
 
 /**
- * Get app info
+ * Get global events
+ *
+ * Subscribe to global events from the OpenCode system using server-sent events.
  */
-export const appGet = <ThrowOnError extends boolean = false>(options?: Options<never, ThrowOnError>) => (options?.client ?? client).get<AppGetResponses, unknown, ThrowOnError>({ url: '/app', ...options });
+export const globalEvent = <ThrowOnError extends boolean = false>(options?: Options<never, ThrowOnError>) => (options?.client ?? client).sse.get<GlobalEventResponses, unknown, ThrowOnError>({ url: '/global/event', ...options });
 
 /**
- * Initialize the app
+ * Dispose instance
+ *
+ * Clean up and dispose all OpenCode instances, releasing all resources.
  */
-export const appInit = <ThrowOnError extends boolean = false>(options?: Options<never, ThrowOnError>) => (options?.client ?? client).post<AppInitResponses, unknown, ThrowOnError>({ url: '/app/init', ...options });
+export const globalDispose = <ThrowOnError extends boolean = false>(options?: Options<never, ThrowOnError>) => (options?.client ?? client).post<GlobalDisposeResponses, unknown, ThrowOnError>({ url: '/global/dispose', ...options });
 
 /**
- * Get config info
+ * List all projects
+ *
+ * Get a list of projects that have been opened with OpenCode.
  */
-export const configGet = <ThrowOnError extends boolean = false>(options?: Options<never, ThrowOnError>) => (options?.client ?? client).get<ConfigGetResponses, unknown, ThrowOnError>({ url: '/config', ...options });
+export const projectList = <ThrowOnError extends boolean = false>(parameters?: {
+    directory?: string;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [{ in: 'query', key: 'directory' }] }]);
+    return (options?.client ?? client).get<ProjectListResponses, unknown, ThrowOnError>({
+        url: '/project',
+        ...options,
+        ...params
+    });
+};
 
 /**
- * List all sessions
+ * Get current project
+ *
+ * Retrieve the currently active project that OpenCode is working with.
  */
-export const sessionList = <ThrowOnError extends boolean = false>(options?: Options<never, ThrowOnError>) => (options?.client ?? client).get<SessionListResponses, unknown, ThrowOnError>({ url: '/session', ...options });
+export const projectCurrent = <ThrowOnError extends boolean = false>(parameters?: {
+    directory?: string;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [{ in: 'query', key: 'directory' }] }]);
+    return (options?.client ?? client).get<ProjectCurrentResponses, unknown, ThrowOnError>({
+        url: '/project/current',
+        ...options,
+        ...params
+    });
+};
 
 /**
- * Create a new session
+ * Update project
+ *
+ * Update project properties such as name, icon and color.
+ */
+export const projectUpdate = <ThrowOnError extends boolean = false>(parameters: {
+    projectID: string;
+    directory?: string;
+    name?: string;
+    icon?: {
+        url?: string;
+        color?: string;
+    };
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [
+                { in: 'path', key: 'projectID' },
+                { in: 'query', key: 'directory' },
+                { in: 'body', key: 'name' },
+                { in: 'body', key: 'icon' }
+            ] }]);
+    return (options?.client ?? client).patch<ProjectUpdateResponses, ProjectUpdateErrors, ThrowOnError>({
+        url: '/project/{projectID}',
+        ...options,
+        ...params,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options?.headers,
+            ...params.headers
+        }
+    });
+};
+
+/**
+ * List PTY sessions
+ *
+ * Get a list of all active pseudo-terminal (PTY) sessions managed by OpenCode.
+ */
+export const ptyList = <ThrowOnError extends boolean = false>(parameters?: {
+    directory?: string;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [{ in: 'query', key: 'directory' }] }]);
+    return (options?.client ?? client).get<PtyListResponses, unknown, ThrowOnError>({
+        url: '/pty',
+        ...options,
+        ...params
+    });
+};
+
+/**
+ * Create PTY session
+ *
+ * Create a new pseudo-terminal (PTY) session for running shell commands and processes.
+ */
+export const ptyCreate = <ThrowOnError extends boolean = false>(parameters?: {
+    directory?: string;
+    command?: string;
+    args?: Array<string>;
+    cwd?: string;
+    title?: string;
+    env?: {
+        [key: string]: string;
+    };
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [
+                { in: 'query', key: 'directory' },
+                { in: 'body', key: 'command' },
+                { in: 'body', key: 'args' },
+                { in: 'body', key: 'cwd' },
+                { in: 'body', key: 'title' },
+                { in: 'body', key: 'env' }
+            ] }]);
+    return (options?.client ?? client).post<PtyCreateResponses, PtyCreateErrors, ThrowOnError>({
+        url: '/pty',
+        ...options,
+        ...params,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options?.headers,
+            ...params.headers
+        }
+    });
+};
+
+/**
+ * Remove PTY session
+ *
+ * Remove and terminate a specific pseudo-terminal (PTY) session.
+ */
+export const ptyRemove = <ThrowOnError extends boolean = false>(parameters: {
+    ptyID: string;
+    directory?: string;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [{ in: 'path', key: 'ptyID' }, { in: 'query', key: 'directory' }] }]);
+    return (options?.client ?? client).delete<PtyRemoveResponses, PtyRemoveErrors, ThrowOnError>({
+        url: '/pty/{ptyID}',
+        ...options,
+        ...params
+    });
+};
+
+/**
+ * Get PTY session
+ *
+ * Retrieve detailed information about a specific pseudo-terminal (PTY) session.
+ */
+export const ptyGet = <ThrowOnError extends boolean = false>(parameters: {
+    ptyID: string;
+    directory?: string;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [{ in: 'path', key: 'ptyID' }, { in: 'query', key: 'directory' }] }]);
+    return (options?.client ?? client).get<PtyGetResponses, PtyGetErrors, ThrowOnError>({
+        url: '/pty/{ptyID}',
+        ...options,
+        ...params
+    });
+};
+
+/**
+ * Update PTY session
+ *
+ * Update properties of an existing pseudo-terminal (PTY) session.
+ */
+export const ptyUpdate = <ThrowOnError extends boolean = false>(parameters: {
+    ptyID: string;
+    directory?: string;
+    title?: string;
+    size?: {
+        rows: number;
+        cols: number;
+    };
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [
+                { in: 'path', key: 'ptyID' },
+                { in: 'query', key: 'directory' },
+                { in: 'body', key: 'title' },
+                { in: 'body', key: 'size' }
+            ] }]);
+    return (options?.client ?? client).put<PtyUpdateResponses, PtyUpdateErrors, ThrowOnError>({
+        url: '/pty/{ptyID}',
+        ...options,
+        ...params,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options?.headers,
+            ...params.headers
+        }
+    });
+};
+
+/**
+ * Connect to PTY session
+ *
+ * Establish a WebSocket connection to interact with a pseudo-terminal (PTY) session in real-time.
+ */
+export const ptyConnect = <ThrowOnError extends boolean = false>(parameters: {
+    ptyID: string;
+    directory?: string;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [{ in: 'path', key: 'ptyID' }, { in: 'query', key: 'directory' }] }]);
+    return (options?.client ?? client).get<PtyConnectResponses, PtyConnectErrors, ThrowOnError>({
+        url: '/pty/{ptyID}/connect',
+        ...options,
+        ...params
+    });
+};
+
+/**
+ * Get configuration
+ *
+ * Retrieve the current OpenCode configuration settings and preferences.
+ */
+export const configGet = <ThrowOnError extends boolean = false>(parameters?: {
+    directory?: string;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [{ in: 'query', key: 'directory' }] }]);
+    return (options?.client ?? client).get<ConfigGetResponses, unknown, ThrowOnError>({
+        url: '/config',
+        ...options,
+        ...params
+    });
+};
+
+/**
+ * Update configuration
+ *
+ * Update OpenCode configuration settings and preferences.
+ */
+export const configUpdate = <ThrowOnError extends boolean = false>(parameters?: {
+    directory?: string;
+    config?: Config;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [{ in: 'query', key: 'directory' }, { key: 'config', map: 'body' }] }]);
+    return (options?.client ?? client).patch<ConfigUpdateResponses, ConfigUpdateErrors, ThrowOnError>({
+        url: '/config',
+        ...options,
+        ...params,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options?.headers,
+            ...params.headers
+        }
+    });
+};
+
+/**
+ * List tool IDs
+ *
+ * Get a list of all available tool IDs, including both built-in tools and dynamically registered tools.
+ */
+export const toolIds = <ThrowOnError extends boolean = false>(parameters?: {
+    directory?: string;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [{ in: 'query', key: 'directory' }] }]);
+    return (options?.client ?? client).get<ToolIdsResponses, ToolIdsErrors, ThrowOnError>({
+        url: '/experimental/tool/ids',
+        ...options,
+        ...params
+    });
+};
+
+/**
+ * List tools
+ *
+ * Get a list of available tools with their JSON schema parameters for a specific provider and model combination.
+ */
+export const toolList = <ThrowOnError extends boolean = false>(parameters: {
+    directory?: string;
+    provider: string;
+    model: string;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [
+                { in: 'query', key: 'directory' },
+                { in: 'query', key: 'provider' },
+                { in: 'query', key: 'model' }
+            ] }]);
+    return (options?.client ?? client).get<ToolListResponses, ToolListErrors, ThrowOnError>({
+        url: '/experimental/tool',
+        ...options,
+        ...params
+    });
+};
+
+/**
+ * Dispose instance
+ *
+ * Clean up and dispose the current OpenCode instance, releasing all resources.
+ */
+export const instanceDispose = <ThrowOnError extends boolean = false>(parameters?: {
+    directory?: string;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [{ in: 'query', key: 'directory' }] }]);
+    return (options?.client ?? client).post<InstanceDisposeResponses, unknown, ThrowOnError>({
+        url: '/instance/dispose',
+        ...options,
+        ...params
+    });
+};
+
+/**
+ * Get paths
+ *
+ * Retrieve the current working directory and related path information for the OpenCode instance.
+ */
+export const pathGet = <ThrowOnError extends boolean = false>(parameters?: {
+    directory?: string;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [{ in: 'query', key: 'directory' }] }]);
+    return (options?.client ?? client).get<PathGetResponses, unknown, ThrowOnError>({
+        url: '/path',
+        ...options,
+        ...params
+    });
+};
+
+/**
+ * Get VCS info
+ *
+ * Retrieve version control system (VCS) information for the current project, such as git branch.
+ */
+export const vcsGet = <ThrowOnError extends boolean = false>(parameters?: {
+    directory?: string;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [{ in: 'query', key: 'directory' }] }]);
+    return (options?.client ?? client).get<VcsGetResponses, unknown, ThrowOnError>({
+        url: '/vcs',
+        ...options,
+        ...params
+    });
+};
+
+/**
+ * List sessions
+ *
+ * Get a list of all OpenCode sessions, sorted by most recently updated.
+ */
+export const sessionList = <ThrowOnError extends boolean = false>(parameters?: {
+    directory?: string;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [{ in: 'query', key: 'directory' }] }]);
+    return (options?.client ?? client).get<SessionListResponses, unknown, ThrowOnError>({
+        url: '/session',
+        ...options,
+        ...params
+    });
+};
+
+/**
+ * Create session
+ *
+ * Create a new OpenCode session for interacting with AI assistants and managing conversations.
  */
 export const sessionCreate = <ThrowOnError extends boolean = false>(parameters?: {
+    directory?: string;
     parentID?: string;
     title?: string;
+    permission?: PermissionRuleset;
 }, options?: Options<never, ThrowOnError>) => {
-    const params = buildClientParams([parameters], [{ args: [{ in: 'body', key: 'parentID' }, { in: 'body', key: 'title' }] }]);
+    const params = buildClientParams([parameters], [{ args: [
+                { in: 'query', key: 'directory' },
+                { in: 'body', key: 'parentID' },
+                { in: 'body', key: 'title' },
+                { in: 'body', key: 'permission' }
+            ] }]);
     return (options?.client ?? client).post<SessionCreateResponses, SessionCreateErrors, ThrowOnError>({
         url: '/session',
         ...options,
@@ -64,14 +407,33 @@ export const sessionCreate = <ThrowOnError extends boolean = false>(parameters?:
 };
 
 /**
- * Delete a session and all its data
+ * Get session status
+ *
+ * Retrieve the current status of all sessions, including active, idle, and completed states.
+ */
+export const sessionStatus = <ThrowOnError extends boolean = false>(parameters?: {
+    directory?: string;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [{ in: 'query', key: 'directory' }] }]);
+    return (options?.client ?? client).get<SessionStatusResponses, SessionStatusErrors, ThrowOnError>({
+        url: '/session/status',
+        ...options,
+        ...params
+    });
+};
+
+/**
+ * Delete session
+ *
+ * Delete a session and permanently remove all associated data, including messages and history.
  */
 export const sessionDelete = <ThrowOnError extends boolean = false>(parameters: {
-    id: string;
+    sessionID: string;
+    directory?: string;
 }, options?: Options<never, ThrowOnError>) => {
-    const params = buildClientParams([parameters], [{ args: [{ in: 'path', key: 'id' }] }]);
-    return (options?.client ?? client).delete<SessionDeleteResponses, unknown, ThrowOnError>({
-        url: '/session/{id}',
+    const params = buildClientParams([parameters], [{ args: [{ in: 'path', key: 'sessionID' }, { in: 'query', key: 'directory' }] }]);
+    return (options?.client ?? client).delete<SessionDeleteResponses, SessionDeleteErrors, ThrowOnError>({
+        url: '/session/{sessionID}',
         ...options,
         ...params
     });
@@ -79,28 +441,42 @@ export const sessionDelete = <ThrowOnError extends boolean = false>(parameters: 
 
 /**
  * Get session
+ *
+ * Retrieve detailed information about a specific OpenCode session.
  */
 export const sessionGet = <ThrowOnError extends boolean = false>(parameters: {
-    id: string;
+    sessionID: string;
+    directory?: string;
 }, options?: Options<never, ThrowOnError>) => {
-    const params = buildClientParams([parameters], [{ args: [{ in: 'path', key: 'id' }] }]);
-    return (options?.client ?? client).get<SessionGetResponses, unknown, ThrowOnError>({
-        url: '/session/{id}',
+    const params = buildClientParams([parameters], [{ args: [{ in: 'path', key: 'sessionID' }, { in: 'query', key: 'directory' }] }]);
+    return (options?.client ?? client).get<SessionGetResponses, SessionGetErrors, ThrowOnError>({
+        url: '/session/{sessionID}',
         ...options,
         ...params
     });
 };
 
 /**
- * Update session properties
+ * Update session
+ *
+ * Update properties of an existing session, such as title or other metadata.
  */
 export const sessionUpdate = <ThrowOnError extends boolean = false>(parameters: {
-    id: string;
+    sessionID: string;
+    directory?: string;
     title?: string;
+    time?: {
+        archived?: number;
+    };
 }, options?: Options<never, ThrowOnError>) => {
-    const params = buildClientParams([parameters], [{ args: [{ in: 'path', key: 'id' }, { in: 'body', key: 'title' }] }]);
-    return (options?.client ?? client).patch<SessionUpdateResponses, unknown, ThrowOnError>({
-        url: '/session/{id}',
+    const params = buildClientParams([parameters], [{ args: [
+                { in: 'path', key: 'sessionID' },
+                { in: 'query', key: 'directory' },
+                { in: 'body', key: 'title' },
+                { in: 'body', key: 'time' }
+            ] }]);
+    return (options?.client ?? client).patch<SessionUpdateResponses, SessionUpdateErrors, ThrowOnError>({
+        url: '/session/{sessionID}',
         ...options,
         ...params,
         headers: {
@@ -112,36 +488,60 @@ export const sessionUpdate = <ThrowOnError extends boolean = false>(parameters: 
 };
 
 /**
- * Get a session's children
+ * Get session children
+ *
+ * Retrieve all child sessions that were forked from the specified parent session.
  */
 export const sessionChildren = <ThrowOnError extends boolean = false>(parameters: {
-    id: string;
+    sessionID: string;
+    directory?: string;
 }, options?: Options<never, ThrowOnError>) => {
-    const params = buildClientParams([parameters], [{ args: [{ in: 'path', key: 'id' }] }]);
-    return (options?.client ?? client).get<SessionChildrenResponses, unknown, ThrowOnError>({
-        url: '/session/{id}/children',
+    const params = buildClientParams([parameters], [{ args: [{ in: 'path', key: 'sessionID' }, { in: 'query', key: 'directory' }] }]);
+    return (options?.client ?? client).get<SessionChildrenResponses, SessionChildrenErrors, ThrowOnError>({
+        url: '/session/{sessionID}/children',
         ...options,
         ...params
     });
 };
 
 /**
- * Analyze the app and create an AGENTS.md file
+ * Get session todos
+ *
+ * Retrieve the todo list associated with a specific session, showing tasks and action items.
+ */
+export const sessionTodo = <ThrowOnError extends boolean = false>(parameters: {
+    sessionID: string;
+    directory?: string;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [{ in: 'path', key: 'sessionID' }, { in: 'query', key: 'directory' }] }]);
+    return (options?.client ?? client).get<SessionTodoResponses, SessionTodoErrors, ThrowOnError>({
+        url: '/session/{sessionID}/todo',
+        ...options,
+        ...params
+    });
+};
+
+/**
+ * Initialize session
+ *
+ * Analyze the current application and create an AGENTS.md file with project-specific agent configurations.
  */
 export const sessionInit = <ThrowOnError extends boolean = false>(parameters: {
-    id: string;
-    messageID?: string;
-    providerID?: string;
+    sessionID: string;
+    directory?: string;
     modelID?: string;
+    providerID?: string;
+    messageID?: string;
 }, options?: Options<never, ThrowOnError>) => {
     const params = buildClientParams([parameters], [{ args: [
-                { in: 'path', key: 'id' },
-                { in: 'body', key: 'messageID' },
+                { in: 'path', key: 'sessionID' },
+                { in: 'query', key: 'directory' },
+                { in: 'body', key: 'modelID' },
                 { in: 'body', key: 'providerID' },
-                { in: 'body', key: 'modelID' }
+                { in: 'body', key: 'messageID' }
             ] }]);
-    return (options?.client ?? client).post<SessionInitResponses, unknown, ThrowOnError>({
-        url: '/session/{id}/init',
+    return (options?.client ?? client).post<SessionInitResponses, SessionInitErrors, ThrowOnError>({
+        url: '/session/{sessionID}/init',
         ...options,
         ...params,
         headers: {
@@ -153,62 +553,126 @@ export const sessionInit = <ThrowOnError extends boolean = false>(parameters: {
 };
 
 /**
- * Abort a session
+ * Fork session
+ *
+ * Create a new session by forking an existing session at a specific message point.
+ */
+export const sessionFork = <ThrowOnError extends boolean = false>(parameters: {
+    sessionID: string;
+    directory?: string;
+    messageID?: string;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [
+                { in: 'path', key: 'sessionID' },
+                { in: 'query', key: 'directory' },
+                { in: 'body', key: 'messageID' }
+            ] }]);
+    return (options?.client ?? client).post<SessionForkResponses, unknown, ThrowOnError>({
+        url: '/session/{sessionID}/fork',
+        ...options,
+        ...params,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options?.headers,
+            ...params.headers
+        }
+    });
+};
+
+/**
+ * Abort session
+ *
+ * Abort an active session and stop any ongoing AI processing or command execution.
  */
 export const sessionAbort = <ThrowOnError extends boolean = false>(parameters: {
-    id: string;
+    sessionID: string;
+    directory?: string;
 }, options?: Options<never, ThrowOnError>) => {
-    const params = buildClientParams([parameters], [{ args: [{ in: 'path', key: 'id' }] }]);
-    return (options?.client ?? client).post<SessionAbortResponses, unknown, ThrowOnError>({
-        url: '/session/{id}/abort',
+    const params = buildClientParams([parameters], [{ args: [{ in: 'path', key: 'sessionID' }, { in: 'query', key: 'directory' }] }]);
+    return (options?.client ?? client).post<SessionAbortResponses, SessionAbortErrors, ThrowOnError>({
+        url: '/session/{sessionID}/abort',
         ...options,
         ...params
     });
 };
 
 /**
- * Unshare the session
+ * Unshare session
+ *
+ * Remove the shareable link for a session, making it private again.
  */
 export const sessionUnshare = <ThrowOnError extends boolean = false>(parameters: {
-    id: string;
+    sessionID: string;
+    directory?: string;
 }, options?: Options<never, ThrowOnError>) => {
-    const params = buildClientParams([parameters], [{ args: [{ in: 'path', key: 'id' }] }]);
-    return (options?.client ?? client).delete<SessionUnshareResponses, unknown, ThrowOnError>({
-        url: '/session/{id}/share',
+    const params = buildClientParams([parameters], [{ args: [{ in: 'path', key: 'sessionID' }, { in: 'query', key: 'directory' }] }]);
+    return (options?.client ?? client).delete<SessionUnshareResponses, SessionUnshareErrors, ThrowOnError>({
+        url: '/session/{sessionID}/share',
         ...options,
         ...params
     });
 };
 
 /**
- * Share a session
+ * Share session
+ *
+ * Create a shareable link for a session, allowing others to view the conversation.
  */
 export const sessionShare = <ThrowOnError extends boolean = false>(parameters: {
-    id: string;
+    sessionID: string;
+    directory?: string;
 }, options?: Options<never, ThrowOnError>) => {
-    const params = buildClientParams([parameters], [{ args: [{ in: 'path', key: 'id' }] }]);
-    return (options?.client ?? client).post<SessionShareResponses, unknown, ThrowOnError>({
-        url: '/session/{id}/share',
+    const params = buildClientParams([parameters], [{ args: [{ in: 'path', key: 'sessionID' }, { in: 'query', key: 'directory' }] }]);
+    return (options?.client ?? client).post<SessionShareResponses, SessionShareErrors, ThrowOnError>({
+        url: '/session/{sessionID}/share',
         ...options,
         ...params
     });
 };
 
 /**
- * Summarize the session
+ * Get session diff
+ *
+ * Get all file changes (diffs) made during this session.
  */
-export const sessionSummarize = <ThrowOnError extends boolean = false>(parameters: {
-    id: string;
-    providerID?: string;
-    modelID?: string;
+export const sessionDiff = <ThrowOnError extends boolean = false>(parameters: {
+    sessionID: string;
+    directory?: string;
+    messageID?: string;
 }, options?: Options<never, ThrowOnError>) => {
     const params = buildClientParams([parameters], [{ args: [
-                { in: 'path', key: 'id' },
-                { in: 'body', key: 'providerID' },
-                { in: 'body', key: 'modelID' }
+                { in: 'path', key: 'sessionID' },
+                { in: 'query', key: 'directory' },
+                { in: 'query', key: 'messageID' }
             ] }]);
-    return (options?.client ?? client).post<SessionSummarizeResponses, unknown, ThrowOnError>({
-        url: '/session/{id}/summarize',
+    return (options?.client ?? client).get<SessionDiffResponses, SessionDiffErrors, ThrowOnError>({
+        url: '/session/{sessionID}/diff',
+        ...options,
+        ...params
+    });
+};
+
+/**
+ * Summarize session
+ *
+ * Generate a concise summary of the session using AI compaction to preserve key information.
+ */
+export const sessionSummarize = <ThrowOnError extends boolean = false>(parameters: {
+    sessionID: string;
+    directory?: string;
+    providerID?: string;
+    modelID?: string;
+    auto?: boolean;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [
+                { in: 'path', key: 'sessionID' },
+                { in: 'query', key: 'directory' },
+                { in: 'body', key: 'providerID' },
+                { in: 'body', key: 'modelID' },
+                { in: 'body', key: 'auto' }
+            ] }]);
+    return (options?.client ?? client).post<SessionSummarizeResponses, SessionSummarizeErrors, ThrowOnError>({
+        url: '/session/{sessionID}/summarize',
         ...options,
         ...params,
         headers: {
@@ -220,52 +684,63 @@ export const sessionSummarize = <ThrowOnError extends boolean = false>(parameter
 };
 
 /**
- * List messages for a session
+ * Get session messages
+ *
+ * Retrieve all messages in a session, including user prompts and AI responses.
  */
 export const sessionMessages = <ThrowOnError extends boolean = false>(parameters: {
-    id: string;
+    sessionID: string;
+    directory?: string;
+    limit?: number;
 }, options?: Options<never, ThrowOnError>) => {
-    const params = buildClientParams([parameters], [{ args: [{ in: 'path', key: 'id' }] }]);
-    return (options?.client ?? client).get<SessionMessagesResponses, unknown, ThrowOnError>({
-        url: '/session/{id}/message',
+    const params = buildClientParams([parameters], [{ args: [
+                { in: 'path', key: 'sessionID' },
+                { in: 'query', key: 'directory' },
+                { in: 'query', key: 'limit' }
+            ] }]);
+    return (options?.client ?? client).get<SessionMessagesResponses, SessionMessagesErrors, ThrowOnError>({
+        url: '/session/{sessionID}/message',
         ...options,
         ...params
     });
 };
 
 /**
- * Create and send a new message to a session
+ * Send message
+ *
+ * Create and send a new message to a session, streaming the AI response.
  */
-export const sessionChat = <ThrowOnError extends boolean = false>(parameters: {
-    id: string;
+export const sessionPrompt = <ThrowOnError extends boolean = false>(parameters: {
+    sessionID: string;
+    directory?: string;
     messageID?: string;
-    providerID?: string;
-    modelID?: string;
+    model?: {
+        providerID: string;
+        modelID: string;
+    };
     agent?: string;
-    system?: string;
+    noReply?: boolean;
     tools?: {
         [key: string]: boolean;
     };
-    parts?: Array<({
-        type: 'text';
-    } & TextPartInput) | ({
-        type: 'file';
-    } & FilePartInput) | ({
-        type: 'agent';
-    } & AgentPartInput)>;
+    system?: string;
+    variant?: string;
+    parts?: Array<TextPartInput | FilePartInput | AgentPartInput | SubtaskPartInput>;
 }, options?: Options<never, ThrowOnError>) => {
     const params = buildClientParams([parameters], [{ args: [
-                { in: 'path', key: 'id' },
+                { in: 'path', key: 'sessionID' },
+                { in: 'query', key: 'directory' },
                 { in: 'body', key: 'messageID' },
-                { in: 'body', key: 'providerID' },
-                { in: 'body', key: 'modelID' },
+                { in: 'body', key: 'model' },
                 { in: 'body', key: 'agent' },
-                { in: 'body', key: 'system' },
+                { in: 'body', key: 'noReply' },
                 { in: 'body', key: 'tools' },
+                { in: 'body', key: 'system' },
+                { in: 'body', key: 'variant' },
                 { in: 'body', key: 'parts' }
             ] }]);
-    return (options?.client ?? client).post<SessionChatResponses, unknown, ThrowOnError>({
-        url: '/session/{id}/message',
+    return (options?.client ?? client).post<SessionPromptResponses, SessionPromptErrors, ThrowOnError>({
+        url: '/session/{sessionID}/message',
         ...options,
         ...params,
         headers: {
@@ -277,35 +752,68 @@ export const sessionChat = <ThrowOnError extends boolean = false>(parameters: {
 };
 
 /**
- * Get a message from a session
+ * Get message
+ *
+ * Retrieve a specific message from a session by its message ID.
  */
 export const sessionMessage = <ThrowOnError extends boolean = false>(parameters: {
-    id: string;
+    sessionID: string;
     messageID: string;
+    directory?: string;
 }, options?: Options<never, ThrowOnError>) => {
-    const params = buildClientParams([parameters], [{ args: [{ in: 'path', key: 'id' }, { in: 'path', key: 'messageID' }] }]);
-    return (options?.client ?? client).get<SessionMessageResponses, unknown, ThrowOnError>({
-        url: '/session/{id}/message/{messageID}',
+    const params = buildClientParams([parameters], [{ args: [
+                { in: 'path', key: 'sessionID' },
+                { in: 'path', key: 'messageID' },
+                { in: 'query', key: 'directory' }
+            ] }]);
+    return (options?.client ?? client).get<SessionMessageResponses, SessionMessageErrors, ThrowOnError>({
+        url: '/session/{sessionID}/message/{messageID}',
         ...options,
         ...params
     });
 };
 
 /**
- * Run a shell command
+ * Delete a part from a message
  */
-export const sessionShell = <ThrowOnError extends boolean = false>(parameters: {
-    id: string;
-    agent?: string;
-    command?: string;
+export const partDelete = <ThrowOnError extends boolean = false>(parameters: {
+    sessionID: string;
+    messageID: string;
+    partID: string;
+    directory?: string;
 }, options?: Options<never, ThrowOnError>) => {
     const params = buildClientParams([parameters], [{ args: [
-                { in: 'path', key: 'id' },
-                { in: 'body', key: 'agent' },
-                { in: 'body', key: 'command' }
+                { in: 'path', key: 'sessionID' },
+                { in: 'path', key: 'messageID' },
+                { in: 'path', key: 'partID' },
+                { in: 'query', key: 'directory' }
             ] }]);
-    return (options?.client ?? client).post<SessionShellResponses, unknown, ThrowOnError>({
-        url: '/session/{id}/shell',
+    return (options?.client ?? client).delete<PartDeleteResponses, PartDeleteErrors, ThrowOnError>({
+        url: '/session/{sessionID}/message/{messageID}/part/{partID}',
+        ...options,
+        ...params
+    });
+};
+
+/**
+ * Update a part in a message
+ */
+export const partUpdate = <ThrowOnError extends boolean = false>(parameters: {
+    sessionID: string;
+    messageID: string;
+    partID: string;
+    directory?: string;
+    part?: Part;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [
+                { in: 'path', key: 'sessionID' },
+                { in: 'path', key: 'messageID' },
+                { in: 'path', key: 'partID' },
+                { in: 'query', key: 'directory' },
+                { key: 'part', map: 'body' }
+            ] }]);
+    return (options?.client ?? client).patch<PartUpdateResponses, PartUpdateErrors, ThrowOnError>({
+        url: '/session/{sessionID}/message/{messageID}/part/{partID}',
         ...options,
         ...params,
         headers: {
@@ -317,20 +825,141 @@ export const sessionShell = <ThrowOnError extends boolean = false>(parameters: {
 };
 
 /**
- * Revert a message
+ * Send async message
+ *
+ * Create and send a new message to a session asynchronously, starting the session if needed and returning immediately.
+ */
+export const sessionPromptAsync = <ThrowOnError extends boolean = false>(parameters: {
+    sessionID: string;
+    directory?: string;
+    messageID?: string;
+    model?: {
+        providerID: string;
+        modelID: string;
+    };
+    agent?: string;
+    noReply?: boolean;
+    tools?: {
+        [key: string]: boolean;
+    };
+    system?: string;
+    variant?: string;
+    parts?: Array<TextPartInput | FilePartInput | AgentPartInput | SubtaskPartInput>;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [
+                { in: 'path', key: 'sessionID' },
+                { in: 'query', key: 'directory' },
+                { in: 'body', key: 'messageID' },
+                { in: 'body', key: 'model' },
+                { in: 'body', key: 'agent' },
+                { in: 'body', key: 'noReply' },
+                { in: 'body', key: 'tools' },
+                { in: 'body', key: 'system' },
+                { in: 'body', key: 'variant' },
+                { in: 'body', key: 'parts' }
+            ] }]);
+    return (options?.client ?? client).post<SessionPromptAsyncResponses, SessionPromptAsyncErrors, ThrowOnError>({
+        url: '/session/{sessionID}/prompt_async',
+        ...options,
+        ...params,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options?.headers,
+            ...params.headers
+        }
+    });
+};
+
+/**
+ * Send command
+ *
+ * Send a new command to a session for execution by the AI assistant.
+ */
+export const sessionCommand = <ThrowOnError extends boolean = false>(parameters: {
+    sessionID: string;
+    directory?: string;
+    messageID?: string;
+    agent?: string;
+    model?: string;
+    arguments?: string;
+    command?: string;
+    variant?: string;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [
+                { in: 'path', key: 'sessionID' },
+                { in: 'query', key: 'directory' },
+                { in: 'body', key: 'messageID' },
+                { in: 'body', key: 'agent' },
+                { in: 'body', key: 'model' },
+                { in: 'body', key: 'arguments' },
+                { in: 'body', key: 'command' },
+                { in: 'body', key: 'variant' }
+            ] }]);
+    return (options?.client ?? client).post<SessionCommandResponses, SessionCommandErrors, ThrowOnError>({
+        url: '/session/{sessionID}/command',
+        ...options,
+        ...params,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options?.headers,
+            ...params.headers
+        }
+    });
+};
+
+/**
+ * Run shell command
+ *
+ * Execute a shell command within the session context and return the AI's response.
+ */
+export const sessionShell = <ThrowOnError extends boolean = false>(parameters: {
+    sessionID: string;
+    directory?: string;
+    agent?: string;
+    model?: {
+        providerID: string;
+        modelID: string;
+    };
+    command?: string;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [
+                { in: 'path', key: 'sessionID' },
+                { in: 'query', key: 'directory' },
+                { in: 'body', key: 'agent' },
+                { in: 'body', key: 'model' },
+                { in: 'body', key: 'command' }
+            ] }]);
+    return (options?.client ?? client).post<SessionShellResponses, SessionShellErrors, ThrowOnError>({
+        url: '/session/{sessionID}/shell',
+        ...options,
+        ...params,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options?.headers,
+            ...params.headers
+        }
+    });
+};
+
+/**
+ * Revert message
+ *
+ * Revert a specific message in a session, undoing its effects and restoring the previous state.
  */
 export const sessionRevert = <ThrowOnError extends boolean = false>(parameters: {
-    id: string;
+    sessionID: string;
+    directory?: string;
     messageID?: string;
     partID?: string;
 }, options?: Options<never, ThrowOnError>) => {
     const params = buildClientParams([parameters], [{ args: [
-                { in: 'path', key: 'id' },
+                { in: 'path', key: 'sessionID' },
+                { in: 'query', key: 'directory' },
                 { in: 'body', key: 'messageID' },
                 { in: 'body', key: 'partID' }
             ] }]);
-    return (options?.client ?? client).post<SessionRevertResponses, unknown, ThrowOnError>({
-        url: '/session/{id}/revert',
+    return (options?.client ?? client).post<SessionRevertResponses, SessionRevertErrors, ThrowOnError>({
+        url: '/session/{sessionID}/revert',
         ...options,
         ...params,
         headers: {
@@ -342,34 +971,43 @@ export const sessionRevert = <ThrowOnError extends boolean = false>(parameters: 
 };
 
 /**
- * Restore all reverted messages
+ * Restore reverted messages
+ *
+ * Restore all previously reverted messages in a session.
  */
 export const sessionUnrevert = <ThrowOnError extends boolean = false>(parameters: {
-    id: string;
+    sessionID: string;
+    directory?: string;
 }, options?: Options<never, ThrowOnError>) => {
-    const params = buildClientParams([parameters], [{ args: [{ in: 'path', key: 'id' }] }]);
-    return (options?.client ?? client).post<SessionUnrevertResponses, unknown, ThrowOnError>({
-        url: '/session/{id}/unrevert',
+    const params = buildClientParams([parameters], [{ args: [{ in: 'path', key: 'sessionID' }, { in: 'query', key: 'directory' }] }]);
+    return (options?.client ?? client).post<SessionUnrevertResponses, SessionUnrevertErrors, ThrowOnError>({
+        url: '/session/{sessionID}/unrevert',
         ...options,
         ...params
     });
 };
 
 /**
- * Respond to a permission request
+ * Respond to permission
+ *
+ * Approve or deny a permission request from the AI assistant.
+ *
+ * @deprecated
  */
-export const postSessionByIdPermissionsByPermissionId = <ThrowOnError extends boolean = false>(parameters: {
-    id: string;
+export const permissionRespond = <ThrowOnError extends boolean = false>(parameters: {
+    sessionID: string;
     permissionID: string;
+    directory?: string;
     response?: 'once' | 'always' | 'reject';
 }, options?: Options<never, ThrowOnError>) => {
     const params = buildClientParams([parameters], [{ args: [
-                { in: 'path', key: 'id' },
+                { in: 'path', key: 'sessionID' },
                 { in: 'path', key: 'permissionID' },
+                { in: 'query', key: 'directory' },
                 { in: 'body', key: 'response' }
             ] }]);
-    return (options?.client ?? client).post<PostSessionByIdPermissionsByPermissionIdResponses, unknown, ThrowOnError>({
-        url: '/session/{id}/permissions/{permissionID}',
+    return (options?.client ?? client).post<PermissionRespondResponses, PermissionRespondErrors, ThrowOnError>({
+        url: '/session/{sessionID}/permissions/{permissionID}',
         ...options,
         ...params,
         headers: {
@@ -381,17 +1019,178 @@ export const postSessionByIdPermissionsByPermissionId = <ThrowOnError extends bo
 };
 
 /**
- * List all providers
+ * Respond to permission request
+ *
+ * Approve or deny a permission request from the AI assistant.
  */
-export const configProviders = <ThrowOnError extends boolean = false>(options?: Options<never, ThrowOnError>) => (options?.client ?? client).get<ConfigProvidersResponses, unknown, ThrowOnError>({ url: '/config/providers', ...options });
+export const permissionReply = <ThrowOnError extends boolean = false>(parameters: {
+    requestID: string;
+    directory?: string;
+    reply?: 'once' | 'always' | 'reject';
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [
+                { in: 'path', key: 'requestID' },
+                { in: 'query', key: 'directory' },
+                { in: 'body', key: 'reply' }
+            ] }]);
+    return (options?.client ?? client).post<PermissionReplyResponses, PermissionReplyErrors, ThrowOnError>({
+        url: '/permission/{requestID}/reply',
+        ...options,
+        ...params,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options?.headers,
+            ...params.headers
+        }
+    });
+};
 
 /**
- * Find text in files
+ * List pending permissions
+ *
+ * Get all pending permission requests across all sessions.
+ */
+export const permissionList = <ThrowOnError extends boolean = false>(parameters?: {
+    directory?: string;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [{ in: 'query', key: 'directory' }] }]);
+    return (options?.client ?? client).get<PermissionListResponses, unknown, ThrowOnError>({
+        url: '/permission',
+        ...options,
+        ...params
+    });
+};
+
+/**
+ * List commands
+ *
+ * Get a list of all available commands in the OpenCode system.
+ */
+export const commandList = <ThrowOnError extends boolean = false>(parameters?: {
+    directory?: string;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [{ in: 'query', key: 'directory' }] }]);
+    return (options?.client ?? client).get<CommandListResponses, unknown, ThrowOnError>({
+        url: '/command',
+        ...options,
+        ...params
+    });
+};
+
+/**
+ * List config providers
+ *
+ * Get a list of all configured AI providers and their default models.
+ */
+export const configProviders = <ThrowOnError extends boolean = false>(parameters?: {
+    directory?: string;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [{ in: 'query', key: 'directory' }] }]);
+    return (options?.client ?? client).get<ConfigProvidersResponses, unknown, ThrowOnError>({
+        url: '/config/providers',
+        ...options,
+        ...params
+    });
+};
+
+/**
+ * List providers
+ *
+ * Get a list of all available AI providers, including both available and connected ones.
+ */
+export const providerList = <ThrowOnError extends boolean = false>(parameters?: {
+    directory?: string;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [{ in: 'query', key: 'directory' }] }]);
+    return (options?.client ?? client).get<ProviderListResponses, unknown, ThrowOnError>({
+        url: '/provider',
+        ...options,
+        ...params
+    });
+};
+
+/**
+ * Get provider auth methods
+ *
+ * Retrieve available authentication methods for all AI providers.
+ */
+export const providerAuth = <ThrowOnError extends boolean = false>(parameters?: {
+    directory?: string;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [{ in: 'query', key: 'directory' }] }]);
+    return (options?.client ?? client).get<ProviderAuthResponses, unknown, ThrowOnError>({
+        url: '/provider/auth',
+        ...options,
+        ...params
+    });
+};
+
+/**
+ * OAuth authorize
+ *
+ * Initiate OAuth authorization for a specific AI provider to get an authorization URL.
+ */
+export const providerOauthAuthorize = <ThrowOnError extends boolean = false>(parameters: {
+    providerID: string;
+    directory?: string;
+    method?: number;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [
+                { in: 'path', key: 'providerID' },
+                { in: 'query', key: 'directory' },
+                { in: 'body', key: 'method' }
+            ] }]);
+    return (options?.client ?? client).post<ProviderOauthAuthorizeResponses, ProviderOauthAuthorizeErrors, ThrowOnError>({
+        url: '/provider/{providerID}/oauth/authorize',
+        ...options,
+        ...params,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options?.headers,
+            ...params.headers
+        }
+    });
+};
+
+/**
+ * OAuth callback
+ *
+ * Handle the OAuth callback from a provider after user authorization.
+ */
+export const providerOauthCallback = <ThrowOnError extends boolean = false>(parameters: {
+    providerID: string;
+    directory?: string;
+    method?: number;
+    code?: string;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [
+                { in: 'path', key: 'providerID' },
+                { in: 'query', key: 'directory' },
+                { in: 'body', key: 'method' },
+                { in: 'body', key: 'code' }
+            ] }]);
+    return (options?.client ?? client).post<ProviderOauthCallbackResponses, ProviderOauthCallbackErrors, ThrowOnError>({
+        url: '/provider/{providerID}/oauth/callback',
+        ...options,
+        ...params,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options?.headers,
+            ...params.headers
+        }
+    });
+};
+
+/**
+ * Find text
+ *
+ * Search for text patterns across files in the project using ripgrep.
  */
 export const findText = <ThrowOnError extends boolean = false>(parameters: {
+    directory?: string;
     pattern: string;
 }, options?: Options<never, ThrowOnError>) => {
-    const params = buildClientParams([parameters], [{ args: [{ in: 'query', key: 'pattern' }] }]);
+    const params = buildClientParams([parameters], [{ args: [{ in: 'query', key: 'directory' }, { in: 'query', key: 'pattern' }] }]);
     return (options?.client ?? client).get<FindTextResponses, unknown, ThrowOnError>({
         url: '/find',
         ...options,
@@ -401,11 +1200,23 @@ export const findText = <ThrowOnError extends boolean = false>(parameters: {
 
 /**
  * Find files
+ *
+ * Search for files or directories by name or pattern in the project directory.
  */
 export const findFiles = <ThrowOnError extends boolean = false>(parameters: {
+    directory?: string;
     query: string;
+    dirs?: 'true' | 'false';
+    type?: 'file' | 'directory';
+    limit?: number;
 }, options?: Options<never, ThrowOnError>) => {
-    const params = buildClientParams([parameters], [{ args: [{ in: 'query', key: 'query' }] }]);
+    const params = buildClientParams([parameters], [{ args: [
+                { in: 'query', key: 'directory' },
+                { in: 'query', key: 'query' },
+                { in: 'query', key: 'dirs' },
+                { in: 'query', key: 'type' },
+                { in: 'query', key: 'limit' }
+            ] }]);
     return (options?.client ?? client).get<FindFilesResponses, unknown, ThrowOnError>({
         url: '/find/file',
         ...options,
@@ -414,12 +1225,15 @@ export const findFiles = <ThrowOnError extends boolean = false>(parameters: {
 };
 
 /**
- * Find workspace symbols
+ * Find symbols
+ *
+ * Search for workspace symbols like functions, classes, and variables using LSP.
  */
 export const findSymbols = <ThrowOnError extends boolean = false>(parameters: {
+    directory?: string;
     query: string;
 }, options?: Options<never, ThrowOnError>) => {
-    const params = buildClientParams([parameters], [{ args: [{ in: 'query', key: 'query' }] }]);
+    const params = buildClientParams([parameters], [{ args: [{ in: 'query', key: 'directory' }, { in: 'query', key: 'query' }] }]);
     return (options?.client ?? client).get<FindSymbolsResponses, unknown, ThrowOnError>({
         url: '/find/symbol',
         ...options,
@@ -428,13 +1242,16 @@ export const findSymbols = <ThrowOnError extends boolean = false>(parameters: {
 };
 
 /**
- * Read a file
+ * List files
+ *
+ * List files and directories in a specified path.
  */
-export const fileRead = <ThrowOnError extends boolean = false>(parameters: {
+export const fileList = <ThrowOnError extends boolean = false>(parameters: {
+    directory?: string;
     path: string;
 }, options?: Options<never, ThrowOnError>) => {
-    const params = buildClientParams([parameters], [{ args: [{ in: 'query', key: 'path' }] }]);
-    return (options?.client ?? client).get<FileReadResponses, unknown, ThrowOnError>({
+    const params = buildClientParams([parameters], [{ args: [{ in: 'query', key: 'directory' }, { in: 'query', key: 'path' }] }]);
+    return (options?.client ?? client).get<FileListResponses, unknown, ThrowOnError>({
         url: '/file',
         ...options,
         ...params
@@ -442,14 +1259,45 @@ export const fileRead = <ThrowOnError extends boolean = false>(parameters: {
 };
 
 /**
- * Get file status
+ * Read file
+ *
+ * Read the content of a specified file.
  */
-export const fileStatus = <ThrowOnError extends boolean = false>(options?: Options<never, ThrowOnError>) => (options?.client ?? client).get<FileStatusResponses, unknown, ThrowOnError>({ url: '/file/status', ...options });
+export const fileRead = <ThrowOnError extends boolean = false>(parameters: {
+    directory?: string;
+    path: string;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [{ in: 'query', key: 'directory' }, { in: 'query', key: 'path' }] }]);
+    return (options?.client ?? client).get<FileReadResponses, unknown, ThrowOnError>({
+        url: '/file/content',
+        ...options,
+        ...params
+    });
+};
 
 /**
- * Write a log entry to the server logs
+ * Get file status
+ *
+ * Get the git status of all files in the project.
+ */
+export const fileStatus = <ThrowOnError extends boolean = false>(parameters?: {
+    directory?: string;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [{ in: 'query', key: 'directory' }] }]);
+    return (options?.client ?? client).get<FileStatusResponses, unknown, ThrowOnError>({
+        url: '/file/status',
+        ...options,
+        ...params
+    });
+};
+
+/**
+ * Write log
+ *
+ * Write a log entry to the server logs with specified level and metadata.
  */
 export const appLog = <ThrowOnError extends boolean = false>(parameters?: {
+    directory?: string;
     service?: string;
     level?: 'debug' | 'info' | 'error' | 'warn';
     message?: string;
@@ -458,12 +1306,13 @@ export const appLog = <ThrowOnError extends boolean = false>(parameters?: {
     };
 }, options?: Options<never, ThrowOnError>) => {
     const params = buildClientParams([parameters], [{ args: [
+                { in: 'query', key: 'directory' },
                 { in: 'body', key: 'service' },
                 { in: 'body', key: 'level' },
                 { in: 'body', key: 'message' },
                 { in: 'body', key: 'extra' }
             ] }]);
-    return (options?.client ?? client).post<AppLogResponses, unknown, ThrowOnError>({
+    return (options?.client ?? client).post<AppLogResponses, AppLogErrors, ThrowOnError>({
         url: '/log',
         ...options,
         ...params,
@@ -476,18 +1325,215 @@ export const appLog = <ThrowOnError extends boolean = false>(parameters?: {
 };
 
 /**
- * List all agents
+ * List agents
+ *
+ * Get a list of all available AI agents in the OpenCode system.
  */
-export const appAgents = <ThrowOnError extends boolean = false>(options?: Options<never, ThrowOnError>) => (options?.client ?? client).get<AppAgentsResponses, unknown, ThrowOnError>({ url: '/agent', ...options });
+export const appAgents = <ThrowOnError extends boolean = false>(parameters?: {
+    directory?: string;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [{ in: 'query', key: 'directory' }] }]);
+    return (options?.client ?? client).get<AppAgentsResponses, unknown, ThrowOnError>({
+        url: '/agent',
+        ...options,
+        ...params
+    });
+};
 
 /**
+ * Get MCP status
+ *
+ * Get the status of all Model Context Protocol (MCP) servers.
+ */
+export const mcpStatus = <ThrowOnError extends boolean = false>(parameters?: {
+    directory?: string;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [{ in: 'query', key: 'directory' }] }]);
+    return (options?.client ?? client).get<McpStatusResponses, unknown, ThrowOnError>({
+        url: '/mcp',
+        ...options,
+        ...params
+    });
+};
+
+/**
+ * Add MCP server
+ *
+ * Dynamically add a new Model Context Protocol (MCP) server to the system.
+ */
+export const mcpAdd = <ThrowOnError extends boolean = false>(parameters?: {
+    directory?: string;
+    name?: string;
+    config?: McpLocalConfig | McpRemoteConfig;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [
+                { in: 'query', key: 'directory' },
+                { in: 'body', key: 'name' },
+                { in: 'body', key: 'config' }
+            ] }]);
+    return (options?.client ?? client).post<McpAddResponses, McpAddErrors, ThrowOnError>({
+        url: '/mcp',
+        ...options,
+        ...params,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options?.headers,
+            ...params.headers
+        }
+    });
+};
+
+/**
+ * Remove MCP OAuth
+ *
+ * Remove OAuth credentials for an MCP server
+ */
+export const mcpAuthRemove = <ThrowOnError extends boolean = false>(parameters: {
+    name: string;
+    directory?: string;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [{ in: 'path', key: 'name' }, { in: 'query', key: 'directory' }] }]);
+    return (options?.client ?? client).delete<McpAuthRemoveResponses, McpAuthRemoveErrors, ThrowOnError>({
+        url: '/mcp/{name}/auth',
+        ...options,
+        ...params
+    });
+};
+
+/**
+ * Start MCP OAuth
+ *
+ * Start OAuth authentication flow for a Model Context Protocol (MCP) server.
+ */
+export const mcpAuthStart = <ThrowOnError extends boolean = false>(parameters: {
+    name: string;
+    directory?: string;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [{ in: 'path', key: 'name' }, { in: 'query', key: 'directory' }] }]);
+    return (options?.client ?? client).post<McpAuthStartResponses, McpAuthStartErrors, ThrowOnError>({
+        url: '/mcp/{name}/auth',
+        ...options,
+        ...params
+    });
+};
+
+/**
+ * Complete MCP OAuth
+ *
+ * Complete OAuth authentication for a Model Context Protocol (MCP) server using the authorization code.
+ */
+export const mcpAuthCallback = <ThrowOnError extends boolean = false>(parameters: {
+    name: string;
+    directory?: string;
+    code?: string;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [
+                { in: 'path', key: 'name' },
+                { in: 'query', key: 'directory' },
+                { in: 'body', key: 'code' }
+            ] }]);
+    return (options?.client ?? client).post<McpAuthCallbackResponses, McpAuthCallbackErrors, ThrowOnError>({
+        url: '/mcp/{name}/auth/callback',
+        ...options,
+        ...params,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options?.headers,
+            ...params.headers
+        }
+    });
+};
+
+/**
+ * Authenticate MCP OAuth
+ *
+ * Start OAuth flow and wait for callback (opens browser)
+ */
+export const mcpAuthAuthenticate = <ThrowOnError extends boolean = false>(parameters: {
+    name: string;
+    directory?: string;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [{ in: 'path', key: 'name' }, { in: 'query', key: 'directory' }] }]);
+    return (options?.client ?? client).post<McpAuthAuthenticateResponses, McpAuthAuthenticateErrors, ThrowOnError>({
+        url: '/mcp/{name}/auth/authenticate',
+        ...options,
+        ...params
+    });
+};
+
+/**
+ * Connect an MCP server
+ */
+export const mcpConnect = <ThrowOnError extends boolean = false>(parameters: {
+    name: string;
+    directory?: string;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [{ in: 'path', key: 'name' }, { in: 'query', key: 'directory' }] }]);
+    return (options?.client ?? client).post<McpConnectResponses, unknown, ThrowOnError>({
+        url: '/mcp/{name}/connect',
+        ...options,
+        ...params
+    });
+};
+
+/**
+ * Disconnect an MCP server
+ */
+export const mcpDisconnect = <ThrowOnError extends boolean = false>(parameters: {
+    name: string;
+    directory?: string;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [{ in: 'path', key: 'name' }, { in: 'query', key: 'directory' }] }]);
+    return (options?.client ?? client).post<McpDisconnectResponses, unknown, ThrowOnError>({
+        url: '/mcp/{name}/disconnect',
+        ...options,
+        ...params
+    });
+};
+
+/**
+ * Get LSP status
+ *
+ * Get LSP server status
+ */
+export const lspStatus = <ThrowOnError extends boolean = false>(parameters?: {
+    directory?: string;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [{ in: 'query', key: 'directory' }] }]);
+    return (options?.client ?? client).get<LspStatusResponses, unknown, ThrowOnError>({
+        url: '/lsp',
+        ...options,
+        ...params
+    });
+};
+
+/**
+ * Get formatter status
+ *
+ * Get formatter status
+ */
+export const formatterStatus = <ThrowOnError extends boolean = false>(parameters?: {
+    directory?: string;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [{ in: 'query', key: 'directory' }] }]);
+    return (options?.client ?? client).get<FormatterStatusResponses, unknown, ThrowOnError>({
+        url: '/formatter',
+        ...options,
+        ...params
+    });
+};
+
+/**
+ * Append TUI prompt
+ *
  * Append prompt to the TUI
  */
 export const tuiAppendPrompt = <ThrowOnError extends boolean = false>(parameters?: {
+    directory?: string;
     text?: string;
 }, options?: Options<never, ThrowOnError>) => {
-    const params = buildClientParams([parameters], [{ args: [{ in: 'body', key: 'text' }] }]);
-    return (options?.client ?? client).post<TuiAppendPromptResponses, unknown, ThrowOnError>({
+    const params = buildClientParams([parameters], [{ args: [{ in: 'query', key: 'directory' }, { in: 'body', key: 'text' }] }]);
+    return (options?.client ?? client).post<TuiAppendPromptResponses, TuiAppendPromptErrors, ThrowOnError>({
         url: '/tui/append-prompt',
         ...options,
         ...params,
@@ -500,43 +1546,112 @@ export const tuiAppendPrompt = <ThrowOnError extends boolean = false>(parameters
 };
 
 /**
- * Open the help dialog
+ * Open help dialog
+ *
+ * Open the help dialog in the TUI to display user assistance information.
  */
-export const tuiOpenHelp = <ThrowOnError extends boolean = false>(options?: Options<never, ThrowOnError>) => (options?.client ?? client).post<TuiOpenHelpResponses, unknown, ThrowOnError>({ url: '/tui/open-help', ...options });
+export const tuiOpenHelp = <ThrowOnError extends boolean = false>(parameters?: {
+    directory?: string;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [{ in: 'query', key: 'directory' }] }]);
+    return (options?.client ?? client).post<TuiOpenHelpResponses, unknown, ThrowOnError>({
+        url: '/tui/open-help',
+        ...options,
+        ...params
+    });
+};
 
 /**
+ * Open sessions dialog
+ *
  * Open the session dialog
  */
-export const tuiOpenSessions = <ThrowOnError extends boolean = false>(options?: Options<never, ThrowOnError>) => (options?.client ?? client).post<TuiOpenSessionsResponses, unknown, ThrowOnError>({ url: '/tui/open-sessions', ...options });
+export const tuiOpenSessions = <ThrowOnError extends boolean = false>(parameters?: {
+    directory?: string;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [{ in: 'query', key: 'directory' }] }]);
+    return (options?.client ?? client).post<TuiOpenSessionsResponses, unknown, ThrowOnError>({
+        url: '/tui/open-sessions',
+        ...options,
+        ...params
+    });
+};
 
 /**
+ * Open themes dialog
+ *
  * Open the theme dialog
  */
-export const tuiOpenThemes = <ThrowOnError extends boolean = false>(options?: Options<never, ThrowOnError>) => (options?.client ?? client).post<TuiOpenThemesResponses, unknown, ThrowOnError>({ url: '/tui/open-themes', ...options });
+export const tuiOpenThemes = <ThrowOnError extends boolean = false>(parameters?: {
+    directory?: string;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [{ in: 'query', key: 'directory' }] }]);
+    return (options?.client ?? client).post<TuiOpenThemesResponses, unknown, ThrowOnError>({
+        url: '/tui/open-themes',
+        ...options,
+        ...params
+    });
+};
 
 /**
+ * Open models dialog
+ *
  * Open the model dialog
  */
-export const tuiOpenModels = <ThrowOnError extends boolean = false>(options?: Options<never, ThrowOnError>) => (options?.client ?? client).post<TuiOpenModelsResponses, unknown, ThrowOnError>({ url: '/tui/open-models', ...options });
+export const tuiOpenModels = <ThrowOnError extends boolean = false>(parameters?: {
+    directory?: string;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [{ in: 'query', key: 'directory' }] }]);
+    return (options?.client ?? client).post<TuiOpenModelsResponses, unknown, ThrowOnError>({
+        url: '/tui/open-models',
+        ...options,
+        ...params
+    });
+};
 
 /**
+ * Submit TUI prompt
+ *
  * Submit the prompt
  */
-export const tuiSubmitPrompt = <ThrowOnError extends boolean = false>(options?: Options<never, ThrowOnError>) => (options?.client ?? client).post<TuiSubmitPromptResponses, unknown, ThrowOnError>({ url: '/tui/submit-prompt', ...options });
+export const tuiSubmitPrompt = <ThrowOnError extends boolean = false>(parameters?: {
+    directory?: string;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [{ in: 'query', key: 'directory' }] }]);
+    return (options?.client ?? client).post<TuiSubmitPromptResponses, unknown, ThrowOnError>({
+        url: '/tui/submit-prompt',
+        ...options,
+        ...params
+    });
+};
 
 /**
+ * Clear TUI prompt
+ *
  * Clear the prompt
  */
-export const tuiClearPrompt = <ThrowOnError extends boolean = false>(options?: Options<never, ThrowOnError>) => (options?.client ?? client).post<TuiClearPromptResponses, unknown, ThrowOnError>({ url: '/tui/clear-prompt', ...options });
+export const tuiClearPrompt = <ThrowOnError extends boolean = false>(parameters?: {
+    directory?: string;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [{ in: 'query', key: 'directory' }] }]);
+    return (options?.client ?? client).post<TuiClearPromptResponses, unknown, ThrowOnError>({
+        url: '/tui/clear-prompt',
+        ...options,
+        ...params
+    });
+};
 
 /**
+ * Execute TUI command
+ *
  * Execute a TUI command (e.g. agent_cycle)
  */
 export const tuiExecuteCommand = <ThrowOnError extends boolean = false>(parameters?: {
+    directory?: string;
     command?: string;
 }, options?: Options<never, ThrowOnError>) => {
-    const params = buildClientParams([parameters], [{ args: [{ in: 'body', key: 'command' }] }]);
-    return (options?.client ?? client).post<TuiExecuteCommandResponses, unknown, ThrowOnError>({
+    const params = buildClientParams([parameters], [{ args: [{ in: 'query', key: 'directory' }, { in: 'body', key: 'command' }] }]);
+    return (options?.client ?? client).post<TuiExecuteCommandResponses, TuiExecuteCommandErrors, ThrowOnError>({
         url: '/tui/execute-command',
         ...options,
         ...params,
@@ -549,17 +1664,23 @@ export const tuiExecuteCommand = <ThrowOnError extends boolean = false>(paramete
 };
 
 /**
+ * Show TUI toast
+ *
  * Show a toast notification in the TUI
  */
 export const tuiShowToast = <ThrowOnError extends boolean = false>(parameters?: {
+    directory?: string;
     title?: string;
     message?: string;
     variant?: 'info' | 'success' | 'warning' | 'error';
+    duration?: number;
 }, options?: Options<never, ThrowOnError>) => {
     const params = buildClientParams([parameters], [{ args: [
+                { in: 'query', key: 'directory' },
                 { in: 'body', key: 'title' },
                 { in: 'body', key: 'message' },
-                { in: 'body', key: 'variant' }
+                { in: 'body', key: 'variant' },
+                { in: 'body', key: 'duration' }
             ] }]);
     return (options?.client ?? client).post<TuiShowToastResponses, unknown, ThrowOnError>({
         url: '/tui/show-toast',
@@ -574,15 +1695,17 @@ export const tuiShowToast = <ThrowOnError extends boolean = false>(parameters?: 
 };
 
 /**
- * Set authentication credentials
+ * Publish TUI event
+ *
+ * Publish a TUI event
  */
-export const authSet = <ThrowOnError extends boolean = false>(parameters: {
-    id: string;
-    auth?: Auth;
+export const tuiPublish = <ThrowOnError extends boolean = false>(parameters?: {
+    directory?: string;
+    body?: EventTuiPromptAppend | EventTuiCommandExecute | EventTuiToastShow;
 }, options?: Options<never, ThrowOnError>) => {
-    const params = buildClientParams([parameters], [{ args: [{ in: 'path', key: 'id' }, { key: 'auth', map: 'body' }] }]);
-    return (options?.client ?? client).put<AuthSetResponses, AuthSetErrors, ThrowOnError>({
-        url: '/auth/{id}',
+    const params = buildClientParams([parameters], [{ args: [{ in: 'query', key: 'directory' }, { key: 'body', map: 'body' }] }]);
+    return (options?.client ?? client).post<TuiPublishResponses, TuiPublishErrors, ThrowOnError>({
+        url: '/tui/publish',
         ...options,
         ...params,
         headers: {
@@ -590,5 +1713,86 @@ export const authSet = <ThrowOnError extends boolean = false>(parameters: {
             ...options?.headers,
             ...params.headers
         }
+    });
+};
+
+/**
+ * Get next TUI request
+ *
+ * Retrieve the next TUI (Terminal User Interface) request from the queue for processing.
+ */
+export const tuiControlNext = <ThrowOnError extends boolean = false>(parameters?: {
+    directory?: string;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [{ in: 'query', key: 'directory' }] }]);
+    return (options?.client ?? client).get<TuiControlNextResponses, unknown, ThrowOnError>({
+        url: '/tui/control/next',
+        ...options,
+        ...params
+    });
+};
+
+/**
+ * Submit TUI response
+ *
+ * Submit a response to the TUI request queue to complete a pending request.
+ */
+export const tuiControlResponse = <ThrowOnError extends boolean = false>(parameters?: {
+    directory?: string;
+    body?: unknown;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [{ in: 'query', key: 'directory' }, { key: 'body', map: 'body' }] }]);
+    return (options?.client ?? client).post<TuiControlResponseResponses, unknown, ThrowOnError>({
+        url: '/tui/control/response',
+        ...options,
+        ...params,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options?.headers,
+            ...params.headers
+        }
+    });
+};
+
+/**
+ * Set auth credentials
+ *
+ * Set authentication credentials
+ */
+export const authSet = <ThrowOnError extends boolean = false>(parameters: {
+    providerID: string;
+    directory?: string;
+    auth?: Auth;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [
+                { in: 'path', key: 'providerID' },
+                { in: 'query', key: 'directory' },
+                { key: 'auth', map: 'body' }
+            ] }]);
+    return (options?.client ?? client).put<AuthSetResponses, AuthSetErrors, ThrowOnError>({
+        url: '/auth/{providerID}',
+        ...options,
+        ...params,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options?.headers,
+            ...params.headers
+        }
+    });
+};
+
+/**
+ * Subscribe to events
+ *
+ * Get events
+ */
+export const eventSubscribe = <ThrowOnError extends boolean = false>(parameters?: {
+    directory?: string;
+}, options?: Options<never, ThrowOnError>) => {
+    const params = buildClientParams([parameters], [{ args: [{ in: 'query', key: 'directory' }] }]);
+    return (options?.client ?? client).sse.get<EventSubscribeResponses, unknown, ThrowOnError>({
+        url: '/event',
+        ...options,
+        ...params
     });
 };

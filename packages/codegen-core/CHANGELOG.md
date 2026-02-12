@@ -1,5 +1,103 @@
 # @hey-api/codegen-core
 
+## 0.7.0
+
+### Minor Changes
+
+- **BREAKING:** **symbol**: replace `exportFrom` array with `getExportFromFilePath()` function ([#3322](https://github.com/hey-api/openapi-ts/pull/3322)) ([`bfd43ec`](https://github.com/hey-api/openapi-ts/commit/bfd43ec6d638bfc97b6905dd9dee2c911ccea3e0)) by [@mrlubos](https://github.com/mrlubos)
+
+### Updated Symbol interface
+
+The `exportFrom` property has been replaced with the `getExportFromFilePath()` function. This allows you to dynamically determine export paths based on symbol properties. This is a low-level feature, so you're most likely unaffected.
+
+## 0.6.1
+
+### Patch Changes
+
+- **planner**: fix duplicate import when same symbol is imported as both type and value ([#3291](https://github.com/hey-api/openapi-ts/pull/3291)) ([`3c08e38`](https://github.com/hey-api/openapi-ts/commit/3c08e38b4daa5c1f4829bdfb7f088d73b0e0f1f1)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+## 0.6.0
+
+### Minor Changes
+
+- **BREAKING**: Drop CommonJS (CJS) support. This package is now **ESM-only**. ([#3251](https://github.com/hey-api/openapi-ts/pull/3251)) ([`7f19d59`](https://github.com/hey-api/openapi-ts/commit/7f19d5921dadfa96ecae84a5298b7aee1daee56d)) by [@mrlubos](https://github.com/mrlubos)
+
+### Removed CommonJS (CJS) support
+
+`@hey-api/codegen-core` is now ESM-only. This change simplifies the codebase, improves tree-shaking, and enables better integration with modern bundlers and TypeScript tooling.
+
+CommonJS entry points (`require()`, `module.exports`) are no longer supported. If you are in a CJS environment, you can still load the package dynamically using `import()` like:
+
+```js
+const { Project } = await import("@hey-api/codegen-core");
+```
+
+If you have previously written:
+
+```js
+const { Project } = require("@hey-api/codegen-core");
+```
+
+Migrate by updating your static imports:
+
+```js
+import { Project } from "@hey-api/codegen-core";
+```
+
+If your environment cannot use ESM, pin to a previous version.
+
+### Patch Changes
+
+### Updated Dependencies:
+
+- @hey-api/types@0.1.3
+
+## 0.5.5
+
+### Patch Changes
+
+- **config**: export `loadConfigFile` function (moved from `@hey-api/openapi-ts`) ([#3244](https://github.com/hey-api/openapi-ts/pull/3244)) ([`4f52bce`](https://github.com/hey-api/openapi-ts/commit/4f52bce79d8ac6573472f32a05b7f70913b90605)) by [@mrlubos](https://github.com/mrlubos)
+
+### Updated Dependencies:
+
+- @hey-api/types@0.1.2
+
+## 0.5.4
+
+### Patch Changes
+
+- **internal**: move logger to codegen-core ([#3235](https://github.com/hey-api/openapi-ts/pull/3235)) ([`88532f0`](https://github.com/hey-api/openapi-ts/commit/88532f01200e1111818e82a4af7bd5cf8cf26e3b)) by [@mrlubos](https://github.com/mrlubos)
+
+## 0.5.3
+
+### Patch Changes
+
+- **deps**: move @hey-api/types to dependencies to fix broken types ([#3232](https://github.com/hey-api/openapi-ts/pull/3232)) ([`edfce48`](https://github.com/hey-api/openapi-ts/commit/edfce4875cb9279d3ab8bfd438ff177e8ba7845c)) by [@mrlubos](https://github.com/mrlubos)
+
+## 0.5.2
+
+### Patch Changes
+
+- **build**: do not minify bundles for better code readability and debugging ([#3186](https://github.com/hey-api/openapi-ts/pull/3186)) ([`4d46130`](https://github.com/hey-api/openapi-ts/commit/4d46130b53d9d8d5d3c178343a1b4fc3645b2628)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+## 0.5.1
+
+### Patch Changes
+
+- **project**: expose `.plan()` method ([#3175](https://github.com/hey-api/openapi-ts/pull/3175)) ([`b985053`](https://github.com/hey-api/openapi-ts/commit/b985053ffa64accc4ff01b7c0f301bb5cd84ff48)) by [@mrlubos](https://github.com/mrlubos)
+
+## 0.5.0
+
+### Minor Changes
+
+- **core**: Structure API ([#3109](https://github.com/hey-api/openapi-ts/pull/3109)) ([`815a3de`](https://github.com/hey-api/openapi-ts/commit/815a3de0af434c28ac6d13ff92b85ce1fc146999)) by [@mrlubos](https://github.com/mrlubos)
+
+### Patch Changes
+
+- **types**: document default values for `importKind` and `kind` ([#3147](https://github.com/hey-api/openapi-ts/pull/3147)) ([`ab80a4b`](https://github.com/hey-api/openapi-ts/commit/ab80a4b2c37423c522aa864afbcb688db76615ba)) by [@mrlubos](https://github.com/mrlubos)
+
+- **fix**: simplify symbol merging logic ([#3169](https://github.com/hey-api/openapi-ts/pull/3169)) ([`77bf81a`](https://github.com/hey-api/openapi-ts/commit/77bf81a13e49a13b6d052ef81e663df0f3b60b5a)) by [@mrlubos](https://github.com/mrlubos)
+
 ## 0.4.0
 
 ### Minor Changes

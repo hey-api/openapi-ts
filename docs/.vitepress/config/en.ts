@@ -2,7 +2,7 @@ import { defineConfig } from 'vitepress';
 
 export default defineConfig({
   description:
-    '🚀 The OpenAPI to TypeScript codegen. Generate clients, SDKs, validators, and more.',
+    '🌀 OpenAPI to TypeScript codegen. Production-ready SDKs, Zod schemas, TanStack Query hooks, and 20+ plugins. Used by Vercel, OpenCode, and PayPal.',
   lang: 'en-US',
   themeConfig: {
     editLink: {
@@ -254,6 +254,16 @@ export default defineConfig({
             ],
             link: '/openapi-ts/web-frameworks',
             text: 'Web Frameworks',
+          },
+          {
+            collapsed: true,
+            items: [
+              {
+                link: '/openapi-ts/plugins/concepts/resolvers',
+                text: 'Resolvers',
+              },
+            ],
+            text: 'Concepts',
           },
           {
             collapsed: true,

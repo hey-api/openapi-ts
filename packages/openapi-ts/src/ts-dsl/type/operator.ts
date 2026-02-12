@@ -1,17 +1,15 @@
-import type { AnalysisContext, AstContext } from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeScope } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { TypeTsDsl } from '../base';
-import { setTypeOperatorFactory } from '../mixins/type-expr';
+import { TsDsl } from '../base';
+import { f } from '../utils/factories';
 
-type Op =
-  | ts.SyntaxKind.KeyOfKeyword
-  | ts.SyntaxKind.ReadonlyKeyword
-  | ts.SyntaxKind.UniqueKeyword;
+type Op = ts.SyntaxKind.KeyOfKeyword | ts.SyntaxKind.ReadonlyKeyword | ts.SyntaxKind.UniqueKeyword;
 type Type = string | MaybeTsDsl<ts.TypeNode>;
+export type TypeOperatorCtor = () => TypeOperatorTsDsl;
 
-const Mixed = TypeTsDsl<ts.TypeOperatorNode>;
+const Mixed = TsDsl<ts.TypeOperatorNode>;
 
 /**
  * Builds a TypeScript `TypeOperatorNode`, such as:
@@ -27,6 +25,7 @@ const Mixed = TypeTsDsl<ts.TypeOperatorNode>;
  */
 export class TypeOperatorTsDsl extends Mixed {
   readonly '~dsl' = 'TypeOperatorTsDsl';
+  override scope: NodeScope = 'type';
 
   protected _op?: Op;
   protected _type?: Type;
@@ -69,12 +68,9 @@ export class TypeOperatorTsDsl extends Mixed {
     return this;
   }
 
-  override toAst(ctx: AstContext) {
+  override toAst() {
     this.$validate();
-    return ts.factory.createTypeOperatorNode(
-      this._op,
-      this.$type(ctx, this._type),
-    );
+    return ts.factory.createTypeOperatorNode(this._op, this.$type(this._type));
   }
 
   /** Throws if required fields are not set. */
@@ -95,4 +91,4 @@ export class TypeOperatorTsDsl extends Mixed {
   }
 }
 
-setTypeOperatorFactory((...args) => new TypeOperatorTsDsl(...args));
+f.type.operator.set((...args) => new TypeOperatorTsDsl(...args));

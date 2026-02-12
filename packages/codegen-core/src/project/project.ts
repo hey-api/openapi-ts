@@ -3,9 +3,9 @@ import path from 'node:path';
 import type { IProjectRenderMeta } from '../extensions';
 import { FileRegistry } from '../files/registry';
 import { defaultExtensions } from '../languages/extensions';
+import { defaultModuleEntryNames } from '../languages/modules';
 import { defaultNameConflictResolvers } from '../languages/resolvers';
-import type { Extensions, NameConflictResolvers } from '../languages/types';
-import type { AstContext } from '../nodes/context';
+import type { Extensions, ModuleEntryNames, NameConflictResolvers } from '../languages/types';
 import { NodeRegistry } from '../nodes/registry';
 import type { IOutput } from '../output';
 import { Planner } from '../planner/planner';
@@ -16,6 +16,8 @@ import { SymbolRegistry } from '../symbols/registry';
 import type { IProject } from './types';
 
 export class Project implements IProject {
+  private _isPlanned = false;
+
   readonly files: FileRegistry;
   readonly nodes = new NodeRegistry();
   readonly symbols = new SymbolRegistry();
@@ -24,6 +26,7 @@ export class Project implements IProject {
   readonly defaultNameConflictResolver: NameConflictResolver;
   readonly extensions: Extensions;
   readonly fileName?: (name: string) => string;
+  readonly moduleEntryNames: ModuleEntryNames;
   readonly nameConflictResolvers: NameConflictResolvers;
   readonly renderers: ReadonlyArray<Renderer>;
   readonly root: string;
@@ -35,6 +38,7 @@ export class Project implements IProject {
       | 'defaultNameConflictResolver'
       | 'extensions'
       | 'fileName'
+      | 'moduleEntryNames'
       | 'nameConflictResolvers'
       | 'renderers'
     > &
@@ -50,6 +54,10 @@ export class Project implements IProject {
     };
     this.fileName = typeof fileName === 'string' ? () => fileName : fileName;
     this.files = new FileRegistry(this);
+    this.moduleEntryNames = {
+      ...defaultModuleEntryNames,
+      ...args.moduleEntryNames,
+    };
     this.nameConflictResolvers = {
       ...defaultNameConflictResolvers,
       ...args.nameConflictResolvers,
@@ -58,22 +66,18 @@ export class Project implements IProject {
     this.root = path.resolve(args.root).replace(/[/\\]+$/, '');
   }
 
-  render(meta?: IProjectRenderMeta): ReadonlyArray<IOutput> {
+  plan(meta?: IProjectRenderMeta): void {
+    if (this._isPlanned) return;
     new Planner(this).plan(meta);
+    this._isPlanned = true;
+  }
+
+  render(meta?: IProjectRenderMeta): ReadonlyArray<IOutput> {
+    if (!this._isPlanned) this.plan(meta);
     const files: Array<IOutput> = [];
-    const astContext: AstContext = {
-      getAccess(node) {
-        return node;
-      },
-    };
     for (const file of this.files.registered()) {
-      if (file.finalPath && file.renderer) {
-        const content = file.renderer.render({
-          astContext,
-          file,
-          meta,
-          project: this,
-        });
+      if (!file.external && file.finalPath && file.renderer) {
+        const content = file.renderer.render({ file, meta, project: this });
         files.push({ content, path: file.finalPath });
       }
     }

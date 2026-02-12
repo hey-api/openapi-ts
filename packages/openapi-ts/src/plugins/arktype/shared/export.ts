@@ -1,14 +1,13 @@
 import type { Symbol } from '@hey-api/codegen-core';
+import type { IR } from '@hey-api/shared';
 
-import type { IR } from '~/ir/types';
-import { createSchemaComment } from '~/plugins/shared/utils/schema';
-import { $ } from '~/ts-dsl';
-
+import { createSchemaComment } from '../../../plugins/shared/utils/schema';
+import { $ } from '../../../ts-dsl';
 import { identifiers } from '../constants';
 import type { ArktypePlugin } from '../types';
 import type { Ast } from './types';
 
-export const exportAst = ({
+export function exportAst({
   ast,
   plugin,
   schema,
@@ -20,17 +19,12 @@ export const exportAst = ({
   schema: IR.SchemaObject;
   symbol: Symbol;
   typeInferSymbol: Symbol | undefined;
-}): void => {
-  const type = plugin.referenceSymbol({
-    category: 'external',
-    resource: 'arktype.type',
-  });
+}): void {
+  const type = plugin.external('arktype.type');
 
   const statement = $.const(symbol)
     .export()
-    .$if(plugin.config.comments && createSchemaComment(schema), (c, v) =>
-      c.doc(v),
-    )
+    .$if(plugin.config.comments && createSchemaComment(schema), (c, v) => c.doc(v))
     // .type(
     //   ast.typeName
     //     ? (tsc.propertyAccessExpression({
@@ -49,4 +43,4 @@ export const exportAst = ({
       .type($.type(symbol).attr(identifiers.type.infer).typeofType());
     plugin.node(inferType);
   }
-};
+}

@@ -1,30 +1,22 @@
-import type {
-  AnalysisContext,
-  AstContext,
-  Node,
-  Ref,
-  Symbol,
-} from '@hey-api/codegen-core';
+import type { AnalysisContext, Node, NodeName, Ref } from '@hey-api/codegen-core';
 import { ref } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import type { MaybeTsDsl, TypeTsDsl } from '../base';
 import type { BaseCtor, MixinCtor } from './types';
 
-type Arg = Symbol | string | MaybeTsDsl<TypeTsDsl>;
+type Arg = NodeName | MaybeTsDsl<TypeTsDsl>;
 
 export interface TypeArgsMethods extends Node {
   /** Returns the type arguments as an array of ts.TypeNode nodes. */
-  $generics(ctx: AstContext): ReadonlyArray<ts.TypeNode> | undefined;
+  $generics(): ReadonlyArray<ts.TypeNode> | undefined;
   /** Adds a single type argument (e.g. `string` in `Foo<string>`). */
   generic(arg: Arg): this;
   /** Adds type arguments (e.g. `Map<string, number>`). */
   generics(...args: ReadonlyArray<Arg>): this;
 }
 
-export function TypeArgsMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
-  Base: TBase,
-) {
+export function TypeArgsMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base: TBase) {
   abstract class TypeArgs extends Base {
     protected _generics: Array<Ref<Arg>> = [];
 
@@ -45,10 +37,8 @@ export function TypeArgsMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
       return this;
     }
 
-    protected $generics(
-      ctx: AstContext,
-    ): ReadonlyArray<ts.TypeNode> | undefined {
-      return this.$type(ctx, this._generics);
+    protected $generics(): ReadonlyArray<ts.TypeNode> | undefined {
+      return this.$type(this._generics);
     }
   }
 

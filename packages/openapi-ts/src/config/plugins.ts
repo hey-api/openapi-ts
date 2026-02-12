@@ -1,13 +1,8 @@
-import { defaultPluginConfigs } from '~/plugins/config';
-import type {
-  AnyPluginName,
-  PluginContext,
-  PluginNames,
-} from '~/plugins/types';
-import type { Config, UserConfig } from '~/types/config';
+import type { AnyPluginName, PluginContext, PluginNames } from '@hey-api/shared';
+import { dependencyFactory, valueToObject } from '@hey-api/shared';
 
-import { valueToObject } from './utils/config';
-import { packageFactory } from './utils/package';
+import { defaultPluginConfigs } from '../plugins/config';
+import type { Config, UserConfig } from './types';
 
 /**
  * Default plugins used to generate artifacts if plugins aren't specified.
@@ -17,7 +12,7 @@ export const defaultPlugins = [
   '@hey-api/sdk',
 ] as const satisfies ReadonlyArray<PluginNames>;
 
-const getPluginsConfig = ({
+function getPluginsConfig({
   dependencies,
   userPlugins,
   userPluginsConfig,
@@ -25,7 +20,7 @@ const getPluginsConfig = ({
   dependencies: Record<string, string>;
   userPlugins: ReadonlyArray<AnyPluginName>;
   userPluginsConfig: Config['plugins'];
-}): Pick<Config, 'plugins' | 'pluginOrder'> => {
+}): Pick<Config, 'plugins' | 'pluginOrder'> {
   const circularReferenceTracker = new Set<AnyPluginName>();
   const pluginOrder = new Set<AnyPluginName>();
   const plugins: Config['plugins'] = {};
@@ -65,7 +60,7 @@ const getPluginsConfig = ({
 
     if (plugin.resolveConfig) {
       const context: PluginContext = {
-        package: packageFactory(dependencies),
+        package: dependencyFactory(dependencies),
         pluginByTag: (tag, props = {}) => {
           const { defaultPlugin, errorMessage } = props;
 
@@ -73,11 +68,7 @@ const getPluginsConfig = ({
             const defaultConfig =
               defaultPluginConfigs[userPlugin as PluginNames] ||
               userPluginsConfig[userPlugin as PluginNames];
-            if (
-              defaultConfig &&
-              defaultConfig.tags?.includes(tag) &&
-              userPlugin !== name
-            ) {
+            if (defaultConfig && defaultConfig.tags?.includes(tag) && userPlugin !== name) {
               return userPlugin as any;
             }
           }
@@ -86,19 +77,12 @@ const getPluginsConfig = ({
             const defaultConfig =
               defaultPluginConfigs[defaultPlugin as PluginNames] ||
               userPluginsConfig[defaultPlugin as PluginNames];
-            if (
-              defaultConfig &&
-              defaultConfig.tags?.includes(tag) &&
-              defaultPlugin !== name
-            ) {
+            if (defaultConfig && defaultConfig.tags?.includes(tag) && defaultPlugin !== name) {
               return defaultPlugin;
             }
           }
 
-          throw new Error(
-            errorMessage ||
-              `missing plugin - no plugin with tag "${tag}" found`,
-          );
+          throw new Error(errorMessage || `missing plugin - no plugin with tag "${tag}" found`);
         },
         valueToObject,
       };
@@ -125,9 +109,9 @@ const getPluginsConfig = ({
     pluginOrder: Array.from(pluginOrder) as ReadonlyArray<PluginNames>,
     plugins,
   };
-};
+}
 
-const isPluginClient = (plugin: Required<UserConfig>['plugins'][number]) => {
+function isPluginClient(plugin: Required<UserConfig>['plugins'][number]): boolean {
   if (typeof plugin === 'string') {
     return plugin.startsWith('@hey-api/client');
   }
@@ -137,15 +121,15 @@ const isPluginClient = (plugin: Required<UserConfig>['plugins'][number]) => {
     // @ts-expect-error
     (plugin.tags && plugin.tags.includes('client'))
   );
-};
+}
 
-export const getPlugins = ({
+export function getPlugins({
   dependencies,
   userConfig,
 }: {
   dependencies: Record<string, string>;
   userConfig: UserConfig;
-}): Pick<Config, 'plugins' | 'pluginOrder'> => {
+}): Pick<Config, 'plugins' | 'pluginOrder'> {
   const userPluginsConfig: Config['plugins'] = {};
 
   let definedPlugins: UserConfig['plugins'] = defaultPlugins;
@@ -153,13 +137,9 @@ export const getPlugins = ({
   if (userConfig.plugins) {
     userConfig.plugins = userConfig.plugins.filter(
       (plugin) =>
-        (typeof plugin === 'string' && plugin) ||
-        (typeof plugin !== 'string' && plugin.name),
+        (typeof plugin === 'string' && plugin) || (typeof plugin !== 'string' && plugin.name),
     );
-    if (
-      userConfig.plugins.length === 1 &&
-      isPluginClient(userConfig.plugins[0]!)
-    ) {
+    if (userConfig.plugins.length === 1 && isPluginClient(userConfig.plugins[0]!)) {
       definedPlugins = [...defaultPlugins, ...userConfig.plugins];
     } else {
       definedPlugins = userConfig.plugins;
@@ -194,4 +174,4 @@ export const getPlugins = ({
     .filter(Boolean);
 
   return getPluginsConfig({ dependencies, userPlugins, userPluginsConfig });
-};
+}

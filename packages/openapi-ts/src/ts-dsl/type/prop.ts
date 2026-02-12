@@ -1,40 +1,50 @@
-import type {
-  AnalysisContext,
-  AstContext,
-  Ref,
-  Symbol,
-} from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName, NodeScope, Ref } from '@hey-api/codegen-core';
 import { ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import { TypeTsDsl } from '../base';
+import { TsDsl } from '../base';
 import { DocMixin } from '../mixins/doc';
 import { ReadonlyMixin } from '../mixins/modifiers';
 import { OptionalMixin } from '../mixins/optional';
 import { TokenTsDsl } from '../token';
 import { safePropName } from '../utils/name';
 
-export type TypePropName = string;
-export type TypePropType = Symbol | string | MaybeTsDsl<ts.TypeNode>;
+export type TypePropType = NodeName | MaybeTsDsl<ts.TypeNode>;
+export type TypePropKind = 'prop';
 
-const Mixed = DocMixin(OptionalMixin(ReadonlyMixin(TypeTsDsl<ts.TypeElement>)));
+const Mixed = DocMixin(OptionalMixin(ReadonlyMixin(TsDsl<ts.TypeElement>)));
 
 export class TypePropTsDsl extends Mixed {
   readonly '~dsl' = 'TypePropTsDsl';
+  override scope: NodeScope = 'type';
 
-  protected name: TypePropName;
   protected _type?: Ref<TypePropType>;
 
-  constructor(name: TypePropName, fn: (p: TypePropTsDsl) => void) {
+  constructor(name: NodeName, fn: (p: TypePropTsDsl) => void) {
     super();
-    this.name = name;
+    this.name.set(name);
     fn(this);
+  }
+
+  /** Element kind. */
+  get kind(): TypePropKind {
+    return 'prop';
+  }
+
+  /** Property name. */
+  get propName(): string {
+    return this.name.toString();
   }
 
   override analyze(ctx: AnalysisContext): void {
     super.analyze(ctx);
     ctx.analyze(this._type);
+  }
+
+  /** Returns true when all required builder calls are present. */
+  get isValid(): boolean {
+    return this.missingRequiredCalls().length === 0;
   }
 
   /** Sets the property type. */
@@ -43,16 +53,30 @@ export class TypePropTsDsl extends Mixed {
     return this;
   }
 
-  override toAst(ctx: AstContext) {
-    if (!this._type) {
-      throw new Error(`Type not specified for property '${this.name}'`);
-    }
+  override toAst() {
+    this.$validate();
+    const name = this.name.toString();
     const node = ts.factory.createPropertySignature(
       this.modifiers,
-      this.$node(ctx, safePropName(this.name)),
-      this._optional ? this.$node(ctx, new TokenTsDsl().optional()) : undefined,
-      this.$type(ctx, this._type),
+      this.$node(safePropName(name)),
+      this._optional ? this.$node(new TokenTsDsl().optional()) : undefined,
+      this.$type(this._type),
     );
-    return this.$docs(ctx, node);
+    return this.$docs(node);
+  }
+
+  $validate(): asserts this is this & {
+    _type: Ref<TypePropType>;
+  } {
+    const missing = this.missingRequiredCalls();
+    if (missing.length === 0) return;
+    const name = this.name.toString();
+    throw new Error(`Type property${name ? ` "${name}"` : ''} missing ${missing.join(' and ')}`);
+  }
+
+  private missingRequiredCalls(): ReadonlyArray<string> {
+    const missing: Array<string> = [];
+    if (!this._type) missing.push('.type()');
+    return missing;
   }
 }

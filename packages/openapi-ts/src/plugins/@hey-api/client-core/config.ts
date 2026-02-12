@@ -1,7 +1,7 @@
 export const clientDefaultConfig = {
   baseUrl: true,
   bundle: true,
-  exportFromIndex: false,
+  includeInEntry: false,
 } as const;
 
 export const clientDefaultMeta = {

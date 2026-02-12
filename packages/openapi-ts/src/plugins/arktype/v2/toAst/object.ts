@@ -1,8 +1,7 @@
 import { fromRef, ref } from '@hey-api/codegen-core';
+import type { SchemaWithType } from '@hey-api/shared';
 
-import type { SchemaWithType } from '~/plugins/shared/types/schema';
-import { $ } from '~/ts-dsl';
-
+import { $ } from '../../../../ts-dsl';
 // import { identifiers } from '../../constants';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
 import { irSchemaToAst } from '../plugin';
@@ -91,14 +90,6 @@ export const objectToAst = ({
     );
     if (additionalAst.hasLazyExpression) {
       result.hasLazyExpression = true;
-    }
-
-    // Return with typeName for circular references
-    if (result.hasLazyExpression) {
-      return {
-        ...result,
-        typeName: 'TODO',
-      } as Ast;
     }
 
     return result as Omit<Ast, 'typeName'>;

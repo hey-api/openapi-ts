@@ -8,19 +8,47 @@ on:
   workflow_dispatch:
 
 concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
-  group: ${{ github.workflow }}=${{ github.head_ref }}
 
 jobs:
+  setup:
+    name: Setup
+    runs-on: ubuntu-latest
+    outputs:
+      node-version: ${{ steps.nvmrc.outputs.node-version }}
+    steps:
+      - uses: actions/checkout@v6.0.2
+
+      - id: nvmrc
+        run: echo "node-version=$(cat .nvmrc)" >> $GITHUB_OUTPUT
+
   ci:
     name: Build, Lint, Test
+    needs: setup
     runs-on: ${{ matrix.os }}
+    env:
+      TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+      TURBO_TELEMETRY_DISABLED: 1
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
-        node-version: ['20.19.0', '22.12.0', '24.10.0']
+        include:
+          # All Node versions on Ubuntu (fast, catches Node issues)
+          - os: ubuntu-latest
+            node-version: '20.19.0'
+          - os: ubuntu-latest
+            node-version: '22.12.0'
+          - os: ubuntu-latest
+            node-version: ${{ needs.setup.outputs.node-version }}
+            is-primary: true # Primary runner for examples/previews
+          # Latest Node on other OSes (catches platform issues)
+          - os: macos-latest
+            node-version: ${{ needs.setup.outputs.node-version }}
+          - os: windows-latest
+            node-version: ${{ needs.setup.outputs.node-version }}
     steps:
-      - uses: actions/checkout@v5.0.1
+      - uses: actions/checkout@v6.0.2
         with:
           fetch-depth: 0
 
@@ -31,35 +59,35 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: pnpm
 
+      - uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Build packages
-        run: pnpm build --filter="@hey-api/**"
+        run: pnpm tb "@hey-api/**"
 
       - name: Check examples generated code
-        if: matrix.node-version == '24.10.0' && matrix.os == 'ubuntu-latest'
+        if: matrix.is-primary
         run: pnpm examples:check
 
       - name: Build examples
-        if: matrix.node-version == '24.10.0' && matrix.os == 'ubuntu-latest'
-        run: pnpm build --filter="@example/**"
+        if: matrix.is-primary
+        run: pnpm tb "@example/**"
 
       - name: Run linter
-        run: pnpm lint
+        run: pnpm turbo run lint
 
       - name: Run type check
         run: pnpm typecheck
 
-      - name: Test packages
-        run: pnpm test --filter="@hey-api/**" --filter="@test/**"
-
-      - name: Test examples
-        if: matrix.node-version == '24.10.0' && matrix.os == 'ubuntu-latest'
-        run: pnpm test --filter="@example/**"
+      - name: Run tests
+        run: pnpm test
 
       - name: Publish preview packages
-        if: github.event_name == 'pull_request' && matrix.node-version == '24.10.0' && matrix.os == 'ubuntu-latest'
+        if: matrix.is-primary && github.event_name == 'pull_request'
         run: ./scripts/publish-preview-packages.sh
         env:
           TURBO_SCM_BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
