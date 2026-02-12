@@ -7,5 +7,9 @@
     "types": ["bun", "vitest/globals"]
   },
   "include": ["src"],
-  "references": [{ "path": "../types" }, { "path": "../codegen-core" }]
+  "references": [
+    { "path": "../types" },
+    { "path": "../codegen-core" },
+    { "path": "../json-schema-ref-parser" }
+  ]
 }
