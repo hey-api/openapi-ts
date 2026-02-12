@@ -45,6 +45,13 @@ export default defineConfig({
       {
         extends: true,
         test: {
+          name: '@hey-api/json-schema-ref-parser',
+          root: 'packages/json-schema-ref-parser',
+        },
+      },
+      {
+        extends: true,
+        test: {
           name: '@test/openapi-ts',
           root: 'packages/openapi-ts-tests/main',
           setupFiles: ['./vitest.setup.ts'],
