@@ -1,5 +1,6 @@
 - [Ahmed Rowaihi](https://github.com/ahmedrowaihi)
 - [Alessandro](https://github.com/ale18V)
+- [Alex Sagal](https://github.com/spikesagal)
 - [Alex Sarychev](https://github.com/Freddis)
 - [Alex Vukadinov](https://github.com/alexvuka1)
 - [Alex Yang](https://github.com/himself65)
