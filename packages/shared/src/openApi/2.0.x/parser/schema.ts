@@ -6,7 +6,11 @@ import type {
   SchemaType,
   SchemaWithRequired,
 } from '../../../openApi/shared/types/schema';
-import { discriminatorValues } from '../../../openApi/shared/utils/discriminator';
+import {
+  convertDiscriminatorValue,
+  type DiscriminatorPropertyType,
+  discriminatorValues,
+} from '../../../openApi/shared/utils/discriminator';
 import { isTopLevelComponent, refToName } from '../../../utils/ref';
 import type { SchemaObject } from '../types/spec';
 
@@ -25,6 +29,53 @@ export const getSchemaType = ({
   }
 
   return;
+};
+
+/**
+ * Finds the type of a discriminator property by looking it up in the provided schemas.
+ * Searches through properties and allOf chains to find the property definition.
+ */
+const findDiscriminatorPropertyType = ({
+  context,
+  propertyName,
+  schemas,
+}: {
+  context: Context;
+  propertyName: string;
+  schemas: ReadonlyArray<SchemaObject>;
+}): DiscriminatorPropertyType => {
+  for (const schema of schemas) {
+    const resolved = schema.$ref ? context.resolveRef<SchemaObject>(schema.$ref) : schema;
+
+    // Check direct properties
+    const property = resolved.properties?.[propertyName];
+    if (property) {
+      const resolvedProperty = property.$ref
+        ? context.resolveRef<SchemaObject>(property.$ref)
+        : property;
+      if (
+        resolvedProperty.type === 'boolean' ||
+        resolvedProperty.type === 'integer' ||
+        resolvedProperty.type === 'number'
+      ) {
+        return resolvedProperty.type;
+      }
+    }
+
+    // Check allOf chains
+    if (resolved.allOf) {
+      const foundType = findDiscriminatorPropertyType({
+        context,
+        propertyName,
+        schemas: resolved.allOf,
+      });
+      if (foundType !== 'string') {
+        return foundType;
+      }
+    }
+  }
+
+  return 'string';
 };
 
 const parseSchemaJsDoc = ({
@@ -336,10 +387,17 @@ const parseAllOf = ({
       // `$ref` should be passed from the root `parseSchema()` call
       if (ref.discriminator && state.$ref) {
         const values = discriminatorValues(state.$ref);
-        const valueSchemas: ReadonlyArray<IR.SchemaObject> = values.map((value) => ({
-          const: value,
-          type: 'string',
-        }));
+
+        // Detect the actual type of the discriminator property
+        const propertyType = findDiscriminatorPropertyType({
+          context,
+          propertyName: ref.discriminator,
+          schemas: [ref],
+        });
+
+        const valueSchemas: ReadonlyArray<IR.SchemaObject> = values.map((value) =>
+          convertDiscriminatorValue(value, propertyType),
+        );
         const irDiscriminatorSchema: IR.SchemaObject = {
           properties: {
             [ref.discriminator]:

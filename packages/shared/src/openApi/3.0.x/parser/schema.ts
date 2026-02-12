@@ -6,7 +6,11 @@ import type {
   SchemaType,
   SchemaWithRequired,
 } from '../../../openApi/shared/types/schema';
-import { discriminatorValues } from '../../../openApi/shared/utils/discriminator';
+import {
+  convertDiscriminatorValue,
+  type DiscriminatorPropertyType,
+  discriminatorValues,
+} from '../../../openApi/shared/utils/discriminator';
 import { isTopLevelComponent, refToName } from '../../../utils/ref';
 import type { ReferenceObject, SchemaObject } from '../types/spec';
 
@@ -25,6 +29,52 @@ export const getSchemaType = ({
   }
 
   return;
+};
+
+/**
+ * Finds the type of a discriminator property by looking it up in the provided schemas.
+ * Searches through properties and allOf chains to find the property definition.
+ */
+const findDiscriminatorPropertyType = ({
+  context,
+  propertyName,
+  schemas,
+}: {
+  context: Context;
+  propertyName: string;
+  schemas: ReadonlyArray<SchemaObject | ReferenceObject>;
+}): DiscriminatorPropertyType => {
+  for (const schema of schemas) {
+    const resolved = '$ref' in schema ? context.resolveRef<SchemaObject>(schema.$ref) : schema;
+
+    // Check direct properties
+    const property = resolved.properties?.[propertyName];
+    if (property) {
+      const resolvedProperty =
+        '$ref' in property ? context.resolveRef<SchemaObject>(property.$ref) : property;
+      if (
+        resolvedProperty.type === 'boolean' ||
+        resolvedProperty.type === 'integer' ||
+        resolvedProperty.type === 'number'
+      ) {
+        return resolvedProperty.type;
+      }
+    }
+
+    // Check allOf chains
+    if (resolved.allOf) {
+      const foundType = findDiscriminatorPropertyType({
+        context,
+        propertyName,
+        schemas: resolved.allOf,
+      });
+      if (foundType !== 'string') {
+        return foundType;
+      }
+    }
+  }
+
+  return 'string';
 };
 
 /**
@@ -482,10 +532,16 @@ const parseAllOf = ({
     // Use allValues if we found children, otherwise use the original values
     const finalValues = allValues.length > 0 ? allValues : values;
 
-    const valueSchemas: ReadonlyArray<IR.SchemaObject> = finalValues.map((value) => ({
-      const: value,
-      type: 'string',
-    }));
+    // Detect the actual type of the discriminator property
+    const propertyType = findDiscriminatorPropertyType({
+      context,
+      propertyName: discriminator.propertyName,
+      schemas: compositionSchemas,
+    });
+
+    const valueSchemas: ReadonlyArray<IR.SchemaObject> = finalValues.map((value) =>
+      convertDiscriminatorValue(value, propertyType),
+    );
 
     const discriminatorProperty: IR.SchemaObject =
       valueSchemas.length > 1
@@ -674,6 +730,14 @@ const parseAnyOf = ({
 
   const compositionSchemas = schema.anyOf;
 
+  const discriminatorPropertyType = schema.discriminator
+    ? findDiscriminatorPropertyType({
+        context,
+        propertyName: schema.discriminator.propertyName,
+        schemas: compositionSchemas,
+      })
+    : undefined;
+
   for (const compositionSchema of compositionSchemas) {
     let irCompositionSchema = schemaToIrSchema({
       context,
@@ -684,10 +748,10 @@ const parseAnyOf = ({
     // `$ref` should be defined with discriminators
     if (schema.discriminator && irCompositionSchema.$ref != null) {
       const values = discriminatorValues(irCompositionSchema.$ref, schema.discriminator.mapping);
-      const valueSchemas: ReadonlyArray<IR.SchemaObject> = values.map((value) => ({
-        const: value,
-        type: 'string',
-      }));
+
+      const valueSchemas: ReadonlyArray<IR.SchemaObject> = values.map((value) =>
+        convertDiscriminatorValue(value, discriminatorPropertyType!),
+      );
       const irDiscriminatorSchema: IR.SchemaObject = {
         properties: {
           [schema.discriminator.propertyName]:
@@ -834,6 +898,14 @@ const parseOneOf = ({
 
   const compositionSchemas = schema.oneOf;
 
+  const discriminatorPropertyType = schema.discriminator
+    ? findDiscriminatorPropertyType({
+        context,
+        propertyName: schema.discriminator.propertyName,
+        schemas: compositionSchemas,
+      })
+    : undefined;
+
   for (const compositionSchema of compositionSchemas) {
     let irCompositionSchema = schemaToIrSchema({
       context,
@@ -844,10 +916,10 @@ const parseOneOf = ({
     // `$ref` should be defined with discriminators
     if (schema.discriminator && irCompositionSchema.$ref != null) {
       const values = discriminatorValues(irCompositionSchema.$ref, schema.discriminator.mapping);
-      const valueSchemas: ReadonlyArray<IR.SchemaObject> = values.map((value) => ({
-        const: value,
-        type: 'string',
-      }));
+
+      const valueSchemas: ReadonlyArray<IR.SchemaObject> = values.map((value) =>
+        convertDiscriminatorValue(value, discriminatorPropertyType!),
+      );
       const irDiscriminatorSchema: IR.SchemaObject = {
         properties: {
           [schema.discriminator.propertyName]:

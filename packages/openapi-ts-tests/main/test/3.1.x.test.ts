@@ -238,6 +238,13 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'discriminator-non-string.yaml',
+        output: 'discriminator-non-string',
+      }),
+      description: 'handles non-string discriminator property types',
+    },
+    {
+      config: createConfig({
         input: 'discriminator-one-of-read-write.yaml',
         output: 'discriminator-one-of-read-write',
       }),
