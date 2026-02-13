@@ -1,5 +1,17 @@
 # @hey-api/shared
 
+## 0.2.0
+
+### Minor Changes
+
+- **utils**: rename `isTopLevelComponentRef` to `isTopLevelComponent` ([#3370](https://github.com/hey-api/openapi-ts/pull/3370)) ([`27cd91f`](https://github.com/hey-api/openapi-ts/commit/27cd91f530bd77da6ea95df1704b2947917b4626)) by [@mrlubos](https://github.com/mrlubos)
+
+### Patch Changes
+
+### Updated Dependencies:
+
+- @hey-api/json-schema-ref-parser@1.3.0
+
 ## 0.1.2
 
 ### Patch Changes
