@@ -1,7 +1,6 @@
 import { ono } from '@jsdevtools/ono';
 
 import { bundle as _bundle } from './bundle';
-import _dereference from './dereference';
 import { getJsonSchemaRefParserDefaultOptions } from './options';
 import { newFile, parseFile } from './parse';
 import $Refs from './refs';
@@ -18,11 +17,11 @@ interface ResolvedInput {
   type: 'file' | 'json' | 'url';
 }
 
-export const getResolvedInput = ({
+export function getResolvedInput({
   pathOrUrlOrSchema,
 }: {
   pathOrUrlOrSchema: JSONSchema | string | unknown;
-}): ResolvedInput => {
+}): ResolvedInput {
   if (!pathOrUrlOrSchema) {
     throw ono(`Expected a file path, URL, or object. Got ${pathOrUrlOrSchema}`);
   }
@@ -61,7 +60,7 @@ export const getResolvedInput = ({
   }
 
   return resolvedInput;
-};
+}
 
 // NOTE: previously used helper removed as unused
 
@@ -163,39 +162,6 @@ export class $RefParser {
   }
 
   /**
-   * Dereferences all `$ref` pointers in the JSON Schema, replacing each reference with its resolved value. This results in a schema object that does not contain any `$ref` pointers. Instead, it's a normal JavaScript object tree that can easily be crawled and used just like any other JavaScript object. This is great for programmatic usage, especially when using tools that don't understand JSON references.
-   *
-   * The dereference method maintains object reference equality, meaning that all `$ref` pointers that point to the same object will be replaced with references to the same object. Again, this is great for programmatic usage, but it does introduce the risk of circular references, so be careful if you intend to serialize the schema using `JSON.stringify()`. Consider using the bundle method instead, which does not create circular references.
-   *
-   * See https://apitools.dev/json-schema-ref-parser/docs/ref-parser.html#dereferenceschema-options-callback
-   *
-   * @param pathOrUrlOrSchema A JSON Schema object, or the file path or URL of a JSON Schema file.
-   */
-  public async dereference({
-    fetch,
-    pathOrUrlOrSchema,
-  }: {
-    fetch?: RequestInit;
-    pathOrUrlOrSchema: JSONSchema | string | unknown;
-  }): Promise<JSONSchema> {
-    await this.parse({
-      fetch,
-      pathOrUrlOrSchema,
-    });
-    await resolveExternal(this, this.options);
-    const errors = JSONParserErrorGroup.getParserErrors(this);
-    if (errors.length > 0) {
-      throw new JSONParserErrorGroup(this);
-    }
-    _dereference(this, this.options);
-    const errors2 = JSONParserErrorGroup.getParserErrors(this);
-    if (errors2.length > 0) {
-      throw new JSONParserErrorGroup(this);
-    }
-    return this.schema!;
-  }
-
-  /**
    * Parses the given JSON schema.
    * This method does not resolve any JSON references.
    * It just reads a single file in JSON or YAML format, and parse it as a JavaScript object.
@@ -241,15 +207,14 @@ export class $RefParser {
           fetch,
           file,
         });
-        const parseResult = await parseFile(file, this.options);
+        const parseResult = await parseFile(file, this.options.parse);
         $refAdded.value = parseResult.result;
         schema = parseResult.result;
-      } catch (err) {
-        if (isHandledError(err)) {
-          $refAdded.value = err;
+      } catch (error) {
+        if (isHandledError(error)) {
+          $refAdded.value = error;
         }
-
-        throw err;
+        throw error;
       }
     }
 
@@ -306,15 +271,14 @@ export class $RefParser {
             fetch,
             file,
           });
-          const parseResult = await parseFile(file, this.options);
+          const parseResult = await parseFile(file, this.options.parse);
           $refAdded.value = parseResult.result;
           schema = parseResult.result;
-        } catch (err) {
-          if (isHandledError(err)) {
-            $refAdded.value = err;
+        } catch (error) {
+          if (isHandledError(error)) {
+            $refAdded.value = error;
           }
-
-          throw err;
+          throw error;
         }
       }
 

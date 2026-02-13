@@ -21,54 +21,68 @@ import * as url from './util/url';
  * The promise resolves once all JSON references in the schema have been resolved,
  * including nested references that are contained in externally-referenced files.
  */
-export function resolveExternal(parser: $RefParser, options: $RefParserOptions) {
-  try {
-    // console.log('Resolving $ref pointers in %s', parser.$refs._root$Ref.path);
-    const promises = crawl(parser.schema, parser.$refs._root$Ref.path + '#', parser.$refs, options);
-    return Promise.all(promises);
-  } catch (e) {
-    return Promise.reject(e);
-  }
+export async function resolveExternal(parser: $RefParser, options: $RefParserOptions) {
+  const promises = crawl(parser.schema, {
+    $refs: parser.$refs,
+    options: options.parse,
+    path: `${parser.$refs._root$Ref.path}#`,
+  });
+  await Promise.all(promises);
 }
 
 /**
  * Recursively crawls the given value, and resolves any external JSON references.
  *
  * @param obj - The value to crawl. If it's not an object or array, it will be ignored.
- * @param path - The full path of `obj`, possibly with a JSON Pointer in the hash
- * @param {boolean} external - Whether `obj` was found in an external document.
- * @param $refs
- * @param options
- * @param seen - Internal.
- *
- * @returns
- * Returns an array of promises. There will be one promise for each JSON reference in `obj`.
+ * @returns An array of promises. There will be one promise for each JSON reference in `obj`.
  * If `obj` does not contain any JSON references, then the array will be empty.
  * If any of the JSON references point to files that contain additional JSON references,
  * then the corresponding promise will internally reference an array of promises.
  */
 function crawl<S extends object = JSONSchema>(
   obj: string | Buffer | S | undefined | null,
-  path: string,
-  $refs: $Refs<S>,
-  options: $RefParserOptions,
-  seen?: Set<any>,
-  external?: boolean,
-) {
-  seen ||= new Set();
-  let promises: any = [];
+  {
+    $refs,
+    external = false,
+    options,
+    path,
+    seen = new Set(),
+  }: {
+    $refs: $Refs<S>;
+    /** Whether `obj` was found in an external document. */
+    external?: boolean;
+    options: $RefParserOptions['parse'];
+    /** The full path of `obj`, possibly with a JSON Pointer in the hash. */
+    path: string;
+    seen?: Set<unknown>;
+  },
+): ReadonlyArray<Promise<unknown>> {
+  let promises: Array<Promise<unknown>> = [];
 
   if (obj && typeof obj === 'object' && !ArrayBuffer.isView(obj) && !seen.has(obj)) {
-    seen.add(obj); // Track previously seen objects to avoid infinite recursion
+    seen.add(obj);
+
     if ($Ref.isExternal$Ref(obj)) {
-      promises.push(resolve$Ref<S>(obj, path, $refs, options));
+      promises.push(
+        resolve$Ref<S>(obj, {
+          $refs,
+          options,
+          path,
+          seen,
+        }),
+      );
     }
 
-    const keys = Object.keys(obj) as string[];
-    for (const key of keys) {
-      const keyPath = Pointer.join(path, key);
-      const value = obj[key as keyof typeof obj] as string | JSONSchema | Buffer | undefined;
-      promises = promises.concat(crawl(value, keyPath, $refs, options, seen, external));
+    for (const [key, value] of Object.entries(obj)) {
+      promises = promises.concat(
+        crawl(value, {
+          $refs,
+          external,
+          options,
+          path: Pointer.join(path, key),
+          seen,
+        }),
+      );
     }
   }
 
@@ -89,14 +103,20 @@ function crawl<S extends object = JSONSchema>(
  */
 async function resolve$Ref<S extends object = JSONSchema>(
   $ref: S,
-  path: string,
-  $refs: $Refs<S>,
-  options: $RefParserOptions,
-) {
+  {
+    $refs,
+    options,
+    path,
+    seen,
+  }: {
+    $refs: $Refs<S>;
+    options: $RefParserOptions['parse'];
+    path: string;
+    seen: Set<unknown>;
+  },
+): Promise<unknown> {
   const resolvedPath = url.resolve(path, ($ref as JSONSchema).$ref!);
   const withoutHash = url.stripHash(resolvedPath);
-
-  // $ref.$ref = url.relative($refs._root$Ref.path, resolvedPath);
 
   // If this ref points back to an input source we've already merged, avoid re-importing
   // by checking if the path (without hash) matches a known source in parser and we can serve it internally later.
@@ -105,7 +125,13 @@ async function resolve$Ref<S extends object = JSONSchema>(
   const ref = $refs._$refs[withoutHash];
   if (ref) {
     // We've already parsed this $ref, so crawl it to resolve its own externals
-    const promises = crawl(ref.value as S, `${withoutHash}#`, $refs, options, new Set(), true);
+    const promises = crawl(ref.value as S, {
+      $refs,
+      external: true,
+      options,
+      path: `${withoutHash}#`,
+      seen,
+    });
     return Promise.all(promises);
   }
 
@@ -121,22 +147,27 @@ async function resolve$Ref<S extends object = JSONSchema>(
 
     $refAdded.pathType = resolvedInput.type;
 
-    let promises: any = [];
+    let promises: ReadonlyArray<Promise<unknown>> = [];
 
     if (resolvedInput.type !== 'json') {
       const resolver = resolvedInput.type === 'file' ? fileResolver : urlResolver;
       await resolver.handler({ file });
       const parseResult = await parseFile(file, options);
       $refAdded.value = parseResult.result;
-      promises = crawl(parseResult.result, `${withoutHash}#`, $refs, options, new Set(), true);
+      promises = crawl(parseResult.result, {
+        $refs,
+        external: true,
+        options,
+        path: `${withoutHash}#`,
+        seen,
+      });
     }
 
     return Promise.all(promises);
-  } catch (err) {
-    if (isHandledError(err)) {
-      $refAdded.value = err;
+  } catch (error) {
+    if (isHandledError(error)) {
+      $refAdded.value = error;
     }
-
-    throw err;
+    throw error;
   }
 }
