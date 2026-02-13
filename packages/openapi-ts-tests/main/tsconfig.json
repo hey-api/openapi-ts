@@ -2,12 +2,8 @@
   "extends": "../tsconfig.base.json",
   "compilerOptions": {
     "allowImportingTsExtensions": true,
-    "declaration": false,
-    "esModuleInterop": true,
-    "noEmit": true,
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
-    "types": ["vitest/globals"]
+    "resolveJsonModule": true
   },
-  "exclude": ["test/custom/request.ts", "test/generated/**"]
+  "exclude": ["test/custom/request.ts", "test/generated/**"],
+  "references": [{ "path": "../../openapi-ts" }]
 }
