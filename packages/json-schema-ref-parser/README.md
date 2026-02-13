@@ -58,20 +58,6 @@ JavaScript objects.
   instance
 - Compatible with Node LTS and beyond, and all major web browsers on Windows, Mac, and Linux
 
-## Example
-
-```javascript
-import { $RefParser } from '@hey-api/json-schema-ref-parser';
-
-try {
-  const parser = new $RefParser();
-  await parser.dereference({ pathOrUrlOrSchema: mySchema });
-  console.log(parser.schema.definitions.person.properties.firstName);
-} catch (err) {
-  console.error(err);
-}
-```
-
 ### New in this fork (@hey-api)
 
 - **Multiple inputs with `bundleMany`**: Merge and bundle several OpenAPI/JSON Schema inputs (files, URLs, or raw objects) into a single schema. Components are prefixed to avoid name collisions, paths are namespaced on conflict, and `$ref`s are rewritten accordingly.
