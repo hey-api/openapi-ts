@@ -152,6 +152,11 @@ export default class $Refs<S extends object = JSONSchema> {
       throw ono(`Error resolving $ref pointer "${path}". \n"${withoutHash}" not found.`);
     }
 
+    if ($ref.value === undefined) {
+      console.warn(`$ref entry exists but value is undefined: ${withoutHash}`);
+      return null; // Treat as unresolved
+    }
+
     return $ref.resolve(absPath, options, path, pathFromRoot);
   }
 

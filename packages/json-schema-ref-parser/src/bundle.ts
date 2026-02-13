@@ -4,21 +4,8 @@ import Pointer from './pointer';
 import $Ref from './ref';
 import type $Refs from './refs';
 import type { JSONSchema } from './types';
+import { MissingPointerError } from './util/errors';
 import * as url from './util/url';
-
-const DEBUG_PERFORMANCE =
-  process.env.DEBUG === 'true' ||
-  (typeof globalThis !== 'undefined' && (globalThis as any).DEBUG_BUNDLE_PERFORMANCE === true);
-
-const perf = {
-  log: (message: string, ...args: any[]) =>
-    DEBUG_PERFORMANCE && console.log('[PERF] ' + message, ...args),
-  mark: (name: string) => DEBUG_PERFORMANCE && performance.mark(name),
-  measure: (name: string, start: string, end: string) =>
-    DEBUG_PERFORMANCE && performance.measure(name, start, end),
-  warn: (message: string, ...args: any[]) =>
-    DEBUG_PERFORMANCE && console.warn('[PERF] ' + message, ...args),
-};
 
 export interface InventoryEntry {
   $ref: any;
@@ -43,8 +30,6 @@ const createInventoryLookup = () => {
   const lookup = new Map<string, InventoryEntry>();
   const objectIds = new WeakMap<object, string>(); // Use WeakMap to avoid polluting objects
   let idCounter = 0;
-  let lookupCount = 0;
-  let addCount = 0;
 
   const getObjectId = (obj: any) => {
     if (!objectIds.has(obj)) {
@@ -59,23 +44,14 @@ const createInventoryLookup = () => {
 
   return {
     add: (entry: InventoryEntry) => {
-      addCount++;
       const key = createInventoryKey(entry.parent, entry.key);
       lookup.set(key, entry);
-      if (addCount % 100 === 0) {
-        perf.log(`Inventory lookup: Added ${addCount} entries, map size: ${lookup.size}`);
-      }
     },
     find: ($refParent: any, $refKey: any) => {
-      lookupCount++;
       const key = createInventoryKey($refParent, $refKey);
       const result = lookup.get(key);
-      if (lookupCount % 100 === 0) {
-        perf.log(`Inventory lookup: ${lookupCount} lookups performed`);
-      }
       return result;
     },
-    getStats: () => ({ addCount, lookupCount, mapSize: lookup.size }),
     remove: (entry: InventoryEntry) => {
       const key = createInventoryKey(entry.parent, entry.key);
       lookup.delete(key);
@@ -171,29 +147,29 @@ const inventory$Ref = <S extends object = JSONSchema>({
    */
   visitedObjects?: WeakSet<object>;
 }) => {
-  perf.mark('inventory-ref-start');
   const $ref = $refKey === null ? $refParent : $refParent[$refKey];
   const $refPath = url.resolve(path, $ref.$ref);
 
   // Check cache first to avoid redundant resolution
   let pointer = resolvedRefs.get($refPath);
   if (!pointer) {
-    perf.mark('resolve-start');
-    pointer = $refs._resolve($refPath, pathFromRoot, options);
-    perf.mark('resolve-end');
-    perf.measure('resolve-time', 'resolve-start', 'resolve-end');
+    try {
+      pointer = $refs._resolve($refPath, pathFromRoot, options);
+    } catch (error) {
+      if (error instanceof MissingPointerError) {
+        // Log warning but continue - common in complex schema ecosystems
+        console.warn(`Skipping unresolvable $ref: ${$refPath}`);
+        return;
+      }
+      throw error; // Re-throw unexpected errors
+    }
 
     if (pointer) {
       resolvedRefs.set($refPath, pointer);
-      perf.log(`Cached resolved $ref: ${$refPath}`);
     }
   }
 
-  if (pointer === null) {
-    perf.mark('inventory-ref-end');
-    perf.measure('inventory-ref-time', 'inventory-ref-start', 'inventory-ref-end');
-    return;
-  }
+  if (pointer === null) return;
 
   const parsed = Pointer.parse(pathFromRoot);
   const depth = parsed.length;
@@ -204,10 +180,7 @@ const inventory$Ref = <S extends object = JSONSchema>({
   indirections += pointer.indirections;
 
   // Check if this exact location (parent + key + pathFromRoot) has already been inventoried
-  perf.mark('lookup-start');
   const existingEntry = inventoryLookup.find($refParent, $refKey);
-  perf.mark('lookup-end');
-  perf.measure('lookup-time', 'lookup-start', 'lookup-end');
 
   if (existingEntry && existingEntry.pathFromRoot === pathFromRoot) {
     // This exact location has already been inventoried, so we don't need to process it again
@@ -215,8 +188,6 @@ const inventory$Ref = <S extends object = JSONSchema>({
       removeFromInventory(inventory, existingEntry);
       inventoryLookup.remove(existingEntry);
     } else {
-      perf.mark('inventory-ref-end');
-      perf.measure('inventory-ref-time', 'inventory-ref-start', 'inventory-ref-end');
       return;
     }
   }
@@ -246,13 +217,8 @@ const inventory$Ref = <S extends object = JSONSchema>({
   inventory.push(newEntry);
   inventoryLookup.add(newEntry);
 
-  perf.log(
-    `Inventoried $ref: ${$ref.$ref} -> ${file}${hash} (external: ${external}, depth: ${depth})`,
-  );
-
   // Recursively crawl the resolved value
   if (!existingEntry || external) {
-    perf.mark('crawl-recursive-start');
     crawl({
       $refs,
       indirections: indirections + 1,
@@ -266,12 +232,7 @@ const inventory$Ref = <S extends object = JSONSchema>({
       resolvedRefs,
       visitedObjects,
     });
-    perf.mark('crawl-recursive-end');
-    perf.measure('crawl-recursive-time', 'crawl-recursive-start', 'crawl-recursive-end');
   }
-
-  perf.mark('inventory-ref-end');
-  perf.measure('inventory-ref-time', 'inventory-ref-start', 'inventory-ref-end');
 };
 
 /**
@@ -330,13 +291,9 @@ const crawl = <S extends object = JSONSchema>({
 
   if (obj && typeof obj === 'object' && !ArrayBuffer.isView(obj)) {
     // Early exit if we've already processed this exact object
-    if (visitedObjects.has(obj)) {
-      perf.log(`Skipping already visited object at ${pathFromRoot}`);
-      return;
-    }
+    if (visitedObjects.has(obj)) return;
 
     if ($Ref.isAllowed$Ref(obj)) {
-      perf.log(`Found $ref at ${pathFromRoot}: ${(obj as any).$ref}`);
       inventory$Ref({
         $refKey: key,
         $refParent: parent,
@@ -369,7 +326,7 @@ const crawl = <S extends object = JSONSchema>({
           // This produces the shortest possible bundled references
           return a.length - b.length;
         }
-      }) as (keyof typeof obj)[];
+      }) as Array<keyof typeof obj>;
 
       for (const key of keys) {
         const keyPath = Pointer.join(path, key);
@@ -414,13 +371,10 @@ const crawl = <S extends object = JSONSchema>({
  * Remap external refs by hoisting resolved values into a shared container in the root schema
  * and pointing all occurrences to those internal definitions. Internal refs remain internal.
  */
-function remap(parser: $RefParser, inventory: InventoryEntry[]) {
-  perf.log(`Starting remap with ${inventory.length} inventory entries`);
-  perf.mark('remap-start');
+function remap(parser: $RefParser, inventory: Array<InventoryEntry>) {
   const root = parser.schema as any;
 
   // Group & sort all the $ref pointers, so they're in the order that we need to dereference/remap them
-  perf.mark('sort-inventory-start');
   inventory.sort((a: InventoryEntry, b: InventoryEntry) => {
     if (a.file !== b.file) {
       // Group all the $refs that point to the same file
@@ -454,11 +408,6 @@ function remap(parser: $RefParser, inventory: InventoryEntry[]) {
       }
     }
   });
-
-  perf.mark('sort-inventory-end');
-  perf.measure('sort-inventory-time', 'sort-inventory-start', 'sort-inventory-end');
-
-  perf.log(`Sorted ${inventory.length} inventory entries`);
 
   // Ensure or return a container by component type. Prefer OpenAPI-aware placement;
   // otherwise use existing root containers; otherwise create components/*.
@@ -583,11 +532,9 @@ function remap(parser: $RefParser, inventory: InventoryEntry[]) {
     used.add(name);
     return name;
   };
-  perf.mark('remap-loop-start');
   for (const entry of inventory) {
     // Safety check: ensure entry and entry.$ref are valid objects
     if (!entry || !entry.$ref || typeof entry.$ref !== 'object') {
-      perf.warn(`Skipping invalid inventory entry:`, entry);
       continue;
     }
 
@@ -654,16 +601,9 @@ function remap(parser: $RefParser, inventory: InventoryEntry[]) {
       entry.parent[entry.key] = { $ref: refPath };
     }
   }
-  perf.mark('remap-loop-end');
-  perf.measure('remap-loop-time', 'remap-loop-start', 'remap-loop-end');
-
-  perf.mark('remap-end');
-  perf.measure('remap-total-time', 'remap-start', 'remap-end');
-
-  perf.log(`Completed remap of ${inventory.length} entries`);
 }
 
-function removeFromInventory(inventory: InventoryEntry[], entry: any) {
+function removeFromInventory(inventory: Array<InventoryEntry>, entry: any) {
   const index = inventory.indexOf(entry);
   inventory.splice(index, 1);
 }
@@ -676,19 +616,12 @@ function removeFromInventory(inventory: InventoryEntry[], entry: any) {
  * @param parser
  * @param options
  */
-export const bundle = (parser: $RefParser, options: ParserOptions) => {
-  // console.log('Bundling $ref pointers in %s', parser.$refs._root$Ref.path);
-  perf.mark('bundle-start');
-
-  // Build an inventory of all $ref pointers in the JSON Schema
-  const inventory: InventoryEntry[] = [];
+export function bundle(parser: $RefParser, options: ParserOptions): void {
+  const inventory: Array<InventoryEntry> = [];
   const inventoryLookup = createInventoryLookup();
 
-  perf.log('Starting crawl phase');
-  perf.mark('crawl-phase-start');
-
   const visitedObjects = new WeakSet<object>();
-  const resolvedRefs = new Map<string, any>(); // Cache for resolved $ref targets
+  const resolvedRefs = new Map<string, any>();
 
   crawl<JSONSchema>({
     $refs: parser.$refs,
@@ -704,40 +637,5 @@ export const bundle = (parser: $RefParser, options: ParserOptions) => {
     visitedObjects,
   });
 
-  perf.mark('crawl-phase-end');
-  perf.measure('crawl-phase-time', 'crawl-phase-start', 'crawl-phase-end');
-
-  const stats = inventoryLookup.getStats();
-  perf.log(`Crawl phase complete. Found ${inventory.length} $refs. Lookup stats:`, stats);
-
-  // Remap all $ref pointers
-  perf.log('Starting remap phase');
-  perf.mark('remap-phase-start');
   remap(parser, inventory);
-  perf.mark('remap-phase-end');
-  perf.measure('remap-phase-time', 'remap-phase-start', 'remap-phase-end');
-
-  perf.mark('bundle-end');
-  perf.measure('bundle-total-time', 'bundle-start', 'bundle-end');
-
-  perf.log('Bundle complete. Performance summary:');
-
-  // Log final stats
-  const finalStats = inventoryLookup.getStats();
-  perf.log(`Final inventory stats:`, finalStats);
-  perf.log(`Resolved refs cache size: ${resolvedRefs.size}`);
-
-  if (DEBUG_PERFORMANCE) {
-    // Log all performance measures
-    const measures = performance.getEntriesByType('measure');
-    measures.forEach((measure) => {
-      if (measure.name.includes('time')) {
-        console.log(`${measure.name}: ${measure.duration.toFixed(2)}ms`);
-      }
-    });
-
-    // Clear performance marks and measures for next run
-    performance.clearMarks();
-    performance.clearMeasures();
-  }
-};
+}
