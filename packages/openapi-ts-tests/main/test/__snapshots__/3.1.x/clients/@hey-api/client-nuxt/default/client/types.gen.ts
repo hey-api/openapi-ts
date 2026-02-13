@@ -68,7 +68,6 @@ export interface RequestOptions<
     }>,
     Pick<
       ServerSentEventsOptions<ResT>,
-      | 'onRequest'
       | 'onSseError'
       | 'onSseEvent'
       | 'sseDefaultRetryDelay'
