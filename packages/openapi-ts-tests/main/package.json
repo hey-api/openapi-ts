@@ -4,7 +4,6 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test:types": "tsc -p tsconfig.test.json --noEmit",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
