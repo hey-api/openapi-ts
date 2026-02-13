@@ -1,6 +1,5 @@
 import { ono } from '@jsdevtools/ono';
 
-import type { $RefParser } from '.';
 import type { DereferenceOptions, ParserOptions } from './options';
 import Pointer from './pointer';
 import $Ref from './ref';
@@ -8,33 +7,6 @@ import type $Refs from './refs';
 import type { JSONSchema } from './types';
 import { TimeoutError } from './util/errors';
 import * as url from './util/url';
-
-export default dereference;
-
-/**
- * Crawls the JSON schema, finds all JSON references, and dereferences them.
- * This method mutates the JSON schema object, replacing JSON references with their resolved value.
- *
- * @param parser
- * @param options
- */
-function dereference(parser: $RefParser, options: ParserOptions) {
-  const start = Date.now();
-  // console.log('Dereferencing $ref pointers in %s', parser.$refs._root$Ref.path);
-  const dereferenced = crawl<JSONSchema>(
-    parser.schema,
-    parser.$refs._root$Ref.path!,
-    '#',
-    new Set(),
-    new Set(),
-    new Map(),
-    parser.$refs,
-    options,
-    start,
-  );
-  parser.$refs.circular = dereferenced.circular;
-  parser.schema = dereferenced.value;
-}
 
 /**
  * Recursively crawls the given value, and dereferences any JSON references.

@@ -9,7 +9,8 @@ export const inputs = {
   opencode: path.resolve(getSpecsPath(), '3.1.x', 'opencode.yaml'),
   petstore:
     'https://raw.githubusercontent.com/swagger-api/swagger-petstore/master/src/main/resources/openapi.yaml',
-  redfish: 'http://redfish.dmtf.org/schemas/v1/Message.v1_2_1.yaml',
+  redfish:
+    'https://raw.githubusercontent.com/DMTF/Redfish-Publications/refs/heads/main/openapi/openapi.yaml',
   scalar: 'scalar:@scalar/access-service',
   transformers: path.resolve(getSpecsPath(), '3.1.x', 'transformers.json'),
   validators: path.resolve(getSpecsPath(), '3.1.x', 'validators.yaml'),

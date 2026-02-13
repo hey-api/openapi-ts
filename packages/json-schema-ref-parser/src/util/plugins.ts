@@ -41,9 +41,9 @@ export async function run(plugins: Pick<Plugin, 'handler'>[], file: FileInfo) {
         if (index === plugins.length) {
           throw new Error('No promise has been returned.');
         }
-      } catch (e) {
+      } catch (error) {
         lastError = {
-          error: e,
+          error,
           plugin,
         };
         runNextPlugin();

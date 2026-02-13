@@ -31,20 +31,15 @@ export function newFile(path: string): FileInfo {
 /**
  * Parses the given file's contents, using the configured parser plugins.
  */
-export const parseFile = async (
+export async function parseFile(
   file: FileInfo,
-  options: $RefParserOptions,
-): Promise<PluginResult> => {
+  options: $RefParserOptions['parse'],
+): Promise<PluginResult> {
   try {
     // If none of the parsers are a match for this file, try all of them. This
     // handles situations where the file is a supported type, just with an
     // unknown extension.
-    const parsers = [
-      options.parse.json,
-      options.parse.yaml,
-      options.parse.text,
-      options.parse.binary,
-    ];
+    const parsers = [options.json, options.yaml, options.text, options.binary];
     const filtered = parsers.filter((plugin) => plugin.canHandle(file));
     return await plugins.run(filtered.length ? filtered : parsers, file);
   } catch (error: any) {
@@ -62,4 +57,4 @@ export const parseFile = async (
 
     throw new ParserError(error.error.message, file.url);
   }
-};
+}
