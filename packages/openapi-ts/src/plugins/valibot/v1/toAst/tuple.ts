@@ -8,13 +8,13 @@ import { identifiers } from '../constants';
 import { irSchemaToAst } from '../plugin';
 import { unknownToAst } from './unknown';
 
-export const tupleToAst = ({
-  plugin,
-  schema,
-  state,
-}: IrSchemaToAstOptions & {
-  schema: SchemaWithType<'tuple'>;
-}): Omit<Ast, 'typeName'> => {
+export function tupleToAst(
+  options: IrSchemaToAstOptions & {
+    schema: SchemaWithType<'tuple'>;
+  },
+): Omit<Ast, 'typeName'> {
+  const { plugin, schema } = options;
+
   const result: Partial<Omit<Ast, 'typeName'>> = {};
 
   const v = plugin.external('valibot.v');
@@ -34,11 +34,11 @@ export const tupleToAst = ({
   if (schema.items) {
     const tupleElements = schema.items.map((item, index) => {
       const schemaPipes = irSchemaToAst({
-        plugin,
+        ...options,
         schema: item,
         state: {
-          ...state,
-          path: ref([...fromRef(state.path), 'items', index]),
+          ...options.state,
+          path: ref([...fromRef(options.state.path), 'items', index]),
         },
       });
       if (schemaPipes.hasLazyExpression) {
@@ -57,12 +57,11 @@ export const tupleToAst = ({
   return {
     pipes: [
       unknownToAst({
-        plugin,
+        ...options,
         schema: {
           type: 'unknown',
         },
-        state,
       }),
     ],
   };
-};
+}

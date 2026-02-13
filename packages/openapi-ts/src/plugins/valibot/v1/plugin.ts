@@ -1,30 +1,24 @@
 import type { SymbolMeta } from '@hey-api/codegen-core';
-import { fromRef, ref, refs } from '@hey-api/codegen-core';
-import type { IR, SchemaExtractor, SchemaWithType } from '@hey-api/shared';
-import {
-  applyNaming,
-  deduplicateSchema,
-  inlineSchema,
-  pathToJsonPointer,
-  refToName,
-} from '@hey-api/shared';
+import { fromRef, ref } from '@hey-api/codegen-core';
+import type { IR, SchemaWithType } from '@hey-api/shared';
+import { deduplicateSchema, pathToJsonPointer } from '@hey-api/shared';
 
 import { maybeBigInt } from '../../../plugins/shared/utils/coerce';
 import { $ } from '../../../ts-dsl';
-import { exportAst } from '../shared/export';
 import { irOperationToAst } from '../shared/operation';
 import { pipesToNode } from '../shared/pipes';
-import type { Ast, IrSchemaToAstOptions, PluginState } from '../shared/types';
+import type { Ast, IrSchemaToAstOptions } from '../shared/types';
 import { irWebhookToAst } from '../shared/webhook';
 import type { ValibotPlugin } from '../types';
 import { identifiers } from './constants';
+import { createProcessor } from './processor';
 import { irSchemaWithTypeToAst } from './toAst';
 
 export function irSchemaToAst({
   optional,
   plugin,
   schema,
-  schemaExtractor = inlineSchema,
+  schemaExtractor,
   state,
 }: IrSchemaToAstOptions & {
   /**
@@ -34,13 +28,19 @@ export function irSchemaToAst({
    */
   optional?: boolean;
   schema: IR.SchemaObject;
-  schemaExtractor?: SchemaExtractor;
 }): Ast {
-  if (!schema.$ref) {
-    const resolved = schemaExtractor({ path: fromRef(state.path), schema });
-    if (resolved !== schema) {
-      schema = resolved;
-    }
+  if (schemaExtractor && !schema.$ref) {
+    const extracted = schemaExtractor({
+      meta: {
+        resource: 'definition',
+        resourceId: pathToJsonPointer(fromRef(state.path)),
+      },
+      naming: plugin.config.definitions,
+      path: fromRef(state.path),
+      plugin,
+      schema,
+    });
+    if (extracted !== schema) schema = extracted;
   }
 
   const ast: Ast = {
@@ -71,6 +71,7 @@ export function irSchemaToAst({
     const typeAst = irSchemaWithTypeToAst({
       plugin,
       schema: schema as SchemaWithType,
+      schemaExtractor,
       state,
     });
     ast.typeName = typeAst.anyType;
@@ -121,6 +122,7 @@ export function irSchemaToAst({
       schema: {
         type: 'unknown',
       },
+      schemaExtractor,
       state,
     });
     ast.typeName = typeAst.anyType;
@@ -152,35 +154,6 @@ export function irSchemaToAst({
   return ast as Ast;
 }
 
-function handleComponent({
-  plugin,
-  schema,
-  state,
-}: IrSchemaToAstOptions & {
-  schema: IR.SchemaObject;
-}): void {
-  const $ref = pathToJsonPointer(fromRef(state.path));
-  const ast = irSchemaToAst({ plugin, schema, state });
-  const baseName = refToName($ref);
-  const symbol = plugin.symbol(applyNaming(baseName, plugin.config.definitions), {
-    meta: {
-      category: 'schema',
-      path: fromRef(state.path),
-      resource: 'definition',
-      resourceId: $ref,
-      tags: fromRef(state.tags),
-      tool: 'valibot',
-    },
-  });
-  exportAst({
-    ast,
-    plugin,
-    schema,
-    state,
-    symbol,
-  });
-}
-
 export const handlerV1: ValibotPlugin['Handler'] = ({ plugin }) => {
   plugin.symbol('v', {
     external: 'valibot',
@@ -191,62 +164,65 @@ export const handlerV1: ValibotPlugin['Handler'] = ({ plugin }) => {
     },
   });
 
+  const processor = createProcessor(plugin);
+
   plugin.forEach('operation', 'parameter', 'requestBody', 'schema', 'webhook', (event) => {
-    const state = refs<PluginState>({
-      hasLazyExpression: false,
-      path: event._path,
-      tags: event.tags,
-    });
     switch (event.type) {
       case 'operation':
         irOperationToAst({
-          getAst: (schema, path) => {
-            const state = refs<PluginState>({
-              hasLazyExpression: false,
-              path,
-              tags: event.tags,
-            });
-            return irSchemaToAst({ plugin, schema, state });
-          },
           operation: event.operation,
+          path: event._path,
           plugin,
-          state,
+          processor,
+          tags: event.tags,
         });
         break;
       case 'parameter':
-        handleComponent({
+        processor.process({
+          meta: {
+            resource: 'definition',
+            resourceId: pathToJsonPointer(event._path),
+          },
+          naming: plugin.config.definitions,
+          path: event._path,
           plugin,
           schema: event.parameter.schema,
-          state,
+          tags: event.tags,
         });
         break;
       case 'requestBody':
-        handleComponent({
+        processor.process({
+          meta: {
+            resource: 'definition',
+            resourceId: pathToJsonPointer(event._path),
+          },
+          naming: plugin.config.definitions,
+          path: event._path,
           plugin,
           schema: event.requestBody.schema,
-          state,
+          tags: event.tags,
         });
         break;
       case 'schema':
-        handleComponent({
+        processor.process({
+          meta: {
+            resource: 'definition',
+            resourceId: pathToJsonPointer(event._path),
+          },
+          naming: plugin.config.definitions,
+          path: event._path,
           plugin,
           schema: event.schema,
-          state,
+          tags: event.tags,
         });
         break;
       case 'webhook':
         irWebhookToAst({
-          getAst: (schema, path) => {
-            const state = refs<PluginState>({
-              hasLazyExpression: false,
-              path,
-              tags: event.tags,
-            });
-            return irSchemaToAst({ plugin, schema, state });
-          },
           operation: event.operation,
+          path: event._path,
           plugin,
-          state,
+          processor,
+          tags: event.tags,
         });
         break;
     }

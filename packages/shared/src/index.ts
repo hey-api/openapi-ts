@@ -59,8 +59,7 @@ export {
 } from './ir/parameter';
 export { deduplicateSchema } from './ir/schema';
 export type { IR } from './ir/types';
-export type { SchemaExtractor, SchemaExtractorContext } from './ir/utils';
-export { addItemsToSchema, createSchemaExtractor, inlineSchema } from './ir/utils';
+export { addItemsToSchema } from './ir/utils';
 export { parseOpenApiSpec } from './openApi';
 export type { OpenApiV2_0_X, OpenApiV2_0_XTypes } from './openApi/2.0.x';
 export { parseV2_0_X } from './openApi/2.0.x';
@@ -88,6 +87,13 @@ export type {
   OpenApiSchemaObject,
 } from './openApi/types';
 export type { Hooks } from './parser/hooks';
+export type {
+  SchemaExtractor,
+  SchemaProcessor,
+  SchemaProcessorContext,
+  SchemaProcessorResult,
+} from './plugins/schema-processor';
+export { createSchemaProcessor } from './plugins/schema-processor';
 export type { SchemaWithType } from './plugins/shared/types/schema';
 export { definePluginConfig, mappers } from './plugins/shared/utils/config';
 export type { PluginInstanceTypes } from './plugins/shared/utils/instance';
@@ -110,9 +116,10 @@ export { heyApiRegistryBaseUrl } from './utils/input/heyApi';
 export { MinHeap } from './utils/minHeap';
 export { applyNaming, resolveNaming, toCase } from './utils/naming/naming';
 export type { Casing, NameTransformer, NamingConfig, NamingRule } from './utils/naming/types';
+export { pathToName } from './utils/path';
 export {
   encodeJsonPointerSegment,
-  isTopLevelComponentRef,
+  isTopLevelComponent,
   jsonPointerToPath,
   normalizeJsonPointer,
   pathToJsonPointer,

@@ -13,11 +13,24 @@ export function irSchemaToAst({
   optional,
   plugin,
   schema,
+  schemaExtractor,
   state,
 }: IrSchemaToAstOptions & {
   optional?: boolean;
   schema: IR.SchemaObject;
 }): Ast {
+  if (schemaExtractor && !schema.$ref) {
+    const extracted = schemaExtractor({
+      meta: {
+        resource: 'definition',
+        resourceId: pathToJsonPointer(fromRef(state.path)),
+      },
+      path: fromRef(state.path),
+      schema,
+    });
+    if (extracted !== schema) schema = extracted;
+  }
+
   if (schema.$ref) {
     const query: SymbolMeta = {
       category: 'schema',

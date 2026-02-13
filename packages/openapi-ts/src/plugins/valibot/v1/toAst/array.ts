@@ -9,13 +9,14 @@ import { identifiers } from '../constants';
 import { irSchemaToAst } from '../plugin';
 import { unknownToAst } from './unknown';
 
-export const arrayToAst = ({
-  plugin,
-  schema,
-  state,
-}: IrSchemaToAstOptions & {
-  schema: SchemaWithType<'array'>;
-}): Omit<Ast, 'typeName'> => {
+export function arrayToAst(
+  options: IrSchemaToAstOptions & {
+    schema: SchemaWithType<'array'>;
+  },
+): Omit<Ast, 'typeName'> {
+  const { plugin } = options;
+  let { schema } = options;
+
   const result: Omit<Ast, 'typeName'> = {
     pipes: [],
   };
@@ -26,11 +27,10 @@ export const arrayToAst = ({
   if (!schema.items) {
     const expression = functionName.call(
       unknownToAst({
-        plugin,
+        ...options,
         schema: {
           type: 'unknown',
         },
-        state,
       }),
     );
     result.pipes.push(expression);
@@ -40,11 +40,11 @@ export const arrayToAst = ({
     // at least one item is guaranteed
     const itemExpressions = schema.items!.map((item, index) => {
       const itemAst = irSchemaToAst({
-        plugin,
+        ...options,
         schema: item,
         state: {
-          ...state,
-          path: ref([...fromRef(state.path), 'items', index]),
+          ...options.state,
+          path: ref([...fromRef(options.state.path), 'items', index]),
         },
       });
       if (itemAst.hasLazyExpression) {
@@ -69,11 +69,10 @@ export const arrayToAst = ({
 
       const expression = functionName.call(
         unknownToAst({
-          plugin,
+          ...options,
           schema: {
             type: 'unknown',
           },
-          state,
         }),
       );
       result.pipes.push(expression);
@@ -100,4 +99,4 @@ export const arrayToAst = ({
   }
 
   return result as Omit<Ast, 'typeName'>;
-};
+}
