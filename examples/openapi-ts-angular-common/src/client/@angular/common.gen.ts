@@ -48,8 +48,8 @@ import type {
  */
 export const addPetRequest = <ThrowOnError extends boolean = false>(
   options: Options<AddPetData, ThrowOnError>,
-): HttpRequest<unknown> =>
-  (options?.client ?? client).requestOptions({
+): HttpRequest<AddPetResponse> =>
+  (options?.client ?? client).requestOptions<AddPetResponse, ThrowOnError>({
     method: 'POST',
     responseStyle: 'data',
     url: '/pet',
@@ -63,8 +63,8 @@ export const addPetRequest = <ThrowOnError extends boolean = false>(
  */
 export const updatePetRequest = <ThrowOnError extends boolean = false>(
   options: Options<UpdatePetData, ThrowOnError>,
-): HttpRequest<unknown> =>
-  (options?.client ?? client).requestOptions({
+): HttpRequest<UpdatePetResponse> =>
+  (options?.client ?? client).requestOptions<UpdatePetResponse, ThrowOnError>({
     method: 'PUT',
     responseStyle: 'data',
     url: '/pet',
@@ -78,8 +78,8 @@ export const updatePetRequest = <ThrowOnError extends boolean = false>(
  */
 export const findPetsByStatusRequest = <ThrowOnError extends boolean = false>(
   options: Options<FindPetsByStatusData, ThrowOnError>,
-): HttpRequest<unknown> =>
-  (options?.client ?? client).requestOptions({
+): HttpRequest<FindPetsByStatusResponse> =>
+  (options?.client ?? client).requestOptions<FindPetsByStatusResponse, ThrowOnError>({
     method: 'GET',
     responseStyle: 'data',
     url: '/pet/findByStatus',
@@ -93,8 +93,8 @@ export const findPetsByStatusRequest = <ThrowOnError extends boolean = false>(
  */
 export const findPetsByTagsRequest = <ThrowOnError extends boolean = false>(
   options: Options<FindPetsByTagsData, ThrowOnError>,
-): HttpRequest<unknown> =>
-  (options?.client ?? client).requestOptions({
+): HttpRequest<FindPetsByTagsResponse> =>
+  (options?.client ?? client).requestOptions<FindPetsByTagsResponse, ThrowOnError>({
     method: 'GET',
     responseStyle: 'data',
     url: '/pet/findByTags',
@@ -109,7 +109,7 @@ export const findPetsByTagsRequest = <ThrowOnError extends boolean = false>(
 export const deletePetRequest = <ThrowOnError extends boolean = false>(
   options: Options<DeletePetData, ThrowOnError>,
 ): HttpRequest<unknown> =>
-  (options?.client ?? client).requestOptions({
+  (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
     method: 'DELETE',
     responseStyle: 'data',
     url: '/pet/{petId}',
@@ -123,8 +123,8 @@ export const deletePetRequest = <ThrowOnError extends boolean = false>(
  */
 export const getPetByIdRequest = <ThrowOnError extends boolean = false>(
   options: Options<GetPetByIdData, ThrowOnError>,
-): HttpRequest<unknown> =>
-  (options?.client ?? client).requestOptions({
+): HttpRequest<GetPetByIdResponse> =>
+  (options?.client ?? client).requestOptions<GetPetByIdResponse, ThrowOnError>({
     method: 'GET',
     responseStyle: 'data',
     url: '/pet/{petId}',
@@ -138,8 +138,8 @@ export const getPetByIdRequest = <ThrowOnError extends boolean = false>(
  */
 export const updatePetWithFormRequest = <ThrowOnError extends boolean = false>(
   options: Options<UpdatePetWithFormData, ThrowOnError>,
-): HttpRequest<unknown> =>
-  (options?.client ?? client).requestOptions({
+): HttpRequest<UpdatePetWithFormResponse> =>
+  (options?.client ?? client).requestOptions<UpdatePetWithFormResponse, ThrowOnError>({
     method: 'POST',
     responseStyle: 'data',
     url: '/pet/{petId}',
@@ -153,8 +153,8 @@ export const updatePetWithFormRequest = <ThrowOnError extends boolean = false>(
  */
 export const uploadFileRequest = <ThrowOnError extends boolean = false>(
   options: Options<UploadFileData, ThrowOnError>,
-): HttpRequest<unknown> =>
-  (options?.client ?? client).requestOptions({
+): HttpRequest<UploadFileResponse> =>
+  (options?.client ?? client).requestOptions<UploadFileResponse, ThrowOnError>({
     method: 'POST',
     responseStyle: 'data',
     url: '/pet/{petId}/uploadImage',
@@ -168,8 +168,8 @@ export const uploadFileRequest = <ThrowOnError extends boolean = false>(
  */
 export const getInventoryRequest = <ThrowOnError extends boolean = false>(
   options?: Options<GetInventoryData, ThrowOnError>,
-): HttpRequest<unknown> =>
-  (options?.client ?? client).requestOptions({
+): HttpRequest<GetInventoryResponse> =>
+  (options?.client ?? client).requestOptions<GetInventoryResponse, ThrowOnError>({
     method: 'GET',
     responseStyle: 'data',
     url: '/store/inventory',
@@ -183,8 +183,8 @@ export const getInventoryRequest = <ThrowOnError extends boolean = false>(
  */
 export const placeOrderRequest = <ThrowOnError extends boolean = false>(
   options?: Options<PlaceOrderData, ThrowOnError>,
-): HttpRequest<unknown> =>
-  (options?.client ?? client).requestOptions({
+): HttpRequest<PlaceOrderResponse> =>
+  (options?.client ?? client).requestOptions<PlaceOrderResponse, ThrowOnError>({
     method: 'POST',
     responseStyle: 'data',
     url: '/store/order',
@@ -199,7 +199,7 @@ export const placeOrderRequest = <ThrowOnError extends boolean = false>(
 export const deleteOrderRequest = <ThrowOnError extends boolean = false>(
   options: Options<DeleteOrderData, ThrowOnError>,
 ): HttpRequest<unknown> =>
-  (options?.client ?? client).requestOptions({
+  (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
     method: 'DELETE',
     responseStyle: 'data',
     url: '/store/order/{orderId}',
@@ -213,8 +213,8 @@ export const deleteOrderRequest = <ThrowOnError extends boolean = false>(
  */
 export const getOrderByIdRequest = <ThrowOnError extends boolean = false>(
   options: Options<GetOrderByIdData, ThrowOnError>,
-): HttpRequest<unknown> =>
-  (options?.client ?? client).requestOptions({
+): HttpRequest<GetOrderByIdResponse> =>
+  (options?.client ?? client).requestOptions<GetOrderByIdResponse, ThrowOnError>({
     method: 'GET',
     responseStyle: 'data',
     url: '/store/order/{orderId}',
@@ -228,8 +228,8 @@ export const getOrderByIdRequest = <ThrowOnError extends boolean = false>(
  */
 export const createUserRequest = <ThrowOnError extends boolean = false>(
   options?: Options<CreateUserData, ThrowOnError>,
-): HttpRequest<unknown> =>
-  (options?.client ?? client).requestOptions({
+): HttpRequest<CreateUserResponse> =>
+  (options?.client ?? client).requestOptions<CreateUserResponse, ThrowOnError>({
     method: 'POST',
     responseStyle: 'data',
     url: '/user',
@@ -243,8 +243,8 @@ export const createUserRequest = <ThrowOnError extends boolean = false>(
  */
 export const createUsersWithListInputRequest = <ThrowOnError extends boolean = false>(
   options?: Options<CreateUsersWithListInputData, ThrowOnError>,
-): HttpRequest<unknown> =>
-  (options?.client ?? client).requestOptions({
+): HttpRequest<CreateUsersWithListInputResponse> =>
+  (options?.client ?? client).requestOptions<CreateUsersWithListInputResponse, ThrowOnError>({
     method: 'POST',
     responseStyle: 'data',
     url: '/user/createWithList',
@@ -258,8 +258,8 @@ export const createUsersWithListInputRequest = <ThrowOnError extends boolean = f
  */
 export const loginUserRequest = <ThrowOnError extends boolean = false>(
   options?: Options<LoginUserData, ThrowOnError>,
-): HttpRequest<unknown> =>
-  (options?.client ?? client).requestOptions({
+): HttpRequest<LoginUserResponse> =>
+  (options?.client ?? client).requestOptions<LoginUserResponse, ThrowOnError>({
     method: 'GET',
     responseStyle: 'data',
     url: '/user/login',
@@ -274,7 +274,7 @@ export const loginUserRequest = <ThrowOnError extends boolean = false>(
 export const logoutUserRequest = <ThrowOnError extends boolean = false>(
   options?: Options<LogoutUserData, ThrowOnError>,
 ): HttpRequest<unknown> =>
-  (options?.client ?? client).requestOptions({
+  (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
     method: 'GET',
     responseStyle: 'data',
     url: '/user/logout',
@@ -289,7 +289,7 @@ export const logoutUserRequest = <ThrowOnError extends boolean = false>(
 export const deleteUserRequest = <ThrowOnError extends boolean = false>(
   options: Options<DeleteUserData, ThrowOnError>,
 ): HttpRequest<unknown> =>
-  (options?.client ?? client).requestOptions({
+  (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
     method: 'DELETE',
     responseStyle: 'data',
     url: '/user/{username}',
@@ -303,8 +303,8 @@ export const deleteUserRequest = <ThrowOnError extends boolean = false>(
  */
 export const getUserByNameRequest = <ThrowOnError extends boolean = false>(
   options: Options<GetUserByNameData, ThrowOnError>,
-): HttpRequest<unknown> =>
-  (options?.client ?? client).requestOptions({
+): HttpRequest<GetUserByNameResponse> =>
+  (options?.client ?? client).requestOptions<GetUserByNameResponse, ThrowOnError>({
     method: 'GET',
     responseStyle: 'data',
     url: '/user/{username}',
@@ -319,7 +319,7 @@ export const getUserByNameRequest = <ThrowOnError extends boolean = false>(
 export const updateUserRequest = <ThrowOnError extends boolean = false>(
   options: Options<UpdateUserData, ThrowOnError>,
 ): HttpRequest<unknown> =>
-  (options?.client ?? client).requestOptions({
+  (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
     method: 'PUT',
     responseStyle: 'data',
     url: '/user/{username}',
