@@ -9,6 +9,7 @@ import type {
 
 import type { IApi } from './api';
 import type { Resolvers } from './resolvers';
+import type { TypeOptions } from './shared/types';
 
 export type UserConfig = Plugin.Name<'zod'> &
   Plugin.Hooks &
@@ -422,34 +423,13 @@ export type Config = Plugin.Name<'zod'> &
       offset: boolean;
     };
     /** Configuration for reusable schema definitions. */
-    definitions: NamingOptions &
-      FeatureToggle & {
-        /** Configuration for TypeScript type generation from Zod schemas. */
-        types: {
-          /** Configuration for `infer` types. */
-          infer: NamingOptions & FeatureToggle;
-        };
-      };
+    definitions: NamingOptions & FeatureToggle & TypeOptions;
     /** Enable Zod metadata support? */
     metadata: boolean;
     /** Configuration for request-specific Zod schemas. */
-    requests: NamingOptions &
-      FeatureToggle & {
-        /** Configuration for TypeScript type generation from Zod schemas. */
-        types: {
-          /** Configuration for `infer` types. */
-          infer: NamingOptions & FeatureToggle;
-        };
-      };
+    requests: NamingOptions & FeatureToggle & TypeOptions;
     /** Configuration for response-specific Zod schemas. */
-    responses: NamingOptions &
-      FeatureToggle & {
-        /** Configuration for TypeScript type generation from Zod schemas. */
-        types: {
-          /** Configuration for `infer` types. */
-          infer: NamingOptions & FeatureToggle;
-        };
-      };
+    responses: NamingOptions & FeatureToggle & TypeOptions;
     /** Configuration for TypeScript type generation from Zod schemas. */
     types: {
       /** Configuration for `infer` types. */
@@ -459,14 +439,7 @@ export type Config = Plugin.Name<'zod'> &
       };
     };
     /** Configuration for webhook-specific Zod schemas. */
-    webhooks: NamingOptions &
-      FeatureToggle & {
-        /** Configuration for TypeScript type generation from Zod schemas. */
-        types: {
-          /** Configuration for `infer` types. */
-          infer: NamingOptions & FeatureToggle;
-        };
-      };
+    webhooks: NamingOptions & FeatureToggle & TypeOptions;
   };
 
 export type ZodPlugin = DefinePlugin<UserConfig, Config, IApi>;

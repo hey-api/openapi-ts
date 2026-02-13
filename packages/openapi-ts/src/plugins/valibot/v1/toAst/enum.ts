@@ -65,13 +65,13 @@ function enumResolver(ctx: EnumResolverContext): PipeResult {
   return ctx.pipes.current;
 }
 
-export const enumToAst = ({
+export function enumToAst({
   plugin,
   schema,
   state,
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'enum'>;
-}): Pipe => {
+}): Pipe {
   const v = plugin.external('valibot.v');
 
   const { enumMembers } = itemsNode({
@@ -118,4 +118,4 @@ export const enumToAst = ({
   const resolver = plugin.config['~resolvers']?.enum;
   const node = resolver?.(ctx) ?? enumResolver(ctx);
   return ctx.pipes.toNode(node, plugin);
-};
+}
