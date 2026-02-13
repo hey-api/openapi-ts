@@ -1,10 +1,9 @@
 import type { Refs, SymbolMeta } from '@hey-api/codegen-core';
-import type { IR, SchemaExtractor } from '@hey-api/shared';
+import type { IR, Walker } from '@hey-api/shared';
 import type ts from 'typescript';
 
 import type { ValibotPlugin } from '../types';
 import type { Pipes } from './pipes';
-import type { ProcessorContext } from './processor';
 
 export type Ast = {
   hasLazyExpression?: boolean;
@@ -15,10 +14,9 @@ export type Ast = {
 export type IrSchemaToAstOptions = {
   /** The plugin instance. */
   plugin: ValibotPlugin['Instance'];
-  /** Optional schema extractor function. */
-  schemaExtractor?: SchemaExtractor<ProcessorContext>;
   /** The plugin state references. */
   state: Refs<PluginState>;
+  walk: Walker<Ast, ValibotPlugin['Instance']>;
 };
 
 export type PluginState = Pick<Required<SymbolMeta>, 'path'> &

@@ -39,6 +39,7 @@ export const identifiers = {
   never: 'never',
   null: 'null',
   nullable: 'nullable',
+  nullish: 'nullish',
   number: 'number',
   object: 'object',
   optional: 'optional',
