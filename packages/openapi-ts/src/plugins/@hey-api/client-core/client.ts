@@ -1,3 +1,5 @@
+import path from 'node:path';
+
 import { parseUrl } from '@hey-api/shared';
 
 import { getTypedConfig } from '../../../config/utils';
@@ -41,9 +43,23 @@ export const createClient: PluginHandler = ({ plugin }) => {
   });
 
   const { runtimeConfigPath } = plugin.config;
-  const symbolCreateClientConfig = runtimeConfigPath
+  let resolvedRuntimeConfigPath: string | undefined;
+  if (runtimeConfigPath) {
+    const config = getTypedConfig(plugin);
+    const outputPath = config.output.path;
+    // Resolve the runtimeConfigPath from the current working directory
+    const absoluteRuntimeConfigPath = path.resolve(process.cwd(), runtimeConfigPath);
+    // Calculate the relative path from the output directory to the runtime config file
+    resolvedRuntimeConfigPath = path.relative(outputPath, absoluteRuntimeConfigPath);
+    // Ensure the path uses forward slashes and starts with ./ or ../
+    resolvedRuntimeConfigPath = resolvedRuntimeConfigPath.split(path.sep).join('/');
+    if (!resolvedRuntimeConfigPath.startsWith('.')) {
+      resolvedRuntimeConfigPath = `./${resolvedRuntimeConfigPath}`;
+    }
+  }
+  const symbolCreateClientConfig = resolvedRuntimeConfigPath
     ? plugin.symbol('createClientConfig', {
-        external: runtimeConfigPath,
+        external: resolvedRuntimeConfigPath,
       })
     : undefined;
 
