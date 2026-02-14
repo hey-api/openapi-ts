@@ -48,8 +48,11 @@ export const createClient: PluginHandler = ({ plugin }) => {
     const config = getTypedConfig(plugin);
     const outputPath = config.output.path;
 
-    // If the path starts with './' or is absolute,
-    // resolve it from the current working directory and make it relative to output
+    // Path resolution strategy:
+    // - Paths starting with './' or absolute paths are assumed to be relative to CWD (project root)
+    //   and need to be resolved to be relative to the output directory
+    // - Paths starting with '../' or without './' prefix are assumed to be already relative
+    //   to the output directory and are used as-is
     if (runtimeConfigPath.startsWith('./') || path.isAbsolute(runtimeConfigPath)) {
       // Resolve the runtimeConfigPath from the current working directory
       const absoluteRuntimeConfigPath = path.resolve(runtimeConfigPath);
