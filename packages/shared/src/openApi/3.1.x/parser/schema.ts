@@ -53,6 +53,9 @@ const findDiscriminatorPropertyType = ({
 
     // Check direct properties
     const property = resolved.properties?.[propertyName];
+    if (property === true) {
+      continue;
+    }
     if (property) {
       const resolvedProperty = property.$ref
         ? context.resolveRef<SchemaObject>(property.$ref)
