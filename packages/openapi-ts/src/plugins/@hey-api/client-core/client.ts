@@ -47,14 +47,22 @@ export const createClient: PluginHandler = ({ plugin }) => {
   if (runtimeConfigPath) {
     const config = getTypedConfig(plugin);
     const outputPath = config.output.path;
-    // Resolve the runtimeConfigPath from the current working directory
-    const absoluteRuntimeConfigPath = path.resolve(process.cwd(), runtimeConfigPath);
-    // Calculate the relative path from the output directory to the runtime config file
-    resolvedRuntimeConfigPath = path.relative(outputPath, absoluteRuntimeConfigPath);
-    // Ensure the path uses forward slashes and starts with ./ or ../
-    resolvedRuntimeConfigPath = resolvedRuntimeConfigPath.split(path.sep).join('/');
-    if (!resolvedRuntimeConfigPath.startsWith('.')) {
-      resolvedRuntimeConfigPath = `./${resolvedRuntimeConfigPath}`;
+
+    // If the path starts with './' or '/' (absolute or relative to CWD),
+    // resolve it from the current working directory and make it relative to output
+    if (runtimeConfigPath.startsWith('./') || path.isAbsolute(runtimeConfigPath)) {
+      // Resolve the runtimeConfigPath from the current working directory
+      const absoluteRuntimeConfigPath = path.resolve(process.cwd(), runtimeConfigPath);
+      // Calculate the relative path from the output directory to the runtime config file
+      resolvedRuntimeConfigPath = path.relative(outputPath, absoluteRuntimeConfigPath);
+      // Ensure the path uses forward slashes and starts with ./ or ../
+      resolvedRuntimeConfigPath = resolvedRuntimeConfigPath.split(path.sep).join('/');
+      if (!resolvedRuntimeConfigPath.startsWith('.')) {
+        resolvedRuntimeConfigPath = `./${resolvedRuntimeConfigPath}`;
+      }
+    } else {
+      // Path is already relative to output (e.g., '../hey-api'), use it as-is
+      resolvedRuntimeConfigPath = runtimeConfigPath;
     }
   }
   const symbolCreateClientConfig = resolvedRuntimeConfigPath
