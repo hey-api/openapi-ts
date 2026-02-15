@@ -9,5 +9,11 @@ export default defineConfig({
     path: './src/client',
     postProcess: ['oxfmt', 'eslint'],
   },
-  plugins: ['nestjs', '@hey-api/sdk'],
+  plugins: [
+    {
+      groupByTag: true,
+      name: 'nestjs',
+    },
+    '@hey-api/sdk',
+  ],
 });

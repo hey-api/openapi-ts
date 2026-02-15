@@ -1,5 +1,5 @@
 import type { IR } from '@hey-api/shared';
-import { hasParameterGroupObjectRequired, operationResponsesMap } from '@hey-api/shared';
+import { hasParameterGroupObjectRequired, operationResponsesMap, toCase } from '@hey-api/shared';
 
 import { $ } from '../../ts-dsl';
 import type { NestJSPlugin } from './types';
@@ -93,24 +93,78 @@ const operationToMethod = ({
   };
 };
 
-export const handler: NestJSPlugin['Handler'] = ({ plugin }) => {
-  const symbolControllerMethods = plugin.symbol('ControllerMethods');
-
+const emitTypeAlias = ({
+  methods,
+  plugin,
+  typeName,
+}: {
+  methods: Array<{ name: string; type: ReturnType<typeof $.type.func> }>;
+  plugin: NestJSPlugin['Instance'];
+  typeName: string;
+}) => {
+  const symbol = plugin.symbol(typeName);
   const type = $.type.object();
+  for (const method of methods) {
+    type.prop(method.name, (p) => p.type(method.type));
+  }
+  plugin.node($.type.alias(symbol).export().type(type));
+};
 
-  plugin.forEach(
-    'operation',
-    ({ operation }) => {
-      const method = operationToMethod({ operation, plugin });
-      if (method) {
-        type.prop(method.name, (p) => p.type(method.type));
-      }
-    },
-    {
-      order: 'declarations',
-    },
-  );
+export const handler: NestJSPlugin['Handler'] = ({ plugin }) => {
+  if (plugin.config.groupByTag) {
+    // Collect operations by tag, then emit per-tag types
+    const operationsByTag = new Map<
+      string,
+      Array<{ name: string; type: ReturnType<typeof $.type.func> }>
+    >();
 
-  const node = $.type.alias(symbolControllerMethods).export().type(type);
-  plugin.node(node);
+    plugin.forEach(
+      'operation',
+      ({ operation, tags }) => {
+        const tag = tags?.[0] ?? 'default';
+        if (!operationsByTag.has(tag)) {
+          operationsByTag.set(tag, []);
+        }
+        const method = operationToMethod({ operation, plugin });
+        operationsByTag.get(tag)!.push(method);
+      },
+      {
+        order: 'declarations',
+      },
+    );
+
+    for (const [tag, methods] of operationsByTag) {
+      const pascalTag = toCase(tag, 'PascalCase');
+      emitTypeAlias({
+        methods,
+        plugin,
+        typeName: `${pascalTag}ControllerMethods`,
+      });
+      emitTypeAlias({
+        methods,
+        plugin,
+        typeName: `${pascalTag}ServiceMethods`,
+      });
+    }
+  } else {
+    // Flat mode: single ControllerMethods + ServiceMethods
+    const methods: Array<{
+      name: string;
+      type: ReturnType<typeof $.type.func>;
+    }> = [];
+
+    plugin.forEach(
+      'operation',
+      ({ operation }) => {
+        const method = operationToMethod({ operation, plugin });
+        methods.push(method);
+      },
+      {
+        order: 'declarations',
+      },
+    );
+
+    emitTypeAlias({ methods, plugin, typeName: 'ControllerMethods' });
+    emitTypeAlias({ methods, plugin, typeName: 'ServiceMethods' });
+  }
 };

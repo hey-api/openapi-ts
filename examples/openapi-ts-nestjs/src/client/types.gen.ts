@@ -4,6 +4,100 @@ export type ClientOptions = {
   baseUrl: 'http://localhost:3000/v3' | (string & {});
 };
 
+export type Pet = {
+  id: string;
+  name: string;
+  status?: 'available' | 'pending' | 'sold';
+  tag?: string;
+};
+
+export type CreatePetBody = {
+  name: string;
+  tag?: string;
+};
+
+export type UpdatePetBody = {
+  name?: string;
+  status?: 'available' | 'pending' | 'sold';
+  tag?: string;
+};
+
+export type Error = {
+  code: number;
+  message: string;
+};
+
+export type ListPetsData = {
+  body?: never;
+  path?: never;
+  query?: {
+    limit?: number;
+    offset?: number;
+  };
+  url: '/pets';
+};
+
+export type ListPetsResponses = {
+  /**
+   * A list of pets
+   */
+  200: Array<Pet>;
+};
+
+export type ListPetsResponse = ListPetsResponses[keyof ListPetsResponses];
+
+export type CreatePetData = {
+  body: CreatePetBody;
+  path?: never;
+  query?: never;
+  url: '/pets';
+};
+
+export type CreatePetErrors = {
+  /**
+   * Validation error
+   */
+  400: Error;
+};
+
+export type CreatePetError = CreatePetErrors[keyof CreatePetErrors];
+
+export type CreatePetResponses = {
+  /**
+   * Pet created
+   */
+  201: Pet;
+};
+
+export type CreatePetResponse = CreatePetResponses[keyof CreatePetResponses];
+
+export type DeletePetData = {
+  body?: never;
+  path: {
+    petId: string;
+  };
+  query?: never;
+  url: '/pets/{petId}';
+};
+
+export type DeletePetErrors = {
+  /**
+   * Pet not found
+   */
+  404: Error;
+};
+
+export type DeletePetError = DeletePetErrors[keyof DeletePetErrors];
+
+export type DeletePetResponses = {
+  /**
+   * Pet deleted
+   */
+  204: void;
+};
+
+export type DeletePetResponse = DeletePetResponses[keyof DeletePetResponses];
+
 export type ShowPetByIdData = {
   body?: never;
   path: {
@@ -13,49 +107,69 @@ export type ShowPetByIdData = {
   url: '/pets/{petId}';
 };
 
+export type ShowPetByIdErrors = {
+  /**
+   * Pet not found
+   */
+  404: Error;
+};
+
+export type ShowPetByIdError = ShowPetByIdErrors[keyof ShowPetByIdErrors];
+
 export type ShowPetByIdResponses = {
   /**
    * Pet found
    */
-  200: {
-    id?: string;
-    name?: string;
-  };
+  200: Pet;
 };
 
 export type ShowPetByIdResponse = ShowPetByIdResponses[keyof ShowPetByIdResponses];
 
-export type ListPetsData = {
-  body?: never;
-  path?: never;
-  query?: {
-    limit?: number;
+export type UpdatePetData = {
+  body: UpdatePetBody;
+  path: {
+    petId: string;
   };
-  url: '/pets';
+  query?: never;
+  url: '/pets/{petId}';
 };
 
-export type ListPetsResponses = {
+export type UpdatePetErrors = {
   /**
-   * A list of pets
+   * Validation error
    */
-  200: Array<{
-    id?: string;
-    name?: string;
-  }>;
+  400: Error;
+  /**
+   * Pet not found
+   */
+  404: Error;
 };
 
-export type ListPetsResponse = ListPetsResponses[keyof ListPetsResponses];
+export type UpdatePetError = UpdatePetErrors[keyof UpdatePetErrors];
 
-export type CreatePetsData = {
+export type UpdatePetResponses = {
+  /**
+   * Pet updated
+   */
+  200: Pet;
+};
+
+export type UpdatePetResponse = UpdatePetResponses[keyof UpdatePetResponses];
+
+export type GetInventoryData = {
   body?: never;
   path?: never;
   query?: never;
-  url: '/pets';
+  url: '/store/inventory';
 };
 
-export type CreatePetsResponses = {
+export type GetInventoryResponses = {
   /**
-   * Pet created
+   * Successful operation
    */
-  201: unknown;
+  200: {
+    [key: string]: number;
+  };
 };
+
+export type GetInventoryResponse = GetInventoryResponses[keyof GetInventoryResponses];

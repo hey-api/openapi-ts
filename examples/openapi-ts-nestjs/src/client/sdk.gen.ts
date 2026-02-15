@@ -3,12 +3,22 @@
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
 import type {
-  CreatePetsData,
-  CreatePetsResponses,
+  CreatePetData,
+  CreatePetErrors,
+  CreatePetResponses,
+  DeletePetData,
+  DeletePetErrors,
+  DeletePetResponses,
+  GetInventoryData,
+  GetInventoryResponses,
   ListPetsData,
   ListPetsResponses,
   ShowPetByIdData,
+  ShowPetByIdErrors,
   ShowPetByIdResponses,
+  UpdatePetData,
+  UpdatePetErrors,
+  UpdatePetResponses,
 } from './types.gen';
 
 export type Options<
@@ -29,17 +39,6 @@ export type Options<
 };
 
 /**
- * Find pet by ID
- */
-export const showPetById = <ThrowOnError extends boolean = false>(
-  options: Options<ShowPetByIdData, ThrowOnError>,
-) =>
-  (options.client ?? client).get<ShowPetByIdResponses, unknown, ThrowOnError>({
-    url: '/pets/{petId}',
-    ...options,
-  });
-
-/**
  * List all pets
  */
 export const listPets = <ThrowOnError extends boolean = false>(
@@ -53,10 +52,62 @@ export const listPets = <ThrowOnError extends boolean = false>(
 /**
  * Create a pet
  */
-export const createPets = <ThrowOnError extends boolean = false>(
-  options?: Options<CreatePetsData, ThrowOnError>,
+export const createPet = <ThrowOnError extends boolean = false>(
+  options: Options<CreatePetData, ThrowOnError>,
 ) =>
-  (options?.client ?? client).post<CreatePetsResponses, unknown, ThrowOnError>({
+  (options.client ?? client).post<CreatePetResponses, CreatePetErrors, ThrowOnError>({
     url: '/pets',
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+  });
+
+/**
+ * Delete a pet
+ */
+export const deletePet = <ThrowOnError extends boolean = false>(
+  options: Options<DeletePetData, ThrowOnError>,
+) =>
+  (options.client ?? client).delete<DeletePetResponses, DeletePetErrors, ThrowOnError>({
+    url: '/pets/{petId}',
+    ...options,
+  });
+
+/**
+ * Find pet by ID
+ */
+export const showPetById = <ThrowOnError extends boolean = false>(
+  options: Options<ShowPetByIdData, ThrowOnError>,
+) =>
+  (options.client ?? client).get<ShowPetByIdResponses, ShowPetByIdErrors, ThrowOnError>({
+    url: '/pets/{petId}',
+    ...options,
+  });
+
+/**
+ * Update a pet
+ */
+export const updatePet = <ThrowOnError extends boolean = false>(
+  options: Options<UpdatePetData, ThrowOnError>,
+) =>
+  (options.client ?? client).put<UpdatePetResponses, UpdatePetErrors, ThrowOnError>({
+    url: '/pets/{petId}',
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+  });
+
+/**
+ * Returns pet inventories by status
+ */
+export const getInventory = <ThrowOnError extends boolean = false>(
+  options?: Options<GetInventoryData, ThrowOnError>,
+) =>
+  (options?.client ?? client).get<GetInventoryResponses, unknown, ThrowOnError>({
+    url: '/store/inventory',
     ...options,
   });
