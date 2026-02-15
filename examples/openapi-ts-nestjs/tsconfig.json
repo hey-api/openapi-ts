@@ -1,0 +1,17 @@
+{
+  "include": ["src/**/*", "test/**/*"],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "lib": ["es2023", "dom", "dom.iterable"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "es2022",
+    "types": ["vitest/globals"]
+  },
+  "references": [{ "path": "./tsconfig.node.json" }]
+}

@@ -110,12 +110,12 @@ import type {
   CreatePetsResponses,
   ShowPetByIdData,
   ShowPetByIdResponses,
-} from "./types.gen";
+} from './types.gen';
 
 export interface PetsController {
-  listPets(query?: ListPetsData["query"]): Promise<ListPetsResponses>;
-  createPets(body: CreatePetsData["body"]): Promise<CreatePetsResponses>;
-  showPetById(params: ShowPetByIdData["path"]): Promise<ShowPetByIdResponses>;
+  listPets(query?: ListPetsData['query']): Promise<ListPetsResponses>;
+  createPets(body: CreatePetsData['body']): Promise<CreatePetsResponses>;
+  showPetById(params: ShowPetByIdData['path']): Promise<ShowPetByIdResponses>;
 }
 ```
 
@@ -123,10 +123,10 @@ export interface PetsController {
 
 ```typescript
 // controllers/pets.controller.ts
-import { Controller, Get, Post, Param, Query, Body } from "@nestjs/common";
-import type { PetsController } from "../client/nestjs.gen";
+import { Controller, Get, Post, Param, Query, Body } from '@nestjs/common';
+import type { PetsController } from '../client/nestjs.gen';
 
-@Controller("pets")
+@Controller('pets')
 export class PetsControllerImpl implements PetsController {
   @Get()
   async listPets(@Query() query?) {
@@ -138,9 +138,9 @@ export class PetsControllerImpl implements PetsController {
     return { id: 1 };
   }
 
-  @Get(":petId")
+  @Get(':petId')
   async showPetById(@Param() params) {
-    return { id: params.petId, name: "Kitty" };
+    return { id: params.petId, name: 'Kitty' };
   }
 }
 ```
@@ -202,10 +202,10 @@ Add `nestjs` to your plugins:
 
 ```js
 export default {
-  input: "openapi.json",
-  output: "src/client",
+  input: 'openapi.json',
+  output: 'src/client',
   plugins: [
-    "nestjs", // [!code ++]
+    'nestjs', // [!code ++]
   ],
 };
 ```
@@ -220,10 +220,10 @@ Generated controller interfaces from all endpoints. Follows SDK naming conventio
 ::: code-group
 
 ```ts [example]
-import { Controller, Get, Post } from "@nestjs/common";
-import type { PetsController } from "../client/nestjs.gen";
+import { Controller, Get, Post } from '@nestjs/common';
+import type { PetsController } from '../client/nestjs.gen';
 
-@Controller("pets")
+@Controller('pets')
 export class PetsControllerImpl implements PetsController {
   @Get()
   async listPets(query?) {
@@ -239,11 +239,11 @@ export class PetsControllerImpl implements PetsController {
 
 ```js [config]
 export default {
-  input: "openapi.json",
-  output: "src/client",
+  input: 'openapi.json',
+  output: 'src/client',
   plugins: [
     {
-      name: "nestjs",
+      name: 'nestjs',
     },
   ],
 };
