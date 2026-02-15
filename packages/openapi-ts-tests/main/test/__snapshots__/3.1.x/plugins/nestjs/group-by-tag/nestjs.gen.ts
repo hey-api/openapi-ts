@@ -10,26 +10,7 @@ export type DefaultControllerMethods = {
     getApiVbyApiVersionSimpleOperation: (path: GetApiVbyApiVersionSimpleOperationData['path']) => Promise<GetApiVbyApiVersionSimpleOperationResponse>;
 };
 
-export type DefaultServiceMethods = {
-    export: () => Promise<void>;
-    patchApiVbyApiVersionNoTag: () => Promise<void>;
-    import: (body: ImportData['body']) => Promise<ImportResponse>;
-    fooWow: () => Promise<void>;
-    getApiVbyApiVersionSimpleOperation: (path: GetApiVbyApiVersionSimpleOperationData['path']) => Promise<GetApiVbyApiVersionSimpleOperationResponse>;
-};
-
 export type SimpleControllerMethods = {
-    apiVVersionODataControllerCount: () => Promise<ApiVVersionODataControllerCountResponse>;
-    deleteCallWithoutParametersAndResponse: () => Promise<void>;
-    getCallWithoutParametersAndResponse: () => Promise<void>;
-    headCallWithoutParametersAndResponse: () => Promise<void>;
-    optionsCallWithoutParametersAndResponse: () => Promise<void>;
-    patchCallWithoutParametersAndResponse: () => Promise<void>;
-    postCallWithoutParametersAndResponse: () => Promise<void>;
-    putCallWithoutParametersAndResponse: () => Promise<void>;
-};
-
-export type SimpleServiceMethods = {
     apiVVersionODataControllerCount: () => Promise<ApiVVersionODataControllerCountResponse>;
     deleteCallWithoutParametersAndResponse: () => Promise<void>;
     getCallWithoutParametersAndResponse: () => Promise<void>;
@@ -48,19 +29,7 @@ export type ParametersControllerMethods = {
     postCallWithOptionalParam: (query: PostCallWithOptionalParamData['query'], body?: PostCallWithOptionalParamData['body']) => Promise<PostCallWithOptionalParamResponse>;
 };
 
-export type ParametersServiceMethods = {
-    deleteFoo: (path: DeleteFooData3['path'], headers: DeleteFooData3['headers']) => Promise<void>;
-    callWithParameters: (path: CallWithParametersData['path'], query: CallWithParametersData['query'], body: CallWithParametersData['body'], headers: CallWithParametersData['headers']) => Promise<void>;
-    callWithWeirdParameterNames: (path: CallWithWeirdParameterNamesData['path'], query: CallWithWeirdParameterNamesData['query'], body: CallWithWeirdParameterNamesData['body'], headers: CallWithWeirdParameterNamesData['headers']) => Promise<void>;
-    getCallWithOptionalParam: (body: GetCallWithOptionalParamData['body'], query?: GetCallWithOptionalParamData['query']) => Promise<void>;
-    postCallWithOptionalParam: (query: PostCallWithOptionalParamData['query'], body?: PostCallWithOptionalParamData['body']) => Promise<PostCallWithOptionalParamResponse>;
-};
-
 export type DescriptionsControllerMethods = {
-    callWithDescriptions: (query?: CallWithDescriptionsData['query']) => Promise<void>;
-};
-
-export type DescriptionsServiceMethods = {
     callWithDescriptions: (query?: CallWithDescriptionsData['query']) => Promise<void>;
 };
 
@@ -68,15 +37,7 @@ export type DeprecatedControllerMethods = {
     deprecatedCall: (headers: DeprecatedCallData['headers']) => Promise<void>;
 };
 
-export type DeprecatedServiceMethods = {
-    deprecatedCall: (headers: DeprecatedCallData['headers']) => Promise<void>;
-};
-
 export type RequestBodyControllerMethods = {
-    postApiVbyApiVersionRequestBody: (query?: PostApiVbyApiVersionRequestBodyData['query'], body?: PostApiVbyApiVersionRequestBodyData['body']) => Promise<void>;
-};
-
-export type RequestBodyServiceMethods = {
     postApiVbyApiVersionRequestBody: (query?: PostApiVbyApiVersionRequestBodyData['query'], body?: PostApiVbyApiVersionRequestBodyData['body']) => Promise<void>;
 };
 
@@ -84,17 +45,7 @@ export type FormDataControllerMethods = {
     postApiVbyApiVersionFormData: (query?: PostApiVbyApiVersionFormDataData['query'], body?: PostApiVbyApiVersionFormDataData['body']) => Promise<void>;
 };
 
-export type FormDataServiceMethods = {
-    postApiVbyApiVersionFormData: (query?: PostApiVbyApiVersionFormDataData['query'], body?: PostApiVbyApiVersionFormDataData['body']) => Promise<void>;
-};
-
 export type DefaultsControllerMethods = {
-    callWithDefaultParameters: (query?: CallWithDefaultParametersData['query']) => Promise<void>;
-    callWithDefaultOptionalParameters: (query?: CallWithDefaultOptionalParametersData['query']) => Promise<void>;
-    callToTestOrderOfParams: (query: CallToTestOrderOfParamsData['query']) => Promise<void>;
-};
-
-export type DefaultsServiceMethods = {
     callWithDefaultParameters: (query?: CallWithDefaultParametersData['query']) => Promise<void>;
     callWithDefaultOptionalParameters: (query?: CallWithDefaultOptionalParametersData['query']) => Promise<void>;
     callToTestOrderOfParams: (query: CallToTestOrderOfParamsData['query']) => Promise<void>;
@@ -107,29 +58,11 @@ export type DuplicateControllerMethods = {
     duplicateName4: () => Promise<void>;
 };
 
-export type DuplicateServiceMethods = {
-    duplicateName: () => Promise<void>;
-    duplicateName2: () => Promise<void>;
-    duplicateName3: () => Promise<void>;
-    duplicateName4: () => Promise<void>;
-};
-
 export type NoContentControllerMethods = {
     callWithNoContentResponse: () => Promise<CallWithNoContentResponseResponse>;
 };
 
-export type NoContentServiceMethods = {
-    callWithNoContentResponse: () => Promise<CallWithNoContentResponseResponse>;
-};
-
 export type ResponseControllerMethods = {
-    callWithResponseAndNoContentResponse: () => Promise<CallWithResponseAndNoContentResponseResponse>;
-    callWithResponse: () => Promise<CallWithResponseResponse>;
-    callWithDuplicateResponses: () => Promise<CallWithDuplicateResponsesResponse>;
-    callWithResponses: () => Promise<CallWithResponsesResponse>;
-};
-
-export type ResponseServiceMethods = {
     callWithResponseAndNoContentResponse: () => Promise<CallWithResponseAndNoContentResponseResponse>;
     callWithResponse: () => Promise<CallWithResponseResponse>;
     callWithDuplicateResponses: () => Promise<CallWithDuplicateResponsesResponse>;
@@ -141,16 +74,7 @@ export type MultipleTags1ControllerMethods = {
     dummyB: () => Promise<DummyBResponse>;
 };
 
-export type MultipleTags1ServiceMethods = {
-    dummyA: () => Promise<DummyAResponse>;
-    dummyB: () => Promise<DummyBResponse>;
-};
-
 export type CollectionFormatControllerMethods = {
-    collectionFormat: (query: CollectionFormatData['query']) => Promise<void>;
-};
-
-export type CollectionFormatServiceMethods = {
     collectionFormat: (query: CollectionFormatData['query']) => Promise<void>;
 };
 
@@ -158,15 +82,7 @@ export type TypesControllerMethods = {
     types: (query: TypesData['query'], path?: TypesData['path']) => Promise<TypesResponse>;
 };
 
-export type TypesServiceMethods = {
-    types: (query: TypesData['query'], path?: TypesData['path']) => Promise<TypesResponse>;
-};
-
 export type UploadControllerMethods = {
-    uploadFile: (path: UploadFileData['path'], body: UploadFileData['body']) => Promise<UploadFileResponse>;
-};
-
-export type UploadServiceMethods = {
     uploadFile: (path: UploadFileData['path'], body: UploadFileData['body']) => Promise<UploadFileResponse>;
 };
 
@@ -174,16 +90,7 @@ export type FileResponseControllerMethods = {
     fileResponse: (path: FileResponseData['path']) => Promise<FileResponseResponse>;
 };
 
-export type FileResponseServiceMethods = {
-    fileResponse: (path: FileResponseData['path']) => Promise<FileResponseResponse>;
-};
-
 export type ComplexControllerMethods = {
-    complexTypes: (query: ComplexTypesData['query']) => Promise<ComplexTypesResponse>;
-    complexParams: (path: ComplexParamsData['path'], body?: ComplexParamsData['body']) => Promise<ComplexParamsResponse>;
-};
-
-export type ComplexServiceMethods = {
     complexTypes: (query: ComplexTypesData['query']) => Promise<ComplexTypesResponse>;
     complexParams: (path: ComplexParamsData['path'], body?: ComplexParamsData['body']) => Promise<ComplexParamsResponse>;
 };
@@ -193,16 +100,7 @@ export type MultipartControllerMethods = {
     multipartRequest: (body?: MultipartRequestData['body']) => Promise<void>;
 };
 
-export type MultipartServiceMethods = {
-    multipartResponse: () => Promise<MultipartResponseResponse>;
-    multipartRequest: (body?: MultipartRequestData['body']) => Promise<void>;
-};
-
 export type HeaderControllerMethods = {
-    callWithResultFromHeader: () => Promise<void>;
-};
-
-export type HeaderServiceMethods = {
     callWithResultFromHeader: () => Promise<void>;
 };
 
@@ -210,16 +108,7 @@ export type ErrorControllerMethods = {
     testErrorCode: (query: TestErrorCodeData['query']) => Promise<void>;
 };
 
-export type ErrorServiceMethods = {
-    testErrorCode: (query: TestErrorCodeData['query']) => Promise<void>;
-};
-
 export type NonAsciiÆøåÆøÅöôêÊControllerMethods = {
-    nonAsciiæøåÆøÅöôêÊ字符串: (query: NonAsciiæøåÆøÅöôêÊ字符串Data['query']) => Promise<NonAsciiæøåÆøÅöôêÊ字符串Response>;
-    putWithFormUrlEncoded: (body: PutWithFormUrlEncodedData['body']) => Promise<void>;
-};
-
-export type NonAsciiÆøåÆøÅöôêÊServiceMethods = {
     nonAsciiæøåÆøÅöôêÊ字符串: (query: NonAsciiæøåÆøÅöôêÊ字符串Data['query']) => Promise<NonAsciiæøåÆøÅöôêÊ字符串Response>;
     putWithFormUrlEncoded: (body: PutWithFormUrlEncodedData['body']) => Promise<void>;
 };

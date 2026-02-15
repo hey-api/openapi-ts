@@ -1,6 +1,6 @@
 ---
 title: NestJS Plugin
-description: Generate NestJS controller and service interfaces from OpenAPI with type safety. Fully compatible with all core features.
+description: Generate NestJS controller interfaces from OpenAPI with type safety. Fully compatible with all core features.
 ---
 
 <script setup lang="ts">
@@ -21,14 +21,13 @@ NestJS plugin is currently in beta. The interface might change before it becomes
 
 [NestJS](https://nestjs.com) is a progressive Node.js framework for building efficient, reliable and scalable server-side applications.
 
-The NestJS plugin for Hey API generates type-safe controller and service method signatures from your OpenAPI spec, fully compatible with all core features.
+The NestJS plugin for Hey API generates type-safe controller method signatures from your OpenAPI spec, fully compatible with all core features.
 
 ## Features
 
 - NestJS v10 support
 - seamless integration with `@hey-api/openapi-ts` ecosystem
 - type-safe controller methods via `implements`
-- service interface types for the DI layer
 - tag-based grouping for per-controller types
 - incremental adoption with `Pick<ControllerMethods, ...>`
 - zero runtime coupling — pure TypeScript types
@@ -61,7 +60,7 @@ The NestJS plugin will generate the following artifacts, depending on the input 
 
 ## Controller Methods
 
-By default, a single `ControllerMethods` type and a matching `ServiceMethods` type are generated from all endpoints.
+By default, a single `ControllerMethods` type is generated from all endpoints.
 
 ::: code-group
 
@@ -74,12 +73,6 @@ import type {
 } from './types.gen';
 
 export type ControllerMethods = {
-  createPet: (body: CreatePetData['body']) => Promise<CreatePetResponse>;
-  listPets: (query?: ListPetsData['query']) => Promise<ListPetsResponse>;
-  showPetById: (path: ShowPetByIdData['path']) => Promise<ShowPetByIdResponse>;
-};
-
-export type ServiceMethods = {
   createPet: (body: CreatePetData['body']) => Promise<CreatePetResponse>;
   listPets: (query?: ListPetsData['query']) => Promise<ListPetsResponse>;
   showPetById: (path: ShowPetByIdData['path']) => Promise<ShowPetByIdResponse>;
@@ -114,17 +107,7 @@ export type PetsControllerMethods = {
   showPetById: (path: ShowPetByIdData['path']) => Promise<ShowPetByIdResponse>;
 };
 
-export type PetsServiceMethods = {
-  createPet: (body: CreatePetData['body']) => Promise<CreatePetResponse>;
-  listPets: (query?: ListPetsData['query']) => Promise<ListPetsResponse>;
-  showPetById: (path: ShowPetByIdData['path']) => Promise<ShowPetByIdResponse>;
-};
-
 export type StoreControllerMethods = {
-  getInventory: () => Promise<GetInventoryResponse>;
-};
-
-export type StoreServiceMethods = {
   getInventory: () => Promise<GetInventoryResponse>;
 };
 ```
@@ -161,27 +144,25 @@ export class PetsController implements Pick<
   PetsControllerMethods,
   'listPets' | 'createPet' | 'showPetById'
 > {
-  constructor(private readonly petsService: PetsService) {}
-
   @Get()
   @ApiOperation({ summary: 'List all pets' })
   @ApiResponse({ status: 200, description: 'A list of pets' })
   async listPets(@Query() query?: ListPetsData['query']) {
-    return this.petsService.listPets(query);
+    // ...
   }
 
   @Post()
   @ApiOperation({ summary: 'Create a pet' })
   @ApiResponse({ status: 201, description: 'Pet created' })
   async createPet(@Body() body: CreatePetDto) {
-    return this.petsService.createPet(body);
+    // ...
   }
 
   @Get(':petId')
   @ApiOperation({ summary: 'Find pet by ID' })
   @ApiResponse({ status: 200, description: 'Pet found' })
   async showPetById(@Param() path: ShowPetByIdData['path']) {
-    return this.petsService.showPetById(path);
+    // ...
   }
 }
 ```
@@ -193,8 +174,7 @@ The [openapi-ts-nestjs example](https://github.com/hey-api/openapi-ts/tree/main/
 - `@nestjs/swagger` for OpenAPI documentation
 - `class-validator` DTOs for request validation
 - `ValidationPipe` with `forbidUnknownValues: true`
-- Service layer with dependency injection
-- Exception filters and guards
+- Exception filters
 - `@darraghor/eslint-plugin-nestjs-typed` for NestJS-specific linting
 
 ## Constraints

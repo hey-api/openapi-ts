@@ -140,14 +140,9 @@ export const handler: NestJSPlugin['Handler'] = ({ plugin }) => {
         plugin,
         typeName: `${pascalTag}ControllerMethods`,
       });
-      emitTypeAlias({
-        methods,
-        plugin,
-        typeName: `${pascalTag}ServiceMethods`,
-      });
     }
   } else {
-    // Flat mode: single ControllerMethods + ServiceMethods
+    // Flat mode: single ControllerMethods
     const methods: Array<{
       name: string;
       type: ReturnType<typeof $.type.func>;
@@ -165,6 +160,5 @@ export const handler: NestJSPlugin['Handler'] = ({ plugin }) => {
     );
 
     emitTypeAlias({ methods, plugin, typeName: 'ControllerMethods' });
-    emitTypeAlias({ methods, plugin, typeName: 'ServiceMethods' });
   }
 };

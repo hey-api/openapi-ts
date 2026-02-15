@@ -25,21 +25,6 @@ export type PetsControllerMethods = {
   ) => Promise<UpdatePetResponse>;
 };
 
-export type PetsServiceMethods = {
-  createPet: (body: CreatePetData['body']) => Promise<CreatePetResponse>;
-  deletePet: (path: DeletePetData['path']) => Promise<DeletePetResponse>;
-  listPets: (query?: ListPetsData['query']) => Promise<ListPetsResponse>;
-  showPetById: (path: ShowPetByIdData['path']) => Promise<ShowPetByIdResponse>;
-  updatePet: (
-    path: UpdatePetData['path'],
-    body: UpdatePetData['body'],
-  ) => Promise<UpdatePetResponse>;
-};
-
 export type StoreControllerMethods = {
-  getInventory: () => Promise<GetInventoryResponse>;
-};
-
-export type StoreServiceMethods = {
   getInventory: () => Promise<GetInventoryResponse>;
 };
