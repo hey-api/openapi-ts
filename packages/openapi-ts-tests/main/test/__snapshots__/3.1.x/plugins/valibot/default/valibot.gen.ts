@@ -81,7 +81,7 @@ export const vSimpleFile = v.string();
 /**
  * This is a simple string
  */
-export const vSimpleStringWithPattern = v.union([v.pipe(v.string(), v.maxLength(64), v.regex(/^[a-zA-Z0-9_]*$/)), v.null()]);
+export const vSimpleStringWithPattern = v.nullable(v.pipe(v.string(), v.maxLength(64), v.regex(/^[a-zA-Z0-9_]*$/)));
 
 /**
  * This is a simple enum with strings
@@ -148,7 +148,7 @@ export const vArrayWithProperties = v.array(v.object({
 export const vArrayWithAnyOfProperties = v.array(v.unknown());
 
 export const vAnyOfAnyAndNull = v.object({
-    data: v.optional(v.union([v.unknown(), v.null()]))
+    data: v.nullish(v.unknown())
 });
 
 /**
@@ -243,10 +243,10 @@ export const vModelFromZendesk = v.string();
  * This is a model with one string property
  */
 export const vModelWithNullableString = v.object({
-    nullableProp1: v.optional(v.union([v.string(), v.null()])),
-    nullableRequiredProp1: v.union([v.string(), v.null()]),
-    nullableProp2: v.optional(v.union([v.string(), v.null()])),
-    nullableRequiredProp2: v.union([v.string(), v.null()]),
+    nullableProp1: v.nullish(v.string()),
+    nullableRequiredProp1: v.nullable(v.string()),
+    nullableProp2: v.nullish(v.string()),
+    nullableRequiredProp2: v.nullable(v.string()),
     'foo_bar-enum': v.optional(v.picklist([
         'Success',
         'Warning',
@@ -436,21 +436,20 @@ export const vConstValue = v.literal('ConstValue');
  * This is a model with one property with a 'any of' relationship where the options are not $ref
  */
 export const vCompositionWithNestedAnyOfAndNull = v.object({
-    propA: v.optional(v.union([v.array(v.unknown()), v.null()]))
+    propA: v.nullish(v.array(v.unknown()))
 });
 
 /**
  * This is a model with one property with a 'one of' relationship
  */
 export const vCompositionWithOneOfAndNullable = v.object({
-    propA: v.optional(v.union([
+    propA: v.nullish(v.union([
         v.object({
             boolean: v.optional(v.boolean())
         }),
         vModelWithEnum,
         vModelWithArray,
-        vModelWithDictionary,
-        v.null()
+        vModelWithDictionary
     ]))
 });
 
@@ -479,28 +478,27 @@ export const vCompositionWithOneOfAndComplexArrayDictionary = v.object({
  * This is a model with one property with a 'all of' relationship
  */
 export const vCompositionWithAllOfAndNullable = v.object({
-    propA: v.optional(v.union([v.intersect([
-            v.object({
-                boolean: v.optional(v.boolean())
-            }),
-            vModelWithEnum,
-            vModelWithArray,
-            vModelWithDictionary
-        ]), v.null()]))
+    propA: v.nullish(v.intersect([
+        v.object({
+            boolean: v.optional(v.boolean())
+        }),
+        vModelWithEnum,
+        vModelWithArray,
+        vModelWithDictionary
+    ]))
 });
 
 /**
  * This is a model with one property with a 'any of' relationship
  */
 export const vCompositionWithAnyOfAndNullable = v.object({
-    propA: v.optional(v.union([
+    propA: v.nullish(v.union([
         v.object({
             boolean: v.optional(v.boolean())
         }),
         vModelWithEnum,
         vModelWithArray,
-        vModelWithDictionary,
-        v.null()
+        vModelWithDictionary
     ]))
 });
 
@@ -527,7 +525,7 @@ export const vCompositionExtendedModel = v.intersect([vCompositionBaseModel, v.o
 export const vModelWithProperties = v.object({
     required: v.string(),
     requiredAndReadOnly: v.pipe(v.string(), v.readonly()),
-    requiredAndNullable: v.union([v.string(), v.null()]),
+    requiredAndNullable: v.nullable(v.string()),
     string: v.optional(v.string()),
     number: v.optional(v.number()),
     boolean: v.optional(v.boolean()),
@@ -550,11 +548,11 @@ export const vModelWithReference = v.object({
  * This is a model with one nested property
  */
 export const vModelWithNestedProperties = v.object({
-    first: v.pipe(v.union([v.pipe(v.object({
-            second: v.pipe(v.union([v.pipe(v.object({
-                    third: v.pipe(v.union([v.pipe(v.string(), v.readonly()), v.null()]), v.readonly())
-                }), v.readonly()), v.null()]), v.readonly())
-        }), v.readonly()), v.null()]), v.readonly())
+    first: v.nullable(v.pipe(v.object({
+        second: v.nullable(v.pipe(v.object({
+            third: v.nullable(v.pipe(v.string(), v.readonly()))
+        }), v.readonly()))
+    }), v.readonly()))
 });
 
 /**
@@ -665,15 +663,15 @@ export const vModelWithAdditionalPropertiesEqTrue = v.objectWithRest({
 }, v.unknown());
 
 export const vNestedAnyOfArraysNullable = v.object({
-    nullableArray: v.optional(v.union([v.array(v.unknown()), v.null()]))
+    nullableArray: v.nullish(v.array(v.unknown()))
 });
 
 /**
  * An object that can be null
  */
-export const vNullableObject = v.optional(v.union([v.object({
-        foo: v.optional(v.string())
-    }), v.null()]), null);
+export const vNullableObject = v.nullish(v.object({
+    foo: v.optional(v.string())
+}), null);
 
 /**
  * Some % character
@@ -751,21 +749,9 @@ export const vModelWithPrefixItemsConstantSizeArray = v.tuple([
 ]);
 
 export const vModelWithAnyOfConstantSizeArrayNullable = v.tuple([
-    v.union([
-        v.number(),
-        v.null(),
-        v.string()
-    ]),
-    v.union([
-        v.number(),
-        v.null(),
-        v.string()
-    ]),
-    v.union([
-        v.number(),
-        v.null(),
-        v.string()
-    ])
+    v.nullable(v.union([v.number(), v.string()])),
+    v.nullable(v.union([v.number(), v.string()])),
+    v.nullable(v.union([v.number(), v.string()]))
 ]);
 
 export const vModelWithAnyOfConstantSizeArrayAndIntersect = v.tuple([v.intersect([v.number(), v.string()]), v.intersect([v.number(), v.string()])]);
@@ -864,14 +850,14 @@ export const vAdditionalPropertiesIntegerIssue = v.objectWithRest({
 
 export const vGenericSchemaDuplicateIssue1SystemBoolean = v.strictObject({
     item: v.optional(v.boolean()),
-    error: v.optional(v.union([v.string(), v.null()])),
+    error: v.nullish(v.string()),
     hasError: v.optional(v.pipe(v.boolean(), v.readonly())),
     data: v.optional(v.strictObject({}))
 });
 
 export const vGenericSchemaDuplicateIssue1SystemString = v.strictObject({
-    item: v.optional(v.union([v.string(), v.null()])),
-    error: v.optional(v.union([v.string(), v.null()])),
+    item: v.nullish(v.string()),
+    error: v.nullish(v.string()),
     hasError: v.optional(v.pipe(v.boolean(), v.readonly()))
 });
 
@@ -897,7 +883,7 @@ export const vExternalRefB = vExternalSharedExternalSharedModel;
  */
 export const vModelWithPropertiesWritable = v.object({
     required: v.string(),
-    requiredAndNullable: v.union([v.string(), v.null()]),
+    requiredAndNullable: v.nullable(v.string()),
     string: v.optional(v.string()),
     number: v.optional(v.number()),
     boolean: v.optional(v.boolean()),
@@ -953,13 +939,13 @@ export const vOneOfAllOfIssueWritable = v.union([v.intersect([v.union([vConstVal
 
 export const vGenericSchemaDuplicateIssue1SystemBooleanWritable = v.strictObject({
     item: v.optional(v.boolean()),
-    error: v.optional(v.union([v.string(), v.null()])),
+    error: v.nullish(v.string()),
     data: v.optional(v.strictObject({}))
 });
 
 export const vGenericSchemaDuplicateIssue1SystemStringWritable = v.strictObject({
-    item: v.optional(v.union([v.string(), v.null()])),
-    error: v.optional(v.union([v.string(), v.null()]))
+    item: v.nullish(v.string()),
+    error: v.nullish(v.string())
 });
 
 /**
@@ -972,12 +958,12 @@ export const vCompositionWithOneOfAndProperties = v.intersect([v.union([v.strict
         }), v.strictObject({
             bar: vNonAsciiStringæøåÆøÅöôêÊ字符串
         })]), v.object({
-        baz: v.union([v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(65535, 'Invalid value: Expected uint16 to be <= 65535')), v.null()]),
+        baz: v.nullable(v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(65535, 'Invalid value: Expected uint16 to be <= 65535'))),
         qux: v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(255, 'Invalid value: Expected uint8 to be <= 255'))
     })]);
 
 export const vModelWithOneOfAndProperties = v.intersect([v.union([vSimpleParameter, vNonAsciiStringæøåÆøÅöôêÊ字符串]), v.object({
-        baz: v.union([v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(65535, 'Invalid value: Expected uint16 to be <= 65535')), v.null()]),
+        baz: v.nullable(v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(65535, 'Invalid value: Expected uint16 to be <= 65535'))),
         qux: v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(255, 'Invalid value: Expected uint8 to be <= 255'))
     })]);
 
@@ -1118,40 +1104,40 @@ export const vDeprecatedCallData = v.object({
     path: v.optional(v.never()),
     query: v.optional(v.never()),
     headers: v.object({
-        parameter: v.union([vDeprecatedModel, v.null()])
+        parameter: v.nullable(vDeprecatedModel)
     })
 });
 
 export const vCallWithParametersData = v.object({
-    body: v.union([v.record(v.string(), v.unknown()), v.null()]),
+    body: v.nullable(v.record(v.string(), v.unknown())),
     path: v.object({
-        parameterPath: v.union([v.string(), v.null()]),
-        'api-version': v.union([v.string(), v.null()])
+        parameterPath: v.nullable(v.string()),
+        'api-version': v.nullable(v.string())
     }),
     query: v.object({
         foo_ref_enum: v.optional(vModelWithNestedArrayEnumsDataFoo),
         foo_all_of_enum: vModelWithNestedArrayEnumsDataFoo,
-        cursor: v.union([v.string(), v.null()])
+        cursor: v.nullable(v.string())
     }),
     headers: v.object({
-        parameterHeader: v.union([v.string(), v.null()])
+        parameterHeader: v.nullable(v.string())
     })
 });
 
 export const vCallWithWeirdParameterNamesData = v.object({
-    body: v.union([vModelWithString, v.null()]),
+    body: v.nullable(vModelWithString),
     path: v.object({
         'parameter.path.1': v.optional(v.string()),
         'parameter-path-2': v.optional(v.string()),
         'PARAMETER-PATH-3': v.optional(v.string()),
-        'api-version': v.union([v.string(), v.null()])
+        'api-version': v.nullable(v.string())
     }),
     query: v.object({
         default: v.optional(v.string()),
-        'parameter-query': v.union([v.string(), v.null()])
+        'parameter-query': v.nullable(v.string())
     }),
     headers: v.object({
-        'parameter.header': v.union([v.string(), v.null()])
+        'parameter.header': v.nullable(v.string())
     })
 });
 
@@ -1165,7 +1151,7 @@ export const vGetCallWithOptionalParamData = v.object({
 
 export const vPostCallWithOptionalParamData = v.object({
     body: v.optional(v.object({
-        offset: v.optional(v.union([v.number(), v.null()]))
+        offset: v.nullish(v.number())
     })),
     path: v.optional(v.never()),
     query: v.object({
@@ -1195,15 +1181,15 @@ export const vCallWithDefaultParametersData = v.object({
     body: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.optional(v.object({
-        parameterString: v.optional(v.union([v.optional(v.string(), 'Hello World!'), v.null()]), 'Hello World!'),
-        parameterNumber: v.optional(v.union([v.optional(v.number(), 123), v.null()]), 123),
-        parameterBoolean: v.optional(v.union([v.optional(v.boolean(), true), v.null()]), true),
+        parameterString: v.nullish(v.string(), 'Hello World!'),
+        parameterNumber: v.nullish(v.number(), 123),
+        parameterBoolean: v.nullish(v.boolean(), true),
         parameterEnum: v.optional(v.picklist([
             'Success',
             'Warning',
             'Error'
         ])),
-        parameterModel: v.optional(v.union([v.optional(vModelWithString, { prop: 'Hello World!' }), v.null()]))
+        parameterModel: v.nullish(vModelWithString)
     }))
 });
 
@@ -1233,8 +1219,8 @@ export const vCallToTestOrderOfParamsData = v.object({
         parameterStringWithDefault: v.optional(v.string(), 'Hello World!'),
         parameterStringWithEmptyDefault: v.optional(v.string(), ''),
         parameterStringWithNoDefault: v.string(),
-        parameterStringNullableWithNoDefault: v.optional(v.union([v.string(), v.null()])),
-        parameterStringNullableWithDefault: v.optional(v.union([v.string(), v.null()]), null)
+        parameterStringNullableWithNoDefault: v.nullish(v.string()),
+        parameterStringNullableWithDefault: v.nullish(v.string(), null)
     })
 });
 
@@ -1336,11 +1322,11 @@ export const vCollectionFormatData = v.object({
     body: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.object({
-        parameterArrayCSV: v.union([v.array(v.string()), v.null()]),
-        parameterArraySSV: v.union([v.array(v.string()), v.null()]),
-        parameterArrayTSV: v.union([v.array(v.string()), v.null()]),
-        parameterArrayPipes: v.union([v.array(v.string()), v.null()]),
-        parameterArrayMulti: v.union([v.array(v.string()), v.null()])
+        parameterArrayCSV: v.nullable(v.array(v.string())),
+        parameterArraySSV: v.nullable(v.array(v.string())),
+        parameterArrayTSV: v.nullable(v.array(v.string())),
+        parameterArrayPipes: v.nullable(v.array(v.string())),
+        parameterArrayMulti: v.nullable(v.array(v.string()))
     })
 });
 
@@ -1351,17 +1337,16 @@ export const vTypesData = v.object({
     })),
     query: v.object({
         parameterNumber: v.optional(v.number(), 123),
-        parameterString: v.optional(v.union([v.optional(v.string(), 'default'), v.null()]), 'default'),
-        parameterBoolean: v.optional(v.union([v.optional(v.boolean(), true), v.null()]), true),
-        parameterObject: v.optional(v.union([v.record(v.string(), v.unknown()), v.null()]), null),
-        parameterArray: v.union([v.array(v.string()), v.null()]),
-        parameterDictionary: v.union([v.record(v.string(), v.unknown()), v.null()]),
-        parameterEnum: v.union([
+        parameterString: v.nullish(v.string(), 'default'),
+        parameterBoolean: v.nullish(v.boolean(), true),
+        parameterObject: v.nullish(v.record(v.string(), v.unknown()), null),
+        parameterArray: v.nullable(v.array(v.string())),
+        parameterDictionary: v.nullable(v.record(v.string(), v.unknown())),
+        parameterEnum: v.nullable(v.union([
             v.literal('Success'),
             v.literal('Warning'),
-            v.literal('Error'),
-            v.null()
-        ])
+            v.literal('Error')
+        ]))
     })
 });
 
@@ -1375,7 +1360,7 @@ export const vTypesResponse = v.union([
 export const vUploadFileData = v.object({
     body: v.string(),
     path: v.object({
-        'api-version': v.union([v.string(), v.null()])
+        'api-version': v.nullable(v.string())
     }),
     query: v.optional(v.never())
 });
@@ -1436,7 +1421,7 @@ export const vMultipartResponseResponse = v.object({
 export const vMultipartRequestData = v.object({
     body: v.optional(v.object({
         content: v.optional(v.string()),
-        data: v.optional(v.union([vModelWithString, v.null()]))
+        data: v.nullish(vModelWithString)
     })),
     path: v.optional(v.never()),
     query: v.optional(v.never())
@@ -1444,16 +1429,16 @@ export const vMultipartRequestData = v.object({
 
 export const vComplexParamsData = v.object({
     body: v.optional(v.object({
-        key: v.pipe(v.union([v.pipe(v.pipe(v.string(), v.maxLength(64), v.regex(/^[a-zA-Z0-9_]*$/)), v.readonly()), v.null()]), v.readonly()),
-        name: v.union([v.pipe(v.string(), v.maxLength(255)), v.null()]),
+        key: v.nullable(v.pipe(v.pipe(v.string(), v.maxLength(64), v.regex(/^[a-zA-Z0-9_]*$/)), v.readonly())),
+        name: v.nullable(v.pipe(v.string(), v.maxLength(255))),
         enabled: v.optional(v.boolean(), true),
         type: v.picklist([
             'Monkey',
             'Horse',
             'Bird'
         ]),
-        listOfModels: v.optional(v.union([v.array(vModelWithString), v.null()])),
-        listOfStrings: v.optional(v.union([v.array(v.string()), v.null()])),
+        listOfModels: v.nullish(v.array(vModelWithString)),
+        listOfStrings: v.nullish(v.array(v.string())),
         parameters: v.union([
             vModelWithString,
             vModelWithEnum,
@@ -1462,7 +1447,7 @@ export const vComplexParamsData = v.object({
         ]),
         user: v.optional(v.pipe(v.object({
             id: v.optional(v.pipe(v.pipe(v.number(), v.integer(), v.minValue(-2147483648, 'Invalid value: Expected int32 to be >= -2147483648'), v.maxValue(2147483647, 'Invalid value: Expected int32 to be <= 2147483647')), v.readonly())),
-            name: v.optional(v.pipe(v.union([v.pipe(v.string(), v.readonly()), v.null()]), v.readonly()))
+            name: v.nullish(v.pipe(v.string(), v.readonly()))
         }), v.readonly()))
     })),
     path: v.object({

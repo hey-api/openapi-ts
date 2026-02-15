@@ -101,7 +101,7 @@ function stringResolver(ctx: StringResolverContext): Pipes {
 export function stringToNode({
   plugin,
   schema,
-}: IrSchemaToAstOptions & {
+}: Pick<IrSchemaToAstOptions, 'plugin'> & {
   schema: SchemaWithType<'string'>;
 }): Pipe {
   const ctx: StringResolverContext = {

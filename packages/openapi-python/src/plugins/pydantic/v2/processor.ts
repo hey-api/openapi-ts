@@ -1,14 +1,14 @@
-import { ref, refs } from '@hey-api/codegen-core';
+import { refs } from '@hey-api/codegen-core';
 import type { IR } from '@hey-api/shared';
-import { createSchemaProcessor, createSchemaWalker, pathToJsonPointer } from '@hey-api/shared';
+import { createSchemaProcessor, pathToJsonPointer } from '@hey-api/shared';
 
 import { exportAst } from '../shared/export';
 import type { ProcessorContext, ProcessorResult } from '../shared/processor';
 import type { PluginState } from '../shared/types';
-import type { ValibotPlugin } from '../types';
-import { createVisitor } from './walker';
+import type { PydanticPlugin } from '../types';
+import { irSchemaToAst } from './plugin';
 
-export function createProcessor(plugin: ValibotPlugin['Instance']): ProcessorResult {
+export function createProcessor(plugin: PydanticPlugin['Instance']): ProcessorResult {
   const processor = createSchemaProcessor();
 
   const hooks = [plugin.config['~hooks']?.schemas, plugin.context.config.parser.hooks.schemas];
@@ -43,24 +43,12 @@ export function createProcessor(plugin: ValibotPlugin['Instance']): ProcessorRes
         tags: ctx.tags,
       });
 
-      const visitor = createVisitor({
+      const ast = irSchemaToAst({
+        plugin,
+        schema: ctx.schema,
         schemaExtractor: extractor,
         state,
       });
-      const walk = createSchemaWalker(visitor);
-
-      const result = walk(ctx.schema, {
-        path: ref(ctx.path),
-        plugin,
-      });
-      const ast =
-        visitor.applyModifiers(result, {
-          path: ref(ctx.path),
-          plugin,
-        }) ?? result.expression;
-      if (result.hasLazyExpression) {
-        state.hasLazyExpression['~ref'] = true;
-      }
 
       exportAst({ ...ctx, ast, plugin, state });
     });

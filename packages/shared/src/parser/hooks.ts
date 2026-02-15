@@ -1,7 +1,7 @@
 import type { Node, Symbol, SymbolIn } from '@hey-api/codegen-core';
 
+import type { SchemaProcessorContext } from '../ir/schema-processor';
 import type { IROperationObject } from '../ir/types';
-import type { SchemaProcessorContext } from '../plugins/schema-processor';
 import type { PluginInstance } from '../plugins/shared/utils/instance';
 
 export type Hooks = {

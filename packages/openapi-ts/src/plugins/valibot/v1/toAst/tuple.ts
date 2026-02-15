@@ -1,19 +1,19 @@
-import { fromRef, ref } from '@hey-api/codegen-core';
-import type { SchemaWithType } from '@hey-api/shared';
+import type { SchemaResult, SchemaWithType } from '@hey-api/shared';
+import { childContext } from '@hey-api/shared';
 
 import { $ } from '../../../../ts-dsl';
 import { pipesToNode } from '../../shared/pipes';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
 import { identifiers } from '../constants';
-import { irSchemaToAst } from '../plugin';
 import { unknownToAst } from './unknown';
 
 export function tupleToAst(
   options: IrSchemaToAstOptions & {
+    applyModifiers: (result: SchemaResult<Ast>, opts: { optional?: boolean }) => Ast;
     schema: SchemaWithType<'tuple'>;
   },
 ): Omit<Ast, 'typeName'> {
-  const { plugin, schema } = options;
+  const { applyModifiers, plugin, schema, walk } = options;
 
   const result: Partial<Omit<Ast, 'typeName'>> = {};
 
@@ -33,18 +33,23 @@ export function tupleToAst(
 
   if (schema.items) {
     const tupleElements = schema.items.map((item, index) => {
-      const schemaPipes = irSchemaToAst({
-        ...options,
-        schema: item,
-        state: {
-          ...options.state,
-          path: ref([...fromRef(options.state.path), 'items', index]),
-        },
-      });
-      if (schemaPipes.hasLazyExpression) {
+      const itemResult = walk(
+        item,
+        childContext(
+          {
+            path: options.state.path,
+            plugin: options.plugin,
+          },
+          'items',
+          index,
+        ),
+      );
+      if (itemResult.hasLazyExpression) {
         result.hasLazyExpression = true;
       }
-      return pipesToNode(schemaPipes.pipes, plugin);
+
+      const finalExpr = applyModifiers(itemResult, { optional: false });
+      return pipesToNode(finalExpr.pipes, plugin);
     });
     result.pipes = [
       $(v)
