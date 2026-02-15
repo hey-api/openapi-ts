@@ -67,12 +67,12 @@ import type {
   ListPetsResponse,
   ShowPetByIdData,
   ShowPetByIdResponse,
-} from "./types.gen";
+} from './types.gen';
 
 export interface ControllerMethods {
-  createPets(body: CreatePetsData["body"]): Promise<CreatePetsResponse>;
-  listPets(query?: ListPetsData["query"]): Promise<ListPetsResponse>;
-  showPetById(path: ShowPetByIdData["path"]): Promise<ShowPetByIdResponse>;
+  createPets(body: CreatePetsData['body']): Promise<CreatePetsResponse>;
+  listPets(query?: ListPetsData['query']): Promise<ListPetsResponse>;
+  showPetById(path: ShowPetByIdData['path']): Promise<ShowPetByIdResponse>;
 }
 ```
 
@@ -113,31 +113,28 @@ For `204 No Content`, the return type is `Promise<void>`.
 ### Basic Usage
 
 ```typescript
-import { Controller, Get, Post, Param, Query, Body } from "@nestjs/common";
-import type { ControllerMethods } from "../client/nestjs.gen";
-import type {
-  ListPetsData,
-  ShowPetByIdData,
-  CreatePetsData,
-} from "../client/types.gen";
+import { Controller, Get, Post, Param, Query, Body } from '@nestjs/common';
+import type { ControllerMethods } from '../client/nestjs.gen';
+import type { ListPetsData, ShowPetByIdData, CreatePetsData } from '../client/types.gen';
 
-@Controller("pets")
-export class PetsController
-  implements Pick<ControllerMethods, "listPets" | "createPets" | "showPetById">
-{
+@Controller('pets')
+export class PetsController implements Pick<
+  ControllerMethods,
+  'listPets' | 'createPets' | 'showPetById'
+> {
   @Get()
-  async listPets(@Query() query?: ListPetsData["query"]) {
+  async listPets(@Query() query?: ListPetsData['query']) {
     return [];
   }
 
   @Post()
-  async createPets(@Body() body: CreatePetsData["body"]) {
+  async createPets(@Body() body: CreatePetsData['body']) {
     return { id: 1, name: body.name };
   }
 
-  @Get(":petId")
-  async showPetById(@Param() path: ShowPetByIdData["path"]) {
-    return { id: path.petId, name: "Kitty" };
+  @Get(':petId')
+  async showPetById(@Param() path: ShowPetByIdData['path']) {
+    return { id: path.petId, name: 'Kitty' };
   }
 }
 ```
@@ -197,11 +194,9 @@ packages/openapi-ts/src/plugins/nestjs/
 ### `types.ts`
 
 ```typescript
-import type { DefinePlugin, Plugin } from "@hey-api/shared";
+import type { DefinePlugin, Plugin } from '@hey-api/shared';
 
-export type UserConfig = Plugin.Name<"nestjs"> &
-  Plugin.Hooks &
-  Plugin.UserExports;
+export type UserConfig = Plugin.Name<'nestjs'> & Plugin.Hooks & Plugin.UserExports;
 
 export type NestJSPlugin = DefinePlugin<UserConfig, UserConfig>;
 ```
@@ -209,18 +204,18 @@ export type NestJSPlugin = DefinePlugin<UserConfig, UserConfig>;
 ### `config.ts`
 
 ```typescript
-import { definePluginConfig } from "@hey-api/shared";
+import { definePluginConfig } from '@hey-api/shared';
 
-import { handler } from "./plugin";
-import type { NestJSPlugin } from "./types";
+import { handler } from './plugin';
+import type { NestJSPlugin } from './types';
 
-export const defaultConfig: NestJSPlugin["Config"] = {
+export const defaultConfig: NestJSPlugin['Config'] = {
   config: {
     includeInEntry: false,
   },
-  dependencies: ["@hey-api/typescript"],
+  dependencies: ['@hey-api/typescript'],
   handler,
-  name: "nestjs",
+  name: 'nestjs',
 };
 
 export const defineConfig = definePluginConfig(defaultConfig);
@@ -229,37 +224,34 @@ export const defineConfig = definePluginConfig(defaultConfig);
 ### `index.ts`
 
 ```typescript
-export { defaultConfig, defineConfig } from "./config";
-export type { NestJSPlugin } from "./types";
+export { defaultConfig, defineConfig } from './config';
+export type { NestJSPlugin } from './types';
 ```
 
 ### `plugin.ts` (Core Logic)
 
 ```typescript
-import type { IR } from "@hey-api/shared";
-import {
-  hasParameterGroupObjectRequired,
-  operationResponsesMap,
-} from "@hey-api/shared";
+import type { IR } from '@hey-api/shared';
+import { hasParameterGroupObjectRequired, operationResponsesMap } from '@hey-api/shared';
 
-import { $ } from "../../ts-dsl";
-import type { NestJSPlugin } from "./types";
+import { $ } from '../../ts-dsl';
+import type { NestJSPlugin } from './types';
 
 const operationToMethod = ({
   operation,
   plugin,
 }: {
   operation: IR.OperationObject;
-  plugin: NestJSPlugin["Instance"];
+  plugin: NestJSPlugin['Instance'];
 }) => {
   const funcType = $.type.func();
 
   const symbolDataType = plugin.querySymbol({
-    category: "type",
-    resource: "operation",
+    category: 'type',
+    resource: 'operation',
     resourceId: operation.id,
-    role: "data",
-    tool: "typescript",
+    role: 'data',
+    tool: 'typescript',
   });
 
   if (symbolDataType) {
@@ -267,9 +259,9 @@ const operationToMethod = ({
     if (operation.parameters?.path) {
       funcType.param((p) =>
         p
-          .name("path")
+          .name('path')
           .required(hasParameterGroupObjectRequired(operation.parameters!.path))
-          .type($.type(symbolDataType).idx($.type.literal("path"))),
+          .type($.type(symbolDataType).idx($.type.literal('path'))),
       );
     }
 
@@ -277,11 +269,9 @@ const operationToMethod = ({
     if (operation.parameters?.query) {
       funcType.param((p) =>
         p
-          .name("query")
-          .required(
-            hasParameterGroupObjectRequired(operation.parameters!.query),
-          )
-          .type($.type(symbolDataType).idx($.type.literal("query"))),
+          .name('query')
+          .required(hasParameterGroupObjectRequired(operation.parameters!.query))
+          .type($.type(symbolDataType).idx($.type.literal('query'))),
       );
     }
 
@@ -289,9 +279,9 @@ const operationToMethod = ({
     if (operation.body) {
       funcType.param((p) =>
         p
-          .name("body")
+          .name('body')
           .required(operation.body!.required)
-          .type($.type(symbolDataType).idx($.type.literal("body"))),
+          .type($.type(symbolDataType).idx($.type.literal('body'))),
       );
     }
 
@@ -299,30 +289,26 @@ const operationToMethod = ({
     if (operation.parameters?.header) {
       funcType.param((p) =>
         p
-          .name("headers")
-          .required(
-            hasParameterGroupObjectRequired(operation.parameters!.header),
-          )
-          .type($.type(symbolDataType).idx($.type.literal("headers"))),
+          .name('headers')
+          .required(hasParameterGroupObjectRequired(operation.parameters!.header))
+          .type($.type(symbolDataType).idx($.type.literal('headers'))),
       );
     }
   }
 
   // Build response type - use the response type alias (union of success bodies)
   const symbolResponseType = plugin.querySymbol({
-    category: "type",
-    resource: "operation",
+    category: 'type',
+    resource: 'operation',
     resourceId: operation.id,
-    role: "response",
-    tool: "typescript",
+    role: 'response',
+    tool: 'typescript',
   });
 
   if (symbolResponseType) {
-    funcType.returns(
-      $.type("Promise", (t) => t.generic($.type(symbolResponseType))),
-    );
+    funcType.returns($.type('Promise', (t) => t.generic($.type(symbolResponseType))));
   } else {
-    funcType.returns($.type("Promise", (t) => t.generic($.type("void"))));
+    funcType.returns($.type('Promise', (t) => t.generic($.type('void'))));
   }
 
   return {
@@ -331,13 +317,13 @@ const operationToMethod = ({
   };
 };
 
-export const handler: NestJSPlugin["Handler"] = ({ plugin }) => {
-  const symbolControllerMethods = plugin.symbol("ControllerMethods");
+export const handler: NestJSPlugin['Handler'] = ({ plugin }) => {
+  const symbolControllerMethods = plugin.symbol('ControllerMethods');
 
   const type = $.type.object();
 
   plugin.forEach(
-    "operation",
+    'operation',
     ({ operation }) => {
       const method = operationToMethod({ operation, plugin });
       if (method) {
@@ -345,7 +331,7 @@ export const handler: NestJSPlugin["Handler"] = ({ plugin }) => {
       }
     },
     {
-      order: "declarations",
+      order: 'declarations',
     },
   );
 
@@ -362,7 +348,7 @@ export const handler: NestJSPlugin["Handler"] = ({ plugin }) => {
 **`packages/openapi-ts/src/plugins/config.ts`:**
 
 ```typescript
-import { defaultConfig as nestjs } from "./nestjs/config";
+import { defaultConfig as nestjs } from './nestjs/config';
 // ... add to defaultPluginConfigs map:
 // nestjs,
 ```
@@ -370,7 +356,7 @@ import { defaultConfig as nestjs } from "./nestjs/config";
 **`packages/openapi-ts/src/index.ts`:**
 
 ```typescript
-import type { NestJSPlugin } from "./plugins/nestjs/types";
+import type { NestJSPlugin } from './plugins/nestjs/types';
 // ... add to PluginConfigMap interface:
 // nestjs: NestJSPlugin['Types'];
 ```
@@ -411,47 +397,44 @@ examples/openapi-ts-nestjs/
 ### `openapi-ts.config.ts`
 
 ```typescript
-import { defineConfig } from "@hey-api/openapi-ts";
+import { defineConfig } from '@hey-api/openapi-ts';
 
 export default defineConfig({
-  input: "./openapi.json",
+  input: './openapi.json',
   output: {
-    path: "./src/client",
+    path: './src/client',
   },
-  plugins: ["nestjs"],
+  plugins: ['nestjs'],
 });
 ```
 
 ### `src/pets/pets.controller.ts`
 
 ```typescript
-import { Controller, Get, Post, Param, Query, Body } from "@nestjs/common";
-import type { ControllerMethods } from "../client/nestjs.gen";
-import type {
-  CreatePetsData,
-  ListPetsData,
-  ShowPetByIdData,
-} from "../client/types.gen";
+import { Controller, Get, Post, Param, Query, Body } from '@nestjs/common';
+import type { ControllerMethods } from '../client/nestjs.gen';
+import type { CreatePetsData, ListPetsData, ShowPetByIdData } from '../client/types.gen';
 
-@Controller("pets")
-export class PetsController
-  implements Pick<ControllerMethods, "listPets" | "createPets" | "showPetById">
-{
+@Controller('pets')
+export class PetsController implements Pick<
+  ControllerMethods,
+  'listPets' | 'createPets' | 'showPetById'
+> {
   @Get()
-  async listPets(@Query() query?: ListPetsData["query"]) {
+  async listPets(@Query() query?: ListPetsData['query']) {
     return [];
   }
 
   @Post()
-  async createPets(@Body() body: CreatePetsData["body"]) {
+  async createPets(@Body() body: CreatePetsData['body']) {
     return;
   }
 
-  @Get(":petId")
-  async showPetById(@Param() path: ShowPetByIdData["path"]) {
+  @Get(':petId')
+  async showPetById(@Param() path: ShowPetByIdData['path']) {
     return {
       id: Number(path.petId),
-      name: "Kitty",
+      name: 'Kitty',
     };
   }
 }

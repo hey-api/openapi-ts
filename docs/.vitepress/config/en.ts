@@ -249,7 +249,7 @@ export default defineConfig({
               },
               {
                 link: '/openapi-ts/plugins/nest',
-                text: 'Nest <span data-soon>soon</span>',
+                text: 'Nest',
               },
             ],
             link: '/openapi-ts/web-frameworks',
