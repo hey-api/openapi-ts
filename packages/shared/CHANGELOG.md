@@ -1,5 +1,11 @@
 # @hey-api/shared
 
+## 0.2.1
+
+### Patch Changes
+
+- **internal**: export schema walker interfaces ([#3396](https://github.com/hey-api/openapi-ts/pull/3396)) ([`ea6f386`](https://github.com/hey-api/openapi-ts/commit/ea6f3865c8e381b3160e1526435c4522f0dc6aa4)) by [@mrlubos](https://github.com/mrlubos)
+
 ## 0.2.0
 
 ### Minor Changes

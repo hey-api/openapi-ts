@@ -1,5 +1,25 @@
 # @hey-api/openapi-ts
 
+## 0.93.0
+
+### Minor Changes
+
+- **plugin(valibot)**: remove `enum.nodes.nullable` resolver node ([#3396](https://github.com/hey-api/openapi-ts/pull/3396)) ([`ea6f386`](https://github.com/hey-api/openapi-ts/commit/ea6f3865c8e381b3160e1526435c4522f0dc6aa4)) by [@mrlubos](https://github.com/mrlubos)
+
+### Removed resolver node
+
+Valibot plugin no longer exposes the `enum.nodes.nullable` node. It was refactored so that nullable values are handled outside of resolvers.
+
+### Patch Changes
+
+- **client**: expose `onRequest` in RequestOptions for SSE request interception ([#3392](https://github.com/hey-api/openapi-ts/pull/3392)) ([`8fc4681`](https://github.com/hey-api/openapi-ts/commit/8fc46819d5df1d4a353be5ae7cd45a8c669a5d7e)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(valibot)**: use `.nullable()` and `.nullish()` methods ([#3396](https://github.com/hey-api/openapi-ts/pull/3396)) ([`ea6f386`](https://github.com/hey-api/openapi-ts/commit/ea6f3865c8e381b3160e1526435c4522f0dc6aa4)) by [@mrlubos](https://github.com/mrlubos)
+
+### Updated Dependencies:
+
+- @hey-api/shared@0.2.1
+
 ## 0.92.4
 
 ### Patch Changes
