@@ -1,4 +1,4 @@
-import type { Client, Config, RequestOptions } from './types';
+import type { Client, Config, ResolvedRequestOptions } from './types';
 import {
   buildUrl,
   createConfig,
@@ -24,7 +24,7 @@ export const createClient = (config: Config = {}): Client => {
     return getConfig();
   };
 
-  const interceptors = createInterceptors<Request, Response, unknown, RequestOptions>();
+  const interceptors = createInterceptors<Request, Response, unknown, ResolvedRequestOptions>();
 
   // @ts-expect-error
   const request: Client['request'] = async (options) => {
