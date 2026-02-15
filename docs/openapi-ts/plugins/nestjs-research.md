@@ -7,6 +7,7 @@ Investigate NestJS plugin following Fastify plugin pattern. Generate type-safe c
 ## Fastify Baseline
 
 **Current implementation:**
+
 - Location: `packages/openapi-ts/src/plugins/fastify/`
 - Output: `RouteHandlers` interface mapping operation IDs to typed handlers
 - Pattern: `RouteHandler<{ Body?, Headers?, Params?, Querystring?, Reply }>`
@@ -18,20 +19,21 @@ Investigate NestJS plugin following Fastify plugin pattern. Generate type-safe c
 
 ## NestJS vs Fastify
 
-| Aspect | Fastify | NestJS |
-|--------|---------|--------|
-| **Style** | Functional handlers | Class-based controllers |
-| **Typing** | Type generics | DTOs + decorators |
-| **DI** | Manual | Built-in container |
-| **Runtime lib** | `fastify-openapi-glue` | `@nestjs/swagger` |
-| **Module system** | None (flat object) | `@Module` required |
-| **Parameters** | Generic types | Decorator metadata (`@Param`, `@Query`, `@Body`) |
+| Aspect            | Fastify                | NestJS                                           |
+| ----------------- | ---------------------- | ------------------------------------------------ |
+| **Style**         | Functional handlers    | Class-based controllers                          |
+| **Typing**        | Type generics          | DTOs + decorators                                |
+| **DI**            | Manual                 | Built-in container                               |
+| **Runtime lib**   | `fastify-openapi-glue` | `@nestjs/swagger`                                |
+| **Module system** | None (flat object)     | `@Module` required                               |
+| **Parameters**    | Generic types          | Decorator metadata (`@Param`, `@Query`, `@Body`) |
 
 ## Research Questions
 
 ### High Priority (MVP)
 
 **1. Output Format**
+
 - Option A: Generate controller interface (recommended - mirrors Fastify pattern)
 - Option B: Generate controller class with decorators
 - Option C: Generate decorator metadata types
@@ -39,21 +41,25 @@ Investigate NestJS plugin following Fastify plugin pattern. Generate type-safe c
 **Recommendation**: Controller interface. Simple, type-safe, lets devs write decorators.
 
 **2. Method Mapping**
+
 - Map operation IDs to camelCase method names (matches SDK functions)
 - Example: `GET /pets` with operationId `listPets` → `listPets()` method
 
 **3. Type Structure**
 Request parameters:
+
 - Path params: `operation.parameters.path` → method param type
 - Query params: `operation.parameters.query` → method param type
 - Request body: `operation.body` → method param type
 - Headers: `operation.parameters.header` → method param type
 
 Response:
+
 - Success responses: `operation.responses` → Promise return type
 - Error responses: Include in union type
 
 **4. Platform Support**
+
 - NestJS supports both Express and Fastify adapters
 - Generated types should be adapter-agnostic
 - Let runtime decorators handle platform differences
@@ -61,21 +67,25 @@ Response:
 ### Medium Priority (Future)
 
 **5. @nestjs/swagger Integration**
+
 - Current: Generate standalone types
 - Future: Optionally generate `@ApiResponse()`, `@ApiOperation()` decorators
 - Requires config flag: `generateDecorators?: boolean`
 
 **6. Validation**
+
 - Current: Type-only validation via TypeScript
 - Future: Generate `class-validator` decorators in DTOs
 - Requires config flag: `generateValidation?: boolean`
 
 **7. Module Generation**
+
 - Current: Generate controller interface only
 - Future: Generate full `@Module()` setup
 - Requires config option: `moduleGeneration?: 'interface' | 'class' | 'module'`
 
 **8. DI Layer**
+
 - Current: Controller interface only
 - Future: Generate service interfaces for business logic separation
 - Common NestJS pattern: Controllers → Services → Repositories
@@ -99,13 +109,13 @@ import type {
   CreatePetsData,
   CreatePetsResponses,
   ShowPetByIdData,
-  ShowPetByIdResponses
-} from './types.gen';
+  ShowPetByIdResponses,
+} from "./types.gen";
 
 export interface PetsController {
-  listPets(query?: ListPetsData['query']): Promise<ListPetsResponses>;
-  createPets(body: CreatePetsData['body']): Promise<CreatePetsResponses>;
-  showPetById(params: ShowPetByIdData['path']): Promise<ShowPetByIdResponses>;
+  listPets(query?: ListPetsData["query"]): Promise<ListPetsResponses>;
+  createPets(body: CreatePetsData["body"]): Promise<CreatePetsResponses>;
+  showPetById(params: ShowPetByIdData["path"]): Promise<ShowPetByIdResponses>;
 }
 ```
 
@@ -113,10 +123,10 @@ export interface PetsController {
 
 ```typescript
 // controllers/pets.controller.ts
-import { Controller, Get, Post, Param, Query, Body } from '@nestjs/common';
-import type { PetsController } from '../client/nestjs.gen';
+import { Controller, Get, Post, Param, Query, Body } from "@nestjs/common";
+import type { PetsController } from "../client/nestjs.gen";
 
-@Controller('pets')
+@Controller("pets")
 export class PetsControllerImpl implements PetsController {
   @Get()
   async listPets(@Query() query?) {
@@ -128,9 +138,9 @@ export class PetsControllerImpl implements PetsController {
     return { id: 1 };
   }
 
-  @Get(':petId')
+  @Get(":petId")
   async showPetById(@Param() params) {
-    return { id: params.petId, name: 'Kitty' };
+    return { id: params.petId, name: "Kitty" };
   }
 }
 ```
@@ -160,7 +170,7 @@ examples/openapi-ts-nestjs/
 
 Mirror Fastify docs style (~100 lines):
 
-```markdown
+````markdown
 ---
 title: NestJS Plugin
 description: Generate NestJS controller interfaces from OpenAPI with type safety
@@ -192,13 +202,14 @@ Add `nestjs` to your plugins:
 
 ```js
 export default {
-  input: 'openapi.json',
-  output: 'src/client',
+  input: "openapi.json",
+  output: "src/client",
   plugins: [
-    'nestjs', // [!code ++]
+    "nestjs", // [!code ++]
   ],
 };
 ```
+````
 
 ## Output
 
@@ -209,10 +220,10 @@ Generated controller interfaces from all endpoints. Follows SDK naming conventio
 ::: code-group
 
 ```ts [example]
-import { Controller, Get, Post } from '@nestjs/common';
-import type { PetsController } from '../client/nestjs.gen';
+import { Controller, Get, Post } from "@nestjs/common";
+import type { PetsController } from "../client/nestjs.gen";
 
-@Controller('pets')
+@Controller("pets")
 export class PetsControllerImpl implements PetsController {
   @Get()
   async listPets(query?) {
@@ -228,11 +239,11 @@ export class PetsControllerImpl implements PetsController {
 
 ```js [config]
 export default {
-  input: 'openapi.json',
-  output: 'src/client',
+  input: "openapi.json",
+  output: "src/client",
   plugins: [
     {
-      name: 'nestjs',
+      name: "nestjs",
     },
   ],
 };
@@ -243,7 +254,8 @@ export default {
 ## API
 
 See [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/nestjs/types.ts).
-```
+
+````
 
 ## Dependencies
 
@@ -287,9 +299,10 @@ See [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openap
      ],
      returns: 'Promise<OperationResponses>'
    }
-   ```
+````
 
 4. **Generate interface**:
+
    ```typescript
    export interface {ControllerName}Controller {
      operation1(...params): Promise<Response1>;
@@ -314,6 +327,7 @@ See [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openap
 ## Critical Files Reference
 
 **Study for implementation:**
+
 - `/Users/undgrnd/Code/openapi-ts/packages/openapi-ts/src/plugins/fastify/plugin.ts` - Core logic template
 - `/Users/undgrnd/Code/openapi-ts/packages/openapi-ts/src/plugins/fastify/types.ts` - UserConfig pattern
 - `/Users/undgrnd/Code/openapi-ts/packages/openapi-ts/src/plugins/fastify/config.ts` - Plugin registration
