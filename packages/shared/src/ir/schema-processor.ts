@@ -1,5 +1,5 @@
-import type { IR } from '../ir/types';
 import { pathToJsonPointer } from '../utils/ref';
+import type { IR } from './types';
 
 export interface SchemaProcessor {
   /** Current inherited context (set by withContext) */

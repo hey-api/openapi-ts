@@ -11,12 +11,12 @@ export const vQux = v.record(v.string(), v.object({
 /**
  * This is Foo schema.
  */
-export const vFoo: v.GenericSchema = v.optional(v.union([v.object({
-        foo: v.optional(v.pipe(v.string(), v.regex(/^\d{3}-\d{2}-\d{4}$/))),
-        bar: v.optional(v.lazy(() => vBar)),
-        baz: v.optional(v.array(v.lazy(() => vFoo))),
-        qux: v.optional(v.pipe(v.number(), v.integer(), v.gtValue(0)), 0)
-    }), v.null()]), null);
+export const vFoo: v.GenericSchema = v.nullish(v.object({
+    foo: v.optional(v.pipe(v.string(), v.regex(/^\d{3}-\d{2}-\d{4}$/))),
+    bar: v.optional(v.lazy(() => vBar)),
+    baz: v.optional(v.array(v.lazy(() => vFoo))),
+    qux: v.optional(v.pipe(v.number(), v.integer(), v.gtValue(0)), 0)
+}), null);
 
 /**
  * This is Bar schema.

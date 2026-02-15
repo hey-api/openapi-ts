@@ -8,7 +8,7 @@ import { identifiers } from '../constants';
 export function booleanToAst({
   plugin,
   schema,
-}: IrSchemaToAstOptions & {
+}: Pick<IrSchemaToAstOptions, 'plugin'> & {
   schema: SchemaWithType<'boolean'>;
 }): ReturnType<typeof $.call | typeof $.expr> {
   const pipes: Array<ReturnType<typeof $.call>> = [];
