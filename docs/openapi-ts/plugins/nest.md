@@ -25,7 +25,7 @@ The NestJS plugin for Hey API generates type-safe controller method signatures f
 
 ## Features
 
-- NestJS v10 support
+- NestJS support
 - seamless integration with `@hey-api/openapi-ts` ecosystem
 - type-safe controller methods via `implements`
 - tag-based grouping for per-controller types
@@ -48,55 +48,9 @@ export default {
 };
 ```
 
-## Configuration
-
-| Option       | Type      | Default | Description                                            |
-| ------------ | --------- | ------- | ------------------------------------------------------ |
-| `groupByTag` | `boolean` | `false` | Group methods by OpenAPI tag into per-controller types |
-
 ## Output
 
-The NestJS plugin will generate the following artifacts, depending on the input specification.
-
-## Controller Methods
-
-By default, a single `ControllerMethods` type is generated from all endpoints.
-
-::: code-group
-
-```ts [output]
-import type {
-  ListPetsData,
-  ListPetsResponse,
-  ShowPetByIdData,
-  ShowPetByIdResponse,
-} from './types.gen';
-
-export type ControllerMethods = {
-  createPet: (body: CreatePetData['body']) => Promise<CreatePetResponse>;
-  listPets: (query?: ListPetsData['query']) => Promise<ListPetsResponse>;
-  showPetById: (path: ShowPetByIdData['path']) => Promise<ShowPetByIdResponse>;
-};
-```
-
-```js [config]
-export default {
-  input: 'hey-api/backend', // sign up at app.heyapi.dev
-  output: 'src/client',
-  plugins: [
-    // ...other plugins
-    {
-      name: 'nestjs',
-    },
-  ],
-};
-```
-
-:::
-
-## Tag Grouping
-
-When `groupByTag` is `true`, operations are grouped by their first OpenAPI tag into per-controller types. This is ideal for larger APIs with multiple controllers.
+The NestJS plugin generates per-tag controller method types from your OpenAPI spec. Operations are grouped by their first OpenAPI tag into separate types like `PetsControllerMethods`, `StoreControllerMethods`, etc.
 
 ::: code-group
 
@@ -118,10 +72,7 @@ export default {
   output: 'src/client',
   plugins: [
     // ...other plugins
-    {
-      groupByTag: true,
-      name: 'nestjs',
-    },
+    'nestjs',
   ],
 };
 ```
@@ -193,7 +144,7 @@ async showPetById(@Param('petId') petId: string) { ... }
 
 Methods using `@Res()` for raw response access are incompatible with `implements` because the extra parameter breaks assignability.
 
-Operations without tags are grouped under `DefaultControllerMethods` when `groupByTag` is `true`.
+Operations without tags are grouped under `DefaultControllerMethods`.
 
 ## API
 

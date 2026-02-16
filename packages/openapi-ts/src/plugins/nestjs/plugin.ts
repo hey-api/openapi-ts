@@ -111,54 +111,33 @@ const emitTypeAlias = ({
 };
 
 export const handler: NestJSPlugin['Handler'] = ({ plugin }) => {
-  if (plugin.config.groupByTag) {
-    // Collect operations by tag, then emit per-tag types
-    const operationsByTag = new Map<
-      string,
-      Array<{ name: string; type: ReturnType<typeof $.type.func> }>
-    >();
+  // Collect operations by tag, then emit per-tag types
+  const operationsByTag = new Map<
+    string,
+    Array<{ name: string; type: ReturnType<typeof $.type.func> }>
+  >();
 
-    plugin.forEach(
-      'operation',
-      ({ operation, tags }) => {
-        const tag = tags?.[0] ?? 'default';
-        if (!operationsByTag.has(tag)) {
-          operationsByTag.set(tag, []);
-        }
-        const method = operationToMethod({ operation, plugin });
-        operationsByTag.get(tag)!.push(method);
-      },
-      {
-        order: 'declarations',
-      },
-    );
+  plugin.forEach(
+    'operation',
+    ({ operation, tags }) => {
+      const tag = tags?.[0] ?? 'default';
+      if (!operationsByTag.has(tag)) {
+        operationsByTag.set(tag, []);
+      }
+      const method = operationToMethod({ operation, plugin });
+      operationsByTag.get(tag)!.push(method);
+    },
+    {
+      order: 'declarations',
+    },
+  );
 
-    for (const [tag, methods] of operationsByTag) {
-      const pascalTag = toCase(tag, 'PascalCase');
-      emitTypeAlias({
-        methods,
-        plugin,
-        typeName: `${pascalTag}ControllerMethods`,
-      });
-    }
-  } else {
-    // Flat mode: single ControllerMethods
-    const methods: Array<{
-      name: string;
-      type: ReturnType<typeof $.type.func>;
-    }> = [];
-
-    plugin.forEach(
-      'operation',
-      ({ operation }) => {
-        const method = operationToMethod({ operation, plugin });
-        methods.push(method);
-      },
-      {
-        order: 'declarations',
-      },
-    );
-
-    emitTypeAlias({ methods, plugin, typeName: 'ControllerMethods' });
+  for (const [tag, methods] of operationsByTag) {
+    const pascalTag = toCase(tag, 'PascalCase');
+    emitTypeAlias({
+      methods,
+      plugin,
+      typeName: `${pascalTag}ControllerMethods`,
+    });
   }
 };
