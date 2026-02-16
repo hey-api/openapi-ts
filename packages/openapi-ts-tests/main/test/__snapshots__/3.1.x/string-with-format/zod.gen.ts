@@ -3,5 +3,5 @@
 import * as z from 'zod';
 
 export const zFoo = z.object({
-    foo: z.optional(z.array(z.union([z.string(), z.string()])))
+    foo: z.array(z.union([z.string(), z.string()])).optional()
 });

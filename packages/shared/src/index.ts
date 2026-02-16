@@ -65,7 +65,7 @@ export type {
   SchemaProcessorResult,
 } from './ir/schema-processor';
 export { createSchemaProcessor } from './ir/schema-processor';
-export type { SchemaResult, SchemaVisitor, SchemaVisitorContext, Walker } from './ir/schema-walker';
+export type { SchemaVisitor, SchemaVisitorContext, Walker } from './ir/schema-walker';
 export { childContext, createSchemaWalker } from './ir/schema-walker';
 export type { IR } from './ir/types';
 export { addItemsToSchema } from './ir/utils';
