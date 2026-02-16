@@ -609,6 +609,144 @@ function removeFromInventory(inventory: Array<InventoryEntry>, entry: any) {
 }
 
 /**
+ * Extracts the last path segment from a JSON Reference string.
+ * e.g. "#/components/schemas/Foo" → "Foo", "#/Foo" → "Foo"
+ */
+function refLastSegment(ref: string): string {
+  let clean = ref;
+  if (clean.startsWith('#')) {
+    clean = clean.slice(1);
+  }
+  if (clean.startsWith('/')) {
+    clean = clean.slice(1);
+  }
+  if (!clean) {
+    return '';
+  }
+  const parts = clean.split('/');
+  const last = parts[parts.length - 1] || '';
+  try {
+    return decodeURIComponent(last);
+  } catch {
+    return last;
+  }
+}
+
+/**
+ * Safely decodes a URI string. Returns the original string if decoding fails.
+ */
+function safeDecodeURI(value: string): string {
+  try {
+    return decodeURI(value);
+  } catch {
+    return value;
+  }
+}
+
+/**
+ * After bundling rewrites all $ref objects to internal paths, discriminator.mapping
+ * values (which are plain strings, not $ref objects) may still contain stale references
+ * from external files. This function walks the schema and updates those mapping values
+ * by matching them against the already-corrected $ref values in sibling oneOf/anyOf arrays.
+ */
+function updateDiscriminatorMappings(schema: any): void {
+  const seen = new WeakSet<object>();
+
+  function walk(obj: any): void {
+    if (!obj || typeof obj !== 'object' || seen.has(obj)) {
+      return;
+    }
+
+    if (Array.isArray(obj)) {
+      for (const item of obj) {
+        walk(item);
+      }
+      return;
+    }
+
+    seen.add(obj);
+
+    if (
+      obj.discriminator &&
+      typeof obj.discriminator === 'object' &&
+      obj.discriminator.mapping &&
+      typeof obj.discriminator.mapping === 'object' &&
+      (Array.isArray(obj.oneOf) || Array.isArray(obj.anyOf))
+    ) {
+      const composition = [...(obj.oneOf || []), ...(obj.anyOf || [])];
+
+      // Build a map from schema name (last segment) to full $ref path
+      const nameToFullRef = new Map<string, string | null>();
+      for (const item of composition) {
+        if (item && typeof item === 'object' && item.$ref && typeof item.$ref === 'string') {
+          const name = refLastSegment(item.$ref);
+          if (name) {
+            // null signals ambiguity (multiple $refs with the same last segment)
+            nameToFullRef.set(name, nameToFullRef.has(name) ? null : item.$ref);
+          }
+        }
+      }
+
+      const mapping = obj.discriminator.mapping;
+      for (const key of Object.keys(mapping)) {
+        const mappingValue = mapping[key];
+        if (typeof mappingValue !== 'string') {
+          continue;
+        }
+
+        // Skip if the mapping value already correctly matches a $ref in the composition.
+        // Compare both exact strings and URI-decoded versions to handle cases where
+        // the bundler URL-encodes non-ASCII characters in $ref values but the mapping
+        // retains the original unencoded form (e.g. "Spæcial" vs "Sp%C3%A6cial").
+        const decodedMappingValue = safeDecodeURI(mappingValue);
+        const isAlreadyCorrect = composition.some((item: any) => {
+          if (!item || typeof item.$ref !== 'string') {
+            return false;
+          }
+          return item.$ref === mappingValue || safeDecodeURI(item.$ref) === decodedMappingValue;
+        });
+        if (isAlreadyCorrect) {
+          continue;
+        }
+
+        const mappingName = refLastSegment(mappingValue);
+        if (!mappingName) {
+          continue;
+        }
+
+        // Try exact name match (e.g. both have the same last segment)
+        const exactMatch = nameToFullRef.get(mappingName);
+        if (exactMatch) {
+          mapping[key] = exactMatch;
+          continue;
+        }
+
+        // Try suffix match to handle file-prefix case:
+        // bundled $ref name is "{filePrefix}_{originalName}", mapping still has "{originalName}"
+        let matched: string | undefined;
+        let matchCount = 0;
+        for (const [refName, fullRef] of nameToFullRef) {
+          if (fullRef && refName.endsWith(`_${mappingName}`)) {
+            matched = fullRef;
+            matchCount++;
+          }
+        }
+
+        if (matchCount === 1 && matched) {
+          mapping[key] = matched;
+        }
+      }
+    }
+
+    for (const value of Object.values(obj)) {
+      walk(value);
+    }
+  }
+
+  walk(schema);
+}
+
+/**
  * Bundles all external JSON references into the main JSON schema, thus resulting in a schema that
  * only has *internal* references, not any *external* references.
  * This method mutates the JSON schema object, adding new references and re-mapping existing ones.
@@ -638,4 +776,5 @@ export function bundle(parser: $RefParser, options: ParserOptions): void {
   });
 
   remap(parser, inventory);
+  updateDiscriminatorMappings(parser.schema);
 }
