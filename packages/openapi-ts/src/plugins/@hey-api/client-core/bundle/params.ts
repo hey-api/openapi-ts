@@ -86,7 +86,7 @@ const buildKeyMap = (fields: FieldsConfig, map?: KeyMap): KeyMap => {
 };
 
 interface Params {
-  body: unknown;
+  body?: unknown;
   headers: Record<string, unknown>;
   path: Record<string, unknown>;
   query: Record<string, unknown>;
@@ -94,7 +94,12 @@ interface Params {
 
 const stripEmptySlots = (params: Params) => {
   for (const [slot, value] of Object.entries(params)) {
-    if (value && typeof value === 'object' && !Object.keys(value).length) {
+    if (
+      slot !== 'body' &&
+      value &&
+      typeof value === 'object' &&
+      !Object.keys(value).length
+    ) {
       delete params[slot as Slot];
     }
   }
@@ -105,7 +110,6 @@ export const buildClientParams = (
   fields: FieldsConfig,
 ) => {
   const params: Params = {
-    body: {},
     headers: {},
     path: {},
     query: {},
