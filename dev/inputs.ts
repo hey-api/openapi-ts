@@ -3,7 +3,7 @@ import path from 'node:path';
 import { getSpecsPath } from '../packages/openapi-ts-tests/utils';
 
 export const inputs = {
-  circular: path.resolve(getSpecsPath(), '3.1.x', 'circular.yaml'),
+  circular: path.resolve(getSpecsPath(), '3.0.x', 'circular.yaml'),
   full: path.resolve(getSpecsPath(), '3.1.x', 'full.yaml'),
   local: 'http://localhost:8000/openapi.json',
   opencode: path.resolve(getSpecsPath(), '3.1.x', 'opencode.yaml'),

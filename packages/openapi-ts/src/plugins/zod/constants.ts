@@ -1,7 +1,9 @@
 // TODO: this is inaccurate, it combines identifiers for all supported versions
 export const identifiers = {
+  AnyZodObject: 'AnyZodObject',
   ZodMiniOptional: 'ZodMiniOptional',
   ZodOptional: 'ZodOptional',
+  ZodTypeAny: 'ZodTypeAny',
   _default: '_default',
   and: 'and',
   array: 'array',

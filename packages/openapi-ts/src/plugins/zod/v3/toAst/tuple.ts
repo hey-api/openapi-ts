@@ -1,20 +1,23 @@
-import { fromRef, ref } from '@hey-api/codegen-core';
 import type { SchemaWithType } from '@hey-api/shared';
+import { childContext } from '@hey-api/shared';
 
 import { $ } from '../../../../ts-dsl';
 import { identifiers } from '../../constants';
-import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
-import { irSchemaToAst } from '../plugin';
+import type {
+  Ast,
+  IrSchemaToAstOptions,
+  ZodAppliedResult,
+  ZodSchemaResult,
+} from '../../shared/types';
 
-export const tupleToAst = ({
-  plugin,
-  schema,
-  state,
-}: IrSchemaToAstOptions & {
-  schema: SchemaWithType<'tuple'>;
-}): Omit<Ast, 'typeName'> & {
-  anyType?: string;
-} => {
+export function tupleToAst(
+  options: IrSchemaToAstOptions & {
+    applyModifiers: (result: ZodSchemaResult, opts: { optional?: boolean }) => ZodAppliedResult;
+    schema: SchemaWithType<'tuple'>;
+  },
+): Omit<Ast, 'typeName'> {
+  const { applyModifiers, plugin, schema, walk } = options;
+
   const z = plugin.external('zod.z');
 
   let hasLazyExpression = false;
@@ -36,18 +39,23 @@ export const tupleToAst = ({
 
   if (schema.items) {
     schema.items.forEach((item, index) => {
-      const itemSchema = irSchemaToAst({
-        plugin,
-        schema: item,
-        state: {
-          ...state,
-          path: ref([...fromRef(state.path), 'items', index]),
-        },
-      });
-      tupleElements.push(itemSchema.expression);
-      if (itemSchema.hasLazyExpression) {
+      const itemResult = walk(
+        item,
+        childContext(
+          {
+            path: options.state.path,
+            plugin: options.plugin,
+          },
+          'items',
+          index,
+        ),
+      );
+      if (itemResult.hasLazyExpression) {
         hasLazyExpression = true;
       }
+
+      const finalExpr = applyModifiers(itemResult, { optional: false });
+      tupleElements.push(finalExpr.expression);
     });
   }
 
@@ -59,4 +67,4 @@ export const tupleToAst = ({
     expression,
     hasLazyExpression,
   };
-};
+}

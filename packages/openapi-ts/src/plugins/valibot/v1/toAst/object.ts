@@ -1,20 +1,28 @@
-import type { SchemaResult, SchemaVisitorContext, SchemaWithType, Walker } from '@hey-api/shared';
+import type { SchemaVisitorContext, SchemaWithType, Walker } from '@hey-api/shared';
 import { childContext } from '@hey-api/shared';
 
 import { $ } from '../../../../ts-dsl';
 import type { ObjectResolverContext } from '../../resolvers';
 import type { Pipe, PipeResult } from '../../shared/pipes';
 import { pipes } from '../../shared/pipes';
-import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
+import type {
+  Ast,
+  IrSchemaToAstOptions,
+  ValibotAppliedResult,
+  ValibotSchemaResult,
+} from '../../shared/types';
 import type { ValibotPlugin } from '../../types';
 import { identifiers } from '../constants';
 
 type WalkerCtx = SchemaVisitorContext<ValibotPlugin['Instance']>;
 
 interface ObjectToAstOptions extends IrSchemaToAstOptions {
-  applyModifiers: (result: SchemaResult<Ast>, opts: { optional?: boolean }) => Ast;
+  applyModifiers: (
+    result: ValibotSchemaResult,
+    opts: { optional?: boolean },
+  ) => ValibotAppliedResult;
   schema: SchemaWithType<'object'>;
-  walk: Walker<Ast, ValibotPlugin['Instance']>;
+  walk: Walker<ValibotSchemaResult, ValibotPlugin['Instance']>;
   walkerCtx: WalkerCtx;
 }
 
@@ -89,11 +97,10 @@ function shapeNode(ctx: ExtendedContext): ReturnType<typeof $.object> {
 }
 
 export function objectToAst(options: ObjectToAstOptions): Omit<Ast, 'typeName'> {
-  const { applyModifiers, plugin, walk, walkerCtx } = options;
+  const { plugin } = options;
   const ctx: ExtendedContext = {
     ...options,
     $,
-    applyModifiers,
     nodes: {
       additionalProperties: additionalPropertiesNode,
       base: baseNode,
@@ -110,8 +117,6 @@ export function objectToAst(options: ObjectToAstOptions): Omit<Ast, 'typeName'> 
       ast: {},
       state: options.state,
     },
-    walk,
-    walkerCtx,
   };
   const resolver = plugin.config['~resolvers']?.object;
   const node = resolver?.(ctx) ?? objectResolver(ctx);

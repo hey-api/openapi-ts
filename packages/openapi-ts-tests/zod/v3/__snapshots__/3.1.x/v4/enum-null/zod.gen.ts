@@ -2,7 +2,7 @@
 
 import * as z from 'zod/v4';
 
-export const zFoo = z.nullable(z.enum(['foo', 'bar']));
+export const zFoo = z.enum(['foo', 'bar']).nullable();
 
 export const zBar = z.enum(['foo', 'bar']);
 

@@ -6,13 +6,13 @@ import { $ } from '../../../../ts-dsl';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
 import { irSchemaToAst } from '../plugin';
 
-export const objectToAst = ({
+export function objectToAst({
   plugin,
   schema,
   state,
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'object'>;
-}): Omit<Ast, 'typeName'> => {
+}): Omit<Ast, 'typeName'> {
   const result: Partial<Omit<Ast, 'typeName'>> = {};
 
   // TODO: parser - handle constants
@@ -106,4 +106,4 @@ export const objectToAst = ({
   }
 
   return result as Omit<Ast, 'typeName'>;
-};
+}

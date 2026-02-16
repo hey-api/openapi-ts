@@ -4,13 +4,13 @@ import { $ } from '../../../../ts-dsl';
 import { identifiers } from '../../constants';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
 
-export const neverToAst = ({
+export function neverToAst({
   plugin,
-}: IrSchemaToAstOptions & {
+}: Pick<IrSchemaToAstOptions, 'plugin'> & {
   schema: SchemaWithType<'never'>;
-}): Omit<Ast, 'typeName'> => {
+}): Omit<Ast, 'typeName'> {
   const result: Partial<Omit<Ast, 'typeName'>> = {};
   const z = plugin.external('zod.z');
   result.expression = $(z).attr(identifiers.never).call();
   return result as Omit<Ast, 'typeName'>;
-};
+}

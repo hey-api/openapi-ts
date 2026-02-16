@@ -4,12 +4,12 @@ import { $ } from '../../../../ts-dsl';
 import { identifiers } from '../../constants';
 import type { IrSchemaToAstOptions } from '../../shared/types';
 
-export const unknownToAst = ({
+export function unknownToAst({
   plugin,
-}: IrSchemaToAstOptions & {
+}: Pick<IrSchemaToAstOptions, 'plugin'> & {
   schema: SchemaWithType<'unknown'>;
-}) => {
+}) {
   const z = plugin.external('zod.z');
   const expression = $(z).attr(identifiers.unknown).call();
   return expression;
-};
+}
