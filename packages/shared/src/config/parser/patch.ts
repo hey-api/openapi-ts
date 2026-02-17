@@ -10,8 +10,12 @@ import type {
   OpenApiSchemaObject,
 } from '../../openApi/types';
 
+export type PatchInputFn = (
+  spec: OpenApi.V2_0_X | OpenApi.V3_0_X | OpenApi.V3_1_X,
+) => void | Promise<void>;
+
 export type Patch =
-  | ((spec: OpenApi.V2_0_X | OpenApi.V3_0_X | OpenApi.V3_1_X) => void)
+  | PatchInputFn
   | {
       /**
        * Patch the raw OpenAPI spec object in place. Called before all other
@@ -46,7 +50,7 @@ export type Patch =
        * }
        * ```
        */
-      input?: (spec: OpenApi.V2_0_X | OpenApi.V3_0_X | OpenApi.V3_1_X) => void;
+      input?: PatchInputFn;
       /**
        * Patch the OpenAPI meta object in place. Useful for modifying general metadata such as title, description, version, or custom fields before further processing.
        *

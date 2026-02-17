@@ -21,14 +21,14 @@ const specMetadataV3: Pick<OpenApi.V3_1_X, 'info' | 'openapi'> = {
 describe('patchOpenApiSpec', () => {
   describe('patch.input', () => {
     describe('OpenAPI v3', () => {
-      it('calls patch.input function before other patches', () => {
+      it('calls patch.input function before other patches', async () => {
         const inputFn = vi.fn();
         const metaFn = vi.fn();
         const spec: OpenApi.V3_1_X = {
           ...specMetadataV3,
         };
 
-        patchOpenApiSpec({
+        await patchOpenApiSpec({
           patchOptions: {
             input: inputFn,
             meta: metaFn,
@@ -42,13 +42,13 @@ describe('patchOpenApiSpec', () => {
         expect(metaFn).toHaveBeenCalledOnce();
       });
 
-      it('allows bulk creation of component parameters', () => {
+      it('allows bulk creation of component parameters', async () => {
         const spec: OpenApi.V3_1_X = {
           ...specMetadataV3,
           paths: {},
         };
 
-        patchOpenApiSpec({
+        await patchOpenApiSpec({
           patchOptions: {
             input: (spec) => {
               if ('openapi' in spec) {
@@ -72,7 +72,7 @@ describe('patchOpenApiSpec', () => {
         });
       });
 
-      it('allows injecting parameters into multiple operations', () => {
+      it('allows injecting parameters into multiple operations', async () => {
         const spec: OpenApi.V3_1_X = {
           ...specMetadataV3,
           components: {
@@ -103,7 +103,7 @@ describe('patchOpenApiSpec', () => {
           } as any,
         };
 
-        patchOpenApiSpec({
+        await patchOpenApiSpec({
           patchOptions: {
             input: (spec) => {
               // Inject parameter into all GET operations
@@ -131,7 +131,7 @@ describe('patchOpenApiSpec', () => {
         expect((spec.paths as any)['/baz'].post.parameters).toBeUndefined();
       });
 
-      it('allows complex Redfish-like transformations', () => {
+      it('allows complex Redfish-like transformations', async () => {
         const spec: OpenApi.V3_1_X = {
           ...specMetadataV3,
           paths: {
@@ -158,7 +158,7 @@ describe('patchOpenApiSpec', () => {
           { description: 'Select subset.', key: '$select' },
         ];
 
-        patchOpenApiSpec({
+        await patchOpenApiSpec({
           patchOptions: {
             input: (spec) => {
               if (!('openapi' in spec)) return;
@@ -209,13 +209,13 @@ describe('patchOpenApiSpec', () => {
     });
 
     describe('OpenAPI v2', () => {
-      it('calls patch.input function for v2 specs', () => {
+      it('calls patch.input function for v2 specs', async () => {
         const inputFn = vi.fn();
         const spec: OpenApi.V2_0_X = {
           ...specMetadataV2,
         };
 
-        patchOpenApiSpec({
+        await patchOpenApiSpec({
           patchOptions: {
             input: inputFn,
           },
@@ -226,12 +226,12 @@ describe('patchOpenApiSpec', () => {
         expect(inputFn).toHaveBeenCalledWith(spec);
       });
 
-      it('allows adding definitions in v2 specs', () => {
+      it('allows adding definitions in v2 specs', async () => {
         const spec: OpenApi.V2_0_X = {
           ...specMetadataV2,
         };
 
-        patchOpenApiSpec({
+        await patchOpenApiSpec({
           patchOptions: {
             input: (spec) => {
               if ('swagger' in spec) {
@@ -258,15 +258,127 @@ describe('patchOpenApiSpec', () => {
     });
   });
 
+  describe('async patch support', () => {
+    describe('patch.input async', () => {
+      it('supports async patch.input function', async () => {
+        const spec: OpenApi.V3_1_X = {
+          ...specMetadataV3,
+        };
+
+        let asyncExecuted = false;
+
+        await patchOpenApiSpec({
+          patchOptions: {
+            input: async (spec) => {
+              await new Promise((resolve) => setTimeout(resolve, 10));
+              spec.info.title = 'Async Modified';
+              asyncExecuted = true;
+            },
+          },
+          spec,
+        });
+
+        expect(asyncExecuted).toBe(true);
+        expect(spec.info.title).toBe('Async Modified');
+      });
+
+      it('supports async operations in patch.input', async () => {
+        const spec: OpenApi.V3_1_X = {
+          ...specMetadataV3,
+          paths: {},
+        };
+
+        await patchOpenApiSpec({
+          patchOptions: {
+            input: async (spec) => {
+              // Simulate async operation like fetching data
+              await new Promise((resolve) => setTimeout(resolve, 5));
+              if ('openapi' in spec) {
+                if (!spec.components) spec.components = {};
+                if (!spec.components.parameters) spec.components.parameters = {};
+                spec.components.parameters.AsyncParam = {
+                  in: 'query',
+                  name: 'asyncParam',
+                  schema: { type: 'string' },
+                } as any;
+              }
+            },
+          },
+          spec,
+        });
+
+        expect(spec.components?.parameters?.AsyncParam).toEqual({
+          in: 'query',
+          name: 'asyncParam',
+          schema: { type: 'string' },
+        });
+      });
+    });
+
+    describe('shorthand async', () => {
+      it('supports async shorthand patch function', async () => {
+        const spec: OpenApi.V3_1_X = {
+          ...specMetadataV3,
+        };
+
+        let asyncExecuted = false;
+
+        await patchOpenApiSpec({
+          patchOptions: async (spec) => {
+            await new Promise((resolve) => setTimeout(resolve, 10));
+            spec.info.title = 'Async Shorthand Modified';
+            asyncExecuted = true;
+          },
+          spec,
+        });
+
+        expect(asyncExecuted).toBe(true);
+        expect(spec.info.title).toBe('Async Shorthand Modified');
+      });
+
+      it('supports async operations in shorthand function', async () => {
+        const spec: OpenApi.V3_1_X = {
+          ...specMetadataV3,
+          components: {
+            schemas: {
+              Foo: {
+                type: 'string',
+              },
+            },
+          },
+        };
+
+        await patchOpenApiSpec({
+          patchOptions: async (spec) => {
+            // Simulate async operation
+            await new Promise((resolve) => setTimeout(resolve, 5));
+            spec.info.description = 'Added via async shorthand';
+            if ('openapi' in spec && spec.components?.schemas) {
+              (spec.components.schemas as any).Bar = {
+                type: 'number',
+              };
+            }
+          },
+          spec,
+        });
+
+        expect(spec.info.description).toBe('Added via async shorthand');
+        expect((spec.components?.schemas as any)?.Bar).toEqual({
+          type: 'number',
+        });
+      });
+    });
+  });
+
   describe('shorthand patch function', () => {
     describe('OpenAPI v3', () => {
-      it('calls shorthand patch function', () => {
+      it('calls shorthand patch function', async () => {
         const patchFn = vi.fn();
         const spec: OpenApi.V3_1_X = {
           ...specMetadataV3,
         };
 
-        patchOpenApiSpec({
+        await patchOpenApiSpec({
           patchOptions: patchFn,
           spec,
         });
@@ -275,12 +387,12 @@ describe('patchOpenApiSpec', () => {
         expect(patchFn).toHaveBeenCalledWith(spec);
       });
 
-      it('allows modifications through shorthand function', () => {
+      it('allows modifications through shorthand function', async () => {
         const spec: OpenApi.V3_1_X = {
           ...specMetadataV3,
         };
 
-        patchOpenApiSpec({
+        await patchOpenApiSpec({
           patchOptions: (spec) => {
             spec.info.title = 'Modified Title';
           },
@@ -290,7 +402,7 @@ describe('patchOpenApiSpec', () => {
         expect(spec.info.title).toBe('Modified Title');
       });
 
-      it('shorthand function replaces object-based patch configuration', () => {
+      it('shorthand function replaces object-based patch configuration', async () => {
         const spec: OpenApi.V3_1_X = {
           ...specMetadataV3,
           components: {
@@ -304,7 +416,7 @@ describe('patchOpenApiSpec', () => {
 
         // When using shorthand syntax, only the function is called
         // Object properties like meta or schemas would be ignored
-        patchOpenApiSpec({
+        await patchOpenApiSpec({
           patchOptions: (spec) => {
             spec.info.title = 'Shorthand Title';
             // This is the only code that runs
@@ -319,13 +431,13 @@ describe('patchOpenApiSpec', () => {
     });
 
     describe('OpenAPI v2', () => {
-      it('calls shorthand patch function for v2 specs', () => {
+      it('calls shorthand patch function for v2 specs', async () => {
         const patchFn = vi.fn();
         const spec: OpenApi.V2_0_X = {
           ...specMetadataV2,
         };
 
-        patchOpenApiSpec({
+        await patchOpenApiSpec({
           patchOptions: patchFn,
           spec,
         });
@@ -334,12 +446,12 @@ describe('patchOpenApiSpec', () => {
         expect(patchFn).toHaveBeenCalledWith(spec);
       });
 
-      it('allows modifications through shorthand function in v2', () => {
+      it('allows modifications through shorthand function in v2', async () => {
         const spec: OpenApi.V2_0_X = {
           ...specMetadataV2,
         };
 
-        patchOpenApiSpec({
+        await patchOpenApiSpec({
           patchOptions: (spec) => {
             spec.info.title = 'Modified V2 Title';
           },
@@ -352,7 +464,7 @@ describe('patchOpenApiSpec', () => {
   });
 
   describe('edge cases', () => {
-    it('does not modify spec', () => {
+    it('does not modify spec', async () => {
       const spec: OpenApi.V3_1_X = {
         ...specMetadataV3,
         components: {
@@ -364,7 +476,7 @@ describe('patchOpenApiSpec', () => {
         },
       };
 
-      patchOpenApiSpec({
+      await patchOpenApiSpec({
         patchOptions: undefined,
         spec,
       });
@@ -381,7 +493,7 @@ describe('patchOpenApiSpec', () => {
       });
     });
 
-    it('does not modify spec', () => {
+    it('does not modify spec', async () => {
       const spec: OpenApi.V3_1_X = {
         ...specMetadataV3,
         components: {
@@ -393,7 +505,7 @@ describe('patchOpenApiSpec', () => {
         },
       };
 
-      patchOpenApiSpec({
+      await patchOpenApiSpec({
         patchOptions: {},
         spec,
       });
@@ -412,7 +524,7 @@ describe('patchOpenApiSpec', () => {
   });
 
   describe('OpenAPI v3', () => {
-    it('calls patch function', () => {
+    it('calls patch function', async () => {
       const fnBar = vi.fn();
       const fnFoo = vi.fn();
 
@@ -430,7 +542,7 @@ describe('patchOpenApiSpec', () => {
         },
       };
 
-      patchOpenApiSpec({
+      await patchOpenApiSpec({
         patchOptions: {
           schemas: {
             Bar: fnBar,
@@ -450,7 +562,7 @@ describe('patchOpenApiSpec', () => {
       });
     });
 
-    it('patch function mutates spec', () => {
+    it('patch function mutates spec', async () => {
       const spec: OpenApi.V3_1_X = {
         ...specMetadataV3,
         components: {
@@ -494,7 +606,7 @@ describe('patchOpenApiSpec', () => {
         },
       };
 
-      patchOpenApiSpec({
+      await patchOpenApiSpec({
         patchOptions: {
           parameters: {
             Foo: (schema) => {
@@ -588,14 +700,14 @@ describe('patchOpenApiSpec', () => {
       });
     });
 
-    it('handles spec without components', () => {
+    it('handles spec without components', async () => {
       const fn = vi.fn();
 
       const spec: OpenApi.V3_1_X = {
         ...specMetadataV3,
       };
 
-      patchOpenApiSpec({
+      await patchOpenApiSpec({
         patchOptions: {
           parameters: {
             Foo: fn,
@@ -616,7 +728,7 @@ describe('patchOpenApiSpec', () => {
       expect(fn).not.toHaveBeenCalled();
     });
 
-    it('handles spec without component namespaces', () => {
+    it('handles spec without component namespaces', async () => {
       const fn = vi.fn();
 
       const spec: OpenApi.V3_1_X = {
@@ -624,7 +736,7 @@ describe('patchOpenApiSpec', () => {
         components: {},
       };
 
-      patchOpenApiSpec({
+      await patchOpenApiSpec({
         patchOptions: {
           parameters: {
             Foo: fn,
@@ -645,7 +757,7 @@ describe('patchOpenApiSpec', () => {
       expect(fn).not.toHaveBeenCalled();
     });
 
-    it('handles spec without matching components', () => {
+    it('handles spec without matching components', async () => {
       const fn = vi.fn();
 
       const spec: OpenApi.V3_1_X = {
@@ -658,7 +770,7 @@ describe('patchOpenApiSpec', () => {
         },
       };
 
-      patchOpenApiSpec({
+      await patchOpenApiSpec({
         patchOptions: {
           parameters: {
             Foo: fn,
@@ -679,7 +791,7 @@ describe('patchOpenApiSpec', () => {
       expect(fn).not.toHaveBeenCalled();
     });
 
-    it('skips invalid schemas', () => {
+    it('skips invalid schemas', async () => {
       const fn = vi.fn();
 
       const spec: OpenApi.V3_1_X = {
@@ -696,7 +808,7 @@ describe('patchOpenApiSpec', () => {
         },
       };
 
-      patchOpenApiSpec({
+      await patchOpenApiSpec({
         patchOptions: {
           schemas: {
             Bar: fn,
@@ -714,14 +826,14 @@ describe('patchOpenApiSpec', () => {
       });
     });
 
-    it('applies meta patch function', () => {
+    it('applies meta patch function', async () => {
       const metaFn = vi.fn((meta) => {
         meta.title = 'Changed Title';
       });
       const spec: OpenApi.V3_1_X = {
         ...specMetadataV3,
       };
-      patchOpenApiSpec({
+      await patchOpenApiSpec({
         patchOptions: {
           meta: metaFn,
         },
@@ -731,12 +843,12 @@ describe('patchOpenApiSpec', () => {
       expect(spec.info.title).toBe('Changed Title');
     });
 
-    it('applies version patch function', () => {
+    it('applies version patch function', async () => {
       const versionFn = vi.fn((version) => `patched-${version}`);
       const spec: OpenApi.V3_1_X = {
         ...specMetadataV3,
       };
-      patchOpenApiSpec({
+      await patchOpenApiSpec({
         patchOptions: {
           version: versionFn,
         },
@@ -748,7 +860,7 @@ describe('patchOpenApiSpec', () => {
   });
 
   describe('OpenAPI v2', () => {
-    it('calls patch function', () => {
+    it('calls patch function', async () => {
       const fnBar = vi.fn();
       const fnFoo = vi.fn();
 
@@ -764,7 +876,7 @@ describe('patchOpenApiSpec', () => {
         },
       };
 
-      patchOpenApiSpec({
+      await patchOpenApiSpec({
         patchOptions: {
           schemas: {
             Bar: fnBar,
@@ -784,7 +896,7 @@ describe('patchOpenApiSpec', () => {
       });
     });
 
-    it('patch function mutates schema', () => {
+    it('patch function mutates schema', async () => {
       const spec: OpenApi.V2_0_X = {
         ...specMetadataV2,
         definitions: {
@@ -794,7 +906,7 @@ describe('patchOpenApiSpec', () => {
         },
       };
 
-      patchOpenApiSpec({
+      await patchOpenApiSpec({
         patchOptions: {
           schemas: {
             Foo: (schema) => {
@@ -815,14 +927,14 @@ describe('patchOpenApiSpec', () => {
       });
     });
 
-    it('handles spec without definitions', () => {
+    it('handles spec without definitions', async () => {
       const fn = vi.fn();
 
       const spec: OpenApi.V2_0_X = {
         ...specMetadataV2,
       };
 
-      patchOpenApiSpec({
+      await patchOpenApiSpec({
         patchOptions: {
           parameters: {
             Foo: fn,
@@ -843,7 +955,7 @@ describe('patchOpenApiSpec', () => {
       expect(fn).not.toHaveBeenCalled();
     });
 
-    it('handles spec without matching definitions', () => {
+    it('handles spec without matching definitions', async () => {
       const fn = vi.fn();
 
       const spec: OpenApi.V2_0_X = {
@@ -851,7 +963,7 @@ describe('patchOpenApiSpec', () => {
         definitions: {},
       };
 
-      patchOpenApiSpec({
+      await patchOpenApiSpec({
         patchOptions: {
           parameters: {
             Foo: fn,
@@ -872,7 +984,7 @@ describe('patchOpenApiSpec', () => {
       expect(fn).not.toHaveBeenCalled();
     });
 
-    it('skips invalid schemas', () => {
+    it('skips invalid schemas', async () => {
       const fn = vi.fn();
 
       const spec: OpenApi.V2_0_X = {
@@ -887,7 +999,7 @@ describe('patchOpenApiSpec', () => {
         },
       };
 
-      patchOpenApiSpec({
+      await patchOpenApiSpec({
         patchOptions: {
           schemas: {
             Bar: fn,
@@ -905,14 +1017,14 @@ describe('patchOpenApiSpec', () => {
       });
     });
 
-    it('applies meta patch function', () => {
+    it('applies meta patch function', async () => {
       const metaFn = vi.fn((meta) => {
         meta.title = 'Changed Title';
       });
       const spec: OpenApi.V2_0_X = {
         ...specMetadataV2,
       };
-      patchOpenApiSpec({
+      await patchOpenApiSpec({
         patchOptions: {
           meta: metaFn,
         },
@@ -922,12 +1034,12 @@ describe('patchOpenApiSpec', () => {
       expect(spec.info.title).toBe('Changed Title');
     });
 
-    it('applies version patch function', () => {
+    it('applies version patch function', async () => {
       const versionFn = vi.fn((version) => `patched-${version}`);
       const spec: OpenApi.V2_0_X = {
         ...specMetadataV2,
       };
-      patchOpenApiSpec({
+      await patchOpenApiSpec({
         patchOptions: {
           version: versionFn,
         },
@@ -939,7 +1051,7 @@ describe('patchOpenApiSpec', () => {
   });
 
   describe('real-world usage', () => {
-    it('handles complex schema example from docs', () => {
+    it('handles complex schema example from docs', async () => {
       const spec: OpenApi.V3_1_X = {
         ...specMetadataV3,
         components: {
@@ -959,7 +1071,7 @@ describe('patchOpenApiSpec', () => {
         },
       };
 
-      patchOpenApiSpec({
+      await patchOpenApiSpec({
         patchOptions: {
           schemas: {
             Foo: (schema: any) => {
@@ -992,7 +1104,7 @@ describe('patchOpenApiSpec', () => {
       });
     });
 
-    it('handles adding new schema properties', () => {
+    it('handles adding new schema properties', async () => {
       const spec: OpenApi.V3_1_X = {
         ...specMetadataV3,
         components: {
@@ -1007,7 +1119,7 @@ describe('patchOpenApiSpec', () => {
         },
       };
 
-      patchOpenApiSpec({
+      await patchOpenApiSpec({
         patchOptions: {
           schemas: {
             Foo: (schema: any) => {
@@ -1042,7 +1154,7 @@ describe('patchOpenApiSpec', () => {
       });
     });
 
-    it('handles removing schema properties', () => {
+    it('handles removing schema properties', async () => {
       const spec: OpenApi.V3_1_X = {
         ...specMetadataV3,
         components: {
@@ -1059,7 +1171,7 @@ describe('patchOpenApiSpec', () => {
         },
       };
 
-      patchOpenApiSpec({
+      await patchOpenApiSpec({
         patchOptions: {
           schemas: {
             Foo: (schema: any) => {
