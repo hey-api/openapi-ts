@@ -14,6 +14,17 @@ export function patchOpenApiSpec({
 
   const spec = _spec as OpenApi.V2_0_X | OpenApi.V3_0_X | OpenApi.V3_1_X;
 
+  // Handle shorthand function syntax: patch: (spec) => { ... }
+  if (typeof patchOptions === 'function') {
+    patchOptions(spec);
+    return;
+  }
+
+  // Handle patch.input callback
+  if (patchOptions.input) {
+    patchOptions.input(spec);
+  }
+
   if ('swagger' in spec) {
     if (patchOptions.version && spec.swagger) {
       spec.swagger = (
