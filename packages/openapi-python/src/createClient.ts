@@ -100,7 +100,7 @@ export async function createClient({
     }
 
     const eventInputPatch = logger.timeEvent('input.patch');
-    patchOpenApiSpec({ patchOptions: config.parser.patch, spec: data });
+    await patchOpenApiSpec({ patchOptions: config.parser.patch, spec: data });
     eventInputPatch.timeEnd();
 
     const eventParser = logger.timeEvent('parser');
