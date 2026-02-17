@@ -108,7 +108,7 @@ function numberResolver(ctx: NumberResolverContext): Pipes {
 export function numberToNode({
   plugin,
   schema,
-}: IrSchemaToAstOptions & {
+}: Pick<IrSchemaToAstOptions, 'plugin'> & {
   schema: SchemaWithType<'integer' | 'number'>;
 }): Pipe {
   const ctx: NumberResolverContext = {

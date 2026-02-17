@@ -6,7 +6,7 @@ import { identifiers } from '../constants';
 
 export function neverToAst({
   plugin,
-}: IrSchemaToAstOptions & {
+}: Pick<IrSchemaToAstOptions, 'plugin'> & {
   schema: SchemaWithType<'never'>;
 }) {
   const v = plugin.external('valibot.v');

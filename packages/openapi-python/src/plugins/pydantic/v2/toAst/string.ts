@@ -3,11 +3,11 @@ import type { SchemaWithType } from '@hey-api/shared';
 // import { $ } from '../../../../py-dsl';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
 
-export const stringToNode = ({
+export function stringToNode({
   schema,
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'string'>;
-}): Ast => {
+}): Ast {
   const constraints: Record<string, unknown> = {};
 
   if (schema.minLength !== undefined) {
@@ -45,4 +45,4 @@ export const stringToNode = ({
     // pipes: [],
     typeAnnotation: 'str',
   };
-};
+}

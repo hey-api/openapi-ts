@@ -4,13 +4,13 @@ import { $ } from '../../../../ts-dsl';
 import { identifiers } from '../../constants';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
 
-export const voidToAst = ({
+export function voidToAst({
   plugin,
-}: IrSchemaToAstOptions & {
+}: Pick<IrSchemaToAstOptions, 'plugin'> & {
   schema: SchemaWithType<'void'>;
-}): Omit<Ast, 'typeName'> => {
+}): Omit<Ast, 'typeName'> {
   const z = plugin.external('zod.z');
   const result: Partial<Omit<Ast, 'typeName'>> = {};
   result.expression = $(z).attr(identifiers.void).call();
   return result as Omit<Ast, 'typeName'>;
-};
+}

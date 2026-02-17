@@ -6,7 +6,7 @@ import { identifiers } from '../constants';
 
 export function voidToAst({
   plugin,
-}: IrSchemaToAstOptions & {
+}: Pick<IrSchemaToAstOptions, 'plugin'> & {
   schema: SchemaWithType<'void'>;
 }) {
   const v = plugin.external('valibot.v');

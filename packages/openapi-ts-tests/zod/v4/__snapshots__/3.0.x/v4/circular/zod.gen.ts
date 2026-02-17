@@ -3,24 +3,16 @@
 import * as z from 'zod';
 
 export const zFoo = z.object({
-    get quux() {
-        return z.optional(z.lazy((): any => zQuux));
-    }
+    quux: z.lazy((): any => zQuux).optional()
 });
 
 export const zBar = z.object({
-    get bar() {
-        return z.optional(z.lazy((): any => zBar));
-    },
-    get baz() {
-        return z.optional(z.lazy((): any => zBaz));
-    }
+    bar: z.lazy((): any => zBar).optional(),
+    baz: z.lazy((): any => zBaz).optional()
 });
 
 export const zBaz = z.object({
-    get quux() {
-        return z.optional(z.lazy((): any => zQuux));
-    }
+    quux: z.lazy((): any => zQuux).optional()
 });
 
 export const zQux = z.union([
@@ -33,9 +25,9 @@ export const zQux = z.union([
 ]);
 
 export const zQuux = z.object({
-    qux: z.optional(zQux)
+    qux: zQux.optional()
 });
 
 export const zCorge = z.object({
-    baz: z.optional(z.array(zBaz))
+    baz: z.array(zBaz).optional()
 });

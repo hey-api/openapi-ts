@@ -14,6 +14,7 @@ export function exportAst({
   path,
   plugin,
   schema,
+  state,
   tags,
 }: Pick<IrSchemaToAstOptions, 'state'> &
   ProcessorContext & {
@@ -48,7 +49,9 @@ export function exportAst({
   const statement = $.const(symbol)
     .export()
     .$if(plugin.config.comments && createSchemaComment(schema), (c, v) => c.doc(v))
-    .$if(ast.typeName, (c, v) => c.type($.type(z).attr(v)))
+    .$if(state.hasLazyExpression['~ref'] && state.anyType?.['~ref'], (c, v) =>
+      c.type($.type(z).attr(v)),
+    )
     .assign(ast.expression);
   plugin.node(statement);
 

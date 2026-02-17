@@ -4,12 +4,12 @@ import { $ } from '../../../../ts-dsl';
 import { identifiers } from '../../constants';
 import type { IrSchemaToAstOptions } from '../../shared/types';
 
-export const nullToAst = ({
+export function nullToAst({
   plugin,
-}: IrSchemaToAstOptions & {
+}: Pick<IrSchemaToAstOptions, 'plugin'> & {
   schema: SchemaWithType<'null'>;
-}) => {
+}) {
   const z = plugin.external('zod.z');
   const expression = $(z).attr(identifiers.null).call();
   return expression;
-};
+}

@@ -58,6 +58,15 @@ export {
   parameterWithPagination,
 } from './ir/parameter';
 export { deduplicateSchema } from './ir/schema';
+export type {
+  SchemaExtractor,
+  SchemaProcessor,
+  SchemaProcessorContext,
+  SchemaProcessorResult,
+} from './ir/schema-processor';
+export { createSchemaProcessor } from './ir/schema-processor';
+export type { SchemaVisitor, SchemaVisitorContext, Walker } from './ir/schema-walker';
+export { childContext, createSchemaWalker } from './ir/schema-walker';
 export type { IR } from './ir/types';
 export { addItemsToSchema } from './ir/utils';
 export { parseOpenApiSpec } from './openApi';
@@ -87,13 +96,6 @@ export type {
   OpenApiSchemaObject,
 } from './openApi/types';
 export type { Hooks } from './parser/hooks';
-export type {
-  SchemaExtractor,
-  SchemaProcessor,
-  SchemaProcessorContext,
-  SchemaProcessorResult,
-} from './plugins/schema-processor';
-export { createSchemaProcessor } from './plugins/schema-processor';
 export type { SchemaWithType } from './plugins/shared/types/schema';
 export { definePluginConfig, mappers } from './plugins/shared/utils/config';
 export type { PluginInstanceTypes } from './plugins/shared/utils/instance';
