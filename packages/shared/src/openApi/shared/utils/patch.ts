@@ -1,7 +1,7 @@
 import type { Patch } from '../../../config/parser/patch';
 import type { OpenApi } from '../../../openApi/types';
 
-export function patchOpenApiSpec({
+export async function patchOpenApiSpec({
   patchOptions,
   spec: _spec,
 }: {
@@ -15,12 +15,12 @@ export function patchOpenApiSpec({
   const spec = _spec as OpenApi.V2_0_X | OpenApi.V3_0_X | OpenApi.V3_1_X;
 
   if (typeof patchOptions === 'function') {
-    patchOptions(spec);
+    await patchOptions(spec);
     return;
   }
 
   if (patchOptions.input) {
-    patchOptions.input(spec);
+    await patchOptions.input(spec);
   }
 
   if ('swagger' in spec) {
