@@ -1,0 +1,155 @@
+openapi: 3.0.3
+info:
+  title: Non-string discriminator test
+  version: 1
+components:
+  schemas:
+    # --- Boolean discriminator (oneOf) ---
+    BooleanOneOf:
+      oneOf:
+        - $ref: '#/components/schemas/AutoConfig'
+        - $ref: '#/components/schemas/CustomConfig'
+      discriminator:
+        propertyName: use_custom
+        mapping:
+          'False': '#/components/schemas/AutoConfig'
+          'True': '#/components/schemas/CustomConfig'
+
+    AutoConfig:
+      type: object
+      required:
+        - use_custom
+        - auto_setting
+      properties:
+        use_custom:
+          type: boolean
+          const: false
+        auto_setting:
+          type: string
+
+    CustomConfig:
+      type: object
+      required:
+        - use_custom
+        - custom_value
+      properties:
+        use_custom:
+          type: boolean
+          const: true
+        custom_value:
+          type: integer
+
+    # --- Boolean discriminator (anyOf) ---
+    BooleanAnyOf:
+      anyOf:
+        - $ref: '#/components/schemas/AutoConfig'
+        - $ref: '#/components/schemas/CustomConfig'
+      discriminator:
+        propertyName: use_custom
+        mapping:
+          'False': '#/components/schemas/AutoConfig'
+          'True': '#/components/schemas/CustomConfig'
+
+    # --- Integer discriminator (oneOf) ---
+    IntegerOneOf:
+      oneOf:
+        - $ref: '#/components/schemas/TypeOne'
+        - $ref: '#/components/schemas/TypeTwo'
+      discriminator:
+        propertyName: type_id
+        mapping:
+          '1': '#/components/schemas/TypeOne'
+          '2': '#/components/schemas/TypeTwo'
+
+    TypeOne:
+      type: object
+      required:
+        - type_id
+        - one_data
+      properties:
+        type_id:
+          type: integer
+          const: 1
+        one_data:
+          type: string
+
+    TypeTwo:
+      type: object
+      required:
+        - type_id
+        - two_data
+      properties:
+        type_id:
+          type: integer
+          const: 2
+        two_data:
+          type: string
+
+    # --- Number (float) discriminator (oneOf) ---
+    NumberOneOf:
+      oneOf:
+        - $ref: '#/components/schemas/VersionAlpha'
+        - $ref: '#/components/schemas/VersionBeta'
+      discriminator:
+        propertyName: version
+        mapping:
+          '1.0': '#/components/schemas/VersionAlpha'
+          '2.5': '#/components/schemas/VersionBeta'
+
+    VersionAlpha:
+      type: object
+      required:
+        - version
+        - alpha_field
+      properties:
+        version:
+          type: number
+          const: 1.0
+        alpha_field:
+          type: string
+
+    VersionBeta:
+      type: object
+      required:
+        - version
+        - beta_field
+      properties:
+        version:
+          type: number
+          const: 2.5
+        beta_field:
+          type: string
+
+    # --- Integer discriminator (allOf) ---
+    IntegerAllOfBase:
+      type: object
+      required:
+        - kind
+      properties:
+        kind:
+          type: integer
+      discriminator:
+        propertyName: kind
+        mapping:
+          '1': '#/components/schemas/IntegerAllOfChildA'
+          '2': '#/components/schemas/IntegerAllOfChildB'
+
+    IntegerAllOfChildA:
+      allOf:
+        - $ref: '#/components/schemas/IntegerAllOfBase'
+        - type: object
+          required:
+            - child_a_field
+          properties:
+            child_a_field:
+              type: string
+
+    IntegerAllOfChildB:
+      allOf:
+        - $ref: '#/components/schemas/IntegerAllOfBase'
+        - type: object
+          required:
+            - child_b_field
+          properties:
+            child_b_field:
+              type: string
