@@ -2,7 +2,7 @@
 
 import * as z from 'zod/mini';
 
-export const zFoo = z.union([z.enum(['foo', 'bar']), z.string()]);
+export const zFoo = z.nullable(z.union([z.enum(['foo', 'bar']), z.string()]));
 
 export const zBar = z.union([z.enum(['foo', 'bar']), z.string()]);
 

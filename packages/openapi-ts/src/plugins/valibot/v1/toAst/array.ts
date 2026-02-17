@@ -1,15 +1,23 @@
-import type { SchemaResult, SchemaWithType } from '@hey-api/shared';
+import type { SchemaWithType } from '@hey-api/shared';
 import { childContext, deduplicateSchema } from '@hey-api/shared';
 
 import { $ } from '../../../../ts-dsl';
 import { pipesToNode } from '../../shared/pipes';
-import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
+import type {
+  Ast,
+  IrSchemaToAstOptions,
+  ValibotAppliedResult,
+  ValibotSchemaResult,
+} from '../../shared/types';
 import { identifiers } from '../constants';
 import { unknownToAst } from './unknown';
 
 export function arrayToAst(
   options: IrSchemaToAstOptions & {
-    applyModifiers: (result: SchemaResult<Ast>, opts: { optional?: boolean }) => Ast;
+    applyModifiers: (
+      result: ValibotSchemaResult,
+      opts: { optional?: boolean },
+    ) => ValibotAppliedResult;
     schema: SchemaWithType<'array'>;
   },
 ): Omit<Ast, 'typeName'> {

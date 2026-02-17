@@ -7,13 +7,13 @@ import { $ } from '../../../../../ts-dsl';
 import type { IrSchemaToAstOptions } from '../../shared/types';
 import { irSchemaToAst } from '../plugin';
 
-export const arrayToAst = ({
+export function arrayToAst({
   plugin,
   schema,
   state,
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'array'>;
-}): TypeTsDsl => {
+}): TypeTsDsl {
   if (!schema.items) {
     return $.type('Array').generic($.type(plugin.config.topType));
   }
@@ -43,4 +43,4 @@ export const arrayToAst = ({
   return schema.logicalOperator === 'and'
     ? $.type('Array').generic($.type.and(...itemTypes))
     : $.type('Array').generic($.type.or(...itemTypes));
-};
+}

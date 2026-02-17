@@ -6,13 +6,13 @@ import { $ } from '../../../../../ts-dsl';
 import type { IrSchemaToAstOptions } from '../../shared/types';
 import { irSchemaToAst } from '../plugin';
 
-export const tupleToAst = ({
+export function tupleToAst({
   plugin,
   schema,
   state,
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'tuple'>;
-}): MaybeTsDsl<TypeTsDsl> => {
+}): MaybeTsDsl<TypeTsDsl> {
   let itemTypes: Array<MaybeTsDsl<TypeTsDsl>> = [];
 
   if (schema.const && Array.isArray(schema.const)) {
@@ -32,4 +32,4 @@ export const tupleToAst = ({
   }
 
   return $.type.tuple(...itemTypes);
-};
+}

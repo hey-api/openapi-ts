@@ -6,27 +6,6 @@ import { deduplicateSchema } from './schema';
 import type { IR } from './types';
 
 /**
- * Result returned by visitor methods. Contains the expression plus metadata
- * needed for modifier application.
- */
-export interface SchemaResult<TExpr> {
-  /** Default value from schema, if any. */
-  default?: unknown;
-  /** The core schema expression, WITHOUT optional/nullable/default applied. */
-  expression: TExpr;
-  /** The original schema format. */
-  format?: string;
-  /** For libraries that need lazy evaluation. */
-  hasLazyExpression?: boolean;
-  /** Plugin-specific metadata bucket. */
-  meta?: Record<string, unknown>;
-  /** Does this schema explicitly allow null? */
-  nullable: boolean;
-  /** Is this schema read-only? */
-  readonly: boolean;
-}
-
-/**
  * Context passed to all visitor methods.
  */
 export interface SchemaVisitorContext<TPlugin = unknown> {
@@ -37,47 +16,43 @@ export interface SchemaVisitorContext<TPlugin = unknown> {
 }
 
 /**
- * The walk function signature.
+ * The walk function signature. Fully generic over TResult.
  */
-export type Walker<TExpr, TPlugin = unknown> = (
+export type Walker<TResult, TPlugin = unknown> = (
   schema: IR.SchemaObject,
   ctx: SchemaVisitorContext<TPlugin>,
-) => SchemaResult<TExpr>;
+) => TResult;
 
 /**
- * The visitor interface. Plugins implement this to define how schemas
- * are transformed into their target representation.
+ * The visitor interface. Plugins define their own TResult type.
+ *
+ * The walker handles orchestration (dispatch, deduplication, path tracking).
+ * Result shape and semantics are entirely plugin-defined.
  */
-export interface SchemaVisitor<TExpr, TPlugin = unknown> {
+export interface SchemaVisitor<TResult, TPlugin = unknown> {
   /**
-   * Apply modifiers (optional/nullable/nullish/default) to a schema result.
+   * Apply modifiers to a result.
    */
   applyModifiers(
-    result: SchemaResult<TExpr>,
+    result: TResult,
     ctx: SchemaVisitorContext<TPlugin>,
     context?: {
       /** Is this property optional? */
       optional?: boolean;
     },
-  ): TExpr;
+  ): unknown;
   array(
     schema: SchemaWithType<'array'>,
     ctx: SchemaVisitorContext<TPlugin>,
-    walk: Walker<TExpr, TPlugin>,
-  ): SchemaResult<TExpr>;
-  boolean(
-    schema: SchemaWithType<'boolean'>,
-    ctx: SchemaVisitorContext<TPlugin>,
-  ): SchemaResult<TExpr>;
+    walk: Walker<TResult, TPlugin>,
+  ): TResult;
+  boolean(schema: SchemaWithType<'boolean'>, ctx: SchemaVisitorContext<TPlugin>): TResult;
   enum(
     schema: SchemaWithType<'enum'>,
     ctx: SchemaVisitorContext<TPlugin>,
-    walk: Walker<TExpr, TPlugin>,
-  ): SchemaResult<TExpr>;
-  integer(
-    schema: SchemaWithType<'integer'>,
-    ctx: SchemaVisitorContext<TPlugin>,
-  ): SchemaResult<TExpr>;
+    walk: Walker<TResult, TPlugin>,
+  ): TResult;
+  integer(schema: SchemaWithType<'integer'>, ctx: SchemaVisitorContext<TPlugin>): TResult;
   /**
    * Called before any dispatch logic. Return a result to short-circuit,
    * or undefined to continue normal dispatch.
@@ -85,63 +60,55 @@ export interface SchemaVisitor<TExpr, TPlugin = unknown> {
   intercept?(
     schema: IR.SchemaObject,
     ctx: SchemaVisitorContext<TPlugin>,
-    walk: Walker<TExpr, TPlugin>,
-  ): SchemaResult<TExpr> | undefined;
+    walk: Walker<TResult, TPlugin>,
+  ): TResult | undefined;
   /**
    * Handle intersection types. Receives already-walked child results.
    */
   intersection(
-    items: Array<SchemaResult<TExpr>>,
+    items: Array<TResult>,
     schemas: ReadonlyArray<IR.SchemaObject>,
+    parentSchema: IR.SchemaObject,
     ctx: SchemaVisitorContext<TPlugin>,
-  ): SchemaResult<TExpr>;
-  never(schema: SchemaWithType<'never'>, ctx: SchemaVisitorContext<TPlugin>): SchemaResult<TExpr>;
-  null(schema: SchemaWithType<'null'>, ctx: SchemaVisitorContext<TPlugin>): SchemaResult<TExpr>;
-  number(schema: SchemaWithType<'number'>, ctx: SchemaVisitorContext<TPlugin>): SchemaResult<TExpr>;
+  ): TResult;
+  never(schema: SchemaWithType<'never'>, ctx: SchemaVisitorContext<TPlugin>): TResult;
+  null(schema: SchemaWithType<'null'>, ctx: SchemaVisitorContext<TPlugin>): TResult;
+  number(schema: SchemaWithType<'number'>, ctx: SchemaVisitorContext<TPlugin>): TResult;
   object(
     schema: SchemaWithType<'object'>,
     ctx: SchemaVisitorContext<TPlugin>,
-    walk: Walker<TExpr, TPlugin>,
-  ): SchemaResult<TExpr>;
+    walk: Walker<TResult, TPlugin>,
+  ): TResult;
   /**
    * Called after each typed schema visitor returns.
    */
   postProcess?(
-    result: SchemaResult<TExpr>,
+    result: TResult,
     schema: IR.SchemaObject,
     ctx: SchemaVisitorContext<TPlugin>,
-  ): SchemaResult<TExpr>;
+  ): TResult;
   /**
    * Handle $ref to another schema.
    */
-  reference(
-    $ref: string,
-    schema: IR.SchemaObject,
-    ctx: SchemaVisitorContext<TPlugin>,
-  ): SchemaResult<TExpr>;
-  string(schema: SchemaWithType<'string'>, ctx: SchemaVisitorContext<TPlugin>): SchemaResult<TExpr>;
+  reference($ref: string, schema: IR.SchemaObject, ctx: SchemaVisitorContext<TPlugin>): TResult;
+  string(schema: SchemaWithType<'string'>, ctx: SchemaVisitorContext<TPlugin>): TResult;
   tuple(
     schema: SchemaWithType<'tuple'>,
     ctx: SchemaVisitorContext<TPlugin>,
-    walk: Walker<TExpr, TPlugin>,
-  ): SchemaResult<TExpr>;
-  undefined(
-    schema: SchemaWithType<'undefined'>,
-    ctx: SchemaVisitorContext<TPlugin>,
-  ): SchemaResult<TExpr>;
+    walk: Walker<TResult, TPlugin>,
+  ): TResult;
+  undefined(schema: SchemaWithType<'undefined'>, ctx: SchemaVisitorContext<TPlugin>): TResult;
   /**
    * Handle union types. Receives already-walked child results.
    */
   union(
-    items: Array<SchemaResult<TExpr>>,
+    items: Array<TResult>,
     schemas: ReadonlyArray<IR.SchemaObject>,
+    parentSchema: IR.SchemaObject,
     ctx: SchemaVisitorContext<TPlugin>,
-  ): SchemaResult<TExpr>;
-  unknown(
-    schema: SchemaWithType<'unknown'>,
-    ctx: SchemaVisitorContext<TPlugin>,
-  ): SchemaResult<TExpr>;
-  void(schema: SchemaWithType<'void'>, ctx: SchemaVisitorContext<TPlugin>): SchemaResult<TExpr>;
+  ): TResult;
+  unknown(schema: SchemaWithType<'unknown'>, ctx: SchemaVisitorContext<TPlugin>): TResult;
+  void(schema: SchemaWithType<'void'>, ctx: SchemaVisitorContext<TPlugin>): TResult;
 }
 
 /**
@@ -151,12 +118,11 @@ export interface SchemaVisitor<TExpr, TPlugin = unknown> {
  * - Dispatch order ($ref → type → items → fallback)
  * - Deduplication of union/intersection schemas
  * - Path tracking for child schemas
- * - Calling the appropriate visitor method
  */
-export function createSchemaWalker<TExpr, TPlugin = unknown>(
-  visitor: SchemaVisitor<TExpr, TPlugin>,
-): Walker<TExpr, TPlugin> {
-  const walk: Walker<TExpr, TPlugin> = (schema, ctx) => {
+export function createSchemaWalker<TResult, TPlugin = unknown>(
+  visitor: SchemaVisitor<TResult, TPlugin>,
+): Walker<TResult, TPlugin> {
+  const walk: Walker<TResult, TPlugin> = (schema, ctx) => {
     // escape hatch
     if (visitor.intercept) {
       const intercepted = visitor.intercept(schema, ctx, walk);
@@ -165,18 +131,8 @@ export function createSchemaWalker<TExpr, TPlugin = unknown>(
       }
     }
 
-    const baseResult = {
-      default: schema.default,
-      readonly: schema.accessScope === 'read',
-    };
-
     if (schema.$ref) {
-      const result = visitor.reference(schema.$ref, schema, ctx);
-      return {
-        ...result,
-        default: result.default ?? baseResult.default,
-        readonly: result.readonly || baseResult.readonly,
-      };
+      return visitor.reference(schema.$ref, schema, ctx);
     }
 
     if (schema.type) {
@@ -184,11 +140,7 @@ export function createSchemaWalker<TExpr, TPlugin = unknown>(
       if (visitor.postProcess) {
         result = visitor.postProcess(result, schema, ctx);
       }
-      return {
-        ...result,
-        default: result.default ?? baseResult.default,
-        readonly: result.readonly || baseResult.readonly,
-      };
+      return result;
     }
 
     if (schema.items) {
@@ -206,25 +158,13 @@ export function createSchemaWalker<TExpr, TPlugin = unknown>(
         }),
       );
 
-      const result =
-        deduplicated.logicalOperator === 'and'
-          ? visitor.intersection(itemResults, deduplicated.items, ctx)
-          : visitor.union(itemResults, deduplicated.items, ctx);
-
-      return {
-        ...result,
-        default: result.default ?? baseResult.default,
-        readonly: result.readonly || baseResult.readonly,
-      };
+      return deduplicated.logicalOperator === 'and'
+        ? visitor.intersection(itemResults, deduplicated.items, schema, ctx)
+        : visitor.union(itemResults, deduplicated.items, schema, ctx);
     }
 
     // fallback
-    const result = visitor.unknown({ type: 'unknown' }, ctx);
-    return {
-      ...result,
-      default: result.default ?? baseResult.default,
-      readonly: result.readonly || baseResult.readonly,
-    };
+    return visitor.unknown({ type: 'unknown' }, ctx);
   };
 
   return walk;
@@ -233,12 +173,12 @@ export function createSchemaWalker<TExpr, TPlugin = unknown>(
 /**
  * Dispatch to the appropriate visitor method based on schema type.
  */
-function visitTyped<TExpr, TPlugin>(
+function visitTyped<TResult, TPlugin>(
   schema: SchemaWithType,
   ctx: SchemaVisitorContext<TPlugin>,
-  visitor: SchemaVisitor<TExpr, TPlugin>,
-  walk: Walker<TExpr, TPlugin>,
-): SchemaResult<TExpr> {
+  visitor: SchemaVisitor<TResult, TPlugin>,
+  walk: Walker<TResult, TPlugin>,
+): TResult {
   switch (schema.type) {
     case 'array':
       return visitor.array(schema as SchemaWithType<'array'>, ctx, walk);
