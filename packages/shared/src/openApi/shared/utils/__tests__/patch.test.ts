@@ -290,9 +290,7 @@ describe('patchOpenApiSpec', () => {
         expect(spec.info.title).toBe('Modified Title');
       });
 
-      it('shorthand function prevents other patches from running', () => {
-        const metaFn = vi.fn();
-        const schemasFn = vi.fn();
+      it('shorthand function replaces object-based patch configuration', () => {
         const spec: OpenApi.V3_1_X = {
           ...specMetadataV3,
           components: {
@@ -304,16 +302,19 @@ describe('patchOpenApiSpec', () => {
           },
         };
 
+        // When using shorthand syntax, only the function is called
+        // Object properties like meta or schemas would be ignored
         patchOpenApiSpec({
-          patchOptions: ((spec) => {
+          patchOptions: (spec) => {
             spec.info.title = 'Shorthand Title';
-          }) as any,
+            // This is the only code that runs
+          },
           spec,
         });
 
         expect(spec.info.title).toBe('Shorthand Title');
-        expect(metaFn).not.toHaveBeenCalled();
-        expect(schemasFn).not.toHaveBeenCalled();
+        // Schemas remain untouched since no schema patch was applied
+        expect(spec.components?.schemas?.Foo).toEqual({ type: 'string' });
       });
     });
 
