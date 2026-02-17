@@ -219,6 +219,13 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'discriminator-non-string.yaml',
+        output: 'discriminator-non-string',
+      }),
+      description: 'handles non-string discriminator property types',
+    },
+    {
+      config: createConfig({
         input: 'enum-escape.json',
         output: 'enum-escape',
       }),
