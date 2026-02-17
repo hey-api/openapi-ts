@@ -4,7 +4,7 @@ import { createSchemaProcessor, createSchemaWalker, pathToJsonPointer } from '@h
 
 import { exportAst } from '../shared/export';
 import type { ProcessorContext, ProcessorResult } from '../shared/processor';
-import type { PluginState } from '../shared/types';
+import type { PluginState, ValibotAppliedResult } from '../shared/types';
 import type { ValibotPlugin } from '../types';
 import { createVisitor } from './walker';
 
@@ -54,10 +54,10 @@ export function createProcessor(plugin: ValibotPlugin['Instance']): ProcessorRes
         plugin,
       });
       const ast =
-        visitor.applyModifiers(result, {
+        (visitor.applyModifiers(result, {
           path: ref(ctx.path),
           plugin,
-        }) ?? result.expression;
+        }) as ValibotAppliedResult) ?? result.expression;
       if (result.hasLazyExpression) {
         state.hasLazyExpression['~ref'] = true;
       }

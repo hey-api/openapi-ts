@@ -105,12 +105,12 @@ function stringResolver(ctx: StringResolverContext): Chain {
   return ctx.chain.current;
 }
 
-export const stringToNode = ({
+export function stringToNode({
   plugin,
   schema,
-}: IrSchemaToAstOptions & {
+}: Pick<IrSchemaToAstOptions, 'plugin'> & {
   schema: SchemaWithType<'string'>;
-}): Omit<Ast, 'typeName'> => {
+}): Omit<Ast, 'typeName'> {
   const z = plugin.external('zod.z');
   const ctx: StringResolverContext = {
     $,
@@ -137,4 +137,4 @@ export const stringToNode = ({
   return {
     expression: node,
   };
-};
+}

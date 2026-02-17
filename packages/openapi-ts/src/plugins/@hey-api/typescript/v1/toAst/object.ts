@@ -8,13 +8,13 @@ import { $ } from '../../../../../ts-dsl';
 import type { IrSchemaToAstOptions } from '../../shared/types';
 import { irSchemaToAst } from '../plugin';
 
-export const objectToAst = ({
+export function objectToAst({
   plugin,
   schema,
   state,
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'object'>;
-}): TypeTsDsl => {
+}): TypeTsDsl {
   // TODO: parser - handle constants
   const shape = $.type.object();
   const required = schema.required ?? [];
@@ -110,4 +110,4 @@ export const objectToAst = ({
   }
 
   return shape;
-};
+}
