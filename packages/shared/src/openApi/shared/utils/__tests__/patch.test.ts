@@ -291,18 +291,29 @@ describe('patchOpenApiSpec', () => {
       });
 
       it('shorthand function prevents other patches from running', () => {
+        const metaFn = vi.fn();
+        const schemasFn = vi.fn();
         const spec: OpenApi.V3_1_X = {
           ...specMetadataV3,
+          components: {
+            schemas: {
+              Foo: {
+                type: 'string',
+              },
+            },
+          },
         };
 
         patchOpenApiSpec({
-          patchOptions: (spec) => {
+          patchOptions: ((spec) => {
             spec.info.title = 'Shorthand Title';
-          },
+          }) as any,
           spec,
         });
 
         expect(spec.info.title).toBe('Shorthand Title');
+        expect(metaFn).not.toHaveBeenCalled();
+        expect(schemasFn).not.toHaveBeenCalled();
       });
     });
 
