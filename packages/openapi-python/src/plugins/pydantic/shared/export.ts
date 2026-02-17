@@ -1,25 +1,36 @@
-import type { Symbol } from '@hey-api/codegen-core';
-import type { IR } from '@hey-api/shared';
+import { applyNaming, pathToName } from '@hey-api/shared';
 
 // import { createSchemaComment } from '../../../plugins/shared/utils/schema';
 import { $ } from '../../../py-dsl';
+import type { ProcessorContext } from './processor';
 // import { identifiers } from '../v2/constants';
 // import { pipesToNode } from './pipes';
 import type { Ast, IrSchemaToAstOptions } from './types';
 
 export function exportAst({
-  // ast,
+  meta,
+  naming,
+  namingAnchor,
+  path,
   plugin,
-  // schema,
-  // state,
-  symbol,
-}: IrSchemaToAstOptions & {
-  ast: Ast;
-  schema: IR.SchemaObject;
-  symbol: Symbol;
-}): void {
-  // const v = plugin.external('valibot.v');
-  const classDef = $.class(symbol);
+  tags,
+}: Pick<IrSchemaToAstOptions, 'state'> &
+  ProcessorContext & {
+    ast: Ast;
+  }): void {
+  const name = pathToName(path, { anchor: namingAnchor });
+  const symbol = plugin.symbol(applyNaming(name, naming), {
+    meta: {
+      category: 'schema',
+      path,
+      tags,
+      tool: 'pydantic',
+      ...meta,
+    },
+  });
+
+  const baseModel = plugin.external('pydantic.BaseModel');
+  const classDef = $.class(symbol).extends(baseModel);
   // .export()
   // .$if(plugin.config.comments && createSchemaComment(schema), (c, v) => c.doc(v))
   // .$if(state.hasLazyExpression['~ref'], (c) =>

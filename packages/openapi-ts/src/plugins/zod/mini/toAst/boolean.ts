@@ -7,7 +7,7 @@ import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
 export function booleanToAst({
   plugin,
   schema,
-}: IrSchemaToAstOptions & {
+}: Pick<IrSchemaToAstOptions, 'plugin'> & {
   schema: SchemaWithType<'boolean'>;
 }): Omit<Ast, 'typeName'> {
   const result: Partial<Omit<Ast, 'typeName'>> = {};

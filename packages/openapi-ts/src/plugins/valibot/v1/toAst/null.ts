@@ -6,7 +6,7 @@ import { identifiers } from '../constants';
 
 export function nullToAst({
   plugin,
-}: IrSchemaToAstOptions & {
+}: Pick<IrSchemaToAstOptions, 'plugin'> & {
   schema: SchemaWithType<'null'>;
 }) {
   const v = plugin.external('valibot.v');

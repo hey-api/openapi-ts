@@ -3,7 +3,7 @@
 import * as z from 'zod/v4';
 
 export const zFoo = z.object({
-    bar: z.optional(z.int()),
+    bar: z.int().optional(),
     foo: z.coerce.bigint().min(BigInt('-9223372036854775808'), { error: 'Invalid value: Expected int64 to be >= -9223372036854775808' }).max(BigInt('9223372036854775807'), { error: 'Invalid value: Expected int64 to be <= 9223372036854775807' }).default(BigInt(0)),
     id: z.string()
 });
@@ -13,9 +13,9 @@ export const zBar = z.object({
 });
 
 export const zPostFooData = z.object({
-    body: z.optional(z.never()),
-    path: z.optional(z.never()),
-    query: z.optional(z.never())
+    body: z.never().optional(),
+    path: z.never().optional(),
+    query: z.never().optional()
 });
 
 /**

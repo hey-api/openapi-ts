@@ -19,16 +19,7 @@ export const zTestSchema = z.object({
     primitiveDefault: z.number().default(42),
     refWithPrimitiveDefault: zAudioFormat.default('pcm_16bit_44.1khz'),
     refWithObjectDefault: zNestedConfig.default({ model: 'gpt-4', temperature: 1 }),
-    anyOfWithNullDefault: z.union([
-        z.number(),
-        z.null()
-    ]).default(null),
-    anyOfWithRefAndNullDefault: z.union([
-        zLanguage,
-        z.null()
-    ]).default(null),
-    optionalAnyOfWithDefault: z.optional(z.union([
-        z.string(),
-        z.null()
-    ])).default(null)
+    anyOfWithNullDefault: z.number().nullable().default(null),
+    anyOfWithRefAndNullDefault: zLanguage.nullable().default(null),
+    optionalAnyOfWithDefault: z.string().nullish().default(null)
 });

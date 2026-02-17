@@ -1,20 +1,27 @@
-import { fromRef, ref } from '@hey-api/codegen-core';
 import type { SchemaWithType } from '@hey-api/shared';
-import { deduplicateSchema } from '@hey-api/shared';
+import { childContext, deduplicateSchema } from '@hey-api/shared';
 
 import { $ } from '../../../../ts-dsl';
 import { pipesToNode } from '../../shared/pipes';
-import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
+import type {
+  Ast,
+  IrSchemaToAstOptions,
+  ValibotAppliedResult,
+  ValibotSchemaResult,
+} from '../../shared/types';
 import { identifiers } from '../constants';
-import { irSchemaToAst } from '../plugin';
 import { unknownToAst } from './unknown';
 
 export function arrayToAst(
   options: IrSchemaToAstOptions & {
+    applyModifiers: (
+      result: ValibotSchemaResult,
+      opts: { optional?: boolean },
+    ) => ValibotAppliedResult;
     schema: SchemaWithType<'array'>;
   },
 ): Omit<Ast, 'typeName'> {
-  const { plugin } = options;
+  const { applyModifiers, plugin, walk } = options;
   let { schema } = options;
 
   const result: Omit<Ast, 'typeName'> = {
@@ -39,18 +46,23 @@ export function arrayToAst(
 
     // at least one item is guaranteed
     const itemExpressions = schema.items!.map((item, index) => {
-      const itemAst = irSchemaToAst({
-        ...options,
-        schema: item,
-        state: {
-          ...options.state,
-          path: ref([...fromRef(options.state.path), 'items', index]),
-        },
-      });
-      if (itemAst.hasLazyExpression) {
+      const itemResult = walk(
+        item,
+        childContext(
+          {
+            path: options.state.path,
+            plugin: options.plugin,
+          },
+          'items',
+          index,
+        ),
+      );
+      if (itemResult.hasLazyExpression) {
         result.hasLazyExpression = true;
       }
-      return pipesToNode(itemAst.pipes, plugin);
+
+      const finalExpr = applyModifiers(itemResult, { optional: false });
+      return pipesToNode(finalExpr.pipes, plugin);
     });
 
     if (itemExpressions.length === 1) {

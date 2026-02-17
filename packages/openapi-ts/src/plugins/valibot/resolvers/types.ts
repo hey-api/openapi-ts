@@ -1,11 +1,12 @@
 import type { Refs, Symbol } from '@hey-api/codegen-core';
-import type { IR, Plugin, SchemaWithType } from '@hey-api/shared';
+import type { IR, Plugin, SchemaVisitorContext, SchemaWithType, Walker } from '@hey-api/shared';
 
 import type { MaybeBigInt, ShouldCoerceToBigInt } from '../../../plugins/shared/utils/coerce';
 import type { GetIntegerLimit } from '../../../plugins/shared/utils/formats';
 import type { $, DollarTsDsl } from '../../../ts-dsl';
 import type { Pipe, PipeResult, Pipes, PipesUtils } from '../shared/pipes';
-import type { Ast, IrSchemaToAstOptions, PluginState } from '../shared/types';
+import type { Ast, IrSchemaToAstOptions, PluginState, ValibotSchemaResult } from '../shared/types';
+import type { ValibotPlugin } from '../types';
 
 export type Resolvers = Plugin.Resolvers<{
   /**
@@ -70,7 +71,7 @@ export type Resolvers = Plugin.Resolvers<{
 type ValidatorResolver = (ctx: ValidatorResolverContext) => PipeResult | null | undefined;
 
 type BaseContext = DollarTsDsl &
-  Pick<IrSchemaToAstOptions, 'plugin' | 'schemaExtractor'> & {
+  Pick<IrSchemaToAstOptions, 'plugin'> & {
     /**
      * Functions for working with pipes.
      */
@@ -116,10 +117,6 @@ export interface EnumResolverContext extends BaseContext {
        */
       isNullable: boolean;
     };
-    /**
-     * Returns a nullable wrapper if the enum includes null, undefined otherwise.
-     */
-    nullable: (ctx: EnumResolverContext) => PipeResult | undefined;
   };
   schema: SchemaWithType<'enum'>;
   /**
@@ -152,6 +149,7 @@ export interface NumberResolverContext extends BaseContext {
 }
 
 export interface ObjectResolverContext extends BaseContext {
+  applyModifiers: (result: ValibotSchemaResult, opts: { optional?: boolean }) => Ast;
   /**
    * Nodes used to build different parts of the object schema.
    */
@@ -172,6 +170,8 @@ export interface ObjectResolverContext extends BaseContext {
     ast: Partial<Omit<Ast, 'typeName'>>;
     state: Refs<PluginState>;
   };
+  walk: Walker<ValibotSchemaResult, ValibotPlugin['Instance']>;
+  walkerCtx: SchemaVisitorContext<ValibotPlugin['Instance']>;
 }
 
 export interface StringResolverContext extends BaseContext {

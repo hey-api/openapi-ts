@@ -3,13 +3,11 @@
 import * as z from 'zod';
 
 export const zBar = z.object({
-    get bar() {
-        return z.optional(z.array(z.lazy((): any => zBar)));
-    }
+    bar: z.array(z.lazy((): any => zBar)).optional()
 });
 
 export const zFoo = z.object({
-    foo: z.optional(zBar)
+    foo: zBar.optional()
 });
 
 export const zBaz = z.lazy((): any => zQux);

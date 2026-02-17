@@ -1,33 +1,52 @@
-import { fromRef, ref } from '@hey-api/codegen-core';
-import type { SchemaWithType } from '@hey-api/shared';
+import type { SchemaVisitorContext, SchemaWithType, Walker } from '@hey-api/shared';
+import { childContext } from '@hey-api/shared';
 
 import { $ } from '../../../../ts-dsl';
 import type { ObjectResolverContext } from '../../resolvers';
 import type { Pipe, PipeResult } from '../../shared/pipes';
 import { pipes } from '../../shared/pipes';
-import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
+import type {
+  Ast,
+  IrSchemaToAstOptions,
+  ValibotAppliedResult,
+  ValibotSchemaResult,
+} from '../../shared/types';
+import type { ValibotPlugin } from '../../types';
 import { identifiers } from '../constants';
-import { irSchemaToAst } from '../plugin';
 
-function additionalPropertiesNode(ctx: ObjectResolverContext): Pipe | null | undefined {
-  const { plugin, schema } = ctx;
+type WalkerCtx = SchemaVisitorContext<ValibotPlugin['Instance']>;
+
+interface ObjectToAstOptions extends IrSchemaToAstOptions {
+  applyModifiers: (
+    result: ValibotSchemaResult,
+    opts: { optional?: boolean },
+  ) => ValibotAppliedResult;
+  schema: SchemaWithType<'object'>;
+  walk: Walker<ValibotSchemaResult, ValibotPlugin['Instance']>;
+  walkerCtx: WalkerCtx;
+}
+
+type ExtendedContext = ObjectResolverContext & {
+  applyModifiers: ObjectToAstOptions['applyModifiers'];
+  walk: ObjectToAstOptions['walk'];
+  walkerCtx: ObjectToAstOptions['walkerCtx'];
+};
+
+function additionalPropertiesNode(ctx: ExtendedContext): Pipe | null | undefined {
+  const { plugin, schema, walk, walkerCtx } = ctx;
 
   if (!schema.additionalProperties || !schema.additionalProperties.type) return;
   if (schema.additionalProperties.type === 'never') return null;
 
-  const additionalAst = irSchemaToAst({
-    ...ctx,
-    schema: schema.additionalProperties,
-    state: {
-      ...ctx.utils.state,
-      path: ref([...fromRef(ctx.utils.state.path), 'additionalProperties']),
-    },
-  });
-  if (additionalAst.hasLazyExpression) ctx.utils.ast.hasLazyExpression = true;
-  return pipes.toNode(additionalAst.pipes, plugin);
+  const additionalResult = walk(
+    schema.additionalProperties,
+    childContext(walkerCtx, 'additionalProperties'),
+  );
+  if (additionalResult.hasLazyExpression) ctx.utils.ast.hasLazyExpression = true;
+  return pipes.toNode(additionalResult.expression.pipes, plugin);
 }
 
-function baseNode(ctx: ObjectResolverContext): PipeResult {
+function baseNode(ctx: ExtendedContext): PipeResult {
   const { nodes, symbols } = ctx;
   const { v } = symbols;
 
@@ -51,41 +70,35 @@ function baseNode(ctx: ObjectResolverContext): PipeResult {
   return $(v).attr(identifiers.schemas.object).call(shape);
 }
 
-function objectResolver(ctx: ObjectResolverContext): PipeResult {
+function objectResolver(ctx: ExtendedContext): PipeResult {
   // TODO: parser - handle constants
   return ctx.nodes.base(ctx);
 }
 
-function shapeNode(ctx: ObjectResolverContext): ReturnType<typeof $.object> {
-  const { plugin, schema } = ctx;
+function shapeNode(ctx: ExtendedContext): ReturnType<typeof $.object> {
+  const { applyModifiers, plugin, schema, walk, walkerCtx } = ctx;
   const shape = $.object().pretty();
 
   for (const name in schema.properties) {
     const property = schema.properties[name]!;
+    const isOptional = !schema.required?.includes(name);
 
-    const propertyAst = irSchemaToAst({
-      ...ctx,
-      optional: !schema.required?.includes(name),
-      schema: property,
-      state: {
-        ...ctx.utils.state,
-        path: ref([...fromRef(ctx.utils.state.path), 'properties', name]),
-      },
+    const propertyResult = walk(property, childContext(walkerCtx, 'properties', name));
+    if (propertyResult.hasLazyExpression) ctx.utils.ast.hasLazyExpression = true;
+
+    const ast = applyModifiers(propertyResult, {
+      optional: isOptional,
     });
-    if (propertyAst.hasLazyExpression) ctx.utils.ast.hasLazyExpression = true;
-    shape.prop(name, pipes.toNode(propertyAst.pipes, plugin));
+
+    shape.prop(name, pipes.toNode(ast.pipes, plugin));
   }
 
   return shape;
 }
 
-export function objectToAst(
-  options: IrSchemaToAstOptions & {
-    schema: SchemaWithType<'object'>;
-  },
-): Omit<Ast, 'typeName'> {
+export function objectToAst(options: ObjectToAstOptions): Omit<Ast, 'typeName'> {
   const { plugin } = options;
-  const ctx: ObjectResolverContext = {
+  const ctx: ExtendedContext = {
     ...options,
     $,
     nodes: {

@@ -99,13 +99,13 @@ function numberResolver(ctx: NumberResolverContext): Chain {
   return ctx.chain.current;
 }
 
-export const numberToNode = ({
+export function numberToNode({
   plugin,
   schema,
   state,
-}: IrSchemaToAstOptions & {
+}: Pick<IrSchemaToAstOptions, 'plugin' | 'state'> & {
   schema: SchemaWithType<'integer' | 'number'>;
-}): Omit<Ast, 'typeName'> => {
+}): Omit<Ast, 'typeName'> {
   const ast: Partial<Omit<Ast, 'typeName'>> = {};
   const z = plugin.external('zod.z');
   const ctx: NumberResolverContext = {
@@ -136,4 +136,4 @@ export const numberToNode = ({
   const node = resolver?.(ctx) ?? numberResolver(ctx);
   ast.expression = node;
   return ast as Omit<Ast, 'typeName'>;
-};
+}
