@@ -40,7 +40,7 @@ export async function patchOpenApiSpec({
       if (typeof patchOptions.schemas === 'function') {
         for (const [key, schema] of Object.entries(spec.definitions)) {
           if (schema && typeof schema === 'object') {
-            patchOptions.schemas(key, schema);
+            await patchOptions.schemas(key, schema);
           }
         }
       } else {
@@ -49,7 +49,7 @@ export async function patchOpenApiSpec({
           if (!schema || typeof schema !== 'object') continue;
 
           const patchFn = patchOptions.schemas[key]!;
-          patchFn(schema);
+          await patchFn(schema);
         }
       }
     }
@@ -91,7 +91,7 @@ export async function patchOpenApiSpec({
       if (typeof patchOptions.schemas === 'function') {
         for (const [key, schema] of Object.entries(spec.components.schemas)) {
           if (schema && typeof schema === 'object') {
-            patchOptions.schemas(key, schema as Parameters<typeof patchOptions.schemas>[1]);
+            await patchOptions.schemas(key, schema as Parameters<typeof patchOptions.schemas>[1]);
           }
         }
       } else {
@@ -100,7 +100,7 @@ export async function patchOpenApiSpec({
           if (!schema || typeof schema !== 'object') continue;
 
           const patchFn = patchOptions.schemas[key]!;
-          patchFn(schema as Parameters<typeof patchFn>[0]);
+          await patchFn(schema as Parameters<typeof patchFn>[0]);
         }
       }
     }

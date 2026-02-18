@@ -989,6 +989,75 @@ describe('patchOpenApiSpec', () => {
       expect(fn).toHaveBeenCalledOnce();
       expect(fn).toHaveBeenCalledWith('Qux', { type: 'string' });
     });
+
+    it('supports async bulk callback', async () => {
+      const spec: OpenApi.V3_1_X = {
+        ...specMetadataV3,
+        components: {
+          schemas: {
+            Bar: {
+              description: 'Bar schema',
+              type: 'object',
+            },
+            Foo: {
+              description: 'Foo schema',
+              type: 'string',
+            },
+          },
+        },
+      };
+
+      await patchOpenApiSpec({
+        patchOptions: {
+          schemas: async (name, schema) => {
+            // Simulate async operation
+            await Promise.resolve();
+            schema.description = `${schema.description} - async patched`;
+          },
+        },
+        spec,
+      });
+
+      expect(spec.components?.schemas?.Bar!.description).toBe('Bar schema - async patched');
+      expect(spec.components?.schemas?.Foo!.description).toBe('Foo schema - async patched');
+    });
+
+    it('supports async Record-based callbacks', async () => {
+      const spec: OpenApi.V3_1_X = {
+        ...specMetadataV3,
+        components: {
+          schemas: {
+            Bar: {
+              description: 'Bar schema',
+              type: 'object',
+            },
+            Foo: {
+              description: 'Foo schema',
+              type: 'string',
+            },
+          },
+        },
+      };
+
+      await patchOpenApiSpec({
+        patchOptions: {
+          schemas: {
+            Bar: async (schema) => {
+              await Promise.resolve();
+              schema.description = `${schema.description} - async`;
+            },
+            Foo: async (schema) => {
+              await Promise.resolve();
+              schema.description = `${schema.description} - async`;
+            },
+          },
+        },
+        spec,
+      });
+
+      expect(spec.components?.schemas?.Bar!.description).toBe('Bar schema - async');
+      expect(spec.components?.schemas?.Foo!.description).toBe('Foo schema - async');
+    });
   });
 
   describe('OpenAPI v2', () => {
@@ -1301,6 +1370,71 @@ describe('patchOpenApiSpec', () => {
 
       expect(fn).toHaveBeenCalledOnce();
       expect(fn).toHaveBeenCalledWith('Qux', { type: 'string' });
+    });
+
+    it('supports async bulk callback', async () => {
+      const spec: OpenApi.V2_0_X = {
+        ...specMetadataV2,
+        definitions: {
+          Bar: {
+            description: 'Bar schema',
+            type: 'object',
+          },
+          Foo: {
+            description: 'Foo schema',
+            type: 'string',
+          },
+        },
+      };
+
+      await patchOpenApiSpec({
+        patchOptions: {
+          schemas: async (name, schema) => {
+            // Simulate async operation
+            await Promise.resolve();
+            schema.description = `${schema.description} - async patched`;
+          },
+        },
+        spec,
+      });
+
+      expect(spec.definitions?.Bar!.description).toBe('Bar schema - async patched');
+      expect(spec.definitions?.Foo!.description).toBe('Foo schema - async patched');
+    });
+
+    it('supports async Record-based callbacks', async () => {
+      const spec: OpenApi.V2_0_X = {
+        ...specMetadataV2,
+        definitions: {
+          Bar: {
+            description: 'Bar schema',
+            type: 'object',
+          },
+          Foo: {
+            description: 'Foo schema',
+            type: 'string',
+          },
+        },
+      };
+
+      await patchOpenApiSpec({
+        patchOptions: {
+          schemas: {
+            Bar: async (schema) => {
+              await Promise.resolve();
+              schema.description = `${schema.description} - async`;
+            },
+            Foo: async (schema) => {
+              await Promise.resolve();
+              schema.description = `${schema.description} - async`;
+            },
+          },
+        },
+        spec,
+      });
+
+      expect(spec.definitions?.Bar!.description).toBe('Bar schema - async');
+      expect(spec.definitions?.Foo!.description).toBe('Foo schema - async');
     });
   });
 

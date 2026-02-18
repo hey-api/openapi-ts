@@ -170,7 +170,7 @@ export type Patch =
                 | OpenApiSchemaObject.V2_0_X
                 | OpenApiSchemaObject.V3_0_X
                 | OpenApiSchemaObject.V3_1_X,
-            ) => void
+            ) => void | Promise<void>
           >
         | ((
             name: string,
@@ -178,7 +178,7 @@ export type Patch =
               | OpenApiSchemaObject.V2_0_X
               | OpenApiSchemaObject.V3_0_X
               | OpenApiSchemaObject.V3_1_X,
-          ) => void);
+          ) => void | Promise<void>);
       /**
        * Patch the OpenAPI version string. The function receives the current version and should return the new version string.
        * Useful for normalizing or overriding the version value before further processing.
