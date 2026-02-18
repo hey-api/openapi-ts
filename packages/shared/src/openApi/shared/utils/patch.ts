@@ -37,12 +37,20 @@ export async function patchOpenApiSpec({
     }
 
     if (patchOptions.schemas && spec.definitions) {
-      for (const key in patchOptions.schemas) {
-        const schema = spec.definitions[key];
-        if (!schema || typeof schema !== 'object') continue;
+      if (typeof patchOptions.schemas === 'function') {
+        for (const [key, schema] of Object.entries(spec.definitions)) {
+          if (schema && typeof schema === 'object') {
+            await patchOptions.schemas(key, schema);
+          }
+        }
+      } else {
+        for (const key in patchOptions.schemas) {
+          const schema = spec.definitions[key];
+          if (!schema || typeof schema !== 'object') continue;
 
-        const patchFn = patchOptions.schemas[key]!;
-        patchFn(schema);
+          const patchFn = patchOptions.schemas[key]!;
+          await patchFn(schema);
+        }
       }
     }
 
@@ -80,12 +88,20 @@ export async function patchOpenApiSpec({
 
   if (spec.components) {
     if (patchOptions.schemas && spec.components.schemas) {
-      for (const key in patchOptions.schemas) {
-        const schema = spec.components.schemas[key];
-        if (!schema || typeof schema !== 'object') continue;
+      if (typeof patchOptions.schemas === 'function') {
+        for (const [key, schema] of Object.entries(spec.components.schemas)) {
+          if (schema && typeof schema === 'object') {
+            await patchOptions.schemas(key, schema as Parameters<typeof patchOptions.schemas>[1]);
+          }
+        }
+      } else {
+        for (const key in patchOptions.schemas) {
+          const schema = spec.components.schemas[key];
+          if (!schema || typeof schema !== 'object') continue;
 
-        const patchFn = patchOptions.schemas[key]!;
-        patchFn(schema as Parameters<typeof patchFn>[0]);
+          const patchFn = patchOptions.schemas[key]!;
+          await patchFn(schema as Parameters<typeof patchFn>[0]);
+        }
       }
     }
 
