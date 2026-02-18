@@ -56,4 +56,54 @@ describe('bundle', () => {
       },
     });
   });
+
+  it('hoists sibling schemas from external files', async () => {
+    const refParser = new $RefParser();
+    const pathOrUrlOrSchema = path.join(
+      getSpecsPath(),
+      'json-schema-ref-parser',
+      'main-with-external-siblings.json',
+    );
+    const schema = (await refParser.bundle({ pathOrUrlOrSchema })) as any;
+
+    // Main schema should reference the hoisted schemas
+    const resolutionStepSchema =
+      schema.paths['/resolution'].get.responses['200'].content['application/json'].schema;
+    expect(resolutionStepSchema.$ref).toBe(
+      '#/components/schemas/external-with-siblings_ResolutionStep',
+    );
+
+    const actionInfoSchema =
+      schema.paths['/action'].get.responses['200'].content['application/json'].schema;
+    expect(actionInfoSchema.$ref).toBe('#/components/schemas/external-with-siblings_ActionInfo');
+
+    // All schemas from the external file should be hoisted
+    expect(schema.components).toBeDefined();
+    expect(schema.components.schemas).toBeDefined();
+
+    // ResolutionStep should be hoisted
+    expect(schema.components.schemas['external-with-siblings_ResolutionStep']).toBeDefined();
+    expect(
+      schema.components.schemas['external-with-siblings_ResolutionStep'].properties.ResolutionType
+        .oneOf[0].$ref,
+    ).toBe('#/components/schemas/external-with-siblings_ResolutionType');
+
+    // ResolutionType (sibling schema) should also be hoisted
+    expect(schema.components.schemas['external-with-siblings_ResolutionType']).toBeDefined();
+    expect(schema.components.schemas['external-with-siblings_ResolutionType']).toEqual({
+      enum: ['ContactVendor', 'ResetToDefaults', 'RetryOperation'],
+      type: 'string',
+    });
+
+    // ActionInfo (another sibling schema) should also be hoisted
+    expect(schema.components.schemas['external-with-siblings_ActionInfo']).toBeDefined();
+    expect(schema.components.schemas['external-with-siblings_ActionInfo']).toEqual({
+      properties: {
+        ActionId: {
+          type: 'string',
+        },
+      },
+      type: 'object',
+    });
+  });
 });
