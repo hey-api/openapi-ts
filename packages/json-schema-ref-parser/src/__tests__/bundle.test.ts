@@ -161,4 +161,61 @@ describe('bundle', () => {
     expect(actionParams.properties.ActionType.$ref).toContain('ResolutionType');
     expect(actionParams.properties.ActionType.$ref).toMatch(/^#\/components\/schemas\//);
   });
+
+  it('fixes cross-file references (schemas in different external files)', async () => {
+    const refParser = new $RefParser();
+    const pathOrUrlOrSchema = path.join(
+      getSpecsPath(),
+      'json-schema-ref-parser',
+      'cross-file-ref-main.json',
+    );
+    const schema = (await refParser.bundle({ pathOrUrlOrSchema })) as any;
+
+    // Both schemas should be hoisted
+    expect(schema.components).toBeDefined();
+    expect(schema.components.schemas).toBeDefined();
+
+    const schemaKeys = Object.keys(schema.components.schemas);
+    expect(schemaKeys.length).toBe(2);
+
+    // Find the hoisted schemas
+    const schemaAKey = schemaKeys.find((k) => k.includes('SchemaA'));
+    const schemaBKey = schemaKeys.find((k) => k.includes('SchemaB'));
+
+    expect(schemaAKey).toBeDefined();
+    expect(schemaBKey).toBeDefined();
+
+    // SchemaA should have a reference to SchemaB
+    const schemaA = schema.components.schemas[schemaAKey!];
+    expect(schemaA.properties.typeField.$ref).toBe(`#/components/schemas/${schemaBKey}`);
+
+    // SchemaB should be the enum type
+    const schemaB = schema.components.schemas[schemaBKey!];
+    expect(schemaB).toEqual({
+      enum: ['TypeA', 'TypeB', 'TypeC'],
+      type: 'string',
+    });
+
+    // Verify no dangling refs exist
+    const findDanglingRefs = (obj: any, schemas: any): string[] => {
+      const dangling: string[] = [];
+      const check = (o: any) => {
+        if (!o || typeof o !== 'object') return;
+        if (o.$ref && typeof o.$ref === 'string' && o.$ref.startsWith('#/components/schemas/')) {
+          const schemaName = o.$ref.replace('#/components/schemas/', '');
+          if (!schemas[schemaName]) {
+            dangling.push(o.$ref);
+          }
+        }
+        for (const value of Object.values(o)) {
+          check(value);
+        }
+      };
+      check(obj);
+      return dangling;
+    };
+
+    const danglingRefs = findDanglingRefs(schema, schema.components.schemas);
+    expect(danglingRefs).toEqual([]);
+  });
 });

@@ -1,0 +1,10 @@
+{
+  "components": {
+    "schemas": {
+      "SchemaB": {
+        "type": "string",
+        "enum": ["TypeA", "TypeB", "TypeC"]
+      }
+    }
+  }
+}
