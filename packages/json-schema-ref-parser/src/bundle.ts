@@ -609,6 +609,111 @@ function removeFromInventory(inventory: Array<InventoryEntry>, entry: any) {
 }
 
 /**
+ * Fix dangling $refs that point to schemas in the root spec but don't exist.
+ * This can happen when an external file references another external file's schema
+ * using a local-looking ref like #/components/schemas/SchemaName.
+ *
+ * @param parser
+ */
+function fixDanglingRefs(parser: $RefParser): void {
+  const root = parser.schema as any;
+  if (!root || typeof root !== 'object') {
+    return;
+  }
+
+  // Get all hoisted schemas from components
+  const containers = [
+    { obj: root.components?.schemas, prefix: '#/components/schemas/' },
+    { obj: root.components?.parameters, prefix: '#/components/parameters/' },
+    { obj: root.components?.requestBodies, prefix: '#/components/requestBodies/' },
+    { obj: root.components?.responses, prefix: '#/components/responses/' },
+    { obj: root.components?.headers, prefix: '#/components/headers/' },
+    { obj: root.definitions, prefix: '#/definitions/' },
+    { obj: root.parameters, prefix: '#/parameters/' },
+    { obj: root.responses, prefix: '#/responses/' },
+  ].filter((c) => c.obj && typeof c.obj === 'object');
+
+  // Build a map of simple schema names to their hoisted full names
+  // E.g., "SchemaB" -> "file2_SchemaB"
+  const schemaNameMap = new Map<string, Array<{ fullName: string; prefix: string }>>();
+
+  for (const container of containers) {
+    for (const fullName of Object.keys(container.obj)) {
+      // Extract the original schema name from the hoisted name
+      // Hoisted names are typically "filename_SchemaName"
+      // Try to match the pattern and extract SchemaName
+      const parts = fullName.split('_');
+      if (parts.length >= 2) {
+        // The last part(s) might be the original schema name
+        // Try progressively longer suffixes
+        for (let i = 1; i < parts.length; i++) {
+          const schemaName = parts.slice(i).join('_');
+          if (!schemaNameMap.has(schemaName)) {
+            schemaNameMap.set(schemaName, []);
+          }
+          schemaNameMap.get(schemaName)!.push({
+            fullName,
+            prefix: container.prefix,
+          });
+        }
+      }
+    }
+  }
+
+  // Find and fix all dangling $refs
+  const fixRefs = (obj: any, visited = new WeakSet<object>()): void => {
+    if (!obj || typeof obj !== 'object' || ArrayBuffer.isView(obj)) {
+      return;
+    }
+
+    if (visited.has(obj)) {
+      return;
+    }
+    visited.add(obj);
+
+    if ($Ref.is$Ref(obj)) {
+      const ref = obj.$ref;
+      if (typeof ref === 'string') {
+        // Check if this is a dangling internal ref
+        for (const container of containers) {
+          if (ref.startsWith(container.prefix)) {
+            const schemaName = ref.substring(container.prefix.length);
+
+            // Check if the exact name exists
+            if (container.obj[schemaName]) {
+              continue; // Not dangling
+            }
+
+            // Try to find a hoisted schema that matches this name
+            const candidates = schemaNameMap.get(schemaName) || [];
+
+            if (candidates.length === 1) {
+              // Unambiguous match - fix the ref
+              const candidate = candidates[0]!;
+              obj.$ref = `${candidate.prefix}${candidate.fullName}`;
+              console.warn(`Fixed dangling $ref: ${ref} -> ${obj.$ref}`);
+            } else if (candidates.length > 1) {
+              // Multiple matches - log warning but don't change
+              console.warn(
+                `Ambiguous dangling $ref: ${ref} could refer to: ${candidates.map((c) => `${c.prefix}${c.fullName}`).join(', ')}`,
+              );
+            }
+            // If no candidates, leave as-is (will remain dangling)
+          }
+        }
+      }
+    }
+
+    // Recursively fix refs in nested objects
+    for (const value of Object.values(obj)) {
+      fixRefs(value, visited);
+    }
+  };
+
+  fixRefs(root);
+}
+
+/**
  * Bundles all external JSON references into the main JSON schema, thus resulting in a schema that
  * only has *internal* references, not any *external* references.
  * This method mutates the JSON schema object, adding new references and re-mapping existing ones.
@@ -638,4 +743,5 @@ export function bundle(parser: $RefParser, options: ParserOptions): void {
   });
 
   remap(parser, inventory);
+  fixDanglingRefs(parser);
 }
