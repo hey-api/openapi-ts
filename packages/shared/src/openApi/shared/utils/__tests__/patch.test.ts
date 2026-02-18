@@ -857,6 +857,207 @@ describe('patchOpenApiSpec', () => {
       expect(versionFn).toHaveBeenCalledOnce();
       expect(spec.openapi).toBe('patched-3.1.0');
     });
+
+    it('calls bulk callback function for all schemas', async () => {
+      const fn = vi.fn();
+
+      const spec: OpenApi.V3_1_X = {
+        ...specMetadataV3,
+        components: {
+          schemas: {
+            Bar: {
+              type: 'object',
+            },
+            Foo: {
+              type: 'string',
+            },
+            Qux: {
+              type: 'number',
+            },
+          },
+        },
+      };
+
+      await patchOpenApiSpec({
+        patchOptions: {
+          schemas: fn,
+        },
+        spec,
+      });
+
+      expect(fn).toHaveBeenCalledTimes(3);
+      expect(fn).toHaveBeenCalledWith('Bar', { type: 'object' });
+      expect(fn).toHaveBeenCalledWith('Foo', { type: 'string' });
+      expect(fn).toHaveBeenCalledWith('Qux', { type: 'number' });
+    });
+
+    it('bulk callback mutates all schemas', async () => {
+      const spec: OpenApi.V3_1_X = {
+        ...specMetadataV3,
+        components: {
+          schemas: {
+            Bar: {
+              description: 'Bar schema',
+              type: 'object',
+            },
+            Foo: {
+              description: 'Foo schema',
+              type: 'string',
+            },
+          },
+        },
+      };
+
+      await patchOpenApiSpec({
+        patchOptions: {
+          schemas: (name, schema) => {
+            schema.description = `${schema.description} - patched`;
+          },
+        },
+        spec,
+      });
+
+      expect(spec.components?.schemas?.Bar!.description).toBe('Bar schema - patched');
+      expect(spec.components?.schemas?.Foo!.description).toBe('Foo schema - patched');
+    });
+
+    it('bulk callback can extract version from schema name', async () => {
+      const spec: OpenApi.V3_1_X = {
+        ...specMetadataV3,
+        components: {
+          schemas: {
+            OtherSchema: {
+              type: 'string',
+            },
+            ServiceRoot_v1_20_0_ServiceRoot: {
+              description: 'Service root',
+              type: 'object',
+            },
+            User_v2_3_1_User: {
+              description: 'User object',
+              type: 'object',
+            },
+          },
+        },
+      };
+
+      await patchOpenApiSpec({
+        patchOptions: {
+          schemas: (name, schema) => {
+            const match = name.match(/_v(\d+)_(\d+)_(\d+)_/);
+            if (match) {
+              schema.description = `${schema.description || ''}\n@version ${match[1]}.${match[2]}.${match[3]}`;
+            }
+          },
+        },
+        spec,
+      });
+
+      expect(spec.components?.schemas?.ServiceRoot_v1_20_0_ServiceRoot!.description).toBe(
+        'Service root\n@version 1.20.0',
+      );
+      expect(spec.components?.schemas?.User_v2_3_1_User!.description).toBe(
+        'User object\n@version 2.3.1',
+      );
+      expect(spec.components?.schemas?.OtherSchema!.description).toBeUndefined();
+    });
+
+    it('bulk callback skips invalid schemas', async () => {
+      const fn = vi.fn();
+
+      const spec: OpenApi.V3_1_X = {
+        ...specMetadataV3,
+        components: {
+          schemas: {
+            Bar: 123 as any,
+            Baz: 'invalid' as any,
+            Foo: null as any,
+            Qux: {
+              type: 'string',
+            },
+          },
+        },
+      };
+
+      await patchOpenApiSpec({
+        patchOptions: {
+          schemas: fn,
+        },
+        spec,
+      });
+
+      expect(fn).toHaveBeenCalledOnce();
+      expect(fn).toHaveBeenCalledWith('Qux', { type: 'string' });
+    });
+
+    it('supports async bulk callback', async () => {
+      const spec: OpenApi.V3_1_X = {
+        ...specMetadataV3,
+        components: {
+          schemas: {
+            Bar: {
+              description: 'Bar schema',
+              type: 'object',
+            },
+            Foo: {
+              description: 'Foo schema',
+              type: 'string',
+            },
+          },
+        },
+      };
+
+      await patchOpenApiSpec({
+        patchOptions: {
+          schemas: async (name, schema) => {
+            // Simulate async operation
+            await Promise.resolve();
+            schema.description = `${schema.description} - async patched`;
+          },
+        },
+        spec,
+      });
+
+      expect(spec.components?.schemas?.Bar!.description).toBe('Bar schema - async patched');
+      expect(spec.components?.schemas?.Foo!.description).toBe('Foo schema - async patched');
+    });
+
+    it('supports async Record-based callbacks', async () => {
+      const spec: OpenApi.V3_1_X = {
+        ...specMetadataV3,
+        components: {
+          schemas: {
+            Bar: {
+              description: 'Bar schema',
+              type: 'object',
+            },
+            Foo: {
+              description: 'Foo schema',
+              type: 'string',
+            },
+          },
+        },
+      };
+
+      await patchOpenApiSpec({
+        patchOptions: {
+          schemas: {
+            Bar: async (schema) => {
+              await Promise.resolve();
+              schema.description = `${schema.description} - async`;
+            },
+            Foo: async (schema) => {
+              await Promise.resolve();
+              schema.description = `${schema.description} - async`;
+            },
+          },
+        },
+        spec,
+      });
+
+      expect(spec.components?.schemas?.Bar!.description).toBe('Bar schema - async');
+      expect(spec.components?.schemas?.Foo!.description).toBe('Foo schema - async');
+    });
   });
 
   describe('OpenAPI v2', () => {
@@ -1047,6 +1248,193 @@ describe('patchOpenApiSpec', () => {
       });
       expect(versionFn).toHaveBeenCalledOnce();
       expect(spec.swagger).toBe('patched-2.0');
+    });
+
+    it('calls bulk callback function for all schemas', async () => {
+      const fn = vi.fn();
+
+      const spec: OpenApi.V2_0_X = {
+        ...specMetadataV2,
+        definitions: {
+          Bar: {
+            type: 'object',
+          },
+          Foo: {
+            type: 'string',
+          },
+          Qux: {
+            type: 'number',
+          },
+        },
+      };
+
+      await patchOpenApiSpec({
+        patchOptions: {
+          schemas: fn,
+        },
+        spec,
+      });
+
+      expect(fn).toHaveBeenCalledTimes(3);
+      expect(fn).toHaveBeenCalledWith('Bar', { type: 'object' });
+      expect(fn).toHaveBeenCalledWith('Foo', { type: 'string' });
+      expect(fn).toHaveBeenCalledWith('Qux', { type: 'number' });
+    });
+
+    it('bulk callback mutates all schemas', async () => {
+      const spec: OpenApi.V2_0_X = {
+        ...specMetadataV2,
+        definitions: {
+          Bar: {
+            description: 'Bar schema',
+            type: 'object',
+          },
+          Foo: {
+            description: 'Foo schema',
+            type: 'string',
+          },
+        },
+      };
+
+      await patchOpenApiSpec({
+        patchOptions: {
+          schemas: (name, schema) => {
+            schema.description = `${schema.description} - patched`;
+          },
+        },
+        spec,
+      });
+
+      expect(spec.definitions?.Bar!.description).toBe('Bar schema - patched');
+      expect(spec.definitions?.Foo!.description).toBe('Foo schema - patched');
+    });
+
+    it('bulk callback can extract version from schema name', async () => {
+      const spec: OpenApi.V2_0_X = {
+        ...specMetadataV2,
+        definitions: {
+          OtherSchema: {
+            type: 'string',
+          },
+          ServiceRoot_v1_20_0_ServiceRoot: {
+            description: 'Service root',
+            type: 'object',
+          },
+          User_v2_3_1_User: {
+            description: 'User object',
+            type: 'object',
+          },
+        },
+      };
+
+      await patchOpenApiSpec({
+        patchOptions: {
+          schemas: (name, schema) => {
+            const match = name.match(/_v(\d+)_(\d+)_(\d+)_/);
+            if (match) {
+              schema.description = `${schema.description || ''}\n@version ${match[1]}.${match[2]}.${match[3]}`;
+            }
+          },
+        },
+        spec,
+      });
+
+      expect(spec.definitions?.ServiceRoot_v1_20_0_ServiceRoot!.description).toBe(
+        'Service root\n@version 1.20.0',
+      );
+      expect(spec.definitions?.User_v2_3_1_User!.description).toBe('User object\n@version 2.3.1');
+      expect(spec.definitions?.OtherSchema!.description).toBeUndefined();
+    });
+
+    it('bulk callback skips invalid schemas', async () => {
+      const fn = vi.fn();
+
+      const spec: OpenApi.V2_0_X = {
+        ...specMetadataV2,
+        definitions: {
+          Bar: 123 as any,
+          Baz: 'invalid' as any,
+          Foo: null as any,
+          Qux: {
+            type: 'string',
+          },
+        },
+      };
+
+      await patchOpenApiSpec({
+        patchOptions: {
+          schemas: fn,
+        },
+        spec,
+      });
+
+      expect(fn).toHaveBeenCalledOnce();
+      expect(fn).toHaveBeenCalledWith('Qux', { type: 'string' });
+    });
+
+    it('supports async bulk callback', async () => {
+      const spec: OpenApi.V2_0_X = {
+        ...specMetadataV2,
+        definitions: {
+          Bar: {
+            description: 'Bar schema',
+            type: 'object',
+          },
+          Foo: {
+            description: 'Foo schema',
+            type: 'string',
+          },
+        },
+      };
+
+      await patchOpenApiSpec({
+        patchOptions: {
+          schemas: async (name, schema) => {
+            // Simulate async operation
+            await Promise.resolve();
+            schema.description = `${schema.description} - async patched`;
+          },
+        },
+        spec,
+      });
+
+      expect(spec.definitions?.Bar!.description).toBe('Bar schema - async patched');
+      expect(spec.definitions?.Foo!.description).toBe('Foo schema - async patched');
+    });
+
+    it('supports async Record-based callbacks', async () => {
+      const spec: OpenApi.V2_0_X = {
+        ...specMetadataV2,
+        definitions: {
+          Bar: {
+            description: 'Bar schema',
+            type: 'object',
+          },
+          Foo: {
+            description: 'Foo schema',
+            type: 'string',
+          },
+        },
+      };
+
+      await patchOpenApiSpec({
+        patchOptions: {
+          schemas: {
+            Bar: async (schema) => {
+              await Promise.resolve();
+              schema.description = `${schema.description} - async`;
+            },
+            Foo: async (schema) => {
+              await Promise.resolve();
+              schema.description = `${schema.description} - async`;
+            },
+          },
+        },
+        spec,
+      });
+
+      expect(spec.definitions?.Bar!.description).toBe('Bar schema - async');
+      expect(spec.definitions?.Foo!.description).toBe('Foo schema - async');
     });
   });
 

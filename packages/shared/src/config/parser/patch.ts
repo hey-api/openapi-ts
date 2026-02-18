@@ -125,8 +125,16 @@ export type Patch =
        * use cases include fixing incorrect data types, removing unwanted
        * properties, adding missing fields, or standardizing date/time formats.
        *
+       * Can be:
+       * - `Record<string, fn>`: Patch specific named schemas
+       * - `function`: Bulk callback receives `(name, schema)` for every schema
+       *
+       * Both patterns support async functions for operations like fetching data
+       * from external sources or performing I/O.
+       *
        * @example
        * ```js
+       * // Named schemas
        * schemas: {
        *   Foo: (schema) => {
        *     // convert date-time format to timestamp
@@ -146,17 +154,42 @@ export type Patch =
        *     delete schema.properties.internalField;
        *   }
        * }
+       *
+       * // Bulk callback for all schemas
+       * schemas: (name, schema) => {
+       *   const match = name.match(/_v(\d+)_(\d+)_(\d+)_/);
+       *   if (match) {
+       *     schema.description = (schema.description || '') +
+       *       `\n@version ${match[1]}.${match[2]}.${match[3]}`;
+       *   }
+       * }
+       *
+       * // Async example - fetch metadata from external source
+       * schemas: async (name, schema) => {
+       *   const metadata = await fetchSchemaMetadata(name);
+       *   if (metadata) {
+       *     schema.description = `${schema.description}\n\n${metadata.notes}`;
+       *   }
+       * }
        * ```
        */
-      schemas?: Record<
-        string,
-        (
-          schema:
-            | OpenApiSchemaObject.V2_0_X
-            | OpenApiSchemaObject.V3_0_X
-            | OpenApiSchemaObject.V3_1_X,
-        ) => void
-      >;
+      schemas?:
+        | Record<
+            string,
+            (
+              schema:
+                | OpenApiSchemaObject.V2_0_X
+                | OpenApiSchemaObject.V3_0_X
+                | OpenApiSchemaObject.V3_1_X,
+            ) => void | Promise<void>
+          >
+        | ((
+            name: string,
+            schema:
+              | OpenApiSchemaObject.V2_0_X
+              | OpenApiSchemaObject.V3_0_X
+              | OpenApiSchemaObject.V3_1_X,
+          ) => void | Promise<void>);
       /**
        * Patch the OpenAPI version string. The function receives the current version and should return the new version string.
        * Useful for normalizing or overriding the version value before further processing.
