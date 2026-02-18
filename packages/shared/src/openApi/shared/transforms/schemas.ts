@@ -75,20 +75,16 @@ export const schemaNameTransform = ({
 
     // Skip if name doesn't change
     if (newName === oldName) {
-      newNames.add(oldName);
       continue;
     }
 
-    // Skip if new name collides with an existing schema or another renamed schema
-    if (oldName in schemasObj && newName in schemasObj && oldName !== newName) {
-      // Collision with existing schema - skip rename
-      newNames.add(oldName);
+    // Skip if new name collides with an existing schema
+    if (newName in schemasObj) {
       continue;
     }
 
+    // Skip if new name collides with another renamed schema
     if (newNames.has(newName)) {
-      // Collision with another renamed schema - skip rename
-      newNames.add(oldName);
       continue;
     }
 
