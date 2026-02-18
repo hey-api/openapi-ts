@@ -38,17 +38,17 @@ const rewriteRefs = (node: unknown, renameMap: Record<string, string>) => {
  * 4. Renames schema keys in the schemas object
  * 5. Updates all $ref pointers throughout the spec to use the new names
  *
- * @param schemaName - The schema name transformer
+ * @param config - The schema name transformer
  * @param spec - The OpenAPI spec object to transform
  */
-export const schemasTransform = ({
-  schemaName,
+export const schemaNameTransform = ({
+  config,
   spec,
 }: {
-  schemaName: SchemaNameConfig;
+  config: SchemaNameConfig;
   spec: unknown;
 }) => {
-  if (!schemaName) {
+  if (!config) {
     return;
   }
 
@@ -67,8 +67,7 @@ export const schemasTransform = ({
   const newNames = new Set<string>();
 
   // Create a simple config object for applyNaming
-  const namingConfig =
-    typeof schemaName === 'function' ? { name: schemaName } : { name: schemaName };
+  const namingConfig = typeof config === 'function' ? { name: config } : { name: config };
 
   // First pass: compute all new names and check for collisions
   for (const oldName of Object.keys(schemasObj)) {
