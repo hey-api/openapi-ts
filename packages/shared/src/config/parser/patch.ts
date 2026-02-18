@@ -129,6 +129,9 @@ export type Patch =
        * - `Record<string, fn>`: Patch specific named schemas
        * - `function`: Bulk callback receives `(name, schema)` for every schema
        *
+       * Both patterns support async functions for operations like fetching data
+       * from external sources or performing I/O.
+       *
        * @example
        * ```js
        * // Named schemas
@@ -158,6 +161,14 @@ export type Patch =
        *   if (match) {
        *     schema.description = (schema.description || '') +
        *       `\n@version ${match[1]}.${match[2]}.${match[3]}`;
+       *   }
+       * }
+       *
+       * // Async example - fetch metadata from external source
+       * schemas: async (name, schema) => {
+       *   const metadata = await fetchSchemaMetadata(name);
+       *   if (metadata) {
+       *     schema.description = `${schema.description}\n\n${metadata.notes}`;
        *   }
        * }
        * ```
