@@ -1,0 +1,71 @@
+swagger: '2.0'
+info:
+  title: Schema Name Transform Test (Swagger 2.0)
+  version: 1.0.0
+paths:
+  /users:
+    get:
+      summary: Get users
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/User_v1_0_0_User'
+  /posts:
+    post:
+      summary: Create post
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/Post_v2_1_3_Post'
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/Post_v2_1_3_Post'
+definitions:
+  User_v1_0_0_User:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      profile:
+        $ref: '#/definitions/UserProfile_v1_0_0_UserProfile'
+  UserProfile_v1_0_0_UserProfile:
+    type: object
+    properties:
+      bio:
+        type: string
+      avatar:
+        type: string
+  Post_v2_1_3_Post:
+    type: object
+    properties:
+      id:
+        type: string
+      title:
+        type: string
+      author:
+        $ref: '#/definitions/User_v1_0_0_User'
+      comments:
+        type: array
+        items:
+          $ref: '#/definitions/Comment_v1_5_2_Comment'
+  Comment_v1_5_2_Comment:
+    type: object
+    properties:
+      id:
+        type: string
+      text:
+        type: string
+      author:
+        $ref: '#/definitions/User_v1_0_0_User'
