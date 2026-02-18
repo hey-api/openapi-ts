@@ -449,14 +449,7 @@ You can customize the naming and casing pattern for `requests` and `responses` s
 
 ### Schema Name
 
-Sometimes your schema names are auto-generated or follow a naming convention that produces verbose or awkward type names. The `schemaName` transform allows you to rename schema component keys throughout the specification, automatically updating all `$ref` pointers.
-
-This is useful for:
-
-- Stripping version markers from schema names
-- Removing vendor prefixes
-- Converting naming conventions
-- Shortening deeply qualified names
+Sometimes your schema names are auto-generated or follow a naming convention that produces verbose or awkward type names. You can rename schema component keys throughout the specification, automatically updating all `$ref` pointers. For example, stripping version markers from schema names, removing vendor prefixes, converting naming conventions, or shortening deeply qualified names.
 
 ::: code-group
 
@@ -467,15 +460,21 @@ export default {
   parser: {
     transforms: {
       schemaName: (name) => {
-        // Strip version markers: ServiceRoot_v1_20_0_ServiceRoot → ServiceRoot
-        let clean = name.replace(/([A-Za-z\d]+)_v\d+_\d+_\d+_([A-Za-z\d]*)/g, (_, p1, p2) =>
-          p2.startsWith(p1) ? p2 : p1 + p2,
-        );
-        // Deduplicate prefixes: Foo_Foo → Foo
-        const m = clean.match(/^([A-Za-z\d]+)_\1([A-Za-z\d]*)$/);
-        if (m) clean = m[1] + m[2];
-        return clean;
-      },
+        // [!code ++]
+        // Strip version markers: ServiceRoot_v1_20_0_ServiceRoot → ServiceRoot // [!code ++]
+        let clean = name.replace(
+          /([A-Za-z\d]+)_v\d+_\d+_\d+_([A-Za-z\d]*)/g,
+          (
+            _,
+            p1,
+            p2, // [!code ++]
+          ) => (p2.startsWith(p1) ? p2 : p1 + p2), // [!code ++]
+        ); // [!code ++]
+        // Deduplicate prefixes: Foo_Foo → Foo // [!code ++]
+        const m = clean.match(/^([A-Za-z\d]+)_\1([A-Za-z\d]*)$/); // [!code ++]
+        if (m) clean = m[1] + m[2]; // [!code ++]
+        return clean; // [!code ++]
+      }, // [!code ++]
     },
   },
 };
@@ -487,7 +486,7 @@ export default {
   output: 'src/client',
   parser: {
     transforms: {
-      schemaName: 'Api{{name}}', // Add "Api" prefix to all schemas
+      schemaName: 'Api{{name}}', // [!code ++]
     },
   },
 };

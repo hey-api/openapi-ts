@@ -176,14 +176,9 @@ export type UserParser = {
               };
         };
     /**
-     * Rename schema component keys and automatically update all `$ref` pointers
-     * throughout the specification.
-     *
-     * This is useful for:
-     * - Stripping version markers from schema names
-     * - Removing vendor prefixes
-     * - Converting naming conventions
-     * - Shortening verbose auto-generated names
+     * Sometimes your schema names are auto-generated or follow a naming convention
+     * that produces verbose or awkward type names. You can rename schema component
+     * keys throughout the specification, automatically updating all `$ref` pointers.
      *
      * @example
      * ```ts
