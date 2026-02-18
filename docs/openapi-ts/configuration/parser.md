@@ -447,6 +447,74 @@ export default {
 
 You can customize the naming and casing pattern for `requests` and `responses` schemas using the `.name` and `.case` options.
 
+### Schemas
+
+Sometimes your schema names are auto-generated or follow a naming convention that produces verbose or awkward type names. The `schemas` transform allows you to rename schema component keys throughout the specification, automatically updating all `$ref` pointers.
+
+This is useful for:
+
+- Stripping version markers from schema names
+- Removing vendor prefixes
+- Converting naming conventions
+- Shortening deeply qualified names
+
+::: code-group
+
+```js [function]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  parser: {
+    transforms: {
+      schemas: {
+        name: (name) => {
+          // Strip version markers: ServiceRoot_v1_20_0_ServiceRoot → ServiceRoot
+          let clean = name.replace(/([A-Za-z\d]+)_v\d+_\d+_\d+_([A-Za-z\d]*)/g, (_, p1, p2) =>
+            p2.startsWith(p1) ? p2 : p1 + p2,
+          );
+          // Deduplicate prefixes: Foo_Foo → Foo
+          const m = clean.match(/^([A-Za-z\d]+)_\1([A-Za-z\d]*)$/);
+          if (m) clean = m[1] + m[2];
+          return clean;
+        },
+      },
+    },
+  },
+};
+```
+
+```js [template]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  parser: {
+    transforms: {
+      schemas: {
+        name: 'Api{{name}}', // Add "Api" prefix to all schemas
+      },
+    },
+  },
+};
+```
+
+```js [disabled]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  parser: {
+    transforms: {
+      schemas: false, // [!code ++]
+    },
+  },
+};
+```
+
+:::
+
+::: tip Name Collisions
+If a transformed schema name conflicts with an existing schema, the rename is skipped for that schema to prevent overwrites. The original name is preserved.
+:::
+
 ## Pagination
 
 Paginated operations are detected by having a pagination keyword in its parameters or request body. By default, we consider the following to be pagination keywords: `after`, `before`, `cursor`, `offset`, `page`, and `start`.
