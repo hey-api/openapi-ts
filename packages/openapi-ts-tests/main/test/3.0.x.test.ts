@@ -614,6 +614,23 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'transforms-schemas-name-collision.yaml',
+        output: 'transforms-schemas-name-collision',
+        parser: {
+          transforms: {
+            schemaName: (name: string) => 
+              // Try to rename all _vX_User schemas to "User"
+              // This should cause collisions since "User" already exists
+               name.replace(/_v\d+_User$/, '')
+            ,
+          },
+        },
+        plugins: ['@hey-api/typescript'],
+      }),
+      description: 'handles schema name collision prevention',
+    },
+    {
+      config: createConfig({
         input: 'security-api-key.yaml',
         output: 'security-api-key',
         plugins: [

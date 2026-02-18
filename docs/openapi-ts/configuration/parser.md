@@ -453,22 +453,17 @@ Sometimes your schema names are auto-generated or follow a naming convention tha
 
 ::: code-group
 
+<!-- prettier-ignore-start -->
 ```js [function]
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   parser: {
     transforms: {
-      schemaName: (name) => {
-        // [!code ++]
+      schemaName: (name) => { // [!code ++]
         // Strip version markers: ServiceRoot_v1_20_0_ServiceRoot → ServiceRoot // [!code ++]
-        let clean = name.replace(
-          /([A-Za-z\d]+)_v\d+_\d+_\d+_([A-Za-z\d]*)/g,
-          (
-            _,
-            p1,
-            p2, // [!code ++]
-          ) => (p2.startsWith(p1) ? p2 : p1 + p2), // [!code ++]
+        let clean = name.replace(/([A-Za-z\d]+)_v\d+_\d+_\d+_([A-Za-z\d]*)/g, (_, p1, p2) => // [!code ++]
+          p2.startsWith(p1) ? p2 : p1 + p2, // [!code ++]
         ); // [!code ++]
         // Deduplicate prefixes: Foo_Foo → Foo // [!code ++]
         const m = clean.match(/^([A-Za-z\d]+)_\1([A-Za-z\d]*)$/); // [!code ++]
@@ -479,6 +474,7 @@ export default {
   },
 };
 ```
+<!-- prettier-ignore-end -->
 
 ```js [template]
 export default {
