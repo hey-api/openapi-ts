@@ -175,6 +175,48 @@ export type UserParser = {
                 name?: NameTransformer;
               };
         };
+    /**
+     * Rename schema component keys and automatically update all `$ref` pointers
+     * throughout the specification.
+     *
+     * This is useful for:
+     * - Stripping version markers from schema names
+     * - Removing vendor prefixes
+     * - Converting naming conventions
+     * - Shortening verbose auto-generated names
+     *
+     * @example
+     * ```ts
+     * {
+     *   schemas: {
+     *     name: (name) => name.replace(/_v\d+_\d+_\d+_/, '_')
+     *   }
+     * }
+     * ```
+     *
+     * @default false
+     */
+    schemas?:
+      | boolean
+      | {
+          /**
+           * Whether this feature is enabled.
+           *
+           * @default false
+           */
+          enabled?: boolean;
+          /**
+           * Customize the generated name of schema components.
+           * When provided, this transformer is called for each schema key
+           * in `components.schemas` to compute the new name.
+           *
+           * If the new name conflicts with an existing schema, the rename
+           * is skipped for that schema.
+           *
+           * @default undefined
+           */
+          name?: NameTransformer;
+        };
   };
   /**
    * **This is an experimental feature.**
@@ -279,6 +321,23 @@ export type Parser = {
        * Configuration for generated response-specific schemas.
        */
       responses: NamingOptions;
+    };
+    /**
+     * Rename schema component keys and automatically update all `$ref` pointers
+     * throughout the specification.
+     */
+    schemas: FeatureToggle & {
+      /**
+       * Customize the generated name of schema components.
+       * When provided, this transformer is called for each schema key
+       * in `components.schemas` to compute the new name.
+       *
+       * If the new name conflicts with an existing schema, the rename
+       * is skipped for that schema.
+       *
+       * @default '{{name}}'
+       */
+      name: NameTransformer;
     };
   };
   /**
