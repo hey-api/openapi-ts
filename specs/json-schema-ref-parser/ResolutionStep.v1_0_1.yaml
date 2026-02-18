@@ -1,0 +1,25 @@
+components:
+  schemas:
+    ResolutionStep_v1_0_1_ResolutionStep:
+      type: object
+      properties:
+        ResolutionType:
+          oneOf:
+            - $ref: '#/components/schemas/ResolutionStep_v1_0_1_ResolutionType'
+        ActionName:
+          type: string
+          description: Name of the action
+    ResolutionStep_v1_0_1_ResolutionType:
+      type: string
+      enum:
+        - ContactVendor
+        - ResetToDefaults
+        - RetryOperation
+      description: Types of resolution actions
+    ResolutionStep_v1_0_1_ActionParameters:
+      type: object
+      properties:
+        ActionId:
+          type: string
+        ActionType:
+          $ref: '#/components/schemas/ResolutionStep_v1_0_1_ResolutionType'

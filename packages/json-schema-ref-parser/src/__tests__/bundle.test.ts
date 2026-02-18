@@ -106,4 +106,59 @@ describe('bundle', () => {
       type: 'object',
     });
   });
+
+  it('hoists sibling schemas from YAML files with versioned names (Redfish-like)', async () => {
+    const refParser = new $RefParser();
+    const pathOrUrlOrSchema = path.join(
+      getSpecsPath(),
+      'json-schema-ref-parser',
+      'redfish-like.yaml',
+    );
+    const schema = (await refParser.bundle({ pathOrUrlOrSchema })) as any;
+
+    // Verify the main schema references are hoisted
+    const systemsSchema =
+      schema.paths['/redfish/v1/Systems'].get.responses['200'].content['application/json'].schema;
+    expect(systemsSchema.$ref).toContain('ResolutionStep');
+
+    const actionsSchema =
+      schema.paths['/redfish/v1/Actions'].post.responses['200'].content['application/json'].schema;
+    expect(actionsSchema.$ref).toContain('ActionParameters');
+
+    // All three schemas from the external YAML should be hoisted
+    expect(schema.components).toBeDefined();
+    expect(schema.components.schemas).toBeDefined();
+
+    const schemaKeys = Object.keys(schema.components.schemas);
+
+    // ResolutionStep (directly referenced)
+    const resolutionStepKey = schemaKeys.find(
+      (k) => k.includes('ResolutionStep') && !k.includes('Type') && !k.includes('ActionParameters'),
+    );
+    expect(resolutionStepKey).toBeDefined();
+
+    // ResolutionType (sibling, referenced by ResolutionStep and ActionParameters)
+    const resolutionTypeKey = schemaKeys.find((k) => k.includes('ResolutionType'));
+    expect(resolutionTypeKey).toBeDefined();
+    expect(schema.components.schemas[resolutionTypeKey!]).toEqual({
+      description: 'Types of resolution actions',
+      enum: ['ContactVendor', 'ResetToDefaults', 'RetryOperation'],
+      type: 'string',
+    });
+
+    // ActionParameters (directly referenced)
+    const actionParamsKey = schemaKeys.find((k) => k.includes('ActionParameters'));
+    expect(actionParamsKey).toBeDefined();
+
+    // Verify that internal $refs in hoisted schemas point to hoisted locations
+    const resolutionStep = schema.components.schemas[resolutionStepKey!];
+    expect(resolutionStep.properties.ResolutionType.oneOf[0].$ref).toContain('ResolutionType');
+    expect(resolutionStep.properties.ResolutionType.oneOf[0].$ref).toMatch(
+      /^#\/components\/schemas\//,
+    );
+
+    const actionParams = schema.components.schemas[actionParamsKey!];
+    expect(actionParams.properties.ActionType.$ref).toContain('ResolutionType');
+    expect(actionParams.properties.ActionType.$ref).toMatch(/^#\/components\/schemas\//);
+  });
 });
