@@ -36,10 +36,7 @@ export function getParser(userConfig: { parser?: UserParser }): Parser {
             name: '{{name}}',
           },
         },
-        schemas: {
-          enabled: false,
-          name: '{{name}}',
-        },
+        schemaName: undefined,
       },
       validate_EXPERIMENTAL: false,
     },
@@ -141,27 +138,8 @@ export function getParser(userConfig: { parser?: UserParser }): Parser {
                 },
                 value: fields.readWrite,
               }),
-              schemas: valueToObject({
-                defaultValue: {
-                  ...(defaultValue.schemas as Extract<
-                    typeof defaultValue.schemas,
-                    Record<string, unknown>
-                  >),
-                  enabled:
-                    fields.schemas !== undefined
-                      ? Boolean(fields.schemas)
-                      : (
-                          defaultValue.schemas as Extract<
-                            typeof defaultValue.schemas,
-                            Record<string, unknown>
-                          >
-                        ).enabled,
-                },
-                mappers: {
-                  boolean: (enabled: boolean) => ({ enabled }),
-                },
-                value: fields.schemas,
-              }),
+              schemaName:
+                fields.schemaName !== undefined ? fields.schemaName : defaultValue.schemaName,
             }),
           },
           value: fields.transforms,

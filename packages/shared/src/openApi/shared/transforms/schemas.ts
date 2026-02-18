@@ -3,7 +3,7 @@ import { applyNaming } from '../../../utils/naming/naming';
 import { getSchemasObject } from '../utils/transforms';
 import { specToSchemasPointerNamespace } from './utils';
 
-type SchemasConfig = Parser['transforms']['schemas'];
+type SchemaNameConfig = Parser['transforms']['schemaName'];
 
 /**
  * Recursively walks the entire spec object and replaces all $ref strings
@@ -38,10 +38,20 @@ const rewriteRefs = (node: unknown, renameMap: Record<string, string>) => {
  * 4. Renames schema keys in the schemas object
  * 5. Updates all $ref pointers throughout the spec to use the new names
  *
- * @param config - The schemas transform config
+ * @param schemaName - The schema name transformer
  * @param spec - The OpenAPI spec object to transform
  */
-export const schemasTransform = ({ config, spec }: { config: SchemasConfig; spec: unknown }) => {
+export const schemasTransform = ({
+  schemaName,
+  spec,
+}: {
+  schemaName: SchemaNameConfig;
+  spec: unknown;
+}) => {
+  if (!schemaName) {
+    return;
+  }
+
   const schemasObj = getSchemasObject(spec);
   if (!schemasObj) {
     return;
@@ -56,9 +66,13 @@ export const schemasTransform = ({ config, spec }: { config: SchemasConfig; spec
   const renameMap: Record<string, string> = {};
   const newNames = new Set<string>();
 
+  // Create a simple config object for applyNaming
+  const namingConfig =
+    typeof schemaName === 'function' ? { name: schemaName } : { name: schemaName };
+
   // First pass: compute all new names and check for collisions
   for (const oldName of Object.keys(schemasObj)) {
-    const newName = applyNaming(oldName, config);
+    const newName = applyNaming(oldName, namingConfig);
 
     // Skip if name doesn't change
     if (newName === oldName) {
