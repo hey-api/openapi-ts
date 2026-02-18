@@ -80,6 +80,7 @@
 - [Sebastiaan Wouters](https://github.com/SebastiaanWouters)
 - [Shinigami](https://github.com/Shinigami92)
 - [Simen Bekkhus](https://github.com/SimenB)
+- [Sipan Petrosyan](https://github.com/SipanP)
 - [Sjoerd Scheffer](https://github.com/ixnas)
 - [Stian Jensen](https://github.com/stianjensen)
 - [Vincent Olesen](https://github.com/volesen)
