@@ -8,9 +8,9 @@ export const transformOpenApiSpec = ({ context }: { context: Context }) => {
   const { logger } = context;
   const eventTransformOpenApiSpec = logger.timeEvent('transform-openapi-spec');
 
-  if (context.config.parser.transforms.schemas.enabled) {
+  if (context.config.parser.transforms.schemaName) {
     schemasTransform({
-      config: context.config.parser.transforms.schemas,
+      schemaName: context.config.parser.transforms.schemaName,
       spec: context.spec,
     });
   }

@@ -447,9 +447,9 @@ export default {
 
 You can customize the naming and casing pattern for `requests` and `responses` schemas using the `.name` and `.case` options.
 
-### Schemas
+### Schema Name
 
-Sometimes your schema names are auto-generated or follow a naming convention that produces verbose or awkward type names. The `schemas` transform allows you to rename schema component keys throughout the specification, automatically updating all `$ref` pointers.
+Sometimes your schema names are auto-generated or follow a naming convention that produces verbose or awkward type names. The `schemaName` transform allows you to rename schema component keys throughout the specification, automatically updating all `$ref` pointers.
 
 This is useful for:
 
@@ -466,17 +466,15 @@ export default {
   output: 'src/client',
   parser: {
     transforms: {
-      schemas: {
-        name: (name) => {
-          // Strip version markers: ServiceRoot_v1_20_0_ServiceRoot → ServiceRoot
-          let clean = name.replace(/([A-Za-z\d]+)_v\d+_\d+_\d+_([A-Za-z\d]*)/g, (_, p1, p2) =>
-            p2.startsWith(p1) ? p2 : p1 + p2,
-          );
-          // Deduplicate prefixes: Foo_Foo → Foo
-          const m = clean.match(/^([A-Za-z\d]+)_\1([A-Za-z\d]*)$/);
-          if (m) clean = m[1] + m[2];
-          return clean;
-        },
+      schemaName: (name) => {
+        // Strip version markers: ServiceRoot_v1_20_0_ServiceRoot → ServiceRoot
+        let clean = name.replace(/([A-Za-z\d]+)_v\d+_\d+_\d+_([A-Za-z\d]*)/g, (_, p1, p2) =>
+          p2.startsWith(p1) ? p2 : p1 + p2,
+        );
+        // Deduplicate prefixes: Foo_Foo → Foo
+        const m = clean.match(/^([A-Za-z\d]+)_\1([A-Za-z\d]*)$/);
+        if (m) clean = m[1] + m[2];
+        return clean;
       },
     },
   },
@@ -489,21 +487,7 @@ export default {
   output: 'src/client',
   parser: {
     transforms: {
-      schemas: {
-        name: 'Api{{name}}', // Add "Api" prefix to all schemas
-      },
-    },
-  },
-};
-```
-
-```js [disabled]
-export default {
-  input: 'hey-api/backend', // sign up at app.heyapi.dev
-  output: 'src/client',
-  parser: {
-    transforms: {
-      schemas: false, // [!code ++]
+      schemaName: 'Api{{name}}', // Add "Api" prefix to all schemas
     },
   },
 };

@@ -188,35 +188,13 @@ export type UserParser = {
      * @example
      * ```ts
      * {
-     *   schemas: {
-     *     name: (name) => name.replace(/_v\d+_\d+_\d+_/, '_')
-     *   }
+     *   schemaName: (name) => name.replace(/_v\d+_\d+_\d+_/, '_')
      * }
      * ```
      *
-     * @default false
+     * @default undefined
      */
-    schemas?:
-      | boolean
-      | {
-          /**
-           * Whether this feature is enabled.
-           *
-           * @default false
-           */
-          enabled?: boolean;
-          /**
-           * Customize the generated name of schema components.
-           * When provided, this transformer is called for each schema key
-           * in `components.schemas` to compute the new name.
-           *
-           * If the new name conflicts with an existing schema, the rename
-           * is skipped for that schema.
-           *
-           * @default undefined
-           */
-          name?: NameTransformer;
-        };
+    schemaName?: NameTransformer;
   };
   /**
    * **This is an experimental feature.**
@@ -325,20 +303,10 @@ export type Parser = {
     /**
      * Rename schema component keys and automatically update all `$ref` pointers
      * throughout the specification.
+     *
+     * @default undefined
      */
-    schemas: FeatureToggle & {
-      /**
-       * Customize the generated name of schema components.
-       * When provided, this transformer is called for each schema key
-       * in `components.schemas` to compute the new name.
-       *
-       * If the new name conflicts with an existing schema, the rename
-       * is skipped for that schema.
-       *
-       * @default '{{name}}'
-       */
-      name: NameTransformer;
-    };
+    schemaName?: NameTransformer;
   };
   /**
    * **This is an experimental feature.**
