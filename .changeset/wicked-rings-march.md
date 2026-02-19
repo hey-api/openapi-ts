@@ -1,5 +1,6 @@
 ---
 "@hey-api/shared": patch
+"@hey-api/openapi-ts": patch
 ---
 
-Support non-string discriminator property types (boolean, integer, number)
+**parser**: add support for non-string discriminator property types
