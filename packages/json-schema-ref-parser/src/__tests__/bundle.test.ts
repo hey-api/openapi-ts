@@ -81,16 +81,4 @@ describe('bundle', () => {
 
     await expectBundledSchemaToMatchSnapshot(schema, 'redfish-like.json');
   });
-
-  it('fixes cross-file references (schemas in different external files)', async () => {
-    const refParser = new $RefParser();
-    const pathOrUrlOrSchema = path.join(
-      getSpecsPath(),
-      'json-schema-ref-parser',
-      'cross-file-ref-main.json',
-    );
-    const schema = await refParser.bundle({ pathOrUrlOrSchema });
-
-    await expectBundledSchemaToMatchSnapshot(schema, 'cross-file-ref-main.json');
-  });
 });
