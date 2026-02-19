@@ -56,15 +56,7 @@ export const schemaNameTransform = ({
   for (const oldName of Object.keys(schemasObj)) {
     const newName = applyNaming(oldName, namingConfig);
 
-    if (newName === oldName) {
-      continue;
-    }
-
-    if (newName in schemasObj) {
-      continue;
-    }
-
-    if (newNames.has(newName)) {
+    if (newName === oldName || newName in schemasObj || newNames.has(newName)) {
       continue;
     }
 
