@@ -1,0 +1,64 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Cross-file Reference Test",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/resource-a": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Returns SchemaA",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/cross-file-ref-file1_SchemaA"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/resource-b": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Returns SchemaB",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/cross-file-ref-file2_SchemaB"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "cross-file-ref-file1_SchemaA": {
+        "type": "object",
+        "properties": {
+          "typeField": {
+            "$ref": "#/components/schemas/cross-file-ref-file2_SchemaB"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "cross-file-ref-file2_SchemaB": {
+        "type": "string",
+        "enum": [
+          "TypeA",
+          "TypeB",
+          "TypeC"
+        ]
+      }
+    }
+  }
+}

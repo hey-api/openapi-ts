@@ -1,0 +1,78 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Test API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/resolution": {
+      "get": {
+        "summary": "Get resolution step",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/external-with-siblings_ResolutionStep"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/action": {
+      "get": {
+        "summary": "Get action info",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/external-with-siblings_ActionInfo"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "external-with-siblings_ActionInfo": {
+        "type": "object",
+        "properties": {
+          "ActionId": {
+            "type": "string"
+          }
+        }
+      },
+      "external-with-siblings_ResolutionStep": {
+        "type": "object",
+        "properties": {
+          "ResolutionType": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/external-with-siblings_ResolutionType"
+              }
+            ]
+          },
+          "ActionName": {
+            "type": "string"
+          }
+        }
+      },
+      "external-with-siblings_ResolutionType": {
+        "type": "string",
+        "enum": [
+          "ContactVendor",
+          "ResetToDefaults",
+          "RetryOperation"
+        ]
+      }
+    }
+  }
+}

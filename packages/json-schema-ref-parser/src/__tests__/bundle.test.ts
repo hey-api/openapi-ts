@@ -1,7 +1,15 @@
+import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import { $RefParser } from '..';
 import { getSpecsPath } from './utils';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const getSnapshotsPath = () => path.join(__dirname, '__snapshots__');
+const getTempSnapshotsPath = () => path.join(__dirname, '.gen', 'snapshots');
 
 describe('bundle', () => {
   it('handles circular reference with description', async () => {
@@ -12,17 +20,19 @@ describe('bundle', () => {
       'circular-ref-with-description.json',
     );
     const schema = await refParser.bundle({ pathOrUrlOrSchema });
-    expect(schema).toEqual({
-      schemas: {
-        Bar: {
-          $ref: '#/schemas/Foo',
-          description: 'ok',
-        },
-        Foo: {
-          $ref: '#/schemas/Bar',
-        },
-      },
-    });
+
+    const outputPath = path.join(getTempSnapshotsPath(), 'circular-ref-with-description.json');
+    const snapshotPath = path.join(getSnapshotsPath(), 'circular-ref-with-description.json');
+
+    // Ensure directory exists
+    fs.mkdirSync(path.dirname(outputPath), { recursive: true });
+
+    // Write the bundled result
+    const content = JSON.stringify(schema, null, 2);
+    fs.writeFileSync(outputPath, content);
+
+    // Compare with snapshot
+    await expect(content).toMatchFileSnapshot(snapshotPath);
   });
 
   it('bundles multiple references to the same file correctly', async () => {
@@ -32,29 +42,20 @@ describe('bundle', () => {
       'json-schema-ref-parser',
       'multiple-refs.json',
     );
-    const schema = (await refParser.bundle({ pathOrUrlOrSchema })) as any;
+    const schema = await refParser.bundle({ pathOrUrlOrSchema });
 
-    // Both parameters should now be $ref to the same internal definition
-    const firstParam = schema.paths['/test1/{pathId}'].get.parameters[0];
-    const secondParam = schema.paths['/test2/{pathId}'].get.parameters[0];
+    const outputPath = path.join(getTempSnapshotsPath(), 'multiple-refs.json');
+    const snapshotPath = path.join(getSnapshotsPath(), 'multiple-refs.json');
 
-    // The $ref should match the output structure in file_context_0
-    expect(firstParam.$ref).toBe('#/components/parameters/path-parameter_pathId');
-    expect(secondParam.$ref).toBe('#/components/parameters/path-parameter_pathId');
+    // Ensure directory exists
+    fs.mkdirSync(path.dirname(outputPath), { recursive: true });
 
-    // The referenced parameter should exist and match the expected structure
-    expect(schema.components).toBeDefined();
-    expect(schema.components.parameters).toBeDefined();
-    expect(schema.components.parameters['path-parameter_pathId']).toEqual({
-      in: 'path',
-      name: 'pathId',
-      required: true,
-      schema: {
-        description: 'Unique identifier for the path',
-        format: 'uuid',
-        type: 'string',
-      },
-    });
+    // Write the bundled result
+    const content = JSON.stringify(schema, null, 2);
+    fs.writeFileSync(outputPath, content);
+
+    // Compare with snapshot
+    await expect(content).toMatchFileSnapshot(snapshotPath);
   });
 
   it('hoists sibling schemas from external files', async () => {
@@ -64,47 +65,20 @@ describe('bundle', () => {
       'json-schema-ref-parser',
       'main-with-external-siblings.json',
     );
-    const schema = (await refParser.bundle({ pathOrUrlOrSchema })) as any;
+    const schema = await refParser.bundle({ pathOrUrlOrSchema });
 
-    // Main schema should reference the hoisted schemas
-    const resolutionStepSchema =
-      schema.paths['/resolution'].get.responses['200'].content['application/json'].schema;
-    expect(resolutionStepSchema.$ref).toBe(
-      '#/components/schemas/external-with-siblings_ResolutionStep',
-    );
+    const outputPath = path.join(getTempSnapshotsPath(), 'main-with-external-siblings.json');
+    const snapshotPath = path.join(getSnapshotsPath(), 'main-with-external-siblings.json');
 
-    const actionInfoSchema =
-      schema.paths['/action'].get.responses['200'].content['application/json'].schema;
-    expect(actionInfoSchema.$ref).toBe('#/components/schemas/external-with-siblings_ActionInfo');
+    // Ensure directory exists
+    fs.mkdirSync(path.dirname(outputPath), { recursive: true });
 
-    // All schemas from the external file should be hoisted
-    expect(schema.components).toBeDefined();
-    expect(schema.components.schemas).toBeDefined();
+    // Write the bundled result
+    const content = JSON.stringify(schema, null, 2);
+    fs.writeFileSync(outputPath, content);
 
-    // ResolutionStep should be hoisted
-    expect(schema.components.schemas['external-with-siblings_ResolutionStep']).toBeDefined();
-    expect(
-      schema.components.schemas['external-with-siblings_ResolutionStep'].properties.ResolutionType
-        .oneOf[0].$ref,
-    ).toBe('#/components/schemas/external-with-siblings_ResolutionType');
-
-    // ResolutionType (sibling schema) should also be hoisted
-    expect(schema.components.schemas['external-with-siblings_ResolutionType']).toBeDefined();
-    expect(schema.components.schemas['external-with-siblings_ResolutionType']).toEqual({
-      enum: ['ContactVendor', 'ResetToDefaults', 'RetryOperation'],
-      type: 'string',
-    });
-
-    // ActionInfo (another sibling schema) should also be hoisted
-    expect(schema.components.schemas['external-with-siblings_ActionInfo']).toBeDefined();
-    expect(schema.components.schemas['external-with-siblings_ActionInfo']).toEqual({
-      properties: {
-        ActionId: {
-          type: 'string',
-        },
-      },
-      type: 'object',
-    });
+    // Compare with snapshot
+    await expect(content).toMatchFileSnapshot(snapshotPath);
   });
 
   it('hoists sibling schemas from YAML files with versioned names (Redfish-like)', async () => {
@@ -114,52 +88,20 @@ describe('bundle', () => {
       'json-schema-ref-parser',
       'redfish-like.yaml',
     );
-    const schema = (await refParser.bundle({ pathOrUrlOrSchema })) as any;
+    const schema = await refParser.bundle({ pathOrUrlOrSchema });
 
-    // Verify the main schema references are hoisted
-    const systemsSchema =
-      schema.paths['/redfish/v1/Systems'].get.responses['200'].content['application/json'].schema;
-    expect(systemsSchema.$ref).toContain('ResolutionStep');
+    const outputPath = path.join(getTempSnapshotsPath(), 'redfish-like.json');
+    const snapshotPath = path.join(getSnapshotsPath(), 'redfish-like.json');
 
-    const actionsSchema =
-      schema.paths['/redfish/v1/Actions'].post.responses['200'].content['application/json'].schema;
-    expect(actionsSchema.$ref).toContain('ActionParameters');
+    // Ensure directory exists
+    fs.mkdirSync(path.dirname(outputPath), { recursive: true });
 
-    // All three schemas from the external YAML should be hoisted
-    expect(schema.components).toBeDefined();
-    expect(schema.components.schemas).toBeDefined();
+    // Write the bundled result
+    const content = JSON.stringify(schema, null, 2);
+    fs.writeFileSync(outputPath, content);
 
-    const schemaKeys = Object.keys(schema.components.schemas);
-
-    // ResolutionStep (directly referenced)
-    const resolutionStepKey = schemaKeys.find(
-      (k) => k.includes('ResolutionStep') && !k.includes('Type') && !k.includes('ActionParameters'),
-    );
-    expect(resolutionStepKey).toBeDefined();
-
-    // ResolutionType (sibling, referenced by ResolutionStep and ActionParameters)
-    const resolutionTypeKey = schemaKeys.find((k) => k.includes('ResolutionType'));
-    expect(resolutionTypeKey).toBeDefined();
-    expect(schema.components.schemas[resolutionTypeKey!]).toEqual({
-      description: 'Types of resolution actions',
-      enum: ['ContactVendor', 'ResetToDefaults', 'RetryOperation'],
-      type: 'string',
-    });
-
-    // ActionParameters (directly referenced)
-    const actionParamsKey = schemaKeys.find((k) => k.includes('ActionParameters'));
-    expect(actionParamsKey).toBeDefined();
-
-    // Verify that internal $refs in hoisted schemas point to hoisted locations
-    const resolutionStep = schema.components.schemas[resolutionStepKey!];
-    expect(resolutionStep.properties.ResolutionType.oneOf[0].$ref).toContain('ResolutionType');
-    expect(resolutionStep.properties.ResolutionType.oneOf[0].$ref).toMatch(
-      /^#\/components\/schemas\//,
-    );
-
-    const actionParams = schema.components.schemas[actionParamsKey!];
-    expect(actionParams.properties.ActionType.$ref).toContain('ResolutionType');
-    expect(actionParams.properties.ActionType.$ref).toMatch(/^#\/components\/schemas\//);
+    // Compare with snapshot
+    await expect(content).toMatchFileSnapshot(snapshotPath);
   });
 
   it('fixes cross-file references (schemas in different external files)', async () => {
@@ -169,53 +111,19 @@ describe('bundle', () => {
       'json-schema-ref-parser',
       'cross-file-ref-main.json',
     );
-    const schema = (await refParser.bundle({ pathOrUrlOrSchema })) as any;
+    const schema = await refParser.bundle({ pathOrUrlOrSchema });
 
-    // Both schemas should be hoisted
-    expect(schema.components).toBeDefined();
-    expect(schema.components.schemas).toBeDefined();
+    const outputPath = path.join(getTempSnapshotsPath(), 'cross-file-ref-main.json');
+    const snapshotPath = path.join(getSnapshotsPath(), 'cross-file-ref-main.json');
 
-    const schemaKeys = Object.keys(schema.components.schemas);
-    expect(schemaKeys.length).toBe(2);
+    // Ensure directory exists
+    fs.mkdirSync(path.dirname(outputPath), { recursive: true });
 
-    // Find the hoisted schemas
-    const schemaAKey = schemaKeys.find((k) => k.includes('SchemaA'));
-    const schemaBKey = schemaKeys.find((k) => k.includes('SchemaB'));
+    // Write the bundled result
+    const content = JSON.stringify(schema, null, 2);
+    fs.writeFileSync(outputPath, content);
 
-    expect(schemaAKey).toBeDefined();
-    expect(schemaBKey).toBeDefined();
-
-    // SchemaA should have a reference to SchemaB
-    const schemaA = schema.components.schemas[schemaAKey!];
-    expect(schemaA.properties.typeField.$ref).toBe(`#/components/schemas/${schemaBKey}`);
-
-    // SchemaB should be the enum type
-    const schemaB = schema.components.schemas[schemaBKey!];
-    expect(schemaB).toEqual({
-      enum: ['TypeA', 'TypeB', 'TypeC'],
-      type: 'string',
-    });
-
-    // Verify no dangling refs exist
-    const findDanglingRefs = (obj: any, schemas: any): string[] => {
-      const dangling: string[] = [];
-      const check = (o: any) => {
-        if (!o || typeof o !== 'object') return;
-        if (o.$ref && typeof o.$ref === 'string' && o.$ref.startsWith('#/components/schemas/')) {
-          const schemaName = o.$ref.replace('#/components/schemas/', '');
-          if (!schemas[schemaName]) {
-            dangling.push(o.$ref);
-          }
-        }
-        for (const value of Object.values(o)) {
-          check(value);
-        }
-      };
-      check(obj);
-      return dangling;
-    };
-
-    const danglingRefs = findDanglingRefs(schema, schema.components.schemas);
-    expect(danglingRefs).toEqual([]);
+    // Compare with snapshot
+    await expect(content).toMatchFileSnapshot(snapshotPath);
   });
 });
