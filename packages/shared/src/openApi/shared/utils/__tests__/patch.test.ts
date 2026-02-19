@@ -1586,4 +1586,472 @@ describe('patchOpenApiSpec', () => {
       });
     });
   });
+
+  describe('patch.operations', () => {
+    describe('OpenAPI v3', () => {
+      it('bulk callback mutates all operations', async () => {
+        const spec: OpenApi.V3_1_X = {
+          ...specMetadataV3,
+          paths: {
+            '/bar': {
+              post: {
+                responses: {},
+              } as any,
+            },
+            '/foo': {
+              get: {
+                responses: {},
+              } as any,
+              put: {
+                responses: {},
+              } as any,
+            },
+          },
+        };
+
+        await patchOpenApiSpec({
+          patchOptions: {
+            operations: (method, path, operation) => {
+              operation.operationId = `${method}_${path.replace(/\//g, '_')}`;
+            },
+          },
+          spec,
+        });
+
+        expect(spec.paths!['/foo']?.get?.operationId).toBe('get__foo');
+        expect(spec.paths!['/foo']?.put?.operationId).toBe('put__foo');
+        expect(spec.paths!['/bar']?.post?.operationId).toBe('post__bar');
+      });
+
+      it('bulk callback receives correct parameters', async () => {
+        const fn = vi.fn();
+
+        const spec: OpenApi.V3_1_X = {
+          ...specMetadataV3,
+          paths: {
+            '/bar': {
+              post: {
+                responses: {},
+              } as any,
+            },
+            '/foo': {
+              get: {
+                responses: {},
+              } as any,
+            },
+          },
+        };
+
+        await patchOpenApiSpec({
+          patchOptions: {
+            operations: fn,
+          },
+          spec,
+        });
+
+        expect(fn).toHaveBeenCalledTimes(2);
+        expect(fn).toHaveBeenCalledWith('get', '/foo', spec.paths!['/foo']?.get);
+        expect(fn).toHaveBeenCalledWith('post', '/bar', spec.paths!['/bar']?.post);
+      });
+
+      it('bulk callback can inject operationId based on path patterns', async () => {
+        const spec: OpenApi.V3_1_X = {
+          ...specMetadataV3,
+          paths: {
+            '/users': {
+              get: {
+                responses: {},
+              } as any,
+              post: {
+                responses: {},
+              } as any,
+            },
+            '/users/{id}': {
+              delete: {
+                responses: {},
+              } as any,
+              get: {
+                operationId: 'existingId',
+                responses: {},
+              } as any,
+            },
+          },
+        };
+
+        await patchOpenApiSpec({
+          patchOptions: {
+            operations: (method, path, operation) => {
+              if (operation.operationId) return; // don't override existing
+
+              const segments = path.split('/').filter(Boolean);
+              const parts = segments.map((seg) => (seg.startsWith('{') ? 'ById' : seg)).join('');
+              operation.operationId = method + parts;
+            },
+          },
+          spec,
+        });
+
+        expect(spec.paths!['/users']?.get?.operationId).toBe('getusers');
+        expect(spec.paths!['/users']?.post?.operationId).toBe('postusers');
+        expect(spec.paths!['/users/{id}']?.get?.operationId).toBe('existingId'); // not overridden
+        expect(spec.paths!['/users/{id}']?.delete?.operationId).toBe('deleteusersById');
+      });
+
+      it('bulk callback skips invalid operations', async () => {
+        const fn = vi.fn();
+
+        const spec: OpenApi.V3_1_X = {
+          ...specMetadataV3,
+          paths: {
+            '/bar': {
+              get: null as any,
+              post: 'invalid' as any,
+            },
+            '/baz': 123 as any,
+            '/foo': {
+              get: {
+                responses: {},
+              } as any,
+            },
+          },
+        };
+
+        await patchOpenApiSpec({
+          patchOptions: {
+            operations: fn,
+          },
+          spec,
+        });
+
+        expect(fn).toHaveBeenCalledOnce();
+        expect(fn).toHaveBeenCalledWith('get', '/foo', spec.paths!['/foo']?.get);
+      });
+
+      it('supports async bulk callback', async () => {
+        const spec: OpenApi.V3_1_X = {
+          ...specMetadataV3,
+          paths: {
+            '/bar': {
+              post: {
+                responses: {},
+              } as any,
+            },
+            '/foo': {
+              get: {
+                responses: {},
+              } as any,
+            },
+          },
+        };
+
+        await patchOpenApiSpec({
+          patchOptions: {
+            operations: async (method, path, operation) => {
+              // Simulate async operation
+              await Promise.resolve();
+              operation.operationId = `async_${method}_${path}`;
+            },
+          },
+          spec,
+        });
+
+        expect(spec.paths!['/foo']?.get?.operationId).toBe('async_get_/foo');
+        expect(spec.paths!['/bar']?.post?.operationId).toBe('async_post_/bar');
+      });
+
+      it('supports async Record-based callbacks', async () => {
+        const spec: OpenApi.V3_1_X = {
+          ...specMetadataV3,
+          paths: {
+            '/bar': {
+              post: {
+                responses: {},
+              } as any,
+            },
+            '/foo': {
+              get: {
+                responses: {},
+              } as any,
+            },
+          },
+        };
+
+        await patchOpenApiSpec({
+          patchOptions: {
+            operations: {
+              'GET /foo': async (operation) => {
+                await Promise.resolve();
+                operation.operationId = 'asyncGetFoo';
+              },
+              'POST /bar': async (operation) => {
+                await Promise.resolve();
+                operation.operationId = 'asyncPostBar';
+              },
+            },
+          },
+          spec,
+        });
+
+        expect(spec.paths!['/foo']?.get?.operationId).toBe('asyncGetFoo');
+        expect(spec.paths!['/bar']?.post?.operationId).toBe('asyncPostBar');
+      });
+
+      it('Record-based operations still work as before', async () => {
+        const spec: OpenApi.V3_1_X = {
+          ...specMetadataV3,
+          paths: {
+            '/bar': {
+              post: {
+                responses: {},
+              } as any,
+            },
+            '/foo': {
+              get: {
+                responses: {},
+              } as any,
+            },
+          },
+        };
+
+        await patchOpenApiSpec({
+          patchOptions: {
+            operations: {
+              'GET /foo': (operation) => {
+                operation.operationId = 'getFoo';
+              },
+              'POST /bar': (operation) => {
+                operation.operationId = 'postBar';
+              },
+            },
+          },
+          spec,
+        });
+
+        expect(spec.paths!['/foo']?.get?.operationId).toBe('getFoo');
+        expect(spec.paths!['/bar']?.post?.operationId).toBe('postBar');
+      });
+
+      it('handles spec without paths', async () => {
+        const fn = vi.fn();
+
+        const spec: OpenApi.V3_1_X = {
+          ...specMetadataV3,
+        };
+
+        await patchOpenApiSpec({
+          patchOptions: {
+            operations: fn,
+          },
+          spec,
+        });
+
+        expect(fn).not.toHaveBeenCalled();
+      });
+
+      it('handles all HTTP methods', async () => {
+        const fn = vi.fn();
+
+        const spec: OpenApi.V3_1_X = {
+          ...specMetadataV3,
+          paths: {
+            '/test': {
+              delete: { responses: {} } as any,
+              get: { responses: {} } as any,
+              head: { responses: {} } as any,
+              options: { responses: {} } as any,
+              patch: { responses: {} } as any,
+              post: { responses: {} } as any,
+              put: { responses: {} } as any,
+              trace: { responses: {} } as any,
+            },
+          },
+        };
+
+        await patchOpenApiSpec({
+          patchOptions: {
+            operations: fn,
+          },
+          spec,
+        });
+
+        expect(fn).toHaveBeenCalledTimes(8);
+        expect(fn).toHaveBeenCalledWith('get', '/test', expect.any(Object));
+        expect(fn).toHaveBeenCalledWith('put', '/test', expect.any(Object));
+        expect(fn).toHaveBeenCalledWith('post', '/test', expect.any(Object));
+        expect(fn).toHaveBeenCalledWith('delete', '/test', expect.any(Object));
+        expect(fn).toHaveBeenCalledWith('options', '/test', expect.any(Object));
+        expect(fn).toHaveBeenCalledWith('head', '/test', expect.any(Object));
+        expect(fn).toHaveBeenCalledWith('patch', '/test', expect.any(Object));
+        expect(fn).toHaveBeenCalledWith('trace', '/test', expect.any(Object));
+      });
+    });
+
+    describe('OpenAPI v2', () => {
+      it('bulk callback mutates all operations', async () => {
+        const spec: OpenApi.V2_0_X = {
+          ...specMetadataV2,
+          paths: {
+            '/bar': {
+              post: {
+                responses: {},
+              } as any,
+            },
+            '/foo': {
+              get: {
+                responses: {},
+              } as any,
+              put: {
+                responses: {},
+              } as any,
+            },
+          },
+        };
+
+        await patchOpenApiSpec({
+          patchOptions: {
+            operations: (method, path, operation) => {
+              operation.operationId = `${method}_${path.replace(/\//g, '_')}`;
+            },
+          },
+          spec,
+        });
+
+        expect(spec.paths!['/foo']?.get?.operationId).toBe('get__foo');
+        expect(spec.paths!['/foo']?.put?.operationId).toBe('put__foo');
+        expect(spec.paths!['/bar']?.post?.operationId).toBe('post__bar');
+      });
+
+      it('bulk callback receives correct parameters', async () => {
+        const fn = vi.fn();
+
+        const spec: OpenApi.V2_0_X = {
+          ...specMetadataV2,
+          paths: {
+            '/bar': {
+              post: {
+                responses: {},
+              } as any,
+            },
+            '/foo': {
+              get: {
+                responses: {},
+              } as any,
+            },
+          },
+        };
+
+        await patchOpenApiSpec({
+          patchOptions: {
+            operations: fn,
+          },
+          spec,
+        });
+
+        expect(fn).toHaveBeenCalledTimes(2);
+        expect(fn).toHaveBeenCalledWith('get', '/foo', spec.paths!['/foo']?.get);
+        expect(fn).toHaveBeenCalledWith('post', '/bar', spec.paths!['/bar']?.post);
+      });
+
+      it('supports async bulk callback', async () => {
+        const spec: OpenApi.V2_0_X = {
+          ...specMetadataV2,
+          paths: {
+            '/bar': {
+              post: {
+                responses: {},
+              } as any,
+            },
+            '/foo': {
+              get: {
+                responses: {},
+              } as any,
+            },
+          },
+        };
+
+        await patchOpenApiSpec({
+          patchOptions: {
+            operations: async (method, path, operation) => {
+              await Promise.resolve();
+              operation.operationId = `async_${method}_${path}`;
+            },
+          },
+          spec,
+        });
+
+        expect(spec.paths!['/foo']?.get?.operationId).toBe('async_get_/foo');
+        expect(spec.paths!['/bar']?.post?.operationId).toBe('async_post_/bar');
+      });
+
+      it('Record-based operations still work as before', async () => {
+        const spec: OpenApi.V2_0_X = {
+          ...specMetadataV2,
+          paths: {
+            '/bar': {
+              post: {
+                responses: {},
+              } as any,
+            },
+            '/foo': {
+              get: {
+                responses: {},
+              } as any,
+            },
+          },
+        };
+
+        await patchOpenApiSpec({
+          patchOptions: {
+            operations: {
+              'GET /foo': (operation) => {
+                operation.operationId = 'getFoo';
+              },
+              'POST /bar': (operation) => {
+                operation.operationId = 'postBar';
+              },
+            },
+          },
+          spec,
+        });
+
+        expect(spec.paths!['/foo']?.get?.operationId).toBe('getFoo');
+        expect(spec.paths!['/bar']?.post?.operationId).toBe('postBar');
+      });
+
+      it('handles all HTTP methods', async () => {
+        const fn = vi.fn();
+
+        const spec: OpenApi.V2_0_X = {
+          ...specMetadataV2,
+          paths: {
+            '/test': {
+              delete: { responses: {} } as any,
+              get: { responses: {} } as any,
+              head: { responses: {} } as any,
+              options: { responses: {} } as any,
+              patch: { responses: {} } as any,
+              post: { responses: {} } as any,
+              put: { responses: {} } as any,
+            },
+          },
+        };
+
+        await patchOpenApiSpec({
+          patchOptions: {
+            operations: fn,
+          },
+          spec,
+        });
+
+        expect(fn).toHaveBeenCalledTimes(7);
+        expect(fn).toHaveBeenCalledWith('get', '/test', expect.any(Object));
+        expect(fn).toHaveBeenCalledWith('put', '/test', expect.any(Object));
+        expect(fn).toHaveBeenCalledWith('post', '/test', expect.any(Object));
+        expect(fn).toHaveBeenCalledWith('delete', '/test', expect.any(Object));
+        expect(fn).toHaveBeenCalledWith('options', '/test', expect.any(Object));
+        expect(fn).toHaveBeenCalledWith('head', '/test', expect.any(Object));
+        expect(fn).toHaveBeenCalledWith('patch', '/test', expect.any(Object));
+      });
+    });
+  });
 });

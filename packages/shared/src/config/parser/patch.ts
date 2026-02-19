@@ -60,24 +60,68 @@ export type Patch =
         meta: OpenApiMetaObject.V2_0_X | OpenApiMetaObject.V3_0_X | OpenApiMetaObject.V3_1_X,
       ) => void;
       /**
-       * Patch OpenAPI operations in place. The key is the operation method and operation path, and the function receives the operation object to modify directly.
+       * Patch OpenAPI operations in place. Each function receives the operation
+       * object to be modified in place. Common use cases include injecting
+       * `operationId` for specs that don't have them, adding `x-*` extensions,
+       * setting `deprecated` based on path patterns, or injecting `security`
+       * requirements globally.
+       *
+       * Can be:
+       * - `Record<string, fn>`: Patch specific operations by `"METHOD /path"` key
+       * - `function`: Bulk callback receives `(method, path, operation)` for every operation
+       *
+       * Both patterns support async functions for operations like fetching data
+       * from external sources or performing I/O.
        *
        * @example
+       * ```js
+       * // Named operations
        * operations: {
        *   'GET /foo': (operation) => {
-       *     operation.responses['200'].description = 'foo';
+       *     operation.responses['200'].description = 'Success';
+       *   },
+       *   'POST /bar': (operation) => {
+       *     operation.deprecated = true;
        *   }
        * }
+       *
+       * // Bulk callback for all operations
+       * operations: (method, path, operation) => {
+       *   if (!operation.operationId) {
+       *     operation.operationId = method + buildOperationName(path);
+       *   }
+       * }
+       *
+       * // Async example - inject operationId based on path patterns
+       * operations: async (method, path, operation) => {
+       *   if (operation.operationId) return;
+       *
+       *   const segments = path.split('/').filter(Boolean);
+       *   const parts = segments
+       *     .map((seg) => seg.startsWith('{') ? 'ById' : seg)
+       *     .join('');
+       *   operation.operationId = method + parts;
+       * }
+       * ```
        */
-      operations?: Record<
-        string,
-        (
-          operation:
-            | OpenApiOperationObject.V2_0_X
-            | OpenApiOperationObject.V3_0_X
-            | OpenApiOperationObject.V3_1_X,
-        ) => void
-      >;
+      operations?:
+        | Record<
+            string,
+            (
+              operation:
+                | OpenApiOperationObject.V2_0_X
+                | OpenApiOperationObject.V3_0_X
+                | OpenApiOperationObject.V3_1_X,
+            ) => void | Promise<void>
+          >
+        | ((
+            method: string,
+            path: string,
+            operation:
+              | OpenApiOperationObject.V2_0_X
+              | OpenApiOperationObject.V3_0_X
+              | OpenApiOperationObject.V3_1_X,
+          ) => void | Promise<void>);
       /**
        * Patch OpenAPI parameters in place. The key is the parameter name, and the function receives the parameter object to modify directly.
        *
