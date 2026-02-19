@@ -618,11 +618,10 @@ describe(`OpenAPI ${version}`, () => {
         output: 'transforms-schemas-name-collision',
         parser: {
           transforms: {
-            schemaName: (name: string) => 
+            schemaName: (name: string) =>
               // Try to rename all _vX_User schemas to "User"
               // This should cause collisions since "User" already exists
-               name.replace(/_v\d+_User$/, '')
-            ,
+              name.replace(/_v\d+_User$/, ''),
           },
         },
         plugins: ['@hey-api/typescript'],

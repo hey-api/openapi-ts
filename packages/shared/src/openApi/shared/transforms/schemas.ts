@@ -8,9 +8,6 @@ type SchemaNameConfig = Parser['transforms']['schemaName'];
 /**
  * Recursively walks the entire spec object and replaces all $ref strings
  * according to the provided rename mapping.
- *
- * @param node - Current node being visited
- * @param renameMap - Map from old pointer to new pointer
  */
 const rewriteRefs = (node: unknown, renameMap: Record<string, string>) => {
   if (node instanceof Array) {
@@ -18,7 +15,6 @@ const rewriteRefs = (node: unknown, renameMap: Record<string, string>) => {
   } else if (node && typeof node === 'object') {
     for (const [key, value] of Object.entries(node)) {
       if (key === '$ref' && typeof value === 'string' && value in renameMap) {
-        // Replace the $ref with the new name
         (node as Record<string, unknown>)[key] = renameMap[value];
       } else {
         rewriteRefs(value, renameMap);
@@ -28,18 +24,9 @@ const rewriteRefs = (node: unknown, renameMap: Record<string, string>) => {
 };
 
 /**
- * Applies the schema name transform to rename schema component keys and
- * update all $ref pointers throughout the spec.
- *
- * This transform:
- * 1. Iterates all schema keys in components.schemas (or definitions for Swagger 2.0)
- * 2. Applies the name transformer to compute new names
- * 3. Handles name collisions (skips rename if new name already exists)
- * 4. Renames schema keys in the schemas object
- * 5. Updates all $ref pointers throughout the spec to use the new names
- *
- * @param config - The schema name transformer
- * @param spec - The OpenAPI spec object to transform
+ * Renames schema component keys and updates all $ref pointers throughout
+ * the spec. Handles collisions by skipping renames when the target name
+ * already exists or conflicts with another rename.
  */
 export const schemaNameTransform = ({
   config,
@@ -62,63 +49,38 @@ export const schemaNameTransform = ({
     return;
   }
 
-  // Build rename map: oldPointer -> newPointer
   const renameMap: Record<string, string> = {};
   const newNames = new Set<string>();
+  const namingConfig = { name: config };
 
-  // Create a simple config object for applyNaming
-  const namingConfig = typeof config === 'function' ? { name: config } : { name: config };
-
-  // First pass: compute all new names and check for collisions
   for (const oldName of Object.keys(schemasObj)) {
     const newName = applyNaming(oldName, namingConfig);
 
-    // Skip if name doesn't change
     if (newName === oldName) {
       continue;
     }
 
-    // Skip if new name collides with an existing schema
     if (newName in schemasObj) {
       continue;
     }
 
-    // Skip if new name collides with another renamed schema
     if (newNames.has(newName)) {
       continue;
     }
 
-    // Record the rename
     renameMap[`${schemasPointerNamespace}${oldName}`] = `${schemasPointerNamespace}${newName}`;
     newNames.add(newName);
   }
 
-  // Second pass: rename schema keys
-  // We need to be careful about the order to avoid overwriting
-  const renamedSchemas: Record<string, unknown> = {};
-  const processedOldNames = new Set<string>();
-
   for (const [oldPointer, newPointer] of Object.entries(renameMap)) {
     const oldName = oldPointer.slice(schemasPointerNamespace.length);
     const newName = newPointer.slice(schemasPointerNamespace.length);
+    const schema = schemasObj[oldName];
 
-    // Store the schema under the new name
-    renamedSchemas[newName] = schemasObj[oldName];
-    processedOldNames.add(oldName);
+    delete schemasObj[oldName];
+    schemasObj[newName] = schema;
   }
 
-  // Add all schemas that weren't renamed
-  for (const [name, schema] of Object.entries(schemasObj)) {
-    if (!processedOldNames.has(name)) {
-      renamedSchemas[name] = schema;
-    }
-  }
-
-  // Replace the entire schemas object with the renamed version
-  Object.keys(schemasObj).forEach((key) => delete schemasObj[key]);
-  Object.assign(schemasObj, renamedSchemas);
-
-  // Third pass: rewrite all $ref pointers throughout the spec
   if (Object.keys(renameMap).length > 0) {
     rewriteRefs(spec, renameMap);
   }
