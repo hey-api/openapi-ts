@@ -15,7 +15,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResolutionStep_v1_0_1_ResolutionStep_v1_0_1_ResolutionStep"
+                  "$ref": "#/components/schemas/ResolutionStep_v1_0_1_ResolutionStep"
                 }
               }
             }
@@ -35,7 +35,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResolutionStep_v1_0_1_ResolutionStep_v1_0_1_ActionParameters"
+                  "$ref": "#/components/schemas/ResolutionStep_v1_0_1_ActionParameters"
                 }
               }
             }
@@ -46,24 +46,24 @@
   },
   "components": {
     "schemas": {
-      "ResolutionStep_v1_0_1_ResolutionStep_v1_0_1_ActionParameters": {
+      "ResolutionStep_v1_0_1_ActionParameters": {
         "type": "object",
         "properties": {
           "ActionId": {
             "type": "string"
           },
           "ActionType": {
-            "$ref": "#/components/schemas/ResolutionStep_v1_0_1_ResolutionStep_v1_0_1_ResolutionType"
+            "$ref": "#/components/schemas/ResolutionStep_v1_0_1_ResolutionType"
           }
         }
       },
-      "ResolutionStep_v1_0_1_ResolutionStep_v1_0_1_ResolutionStep": {
+      "ResolutionStep_v1_0_1_ResolutionStep": {
         "type": "object",
         "properties": {
           "ResolutionType": {
             "oneOf": [
               {
-                "$ref": "#/components/schemas/ResolutionStep_v1_0_1_ResolutionStep_v1_0_1_ResolutionType"
+                "$ref": "#/components/schemas/ResolutionStep_v1_0_1_ResolutionType"
               }
             ]
           },
@@ -73,7 +73,7 @@
           }
         }
       },
-      "ResolutionStep_v1_0_1_ResolutionStep_v1_0_1_ResolutionType": {
+      "ResolutionStep_v1_0_1_ResolutionType": {
         "type": "string",
         "enum": [
           "ContactVendor",

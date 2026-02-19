@@ -14,7 +14,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/external-with-siblings_ResolutionStep"
+                  "$ref": "#/components/schemas/ResolutionStep"
                 }
               }
             }
@@ -31,7 +31,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/external-with-siblings_ActionInfo"
+                  "$ref": "#/components/schemas/ActionInfo"
                 }
               }
             }
@@ -42,7 +42,7 @@
   },
   "components": {
     "schemas": {
-      "external-with-siblings_ActionInfo": {
+      "ActionInfo": {
         "type": "object",
         "properties": {
           "ActionId": {
@@ -50,13 +50,13 @@
           }
         }
       },
-      "external-with-siblings_ResolutionStep": {
+      "ResolutionStep": {
         "type": "object",
         "properties": {
           "ResolutionType": {
             "oneOf": [
               {
-                "$ref": "#/components/schemas/external-with-siblings_ResolutionType"
+                "$ref": "#/components/schemas/ResolutionType"
               }
             ]
           },
@@ -65,7 +65,7 @@
           }
         }
       },
-      "external-with-siblings_ResolutionType": {
+      "ResolutionType": {
         "type": "string",
         "enum": [
           "ContactVendor",
