@@ -55,20 +55,42 @@ export async function patchOpenApiSpec({
     }
 
     if (patchOptions.operations && spec.paths) {
-      for (const key in patchOptions.operations) {
-        const [method, path] = key.split(' ');
-        if (!method || !path) continue;
+      if (typeof patchOptions.operations === 'function') {
+        // Bulk callback: iterate all operations
+        for (const [path, pathItem] of Object.entries(spec.paths)) {
+          if (!pathItem || typeof pathItem !== 'object') continue;
+          for (const method of [
+            'get',
+            'put',
+            'post',
+            'delete',
+            'options',
+            'head',
+            'patch',
+            'trace',
+          ]) {
+            const operation = pathItem[method as keyof typeof pathItem];
+            if (!operation || typeof operation !== 'object') continue;
+            await patchOptions.operations(method, path, operation as any);
+          }
+        }
+      } else {
+        // Record-based: iterate named operations
+        for (const key in patchOptions.operations) {
+          const [method, path] = key.split(' ');
+          if (!method || !path) continue;
 
-        const pathItem = spec.paths[path as keyof typeof spec.paths];
-        if (!pathItem) continue;
+          const pathItem = spec.paths[path as keyof typeof spec.paths];
+          if (!pathItem) continue;
 
-        const operation =
-          pathItem[method.toLocaleLowerCase() as keyof typeof pathItem] ||
-          pathItem[method.toLocaleUpperCase() as keyof typeof pathItem];
-        if (!operation || typeof operation !== 'object') continue;
+          const operation =
+            pathItem[method.toLocaleLowerCase() as keyof typeof pathItem] ||
+            pathItem[method.toLocaleUpperCase() as keyof typeof pathItem];
+          if (!operation || typeof operation !== 'object') continue;
 
-        const patchFn = patchOptions.operations[key]!;
-        patchFn(operation as any);
+          const patchFn = patchOptions.operations[key]!;
+          await patchFn(operation as any);
+        }
       }
     }
     return;
@@ -137,20 +159,42 @@ export async function patchOpenApiSpec({
   }
 
   if (patchOptions.operations && spec.paths) {
-    for (const key in patchOptions.operations) {
-      const [method, path] = key.split(' ');
-      if (!method || !path) continue;
+    if (typeof patchOptions.operations === 'function') {
+      // Bulk callback: iterate all operations
+      for (const [path, pathItem] of Object.entries(spec.paths)) {
+        if (!pathItem || typeof pathItem !== 'object') continue;
+        for (const method of [
+          'get',
+          'put',
+          'post',
+          'delete',
+          'options',
+          'head',
+          'patch',
+          'trace',
+        ]) {
+          const operation = pathItem[method as keyof typeof pathItem];
+          if (!operation || typeof operation !== 'object') continue;
+          await patchOptions.operations(method, path, operation as any);
+        }
+      }
+    } else {
+      // Record-based: iterate named operations
+      for (const key in patchOptions.operations) {
+        const [method, path] = key.split(' ');
+        if (!method || !path) continue;
 
-      const pathItem = spec.paths[path as keyof typeof spec.paths];
-      if (!pathItem) continue;
+        const pathItem = spec.paths[path as keyof typeof spec.paths];
+        if (!pathItem) continue;
 
-      const operation =
-        pathItem[method.toLocaleLowerCase() as keyof typeof pathItem] ||
-        pathItem[method.toLocaleUpperCase() as keyof typeof pathItem];
-      if (!operation || typeof operation !== 'object') continue;
+        const operation =
+          pathItem[method.toLocaleLowerCase() as keyof typeof pathItem] ||
+          pathItem[method.toLocaleUpperCase() as keyof typeof pathItem];
+        if (!operation || typeof operation !== 'object') continue;
 
-      const patchFn = patchOptions.operations[key]!;
-      patchFn(operation as any);
+        const patchFn = patchOptions.operations[key]!;
+        await patchFn(operation as any);
+      }
     }
   }
 }
