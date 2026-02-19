@@ -586,7 +586,22 @@ function remap(parser: $RefParser, inventory: Array<InventoryEntry>) {
       } catch {
         // Ignore errors
       }
-      const proposed = `${proposedBase}_${lastToken(entry.hash)}`;
+
+      // Try without prefix first (cleaner names)
+      const schemaName = lastToken(entry.hash);
+      let proposed = schemaName;
+
+      // Check if this name would conflict with existing schemas from other files
+      if (!usedNamesByObj.has(container)) {
+        usedNamesByObj.set(container, new Set<string>(Object.keys(container || {})));
+      }
+      const used = usedNamesByObj.get(container)!;
+
+      // If the name is already used, add the file prefix
+      if (used.has(proposed)) {
+        proposed = `${proposedBase}_${schemaName}`;
+      }
+
       defName = uniqueName(container, proposed);
       namesForPrefix.set(targetKey, defName);
       // Store the resolved value under the container
@@ -634,13 +649,22 @@ function fixDanglingRefs(parser: $RefParser): void {
   ].filter((c) => c.obj && typeof c.obj === 'object');
 
   // Build a map of simple schema names to their hoisted full names
-  // E.g., "SchemaB" -> "file2_SchemaB"
+  // Since we now use unprefixed names when there's no conflict, we need to handle both cases
   const schemaNameMap = new Map<string, Array<{ fullName: string; prefix: string }>>();
 
   for (const container of containers) {
     for (const fullName of Object.keys(container.obj)) {
-      // Extract the original schema name from the hoisted name
-      // Hoisted names are typically "filename_SchemaName"
+      // First, add the full name itself as a candidate (for unprefixed schemas)
+      if (!schemaNameMap.has(fullName)) {
+        schemaNameMap.set(fullName, []);
+      }
+      schemaNameMap.get(fullName)!.push({
+        fullName,
+        prefix: container.prefix,
+      });
+
+      // Extract the original schema name from the hoisted name if it has a prefix
+      // Hoisted names with conflicts are "filename_SchemaName"
       // Try to match the pattern and extract SchemaName
       const parts = fullName.split('_');
       if (parts.length >= 2) {

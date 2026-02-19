@@ -13,7 +13,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/cross-file-ref-file1_SchemaA"
+                  "$ref": "#/components/schemas/SchemaA"
                 }
               }
             }
@@ -29,7 +29,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/cross-file-ref-file2_SchemaB"
+                  "$ref": "#/components/schemas/SchemaB"
                 }
               }
             }
@@ -40,18 +40,18 @@
   },
   "components": {
     "schemas": {
-      "cross-file-ref-file1_SchemaA": {
+      "SchemaA": {
         "type": "object",
         "properties": {
           "typeField": {
-            "$ref": "#/components/schemas/cross-file-ref-file2_SchemaB"
+            "$ref": "#/components/schemas/SchemaB"
           },
           "name": {
             "type": "string"
           }
         }
       },
-      "cross-file-ref-file2_SchemaB": {
+      "SchemaB": {
         "type": "string",
         "enum": [
           "TypeA",
