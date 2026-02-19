@@ -11,6 +11,28 @@ const __dirname = path.dirname(__filename);
 const getSnapshotsPath = () => path.join(__dirname, '__snapshots__');
 const getTempSnapshotsPath = () => path.join(__dirname, '.gen', 'snapshots');
 
+/**
+ * Helper function to compare a bundled schema with a snapshot file.
+ * Handles writing the schema to a temp file and comparing with the snapshot.
+ *
+ * @param schema - The bundled schema to compare
+ * @param snapshotName - The name of the snapshot file (e.g., 'circular-ref-with-description.json')
+ */
+const expectBundledSchemaToMatchSnapshot = async (schema: unknown, snapshotName: string) => {
+  const outputPath = path.join(getTempSnapshotsPath(), snapshotName);
+  const snapshotPath = path.join(getSnapshotsPath(), snapshotName);
+
+  // Ensure directory exists
+  fs.mkdirSync(path.dirname(outputPath), { recursive: true });
+
+  // Write the bundled result
+  const content = JSON.stringify(schema, null, 2);
+  fs.writeFileSync(outputPath, content);
+
+  // Compare with snapshot
+  await expect(content).toMatchFileSnapshot(snapshotPath);
+};
+
 describe('bundle', () => {
   it('handles circular reference with description', async () => {
     const refParser = new $RefParser();
@@ -21,18 +43,7 @@ describe('bundle', () => {
     );
     const schema = await refParser.bundle({ pathOrUrlOrSchema });
 
-    const outputPath = path.join(getTempSnapshotsPath(), 'circular-ref-with-description.json');
-    const snapshotPath = path.join(getSnapshotsPath(), 'circular-ref-with-description.json');
-
-    // Ensure directory exists
-    fs.mkdirSync(path.dirname(outputPath), { recursive: true });
-
-    // Write the bundled result
-    const content = JSON.stringify(schema, null, 2);
-    fs.writeFileSync(outputPath, content);
-
-    // Compare with snapshot
-    await expect(content).toMatchFileSnapshot(snapshotPath);
+    await expectBundledSchemaToMatchSnapshot(schema, 'circular-ref-with-description.json');
   });
 
   it('bundles multiple references to the same file correctly', async () => {
@@ -44,18 +55,7 @@ describe('bundle', () => {
     );
     const schema = await refParser.bundle({ pathOrUrlOrSchema });
 
-    const outputPath = path.join(getTempSnapshotsPath(), 'multiple-refs.json');
-    const snapshotPath = path.join(getSnapshotsPath(), 'multiple-refs.json');
-
-    // Ensure directory exists
-    fs.mkdirSync(path.dirname(outputPath), { recursive: true });
-
-    // Write the bundled result
-    const content = JSON.stringify(schema, null, 2);
-    fs.writeFileSync(outputPath, content);
-
-    // Compare with snapshot
-    await expect(content).toMatchFileSnapshot(snapshotPath);
+    await expectBundledSchemaToMatchSnapshot(schema, 'multiple-refs.json');
   });
 
   it('hoists sibling schemas from external files', async () => {
@@ -67,18 +67,7 @@ describe('bundle', () => {
     );
     const schema = await refParser.bundle({ pathOrUrlOrSchema });
 
-    const outputPath = path.join(getTempSnapshotsPath(), 'main-with-external-siblings.json');
-    const snapshotPath = path.join(getSnapshotsPath(), 'main-with-external-siblings.json');
-
-    // Ensure directory exists
-    fs.mkdirSync(path.dirname(outputPath), { recursive: true });
-
-    // Write the bundled result
-    const content = JSON.stringify(schema, null, 2);
-    fs.writeFileSync(outputPath, content);
-
-    // Compare with snapshot
-    await expect(content).toMatchFileSnapshot(snapshotPath);
+    await expectBundledSchemaToMatchSnapshot(schema, 'main-with-external-siblings.json');
   });
 
   it('hoists sibling schemas from YAML files with versioned names (Redfish-like)', async () => {
@@ -90,18 +79,7 @@ describe('bundle', () => {
     );
     const schema = await refParser.bundle({ pathOrUrlOrSchema });
 
-    const outputPath = path.join(getTempSnapshotsPath(), 'redfish-like.json');
-    const snapshotPath = path.join(getSnapshotsPath(), 'redfish-like.json');
-
-    // Ensure directory exists
-    fs.mkdirSync(path.dirname(outputPath), { recursive: true });
-
-    // Write the bundled result
-    const content = JSON.stringify(schema, null, 2);
-    fs.writeFileSync(outputPath, content);
-
-    // Compare with snapshot
-    await expect(content).toMatchFileSnapshot(snapshotPath);
+    await expectBundledSchemaToMatchSnapshot(schema, 'redfish-like.json');
   });
 
   it('fixes cross-file references (schemas in different external files)', async () => {
@@ -113,17 +91,6 @@ describe('bundle', () => {
     );
     const schema = await refParser.bundle({ pathOrUrlOrSchema });
 
-    const outputPath = path.join(getTempSnapshotsPath(), 'cross-file-ref-main.json');
-    const snapshotPath = path.join(getSnapshotsPath(), 'cross-file-ref-main.json');
-
-    // Ensure directory exists
-    fs.mkdirSync(path.dirname(outputPath), { recursive: true });
-
-    // Write the bundled result
-    const content = JSON.stringify(schema, null, 2);
-    fs.writeFileSync(outputPath, content);
-
-    // Compare with snapshot
-    await expect(content).toMatchFileSnapshot(snapshotPath);
+    await expectBundledSchemaToMatchSnapshot(schema, 'cross-file-ref-main.json');
   });
 });
