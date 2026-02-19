@@ -1,13 +1,13 @@
 import type { SchemaWithType } from '@hey-api/shared';
 
-import { $ } from '../../../../py-dsl';
+// import { $ } from '../../../../py-dsl';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
 
-export const stringToNode = ({
+export function stringToNode({
   schema,
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'string'>;
-}): Ast => {
+}): Ast {
   const constraints: Record<string, unknown> = {};
 
   if (schema.minLength !== undefined) {
@@ -28,19 +28,21 @@ export const stringToNode = ({
 
   if (typeof schema.const === 'string') {
     return {
-      expression: $.expr(`Literal["${schema.const}"]`),
+      // expression: $.expr(`Literal["${schema.const}"]`),
       fieldConstraints: constraints,
       hasLazyExpression: false,
-      pipes: [],
+      models: [],
+      // pipes: [],
       typeAnnotation: `Literal["${schema.const}"]`,
     };
   }
 
   return {
-    expression: $.expr('str'),
+    // expression: $.expr('str'),
     fieldConstraints: constraints,
     hasLazyExpression: false,
-    pipes: [],
+    models: [],
+    // pipes: [],
     typeAnnotation: 'str',
   };
-};
+}

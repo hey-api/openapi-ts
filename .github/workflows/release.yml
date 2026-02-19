@@ -36,7 +36,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build packages
-        run: pnpm turbo run build --filter="@hey-api/**"
+        run: pnpm tb "@hey-api/**"
 
       - name: Generate GitHub App Token
         id: app-token
@@ -46,7 +46,7 @@ jobs:
           private-key: ${{ secrets.GIT_APP_PRIVATE_KEY }}
 
       - name: Create Release Pull Request
-        uses: changesets/action@v1.6.0
+        uses: changesets/action@v1.7.0
         with:
           commit: 'ci: release'
           publish: pnpm changeset publish
@@ -93,7 +93,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build packages
-        run: pnpm turbo run build --filter="@hey-api/**"
+        run: pnpm tb "@hey-api/**"
 
       - name: Publish snapshot
         run: |

@@ -89,7 +89,7 @@ export async function createClient({
         : await refParser.bundle({
             arrayBuffer: specData[0]!.arrayBuffer,
             pathOrUrlOrSchema: undefined,
-            resolvedInput: specData[0]!.resolvedInput,
+            resolvedInput: specData[0]!.resolvedInput!,
           });
 
     // on subsequent runs in watch mode, print the message only if we know we're
@@ -100,7 +100,7 @@ export async function createClient({
     }
 
     const eventInputPatch = logger.timeEvent('input.patch');
-    patchOpenApiSpec({ patchOptions: config.parser.patch, spec: data });
+    await patchOpenApiSpec({ patchOptions: config.parser.patch, spec: data });
     eventInputPatch.timeEnd();
 
     const eventParser = logger.timeEvent('parser');

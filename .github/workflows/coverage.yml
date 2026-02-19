@@ -36,12 +36,12 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Run test coverage
-        run: pnpm turbo run test:coverage
+        run: pnpm test:coverage
 
       - name: Upload code coverage to codecov.io
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          directory: ./packages/openapi-ts/coverage
+          directory: ./coverage
           flags: unittests
           fail_ci_if_error: true

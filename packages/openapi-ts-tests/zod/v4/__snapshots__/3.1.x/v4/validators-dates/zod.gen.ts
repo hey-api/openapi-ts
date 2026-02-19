@@ -5,31 +5,24 @@ import * as z from 'zod';
 export const zBaz = z.string().regex(/foo\nbar/).readonly().default('baz');
 
 export const zQux = z.record(z.string(), z.object({
-    qux: z.optional(z.string())
+    qux: z.string().optional()
 }));
 
 /**
  * This is Foo schema.
  */
-export const zFoo = z.union([
-    z.object({
-        foo: z.optional(z.string().regex(/^\d{3}-\d{2}-\d{4}$/)),
-        get bar() {
-            return z.optional(z.lazy((): any => zBar));
-        },
-        get baz() {
-            return z.optional(z.array(z.lazy((): any => zFoo)));
-        },
-        qux: z.optional(z.int().gt(0)).default(0)
-    }),
-    z.null()
-]).default(null);
+export const zFoo = z.object({
+    foo: z.string().regex(/^\d{3}-\d{2}-\d{4}$/).optional(),
+    bar: z.lazy((): any => zBar).optional(),
+    baz: z.array(z.lazy((): any => zFoo)).optional(),
+    qux: z.int().gt(0).optional().default(0)
+}).nullable().default(null);
 
 /**
  * This is Bar schema.
  */
 export const zBar = z.object({
-    foo: z.optional(zFoo)
+    foo: zFoo.optional()
 });
 
 /**
@@ -38,27 +31,27 @@ export const zBar = z.object({
 export const zFoo2 = z.string();
 
 export const zFoo3 = z.object({
-    foo: z.optional(zBar)
+    foo: zBar.optional()
 });
 
 export const zPatchFooData = z.object({
     body: z.object({
-        foo: z.optional(z.string())
+        foo: z.string().optional()
     }),
-    path: z.optional(z.never()),
-    query: z.optional(z.object({
-        foo: z.optional(z.string()),
-        bar: z.optional(zBar),
-        baz: z.optional(z.object({
-            baz: z.optional(z.string())
-        })),
-        qux: z.optional(z.iso.date()),
-        quux: z.optional(z.iso.datetime({ offset: true }))
-    }))
+    path: z.never().optional(),
+    query: z.object({
+        foo: z.string().optional(),
+        bar: zBar.optional(),
+        baz: z.object({
+            baz: z.string().optional()
+        }).optional(),
+        qux: z.iso.date().optional(),
+        quux: z.iso.datetime({ offset: true }).optional()
+    }).optional()
 });
 
 export const zPostFooData = z.object({
     body: zFoo3,
-    path: z.optional(z.never()),
-    query: z.optional(z.never())
+    path: z.never().optional(),
+    query: z.never().optional()
 });

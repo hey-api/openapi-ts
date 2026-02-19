@@ -4,12 +4,12 @@ import { $ } from '../../../../ts-dsl';
 import { identifiers } from '../../constants';
 import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
 
-export const booleanToAst = ({
+export function booleanToAst({
   plugin,
   schema,
-}: IrSchemaToAstOptions & {
+}: Pick<IrSchemaToAstOptions, 'plugin'> & {
   schema: SchemaWithType<'boolean'>;
-}): Omit<Ast, 'typeName'> => {
+}): Omit<Ast, 'typeName'> {
   const result: Partial<Omit<Ast, 'typeName'>> = {};
   let chain: ReturnType<typeof $.call>;
 
@@ -24,4 +24,4 @@ export const booleanToAst = ({
   chain = $(z).attr(identifiers.boolean).call();
   result.expression = chain;
   return result as Omit<Ast, 'typeName'>;
-};
+}

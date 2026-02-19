@@ -38,15 +38,6 @@ function baseNode(ctx: EnumResolverContext): PipeResult {
     .call($.array(...enumMembers));
 }
 
-function nullableNode(ctx: EnumResolverContext): PipeResult | undefined {
-  const { symbols } = ctx;
-  const { v } = symbols;
-  const { isNullable } = ctx.nodes.items(ctx);
-  if (!isNullable) return;
-  const currentNode = ctx.pipes.toNode(ctx.pipes.current, ctx.plugin);
-  return $(v).attr(identifiers.schemas.nullable).call(currentNode);
-}
-
 function enumResolver(ctx: EnumResolverContext): PipeResult {
   const { enumMembers } = ctx.nodes.items(ctx);
 
@@ -57,26 +48,21 @@ function enumResolver(ctx: EnumResolverContext): PipeResult {
   const baseExpression = ctx.nodes.base(ctx);
   ctx.pipes.push(ctx.pipes.current, baseExpression);
 
-  const nullableExpression = ctx.nodes.nullable(ctx);
-  if (nullableExpression) {
-    return nullableExpression;
-  }
-
   return ctx.pipes.current;
 }
 
-export const enumToAst = ({
+export function enumToAst({
   plugin,
   schema,
   state,
-}: IrSchemaToAstOptions & {
+}: Pick<IrSchemaToAstOptions, 'plugin' | 'state'> & {
   schema: SchemaWithType<'enum'>;
-}): Pipe => {
+}): Pipe {
   const v = plugin.external('valibot.v');
 
   const { enumMembers } = itemsNode({
     $,
-    nodes: { base: baseNode, items: itemsNode, nullable: nullableNode },
+    nodes: { base: baseNode, items: itemsNode },
     pipes: { ...pipes, current: [] },
     plugin,
     schema,
@@ -90,7 +76,6 @@ export const enumToAst = ({
       schema: {
         type: 'unknown',
       },
-      state,
     });
   }
 
@@ -99,7 +84,6 @@ export const enumToAst = ({
     nodes: {
       base: baseNode,
       items: itemsNode,
-      nullable: nullableNode,
     },
     pipes: {
       ...pipes,
@@ -118,4 +102,4 @@ export const enumToAst = ({
   const resolver = plugin.config['~resolvers']?.enum;
   const node = resolver?.(ctx) ?? enumResolver(ctx);
   return ctx.pipes.toNode(node, plugin);
-};
+}

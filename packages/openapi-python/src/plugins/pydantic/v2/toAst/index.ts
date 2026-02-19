@@ -23,7 +23,8 @@ export function irSchemaWithTypeToAst({
       });
     default:
       return {
-        expression: 'Any',
+        // expression: 'Any',
+        models: [],
         typeAnnotation: 'Any',
       };
   }

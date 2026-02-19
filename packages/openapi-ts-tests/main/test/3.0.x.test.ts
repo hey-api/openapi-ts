@@ -21,6 +21,13 @@ describe(`OpenAPI ${version}`, () => {
       version,
       typeof input === 'string' ? input : ((input?.path as string) ?? ''),
     );
+    const output = userConfig.output instanceof Array ? userConfig.output[0] : userConfig.output;
+    const outputPath = path.join(
+      outputDir,
+      typeof output === 'string' ? output : ((output?.path as string) ?? ''),
+    );
+    const nameConflictResolver =
+      typeof output === 'string' ? undefined : output?.nameConflictResolver;
     return {
       plugins: ['@hey-api/typescript'],
       ...userConfig,
@@ -34,7 +41,10 @@ describe(`OpenAPI ${version}`, () => {
       logs: {
         level: 'silent',
       },
-      output: path.join(outputDir, typeof userConfig.output === 'string' ? userConfig.output : ''),
+      output: {
+        nameConflictResolver,
+        path: outputPath,
+      },
     } as const satisfies UserConfig;
   };
 
@@ -209,6 +219,13 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'discriminator-non-string.yaml',
+        output: 'discriminator-non-string',
+      }),
+      description: 'handles non-string discriminator property types',
+    },
+    {
+      config: createConfig({
         input: 'enum-escape.json',
         output: 'enum-escape',
       }),
@@ -262,6 +279,49 @@ describe(`OpenAPI ${version}`, () => {
         ],
       }),
       description: 'exports inline enums (TypeScript)',
+    },
+    {
+      config: createConfig({
+        input: 'enum-inline.json',
+        output: {
+          nameConflictResolver: ({ attempt, baseName }) =>
+            attempt === 0 ? baseName : `${baseName}_N${attempt + 1}`,
+          path: 'enum-inline-name-resolver',
+        },
+        parser: {
+          transforms: {
+            enums: 'root',
+          },
+        },
+        plugins: [
+          {
+            enums: 'javascript',
+            name: '@hey-api/typescript',
+          },
+        ],
+      }),
+      description: 'exports inline enums with name conflict resolver',
+    },
+    {
+      config: createConfig({
+        input: 'enum-inline.json',
+        output: {
+          nameConflictResolver: () => null,
+          path: 'enum-inline-name-resolver-null',
+        },
+        parser: {
+          transforms: {
+            enums: 'root',
+          },
+        },
+        plugins: [
+          {
+            enums: 'javascript',
+            name: '@hey-api/typescript',
+          },
+        ],
+      }),
+      description: 'exports inline enums with name conflict resolver returning null',
     },
     {
       config: createConfig({
@@ -618,6 +678,14 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'transformers-allof-response-wrapper.json',
+        output: 'transformers-allof-response-wrapper',
+        plugins: ['@hey-api/client-fetch', '@hey-api/transformers'],
+      }),
+      description: 'transforms dates in allOf response wrapper (paginated response)',
+    },
+    {
+      config: createConfig({
         input: 'transformers-any-of-null.json',
         output: 'transformers-any-of-null',
         plugins: ['@hey-api/client-fetch', '@hey-api/transformers'],
@@ -673,7 +741,7 @@ describe(`OpenAPI ${version}`, () => {
   it.each(scenarios)('$description', async ({ config }) => {
     await createClient(config);
 
-    const filePaths = getFilePaths(config.output);
+    const filePaths = getFilePaths(config.output.path);
 
     await Promise.all(
       filePaths.map(async (filePath) => {

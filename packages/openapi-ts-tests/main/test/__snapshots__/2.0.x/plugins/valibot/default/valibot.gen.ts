@@ -197,8 +197,8 @@ export const vModelWithStringError = v.object({
  * This is a model with one string property
  */
 export const vModelWithNullableString = v.object({
-    nullableProp: v.optional(v.union([v.string(), v.null()])),
-    nullableRequiredProp: v.union([v.string(), v.null()])
+    nullableProp: v.nullish(v.string()),
+    nullableRequiredProp: v.nullable(v.string())
 });
 
 /**
@@ -581,8 +581,8 @@ export const vCallToTestOrderOfParamsData = v.object({
         parameterStringWithDefault: v.optional(v.string(), 'Hello World!'),
         parameterStringWithEmptyDefault: v.optional(v.string(), ''),
         parameterStringWithNoDefault: v.string(),
-        parameterStringNullableWithNoDefault: v.optional(v.union([v.string(), v.null()])),
-        parameterStringNullableWithDefault: v.optional(v.union([v.string(), v.null()]), null)
+        parameterStringNullableWithNoDefault: v.nullish(v.string()),
+        parameterStringNullableWithDefault: v.nullish(v.string(), null)
     })
 });
 

@@ -105,12 +105,12 @@ function numberResolver(ctx: NumberResolverContext): Pipes {
   return ctx.pipes.current;
 }
 
-export const numberToNode = ({
+export function numberToNode({
   plugin,
   schema,
-}: IrSchemaToAstOptions & {
+}: Pick<IrSchemaToAstOptions, 'plugin'> & {
   schema: SchemaWithType<'integer' | 'number'>;
-}): Pipe => {
+}): Pipe {
   const ctx: NumberResolverContext = {
     $,
     nodes: {
@@ -137,4 +137,4 @@ export const numberToNode = ({
   const resolver = plugin.config['~resolvers']?.number;
   const node = resolver?.(ctx) ?? numberResolver(ctx);
   return ctx.pipes.toNode(node, plugin);
-};
+}

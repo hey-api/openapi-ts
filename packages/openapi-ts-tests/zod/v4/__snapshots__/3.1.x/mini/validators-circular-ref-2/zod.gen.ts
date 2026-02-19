@@ -3,10 +3,7 @@
 import * as z from 'zod/mini';
 
 export const zBar = z.object({
-    bar: z.union([
-        z.array(z.lazy((): any => zBar)),
-        z.null()
-    ])
+    bar: z.nullable(z.array(z.lazy((): any => zBar)))
 });
 
 export const zFoo = z.object({

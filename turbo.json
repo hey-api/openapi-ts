@@ -3,7 +3,13 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "inputs": ["src/**", "package.json", "tsdown.config.ts", "tsconfig.json"],
+      "inputs": [
+        "src/**",
+        "!src/**/*.test.ts",
+        "package.json",
+        "tsconfig.json",
+        "tsdown.config.ts"
+      ],
       "outputs": [
         ".next/**",
         "!.next/cache/**",
@@ -21,20 +27,22 @@
       "dependsOn": ["^build"],
       "inputs": ["src/**", "test/**", "*.config.*", "package.json"]
     },
-    "test": {
+    "//#test": {
+      "cache": true,
       "dependsOn": ["^build"],
-      "inputs": ["src/**", "test/**", "*.config.*", "package.json"]
-    },
-    "test:coverage": {
-      "dependsOn": ["^build"],
-      "inputs": ["src/**", "test/**", "*.config.*", "package.json"],
+      "inputs": ["src/**", "test/**", "*.config.*", "package.json", "vitest.config.ts"],
       "outputs": ["coverage/**"]
     },
-    "test:update": {
+    "//#test:coverage": {
+      "dependsOn": ["^build"],
+      "inputs": ["src/**", "test/**", "*.config.*", "package.json", "vitest.config.ts"],
+      "outputs": ["coverage/**"]
+    },
+    "//#test:update": {
       "cache": false,
       "dependsOn": ["^build"]
     },
-    "test:watch": {
+    "//#test:watch": {
       "cache": false,
       "dependsOn": ["^build"],
       "persistent": true

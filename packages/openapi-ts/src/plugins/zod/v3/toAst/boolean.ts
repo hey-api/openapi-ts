@@ -4,12 +4,12 @@ import { $ } from '../../../../ts-dsl';
 import { identifiers } from '../../constants';
 import type { IrSchemaToAstOptions } from '../../shared/types';
 
-export const booleanToAst = ({
+export function booleanToAst({
   plugin,
   schema,
-}: IrSchemaToAstOptions & {
+}: Pick<IrSchemaToAstOptions, 'plugin'> & {
   schema: SchemaWithType<'boolean'>;
-}): ReturnType<typeof $.call> => {
+}): ReturnType<typeof $.call> {
   let chain: ReturnType<typeof $.call>;
 
   const z = plugin.external('zod.z');
@@ -21,4 +21,4 @@ export const booleanToAst = ({
 
   chain = $(z).attr(identifiers.boolean).call();
   return chain;
-};
+}

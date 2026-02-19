@@ -130,6 +130,42 @@ export default {
 
 We recommend exporting enums as plain JavaScript objects. [TypeScript enums](https://www.typescriptlang.org/docs/handbook/enums.html) are not a type-level extension of JavaScript and pose [typing challenges](https://dev.to/ivanzm123/dont-use-enums-in-typescript-they-are-very-dangerous-57bh).
 
+## Comments
+
+By default, `@hey-api/typescript` will include comments in the generated code based on descriptions from your OpenAPI specification. If you want to reduce the size of your generated files or prefer cleaner output, you can disable comments.
+
+::: code-group
+
+```js [enabled]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      comments: true, // default // [!code ++]
+      name: '@hey-api/typescript',
+    },
+  ],
+};
+```
+
+```js [disabled]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      comments: false, // [!code ++]
+      name: '@hey-api/typescript',
+    },
+  ],
+};
+```
+
+:::
+
 ## API
 
 You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/@hey-api/typescript/types.ts) interface.

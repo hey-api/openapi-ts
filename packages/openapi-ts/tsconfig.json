@@ -4,8 +4,13 @@
     "composite": true,
     "rootDir": "src",
     "outDir": "dist",
-    "types": ["vitest/globals"]
+    "types": ["vitest/globals", "node"]
   },
   "include": ["src"],
-  "references": [{ "path": "../types" }, { "path": "../codegen-core" }, { "path": "../shared" }]
+  "references": [
+    { "path": "../types" },
+    { "path": "../codegen-core" },
+    { "path": "../shared" },
+    { "path": "../json-schema-ref-parser" }
+  ]
 }

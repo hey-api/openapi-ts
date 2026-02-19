@@ -1,7 +1,7 @@
 import type { Patch } from '../../../config/parser/patch';
 import type { OpenApi } from '../../../openApi/types';
 
-export function patchOpenApiSpec({
+export async function patchOpenApiSpec({
   patchOptions,
   spec: _spec,
 }: {
@@ -13,6 +13,15 @@ export function patchOpenApiSpec({
   }
 
   const spec = _spec as OpenApi.V2_0_X | OpenApi.V3_0_X | OpenApi.V3_1_X;
+
+  if (typeof patchOptions === 'function') {
+    await patchOptions(spec);
+    return;
+  }
+
+  if (patchOptions.input) {
+    await patchOptions.input(spec);
+  }
 
   if ('swagger' in spec) {
     if (patchOptions.version && spec.swagger) {
@@ -28,12 +37,20 @@ export function patchOpenApiSpec({
     }
 
     if (patchOptions.schemas && spec.definitions) {
-      for (const key in patchOptions.schemas) {
-        const schema = spec.definitions[key];
-        if (!schema || typeof schema !== 'object') continue;
+      if (typeof patchOptions.schemas === 'function') {
+        for (const [key, schema] of Object.entries(spec.definitions)) {
+          if (schema && typeof schema === 'object') {
+            await patchOptions.schemas(key, schema);
+          }
+        }
+      } else {
+        for (const key in patchOptions.schemas) {
+          const schema = spec.definitions[key];
+          if (!schema || typeof schema !== 'object') continue;
 
-        const patchFn = patchOptions.schemas[key]!;
-        patchFn(schema);
+          const patchFn = patchOptions.schemas[key]!;
+          await patchFn(schema);
+        }
       }
     }
 
@@ -71,12 +88,20 @@ export function patchOpenApiSpec({
 
   if (spec.components) {
     if (patchOptions.schemas && spec.components.schemas) {
-      for (const key in patchOptions.schemas) {
-        const schema = spec.components.schemas[key];
-        if (!schema || typeof schema !== 'object') continue;
+      if (typeof patchOptions.schemas === 'function') {
+        for (const [key, schema] of Object.entries(spec.components.schemas)) {
+          if (schema && typeof schema === 'object') {
+            await patchOptions.schemas(key, schema as Parameters<typeof patchOptions.schemas>[1]);
+          }
+        }
+      } else {
+        for (const key in patchOptions.schemas) {
+          const schema = spec.components.schemas[key];
+          if (!schema || typeof schema !== 'object') continue;
 
-        const patchFn = patchOptions.schemas[key]!;
-        patchFn(schema as Parameters<typeof patchFn>[0]);
+          const patchFn = patchOptions.schemas[key]!;
+          await patchFn(schema as Parameters<typeof patchFn>[0]);
+        }
       }
     }
 

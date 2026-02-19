@@ -92,7 +92,7 @@ export function pathToJsonPointer(path: ReadonlyArray<string | number>): string 
 }
 
 /**
- * Checks if a $ref points to a top-level component (not a deep path reference).
+ * Checks if a $ref or path points to a top-level component (not a deep path reference).
  *
  * Top-level component references:
  * - OpenAPI 3.x: #/components/{type}/{name} (3 segments)
@@ -101,11 +101,11 @@ export function pathToJsonPointer(path: ReadonlyArray<string | number>): string 
  * Deep path references (4+ segments for 3.x, 3+ for 2.0) should be inlined
  * because they don't have corresponding registered symbols.
  *
- * @param $ref - The $ref string to check
+ * @param refOrPath - The $ref string or path array to check
  * @returns true if the ref points to a top-level component, false otherwise
  */
-export function isTopLevelComponentRef($ref: string): boolean {
-  const path = jsonPointerToPath($ref);
+export function isTopLevelComponent(refOrPath: string | ReadonlyArray<string | number>): boolean {
+  const path = refOrPath instanceof Array ? refOrPath : jsonPointerToPath(refOrPath);
 
   // OpenAPI 3.x: #/components/{type}/{name} = 3 segments
   if (path[0] === 'components') {

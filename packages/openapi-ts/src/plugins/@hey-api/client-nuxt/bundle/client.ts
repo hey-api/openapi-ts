@@ -1,5 +1,5 @@
 import { useAsyncData, useFetch, useLazyAsyncData, useLazyFetch } from 'nuxt/app';
-import { reactive, ref, watch } from 'vue';
+import { reactive, ref, toValue, watch } from 'vue';
 
 import { createSseClient } from '../../client-core/bundle/serverSentEvents';
 import type { HttpMethod } from '../../client-core/bundle/types';
@@ -136,14 +136,14 @@ export const createClient = (config: Config = {}): Client => {
         body: opts.body,
         bodySerializer: opts.bodySerializer,
       });
-      const body = ref(serializeBody(opts));
+      const body = ref(serializeBody({ ...opts, body: toValue(opts.body) }));
       opts.body = body;
       watch(bodyParams, (changed) => {
         body.value = serializeBody(changed);
       });
       return composable === 'useLazyFetch'
-        ? useLazyFetch(() => buildUrl(opts), opts)
-        : useFetch(() => buildUrl(opts), opts);
+        ? useLazyFetch(() => buildUrl(opts), { ...opts, ...asyncDataOptions })
+        : useFetch(() => buildUrl(opts), { ...opts, ...asyncDataOptions });
     }
 
     const handler: any = () =>
