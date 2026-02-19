@@ -603,7 +603,7 @@ describe(`OpenAPI ${version}`, () => {
               );
               // Deduplicate prefixes: Foo_Foo → Foo
               const m = clean.match(/^([A-Za-z\d]+)_\1([A-Za-z\d]*)$/);
-              if (m?.[1] && m?.[2] !== undefined) clean = m[1] + m[2];
+              if (m) clean = m[1]! + m[2]!;
               return clean;
             },
           },
