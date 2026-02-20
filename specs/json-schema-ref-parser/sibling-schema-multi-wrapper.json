@@ -1,0 +1,10 @@
+{
+  "components": {
+    "schemas": {
+      "Resource_Schema": {
+        "description": "Wrapper with extra description",
+        "$ref": "sibling-schema-multi-versioned.json#/components/schemas/Resource_v1_Schema"
+      }
+    }
+  }
+}
