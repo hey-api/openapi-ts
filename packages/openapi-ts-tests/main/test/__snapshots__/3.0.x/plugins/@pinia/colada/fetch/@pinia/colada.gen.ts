@@ -103,7 +103,9 @@ export const apiVVersionODataControllerCountQuery = defineQueryOptions((options?
     }
 }));
 
-export const getApiVbyApiVersionSimpleOperationQueryKey = (options: Options<GetApiVbyApiVersionSimpleOperationData>) => createQueryKey('getApiVbyApiVersionSimpleOperation', options);
+export const getApiVbyApiVersionSimpleOperationQueryKey = (options: Options<GetApiVbyApiVersionSimpleOperationData> | {
+    strict: false;
+}) => createQueryKey('getApiVbyApiVersionSimpleOperation', options as Options<GetApiVbyApiVersionSimpleOperationData>);
 
 export const getApiVbyApiVersionSimpleOperationQuery = defineQueryOptions((options: Options<GetApiVbyApiVersionSimpleOperationData>) => ({
     key: getApiVbyApiVersionSimpleOperationQueryKey(options),
@@ -233,7 +235,9 @@ export const callWithWeirdParameterNamesMutation = (options?: Partial<Options<Ca
     }
 });
 
-export const getCallWithOptionalParamQueryKey = (options: Options<GetCallWithOptionalParamData>) => createQueryKey('getCallWithOptionalParam', options);
+export const getCallWithOptionalParamQueryKey = (options: Options<GetCallWithOptionalParamData> | {
+    strict: false;
+}) => createQueryKey('getCallWithOptionalParam', options as Options<GetCallWithOptionalParamData>);
 
 export const getCallWithOptionalParamQuery = defineQueryOptions((options: Options<GetCallWithOptionalParamData>) => ({
     key: getCallWithOptionalParamQueryKey(options),
@@ -455,7 +459,9 @@ export const callWithResponsesMutation = (options?: Partial<Options<CallWithResp
     }
 });
 
-export const collectionFormatQueryKey = (options: Options<CollectionFormatData>) => createQueryKey('collectionFormat', options);
+export const collectionFormatQueryKey = (options: Options<CollectionFormatData> | {
+    strict: false;
+}) => createQueryKey('collectionFormat', options as Options<CollectionFormatData>);
 
 export const collectionFormatQuery = defineQueryOptions((options: Options<CollectionFormatData>) => ({
     key: collectionFormatQueryKey(options),
@@ -469,7 +475,9 @@ export const collectionFormatQuery = defineQueryOptions((options: Options<Collec
     }
 }));
 
-export const typesQueryKey = (options: Options<TypesData>) => createQueryKey('types', options);
+export const typesQueryKey = (options: Options<TypesData> | {
+    strict: false;
+}) => createQueryKey('types', options as Options<TypesData>);
 
 export const typesQuery = defineQueryOptions((options: Options<TypesData>) => ({
     key: typesQueryKey(options),
@@ -494,7 +502,9 @@ export const uploadFileMutation = (options?: Partial<Options<UploadFileData>>): 
     }
 });
 
-export const fileResponseQueryKey = (options: Options<FileResponseData>) => createQueryKey('fileResponse', options);
+export const fileResponseQueryKey = (options: Options<FileResponseData> | {
+    strict: false;
+}) => createQueryKey('fileResponse', options as Options<FileResponseData>);
 
 export const fileResponseQuery = defineQueryOptions((options: Options<FileResponseData>) => ({
     key: fileResponseQueryKey(options),
@@ -508,7 +518,9 @@ export const fileResponseQuery = defineQueryOptions((options: Options<FileRespon
     }
 }));
 
-export const complexTypesQueryKey = (options: Options<ComplexTypesData>) => createQueryKey('complexTypes', options);
+export const complexTypesQueryKey = (options: Options<ComplexTypesData> | {
+    strict: false;
+}) => createQueryKey('complexTypes', options as Options<ComplexTypesData>);
 
 export const complexTypesQuery = defineQueryOptions((options: Options<ComplexTypesData>) => ({
     key: complexTypesQueryKey(options),

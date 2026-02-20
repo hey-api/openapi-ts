@@ -1,10 +1,12 @@
 import type { Symbol } from '@hey-api/codegen-core';
 import type { IR } from '@hey-api/shared';
 import { applyNaming, hasOperationDataRequired } from '@hey-api/shared';
+import type ts from 'typescript';
 
 import { getTypedConfig } from '../../../config/utils';
 import { clientFolderAbsolutePath } from '../../../generate/client';
 import { getClientBaseUrlKey, getClientPlugin } from '../../../plugins/@hey-api/client-core/utils';
+import type { MaybeTsDsl } from '../../../ts-dsl';
 import { $ } from '../../../ts-dsl';
 import type { PiniaColadaPlugin } from './types';
 import { getPublicTypeData } from './utils';
@@ -114,10 +116,12 @@ export const createQueryKeyFunction = ({ plugin }: { plugin: PiniaColadaPlugin['
 const createQueryKeyLiteral = ({
   id,
   operation,
+  optionsExpr = 'options',
   plugin,
 }: {
   id: string;
   operation: IR.OperationObject;
+  optionsExpr?: string | MaybeTsDsl<ts.Expression>;
   plugin: PiniaColadaPlugin['Instance'];
 }) => {
   const config = plugin.config.queryKeys;
@@ -133,7 +137,7 @@ const createQueryKeyLiteral = ({
   });
   const createQueryKeyCallExpression = $(symbolCreateQueryKey).call(
     $.literal(id),
-    'options',
+    optionsExpr,
     tagsExpression,
   );
   return createQueryKeyCallExpression;
@@ -188,19 +192,24 @@ export const queryKeyStatement = ({
 }) => {
   const client = getClientPlugin(getTypedConfig(plugin));
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
+  const typeData = getPublicTypeData({ isNuxtClient, operation, plugin });
+  const isRequired = hasOperationDataRequired(operation);
+  const paramType = isRequired
+    ? $.type.or(
+        typeData,
+        $.type.object().prop('strict', (p) => p.type($.type.literal(false))),
+      )
+    : typeData;
   const statement = $.const(symbol)
     .export()
     .assign(
       $.func()
-        .param('options', (p) =>
-          p
-            .required(hasOperationDataRequired(operation))
-            .type(getPublicTypeData({ isNuxtClient, operation, plugin })),
-        )
+        .param('options', (p) => p.required(isRequired).type(paramType))
         .do(
           createQueryKeyLiteral({
             id: operation.id,
             operation,
+            optionsExpr: isRequired ? $('options').as(typeData) : 'options',
             plugin,
           }).return(),
         ),

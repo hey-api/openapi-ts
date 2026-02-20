@@ -5,7 +5,7 @@ import type ts from 'typescript';
 
 import { getTypedConfig } from '../../../config/utils';
 import { getClientBaseUrlKey } from '../../../plugins/@hey-api/client-core/utils';
-import type { TsDsl } from '../../../ts-dsl';
+import type { MaybeTsDsl, TsDsl } from '../../../ts-dsl';
 import { $ } from '../../../ts-dsl';
 import { useTypeData } from './shared/useType';
 import type { PluginInstance } from './types';
@@ -100,11 +100,13 @@ const createQueryKeyLiteral = ({
   id,
   isInfinite,
   operation,
+  optionsExpr = 'options',
   plugin,
 }: {
   id: string;
   isInfinite?: boolean;
   operation: IR.OperationObject;
+  optionsExpr?: string | MaybeTsDsl<ts.Expression>;
   plugin: PluginInstance;
 }) => {
   const config = isInfinite ? plugin.config.infiniteQueryKeys : plugin.config.queryKeys;
@@ -119,7 +121,7 @@ const createQueryKeyLiteral = ({
   });
   const createQueryKeyCallExpression = $(symbolCreateQueryKey).call(
     $.literal(id),
-    'options',
+    optionsExpr,
     isInfinite || tagsArray ? $.literal(Boolean(isInfinite)) : undefined,
     tagsArray,
   );
@@ -174,17 +176,25 @@ export const queryKeyStatement = ({
   typeQueryKey?: ReturnType<typeof $.type>;
 }) => {
   const typeData = useTypeData({ operation, plugin });
+  const isRequired = hasOperationDataRequired(operation);
+  const paramType = isRequired
+    ? $.type.or(
+        typeData,
+        $.type.object().prop('strict', (p) => p.type($.type.literal(false))),
+      )
+    : typeData;
   const statement = $.const(symbol)
     .export()
     .assign(
       $.func()
-        .param('options', (p) => p.required(hasOperationDataRequired(operation)).type(typeData))
+        .param('options', (p) => p.required(isRequired).type(paramType))
         .$if(isInfinite && typeQueryKey, (f, v) => f.returns(v))
         .do(
           createQueryKeyLiteral({
             id: operation.id,
             isInfinite,
             operation,
+            optionsExpr: isRequired ? $('options').as(typeData) : 'options',
             plugin,
           }).return(),
         ),
