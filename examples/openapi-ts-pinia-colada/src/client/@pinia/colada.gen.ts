@@ -101,9 +101,18 @@ export type QueryKey<TOptions extends Options> = [
   },
 ];
 
+export type QueryKeyOptions<
+  TOptions extends Options,
+  TStrict extends boolean = true,
+> = TStrict extends false
+  ? Partial<Omit<TOptions, 'url'>> & { strict: false }
+  : TOptions & { strict?: true };
+
 const createQueryKey = <TOptions extends Options>(
   id: string,
-  options?: TOptions,
+  options?: Partial<Omit<TOptions, 'url'>> & {
+    strict?: boolean;
+  },
   tags?: ReadonlyArray<string>,
 ): [QueryKey<TOptions>[0]] => {
   const params: QueryKey<TOptions>[0] = {
