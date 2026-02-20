@@ -119,9 +119,18 @@ export type QueryKey<TOptions extends Options> = [
   },
 ];
 
+export type QueryKeyOptions<
+  TOptions extends Options,
+  TStrict extends boolean = true,
+> = TStrict extends false
+  ? Partial<Omit<TOptions, 'url'>> & { strict: false }
+  : TOptions & { strict?: true };
+
 const createQueryKey = <TOptions extends Options>(
   id: string,
-  options?: TOptions,
+  options?: Partial<Omit<TOptions, 'url'>> & {
+    strict?: boolean;
+  },
   infinite?: boolean,
   tags?: ReadonlyArray<string>,
 ): [QueryKey<TOptions>[0]] => {
@@ -150,8 +159,9 @@ const createQueryKey = <TOptions extends Options>(
   return [params];
 };
 
-export const findPetsByStatusQueryKey = (options: Options<FindPetsByStatusData>) =>
-  createQueryKey('findPetsByStatus', options);
+export const findPetsByStatusQueryKey = <TStrict extends boolean = true>(
+  options: QueryKeyOptions<Options<FindPetsByStatusData>, TStrict>,
+) => createQueryKey<Options<FindPetsByStatusData>>('findPetsByStatus', options);
 
 /**
  * Finds Pets by status.
@@ -177,8 +187,9 @@ export const findPetsByStatusOptions = (options: Options<FindPetsByStatusData>) 
     queryKey: findPetsByStatusQueryKey(options),
   });
 
-export const findPetsByTagsQueryKey = (options: Options<FindPetsByTagsData>) =>
-  createQueryKey('findPetsByTags', options);
+export const findPetsByTagsQueryKey = <TStrict extends boolean = true>(
+  options: QueryKeyOptions<Options<FindPetsByTagsData>, TStrict>,
+) => createQueryKey<Options<FindPetsByTagsData>>('findPetsByTags', options);
 
 /**
  * Finds Pets by tags.
@@ -225,8 +236,9 @@ export const deletePetMutation = (
   return mutationOptions;
 };
 
-export const getPetByIdQueryKey = (options: Options<GetPetByIdData>) =>
-  createQueryKey('getPetById', options);
+export const getPetByIdQueryKey = <TStrict extends boolean = true>(
+  options: QueryKeyOptions<Options<GetPetByIdData>, TStrict>,
+) => createQueryKey<Options<GetPetByIdData>>('getPetById', options);
 
 /**
  * Find pet by ID.
@@ -375,8 +387,9 @@ export const deleteOrderMutation = (
   return mutationOptions;
 };
 
-export const getOrderByIdQueryKey = (options: Options<GetOrderByIdData>) =>
-  createQueryKey('getOrderById', options);
+export const getOrderByIdQueryKey = <TStrict extends boolean = true>(
+  options: QueryKeyOptions<Options<GetOrderByIdData>, TStrict>,
+) => createQueryKey<Options<GetOrderByIdData>>('getOrderById', options);
 
 /**
  * Find purchase order by ID.
@@ -526,8 +539,9 @@ export const deleteUserMutation = (
   return mutationOptions;
 };
 
-export const getUserByNameQueryKey = (options: Options<GetUserByNameData>) =>
-  createQueryKey('getUserByName', options);
+export const getUserByNameQueryKey = <TStrict extends boolean = true>(
+  options: QueryKeyOptions<Options<GetUserByNameData>, TStrict>,
+) => createQueryKey<Options<GetUserByNameData>>('getUserByName', options);
 
 /**
  * Get user by user name.
