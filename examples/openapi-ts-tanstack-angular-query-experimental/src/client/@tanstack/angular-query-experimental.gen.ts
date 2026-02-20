@@ -315,7 +315,7 @@ export const uploadFileMutation = (
 };
 
 export const getInventoryQueryKey = (options?: Options<GetInventoryData>) =>
-  createQueryKey('getInventory', options);
+  createQueryKey<Options<GetInventoryData>>('getInventory', options);
 
 /**
  * Returns pet inventories by status.
@@ -470,7 +470,7 @@ export const createUsersWithListInputMutation = (
 };
 
 export const loginUserQueryKey = (options?: Options<LoginUserData>) =>
-  createQueryKey('loginUser', options);
+  createQueryKey<Options<LoginUserData>>('loginUser', options);
 
 /**
  * Logs user into the system.
@@ -497,7 +497,7 @@ export const loginUserOptions = (options?: Options<LoginUserData>) =>
   });
 
 export const logoutUserQueryKey = (options?: Options<LogoutUserData>) =>
-  createQueryKey('logoutUser', options);
+  createQueryKey<Options<LogoutUserData>>('logoutUser', options);
 
 /**
  * Logs out current logged in user session.

@@ -50,6 +50,9 @@ export const createQueryOptions = ({
   }
 
   let keyExpression: ReturnType<typeof $.call>;
+  const client = getClientPlugin(getTypedConfig(plugin));
+  const isNuxtClient = client.name === '@hey-api/client-nuxt';
+  const typeData = getPublicTypeData({ isNuxtClient, operation, plugin });
   if (plugin.config.queryKeys.enabled) {
     const symbolQueryKey = plugin.symbol(applyNaming(operation.id, plugin.config.queryKeys));
     const node = queryKeyStatement({
@@ -75,11 +78,8 @@ export const createQueryOptions = ({
       optionsParamName,
       tagsExpr,
     );
+    keyExpression = keyExpression.generic(typeData);
   }
-
-  const client = getClientPlugin(getTypedConfig(plugin));
-  const isNuxtClient = client.name === '@hey-api/client-nuxt';
-  const typeData = getPublicTypeData({ isNuxtClient, operation, plugin });
   const awaitSdkFn = $.lazy((ctx) =>
     ctx
       .access(

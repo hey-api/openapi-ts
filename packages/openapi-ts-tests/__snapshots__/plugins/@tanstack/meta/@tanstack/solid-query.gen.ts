@@ -43,7 +43,7 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: Partial<
     return [params];
 };
 
-export const getFooQueryKey = (options?: Options<GetFooData>) => createQueryKey('getFoo', options);
+export const getFooQueryKey = (options?: Options<GetFooData>) => createQueryKey<Options<GetFooData>>('getFoo', options);
 
 export const getFooOptions = (options?: Options<GetFooData>) => queryOptions<unknown, DefaultError, unknown, ReturnType<typeof getFooQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
@@ -63,7 +63,7 @@ export const getFooOptions = (options?: Options<GetFooData>) => queryOptions<unk
     }
 });
 
-export const getBarQueryKey = (options?: Options<GetBarData>) => createQueryKey('getBar', options);
+export const getBarQueryKey = (options?: Options<GetBarData>) => createQueryKey<Options<GetBarData>>('getBar', options);
 
 export const getBarOptions = (options?: Options<GetBarData>) => queryOptions<unknown, DefaultError, unknown, ReturnType<typeof getBarQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {

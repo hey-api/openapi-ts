@@ -46,7 +46,7 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: Partial<
     return [params];
 };
 
-export const getFooQueryKey = (options?: Options<GetFooData>) => createQueryKey('getFoo', options);
+export const getFooQueryKey = (options?: Options<GetFooData>) => createQueryKey<Options<GetFooData>>('getFoo', options);
 
 export const getFooQuery = defineQueryOptions((options?: Options<GetFooData>) => ({
     key: getFooQueryKey(options),
@@ -82,7 +82,7 @@ export const fooPutMutation = (options?: Partial<Options<FooPutData>>): UseMutat
     }
 });
 
-export const getFooBarQueryKey = (options?: Options<GetFooBarData>) => createQueryKey('getFooBar', options);
+export const getFooBarQueryKey = (options?: Options<GetFooBarData>) => createQueryKey<Options<GetFooBarData>>('getFooBar', options);
 
 export const getFooBarQuery = defineQueryOptions((options?: Options<GetFooBarData>) => ({
     key: getFooBarQueryKey(options),
