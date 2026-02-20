@@ -181,6 +181,41 @@ export const createQueryKeyType = ({ plugin }: { plugin: PiniaColadaPlugin['Inst
   plugin.node(queryKeyType);
 };
 
+export const createQueryKeyOptionsType = ({
+  plugin,
+}: {
+  plugin: PiniaColadaPlugin['Instance'];
+}) => {
+  const symbolOptions = plugin.referenceSymbol({
+    category: 'type',
+    resource: 'client-options',
+    tool: 'sdk',
+  });
+  const symbolQueryKeyOptionsType = plugin.symbol('QueryKeyOptions', {
+    meta: {
+      category: 'type',
+      resource: 'QueryKeyOptions',
+      tool: plugin.name,
+    },
+  });
+  const queryKeyOptionsType = $.type
+    .alias(symbolQueryKeyOptionsType)
+    .export()
+    .generic(TOptionsType, (g) => g.extends($.type(symbolOptions)))
+    .type(
+      $.type.or(
+        $.type(TOptionsType),
+        $.type.and(
+          $.type(
+            `{ [K in keyof Omit<${TOptionsType}, 'url'>]?: ${TOptionsType}[K] extends object ? Partial<${TOptionsType}[K]> : ${TOptionsType}[K] }`,
+          ),
+          $.type.object().prop('strict', (p) => p.type($.type.literal(false))),
+        ),
+      ),
+    );
+  plugin.node(queryKeyOptionsType);
+};
+
 export const queryKeyStatement = ({
   operation,
   plugin,
@@ -194,12 +229,17 @@ export const queryKeyStatement = ({
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
   const typeData = getPublicTypeData({ isNuxtClient, operation, plugin });
   const isRequired = hasOperationDataRequired(operation);
-  const paramType = isRequired
-    ? $.type.or(
-        typeData,
-        $.type.object().prop('strict', (p) => p.type($.type.literal(false))),
-      )
-    : typeData;
+  let paramType: ReturnType<typeof $.type>;
+  if (isRequired) {
+    const symbolQueryKeyOptionsType = plugin.referenceSymbol({
+      category: 'type',
+      resource: 'QueryKeyOptions',
+      tool: plugin.name,
+    });
+    paramType = $.type(symbolQueryKeyOptionsType).generic(typeData);
+  } else {
+    paramType = typeData;
+  }
   const statement = $.const(symbol)
     .export()
     .assign(
