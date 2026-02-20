@@ -11,7 +11,7 @@ import {
   type DiscriminatorPropertyType,
   discriminatorValues,
 } from '../../../openApi/shared/utils/discriminator';
-import { isTopLevelComponent, refToName } from '../../../utils/ref';
+import { hasPropertyInSchemaRefChain, isTopLevelComponent, refToName } from '../../../utils/ref';
 import type { ReferenceObject, SchemaObject } from '../types/spec';
 
 export const getSchemaType = ({
@@ -559,19 +559,14 @@ const parseAllOf = ({
         const hasProperty = (() => {
           if (!item.$ref) return false;
           try {
-            const refSchema = context.resolveRef<SchemaObject>(item.$ref);
             // Check if the discriminator property exists in the ref schema
-            return (
-              refSchema.properties?.[discriminator.propertyName] !== undefined ||
-              (refSchema.allOf &&
-                refSchema.allOf.some((allOfItem) => {
-                  const resolved =
-                    '$ref' in allOfItem
-                      ? context.resolveRef<SchemaObject>(allOfItem.$ref)
-                      : allOfItem;
-                  return resolved.properties?.[discriminator.propertyName] !== undefined;
-                }))
-            );
+            return hasPropertyInSchemaRefChain({
+              propertyName: discriminator.propertyName,
+              resolveRef: ($ref) => context.resolveRef<SchemaObject>($ref),
+              schema: {
+                $ref: item.$ref,
+              },
+            });
           } catch {
             return false;
           }

@@ -137,3 +137,63 @@ export function resolveRef<T>({ $ref, spec }: { $ref: string; spec: Record<strin
 
   return current as T;
 }
+
+type RefObjectLike = {
+  $ref: string;
+};
+
+type SchemaObjectLike = {
+  allOf?: ReadonlyArray<RefObjectLike | SchemaObjectLike>;
+  properties?: Record<string, unknown>;
+};
+
+/**
+ * Recursively checks whether a schema or any schema in its allOf/ref chain contains a property.
+ *
+ * @param propertyName - Property name to search for.
+ * @param schema - Starting schema node.
+ * @param resolveRef - Function used to resolve $ref values.
+ * @param visitedRefs - Internal set to avoid cycles while traversing refs.
+ * @returns true when the property is found in the schema tree.
+ */
+export function hasPropertyInSchemaRefChain({
+  propertyName,
+  resolveRef,
+  schema,
+  visitedRefs = new Set<string>(),
+}: {
+  propertyName: string;
+  resolveRef: ($ref: string) => SchemaObjectLike;
+  schema: RefObjectLike | SchemaObjectLike;
+  visitedRefs?: Set<string>;
+}): boolean {
+  if ('$ref' in schema) {
+    if (visitedRefs.has(schema.$ref)) {
+      return false;
+    }
+    visitedRefs.add(schema.$ref);
+    return hasPropertyInSchemaRefChain({
+      propertyName,
+      resolveRef,
+      schema: resolveRef(schema.$ref),
+      visitedRefs,
+    });
+  }
+
+  if (schema.properties?.[propertyName] !== undefined) {
+    return true;
+  }
+
+  if (!schema.allOf?.length) {
+    return false;
+  }
+
+  return schema.allOf.some((allOfItem) =>
+    hasPropertyInSchemaRefChain({
+      propertyName,
+      resolveRef,
+      schema: allOfItem,
+      visitedRefs,
+    }),
+  );
+}

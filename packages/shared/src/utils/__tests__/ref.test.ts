@@ -1,4 +1,9 @@
-import { isTopLevelComponent, jsonPointerToPath, pathToJsonPointer } from '../ref';
+import {
+  hasPropertyInSchemaRefChain,
+  isTopLevelComponent,
+  jsonPointerToPath,
+  pathToJsonPointer,
+} from '../ref';
 
 describe('jsonPointerToPath', () => {
   it('parses root pointer', () => {
@@ -68,5 +73,199 @@ describe('isTopLevelComponent', () => {
     it('returns false for other refs', () => {
       expect(isTopLevelComponent('#/info/title')).toBe(false);
     });
+  });
+});
+
+describe('hasPropertyInSchemaRefChain', () => {
+  it('finds property in deep allOf and ref chain', () => {
+    const spec = {
+      components: {
+        schemas: {
+          BaseEntity: {
+            properties: {
+              id: {
+                type: 'string',
+              },
+            },
+            type: 'object',
+          },
+          DiscriminatorCarrier: {
+            allOf: [
+              {
+                $ref: '#/components/schemas/BaseEntity',
+              },
+              {
+                properties: {
+                  kind: {
+                    type: 'string',
+                  },
+                },
+                type: 'object',
+              },
+            ],
+          },
+          Leaf: {
+            allOf: [
+              {
+                $ref: '#/components/schemas/MidLevel',
+              },
+            ],
+          },
+          MidLevel: {
+            allOf: [
+              {
+                $ref: '#/components/schemas/DiscriminatorCarrier',
+              },
+            ],
+          },
+        },
+      },
+    };
+
+    expect(
+      hasPropertyInSchemaRefChain({
+        propertyName: 'kind',
+        resolveRef: ($ref) => {
+          const name = $ref.split('/').pop()!;
+          return spec.components.schemas[name as keyof typeof spec.components.schemas] as {
+            allOf?: ReadonlyArray<{ $ref: string } | { properties?: Record<string, unknown> }>;
+            properties?: Record<string, unknown>;
+          };
+        },
+        schema: {
+          $ref: '#/components/schemas/Leaf',
+        },
+      }),
+    ).toBe(true);
+  });
+
+  it('finds property in a single-level ref schema', () => {
+    const spec = {
+      components: {
+        schemas: {
+          SingleLevel: {
+            properties: {
+              discriminator: {
+                type: 'string',
+              },
+            },
+            type: 'object',
+          },
+        },
+      },
+    };
+
+    expect(
+      hasPropertyInSchemaRefChain({
+        propertyName: 'discriminator',
+        resolveRef: ($ref) => {
+          const name = $ref.split('/').pop()!;
+          return spec.components.schemas[name as keyof typeof spec.components.schemas] as {
+            allOf?: ReadonlyArray<{ $ref: string } | { properties?: Record<string, unknown> }>;
+            properties?: Record<string, unknown>;
+          };
+        },
+        schema: {
+          $ref: '#/components/schemas/SingleLevel',
+        },
+      }),
+    ).toBe(true);
+  });
+});
+
+describe('hasPropertyInSchemaRefChain', () => {
+  it('finds property in deep allOf and ref chain', () => {
+    const spec = {
+      components: {
+        schemas: {
+          BaseEntity: {
+            properties: {
+              id: {
+                type: 'string',
+              },
+            },
+            type: 'object',
+          },
+          DiscriminatorCarrier: {
+            allOf: [
+              {
+                $ref: '#/components/schemas/BaseEntity',
+              },
+              {
+                properties: {
+                  kind: {
+                    type: 'string',
+                  },
+                },
+                type: 'object',
+              },
+            ],
+          },
+          Leaf: {
+            allOf: [
+              {
+                $ref: '#/components/schemas/MidLevel',
+              },
+            ],
+          },
+          MidLevel: {
+            allOf: [
+              {
+                $ref: '#/components/schemas/DiscriminatorCarrier',
+              },
+            ],
+          },
+        },
+      },
+    };
+
+    expect(
+      hasPropertyInSchemaRefChain({
+        propertyName: 'kind',
+        resolveRef: ($ref) => {
+          const name = $ref.split('/').pop()!;
+          return spec.components.schemas[name as keyof typeof spec.components.schemas] as {
+            allOf?: ReadonlyArray<{ $ref: string } | { properties?: Record<string, unknown> }>;
+            properties?: Record<string, unknown>;
+          };
+        },
+        schema: {
+          $ref: '#/components/schemas/Leaf',
+        },
+      }),
+    ).toBe(true);
+  });
+
+  it('finds property in a single-level ref schema', () => {
+    const spec = {
+      components: {
+        schemas: {
+          SingleLevel: {
+            properties: {
+              discriminator: {
+                type: 'string',
+              },
+            },
+            type: 'object',
+          },
+        },
+      },
+    };
+
+    expect(
+      hasPropertyInSchemaRefChain({
+        propertyName: 'discriminator',
+        resolveRef: ($ref) => {
+          const name = $ref.split('/').pop()!;
+          return spec.components.schemas[name as keyof typeof spec.components.schemas] as {
+            allOf?: ReadonlyArray<{ $ref: string } | { properties?: Record<string, unknown> }>;
+            properties?: Record<string, unknown>;
+          };
+        },
+        schema: {
+          $ref: '#/components/schemas/SingleLevel',
+        },
+      }),
+    ).toBe(true);
   });
 });
