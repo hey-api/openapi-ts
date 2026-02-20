@@ -66,7 +66,10 @@ export async function createClient({
     // if in watch mode, subsequent errors won't throw to gracefully handle
     // cases where server might be reloading
     if (error && !_watches) {
-      throw new Error(`Request failed with status ${response.status}: ${response.statusText}`);
+      const text = await response.text().catch(() => '');
+      throw new Error(
+        `Request failed with status ${response.status}: ${text || response.statusText}`,
+      );
     }
 
     return { arrayBuffer, resolvedInput };
