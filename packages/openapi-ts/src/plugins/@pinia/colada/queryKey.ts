@@ -1,12 +1,10 @@
 import type { Symbol } from '@hey-api/codegen-core';
 import type { IR } from '@hey-api/shared';
 import { applyNaming, hasOperationDataRequired } from '@hey-api/shared';
-import type ts from 'typescript';
 
 import { getTypedConfig } from '../../../config/utils';
 import { clientFolderAbsolutePath } from '../../../generate/client';
 import { getClientBaseUrlKey, getClientPlugin } from '../../../plugins/@hey-api/client-core/utils';
-import type { MaybeTsDsl } from '../../../ts-dsl';
 import { $ } from '../../../ts-dsl';
 import type { PiniaColadaPlugin } from './types';
 import { getPublicTypeData } from './utils';
@@ -56,10 +54,15 @@ export const createQueryKeyFunction = ({ plugin }: { plugin: PiniaColadaPlugin['
     },
   });
 
+  const partialOmitUrlType = $.type.and(
+    $.type('Partial').generic($.type('Omit').generics(TOptionsType, $.type.literal('url'))),
+    $.type.object().prop('strict', (p) => p.optional().type('boolean')),
+  );
+
   const fn = $.const(symbolCreateQueryKey).assign(
     $.func()
       .param('id', (p) => p.type('string'))
-      .param('options', (p) => p.optional().type(TOptionsType))
+      .param('options', (p) => p.optional().type(partialOmitUrlType))
       .param('tags', (p) => p.optional().type('ReadonlyArray<string>'))
       .returns($.type.tuple(returnType))
       .generic(TOptionsType, (g) => g.extends(symbolOptions))
@@ -117,13 +120,13 @@ export const createQueryKeyFunction = ({ plugin }: { plugin: PiniaColadaPlugin['
 const createQueryKeyLiteral = ({
   id,
   operation,
-  optionsExpr = 'options',
   plugin,
+  typeOptions,
 }: {
   id: string;
   operation: IR.OperationObject;
-  optionsExpr?: string | MaybeTsDsl<ts.Expression>;
   plugin: PiniaColadaPlugin['Instance'];
+  typeOptions?: ReturnType<typeof $.type>;
 }) => {
   const config = plugin.config.queryKeys;
   let tagsExpression: ReturnType<typeof $.array> | undefined;
@@ -138,10 +141,10 @@ const createQueryKeyLiteral = ({
   });
   const createQueryKeyCallExpression = $(symbolCreateQueryKey).call(
     $.literal(id),
-    optionsExpr,
+    'options',
     tagsExpression,
   );
-  return createQueryKeyCallExpression;
+  return createQueryKeyCallExpression.$if(typeOptions, (c, t) => c.generic(t));
 };
 
 export const createQueryKeyType = ({ plugin }: { plugin: PiniaColadaPlugin['Instance'] }) => {
@@ -206,7 +209,7 @@ export const createQueryKeyOptionsType = ({
     .generic(TStrictType, (g) => g.extends('boolean').default($.type.literal(true)))
     .type(
       $.type(
-        `${TStrictType} extends false ? { [K in keyof Omit<${TOptionsType}, 'url'>]?: ${TOptionsType}[K] extends object ? Partial<${TOptionsType}[K]> : ${TOptionsType}[K] } & { strict: false } : ${TOptionsType} & { strict?: true }`,
+        `${TStrictType} extends false ? Partial<Omit<${TOptionsType}, 'url'>> & { strict: false } : ${TOptionsType} & { strict?: true }`,
       ),
     );
   plugin.node(queryKeyOptionsType);
@@ -248,8 +251,8 @@ export const queryKeyStatement = ({
           createQueryKeyLiteral({
             id: operation.id,
             operation,
-            optionsExpr: isRequired ? $('options').as(typeData) : 'options',
             plugin,
+            typeOptions: isRequired ? typeData : undefined,
           }).return(),
         ),
     );

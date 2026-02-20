@@ -17,9 +17,11 @@ export type QueryKey<TOptions extends Options> = [
     }
 ];
 
-export type QueryKeyOptions<TOptions extends Options, TStrict extends boolean = true> = TStrict extends false ? { [K in keyof Omit<TOptions, 'url'>]?: TOptions[K] extends object ? Partial<TOptions[K]> : TOptions[K] } & { strict: false } : TOptions & { strict?: true };
+export type QueryKeyOptions<TOptions extends Options, TStrict extends boolean = true> = TStrict extends false ? Partial<Omit<TOptions, 'url'>> & { strict: false } : TOptions & { strict?: true };
 
-const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions, tags?: ReadonlyArray<string>): [
+const createQueryKey = <TOptions extends Options>(id: string, options?: Partial<Omit<TOptions, 'url'>> & {
+    strict?: boolean;
+}, tags?: ReadonlyArray<string>): [
     QueryKey<TOptions>[0]
 ] => {
     const params: QueryKey<TOptions>[0] = { _id: id, baseUrl: options?.baseUrl || (options?.client ?? client).getConfig().baseUrl } as QueryKey<TOptions>[0];
@@ -105,7 +107,7 @@ export const apiVVersionODataControllerCountQuery = defineQueryOptions((options?
     }
 }));
 
-export const getApiVbyApiVersionSimpleOperationQueryKey = <TStrict extends boolean = true>(options: QueryKeyOptions<Options<GetApiVbyApiVersionSimpleOperationData>, TStrict>) => createQueryKey('getApiVbyApiVersionSimpleOperation', options as Options<GetApiVbyApiVersionSimpleOperationData>);
+export const getApiVbyApiVersionSimpleOperationQueryKey = <TStrict extends boolean = true>(options: QueryKeyOptions<Options<GetApiVbyApiVersionSimpleOperationData>, TStrict>) => createQueryKey<Options<GetApiVbyApiVersionSimpleOperationData>>('getApiVbyApiVersionSimpleOperation', options);
 
 export const getApiVbyApiVersionSimpleOperationQuery = defineQueryOptions((options: Options<GetApiVbyApiVersionSimpleOperationData>) => ({
     key: getApiVbyApiVersionSimpleOperationQueryKey(options),
@@ -235,7 +237,7 @@ export const callWithWeirdParameterNamesMutation = (options?: Partial<Options<Ca
     }
 });
 
-export const getCallWithOptionalParamQueryKey = <TStrict extends boolean = true>(options: QueryKeyOptions<Options<GetCallWithOptionalParamData>, TStrict>) => createQueryKey('getCallWithOptionalParam', options as Options<GetCallWithOptionalParamData>);
+export const getCallWithOptionalParamQueryKey = <TStrict extends boolean = true>(options: QueryKeyOptions<Options<GetCallWithOptionalParamData>, TStrict>) => createQueryKey<Options<GetCallWithOptionalParamData>>('getCallWithOptionalParam', options);
 
 export const getCallWithOptionalParamQuery = defineQueryOptions((options: Options<GetCallWithOptionalParamData>) => ({
     key: getCallWithOptionalParamQueryKey(options),
@@ -457,7 +459,7 @@ export const callWithResponsesMutation = (options?: Partial<Options<CallWithResp
     }
 });
 
-export const collectionFormatQueryKey = <TStrict extends boolean = true>(options: QueryKeyOptions<Options<CollectionFormatData>, TStrict>) => createQueryKey('collectionFormat', options as Options<CollectionFormatData>);
+export const collectionFormatQueryKey = <TStrict extends boolean = true>(options: QueryKeyOptions<Options<CollectionFormatData>, TStrict>) => createQueryKey<Options<CollectionFormatData>>('collectionFormat', options);
 
 export const collectionFormatQuery = defineQueryOptions((options: Options<CollectionFormatData>) => ({
     key: collectionFormatQueryKey(options),
@@ -471,7 +473,7 @@ export const collectionFormatQuery = defineQueryOptions((options: Options<Collec
     }
 }));
 
-export const typesQueryKey = <TStrict extends boolean = true>(options: QueryKeyOptions<Options<TypesData>, TStrict>) => createQueryKey('types', options as Options<TypesData>);
+export const typesQueryKey = <TStrict extends boolean = true>(options: QueryKeyOptions<Options<TypesData>, TStrict>) => createQueryKey<Options<TypesData>>('types', options);
 
 export const typesQuery = defineQueryOptions((options: Options<TypesData>) => ({
     key: typesQueryKey(options),
@@ -496,7 +498,7 @@ export const uploadFileMutation = (options?: Partial<Options<UploadFileData>>): 
     }
 });
 
-export const fileResponseQueryKey = <TStrict extends boolean = true>(options: QueryKeyOptions<Options<FileResponseData>, TStrict>) => createQueryKey('fileResponse', options as Options<FileResponseData>);
+export const fileResponseQueryKey = <TStrict extends boolean = true>(options: QueryKeyOptions<Options<FileResponseData>, TStrict>) => createQueryKey<Options<FileResponseData>>('fileResponse', options);
 
 export const fileResponseQuery = defineQueryOptions((options: Options<FileResponseData>) => ({
     key: fileResponseQueryKey(options),
@@ -510,7 +512,7 @@ export const fileResponseQuery = defineQueryOptions((options: Options<FileRespon
     }
 }));
 
-export const complexTypesQueryKey = <TStrict extends boolean = true>(options: QueryKeyOptions<Options<ComplexTypesData>, TStrict>) => createQueryKey('complexTypes', options as Options<ComplexTypesData>);
+export const complexTypesQueryKey = <TStrict extends boolean = true>(options: QueryKeyOptions<Options<ComplexTypesData>, TStrict>) => createQueryKey<Options<ComplexTypesData>>('complexTypes', options);
 
 export const complexTypesQuery = defineQueryOptions((options: Options<ComplexTypesData>) => ({
     key: complexTypesQueryKey(options),
