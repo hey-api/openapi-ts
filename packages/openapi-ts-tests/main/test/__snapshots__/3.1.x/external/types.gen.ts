@@ -4,215 +4,215 @@ export type ClientOptions = {
     baseUrl: `${string}://${string}` | (string & {});
 };
 
+export type _1 = string;
+
 /**
  * External schema (A)
  */
-export type ExternalSchemaA = ExternalSharedExternalSharedModel;
+export type ExternalSchemaA = ExternalSharedModel;
 
 /**
  * External schema (B) - second use of ExternalSharedModel
  */
-export type ExternalSchemaB = ExternalSharedExternalSharedModel;
+export type ExternalSchemaB = ExternalSharedModel;
 
 /**
  * External schema (C) - third use of ExternalSharedModel
  */
-export type ExternalSchemaC = ExternalSharedExternalSharedModel;
+export type ExternalSchemaC = ExternalSharedModel;
 
 /**
  * External schema via path reference (A)
  */
-export type ExternalSchemaPathA = ExternalSharedExternalSharedModel;
+export type ExternalSchemaPathA = ExternalSharedModel;
 
 /**
  * External schema via path reference (B) - second use
  */
-export type ExternalSchemaPathB = ExternalSharedExternalSharedModel;
+export type ExternalSchemaPathB = ExternalSharedModel;
 
 /**
  * External schema property (A)
  */
 export type ExternalSchemaPropertyA = {
-    uuid1?: ExternalSharedExternalSharedModelWithUuid;
+    uuid1?: ExternalSharedModelWithUuid;
 };
 
 /**
  * External schema property (B) - second use of UUID
  */
 export type ExternalSchemaPropertyB = {
-    uuid2?: ExternalSharedExternalSharedModelWithUuid;
+    uuid2?: ExternalSharedModelWithUuid;
 };
 
 /**
  * External schema property (C) - third use of UUID
  */
 export type ExternalSchemaPropertyC = {
-    uuid3?: ExternalSharedExternalSharedModelWithUuid;
+    uuid3?: ExternalSharedModelWithUuid;
 };
 
 /**
  * External schema property with duplicate refs (D)
  */
 export type ExternalSchemaPropertyD = {
-    uuid4?: ExternalSharedExternalSharedModelWithUuid;
-    uuid5?: ExternalSharedExternalSharedModelWithUuid;
+    uuid4?: ExternalSharedModelWithUuid;
+    uuid5?: ExternalSharedModelWithUuid;
 };
 
 /**
  * External schema property via external property ref (id)
  */
 export type ExternalSchemaExternalProp = {
-    id3?: ExternalSharedId;
-    id4?: ExternalSharedId;
+    id3?: Id;
+    id4?: Id;
 };
 
 /**
  * Alias to external property via component property ref
  */
 export type ExternalSchemaExternalPropAlias = {
-    id5?: ExternalSharedId;
-    id6?: ExternalSharedId;
+    id5?: Id;
+    id6?: Id;
 };
 
 /**
  * External double nested prop via property ref
  */
 export type ExternalDoubleNestedProp = {
-    deep1?: ExternalSharedDeep;
-    deep2?: ExternalSharedDeep;
+    deep1?: Deep;
+    deep2?: Deep;
 };
 
 /**
  * External double nested numeric properties
  */
 export type ExternalDoubleNestedNumeric = {
-    numeric1?: ExternalShared1;
-    numeric2?: ExternalShared1;
+    numeric1?: _1;
+    numeric2?: _1;
 };
 
 /**
  * External nested object reference (A)
  */
-export type ExternalNestedObjectA = ExternalSharedExternalNested;
+export type ExternalNestedObjectA = ExternalNested;
 
 /**
  * External nested object reference (B) - second use
  */
-export type ExternalNestedObjectB = ExternalSharedExternalNested;
+export type ExternalNestedObjectB = ExternalNested;
 
 /**
  * External numeric nested object reference (A)
  */
-export type ExternalNestedNumericObjectA = ExternalSharedExternalNestedNumeric;
+export type ExternalNestedNumericObjectA = ExternalNestedNumeric;
 
 /**
  * External numeric nested object reference (B) - second use
  */
-export type ExternalNestedNumericObjectB = ExternalSharedExternalNestedNumeric;
+export type ExternalNestedNumericObjectB = ExternalNestedNumeric;
 
 /**
  * Mixed external property references
  */
 export type ExternalMixedProperties = {
-    id7?: ExternalSharedId;
-    name1?: ExternalSharedName;
-    uuid6?: ExternalSharedExternalSharedModelWithUuid;
-    deep3?: ExternalSharedDeep;
-    numeric3?: ExternalShared1;
+    id7?: Id;
+    name1?: Name;
+    uuid6?: ExternalSharedModelWithUuid;
+    deep3?: Deep;
+    numeric3?: _1;
 };
 
 /**
  * Array containing external references
  */
 export type ExternalArraySchema = {
-    items?: Array<ExternalSharedExternalSharedModel>;
-    uuidItems?: Array<ExternalSharedExternalSharedModelWithUuid>;
+    items?: Array<ExternalSharedModel>;
+    uuidItems?: Array<ExternalSharedModelWithUuid>;
 };
 
 /**
  * Union type with external references
  */
-export type ExternalUnionSchema = ExternalSharedExternalSharedModel | ExternalSharedExternalSharedModelWithUuid;
+export type ExternalUnionSchema = ExternalSharedModel | ExternalSharedModelWithUuid;
 
 /**
  * AllOf with external references
  */
-export type ExternalAllOfSchema = ExternalSharedExternalSharedModel & {
-    additional?: ExternalSharedExternalSharedModelWithUuid;
+export type ExternalAllOfSchema = ExternalSharedModel & {
+    additional?: ExternalSharedModelWithUuid;
 };
 
 /**
  * AnyOf with external references
  */
-export type ExternalAnyOfSchema = ExternalSharedExternalNested | ExternalSharedExternalNestedNumeric;
+export type ExternalAnyOfSchema = ExternalNested | ExternalNestedNumeric;
 
-export type ExternalSharedExternalNested = {
+export type ExternalNested = {
     inner?: {
         deep?: string;
     };
 };
 
-export type ExternalSharedDeep = string;
+export type Deep = string;
 
-export type ExternalSharedExternalNestedNumeric = {
+export type ExternalNestedNumeric = {
     0?: {
         1?: string;
     };
 };
 
-export type ExternalShared1 = string;
-
-export type ExternalSharedExternalSharedModel = {
+export type ExternalSharedModel = {
     id: string;
     name?: string;
 };
 
-export type ExternalSharedId = string;
+export type Id = string;
 
-export type ExternalSharedName = string;
+export type Name = string;
 
-export type ExternalSharedExternalSharedModelWithUuid = string;
+export type ExternalSharedModelWithUuid = string;
 
-export type ExternalIdParam = ExternalSharedId;
+export type ExternalIdParam = Id;
 
-export type ExternalUuidParam = ExternalSharedExternalSharedModelWithUuid;
+export type ExternalUuidParam = ExternalSharedModelWithUuid;
 
-export type ExternalDeepParam = ExternalSharedDeep;
+export type ExternalDeepParam = Deep;
 
-export type ExternalNumericParam = ExternalShared1;
+export type ExternalNumericParam = _1;
 
 /**
  * Request body using external model
  */
-export type ExternalModelBody = ExternalSharedExternalSharedModel;
+export type ExternalModelBody = ExternalSharedModel;
 
 /**
  * Request body using external UUID
  */
-export type ExternalUuidBody = ExternalSharedExternalSharedModelWithUuid;
+export type ExternalUuidBody = ExternalSharedModelWithUuid;
 
 /**
  * Request body using external nested object
  */
-export type ExternalNestedBody = ExternalSharedExternalNested;
+export type ExternalNestedBody = ExternalNested;
 
 /**
  * Request body with mixed external properties
  */
 export type ExternalMixedBody = {
-    id?: ExternalSharedId;
-    name?: ExternalSharedName;
-    uuid?: ExternalSharedExternalSharedModelWithUuid;
-    deep?: ExternalSharedDeep;
+    id?: Id;
+    name?: Name;
+    uuid?: ExternalSharedModelWithUuid;
+    deep?: Deep;
 };
 
 export type GetExternalModelData = {
     body?: never;
     path: {
-        id: ExternalSharedId;
+        id: Id;
     };
     query?: {
-        uuid?: ExternalSharedExternalSharedModelWithUuid;
+        uuid?: ExternalSharedModelWithUuid;
     };
     url: '/external-model';
 };
@@ -221,7 +221,7 @@ export type GetExternalModelErrors = {
     /**
      * Response using external UUID
      */
-    400: ExternalSharedExternalSharedModelWithUuid;
+    400: ExternalSharedModelWithUuid;
 };
 
 export type GetExternalModelError = GetExternalModelErrors[keyof GetExternalModelErrors];
@@ -230,7 +230,7 @@ export type GetExternalModelResponses = {
     /**
      * Response using external model
      */
-    200: ExternalSharedExternalSharedModel;
+    200: ExternalSharedModel;
 };
 
 export type GetExternalModelResponse = GetExternalModelResponses[keyof GetExternalModelResponses];
@@ -249,7 +249,7 @@ export type PostExternalModelErrors = {
     /**
      * Response with union of external types
      */
-    422: ExternalSharedExternalSharedModel | ExternalSharedExternalSharedModelWithUuid | ExternalSharedExternalNested;
+    422: ExternalSharedModel | ExternalSharedModelWithUuid | ExternalNested;
 };
 
 export type PostExternalModelError = PostExternalModelErrors[keyof PostExternalModelErrors];
@@ -258,7 +258,7 @@ export type PostExternalModelResponses = {
     /**
      * Response using external model
      */
-    201: ExternalSharedExternalSharedModel;
+    201: ExternalSharedModel;
 };
 
 export type PostExternalModelResponse = PostExternalModelResponses[keyof PostExternalModelResponses];
@@ -267,7 +267,7 @@ export type GetExternalUuidData = {
     body?: never;
     path?: never;
     query?: {
-        uuid?: ExternalSharedExternalSharedModelWithUuid;
+        uuid?: ExternalSharedModelWithUuid;
     };
     url: '/external-uuid';
 };
@@ -276,7 +276,7 @@ export type GetExternalUuidResponses = {
     /**
      * Response using external UUID
      */
-    200: ExternalSharedExternalSharedModelWithUuid;
+    200: ExternalSharedModelWithUuid;
 };
 
 export type GetExternalUuidResponse = GetExternalUuidResponses[keyof GetExternalUuidResponses];
@@ -295,7 +295,7 @@ export type PutExternalUuidResponses = {
     /**
      * Response using external UUID
      */
-    200: ExternalSharedExternalSharedModelWithUuid;
+    200: ExternalSharedModelWithUuid;
 };
 
 export type PutExternalUuidResponse = PutExternalUuidResponses[keyof PutExternalUuidResponses];
@@ -303,7 +303,7 @@ export type PutExternalUuidResponse = PutExternalUuidResponses[keyof PutExternal
 export type GetExternalNestedData = {
     body?: never;
     headers?: {
-        deep?: ExternalSharedDeep;
+        deep?: Deep;
     };
     path?: never;
     query?: never;
@@ -314,7 +314,7 @@ export type GetExternalNestedResponses = {
     /**
      * Response using external nested object
      */
-    200: ExternalSharedExternalNested;
+    200: ExternalNested;
 };
 
 export type GetExternalNestedResponse = GetExternalNestedResponses[keyof GetExternalNestedResponses];
@@ -333,7 +333,7 @@ export type PostExternalNestedResponses = {
     /**
      * Response using external nested object
      */
-    201: ExternalSharedExternalNested;
+    201: ExternalNested;
 };
 
 export type PostExternalNestedResponse = PostExternalNestedResponses[keyof PostExternalNestedResponses];
@@ -341,14 +341,14 @@ export type PostExternalNestedResponse = PostExternalNestedResponses[keyof PostE
 export type GetExternalMixedData = {
     body?: never;
     headers?: {
-        deep?: ExternalSharedDeep;
+        deep?: Deep;
     };
     path: {
-        id: ExternalSharedId;
+        id: Id;
     };
     query?: {
-        uuid?: ExternalSharedExternalSharedModelWithUuid;
-        numeric?: ExternalShared1;
+        uuid?: ExternalSharedModelWithUuid;
+        numeric?: _1;
     };
     url: '/external-mixed';
 };
@@ -357,7 +357,7 @@ export type GetExternalMixedResponses = {
     /**
      * Response with array of external models
      */
-    200: Array<ExternalSharedExternalSharedModel>;
+    200: Array<ExternalSharedModel>;
 };
 
 export type GetExternalMixedResponse = GetExternalMixedResponses[keyof GetExternalMixedResponses];
@@ -376,7 +376,7 @@ export type PostExternalMixedResponses = {
     /**
      * Response using external model
      */
-    201: ExternalSharedExternalSharedModel;
+    201: ExternalSharedModel;
 };
 
 export type PostExternalMixedResponse = PostExternalMixedResponses[keyof PostExternalMixedResponses];
@@ -392,13 +392,13 @@ export type GetExternalArrayResponses = {
     /**
      * Response with array of external models
      */
-    200: Array<ExternalSharedExternalSharedModel>;
+    200: Array<ExternalSharedModel>;
 };
 
 export type GetExternalArrayResponse = GetExternalArrayResponses[keyof GetExternalArrayResponses];
 
 export type PostExternalArrayData = {
-    body: Array<ExternalSharedExternalSharedModel>;
+    body: Array<ExternalSharedModel>;
     path?: never;
     query?: never;
     url: '/external-array';
@@ -408,7 +408,7 @@ export type PostExternalArrayResponses = {
     /**
      * Response with array of external models
      */
-    201: Array<ExternalSharedExternalSharedModel>;
+    201: Array<ExternalSharedModel>;
 };
 
 export type PostExternalArrayResponse = PostExternalArrayResponses[keyof PostExternalArrayResponses];
@@ -424,13 +424,13 @@ export type GetExternalUnionResponses = {
     /**
      * Response with union of external types
      */
-    200: ExternalSharedExternalSharedModel | ExternalSharedExternalSharedModelWithUuid | ExternalSharedExternalNested;
+    200: ExternalSharedModel | ExternalSharedModelWithUuid | ExternalNested;
 };
 
 export type GetExternalUnionResponse = GetExternalUnionResponses[keyof GetExternalUnionResponses];
 
 export type PostExternalUnionData = {
-    body: ExternalSharedExternalSharedModel | ExternalSharedExternalSharedModelWithUuid | ExternalSharedExternalNested;
+    body: ExternalSharedModel | ExternalSharedModelWithUuid | ExternalNested;
     path?: never;
     query?: never;
     url: '/external-union';
@@ -440,7 +440,7 @@ export type PostExternalUnionResponses = {
     /**
      * Response with union of external types
      */
-    201: ExternalSharedExternalSharedModel | ExternalSharedExternalSharedModelWithUuid | ExternalSharedExternalNested;
+    201: ExternalSharedModel | ExternalSharedModelWithUuid | ExternalNested;
 };
 
 export type PostExternalUnionResponse = PostExternalUnionResponses[keyof PostExternalUnionResponses];
@@ -448,24 +448,24 @@ export type PostExternalUnionResponse = PostExternalUnionResponses[keyof PostExt
 export type GetExternalPropertiesByIdData = {
     body?: never;
     headers?: {
-        deep?: ExternalSharedDeep;
+        deep?: Deep;
     };
     path: {
-        id: ExternalSharedId;
+        id: Id;
     };
     query?: {
-        uuid?: ExternalSharedExternalSharedModelWithUuid;
+        uuid?: ExternalSharedModelWithUuid;
     };
     url: '/external-properties/{id}';
 };
 
 export type GetExternalPropertiesByIdResponses = {
     200: {
-        id?: ExternalSharedId;
-        name?: ExternalSharedName;
-        uuid?: ExternalSharedExternalSharedModelWithUuid;
-        deep?: ExternalSharedDeep;
-        numeric?: ExternalShared1;
+        id?: Id;
+        name?: Name;
+        uuid?: ExternalSharedModelWithUuid;
+        deep?: Deep;
+        numeric?: _1;
     };
 };
 

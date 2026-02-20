@@ -2,12 +2,12 @@
 
 export const ExternalRefASchema = {
     description: 'External ref to shared model (A)',
-    $ref: '#/definitions/external-shared_ExternalSharedModel'
+    $ref: '#/definitions/ExternalSharedModel'
 } as const;
 
 export const ExternalRefBSchema = {
     description: 'External ref to shared model (B)',
-    $ref: '#/definitions/external-shared_ExternalSharedModel'
+    $ref: '#/definitions/ExternalSharedModel'
 } as const;
 
 export const CommentWithBreaksSchema = {
@@ -748,7 +748,7 @@ export const failure_FailureSchema = {
     }
 } as const;
 
-export const external_shared_ExternalSharedModelSchema = {
+export const ExternalSharedModelSchema = {
     type: 'object',
     properties: {
         id: {
