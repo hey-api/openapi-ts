@@ -195,7 +195,9 @@ export const callWithWeirdParameterNamesMutation = (options?: Partial<Options<Ca
     return mutationOptions;
 };
 
-export const callWithDefaultParametersQueryKey = (options: Options<CallWithDefaultParametersData>) => createQueryKey('callWithDefaultParameters', options);
+export const callWithDefaultParametersQueryKey = (options: Options<CallWithDefaultParametersData> | {
+    strict: false;
+}) => createQueryKey('callWithDefaultParameters', options as Options<CallWithDefaultParametersData>);
 
 export const callWithDefaultParametersOptions = (options: Options<CallWithDefaultParametersData>) => queryOptions<unknown, DefaultError, unknown, ReturnType<typeof callWithDefaultParametersQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
@@ -398,7 +400,9 @@ export const callWithResponsesMutation = (options?: Partial<Options<CallWithResp
     return mutationOptions;
 };
 
-export const collectionFormatQueryKey = (options: Options<CollectionFormatData>) => createQueryKey('collectionFormat', options);
+export const collectionFormatQueryKey = (options: Options<CollectionFormatData> | {
+    strict: false;
+}) => createQueryKey('collectionFormat', options as Options<CollectionFormatData>);
 
 export const collectionFormatOptions = (options: Options<CollectionFormatData>) => queryOptions<unknown, DefaultError, unknown, ReturnType<typeof collectionFormatQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
@@ -413,7 +417,9 @@ export const collectionFormatOptions = (options: Options<CollectionFormatData>) 
     queryKey: collectionFormatQueryKey(options)
 });
 
-export const typesQueryKey = (options: Options<TypesData>) => createQueryKey('types', options);
+export const typesQueryKey = (options: Options<TypesData> | {
+    strict: false;
+}) => createQueryKey('types', options as Options<TypesData>);
 
 export const typesOptions = (options: Options<TypesData>) => queryOptions<TypesResponse, DefaultError, TypesResponse, ReturnType<typeof typesQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
@@ -428,7 +434,9 @@ export const typesOptions = (options: Options<TypesData>) => queryOptions<TypesR
     queryKey: typesQueryKey(options)
 });
 
-export const complexTypesQueryKey = (options: Options<ComplexTypesData>) => createQueryKey('complexTypes', options);
+export const complexTypesQueryKey = (options: Options<ComplexTypesData> | {
+    strict: false;
+}) => createQueryKey('complexTypes', options as Options<ComplexTypesData>);
 
 export const complexTypesOptions = (options: Options<ComplexTypesData>) => queryOptions<ComplexTypesResponse, DefaultError, ComplexTypesResponse, ReturnType<typeof complexTypesQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {

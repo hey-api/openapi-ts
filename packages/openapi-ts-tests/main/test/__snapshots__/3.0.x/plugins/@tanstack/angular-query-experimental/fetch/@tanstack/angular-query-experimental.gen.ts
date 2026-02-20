@@ -111,7 +111,9 @@ export const apiVVersionODataControllerCountOptions = (options?: Options<ApiVVer
     queryKey: apiVVersionODataControllerCountQueryKey(options)
 });
 
-export const getApiVbyApiVersionSimpleOperationQueryKey = (options: Options<GetApiVbyApiVersionSimpleOperationData>) => createQueryKey('getApiVbyApiVersionSimpleOperation', options);
+export const getApiVbyApiVersionSimpleOperationQueryKey = (options: Options<GetApiVbyApiVersionSimpleOperationData> | {
+    strict: false;
+}) => createQueryKey('getApiVbyApiVersionSimpleOperation', options as Options<GetApiVbyApiVersionSimpleOperationData>);
 
 export const getApiVbyApiVersionSimpleOperationOptions = (options: Options<GetApiVbyApiVersionSimpleOperationData>) => queryOptions<GetApiVbyApiVersionSimpleOperationResponse, GetApiVbyApiVersionSimpleOperationError, GetApiVbyApiVersionSimpleOperationResponse, ReturnType<typeof getApiVbyApiVersionSimpleOperationQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
@@ -270,7 +272,9 @@ export const callWithWeirdParameterNamesMutation = (options?: Partial<Options<Ca
     return mutationOptions;
 };
 
-export const getCallWithOptionalParamQueryKey = (options: Options<GetCallWithOptionalParamData>) => createQueryKey('getCallWithOptionalParam', options);
+export const getCallWithOptionalParamQueryKey = (options: Options<GetCallWithOptionalParamData> | {
+    strict: false;
+}) => createQueryKey('getCallWithOptionalParam', options as Options<GetCallWithOptionalParamData>);
 
 export const getCallWithOptionalParamOptions = (options: Options<GetCallWithOptionalParamData>) => queryOptions<unknown, DefaultError, unknown, ReturnType<typeof getCallWithOptionalParamQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
@@ -314,7 +318,9 @@ const createInfiniteParams = <K extends Pick<QueryKey<Options>[0], 'body' | 'hea
     return params as unknown as typeof page;
 };
 
-export const getCallWithOptionalParamInfiniteQueryKey = (options: Options<GetCallWithOptionalParamData>): QueryKey<Options<GetCallWithOptionalParamData>> => createQueryKey('getCallWithOptionalParam', options, true);
+export const getCallWithOptionalParamInfiniteQueryKey = (options: Options<GetCallWithOptionalParamData> | {
+    strict: false;
+}): QueryKey<Options<GetCallWithOptionalParamData>> => createQueryKey('getCallWithOptionalParam', options as Options<GetCallWithOptionalParamData>, true);
 
 export const getCallWithOptionalParamInfiniteOptions = (options: Options<GetCallWithOptionalParamData>) => infiniteQueryOptions<unknown, DefaultError, InfiniteData<unknown>, QueryKey<Options<GetCallWithOptionalParamData>>, number | Pick<QueryKey<Options<GetCallWithOptionalParamData>>[0], 'body' | 'headers' | 'path' | 'query'>>(
 // @ts-ignore
@@ -583,7 +589,9 @@ export const callWithResponsesMutation = (options?: Partial<Options<CallWithResp
     return mutationOptions;
 };
 
-export const collectionFormatQueryKey = (options: Options<CollectionFormatData>) => createQueryKey('collectionFormat', options);
+export const collectionFormatQueryKey = (options: Options<CollectionFormatData> | {
+    strict: false;
+}) => createQueryKey('collectionFormat', options as Options<CollectionFormatData>);
 
 export const collectionFormatOptions = (options: Options<CollectionFormatData>) => queryOptions<unknown, DefaultError, unknown, ReturnType<typeof collectionFormatQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
@@ -598,7 +606,9 @@ export const collectionFormatOptions = (options: Options<CollectionFormatData>) 
     queryKey: collectionFormatQueryKey(options)
 });
 
-export const typesQueryKey = (options: Options<TypesData>) => createQueryKey('types', options);
+export const typesQueryKey = (options: Options<TypesData> | {
+    strict: false;
+}) => createQueryKey('types', options as Options<TypesData>);
 
 export const typesOptions = (options: Options<TypesData>) => queryOptions<TypesResponse, DefaultError, TypesResponse, ReturnType<typeof typesQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
@@ -627,7 +637,9 @@ export const uploadFileMutation = (options?: Partial<Options<UploadFileData>>): 
     return mutationOptions;
 };
 
-export const fileResponseQueryKey = (options: Options<FileResponseData>) => createQueryKey('fileResponse', options);
+export const fileResponseQueryKey = (options: Options<FileResponseData> | {
+    strict: false;
+}) => createQueryKey('fileResponse', options as Options<FileResponseData>);
 
 export const fileResponseOptions = (options: Options<FileResponseData>) => queryOptions<FileResponseResponse, DefaultError, FileResponseResponse, ReturnType<typeof fileResponseQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
@@ -642,7 +654,9 @@ export const fileResponseOptions = (options: Options<FileResponseData>) => query
     queryKey: fileResponseQueryKey(options)
 });
 
-export const complexTypesQueryKey = (options: Options<ComplexTypesData>) => createQueryKey('complexTypes', options);
+export const complexTypesQueryKey = (options: Options<ComplexTypesData> | {
+    strict: false;
+}) => createQueryKey('complexTypes', options as Options<ComplexTypesData>);
 
 export const complexTypesOptions = (options: Options<ComplexTypesData>) => queryOptions<ComplexTypesResponse, DefaultError, ComplexTypesResponse, ReturnType<typeof complexTypesQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
