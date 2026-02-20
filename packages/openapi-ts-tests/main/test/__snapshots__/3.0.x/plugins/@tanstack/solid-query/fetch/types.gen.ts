@@ -9,9 +9,9 @@ export type ClientOptions = {
  */
 export type _400 = string;
 
-export type ExternalRefA = ExternalSharedExternalSharedModel;
+export type ExternalRefA = ExternalSharedModel;
 
-export type ExternalRefB = ExternalSharedExternalSharedModel;
+export type ExternalRefB = ExternalSharedModel;
 
 /**
  * Testing multiline comments in string: First line
@@ -964,7 +964,7 @@ export type GenericSchemaDuplicateIssue1SystemString = {
     readonly hasError?: boolean;
 };
 
-export type ExternalSharedExternalSharedModel = {
+export type ExternalSharedModel = {
     id: string;
     name?: string;
 };
