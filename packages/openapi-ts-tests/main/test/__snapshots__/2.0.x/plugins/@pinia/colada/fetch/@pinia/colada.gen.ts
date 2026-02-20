@@ -17,6 +17,10 @@ export type QueryKey<TOptions extends Options> = [
     }
 ];
 
+export type QueryKeyOptions<TOptions extends Options> = TOptions | ({ [K in keyof Omit<TOptions, 'url'>]?: TOptions[K] extends object ? Partial<TOptions[K]> : TOptions[K] } & {
+    strict: false;
+});
+
 const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions, tags?: ReadonlyArray<string>): [
     QueryKey<TOptions>[0]
 ] => {
@@ -169,9 +173,7 @@ export const callWithWeirdParameterNamesMutation = (options?: Partial<Options<Ca
     }
 });
 
-export const callWithDefaultParametersQueryKey = (options: Options<CallWithDefaultParametersData> | {
-    strict: false;
-}) => createQueryKey('callWithDefaultParameters', options as Options<CallWithDefaultParametersData>);
+export const callWithDefaultParametersQueryKey = (options: QueryKeyOptions<Options<CallWithDefaultParametersData>>) => createQueryKey('callWithDefaultParameters', options as Options<CallWithDefaultParametersData>);
 
 export const callWithDefaultParametersQuery = defineQueryOptions((options: Options<CallWithDefaultParametersData>) => ({
     key: callWithDefaultParametersQueryKey(options),
@@ -346,9 +348,7 @@ export const callWithResponsesMutation = (options?: Partial<Options<CallWithResp
     }
 });
 
-export const collectionFormatQueryKey = (options: Options<CollectionFormatData> | {
-    strict: false;
-}) => createQueryKey('collectionFormat', options as Options<CollectionFormatData>);
+export const collectionFormatQueryKey = (options: QueryKeyOptions<Options<CollectionFormatData>>) => createQueryKey('collectionFormat', options as Options<CollectionFormatData>);
 
 export const collectionFormatQuery = defineQueryOptions((options: Options<CollectionFormatData>) => ({
     key: collectionFormatQueryKey(options),
@@ -362,9 +362,7 @@ export const collectionFormatQuery = defineQueryOptions((options: Options<Collec
     }
 }));
 
-export const typesQueryKey = (options: Options<TypesData> | {
-    strict: false;
-}) => createQueryKey('types', options as Options<TypesData>);
+export const typesQueryKey = (options: QueryKeyOptions<Options<TypesData>>) => createQueryKey('types', options as Options<TypesData>);
 
 export const typesQuery = defineQueryOptions((options: Options<TypesData>) => ({
     key: typesQueryKey(options),
@@ -378,9 +376,7 @@ export const typesQuery = defineQueryOptions((options: Options<TypesData>) => ({
     }
 }));
 
-export const complexTypesQueryKey = (options: Options<ComplexTypesData> | {
-    strict: false;
-}) => createQueryKey('complexTypes', options as Options<ComplexTypesData>);
+export const complexTypesQueryKey = (options: QueryKeyOptions<Options<ComplexTypesData>>) => createQueryKey('complexTypes', options as Options<ComplexTypesData>);
 
 export const complexTypesQuery = defineQueryOptions((options: Options<ComplexTypesData>) => ({
     key: complexTypesQueryKey(options),

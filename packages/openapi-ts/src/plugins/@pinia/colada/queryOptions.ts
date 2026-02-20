@@ -10,7 +10,12 @@ import {
 } from '../../../plugins/shared/utils/operation';
 import { $ } from '../../../ts-dsl';
 import { handleMeta } from './meta';
-import { createQueryKeyFunction, createQueryKeyType, queryKeyStatement } from './queryKey';
+import {
+  createQueryKeyFunction,
+  createQueryKeyOptionsType,
+  createQueryKeyType,
+  queryKeyStatement,
+} from './queryKey';
 import type { PiniaColadaPlugin } from './types';
 import { getPublicTypeData } from './utils';
 
@@ -40,6 +45,7 @@ export const createQueryOptions = ({
     })
   ) {
     createQueryKeyType({ plugin });
+    createQueryKeyOptionsType({ plugin });
     createQueryKeyFunction({ plugin });
   }
 

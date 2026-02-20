@@ -17,6 +17,10 @@ export type QueryKey<TOptions extends Options> = [
     }
 ];
 
+export type QueryKeyOptions<TOptions extends Options> = TOptions | ({ [K in keyof Omit<TOptions, 'url'>]?: TOptions[K] extends object ? Partial<TOptions[K]> : TOptions[K] } & {
+    strict: false;
+});
+
 const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions, tags?: ReadonlyArray<string>): [
     QueryKey<TOptions>[0]
 ] => {
