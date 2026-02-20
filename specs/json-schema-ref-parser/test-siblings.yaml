@@ -1,0 +1,14 @@
+components:
+  schemas:
+    MainSchema:
+      type: object
+      properties:
+        typeField:
+          $ref: '#/components/schemas/SiblingSchema'
+        name:
+          type: string
+    SiblingSchema:
+      type: string
+      enum:
+        - TypeA
+        - TypeB

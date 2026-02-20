@@ -586,7 +586,22 @@ function remap(parser: $RefParser, inventory: Array<InventoryEntry>) {
       } catch {
         // Ignore errors
       }
-      const proposed = `${proposedBase}_${lastToken(entry.hash)}`;
+
+      // Try without prefix first (cleaner names)
+      const schemaName = lastToken(entry.hash);
+      let proposed = schemaName;
+
+      // Check if this name would conflict with existing schemas from other files
+      if (!usedNamesByObj.has(container)) {
+        usedNamesByObj.set(container, new Set<string>(Object.keys(container || {})));
+      }
+      const used = usedNamesByObj.get(container)!;
+
+      // If the name is already used, add the file prefix
+      if (used.has(proposed)) {
+        proposed = `${proposedBase}_${schemaName}`;
+      }
+
       defName = uniqueName(container, proposed);
       namesForPrefix.set(targetKey, defName);
       // Store the resolved value under the container

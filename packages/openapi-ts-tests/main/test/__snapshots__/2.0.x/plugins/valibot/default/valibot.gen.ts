@@ -391,14 +391,14 @@ export const vFailureFailure = v.object({
     reference_code: v.optional(v.string())
 });
 
-export const vExternalSharedExternalSharedModel = v.object({
+export const vExternalSharedModel = v.object({
     id: v.string(),
     name: v.optional(v.string())
 });
 
-export const vExternalRefA = vExternalSharedExternalSharedModel;
+export const vExternalRefA = vExternalSharedModel;
 
-export const vExternalRefB = vExternalSharedExternalSharedModel;
+export const vExternalRefB = vExternalSharedModel;
 
 /**
  * This is a model with one nested property
