@@ -5,12 +5,13 @@ import type ts from 'typescript';
 
 import { getTypedConfig } from '../../../config/utils';
 import { getClientBaseUrlKey } from '../../../plugins/@hey-api/client-core/utils';
-import type { MaybeTsDsl, TsDsl } from '../../../ts-dsl';
+import type { TsDsl } from '../../../ts-dsl';
 import { $ } from '../../../ts-dsl';
 import { useTypeData } from './shared/useType';
 import type { PluginInstance } from './types';
 
 const TOptionsType = 'TOptions';
+const TStrictType = 'TStrict';
 
 export const createQueryKeyFunction = ({ plugin }: { plugin: PluginInstance }) => {
   const symbolCreateQueryKey = plugin.symbol(
@@ -45,10 +46,15 @@ export const createQueryKeyFunction = ({ plugin }: { plugin: PluginInstance }) =
 
   const returnType = $.type(symbolQueryKeyType).generic(TOptionsType).idx(0);
 
+  const partialOmitUrlType = $.type.and(
+    $.type('Partial').generic($.type('Omit').generics(TOptionsType, $.type.literal('url'))),
+    $.type.object().prop('strict', (p) => p.optional().type('boolean')),
+  );
+
   const fn = $.const(symbolCreateQueryKey).assign(
     $.func()
       .param('id', (p) => p.type('string'))
-      .param('options', (p) => p.optional().type(TOptionsType))
+      .param('options', (p) => p.optional().type(partialOmitUrlType))
       .param('infinite', (p) => p.optional().type('boolean'))
       .param('tags', (p) => p.optional().type('ReadonlyArray<string>'))
       .generic(TOptionsType, (g) => g.extends(symbolOptions))
@@ -100,14 +106,14 @@ const createQueryKeyLiteral = ({
   id,
   isInfinite,
   operation,
-  optionsExpr = 'options',
   plugin,
+  typeOptions,
 }: {
   id: string;
   isInfinite?: boolean;
   operation: IR.OperationObject;
-  optionsExpr?: string | MaybeTsDsl<ts.Expression>;
   plugin: PluginInstance;
+  typeOptions?: ReturnType<typeof $.type>;
 }) => {
   const config = isInfinite ? plugin.config.infiniteQueryKeys : plugin.config.queryKeys;
   let tagsArray: TsDsl<ts.ArrayLiteralExpression> | undefined;
@@ -121,11 +127,11 @@ const createQueryKeyLiteral = ({
   });
   const createQueryKeyCallExpression = $(symbolCreateQueryKey).call(
     $.literal(id),
-    optionsExpr,
+    'options',
     isInfinite || tagsArray ? $.literal(Boolean(isInfinite)) : undefined,
     tagsArray,
   );
-  return createQueryKeyCallExpression;
+  return createQueryKeyCallExpression.$if(typeOptions, (c, t) => c.generic(t));
 };
 
 export const createQueryKeyType = ({ plugin }: { plugin: PluginInstance }) => {
@@ -162,8 +168,6 @@ export const createQueryKeyType = ({ plugin }: { plugin: PluginInstance }) => {
   plugin.node(queryKeyType);
 };
 
-const TStrictType = 'TStrict';
-
 export const createQueryKeyOptionsType = ({ plugin }: { plugin: PluginInstance }) => {
   const symbolOptions = plugin.referenceSymbol({
     category: 'type',
@@ -184,7 +188,7 @@ export const createQueryKeyOptionsType = ({ plugin }: { plugin: PluginInstance }
     .generic(TStrictType, (g) => g.extends('boolean').default($.type.literal(true)))
     .type(
       $.type(
-        `${TStrictType} extends false ? { [K in keyof Omit<${TOptionsType}, 'url'>]?: ${TOptionsType}[K] extends object ? Partial<${TOptionsType}[K]> : ${TOptionsType}[K] } & { strict: false } : ${TOptionsType} & { strict?: true }`,
+        `${TStrictType} extends false ? Partial<Omit<${TOptionsType}, 'url'>> & { strict: false } : ${TOptionsType} & { strict?: true }`,
       ),
     );
   plugin.node(queryKeyOptionsType);
@@ -230,8 +234,8 @@ export const queryKeyStatement = ({
             id: operation.id,
             isInfinite,
             operation,
-            optionsExpr: isRequired ? $('options').as(typeData) : 'options',
             plugin,
+            typeOptions: isRequired ? typeData : undefined,
           }).return(),
         ),
     );

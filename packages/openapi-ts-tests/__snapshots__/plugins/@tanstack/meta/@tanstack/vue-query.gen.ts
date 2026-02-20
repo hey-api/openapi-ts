@@ -14,9 +14,11 @@ export type QueryKey<TOptions extends Options> = [
     }
 ];
 
-export type QueryKeyOptions<TOptions extends Options, TStrict extends boolean = true> = TStrict extends false ? { [K in keyof Omit<TOptions, 'url'>]?: TOptions[K] extends object ? Partial<TOptions[K]> : TOptions[K] } & { strict: false } : TOptions & { strict?: true };
+export type QueryKeyOptions<TOptions extends Options, TStrict extends boolean = true> = TStrict extends false ? Partial<Omit<TOptions, 'url'>> & { strict: false } : TOptions & { strict?: true };
 
-const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions, infinite?: boolean, tags?: ReadonlyArray<string>): [
+const createQueryKey = <TOptions extends Options>(id: string, options?: Partial<Omit<TOptions, 'url'>> & {
+    strict?: boolean;
+}, infinite?: boolean, tags?: ReadonlyArray<string>): [
     QueryKey<TOptions>[0]
 ] => {
     const params: QueryKey<TOptions>[0] = { _id: id, baseUrl: options?.baseUrl || (options?.client ?? client).getConfig().baseUrl } as QueryKey<TOptions>[0];

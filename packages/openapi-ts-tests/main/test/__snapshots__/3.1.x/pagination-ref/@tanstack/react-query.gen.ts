@@ -14,9 +14,11 @@ export type QueryKey<TOptions extends Options> = [
     }
 ];
 
-export type QueryKeyOptions<TOptions extends Options, TStrict extends boolean = true> = TStrict extends false ? { [K in keyof Omit<TOptions, 'url'>]?: TOptions[K] extends object ? Partial<TOptions[K]> : TOptions[K] } & { strict: false } : TOptions & { strict?: true };
+export type QueryKeyOptions<TOptions extends Options, TStrict extends boolean = true> = TStrict extends false ? Partial<Omit<TOptions, 'url'>> & { strict: false } : TOptions & { strict?: true };
 
-const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions, infinite?: boolean, tags?: ReadonlyArray<string>): [
+const createQueryKey = <TOptions extends Options>(id: string, options?: Partial<Omit<TOptions, 'url'>> & {
+    strict?: boolean;
+}, infinite?: boolean, tags?: ReadonlyArray<string>): [
     QueryKey<TOptions>[0]
 ] => {
     const params: QueryKey<TOptions>[0] = { _id: id, baseUrl: options?.baseUrl || (options?.client ?? client).getConfig().baseUrl } as QueryKey<TOptions>[0];
@@ -41,7 +43,7 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
     return [params];
 };
 
-export const getFooQueryKey = <TStrict extends boolean = true>(options: QueryKeyOptions<Options<GetFooData>, TStrict>) => createQueryKey('getFoo', options as Options<GetFooData>);
+export const getFooQueryKey = <TStrict extends boolean = true>(options: QueryKeyOptions<Options<GetFooData>, TStrict>) => createQueryKey<Options<GetFooData>>('getFoo', options);
 
 export const getFooOptions = (options: Options<GetFooData>) => queryOptions<GetFooResponse, DefaultError, GetFooResponse, ReturnType<typeof getFooQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
@@ -85,7 +87,7 @@ const createInfiniteParams = <K extends Pick<QueryKey<Options>[0], 'body' | 'hea
     return params as unknown as typeof page;
 };
 
-export const getFooInfiniteQueryKey = <TStrict extends boolean = true>(options: QueryKeyOptions<Options<GetFooData>, TStrict>): QueryKey<Options<GetFooData>> => createQueryKey('getFoo', options as Options<GetFooData>, true);
+export const getFooInfiniteQueryKey = <TStrict extends boolean = true>(options: QueryKeyOptions<Options<GetFooData>, TStrict>): QueryKey<Options<GetFooData>> => createQueryKey<Options<GetFooData>>('getFoo', options, true);
 
 export const getFooInfiniteOptions = (options: Options<GetFooData>) => infiniteQueryOptions<GetFooResponse, DefaultError, InfiniteData<GetFooResponse>, QueryKey<Options<GetFooData>>, number | null | Pick<QueryKey<Options<GetFooData>>[0], 'body' | 'headers' | 'path' | 'query'>>(
 // @ts-ignore

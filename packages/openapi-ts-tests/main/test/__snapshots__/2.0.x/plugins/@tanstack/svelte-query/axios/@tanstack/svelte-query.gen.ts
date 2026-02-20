@@ -15,9 +15,11 @@ export type QueryKey<TOptions extends Options> = [
     }
 ];
 
-export type QueryKeyOptions<TOptions extends Options, TStrict extends boolean = true> = TStrict extends false ? { [K in keyof Omit<TOptions, 'url'>]?: TOptions[K] extends object ? Partial<TOptions[K]> : TOptions[K] } & { strict: false } : TOptions & { strict?: true };
+export type QueryKeyOptions<TOptions extends Options, TStrict extends boolean = true> = TStrict extends false ? Partial<Omit<TOptions, 'url'>> & { strict: false } : TOptions & { strict?: true };
 
-const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions, infinite?: boolean, tags?: ReadonlyArray<string>): [
+const createQueryKey = <TOptions extends Options>(id: string, options?: Partial<Omit<TOptions, 'url'>> & {
+    strict?: boolean;
+}, infinite?: boolean, tags?: ReadonlyArray<string>): [
     QueryKey<TOptions>[0]
 ] => {
     const params: QueryKey<TOptions>[0] = { _id: id, baseURL: options?.baseURL || (options?.client ?? client).getConfig().baseURL } as QueryKey<TOptions>[0];
@@ -198,7 +200,7 @@ export const callWithWeirdParameterNamesMutation = (options?: Partial<Options<Ca
     return mutationOptions;
 };
 
-export const callWithDefaultParametersQueryKey = <TStrict extends boolean = true>(options: QueryKeyOptions<Options<CallWithDefaultParametersData>, TStrict>) => createQueryKey('callWithDefaultParameters', options as Options<CallWithDefaultParametersData>);
+export const callWithDefaultParametersQueryKey = <TStrict extends boolean = true>(options: QueryKeyOptions<Options<CallWithDefaultParametersData>, TStrict>) => createQueryKey<Options<CallWithDefaultParametersData>>('callWithDefaultParameters', options);
 
 export const callWithDefaultParametersOptions = (options: Options<CallWithDefaultParametersData>) => queryOptions<unknown, AxiosError<DefaultError>, unknown, ReturnType<typeof callWithDefaultParametersQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
@@ -401,7 +403,7 @@ export const callWithResponsesMutation = (options?: Partial<Options<CallWithResp
     return mutationOptions;
 };
 
-export const collectionFormatQueryKey = <TStrict extends boolean = true>(options: QueryKeyOptions<Options<CollectionFormatData>, TStrict>) => createQueryKey('collectionFormat', options as Options<CollectionFormatData>);
+export const collectionFormatQueryKey = <TStrict extends boolean = true>(options: QueryKeyOptions<Options<CollectionFormatData>, TStrict>) => createQueryKey<Options<CollectionFormatData>>('collectionFormat', options);
 
 export const collectionFormatOptions = (options: Options<CollectionFormatData>) => queryOptions<unknown, AxiosError<DefaultError>, unknown, ReturnType<typeof collectionFormatQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
@@ -416,7 +418,7 @@ export const collectionFormatOptions = (options: Options<CollectionFormatData>) 
     queryKey: collectionFormatQueryKey(options)
 });
 
-export const typesQueryKey = <TStrict extends boolean = true>(options: QueryKeyOptions<Options<TypesData>, TStrict>) => createQueryKey('types', options as Options<TypesData>);
+export const typesQueryKey = <TStrict extends boolean = true>(options: QueryKeyOptions<Options<TypesData>, TStrict>) => createQueryKey<Options<TypesData>>('types', options);
 
 export const typesOptions = (options: Options<TypesData>) => queryOptions<TypesResponse, AxiosError<DefaultError>, TypesResponse, ReturnType<typeof typesQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
@@ -431,7 +433,7 @@ export const typesOptions = (options: Options<TypesData>) => queryOptions<TypesR
     queryKey: typesQueryKey(options)
 });
 
-export const complexTypesQueryKey = <TStrict extends boolean = true>(options: QueryKeyOptions<Options<ComplexTypesData>, TStrict>) => createQueryKey('complexTypes', options as Options<ComplexTypesData>);
+export const complexTypesQueryKey = <TStrict extends boolean = true>(options: QueryKeyOptions<Options<ComplexTypesData>, TStrict>) => createQueryKey<Options<ComplexTypesData>>('complexTypes', options);
 
 export const complexTypesOptions = (options: Options<ComplexTypesData>) => queryOptions<ComplexTypesResponse, AxiosError<DefaultError>, ComplexTypesResponse, ReturnType<typeof complexTypesQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
