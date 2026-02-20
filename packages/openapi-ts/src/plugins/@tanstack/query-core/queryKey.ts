@@ -235,7 +235,7 @@ export const queryKeyStatement = ({
             isInfinite,
             operation,
             plugin,
-            typeOptions: isRequired ? typeData : undefined,
+            typeOptions: typeData,
           }).return(),
         ),
     );

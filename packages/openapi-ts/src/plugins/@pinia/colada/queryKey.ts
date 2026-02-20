@@ -252,7 +252,7 @@ export const queryKeyStatement = ({
             id: operation.id,
             operation,
             plugin,
-            typeOptions: isRequired ? typeData : undefined,
+            typeOptions: typeData,
           }).return(),
         ),
     );

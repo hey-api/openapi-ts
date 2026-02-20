@@ -46,7 +46,7 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: Partial<
     return [params];
 };
 
-export const exportQueryKey = (options?: Options<ExportData>) => createQueryKey('export', options);
+export const exportQueryKey = (options?: Options<ExportData>) => createQueryKey<Options<ExportData>>('export', options);
 
 export const exportQuery = defineQueryOptions((options?: Options<ExportData>) => ({
     key: exportQueryKey(options),
@@ -93,7 +93,7 @@ export const fooWowMutation = (options?: Partial<Options<FooWowData>>): UseMutat
     }
 });
 
-export const apiVVersionODataControllerCountQueryKey = (options?: Options<ApiVVersionODataControllerCountData>) => createQueryKey('apiVVersionODataControllerCount', options);
+export const apiVVersionODataControllerCountQueryKey = (options?: Options<ApiVVersionODataControllerCountData>) => createQueryKey<Options<ApiVVersionODataControllerCountData>>('apiVVersionODataControllerCount', options);
 
 export const apiVVersionODataControllerCountQuery = defineQueryOptions((options?: Options<ApiVVersionODataControllerCountData>) => ({
     key: apiVVersionODataControllerCountQueryKey(options),
@@ -132,7 +132,7 @@ export const deleteCallWithoutParametersAndResponseMutation = (options?: Partial
     }
 });
 
-export const getCallWithoutParametersAndResponseQueryKey = (options?: Options<GetCallWithoutParametersAndResponseData>) => createQueryKey('getCallWithoutParametersAndResponse', options);
+export const getCallWithoutParametersAndResponseQueryKey = (options?: Options<GetCallWithoutParametersAndResponseData>) => createQueryKey<Options<GetCallWithoutParametersAndResponseData>>('getCallWithoutParametersAndResponse', options);
 
 export const getCallWithoutParametersAndResponseQuery = defineQueryOptions((options?: Options<GetCallWithoutParametersAndResponseData>) => ({
     key: getCallWithoutParametersAndResponseQueryKey(options),
@@ -284,7 +284,7 @@ export const postApiVbyApiVersionFormDataMutation = (options?: Partial<Options<P
     }
 });
 
-export const callWithDefaultParametersQueryKey = (options?: Options<CallWithDefaultParametersData>) => createQueryKey('callWithDefaultParameters', options);
+export const callWithDefaultParametersQueryKey = (options?: Options<CallWithDefaultParametersData>) => createQueryKey<Options<CallWithDefaultParametersData>>('callWithDefaultParameters', options);
 
 export const callWithDefaultParametersQuery = defineQueryOptions((options?: Options<CallWithDefaultParametersData>) => ({
     key: callWithDefaultParametersQueryKey(options),
@@ -331,7 +331,7 @@ export const duplicateNameMutation = (options?: Partial<Options<DuplicateNameDat
     }
 });
 
-export const duplicateName2QueryKey = (options?: Options<DuplicateName2Data>) => createQueryKey('duplicateName2', options);
+export const duplicateName2QueryKey = (options?: Options<DuplicateName2Data>) => createQueryKey<Options<DuplicateName2Data>>('duplicateName2', options);
 
 export const duplicateName2Query = defineQueryOptions((options?: Options<DuplicateName2Data>) => ({
     key: duplicateName2QueryKey(options),
@@ -367,7 +367,7 @@ export const duplicateName4Mutation = (options?: Partial<Options<DuplicateName4D
     }
 });
 
-export const callWithNoContentResponseQueryKey = (options?: Options<CallWithNoContentResponseData>) => createQueryKey('callWithNoContentResponse', options);
+export const callWithNoContentResponseQueryKey = (options?: Options<CallWithNoContentResponseData>) => createQueryKey<Options<CallWithNoContentResponseData>>('callWithNoContentResponse', options);
 
 export const callWithNoContentResponseQuery = defineQueryOptions((options?: Options<CallWithNoContentResponseData>) => ({
     key: callWithNoContentResponseQueryKey(options),
@@ -381,7 +381,7 @@ export const callWithNoContentResponseQuery = defineQueryOptions((options?: Opti
     }
 }));
 
-export const callWithResponseAndNoContentResponseQueryKey = (options?: Options<CallWithResponseAndNoContentResponseData>) => createQueryKey('callWithResponseAndNoContentResponse', options);
+export const callWithResponseAndNoContentResponseQueryKey = (options?: Options<CallWithResponseAndNoContentResponseData>) => createQueryKey<Options<CallWithResponseAndNoContentResponseData>>('callWithResponseAndNoContentResponse', options);
 
 export const callWithResponseAndNoContentResponseQuery = defineQueryOptions((options?: Options<CallWithResponseAndNoContentResponseData>) => ({
     key: callWithResponseAndNoContentResponseQueryKey(options),
@@ -395,7 +395,7 @@ export const callWithResponseAndNoContentResponseQuery = defineQueryOptions((opt
     }
 }));
 
-export const dummyAQueryKey = (options?: Options<DummyAData>) => createQueryKey('dummyA', options);
+export const dummyAQueryKey = (options?: Options<DummyAData>) => createQueryKey<Options<DummyAData>>('dummyA', options);
 
 export const dummyAQuery = defineQueryOptions((options?: Options<DummyAData>) => ({
     key: dummyAQueryKey(options),
@@ -409,7 +409,7 @@ export const dummyAQuery = defineQueryOptions((options?: Options<DummyAData>) =>
     }
 }));
 
-export const dummyBQueryKey = (options?: Options<DummyBData>) => createQueryKey('dummyB', options);
+export const dummyBQueryKey = (options?: Options<DummyBData>) => createQueryKey<Options<DummyBData>>('dummyB', options);
 
 export const dummyBQuery = defineQueryOptions((options?: Options<DummyBData>) => ({
     key: dummyBQueryKey(options),
@@ -423,7 +423,7 @@ export const dummyBQuery = defineQueryOptions((options?: Options<DummyBData>) =>
     }
 }));
 
-export const callWithResponseQueryKey = (options?: Options<CallWithResponseData>) => createQueryKey('callWithResponse', options);
+export const callWithResponseQueryKey = (options?: Options<CallWithResponseData>) => createQueryKey<Options<CallWithResponseData>>('callWithResponse', options);
 
 export const callWithResponseQuery = defineQueryOptions((options?: Options<CallWithResponseData>) => ({
     key: callWithResponseQueryKey(options),
@@ -526,7 +526,7 @@ export const complexTypesQuery = defineQueryOptions((options: Options<ComplexTyp
     }
 }));
 
-export const multipartResponseQueryKey = (options?: Options<MultipartResponseData>) => createQueryKey('multipartResponse', options);
+export const multipartResponseQueryKey = (options?: Options<MultipartResponseData>) => createQueryKey<Options<MultipartResponseData>>('multipartResponse', options);
 
 export const multipartResponseQuery = defineQueryOptions((options?: Options<MultipartResponseData>) => ({
     key: multipartResponseQueryKey(options),
