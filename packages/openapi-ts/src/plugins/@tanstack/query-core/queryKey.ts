@@ -162,6 +162,8 @@ export const createQueryKeyType = ({ plugin }: { plugin: PluginInstance }) => {
   plugin.node(queryKeyType);
 };
 
+const TStrictType = 'TStrict';
+
 export const createQueryKeyOptionsType = ({ plugin }: { plugin: PluginInstance }) => {
   const symbolOptions = plugin.referenceSymbol({
     category: 'type',
@@ -179,15 +181,10 @@ export const createQueryKeyOptionsType = ({ plugin }: { plugin: PluginInstance }
     .alias(symbolQueryKeyOptionsType)
     .export()
     .generic(TOptionsType, (g) => g.extends(symbolOptions))
+    .generic(TStrictType, (g) => g.extends('boolean').default($.type.literal(true)))
     .type(
-      $.type.or(
-        $.type(TOptionsType),
-        $.type.and(
-          $.type(
-            `{ [K in keyof Omit<${TOptionsType}, 'url'>]?: ${TOptionsType}[K] extends object ? Partial<${TOptionsType}[K]> : ${TOptionsType}[K] }`,
-          ),
-          $.type.object().prop('strict', (p) => p.type($.type.literal(false))),
-        ),
+      $.type(
+        `${TStrictType} extends false ? { [K in keyof Omit<${TOptionsType}, 'url'>]?: ${TOptionsType}[K] extends object ? Partial<${TOptionsType}[K]> : ${TOptionsType}[K] } & { strict: false } : ${TOptionsType} & { strict?: true }`,
       ),
     );
   plugin.node(queryKeyOptionsType);
@@ -215,7 +212,7 @@ export const queryKeyStatement = ({
       resource: 'QueryKeyOptions',
       tool: plugin.name,
     });
-    paramType = $.type(symbolQueryKeyOptionsType).generic(typeData);
+    paramType = $.type(symbolQueryKeyOptionsType).generic(typeData).generic(TStrictType);
   } else {
     paramType = typeData;
   }
@@ -223,6 +220,9 @@ export const queryKeyStatement = ({
     .export()
     .assign(
       $.func()
+        .$if(isRequired, (f) =>
+          f.generic(TStrictType, (g) => g.extends('boolean').default($.type.literal(true))),
+        )
         .param('options', (p) => p.required(isRequired).type(paramType))
         .$if(isInfinite && typeQueryKey, (f, v) => f.returns(v))
         .do(
