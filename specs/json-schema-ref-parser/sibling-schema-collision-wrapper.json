@@ -1,0 +1,9 @@
+{
+  "components": {
+    "schemas": {
+      "MainSchema": {
+        "$ref": "sibling-schema-collision-versioned.json#/components/schemas/MainSchema"
+      }
+    }
+  }
+}
