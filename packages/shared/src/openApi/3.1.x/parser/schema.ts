@@ -1,4 +1,5 @@
 import type { Context } from '../../../ir/context';
+import { isMediaTypeFileLike } from '../../../ir/mediaType';
 import type { IR } from '../../../ir/types';
 import { addItemsToSchema } from '../../../ir/utils';
 import type {
@@ -231,6 +232,11 @@ const parseSchemaMeta = ({
 
   if (schema.format) {
     irSchema.format = schema.format;
+  } else if (
+    schema.contentMediaType &&
+    isMediaTypeFileLike({ mediaType: schema.contentMediaType })
+  ) {
+    irSchema.format = 'binary';
   }
 
   if (schema.maximum !== undefined) {
@@ -1360,6 +1366,15 @@ export const schemaToIrSchema = ({
     return parseType({
       context,
       schema: schema as SchemaWithRequired<SchemaObject, 'type'>,
+      state,
+    });
+  }
+
+  // infer string with binary format based on contentMediaType
+  if (schema.contentMediaType && isMediaTypeFileLike({ mediaType: schema.contentMediaType })) {
+    return parseType({
+      context,
+      schema: { ...schema, type: 'string' } as SchemaWithRequired<SchemaObject, 'type'>,
       state,
     });
   }
