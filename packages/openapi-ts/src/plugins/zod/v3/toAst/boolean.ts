@@ -7,7 +7,7 @@ import type { IrSchemaToAstOptions } from '../../shared/types';
 export function booleanToAst({
   plugin,
   schema,
-}: IrSchemaToAstOptions & {
+}: Pick<IrSchemaToAstOptions, 'plugin'> & {
   schema: SchemaWithType<'boolean'>;
 }): ReturnType<typeof $.call> {
   let chain: ReturnType<typeof $.call>;

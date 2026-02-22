@@ -4,12 +4,12 @@ import { $ } from '../../../../ts-dsl';
 import type { IrSchemaToAstOptions } from '../../shared/types';
 import { identifiers } from '../constants';
 
-export const neverToAst = ({
+export function neverToAst({
   plugin,
-}: IrSchemaToAstOptions & {
+}: Pick<IrSchemaToAstOptions, 'plugin'> & {
   schema: SchemaWithType<'never'>;
-}) => {
+}) {
   const v = plugin.external('valibot.v');
   const expression = $(v).attr(identifiers.schemas.never).call();
   return expression;
-};
+}

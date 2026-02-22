@@ -1,5 +1,30 @@
 # @hey-api/openapi-ts
 
+## 0.92.4
+
+### Patch Changes
+
+- **plugin(@hey-api/transformers)**: fix: false positive warning for discriminated `oneOf` schemas ([#3379](https://github.com/hey-api/openapi-ts/pull/3379)) ([`1f7c262`](https://github.com/hey-api/openapi-ts/commit/1f7c262f17b45093ae19d060ae26270c91b3ad41)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(@hey-api/client-nuxt)**: fix: forward `asyncDataOptions` to `useFetch` and `useLazyFetch` ([#3382](https://github.com/hey-api/openapi-ts/pull/3382)) ([`a4b7399`](https://github.com/hey-api/openapi-ts/commit/a4b73998e1985f236aee1bbe76611e8d3413f4c6)) by [@rigtigeEmil](https://github.com/rigtigeEmil)
+
+- **output**: detect `importFileExtension` from tsconfig `module` option ([#3380](https://github.com/hey-api/openapi-ts/pull/3380)) ([`4cbc307`](https://github.com/hey-api/openapi-ts/commit/4cbc307862e4357a42afe8fb595036f86279babd)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(@hey-api/typescript)**: fix: deduplicate enum keys to avoid name collision ([#3376](https://github.com/hey-api/openapi-ts/pull/3376)) ([`54138b6`](https://github.com/hey-api/openapi-ts/commit/54138b6771618d464f3b930fdf7af23290c00076)) by [@spikesagal](https://github.com/spikesagal)
+
+- **plugin(@hey-api/client-nuxt)**: unwrap `ComputedRef` body before initial serialization ([#3361](https://github.com/hey-api/openapi-ts/pull/3361)) ([`ca52649`](https://github.com/hey-api/openapi-ts/commit/ca52649a2f479478cc2842677c21c1bcfac69160)) by [@rigtigeEmil](https://github.com/rigtigeEmil)
+
+- **plugin(@angular/common)**: use generics for HttpRequests ([#3384](https://github.com/hey-api/openapi-ts/pull/3384)) ([`a94f50f`](https://github.com/hey-api/openapi-ts/commit/a94f50fef84f2387b9ca686ff47370030007e7a2)) by [@quartepie](https://github.com/quartepie)
+
+- **plugin(@hey-api/transformers)**: fix: handle `$ref` keywords in `allOf` compositions ([#3374](https://github.com/hey-api/openapi-ts/pull/3374)) ([`4b781aa`](https://github.com/hey-api/openapi-ts/commit/4b781aa18bc9f5bfde302c0359bfe9f3ad3effa7)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **internal**: use shared schema processor ([#3370](https://github.com/hey-api/openapi-ts/pull/3370)) ([`27cd91f`](https://github.com/hey-api/openapi-ts/commit/27cd91f530bd77da6ea95df1704b2947917b4626)) by [@mrlubos](https://github.com/mrlubos)
+
+### Updated Dependencies:
+
+- @hey-api/shared@0.2.0
+- @hey-api/json-schema-ref-parser@1.3.0
+
 ## 0.92.3
 
 ### Patch Changes

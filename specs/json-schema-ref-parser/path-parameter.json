@@ -1,0 +1,16 @@
+{
+  "components": {
+    "parameters": {
+      "pathId": {
+        "name": "pathId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Unique identifier for the path"
+        }
+      }
+    }
+  }
+}

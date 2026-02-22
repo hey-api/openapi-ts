@@ -1,0 +1,18 @@
+{
+  "components": {
+    "schemas": {
+      "MainSchema": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/Status"
+          }
+        }
+      },
+      "Status": {
+        "type": "string",
+        "enum": ["active", "inactive"]
+      }
+    }
+  }
+}

@@ -59,7 +59,7 @@
     "@types/node": "24.10.10",
     "@typescript-eslint/eslint-plugin": "8.54.0",
     "@vitest/coverage-v8": "4.0.18",
-    "dotenv": "17.2.3",
+    "dotenv": "17.3.1",
     "eslint": "9.39.2",
     "eslint-plugin-simple-import-sort": "12.1.1",
     "eslint-plugin-sort-destructure-keys": "2.0.0",
@@ -69,11 +69,11 @@
     "globals": "17.3.0",
     "husky": "9.1.7",
     "lint-staged": "16.2.7",
-    "oxfmt": "0.28.0",
+    "oxfmt": "0.32.0",
     "ts-node": "10.9.2",
     "tsdown": "0.18.4",
     "tsx": "4.21.0",
-    "turbo": "2.8.3",
+    "turbo": "2.8.8",
     "typescript": "5.9.3",
     "typescript-eslint": "8.54.0",
     "vitest": "4.0.18"
@@ -81,5 +81,5 @@
   "engines": {
     "node": ">=20.19.0"
   },
-  "packageManager": "pnpm@10.28.2"
+  "packageManager": "pnpm@10.29.3"
 }

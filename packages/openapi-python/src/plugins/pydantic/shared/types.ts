@@ -1,8 +1,9 @@
 import type { Refs, Symbol, SymbolMeta } from '@hey-api/codegen-core';
-import type { IR } from '@hey-api/shared';
+import type { IR, SchemaExtractor } from '@hey-api/shared';
 
 import type { $ } from '../../../py-dsl';
 import type { PydanticPlugin } from '../types';
+import type { ProcessorContext } from './processor';
 
 export type Ast = {
   /**
@@ -29,7 +30,11 @@ export type Ast = {
 };
 
 export type IrSchemaToAstOptions = {
+  /** The plugin instance. */
   plugin: PydanticPlugin['Instance'];
+  /** Optional schema extractor function. */
+  schemaExtractor?: SchemaExtractor<ProcessorContext>;
+  /** The plugin state references. */
   state: Refs<PluginState>;
 };
 

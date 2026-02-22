@@ -217,14 +217,8 @@ export const zModelWithStringError = z.object({
  * This is a model with one string property
  */
 export const zModelWithNullableString = z.object({
-    nullableProp: z.optional(z.union([
-        z.string(),
-        z.null()
-    ])),
-    nullableRequiredProp: z.union([
-        z.string(),
-        z.null()
-    ])
+    nullableProp: z.nullish(z.string()),
+    nullableRequiredProp: z.nullable(z.string())
 });
 
 /**
@@ -293,9 +287,7 @@ export const zModelWithDictionary = z.object({
  * This is a model with one property containing a circular reference
  */
 export const zModelWithCircularReference = z.object({
-    get prop() {
-        return z.optional(z.lazy((): any => zModelWithCircularReference));
-    }
+    prop: z.optional(z.lazy((): any => zModelWithCircularReference))
 });
 
 /**
@@ -415,14 +407,14 @@ export const zFailureFailure = z.object({
     reference_code: z.optional(z.string())
 });
 
-export const zExternalSharedExternalSharedModel = z.object({
+export const zExternalSharedModel = z.object({
     id: z.string(),
     name: z.optional(z.string())
 });
 
-export const zExternalRefA = zExternalSharedExternalSharedModel;
+export const zExternalRefA = zExternalSharedModel;
 
-export const zExternalRefB = zExternalSharedExternalSharedModel;
+export const zExternalRefB = zExternalSharedModel;
 
 /**
  * This is a model with one nested property
@@ -605,14 +597,8 @@ export const zCallToTestOrderOfParamsData = z.object({
         parameterStringWithDefault: z._default(z.string(), 'Hello World!'),
         parameterStringWithEmptyDefault: z._default(z.string(), ''),
         parameterStringWithNoDefault: z.string(),
-        parameterStringNullableWithNoDefault: z.optional(z.union([
-            z.string(),
-            z.null()
-        ])),
-        parameterStringNullableWithDefault: z._default(z.optional(z.union([
-            z.string(),
-            z.null()
-        ])), null)
+        parameterStringNullableWithNoDefault: z.nullish(z.string()),
+        parameterStringNullableWithDefault: z._default(z.nullish(z.string()), null)
     })
 });
 

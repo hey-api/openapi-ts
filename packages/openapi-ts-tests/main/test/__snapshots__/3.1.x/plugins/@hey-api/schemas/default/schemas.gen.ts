@@ -7,12 +7,12 @@ export const _400Schema = {
 
 export const ExternalRefASchema = {
     description: 'External ref to shared model (A)',
-    $ref: '#/components/schemas/external-shared_ExternalSharedModel'
+    $ref: '#/components/schemas/ExternalSharedModel'
 } as const;
 
 export const ExternalRefBSchema = {
     description: 'External ref to shared model (B)',
-    $ref: '#/components/schemas/external-shared_ExternalSharedModel'
+    $ref: '#/components/schemas/ExternalSharedModel'
 } as const;
 
 export const camelCaseCommentWithBreaksSchema = {
@@ -2178,7 +2178,7 @@ export const Generic_Schema_Duplicate_Issue_1_System_String_Schema = {
     additionalProperties: false
 } as const;
 
-export const external_shared_ExternalSharedModelSchema = {
+export const ExternalSharedModelSchema = {
     type: 'object',
     properties: {
         id: {

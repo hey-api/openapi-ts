@@ -1,23 +1,38 @@
 import type { SymbolMeta } from '@hey-api/codegen-core';
-import { fromRef, ref, refs } from '@hey-api/codegen-core';
+import { fromRef, ref } from '@hey-api/codegen-core';
 import type { IR, SchemaWithType } from '@hey-api/shared';
-import { applyNaming, deduplicateSchema, pathToJsonPointer, refToName } from '@hey-api/shared';
+import { deduplicateSchema, pathToJsonPointer } from '@hey-api/shared';
 
 // import { $ } from '../../../py-dsl';
-import { exportAst } from '../shared/export';
-import type { Ast, IrSchemaToAstOptions, PluginState } from '../shared/types';
+import type { Ast, IrSchemaToAstOptions } from '../shared/types';
 import type { PydanticPlugin } from '../types';
+import { createProcessor } from './processor';
 import { irSchemaWithTypeToAst } from './toAst';
 
 export function irSchemaToAst({
   optional,
   plugin,
   schema,
+  schemaExtractor,
   state,
 }: IrSchemaToAstOptions & {
   optional?: boolean;
   schema: IR.SchemaObject;
 }): Ast {
+  if (schemaExtractor && !schema.$ref) {
+    const extracted = schemaExtractor({
+      meta: {
+        resource: 'definition',
+        resourceId: pathToJsonPointer(fromRef(state.path)),
+      },
+      naming: plugin.config.definitions,
+      path: fromRef(state.path),
+      plugin,
+      schema,
+    });
+    if (extracted !== schema) schema = extracted;
+  }
+
   if (schema.$ref) {
     const query: SymbolMeta = {
       category: 'schema',
@@ -106,39 +121,6 @@ export function irSchemaToAst({
   };
 }
 
-function handleComponent({
-  plugin,
-  schema,
-  state,
-}: IrSchemaToAstOptions & {
-  schema: IR.SchemaObject;
-}): void {
-  const $ref = pathToJsonPointer(fromRef(state.path));
-  const baseName = refToName($ref);
-  const symbol = plugin.symbol(applyNaming(baseName, plugin.config.definitions), {
-    meta: {
-      category: 'schema',
-      path: fromRef(state.path),
-      resource: 'definition',
-      resourceId: $ref,
-      tags: fromRef(state.tags),
-      tool: 'pydantic',
-    },
-  });
-  const ast = irSchemaToAst({
-    plugin,
-    schema,
-    state,
-  });
-  exportAst({
-    ast,
-    plugin,
-    schema,
-    state,
-    symbol,
-  });
-}
-
 export const handlerV2: PydanticPlugin['Handler'] = ({ plugin }) => {
   plugin.symbol('Any', {
     external: 'typing',
@@ -189,36 +171,47 @@ export const handlerV2: PydanticPlugin['Handler'] = ({ plugin }) => {
     },
   });
 
-  plugin.forEach('operation', 'parameter', 'requestBody', 'schema', 'webhook', (event) => {
-    const state = refs<PluginState>({
-      hasLazyExpression: false,
-      path: event._path,
-      tags: event.tags,
-    });
+  const processor = createProcessor(plugin);
 
+  plugin.forEach('operation', 'parameter', 'requestBody', 'schema', 'webhook', (event) => {
     switch (event.type) {
       case 'parameter':
-        handleComponent({
-          // baseName: event.name,
+        processor.process({
+          meta: {
+            resource: 'definition',
+            resourceId: pathToJsonPointer(event._path),
+          },
+          naming: plugin.config.definitions,
+          path: event._path,
           plugin,
           schema: event.parameter.schema,
-          state,
+          tags: event.tags,
         });
         break;
       case 'requestBody':
-        handleComponent({
-          // baseName: event.name,
+        processor.process({
+          meta: {
+            resource: 'definition',
+            resourceId: pathToJsonPointer(event._path),
+          },
+          naming: plugin.config.definitions,
+          path: event._path,
           plugin,
           schema: event.requestBody.schema,
-          state,
+          tags: event.tags,
         });
         break;
       case 'schema':
-        handleComponent({
-          // baseName: event.name,
+        processor.process({
+          meta: {
+            resource: 'definition',
+            resourceId: pathToJsonPointer(event._path),
+          },
+          naming: plugin.config.definitions,
+          path: event._path,
           plugin,
           schema: event.schema,
-          state,
+          tags: event.tags,
         });
         break;
     }

@@ -66,7 +66,10 @@ export async function createClient({
     // if in watch mode, subsequent errors won't throw to gracefully handle
     // cases where server might be reloading
     if (error && !_watches) {
-      throw new Error(`Request failed with status ${response.status}: ${response.statusText}`);
+      const text = await response.text().catch(() => '');
+      throw new Error(
+        `Request failed with status ${response.status}: ${text || response.statusText}`,
+      );
     }
 
     return { arrayBuffer, resolvedInput };
@@ -89,7 +92,7 @@ export async function createClient({
         : await refParser.bundle({
             arrayBuffer: specData[0]!.arrayBuffer,
             pathOrUrlOrSchema: undefined,
-            resolvedInput: specData[0]!.resolvedInput,
+            resolvedInput: specData[0]!.resolvedInput!,
           });
 
     // on subsequent runs in watch mode, print the message only if we know we're
@@ -100,7 +103,7 @@ export async function createClient({
     }
 
     const eventInputPatch = logger.timeEvent('input.patch');
-    patchOpenApiSpec({ patchOptions: config.parser.patch, spec: data });
+    await patchOpenApiSpec({ patchOptions: config.parser.patch, spec: data });
     eventInputPatch.timeEnd();
 
     const eventParser = logger.timeEvent('parser');

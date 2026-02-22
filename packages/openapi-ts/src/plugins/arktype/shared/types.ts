@@ -1,5 +1,5 @@
 import type { Refs, SymbolMeta } from '@hey-api/codegen-core';
-import type { IR } from '@hey-api/shared';
+import type { IR, SchemaExtractor } from '@hey-api/shared';
 import type ts from 'typescript';
 
 import type { $ } from '../../../ts-dsl';
@@ -13,7 +13,11 @@ export type Ast = {
 };
 
 export type IrSchemaToAstOptions = {
+  /** The plugin instance. */
   plugin: ArktypePlugin['Instance'];
+  /** Optional schema extractor function. */
+  schemaExtractor?: SchemaExtractor;
+  /** The plugin state references. */
   state: Refs<PluginState>;
 };
 

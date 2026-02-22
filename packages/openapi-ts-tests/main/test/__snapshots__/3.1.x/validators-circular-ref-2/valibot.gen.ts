@@ -3,7 +3,7 @@
 import * as v from 'valibot';
 
 export const vBar: v.GenericSchema = v.strictObject({
-    bar: v.union([v.array(v.lazy(() => vBar)), v.null()])
+    bar: v.nullable(v.array(v.lazy(() => vBar)))
 });
 
 export const vFoo = v.strictObject({
