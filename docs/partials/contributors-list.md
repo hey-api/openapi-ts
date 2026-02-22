@@ -33,6 +33,7 @@
 - [Jacob Cohen](https://github.com/jacobinu)
 - [Jan](https://github.com/JanST123)
 - [Jason Lee](https://github.com/LeeChSien)
+- [Jason Westover](https://github.com/j-westover)
 - [Jeff James](https://github.com/jsjames)
 - [Jianqi Pan](https://github.com/Jannchie)
 - [John Gozde](https://github.com/jgoz)
