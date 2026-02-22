@@ -259,6 +259,20 @@ for (const version of versions) {
       },
       {
         config: createConfig({
+          output: 'useMutation',
+          plugins: [
+            {
+              name: '@tanstack/react-query',
+              useMutation: true,
+            },
+            '@hey-api/client-fetch',
+          ],
+        }),
+        description:
+          'generate Fetch API client with TanStack React Query plugin with useMutation hooks',
+      },
+      {
+        config: createConfig({
           input: 'sdk-instance.yaml',
           output: 'name-builder',
           plugins: [
