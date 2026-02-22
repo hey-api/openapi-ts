@@ -142,6 +142,12 @@ export type UserConfig = Plugin.Name<'@tanstack/angular-query-experimental'> &
            */
           enabled?: boolean;
           /**
+           * Whether to export generated symbols.
+           *
+           * @default true
+           */
+          exported?: boolean;
+          /**
            * Custom function to generate metadata for the operation.
            * Can return any valid meta object that will be included in the generated mutation options.
            * @param operation - The operation object containing all available metadata
@@ -340,6 +346,12 @@ export type Config = Plugin.Name<'@tanstack/angular-query-experimental'> &
      */
     mutationOptions: NamingOptions &
       FeatureToggle & {
+        /**
+         * Whether to export generated symbols.
+         *
+         * @default true
+         */
+        exported: boolean;
         /**
          * Custom function to generate metadata for the operation.
          * Can return any valid meta object that will be included in the generated mutation options.
