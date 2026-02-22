@@ -4,12 +4,12 @@ import { $ } from '../../../../ts-dsl';
 import type { IrSchemaToAstOptions } from '../../shared/types';
 import { identifiers } from '../constants';
 
-export const unknownToAst = ({
+export function unknownToAst({
   plugin,
-}: IrSchemaToAstOptions & {
+}: Pick<IrSchemaToAstOptions, 'plugin'> & {
   schema: SchemaWithType<'unknown'>;
-}) => {
+}) {
   const v = plugin.external('valibot.v');
   const expression = $(v).attr(identifiers.schemas.unknown).call();
   return expression;
-};
+}

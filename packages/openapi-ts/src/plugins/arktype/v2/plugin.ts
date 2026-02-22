@@ -13,6 +13,7 @@ export function irSchemaToAst({
   // optional,
   plugin,
   schema,
+  schemaExtractor,
   state,
 }: IrSchemaToAstOptions & {
   /**
@@ -23,6 +24,18 @@ export function irSchemaToAst({
   optional?: boolean;
   schema: IR.SchemaObject;
 }): Ast {
+  if (schemaExtractor && !schema.$ref) {
+    const extracted = schemaExtractor({
+      meta: {
+        resource: 'definition',
+        resourceId: pathToJsonPointer(fromRef(state.path)),
+      },
+      path: fromRef(state.path),
+      schema,
+    });
+    if (extracted !== schema) schema = extracted;
+  }
+
   let ast: Partial<Ast> = {};
 
   // const z = plugin.referenceSymbol({

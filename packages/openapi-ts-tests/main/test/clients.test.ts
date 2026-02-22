@@ -5,14 +5,13 @@ import { fileURLToPath } from 'node:url';
 import { customClientPlugin } from '@hey-api/custom-client/plugin';
 import { createClient, type UserConfig } from '@hey-api/openapi-ts';
 
-import type { PluginClientNames } from '../../../openapi-ts/src/plugins/types';
 import { getFilePaths, getSpecsPath } from '../../utils';
 import { myClientPlugin } from './custom/client/plugin';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const clients: ReadonlyArray<PluginClientNames> = [
+const clients = [
   '@hey-api/client-angular',
   '@hey-api/client-axios',
   '@hey-api/client-fetch',
@@ -20,7 +19,7 @@ const clients: ReadonlyArray<PluginClientNames> = [
   '@hey-api/client-next',
   '@hey-api/client-nuxt',
   '@hey-api/client-ofetch',
-];
+] satisfies UserConfig['plugins'];
 
 for (const client of clients) {
   const namespace = 'clients';

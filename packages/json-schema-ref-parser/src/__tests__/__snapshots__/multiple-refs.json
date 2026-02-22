@@ -1,0 +1,48 @@
+{
+  "paths": {
+    "/test1/{pathId}": {
+      "get": {
+        "summary": "First endpoint using the same pathId schema",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/pathId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Test 1 response"
+          }
+        }
+      }
+    },
+    "/test2/{pathId}": {
+      "get": {
+        "summary": "Second endpoint using the same pathId schema",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/pathId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Test 2 response"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "pathId": {
+        "name": "pathId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Unique identifier for the path"
+        }
+      }
+    }
+  }
+}

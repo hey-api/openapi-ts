@@ -1,0 +1,87 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Redfish-like API",
+    "version": "1.0.0",
+    "description": "Test API simulating Redfish structure with versioned schemas"
+  },
+  "paths": {
+    "/redfish/v1/Systems": {
+      "get": {
+        "summary": "Get Systems",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResolutionStep_v1_0_1_ResolutionStep"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error"
+          }
+        }
+      }
+    },
+    "/redfish/v1/Actions": {
+      "post": {
+        "summary": "Submit Action",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResolutionStep_v1_0_1_ActionParameters"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ResolutionStep_v1_0_1_ActionParameters": {
+        "type": "object",
+        "properties": {
+          "ActionId": {
+            "type": "string"
+          },
+          "ActionType": {
+            "$ref": "#/components/schemas/ResolutionStep_v1_0_1_ResolutionType"
+          }
+        }
+      },
+      "ResolutionStep_v1_0_1_ResolutionStep": {
+        "type": "object",
+        "properties": {
+          "ResolutionType": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ResolutionStep_v1_0_1_ResolutionType"
+              }
+            ]
+          },
+          "ActionName": {
+            "type": "string",
+            "description": "Name of the action"
+          }
+        }
+      },
+      "ResolutionStep_v1_0_1_ResolutionType": {
+        "type": "string",
+        "enum": [
+          "ContactVendor",
+          "ResetToDefaults",
+          "RetryOperation"
+        ],
+        "description": "Types of resolution actions"
+      }
+    }
+  }
+}

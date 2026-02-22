@@ -64,13 +64,6 @@ function baseNode(ctx: EnumResolverContext): Chain {
   }
 }
 
-function nullableNode(ctx: EnumResolverContext): Chain | undefined {
-  const { chain } = ctx;
-  const { isNullable } = ctx.nodes.items(ctx);
-  if (!isNullable) return;
-  return chain.current.attr(identifiers.nullable).call();
-}
-
 function enumResolver(ctx: EnumResolverContext): Chain {
   const { literalMembers } = ctx.nodes.items(ctx);
 
@@ -81,27 +74,22 @@ function enumResolver(ctx: EnumResolverContext): Chain {
   const baseExpression = ctx.nodes.base(ctx);
   ctx.chain.current = baseExpression;
 
-  const nullableExpression = ctx.nodes.nullable(ctx);
-  if (nullableExpression) {
-    ctx.chain.current = nullableExpression;
-  }
-
   return ctx.chain.current;
 }
 
-export const enumToAst = ({
+export function enumToAst({
   plugin,
   schema,
   state,
-}: IrSchemaToAstOptions & {
+}: Pick<IrSchemaToAstOptions, 'plugin' | 'state'> & {
   schema: SchemaWithType<'enum'>;
-}): Chain => {
+}): Chain {
   const z = plugin.external('zod.z');
 
   const { literalMembers } = itemsNode({
     $,
     chain: { current: $(z) },
-    nodes: { base: baseNode, items: itemsNode, nullable: nullableNode },
+    nodes: { base: baseNode, items: itemsNode },
     plugin,
     schema,
     symbols: { z },
@@ -114,7 +102,6 @@ export const enumToAst = ({
       schema: {
         type: 'unknown',
       },
-      state,
     });
   }
 
@@ -126,7 +113,6 @@ export const enumToAst = ({
     nodes: {
       base: baseNode,
       items: itemsNode,
-      nullable: nullableNode,
     },
     plugin,
     schema,
@@ -141,4 +127,4 @@ export const enumToAst = ({
 
   const resolver = plugin.config['~resolvers']?.enum;
   return resolver?.(ctx) ?? enumResolver(ctx);
-};
+}

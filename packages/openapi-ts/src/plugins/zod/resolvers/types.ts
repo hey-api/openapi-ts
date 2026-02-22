@@ -1,5 +1,5 @@
 import type { Refs, Symbol } from '@hey-api/codegen-core';
-import type { IR, Plugin, SchemaWithType } from '@hey-api/shared';
+import type { IR, Plugin, SchemaVisitorContext, SchemaWithType, Walker } from '@hey-api/shared';
 import type { MaybeArray } from '@hey-api/types';
 import type ts from 'typescript';
 
@@ -7,7 +7,7 @@ import type { MaybeBigInt, ShouldCoerceToBigInt } from '../../../plugins/shared/
 import type { GetIntegerLimit } from '../../../plugins/shared/utils/formats';
 import type { $, DollarTsDsl, TsDsl } from '../../../ts-dsl';
 import type { Chain } from '../shared/chain';
-import type { Ast, PluginState } from '../shared/types';
+import type { Ast, IrSchemaToAstOptions, PluginState, ZodSchemaResult } from '../shared/types';
 import type { ZodPlugin } from '../types';
 
 export type Resolvers = Plugin.Resolvers<{
@@ -74,33 +74,30 @@ type ValidatorResolver = (
   ctx: ValidatorResolverContext,
 ) => MaybeArray<TsDsl<ts.Statement>> | null | undefined;
 
-interface BaseContext extends DollarTsDsl {
-  /**
-   * Functions for working with chains.
-   */
-  chain: {
+type BaseContext = DollarTsDsl &
+  Pick<IrSchemaToAstOptions, 'plugin'> & {
     /**
-     * The current chain.
-     *
-     * In Zod, this represents a chain of call expressions ("chains")
-     * being assembled to form a schema definition.
-     *
-     * Each chain can be extended, modified, or replaced to customize
-     * the resulting schema.
+     * Functions for working with chains.
      */
-    current: Chain;
+    chain: {
+      /**
+       * The current chain.
+       *
+       * In Zod, this represents a chain of call expressions ("chains")
+       * being assembled to form a schema definition.
+       *
+       * Each chain can be extended, modified, or replaced to customize
+       * the resulting schema.
+       */
+      current: Chain;
+    };
+    /**
+     * Provides access to commonly used symbols within the plugin.
+     */
+    symbols: {
+      z: Symbol;
+    };
   };
-  /**
-   * The plugin instance.
-   */
-  plugin: ZodPlugin['Instance'];
-  /**
-   * Provides access to commonly used symbols within the plugin.
-   */
-  symbols: {
-    z: Symbol;
-  };
-}
 
 export interface EnumResolverContext extends BaseContext {
   /**
@@ -132,10 +129,6 @@ export interface EnumResolverContext extends BaseContext {
        */
       literalMembers: Array<Chain>;
     };
-    /**
-     * Returns a nullable wrapper if the enum includes null, undefined otherwise.
-     */
-    nullable: (ctx: EnumResolverContext) => Chain | undefined;
   };
   schema: SchemaWithType<'enum'>;
   /**
@@ -171,6 +164,7 @@ export interface NumberResolverContext extends BaseContext {
 }
 
 export interface ObjectResolverContext extends BaseContext {
+  applyModifiers: (result: ZodSchemaResult, opts: { optional?: boolean }) => Ast;
   /**
    * Nodes used to build different parts of the object schema.
    */
@@ -191,6 +185,8 @@ export interface ObjectResolverContext extends BaseContext {
     ast: Partial<Omit<Ast, 'typeName'>>;
     state: Refs<PluginState>;
   };
+  walk: Walker<ZodSchemaResult, ZodPlugin['Instance']>;
+  walkerCtx: SchemaVisitorContext<ZodPlugin['Instance']>;
 }
 
 export interface StringResolverContext extends BaseContext {

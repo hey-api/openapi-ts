@@ -217,14 +217,8 @@ export const zModelWithStringError = z.object({
  * This is a model with one string property
  */
 export const zModelWithNullableString = z.object({
-    nullableProp: z.union([
-        z.string(),
-        z.null()
-    ]).optional(),
-    nullableRequiredProp: z.union([
-        z.string(),
-        z.null()
-    ])
+    nullableProp: z.string().nullish(),
+    nullableRequiredProp: z.string().nullable()
 });
 
 /**
@@ -413,14 +407,14 @@ export const zFailureFailure = z.object({
     reference_code: z.string().optional()
 });
 
-export const zExternalSharedExternalSharedModel = z.object({
+export const zExternalSharedModel = z.object({
     id: z.string(),
     name: z.string().optional()
 });
 
-export const zExternalRefA = zExternalSharedExternalSharedModel;
+export const zExternalRefA = zExternalSharedModel;
 
-export const zExternalRefB = zExternalSharedExternalSharedModel;
+export const zExternalRefB = zExternalSharedModel;
 
 /**
  * This is a model with one nested property
@@ -603,14 +597,8 @@ export const zCallToTestOrderOfParamsData = z.object({
         parameterStringWithDefault: z.string().default('Hello World!'),
         parameterStringWithEmptyDefault: z.string().default(''),
         parameterStringWithNoDefault: z.string(),
-        parameterStringNullableWithNoDefault: z.union([
-            z.string(),
-            z.null()
-        ]).optional(),
-        parameterStringNullableWithDefault: z.union([
-            z.string(),
-            z.null()
-        ]).optional().default(null)
+        parameterStringNullableWithNoDefault: z.string().nullish(),
+        parameterStringNullableWithDefault: z.string().nullish().default(null)
     })
 });
 

@@ -4,20 +4,13 @@ import * as z from 'zod';
 
 export const zBaz = z.string().regex(/foo\nbar/).readonly().default('baz');
 
-export const zFoo = z.union([
-    z.object({
-        foo: z.optional(z.string().regex(/^\d{3}-\d{2}-\d{4}$/)),
-        get bar() {
-            return z.optional(z.lazy((): any => zBar));
-        },
-        get baz() {
-            return z.optional(z.array(z.lazy((): any => zFoo)));
-        },
-        qux: z.optional(z.int().gt(0)).default(0)
-    }),
-    z.null()
-]).default(null);
+export const zFoo = z.object({
+    foo: z.string().regex(/^\d{3}-\d{2}-\d{4}$/).optional(),
+    bar: z.lazy((): any => zBar).optional(),
+    baz: z.array(z.lazy((): any => zFoo)).optional(),
+    qux: z.int().gt(0).optional().default(0)
+}).nullable().default(null);
 
 export const zBar = z.object({
-    foo: z.optional(zFoo)
+    foo: zFoo.optional()
 });

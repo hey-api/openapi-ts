@@ -1,22 +1,25 @@
-import { fromRef, ref } from '@hey-api/codegen-core';
 import type { SchemaWithType } from '@hey-api/shared';
-import { deduplicateSchema } from '@hey-api/shared';
+import { childContext, deduplicateSchema } from '@hey-api/shared';
 
 import { $ } from '../../../../ts-dsl';
 import { identifiers } from '../../constants';
-import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
-import { irSchemaToAst } from '../plugin';
+import type {
+  Ast,
+  IrSchemaToAstOptions,
+  ZodAppliedResult,
+  ZodSchemaResult,
+} from '../../shared/types';
 import { unknownToAst } from './unknown';
 
-export const arrayToAst = ({
-  plugin,
-  schema,
-  state,
-}: IrSchemaToAstOptions & {
-  schema: SchemaWithType<'array'>;
-}): Omit<Ast, 'typeName'> & {
-  anyType?: string;
-} => {
+export function arrayToAst(
+  options: IrSchemaToAstOptions & {
+    applyModifiers: (result: ZodSchemaResult, opts: { optional?: boolean }) => ZodAppliedResult;
+    schema: SchemaWithType<'array'>;
+  },
+): Omit<Ast, 'typeName'> {
+  const { applyModifiers, plugin, walk } = options;
+  let { schema } = options;
+
   const z = plugin.external('zod.z');
 
   const functionName = $(z).attr(identifiers.array);
@@ -27,11 +30,10 @@ export const arrayToAst = ({
   if (!schema.items) {
     arrayExpression = functionName.call(
       unknownToAst({
-        plugin,
+        ...options,
         schema: {
           type: 'unknown',
         },
-        state,
       }),
     );
   } else {
@@ -39,18 +41,23 @@ export const arrayToAst = ({
 
     // at least one item is guaranteed
     const itemExpressions = schema.items!.map((item, index) => {
-      const itemAst = irSchemaToAst({
-        plugin,
-        schema: item,
-        state: {
-          ...state,
-          path: ref([...fromRef(state.path), 'items', index]),
-        },
-      });
-      if (itemAst.hasLazyExpression) {
+      const itemResult = walk(
+        item,
+        childContext(
+          {
+            path: options.state.path,
+            plugin: options.plugin,
+          },
+          'items',
+          index,
+        ),
+      );
+      if (itemResult.hasLazyExpression) {
         hasLazyExpression = true;
       }
-      return itemAst.expression;
+
+      const finalExpr = applyModifiers(itemResult, { optional: false });
+      return finalExpr.expression;
     });
 
     if (itemExpressions.length === 1) {
@@ -107,4 +114,4 @@ export const arrayToAst = ({
     expression: arrayExpression,
     hasLazyExpression,
   };
-};
+}

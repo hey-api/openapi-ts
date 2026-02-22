@@ -12,7 +12,7 @@ export default defineConfig(() => [
       path: './logs',
     },
     output: {
-      path: path.resolve(__dirname, '..', '.gen', 'python'),
+      path: path.resolve(__dirname, '.gen', 'python'),
     },
     plugins: getPreset(),
   },

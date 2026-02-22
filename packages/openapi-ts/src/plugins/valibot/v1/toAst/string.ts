@@ -98,12 +98,12 @@ function stringResolver(ctx: StringResolverContext): Pipes {
   return ctx.pipes.current;
 }
 
-export const stringToNode = ({
+export function stringToNode({
   plugin,
   schema,
-}: IrSchemaToAstOptions & {
+}: Pick<IrSchemaToAstOptions, 'plugin'> & {
   schema: SchemaWithType<'string'>;
-}): Pipe => {
+}): Pipe {
   const ctx: StringResolverContext = {
     $,
     nodes: {
@@ -128,4 +128,4 @@ export const stringToNode = ({
   const resolver = plugin.config['~resolvers']?.string;
   const node = resolver?.(ctx) ?? stringResolver(ctx);
   return ctx.pipes.toNode(node, plugin);
-};
+}

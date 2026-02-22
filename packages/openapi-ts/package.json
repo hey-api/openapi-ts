@@ -1,6 +1,6 @@
 {
   "name": "@hey-api/openapi-ts",
-  "version": "0.92.3",
+  "version": "0.92.4",
   "description": "🌀 OpenAPI to TypeScript codegen. Production-ready SDKs, Zod schemas, TanStack Query hooks, and 20+ plugins. Used by Vercel, OpenCode, and PayPal.",
   "keywords": [
     "angular",
@@ -70,7 +70,7 @@
   },
   "dependencies": {
     "@hey-api/codegen-core": "workspace:*",
-    "@hey-api/json-schema-ref-parser": "1.2.4",
+    "@hey-api/json-schema-ref-parser": "workspace:*",
     "@hey-api/shared": "workspace:*",
     "@hey-api/types": "workspace:*",
     "ansi-colors": "4.1.3",

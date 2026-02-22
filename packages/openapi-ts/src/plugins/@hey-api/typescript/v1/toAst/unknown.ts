@@ -4,11 +4,11 @@ import type { TypeTsDsl } from '../../../../../ts-dsl';
 import { $ } from '../../../../../ts-dsl';
 import type { IrSchemaToAstOptions } from '../../shared/types';
 
-export const unknownToAst = ({
+export function unknownToAst({
   plugin,
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'unknown'>;
-}): TypeTsDsl => {
+}): TypeTsDsl {
   const node = $.type(plugin.config.topType);
   return node;
-};
+}

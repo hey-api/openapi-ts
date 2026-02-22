@@ -81,7 +81,10 @@ jobs:
         run: pnpm turbo run lint
 
       - name: Run type check
-        run: pnpm typecheck
+        run: pnpm ty "!@test/openapi-ts"
+
+      - name: Run type check (heavy tests)
+        run: pnpm ty "@test/openapi-ts"
 
       - name: Run tests
         run: pnpm test

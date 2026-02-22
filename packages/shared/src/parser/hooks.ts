@@ -1,5 +1,6 @@
 import type { Node, Symbol, SymbolIn } from '@hey-api/codegen-core';
 
+import type { SchemaProcessorContext } from '../ir/schema-processor';
 import type { IROperationObject } from '../ir/types';
 import type { PluginInstance } from '../plugins/shared/utils/instance';
 
@@ -164,6 +165,28 @@ export type Hooks = {
      * ```
      */
     isQuery?: (operation: IROperationObject) => boolean | undefined;
+  };
+  schemas?: {
+    /**
+     * Whether to extract the given schema into a separate symbol.
+     *
+     * This affects how schemas are processed and output.
+     *
+     * **Default behavior:** No schemas are extracted.
+     *
+     * @param ctx - The processing context for the schema.
+     * @returns true to extract the schema, false to keep it inline, or undefined to fallback to default behavior.
+     * @example
+     * ```ts
+     * shouldExtract: (ctx) => {
+     *   if (ctx.meta.resource === 'requestBody') {
+     *     return true;
+     *   }
+     *   return; // fallback to default behavior
+     * }
+     * ```
+     */
+    shouldExtract?: (ctx: SchemaProcessorContext) => boolean;
   };
   /**
    * Hooks specifically for overriding symbols behavior.
