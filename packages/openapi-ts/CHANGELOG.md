@@ -1,5 +1,58 @@
 # @hey-api/openapi-ts
 
+## 0.93.0
+
+### Minor Changes
+
+- **plugin(valibot)**: remove `enum.nodes.nullable` resolver node ([#3396](https://github.com/hey-api/openapi-ts/pull/3396)) ([`ea6f386`](https://github.com/hey-api/openapi-ts/commit/ea6f3865c8e381b3160e1526435c4522f0dc6aa4)) by [@mrlubos](https://github.com/mrlubos)
+
+### Removed resolver node
+
+Valibot plugin no longer exposes the `enum.nodes.nullable` node. It was refactored so that nullable values are handled outside of resolvers.
+
+- **plugin(zod)**: remove `enum.nodes.nullable` resolver node ([#3398](https://github.com/hey-api/openapi-ts/pull/3398)) ([`737730c`](https://github.com/hey-api/openapi-ts/commit/737730c9c6450c60a81a8949259336e790e9b4f4)) by [@mrlubos](https://github.com/mrlubos)
+
+### Removed resolver node
+
+Zod plugin no longer exposes the `enum.nodes.nullable` node. It was refactored so that nullable values are handled outside of resolvers.
+
+### Patch Changes
+
+- **parser**: prefer unprefixed schema names from external files ([#3417](https://github.com/hey-api/openapi-ts/pull/3417)) ([`f3a264b`](https://github.com/hey-api/openapi-ts/commit/f3a264b2c5d7af06bb44fa0350ef613bde3aff87)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **parser(patch)**: support callback for `patch.schemas` ([#3415](https://github.com/hey-api/openapi-ts/pull/3415)) ([`e494f4d`](https://github.com/hey-api/openapi-ts/commit/e494f4dd828167a0096a0a488b222a013f911055)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **output**: fix: apply `output.header` to bundled files ([#3438](https://github.com/hey-api/openapi-ts/pull/3438)) ([`bcd0a87`](https://github.com/hey-api/openapi-ts/commit/bcd0a87cdd366cef572eb920b59c115ae65f67bb)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **parser**: handle OpenAPI 3.1 `contentMediaType` keyword as binary format when file-like ([#3431](https://github.com/hey-api/openapi-ts/pull/3431)) ([`d6a8538`](https://github.com/hey-api/openapi-ts/commit/d6a85381e3c52b4fd1c4af43ee57506459db7a45)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **input**: fix: improve returned status code when spec fetch fails ([#3427](https://github.com/hey-api/openapi-ts/pull/3427)) ([`37dd92c`](https://github.com/hey-api/openapi-ts/commit/37dd92c6629511860ae434c64ac8af9154ed6aed)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **client**: expose `onRequest` in RequestOptions for SSE request interception ([#3392](https://github.com/hey-api/openapi-ts/pull/3392)) ([`8fc4681`](https://github.com/hey-api/openapi-ts/commit/8fc46819d5df1d4a353be5ae7cd45a8c669a5d7e)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **parser**: add `patch.input` and shorthand `patch()` option for full specification transformations ([#3411](https://github.com/hey-api/openapi-ts/pull/3411)) ([`ba9f893`](https://github.com/hey-api/openapi-ts/commit/ba9f893d71b959721e177717ae85fce34d697002)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **parser**: fix: preserve `unevaluatedProperties` keyword in transforms ([#3435](https://github.com/hey-api/openapi-ts/pull/3435)) ([`f659b38`](https://github.com/hey-api/openapi-ts/commit/f659b38701795d2c2b61c8d3f5c43af93893481a)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(zod)**: use `.nullable()` and `.nullish()` methods ([#3398](https://github.com/hey-api/openapi-ts/pull/3398)) ([`737730c`](https://github.com/hey-api/openapi-ts/commit/737730c9c6450c60a81a8949259336e790e9b4f4)) by [@mrlubos](https://github.com/mrlubos)
+
+- **parser**: fix: resolve sibling schemas from external files during bundling ([#3422](https://github.com/hey-api/openapi-ts/pull/3422)) ([`19fd80a`](https://github.com/hey-api/openapi-ts/commit/19fd80aff26b1198d6838d48357702c39ad05501)) by [@j-westover](https://github.com/j-westover)
+
+- **parser(transforms)**: add `schemaName` transform ([#3416](https://github.com/hey-api/openapi-ts/pull/3416)) ([`4b9d032`](https://github.com/hey-api/openapi-ts/commit/4b9d032c6a144fa79cedc28e077782b9d67803a3)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(valibot)**: use `.nullable()` and `.nullish()` methods ([#3396](https://github.com/hey-api/openapi-ts/pull/3396)) ([`ea6f386`](https://github.com/hey-api/openapi-ts/commit/ea6f3865c8e381b3160e1526435c4522f0dc6aa4)) by [@mrlubos](https://github.com/mrlubos)
+
+- **input**: fix: avoid prefixing sources if paths do not collide on operations ([#3436](https://github.com/hey-api/openapi-ts/pull/3436)) ([`b1a419a`](https://github.com/hey-api/openapi-ts/commit/b1a419a835c312a1f8bf36a5b781109368041220)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **parser(patch)**: support callback for `patch.operations` ([#3420](https://github.com/hey-api/openapi-ts/pull/3420)) ([`e1cd970`](https://github.com/hey-api/openapi-ts/commit/e1cd970e4f3028b29ace44a58b2d2cae18a6c45f)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **parser**: add support for non-string discriminator property types ([#3385](https://github.com/hey-api/openapi-ts/pull/3385)) ([`dd0be9c`](https://github.com/hey-api/openapi-ts/commit/dd0be9c6ca93552c3367ca8e8ba785381295a112)) by [@SipanP](https://github.com/SipanP)
+
+### Updated Dependencies:
+
+- @hey-api/shared@0.2.1
+- @hey-api/json-schema-ref-parser@1.3.1
+
 ## 0.92.4
 
 ### Patch Changes
