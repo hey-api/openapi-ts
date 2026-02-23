@@ -26,6 +26,8 @@ import type { PyListExpression as _PyListExpression } from './nodes/expressions/
 import type { PyLiteral as _PyLiteral } from './nodes/expressions/literal';
 import type { PyMemberExpression as _PyMemberExpression } from './nodes/expressions/member';
 import type { PySetExpression as _PySetExpression } from './nodes/expressions/set';
+import type { PySubscriptExpression as _PySubscriptExpression } from './nodes/expressions/subscript';
+import type { PySubscriptSlice as _PySubscriptSlice } from './nodes/expressions/subscript-slice';
 import type { PyTupleExpression as _PyTupleExpression } from './nodes/expressions/tuple';
 import type { PyYieldExpression as _PyYieldExpression } from './nodes/expressions/yield';
 import type { PyYieldFromExpression as _PyYieldFromExpression } from './nodes/expressions/yieldFrom';
@@ -110,6 +112,8 @@ export namespace py {
   export type Literal = _PyLiteral;
   export type MemberExpression = _PyMemberExpression;
   export type SetExpression = _PySetExpression;
+  export type SubscriptExpression = _PySubscriptExpression;
+  export type SubscriptSlice = _PySubscriptSlice;
   export type TupleExpression = _PyTupleExpression;
   export type YieldExpression = _PyYieldExpression;
   export type YieldFromExpression = _PyYieldFromExpression;

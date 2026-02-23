@@ -10,31 +10,31 @@ import { ExprMixin } from '../mixins/expr';
 import { TypeArgsMixin } from '../mixins/type-args';
 import { f } from '../utils/factories';
 
-export type CallArgs = ReadonlyArray<CallExpr | undefined>;
-export type CallExpr = NodeName | MaybeTsDsl<ts.Expression>;
-export type CallCtor = (expr: CallExpr, ...args: CallArgs) => CallTsDsl;
+export type CallArgs = ReadonlyArray<CallCallee | undefined>;
+export type CallCallee = NodeName | MaybeTsDsl<ts.Expression>;
+export type CallCtor = (callee: CallCallee, ...args: CallArgs) => CallTsDsl;
 
 const Mixed = ArgsMixin(AsMixin(ExprMixin(TypeArgsMixin(TsDsl<ts.CallExpression>))));
 
 export class CallTsDsl extends Mixed {
   readonly '~dsl' = 'CallTsDsl';
 
-  protected _callExpr: Ref<CallExpr>;
+  protected _callee: Ref<CallCallee>;
 
-  constructor(expr: CallExpr, ...args: CallArgs) {
+  constructor(callee: CallCallee, ...args: CallArgs) {
     super();
-    this._callExpr = ref(expr);
+    this._callee = ref(callee);
     this.args(...args);
   }
 
   override analyze(ctx: AnalysisContext): void {
     super.analyze(ctx);
-    ctx.analyze(this._callExpr);
+    ctx.analyze(this._callee);
   }
 
   override toAst() {
     return ts.factory.createCallExpression(
-      this.$node(this._callExpr),
+      this.$node(this._callee),
       this.$generics(),
       this.$args(),
     );
