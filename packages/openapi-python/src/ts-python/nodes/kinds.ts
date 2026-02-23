@@ -33,6 +33,8 @@ export enum PyNodeKind {
   SetComprehension = 'SetComprehension',
   SetExpression = 'SetExpression',
   SourceFile = 'SourceFile',
+  SubscriptExpression = 'SubscriptExpression',
+  SubscriptSlice = 'SubscriptSlice',
   TryStatement = 'TryStatement',
   TupleExpression = 'TupleExpression',
   WhileStatement = 'WhileStatement',

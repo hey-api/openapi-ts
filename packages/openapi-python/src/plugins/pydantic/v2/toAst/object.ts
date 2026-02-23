@@ -1,63 +1,110 @@
-// import { fromRef, ref } from '@hey-api/codegen-core';
-import type { SchemaWithType } from '@hey-api/shared';
+import type { SchemaVisitorContext, SchemaWithType, Walker } from '@hey-api/shared';
+import { childContext } from '@hey-api/shared';
 
-import { $ } from '../../../../py-dsl';
-import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
-// import { irSchemaToAst } from '../plugin';
+import { $, type MaybePyDsl } from '../../../../py-dsl';
+import type { py } from '../../../../ts-python';
+import type { PydanticField, PydanticFinal, PydanticResult } from '../../shared/types';
+import type { PydanticPlugin } from '../../types';
 
-export function objectToAst({
-  plugin,
-  // schema,
-  // state,
-}: IrSchemaToAstOptions & {
+interface ObjectResolverContext {
+  _childResults: Array<PydanticResult>;
+  applyModifiers: (result: PydanticResult, options?: { optional?: boolean }) => PydanticFinal;
+  plugin: PydanticPlugin['Instance'];
   schema: SchemaWithType<'object'>;
-}): Ast {
-  const symbolBaseModel = plugin.external('pydantic.BaseModel');
-  // const fieldSymbol = plugin.external('pydantic.Field');
-  const symbolTemp = plugin.symbol('temp');
+  walk: Walker<PydanticResult, PydanticPlugin['Instance']>;
+  walkerCtx: SchemaVisitorContext<PydanticPlugin['Instance']>;
+}
 
-  const classDef = $.class(symbolTemp).extends(symbolBaseModel);
-  console.log(classDef);
+export interface ObjectToFieldsResult {
+  childResults: Array<PydanticResult>;
+  fields?: Array<PydanticField>; // present = emit class
+  typeAnnotation?: string | MaybePyDsl<py.Expression>; // present = emit type alias (dict case)
+}
 
-  // if (schema.properties) {
-  //   for (const name in schema.properties) {
-  //     const property = schema.properties[name]!;
-  //     const isOptional = !schema.required?.includes(name);
+function resolveAdditionalProperties(
+  ctx: ObjectResolverContext,
+): string | MaybePyDsl<py.Expression> | null | undefined {
+  const { schema } = ctx;
 
-  //     const propertyAst = irSchemaToAst({
-  //       optional: isOptional,
-  //       plugin,
-  //       schema: property,
-  //       state: {
-  //         ...state,
-  //         path: ref([...fromRef(state.path), 'properties', name]),
-  //       },
-  //     });
+  if (!schema.additionalProperties || !schema.additionalProperties.type) return undefined;
+  if (schema.additionalProperties.type === 'never') return null;
 
-  //     let typeAnnotation = propertyAst.typeAnnotation;
+  const result = ctx.walk(
+    schema.additionalProperties,
+    childContext(ctx.walkerCtx, 'additionalProperties'),
+  );
+  ctx._childResults.push(result);
 
-  //     if (isOptional && !typeAnnotation.startsWith('Optional[')) {
-  //       typeAnnotation = `Optional[${typeAnnotation}]`;
-  //     }
+  return result.typeAnnotation;
+}
 
-  //     if (propertyAst.fieldConstraints && Object.keys(propertyAst.fieldConstraints).length > 0) {
-  //       const constraints = Object.entries(propertyAst.fieldConstraints)
-  //         .map(([key, value]) => `${key}=${JSON.stringify(value)}`)
-  //         .join(', ');
-  //       classDef.do($.expr(`${name}: ${typeAnnotation} = Field(${constraints})`));
-  //     } else {
-  //       classDef.do($.expr(`${name}: ${typeAnnotation}`));
-  //     }
-  //   }
-  // }
+function resolveFields(ctx: ObjectResolverContext): Array<PydanticField> {
+  const { schema } = ctx;
+  const fields: Array<PydanticField> = [];
 
-  return {
-    // expression: classDef,
-    fieldConstraints: {},
-    hasLazyExpression: false,
-    models: [],
-    // pipes: [],
-    typeAnnotation: 'DynamicModel',
-    typeName: 'DynamicModel',
+  for (const name in schema.properties) {
+    const property = schema.properties[name]!;
+    const isOptional = !schema.required?.includes(name);
+
+    const propertyResult = ctx.walk(property, childContext(ctx.walkerCtx, 'properties', name));
+    ctx._childResults.push(propertyResult);
+
+    const final = ctx.applyModifiers(propertyResult, { optional: isOptional });
+    fields.push({
+      fieldConstraints: final.fieldConstraints,
+      isOptional,
+      name,
+      typeAnnotation: final.typeAnnotation,
+    });
+  }
+
+  return fields;
+}
+
+function objectResolver(ctx: ObjectResolverContext): Omit<ObjectToFieldsResult, 'childResults'> {
+  const additional = resolveAdditionalProperties(ctx);
+
+  // additionalProperties: false → strict — still emit a class, just no extra fields
+  // additionalProperties: { type: 'never' } → null sentinel → strict class
+  if (additional === null) {
+    const fields = resolveFields(ctx);
+    return { fields };
+  }
+
+  if (additional && !ctx.schema.properties) {
+    const any = ctx.plugin.external('typing.Any');
+    return { typeAnnotation: $('dict').slice('str', any) };
+  }
+
+  // additionalProperties with properties → class wins, additional props ignored for now
+  // TODO: consider model_config = ConfigDict(extra='allow')
+  if (ctx.schema.properties) {
+    const fields = resolveFields(ctx);
+    return { fields };
+  }
+
+  const any = ctx.plugin.external('typing.Any');
+  return { typeAnnotation: $('dict').slice('str', any) };
+}
+
+export function objectToFields(
+  ctx: Pick<ObjectResolverContext, 'applyModifiers' | 'plugin' | 'schema' | 'walk' | 'walkerCtx'>,
+): ObjectToFieldsResult {
+  const { applyModifiers, plugin, schema, walk, walkerCtx } = ctx;
+  const childResults: Array<PydanticResult> = [];
+
+  const extendedCtx: ObjectResolverContext = {
+    _childResults: childResults,
+    applyModifiers,
+    plugin,
+    schema,
+    walk,
+    walkerCtx,
   };
+
+  // const resolver = plugin.config?.['~resolvers']?.object;
+  // const resolved = resolver?.(extendedCtx) ?? objectResolver(extendedCtx);
+  const resolved = objectResolver(extendedCtx);
+
+  return { childResults, ...resolved };
 }

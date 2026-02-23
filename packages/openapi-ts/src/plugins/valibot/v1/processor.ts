@@ -50,11 +50,7 @@ export function createProcessor(plugin: ValibotPlugin['Instance']): ProcessorRes
         plugin,
       }) as ValibotFinal;
 
-      exportAst({
-        ...ctx,
-        final,
-        plugin,
-      });
+      exportAst({ ...ctx, final, plugin });
     });
   }
 

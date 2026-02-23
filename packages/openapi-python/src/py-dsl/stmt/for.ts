@@ -74,8 +74,8 @@ export class ForPyDsl extends Mixed {
     const elseBlock = this._else ? new BlockPyDsl(...this._else).$do() : undefined;
 
     return py.factory.createForStatement(
-      this.$node(this._target!) as py.Expression,
-      this.$node(this._iterable!) as py.Expression,
+      this.$node(this._target!),
+      this.$node(this._iterable!),
       [...body],
       elseBlock ? [...elseBlock] : undefined,
     );

@@ -1,11 +1,11 @@
 import type { IR } from '@hey-api/shared';
 
-import type { ValibotMeta, ValibotResult } from './types';
+import type { PydanticMeta, PydanticResult } from './types';
 
 /**
  * Creates default metadata from a schema.
  */
-export function defaultMeta(schema: IR.SchemaObject): ValibotMeta {
+export function defaultMeta(schema: IR.SchemaObject): PydanticMeta {
   return {
     default: schema.default,
     format: schema.format,
@@ -24,9 +24,9 @@ export function defaultMeta(schema: IR.SchemaObject): ValibotMeta {
  * @param overrides - Explicit overrides (e.g., from parent schema)
  */
 export function composeMeta(
-  children: ReadonlyArray<ValibotResult>,
-  overrides?: Partial<ValibotMeta>,
-): ValibotMeta {
+  children: ReadonlyArray<PydanticResult>,
+  overrides?: Partial<PydanticMeta>,
+): PydanticMeta {
   return {
     default: overrides?.default,
     format: overrides?.format,
@@ -44,8 +44,8 @@ export function composeMeta(
  */
 export function inheritMeta(
   parent: IR.SchemaObject,
-  children: ReadonlyArray<ValibotResult>,
-): ValibotMeta {
+  children: ReadonlyArray<PydanticResult>,
+): PydanticMeta {
   return composeMeta(children, {
     default: parent.default,
     format: parent.format,
