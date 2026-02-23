@@ -308,4 +308,86 @@ describe('bundle', () => {
       }
     });
   });
+
+  describe('mergeMany', () => {
+    it('merges paths with non-conflicting methods under the same path', async () => {
+      const refParser = new $RefParser();
+      const spec1 = {
+        info: { title: 'Spec 1', version: '1.0.0' },
+        paths: {
+          '/pet/{petId}': {
+            post: {
+              operationId: 'updatePetWithForm',
+              responses: { '405': { description: 'Invalid input' } },
+            },
+          },
+        },
+        swagger: '2.0',
+      };
+      const spec2 = {
+        info: { title: 'Spec 2', version: '1.0.0' },
+        paths: {
+          '/pet/{petId}': {
+            delete: {
+              operationId: 'deletePet',
+              responses: {
+                '400': { description: 'Invalid ID supplied' },
+                '404': { description: 'Pet not found' },
+              },
+            },
+          },
+        },
+        swagger: '2.0',
+      };
+
+      const merged = (await refParser.bundleMany({ pathOrUrlOrSchemas: [spec1, spec2] })) as any;
+
+      // Both methods should be under the same path (no prefix added)
+      expect(merged.paths['/pet/{petId}']).toBeDefined();
+      expect(merged.paths['/pet/{petId}'].post).toBeDefined();
+      expect(merged.paths['/pet/{petId}'].delete).toBeDefined();
+
+      // No prefixed path should be created
+      const pathKeys = Object.keys(merged.paths);
+      expect(pathKeys).toHaveLength(1);
+    });
+
+    it('adds prefix to path when HTTP methods conflict', async () => {
+      const refParser = new $RefParser();
+      const spec1 = {
+        info: { title: 'Spec 1', version: '1.0.0' },
+        paths: {
+          '/pet/{petId}': {
+            get: {
+              operationId: 'getPetById',
+              responses: { '200': { description: 'OK' } },
+            },
+          },
+        },
+        swagger: '2.0',
+      };
+      const spec2 = {
+        info: { title: 'Spec 2', version: '1.0.0' },
+        paths: {
+          '/pet/{petId}': {
+            get: {
+              operationId: 'getPet',
+              responses: { '200': { description: 'Success' } },
+            },
+          },
+        },
+        swagger: '2.0',
+      };
+
+      const merged = (await refParser.bundleMany({ pathOrUrlOrSchemas: [spec1, spec2] })) as any;
+
+      // The conflicting path should be prefixed
+      const pathKeys = Object.keys(merged.paths);
+      expect(pathKeys).toHaveLength(2);
+      expect(merged.paths['/pet/{petId}']).toBeDefined();
+      const prefixedKey = pathKeys.find((k) => k !== '/pet/{petId}');
+      expect(prefixedKey).toBeDefined();
+      expect(merged.paths[prefixedKey!].get).toBeDefined();
+    });
+  });
 });
