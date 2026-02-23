@@ -946,14 +946,14 @@ export const zOneOfAllOfIssue = z.union([
     zGenericSchemaDuplicateIssue1SystemString
 ]);
 
-export const zExternalSharedExternalSharedModel = z.object({
+export const zExternalSharedModel = z.object({
     id: z.string(),
     name: z.optional(z.string())
 });
 
-export const zExternalRefA = zExternalSharedExternalSharedModel;
+export const zExternalRefA = zExternalSharedModel;
 
-export const zExternalRefB = zExternalSharedExternalSharedModel;
+export const zExternalRefB = zExternalSharedModel;
 
 /**
  * This is a model with one nested property

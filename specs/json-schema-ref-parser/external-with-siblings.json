@@ -1,0 +1,33 @@
+{
+  "components": {
+    "schemas": {
+      "ResolutionStep": {
+        "type": "object",
+        "properties": {
+          "ResolutionType": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ResolutionType"
+              }
+            ]
+          },
+          "ActionName": {
+            "type": "string"
+          }
+        }
+      },
+      "ResolutionType": {
+        "type": "string",
+        "enum": ["ContactVendor", "ResetToDefaults", "RetryOperation"]
+      },
+      "ActionInfo": {
+        "type": "object",
+        "properties": {
+          "ActionId": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

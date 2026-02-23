@@ -1,15 +1,16 @@
 import type { SchemaWithType } from '@hey-api/shared';
 
 import { $ } from '../../../../ts-dsl';
-import type { IrSchemaToAstOptions } from '../../shared/types';
+import type { Pipe } from '../../shared/pipes';
+import type { ValibotPlugin } from '../../types';
 import { identifiers } from '../constants';
 
-export function neverToAst({
+export function neverToPipes({
   plugin,
-}: Pick<IrSchemaToAstOptions, 'plugin'> & {
+}: {
+  plugin: ValibotPlugin['Instance'];
   schema: SchemaWithType<'never'>;
-}) {
+}): Pipe {
   const v = plugin.external('valibot.v');
-  const expression = $(v).attr(identifiers.schemas.never).call();
-  return expression;
+  return $(v).attr(identifiers.schemas.never).call();
 }

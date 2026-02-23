@@ -592,6 +592,44 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'transforms-schemas-name.yaml',
+        output: 'transforms-schemas-name',
+        parser: {
+          transforms: {
+            schemaName: (name: string) => {
+              // Strip version markers: User_v1_0_0_User → User
+              let clean = name.replace(/([A-Za-z\d]+)_v\d+_\d+_\d+_([A-Za-z\d]*)/g, (_, p1, p2) =>
+                p2.startsWith(p1) ? p2 : p1 + p2,
+              );
+              // Deduplicate prefixes: Foo_Foo → Foo
+              const m = clean.match(/^([A-Za-z\d]+)_\1([A-Za-z\d]*)$/);
+              if (m) clean = m[1]! + m[2]!;
+              return clean;
+            },
+          },
+        },
+        plugins: ['@hey-api/typescript'],
+      }),
+      description: 'handles schema name transforms',
+    },
+    {
+      config: createConfig({
+        input: 'transforms-schemas-name-collision.yaml',
+        output: 'transforms-schemas-name-collision',
+        parser: {
+          transforms: {
+            schemaName: (name: string) =>
+              // Try to rename all _vX_User schemas to "User"
+              // This should cause collisions since "User" already exists
+              name.replace(/_v\d+_User$/, ''),
+          },
+        },
+        plugins: ['@hey-api/typescript'],
+      }),
+      description: 'handles schema name collision prevention',
+    },
+    {
+      config: createConfig({
         input: 'security-api-key.yaml',
         output: 'security-api-key',
         plugins: [

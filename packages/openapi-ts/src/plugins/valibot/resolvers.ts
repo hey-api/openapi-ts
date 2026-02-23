@@ -1,12 +1,12 @@
-import type { Refs, Symbol } from '@hey-api/codegen-core';
+import type { Symbol } from '@hey-api/codegen-core';
 import type { IR, Plugin, SchemaVisitorContext, SchemaWithType, Walker } from '@hey-api/shared';
 
-import type { MaybeBigInt, ShouldCoerceToBigInt } from '../../../plugins/shared/utils/coerce';
-import type { GetIntegerLimit } from '../../../plugins/shared/utils/formats';
-import type { $, DollarTsDsl } from '../../../ts-dsl';
-import type { Pipe, PipeResult, Pipes, PipesUtils } from '../shared/pipes';
-import type { Ast, IrSchemaToAstOptions, PluginState, ValibotSchemaResult } from '../shared/types';
-import type { ValibotPlugin } from '../types';
+import type { MaybeBigInt, ShouldCoerceToBigInt } from '../../plugins/shared/utils/coerce';
+import type { GetIntegerLimit } from '../../plugins/shared/utils/formats';
+import type { $, DollarTsDsl } from '../../ts-dsl';
+import type { Pipe, PipeResult, Pipes, PipesUtils } from './shared/pipes';
+import type { ValibotFinal, ValibotResult } from './shared/types';
+import type { ValibotPlugin } from './types';
 
 export type Resolvers = Plugin.Resolvers<{
   /**
@@ -16,7 +16,7 @@ export type Resolvers = Plugin.Resolvers<{
    *
    * Returning `undefined` will execute the default resolver logic.
    */
-  enum?: (ctx: EnumResolverContext) => PipeResult | undefined;
+  enum?: (ctx: EnumResolverContext) => PipeResult;
   /**
    * Resolver for number schemas.
    *
@@ -24,7 +24,7 @@ export type Resolvers = Plugin.Resolvers<{
    *
    * Returning `undefined` will execute the default resolver logic.
    */
-  number?: (ctx: NumberResolverContext) => PipeResult | undefined;
+  number?: (ctx: NumberResolverContext) => PipeResult;
   /**
    * Resolver for object schemas.
    *
@@ -32,7 +32,7 @@ export type Resolvers = Plugin.Resolvers<{
    *
    * Returning `undefined` will execute the default resolver logic.
    */
-  object?: (ctx: ObjectResolverContext) => PipeResult | undefined;
+  object?: (ctx: ObjectResolverContext) => PipeResult;
   /**
    * Resolver for string schemas.
    *
@@ -40,7 +40,7 @@ export type Resolvers = Plugin.Resolvers<{
    *
    * Returning `undefined` will execute the default resolver logic.
    */
-  string?: (ctx: StringResolverContext) => PipeResult | undefined;
+  string?: (ctx: StringResolverContext) => PipeResult;
   /**
    * Resolvers for request and response validators.
    *
@@ -70,34 +70,35 @@ export type Resolvers = Plugin.Resolvers<{
 
 type ValidatorResolver = (ctx: ValidatorResolverContext) => PipeResult | null | undefined;
 
-type BaseContext = DollarTsDsl &
-  Pick<IrSchemaToAstOptions, 'plugin'> & {
+interface BaseContext extends DollarTsDsl {
+  /**
+   * Functions for working with pipes.
+   */
+  pipes: PipesUtils & {
     /**
-     * Functions for working with pipes.
+     * The current pipe.
+     *
+     * In Valibot, this represents a list of call expressions ("pipes")
+     * being assembled to form a schema definition.
+     *
+     * Each pipe can be extended, modified, or replaced to customize
+     * the resulting schema.
      */
-    pipes: PipesUtils & {
-      /**
-       * The current pipe.
-       *
-       * In Valibot, this represents a list of call expressions ("pipes")
-       * being assembled to form a schema definition.
-       *
-       * Each pipe can be extended, modified, or replaced to customize
-       * the resulting schema.
-       */
-      current: Pipes;
-    };
-    /**
-     * Provides access to commonly used symbols within the plugin.
-     */
-    symbols: {
-      v: Symbol;
-    };
+    current: Pipes;
   };
+  /** The plugin instance. */
+  plugin: ValibotPlugin['Instance'];
+  /**
+   * Provides access to commonly used symbols within the plugin.
+   */
+  symbols: {
+    v: Symbol;
+  };
+}
 
 export interface EnumResolverContext extends BaseContext {
   /**
-   * Nodes used to build different parts of the enum schema.
+   * Nodes used to build different parts of the schema.
    */
   nodes: {
     /**
@@ -119,23 +120,17 @@ export interface EnumResolverContext extends BaseContext {
     };
   };
   schema: SchemaWithType<'enum'>;
-  /**
-   * Utility functions for enum schema processing.
-   */
-  utils: {
-    state: Refs<PluginState>;
-  };
 }
 
 export interface NumberResolverContext extends BaseContext {
   /**
-   * Nodes used to build different parts of the number schema.
+   * Nodes used to build different parts of the schema.
    */
   nodes: {
     base: (ctx: NumberResolverContext) => PipeResult;
-    const: (ctx: NumberResolverContext) => PipeResult | undefined;
-    max: (ctx: NumberResolverContext) => PipeResult | undefined;
-    min: (ctx: NumberResolverContext) => PipeResult | undefined;
+    const: (ctx: NumberResolverContext) => PipeResult;
+    max: (ctx: NumberResolverContext) => PipeResult;
+    min: (ctx: NumberResolverContext) => PipeResult;
   };
   schema: SchemaWithType<'integer' | 'number'>;
   /**
@@ -149,17 +144,14 @@ export interface NumberResolverContext extends BaseContext {
 }
 
 export interface ObjectResolverContext extends BaseContext {
-  applyModifiers: (result: ValibotSchemaResult, opts: { optional?: boolean }) => Ast;
+  _childResults: Array<ValibotResult>;
+  applyModifiers: (result: ValibotResult, opts: { optional?: boolean }) => ValibotFinal;
   /**
-   * Nodes used to build different parts of the object schema.
+   * Nodes used to build different parts of the schema.
    */
   nodes: {
-    /**
-     * If `additionalProperties` is `false` or `{ type: 'never' }`, returns `null`
-     * to indicate no additional properties are allowed.
-     */
     additionalProperties: (ctx: ObjectResolverContext) => Pipe | null | undefined;
-    base: (ctx: ObjectResolverContext) => PipeResult;
+    base: (ctx: ObjectResolverContext) => Pipes | Pipe;
     shape: (ctx: ObjectResolverContext) => ReturnType<typeof $.object>;
   };
   schema: SchemaWithType<'object'>;
@@ -167,25 +159,24 @@ export interface ObjectResolverContext extends BaseContext {
    * Utility functions for object schema processing.
    */
   utils: {
-    ast: Partial<Omit<Ast, 'typeName'>>;
-    state: Refs<PluginState>;
+    ast: Partial<{ hasLazy: boolean }>;
   };
-  walk: Walker<ValibotSchemaResult, ValibotPlugin['Instance']>;
+  walk: Walker<ValibotResult, ValibotPlugin['Instance']>;
   walkerCtx: SchemaVisitorContext<ValibotPlugin['Instance']>;
 }
 
 export interface StringResolverContext extends BaseContext {
   /**
-   * Nodes used to build different parts of the string schema.
+   * Nodes used to build different parts of the schema.
    */
   nodes: {
     base: (ctx: StringResolverContext) => PipeResult;
-    const: (ctx: StringResolverContext) => PipeResult | undefined;
-    format: (ctx: StringResolverContext) => PipeResult | undefined;
-    length: (ctx: StringResolverContext) => PipeResult | undefined;
-    maxLength: (ctx: StringResolverContext) => PipeResult | undefined;
-    minLength: (ctx: StringResolverContext) => PipeResult | undefined;
-    pattern: (ctx: StringResolverContext) => PipeResult | undefined;
+    const: (ctx: StringResolverContext) => PipeResult;
+    format: (ctx: StringResolverContext) => PipeResult;
+    length: (ctx: StringResolverContext) => PipeResult;
+    maxLength: (ctx: StringResolverContext) => PipeResult;
+    minLength: (ctx: StringResolverContext) => PipeResult;
+    pattern: (ctx: StringResolverContext) => PipeResult;
   };
   schema: SchemaWithType<'string'>;
 }

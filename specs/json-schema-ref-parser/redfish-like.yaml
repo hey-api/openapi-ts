@@ -1,0 +1,28 @@
+openapi: 3.0.0
+info:
+  title: Redfish-like API
+  version: '1.0.0'
+  description: Test API simulating Redfish structure with versioned schemas
+paths:
+  /redfish/v1/Systems:
+    get:
+      summary: Get Systems
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: 'ResolutionStep.v1_0_1.yaml#/components/schemas/ResolutionStep_v1_0_1_ResolutionStep'
+        default:
+          description: Error
+  /redfish/v1/Actions:
+    post:
+      summary: Submit Action
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: 'ResolutionStep.v1_0_1.yaml#/components/schemas/ResolutionStep_v1_0_1_ActionParameters'

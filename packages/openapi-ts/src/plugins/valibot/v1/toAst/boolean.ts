@@ -1,25 +1,22 @@
 import type { SchemaWithType } from '@hey-api/shared';
 
 import { $ } from '../../../../ts-dsl';
-import { pipesToNode } from '../../shared/pipes';
-import type { IrSchemaToAstOptions } from '../../shared/types';
+import type { Pipe } from '../../shared/pipes';
+import type { ValibotPlugin } from '../../types';
 import { identifiers } from '../constants';
 
-export function booleanToAst({
+export function booleanToPipes({
   plugin,
   schema,
-}: Pick<IrSchemaToAstOptions, 'plugin'> & {
+}: {
+  plugin: ValibotPlugin['Instance'];
   schema: SchemaWithType<'boolean'>;
-}): ReturnType<typeof $.call | typeof $.expr> {
-  const pipes: Array<ReturnType<typeof $.call>> = [];
-
+}): Pipe {
   const v = plugin.external('valibot.v');
 
   if (typeof schema.const === 'boolean') {
-    pipes.push($(v).attr(identifiers.schemas.literal).call($.literal(schema.const)));
-    return pipesToNode(pipes, plugin);
+    return $(v).attr(identifiers.schemas.literal).call($.literal(schema.const));
   }
 
-  pipes.push($(v).attr(identifiers.schemas.boolean).call());
-  return pipesToNode(pipes, plugin);
+  return $(v).attr(identifiers.schemas.boolean).call();
 }
