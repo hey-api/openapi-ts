@@ -739,6 +739,14 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'transforms-read-write-unevaluated.yaml',
+        output: 'transforms-read-write-unevaluated',
+        plugins: ['@hey-api/typescript'],
+      }),
+      description: 'preserves unevaluatedProperties in schemas with readOnly fields',
+    },
+    {
+      config: createConfig({
         input: 'ref-type.json',
         output: 'ref-type',
       }),

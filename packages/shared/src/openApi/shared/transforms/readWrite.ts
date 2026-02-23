@@ -46,6 +46,7 @@ const schemaKeys = new Set([
   'patternProperties',
   'properties',
   'schema',
+  'unevaluatedProperties',
 ]);
 
 const getComponentContext = (path: ReadonlyArray<string | number>): Scope | undefined => {
