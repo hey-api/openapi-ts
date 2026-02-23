@@ -195,6 +195,13 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'content-media-type.yaml',
+        output: 'content-media-type',
+      }),
+      description: 'handles contentMediaType schema property for file uploads',
+    },
+    {
+      config: createConfig({
         input: 'content-types.yaml',
         output: 'content-types',
         plugins: ['@hey-api/client-axios', '@hey-api/typescript', '@hey-api/sdk'],
