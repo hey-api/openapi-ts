@@ -5,12 +5,13 @@ import type {
   SchemaProcessorResult,
 } from '@hey-api/shared';
 
-import type { IrSchemaToAstOptions } from './types';
+import type { ValibotPlugin } from '../types';
 
-export type ProcessorContext = Pick<IrSchemaToAstOptions, 'plugin'> &
-  SchemaProcessorContext & {
-    naming: NamingConfig;
-    schema: IR.SchemaObject;
-  };
+export type ProcessorContext = SchemaProcessorContext & {
+  naming: NamingConfig;
+  /** The plugin instance. */
+  plugin: ValibotPlugin['Instance'];
+  schema: IR.SchemaObject;
+};
 
 export type ProcessorResult = SchemaProcessorResult<ProcessorContext>;

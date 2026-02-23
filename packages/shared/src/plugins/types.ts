@@ -126,6 +126,7 @@ export type DefinePlugin<
 > = {
   Config: Plugin.Config<Plugin.Types<Config, ResolvedConfig, Api>>;
   Handler: (args: { plugin: PluginInstance<Plugin.Types<Config, ResolvedConfig, Api>> }) => void;
+  /** The plugin instance. */
   Instance: PluginInstance<Plugin.Types<Config, ResolvedConfig, Api>>;
   Types: Plugin.Types<Config, ResolvedConfig, Api>;
 };
