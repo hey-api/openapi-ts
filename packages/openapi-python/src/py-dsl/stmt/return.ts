@@ -4,7 +4,7 @@ import { ref } from '@hey-api/codegen-core';
 import { py } from '../../ts-python';
 import type { MaybePyDsl } from '../base';
 import { PyDsl } from '../base';
-// import { f } from '../utils/factories';
+import { f } from '../utils/factories';
 
 export type ReturnExpr = NodeName | MaybePyDsl<py.Expression>;
 export type ReturnCtor = (expr?: ReturnExpr) => ReturnPyDsl;
@@ -31,4 +31,4 @@ export class ReturnPyDsl extends Mixed {
   }
 }
 
-// f.return.set((...args) => new ReturnPyDsl(...args));
+f.return.set((...args) => new ReturnPyDsl(...args));

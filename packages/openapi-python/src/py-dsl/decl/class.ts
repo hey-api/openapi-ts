@@ -97,7 +97,7 @@ export class ClassPyDsl extends Mixed {
 
     return py.factory.createClassDeclaration(
       this.name.toString(),
-      this.$node(this.body) as ReadonlyArray<py.Statement>,
+      this.$node(this.body),
       this.$decorators(),
       this.baseClasses.map((c) => this.$node(c)),
       this.$docs(),

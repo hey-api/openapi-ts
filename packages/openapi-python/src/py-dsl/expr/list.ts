@@ -35,7 +35,7 @@ export class ListPyDsl extends Mixed {
   }
 
   override toAst(): py.ListExpression {
-    const astElements = this._elements.map((el) => this.$node(el) as py.Expression);
+    const astElements = this._elements.map((el) => this.$node(el));
     return py.factory.createListExpression(astElements);
   }
 }

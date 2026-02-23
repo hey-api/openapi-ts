@@ -1,18 +1,20 @@
-import type { AnalysisContext } from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName } from '@hey-api/codegen-core';
 
 import { py } from '../../ts-python';
 import type { MaybePyDsl } from '../base';
 import { PyDsl } from '../base';
 import { LayoutMixin } from '../mixins/layout';
 
+export type TupleElement = NodeName | MaybePyDsl<py.Expression>;
+
 const Mixed = LayoutMixin(PyDsl<py.TupleExpression>);
 
 export class TuplePyDsl extends Mixed {
   readonly '~dsl' = 'TuplePyDsl';
 
-  protected _elements: Array<MaybePyDsl<py.Expression>> = [];
+  protected _elements: Array<TupleElement> = [];
 
-  constructor(...elements: Array<MaybePyDsl<py.Expression>>) {
+  constructor(...elements: Array<TupleElement>) {
     super();
     this._elements = elements;
   }
@@ -24,18 +26,18 @@ export class TuplePyDsl extends Mixed {
     }
   }
 
-  element(expr: MaybePyDsl<py.Expression>): this {
+  element(expr: TupleElement): this {
     this._elements.push(expr);
     return this;
   }
 
-  elements(...exprs: ReadonlyArray<MaybePyDsl<py.Expression>>): this {
+  elements(...exprs: ReadonlyArray<TupleElement>): this {
     this._elements.push(...exprs);
     return this;
   }
 
   override toAst(): py.TupleExpression {
-    const astElements = this._elements.map((el) => this.$node(el) as py.Expression);
+    const astElements = this._elements.map((el) => this.$node(el));
     return py.factory.createTupleExpression(astElements);
   }
 }
