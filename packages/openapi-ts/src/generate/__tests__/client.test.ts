@@ -5,9 +5,10 @@ import path from 'node:path';
  */
 function outputHeaderToPrefix(header: unknown): string {
   if (header == null || typeof header === 'function') return '';
-  const lines = Array.isArray(header)
-    ? (header as string[]).flatMap((line) => line.split(/\r?\n/))
-    : (header as string).split(/\r?\n/);
+  const lines =
+    typeof header === 'string'
+      ? header.split(/\r?\n/)
+      : (header as string[]).flatMap((line) => line.split(/\r?\n/));
   const content = lines.join('\n');
   return content ? `${content}\n\n` : '';
 }
