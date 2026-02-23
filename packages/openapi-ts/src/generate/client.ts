@@ -60,9 +60,10 @@ function getClientBundlePaths(pluginName: string): {
  */
 function outputHeaderToPrefix(header: OutputHeader): string {
   if (header == null || typeof header === 'function') return '';
-  const lines = Array.isArray(header)
-    ? header.flatMap((line) => line.split(/\r?\n/))
-    : header.split(/\r?\n/);
+  const lines =
+    typeof header === 'string'
+      ? header.split(/\r?\n/)
+      : header.flatMap((line) => line.split(/\r?\n/));
   const content = lines.join('\n');
   return content ? `${content}\n\n` : '';
 }
