@@ -1,30 +1,31 @@
-import type { AnalysisContext, NodeName } from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName, Ref } from '@hey-api/codegen-core';
+import { fromRef, isSymbol, ref } from '@hey-api/codegen-core';
 
 import { py } from '../../ts-python';
 import type { MaybePyDsl } from '../base';
 import { PyDsl } from '../base';
+import { ExprMixin } from '../mixins/expr';
+import { f } from '../utils/factories';
 
-const Mixed = PyDsl<py.MemberExpression>;
+export type AttrLeft = NodeName | MaybePyDsl<py.Expression>;
+export type AttrCtor = (left: AttrLeft, right: NodeName) => AttrPyDsl;
+
+const Mixed = ExprMixin(PyDsl<py.MemberExpression>);
 
 export class AttrPyDsl extends Mixed {
   readonly '~dsl' = 'AttrPyDsl';
 
-  protected object?: MaybePyDsl<py.Expression>;
-  protected prop?: NodeName;
+  protected left: Ref<AttrLeft>;
 
-  constructor(object: MaybePyDsl<py.Expression>, prop: NodeName) {
+  constructor(left: AttrLeft, right: NodeName) {
     super();
-    this.object = object;
-    this.name.set(prop);
-  }
-
-  static attr(object: MaybePyDsl<py.Expression>, prop: NodeName): AttrPyDsl {
-    return new AttrPyDsl(object, prop);
+    this.left = ref(left);
+    this.name.set(right);
   }
 
   override analyze(ctx: AnalysisContext): void {
     super.analyze(ctx);
-    ctx.analyze(this.object);
+    ctx.analyze(this.left);
     ctx.analyze(this.name);
   }
 
@@ -36,14 +37,17 @@ export class AttrPyDsl extends Mixed {
   override toAst(): py.MemberExpression {
     this.$validate();
 
+    const leftNode = this.$node(this.left);
+    const right = fromRef(this.name);
+    const value = isSymbol(right) ? right.finalName : right;
     return py.factory.createMemberExpression(
-      this.$node(this.object!) as py.Expression,
-      py.factory.createIdentifier(this.name.toString()),
+      leftNode,
+      py.factory.createIdentifier(value as string),
     );
   }
 
   $validate(): asserts this is this & {
-    object: MaybePyDsl<py.Expression>;
+    left: MaybePyDsl<py.Expression>;
   } {
     const missing = this.missingRequiredCalls();
     if (missing.length === 0) return;
@@ -52,8 +56,9 @@ export class AttrPyDsl extends Mixed {
 
   private missingRequiredCalls(): ReadonlyArray<string> {
     const missing: Array<string> = [];
-    if (!this.object) missing.push('object');
     if (!this.name.toString()) missing.push('property name');
     return missing;
   }
 }
+
+f.attr.set((...args) => new AttrPyDsl(...args));

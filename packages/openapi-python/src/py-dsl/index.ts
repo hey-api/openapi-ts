@@ -6,6 +6,7 @@ import { ClassPyDsl } from './decl/class';
 // import { EnumPyDsl } from './decl/enum';
 // import { FieldPyDsl } from './decl/field';
 import { FuncPyDsl } from './decl/func';
+import { AttrPyDsl } from './expr/attr';
 // import { GetterPyDsl } from './decl/getter';
 // import { InitPyDsl } from './decl/init';
 // import { EnumMemberPyDsl } from './decl/member';
@@ -24,13 +25,13 @@ import { ExprPyDsl } from './expr/expr';
 import { IdPyDsl } from './expr/identifier';
 import { ListPyDsl } from './expr/list';
 import { LiteralPyDsl } from './expr/literal';
-import { AttrPyDsl } from './expr/member';
 // import { NewPyDsl } from './expr/new';
 // import { ObjectPyDsl } from './expr/object';
 // import { PrefixPyDsl } from './expr/prefix';
 // import { ObjectPropPyDsl } from './expr/prop';
 // import { RegExpPyDsl } from './expr/regexp';
 import { SetPyDsl } from './expr/set';
+import { SubscriptPyDsl } from './expr/subscript';
 // import { TemplatePyDsl } from './expr/template';
 // import { TernaryPyDsl } from './expr/ternary';
 import { TuplePyDsl } from './expr/tuple';
@@ -208,6 +209,9 @@ const pyDsl = {
 
   /** Wraps an expression or statement-like value into a `StmtPyDsl`. */
   stmt: (...args: ConstructorParameters<typeof StmtPyDsl>) => new StmtPyDsl(...args),
+
+  /** Creates a subscript expression (e.g. `obj[index]` or `Type[Param]`). */
+  subscript: (...args: ConstructorParameters<typeof SubscriptPyDsl>) => new SubscriptPyDsl(...args),
 
   /** Creates a template literal expression. */
   // template: (...args: ConstructorParameters<typeof TemplateTsDsl>) => new TemplateTsDsl(...args),

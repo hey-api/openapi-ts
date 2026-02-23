@@ -172,9 +172,7 @@ export class TryPyDsl extends Mixed {
         if (entry.types.length === 1) {
           exceptionType = this.$node(entry.types[0]!);
         } else if (entry.types.length > 1) {
-          exceptionType = py.factory.createTupleExpression(
-            entry.types.map((t) => this.$node(t) as py.Expression),
-          );
+          exceptionType = py.factory.createTupleExpression(entry.types.map((t) => this.$node(t)));
         }
 
         const exceptionName = entry.name

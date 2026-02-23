@@ -2,7 +2,6 @@ import { applyNaming, pathToName } from '@hey-api/shared';
 
 import { createSchemaComment } from '../../../plugins/shared/utils/schema';
 import { $ } from '../../../ts-dsl';
-import type { ValibotPlugin } from '../types';
 import { pipesToNode } from './pipes';
 import type { ProcessorContext } from './processor';
 import type { ValibotFinal } from './types';
@@ -18,7 +17,6 @@ export function exportAst({
   tags,
 }: ProcessorContext & {
   final: ValibotFinal;
-  plugin: ValibotPlugin['Instance'];
 }): void {
   const v = plugin.external('valibot.v');
 

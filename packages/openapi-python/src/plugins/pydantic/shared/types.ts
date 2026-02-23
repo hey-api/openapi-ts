@@ -1,7 +1,8 @@
 import type { Refs, Symbol, SymbolMeta } from '@hey-api/codegen-core';
 import type { IR, SchemaExtractor } from '@hey-api/shared';
 
-import type { $ } from '../../../py-dsl';
+import type { $, MaybePyDsl } from '../../../py-dsl';
+import type { py } from '../../../ts-python';
 import type { PydanticPlugin } from '../types';
 import type { ProcessorContext } from './processor';
 
@@ -64,4 +65,57 @@ export interface ResolverContext {
    * IR schema being processed
    */
   schema: IR.SchemaObject;
+}
+
+// ..... ^^^^^^ OLD
+
+/**
+ * Metadata that flows through schema walking.
+ */
+export interface PydanticMeta {
+  /** Default value from schema. */
+  default?: unknown;
+  /** Original format (for BigInt coercion). */
+  format?: string;
+  /** Whether this or any child contains a lazy reference. */
+  hasLazy: boolean;
+  /** Does this schema explicitly allow null? */
+  nullable: boolean;
+  /** Is this schema read-only? */
+  readonly: boolean;
+}
+
+/**
+ * Result from walking a schema node.
+ */
+export interface PydanticResult {
+  fieldConstraints: Record<string, unknown>;
+  fields?: Array<PydanticField>;
+  meta: PydanticMeta;
+  typeAnnotation: string | MaybePyDsl<py.Expression>;
+}
+
+export interface PydanticField {
+  fieldConstraints: Record<string, unknown>;
+  isOptional: boolean;
+  name: string;
+  typeAnnotation: string | MaybePyDsl<py.Expression>;
+}
+
+/**
+ * Finalized result after applyModifiers.
+ */
+export interface PydanticFinal {
+  fieldConstraints: Record<string, unknown>;
+  fields?: Array<PydanticField>; // present = emit class, absent = emit type alias
+  typeAnnotation: string | MaybePyDsl<py.Expression>;
+}
+
+/**
+ * Result from composite handlers that walk children.
+ */
+export interface PydanticCompositeHandlerResult {
+  childResults: Array<PydanticResult>;
+  fieldConstraints: Record<string, unknown>;
+  typeAnnotation: string | MaybePyDsl<py.Expression>;
 }
