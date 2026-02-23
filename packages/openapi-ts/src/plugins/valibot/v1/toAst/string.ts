@@ -1,25 +1,27 @@
 import type { SchemaWithType } from '@hey-api/shared';
 
+import { shouldCoerceToBigInt } from '../../../../plugins/shared/utils/coerce';
 import { $ } from '../../../../ts-dsl';
 import type { StringResolverContext } from '../../resolvers';
 import type { Pipe, PipeResult, Pipes } from '../../shared/pipes';
 import { pipes } from '../../shared/pipes';
-import type { IrSchemaToAstOptions } from '../../shared/types';
+import type { ValibotPlugin } from '../../types';
 import { identifiers } from '../constants';
+import { numberToPipes } from './number';
 
 function baseNode(ctx: StringResolverContext): PipeResult {
   const { v } = ctx.symbols;
   return $(v).attr(identifiers.schemas.string).call();
 }
 
-function constNode(ctx: StringResolverContext): PipeResult | undefined {
+function constNode(ctx: StringResolverContext): PipeResult {
   const { schema, symbols } = ctx;
   const { v } = symbols;
   if (typeof schema.const !== 'string') return;
   return $(v).attr(identifiers.schemas.literal).call($.literal(schema.const));
 }
 
-function formatNode(ctx: StringResolverContext): PipeResult | undefined {
+function formatNode(ctx: StringResolverContext): PipeResult {
   const { schema, symbols } = ctx;
   const { v } = symbols;
   switch (schema.format) {
@@ -39,32 +41,30 @@ function formatNode(ctx: StringResolverContext): PipeResult | undefined {
     case 'uuid':
       return $(v).attr(identifiers.actions.uuid).call();
   }
-
-  return;
 }
 
-function lengthNode(ctx: StringResolverContext): PipeResult | undefined {
+function lengthNode(ctx: StringResolverContext): PipeResult {
   const { schema, symbols } = ctx;
   const { v } = symbols;
   if (schema.minLength === undefined || schema.minLength !== schema.maxLength) return;
   return $(v).attr(identifiers.actions.length).call($.literal(schema.minLength));
 }
 
-function maxLengthNode(ctx: StringResolverContext): PipeResult | undefined {
+function maxLengthNode(ctx: StringResolverContext): PipeResult {
   const { schema, symbols } = ctx;
   const { v } = symbols;
   if (schema.maxLength === undefined) return;
   return $(v).attr(identifiers.actions.maxLength).call($.literal(schema.maxLength));
 }
 
-function minLengthNode(ctx: StringResolverContext): PipeResult | undefined {
+function minLengthNode(ctx: StringResolverContext): PipeResult {
   const { schema, symbols } = ctx;
   const { v } = symbols;
   if (schema.minLength === undefined) return;
   return $(v).attr(identifiers.actions.minLength).call($.literal(schema.minLength));
 }
 
-function patternNode(ctx: StringResolverContext): PipeResult | undefined {
+function patternNode(ctx: StringResolverContext): PipeResult {
   const { schema, symbols } = ctx;
   const { v } = symbols;
   if (!schema.pattern) return;
@@ -98,12 +98,20 @@ function stringResolver(ctx: StringResolverContext): Pipes {
   return ctx.pipes.current;
 }
 
-export function stringToNode({
+export function stringToPipes({
   plugin,
   schema,
-}: Pick<IrSchemaToAstOptions, 'plugin'> & {
+}: {
+  plugin: ValibotPlugin['Instance'];
   schema: SchemaWithType<'string'>;
 }): Pipe {
+  if (shouldCoerceToBigInt(schema.format)) {
+    return numberToPipes({
+      plugin,
+      schema: { ...schema, type: 'number' },
+    });
+  }
+
   const ctx: StringResolverContext = {
     $,
     nodes: {
@@ -125,6 +133,7 @@ export function stringToNode({
       v: plugin.external('valibot.v'),
     },
   };
+
   const resolver = plugin.config['~resolvers']?.string;
   const node = resolver?.(ctx) ?? stringResolver(ctx);
   return ctx.pipes.toNode(node, plugin);

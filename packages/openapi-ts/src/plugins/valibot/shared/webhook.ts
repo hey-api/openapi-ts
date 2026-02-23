@@ -2,7 +2,6 @@ import type { IR } from '@hey-api/shared';
 
 import { buildOperationSchema } from './operation-schema';
 import type { ProcessorContext, ProcessorResult } from './processor';
-import type { IrSchemaToAstOptions } from './types';
 
 export function irWebhookToAst({
   operation,
@@ -10,11 +9,10 @@ export function irWebhookToAst({
   plugin,
   processor,
   tags,
-}: Pick<IrSchemaToAstOptions, 'plugin'> &
-  Pick<ProcessorContext, 'path' | 'tags'> & {
-    operation: IR.OperationObject;
-    processor: ProcessorResult;
-  }): void {
+}: Pick<ProcessorContext, 'path' | 'plugin' | 'tags'> & {
+  operation: IR.OperationObject;
+  processor: ProcessorResult;
+}): void {
   if (plugin.config.webhooks.enabled) {
     const { schema } = buildOperationSchema(operation);
 
