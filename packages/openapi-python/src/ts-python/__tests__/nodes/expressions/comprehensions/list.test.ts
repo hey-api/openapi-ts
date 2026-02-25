@@ -11,6 +11,7 @@ describe('list comprehension', () => {
         [
           py.factory.createAssignment(
             py.factory.createIdentifier('items'),
+            undefined,
             py.factory.createListExpression([
               py.factory.createLiteral(1),
               py.factory.createLiteral(2),
@@ -19,6 +20,7 @@ describe('list comprehension', () => {
           ),
           py.factory.createAssignment(
             py.factory.createIdentifier('evens'),
+            undefined,
             py.factory.createListComprehension(
               py.factory.createIdentifier('x'),
               py.factory.createIdentifier('x'),

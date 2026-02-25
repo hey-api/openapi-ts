@@ -6,6 +6,7 @@ describe('nested comprehension', () => {
     const file = py.factory.createSourceFile([
       py.factory.createAssignment(
         py.factory.createIdentifier('data'),
+        undefined,
         py.factory.createDictExpression([
           {
             key: py.factory.createLiteral('numbers'),

@@ -1,0 +1,1 @@
+result = func(name="test")

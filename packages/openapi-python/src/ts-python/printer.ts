@@ -48,9 +48,20 @@ export function createPrinter(options?: PyPrinterOptions) {
     let indentTrailingComments = false;
 
     switch (node.kind) {
-      case PyNodeKind.Assignment:
-        parts.push(printLine(`${printNode(node.target)} = ${printNode(node.value)}`));
+      case PyNodeKind.Assignment: {
+        const target = printNode(node.target);
+        if (node.annotation) {
+          const annotation = printNode(node.annotation);
+          if (node.value) {
+            parts.push(printLine(`${target}: ${annotation} = ${printNode(node.value)}`));
+          } else {
+            parts.push(printLine(`${target}: ${annotation}`));
+          }
+        } else {
+          parts.push(printLine(`${target} = ${printNode(node.value!)}`));
+        }
         break;
+      }
 
       case PyNodeKind.AsyncExpression:
         parts.push(`async ${printNode(node.expression)}`);
@@ -211,6 +222,10 @@ export function createPrinter(options?: PyPrinterOptions) {
           parts.push(`${printLine('else:')}`);
           parts.push(`${printNode(node.elseBlock)}`);
         }
+        break;
+
+      case PyNodeKind.KeywordArgument:
+        parts.push(`${node.name}=${printNode(node.value)}`);
         break;
 
       case PyNodeKind.ImportStatement: {
@@ -399,8 +414,7 @@ export function createPrinter(options?: PyPrinterOptions) {
         break;
 
       default:
-        // @ts-expect-error
-        throw new Error(`Unsupported node kind: ${node.kind}`);
+        throw new Error(`Unsupported node kind: ${(node as { kind: string }).kind}`);
     }
 
     if (node.trailingComments) {

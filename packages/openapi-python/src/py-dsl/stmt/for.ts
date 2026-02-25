@@ -67,7 +67,7 @@ export class ForPyDsl extends Mixed {
     return this;
   }
 
-  override toAst(): py.ForStatement {
+  override toAst() {
     this.$validate();
 
     const body = new BlockPyDsl(...this._body!).$do();

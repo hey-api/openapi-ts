@@ -18,7 +18,7 @@ export class IdPyDsl extends Mixed {
     ctx.analyze(this.name);
   }
 
-  override toAst(): py.Identifier {
+  override toAst() {
     return py.factory.createIdentifier(this.name.toString());
   }
 }

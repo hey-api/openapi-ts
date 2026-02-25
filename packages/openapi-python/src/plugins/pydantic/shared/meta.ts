@@ -8,8 +8,7 @@ import type { PydanticMeta, PydanticResult } from './types';
 export function defaultMeta(schema: IR.SchemaObject): PydanticMeta {
   return {
     default: schema.default,
-    format: schema.format,
-    hasLazy: false,
+    hasForwardReference: false,
     nullable: false,
     readonly: schema.accessScope === 'read',
   };
@@ -18,7 +17,7 @@ export function defaultMeta(schema: IR.SchemaObject): PydanticMeta {
 /**
  * Composes metadata from child results.
  *
- * Automatically propagates hasLazy, nullable, readonly from children.
+ * Automatically propagates hasForwardReference, nullable, readonly from children.
  *
  * @param children - Results from walking child schemas
  * @param overrides - Explicit overrides (e.g., from parent schema)
@@ -29,8 +28,8 @@ export function composeMeta(
 ): PydanticMeta {
   return {
     default: overrides?.default,
-    format: overrides?.format,
-    hasLazy: overrides?.hasLazy ?? children.some((c) => c.meta.hasLazy),
+    hasForwardReference:
+      overrides?.hasForwardReference ?? children.some((c) => c.meta.hasForwardReference),
     nullable: overrides?.nullable ?? children.some((c) => c.meta.nullable),
     readonly: overrides?.readonly ?? children.some((c) => c.meta.readonly),
   };
@@ -48,7 +47,6 @@ export function inheritMeta(
 ): PydanticMeta {
   return composeMeta(children, {
     default: parent.default,
-    format: parent.format,
     nullable: false,
     readonly: parent.accessScope === 'read',
   });
