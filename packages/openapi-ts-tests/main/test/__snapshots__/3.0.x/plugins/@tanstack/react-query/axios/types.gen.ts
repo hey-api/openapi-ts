@@ -735,6 +735,13 @@ export type ModelWithNullableObject = {
     data?: NullableObject;
 };
 
+/**
+ * An object with additional properties that can be null
+ */
+export type ModelWithAdditionalPropertiesRef = {
+    [key: string]: NullableObject | null;
+};
+
 export type ModelWithOneOfEnum = {
     foo: 'Bar';
 } | {
