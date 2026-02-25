@@ -71,8 +71,7 @@ export const defaultConfig: TanStackReactQueryPlugin['Config'] = {
       defaultValue: {
         case: plugin.config.case ?? 'camelCase',
         enabled: false,
-        name: 'use{{name}}',
-        requestOptions: false,
+        name: 'use{{name}}Mutation',
       },
       mappers: {
         boolean: (enabled) => ({ enabled }),

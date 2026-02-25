@@ -68,7 +68,7 @@ export const patchApiVbyApiVersionNoTagMutation = (options?: Partial<Options<Pat
     return mutationOptions;
 };
 
-export const usePatchApiVbyApiVersionNoTag = (mutationOptions?: Partial<Omit<UseMutationOptions<unknown, DefaultError, Options<PatchApiVbyApiVersionNoTagData>>, 'mutationFn'>>) => useMutation({ ...patchApiVbyApiVersionNoTagMutation(), ...mutationOptions });
+export const usePatchApiVbyApiVersionNoTagMutation = (mutationOptions?: Partial<Omit<UseMutationOptions<unknown, DefaultError, Options<PatchApiVbyApiVersionNoTagData>>, 'mutationFn'>>) => useMutation({ ...patchApiVbyApiVersionNoTagMutation(), ...mutationOptions });
 
 export const importMutation = (options?: Partial<Options<ImportData>>): UseMutationOptions<ImportResponse, DefaultError, Options<ImportData>> => {
     const mutationOptions: UseMutationOptions<ImportResponse, DefaultError, Options<ImportData>> = {
@@ -84,7 +84,7 @@ export const importMutation = (options?: Partial<Options<ImportData>>): UseMutat
     return mutationOptions;
 };
 
-export const useImport = (mutationOptions?: Partial<Omit<UseMutationOptions<ImportResponse, DefaultError, Options<ImportData>>, 'mutationFn'>>) => useMutation({ ...importMutation(), ...mutationOptions });
+export const useImportMutation = (mutationOptions?: Partial<Omit<UseMutationOptions<ImportResponse, DefaultError, Options<ImportData>>, 'mutationFn'>>) => useMutation({ ...importMutation(), ...mutationOptions });
 
 export const fooWowMutation = (options?: Partial<Options<FooWowData>>): UseMutationOptions<unknown, DefaultError, Options<FooWowData>> => {
     const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<FooWowData>> = {
@@ -100,7 +100,7 @@ export const fooWowMutation = (options?: Partial<Options<FooWowData>>): UseMutat
     return mutationOptions;
 };
 
-export const useFooWow = (mutationOptions?: Partial<Omit<UseMutationOptions<unknown, DefaultError, Options<FooWowData>>, 'mutationFn'>>) => useMutation({ ...fooWowMutation(), ...mutationOptions });
+export const useFooWowMutation = (mutationOptions?: Partial<Omit<UseMutationOptions<unknown, DefaultError, Options<FooWowData>>, 'mutationFn'>>) => useMutation({ ...fooWowMutation(), ...mutationOptions });
 
 export const apiVVersionODataControllerCountQueryKey = (options?: Options<ApiVVersionODataControllerCountData>) => createQueryKey('apiVVersionODataControllerCount', options);
 
@@ -146,7 +146,7 @@ export const deleteCallWithoutParametersAndResponseMutation = (options?: Partial
     return mutationOptions;
 };
 
-export const useDeleteCallWithoutParametersAndResponse = (mutationOptions?: Partial<Omit<UseMutationOptions<unknown, DefaultError, Options<DeleteCallWithoutParametersAndResponseData>>, 'mutationFn'>>) => useMutation({ ...deleteCallWithoutParametersAndResponseMutation(), ...mutationOptions });
+export const useDeleteCallWithoutParametersAndResponseMutation = (mutationOptions?: Partial<Omit<UseMutationOptions<unknown, DefaultError, Options<DeleteCallWithoutParametersAndResponseData>>, 'mutationFn'>>) => useMutation({ ...deleteCallWithoutParametersAndResponseMutation(), ...mutationOptions });
 
 export const getCallWithoutParametersAndResponseQueryKey = (options?: Options<GetCallWithoutParametersAndResponseData>) => createQueryKey('getCallWithoutParametersAndResponse', options);
 
@@ -177,7 +177,7 @@ export const patchCallWithoutParametersAndResponseMutation = (options?: Partial<
     return mutationOptions;
 };
 
-export const usePatchCallWithoutParametersAndResponse = (mutationOptions?: Partial<Omit<UseMutationOptions<unknown, DefaultError, Options<PatchCallWithoutParametersAndResponseData>>, 'mutationFn'>>) => useMutation({ ...patchCallWithoutParametersAndResponseMutation(), ...mutationOptions });
+export const usePatchCallWithoutParametersAndResponseMutation = (mutationOptions?: Partial<Omit<UseMutationOptions<unknown, DefaultError, Options<PatchCallWithoutParametersAndResponseData>>, 'mutationFn'>>) => useMutation({ ...patchCallWithoutParametersAndResponseMutation(), ...mutationOptions });
 
 export const postCallWithoutParametersAndResponseMutation = (options?: Partial<Options<PostCallWithoutParametersAndResponseData>>): UseMutationOptions<unknown, DefaultError, Options<PostCallWithoutParametersAndResponseData>> => {
     const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<PostCallWithoutParametersAndResponseData>> = {
@@ -193,7 +193,7 @@ export const postCallWithoutParametersAndResponseMutation = (options?: Partial<O
     return mutationOptions;
 };
 
-export const usePostCallWithoutParametersAndResponse = (mutationOptions?: Partial<Omit<UseMutationOptions<unknown, DefaultError, Options<PostCallWithoutParametersAndResponseData>>, 'mutationFn'>>) => useMutation({ ...postCallWithoutParametersAndResponseMutation(), ...mutationOptions });
+export const usePostCallWithoutParametersAndResponseMutation = (mutationOptions?: Partial<Omit<UseMutationOptions<unknown, DefaultError, Options<PostCallWithoutParametersAndResponseData>>, 'mutationFn'>>) => useMutation({ ...postCallWithoutParametersAndResponseMutation(), ...mutationOptions });
 
 export const putCallWithoutParametersAndResponseMutation = (options?: Partial<Options<PutCallWithoutParametersAndResponseData>>): UseMutationOptions<unknown, DefaultError, Options<PutCallWithoutParametersAndResponseData>> => {
     const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<PutCallWithoutParametersAndResponseData>> = {
@@ -209,7 +209,7 @@ export const putCallWithoutParametersAndResponseMutation = (options?: Partial<Op
     return mutationOptions;
 };
 
-export const usePutCallWithoutParametersAndResponse = (mutationOptions?: Partial<Omit<UseMutationOptions<unknown, DefaultError, Options<PutCallWithoutParametersAndResponseData>>, 'mutationFn'>>) => useMutation({ ...putCallWithoutParametersAndResponseMutation(), ...mutationOptions });
+export const usePutCallWithoutParametersAndResponseMutation = (mutationOptions?: Partial<Omit<UseMutationOptions<unknown, DefaultError, Options<PutCallWithoutParametersAndResponseData>>, 'mutationFn'>>) => useMutation({ ...putCallWithoutParametersAndResponseMutation(), ...mutationOptions });
 
 export const deleteFooMutation = (options?: Partial<Options<DeleteFooData3>>): UseMutationOptions<unknown, DefaultError, Options<DeleteFooData3>> => {
     const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<DeleteFooData3>> = {
@@ -225,7 +225,7 @@ export const deleteFooMutation = (options?: Partial<Options<DeleteFooData3>>): U
     return mutationOptions;
 };
 
-export const useDeleteFoo = (mutationOptions?: Partial<Omit<UseMutationOptions<unknown, DefaultError, Options<DeleteFooData3>>, 'mutationFn'>>) => useMutation({ ...deleteFooMutation(), ...mutationOptions });
+export const useDeleteFooMutation = (mutationOptions?: Partial<Omit<UseMutationOptions<unknown, DefaultError, Options<DeleteFooData3>>, 'mutationFn'>>) => useMutation({ ...deleteFooMutation(), ...mutationOptions });
 
 export const callWithDescriptionsMutation = (options?: Partial<Options<CallWithDescriptionsData>>): UseMutationOptions<unknown, DefaultError, Options<CallWithDescriptionsData>> => {
     const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<CallWithDescriptionsData>> = {
@@ -241,7 +241,7 @@ export const callWithDescriptionsMutation = (options?: Partial<Options<CallWithD
     return mutationOptions;
 };
 
-export const useCallWithDescriptions = (mutationOptions?: Partial<Omit<UseMutationOptions<unknown, DefaultError, Options<CallWithDescriptionsData>>, 'mutationFn'>>) => useMutation({ ...callWithDescriptionsMutation(), ...mutationOptions });
+export const useCallWithDescriptionsMutation = (mutationOptions?: Partial<Omit<UseMutationOptions<unknown, DefaultError, Options<CallWithDescriptionsData>>, 'mutationFn'>>) => useMutation({ ...callWithDescriptionsMutation(), ...mutationOptions });
 
 /**
  * @deprecated
@@ -263,7 +263,7 @@ export const deprecatedCallMutation = (options?: Partial<Options<DeprecatedCallD
 /**
  * @deprecated
  */
-export const useDeprecatedCall = (mutationOptions?: Partial<Omit<UseMutationOptions<unknown, DefaultError, Options<DeprecatedCallData>>, 'mutationFn'>>) => useMutation({ ...deprecatedCallMutation(), ...mutationOptions });
+export const useDeprecatedCallMutation = (mutationOptions?: Partial<Omit<UseMutationOptions<unknown, DefaultError, Options<DeprecatedCallData>>, 'mutationFn'>>) => useMutation({ ...deprecatedCallMutation(), ...mutationOptions });
 
 export const callWithParametersMutation = (options?: Partial<Options<CallWithParametersData>>): UseMutationOptions<unknown, DefaultError, Options<CallWithParametersData>> => {
     const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<CallWithParametersData>> = {
@@ -279,7 +279,7 @@ export const callWithParametersMutation = (options?: Partial<Options<CallWithPar
     return mutationOptions;
 };
 
-export const useCallWithParameters = (mutationOptions?: Partial<Omit<UseMutationOptions<unknown, DefaultError, Options<CallWithParametersData>>, 'mutationFn'>>) => useMutation({ ...callWithParametersMutation(), ...mutationOptions });
+export const useCallWithParametersMutation = (mutationOptions?: Partial<Omit<UseMutationOptions<unknown, DefaultError, Options<CallWithParametersData>>, 'mutationFn'>>) => useMutation({ ...callWithParametersMutation(), ...mutationOptions });
 
 export const callWithWeirdParameterNamesMutation = (options?: Partial<Options<CallWithWeirdParameterNamesData>>): UseMutationOptions<unknown, DefaultError, Options<CallWithWeirdParameterNamesData>> => {
     const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<CallWithWeirdParameterNamesData>> = {
@@ -295,7 +295,7 @@ export const callWithWeirdParameterNamesMutation = (options?: Partial<Options<Ca
     return mutationOptions;
 };
 
-export const useCallWithWeirdParameterNames = (mutationOptions?: Partial<Omit<UseMutationOptions<unknown, DefaultError, Options<CallWithWeirdParameterNamesData>>, 'mutationFn'>>) => useMutation({ ...callWithWeirdParameterNamesMutation(), ...mutationOptions });
+export const useCallWithWeirdParameterNamesMutation = (mutationOptions?: Partial<Omit<UseMutationOptions<unknown, DefaultError, Options<CallWithWeirdParameterNamesData>>, 'mutationFn'>>) => useMutation({ ...callWithWeirdParameterNamesMutation(), ...mutationOptions });
 
 export const getCallWithOptionalParamQueryKey = (options: Options<GetCallWithOptionalParamData>) => createQueryKey('getCallWithOptionalParam', options);
 
@@ -379,7 +379,7 @@ export const postCallWithOptionalParamMutation = (options?: Partial<Options<Post
     return mutationOptions;
 };
 
-export const usePostCallWithOptionalParam = (mutationOptions?: Partial<Omit<UseMutationOptions<PostCallWithOptionalParamResponse, DefaultError, Options<PostCallWithOptionalParamData>>, 'mutationFn'>>) => useMutation({ ...postCallWithOptionalParamMutation(), ...mutationOptions });
+export const usePostCallWithOptionalParamMutation = (mutationOptions?: Partial<Omit<UseMutationOptions<PostCallWithOptionalParamResponse, DefaultError, Options<PostCallWithOptionalParamData>>, 'mutationFn'>>) => useMutation({ ...postCallWithOptionalParamMutation(), ...mutationOptions });
 
 export const postApiVbyApiVersionRequestBodyMutation = (options?: Partial<Options<PostApiVbyApiVersionRequestBodyData>>): UseMutationOptions<unknown, DefaultError, Options<PostApiVbyApiVersionRequestBodyData>> => {
     const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<PostApiVbyApiVersionRequestBodyData>> = {
@@ -395,7 +395,7 @@ export const postApiVbyApiVersionRequestBodyMutation = (options?: Partial<Option
     return mutationOptions;
 };
 
-export const usePostApiVbyApiVersionRequestBody = (mutationOptions?: Partial<Omit<UseMutationOptions<unknown, DefaultError, Options<PostApiVbyApiVersionRequestBodyData>>, 'mutationFn'>>) => useMutation({ ...postApiVbyApiVersionRequestBodyMutation(), ...mutationOptions });
+export const usePostApiVbyApiVersionRequestBodyMutation = (mutationOptions?: Partial<Omit<UseMutationOptions<unknown, DefaultError, Options<PostApiVbyApiVersionRequestBodyData>>, 'mutationFn'>>) => useMutation({ ...postApiVbyApiVersionRequestBodyMutation(), ...mutationOptions });
 
 export const postApiVbyApiVersionFormDataMutation = (options?: Partial<Options<PostApiVbyApiVersionFormDataData>>): UseMutationOptions<unknown, DefaultError, Options<PostApiVbyApiVersionFormDataData>> => {
     const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<PostApiVbyApiVersionFormDataData>> = {
@@ -411,7 +411,7 @@ export const postApiVbyApiVersionFormDataMutation = (options?: Partial<Options<P
     return mutationOptions;
 };
 
-export const usePostApiVbyApiVersionFormData = (mutationOptions?: Partial<Omit<UseMutationOptions<unknown, DefaultError, Options<PostApiVbyApiVersionFormDataData>>, 'mutationFn'>>) => useMutation({ ...postApiVbyApiVersionFormDataMutation(), ...mutationOptions });
+export const usePostApiVbyApiVersionFormDataMutation = (mutationOptions?: Partial<Omit<UseMutationOptions<unknown, DefaultError, Options<PostApiVbyApiVersionFormDataData>>, 'mutationFn'>>) => useMutation({ ...postApiVbyApiVersionFormDataMutation(), ...mutationOptions });
 
 export const callWithDefaultParametersQueryKey = (options?: Options<CallWithDefaultParametersData>) => createQueryKey('callWithDefaultParameters', options);
 
@@ -442,7 +442,7 @@ export const callWithDefaultOptionalParametersMutation = (options?: Partial<Opti
     return mutationOptions;
 };
 
-export const useCallWithDefaultOptionalParameters = (mutationOptions?: Partial<Omit<UseMutationOptions<unknown, DefaultError, Options<CallWithDefaultOptionalParametersData>>, 'mutationFn'>>) => useMutation({ ...callWithDefaultOptionalParametersMutation(), ...mutationOptions });
+export const useCallWithDefaultOptionalParametersMutation = (mutationOptions?: Partial<Omit<UseMutationOptions<unknown, DefaultError, Options<CallWithDefaultOptionalParametersData>>, 'mutationFn'>>) => useMutation({ ...callWithDefaultOptionalParametersMutation(), ...mutationOptions });
 
 export const callToTestOrderOfParamsMutation = (options?: Partial<Options<CallToTestOrderOfParamsData>>): UseMutationOptions<unknown, DefaultError, Options<CallToTestOrderOfParamsData>> => {
     const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<CallToTestOrderOfParamsData>> = {
@@ -458,7 +458,7 @@ export const callToTestOrderOfParamsMutation = (options?: Partial<Options<CallTo
     return mutationOptions;
 };
 
-export const useCallToTestOrderOfParams = (mutationOptions?: Partial<Omit<UseMutationOptions<unknown, DefaultError, Options<CallToTestOrderOfParamsData>>, 'mutationFn'>>) => useMutation({ ...callToTestOrderOfParamsMutation(), ...mutationOptions });
+export const useCallToTestOrderOfParamsMutation = (mutationOptions?: Partial<Omit<UseMutationOptions<unknown, DefaultError, Options<CallToTestOrderOfParamsData>>, 'mutationFn'>>) => useMutation({ ...callToTestOrderOfParamsMutation(), ...mutationOptions });
 
 export const duplicateNameMutation = (options?: Partial<Options<DuplicateNameData>>): UseMutationOptions<unknown, DefaultError, Options<DuplicateNameData>> => {
     const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<DuplicateNameData>> = {
@@ -474,7 +474,7 @@ export const duplicateNameMutation = (options?: Partial<Options<DuplicateNameDat
     return mutationOptions;
 };
 
-export const useDuplicateName = (mutationOptions?: Partial<Omit<UseMutationOptions<unknown, DefaultError, Options<DuplicateNameData>>, 'mutationFn'>>) => useMutation({ ...duplicateNameMutation(), ...mutationOptions });
+export const useDuplicateNameMutation = (mutationOptions?: Partial<Omit<UseMutationOptions<unknown, DefaultError, Options<DuplicateNameData>>, 'mutationFn'>>) => useMutation({ ...duplicateNameMutation(), ...mutationOptions });
 
 export const duplicateName2QueryKey = (options?: Options<DuplicateName2Data>) => createQueryKey('duplicateName2', options);
 
@@ -505,7 +505,7 @@ export const duplicateName3Mutation = (options?: Partial<Options<DuplicateName3D
     return mutationOptions;
 };
 
-export const useDuplicateName3 = (mutationOptions?: Partial<Omit<UseMutationOptions<unknown, DefaultError, Options<DuplicateName3Data>>, 'mutationFn'>>) => useMutation({ ...duplicateName3Mutation(), ...mutationOptions });
+export const useDuplicateName3Mutation = (mutationOptions?: Partial<Omit<UseMutationOptions<unknown, DefaultError, Options<DuplicateName3Data>>, 'mutationFn'>>) => useMutation({ ...duplicateName3Mutation(), ...mutationOptions });
 
 export const duplicateName4Mutation = (options?: Partial<Options<DuplicateName4Data>>): UseMutationOptions<unknown, DefaultError, Options<DuplicateName4Data>> => {
     const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<DuplicateName4Data>> = {
@@ -521,7 +521,7 @@ export const duplicateName4Mutation = (options?: Partial<Options<DuplicateName4D
     return mutationOptions;
 };
 
-export const useDuplicateName4 = (mutationOptions?: Partial<Omit<UseMutationOptions<unknown, DefaultError, Options<DuplicateName4Data>>, 'mutationFn'>>) => useMutation({ ...duplicateName4Mutation(), ...mutationOptions });
+export const useDuplicateName4Mutation = (mutationOptions?: Partial<Omit<UseMutationOptions<unknown, DefaultError, Options<DuplicateName4Data>>, 'mutationFn'>>) => useMutation({ ...duplicateName4Mutation(), ...mutationOptions });
 
 export const callWithNoContentResponseQueryKey = (options?: Options<CallWithNoContentResponseData>) => createQueryKey('callWithNoContentResponse', options);
 
@@ -612,7 +612,7 @@ export const callWithDuplicateResponsesMutation = (options?: Partial<Options<Cal
     return mutationOptions;
 };
 
-export const useCallWithDuplicateResponses = (mutationOptions?: Partial<Omit<UseMutationOptions<CallWithDuplicateResponsesResponse, CallWithDuplicateResponsesError, Options<CallWithDuplicateResponsesData>>, 'mutationFn'>>) => useMutation({ ...callWithDuplicateResponsesMutation(), ...mutationOptions });
+export const useCallWithDuplicateResponsesMutation = (mutationOptions?: Partial<Omit<UseMutationOptions<CallWithDuplicateResponsesResponse, CallWithDuplicateResponsesError, Options<CallWithDuplicateResponsesData>>, 'mutationFn'>>) => useMutation({ ...callWithDuplicateResponsesMutation(), ...mutationOptions });
 
 export const callWithResponsesMutation = (options?: Partial<Options<CallWithResponsesData>>): UseMutationOptions<CallWithResponsesResponse, CallWithResponsesError, Options<CallWithResponsesData>> => {
     const mutationOptions: UseMutationOptions<CallWithResponsesResponse, CallWithResponsesError, Options<CallWithResponsesData>> = {
@@ -628,7 +628,7 @@ export const callWithResponsesMutation = (options?: Partial<Options<CallWithResp
     return mutationOptions;
 };
 
-export const useCallWithResponses = (mutationOptions?: Partial<Omit<UseMutationOptions<CallWithResponsesResponse, CallWithResponsesError, Options<CallWithResponsesData>>, 'mutationFn'>>) => useMutation({ ...callWithResponsesMutation(), ...mutationOptions });
+export const useCallWithResponsesMutation = (mutationOptions?: Partial<Omit<UseMutationOptions<CallWithResponsesResponse, CallWithResponsesError, Options<CallWithResponsesData>>, 'mutationFn'>>) => useMutation({ ...callWithResponsesMutation(), ...mutationOptions });
 
 export const collectionFormatQueryKey = (options: Options<CollectionFormatData>) => createQueryKey('collectionFormat', options);
 
@@ -674,7 +674,7 @@ export const uploadFileMutation = (options?: Partial<Options<UploadFileData>>): 
     return mutationOptions;
 };
 
-export const useUploadFile = (mutationOptions?: Partial<Omit<UseMutationOptions<UploadFileResponse, DefaultError, Options<UploadFileData>>, 'mutationFn'>>) => useMutation({ ...uploadFileMutation(), ...mutationOptions });
+export const useUploadFileMutation = (mutationOptions?: Partial<Omit<UseMutationOptions<UploadFileResponse, DefaultError, Options<UploadFileData>>, 'mutationFn'>>) => useMutation({ ...uploadFileMutation(), ...mutationOptions });
 
 export const fileResponseQueryKey = (options: Options<FileResponseData>) => createQueryKey('fileResponse', options);
 
@@ -735,7 +735,7 @@ export const multipartRequestMutation = (options?: Partial<Options<MultipartRequ
     return mutationOptions;
 };
 
-export const useMultipartRequest = (mutationOptions?: Partial<Omit<UseMutationOptions<unknown, DefaultError, Options<MultipartRequestData>>, 'mutationFn'>>) => useMutation({ ...multipartRequestMutation(), ...mutationOptions });
+export const useMultipartRequestMutation = (mutationOptions?: Partial<Omit<UseMutationOptions<unknown, DefaultError, Options<MultipartRequestData>>, 'mutationFn'>>) => useMutation({ ...multipartRequestMutation(), ...mutationOptions });
 
 export const complexParamsMutation = (options?: Partial<Options<ComplexParamsData>>): UseMutationOptions<ComplexParamsResponse, DefaultError, Options<ComplexParamsData>> => {
     const mutationOptions: UseMutationOptions<ComplexParamsResponse, DefaultError, Options<ComplexParamsData>> = {
@@ -751,7 +751,7 @@ export const complexParamsMutation = (options?: Partial<Options<ComplexParamsDat
     return mutationOptions;
 };
 
-export const useComplexParams = (mutationOptions?: Partial<Omit<UseMutationOptions<ComplexParamsResponse, DefaultError, Options<ComplexParamsData>>, 'mutationFn'>>) => useMutation({ ...complexParamsMutation(), ...mutationOptions });
+export const useComplexParamsMutation = (mutationOptions?: Partial<Omit<UseMutationOptions<ComplexParamsResponse, DefaultError, Options<ComplexParamsData>>, 'mutationFn'>>) => useMutation({ ...complexParamsMutation(), ...mutationOptions });
 
 export const callWithResultFromHeaderMutation = (options?: Partial<Options<CallWithResultFromHeaderData>>): UseMutationOptions<unknown, DefaultError, Options<CallWithResultFromHeaderData>> => {
     const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<CallWithResultFromHeaderData>> = {
@@ -767,7 +767,7 @@ export const callWithResultFromHeaderMutation = (options?: Partial<Options<CallW
     return mutationOptions;
 };
 
-export const useCallWithResultFromHeader = (mutationOptions?: Partial<Omit<UseMutationOptions<unknown, DefaultError, Options<CallWithResultFromHeaderData>>, 'mutationFn'>>) => useMutation({ ...callWithResultFromHeaderMutation(), ...mutationOptions });
+export const useCallWithResultFromHeaderMutation = (mutationOptions?: Partial<Omit<UseMutationOptions<unknown, DefaultError, Options<CallWithResultFromHeaderData>>, 'mutationFn'>>) => useMutation({ ...callWithResultFromHeaderMutation(), ...mutationOptions });
 
 export const testErrorCodeMutation = (options?: Partial<Options<TestErrorCodeData>>): UseMutationOptions<unknown, DefaultError, Options<TestErrorCodeData>> => {
     const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<TestErrorCodeData>> = {
@@ -783,7 +783,7 @@ export const testErrorCodeMutation = (options?: Partial<Options<TestErrorCodeDat
     return mutationOptions;
 };
 
-export const useTestErrorCode = (mutationOptions?: Partial<Omit<UseMutationOptions<unknown, DefaultError, Options<TestErrorCodeData>>, 'mutationFn'>>) => useMutation({ ...testErrorCodeMutation(), ...mutationOptions });
+export const useTestErrorCodeMutation = (mutationOptions?: Partial<Omit<UseMutationOptions<unknown, DefaultError, Options<TestErrorCodeData>>, 'mutationFn'>>) => useMutation({ ...testErrorCodeMutation(), ...mutationOptions });
 
 export const nonAsciiæøåÆøÅöôêÊ字符串Mutation = (options?: Partial<Options<NonAsciiæøåÆøÅöôêÊ字符串Data>>): UseMutationOptions<NonAsciiæøåÆøÅöôêÊ字符串Response, DefaultError, Options<NonAsciiæøåÆøÅöôêÊ字符串Data>> => {
     const mutationOptions: UseMutationOptions<NonAsciiæøåÆøÅöôêÊ字符串Response, DefaultError, Options<NonAsciiæøåÆøÅöôêÊ字符串Data>> = {
@@ -799,7 +799,7 @@ export const nonAsciiæøåÆøÅöôêÊ字符串Mutation = (options?: Partial<
     return mutationOptions;
 };
 
-export const useNonAsciiæøåÆøÅöôêÊ字符串 = (mutationOptions?: Partial<Omit<UseMutationOptions<NonAsciiæøåÆøÅöôêÊ字符串Response, DefaultError, Options<NonAsciiæøåÆøÅöôêÊ字符串Data>>, 'mutationFn'>>) => useMutation({ ...nonAsciiæøåÆøÅöôêÊ字符串Mutation(), ...mutationOptions });
+export const useNonAsciiæøåÆøÅöôêÊ字符串Mutation = (mutationOptions?: Partial<Omit<UseMutationOptions<NonAsciiæøåÆøÅöôêÊ字符串Response, DefaultError, Options<NonAsciiæøåÆøÅöôêÊ字符串Data>>, 'mutationFn'>>) => useMutation({ ...nonAsciiæøåÆøÅöôêÊ字符串Mutation(), ...mutationOptions });
 
 /**
  * Login User
@@ -821,4 +821,4 @@ export const putWithFormUrlEncodedMutation = (options?: Partial<Options<PutWithF
 /**
  * Login User
  */
-export const usePutWithFormUrlEncoded = (mutationOptions?: Partial<Omit<UseMutationOptions<unknown, DefaultError, Options<PutWithFormUrlEncodedData>>, 'mutationFn'>>) => useMutation({ ...putWithFormUrlEncodedMutation(), ...mutationOptions });
+export const usePutWithFormUrlEncodedMutation = (mutationOptions?: Partial<Omit<UseMutationOptions<unknown, DefaultError, Options<PutWithFormUrlEncodedData>>, 'mutationFn'>>) => useMutation({ ...putWithFormUrlEncodedMutation(), ...mutationOptions });

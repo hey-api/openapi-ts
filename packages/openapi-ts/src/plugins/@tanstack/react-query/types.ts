@@ -325,17 +325,9 @@ export type UserConfig = Plugin.Name<'@tanstack/react-query'> &
            *
            * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/useMutation useMutation}
            *
-           * @default 'use{{name}}'
+           * @default 'use{{name}}Mutation'
            */
           name?: NameTransformer;
-          /**
-           * Include SDK request options as second parameter.
-           * When `false` (default), hooks take `(mutationOptions?)`.
-           * When `true`, hooks take `(mutationOptions?, options?)`.
-           *
-           * @default false
-           */
-          requestOptions?: boolean;
         };
     useQuery?:
       | boolean
@@ -512,7 +504,7 @@ export type Config = Plugin.Name<'@tanstack/react-query'> &
      *
      * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/useQuery useQuery}
      */
-    useMutation: NamingOptions & FeatureToggle & { requestOptions: boolean };
+    useMutation: NamingOptions & FeatureToggle;
     useQuery: NamingOptions & FeatureToggle;
   };
 
