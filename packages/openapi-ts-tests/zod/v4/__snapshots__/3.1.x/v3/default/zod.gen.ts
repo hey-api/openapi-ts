@@ -721,6 +721,11 @@ export const zModelWithNullableObject = z.object({
     data: zNullableObject.optional()
 });
 
+/**
+ * An object with additional properties that can be null (anyOf ref + null)
+ */
+export const zModelWithAdditionalPropertiesRef = z.record(zNullableObject.nullable());
+
 export const zModelWithOneOfEnum = z.union([
     z.object({
         foo: z.enum(['Bar'])
