@@ -353,41 +353,52 @@ describe('bundle', () => {
     });
 
     it('adds prefix to path when HTTP methods conflict', async () => {
-      const refParser = new $RefParser();
-      const spec1 = {
-        info: { title: 'Spec 1', version: '1.0.0' },
-        paths: {
-          '/pet/{petId}': {
-            get: {
-              operationId: 'getPetById',
-              responses: { '200': { description: 'OK' } },
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      try {
+        const refParser = new $RefParser();
+        const spec1 = {
+          info: { title: 'Spec 1', version: '1.0.0' },
+          paths: {
+            '/pet/{petId}': {
+              get: {
+                operationId: 'getPetById',
+                responses: { '200': { description: 'OK' } },
+              },
             },
           },
-        },
-        swagger: '2.0',
-      };
-      const spec2 = {
-        info: { title: 'Spec 2', version: '1.0.0' },
-        paths: {
-          '/pet/{petId}': {
-            get: {
-              operationId: 'getPet',
-              responses: { '200': { description: 'Success' } },
+          swagger: '2.0',
+        };
+        const spec2 = {
+          info: { title: 'Spec 2', version: '1.0.0' },
+          paths: {
+            '/pet/{petId}': {
+              get: {
+                operationId: 'getPet',
+                responses: { '200': { description: 'Success' } },
+              },
             },
           },
-        },
-        swagger: '2.0',
-      };
+          swagger: '2.0',
+        };
 
-      const merged = (await refParser.bundleMany({ pathOrUrlOrSchemas: [spec1, spec2] })) as any;
+        const merged = (await refParser.bundleMany({ pathOrUrlOrSchemas: [spec1, spec2] })) as any;
 
-      // The conflicting path should be prefixed
-      const pathKeys = Object.keys(merged.paths);
-      expect(pathKeys).toHaveLength(2);
-      expect(merged.paths['/pet/{petId}']).toBeDefined();
-      const prefixedKey = pathKeys.find((k) => k !== '/pet/{petId}');
-      expect(prefixedKey).toBeDefined();
-      expect(merged.paths[prefixedKey!].get).toBeDefined();
+        // The conflicting path should be prefixed
+        const pathKeys = Object.keys(merged.paths);
+        expect(pathKeys).toHaveLength(2);
+        expect(merged.paths['/pet/{petId}']).toBeDefined();
+        const prefixedKey = pathKeys.find((k) => k !== '/pet/{petId}');
+        expect(prefixedKey).toBeDefined();
+        expect(merged.paths[prefixedKey!].get).toBeDefined();
+
+        // A warning should be emitted for the conflicting method
+        const conflictWarnings = warnSpy.mock.calls.filter(
+          (args) => typeof args[0] === 'string' && args[0].includes('Duplicate `GET /pet/{petId}`'),
+        );
+        expect(conflictWarnings).toHaveLength(1);
+      } finally {
+        warnSpy.mockRestore();
+      }
     });
   });
 });

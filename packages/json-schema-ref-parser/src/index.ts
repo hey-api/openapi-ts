@@ -552,6 +552,12 @@ export class $RefParser {
           );
           if (hasMethodConflict) {
             const trimmed = p.startsWith('/') ? p.substring(1) : p;
+            const conflictingMethods = newMethods.filter((m) => merged.paths[p][m] !== undefined);
+            for (const m of conflictingMethods) {
+              console.warn(
+                `Duplicate \`${m.toUpperCase()} ${p}\` operation found. Each operation must have a unique combination of path and HTTP method.`,
+              );
+            }
             merged.paths[`/${prefix}/${trimmed}`] = rewritten;
           } else {
             Object.assign(merged.paths[p], rewritten);
