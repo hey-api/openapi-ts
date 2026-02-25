@@ -2208,6 +2208,13 @@ components:
       properties:
         data:
           $ref: '#/components/schemas/NullableObject'
+    ModelWithAdditionalPropertiesRef:
+      type: object
+      description: An object with additional properties that can be null
+      additionalProperties:
+        nullable: true
+        allOf:
+          - $ref: '#/components/schemas/NullableObject'
     ModelWithOneOfEnum:
       oneOf:
         - type: object
