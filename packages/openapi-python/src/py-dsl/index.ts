@@ -23,6 +23,7 @@ import { DictPyDsl } from './expr/dict';
 import { ExprPyDsl } from './expr/expr';
 // import { fromValue as exprValue } from './expr/fromValue';
 import { IdPyDsl } from './expr/identifier';
+import { KwargPyDsl } from './expr/kwarg';
 import { ListPyDsl } from './expr/list';
 import { LiteralPyDsl } from './expr/literal';
 // import { NewPyDsl } from './expr/new';
@@ -145,6 +146,9 @@ const pyDsl = {
 
   /** Creates an import statement. */
   import: (...args: ConstructorParameters<typeof ImportPyDsl>) => new ImportPyDsl(...args),
+
+  /** Creates a keyword argument expression (e.g. `name=value`). */
+  kwarg: (...args: ConstructorParameters<typeof KwargPyDsl>) => new KwargPyDsl(...args),
 
   /** Creates an initialization block or statement. */
   // init: (...args: ConstructorParameters<typeof InitTsDsl>) => new InitTsDsl(...args),
@@ -316,6 +320,7 @@ export type { MaybePyDsl } from './base';
 // export type { MaybePyDsl, TypePyDsl } from './base';
 export { PyDsl } from './base';
 export type { CallArgs } from './expr/call';
+export type { AnnotationExpr } from './stmt/var';
 export type { ExampleOptions } from './utils/context';
 export { ctx, PyDslContext } from './utils/context';
 export { keywords } from './utils/keywords';

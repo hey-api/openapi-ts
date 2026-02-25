@@ -21,6 +21,7 @@ import type { PyDictExpression as _PyDictExpression } from './nodes/expressions/
 import type { PyFStringExpression as _PyFStringExpression } from './nodes/expressions/fString';
 import type { PyGeneratorExpression as _PyGeneratorExpression } from './nodes/expressions/generator';
 import type { PyIdentifier as _PyIdentifier } from './nodes/expressions/identifier';
+import type { PyKeywordArgument as _PyKeywordArgument } from './nodes/expressions/keywordArg';
 import type { PyLambdaExpression as _PyLambdaExpression } from './nodes/expressions/lambda';
 import type { PyListExpression as _PyListExpression } from './nodes/expressions/list';
 import type { PyLiteral as _PyLiteral } from './nodes/expressions/literal';
@@ -107,6 +108,7 @@ export namespace py {
   export type FStringExpression = _PyFStringExpression;
   export type GeneratorExpression = _PyGeneratorExpression;
   export type Identifier = _PyIdentifier;
+  export type KeywordArgument = _PyKeywordArgument;
   export type LambdaExpression = _PyLambdaExpression;
   export type ListExpression = _PyListExpression;
   export type Literal = _PyLiteral;

@@ -36,7 +36,7 @@ export class TuplePyDsl extends Mixed {
     return this;
   }
 
-  override toAst(): py.TupleExpression {
+  override toAst() {
     const astElements = this._elements.map((el) => this.$node(el));
     return py.factory.createTupleExpression(astElements);
   }

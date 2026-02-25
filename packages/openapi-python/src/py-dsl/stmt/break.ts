@@ -12,7 +12,7 @@ export class BreakPyDsl extends Mixed {
     super.analyze(_ctx);
   }
 
-  override toAst(): py.BreakStatement {
+  override toAst() {
     return py.factory.createBreakStatement();
   }
 }
