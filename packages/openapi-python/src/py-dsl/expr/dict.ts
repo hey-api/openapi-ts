@@ -42,7 +42,7 @@ export class DictPyDsl extends Mixed {
     return this;
   }
 
-  override toAst(): py.DictExpression {
+  override toAst() {
     const astEntries = this._entries.map((entry) => ({
       key: this.$node(entry.key),
       value: this.$node(entry.value),

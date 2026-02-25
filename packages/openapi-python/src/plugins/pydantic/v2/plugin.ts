@@ -1,21 +1,72 @@
 import { pathToJsonPointer } from '@hey-api/shared';
 
-// import { $ } from '../../../py-dsl';
 import type { PydanticPlugin } from '../types';
 import { createProcessor } from './processor';
 
 export const handlerV2: PydanticPlugin['Handler'] = ({ plugin }) => {
+  // enum
+  plugin.symbol('Enum', {
+    external: 'enum',
+    meta: {
+      category: 'external',
+      resource: 'enum.Enum',
+    },
+  });
+
+  // typing
   plugin.symbol('Any', {
     external: 'typing',
-    importKind: 'named',
     meta: {
       category: 'external',
       resource: 'typing.Any',
     },
   });
+  plugin.symbol('List', {
+    external: 'typing',
+    meta: {
+      category: 'external',
+      resource: 'typing.List',
+    },
+  });
+  plugin.symbol('Literal', {
+    external: 'typing',
+    meta: {
+      category: 'external',
+      resource: 'typing.Literal',
+    },
+  });
+  plugin.symbol('NoReturn', {
+    external: 'typing',
+    meta: {
+      category: 'external',
+      resource: 'typing.NoReturn',
+    },
+  });
+  plugin.symbol('Optional', {
+    external: 'typing',
+    meta: {
+      category: 'external',
+      resource: 'typing.Optional',
+    },
+  });
+  plugin.symbol('TypeAlias', {
+    external: 'typing',
+    meta: {
+      category: 'external',
+      resource: 'typing.TypeAlias',
+    },
+  });
+  plugin.symbol('Union', {
+    external: 'typing',
+    meta: {
+      category: 'external',
+      resource: 'typing.Union',
+    },
+  });
+
+  // Pydantic
   plugin.symbol('BaseModel', {
     external: 'pydantic',
-    importKind: 'named',
     meta: {
       category: 'external',
       resource: 'pydantic.BaseModel',
@@ -23,7 +74,6 @@ export const handlerV2: PydanticPlugin['Handler'] = ({ plugin }) => {
   });
   plugin.symbol('ConfigDict', {
     external: 'pydantic',
-    importKind: 'named',
     meta: {
       category: 'external',
       resource: 'pydantic.ConfigDict',
@@ -31,26 +81,9 @@ export const handlerV2: PydanticPlugin['Handler'] = ({ plugin }) => {
   });
   plugin.symbol('Field', {
     external: 'pydantic',
-    importKind: 'named',
     meta: {
       category: 'external',
       resource: 'pydantic.Field',
-    },
-  });
-  plugin.symbol('Literal', {
-    external: 'typing',
-    importKind: 'named',
-    meta: {
-      category: 'external',
-      resource: 'typing.Literal',
-    },
-  });
-  plugin.symbol('Optional', {
-    external: 'typing',
-    importKind: 'named',
-    meta: {
-      category: 'external',
-      resource: 'typing.Optional',
     },
   });
 

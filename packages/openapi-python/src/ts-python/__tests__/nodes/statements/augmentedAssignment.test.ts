@@ -4,12 +4,36 @@ import { assertPrintedMatchesSnapshot } from '../utils';
 describe('augmented assignment statement', () => {
   it('arithmetic operators', async () => {
     const file = py.factory.createSourceFile([
-      py.factory.createAssignment(py.factory.createIdentifier('x'), py.factory.createLiteral(0)),
-      py.factory.createAssignment(py.factory.createIdentifier('y'), py.factory.createLiteral(0)),
-      py.factory.createAssignment(py.factory.createIdentifier('z'), py.factory.createLiteral(0)),
-      py.factory.createAssignment(py.factory.createIdentifier('a'), py.factory.createLiteral(0.0)),
-      py.factory.createAssignment(py.factory.createIdentifier('b'), py.factory.createLiteral(0)),
-      py.factory.createAssignment(py.factory.createIdentifier('c'), py.factory.createLiteral(0)),
+      py.factory.createAssignment(
+        py.factory.createIdentifier('x'),
+        undefined,
+        py.factory.createLiteral(0),
+      ),
+      py.factory.createAssignment(
+        py.factory.createIdentifier('y'),
+        undefined,
+        py.factory.createLiteral(0),
+      ),
+      py.factory.createAssignment(
+        py.factory.createIdentifier('z'),
+        undefined,
+        py.factory.createLiteral(0),
+      ),
+      py.factory.createAssignment(
+        py.factory.createIdentifier('a'),
+        undefined,
+        py.factory.createLiteral(0.0),
+      ),
+      py.factory.createAssignment(
+        py.factory.createIdentifier('b'),
+        undefined,
+        py.factory.createLiteral(0),
+      ),
+      py.factory.createAssignment(
+        py.factory.createIdentifier('c'),
+        undefined,
+        py.factory.createLiteral(0),
+      ),
 
       py.factory.createAugmentedAssignment(
         py.factory.createIdentifier('x'),
@@ -47,12 +71,36 @@ describe('augmented assignment statement', () => {
 
   it('power and bitwise operators', async () => {
     const file = py.factory.createSourceFile([
-      py.factory.createAssignment(py.factory.createIdentifier('x'), py.factory.createLiteral(1)),
-      py.factory.createAssignment(py.factory.createIdentifier('y'), py.factory.createLiteral(1)),
-      py.factory.createAssignment(py.factory.createIdentifier('z'), py.factory.createLiteral(1)),
-      py.factory.createAssignment(py.factory.createIdentifier('a'), py.factory.createLiteral(1)),
-      py.factory.createAssignment(py.factory.createIdentifier('b'), py.factory.createLiteral(1)),
-      py.factory.createAssignment(py.factory.createIdentifier('c'), py.factory.createLiteral(1)),
+      py.factory.createAssignment(
+        py.factory.createIdentifier('x'),
+        undefined,
+        py.factory.createLiteral(1),
+      ),
+      py.factory.createAssignment(
+        py.factory.createIdentifier('y'),
+        undefined,
+        py.factory.createLiteral(1),
+      ),
+      py.factory.createAssignment(
+        py.factory.createIdentifier('z'),
+        undefined,
+        py.factory.createLiteral(1),
+      ),
+      py.factory.createAssignment(
+        py.factory.createIdentifier('a'),
+        undefined,
+        py.factory.createLiteral(1),
+      ),
+      py.factory.createAssignment(
+        py.factory.createIdentifier('b'),
+        undefined,
+        py.factory.createLiteral(1),
+      ),
+      py.factory.createAssignment(
+        py.factory.createIdentifier('c'),
+        undefined,
+        py.factory.createLiteral(1),
+      ),
 
       py.factory.createAugmentedAssignment(
         py.factory.createIdentifier('x'),

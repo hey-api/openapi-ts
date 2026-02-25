@@ -34,7 +34,7 @@ export class AttrPyDsl extends Mixed {
     return this.missingRequiredCalls().length === 0;
   }
 
-  override toAst(): py.MemberExpression {
+  override toAst() {
     this.$validate();
 
     const leftNode = this.$node(this.left);

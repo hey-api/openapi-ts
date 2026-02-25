@@ -72,7 +72,7 @@ export class ClassPyDsl extends Mixed {
     return this;
   }
 
-  override toAst(): py.ClassDeclaration {
+  override toAst() {
     this.$validate();
     // const uniqueClasses: Array<py.Expression> = [];
 

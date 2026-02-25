@@ -6,6 +6,7 @@ describe('dict expression', () => {
     const file = py.factory.createSourceFile([
       py.factory.createAssignment(
         py.factory.createIdentifier('person'),
+        undefined,
         py.factory.createDictExpression([
           {
             key: py.factory.createLiteral('name'),
