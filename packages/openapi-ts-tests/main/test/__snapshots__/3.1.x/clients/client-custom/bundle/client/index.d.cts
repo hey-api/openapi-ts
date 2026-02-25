@@ -229,7 +229,7 @@ type Client = Client$1<RequestFn, Config, MethodFn, BuildUrlFn> & {
  * `setConfig()`. This is useful for example if you're using Next.js
  * to ensure your client always has the correct values.
  */
-type CreateClientConfig<T extends ClientOptions = ClientOptions> = (override?: Config<ClientOptions & T>) => Config<Required<ClientOptions> & T>;
+type CreateClientConfig<T extends ClientOptions = ClientOptions> = (override?: Config<ClientOptions & T>) => Config<Required<ClientOptions> & T> | Promise<Config<Required<ClientOptions> & T>>;
 interface TDataShape {
   body?: unknown;
   headers?: unknown;

@@ -41,8 +41,15 @@ export const createClientConfigType = ({ plugin }: Parameters<PluginHandler>[0])
             .type($.type(symbolConfig).generic($.type.and(symbolDefaultClientOptions, 'T'))),
         )
         .returns(
-          $.type(symbolConfig).generic(
-            $.type.and($.type('Required').generic(symbolDefaultClientOptions), 'T'),
+          $.type.or(
+            $.type(symbolConfig).generic(
+              $.type.and($.type('Required').generic(symbolDefaultClientOptions), 'T'),
+            ),
+            $.type('Promise').generic(
+              $.type(symbolConfig).generic(
+                $.type.and($.type('Required').generic(symbolDefaultClientOptions), 'T'),
+              ),
+            ),
           ),
         ),
     );
