@@ -50,20 +50,24 @@ export const handlerV5: PluginHandler = ({ plugin }) => {
       resource: `${plugin.name}.queryOptions`,
     },
   });
-  plugin.symbol('useQuery', {
-    external: plugin.name,
-    meta: {
-      category: 'external',
-      resource: `${plugin.name}.useQuery`,
-    },
-  });
-  plugin.symbol('useMutation', {
-    external: plugin.name,
-    meta: {
-      category: 'external',
-      resource: `${plugin.name}.useMutation`,
-    },
-  });
+  if ('useQuery' in plugin.config) {
+    plugin.symbol('useQuery', {
+      external: plugin.name,
+      meta: {
+        category: 'external',
+        resource: `${plugin.name}.useQuery`,
+      },
+    });
+  }
+  if ('useMutation' in plugin.config) {
+    plugin.symbol('useMutation', {
+      external: plugin.name,
+      meta: {
+        category: 'external',
+        resource: `${plugin.name}.useMutation`,
+      },
+    });
+  }
   plugin.symbol('AxiosError', {
     external: 'axios',
     kind: 'type',

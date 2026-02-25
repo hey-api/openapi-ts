@@ -6,7 +6,6 @@ import { $ } from '../../../../ts-dsl';
 import { useTypeData, useTypeError, useTypeResponse } from '../shared/useType';
 import type { PluginInstance } from '../types';
 
-const optionsParamName = 'options';
 const mutationOptionsParamName = 'mutationOptions';
 
 export const createUseMutation = ({
@@ -39,8 +38,6 @@ export const createUseMutation = ({
     role: 'mutationOptions',
     tool: plugin.name,
   });
-  const includeRequestOptions =
-    'useMutation' in plugin.config && plugin.config.useMutation.requestOptions;
 
   const func = $.func().param(mutationOptionsParamName, (p) =>
     p
@@ -52,21 +49,9 @@ export const createUseMutation = ({
       ),
   );
 
-  if (includeRequestOptions) {
-    func.param(optionsParamName, (p) => p.optional().type($.type('Partial').generic(typeData)));
-  }
-
   func.do(
     $(symbolUseMutation)
-      .call(
-        $.object()
-          .spread(
-            includeRequestOptions
-              ? $(symbolMutationOptionsFn).call(optionsParamName)
-              : $(symbolMutationOptionsFn).call(),
-          )
-          .spread(mutationOptionsParamName),
-      )
+      .call($.object().spread($(symbolMutationOptionsFn).call()).spread(mutationOptionsParamName))
       .return(),
   );
 
