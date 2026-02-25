@@ -703,7 +703,7 @@ export type ModelWithAdditionalPropertiesEqTrue = {
      * This is a simple string property
      */
     prop?: string;
-    [key: string]: unknown | string | undefined;
+    [key: string]: unknown;
 };
 
 export type NestedAnyOfArraysNullable = {
