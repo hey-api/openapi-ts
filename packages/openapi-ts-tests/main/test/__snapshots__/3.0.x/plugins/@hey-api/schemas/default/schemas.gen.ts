@@ -1555,6 +1555,19 @@ export const ModelWithNullableObjectSchema = {
     }
 } as const;
 
+export const ModelWithAdditionalPropertiesRefSchema = {
+    type: 'object',
+    description: 'An object with additional properties that can be null',
+    additionalProperties: {
+        nullable: true,
+        allOf: [
+            {
+                $ref: '#/components/schemas/NullableObject'
+            }
+        ]
+    }
+} as const;
+
 export const ModelWithOneOfEnumSchema = {
     oneOf: [
         {
