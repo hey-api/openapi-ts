@@ -84,7 +84,7 @@ export const createClient: PluginHandler = ({ plugin }) => {
     .assign(
       $(symbolCreateClient).$if(
         symbolCreateClientConfig,
-        (c, s) => c.call($(s).call(...createConfigParameters)),
+        (c, s) => c.call($.await($(s).call(...createConfigParameters))),
         (c) => c.call(...createConfigParameters),
       ),
     );
