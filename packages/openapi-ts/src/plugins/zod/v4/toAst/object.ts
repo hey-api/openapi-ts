@@ -29,7 +29,7 @@ type ExtendedContext = ObjectResolverContext & {
 };
 
 function additionalPropertiesNode(ctx: ExtendedContext): Chain | null | undefined {
-  const { schema, walk, walkerCtx } = ctx;
+  const { applyModifiers, schema, walk, walkerCtx } = ctx;
 
   if (
     !schema.additionalProperties ||
@@ -43,7 +43,8 @@ function additionalPropertiesNode(ctx: ExtendedContext): Chain | null | undefine
     childContext(walkerCtx, 'additionalProperties'),
   );
   if (additionalResult.hasLazyExpression) ctx.utils.ast.hasLazyExpression = true;
-  return additionalResult.expression.expression;
+  const ast = applyModifiers(additionalResult, {});
+  return ast.expression;
 }
 
 function baseNode(ctx: ExtendedContext): Chain {
