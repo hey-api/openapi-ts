@@ -682,6 +682,11 @@ export const vModelWithNullableObject = v.object({
     data: v.optional(vNullableObject)
 });
 
+/**
+ * An object with additional properties that can be null
+ */
+export const vModelWithAdditionalPropertiesRef = v.object({});
+
 export const vModelWithOneOfEnum = v.union([
     v.object({
         foo: v.picklist(['Bar'])
