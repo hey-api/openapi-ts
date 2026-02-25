@@ -344,6 +344,18 @@ describe('buildClientParams', () => {
       description: 'strip empty slots',
       params: {},
     },
+    {
+      args: [[]],
+      config: [
+        {
+          in: 'body',
+        },
+      ],
+      description: 'empty array body',
+      params: {
+        body: [],
+      },
+    },
   ];
 
   it.each(scenarios)('$description', async ({ args, config, params }) => {
