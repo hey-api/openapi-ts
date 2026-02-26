@@ -529,9 +529,9 @@ export const sessionTodo = <ThrowOnError extends boolean = false>(parameters: {
 export const sessionInit = <ThrowOnError extends boolean = false>(parameters: {
     sessionID: string;
     directory?: string;
-    modelID?: string;
-    providerID?: string;
-    messageID?: string;
+    modelID: string;
+    providerID: string;
+    messageID: string;
 }, options?: Options<never, ThrowOnError>) => {
     const params = buildClientParams([parameters], [{ args: [
                 { in: 'path', key: 'sessionID' },
@@ -660,8 +660,8 @@ export const sessionDiff = <ThrowOnError extends boolean = false>(parameters: {
 export const sessionSummarize = <ThrowOnError extends boolean = false>(parameters: {
     sessionID: string;
     directory?: string;
-    providerID?: string;
-    modelID?: string;
+    providerID: string;
+    modelID: string;
     auto?: boolean;
 }, options?: Options<never, ThrowOnError>) => {
     const params = buildClientParams([parameters], [{ args: [
@@ -725,7 +725,7 @@ export const sessionPrompt = <ThrowOnError extends boolean = false>(parameters: 
     };
     system?: string;
     variant?: string;
-    parts?: Array<TextPartInput | FilePartInput | AgentPartInput | SubtaskPartInput>;
+    parts: Array<TextPartInput | FilePartInput | AgentPartInput | SubtaskPartInput>;
 }, options?: Options<never, ThrowOnError>) => {
     const params = buildClientParams([parameters], [{ args: [
                 { in: 'path', key: 'sessionID' },
@@ -844,7 +844,7 @@ export const sessionPromptAsync = <ThrowOnError extends boolean = false>(paramet
     };
     system?: string;
     variant?: string;
-    parts?: Array<TextPartInput | FilePartInput | AgentPartInput | SubtaskPartInput>;
+    parts: Array<TextPartInput | FilePartInput | AgentPartInput | SubtaskPartInput>;
 }, options?: Options<never, ThrowOnError>) => {
     const params = buildClientParams([parameters], [{ args: [
                 { in: 'path', key: 'sessionID' },
@@ -881,8 +881,8 @@ export const sessionCommand = <ThrowOnError extends boolean = false>(parameters:
     messageID?: string;
     agent?: string;
     model?: string;
-    arguments?: string;
-    command?: string;
+    arguments: string;
+    command: string;
     variant?: string;
 }, options?: Options<never, ThrowOnError>) => {
     const params = buildClientParams([parameters], [{ args: [
@@ -915,12 +915,12 @@ export const sessionCommand = <ThrowOnError extends boolean = false>(parameters:
 export const sessionShell = <ThrowOnError extends boolean = false>(parameters: {
     sessionID: string;
     directory?: string;
-    agent?: string;
+    agent: string;
     model?: {
         providerID: string;
         modelID: string;
     };
-    command?: string;
+    command: string;
 }, options?: Options<never, ThrowOnError>) => {
     const params = buildClientParams([parameters], [{ args: [
                 { in: 'path', key: 'sessionID' },
@@ -949,7 +949,7 @@ export const sessionShell = <ThrowOnError extends boolean = false>(parameters: {
 export const sessionRevert = <ThrowOnError extends boolean = false>(parameters: {
     sessionID: string;
     directory?: string;
-    messageID?: string;
+    messageID: string;
     partID?: string;
 }, options?: Options<never, ThrowOnError>) => {
     const params = buildClientParams([parameters], [{ args: [
@@ -998,7 +998,7 @@ export const permissionRespond = <ThrowOnError extends boolean = false>(paramete
     sessionID: string;
     permissionID: string;
     directory?: string;
-    response?: 'once' | 'always' | 'reject';
+    response: 'once' | 'always' | 'reject';
 }, options?: Options<never, ThrowOnError>) => {
     const params = buildClientParams([parameters], [{ args: [
                 { in: 'path', key: 'sessionID' },
@@ -1026,7 +1026,7 @@ export const permissionRespond = <ThrowOnError extends boolean = false>(paramete
 export const permissionReply = <ThrowOnError extends boolean = false>(parameters: {
     requestID: string;
     directory?: string;
-    reply?: 'once' | 'always' | 'reject';
+    reply: 'once' | 'always' | 'reject';
 }, options?: Options<never, ThrowOnError>) => {
     const params = buildClientParams([parameters], [{ args: [
                 { in: 'path', key: 'requestID' },
@@ -1133,7 +1133,7 @@ export const providerAuth = <ThrowOnError extends boolean = false>(parameters?: 
 export const providerOauthAuthorize = <ThrowOnError extends boolean = false>(parameters: {
     providerID: string;
     directory?: string;
-    method?: number;
+    method: number;
 }, options?: Options<never, ThrowOnError>) => {
     const params = buildClientParams([parameters], [{ args: [
                 { in: 'path', key: 'providerID' },
@@ -1160,7 +1160,7 @@ export const providerOauthAuthorize = <ThrowOnError extends boolean = false>(par
 export const providerOauthCallback = <ThrowOnError extends boolean = false>(parameters: {
     providerID: string;
     directory?: string;
-    method?: number;
+    method: number;
     code?: string;
 }, options?: Options<never, ThrowOnError>) => {
     const params = buildClientParams([parameters], [{ args: [
@@ -1296,11 +1296,11 @@ export const fileStatus = <ThrowOnError extends boolean = false>(parameters?: {
  *
  * Write a log entry to the server logs with specified level and metadata.
  */
-export const appLog = <ThrowOnError extends boolean = false>(parameters?: {
+export const appLog = <ThrowOnError extends boolean = false>(parameters: {
     directory?: string;
-    service?: string;
-    level?: 'debug' | 'info' | 'error' | 'warn';
-    message?: string;
+    service: string;
+    level: 'debug' | 'info' | 'error' | 'warn';
+    message: string;
     extra?: {
         [key: string]: unknown;
     };
@@ -1361,10 +1361,10 @@ export const mcpStatus = <ThrowOnError extends boolean = false>(parameters?: {
  *
  * Dynamically add a new Model Context Protocol (MCP) server to the system.
  */
-export const mcpAdd = <ThrowOnError extends boolean = false>(parameters?: {
+export const mcpAdd = <ThrowOnError extends boolean = false>(parameters: {
     directory?: string;
-    name?: string;
-    config?: McpLocalConfig | McpRemoteConfig;
+    name: string;
+    config: McpLocalConfig | McpRemoteConfig;
 }, options?: Options<never, ThrowOnError>) => {
     const params = buildClientParams([parameters], [{ args: [
                 { in: 'query', key: 'directory' },
@@ -1425,7 +1425,7 @@ export const mcpAuthStart = <ThrowOnError extends boolean = false>(parameters: {
 export const mcpAuthCallback = <ThrowOnError extends boolean = false>(parameters: {
     name: string;
     directory?: string;
-    code?: string;
+    code: string;
 }, options?: Options<never, ThrowOnError>) => {
     const params = buildClientParams([parameters], [{ args: [
                 { in: 'path', key: 'name' },
@@ -1528,9 +1528,9 @@ export const formatterStatus = <ThrowOnError extends boolean = false>(parameters
  *
  * Append prompt to the TUI
  */
-export const tuiAppendPrompt = <ThrowOnError extends boolean = false>(parameters?: {
+export const tuiAppendPrompt = <ThrowOnError extends boolean = false>(parameters: {
     directory?: string;
-    text?: string;
+    text: string;
 }, options?: Options<never, ThrowOnError>) => {
     const params = buildClientParams([parameters], [{ args: [{ in: 'query', key: 'directory' }, { in: 'body', key: 'text' }] }]);
     return (options?.client ?? client).post<TuiAppendPromptResponses, TuiAppendPromptErrors, ThrowOnError>({
@@ -1646,9 +1646,9 @@ export const tuiClearPrompt = <ThrowOnError extends boolean = false>(parameters?
  *
  * Execute a TUI command (e.g. agent_cycle)
  */
-export const tuiExecuteCommand = <ThrowOnError extends boolean = false>(parameters?: {
+export const tuiExecuteCommand = <ThrowOnError extends boolean = false>(parameters: {
     directory?: string;
-    command?: string;
+    command: string;
 }, options?: Options<never, ThrowOnError>) => {
     const params = buildClientParams([parameters], [{ args: [{ in: 'query', key: 'directory' }, { in: 'body', key: 'command' }] }]);
     return (options?.client ?? client).post<TuiExecuteCommandResponses, TuiExecuteCommandErrors, ThrowOnError>({
@@ -1668,11 +1668,11 @@ export const tuiExecuteCommand = <ThrowOnError extends boolean = false>(paramete
  *
  * Show a toast notification in the TUI
  */
-export const tuiShowToast = <ThrowOnError extends boolean = false>(parameters?: {
+export const tuiShowToast = <ThrowOnError extends boolean = false>(parameters: {
     directory?: string;
     title?: string;
-    message?: string;
-    variant?: 'info' | 'success' | 'warning' | 'error';
+    message: string;
+    variant: 'info' | 'success' | 'warning' | 'error';
     duration?: number;
 }, options?: Options<never, ThrowOnError>) => {
     const params = buildClientParams([parameters], [{ args: [
