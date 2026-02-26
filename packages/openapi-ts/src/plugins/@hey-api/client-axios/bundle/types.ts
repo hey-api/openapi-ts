@@ -106,7 +106,7 @@ type MethodFn = <TData = unknown, TError = unknown, ThrowOnError extends boolean
 ) => RequestResult<TData, TError, ThrowOnError>;
 
 type SseFn = <TData = unknown, TError = unknown, ThrowOnError extends boolean = false>(
-  options: Omit<RequestOptions<TData, ThrowOnError>, 'method'>,
+  options: Omit<RequestOptions<never, ThrowOnError>, 'method'>,
 ) => Promise<ServerSentEventsResult<TData, TError>>;
 
 type RequestFn = <TData = unknown, TError = unknown, ThrowOnError extends boolean = false>(
