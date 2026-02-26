@@ -179,7 +179,7 @@ export type SessionUserRoomSystemCalloutRingingWebhookPayload = {
                  * The user's device IP address.
                  */
                 device_ip: string;
-                [key: string]: unknown | string;
+                [key: string]: unknown;
             };
         };
     };
@@ -629,7 +629,7 @@ export type SessionUserRoomSystemCalloutRejectedWebhookPayload = {
                  * The user's device IP address.
                  */
                 device_ip: string;
-                [key: string]: unknown | string;
+                [key: string]: unknown;
             };
         };
     };
@@ -1317,7 +1317,7 @@ export type SessionUserRoomSystemCalloutMissedWebhookPayload = {
                  * The user's device IP address.
                  */
                 device_ip: string;
-                [key: string]: unknown | string;
+                [key: string]: unknown;
             };
         };
     };
@@ -2063,7 +2063,7 @@ export type SessionUserRoomSystemCalloutFailedWebhookPayload = {
                  * The user's device IP address.
                  */
                 device_ip: string;
-                [key: string]: unknown | string;
+                [key: string]: unknown;
             };
         };
     };
@@ -3240,7 +3240,7 @@ export type SessionUserRoomSystemCalloutAcceptedWebhookPayload = {
                  * The user's device IP address.
                  */
                 device_ip: string;
-                [key: string]: unknown | string;
+                [key: string]: unknown;
             };
         };
     };
