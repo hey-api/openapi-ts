@@ -131,7 +131,7 @@ export function getSignatureParameters({
         const property = properties[originalName]!;
         const name = conflicts.has(originalName) ? `${location}_${originalName}` : originalName;
         const signatureParameter: SignatureParameter = {
-          isRequired: property.required?.includes(originalName) ?? false,
+          isRequired: operation.body.schema.required?.includes(originalName) ?? false,
           name,
           schema: property,
         };
