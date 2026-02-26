@@ -63,7 +63,7 @@ export const jsonBodySerializer = {
 };
 
 export const urlSearchParamsBodySerializer = {
-  bodySerializer: <T extends Record<string, any> | Array<Record<string, any>>>(body: T): string => {
+  bodySerializer: (body: unknown): string => {
     const data = new URLSearchParams();
 
     Object.entries(body as Record<string, unknown>).forEach(([key, value]) => {
