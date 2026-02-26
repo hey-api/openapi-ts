@@ -72,7 +72,8 @@ function minLengthNode(ctx: StringResolverContext): Chain | undefined {
 function patternNode(ctx: StringResolverContext): Chain | undefined {
   const { chain, schema } = ctx;
   if (!schema.pattern) return;
-  return chain.current.attr(identifiers.regex).call($.regexp(schema.pattern));
+  const flags = /\\[pP]\{/.test(schema.pattern) ? 'u' : undefined;
+  return chain.current.attr(identifiers.regex).call($.regexp(schema.pattern, flags));
 }
 
 function stringResolver(ctx: StringResolverContext): Chain {

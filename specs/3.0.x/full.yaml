@@ -2064,6 +2064,9 @@ components:
         patternWithBacktick:
           type: string
           pattern: aaa`bbb
+        patternWithUnicode:
+          type: string
+          pattern: ^\p{L}+$
     File:
       required:
         - mime
