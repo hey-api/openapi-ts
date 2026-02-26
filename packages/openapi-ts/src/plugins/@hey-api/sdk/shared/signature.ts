@@ -126,12 +126,14 @@ export function getSignatureParameters({
       operation.body.schema.type === 'object' &&
       operation.body.schema.properties
     ) {
+      const requiredBodyProperties = new Set(operation.body.schema.required ?? []);
       const properties = operation.body.schema.properties;
       for (const originalName in properties) {
         const property = properties[originalName]!;
         const name = conflicts.has(originalName) ? `${location}_${originalName}` : originalName;
         const signatureParameter: SignatureParameter = {
-          isRequired: property.required?.includes(originalName) ?? false,
+          isRequired:
+            (operation.body.required ?? false) && requiredBodyProperties.has(originalName),
           name,
           schema: property,
         };
