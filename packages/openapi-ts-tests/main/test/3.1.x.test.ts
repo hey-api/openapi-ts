@@ -195,6 +195,13 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'content-media-type.yaml',
+        output: 'content-media-type',
+      }),
+      description: 'handles contentMediaType schema property for file uploads',
+    },
+    {
+      config: createConfig({
         input: 'content-types.yaml',
         output: 'content-types',
         plugins: ['@hey-api/client-axios', '@hey-api/typescript', '@hey-api/sdk'],
@@ -729,6 +736,14 @@ describe(`OpenAPI ${version}`, () => {
         plugins: ['@hey-api/typescript'],
       }),
       description: 'handles read-only types in nested response schemas',
+    },
+    {
+      config: createConfig({
+        input: 'transforms-read-write-unevaluated.yaml',
+        output: 'transforms-read-write-unevaluated',
+        plugins: ['@hey-api/typescript'],
+      }),
+      description: 'preserves unevaluatedProperties in schemas with readOnly fields',
     },
     {
       config: createConfig({

@@ -67,7 +67,7 @@ export class FuncPyDsl extends Mixed {
     return py.factory.createFunctionDeclaration(
       this.name.toString(),
       this._parameters,
-      this._returnType ? (this.$node(this._returnType) as py.Expression) : undefined,
+      this.$node(this._returnType),
       this.$do(),
       this.$decorators(),
       this.$docs(),

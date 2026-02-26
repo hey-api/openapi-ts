@@ -218,7 +218,7 @@ export type Client = CoreClient<
  */
 export type CreateClientConfig<T extends ClientOptions = ClientOptions> = (
   override?: Config<ClientOptions & T>,
-) => Config<Required<ClientOptions> & T>;
+) => Config<Required<ClientOptions> & T> | Promise<Config<Required<ClientOptions> & T>>;
 
 export interface TDataShape {
   body?: unknown;

@@ -67,7 +67,7 @@ export class WhilePyDsl extends Mixed {
     const elseBlock = this._else ? new BlockPyDsl(...this._else).$do() : undefined;
 
     return py.factory.createWhileStatement(
-      this.$node(this._condition!) as py.Expression,
+      this.$node(this._condition!),
       [...body],
       elseBlock ? [...elseBlock] : undefined,
     );
