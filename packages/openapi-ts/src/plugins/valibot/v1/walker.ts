@@ -1,132 +1,127 @@
-import type { Refs, SymbolMeta } from '@hey-api/codegen-core';
+import type { SymbolMeta } from '@hey-api/codegen-core';
 import { fromRef } from '@hey-api/codegen-core';
 import type { SchemaExtractor, SchemaVisitor } from '@hey-api/shared';
 import { pathToJsonPointer } from '@hey-api/shared';
 
 import { $ } from '../../../ts-dsl';
-import { maybeBigInt, shouldCoerceToBigInt } from '../../shared/utils/coerce';
+import { maybeBigInt } from '../../shared/utils/coerce';
+import { composeMeta, defaultMeta, inheritMeta } from '../shared/meta';
+import type { Pipes } from '../shared/pipes';
 import { pipesToNode } from '../shared/pipes';
 import type { ProcessorContext } from '../shared/processor';
-import type { PluginState, ValibotAppliedResult, ValibotSchemaResult } from '../shared/types';
+import type { ValibotFinal, ValibotMeta, ValibotResult } from '../shared/types';
 import type { ValibotPlugin } from '../types';
 import { identifiers } from './constants';
-import { arrayToAst } from './toAst/array';
-import { booleanToAst } from './toAst/boolean';
-import { enumToAst } from './toAst/enum';
-import { neverToAst } from './toAst/never';
-import { nullToAst } from './toAst/null';
-import { numberToNode } from './toAst/number';
-import { objectToAst } from './toAst/object';
-import { stringToNode } from './toAst/string';
-import { tupleToAst } from './toAst/tuple';
-import { undefinedToAst } from './toAst/undefined';
-import { unknownToAst } from './toAst/unknown';
-import { voidToAst } from './toAst/void';
+import { arrayToPipes } from './toAst/array';
+import { booleanToPipes } from './toAst/boolean';
+import { enumToPipes } from './toAst/enum';
+import { neverToPipes } from './toAst/never';
+import { nullToPipes } from './toAst/null';
+import { numberToPipes } from './toAst/number';
+import { objectToPipes } from './toAst/object';
+import { stringToPipes } from './toAst/string';
+import { tupleToPipes } from './toAst/tuple';
+import { undefinedToPipes } from './toAst/undefined';
+import { unknownToPipes } from './toAst/unknown';
+import { voidToPipes } from './toAst/void';
 
 export interface VisitorConfig {
   /** Optional schema extractor function. */
   schemaExtractor?: SchemaExtractor<ProcessorContext>;
-  /** The plugin state references. */
-  state: Refs<PluginState>;
 }
 
-function getDefaultValue(result: ValibotSchemaResult) {
-  return result.format ? maybeBigInt(result.default, result.format) : $.fromValue(result.default);
+function getDefaultValue(meta: ValibotMeta): ReturnType<typeof $.fromValue> {
+  return meta.format ? maybeBigInt(meta.default, meta.format) : $.fromValue(meta.default);
 }
 
 export function createVisitor(
   config: VisitorConfig,
-): SchemaVisitor<ValibotSchemaResult, ValibotPlugin['Instance']> {
-  const { schemaExtractor, state } = config;
+): SchemaVisitor<ValibotResult, ValibotPlugin['Instance']> {
+  const { schemaExtractor } = config;
+
   return {
-    applyModifiers(result, ctx, options = {}): ValibotAppliedResult {
+    applyModifiers(result, ctx, options = {}): ValibotFinal {
       const { optional } = options;
       const v = ctx.plugin.external('valibot.v');
-      const pipes = [...result.expression.pipes];
+      const pipes: Pipes = [...result.pipes];
 
-      if (result.readonly) {
+      if (result.meta.readonly) {
         pipes.push($(v).attr(identifiers.actions.readonly).call());
       }
 
-      const hasDefault = result.default !== undefined;
+      const hasDefault = result.meta.default !== undefined;
       const needsOptional = optional || hasDefault;
-      const needsNullable = result.nullable;
+      const needsNullable = result.meta.nullable;
       const innerNode = pipesToNode(pipes, ctx.plugin);
+
+      let finalPipes: Pipes;
 
       if (needsOptional && needsNullable) {
         if (hasDefault) {
-          return {
-            pipes: [
-              $(v).attr(identifiers.schemas.nullish).call(innerNode, getDefaultValue(result)),
-            ],
-          };
+          finalPipes = [
+            $(v).attr(identifiers.schemas.nullish).call(innerNode, getDefaultValue(result.meta)),
+          ];
+        } else {
+          finalPipes = [$(v).attr(identifiers.schemas.nullish).call(innerNode)];
         }
-        return { pipes: [$(v).attr(identifiers.schemas.nullish).call(innerNode)] };
-      }
-
-      if (needsOptional) {
+      } else if (needsOptional) {
         if (hasDefault) {
-          return {
-            pipes: [
-              $(v).attr(identifiers.schemas.optional).call(innerNode, getDefaultValue(result)),
-            ],
-          };
+          finalPipes = [
+            $(v).attr(identifiers.schemas.optional).call(innerNode, getDefaultValue(result.meta)),
+          ];
+        } else {
+          finalPipes = [$(v).attr(identifiers.schemas.optional).call(innerNode)];
         }
-        return { pipes: [$(v).attr(identifiers.schemas.optional).call(innerNode)] };
+      } else if (needsNullable) {
+        finalPipes = [$(v).attr(identifiers.schemas.nullable).call(innerNode)];
+      } else {
+        finalPipes = pipes;
       }
 
-      if (needsNullable) {
-        return { pipes: [$(v).attr(identifiers.schemas.nullable).call(innerNode)] };
-      }
-
-      return { pipes };
+      return {
+        pipes: finalPipes,
+        typeName: result.meta.hasLazy ? identifiers.types.GenericSchema : undefined,
+      };
     },
     array(schema, ctx, walk) {
-      const applyModifiers = (result: ValibotSchemaResult, opts: { optional?: boolean }) =>
-        this.applyModifiers(result, ctx, opts) as ValibotAppliedResult;
-      const ast = arrayToAst({
-        ...ctx,
+      const applyModifiers = (result: ValibotResult, opts?: { optional?: boolean }) =>
+        this.applyModifiers(result, ctx, opts) as ValibotFinal;
+
+      const { childResults, pipes } = arrayToPipes({
         applyModifiers,
+        plugin: ctx.plugin,
         schema,
-        state,
         walk,
+        walkerCtx: ctx,
       });
+
       return {
-        default: schema.default,
-        expression: ast,
-        hasLazyExpression: state.hasLazyExpression['~ref'],
-        nullable: false,
-        readonly: schema.accessScope === 'read',
+        meta: inheritMeta(schema, childResults),
+        pipes,
       };
     },
     boolean(schema, ctx) {
-      const pipe = booleanToAst({ ...ctx, schema });
+      const pipe = booleanToPipes({ plugin: ctx.plugin, schema });
       return {
-        default: schema.default,
-        expression: { pipes: [pipe] },
-        nullable: false,
-        readonly: schema.accessScope === 'read',
+        meta: defaultMeta(schema),
+        pipes: [pipe],
       };
     },
     enum(schema, ctx) {
-      const pipe = enumToAst({ ...ctx, schema, state });
-      const hasNull =
-        schema.items?.some((item) => item.type === 'null' || item.const === null) ?? false;
+      const { isNullable, pipe } = enumToPipes({ plugin: ctx.plugin, schema });
       return {
-        default: schema.default,
-        expression: { pipes: [pipe] },
-        nullable: hasNull,
-        readonly: schema.accessScope === 'read',
+        meta: {
+          ...defaultMeta(schema),
+          nullable: isNullable,
+        },
+        pipes: [pipe],
       };
     },
     integer(schema, ctx) {
-      const pipe = numberToNode({ ...ctx, schema });
+      const pipe = numberToPipes({ plugin: ctx.plugin, schema });
       return {
-        default: schema.default,
-        expression: { pipes: [pipe] },
-        format: schema.format,
-        nullable: false,
-        readonly: schema.accessScope === 'read',
+        meta: defaultMeta(schema),
+        pipes: [pipe],
       };
     },
     intercept(schema, ctx, walk) {
@@ -141,6 +136,7 @@ export function createVisitor(
           plugin: ctx.plugin,
           schema,
         });
+
         if (extracted !== schema) {
           return walk(extracted, ctx);
         }
@@ -148,68 +144,61 @@ export function createVisitor(
     },
     intersection(items, schemas, parentSchema, ctx) {
       const v = ctx.plugin.external('valibot.v');
-      const hasAnyLazy = items.some((item) => item.hasLazyExpression);
-      const itemNodes = items.map((item) => pipesToNode(item.expression.pipes, ctx.plugin));
+      const itemNodes = items.map((item) => pipesToNode(item.pipes, ctx.plugin));
 
       return {
-        default: parentSchema.default,
-        expression: {
-          pipes: [
-            $(v)
-              .attr(identifiers.schemas.intersect)
-              .call($.array(...itemNodes)),
-          ],
-        },
-        hasLazyExpression: hasAnyLazy,
-        nullable: items.some((i) => i.nullable),
-        readonly: items.some((i) => i.readonly),
+        meta: composeMeta(items, { default: parentSchema.default }),
+        pipes: [
+          $(v)
+            .attr(identifiers.schemas.intersect)
+            .call($.array(...itemNodes)),
+        ],
       };
     },
     never(schema, ctx) {
-      const pipe = neverToAst({ ...ctx, schema });
+      const pipe = neverToPipes({ plugin: ctx.plugin, schema });
       return {
-        default: schema.default,
-        expression: { pipes: [pipe] },
-        nullable: false,
-        readonly: false,
+        meta: {
+          ...defaultMeta(schema),
+          nullable: false,
+          readonly: false,
+        },
+        pipes: [pipe],
       };
     },
     null(schema, ctx) {
-      const pipe = nullToAst({ ...ctx, schema });
+      const pipe = nullToPipes({ plugin: ctx.plugin, schema });
       return {
-        default: schema.default,
-        expression: { pipes: [pipe] },
-        nullable: false,
-        readonly: false,
+        meta: {
+          ...defaultMeta(schema),
+          nullable: false,
+          readonly: false,
+        },
+        pipes: [pipe],
       };
     },
     number(schema, ctx) {
-      const pipe = numberToNode({ ...ctx, schema });
+      const pipe = numberToPipes({ plugin: ctx.plugin, schema });
       return {
-        default: schema.default,
-        expression: { pipes: [pipe] },
-        format: schema.format,
-        nullable: false,
-        readonly: schema.accessScope === 'read',
+        meta: defaultMeta(schema),
+        pipes: [pipe],
       };
     },
     object(schema, ctx, walk) {
-      const applyModifiers = (result: ValibotSchemaResult, opts: { optional?: boolean }) =>
-        this.applyModifiers(result, ctx, opts) as ValibotAppliedResult;
-      const ast = objectToAst({
+      const applyModifiers = (result: ValibotResult, opts: { optional?: boolean }) =>
+        this.applyModifiers(result, ctx, opts) as ValibotFinal;
+
+      const { childResults, pipes } = objectToPipes({
         applyModifiers,
         plugin: ctx.plugin,
         schema,
-        state,
         walk,
         walkerCtx: ctx,
       });
+
       return {
-        default: schema.default,
-        expression: ast,
-        hasLazyExpression: state.hasLazyExpression['~ref'],
-        nullable: false,
-        readonly: schema.accessScope === 'read',
+        meta: inheritMeta(schema, childResults),
+        pipes,
       };
     },
     postProcess(result, schema, ctx) {
@@ -218,11 +207,13 @@ export function createVisitor(
         const metadataExpr = $(v)
           .attr(identifiers.actions.metadata)
           .call($.object().prop('description', $.literal(schema.description)));
+
         return {
-          ...result,
-          expression: { pipes: [...result.expression.pipes, metadataExpr] },
+          meta: result.meta,
+          pipes: [...result.pipes, metadataExpr],
         };
       }
+
       return result;
     },
     reference($ref, schema, ctx) {
@@ -235,88 +226,68 @@ export function createVisitor(
       };
 
       const refSymbol = ctx.plugin.referenceSymbol(query);
+      const isRegistered = ctx.plugin.isSymbolRegistered(query);
 
-      if (ctx.plugin.isSymbolRegistered(query)) {
+      if (isRegistered) {
         return {
-          default: schema.default,
-          expression: { pipes: [$(refSymbol)] },
-          nullable: false,
-          readonly: schema.accessScope === 'read',
+          meta: defaultMeta(schema),
+          pipes: [$(refSymbol)],
         };
       }
 
-      state.hasLazyExpression['~ref'] = true;
       return {
-        default: schema.default,
-        expression: {
-          pipes: [
-            $(v)
-              .attr(identifiers.schemas.lazy)
-              .call($.func().do($(refSymbol).return())),
-          ],
+        meta: {
+          ...defaultMeta(schema),
+          hasLazy: true,
         },
-        hasLazyExpression: true,
-        nullable: false,
-        readonly: schema.accessScope === 'read',
+        pipes: [
+          $(v)
+            .attr(identifiers.schemas.lazy)
+            .call($.func().do($(refSymbol).return())),
+        ],
       };
     },
     string(schema, ctx) {
-      if (shouldCoerceToBigInt(schema.format)) {
-        const pipe = numberToNode({
-          plugin: ctx.plugin,
-          schema: { ...schema, type: 'number' },
-        });
-        return {
-          default: schema.default,
-          expression: { pipes: [pipe] },
-          nullable: false,
-          readonly: schema.accessScope === 'read',
-        };
-      }
-
-      const pipe = stringToNode({ ...ctx, schema });
+      const pipe = stringToPipes({ plugin: ctx.plugin, schema });
       return {
-        default: schema.default,
-        expression: { pipes: [pipe] },
-        nullable: false,
-        readonly: schema.accessScope === 'read',
+        meta: defaultMeta(schema),
+        pipes: [pipe],
       };
     },
     tuple(schema, ctx, walk) {
-      const applyModifiers = (result: ValibotSchemaResult, opts: { optional?: boolean }) =>
-        this.applyModifiers(result, ctx, opts) as ValibotAppliedResult;
-      const ast = tupleToAst({
-        ...ctx,
+      const applyModifiers = (result: ValibotResult, opts?: { optional?: boolean }) =>
+        this.applyModifiers(result, ctx, opts) as ValibotFinal;
+
+      const { childResults, pipes } = tupleToPipes({
         applyModifiers,
+        plugin: ctx.plugin,
         schema,
-        state,
         walk,
+        walkerCtx: ctx,
       });
+
       return {
-        default: schema.default,
-        expression: ast,
-        hasLazyExpression: state.hasLazyExpression['~ref'],
-        nullable: false,
-        readonly: schema.accessScope === 'read',
+        meta: inheritMeta(schema, childResults),
+        pipes,
       };
     },
     undefined(schema, ctx) {
-      const pipe = undefinedToAst({ ...ctx, schema });
+      const pipe = undefinedToPipes({ plugin: ctx.plugin, schema });
       return {
-        default: schema.default,
-        expression: { pipes: [pipe] },
-        nullable: false,
-        readonly: false,
+        meta: {
+          ...defaultMeta(schema),
+          nullable: false,
+          readonly: false,
+        },
+        pipes: [pipe],
       };
     },
     union(items, schemas, parentSchema, ctx) {
       const v = ctx.plugin.external('valibot.v');
-      const hasAnyLazy = items.some((item) => item.hasLazyExpression);
 
-      const hasNull = schemas.some((s) => s.type === 'null') || items.some((i) => i.nullable);
+      const hasNull = schemas.some((s) => s.type === 'null') || items.some((i) => i.meta.nullable);
 
-      const nonNullItems: typeof items = [];
-
+      const nonNullItems: Array<ValibotResult> = [];
       items.forEach((item, index) => {
         const schema = schemas[index]!;
         if (schema.type !== 'null') {
@@ -324,46 +295,49 @@ export function createVisitor(
         }
       });
 
-      let expression: ValibotSchemaResult['expression'];
+      let pipes: Pipes;
+
       if (nonNullItems.length === 0) {
-        expression = { pipes: [$(v).attr(identifiers.schemas.null).call()] };
+        pipes = [$(v).attr(identifiers.schemas.null).call()];
       } else if (nonNullItems.length === 1) {
-        expression = nonNullItems[0]!.expression;
+        pipes = nonNullItems[0]!.pipes;
       } else {
-        const itemNodes = nonNullItems.map((i) => pipesToNode(i.expression.pipes, ctx.plugin));
-        expression = {
-          pipes: [
-            $(v)
-              .attr(identifiers.schemas.union)
-              .call($.array(...itemNodes)),
-          ],
-        };
+        const itemNodes = nonNullItems.map((i) => pipesToNode(i.pipes, ctx.plugin));
+        pipes = [
+          $(v)
+            .attr(identifiers.schemas.union)
+            .call($.array(...itemNodes)),
+        ];
       }
 
       return {
-        default: parentSchema.default,
-        expression,
-        hasLazyExpression: hasAnyLazy,
-        nullable: hasNull,
-        readonly: items.some((i) => i.readonly),
+        meta: composeMeta(items, {
+          default: parentSchema.default,
+          nullable: hasNull,
+        }),
+        pipes,
       };
     },
     unknown(schema, ctx) {
-      const pipe = unknownToAst({ ...ctx, schema });
+      const pipe = unknownToPipes({ plugin: ctx.plugin });
       return {
-        default: schema.default,
-        expression: { pipes: [pipe] },
-        nullable: false,
-        readonly: false,
+        meta: {
+          ...defaultMeta(schema),
+          nullable: false,
+          readonly: false,
+        },
+        pipes: [pipe],
       };
     },
     void(schema, ctx) {
-      const pipe = voidToAst({ ...ctx, schema });
+      const pipe = voidToPipes({ plugin: ctx.plugin, schema });
       return {
-        default: schema.default,
-        expression: { pipes: [pipe] },
-        nullable: false,
-        readonly: false,
+        meta: {
+          ...defaultMeta(schema),
+          nullable: false,
+          readonly: false,
+        },
+        pipes: [pipe],
       };
     },
   };

@@ -1,0 +1,47 @@
+openapi: 3.1.0
+info:
+  title: readOnly map property with unevaluatedProperties
+  version: 1.0.0
+paths:
+  /x:
+    get:
+      operationId: getX
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DisposableEmail'
+    post:
+      operationId: createX
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DisposableEmail'
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DisposableEmail'
+components:
+  schemas:
+    DisposableEmail:
+      type: object
+      required:
+        - domain
+        - disposable
+        - metadata
+      properties:
+        domain:
+          type: string
+        disposable:
+          type: boolean
+          readOnly: true
+        metadata:
+          type: object
+          unevaluatedProperties: {}

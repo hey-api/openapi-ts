@@ -12,6 +12,8 @@ import type { PyListExpression } from './expressions/list';
 import type { PyLiteral } from './expressions/literal';
 import type { PyMemberExpression } from './expressions/member';
 import type { PySetExpression } from './expressions/set';
+import type { PySubscriptExpression } from './expressions/subscript';
+import type { PySubscriptSlice } from './expressions/subscript-slice';
 import type { PyTupleExpression } from './expressions/tuple';
 import type { PyYieldExpression } from './expressions/yield';
 import type { PyYieldFromExpression } from './expressions/yieldFrom';
@@ -31,6 +33,8 @@ export type PyExpression =
   | PyLiteral
   | PyMemberExpression
   | PySetExpression
+  | PySubscriptExpression
+  | PySubscriptSlice
   | PyTupleExpression
   | PyYieldExpression
   | PyYieldFromExpression;

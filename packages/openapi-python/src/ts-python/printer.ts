@@ -328,6 +328,14 @@ export function createPrinter(options?: PyPrinterOptions) {
         parts.push(...node.statements.map(printNode));
         break;
 
+      case PyNodeKind.SubscriptExpression:
+        parts.push(`${printNode(node.value)}[${printNode(node.slice)}]`);
+        break;
+
+      case PyNodeKind.SubscriptSlice:
+        parts.push(node.elements.map(printNode).join(', '));
+        break;
+
       case PyNodeKind.TryStatement: {
         parts.push(printLine('try:'), printNode(node.tryBlock));
         if (node.exceptClauses) {

@@ -527,20 +527,44 @@ export class $RefParser {
         }
       }
 
+      const HTTP_METHODS = new Set([
+        'delete',
+        'get',
+        'head',
+        'options',
+        'patch',
+        'post',
+        'put',
+        'trace',
+      ]);
+
       const srcPaths = (schema.paths || {}) as Record<string, any>;
       for (const [p, item] of Object.entries(srcPaths)) {
-        let targetPath = p;
         if (merged.paths[p]) {
-          const trimmed = p.startsWith('/') ? p.substring(1) : p;
-          targetPath = `/${prefix}/${trimmed}`;
+          const newMethods = Object.keys(item as object).filter((k) => HTTP_METHODS.has(k));
+          const hasMethodConflict = newMethods.some((m) => merged.paths[p][m] !== undefined);
+          const rewritten = cloneAndRewrite(
+            item,
+            refMap,
+            tagMap,
+            prefix,
+            url.stripHash(sourcePath),
+          );
+          if (hasMethodConflict) {
+            const trimmed = p.startsWith('/') ? p.substring(1) : p;
+            merged.paths[`/${prefix}/${trimmed}`] = rewritten;
+          } else {
+            Object.assign(merged.paths[p], rewritten);
+          }
+        } else {
+          merged.paths[p] = cloneAndRewrite(
+            item,
+            refMap,
+            tagMap,
+            prefix,
+            url.stripHash(sourcePath),
+          );
         }
-        merged.paths[targetPath] = cloneAndRewrite(
-          item,
-          refMap,
-          tagMap,
-          prefix,
-          url.stripHash(sourcePath),
-        );
       }
     }
 

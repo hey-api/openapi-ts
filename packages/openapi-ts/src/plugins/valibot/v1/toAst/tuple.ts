@@ -1,80 +1,63 @@
-import type { SchemaWithType } from '@hey-api/shared';
+import type { SchemaVisitorContext, SchemaWithType, Walker } from '@hey-api/shared';
 import { childContext } from '@hey-api/shared';
 
 import { $ } from '../../../../ts-dsl';
 import { pipesToNode } from '../../shared/pipes';
-import type {
-  Ast,
-  IrSchemaToAstOptions,
-  ValibotAppliedResult,
-  ValibotSchemaResult,
-} from '../../shared/types';
+import type { CompositeHandlerResult, ValibotFinal, ValibotResult } from '../../shared/types';
+import type { ValibotPlugin } from '../../types';
 import { identifiers } from '../constants';
-import { unknownToAst } from './unknown';
+import { unknownToPipes } from './unknown';
 
-export function tupleToAst(
-  options: IrSchemaToAstOptions & {
-    applyModifiers: (
-      result: ValibotSchemaResult,
-      opts: { optional?: boolean },
-    ) => ValibotAppliedResult;
-    schema: SchemaWithType<'tuple'>;
-  },
-): Omit<Ast, 'typeName'> {
-  const { applyModifiers, plugin, schema, walk } = options;
+interface TupleToPipesContext {
+  applyModifiers: (result: ValibotResult, options?: { optional?: boolean }) => ValibotFinal;
+  plugin: ValibotPlugin['Instance'];
+  schema: SchemaWithType<'tuple'>;
+  walk: Walker<ValibotResult, ValibotPlugin['Instance']>;
+  walkerCtx: SchemaVisitorContext<ValibotPlugin['Instance']>;
+}
 
-  const result: Partial<Omit<Ast, 'typeName'>> = {};
+export function tupleToPipes(ctx: TupleToPipesContext): CompositeHandlerResult {
+  const { plugin, schema, walk, walkerCtx } = ctx;
 
   const v = plugin.external('valibot.v');
+  const childResults: Array<ValibotResult> = [];
 
   if (schema.const && Array.isArray(schema.const)) {
     const tupleElements = schema.const.map((value) =>
       $(v).attr(identifiers.schemas.literal).call($.fromValue(value)),
     );
-    result.pipes = [
-      $(v)
-        .attr(identifiers.schemas.tuple)
-        .call($.array(...tupleElements)),
-    ];
-    return result as Omit<Ast, 'typeName'>;
+
+    return {
+      childResults: [],
+      pipes: [
+        $(v)
+          .attr(identifiers.schemas.tuple)
+          .call($.array(...tupleElements)),
+      ],
+    };
   }
 
   if (schema.items) {
-    const tupleElements = schema.items.map((item, index) => {
-      const itemResult = walk(
-        item,
-        childContext(
-          {
-            path: options.state.path,
-            plugin: options.plugin,
-          },
-          'items',
-          index,
-        ),
-      );
-      if (itemResult.hasLazyExpression) {
-        result.hasLazyExpression = true;
-      }
+    for (let i = 0; i < schema.items.length; i++) {
+      const item = schema.items[i]!;
+      const result = walk(item, childContext(walkerCtx, 'items', i));
+      childResults.push(result);
+    }
 
-      const finalExpr = applyModifiers(itemResult, { optional: false });
-      return pipesToNode(finalExpr.pipes, plugin);
-    });
-    result.pipes = [
-      $(v)
-        .attr(identifiers.schemas.tuple)
-        .call($.array(...tupleElements)),
-    ];
-    return result as Omit<Ast, 'typeName'>;
+    const tupleElements = childResults.map((r) => pipesToNode(ctx.applyModifiers(r).pipes, plugin));
+
+    return {
+      childResults,
+      pipes: [
+        $(v)
+          .attr(identifiers.schemas.tuple)
+          .call($.array(...tupleElements)),
+      ],
+    };
   }
 
   return {
-    pipes: [
-      unknownToAst({
-        ...options,
-        schema: {
-          type: 'unknown',
-        },
-      }),
-    ],
+    childResults: [],
+    pipes: [unknownToPipes({ plugin })],
   };
 }

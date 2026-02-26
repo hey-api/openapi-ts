@@ -703,7 +703,7 @@ export type ModelWithAdditionalPropertiesEqTrue = {
      * This is a simple string property
      */
     prop?: string;
-    [key: string]: unknown | string | undefined;
+    [key: string]: unknown;
 };
 
 export type NestedAnyOfArraysNullable = {
@@ -733,6 +733,13 @@ export type CharactersInDescription = string;
 
 export type ModelWithNullableObject = {
     data?: NullableObject;
+};
+
+/**
+ * An object with additional properties that can be null
+ */
+export type ModelWithAdditionalPropertiesRef = {
+    [key: string]: NullableObject | null;
 };
 
 export type ModelWithOneOfEnum = {

@@ -17,6 +17,8 @@ import { createListExpression } from './expressions/list';
 import { createLiteral } from './expressions/literal';
 import { createMemberExpression } from './expressions/member';
 import { createSetExpression } from './expressions/set';
+import { createSubscriptExpression } from './expressions/subscript';
+import { createSubscriptSlice } from './expressions/subscript-slice';
 import { createTupleExpression } from './expressions/tuple';
 import { createYieldExpression } from './expressions/yield';
 import { createYieldFromExpression } from './expressions/yieldFrom';
@@ -75,6 +77,8 @@ export const factory = {
   createSetComprehension,
   createSetExpression,
   createSourceFile,
+  createSubscriptExpression,
+  createSubscriptSlice,
   createTryStatement,
   createTupleExpression,
   createWhileStatement,

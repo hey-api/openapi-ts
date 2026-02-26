@@ -64,16 +64,29 @@ export function objectToAst({
     hasPatterns || (!!addPropsObj && (addPropsObj.type !== 'never' || !indexSchemas.length));
 
   if (shouldCreateIndex) {
-    // only inject additionalProperties when it's not "never"
     const addProps = addPropsObj;
     if (addProps && addProps.type !== 'never') {
-      indexSchemas.unshift(addProps);
+      if (addProps.type === 'unknown') {
+        // When additionalProperties is unknown (e.g. `{}` or `true`), it already subsumes all
+        // named property types, so we only need the additionalProperties schema itself (plus any
+        // patternProperties) in the index signature. Including named property types would produce
+        // a redundant, noisy union like `unknown | string | null | ...`.
+        const patternSchemas: Array<IR.SchemaObject> = schema.patternProperties
+          ? Object.values(schema.patternProperties)
+          : [];
+        indexSchemas = [addProps, ...patternSchemas];
+      } else {
+        // For typed additionalProperties (e.g. `{ type: 'string' }`), named property types must
+        // be included so that TypeScript's index signature constraint is satisfied.
+        indexSchemas.unshift(addProps);
+      }
     } else if (!hasPatterns && !indexSchemas.length && addProps && addProps.type === 'never') {
       // keep "never" only when there are NO patterns and NO explicit properties
       indexSchemas = [addProps];
     }
 
-    if (hasOptionalProperties) {
+    // `unknown` already subsumes `undefined`, so no need to add it explicitly
+    if (hasOptionalProperties && addProps?.type !== 'unknown') {
       indexSchemas.push({ type: 'undefined' });
     }
 
