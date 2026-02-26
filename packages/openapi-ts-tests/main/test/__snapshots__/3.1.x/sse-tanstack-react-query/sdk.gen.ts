@@ -2,9 +2,9 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { ListEventsData, ListEventsResponses, SubscribeToEventStreamData, SubscribeToEventStreamResponses } from './types.gen';
+import type { ListEventsData, ListEventsResponses, SubscribeToEventStreamData, SubscribeToEventStreamResponse, SubscribeToEventStreamResponses } from './types.gen';
 
-export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
+export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
      * You can provide a client instance returned by `createClient()` instead of
      * individual options. This might be also useful if you want to implement a
@@ -21,7 +21,7 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
 /**
  * Subscribe to event stream
  */
-export const subscribeToEventStream = <ThrowOnError extends boolean = false>(options?: Options<SubscribeToEventStreamData, ThrowOnError>) => (options?.client ?? client).sse.post<SubscribeToEventStreamResponses, unknown, ThrowOnError>({ url: '/events/subscribe', ...options });
+export const subscribeToEventStream = <ThrowOnError extends boolean = false>(options?: Options<SubscribeToEventStreamData, ThrowOnError, SubscribeToEventStreamResponse>) => (options?.client ?? client).sse.post<SubscribeToEventStreamResponses, unknown, ThrowOnError>({ url: '/events/subscribe', ...options });
 
 /**
  * List events
