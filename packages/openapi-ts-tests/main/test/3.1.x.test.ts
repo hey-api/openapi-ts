@@ -1076,6 +1076,14 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'sse-post.yaml',
+        output: 'sse-tanstack-react-query',
+        plugins: ['@hey-api/client-fetch', '@tanstack/react-query'],
+      }),
+      description: 'SSE POST endpoint is excluded from TanStack React Query mutations',
+    },
+    {
+      config: createConfig({
         input: 'zoom-video-sdk.json',
         output: 'webhooks',
         plugins: ['@hey-api/typescript', 'valibot', 'zod'],

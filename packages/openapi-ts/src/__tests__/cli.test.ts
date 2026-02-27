@@ -27,11 +27,7 @@ describe('cli', () => {
     } finally {
       process.argv = originalArgv;
     }
-    expect(spy).toHaveBeenCalledWith({
-      logs: {
-        file: true,
-      },
-    });
+    expect(spy).toHaveBeenCalledWith({});
   });
 
   it('with minimal options', async () => {
@@ -51,9 +47,6 @@ describe('cli', () => {
     }
     expect(spy).toHaveBeenCalledWith({
       input: ['foo.json'],
-      logs: {
-        file: true,
-      },
       output: ['bar'],
     });
   });
@@ -66,11 +59,7 @@ describe('cli', () => {
     } finally {
       process.argv = originalArgv;
     }
-    expect(spy).toHaveBeenCalledWith({
-      logs: {
-        file: true,
-      },
-    });
+    expect(spy).toHaveBeenCalledWith({});
   });
 
   it('with plugins', async () => {
@@ -82,9 +71,6 @@ describe('cli', () => {
       process.argv = originalArgv;
     }
     expect(spy).toHaveBeenCalledWith({
-      logs: {
-        file: true,
-      },
       plugins: ['foo'],
     });
   });
@@ -98,9 +84,6 @@ describe('cli', () => {
       process.argv = originalArgv;
     }
     expect(spy).toHaveBeenCalledWith({
-      logs: {
-        file: true,
-      },
       plugins: ['foo'],
     });
   });
@@ -116,7 +99,6 @@ describe('cli', () => {
       }
       expect(spy).toHaveBeenCalledWith({
         logs: {
-          file: true,
           level: 'debug',
         },
       });
@@ -132,7 +114,6 @@ describe('cli', () => {
       }
       expect(spy).toHaveBeenCalledWith({
         logs: {
-          file: true,
           level: 'silent',
         },
       });
@@ -184,7 +165,6 @@ describe('cli', () => {
       dryRun: true,
       input: ['baz'],
       logs: {
-        file: true,
         path: 'qux',
       },
       output: ['quux'],
