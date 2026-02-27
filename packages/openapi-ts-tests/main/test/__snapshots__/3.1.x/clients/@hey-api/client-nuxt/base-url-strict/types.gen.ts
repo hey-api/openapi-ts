@@ -641,6 +641,7 @@ export type ModelWithPattern = {
     patternWithSingleQuotes?: string;
     patternWithNewline?: string;
     patternWithBacktick?: string;
+    patternWithUnicode?: string;
 };
 
 export type File = {
@@ -1031,6 +1032,7 @@ export type ModelWithPatternWritable = {
     patternWithSingleQuotes?: string;
     patternWithNewline?: string;
     patternWithBacktick?: string;
+    patternWithUnicode?: string;
 };
 
 export type FileWritable = {

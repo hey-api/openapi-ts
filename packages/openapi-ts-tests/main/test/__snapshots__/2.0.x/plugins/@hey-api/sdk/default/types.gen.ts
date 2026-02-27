@@ -390,6 +390,7 @@ export type ModelWithPattern = {
     patternWithSingleQuotes?: string;
     patternWithNewline?: string;
     patternWithBacktick?: string;
+    patternWithUnicode?: string;
 };
 
 export type ParameterActivityParams = {
@@ -451,6 +452,7 @@ export type ModelWithPatternWritable = {
     patternWithSingleQuotes?: string;
     patternWithNewline?: string;
     patternWithBacktick?: string;
+    patternWithUnicode?: string;
 };
 
 export type ServiceWithEmptyTagData = {
