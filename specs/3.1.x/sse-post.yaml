@@ -1,0 +1,29 @@
+openapi: 3.1.0
+info:
+  title: SSE POST test
+  version: 1.0.0
+paths:
+  /events/subscribe:
+    post:
+      operationId: subscribeToEventStream
+      summary: Subscribe to event stream
+      responses:
+        '200':
+          description: Event stream
+          content:
+            text/event-stream:
+              schema:
+                type: object
+  /events/list:
+    get:
+      operationId: listEvents
+      summary: List events
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
