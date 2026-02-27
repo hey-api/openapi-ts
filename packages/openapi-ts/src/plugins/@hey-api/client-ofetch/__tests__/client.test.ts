@@ -344,7 +344,7 @@ describe('request interceptor', () => {
     },
     {
       body: { key: 'value' },
-      bodySerializer: (body: object) => JSON.stringify(body),
+      bodySerializer: (body: unknown) => JSON.stringify(body),
       contentType: 'application/json',
       expectedSerializedValue: '{"key":"value"}',
     },
