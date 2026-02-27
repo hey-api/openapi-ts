@@ -1327,6 +1327,10 @@ export const ModelWithPatternSchema = {
         patternWithBacktick: {
             type: 'string',
             pattern: 'aaa`bbb'
+        },
+        patternWithUnicode: {
+            type: 'string',
+            pattern: '^\\p{L}+$'
         }
     }
 } as const;
@@ -2272,6 +2276,10 @@ export const ModelWithPatternWritableSchema = {
         patternWithBacktick: {
             type: 'string',
             pattern: 'aaa`bbb'
+        },
+        patternWithUnicode: {
+            type: 'string',
+            pattern: '^\\p{L}+$'
         }
     }
 } as const;
