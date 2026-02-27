@@ -1,5 +1,29 @@
 # @hey-api/openapi-ts
 
+## 0.93.1
+
+### Patch Changes
+
+- **plugin(@tanstack/query)**: fix: skip mutation queries for SSE endpoints ([#3470](https://github.com/hey-api/openapi-ts/pull/3470)) ([`3ca4f31`](https://github.com/hey-api/openapi-ts/commit/3ca4f317e422bb58345cb794faf979e26f10d127)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **client**: fix: avoid removing empty arrays from flat arguments ([#3451](https://github.com/hey-api/openapi-ts/pull/3451)) ([`1518fda`](https://github.com/hey-api/openapi-ts/commit/1518fda8372b5fb27085f4b296a77b922c340885)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(zod)**: fix: apply nullable modifier to `additionalProperties` schema ([#3452](https://github.com/hey-api/openapi-ts/pull/3452)) ([`2e903af`](https://github.com/hey-api/openapi-ts/commit/2e903af5d09881949b042bbd9aba516f3237764d)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **cli**: fix: do not set `logs.file` to `true` by default ([#3469](https://github.com/hey-api/openapi-ts/pull/3469)) ([`9e3d347`](https://github.com/hey-api/openapi-ts/commit/9e3d347d4b7a36c9d04b2f9c2d4988ece03677d8)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(@hey-api/sdk)**: fix: correctly set required flat parameters ([#3458](https://github.com/hey-api/openapi-ts/pull/3458)) ([`bf50a55`](https://github.com/hey-api/openapi-ts/commit/bf50a559670311a866ff8b104c169ef7619fb202)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(zod)**: add `u` flag on regex patterns with unicode property escapes ([#3468](https://github.com/hey-api/openapi-ts/pull/3468)) ([`67ad86a`](https://github.com/hey-api/openapi-ts/commit/67ad86a7e37a16125fc5a26eaad5859de43ccac3)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(valibot)**: add `u` flag on regex patterns with unicode property escapes ([#3468](https://github.com/hey-api/openapi-ts/pull/3468)) ([`003d914`](https://github.com/hey-api/openapi-ts/commit/003d91422cc831de782015c640b9bcbce9f17dd9)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(@hey-api/typescript)**: simplify union types if a member is `unknown` ([#3454](https://github.com/hey-api/openapi-ts/pull/3454)) ([`96d87df`](https://github.com/hey-api/openapi-ts/commit/96d87df7cf49bd1e8ce2dc196fcacc57270e4954)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **client(@hey-api/nuxt)**: fix: do not unwrap blob values ([#3459](https://github.com/hey-api/openapi-ts/pull/3459)) ([`b7233d1`](https://github.com/hey-api/openapi-ts/commit/b7233d1d3cc5de84b02c9dc8a27c3cb84235d752)) by [@LeiCraft](https://github.com/LeiCraft)
+
+- **client**: support async `createClientConfig` ([#3445](https://github.com/hey-api/openapi-ts/pull/3445)) ([`cd33d86`](https://github.com/hey-api/openapi-ts/commit/cd33d867857fbe9b4daf3c164f892d89946c4beb)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
 ## 0.93.0
 
 ### Minor Changes
