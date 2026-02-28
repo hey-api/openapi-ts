@@ -30,7 +30,7 @@ Help Hey API stay around for the long haul by becoming a [sponsor](https://githu
       <td align="center" width="336px">
         <p></p>
         <p>
-          <a href="https://kutt.it/pkEZyc" target="_blank">
+          <a href="https://kutt.to/pkEZyc" target="_blank">
             <picture height="50px">
               <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/.gen/stainless-logo-wordmark-480w.jpeg">
               <img alt="Stainless logo" height="50px" src="https://heyapi.dev/assets/.gen/stainless-logo-wordmark-480w.jpeg">
@@ -39,7 +39,7 @@ Help Hey API stay around for the long haul by becoming a [sponsor](https://githu
           <br/>
           Best-in-class developer interfaces for your API.
           <br/>
-          <a href="https://kutt.it/pkEZyc" style="text-decoration:none;" target="_blank">
+          <a href="https://kutt.to/pkEZyc" style="text-decoration:none;" target="_blank">
             stainless.com
           </a>
         </p>
@@ -48,7 +48,7 @@ Help Hey API stay around for the long haul by becoming a [sponsor](https://githu
       <td align="center" width="336px">
         <p></p>
         <p>
-          <a href="https://kutt.it/QM9Q2N" target="_blank">
+          <a href="https://kutt.to/QM9Q2N" target="_blank">
             <picture height="50px">
               <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/opencode/logo-light.svg">
               <img alt="Opencode logo" height="50px" src="https://heyapi.dev/assets/opencode/logo-dark.svg">
@@ -57,7 +57,7 @@ Help Hey API stay around for the long haul by becoming a [sponsor](https://githu
           <br/>
           The open source coding agent.
           <br/>
-          <a href="https://kutt.it/QM9Q2N" style="text-decoration:none;" target="_blank">
+          <a href="https://kutt.to/QM9Q2N" style="text-decoration:none;" target="_blank">
             opencode.ai
           </a>
         </p>
@@ -68,7 +68,7 @@ Help Hey API stay around for the long haul by becoming a [sponsor](https://githu
       <td align="center" width="336px">
         <p></p>
         <p>
-          <a href="https://kutt.it/6vrYy9" target="_blank">
+          <a href="https://kutt.to/6vrYy9" target="_blank">
             <picture height="50px">
               <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/mintlify/logo-light.svg">
               <img alt="Mintlify logo" height="50px" src="https://heyapi.dev/assets/mintlify/logo-dark.svg">
@@ -77,7 +77,7 @@ Help Hey API stay around for the long haul by becoming a [sponsor](https://githu
           <br/>
           The intelligent knowledge platform.
           <br/>
-          <a href="https://kutt.it/6vrYy9" style="text-decoration:none;" target="_blank">
+          <a href="https://kutt.to/6vrYy9" style="text-decoration:none;" target="_blank">
             mintlify.com
           </a>
         </p>
@@ -93,26 +93,26 @@ Help Hey API stay around for the long haul by becoming a [sponsor](https://githu
   <tbody>
     <tr>
       <td align="center" width="172px">
-        <a href="https://kutt.it/skQUVd" target="_blank">
+        <a href="https://kutt.to/skQUVd" target="_blank">
           <picture height="40px">
             <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/scalar/logo-light.svg">
             <img alt="Scalar logo" height="40px" src="https://heyapi.dev/assets/scalar/logo-dark.svg">
           </picture>
         </a>
         <br/>
-        <a href="https://kutt.it/skQUVd" style="text-decoration:none;" target="_blank">
+        <a href="https://kutt.to/skQUVd" style="text-decoration:none;" target="_blank">
           scalar.com
         </a>
       </td>
       <td align="center" width="172px">
-        <a href="https://kutt.it/Dr9GuW" target="_blank">
+        <a href="https://kutt.to/Dr9GuW" target="_blank">
           <picture height="40px">
             <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/fastapi/logo-light.svg">
             <img alt="FastAPI logo" height="40px" src="https://heyapi.dev/assets/fastapi/logo-dark.svg">
           </picture>
         </a>
         <br/>
-        <a href="https://kutt.it/Dr9GuW" style="text-decoration:none;" target="_blank">
+        <a href="https://kutt.to/Dr9GuW" style="text-decoration:none;" target="_blank">
           fastapi.tiangolo.com
         </a>
       </td>
@@ -126,7 +126,7 @@ Help Hey API stay around for the long haul by becoming a [sponsor](https://githu
   <tbody>
     <tr>
       <td align="center" width="136px">
-        <a href="https://kutt.it/YpaKsX" target="_blank">
+        <a href="https://kutt.to/YpaKsX" target="_blank">
           <picture height="34px">
             <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/.gen/kinde-logo-wordmark-dark-480w.webp">
             <img alt="Kinde logo" height="34px" src="https://heyapi.dev/assets/.gen/kinde-logo-wordmark-480w.jpeg">
@@ -134,7 +134,7 @@ Help Hey API stay around for the long haul by becoming a [sponsor](https://githu
         </a>
       </td>
       <td align="center" width="136px">
-        <a href="https://kutt.it/KkqSaw" target="_blank">
+        <a href="https://kutt.to/KkqSaw" target="_blank">
           <picture height="34px">
             <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/cella/logo-light.svg">
             <img alt="Cella logo" height="34px" src="https://heyapi.dev/assets/cella/logo-dark.svg">
