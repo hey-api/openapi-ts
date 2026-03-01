@@ -78,23 +78,23 @@
     "commander": "14.0.3"
   },
   "devDependencies": {
-    "@angular/common": "21.1.2",
-    "@angular/compiler": "21.1.2",
-    "@angular/compiler-cli": "21.1.2",
-    "@angular/core": "21.1.2",
-    "@angular/platform-browser": "21.1.2",
-    "@angular/platform-browser-dynamic": "21.1.2",
-    "@angular/router": "21.1.2",
-    "axios": "1.13.4",
-    "eslint": "9.39.1",
+    "@angular/common": "21.2.0",
+    "@angular/compiler": "21.2.0",
+    "@angular/compiler-cli": "21.2.0",
+    "@angular/core": "21.2.0",
+    "@angular/platform-browser": "21.2.0",
+    "@angular/platform-browser-dynamic": "21.2.0",
+    "@angular/router": "21.2.0",
+    "axios": "1.13.5",
+    "eslint": "9.39.3",
     "ky": "1.14.3",
-    "nuxt": "3.14.1592",
+    "nuxt": "3.21.1",
     "ofetch": "1.5.1",
     "rxjs": "7.8.2",
     "typescript": "5.9.3",
-    "vue": "3.5.25",
+    "vue": "3.5.29",
     "yaml": "2.8.2",
-    "zone.js": "0.16.0"
+    "zone.js": "0.16.1"
   },
   "peerDependencies": {
     "typescript": ">=5.5.3"

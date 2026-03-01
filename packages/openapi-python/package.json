@@ -69,7 +69,7 @@
     "commander": "14.0.3"
   },
   "devDependencies": {
-    "eslint": "9.39.1",
+    "eslint": "9.39.3",
     "typescript": "5.9.3",
     "yaml": "2.8.2"
   },
