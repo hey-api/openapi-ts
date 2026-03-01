@@ -1,3 +1,5 @@
+import path from 'node:path';
+
 import { parseUrl } from '@hey-api/shared';
 
 import { getTypedConfig } from '../../../config/utils';
@@ -41,9 +43,34 @@ export const createClient: PluginHandler = ({ plugin }) => {
   });
 
   const { runtimeConfigPath } = plugin.config;
-  const symbolCreateClientConfig = runtimeConfigPath
+  let resolvedRuntimeConfigPath: string | undefined;
+  if (runtimeConfigPath) {
+    const config = getTypedConfig(plugin);
+    const outputPath = config.output.path;
+
+    // Path resolution strategy:
+    // - Paths starting with './' or absolute paths are assumed to be relative to CWD (project root)
+    //   and need to be resolved to be relative to the output directory
+    // - Paths starting with '../' or without './' prefix are assumed to be already relative
+    //   to the output directory and are used as-is
+    if (runtimeConfigPath.startsWith('./') || path.isAbsolute(runtimeConfigPath)) {
+      // Resolve the runtimeConfigPath from the current working directory
+      const absoluteRuntimeConfigPath = path.resolve(runtimeConfigPath);
+      // Calculate the relative path from the output directory to the runtime config file
+      resolvedRuntimeConfigPath = path.relative(outputPath, absoluteRuntimeConfigPath);
+      // Ensure the path uses forward slashes and starts with ./ or ../
+      resolvedRuntimeConfigPath = resolvedRuntimeConfigPath.split(path.sep).join('/');
+      if (!resolvedRuntimeConfigPath.startsWith('.')) {
+        resolvedRuntimeConfigPath = `./${resolvedRuntimeConfigPath}`;
+      }
+    } else {
+      // Path is already relative to output (e.g., '../hey-api' or 'my-config'), use it as-is
+      resolvedRuntimeConfigPath = runtimeConfigPath;
+    }
+  }
+  const symbolCreateClientConfig = resolvedRuntimeConfigPath
     ? plugin.symbol('createClientConfig', {
-        external: runtimeConfigPath,
+        external: resolvedRuntimeConfigPath,
       })
     : undefined;
 
