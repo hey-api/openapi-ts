@@ -10,7 +10,12 @@ import {
 } from '../../../plugins/shared/utils/operation';
 import { $ } from '../../../ts-dsl';
 import { handleMeta } from './meta';
-import { createQueryKeyFunction, createQueryKeyType, queryKeyStatement } from './queryKey';
+import {
+  createQueryKeyFunction,
+  createQueryKeyOptionsType,
+  createQueryKeyType,
+  queryKeyStatement,
+} from './queryKey';
 import type { PiniaColadaPlugin } from './types';
 import { getPublicTypeData } from './utils';
 
@@ -40,10 +45,14 @@ export const createQueryOptions = ({
     })
   ) {
     createQueryKeyType({ plugin });
+    createQueryKeyOptionsType({ plugin });
     createQueryKeyFunction({ plugin });
   }
 
   let keyExpression: ReturnType<typeof $.call>;
+  const client = getClientPlugin(getTypedConfig(plugin));
+  const isNuxtClient = client.name === '@hey-api/client-nuxt';
+  const typeData = getPublicTypeData({ isNuxtClient, operation, plugin });
   if (plugin.config.queryKeys.enabled) {
     const symbolQueryKey = plugin.symbol(applyNaming(operation.id, plugin.config.queryKeys));
     const node = queryKeyStatement({
@@ -69,11 +78,8 @@ export const createQueryOptions = ({
       optionsParamName,
       tagsExpr,
     );
+    keyExpression = keyExpression.generic(typeData);
   }
-
-  const client = getClientPlugin(getTypedConfig(plugin));
-  const isNuxtClient = client.name === '@hey-api/client-nuxt';
-  const typeData = getPublicTypeData({ isNuxtClient, operation, plugin });
   const awaitSdkFn = $.lazy((ctx) =>
     ctx
       .access(
