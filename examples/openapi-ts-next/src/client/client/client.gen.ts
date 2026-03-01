@@ -67,7 +67,6 @@ export const createClient = (config: Config = {}): Client => {
 
   // @ts-expect-error
   const request: Client['request'] = async (options) => {
-    // @ts-expect-error
     const { opts, url } = await beforeRequest(options);
 
     for (const fn of interceptors.request.fns) {
@@ -207,14 +206,18 @@ export const createClient = (config: Config = {}): Client => {
       method,
       onRequest: async (url, init) => {
         let request = new Request(url, init);
+        // Create options for interceptor - convert headers to Headers instance
+        // to match ResolvedRequestOptions type
         const requestInit = {
           ...init,
+          headers: new Headers(init.headers),
           method: init.method as Config['method'],
           url,
         };
         for (const fn of interceptors.request.fns) {
           if (fn) {
-            await fn(requestInit);
+            // Cast to ResolvedRequestOptions: structurally matches with headers: Headers
+            await fn(requestInit as ResolvedRequestOptions);
             request = new Request(requestInit.url, requestInit);
           }
         }

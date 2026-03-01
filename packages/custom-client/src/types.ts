@@ -53,6 +53,18 @@ export interface RequestOptions<
   url: Url;
 }
 
+export interface ResolvedRequestOptions<
+  ThrowOnError extends boolean = boolean,
+  Url extends string = string,
+> extends RequestOptions<ThrowOnError, Url> {
+  /**
+   * Headers object after merging config and request headers.
+   * Always a Headers instance in request interceptors.
+   */
+  headers: Headers;
+  serializedBody?: string;
+}
+
 export type RequestResult<
   TData = unknown,
   TError = unknown,
@@ -96,7 +108,7 @@ type BuildUrlFn = <
 ) => string;
 
 export type Client = CoreClient<RequestFn, Config, MethodFn, BuildUrlFn> & {
-  interceptors: Middleware<Request, Response, unknown, RequestOptions>;
+  interceptors: Middleware<Request, Response, unknown, ResolvedRequestOptions>;
 };
 
 /**

@@ -72,6 +72,11 @@ export interface ResolvedRequestOptions<
   ThrowOnError extends boolean = boolean,
   Url extends string = string,
 > extends RequestOptions<unknown, ThrowOnError, Url> {
+  /**
+   * Headers object after merging config and request headers.
+   * Always a Headers instance in request interceptors.
+   */
+  headers: Headers;
   serializedBody?: string;
 }
 
