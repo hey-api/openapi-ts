@@ -21,7 +21,7 @@ export const stringToAst = ({
       return $.type.or($.type('Blob'), $.type('File'));
     }
 
-    if (schema.format === 'date-time' || schema.format === 'date') {
+    if (schema.format === 'date-time') {
       // TODO: parser - add ability to skip type transformers
       if (plugin.getPlugin('@hey-api/transformers')?.config.dates) {
         return $.type('Date');
