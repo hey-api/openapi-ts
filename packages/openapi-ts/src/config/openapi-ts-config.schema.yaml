@@ -1,0 +1,370 @@
+$id: https://heyapi.dev/openapi-ts/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+title: hey-api openapi-ts configuration
+description: Configuration schema for hey-api options
+type: object
+properties:
+  input:
+    description: >-
+      The input can be a string path, URL, API registry, an object containing any of these, or an object representing an OpenAPI specification. Hey API supports all valid OpenAPI versions and file formats.
+
+      You can learn more about complex use cases in the [Advanced](https://github.com/hey-api/openapi-ts/blob/main/openapi-ts/configuration#advanced) section.
+
+      If you use an HTTPS URL with a self-signed certificate in development, you will need to set `NODE_TLS_REJECT_UNAUTHORIZED=0` in your environment.
+
+      We also provide shorthands for other registries:
+
+      - Scalar Prefix your input with `scalar:` to use the Scalar API Registry.
+      - ReadMe Prefix your input with `readme:` to use the ReadMe API Registry.
+    type:
+      - string
+      - object
+    format: uri-reference
+    anyOf:
+      - $ref: '#/$defs/input_fetch'
+      - $ref: '#/$defs/input_registry'
+      - $ref: '#/$defs/input_openapi'
+      - $ref: '#/$defs/input_watchMode'
+  output:
+    description: >-
+      You must set the output so we know where to generate your files.
+
+      Output can be a path to the destination folder or an object containing the destination folder path and optional settings.
+    type:
+      - string
+      - object
+    format: uri-reference
+    anyOf:
+      - $ref: '#/$defs/output_fileName'
+      - $ref: '#/$defs/output_importFileExtension'
+  parser:
+    description: >-
+      We parse your input before making it available to plugins. Configuring the parser is optional, but it provides an ideal opportunity to modify or validate your input as needed.
+    type: object
+    properties:
+      patch:
+        description: >-
+          Sometimes you need to modify raw input before it's processed further. A common use case is fixing an invalid specification or adding a missing field. For this reason, custom patches are applied before any parsing takes place.
+
+          You can add custom patches with `patch`.
+        type: object
+        properties:
+          schemas:
+            additionalProperties:
+              type: string
+      validate_EXPERIMENTAL:
+        description: >-
+          The validator feature is very limited. You can help improve it by submitting more [use cases](https://github.com/hey-api/openapi-ts/issues/1970#issuecomment-2933189789).
+
+          If you don't control or trust your input, you might want to validate it. Any detected errors in your input will exit `@hey-api/openapi-ts` and no plugins will be executed.
+
+          To validate your input, set `validate_EXPERIMENTAL` to `true`.
+        type: boolean
+        default: false
+      filters:
+        description: List of filters to apply during parsing
+        type: object
+        properties:
+          operations:
+            description:
+              Set `include` to match operations to be included or `exclude` to match
+              operations to be excluded. Both exact keys and regular expressions
+              are supported. When both rules match the same operation, `exclude`
+              takes precedence over `include`.
+            $ref: '#/$defs/parser_options'
+          tags:
+            description:
+              Set `include` to match tags to be included or `exclude` to match tags
+              to be excluded. When both rules match the same tag, `exclude` takes
+              precedence over `include`.
+            $ref: '#/$defs/parser_options'
+          deprecated:
+            description:
+              You can filter out deprecated resources by setting `deprecated` to
+              `false`.
+            type: boolean
+            default: false
+          schemas:
+            description:
+              Set `include` to match schemas to be included or `exclude` to match
+              schemas to be excluded. Both exact keys and regular expressions
+              are supported. When both rules match the same schema, `exclude`
+              takes precedence over `include`.
+            $ref: '#/$defs/parser_options'
+          parameters:
+            description:
+              Set `include` to match parameters to be included or `exclude` to match
+              parameters to be excluded. Both exact keys and regular expressions
+              are supported. When both rules match the same parameter, `exclude`
+              takes precedence over `include`.
+            $ref: '#/$defs/parser_options'
+          requestBodies:
+            description:
+              Set `include` to match request bodies to be included or `exclude` to
+              match request bodies to be excluded. Both exact keys and regular
+              expressions are supported. When both rules match the same request
+              body, `exclude` takes precedence over `include`.
+            $ref: '#/$defs/parser_options'
+          responses:
+            description:
+              Set `include` to match responses to be included or `exclude` to match
+              responses to be excluded. Both exact keys and regular expressions
+              are supported. When both rules match the same response, `exclude`
+              takes precedence over `include`.
+            $ref: '#/$defs/parser_options'
+          orphans:
+            description:
+              If you only want to `exclude` orphaned resources, set `orphans` to
+              `false`. This is the default value when combined with any other
+              filters. If this isn't the desired behavior, you may want to set
+              `orphans` to `true` to always preserve unused resources.
+            type: boolean
+            default: false
+          preserveOrder:
+            description:
+              For performance reasons, we don't preserve the original order when
+              filtering out resources. If maintaining the original order is
+              important to you, set `preserveOrder` to `true`.
+            type: boolean
+            default: false
+      transforms:
+        description:
+          You can think of transforms as deterministic [patches](https://github.com/hey-api/openapi-ts/blob/main/docs/openapi-ts/configuration/parser.md#patch). They provide
+          an easy way to apply the most commonly used input transformations.
+        type: object
+        properties:
+          enums:
+            description: >-
+              Your input might contain two types of enums:
+
+              - enums defined as reusable components (root enums)
+              - non-reusable enums nested within other schemas (inline enums)
+
+              You may want all enums to be reusable. This is because only root enums are typically exported by plugins. Inline enums will never be directly importable since they're nested inside other schemas.
+
+              You can customize the naming and casing pattern for enums schemas using the `.name` and `.case` options.
+            type: string
+          propertiesRequiredByDefault:
+            description: >-
+              By default, any object schema with a missing `required` keyword is interpreted as "no properties are required." This is the correct behavior according to the OpenAPI standard. However, some specifications interpret a missing `required` keyword as "all properties should be required."
+
+              This option allows you to change the default behavior so that properties are required by default unless explicitly marked as optional.
+            type: boolean
+            default: false
+          readWrite:
+            description: >-
+              Your schemas might contain read-only or write-only fields. Using such schemas directly could mean asking the user to provide a read-only field in requests, or expecting a write-only field in responses. We separate schemas for requests and responses if direct usage would result in such scenarios.
+
+              You can customize the naming and casing pattern for `requests` and `responses` schemas using the `.name` and `.case` options.
+            type:
+              - object
+              - boolean
+            properties:
+              requests:
+                type: string
+              responses:
+                type: string
+            default: false
+    pagination:
+      description: >-
+        Paginated operations are detected by having a pagination keyword in its parameters or request body. By default, we consider the following to be pagination keywords: `after`, `before`, `cursor`, `offset`, `page`, and `start`.
+
+        You can provide custom pagination keywords using `pagination.keywords`.
+      type: object
+      properties:
+        keywords:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+    hooks:
+      description: >-
+        Hooks affect runtime behavior but aren't tied to any single plugin. They can be configured globally via `hooks` or per plugin through the `~hooks` property.
+
+        We always use the first hook that returns a value. If a hook returns no value, we fall back to less specific hooks until one does.
+      type: object
+      properties:
+        operations:
+          description: >-
+            Each operation has a list of classifiers that can include `query`, `mutation`, both, or none. Plugins may use these values to decide whether to generate specific output. For example, you usually don't want to generate [TanStack Query options](https://github.com/hey-api/openapi-ts/blob/main/openapi-ts/plugins/tanstack-query#queries) for PATCH operations.
+
+            ## Query operations {#hooks-query-operations}
+            By default, GET operations are classified as `query` operations.
+
+            ## Mutation operations {#hooks-mutation-operations}
+            By default, DELETE, PATCH, POST, and PUT operations are classified as `mutation` operations.
+
+            Example: POST search query
+            Imagine your API has a POST `/search `endpoint that accepts a large payload. By default, it's classified as a `mutation`, but in practice it behaves like a `query`, and your [state management](https://github.com/hey-api/openapi-ts/blob/main/openapi-ts/state-management) plugin should generate query hooks.
+
+            You can achieve this by classifying the operation as `query` in a matcher.
+          type: object
+          properties:
+            isQuery:
+              type: string
+            getKind:
+              type: string
+        symbols:
+          description: >-
+            Each symbol can have a placement function deciding its output location.
+
+            Example: Alphabetic sort
+            While we work on a better example, let's imagine a world where it's desirable to place every symbol in a file named after its initial letter. For example, a function named `Foo` should end up in the file `f.ts`.
+
+            You can achieve this by using the symbol's name.
+          type: object
+          properties:
+            getFilePath:
+              type: string
+  plugins:
+    description: Configuration options for individual plugins
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+        '~hooks':
+          type: object
+          properties: {}
+$defs:
+  parser_options:
+    type: object
+    additionalProperties: false
+    properties:
+      include:
+        type: array
+        uniqueItems: true
+        items:
+          type: string
+      exclude:
+        type: array
+        uniqueItems: true
+        items:
+          type: string
+  input_fetch:
+    allOf:
+      - $ref: '#/$defs/path'
+    type: object
+    properties:
+      fetch:
+        description: >-
+          You can pass any valid Fetch API [options](https://developer.mozilla.org/en-US/docs/Web/API/RequestInit) to the request for fetching your specification. This is useful if your file is behind auth for example.
+        type: object
+        properties:
+          headers:
+            type: object
+            additionalProperties:
+              type: string
+    unevaluatedProperties: false
+  input_registry:
+    allOf:
+      - $ref: '#/$defs/path'
+    type: object
+    properties:
+      branch:
+        description: >-
+          The name of the API registry to fetch the specification from. Hey API supports any API registry that implements the [API Registry Spec](
+        type: string
+    unevaluatedProperties: false
+  input_openapi:
+    type: object
+    properties:
+      openapi:
+        description: >-
+          An OpenAPI Definition object. This should be stringified JSON or YAML to validate successfully.
+        anyOf:
+          - $ref: 'https://spec.openapis.org/oas/3.0/schema/2024-10-18'
+          - $ref: 'https://spec.openapis.org/oas/3.1/schema-base/2025-09-15'
+          - $ref: 'https://spec.openapis.org/oas/3.2/schema/2025-09-17'
+    additionalProperties: false
+  input_watchMode:
+    allOf:
+      - $ref: '#/$defs/path'
+    type: object
+    properties:
+      watchMode:
+        description: >-
+          Watch mode currently supports only remote files via URL.
+
+          If your schema changes frequently, you may want to automatically regenerate the output during development. To watch your input file for changes, enable `input.watch` mode in your configuration or pass the `--watch` flag to the CLI.
+        type: boolean
+        default: false
+    unevaluatedProperties: false
+  output_fileName:
+    allOf:
+      - $ref: '#/$defs/path'
+      - $ref: '#/$defs/output_base_options'
+    type: object
+    properties:
+      fileName:
+        description: >-
+          You can customize the naming and casing pattern for files using the `fileName` option.
+        type:
+          - string
+          - object
+        format: uri-reference
+        properties:
+          case:
+            type: string
+          suffix:
+            description: >-
+              By default, we append every file name with a `.gen` suffix to highlight it's automatically generated. You can customize or disable this suffix using the `fileName.suffix` option.
+            type:
+              - string
+              - null
+        additionalProperties: false
+    unevaluatedProperties: false
+  output_importFileExtension:
+    description: >-
+      You can customize the extension used for imported TypeScript files.
+    allOf:
+      - $ref: '#/$defs/path'
+      - $ref: '#/$defs/output_base_options'
+    type: object
+    properties:
+      importFileExtension:
+        description: >-
+          By default, we don't add a file extension and let the runtime resolve it.
+
+          If we detect a [TSConfig file](https://github.com/hey-api/openapi-ts/blob/main/docs/openapi-ts/configuration/output.md#tsconfig-path) with `moduleResolution` option set to `nodenext`, we default the extension to `.js`.
+        type:
+          - string
+          - null
+    unevaluatedProperties: false
+  output_base_options:
+    type: object
+    properties:
+      lint:
+        description: >-
+          To lint your output folder contents, set `lint` to a valid linter.
+        type:
+          - string
+          - null
+      format:
+        description: >-
+          To format your output folder contents, set `format` to a valid formatter.
+        type:
+          - string
+          - null
+      tsConfigPath:
+        description: >-
+          We use the TSConfig file to generate output matching your project's settings. By default, we attempt to find a TSConfig file starting from the location of the @hey-api/openapi-ts configuration file and traversing up.
+        type:
+          - string
+          - null
+        format: uri-reference
+      clean:
+        description: >-
+          By default, you can't keep custom files in the `path` folder because it's emptied on every run. If you're sure you need to disable this behavior, set `clean` to `false`.
+
+          Setting `clean` to `false` may result in broken output. Ensure you typecheck your code.
+        type: boolean
+        default: false
+  path:
+    type: object
+    properties:
+      path:
+        type: string
+        format: uri-reference
+additionalProperties: false
