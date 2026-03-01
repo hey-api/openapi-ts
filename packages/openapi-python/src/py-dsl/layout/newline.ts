@@ -10,7 +10,7 @@ export class NewlinePyDsl extends PyDsl<py.EmptyStatement> {
     super.analyze(ctx);
   }
 
-  override toAst(): py.EmptyStatement {
+  override toAst() {
     return py.factory.createEmptyStatement();
   }
 }

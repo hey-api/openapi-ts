@@ -26,7 +26,7 @@ export class LazyPyDsl<T extends py.Node = py.Node> extends PyDsl<T> {
     return this._thunk(ctx);
   }
 
-  override toAst(): T {
+  override toAst() {
     return this.toResult().toAst();
   }
 }

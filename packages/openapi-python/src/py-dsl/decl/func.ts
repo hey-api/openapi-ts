@@ -62,7 +62,7 @@ export class FuncPyDsl extends Mixed {
     return this;
   }
 
-  override toAst(): py.FunctionDeclaration {
+  override toAst() {
     this.$validate();
     return py.factory.createFunctionDeclaration(
       this.name.toString(),

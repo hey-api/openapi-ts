@@ -5,12 +5,14 @@ import type {
   SchemaProcessorResult,
 } from '@hey-api/shared';
 
-import type { IrSchemaToAstOptions, TypeOptions } from './types';
+import type { ZodPlugin } from '../types';
+import type { TypeOptions } from './types';
 
-export type ProcessorContext = Pick<IrSchemaToAstOptions, 'plugin'> &
-  SchemaProcessorContext & {
-    naming: NamingConfig & TypeOptions;
-    schema: IR.SchemaObject;
-  };
+export type ProcessorContext = SchemaProcessorContext & {
+  naming: NamingConfig & TypeOptions;
+  /** The plugin instance. */
+  plugin: ZodPlugin['Instance'];
+  schema: IR.SchemaObject;
+};
 
 export type ProcessorResult = SchemaProcessorResult<ProcessorContext>;

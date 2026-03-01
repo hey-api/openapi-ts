@@ -305,7 +305,7 @@ export class Symbol<Node extends INode = INode> {
     if (canonical._finalName && canonical._finalName !== canonical._name) {
       return `[Symbol ${canonical._name} → ${canonical._finalName}#${canonical.id}]`;
     }
-    return `[Symbol ${canonical._name}#${canonical.id}]`;
+    return `[Symbol ${canonical._name || canonical._meta !== undefined ? JSON.stringify(canonical._meta) : '<unknown>'}#${canonical.id}]`;
   }
 
   /**

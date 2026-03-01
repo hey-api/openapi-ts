@@ -23,6 +23,7 @@ export enum PyNodeKind {
   Identifier = 'Identifier',
   IfStatement = 'IfStatement',
   ImportStatement = 'ImportStatement',
+  KeywordArgument = 'KeywordArgument',
   LambdaExpression = 'LambdaExpression',
   ListComprehension = 'ListComprehension',
   ListExpression = 'ListExpression',

@@ -46,6 +46,8 @@ export const safePropName = (
   return new LiteralTsDsl(name) as TsDsl<ts.StringLiteral>;
 };
 
+const validTypeScriptChar = /^[\u200c\u200d\p{ID_Continue}]$/u;
+
 const safeName = (name: string, reserved: ReservedList): string => {
   let sanitized = '';
   let index: number;
@@ -53,8 +55,14 @@ const safeName = (name: string, reserved: ReservedList): string => {
   const first = name[0] ?? '';
   regexp.illegalStartCharacters.lastIndex = 0;
   if (regexp.illegalStartCharacters.test(first)) {
-    sanitized += '_';
-    index = 0;
+    // Check if character becomes valid when not in leading position (e.g., digits)
+    if (validTypeScriptChar.test(first)) {
+      sanitized += '_';
+      index = 0;
+    } else {
+      sanitized += '_';
+      index = 1;
+    }
   } else {
     sanitized += first;
     index = 1;
@@ -62,7 +70,7 @@ const safeName = (name: string, reserved: ReservedList): string => {
 
   while (index < name.length) {
     const char = name[index] ?? '';
-    sanitized += /^[\u200c\u200d\p{ID_Continue}]$/u.test(char) ? char : '_';
+    sanitized += validTypeScriptChar.test(char) ? char : '_';
     index += 1;
   }
 
