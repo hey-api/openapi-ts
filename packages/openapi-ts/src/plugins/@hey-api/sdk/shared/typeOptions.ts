@@ -52,7 +52,8 @@ export const createTypeOptions = ({ plugin }: { plugin: HeyApiSdkPlugin['Instanc
       (t) =>
         t
           .generic('TData', (g) => g.extends(symbolTDataShape).default(symbolTDataShape))
-          .generic('ThrowOnError', (g) => g.extends('boolean').default('boolean')),
+          .generic('ThrowOnError', (g) => g.extends('boolean').default('boolean'))
+          .generic('TResponse', (g) => g.default('unknown')),
     )
     .type(
       $.type.and(
@@ -64,7 +65,7 @@ export const createTypeOptions = ({ plugin }: { plugin: HeyApiSdkPlugin['Instanc
               .generic('TData')
               .generic(nuxtTypeResponse)
               .generic(nuxtTypeDefault),
-          (t) => t.generic('TData').generic('ThrowOnError'),
+          (t) => t.generic('TData').generic('ThrowOnError').generic('TResponse'),
         ),
         $.type
           .object()

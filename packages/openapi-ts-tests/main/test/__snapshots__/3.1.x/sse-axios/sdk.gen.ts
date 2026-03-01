@@ -2,9 +2,9 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { EventSubscribeData, EventSubscribeResponses } from './types.gen';
+import type { EventSubscribeData, EventSubscribeResponse } from './types.gen';
 
-export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
+export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
      * You can provide a client instance returned by `createClient()` instead of
      * individual options. This might be also useful if you want to implement a
@@ -23,7 +23,7 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
  *
  * Get events
  */
-export const eventSubscribe = <ThrowOnError extends boolean = false>(options?: Options<EventSubscribeData, ThrowOnError>) => (options?.client ?? client).sse.get<EventSubscribeResponses, unknown, ThrowOnError>({
+export const eventSubscribe = <ThrowOnError extends boolean = false>(options?: Options<EventSubscribeData, ThrowOnError, EventSubscribeResponse>) => (options?.client ?? client).sse.get<EventSubscribeResponse, unknown, ThrowOnError>({
     responseType: 'text',
     url: '/event',
     ...options
