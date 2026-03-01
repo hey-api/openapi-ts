@@ -60,7 +60,7 @@
   "devDependencies": {
     "@hey-api/openapi-ts": "workspace:*",
     "@nuxt/module-builder": "0.8.4",
-    "@nuxt/schema": "3.16.2",
+    "@nuxt/schema": "3.21.1",
     "@nuxt/test-utils": "4.0.0",
     "vite": "7.3.1"
   },
