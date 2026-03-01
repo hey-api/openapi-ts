@@ -2,6 +2,7 @@ import type { PluginHandler } from '../types';
 import { createInfiniteQueryOptions } from './infiniteQueryOptions';
 import { createMutationOptions } from './mutationOptions';
 import { createQueryOptions } from './queryOptions';
+import { createUseMutation } from './useMutation';
 import { createUseQuery } from './useQuery';
 
 export const handlerV5: PluginHandler = ({ plugin }) => {
@@ -49,13 +50,24 @@ export const handlerV5: PluginHandler = ({ plugin }) => {
       resource: `${plugin.name}.queryOptions`,
     },
   });
-  plugin.symbol('useQuery', {
-    external: plugin.name,
-    meta: {
-      category: 'external',
-      resource: `${plugin.name}.useQuery`,
-    },
-  });
+  if ('useQuery' in plugin.config) {
+    plugin.symbol('useQuery', {
+      external: plugin.name,
+      meta: {
+        category: 'external',
+        resource: `${plugin.name}.useQuery`,
+      },
+    });
+  }
+  if ('useMutation' in plugin.config) {
+    plugin.symbol('useMutation', {
+      external: plugin.name,
+      meta: {
+        category: 'external',
+        resource: `${plugin.name}.useMutation`,
+      },
+    });
+  }
   plugin.symbol('AxiosError', {
     external: 'axios',
     kind: 'type',
@@ -85,6 +97,10 @@ export const handlerV5: PluginHandler = ({ plugin }) => {
       if (plugin.hooks.operation.isMutation(operation)) {
         if (plugin.config.mutationOptions.enabled) {
           createMutationOptions({ operation, plugin });
+        }
+
+        if ('useMutation' in plugin.config && plugin.config.useMutation.enabled) {
+          createUseMutation({ operation, plugin });
         }
       }
     },

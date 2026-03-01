@@ -66,7 +66,7 @@ export const createMutationOptions = ({
     },
   );
   const statement = $.const(symbolMutationOptions)
-    .export()
+    .export(plugin.config.mutationOptions.exported)
     .$if(plugin.config.comments && createOperationComment(operation), (c, v) => c.doc(v))
     .assign(
       $.func()
