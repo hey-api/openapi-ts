@@ -192,6 +192,53 @@ const processSchemaType = ({
       }
     }
 
+    if (schema.additionalProperties && dataExpression) {
+      const entryValueExpression = $.expr('entry[1]');
+      const entryValueNodes = processSchemaType({
+        dataExpression: entryValueExpression,
+        plugin,
+        schema: schema.additionalProperties,
+      });
+
+      if (entryValueNodes.length) {
+        const declaredProperties = Object.keys(schema.properties ?? {});
+        const mapCallbackNodes: Array<Expr> = [];
+
+        if (declaredProperties.length) {
+          mapCallbackNodes.push(
+            $.if(
+              $.expr($.array(...declaredProperties.map((name) => $.literal(name))))
+                .attr('includes')
+                .call($.expr('entry[0]')),
+            ).do($.return('entry')),
+          );
+        }
+
+        mapCallbackNodes.push(
+          ...entryValueNodes,
+          $.return($.array($.expr('entry[0]'), $.expr('entry[1]'))),
+        );
+
+        nodes.push(
+          $(dataExpression).assign(
+            $('Object')
+              .attr('fromEntries')
+              .call(
+                $('Object')
+                  .attr('entries')
+                  .call(dataExpression)
+                  .attr('map')
+                  .call(
+                    $.func()
+                      .param('entry', (p) => p.type('any'))
+                      .do(...mapCallbackNodes),
+                  ),
+              ),
+          ),
+        );
+      }
+    }
+
     return nodes;
   }
 

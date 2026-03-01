@@ -1,0 +1,52 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "OpenAPI 3.1 transformers additionalProperties example",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/model-map": {
+      "put": {
+        "operationId": "modelMap",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelMapResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ModelWithDate": {
+        "type": "object",
+        "required": ["modified"],
+        "properties": {
+          "modified": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ModelMapResponse": {
+        "type": "object",
+        "required": ["items"],
+        "properties": {
+          "items": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ModelWithDate"
+            }
+          }
+        }
+      }
+    }
+  }
+}
