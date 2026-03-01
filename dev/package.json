@@ -13,7 +13,7 @@
     "@hey-api/openapi-python": "workspace:*",
     "@hey-api/openapi-ts": "workspace:*",
     "@opencode-ai/sdk": "1.1.48",
-    "@pinia/colada": "0.19.1",
+    "@pinia/colada": "0.21.6",
     "@tanstack/angular-query-experimental": "5.73.3",
     "@tanstack/react-query": "5.73.3",
     "@tanstack/solid-query": "5.73.3",
