@@ -16,24 +16,24 @@
     "test": "vitest --watch=false"
   },
   "dependencies": {
-    "@tanstack/svelte-query": "5.73.3"
+    "@tanstack/svelte-query": "5.90.2"
   },
   "devDependencies": {
-    "@fontsource/fira-mono": "5.0.0",
+    "@fontsource/fira-mono": "5.2.7",
     "@hey-api/openapi-ts": "workspace:*",
-    "@neoconfetti/svelte": "2.0.0",
+    "@neoconfetti/svelte": "2.2.2",
     "@sveltejs/adapter-auto": "4.0.0",
-    "@sveltejs/kit": "2.17.1",
-    "@sveltejs/vite-plugin-svelte": "5.0.3",
-    "@types/eslint": "9.6.0",
-    "eslint": "9.17.0",
-    "eslint-plugin-svelte": "2.36.0",
-    "globals": "15.14.0",
-    "oxfmt": "0.27.0",
-    "svelte": "5.19.9",
-    "svelte-check": "4.1.4",
+    "@sveltejs/kit": "2.53.3",
+    "@sveltejs/vite-plugin-svelte": "5.1.1",
+    "@types/eslint": "9.6.1",
+    "eslint": "9.39.3",
+    "eslint-plugin-svelte": "2.46.1",
+    "globals": "15.15.0",
+    "oxfmt": "0.35.0",
+    "svelte": "5.53.5",
+    "svelte-check": "4.4.4",
     "typescript": "5.9.3",
-    "typescript-eslint": "8.29.1",
+    "typescript-eslint": "8.56.1",
     "vite": "7.3.1",
     "vitest": "4.0.18"
   }
