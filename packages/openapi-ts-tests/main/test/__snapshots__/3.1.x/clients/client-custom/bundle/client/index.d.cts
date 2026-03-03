@@ -30,7 +30,7 @@ type ObjectStyle = 'form' | 'deepObject';
 //#endregion
 //#region src/core/bodySerializer.d.ts
 type QuerySerializer = (query: Record<string, unknown>) => string;
-type BodySerializer = (body: any) => any;
+type BodySerializer = (body: unknown) => unknown;
 type QuerySerializerOptionsObject = {
   allowReserved?: boolean;
   array?: Partial<SerializerOptions<ArrayStyle>>;
@@ -44,13 +44,13 @@ type QuerySerializerOptions = QuerySerializerOptionsObject & {
   parameters?: Record<string, QuerySerializerOptionsObject>;
 };
 declare const formDataBodySerializer: {
-  bodySerializer: <T extends Record<string, any> | Array<Record<string, any>>>(body: T) => FormData;
+  bodySerializer: (body: unknown) => FormData;
 };
 declare const jsonBodySerializer: {
-  bodySerializer: <T>(body: T) => string;
+  bodySerializer: (body: unknown) => string;
 };
 declare const urlSearchParamsBodySerializer: {
-  bodySerializer: <T extends Record<string, any> | Array<Record<string, any>>>(body: T) => string;
+  bodySerializer: (body: unknown) => string;
 };
 //#endregion
 //#region src/core/types.d.ts
