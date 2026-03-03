@@ -1,6 +1,6 @@
 import type { UserConfig } from '@hey-api/openapi-ts';
 
-type PluginConfig = NonNullable<NonNullable<UserConfig['plugins']>[number]>;
+export type PluginConfig = NonNullable<NonNullable<UserConfig['plugins']>[number]>;
 
 export function typescript(
   options?: Omit<Extract<PluginConfig, { name: '@hey-api/typescript' }>, 'name'>,
