@@ -1,67 +1,47 @@
-import type { Refs, Symbol, SymbolMeta } from '@hey-api/codegen-core';
-import type { IR, SchemaExtractor } from '@hey-api/shared';
+import type { Symbol } from '@hey-api/codegen-core';
 
-import type { $ } from '../../../py-dsl';
-import type { PydanticPlugin } from '../types';
-import type { ProcessorContext } from './processor';
-
-export type Ast = {
-  /**
-   * Field constraints for pydantic.Field()
-   */
-  fieldConstraints?: Record<string, unknown>;
-  /**
-   * Whether this AST node has a lazy expression (forward reference)
-   */
-  hasLazyExpression?: boolean;
-  models: Array<{
-    baseName: string;
-    expression: ReturnType<typeof $.class>;
-    symbol: Symbol;
-  }>;
-  /**
-   * Type annotation for the field
-   */
-  typeAnnotation: string;
-  /**
-   * Type name for the model class
-   */
-  typeName?: string;
-};
-
-export type IrSchemaToAstOptions = {
-  /** The plugin instance. */
-  plugin: PydanticPlugin['Instance'];
-  /** Optional schema extractor function. */
-  schemaExtractor?: SchemaExtractor<ProcessorContext>;
-  /** The plugin state references. */
-  state: Refs<PluginState>;
-};
-
-export type PluginState = Pick<Required<SymbolMeta>, 'path'> &
-  Pick<Partial<SymbolMeta>, 'tags'> & {
-    hasLazyExpression: boolean;
-  };
+import type { AnnotationExpr } from '../../../py-dsl';
+import type { FieldConstraints } from '../v2/constants';
 
 /**
- * Pipe system for building field constraints (similar to Valibot pattern)
+ * Return type for toType converters.
  */
-export type Pipes = Array<unknown>;
-
-/**
- * Context for type resolver functions
- */
-export interface ResolverContext {
-  /**
-   * Field constraints being built
-   */
-  constraints: Record<string, unknown>;
-  /**
-   * The plugin instance
-   */
-  plugin: PydanticPlugin['Instance'];
-  /**
-   * IR schema being processed
-   */
-  schema: IR.SchemaObject;
+export interface PydanticType {
+  fieldConstraints?: FieldConstraints;
+  typeAnnotation?: AnnotationExpr;
 }
+
+/**
+ * Metadata that flows through schema walking.
+ */
+export interface PydanticMeta {
+  /** Default value from schema. */
+  default?: unknown;
+  /** Whether this or any child contains a forward reference. */
+  hasForwardReference: boolean;
+  /** Does this schema explicitly allow null? */
+  nullable: boolean;
+  /** Is this schema read-only? */
+  readonly: boolean;
+}
+
+/**
+ * Result from walking a schema node.
+ */
+export interface PydanticResult extends PydanticType {
+  enumMembers?: Array<{ name: Symbol; value: string | number }>;
+  fields?: Array<PydanticField>; // present = emit class, absent = emit type alias
+  meta: PydanticMeta;
+}
+
+export interface PydanticField extends PydanticType {
+  isOptional: boolean;
+  name: Symbol;
+  originalName?: string;
+}
+
+/**
+ * Finalized result after applyModifiers.
+ */
+export interface PydanticFinal
+  extends PydanticType, Pick<PydanticResult, 'enumMembers' | 'fields'> {}

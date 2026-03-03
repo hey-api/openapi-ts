@@ -6,6 +6,7 @@ import { ClassPyDsl } from './decl/class';
 // import { EnumPyDsl } from './decl/enum';
 // import { FieldPyDsl } from './decl/field';
 import { FuncPyDsl } from './decl/func';
+import { AttrPyDsl } from './expr/attr';
 // import { GetterPyDsl } from './decl/getter';
 // import { InitPyDsl } from './decl/init';
 // import { EnumMemberPyDsl } from './decl/member';
@@ -22,15 +23,16 @@ import { DictPyDsl } from './expr/dict';
 import { ExprPyDsl } from './expr/expr';
 // import { fromValue as exprValue } from './expr/fromValue';
 import { IdPyDsl } from './expr/identifier';
+import { KwargPyDsl } from './expr/kwarg';
 import { ListPyDsl } from './expr/list';
 import { LiteralPyDsl } from './expr/literal';
-import { AttrPyDsl } from './expr/member';
 // import { NewPyDsl } from './expr/new';
 // import { ObjectPyDsl } from './expr/object';
 // import { PrefixPyDsl } from './expr/prefix';
 // import { ObjectPropPyDsl } from './expr/prop';
 // import { RegExpPyDsl } from './expr/regexp';
 import { SetPyDsl } from './expr/set';
+import { SubscriptPyDsl } from './expr/subscript';
 // import { TemplatePyDsl } from './expr/template';
 // import { TernaryPyDsl } from './expr/ternary';
 import { TuplePyDsl } from './expr/tuple';
@@ -145,6 +147,9 @@ const pyDsl = {
   /** Creates an import statement. */
   import: (...args: ConstructorParameters<typeof ImportPyDsl>) => new ImportPyDsl(...args),
 
+  /** Creates a keyword argument expression (e.g. `name=value`). */
+  kwarg: (...args: ConstructorParameters<typeof KwargPyDsl>) => new KwargPyDsl(...args),
+
   /** Creates an initialization block or statement. */
   // init: (...args: ConstructorParameters<typeof InitTsDsl>) => new InitTsDsl(...args),
 
@@ -208,6 +213,9 @@ const pyDsl = {
 
   /** Wraps an expression or statement-like value into a `StmtPyDsl`. */
   stmt: (...args: ConstructorParameters<typeof StmtPyDsl>) => new StmtPyDsl(...args),
+
+  /** Creates a subscript expression (e.g. `obj[index]` or `Type[Param]`). */
+  subscript: (...args: ConstructorParameters<typeof SubscriptPyDsl>) => new SubscriptPyDsl(...args),
 
   /** Creates a template literal expression. */
   // template: (...args: ConstructorParameters<typeof TemplateTsDsl>) => new TemplateTsDsl(...args),
@@ -312,6 +320,7 @@ export type { MaybePyDsl } from './base';
 // export type { MaybePyDsl, TypePyDsl } from './base';
 export { PyDsl } from './base';
 export type { CallArgs } from './expr/call';
+export type { AnnotationExpr } from './stmt/var';
 export type { ExampleOptions } from './utils/context';
 export { ctx, PyDslContext } from './utils/context';
 export { keywords } from './utils/keywords';

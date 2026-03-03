@@ -612,7 +612,8 @@ export const vModelWithPattern = v.object({
     text: v.optional(v.pipe(v.string(), v.regex(/^\w+$/))),
     patternWithSingleQuotes: v.optional(v.pipe(v.string(), v.regex(/^[a-zA-Z0-9']*$/))),
     patternWithNewline: v.optional(v.pipe(v.string(), v.regex(/aaa\nbbb/))),
-    patternWithBacktick: v.optional(v.pipe(v.string(), v.regex(/aaa`bbb/)))
+    patternWithBacktick: v.optional(v.pipe(v.string(), v.regex(/aaa`bbb/))),
+    patternWithUnicode: v.optional(v.pipe(v.string(), v.regex(/^\p{L}+$/u)))
 });
 
 export const vFile = v.object({
@@ -681,6 +682,11 @@ export const vCharactersInDescription = v.string();
 export const vModelWithNullableObject = v.object({
     data: v.optional(vNullableObject)
 });
+
+/**
+ * An object with additional properties that can be null (anyOf ref + null)
+ */
+export const vModelWithAdditionalPropertiesRef = v.object({});
 
 export const vModelWithOneOfEnum = v.union([
     v.object({
@@ -910,7 +916,8 @@ export const vModelWithPatternWritable = v.object({
     text: v.optional(v.pipe(v.string(), v.regex(/^\w+$/))),
     patternWithSingleQuotes: v.optional(v.pipe(v.string(), v.regex(/^[a-zA-Z0-9']*$/))),
     patternWithNewline: v.optional(v.pipe(v.string(), v.regex(/aaa\nbbb/))),
-    patternWithBacktick: v.optional(v.pipe(v.string(), v.regex(/aaa`bbb/)))
+    patternWithBacktick: v.optional(v.pipe(v.string(), v.regex(/aaa`bbb/))),
+    patternWithUnicode: v.optional(v.pipe(v.string(), v.regex(/^\p{L}+$/u)))
 });
 
 export const vFileWritable = v.object({

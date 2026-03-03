@@ -48,9 +48,20 @@ export function createPrinter(options?: PyPrinterOptions) {
     let indentTrailingComments = false;
 
     switch (node.kind) {
-      case PyNodeKind.Assignment:
-        parts.push(printLine(`${printNode(node.target)} = ${printNode(node.value)}`));
+      case PyNodeKind.Assignment: {
+        const target = printNode(node.target);
+        if (node.annotation) {
+          const annotation = printNode(node.annotation);
+          if (node.value) {
+            parts.push(printLine(`${target}: ${annotation} = ${printNode(node.value)}`));
+          } else {
+            parts.push(printLine(`${target}: ${annotation}`));
+          }
+        } else {
+          parts.push(printLine(`${target} = ${printNode(node.value!)}`));
+        }
         break;
+      }
 
       case PyNodeKind.AsyncExpression:
         parts.push(`async ${printNode(node.expression)}`);
@@ -213,6 +224,10 @@ export function createPrinter(options?: PyPrinterOptions) {
         }
         break;
 
+      case PyNodeKind.KeywordArgument:
+        parts.push(`${node.name}=${printNode(node.value)}`);
+        break;
+
       case PyNodeKind.ImportStatement: {
         const fromPrefix = node.isFrom ? `from ${node.module} ` : '';
         if (fromPrefix) {
@@ -328,6 +343,14 @@ export function createPrinter(options?: PyPrinterOptions) {
         parts.push(...node.statements.map(printNode));
         break;
 
+      case PyNodeKind.SubscriptExpression:
+        parts.push(`${printNode(node.value)}[${printNode(node.slice)}]`);
+        break;
+
+      case PyNodeKind.SubscriptSlice:
+        parts.push(node.elements.map(printNode).join(', '));
+        break;
+
       case PyNodeKind.TryStatement: {
         parts.push(printLine('try:'), printNode(node.tryBlock));
         if (node.exceptClauses) {
@@ -391,8 +414,7 @@ export function createPrinter(options?: PyPrinterOptions) {
         break;
 
       default:
-        // @ts-expect-error
-        throw new Error(`Unsupported node kind: ${node.kind}`);
+        throw new Error(`Unsupported node kind: ${(node as { kind: string }).kind}`);
     }
 
     if (node.trailingComments) {

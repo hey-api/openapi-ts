@@ -42,7 +42,7 @@ export class DocPyDsl extends PyDsl<py.Comment> {
     return lines.join('\n');
   }
 
-  override toAst(): py.Comment {
+  override toAst() {
     // Return a dummy comment node for compliance.
     return py.factory.createComment(this.resolve() ?? '');
     // return this.$node(new IdTsDsl(''));

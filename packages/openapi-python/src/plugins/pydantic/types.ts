@@ -54,6 +54,15 @@ export type UserConfig = Plugin.Name<'pydantic'> &
           name?: NameTransformer;
         };
     /**
+     * How to generate enum types.
+     *
+     * - `'enum'`: Generate Python Enum classes (e.g., `class Status(str, Enum): ...`)
+     * - `'literal'`: Generate Literal type hints (e.g., `Literal["pending", "active"]`)
+     *
+     * @default 'enum'
+     */
+    enums?: 'enum' | 'literal';
+    /**
      * Configuration for request-specific Pydantic models.
      *
      * Controls generation of Pydantic models for request bodies,
@@ -181,6 +190,8 @@ export type Config = Plugin.Name<'pydantic'> &
     case: Casing;
     /** Configuration for reusable schema definitions. */
     definitions: NamingOptions & FeatureToggle;
+    /** How to generate enum types. */
+    enums: 'enum' | 'literal';
     /** Configuration for request-specific Pydantic models. */
     requests: NamingOptions & FeatureToggle;
     /** Configuration for response-specific Pydantic models. */

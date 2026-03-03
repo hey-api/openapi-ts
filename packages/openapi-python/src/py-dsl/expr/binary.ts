@@ -132,13 +132,13 @@ export class BinaryPyDsl extends Mixed {
     return this.opAndExpr('*', right);
   }
 
-  override toAst(): py.BinaryExpression {
+  override toAst() {
     this.$validate();
 
     return py.factory.createBinaryExpression(
-      this.$node(this._left!) as py.Expression,
+      this.$node(this._left!),
       this._op!,
-      this.$node(this._right!) as py.Expression,
+      this.$node(this._right!),
     );
   }
 

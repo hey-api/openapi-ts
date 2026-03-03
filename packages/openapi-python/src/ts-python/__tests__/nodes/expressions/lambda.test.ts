@@ -4,7 +4,11 @@ import { assertPrintedMatchesSnapshot } from '../utils';
 describe('lambda expression', () => {
   it('simple', async () => {
     const file = py.factory.createSourceFile([
-      py.factory.createAssignment(py.factory.createIdentifier('x'), py.factory.createLiteral(5)),
+      py.factory.createAssignment(
+        py.factory.createIdentifier('x'),
+        undefined,
+        py.factory.createLiteral(5),
+      ),
       py.factory.createExpressionStatement(
         py.factory.createLambdaExpression(
           [],

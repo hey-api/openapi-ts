@@ -12,11 +12,14 @@ import { createDictExpression } from './expressions/dict';
 import { createFStringExpression } from './expressions/fString';
 import { createGeneratorExpression } from './expressions/generator';
 import { createIdentifier } from './expressions/identifier';
+import { createKeywordArgument } from './expressions/keywordArg';
 import { createLambdaExpression } from './expressions/lambda';
 import { createListExpression } from './expressions/list';
 import { createLiteral } from './expressions/literal';
 import { createMemberExpression } from './expressions/member';
 import { createSetExpression } from './expressions/set';
+import { createSubscriptExpression } from './expressions/subscript';
+import { createSubscriptSlice } from './expressions/subscript-slice';
 import { createTupleExpression } from './expressions/tuple';
 import { createYieldExpression } from './expressions/yield';
 import { createYieldFromExpression } from './expressions/yieldFrom';
@@ -65,6 +68,7 @@ export const factory = {
   createIdentifier,
   createIfStatement,
   createImportStatement,
+  createKeywordArgument,
   createLambdaExpression,
   createListComprehension,
   createListExpression,
@@ -75,6 +79,8 @@ export const factory = {
   createSetComprehension,
   createSetExpression,
   createSourceFile,
+  createSubscriptExpression,
+  createSubscriptSlice,
   createTryStatement,
   createTupleExpression,
   createWhileStatement,

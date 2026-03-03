@@ -651,7 +651,8 @@ export const zModelWithPattern = z.object({
     text: z.optional(z.string().check(z.regex(/^\w+$/))),
     patternWithSingleQuotes: z.optional(z.string().check(z.regex(/^[a-zA-Z0-9']*$/))),
     patternWithNewline: z.optional(z.string().check(z.regex(/aaa\nbbb/))),
-    patternWithBacktick: z.optional(z.string().check(z.regex(/aaa`bbb/)))
+    patternWithBacktick: z.optional(z.string().check(z.regex(/aaa`bbb/))),
+    patternWithUnicode: z.optional(z.string().check(z.regex(/^\p{L}+$/u)))
 });
 
 export const zFile = z.object({
@@ -720,6 +721,11 @@ export const zCharactersInDescription = z.string();
 export const zModelWithNullableObject = z.object({
     data: z.optional(zNullableObject)
 });
+
+/**
+ * An object with additional properties that can be null
+ */
+export const zModelWithAdditionalPropertiesRef = z.record(z.string(), z.nullable(zNullableObject));
 
 export const zModelWithOneOfEnum = z.union([
     z.object({
@@ -987,7 +993,8 @@ export const zModelWithPatternWritable = z.object({
     text: z.optional(z.string().check(z.regex(/^\w+$/))),
     patternWithSingleQuotes: z.optional(z.string().check(z.regex(/^[a-zA-Z0-9']*$/))),
     patternWithNewline: z.optional(z.string().check(z.regex(/aaa\nbbb/))),
-    patternWithBacktick: z.optional(z.string().check(z.regex(/aaa`bbb/)))
+    patternWithBacktick: z.optional(z.string().check(z.regex(/aaa`bbb/))),
+    patternWithUnicode: z.optional(z.string().check(z.regex(/^\p{L}+$/u)))
 });
 
 export const zFileWritable = z.object({

@@ -17,7 +17,11 @@ describe('if statement', () => {
 
   it('with else', async () => {
     const file = py.factory.createSourceFile([
-      py.factory.createAssignment(py.factory.createIdentifier('x'), py.factory.createLiteral(0)),
+      py.factory.createAssignment(
+        py.factory.createIdentifier('x'),
+        undefined,
+        py.factory.createLiteral(0),
+      ),
       py.factory.createIfStatement(
         py.factory.createBinaryExpression(
           py.factory.createIdentifier('x'),
