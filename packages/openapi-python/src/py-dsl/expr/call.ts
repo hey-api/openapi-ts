@@ -35,7 +35,7 @@ export class CallPyDsl extends Mixed {
     return this.missingRequiredCalls().length === 0;
   }
 
-  override toAst(): py.CallExpression {
+  override toAst() {
     this.$validate();
 
     return py.factory.createCallExpression(this.$node(this._callee!), this.$args());

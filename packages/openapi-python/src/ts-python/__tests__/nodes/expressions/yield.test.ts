@@ -26,6 +26,7 @@ describe('yield expression', () => {
     const file = py.factory.createSourceFile([
       py.factory.createAssignment(
         py.factory.createIdentifier('iterable'),
+        undefined,
         py.factory.createListExpression([
           py.factory.createLiteral(1),
           py.factory.createLiteral(2),

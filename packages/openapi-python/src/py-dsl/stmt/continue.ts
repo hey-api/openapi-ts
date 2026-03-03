@@ -12,7 +12,7 @@ export class ContinuePyDsl extends Mixed {
     super.analyze(_ctx);
   }
 
-  override toAst(): py.ContinueStatement {
+  override toAst() {
     return py.factory.createContinueStatement();
   }
 }

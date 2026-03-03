@@ -72,7 +72,7 @@ export class WithPyDsl extends Mixed {
     return this;
   }
 
-  override toAst(): py.WithStatement {
+  override toAst() {
     this.$validate();
 
     const astItems = this._items.map((item) => {

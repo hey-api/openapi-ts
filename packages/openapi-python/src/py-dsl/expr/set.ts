@@ -34,7 +34,7 @@ export class SetPyDsl extends Mixed {
     return this;
   }
 
-  override toAst(): py.SetExpression {
+  override toAst() {
     const astElements = this._elements.map((el) => this.$node(el));
     return py.factory.createSetExpression(astElements);
   }

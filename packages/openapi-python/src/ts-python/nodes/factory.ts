@@ -12,6 +12,7 @@ import { createDictExpression } from './expressions/dict';
 import { createFStringExpression } from './expressions/fString';
 import { createGeneratorExpression } from './expressions/generator';
 import { createIdentifier } from './expressions/identifier';
+import { createKeywordArgument } from './expressions/keywordArg';
 import { createLambdaExpression } from './expressions/lambda';
 import { createListExpression } from './expressions/list';
 import { createLiteral } from './expressions/literal';
@@ -67,6 +68,7 @@ export const factory = {
   createIdentifier,
   createIfStatement,
   createImportStatement,
+  createKeywordArgument,
   createLambdaExpression,
   createListComprehension,
   createListExpression,

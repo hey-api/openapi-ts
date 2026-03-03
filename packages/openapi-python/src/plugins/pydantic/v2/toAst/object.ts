@@ -1,8 +1,8 @@
 import type { SchemaVisitorContext, SchemaWithType, Walker } from '@hey-api/shared';
-import { childContext } from '@hey-api/shared';
+import { childContext, toCase } from '@hey-api/shared';
 
-import { $, type MaybePyDsl } from '../../../../py-dsl';
-import type { py } from '../../../../ts-python';
+import { $, type AnnotationExpr } from '../../../../py-dsl';
+import { safeRuntimeName } from '../../../../py-dsl/utils/name';
 import type { PydanticField, PydanticFinal, PydanticResult } from '../../shared/types';
 import type { PydanticPlugin } from '../../types';
 
@@ -15,15 +15,13 @@ interface ObjectResolverContext {
   walkerCtx: SchemaVisitorContext<PydanticPlugin['Instance']>;
 }
 
-export interface ObjectToFieldsResult {
+export interface ObjectToFieldsResult extends Pick<PydanticResult, 'fields' | 'typeAnnotation'> {
   childResults: Array<PydanticResult>;
-  fields?: Array<PydanticField>; // present = emit class
-  typeAnnotation?: string | MaybePyDsl<py.Expression>; // present = emit type alias (dict case)
 }
 
 function resolveAdditionalProperties(
   ctx: ObjectResolverContext,
-): string | MaybePyDsl<py.Expression> | null | undefined {
+): AnnotationExpr | null | undefined {
   const { schema } = ctx;
 
   if (!schema.additionalProperties || !schema.additionalProperties.type) return undefined;
@@ -50,10 +48,12 @@ function resolveFields(ctx: ObjectResolverContext): Array<PydanticField> {
     ctx._childResults.push(propertyResult);
 
     const final = ctx.applyModifiers(propertyResult, { optional: isOptional });
+    const snakeCaseName = safeRuntimeName(toCase(name, 'snake_case'));
     fields.push({
       fieldConstraints: final.fieldConstraints,
       isOptional,
-      name,
+      name: ctx.plugin.symbol(snakeCaseName),
+      originalName: name,
       typeAnnotation: final.typeAnnotation,
     });
   }
@@ -71,8 +71,11 @@ function objectResolver(ctx: ObjectResolverContext): Omit<ObjectToFieldsResult, 
     return { fields };
   }
 
-  if (additional && !ctx.schema.properties) {
+  if (additional) {
     const any = ctx.plugin.external('typing.Any');
+    if (!ctx.schema.properties) {
+      return { typeAnnotation: $('dict').slice('str', any) };
+    }
     return { typeAnnotation: $('dict').slice('str', any) };
   }
 

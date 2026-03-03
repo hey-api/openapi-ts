@@ -60,7 +60,7 @@ export class WhilePyDsl extends Mixed {
     return this;
   }
 
-  override toAst(): py.WhileStatement {
+  override toAst() {
     this.$validate();
 
     const body = new BlockPyDsl(...this._body!).$do();

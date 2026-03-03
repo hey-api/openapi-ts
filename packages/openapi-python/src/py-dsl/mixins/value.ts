@@ -1,10 +1,10 @@
-import type { AnalysisContext, Node } from '@hey-api/codegen-core';
+import type { AnalysisContext, Node, NodeName } from '@hey-api/codegen-core';
 
 import type { py } from '../../ts-python';
 import type { MaybePyDsl } from '../base';
 import type { BaseCtor, MixinCtor } from './types';
 
-export type ValueExpr = string | MaybePyDsl<py.Expression>;
+export type ValueExpr = NodeName | MaybePyDsl<py.Expression>;
 
 export interface ValueMethods extends Node {
   $value(): py.Expression | undefined;

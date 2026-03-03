@@ -34,7 +34,7 @@ export class SubscriptPyDsl extends Mixed {
     }
   }
 
-  override toAst(): py.SubscriptExpression {
+  override toAst() {
     const slice =
       this._slices.length === 1
         ? this.$node(this._slices[0]!)
