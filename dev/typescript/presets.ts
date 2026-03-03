@@ -1,3 +1,4 @@
+import type { PluginConfig } from './plugins';
 import { sdk, tanstackReactQuery, transformers, typescript, valibot, zod } from './plugins';
 
 export const presets = {
@@ -36,7 +37,7 @@ export const presets = {
     valibot({ metadata: true }),
     zod({ metadata: true }),
   ],
-} as const;
+} as const satisfies Record<string, () => ReadonlyArray<PluginConfig>>;
 
 export type PresetKey = keyof typeof presets;
 

@@ -1,3 +1,4 @@
+import type { PluginConfig } from './plugins';
 import { pydantic, sdk } from './plugins';
 
 export const presets = {
@@ -19,7 +20,7 @@ export const presets = {
     sdk(),
     pydantic(),
   ],
-} as const;
+} as const satisfies Record<string, () => ReadonlyArray<PluginConfig>>;
 
 export type PresetKey = keyof typeof presets;
 
