@@ -5,7 +5,7 @@ import { type _JSONValue, defineQueryOptions, type UseMutationOptions } from '@p
 import { serializeQueryKeyValue } from '../client';
 import { client } from '../client.gen';
 import { BarBazService, BarService, FooBazService, FooService, type Options } from '../sdk.gen';
-import type { FooBarPostData, FooBarPostResponse, FooBarPutData, FooBarPutResponse, FooPostData, FooPostResponse, FooPutData, FooPutResponse, GetFooBarData, GetFooData } from '../types.gen';
+import type { FooBarPostData, FooBarPostResponse, FooBarPutData, FooBarPutResponse, FooPostData, FooPostResponse, FooPutData, FooPutResponse, GetFooBarData, GetFooBarResponse, GetFooData, GetFooResponse } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'path'> & {
@@ -44,7 +44,7 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
 
 export const getFooQueryKey = (options?: Options<GetFooData>) => createQueryKey('getFoo', options);
 
-export const getFooQuery = defineQueryOptions((options?: Options<GetFooData>) => ({
+export const getFooQuery = defineQueryOptions<Options<GetFooData>, GetFooResponse, Error>((options?: Options<GetFooData>) => ({
     key: getFooQueryKey(options),
     query: async (context) => {
         const { data } = await FooBazService.getFoo({
@@ -80,7 +80,7 @@ export const fooPutMutation = (options?: Partial<Options<FooPutData>>): UseMutat
 
 export const getFooBarQueryKey = (options?: Options<GetFooBarData>) => createQueryKey('getFooBar', options);
 
-export const getFooBarQuery = defineQueryOptions((options?: Options<GetFooBarData>) => ({
+export const getFooBarQuery = defineQueryOptions<Options<GetFooBarData>, GetFooBarResponse, Error>((options?: Options<GetFooBarData>) => ({
     key: getFooBarQueryKey(options),
     query: async (context) => {
         const { data } = await BarBazService.getFooBar({
