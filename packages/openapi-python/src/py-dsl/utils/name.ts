@@ -15,6 +15,8 @@ export const safeAccessorName = (name: string): string => {
   return `'${name}'`;
 };
 
+const validPythonChar = /^[a-zA-Z0-9_]$/;
+
 const safeName = (name: string, reserved: ReservedList): string => {
   let sanitized = '';
   let index: number;
@@ -22,8 +24,14 @@ const safeName = (name: string, reserved: ReservedList): string => {
   const first = name[0] ?? '';
   regexp.illegalStartCharacters.lastIndex = 0;
   if (regexp.illegalStartCharacters.test(first)) {
-    sanitized += '_';
-    index = 0;
+    // Check if character becomes valid when not in leading position (e.g., digits)
+    if (validPythonChar.test(first)) {
+      sanitized += '_';
+      index = 0;
+    } else {
+      sanitized += '_';
+      index = 1;
+    }
   } else {
     sanitized += first;
     index = 1;
@@ -31,7 +39,7 @@ const safeName = (name: string, reserved: ReservedList): string => {
 
   while (index < name.length) {
     const char = name[index] ?? '';
-    sanitized += /^[a-zA-Z0-9_]$/.test(char) ? char : '_';
+    sanitized += validPythonChar.test(char) ? char : '_';
     index += 1;
   }
 

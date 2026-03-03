@@ -4,7 +4,11 @@ import { assertPrintedMatchesSnapshot } from '../utils';
 describe('while statement', () => {
   it('simple', async () => {
     const file = py.factory.createSourceFile([
-      py.factory.createAssignment(py.factory.createIdentifier('x'), py.factory.createLiteral(3)),
+      py.factory.createAssignment(
+        py.factory.createIdentifier('x'),
+        undefined,
+        py.factory.createLiteral(3),
+      ),
       py.factory.createWhileStatement(
         py.factory.createBinaryExpression(
           py.factory.createIdentifier('x'),
@@ -19,6 +23,7 @@ describe('while statement', () => {
           ),
           py.factory.createAssignment(
             py.factory.createIdentifier('x'),
+            undefined,
             py.factory.createBinaryExpression(
               py.factory.createIdentifier('x'),
               '-',

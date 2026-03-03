@@ -6,6 +6,7 @@ describe('subscript expression', () => {
     const file = py.factory.createSourceFile([
       py.factory.createAssignment(
         py.factory.createIdentifier('numbers'),
+        undefined,
         py.factory.createSubscriptExpression(
           py.factory.createIdentifier('list'),
           py.factory.createIdentifier('int'),
@@ -19,6 +20,7 @@ describe('subscript expression', () => {
     const file = py.factory.createSourceFile([
       py.factory.createAssignment(
         py.factory.createIdentifier('data'),
+        undefined,
         py.factory.createSubscriptExpression(
           py.factory.createIdentifier('dict'),
           py.factory.createSubscriptSlice([
@@ -35,6 +37,7 @@ describe('subscript expression', () => {
     const file = py.factory.createSourceFile([
       py.factory.createAssignment(
         py.factory.createIdentifier('items'),
+        undefined,
         py.factory.createTupleExpression([
           py.factory.createLiteral(1),
           py.factory.createLiteral(2),
@@ -43,6 +46,7 @@ describe('subscript expression', () => {
       ),
       py.factory.createAssignment(
         py.factory.createIdentifier('first'),
+        undefined,
         py.factory.createSubscriptExpression(
           py.factory.createIdentifier('items'),
           py.factory.createLiteral(0),
@@ -56,6 +60,7 @@ describe('subscript expression', () => {
     const file = py.factory.createSourceFile([
       py.factory.createAssignment(
         py.factory.createIdentifier('matrix'),
+        undefined,
         py.factory.createSubscriptExpression(
           py.factory.createIdentifier('list'),
           py.factory.createSubscriptExpression(

@@ -7,6 +7,7 @@ import type { PyDictExpression } from './expressions/dict';
 import type { PyFStringExpression } from './expressions/fString';
 import type { PyGeneratorExpression } from './expressions/generator';
 import type { PyIdentifier } from './expressions/identifier';
+import type { PyKeywordArgument } from './expressions/keywordArg';
 import type { PyLambdaExpression } from './expressions/lambda';
 import type { PyListExpression } from './expressions/list';
 import type { PyLiteral } from './expressions/literal';
@@ -28,6 +29,7 @@ export type PyExpression =
   | PyFStringExpression
   | PyGeneratorExpression
   | PyIdentifier
+  | PyKeywordArgument
   | PyLambdaExpression
   | PyListExpression
   | PyLiteral

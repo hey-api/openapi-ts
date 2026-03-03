@@ -11,6 +11,7 @@ describe('dict comprehension', () => {
         [
           py.factory.createAssignment(
             py.factory.createIdentifier('items'),
+            undefined,
             py.factory.createDictExpression([
               {
                 key: py.factory.createLiteral('key1'),
