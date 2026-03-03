@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 
 import type { IProject, ProjectRenderMeta } from '@hey-api/codegen-core';
 import type { DefinePlugin, OutputHeader } from '@hey-api/shared';
-import { ensureDirSync } from '@hey-api/shared';
+import { ensureDirSync, outputHeaderToPrefix } from '@hey-api/shared';
 
 import type { Config } from '../config/types';
 import type { Client } from '../plugins/@hey-api/client-core/types';
@@ -51,21 +51,6 @@ function getClientBundlePaths(pluginName: string): {
     clientPath: path.resolve(__dirname, 'clients', clientName),
     corePath: path.resolve(__dirname, 'clients', 'core'),
   };
-}
-
-/**
- * Converts an {@link OutputHeader} value to a string prefix for file content.
- * Returns an empty string when the header is null, undefined, or a function
- * (functions require a render context which is not available for bundled files).
- */
-function outputHeaderToPrefix(header: OutputHeader): string {
-  if (header == null || typeof header === 'function') return '';
-  const lines =
-    typeof header === 'string'
-      ? header.split(/\r?\n/)
-      : header.flatMap((line) => line.split(/\r?\n/));
-  const content = lines.join('\n');
-  return content ? `${content}\n\n` : '';
 }
 
 /**
@@ -186,11 +171,11 @@ export function generateClientBundle({
   meta: ProjectRenderMeta;
   outputPath: string;
   plugin: DefinePlugin<Client.Config & { name: string }>['Config'];
-  project?: IProject;
+  project: IProject;
 }): Map<string, string> | undefined {
   const renamed = new Map<string, string>();
   const devMode = isDevMode();
-  const headerPrefix = outputHeaderToPrefix(header);
+  const headerPrefix = outputHeaderToPrefix(header, project);
 
   // copy Hey API clients to output
   const isHeyApiClientPlugin = plugin.name.startsWith('@hey-api/client-');
