@@ -293,9 +293,9 @@ export type UserConfig = Plugin.Name<'@tanstack/react-query'> &
           name?: NameTransformer;
         };
     /**
-     * Configuration for generated `useQuery()` function helpers.
+     * Configuration for generated `useMutation()` function helpers.
      *
-     * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/useQuery useQuery}
+     * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/useMutation useMutation}
      *
      * Can be:
      * - `boolean`: Shorthand for `{ enabled: boolean }`
@@ -329,6 +329,18 @@ export type UserConfig = Plugin.Name<'@tanstack/react-query'> &
            */
           name?: NameTransformer;
         };
+    /**
+     * Configuration for generated `useQuery()` function helpers.
+     *
+     * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/useQuery useQuery}
+     *
+     * Can be:
+     * - `boolean`: Shorthand for `{ enabled: boolean }`
+     * - `string` or `function`: Shorthand for `{ name: string | function }`
+     * - `object`: Full configuration object
+     *
+     * @default false
+     */
     useQuery?:
       | boolean
       | NameTransformer
