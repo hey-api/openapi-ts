@@ -1,5 +1,5 @@
 // @ts-ignore
-import type { CreateClientConfig } from './client/client.gen';
+import type { CreateClientConfig } from './.gen/typescript/client.gen';
 
 // @ts-ignore
 export const createClientConfig: CreateClientConfig = (config) => ({
