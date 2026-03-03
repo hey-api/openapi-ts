@@ -5,7 +5,7 @@ import { type _JSONValue, defineQueryOptions, type UseMutationOptions } from '@p
 import { serializeQueryKeyValue } from '../client';
 import { client } from '../client.gen';
 import { callToTestOrderOfParams, callWithDefaultOptionalParameters, callWithDefaultParameters, callWithDescriptions, callWithDuplicateResponses, callWithNoContentResponse, callWithParameters, callWithResponse, callWithResponseAndNoContentResponse, callWithResponses, callWithResultFromHeader, callWithWeirdParameterNames, collectionFormat, complexTypes, deleteCallWithoutParametersAndResponse, dummyA, dummyB, duplicateName, duplicateName2, duplicateName3, duplicateName4, fooWow, getCallWithoutParametersAndResponse, nonAsciiæøåÆøÅöôêÊ字符串, type Options, patchApiVbyApiVersionNoTag, patchCallWithoutParametersAndResponse, postApiVbyApiVersionBody, postCallWithoutParametersAndResponse, putCallWithoutParametersAndResponse, serviceWithEmptyTag, testErrorCode, types } from '../sdk.gen';
-import type { CallToTestOrderOfParamsData, CallWithDefaultOptionalParametersData, CallWithDefaultParametersData, CallWithDescriptionsData, CallWithDuplicateResponsesData, CallWithDuplicateResponsesError, CallWithDuplicateResponsesResponse, CallWithNoContentResponseData, CallWithParametersData, CallWithResponseAndNoContentResponseData, CallWithResponseData, CallWithResponsesData, CallWithResponsesError, CallWithResponsesResponse, CallWithResultFromHeaderData, CallWithWeirdParameterNamesData, CollectionFormatData, ComplexTypesData, DeleteCallWithoutParametersAndResponseData, DummyAData, DummyBData, DuplicateName2Data, DuplicateName3Data, DuplicateName4Data, DuplicateNameData, FooWowData, GetCallWithoutParametersAndResponseData, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, PatchApiVbyApiVersionNoTagData, PatchCallWithoutParametersAndResponseData, PostApiVbyApiVersionBodyData, PostApiVbyApiVersionBodyError, PostApiVbyApiVersionBodyResponse, PostCallWithoutParametersAndResponseData, PutCallWithoutParametersAndResponseData, ServiceWithEmptyTagData, TestErrorCodeData, TypesData } from '../types.gen';
+import type { CallToTestOrderOfParamsData, CallWithDefaultOptionalParametersData, CallWithDefaultParametersData, CallWithDescriptionsData, CallWithDuplicateResponsesData, CallWithDuplicateResponsesError, CallWithDuplicateResponsesResponse, CallWithNoContentResponseData, CallWithParametersData, CallWithResponseAndNoContentResponseData, CallWithResponseAndNoContentResponseResponse, CallWithResponseData, CallWithResponseResponse, CallWithResponsesData, CallWithResponsesError, CallWithResponsesResponse, CallWithResultFromHeaderData, CallWithWeirdParameterNamesData, CollectionFormatData, ComplexTypesData, ComplexTypesResponse, DeleteCallWithoutParametersAndResponseData, DummyAData, DummyBData, DuplicateName2Data, DuplicateName3Data, DuplicateName4Data, DuplicateNameData, FooWowData, GetCallWithoutParametersAndResponseData, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, PatchApiVbyApiVersionNoTagData, PatchCallWithoutParametersAndResponseData, PostApiVbyApiVersionBodyData, PostApiVbyApiVersionBodyError, PostApiVbyApiVersionBodyResponse, PostCallWithoutParametersAndResponseData, PutCallWithoutParametersAndResponseData, ServiceWithEmptyTagData, TestErrorCodeData, TypesData, TypesResponse } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'path'> & {
@@ -44,7 +44,7 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
 
 export const serviceWithEmptyTagQueryKey = (options?: Options<ServiceWithEmptyTagData>) => createQueryKey('serviceWithEmptyTag', options);
 
-export const serviceWithEmptyTagQuery = defineQueryOptions((options?: Options<ServiceWithEmptyTagData>) => ({
+export const serviceWithEmptyTagQuery = defineQueryOptions<Options<ServiceWithEmptyTagData>, unknown, Error>((options?: Options<ServiceWithEmptyTagData>) => ({
     key: serviceWithEmptyTagQueryKey(options),
     query: async (context) => {
         const { data } = await serviceWithEmptyTag({
@@ -91,7 +91,7 @@ export const deleteCallWithoutParametersAndResponseMutation = (options?: Partial
 
 export const getCallWithoutParametersAndResponseQueryKey = (options?: Options<GetCallWithoutParametersAndResponseData>) => createQueryKey('getCallWithoutParametersAndResponse', options);
 
-export const getCallWithoutParametersAndResponseQuery = defineQueryOptions((options?: Options<GetCallWithoutParametersAndResponseData>) => ({
+export const getCallWithoutParametersAndResponseQuery = defineQueryOptions<Options<GetCallWithoutParametersAndResponseData>, unknown, Error>((options?: Options<GetCallWithoutParametersAndResponseData>) => ({
     key: getCallWithoutParametersAndResponseQueryKey(options),
     query: async (context) => {
         const { data } = await getCallWithoutParametersAndResponse({
@@ -171,7 +171,7 @@ export const callWithWeirdParameterNamesMutation = (options?: Partial<Options<Ca
 
 export const callWithDefaultParametersQueryKey = (options: Options<CallWithDefaultParametersData>) => createQueryKey('callWithDefaultParameters', options);
 
-export const callWithDefaultParametersQuery = defineQueryOptions((options: Options<CallWithDefaultParametersData>) => ({
+export const callWithDefaultParametersQuery = defineQueryOptions<Options<CallWithDefaultParametersData>, unknown, Error>((options: Options<CallWithDefaultParametersData>) => ({
     key: callWithDefaultParametersQueryKey(options),
     query: async (context) => {
         const { data } = await callWithDefaultParameters({
@@ -218,7 +218,7 @@ export const duplicateNameMutation = (options?: Partial<Options<DuplicateNameDat
 
 export const duplicateName2QueryKey = (options?: Options<DuplicateName2Data>) => createQueryKey('duplicateName2', options);
 
-export const duplicateName2Query = defineQueryOptions((options?: Options<DuplicateName2Data>) => ({
+export const duplicateName2Query = defineQueryOptions<Options<DuplicateName2Data>, unknown, Error>((options?: Options<DuplicateName2Data>) => ({
     key: duplicateName2QueryKey(options),
     query: async (context) => {
         const { data } = await duplicateName2({
@@ -254,7 +254,7 @@ export const duplicateName4Mutation = (options?: Partial<Options<DuplicateName4D
 
 export const callWithNoContentResponseQueryKey = (options?: Options<CallWithNoContentResponseData>) => createQueryKey('callWithNoContentResponse', options);
 
-export const callWithNoContentResponseQuery = defineQueryOptions((options?: Options<CallWithNoContentResponseData>) => ({
+export const callWithNoContentResponseQuery = defineQueryOptions<Options<CallWithNoContentResponseData>, unknown, Error>((options?: Options<CallWithNoContentResponseData>) => ({
     key: callWithNoContentResponseQueryKey(options),
     query: async (context) => {
         const { data } = await callWithNoContentResponse({
@@ -268,7 +268,7 @@ export const callWithNoContentResponseQuery = defineQueryOptions((options?: Opti
 
 export const callWithResponseAndNoContentResponseQueryKey = (options?: Options<CallWithResponseAndNoContentResponseData>) => createQueryKey('callWithResponseAndNoContentResponse', options);
 
-export const callWithResponseAndNoContentResponseQuery = defineQueryOptions((options?: Options<CallWithResponseAndNoContentResponseData>) => ({
+export const callWithResponseAndNoContentResponseQuery = defineQueryOptions<Options<CallWithResponseAndNoContentResponseData>, CallWithResponseAndNoContentResponseResponse, Error>((options?: Options<CallWithResponseAndNoContentResponseData>) => ({
     key: callWithResponseAndNoContentResponseQueryKey(options),
     query: async (context) => {
         const { data } = await callWithResponseAndNoContentResponse({
@@ -282,7 +282,7 @@ export const callWithResponseAndNoContentResponseQuery = defineQueryOptions((opt
 
 export const dummyAQueryKey = (options?: Options<DummyAData>) => createQueryKey('dummyA', options);
 
-export const dummyAQuery = defineQueryOptions((options?: Options<DummyAData>) => ({
+export const dummyAQuery = defineQueryOptions<Options<DummyAData>, unknown, Error>((options?: Options<DummyAData>) => ({
     key: dummyAQueryKey(options),
     query: async (context) => {
         const { data } = await dummyA({
@@ -296,7 +296,7 @@ export const dummyAQuery = defineQueryOptions((options?: Options<DummyAData>) =>
 
 export const dummyBQueryKey = (options?: Options<DummyBData>) => createQueryKey('dummyB', options);
 
-export const dummyBQuery = defineQueryOptions((options?: Options<DummyBData>) => ({
+export const dummyBQuery = defineQueryOptions<Options<DummyBData>, unknown, Error>((options?: Options<DummyBData>) => ({
     key: dummyBQueryKey(options),
     query: async (context) => {
         const { data } = await dummyB({
@@ -310,7 +310,7 @@ export const dummyBQuery = defineQueryOptions((options?: Options<DummyBData>) =>
 
 export const callWithResponseQueryKey = (options?: Options<CallWithResponseData>) => createQueryKey('callWithResponse', options);
 
-export const callWithResponseQuery = defineQueryOptions((options?: Options<CallWithResponseData>) => ({
+export const callWithResponseQuery = defineQueryOptions<Options<CallWithResponseData>, CallWithResponseResponse, Error>((options?: Options<CallWithResponseData>) => ({
     key: callWithResponseQueryKey(options),
     query: async (context) => {
         const { data } = await callWithResponse({
@@ -346,7 +346,7 @@ export const callWithResponsesMutation = (options?: Partial<Options<CallWithResp
 
 export const collectionFormatQueryKey = (options: Options<CollectionFormatData>) => createQueryKey('collectionFormat', options);
 
-export const collectionFormatQuery = defineQueryOptions((options: Options<CollectionFormatData>) => ({
+export const collectionFormatQuery = defineQueryOptions<Options<CollectionFormatData>, unknown, Error>((options: Options<CollectionFormatData>) => ({
     key: collectionFormatQueryKey(options),
     query: async (context) => {
         const { data } = await collectionFormat({
@@ -360,7 +360,7 @@ export const collectionFormatQuery = defineQueryOptions((options: Options<Collec
 
 export const typesQueryKey = (options: Options<TypesData>) => createQueryKey('types', options);
 
-export const typesQuery = defineQueryOptions((options: Options<TypesData>) => ({
+export const typesQuery = defineQueryOptions<Options<TypesData>, TypesResponse, Error>((options: Options<TypesData>) => ({
     key: typesQueryKey(options),
     query: async (context) => {
         const { data } = await types({
@@ -374,7 +374,7 @@ export const typesQuery = defineQueryOptions((options: Options<TypesData>) => ({
 
 export const complexTypesQueryKey = (options: Options<ComplexTypesData>) => createQueryKey('complexTypes', options);
 
-export const complexTypesQuery = defineQueryOptions((options: Options<ComplexTypesData>) => ({
+export const complexTypesQuery = defineQueryOptions<Options<ComplexTypesData>, ComplexTypesResponse, Error>((options: Options<ComplexTypesData>) => ({
     key: complexTypesQueryKey(options),
     query: async (context) => {
         const { data } = await complexTypes({

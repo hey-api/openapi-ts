@@ -1,7 +1,7 @@
 import type { DefinePlugin, IR } from '@hey-api/openapi-ts';
 
 // import { createOpencode } from '@opencode-ai/sdk';
-import { PetStore } from './.gen/sdk.gen.ts';
+import { PetStore } from './.gen/typescript/sdk.gen.ts';
 
 type MyPluginConfig = { readonly name: 'myplugin' };
 type MyPlugin = DefinePlugin<MyPluginConfig>;

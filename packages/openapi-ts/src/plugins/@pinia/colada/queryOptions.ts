@@ -12,6 +12,7 @@ import { $ } from '../../../ts-dsl';
 import { handleMeta } from './meta';
 import { createQueryKeyFunction, createQueryKeyType, queryKeyStatement } from './queryKey';
 import type { PiniaColadaPlugin } from './types';
+import { useTypeError, useTypeResponse } from './useType';
 import { getPublicTypeData } from './utils';
 
 const optionsParamName = 'options';
@@ -125,11 +126,17 @@ export const createQueryOptions = ({
     .export()
     .$if(plugin.config.comments && createOperationComment(operation), (c, v) => c.doc(v))
     .assign(
-      $(symbolDefineQueryOptions).call(
-        $.func()
-          .param(optionsParamName, (p) => p.required(isRequiredOptions).type(typeData))
-          .do($.return(queryOpts)),
-      ),
+      $(symbolDefineQueryOptions)
+        .call(
+          $.func()
+            .param(optionsParamName, (p) => p.required(isRequiredOptions).type(typeData))
+            .do($.return(queryOpts)),
+        )
+        .generics(
+          typeData,
+          useTypeResponse({ operation, plugin }),
+          useTypeError({ operation, plugin }),
+        ),
     );
   plugin.node(statement);
 };
