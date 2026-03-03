@@ -500,11 +500,16 @@ export type Config = Plugin.Name<'@tanstack/react-query'> &
         meta: (operation: IR.OperationObject) => Record<string, unknown>;
       };
     /**
+     * Configuration for generated `useMutation()` function helpers.
+     *
+     * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/useMutation useMutation}
+     */
+    useMutation: NamingOptions & FeatureToggle;
+    /**
      * Configuration for generated `useQuery()` function helpers.
      *
      * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/useQuery useQuery}
      */
-    useMutation: NamingOptions & FeatureToggle;
     useQuery: NamingOptions & FeatureToggle;
   };
 
