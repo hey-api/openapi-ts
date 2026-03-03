@@ -1,18 +1,51 @@
-const browserGlobals = ['document', 'history', 'location', 'navigator', 'window'];
+const browserGlobals = [
+  'document',
+  'fetch',
+  'history',
+  'location',
+  'navigator',
+  'window',
+  'AbortController',
+  'AbortSignal',
+  'Blob',
+  'CustomEvent',
+  'Event',
+  'EventTarget',
+  'File',
+  'FileList',
+  'FileReader',
+  'FormData',
+  'Headers',
+  'Request',
+  'Response',
+  'TextDecoder',
+  'TextEncoder',
+  'URL',
+  'URLSearchParams',
+];
 
 const javaScriptGlobals = [
   'console',
   'Array',
+  'ArrayBuffer',
+  'BigInt',
+  'Boolean',
+  'DataView',
   'Date',
   'Error',
   'Function',
   'JSON',
   'Map',
   'Math',
+  'Number',
   'Object',
   'Promise',
+  'Proxy',
+  'Reflect',
   'RegExp',
   'Set',
+  'String',
+  'Symbol',
   'WeakMap',
   'WeakSet',
 ];
@@ -70,7 +103,16 @@ const javaScriptKeywords = [
   'yield',
 ];
 
-const nodeGlobals = ['global', 'process', 'Buffer'];
+const nodeGlobals = [
+  '__dirname',
+  '__filename',
+  'exports',
+  'global',
+  'module',
+  'process',
+  'require',
+  'Buffer',
+];
 
 const typeScriptKeywords = [
   'any',

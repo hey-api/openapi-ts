@@ -113,6 +113,7 @@ export type { Logs } from './types/logs';
 export type { WatchValues } from './types/watch';
 export { escapeComment } from './utils/escape';
 export { utils } from './utils/exports';
+export { outputHeaderToPrefix } from './utils/header';
 export { inputToApiRegistry } from './utils/input';
 export { heyApiRegistryBaseUrl } from './utils/input/heyApi';
 export { MinHeap } from './utils/minHeap';
