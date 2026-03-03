@@ -14,7 +14,11 @@ export type QueryKey<TOptions extends Options> = [
     }
 ];
 
-const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions, infinite?: boolean, tags?: ReadonlyArray<string>): [
+export type QueryKeyOptions<TOptions extends Options, TStrict extends boolean = true> = TStrict extends false ? Partial<Omit<TOptions, 'url'>> & { strict: false } : TOptions & { strict?: true };
+
+const createQueryKey = <TOptions extends Options>(id: string, options?: Partial<Omit<TOptions, 'url'>> & {
+    strict?: boolean;
+}, infinite?: boolean, tags?: ReadonlyArray<string>): [
     QueryKey<TOptions>[0]
 ] => {
     const params: QueryKey<TOptions>[0] = { _id: id, baseUrl: options?.baseUrl || (options?.client ?? client).getConfig().baseUrl } as QueryKey<TOptions>[0];
@@ -39,7 +43,7 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
     return [params];
 };
 
-export const getFooQueryKey = (options?: Options<GetFooData>) => createQueryKey('getFoo', options);
+export const getFooQueryKey = (options?: Options<GetFooData>) => createQueryKey<Options<GetFooData>>('getFoo', options);
 
 export const getFooOptions = (options?: Options<GetFooData>) => queryOptions<unknown, DefaultError, unknown, ReturnType<typeof getFooQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
@@ -59,7 +63,7 @@ export const getFooOptions = (options?: Options<GetFooData>) => queryOptions<unk
     }
 });
 
-export const getBarQueryKey = (options?: Options<GetBarData>) => createQueryKey('getBar', options);
+export const getBarQueryKey = (options?: Options<GetBarData>) => createQueryKey<Options<GetBarData>>('getBar', options);
 
 export const getBarOptions = (options?: Options<GetBarData>) => queryOptions<unknown, DefaultError, unknown, ReturnType<typeof getBarQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {

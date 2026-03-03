@@ -11,6 +11,7 @@ import { useTypeData } from './shared/useType';
 import type { PluginInstance } from './types';
 
 const TOptionsType = 'TOptions';
+const TStrictType = 'TStrict';
 
 export const createQueryKeyFunction = ({ plugin }: { plugin: PluginInstance }) => {
   const symbolCreateQueryKey = plugin.symbol(
@@ -45,10 +46,15 @@ export const createQueryKeyFunction = ({ plugin }: { plugin: PluginInstance }) =
 
   const returnType = $.type(symbolQueryKeyType).generic(TOptionsType).idx(0);
 
+  const partialOmitUrlType = $.type.and(
+    $.type('Partial').generic($.type('Omit').generics(TOptionsType, $.type.literal('url'))),
+    $.type.object().prop('strict', (p) => p.optional().type('boolean')),
+  );
+
   const fn = $.const(symbolCreateQueryKey).assign(
     $.func()
       .param('id', (p) => p.type('string'))
-      .param('options', (p) => p.optional().type(TOptionsType))
+      .param('options', (p) => p.optional().type(partialOmitUrlType))
       .param('infinite', (p) => p.optional().type('boolean'))
       .param('tags', (p) => p.optional().type('ReadonlyArray<string>'))
       .generic(TOptionsType, (g) => g.extends(symbolOptions))
@@ -101,11 +107,13 @@ const createQueryKeyLiteral = ({
   isInfinite,
   operation,
   plugin,
+  typeOptions,
 }: {
   id: string;
   isInfinite?: boolean;
   operation: IR.OperationObject;
   plugin: PluginInstance;
+  typeOptions?: ReturnType<typeof $.type>;
 }) => {
   const config = isInfinite ? plugin.config.infiniteQueryKeys : plugin.config.queryKeys;
   let tagsArray: TsDsl<ts.ArrayLiteralExpression> | undefined;
@@ -123,7 +131,7 @@ const createQueryKeyLiteral = ({
     isInfinite || tagsArray ? $.literal(Boolean(isInfinite)) : undefined,
     tagsArray,
   );
-  return createQueryKeyCallExpression;
+  return createQueryKeyCallExpression.$if(typeOptions, (c, t) => c.generic(t));
 };
 
 export const createQueryKeyType = ({ plugin }: { plugin: PluginInstance }) => {
@@ -160,6 +168,32 @@ export const createQueryKeyType = ({ plugin }: { plugin: PluginInstance }) => {
   plugin.node(queryKeyType);
 };
 
+export const createQueryKeyOptionsType = ({ plugin }: { plugin: PluginInstance }) => {
+  const symbolOptions = plugin.referenceSymbol({
+    category: 'type',
+    resource: 'client-options',
+    tool: 'sdk',
+  });
+  const symbolQueryKeyOptionsType = plugin.symbol('QueryKeyOptions', {
+    meta: {
+      category: 'type',
+      resource: 'QueryKeyOptions',
+      tool: plugin.name,
+    },
+  });
+  const queryKeyOptionsType = $.type
+    .alias(symbolQueryKeyOptionsType)
+    .export()
+    .generic(TOptionsType, (g) => g.extends(symbolOptions))
+    .generic(TStrictType, (g) => g.extends('boolean').default($.type.literal(true)))
+    .type(
+      $.type(
+        `${TStrictType} extends false ? Partial<Omit<${TOptionsType}, 'url'>> & { strict: false } : ${TOptionsType} & { strict?: true }`,
+      ),
+    );
+  plugin.node(queryKeyOptionsType);
+};
+
 export const queryKeyStatement = ({
   isInfinite,
   operation,
@@ -174,11 +208,26 @@ export const queryKeyStatement = ({
   typeQueryKey?: ReturnType<typeof $.type>;
 }) => {
   const typeData = useTypeData({ operation, plugin });
+  const isRequired = hasOperationDataRequired(operation);
+  let paramType: ReturnType<typeof $.type>;
+  if (isRequired) {
+    const symbolQueryKeyOptionsType = plugin.referenceSymbol({
+      category: 'type',
+      resource: 'QueryKeyOptions',
+      tool: plugin.name,
+    });
+    paramType = $.type(symbolQueryKeyOptionsType).generic(typeData).generic(TStrictType);
+  } else {
+    paramType = typeData;
+  }
   const statement = $.const(symbol)
     .export()
     .assign(
       $.func()
-        .param('options', (p) => p.required(hasOperationDataRequired(operation)).type(typeData))
+        .$if(isRequired, (f) =>
+          f.generic(TStrictType, (g) => g.extends('boolean').default($.type.literal(true))),
+        )
+        .param('options', (p) => p.required(isRequired).type(paramType))
         .$if(isInfinite && typeQueryKey, (f, v) => f.returns(v))
         .do(
           createQueryKeyLiteral({
@@ -186,6 +235,7 @@ export const queryKeyStatement = ({
             isInfinite,
             operation,
             plugin,
+            typeOptions: typeData,
           }).return(),
         ),
     );

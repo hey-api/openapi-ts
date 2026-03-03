@@ -17,6 +17,7 @@ export {
   logoutUserQuery,
   placeOrderMutation,
   type QueryKey,
+  type QueryKeyOptions,
   updatePetMutation,
   updatePetWithFormMutation,
   updateUserMutation,

@@ -10,6 +10,7 @@ import type { PiniaColadaPlugin } from './types';
 import { getPublicTypeData } from './utils';
 
 const TOptionsType = 'TOptions';
+const TStrictType = 'TStrict';
 
 export const createQueryKeyFunction = ({ plugin }: { plugin: PiniaColadaPlugin['Instance'] }) => {
   const symbolCreateQueryKey = plugin.symbol(
@@ -53,10 +54,15 @@ export const createQueryKeyFunction = ({ plugin }: { plugin: PiniaColadaPlugin['
     },
   });
 
+  const partialOmitUrlType = $.type.and(
+    $.type('Partial').generic($.type('Omit').generics(TOptionsType, $.type.literal('url'))),
+    $.type.object().prop('strict', (p) => p.optional().type('boolean')),
+  );
+
   const fn = $.const(symbolCreateQueryKey).assign(
     $.func()
       .param('id', (p) => p.type('string'))
-      .param('options', (p) => p.optional().type(TOptionsType))
+      .param('options', (p) => p.optional().type(partialOmitUrlType))
       .param('tags', (p) => p.optional().type('ReadonlyArray<string>'))
       .returns($.type.tuple(returnType))
       .generic(TOptionsType, (g) => g.extends(symbolOptions))
@@ -115,10 +121,12 @@ const createQueryKeyLiteral = ({
   id,
   operation,
   plugin,
+  typeOptions,
 }: {
   id: string;
   operation: IR.OperationObject;
   plugin: PiniaColadaPlugin['Instance'];
+  typeOptions?: ReturnType<typeof $.type>;
 }) => {
   const config = plugin.config.queryKeys;
   let tagsExpression: ReturnType<typeof $.array> | undefined;
@@ -136,7 +144,7 @@ const createQueryKeyLiteral = ({
     'options',
     tagsExpression,
   );
-  return createQueryKeyCallExpression;
+  return createQueryKeyCallExpression.$if(typeOptions, (c, t) => c.generic(t));
 };
 
 export const createQueryKeyType = ({ plugin }: { plugin: PiniaColadaPlugin['Instance'] }) => {
@@ -177,6 +185,36 @@ export const createQueryKeyType = ({ plugin }: { plugin: PiniaColadaPlugin['Inst
   plugin.node(queryKeyType);
 };
 
+export const createQueryKeyOptionsType = ({
+  plugin,
+}: {
+  plugin: PiniaColadaPlugin['Instance'];
+}) => {
+  const symbolOptions = plugin.referenceSymbol({
+    category: 'type',
+    resource: 'client-options',
+    tool: 'sdk',
+  });
+  const symbolQueryKeyOptionsType = plugin.symbol('QueryKeyOptions', {
+    meta: {
+      category: 'type',
+      resource: 'QueryKeyOptions',
+      tool: plugin.name,
+    },
+  });
+  const queryKeyOptionsType = $.type
+    .alias(symbolQueryKeyOptionsType)
+    .export()
+    .generic(TOptionsType, (g) => g.extends($.type(symbolOptions)))
+    .generic(TStrictType, (g) => g.extends('boolean').default($.type.literal(true)))
+    .type(
+      $.type(
+        `${TStrictType} extends false ? Partial<Omit<${TOptionsType}, 'url'>> & { strict: false } : ${TOptionsType} & { strict?: true }`,
+      ),
+    );
+  plugin.node(queryKeyOptionsType);
+};
+
 export const queryKeyStatement = ({
   operation,
   plugin,
@@ -188,20 +226,33 @@ export const queryKeyStatement = ({
 }) => {
   const client = getClientPlugin(getTypedConfig(plugin));
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
+  const typeData = getPublicTypeData({ isNuxtClient, operation, plugin });
+  const isRequired = hasOperationDataRequired(operation);
+  let paramType: ReturnType<typeof $.type>;
+  if (isRequired) {
+    const symbolQueryKeyOptionsType = plugin.referenceSymbol({
+      category: 'type',
+      resource: 'QueryKeyOptions',
+      tool: plugin.name,
+    });
+    paramType = $.type(symbolQueryKeyOptionsType).generic(typeData).generic(TStrictType);
+  } else {
+    paramType = typeData;
+  }
   const statement = $.const(symbol)
     .export()
     .assign(
       $.func()
-        .param('options', (p) =>
-          p
-            .required(hasOperationDataRequired(operation))
-            .type(getPublicTypeData({ isNuxtClient, operation, plugin })),
+        .$if(isRequired, (f) =>
+          f.generic(TStrictType, (g) => g.extends('boolean').default($.type.literal(true))),
         )
+        .param('options', (p) => p.required(isRequired).type(paramType))
         .do(
           createQueryKeyLiteral({
             id: operation.id,
             operation,
             plugin,
+            typeOptions: typeData,
           }).return(),
         ),
     );
