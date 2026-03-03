@@ -76,7 +76,8 @@ function patternNode(ctx: StringResolverContext): Chain | undefined {
   const { schema, symbols } = ctx;
   const { z } = symbols;
   if (!schema.pattern) return;
-  return $(z).attr(identifiers.regex).call($.regexp(schema.pattern));
+  const flags = /\\[pP]\{/.test(schema.pattern) ? 'u' : undefined;
+  return $(z).attr(identifiers.regex).call($.regexp(schema.pattern, flags));
 }
 
 function stringResolver(ctx: StringResolverContext): Chain {

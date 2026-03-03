@@ -6,14 +6,17 @@ describe('set expression', () => {
     const file = py.factory.createSourceFile([
       py.factory.createAssignment(
         py.factory.createIdentifier('foo'),
+        undefined,
         py.factory.createLiteral('bar'),
       ),
       py.factory.createAssignment(
         py.factory.createIdentifier('emptySet'),
+        undefined,
         py.factory.createSetExpression([]),
       ),
       py.factory.createAssignment(
         py.factory.createIdentifier('numberSet'),
+        undefined,
         py.factory.createSetExpression([
           py.factory.createLiteral(1),
           py.factory.createLiteral(2),
@@ -22,6 +25,7 @@ describe('set expression', () => {
       ),
       py.factory.createAssignment(
         py.factory.createIdentifier('mixedSet'),
+        undefined,
         py.factory.createSetExpression([
           py.factory.createLiteral('a'),
           py.factory.createLiteral(true),

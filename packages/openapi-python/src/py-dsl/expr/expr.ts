@@ -4,15 +4,11 @@ import { isNode, isSymbol, ref } from '@hey-api/codegen-core';
 import type { py } from '../../ts-python';
 import type { MaybePyDsl } from '../base';
 import { PyDsl } from '../base';
-// import { AsMixin } from '../mixins/as';
-// import { ExprMixin } from '../mixins/expr';
-// import { OperatorMixin } from '../mixins/operator';
-// import { TypeExprMixin } from '../mixins/type-expr';
+import { ExprMixin } from '../mixins/expr';
 
 type Id = NodeName | MaybePyDsl<py.Expression>;
 
-const Mixed = PyDsl<py.Expression>;
-// const Mixed = AsMixin(ExprMixin(OperatorMixin(TypeExprMixin(PyDsl<PyExpression>))));
+const Mixed = ExprMixin(PyDsl<py.Expression>);
 
 export class ExprPyDsl extends Mixed {
   readonly '~dsl' = 'ExprPyDsl';

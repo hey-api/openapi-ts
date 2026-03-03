@@ -34,7 +34,7 @@ export function DecoratorMixin<T extends py.Node, TBase extends BaseCtor<T>>(Bas
       const decoratorExpr = args.length
         ? py.factory.createCallExpression(
             nameNode as py.Expression,
-            args.map((a) => this.$node(a) as py.Expression),
+            args.map((a) => this.$node(a)),
           )
         : (nameNode as py.Expression);
       this.decorators.push(decoratorExpr);

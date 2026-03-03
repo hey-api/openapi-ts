@@ -12,4 +12,5 @@ export const childSchemaRelationships = [
   ['properties', 'objectMap'],
   ['propertyNames', 'single'],
   ['then', 'single'],
+  ['unevaluatedProperties', 'single'],
 ] as const;

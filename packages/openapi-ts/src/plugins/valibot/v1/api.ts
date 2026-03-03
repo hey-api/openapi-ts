@@ -48,7 +48,6 @@ export const createRequestValidatorV1 = ({
         .do(...(statements instanceof Array ? statements : [statements]));
     }
   }
-  return;
 };
 
 export const createResponseValidatorV1 = ({
@@ -90,5 +89,4 @@ export const createResponseValidatorV1 = ({
         .do(...(statements instanceof Array ? statements : [statements]));
     }
   }
-  return;
 };

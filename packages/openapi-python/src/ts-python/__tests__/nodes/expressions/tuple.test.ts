@@ -6,6 +6,7 @@ describe('tuple expression', () => {
     const file = py.factory.createSourceFile([
       py.factory.createAssignment(
         py.factory.createIdentifier('t'),
+        undefined,
         py.factory.createTupleExpression([
           py.factory.createLiteral(1),
           py.factory.createLiteral(2),
@@ -14,6 +15,7 @@ describe('tuple expression', () => {
       ),
       py.factory.createAssignment(
         py.factory.createIdentifier('single'),
+        undefined,
         py.factory.createTupleExpression([py.factory.createLiteral(42)]),
       ),
     ]);

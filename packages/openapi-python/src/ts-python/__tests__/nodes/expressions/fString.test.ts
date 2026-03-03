@@ -6,6 +6,7 @@ describe('f-string expression', () => {
     const file = py.factory.createSourceFile([
       py.factory.createAssignment(
         py.factory.createIdentifier('name'),
+        undefined,
         py.factory.createLiteral('Joe'),
       ),
       py.factory.createExpressionStatement(
@@ -19,8 +20,16 @@ describe('f-string expression', () => {
 
   it('with multiple expressions', async () => {
     const file = py.factory.createSourceFile([
-      py.factory.createAssignment(py.factory.createIdentifier('a'), py.factory.createLiteral(1)),
-      py.factory.createAssignment(py.factory.createIdentifier('b'), py.factory.createLiteral(2)),
+      py.factory.createAssignment(
+        py.factory.createIdentifier('a'),
+        undefined,
+        py.factory.createLiteral(1),
+      ),
+      py.factory.createAssignment(
+        py.factory.createIdentifier('b'),
+        undefined,
+        py.factory.createLiteral(2),
+      ),
       py.factory.createExpressionStatement(
         py.factory.createCallExpression(py.factory.createIdentifier('print'), [
           py.factory.createFStringExpression([

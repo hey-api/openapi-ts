@@ -382,7 +382,8 @@ export const zModelWithPattern = z.object({
     text: z.string().regex(/^\w+$/).optional(),
     patternWithSingleQuotes: z.string().regex(/^[a-zA-Z0-9']*$/).optional(),
     patternWithNewline: z.string().regex(/aaa\nbbb/).optional(),
-    patternWithBacktick: z.string().regex(/aaa`bbb/).optional()
+    patternWithBacktick: z.string().regex(/aaa`bbb/).optional(),
+    patternWithUnicode: z.string().regex(/^\p{L}+$/u).optional()
 });
 
 export const zParameterActivityParams = z.object({
@@ -447,7 +448,8 @@ export const zModelWithPatternWritable = z.object({
     text: z.string().regex(/^\w+$/).optional(),
     patternWithSingleQuotes: z.string().regex(/^[a-zA-Z0-9']*$/).optional(),
     patternWithNewline: z.string().regex(/aaa\nbbb/).optional(),
-    patternWithBacktick: z.string().regex(/aaa`bbb/).optional()
+    patternWithBacktick: z.string().regex(/aaa`bbb/).optional(),
+    patternWithUnicode: z.string().regex(/^\p{L}+$/u).optional()
 });
 
 export const zServiceWithEmptyTagData = z.object({

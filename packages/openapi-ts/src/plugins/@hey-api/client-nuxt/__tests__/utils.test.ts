@@ -1,5 +1,35 @@
 import type { Auth } from '../../client-core/bundle/auth';
-import { mergeInterceptors, setAuthParams } from '../bundle/utils';
+import { mergeInterceptors, setAuthParams, unwrapRefs } from '../bundle/utils';
+
+describe('unwrapRefs', () => {
+  it('returns Blob as-is', () => {
+    const blob = new Blob(['test content'], { type: 'text/plain' });
+    const result = unwrapRefs(blob);
+    expect(result).toBe(blob);
+  });
+
+  it('preserves Blob in object', () => {
+    const blob = new Blob(['test content'], { type: 'application/json' });
+    const input = { file: blob, name: 'test' };
+    const result = unwrapRefs(input);
+    expect(result.file).toBe(blob);
+    expect(result.name).toBe('test');
+  });
+
+  it('preserves Blob in array', () => {
+    const blob = new Blob(['test content'], { type: 'image/png' });
+    const input = [blob, 'text'];
+    const result = unwrapRefs(input);
+    expect(result[0]).toBe(blob);
+    expect(result[1]).toBe('text');
+  });
+
+  it('preserves File (extends Blob) as-is', () => {
+    const file = new File(['test content'], 'test.txt', { type: 'text/plain' });
+    const result = unwrapRefs(file);
+    expect(result).toBe(file);
+  });
+});
 
 describe('mergeInterceptors', () => {
   it('handles no arguments', () => {

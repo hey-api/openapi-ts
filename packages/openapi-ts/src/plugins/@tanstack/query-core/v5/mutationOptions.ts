@@ -1,7 +1,10 @@
 import type { IR } from '@hey-api/shared';
 import { applyNaming } from '@hey-api/shared';
 
-import { createOperationComment } from '../../../../plugins/shared/utils/operation';
+import {
+  createOperationComment,
+  hasOperationSse,
+} from '../../../../plugins/shared/utils/operation';
 import type { TsDsl } from '../../../../ts-dsl';
 import { $ } from '../../../../ts-dsl';
 import { handleMeta } from '../shared/meta';
@@ -15,6 +18,10 @@ export const createMutationOptions = ({
   operation: IR.OperationObject;
   plugin: PluginInstance;
 }): void => {
+  if (hasOperationSse({ operation })) {
+    return;
+  }
+
   const symbolMutationOptionsType = plugin.external(`${plugin.name}.MutationOptions`);
 
   const typeData = useTypeData({ operation, plugin });

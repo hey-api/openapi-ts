@@ -6,12 +6,22 @@ describe('literal expression', () => {
     const file = py.factory.createSourceFile([
       py.factory.createAssignment(
         py.factory.createIdentifier('s'),
+        undefined,
         py.factory.createLiteral('hello'),
       ),
-      py.factory.createAssignment(py.factory.createIdentifier('n'), py.factory.createLiteral(123)),
-      py.factory.createAssignment(py.factory.createIdentifier('b'), py.factory.createLiteral(true)),
+      py.factory.createAssignment(
+        py.factory.createIdentifier('n'),
+        undefined,
+        py.factory.createLiteral(123),
+      ),
+      py.factory.createAssignment(
+        py.factory.createIdentifier('b'),
+        undefined,
+        py.factory.createLiteral(true),
+      ),
       py.factory.createAssignment(
         py.factory.createIdentifier('none'),
+        undefined,
         py.factory.createLiteral(null),
       ),
     ]);
