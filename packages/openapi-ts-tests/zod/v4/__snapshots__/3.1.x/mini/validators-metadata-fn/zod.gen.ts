@@ -2,128 +2,56 @@
 
 import * as z from 'zod/mini';
 
-export const zBaz = z._default(z.readonly(z.string().check(z.regex(/foo\nbar/)).register(z.globalRegistry, {
-    custom: 'value',
-    title: 'string'
-})), 'baz');
+export const zBaz = z._default(z.readonly(z.string().check(z.regex(/foo\nbar/)).register(z.globalRegistry, { custom: 'value', title: 'string' })), 'baz');
 
 export const zQux = z.record(z.string(), z.object({
-    qux: z.optional(z.string().register(z.globalRegistry, {
-        custom: 'value',
-        title: 'string'
-    }))
-}).register(z.globalRegistry, {
-    custom: 'value',
-    title: 'object'
-})).register(z.globalRegistry, {
-    custom: 'value',
-    title: 'object'
-});
+    qux: z.optional(z.string().register(z.globalRegistry, { custom: 'value', title: 'string' }))
+}).register(z.globalRegistry, { custom: 'value', title: 'object' })).register(z.globalRegistry, { custom: 'value', title: 'object' });
 
 /**
  * This is Foo schema.
  */
 export const zFoo = z._default(z.nullable(z.object({
-    foo: z.optional(z.string().check(z.regex(/^\d{3}-\d{2}-\d{4}$/)).register(z.globalRegistry, {
-        custom: 'value',
-        title: 'This is foo property.'
-    })),
+    foo: z.optional(z.string().check(z.regex(/^\d{3}-\d{2}-\d{4}$/)).register(z.globalRegistry, { custom: 'value', title: 'This is foo property.' })),
     bar: z.optional(z.lazy((): any => zBar)),
-    baz: z.optional(z.array(z.lazy((): any => zFoo)).register(z.globalRegistry, {
-        custom: 'value',
-        title: 'This is baz property.'
-    })),
-    qux: z._default(z.optional(z.int().check(z.gt(0)).register(z.globalRegistry, {
-        custom: 'value',
-        title: 'This is qux property.'
-    })), 0)
-}).register(z.globalRegistry, {
-    custom: 'value',
-    title: 'object'
-})), null);
+    baz: z.optional(z.array(z.lazy((): any => zFoo)).register(z.globalRegistry, { custom: 'value', title: 'This is baz property.' })),
+    qux: z._default(z.optional(z.int().check(z.gt(0)).register(z.globalRegistry, { custom: 'value', title: 'This is qux property.' })), 0)
+}).register(z.globalRegistry, { custom: 'value', title: 'object' })), null);
 
 /**
  * This is Bar schema.
  */
 export const zBar = z.object({
     foo: z.optional(zFoo)
-}).register(z.globalRegistry, {
-    custom: 'value',
-    title: 'This is Bar schema.'
-});
+}).register(z.globalRegistry, { custom: 'value', title: 'This is Bar schema.' });
 
 /**
  * This is Foo parameter.
  */
-export const zFoo2 = z.string().register(z.globalRegistry, {
-    custom: 'value',
-    title: 'This is Foo parameter.'
-});
+export const zFoo2 = z.string().register(z.globalRegistry, { custom: 'value', title: 'This is Foo parameter.' });
 
 export const zFoo3 = z.object({
     foo: z.optional(zBar)
-}).register(z.globalRegistry, {
-    custom: 'value',
-    title: 'object'
-});
+}).register(z.globalRegistry, { custom: 'value', title: 'object' });
 
 export const zPatchFooData = z.object({
     body: z.object({
-        foo: z.optional(z.string().register(z.globalRegistry, {
-            custom: 'value',
-            title: 'string'
-        }))
-    }).register(z.globalRegistry, {
-        custom: 'value',
-        title: 'object'
-    }),
-    path: z.optional(z.never().register(z.globalRegistry, {
-        custom: 'value',
-        title: 'never'
-    })),
+        foo: z.optional(z.string().register(z.globalRegistry, { custom: 'value', title: 'string' }))
+    }).register(z.globalRegistry, { custom: 'value', title: 'object' }),
+    path: z.optional(z.never().register(z.globalRegistry, { custom: 'value', title: 'never' })),
     query: z.optional(z.object({
-        foo: z.optional(z.string().register(z.globalRegistry, {
-            custom: 'value',
-            title: 'This is Foo parameter.'
-        })),
+        foo: z.optional(z.string().register(z.globalRegistry, { custom: 'value', title: 'This is Foo parameter.' })),
         bar: z.optional(zBar),
         baz: z.optional(z.object({
-            baz: z.optional(z.string().register(z.globalRegistry, {
-                custom: 'value',
-                title: 'string'
-            }))
-        }).register(z.globalRegistry, {
-            custom: 'value',
-            title: 'object'
-        })),
-        qux: z.optional(z.iso.date().register(z.globalRegistry, {
-            custom: 'value',
-            title: 'string'
-        })),
-        quux: z.optional(z.iso.datetime().register(z.globalRegistry, {
-            custom: 'value',
-            title: 'string'
-        }))
-    }).register(z.globalRegistry, {
-        custom: 'value',
-        title: 'object'
-    }))
-}).register(z.globalRegistry, {
-    custom: 'value',
-    title: 'object'
-});
+            baz: z.optional(z.string().register(z.globalRegistry, { custom: 'value', title: 'string' }))
+        }).register(z.globalRegistry, { custom: 'value', title: 'object' })),
+        qux: z.optional(z.iso.date().register(z.globalRegistry, { custom: 'value', title: 'string' })),
+        quux: z.optional(z.iso.datetime().register(z.globalRegistry, { custom: 'value', title: 'string' }))
+    }).register(z.globalRegistry, { custom: 'value', title: 'object' }))
+}).register(z.globalRegistry, { custom: 'value', title: 'object' });
 
 export const zPostFooData = z.object({
     body: zFoo3,
-    path: z.optional(z.never().register(z.globalRegistry, {
-        custom: 'value',
-        title: 'never'
-    })),
-    query: z.optional(z.never().register(z.globalRegistry, {
-        custom: 'value',
-        title: 'never'
-    }))
-}).register(z.globalRegistry, {
-    custom: 'value',
-    title: 'object'
-});
+    path: z.optional(z.never().register(z.globalRegistry, { custom: 'value', title: 'never' })),
+    query: z.optional(z.never().register(z.globalRegistry, { custom: 'value', title: 'never' }))
+}).register(z.globalRegistry, { custom: 'value', title: 'object' });
