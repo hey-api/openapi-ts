@@ -14,18 +14,25 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 /**
- * Dev mode: 'src' appears after 'dist' (or dist doesn't exist), and 'generate' follows 'src'
+ * Dev mode: the file is located at src/generate relative to the nearest package.json.
+ * Traverses up the directory tree until a package.json is found (similar to how
+ * git traverses up to find .git/), then checks the relative path from there.
+ * This avoids false positives from 'src' or 'dist' appearing in parent directory names.
  */
 function isDevMode(): boolean {
-  const normalized = __dirname.split(path.sep);
-  const srcIndex = normalized.lastIndexOf('src');
-  const distIndex = normalized.lastIndexOf('dist');
-  return (
-    srcIndex !== -1 &&
-    srcIndex > distIndex &&
-    srcIndex === normalized.length - 2 &&
-    normalized[srcIndex + 1] === 'generate'
-  );
+  let dir = __dirname;
+  for (let depth = 0; depth < 20; depth++) {
+    if (fs.existsSync(path.join(dir, 'package.json'))) {
+      const relPath = path.relative(dir, __dirname);
+      if (!relPath) return false;
+      const relParts = relPath.split(path.sep);
+      return relParts.length === 2 && relParts[0] === 'src' && relParts[1] === 'generate';
+    }
+    const parent = path.dirname(dir);
+    if (parent === dir) break;
+    dir = parent;
+  }
+  return false;
 }
 
 /**
