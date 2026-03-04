@@ -84,6 +84,62 @@ export default defineConfig({
       {
         extends: true,
         test: {
+          name: '@test/openapi-ts-core',
+          root: 'packages/openapi-ts-tests/core/test',
+          setupFiles: ['./vitest.setup.ts'],
+        },
+      },
+      {
+        extends: true,
+        test: {
+          name: '@test/openapi-ts-clients',
+          root: 'packages/openapi-ts-tests/clients/test',
+          setupFiles: ['./vitest.setup.ts'],
+        },
+      },
+      {
+        extends: true,
+        test: {
+          name: '@test/openapi-ts-formats',
+          root: 'packages/openapi-ts-tests/formats/test',
+          setupFiles: ['./vitest.setup.ts'],
+        },
+      },
+      {
+        extends: true,
+        test: {
+          name: '@test/openapi-ts-constraints',
+          root: 'packages/openapi-ts-tests/constraints/test',
+          setupFiles: ['./vitest.setup.ts'],
+        },
+      },
+      {
+        extends: true,
+        test: {
+          name: '@test/openapi-ts-additional-props',
+          root: 'packages/openapi-ts-tests/additional-props/test',
+          setupFiles: ['./vitest.setup.ts'],
+        },
+      },
+      {
+        extends: true,
+        test: {
+          name: '@test/openapi-ts-plugins',
+          root: 'packages/openapi-ts-tests/plugins/test',
+          setupFiles: ['./vitest.setup.ts'],
+        },
+      },
+      {
+        extends: true,
+        test: {
+          name: '@test/openapi-ts-meta',
+          root: 'packages/openapi-ts-tests/meta/test',
+          setupFiles: ['./vitest.setup.ts'],
+        },
+      },
+      {
+        extends: true,
+        test: {
           name: '@hey-api/custom-client',
           root: 'packages/custom-client',
         },
