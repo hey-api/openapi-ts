@@ -219,6 +219,14 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'discriminator-allof-inline.json',
+        output: 'discriminator-allof-inline',
+      }),
+      description:
+        'handles allOf where inline schema discriminator mapping should take priority over $ref discriminator fallback',
+    },
+    {
+      config: createConfig({
         input: 'discriminator-non-string.yaml',
         output: 'discriminator-non-string',
       }),
