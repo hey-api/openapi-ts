@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { createClient } from '@hey-api/openapi-ts';
+import { $, createClient } from '@hey-api/openapi-ts';
 
 import { getFilePaths } from '../../../utils';
 import { createZodConfig, getSnapshotsPath, getTempSnapshotsPath, zodVersions } from './utils';
@@ -84,6 +84,24 @@ for (const zodVersion of zodVersions) {
           ],
         }),
         description: 'generates validator schemas with metadata',
+      },
+      {
+        config: createConfig({
+          input: 'validators.yaml',
+          output: 'validators-metadata-fn',
+          plugins: [
+            {
+              compatibilityVersion: zodVersion.compatibilityVersion,
+              metadata: ({ schema }) =>
+                $.object()
+                  .pretty()
+                  .prop('custom', $.literal('value'))
+                  .prop('title', $.literal(schema.description ?? schema.type ?? '')),
+              name: 'zod',
+            },
+          ],
+        }),
+        description: 'generates validator schemas with metadata function',
       },
       {
         config: createConfig({

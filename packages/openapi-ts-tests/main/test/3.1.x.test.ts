@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { createClient, type UserConfig } from '@hey-api/openapi-ts';
+import { $, createClient, type UserConfig } from '@hey-api/openapi-ts';
 
 import { getFilePaths, getSpecsPath } from '../../utils';
 
@@ -942,6 +942,22 @@ describe(`OpenAPI ${version}`, () => {
         ],
       }),
       description: 'generates validator schemas with metadata',
+    },
+    {
+      config: createConfig({
+        input: 'validators.yaml',
+        output: 'validators-metadata-fn',
+        plugins: [
+          {
+            metadata: ({ schema }) =>
+              $.object()
+                .prop('custom', $.literal('value'))
+                .prop('title', $.literal(schema.description ?? schema.type ?? '')),
+            name: 'valibot',
+          },
+        ],
+      }),
+      description: 'generates validator schemas with metadata function',
     },
     {
       config: createConfig({

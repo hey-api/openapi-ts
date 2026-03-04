@@ -2,11 +2,13 @@ import type {
   Casing,
   DefinePlugin,
   FeatureToggle,
+  IR,
   NameTransformer,
   NamingOptions,
   Plugin,
 } from '@hey-api/shared';
 
+import type { ObjectTsDsl } from '../../ts-dsl';
 import type { IApi } from './api';
 import type { Resolvers } from './resolvers';
 
@@ -62,9 +64,17 @@ export type UserConfig = Plugin.Name<'valibot'> &
      * with some additional metadata for documentation, code generation, AI
      * structured outputs, form validation, and other purposes.
      *
+     * Can be:
+     * - `boolean`: Shorthand for the default metadata builder. When `true`,
+     *   attaches `{ description }` from the schema (if present) to the
+     *   generated Valibot schema via the metadata action.
+     * - `function`: Custom metadata builder. Receives `{ schema }` and must
+     *   return an {@link ObjectTsDsl} node that is passed directly to
+     *   `v.metadata()`.
+     *
      * @default false
      */
-    metadata?: boolean;
+    metadata?: boolean | ((ctx: { schema: IR.SchemaObject }) => ObjectTsDsl);
     /**
      * Configuration for request-specific Valibot schemas.
      *
@@ -184,7 +194,7 @@ export type Config = Plugin.Name<'valibot'> &
     /** Configuration for reusable schema definitions. */
     definitions: NamingOptions & FeatureToggle;
     /** Enable Valibot metadata support? */
-    metadata: boolean;
+    metadata: boolean | ((ctx: { schema: IR.SchemaObject }) => ObjectTsDsl);
     /** Configuration for request-specific Valibot schemas. */
     requests: NamingOptions & FeatureToggle;
     /** Configuration for response-specific Valibot schemas. */
