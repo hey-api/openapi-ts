@@ -303,7 +303,6 @@ export type DollarTsDsl = {
 export type { MaybeTsDsl, TypeTsDsl } from './base';
 export { TsDsl } from './base';
 export type { CallArgs } from './expr/call';
-export { ObjectTsDsl } from './expr/object';
 export type { ExampleOptions } from './utils/context';
 export { ctx, TsDslContext } from './utils/context';
 export { keywords } from './utils/keywords';

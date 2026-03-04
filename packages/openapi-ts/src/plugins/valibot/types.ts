@@ -8,7 +8,7 @@ import type {
   Plugin,
 } from '@hey-api/shared';
 
-import type { ObjectTsDsl } from '../../ts-dsl';
+import type { $ } from '../../ts-dsl';
 import type { IApi } from './api';
 import type { Resolvers } from './resolvers';
 
@@ -69,12 +69,12 @@ export type UserConfig = Plugin.Name<'valibot'> &
      *   attaches `{ description }` from the schema (if present) to the
      *   generated Valibot schema via the metadata action.
      * - `function`: Custom metadata builder. Receives `{ schema }` and must
-     *   return an {@link ObjectTsDsl} node that is passed directly to
-     *   `v.metadata()`.
+     *   return a `ReturnType<typeof $.object>` node that is passed directly to
+     *   `v.metadata()`, or `null` to skip metadata for this schema.
      *
      * @default false
      */
-    metadata?: boolean | ((ctx: { schema: IR.SchemaObject }) => ObjectTsDsl);
+    metadata?: boolean | ((ctx: { schema: IR.SchemaObject }) => ReturnType<typeof $.object> | null);
     /**
      * Configuration for request-specific Valibot schemas.
      *
@@ -194,7 +194,7 @@ export type Config = Plugin.Name<'valibot'> &
     /** Configuration for reusable schema definitions. */
     definitions: NamingOptions & FeatureToggle;
     /** Enable Valibot metadata support? */
-    metadata: boolean | ((ctx: { schema: IR.SchemaObject }) => ObjectTsDsl);
+    metadata: boolean | ((ctx: { schema: IR.SchemaObject }) => ReturnType<typeof $.object> | null);
     /** Configuration for request-specific Valibot schemas. */
     requests: NamingOptions & FeatureToggle;
     /** Configuration for response-specific Valibot schemas. */
