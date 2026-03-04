@@ -127,4 +127,16 @@ describe('buildUrl', () => {
   it.each(scenarios)('returns $url', ({ options, url }) => {
     expect(client.buildUrl(options)).toBe(url);
   });
+
+  it('uses baseURL from client config by default', () => {
+    const clientWithBase = createClient({ baseURL: 'https://example.com' });
+    expect(clientWithBase.buildUrl({ url: '/foo' })).toBe('https://example.com/foo');
+  });
+
+  it('allows overriding baseURL from client config', () => {
+    const clientWithBase = createClient({ baseURL: 'https://example.com' });
+    expect(clientWithBase.buildUrl({ baseURL: 'https://other.com', url: '/foo' })).toBe(
+      'https://other.com/foo',
+    );
+  });
 });
