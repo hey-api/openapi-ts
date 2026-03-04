@@ -145,6 +145,12 @@ export type UserConfig = Plugin.Name<'@tanstack/react-query'> &
            */
           enabled?: boolean;
           /**
+           * Whether to export generated symbols.
+           *
+           * @default true
+           */
+          exported?: boolean;
+          /**
            * Custom function to generate metadata for the operation.
            * Can return any valid meta object that will be included in the generated mutation options.
            *
@@ -287,6 +293,43 @@ export type UserConfig = Plugin.Name<'@tanstack/react-query'> &
           name?: NameTransformer;
         };
     /**
+     * Configuration for generated `useMutation()` function helpers.
+     *
+     * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/useMutation useMutation}
+     *
+     * Can be:
+     * - `boolean`: Shorthand for `{ enabled: boolean }`
+     * - `string` or `function`: Shorthand for `{ name: string | function }`
+     * - `object`: Full configuration object
+     *
+     * @default false
+     */
+    useMutation?:
+      | boolean
+      | NameTransformer
+      | {
+          /**
+           * Casing convention for generated names.
+           *
+           * @default 'camelCase'
+           */
+          case?: Casing;
+          /**
+           * Whether this feature is enabled.
+           *
+           * @default false
+           */
+          enabled?: boolean;
+          /**
+           * Naming pattern for generated names.
+           *
+           * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/useMutation useMutation}
+           *
+           * @default 'use{{name}}Mutation'
+           */
+          name?: NameTransformer;
+        };
+    /**
      * Configuration for generated `useQuery()` function helpers.
      *
      * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/useQuery useQuery}
@@ -387,6 +430,12 @@ export type Config = Plugin.Name<'@tanstack/react-query'> &
     mutationOptions: NamingOptions &
       FeatureToggle & {
         /**
+         * Whether to export generated symbols.
+         *
+         * @default true
+         */
+        exported: boolean;
+        /**
          * Custom function to generate metadata for the operation.
          * Can return any valid meta object that will be included in the generated mutation options.
          *
@@ -462,6 +511,12 @@ export type Config = Plugin.Name<'@tanstack/react-query'> &
          */
         meta: (operation: IR.OperationObject) => Record<string, unknown>;
       };
+    /**
+     * Configuration for generated `useMutation()` function helpers.
+     *
+     * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/useMutation useMutation}
+     */
+    useMutation: NamingOptions & FeatureToggle;
     /**
      * Configuration for generated `useQuery()` function helpers.
      *
