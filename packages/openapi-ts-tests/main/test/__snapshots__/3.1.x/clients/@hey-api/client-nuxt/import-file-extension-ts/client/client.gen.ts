@@ -186,7 +186,8 @@ export const createClient = (config: Config = {}): Client => {
     });
   };
 
-  const _buildUrl: Client['buildUrl'] = (options) => buildUrl({ ..._config, ...options });
+  const _buildUrl: Client['buildUrl'] = (options) =>
+    buildUrl({ ..._config, ...options } as typeof options);
 
   return {
     buildUrl: _buildUrl,
