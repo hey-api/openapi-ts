@@ -8,7 +8,7 @@ import type {
   Plugin,
 } from '@hey-api/shared';
 
-import type { $ } from '../../ts-dsl';
+import type { $, DollarTsDsl } from '../../ts-dsl';
 import type { IApi } from './api';
 import type { Resolvers } from './resolvers';
 
@@ -68,13 +68,18 @@ export type UserConfig = Plugin.Name<'valibot'> &
      * - `boolean`: Shorthand for the default metadata builder. When `true`,
      *   attaches `{ description }` from the schema (if present) to the
      *   generated Valibot schema via the metadata action.
-     * - `function`: Custom metadata builder. Receives `{ schema }` and must
-     *   return a `ReturnType<typeof $.object>` node that is passed directly to
-     *   `v.metadata()`, or `null` to skip metadata for this schema.
+     * - `function`: Custom metadata builder. Receives `{ $, node, schema }`,
+     *   where `node` is a pre-initialized `$.object()` node. Add properties to
+     *   `node` to populate the metadata object. Return value is ignored; an
+     *   empty `node` skips metadata for that schema.
      *
      * @default false
      */
-    metadata?: boolean | ((ctx: { schema: IR.SchemaObject }) => ReturnType<typeof $.object> | null);
+    metadata?:
+      | boolean
+      | ((
+          ctx: DollarTsDsl & { node: ReturnType<typeof $.object>; schema: IR.SchemaObject },
+        ) => void);
     /**
      * Configuration for request-specific Valibot schemas.
      *
@@ -194,7 +199,11 @@ export type Config = Plugin.Name<'valibot'> &
     /** Configuration for reusable schema definitions. */
     definitions: NamingOptions & FeatureToggle;
     /** Enable Valibot metadata support? */
-    metadata: boolean | ((ctx: { schema: IR.SchemaObject }) => ReturnType<typeof $.object> | null);
+    metadata:
+      | boolean
+      | ((
+          ctx: DollarTsDsl & { node: ReturnType<typeof $.object>; schema: IR.SchemaObject },
+        ) => void);
     /** Configuration for request-specific Valibot schemas. */
     requests: NamingOptions & FeatureToggle;
     /** Configuration for response-specific Valibot schemas. */
