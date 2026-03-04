@@ -225,11 +225,11 @@ export function createVisitor(
       if (!metadata) {
         return result;
       }
-      const node = $.object().pretty();
+      const node = $.object();
       if (typeof metadata === 'function') {
         metadata({ $, node, schema });
       } else if (schema.description) {
-        node.prop('description', $.literal(schema.description));
+        node.pretty().prop('description', $.literal(schema.description));
       }
       if (node.isEmpty) {
         return result;
