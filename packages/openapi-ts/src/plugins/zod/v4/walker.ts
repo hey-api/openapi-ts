@@ -231,7 +231,7 @@ export function createVisitor(
           : schema.description
             ? $.object().pretty().prop('description', $.literal(schema.description))
             : undefined;
-      if (!metadataObj) {
+      if (!metadataObj || !metadataObj.hasProps()) {
         return result;
       }
       const z = ctx.plugin.external('zod.z');

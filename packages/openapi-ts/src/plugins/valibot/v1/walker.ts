@@ -212,7 +212,7 @@ export function createVisitor(
           : schema.description
             ? $.object().prop('description', $.literal(schema.description))
             : undefined;
-      if (!metadataObj) {
+      if (!metadataObj || !metadataObj.hasProps()) {
         return result;
       }
       const v = ctx.plugin.external('valibot.v');
