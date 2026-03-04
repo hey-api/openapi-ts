@@ -202,19 +202,26 @@ export function createVisitor(
       };
     },
     postProcess(result, schema, ctx) {
-      if (ctx.plugin.config.metadata && schema.description) {
-        const v = ctx.plugin.external('valibot.v');
-        const metadataExpr = $(v)
-          .attr(identifiers.actions.metadata)
-          .call($.object().prop('description', $.literal(schema.description)));
-
-        return {
-          meta: result.meta,
-          pipes: [...result.pipes, metadataExpr],
-        };
+      const metadata = ctx.plugin.config.metadata;
+      if (!metadata) {
+        return result;
       }
+      const node = $.object();
+      if (typeof metadata === 'function') {
+        metadata({ $, node, schema });
+      } else if (schema.description) {
+        node.prop('description', $.literal(schema.description));
+      }
+      if (node.isEmpty) {
+        return result;
+      }
+      const v = ctx.plugin.external('valibot.v');
+      const metadataExpr = $(v).attr(identifiers.actions.metadata).call(node);
 
-      return result;
+      return {
+        meta: result.meta,
+        pipes: [...result.pipes, metadataExpr],
+      };
     },
     reference($ref, schema, ctx) {
       const v = ctx.plugin.external('valibot.v');
