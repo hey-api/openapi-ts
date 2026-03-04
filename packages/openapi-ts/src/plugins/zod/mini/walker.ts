@@ -204,21 +204,28 @@ export function createVisitor(
       };
     },
     postProcess(result, schema, ctx) {
-      if (ctx.plugin.config.metadata && schema.description) {
-        const z = ctx.plugin.external('zod.z');
-        return {
-          ...result,
-          expression: {
-            expression: result.expression.expression
-              .attr(identifiers.register)
-              .call(
-                $(z).attr(identifiers.globalRegistry),
-                $.object().pretty().prop('description', $.literal(schema.description)),
-              ),
-          },
-        };
+      const metadata = ctx.plugin.config.metadata;
+      if (!metadata) {
+        return result;
       }
-      return result;
+      const metadataObj =
+        typeof metadata === 'function'
+          ? metadata({ schema })
+          : schema.description
+            ? $.object().pretty().prop('description', $.literal(schema.description))
+            : undefined;
+      if (!metadataObj) {
+        return result;
+      }
+      const z = ctx.plugin.external('zod.z');
+      return {
+        ...result,
+        expression: {
+          expression: result.expression.expression
+            .attr(identifiers.register)
+            .call($(z).attr(identifiers.globalRegistry), metadataObj),
+        },
+      };
     },
     reference($ref, schema, ctx) {
       const z = ctx.plugin.external('zod.z');
