@@ -8,7 +8,7 @@ import type {
   Plugin,
 } from '@hey-api/shared';
 
-import type { $ } from '../../ts-dsl';
+import type { $, DollarTsDsl } from '../../ts-dsl';
 import type { IApi } from './api';
 import type { Resolvers } from './resolvers';
 import type { TypeOptions } from './shared/types';
@@ -146,14 +146,19 @@ export type UserConfig = Plugin.Name<'zod'> &
      * - `boolean`: Shorthand for the default metadata builder. When `true`,
      *   attaches `{ description }` from the schema (if present) to the
      *   generated Zod schema via the metadata API.
-     * - `function`: Custom metadata builder. Receives `{ schema }` and must
-     *   return a `ReturnType<typeof $.object>` node that is passed directly to
-     *   the metadata API, or `null` to skip metadata for this schema.
+     * - `function`: Custom metadata builder. Receives `{ $, node, schema }`,
+     *   where `node` is a pre-initialized `$.object().pretty()` node. Add
+     *   properties to `node` to populate the metadata object. Return value is
+     *   ignored; an empty `node` skips metadata for that schema.
      *   Note: **not supported for Zod 3** (use `boolean` only).
      *
      * @default false
      */
-    metadata?: boolean | ((ctx: { schema: IR.SchemaObject }) => ReturnType<typeof $.object> | null);
+    metadata?:
+      | boolean
+      | ((
+          ctx: DollarTsDsl & { node: ReturnType<typeof $.object>; schema: IR.SchemaObject },
+        ) => void);
     /**
      * Configuration for request-specific Zod schemas.
      *
@@ -436,7 +441,11 @@ export type Config = Plugin.Name<'zod'> &
     /** Configuration for reusable schema definitions. */
     definitions: NamingOptions & FeatureToggle & TypeOptions;
     /** Enable Zod metadata support? */
-    metadata: boolean | ((ctx: { schema: IR.SchemaObject }) => ReturnType<typeof $.object> | null);
+    metadata:
+      | boolean
+      | ((
+          ctx: DollarTsDsl & { node: ReturnType<typeof $.object>; schema: IR.SchemaObject },
+        ) => void);
     /** Configuration for request-specific Zod schemas. */
     requests: NamingOptions & FeatureToggle & TypeOptions;
     /** Configuration for response-specific Zod schemas. */

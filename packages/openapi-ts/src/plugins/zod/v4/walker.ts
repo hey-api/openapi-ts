@@ -225,13 +225,13 @@ export function createVisitor(
       if (!metadata) {
         return result;
       }
-      const metadataObj =
-        typeof metadata === 'function'
-          ? metadata({ schema })
-          : schema.description
-            ? $.object().pretty().prop('description', $.literal(schema.description))
-            : undefined;
-      if (!metadataObj || !metadataObj.hasProps()) {
+      const node = $.object().pretty();
+      if (typeof metadata === 'function') {
+        metadata({ $, node, schema });
+      } else if (schema.description) {
+        node.prop('description', $.literal(schema.description));
+      }
+      if (node.isEmpty) {
         return result;
       }
       const z = ctx.plugin.external('zod.z');
@@ -240,7 +240,7 @@ export function createVisitor(
         expression: {
           expression: result.expression.expression
             .attr(identifiers.register)
-            .call($(z).attr(identifiers.globalRegistry), metadataObj),
+            .call($(z).attr(identifiers.globalRegistry), node),
         },
       };
     },
