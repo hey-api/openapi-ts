@@ -126,8 +126,14 @@ export const createClient = (config: Config = {}): Client => {
     });
   };
 
+  const buildUrlFn: Client['buildUrl'] = (options) =>
+    buildUrl({
+      ..._config,
+      ...options,
+    });
+
   return {
-    buildUrl,
+    buildUrl: buildUrlFn,
     connect: makeMethodFn('CONNECT'),
     delete: makeMethodFn('DELETE'),
     get: makeMethodFn('GET'),
