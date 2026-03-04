@@ -14,18 +14,10 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 /**
- * Dev mode: 'src' appears after 'dist' (or dist doesn't exist), and 'generate' follows 'src'
+ * Dev mode: determined by OPENAPI_TS_DEV_MODE environment variable
  */
-function isDevMode(): boolean {
-  const normalized = __dirname.split(path.sep);
-  const srcIndex = normalized.lastIndexOf('src');
-  const distIndex = normalized.lastIndexOf('dist');
-  return (
-    srcIndex !== -1 &&
-    srcIndex > distIndex &&
-    srcIndex === normalized.length - 2 &&
-    normalized[srcIndex + 1] === 'generate'
-  );
+export function isDevMode(): boolean {
+  return process.env.OPENAPI_TS_DEV_MODE === 'true' || process.env.OPENAPI_TS_DEV_MODE === '1';
 }
 
 /**
