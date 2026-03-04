@@ -946,6 +946,23 @@ describe(`OpenAPI ${version}`, () => {
     {
       config: createConfig({
         input: 'validators.yaml',
+        output: 'validators-metadata-fn',
+        plugins: [
+          {
+            metadata: ({ $, node, schema }) => {
+              node
+                .prop('custom', $.literal('value'))
+                .prop('title', $.literal(schema.description ?? schema.type ?? ''));
+            },
+            name: 'valibot',
+          },
+        ],
+      }),
+      description: 'generates validator schemas with metadata function',
+    },
+    {
+      config: createConfig({
+        input: 'validators.yaml',
         output: 'validators-types',
         plugins: ['valibot'],
       }),
