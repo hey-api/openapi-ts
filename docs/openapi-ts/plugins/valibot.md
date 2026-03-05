@@ -221,6 +221,7 @@ export const vFoo = v.pipe(
 );
 ```
 
+<!-- prettier-ignore-start -->
 ```js [config]
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
@@ -229,8 +230,7 @@ export default {
     // ...other plugins
     {
       name: 'valibot',
-      metadata({ $, node, schema }) {
-        // [!code ++]
+      metadata({ $, node, schema }) { // [!code ++]
         node.prop('hasTitle', $.literal(Boolean(schema.title))); // [!code ++]
         node.prop('createdAt', $.literal(Date.now())); // [!code ++]
       }, // [!code ++]
@@ -238,6 +238,7 @@ export default {
   ],
 };
 ```
+<!-- prettier-ignore-end -->
 
 :::
 
