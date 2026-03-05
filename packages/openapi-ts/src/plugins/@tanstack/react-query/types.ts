@@ -354,7 +354,7 @@ export type UserConfig = Plugin.Name<'@tanstack/react-query'> &
           /**
            * Whether this feature is enabled.
            *
-           * @default true
+           * @default false
            */
           enabled?: boolean;
           /**
