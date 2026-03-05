@@ -73,6 +73,7 @@ function childToNode(
   return [
     $.func(memberName)
       .decorator(cachedProp)
+      .param('self')
       .returns(refChild)
       .do(
         $(refChild)
@@ -115,21 +116,9 @@ function implementFn<T extends ReturnType<typeof $.func>>(args: {
 }): T {
   const { node, operation } = args;
 
-  // Build the URL path
-  const path = operation.path;
-
-  // Get the HTTP method (default to GET)
   const method = operation.method?.toLowerCase() || 'get';
 
-  // Create the client call expression: self.client.get(path)
-  // self is the Python equivalent of 'this' for instance methods
-  const selfExpr = $.id('self');
-  const clientExpr = $.attr(selfExpr, 'client');
-  const methodExpr = $.attr(clientExpr, method);
-  const clientCall = $.call(methodExpr, $.literal(path));
-
-  // Return the client call
-  node.do($.return(clientCall));
+  node.do($('self').attr('client').attr(method).call($.literal(operation.path)).return());
 
   return node;
 }
@@ -177,7 +166,7 @@ export function toNode(
             operation,
             plugin,
           }),
-        ),
+        ).param('self'),
         operation,
         plugin,
       });

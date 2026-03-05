@@ -22,6 +22,7 @@ export const presets = {
         containerName: 'OpenCode',
         strategy: 'single',
       },
+      paramsStructure: 'flat',
     }),
   ],
   tanstack: () => [
