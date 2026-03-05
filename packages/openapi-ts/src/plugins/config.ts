@@ -15,6 +15,7 @@ import { defaultConfig as heyApiTransformers } from '../plugins/@hey-api/transfo
 import { defaultConfig as heyApiTypeScript } from '../plugins/@hey-api/typescript';
 import { defaultConfig as piniaColada } from '../plugins/@pinia/colada';
 import { defaultConfig as tanStackAngularQuery } from '../plugins/@tanstack/angular-query-experimental';
+import { defaultConfig as tanStackPreactQuery } from '../plugins/@tanstack/preact-query';
 import { defaultConfig as tanStackReactQuery } from '../plugins/@tanstack/react-query';
 import { defaultConfig as tanStackSolidQuery } from '../plugins/@tanstack/solid-query';
 import { defaultConfig as tanStackSvelteQuery } from '../plugins/@tanstack/svelte-query';
@@ -43,6 +44,7 @@ export const defaultPluginConfigs: {
   '@hey-api/typescript': heyApiTypeScript,
   '@pinia/colada': piniaColada,
   '@tanstack/angular-query-experimental': tanStackAngularQuery,
+  '@tanstack/preact-query': tanStackPreactQuery,
   '@tanstack/react-query': tanStackReactQuery,
   '@tanstack/solid-query': tanStackSolidQuery,
   '@tanstack/svelte-query': tanStackSvelteQuery,

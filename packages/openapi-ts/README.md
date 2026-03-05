@@ -337,6 +337,7 @@ These plugins help reduce boilerplate associated with third-party dependencies. 
 - [`@hey-api/typescript`](https://heyapi.dev/openapi-ts/output/typescript)
 - [`@pinia/colada`](https://heyapi.dev/openapi-ts/plugins/pinia-colada)
 - [`@tanstack/angular-query-experimental`](https://heyapi.dev/openapi-ts/plugins/tanstack-query)
+- [`@tanstack/preact-query`](https://heyapi.dev/openapi-ts/plugins/tanstack-query)
 - [`@tanstack/react-query`](https://heyapi.dev/openapi-ts/plugins/tanstack-query)
 - [`@tanstack/solid-query`](https://heyapi.dev/openapi-ts/plugins/tanstack-query)
 - [`@tanstack/svelte-query`](https://heyapi.dev/openapi-ts/plugins/tanstack-query)
