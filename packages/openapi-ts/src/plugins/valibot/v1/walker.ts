@@ -15,6 +15,7 @@ import { identifiers } from './constants';
 import { arrayToPipes } from './toAst/array';
 import { booleanToPipes } from './toAst/boolean';
 import { enumToPipes } from './toAst/enum';
+import { intersectionToPipes } from './toAst/intersection';
 import { neverToPipes } from './toAst/never';
 import { nullToPipes } from './toAst/null';
 import { numberToPipes } from './toAst/number';
@@ -22,6 +23,7 @@ import { objectToPipes } from './toAst/object';
 import { stringToPipes } from './toAst/string';
 import { tupleToPipes } from './toAst/tuple';
 import { undefinedToPipes } from './toAst/undefined';
+import { unionToPipes } from './toAst/union';
 import { unknownToPipes } from './toAst/unknown';
 import { voidToPipes } from './toAst/void';
 
@@ -143,16 +145,19 @@ export function createVisitor(
       }
     },
     intersection(items, schemas, parentSchema, ctx) {
-      const v = ctx.plugin.external('valibot.v');
-      const itemNodes = items.map((item) => pipesToNode(item.pipes, ctx.plugin));
+      const applyModifiers = (result: ValibotResult, opts?: { optional?: boolean }) =>
+        this.applyModifiers(result, ctx, opts) as ValibotFinal;
+
+      const { pipes } = intersectionToPipes({
+        applyModifiers,
+        childResults: items,
+        parentSchema,
+        plugin: ctx.plugin,
+      });
 
       return {
         meta: composeMeta(items, { default: parentSchema.default }),
-        pipes: [
-          $(v)
-            .attr(identifiers.schemas.intersect)
-            .call($.array(...itemNodes)),
-        ],
+        pipes,
       };
     },
     never(schema, ctx) {
@@ -290,32 +295,18 @@ export function createVisitor(
       };
     },
     union(items, schemas, parentSchema, ctx) {
-      const v = ctx.plugin.external('valibot.v');
+      const applyModifiers = (result: ValibotResult, opts?: { optional?: boolean }) =>
+        this.applyModifiers(result, ctx, opts) as ValibotFinal;
 
       const hasNull = schemas.some((s) => s.type === 'null') || items.some((i) => i.meta.nullable);
 
-      const nonNullItems: Array<ValibotResult> = [];
-      items.forEach((item, index) => {
-        const schema = schemas[index]!;
-        if (schema.type !== 'null') {
-          nonNullItems.push(item);
-        }
+      const { pipes } = unionToPipes({
+        applyModifiers,
+        childResults: items,
+        parentSchema,
+        plugin: ctx.plugin,
+        schemas,
       });
-
-      let pipes: Pipes;
-
-      if (nonNullItems.length === 0) {
-        pipes = [$(v).attr(identifiers.schemas.null).call()];
-      } else if (nonNullItems.length === 1) {
-        pipes = nonNullItems[0]!.pipes;
-      } else {
-        const itemNodes = nonNullItems.map((i) => pipesToNode(i.pipes, ctx.plugin));
-        pipes = [
-          $(v)
-            .attr(identifiers.schemas.union)
-            .call($.array(...itemNodes)),
-        ];
-      }
 
       return {
         meta: composeMeta(items, {
