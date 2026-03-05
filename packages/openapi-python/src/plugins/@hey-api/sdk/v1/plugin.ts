@@ -20,6 +20,14 @@ export const handlerV1: HeyApiSdkPlugin['Handler'] = ({ plugin }) => {
     },
   });
 
+  plugin.symbol('cached_property', {
+    external: 'functools',
+    meta: {
+      category: 'external',
+      resource: 'functools.cached_property',
+    },
+  });
+
   const structure = new StructureModel();
   const shell = createShell(plugin);
   const strategy = resolveStrategy(plugin);
