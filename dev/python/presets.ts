@@ -5,13 +5,9 @@ export const presets = {
   sdk: () => [
     /** SDK */
     sdk({
-      '~hooks': {
-        symbols: {
-          // getExportFromFilePath(symbol) {
-          //   console.log(symbol.toString());
-          //   return undefined;
-          // },
-        },
+      operations: {
+        containerName: 'OpenCode',
+        strategy: 'single',
       },
     }),
   ],

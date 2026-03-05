@@ -39,6 +39,7 @@ type ResolvedNode = 'Node' extends keyof PluginInstanceTypes
     PluginInstanceTypes['Node']
   : Node;
 
+// TODO: abstract
 const defaultGetFilePath = (symbol: Symbol): string | undefined => {
   if (!symbol.meta?.pluginName || typeof symbol.meta.pluginName !== 'string') {
     return;
@@ -48,6 +49,9 @@ const defaultGetFilePath = (symbol: Symbol): string | undefined => {
   }
   if (symbol.meta.pluginName === '@hey-api/typescript') {
     return 'types';
+  }
+  if (symbol.meta.pluginName === '@hey-api/python-sdk') {
+    return 'sdk';
   }
   if (symbol.meta.pluginName.startsWith('@hey-api/')) {
     return symbol.meta.pluginName.split('/')[1];
