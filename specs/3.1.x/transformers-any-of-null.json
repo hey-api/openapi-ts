@@ -24,6 +24,47 @@
         }
       }
     },
+    "/polls": {
+      "get": {
+        "operationId": "getPoll",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Poll"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/polls/nullable": {
+      "get": {
+        "operationId": "getNullablePoll",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/Poll"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/nested-date-object": {
       "get": {
         "operationId": "nestedDateObject",
@@ -44,6 +85,19 @@
   },
   "components": {
     "schemas": {
+      "Poll": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": ["id", "createdAt"]
+      },
       "NestedDateObject": {
         "description": "Object with a nested date structure",
         "type": "object",
