@@ -76,6 +76,7 @@
 - [Novak Antonijevic](https://github.com/NovakAnton)
 - [Ondřej Maxa](https://github.com/maxa-ondrej)
 - [Pascal Ernst](https://github.com/LinuCC)
+- [Peter Graugaard](https://github.com/pgraug)
 - [Philipp Katz](https://github.com/qqilihq)
 - [Phuc Tran](https://github.com/Glup3)
 - [Rico](https://github.com/btmnk)
