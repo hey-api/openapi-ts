@@ -72,6 +72,7 @@ declare module '@hey-api/shared' {
     '@hey-api/typescript': HeyApiTypeScriptPlugin['Types'];
     '@pinia/colada': PiniaColadaPlugin['Types'];
     '@tanstack/angular-query-experimental': TanStackAngularQueryPlugin['Types'];
+    '@tanstack/preact-query': TanStackPreactQueryPlugin['Types'];
     '@tanstack/react-query': TanStackReactQueryPlugin['Types'];
     '@tanstack/solid-query': TanStackSolidQueryPlugin['Types'];
     '@tanstack/svelte-query': TanStackSvelteQueryPlugin['Types'];
@@ -110,6 +111,7 @@ import type { HeyApiTransformersPlugin } from './plugins/@hey-api/transformers';
 import type { HeyApiTypeScriptPlugin } from './plugins/@hey-api/typescript';
 import type { PiniaColadaPlugin } from './plugins/@pinia/colada';
 import type { TanStackAngularQueryPlugin } from './plugins/@tanstack/angular-query-experimental';
+import type { TanStackPreactQueryPlugin } from './plugins/@tanstack/preact-query';
 import type { TanStackReactQueryPlugin } from './plugins/@tanstack/react-query';
 import type { TanStackSolidQueryPlugin } from './plugins/@tanstack/solid-query';
 import type { TanStackSvelteQueryPlugin } from './plugins/@tanstack/svelte-query';
