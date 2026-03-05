@@ -19,7 +19,7 @@ export class FuncPyDsl extends Mixed {
   override readonly nameSanitizer = safeRuntimeName;
 
   protected _parameters: Array<py.FunctionParameter> = [];
-  protected _returnType?: py.Expression;
+  protected _returnType?: NodeName | py.Expression;
 
   constructor(name: NodeName, fn?: (f: FuncPyDsl) => void) {
     super();
@@ -56,7 +56,7 @@ export class FuncPyDsl extends Mixed {
     return this;
   }
 
-  returns(returnType: string | py.Expression): this {
+  returns(returnType: NodeName | py.Expression): this {
     this._returnType =
       typeof returnType === 'string' ? py.factory.createIdentifier(returnType) : returnType;
     return this;

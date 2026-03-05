@@ -68,19 +68,17 @@ function childToNode(
     plugin.config.operations.methodName.casing ?? 'camelCase',
   );
   const memberName = plugin.symbol(memberNameStr);
+  const cachedProp = plugin.external('functools.cached_property');
+
   return [
-    $.func(
-      memberName,
-      (f) => f.returns('None'),
-      // f.returns(refChild).do(
-      //   $('this')
-      //     .attr(privateName)
-      //     .nullishAssign(
-      //       $.new(refChild).args($.object().prop('client', $('this').attr('client'))),
-      //     )
-      //     .return(),
-      // ),
-    ),
+    $.func(memberName)
+      .decorator(cachedProp)
+      .returns(refChild)
+      .do(
+        $(refChild)
+          .call($.kwarg('client', $('self').attr('client')))
+          .return(),
+      ),
   ];
 }
 
