@@ -1,5 +1,11 @@
 # @hey-api/codegen-core
 
+## 0.7.1
+
+### Patch Changes
+
+- **internal**: log symbol meta if name is falsy ([#3448](https://github.com/hey-api/openapi-ts/pull/3448)) ([`c50f7bc`](https://github.com/hey-api/openapi-ts/commit/c50f7bcf5676f2783a412288d243aeaeabd9f8bd)) by [@mrlubos](https://github.com/mrlubos)
+
 ## 0.7.0
 
 ### Minor Changes
