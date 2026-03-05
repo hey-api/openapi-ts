@@ -1,5 +1,44 @@
 # @hey-api/openapi-ts
 
+## 0.94.0
+
+### Minor Changes
+
+- **BREAKING** **client**: `buildUrl()` function includes `baseUrl` from config by default ([#3491](https://github.com/hey-api/openapi-ts/pull/3491)) ([`c0cbffb`](https://github.com/hey-api/openapi-ts/commit/c0cbffb9413c6f1cc12b41069af6ddb031401742)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+### Patch Changes
+
+- **dsl(reserved)**: expand reserved keywords with more globals ([#3487](https://github.com/hey-api/openapi-ts/pull/3487)) ([`89a9151`](https://github.com/hey-api/openapi-ts/commit/89a9151b8d456796aa861c2a015af9bc1a300eb2)) by [@mrlubos](https://github.com/mrlubos)
+
+- **parser**: fix: explicit discriminator mapping wins over fallback in nested `allOf` ([#3490](https://github.com/hey-api/openapi-ts/pull/3490)) ([`a67d589`](https://github.com/hey-api/openapi-ts/commit/a67d589e1f8e5860bd05d5caff134dd6a7eed6e2)) by [@pgraug](https://github.com/pgraug)
+
+- **plugin(@pinia/colada)**: fix: pass error type generic to `defineQueryOptions` ([#3483](https://github.com/hey-api/openapi-ts/pull/3483)) ([`8e5a578`](https://github.com/hey-api/openapi-ts/commit/8e5a57855c03a2a49f9c62398f5bdf1fa989f4de)) by [@lukaspodmelle](https://github.com/lukaspodmelle)
+
+- **plugin(@tanstack/react-query)**: support generating `useMutation` hooks ([#3432](https://github.com/hey-api/openapi-ts/pull/3432)) ([`12d7660`](https://github.com/hey-api/openapi-ts/commit/12d76605e3dfb4204f9971dff7254be69c0a7359)) by [@nmokkenstorm](https://github.com/nmokkenstorm)
+
+- **plugin(typescript)**: fix: reference enum object when creating enum types ([#3500](https://github.com/hey-api/openapi-ts/pull/3500)) ([`127e67b`](https://github.com/hey-api/openapi-ts/commit/127e67b9b761889751e25d95fe5900508e6fd151)) by [@mrlubos](https://github.com/mrlubos)
+
+- **output(header)**: fix: support function signature in client and core files ([#3486](https://github.com/hey-api/openapi-ts/pull/3486)) ([`942913a`](https://github.com/hey-api/openapi-ts/commit/942913af15ae10c5fc3c5e456800829b7dd9c10a)) by [@mrlubos](https://github.com/mrlubos)
+
+- **output**: fix: avoid double sanitizing leading character ([#3448](https://github.com/hey-api/openapi-ts/pull/3448)) ([`c50f7bc`](https://github.com/hey-api/openapi-ts/commit/c50f7bcf5676f2783a412288d243aeaeabd9f8bd)) by [@mrlubos](https://github.com/mrlubos)
+
+- **internal**: fix: simplify dev mode check ([#3498](https://github.com/hey-api/openapi-ts/pull/3498)) ([`ea2538b`](https://github.com/hey-api/openapi-ts/commit/ea2538b221605ee1ba900d173394cd4f0aab8b12)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(zod)**: support function in `metadata` option ([#3497](https://github.com/hey-api/openapi-ts/pull/3497)) ([`1ed39bc`](https://github.com/hey-api/openapi-ts/commit/1ed39bc3ed713edd7ecdcc997fac1c7487b07105)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(valibot)**: support function in `metadata` option ([#3497](https://github.com/hey-api/openapi-ts/pull/3497)) ([`202cc05`](https://github.com/hey-api/openapi-ts/commit/202cc054a7221d8ea7b63881785d314104ab01d2)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **internal**: log symbol meta if name is falsy ([#3448](https://github.com/hey-api/openapi-ts/pull/3448)) ([`c50f7bc`](https://github.com/hey-api/openapi-ts/commit/c50f7bcf5676f2783a412288d243aeaeabd9f8bd)) by [@mrlubos](https://github.com/mrlubos)
+
+- **client**: fix: change serializer types from `any` to `unknown` ([#3471](https://github.com/hey-api/openapi-ts/pull/3471)) ([`ad11be2`](https://github.com/hey-api/openapi-ts/commit/ad11be241c494d23930ce8f76e57eb7afa631c67)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(@tanstack/preact-query)**: initial release ([#3499](https://github.com/hey-api/openapi-ts/pull/3499)) ([`873839e`](https://github.com/hey-api/openapi-ts/commit/873839e065a7919fcf736348c15238bd3b6c3d15)) by [@mrlubos](https://github.com/mrlubos)
+
+### Updated Dependencies:
+
+- @hey-api/shared@0.2.2
+- @hey-api/codegen-core@0.7.1
+
 ## 0.93.1
 
 ### Patch Changes
