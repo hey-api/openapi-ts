@@ -151,7 +151,7 @@ export const exportType = ({
         .alias(symbol)
         .export()
         .$if(plugin.config.comments && createSchemaComment(schema), (t, v) => t.doc(v))
-        .type($.type(symbol).idx($.type(symbol).typeofType().keyof()).typeofType());
+        .type($.type(symbolObject).idx($.type(symbolObject).typeofType().keyof()).typeofType());
       plugin.node(node);
       return;
     } else if (
