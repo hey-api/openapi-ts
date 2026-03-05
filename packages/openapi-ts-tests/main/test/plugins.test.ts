@@ -53,6 +53,13 @@ for (const version of versions) {
       {
         config: createConfig({
           output: 'fetch',
+          plugins: ['@tanstack/preact-query', '@hey-api/client-fetch'],
+        }),
+        description: 'generate Fetch API client with TanStack Preact Query plugin',
+      },
+      {
+        config: createConfig({
+          output: 'fetch',
           plugins: ['@tanstack/react-query', '@hey-api/client-fetch'],
         }),
         description: 'generate Fetch API client with TanStack React Query plugin',
@@ -84,6 +91,13 @@ for (const version of versions) {
           plugins: ['@tanstack/angular-query-experimental', '@hey-api/client-axios'],
         }),
         description: 'generate Axios client with TanStack Angular Query Experimental plugin',
+      },
+      {
+        config: createConfig({
+          output: 'axios',
+          plugins: ['@tanstack/preact-query', '@hey-api/client-axios'],
+        }),
+        description: 'generate Axios client with TanStack Preact Query plugin',
       },
       {
         config: createConfig({
@@ -129,6 +143,23 @@ for (const version of versions) {
         }),
         description:
           'generate Fetch API client with TanStack Angular Query Experimental plugin using class-based SDKs',
+      },
+      {
+        config: createConfig({
+          input: 'sdk-instance.yaml',
+          output: 'asClass',
+          plugins: [
+            '@tanstack/preact-query',
+            '@hey-api/client-fetch',
+            {
+              asClass: true,
+              classNameBuilder: '{{name}}Service',
+              name: '@hey-api/sdk',
+            },
+          ],
+        }),
+        description:
+          'generate Fetch API client with TanStack Preact Query plugin using class-based SDKs',
       },
       {
         config: createConfig({
@@ -227,6 +258,36 @@ for (const version of versions) {
         }),
         description:
           'generate Fetch API client with TanStack Angular Query Experimental plugin with custom names',
+      },
+      {
+        config: createConfig({
+          input: 'sdk-instance.yaml',
+          output: 'name-builder',
+          plugins: [
+            {
+              infiniteQueryKeys: {
+                name: '{{name}}A',
+              },
+              infiniteQueryOptions: {
+                name: '{{name}}B',
+              },
+              mutationOptions: {
+                name: '{{name}}C',
+              },
+              name: '@tanstack/preact-query',
+              queryKeys: {
+                name: '{{name}}D',
+              },
+              queryOptions: {
+                name: '{{name}}E',
+              },
+            },
+            '@hey-api/client-fetch',
+            '@hey-api/sdk',
+          ],
+        }),
+        description:
+          'generate Fetch API client with TanStack Preact Query plugin with custom names',
       },
       {
         config: createConfig({
