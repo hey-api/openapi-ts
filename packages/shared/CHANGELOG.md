@@ -1,5 +1,17 @@
 # @hey-api/shared
 
+## 0.2.2
+
+### Patch Changes
+
+- **output**: context file is optional ([#3486](https://github.com/hey-api/openapi-ts/pull/3486)) ([`942913a`](https://github.com/hey-api/openapi-ts/commit/942913af15ae10c5fc3c5e456800829b7dd9c10a)) by [@mrlubos](https://github.com/mrlubos)
+
+- **parser**: fix: explicit discriminator mapping wins over fallback in nested `allOf` ([#3490](https://github.com/hey-api/openapi-ts/pull/3490)) ([`a67d589`](https://github.com/hey-api/openapi-ts/commit/a67d589e1f8e5860bd05d5caff134dd6a7eed6e2)) by [@pgraug](https://github.com/pgraug)
+
+### Updated Dependencies:
+
+- @hey-api/codegen-core@0.7.1
+
 ## 0.2.1
 
 ### Patch Changes
