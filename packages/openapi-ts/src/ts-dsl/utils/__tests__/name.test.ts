@@ -5,6 +5,7 @@ describe('safeRuntimeName', () => {
     name: string;
     output: string;
   }> = [
+    // browser globals
     {
       name: 'document',
       output: 'document_',
@@ -97,10 +98,7 @@ describe('safeRuntimeName', () => {
       name: 'URLSearchParams',
       output: 'URLSearchParams_',
     },
-    {
-      name: 'console',
-      output: 'console_',
-    },
+    // JavaScript globals
     {
       name: 'Array',
       output: 'Array_',
@@ -110,12 +108,36 @@ describe('safeRuntimeName', () => {
       output: 'ArrayBuffer_',
     },
     {
+      name: 'atob',
+      output: 'atob_',
+    },
+    {
       name: 'BigInt',
       output: 'BigInt_',
     },
     {
       name: 'Boolean',
       output: 'Boolean_',
+    },
+    {
+      name: 'btoa',
+      output: 'btoa_',
+    },
+    {
+      name: 'clearInterval',
+      output: 'clearInterval_',
+    },
+    {
+      name: 'clearTimeout',
+      output: 'clearTimeout_',
+    },
+    {
+      name: 'console',
+      output: 'console_',
+    },
+    {
+      name: 'crypto',
+      output: 'crypto_',
     },
     {
       name: 'DataView',
@@ -134,6 +156,18 @@ describe('safeRuntimeName', () => {
       output: 'Function_',
     },
     {
+      name: 'globalThis',
+      output: 'globalThis_',
+    },
+    {
+      name: 'Infinity',
+      output: 'Infinity_',
+    },
+    {
+      name: 'Intl',
+      output: 'Intl_',
+    },
+    {
       name: 'JSON',
       output: 'JSON_',
     },
@@ -146,6 +180,10 @@ describe('safeRuntimeName', () => {
       output: 'Math_',
     },
     {
+      name: 'NaN',
+      output: 'NaN_',
+    },
+    {
       name: 'Number',
       output: 'Number_',
     },
@@ -154,12 +192,20 @@ describe('safeRuntimeName', () => {
       output: 'Object_',
     },
     {
+      name: 'performance',
+      output: 'performance_',
+    },
+    {
       name: 'Promise',
       output: 'Promise_',
     },
     {
       name: 'Proxy',
       output: 'Proxy_',
+    },
+    {
+      name: 'queueMicrotask',
+      output: 'queueMicrotask_',
     },
     {
       name: 'Reflect',
@@ -174,8 +220,20 @@ describe('safeRuntimeName', () => {
       output: 'Set_',
     },
     {
+      name: 'setInterval',
+      output: 'setInterval_',
+    },
+    {
+      name: 'setTimeout',
+      output: 'setTimeout_',
+    },
+    {
       name: 'String',
       output: 'String_',
+    },
+    {
+      name: 'structuredClone',
+      output: 'structuredClone_',
     },
     {
       name: 'Symbol',
@@ -189,6 +247,7 @@ describe('safeRuntimeName', () => {
       name: 'WeakSet',
       output: 'WeakSet_',
     },
+    // JavaScript keywords
     {
       name: 'arguments',
       output: 'arguments_',
@@ -389,6 +448,7 @@ describe('safeRuntimeName', () => {
       name: 'yield',
       output: 'yield_',
     },
+    // Node.js globals
     {
       name: '__dirname',
       output: '__dirname_',
@@ -421,6 +481,7 @@ describe('safeRuntimeName', () => {
       name: 'Buffer',
       output: 'Buffer_',
     },
+    // TypeScript keywords
     {
       name: 'any',
       output: 'any_',
