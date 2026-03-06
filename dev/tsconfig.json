@@ -1,11 +1,10 @@
 {
-  "extends": "../packages/openapi-ts-tests/tsconfig.base.json",
+  "extends": "../tsconfig.base.json",
   "compilerOptions": {
     "allowImportingTsExtensions": true,
-    "declaration": false,
-    "esModuleInterop": true,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "noEmit": true,
-    "resolveJsonModule": true,
-    "skipLibCheck": true
+    "resolveJsonModule": true
   }
 }
