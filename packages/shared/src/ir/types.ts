@@ -52,14 +52,14 @@ export interface IROperationObject extends SpecificationExtensions {
   tags?: ReadonlyArray<string>;
 }
 
-interface IRParametersObject {
+export interface IRParametersObject {
   cookie?: Record<string, IRParameterObject>;
   header?: Record<string, IRParameterObject>;
   path?: Record<string, IRParameterObject>;
   query?: Record<string, IRParameterObject>;
 }
 
-interface IRParameterObject
+export interface IRParameterObject
   extends Pick<JsonSchemaDraft2020_12, 'deprecated' | 'description'>, SpecificationExtensions {
   /**
    * Determines whether the parameter value SHOULD allow reserved characters, as defined by RFC3986 `:/?#[]@!$&'()*+,;=` to be included without percent-encoding. The default value is `false`. This property SHALL be ignored if the request body media type is not `application/x-www-form-urlencoded` or `multipart/form-data`. If a value is explicitly defined, then the value of `contentType` (implicit or explicit) SHALL be ignored.
@@ -124,7 +124,7 @@ interface IRResponseObject {
   schema: IRSchemaObject;
 }
 
-interface IRSchemaObject
+export interface IRSchemaObject
   extends
     Pick<
       JsonSchemaDraft2020_12,
@@ -221,11 +221,12 @@ interface IRSchemaObject
 
 type IRSecurityObject = SecuritySchemeObject;
 
-type IRServerObject = ServerObject;
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type -- Interface rather than type alias avoids TS4023 errors when bundled dist is consumed by tsgo/TypeScript 7
+export interface IRServerObject extends ServerObject {}
 
 type IRWebhookObject = IRPathItemObject;
 
-interface IRModel {
+export interface IRModel {
   components?: IRComponentsObject;
   paths?: IRPathsObject;
   servers?: ReadonlyArray<IRServerObject>;
