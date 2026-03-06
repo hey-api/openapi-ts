@@ -67,7 +67,15 @@ export type {
 export { createSchemaProcessor } from './ir/schema-processor';
 export type { SchemaVisitor, SchemaVisitorContext, Walker } from './ir/schema-walker';
 export { childContext, createSchemaWalker } from './ir/schema-walker';
-export type { IR } from './ir/types';
+export type {
+  IR,
+  IRModel,
+  IROperationObject,
+  IRParameterObject,
+  IRParametersObject,
+  IRSchemaObject,
+  IRServerObject,
+} from './ir/types';
 export { addItemsToSchema } from './ir/utils';
 export { parseOpenApiSpec } from './openApi';
 export type { OpenApiV2_0_X, OpenApiV2_0_XTypes } from './openApi/2.0.x';
