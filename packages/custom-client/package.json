@@ -60,8 +60,8 @@
   "devDependencies": {
     "@hey-api/codegen-core": "workspace:*",
     "@hey-api/openapi-ts": "workspace:*",
-    "rollup": "4.56.0",
-    "rollup-plugin-dts": "6.1.1"
+    "rollup": "4.59.0",
+    "rollup-plugin-dts": "6.3.0"
   },
   "peerDependencies": {
     "@hey-api/codegen-core": "<2",
