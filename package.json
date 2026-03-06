@@ -49,7 +49,7 @@
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "0.18.2",
-    "@changesets/cli": "2.29.8",
+    "@changesets/cli": "2.30.0",
     "@changesets/get-github-info": "0.7.0",
     "@changesets/parse": "0.4.2",
     "@changesets/types": "6.1.0",
