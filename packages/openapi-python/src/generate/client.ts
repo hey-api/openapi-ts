@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import type { IProject, ProjectRenderMeta } from '@hey-api/codegen-core';
+import type { IProject } from '@hey-api/codegen-core';
 import type { DefinePlugin, OutputHeader } from '@hey-api/shared';
 import { ensureDirSync, outputHeaderToPrefix } from '@hey-api/shared';
 
@@ -108,38 +108,37 @@ function replaceImports({
   filePath,
   header,
   isDevMode,
-  meta,
   renamed,
 }: {
   filePath: string;
   header?: string;
   isDevMode?: boolean;
-  meta: ProjectRenderMeta;
   renamed: Map<string, string>;
 }): void {
   let content = fs.readFileSync(filePath, 'utf8');
 
   // Dev mode: rewrite source bundle imports to match output structure
   if (isDevMode) {
-    // ../../client-core/bundle/foo -> ../core/foo
-    content = content.replace(/from\s+['"]\.\.\/\.\.\/client-core\/bundle\//g, "from '../core/");
-    // ../../client-core/bundle' (index import)
-    content = content.replace(/from\s+['"]\.\.\/\.\.\/client-core\/bundle['"]/g, "from '../core'");
+    // ...client_core.bundle.foo -> ..core.foo
+    content = content.replace(
+      /from\s+(\.{3,})\.?client_core\.bundle\./g,
+      (match, dots) => `from ${dots === '...' ? '..' : dots.slice(0, -1)}core.`,
+    );
+    // ...client_core.bundle (index import) -> ..core
+    content = content.replace(
+      /from\s+(\.{3,})\.?client_core\.bundle['"]?/g,
+      (match, dots) => `from ${dots === '...' ? '..' : dots.slice(0, -1)}core`,
+    );
   }
 
-  content = content.replace(/from\s+['"](\.\.?\/[^'"]*?)['"]/g, (match, importPath) => {
-    const importIndex = match.indexOf(importPath);
-    const extension = path.extname(importPath);
-    const fileName = path.basename(importPath, extension);
-    const importDir = path.dirname(importPath);
-    const replacedName =
-      (renamed.get(fileName) ?? fileName) +
-      (meta.importFileExtension ? meta.importFileExtension : extension);
-    const replacedMatch =
-      match.slice(0, importIndex) +
-      [importDir, replacedName].filter(Boolean).join('/') +
-      match.slice(importIndex + importPath.length);
-    return replacedMatch;
+  content = content.replace(/from\s+(.+?)\s+import/g, (match, importPath) => {
+    const cleanPath = importPath.replace(/^['"]|['"]$/g, '');
+    if (!cleanPath.startsWith('.')) return match;
+    const leadingDots = cleanPath.match(/^\.+/)?.[0] || '';
+    const moduleName = cleanPath.replace(/^\.+/, '');
+    if (!moduleName) return match;
+    const replacedName = renamed.get(moduleName) ?? moduleName;
+    return `from ${leadingDots}${replacedName} import`;
   });
 
   const fileHeader = header ?? '';
@@ -154,13 +153,11 @@ function replaceImports({
  */
 export function generateClientBundle({
   header,
-  meta,
   outputPath,
   plugin,
   project,
 }: {
   header?: OutputHeader;
-  meta: ProjectRenderMeta;
   outputPath: string;
   plugin: DefinePlugin<Client.Config & { name: string }>['Config'];
   project: IProject;
@@ -210,7 +207,6 @@ export function generateClientBundle({
     //   replaceImports({
     //     filePath: path.resolve(coreOutputPath, file),
     //     isDevMode: devMode,
-    //     meta,
     //     renamed,
     //   });
     // }
@@ -221,7 +217,6 @@ export function generateClientBundle({
         filePath: path.resolve(clientOutputPath, file),
         header: headerPrefix,
         isDevMode: devMode,
-        meta,
         renamed,
       });
     }
