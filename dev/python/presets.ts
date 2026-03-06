@@ -1,16 +1,13 @@
+import type { PluginConfig } from './plugins';
 import { pydantic, sdk } from './plugins';
 
 export const presets = {
   sdk: () => [
     /** SDK */
     sdk({
-      '~hooks': {
-        symbols: {
-          // getExportFromFilePath(symbol) {
-          //   console.log(symbol.toString());
-          //   return undefined;
-          // },
-        },
+      operations: {
+        containerName: 'OpenCode',
+        strategy: 'single',
       },
     }),
   ],
@@ -19,7 +16,7 @@ export const presets = {
     sdk(),
     pydantic(),
   ],
-} as const;
+} as const satisfies Record<string, () => ReadonlyArray<PluginConfig>>;
 
 export type PresetKey = keyof typeof presets;
 

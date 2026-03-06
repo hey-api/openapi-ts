@@ -14,7 +14,7 @@ import { contentToSchema, mediaTypeObjects } from './mediaType';
 import { paginationField } from './pagination';
 import { parseExtensions, schemaToIrSchema } from './schema';
 
-interface Operation
+export interface Operation
   extends Omit<OperationObject, 'parameters'>, Pick<IR.OperationObject, 'parameters'> {}
 
 const parseOperationJsDoc = ({

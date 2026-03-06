@@ -1,3 +1,5 @@
+import 'dotenv/config';
+
 import path from 'node:path';
 
 import { defineConfig } from '@hey-api/openapi-ts';
@@ -12,7 +14,7 @@ export default defineConfig(() => [
       path: './logs',
     },
     output: {
-      path: path.resolve(__dirname, '.gen', 'typescript'),
+      path: path.resolve(__dirname, 'gen', 'typescript'),
     },
     plugins: getPreset(),
   },

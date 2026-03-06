@@ -17,7 +17,7 @@ import { embedProject } from '../../embed'
 
 ### About
 
-[TanStack Query](https://tanstack.com/query) is a powerful asynchronous state management solution for TypeScript/JavaScript, React, Solid, Vue, Svelte, and Angular.
+[TanStack Query](https://tanstack.com/query) is a powerful asynchronous state management solution for TypeScript/JavaScript, React, Solid, Vue, Svelte, Angular, and Preact.
 
 The TanStack Query plugin for Hey API generates functions and query keys from your OpenAPI spec, fully compatible with SDKs, transformers, and all core features.
 
@@ -92,6 +92,17 @@ export default {
   plugins: [
     // ...other plugins
     '@tanstack/solid-query', // [!code ++]
+  ],
+};
+```
+
+```js [preact]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    '@tanstack/preact-query', // [!code ++]
   ],
 };
 ```

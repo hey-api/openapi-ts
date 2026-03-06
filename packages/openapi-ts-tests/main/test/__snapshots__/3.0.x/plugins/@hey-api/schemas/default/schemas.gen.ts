@@ -1327,6 +1327,10 @@ export const ModelWithPatternSchema = {
         patternWithBacktick: {
             type: 'string',
             pattern: 'aaa`bbb'
+        },
+        patternWithUnicode: {
+            type: 'string',
+            pattern: '^\\p{L}+$'
         }
     }
 } as const;
@@ -1552,6 +1556,19 @@ export const ModelWithNullableObjectSchema = {
         data: {
             $ref: '#/components/schemas/NullableObject'
         }
+    }
+} as const;
+
+export const ModelWithAdditionalPropertiesRefSchema = {
+    type: 'object',
+    description: 'An object with additional properties that can be null',
+    additionalProperties: {
+        nullable: true,
+        allOf: [
+            {
+                $ref: '#/components/schemas/NullableObject'
+            }
+        ]
     }
 } as const;
 
@@ -2259,6 +2276,10 @@ export const ModelWithPatternWritableSchema = {
         patternWithBacktick: {
             type: 'string',
             pattern: 'aaa`bbb'
+        },
+        patternWithUnicode: {
+            type: 'string',
+            pattern: '^\\p{L}+$'
         }
     }
 } as const;

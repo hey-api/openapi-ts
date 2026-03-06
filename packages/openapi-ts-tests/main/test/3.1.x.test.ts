@@ -245,6 +245,14 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'discriminator-allof-inline.json',
+        output: 'discriminator-allof-inline',
+      }),
+      description:
+        'handles allOf where inline schema discriminator mapping should take priority over $ref discriminator fallback',
+    },
+    {
+      config: createConfig({
         input: 'discriminator-non-string.yaml',
         output: 'discriminator-non-string',
       }),
@@ -938,6 +946,23 @@ describe(`OpenAPI ${version}`, () => {
     {
       config: createConfig({
         input: 'validators.yaml',
+        output: 'validators-metadata-fn',
+        plugins: [
+          {
+            metadata: ({ $, node, schema }) => {
+              node
+                .prop('custom', $.literal('value'))
+                .prop('title', $.literal(schema.description ?? schema.type ?? ''));
+            },
+            name: 'valibot',
+          },
+        ],
+      }),
+      description: 'generates validator schemas with metadata function',
+    },
+    {
+      config: createConfig({
+        input: 'validators.yaml',
         output: 'validators-types',
         plugins: ['valibot'],
       }),
@@ -1073,6 +1098,14 @@ describe(`OpenAPI ${version}`, () => {
         plugins: ['@hey-api/client-nuxt', '@hey-api/sdk'],
       }),
       description: 'client with SSE (Nuxt)',
+    },
+    {
+      config: createConfig({
+        input: 'sse-post.yaml',
+        output: 'sse-tanstack-react-query',
+        plugins: ['@hey-api/client-fetch', '@tanstack/react-query'],
+      }),
+      description: 'SSE POST endpoint is excluded from TanStack React Query mutations',
     },
     {
       config: createConfig({

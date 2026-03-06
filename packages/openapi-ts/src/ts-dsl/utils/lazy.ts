@@ -26,7 +26,7 @@ export class LazyTsDsl<T extends ts.Node = ts.Node> extends TsDsl<T> {
     return this._thunk(ctx);
   }
 
-  override toAst(): T {
+  override toAst() {
     return this.toResult().toAst();
   }
 }

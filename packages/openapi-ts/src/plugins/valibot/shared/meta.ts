@@ -27,16 +27,12 @@ export function composeMeta(
   children: ReadonlyArray<ValibotResult>,
   overrides?: Partial<ValibotMeta>,
 ): ValibotMeta {
-  const hasLazy = overrides?.hasLazy ?? children.some((c) => c.meta.hasLazy);
-  const nullable = overrides?.nullable ?? children.some((c) => c.meta.nullable);
-  const readonly = overrides?.readonly ?? children.some((c) => c.meta.readonly);
-
   return {
     default: overrides?.default,
     format: overrides?.format,
-    hasLazy,
-    nullable,
-    readonly,
+    hasLazy: overrides?.hasLazy ?? children.some((c) => c.meta.hasLazy),
+    nullable: overrides?.nullable ?? children.some((c) => c.meta.nullable),
+    readonly: overrides?.readonly ?? children.some((c) => c.meta.readonly),
   };
 }
 

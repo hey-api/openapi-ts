@@ -6,6 +6,7 @@ describe('generator expression', () => {
     const file = py.factory.createSourceFile([
       py.factory.createAssignment(
         py.factory.createIdentifier('x_iter'),
+        undefined,
         py.factory.createListExpression([
           py.factory.createLiteral(1),
           py.factory.createLiteral(2),
@@ -27,6 +28,7 @@ describe('generator expression', () => {
     const file = py.factory.createSourceFile([
       py.factory.createAssignment(
         py.factory.createIdentifier('x_iter'),
+        undefined,
         py.factory.createListExpression([
           py.factory.createLiteral(1),
           py.factory.createLiteral(2),
@@ -55,6 +57,7 @@ describe('generator expression', () => {
     const file = py.factory.createSourceFile([
       py.factory.createAssignment(
         py.factory.createIdentifier('x_iter'),
+        undefined,
         py.factory.createListExpression([
           py.factory.createLiteral(1),
           py.factory.createLiteral(2),

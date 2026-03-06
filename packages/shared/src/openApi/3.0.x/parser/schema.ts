@@ -436,11 +436,11 @@ const parseAllOf = ({
   // Collect discriminator information to add after all compositions are processed
   type DiscriminatorInfo = {
     discriminator: NonNullable<SchemaObject['discriminator']>;
+    isExplicitMapping: boolean;
     isRequired: boolean;
     values: ReadonlyArray<string>;
   };
   const discriminatorsToAdd: Array<DiscriminatorInfo> = [];
-  const addedDiscriminators = new Set<string>();
 
   for (const compositionSchema of compositionSchemas) {
     const originalInAllOf = state.inAllOf;
@@ -478,13 +478,7 @@ const parseAllOf = ({
           schema: ref,
         });
 
-        // Process each discriminator found
         for (const { discriminator, oneOf } of discriminators) {
-          // Skip if we've already collected this discriminator property
-          if (addedDiscriminators.has(discriminator.propertyName)) {
-            continue;
-          }
-
           const values = discriminatorValues(
             state.$ref,
             discriminator.mapping,
@@ -494,28 +488,48 @@ const parseAllOf = ({
             oneOf ? () => oneOf.some((o) => '$ref' in o && o.$ref === state.$ref) : undefined,
           );
 
-          if (values.length > 0) {
-            // Check if the discriminator property is required in any of the discriminator schemas
-            const isRequired = discriminators.some(
-              (d) =>
-                d.discriminator.propertyName === discriminator.propertyName &&
-                // Check in the ref's required array or in the allOf components
-                (ref.required?.includes(d.discriminator.propertyName) ||
-                  (ref.allOf &&
-                    ref.allOf.some((item) => {
-                      const resolvedItem =
-                        '$ref' in item ? context.resolveRef<SchemaObject>(item.$ref) : item;
-                      return resolvedItem.required?.includes(d.discriminator.propertyName);
-                    }))),
-            );
-
-            discriminatorsToAdd.push({
-              discriminator,
-              isRequired,
-              values,
-            });
-            addedDiscriminators.add(discriminator.propertyName);
+          if (values.length === 0) {
+            continue;
           }
+
+          // True when state.$ref appears directly in the mapping; false when the
+          // value fell back to the schema name because no mapping entry matched.
+          const isExplicitMapping =
+            discriminator.mapping !== undefined &&
+            Object.values(discriminator.mapping).includes(state.$ref);
+
+          // An explicit mapping always beats a same-property fallback collected
+          // earlier (e.g. from a grandparent discriminator that doesn't list this
+          // schema). Replace it; otherwise skip the duplicate.
+          const existingIndex = discriminatorsToAdd.findIndex(
+            (d) => d.discriminator.propertyName === discriminator.propertyName,
+          );
+          if (existingIndex !== -1) {
+            if (isExplicitMapping && !discriminatorsToAdd[existingIndex]!.isExplicitMapping) {
+              discriminatorsToAdd.splice(existingIndex, 1);
+            } else {
+              continue;
+            }
+          }
+
+          const isRequired = discriminators.some(
+            (d) =>
+              d.discriminator.propertyName === discriminator.propertyName &&
+              (ref.required?.includes(d.discriminator.propertyName) ||
+                (ref.allOf &&
+                  ref.allOf.some((item) => {
+                    const resolvedItem =
+                      '$ref' in item ? context.resolveRef<SchemaObject>(item.$ref) : item;
+                    return resolvedItem.required?.includes(d.discriminator.propertyName);
+                  }))),
+          );
+
+          discriminatorsToAdd.push({
+            discriminator,
+            isExplicitMapping,
+            isRequired,
+            values,
+          });
         }
       }
     }

@@ -2,26 +2,20 @@ import type { AnalysisContext, NodeName } from '@hey-api/codegen-core';
 import { isSymbol } from '@hey-api/codegen-core';
 
 import { py } from '../../ts-python';
-// import { TypePyDsl } from '../base';
+import type { MaybePyDsl } from '../base';
 import { PyDsl } from '../base';
-// import { DocMixin } from '../mixins/doc';
-// import { HintMixin } from '../mixins/hint';
-// import { DefaultMixin, ExportMixin } from '../mixins/modifiers';
-// import { PatternMixin } from '../mixins/pattern';
 import { ValueMixin } from '../mixins/value';
-// import { TypeExprPyDsl } from '../type/expr';
 import { safeRuntimeName } from '../utils/name';
 
-// const Mixed = DefaultMixin(
-//   DocMixin(ExportMixin(HintMixin(PatternMixin(ValueMixin(PyDsl<py.Assignment>))))),
-// );
 const Mixed = ValueMixin(PyDsl<py.Assignment>);
+
+export type AnnotationExpr = NodeName | MaybePyDsl<py.Expression>;
 
 export class VarPyDsl extends Mixed {
   readonly '~dsl' = 'VarPyDsl';
   override readonly nameSanitizer = safeRuntimeName;
 
-  // protected _type?: TypePyDsl;
+  protected _annotation?: AnnotationExpr;
 
   constructor(name?: NodeName) {
     super();
@@ -34,7 +28,7 @@ export class VarPyDsl extends Mixed {
   override analyze(ctx: AnalysisContext): void {
     super.analyze(ctx);
     ctx.analyze(this.name);
-    // ctx.analyze(this._type);
+    ctx.analyze(this._annotation);
   }
 
   /** Returns true when all required builder calls are present. */
@@ -42,15 +36,19 @@ export class VarPyDsl extends Mixed {
     return this.missingRequiredCalls().length === 0;
   }
 
-  // /** Sets the variable type annotation. */
-  // type(type: string | TypePyDsl): this {
-  //   this._type = type instanceof TypePyDsl ? type : new TypeExprPyDsl(type);
-  //   return this;
-  // }
+  /** Sets the type annotation for the variable. */
+  annotate(annotation: AnnotationExpr): this {
+    this._annotation = annotation;
+    return this;
+  }
 
   override toAst() {
     this.$validate();
-    return py.factory.createAssignment(this.$node(this.name)!, this.$value()!);
+    const target = this.$node(this.name)!;
+    const annotation = this.$annotation();
+    const value = this.$value();
+
+    return py.factory.createAssignment(target, annotation, value);
   }
 
   $validate(): asserts this {
@@ -59,10 +57,18 @@ export class VarPyDsl extends Mixed {
     throw new Error(`Variable assignment missing ${missing.join(' and ')}`);
   }
 
+  protected $annotation(): py.Expression | undefined {
+    return this.$node(this._annotation);
+  }
+
   private missingRequiredCalls(): ReadonlyArray<string> {
     const missing: Array<string> = [];
     if (!this.$node(this.name)) missing.push('name');
-    if (!this.$value()) missing.push('.value()');
+    const hasAnnotation = this.$annotation();
+    const hasValue = this.$value();
+    if (!hasAnnotation && !hasValue) {
+      missing.push('.annotate() or .assign()');
+    }
     return missing;
   }
 }

@@ -21,7 +21,7 @@ export class LiteralPyDsl extends Mixed {
     super.analyze(_ctx);
   }
 
-  override toAst(): py.Literal {
+  override toAst() {
     return py.factory.createLiteral(this.value);
   }
 }

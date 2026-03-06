@@ -1,14 +1,25 @@
 import type { SchemaWithType } from '@hey-api/shared';
 
-// import { $ } from '../../../../py-dsl';
-import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
+import { $ } from '../../../../py-dsl';
+import type { PydanticType } from '../../shared/types';
+import type { PydanticPlugin } from '../../types';
+import type { FieldConstraints } from '../constants';
 
-export function stringToNode({
+export function stringToType({
+  plugin,
   schema,
-}: IrSchemaToAstOptions & {
+}: {
+  plugin: PydanticPlugin['Instance'];
   schema: SchemaWithType<'string'>;
-}): Ast {
-  const constraints: Record<string, unknown> = {};
+}): PydanticType {
+  const constraints: FieldConstraints = {};
+
+  if (typeof schema.const === 'string') {
+    const literal = plugin.external('typing.Literal');
+    return {
+      typeAnnotation: $(literal).slice($.literal(schema.const)),
+    };
+  }
 
   if (schema.minLength !== undefined) {
     constraints.min_length = schema.minLength;
@@ -26,23 +37,8 @@ export function stringToNode({
     constraints.description = schema.description;
   }
 
-  if (typeof schema.const === 'string') {
-    return {
-      // expression: $.expr(`Literal["${schema.const}"]`),
-      fieldConstraints: constraints,
-      hasLazyExpression: false,
-      models: [],
-      // pipes: [],
-      typeAnnotation: `Literal["${schema.const}"]`,
-    };
-  }
-
   return {
-    // expression: $.expr('str'),
     fieldConstraints: constraints,
-    hasLazyExpression: false,
-    models: [],
-    // pipes: [],
     typeAnnotation: 'str',
   };
 }

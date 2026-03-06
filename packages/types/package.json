@@ -26,7 +26,7 @@
     "build": "tsc --build",
     "dev": "tsc --build --watch",
     "prepublishOnly": "pnpm build",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsgo --noEmit"
   },
   "devDependencies": {
     "typescript": "5.9.3"

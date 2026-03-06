@@ -44,12 +44,12 @@
     "tu": "turbo run build && vitest watch --update --project",
     "tb": "turbo run build --filter",
     "ty": "turbo run typecheck --filter",
-    "dev:ts": "cd dev && tsx watch --clear-screen=false ../packages/openapi-ts/src/run.ts",
-    "dev:py": "cd dev && tsx watch --clear-screen=false ../packages/openapi-python/src/run.ts"
+    "dev:ts": "cd dev && OPENAPI_TS_DEV_MODE=1 tsx watch --clear-screen=false ../packages/openapi-ts/src/run.ts",
+    "dev:py": "cd dev && OPENAPI_TS_DEV_MODE=1 tsx watch --clear-screen=false ../packages/openapi-python/src/run.ts"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "0.18.2",
-    "@changesets/cli": "2.29.8",
+    "@changesets/cli": "2.30.0",
     "@changesets/get-github-info": "0.7.0",
     "@changesets/parse": "0.4.2",
     "@changesets/types": "6.1.0",
@@ -58,6 +58,7 @@
     "@hey-api/openapi-ts": "workspace:*",
     "@types/node": "24.10.10",
     "@typescript-eslint/eslint-plugin": "8.54.0",
+    "@typescript/native-preview": "7.0.0-dev.20260305.1",
     "@vitest/coverage-v8": "4.0.18",
     "dotenv": "17.3.1",
     "eslint": "9.39.2",
@@ -69,11 +70,10 @@
     "globals": "17.3.0",
     "husky": "9.1.7",
     "lint-staged": "16.2.7",
-    "oxfmt": "0.32.0",
-    "ts-node": "10.9.2",
+    "oxfmt": "0.36.0",
     "tsdown": "0.18.4",
     "tsx": "4.21.0",
-    "turbo": "2.8.8",
+    "turbo": "2.8.12",
     "typescript": "5.9.3",
     "typescript-eslint": "8.54.0",
     "vitest": "4.0.18"
@@ -81,5 +81,5 @@
   "engines": {
     "node": ">=20.19.0"
   },
-  "packageManager": "pnpm@10.29.3"
+  "packageManager": "pnpm@10.30.3"
 }

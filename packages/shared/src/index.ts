@@ -67,7 +67,15 @@ export type {
 export { createSchemaProcessor } from './ir/schema-processor';
 export type { SchemaVisitor, SchemaVisitorContext, Walker } from './ir/schema-walker';
 export { childContext, createSchemaWalker } from './ir/schema-walker';
-export type { IR } from './ir/types';
+export type {
+  IR,
+  IRModel,
+  IROperationObject,
+  IRParameterObject,
+  IRParametersObject,
+  IRSchemaObject,
+  IRServerObject,
+} from './ir/types';
 export { addItemsToSchema } from './ir/utils';
 export { parseOpenApiSpec } from './openApi';
 export type { OpenApiV2_0_X, OpenApiV2_0_XTypes } from './openApi/2.0.x';
@@ -113,6 +121,7 @@ export type { Logs } from './types/logs';
 export type { WatchValues } from './types/watch';
 export { escapeComment } from './utils/escape';
 export { utils } from './utils/exports';
+export { outputHeaderToPrefix } from './utils/header';
 export { inputToApiRegistry } from './utils/input';
 export { heyApiRegistryBaseUrl } from './utils/input/heyApi';
 export { MinHeap } from './utils/minHeap';

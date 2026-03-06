@@ -1,6 +1,6 @@
 {
   "name": "@hey-api/openapi-python",
-  "version": "0.0.7",
+  "version": "0.0.9",
   "private": true,
   "description": "🐍 OpenAPI to Python codegen.",
   "keywords": [
@@ -56,7 +56,7 @@
     "check-exports": "attw --pack . --profile esm-only --ignore-rules cjs-resolves-to-esm",
     "dev": "tsdown --watch",
     "prepublishOnly": "pnpm build",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsgo --noEmit",
     "typecheck:next": "tsc --noEmit && uv run mypy src/ts-python/__snapshots__"
   },
   "dependencies": {

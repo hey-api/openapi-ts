@@ -1,5 +1,121 @@
 # @hey-api/openapi-ts
 
+## 0.94.0
+
+### Minor Changes
+
+- **BREAKING** **client**: `buildUrl()` function includes `baseUrl` from config by default ([#3491](https://github.com/hey-api/openapi-ts/pull/3491)) ([`c0cbffb`](https://github.com/hey-api/openapi-ts/commit/c0cbffb9413c6f1cc12b41069af6ddb031401742)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+### Patch Changes
+
+- **dsl(reserved)**: expand reserved keywords with more globals ([#3487](https://github.com/hey-api/openapi-ts/pull/3487)) ([`89a9151`](https://github.com/hey-api/openapi-ts/commit/89a9151b8d456796aa861c2a015af9bc1a300eb2)) by [@mrlubos](https://github.com/mrlubos)
+
+- **parser**: fix: explicit discriminator mapping wins over fallback in nested `allOf` ([#3490](https://github.com/hey-api/openapi-ts/pull/3490)) ([`a67d589`](https://github.com/hey-api/openapi-ts/commit/a67d589e1f8e5860bd05d5caff134dd6a7eed6e2)) by [@pgraug](https://github.com/pgraug)
+
+- **plugin(@pinia/colada)**: fix: pass error type generic to `defineQueryOptions` ([#3483](https://github.com/hey-api/openapi-ts/pull/3483)) ([`8e5a578`](https://github.com/hey-api/openapi-ts/commit/8e5a57855c03a2a49f9c62398f5bdf1fa989f4de)) by [@lukaspodmelle](https://github.com/lukaspodmelle)
+
+- **plugin(@tanstack/react-query)**: support generating `useMutation` hooks ([#3432](https://github.com/hey-api/openapi-ts/pull/3432)) ([`12d7660`](https://github.com/hey-api/openapi-ts/commit/12d76605e3dfb4204f9971dff7254be69c0a7359)) by [@nmokkenstorm](https://github.com/nmokkenstorm)
+
+- **plugin(typescript)**: fix: reference enum object when creating enum types ([#3500](https://github.com/hey-api/openapi-ts/pull/3500)) ([`127e67b`](https://github.com/hey-api/openapi-ts/commit/127e67b9b761889751e25d95fe5900508e6fd151)) by [@mrlubos](https://github.com/mrlubos)
+
+- **output(header)**: fix: support function signature in client and core files ([#3486](https://github.com/hey-api/openapi-ts/pull/3486)) ([`942913a`](https://github.com/hey-api/openapi-ts/commit/942913af15ae10c5fc3c5e456800829b7dd9c10a)) by [@mrlubos](https://github.com/mrlubos)
+
+- **output**: fix: avoid double sanitizing leading character ([#3448](https://github.com/hey-api/openapi-ts/pull/3448)) ([`c50f7bc`](https://github.com/hey-api/openapi-ts/commit/c50f7bcf5676f2783a412288d243aeaeabd9f8bd)) by [@mrlubos](https://github.com/mrlubos)
+
+- **internal**: fix: simplify dev mode check ([#3498](https://github.com/hey-api/openapi-ts/pull/3498)) ([`ea2538b`](https://github.com/hey-api/openapi-ts/commit/ea2538b221605ee1ba900d173394cd4f0aab8b12)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(zod)**: support function in `metadata` option ([#3497](https://github.com/hey-api/openapi-ts/pull/3497)) ([`1ed39bc`](https://github.com/hey-api/openapi-ts/commit/1ed39bc3ed713edd7ecdcc997fac1c7487b07105)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(valibot)**: support function in `metadata` option ([#3497](https://github.com/hey-api/openapi-ts/pull/3497)) ([`202cc05`](https://github.com/hey-api/openapi-ts/commit/202cc054a7221d8ea7b63881785d314104ab01d2)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **internal**: log symbol meta if name is falsy ([#3448](https://github.com/hey-api/openapi-ts/pull/3448)) ([`c50f7bc`](https://github.com/hey-api/openapi-ts/commit/c50f7bcf5676f2783a412288d243aeaeabd9f8bd)) by [@mrlubos](https://github.com/mrlubos)
+
+- **client**: fix: change serializer types from `any` to `unknown` ([#3471](https://github.com/hey-api/openapi-ts/pull/3471)) ([`ad11be2`](https://github.com/hey-api/openapi-ts/commit/ad11be241c494d23930ce8f76e57eb7afa631c67)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(@tanstack/preact-query)**: initial release ([#3499](https://github.com/hey-api/openapi-ts/pull/3499)) ([`873839e`](https://github.com/hey-api/openapi-ts/commit/873839e065a7919fcf736348c15238bd3b6c3d15)) by [@mrlubos](https://github.com/mrlubos)
+
+### Updated Dependencies:
+
+- @hey-api/shared@0.2.2
+- @hey-api/codegen-core@0.7.1
+
+## 0.93.1
+
+### Patch Changes
+
+- **plugin(@tanstack/query)**: fix: skip mutation queries for SSE endpoints ([#3470](https://github.com/hey-api/openapi-ts/pull/3470)) ([`3ca4f31`](https://github.com/hey-api/openapi-ts/commit/3ca4f317e422bb58345cb794faf979e26f10d127)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **client**: fix: avoid removing empty arrays from flat arguments ([#3451](https://github.com/hey-api/openapi-ts/pull/3451)) ([`1518fda`](https://github.com/hey-api/openapi-ts/commit/1518fda8372b5fb27085f4b296a77b922c340885)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(zod)**: fix: apply nullable modifier to `additionalProperties` schema ([#3452](https://github.com/hey-api/openapi-ts/pull/3452)) ([`2e903af`](https://github.com/hey-api/openapi-ts/commit/2e903af5d09881949b042bbd9aba516f3237764d)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **cli**: fix: do not set `logs.file` to `true` by default ([#3469](https://github.com/hey-api/openapi-ts/pull/3469)) ([`9e3d347`](https://github.com/hey-api/openapi-ts/commit/9e3d347d4b7a36c9d04b2f9c2d4988ece03677d8)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(@hey-api/sdk)**: fix: correctly set required flat parameters ([#3458](https://github.com/hey-api/openapi-ts/pull/3458)) ([`bf50a55`](https://github.com/hey-api/openapi-ts/commit/bf50a559670311a866ff8b104c169ef7619fb202)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(zod)**: add `u` flag on regex patterns with unicode property escapes ([#3468](https://github.com/hey-api/openapi-ts/pull/3468)) ([`67ad86a`](https://github.com/hey-api/openapi-ts/commit/67ad86a7e37a16125fc5a26eaad5859de43ccac3)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(valibot)**: add `u` flag on regex patterns with unicode property escapes ([#3468](https://github.com/hey-api/openapi-ts/pull/3468)) ([`003d914`](https://github.com/hey-api/openapi-ts/commit/003d91422cc831de782015c640b9bcbce9f17dd9)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(@hey-api/typescript)**: simplify union types if a member is `unknown` ([#3454](https://github.com/hey-api/openapi-ts/pull/3454)) ([`96d87df`](https://github.com/hey-api/openapi-ts/commit/96d87df7cf49bd1e8ce2dc196fcacc57270e4954)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **client(@hey-api/nuxt)**: fix: do not unwrap blob values ([#3459](https://github.com/hey-api/openapi-ts/pull/3459)) ([`b7233d1`](https://github.com/hey-api/openapi-ts/commit/b7233d1d3cc5de84b02c9dc8a27c3cb84235d752)) by [@LeiCraft](https://github.com/LeiCraft)
+
+- **client**: support async `createClientConfig` ([#3445](https://github.com/hey-api/openapi-ts/pull/3445)) ([`cd33d86`](https://github.com/hey-api/openapi-ts/commit/cd33d867857fbe9b4daf3c164f892d89946c4beb)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+## 0.93.0
+
+### Minor Changes
+
+- **plugin(valibot)**: remove `enum.nodes.nullable` resolver node ([#3396](https://github.com/hey-api/openapi-ts/pull/3396)) ([`ea6f386`](https://github.com/hey-api/openapi-ts/commit/ea6f3865c8e381b3160e1526435c4522f0dc6aa4)) by [@mrlubos](https://github.com/mrlubos)
+
+### Removed resolver node
+
+Valibot plugin no longer exposes the `enum.nodes.nullable` node. It was refactored so that nullable values are handled outside of resolvers.
+
+- **plugin(zod)**: remove `enum.nodes.nullable` resolver node ([#3398](https://github.com/hey-api/openapi-ts/pull/3398)) ([`737730c`](https://github.com/hey-api/openapi-ts/commit/737730c9c6450c60a81a8949259336e790e9b4f4)) by [@mrlubos](https://github.com/mrlubos)
+
+### Removed resolver node
+
+Zod plugin no longer exposes the `enum.nodes.nullable` node. It was refactored so that nullable values are handled outside of resolvers.
+
+### Patch Changes
+
+- **parser**: prefer unprefixed schema names from external files ([#3417](https://github.com/hey-api/openapi-ts/pull/3417)) ([`f3a264b`](https://github.com/hey-api/openapi-ts/commit/f3a264b2c5d7af06bb44fa0350ef613bde3aff87)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **parser(patch)**: support callback for `patch.schemas` ([#3415](https://github.com/hey-api/openapi-ts/pull/3415)) ([`e494f4d`](https://github.com/hey-api/openapi-ts/commit/e494f4dd828167a0096a0a488b222a013f911055)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **output**: fix: apply `output.header` to bundled files ([#3438](https://github.com/hey-api/openapi-ts/pull/3438)) ([`bcd0a87`](https://github.com/hey-api/openapi-ts/commit/bcd0a87cdd366cef572eb920b59c115ae65f67bb)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **parser**: handle OpenAPI 3.1 `contentMediaType` keyword as binary format when file-like ([#3431](https://github.com/hey-api/openapi-ts/pull/3431)) ([`d6a8538`](https://github.com/hey-api/openapi-ts/commit/d6a85381e3c52b4fd1c4af43ee57506459db7a45)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **input**: fix: improve returned status code when spec fetch fails ([#3427](https://github.com/hey-api/openapi-ts/pull/3427)) ([`37dd92c`](https://github.com/hey-api/openapi-ts/commit/37dd92c6629511860ae434c64ac8af9154ed6aed)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **client**: expose `onRequest` in RequestOptions for SSE request interception ([#3392](https://github.com/hey-api/openapi-ts/pull/3392)) ([`8fc4681`](https://github.com/hey-api/openapi-ts/commit/8fc46819d5df1d4a353be5ae7cd45a8c669a5d7e)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **parser**: add `patch.input` and shorthand `patch()` option for full specification transformations ([#3411](https://github.com/hey-api/openapi-ts/pull/3411)) ([`ba9f893`](https://github.com/hey-api/openapi-ts/commit/ba9f893d71b959721e177717ae85fce34d697002)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **parser**: fix: preserve `unevaluatedProperties` keyword in transforms ([#3435](https://github.com/hey-api/openapi-ts/pull/3435)) ([`f659b38`](https://github.com/hey-api/openapi-ts/commit/f659b38701795d2c2b61c8d3f5c43af93893481a)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(zod)**: use `.nullable()` and `.nullish()` methods ([#3398](https://github.com/hey-api/openapi-ts/pull/3398)) ([`737730c`](https://github.com/hey-api/openapi-ts/commit/737730c9c6450c60a81a8949259336e790e9b4f4)) by [@mrlubos](https://github.com/mrlubos)
+
+- **parser**: fix: resolve sibling schemas from external files during bundling ([#3422](https://github.com/hey-api/openapi-ts/pull/3422)) ([`19fd80a`](https://github.com/hey-api/openapi-ts/commit/19fd80aff26b1198d6838d48357702c39ad05501)) by [@j-westover](https://github.com/j-westover)
+
+- **parser(transforms)**: add `schemaName` transform ([#3416](https://github.com/hey-api/openapi-ts/pull/3416)) ([`4b9d032`](https://github.com/hey-api/openapi-ts/commit/4b9d032c6a144fa79cedc28e077782b9d67803a3)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(valibot)**: use `.nullable()` and `.nullish()` methods ([#3396](https://github.com/hey-api/openapi-ts/pull/3396)) ([`ea6f386`](https://github.com/hey-api/openapi-ts/commit/ea6f3865c8e381b3160e1526435c4522f0dc6aa4)) by [@mrlubos](https://github.com/mrlubos)
+
+- **input**: fix: avoid prefixing sources if paths do not collide on operations ([#3436](https://github.com/hey-api/openapi-ts/pull/3436)) ([`b1a419a`](https://github.com/hey-api/openapi-ts/commit/b1a419a835c312a1f8bf36a5b781109368041220)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **parser(patch)**: support callback for `patch.operations` ([#3420](https://github.com/hey-api/openapi-ts/pull/3420)) ([`e1cd970`](https://github.com/hey-api/openapi-ts/commit/e1cd970e4f3028b29ace44a58b2d2cae18a6c45f)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **parser**: add support for non-string discriminator property types ([#3385](https://github.com/hey-api/openapi-ts/pull/3385)) ([`dd0be9c`](https://github.com/hey-api/openapi-ts/commit/dd0be9c6ca93552c3367ca8e8ba785381295a112)) by [@SipanP](https://github.com/SipanP)
+
+### Updated Dependencies:
+
+- @hey-api/shared@0.2.1
+- @hey-api/json-schema-ref-parser@1.3.1
+
 ## 0.92.4
 
 ### Patch Changes

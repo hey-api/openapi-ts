@@ -23,7 +23,7 @@ export class StmtPyDsl extends Mixed {
   override toAst() {
     const node = this.$node(this._inner);
     if (isStatement(node)) return node;
-    return py.factory.createExpressionStatement(node as py.Expression);
+    return py.factory.createExpressionStatement(node);
   }
 }
 

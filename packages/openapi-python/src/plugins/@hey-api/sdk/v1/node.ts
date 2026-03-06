@@ -68,19 +68,18 @@ function childToNode(
     plugin.config.operations.methodName.casing ?? 'camelCase',
   );
   const memberName = plugin.symbol(memberNameStr);
+  const cachedProp = plugin.external('functools.cached_property');
+
   return [
-    $.func(
-      memberName,
-      (f) => f.returns('None'),
-      // f.returns(refChild).do(
-      //   $('this')
-      //     .attr(privateName)
-      //     .nullishAssign(
-      //       $.new(refChild).args($.object().prop('client', $('this').attr('client'))),
-      //     )
-      //     .return(),
-      // ),
-    ),
+    $.func(memberName)
+      .decorator(cachedProp)
+      .param('self')
+      .returns(refChild)
+      .do(
+        $(refChild)
+          .call($.kwarg('client', $('self').attr('client')))
+          .return(),
+      ),
   ];
 }
 
@@ -117,21 +116,9 @@ function implementFn<T extends ReturnType<typeof $.func>>(args: {
 }): T {
   const { node, operation } = args;
 
-  // Build the URL path
-  const path = operation.path;
-
-  // Get the HTTP method (default to GET)
   const method = operation.method?.toLowerCase() || 'get';
 
-  // Create the client call expression: self.client.get(path)
-  // self is the Python equivalent of 'this' for instance methods
-  const selfExpr = $.id('self');
-  const clientExpr = $.attr(selfExpr, 'client');
-  const methodExpr = $.attr(clientExpr, method);
-  const clientCall = $.call(methodExpr, $.literal(path));
-
-  // Return the client call
-  node.do($.return(clientCall));
+  node.do($('self').attr('client').attr(method).call($.literal(operation.path)).return());
 
   return node;
 }
@@ -179,7 +166,7 @@ export function toNode(
             operation,
             plugin,
           }),
-        ),
+        ).param('self'),
         operation,
         plugin,
       });

@@ -68,7 +68,8 @@ function patternNode(ctx: StringResolverContext): PipeResult {
   const { schema, symbols } = ctx;
   const { v } = symbols;
   if (!schema.pattern) return;
-  return $(v).attr(identifiers.actions.regex).call($.regexp(schema.pattern));
+  const flags = /\\[pP]\{/.test(schema.pattern) ? 'u' : undefined;
+  return $(v).attr(identifiers.actions.regex).call($.regexp(schema.pattern, flags));
 }
 
 function stringResolver(ctx: StringResolverContext): Pipes {
