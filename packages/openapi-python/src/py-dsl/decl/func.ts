@@ -7,11 +7,11 @@ import { DecoratorMixin } from '../mixins/decorator';
 import { DoMixin } from '../mixins/do';
 import { DocMixin } from '../mixins/doc';
 import { LayoutMixin } from '../mixins/layout';
-import { AsyncMixin, ModifiersMixin } from '../mixins/modifiers';
+import { AsyncMixin, ExportMixin } from '../mixins/modifiers';
 import { safeRuntimeName } from '../utils/name';
 
-const Mixed = DecoratorMixin(
-  DocMixin(DoMixin(LayoutMixin(AsyncMixin(ModifiersMixin(PyDsl<py.FunctionDeclaration>))))),
+const Mixed = AsyncMixin(
+  DecoratorMixin(DocMixin(DoMixin(ExportMixin(LayoutMixin(PyDsl<py.FunctionDeclaration>))))),
 );
 
 export class FuncPyDsl extends Mixed {

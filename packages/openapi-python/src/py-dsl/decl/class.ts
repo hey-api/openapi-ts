@@ -7,11 +7,12 @@ import { NewlinePyDsl } from '../layout/newline';
 import { DecoratorMixin } from '../mixins/decorator';
 import { DocMixin } from '../mixins/doc';
 import { LayoutMixin } from '../mixins/layout';
+import { ExportMixin } from '../mixins/modifiers';
 import { safeRuntimeName } from '../utils/name';
 
 type Body = Array<MaybePyDsl<py.Statement>>;
 
-const Mixed = DecoratorMixin(DocMixin(LayoutMixin(PyDsl<py.ClassDeclaration>)));
+const Mixed = DecoratorMixin(DocMixin(ExportMixin(LayoutMixin(PyDsl<py.ClassDeclaration>))));
 
 export class ClassPyDsl extends Mixed {
   readonly '~dsl' = 'ClassPyDsl';
