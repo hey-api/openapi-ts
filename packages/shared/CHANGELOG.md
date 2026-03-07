@@ -1,5 +1,11 @@
 # @hey-api/shared
 
+## 0.2.3
+
+### Patch Changes
+
+- **internal**: export more IR types ([#3513](https://github.com/hey-api/openapi-ts/pull/3513)) ([`ffe68cd`](https://github.com/hey-api/openapi-ts/commit/ffe68cd4303c39e71152f36c2057165468e64308)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
 ## 0.2.2
 
 ### Patch Changes

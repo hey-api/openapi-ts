@@ -1,5 +1,17 @@
 # @hey-api/openapi-ts
 
+## 0.94.1
+
+### Patch Changes
+
+- **dsl**: expand list of JavaScript globals ([#3508](https://github.com/hey-api/openapi-ts/pull/3508)) ([`1e00a69`](https://github.com/hey-api/openapi-ts/commit/1e00a6983eaa56acaf98663310fb9e3122d1d575)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@hey-api/transformers)**: fix: support `anyOf` schema with null ([#3504](https://github.com/hey-api/openapi-ts/pull/3504)) ([`4b6b398`](https://github.com/hey-api/openapi-ts/commit/4b6b398c59746167b93857f6ab475a7a88ddbcd4)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+### Updated Dependencies:
+
+- @hey-api/shared@0.2.3
+
 ## 0.94.0
 
 ### Minor Changes
