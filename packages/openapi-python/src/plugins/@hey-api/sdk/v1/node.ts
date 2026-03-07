@@ -100,7 +100,7 @@ export function createShell(plugin: HeyApiSdkPlugin['Instance']): StructureShell
 
       const symbolClient = plugin.external('client.Client');
 
-      const c = $.class(symbol).extends(symbolClient);
+      const c = $.class(symbol).export().extends(symbolClient);
 
       const dependencies: Array<ReturnType<typeof $.class>> = [];
 
@@ -137,8 +137,7 @@ export function toNode(
         String(item.location[item.location.length - 1]),
         plugin.config.operations.methodName,
       );
-      const node = $.func(fnName);
-      node.do($.return($.id('None')));
+      const node = $.func(fnName).export().do($('None').return());
       nodes.push(node);
     }
     return { nodes };

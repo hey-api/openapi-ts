@@ -34,7 +34,7 @@ function modifierToKind(modifier: Modifier): py.Expression {
   }
 }
 
-export function ModifiersMixin<T extends py.Node, TBase extends BaseCtor<T>>(Base: TBase) {
+function ModifiersMixin<T extends py.Node, TBase extends BaseCtor<T>>(Base: TBase) {
   abstract class Modifiers extends Base {
     protected modifiers: Array<py.Expression> = [];
 
@@ -83,4 +83,39 @@ export function AsyncMixin<T extends py.Node, TBase extends BaseCtor<T>>(Base: T
   }
 
   return Async as unknown as MixinCtor<TBase, AsyncMethods>;
+}
+
+export interface ExportMethods extends Modifiers {
+  /**
+   * Adds the `export` keyword modifier if the condition is true.
+   *
+   * @param condition - Whether to add the modifier (default: true).
+   * @returns The target object for chaining.
+   */
+  export(condition?: boolean): this;
+}
+
+/**
+ * Mixin that adds an `export` modifier to a node.
+ */
+export function ExportMixin<T extends py.Node, TBase extends BaseCtor<T>>(Base: TBase) {
+  const Mixed = ModifiersMixin(Base as BaseCtor<T>);
+
+  abstract class Export extends Mixed {
+    /**
+     * Adds the `export` keyword modifier if the condition is true.
+     *
+     * @param condition - Whether to add the modifier (default: true).
+     * @returns The target object for chaining.
+     */
+    protected export(condition?: boolean): this {
+      const cond = arguments.length === 0 ? true : Boolean(condition);
+      this.exported = cond;
+      // TODO: remove this side-effect once planner handles exported flag
+      if (this.symbol) this.symbol.setExported(cond);
+      return this;
+    }
+  }
+
+  return Export as unknown as MixinCtor<TBase, ExportMethods>;
 }
