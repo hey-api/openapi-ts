@@ -4,6 +4,25 @@ export type ClientOptions = {
     baseUrl: `${string}://${string}` | (string & {});
 };
 
+export type GetFooData = {
+    body?: never;
+    path?: never;
+    query?: {
+        filter?: {
+            name?: string;
+            active?: boolean;
+        };
+    };
+    url: '/foo';
+};
+
+export type GetFooResponses = {
+    /**
+     * OK
+     */
+    default: unknown;
+};
+
 export type PostFooData = {
     body?: never;
     path?: never;

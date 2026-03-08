@@ -6,6 +6,34 @@
   },
   "paths": {
     "/foo": {
+      "get": {
+        "parameters": [
+          {
+            "name": "filter",
+            "in": "query",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "active": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "OK"
+          }
+        }
+      },
       "post": {
         "parameters": [
           {
