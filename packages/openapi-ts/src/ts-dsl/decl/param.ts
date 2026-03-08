@@ -9,10 +9,10 @@ import { ValueMixin } from '../mixins/value';
 import { TokenTsDsl } from '../token';
 import { TypeExprTsDsl } from '../type/expr';
 
-export type ParamCtor = (
-  name: NodeName | ((p: ParamTsDsl) => void),
-  fn?: (p: ParamTsDsl) => void,
-) => ParamTsDsl;
+export type ParamName = NodeName | ParamFn;
+export type ParamFn = (p: ParamTsDsl) => void;
+
+export type ParamCtor = (name: ParamName, fn?: ParamFn) => ParamTsDsl;
 
 const Mixed = DecoratorMixin(
   OptionalMixin(PatternMixin(ValueMixin(TsDsl<ts.ParameterDeclaration>))),
@@ -23,7 +23,7 @@ export class ParamTsDsl extends Mixed {
 
   protected _type?: TypeTsDsl;
 
-  constructor(name: NodeName | ((p: ParamTsDsl) => void), fn?: (p: ParamTsDsl) => void) {
+  constructor(name: ParamName, fn?: ParamFn) {
     super();
     if (typeof name === 'function') {
       name(this);

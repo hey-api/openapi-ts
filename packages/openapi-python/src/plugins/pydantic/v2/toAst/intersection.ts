@@ -1,6 +1,6 @@
 import type { IR } from '@hey-api/shared';
 
-import type { AnnotationExpr } from '../../../../py-dsl';
+import type { VarType } from '../../../../py-dsl';
 import type {
   PydanticField,
   PydanticFinal,
@@ -37,7 +37,7 @@ export function intersectionToType({
     return {
       childResults,
       fieldConstraints: constraints,
-      typeAnnotation: plugin.external('typing.Any'),
+      type: plugin.external('typing.Any'),
     };
   }
 
@@ -47,7 +47,7 @@ export function intersectionToType({
       childResults,
       fieldConstraints: { ...constraints, ...finalResult.fieldConstraints },
       mergedFields: finalResult.fields,
-      typeAnnotation: finalResult.typeAnnotation,
+      type: finalResult.type,
     };
   }
 
@@ -59,7 +59,7 @@ export function intersectionToType({
     const finalResult = applyModifiers(result);
 
     // TODO: replace
-    const typeStr = String(finalResult.typeAnnotation);
+    const typeStr = String(finalResult.type);
     const isReference =
       !finalResult.fields &&
       typeStr !== '' &&
@@ -84,15 +84,15 @@ export function intersectionToType({
     }
   }
 
-  let typeAnnotation: AnnotationExpr;
+  let type: VarType;
 
   if (baseClasses.length > 0 && mergedFields.length === 0) {
-    typeAnnotation = baseClasses[0]!;
+    type = baseClasses[0]!;
   } else if (mergedFields.length > 0) {
     // TODO: replace
-    typeAnnotation = '__INTERSECTION_PLACEHOLDER__';
+    type = '__INTERSECTION_PLACEHOLDER__';
   } else {
-    typeAnnotation = plugin.external('typing.Any');
+    type = plugin.external('typing.Any');
   }
 
   return {
@@ -100,6 +100,6 @@ export function intersectionToType({
     childResults,
     fieldConstraints: constraints,
     mergedFields: mergedFields.length > 0 ? mergedFields : undefined,
-    typeAnnotation,
+    type,
   };
 }

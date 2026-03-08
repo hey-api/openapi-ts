@@ -27,7 +27,7 @@ async function run() {
   sdk.tui.publish({
     body: {
       properties: {
-        message: 'Hello from Hey API OpenAPI TS Playground!',
+        message: 'Hello from Hey API OpenAPI TypeScript Playground!',
         variant: 'success',
       },
       type: 'tui.toast.show',

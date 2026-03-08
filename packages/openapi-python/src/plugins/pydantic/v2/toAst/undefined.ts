@@ -9,6 +9,6 @@ export function undefinedToType(args: {
   schema: SchemaWithType<'undefined'>;
 }): PydanticType {
   return {
-    typeAnnotation: 'None',
+    type: 'None',
   };
 }

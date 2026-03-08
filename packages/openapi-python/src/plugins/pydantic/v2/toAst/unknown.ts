@@ -10,6 +10,6 @@ export function unknownToType({
   schema: SchemaWithType<'unknown'>;
 }): PydanticType {
   return {
-    typeAnnotation: plugin.external('typing.Any'),
+    type: plugin.external('typing.Any'),
   };
 }

@@ -43,7 +43,7 @@ export function arrayToType(ctx: ArrayToTypeContext): ArrayToTypeResult {
     return {
       childResults,
       fieldConstraints: constraints,
-      typeAnnotation: $(list).slice(any),
+      type: $(list).slice(any),
     };
   }
 
@@ -60,23 +60,23 @@ export function arrayToType(ctx: ArrayToTypeContext): ArrayToTypeResult {
     return {
       childResults,
       fieldConstraints: constraints,
-      typeAnnotation: $(list).slice(itemResult.typeAnnotation ?? any),
+      type: $(list).slice(itemResult.type ?? any),
     };
   }
 
   if (childResults.length > 1) {
     const union = plugin.external('typing.Union');
-    const itemTypes = childResults.map((r) => ctx.applyModifiers(r).typeAnnotation ?? any);
+    const itemTypes = childResults.map((r) => ctx.applyModifiers(r).type ?? any);
     return {
       childResults,
       fieldConstraints: constraints,
-      typeAnnotation: $(list).slice($(union).slice(...itemTypes)),
+      type: $(list).slice($(union).slice(...itemTypes)),
     };
   }
 
   return {
     childResults,
     fieldConstraints: constraints,
-    typeAnnotation: $(list).slice(any),
+    type: $(list).slice(any),
   };
 }
