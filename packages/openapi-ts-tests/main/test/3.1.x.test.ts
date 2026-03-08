@@ -686,6 +686,15 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'parameter-content-query-json.json',
+        output: 'parameter-content-query-json',
+        plugins: ['@hey-api/client-fetch', '@hey-api/sdk'],
+      }),
+      description:
+        'does not generate style-based query serializer options for content query parameters',
+    },
+    {
+      config: createConfig({
         input: 'parameter-tuple.json',
         output: 'parameter-tuple',
       }),

@@ -66,6 +66,10 @@ export interface IRParameterObject
    */
   allowReserved?: boolean;
   /**
+   * Media type used when parameter is defined via OpenAPI `content`.
+   */
+  contentType?: string;
+  /**
    * When this is true, property values of type `array` or `object` generate separate parameters for each value of the array, or key-value-pair of the map. For other types of properties this property has no effect. When `style` is `form`, the default value is `true`. For all other styles, the default value is `false`. This property SHALL be ignored if the request body media type is not `application/x-www-form-urlencoded` or `multipart/form-data`. If a value is explicitly defined, then the value of `contentType` (implicit or explicit) SHALL be ignored.
    */
   explode: boolean;
