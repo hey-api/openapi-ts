@@ -9,6 +9,6 @@ export function voidToType(args: {
   schema: SchemaWithType<'void'>;
 }): PydanticType {
   return {
-    typeAnnotation: 'None',
+    type: 'None',
   };
 }

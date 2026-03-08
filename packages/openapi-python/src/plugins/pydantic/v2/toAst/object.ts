@@ -1,7 +1,7 @@
 import type { SchemaVisitorContext, SchemaWithType, Walker } from '@hey-api/shared';
 import { childContext, toCase } from '@hey-api/shared';
 
-import { $, type AnnotationExpr } from '../../../../py-dsl';
+import { $, type VarType } from '../../../../py-dsl';
 import { safeRuntimeName } from '../../../../py-dsl/utils/name';
 import type { PydanticField, PydanticFinal, PydanticResult } from '../../shared/types';
 import type { PydanticPlugin } from '../../types';
@@ -15,13 +15,11 @@ interface ObjectResolverContext {
   walkerCtx: SchemaVisitorContext<PydanticPlugin['Instance']>;
 }
 
-export interface ObjectToFieldsResult extends Pick<PydanticResult, 'fields' | 'typeAnnotation'> {
+export interface ObjectToFieldsResult extends Pick<PydanticResult, 'fields' | 'type'> {
   childResults: Array<PydanticResult>;
 }
 
-function resolveAdditionalProperties(
-  ctx: ObjectResolverContext,
-): AnnotationExpr | null | undefined {
+function resolveAdditionalProperties(ctx: ObjectResolverContext): VarType | null | undefined {
   const { schema } = ctx;
 
   if (!schema.additionalProperties || !schema.additionalProperties.type) return undefined;
@@ -33,7 +31,7 @@ function resolveAdditionalProperties(
   );
   ctx._childResults.push(result);
 
-  return result.typeAnnotation;
+  return result.type;
 }
 
 function resolveFields(ctx: ObjectResolverContext): Array<PydanticField> {
@@ -54,7 +52,7 @@ function resolveFields(ctx: ObjectResolverContext): Array<PydanticField> {
       isOptional,
       name: ctx.plugin.symbol(snakeCaseName),
       originalName: name,
-      typeAnnotation: final.typeAnnotation,
+      type: final.type,
     });
   }
 
@@ -74,9 +72,9 @@ function objectResolver(ctx: ObjectResolverContext): Omit<ObjectToFieldsResult, 
   if (additional) {
     const any = ctx.plugin.external('typing.Any');
     if (!ctx.schema.properties) {
-      return { typeAnnotation: $('dict').slice('str', any) };
+      return { type: $('dict').slice('str', any) };
     }
-    return { typeAnnotation: $('dict').slice('str', any) };
+    return { type: $('dict').slice('str', any) };
   }
 
   // additionalProperties with properties → class wins, additional props ignored for now
@@ -87,7 +85,7 @@ function objectResolver(ctx: ObjectResolverContext): Omit<ObjectToFieldsResult, 
   }
 
   const any = ctx.plugin.external('typing.Any');
-  return { typeAnnotation: $('dict').slice('str', any) };
+  return { type: $('dict').slice('str', any) };
 }
 
 export function objectToFields(

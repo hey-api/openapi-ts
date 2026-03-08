@@ -8,18 +8,21 @@ import { DoMixin } from '../mixins/do';
 import { DocMixin } from '../mixins/doc';
 import { LayoutMixin } from '../mixins/layout';
 import { AsyncMixin, ExportMixin } from '../mixins/modifiers';
+import { ParamMixin } from '../mixins/param';
+import { ReturnsMixin } from '../mixins/returns';
 import { safeRuntimeName } from '../utils/name';
 
 const Mixed = AsyncMixin(
-  DecoratorMixin(DocMixin(DoMixin(ExportMixin(LayoutMixin(PyDsl<py.FunctionDeclaration>))))),
+  DecoratorMixin(
+    DocMixin(
+      DoMixin(ExportMixin(LayoutMixin(ParamMixin(ReturnsMixin(PyDsl<py.FunctionDeclaration>))))),
+    ),
+  ),
 );
 
 export class FuncPyDsl extends Mixed {
   readonly '~dsl' = 'FuncPyDsl';
   override readonly nameSanitizer = safeRuntimeName;
-
-  protected _parameters: Array<py.FunctionParameter> = [];
-  protected _returnType?: NodeName | py.Expression;
 
   constructor(name: NodeName, fn?: (f: FuncPyDsl) => void) {
     super();
@@ -38,10 +41,6 @@ export class FuncPyDsl extends Mixed {
     } finally {
       ctx.popScope();
     }
-    for (const param of this._parameters) {
-      ctx.analyze(param);
-    }
-    ctx.analyze(this._returnType);
   }
 
   /** Returns true when all required builder calls are present. */
@@ -49,25 +48,12 @@ export class FuncPyDsl extends Mixed {
     return this.missingRequiredCalls().length === 0;
   }
 
-  param(name: string, configure?: (p: py.FunctionParameter) => void): this {
-    const param = py.factory.createFunctionParameter(name, undefined, undefined, undefined);
-    if (configure) configure(param);
-    this._parameters.push(param);
-    return this;
-  }
-
-  returns(returnType: NodeName | py.Expression): this {
-    this._returnType =
-      typeof returnType === 'string' ? py.factory.createIdentifier(returnType) : returnType;
-    return this;
-  }
-
   override toAst() {
     this.$validate();
     return py.factory.createFunctionDeclaration(
       this.name.toString(),
-      this._parameters,
-      this.$node(this._returnType),
+      this.$params(),
+      this.$returns(),
       this.$do(),
       this.$decorators(),
       this.$docs(),

@@ -6,16 +6,16 @@ import { ClassPyDsl } from './decl/class';
 // import { EnumPyDsl } from './decl/enum';
 // import { FieldPyDsl } from './decl/field';
 import { FuncPyDsl } from './decl/func';
-import { AttrPyDsl } from './expr/attr';
+import { ParamPyDsl } from './decl/param';
 // import { GetterPyDsl } from './decl/getter';
 // import { InitPyDsl } from './decl/init';
 // import { EnumMemberPyDsl } from './decl/member';
 // import { MethodPyDsl } from './decl/method';
-// import { ParamPyDsl } from './decl/param';
 // import { PatternPyDsl } from './decl/pattern';
 // import { SetterPyDsl } from './decl/setter';
 // import { ArrayPyDsl } from './expr/array';
 // import { AsPyDsl } from './expr/as';
+import { AttrPyDsl } from './expr/attr';
 // import { AwaitPyDsl } from './expr/await';
 import { BinaryPyDsl } from './expr/binary';
 import { CallPyDsl } from './expr/call';
@@ -185,7 +185,7 @@ const pyDsl = {
   // object: (...args: ConstructorParameters<typeof ObjectTsDsl>) => new ObjectTsDsl(...args),
 
   /** Creates a parameter declaration for functions or methods. */
-  // param: (...args: ConstructorParameters<typeof ParamTsDsl>) => new ParamTsDsl(...args),
+  param: (...args: ConstructorParameters<typeof ParamPyDsl>) => new ParamPyDsl(...args),
 
   /** Creates a pattern for destructuring or matching. */
   // pattern: (...args: ConstructorParameters<typeof PatternTsDsl>) => new PatternTsDsl(...args),
@@ -320,7 +320,7 @@ export type { MaybePyDsl } from './base';
 // export type { MaybePyDsl, TypePyDsl } from './base';
 export { PyDsl } from './base';
 export type { CallArgs } from './expr/call';
-export type { AnnotationExpr } from './stmt/var';
+export type { VarType } from './stmt/var';
 export type { ExampleOptions } from './utils/context';
 export { ctx, PyDslContext } from './utils/context';
 export { keywords } from './utils/keywords';

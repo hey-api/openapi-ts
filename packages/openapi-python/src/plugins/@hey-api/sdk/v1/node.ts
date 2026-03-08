@@ -10,6 +10,7 @@ import { applyNaming, toCase } from '@hey-api/shared';
 
 import { $ } from '../../../../py-dsl';
 import { createOperationComment } from '../../../shared/utils/operation';
+import { operationParameters } from '../shared/operation';
 import type { HeyApiSdkPlugin } from '../types';
 
 export interface OperationItem {
@@ -114,13 +115,15 @@ function implementFn<T extends ReturnType<typeof $.func>>(args: {
   operation: IR.OperationObject;
   plugin: HeyApiSdkPlugin['Instance'];
 }): T {
-  const { node, operation } = args;
-
-  const method = operation.method?.toLowerCase() || 'get';
-
-  node.do($('self').attr('client').attr(method).call($.literal(operation.path)).return());
-
-  return node;
+  const { node, operation, plugin } = args;
+  const method = operation.method.toLowerCase();
+  const opParameters = operationParameters({ operation, plugin });
+  return (
+    node
+      .params(...opParameters.parameters)
+      // TODO: extract operation statements into a separate function
+      .do($('self').attr('client').attr(method).call($.literal(operation.path)).return()) as T
+  );
 }
 
 export function toNode(
