@@ -83,7 +83,7 @@ export function enumToType({
     return {
       enumMembers,
       isNullable,
-      typeAnnotation: plugin.external('typing.Any'),
+      type: plugin.external('typing.Any'),
     };
   }
 
@@ -91,7 +91,7 @@ export function enumToType({
     return {
       enumMembers,
       isNullable,
-      typeAnnotation: toLiteralType(enumMembers, plugin),
+      type: toLiteralType(enumMembers, plugin),
     };
   }
 

@@ -17,7 +17,7 @@ export function numberToType({
   if (typeof schema.const === 'number') {
     const literal = plugin.external('typing.Literal');
     return {
-      typeAnnotation: $(literal).slice($.literal(schema.const)),
+      type: $(literal).slice($.literal(schema.const)),
     };
   }
 
@@ -43,6 +43,6 @@ export function numberToType({
 
   return {
     fieldConstraints: constraints,
-    typeAnnotation: schema.type === 'integer' ? 'int' : 'float',
+    type: schema.type === 'integer' ? 'int' : 'float',
   };
 }

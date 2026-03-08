@@ -5,6 +5,8 @@ export interface PyPrinterOptions {
   indentSize?: number;
 }
 
+const PARAMS_MULTILINE_THRESHOLD = 3;
+
 export function createPrinter(options?: PyPrinterOptions) {
   const indentSize = options?.indentSize ?? 4;
 
@@ -178,16 +180,31 @@ export function createPrinter(options?: PyPrinterOptions) {
         }
         const modifiers = node.modifiers?.map(printNode).join(' ') ?? '';
         const defPrefix = modifiers ? `${modifiers} def` : 'def';
-        const parameters = node.parameters.map((parameter) => {
+        const formatParameter = (parameter: (typeof node.parameters)[number]): string => {
           const children: Array<string> = [parameter.name];
           if (parameter.annotation) children.push(`: ${printNode(parameter.annotation)}`);
           if (parameter.defaultValue) children.push(` = ${printNode(parameter.defaultValue)}`);
           return children.join('');
-        });
+        };
         const returnAnnotation = node.returnType ? ` -> ${printNode(node.returnType)}` : '';
-        parts.push(
-          printLine(`${defPrefix} ${node.name}(${parameters.join(', ')})${returnAnnotation}:`),
-        );
+        const preParams = `${defPrefix} ${node.name}(`;
+        const postParams = `)${returnAnnotation}:`;
+
+        if (node.parameters.length > PARAMS_MULTILINE_THRESHOLD) {
+          parts.push(printLine(preParams));
+          indentLevel += 1;
+          const params = node.parameters.map((parameter) =>
+            printLine(`${formatParameter(parameter)},`),
+          );
+          parts.push(...params);
+          indentLevel -= 1;
+          parts.push(printLine(postParams));
+        } else {
+          const parameters = node.parameters.map((parameter) => formatParameter(parameter));
+          const params = parameters.join(', ');
+          parts.push(printLine(`${preParams}${params}${postParams}`));
+        }
+
         if (node.docstring) {
           indentLevel += 1;
           parts.push(...printDocstring(node.docstring));

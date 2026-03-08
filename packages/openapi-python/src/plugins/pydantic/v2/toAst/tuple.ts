@@ -1,7 +1,7 @@
 import type { SchemaVisitorContext, SchemaWithType, Walker } from '@hey-api/shared';
 import { childContext } from '@hey-api/shared';
 
-import { $, type AnnotationExpr } from '../../../../py-dsl';
+import { $, type VarType } from '../../../../py-dsl';
 import type { PydanticFinal, PydanticResult, PydanticType } from '../../shared/types';
 import type { PydanticPlugin } from '../../types';
 import type { FieldConstraints } from '../constants';
@@ -34,11 +34,11 @@ export function tupleToType(ctx: TupleToTypeContext): TupleToTypeResult {
     return {
       childResults,
       fieldConstraints: constraints,
-      typeAnnotation: $(tuple).slice(),
+      type: $(tuple).slice(),
     };
   }
 
-  const itemTypes: Array<AnnotationExpr> = [];
+  const itemTypes: Array<VarType> = [];
 
   for (let i = 0; i < schema.items.length; i++) {
     const item = schema.items[i]!;
@@ -46,8 +46,8 @@ export function tupleToType(ctx: TupleToTypeContext): TupleToTypeResult {
     childResults.push(result);
 
     const finalResult = applyModifiers(result);
-    if (finalResult.typeAnnotation !== undefined) {
-      itemTypes.push(finalResult.typeAnnotation);
+    if (finalResult.type !== undefined) {
+      itemTypes.push(finalResult.type);
     }
   }
 
@@ -55,13 +55,13 @@ export function tupleToType(ctx: TupleToTypeContext): TupleToTypeResult {
     return {
       childResults,
       fieldConstraints: constraints,
-      typeAnnotation: $(tuple).slice(any, '...'),
+      type: $(tuple).slice(any, '...'),
     };
   }
 
   return {
     childResults,
     fieldConstraints: constraints,
-    typeAnnotation: $(tuple).slice(...itemTypes),
+    type: $(tuple).slice(...itemTypes),
   };
 }

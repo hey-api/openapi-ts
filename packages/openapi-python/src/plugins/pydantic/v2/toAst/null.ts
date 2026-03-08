@@ -9,6 +9,6 @@ export function nullToType(args: {
   schema: SchemaWithType<'null'>;
 }): PydanticType {
   return {
-    typeAnnotation: 'None',
+    type: 'None',
   };
 }

@@ -17,7 +17,7 @@ export function stringToType({
   if (typeof schema.const === 'string') {
     const literal = plugin.external('typing.Literal');
     return {
-      typeAnnotation: $(literal).slice($.literal(schema.const)),
+      type: $(literal).slice($.literal(schema.const)),
     };
   }
 
@@ -39,6 +39,6 @@ export function stringToType({
 
   return {
     fieldConstraints: constraints,
-    typeAnnotation: 'str',
+    type: 'str',
   };
 }
