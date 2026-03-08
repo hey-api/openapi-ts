@@ -25,6 +25,7 @@
     "**/openapi-ts-tests/**/.gen": true,
     "**/*.tsbuildinfo": true
   },
+  "typescript.experimental.useTsgo": true,
   "typescript.preferences.autoImportFileExcludePatterns": ["dist/**"],
   "typescript.preferences.autoImportSpecifierExcludeRegexes": ["^(node:)?os$"],
   "typescript.tsdk": "node_modules/typescript/lib",
