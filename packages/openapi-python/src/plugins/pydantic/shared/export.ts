@@ -100,7 +100,7 @@ function createFieldStatement(
   plugin: PydanticPlugin['Instance'],
 ): ReturnType<typeof $.var> {
   const fieldSymbol = field.name;
-  const varStatement = $.var(fieldSymbol).$if(field.typeAnnotation, (v, a) => v.annotate(a));
+  const varStatement = $.var(fieldSymbol).$if(field.type, (v, a) => v.type(a));
 
   const originalName = field.originalName ?? fieldSymbol.name;
   const needsAlias = field.originalName !== undefined && fieldSymbol.name !== originalName;
@@ -135,7 +135,7 @@ function exportTypeAlias({
 }): void {
   const typeAlias = plugin.external('typing.TypeAlias');
   const statement = $.var(symbol)
-    .annotate(typeAlias)
-    .assign(final.typeAnnotation ?? plugin.external('typing.Any'));
+    .type(typeAlias)
+    .assign(final.type ?? plugin.external('typing.Any'));
   plugin.node(statement);
 }

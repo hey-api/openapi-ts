@@ -1,5 +1,6 @@
 import type { PyClassDeclaration } from './declarations/class';
 import type { PyFunctionDeclaration } from './declarations/function';
+import type { PyFunctionParameter } from './declarations/functionParameter';
 import type { PyAssignment } from './statements/assignment';
 import type { PyAugmentedAssignment } from './statements/augmentedAssignment';
 import type { PyBreakStatement } from './statements/break';
@@ -27,6 +28,7 @@ export type PyStatement =
   | PyExpressionStatement
   | PyForStatement
   | PyFunctionDeclaration
+  | PyFunctionParameter
   | PyIfStatement
   | PyImportStatement
   | PyRaiseStatement

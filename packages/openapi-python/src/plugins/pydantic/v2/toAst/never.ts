@@ -10,6 +10,6 @@ export function neverToType({
   schema: SchemaWithType<'never'>;
 }): PydanticType {
   return {
-    typeAnnotation: plugin.external('typing.NoReturn'),
+    type: plugin.external('typing.NoReturn'),
   };
 }

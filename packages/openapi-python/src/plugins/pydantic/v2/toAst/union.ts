@@ -31,7 +31,7 @@ export function unionToType({
   let isNullable = false;
 
   for (const result of childResults) {
-    if (result.typeAnnotation === 'None') {
+    if (result.type === 'None') {
       isNullable = true;
     } else {
       nonNullResults.push(result);
@@ -45,7 +45,7 @@ export function unionToType({
       childResults,
       fieldConstraints: constraints,
       isNullable: true,
-      typeAnnotation: 'None',
+      type: 'None',
     };
   }
 
@@ -55,13 +55,13 @@ export function unionToType({
       childResults,
       fieldConstraints: { ...constraints, ...finalResult.fieldConstraints },
       isNullable,
-      typeAnnotation: finalResult.typeAnnotation,
+      type: finalResult.type,
     };
   }
 
   const union = plugin.external('typing.Union');
   const itemTypes = nonNullResults.map(
-    (r) => applyModifiers(r).typeAnnotation ?? plugin.external('typing.Any'),
+    (r) => applyModifiers(r).type ?? plugin.external('typing.Any'),
   );
 
   if (isNullable) {
@@ -72,6 +72,6 @@ export function unionToType({
     childResults,
     fieldConstraints: constraints,
     isNullable,
-    typeAnnotation: $(union).slice(...itemTypes),
+    type: $(union).slice(...itemTypes),
   };
 }

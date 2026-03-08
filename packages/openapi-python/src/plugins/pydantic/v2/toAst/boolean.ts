@@ -14,11 +14,11 @@ export function booleanToType({
   if (typeof schema.const === 'boolean') {
     const literal = plugin.external('typing.Literal');
     return {
-      typeAnnotation: $(literal).slice($.literal(schema.const)),
+      type: $(literal).slice($.literal(schema.const)),
     };
   }
 
   return {
-    typeAnnotation: 'bool',
+    type: 'bool',
   };
 }

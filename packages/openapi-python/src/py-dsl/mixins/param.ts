@@ -1,23 +1,23 @@
 import type { AnalysisContext, Node } from '@hey-api/codegen-core';
-import type ts from 'typescript';
 
-import type { MaybeTsDsl } from '../base';
+import type { py } from '../../ts-python';
+import type { MaybePyDsl } from '../base';
 import type { ParamCtor, ParamFn, ParamName } from '../decl/param';
-import { ParamTsDsl } from '../decl/param';
+import { ParamPyDsl } from '../decl/param';
 import type { BaseCtor, MixinCtor } from './types';
 
 export interface ParamMethods extends Node {
-  /** Renders the parameters into an array of `ParameterDeclaration`s. */
-  $params(): ReadonlyArray<ts.ParameterDeclaration>;
+  /** Renders the parameters into an array of `FunctionParameter`s. */
+  $params(): ReadonlyArray<py.FunctionParameter>;
   /** Adds a parameter. */
   param(...args: Parameters<ParamCtor>): this;
   /** Adds multiple parameters. */
-  params(...params: ReadonlyArray<MaybeTsDsl<ts.ParameterDeclaration>>): this;
+  params(...params: ReadonlyArray<MaybePyDsl<py.FunctionParameter>>): this;
 }
 
-export function ParamMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base: TBase) {
+export function ParamMixin<T extends py.Node, TBase extends BaseCtor<T>>(Base: TBase) {
   abstract class Param extends Base {
-    protected _params: Array<MaybeTsDsl<ts.ParameterDeclaration>> = [];
+    protected _params: Array<MaybePyDsl<py.FunctionParameter>> = [];
 
     override analyze(ctx: AnalysisContext): void {
       super.analyze(ctx);
@@ -27,17 +27,17 @@ export function ParamMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base: T
     }
 
     protected param(name: ParamName, fn?: ParamFn): this {
-      const p = new ParamTsDsl(name, fn);
+      const p = typeof name === 'function' ? new ParamPyDsl(name) : new ParamPyDsl(name, fn);
       this._params.push(p);
       return this;
     }
 
-    protected params(...params: ReadonlyArray<MaybeTsDsl<ts.ParameterDeclaration>>): this {
+    protected params(...params: ReadonlyArray<MaybePyDsl<py.FunctionParameter>>): this {
       this._params.push(...params);
       return this;
     }
 
-    protected $params(): ReadonlyArray<ts.ParameterDeclaration> {
+    protected $params(): ReadonlyArray<py.FunctionParameter> {
       return this.$node(this._params);
     }
   }

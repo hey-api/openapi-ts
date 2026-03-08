@@ -41,12 +41,12 @@ export function createVisitor(
       const needsOptional = optional || hasDefault;
       const needsNullable = result.meta.nullable;
 
-      let typeAnnotation = result.typeAnnotation;
+      let type = result.type;
       const fieldConstraints = { ...result.fieldConstraints };
 
       if (needsOptional || needsNullable) {
         const optionalType = ctx.plugin.external('typing.Optional');
-        typeAnnotation = $(optionalType).slice(typeAnnotation ?? ctx.plugin.external('typing.Any'));
+        type = $(optionalType).slice(type ?? ctx.plugin.external('typing.Any'));
         if (needsOptional) {
           fieldConstraints.default = hasDefault ? result.meta.default : null;
         }
@@ -56,14 +56,14 @@ export function createVisitor(
         enumMembers: result.enumMembers,
         fieldConstraints,
         fields: result.fields,
-        typeAnnotation,
+        type,
       };
     },
     array(schema, ctx, walk) {
       const applyModifiers = (result: PydanticResult, opts?: { optional?: boolean }) =>
         this.applyModifiers(result, ctx, opts) as PydanticFinal;
 
-      const { childResults, fieldConstraints, typeAnnotation } = arrayToType({
+      const { childResults, fieldConstraints, type } = arrayToType({
         applyModifiers,
         plugin: ctx.plugin,
         schema,
@@ -74,7 +74,7 @@ export function createVisitor(
       return {
         fieldConstraints,
         meta: composeMeta(childResults, { ...defaultMeta(schema) }),
-        typeAnnotation,
+        type,
       };
     },
     boolean(schema, ctx) {
@@ -160,7 +160,7 @@ export function createVisitor(
       const applyModifiers = (result: PydanticResult, opts?: { optional?: boolean }) =>
         this.applyModifiers(result, ctx, opts) as PydanticFinal;
 
-      const { childResults, fields, typeAnnotation } = objectToFields({
+      const { childResults, fields, type } = objectToFields({
         applyModifiers,
         plugin: ctx.plugin,
         schema,
@@ -171,7 +171,7 @@ export function createVisitor(
       return {
         fields,
         meta: inheritMeta(schema, childResults),
-        typeAnnotation: typeAnnotation ?? '',
+        type: type ?? '',
       };
     },
     postProcess(result) {
@@ -193,7 +193,7 @@ export function createVisitor(
           ...defaultMeta(schema),
           hasForwardReference: !isRegistered,
         },
-        typeAnnotation: refSymbol,
+        type: refSymbol,
       };
     },
     string(schema, ctx) {
@@ -207,7 +207,7 @@ export function createVisitor(
       const applyModifiers = (result: PydanticResult, opts?: { optional?: boolean }) =>
         this.applyModifiers(result, ctx, opts) as PydanticFinal;
 
-      const { childResults, fieldConstraints, typeAnnotation } = tupleToType({
+      const { childResults, fieldConstraints, type } = tupleToType({
         applyModifiers,
         plugin: ctx.plugin,
         schema,
@@ -218,7 +218,7 @@ export function createVisitor(
       return {
         fieldConstraints,
         meta: composeMeta(childResults, { ...defaultMeta(schema) }),
-        typeAnnotation,
+        type,
       };
     },
     undefined(schema, ctx) {
