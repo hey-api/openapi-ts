@@ -10,10 +10,6 @@ export const presets = {
     zod({ metadata: true }),
     tanstackReactQuery({ queryKeys: { tags: true } }),
   ],
-  minimal: () => [
-    /** Just types, nothing else */
-    typescript(),
-  ],
   sdk: () => [
     /** SDK with types */
     typescript(),
@@ -30,6 +26,10 @@ export const presets = {
     typescript(),
     sdk(),
     tanstackReactQuery({ queryKeys: { tags: true } }),
+  ],
+  types: () => [
+    /** Just types, nothing else */
+    typescript(),
   ],
   validated: () => [
     /** SDK + Zod validation */

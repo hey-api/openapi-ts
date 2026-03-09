@@ -1,46 +1,41 @@
-import { fromRef, ref } from '@hey-api/codegen-core';
+import { ref } from '@hey-api/codegen-core';
 import type { SchemaWithType } from '@hey-api/shared';
+import type { Walker } from '@hey-api/shared';
 import { deduplicateSchema } from '@hey-api/shared';
 
-import type { MaybeTsDsl, TypeTsDsl } from '../../../../../ts-dsl';
 import { $ } from '../../../../../ts-dsl';
-import type { IrSchemaToAstOptions } from '../../shared/types';
-import { irSchemaToAst } from '../plugin';
+import type { HeyApiTypeScriptPlugin } from '../../shared/types';
+import type { TypeScriptResult } from '../../shared/types';
 
 export function arrayToAst({
   plugin,
   schema,
-  state,
-}: IrSchemaToAstOptions & {
+  walk,
+}: {
+  plugin: HeyApiTypeScriptPlugin['Instance'];
   schema: SchemaWithType<'array'>;
-}): TypeTsDsl {
+  walk: Walker<TypeScriptResult, HeyApiTypeScriptPlugin['Instance']>;
+}): TypeScriptResult['type'] {
   if (!schema.items) {
     return $.type('Array').generic($.type(plugin.config.topType));
   }
 
-  schema = deduplicateSchema({ detectFormat: true, schema });
-
-  const itemTypes: Array<MaybeTsDsl<TypeTsDsl>> = [];
-
-  if (schema.items) {
-    schema.items.forEach((item, index) => {
-      const type = irSchemaToAst({
-        plugin,
-        schema: item,
-        state: {
-          ...state,
-          path: ref([...fromRef(state.path), 'items', index]),
-        },
-      });
-      itemTypes.push(type);
-    });
+  const dedupedSchema = deduplicateSchema({ detectFormat: true, schema });
+  if (!dedupedSchema.items) {
+    return $.type('Array').generic($.type(plugin.config.topType));
   }
 
-  if (itemTypes.length === 1) {
-    return $.type('Array').generic(itemTypes[0]!);
+  const itemResults: Array<TypeScriptResult> = dedupedSchema.items.map((item) =>
+    walk(item, {
+      path: ref([]),
+      plugin,
+    }),
+  );
+  if (itemResults.length === 1) {
+    return $.type('Array').generic(itemResults[0]!.type);
   }
 
-  return schema.logicalOperator === 'and'
-    ? $.type('Array').generic($.type.and(...itemTypes))
-    : $.type('Array').generic($.type.or(...itemTypes));
+  return dedupedSchema.logicalOperator === 'and'
+    ? $.type('Array').generic($.type.and(...itemResults.map((r) => r.type)))
+    : $.type('Array').generic($.type.or(...itemResults.map((r) => r.type)));
 }

@@ -1,31 +1,28 @@
 import type { Symbol } from '@hey-api/codegen-core';
-import { fromRef } from '@hey-api/codegen-core';
 import type { IR } from '@hey-api/shared';
 import { applyNaming } from '@hey-api/shared';
 
 import { createSchemaComment } from '../../../../plugins/shared/utils/schema';
 import { $ } from '../../../../ts-dsl';
-import { irSchemaToAst } from '../v1/plugin';
-import type { IrSchemaToAstOptions } from './types';
+import { createProcessor } from '../v1/processor';
+import type { HeyApiTypeScriptPlugin } from './types';
 
-const operationToDataType = ({
+export function webhookToType({
   operation,
+  path,
   plugin,
-  state,
-}: IrSchemaToAstOptions & {
+  tags,
+}: {
   operation: IR.OperationObject;
-}): Symbol => {
-  const data: IR.SchemaObject = {
-    type: 'object',
-  };
-  const dataRequired: Array<string> = [];
-
-  if (!data.properties) {
-    data.properties = {};
-  }
+  path: ReadonlyArray<string | number>;
+  plugin: HeyApiTypeScriptPlugin['Instance'];
+  tags?: ReadonlyArray<string>;
+}): Symbol {
+  const processor = createProcessor(plugin);
+  let symbolWebhookPayload: Symbol | undefined;
 
   if (operation.body) {
-    const symbolWebhookPayload = plugin.symbol(
+    symbolWebhookPayload = plugin.symbol(
       applyNaming(operation.id, {
         case: plugin.config.webhooks.case,
         name: plugin.config.webhooks.payload,
@@ -33,80 +30,61 @@ const operationToDataType = ({
       {
         meta: {
           category: 'type',
-          path: fromRef(state.path),
+          path,
           resource: 'webhook',
           resourceId: operation.id,
-          role: 'data',
-          tags: fromRef(state.tags),
+          role: 'payload',
+          tags,
           tool: 'typescript',
         },
       },
     );
-    const node = $.type
+
+    const payloadResult = processor.process({
+      export: false,
+      meta: {
+        resource: 'webhook',
+        resourceId: operation.id,
+      },
+      naming: plugin.config.definitions,
+      path: [...path, operation.id, 'payload'],
+      plugin,
+      schema: operation.body.schema,
+    });
+
+    const payloadNode = $.type
       .alias(symbolWebhookPayload)
       .export()
       .$if(plugin.config.comments && createSchemaComment(operation.body.schema), (t, v) => t.doc(v))
-      .type(
-        irSchemaToAst({
-          plugin,
-          schema: operation.body.schema,
-          state,
-        }),
-      );
-    plugin.node(node);
-
-    data.properties.body = { symbolRef: symbolWebhookPayload };
-    dataRequired.push('body');
-  } else {
-    data.properties.body = { type: 'never' };
+      .type(payloadResult?.type ?? $.type('never'));
+    plugin.node(payloadNode);
   }
 
-  data.properties.key = {
-    const: operation.path,
-    type: 'string',
-  };
-  dataRequired.push('key');
+  const requestType = $.type
+    .object()
+    .prop('body', (p) =>
+      p
+        .required(Boolean(symbolWebhookPayload))
+        .type(symbolWebhookPayload ? $.type(symbolWebhookPayload) : $.type('never')),
+    )
+    .prop('key', (p) => p.required(true).type($.type.literal(operation.path)))
+    .prop('path', (p) => p.required(false).type($.type('never')))
+    .prop('query', (p) => p.required(false).type($.type('never')));
 
-  data.properties.path = { type: 'never' };
-  data.properties.query = { type: 'never' };
-
-  data.required = dataRequired;
-
-  const symbolWebhookRequest = plugin.symbol(applyNaming(operation.id, plugin.config.webhooks), {
+  const symbol = plugin.symbol(applyNaming(operation.id, plugin.config.webhooks), {
     meta: {
       category: 'type',
-      path: fromRef(state.path),
+      path,
       resource: 'webhook',
       resourceId: operation.id,
       role: 'data',
-      tags: fromRef(state.tags),
+      tags,
       tool: 'typescript',
     },
   });
-  const node = $.type
-    .alias(symbolWebhookRequest)
-    .export()
-    .type(
-      irSchemaToAst({
-        plugin,
-        schema: data,
-        state,
-      }),
-    );
+
+  const node = $.type.alias(symbol).export().type(requestType);
   plugin.node(node);
 
-  return symbolWebhookRequest;
-};
-
-export const webhookToType = ({
-  operation,
-  plugin,
-  state,
-}: IrSchemaToAstOptions & {
-  operation: IR.OperationObject;
-}): Symbol => {
-  const symbol = operationToDataType({ operation, plugin, state });
   return symbol;
-
-  // don't handle webhook responses for now, users only need requestBody
-};
+}
