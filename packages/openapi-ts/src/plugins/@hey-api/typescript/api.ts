@@ -1,22 +1,16 @@
 import type { IR } from '@hey-api/shared';
 
 import { $ } from '../../../ts-dsl';
-import type { TypeScriptResult } from './shared/types';
+import type { Type } from './shared/types';
 import type { HeyApiTypeScriptPlugin } from './types';
 import { createProcessor } from './v1/processor';
 
 export type IApi = {
-  schemaToType: (
-    plugin: HeyApiTypeScriptPlugin['Instance'],
-    schema: IR.SchemaObject,
-  ) => TypeScriptResult['type'];
+  schemaToType: (plugin: HeyApiTypeScriptPlugin['Instance'], schema: IR.SchemaObject) => Type;
 };
 
 export class Api implements IApi {
-  schemaToType(
-    plugin: HeyApiTypeScriptPlugin['Instance'],
-    schema: IR.SchemaObject,
-  ): TypeScriptResult['type'] {
+  schemaToType(plugin: HeyApiTypeScriptPlugin['Instance'], schema: IR.SchemaObject): Type {
     const processor = createProcessor(plugin);
     const result = processor.process({
       export: false,

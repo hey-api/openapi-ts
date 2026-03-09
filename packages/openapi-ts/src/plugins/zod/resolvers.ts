@@ -3,12 +3,12 @@ import type { IR, Plugin, SchemaVisitorContext, SchemaWithType, Walker } from '@
 import type { MaybeArray } from '@hey-api/types';
 import type ts from 'typescript';
 
-import type { MaybeBigInt, ShouldCoerceToBigInt } from '../../../plugins/shared/utils/coerce';
-import type { GetIntegerLimit } from '../../../plugins/shared/utils/formats';
-import type { $, DollarTsDsl, TsDsl } from '../../../ts-dsl';
-import type { Chain } from '../shared/chain';
-import type { Ast, IrSchemaToAstOptions, PluginState, ZodSchemaResult } from '../shared/types';
-import type { ZodPlugin } from '../types';
+import type { MaybeBigInt, ShouldCoerceToBigInt } from '../../plugins/shared/utils/coerce';
+import type { GetIntegerLimit } from '../../plugins/shared/utils/formats';
+import type { $, DollarTsDsl, TsDsl } from '../../ts-dsl';
+import type { Chain } from './shared/chain';
+import type { Ast, PluginState, ZodSchemaResult } from './shared/types';
+import type { ZodPlugin } from './types';
 
 export type Resolvers = Plugin.Resolvers<{
   /**
@@ -74,34 +74,35 @@ type ValidatorResolver = (
   ctx: ValidatorResolverContext,
 ) => MaybeArray<TsDsl<ts.Statement>> | null | undefined;
 
-type BaseContext = DollarTsDsl &
-  Pick<IrSchemaToAstOptions, 'plugin'> & {
+interface BaseContext extends DollarTsDsl {
+  /**
+   * Functions for working with chains.
+   */
+  chain: {
     /**
-     * Functions for working with chains.
+     * The current chain.
+     *
+     * In Zod, this represents a chain of call expressions ("chains")
+     * being assembled to form a schema definition.
+     *
+     * Each chain can be extended, modified, or replaced to customize
+     * the resulting schema.
      */
-    chain: {
-      /**
-       * The current chain.
-       *
-       * In Zod, this represents a chain of call expressions ("chains")
-       * being assembled to form a schema definition.
-       *
-       * Each chain can be extended, modified, or replaced to customize
-       * the resulting schema.
-       */
-      current: Chain;
-    };
-    /**
-     * Provides access to commonly used symbols within the plugin.
-     */
-    symbols: {
-      z: Symbol;
-    };
+    current: Chain;
   };
+  /** The plugin instance. */
+  plugin: ZodPlugin['Instance'];
+  /**
+   * Provides access to commonly used symbols within the plugin.
+   */
+  symbols: {
+    z: Symbol;
+  };
+}
 
 export interface EnumResolverContext extends BaseContext {
   /**
-   * Nodes used to build different parts of the enum schema.
+   * Nodes used to build different parts of the result.
    */
   nodes: {
     /**
@@ -142,7 +143,7 @@ export interface EnumResolverContext extends BaseContext {
 
 export interface NumberResolverContext extends BaseContext {
   /**
-   * Nodes used to build different parts of the number schema.
+   * Nodes used to build different parts of the result.
    */
   nodes: {
     base: (ctx: NumberResolverContext) => Chain;
@@ -166,7 +167,7 @@ export interface NumberResolverContext extends BaseContext {
 export interface ObjectResolverContext extends BaseContext {
   applyModifiers: (result: ZodSchemaResult, opts: { optional?: boolean }) => Ast;
   /**
-   * Nodes used to build different parts of the object schema.
+   * Nodes used to build different parts of the result.
    */
   nodes: {
     /**
@@ -191,7 +192,7 @@ export interface ObjectResolverContext extends BaseContext {
 
 export interface StringResolverContext extends BaseContext {
   /**
-   * Nodes used to build different parts of the string schema.
+   * Nodes used to build different parts of the result.
    */
   nodes: {
     base: (ctx: StringResolverContext) => Chain;

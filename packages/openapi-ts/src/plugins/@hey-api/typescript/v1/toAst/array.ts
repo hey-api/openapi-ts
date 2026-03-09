@@ -4,7 +4,7 @@ import type { Walker } from '@hey-api/shared';
 import { deduplicateSchema } from '@hey-api/shared';
 
 import { $ } from '../../../../../ts-dsl';
-import type { HeyApiTypeScriptPlugin } from '../../shared/types';
+import type { HeyApiTypeScriptPlugin, Type } from '../../shared/types';
 import type { TypeScriptResult } from '../../shared/types';
 
 export function arrayToAst({
@@ -15,7 +15,7 @@ export function arrayToAst({
   plugin: HeyApiTypeScriptPlugin['Instance'];
   schema: SchemaWithType<'array'>;
   walk: Walker<TypeScriptResult, HeyApiTypeScriptPlugin['Instance']>;
-}): TypeScriptResult['type'] {
+}): Type {
   if (!schema.items) {
     return $.type('Array').generic($.type(plugin.config.topType));
   }
