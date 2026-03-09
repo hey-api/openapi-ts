@@ -4,6 +4,8 @@ import type { MaybeTsDsl, TypeTsDsl } from '../../../../ts-dsl';
 
 export type { HeyApiTypeScriptPlugin } from '../types';
 
+export type Type = MaybeTsDsl<TypeTsDsl>;
+
 /**
  * Metadata that flows through schema walking.
  */
@@ -25,7 +27,7 @@ export interface TypeScriptEnumData {
 export interface TypeScriptResult {
   enumData?: TypeScriptEnumData;
   meta: TypeScriptMeta;
-  type: MaybeTsDsl<TypeTsDsl>;
+  type: Type;
 }
 
 /**

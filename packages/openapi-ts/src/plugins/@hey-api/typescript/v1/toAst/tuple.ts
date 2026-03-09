@@ -3,7 +3,7 @@ import type { SchemaWithType } from '@hey-api/shared';
 import type { Walker } from '@hey-api/shared';
 
 import { $ } from '../../../../../ts-dsl';
-import type { HeyApiTypeScriptPlugin } from '../../shared/types';
+import type { HeyApiTypeScriptPlugin, Type } from '../../shared/types';
 import type { TypeScriptResult } from '../../shared/types';
 
 export function tupleToAst({
@@ -14,8 +14,8 @@ export function tupleToAst({
   plugin: HeyApiTypeScriptPlugin['Instance'];
   schema: SchemaWithType<'tuple'>;
   walk: Walker<TypeScriptResult, HeyApiTypeScriptPlugin['Instance']>;
-}): TypeScriptResult['type'] {
-  let itemTypes: Array<TypeScriptResult['type']> = [];
+}): Type {
+  let itemTypes: Array<Type> = [];
 
   if (schema.const && Array.isArray(schema.const)) {
     itemTypes = schema.const.map((value) => $.type.fromValue(value));

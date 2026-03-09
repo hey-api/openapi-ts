@@ -131,6 +131,7 @@ export function createVisitor(
         plugin: ctx.plugin,
         schema,
         walk,
+        walkerCtx: ctx,
       });
       return {
         meta: defaultMeta(schema),
