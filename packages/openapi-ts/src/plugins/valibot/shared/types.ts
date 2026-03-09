@@ -37,8 +37,7 @@ export interface ValibotResult {
 /**
  * Finalized result after applyModifiers.
  */
-export interface ValibotFinal {
-  pipes: Pipes;
+export interface ValibotFinal extends Pick<ValibotResult, 'pipes'> {
   /** Type annotation for schemas requiring explicit typing (e.g., lazy). */
   typeName?: string | ts.Identifier;
 }

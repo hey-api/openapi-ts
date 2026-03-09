@@ -15,7 +15,12 @@ export const fromValue = (input: unknown): TsDsl<ts.TypeNode> => {
     return new TypeLiteralTsDsl(input);
   }
 
-  if (typeof input === 'number' || typeof input === 'boolean' || typeof input === 'string') {
+  if (
+    typeof input === 'number' ||
+    typeof input === 'boolean' ||
+    typeof input === 'string' ||
+    typeof input === 'bigint'
+  ) {
     return new TypeLiteralTsDsl(input);
   }
 

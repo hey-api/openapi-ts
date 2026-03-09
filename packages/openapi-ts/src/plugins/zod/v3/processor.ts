@@ -36,7 +36,7 @@ export function createProcessor(plugin: ZodPlugin['Instance']): ProcessorResult 
   function process(ctx: ProcessorContext): void {
     if (!processor.markEmitted(ctx.path)) return;
 
-    processor.withContext({ anchor: ctx.namingAnchor, tags: ctx.tags }, () => {
+    return processor.withContext({ anchor: ctx.namingAnchor, tags: ctx.tags }, () => {
       const state = refs<PluginState>({
         hasLazyExpression: false,
         path: ctx.path,

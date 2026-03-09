@@ -1,33 +1,28 @@
-import { fromRef, ref } from '@hey-api/codegen-core';
+import { ref } from '@hey-api/codegen-core';
 import type { SchemaWithType } from '@hey-api/shared';
+import type { Walker } from '@hey-api/shared';
 
-import type { MaybeTsDsl, TypeTsDsl } from '../../../../../ts-dsl';
 import { $ } from '../../../../../ts-dsl';
-import type { IrSchemaToAstOptions } from '../../shared/types';
-import { irSchemaToAst } from '../plugin';
+import type { HeyApiTypeScriptPlugin } from '../../shared/types';
+import type { TypeScriptResult } from '../../shared/types';
 
 export function tupleToAst({
   plugin,
   schema,
-  state,
-}: IrSchemaToAstOptions & {
+  walk,
+}: {
+  plugin: HeyApiTypeScriptPlugin['Instance'];
   schema: SchemaWithType<'tuple'>;
-}): MaybeTsDsl<TypeTsDsl> {
-  let itemTypes: Array<MaybeTsDsl<TypeTsDsl>> = [];
+  walk: Walker<TypeScriptResult, HeyApiTypeScriptPlugin['Instance']>;
+}): TypeScriptResult['type'] {
+  let itemTypes: Array<TypeScriptResult['type']> = [];
 
   if (schema.const && Array.isArray(schema.const)) {
     itemTypes = schema.const.map((value) => $.type.fromValue(value));
   } else if (schema.items) {
-    schema.items.forEach((item, index) => {
-      const type = irSchemaToAst({
-        plugin,
-        schema: item,
-        state: {
-          ...state,
-          path: ref([...fromRef(state.path), 'items', index]),
-        },
-      });
-      itemTypes.push(type);
+    schema.items.forEach((item) => {
+      const result = walk(item, { path: ref([]), plugin });
+      itemTypes.push(result.type);
     });
   }
 

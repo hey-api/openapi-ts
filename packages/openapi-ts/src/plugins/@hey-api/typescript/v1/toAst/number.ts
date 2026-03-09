@@ -1,17 +1,17 @@
 import type { SchemaWithType } from '@hey-api/shared';
 
-import type { TypeTsDsl } from '../../../../../ts-dsl';
 import { $ } from '../../../../../ts-dsl';
-import type { IrSchemaToAstOptions } from '../../shared/types';
+import type { HeyApiTypeScriptPlugin, TypeScriptResult } from '../../shared/types';
 
-export const numberToAst = ({
+export function numberToAst({
   plugin,
   schema,
-}: IrSchemaToAstOptions & {
+}: {
+  plugin: HeyApiTypeScriptPlugin['Instance'];
   schema: SchemaWithType<'integer' | 'number'>;
-}): TypeTsDsl => {
+}): TypeScriptResult['type'] {
   if (schema.const !== undefined) {
-    return $.type.literal(schema.const as number);
+    return $.type.fromValue(schema.const);
   }
 
   if (schema.type === 'integer' && schema.format === 'int64') {
@@ -22,4 +22,4 @@ export const numberToAst = ({
   }
 
   return $.type('number');
-};
+}
