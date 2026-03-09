@@ -4,20 +4,14 @@ import { createSchemaProcessor, createSchemaWalker, pathToJsonPointer } from '@h
 
 import { exportAst } from '../shared/export';
 import type { ProcessorContext, ProcessorResult } from '../shared/processor';
-import type { PydanticFinal } from '../shared/types';
-import type { PydanticPlugin } from '../types';
+import type { TypeScriptFinal } from '../shared/types';
+import type { HeyApiTypeScriptPlugin } from '../types';
 import { createVisitor } from './walker';
 
-export function createProcessor(plugin: PydanticPlugin['Instance']): ProcessorResult {
+export function createProcessor(plugin: HeyApiTypeScriptPlugin['Instance']): ProcessorResult {
   const processor = createSchemaProcessor();
 
   const extractorHooks: ReadonlyArray<NonNullable<Hooks['schemas']>['shouldExtract']> = [
-    (ctx) =>
-      ctx.schema.type === 'object' &&
-      ctx.schema.properties !== undefined &&
-      Object.keys(ctx.schema.properties).length > 0,
-    (ctx) =>
-      ctx.schema.type === 'enum' && ctx.schema.items !== undefined && ctx.schema.items.length > 0,
     plugin.config['~hooks']?.schemas?.shouldExtract,
     plugin.context.config.parser.hooks.schemas?.shouldExtract,
   ];
@@ -42,7 +36,7 @@ export function createProcessor(plugin: PydanticPlugin['Instance']): ProcessorRe
     return ctx.schema;
   }
 
-  function process(ctx: ProcessorContext): PydanticFinal | void {
+  function process(ctx: ProcessorContext): TypeScriptFinal | void {
     if (!processor.markEmitted(ctx.path)) return;
 
     const shouldExport = ctx.export !== false;
@@ -59,7 +53,7 @@ export function createProcessor(plugin: PydanticPlugin['Instance']): ProcessorRe
       const final = visitor.applyModifiers(result, {
         path: ref(ctx.path),
         plugin,
-      }) as PydanticFinal;
+      }) as TypeScriptFinal;
 
       if (shouldExport) {
         exportAst({ ...ctx, final, plugin });

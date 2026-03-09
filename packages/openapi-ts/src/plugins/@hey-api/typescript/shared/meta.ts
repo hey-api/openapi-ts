@@ -1,15 +1,13 @@
 import type { IR } from '@hey-api/shared';
 
-import type { PydanticMeta, PydanticResult } from './types';
+import type { TypeScriptMeta, TypeScriptResult } from './types';
 
 /**
  * Creates default metadata from a schema.
  */
-export function defaultMeta(schema: IR.SchemaObject): PydanticMeta {
+export function defaultMeta(schema: IR.SchemaObject): TypeScriptMeta {
   return {
     default: schema.default,
-    hasForwardReference: false,
-    nullable: false,
     readonly: schema.accessScope === 'read',
   };
 }
@@ -21,14 +19,11 @@ export function defaultMeta(schema: IR.SchemaObject): PydanticMeta {
  * @param overrides - Explicit overrides (e.g., from parent schema)
  */
 export function composeMeta(
-  children: ReadonlyArray<PydanticResult>,
-  overrides?: Partial<PydanticMeta>,
-): PydanticMeta {
+  children: ReadonlyArray<TypeScriptResult>,
+  overrides?: Partial<TypeScriptMeta>,
+): TypeScriptMeta {
   return {
     default: overrides?.default,
-    hasForwardReference:
-      overrides?.hasForwardReference ?? children.some((c) => c.meta.hasForwardReference),
-    nullable: overrides?.nullable ?? children.some((c) => c.meta.nullable),
     readonly: overrides?.readonly ?? children.some((c) => c.meta.readonly),
   };
 }
@@ -41,11 +36,10 @@ export function composeMeta(
  */
 export function inheritMeta(
   parent: IR.SchemaObject,
-  children: ReadonlyArray<PydanticResult>,
-): PydanticMeta {
+  children: ReadonlyArray<TypeScriptResult>,
+): TypeScriptMeta {
   return composeMeta(children, {
     default: parent.default,
-    nullable: false,
     readonly: parent.accessScope === 'read',
   });
 }

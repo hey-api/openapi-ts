@@ -1,5 +1,4 @@
 import type { SymbolMeta } from '@hey-api/codegen-core';
-import { refs } from '@hey-api/codegen-core';
 import type { IR } from '@hey-api/shared';
 import { statusCodeToGroup } from '@hey-api/shared';
 
@@ -108,15 +107,9 @@ export function operationParameters({
           isParametersRequired = true;
         }
         flatParams.prop(parameter.name, (p) =>
-          p.required(parameter.isRequired).type(
-            pluginTypeScript.api.schemaToType({
-              plugin: pluginTypeScript,
-              schema: parameter.schema,
-              state: refs({
-                path: [],
-              }),
-            }),
-          ),
+          p
+            .required(parameter.isRequired)
+            .type(pluginTypeScript.api.schemaToType(pluginTypeScript, parameter.schema)),
         );
       }
 
