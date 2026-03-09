@@ -1,16 +1,16 @@
 import type { SchemaWithType } from '@hey-api/shared';
 
-import type { TypeTsDsl } from '../../../../../ts-dsl';
 import { $ } from '../../../../../ts-dsl';
-import type { IrSchemaToAstOptions } from '../../shared/types';
+import type { HeyApiTypeScriptPlugin, TypeScriptResult } from '../../shared/types';
 
 export function booleanToAst({
   schema,
-}: IrSchemaToAstOptions & {
+}: {
+  plugin: HeyApiTypeScriptPlugin['Instance'];
   schema: SchemaWithType<'boolean'>;
-}): TypeTsDsl {
+}): TypeScriptResult['type'] {
   if (schema.const !== undefined) {
-    return $.type.literal(schema.const as boolean);
+    return $.type.fromValue(schema.const);
   }
 
   return $.type('boolean');

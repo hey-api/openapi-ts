@@ -1,21 +1,21 @@
-import { fromRef, ref } from '@hey-api/codegen-core';
-import type { IR } from '@hey-api/shared';
-import type { SchemaWithType } from '@hey-api/shared';
+import { ref } from '@hey-api/codegen-core';
+import type { IR, SchemaWithType, Walker } from '@hey-api/shared';
+import { deduplicateSchema } from '@hey-api/shared';
 
 import { createSchemaComment } from '../../../../../plugins/shared/utils/schema';
-import type { TypeTsDsl } from '../../../../../ts-dsl';
 import { $ } from '../../../../../ts-dsl';
-import type { IrSchemaToAstOptions } from '../../shared/types';
-import { irSchemaToAst } from '../plugin';
+import type { HeyApiTypeScriptPlugin } from '../../shared/types';
+import type { TypeScriptResult } from '../../shared/types';
 
 export function objectToAst({
   plugin,
   schema,
-  state,
-}: IrSchemaToAstOptions & {
+  walk,
+}: {
+  plugin: HeyApiTypeScriptPlugin['Instance'];
   schema: SchemaWithType<'object'>;
-}): TypeTsDsl {
-  // TODO: parser - handle constants
+  walk: Walker<TypeScriptResult, HeyApiTypeScriptPlugin['Instance']>;
+}): TypeScriptResult['type'] {
   const shape = $.type.object();
   const required = schema.required ?? [];
   let indexSchemas: Array<IR.SchemaObject> = [];
@@ -23,21 +23,14 @@ export function objectToAst({
 
   for (const name in schema.properties) {
     const property = schema.properties[name]!;
-    const propertyType = irSchemaToAst({
-      plugin,
-      schema: property,
-      state: {
-        ...state,
-        path: ref([...fromRef(state.path), 'properties', name]),
-      },
-    });
+    const propertyResult = walk(property, { path: ref([]), plugin });
     const isRequired = required.includes(name);
     shape.prop(name, (p) =>
       p
         .$if(plugin.config.comments && createSchemaComment(property), (p, v) => p.doc(v))
         .readonly(property.accessScope === 'read')
         .required(isRequired)
-        .type(propertyType),
+        .type(propertyResult.type),
     );
     indexSchemas.push(property);
 
@@ -46,7 +39,6 @@ export function objectToAst({
     }
   }
 
-  // include pattern value schemas into the index union
   if (schema.patternProperties) {
     for (const pattern in schema.patternProperties) {
       const ir = schema.patternProperties[pattern]!;
@@ -67,59 +59,39 @@ export function objectToAst({
     const addProps = addPropsObj;
     if (addProps && addProps.type !== 'never') {
       if (addProps.type === 'unknown') {
-        // When additionalProperties is unknown (e.g. `{}` or `true`), it already subsumes all
-        // named property types, so we only need the additionalProperties schema itself (plus any
-        // patternProperties) in the index signature. Including named property types would produce
-        // a redundant, noisy union like `unknown | string | null | ...`.
         const patternSchemas: Array<IR.SchemaObject> = schema.patternProperties
           ? Object.values(schema.patternProperties)
           : [];
         indexSchemas = [addProps, ...patternSchemas];
       } else {
-        // For typed additionalProperties (e.g. `{ type: 'string' }`), named property types must
-        // be included so that TypeScript's index signature constraint is satisfied.
         indexSchemas.unshift(addProps);
       }
     } else if (!hasPatterns && !indexSchemas.length && addProps && addProps.type === 'never') {
-      // keep "never" only when there are NO patterns and NO explicit properties
       indexSchemas = [addProps];
     }
 
-    // `unknown` already subsumes `undefined`, so no need to add it explicitly
     if (hasOptionalProperties && addProps?.type !== 'unknown') {
       indexSchemas.push({ type: 'undefined' });
     }
 
-    const type =
-      indexSchemas.length === 1
-        ? irSchemaToAst({
-            plugin,
-            schema: indexSchemas[0]!,
-            state,
-          })
-        : irSchemaToAst({
-            plugin,
-            schema: { items: indexSchemas, logicalOperator: 'or' },
-            state,
-          });
+    if (indexSchemas.length > 0) {
+      const unionSchema: IR.SchemaObject =
+        indexSchemas.length === 1
+          ? indexSchemas[0]!
+          : deduplicateSchema({ schema: { items: indexSchemas, logicalOperator: 'or' } });
 
-    if (schema.propertyNames?.$ref) {
-      return $.type
-        .mapped('key')
-        .key(
-          irSchemaToAst({
-            plugin,
-            schema: {
-              $ref: schema.propertyNames.$ref,
-            },
-            state,
-          }),
-        )
-        .optional()
-        .type(type);
+      const indexType = walk(unionSchema, { path: ref([]), plugin }).type;
+
+      if (schema.propertyNames?.$ref) {
+        const propertyNamesResult = walk(
+          { $ref: schema.propertyNames.$ref },
+          { path: ref([]), plugin },
+        );
+        return $.type.mapped('key').key(propertyNamesResult.type).optional().type(indexType);
+      }
+
+      shape.idxSig('key', (i) => i.key('string').type(indexType));
     }
-
-    shape.idxSig('key', (i) => i.key('string').type(type));
   }
 
   return shape;
