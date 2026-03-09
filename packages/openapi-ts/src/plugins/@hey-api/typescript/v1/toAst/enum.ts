@@ -1,7 +1,8 @@
 import type { SchemaWithType } from '@hey-api/shared';
 
 import { $ } from '../../../../../ts-dsl';
-import type { HeyApiTypeScriptPlugin, TypeScriptResult } from '../../shared/types';
+import type { EnumResolverContext } from '../../resolvers';
+import type { HeyApiTypeScriptPlugin, Type } from '../../shared/types';
 import type { TypeScriptEnumData } from '../../shared/types';
 
 function buildEnumData(
@@ -35,6 +36,46 @@ function buildEnumData(
   };
 }
 
+function itemsNode(ctx: EnumResolverContext): ReturnType<EnumResolverContext['nodes']['items']> {
+  const { schema } = ctx;
+  const items = schema.items ?? [];
+
+  const enumMembers: Array<ReturnType<typeof $.type.literal>> = [];
+  let isNullable = false;
+
+  for (const item of items) {
+    if (item.type === 'string' && typeof item.const === 'string') {
+      enumMembers.push($.type.literal(item.const));
+    } else if (item.type === 'number' && typeof item.const === 'number') {
+      enumMembers.push($.type.literal(item.const));
+    } else if (item.type === 'boolean' && typeof item.const === 'boolean') {
+      enumMembers.push($.type.literal(item.const));
+    } else if (item.type === 'null' || item.const === null) {
+      isNullable = true;
+    }
+  }
+
+  return { enumMembers, isNullable };
+}
+
+function baseNode(ctx: EnumResolverContext): Type {
+  const { schema } = ctx;
+  const items = schema.items ?? [];
+
+  if (items.length === 0) {
+    return $.type('never');
+  }
+
+  const literalTypes = items
+    .filter((item) => item.const !== undefined)
+    .map((item) => $.type.fromValue(item.const));
+  return literalTypes.length > 0 ? $.type.or(...literalTypes) : $.type('string');
+}
+
+function enumResolver(ctx: EnumResolverContext): Type {
+  return ctx.nodes.base(ctx);
+}
+
 export function enumToAst({
   plugin,
   schema,
@@ -43,21 +84,22 @@ export function enumToAst({
   schema: SchemaWithType<'enum'>;
 }): {
   enumData?: TypeScriptEnumData;
-  type: TypeScriptResult['type'];
+  type: Type;
 } {
-  const items = schema.items ?? [];
   const enumData = buildEnumData(plugin, schema);
 
-  let type: TypeScriptResult['type'];
+  const ctx: EnumResolverContext = {
+    $,
+    nodes: {
+      base: baseNode,
+      items: itemsNode,
+    },
+    plugin,
+    schema,
+  };
 
-  if (items.length === 0) {
-    type = $.type('never');
-  } else {
-    const literalTypes = items
-      .filter((item) => item.const !== undefined)
-      .map((item) => $.type.fromValue(item.const));
-    type = literalTypes.length > 0 ? $.type.or(...literalTypes) : $.type('string');
-  }
+  const resolver = plugin.config['~resolvers']?.enum;
+  const type = resolver?.(ctx) ?? enumResolver(ctx);
 
   return {
     enumData,

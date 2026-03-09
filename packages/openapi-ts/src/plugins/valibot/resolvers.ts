@@ -98,7 +98,7 @@ interface BaseContext extends DollarTsDsl {
 
 export interface EnumResolverContext extends BaseContext {
   /**
-   * Nodes used to build different parts of the schema.
+   * Nodes used to build different parts of the result.
    */
   nodes: {
     /**
@@ -124,7 +124,7 @@ export interface EnumResolverContext extends BaseContext {
 
 export interface NumberResolverContext extends BaseContext {
   /**
-   * Nodes used to build different parts of the schema.
+   * Nodes used to build different parts of the result.
    */
   nodes: {
     base: (ctx: NumberResolverContext) => PipeResult;
@@ -147,7 +147,7 @@ export interface ObjectResolverContext extends BaseContext {
   _childResults: Array<ValibotResult>;
   applyModifiers: (result: ValibotResult, opts: { optional?: boolean }) => ValibotFinal;
   /**
-   * Nodes used to build different parts of the schema.
+   * Nodes used to build different parts of the result.
    */
   nodes: {
     additionalProperties: (ctx: ObjectResolverContext) => Pipe | null | undefined;
@@ -167,7 +167,7 @@ export interface ObjectResolverContext extends BaseContext {
 
 export interface StringResolverContext extends BaseContext {
   /**
-   * Nodes used to build different parts of the schema.
+   * Nodes used to build different parts of the result.
    */
   nodes: {
     base: (ctx: StringResolverContext) => PipeResult;
