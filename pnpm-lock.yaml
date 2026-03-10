@@ -20,8 +20,8 @@ importers:
         specifier: 2.30.0
         version: 2.30.0(@types/node@24.10.10)
       '@changesets/get-github-info':
-        specifier: 0.7.0
-        version: 0.7.0(encoding@0.1.13)
+        specifier: 0.8.0
+        version: 0.8.0(encoding@0.1.13)
       '@changesets/parse':
         specifier: 0.4.3
         version: 0.4.3
@@ -2649,8 +2649,8 @@ packages:
   '@changesets/get-dependents-graph@2.1.3':
     resolution: {integrity: sha512-gphr+v0mv2I3Oxt19VdWRRUxq3sseyUpX9DaHpTUmLj92Y10AGy+XOtV+kbM6L/fDcpx7/ISDFK6T8A/P3lOdQ==}
 
-  '@changesets/get-github-info@0.7.0':
-    resolution: {integrity: sha512-+i67Bmhfj9V4KfDeS1+Tz3iF32btKZB2AAx+cYMqDSRFP7r3/ZdGbjCo+c6qkyViN9ygDuBjzageuPGJtKGe5A==}
+  '@changesets/get-github-info@0.8.0':
+    resolution: {integrity: sha512-cRnC+xdF0JIik7coko3iUP9qbnfi1iJQ3sAa6dE+Tx3+ET8bjFEm63PA4WEohgjYcmsOikPHWzPsMWWiZmntOQ==}
 
   '@changesets/get-release-plan@4.0.15':
     resolution: {integrity: sha512-Q04ZaRPuEVZtA+auOYgFaVQQSA98dXiVe/yFaZfY7hoSmQICHGvP0TF4u3EDNHWmmCS4ekA/XSpKlSM2PyTS2g==}
@@ -17128,7 +17128,7 @@ snapshots:
       picocolors: 1.1.1
       semver: 7.7.3
 
-  '@changesets/get-github-info@0.7.0(encoding@0.1.13)':
+  '@changesets/get-github-info@0.8.0(encoding@0.1.13)':
     dependencies:
       dataloader: 1.4.0
       node-fetch: 2.7.0(encoding@0.1.13)
