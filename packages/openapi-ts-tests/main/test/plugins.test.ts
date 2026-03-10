@@ -470,23 +470,6 @@ for (const version of versions) {
       },
       {
         config: createConfig({
-          input: 'type-format.yaml',
-          output: 'type-format-zod',
-          plugins: [
-            '@hey-api/transformers',
-            '@hey-api/client-fetch',
-            'zod',
-            {
-              name: '@hey-api/sdk',
-              transformer: true,
-              validator: true,
-            },
-          ],
-        }),
-        description: 'handles various schema types and formats',
-      },
-      {
-        config: createConfig({
           input: 'transforms-read-write.yaml',
           output: 'transforms-read-write-ignore',
           parser: {

@@ -121,7 +121,7 @@ describe(`OpenAPI ${version}`, () => {
         input: 'zoom-video-sdk.json',
         output: 'webhooks',
       }),
-      description: 'webhook types and validator schemas',
+      description: 'webhook schemas',
     },
     {
       config: createConfig({
@@ -140,7 +140,7 @@ describe(`OpenAPI ${version}`, () => {
     {
       config: createConfig({
         input: 'type-format.yaml',
-        output: 'type-format-valibot',
+        output: 'type-format',
         plugins: [
           '@hey-api/transformers',
           '@hey-api/client-fetch',

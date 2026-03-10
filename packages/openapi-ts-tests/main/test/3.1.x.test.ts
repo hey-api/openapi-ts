@@ -1014,15 +1014,13 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'zoom-video-sdk.json',
         output: 'webhooks',
-        plugins: ['@hey-api/typescript', 'zod'],
       }),
-      description: 'webhook types and validator schemas',
+      description: 'webhook types',
     },
     {
       config: createConfig({
         input: 'string-with-format.yaml',
         output: 'string-with-format',
-        plugins: ['@hey-api/typescript', 'zod'],
       }),
       description: 'anyOf string and binary string',
     },
