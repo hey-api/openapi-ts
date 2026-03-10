@@ -8,7 +8,12 @@ import {
 } from '../../../../plugins/shared/utils/operation';
 import type { TsDsl } from '../../../../ts-dsl';
 import { $ } from '../../../../ts-dsl';
-import { createQueryKeyFunction, createQueryKeyType, queryKeyStatement } from '../queryKey';
+import {
+  createQueryKeyFunction,
+  createQueryKeyType,
+  createSkipTokenHelpers,
+  queryKeyStatement,
+} from '../queryKey';
 import { handleMeta } from '../shared/meta';
 import { useTypeData, useTypeError, useTypeResponse } from '../shared/useType';
 import type { PluginInstance } from '../types';
@@ -42,6 +47,16 @@ export const createQueryOptions = ({
     createQueryKeyFunction({ plugin });
   }
 
+  if (
+    !plugin.getSymbol({
+      category: 'utility',
+      resource: 'resolveOptions',
+      tool: plugin.name,
+    })
+  ) {
+    createSkipTokenHelpers({ plugin });
+  }
+
   const symbolQueryOptions = plugin.external(`${plugin.name}.queryOptions`);
 
   const symbolQueryKey = plugin.symbol(applyNaming(operation.id, plugin.config.queryKeys));
@@ -54,6 +69,19 @@ export const createQueryOptions = ({
   plugin.node(node);
 
   const typeResponse = useTypeResponse({ operation, plugin });
+
+  const symbolSkipToken = $(plugin.external(`${plugin.name}.skipToken`));
+
+  const symbolResolveOptions = plugin.referenceSymbol({
+    category: 'utility',
+    resource: 'resolveOptions',
+    tool: plugin.name,
+  });
+  const symbolResolveQueryFn = plugin.referenceSymbol({
+    category: 'utility',
+    resource: 'resolveQueryFn',
+    tool: plugin.name,
+  });
 
   const awaitSdkFn = $.lazy((ctx) =>
     ctx
@@ -81,17 +109,19 @@ export const createQueryOptions = ({
     statements.push($.const().object('data').assign(awaitSdkFn), $.return('data'));
   }
 
+  const asyncQueryFn = $.func()
+    .async()
+    .param((p) => p.object('queryKey', 'signal'))
+    .do(...statements);
+
   const queryOptionsObj = $.object()
     .pretty()
-    .prop(
-      'queryFn',
-      $.func()
-        .async()
-        .param((p) => p.object('queryKey', 'signal'))
-        .do(...statements),
-    )
-    .prop('queryKey', $(symbolQueryKey).call(optionsParamName))
+    .prop('queryFn', $(symbolResolveQueryFn).call($(optionsParamName), asyncQueryFn))
+    .prop('queryKey', $(symbolQueryKey).call($(symbolResolveOptions).call($(optionsParamName))))
     .$if(handleMeta(plugin, operation, 'queryOptions'), (o, v) => o.prop('meta', v));
+
+  const typeData = useTypeData({ operation, plugin });
+  const paramType = $.type.or(typeData, $.type.query(symbolSkipToken));
 
   const symbolQueryOptionsFn = plugin.symbol(
     applyNaming(operation.id, plugin.config.queryOptions),
@@ -112,9 +142,7 @@ export const createQueryOptions = ({
     .$if(plugin.config.comments && createOperationComment(operation), (c, v) => c.doc(v))
     .assign(
       $.func()
-        .param(optionsParamName, (p) =>
-          p.required(isRequiredOptions).type(useTypeData({ operation, plugin })),
-        )
+        .param(optionsParamName, (p) => p.required(isRequiredOptions).type(paramType))
         .do(
           $(symbolQueryOptions)
             .call(queryOptionsObj)

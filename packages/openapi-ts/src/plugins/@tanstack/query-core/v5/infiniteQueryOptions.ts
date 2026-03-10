@@ -7,7 +7,12 @@ import {
 } from '../../../../plugins/shared/utils/operation';
 import type { TsDsl } from '../../../../ts-dsl';
 import { $ } from '../../../../ts-dsl';
-import { createQueryKeyFunction, createQueryKeyType, queryKeyStatement } from '../queryKey';
+import {
+  createQueryKeyFunction,
+  createQueryKeyType,
+  createSkipTokenHelpers,
+  queryKeyStatement,
+} from '../queryKey';
 import { handleMeta } from '../shared/meta';
 import { useTypeData, useTypeError, useTypeResponse } from '../shared/useType';
 import type { PluginInstance } from '../types';
@@ -126,6 +131,16 @@ export const createInfiniteQueryOptions = ({
   if (
     !plugin.getSymbol({
       category: 'utility',
+      resource: 'resolveOptions',
+      tool: plugin.name,
+    })
+  ) {
+    createSkipTokenHelpers({ plugin });
+  }
+
+  if (
+    !plugin.getSymbol({
+      category: 'utility',
       resource: 'createInfiniteParams',
       tool: plugin.name,
     })
@@ -138,6 +153,19 @@ export const createInfiniteQueryOptions = ({
 
   const typeData = useTypeData({ operation, plugin });
   const typeResponse = useTypeResponse({ operation, plugin });
+
+  const symbolSkipToken = $(plugin.external(`${plugin.name}.skipToken`));
+
+  const symbolResolveOptions = plugin.referenceSymbol({
+    category: 'utility',
+    resource: 'resolveOptions',
+    tool: plugin.name,
+  });
+  const symbolResolveQueryFn = plugin.referenceSymbol({
+    category: 'utility',
+    resource: 'resolveQueryFn',
+    tool: plugin.name,
+  });
 
   const symbolQueryKeyType = plugin.referenceSymbol({
     category: 'type',
@@ -216,6 +244,13 @@ export const createInfiniteQueryOptions = ({
     statements.push($.const().object('data').assign(awaitSdkFn), $.return('data'));
   }
 
+  const asyncQueryFn = $.func()
+    .async()
+    .param((p) => p.object('pageParam', 'queryKey', 'signal'))
+    .do(...statements);
+
+  const paramType = $.type.or(typeData, $.type.query(symbolSkipToken));
+
   const symbolInfiniteQueryOptionsFn = plugin.symbol(
     applyNaming(operation.id, plugin.config.infiniteQueryOptions),
   );
@@ -224,7 +259,7 @@ export const createInfiniteQueryOptions = ({
     .$if(plugin.config.comments && createOperationComment(operation), (c, v) => c.doc(v))
     .assign(
       $.func()
-        .param('options', (p) => p.required(isRequiredOptions).type(typeData))
+        .param('options', (p) => p.required(isRequiredOptions).type(paramType))
         .do(
           $.return(
             $(symbolInfiniteQueryOptions)
@@ -232,14 +267,11 @@ export const createInfiniteQueryOptions = ({
                 $.object()
                   .pretty()
                   .hint('@ts-ignore')
+                  .prop('queryFn', $(symbolResolveQueryFn).call($('options'), asyncQueryFn))
                   .prop(
-                    'queryFn',
-                    $.func()
-                      .async()
-                      .param((p) => p.object('pageParam', 'queryKey', 'signal'))
-                      .do(...statements),
+                    'queryKey',
+                    $(symbolInfiniteQueryKey).call($(symbolResolveOptions).call($('options'))),
                   )
-                  .prop('queryKey', $(symbolInfiniteQueryKey).call('options'))
                   .$if(handleMeta(plugin, operation, 'infiniteQueryOptions'), (o, v) =>
                     o.prop('meta', v),
                   ),

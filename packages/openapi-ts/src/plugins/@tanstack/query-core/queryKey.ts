@@ -160,6 +160,57 @@ export const createQueryKeyType = ({ plugin }: { plugin: PluginInstance }) => {
   plugin.node(queryKeyType);
 };
 
+export const createSkipTokenHelpers = ({ plugin }: { plugin: PluginInstance }) => {
+  const symbolSkipToken = $(plugin.external(`${plugin.name}.skipToken`));
+
+  const symbolResolveOptions = plugin.symbol(
+    applyNaming('resolveOptions', { case: plugin.config.case }),
+    {
+      meta: {
+        category: 'utility',
+        resource: 'resolveOptions',
+        tool: plugin.name,
+      },
+    },
+  );
+  plugin.node(
+    $.const(symbolResolveOptions).assign(
+      $.func()
+        .generic('T')
+        .param('options', (p) => p.type($.type.or('T', $.type.query(symbolSkipToken))))
+        .do(
+          $.return(
+            $.ternary($('options').eq(symbolSkipToken)).do($('undefined')).otherwise($('options')),
+          ),
+        ),
+    ),
+  );
+
+  const symbolResolveQueryFn = plugin.symbol(
+    applyNaming('resolveQueryFn', { case: plugin.config.case }),
+    {
+      meta: {
+        category: 'utility',
+        resource: 'resolveQueryFn',
+        tool: plugin.name,
+      },
+    },
+  );
+  plugin.node(
+    $.const(symbolResolveQueryFn).assign(
+      $.func()
+        .generic('T')
+        .param('options', (p) => p.type($.type.or('T', $.type.query(symbolSkipToken))))
+        .param('queryFn', (p) => p.type('T'))
+        .do(
+          $.return(
+            $.ternary($('options').eq(symbolSkipToken)).do(symbolSkipToken).otherwise($('queryFn')),
+          ),
+        ),
+    ),
+  );
+};
+
 export const queryKeyStatement = ({
   isInfinite,
   operation,
