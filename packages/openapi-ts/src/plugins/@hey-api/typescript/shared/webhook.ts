@@ -4,8 +4,8 @@ import { applyNaming } from '@hey-api/shared';
 
 import { createSchemaComment } from '../../../../plugins/shared/utils/schema';
 import { $ } from '../../../../ts-dsl';
+import type { HeyApiTypeScriptPlugin } from '../types';
 import { createProcessor } from '../v1/processor';
-import type { HeyApiTypeScriptPlugin } from './types';
 
 export function webhookToType({
   operation,
