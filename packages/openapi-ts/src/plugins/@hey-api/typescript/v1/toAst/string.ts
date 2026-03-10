@@ -4,7 +4,8 @@ import { toCase } from '@hey-api/shared';
 
 import { $ } from '../../../../../ts-dsl';
 import type { StringResolverContext } from '../../resolvers';
-import type { HeyApiTypeScriptPlugin, Type } from '../../shared/types';
+import type { Type } from '../../shared/types';
+import type { HeyApiTypeScriptPlugin } from '../../types';
 
 function constNode(ctx: StringResolverContext): Type | undefined {
   const { schema } = ctx;

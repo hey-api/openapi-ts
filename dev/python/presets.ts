@@ -9,11 +9,14 @@ export const presets = {
         containerName: 'OpenCode',
         strategy: 'single',
       },
+      paramsStructure: 'flat',
     }),
   ],
   validated: () => [
     /** SDK + Pydantic validation */
-    sdk(),
+    sdk({
+      paramsStructure: 'flat',
+    }),
     pydantic(),
   ],
 } as const satisfies Record<string, () => ReadonlyArray<PluginConfig>>;

@@ -1,7 +1,8 @@
 import type { Plugin, SchemaVisitorContext, SchemaWithType, Walker } from '@hey-api/shared';
 
 import type { $, DollarTsDsl } from '../../../ts-dsl';
-import type { HeyApiTypeScriptPlugin, Type, TypeScriptResult } from './shared/types';
+import type { Type, TypeScriptResult } from './shared/types';
+import type { HeyApiTypeScriptPlugin } from './types';
 
 export type Resolvers = Plugin.Resolvers<{
   /**
