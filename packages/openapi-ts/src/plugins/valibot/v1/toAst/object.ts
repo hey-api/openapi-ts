@@ -93,9 +93,6 @@ export function objectToPipes(
     symbols: {
       v: plugin.external('valibot.v'),
     },
-    utils: {
-      ast: {},
-    },
     walk,
     walkerCtx,
   };
