@@ -68,6 +68,14 @@ export default defineConfig({
       {
         extends: true,
         test: {
+          name: '@test/openapi-ts-valibot-v1',
+          root: 'packages/openapi-ts-tests/valibot/v1',
+          setupFiles: ['./vitest.setup.ts'],
+        },
+      },
+      {
+        extends: true,
+        test: {
           name: '@test/openapi-ts-zod-v3',
           root: 'packages/openapi-ts-tests/zod/v3',
           setupFiles: ['./vitest.setup.ts'],
