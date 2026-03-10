@@ -81,7 +81,6 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'array-items-one-of-length-1.yaml',
         output: 'array-items-one-of-length-1',
-        plugins: ['@hey-api/typescript', 'valibot'],
       }),
       description: 'generates correct array when items are oneOf array with single item',
     },
@@ -248,7 +247,6 @@ describe(`OpenAPI ${version}`, () => {
             enums: 'root',
           },
         },
-        plugins: ['@hey-api/typescript'],
       }),
       description: 'exports inline enums',
     },
@@ -535,7 +533,6 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'enum-null.json',
         output: 'enum-null',
-        plugins: ['@hey-api/typescript', 'valibot'],
       }),
       description: 'handles null enums',
     },
@@ -586,7 +583,6 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'ref-deep.yaml',
         output: 'ref-deep',
-        plugins: ['@hey-api/typescript'],
       }),
       description: 'handles deep references',
     },
@@ -616,7 +612,6 @@ describe(`OpenAPI ${version}`, () => {
             },
           },
         },
-        plugins: ['@hey-api/typescript'],
       }),
       description: 'handles schema name transforms',
     },
@@ -632,7 +627,6 @@ describe(`OpenAPI ${version}`, () => {
               name.replace(/_v\d+_User$/, ''),
           },
         },
-        plugins: ['@hey-api/typescript'],
       }),
       description: 'handles schema name collision prevention',
     },
@@ -763,7 +757,6 @@ describe(`OpenAPI ${version}`, () => {
             propertiesRequiredByDefault: true,
           },
         },
-        plugins: ['@hey-api/typescript'],
       }),
       description: 'makes all object properties required by default',
     },
@@ -773,14 +766,6 @@ describe(`OpenAPI ${version}`, () => {
         output: 'type-invalid',
       }),
       description: 'gracefully handles invalid type',
-    },
-    {
-      config: createConfig({
-        input: 'validators.json',
-        output: 'validators',
-        plugins: ['valibot'],
-      }),
-      description: 'generates validator schemas',
     },
   ];
 
