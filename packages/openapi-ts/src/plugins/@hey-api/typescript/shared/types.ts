@@ -2,8 +2,6 @@ import type { IR } from '@hey-api/shared';
 
 import type { MaybeTsDsl, TypeTsDsl } from '../../../../ts-dsl';
 
-export type { HeyApiTypeScriptPlugin } from '../types';
-
 export type Type = MaybeTsDsl<TypeTsDsl>;
 
 /**

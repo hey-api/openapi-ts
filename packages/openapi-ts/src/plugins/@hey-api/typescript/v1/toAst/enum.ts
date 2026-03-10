@@ -2,8 +2,9 @@ import type { SchemaWithType } from '@hey-api/shared';
 
 import { $ } from '../../../../../ts-dsl';
 import type { EnumResolverContext } from '../../resolvers';
-import type { HeyApiTypeScriptPlugin, Type } from '../../shared/types';
+import type { Type } from '../../shared/types';
 import type { TypeScriptEnumData } from '../../shared/types';
+import type { HeyApiTypeScriptPlugin } from '../../types';
 
 function buildEnumData(
   plugin: HeyApiTypeScriptPlugin['Instance'],

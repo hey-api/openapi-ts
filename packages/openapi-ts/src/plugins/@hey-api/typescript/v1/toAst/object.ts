@@ -5,8 +5,9 @@ import { deduplicateSchema } from '@hey-api/shared';
 import { createSchemaComment } from '../../../../../plugins/shared/utils/schema';
 import { $ } from '../../../../../ts-dsl';
 import type { ObjectResolverContext } from '../../resolvers';
-import type { HeyApiTypeScriptPlugin, Type } from '../../shared/types';
+import type { Type } from '../../shared/types';
 import type { TypeScriptResult } from '../../shared/types';
+import type { HeyApiTypeScriptPlugin } from '../../types';
 
 function shapeNode(ctx: ObjectResolverContext): ReturnType<typeof $.type.object> {
   const { schema, walk, walkerCtx } = ctx;
