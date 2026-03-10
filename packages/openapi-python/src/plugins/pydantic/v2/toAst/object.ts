@@ -12,7 +12,7 @@ export interface ObjectToFieldsResult extends Pick<PydanticResult, 'fields' | 't
 function additionalPropertiesNode(ctx: ObjectResolverContext): PydanticType | null | undefined {
   const { schema } = ctx;
 
-  if (!schema.additionalProperties || !schema.additionalProperties.type) return undefined;
+  if (!schema.additionalProperties || !schema.additionalProperties.type) return;
   if (schema.additionalProperties.type === 'never') return null;
 
   const result = ctx.walk(

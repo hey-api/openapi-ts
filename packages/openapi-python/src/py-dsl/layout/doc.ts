@@ -38,7 +38,7 @@ export class DocPyDsl extends PyDsl<py.Comment> {
       }
       return lines;
     }, []);
-    if (!lines.length) return undefined;
+    if (!lines.length) return;
     return lines.join('\n');
   }
 
