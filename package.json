@@ -44,8 +44,8 @@
     "tu": "turbo run build && vitest watch --update --project",
     "tb": "turbo run build --filter",
     "ty": "turbo run typecheck --filter",
-    "dev:ts": "cd dev && OPENAPI_TS_DEV_MODE=1 tsx watch --clear-screen=false ../packages/openapi-ts/src/run.ts",
-    "dev:py": "cd dev && OPENAPI_TS_DEV_MODE=1 tsx watch --clear-screen=false ../packages/openapi-python/src/run.ts"
+    "dev:ts": "cd dev && HEYAPI_CODEGEN_ENV=development tsx watch --clear-screen=false ../packages/openapi-ts/src/run.ts",
+    "dev:py": "cd dev && HEYAPI_CODEGEN_ENV=development tsx watch --clear-screen=false ../packages/openapi-python/src/run.ts"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "0.18.2",
