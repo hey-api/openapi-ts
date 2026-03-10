@@ -1,19 +1,19 @@
 import path from 'node:path';
 
-import { getSpecsPath } from '../packages/openapi-ts-tests/utils';
+const specsPath = path.join(__dirname, '..', 'specs');
 
 export const inputs = {
-  circular: path.resolve(getSpecsPath(), '3.0.x', 'circular.yaml'),
-  full: path.resolve(getSpecsPath(), '3.1.x', 'full.yaml'),
+  circular: path.resolve(specsPath, '3.0.x', 'circular.yaml'),
+  full: path.resolve(specsPath, '3.1.x', 'full.yaml'),
   local: 'http://localhost:8000/openapi.json',
-  opencode: path.resolve(getSpecsPath(), '3.1.x', 'opencode.yaml'),
+  opencode: path.resolve(specsPath, '3.1.x', 'opencode.yaml'),
   petstore:
     'https://raw.githubusercontent.com/swagger-api/swagger-petstore/master/src/main/resources/openapi.yaml',
   redfish:
     'https://raw.githubusercontent.com/DMTF/Redfish-Publications/refs/heads/main/openapi/openapi.yaml',
   scalar: 'scalar:@scalar/access-service',
-  transformers: path.resolve(getSpecsPath(), '3.1.x', 'transformers.json'),
-  validators: path.resolve(getSpecsPath(), '3.1.x', 'validators.yaml'),
+  transformers: path.resolve(specsPath, '3.1.x', 'transformers.json'),
+  validators: path.resolve(specsPath, '3.1.x', 'validators.yaml'),
 } as const;
 
 export type InputKey = keyof typeof inputs;
