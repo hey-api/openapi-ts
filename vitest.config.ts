@@ -84,6 +84,22 @@ export default defineConfig({
       {
         extends: true,
         test: {
+          name: '@test/openapi-python-sdks',
+          root: 'packages/openapi-python-tests/sdks',
+          setupFiles: ['./vitest.setup.ts'],
+        },
+      },
+      {
+        extends: true,
+        test: {
+          name: '@test/openapi-python-pydantic-v2',
+          root: 'packages/openapi-python-tests/pydantic/v2',
+          setupFiles: ['./vitest.setup.ts'],
+        },
+      },
+      {
+        extends: true,
+        test: {
           name: '@hey-api/custom-client',
           root: 'packages/custom-client',
         },
