@@ -7,7 +7,7 @@ description: Understand the concepts behind plugins.
 
 Sometimes the default plugin behavior isn't what you need or expect. Resolvers let you patch plugins in a safe and performant way, without forking or reimplementing core logic.
 
-Currently available for [Valibot](/openapi-ts/plugins/valibot) and [Zod](/openapi-ts/plugins/zod).
+Currently available for [TypeScript](/openapi-ts/plugins/typescript), [Valibot](/openapi-ts/plugins/valibot), and [Zod](/openapi-ts/plugins/zod).
 
 ## Examples
 
