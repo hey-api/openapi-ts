@@ -38,7 +38,7 @@ for (const version of versions) {
         {
           config: createConfig({
             input: 'type-format.yaml',
-            output: 'type-format-zod',
+            output: 'type-format',
           }),
           description: 'handles various schema types and formats',
         },

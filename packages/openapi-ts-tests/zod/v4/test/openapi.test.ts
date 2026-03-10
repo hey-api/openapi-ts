@@ -38,7 +38,20 @@ for (const version of versions) {
         {
           config: createConfig({
             input: 'type-format.yaml',
-            output: 'type-format-zod',
+            output: 'type-format',
+            plugins: [
+              '@hey-api/transformers',
+              '@hey-api/client-fetch',
+              {
+                compatibilityVersion: zodVersion.compatibilityVersion,
+                name: 'zod',
+              },
+              {
+                name: '@hey-api/sdk',
+                transformer: true,
+                validator: true,
+              },
+            ],
           }),
           description: 'handles various schema types and formats',
         },
