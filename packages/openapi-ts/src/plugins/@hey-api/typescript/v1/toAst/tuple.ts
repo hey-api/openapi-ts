@@ -3,8 +3,9 @@ import type { SchemaWithType } from '@hey-api/shared';
 import type { Walker } from '@hey-api/shared';
 
 import { $ } from '../../../../../ts-dsl';
-import type { HeyApiTypeScriptPlugin, Type } from '../../shared/types';
+import type { Type } from '../../shared/types';
 import type { TypeScriptResult } from '../../shared/types';
+import type { HeyApiTypeScriptPlugin } from '../../types';
 
 export function tupleToAst({
   plugin,

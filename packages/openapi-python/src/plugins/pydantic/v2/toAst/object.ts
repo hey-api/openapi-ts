@@ -1,25 +1,15 @@
-import type { SchemaVisitorContext, SchemaWithType, Walker } from '@hey-api/shared';
 import { childContext, toCase } from '@hey-api/shared';
 
-import { $, type VarType } from '../../../../py-dsl';
+import { $ } from '../../../../py-dsl';
 import { safeRuntimeName } from '../../../../py-dsl/utils/name';
-import type { PydanticField, PydanticFinal, PydanticResult } from '../../shared/types';
-import type { PydanticPlugin } from '../../types';
-
-interface ObjectResolverContext {
-  _childResults: Array<PydanticResult>;
-  applyModifiers: (result: PydanticResult, options?: { optional?: boolean }) => PydanticFinal;
-  plugin: PydanticPlugin['Instance'];
-  schema: SchemaWithType<'object'>;
-  walk: Walker<PydanticResult, PydanticPlugin['Instance']>;
-  walkerCtx: SchemaVisitorContext<PydanticPlugin['Instance']>;
-}
+import type { ObjectResolverContext } from '../../resolvers';
+import type { PydanticField, PydanticResult, PydanticType } from '../../shared/types';
 
 export interface ObjectToFieldsResult extends Pick<PydanticResult, 'fields' | 'type'> {
   childResults: Array<PydanticResult>;
 }
 
-function resolveAdditionalProperties(ctx: ObjectResolverContext): VarType | null | undefined {
+function additionalPropertiesNode(ctx: ObjectResolverContext): PydanticType | null | undefined {
   const { schema } = ctx;
 
   if (!schema.additionalProperties || !schema.additionalProperties.type) return undefined;
@@ -31,10 +21,12 @@ function resolveAdditionalProperties(ctx: ObjectResolverContext): VarType | null
   );
   ctx._childResults.push(result);
 
-  return result.type;
+  return {
+    type: result.type,
+  };
 }
 
-function resolveFields(ctx: ObjectResolverContext): Array<PydanticField> {
+function fieldsNode(ctx: ObjectResolverContext): Array<PydanticField> {
   const { schema } = ctx;
   const fields: Array<PydanticField> = [];
 
@@ -59,13 +51,11 @@ function resolveFields(ctx: ObjectResolverContext): Array<PydanticField> {
   return fields;
 }
 
-function objectResolver(ctx: ObjectResolverContext): Omit<ObjectToFieldsResult, 'childResults'> {
-  const additional = resolveAdditionalProperties(ctx);
+function baseNode(ctx: ObjectResolverContext): PydanticType & { fields?: Array<PydanticField> } {
+  const additional = additionalPropertiesNode(ctx);
 
-  // additionalProperties: false → strict — still emit a class, just no extra fields
-  // additionalProperties: { type: 'never' } → null sentinel → strict class
   if (additional === null) {
-    const fields = resolveFields(ctx);
+    const fields = fieldsNode(ctx);
     return { fields };
   }
 
@@ -77,15 +67,18 @@ function objectResolver(ctx: ObjectResolverContext): Omit<ObjectToFieldsResult, 
     return { type: $('dict').slice('str', any) };
   }
 
-  // additionalProperties with properties → class wins, additional props ignored for now
   // TODO: consider model_config = ConfigDict(extra='allow')
   if (ctx.schema.properties) {
-    const fields = resolveFields(ctx);
+    const fields = fieldsNode(ctx);
     return { fields };
   }
 
   const any = ctx.plugin.external('typing.Any');
   return { type: $('dict').slice('str', any) };
+}
+
+function objectResolver(ctx: ObjectResolverContext): PydanticType {
+  return ctx.nodes.base(ctx);
 }
 
 export function objectToFields(
@@ -95,17 +88,24 @@ export function objectToFields(
   const childResults: Array<PydanticResult> = [];
 
   const extendedCtx: ObjectResolverContext = {
+    $,
     _childResults: childResults,
     applyModifiers,
+    nodes: {
+      additionalProperties: additionalPropertiesNode,
+      base: baseNode,
+      fields: fieldsNode,
+    },
     plugin,
     schema,
     walk,
     walkerCtx,
   };
 
-  // const resolver = plugin.config?.['~resolvers']?.object;
-  // const resolved = resolver?.(extendedCtx) ?? objectResolver(extendedCtx);
-  const resolved = objectResolver(extendedCtx);
+  const resolver = plugin.config['~resolvers']?.object;
+  const resolved = resolver?.(extendedCtx) ?? objectResolver(extendedCtx);
 
-  return { childResults, ...resolved };
+  const childResultsFinal = extendedCtx._childResults;
+
+  return { childResults: childResultsFinal, ...resolved };
 }

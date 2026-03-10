@@ -1,8 +1,8 @@
-import type { Symbol } from '@hey-api/codegen-core';
 import type { SchemaWithType } from '@hey-api/shared';
 import { toCase } from '@hey-api/shared';
 
 import { $ } from '../../../../py-dsl';
+import type { EnumResolverContext } from '../../resolvers';
 import type { PydanticFinal, PydanticType } from '../../shared/types';
 import type { PydanticPlugin } from '../../types';
 
@@ -21,13 +21,8 @@ function toEnumMemberName(value: string | number): string {
   return toCase(value, 'SCREAMING_SNAKE_CASE');
 }
 
-function extractEnumMembers(
-  schema: SchemaWithType<'enum'>,
-  plugin: PydanticPlugin['Instance'],
-): {
-  enumMembers: Required<PydanticFinal>['enumMembers'];
-  isNullable: boolean;
-} {
+function itemsNode(ctx: EnumResolverContext) {
+  const { plugin, schema } = ctx;
   const enumMembers: Required<PydanticFinal>['enumMembers'] = [];
   let isNullable = false;
 
@@ -51,51 +46,67 @@ function extractEnumMembers(
   return { enumMembers, isNullable };
 }
 
-function toLiteralType(
-  enumMembers: Required<PydanticFinal>['enumMembers'],
-  plugin: PydanticPlugin['Instance'],
-): string | Symbol | ReturnType<typeof $.subscript> {
-  if (enumMembers.length === 0) {
-    return plugin.external('typing.Any');
-  }
-
-  const literal = plugin.external('typing.Literal');
-  const values = enumMembers.map((m) =>
-    // TODO: replace
-    typeof m.value === 'string' ? `"<<<<${m.value}"` : `<<<${m.value}`,
-  );
-
-  return $(literal).slice(...values);
-}
-
-export function enumToType({
-  mode = 'enum',
-  plugin,
-  schema,
-}: {
-  mode?: 'enum' | 'literal';
-  plugin: PydanticPlugin['Instance'];
-  schema: SchemaWithType<'enum'>;
-}): EnumToTypeResult {
-  const { enumMembers, isNullable } = extractEnumMembers(schema, plugin);
+function baseNode(ctx: EnumResolverContext): PydanticType {
+  const { plugin } = ctx;
+  const { enumMembers } = ctx.nodes.items(ctx);
 
   if (enumMembers.length === 0) {
     return {
-      enumMembers,
-      isNullable,
       type: plugin.external('typing.Any'),
     };
   }
 
+  const mode = plugin.config.enums ?? 'enum';
+
   if (mode === 'literal') {
+    if (enumMembers.length === 0) {
+      return {
+        type: plugin.external('typing.Any'),
+      };
+    }
+
+    const literal = plugin.external('typing.Literal');
+    const values = enumMembers.map((m) =>
+      // TODO: replace
+      typeof m.value === 'string' ? `"<<<<${m.value}"` : `<<<${m.value}`,
+    );
+
     return {
-      enumMembers,
-      isNullable,
-      type: toLiteralType(enumMembers, plugin),
+      type: $(literal).slice(...values),
     };
   }
 
+  return {};
+}
+
+function enumResolver(ctx: EnumResolverContext): PydanticType {
+  return ctx.nodes.base(ctx);
+}
+
+export function enumToType({
+  plugin,
+  schema,
+}: {
+  plugin: PydanticPlugin['Instance'];
+  schema: SchemaWithType<'enum'>;
+}): EnumToTypeResult {
+  const ctx: EnumResolverContext = {
+    $,
+    nodes: {
+      base: baseNode,
+      items: itemsNode,
+    },
+    plugin,
+    schema,
+  };
+
+  const resolver = plugin.config['~resolvers']?.enum;
+  const resolved = resolver?.(ctx) ?? enumResolver(ctx);
+
+  const { enumMembers, isNullable } = ctx.nodes.items(ctx);
+
   return {
+    ...resolved,
     enumMembers,
     isNullable,
   };
