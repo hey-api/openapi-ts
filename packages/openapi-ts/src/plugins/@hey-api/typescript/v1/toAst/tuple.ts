@@ -24,7 +24,7 @@ function constNode(ctx: TupleResolverContext): Type | undefined {
   const { schema } = ctx;
 
   if (!schema.const || !Array.isArray(schema.const)) {
-    return undefined;
+    return;
   }
 
   const itemTypes = schema.const.map((value) => $.type.fromValue(value));

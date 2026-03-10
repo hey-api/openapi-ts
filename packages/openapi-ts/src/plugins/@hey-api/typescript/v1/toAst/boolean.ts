@@ -14,7 +14,6 @@ function constNode(ctx: BooleanResolverContext): Type | undefined {
   if (schema.const !== undefined) {
     return $.type.fromValue(schema.const);
   }
-  return undefined;
 }
 
 function booleanResolver(ctx: BooleanResolverContext): Type {

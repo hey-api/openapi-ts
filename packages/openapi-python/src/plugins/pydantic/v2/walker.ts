@@ -240,6 +240,7 @@ export function createVisitor(
         childResults: items,
         parentSchema,
         plugin: ctx.plugin,
+        schemas,
       });
 
       return {

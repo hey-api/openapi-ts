@@ -30,7 +30,7 @@ export function ReturnsMixin<T extends py.Node, TBase extends BaseCtor<T>>(Base:
 
     protected $returns(): py.Expression | undefined {
       if (!this._returns) {
-        return undefined;
+        return;
       }
       if (this._returns instanceof IdPyDsl) {
         return this._returns.toAst();

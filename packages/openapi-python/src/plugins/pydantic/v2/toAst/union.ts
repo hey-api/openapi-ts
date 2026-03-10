@@ -1,31 +1,13 @@
 import type { IR } from '@hey-api/shared';
 
 import { $ } from '../../../../py-dsl';
+import type { UnionResolverContext } from '../../resolvers';
 import type { PydanticFinal, PydanticResult, PydanticType } from '../../shared/types';
 import type { PydanticPlugin } from '../../types';
 import type { FieldConstraints } from '../constants';
 
-export interface UnionToTypeResult extends PydanticType {
-  childResults: Array<PydanticResult>;
-  isNullable: boolean;
-}
-
-export function unionToType({
-  applyModifiers,
-  childResults,
-  parentSchema,
-  plugin,
-}: {
-  applyModifiers: (result: PydanticResult, options?: { optional?: boolean }) => PydanticFinal;
-  childResults: Array<PydanticResult>;
-  parentSchema: IR.SchemaObject;
-  plugin: PydanticPlugin['Instance'];
-}): UnionToTypeResult {
-  const constraints: FieldConstraints = {};
-
-  if (parentSchema.description !== undefined) {
-    constraints.description = parentSchema.description;
-  }
+function baseNode(ctx: UnionResolverContext): PydanticType {
+  const { applyModifiers, childResults, plugin } = ctx;
 
   const nonNullResults: Array<PydanticResult> = [];
   let isNullable = false;
@@ -42,21 +24,13 @@ export function unionToType({
 
   if (nonNullResults.length === 0) {
     return {
-      childResults,
-      fieldConstraints: constraints,
-      isNullable: true,
       type: 'None',
     };
   }
 
   if (nonNullResults.length === 1) {
     const finalResult = applyModifiers(nonNullResults[0]!);
-    return {
-      childResults,
-      fieldConstraints: { ...constraints, ...finalResult.fieldConstraints },
-      isNullable,
-      type: finalResult.type,
-    };
+    return finalResult;
   }
 
   const union = plugin.external('typing.Union');
@@ -69,9 +43,70 @@ export function unionToType({
   }
 
   return {
-    childResults,
-    fieldConstraints: constraints,
-    isNullable,
     type: $(union).slice(...itemTypes),
+  };
+}
+
+function unionResolver(ctx: UnionResolverContext): PydanticType {
+  return ctx.nodes.base(ctx);
+}
+
+export interface UnionToTypeResult extends PydanticType {
+  childResults: Array<PydanticResult>;
+  isNullable: boolean;
+}
+
+export function unionToType({
+  applyModifiers,
+  childResults,
+  parentSchema,
+  plugin,
+  schemas,
+}: {
+  applyModifiers: (result: PydanticResult, options?: { optional?: boolean }) => PydanticFinal;
+  childResults: Array<PydanticResult>;
+  parentSchema: IR.SchemaObject;
+  plugin: PydanticPlugin['Instance'];
+  schemas: ReadonlyArray<IR.SchemaObject>;
+}): UnionToTypeResult {
+  const constraints: FieldConstraints = {};
+
+  if (parentSchema.description !== undefined) {
+    constraints.description = parentSchema.description;
+  }
+
+  let isNullable = false;
+  for (const result of childResults) {
+    if (result.type === 'None') {
+      isNullable = true;
+      break;
+    }
+  }
+  isNullable = isNullable || childResults.some((r) => r.meta.nullable);
+
+  const resolverCtx: UnionResolverContext = {
+    $,
+    applyModifiers,
+    childResults,
+    nodes: {
+      base: baseNode,
+    },
+    parentSchema,
+    plugin,
+    schema: parentSchema,
+    schemas,
+  };
+
+  const resolver = plugin.config['~resolvers']?.union;
+  const resolved = resolver?.(resolverCtx) ?? unionResolver(resolverCtx);
+
+  return {
+    ...resolved,
+    childResults,
+    fieldConstraints:
+      Object.keys(constraints).length > 0
+        ? { ...constraints, ...resolved.fieldConstraints }
+        : resolved.fieldConstraints,
+    isNullable,
   };
 }

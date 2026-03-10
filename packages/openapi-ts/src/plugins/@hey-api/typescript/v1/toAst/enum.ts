@@ -11,7 +11,7 @@ function buildEnumData(
   schema: SchemaWithType<'enum'>,
 ): TypeScriptEnumData | undefined {
   if (!plugin.config.enums.enabled) {
-    return undefined;
+    return;
   }
 
   const items = schema.items ?? [];

@@ -12,14 +12,13 @@ function constNode(ctx: StringResolverContext): Type | undefined {
   if (schema.const !== undefined) {
     return $.type.fromValue(schema.const);
   }
-  return undefined;
 }
 
 function formatNode(ctx: StringResolverContext): Type | undefined {
   const { plugin, schema } = ctx;
   const { format } = schema;
 
-  if (!format) return undefined;
+  if (!format) return;
 
   if (format === 'binary') {
     return $.type.or($.type('Blob'), $.type('File'));
@@ -74,8 +73,6 @@ function formatNode(ctx: StringResolverContext): Type | undefined {
     }
     return $.type(plugin.referenceSymbol(typeidQuery));
   }
-
-  return undefined;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
