@@ -15,8 +15,6 @@ function constNode(ctx: NumberResolverContext): PydanticType | undefined {
       type: $(literal).slice($.literal(schema.const)),
     };
   }
-
-  return undefined;
 }
 
 function baseNode(ctx: NumberResolverContext): PydanticType {

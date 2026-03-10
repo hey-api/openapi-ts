@@ -10,7 +10,6 @@ function constNode(ctx: NumberResolverContext): Type | undefined {
   if (schema.const !== undefined) {
     return $.type.fromValue(schema.const);
   }
-  return undefined;
 }
 
 function baseNode(ctx: NumberResolverContext): Type {
