@@ -1,6 +1,6 @@
 {
   "extends": "../../tsconfig.base.json",
   "include": ["test/**/*"],
-  "exclude": [".gen/**/*", "__snapshots__/**/*"],
+  "exclude": [".gen/**/*"],
   "references": [{ "path": "../../../openapi-python" }]
 }
