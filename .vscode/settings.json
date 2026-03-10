@@ -21,6 +21,7 @@
     "**/.mypy_cache": true,
     "**/__snapshots__": true,
     "**/coverage": true,
+    "**/openapi-python-tests/**/.gen": true,
     "**/openapi-ts-tests/**/generated": true,
     "**/openapi-ts-tests/**/.gen": true,
     "**/*.tsbuildinfo": true
