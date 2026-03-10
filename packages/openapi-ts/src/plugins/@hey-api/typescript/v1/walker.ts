@@ -10,6 +10,7 @@ import type { HeyApiTypeScriptPlugin } from '../types';
 import { arrayToAst } from './toAst/array';
 import { booleanToAst } from './toAst/boolean';
 import { enumToAst } from './toAst/enum';
+import { intersectionToAst } from './toAst/intersection';
 import { neverToAst } from './toAst/never';
 import { nullToAst } from './toAst/null';
 import { numberToAst } from './toAst/number';
@@ -17,6 +18,7 @@ import { objectToAst } from './toAst/object';
 import { stringToAst } from './toAst/string';
 import { tupleToAst } from './toAst/tuple';
 import { undefinedToAst } from './toAst/undefined';
+import { unionToAst } from './toAst/union';
 import { unknownToAst } from './toAst/unknown';
 import { voidToAst } from './toAst/void';
 
@@ -42,6 +44,7 @@ export function createVisitor(
         plugin: ctx.plugin,
         schema,
         walk,
+        walkerCtx: ctx,
       });
       return {
         meta: defaultMeta(schema),
@@ -98,8 +101,13 @@ export function createVisitor(
         }
       }
     },
-    intersection(items, schemas, parentSchema) {
-      const type = items.length === 1 ? items[0]!.type : $.type.and(...items.map((r) => r.type));
+    intersection(items, schemas, parentSchema, ctx) {
+      const type = intersectionToAst({
+        childResults: items,
+        parentSchema,
+        plugin: ctx.plugin,
+        schemas,
+      });
 
       return {
         meta: inheritMeta(parentSchema, items),
@@ -177,6 +185,7 @@ export function createVisitor(
         plugin: ctx.plugin,
         schema,
         walk,
+        walkerCtx: ctx,
       });
       return {
         meta: defaultMeta(schema),
@@ -190,8 +199,13 @@ export function createVisitor(
         type,
       };
     },
-    union(items, schemas, parentSchema) {
-      const type = items.length === 1 ? items[0]!.type : $.type.or(...items.map((r) => r.type));
+    union(items, schemas, parentSchema, ctx) {
+      const type = unionToAst({
+        childResults: items,
+        parentSchema,
+        plugin: ctx.plugin,
+        schemas,
+      });
 
       return {
         meta: inheritMeta(parentSchema, items),

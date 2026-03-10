@@ -1,10 +1,26 @@
-import type { Plugin, SchemaVisitorContext, SchemaWithType, Walker } from '@hey-api/shared';
+import type { IR, Plugin, SchemaVisitorContext, SchemaWithType, Walker } from '@hey-api/shared';
 
 import type { $, DollarTsDsl } from '../../../ts-dsl';
 import type { Type, TypeScriptResult } from './shared/types';
 import type { HeyApiTypeScriptPlugin } from './types';
 
 export type Resolvers = Plugin.Resolvers<{
+  /**
+   * Resolver for array schemas.
+   *
+   * Allows customization of how array types are rendered.
+   *
+   * Returning `undefined` will execute the default resolver logic.
+   */
+  array?: (ctx: ArrayResolverContext) => Type | undefined;
+  /**
+   * Resolver for boolean schemas.
+   *
+   * Allows customization of how boolean types are rendered.
+   *
+   * Returning `undefined` will execute the default resolver logic.
+   */
+  boolean?: (ctx: BooleanResolverContext) => Type | undefined;
   /**
    * Resolver for enum schemas.
    *
@@ -13,6 +29,30 @@ export type Resolvers = Plugin.Resolvers<{
    * Returning `undefined` will execute the default resolver logic.
    */
   enum?: (ctx: EnumResolverContext) => Type | undefined;
+  /**
+   * Resolver for intersection schemas.
+   *
+   * Allows customization of how intersection types are rendered.
+   *
+   * Returning `undefined` will execute the default resolver logic.
+   */
+  intersection?: (ctx: IntersectionResolverContext) => Type | undefined;
+  /**
+   * Resolver for never schemas.
+   *
+   * Allows customization of how never types are rendered.
+   *
+   * Returning `undefined` will execute the default resolver logic.
+   */
+  never?: (ctx: NeverResolverContext) => Type | undefined;
+  /**
+   * Resolver for null schemas.
+   *
+   * Allows customization of how null types are rendered.
+   *
+   * Returning `undefined` will execute the default resolver logic.
+   */
+  null?: (ctx: NullResolverContext) => Type | undefined;
   /**
    * Resolver for number schemas.
    *
@@ -37,11 +77,83 @@ export type Resolvers = Plugin.Resolvers<{
    * Returning `undefined` will execute the default resolver logic.
    */
   string?: (ctx: StringResolverContext) => Type | undefined;
+  /**
+   * Resolver for tuple schemas.
+   *
+   * Allows customization of how tuple types are rendered.
+   *
+   * Returning `undefined` will execute the default resolver logic.
+   */
+  tuple?: (ctx: TupleResolverContext) => Type | undefined;
+  /**
+   * Resolver for undefined schemas.
+   *
+   * Allows customization of how undefined types are rendered.
+   *
+   * Returning `undefined` will execute the default resolver logic.
+   */
+  undefined?: (ctx: UndefinedResolverContext) => Type | undefined;
+  /**
+   * Resolver for union schemas.
+   *
+   * Allows customization of how union types are rendered.
+   *
+   * Returning `undefined` will execute the default resolver logic.
+   */
+  union?: (ctx: UnionResolverContext) => Type | undefined;
+  /**
+   * Resolver for unknown schemas.
+   *
+   * Allows customization of how unknown types are rendered.
+   *
+   * Returning `undefined` will execute the default resolver logic.
+   */
+  unknown?: (ctx: UnknownResolverContext) => Type | undefined;
+  /**
+   * Resolver for void schemas.
+   *
+   * Allows customization of how void types are rendered.
+   *
+   * Returning `undefined` will execute the default resolver logic.
+   */
+  void?: (ctx: VoidResolverContext) => Type | undefined;
 }>;
 
 interface BaseContext extends DollarTsDsl {
   /** The plugin instance. */
   plugin: HeyApiTypeScriptPlugin['Instance'];
+}
+
+export interface ArrayResolverContext extends BaseContext {
+  /**
+   * Nodes used to build different parts of the result.
+   */
+  nodes: {
+    /**
+     * Returns the base array type expression.
+     */
+    base: (ctx: ArrayResolverContext) => Type;
+  };
+  schema: SchemaWithType<'array'>;
+  walk: Walker<TypeScriptResult, HeyApiTypeScriptPlugin['Instance']>;
+  walkerCtx: SchemaVisitorContext<HeyApiTypeScriptPlugin['Instance']>;
+}
+
+export interface BooleanResolverContext extends BaseContext {
+  /**
+   * Nodes used to build different parts of the result.
+   */
+  nodes: {
+    /**
+     * Returns the base boolean type expression.
+     */
+    base: (ctx: BooleanResolverContext) => Type;
+    /**
+     * Returns the literal type for const values.
+     */
+    const: (ctx: BooleanResolverContext) => Type | undefined;
+  };
+  schema: SchemaWithType<'boolean'>;
 }
 
 export interface EnumResolverContext extends BaseContext {
@@ -68,6 +180,56 @@ export interface EnumResolverContext extends BaseContext {
     };
   };
   schema: SchemaWithType<'enum'>;
+}
+
+export interface IntersectionResolverContext extends BaseContext {
+  /**
+   * The child results from walking intersection members.
+   */
+  childResults: ReadonlyArray<TypeScriptResult>;
+  /**
+   * Nodes used to build different parts of the result.
+   */
+  nodes: {
+    /**
+     * Returns the base intersection type expression.
+     */
+    base: (ctx: IntersectionResolverContext) => Type;
+  };
+  /**
+   * The parent schema containing the intersection.
+   */
+  parentSchema: IR.SchemaObject;
+  /**
+   * The individual schemas being intersected.
+   */
+  schemas: ReadonlyArray<IR.SchemaObject>;
+}
+
+export interface NeverResolverContext extends BaseContext {
+  /**
+   * Nodes used to build different parts of the result.
+   */
+  nodes: {
+    /**
+     * Returns the base never type expression.
+     */
+    base: (ctx: NeverResolverContext) => Type;
+  };
+  schema: SchemaWithType<'never'>;
+}
+
+export interface NullResolverContext extends BaseContext {
+  /**
+   * Nodes used to build different parts of the result.
+   */
+  nodes: {
+    /**
+     * Returns the base null type expression.
+     */
+    base: (ctx: NullResolverContext) => Type;
+  };
+  schema: SchemaWithType<'null'>;
 }
 
 export interface NumberResolverContext extends BaseContext {
@@ -125,4 +287,86 @@ export interface StringResolverContext extends BaseContext {
     format: (ctx: StringResolverContext) => Type | undefined;
   };
   schema: SchemaWithType<'string'>;
+}
+
+export interface TupleResolverContext extends BaseContext {
+  /**
+   * Nodes used to build different parts of the result.
+   */
+  nodes: {
+    /**
+     * Returns the base tuple type expression.
+     */
+    base: (ctx: TupleResolverContext) => Type;
+    /**
+     * Returns the literal type for const tuple values.
+     */
+    const: (ctx: TupleResolverContext) => Type | undefined;
+  };
+  schema: SchemaWithType<'tuple'>;
+  walk: Walker<TypeScriptResult, HeyApiTypeScriptPlugin['Instance']>;
+  walkerCtx: SchemaVisitorContext<HeyApiTypeScriptPlugin['Instance']>;
+}
+
+export interface UnionResolverContext extends BaseContext {
+  /**
+   * The child results from walking union members.
+   */
+  childResults: ReadonlyArray<TypeScriptResult>;
+  /**
+   * Nodes used to build different parts of the result.
+   */
+  nodes: {
+    /**
+     * Returns the base union type expression.
+     */
+    base: (ctx: UnionResolverContext) => Type;
+  };
+  /**
+   * The parent schema containing the union.
+   */
+  parentSchema: IR.SchemaObject;
+  /**
+   * The individual schemas being unioned.
+   */
+  schemas: ReadonlyArray<IR.SchemaObject>;
+}
+
+export interface UndefinedResolverContext extends BaseContext {
+  /**
+   * Nodes used to build different parts of the result.
+   */
+  nodes: {
+    /**
+     * Returns the base undefined type expression.
+     */
+    base: (ctx: UndefinedResolverContext) => Type;
+  };
+  schema: SchemaWithType<'undefined'>;
+}
+
+export interface UnknownResolverContext extends BaseContext {
+  /**
+   * Nodes used to build different parts of the result.
+   */
+  nodes: {
+    /**
+     * Returns the base unknown type expression.
+     */
+    base: (ctx: UnknownResolverContext) => Type;
+  };
+  schema: SchemaWithType<'unknown'>;
+}
+
+export interface VoidResolverContext extends BaseContext {
+  /**
+   * Nodes used to build different parts of the result.
+   */
+  nodes: {
+    /**
+     * Returns the base void type expression.
+     */
+    base: (ctx: VoidResolverContext) => Type;
+  };
+  schema: SchemaWithType<'void'>;
 }
