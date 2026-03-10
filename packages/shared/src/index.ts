@@ -1,4 +1,4 @@
-export { printCliIntro } from './cli';
+export { isEnvironment, printCliIntro } from './cli';
 export { checkNodeVersion } from './config/engine';
 export { getInput } from './config/input/input';
 export { compileInputPath, logInputPaths } from './config/input/path';
