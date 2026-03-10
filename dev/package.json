@@ -20,7 +20,7 @@
     "@tanstack/solid-query": "5.90.23",
     "@tanstack/svelte-query": "5.90.2",
     "@tanstack/vue-query": "5.92.9",
-    "arktype": "2.1.29",
+    "arktype": "2.2.0",
     "nuxt": "3.21.0",
     "swr": "2.4.0",
     "tsx": "4.21.0",
