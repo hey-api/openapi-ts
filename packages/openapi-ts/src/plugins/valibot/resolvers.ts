@@ -155,12 +155,6 @@ export interface ObjectResolverContext extends BaseContext {
     shape: (ctx: ObjectResolverContext) => ReturnType<typeof $.object>;
   };
   schema: SchemaWithType<'object'>;
-  /**
-   * Utility functions for object schema processing.
-   */
-  utils: {
-    ast: Partial<{ hasLazy: boolean }>;
-  };
   walk: Walker<ValibotResult, ValibotPlugin['Instance']>;
   walkerCtx: SchemaVisitorContext<ValibotPlugin['Instance']>;
 }
