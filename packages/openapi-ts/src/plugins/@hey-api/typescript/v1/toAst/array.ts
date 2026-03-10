@@ -1,22 +1,15 @@
 import { ref } from '@hey-api/codegen-core';
-import type { SchemaWithType } from '@hey-api/shared';
-import type { Walker } from '@hey-api/shared';
+import type { SchemaVisitorContext, SchemaWithType, Walker } from '@hey-api/shared';
 import { deduplicateSchema } from '@hey-api/shared';
 
 import { $ } from '../../../../../ts-dsl';
-import type { Type } from '../../shared/types';
-import type { TypeScriptResult } from '../../shared/types';
+import type { ArrayResolverContext } from '../../resolvers';
+import type { Type, TypeScriptResult } from '../../shared/types';
 import type { HeyApiTypeScriptPlugin } from '../../types';
 
-export function arrayToAst({
-  plugin,
-  schema,
-  walk,
-}: {
-  plugin: HeyApiTypeScriptPlugin['Instance'];
-  schema: SchemaWithType<'array'>;
-  walk: Walker<TypeScriptResult, HeyApiTypeScriptPlugin['Instance']>;
-}): Type {
+function baseNode(ctx: ArrayResolverContext): Type {
+  const { plugin, schema, walk } = ctx;
+
   if (!schema.items) {
     return $.type('Array').generic($.type(plugin.config.topType));
   }
@@ -39,4 +32,35 @@ export function arrayToAst({
   return dedupedSchema.logicalOperator === 'and'
     ? $.type('Array').generic($.type.and(...itemResults.map((r) => r.type)))
     : $.type('Array').generic($.type.or(...itemResults.map((r) => r.type)));
+}
+
+function arrayResolver(ctx: ArrayResolverContext): Type {
+  return ctx.nodes.base(ctx);
+}
+
+export function arrayToAst({
+  plugin,
+  schema,
+  walk,
+  walkerCtx,
+}: {
+  plugin: HeyApiTypeScriptPlugin['Instance'];
+  schema: SchemaWithType<'array'>;
+  walk: Walker<TypeScriptResult, HeyApiTypeScriptPlugin['Instance']>;
+  walkerCtx: SchemaVisitorContext<HeyApiTypeScriptPlugin['Instance']>;
+}): Type {
+  const ctx: ArrayResolverContext = {
+    $,
+    nodes: {
+      base: baseNode,
+    },
+    plugin,
+    schema,
+    walk,
+    walkerCtx,
+  };
+
+  const resolver = plugin.config['~resolvers']?.array;
+  const result = resolver?.(ctx);
+  return result ?? arrayResolver(ctx);
 }
