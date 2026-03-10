@@ -1,26 +1,16 @@
 import { ref } from '@hey-api/codegen-core';
-import type { SchemaWithType } from '@hey-api/shared';
-import type { Walker } from '@hey-api/shared';
+import type { SchemaVisitorContext, SchemaWithType, Walker } from '@hey-api/shared';
 
 import { $ } from '../../../../../ts-dsl';
-import type { Type } from '../../shared/types';
-import type { TypeScriptResult } from '../../shared/types';
+import type { TupleResolverContext } from '../../resolvers';
+import type { Type, TypeScriptResult } from '../../shared/types';
 import type { HeyApiTypeScriptPlugin } from '../../types';
 
-export function tupleToAst({
-  plugin,
-  schema,
-  walk,
-}: {
-  plugin: HeyApiTypeScriptPlugin['Instance'];
-  schema: SchemaWithType<'tuple'>;
-  walk: Walker<TypeScriptResult, HeyApiTypeScriptPlugin['Instance']>;
-}): Type {
-  let itemTypes: Array<Type> = [];
+function baseNode(ctx: TupleResolverContext): Type {
+  const { plugin, schema, walk } = ctx;
+  const itemTypes: Array<Type> = [];
 
-  if (schema.const && Array.isArray(schema.const)) {
-    itemTypes = schema.const.map((value) => $.type.fromValue(value));
-  } else if (schema.items) {
+  if (schema.items) {
     schema.items.forEach((item) => {
       const result = walk(item, { path: ref([]), plugin });
       itemTypes.push(result.type);
@@ -28,4 +18,50 @@ export function tupleToAst({
   }
 
   return $.type.tuple(...itemTypes);
+}
+
+function constNode(ctx: TupleResolverContext): Type | undefined {
+  const { schema } = ctx;
+
+  if (!schema.const || !Array.isArray(schema.const)) {
+    return undefined;
+  }
+
+  const itemTypes = schema.const.map((value) => $.type.fromValue(value));
+  return $.type.tuple(...itemTypes);
+}
+
+function tupleResolver(ctx: TupleResolverContext): Type {
+  const constResult = ctx.nodes.const(ctx);
+  if (constResult) return constResult;
+
+  return ctx.nodes.base(ctx);
+}
+
+export function tupleToAst({
+  plugin,
+  schema,
+  walk,
+  walkerCtx,
+}: {
+  plugin: HeyApiTypeScriptPlugin['Instance'];
+  schema: SchemaWithType<'tuple'>;
+  walk: Walker<TypeScriptResult, HeyApiTypeScriptPlugin['Instance']>;
+  walkerCtx: SchemaVisitorContext<HeyApiTypeScriptPlugin['Instance']>;
+}): Type {
+  const ctx: TupleResolverContext = {
+    $,
+    nodes: {
+      base: baseNode,
+      const: constNode,
+    },
+    plugin,
+    schema,
+    walk,
+    walkerCtx,
+  };
+
+  const resolver = plugin.config['~resolvers']?.tuple;
+  const result = resolver?.(ctx);
+  return result ?? tupleResolver(ctx);
 }
