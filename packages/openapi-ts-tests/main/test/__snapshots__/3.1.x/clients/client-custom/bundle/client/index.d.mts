@@ -238,7 +238,7 @@ interface TDataShape {
   url: string;
 }
 type OmitKeys<T, K$1> = Pick<T, Exclude<keyof T, K$1>>;
-type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = OmitKeys<RequestOptions<ThrowOnError>, 'body' | 'path' | 'query' | 'url'> & Omit<TData, 'url'>;
+type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, _TResponse = unknown> = OmitKeys<RequestOptions<ThrowOnError>, 'body' | 'path' | 'query' | 'url'> & Omit<TData, 'url'>;
 //#endregion
 //#region src/client.d.ts
 declare const createClient: (config?: Config) => Client;
