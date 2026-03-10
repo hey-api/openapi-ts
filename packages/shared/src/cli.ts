@@ -38,6 +38,13 @@ const asciiToLines = (
   return { lines, maxLineLength };
 };
 
+/**
+ * Checks the current environment based on the HEYAPI_CODEGEN_ENV environment variable.
+ */
+export function isEnvironment(value: 'development'): boolean {
+  return process.env.HEYAPI_CODEGEN_ENV === value;
+}
+
 // TODO: show ascii logo only in `--help` and `--version` commands
 export function printCliIntro(initialDir: string, showLogo: boolean = false): void {
   const packageJson = loadPackageJson(initialDir);
@@ -48,7 +55,10 @@ export function printCliIntro(initialDir: string, showLogo: boolean = false): vo
         console.log(colors.cyan(line));
       }
     }
-    console.log(colors.gray(`${packageJson.name} v${packageJson.version}`));
+    const versionString = isEnvironment('development')
+      ? '[DEVELOPMENT]'
+      : `v${packageJson.version}`;
+    console.log(colors.gray(`${packageJson.name} ${versionString}`));
   }
   console.log('');
 }
