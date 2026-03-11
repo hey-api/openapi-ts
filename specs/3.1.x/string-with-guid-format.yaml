@@ -1,0 +1,18 @@
+openapi: 3.1.1
+info:
+  title: OpenAPI 3.1.1 string with GUID format example
+  version: '1'
+paths:
+  /foo/{guidId}:
+    get:
+      operationId: getFoo
+      parameters:
+        - name: guidId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: guid
+      responses:
+        '200':
+          description: OK
