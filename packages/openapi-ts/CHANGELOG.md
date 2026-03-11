@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## Unreleased
+
+### Patch Changes
+
+- **plugin(zod)**: support OpenAPI `guid` string format in Zod v4 and Zod Mini outputs
+
 ## 0.94.0
 
 ### Minor Changes
