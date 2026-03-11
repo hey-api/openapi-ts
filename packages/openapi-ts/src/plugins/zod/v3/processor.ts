@@ -1,10 +1,10 @@
-import { ref, refs } from '@hey-api/codegen-core';
+import { ref } from '@hey-api/codegen-core';
 import type { IR } from '@hey-api/shared';
 import { createSchemaProcessor, createSchemaWalker, pathToJsonPointer } from '@hey-api/shared';
 
 import { exportAst } from '../shared/export';
 import type { ProcessorContext, ProcessorResult } from '../shared/processor';
-import type { PluginState, ZodAppliedResult } from '../shared/types';
+import type { ZodFinal } from '../shared/types';
 import type { ZodPlugin } from '../types';
 import { createVisitor } from './walker';
 
@@ -37,15 +37,8 @@ export function createProcessor(plugin: ZodPlugin['Instance']): ProcessorResult 
     if (!processor.markEmitted(ctx.path)) return;
 
     return processor.withContext({ anchor: ctx.namingAnchor, tags: ctx.tags }, () => {
-      const state = refs<PluginState>({
-        hasLazyExpression: false,
-        path: ctx.path,
-        tags: ctx.tags,
-      });
-
       const visitor = createVisitor({
         schemaExtractor: extractor,
-        state,
       });
       const walk = createSchemaWalker(visitor);
 
@@ -53,16 +46,13 @@ export function createProcessor(plugin: ZodPlugin['Instance']): ProcessorResult 
         path: ref(ctx.path),
         plugin,
       });
-      const ast =
-        (visitor.applyModifiers(result, {
-          path: ref(ctx.path),
-          plugin,
-        }) as ZodAppliedResult) ?? result.expression;
-      if (result.hasLazyExpression) {
-        state.hasLazyExpression['~ref'] = true;
-      }
 
-      exportAst({ ...ctx, ast, plugin, state });
+      const final = visitor.applyModifiers(result, {
+        path: ref(ctx.path),
+        plugin,
+      }) as ZodFinal;
+
+      exportAst({ ...ctx, final, plugin });
     });
   }
 

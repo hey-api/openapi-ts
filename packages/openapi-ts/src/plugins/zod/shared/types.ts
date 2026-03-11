@@ -1,58 +1,35 @@
-import type { Refs, SymbolMeta } from '@hey-api/codegen-core';
-import type { FeatureToggle, IR, NamingOptions, Walker } from '@hey-api/shared';
+import type { FeatureToggle, IR, NamingOptions } from '@hey-api/shared';
 import type ts from 'typescript';
 
-import type { $ } from '../../../ts-dsl';
 import type { ZodPlugin } from '../types';
+import type { Chain } from './chain';
 
-export type Ast = {
-  anyType?: string;
-  expression: ReturnType<typeof $.expr | typeof $.call>;
-  hasLazyExpression?: boolean;
-  typeName?: string | ts.Identifier;
-};
-
-export type IrSchemaToAstOptions = {
+export type ValidatorArgs = {
+  operation: IR.OperationObject;
   /** The plugin instance. */
   plugin: ZodPlugin['Instance'];
-  /** The plugin state references. */
-  state: Refs<PluginState>;
-  walk: Walker<ZodSchemaResult, ZodPlugin['Instance']>;
 };
 
-export type PluginState = Pick<Required<SymbolMeta>, 'path'> &
-  Pick<Partial<SymbolMeta>, 'tags'> & {
-    anyType?: string;
-    hasLazyExpression: boolean;
-  };
-
 export type TypeOptions = {
-  /** Configuration for TypeScript type generation from Zod schemas. */
   types: {
-    /** Configuration for `infer` types. */
     infer: NamingOptions & FeatureToggle;
   };
 };
 
-export type ValidatorArgs = {
-  operation: IR.OperationObject;
-  plugin: ZodPlugin['Instance'];
-};
-
 /**
- * The result from schema walking.
+ * Metadata that flows through schema walking.
  */
-export interface ZodSchemaResult {
-  /** Default value from schema, if any. */
+export interface ZodMeta {
+  /** Default value from schema. */
   default?: unknown;
-  /** The Zod expression AST. */
-  expression: { expression: ReturnType<typeof $.expr | typeof $.call> };
-  /** The original schema format (for BigInt coercion). */
+  /** Original format (for BigInt coercion). */
   format?: string;
-  /** Whether any child contains a lazy expression. */
-  hasLazyExpression?: boolean;
-  /** Whether THIS result is itself lazy (not just inherited). */
-  isLazy?: boolean;
+  /** Whether this or any child contains a lazy reference. */
+  hasLazy: boolean;
+  /** Whether this schema itself is emitted as lazy. */
+  isLazy: boolean;
+  /** Whether this schema resolves to an object shape. */
+  isObject?: boolean;
   /** Does this schema explicitly allow null? */
   nullable: boolean;
   /** Is this schema read-only? */
@@ -60,8 +37,24 @@ export interface ZodSchemaResult {
 }
 
 /**
- * The finalized expression after applyModifiers.
+ * Result from walking a schema node.
  */
-export interface ZodAppliedResult {
-  expression: ReturnType<typeof $.expr | typeof $.call>;
+export interface ZodResult {
+  expression: Chain;
+  meta: ZodMeta;
+}
+
+/**
+ * Finalized result after applyModifiers.
+ */
+export interface ZodFinal extends Pick<ZodResult, 'expression'> {
+  /** Type annotation for schemas requiring explicit typing (e.g., lazy). */
+  typeName?: string | ts.Identifier;
+}
+
+/**
+ * Result from composite handlers that walk children.
+ */
+export interface CompositeHandlerResult extends Pick<ZodResult, 'expression'> {
+  childResults: Array<ZodResult>;
 }
