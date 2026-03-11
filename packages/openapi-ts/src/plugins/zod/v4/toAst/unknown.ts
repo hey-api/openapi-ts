@@ -2,15 +2,15 @@ import type { SchemaWithType } from '@hey-api/shared';
 
 import { $ } from '../../../../ts-dsl';
 import { identifiers } from '../../constants';
-import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
+import type { Chain } from '../../shared/chain';
+import type { ZodPlugin } from '../../types';
 
 export function unknownToAst({
   plugin,
-}: Pick<IrSchemaToAstOptions, 'plugin'> & {
+}: {
+  plugin: ZodPlugin['Instance'];
   schema: SchemaWithType<'unknown'>;
-}): Omit<Ast, 'typeName'> {
-  const result: Partial<Omit<Ast, 'typeName'>> = {};
+}): Chain {
   const z = plugin.external('zod.z');
-  result.expression = $(z).attr(identifiers.unknown).call();
-  return result as Omit<Ast, 'typeName'>;
+  return $(z).attr(identifiers.unknown).call();
 }

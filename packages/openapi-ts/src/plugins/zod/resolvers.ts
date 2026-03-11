@@ -1,4 +1,4 @@
-import type { Refs, Symbol } from '@hey-api/codegen-core';
+import type { Symbol } from '@hey-api/codegen-core';
 import type { IR, Plugin, SchemaVisitorContext, SchemaWithType, Walker } from '@hey-api/shared';
 import type { MaybeArray } from '@hey-api/types';
 import type ts from 'typescript';
@@ -6,8 +6,8 @@ import type ts from 'typescript';
 import type { MaybeBigInt, ShouldCoerceToBigInt } from '../../plugins/shared/utils/coerce';
 import type { GetIntegerLimit } from '../../plugins/shared/utils/formats';
 import type { $, DollarTsDsl, TsDsl } from '../../ts-dsl';
-import type { Chain } from './shared/chain';
-import type { Ast, PluginState, ZodSchemaResult } from './shared/types';
+import type { Chain, ChainResult } from './shared/chain';
+import type { ZodFinal, ZodResult } from './shared/types';
 import type { ZodPlugin } from './types';
 
 export type Resolvers = Plugin.Resolvers<{
@@ -18,7 +18,7 @@ export type Resolvers = Plugin.Resolvers<{
    *
    * Returning `undefined` will execute the default resolver logic.
    */
-  enum?: (ctx: EnumResolverContext) => Chain | undefined;
+  enum?: (ctx: EnumResolverContext) => ChainResult;
   /**
    * Resolver for number schemas.
    *
@@ -26,7 +26,7 @@ export type Resolvers = Plugin.Resolvers<{
    *
    * Returning `undefined` will execute the default resolver logic.
    */
-  number?: (ctx: NumberResolverContext) => Chain | undefined;
+  number?: (ctx: NumberResolverContext) => ChainResult;
   /**
    * Resolver for object schemas.
    *
@@ -34,7 +34,7 @@ export type Resolvers = Plugin.Resolvers<{
    *
    * Returning `undefined` will execute the default resolver logic.
    */
-  object?: (ctx: ObjectResolverContext) => Chain | undefined;
+  object?: (ctx: ObjectResolverContext) => ChainResult;
   /**
    * Resolver for string schemas.
    *
@@ -42,7 +42,7 @@ export type Resolvers = Plugin.Resolvers<{
    *
    * Returning `undefined` will execute the default resolver logic.
    */
-  string?: (ctx: StringResolverContext) => Chain | undefined;
+  string?: (ctx: StringResolverContext) => ChainResult;
   /**
    * Resolvers for request and response validators.
    *
@@ -82,10 +82,10 @@ interface BaseContext extends DollarTsDsl {
     /**
      * The current chain.
      *
-     * In Zod, this represents a chain of call expressions ("chains")
-     * being assembled to form a schema definition.
+     * In Zod, this represents a chain of method calls being assembled
+     * to form a schema definition (e.g., `z.string().min(1).max(10)`).
      *
-     * Each chain can be extended, modified, or replaced to customize
+     * Each method can be extended, modified, or replaced to customize
      * the resulting schema.
      */
     current: Chain;
@@ -106,7 +106,7 @@ export interface EnumResolverContext extends BaseContext {
    */
   nodes: {
     /**
-     * Returns the base enum expression (z.enum([...]) or z.union([...]) for mixed types).
+     * Returns the base enum expression (z.enum([...]) or z.union([...])).
      */
     base: (ctx: EnumResolverContext) => Chain;
     /**
@@ -114,7 +114,7 @@ export interface EnumResolverContext extends BaseContext {
      */
     items: (ctx: EnumResolverContext) => {
       /**
-       * Whether all enum items are strings (determines if z.enum can be used).
+       * Whether all enum members are strings.
        */
       allStrings: boolean;
       /**
@@ -126,19 +126,12 @@ export interface EnumResolverContext extends BaseContext {
        */
       isNullable: boolean;
       /**
-       * z.literal(...) expressions for each non-null enum value.
+       * Zod literal expressions for each enum member.
        */
       literalMembers: Array<Chain>;
     };
   };
   schema: SchemaWithType<'enum'>;
-  /**
-   * Utility functions for enum schema processing.
-   */
-  utils: {
-    ast: Partial<Omit<Ast, 'typeName'>>;
-    state: Refs<PluginState>;
-  };
 }
 
 export interface NumberResolverContext extends BaseContext {
@@ -146,47 +139,60 @@ export interface NumberResolverContext extends BaseContext {
    * Nodes used to build different parts of the result.
    */
   nodes: {
+    /**
+     * Returns the base number expression (z.number() or z.coerce.number()).
+     */
     base: (ctx: NumberResolverContext) => Chain;
-    const: (ctx: NumberResolverContext) => Chain | undefined;
-    max: (ctx: NumberResolverContext) => Chain | undefined;
-    min: (ctx: NumberResolverContext) => Chain | undefined;
+    /**
+     * Returns a literal expression for the const value, if present.
+     */
+    const: (ctx: NumberResolverContext) => ChainResult;
+    /**
+     * Returns the maximum value constraint.
+     */
+    max: (ctx: NumberResolverContext) => ChainResult;
+    /**
+     * Returns the minimum value constraint.
+     */
+    min: (ctx: NumberResolverContext) => ChainResult;
   };
   schema: SchemaWithType<'integer' | 'number'>;
   /**
    * Utility functions for number schema processing.
    */
   utils: {
-    ast: Partial<Omit<Ast, 'typeName'>>;
     getIntegerLimit: GetIntegerLimit;
     maybeBigInt: MaybeBigInt;
     shouldCoerceToBigInt: ShouldCoerceToBigInt;
-    state: Refs<PluginState>;
   };
 }
 
 export interface ObjectResolverContext extends BaseContext {
-  applyModifiers: (result: ZodSchemaResult, opts: { optional?: boolean }) => Ast;
+  /**
+   * Child results from processing object properties.
+   * Used for metadata composition.
+   */
+  _childResults: Array<ZodResult>;
+  applyModifiers: (result: ZodResult, opts: { optional?: boolean }) => ZodFinal;
   /**
    * Nodes used to build different parts of the result.
    */
   nodes: {
     /**
-     * If `additionalProperties` is `false` or `{ type: 'never' }`, returns `null`
-     * to indicate no additional properties are allowed.
+     * Returns the additional properties expression, if any.
      */
     additionalProperties: (ctx: ObjectResolverContext) => Chain | null | undefined;
+    /**
+     * Returns the base object expression (z.object({...}) or z.record(...)).
+     */
     base: (ctx: ObjectResolverContext) => Chain;
+    /**
+     * Returns the object shape (property definitions).
+     */
     shape: (ctx: ObjectResolverContext) => ReturnType<typeof $.object>;
   };
   schema: SchemaWithType<'object'>;
-  /**
-   * Utility functions for object schema processing.
-   */
-  utils: {
-    ast: Partial<Omit<Ast, 'typeName'>>;
-    state: Refs<PluginState>;
-  };
-  walk: Walker<ZodSchemaResult, ZodPlugin['Instance']>;
+  walk: Walker<ZodResult, ZodPlugin['Instance']>;
   walkerCtx: SchemaVisitorContext<ZodPlugin['Instance']>;
 }
 
@@ -195,13 +201,34 @@ export interface StringResolverContext extends BaseContext {
    * Nodes used to build different parts of the result.
    */
   nodes: {
+    /**
+     * Returns the base string expression (z.string()).
+     */
     base: (ctx: StringResolverContext) => Chain;
-    const: (ctx: StringResolverContext) => Chain | undefined;
-    format: (ctx: StringResolverContext) => Chain | undefined;
-    length: (ctx: StringResolverContext) => Chain | undefined;
-    maxLength: (ctx: StringResolverContext) => Chain | undefined;
-    minLength: (ctx: StringResolverContext) => Chain | undefined;
-    pattern: (ctx: StringResolverContext) => Chain | undefined;
+    /**
+     * Returns a literal expression for the const value, if present.
+     */
+    const: (ctx: StringResolverContext) => ChainResult;
+    /**
+     * Returns a format validation expression, if applicable.
+     */
+    format: (ctx: StringResolverContext) => ChainResult;
+    /**
+     * Returns a length constraint (when min === max), if applicable.
+     */
+    length: (ctx: StringResolverContext) => ChainResult;
+    /**
+     * Returns a maxLength constraint, if applicable.
+     */
+    maxLength: (ctx: StringResolverContext) => ChainResult;
+    /**
+     * Returns a minLength constraint, if applicable.
+     */
+    minLength: (ctx: StringResolverContext) => ChainResult;
+    /**
+     * Returns a pattern (regex) constraint, if applicable.
+     */
+    pattern: (ctx: StringResolverContext) => ChainResult;
   };
   schema: SchemaWithType<'string'>;
 }

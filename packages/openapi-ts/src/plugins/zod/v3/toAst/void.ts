@@ -2,14 +2,15 @@ import type { SchemaWithType } from '@hey-api/shared';
 
 import { $ } from '../../../../ts-dsl';
 import { identifiers } from '../../constants';
-import type { IrSchemaToAstOptions } from '../../shared/types';
+import type { Chain } from '../../shared/chain';
+import type { ZodPlugin } from '../../types';
 
 export function voidToAst({
   plugin,
-}: Pick<IrSchemaToAstOptions, 'plugin'> & {
+}: {
+  plugin: ZodPlugin['Instance'];
   schema: SchemaWithType<'void'>;
-}) {
+}): Chain {
   const z = plugin.external('zod.z');
-  const expression = $(z).attr(identifiers.void).call();
-  return expression;
+  return $(z).attr(identifiers.void).call();
 }
