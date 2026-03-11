@@ -2,23 +2,21 @@ import type { SchemaWithType } from '@hey-api/shared';
 
 import { $ } from '../../../../ts-dsl';
 import { identifiers } from '../../constants';
-import type { IrSchemaToAstOptions } from '../../shared/types';
+import type { Chain } from '../../shared/chain';
+import type { ZodPlugin } from '../../types';
 
 export function booleanToAst({
   plugin,
   schema,
-}: Pick<IrSchemaToAstOptions, 'plugin'> & {
+}: {
+  plugin: ZodPlugin['Instance'];
   schema: SchemaWithType<'boolean'>;
-}): ReturnType<typeof $.call> {
-  let chain: ReturnType<typeof $.call>;
-
+}): Chain {
   const z = plugin.external('zod.z');
 
   if (typeof schema.const === 'boolean') {
-    chain = $(z).attr(identifiers.literal).call($.literal(schema.const));
-    return chain;
+    return $(z).attr(identifiers.literal).call($.literal(schema.const));
   }
 
-  chain = $(z).attr(identifiers.boolean).call();
-  return chain;
+  return $(z).attr(identifiers.boolean).call();
 }

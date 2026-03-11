@@ -3,7 +3,6 @@ import { operationResponsesMap } from '@hey-api/shared';
 
 import { buildOperationSchema } from './operation-schema';
 import type { ProcessorContext, ProcessorResult } from './processor';
-import type { IrSchemaToAstOptions } from './types';
 
 export function irOperationToAst({
   operation,
@@ -11,11 +10,10 @@ export function irOperationToAst({
   plugin,
   processor,
   tags,
-}: Pick<IrSchemaToAstOptions, 'plugin'> &
-  Pick<ProcessorContext, 'path' | 'tags'> & {
-    operation: IR.OperationObject;
-    processor: ProcessorResult;
-  }): void {
+}: Pick<ProcessorContext, 'path' | 'plugin' | 'tags'> & {
+  operation: IR.OperationObject;
+  processor: ProcessorResult;
+}): void {
   if (plugin.config.requests.enabled) {
     const { schema } = buildOperationSchema(operation);
 
