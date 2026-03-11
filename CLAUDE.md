@@ -88,6 +88,15 @@ scripts/               # Build and test scripts
 - Object/interface keys sorted alphabetically
 - Destructured keys sorted alphabetically
 
+## Refactoring Guidelines
+
+When refactoring existing code:
+
+- **Preserve all JSDoc comments** - Read the original file first and keep all existing documentation
+- **Match existing code patterns** - Look at similar files in the codebase for conventions
+- **Prefer `edit` over `write`** - Making targeted edits preserves comments better than rewriting files
+- **Check reference implementations** - For plugin work, use Valibot as a reference for proper patterns
+
 ## Pre-commit Checklist
 
 Run before committing (Husky runs format + lint automatically, but also verify):

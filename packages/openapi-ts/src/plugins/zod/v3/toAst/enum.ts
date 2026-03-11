@@ -4,8 +4,7 @@ import { $ } from '../../../../ts-dsl';
 import { identifiers } from '../../constants';
 import type { EnumResolverContext } from '../../resolvers';
 import type { Chain } from '../../shared/chain';
-import type { IrSchemaToAstOptions } from '../../shared/types';
-import { unknownToAst } from './unknown';
+import type { ZodPlugin } from '../../types';
 
 function itemsNode(ctx: EnumResolverContext): ReturnType<EnumResolverContext['nodes']['items']> {
   const { schema, symbols } = ctx;
@@ -80,30 +79,11 @@ function enumResolver(ctx: EnumResolverContext): Chain {
 export function enumToAst({
   plugin,
   schema,
-  state,
-}: Pick<IrSchemaToAstOptions, 'plugin' | 'state'> & {
+}: {
+  plugin: ZodPlugin['Instance'];
   schema: SchemaWithType<'enum'>;
 }): Chain {
   const z = plugin.external('zod.z');
-
-  const { literalMembers } = itemsNode({
-    $,
-    chain: { current: $(z) },
-    nodes: { base: baseNode, items: itemsNode },
-    plugin,
-    schema,
-    symbols: { z },
-    utils: { ast: {}, state },
-  });
-
-  if (!literalMembers.length) {
-    return unknownToAst({
-      plugin,
-      schema: {
-        type: 'unknown',
-      },
-    });
-  }
 
   const ctx: EnumResolverContext = {
     $,
@@ -118,10 +98,6 @@ export function enumToAst({
     schema,
     symbols: {
       z,
-    },
-    utils: {
-      ast: {},
-      state,
     },
   };
 

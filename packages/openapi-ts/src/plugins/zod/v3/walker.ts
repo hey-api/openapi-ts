@@ -1,13 +1,15 @@
-import type { Refs, SymbolMeta } from '@hey-api/codegen-core';
-import { fromRef, ref } from '@hey-api/codegen-core';
+import type { SymbolMeta } from '@hey-api/codegen-core';
+import { fromRef } from '@hey-api/codegen-core';
 import type { SchemaExtractor, SchemaVisitor } from '@hey-api/shared';
 import { pathToJsonPointer } from '@hey-api/shared';
 
 import { $ } from '../../../ts-dsl';
 import { maybeBigInt, shouldCoerceToBigInt } from '../../shared/utils/coerce';
 import { identifiers } from '../constants';
+import type { Chain } from '../shared/chain';
+import { defaultMeta, inheritMeta } from '../shared/meta';
 import type { ProcessorContext } from '../shared/processor';
-import type { PluginState, ZodAppliedResult, ZodSchemaResult } from '../shared/types';
+import type { ZodFinal, ZodResult } from '../shared/types';
 import type { ZodPlugin } from '../types';
 import { arrayToAst } from './toAst/array';
 import { booleanToAst } from './toAst/boolean';
@@ -25,25 +27,24 @@ import { voidToAst } from './toAst/void';
 export interface VisitorConfig {
   /** Optional schema extractor function. */
   schemaExtractor?: SchemaExtractor<ProcessorContext>;
-  /** The plugin state references. */
-  state: Refs<PluginState>;
 }
 
 export function createVisitor(
   config: VisitorConfig,
-): SchemaVisitor<ZodSchemaResult, ZodPlugin['Instance']> {
-  const { schemaExtractor, state } = config;
-  return {
-    applyModifiers(result, ctx, options = {}): ZodAppliedResult {
-      const { optional } = options;
-      let expression = result.expression.expression;
+): SchemaVisitor<ZodResult, ZodPlugin['Instance']> {
+  const { schemaExtractor } = config;
 
-      if (result.readonly) {
+  return {
+    applyModifiers(result, ctx, options = {}): ZodFinal {
+      const { optional } = options;
+      let expression = result.expression;
+
+      if (result.meta.readonly) {
         expression = expression.attr(identifiers.readonly).call();
       }
 
-      const hasDefault = result.default !== undefined;
-      const needsNullable = result.nullable;
+      const hasDefault = result.meta.default !== undefined;
+      const needsNullable = result.meta.nullable;
 
       if (optional && needsNullable) {
         expression = expression.attr(identifiers.nullish).call();
@@ -57,60 +58,64 @@ export function createVisitor(
         expression = expression
           .attr(identifiers.default)
           .call(
-            result.format
-              ? maybeBigInt(result.default, result.format)
-              : $.fromValue(result.default),
+            result.meta.format
+              ? maybeBigInt(result.meta.default, result.meta.format)
+              : $.fromValue(result.meta.default),
           );
       }
 
-      return { expression };
+      return {
+        expression,
+        typeName: result.meta.hasLazy
+          ? result.meta.isObject
+            ? identifiers.AnyZodObject
+            : identifiers.ZodTypeAny
+          : undefined,
+      };
     },
     array(schema, ctx, walk) {
-      const applyModifiers = (result: ZodSchemaResult, opts: { optional?: boolean }) =>
-        this.applyModifiers(result, ctx, opts) as ZodAppliedResult;
-      const ast = arrayToAst({
-        ...ctx,
+      const applyModifiers = (result: ZodResult, opts: { optional?: boolean }) =>
+        this.applyModifiers(result, ctx, opts) as ZodFinal;
+      const { childResults, expression } = arrayToAst({
         applyModifiers,
+        plugin: ctx.plugin,
         schema,
-        state,
         walk,
+        walkerCtx: ctx,
       });
+
       return {
-        default: schema.default,
-        expression: ast,
-        hasLazyExpression: state.hasLazyExpression['~ref'],
-        nullable: false,
-        readonly: schema.accessScope === 'read',
+        expression,
+        meta: inheritMeta(schema, childResults),
       };
     },
     boolean(schema, ctx) {
-      const ast = booleanToAst({ ...ctx, schema });
+      const expression = booleanToAst({ plugin: ctx.plugin, schema });
       return {
-        default: schema.default,
-        expression: { expression: ast },
-        nullable: false,
-        readonly: schema.accessScope === 'read',
+        expression,
+        meta: defaultMeta(schema),
       };
     },
     enum(schema, ctx) {
-      const ast = enumToAst({ ...ctx, schema, state });
+      const expression = enumToAst({ plugin: ctx.plugin, schema });
       const hasNull =
         schema.items?.some((item) => item.type === 'null' || item.const === null) ?? false;
       return {
-        default: schema.default,
-        expression: { expression: ast },
-        nullable: hasNull,
-        readonly: schema.accessScope === 'read',
+        expression,
+        meta: {
+          ...defaultMeta(schema),
+          nullable: hasNull,
+        },
       };
     },
     integer(schema, ctx) {
-      const ast = numberToNode({ ...ctx, schema, state });
+      const expression = numberToNode({ plugin: ctx.plugin, schema });
       return {
-        default: schema.default,
-        expression: { expression: ast },
-        format: schema.format,
-        nullable: false,
-        readonly: schema.accessScope === 'read',
+        expression,
+        meta: {
+          ...defaultMeta(schema),
+          format: schema.format,
+        },
       };
     },
     intercept(schema, ctx, walk) {
@@ -132,110 +137,101 @@ export function createVisitor(
     },
     intersection(items, schemas, parentSchema, ctx) {
       const z = ctx.plugin.external('zod.z');
-      const hasAnyLazy = items.some((item) => item.hasLazyExpression);
-
-      if (hasAnyLazy) {
-        state.anyType = ref(identifiers.ZodTypeAny);
-      }
+      const hasAnyLazy = items.some((item) => item.meta.hasLazy);
 
       const firstSchema = schemas[0];
-      let expression: ZodSchemaResult['expression'];
+      let expression: Chain;
 
-      // If first item is a union or non-object, use z.intersection()
-      // Otherwise use .and() chaining for better type inference
       if (
         firstSchema?.logicalOperator === 'or' ||
         (firstSchema?.type && firstSchema.type !== 'object')
       ) {
-        expression = {
-          expression: $(z)
-            .attr(identifiers.intersection)
-            .call(...items.map((item) => item.expression.expression)),
-        };
+        expression = $(z)
+          .attr(identifiers.intersection)
+          .call(...items.map((item) => item.expression));
       } else {
         expression = items[0]!.expression;
         items.slice(1).forEach((item) => {
-          expression = {
-            expression: expression.expression
-              .attr(identifiers.and)
-              .call(
-                item.hasLazyExpression && !item.isLazy
-                  ? $(z)
-                      .attr(identifiers.lazy)
-                      .call($.func().do(item.expression.expression.return()))
-                  : item.expression.expression,
-              ),
-          };
+          expression = expression
+            .attr(identifiers.and)
+            .call(
+              item.meta.hasLazy && !item.meta.isLazy
+                ? $(z).attr(identifiers.lazy).call($.func().do(item.expression.return()))
+                : item.expression,
+            );
         });
       }
 
       return {
-        default: parentSchema.default,
         expression,
-        hasLazyExpression: hasAnyLazy,
-        nullable: items.some((i) => i.nullable),
-        readonly: items.some((i) => i.readonly),
+        meta: {
+          default: parentSchema.default,
+          format: parentSchema.format,
+          hasLazy: hasAnyLazy,
+          isLazy: false,
+          nullable: items.some((i) => i.meta.nullable),
+          readonly: items.some((i) => i.meta.readonly),
+        },
       };
     },
     never(schema, ctx) {
-      const ast = neverToAst({ ...ctx, schema });
+      const expression = neverToAst({ plugin: ctx.plugin, schema });
       return {
-        default: schema.default,
-        expression: { expression: ast },
-        nullable: false,
-        readonly: false,
+        expression,
+        meta: {
+          ...defaultMeta(schema),
+          nullable: false,
+          readonly: false,
+        },
       };
     },
     null(schema, ctx) {
-      const ast = nullToAst({ ...ctx, schema });
+      const expression = nullToAst({ plugin: ctx.plugin, schema });
       return {
-        default: schema.default,
-        expression: { expression: ast },
-        nullable: false,
-        readonly: false,
+        expression,
+        meta: {
+          ...defaultMeta(schema),
+          nullable: false,
+          readonly: false,
+        },
       };
     },
     number(schema, ctx) {
-      const ast = numberToNode({ ...ctx, schema, state });
+      const expression = numberToNode({ plugin: ctx.plugin, schema });
       return {
-        default: schema.default,
-        expression: { expression: ast },
-        format: schema.format,
-        nullable: false,
-        readonly: schema.accessScope === 'read',
+        expression,
+        meta: {
+          ...defaultMeta(schema),
+          format: schema.format,
+        },
       };
     },
     object(schema, ctx, walk) {
-      const applyModifiers = (result: ZodSchemaResult, opts: { optional?: boolean }) =>
-        this.applyModifiers(result, ctx, opts) as ZodAppliedResult;
-      const ast = objectToAst({
+      const applyModifiers = (result: ZodResult, opts: { optional?: boolean }) =>
+        this.applyModifiers(result, ctx, opts) as ZodFinal;
+      const { childResults, expression } = objectToAst({
         applyModifiers,
         plugin: ctx.plugin,
         schema,
-        state,
         walk,
         walkerCtx: ctx,
       });
-      if (state.hasLazyExpression['~ref'] && ast.anyType) {
-        state.anyType = ref(ast.anyType);
-      }
+
       return {
-        default: schema.default,
-        expression: ast,
-        hasLazyExpression: state.hasLazyExpression['~ref'],
-        nullable: false,
-        readonly: schema.accessScope === 'read',
+        expression,
+        meta: {
+          ...inheritMeta(schema, childResults),
+          isObject: true,
+        },
       };
     },
     postProcess(result, schema, ctx) {
       if (ctx.plugin.config.metadata && schema.description) {
         return {
           ...result,
-          expression: {
-            expression: result.expression.expression
-              .attr(identifiers.describe)
-              .call($.literal(schema.description)),
-          },
+          expression: result.expression
+            .attr(identifiers.describe)
+            .call($.literal(schema.description)),
         };
       }
       return result;
@@ -253,89 +249,72 @@ export function createVisitor(
 
       if (ctx.plugin.isSymbolRegistered(query)) {
         return {
-          default: schema.default,
-          expression: {
-            expression: $(refSymbol),
-          },
-          nullable: false,
-          readonly: schema.accessScope === 'read',
+          expression: $(refSymbol),
+          meta: defaultMeta(schema),
         };
       }
 
-      state.hasLazyExpression['~ref'] = true;
-      state.anyType = ref(identifiers.ZodTypeAny);
       return {
-        default: schema.default,
-        expression: {
-          expression: $(z)
-            .attr(identifiers.lazy)
-            .call($.func().do($(refSymbol).return())),
+        expression: $(z)
+          .attr(identifiers.lazy)
+          .call($.func().do($(refSymbol).return())),
+        meta: {
+          ...defaultMeta(schema),
+          hasLazy: true,
+          isLazy: true,
         },
-        hasLazyExpression: true,
-        isLazy: true,
-        nullable: false,
-        readonly: schema.accessScope === 'read',
       };
     },
     string(schema, ctx) {
       if (shouldCoerceToBigInt(schema.format)) {
-        const ast = numberToNode({
+        const expression = numberToNode({
           plugin: ctx.plugin,
           schema: { ...schema, type: 'number' },
-          state,
         });
         return {
-          default: schema.default,
-          expression: { expression: ast },
-          nullable: false,
-          readonly: schema.accessScope === 'read',
+          expression,
+          meta: defaultMeta(schema),
         };
       }
 
-      const ast = stringToNode({ ...ctx, schema });
+      const expression = stringToNode({ plugin: ctx.plugin, schema });
       return {
-        default: schema.default,
-        expression: { expression: ast },
-        nullable: false,
-        readonly: schema.accessScope === 'read',
+        expression,
+        meta: defaultMeta(schema),
       };
     },
     tuple(schema, ctx, walk) {
-      const applyModifiers = (result: ZodSchemaResult, opts: { optional?: boolean }) =>
-        this.applyModifiers(result, ctx, opts) as ZodAppliedResult;
-      const ast = tupleToAst({
-        ...ctx,
+      const applyModifiers = (result: ZodResult, opts: { optional?: boolean }) =>
+        this.applyModifiers(result, ctx, opts) as ZodFinal;
+      const { childResults, expression } = tupleToAst({
         applyModifiers,
+        plugin: ctx.plugin,
         schema,
-        state,
         walk,
+        walkerCtx: ctx,
       });
+
       return {
-        default: schema.default,
-        expression: ast,
-        hasLazyExpression: state.hasLazyExpression['~ref'],
-        nullable: false,
-        readonly: schema.accessScope === 'read',
+        expression,
+        meta: inheritMeta(schema, childResults),
       };
     },
     undefined(schema, ctx) {
-      const ast = undefinedToAst({ ...ctx, schema });
+      const expression = undefinedToAst({ plugin: ctx.plugin, schema });
       return {
-        default: schema.default,
-        expression: { expression: ast },
-        nullable: false,
-        readonly: false,
+        expression,
+        meta: {
+          ...defaultMeta(schema),
+          nullable: false,
+          readonly: false,
+        },
       };
     },
     union(items, schemas, parentSchema, ctx) {
       const z = ctx.plugin.external('zod.z');
-      const hasAnyLazy = items.some((item) => item.hasLazyExpression);
+      const hasAnyLazy = items.some((item) => item.meta.hasLazy);
 
-      const hasNull = schemas.some((s) => s.type === 'null') || items.some((i) => i.nullable);
-
-      if (hasAnyLazy) {
-        state.anyType = ref(identifiers.ZodTypeAny);
-      }
+      const hasNull = schemas.some((s) => s.type === 'null') || items.some((i) => i.meta.nullable);
 
       const nonNullItems: typeof items = [];
 
@@ -346,49 +325,53 @@ export function createVisitor(
         }
       });
 
-      let expression: ZodSchemaResult['expression'];
+      let expression: Chain;
       if (nonNullItems.length === 0) {
-        expression = {
-          expression: $(z).attr(identifiers.null).call(),
-        };
+        expression = $(z).attr(identifiers.null).call();
       } else if (nonNullItems.length === 1) {
         expression = nonNullItems[0]!.expression;
       } else {
-        expression = {
-          expression: $(z)
-            .attr(identifiers.union)
-            .call(
-              $.array()
-                .pretty()
-                .elements(...nonNullItems.map((item) => item.expression.expression)),
-            ),
-        };
+        expression = $(z)
+          .attr(identifiers.union)
+          .call(
+            $.array()
+              .pretty()
+              .elements(...nonNullItems.map((item) => item.expression)),
+          );
       }
 
       return {
-        default: parentSchema.default,
         expression,
-        hasLazyExpression: hasAnyLazy,
-        nullable: hasNull,
-        readonly: items.some((i) => i.readonly),
+        meta: {
+          default: parentSchema.default,
+          format: parentSchema.format,
+          hasLazy: hasAnyLazy,
+          isLazy: false,
+          nullable: hasNull,
+          readonly: items.some((i) => i.meta.readonly),
+        },
       };
     },
     unknown(schema, ctx) {
-      const ast = unknownToAst({ ...ctx, schema });
+      const expression = unknownToAst({ plugin: ctx.plugin, schema });
       return {
-        default: schema.default,
-        expression: { expression: ast },
-        nullable: false,
-        readonly: false,
+        expression,
+        meta: {
+          ...defaultMeta(schema),
+          nullable: false,
+          readonly: false,
+        },
       };
     },
     void(schema, ctx) {
-      const ast = voidToAst({ ...ctx, schema });
+      const expression = voidToAst({ plugin: ctx.plugin, schema });
       return {
-        default: schema.default,
-        expression: { expression: ast },
-        nullable: false,
-        readonly: false,
+        expression,
+        meta: {
+          ...defaultMeta(schema),
+          nullable: false,
+          readonly: false,
+        },
       };
     },
   };
