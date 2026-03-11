@@ -44,6 +44,8 @@ function formatNode(ctx: StringResolverContext): Chain | undefined {
       return $(z).attr(identifiers.iso).attr(identifiers.time).call();
     case 'uri':
       return $(z).attr(identifiers.url).call();
+    case 'guid':
+      return $(z).attr(identifiers.guid).call();
     case 'uuid':
       return $(z).attr(identifiers.uuid).call();
   }

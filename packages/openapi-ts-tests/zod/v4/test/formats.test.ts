@@ -46,6 +46,19 @@ for (const zodVersion of zodVersions) {
         }),
         description: 'generates anyOf string and binary string',
       },
+      {
+        config: createConfig({
+          input: 'string-with-guid-format.yaml',
+          output: 'string-with-guid-format',
+          plugins: [
+            {
+              compatibilityVersion: zodVersion.compatibilityVersion,
+              name: 'zod',
+            },
+          ],
+        }),
+        description: 'handles string guid format',
+      },
     ];
 
     it.each(scenarios)('$description', async ({ config }) => {
