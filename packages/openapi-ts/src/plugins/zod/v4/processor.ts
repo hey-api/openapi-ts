@@ -33,13 +33,13 @@ export function createProcessor(plugin: ZodPlugin['Instance']): ProcessorResult 
     return ctx.schema;
   }
 
-  function process(ctx: ProcessorContext): void {
+  function process(ctx: ProcessorContext): ZodFinal | void {
     if (!processor.markEmitted(ctx.path)) return;
 
+    const shouldExport = ctx.export !== false;
+
     return processor.withContext({ anchor: ctx.namingAnchor, tags: ctx.tags }, () => {
-      const visitor = createVisitor({
-        schemaExtractor: extractor,
-      });
+      const visitor = createVisitor({ schemaExtractor: extractor });
       const walk = createSchemaWalker(visitor);
 
       const result = walk(ctx.schema, {
@@ -52,7 +52,12 @@ export function createProcessor(plugin: ZodPlugin['Instance']): ProcessorResult 
         plugin,
       }) as ZodFinal;
 
-      exportAst({ ...ctx, final, plugin });
+      if (shouldExport) {
+        exportAst({ ...ctx, final, plugin });
+        return;
+      }
+
+      return final;
     });
   }
 
