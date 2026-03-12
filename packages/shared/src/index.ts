@@ -117,7 +117,7 @@ export type {
   PluginContext,
   PluginNames,
 } from './plugins/types';
-export { findPackageJson, findTsConfigPath, loadPackageJson, loadTsConfig } from './tsConfig';
+export { findPackageJson, findTsConfigPath, loadPackageJson } from './tsConfig';
 export type { Logs } from './types/logs';
 export type { WatchValues } from './types/watch';
 export { escapeComment } from './utils/escape';

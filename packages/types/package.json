@@ -30,8 +30,5 @@
   },
   "devDependencies": {
     "typescript": "5.9.3"
-  },
-  "peerDependencies": {
-    "typescript": ">=5.5.3"
   }
 }

@@ -56,9 +56,6 @@
     "eslint": "9.39.1",
     "typescript": "5.9.3"
   },
-  "peerDependencies": {
-    "typescript": ">=5.5.3"
-  },
   "engines": {
     "node": ">=20.19.0"
   }
