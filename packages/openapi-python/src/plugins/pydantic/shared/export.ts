@@ -1,5 +1,5 @@
 import type { Symbol } from '@hey-api/codegen-core';
-import { applyNaming, pathToName } from '@hey-api/shared';
+import { applyNaming, buildSymbolIn, pathToName } from '@hey-api/shared';
 
 import { $ } from '../../../py-dsl';
 import type { PydanticPlugin } from '../types';
@@ -15,20 +15,26 @@ export function exportAst({
   namingAnchor,
   path,
   plugin,
+  schema,
   tags,
 }: ProcessorContext & {
   final: PydanticFinal;
 }): void {
   const name = pathToName(path, { anchor: namingAnchor });
-  const symbol = plugin.symbol(applyNaming(name, naming), {
-    meta: {
-      category: 'schema',
-      path,
-      tags,
-      tool: 'pydantic',
-      ...meta,
-    },
-  });
+  const symbol = plugin.registerSymbol(
+    buildSymbolIn({
+      meta: {
+        category: 'schema',
+        path,
+        tags,
+        tool: 'pydantic',
+        ...meta,
+      },
+      name: applyNaming(name, naming),
+      plugin,
+      schema,
+    }),
+  );
 
   if (final.enumMembers) {
     exportEnumClass({ final, plugin, symbol });
