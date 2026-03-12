@@ -15,7 +15,7 @@ function baseNode(ctx: UnionResolverContext): PipeResult {
   const nonNullItems: Array<ValibotResult> = [];
   childResults.forEach((item, index) => {
     const schema = schemas[index]!;
-    if (schema.type !== 'null') {
+    if (schema.type !== 'null' && schema.const !== null) {
       nonNullItems.push(item);
     }
   });
@@ -49,11 +49,11 @@ export function unionToPipes(ctx: {
   plugin: ValibotPlugin['Instance'];
   schemas: ReadonlyArray<IR.SchemaObject>;
 }): CompositeHandlerResult {
-  const { childResults, parentSchema, plugin, schemas } = ctx;
+  const { applyModifiers, childResults, parentSchema, plugin, schemas } = ctx;
 
   const resolverCtx: UnionResolverContext = {
     $,
-    applyModifiers: ctx.applyModifiers,
+    applyModifiers,
     childResults,
     nodes: {
       base: baseNode,
