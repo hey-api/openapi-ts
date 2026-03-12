@@ -1,7 +1,7 @@
-import type { Node, Symbol, SymbolIn } from '@hey-api/codegen-core';
+import type { Node, Symbol, SymbolIn, SymbolMeta } from '@hey-api/codegen-core';
 
 import type { SchemaProcessorContext } from '../ir/schema-processor';
-import type { IROperationObject } from '../ir/types';
+import type { IROperationObject, IRSchemaObject } from '../ir/types';
 import type { PluginInstance } from '../plugins/shared/utils/instance';
 
 export type Hooks = {
@@ -210,5 +210,22 @@ export type Hooks = {
      * @returns The file path to output the symbol to, or undefined to fallback to default behavior.
      */
     getFilePath?: (symbol: Symbol) => string | undefined;
+    /**
+     * Optional output strategy to override default plugin behavior.
+     *
+     * Use this to customize symbol names.
+     *
+     * @returns The name to register the symbol with, or undefined to fallback to default behavior.
+     */
+    getName?: (ctx: {
+      /** Arbitrary metadata about the symbol. */
+      meta: SymbolMeta;
+      /** The proposed name for the symbol. */
+      name: string;
+      /** The operation object associated with the symbol. */
+      operation?: IROperationObject;
+      /** The schema object associated with the symbol. */
+      schema?: IRSchemaObject;
+    }) => string | undefined;
   };
 };

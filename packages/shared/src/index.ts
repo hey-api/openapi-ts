@@ -108,6 +108,7 @@ export type { SchemaWithType } from './plugins/shared/types/schema';
 export { definePluginConfig, mappers } from './plugins/shared/utils/config';
 export type { PluginInstanceTypes } from './plugins/shared/utils/instance';
 export { PluginInstance } from './plugins/shared/utils/instance';
+export { buildSymbolIn } from './plugins/symbol';
 export type {
   AnyPluginName,
   DefinePlugin,

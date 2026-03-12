@@ -1,5 +1,5 @@
 import type { IR } from '@hey-api/shared';
-import { applyNaming, parseUrl } from '@hey-api/shared';
+import { applyNaming, buildSymbolIn, parseUrl } from '@hey-api/shared';
 
 import { getTypedConfig } from '../../../../config/utils';
 import {
@@ -45,18 +45,19 @@ export const createClientOptions = ({
     types.push($.type.and($.type('string'), $.type.object()));
   }
 
-  const symbol = plugin.symbol(
-    applyNaming('ClientOptions', {
-      case: plugin.config.case,
-    }),
-    {
+  const symbol = plugin.registerSymbol(
+    buildSymbolIn({
       meta: {
         category: 'type',
         resource: 'client',
         role: 'options',
         tool: 'typescript',
       },
-    },
+      name: applyNaming('ClientOptions', {
+        case: plugin.config.case,
+      }),
+      plugin,
+    }),
   );
 
   const node = $.type

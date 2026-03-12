@@ -1,4 +1,4 @@
-import { applyNaming, pathToName } from '@hey-api/shared';
+import { applyNaming, buildSymbolIn, pathToName } from '@hey-api/shared';
 
 import { createSchemaComment } from '../../../plugins/shared/utils/schema';
 import { $ } from '../../../ts-dsl';
@@ -22,27 +22,38 @@ export function exportAst({
   const z = plugin.external('zod.z');
 
   const name = pathToName(path, { anchor: namingAnchor });
-  const symbol = plugin.symbol(applyNaming(name, naming), {
-    meta: {
-      category: 'schema',
-      path,
-      tags,
-      tool: 'zod',
-      ...meta,
-    },
-  });
+
+  const symbol = plugin.registerSymbol(
+    buildSymbolIn({
+      meta: {
+        category: 'schema',
+        path,
+        tags,
+        tool: 'zod',
+        ...meta,
+      },
+      name: applyNaming(name, naming),
+      plugin,
+      schema,
+    }),
+  );
 
   const typeInferSymbol = naming.types.infer.enabled
-    ? plugin.symbol(applyNaming(name, naming.types.infer), {
-        meta: {
-          category: 'type',
-          path,
-          tags,
-          tool: 'zod',
-          variant: 'infer',
-          ...meta,
-        },
-      })
+    ? plugin.registerSymbol(
+        buildSymbolIn({
+          meta: {
+            category: 'type',
+            path,
+            tags,
+            tool: 'zod',
+            variant: 'infer',
+            ...meta,
+          },
+          name: applyNaming(name, naming.types.infer),
+          plugin,
+          schema,
+        }),
+      )
     : undefined;
 
   const statement = $.const(symbol)

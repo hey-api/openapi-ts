@@ -1,6 +1,6 @@
 import type { Symbol } from '@hey-api/codegen-core';
 import type { IR } from '@hey-api/shared';
-import { applyNaming, pathToJsonPointer } from '@hey-api/shared';
+import { applyNaming, buildSymbolIn, pathToJsonPointer } from '@hey-api/shared';
 
 import { $ } from '../../../../ts-dsl';
 import { createClientOptions } from '../shared/clientOptions';
@@ -97,18 +97,19 @@ export const handlerV1: HeyApiTypeScriptPlugin['Handler'] = ({ plugin }) => {
   createClientOptions({ nodeIndex: nodeClientIndex, plugin, servers });
 
   if (webhooks.length > 0) {
-    const symbol = plugin.symbol(
-      applyNaming('Webhooks', {
-        case: plugin.config.case,
-      }),
-      {
+    const symbol = plugin.registerSymbol(
+      buildSymbolIn({
         meta: {
           category: 'type',
           resource: 'webhook',
           tool: 'typescript',
           variant: 'container',
         },
-      },
+        name: applyNaming('Webhooks', {
+          case: plugin.config.case,
+        }),
+        plugin,
+      }),
     );
     const node = $.type
       .alias(symbol)
