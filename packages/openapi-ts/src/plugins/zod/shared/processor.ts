@@ -1,18 +1,17 @@
-import type {
-  IR,
-  NamingConfig,
-  SchemaProcessorContext,
-  SchemaProcessorResult,
-} from '@hey-api/shared';
+import type { IR, NamingConfig, SchemaProcessorContext } from '@hey-api/shared';
 
 import type { ZodPlugin } from '../types';
-import type { TypeOptions } from './types';
+import type { TypeOptions, ZodFinal } from './types';
 
 export type ProcessorContext = SchemaProcessorContext & {
+  /** Whether to export the result (default: true) */
+  export?: boolean;
   naming: NamingConfig & TypeOptions;
   /** The plugin instance. */
   plugin: ZodPlugin['Instance'];
   schema: IR.SchemaObject;
 };
 
-export type ProcessorResult = SchemaProcessorResult<ProcessorContext>;
+export type ProcessorResult = {
+  process: (ctx: ProcessorContext) => ZodFinal | void;
+};
