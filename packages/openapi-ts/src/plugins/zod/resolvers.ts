@@ -12,6 +12,22 @@ import type { ZodPlugin } from './types';
 
 export type Resolvers = Plugin.Resolvers<{
   /**
+   * Resolver for array schemas.
+   *
+   * Allows customization of how array types are rendered.
+   *
+   * Returning `undefined` will execute the default resolver logic.
+   */
+  array?: (ctx: ArrayResolverContext) => ChainResult;
+  /**
+   * Resolver for boolean schemas.
+   *
+   * Allows customization of how boolean types are rendered.
+   *
+   * Returning `undefined` will execute the default resolver logic.
+   */
+  boolean?: (ctx: BooleanResolverContext) => ChainResult;
+  /**
    * Resolver for enum schemas.
    *
    * Allows customization of how enum types are rendered.
@@ -19,6 +35,30 @@ export type Resolvers = Plugin.Resolvers<{
    * Returning `undefined` will execute the default resolver logic.
    */
   enum?: (ctx: EnumResolverContext) => ChainResult;
+  /**
+   * Resolver for intersection schemas.
+   *
+   * Allows customization of how intersection types are rendered.
+   *
+   * Returning `undefined` will execute the default resolver logic.
+   */
+  intersection?: (ctx: IntersectionResolverContext) => ChainResult;
+  /**
+   * Resolver for never schemas.
+   *
+   * Allows customization of how never types are rendered.
+   *
+   * Returning `undefined` will execute the default resolver logic.
+   */
+  never?: (ctx: NeverResolverContext) => ChainResult;
+  /**
+   * Resolver for null schemas.
+   *
+   * Allows customization of how null types are rendered.
+   *
+   * Returning `undefined` will execute the default resolver logic.
+   */
+  null?: (ctx: NullResolverContext) => ChainResult;
   /**
    * Resolver for number schemas.
    *
@@ -44,6 +84,38 @@ export type Resolvers = Plugin.Resolvers<{
    */
   string?: (ctx: StringResolverContext) => ChainResult;
   /**
+   * Resolver for tuple schemas.
+   *
+   * Allows customization of how tuple types are rendered.
+   *
+   * Returning `undefined` will execute the default resolver logic.
+   */
+  tuple?: (ctx: TupleResolverContext) => ChainResult;
+  /**
+   * Resolver for undefined schemas.
+   *
+   * Allows customization of how undefined types are rendered.
+   *
+   * Returning `undefined` will execute the default resolver logic.
+   */
+  undefined?: (ctx: UndefinedResolverContext) => ChainResult;
+  /**
+   * Resolver for union schemas.
+   *
+   * Allows customization of how union types are rendered.
+   *
+   * Returning `undefined` will execute the default resolver logic.
+   */
+  union?: (ctx: UnionResolverContext) => ChainResult;
+  /**
+   * Resolver for unknown schemas.
+   *
+   * Allows customization of how unknown types are rendered.
+   *
+   * Returning `undefined` will execute the default resolver logic.
+   */
+  unknown?: (ctx: UnknownResolverContext) => ChainResult;
+  /**
    * Resolvers for request and response validators.
    *
    * Allow customization of validator function bodies.
@@ -68,6 +140,14 @@ export type Resolvers = Plugin.Resolvers<{
          */
         response?: ValidatorResolver;
       };
+  /**
+   * Resolver for void schemas.
+   *
+   * Allows customization of how void types are rendered.
+   *
+   * Returning `undefined` will execute the default resolver logic.
+   */
+  void?: (ctx: VoidResolverContext) => ChainResult;
 }>;
 
 type ValidatorResolver = (
@@ -98,6 +178,55 @@ interface BaseContext extends DollarTsDsl {
   symbols: {
     z: Symbol;
   };
+}
+
+export interface ArrayResolverContext extends BaseContext {
+  applyModifiers: (result: ZodResult, opts?: { optional?: boolean }) => ZodFinal;
+  /**
+   * Child results from processing array items.
+   */
+  childResults: Array<ZodResult>;
+  /**
+   * Nodes used to build different parts of the result.
+   */
+  nodes: {
+    /**
+     * Returns the base array expression (z.array(...)).
+     */
+    base: (ctx: ArrayResolverContext) => Chain;
+    /**
+     * Returns a length constraint (when minItems === maxItems), if applicable.
+     */
+    length: (ctx: ArrayResolverContext) => ChainResult;
+    /**
+     * Returns a maxItems constraint, if applicable.
+     */
+    maxLength: (ctx: ArrayResolverContext) => ChainResult;
+    /**
+     * Returns a minItems constraint, if applicable.
+     */
+    minLength: (ctx: ArrayResolverContext) => ChainResult;
+  };
+  schema: SchemaWithType<'array'>;
+  walk: Walker<ZodResult, ZodPlugin['Instance']>;
+  walkerCtx: SchemaVisitorContext<ZodPlugin['Instance']>;
+}
+
+export interface BooleanResolverContext extends BaseContext {
+  /**
+   * Nodes used to build different parts of the result.
+   */
+  nodes: {
+    /**
+     * Returns the base boolean expression (z.boolean()).
+     */
+    base: (ctx: BooleanResolverContext) => Chain;
+    /**
+     * Returns a literal expression for the const value, if present.
+     */
+    const: (ctx: BooleanResolverContext) => ChainResult;
+  };
+  schema: SchemaWithType<'boolean'>;
 }
 
 export interface EnumResolverContext extends BaseContext {
@@ -132,6 +261,49 @@ export interface EnumResolverContext extends BaseContext {
     };
   };
   schema: SchemaWithType<'enum'>;
+}
+
+export interface IntersectionResolverContext extends BaseContext {
+  childResults: Array<ZodResult>;
+  /**
+   * Nodes used to build different parts of the result.
+   */
+  nodes: {
+    /**
+     * Returns the base intersection expression.
+     */
+    base: (ctx: IntersectionResolverContext) => Chain;
+  };
+  parentSchema: IR.SchemaObject;
+  schema: IR.SchemaObject;
+  walk: Walker<ZodResult, ZodPlugin['Instance']>;
+  walkerCtx: SchemaVisitorContext<ZodPlugin['Instance']>;
+}
+
+export interface NeverResolverContext extends BaseContext {
+  /**
+   * Nodes used to build different parts of the result.
+   */
+  nodes: {
+    /**
+     * Returns the base never expression (z.never()).
+     */
+    base: (ctx: NeverResolverContext) => Chain;
+  };
+  schema: SchemaWithType<'never'>;
+}
+
+export interface NullResolverContext extends BaseContext {
+  /**
+   * Nodes used to build different parts of the result.
+   */
+  nodes: {
+    /**
+     * Returns the base null expression (z.null()).
+     */
+    base: (ctx: NullResolverContext) => Chain;
+  };
+  schema: SchemaWithType<'null'>;
 }
 
 export interface NumberResolverContext extends BaseContext {
@@ -233,6 +405,71 @@ export interface StringResolverContext extends BaseContext {
   schema: SchemaWithType<'string'>;
 }
 
+export interface TupleResolverContext extends BaseContext {
+  applyModifiers: (result: ZodResult, opts?: { optional?: boolean }) => ZodFinal;
+  childResults: Array<ZodResult>;
+  /**
+   * Nodes used to build different parts of the result.
+   */
+  nodes: {
+    /**
+     * Returns the base tuple expression (z.tuple([...])).
+     */
+    base: (ctx: TupleResolverContext) => Chain;
+    /**
+     * Returns a literal expression for the const value, if present.
+     */
+    const: (ctx: TupleResolverContext) => ChainResult;
+  };
+  schema: SchemaWithType<'tuple'>;
+  walk: Walker<ZodResult, ZodPlugin['Instance']>;
+  walkerCtx: SchemaVisitorContext<ZodPlugin['Instance']>;
+}
+
+export interface UndefinedResolverContext extends BaseContext {
+  /**
+   * Nodes used to build different parts of the result.
+   */
+  nodes: {
+    /**
+     * Returns the base undefined expression (z.undefined()).
+     */
+    base: (ctx: UndefinedResolverContext) => Chain;
+  };
+  schema: SchemaWithType<'undefined'>;
+}
+
+export interface UnionResolverContext extends BaseContext {
+  childResults: Array<ZodResult>;
+  /**
+   * Nodes used to build different parts of the result.
+   */
+  nodes: {
+    /**
+     * Returns the base union expression.
+     */
+    base: (ctx: UnionResolverContext) => Chain;
+  };
+  parentSchema: IR.SchemaObject;
+  schema: IR.SchemaObject;
+  schemas: ReadonlyArray<IR.SchemaObject>;
+  walk: Walker<ZodResult, ZodPlugin['Instance']>;
+  walkerCtx: SchemaVisitorContext<ZodPlugin['Instance']>;
+}
+
+export interface UnknownResolverContext extends BaseContext {
+  /**
+   * Nodes used to build different parts of the result.
+   */
+  nodes: {
+    /**
+     * Returns the base unknown expression (z.unknown()).
+     */
+    base: (ctx: UnknownResolverContext) => Chain;
+  };
+  schema: SchemaWithType<'unknown'>;
+}
+
 export interface ValidatorResolverContext extends BaseContext {
   operation: IR.OperationObject;
   /**
@@ -241,4 +478,17 @@ export interface ValidatorResolverContext extends BaseContext {
   symbols: BaseContext['symbols'] & {
     schema: Symbol;
   };
+}
+
+export interface VoidResolverContext extends BaseContext {
+  /**
+   * Nodes used to build different parts of the result.
+   */
+  nodes: {
+    /**
+     * Returns the base void expression (z.void()).
+     */
+    base: (ctx: VoidResolverContext) => Chain;
+  };
+  schema: SchemaWithType<'void'>;
 }

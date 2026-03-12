@@ -80,15 +80,14 @@ function shapeNode(ctx: ExtendedContext): ReturnType<typeof $.object> {
 
 export function objectToAst(options: ObjectToAstOptions): CompositeHandlerResult {
   const { applyModifiers, plugin, schema, walk, walkerCtx } = options;
-
   const childResults: Array<ZodResult> = [];
-
+  const z = plugin.external('zod.z');
   const ctx: ExtendedContext = {
     $,
     _childResults: childResults,
     applyModifiers,
     chain: {
-      current: $(plugin.external('zod.z')),
+      current: $(z),
     },
     nodes: {
       additionalProperties: additionalPropertiesNode,
@@ -98,7 +97,7 @@ export function objectToAst(options: ObjectToAstOptions): CompositeHandlerResult
     plugin,
     schema,
     symbols: {
-      z: plugin.external('zod.z'),
+      z,
     },
     walk,
     walkerCtx,
