@@ -1,5 +1,4 @@
-import yaml from 'js-yaml';
-import { JSON_SCHEMA } from 'js-yaml';
+import { parse } from 'yaml';
 
 import type { FileInfo, JSONSchema, Plugin } from '../types';
 import { ParserError } from '../util/errors';
@@ -16,8 +15,7 @@ export const yamlParser: Plugin = {
     }
 
     try {
-      const yamlSchema = yaml.load(data, { schema: JSON_SCHEMA }) as JSONSchema;
-      return yamlSchema;
+      return parse(data) as JSONSchema;
     } catch (error: any) {
       throw new ParserError(error?.message || 'Parser Error', file.url);
     }
