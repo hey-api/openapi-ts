@@ -1,18 +1,20 @@
 import type { SchemaWithType } from '@hey-api/shared';
-
+import type { IrSchemaToAstOptions } from '../../shared/types';
 import { identifiers } from '../../constants';
-import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
+import type { ArktypeResult } from '../../shared/types';
+import { $ } from '../../../../ts-dsl';
 
 export const stringToAst = ({
   schema,
 }: IrSchemaToAstOptions & {
   schema: SchemaWithType<'string'>;
-}): Omit<Ast, 'typeName'> => {
-  const result: Partial<Omit<Ast, 'typeName'>> = {};
+}): ArktypeResult => {
+  const result: Partial<ArktypeResult> = {};
 
   if (typeof schema.const === 'string') {
     result.def = schema.const;
-    return result as Omit<Ast, 'typeName'>;
+    result.expression = $.literal(`'${schema.const}'`);
+    return result as ArktypeResult;
   }
 
   let def = identifiers.primitives.string;
@@ -61,6 +63,7 @@ export const stringToAst = ({
   }
 
   result.def = def;
+  result.expression = $.literal(def);
 
-  return result as Omit<Ast, 'typeName'>;
+  return result as ArktypeResult;
 };
