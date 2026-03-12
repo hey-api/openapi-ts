@@ -1,5 +1,19 @@
 # @hey-api/shared
 
+## 0.2.3
+
+### Patch Changes
+
+- **cli**: export isEnvironment function ([#3546](https://github.com/hey-api/openapi-ts/pull/3546)) ([`571bc8a`](https://github.com/hey-api/openapi-ts/commit/571bc8a32b55647083bb506d4a5b575c4736cb94)) by [@mrlubos](https://github.com/mrlubos)
+
+- **internal**: export more IR types ([#3513](https://github.com/hey-api/openapi-ts/pull/3513)) ([`ffe68cd`](https://github.com/hey-api/openapi-ts/commit/ffe68cd4303c39e71152f36c2057165468e64308)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **parser**: add `getName()` symbol hook ([#3556](https://github.com/hey-api/openapi-ts/pull/3556)) ([`68c750a`](https://github.com/hey-api/openapi-ts/commit/68c750ab7ad37c71c4f9b267ddc9e1c90c89924a)) by [@mrlubos](https://github.com/mrlubos)
+
+### Updated Dependencies:
+
+- @hey-api/codegen-core@0.7.2
+
 ## 0.2.2
 
 ### Patch Changes
