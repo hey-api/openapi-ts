@@ -73,9 +73,6 @@
     "typescript": "5.9.3",
     "yaml": "2.8.2"
   },
-  "peerDependencies": {
-    "typescript": ">=5.5.3"
-  },
   "engines": {
     "node": ">=20.19.0"
   }

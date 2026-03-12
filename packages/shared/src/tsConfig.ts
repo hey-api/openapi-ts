@@ -2,7 +2,6 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import type { AnyString } from '@hey-api/types';
-import ts from 'typescript';
 
 export function findPackageJson(initialDir: string): unknown | undefined {
   let dir = initialDir;
@@ -95,18 +94,4 @@ export function findTsConfigPath(baseDir: string, tsConfigPath?: AnyString | nul
   }
 
   return null;
-}
-
-export function loadTsConfig(configPath: string | null): ts.ParsedCommandLine | null {
-  if (!configPath) {
-    return null;
-  }
-
-  const raw = ts.readConfigFile(configPath, ts.sys.readFile);
-
-  if (raw.error) {
-    throw new Error(`Couldn't read tsconfig from path: ${configPath}`);
-  }
-
-  return ts.parseJsonConfigFileContent(raw.config, ts.sys, path.dirname(configPath));
 }
