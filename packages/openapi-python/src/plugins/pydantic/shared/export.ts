@@ -1,5 +1,5 @@
 import type { Symbol } from '@hey-api/codegen-core';
-import { applyNaming, buildSymbolIn, pathToName } from '@hey-api/shared';
+import { buildSymbolIn, pathToName } from '@hey-api/shared';
 
 import { $ } from '../../../py-dsl';
 import type { PydanticPlugin } from '../types';
@@ -30,7 +30,8 @@ export function exportAst({
         tool: 'pydantic',
         ...meta,
       },
-      name: applyNaming(name, naming),
+      name,
+      naming,
       plugin,
       schema,
     }),

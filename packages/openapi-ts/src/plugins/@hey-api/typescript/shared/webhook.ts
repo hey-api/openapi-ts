@@ -1,6 +1,6 @@
 import type { Symbol } from '@hey-api/codegen-core';
 import type { IR } from '@hey-api/shared';
-import { applyNaming, buildSymbolIn } from '@hey-api/shared';
+import { buildSymbolIn } from '@hey-api/shared';
 
 import { createSchemaComment } from '../../../../plugins/shared/utils/schema';
 import { $ } from '../../../../ts-dsl';
@@ -33,10 +33,11 @@ export function webhookToType({
           tags,
           tool: 'typescript',
         },
-        name: applyNaming(operation.id, {
+        name: operation.id,
+        naming: {
           case: plugin.config.webhooks.case,
           name: plugin.config.webhooks.payload,
-        }),
+        },
         operation,
         plugin,
       }),
@@ -84,7 +85,8 @@ export function webhookToType({
         tags,
         tool: 'typescript',
       },
-      name: applyNaming(operation.id, plugin.config.webhooks),
+      name: operation.id,
+      naming: plugin.config.webhooks,
       operation,
       plugin,
     }),

@@ -1,8 +1,10 @@
 import type { Node, Symbol, SymbolIn, SymbolMeta } from '@hey-api/codegen-core';
+import type { MaybeFunc } from '@hey-api/types';
 
 import type { SchemaProcessorContext } from '../ir/schema-processor';
 import type { IROperationObject, IRSchemaObject } from '../ir/types';
 import type { PluginInstance } from '../plugins/shared/utils/instance';
+import type { NamingConfig } from '../utils/naming/types';
 
 export type Hooks = {
   /**
@@ -217,15 +219,19 @@ export type Hooks = {
      *
      * @returns The name to register the symbol with, or undefined to fallback to default behavior.
      */
-    getName?: (ctx: {
-      /** Arbitrary metadata about the symbol. */
-      meta: SymbolMeta;
-      /** The proposed name for the symbol. */
-      name: string;
-      /** The operation object associated with the symbol. */
-      operation?: IROperationObject;
-      /** The schema object associated with the symbol. */
-      schema?: IRSchemaObject;
-    }) => string | undefined;
+    getName?: (ctx: GetNameContext) => MaybeFunc<(ctx: GetNameContext) => string | undefined>;
   };
 };
+
+export interface GetNameContext {
+  /** Arbitrary metadata about the symbol. */
+  meta: SymbolMeta;
+  /** The proposed name for the symbol. */
+  name: string;
+  /** The naming configuration for the symbol. */
+  naming?: NamingConfig;
+  /** The operation object associated with the symbol. */
+  operation?: IROperationObject;
+  /** The schema object associated with the symbol. */
+  schema?: IRSchemaObject;
+}

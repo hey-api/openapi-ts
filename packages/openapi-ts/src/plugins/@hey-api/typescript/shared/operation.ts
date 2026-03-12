@@ -1,10 +1,5 @@
 import type { IR } from '@hey-api/shared';
-import {
-  applyNaming,
-  buildSymbolIn,
-  deduplicateSchema,
-  operationResponsesMap,
-} from '@hey-api/shared';
+import { buildSymbolIn, deduplicateSchema, operationResponsesMap } from '@hey-api/shared';
 
 import { $ } from '../../../../ts-dsl';
 import type { HeyApiTypeScriptPlugin } from '../types';
@@ -131,7 +126,8 @@ export const operationToType = ({
         tags,
         tool: 'typescript',
       },
-      name: applyNaming(operation.id, plugin.config.requests),
+      name: operation.id,
+      naming: plugin.config.requests,
       operation,
       plugin,
     }),
@@ -168,7 +164,8 @@ export const operationToType = ({
           tags,
           tool: 'typescript',
         },
-        name: applyNaming(operation.id, plugin.config.errors),
+        name: operation.id,
+        naming: plugin.config.errors,
         operation,
         plugin,
       }),
@@ -191,10 +188,11 @@ export const operationToType = ({
             tags,
             tool: 'typescript',
           },
-          name: applyNaming(operation.id, {
+          name: operation.id,
+          naming: {
             case: plugin.config.errors.case,
             name: plugin.config.errors.error,
-          }),
+          },
           operation,
           plugin,
         }),
@@ -231,7 +229,8 @@ export const operationToType = ({
           tags,
           tool: 'typescript',
         },
-        name: applyNaming(operation.id, plugin.config.responses),
+        name: operation.id,
+        naming: plugin.config.responses,
         operation,
         plugin,
       }),
@@ -254,10 +253,11 @@ export const operationToType = ({
             tags,
             tool: 'typescript',
           },
-          name: applyNaming(operation.id, {
+          name: operation.id,
+          naming: {
             case: plugin.config.responses.case,
             name: plugin.config.responses.response,
-          }),
+          },
           operation,
           plugin,
         }),

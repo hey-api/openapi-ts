@@ -1,4 +1,4 @@
-import { applyNaming, buildSymbolIn, pathToName } from '@hey-api/shared';
+import { buildSymbolIn, pathToName } from '@hey-api/shared';
 
 import { createSchemaComment } from '../../../plugins/shared/utils/schema';
 import { $ } from '../../../ts-dsl';
@@ -31,7 +31,8 @@ export function exportAst({
         tool: 'valibot',
         ...meta,
       },
-      name: applyNaming(name, naming),
+      name,
+      naming,
       plugin,
       schema,
     }),
