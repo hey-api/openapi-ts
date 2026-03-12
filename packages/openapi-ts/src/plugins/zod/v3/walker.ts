@@ -74,7 +74,7 @@ export function createVisitor(
       };
     },
     array(schema, ctx, walk) {
-      const applyModifiers = (result: ZodResult, opts: { optional?: boolean }) =>
+      const applyModifiers: Parameters<typeof arrayToAst>[0]['applyModifiers'] = (result, opts) =>
         this.applyModifiers(result, ctx, opts) as ZodFinal;
       const { childResults, expression } = arrayToAst({
         applyModifiers,
@@ -207,7 +207,7 @@ export function createVisitor(
       };
     },
     object(schema, ctx, walk) {
-      const applyModifiers = (result: ZodResult, opts: { optional?: boolean }) =>
+      const applyModifiers: Parameters<typeof objectToAst>[0]['applyModifiers'] = (result, opts) =>
         this.applyModifiers(result, ctx, opts) as ZodFinal;
       const { childResults, expression } = objectToAst({
         applyModifiers,
@@ -284,7 +284,7 @@ export function createVisitor(
       };
     },
     tuple(schema, ctx, walk) {
-      const applyModifiers = (result: ZodResult, opts: { optional?: boolean }) =>
+      const applyModifiers: Parameters<typeof tupleToAst>[0]['applyModifiers'] = (result, opts) =>
         this.applyModifiers(result, ctx, opts) as ZodFinal;
       const { childResults, expression } = tupleToAst({
         applyModifiers,
@@ -320,7 +320,7 @@ export function createVisitor(
 
       items.forEach((item, index) => {
         const schema = schemas[index]!;
-        if (schema.type !== 'null') {
+        if (schema.type !== 'null' && schema.const !== null) {
           nonNullItems.push(item);
         }
       });

@@ -363,16 +363,6 @@ export interface UnknownResolverContext extends BaseContext {
   schema: SchemaWithType<'unknown'>;
 }
 
-export interface VoidResolverContext extends BaseContext {
-  /**
-   * Nodes used to build different parts of the result.
-   */
-  nodes: {
-    base: (ctx: VoidResolverContext) => PipeResult;
-  };
-  schema: SchemaWithType<'void'>;
-}
-
 export interface ValidatorResolverContext extends BaseContext {
   operation: IR.OperationObject;
   /**
@@ -381,4 +371,14 @@ export interface ValidatorResolverContext extends BaseContext {
   symbols: BaseContext['symbols'] & {
     schema: Symbol;
   };
+}
+
+export interface VoidResolverContext extends BaseContext {
+  /**
+   * Nodes used to build different parts of the result.
+   */
+  nodes: {
+    base: (ctx: VoidResolverContext) => PipeResult;
+  };
+  schema: SchemaWithType<'void'>;
 }
