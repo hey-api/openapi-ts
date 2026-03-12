@@ -353,7 +353,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
   }
 
   /**
-   * @deprecated use `plugin.symbol()` instead
+   * Alias for `symbol()` method with single argument.
    */
   registerSymbol(symbol: SymbolIn): Symbol<ResolvedNode> {
     return this.symbol(symbol.name, symbol) as Symbol<ResolvedNode>;
