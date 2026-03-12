@@ -1,4 +1,4 @@
-import { applyNaming, buildSymbolIn, pathToName } from '@hey-api/shared';
+import { buildSymbolIn, pathToName } from '@hey-api/shared';
 
 import { createSchemaComment } from '../../../plugins/shared/utils/schema';
 import { $ } from '../../../ts-dsl';
@@ -32,7 +32,8 @@ export function exportAst({
         tool: 'zod',
         ...meta,
       },
-      name: applyNaming(name, naming),
+      name,
+      naming,
       plugin,
       schema,
     }),
@@ -49,7 +50,8 @@ export function exportAst({
             variant: 'infer',
             ...meta,
           },
-          name: applyNaming(name, naming.types.infer),
+          name,
+          naming: naming.types.infer,
           plugin,
           schema,
         }),
