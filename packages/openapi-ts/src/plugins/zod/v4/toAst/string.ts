@@ -36,6 +36,8 @@ function formatNode(ctx: StringResolverContext): ChainResult {
     }
     case 'email':
       return $(z).attr(identifiers.email).call();
+    case 'guid':
+      return $(z).attr(identifiers.guid).call();
     case 'ipv4':
       return $(z).attr(identifiers.ipv4).call();
     case 'ipv6':
