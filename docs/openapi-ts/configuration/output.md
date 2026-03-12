@@ -307,7 +307,7 @@ export default {
 ```
 <!-- prettier-ignore-end -->
 
-You can skip processing by adding the output path to the tool’s ignore file (for example `.eslintignore` or `.prettierignore`).
+You can skip processing by adding the output path to the tool's ignore file (for example `.eslintignore` or `.prettierignore`).
 
 ## Name Conflicts
 
