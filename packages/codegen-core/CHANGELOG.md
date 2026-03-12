@@ -1,5 +1,11 @@
 # @hey-api/codegen-core
 
+## 0.7.2
+
+### Patch Changes
+
+- **log**: make group optional in warn method ([#3540](https://github.com/hey-api/openapi-ts/pull/3540)) ([`0512650`](https://github.com/hey-api/openapi-ts/commit/0512650988ce3c411492172e6bbe300f5440408f)) by [@mrlubos](https://github.com/mrlubos)
+
 ## 0.7.1
 
 ### Patch Changes
