@@ -1,4 +1,4 @@
-import { applyNaming, pathToName } from '@hey-api/shared';
+import { buildSymbolIn, pathToName } from '@hey-api/shared';
 
 import { createSchemaComment } from '../../../plugins/shared/utils/schema';
 import { $ } from '../../../ts-dsl';
@@ -21,15 +21,22 @@ export function exportAst({
   const v = plugin.external('valibot.v');
 
   const name = pathToName(path, { anchor: namingAnchor });
-  const symbol = plugin.symbol(applyNaming(name, naming), {
-    meta: {
-      category: 'schema',
-      path,
-      tags,
-      tool: 'valibot',
-      ...meta,
-    },
-  });
+
+  const symbol = plugin.registerSymbol(
+    buildSymbolIn({
+      meta: {
+        category: 'schema',
+        path,
+        tags,
+        tool: 'valibot',
+        ...meta,
+      },
+      name,
+      naming,
+      plugin,
+      schema,
+    }),
+  );
 
   const statement = $.const(symbol)
     .export()

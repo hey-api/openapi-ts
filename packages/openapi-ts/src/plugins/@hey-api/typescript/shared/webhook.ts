@@ -1,6 +1,6 @@
 import type { Symbol } from '@hey-api/codegen-core';
 import type { IR } from '@hey-api/shared';
-import { applyNaming } from '@hey-api/shared';
+import { buildSymbolIn } from '@hey-api/shared';
 
 import { createSchemaComment } from '../../../../plugins/shared/utils/schema';
 import { $ } from '../../../../ts-dsl';
@@ -22,12 +22,8 @@ export function webhookToType({
   let symbolWebhookPayload: Symbol | undefined;
 
   if (operation.body) {
-    symbolWebhookPayload = plugin.symbol(
-      applyNaming(operation.id, {
-        case: plugin.config.webhooks.case,
-        name: plugin.config.webhooks.payload,
-      }),
-      {
+    symbolWebhookPayload = plugin.registerSymbol(
+      buildSymbolIn({
         meta: {
           category: 'type',
           path,
@@ -37,7 +33,14 @@ export function webhookToType({
           tags,
           tool: 'typescript',
         },
-      },
+        name: operation.id,
+        naming: {
+          case: plugin.config.webhooks.case,
+          name: plugin.config.webhooks.payload,
+        },
+        operation,
+        plugin,
+      }),
     );
 
     const payloadResult = processor.process({
@@ -71,17 +74,23 @@ export function webhookToType({
     .prop('path', (p) => p.required(false).type($.type('never')))
     .prop('query', (p) => p.required(false).type($.type('never')));
 
-  const symbol = plugin.symbol(applyNaming(operation.id, plugin.config.webhooks), {
-    meta: {
-      category: 'type',
-      path,
-      resource: 'webhook',
-      resourceId: operation.id,
-      role: 'data',
-      tags,
-      tool: 'typescript',
-    },
-  });
+  const symbol = plugin.registerSymbol(
+    buildSymbolIn({
+      meta: {
+        category: 'type',
+        path,
+        resource: 'webhook',
+        resourceId: operation.id,
+        role: 'data',
+        tags,
+        tool: 'typescript',
+      },
+      name: operation.id,
+      naming: plugin.config.webhooks,
+      operation,
+      plugin,
+    }),
+  );
 
   const node = $.type.alias(symbol).export().type(requestType);
   plugin.node(node);

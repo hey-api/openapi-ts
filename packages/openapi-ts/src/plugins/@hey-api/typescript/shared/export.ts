@@ -1,5 +1,5 @@
 import type { IR } from '@hey-api/shared';
-import { applyNaming, pathToName, toCase } from '@hey-api/shared';
+import { buildSymbolIn, pathToName, toCase } from '@hey-api/shared';
 import { pathToJsonPointer } from '@hey-api/shared';
 
 import { createSchemaComment } from '../../../../plugins/shared/utils/schema';
@@ -98,14 +98,20 @@ function buildEnumExport({
         ? items.filter((item) => item.schema.const !== null)
         : items;
 
-    const symbolObject = plugin.symbol(applyNaming(name, plugin.config.definitions), {
-      meta: {
-        category: 'utility',
-        resource: 'definition',
-        resourceId,
-        tool: 'typescript',
-      },
-    });
+    const symbolObject = plugin.registerSymbol(
+      buildSymbolIn({
+        meta: {
+          category: 'utility',
+          resource: 'definition',
+          resourceId,
+          tool: 'typescript',
+        },
+        name,
+        naming: plugin.config.definitions,
+        plugin,
+        schema,
+      }),
+    );
 
     const objectNode = $.const(symbolObject)
       .export()
@@ -126,14 +132,20 @@ function buildEnumExport({
       );
     plugin.node(objectNode);
 
-    const symbol = plugin.symbol(applyNaming(name, plugin.config.definitions), {
-      meta: {
-        category: 'type',
-        resource: 'definition',
-        resourceId,
-        tool: 'typescript',
-      },
-    });
+    const symbol = plugin.registerSymbol(
+      buildSymbolIn({
+        meta: {
+          category: 'type',
+          resource: 'definition',
+          resourceId,
+          tool: 'typescript',
+        },
+        name,
+        naming: plugin.config.definitions,
+        plugin,
+        schema,
+      }),
+    );
     const node = $.type
       .alias(symbol)
       .export()
@@ -149,14 +161,20 @@ function buildEnumExport({
     );
     if (hasInvalidTypes) return false;
 
-    const symbol = plugin.symbol(applyNaming(name, plugin.config.definitions), {
-      meta: {
-        category: 'type',
-        resource: 'definition',
-        resourceId,
-        tool: 'typescript',
-      },
-    });
+    const symbol = plugin.registerSymbol(
+      buildSymbolIn({
+        meta: {
+          category: 'type',
+          resource: 'definition',
+          resourceId,
+          tool: 'typescript',
+        },
+        name,
+        naming: plugin.config.definitions,
+        plugin,
+        schema,
+      }),
+    );
     const enumNode = $.enum(symbol)
       .export()
       .$if(plugin.config.comments && createSchemaComment(schema), (e, v) => e.doc(v))
@@ -203,16 +221,22 @@ export function exportAst({
     return;
   }
 
-  const symbol = plugin.symbol(applyNaming(name, naming), {
-    meta: {
-      category: 'type',
-      path,
-      resource: 'definition',
-      resourceId: $ref,
-      tags,
-      tool: 'typescript',
-    },
-  });
+  const symbol = plugin.registerSymbol(
+    buildSymbolIn({
+      meta: {
+        category: 'type',
+        path,
+        resource: 'definition',
+        resourceId: $ref,
+        tags,
+        tool: 'typescript',
+      },
+      name,
+      naming,
+      plugin,
+      schema,
+    }),
+  );
 
   const node = $.type
     .alias(symbol)

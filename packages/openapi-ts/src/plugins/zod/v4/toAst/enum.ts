@@ -4,7 +4,7 @@ import { $ } from '../../../../ts-dsl';
 import { identifiers } from '../../constants';
 import type { EnumResolverContext } from '../../resolvers';
 import type { Chain } from '../../shared/chain';
-import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
+import type { ZodPlugin } from '../../types';
 import { unknownToAst } from './unknown';
 
 function itemsNode(ctx: EnumResolverContext): ReturnType<EnumResolverContext['nodes']['items']> {
@@ -55,13 +55,15 @@ function baseNode(ctx: EnumResolverContext): Chain {
     return $(z)
       .attr(identifiers.enum)
       .call($.array(...enumMembers));
-  } else if (literalMembers.length === 1) {
-    return literalMembers[0]!;
-  } else {
-    return $(z)
-      .attr(identifiers.union)
-      .call($.array(...literalMembers));
   }
+
+  if (literalMembers.length === 1) {
+    return literalMembers[0]!;
+  }
+
+  return $(z)
+    .attr(identifiers.union)
+    .call($.array(...literalMembers));
 }
 
 function enumResolver(ctx: EnumResolverContext): Chain {
@@ -80,30 +82,11 @@ function enumResolver(ctx: EnumResolverContext): Chain {
 export function enumToAst({
   plugin,
   schema,
-  state,
-}: Pick<IrSchemaToAstOptions, 'plugin' | 'state'> & {
+}: {
+  plugin: ZodPlugin['Instance'];
   schema: SchemaWithType<'enum'>;
-}): Omit<Ast, 'typeName'> {
+}): Chain {
   const z = plugin.external('zod.z');
-
-  const { literalMembers } = itemsNode({
-    $,
-    chain: { current: $(z) },
-    nodes: { base: baseNode, items: itemsNode },
-    plugin,
-    schema,
-    symbols: { z },
-    utils: { ast: {}, state },
-  });
-
-  if (!literalMembers.length) {
-    return unknownToAst({
-      plugin,
-      schema: {
-        type: 'unknown',
-      },
-    });
-  }
 
   const ctx: EnumResolverContext = {
     $,
@@ -119,16 +102,19 @@ export function enumToAst({
     symbols: {
       z,
     },
-    utils: {
-      ast: {},
-      state,
-    },
   };
+
+  const { literalMembers } = itemsNode(ctx);
+
+  if (!literalMembers.length) {
+    return unknownToAst({
+      plugin,
+      schema: {
+        type: 'unknown',
+      },
+    });
+  }
 
   const resolver = plugin.config['~resolvers']?.enum;
-  const node = resolver?.(ctx) ?? enumResolver(ctx);
-
-  return {
-    expression: node,
-  };
+  return resolver?.(ctx) ?? enumResolver(ctx);
 }
