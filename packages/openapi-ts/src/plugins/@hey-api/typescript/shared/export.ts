@@ -1,5 +1,5 @@
 import type { IR } from '@hey-api/shared';
-import { applyNaming, buildSymbolIn, pathToName, toCase } from '@hey-api/shared';
+import { buildSymbolIn, pathToName, toCase } from '@hey-api/shared';
 import { pathToJsonPointer } from '@hey-api/shared';
 
 import { createSchemaComment } from '../../../../plugins/shared/utils/schema';
@@ -106,7 +106,8 @@ function buildEnumExport({
           resourceId,
           tool: 'typescript',
         },
-        name: applyNaming(name, plugin.config.definitions),
+        name,
+        naming: plugin.config.definitions,
         plugin,
         schema,
       }),
@@ -139,7 +140,8 @@ function buildEnumExport({
           resourceId,
           tool: 'typescript',
         },
-        name: applyNaming(name, plugin.config.definitions),
+        name,
+        naming: plugin.config.definitions,
         plugin,
         schema,
       }),
@@ -167,7 +169,8 @@ function buildEnumExport({
           resourceId,
           tool: 'typescript',
         },
-        name: applyNaming(name, plugin.config.definitions),
+        name,
+        naming: plugin.config.definitions,
         plugin,
         schema,
       }),
@@ -228,7 +231,8 @@ export function exportAst({
         tags,
         tool: 'typescript',
       },
-      name: applyNaming(name, naming),
+      name,
+      naming,
       plugin,
       schema,
     }),

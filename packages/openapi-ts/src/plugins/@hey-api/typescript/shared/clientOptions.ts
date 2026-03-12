@@ -1,5 +1,5 @@
 import type { IR } from '@hey-api/shared';
-import { applyNaming, buildSymbolIn, parseUrl } from '@hey-api/shared';
+import { buildSymbolIn, parseUrl } from '@hey-api/shared';
 
 import { getTypedConfig } from '../../../../config/utils';
 import {
@@ -53,9 +53,10 @@ export const createClientOptions = ({
         role: 'options',
         tool: 'typescript',
       },
-      name: applyNaming('ClientOptions', {
+      name: 'ClientOptions',
+      naming: {
         case: plugin.config.case,
-      }),
+      },
       plugin,
     }),
   );
