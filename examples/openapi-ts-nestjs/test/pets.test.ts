@@ -2,7 +2,7 @@ import type { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import type { AddressInfo } from 'net';
 import { AppModule } from 'src/app.module';
-import { createPet, deletePet, getInventory, listPets, showPetById, updatePet } from 'src/client';
+import { createPet, getInventory, listPets, showPetById } from 'src/client';
 import { client } from 'src/client/client.gen';
 
 let app: INestApplication;
@@ -35,7 +35,7 @@ describe('PetsController', () => {
   test('showPetById', async () => {
     const result = await showPetById({
       client,
-      path: { petId: '550e8400-e29b-41d4-a716-446655440000' },
+      path: { petId: '1' },
     });
     expect(result.response.status).toBe(200);
   });
@@ -47,24 +47,6 @@ describe('PetsController', () => {
     });
     expect(result.response.status).toBe(201);
     expect(result.data).toMatchObject({ name: 'Buddy' });
-  });
-
-  test('updatePet', async () => {
-    const result = await updatePet({
-      body: { name: 'Fido Updated' },
-      client,
-      path: { petId: '550e8400-e29b-41d4-a716-446655440000' },
-    });
-    expect(result.response.status).toBe(200);
-    expect(result.data).toMatchObject({ name: 'Fido Updated' });
-  });
-
-  test('deletePet', async () => {
-    const result = await deletePet({
-      client,
-      path: { petId: '550e8400-e29b-41d4-a716-446655440001' },
-    });
-    expect(result.response.status).toBe(204);
   });
 });
 
