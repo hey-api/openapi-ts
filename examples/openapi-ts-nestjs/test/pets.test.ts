@@ -1,7 +1,6 @@
 import type { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import type { AddressInfo } from 'net';
-import { configureApp } from 'src/app.factory';
 import { AppModule } from 'src/app.module';
 import { createPet, deletePet, getInventory, listPets, showPetById, updatePet } from 'src/client';
 import { client } from 'src/client/client.gen';
@@ -13,7 +12,7 @@ beforeAll(async () => {
     imports: [AppModule],
   }).compile();
 
-  app = configureApp(moduleRef.createNestApplication());
+  app = moduleRef.createNestApplication();
   await app.init();
   await app.listen(0);
 
