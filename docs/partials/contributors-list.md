@@ -21,6 +21,7 @@
 - [David Bieregger](https://github.com/BierDav)
 - [David Ovčačík](https://github.com/dovca)
 - [Dmitriy Brolnickij](https://github.com/brolnickij)
+- [Erikwski](https://github.com/erikwski)
 - [Finn Poppinga](https://github.com/fpoppinga)
 - [Flo Edelmann](https://github.com/FloEdelmann)
 - [Florian Lutze](https://github.com/flow96)
