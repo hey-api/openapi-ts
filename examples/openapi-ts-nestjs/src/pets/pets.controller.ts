@@ -10,7 +10,6 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import type { PetsControllerMethods } from '../client/nestjs.gen';
 import type {
@@ -23,7 +22,6 @@ import type {
 import type { CreatePetDto } from './dto/create-pet.dto';
 import type { UpdatePetDto } from './dto/update-pet.dto';
 
-@ApiTags('pets')
 @Controller('pets')
 export class PetsController implements Pick<
   PetsControllerMethods,
@@ -45,8 +43,6 @@ export class PetsController implements Pick<
   ];
 
   @Get()
-  @ApiOperation({ summary: 'List all pets' })
-  @ApiResponse({ description: 'A list of pets', status: 200 })
   async listPets(@Query() query?: ListPetsData['query']) {
     const offset = query?.offset ?? 0;
     const limit = query?.limit ?? 20;
@@ -54,9 +50,6 @@ export class PetsController implements Pick<
   }
 
   @Post()
-  @ApiOperation({ summary: 'Create a pet' })
-  @ApiResponse({ description: 'Pet created', status: 201 })
-  @ApiResponse({ description: 'Validation error', status: 400 })
   async createPet(@Body() body: CreatePetDto) {
     const pet: Pet = {
       id: crypto.randomUUID(),
@@ -69,9 +62,6 @@ export class PetsController implements Pick<
   }
 
   @Get(':petId')
-  @ApiOperation({ summary: 'Find pet by ID' })
-  @ApiResponse({ description: 'Pet found', status: 200 })
-  @ApiResponse({ description: 'Pet not found', status: 404 })
   async showPetById(@Param() path: ShowPetByIdData['path']) {
     const pet = this.pets.find((p) => p.id === path.petId);
     if (!pet) {
@@ -81,10 +71,6 @@ export class PetsController implements Pick<
   }
 
   @Put(':petId')
-  @ApiOperation({ summary: 'Update a pet' })
-  @ApiResponse({ description: 'Pet updated', status: 200 })
-  @ApiResponse({ description: 'Validation error', status: 400 })
-  @ApiResponse({ description: 'Pet not found', status: 404 })
   async updatePet(@Param() path: UpdatePetData['path'], @Body() body: UpdatePetDto) {
     const pet = this.pets.find((p) => p.id === path.petId);
     if (!pet) {
@@ -104,9 +90,6 @@ export class PetsController implements Pick<
 
   @Delete(':petId')
   @HttpCode(204)
-  @ApiOperation({ summary: 'Delete a pet' })
-  @ApiResponse({ description: 'Pet deleted', status: 204 })
-  @ApiResponse({ description: 'Pet not found', status: 404 })
   async deletePet(@Param() path: DeletePetData['path']) {
     const index = this.pets.findIndex((p) => p.id === path.petId);
     if (index === -1) {

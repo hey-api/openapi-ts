@@ -85,33 +85,25 @@ Use `Pick<ControllerMethods, ...>` with `implements` to enforce the contract on 
 
 ```ts
 import { Controller, Get, Post, Param, Query, Body } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import type { PetsControllerMethods } from '../client/nestjs.gen';
 import type { ListPetsData, ShowPetByIdData, CreatePetData } from '../client/types.gen';
 
-@ApiTags('pets')
 @Controller('pets')
 export class PetsController implements Pick<
   PetsControllerMethods,
   'listPets' | 'createPet' | 'showPetById'
 > {
   @Get()
-  @ApiOperation({ summary: 'List all pets' })
-  @ApiResponse({ status: 200, description: 'A list of pets' })
   async listPets(@Query() query?: ListPetsData['query']) {
     // ...
   }
 
   @Post()
-  @ApiOperation({ summary: 'Create a pet' })
-  @ApiResponse({ status: 201, description: 'Pet created' })
   async createPet(@Body() body: CreatePetDto) {
     // ...
   }
 
   @Get(':petId')
-  @ApiOperation({ summary: 'Find pet by ID' })
-  @ApiResponse({ status: 200, description: 'Pet found' })
   async showPetById(@Param() path: ShowPetByIdData['path']) {
     // ...
   }
@@ -122,9 +114,8 @@ export class PetsController implements Pick<
 
 The [openapi-ts-nestjs example](https://github.com/hey-api/openapi-ts/tree/main/examples/openapi-ts-nestjs) demonstrates a production-quality NestJS app with:
 
-- `@nestjs/swagger` for OpenAPI documentation
 - `class-validator` DTOs for request validation
-- `ValidationPipe` with `forbidUnknownValues: true`
+- `ValidationPipe` with `forbidNonWhitelisted: true`
 - Exception filters
 - `@darraghor/eslint-plugin-nestjs-typed` for NestJS-specific linting
 
@@ -145,6 +136,8 @@ async showPetById(@Param('petId') petId: string) { ... }
 Methods using `@Res()` for raw response access are incompatible with `implements` because the extra parameter breaks assignability.
 
 Operations without tags are grouped under `DefaultControllerMethods`.
+
+Cookie parameters defined in the OpenAPI spec are not included in generated method signatures. NestJS handles cookies separately via `@Req()` or dedicated cookie middleware.
 
 ## API
 
