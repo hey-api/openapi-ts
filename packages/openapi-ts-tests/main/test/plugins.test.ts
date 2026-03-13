@@ -429,6 +429,14 @@ for (const version of versions) {
       },
       {
         config: createConfig({
+          input: 'inline-schemas.yaml',
+          output: 'inline-schemas',
+          plugins: ['@hey-api/schemas'],
+        }),
+        description: 'generate schemas for inline parameter schemas',
+      },
+      {
+        config: createConfig({
           output: 'default',
           plugins: ['@hey-api/sdk', '@hey-api/client-fetch'],
         }),

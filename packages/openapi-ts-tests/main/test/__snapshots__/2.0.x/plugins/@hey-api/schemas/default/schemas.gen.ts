@@ -854,3 +854,213 @@ export const ModelWithPatternWritableSchema = {
         }
     }
 } as const;
+
+export const CallWithDescriptionsQuerySchema = {
+    properties: {
+        parameterWithBreaks: {
+            description: 'Testing multiline comments in string: First line\nSecond line\n\nFourth line',
+            type: 'string'
+        },
+        parameterWithBackticks: {
+            description: 'Testing backticks in string: `backticks` and ```multiple backticks``` should work',
+            type: 'string'
+        },
+        parameterWithSlashes: {
+            description: 'Testing slashes in string: \\backwards\\\\\\ and /forwards/// should work',
+            type: 'string'
+        },
+        parameterWithExpressionPlaceholders: {
+            description: 'Testing expression placeholders in string: ${expression} should work',
+            type: 'string'
+        },
+        parameterWithQuotes: {
+            description: 'Testing quotes in string: \'single quote\'\'\' and "double quotes""" should work',
+            type: 'string'
+        },
+        parameterWithReservedCharacters: {
+            description: 'Testing reserved characters in string: /* inline */ and /** inline **/ should work',
+            type: 'string'
+        }
+    },
+    type: 'object'
+} as const;
+
+export const CallWithParametersQuerySchema = {
+    properties: {
+        parameterQuery: {
+            description: 'This is the parameter that goes into the query params',
+            type: 'string'
+        }
+    },
+    type: 'object'
+} as const;
+
+export const CallWithWeirdParameterNamesQuerySchema = {
+    properties: {
+        default: {
+            description: 'This is the parameter with a reserved keyword',
+            type: 'string'
+        },
+        'parameter-query': {
+            description: 'This is the parameter that goes into the request query params',
+            type: 'string'
+        }
+    },
+    type: 'object'
+} as const;
+
+export const CallWithDefaultParametersQuerySchema = {
+    properties: {
+        parameterString: {
+            description: 'This is a simple string with default value',
+            type: 'string'
+        },
+        parameterNumber: {
+            description: 'This is a simple number with default value',
+            type: 'number'
+        },
+        parameterBoolean: {
+            description: 'This is a simple boolean with default value',
+            type: 'boolean'
+        }
+    },
+    type: 'object'
+} as const;
+
+export const CallWithDefaultOptionalParametersQuerySchema = {
+    properties: {
+        parameterString: {
+            description: 'This is a simple string that is optional with default value',
+            type: 'string'
+        },
+        parameterNumber: {
+            description: 'This is a simple number that is optional with default value',
+            type: 'number'
+        },
+        parameterBoolean: {
+            description: 'This is a simple boolean that is optional with default value',
+            type: 'boolean'
+        }
+    },
+    type: 'object'
+} as const;
+
+export const CallToTestOrderOfParamsQuerySchema = {
+    properties: {
+        parameterOptionalStringWithDefault: {
+            description: 'This is a optional string with default',
+            type: 'string'
+        },
+        parameterOptionalStringWithEmptyDefault: {
+            description: 'This is a optional string with empty default',
+            type: 'string'
+        },
+        parameterOptionalStringWithNoDefault: {
+            description: 'This is a optional string with no default',
+            type: 'string'
+        },
+        parameterStringWithDefault: {
+            description: 'This is a string with default',
+            type: 'string'
+        },
+        parameterStringWithEmptyDefault: {
+            description: 'This is a string with empty default',
+            type: 'string'
+        },
+        parameterStringWithNoDefault: {
+            description: 'This is a string with no default',
+            type: 'string'
+        },
+        parameterStringNullableWithNoDefault: {
+            description: 'This is a string that can be null with no default',
+            type: 'string'
+        },
+        parameterStringNullableWithDefault: {
+            description: 'This is a string that can be null with default',
+            type: 'string'
+        }
+    },
+    type: 'object'
+} as const;
+
+export const CollectionFormatQuerySchema = {
+    properties: {
+        parameterArrayCSV: {
+            description: 'This is an array parameter that is sent as csv format (comma-separated values)',
+            type: 'array'
+        },
+        parameterArraySSV: {
+            description: 'This is an array parameter that is sent as ssv format (space-separated values)',
+            type: 'array'
+        },
+        parameterArrayTSV: {
+            description: 'This is an array parameter that is sent as tsv format (tab-separated values)',
+            type: 'array'
+        },
+        parameterArrayPipes: {
+            description: 'This is an array parameter that is sent as pipes format (pipe-separated values)',
+            type: 'array'
+        },
+        parameterArrayMulti: {
+            description: 'This is an array parameter that is sent as multi format (multiple parameter instances)',
+            type: 'array'
+        }
+    },
+    type: 'object'
+} as const;
+
+export const TypesQuerySchema = {
+    properties: {
+        parameterNumber: {
+            description: 'This is a number parameter',
+            type: 'number'
+        },
+        parameterString: {
+            description: 'This is a string parameter',
+            type: 'string'
+        },
+        parameterBoolean: {
+            description: 'This is a boolean parameter',
+            type: 'boolean'
+        },
+        parameterArray: {
+            description: 'This is an array parameter',
+            type: 'array'
+        },
+        parameterDictionary: {
+            description: 'This is a dictionary parameter',
+            type: 'object'
+        }
+    },
+    type: 'object'
+} as const;
+
+export const ComplexTypesQuerySchema = {
+    properties: {
+        parameterObject: {
+            description: 'Parameter containing object',
+            type: 'object'
+        }
+    },
+    type: 'object'
+} as const;
+
+export const TestErrorCodeQuerySchema = {
+    properties: {
+        status: {
+            description: 'Status code to return',
+            type: 'string'
+        }
+    },
+    type: 'object'
+} as const;
+
+export const NonAsciiæøåÆøÅöôêÊ字符串QuerySchema = {
+    properties: {
+        nonAsciiParamæøåÆØÅöôêÊ: {
+            description: 'Dummy input param',
+            type: 'integer'
+        }
+    },
+    type: 'object'
+} as const;
