@@ -3,15 +3,25 @@
   "compilerOptions": {
     "baseUrl": ".",
     "emitDecoratorMetadata": true,
-    "esModuleInterop": true,
     "experimentalDecorators": true,
+    "esModuleInterop": true,
     "lib": ["es2023", "dom", "dom.iterable"],
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "skipLibCheck": true,
-    "strict": true,
     "target": "es2022",
-    "types": ["node", "vitest/globals"]
+    "types": ["node", "vitest/globals"],
+
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true
   },
   "references": [{ "path": "./tsconfig.node.json" }]
 }

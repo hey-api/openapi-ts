@@ -7,8 +7,8 @@ export type ClientOptions = {
 export type Pet = {
   id: string;
   name: string;
-  status?: 'available' | 'pending' | 'sold';
   tag?: string;
+  status?: 'available' | 'pending' | 'sold';
 };
 
 export type CreatePetBody = {
@@ -18,8 +18,8 @@ export type CreatePetBody = {
 
 export type UpdatePetBody = {
   name?: string;
-  status?: 'available' | 'pending' | 'sold';
   tag?: string;
+  status?: 'available' | 'pending' | 'sold';
 };
 
 export type Error = {
