@@ -1,3 +1,4 @@
 export default {
-  '*': ['pnpm format', 'pnpm lint:fix'],
+  '*': 'oxfmt',
+  '*.{js,jsx,ts,tsx,mjs,mts,cjs,cts,vue,svelte}': 'eslint --fix',
 };
