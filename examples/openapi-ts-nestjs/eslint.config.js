@@ -2,6 +2,9 @@ import nestjsTyped from '@darraghor/eslint-plugin-nestjs-typed';
 import tseslint from 'typescript-eslint';
 
 export default [
+  {
+    ignores: ['src/client/**'],
+  },
   ...tseslint.configs.recommended,
   nestjsTyped.flatRecommended,
   {
@@ -11,8 +14,5 @@ export default [
         project: './tsconfig.json',
       },
     },
-  },
-  {
-    ignores: ['src/client/**'],
   },
 ];

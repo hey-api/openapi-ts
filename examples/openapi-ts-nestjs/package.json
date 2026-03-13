@@ -25,7 +25,6 @@
     "@swc/core": "^1.11.29",
     "eslint": "^9.18.0",
     "oxfmt": "^0.27.0",
-    "supertest": "^7.1.0",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.20.0",
     "unplugin-swc": "^1.5.5",

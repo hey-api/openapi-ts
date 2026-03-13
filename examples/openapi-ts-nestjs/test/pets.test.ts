@@ -1,9 +1,11 @@
 import type { INestApplication } from '@nestjs/common';
+import { ValidationPipe } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import type { AddressInfo } from 'net';
 import { AppModule } from 'src/app.module';
 import { createPet, deletePet, getInventory, listPets, showPetById, updatePet } from 'src/client';
 import { client } from 'src/client/client.gen';
+import { HttpExceptionFilter } from 'src/common/filters/http-exception.filter';
 
 let app: INestApplication;
 
@@ -13,6 +15,14 @@ beforeAll(async () => {
   }).compile();
 
   app = moduleRef.createNestApplication();
+  app.useGlobalPipes(
+    new ValidationPipe({
+      forbidUnknownValues: true,
+      transform: true,
+      whitelist: true,
+    }),
+  );
+  app.useGlobalFilters(new HttpExceptionFilter());
   await app.init();
   await app.listen(0);
 
