@@ -116,7 +116,6 @@ The [openapi-ts-nestjs example](https://github.com/hey-api/openapi-ts/tree/main/
 
 - `class-validator` DTOs for request validation
 - `ValidationPipe` with `forbidNonWhitelisted: true`
-- Exception filters
 - `@darraghor/eslint-plugin-nestjs-typed` for NestJS-specific linting
 
 ## Constraints

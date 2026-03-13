@@ -13,14 +13,13 @@ import {
 
 import type { PetsControllerMethods } from '../client/nestjs.gen';
 import type {
+  CreatePetData,
   DeletePetData,
   ListPetsData,
   Pet,
   ShowPetByIdData,
   UpdatePetData,
 } from '../client/types.gen';
-import type { CreatePetDto } from './dto/create-pet.dto';
-import type { UpdatePetDto } from './dto/update-pet.dto';
 
 @Controller('pets')
 export class PetsController implements Pick<
@@ -50,7 +49,7 @@ export class PetsController implements Pick<
   }
 
   @Post()
-  async createPet(@Body() body: CreatePetDto) {
+  async createPet(@Body() body: CreatePetData['body']) {
     const pet: Pet = {
       id: crypto.randomUUID(),
       name: body.name,
@@ -71,7 +70,7 @@ export class PetsController implements Pick<
   }
 
   @Put(':petId')
-  async updatePet(@Param() path: UpdatePetData['path'], @Body() body: UpdatePetDto) {
+  async updatePet(@Param() path: UpdatePetData['path'], @Body() body: UpdatePetData['body']) {
     const pet = this.pets.find((p) => p.id === path.petId);
     if (!pet) {
       throw new NotFoundException(`Pet ${path.petId} not found`);

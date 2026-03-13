@@ -14,8 +14,6 @@
     "@nestjs/common": "^11.0.1",
     "@nestjs/core": "^11.0.1",
     "@nestjs/platform-express": "^11.0.1",
-    "class-transformer": "^0.5.1",
-    "class-validator": "^0.14.1",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1"
   },
@@ -25,7 +23,6 @@
     "@nestjs/testing": "^11.0.1",
     "@swc-node/register": "^1.10.10",
     "@swc/core": "^1.11.29",
-    "@types/express": "^5.0.0",
     "eslint": "^9.18.0",
     "oxfmt": "^0.27.0",
     "typescript": "^5.9.3",
