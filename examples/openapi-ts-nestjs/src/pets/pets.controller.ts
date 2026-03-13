@@ -14,7 +14,6 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import type { PetsControllerMethods } from '../client/nestjs.gen';
 import type {
-  CreatePetData,
   DeletePetData,
   ListPetsData,
   Pet,
@@ -63,7 +62,7 @@ export class PetsController implements Pick<
       id: crypto.randomUUID(),
       name: body.name,
       status: 'available',
-      tag: (body as CreatePetData['body']).tag,
+      tag: body.tag,
     };
     this.pets.push(pet);
     return pet;
@@ -91,15 +90,14 @@ export class PetsController implements Pick<
     if (!pet) {
       throw new NotFoundException(`Pet ${path.petId} not found`);
     }
-    const update = body as UpdatePetData['body'];
-    if (update.name !== undefined) {
-      pet.name = update.name;
+    if (body.name !== undefined) {
+      pet.name = body.name;
     }
-    if (update.tag !== undefined) {
-      pet.tag = update.tag;
+    if (body.tag !== undefined) {
+      pet.tag = body.tag;
     }
-    if (update.status !== undefined) {
-      pet.status = update.status;
+    if (body.status !== undefined) {
+      pet.status = body.status;
     }
     return pet;
   }

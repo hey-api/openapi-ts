@@ -30,9 +30,12 @@ export const buildApp = async () => {
   return app;
 };
 
-buildApp().then((app) => {
-  app.listen(3000).catch((err: unknown) => {
-    console.error(err);
-    process.exit(1);
+const isEntryPoint = process.argv[1]?.includes('main');
+if (isEntryPoint) {
+  buildApp().then((app) => {
+    app.listen(3000).catch((err: unknown) => {
+      console.error(err);
+      process.exit(1);
+    });
   });
-});
+}
