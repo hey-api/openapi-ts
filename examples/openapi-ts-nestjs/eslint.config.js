@@ -6,7 +6,7 @@ export default [
     ignores: ['src/client/**'],
   },
   ...tseslint.configs.recommended,
-  nestjsTyped.flatRecommended,
+  ...nestjsTyped.configs.flatNoSwagger,
   {
     files: ['src/**/*.ts'],
     languageOptions: {
