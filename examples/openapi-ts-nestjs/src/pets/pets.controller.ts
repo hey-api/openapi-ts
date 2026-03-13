@@ -28,7 +28,7 @@ import type { UpdatePetDto } from './dto/update-pet.dto';
 @Controller('pets')
 export class PetsController implements Pick<
   PetsControllerMethods,
-  'listPets' | 'createPet' | 'showPetById' | 'updatePet' | 'deletePet'
+  'createPet' | 'deletePet' | 'listPets' | 'showPetById' | 'updatePet'
 > {
   private readonly pets: Pet[] = [
     {

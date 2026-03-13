@@ -1,5 +1,6 @@
 import type { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
+import type { AddressInfo } from 'net';
 import { AppModule } from 'src/app.module';
 import { createPet, deletePet, getInventory, listPets, showPetById, updatePet } from 'src/client';
 import { client } from 'src/client/client.gen';
@@ -15,8 +16,8 @@ beforeAll(async () => {
   await app.init();
   await app.listen(0);
 
-  const address = app.getHttpServer().address();
-  const baseUrl = `http://localhost:${address.port}`;
+  const address = app.getHttpServer().address() as AddressInfo;
+  const baseUrl = `http://localhost:${String(address.port)}`;
   client.setConfig({ baseUrl });
 });
 
