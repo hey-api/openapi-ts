@@ -21,13 +21,6 @@ export const handlerV2: PydanticPlugin['Handler'] = ({ plugin }) => {
       resource: 'typing.Any',
     },
   });
-  plugin.symbol('List', {
-    external: 'typing',
-    meta: {
-      category: 'external',
-      resource: 'typing.List',
-    },
-  });
   plugin.symbol('Literal', {
     external: 'typing',
     meta: {

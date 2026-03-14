@@ -2,14 +2,13 @@ import type { AnalysisContext, NodeName } from '@hey-api/codegen-core';
 import { isSymbol } from '@hey-api/codegen-core';
 
 import { py } from '../../ts-python';
-import type { MaybePyDsl } from '../base';
 import { PyDsl } from '../base';
 import { ValueMixin } from '../mixins/value';
 import { safeRuntimeName } from '../utils/name';
 
 const Mixed = ValueMixin(PyDsl<py.Assignment>);
 
-export type VarType = NodeName | MaybePyDsl<py.Expression>;
+export type VarType = NodeName | PyDsl<py.Expression>;
 
 export class VarPyDsl extends Mixed {
   readonly '~dsl' = 'VarPyDsl';

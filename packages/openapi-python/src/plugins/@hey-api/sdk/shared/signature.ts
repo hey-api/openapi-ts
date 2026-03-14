@@ -13,8 +13,15 @@ type SignatureParameter = {
 
 type SignatureParameters = Record<string, SignatureParameter>;
 
+type Field = {
+  in: Location | 'headers';
+  key: string;
+  map?: string;
+};
+
 type Signature = {
   bodyRef?: string;
+  fields: Field[];
   parameters: SignatureParameters;
 };
 
@@ -70,6 +77,7 @@ export function getSignatureParameters({
   }
 
   const signatureParameters: SignatureParameters = {};
+  const fields: Field[] = [];
 
   for (const location of locations) {
     const parameters = operation.parameters?.[location];
@@ -88,6 +96,11 @@ export function getSignatureParameters({
           signatureParameter.originalName = originalName;
         }
         signatureParameters[name] = signatureParameter;
+        fields.push({
+          in: location === 'header' ? 'headers' : location,
+          key: name,
+          ...(name !== originalName ? { map: originalName } : {}),
+        });
       }
     }
   }
@@ -115,6 +128,11 @@ export function getSignatureParameters({
           signatureParameter.originalName = originalName;
         }
         signatureParameters[name] = signatureParameter;
+        fields.push({
+          in: location,
+          key: name,
+          ...(name !== originalName ? { map: originalName } : {}),
+        });
       }
     } else if (operation.body.schema.$ref) {
       const value = refToName(operation.body.schema.$ref);
@@ -131,6 +149,11 @@ export function getSignatureParameters({
         signatureParameter.originalName = originalName;
       }
       signatureParameters[name] = signatureParameter;
+      fields.push({
+        in: location,
+        key: name,
+        map: 'body',
+      });
     } else {
       signatureParameters.body = {
         in: location,
@@ -138,6 +161,11 @@ export function getSignatureParameters({
         name: 'body',
         schema: operation.body.schema,
       };
+      fields.push({
+        in: location,
+        key: 'body',
+        map: 'body',
+      });
     }
   }
 
@@ -145,5 +173,5 @@ export function getSignatureParameters({
     return;
   }
 
-  return { bodyRef, parameters: signatureParameters };
+  return { bodyRef, fields, parameters: signatureParameters };
 }
