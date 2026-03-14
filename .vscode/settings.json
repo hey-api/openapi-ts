@@ -4,6 +4,7 @@
   },
   "editor.defaultFormatter": "oxc.oxc-vscode",
   "editor.quickSuggestions": {
+    "other": "on",
     "strings": "on"
   },
   "eslint.format.enable": true,

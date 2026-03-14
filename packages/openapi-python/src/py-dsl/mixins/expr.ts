@@ -37,7 +37,6 @@ export function ExprMixin<T extends py.Expression, TBase extends BaseCtor<T>>(Ba
     }
 
     protected slice(...args: DropFirst<Parameters<typeof f.slice>>): ReturnType<typeof f.slice> {
-      // @ts-expect-error - fix this type
       return f.slice(this, ...args);
     }
   }

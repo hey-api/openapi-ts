@@ -15,6 +15,7 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
     // transformer: false,
     // validator: false,
   },
+  dependencies: ['pydantic'],
   handler,
   name: '@hey-api/python-sdk',
   resolveConfig: (plugin, context) => {
