@@ -4,7 +4,7 @@ import type { $, DollarTsDsl } from '../../../ts-dsl';
 import type { Type, TypeScriptResult } from './shared/types';
 import type { HeyApiTypeScriptPlugin } from './types';
 
-export type Resolvers = Plugin.Resolvers<{
+export type HeyApiTypeScriptResolvers = Plugin.Resolvers<{
   /**
    * Resolver for array schemas.
    *

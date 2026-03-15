@@ -18,6 +18,7 @@
     "**/*.mjs": true,
     "**/*.mts": true,
     "**/.vitepress/dist": true,
+    "**/dist": true,
     "**/.mypy_cache": true,
     "**/__snapshots__": true,
     "**/coverage": true,

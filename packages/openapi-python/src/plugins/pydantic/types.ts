@@ -7,13 +7,13 @@ import type {
   Plugin,
 } from '@hey-api/shared';
 
-import type { Resolvers } from './resolvers';
+import type { PydanticResolvers } from './resolvers';
 
 export type UserConfig = Plugin.Name<'pydantic'> &
   Plugin.Hooks &
   Plugin.UserComments &
   Plugin.UserExports &
-  Resolvers & {
+  PydanticResolvers & {
     /**
      * Casing convention for generated names.
      *
@@ -189,7 +189,7 @@ export type Config = Plugin.Name<'pydantic'> &
   Plugin.Hooks &
   Plugin.Comments &
   Plugin.Exports &
-  Resolvers & {
+  PydanticResolvers & {
     /** Casing convention for generated names. */
     case: Casing;
     /** Configuration for reusable schema definitions. */

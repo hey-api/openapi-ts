@@ -64,7 +64,7 @@ import colorSupport from 'color-support';
 import type { UserConfig } from './config/types';
 import type { HeyApiClientHttpxPlugin } from './plugins/@hey-api/client-httpx';
 import type { HeyApiSdkPlugin } from './plugins/@hey-api/sdk';
-import type { PydanticPlugin } from './plugins/pydantic';
+import type { PydanticPlugin, PydanticResolvers } from './plugins/pydantic';
 
 colors.enabled = colorSupport().hasBasic;
 
@@ -116,6 +116,7 @@ export namespace Plugins {
   }
 
   export namespace Pydantic {
+    export type Resolvers = Required<PydanticResolvers>['~resolvers'];
     export type Types = PydanticPlugin;
   }
 }
