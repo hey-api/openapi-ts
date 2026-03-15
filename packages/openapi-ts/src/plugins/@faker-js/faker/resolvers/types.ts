@@ -7,7 +7,7 @@ import type { FakerJsFakerPlugin } from '../types';
 
 type Expression = ReturnType<typeof $.expr>;
 
-export type Resolvers = Plugin.Resolvers<{
+export type FakerJsFakerResolvers = Plugin.Resolvers<{
   array?: (ctx: ArrayResolverContext) => Expression | undefined;
   number?: (ctx: NumberResolverContext) => Expression | undefined;
   object?: (ctx: ObjectResolverContext) => Expression | undefined;
