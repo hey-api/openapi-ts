@@ -22,7 +22,7 @@
     "@tanstack/vue-query": "5.92.9",
     "arktype": "2.2.0",
     "nuxt": "3.21.0",
-    "swr": "2.4.0",
+    "swr": "2.4.1",
     "tsx": "4.21.0",
     "typescript": "5.9.3",
     "valibot": "1.2.0",
