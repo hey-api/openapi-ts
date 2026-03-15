@@ -12,6 +12,7 @@ type ExportsOptions = {
   preferExportAll?: boolean;
 };
 type Header = MaybeArray<string> | null | undefined;
+type HeaderArg = MaybeFunc<(ctx: RenderContext<TsDsl>) => Header>;
 type Imports = ReadonlyArray<ReadonlyArray<ModuleImport>>;
 
 function headerToLines(header: Header): ReadonlyArray<string> {
@@ -33,7 +34,7 @@ export class TypeScriptRenderer implements Renderer {
    *
    * @private
    */
-  private _header?: MaybeFunc<(ctx: RenderContext<TsDsl>) => Header>;
+  private _header?: HeaderArg;
   /**
    * Whether `export * from 'module'` should be used when possible instead of named exports.
    *
@@ -55,7 +56,7 @@ export class TypeScriptRenderer implements Renderer {
 
   constructor(
     args: {
-      header?: MaybeFunc<(ctx: RenderContext<TsDsl>) => Header>;
+      header?: HeaderArg;
       preferExportAll?: boolean;
       preferFileExtension?: string;
       resolveModuleName?: (moduleName: string) => string | undefined;
