@@ -1,3 +1,4 @@
+import { isEnvironment } from '@hey-api/shared';
 import { Command, CommanderError } from 'commander';
 
 import pkg from '../../package.json';
@@ -9,7 +10,7 @@ const binName = Object.keys(pkg.bin)[0]!;
 const program = new Command()
   .name(binName)
   .description('Generate Python code from OpenAPI specifications')
-  .version(pkg.version);
+  .version(isEnvironment('development') ? '[DEVELOPMENT]' : pkg.version);
 
 program
   .option('-i, --input <path...>', 'OpenAPI specification (path, URL, or string)')

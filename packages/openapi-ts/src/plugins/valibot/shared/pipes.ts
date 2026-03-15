@@ -61,6 +61,6 @@ export const pipes: PipesUtils = {
  *
  * Re-exported for backward compatibility.
  */
-export function pipesToNode(p: Pipes, plugin: ValibotPlugin['Instance']): Pipe {
-  return toNode(p, plugin);
+export function pipesToNode(pipes: Pipes | Pipe, plugin: ValibotPlugin['Instance']): Pipe {
+  return toNode(pipes, plugin);
 }

@@ -1,5 +1,36 @@
 # @hey-api/openapi-ts
 
+## 0.94.1
+
+### Patch Changes
+
+- **plugin(@hey-api/typescript)**: add Resolvers API ([#3531](https://github.com/hey-api/openapi-ts/pull/3531)) ([`0e47fcb`](https://github.com/hey-api/openapi-ts/commit/0e47fcbf87560f1d59b74d01c704a0e42648febb)) by [@mrlubos](https://github.com/mrlubos)
+
+- **dsl**: expand list of JavaScript globals ([#3508](https://github.com/hey-api/openapi-ts/pull/3508)) ([`1e00a69`](https://github.com/hey-api/openapi-ts/commit/1e00a6983eaa56acaf98663310fb9e3122d1d575)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(valibot)**: provide more resolvers ([#3547](https://github.com/hey-api/openapi-ts/pull/3547)) ([`854ee1c`](https://github.com/hey-api/openapi-ts/commit/854ee1cbdf322f7c3f02441d02eeb4b0dbe747aa)) by [@mrlubos](https://github.com/mrlubos)
+
+- **cli**: show environment value in development ([#3546](https://github.com/hey-api/openapi-ts/pull/3546)) ([`571bc8a`](https://github.com/hey-api/openapi-ts/commit/571bc8a32b55647083bb506d4a5b575c4736cb94)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(zod)**: handle `guid` string format ([#3552](https://github.com/hey-api/openapi-ts/pull/3552)) ([`7acb228`](https://github.com/hey-api/openapi-ts/commit/7acb228c7c4e1dd5d7b70ee576a007ee1c9682cd)) by [@erikwski](https://github.com/erikwski)
+
+- **plugin(@hey-api/typescript)**: implement `getName()` symbol hook ([#3556](https://github.com/hey-api/openapi-ts/pull/3556)) ([`68c750a`](https://github.com/hey-api/openapi-ts/commit/68c750ab7ad37c71c4f9b267ddc9e1c90c89924a)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(zod)**: implement `getName()` symbol hook ([#3556](https://github.com/hey-api/openapi-ts/pull/3556)) ([`68c750a`](https://github.com/hey-api/openapi-ts/commit/68c750ab7ad37c71c4f9b267ddc9e1c90c89924a)) by [@mrlubos](https://github.com/mrlubos)
+
+- **config(plugins)**: show warning when plugin infer fails ([#3540](https://github.com/hey-api/openapi-ts/pull/3540)) ([`0512650`](https://github.com/hey-api/openapi-ts/commit/0512650988ce3c411492172e6bbe300f5440408f)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(valibot)**: implement `getName()` symbol hook ([#3556](https://github.com/hey-api/openapi-ts/pull/3556)) ([`68c750a`](https://github.com/hey-api/openapi-ts/commit/68c750ab7ad37c71c4f9b267ddc9e1c90c89924a)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@hey-api/transformers)**: fix: support `anyOf` schema with null ([#3504](https://github.com/hey-api/openapi-ts/pull/3504)) ([`4b6b398`](https://github.com/hey-api/openapi-ts/commit/4b6b398c59746167b93857f6ab475a7a88ddbcd4)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(zod)**: provide more resolvers ([#3554](https://github.com/hey-api/openapi-ts/pull/3554)) ([`bfa255c`](https://github.com/hey-api/openapi-ts/commit/bfa255c0db03a869dd99cd16736acef6abe39987)) by [@mrlubos](https://github.com/mrlubos)
+
+### Updated Dependencies:
+
+- @hey-api/codegen-core@0.7.2
+- @hey-api/shared@0.2.3
+
 ## 0.94.0
 
 ### Minor Changes

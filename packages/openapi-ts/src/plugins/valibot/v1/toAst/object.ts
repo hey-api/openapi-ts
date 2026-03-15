@@ -3,12 +3,12 @@ import { childContext } from '@hey-api/shared';
 import { $ } from '../../../../ts-dsl';
 import type { ObjectResolverContext } from '../../resolvers';
 import type { Pipe, Pipes } from '../../shared/pipes';
-import { pipes, pipesToNode } from '../../shared/pipes';
+import { pipes } from '../../shared/pipes';
 import type { CompositeHandlerResult, ValibotResult } from '../../shared/types';
 import { identifiers } from '../constants';
 
 function additionalPropertiesNode(ctx: ObjectResolverContext): Pipe | null | undefined {
-  const { schema } = ctx;
+  const { pipes, schema } = ctx;
 
   if (!schema.additionalProperties || !schema.additionalProperties.type) return;
   if (schema.additionalProperties.type === 'never') return null;
@@ -19,7 +19,7 @@ function additionalPropertiesNode(ctx: ObjectResolverContext): Pipe | null | und
   );
   ctx._childResults.push(additionalResult);
 
-  return pipesToNode(additionalResult.pipes, ctx.plugin);
+  return pipes.toNode(additionalResult.pipes, ctx.plugin);
 }
 
 function baseNode(ctx: ObjectResolverContext): Pipes | Pipe {
@@ -51,7 +51,7 @@ function objectResolver(ctx: ObjectResolverContext): Pipes | Pipe {
 }
 
 function shapeNode(ctx: ObjectResolverContext): ReturnType<typeof $.object> {
-  const { schema } = ctx;
+  const { pipes, schema } = ctx;
   const shape = $.object().pretty();
 
   for (const name in schema.properties) {
@@ -62,7 +62,7 @@ function shapeNode(ctx: ObjectResolverContext): ReturnType<typeof $.object> {
     ctx._childResults.push(propertyResult);
 
     const finalExpr = ctx.applyModifiers(propertyResult, { optional: isOptional });
-    shape.prop(name, pipesToNode(finalExpr.pipes, ctx.plugin));
+    shape.prop(name, pipes.toNode(finalExpr.pipes, ctx.plugin));
   }
 
   return shape;
@@ -75,7 +75,7 @@ export function objectToPipes(
 
   const childResults: Array<ValibotResult> = [];
 
-  const extendedCtx: ObjectResolverContext = {
+  const resolverCtx: ObjectResolverContext = {
     $,
     _childResults: childResults,
     applyModifiers,
@@ -93,18 +93,15 @@ export function objectToPipes(
     symbols: {
       v: plugin.external('valibot.v'),
     },
-    utils: {
-      ast: {},
-    },
     walk,
     walkerCtx,
   };
 
   const resolver = plugin.config['~resolvers']?.object;
-  const node = resolver?.(extendedCtx) ?? objectResolver(extendedCtx);
+  const node = resolver?.(resolverCtx) ?? objectResolver(resolverCtx);
 
   return {
     childResults,
-    pipes: [extendedCtx.pipes.toNode(node, plugin)],
+    pipes: [resolverCtx.pipes.toNode(node, plugin)],
   };
 }

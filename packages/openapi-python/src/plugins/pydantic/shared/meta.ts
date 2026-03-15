@@ -17,8 +17,6 @@ export function defaultMeta(schema: IR.SchemaObject): PydanticMeta {
 /**
  * Composes metadata from child results.
  *
- * Automatically propagates hasForwardReference, nullable, readonly from children.
- *
  * @param children - Results from walking child schemas
  * @param overrides - Explicit overrides (e.g., from parent schema)
  */

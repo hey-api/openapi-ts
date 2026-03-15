@@ -1,42 +1,75 @@
-import type { PluginConfig } from './plugins';
-import { sdk, tanstackReactQuery, transformers, typescript, valibot, zod } from './plugins';
+import type { UserConfig } from '@hey-api/openapi-ts';
+
+export type PluginConfig = NonNullable<NonNullable<UserConfig['plugins']>[number]>;
 
 export const presets = {
+  angular: () => [
+    {
+      httpRequests: 'flat',
+      name: '@angular/common',
+    },
+  ],
   full: () => [
     /** Full kitchen sink for comprehensive testing */
-    typescript(),
-    sdk({ paramsStructure: 'flat' }),
-    transformers(),
-    zod({ metadata: true }),
-    tanstackReactQuery({ queryKeys: { tags: true } }),
-  ],
-  minimal: () => [
-    /** Just types, nothing else */
-    typescript(),
+    '@hey-api/typescript',
+    {
+      name: '@hey-api/sdk',
+      paramsStructure: 'flat',
+    },
+    '@hey-api/transformers',
+    {
+      metadata: true,
+      name: 'zod',
+    },
+    {
+      name: '@tanstack/react-query',
+      queryKeys: {
+        tags: true,
+      },
+    },
   ],
   sdk: () => [
     /** SDK with types */
-    typescript(),
-    sdk({
+    '@hey-api/typescript',
+    {
+      name: '@hey-api/sdk',
       operations: {
         containerName: 'OpenCode',
         strategy: 'single',
       },
       paramsStructure: 'flat',
-    }),
+    },
   ],
   tanstack: () => [
     /** SDK + TanStack Query */
-    typescript(),
-    sdk(),
-    tanstackReactQuery({ queryKeys: { tags: true } }),
+    '@hey-api/typescript',
+    '@hey-api/sdk',
+    {
+      name: '@tanstack/react-query',
+      queryKeys: {
+        tags: true,
+      },
+    },
+  ],
+  types: () => [
+    /** Just types, nothing else */
+    '@hey-api/typescript',
   ],
   validated: () => [
     /** SDK + Zod validation */
-    typescript(),
-    sdk({ validator: 'zod' }),
-    valibot({ metadata: true }),
-    zod({ metadata: true }),
+    '@hey-api/typescript',
+    {
+      name: '@hey-api/sdk',
+      validator: 'zod',
+    },
+    {
+      metadata: true,
+      name: 'valibot',
+    },
+    {
+      metadata: true,
+      name: 'zod',
+    },
   ],
 } as const satisfies Record<string, () => ReadonlyArray<PluginConfig>>;
 

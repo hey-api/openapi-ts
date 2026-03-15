@@ -68,6 +68,14 @@ export default defineConfig({
       {
         extends: true,
         test: {
+          name: '@test/openapi-ts-valibot-v1',
+          root: 'packages/openapi-ts-tests/valibot/v1',
+          setupFiles: ['./vitest.setup.ts'],
+        },
+      },
+      {
+        extends: true,
+        test: {
           name: '@test/openapi-ts-zod-v3',
           root: 'packages/openapi-ts-tests/zod/v3',
           setupFiles: ['./vitest.setup.ts'],
@@ -78,6 +86,22 @@ export default defineConfig({
         test: {
           name: '@test/openapi-ts-zod-v4',
           root: 'packages/openapi-ts-tests/zod/v4',
+          setupFiles: ['./vitest.setup.ts'],
+        },
+      },
+      {
+        extends: true,
+        test: {
+          name: '@test/openapi-python-sdks',
+          root: 'packages/openapi-python-tests/sdks',
+          setupFiles: ['./vitest.setup.ts'],
+        },
+      },
+      {
+        extends: true,
+        test: {
+          name: '@test/openapi-python-pydantic-v2',
+          root: 'packages/openapi-python-tests/pydantic/v2',
           setupFiles: ['./vitest.setup.ts'],
         },
       },

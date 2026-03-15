@@ -1,58 +1,68 @@
-import { applyNaming, pathToName } from '@hey-api/shared';
+import { buildSymbolIn, pathToName } from '@hey-api/shared';
 
 import { createSchemaComment } from '../../../plugins/shared/utils/schema';
 import { $ } from '../../../ts-dsl';
 import { identifiers } from '../constants';
 import type { ProcessorContext } from './processor';
-import type { Ast, IrSchemaToAstOptions } from './types';
+import type { ZodFinal } from './types';
 
 export function exportAst({
-  ast,
+  final,
   meta,
   naming,
   namingAnchor,
   path,
   plugin,
   schema,
-  state,
   tags,
-}: Pick<IrSchemaToAstOptions, 'state'> &
-  ProcessorContext & {
-    ast: Ast;
-  }): void {
+}: ProcessorContext & {
+  final: ZodFinal;
+  meta?: Record<string, unknown>;
+}): void {
   const z = plugin.external('zod.z');
 
   const name = pathToName(path, { anchor: namingAnchor });
-  const symbol = plugin.symbol(applyNaming(name, naming), {
-    meta: {
-      category: 'schema',
-      path,
-      tags,
-      tool: 'zod',
-      ...meta,
-    },
-  });
+
+  const symbol = plugin.registerSymbol(
+    buildSymbolIn({
+      meta: {
+        category: 'schema',
+        path,
+        tags,
+        tool: 'zod',
+        ...meta,
+      },
+      name,
+      naming,
+      plugin,
+      schema,
+    }),
+  );
 
   const typeInferSymbol = naming.types.infer.enabled
-    ? plugin.symbol(applyNaming(name, naming.types.infer), {
-        meta: {
-          category: 'type',
-          path,
-          tags,
-          tool: 'zod',
-          variant: 'infer',
-          ...meta,
-        },
-      })
+    ? plugin.registerSymbol(
+        buildSymbolIn({
+          meta: {
+            category: 'type',
+            path,
+            tags,
+            tool: 'zod',
+            variant: 'infer',
+            ...meta,
+          },
+          name,
+          naming: naming.types.infer,
+          plugin,
+          schema,
+        }),
+      )
     : undefined;
 
   const statement = $.const(symbol)
     .export()
     .$if(plugin.config.comments && createSchemaComment(schema), (c, v) => c.doc(v))
-    .$if(state.hasLazyExpression['~ref'] && state.anyType?.['~ref'], (c, v) =>
-      c.type($.type(z).attr(v)),
-    )
-    .assign(ast.expression);
+    .$if(final.typeName, (c) => c.type($.type(z).attr(final.typeName!)))
+    .assign(final.expression);
   plugin.node(statement);
 
   if (typeInferSymbol) {

@@ -42,10 +42,12 @@ export function createProcessor(plugin: PydanticPlugin['Instance']): ProcessorRe
     return ctx.schema;
   }
 
-  function process(ctx: ProcessorContext): void {
+  function process(ctx: ProcessorContext): PydanticFinal | void {
     if (!processor.markEmitted(ctx.path)) return;
 
-    processor.withContext({ anchor: ctx.namingAnchor, tags: ctx.tags }, () => {
+    const shouldExport = ctx.export !== false;
+
+    return processor.withContext({ anchor: ctx.namingAnchor, tags: ctx.tags }, () => {
       const visitor = createVisitor({ schemaExtractor: extractor });
       const walk = createSchemaWalker(visitor);
 
@@ -59,7 +61,12 @@ export function createProcessor(plugin: PydanticPlugin['Instance']): ProcessorRe
         plugin,
       }) as PydanticFinal;
 
-      exportAst({ ...ctx, final, plugin });
+      if (shouldExport) {
+        exportAst({ ...ctx, final, plugin });
+        return;
+      }
+
+      return final;
     });
   }
 

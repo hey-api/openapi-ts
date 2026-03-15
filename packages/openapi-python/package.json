@@ -1,6 +1,6 @@
 {
   "name": "@hey-api/openapi-python",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "private": true,
   "description": "🐍 OpenAPI to Python codegen.",
   "keywords": [
@@ -72,9 +72,6 @@
     "eslint": "9.39.1",
     "typescript": "5.9.3",
     "yaml": "2.8.2"
-  },
-  "peerDependencies": {
-    "typescript": ">=5.5.3"
   },
   "engines": {
     "node": ">=20.19.0"

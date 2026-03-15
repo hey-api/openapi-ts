@@ -1,5 +1,16 @@
 # @hey-api/openapi-python
 
+## 0.0.10
+
+### Patch Changes
+
+- **cli**: show environment value in development ([#3546](https://github.com/hey-api/openapi-ts/pull/3546)) ([`571bc8a`](https://github.com/hey-api/openapi-ts/commit/571bc8a32b55647083bb506d4a5b575c4736cb94)) by [@mrlubos](https://github.com/mrlubos)
+
+### Updated Dependencies:
+
+- @hey-api/codegen-core@0.7.2
+- @hey-api/shared@0.2.3
+
 ## 0.0.9
 
 ### Patch Changes

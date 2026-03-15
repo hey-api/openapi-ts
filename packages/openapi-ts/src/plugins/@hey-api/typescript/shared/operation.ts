@@ -1,12 +1,9 @@
-import { fromRef } from '@hey-api/codegen-core';
 import type { IR } from '@hey-api/shared';
-import { applyNaming } from '@hey-api/shared';
-import { operationResponsesMap } from '@hey-api/shared';
-import { deduplicateSchema } from '@hey-api/shared';
+import { buildSymbolIn, deduplicateSchema, operationResponsesMap } from '@hey-api/shared';
 
 import { $ } from '../../../../ts-dsl';
-import { irSchemaToAst } from '../v1/plugin';
-import type { IrSchemaToAstOptions } from './types';
+import type { HeyApiTypeScriptPlugin } from '../types';
+import { createProcessor } from '../v1/processor';
 
 const irParametersToIrSchema = ({
   parameters,
@@ -44,215 +41,232 @@ const irParametersToIrSchema = ({
   return irSchema;
 };
 
-const operationToDataType = ({
-  operation,
-  plugin,
-  state,
-}: IrSchemaToAstOptions & {
-  operation: IR.OperationObject;
-}) => {
-  const data: IR.SchemaObject = {
-    type: 'object',
-  };
-  const dataRequired: Array<string> = [];
-
-  if (!data.properties) {
-    data.properties = {};
-  }
-
-  if (operation.body) {
-    data.properties.body = operation.body.schema;
-
-    if (operation.body.required) {
-      dataRequired.push('body');
-    }
-  } else {
-    data.properties.body = {
-      type: 'never',
-    };
-  }
-
-  // TODO: parser - handle cookie parameters
-
-  // do not set headers to never so we can always pass arbitrary values
-  if (operation.parameters?.header) {
-    data.properties.headers = irParametersToIrSchema({
-      parameters: operation.parameters.header,
-    });
-
-    if (data.properties.headers.required) {
-      dataRequired.push('headers');
-    }
-  }
-
-  if (operation.parameters?.path) {
-    data.properties.path = irParametersToIrSchema({
-      parameters: operation.parameters.path,
-    });
-
-    if (data.properties.path.required) {
-      dataRequired.push('path');
-    }
-  } else {
-    data.properties.path = {
-      type: 'never',
-    };
-  }
-
-  if (operation.parameters?.query) {
-    data.properties.query = irParametersToIrSchema({
-      parameters: operation.parameters.query,
-    });
-
-    if (data.properties.query.required) {
-      dataRequired.push('query');
-    }
-  } else {
-    data.properties.query = {
-      type: 'never',
-    };
-  }
-
-  data.properties.url = {
-    const: operation.path,
-    type: 'string',
-  };
-  dataRequired.push('url');
-
-  data.required = dataRequired;
-
-  const symbol = plugin.symbol(applyNaming(operation.id, plugin.config.requests), {
-    meta: {
-      category: 'type',
-      path: fromRef(state.path),
-      resource: 'operation',
-      resourceId: operation.id,
-      role: 'data',
-      tags: fromRef(state.tags),
-      tool: 'typescript',
-    },
-  });
-  const node = $.type
-    .alias(symbol)
-    .export()
-    .type(
-      irSchemaToAst({
-        plugin,
-        schema: data,
-        state,
-      }),
-    );
-  plugin.node(node);
-};
-
 export const operationToType = ({
   operation,
+  path,
   plugin,
-  state,
-}: IrSchemaToAstOptions & {
+  tags,
+}: {
   operation: IR.OperationObject;
-}) => {
-  operationToDataType({ operation, plugin, state });
+  path: ReadonlyArray<string | number>;
+  plugin: HeyApiTypeScriptPlugin['Instance'];
+  tags?: ReadonlyArray<string>;
+}): void => {
+  const processor = createProcessor(plugin);
+
+  const data: IR.SchemaObject = {
+    properties: {
+      body: operation.body?.schema ?? { type: 'never' },
+      ...(operation.parameters?.header
+        ? {
+            headers: irParametersToIrSchema({
+              parameters: operation.parameters.header,
+            }),
+          }
+        : {}),
+      path: operation.parameters?.path
+        ? irParametersToIrSchema({ parameters: operation.parameters.path })
+        : { type: 'never' },
+      query: operation.parameters?.query
+        ? irParametersToIrSchema({ parameters: operation.parameters.query })
+        : { type: 'never' },
+      url: {
+        const: operation.path,
+        type: 'string',
+      },
+    },
+    type: 'object',
+  };
+
+  const dataRequired: Array<string> = [];
+
+  if (operation.body?.required) {
+    dataRequired.push('body');
+  }
+
+  // do not set headers to never so we can always pass arbitrary values
+  if (data.properties!.headers?.required) {
+    dataRequired.push('headers');
+  }
+
+  if (data.properties!.path!.required) {
+    dataRequired.push('path');
+  }
+
+  if (data.properties!.query!.required) {
+    dataRequired.push('query');
+  }
+
+  dataRequired.push('url');
+
+  if (dataRequired.length > 0) {
+    data.required = dataRequired;
+  }
+
+  const dataResult = processor.process({
+    export: false,
+    meta: {
+      resource: 'operation',
+      resourceId: operation.id,
+    },
+    naming: plugin.config.definitions,
+    path: [...path, operation.id, 'data'],
+    plugin,
+    schema: data,
+  });
+
+  const dataSymbol = plugin.registerSymbol(
+    buildSymbolIn({
+      meta: {
+        category: 'type',
+        path,
+        resource: 'operation',
+        resourceId: operation.id,
+        role: 'data',
+        tags,
+        tool: 'typescript',
+      },
+      name: operation.id,
+      naming: plugin.config.requests,
+      operation,
+      plugin,
+    }),
+  );
+  const dataNode = $.type
+    .alias(dataSymbol)
+    .export()
+    .type(dataResult?.type ?? $.type('never'));
+  plugin.node(dataNode);
 
   const { error, errors, response, responses } = operationResponsesMap(operation);
 
   if (errors) {
-    const symbolErrors = plugin.symbol(applyNaming(operation.id, plugin.config.errors), {
+    const errorsResult = processor.process({
+      export: false,
       meta: {
-        category: 'type',
-        path: fromRef(state.path),
         resource: 'operation',
         resourceId: operation.id,
-        role: 'errors',
-        tags: fromRef(state.tags),
-        tool: 'typescript',
       },
+      naming: plugin.config.definitions,
+      path: [...path, operation.id, 'errors'],
+      plugin,
+      schema: errors,
     });
-    const node = $.type
-      .alias(symbolErrors)
+
+    const errorsSymbol = plugin.registerSymbol(
+      buildSymbolIn({
+        meta: {
+          category: 'type',
+          path,
+          resource: 'operation',
+          resourceId: operation.id,
+          role: 'errors',
+          tags,
+          tool: 'typescript',
+        },
+        name: operation.id,
+        naming: plugin.config.errors,
+        operation,
+        plugin,
+      }),
+    );
+    const errorsNode = $.type
+      .alias(errorsSymbol)
       .export()
-      .type(
-        irSchemaToAst({
-          plugin,
-          schema: errors,
-          state,
-        }),
-      );
-    plugin.node(node);
+      .type(errorsResult?.type ?? $.type('never'));
+    plugin.node(errorsNode);
 
     if (error) {
-      const symbol = plugin.symbol(
-        applyNaming(operation.id, {
-          case: plugin.config.errors.case,
-          name: plugin.config.errors.error,
-        }),
-        {
+      const errorSymbol = plugin.registerSymbol(
+        buildSymbolIn({
           meta: {
             category: 'type',
-            path: fromRef(state.path),
+            path,
             resource: 'operation',
             resourceId: operation.id,
             role: 'error',
-            tags: fromRef(state.tags),
+            tags,
             tool: 'typescript',
           },
-        },
+          name: operation.id,
+          naming: {
+            case: plugin.config.errors.case,
+            name: plugin.config.errors.error,
+          },
+          operation,
+          plugin,
+        }),
       );
-      const node = $.type
-        .alias(symbol)
+      const errorNode = $.type
+        .alias(errorSymbol)
         .export()
-        .type($.type(symbolErrors).idx($.type(symbolErrors).keyof()));
-      plugin.node(node);
+        .type($.type(errorsSymbol).idx($.type(errorsSymbol).keyof()));
+      plugin.node(errorNode);
     }
   }
 
   if (responses) {
-    const symbolResponses = plugin.symbol(applyNaming(operation.id, plugin.config.responses), {
+    const responsesResult = processor.process({
+      export: false,
       meta: {
-        category: 'type',
-        path: fromRef(state.path),
         resource: 'operation',
         resourceId: operation.id,
-        role: 'responses',
-        tags: fromRef(state.tags),
-        tool: 'typescript',
       },
+      naming: plugin.config.definitions,
+      path: [...path, operation.id, 'responses'],
+      plugin,
+      schema: responses,
     });
-    const node = $.type
-      .alias(symbolResponses)
+
+    const responsesSymbol = plugin.registerSymbol(
+      buildSymbolIn({
+        meta: {
+          category: 'type',
+          path,
+          resource: 'operation',
+          resourceId: operation.id,
+          role: 'responses',
+          tags,
+          tool: 'typescript',
+        },
+        name: operation.id,
+        naming: plugin.config.responses,
+        operation,
+        plugin,
+      }),
+    );
+    const responsesNode = $.type
+      .alias(responsesSymbol)
       .export()
-      .type(
-        irSchemaToAst({
-          plugin,
-          schema: responses,
-          state,
-        }),
-      );
-    plugin.node(node);
+      .type(responsesResult?.type ?? $.type('never'));
+    plugin.node(responsesNode);
 
     if (response) {
-      const symbol = plugin.symbol(
-        applyNaming(operation.id, {
-          case: plugin.config.responses.case,
-          name: plugin.config.responses.response,
-        }),
-        {
+      const responseSymbol = plugin.registerSymbol(
+        buildSymbolIn({
           meta: {
             category: 'type',
-            path: fromRef(state.path),
+            path,
             resource: 'operation',
             resourceId: operation.id,
             role: 'response',
-            tags: fromRef(state.tags),
+            tags,
             tool: 'typescript',
           },
-        },
+          name: operation.id,
+          naming: {
+            case: plugin.config.responses.case,
+            name: plugin.config.responses.response,
+          },
+          operation,
+          plugin,
+        }),
       );
-      const node = $.type
-        .alias(symbol)
+      const responseNode = $.type
+        .alias(responseSymbol)
         .export()
-        .type($.type(symbolResponses).idx($.type(symbolResponses).keyof()));
-      plugin.node(node);
+        .type($.type(responsesSymbol).idx($.type(responsesSymbol).keyof()));
+      plugin.node(responseNode);
     }
   }
 };

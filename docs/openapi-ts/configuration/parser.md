@@ -550,7 +550,7 @@ export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   parser: {
-    hooks: {}, // configure global hooks here // [!code ++]
+    hooks: {}, // configure global hooks // [!code ++]
   },
 };
 ```
@@ -562,7 +562,7 @@ export default {
   plugins: [
     {
       name: '@tanstack/react-query',
-      '~hooks': {}, // configure plugin hooks here // [!code ++]
+      '~hooks': {}, // configure plugin hooks // [!code ++]
     },
   ],
 };
@@ -651,17 +651,88 @@ export default {
   parser: {
     hooks: {
       symbols: {
-        getFilePath: (symbol) => {
+        getFilePath: (symbol) => { // [!code ++]
           if (symbol.name) { // [!code ++]
             return symbol.name[0]?.toLowerCase(); // [!code ++]
           } // [!code ++]
-        },
+        }, // [!code ++]
       },
     },
   },
 };
 ```
 <!-- prettier-ignore-end -->
+
+Most plugins expose configuration options that allow you to rename many of the generated symbols. If you need even more control, use the `getName()` hook.
+
+#### Example: Enum naming
+
+By default, generated enums use the same name for both the type and the runtime value.
+
+::: code-group
+
+```ts [example]
+export const Flags = {
+  ALPHA: 'alpha',
+  BETA: 'beta',
+} as const;
+
+export type Flags = (typeof Flags)[keyof typeof Flags];
+```
+
+```js [config]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    {
+      enums: 'javascript',
+      name: '@hey-api/typescript',
+    },
+  ],
+};
+```
+
+:::
+
+While this code works perfectly fine due to TypeScript's declaration merging, let's say we want to use a different name for the type. We can accomplish this with the `getName()` hook.
+
+::: code-group
+
+```ts [example]
+export const Flags = {
+  ALPHA: 'alpha',
+  BETA: 'beta',
+} as const;
+
+export type FlagsType = (typeof Flags)[keyof typeof Flags]; // [!code ++]
+```
+
+<!-- prettier-ignore-start -->
+```js [config]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    {
+      enums: 'javascript',
+      name: '@hey-api/typescript',
+      '~hooks': {
+        symbols: {
+          getName({ meta, name, schema }) { // [!code ++]
+            if (schema?.type === 'enum' && meta.category === 'type') { // [!code ++]
+              return `${name}Type`; // [!code ++]
+            } // [!code ++]
+          }, // [!code ++]
+        },
+      },
+    },
+  ],
+};
+```
+<!-- prettier-ignore-end -->
+
+:::
 
 <!--@include: ../../partials/examples.md-->
 <!--@include: ../../partials/sponsors.md-->

@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import colors from 'ansi-colors';
+import open from 'open';
 
 import { ensureDirSync } from './fs';
 import { loadPackageJson } from './tsConfig';
@@ -153,7 +154,6 @@ export async function openGitHubIssueWithCrashReport(
     title: 'Crash Report',
   });
   const url = `${packageJson.bugs.url}new?${search.toString()}`;
-  const open = (await import('open')).default;
   await open(url);
 }
 

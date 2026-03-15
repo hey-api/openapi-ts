@@ -86,7 +86,7 @@ export function createVisitor(
       };
     },
     array(schema, ctx, walk) {
-      const applyModifiers = (result: ValibotResult, opts?: { optional?: boolean }) =>
+      const applyModifiers: Parameters<typeof arrayToPipes>[0]['applyModifiers'] = (result, opts) =>
         this.applyModifiers(result, ctx, opts) as ValibotFinal;
 
       const { childResults, pipes } = arrayToPipes({
@@ -145,8 +145,10 @@ export function createVisitor(
       }
     },
     intersection(items, schemas, parentSchema, ctx) {
-      const applyModifiers = (result: ValibotResult, opts?: { optional?: boolean }) =>
-        this.applyModifiers(result, ctx, opts) as ValibotFinal;
+      const applyModifiers: Parameters<typeof intersectionToPipes>[0]['applyModifiers'] = (
+        result,
+        opts,
+      ) => this.applyModifiers(result, ctx, opts) as ValibotFinal;
 
       const { pipes } = intersectionToPipes({
         applyModifiers,
@@ -190,8 +192,10 @@ export function createVisitor(
       };
     },
     object(schema, ctx, walk) {
-      const applyModifiers = (result: ValibotResult, opts: { optional?: boolean }) =>
-        this.applyModifiers(result, ctx, opts) as ValibotFinal;
+      const applyModifiers: Parameters<typeof objectToPipes>[0]['applyModifiers'] = (
+        result,
+        opts,
+      ) => this.applyModifiers(result, ctx, opts) as ValibotFinal;
 
       const { childResults, pipes } = objectToPipes({
         applyModifiers,
@@ -267,7 +271,7 @@ export function createVisitor(
       };
     },
     tuple(schema, ctx, walk) {
-      const applyModifiers = (result: ValibotResult, opts?: { optional?: boolean }) =>
+      const applyModifiers: Parameters<typeof tupleToPipes>[0]['applyModifiers'] = (result, opts) =>
         this.applyModifiers(result, ctx, opts) as ValibotFinal;
 
       const { childResults, pipes } = tupleToPipes({
@@ -295,7 +299,7 @@ export function createVisitor(
       };
     },
     union(items, schemas, parentSchema, ctx) {
-      const applyModifiers = (result: ValibotResult, opts?: { optional?: boolean }) =>
+      const applyModifiers: Parameters<typeof unionToPipes>[0]['applyModifiers'] = (result, opts) =>
         this.applyModifiers(result, ctx, opts) as ValibotFinal;
 
       const hasNull = schemas.some((s) => s.type === 'null') || items.some((i) => i.meta.nullable);

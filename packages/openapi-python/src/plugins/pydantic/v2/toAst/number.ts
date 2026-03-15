@@ -1,18 +1,13 @@
 import type { SchemaWithType } from '@hey-api/shared';
 
 import { $ } from '../../../../py-dsl';
+import type { NumberResolverContext } from '../../resolvers';
 import type { PydanticType } from '../../shared/types';
 import type { PydanticPlugin } from '../../types';
 import type { FieldConstraints } from '../constants';
 
-export function numberToType({
-  plugin,
-  schema,
-}: {
-  plugin: PydanticPlugin['Instance'];
-  schema: SchemaWithType<'integer' | 'number'>;
-}): PydanticType {
-  const constraints: FieldConstraints = {};
+function constNode(ctx: NumberResolverContext): PydanticType | undefined {
+  const { plugin, schema } = ctx;
 
   if (typeof schema.const === 'number') {
     const literal = plugin.external('typing.Literal');
@@ -20,6 +15,12 @@ export function numberToType({
       type: $(literal).slice($.literal(schema.const)),
     };
   }
+}
+
+function baseNode(ctx: NumberResolverContext): PydanticType {
+  const { schema } = ctx;
+
+  const constraints: FieldConstraints = {};
 
   if (schema.minimum !== undefined) {
     constraints.ge = schema.minimum;
@@ -45,4 +46,32 @@ export function numberToType({
     fieldConstraints: constraints,
     type: schema.type === 'integer' ? 'int' : 'float',
   };
+}
+
+function numberResolver(ctx: NumberResolverContext): PydanticType {
+  const constResult = ctx.nodes.const(ctx);
+  if (constResult) return constResult;
+
+  return ctx.nodes.base(ctx);
+}
+
+export function numberToType({
+  plugin,
+  schema,
+}: {
+  plugin: PydanticPlugin['Instance'];
+  schema: SchemaWithType<'integer' | 'number'>;
+}): PydanticType {
+  const ctx: NumberResolverContext = {
+    $,
+    nodes: {
+      base: baseNode,
+      const: constNode,
+    },
+    plugin,
+    schema,
+  };
+
+  const resolver = plugin.config['~resolvers']?.number;
+  return resolver?.(ctx) ?? numberResolver(ctx);
 }

@@ -470,47 +470,6 @@ for (const version of versions) {
       },
       {
         config: createConfig({
-          output: 'default',
-          plugins: ['valibot'],
-        }),
-        description: 'generate Valibot schemas with Valibot plugin',
-      },
-      {
-        config: createConfig({
-          input: 'type-format.yaml',
-          output: 'type-format-valibot',
-          plugins: [
-            '@hey-api/transformers',
-            '@hey-api/client-fetch',
-            'valibot',
-            {
-              name: '@hey-api/sdk',
-              transformer: true,
-              validator: true,
-            },
-          ],
-        }),
-        description: 'handles various schema types and formats',
-      },
-      {
-        config: createConfig({
-          input: 'type-format.yaml',
-          output: 'type-format-zod',
-          plugins: [
-            '@hey-api/transformers',
-            '@hey-api/client-fetch',
-            'zod',
-            {
-              name: '@hey-api/sdk',
-              transformer: true,
-              validator: true,
-            },
-          ],
-        }),
-        description: 'handles various schema types and formats',
-      },
-      {
-        config: createConfig({
           input: 'transforms-read-write.yaml',
           output: 'transforms-read-write-ignore',
           parser: {

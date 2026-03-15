@@ -60,7 +60,7 @@ export function createVisitor(
       };
     },
     array(schema, ctx, walk) {
-      const applyModifiers = (result: PydanticResult, opts?: { optional?: boolean }) =>
+      const applyModifiers: Parameters<typeof arrayToType>[0]['applyModifiers'] = (result, opts) =>
         this.applyModifiers(result, ctx, opts) as PydanticFinal;
 
       const { childResults, fieldConstraints, type } = arrayToType({
@@ -85,8 +85,7 @@ export function createVisitor(
       };
     },
     enum(schema, ctx) {
-      const mode = ctx.plugin.config.enums ?? 'enum';
-      const result = enumToType({ mode, plugin: ctx.plugin, schema });
+      const result = enumToType({ plugin: ctx.plugin, schema });
       return {
         ...result,
         meta: defaultMeta(schema),
@@ -112,8 +111,10 @@ export function createVisitor(
       }
     },
     intersection(items, schemas, parentSchema, ctx) {
-      const applyModifiers = (result: PydanticResult, opts?: { optional?: boolean }) =>
-        this.applyModifiers(result, ctx, opts) as PydanticFinal;
+      const applyModifiers: Parameters<typeof intersectionToType>[0]['applyModifiers'] = (
+        result,
+        opts,
+      ) => this.applyModifiers(result, ctx, opts) as PydanticFinal;
 
       const result = intersectionToType({
         applyModifiers,
@@ -157,8 +158,10 @@ export function createVisitor(
       };
     },
     object(schema, ctx, walk) {
-      const applyModifiers = (result: PydanticResult, opts?: { optional?: boolean }) =>
-        this.applyModifiers(result, ctx, opts) as PydanticFinal;
+      const applyModifiers: Parameters<typeof objectToFields>[0]['applyModifiers'] = (
+        result,
+        opts,
+      ) => this.applyModifiers(result, ctx, opts) as PydanticFinal;
 
       const { childResults, fields, type } = objectToFields({
         applyModifiers,
@@ -204,7 +207,7 @@ export function createVisitor(
       };
     },
     tuple(schema, ctx, walk) {
-      const applyModifiers = (result: PydanticResult, opts?: { optional?: boolean }) =>
+      const applyModifiers: Parameters<typeof tupleToType>[0]['applyModifiers'] = (result, opts) =>
         this.applyModifiers(result, ctx, opts) as PydanticFinal;
 
       const { childResults, fieldConstraints, type } = tupleToType({
@@ -233,7 +236,7 @@ export function createVisitor(
       };
     },
     union(items, schemas, parentSchema, ctx) {
-      const applyModifiers = (result: PydanticResult, opts?: { optional?: boolean }) =>
+      const applyModifiers: Parameters<typeof unionToType>[0]['applyModifiers'] = (result, opts) =>
         this.applyModifiers(result, ctx, opts) as PydanticFinal;
 
       const result = unionToType({
@@ -241,6 +244,7 @@ export function createVisitor(
         childResults: items,
         parentSchema,
         plugin: ctx.plugin,
+        schemas,
       });
 
       return {

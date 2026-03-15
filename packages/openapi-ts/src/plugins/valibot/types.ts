@@ -10,13 +10,13 @@ import type {
 
 import type { $, DollarTsDsl } from '../../ts-dsl';
 import type { IApi } from './api';
-import type { Resolvers } from './resolvers';
+import type { ValibotResolvers } from './resolvers';
 
 export type UserConfig = Plugin.Name<'valibot'> &
   Plugin.Hooks &
   Plugin.UserComments &
   Plugin.UserExports &
-  Resolvers & {
+  ValibotResolvers & {
     /**
      * Casing convention for generated names.
      *
@@ -193,7 +193,7 @@ export type Config = Plugin.Name<'valibot'> &
   Plugin.Hooks &
   Plugin.Comments &
   Plugin.Exports &
-  Resolvers & {
+  ValibotResolvers & {
     /** Casing convention for generated names. */
     case: Casing;
     /** Configuration for reusable schema definitions. */

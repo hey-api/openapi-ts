@@ -2,81 +2,129 @@ import type { SchemaVisitorContext, SchemaWithType, Walker } from '@hey-api/shar
 import { childContext, deduplicateSchema } from '@hey-api/shared';
 
 import { $ } from '../../../../py-dsl';
+import type { ArrayResolverContext } from '../../resolvers';
 import type { PydanticFinal, PydanticResult, PydanticType } from '../../shared/types';
 import type { PydanticPlugin } from '../../types';
 import type { FieldConstraints } from '../constants';
 
-interface ArrayToTypeContext {
-  applyModifiers: (result: PydanticResult, options?: { optional?: boolean }) => PydanticFinal;
-  plugin: PydanticPlugin['Instance'];
-  schema: SchemaWithType<'array'>;
-  walk: Walker<PydanticResult, PydanticPlugin['Instance']>;
-  walkerCtx: SchemaVisitorContext<PydanticPlugin['Instance']>;
-}
-
-export interface ArrayToTypeResult extends PydanticType {
-  childResults: Array<PydanticResult>;
-}
-
-export function arrayToType(ctx: ArrayToTypeContext): ArrayToTypeResult {
-  const { plugin, walk, walkerCtx } = ctx;
-  let { schema } = ctx;
-
-  const childResults: Array<PydanticResult> = [];
-  const constraints: FieldConstraints = {};
+function baseNode(ctx: ArrayResolverContext): PydanticType {
+  const { applyModifiers, childResults, plugin } = ctx;
   const list = plugin.external('typing.List');
   const any = plugin.external('typing.Any');
 
-  if (schema.minItems !== undefined) {
-    constraints.min_length = schema.minItems;
-  }
-
-  if (schema.maxItems !== undefined) {
-    constraints.max_length = schema.maxItems;
-  }
-
-  if (schema.description !== undefined) {
-    constraints.description = schema.description;
-  }
-
-  if (!schema.items) {
+  if (childResults.length === 0) {
     return {
-      childResults,
-      fieldConstraints: constraints,
       type: $(list).slice(any),
     };
   }
 
-  schema = deduplicateSchema({ schema });
-
-  for (let i = 0; i < schema.items!.length; i++) {
-    const item = schema.items![i]!;
-    const result = walk(item, childContext(walkerCtx, 'items', i));
-    childResults.push(result);
-  }
-
   if (childResults.length === 1) {
-    const itemResult = ctx.applyModifiers(childResults[0]!);
+    const itemResult = applyModifiers(childResults[0]!);
     return {
-      childResults,
-      fieldConstraints: constraints,
       type: $(list).slice(itemResult.type ?? any),
     };
   }
 
   if (childResults.length > 1) {
     const union = plugin.external('typing.Union');
-    const itemTypes = childResults.map((r) => ctx.applyModifiers(r).type ?? any);
+    const itemTypes = childResults.map((r) => applyModifiers(r).type ?? any);
     return {
-      childResults,
-      fieldConstraints: constraints,
       type: $(list).slice($(union).slice(...itemTypes)),
     };
   }
 
   return {
-    childResults,
-    fieldConstraints: constraints,
     type: $(list).slice(any),
+  };
+}
+
+function minLengthNode(ctx: ArrayResolverContext): PydanticType | undefined {
+  const { schema } = ctx;
+  if (schema.minItems === undefined) return;
+  return {
+    fieldConstraints: { min_length: schema.minItems },
+  };
+}
+
+function maxLengthNode(ctx: ArrayResolverContext): PydanticType | undefined {
+  const { schema } = ctx;
+  if (schema.maxItems === undefined) return;
+  return {
+    fieldConstraints: { max_length: schema.maxItems },
+  };
+}
+
+function arrayResolver(ctx: ArrayResolverContext): PydanticType {
+  const baseResult = ctx.nodes.base(ctx);
+  const minLengthResult = ctx.nodes.minLength(ctx);
+  const maxLengthResult = ctx.nodes.maxLength(ctx);
+
+  const fieldConstraints: FieldConstraints = {
+    ...(baseResult.fieldConstraints ?? {}),
+    ...(minLengthResult?.fieldConstraints ?? {}),
+    ...(maxLengthResult?.fieldConstraints ?? {}),
+  };
+
+  if (ctx.schema.description !== undefined) {
+    fieldConstraints.description = ctx.schema.description;
+  }
+
+  return {
+    ...baseResult,
+    fieldConstraints: Object.keys(fieldConstraints).length > 0 ? fieldConstraints : undefined,
+  };
+}
+
+export interface ArrayToTypeResult extends PydanticType {
+  childResults: Array<PydanticResult>;
+}
+
+export function arrayToType(ctx: {
+  applyModifiers: (result: PydanticResult, options?: { optional?: boolean }) => PydanticFinal;
+  plugin: PydanticPlugin['Instance'];
+  schema: SchemaWithType<'array'>;
+  walk: Walker<PydanticResult, PydanticPlugin['Instance']>;
+  walkerCtx: SchemaVisitorContext<PydanticPlugin['Instance']>;
+}): ArrayToTypeResult {
+  const { applyModifiers, plugin, schema, walk, walkerCtx } = ctx;
+  const any = plugin.external('typing.Any');
+  const list = plugin.external('typing.List');
+
+  const childResults: Array<PydanticResult> = [];
+
+  if (schema.items) {
+    const normalizedSchema = deduplicateSchema({ schema });
+    for (let i = 0; i < normalizedSchema.items!.length; i++) {
+      const item = normalizedSchema.items![i]!;
+      const result = walk(item, childContext(walkerCtx, 'items', i));
+      childResults.push(result);
+    }
+  }
+
+  const resolverCtx: ArrayResolverContext = {
+    $,
+    applyModifiers,
+    childResults,
+    nodes: {
+      base: baseNode,
+      maxLength: maxLengthNode,
+      minLength: minLengthNode,
+    },
+    plugin,
+    schema,
+    walk,
+    walkerCtx,
+  };
+
+  const resolver = plugin.config['~resolvers']?.array;
+  const resolved = resolver?.(resolverCtx) ?? arrayResolver(resolverCtx);
+
+  if (!resolved.type) {
+    resolved.type = $(list).slice(any);
+  }
+
+  return {
+    ...resolved,
+    childResults,
   };
 }

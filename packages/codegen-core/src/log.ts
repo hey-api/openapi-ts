@@ -55,10 +55,10 @@ function debug(message: string, group: keyof typeof DebugGroups) {
   console.debug(`${prefix} ${message}`);
 }
 
-function warn(message: string, group: keyof typeof WarnGroups) {
+function warn(message: string, group?: keyof typeof WarnGroups) {
   if (NO_WARNINGS) return;
 
-  const color = WarnGroups[group] ?? colors.yellowBright;
+  const color = group ? WarnGroups[group] : colors.yellowBright;
 
   console.warn(color(`${message}`));
 }
