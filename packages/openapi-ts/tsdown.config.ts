@@ -15,6 +15,18 @@ const replaceCoreImports = (filePath: string) => {
 
 export default defineConfig({
   clean: true,
+  deps: {
+    neverBundle: [
+      '@angular/common/http',
+      '@angular/core',
+      'axios',
+      'ky',
+      'nuxt/app',
+      'ofetch',
+      'rxjs',
+      'vue',
+    ],
+  },
   dts: true,
   entry: ['./src/{index,internal,run}.ts'],
   format: ['esm'],
