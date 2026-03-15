@@ -10,14 +10,14 @@ import type {
 
 import type { $, DollarTsDsl } from '../../ts-dsl';
 import type { IApi } from './api';
-import type { Resolvers } from './resolvers';
+import type { ZodResolvers } from './resolvers';
 import type { TypeOptions } from './shared/types';
 
 export type UserConfig = Plugin.Name<'zod'> &
   Plugin.Hooks &
   Plugin.UserComments &
   Plugin.UserExports &
-  Resolvers & {
+  ZodResolvers & {
     /**
      * Casing convention for generated names.
      *
@@ -426,7 +426,7 @@ export type Config = Plugin.Name<'zod'> &
   Plugin.Hooks &
   Plugin.Comments &
   Plugin.Exports &
-  Resolvers & {
+  ZodResolvers & {
     /** Casing convention for generated names. */
     case: Casing;
     /** The compatibility version to target for generated output. */

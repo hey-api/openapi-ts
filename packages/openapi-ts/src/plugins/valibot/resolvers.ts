@@ -8,7 +8,7 @@ import type { Pipe, PipeResult, Pipes, PipesUtils } from './shared/pipes';
 import type { ValibotFinal, ValibotResult } from './shared/types';
 import type { ValibotPlugin } from './types';
 
-export type Resolvers = Plugin.Resolvers<{
+export type ValibotResolvers = Plugin.Resolvers<{
   /**
    * Resolver for array schemas.
    *

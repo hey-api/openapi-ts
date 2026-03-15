@@ -70,7 +70,7 @@
     "husky": "9.1.7",
     "lint-staged": "16.3.3",
     "oxfmt": "0.40.0",
-    "tsdown": "0.18.4",
+    "tsdown": "0.21.3",
     "tsx": "4.21.0",
     "turbo": "2.8.16",
     "typescript": "5.9.3",

@@ -10,7 +10,7 @@ import type { Chain, ChainResult } from './shared/chain';
 import type { ZodFinal, ZodResult } from './shared/types';
 import type { ZodPlugin } from './types';
 
-export type Resolvers = Plugin.Resolvers<{
+export type ZodResolvers = Plugin.Resolvers<{
   /**
    * Resolver for array schemas.
    *

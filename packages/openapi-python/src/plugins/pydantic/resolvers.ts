@@ -4,7 +4,7 @@ import type { DollarPyDsl } from '../../py-dsl';
 import type { PydanticField, PydanticFinal, PydanticResult, PydanticType } from './shared/types';
 import type { PydanticPlugin } from './types';
 
-export type Resolvers = Plugin.Resolvers<{
+export type PydanticResolvers = Plugin.Resolvers<{
   /**
    * Resolver for array schemas.
    *
