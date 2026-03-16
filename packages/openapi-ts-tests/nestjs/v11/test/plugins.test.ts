@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 
 import { createClient, type UserConfig } from '@hey-api/openapi-ts';
 
-import { getFilePaths, getSpecsPath } from '../../utils';
+import { getFilePaths, getSpecsPath } from '../../../utils';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

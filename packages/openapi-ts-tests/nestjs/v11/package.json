@@ -1,5 +1,5 @@
 {
-  "name": "@test/openapi-ts-nestjs",
+  "name": "@test/openapi-ts-nestjs-v11",
   "version": "0.0.0",
   "private": true,
   "type": "module",
