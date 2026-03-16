@@ -1,2 +1,2 @@
 export { defaultConfig, defineConfig } from './config';
-export type { NestJSPlugin } from './types';
+export type { NestJsPlugin } from './types';

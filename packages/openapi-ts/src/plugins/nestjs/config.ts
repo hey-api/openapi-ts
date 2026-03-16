@@ -1,9 +1,9 @@
 import { definePluginConfig } from '@hey-api/shared';
 
 import { handler } from './plugin';
-import type { NestJSPlugin } from './types';
+import type { NestJsPlugin } from './types';
 
-export const defaultConfig: NestJSPlugin['Config'] = {
+export const defaultConfig: NestJsPlugin['Config'] = {
   config: {
     includeInEntry: false,
   },
