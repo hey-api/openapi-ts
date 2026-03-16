@@ -4,7 +4,6 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "lint": "eslint .",
     "openapi-ts": "openapi-ts",
     "start": "node --import @swc-node/register/esm-register src/main.ts",
     "test": "vitest",
@@ -18,7 +17,6 @@
     "rxjs": "^7.8.1"
   },
   "devDependencies": {
-    "@darraghor/eslint-plugin-nestjs-typed": "^7.1.26",
     "@hey-api/openapi-ts": "workspace:*",
     "@nestjs/testing": "^11.0.1",
     "@swc-node/register": "^1.10.10",
@@ -26,7 +24,6 @@
     "eslint": "^9.18.0",
     "oxfmt": "^0.27.0",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.20.0",
     "unplugin-swc": "^1.5.5",
     "vite": "^7.3.1",
     "vitest": "^4.0.18"
