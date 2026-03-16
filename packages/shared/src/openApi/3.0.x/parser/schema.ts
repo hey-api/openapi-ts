@@ -150,46 +150,6 @@ const getAllDiscriminatorValues = ({
   return values;
 };
 
-const getMappedDiscriminatorProperty = ({
-  context,
-  discriminator,
-  schema,
-  schemaRef,
-}: {
-  context: Context;
-  discriminator: NonNullable<SchemaObject['discriminator']>;
-  schema: SchemaObject;
-  schemaRef: string;
-}): IR.SchemaObject | undefined => {
-  const values = getAllDiscriminatorValues({
-    discriminator,
-    schemaRef,
-  });
-
-  if (!values.length) {
-    return;
-  }
-
-  const propertyType = findDiscriminatorPropertyType({
-    context,
-    propertyName: discriminator.propertyName,
-    schemas: [schema],
-  });
-
-  const valueSchemas: ReadonlyArray<IR.SchemaObject> = values.map((value) =>
-    convertDiscriminatorValue(value, propertyType),
-  );
-
-  if (valueSchemas.length === 1) {
-    return valueSchemas[0];
-  }
-
-  return {
-    items: valueSchemas,
-    logicalOperator: 'or',
-  };
-};
-
 const parseSchemaJsDoc = ({
   irSchema,
   schema,
@@ -418,19 +378,32 @@ const parseObject = ({
   }
 
   if (schema.discriminator && state.$ref) {
-    const discriminatorProperty = getMappedDiscriminatorProperty({
-      context,
+    const values = getAllDiscriminatorValues({
       discriminator: schema.discriminator,
-      schema,
       schemaRef: state.$ref,
     });
 
-    if (discriminatorProperty) {
+    if (values.length) {
+      const propertyType = findDiscriminatorPropertyType({
+        context,
+        propertyName: schema.discriminator.propertyName,
+        schemas: [schema],
+      });
+      const valueSchemas: ReadonlyArray<IR.SchemaObject> = values.map((value) =>
+        convertDiscriminatorValue(value, propertyType),
+      );
+
       if (!irSchema.properties) {
         irSchema.properties = {};
       }
 
-      irSchema.properties[schema.discriminator.propertyName] = discriminatorProperty;
+      irSchema.properties[schema.discriminator.propertyName] =
+        valueSchemas.length > 1
+          ? {
+              items: valueSchemas,
+              logicalOperator: 'or',
+            }
+          : valueSchemas[0]!;
     }
   }
 
