@@ -5,6 +5,7 @@ description: Generate Fastify v5 route handlers from OpenAPI with the Fastify pl
 
 <script setup lang="ts">
 import AuthorsList from '@components/AuthorsList.vue';
+import Examples from '@components/Examples.vue';
 import Heading from '@components/Heading.vue';
 import { jacobCohen } from '@data/people.js';
 import VersionLabel from '@components/VersionLabel.vue';
@@ -99,5 +100,6 @@ export default {
 
 You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/fastify/types.ts) interface.
 
-<!--@include: ../../partials/examples.md-->
+<Examples githubExamplePath="/openapi-ts-fastify" />
+
 <!--@include: ../../partials/sponsors.md-->

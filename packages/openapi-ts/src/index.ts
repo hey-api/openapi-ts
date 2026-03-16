@@ -211,10 +211,6 @@ export namespace Plugins {
     export type Types = FastifyPlugin;
   }
 
-  export namespace NestJs {
-    export type Types = NestJsPlugin;
-  }
-
   export namespace HeyApiClientAngular {
     export type Client = AngularClientImp;
     export type Types = HeyApiClientAngularPlugin;
@@ -265,6 +261,10 @@ export namespace Plugins {
   export namespace HeyApiTypeScript {
     export type Resolvers = Required<HeyApiTypeScriptResolvers>['~resolvers'];
     export type Types = HeyApiTypeScriptPlugin;
+  }
+
+  export namespace NestJs {
+    export type Types = NestJsPlugin;
   }
 
   export namespace PiniaColada {
