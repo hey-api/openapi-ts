@@ -377,6 +377,36 @@ const parseObject = ({
     irSchema.required = schema.required;
   }
 
+  if (schema.discriminator && state.$ref) {
+    const values = getAllDiscriminatorValues({
+      discriminator: schema.discriminator,
+      schemaRef: state.$ref,
+    });
+
+    if (values.length) {
+      const propertyType = findDiscriminatorPropertyType({
+        context,
+        propertyName: schema.discriminator.propertyName,
+        schemas: [schema],
+      });
+      const valueSchemas: ReadonlyArray<IR.SchemaObject> = values.map((value) =>
+        convertDiscriminatorValue(value, propertyType),
+      );
+
+      if (!irSchema.properties) {
+        irSchema.properties = {};
+      }
+
+      irSchema.properties[schema.discriminator.propertyName] =
+        valueSchemas.length > 1
+          ? {
+              items: valueSchemas,
+              logicalOperator: 'or',
+            }
+          : valueSchemas[0]!;
+    }
+  }
+
   return irSchema;
 };
 
