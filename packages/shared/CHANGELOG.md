@@ -1,5 +1,18 @@
 # @hey-api/shared
 
+## 0.2.4
+
+### Patch Changes
+
+- **utils**: `outputHeaderToPrefix()` function signature change ([#3585](https://github.com/hey-api/openapi-ts/pull/3585)) ([`c076e4d`](https://github.com/hey-api/openapi-ts/commit/c076e4d3e9697d8bbc72db13a31d44627c814c2d)) by [@mrlubos](https://github.com/mrlubos)
+
+- **internal**: remove TypeScript from peer dependencies ([#3566](https://github.com/hey-api/openapi-ts/pull/3566)) ([`b5f1e4b`](https://github.com/hey-api/openapi-ts/commit/b5f1e4b5f64cbf0bad2eff888177ac9c1881ba3e)) by [@mrlubos](https://github.com/mrlubos)
+
+### Updated Dependencies:
+
+- @hey-api/codegen-core@0.7.3
+- @hey-api/types@0.1.4
+
 ## 0.2.3
 
 ### Patch Changes
