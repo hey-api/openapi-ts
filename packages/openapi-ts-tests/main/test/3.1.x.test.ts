@@ -252,6 +252,13 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'discriminator-object-self-mapped.json',
+        output: 'discriminator-object-self-mapped',
+      }),
+      description: 'handles object discriminator mappings that include the schema itself',
+    },
+    {
+      config: createConfig({
         input: 'discriminator-non-string.yaml',
         output: 'discriminator-non-string',
       }),

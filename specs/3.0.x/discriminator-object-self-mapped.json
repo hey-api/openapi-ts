@@ -1,0 +1,73 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Discriminator object schema with self mapping",
+    "version": "1.0.0",
+    "description": "Ensures a concrete schema with a discriminator mapping to itself gets a literal discriminator value instead of falling back to string."
+  },
+  "paths": {
+    "/blog-posts": {
+      "get": {
+        "summary": "Get blog posts",
+        "responses": {
+          "200": {
+            "description": "List of blog posts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "oneOf": [
+                      { "$ref": "#/components/schemas/BlogPostDto" },
+                      { "$ref": "#/components/schemas/BlogPostWithImageDto" }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BlogPostDto": {
+        "type": "object",
+        "required": ["$type", "id", "title"],
+        "properties": {
+          "$type": {
+            "type": "string"
+          },
+          "id": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "discriminator": {
+          "propertyName": "$type",
+          "mapping": {
+            "BlogPost": "#/components/schemas/BlogPostDto",
+            "BlogPostWithImage": "#/components/schemas/BlogPostWithImageDto"
+          }
+        }
+      },
+      "BlogPostWithImageDto": {
+        "allOf": [
+          { "$ref": "#/components/schemas/BlogPostDto" },
+          {
+            "type": "object",
+            "required": ["imageUrl"],
+            "properties": {
+              "imageUrl": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}
