@@ -6,7 +6,7 @@ import { PyDsl } from '../base';
 export type ParamDefaultValue = NodeName | py.Expression | undefined;
 export type ParamFn = (p: ParamPyDsl) => void;
 export type ParamName = NodeName | ParamFn;
-export type ParamType = NodeName | py.Expression | undefined;
+export type ParamType = NodeName | PyDsl<py.Expression> | undefined;
 
 export type ParamCtor = (name: ParamName, fn?: ParamFn) => ParamPyDsl;
 

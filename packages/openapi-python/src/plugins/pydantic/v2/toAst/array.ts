@@ -9,19 +9,18 @@ import type { FieldConstraints } from '../constants';
 
 function baseNode(ctx: ArrayResolverContext): PydanticType {
   const { applyModifiers, childResults, plugin } = ctx;
-  const list = plugin.external('typing.List');
   const any = plugin.external('typing.Any');
 
   if (childResults.length === 0) {
     return {
-      type: $(list).slice(any),
+      type: $('list').slice(any),
     };
   }
 
   if (childResults.length === 1) {
     const itemResult = applyModifiers(childResults[0]!);
     return {
-      type: $(list).slice(itemResult.type ?? any),
+      type: $('list').slice(itemResult.type ?? any),
     };
   }
 
@@ -29,12 +28,12 @@ function baseNode(ctx: ArrayResolverContext): PydanticType {
     const union = plugin.external('typing.Union');
     const itemTypes = childResults.map((r) => applyModifiers(r).type ?? any);
     return {
-      type: $(list).slice($(union).slice(...itemTypes)),
+      type: $('list').slice($(union).slice(...itemTypes)),
     };
   }
 
   return {
-    type: $(list).slice(any),
+    type: $('list').slice(any),
   };
 }
 
@@ -88,7 +87,6 @@ export function arrayToType(ctx: {
 }): ArrayToTypeResult {
   const { applyModifiers, plugin, schema, walk, walkerCtx } = ctx;
   const any = plugin.external('typing.Any');
-  const list = plugin.external('typing.List');
 
   const childResults: Array<PydanticResult> = [];
 
@@ -120,7 +118,7 @@ export function arrayToType(ctx: {
   const resolved = resolver?.(resolverCtx) ?? arrayResolver(resolverCtx);
 
   if (!resolved.type) {
-    resolved.type = $(list).slice(any);
+    resolved.type = $('list').slice(any);
   }
 
   return {

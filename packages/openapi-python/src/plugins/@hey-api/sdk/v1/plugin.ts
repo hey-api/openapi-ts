@@ -11,6 +11,16 @@ import { createShell, type OperationItem, source, toNode } from './node';
 export const handlerV1: HeyApiSdkPlugin['Handler'] = ({ plugin }) => {
   const clientModule = clientFolderAbsolutePath(getTypedConfig(plugin));
   const client = getClientPlugin(getTypedConfig(plugin));
+
+  // client
+  plugin.symbol('build_client_params', {
+    external: clientModule,
+    meta: {
+      category: 'external',
+      resource: 'client.build_client_params',
+      tool: client.name,
+    },
+  });
   plugin.symbol('Client', {
     external: clientModule,
     meta: {
@@ -20,11 +30,28 @@ export const handlerV1: HeyApiSdkPlugin['Handler'] = ({ plugin }) => {
     },
   });
 
+  // functools
   plugin.symbol('cached_property', {
     external: 'functools',
     meta: {
       category: 'external',
       resource: 'functools.cached_property',
+    },
+  });
+
+  // typing
+  plugin.symbol('Any', {
+    external: 'typing',
+    meta: {
+      category: 'external',
+      resource: 'typing.Any',
+    },
+  });
+  plugin.symbol('Union', {
+    external: 'typing',
+    meta: {
+      category: 'external',
+      resource: 'typing.Union',
     },
   });
 

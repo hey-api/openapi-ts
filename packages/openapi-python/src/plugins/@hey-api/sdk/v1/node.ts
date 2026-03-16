@@ -118,12 +118,48 @@ function implementFn<T extends ReturnType<typeof $.func>>(args: {
   const { node, operation, plugin } = args;
   const method = operation.method.toLowerCase();
   const opParameters = operationParameters({ operation, plugin });
-  return (
-    node
-      .params(...opParameters.parameters)
-      // TODO: extract operation statements into a separate function
-      .do($('self').attr('client').attr(method).call($.literal(operation.path)).return()) as T
-  );
+
+  if (plugin.config.paramsStructure === 'flat' && opParameters.fields.length > 0) {
+    const paramNames = opParameters.parameters.map((parameter) => parameter.name.toString());
+
+    const fieldsList = $.list();
+    for (const field of opParameters.fields) {
+      const fieldDict = $.dict();
+      fieldDict.entry($.literal('in'), $.literal(field.in));
+      fieldDict.entry($.literal('key'), $.literal(field.key));
+      if (field.map) {
+        fieldDict.entry($.literal('map'), $.literal(field.map));
+      }
+      fieldsList.element(fieldDict);
+    }
+
+    const kwargs: Array<ReturnType<typeof $.kwarg>> = [];
+    for (const name of paramNames) {
+      kwargs.push($.kwarg(name, name));
+    }
+
+    return (
+      node
+        .params(...opParameters.parameters)
+        // TODO: extract operation statements into a separate function
+        .do(
+          $.var('params').assign(
+            $(plugin.external('client.build_client_params')).call(fieldsList, ...kwargs),
+          ),
+        )
+        .do(
+          $('self')
+            .attr('client')
+            .attr(method)
+            .call($.literal(operation.path), $.kwarg('params', $('params') as never))
+            .return(),
+        ) as T
+    );
+  }
+
+  return node
+    .params(...opParameters.parameters)
+    .do($('self').attr('client').attr(method).call($.literal(operation.path)).return()) as T;
 }
 
 export function toNode(
