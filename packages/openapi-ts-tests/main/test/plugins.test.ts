@@ -470,13 +470,6 @@ for (const version of versions) {
       },
       {
         config: createConfig({
-          output: 'default',
-          plugins: ['nestjs'],
-        }),
-        description: 'generate NestJS types with NestJS plugin',
-      },
-      {
-        config: createConfig({
           input: 'transforms-read-write.yaml',
           output: 'transforms-read-write-ignore',
           parser: {
