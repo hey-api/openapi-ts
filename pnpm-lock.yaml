@@ -1581,6 +1581,15 @@ importers:
         specifier: 4.3.6
         version: 4.3.6
 
+  packages/openapi-ts-tests/nestjs:
+    devDependencies:
+      '@hey-api/openapi-ts':
+        specifier: workspace:*
+        version: link:../../openapi-ts
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+
   packages/openapi-ts-tests/sdks:
     devDependencies:
       '@hey-api/openapi-ts':
