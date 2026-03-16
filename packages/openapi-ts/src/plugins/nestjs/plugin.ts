@@ -2,14 +2,14 @@ import type { IR } from '@hey-api/shared';
 import { hasParameterGroupObjectRequired, operationResponsesMap, toCase } from '@hey-api/shared';
 
 import { $ } from '../../ts-dsl';
-import type { NestJSPlugin } from './types';
+import type { NestJsPlugin } from './types';
 
 const operationToMethod = ({
   operation,
   plugin,
 }: {
   operation: IR.OperationObject;
-  plugin: NestJSPlugin['Instance'];
+  plugin: NestJsPlugin['Instance'];
 }) => {
   const funcType = $.type.func();
 
@@ -99,7 +99,7 @@ const emitTypeAlias = ({
   typeName,
 }: {
   methods: Array<{ name: string; type: ReturnType<typeof $.type.func> }>;
-  plugin: NestJSPlugin['Instance'];
+  plugin: NestJsPlugin['Instance'];
   typeName: string;
 }) => {
   const symbol = plugin.symbol(typeName);
@@ -110,7 +110,7 @@ const emitTypeAlias = ({
   plugin.node($.type.alias(symbol).export().type(type));
 };
 
-export const handler: NestJSPlugin['Handler'] = ({ plugin }) => {
+export const handler: NestJsPlugin['Handler'] = ({ plugin }) => {
   // Collect operations by tag, then emit per-tag types
   const operationsByTag = new Map<
     string,
