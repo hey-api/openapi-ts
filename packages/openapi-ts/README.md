@@ -343,6 +343,7 @@ These plugins help reduce boilerplate associated with third-party dependencies. 
 - [`@tanstack/svelte-query`](https://heyapi.dev/openapi-ts/plugins/tanstack-query)
 - [`@tanstack/vue-query`](https://heyapi.dev/openapi-ts/plugins/tanstack-query)
 - [`fastify`](https://heyapi.dev/openapi-ts/plugins/fastify)
+- [`nestjs`](https://heyapi.dev/openapi-ts/plugins/nest)
 - [`valibot`](https://heyapi.dev/openapi-ts/plugins/valibot)
 - [`zod`](https://heyapi.dev/openapi-ts/plugins/zod)
 
@@ -362,7 +363,6 @@ The following plugins are planned but not in development yet. You can help us pr
 - [Joi](https://heyapi.dev/openapi-ts/plugins/joi)
 - [Koa](https://heyapi.dev/openapi-ts/plugins/koa)
 - [MSW](https://heyapi.dev/openapi-ts/plugins/msw)
-- [Nest](https://heyapi.dev/openapi-ts/plugins/nest)
 - [Nock](https://heyapi.dev/openapi-ts/plugins/nock)
 - [Superstruct](https://heyapi.dev/openapi-ts/plugins/superstruct)
 - [Supertest](https://heyapi.dev/openapi-ts/plugins/supertest)

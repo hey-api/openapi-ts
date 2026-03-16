@@ -80,6 +80,7 @@ declare module '@hey-api/shared' {
     '@tanstack/vue-query': Plugins.TanStackVueQuery.Types['Types'];
     arktype: Plugins.Arktype.Types['Types'];
     fastify: Plugins.Fastify.Types['Types'];
+    nestjs: Plugins.NestJs.Types['Types'];
     swr: Plugins.Swr.Types['Types'];
     valibot: Plugins.Valibot.Types['Types'];
     zod: Plugins.Zod.Types['Types'];
@@ -140,6 +141,7 @@ import type { TanStackSvelteQueryPlugin } from './plugins/@tanstack/svelte-query
 import type { TanStackVueQueryPlugin } from './plugins/@tanstack/vue-query';
 import type { ArktypePlugin } from './plugins/arktype';
 import type { FastifyPlugin } from './plugins/fastify';
+import type { NestJsPlugin } from './plugins/nestjs';
 import type { SwrPlugin } from './plugins/swr';
 import type { ValibotPlugin, ValibotResolvers } from './plugins/valibot';
 import type { ZodPlugin, ZodResolvers } from './plugins/zod';
@@ -259,6 +261,10 @@ export namespace Plugins {
   export namespace HeyApiTypeScript {
     export type Resolvers = Required<HeyApiTypeScriptResolvers>['~resolvers'];
     export type Types = HeyApiTypeScriptPlugin;
+  }
+
+  export namespace NestJs {
+    export type Types = NestJsPlugin;
   }
 
   export namespace PiniaColada {

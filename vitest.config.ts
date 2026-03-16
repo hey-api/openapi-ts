@@ -60,6 +60,14 @@ export default defineConfig({
       {
         extends: true,
         test: {
+          name: '@test/openapi-ts-nestjs-v11',
+          root: 'packages/openapi-ts-tests/nestjs/v11',
+          setupFiles: ['./vitest.setup.ts'],
+        },
+      },
+      {
+        extends: true,
+        test: {
           name: '@test/openapi-ts-sdks',
           root: 'packages/openapi-ts-tests/sdks',
           setupFiles: ['./vitest.setup.ts'],
