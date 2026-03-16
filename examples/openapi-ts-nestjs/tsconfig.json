@@ -1,13 +1,15 @@
 {
   "include": ["src/**/*", "test/**/*"],
   "compilerOptions": {
-    "baseUrl": ".",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "esModuleInterop": true,
     "lib": ["es2023", "dom", "dom.iterable"],
     "module": "ESNext",
     "moduleResolution": "Bundler",
+    "paths": {
+      "src/*": ["./src/*"]
+    },
     "skipLibCheck": true,
     "target": "es2022",
     "types": ["node", "vitest/globals"],
