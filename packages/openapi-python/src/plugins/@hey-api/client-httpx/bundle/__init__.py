@@ -1,3 +1,3 @@
-from .client import Client, create_client
+from .client import Client, build_client_params, create_client
 
-__all__ = ["Client", "create_client"]
+__all__ = ["Client", "build_client_params", "create_client"]
