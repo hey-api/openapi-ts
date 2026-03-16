@@ -1,6 +1,6 @@
 ---
 title: NestJS Plugin
-description: Generate NestJS controller interfaces from OpenAPI with type safety. Fully compatible with all core features.
+description: Generate NestJS controller method types from OpenAPI specs. Type-safe controllers via implements.
 ---
 
 <script setup lang="ts">
@@ -10,7 +10,7 @@ import VersionLabel from '@components/VersionLabel.vue';
 
 <Heading>
   <h1>NestJS</h1>
-  <VersionLabel value="v10" />
+  <VersionLabel value="v11" />
 </Heading>
 
 ::: warning
@@ -19,23 +19,18 @@ NestJS plugin is currently in beta. The interface might change before it becomes
 
 ### About
 
-[NestJS](https://nestjs.com) is a progressive Node.js framework for building efficient, reliable and scalable server-side applications.
-
-The NestJS plugin for Hey API generates type-safe controller method signatures from your OpenAPI spec, fully compatible with all core features.
+The NestJS plugin generates type-safe controller method signatures from your OpenAPI spec.
 
 ## Features
 
-- NestJS support
-- seamless integration with `@hey-api/openapi-ts` ecosystem
 - type-safe controller methods via `implements`
 - tag-based grouping for per-controller types
 - incremental adoption with `Pick<ControllerMethods, ...>`
 - zero runtime coupling — pure TypeScript types
-- minimal learning curve thanks to extending the underlying technology
 
 ## Installation
 
-In your [configuration](/openapi-ts/get-started), add `nestjs` to your plugins and you'll be ready to generate NestJS artifacts. :tada:
+In your [configuration](/openapi-ts/get-started), add `nestjs` to your plugins.
 
 ```js
 export default {
@@ -50,14 +45,12 @@ export default {
 
 ## Output
 
-The NestJS plugin generates per-tag controller method types from your OpenAPI spec. Operations are grouped by their first OpenAPI tag into separate types like `PetsControllerMethods`, `StoreControllerMethods`, etc.
+Operations are grouped by their first OpenAPI tag into separate types like `PetsControllerMethods`, `StoreControllerMethods`, etc.
 
-::: code-group
-
-```ts [output]
+```ts
 export type PetsControllerMethods = {
-  createPet: (body: CreatePetData['body']) => Promise<CreatePetResponse>;
   listPets: (query?: ListPetsData['query']) => Promise<ListPetsResponse>;
+  createPet: (body: CreatePetData['body']) => Promise<CreatePetResponse>;
   showPetById: (path: ShowPetByIdData['path']) => Promise<ShowPetByIdResponse>;
 };
 
@@ -66,32 +59,17 @@ export type StoreControllerMethods = {
 };
 ```
 
-```js [config]
-export default {
-  input: 'hey-api/backend', // sign up at app.heyapi.dev
-  output: 'src/client',
-  plugins: [
-    // ...other plugins
-    'nestjs',
-  ],
-};
-```
-
-:::
-
 ## Usage
 
-Use `Pick<ControllerMethods, ...>` with `implements` to enforce the contract on your controllers.
-
 ```ts
-import { Controller, Get, Post, Param, Query, Body } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import type { PetsControllerMethods } from '../client/nestjs.gen';
-import type { ListPetsData, ShowPetByIdData, CreatePetData } from '../client/types.gen';
+import type { CreatePetData, ListPetsData, ShowPetByIdData } from '../client/types.gen';
 
 @Controller('pets')
 export class PetsController implements Pick<
   PetsControllerMethods,
-  'listPets' | 'createPet' | 'showPetById'
+  'createPet' | 'listPets' | 'showPetById'
 > {
   @Get()
   async listPets(@Query() query?: ListPetsData['query']) {
@@ -99,7 +77,7 @@ export class PetsController implements Pick<
   }
 
   @Post()
-  async createPet(@Body() body: CreatePetDto) {
+  async createPet(@Body() body: CreatePetData['body']) {
     // ...
   }
 
@@ -110,13 +88,9 @@ export class PetsController implements Pick<
 }
 ```
 
-## Production Example
+## Example
 
-The [openapi-ts-nestjs example](https://github.com/hey-api/openapi-ts/tree/main/examples/openapi-ts-nestjs) demonstrates a production-quality NestJS app with:
-
-- `class-validator` DTOs for request validation
-- `ValidationPipe` with `forbidNonWhitelisted: true`
-- `@darraghor/eslint-plugin-nestjs-typed` for NestJS-specific linting
+The [openapi-ts-nestjs example](https://github.com/hey-api/openapi-ts/tree/main/examples/openapi-ts-nestjs) demonstrates the plugin with a minimal NestJS v11 app featuring two controllers and integration tests.
 
 ## Constraints
 
@@ -132,15 +106,9 @@ async showPetById(@Param() path: ShowPetByIdData['path']) { ... }
 async showPetById(@Param('petId') petId: string) { ... }
 ```
 
-Methods using `@Res()` for raw response access are incompatible with `implements` because the extra parameter breaks assignability.
-
-Operations without tags are grouped under `DefaultControllerMethods`.
-
-Cookie parameters defined in the OpenAPI spec are not included in generated method signatures. NestJS handles cookies separately via `@Req()` or dedicated cookie middleware.
-
-## API
-
-You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/nestjs/types.ts) interface.
+- Methods using `@Res()` for raw response access are incompatible — the extra parameter breaks assignability
+- Operations without tags are grouped under `DefaultControllerMethods`
+- Cookie parameters are not included in generated signatures — NestJS handles cookies via `@Req()` or dedicated middleware
 
 <!--@include: ../../partials/examples.md-->
 <!--@include: ../../partials/sponsors.md-->
