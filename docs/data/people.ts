@@ -27,3 +27,8 @@ export const sebastiaanWouters: Person = {
   github: 'https://github.com/SebastiaanWouters',
   name: 'Sebastiaan Wouters',
 };
+
+export const yuriMikhin: Person = {
+  github: 'https://github.com/mikhin',
+  name: 'Yuri Mikhin',
+};
