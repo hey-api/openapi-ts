@@ -1,5 +1,23 @@
 # @hey-api/openapi-ts
 
+## 0.94.2
+
+### Patch Changes
+
+- **internal**: export Plugins namespace ([#3586](https://github.com/hey-api/openapi-ts/pull/3586)) ([`12827e3`](https://github.com/hey-api/openapi-ts/commit/12827e333b9c1b810607c8a948ab3a909a920678)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(nestjs)**: initial release ([#3573](https://github.com/hey-api/openapi-ts/pull/3573)) ([`e596edb`](https://github.com/hey-api/openapi-ts/commit/e596edbe799e51c21783239bfb524c7342df365b)) by [@mikhin](https://github.com/mikhin)
+
+- **internal**: expand TypeScript peer dependency range ([#3588](https://github.com/hey-api/openapi-ts/pull/3588)) ([`ae5ecc9`](https://github.com/hey-api/openapi-ts/commit/ae5ecc943f41c19bdc77a477c00b68ceb8ab3d52)) by [@mrlubos](https://github.com/mrlubos)
+
+- **output**: pass default value to `header` function ([#3585](https://github.com/hey-api/openapi-ts/pull/3585)) ([`c076e4d`](https://github.com/hey-api/openapi-ts/commit/c076e4d3e9697d8bbc72db13a31d44627c814c2d)) by [@mrlubos](https://github.com/mrlubos)
+
+### Updated Dependencies:
+
+- @hey-api/shared@0.2.4
+- @hey-api/codegen-core@0.7.3
+- @hey-api/types@0.1.4
+
 ## 0.94.1
 
 ### Patch Changes
