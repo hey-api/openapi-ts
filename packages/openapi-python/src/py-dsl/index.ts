@@ -71,6 +71,7 @@ import { WithPyDsl } from './stmt/with';
 // import { TypeTemplatePyDsl } from './type/template';
 // import { TypeTuplePyDsl } from './type/tuple';
 import { LazyPyDsl } from './utils/lazy';
+import { safeKeywordName } from './utils/name';
 
 const pyDsl = {
   /** Creates an array literal expression (e.g. `[1, 2, 3]`). */
@@ -147,11 +148,11 @@ const pyDsl = {
   /** Creates an import statement. */
   import: (...args: ConstructorParameters<typeof ImportPyDsl>) => new ImportPyDsl(...args),
 
-  /** Creates a keyword argument expression (e.g. `name=value`). */
-  kwarg: (...args: ConstructorParameters<typeof KwargPyDsl>) => new KwargPyDsl(...args),
-
   /** Creates an initialization block or statement. */
   // init: (...args: ConstructorParameters<typeof InitTsDsl>) => new InitTsDsl(...args),
+
+  /** Creates a keyword argument expression (e.g. `name=value`). */
+  kwarg: (...args: ConstructorParameters<typeof KwargPyDsl>) => new KwargPyDsl(...args),
 
   /** Creates a lazy, context-aware node with deferred evaluation. */
   lazy: <T extends py.Node>(...args: ConstructorParameters<typeof LazyPyDsl<T>>) =>
@@ -166,8 +167,12 @@ const pyDsl = {
   /** Creates an enum member declaration. */
   // member: (...args: ConstructorParameters<typeof EnumMemberTsDsl>) => new EnumMemberTsDsl(...args),
 
-  /** Creates a method declaration inside a class or object. */
-  // method: (...args: ConstructorParameters<typeof MethodTsDsl>) => new MethodTsDsl(...args),
+  /** Creates a class method declaration. */
+  method: ((name: NodeName, fn?: (f: FuncPyDsl) => void) =>
+    new FuncPyDsl(name, fn, { nameSanitizer: safeKeywordName })) as {
+    (name: NodeName): FuncPyDsl;
+    (name: NodeName, fn: (f: FuncPyDsl) => void): FuncPyDsl;
+  },
 
   /** Creates a negation expression (`-x`). */
   // neg: (...args: ConstructorParameters<typeof PrefixTsDsl>) => new PrefixTsDsl(...args).neg(),
