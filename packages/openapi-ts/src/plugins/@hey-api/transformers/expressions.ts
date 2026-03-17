@@ -2,15 +2,13 @@ import type { IR } from '@hey-api/shared';
 import type ts from 'typescript';
 
 import { $ } from '../../../ts-dsl';
-import type { UserConfig } from './types';
+import type { HeyApiTransformersPlugin, UserConfig } from './types';
 
-export type ExpressionTransformer = ({
-  config,
-  dataExpression,
-  schema,
-}: {
+export type ExpressionTransformer = (ctx: {
+  /** @deprecated Use `plugin` instead and access the config via `plugin.config` */
   config: Omit<UserConfig, 'name'>;
-  dataExpression?: ts.Expression | ReturnType<typeof $.expr | typeof $.attr> | string;
+  dataExpression?: ts.Expression | ReturnType<typeof $.attr | typeof $.expr> | string;
+  plugin: HeyApiTransformersPlugin['Instance'];
   schema: IR.SchemaObject;
 }) => Array<ReturnType<typeof $.fromValue>> | undefined;
 
