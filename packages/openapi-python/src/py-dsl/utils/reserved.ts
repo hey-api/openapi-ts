@@ -29,12 +29,18 @@ export class ReservedList {
 }
 
 const runtimeReserved = new ReservedList([...keywords.pythonKeywords, ...keywords.pythonBuiltins]);
+const keywordReserved = new ReservedList([...keywords.pythonKeywords]);
 
 /**
  * Reserved names for identifiers. These names will not be used
  * for variables, functions, classes, or other identifiers in generated code.
  */
 export const reserved = {
+  /**
+   * Reserved names for Python language keywords. These names are syntactically
+   * invalid as identifiers in any scope.
+   */
+  keywords: keywordReserved,
   /**
    * Reserved names for runtime identifiers. These names will not be used
    * for variables, functions, classes, or other runtime identifiers in

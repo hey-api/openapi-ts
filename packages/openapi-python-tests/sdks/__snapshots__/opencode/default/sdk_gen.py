@@ -35,7 +35,7 @@ class Global(Client):
 
 
 class Project(Client):
-    def list_(self):
+    def list(self):
         """
         List all projects
 
@@ -64,7 +64,7 @@ class Project(Client):
 
 
 class Pty(Client):
-    def list_(self):
+    def list(self):
         """
         List PTY sessions
 
@@ -158,7 +158,7 @@ class Tool(Client):
 
         return self.client.get("/experimental/tool/ids")
 
-    def list_(self):
+    def list(self):
         """
         List tools
 
@@ -202,7 +202,7 @@ class Vcs(Client):
 
 
 class Session(Client):
-    def list_(self):
+    def list(self):
         """
         List sessions
 
@@ -443,7 +443,7 @@ class Permission(Client):
 
         return self.client.post("/permission/{requestID}/reply")
 
-    def list_(self):
+    def list(self):
         """
         List pending permissions
 
@@ -454,7 +454,7 @@ class Permission(Client):
 
 
 class Command(Client):
-    def list_(self):
+    def list(self):
         """
         List commands
 
@@ -485,7 +485,7 @@ class Oauth(Client):
 
 
 class Provider(Client):
-    def list_(self):
+    def list(self):
         """
         List providers
 
@@ -538,7 +538,7 @@ class Find(Client):
 
 
 class File(Client):
-    def list_(self):
+    def list(self):
         """
         List files
 
@@ -681,7 +681,7 @@ class Formatter(Client):
 
 
 class Control(Client):
-    def next_(self):
+    def next(self):
         """
         Get next TUI request
 
@@ -797,7 +797,7 @@ class Tui(Client):
 
 
 class Auth_2(Client):
-    def set_(self):
+    def set(self):
         """
         Set auth credentials
 

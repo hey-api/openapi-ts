@@ -1,4 +1,4 @@
-import type { AnalysisContext, NodeName } from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName, NodeNameSanitizer } from '@hey-api/codegen-core';
 import { isSymbol } from '@hey-api/codegen-core';
 
 import { py } from '../../ts-python';
@@ -22,10 +22,15 @@ const Mixed = AsyncMixin(
 
 export class FuncPyDsl extends Mixed {
   readonly '~dsl' = 'FuncPyDsl';
-  override readonly nameSanitizer = safeRuntimeName;
+  override readonly nameSanitizer: NodeNameSanitizer;
 
-  constructor(name: NodeName, fn?: (f: FuncPyDsl) => void) {
+  constructor(
+    name: NodeName,
+    fn?: (f: FuncPyDsl) => void,
+    options?: { nameSanitizer?: NodeNameSanitizer },
+  ) {
     super();
+    this.nameSanitizer = options?.nameSanitizer ?? safeRuntimeName;
     this.name.set(name);
     if (isSymbol(name)) {
       name.setKind('function');
