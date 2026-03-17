@@ -419,6 +419,7 @@ export class Planner {
     while (true) {
       const kinds = [...(localNames.get(finalName) ?? [])];
 
+      // TODO: adjust canShareName for language
       const ok = kinds.every((kind) => canShareName(symbol.kind, kind));
       if (ok) break;
 

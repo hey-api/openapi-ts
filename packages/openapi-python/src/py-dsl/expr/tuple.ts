@@ -1,4 +1,5 @@
-import type { AnalysisContext, NodeName } from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName, Ref } from '@hey-api/codegen-core';
+import { ref } from '@hey-api/codegen-core';
 
 import { py } from '../../ts-python';
 import type { MaybePyDsl } from '../base';
@@ -12,11 +13,11 @@ const Mixed = LayoutMixin(PyDsl<py.TupleExpression>);
 export class TuplePyDsl extends Mixed {
   readonly '~dsl' = 'TuplePyDsl';
 
-  protected _elements: Array<TupleElement> = [];
+  protected _elements: Array<Ref<TupleElement>> = [];
 
   constructor(...elements: Array<TupleElement>) {
     super();
-    this._elements = elements;
+    this._elements = elements.map((element) => ref(element));
   }
 
   override analyze(ctx: AnalysisContext): void {
@@ -27,12 +28,12 @@ export class TuplePyDsl extends Mixed {
   }
 
   element(expr: TupleElement): this {
-    this._elements.push(expr);
+    this._elements.push(ref(expr));
     return this;
   }
 
   elements(...exprs: ReadonlyArray<TupleElement>): this {
-    this._elements.push(...exprs);
+    this._elements.push(...exprs.map((expr) => ref(expr)));
     return this;
   }
 

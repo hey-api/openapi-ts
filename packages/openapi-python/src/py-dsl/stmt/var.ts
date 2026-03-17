@@ -1,5 +1,5 @@
-import type { AnalysisContext, NodeName } from '@hey-api/codegen-core';
-import { isSymbol } from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName, Ref } from '@hey-api/codegen-core';
+import { isSymbol, ref } from '@hey-api/codegen-core';
 
 import { py } from '../../ts-python';
 import { PyDsl } from '../base';
@@ -14,7 +14,7 @@ export class VarPyDsl extends Mixed {
   readonly '~dsl' = 'VarPyDsl';
   override readonly nameSanitizer = safeRuntimeName;
 
-  protected _type?: VarType;
+  protected _type?: Ref<VarType>;
 
   constructor(name?: NodeName) {
     super();
@@ -37,7 +37,7 @@ export class VarPyDsl extends Mixed {
 
   /** Sets the type annotation for the variable. */
   type(type: VarType): this {
-    this._type = type;
+    this._type = ref(type);
     return this;
   }
 

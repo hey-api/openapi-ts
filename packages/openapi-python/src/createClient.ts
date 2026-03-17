@@ -121,7 +121,7 @@ export async function createClient({
       },
       nameConflictResolvers: config.output.nameConflictResolver
         ? {
-            typescript: config.output.nameConflictResolver,
+            python: config.output.nameConflictResolver,
           }
         : undefined,
       renderers: [
