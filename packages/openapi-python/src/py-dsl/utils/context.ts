@@ -3,8 +3,8 @@ import type { BindingKind } from '@hey-api/codegen-core';
 // import { isSymbol } from '@hey-api/codegen-core';
 import type { MaybeFunc } from '@hey-api/types';
 
+import type { py } from '../../py-compiler';
 import type { DollarPyDsl } from '../../py-dsl';
-import type { py } from '../../ts-python';
 // import { $, PythonRenderer } from '../../py-dsl';
 import type { PyDsl } from '../base';
 import type { CallArgs } from '../expr/call';

@@ -1,6 +1,6 @@
 import type { AnalysisContext } from '@hey-api/codegen-core';
 
-import type { py } from '../../ts-python';
+import type { py } from '../../py-compiler';
 import { PyDsl } from '../base';
 import type { PyDslContext } from './context';
 import { ctx } from './context';
