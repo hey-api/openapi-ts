@@ -1,4 +1,5 @@
-import type { AnalysisContext, NodeName } from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName, Ref } from '@hey-api/codegen-core';
+import { ref } from '@hey-api/codegen-core';
 
 import { py } from '../../ts-python';
 import { PyDsl } from '../base';
@@ -16,13 +17,13 @@ const Mixed = LayoutMixin(PyDsl<py.SubscriptExpression>);
 export class SubscriptPyDsl extends Mixed {
   readonly '~dsl' = 'SubscriptPyDsl';
 
-  protected _slices: Array<SubscriptExpr>;
-  protected _value: SubscriptExpr;
+  protected _slices: Array<Ref<SubscriptExpr>>;
+  protected _value: Ref<SubscriptExpr>;
 
   constructor(value: SubscriptExpr, ...slices: Array<SubscriptExpr>) {
     super();
-    this._slices = slices;
-    this._value = value;
+    this._slices = slices.map((slice) => ref(slice));
+    this._value = ref(value);
   }
 
   override analyze(ctx: AnalysisContext): void {
