@@ -57,7 +57,7 @@
     "dev": "tsdown --watch",
     "prepublishOnly": "pnpm build",
     "typecheck": "tsgo --noEmit",
-    "typecheck:next": "tsc --noEmit && uv run mypy src/ts-python/__snapshots__"
+    "typecheck:next": "tsc --noEmit && uv run mypy src/py-compiler/__snapshots__"
   },
   "dependencies": {
     "@hey-api/codegen-core": "workspace:*",

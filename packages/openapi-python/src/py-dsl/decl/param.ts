@@ -1,7 +1,7 @@
 import type { AnalysisContext, NodeName, Ref } from '@hey-api/codegen-core';
 import { ref } from '@hey-api/codegen-core';
 
-import { py } from '../../ts-python';
+import { py } from '../../py-compiler';
 import { PyDsl } from '../base';
 
 export type ParamDefaultValue = NodeName | py.Expression | undefined;

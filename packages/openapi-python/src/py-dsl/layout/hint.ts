@@ -1,7 +1,7 @@
 import type { AnalysisContext } from '@hey-api/codegen-core';
 import type { MaybeArray } from '@hey-api/types';
 
-import { py } from '../../ts-python';
+import { py } from '../../py-compiler';
 import { PyDsl } from '../base';
 import type { PyDslContext } from '../utils/context';
 import { ctx } from '../utils/context';

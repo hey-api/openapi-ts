@@ -1,6 +1,6 @@
 import type { AnalysisContext, Node } from '@hey-api/codegen-core';
 
-import type { py } from '../../ts-python';
+import type { py } from '../../py-compiler';
 import type { DocFn, DocLines } from '../layout/doc';
 import { DocPyDsl } from '../layout/doc';
 import type { BaseCtor, MixinCtor } from './types';
