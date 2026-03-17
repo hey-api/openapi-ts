@@ -72,7 +72,7 @@ function childToNode(
   const cachedProp = plugin.external('functools.cached_property');
 
   return [
-    $.func(memberName)
+    $.method(memberName)
       .decorator(cachedProp)
       .param('self')
       .returns(refChild)
@@ -196,7 +196,7 @@ export function toNode(
     } else {
       if (index > 0 || node.hasBody) node.newline();
       const method = implementFn({
-        node: $.func(createFnSymbol(plugin, item), (m) =>
+        node: $.method(createFnSymbol(plugin, item), (m) =>
           attachComment({
             node: m,
             operation,

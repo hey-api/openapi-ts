@@ -51,3 +51,5 @@ const safeName = (name: string, reserved: ReservedList): string => {
 };
 
 export const safeRuntimeName = (name: string): string => safeName(name, reserved.runtime);
+
+export const safeKeywordName = (name: string): string => safeName(name, reserved.keywords);
