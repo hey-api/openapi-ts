@@ -1,6 +1,6 @@
 import type { NodeName } from '@hey-api/codegen-core';
 
-import type { py } from '../ts-python';
+import type { py } from '../py-compiler';
 import { ClassPyDsl } from './decl/class';
 // import { DecoratorPyDsl } from './decl/decorator';
 // import { EnumPyDsl } from './decl/enum';

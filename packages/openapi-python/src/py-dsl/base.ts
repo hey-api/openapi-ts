@@ -15,7 +15,7 @@ import type {
 import { fromRef, isNode, isRef, isSymbol, nodeBrand, ref } from '@hey-api/codegen-core';
 import type { AnyString } from '@hey-api/types';
 
-import { py } from '../ts-python';
+import { py } from '../py-compiler';
 import type { AccessOptions } from './utils/context';
 
 export abstract class PyDsl<T extends py.Node = py.Node> implements Node<T> {
