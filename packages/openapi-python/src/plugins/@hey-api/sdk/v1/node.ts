@@ -133,18 +133,16 @@ function implementFn<T extends ReturnType<typeof $.func>>(args: {
       fieldsList.element(fieldDict);
     }
 
-    const kwargs: Array<ReturnType<typeof $.kwarg>> = [];
-    for (const name of paramNames) {
-      kwargs.push($.kwarg(name, name));
-    }
-
     return (
       node
         .params(...opParameters.parameters)
         // TODO: extract operation statements into a separate function
         .do(
           $.var('params').assign(
-            $(plugin.external('client.build_client_params')).call(fieldsList, ...kwargs),
+            $(plugin.external('client.build_client_params')).call(
+              fieldsList,
+              ...paramNames.map((name) => $.kwarg(name, name)),
+            ),
           ),
         )
         .do(

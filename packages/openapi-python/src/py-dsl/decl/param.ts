@@ -1,4 +1,5 @@
-import type { AnalysisContext, NodeName } from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName, Ref } from '@hey-api/codegen-core';
+import { ref } from '@hey-api/codegen-core';
 
 import { py } from '../../ts-python';
 import { PyDsl } from '../base';
@@ -13,8 +14,8 @@ export type ParamCtor = (name: ParamName, fn?: ParamFn) => ParamPyDsl;
 export class ParamPyDsl extends PyDsl<py.FunctionParameter> {
   readonly '~dsl' = 'ParamPyDsl';
 
-  protected _defaultValue?: ParamDefaultValue;
-  protected _type?: ParamType;
+  protected _defaultValue?: Ref<ParamDefaultValue>;
+  protected _type?: Ref<ParamType>;
 
   constructor(name: ParamName, fn?: ParamFn) {
     super();
@@ -35,7 +36,7 @@ export class ParamPyDsl extends PyDsl<py.FunctionParameter> {
 
   /** Sets the parameter default value. */
   default(value: ParamDefaultValue): this {
-    this._defaultValue = value;
+    this._defaultValue = ref(value);
     return this;
   }
 
@@ -45,7 +46,7 @@ export class ParamPyDsl extends PyDsl<py.FunctionParameter> {
 
   /** Sets the parameter type. */
   type(type: ParamType): this {
-    this._type = type;
+    this._type = ref(type);
     return this;
   }
 

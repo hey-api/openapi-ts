@@ -1,22 +1,24 @@
-import type { AnalysisContext, NodeName } from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName, Ref } from '@hey-api/codegen-core';
+import { ref } from '@hey-api/codegen-core';
 
 import { py } from '../../ts-python';
 import type { MaybePyDsl } from '../base';
 import type { BaseCtor, MixinCtor } from './types';
 
-type DecoratorInput = {
-  args: ReadonlyArray<MaybePyDsl<py.Expression>>;
-  name: NodeName | MaybePyDsl<py.Expression>;
-};
+type DecoratorArg = MaybePyDsl<py.Expression>;
+type DecoratorName = NodeName | MaybePyDsl<py.Expression>;
 
 export interface DecoratorMethods extends Node {
   $decorators(): ReadonlyArray<py.Expression>;
-  decorator(name: DecoratorInput['name'], ...args: DecoratorInput['args']): this;
+  decorator(name: DecoratorName, ...args: ReadonlyArray<DecoratorArg>): this;
 }
 
 export function DecoratorMixin<T extends py.Node, TBase extends BaseCtor<T>>(Base: TBase) {
   abstract class Decorator extends Base {
-    protected _decorators: Array<DecoratorInput> = [];
+    protected _decorators: Array<{
+      args: ReadonlyArray<Ref<DecoratorArg>>;
+      name: Ref<DecoratorName>;
+    }> = [];
 
     override analyze(ctx: AnalysisContext): void {
       super.analyze(ctx);
@@ -28,15 +30,21 @@ export function DecoratorMixin<T extends py.Node, TBase extends BaseCtor<T>>(Bas
       }
     }
 
-    protected decorator(name: DecoratorInput['name'], ...args: DecoratorInput['args']): this {
-      this._decorators.push({ args, name });
+    protected decorator(name: DecoratorName, ...args: ReadonlyArray<DecoratorArg>): this {
+      this._decorators.push({
+        args: args.map((arg) => ref(arg)),
+        name: ref(name),
+      });
       return this;
     }
 
     protected $decorators(): ReadonlyArray<py.Expression> {
       return this._decorators.map((decorator) =>
         decorator.args.length > 0
-          ? py.factory.createCallExpression(this.$node(decorator.name), this.$node(decorator.args))
+          ? py.factory.createCallExpression(
+              this.$node(decorator.name),
+              decorator.args.map((arg) => this.$node(arg)),
+            )
           : this.$node(decorator.name),
       );
     }

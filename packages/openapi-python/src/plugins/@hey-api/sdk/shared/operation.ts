@@ -37,7 +37,9 @@ function schemaToPythonType(
 
   if (schema.type === 'array') {
     const itemsSchema = schema.items?.[0];
-    const itemType = itemsSchema ? schemaToPythonType(itemsSchema, plugin) : 'Any';
+    const itemType = itemsSchema
+      ? schemaToPythonType(itemsSchema, plugin)
+      : plugin.external('typing.Any');
     return $('list').slice(itemType);
   }
 
