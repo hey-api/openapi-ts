@@ -1,4 +1,5 @@
-import type { AnalysisContext } from '@hey-api/codegen-core';
+import type { AnalysisContext, Ref } from '@hey-api/codegen-core';
+import { ref } from '@hey-api/codegen-core';
 
 import { py } from '../../ts-python';
 import type { MaybePyDsl } from '../base';
@@ -30,9 +31,9 @@ const Mixed = PyDsl<py.BinaryExpression>;
 export class BinaryPyDsl extends Mixed {
   readonly '~dsl' = 'BinaryPyDsl';
 
-  protected _left?: MaybePyDsl<py.Expression>;
+  protected _left?: Ref<MaybePyDsl<py.Expression>>;
   protected _op?: PyBinaryOperator;
-  protected _right?: MaybePyDsl<py.Expression>;
+  protected _right?: Ref<MaybePyDsl<py.Expression>>;
 
   constructor(
     left: MaybePyDsl<py.Expression>,
@@ -40,9 +41,9 @@ export class BinaryPyDsl extends Mixed {
     right: MaybePyDsl<py.Expression>,
   ) {
     super();
-    this._left = left;
+    this._left = ref(left);
     this._op = op;
-    this._right = right;
+    this._right = ref(right);
   }
 
   override analyze(ctx: AnalysisContext): void {
@@ -161,7 +162,7 @@ export class BinaryPyDsl extends Mixed {
   }
 
   private opAndExpr(op: PyBinaryOperator, right: MaybePyDsl<py.Expression>): this {
-    this._right = right;
+    this._right = ref(right);
     this._op = op;
     return this;
   }

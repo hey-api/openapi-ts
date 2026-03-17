@@ -1,5 +1,5 @@
-import type { AnalysisContext, NodeName } from '@hey-api/codegen-core';
-import { isSymbol } from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName, Ref } from '@hey-api/codegen-core';
+import { isSymbol, ref } from '@hey-api/codegen-core';
 
 import { py } from '../../ts-python';
 import { type MaybePyDsl, PyDsl } from '../base';
@@ -18,7 +18,7 @@ export class ClassPyDsl extends Mixed {
   readonly '~dsl' = 'ClassPyDsl';
   override readonly nameSanitizer = safeRuntimeName;
 
-  protected baseClasses: Array<NodeName> = [];
+  protected baseClasses: Array<Ref<NodeName>> = [];
   protected body: Body = [];
 
   constructor(name: NodeName) {
@@ -63,7 +63,7 @@ export class ClassPyDsl extends Mixed {
 
   /** Records base classes to extend from. */
   extends(...baseClass: ReadonlyArray<NodeName>): this {
-    this.baseClasses.push(...baseClass);
+    this.baseClasses.push(...baseClass.map((item) => ref(item)));
     return this;
   }
 

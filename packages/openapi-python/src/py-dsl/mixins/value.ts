@@ -1,4 +1,5 @@
-import type { AnalysisContext, Node, NodeName } from '@hey-api/codegen-core';
+import type { AnalysisContext, Node, NodeName, Ref } from '@hey-api/codegen-core';
+import { ref } from '@hey-api/codegen-core';
 
 import type { py } from '../../ts-python';
 import type { PyDsl } from '../base';
@@ -14,7 +15,7 @@ export interface ValueMethods extends Node {
 
 export function ValueMixin<T extends py.Node, TBase extends BaseCtor<T>>(Base: TBase) {
   abstract class Value extends Base {
-    protected value?: ValueExpr;
+    protected value?: Ref<ValueExpr>;
 
     override analyze(ctx: AnalysisContext): void {
       super.analyze(ctx);
@@ -22,7 +23,7 @@ export function ValueMixin<T extends py.Node, TBase extends BaseCtor<T>>(Base: T
     }
 
     protected assign(expr: ValueExpr): this {
-      this.value = expr;
+      this.value = ref(expr);
       return this;
     }
 
