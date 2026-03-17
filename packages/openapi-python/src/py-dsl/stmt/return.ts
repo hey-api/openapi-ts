@@ -1,7 +1,7 @@
 import type { AnalysisContext, NodeName, Ref } from '@hey-api/codegen-core';
 import { ref } from '@hey-api/codegen-core';
 
-import { py } from '../../ts-python';
+import { py } from '../../py-compiler';
 import type { MaybePyDsl } from '../base';
 import { PyDsl } from '../base';
 import { f } from '../utils/factories';

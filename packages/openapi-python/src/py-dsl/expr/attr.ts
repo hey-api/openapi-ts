@@ -1,7 +1,7 @@
 import type { AnalysisContext, NodeName, Ref } from '@hey-api/codegen-core';
 import { fromRef, isSymbol, ref } from '@hey-api/codegen-core';
 
-import { py } from '../../ts-python';
+import { py } from '../../py-compiler';
 import type { MaybePyDsl } from '../base';
 import { PyDsl } from '../base';
 import { ExprMixin } from '../mixins/expr';

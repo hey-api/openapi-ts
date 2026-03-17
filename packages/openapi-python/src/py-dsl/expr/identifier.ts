@@ -1,6 +1,6 @@
 import type { AnalysisContext, NodeName } from '@hey-api/codegen-core';
 
-import { py } from '../../ts-python';
+import { py } from '../../py-compiler';
 import { PyDsl } from '../base';
 
 const Mixed = PyDsl<py.Identifier>;

@@ -1,8 +1,8 @@
 import type { RenderContext, Renderer } from '@hey-api/codegen-core';
 import type { MaybeArray, MaybeFunc } from '@hey-api/types';
 
+import { py } from '../../py-compiler';
 import type { PyDsl } from '../../py-dsl';
-import { py } from '../../ts-python';
 import type { ModuleExport, ModuleImport, SortGroup, SortKey, SortModule } from './render-utils';
 import { astToString, moduleSortKey } from './render-utils';
 

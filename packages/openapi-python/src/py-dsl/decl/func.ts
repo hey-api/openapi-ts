@@ -1,7 +1,7 @@
 import type { AnalysisContext, NodeName, NodeNameSanitizer } from '@hey-api/codegen-core';
 import { isSymbol } from '@hey-api/codegen-core';
 
-import { py } from '../../ts-python';
+import { py } from '../../py-compiler';
 import { PyDsl } from '../base';
 import { DecoratorMixin } from '../mixins/decorator';
 import { DoMixin } from '../mixins/do';

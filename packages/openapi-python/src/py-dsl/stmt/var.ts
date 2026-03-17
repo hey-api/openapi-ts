@@ -1,7 +1,7 @@
 import type { AnalysisContext, NodeName, Ref } from '@hey-api/codegen-core';
 import { isSymbol, ref } from '@hey-api/codegen-core';
 
-import { py } from '../../ts-python';
+import { py } from '../../py-compiler';
 import { PyDsl } from '../base';
 import { ValueMixin } from '../mixins/value';
 import { safeRuntimeName } from '../utils/name';
