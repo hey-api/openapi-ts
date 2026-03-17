@@ -14,15 +14,17 @@ const buildingSymbols = new Set<number>();
 
 type Expr = ReturnType<typeof $.fromValue | typeof $.return | typeof $.if>;
 
-const isNodeReturnStatement = (node: Expr) => node['~dsl'] === 'ReturnTsDsl';
+function isNodeReturnStatement(node: Expr) {
+  return node['~dsl'] === 'ReturnTsDsl';
+}
 
-const schemaResponseTransformerNodes = ({
+function schemaResponseTransformerNodes({
   plugin,
   schema,
 }: {
   plugin: HeyApiTransformersPlugin['Instance'];
   schema: IR.SchemaObject;
-}): Array<ts.Expression | ts.Statement | Expr> => {
+}): Array<ts.Expression | ts.Statement | Expr> {
   const nodes = processSchemaType({
     dataExpression: $(dataVariableName),
     plugin,
@@ -36,9 +38,9 @@ const schemaResponseTransformerNodes = ({
     }
   }
   return nodes;
-};
+}
 
-const processSchemaType = ({
+function processSchemaType({
   dataExpression,
   plugin,
   schema,
@@ -46,7 +48,7 @@ const processSchemaType = ({
   dataExpression?: ts.Expression | string | ReturnType<typeof $.attr | typeof $.expr>;
   plugin: HeyApiTransformersPlugin['Instance'];
   schema: IR.SchemaObject;
-}): Array<Expr> => {
+}): Array<Expr> {
   if (schema.$ref) {
     const query: SymbolMeta = {
       category: 'transform',
@@ -265,6 +267,7 @@ const processSchemaType = ({
     const t = transformer({
       config: plugin.config,
       dataExpression,
+      plugin,
       schema,
     });
     if (t) {
@@ -273,7 +276,7 @@ const processSchemaType = ({
   }
 
   return [];
-};
+}
 
 // handles only response transformers for now
 export const handler: HeyApiTransformersPlugin['Handler'] = ({ plugin }) => {
