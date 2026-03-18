@@ -344,7 +344,12 @@ export const unwrapRefs = <T>(value: T): UnwrapRefs<T> => {
     return (isRef(value) ? unref(value) : value) as UnwrapRefs<T>;
   }
 
-  if (value instanceof Blob) {
+  if (
+    value instanceof Blob ||
+    value instanceof FormData ||
+    value instanceof ReadableStream ||
+    value instanceof AbortSignal
+  ) {
     return value as UnwrapRefs<T>;
   }
 
