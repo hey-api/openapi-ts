@@ -131,9 +131,8 @@ export async function createClient({
             const result = typeof header === 'function' ? header({ ...ctx, defaultValue }) : header;
             return result === undefined ? defaultValue : result;
           },
+          module: config.output.module,
           preferExportAll: config.output.preferExportAll,
-          preferFileExtension: config.output.importFileExtension || undefined,
-          resolveModuleName: config.output.resolveModuleName,
         }),
       ],
       root: config.output.path,
