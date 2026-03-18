@@ -1,29 +1,28 @@
 import type { AnalysisContext } from '@hey-api/codegen-core';
-import ts from 'typescript';
+import tsOld from 'typescript';
 
+import type { ts } from '../../ts-compiler';
 import { TsDsl } from '../base';
 import { PrefixTsDsl } from '../expr/prefix';
 import { AsMixin } from '../mixins/as';
 
-export type LiteralValue = string | number | boolean | bigint | null;
-
 const Mixed = AsMixin(
   TsDsl<
-    | ts.BigIntLiteral
-    | ts.BooleanLiteral
-    | ts.NullLiteral
-    | ts.NumericLiteral
-    | ts.PrefixUnaryExpression
-    | ts.StringLiteral
+    | tsOld.BigIntLiteral
+    | tsOld.BooleanLiteral
+    | tsOld.NullLiteral
+    | tsOld.NumericLiteral
+    | tsOld.PrefixUnaryExpression
+    | tsOld.StringLiteral
   >,
 );
 
 export class LiteralTsDsl extends Mixed {
   readonly '~dsl' = 'LiteralTsDsl';
 
-  protected value: LiteralValue;
+  protected value: ts.LiteralValue;
 
-  constructor(value: LiteralValue) {
+  constructor(value: ts.LiteralValue) {
     super();
     this.value = value;
   }
@@ -34,20 +33,20 @@ export class LiteralTsDsl extends Mixed {
 
   override toAst() {
     if (typeof this.value === 'boolean') {
-      return this.value ? ts.factory.createTrue() : ts.factory.createFalse();
+      return this.value ? tsOld.factory.createTrue() : tsOld.factory.createFalse();
     }
     if (typeof this.value === 'number') {
-      const expr = ts.factory.createNumericLiteral(Math.abs(this.value));
+      const expr = tsOld.factory.createNumericLiteral(Math.abs(this.value));
       return this.value < 0 ? this.$node(new PrefixTsDsl(expr).neg()) : expr;
     }
     if (typeof this.value === 'string') {
-      return ts.factory.createStringLiteral(this.value, true);
+      return tsOld.factory.createStringLiteral(this.value, true);
     }
     if (typeof this.value === 'bigint') {
-      return ts.factory.createBigIntLiteral(this.value.toString());
+      return tsOld.factory.createBigIntLiteral(this.value.toString());
     }
     if (this.value === null) {
-      return ts.factory.createNull();
+      return tsOld.factory.createNull();
     }
     throw new Error(`Unsupported literal: ${String(this.value)}`);
   }

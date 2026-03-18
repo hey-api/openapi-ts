@@ -3,16 +3,14 @@ import type { AnalysisContext } from '@hey-api/codegen-core';
 import { py } from '../../py-compiler';
 import { PyDsl } from '../base';
 
-export type LiteralValue = string | number | boolean | null;
-
 const Mixed = PyDsl<py.Literal>;
 
 export class LiteralPyDsl extends Mixed {
   readonly '~dsl' = 'LiteralPyDsl';
 
-  protected value: LiteralValue;
+  protected value: py.LiteralValue;
 
-  constructor(value: LiteralValue) {
+  constructor(value: py.LiteralValue) {
     super();
     this.value = value;
   }
