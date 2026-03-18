@@ -265,6 +265,7 @@ function processSchemaType({
 
   for (const transformer of plugin.config.transformers) {
     const t = transformer({
+      $,
       config: plugin.config,
       dataExpression,
       plugin,

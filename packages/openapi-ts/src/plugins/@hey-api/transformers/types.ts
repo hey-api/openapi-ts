@@ -2,9 +2,9 @@ import type { IR } from '@hey-api/shared';
 import type { DefinePlugin, Plugin } from '@hey-api/shared';
 import type ts from 'typescript';
 
-import type { $, MaybeTsDsl, TsDsl } from '../../../ts-dsl';
+import type { $, DollarTsDsl, MaybeTsDsl, TsDsl } from '../../../ts-dsl';
 
-interface BaseTransformer {
+interface BaseTransformer extends DollarTsDsl {
   plugin: HeyApiTransformersPlugin['Instance'];
   schema: IR.SchemaObject;
 }
