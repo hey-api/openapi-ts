@@ -20,6 +20,11 @@ describe('literal expression', () => {
         py.factory.createLiteral(true),
       ),
       py.factory.createAssignment(
+        py.factory.createIdentifier('c'),
+        undefined,
+        py.factory.createLiteral(false),
+      ),
+      py.factory.createAssignment(
         py.factory.createIdentifier('none'),
         undefined,
         py.factory.createLiteral(null),

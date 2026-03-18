@@ -5,10 +5,11 @@ export interface PyPrinterOptions {
   indentSize?: number;
 }
 
+const DEFAULT_INDENT_SIZE = 4;
 const PARAMS_MULTILINE_THRESHOLD = 3;
 
 export function createPrinter(options?: PyPrinterOptions) {
-  const indentSize = options?.indentSize ?? 4;
+  const indentSize = options?.indentSize ?? DEFAULT_INDENT_SIZE;
 
   let indentLevel = 0;
 
@@ -52,12 +53,12 @@ export function createPrinter(options?: PyPrinterOptions) {
     switch (node.kind) {
       case PyNodeKind.Assignment: {
         const target = printNode(node.target);
-        if (node.annotation) {
-          const annotation = printNode(node.annotation);
+        if (node.type) {
+          const type = printNode(node.type);
           if (node.value) {
-            parts.push(printLine(`${target}: ${annotation} = ${printNode(node.value)}`));
+            parts.push(printLine(`${target}: ${type} = ${printNode(node.value)}`));
           } else {
-            parts.push(printLine(`${target}: ${annotation}`));
+            parts.push(printLine(`${target}: ${type}`));
           }
         } else {
           parts.push(printLine(`${target} = ${printNode(node.value!)}`));
@@ -182,7 +183,7 @@ export function createPrinter(options?: PyPrinterOptions) {
         const defPrefix = modifiers ? `${modifiers} def` : 'def';
         const formatParameter = (parameter: (typeof node.parameters)[number]): string => {
           const children: Array<string> = [parameter.name];
-          if (parameter.annotation) children.push(`: ${printNode(parameter.annotation)}`);
+          if (parameter.type) children.push(`: ${printNode(parameter.type)}`);
           if (parameter.defaultValue) children.push(` = ${printNode(parameter.defaultValue)}`);
           return children.join('');
         };
@@ -272,7 +273,7 @@ export function createPrinter(options?: PyPrinterOptions) {
       case PyNodeKind.LambdaExpression: {
         const parameters = node.parameters.map((parameter) => {
           const children: Array<string> = [parameter.name];
-          if (parameter.annotation) children.push(`: ${printNode(parameter.annotation)}`);
+          if (parameter.type) children.push(`: ${printNode(parameter.type)}`);
           if (parameter.defaultValue) children.push(` = ${printNode(parameter.defaultValue)}`);
           return children.join('');
         });
