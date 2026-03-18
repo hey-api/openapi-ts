@@ -130,7 +130,7 @@ export const vAmount = v.number();
 
 ### Replace default base
 
-You might want to replace the default base schema, e.g. `v.object()`.
+You might want to replace the default base schema, e.g., `v.object()`.
 
 ```js
 export const vUser = v.object({

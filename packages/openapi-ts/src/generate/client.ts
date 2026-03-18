@@ -2,8 +2,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import type { IProject, ProjectRenderMeta } from '@hey-api/codegen-core';
-import type { DefinePlugin, OutputHeader } from '@hey-api/shared';
+import type { IProject } from '@hey-api/codegen-core';
+import type { BaseOutput, DefinePlugin, OutputHeader } from '@hey-api/shared';
 import { ensureDirSync, isEnvironment, outputHeaderToPrefix } from '@hey-api/shared';
 
 import type { Config } from '../config/types';
@@ -100,12 +100,11 @@ function renameFile({
 function replaceImports({
   filePath,
   header,
-  meta,
+  module,
   renamed,
-}: {
+}: Pick<BaseOutput, 'module'> & {
   filePath: string;
   header?: string;
-  meta: ProjectRenderMeta;
   renamed: Map<string, string>;
 }): void {
   let content = fs.readFileSync(filePath, 'utf8');
@@ -124,8 +123,7 @@ function replaceImports({
     const fileName = path.basename(importPath, extension);
     const importDir = path.dirname(importPath);
     const replacedName =
-      (renamed.get(fileName) ?? fileName) +
-      (meta.importFileExtension ? meta.importFileExtension : extension);
+      (renamed.get(fileName) ?? fileName) + (module.extension ? module.extension : extension);
     const replacedMatch =
       match.slice(0, importIndex) +
       [importDir, replacedName].filter(Boolean).join('/') +
@@ -145,13 +143,12 @@ function replaceImports({
  */
 export function generateClientBundle({
   header,
-  meta,
+  module,
   outputPath,
   plugin,
   project,
-}: {
+}: Pick<BaseOutput, 'module'> & {
   header?: OutputHeader;
-  meta: ProjectRenderMeta;
   outputPath: string;
   plugin: DefinePlugin<Client.Config & { name: string }>['Config'];
   project: IProject;
@@ -203,7 +200,7 @@ export function generateClientBundle({
       replaceImports({
         filePath: path.resolve(coreOutputPath, file),
         header: headerPrefix,
-        meta,
+        module,
         renamed,
       });
     }
@@ -213,7 +210,7 @@ export function generateClientBundle({
       replaceImports({
         filePath: path.resolve(clientOutputPath, file),
         header: headerPrefix,
-        meta,
+        module,
         renamed,
       });
     }

@@ -18,7 +18,7 @@ describe('getOutput', () => {
   });
 
   describe('module resolution detection', () => {
-    it('should set importFileExtension when moduleResolution is NodeNext', () => {
+    it('should set module.extension when moduleResolution is NodeNext', () => {
       const tsconfigPath = path.join(tmpDir, 'tsconfig.json');
       fs.writeFileSync(
         tsconfigPath,
@@ -36,10 +36,10 @@ describe('getOutput', () => {
         },
       });
 
-      expect(output.importFileExtension).toBe('.js');
+      expect(output.module.extension).toBe('.js');
     });
 
-    it('should set importFileExtension when moduleResolution is Node16', () => {
+    it('should set module.extension when moduleResolution is Node16', () => {
       const tsconfigPath = path.join(tmpDir, 'tsconfig.json');
       fs.writeFileSync(
         tsconfigPath,
@@ -57,10 +57,10 @@ describe('getOutput', () => {
         },
       });
 
-      expect(output.importFileExtension).toBe('.js');
+      expect(output.module.extension).toBe('.js');
     });
 
-    it('should set importFileExtension when module is NodeNext (implicit moduleResolution)', () => {
+    it('should set module.extension when module is NodeNext (implicit moduleResolution)', () => {
       const tsconfigPath = path.join(tmpDir, 'tsconfig.json');
       fs.writeFileSync(
         tsconfigPath,
@@ -78,10 +78,10 @@ describe('getOutput', () => {
         },
       });
 
-      expect(output.importFileExtension).toBe('.js');
+      expect(output.module.extension).toBe('.js');
     });
 
-    it('should set importFileExtension when module is Node16 (implicit moduleResolution)', () => {
+    it('should set module.extension when module is Node16 (implicit moduleResolution)', () => {
       const tsconfigPath = path.join(tmpDir, 'tsconfig.json');
       fs.writeFileSync(
         tsconfigPath,
@@ -99,10 +99,10 @@ describe('getOutput', () => {
         },
       });
 
-      expect(output.importFileExtension).toBe('.js');
+      expect(output.module.extension).toBe('.js');
     });
 
-    it('should not set importFileExtension for other module types', () => {
+    it('should not set module.extension for other module types', () => {
       const tsconfigPath = path.join(tmpDir, 'tsconfig.json');
       fs.writeFileSync(
         tsconfigPath,
@@ -120,10 +120,10 @@ describe('getOutput', () => {
         },
       });
 
-      expect(output.importFileExtension).toBeUndefined();
+      expect(output.module.extension).toBeUndefined();
     });
 
-    it('should not override explicit importFileExtension setting', () => {
+    it('should not override explicit module.extension setting', () => {
       const tsconfigPath = path.join(tmpDir, 'tsconfig.json');
       fs.writeFileSync(
         tsconfigPath,
@@ -136,13 +136,15 @@ describe('getOutput', () => {
 
       const output = getOutput({
         output: {
-          importFileExtension: '.ts',
+          module: {
+            extension: '.ts',
+          },
           path: tmpDir,
           tsConfigPath: tsconfigPath,
         },
       });
 
-      expect(output.importFileExtension).toBe('.ts');
+      expect(output.module.extension).toBe('.ts');
     });
 
     it('should work when both module and moduleResolution are set', () => {
@@ -164,7 +166,7 @@ describe('getOutput', () => {
         },
       });
 
-      expect(output.importFileExtension).toBe('.js');
+      expect(output.module.extension).toBe('.js');
     });
 
     it('should handle missing tsconfig gracefully', () => {
@@ -174,7 +176,7 @@ describe('getOutput', () => {
         },
       });
 
-      expect(output.importFileExtension).toBeUndefined();
+      expect(output.module.extension).toBeUndefined();
     });
   });
 });
