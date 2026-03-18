@@ -1,4 +1,4 @@
-import type { NameConflictResolver, Symbol } from '@hey-api/codegen-core';
+import type { NameConflictResolver, RenderContext, Symbol } from '@hey-api/codegen-core';
 import type { MaybeArray } from '@hey-api/types';
 
 import type { Plugin } from '../plugins/types';
@@ -169,7 +169,7 @@ export interface BaseUserOutput {
    *
    * @default undefined
    */
-  resolveModuleName?: (moduleName: string) => string | undefined;
+  resolveModuleName?: ResolveModuleName;
   /**
    * Configuration for generating a copy of the input source used to produce this output.
    *
@@ -247,7 +247,7 @@ export interface BaseOutput {
   /**
    * Optional function to transform module specifiers.
    */
-  resolveModuleName: ((moduleName: string) => string | undefined) | undefined;
+  resolveModuleName: ResolveModuleName | undefined;
   /**
    * Configuration for generating a copy of the input source used to produce this output.
    */
@@ -346,3 +346,8 @@ export type BaseConfig<TUserConfig extends object, TOutput extends BaseOutput> =
  * For shared utilities that operate on any config.
  */
 export type AnyConfig = BaseConfig<Record<string, unknown>, BaseOutput>;
+
+/**
+ * Function to transform module specifiers.
+ */
+export type ResolveModuleName = (moduleName: string, ctx: RenderContext) => string | undefined;
