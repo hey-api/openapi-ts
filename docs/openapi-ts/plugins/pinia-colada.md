@@ -60,7 +60,7 @@ The Pinia Colada plugin will generate the following artifacts, depending on the 
 
 ## Queries
 
-Queries are generated from [query operations](/openapi-ts/configuration/parser#hooks-query-operations). The generated query functions follow the naming convention of SDK functions and by default append `Query`, e.g. `getPetByIdQuery()`.
+Queries are generated from [query operations](/openapi-ts/configuration/parser#hooks-query-operations). The generated query functions follow the naming convention of SDK functions and by default append `Query`, e.g., `getPetByIdQuery()`.
 
 ::: code-group
 
@@ -191,7 +191,7 @@ export default {
 
 :::
 
-Alternatively, you can access the same query key by calling query key functions. The generated query key functions follow the naming convention of SDK functions and by default append `QueryKey`, e.g. `getPetByIdQueryKey()`.
+Alternatively, you can access the same query key by calling query key functions. The generated query key functions follow the naming convention of SDK functions and by default append `QueryKey`, e.g., `getPetByIdQueryKey()`.
 
 ::: code-group
 
@@ -223,7 +223,7 @@ You can customize the naming and casing pattern for `queryKeys` functions using 
 
 ## Mutations
 
-Mutations are generated from [mutation operations](/openapi-ts/configuration/parser#hooks-mutation-operations). The generated mutation functions follow the naming convention of SDK functions and by default append `Mutation`, e.g. `addPetMutation()`.
+Mutations are generated from [mutation operations](/openapi-ts/configuration/parser#hooks-mutation-operations). The generated mutation functions follow the naming convention of SDK functions and by default append `Mutation`, e.g., `addPetMutation()`.
 
 ::: code-group
 

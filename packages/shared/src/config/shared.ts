@@ -1,5 +1,5 @@
 import type { NameConflictResolver, RenderContext, Symbol } from '@hey-api/codegen-core';
-import type { MaybeArray } from '@hey-api/types';
+import type { AnyString, MaybeArray } from '@hey-api/types';
 
 import type { Plugin } from '../plugins/types';
 import type { Logs } from '../types/logs';
@@ -82,7 +82,7 @@ export type NamingOptions = {
 /**
  * Base output shape all packages must satisfy.
  */
-export interface BaseUserOutput {
+export interface BaseUserOutput<TModuleExtension extends string = string> {
   /**
    * Defines casing of the output fields. By default, we preserve `input`
    * values as data transforms incur a performance penalty at runtime.
@@ -156,6 +156,25 @@ export interface BaseUserOutput {
    */
   indexFile?: boolean;
   /**
+   * Options for module specifier resolution.
+   */
+  module?: {
+    /**
+     * If specified, this will be the extension used when importing other
+     * modules. By default, we don't add an extension unless we detect that
+     * you're using a module resolution strategy that requires one.
+     *
+     * @default undefined
+     */
+    extension?: TModuleExtension | AnyString | null;
+    /**
+     * Function to transform module specifiers.
+     *
+     * @default undefined
+     */
+    resolve?: ResolveModuleFn;
+  };
+  /**
    * Optional name conflict resolver to customize how naming conflicts
    * are handled.
    */
@@ -168,8 +187,9 @@ export interface BaseUserOutput {
    * Optional function to transform module specifiers.
    *
    * @default undefined
+   * @deprecated use `module.resolve` instead
    */
-  resolveModuleName?: ResolveModuleName;
+  resolveModuleName?: ResolveModuleFn;
   /**
    * Configuration for generating a copy of the input source used to produce this output.
    *
@@ -185,7 +205,7 @@ export interface BaseUserOutput {
 /**
  * Base output shape all packages must satisfy.
  */
-export interface BaseOutput {
+export interface BaseOutput<TModuleExtension extends string = string> {
   /**
    * Defines casing of the output fields. By default, we preserve `input`
    * values as data transforms incur a performance penalty at runtime.
@@ -198,9 +218,7 @@ export interface BaseOutput {
    * input, or package version changes.
    */
   clean: boolean;
-  /**
-   * Whether to generate an entry file that re-exports symbols for convenient imports.
-   */
+  /** Whether to generate an entry file that re-exports symbols for convenient imports. */
   entryFile: boolean;
   /**
    * Optional function to transform file names before they are used.
@@ -221,9 +239,7 @@ export interface BaseOutput {
      */
     suffix: string | null;
   };
-  /**
-   * Text to include at the top of every generated file.
-   */
+  /** Text to include at the top of every generated file. */
   header: OutputHeader;
   /**
    * Whether to generate an entry file that re-exports symbols for convenient imports.
@@ -231,26 +247,20 @@ export interface BaseOutput {
    * @deprecated use `entryFile` instead
    */
   indexFile: boolean;
-  /**
-   * Optional name conflict resolver to customize how naming conflicts
-   * are handled.
-   */
+  /** Options for module specifier resolution. */
+  module: {
+    /** The extension used when importing other modules. */
+    extension: TModuleExtension | AnyString | null;
+    /** Function to transform module specifiers. */
+    resolve: ResolveModuleFn | undefined;
+  };
+  /** Name conflict resolver to customize how naming conflicts are handled. */
   nameConflictResolver: NameConflictResolver | undefined;
-  /**
-   * The absolute path to the output folder.
-   */
+  /** The absolute path to the output folder. */
   path: string;
-  /**
-   * Post-processing commands to run on the output folder, executed in order.
-   */
+  /** Post-processing commands to run on the output folder, executed in order. */
   postProcess: ReadonlyArray<PostProcessor>;
-  /**
-   * Optional function to transform module specifiers.
-   */
-  resolveModuleName: ResolveModuleName | undefined;
-  /**
-   * Configuration for generating a copy of the input source used to produce this output.
-   */
+  /** Configuration for generating a copy of the input source used to produce this output. */
   source: SourceConfig;
 }
 
@@ -350,4 +360,4 @@ export type AnyConfig = BaseConfig<Record<string, unknown>, BaseOutput>;
 /**
  * Function to transform module specifiers.
  */
-export type ResolveModuleName = (moduleName: string, ctx: RenderContext) => string | undefined;
+export type ResolveModuleFn = (path: string, ctx: RenderContext) => string | undefined;

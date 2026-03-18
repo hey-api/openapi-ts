@@ -37,6 +37,7 @@ export function getOutput(userConfig: { output: MaybeArray<string | UserOutput> 
       },
       format: null,
       lint: null,
+      module: {},
       path: '',
       postProcess: [],
       preferExportAll: false,
@@ -57,13 +58,27 @@ export function getOutput(userConfig: { output: MaybeArray<string | UserOutput> 
           },
           value: fields.fileName,
         }),
+        module: valueToObject({
+          defaultValue: {
+            extension: fields.importFileExtension,
+            resolve: fields.resolveModuleName,
+          },
+          mappers: {
+            object: (moduleFields) => ({
+              ...moduleFields,
+              extension: fields.importFileExtension ?? moduleFields.extension,
+              resolve: fields.resolveModuleName ?? moduleFields.resolve,
+            }),
+          },
+          value: fields.module,
+        }),
       }),
     },
     value: userOutput,
   }) as Output;
   output.tsConfig = loadTsConfig(findTsConfigPath(__dirname, output.tsConfigPath));
   if (
-    output.importFileExtension === undefined &&
+    output.module.extension === undefined &&
     (output.tsConfig?.compilerOptions?.moduleResolution === 'nodenext' ||
       output.tsConfig?.compilerOptions?.moduleResolution === 'NodeNext' ||
       output.tsConfig?.compilerOptions?.moduleResolution === 'node16' ||
@@ -73,10 +88,10 @@ export function getOutput(userConfig: { output: MaybeArray<string | UserOutput> 
       output.tsConfig?.compilerOptions?.module === 'node16' ||
       output.tsConfig?.compilerOptions?.module === 'Node16')
   ) {
-    output.importFileExtension = '.js';
+    output.module.extension = '.js';
   }
-  if (output.importFileExtension && !output.importFileExtension.startsWith('.')) {
-    output.importFileExtension = `.${output.importFileExtension}`;
+  if (output.module.extension && !output.module.extension.startsWith('.')) {
+    output.module.extension = `.${output.module.extension}`;
   }
   output.postProcess = normalizePostProcess(userOutput.postProcess ?? legacyPostProcess);
   output.source = resolveSource(output);

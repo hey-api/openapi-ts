@@ -4,9 +4,7 @@ import type { TsConfigJsonResolved } from 'get-tsconfig';
 
 import type { Formatters, Linters, PostProcessorPreset } from './postprocess';
 
-type ImportFileExtensions = '.js' | '.ts';
-
-export type UserOutput = BaseUserOutput & {
+export type UserOutput = BaseUserOutput<'.js' | '.ts'> & {
   /**
    * Which formatter to use to process output folder?
    *
@@ -21,8 +19,9 @@ export type UserOutput = BaseUserOutput & {
    * `node16`, we default to `.js`.
    *
    * @default undefined
+   * @deprecated Use `module.extension` instead.
    */
-  importFileExtension?: ImportFileExtensions | AnyString | null;
+  importFileExtension?: '.js' | '.ts' | AnyString | null;
   /**
    * Which linter to use to process output folder?
    *
@@ -60,18 +59,11 @@ export type UserOutput = BaseUserOutput & {
   tsConfigPath?: AnyString | null;
 };
 
-export type Output = BaseOutput & {
+export type Output = BaseOutput<'.js' | '.ts'> & {
   /**
    * Which formatter to use to process output folder?
    */
   format: Formatters | null;
-  /**
-   * If specified, this will be the file extension used when importing
-   * other modules. By default, we don't add a file extension and let the
-   * runtime resolve it. If you're using moduleResolution `nodenext` or
-   * `node16`, we default to `.js`.
-   */
-  importFileExtension: ImportFileExtensions | AnyString | null | undefined;
   /**
    * Which linter to use to process output folder?
    */

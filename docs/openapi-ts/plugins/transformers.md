@@ -21,7 +21,7 @@ Before deciding whether transformers are right for you, let's explain how they w
 
 Transformers handle only the most common scenarios. Some of the known limitations are:
 
-- union types are not transformed (e.g. if you have multiple possible response shapes)
+- union types are not transformed (e.g., if you have multiple possible response shapes)
 - only types defined through `$ref` are transformed
 - error responses are not transformed
 
