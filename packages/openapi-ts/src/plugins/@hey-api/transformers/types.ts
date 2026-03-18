@@ -2,13 +2,26 @@ import type { IR } from '@hey-api/shared';
 import type { DefinePlugin, Plugin } from '@hey-api/shared';
 import type ts from 'typescript';
 
-import type { ExpressionTransformer } from './expressions';
+import type { $, MaybeTsDsl, TsDsl } from '../../../ts-dsl';
+
+interface BaseTransformer {
+  plugin: HeyApiTransformersPlugin['Instance'];
+  schema: IR.SchemaObject;
+}
+
+export type ExpressionTransformer = (
+  ctx: BaseTransformer & {
+    /** @deprecated Use `plugin` instead and access the config via `plugin.config` */
+    config: Omit<UserConfig, 'name'>;
+    dataExpression?: ts.Expression | ReturnType<typeof $.attr | typeof $.expr> | string;
+  },
+) => Array<TsDsl<ts.Expression>> | undefined;
 
 /**
  * Returns the TypeScript type node for a schema with a specific format.
  * If undefined is returned, the default type will be used.
  */
-export type TypeTransformer = ({ schema }: { schema: IR.SchemaObject }) => ts.TypeNode | undefined;
+export type TypeTransformer = (ctx: BaseTransformer) => MaybeTsDsl<ts.TypeNode> | undefined;
 
 export type UserConfig = Plugin.Name<'@hey-api/transformers'> &
   Plugin.Hooks &
