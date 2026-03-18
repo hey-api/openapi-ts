@@ -24,6 +24,7 @@ export function getOutput(userConfig: { output: MaybeArray<string | UserOutput> 
         name: '{{name}}',
         suffix: '_gen',
       },
+      module: {},
       path: '',
       postProcess: [],
       preferExportAll: false,
@@ -48,8 +49,8 @@ export function getOutput(userConfig: { output: MaybeArray<string | UserOutput> 
     },
     value: userOutput,
   }) as Output;
-  if (output.importFileExtension && !output.importFileExtension.startsWith('.')) {
-    output.importFileExtension = `.${output.importFileExtension}`;
+  if (output.module.extension && !output.module.extension.startsWith('.')) {
+    output.module.extension = `.${output.module.extension}`;
   }
   output.postProcess = normalizePostProcess(userOutput.postProcess);
   output.source = resolveSource(output);
