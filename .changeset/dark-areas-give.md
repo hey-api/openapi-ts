@@ -3,4 +3,4 @@
 "@hey-api/shared": patch
 ---
 
-**output**: pass context as second argument in `resolveModuleName()` function
+**output**: pass context as second argument in `module.resolve()` function

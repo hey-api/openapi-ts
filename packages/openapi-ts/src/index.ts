@@ -169,8 +169,7 @@ export type { UserConfig } from './config/types';
 export { clientDefaultConfig, clientDefaultMeta } from './plugins/@hey-api/client-core/config';
 export { clientPluginHandler } from './plugins/@hey-api/client-core/plugin';
 export type { Client } from './plugins/@hey-api/client-core/types';
-export type { ExpressionTransformer } from './plugins/@hey-api/transformers/expressions';
-export type { TypeTransformer } from './plugins/@hey-api/transformers/types';
+export type { ExpressionTransformer, TypeTransformer } from './plugins/@hey-api/transformers/types';
 export * from './ts-dsl';
 export { Logger } from '@hey-api/codegen-core';
 export type {
