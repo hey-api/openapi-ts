@@ -1,4 +1,5 @@
 import type { RenderContext, Renderer } from '@hey-api/codegen-core';
+import type { ResolveModuleName } from '@hey-api/shared';
 import type { MaybeArray, MaybeFunc } from '@hey-api/types';
 
 import { py } from '../../py-compiler';
@@ -51,14 +52,14 @@ export class PythonRenderer implements Renderer {
    *
    * @private
    */
-  private _resolveModuleName?: (moduleName: string) => string | undefined;
+  private _resolveModuleName?: ResolveModuleName;
 
   constructor(
     args: {
       header?: HeaderArg;
       preferExportAll?: boolean;
       preferFileExtension?: string;
-      resolveModuleName?: (moduleName: string) => string | undefined;
+      resolveModuleName?: ResolveModuleName;
     } = {},
   ) {
     this._header = args.header;
@@ -202,7 +203,7 @@ export class PythonRenderer implements Renderer {
         preferFileExtension: this._preferFileExtension,
         root: ctx.project.root,
       });
-      const modulePath = this._resolveModuleName?.(sortKey[2]) ?? sortKey[2];
+      const modulePath = this._resolveModuleName?.(sortKey[2], ctx) ?? sortKey[2];
       const [groupIndex] = sortKey;
 
       if (!groups.has(groupIndex)) groups.set(groupIndex, new Map());
@@ -268,7 +269,7 @@ export class PythonRenderer implements Renderer {
         preferFileExtension: this._preferFileExtension,
         root: ctx.project.root,
       });
-      const modulePath = this._resolveModuleName?.(sortKey[2]) ?? sortKey[2];
+      const modulePath = this._resolveModuleName?.(sortKey[2], ctx) ?? sortKey[2];
       const [groupIndex] = sortKey;
 
       if (!groups.has(groupIndex)) groups.set(groupIndex, new Map());
