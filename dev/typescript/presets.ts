@@ -16,7 +16,9 @@ export const presets = {
       name: '@hey-api/sdk',
       paramsStructure: 'flat',
     },
-    '@hey-api/transformers',
+    {
+      name: '@hey-api/transformers',
+    },
     {
       metadata: true,
       name: 'zod',

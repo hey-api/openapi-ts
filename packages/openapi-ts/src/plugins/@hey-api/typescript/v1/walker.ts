@@ -94,7 +94,7 @@ export function createVisitor(
       const transformersPlugin = ctx.plugin.getPlugin('@hey-api/transformers');
       if (transformersPlugin?.config.typeTransformers) {
         for (const typeTransformer of transformersPlugin.config.typeTransformers) {
-          const typeNode = typeTransformer({ plugin: transformersPlugin, schema });
+          const typeNode = typeTransformer({ $, plugin: transformersPlugin, schema });
           if (typeNode) {
             return { meta: defaultMeta(schema), type: typeNode };
           }
