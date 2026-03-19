@@ -22,6 +22,7 @@ export default defineConfig({
       {
         extends: true,
         test: {
+          globalSetup: ['./src/py-compiler/__tests__/globalTeardown.ts'],
           name: '@hey-api/openapi-python',
           root: 'packages/openapi-python',
           setupFiles: ['./vitest.setup.ts'],
@@ -30,6 +31,7 @@ export default defineConfig({
       {
         extends: true,
         test: {
+          globalSetup: ['./src/ts-compiler/__tests__/globalTeardown.ts'],
           name: '@hey-api/openapi-ts',
           root: 'packages/openapi-ts',
           setupFiles: ['./vitest.setup.ts'],

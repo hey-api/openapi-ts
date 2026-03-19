@@ -24,7 +24,10 @@ import type { PyIdentifier as _PyIdentifier } from './nodes/expressions/identifi
 import type { PyKeywordArgument as _PyKeywordArgument } from './nodes/expressions/keywordArg';
 import type { PyLambdaExpression as _PyLambdaExpression } from './nodes/expressions/lambda';
 import type { PyListExpression as _PyListExpression } from './nodes/expressions/list';
-import type { PyLiteral as _PyLiteral } from './nodes/expressions/literal';
+import type {
+  PyLiteral as _PyLiteral,
+  PyLiteralValue as _PyLiteralValue,
+} from './nodes/expressions/literal';
 import type { PyMemberExpression as _PyMemberExpression } from './nodes/expressions/member';
 import type { PySetExpression as _PySetExpression } from './nodes/expressions/set';
 import type { PySubscriptExpression as _PySubscriptExpression } from './nodes/expressions/subscript';
@@ -129,6 +132,9 @@ export namespace py {
 
   // Printer
   export type PrinterOptions = _PyPrinterOptions;
+
+  // Miscellaneous
+  export type LiteralValue = _PyLiteralValue;
 }
 
 export const py = {

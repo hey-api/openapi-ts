@@ -3,25 +3,25 @@ import type { PyExpression } from '../expression';
 import { PyNodeKind } from '../kinds';
 
 export interface PyFunctionParameter extends PyNodeBase {
-  annotation?: PyExpression;
   defaultValue?: PyExpression;
   kind: PyNodeKind.FunctionParameter;
   name: string;
+  type?: PyExpression;
 }
 
 export function createFunctionParameter(
   name: string,
-  annotation?: PyExpression,
+  type?: PyExpression,
   defaultValue?: PyExpression,
   leadingComments?: ReadonlyArray<string>,
   trailingComments?: ReadonlyArray<string>,
 ): PyFunctionParameter {
   return {
-    annotation,
     defaultValue,
     kind: PyNodeKind.FunctionParameter,
     leadingComments,
     name,
     trailingComments,
+    type,
   };
 }
