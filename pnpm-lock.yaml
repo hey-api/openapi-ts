@@ -118,6 +118,9 @@ importers:
       '@opencode-ai/sdk':
         specifier: 1.2.27
         version: 1.2.27
+      '@orpc/contract':
+        specifier: 1.13.4
+        version: 1.13.4
       '@pinia/colada':
         specifier: 0.19.1
         version: 0.19.1(pinia@3.0.3(typescript@5.9.3)(vue@3.5.25(typescript@5.9.3)))(vue@3.5.25(typescript@5.9.3))

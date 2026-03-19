@@ -11,8 +11,8 @@ export const base = oc.$route({ inputStructure: 'detailed' });
  */
 export const getUsersContract = base.route({
     method: 'GET',
-    path: '/users',
     operationId: 'getUsers',
+    path: '/users',
     summary: 'Get all users',
     tags: ['users']
 }).input(zGetUsersData).output(zGetUsersResponse);
@@ -22,11 +22,11 @@ export const getUsersContract = base.route({
  */
 export const createUserContract = base.route({
     method: 'POST',
-    path: '/users',
     operationId: 'createUser',
+    path: '/users',
+    successStatus: 201,
     summary: 'Create a new user',
-    tags: ['users'],
-    successStatus: 201
+    tags: ['users']
 }).input(zCreateUserData).output(zCreateUserResponse);
 
 /**
@@ -34,8 +34,8 @@ export const createUserContract = base.route({
  */
 export const deleteUserContract = base.route({
     method: 'DELETE',
-    path: '/users/{userId}',
     operationId: 'deleteUser',
+    path: '/users/{userId}',
     summary: 'Delete a user',
     tags: ['users']
 }).input(zDeleteUserData);
@@ -45,8 +45,8 @@ export const deleteUserContract = base.route({
  */
 export const getUserByIdContract = base.route({
     method: 'GET',
-    path: '/users/{userId}',
     operationId: 'getUserById',
+    path: '/users/{userId}',
     summary: 'Get a user by ID',
     tags: ['users']
 }).input(zGetUserByIdData).output(zGetUserByIdResponse);
@@ -56,8 +56,8 @@ export const getUserByIdContract = base.route({
  */
 export const updateUserContract = base.route({
     method: 'PUT',
-    path: '/users/{userId}',
     operationId: 'updateUser',
+    path: '/users/{userId}',
     summary: 'Update a user',
     tags: ['users']
 }).input(zUpdateUserData).output(zUpdateUserResponse);
@@ -67,8 +67,8 @@ export const updateUserContract = base.route({
  */
 export const getPostsContract = base.route({
     method: 'GET',
-    path: '/posts',
     operationId: 'getPosts',
+    path: '/posts',
     summary: 'Get all posts',
     tags: ['posts']
 }).input(zGetPostsData).output(zGetPostsResponse);
@@ -78,11 +78,11 @@ export const getPostsContract = base.route({
  */
 export const createPostContract = base.route({
     method: 'POST',
-    path: '/posts',
     operationId: 'createPost',
+    path: '/posts',
+    successStatus: 201,
     summary: 'Create a new post',
-    tags: ['posts'],
-    successStatus: 201
+    tags: ['posts']
 }).input(zCreatePostData).output(zCreatePostResponse);
 
 /**
@@ -90,8 +90,8 @@ export const createPostContract = base.route({
  */
 export const getPostByIdContract = base.route({
     method: 'GET',
-    path: '/posts/{postId}',
     operationId: 'getPostById',
+    path: '/posts/{postId}',
     summary: 'Get a post by ID',
     tags: ['posts']
 }).input(zGetPostByIdData).output(zGetPostByIdResponse);

@@ -19,6 +19,7 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'orpc-contract.yaml',
         output: 'default',
+        plugins: ['@orpc/contract', 'zod'],
       }),
       description: 'generate oRPC contracts with Zod schemas',
     },
