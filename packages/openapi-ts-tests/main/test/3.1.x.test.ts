@@ -201,6 +201,24 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'content-binary.json',
+        output: 'content-binary-zod',
+        plugins: ['@hey-api/typescript', 'zod'],
+      }),
+      description:
+        'generates z.instanceof(Blob/File) for binary format with zod',
+    },
+    {
+      config: createConfig({
+        input: 'content-media-type.yaml',
+        output: 'content-media-type-zod',
+        plugins: ['@hey-api/typescript', 'zod'],
+      }),
+      description:
+        'generates z.instanceof(Blob/File) for contentMediaType with zod',
+    },
+    {
+      config: createConfig({
         input: 'content-types.yaml',
         output: 'content-types',
         plugins: ['@hey-api/client-axios', '@hey-api/typescript', '@hey-api/sdk'],
