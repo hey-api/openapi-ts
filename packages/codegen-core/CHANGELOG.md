@@ -1,5 +1,11 @@
 # @hey-api/codegen-core
 
+## 0.7.4
+
+### Patch Changes
+
+- **planner**: language-aware declaration sharing check ([#3606](https://github.com/hey-api/openapi-ts/pull/3606)) ([`86c7115`](https://github.com/hey-api/openapi-ts/commit/86c71151671b00821746659fa3be715224a28894)) by [@mrlubos](https://github.com/mrlubos)
+
 ## 0.7.3
 
 ### Patch Changes

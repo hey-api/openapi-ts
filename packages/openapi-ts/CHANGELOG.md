@@ -1,5 +1,24 @@
 # @hey-api/openapi-ts
 
+## 0.94.3
+
+### Patch Changes
+
+- **output**: pass context as second argument in `module.resolve()` function ([#3615](https://github.com/hey-api/openapi-ts/pull/3615)) ([`b6a65d6`](https://github.com/hey-api/openapi-ts/commit/b6a65d6bb3ff1895f2189af858e3424733154bdf)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@hey-api/client-nuxt)**: preserve AbortSignal, FormData, and ReadableStream in unwrapRefs ([#3614](https://github.com/hey-api/openapi-ts/pull/3614)) ([`129afa0`](https://github.com/hey-api/openapi-ts/commit/129afa052b61d71fe4d0d7f5568b4ea38dead44c)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **parser**: fix: self-referencing discriminator ([#3601](https://github.com/hey-api/openapi-ts/pull/3601)) ([`857eb19`](https://github.com/hey-api/openapi-ts/commit/857eb1983fa1ab0f048d426a31835ede563a2c00)) by [@pgraug](https://github.com/pgraug)
+
+- **output**: add `module` option ([#3616](https://github.com/hey-api/openapi-ts/pull/3616)) ([`e4eea23`](https://github.com/hey-api/openapi-ts/commit/e4eea23ab23fb704dfdb9aaad63989be34d5093c)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@hey-api/transformers)**: expose `plugin` and `$` in transformer function context ([#3610](https://github.com/hey-api/openapi-ts/pull/3610)) ([`18ccc81`](https://github.com/hey-api/openapi-ts/commit/18ccc81ae75718157949c9724d86d6225f0c0eb0)) by [@mrlubos](https://github.com/mrlubos)
+
+### Updated Dependencies:
+
+- @hey-api/shared@0.2.5
+- @hey-api/codegen-core@0.7.4
+
 ## 0.94.2
 
 ### Patch Changes
