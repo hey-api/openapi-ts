@@ -1,5 +1,14 @@
 # @hey-api/openapi-python
 
+## 0.0.12
+
+### Patch Changes
+
+### Updated Dependencies:
+
+- @hey-api/shared@0.2.5
+- @hey-api/codegen-core@0.7.4
+
 ## 0.0.11
 
 ### Patch Changes
