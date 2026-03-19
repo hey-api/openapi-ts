@@ -15,9 +15,7 @@ export interface DecoratorMethods extends Node {
   ): this;
 }
 
-export function DecoratorMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
-  Base: TBase,
-) {
+export function DecoratorMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base: TBase) {
   abstract class Decorator extends Base {
     protected decorators: Array<DecoratorTsDsl> = [];
 

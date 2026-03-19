@@ -1,11 +1,11 @@
-import { definePluginConfig } from '~/plugins/shared/utils/config';
+import { definePluginConfig } from '@hey-api/shared';
 
 import { handler } from './plugin';
 import type { HeyApiSchemasPlugin } from './types';
 
 export const defaultConfig: HeyApiSchemasPlugin['Config'] = {
   config: {
-    exportFromIndex: false,
+    includeInEntry: false,
     nameBuilder: (name) => `${name}Schema`,
     type: 'json',
   },

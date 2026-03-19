@@ -1,7 +1,6 @@
 import path from 'node:path';
 
 import { sync } from 'cross-spawn';
-import { describe, expect, it } from 'vitest';
 
 import { getSpecsPath } from '../../utils';
 

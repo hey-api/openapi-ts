@@ -1,8 +1,8 @@
-import type { AnalysisContext, Node, NodeName } from '@hey-api/codegen-core';
+import type { AnalysisContext, Node } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import type { ParamCtor } from '../decl/param';
+import type { ParamCtor, ParamFn, ParamName } from '../decl/param';
 import { ParamTsDsl } from '../decl/param';
 import type { BaseCtor, MixinCtor } from './types';
 
@@ -15,9 +15,7 @@ export interface ParamMethods extends Node {
   params(...params: ReadonlyArray<MaybeTsDsl<ts.ParameterDeclaration>>): this;
 }
 
-export function ParamMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
-  Base: TBase,
-) {
+export function ParamMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base: TBase) {
   abstract class Param extends Base {
     protected _params: Array<MaybeTsDsl<ts.ParameterDeclaration>> = [];
 
@@ -28,18 +26,13 @@ export function ParamMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
       }
     }
 
-    protected param(
-      name: NodeName | ((p: ParamTsDsl) => void),
-      fn?: (p: ParamTsDsl) => void,
-    ): this {
+    protected param(name: ParamName, fn?: ParamFn): this {
       const p = new ParamTsDsl(name, fn);
       this._params.push(p);
       return this;
     }
 
-    protected params(
-      ...params: ReadonlyArray<MaybeTsDsl<ts.ParameterDeclaration>>
-    ): this {
+    protected params(...params: ReadonlyArray<MaybeTsDsl<ts.ParameterDeclaration>>): this {
       this._params.push(...params);
       return this;
     }

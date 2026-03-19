@@ -61,8 +61,6 @@ export class TypeObjectTsDsl extends Mixed {
   }
 
   override toAst() {
-    return ts.factory.createTypeLiteralNode(
-      this.$node([...this._props.values()]),
-    );
+    return ts.factory.createTypeLiteralNode(this.$node([...this._props.values()]));
   }
 }

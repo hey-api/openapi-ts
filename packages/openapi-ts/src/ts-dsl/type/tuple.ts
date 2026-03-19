@@ -30,8 +30,6 @@ export class TypeTupleTsDsl extends Mixed {
   }
 
   override toAst() {
-    return ts.factory.createTupleTypeNode(
-      this._elements.map((t) => this.$type(t)),
-    );
+    return ts.factory.createTupleTypeNode(this._elements.map((t) => this.$type(t)));
   }
 }

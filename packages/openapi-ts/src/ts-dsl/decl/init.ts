@@ -12,11 +12,7 @@ import { BlockTsDsl } from '../stmt/block';
 const Mixed = DecoratorMixin(
   DoMixin(
     DocMixin(
-      ParamMixin(
-        PrivateMixin(
-          ProtectedMixin(PublicMixin(TsDsl<ts.ConstructorDeclaration>)),
-        ),
-      ),
+      ParamMixin(PrivateMixin(ProtectedMixin(PublicMixin(TsDsl<ts.ConstructorDeclaration>)))),
     ),
   ),
 );

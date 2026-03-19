@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import type { Pet } from '@/client'
-import type { RequestOptions } from '@/client/client'
-import { PiniaColadaDevtools } from '@pinia/colada-devtools'
-import { createClient } from '@/client/client'
-import { PetSchema } from '@/client/schemas.gen'
-import { addPetMutation, getPetByIdQuery, updatePetMutation } from '@/client/@pinia/colada.gen'
-import { useQuery, useMutation, useQueryCache } from '@pinia/colada'
-import { ref, watch } from 'vue'
+import type { Pet } from '@/client';
+import type { RequestOptions } from '@/client/client';
+import { PiniaColadaDevtools } from '@pinia/colada-devtools';
+import { createClient } from '@/client/client';
+import { PetSchema } from '@/client/schemas.gen';
+import { addPetMutation, getPetByIdQuery, updatePetMutation } from '@/client/@pinia/colada.gen';
+import { useQuery, useMutation, useQueryCache } from '@pinia/colada';
+import { ref, watch } from 'vue';
 
 const localClient = createClient({
   // set default base url for requests made by this client
@@ -17,92 +17,92 @@ const localClient = createClient({
    * internal service client.
    */
   headers: {
-    Authorization: 'Bearer <token_from_local_client>'
-  }
-})
+    Authorization: 'Bearer <token_from_local_client>',
+  },
+});
 
 localClient.interceptors.request.use((request: Request, options: RequestOptions) => {
   // Middleware is great for adding authorization tokens to requests made to
   // protected paths. Headers are set randomly here to allow surfacing the
   // default headers, too.
   if (options.url === '/pet/{petId}' && options.method === 'GET' && Math.random() < 0.5) {
-    request.headers.set('Authorization', 'Bearer <token_from_interceptor>')
+    request.headers.set('Authorization', 'Bearer <token_from_interceptor>');
   }
-  return request
-})
+  return request;
+});
 
-const isPetNameRequired = PetSchema.required.includes('name')
+const isPetNameRequired = PetSchema.required.includes('name');
 
-const petId = ref<number | undefined>()
-const petInput = ref({ name: '', category: '' })
+const petId = ref<number | undefined>();
+const petInput = ref({ name: '', category: '' });
 
 const { data: pet, error } = useQuery(() => ({
   ...getPetByIdQuery({
     path: {
-      petId: petId.value as number
-    }
+      petId: petId.value as number,
+    },
   }),
-  enabled: petId.value !== undefined
-}))
-const { mutateAsync: createPet } = useMutation(addPetMutation())
-const { mutateAsync: updatePet } = useMutation(updatePetMutation())
+  enabled: petId.value !== undefined,
+}));
+const { mutateAsync: createPet } = useMutation(addPetMutation());
+const { mutateAsync: updatePet } = useMutation(updatePetMutation());
 
-const queryCache = useQueryCache()
+const queryCache = useQueryCache();
 async function invalidateCurrentPet() {
   const { key } = getPetByIdQuery({
     path: {
-      petId: petId.value as number
-    }
-  })
-  await queryCache.invalidateQueries({ key, exact: true })
+      petId: petId.value as number,
+    },
+  });
+  await queryCache.invalidateQueries({ key, exact: true });
 }
 
 async function updatePetIdAndInvalidate(newId: number | undefined) {
   if (newId !== undefined) {
-    petId.value = newId
+    petId.value = newId;
   }
 
   if (petId.value !== undefined) {
-    await invalidateCurrentPet()
+    await invalidateCurrentPet();
   }
 }
 
 async function handleAddPet() {
-  if (isPetNameRequired && !petInput.value.name) return
+  if (isPetNameRequired && !petInput.value.name) return;
 
-  const result = await createPet({ body: buildPetBody() })
-  if (!result) return
+  const result = await createPet({ body: buildPetBody() });
+  if (!result) return;
 
-  await updatePetIdAndInvalidate(result.id)
+  await updatePetIdAndInvalidate(result.id);
 }
 
 async function handleUpdatePet() {
-  if (!pet.value) return
+  if (!pet.value) return;
 
   const result = await updatePet({
     body: buildPetBody(pet.value),
     headers: {
-      Authorization: 'Bearer <token_from_method>'
-    }
-  })
-  if (!result) return
+      Authorization: 'Bearer <token_from_method>',
+    },
+  });
+  if (!result) return;
 
-  await updatePetIdAndInvalidate(result.id)
+  await updatePetIdAndInvalidate(result.id);
 }
 
 function randomInt(min: number, max: number) {
-  return Math.floor(Math.random() * (max - min + 1) + min)
+  return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
 function setRandomPetId() {
-  petId.value = randomInt(1, 10)
+  petId.value = randomInt(1, 10);
 }
 
 function buildPetBody(base?: Partial<Pet>) {
   return {
     category: {
       id: base?.category?.id ?? 0,
-      name: petInput.value.category
+      name: petInput.value.category,
     },
     id: base?.id ?? 0,
     name: petInput.value.name,
@@ -111,15 +111,15 @@ function buildPetBody(base?: Partial<Pet>) {
     tags: [
       {
         id: 0,
-        name: 'string'
-      }
-    ]
-  }
+        name: 'string',
+      },
+    ],
+  };
 }
 
 watch(error, (error) => {
-  console.error(error)
-})
+  console.error(error);
+});
 </script>
 
 <template>

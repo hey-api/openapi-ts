@@ -1,0 +1,23 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build:openapi-ts",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["turbo", "run", "build", "--filter=@hey-api/openapi-ts"],
+      "group": "build",
+      "problemMatcher": ["$tsc"],
+      "presentation": { "reveal": "silent", "close": true }
+    },
+    {
+      "label": "build:openapi-python",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["turbo", "run", "build", "--filter=@hey-api/openapi-python"],
+      "group": "build",
+      "problemMatcher": ["$tsc"],
+      "presentation": { "reveal": "silent", "close": true }
+    }
+  ]
+}

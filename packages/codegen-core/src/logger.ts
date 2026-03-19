@@ -23,10 +23,7 @@ const idEnd = (id: string) => `${id}-end`;
 const idLength = (id: string) => `${id}-length`;
 const idStart = (id: string) => `${id}-start`;
 
-const getSeverity = (
-  duration: number,
-  percentage: number,
-): Severity | undefined => {
+const getSeverity = (duration: number, percentage: number): Severity | undefined => {
   if (duration > 200) {
     return {
       color: colors.red,
@@ -134,15 +131,10 @@ export class Logger {
 
     parent.events.forEach((event, index) => {
       try {
-        const measure = performance.measure(
-          idLength(event.id),
-          idStart(event.id),
-          idEnd(event.id),
-        );
+        const measure = performance.measure(idLength(event.id), idStart(event.id), idEnd(event.id));
         const duration = Math.ceil(measure.duration * 100) / 100;
         const percentage =
-          Math.ceil((measure.duration / parent.measure.duration) * 100 * 100) /
-          100;
+          Math.ceil((measure.duration / parent.measure.duration) * 100 * 100) / 100;
         const severity = indent ? getSeverity(duration, percentage) : undefined;
 
         let durationLabel = `${duration.toFixed(2).padStart(8)}ms`;
@@ -155,9 +147,7 @@ export class Logger {
         const maxLength = 38 - prefix.length;
 
         const percentageBranch = !indent ? '' : '↳ ';
-        const percentagePrefix = indent
-          ? ' '.repeat(indent - 1) + percentageBranch
-          : '';
+        const percentagePrefix = indent ? ' '.repeat(indent - 1) + percentageBranch : '';
         let percentageLabel = `${percentagePrefix}${percentage.toFixed(2)}%`;
         if (severity?.type === 'percentage') {
           percentageLabel = severity.color(percentageLabel);

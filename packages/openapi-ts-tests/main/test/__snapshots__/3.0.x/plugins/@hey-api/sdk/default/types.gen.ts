@@ -9,9 +9,9 @@ export type ClientOptions = {
  */
 export type _400 = string;
 
-export type ExternalRefA = ExternalSharedExternalSharedModel;
+export type ExternalRefA = ExternalSharedModel;
 
-export type ExternalRefB = ExternalSharedExternalSharedModel;
+export type ExternalRefB = ExternalSharedModel;
 
 /**
  * Testing multiline comments in string: First line
@@ -632,6 +632,7 @@ export type ModelWithPattern = {
     patternWithSingleQuotes?: string;
     patternWithNewline?: string;
     patternWithBacktick?: string;
+    patternWithUnicode?: string;
 };
 
 export type File = {
@@ -703,7 +704,7 @@ export type ModelWithAdditionalPropertiesEqTrue = {
      * This is a simple string property
      */
     prop?: string;
-    [key: string]: unknown | string | undefined;
+    [key: string]: unknown;
 };
 
 export type NestedAnyOfArraysNullable = {
@@ -733,6 +734,13 @@ export type CharactersInDescription = string;
 
 export type ModelWithNullableObject = {
     data?: NullableObject;
+};
+
+/**
+ * An object with additional properties that can be null
+ */
+export type ModelWithAdditionalPropertiesRef = {
+    [key: string]: NullableObject | null;
 };
 
 export type ModelWithOneOfEnum = {
@@ -964,7 +972,7 @@ export type GenericSchemaDuplicateIssue1SystemString = {
     readonly hasError?: boolean;
 };
 
-export type ExternalSharedExternalSharedModel = {
+export type ExternalSharedModel = {
     id: string;
     name?: string;
 };
@@ -1011,6 +1019,7 @@ export type ModelWithPatternWritable = {
     patternWithSingleQuotes?: string;
     patternWithNewline?: string;
     patternWithBacktick?: string;
+    patternWithUnicode?: string;
 };
 
 export type FileWritable = {

@@ -1,12 +1,8 @@
-import type {
-  ArrayStyle,
-  ObjectStyle,
-  SerializerOptions,
-} from './pathSerializer';
+import type { ArrayStyle, ObjectStyle, SerializerOptions } from './pathSerializer';
 
 export type QuerySerializer = (query: Record<string, unknown>) => string;
 
-export type BodySerializer = (body: any) => any;
+export type BodySerializer = (body: unknown) => unknown;
 
 type QuerySerializerOptionsObject = {
   allowReserved?: boolean;
@@ -30,11 +26,7 @@ const serializeFormDataPair = (data: FormData, key: string, value: unknown) => {
   }
 };
 
-const serializeUrlSearchParamsPair = (
-  data: URLSearchParams,
-  key: string,
-  value: unknown,
-) => {
+const serializeUrlSearchParamsPair = (data: URLSearchParams, key: string, value: unknown) => {
   if (typeof value === 'string') {
     data.append(key, value);
   } else {
@@ -43,12 +35,10 @@ const serializeUrlSearchParamsPair = (
 };
 
 export const formDataBodySerializer = {
-  bodySerializer: <T extends Record<string, any> | Array<Record<string, any>>>(
-    body: T,
-  ) => {
+  bodySerializer: (body: unknown) => {
     const data = new FormData();
 
-    Object.entries(body).forEach(([key, value]) => {
+    Object.entries(body as Record<string, unknown>).forEach(([key, value]) => {
       if (value === undefined || value === null) {
         return;
       }
@@ -64,19 +54,15 @@ export const formDataBodySerializer = {
 };
 
 export const jsonBodySerializer = {
-  bodySerializer: <T>(body: T) =>
-    JSON.stringify(body, (_key, value) =>
-      typeof value === 'bigint' ? value.toString() : value,
-    ),
+  bodySerializer: (body: unknown) =>
+    JSON.stringify(body, (_key, value) => (typeof value === 'bigint' ? value.toString() : value)),
 };
 
 export const urlSearchParamsBodySerializer = {
-  bodySerializer: <T extends Record<string, any> | Array<Record<string, any>>>(
-    body: T,
-  ) => {
+  bodySerializer: (body: unknown) => {
     const data = new URLSearchParams();
 
-    Object.entries(body).forEach(([key, value]) => {
+    Object.entries(body as Record<string, unknown>).forEach(([key, value]) => {
       if (value === undefined || value === null) {
         return;
       }

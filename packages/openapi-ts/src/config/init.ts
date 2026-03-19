@@ -47,9 +47,7 @@ export async function resolveJobs({
 
     if (!Object.keys(dependencies).length) {
       // TODO: handle dependencies for multiple configs properly?
-      dependencies = getProjectDependencies(
-        loaded.foundConfig ? loaded.configFile : undefined,
-      );
+      dependencies = getProjectDependencies(loaded.foundConfig ? loaded.configFile : undefined);
     }
 
     configs.push(...loaded.configs);
@@ -58,9 +56,7 @@ export async function resolveJobs({
 
   const eventBuild = logger.timeEvent('build');
   const jobs = validateJobs(expandToJobs(configs));
-  const resolvedJobs = jobs.map((validated) =>
-    resolveConfig(validated, dependencies),
-  );
+  const resolvedJobs = jobs.map((validated) => resolveConfig(validated, dependencies));
   eventBuild.timeEnd();
 
   return {

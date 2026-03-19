@@ -1,29 +1,18 @@
-import { ref } from '@hey-api/codegen-core';
+import type { IR } from '@hey-api/shared';
+import { applyNaming, operationPagination } from '@hey-api/shared';
 
-import { operationPagination } from '~/ir/operation';
-import type { IR } from '~/ir/types';
 import {
   createOperationComment,
   isOperationOptionsRequired,
-} from '~/plugins/shared/utils/operation';
-import type { TsDsl } from '~/ts-dsl';
-import { $ } from '~/ts-dsl';
-import { applyNaming } from '~/utils/naming';
-
-import {
-  createQueryKeyFunction,
-  createQueryKeyType,
-  queryKeyStatement,
-} from '../queryKey';
+} from '../../../../plugins/shared/utils/operation';
+import type { TsDsl } from '../../../../ts-dsl';
+import { $ } from '../../../../ts-dsl';
+import { createQueryKeyFunction, createQueryKeyType, queryKeyStatement } from '../queryKey';
 import { handleMeta } from '../shared/meta';
 import { useTypeData, useTypeError, useTypeResponse } from '../shared/useType';
 import type { PluginInstance } from '../types';
 
-const createInfiniteParamsFunction = ({
-  plugin,
-}: {
-  plugin: PluginInstance;
-}) => {
+const createInfiniteParamsFunction = ({ plugin }: { plugin: PluginInstance }) => {
   const symbolCreateInfiniteParams = plugin.symbol(
     applyNaming('createInfiniteParams', {
       case: plugin.config.case,
@@ -144,9 +133,7 @@ export const createInfiniteQueryOptions = ({
     createInfiniteParamsFunction({ plugin });
   }
 
-  const symbolInfiniteQueryOptions = plugin.external(
-    `${plugin.name}.infiniteQueryOptions`,
-  );
+  const symbolInfiniteQueryOptions = plugin.external(`${plugin.name}.infiniteQueryOptions`);
   const symbolInfiniteDataType = plugin.external(`${plugin.name}.InfiniteData`);
 
   const typeData = useTypeData({ operation, plugin });
@@ -168,13 +155,7 @@ export const createInfiniteQueryOptions = ({
     ),
   );
   const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
-  const type = pluginTypeScript.api.schemaToType({
-    plugin: pluginTypeScript,
-    schema: pagination.schema,
-    state: {
-      path: ref([]),
-    },
-  });
+  const type = pluginTypeScript.api.schemaToType(pluginTypeScript, pagination.schema);
 
   const symbolInfiniteQueryKey = plugin.symbol(
     applyNaming(operation.id, plugin.config.infiniteQueryKeys),
@@ -223,24 +204,16 @@ export const createInfiniteQueryOptions = ({
           .otherwise(
             $.object()
               .pretty()
-              .prop(
-                pagination.in,
-                $.object().pretty().prop(pagination.name, $('pageParam')),
-              ),
+              .prop(pagination.in, $.object().pretty().prop(pagination.name, $('pageParam'))),
           ),
       ),
-    $.const('params').assign(
-      $(symbolCreateInfiniteParams).call('queryKey', 'page'),
-    ),
+    $.const('params').assign($(symbolCreateInfiniteParams).call('queryKey', 'page')),
   ];
 
   if (plugin.getPluginOrThrow('@hey-api/sdk').config.responseStyle === 'data') {
     statements.push($.return(awaitSdkFn));
   } else {
-    statements.push(
-      $.const().object('data').assign(awaitSdkFn),
-      $.return('data'),
-    );
+    statements.push($.const().object('data').assign(awaitSdkFn), $.return('data'));
   }
 
   const symbolInfiniteQueryOptionsFn = plugin.symbol(
@@ -248,9 +221,7 @@ export const createInfiniteQueryOptions = ({
   );
   const statement = $.const(symbolInfiniteQueryOptionsFn)
     .export()
-    .$if(plugin.config.comments && createOperationComment(operation), (c, v) =>
-      c.doc(v),
-    )
+    .$if(plugin.config.comments && createOperationComment(operation), (c, v) => c.doc(v))
     .assign(
       $.func()
         .param('options', (p) => p.required(isRequiredOptions).type(typeData))
@@ -269,9 +240,8 @@ export const createInfiniteQueryOptions = ({
                       .do(...statements),
                   )
                   .prop('queryKey', $(symbolInfiniteQueryKey).call('options'))
-                  .$if(
-                    handleMeta(plugin, operation, 'infiniteQueryOptions'),
-                    (o, v) => o.prop('meta', v),
+                  .$if(handleMeta(plugin, operation, 'infiniteQueryOptions'), (o, v) =>
+                    o.prop('meta', v),
                   ),
               )
               .generics(

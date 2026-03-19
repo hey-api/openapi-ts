@@ -4,11 +4,7 @@ import type { PluginContext } from '~/plugins/types';
 import { resolveNaming } from '~/utils/naming';
 
 import { handler } from './plugin';
-import type {
-  OrpcContractPlugin,
-  RouterConfig,
-  UserRouterConfig,
-} from './types';
+import type { OrpcContractPlugin, RouterConfig, UserRouterConfig } from './types';
 
 function resolveRouter(
   input: OperationsStrategy | UserRouterConfig | undefined,

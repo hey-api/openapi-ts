@@ -447,6 +447,53 @@ export default {
 
 You can customize the naming and casing pattern for `requests` and `responses` schemas using the `.name` and `.case` options.
 
+### Schema Name
+
+Sometimes your schema names are auto-generated or follow a naming convention that produces verbose or awkward type names. You can rename schema component keys throughout the specification, automatically updating all `$ref` pointers. For example, stripping version markers from schema names, removing vendor prefixes, converting naming conventions, or shortening deeply qualified names.
+
+::: code-group
+
+<!-- prettier-ignore-start -->
+```js [function]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  parser: {
+    transforms: {
+      schemaName: (name) => { // [!code ++]
+        // Strip version markers: ServiceRoot_v1_20_0_ServiceRoot → ServiceRoot // [!code ++]
+        let clean = name.replace(/([A-Za-z\d]+)_v\d+_\d+_\d+_([A-Za-z\d]*)/g, (_, p1, p2) => // [!code ++]
+          p2.startsWith(p1) ? p2 : p1 + p2, // [!code ++]
+        ); // [!code ++]
+        // Deduplicate prefixes: Foo_Foo → Foo // [!code ++]
+        const m = clean.match(/^([A-Za-z\d]+)_\1([A-Za-z\d]*)$/); // [!code ++]
+        if (m) clean = m[1] + m[2]; // [!code ++]
+        return clean; // [!code ++]
+      }, // [!code ++]
+    },
+  },
+};
+```
+<!-- prettier-ignore-end -->
+
+```js [template]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  parser: {
+    transforms: {
+      schemaName: 'Api{{name}}', // [!code ++]
+    },
+  },
+};
+```
+
+:::
+
+::: tip Name Collisions
+If a transformed schema name conflicts with an existing schema, the rename is skipped for that schema to prevent overwrites. The original name is preserved.
+:::
+
 ## Pagination
 
 Paginated operations are detected by having a pagination keyword in its parameters or request body. By default, we consider the following to be pagination keywords: `after`, `before`, `cursor`, `offset`, `page`, and `start`.
@@ -503,7 +550,7 @@ export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   parser: {
-    hooks: {}, // configure global hooks here // [!code ++]
+    hooks: {}, // configure global hooks // [!code ++]
   },
 };
 ```
@@ -515,7 +562,7 @@ export default {
   plugins: [
     {
       name: '@tanstack/react-query',
-      '~hooks': {}, // configure plugin hooks here // [!code ++]
+      '~hooks': {}, // configure plugin hooks // [!code ++]
     },
   ],
 };
@@ -604,17 +651,88 @@ export default {
   parser: {
     hooks: {
       symbols: {
-        getFilePath: (symbol) => {
+        getFilePath: (symbol) => { // [!code ++]
           if (symbol.name) { // [!code ++]
             return symbol.name[0]?.toLowerCase(); // [!code ++]
           } // [!code ++]
-        },
+        }, // [!code ++]
       },
     },
   },
 };
 ```
 <!-- prettier-ignore-end -->
+
+Most plugins expose configuration options that allow you to rename many of the generated symbols. If you need even more control, use the `getName()` hook.
+
+#### Example: Enum naming
+
+By default, generated enums use the same name for both the type and the runtime value.
+
+::: code-group
+
+```ts [example]
+export const Flags = {
+  ALPHA: 'alpha',
+  BETA: 'beta',
+} as const;
+
+export type Flags = (typeof Flags)[keyof typeof Flags];
+```
+
+```js [config]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    {
+      enums: 'javascript',
+      name: '@hey-api/typescript',
+    },
+  ],
+};
+```
+
+:::
+
+While this code works perfectly fine due to TypeScript's declaration merging, let's say we want to use a different name for the type. We can accomplish this with the `getName()` hook.
+
+::: code-group
+
+```ts [example]
+export const Flags = {
+  ALPHA: 'alpha',
+  BETA: 'beta',
+} as const;
+
+export type FlagsType = (typeof Flags)[keyof typeof Flags]; // [!code ++]
+```
+
+<!-- prettier-ignore-start -->
+```js [config]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    {
+      enums: 'javascript',
+      name: '@hey-api/typescript',
+      '~hooks': {
+        symbols: {
+          getName({ meta, name, schema }) { // [!code ++]
+            if (schema?.type === 'enum' && meta.category === 'type') { // [!code ++]
+              return `${name}Type`; // [!code ++]
+            } // [!code ++]
+          }, // [!code ++]
+        },
+      },
+    },
+  ],
+};
+```
+<!-- prettier-ignore-end -->
+
+:::
 
 <!--@include: ../../partials/examples.md-->
 <!--@include: ../../partials/sponsors.md-->

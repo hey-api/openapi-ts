@@ -11,7 +11,7 @@ export class NewlineTsDsl extends TsDsl<ts.Identifier> {
     super.analyze(ctx);
   }
 
-  override toAst(): ts.Identifier {
+  override toAst() {
     return this.$node(new IdTsDsl('\n'));
   }
 }

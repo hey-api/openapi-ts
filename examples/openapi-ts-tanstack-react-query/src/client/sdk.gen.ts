@@ -95,9 +95,7 @@ class HeyApiRegistry<T> {
   get(key?: string): T {
     const instance = this.instances.get(key ?? this.defaultKey);
     if (!instance) {
-      throw new Error(
-        `No SDK client found. Create one with "new Sdk()" to fix this error.`,
-      );
+      throw new Error(`No SDK client found. Create one with "new Sdk()" to fix this error.`);
     }
     return instance;
   }
@@ -120,14 +118,8 @@ export class Sdk extends HeyApiClient {
    *
    * Add a new pet to the store.
    */
-  public addPet<ThrowOnError extends boolean = false>(
-    options: Options<AddPetData, ThrowOnError>,
-  ) {
-    return (options.client ?? this.client).post<
-      AddPetResponses,
-      AddPetErrors,
-      ThrowOnError
-    >({
+  public addPet<ThrowOnError extends boolean = false>(options: Options<AddPetData, ThrowOnError>) {
+    return (options.client ?? this.client).post<AddPetResponses, AddPetErrors, ThrowOnError>({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/pet',
       ...options,
@@ -146,11 +138,7 @@ export class Sdk extends HeyApiClient {
   public updatePet<ThrowOnError extends boolean = false>(
     options: Options<UpdatePetData, ThrowOnError>,
   ) {
-    return (options.client ?? this.client).put<
-      UpdatePetResponses,
-      UpdatePetErrors,
-      ThrowOnError
-    >({
+    return (options.client ?? this.client).put<UpdatePetResponses, UpdatePetErrors, ThrowOnError>({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/pet',
       ...options,
@@ -226,18 +214,16 @@ export class Sdk extends HeyApiClient {
   public getPetById<ThrowOnError extends boolean = false>(
     options: Options<GetPetByIdData, ThrowOnError>,
   ) {
-    return (options.client ?? this.client).get<
-      GetPetByIdResponses,
-      GetPetByIdErrors,
-      ThrowOnError
-    >({
-      security: [
-        { name: 'api_key', type: 'apiKey' },
-        { scheme: 'bearer', type: 'http' },
-      ],
-      url: '/pet/{petId}',
-      ...options,
-    });
+    return (options.client ?? this.client).get<GetPetByIdResponses, GetPetByIdErrors, ThrowOnError>(
+      {
+        security: [
+          { name: 'api_key', type: 'apiKey' },
+          { scheme: 'bearer', type: 'http' },
+        ],
+        url: '/pet/{petId}',
+        ...options,
+      },
+    );
   }
 
   /**
@@ -406,11 +392,10 @@ export class Sdk extends HeyApiClient {
   public loginUser<ThrowOnError extends boolean = false>(
     options?: Options<LoginUserData, ThrowOnError>,
   ) {
-    return (options?.client ?? this.client).get<
-      LoginUserResponses,
-      LoginUserErrors,
-      ThrowOnError
-    >({ url: '/user/login', ...options });
+    return (options?.client ?? this.client).get<LoginUserResponses, LoginUserErrors, ThrowOnError>({
+      url: '/user/login',
+      ...options,
+    });
   }
 
   /**
@@ -466,17 +451,15 @@ export class Sdk extends HeyApiClient {
   public updateUser<ThrowOnError extends boolean = false>(
     options: Options<UpdateUserData, ThrowOnError>,
   ) {
-    return (options.client ?? this.client).put<
-      UpdateUserResponses,
-      UpdateUserErrors,
-      ThrowOnError
-    >({
-      url: '/user/{username}',
-      ...options,
-      headers: {
-        'Content-Type': 'application/json',
-        ...options.headers,
+    return (options.client ?? this.client).put<UpdateUserResponses, UpdateUserErrors, ThrowOnError>(
+      {
+        url: '/user/{username}',
+        ...options,
+        headers: {
+          'Content-Type': 'application/json',
+          ...options.headers,
+        },
       },
-    });
+    );
   }
 }

@@ -1,4 +1,4 @@
-import { definePluginConfig } from '~/plugins/shared/utils/config';
+import { definePluginConfig, mappers } from '@hey-api/shared';
 
 import { Api } from './api';
 import { handler } from './plugin';
@@ -9,7 +9,7 @@ export const defaultConfig: ValibotPlugin['Config'] = {
   config: {
     case: 'camelCase',
     comments: true,
-    exportFromIndex: false,
+    includeInEntry: false,
     metadata: false,
   },
   handler,
@@ -21,11 +21,7 @@ export const defaultConfig: ValibotPlugin['Config'] = {
         enabled: true,
         name: 'v{{name}}',
       },
-      mappers: {
-        boolean: (enabled) => ({ enabled }),
-        function: (name) => ({ name }),
-        string: (name) => ({ name }),
-      },
+      mappers,
       value: plugin.config.definitions,
     });
 
@@ -35,11 +31,7 @@ export const defaultConfig: ValibotPlugin['Config'] = {
         enabled: true,
         name: 'v{{name}}Data',
       },
-      mappers: {
-        boolean: (enabled) => ({ enabled }),
-        function: (name) => ({ name }),
-        string: (name) => ({ name }),
-      },
+      mappers,
       value: plugin.config.requests,
     });
 
@@ -49,11 +41,7 @@ export const defaultConfig: ValibotPlugin['Config'] = {
         enabled: true,
         name: 'v{{name}}Response',
       },
-      mappers: {
-        boolean: (enabled) => ({ enabled }),
-        function: (name) => ({ name }),
-        string: (name) => ({ name }),
-      },
+      mappers,
       value: plugin.config.responses,
     });
 
@@ -63,11 +51,7 @@ export const defaultConfig: ValibotPlugin['Config'] = {
         enabled: true,
         name: 'v{{name}}WebhookRequest',
       },
-      mappers: {
-        boolean: (enabled) => ({ enabled }),
-        function: (name) => ({ name }),
-        string: (name) => ({ name }),
-      },
+      mappers,
       value: plugin.config.webhooks,
     });
   },

@@ -1,5 +1,79 @@
 # @hey-api/codegen-core
 
+## 0.7.3
+
+### Patch Changes
+
+- **internal**: remove TypeScript from peer dependencies ([#3566](https://github.com/hey-api/openapi-ts/pull/3566)) ([`b5f1e4b`](https://github.com/hey-api/openapi-ts/commit/b5f1e4b5f64cbf0bad2eff888177ac9c1881ba3e)) by [@mrlubos](https://github.com/mrlubos)
+
+### Updated Dependencies:
+
+- @hey-api/types@0.1.4
+
+## 0.7.2
+
+### Patch Changes
+
+- **log**: make group optional in warn method ([#3540](https://github.com/hey-api/openapi-ts/pull/3540)) ([`0512650`](https://github.com/hey-api/openapi-ts/commit/0512650988ce3c411492172e6bbe300f5440408f)) by [@mrlubos](https://github.com/mrlubos)
+
+## 0.7.1
+
+### Patch Changes
+
+- **internal**: log symbol meta if name is falsy ([#3448](https://github.com/hey-api/openapi-ts/pull/3448)) ([`c50f7bc`](https://github.com/hey-api/openapi-ts/commit/c50f7bcf5676f2783a412288d243aeaeabd9f8bd)) by [@mrlubos](https://github.com/mrlubos)
+
+## 0.7.0
+
+### Minor Changes
+
+- **BREAKING:** **symbol**: replace `exportFrom` array with `getExportFromFilePath()` function ([#3322](https://github.com/hey-api/openapi-ts/pull/3322)) ([`bfd43ec`](https://github.com/hey-api/openapi-ts/commit/bfd43ec6d638bfc97b6905dd9dee2c911ccea3e0)) by [@mrlubos](https://github.com/mrlubos)
+
+### Updated Symbol interface
+
+The `exportFrom` property has been replaced with the `getExportFromFilePath()` function. This allows you to dynamically determine export paths based on symbol properties. This is a low-level feature, so you're most likely unaffected.
+
+## 0.6.1
+
+### Patch Changes
+
+- **planner**: fix duplicate import when same symbol is imported as both type and value ([#3291](https://github.com/hey-api/openapi-ts/pull/3291)) ([`3c08e38`](https://github.com/hey-api/openapi-ts/commit/3c08e38b4daa5c1f4829bdfb7f088d73b0e0f1f1)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+## 0.6.0
+
+### Minor Changes
+
+- **BREAKING**: Drop CommonJS (CJS) support. This package is now **ESM-only**. ([#3251](https://github.com/hey-api/openapi-ts/pull/3251)) ([`7f19d59`](https://github.com/hey-api/openapi-ts/commit/7f19d5921dadfa96ecae84a5298b7aee1daee56d)) by [@mrlubos](https://github.com/mrlubos)
+
+### Removed CommonJS (CJS) support
+
+`@hey-api/codegen-core` is now ESM-only. This change simplifies the codebase, improves tree-shaking, and enables better integration with modern bundlers and TypeScript tooling.
+
+CommonJS entry points (`require()`, `module.exports`) are no longer supported. If you are in a CJS environment, you can still load the package dynamically using `import()` like:
+
+```js
+const { Project } = await import("@hey-api/codegen-core");
+```
+
+If you have previously written:
+
+```js
+const { Project } = require("@hey-api/codegen-core");
+```
+
+Migrate by updating your static imports:
+
+```js
+import { Project } from "@hey-api/codegen-core";
+```
+
+If your environment cannot use ESM, pin to a previous version.
+
+### Patch Changes
+
+### Updated Dependencies:
+
+- @hey-api/types@0.1.3
+
 ## 0.5.5
 
 ### Patch Changes

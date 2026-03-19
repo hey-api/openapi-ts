@@ -167,8 +167,7 @@ export type FindPetsByStatusResponses = {
   200: Array<Pet>;
 };
 
-export type FindPetsByStatusResponse =
-  FindPetsByStatusResponses[keyof FindPetsByStatusResponses];
+export type FindPetsByStatusResponse = FindPetsByStatusResponses[keyof FindPetsByStatusResponses];
 
 export type FindPetsByTagsData = {
   body?: never;
@@ -200,8 +199,7 @@ export type FindPetsByTagsResponses = {
   200: Array<Pet>;
 };
 
-export type FindPetsByTagsResponse =
-  FindPetsByTagsResponses[keyof FindPetsByTagsResponses];
+export type FindPetsByTagsResponse = FindPetsByTagsResponses[keyof FindPetsByTagsResponses];
 
 export type DeletePetData = {
   body?: never;
@@ -378,8 +376,7 @@ export type GetInventoryResponses = {
   };
 };
 
-export type GetInventoryResponse =
-  GetInventoryResponses[keyof GetInventoryResponses];
+export type GetInventoryResponse = GetInventoryResponses[keyof GetInventoryResponses];
 
 export type PlaceOrderData = {
   body?: Order;
@@ -480,8 +477,7 @@ export type GetOrderByIdResponses = {
   200: Order;
 };
 
-export type GetOrderByIdResponse =
-  GetOrderByIdResponses[keyof GetOrderByIdResponses];
+export type GetOrderByIdResponse = GetOrderByIdResponses[keyof GetOrderByIdResponses];
 
 export type CreateUserData = {
   /**
@@ -658,8 +654,7 @@ export type GetUserByNameResponses = {
   200: User;
 };
 
-export type GetUserByNameResponse =
-  GetUserByNameResponses[keyof GetUserByNameResponses];
+export type GetUserByNameResponse = GetUserByNameResponses[keyof GetUserByNameResponses];
 
 export type UpdateUserData = {
   /**

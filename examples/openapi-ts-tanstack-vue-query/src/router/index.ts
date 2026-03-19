@@ -1,6 +1,6 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router';
 
-import TanstackExample from '@/views/TanstackExample.vue'
+import TanstackExample from '@/views/TanstackExample.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -8,9 +8,9 @@ const router = createRouter({
     {
       component: TanstackExample,
       name: 'home',
-      path: '/'
-    }
-  ]
-})
+      path: '/',
+    },
+  ],
+});
 
-export default router
+export default router;

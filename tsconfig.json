@@ -1,0 +1,11 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./packages/codegen-core" },
+    { "path": "./packages/json-schema-ref-parser" },
+    { "path": "./packages/openapi-python" },
+    { "path": "./packages/openapi-ts" },
+    { "path": "./packages/shared" },
+    { "path": "./packages/types" }
+  ]
+}

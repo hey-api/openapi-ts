@@ -1,4 +1,4 @@
-import { definePluginConfig } from '~/plugins/shared/utils/config';
+import { definePluginConfig } from '@hey-api/shared';
 
 import { Api } from './api';
 import { handler } from './plugin';
@@ -8,7 +8,8 @@ export const defaultConfig: HeyApiTypeScriptPlugin['Config'] = {
   api: new Api(),
   config: {
     case: 'PascalCase',
-    exportFromIndex: true,
+    comments: true,
+    includeInEntry: true,
     topType: 'unknown',
   },
   handler,

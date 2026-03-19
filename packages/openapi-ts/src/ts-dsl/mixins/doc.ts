@@ -10,9 +10,7 @@ export interface DocMethods extends Node {
   doc(lines?: DocLines, fn?: DocFn): this;
 }
 
-export function DocMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
-  Base: TBase,
-) {
+export function DocMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base: TBase) {
   abstract class Doc extends Base {
     private _doc?: DocTsDsl;
 

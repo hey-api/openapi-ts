@@ -9,7 +9,7 @@
       "Foo": {
         "properties": {
           "type": {
-            "enum": ["foo", "bar"],
+            "enum": ["foo", "bar", "FooBar", "fooBar", "foo bar"],
             "type": "string"
           }
         },

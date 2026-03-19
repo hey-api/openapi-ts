@@ -3,7 +3,6 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { createClient, type UserConfig } from '@hey-api/openapi-ts';
-import { describe, expect, it } from 'vitest';
 
 import { getFilePaths, getSpecsPath } from '../../utils';
 
@@ -16,15 +15,19 @@ const outputDir = path.join(__dirname, 'generated', version);
 
 describe(`OpenAPI ${version}`, () => {
   const createConfig = (userConfig: UserConfig) => {
-    const input =
-      userConfig.input instanceof Array
-        ? userConfig.input[0]
-        : userConfig.input;
+    const input = userConfig.input instanceof Array ? userConfig.input[0] : userConfig.input;
     const inputPath = path.join(
       getSpecsPath(),
       version,
       typeof input === 'string' ? input : ((input?.path as string) ?? ''),
     );
+    const output = userConfig.output instanceof Array ? userConfig.output[0] : userConfig.output;
+    const outputPath = path.join(
+      outputDir,
+      typeof output === 'string' ? output : ((output?.path as string) ?? ''),
+    );
+    const nameConflictResolver =
+      typeof output === 'string' ? undefined : output?.nameConflictResolver;
     return {
       plugins: ['@hey-api/typescript'],
       ...userConfig,
@@ -38,10 +41,10 @@ describe(`OpenAPI ${version}`, () => {
       logs: {
         level: 'silent',
       },
-      output: path.join(
-        outputDir,
-        typeof userConfig.output === 'string' ? userConfig.output : '',
-      ),
+      output: {
+        nameConflictResolver,
+        path: outputPath,
+      },
     } as const satisfies UserConfig;
   };
 
@@ -78,10 +81,8 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'array-items-one-of-length-1.yaml',
         output: 'array-items-one-of-length-1',
-        plugins: ['@hey-api/typescript', 'valibot'],
       }),
-      description:
-        'generates correct array when items are oneOf array with single item',
+      description: 'generates correct array when items are oneOf array with single item',
     },
     {
       config: createConfig({
@@ -94,11 +95,7 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'body-response-text-plain.yaml',
         output: 'body-response-text-plain',
-        plugins: [
-          '@hey-api/client-fetch',
-          '@hey-api/typescript',
-          '@hey-api/sdk',
-        ],
+        plugins: ['@hey-api/client-fetch', '@hey-api/typescript', '@hey-api/sdk'],
       }),
       description: 'handle text/plain content type',
     },
@@ -172,11 +169,7 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'body-binary-format.yaml',
         output: 'body-binary-format',
-        plugins: [
-          '@hey-api/client-fetch',
-          '@hey-api/typescript',
-          '@hey-api/sdk',
-        ],
+        plugins: ['@hey-api/client-fetch', '@hey-api/typescript', '@hey-api/sdk'],
       }),
       description: 'handles binary format request body',
     },
@@ -184,11 +177,7 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'content-types.yaml',
         output: 'content-types',
-        plugins: [
-          '@hey-api/client-axios',
-          '@hey-api/typescript',
-          '@hey-api/sdk',
-        ],
+        plugins: ['@hey-api/client-axios', '@hey-api/typescript', '@hey-api/sdk'],
       }),
       description: 'handles content types',
     },
@@ -229,6 +218,28 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'discriminator-allof-inline.json',
+        output: 'discriminator-allof-inline',
+      }),
+      description:
+        'handles allOf where inline schema discriminator mapping should take priority over $ref discriminator fallback',
+    },
+    {
+      config: createConfig({
+        input: 'discriminator-object-self-mapped.json',
+        output: 'discriminator-object-self-mapped',
+      }),
+      description: 'handles object discriminator mappings that include the schema itself',
+    },
+    {
+      config: createConfig({
+        input: 'discriminator-non-string.yaml',
+        output: 'discriminator-non-string',
+      }),
+      description: 'handles non-string discriminator property types',
+    },
+    {
+      config: createConfig({
         input: 'enum-escape.json',
         output: 'enum-escape',
       }),
@@ -243,7 +254,6 @@ describe(`OpenAPI ${version}`, () => {
             enums: 'root',
           },
         },
-        plugins: ['@hey-api/typescript'],
       }),
       description: 'exports inline enums',
     },
@@ -285,6 +295,49 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'enum-inline.json',
+        output: {
+          nameConflictResolver: ({ attempt, baseName }) =>
+            attempt === 0 ? baseName : `${baseName}_N${attempt + 1}`,
+          path: 'enum-inline-name-resolver',
+        },
+        parser: {
+          transforms: {
+            enums: 'root',
+          },
+        },
+        plugins: [
+          {
+            enums: 'javascript',
+            name: '@hey-api/typescript',
+          },
+        ],
+      }),
+      description: 'exports inline enums with name conflict resolver',
+    },
+    {
+      config: createConfig({
+        input: 'enum-inline.json',
+        output: {
+          nameConflictResolver: () => null,
+          path: 'enum-inline-name-resolver-null',
+        },
+        parser: {
+          transforms: {
+            enums: 'root',
+          },
+        },
+        plugins: [
+          {
+            enums: 'javascript',
+            name: '@hey-api/typescript',
+          },
+        ],
+      }),
+      description: 'exports inline enums with name conflict resolver returning null',
+    },
+    {
+      config: createConfig({
         input: 'enum-names-values.json',
         output: 'enum-names-values',
       }),
@@ -304,8 +357,7 @@ describe(`OpenAPI ${version}`, () => {
           },
         ],
       }),
-      description:
-        'handles various enum names and values (JavaScript, SCREAMING_SNAKE_CASE)',
+      description: 'handles various enum names and values (JavaScript, SCREAMING_SNAKE_CASE)',
     },
     {
       config: createConfig({
@@ -321,8 +373,7 @@ describe(`OpenAPI ${version}`, () => {
           },
         ],
       }),
-      description:
-        'handles various enum names and values (JavaScript, PascalCase)',
+      description: 'handles various enum names and values (JavaScript, PascalCase)',
     },
     {
       config: createConfig({
@@ -338,8 +389,7 @@ describe(`OpenAPI ${version}`, () => {
           },
         ],
       }),
-      description:
-        'handles various enum names and values (JavaScript, camelCase)',
+      description: 'handles various enum names and values (JavaScript, camelCase)',
     },
     {
       config: createConfig({
@@ -355,8 +405,7 @@ describe(`OpenAPI ${version}`, () => {
           },
         ],
       }),
-      description:
-        'handles various enum names and values (JavaScript, snake_case)',
+      description: 'handles various enum names and values (JavaScript, snake_case)',
     },
     {
       config: createConfig({
@@ -372,8 +421,7 @@ describe(`OpenAPI ${version}`, () => {
           },
         ],
       }),
-      description:
-        'handles various enum names and values (JavaScript, preserve)',
+      description: 'handles various enum names and values (JavaScript, preserve)',
     },
     {
       config: createConfig({
@@ -390,8 +438,7 @@ describe(`OpenAPI ${version}`, () => {
           },
         ],
       }),
-      description:
-        'handles various enum names and values (JavaScript, preserve, ignore null)',
+      description: 'handles various enum names and values (JavaScript, preserve, ignore null)',
     },
     {
       config: createConfig({
@@ -407,8 +454,7 @@ describe(`OpenAPI ${version}`, () => {
           },
         ],
       }),
-      description:
-        'handles various enum names and values (TypeScript, SCREAMING_SNAKE_CASE)',
+      description: 'handles various enum names and values (TypeScript, SCREAMING_SNAKE_CASE)',
     },
     {
       config: createConfig({
@@ -424,8 +470,7 @@ describe(`OpenAPI ${version}`, () => {
           },
         ],
       }),
-      description:
-        'handles various enum names and values (TypeScript, PascalCase)',
+      description: 'handles various enum names and values (TypeScript, PascalCase)',
     },
     {
       config: createConfig({
@@ -441,8 +486,7 @@ describe(`OpenAPI ${version}`, () => {
           },
         ],
       }),
-      description:
-        'handles various enum names and values (TypeScript, camelCase)',
+      description: 'handles various enum names and values (TypeScript, camelCase)',
     },
     {
       config: createConfig({
@@ -458,8 +502,7 @@ describe(`OpenAPI ${version}`, () => {
           },
         ],
       }),
-      description:
-        'handles various enum names and values (TypeScript, snake_case)',
+      description: 'handles various enum names and values (TypeScript, snake_case)',
     },
     {
       config: createConfig({
@@ -475,8 +518,7 @@ describe(`OpenAPI ${version}`, () => {
           },
         ],
       }),
-      description:
-        'handles various enum names and values (TypeScript, preserve)',
+      description: 'handles various enum names and values (TypeScript, preserve)',
     },
     {
       config: createConfig({
@@ -498,7 +540,6 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'enum-null.json',
         output: 'enum-null',
-        plugins: ['@hey-api/typescript', 'valibot'],
       }),
       description: 'handles null enums',
     },
@@ -520,8 +561,7 @@ describe(`OpenAPI ${version}`, () => {
         output: 'internal-name-conflict',
         plugins: ['@hey-api/client-fetch', '@tanstack/react-query'],
       }),
-      description:
-        'handles conflict between generated code and internal artifacts',
+      description: 'handles conflict between generated code and internal artifacts',
     },
     {
       config: createConfig({
@@ -550,7 +590,6 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'ref-deep.yaml',
         output: 'ref-deep',
-        plugins: ['@hey-api/typescript'],
       }),
       description: 'handles deep references',
     },
@@ -561,6 +600,42 @@ describe(`OpenAPI ${version}`, () => {
         plugins: ['@hey-api/client-fetch', '@hey-api/typescript'],
       }),
       description: 'handles read-only and write-only types',
+    },
+    {
+      config: createConfig({
+        input: 'transforms-schemas-name.yaml',
+        output: 'transforms-schemas-name',
+        parser: {
+          transforms: {
+            schemaName: (name: string) => {
+              // Strip version markers: User_v1_0_0_User → User
+              let clean = name.replace(/([A-Za-z\d]+)_v\d+_\d+_\d+_([A-Za-z\d]*)/g, (_, p1, p2) =>
+                p2.startsWith(p1) ? p2 : p1 + p2,
+              );
+              // Deduplicate prefixes: Foo_Foo → Foo
+              const m = clean.match(/^([A-Za-z\d]+)_\1([A-Za-z\d]*)$/);
+              if (m) clean = m[1]! + m[2]!;
+              return clean;
+            },
+          },
+        },
+      }),
+      description: 'handles schema name transforms',
+    },
+    {
+      config: createConfig({
+        input: 'transforms-schemas-name-collision.yaml',
+        output: 'transforms-schemas-name-collision',
+        parser: {
+          transforms: {
+            schemaName: (name: string) =>
+              // Try to rename all _vX_User schemas to "User"
+              // This should cause collisions since "User" already exists
+              name.replace(/_v\d+_User$/, ''),
+          },
+        },
+      }),
+      description: 'handles schema name collision prevention',
     },
     {
       config: createConfig({
@@ -650,6 +725,14 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'transformers-allof-response-wrapper.json',
+        output: 'transformers-allof-response-wrapper',
+        plugins: ['@hey-api/client-fetch', '@hey-api/transformers'],
+      }),
+      description: 'transforms dates in allOf response wrapper (paginated response)',
+    },
+    {
+      config: createConfig({
         input: 'transformers-any-of-null.json',
         output: 'transformers-any-of-null',
         plugins: ['@hey-api/client-fetch', '@hey-api/transformers'],
@@ -681,7 +764,6 @@ describe(`OpenAPI ${version}`, () => {
             propertiesRequiredByDefault: true,
           },
         },
-        plugins: ['@hey-api/typescript'],
       }),
       description: 'makes all object properties required by default',
     },
@@ -692,31 +774,18 @@ describe(`OpenAPI ${version}`, () => {
       }),
       description: 'gracefully handles invalid type',
     },
-    {
-      config: createConfig({
-        input: 'validators.json',
-        output: 'validators',
-        plugins: ['valibot'],
-      }),
-      description: 'generates validator schemas',
-    },
   ];
 
   it.each(scenarios)('$description', async ({ config }) => {
     await createClient(config);
 
-    const filePaths = getFilePaths(config.output);
+    const filePaths = getFilePaths(config.output.path);
 
     await Promise.all(
       filePaths.map(async (filePath) => {
         const fileContent = fs.readFileSync(filePath, 'utf-8');
         await expect(fileContent).toMatchFileSnapshot(
-          path.join(
-            __dirname,
-            '__snapshots__',
-            version,
-            filePath.slice(outputDir.length + 1),
-          ),
+          path.join(__dirname, '__snapshots__', version, filePath.slice(outputDir.length + 1)),
         );
       }),
     );

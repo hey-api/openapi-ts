@@ -1,5 +1,3 @@
-import { describe, expect, it } from 'vitest';
-
 import type { FieldsConfig } from '../bundle/params';
 import { buildClientParams } from '../bundle/params';
 
@@ -345,6 +343,18 @@ describe('buildClientParams', () => {
       config: [],
       description: 'strip empty slots',
       params: {},
+    },
+    {
+      args: [[]],
+      config: [
+        {
+          in: 'body',
+        },
+      ],
+      description: 'empty array body',
+      params: {
+        body: [],
+      },
     },
   ];
 

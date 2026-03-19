@@ -178,7 +178,7 @@ You can customize the naming and casing pattern for `definitions` schemas using 
 
 ## Metadata
 
-It's often useful to associate a schema with some additional [metadata](https://valibot.dev/api/metadata/) for documentation, code generation, AI structured outputs, form validation, and other purposes. If this is your use case, you can set `metadata` to `true` to generate additional metadata about schemas.
+It's often useful to associate a schema with some additional [metadata](https://valibot.dev/api/metadata/) for documentation, code generation, AI structured outputs, form validation, and other purposes. You can set `metadata` to `true` to attach descriptions to schemas when available.
 
 ::: code-group
 
@@ -207,13 +207,48 @@ export default {
 
 :::
 
+For more control over metadata, you can provide your own function. It receives the source `schema`, the target `node` object, and the `$` builder for populating metadata.
+
+::: code-group
+
+```ts [example]
+export const vFoo = v.pipe(
+  v.string(),
+  v.metadata({
+    hasTitle: false,
+    createdAt: 1735732800000,
+  }),
+);
+```
+
+<!-- prettier-ignore-start -->
+```js [config]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: 'valibot',
+      metadata({ $, node, schema }) { // [!code ++]
+        node.prop('hasTitle', $.literal(Boolean(schema.title))); // [!code ++]
+        node.prop('createdAt', $.literal(Date.now())); // [!code ++]
+      }, // [!code ++]
+    },
+  ],
+};
+```
+<!-- prettier-ignore-end -->
+
+:::
+
 ## Resolvers
 
 You can further customize this plugin's behavior using [resolvers](/openapi-ts/plugins/concepts/resolvers).
 
 ## API
 
-You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/valibot/types.d.ts) interface.
+You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/valibot/types.ts) interface.
 
 <!--@include: ../../partials/examples.md-->
 <!--@include: ../../partials/sponsors.md-->

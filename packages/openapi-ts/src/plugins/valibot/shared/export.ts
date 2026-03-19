@@ -1,33 +1,48 @@
-import type { Symbol } from '@hey-api/codegen-core';
+import { buildSymbolIn, pathToName } from '@hey-api/shared';
 
-import type { IR } from '~/ir/types';
-import { createSchemaComment } from '~/plugins/shared/utils/schema';
-import { $ } from '~/ts-dsl';
-
-import { identifiers } from '../v1/constants';
+import { createSchemaComment } from '../../../plugins/shared/utils/schema';
+import { $ } from '../../../ts-dsl';
 import { pipesToNode } from './pipes';
-import type { Ast, IrSchemaToAstOptions } from './types';
+import type { ProcessorContext } from './processor';
+import type { ValibotFinal } from './types';
 
-export const exportAst = ({
-  ast,
+export function exportAst({
+  final,
+  meta,
+  naming,
+  namingAnchor,
+  path,
   plugin,
   schema,
-  state,
-  symbol,
-}: IrSchemaToAstOptions & {
-  ast: Ast;
-  schema: IR.SchemaObject;
-  symbol: Symbol;
-}): void => {
+  tags,
+}: ProcessorContext & {
+  final: ValibotFinal;
+}): void {
   const v = plugin.external('valibot.v');
+
+  const name = pathToName(path, { anchor: namingAnchor });
+
+  const symbol = plugin.registerSymbol(
+    buildSymbolIn({
+      meta: {
+        category: 'schema',
+        path,
+        tags,
+        tool: 'valibot',
+        ...meta,
+      },
+      name,
+      naming,
+      plugin,
+      schema,
+    }),
+  );
+
   const statement = $.const(symbol)
     .export()
-    .$if(plugin.config.comments && createSchemaComment(schema), (c, v) =>
-      c.doc(v),
-    )
-    .$if(state.hasLazyExpression['~ref'], (c) =>
-      c.type($.type(v).attr(ast.typeName || identifiers.types.GenericSchema)),
-    )
-    .assign(pipesToNode(ast.pipes, plugin));
+    .$if(plugin.config.comments && createSchemaComment(schema), (c, v) => c.doc(v))
+    .$if(final.typeName, (c) => c.type($.type(v).attr(final.typeName!)))
+    .assign(pipesToNode(final.pipes, plugin));
+
   plugin.node(statement);
-};
+}

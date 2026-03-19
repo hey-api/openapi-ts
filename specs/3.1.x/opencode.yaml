@@ -198,8 +198,7 @@ paths:
           schema:
             type: string
       summary: List PTY sessions
-      description:
-        Get a list of all active pseudo-terminal (PTY) sessions managed by
+      description: Get a list of all active pseudo-terminal (PTY) sessions managed by
         OpenCode.
       responses:
         '200':
@@ -287,8 +286,7 @@ paths:
             type: string
           required: true
       summary: Get PTY session
-      description:
-        Retrieve detailed information about a specific pseudo-terminal
+      description: Retrieve detailed information about a specific pseudo-terminal
         (PTY) session.
       responses:
         '200':
@@ -416,8 +414,7 @@ paths:
             type: string
           required: true
       summary: Connect to PTY session
-      description:
-        Establish a WebSocket connection to interact with a pseudo-terminal
+      description: Establish a WebSocket connection to interact with a pseudo-terminal
         (PTY) session in real-time.
       responses:
         '200':
@@ -512,8 +509,7 @@ paths:
           schema:
             type: string
       summary: List tool IDs
-      description:
-        Get a list of all available tool IDs, including both built-in tools
+      description: Get a list of all available tool IDs, including both built-in tools
         and dynamically registered tools.
       responses:
         '200':
@@ -556,8 +552,7 @@ paths:
             type: string
           required: true
       summary: List tools
-      description:
-        Get a list of available tools with their JSON schema parameters for
+      description: Get a list of available tools with their JSON schema parameters for
         a specific provider and model combination.
       responses:
         '200':
@@ -590,8 +585,7 @@ paths:
           schema:
             type: string
       summary: Dispose instance
-      description:
-        Clean up and dispose the current OpenCode instance, releasing all
+      description: Clean up and dispose the current OpenCode instance, releasing all
         resources.
       responses:
         '200':
@@ -618,8 +612,7 @@ paths:
           schema:
             type: string
       summary: Get paths
-      description:
-        Retrieve the current working directory and related path information
+      description: Retrieve the current working directory and related path information
         for the OpenCode instance.
       responses:
         '200':
@@ -646,8 +639,7 @@ paths:
           schema:
             type: string
       summary: Get VCS info
-      description:
-        Retrieve version control system (VCS) information for the current
+      description: Retrieve version control system (VCS) information for the current
         project, such as git branch.
       responses:
         '200':
@@ -701,8 +693,7 @@ paths:
           schema:
             type: string
       summary: Create session
-      description:
-        Create a new OpenCode session for interacting with AI assistants
+      description: Create a new OpenCode session for interacting with AI assistants
         and managing conversations.
       responses:
         '200':
@@ -748,8 +739,7 @@ paths:
           schema:
             type: string
       summary: Get session status
-      description:
-        Retrieve the current status of all sessions, including active,
+      description: Retrieve the current status of all sessions, including active,
         idle, and completed states.
       responses:
         '200':
@@ -880,8 +870,7 @@ paths:
             type: string
           required: true
       summary: Update session
-      description:
-        Update properties of an existing session, such as title or other
+      description: Update properties of an existing session, such as title or other
         metadata.
       responses:
         '200':
@@ -941,8 +930,7 @@ paths:
       summary: Get session children
       tags:
         - Session
-      description:
-        Retrieve all child sessions that were forked from the specified
+      description: Retrieve all child sessions that were forked from the specified
         parent session.
       responses:
         '200':
@@ -989,8 +977,7 @@ paths:
           required: true
           description: Session ID
       summary: Get session todos
-      description:
-        Retrieve the todo list associated with a specific session, showing
+      description: Retrieve the todo list associated with a specific session, showing
         tasks and action items.
       responses:
         '200':
@@ -1037,8 +1024,7 @@ paths:
           required: true
           description: Session ID
       summary: Initialize session
-      description:
-        Analyze the current application and create an AGENTS.md file with
+      description: Analyze the current application and create an AGENTS.md file with
         project-specific agent configurations.
       responses:
         '200':
@@ -1100,8 +1086,7 @@ paths:
             pattern: ^ses.*
           required: true
       summary: Fork session
-      description:
-        Create a new session by forking an existing session at a specific
+      description: Create a new session by forking an existing session at a specific
         message point.
       responses:
         '200':
@@ -1186,8 +1171,7 @@ paths:
             type: string
           required: true
       summary: Share session
-      description:
-        Create a shareable link for a session, allowing others to view the
+      description: Create a shareable link for a session, allowing others to view the
         conversation.
       responses:
         '200':
@@ -1326,8 +1310,7 @@ paths:
           required: true
           description: Session ID
       summary: Summarize session
-      description:
-        Generate a concise summary of the session using AI compaction to
+      description: Generate a concise summary of the session using AI compaction to
         preserve key information.
       responses:
         '200':
@@ -1392,8 +1375,7 @@ paths:
           schema:
             type: number
       summary: Get session messages
-      description:
-        Retrieve all messages in a session, including user prompts and AI
+      description: Retrieve all messages in a session, including user prompts and AI
         responses.
       responses:
         '200':
@@ -1503,8 +1485,7 @@ paths:
                 noReply:
                   type: boolean
                 tools:
-                  description:
-                    '@deprecated tools and permissions have been merged, you can set
+                  description: '@deprecated tools and permissions have been merged, you can set
                     permissions on the session itself now'
                   type: object
                   propertyNames:
@@ -1723,8 +1704,7 @@ paths:
           required: true
           description: Session ID
       summary: Send async message
-      description:
-        Create and send a new message to a session asynchronously, starting
+      description: Create and send a new message to a session asynchronously, starting
         the session if needed and returning immediately.
       responses:
         '204':
@@ -1765,8 +1745,7 @@ paths:
                 noReply:
                   type: boolean
                 tools:
-                  description:
-                    '@deprecated tools and permissions have been merged, you can set
+                  description: '@deprecated tools and permissions have been merged, you can set
                     permissions on the session itself now'
                   type: object
                   propertyNames:
@@ -1887,8 +1866,7 @@ paths:
           required: true
           description: Session ID
       summary: Run shell command
-      description:
-        Execute a shell command within the session context and return the
+      description: Execute a shell command within the session context and return the
         AI's response.
       responses:
         '200':
@@ -1955,8 +1933,7 @@ paths:
             type: string
           required: true
       summary: Revert message
-      description:
-        Revert a specific message in a session, undoing its effects and
+      description: Revert a specific message in a session, undoing its effects and
         restoring the previous state.
       responses:
         '200':
@@ -2268,8 +2245,7 @@ paths:
           schema:
             type: string
       summary: List providers
-      description:
-        Get a list of all available AI providers, including both available
+      description: Get a list of all available AI providers, including both available
         and connected ones.
       responses:
         '200':
@@ -2517,8 +2493,7 @@ paths:
           required: true
           description: Provider ID
       summary: OAuth authorize
-      description:
-        Initiate OAuth authorization for a specific AI provider to get an
+      description: Initiate OAuth authorization for a specific AI provider to get an
         authorization URL.
       responses:
         '200':
@@ -2717,8 +2692,7 @@ paths:
             minimum: 1
             maximum: 200
       summary: Find files
-      description:
-        Search for files or directories by name or pattern in the project
+      description: Search for files or directories by name or pattern in the project
         directory.
       responses:
         '200':
@@ -2752,8 +2726,7 @@ paths:
             type: string
           required: true
       summary: Find symbols
-      description:
-        Search for workspace symbols like functions, classes, and variables
+      description: Search for workspace symbols like functions, classes, and variables
         using LSP.
       responses:
         '200':
@@ -3049,8 +3022,7 @@ paths:
           name: name
           required: true
       summary: Start MCP OAuth
-      description:
-        Start OAuth authentication flow for a Model Context Protocol (MCP)
+      description: Start OAuth authentication flow for a Model Context Protocol (MCP)
         server.
       responses:
         '200':
@@ -3142,8 +3114,7 @@ paths:
           name: name
           required: true
       summary: Complete MCP OAuth
-      description:
-        Complete OAuth authentication for a Model Context Protocol (MCP)
+      description: Complete OAuth authentication for a Model Context Protocol (MCP)
         server using the authorization code.
       responses:
         '200':
@@ -3682,8 +3653,7 @@ paths:
           schema:
             type: string
       summary: Get next TUI request
-      description:
-        Retrieve the next TUI (Terminal User Interface) request from the
+      description: Retrieve the next TUI (Terminal User Interface) request from the
         queue for processing.
       responses:
         '200':
@@ -5048,8 +5018,7 @@ components:
           description: Brief description of the task
           type: string
         status:
-          description:
-            'Current status of the task: pending, in_progress, completed,
+          description: 'Current status of the task: pending, in_progress, completed,
             cancelled'
           type: string
         priority:
@@ -6114,8 +6083,7 @@ components:
           type: string
           pattern: ^#[0-9a-fA-F]{6}$
         steps:
-          description:
-            Maximum number of agentic iterations before forcing text-only
+          description: Maximum number of agentic iterations before forcing text-only
             response
           type: integer
           exclusiveMinimum: 0
@@ -6304,12 +6272,10 @@ components:
               description: Enable promptCacheKey for this provider (default false)
               type: boolean
             timeout:
-              description:
-                Timeout in milliseconds for requests to this provider. Default is
+              description: Timeout in milliseconds for requests to this provider. Default is
                 300000 (5 minutes). Set to false to disable timeout.
               anyOf:
-                - description:
-                    Timeout in milliseconds for requests to this provider. Default is
+                - description: Timeout in milliseconds for requests to this provider. Default is
                     300000 (5 minutes). Set to false to disable timeout.
                   type: integer
                   exclusiveMinimum: 0
@@ -6342,8 +6308,7 @@ components:
           description: Enable or disable the MCP server on startup
           type: boolean
         timeout:
-          description:
-            Timeout in ms for fetching tools from the MCP server. Defaults to
+          description: Timeout in ms for fetching tools from the MCP server. Defaults to
             5000 (5 seconds) if not specified.
           type: integer
           exclusiveMinimum: 0
@@ -6356,8 +6321,7 @@ components:
       type: object
       properties:
         clientId:
-          description:
-            OAuth client ID. If not provided, dynamic client registration (RFC
+          description: OAuth client ID. If not provided, dynamic client registration (RFC
             7591) will be attempted.
           type: string
         clientSecret:
@@ -6388,16 +6352,14 @@ components:
           additionalProperties:
             type: string
         oauth:
-          description:
-            OAuth authentication configuration for the MCP server. Set to false
+          description: OAuth authentication configuration for the MCP server. Set to false
             to disable OAuth auto-detection.
           anyOf:
             - $ref: '#/components/schemas/McpOAuthConfig'
             - type: boolean
               const: false
         timeout:
-          description:
-            Timeout in ms for fetching tools from the MCP server. Defaults to
+          description: Timeout in ms for fetching tools from the MCP server. Defaults to
             5000 (5 seconds) if not specified.
           type: integer
           exclusiveMinimum: 0
@@ -6443,8 +6405,7 @@ components:
               required:
                 - enabled
             diff_style:
-              description:
-                "Control diff rendering style: 'auto' adapts to terminal width,
+              description: "Control diff rendering style: 'auto' adapts to terminal width,
                 'stacked' always shows single column"
               type: string
               enum:
@@ -6486,8 +6447,7 @@ components:
         snapshot:
           type: boolean
         share:
-          description:
-            Control sharing behavior:'manual' allows manual sharing via
+          description: Control sharing behavior:'manual' allows manual sharing via
             commands, 'auto' enables automatic sharing, 'disabled' disables all
             sharing
           type: string
@@ -6496,13 +6456,11 @@ components:
             - auto
             - disabled
         autoshare:
-          description:
-            "@deprecated Use 'share' field instead. Share newly created
+          description: "@deprecated Use 'share' field instead. Share newly created
             sessions automatically"
           type: boolean
         autoupdate:
-          description:
-            Automatically update to the latest version. Set to true to
+          description: Automatically update to the latest version. Set to true to
             auto-update, false to disable, or 'notify' to show update
             notifications
           anyOf:
@@ -6515,8 +6473,7 @@ components:
           items:
             type: string
         enabled_providers:
-          description:
-            When set, ONLY these providers will be enabled. All other providers
+          description: When set, ONLY these providers will be enabled. All other providers
             will be ignored
           type: array
           items:
@@ -6525,19 +6482,16 @@ components:
           description: Model to use in the format of provider/model, eg anthropic/claude-2
           type: string
         small_model:
-          description:
-            Small model to use for tasks like title generation in the format of
+          description: Small model to use for tasks like title generation in the format of
             provider/model
           type: string
         default_agent:
-          description:
-            Default agent to use when none is specified. Must be a primary
+          description: Default agent to use when none is specified. Must be a primary
             agent. Falls back to 'build' if not set or if the specified agent is
             invalid.
           type: string
         username:
-          description:
-            Custom username to display in conversations instead of system
+          description: Custom username to display in conversations instead of system
             username
           type: string
         mode:
@@ -6736,8 +6690,7 @@ components:
               description: Enable the batch tool
               type: boolean
             openTelemetry:
-              description:
-                Enable OpenTelemetry spans for AI SDK calls (using the
+              description: Enable OpenTelemetry spans for AI SDK calls (using the
                 'experimental_telemetry' flag)
               type: boolean
             primary_tools:

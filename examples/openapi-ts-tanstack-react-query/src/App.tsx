@@ -43,11 +43,7 @@ localClient.interceptors.request.use((request, options) => {
   // Middleware is great for adding authorization tokens to requests made to
   // protected paths. Headers are set randomly here to allow surfacing the
   // default headers, too.
-  if (
-    options.url === '/pet/{petId}' &&
-    options.method === 'GET' &&
-    Math.random() < 0.5
-  ) {
+  if (options.url === '/pet/{petId}' && options.method === 'GET' && Math.random() < 0.5) {
     request.headers.set('Authorization', 'Bearer <token_from_interceptor>');
   }
   return request;
@@ -156,9 +152,7 @@ function App() {
   }, [data, error]);
 
   return (
-    <Box
-      style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}
-    >
+    <Box style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
       <Container size="1">
         <Section size="1" />
         <Flex align="center">
@@ -226,20 +220,12 @@ function App() {
                 <Form.Label className="text-[15px] font-medium leading-[35px] text-white">
                   Category
                 </Form.Label>
-                <Form.Message
-                  className="text-[13px] text-white opacity-[0.8]"
-                  match="valueMissing"
-                >
+                <Form.Message className="text-[13px] text-white opacity-[0.8]" match="valueMissing">
                   Please enter a category
                 </Form.Message>
               </div>
               <Form.Control asChild>
-                <TextField.Root
-                  placeholder="Cats"
-                  name="category"
-                  type="text"
-                  required
-                />
+                <TextField.Root placeholder="Cats" name="category" type="text" required />
               </Form.Control>
             </Form.Field>
             <Flex gapX="2">

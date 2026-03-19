@@ -1,15 +1,12 @@
-import type { SchemaWithType } from '~/plugins';
-import {
-  maybeBigInt,
-  shouldCoerceToBigInt,
-} from '~/plugins/shared/utils/coerce';
-import { getIntegerLimit } from '~/plugins/shared/utils/formats';
-import { $ } from '~/ts-dsl';
+import type { SchemaWithType } from '@hey-api/shared';
 
+import { maybeBigInt, shouldCoerceToBigInt } from '../../../../plugins/shared/utils/coerce';
+import { getIntegerLimit } from '../../../../plugins/shared/utils/formats';
+import { $ } from '../../../../ts-dsl';
 import { identifiers } from '../../constants';
 import type { NumberResolverContext } from '../../resolvers';
-import type { Chain } from '../../shared/chain';
-import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
+import type { Chain, ChainResult } from '../../shared/chain';
+import type { ZodPlugin } from '../../types';
 
 function baseNode(ctx: NumberResolverContext): Chain {
   const { schema, symbols } = ctx;
@@ -24,16 +21,14 @@ function baseNode(ctx: NumberResolverContext): Chain {
   return chain;
 }
 
-function constNode(ctx: NumberResolverContext): Chain | undefined {
+function constNode(ctx: NumberResolverContext): ChainResult {
   const { schema, symbols } = ctx;
   const { z } = symbols;
   if (schema.const === undefined) return;
-  return $(z)
-    .attr(identifiers.literal)
-    .call(ctx.utils.maybeBigInt(schema.const, schema.format));
+  return $(z).attr(identifiers.literal).call(ctx.utils.maybeBigInt(schema.const, schema.format));
 }
 
-function maxNode(ctx: NumberResolverContext): Chain | undefined {
+function maxNode(ctx: NumberResolverContext): ChainResult {
   const { schema, symbols } = ctx;
   const { z } = symbols;
   if (schema.exclusiveMaximum !== undefined) {
@@ -42,9 +37,7 @@ function maxNode(ctx: NumberResolverContext): Chain | undefined {
       .call(ctx.utils.maybeBigInt(schema.exclusiveMaximum, schema.format));
   }
   if (schema.maximum !== undefined) {
-    return $(z)
-      .attr(identifiers.lte)
-      .call(ctx.utils.maybeBigInt(schema.maximum, schema.format));
+    return $(z).attr(identifiers.lte).call(ctx.utils.maybeBigInt(schema.maximum, schema.format));
   }
   const limit = ctx.utils.getIntegerLimit(schema.format);
   if (limit) {
@@ -58,7 +51,7 @@ function maxNode(ctx: NumberResolverContext): Chain | undefined {
   return;
 }
 
-function minNode(ctx: NumberResolverContext): Chain | undefined {
+function minNode(ctx: NumberResolverContext): ChainResult {
   const { schema, symbols } = ctx;
   const { z } = symbols;
   if (schema.exclusiveMinimum !== undefined) {
@@ -67,9 +60,7 @@ function minNode(ctx: NumberResolverContext): Chain | undefined {
       .call(ctx.utils.maybeBigInt(schema.exclusiveMinimum, schema.format));
   }
   if (schema.minimum !== undefined) {
-    return $(z)
-      .attr(identifiers.gte)
-      .call(ctx.utils.maybeBigInt(schema.minimum, schema.format));
+    return $(z).attr(identifiers.gte).call(ctx.utils.maybeBigInt(schema.minimum, schema.format));
   }
   const limit = ctx.utils.getIntegerLimit(schema.format);
   if (limit) {
@@ -102,22 +93,19 @@ function numberResolver(ctx: NumberResolverContext): Chain {
   if (maxNode) checks.push(maxNode);
 
   if (checks.length > 0) {
-    ctx.chain.current = ctx.chain.current
-      .attr(identifiers.check)
-      .call(...checks);
+    ctx.chain.current = ctx.chain.current.attr(identifiers.check).call(...checks);
   }
 
   return ctx.chain.current;
 }
 
-export const numberToNode = ({
+export function numberToNode({
   plugin,
   schema,
-  state,
-}: IrSchemaToAstOptions & {
+}: {
+  plugin: ZodPlugin['Instance'];
   schema: SchemaWithType<'integer' | 'number'>;
-}): Omit<Ast, 'typeName'> => {
-  const ast: Partial<Omit<Ast, 'typeName'>> = {};
+}): Chain {
   const z = plugin.external('zod.z');
   const ctx: NumberResolverContext = {
     $,
@@ -136,15 +124,11 @@ export const numberToNode = ({
       z,
     },
     utils: {
-      ast,
       getIntegerLimit,
       maybeBigInt,
       shouldCoerceToBigInt,
-      state,
     },
   };
   const resolver = plugin.config['~resolvers']?.number;
-  const node = resolver?.(ctx) ?? numberResolver(ctx);
-  ast.expression = node;
-  return ast as Omit<Ast, 'typeName'>;
-};
+  return resolver?.(ctx) ?? numberResolver(ctx);
+}

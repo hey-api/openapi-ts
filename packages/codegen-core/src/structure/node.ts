@@ -69,9 +69,7 @@ export class StructureNode {
    * @param source - The source symbol to filter by
    * @returns Generator of items from that source
    */
-  *itemsFrom<T = unknown>(
-    source: symbol,
-  ): Generator<StructureItem & { data: T }> {
+  *itemsFrom<T = unknown>(source: symbol): Generator<StructureItem & { data: T }> {
     for (const item of this.items) {
       if (item.source === source) {
         yield item as StructureItem & { data: T };

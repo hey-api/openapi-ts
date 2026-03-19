@@ -2,22 +2,46 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import type { IProject, ProjectRenderMeta } from '@hey-api/codegen-core';
+import type { IProject } from '@hey-api/codegen-core';
+import type { BaseOutput, DefinePlugin, OutputHeader } from '@hey-api/shared';
+import { ensureDirSync, isEnvironment, outputHeaderToPrefix } from '@hey-api/shared';
 
-import type { Config } from '~/config/types';
-import type { DefinePlugin } from '~/plugins';
-import type { Client } from '~/plugins/@hey-api/client-core/types';
-import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
-
-import { ensureDirSync } from './utils';
+import type { Config } from '../config/types';
+import type { Client } from '../plugins/@hey-api/client-core/types';
+import { getClientPlugin } from '../plugins/@hey-api/client-core/utils';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 /**
+ * Returns paths to client bundle files based on execution context
+ */
+function getClientBundlePaths(pluginName: string): {
+  clientPath: string;
+  corePath: string;
+} {
+  const clientName = pluginName.slice('@hey-api/client-'.length);
+
+  if (isEnvironment('development')) {
+    // Dev: source bundle folders at src/plugins/@hey-api/{client}/bundle
+    const pluginsDir = path.resolve(__dirname, '..', 'plugins', '@hey-api');
+    return {
+      clientPath: path.resolve(pluginsDir, `client-${clientName}`, 'bundle'),
+      corePath: path.resolve(pluginsDir, 'client-core', 'bundle'),
+    };
+  }
+
+  // Prod: copied to dist/clients/{clientName}
+  return {
+    clientPath: path.resolve(__dirname, 'clients', clientName),
+    corePath: path.resolve(__dirname, 'clients', 'core'),
+  };
+}
+
+/**
  * Returns absolute path to the client folder. This is hard-coded for now.
  */
-export const clientFolderAbsolutePath = (config: Config): string => {
+export function clientFolderAbsolutePath(config: Config): string {
   const client = getClientPlugin(config);
 
   if ('bundle' in client.config && client.config.bundle) {
@@ -25,22 +49,18 @@ export const clientFolderAbsolutePath = (config: Config): string => {
     const renamed: Map<string, string> | undefined =
       // @ts-expect-error
       config._FRAGILE_CLIENT_BUNDLE_RENAMED;
-    return path.resolve(
-      config.output.path,
-      'client',
-      `${renamed?.get('index') ?? 'index'}.ts`,
-    );
+    return path.resolve(config.output.path, 'client', `${renamed?.get('index') ?? 'index'}.ts`);
   }
 
   return client.name;
-};
+}
 
 /**
  * Recursively copies files and directories.
  * This is a PnP-compatible alternative to fs.cpSync that works with Yarn PnP's
  * virtualized filesystem.
  */
-const copyRecursivePnP = (src: string, dest: string) => {
+function copyRecursivePnP(src: string, dest: string): void {
   const stat = fs.statSync(src);
 
   if (stat.isDirectory()) {
@@ -56,9 +76,9 @@ const copyRecursivePnP = (src: string, dest: string) => {
     const content = fs.readFileSync(src);
     fs.writeFileSync(dest, content);
   }
-};
+}
 
-const renameFile = ({
+function renameFile({
   filePath,
   project,
   renamed,
@@ -66,91 +86,94 @@ const renameFile = ({
   filePath: string;
   project: IProject;
   renamed: Map<string, string>;
-}) => {
+}): void {
   const extension = path.extname(filePath);
   const name = path.basename(filePath, extension);
   const renamedName = project.fileName?.(name) || name;
   if (renamedName !== name) {
     const outputPath = path.dirname(filePath);
-    fs.renameSync(
-      filePath,
-      path.resolve(outputPath, `${renamedName}${extension}`),
-    );
+    fs.renameSync(filePath, path.resolve(outputPath, `${renamedName}${extension}`));
     renamed.set(name, renamedName);
   }
-};
+}
 
-const replaceImports = ({
+function replaceImports({
   filePath,
-  meta,
+  header,
+  module,
   renamed,
-}: {
+}: Pick<BaseOutput, 'module'> & {
   filePath: string;
-  meta: ProjectRenderMeta;
+  header?: string;
   renamed: Map<string, string>;
-}) => {
+}): void {
   let content = fs.readFileSync(filePath, 'utf8');
 
-  content = content.replace(
-    /from\s+['"](\.\.?\/[^'"]*?)['"]/g,
-    (match, importPath) => {
-      const importIndex = match.indexOf(importPath);
-      const extension = path.extname(importPath);
-      const fileName = path.basename(importPath, extension);
-      const importDir = path.dirname(importPath);
-      const replacedName =
-        (renamed.get(fileName) ?? fileName) +
-        (meta.importFileExtension ? meta.importFileExtension : extension);
-      const replacedMatch =
-        match.slice(0, importIndex) +
-        [importDir, replacedName].filter(Boolean).join('/') +
-        match.slice(importIndex + importPath.length);
-      return replacedMatch;
-    },
-  );
+  // Dev mode: rewrite source bundle imports to match output structure
+  if (isEnvironment('development')) {
+    // ../../client-core/bundle/foo -> ../core/foo
+    content = content.replace(/from\s+['"]\.\.\/\.\.\/client-core\/bundle\//g, "from '../core/");
+    // ../../client-core/bundle' (index import)
+    content = content.replace(/from\s+['"]\.\.\/\.\.\/client-core\/bundle['"]/g, "from '../core'");
+  }
 
-  const header = '// This file is auto-generated by @hey-api/openapi-ts\n\n';
+  content = content.replace(/from\s+['"](\.\.?\/[^'"]*?)['"]/g, (match, importPath) => {
+    const importIndex = match.indexOf(importPath);
+    const extension = path.extname(importPath);
+    const fileName = path.basename(importPath, extension);
+    const importDir = path.dirname(importPath);
+    const replacedName =
+      (renamed.get(fileName) ?? fileName) + (module.extension ? module.extension : extension);
+    const replacedMatch =
+      match.slice(0, importIndex) +
+      [importDir, replacedName].filter(Boolean).join('/') +
+      match.slice(importIndex + importPath.length);
+    return replacedMatch;
+  });
 
-  content = `${header}${content}`;
+  const fileHeader = header ?? '';
+
+  content = `${fileHeader}${content}`;
 
   fs.writeFileSync(filePath, content, 'utf8');
-};
+}
 
 /**
  * Creates a `client` folder containing the same modules as the client package.
  */
-export const generateClientBundle = ({
-  meta,
+export function generateClientBundle({
+  header,
+  module,
   outputPath,
   plugin,
   project,
-}: {
-  meta: ProjectRenderMeta;
+}: Pick<BaseOutput, 'module'> & {
+  header?: OutputHeader;
   outputPath: string;
   plugin: DefinePlugin<Client.Config & { name: string }>['Config'];
-  project?: IProject;
-}): Map<string, string> | undefined => {
+  project: IProject;
+}): Map<string, string> | undefined {
   const renamed = new Map<string, string>();
+  const headerPrefix = outputHeaderToPrefix({
+    defaultValue: ['// This file is auto-generated by @hey-api/openapi-ts'],
+    header,
+    project,
+  });
 
   // copy Hey API clients to output
   const isHeyApiClientPlugin = plugin.name.startsWith('@hey-api/client-');
   if (isHeyApiClientPlugin) {
+    const { clientPath, corePath } = getClientBundlePaths(plugin.name);
+
     // copy client core
     const coreOutputPath = path.resolve(outputPath, 'core');
     ensureDirSync(coreOutputPath);
-    const coreDistPath = path.resolve(__dirname, 'clients', 'core');
-    copyRecursivePnP(coreDistPath, coreOutputPath);
+    copyRecursivePnP(corePath, coreOutputPath);
 
     // copy client bundle
     const clientOutputPath = path.resolve(outputPath, 'client');
     ensureDirSync(clientOutputPath);
-    const clientDistFolderName = plugin.name.slice('@hey-api/client-'.length);
-    const clientDistPath = path.resolve(
-      __dirname,
-      'clients',
-      clientDistFolderName,
-    );
-    copyRecursivePnP(clientDistPath, clientOutputPath);
+    copyRecursivePnP(clientPath, clientOutputPath);
 
     if (project) {
       const copiedCoreFiles = fs.readdirSync(coreOutputPath);
@@ -176,7 +199,8 @@ export const generateClientBundle = ({
     for (const file of coreFiles) {
       replaceImports({
         filePath: path.resolve(coreOutputPath, file),
-        meta,
+        header: headerPrefix,
+        module,
         renamed,
       });
     }
@@ -185,16 +209,15 @@ export const generateClientBundle = ({
     for (const file of clientFiles) {
       replaceImports({
         filePath: path.resolve(clientOutputPath, file),
-        meta,
+        header: headerPrefix,
+        module,
         renamed,
       });
     }
     return renamed;
   }
 
-  const clientSrcPath = path.isAbsolute(plugin.name)
-    ? path.dirname(plugin.name)
-    : undefined;
+  const clientSrcPath = path.isAbsolute(plugin.name) ? path.dirname(plugin.name) : undefined;
 
   // copy custom local client to output
   if (clientSrcPath) {
@@ -211,17 +234,13 @@ export const generateClientBundle = ({
     .slice(0, clientModulePathComponents.indexOf('dist') + 1)
     .join(path.sep);
 
-  const indexJsFile =
-    clientModulePathComponents[clientModulePathComponents.length - 1];
+  const indexJsFile = clientModulePathComponents[clientModulePathComponents.length - 1];
   const distFiles = [indexJsFile!, 'index.d.mts', 'index.d.cts'];
   const dirPath = path.resolve(outputPath, 'client');
   ensureDirSync(dirPath);
   for (const file of distFiles) {
-    fs.copyFileSync(
-      path.resolve(clientDistPath, file),
-      path.resolve(dirPath, file),
-    );
+    fs.copyFileSync(path.resolve(clientDistPath, file), path.resolve(dirPath, file));
   }
 
   return;
-};
+}

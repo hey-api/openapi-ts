@@ -10,9 +10,7 @@ export const buildServer = async () => {
   const fastify = Fastify();
 
   const specificationPath = join(__dirname, '..', 'openapi.json');
-  const specificationJson = JSON.parse(
-    readFileSync(specificationPath, 'utf-8'),
-  );
+  const specificationJson = JSON.parse(readFileSync(specificationPath, 'utf-8'));
 
   fastify.register(glue, {
     prefix: 'v3',

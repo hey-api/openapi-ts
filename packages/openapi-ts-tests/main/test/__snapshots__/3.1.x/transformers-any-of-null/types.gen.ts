@@ -4,6 +4,11 @@ export type ClientOptions = {
     baseUrl: `${string}://${string}` | (string & {});
 };
 
+export type Poll = {
+    id: number;
+    createdAt: Date;
+};
+
 /**
  * Object with a nested date structure
  */
@@ -35,6 +40,38 @@ export type GetFooResponses = {
 };
 
 export type GetFooResponse = GetFooResponses[keyof GetFooResponses];
+
+export type GetPollData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/polls';
+};
+
+export type GetPollResponses = {
+    /**
+     * OK
+     */
+    200: Poll;
+};
+
+export type GetPollResponse = GetPollResponses[keyof GetPollResponses];
+
+export type GetNullablePollData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/polls/nullable';
+};
+
+export type GetNullablePollResponses = {
+    /**
+     * OK
+     */
+    200: Poll | null;
+};
+
+export type GetNullablePollResponse = GetNullablePollResponses[keyof GetNullablePollResponses];
 
 export type NestedDateObjectData = {
     body?: never;

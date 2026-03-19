@@ -9,10 +9,10 @@ import { ValueMixin } from '../mixins/value';
 import { TokenTsDsl } from '../token';
 import { TypeExprTsDsl } from '../type/expr';
 
-export type ParamCtor = (
-  name: NodeName | ((p: ParamTsDsl) => void),
-  fn?: (p: ParamTsDsl) => void,
-) => ParamTsDsl;
+export type ParamName = NodeName | ParamFn;
+export type ParamFn = (p: ParamTsDsl) => void;
+
+export type ParamCtor = (name: ParamName, fn?: ParamFn) => ParamTsDsl;
 
 const Mixed = DecoratorMixin(
   OptionalMixin(PatternMixin(ValueMixin(TsDsl<ts.ParameterDeclaration>))),
@@ -23,10 +23,7 @@ export class ParamTsDsl extends Mixed {
 
   protected _type?: TypeTsDsl;
 
-  constructor(
-    name: NodeName | ((p: ParamTsDsl) => void),
-    fn?: (p: ParamTsDsl) => void,
-  ) {
+  constructor(name: ParamName, fn?: ParamFn) {
     super();
     if (typeof name === 'function') {
       name(this);
@@ -42,6 +39,11 @@ export class ParamTsDsl extends Mixed {
     ctx.analyze(this._type);
   }
 
+  /** Returns true when all required builder calls are present. */
+  get isValid(): boolean {
+    return this.missingRequiredCalls().length === 0;
+  }
+
   /** Sets the parameter type. */
   type(type: string | TypeTsDsl): this {
     this._type = type instanceof TypeTsDsl ? type : new TypeExprTsDsl(type);
@@ -49,19 +51,27 @@ export class ParamTsDsl extends Mixed {
   }
 
   override toAst() {
-    const name = this.$pattern() || this.name.toString();
-    if (!name) {
-      throw new Error(
-        'Param must have either a name or a destructuring pattern',
-      );
-    }
+    this.$validate();
     return ts.factory.createParameterDeclaration(
       this.$decorators(),
       undefined,
-      name,
+      this.$pattern() ?? this.name.toString(),
       this._optional ? this.$node(new TokenTsDsl().optional()) : undefined,
       this.$type(this._type),
       this.$value(),
     );
+  }
+
+  $validate(): asserts this {
+    const missing = this.missingRequiredCalls();
+    if (missing.length === 0) return;
+    throw new Error(`Parameter missing ${missing.join(' and ')}`);
+  }
+
+  private missingRequiredCalls(): ReadonlyArray<string> {
+    const missing: Array<string> = [];
+    if (!this.$pattern() && !this.name.toString())
+      missing.push('name or pattern (.array()/.object())');
+    return missing;
   }
 }

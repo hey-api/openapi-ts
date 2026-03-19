@@ -37,8 +37,8 @@ const props = defineProps<{
   display: grid;
   flex: 1 1 0%;
   overflow: hidden;
-  padding: var(--vs-padding-y) calc(var(--vs-padding-x) * 1.4)
-    var(--vs-padding-y) var(--vs-padding-x);
+  padding: var(--vs-padding-y) calc(var(--vs-padding-x) * 1.4) var(--vs-padding-y)
+    var(--vs-padding-x);
   position: relative;
 }
 </style>

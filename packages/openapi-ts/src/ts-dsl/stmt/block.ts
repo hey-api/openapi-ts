@@ -22,9 +22,6 @@ export class BlockTsDsl extends Mixed {
 
   override toAst() {
     const statements = this.$do();
-    return ts.factory.createBlock(
-      statements,
-      this.$multiline(statements.length),
-    );
+    return ts.factory.createBlock(statements, this.$multiline(statements.length));
   }
 }

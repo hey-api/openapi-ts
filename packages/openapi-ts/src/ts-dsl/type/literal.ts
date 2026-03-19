@@ -1,18 +1,19 @@
 import type { AnalysisContext, NodeScope } from '@hey-api/codegen-core';
-import ts from 'typescript';
+import tsOld from 'typescript';
 
+import type { ts } from '../../ts-compiler';
 import { TsDsl } from '../base';
 import { LiteralTsDsl } from '../expr/literal';
 
-const Mixed = TsDsl<ts.LiteralTypeNode>;
+const Mixed = TsDsl<tsOld.LiteralTypeNode>;
 
 export class TypeLiteralTsDsl extends Mixed {
   readonly '~dsl' = 'TypeLiteralTsDsl';
   override scope: NodeScope = 'type';
 
-  protected value: string | number | boolean | null;
+  protected value: ts.LiteralValue;
 
-  constructor(value: string | number | boolean | null) {
+  constructor(value: ts.LiteralValue) {
     super();
     this.value = value;
   }
@@ -22,8 +23,6 @@ export class TypeLiteralTsDsl extends Mixed {
   }
 
   override toAst() {
-    return ts.factory.createLiteralTypeNode(
-      this.$node(new LiteralTsDsl(this.value)),
-    );
+    return tsOld.factory.createLiteralTypeNode(this.$node(new LiteralTsDsl(this.value)));
   }
 }

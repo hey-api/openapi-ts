@@ -1,19 +1,34 @@
 {
   "name": "@hey-api/types",
-  "version": "0.1.2",
+  "version": "0.1.4",
   "description": "Shared utility types.",
-  "type": "module",
-  "types": "./src/index.ts",
-  "files": [
-    "src"
-  ],
   "homepage": "https://heyapi.dev/",
+  "bugs": {
+    "url": "https://github.com/hey-api/openapi-ts/issues"
+  },
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hey-api/openapi-ts.git"
   },
-  "bugs": {
-    "url": "https://github.com/hey-api/openapi-ts/issues"
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts"
+    },
+    "./package.json": "./package.json"
   },
-  "license": "MIT"
+  "scripts": {
+    "build": "tsc --build",
+    "dev": "tsc --build --watch",
+    "prepublishOnly": "pnpm build",
+    "typecheck": "tsgo --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3"
+  }
 }

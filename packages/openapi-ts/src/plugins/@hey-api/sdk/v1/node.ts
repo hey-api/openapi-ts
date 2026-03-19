@@ -5,16 +5,16 @@ import type {
   Symbol,
   SymbolMeta,
 } from '@hey-api/codegen-core';
+import type { IR } from '@hey-api/shared';
+import { applyNaming, toCase } from '@hey-api/shared';
 
-import type { IR } from '~/ir/types';
-import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
+import { getTypedConfig } from '../../../../config/utils';
+import { getClientPlugin } from '../../../../plugins/@hey-api/client-core/utils';
 import {
   createOperationComment,
   isOperationOptionsRequired,
-} from '~/plugins/shared/utils/operation';
-import { $, ctx } from '~/ts-dsl';
-import { applyNaming, toCase } from '~/utils/naming';
-
+} from '../../../../plugins/shared/utils/operation';
+import { $, ctx } from '../../../../ts-dsl';
 import { createClientClass, createRegistryClass } from '../shared/class';
 import { nuxtTypeComposable, nuxtTypeDefault } from '../shared/constants';
 import { operationParameters, operationStatements } from '../shared/operation';
@@ -31,17 +31,19 @@ export const source = globalThis.Symbol('@hey-api/sdk');
 export function isInstance(plugin: HeyApiSdkPlugin['Instance']): boolean {
   const config = plugin.config.operations;
   return (
-    config.container === 'class' &&
-    config.methods === 'instance' &&
-    config.strategy !== 'flat'
+    config.container === 'class' && config.methods === 'instance' && config.strategy !== 'flat'
   );
 }
 
-function attachComment<
-  T extends ReturnType<typeof $.var | typeof $.method>,
->(args: { node: T; operation: IR.OperationObject }): T {
-  const { node, operation } = args;
-  return node.$if(createOperationComment(operation), (n, v) => n.doc(v)) as T;
+function attachComment<T extends ReturnType<typeof $.var | typeof $.method>>(args: {
+  node: T;
+  operation: IR.OperationObject;
+  plugin: HeyApiSdkPlugin['Instance'];
+}): T {
+  const { node, operation, plugin } = args;
+  return node.$if(plugin.config.comments && createOperationComment(operation), (n, v) =>
+    n.doc(v),
+  ) as T;
 }
 
 function createShellMeta(node: StructureNode): SymbolMeta {
@@ -90,9 +92,7 @@ function childToNode(
           $('this')
             .attr(privateName)
             .nullishAssign(
-              $.new(refChild).args(
-                $.object().prop('client', $('this').attr('client')),
-              ),
+              $.new(refChild).args($.object().prop('client', $('this').attr('client'))),
             )
             .return(),
         ),
@@ -102,15 +102,11 @@ function childToNode(
   if (plugin.isSymbolRegistered(refChild.id)) {
     return [$.field(memberName, (f) => f.static().assign($(refChild)))];
   }
-  return [
-    $.getter(memberName, (g) => g.public().static().do($.return(refChild))),
-  ];
+  return [$.getter(memberName, (g) => g.public().static().do($.return(refChild)))];
 }
 
-export function createShell(
-  plugin: HeyApiSdkPlugin['Instance'],
-): StructureShell {
-  const client = getClientPlugin(plugin.context.config);
+export function createShell(plugin: HeyApiSdkPlugin['Instance']): StructureShell {
+  const client = getClientPlugin(getTypedConfig(plugin));
   const isAngularClient = client.name === '@hey-api/client-angular';
   return {
     define: (node) => {
@@ -197,8 +193,7 @@ function enrichRootClass(args: {
       symbol: symbolRegistry,
     }),
   );
-  const isClientRequired =
-    !plugin.config.client || !plugin.getSymbol({ category: 'client' });
+  const isClientRequired = !plugin.config.client || !plugin.getSymbol({ category: 'client' });
   const registry = plugin.symbol('__registry');
   node.toAccessNode = (node, options) => {
     if (options.context) return;
@@ -206,11 +201,7 @@ function enrichRootClass(args: {
   };
   node.do(
     $.field(registry, (f) =>
-      f
-        .public()
-        .static()
-        .readonly()
-        .assign($.new(symbolRegistry).generic(symbol)),
+      f.public().static().readonly().assign($.new(symbolRegistry).generic(symbol)),
     ),
     $.newline(),
     $.init((i) =>
@@ -220,9 +211,7 @@ function enrichRootClass(args: {
             $.type
               .object()
               .prop('client', (p) =>
-                p
-                  .required(isClientRequired)
-                  .type(plugin.external('client.Client')),
+                p.required(isClientRequired).type(plugin.external('client.Client')),
               )
               .prop('key', (p) => p.optional().type('string')),
           ),
@@ -250,8 +239,7 @@ function exampleIntent(
       const { payload } = config;
       let example = ctx.example(node, {
         ...config,
-        payload: (ctx) =>
-          typeof payload === 'function' ? payload(operation, ctx) : payload,
+        payload: (ctx) => (typeof payload === 'function' ? payload(operation, ctx) : payload),
       });
       if (config.transform) {
         example = await config.transform(example, operation);
@@ -266,15 +254,13 @@ function exampleIntent(
   });
 }
 
-function implementFn<
-  T extends ReturnType<typeof $.func | typeof $.method>,
->(args: {
+function implementFn<T extends ReturnType<typeof $.func | typeof $.method>>(args: {
   node: T;
   operation: IR.OperationObject;
   plugin: HeyApiSdkPlugin['Instance'];
 }): T {
   const { node, operation, plugin } = args;
-  const client = getClientPlugin(plugin.context.config);
+  const client = getClientPlugin(getTypedConfig(plugin));
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
   const isRequiredOptions = isOperationOptionsRequired({
     context: plugin.context,
@@ -297,9 +283,7 @@ function implementFn<
       (m) =>
         m
           .generic(nuxtTypeComposable, (t) =>
-            t
-              .extends(plugin.external('client.Composable'))
-              .default($.type.literal('$fetch')),
+            t.extends(plugin.external('client.Composable')).default($.type.literal('$fetch')),
           )
           .generic(nuxtTypeDefault, (t) =>
             t.$if(
@@ -318,9 +302,7 @@ function implementFn<
           t
             .extends('boolean')
             .default(
-              ('throwOnError' in client.config
-                ? client.config.throwOnError
-                : false) ?? false,
+              ('throwOnError' in client.config ? client.config.throwOnError : false) ?? false,
             ),
         ),
     )
@@ -348,7 +330,7 @@ export function toNode(
             plugin,
           }),
         );
-      node = attachComment({ node, operation });
+      node = attachComment({ node, operation, plugin });
       nodes.push(node);
       exampleIntent(node, operation, plugin);
     }
@@ -361,7 +343,7 @@ export function toNode(
 
   const nodes: Array<ReturnType<typeof $.class | typeof $.var>> = [];
 
-  const client = getClientPlugin(plugin.context.config);
+  const client = getClientPlugin(getTypedConfig(plugin));
   const isAngularClient = client.name === '@hey-api/client-angular';
 
   const shell = model.shell.define(model);
@@ -379,6 +361,7 @@ export function toNode(
           attachComment({
             node: m,
             operation,
+            plugin,
           })
             .public()
             .static(!isAngularClient && !isInstance(plugin)),
@@ -404,9 +387,7 @@ export function toNode(
   nodes.push(node);
 
   return {
-    dependencies: shell.dependencies as Array<
-      ReturnType<typeof $.class | typeof $.var>
-    >,
+    dependencies: shell.dependencies as Array<ReturnType<typeof $.class | typeof $.var>>,
     nodes,
   };
 }

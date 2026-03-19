@@ -1,13 +1,13 @@
-import type { IR } from '~/ir/types';
+import type { IR } from '@hey-api/shared';
+import { buildSymbolIn, parseUrl } from '@hey-api/shared';
+
+import { getTypedConfig } from '../../../../config/utils';
 import {
   getClientBaseUrlKey,
   getClientPlugin,
-} from '~/plugins/@hey-api/client-core/utils';
-import type { TypeTsDsl } from '~/ts-dsl';
-import { $ } from '~/ts-dsl';
-import { applyNaming } from '~/utils/naming';
-import { parseUrl } from '~/utils/url';
-
+} from '../../../../plugins/@hey-api/client-core/utils';
+import type { TypeTsDsl } from '../../../../ts-dsl';
+import { $ } from '../../../../ts-dsl';
 import type { HeyApiTypeScriptPlugin } from '../types';
 
 const serverToBaseUrlType = ({ server }: { server: IR.ServerObject }) => {
@@ -35,32 +35,30 @@ export const createClientOptions = ({
   plugin: HeyApiTypeScriptPlugin['Instance'];
   servers: ReadonlyArray<IR.ServerObject>;
 }) => {
-  const client = getClientPlugin(plugin.context.config);
+  const client = getClientPlugin(getTypedConfig(plugin));
 
-  const types: Array<TypeTsDsl> = servers.map((server) =>
-    serverToBaseUrlType({ server }),
-  );
+  const types: Array<TypeTsDsl> = servers.map((server) => serverToBaseUrlType({ server }));
 
   if (!servers.length) {
     types.push($.type('string'));
-  } else if (
-    !('strictBaseUrl' in client.config && client.config.strictBaseUrl)
-  ) {
+  } else if (!('strictBaseUrl' in client.config && client.config.strictBaseUrl)) {
     types.push($.type.and($.type('string'), $.type.object()));
   }
 
-  const symbol = plugin.symbol(
-    applyNaming('ClientOptions', {
-      case: plugin.config.case,
-    }),
-    {
+  const symbol = plugin.registerSymbol(
+    buildSymbolIn({
       meta: {
         category: 'type',
         resource: 'client',
         role: 'options',
         tool: 'typescript',
       },
-    },
+      name: 'ClientOptions',
+      naming: {
+        case: plugin.config.case,
+      },
+      plugin,
+    }),
   );
 
   const node = $.type
@@ -69,9 +67,7 @@ export const createClientOptions = ({
     .type(
       $.type
         .object()
-        .prop(getClientBaseUrlKey(plugin.context.config), (p) =>
-          p.type($.type.or(...types)),
-        ),
+        .prop(getClientBaseUrlKey(getTypedConfig(plugin)), (p) => p.type($.type.or(...types))),
     );
   plugin.node(node, nodeIndex);
 };

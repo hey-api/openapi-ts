@@ -1,5 +1,3 @@
-import { describe, expect, it } from 'vitest';
-
 import { safeRuntimeName } from '../name';
 
 describe('safeRuntimeName', () => {
@@ -7,9 +5,14 @@ describe('safeRuntimeName', () => {
     name: string;
     output: string;
   }> = [
+    // browser globals
     {
       name: 'document',
       output: 'document_',
+    },
+    {
+      name: 'fetch',
+      output: 'fetch_',
     },
     {
       name: 'history',
@@ -28,12 +31,117 @@ describe('safeRuntimeName', () => {
       output: 'window_',
     },
     {
+      name: 'AbortController',
+      output: 'AbortController_',
+    },
+    {
+      name: 'AbortSignal',
+      output: 'AbortSignal_',
+    },
+    {
+      name: 'Blob',
+      output: 'Blob_',
+    },
+    {
+      name: 'CustomEvent',
+      output: 'CustomEvent_',
+    },
+    {
+      name: 'Event',
+      output: 'Event_',
+    },
+    {
+      name: 'EventTarget',
+      output: 'EventTarget_',
+    },
+    {
+      name: 'File',
+      output: 'File_',
+    },
+    {
+      name: 'FileList',
+      output: 'FileList_',
+    },
+    {
+      name: 'FileReader',
+      output: 'FileReader_',
+    },
+    {
+      name: 'FormData',
+      output: 'FormData_',
+    },
+    {
+      name: 'Headers',
+      output: 'Headers_',
+    },
+    {
+      name: 'Request',
+      output: 'Request_',
+    },
+    {
+      name: 'Response',
+      output: 'Response_',
+    },
+    {
+      name: 'TextDecoder',
+      output: 'TextDecoder_',
+    },
+    {
+      name: 'TextEncoder',
+      output: 'TextEncoder_',
+    },
+    {
+      name: 'URL',
+      output: 'URL_',
+    },
+    {
+      name: 'URLSearchParams',
+      output: 'URLSearchParams_',
+    },
+    // JavaScript globals
+    {
+      name: 'Array',
+      output: 'Array_',
+    },
+    {
+      name: 'ArrayBuffer',
+      output: 'ArrayBuffer_',
+    },
+    {
+      name: 'atob',
+      output: 'atob_',
+    },
+    {
+      name: 'BigInt',
+      output: 'BigInt_',
+    },
+    {
+      name: 'Boolean',
+      output: 'Boolean_',
+    },
+    {
+      name: 'btoa',
+      output: 'btoa_',
+    },
+    {
+      name: 'clearInterval',
+      output: 'clearInterval_',
+    },
+    {
+      name: 'clearTimeout',
+      output: 'clearTimeout_',
+    },
+    {
       name: 'console',
       output: 'console_',
     },
     {
-      name: 'Array',
-      output: 'Array_',
+      name: 'crypto',
+      output: 'crypto_',
+    },
+    {
+      name: 'DataView',
+      output: 'DataView_',
     },
     {
       name: 'Date',
@@ -48,6 +156,18 @@ describe('safeRuntimeName', () => {
       output: 'Function_',
     },
     {
+      name: 'globalThis',
+      output: 'globalThis_',
+    },
+    {
+      name: 'Infinity',
+      output: 'Infinity_',
+    },
+    {
+      name: 'Intl',
+      output: 'Intl_',
+    },
+    {
       name: 'JSON',
       output: 'JSON_',
     },
@@ -60,12 +180,36 @@ describe('safeRuntimeName', () => {
       output: 'Math_',
     },
     {
+      name: 'NaN',
+      output: 'NaN_',
+    },
+    {
+      name: 'Number',
+      output: 'Number_',
+    },
+    {
       name: 'Object',
       output: 'Object_',
     },
     {
+      name: 'performance',
+      output: 'performance_',
+    },
+    {
       name: 'Promise',
       output: 'Promise_',
+    },
+    {
+      name: 'Proxy',
+      output: 'Proxy_',
+    },
+    {
+      name: 'queueMicrotask',
+      output: 'queueMicrotask_',
+    },
+    {
+      name: 'Reflect',
+      output: 'Reflect_',
     },
     {
       name: 'RegExp',
@@ -76,6 +220,26 @@ describe('safeRuntimeName', () => {
       output: 'Set_',
     },
     {
+      name: 'setInterval',
+      output: 'setInterval_',
+    },
+    {
+      name: 'setTimeout',
+      output: 'setTimeout_',
+    },
+    {
+      name: 'String',
+      output: 'String_',
+    },
+    {
+      name: 'structuredClone',
+      output: 'structuredClone_',
+    },
+    {
+      name: 'Symbol',
+      output: 'Symbol_',
+    },
+    {
       name: 'WeakMap',
       output: 'WeakMap_',
     },
@@ -83,6 +247,7 @@ describe('safeRuntimeName', () => {
       name: 'WeakSet',
       output: 'WeakSet_',
     },
+    // JavaScript keywords
     {
       name: 'arguments',
       output: 'arguments_',
@@ -283,18 +448,40 @@ describe('safeRuntimeName', () => {
       name: 'yield',
       output: 'yield_',
     },
+    // Node.js globals
+    {
+      name: '__dirname',
+      output: '__dirname_',
+    },
+    {
+      name: '__filename',
+      output: '__filename_',
+    },
+    {
+      name: 'exports',
+      output: 'exports_',
+    },
     {
       name: 'global',
       output: 'global_',
+    },
+    {
+      name: 'module',
+      output: 'module_',
     },
     {
       name: 'process',
       output: 'process_',
     },
     {
+      name: 'require',
+      output: 'require_',
+    },
+    {
       name: 'Buffer',
       output: 'Buffer_',
     },
+    // TypeScript keywords
     {
       name: 'any',
       output: 'any_',
@@ -353,10 +540,7 @@ describe('safeRuntimeName', () => {
     },
   ];
 
-  it.each(scenarios)(
-    'transforms $name -> $output',
-    async ({ name, output }) => {
-      expect(safeRuntimeName(name)).toEqual(output);
-    },
-  );
+  it.each(scenarios)('transforms $name -> $output', async ({ name, output }) => {
+    expect(safeRuntimeName(name)).toEqual(output);
+  });
 });

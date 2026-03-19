@@ -1,12 +1,8 @@
-import type {
-  ArrayStyle,
-  ObjectStyle,
-  SerializerOptions,
-} from './pathSerializer';
+import type { ArrayStyle, ObjectStyle, SerializerOptions } from './pathSerializer';
 
 export type QuerySerializer = (query: Record<string, unknown>) => string;
 
-export type BodySerializer = (body: any) => any;
+export type BodySerializer = (body: unknown) => unknown;
 
 type QuerySerializerOptionsObject = {
   allowReserved?: boolean;
@@ -22,11 +18,7 @@ export type QuerySerializerOptions = QuerySerializerOptionsObject & {
   parameters?: Record<string, QuerySerializerOptionsObject>;
 };
 
-const serializeFormDataPair = (
-  data: FormData,
-  key: string,
-  value: unknown,
-): void => {
+const serializeFormDataPair = (data: FormData, key: string, value: unknown): void => {
   if (typeof value === 'string' || value instanceof Blob) {
     data.append(key, value);
   } else {
@@ -34,11 +26,7 @@ const serializeFormDataPair = (
   }
 };
 
-const serializeUrlSearchParamsPair = (
-  data: URLSearchParams,
-  key: string,
-  value: unknown,
-): void => {
+const serializeUrlSearchParamsPair = (data: URLSearchParams, key: string, value: unknown): void => {
   if (typeof value === 'string') {
     data.append(key, value);
   } else {
@@ -47,12 +35,10 @@ const serializeUrlSearchParamsPair = (
 };
 
 export const formDataBodySerializer = {
-  bodySerializer: <T extends Record<string, any> | Array<Record<string, any>>>(
-    body: T,
-  ): FormData => {
+  bodySerializer: (body: unknown): FormData => {
     const data = new FormData();
 
-    Object.entries(body).forEach(([key, value]) => {
+    Object.entries(body as Record<string, unknown>).forEach(([key, value]) => {
       if (value === undefined || value === null) {
         return;
       }
@@ -68,19 +54,15 @@ export const formDataBodySerializer = {
 };
 
 export const jsonBodySerializer = {
-  bodySerializer: <T>(body: T): string =>
-    JSON.stringify(body, (_key, value) =>
-      typeof value === 'bigint' ? value.toString() : value,
-    ),
+  bodySerializer: (body: unknown): string =>
+    JSON.stringify(body, (_key, value) => (typeof value === 'bigint' ? value.toString() : value)),
 };
 
 export const urlSearchParamsBodySerializer = {
-  bodySerializer: <T extends Record<string, any> | Array<Record<string, any>>>(
-    body: T,
-  ): string => {
+  bodySerializer: (body: unknown): string => {
     const data = new URLSearchParams();
 
-    Object.entries(body).forEach(([key, value]) => {
+    Object.entries(body as Record<string, unknown>).forEach(([key, value]) => {
       if (value === undefined || value === null) {
         return;
       }

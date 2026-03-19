@@ -1,17 +1,11 @@
 import type { RenderContext, Renderer } from '@hey-api/codegen-core';
+import type { BaseOutput } from '@hey-api/shared';
 import type { MaybeArray, MaybeFunc } from '@hey-api/types';
 import ts from 'typescript';
 
-import type { TsDsl } from '~/ts-dsl';
-import { $ } from '~/ts-dsl';
-
-import type {
-  ModuleExport,
-  ModuleImport,
-  SortGroup,
-  SortKey,
-  SortModule,
-} from './render-utils';
+import type { TsDsl } from '../../ts-dsl';
+import { $ } from '../../ts-dsl';
+import type { ModuleExport, ModuleImport, SortGroup, SortKey, SortModule } from './render-utils';
 import { astToString, moduleSortKey } from './render-utils';
 
 type Exports = ReadonlyArray<ReadonlyArray<ModuleExport>>;
@@ -19,6 +13,7 @@ type ExportsOptions = {
   preferExportAll?: boolean;
 };
 type Header = MaybeArray<string> | null | undefined;
+type HeaderArg = MaybeFunc<(ctx: RenderContext<TsDsl>) => Header>;
 type Imports = ReadonlyArray<ReadonlyArray<ModuleImport>>;
 
 function headerToLines(header: Header): ReadonlyArray<string> {
@@ -40,43 +35,33 @@ export class TypeScriptRenderer implements Renderer {
    *
    * @private
    */
-  private _header?: MaybeFunc<(ctx: RenderContext<TsDsl>) => Header>;
+  private _header?: HeaderArg;
+  /**
+   * Options for module specifier resolution.
+   *
+   * @private
+   */
+  private _module?: Partial<BaseOutput>['module'];
   /**
    * Whether `export * from 'module'` should be used when possible instead of named exports.
    *
    * @private
    */
   private _preferExportAll: boolean;
-  /**
-   * Controls whether imports/exports include a file extension (e.g., '.ts' or '.js').
-   *
-   * @private
-   */
-  private _preferFileExtension: string;
-  /**
-   * Optional function to transform module specifiers.
-   *
-   * @private
-   */
-  private _resolveModuleName?: (moduleName: string) => string | undefined;
 
   constructor(
-    args: {
-      header?: MaybeFunc<(ctx: RenderContext<TsDsl>) => Header>;
+    args: Pick<Partial<BaseOutput>, 'module'> & {
+      header?: HeaderArg;
       preferExportAll?: boolean;
-      preferFileExtension?: string;
-      resolveModuleName?: (moduleName: string) => string | undefined;
     } = {},
   ) {
     this._header = args.header;
+    this._module = args.module;
     this._preferExportAll = args.preferExportAll ?? false;
-    this._preferFileExtension = args.preferFileExtension ?? '';
-    this._resolveModuleName = args.resolveModuleName;
   }
 
   render(ctx: RenderContext<TsDsl>): string {
-    const header =
-      typeof this._header === 'function' ? this._header(ctx) : this._header;
+    const header = typeof this._header === 'function' ? this._header(ctx) : this._header;
     return TypeScriptRenderer.astToString({
       exports: this.getExports(ctx),
       exportsOptions: {
@@ -142,16 +127,11 @@ export class TypeScriptRenderer implements Renderer {
     return text;
   }
 
-  static toExportAst(
-    group: ModuleExport,
-    options?: ExportsOptions,
-  ): ts.ExportDeclaration {
+  static toExportAst(group: ModuleExport, options?: ExportsOptions): ts.ExportDeclaration {
     const specifiers = group.exports.map((exp) => {
       const specifier = ts.factory.createExportSpecifier(
         exp.isTypeOnly,
-        exp.sourceName !== exp.exportedName
-          ? $.id(exp.sourceName).toAst()
-          : undefined,
+        exp.sourceName !== exp.exportedName ? $.id(exp.sourceName).toAst() : undefined,
         $.id(exp.exportedName).toAst(),
       );
       return specifier;
@@ -173,18 +153,14 @@ export class TypeScriptRenderer implements Renderer {
     const specifiers = group.imports.map((imp) => {
       const specifier = ts.factory.createImportSpecifier(
         imp.isTypeOnly,
-        imp.sourceName !== imp.localName
-          ? $.id(imp.sourceName).toAst()
-          : undefined,
+        imp.sourceName !== imp.localName ? $.id(imp.sourceName).toAst() : undefined,
         $.id(imp.localName).toAst(),
       );
       return specifier;
     });
     const importClause = ts.factory.createImportClause(
       group.isTypeOnly,
-      group.kind === 'default'
-        ? $.id(group.localName ?? '').toAst()
-        : undefined,
+      group.kind === 'default' ? $.id(group.localName ?? '').toAst() : undefined,
       group.kind === 'namespace'
         ? ts.factory.createNamespaceImport($.id(group.localName ?? '').toAst())
         : specifiers.length > 0
@@ -210,10 +186,10 @@ export class TypeScriptRenderer implements Renderer {
       const sortKey = moduleSortKey({
         file: ctx.file,
         fromFile: exp.from,
-        preferFileExtension: this._preferFileExtension,
+        preferFileExtension: this._module?.extension || '',
         root: ctx.project.root,
       });
-      const modulePath = this._resolveModuleName?.(sortKey[2]) ?? sortKey[2];
+      const modulePath = this._module?.resolve?.(sortKey[2], ctx) ?? sortKey[2];
       const [groupIndex] = sortKey;
 
       if (!groups.has(groupIndex)) groups.set(groupIndex, new Map());
@@ -240,9 +216,7 @@ export class TypeScriptRenderer implements Renderer {
 
         entries.sort((a, b) => {
           const d = a.sortKey[1] - b.sortKey[1];
-          return d !== 0
-            ? d
-            : a.group.modulePath.localeCompare(b.group.modulePath);
+          return d !== 0 ? d : a.group.modulePath.localeCompare(b.group.modulePath);
         });
 
         return entries.map((e) => {
@@ -257,9 +231,7 @@ export class TypeScriptRenderer implements Renderer {
                 exp.isTypeOnly = false;
               }
             }
-            group.exports.sort((a, b) =>
-              a.exportedName.localeCompare(b.exportedName),
-            );
+            group.exports.sort((a, b) => a.exportedName.localeCompare(b.exportedName));
           }
           return group;
         });
@@ -280,10 +252,10 @@ export class TypeScriptRenderer implements Renderer {
       const sortKey = moduleSortKey({
         file: ctx.file,
         fromFile: imp.from,
-        preferFileExtension: this._preferFileExtension,
+        preferFileExtension: this._module?.extension || '',
         root: ctx.project.root,
       });
-      const modulePath = this._resolveModuleName?.(sortKey[2]) ?? sortKey[2];
+      const modulePath = this._module?.resolve?.(sortKey[2], ctx) ?? sortKey[2];
       const [groupIndex] = sortKey;
 
       if (!groups.has(groupIndex)) groups.set(groupIndex, new Map());
@@ -320,9 +292,7 @@ export class TypeScriptRenderer implements Renderer {
 
         entries.sort((a, b) => {
           const d = a.sortKey[1] - b.sortKey[1];
-          return d !== 0
-            ? d
-            : a.group.modulePath.localeCompare(b.group.modulePath);
+          return d !== 0 ? d : a.group.modulePath.localeCompare(b.group.modulePath);
         });
 
         return entries.map((e) => {
@@ -337,9 +307,7 @@ export class TypeScriptRenderer implements Renderer {
                 imp.isTypeOnly = false;
               }
             }
-            group.imports.sort((a, b) =>
-              a.localName.localeCompare(b.localName),
-            );
+            group.imports.sort((a, b) => a.localName.localeCompare(b.localName));
           }
           return group;
         });

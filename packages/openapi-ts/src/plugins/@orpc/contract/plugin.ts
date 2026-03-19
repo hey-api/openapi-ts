@@ -11,16 +11,13 @@ import type { OrpcContractPlugin, RouterConfig } from './types';
 
 function hasInput(operation: IR.OperationObject): boolean {
   const hasPathParams = Boolean(
-    operation.parameters?.path &&
-      Object.keys(operation.parameters.path).length > 0,
+    operation.parameters?.path && Object.keys(operation.parameters.path).length > 0,
   );
   const hasQueryParams = Boolean(
-    operation.parameters?.query &&
-      Object.keys(operation.parameters.query).length > 0,
+    operation.parameters?.query && Object.keys(operation.parameters.query).length > 0,
   );
   const hasHeaderParams = Boolean(
-    operation.parameters?.header &&
-      Object.keys(operation.parameters.header).length > 0,
+    operation.parameters?.header && Object.keys(operation.parameters.header).length > 0,
   );
   const hasBody = Boolean(operation.body);
   return hasPathParams || hasQueryParams || hasHeaderParams || hasBody;
@@ -28,9 +25,7 @@ function hasInput(operation: IR.OperationObject): boolean {
 
 function getSuccessResponse(
   operation: IR.OperationObject,
-):
-  | { hasOutput: true; statusCode: number }
-  | { hasOutput: false; statusCode?: undefined } {
+): { hasOutput: true; statusCode: number } | { hasOutput: false; statusCode?: undefined } {
   if (operation.responses) {
     for (const [statusCode, response] of Object.entries(operation.responses)) {
       const statusCodeNumber = Number.parseInt(statusCode, 10);
@@ -48,17 +43,14 @@ function getSuccessResponse(
 }
 
 function getTags(operation: IR.OperationObject, defaultTag: string): string[] {
-  return operation.tags && operation.tags.length > 0
-    ? [...operation.tags]
-    : [defaultTag];
+  return operation.tags && operation.tags.length > 0 ? [...operation.tags] : [defaultTag];
 }
 
 function getOperationPaths(
   operation: IR.OperationObject,
   routerConfig: RouterConfig,
 ): ReadonlyArray<ReadonlyArray<string>> {
-  const { nesting, nestingDelimiters, strategy, strategyDefaultTag } =
-    routerConfig;
+  const { nesting, nestingDelimiters, strategy, strategyDefaultTag } = routerConfig;
 
   // Get path derivation function
   let pathFn = OperationPath.id();
@@ -167,19 +159,13 @@ export const handler: OrpcContractPlugin['Handler'] = ({ plugin }) => {
     const routeConfig = $.object()
       .prop('method', $.literal(method))
       .prop('path', $.literal(op.path as string))
-      .$if(op.operationId, (node) =>
-        node.prop('operationId', $.literal(op.operationId!)),
-      )
+      .$if(op.operationId, (node) => node.prop('operationId', $.literal(op.operationId!)))
       .$if(op.summary, (node) => node.prop('summary', $.literal(op.summary!)))
-      .$if(op.description, (node) =>
-        node.prop('description', $.literal(op.description!)),
-      )
+      .$if(op.description, (node) => node.prop('description', $.literal(op.description!)))
       .$if(op.deprecated, (node) => node.prop('deprecated', $.literal(true)))
       .$if(tags.length > 0, (node) => node.prop('tags', $.fromValue(tags)))
-      .$if(
-        successResponse.hasOutput && successResponse.statusCode !== 200,
-        (node) =>
-          node.prop('successStatus', $.literal(successResponse.statusCode!)),
+      .$if(successResponse.hasOutput && successResponse.statusCode !== 200, (node) =>
+        node.prop('successStatus', $.literal(successResponse.statusCode!)),
       );
 
     let expression = $(baseSymbol).attr('route').call(routeConfig);
@@ -268,9 +254,7 @@ export const handler: OrpcContractPlugin['Handler'] = ({ plugin }) => {
   }
 
   const contractsObject = buildNestedObject(root).pretty();
-  const contractsNode = $.const(contractsSymbol)
-    .export()
-    .assign(contractsObject);
+  const contractsNode = $.const(contractsSymbol).export().assign(contractsObject);
   plugin.node(contractsNode);
 
   const routerTypeName = toCase(routerExportName, 'PascalCase');

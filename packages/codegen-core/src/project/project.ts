@@ -3,8 +3,9 @@ import path from 'node:path';
 import type { IProjectRenderMeta } from '../extensions';
 import { FileRegistry } from '../files/registry';
 import { defaultExtensions } from '../languages/extensions';
+import { defaultModuleEntryNames } from '../languages/modules';
 import { defaultNameConflictResolvers } from '../languages/resolvers';
-import type { Extensions, NameConflictResolvers } from '../languages/types';
+import type { Extensions, ModuleEntryNames, NameConflictResolvers } from '../languages/types';
 import { NodeRegistry } from '../nodes/registry';
 import type { IOutput } from '../output';
 import { Planner } from '../planner/planner';
@@ -25,6 +26,7 @@ export class Project implements IProject {
   readonly defaultNameConflictResolver: NameConflictResolver;
   readonly extensions: Extensions;
   readonly fileName?: (name: string) => string;
+  readonly moduleEntryNames: ModuleEntryNames;
   readonly nameConflictResolvers: NameConflictResolvers;
   readonly renderers: ReadonlyArray<Renderer>;
   readonly root: string;
@@ -36,6 +38,7 @@ export class Project implements IProject {
       | 'defaultNameConflictResolver'
       | 'extensions'
       | 'fileName'
+      | 'moduleEntryNames'
       | 'nameConflictResolvers'
       | 'renderers'
     > &
@@ -51,6 +54,10 @@ export class Project implements IProject {
     };
     this.fileName = typeof fileName === 'string' ? () => fileName : fileName;
     this.files = new FileRegistry(this);
+    this.moduleEntryNames = {
+      ...defaultModuleEntryNames,
+      ...args.moduleEntryNames,
+    };
     this.nameConflictResolvers = {
       ...defaultNameConflictResolvers,
       ...args.nameConflictResolvers,

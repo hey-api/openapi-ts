@@ -1,15 +1,35 @@
-import type { SchemaWithType } from '~/plugins';
-import type { TypeTsDsl } from '~/ts-dsl';
-import { $ } from '~/ts-dsl';
+import type { SchemaWithType } from '@hey-api/shared';
 
-import type { IrSchemaToAstOptions } from '../../shared/types';
+import { $ } from '../../../../../ts-dsl';
+import type { UndefinedResolverContext } from '../../resolvers';
+import type { Type } from '../../shared/types';
+import type { HeyApiTypeScriptPlugin } from '../../types';
 
-export const undefinedToAst = (
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _args: IrSchemaToAstOptions & {
-    schema: SchemaWithType<'undefined'>;
-  },
-): TypeTsDsl => {
-  const node = $.type('undefined');
-  return node;
-};
+function baseNode(): Type {
+  return $.type('undefined');
+}
+
+function undefinedResolver(ctx: UndefinedResolverContext): Type {
+  return ctx.nodes.base(ctx);
+}
+
+export function undefinedToAst({
+  plugin,
+  schema,
+}: {
+  plugin: HeyApiTypeScriptPlugin['Instance'];
+  schema: SchemaWithType<'undefined'>;
+}): Type {
+  const ctx: UndefinedResolverContext = {
+    $,
+    nodes: {
+      base: baseNode,
+    },
+    plugin,
+    schema,
+  };
+
+  const resolver = plugin.config['~resolvers']?.undefined;
+  const result = resolver?.(ctx);
+  return result ?? undefinedResolver(ctx);
+}

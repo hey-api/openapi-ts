@@ -1,14 +1,11 @@
-import type { PluginContext } from '~/plugins/types';
+import type { PluginContext } from '@hey-api/shared';
 
 import type { UserConfig } from '../types';
 import type { ExamplesConfig } from './types';
 
 type Config = Omit<UserConfig, 'name'>;
 
-export function resolveExamples(
-  config: Config,
-  context: PluginContext,
-): ExamplesConfig {
+export function resolveExamples(config: Config, context: PluginContext): ExamplesConfig {
   return context.valueToObject({
     defaultValue: {
       enabled: Boolean(config.examples),

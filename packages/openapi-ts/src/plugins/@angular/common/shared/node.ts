@@ -5,16 +5,16 @@ import type {
   Symbol,
   SymbolMeta,
 } from '@hey-api/codegen-core';
+import type { IR } from '@hey-api/shared';
+import { applyNaming, toCase } from '@hey-api/shared';
 
-import type { IR } from '~/ir/types';
-import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
+import { getTypedConfig } from '../../../../config/utils';
+import { getClientPlugin } from '../../../../plugins/@hey-api/client-core/utils';
 import {
   createOperationComment,
   isOperationOptionsRequired,
-} from '~/plugins/shared/utils/operation';
-import { $ } from '~/ts-dsl';
-import { applyNaming, toCase } from '~/utils/naming';
-
+} from '../../../../plugins/shared/utils/operation';
+import { $ } from '../../../../ts-dsl';
 import type { AngularCommonPlugin } from '../types';
 
 export interface OperationItem {
@@ -23,11 +23,15 @@ export interface OperationItem {
 
 export const source = globalThis.Symbol('@angular/common');
 
-function attachComment<
-  T extends ReturnType<typeof $.var | typeof $.method>,
->(args: { node: T; operation: IR.OperationObject }): T {
-  const { node, operation } = args;
-  return node.$if(createOperationComment(operation), (n, v) => n.doc(v)) as T;
+function attachComment<T extends ReturnType<typeof $.var | typeof $.method>>(args: {
+  node: T;
+  operation: IR.OperationObject;
+  plugin: AngularCommonPlugin['Instance'];
+}): T {
+  const { node, operation, plugin } = args;
+  return node.$if(plugin.config.comments && createOperationComment(operation), (n, v) =>
+    n.doc(v),
+  ) as T;
 }
 
 function createHttpRequestFnMeta(operation: IR.OperationObject): SymbolMeta {
@@ -76,12 +80,9 @@ function createHttpRequestFnSymbol(
 ): Symbol {
   const { operation } = item.data;
   const name = item.location[item.location.length - 1]!;
-  return plugin.symbol(
-    applyNaming(name, plugin.config.httpRequests.methodName),
-    {
-      meta: createHttpRequestFnMeta(operation),
-    },
-  );
+  return plugin.symbol(applyNaming(name, plugin.config.httpRequests.methodName), {
+    meta: createHttpRequestFnMeta(operation),
+  });
 }
 
 function createHttpResourceFnSymbol(
@@ -90,12 +91,9 @@ function createHttpResourceFnSymbol(
 ): Symbol {
   const { operation } = item.data;
   const name = item.location[item.location.length - 1]!;
-  return plugin.symbol(
-    applyNaming(name, plugin.config.httpResources.methodName),
-    {
-      meta: createHttpResourceFnMeta(operation),
-    },
-  );
+  return plugin.symbol(applyNaming(name, plugin.config.httpResources.methodName), {
+    meta: createHttpResourceFnMeta(operation),
+  });
 }
 
 function childToHttpRequestNode(
@@ -111,12 +109,7 @@ function childToHttpRequestNode(
     $.getter(memberName, (g) =>
       g
         .returns(refChild)
-        .do(
-          $('this')
-            .attr(privateName)
-            .nullishAssign($.new(refChild).args())
-            .return(),
-        ),
+        .do($('this').attr(privateName).nullishAssign($.new(refChild).args()).return()),
     ),
   ];
 }
@@ -125,9 +118,7 @@ function childToHttpResourceNode(
   resource: StructureNode,
   plugin: AngularCommonPlugin['Instance'],
 ): ReadonlyArray<ReturnType<typeof $.field | typeof $.getter>> {
-  const refChild = plugin.referenceSymbol(
-    createHttpResourceShellMeta(resource),
-  );
+  const refChild = plugin.referenceSymbol(createHttpResourceShellMeta(resource));
   const memberNameStr = toCase(refChild.name, 'camelCase');
   const memberName = plugin.symbol(memberNameStr);
   const privateName = plugin.symbol(`_${memberNameStr}`);
@@ -136,20 +127,13 @@ function childToHttpResourceNode(
     $.getter(memberName, (g) =>
       g
         .returns(refChild)
-        .do(
-          $('this')
-            .attr(privateName)
-            .nullishAssign($.new(refChild).args())
-            .return(),
-        ),
+        .do($('this').attr(privateName).nullishAssign($.new(refChild).args()).return()),
     ),
   ];
 }
 
-export function createHttpRequestShell(
-  plugin: AngularCommonPlugin['Instance'],
-): StructureShell {
-  const client = getClientPlugin(plugin.context.config);
+export function createHttpRequestShell(plugin: AngularCommonPlugin['Instance']): StructureShell {
+  const client = getClientPlugin(getTypedConfig(plugin));
   const isAngularClient = client.name === '@hey-api/client-angular';
 
   const symbolInjectable = plugin.external('@angular/core.Injectable');
@@ -171,10 +155,7 @@ export function createHttpRequestShell(
       const c = $.class(symbol)
         .export()
         .$if(isAngularClient && node.isRoot, (c) =>
-          c.decorator(
-            symbolInjectable,
-            $.object().prop('providedIn', $.literal('root')),
-          ),
+          c.decorator(symbolInjectable, $.object().prop('providedIn', $.literal('root'))),
         );
 
       return { dependencies: [], node: c };
@@ -182,10 +163,8 @@ export function createHttpRequestShell(
   };
 }
 
-export function createHttpResourceShell(
-  plugin: AngularCommonPlugin['Instance'],
-): StructureShell {
-  const client = getClientPlugin(plugin.context.config);
+export function createHttpResourceShell(plugin: AngularCommonPlugin['Instance']): StructureShell {
+  const client = getClientPlugin(getTypedConfig(plugin));
   const isAngularClient = client.name === '@hey-api/client-angular';
 
   const symbolInjectable = plugin.external('@angular/core.Injectable');
@@ -207,10 +186,7 @@ export function createHttpResourceShell(
       const c = $.class(symbol)
         .export()
         .$if(isAngularClient && node.isRoot, (c) =>
-          c.decorator(
-            symbolInjectable,
-            $.object().prop('providedIn', $.literal('root')),
-          ),
+          c.decorator(symbolInjectable, $.object().prop('providedIn', $.literal('root'))),
         );
 
       return { dependencies: [], node: c };
@@ -218,9 +194,7 @@ export function createHttpResourceShell(
   };
 }
 
-function implementHttpRequestFn<
-  T extends ReturnType<typeof $.func | typeof $.method>,
->(args: {
+function implementHttpRequestFn<T extends ReturnType<typeof $.func | typeof $.method>>(args: {
   node: T;
   operation: IR.OperationObject;
   plugin: AngularCommonPlugin['Instance'];
@@ -245,6 +219,12 @@ function implementHttpRequestFn<
     role: 'data',
     tool: 'typescript',
   });
+  const symbolResponseType = plugin.querySymbol({
+    category: 'type',
+    resource: 'operation',
+    resourceId: operation.id,
+    role: 'response',
+  });
 
   return node
     .param('options', (p) =>
@@ -255,7 +235,7 @@ function implementHttpRequestFn<
       ),
     )
     .generic('ThrowOnError', (g) => g.extends('boolean').default(false))
-    .returns($.type(symbolHttpRequest).generic('unknown'))
+    .returns($.type(symbolHttpRequest).generic(symbolResponseType ?? 'unknown'))
     .do(
       $.return(
         $('options')
@@ -269,14 +249,14 @@ function implementHttpRequestFn<
               .prop('method', $.literal(operation.method.toUpperCase()))
               .prop('url', $.literal(operation.path))
               .spread('options'),
-          ),
+          )
+          .generic(symbolResponseType ?? 'unknown')
+          .generic('ThrowOnError'),
       ),
     ) as T;
 }
 
-function implementHttpResourceFn<
-  T extends ReturnType<typeof $.func | typeof $.method>,
->(args: {
+function implementHttpResourceFn<T extends ReturnType<typeof $.func | typeof $.method>>(args: {
   node: T;
   operation: IR.OperationObject;
   plugin: AngularCommonPlugin['Instance'];
@@ -287,9 +267,7 @@ function implementHttpResourceFn<
     operation,
   });
 
-  const symbolHttpResource = plugin.external(
-    '@angular/common/http.httpResource',
-  );
+  const symbolHttpResource = plugin.external('@angular/common/http.httpResource');
   const symbolInject = plugin.external('@angular/core.inject');
   const symbolOptions = plugin.referenceSymbol({
     category: 'type',
@@ -330,28 +308,21 @@ function implementHttpResourceFn<
           .call(
             $.func().do(
               $.const('opts').assign(
-                $.ternary('options')
-                  .do($('options').call())
-                  .otherwise($.id('undefined')),
+                $.ternary('options').do($('options').call()).otherwise($.id('undefined')),
               ),
               $.return(
                 $.ternary('opts')
                   .do(
                     $.lazy((ctx) =>
                       ctx
-                        .access(
-                          plugin.referenceSymbol(
-                            createHttpRequestFnMeta(operation),
-                          ),
-                          {
-                            transform: (node, index) =>
-                              index === 0
-                                ? node['~dsl'] === 'ClassTsDsl'
-                                  ? $(symbolInject).call($(node.name))
-                                  : $(node.name)
-                                : node,
-                          },
-                        )
+                        .access(plugin.referenceSymbol(createHttpRequestFnMeta(operation)), {
+                          transform: (node, index) =>
+                            index === 0
+                              ? node['~dsl'] === 'ClassTsDsl'
+                                ? $(symbolInject).call($(node.name))
+                                : $(node.name)
+                              : node,
+                        })
                         .call('opts'),
                     ),
                   )
@@ -384,7 +355,7 @@ export function toHttpRequestNode(
             plugin,
           }),
         );
-      node = attachComment({ node, operation });
+      node = attachComment({ node, operation, plugin });
       nodes.push(node);
     }
     return { nodes };
@@ -409,6 +380,7 @@ export function toHttpRequestNode(
           attachComment({
             node: m,
             operation,
+            plugin,
           }).public(),
         ),
         operation,
@@ -451,7 +423,7 @@ export function toHttpResourceNode(
             plugin,
           }),
         );
-      node = attachComment({ node, operation });
+      node = attachComment({ node, operation, plugin });
       nodes.push(node);
     }
     return { nodes };
@@ -476,6 +448,7 @@ export function toHttpResourceNode(
           attachComment({
             node: m,
             operation,
+            plugin,
           }).public(),
         ),
         operation,

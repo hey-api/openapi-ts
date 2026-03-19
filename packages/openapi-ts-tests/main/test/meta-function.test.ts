@@ -3,7 +3,6 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { createClient, type UserConfig } from '@hey-api/openapi-ts';
-import { describe, expect, it } from 'vitest';
 
 import { getFilePaths, getSpecsPath } from '../../utils';
 
@@ -53,17 +52,17 @@ describe('TanStack Query Meta Function Customization', () => {
       name: '@tanstack/angular-query-experimental',
       output: 'angular-query-experimental',
     },
+    {
+      description: 'Preact Query',
+      name: '@tanstack/preact-query',
+      output: 'preact-query',
+    },
   ] as const;
 
   // Generate scenarios for each framework
   const scenarios = frameworks.map((framework) => ({
     config: createConfig({
-      output: path.join(
-        outputDir,
-        '@tanstack',
-        framework.output,
-        'meta-function',
-      ),
+      output: path.join(outputDir, '@tanstack', framework.output, 'meta-function'),
       plugins: [
         {
           infiniteQueryOptions: {

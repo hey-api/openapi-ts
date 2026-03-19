@@ -19,10 +19,7 @@ export const createZodConfig =
     zodVersion: (typeof zodVersions)[number];
   }) =>
   (userConfig: UserConfig) => {
-    const input =
-      userConfig.input instanceof Array
-        ? userConfig.input[0]!
-        : userConfig.input;
+    const input = userConfig.input instanceof Array ? userConfig.input[0]! : userConfig.input;
     const inputPath = path.join(
       getSpecsPath(),
       openApiVersion,
@@ -45,19 +42,15 @@ export const createZodConfig =
             },
       logs: {
         level: 'silent',
+        path: './logs',
       },
-      output: path.join(
-        outputDir,
-        typeof userConfig.output === 'string' ? userConfig.output : '',
-      ),
+      output: path.join(outputDir, typeof userConfig.output === 'string' ? userConfig.output : ''),
     } as const satisfies UserConfig;
   };
 
-export const getSnapshotsPath = (): string =>
-  path.join(__dirname, '..', '__snapshots__');
+export const getSnapshotsPath = (): string => path.join(__dirname, '..', '__snapshots__');
 
-export const getTempSnapshotsPath = (): string =>
-  path.join(__dirname, '..', '.gen', 'snapshots');
+export const getTempSnapshotsPath = (): string => path.join(__dirname, '..', '.gen', 'snapshots');
 
 export const zodVersions = [
   {

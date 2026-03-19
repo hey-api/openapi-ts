@@ -1,5 +1,6 @@
-import type { IR } from '~/ir/types';
-import type { $ } from '~/ts-dsl';
+import type { IR } from '@hey-api/shared';
+
+import type { $ } from '../../../ts-dsl';
 
 type Expression = ReturnType<typeof $.expr>;
 

@@ -6,9 +6,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Load your exported graph
-const nodes = JSON.parse(
-  fs.readFileSync(path.resolve(__dirname, 'graph.json'), 'utf-8'),
-);
+const nodes = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'graph.json'), 'utf-8'));
 
 // Annotate nodes with children count
 const annotatedNodes = nodes.map((n) => ({

@@ -8,13 +8,7 @@ const printer = ts.createPrinter({
   removeComments: false,
 });
 
-const blankFile = ts.createSourceFile(
-  '',
-  '',
-  ts.ScriptTarget.ESNext,
-  false,
-  ts.ScriptKind.TS,
-);
+const blankFile = ts.createSourceFile('', '', ts.ScriptTarget.ESNext, false, ts.ScriptKind.TS);
 
 /** Print a TypeScript node to a string. */
 export function astToString(node: ts.Node): string {
@@ -86,17 +80,17 @@ export type ModuleImport = Omit<ImportModule, 'from'> & {
   modulePath: string;
 };
 
-export const moduleSortKey = ({
+export function moduleSortKey({
   file,
   fromFile,
   preferFileExtension,
   root,
 }: {
-  file: File;
-  fromFile: File;
+  file: Pick<File, 'finalPath'>;
+  fromFile: Pick<File, 'finalPath' | 'extension' | 'external' | 'name'>;
   preferFileExtension: string;
   root: string;
-}): SortKey => {
+}): SortKey {
   const filePath = file.finalPath!.split(path.sep).join('/');
   let modulePath = fromFile.finalPath!.split(path.sep).join('/');
 
@@ -126,9 +120,7 @@ export const moduleSortKey = ({
     parentCount = 0;
   } else {
     modulePath = `${rel}/${fromFile.name}${fromFile.extension ?? ''}`;
-    parentCount = rel
-      .split(path.sep)
-      .filter((segment) => segment === '..').length;
+    parentCount = rel.split(path.sep).filter((segment) => segment === '..').length;
   }
 
   if (modulePath.endsWith('.ts')) {
@@ -141,4 +133,4 @@ export const moduleSortKey = ({
   }
 
   return [2, parentCount, modulePath];
-};
+}

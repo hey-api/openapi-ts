@@ -1,0 +1,107 @@
+openapi: 3.1.0
+info:
+  title: OpenAPI 3.1.0 discriminator one of with read/write example
+  version: 1
+paths:
+  /pets:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePetRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatePetResponse'
+          description: OK
+components:
+  schemas:
+    AnimalPayload:
+      type: object
+      required:
+        - typeDiscriminator
+      properties:
+        typeDiscriminator:
+          type: string
+      discriminator:
+        propertyName: typeDiscriminator
+        mapping:
+          dog: '#/components/schemas/DogPayload'
+          cat: '#/components/schemas/CatPayload'
+
+    DogPayload:
+      allOf:
+        - $ref: '#/components/schemas/AnimalPayload'
+        - type: object
+          required:
+            - breed
+            - canFetch
+            - displayBreed
+          properties:
+            breed:
+              type: string
+            canFetch:
+              type: boolean
+            displayBreed:
+              type: string
+              readOnly: true
+
+    CatPayload:
+      allOf:
+        - $ref: '#/components/schemas/AnimalPayload'
+        - type: object
+          required:
+            - breed
+            - livesRemaining
+            - displayBreed
+          properties:
+            breed:
+              type: string
+            livesRemaining:
+              type: integer
+            displayBreed:
+              type: string
+              readOnly: true
+
+    CreatePetRequest:
+      type: object
+      required:
+        - name
+        - animal
+      properties:
+        name:
+          type: string
+        animal:
+          oneOf:
+            - $ref: '#/components/schemas/DogPayload'
+            - $ref: '#/components/schemas/CatPayload'
+          discriminator:
+            propertyName: typeDiscriminator
+            mapping:
+              dog: '#/components/schemas/DogPayload'
+              cat: '#/components/schemas/CatPayload'
+
+    CreatePetResponse:
+      type: object
+      required:
+        - id
+        - name
+        - animal
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        animal:
+          oneOf:
+            - $ref: '#/components/schemas/DogPayload'
+            - $ref: '#/components/schemas/CatPayload'
+          discriminator:
+            propertyName: typeDiscriminator
+            mapping:
+              dog: '#/components/schemas/DogPayload'
+              cat: '#/components/schemas/CatPayload'

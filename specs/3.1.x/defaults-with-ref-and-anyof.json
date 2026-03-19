@@ -52,10 +52,7 @@
             "default": null
           },
           "anyOfWithRefAndNullDefault": {
-            "anyOf": [
-              { "$ref": "#/components/schemas/Language" },
-              { "type": "null" }
-            ],
+            "anyOf": [{ "$ref": "#/components/schemas/Language" }, { "type": "null" }],
             "default": null
           },
           "optionalAnyOfWithDefault": {

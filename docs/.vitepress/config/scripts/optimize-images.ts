@@ -4,13 +4,7 @@ import path from 'node:path';
 import type { FormatEnum } from 'sharp';
 import sharp from 'sharp';
 
-const allowedImageExtensions = [
-  '.png',
-  '.jpg',
-  '.jpeg',
-  '.webp',
-  '.svg',
-] as const;
+const allowedImageExtensions = ['.png', '.jpg', '.jpeg', '.webp', '.svg'] as const;
 const images: ReadonlyArray<{
   formats?: ReadonlyArray<keyof FormatEnum>;
   sizes: ReadonlyArray<{
@@ -129,20 +123,14 @@ export async function processImages() {
     const ext = path.extname(image.source).toLowerCase();
     const name = path.basename(image.source, ext);
 
-    if (
-      !allowedImageExtensions.includes(
-        ext as (typeof allowedImageExtensions)[number],
-      )
-    ) {
+    if (!allowedImageExtensions.includes(ext as (typeof allowedImageExtensions)[number])) {
       continue;
     }
 
     for (const imageSize of image.sizes) {
       const size = typeof imageSize === 'object' ? imageSize.width : imageSize;
       const formats =
-        typeof imageSize === 'object'
-          ? imageSize.formats || image.formats
-          : image.formats;
+        typeof imageSize === 'object' ? imageSize.formats || image.formats : image.formats;
       for (const format of formats) {
         const outputFileName = `${name}-${size}w.${format}`;
         const outputPath = path.join(outputDir, outputFileName);

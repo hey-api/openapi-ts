@@ -1,10 +1,16 @@
 {
-  "extends": "./tsconfig.base.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "declaration": false,
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "skipLibCheck": true
+    "composite": true,
+    "rootDir": "src",
+    "outDir": "dist",
+    "types": ["vitest/globals", "node"]
   },
-  "exclude": ["test/generated/**"]
+  "include": ["src"],
+  "references": [
+    { "path": "../types" },
+    { "path": "../codegen-core" },
+    { "path": "../shared" },
+    { "path": "../json-schema-ref-parser" }
+  ]
 }

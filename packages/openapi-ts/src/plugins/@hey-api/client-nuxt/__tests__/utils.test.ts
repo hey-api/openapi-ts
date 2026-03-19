@@ -1,7 +1,72 @@
-import { describe, expect, it, vi } from 'vitest';
-
 import type { Auth } from '../../client-core/bundle/auth';
-import { mergeInterceptors, setAuthParams } from '../bundle/utils';
+import { mergeInterceptors, setAuthParams, unwrapRefs } from '../bundle/utils';
+
+describe('unwrapRefs', () => {
+  it('returns Blob as-is', () => {
+    const blob = new Blob(['test content'], { type: 'text/plain' });
+    const result = unwrapRefs(blob);
+    expect(result).toBe(blob);
+  });
+
+  it('preserves Blob in object', () => {
+    const blob = new Blob(['test content'], { type: 'application/json' });
+    const input = { file: blob, name: 'test' };
+    const result = unwrapRefs(input);
+    expect(result.file).toBe(blob);
+    expect(result.name).toBe('test');
+  });
+
+  it('preserves Blob in array', () => {
+    const blob = new Blob(['test content'], { type: 'image/png' });
+    const input = [blob, 'text'];
+    const result = unwrapRefs(input);
+    expect(result[0]).toBe(blob);
+    expect(result[1]).toBe('text');
+  });
+
+  it('preserves File (extends Blob) as-is', () => {
+    const file = new File(['test content'], 'test.txt', { type: 'text/plain' });
+    const result = unwrapRefs(file);
+    expect(result).toBe(file);
+  });
+
+  it('returns AbortSignal as-is', () => {
+    const controller = new AbortController();
+    const result = unwrapRefs(controller.signal);
+    expect(result).toBe(controller.signal);
+  });
+
+  it('preserves AbortSignal in object', () => {
+    const controller = new AbortController();
+    const input = { signal: controller.signal, url: '/test' };
+    const result = unwrapRefs(input);
+    expect(result.signal).toBe(controller.signal);
+    expect(result.signal instanceof AbortSignal).toBe(true);
+    expect(result.url).toBe('/test');
+  });
+
+  it('returns FormData as-is', () => {
+    const formData = new FormData();
+    formData.append('key', 'value');
+    const result = unwrapRefs(formData);
+    expect(result).toBe(formData);
+  });
+
+  it('preserves FormData in object', () => {
+    const formData = new FormData();
+    formData.append('key', 'value');
+    const input = { body: formData, url: '/upload' };
+    const result = unwrapRefs(input);
+    expect(result.body).toBe(formData);
+    expect(result.body instanceof FormData).toBe(true);
+  });
+
+  it('returns ReadableStream as-is', () => {
+    const stream = new ReadableStream();
+    const result = unwrapRefs(stream);
+    expect(result).toBe(stream);
+  });
+});
 
 describe('mergeInterceptors', () => {
   it('handles no arguments', () => {

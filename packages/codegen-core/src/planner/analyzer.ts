@@ -151,10 +151,7 @@ export class Analyzer {
     return ctx;
   }
 
-  analyze(
-    nodes: Iterable<INode>,
-    callback?: (ctx: AnalysisContext, node: INode) => void,
-  ): void {
+  analyze(nodes: Iterable<INode>, callback?: (ctx: AnalysisContext, node: INode) => void): void {
     for (const node of nodes) {
       const ctx = this.analyzeNode(node);
       callback?.(ctx, node);

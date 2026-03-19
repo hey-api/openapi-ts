@@ -1,5 +1,3 @@
-import { describe, expect, it, vi } from 'vitest';
-
 import type { Auth } from '../core/auth';
 import { getParseAs, setAuthParams } from '../utils';
 
@@ -58,12 +56,9 @@ describe('getParseAs', () => {
     },
   ];
 
-  it.each(scenarios)(
-    'detects $content as $parseAs',
-    async ({ content, parseAs }) => {
-      expect(getParseAs(content)).toEqual(parseAs);
-    },
-  );
+  it.each(scenarios)('detects $content as $parseAs', async ({ content, parseAs }) => {
+    expect(getParseAs(content)).toEqual(parseAs);
+  });
 });
 
 describe('setAuthParams', () => {

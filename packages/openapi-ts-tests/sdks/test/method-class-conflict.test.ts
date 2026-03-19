@@ -2,25 +2,16 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import { createClient } from '@hey-api/openapi-ts';
-import { describe, expect, it } from 'vitest';
 
 import { getFilePaths, getSpecsPath } from '../../utils';
-import {
-  createSdkConfig,
-  getSnapshotsPath,
-  getTempSnapshotsPath,
-} from './utils';
+import { createSdkConfig, getSnapshotsPath, getTempSnapshotsPath } from './utils';
 
 const namespace = 'method-class-conflict';
 
 const outputDir = path.join(getTempSnapshotsPath(), namespace);
 const snapshotsDir = path.join(getSnapshotsPath(), namespace);
 
-const specPath = path.join(
-  getSpecsPath(),
-  '3.0.x',
-  'sdk-method-class-conflict.yaml',
-);
+const specPath = path.join(getSpecsPath(), '3.0.x', 'sdk-method-class-conflict.yaml');
 
 describe(`SDK: ${namespace}`, () => {
   const createConfig = createSdkConfig({
@@ -32,7 +23,7 @@ describe(`SDK: ${namespace}`, () => {
       config: createConfig({
         input: specPath,
         output: {
-          indexFile: false,
+          entryFile: false,
           path: 'class',
         },
         plugins: [
@@ -49,7 +40,7 @@ describe(`SDK: ${namespace}`, () => {
       config: createConfig({
         input: specPath,
         output: {
-          indexFile: false,
+          entryFile: false,
           path: 'flat',
         },
         plugins: [
@@ -66,7 +57,7 @@ describe(`SDK: ${namespace}`, () => {
       config: createConfig({
         input: specPath,
         output: {
-          indexFile: false,
+          entryFile: false,
           path: 'instance',
         },
         plugins: [

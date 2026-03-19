@@ -4,9 +4,9 @@ export type ClientOptions = {
     baseURL: 'http://localhost:3000/base' | (string & {});
 };
 
-export type ExternalRefA = ExternalSharedExternalSharedModel;
+export type ExternalRefA = ExternalSharedModel;
 
-export type ExternalRefB = ExternalSharedExternalSharedModel;
+export type ExternalRefB = ExternalSharedModel;
 
 /**
  * Testing multiline comments in string: First line
@@ -390,6 +390,7 @@ export type ModelWithPattern = {
     patternWithSingleQuotes?: string;
     patternWithNewline?: string;
     patternWithBacktick?: string;
+    patternWithUnicode?: string;
 };
 
 export type ParameterActivityParams = {
@@ -414,7 +415,7 @@ export type FailureFailure = {
     reference_code?: string;
 };
 
-export type ExternalSharedExternalSharedModel = {
+export type ExternalSharedModel = {
     id: string;
     name?: string;
 };
@@ -451,6 +452,7 @@ export type ModelWithPatternWritable = {
     patternWithSingleQuotes?: string;
     patternWithNewline?: string;
     patternWithBacktick?: string;
+    patternWithUnicode?: string;
 };
 
 export type ServiceWithEmptyTagData = {

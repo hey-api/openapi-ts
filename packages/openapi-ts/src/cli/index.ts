@@ -1,8 +1,8 @@
+import { isEnvironment } from '@hey-api/shared';
 import { Command, CommanderError } from 'commander';
 
-import { createClient } from '~/index';
-
-import pkg from '../../package.json' assert { type: 'json' };
+import pkg from '../../package.json';
+import { createClient } from '../index';
 import { cliToConfig } from './adapter';
 
 const binName = Object.keys(pkg.bin)[0]!;
@@ -10,13 +10,10 @@ const binName = Object.keys(pkg.bin)[0]!;
 const program = new Command()
   .name(binName)
   .description('Generate TypeScript code from OpenAPI specifications')
-  .version(pkg.version);
+  .version(isEnvironment('development') ? '[DEVELOPMENT]' : pkg.version);
 
 program
-  .option(
-    '-i, --input <path...>',
-    'OpenAPI specification (path, URL, or string)',
-  )
+  .option('-i, --input <path...>', 'OpenAPI specification (path, URL, or string)')
   .option('-o, --output <path...>', 'Output folder(s)')
   .option('-c, --client <name>', 'HTTP client to generate')
   .option('-p, --plugins [names...]', 'Plugins to use')
@@ -30,13 +27,9 @@ program
   .action(async (options) => {
     const config = cliToConfig(options);
 
-    const context = await createClient(
-      config as Parameters<typeof createClient>[0],
-    );
+    const context = await createClient(config as Parameters<typeof createClient>[0]);
 
-    const hasActiveWatch = context[0]?.config.input.some(
-      (input) => input.watch?.enabled,
-    );
+    const hasActiveWatch = context[0]?.config.input.some((input) => input.watch?.enabled);
 
     if (!hasActiveWatch) {
       process.exit(0);
@@ -49,13 +42,9 @@ export async function runCli(): Promise<void> {
   } catch (error) {
     if (error instanceof CommanderError && 'code' in error) {
       if (error.code === 'commander.optionMissingArgument') {
-        console.error(
-          `\nMissing required argument. Run '${binName} --help' for usage.\n`,
-        );
+        console.error(`\nMissing required argument. Run '${binName} --help' for usage.\n`);
       } else if (error.code === 'commander.unknownOption') {
-        console.error(
-          `\nUnknown option. Run '${binName} --help' for available options.\n`,
-        );
+        console.error(`\nUnknown option. Run '${binName} --help' for available options.\n`);
       }
 
       process.exit(error.exitCode);

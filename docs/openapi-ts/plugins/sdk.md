@@ -466,9 +466,7 @@ export default {
         importKind: 'default', // [!code ++]
         importName: 'CatStore', // [!code ++]
         importSetup: ({ $, node }) =>
-          $(node.name).call(
-            $.object().pretty().prop('apiKey', $.literal('YOUR_API_KEY')),
-          ),
+          $(node.name).call($.object().pretty().prop('apiKey', $.literal('YOUR_API_KEY'))),
         moduleName: '@petstore/client',
         setupName: 'client',
       },
@@ -542,11 +540,11 @@ export default {
 
 ### Display
 
-Enabling examples does not produce visible output on its own. Examples are written into the source specification and can be consumed by documentation tools such as [Mintlify](https://kutt.it/6vrYy9) or [Scalar](https://kutt.it/skQUVd). To persist that specification, enable [Source](/openapi-ts/configuration/output#source) generation.
+Enabling examples does not produce visible output on its own. Examples are written into the source specification and can be consumed by documentation tools such as [Mintlify](https://kutt.to/6vrYy9) or [Scalar](https://kutt.to/skQUVd). To persist that specification, enable [Source](/openapi-ts/configuration/output#source) generation.
 
 ## API
 
-You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/@hey-api/sdk/types.d.ts) interface.
+You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/@hey-api/sdk/types.ts) interface.
 
 <!--@include: ../../partials/examples.md-->
 <!--@include: ../../partials/sponsors.md-->

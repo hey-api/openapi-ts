@@ -1,10 +1,8 @@
 import type { RenderContext } from '@hey-api/codegen-core';
 import { Project } from '@hey-api/codegen-core';
 import ts from 'typescript';
-import { describe, expect, it } from 'vitest';
 
-import type { TsDsl } from '~/ts-dsl';
-
+import type { TsDsl } from '../../../ts-dsl';
 import { TypeScriptRenderer } from '../render';
 import type { ModuleExport, ModuleImport } from '../render-utils';
 
@@ -19,10 +17,7 @@ describe('TypeScriptRenderer', () => {
     ...overrides,
   });
 
-  const mockCtx = (
-    fileOverrides = {},
-    projectOverrides = {},
-  ): RenderContext<TsDsl> => ({
+  const mockCtx = (fileOverrides = {}, projectOverrides = {}): RenderContext<TsDsl> => ({
     file: mockFile(fileOverrides),
     project: new Project({
       root: '/root',

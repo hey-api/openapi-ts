@@ -14,9 +14,7 @@ export interface LayoutMethods extends Node {
   pretty(): this;
 }
 
-export function LayoutMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
-  Base: TBase,
-) {
+export function LayoutMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base: TBase) {
   abstract class Layout extends Base {
     protected static readonly DEFAULT_THRESHOLD = 3;
     protected layout: boolean | number | undefined;
@@ -45,9 +43,7 @@ export function LayoutMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
         this.layout = Layout.DEFAULT_THRESHOLD;
       }
       if (count === 0) return false;
-      return typeof this.layout === 'number'
-        ? count >= this.layout
-        : this.layout;
+      return typeof this.layout === 'number' ? count >= this.layout : this.layout;
     }
   }
 
