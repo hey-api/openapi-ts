@@ -71,7 +71,6 @@ declare module '@hey-api/shared' {
     '@hey-api/sdk': Plugins.HeyApiSdk.Types['Types'];
     '@hey-api/transformers': Plugins.HeyApiTransformers.Types['Types'];
     '@hey-api/typescript': Plugins.HeyApiTypeScript.Types['Types'];
-    '@orpc/contract': Plugins.OrpcContract.Types['Types'];
     '@pinia/colada': Plugins.PiniaColada.Types['Types'];
     '@tanstack/angular-query-experimental': Plugins.TanStackAngularQuery.Types['Types'];
     '@tanstack/preact-query': Plugins.TanStackPreactQuery.Types['Types'];
@@ -82,6 +81,7 @@ declare module '@hey-api/shared' {
     arktype: Plugins.Arktype.Types['Types'];
     fastify: Plugins.Fastify.Types['Types'];
     nestjs: Plugins.NestJs.Types['Types'];
+    orpc: Plugins.Orpc.Types['Types'];
     swr: Plugins.Swr.Types['Types'];
     valibot: Plugins.Valibot.Types['Types'];
     zod: Plugins.Zod.Types['Types'];
@@ -133,7 +133,6 @@ import type {
   HeyApiTypeScriptPlugin,
   HeyApiTypeScriptResolvers,
 } from './plugins/@hey-api/typescript';
-import type { OrpcContractPlugin } from './plugins/@orpc/contract';
 import type { PiniaColadaPlugin } from './plugins/@pinia/colada';
 import type { TanStackAngularQueryPlugin } from './plugins/@tanstack/angular-query-experimental';
 import type { TanStackPreactQueryPlugin } from './plugins/@tanstack/preact-query';
@@ -144,6 +143,7 @@ import type { TanStackVueQueryPlugin } from './plugins/@tanstack/vue-query';
 import type { ArktypePlugin } from './plugins/arktype';
 import type { FastifyPlugin } from './plugins/fastify';
 import type { NestJsPlugin } from './plugins/nestjs';
+import type { OrpcPlugin } from './plugins/orpc';
 import type { SwrPlugin } from './plugins/swr';
 import type { ValibotPlugin, ValibotResolvers } from './plugins/valibot';
 import type { ZodPlugin, ZodResolvers } from './plugins/zod';
@@ -268,8 +268,8 @@ export namespace Plugins {
     export type Types = NestJsPlugin;
   }
 
-  export namespace OrpcContract {
-    export type Types = OrpcContractPlugin;
+  export namespace Orpc {
+    export type Types = OrpcPlugin;
   }
 
   export namespace PiniaColada {
