@@ -1,15 +1,46 @@
-import type { SchemaWithType } from '~/plugins';
-import { $ } from '~/ts-dsl';
+import type { SchemaWithType } from '@hey-api/shared';
 
+import { $ } from '../../../../ts-dsl';
 import { identifiers } from '../../constants';
-import type { IrSchemaToAstOptions } from '../../shared/types';
+import type { UnknownResolverContext } from '../../resolvers';
+import type { Chain } from '../../shared/chain';
+import type { ZodPlugin } from '../../types';
 
-export const unknownToAst = ({
+function baseNode(ctx: UnknownResolverContext): Chain {
+  const { symbols } = ctx;
+  const { z } = symbols;
+  return $(z).attr(identifiers.unknown).call();
+}
+
+function unknownResolver(ctx: UnknownResolverContext): Chain {
+  const baseResult = ctx.nodes.base(ctx);
+  ctx.chain.current = baseResult;
+  return ctx.chain.current;
+}
+
+export function unknownToAst({
   plugin,
-}: IrSchemaToAstOptions & {
+  schema,
+}: {
+  plugin: ZodPlugin['Instance'];
   schema: SchemaWithType<'unknown'>;
-}) => {
+}): Chain {
   const z = plugin.external('zod.z');
-  const expression = $(z).attr(identifiers.unknown).call();
-  return expression;
-};
+  const ctx: UnknownResolverContext = {
+    $,
+    chain: {
+      current: $(z),
+    },
+    nodes: {
+      base: baseNode,
+    },
+    plugin,
+    schema,
+    symbols: {
+      z,
+    },
+  };
+
+  const resolver = plugin.config['~resolvers']?.unknown;
+  return resolver?.(ctx) ?? unknownResolver(ctx);
+}

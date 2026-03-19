@@ -1,5 +1,3 @@
-import { describe, expect, it, vi } from 'vitest';
-
 import { createClient } from '../bundle/client';
 import type { ResolvedRequestOptions } from '../bundle/types';
 
@@ -51,6 +49,18 @@ describe('buildUrl', () => {
 
   it.each(scenarios)('returns $url', ({ options, url }) => {
     expect(client.buildUrl(options)).toBe(url);
+  });
+
+  it('uses baseUrl from client config by default', () => {
+    const clientWithBase = createClient({ baseUrl: 'https://example.com' });
+    expect(clientWithBase.buildUrl({ url: '/foo' })).toBe('https://example.com/foo');
+  });
+
+  it('allows overriding baseUrl from client config', () => {
+    const clientWithBase = createClient({ baseUrl: 'https://example.com' });
+    expect(clientWithBase.buildUrl({ baseUrl: 'https://other.com', url: '/foo' })).toBe(
+      'https://other.com/foo',
+    );
   });
 });
 
@@ -120,45 +130,37 @@ describe('zero-length body handling', () => {
 describe('unserialized request body handling', () => {
   const client = createClient({ baseUrl: 'https://example.com' });
 
-  const scenarios = [
-    { body: 0 },
-    { body: false },
-    { body: 'test string' },
-    { body: '' },
-  ];
+  const scenarios = [{ body: 0 }, { body: false }, { body: 'test string' }, { body: '' }];
 
-  it.each(scenarios)(
-    'handles plain text body with $body value',
-    async ({ body }) => {
-      const mockResponse = new Response(JSON.stringify({ success: true }), {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        status: 200,
-      });
+  it.each(scenarios)('handles plain text body with $body value', async ({ body }) => {
+    const mockResponse = new Response(JSON.stringify({ success: true }), {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      status: 200,
+    });
 
-      const mockFetch: MockFetch = vi.fn().mockResolvedValueOnce(mockResponse);
-      const headers = new Headers({ 'Content-Type': 'text/plain' });
+    const mockFetch: MockFetch = vi.fn().mockResolvedValueOnce(mockResponse);
+    const headers = new Headers({ 'Content-Type': 'text/plain' });
 
-      await client.post({
+    await client.post({
+      body,
+      bodySerializer: null,
+      fetch: mockFetch,
+      headers: {
+        'Content-Type': 'text/plain',
+      },
+      url: '/test',
+    });
+
+    expect(mockFetch).toHaveBeenCalledExactlyOnceWith(
+      expect.any(String),
+      expect.objectContaining({
         body,
-        bodySerializer: null,
-        fetch: mockFetch,
-        headers: {
-          'Content-Type': 'text/plain',
-        },
-        url: '/test',
-      });
-
-      expect(mockFetch).toHaveBeenCalledExactlyOnceWith(
-        expect.any(String),
-        expect.objectContaining({
-          body,
-          headers,
-        }),
-      );
-    },
-  );
+        headers,
+      }),
+    );
+  });
 });
 
 describe('serialized request body handling', () => {
@@ -238,7 +240,7 @@ describe('request interceptor', () => {
     },
     {
       body: { key: 'value' },
-      bodySerializer: (body: object) => JSON.stringify(body),
+      bodySerializer: (body: unknown) => JSON.stringify(body),
       contentType: 'application/json',
       expectedSerializedValue: '{"key":"value"}',
       expectedValue: '{"key":"value"}',
@@ -266,9 +268,7 @@ describe('request interceptor', () => {
           return options;
         });
 
-      const interceptorId = client.interceptors.request.use(
-        mockRequestInterceptor,
-      );
+      const interceptorId = client.interceptors.request.use(mockRequestInterceptor);
 
       await client.post({
         body,

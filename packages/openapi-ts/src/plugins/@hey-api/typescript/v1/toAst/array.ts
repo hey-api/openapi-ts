@@ -1,47 +1,66 @@
-import { fromRef, ref } from '@hey-api/codegen-core';
+import { ref } from '@hey-api/codegen-core';
+import type { SchemaVisitorContext, SchemaWithType, Walker } from '@hey-api/shared';
+import { deduplicateSchema } from '@hey-api/shared';
 
-import { deduplicateSchema } from '~/ir/schema';
-import type { SchemaWithType } from '~/plugins';
-import type { MaybeTsDsl, TypeTsDsl } from '~/ts-dsl';
-import { $ } from '~/ts-dsl';
+import { $ } from '../../../../../ts-dsl';
+import type { ArrayResolverContext } from '../../resolvers';
+import type { Type, TypeScriptResult } from '../../shared/types';
+import type { HeyApiTypeScriptPlugin } from '../../types';
 
-import type { IrSchemaToAstOptions } from '../../shared/types';
-import { irSchemaToAst } from '../plugin';
+function baseNode(ctx: ArrayResolverContext): Type {
+  const { plugin, schema, walk } = ctx;
 
-export const arrayToAst = ({
-  plugin,
-  schema,
-  state,
-}: IrSchemaToAstOptions & {
-  schema: SchemaWithType<'array'>;
-}): TypeTsDsl => {
   if (!schema.items) {
     return $.type('Array').generic($.type(plugin.config.topType));
   }
 
-  schema = deduplicateSchema({ detectFormat: true, schema });
-
-  const itemTypes: Array<MaybeTsDsl<TypeTsDsl>> = [];
-
-  if (schema.items) {
-    schema.items.forEach((item, index) => {
-      const type = irSchemaToAst({
-        plugin,
-        schema: item,
-        state: {
-          ...state,
-          path: ref([...fromRef(state.path), 'items', index]),
-        },
-      });
-      itemTypes.push(type);
-    });
+  const dedupedSchema = deduplicateSchema({ detectFormat: true, schema });
+  if (!dedupedSchema.items) {
+    return $.type('Array').generic($.type(plugin.config.topType));
   }
 
-  if (itemTypes.length === 1) {
-    return $.type('Array').generic(itemTypes[0]!);
+  const itemResults: Array<TypeScriptResult> = dedupedSchema.items.map((item) =>
+    walk(item, {
+      path: ref([]),
+      plugin,
+    }),
+  );
+  if (itemResults.length === 1) {
+    return $.type('Array').generic(itemResults[0]!.type);
   }
 
-  return schema.logicalOperator === 'and'
-    ? $.type('Array').generic($.type.and(...itemTypes))
-    : $.type('Array').generic($.type.or(...itemTypes));
-};
+  return dedupedSchema.logicalOperator === 'and'
+    ? $.type('Array').generic($.type.and(...itemResults.map((r) => r.type)))
+    : $.type('Array').generic($.type.or(...itemResults.map((r) => r.type)));
+}
+
+function arrayResolver(ctx: ArrayResolverContext): Type {
+  return ctx.nodes.base(ctx);
+}
+
+export function arrayToAst({
+  plugin,
+  schema,
+  walk,
+  walkerCtx,
+}: {
+  plugin: HeyApiTypeScriptPlugin['Instance'];
+  schema: SchemaWithType<'array'>;
+  walk: Walker<TypeScriptResult, HeyApiTypeScriptPlugin['Instance']>;
+  walkerCtx: SchemaVisitorContext<HeyApiTypeScriptPlugin['Instance']>;
+}): Type {
+  const ctx: ArrayResolverContext = {
+    $,
+    nodes: {
+      base: baseNode,
+    },
+    plugin,
+    schema,
+    walk,
+    walkerCtx,
+  };
+
+  const resolver = plugin.config['~resolvers']?.array;
+  const result = resolver?.(ctx);
+  return result ?? arrayResolver(ctx);
+}

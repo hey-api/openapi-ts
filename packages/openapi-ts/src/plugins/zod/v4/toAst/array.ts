@@ -1,111 +1,177 @@
-import { fromRef, ref } from '@hey-api/codegen-core';
+import { childContext, deduplicateSchema } from '@hey-api/shared';
 
-import { deduplicateSchema } from '~/ir/schema';
-import type { SchemaWithType } from '~/plugins';
-import { $ } from '~/ts-dsl';
-
+import { $ } from '../../../../ts-dsl';
 import { identifiers } from '../../constants';
-import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
-import { irSchemaToAst } from '../plugin';
+import type { ArrayResolverContext } from '../../resolvers';
+import type { Chain, ChainResult } from '../../shared/chain';
+import type { CompositeHandlerResult, ZodResult } from '../../shared/types';
 import { unknownToAst } from './unknown';
 
-export const arrayToAst = ({
-  plugin,
-  schema,
-  state,
-}: IrSchemaToAstOptions & {
-  schema: SchemaWithType<'array'>;
-}): Omit<Ast, 'typeName'> => {
-  const result: Partial<Omit<Ast, 'typeName'>> = {};
+type ArrayToAstOptions = Pick<
+  ArrayResolverContext,
+  'applyModifiers' | 'plugin' | 'schema' | 'walk' | 'walkerCtx'
+>;
 
-  const z = plugin.external('zod.z');
+function baseNode(ctx: ArrayResolverContext): Chain {
+  const { applyModifiers, childResults, plugin, schema, symbols } = ctx;
+  const { z } = symbols;
 
-  const functionName = $(z).attr(identifiers.array);
+  const arrayFn = $(z).attr(identifiers.array);
 
-  if (!schema.items) {
-    result.expression = functionName.call(
+  let normalizedSchema = schema;
+  if (normalizedSchema.items) {
+    normalizedSchema = deduplicateSchema({ schema: normalizedSchema });
+  }
+
+  if (!normalizedSchema.items) {
+    return arrayFn.call(
       unknownToAst({
         plugin,
         schema: {
           type: 'unknown',
         },
-        state,
-      }).expression,
+      }),
     );
-  } else {
-    schema = deduplicateSchema({ schema });
+  }
 
-    // at least one item is guaranteed
-    const itemExpressions = schema.items!.map((item, index) => {
-      const itemAst = irSchemaToAst({
-        plugin,
-        schema: item,
-        state: {
-          ...state,
-          path: ref([...fromRef(state.path), 'items', index]),
-        },
-      });
-      if (itemAst.hasLazyExpression) {
-        result.hasLazyExpression = true;
-      }
-      return itemAst.expression;
-    });
+  if (childResults.length === 1) {
+    const itemNode = applyModifiers(childResults[0]!, { optional: false }).expression;
+    return arrayFn.call(itemNode);
+  }
 
-    if (itemExpressions.length === 1) {
-      result.expression = functionName.call(...itemExpressions);
-    } else {
-      if (schema.logicalOperator === 'and') {
-        const firstSchema = schema.items![0]!;
-        // we want to add an intersection, but not every schema can use the same API.
-        // if the first item contains another array or not an object, we cannot use
-        // `.and()` as that does not exist on `.union()` and non-object schemas.
-        let intersectionExpression: ReturnType<typeof $.call | typeof $.expr>;
-        if (
-          firstSchema.logicalOperator === 'or' ||
-          (firstSchema.type && firstSchema.type !== 'object')
-        ) {
-          intersectionExpression = $(z)
-            .attr(identifiers.intersection)
-            .call(...itemExpressions);
-        } else {
-          intersectionExpression = itemExpressions[0]!;
-          for (let i = 1; i < itemExpressions.length; i++) {
-            intersectionExpression = intersectionExpression
-              .attr(identifiers.and)
-              .call(itemExpressions[i]);
-          }
-        }
+  if (childResults.length > 1) {
+    const itemExpressions: Array<Chain> = childResults.map(
+      (result) => applyModifiers(result, { optional: false }).expression,
+    );
 
-        result.expression = functionName.call(intersectionExpression);
+    const firstSchema = normalizedSchema.items[0];
+    if (normalizedSchema.logicalOperator === 'and') {
+      let intersectionExpression: Chain;
+      if (
+        firstSchema?.logicalOperator === 'or' ||
+        (firstSchema?.type && firstSchema.type !== 'object')
+      ) {
+        intersectionExpression = $(z)
+          .attr(identifiers.intersection)
+          .call(...itemExpressions);
       } else {
-        result.expression = $(z)
-          .attr(identifiers.array)
-          .call(
-            $(z)
-              .attr(identifiers.union)
-              .call($.array(...itemExpressions)),
-          );
+        intersectionExpression = itemExpressions[0]!;
+        for (let i = 1; i < itemExpressions.length; i++) {
+          intersectionExpression = intersectionExpression
+            .attr(identifiers.and)
+            .call(itemExpressions[i]);
+        }
       }
+
+      return arrayFn.call(intersectionExpression);
+    } else {
+      return arrayFn.call(
+        $(z)
+          .attr(identifiers.union)
+          .call($.array(...itemExpressions)),
+      );
     }
   }
 
+  return arrayFn.call(
+    unknownToAst({
+      plugin,
+      schema: {
+        type: 'unknown',
+      },
+    }),
+  );
+}
+
+function lengthNode(ctx: ArrayResolverContext): ChainResult {
+  const { schema } = ctx;
   if (schema.minItems === schema.maxItems && schema.minItems !== undefined) {
-    result.expression = result.expression
-      .attr(identifiers.length)
-      .call($.fromValue(schema.minItems));
+    return ctx.chain.current.attr(identifiers.length).call($.fromValue(schema.minItems));
+  }
+}
+
+function maxLengthNode(ctx: ArrayResolverContext): ChainResult {
+  const { schema } = ctx;
+  if (schema.maxItems === undefined) return;
+  return ctx.chain.current.attr(identifiers.max).call($.fromValue(schema.maxItems));
+}
+
+function minLengthNode(ctx: ArrayResolverContext): ChainResult {
+  const { schema } = ctx;
+  if (schema.minItems === undefined) return;
+  return ctx.chain.current.attr(identifiers.min).call($.fromValue(schema.minItems));
+}
+
+function arrayResolver(ctx: ArrayResolverContext): Chain {
+  const baseResult = ctx.nodes.base(ctx);
+  ctx.chain.current = baseResult;
+
+  const lengthResult = ctx.nodes.length(ctx);
+  if (lengthResult) {
+    ctx.chain.current = lengthResult;
   } else {
-    if (schema.minItems !== undefined) {
-      result.expression = result.expression
-        .attr(identifiers.min)
-        .call($.fromValue(schema.minItems));
+    const minLengthResult = ctx.nodes.minLength(ctx);
+    if (minLengthResult) {
+      ctx.chain.current = minLengthResult;
     }
 
-    if (schema.maxItems !== undefined) {
-      result.expression = result.expression
-        .attr(identifiers.max)
-        .call($.fromValue(schema.maxItems));
+    const maxLengthResult = ctx.nodes.maxLength(ctx);
+    if (maxLengthResult) {
+      ctx.chain.current = maxLengthResult;
     }
   }
 
-  return result as Omit<Ast, 'typeName'>;
-};
+  return ctx.chain.current;
+}
+
+export function arrayToAst({
+  applyModifiers,
+  plugin,
+  schema,
+  walk,
+  walkerCtx,
+}: ArrayToAstOptions): CompositeHandlerResult {
+  const childResults: Array<ZodResult> = [];
+  let schemaCopy = schema;
+
+  const z = plugin.external('zod.z');
+
+  if (schemaCopy.items) {
+    schemaCopy = deduplicateSchema({ schema: schemaCopy });
+
+    schemaCopy.items!.forEach((item, index) => {
+      const itemResult = walk(item, childContext(walkerCtx, 'items', index));
+      childResults.push(itemResult);
+    });
+  }
+
+  const ctx: ArrayResolverContext = {
+    $,
+    applyModifiers,
+    chain: {
+      current: $(z),
+    },
+    childResults,
+    nodes: {
+      base: baseNode,
+      length: lengthNode,
+      maxLength: maxLengthNode,
+      minLength: minLengthNode,
+    },
+    plugin,
+    schema,
+    symbols: {
+      z,
+    },
+    walk,
+    walkerCtx,
+  };
+
+  const resolver = plugin.config['~resolvers']?.array;
+  const expression = resolver?.(ctx) ?? arrayResolver(ctx);
+
+  return {
+    childResults,
+    expression,
+  };
+}

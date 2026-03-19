@@ -1,4 +1,4 @@
-# @docs/openapi-ts
+# docs
 
 ## 0.10.4
 

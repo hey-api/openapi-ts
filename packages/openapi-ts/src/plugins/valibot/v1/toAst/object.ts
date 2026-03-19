@@ -1,41 +1,32 @@
-import { fromRef, ref } from '@hey-api/codegen-core';
+import { childContext } from '@hey-api/shared';
 
-import type { SchemaWithType } from '~/plugins';
-import { $ } from '~/ts-dsl';
-
+import { $ } from '../../../../ts-dsl';
 import type { ObjectResolverContext } from '../../resolvers';
-import type { Pipe, PipeResult } from '../../shared/pipes';
+import type { Pipe, Pipes } from '../../shared/pipes';
 import { pipes } from '../../shared/pipes';
-import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
+import type { CompositeHandlerResult, ValibotResult } from '../../shared/types';
 import { identifiers } from '../constants';
-import { irSchemaToAst } from '../plugin';
 
-function additionalPropertiesNode(
-  ctx: ObjectResolverContext,
-): Pipe | null | undefined {
-  const { plugin, schema } = ctx;
+function additionalPropertiesNode(ctx: ObjectResolverContext): Pipe | null | undefined {
+  const { pipes, schema } = ctx;
 
   if (!schema.additionalProperties || !schema.additionalProperties.type) return;
   if (schema.additionalProperties.type === 'never') return null;
 
-  const additionalAst = irSchemaToAst({
-    plugin,
-    schema: schema.additionalProperties,
-    state: {
-      ...ctx.utils.state,
-      path: ref([...fromRef(ctx.utils.state.path), 'additionalProperties']),
-    },
-  });
-  if (additionalAst.hasLazyExpression) ctx.utils.ast.hasLazyExpression = true;
-  return pipes.toNode(additionalAst.pipes, plugin);
+  const additionalResult = ctx.walk(
+    schema.additionalProperties,
+    childContext(ctx.walkerCtx, 'additionalProperties'),
+  );
+  ctx._childResults.push(additionalResult);
+
+  return pipes.toNode(additionalResult.pipes, ctx.plugin);
 }
 
-function baseNode(ctx: ObjectResolverContext): PipeResult {
-  const { nodes, symbols } = ctx;
-  const { v } = symbols;
+function baseNode(ctx: ObjectResolverContext): Pipes | Pipe {
+  const { v } = ctx.symbols;
 
-  const additional = nodes.additionalProperties(ctx);
-  const shape = nodes.shape(ctx);
+  const additional = ctx.nodes.additionalProperties(ctx);
+  const shape = ctx.nodes.shape(ctx);
 
   if (additional === null) {
     return $(v).attr(identifiers.schemas.strictObject).call(shape);
@@ -48,51 +39,46 @@ function baseNode(ctx: ObjectResolverContext): PipeResult {
         .call($(v).attr(identifiers.schemas.string).call(), additional);
     }
 
-    return $(v)
-      .attr(identifiers.schemas.objectWithRest)
-      .call(shape, additional);
+    return $(v).attr(identifiers.schemas.objectWithRest).call(shape, additional);
   }
 
   return $(v).attr(identifiers.schemas.object).call(shape);
 }
 
-function objectResolver(ctx: ObjectResolverContext): PipeResult {
+function objectResolver(ctx: ObjectResolverContext): Pipes | Pipe {
   // TODO: parser - handle constants
   return ctx.nodes.base(ctx);
 }
 
 function shapeNode(ctx: ObjectResolverContext): ReturnType<typeof $.object> {
-  const { plugin, schema } = ctx;
+  const { pipes, schema } = ctx;
   const shape = $.object().pretty();
 
   for (const name in schema.properties) {
     const property = schema.properties[name]!;
+    const isOptional = !schema.required?.includes(name);
 
-    const propertyAst = irSchemaToAst({
-      optional: !schema.required?.includes(name),
-      plugin,
-      schema: property,
-      state: {
-        ...ctx.utils.state,
-        path: ref([...fromRef(ctx.utils.state.path), 'properties', name]),
-      },
-    });
-    if (propertyAst.hasLazyExpression) ctx.utils.ast.hasLazyExpression = true;
-    shape.prop(name, pipes.toNode(propertyAst.pipes, plugin));
+    const propertyResult = ctx.walk(property, childContext(ctx.walkerCtx, 'properties', name));
+    ctx._childResults.push(propertyResult);
+
+    const finalExpr = ctx.applyModifiers(propertyResult, { optional: isOptional });
+    shape.prop(name, pipes.toNode(finalExpr.pipes, ctx.plugin));
   }
 
   return shape;
 }
 
-export const objectToAst = ({
-  plugin,
-  schema,
-  state,
-}: IrSchemaToAstOptions & {
-  schema: SchemaWithType<'object'>;
-}): Omit<Ast, 'typeName'> => {
-  const ctx: ObjectResolverContext = {
+export function objectToPipes(
+  ctx: Pick<ObjectResolverContext, 'applyModifiers' | 'plugin' | 'schema' | 'walk' | 'walkerCtx'>,
+): CompositeHandlerResult {
+  const { applyModifiers, plugin, schema, walk, walkerCtx } = ctx;
+
+  const childResults: Array<ValibotResult> = [];
+
+  const resolverCtx: ObjectResolverContext = {
     $,
+    _childResults: childResults,
+    applyModifiers,
     nodes: {
       additionalProperties: additionalPropertiesNode,
       base: baseNode,
@@ -107,13 +93,15 @@ export const objectToAst = ({
     symbols: {
       v: plugin.external('valibot.v'),
     },
-    utils: {
-      ast: {},
-      state,
-    },
+    walk,
+    walkerCtx,
   };
+
   const resolver = plugin.config['~resolvers']?.object;
-  const node = resolver?.(ctx) ?? objectResolver(ctx);
-  ctx.utils.ast.pipes = [ctx.pipes.toNode(node, plugin)];
-  return ctx.utils.ast as Omit<Ast, 'typeName'>;
-};
+  const node = resolver?.(resolverCtx) ?? objectResolver(resolverCtx);
+
+  return {
+    childResults,
+    pipes: [resolverCtx.pipes.toNode(node, plugin)],
+  };
+}

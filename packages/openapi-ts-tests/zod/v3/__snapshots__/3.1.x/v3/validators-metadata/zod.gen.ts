@@ -11,15 +11,12 @@ export const zQux = z.record(z.object({
 /**
  * This is Foo schema.
  */
-export const zFoo: z.ZodTypeAny = z.union([
-    z.object({
-        foo: z.string().regex(/^\d{3}-\d{2}-\d{4}$/).describe('This is foo property.').optional(),
-        bar: z.lazy(() => zBar).optional(),
-        baz: z.array(z.lazy(() => zFoo)).describe('This is baz property.').optional(),
-        qux: z.number().int().gt(0).describe('This is qux property.').optional().default(0)
-    }),
-    z.null()
-]).default(null);
+export const zFoo: z.ZodTypeAny = z.object({
+    foo: z.string().regex(/^\d{3}-\d{2}-\d{4}$/).describe('This is foo property.').optional(),
+    bar: z.lazy(() => zBar).optional(),
+    baz: z.array(z.lazy(() => zFoo)).describe('This is baz property.').optional(),
+    qux: z.number().int().gt(0).describe('This is qux property.').optional().default(0)
+}).nullable().default(null);
 
 /**
  * This is Bar schema.

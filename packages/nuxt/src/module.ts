@@ -60,8 +60,7 @@ export default defineNuxtModule<ModuleOptions>({
       config.watch = false;
     }
 
-    const output =
-      config.output instanceof Array ? config.output[0] : config.output;
+    const output = config.output instanceof Array ? config.output[0] : config.output;
     const folder = path.resolve(
       nuxt.options.rootDir,
       typeof output === 'string' ? output : (output?.path ?? ''),
@@ -78,9 +77,7 @@ export default defineNuxtModule<ModuleOptions>({
       await createClient(config);
       const typeImports = new Set<string>();
       const valueImports = new Set<string>();
-      const files = findExports(
-        fs.readFileSync(path.join(folder, 'index.ts'), 'utf-8'),
-      );
+      const files = findExports(fs.readFileSync(path.join(folder, 'index.ts'), 'utf-8'));
       for (const file of files) {
         if (!file.specifier || !/^\.{1,2}\//.test(file.specifier)) {
           continue;
@@ -102,10 +99,7 @@ export default defineNuxtModule<ModuleOptions>({
         }
       }
 
-      const imports = [
-        ...[...typeImports].map((name) => ({ name, type: true })),
-        ...valueImports,
-      ];
+      const imports = [...[...typeImports].map((name) => ({ name, type: true })), ...valueImports];
 
       if (imports.length && options.alias) {
         addImportsSources({

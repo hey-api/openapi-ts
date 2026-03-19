@@ -144,7 +144,7 @@ Interceptors (middleware) can be used to modify requests before they're sent or 
 The `ofetch` client supports two complementary options:
 
 - built-in Hey API interceptors exposed via `client.interceptors`
-- native `ofetch` hooks passed through config (e.g. `onRequest`)
+- native `ofetch` hooks passed through config (e.g., `onRequest`)
 
 ### Example: Request interceptor
 
@@ -344,7 +344,7 @@ You can use any of the approaches mentioned in [Configuration](#configuration), 
 
 ## API
 
-You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/@hey-api/client-ofetch/types.d.ts) interface.
+You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/@hey-api/client-ofetch/types.ts) interface.
 
 <!--@include: ../../partials/examples.md-->
 <!--@include: ../../partials/sponsors.md-->

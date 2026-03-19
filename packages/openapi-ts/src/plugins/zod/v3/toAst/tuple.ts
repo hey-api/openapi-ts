@@ -1,63 +1,104 @@
-import { fromRef, ref } from '@hey-api/codegen-core';
+import { childContext } from '@hey-api/shared';
 
-import type { SchemaWithType } from '~/plugins';
-import { $ } from '~/ts-dsl';
-
+import { $ } from '../../../../ts-dsl';
 import { identifiers } from '../../constants';
-import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
-import { irSchemaToAst } from '../plugin';
+import type { TupleResolverContext } from '../../resolvers';
+import type { Chain, ChainResult } from '../../shared/chain';
+import type { CompositeHandlerResult, ZodResult } from '../../shared/types';
 
-export const tupleToAst = ({
-  plugin,
-  schema,
-  state,
-}: IrSchemaToAstOptions & {
-  schema: SchemaWithType<'tuple'>;
-}): Omit<Ast, 'typeName'> & {
-  anyType?: string;
-} => {
-  const z = plugin.external('zod.z');
+type TupleToAstOptions = Pick<
+  TupleResolverContext,
+  'applyModifiers' | 'plugin' | 'schema' | 'walk' | 'walkerCtx'
+>;
 
-  let hasLazyExpression = false;
+function baseNode(ctx: TupleResolverContext): Chain {
+  const { applyModifiers, childResults, symbols } = ctx;
+  const { z } = symbols;
 
-  if (schema.const && Array.isArray(schema.const)) {
-    const tupleElements = schema.const.map((value) =>
-      $(z).attr(identifiers.literal).call($.fromValue(value)),
-    );
-    const expression = $(z)
-      .attr(identifiers.tuple)
-      .call($.array(...tupleElements));
-    return {
-      expression,
-      hasLazyExpression,
-    };
+  const tupleFn = $(z).attr(identifiers.tuple);
+
+  if (childResults.length === 0) {
+    return tupleFn.call($.array());
   }
 
-  const tupleElements: Array<ReturnType<typeof $.call | typeof $.expr>> = [];
+  const tupleElements = childResults.map(
+    (result) => applyModifiers(result, { optional: false }).expression,
+  );
+
+  return tupleFn.call($.array(...tupleElements));
+}
+
+function constNode(ctx: TupleResolverContext): ChainResult {
+  const { schema, symbols } = ctx;
+  const { z } = symbols;
+
+  if (!schema.const || !Array.isArray(schema.const)) return;
+
+  const tupleElements = schema.const.map((value) =>
+    $(z).attr(identifiers.literal).call($.fromValue(value)),
+  );
+
+  return $(z)
+    .attr(identifiers.tuple)
+    .call($.array(...tupleElements));
+}
+
+function tupleResolver(ctx: TupleResolverContext): Chain {
+  const constResult = ctx.nodes.const(ctx);
+  if (constResult) {
+    ctx.chain.current = constResult;
+    return ctx.chain.current;
+  }
+
+  const baseResult = ctx.nodes.base(ctx);
+  ctx.chain.current = baseResult;
+
+  return ctx.chain.current;
+}
+
+export function tupleToAst({
+  applyModifiers,
+  plugin,
+  schema,
+  walk,
+  walkerCtx,
+}: TupleToAstOptions): CompositeHandlerResult {
+  const childResults: Array<ZodResult> = [];
+
+  const z = plugin.external('zod.z');
 
   if (schema.items) {
     schema.items.forEach((item, index) => {
-      const itemSchema = irSchemaToAst({
-        plugin,
-        schema: item,
-        state: {
-          ...state,
-          path: ref([...fromRef(state.path), 'items', index]),
-        },
-      });
-      tupleElements.push(itemSchema.expression);
-      if (itemSchema.hasLazyExpression) {
-        hasLazyExpression = true;
-      }
+      const itemResult = walk(item, childContext(walkerCtx, 'items', index));
+      childResults.push(itemResult);
     });
   }
 
-  const expression = $(z)
-    .attr(identifiers.tuple)
-    .call($.array(...tupleElements));
+  const ctx: TupleResolverContext = {
+    $,
+    applyModifiers,
+    chain: {
+      current: $(z),
+    },
+    childResults,
+    nodes: {
+      base: baseNode,
+      const: constNode,
+    },
+    plugin,
+    schema,
+    symbols: {
+      z,
+    },
+    walk,
+    walkerCtx,
+  };
+
+  const resolver = plugin.config['~resolvers']?.tuple;
+  const expression = resolver?.(ctx) ?? tupleResolver(ctx);
 
   return {
+    childResults,
     expression,
-    hasLazyExpression,
   };
-};
+}

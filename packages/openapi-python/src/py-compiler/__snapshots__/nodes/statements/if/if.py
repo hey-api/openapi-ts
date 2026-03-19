@@ -1,0 +1,2 @@
+if True:
+    print("positive")

@@ -12,11 +12,7 @@ import { TypeExprTsDsl } from '../type/expr';
 import { safeRuntimeName } from '../utils/name';
 
 const Mixed = DefaultMixin(
-  DocMixin(
-    ExportMixin(
-      HintMixin(PatternMixin(ValueMixin(TsDsl<ts.VariableStatement>))),
-    ),
-  ),
+  DocMixin(ExportMixin(HintMixin(PatternMixin(ValueMixin(TsDsl<ts.VariableStatement>))))),
 );
 
 export class VarTsDsl extends Mixed {
@@ -38,6 +34,11 @@ export class VarTsDsl extends Mixed {
     super.analyze(ctx);
     ctx.analyze(this.name);
     ctx.analyze(this._type);
+  }
+
+  /** Returns true when all required builder calls are present. */
+  get isValid(): boolean {
+    return this.missingRequiredCalls().length === 0;
   }
 
   const(): this {
@@ -62,15 +63,13 @@ export class VarTsDsl extends Mixed {
   }
 
   override toAst() {
-    const name = this.$pattern() ?? this.$node(this.name);
-    if (!name)
-      throw new Error('Var must have either a name or a destructuring pattern');
+    this.$validate();
     const node = ts.factory.createVariableStatement(
       this.modifiers,
       ts.factory.createVariableDeclarationList(
         [
           ts.factory.createVariableDeclaration(
-            name as ts.BindingName,
+            this.$pattern() ?? (this.$node(this.name) as ts.BindingName),
             undefined,
             this.$type(this._type),
             this.$value(),
@@ -80,5 +79,18 @@ export class VarTsDsl extends Mixed {
       ),
     );
     return this.$docs(this.$hint(node));
+  }
+
+  $validate(): asserts this {
+    const missing = this.missingRequiredCalls();
+    if (missing.length === 0) return;
+    throw new Error(`Variable declaration missing ${missing.join(' and ')}`);
+  }
+
+  private missingRequiredCalls(): ReadonlyArray<string> {
+    const missing: Array<string> = [];
+    if (!this.$pattern() && !this.name.toString())
+      missing.push('name or pattern (.array()/.object())');
+    return missing;
   }
 }

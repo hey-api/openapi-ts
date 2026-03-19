@@ -34,9 +34,7 @@ export interface TypeExprMethods extends Node {
   unique(this: MaybeTsDsl<TypeTsDsl>): ReturnType<typeof f.type.operator>;
 }
 
-export function TypeExprMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
-  Base: TBase,
-) {
+export function TypeExprMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base: TBase) {
   abstract class TypeExpr extends Base {
     override analyze(ctx: AnalysisContext): void {
       super.analyze(ctx);

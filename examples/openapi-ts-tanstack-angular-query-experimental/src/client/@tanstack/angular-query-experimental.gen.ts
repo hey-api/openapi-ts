@@ -73,11 +73,7 @@ import type {
 export const addPetMutation = (
   options?: Partial<Options<AddPetData>>,
 ): MutationOptions<AddPetResponse, DefaultError, Options<AddPetData>> => {
-  const mutationOptions: MutationOptions<
-    AddPetResponse,
-    DefaultError,
-    Options<AddPetData>
-  > = {
+  const mutationOptions: MutationOptions<AddPetResponse, DefaultError, Options<AddPetData>> = {
     mutationFn: async (fnOptions) => {
       const { data } = await addPet({
         ...options,
@@ -131,8 +127,7 @@ const createQueryKey = <TOptions extends Options>(
 ): [QueryKey<TOptions>[0]] => {
   const params: QueryKey<TOptions>[0] = {
     _id: id,
-    baseUrl:
-      options?.baseUrl || (options?.client ?? client).getConfig().baseUrl,
+    baseUrl: options?.baseUrl || (options?.client ?? client).getConfig().baseUrl,
   } as QueryKey<TOptions>[0];
   if (infinite) {
     params._infinite = infinite;
@@ -155,18 +150,15 @@ const createQueryKey = <TOptions extends Options>(
   return [params];
 };
 
-export const findPetsByStatusQueryKey = (
-  options: Options<FindPetsByStatusData>,
-) => createQueryKey('findPetsByStatus', options);
+export const findPetsByStatusQueryKey = (options: Options<FindPetsByStatusData>) =>
+  createQueryKey('findPetsByStatus', options);
 
 /**
  * Finds Pets by status.
  *
  * Multiple status values can be provided with comma separated strings.
  */
-export const findPetsByStatusOptions = (
-  options: Options<FindPetsByStatusData>,
-) =>
+export const findPetsByStatusOptions = (options: Options<FindPetsByStatusData>) =>
   queryOptions<
     FindPetsByStatusResponse,
     DefaultError,
@@ -220,11 +212,7 @@ export const findPetsByTagsOptions = (options: Options<FindPetsByTagsData>) =>
 export const deletePetMutation = (
   options?: Partial<Options<DeletePetData>>,
 ): MutationOptions<unknown, DefaultError, Options<DeletePetData>> => {
-  const mutationOptions: MutationOptions<
-    unknown,
-    DefaultError,
-    Options<DeletePetData>
-  > = {
+  const mutationOptions: MutationOptions<unknown, DefaultError, Options<DeletePetData>> = {
     mutationFn: async (fnOptions) => {
       const { data } = await deletePet({
         ...options,
@@ -271,11 +259,7 @@ export const getPetByIdOptions = (options: Options<GetPetByIdData>) =>
  */
 export const updatePetWithFormMutation = (
   options?: Partial<Options<UpdatePetWithFormData>>,
-): MutationOptions<
-  UpdatePetWithFormResponse,
-  DefaultError,
-  Options<UpdatePetWithFormData>
-> => {
+): MutationOptions<UpdatePetWithFormResponse, DefaultError, Options<UpdatePetWithFormData>> => {
   const mutationOptions: MutationOptions<
     UpdatePetWithFormResponse,
     DefaultError,
@@ -300,11 +284,7 @@ export const updatePetWithFormMutation = (
  */
 export const uploadFileMutation = (
   options?: Partial<Options<UploadFileData>>,
-): MutationOptions<
-  UploadFileResponse,
-  DefaultError,
-  Options<UploadFileData>
-> => {
+): MutationOptions<UploadFileResponse, DefaultError, Options<UploadFileData>> => {
   const mutationOptions: MutationOptions<
     UploadFileResponse,
     DefaultError,
@@ -356,11 +336,7 @@ export const getInventoryOptions = (options?: Options<GetInventoryData>) =>
  */
 export const placeOrderMutation = (
   options?: Partial<Options<PlaceOrderData>>,
-): MutationOptions<
-  PlaceOrderResponse,
-  DefaultError,
-  Options<PlaceOrderData>
-> => {
+): MutationOptions<PlaceOrderResponse, DefaultError, Options<PlaceOrderData>> => {
   const mutationOptions: MutationOptions<
     PlaceOrderResponse,
     DefaultError,
@@ -386,11 +362,7 @@ export const placeOrderMutation = (
 export const deleteOrderMutation = (
   options?: Partial<Options<DeleteOrderData>>,
 ): MutationOptions<unknown, DefaultError, Options<DeleteOrderData>> => {
-  const mutationOptions: MutationOptions<
-    unknown,
-    DefaultError,
-    Options<DeleteOrderData>
-  > = {
+  const mutationOptions: MutationOptions<unknown, DefaultError, Options<DeleteOrderData>> = {
     mutationFn: async (fnOptions) => {
       const { data } = await deleteOrder({
         ...options,
@@ -437,11 +409,7 @@ export const getOrderByIdOptions = (options: Options<GetOrderByIdData>) =>
  */
 export const createUserMutation = (
   options?: Partial<Options<CreateUserData>>,
-): MutationOptions<
-  CreateUserResponse,
-  DefaultError,
-  Options<CreateUserData>
-> => {
+): MutationOptions<CreateUserResponse, DefaultError, Options<CreateUserData>> => {
   const mutationOptions: MutationOptions<
     CreateUserResponse,
     DefaultError,
@@ -524,12 +492,7 @@ export const logoutUserQueryKey = (options?: Options<LogoutUserData>) =>
  * Log user out of the system.
  */
 export const logoutUserOptions = (options?: Options<LogoutUserData>) =>
-  queryOptions<
-    unknown,
-    DefaultError,
-    unknown,
-    ReturnType<typeof logoutUserQueryKey>
-  >({
+  queryOptions<unknown, DefaultError, unknown, ReturnType<typeof logoutUserQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
       const { data } = await logoutUser({
         ...options,
@@ -550,11 +513,7 @@ export const logoutUserOptions = (options?: Options<LogoutUserData>) =>
 export const deleteUserMutation = (
   options?: Partial<Options<DeleteUserData>>,
 ): MutationOptions<unknown, DefaultError, Options<DeleteUserData>> => {
-  const mutationOptions: MutationOptions<
-    unknown,
-    DefaultError,
-    Options<DeleteUserData>
-  > = {
+  const mutationOptions: MutationOptions<unknown, DefaultError, Options<DeleteUserData>> = {
     mutationFn: async (fnOptions) => {
       const { data } = await deleteUser({
         ...options,
@@ -602,11 +561,7 @@ export const getUserByNameOptions = (options: Options<GetUserByNameData>) =>
 export const updateUserMutation = (
   options?: Partial<Options<UpdateUserData>>,
 ): MutationOptions<unknown, DefaultError, Options<UpdateUserData>> => {
-  const mutationOptions: MutationOptions<
-    unknown,
-    DefaultError,
-    Options<UpdateUserData>
-  > = {
+  const mutationOptions: MutationOptions<unknown, DefaultError, Options<UpdateUserData>> = {
     mutationFn: async (fnOptions) => {
       const { data } = await updateUser({
         ...options,

@@ -1,12 +1,9 @@
-import { $ } from '~/ts-dsl';
-
+import { $ } from '../../../ts-dsl';
 import { identifiers } from '../constants';
 import type { ValidatorResolverContext } from '../resolvers';
 import type { ValidatorArgs } from '../shared/types';
 
-const validatorResolver = (
-  ctx: ValidatorResolverContext,
-): ReturnType<typeof $.return> => {
+const validatorResolver = (ctx: ValidatorResolverContext): ReturnType<typeof $.return> => {
   const { schema } = ctx.symbols;
   return $(schema).attr(identifiers.parseAsync).call('data').await().return();
 };
@@ -38,8 +35,7 @@ export const createRequestValidatorV3 = ({
     },
   };
   const validator = plugin.config['~resolvers']?.validator;
-  const resolver =
-    typeof validator === 'function' ? validator : validator?.request;
+  const resolver = typeof validator === 'function' ? validator : validator?.request;
   const candidates = [resolver, validatorResolver];
   for (const candidate of candidates) {
     const statements = candidate?.(ctx);
@@ -81,8 +77,7 @@ export const createResponseValidatorV3 = ({
     },
   };
   const validator = plugin.config['~resolvers']?.validator;
-  const resolver =
-    typeof validator === 'function' ? validator : validator?.response;
+  const resolver = typeof validator === 'function' ? validator : validator?.response;
   const candidates = [resolver, validatorResolver];
   for (const candidate of candidates) {
     const statements = candidate?.(ctx);

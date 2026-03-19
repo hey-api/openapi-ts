@@ -1,9 +1,4 @@
-import type {
-  AnalysisContext,
-  Node,
-  NodeName,
-  Ref,
-} from '@hey-api/codegen-core';
+import type { AnalysisContext, Node, NodeName, Ref } from '@hey-api/codegen-core';
 import { ref } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
@@ -21,9 +16,7 @@ export interface TypeArgsMethods extends Node {
   generics(...args: ReadonlyArray<Arg>): this;
 }
 
-export function TypeArgsMixin<T extends ts.Node, TBase extends BaseCtor<T>>(
-  Base: TBase,
-) {
+export function TypeArgsMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base: TBase) {
   abstract class TypeArgs extends Base {
     protected _generics: Array<Ref<Arg>> = [];
 

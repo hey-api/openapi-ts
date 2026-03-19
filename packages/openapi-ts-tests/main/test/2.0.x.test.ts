@@ -3,7 +3,6 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { createClient, type UserConfig } from '@hey-api/openapi-ts';
-import { describe, expect, it } from 'vitest';
 
 import { getFilePaths, getSpecsPath } from '../../utils';
 
@@ -16,10 +15,7 @@ const outputDir = path.join(__dirname, 'generated', version);
 
 describe(`OpenAPI ${version}`, () => {
   const createConfig = (userConfig: UserConfig) => {
-    const input =
-      userConfig.input instanceof Array
-        ? userConfig.input[0]
-        : userConfig.input;
+    const input = userConfig.input instanceof Array ? userConfig.input[0] : userConfig.input;
     const inputPath = path.join(
       getSpecsPath(),
       version,
@@ -38,10 +34,7 @@ describe(`OpenAPI ${version}`, () => {
       logs: {
         level: 'silent',
       },
-      output: path.join(
-        outputDir,
-        typeof userConfig.output === 'string' ? userConfig.output : '',
-      ),
+      output: path.join(outputDir, typeof userConfig.output === 'string' ? userConfig.output : ''),
     } as const satisfies UserConfig;
   };
 
@@ -71,11 +64,7 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'body-response-text-plain.yaml',
         output: 'body-response-text-plain',
-        plugins: [
-          '@hey-api/client-fetch',
-          '@hey-api/typescript',
-          '@hey-api/sdk',
-        ],
+        plugins: ['@hey-api/client-fetch', '@hey-api/typescript', '@hey-api/sdk'],
       }),
       description: 'handle text/plain content type',
     },
@@ -100,8 +89,7 @@ describe(`OpenAPI ${version}`, () => {
           },
         ],
       }),
-      description:
-        'handles various enum names and values (JavaScript, SCREAMING_SNAKE_CASE)',
+      description: 'handles various enum names and values (JavaScript, SCREAMING_SNAKE_CASE)',
     },
     {
       config: createConfig({
@@ -117,8 +105,7 @@ describe(`OpenAPI ${version}`, () => {
           },
         ],
       }),
-      description:
-        'handles various enum names and values (JavaScript, PascalCase)',
+      description: 'handles various enum names and values (JavaScript, PascalCase)',
     },
     {
       config: createConfig({
@@ -134,8 +121,7 @@ describe(`OpenAPI ${version}`, () => {
           },
         ],
       }),
-      description:
-        'handles various enum names and values (JavaScript, camelCase)',
+      description: 'handles various enum names and values (JavaScript, camelCase)',
     },
     {
       config: createConfig({
@@ -151,8 +137,7 @@ describe(`OpenAPI ${version}`, () => {
           },
         ],
       }),
-      description:
-        'handles various enum names and values (JavaScript, snake_case)',
+      description: 'handles various enum names and values (JavaScript, snake_case)',
     },
     {
       config: createConfig({
@@ -168,8 +153,7 @@ describe(`OpenAPI ${version}`, () => {
           },
         ],
       }),
-      description:
-        'handles various enum names and values (JavaScript, preserve)',
+      description: 'handles various enum names and values (JavaScript, preserve)',
     },
     {
       config: createConfig({
@@ -185,8 +169,7 @@ describe(`OpenAPI ${version}`, () => {
           },
         ],
       }),
-      description:
-        'handles various enum names and values (TypeScript, SCREAMING_SNAKE_CASE)',
+      description: 'handles various enum names and values (TypeScript, SCREAMING_SNAKE_CASE)',
     },
     {
       config: createConfig({
@@ -202,8 +185,7 @@ describe(`OpenAPI ${version}`, () => {
           },
         ],
       }),
-      description:
-        'handles various enum names and values (TypeScript, PascalCase)',
+      description: 'handles various enum names and values (TypeScript, PascalCase)',
     },
     {
       config: createConfig({
@@ -219,8 +201,7 @@ describe(`OpenAPI ${version}`, () => {
           },
         ],
       }),
-      description:
-        'handles various enum names and values (TypeScript, camelCase)',
+      description: 'handles various enum names and values (TypeScript, camelCase)',
     },
     {
       config: createConfig({
@@ -236,8 +217,7 @@ describe(`OpenAPI ${version}`, () => {
           },
         ],
       }),
-      description:
-        'handles various enum names and values (TypeScript, snake_case)',
+      description: 'handles various enum names and values (TypeScript, snake_case)',
     },
     {
       config: createConfig({
@@ -253,8 +233,7 @@ describe(`OpenAPI ${version}`, () => {
           },
         ],
       }),
-      description:
-        'handles various enum names and values (TypeScript, preserve)',
+      description: 'handles various enum names and values (TypeScript, preserve)',
     },
     {
       config: createConfig({
@@ -307,6 +286,28 @@ describe(`OpenAPI ${version}`, () => {
         plugins: ['@hey-api/client-fetch', '@hey-api/typescript'],
       }),
       description: 'handles read-only and write-only types',
+    },
+    {
+      config: createConfig({
+        input: 'transforms-schemas-name.yaml',
+        output: 'transforms-schemas-name',
+        parser: {
+          transforms: {
+            schemaName: (name: string) => {
+              // Strip version markers: User_v1_0_0_User → User
+              let clean = name.replace(/([A-Za-z\d]+)_v\d+_\d+_\d+_([A-Za-z\d]*)/g, (_, p1, p2) =>
+                p2.startsWith(p1) ? p2 : p1 + p2,
+              );
+              // Deduplicate prefixes: Foo_Foo → Foo
+              const m = clean.match(/^([A-Za-z\d]+)_\1([A-Za-z\d]*)$/);
+              if (m) clean = m[1]! + m[2]!;
+              return clean;
+            },
+          },
+        },
+        plugins: ['@hey-api/typescript'],
+      }),
+      description: 'handles schema name transforms',
     },
     {
       config: createConfig({
@@ -407,12 +408,7 @@ describe(`OpenAPI ${version}`, () => {
       filePaths.map(async (filePath) => {
         const fileContent = fs.readFileSync(filePath, 'utf-8');
         await expect(fileContent).toMatchFileSnapshot(
-          path.join(
-            __dirname,
-            '__snapshots__',
-            version,
-            filePath.slice(outputDir.length + 1),
-          ),
+          path.join(__dirname, '__snapshots__', version, filePath.slice(outputDir.length + 1)),
         );
       }),
     );

@@ -1,7 +1,5 @@
-import type { IR } from '~/ir/types';
-import type { PluginInstance } from '~/plugins/shared/utils/instance';
-import { toCase } from '~/utils/naming';
-import { refToName } from '~/utils/ref';
+import type { IR, PluginInstance } from '@hey-api/shared';
+import { refToName, toCase } from '@hey-api/shared';
 
 import type { Field } from '../../client-core/bundle/params';
 
@@ -45,11 +43,7 @@ export function getSignatureParameters({
   plugin: PluginInstance;
 }): Signature | undefined {
   // TODO: add cookies
-  const locations = [
-    'header',
-    'path',
-    'query',
-  ] as const satisfies ReadonlyArray<Location>;
+  const locations = ['header', 'path', 'query'] as const satisfies ReadonlyArray<Location>;
   const nameToLocations: Record<string, Set<Location>> = {};
 
   const addParameter = (name: string, location: Location): void => {
@@ -106,9 +100,7 @@ export function getSignatureParameters({
       for (const key in parameters) {
         const parameter = parameters[key]!;
         const originalName = parameter.name;
-        const name = conflicts.has(originalName)
-          ? `${location}_${originalName}`
-          : originalName;
+        const name = conflicts.has(originalName) ? `${location}_${originalName}` : originalName;
         const signatureParameter: SignatureParameter = {
           isRequired: parameter.required ?? false,
           name,
@@ -137,11 +129,9 @@ export function getSignatureParameters({
       const properties = operation.body.schema.properties;
       for (const originalName in properties) {
         const property = properties[originalName]!;
-        const name = conflicts.has(originalName)
-          ? `${location}_${originalName}`
-          : originalName;
+        const name = conflicts.has(originalName) ? `${location}_${originalName}` : originalName;
         const signatureParameter: SignatureParameter = {
-          isRequired: property.required?.includes(originalName) ?? false,
+          isRequired: operation.body.schema.required?.includes(originalName) ?? false,
           name,
           schema: property,
         };
@@ -158,9 +148,7 @@ export function getSignatureParameters({
     } else if (operation.body.schema.$ref) {
       const value = refToName(operation.body.schema.$ref);
       const originalName = toCase(value, 'camelCase');
-      const name = conflicts.has(originalName)
-        ? `${location}_${originalName}`
-        : originalName;
+      const name = conflicts.has(originalName) ? `${location}_${originalName}` : originalName;
       const signatureParameter: SignatureParameter = {
         isRequired: operation.body.required ?? false,
         name,

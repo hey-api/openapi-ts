@@ -1,12 +1,7 @@
 import { createSseClient } from '../../client-core/bundle/serverSentEvents';
 import type { HttpMethod } from '../../client-core/bundle/types';
 import { getValidRequestBody } from '../../client-core/bundle/utils';
-import type {
-  Client,
-  Config,
-  RequestOptions,
-  ResolvedRequestOptions,
-} from './types';
+import type { Client, Config, RequestOptions, ResolvedRequestOptions } from './types';
 import {
   buildUrl,
   createConfig,
@@ -32,11 +27,7 @@ export const createClient = (config: Config = {}): Client => {
     return getConfig();
   };
 
-  const interceptors = createInterceptors<
-    Response,
-    unknown,
-    ResolvedRequestOptions
-  >();
+  const interceptors = createInterceptors<Response, unknown, ResolvedRequestOptions>();
 
   const beforeRequest = async (options: RequestOptions) => {
     const opts = {
@@ -44,7 +35,7 @@ export const createClient = (config: Config = {}): Client => {
       ...options,
       fetch: options.fetch ?? _config.fetch ?? globalThis.fetch,
       headers: mergeHeaders(_config.headers, options.headers),
-      serializedBody: undefined,
+      serializedBody: undefined as string | undefined,
     };
 
     if (opts.security) {
@@ -59,7 +50,7 @@ export const createClient = (config: Config = {}): Client => {
     }
 
     if (opts.body !== undefined && opts.bodySerializer) {
-      opts.serializedBody = opts.bodySerializer(opts.body);
+      opts.serializedBody = opts.bodySerializer(opts.body) as string | undefined;
     }
 
     // remove Content-Type header if body is empty to avoid sending invalid requests
@@ -109,10 +100,7 @@ export const createClient = (config: Config = {}): Client => {
           ? getParseAs(response.headers.get('Content-Type'))
           : opts.parseAs) ?? 'json';
 
-      if (
-        response.status === 204 ||
-        response.headers.get('Content-Length') === '0'
-      ) {
+      if (response.status === 204 || response.headers.get('Content-Length') === '0') {
         let emptyData: any;
         switch (parseAs) {
           case 'arrayBuffer':
@@ -205,43 +193,40 @@ export const createClient = (config: Config = {}): Client => {
     };
   };
 
-  const makeMethodFn =
-    (method: Uppercase<HttpMethod>) => (options: RequestOptions) =>
-      request({ ...options, method });
+  const makeMethodFn = (method: Uppercase<HttpMethod>) => (options: RequestOptions) =>
+    request({ ...options, method });
 
-  const makeSseFn =
-    (method: Uppercase<HttpMethod>) => async (options: RequestOptions) => {
-      const { opts, url } = await beforeRequest(options);
-      return createSseClient({
-        ...opts,
-        body: opts.body as BodyInit | null | undefined,
-        headers: opts.headers as unknown as Record<string, string>,
-        method,
-        onRequest: async (url, init) => {
-          let request = new Request(url, init);
-          const requestInit = {
-            ...init,
-            method: init.method as Config['method'],
-            url,
-          };
-          for (const fn of interceptors.request.fns) {
-            if (fn) {
-              await fn(requestInit);
-              request = new Request(requestInit.url, requestInit);
-            }
+  const makeSseFn = (method: Uppercase<HttpMethod>) => async (options: RequestOptions) => {
+    const { opts, url } = await beforeRequest(options);
+    return createSseClient({
+      ...opts,
+      body: opts.body as BodyInit | null | undefined,
+      headers: opts.headers as unknown as Record<string, string>,
+      method,
+      onRequest: async (url, init) => {
+        let request = new Request(url, init);
+        const requestInit = {
+          ...init,
+          method: init.method as Config['method'],
+          url,
+        };
+        for (const fn of interceptors.request.fns) {
+          if (fn) {
+            await fn(requestInit);
+            request = new Request(requestInit.url, requestInit);
           }
-          return request;
-        },
-        serializedBody: getValidRequestBody(opts) as
-          | BodyInit
-          | null
-          | undefined,
-        url,
-      });
-    };
+        }
+        return request;
+      },
+      serializedBody: getValidRequestBody(opts) as BodyInit | null | undefined,
+      url,
+    });
+  };
+
+  const _buildUrl: Client['buildUrl'] = (options) => buildUrl({ ..._config, ...options });
 
   return {
-    buildUrl,
+    buildUrl: _buildUrl,
     connect: makeMethodFn('CONNECT'),
     delete: makeMethodFn('DELETE'),
     get: makeMethodFn('GET'),

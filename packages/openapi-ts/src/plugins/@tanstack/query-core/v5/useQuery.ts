@@ -1,12 +1,12 @@
-import type { IR } from '~/ir/types';
+import type { IR } from '@hey-api/shared';
+import { applyNaming } from '@hey-api/shared';
+
 import {
   createOperationComment,
   hasOperationSse,
   isOperationOptionsRequired,
-} from '~/plugins/shared/utils/operation';
-import { $ } from '~/ts-dsl';
-import { applyNaming } from '~/utils/naming';
-
+} from '../../../../plugins/shared/utils/operation';
+import { $ } from '../../../../ts-dsl';
 import { useTypeData } from '../shared/useType';
 import type { PluginInstance } from '../types';
 
@@ -27,9 +27,7 @@ export const createUseQuery = ({
     return;
   }
 
-  const symbolUseQueryFn = plugin.symbol(
-    applyNaming(operation.id, plugin.config.useQuery),
-  );
+  const symbolUseQueryFn = plugin.symbol(applyNaming(operation.id, plugin.config.useQuery));
 
   const symbolUseQuery = plugin.external(`${plugin.name}.useQuery`);
 
@@ -48,19 +46,11 @@ export const createUseQuery = ({
   });
   const statement = $.const(symbolUseQueryFn)
     .export()
-    .$if(plugin.config.comments && createOperationComment(operation), (c, v) =>
-      c.doc(v),
-    )
+    .$if(plugin.config.comments && createOperationComment(operation), (c, v) => c.doc(v))
     .assign(
       $.func()
-        .param(optionsParamName, (p) =>
-          p.required(isRequiredOptions).type(typeData),
-        )
-        .do(
-          $(symbolUseQuery)
-            .call($(symbolQueryOptionsFn).call(optionsParamName))
-            .return(),
-        ),
+        .param(optionsParamName, (p) => p.required(isRequiredOptions).type(typeData))
+        .do($(symbolUseQuery).call($(symbolQueryOptionsFn).call(optionsParamName)).return()),
     );
   plugin.node(statement);
 };

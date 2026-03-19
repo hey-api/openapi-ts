@@ -1,8 +1,6 @@
-import { JsonPipe } from '@angular/common';
 import type { HttpErrorResponse } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
 
 import type { AddPetErrors, Pet } from '../../client';
 import { PetService } from '../../client';
@@ -23,7 +21,7 @@ const localClient = createClient({
 
 @Component({
   host: { ngSkipHydration: 'true' },
-  imports: [RouterOutlet, JsonPipe],
+  imports: [],
   selector: 'app-demo',
   styleUrl: './demo.css',
   templateUrl: './demo.html',

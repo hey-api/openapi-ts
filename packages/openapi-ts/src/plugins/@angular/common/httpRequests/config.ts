@@ -1,14 +1,11 @@
-import type { PluginContext } from '~/plugins/types';
+import type { PluginContext } from '@hey-api/shared';
 
 import type { UserConfig } from '../types';
 import type { HttpRequestsConfig, UserHttpRequestsConfig } from './types';
 
 type Config = Omit<UserConfig, 'name'>;
 
-export function resolveHttpRequests(
-  config: Config,
-  context: PluginContext,
-): HttpRequestsConfig {
+export function resolveHttpRequests(config: Config, context: PluginContext): HttpRequestsConfig {
   let input = config.httpRequests;
   if (typeof input === 'string' || typeof input === 'function') {
     input = { strategy: input };

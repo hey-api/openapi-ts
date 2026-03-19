@@ -1,6 +1,4 @@
-import { describe, expect, it } from 'vitest';
-
-import { createClient } from '~/index';
+import { createClient } from '../index';
 
 type Config = Parameters<typeof createClient>[0];
 
@@ -286,5 +284,45 @@ describe('createClient', () => {
 
     const results = await createClient(config);
     expect(results).toHaveLength(4);
+  });
+
+  it('executes @angular/common HttpRequest builder path', async () => {
+    const results = await createClient({
+      dryRun: true,
+      input: {
+        info: { title: 'angular-common-test', version: '1.0.0' },
+        openapi: '3.1.0',
+        paths: {
+          '/pets': {
+            get: {
+              operationId: 'listPets',
+              responses: {
+                200: {
+                  content: {
+                    'application/json': {
+                      schema: {
+                        items: { type: 'string' },
+                        type: 'array',
+                      },
+                    },
+                  },
+                  description: 'ok',
+                },
+              },
+            },
+          },
+        },
+      },
+      logs: { level: 'silent' },
+      output: 'out',
+      plugins: [
+        '@hey-api/typescript',
+        '@hey-api/sdk',
+        '@angular/common',
+        '@hey-api/client-angular',
+      ],
+    });
+
+    expect(results.length).toBeGreaterThanOrEqual(1);
   });
 });

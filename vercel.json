@@ -1,10 +1,10 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "pnpm --filter @docs/openapi-ts build",
+  "buildCommand": "pnpm --filter docs build",
   "cleanUrls": true,
-  "devCommand": "pnpm --filter @docs/openapi-ts dev",
+  "devCommand": "pnpm --filter docs dev",
   "framework": "vitepress",
-  "installCommand": "pnpm install --filter @docs/openapi-ts",
+  "installCommand": "pnpm install --filter docs",
   "outputDirectory": "docs/.vitepress/dist",
   "redirects": [
     {

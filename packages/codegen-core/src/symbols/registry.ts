@@ -9,11 +9,9 @@ type SymbolId = number;
 
 export class SymbolRegistry implements ISymbolRegistry {
   private _id: SymbolId = 0;
-  private _indices: Map<IndexEntry[0], Map<IndexEntry[1], Set<SymbolId>>> =
-    new Map();
+  private _indices: Map<IndexEntry[0], Map<IndexEntry[1], Set<SymbolId>>> = new Map();
   private _queryCache: Map<QueryCacheKey, ReadonlyArray<SymbolId>> = new Map();
-  private _queryCacheDependencies: Map<QueryCacheKey, Set<QueryCacheKey>> =
-    new Map();
+  private _queryCacheDependencies: Map<QueryCacheKey, Set<QueryCacheKey>> = new Map();
   private _registered: Set<SymbolId> = new Set();
   private _stubs: Set<SymbolId> = new Set();
   private _stubCache: Map<QueryCacheKey, SymbolId> = new Map();
@@ -143,13 +141,8 @@ export class SymbolRegistry implements ISymbolRegistry {
   }
 
   private invalidateCache(indexKeySpace: IndexKeySpace): void {
-    const changed = indexKeySpace.map((indexEntry) =>
-      this.serializeIndexEntry(indexEntry),
-    );
-    for (const [
-      cacheKey,
-      cacheDependencies,
-    ] of this._queryCacheDependencies.entries()) {
+    const changed = indexKeySpace.map((indexEntry) => this.serializeIndexEntry(indexEntry));
+    for (const [cacheKey, cacheDependencies] of this._queryCacheDependencies.entries()) {
       for (const key of changed) {
         if (cacheDependencies.has(key)) {
           this._queryCacheDependencies.delete(cacheKey);
@@ -173,10 +166,7 @@ export class SymbolRegistry implements ISymbolRegistry {
   private replaceStubs(symbol: Symbol, indexKeySpace: IndexKeySpace): void {
     for (const stubId of this._stubs.values()) {
       const stub = this._values.get(stubId);
-      if (
-        stub?.meta &&
-        this.isSubset(this.buildIndexKeySpace(stub.meta), indexKeySpace)
-      ) {
+      if (stub?.meta && this.isSubset(this.buildIndexKeySpace(stub.meta), indexKeySpace)) {
         const cacheKey = this.buildCacheKey(stub.meta);
         this._stubCache.delete(cacheKey);
         this._stubs.delete(stubId);

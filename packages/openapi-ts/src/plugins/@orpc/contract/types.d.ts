@@ -1,10 +1,18 @@
 import type {
+  // Casing,
+  DefinePlugin,
+  // FeatureToggle,
+  // IR,
+  // NameTransformer,
+  // NamingOptions,
+  NamingConfig,
+  NamingRule,
   OperationPathStrategy,
   OperationsStrategy,
-} from '~/openApi/shared/locations';
-import type { DefinePlugin, Plugin } from '~/plugins';
-import type { PluginValidatorNames } from '~/plugins/types';
-import type { NamingConfig, NamingRule } from '~/utils/naming';
+  Plugin,
+} from '@hey-api/shared';
+
+import type { PluginValidatorNames } from '../../types';
 
 export interface UserRouterConfig {
   /**

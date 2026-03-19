@@ -1,11 +1,11 @@
-import { definePluginConfig } from '~/plugins/shared/utils/config';
+import { definePluginConfig } from '@hey-api/shared';
 
 import { handler } from './plugin';
 import type { FastifyPlugin } from './types';
 
 export const defaultConfig: FastifyPlugin['Config'] = {
   config: {
-    exportFromIndex: false,
+    includeInEntry: false,
   },
   dependencies: ['@hey-api/typescript'],
   handler,

@@ -1,4 +1,4 @@
-import { definePluginConfig } from '~/plugins/shared/utils/config';
+import { definePluginConfig } from '@hey-api/shared';
 
 import { resolveHttpRequests } from './httpRequests';
 import { resolveHttpResources } from './httpResources';
@@ -7,7 +7,8 @@ import type { AngularCommonPlugin } from './types';
 
 export const defaultConfig: AngularCommonPlugin['Config'] = {
   config: {
-    exportFromIndex: false,
+    comments: true,
+    includeInEntry: false,
   },
   dependencies: ['@hey-api/client-angular', '@hey-api/sdk'],
   handler,

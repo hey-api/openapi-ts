@@ -44,10 +44,7 @@ export interface OperatorMethods extends Node {
   times(expr: Expr): BinaryTsDsl;
 }
 
-export function OperatorMixin<
-  T extends ts.Expression,
-  TBase extends BaseCtor<T>,
->(Base: TBase) {
+export function OperatorMixin<T extends ts.Expression, TBase extends BaseCtor<T>>(Base: TBase) {
   abstract class Operator extends Base {
     override analyze(ctx: AnalysisContext): void {
       super.analyze(ctx);

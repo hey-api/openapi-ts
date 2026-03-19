@@ -1,7 +1,8 @@
 import type { DefinePlugin, IR } from '@hey-api/openapi-ts';
 
 // import { createOpencode } from '@opencode-ai/sdk';
-import { PetStore } from './.gen/sdk.gen.ts';
+import { client } from './gen/typescript/client.gen';
+import { OpenCode } from './gen/typescript/sdk.gen';
 
 type MyPluginConfig = { readonly name: 'myplugin' };
 type MyPlugin = DefinePlugin<MyPluginConfig>;
@@ -19,11 +20,14 @@ export const handler: MyPlugin['Handler'] = ({ plugin }) => {
 async function run() {
   // const { client, server } = await createOpencode();
   // console.log(client, server);
-  const client = new PetStore();
-  client.tui.publish({
+  client.setConfig({
+    baseUrl: 'https://api.example.com',
+  });
+  const sdk = new OpenCode({ client });
+  sdk.tui.publish({
     body: {
       properties: {
-        message: 'Hello from Hey API OpenAPI TS Playground!',
+        message: 'Hello from Hey API OpenAPI TypeScript Playground!',
         variant: 'success',
       },
       type: 'tui.toast.show',

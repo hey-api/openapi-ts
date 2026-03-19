@@ -1,0 +1,31 @@
+{
+  "name": "@example/openapi-ts-nestjs",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "openapi-ts": "openapi-ts",
+    "start": "node --import @swc-node/register/esm-register src/main.ts",
+    "test": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@nestjs/common": "^11.0.1",
+    "@nestjs/core": "^11.0.1",
+    "@nestjs/platform-express": "^11.0.1",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.1"
+  },
+  "devDependencies": {
+    "@hey-api/openapi-ts": "workspace:*",
+    "@nestjs/testing": "^11.0.1",
+    "@swc-node/register": "^1.10.10",
+    "@swc/core": "^1.11.29",
+    "eslint": "^9.18.0",
+    "oxfmt": "^0.27.0",
+    "typescript": "^5.9.3",
+    "unplugin-swc": "^1.5.5",
+    "vite": "^7.3.1",
+    "vitest": "^4.0.18"
+  }
+}

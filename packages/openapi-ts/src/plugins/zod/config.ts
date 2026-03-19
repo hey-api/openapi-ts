@@ -1,21 +1,18 @@
+import { definePluginConfig, mappers } from '@hey-api/shared';
 import colors from 'ansi-colors';
-
-import { definePluginConfig, mappers } from '~/plugins/shared/utils/config';
 
 import { Api } from './api';
 import { handler } from './plugin';
 import type { ZodPlugin } from './types';
 
-type CompatibilityVersion = NonNullable<
-  ZodPlugin['Config']['config']['compatibilityVersion']
->;
+type CompatibilityVersion = NonNullable<ZodPlugin['Config']['config']['compatibilityVersion']>;
 
 export const defaultConfig: ZodPlugin['Config'] = {
   api: new Api(),
   config: {
     case: 'camelCase',
     comments: true,
-    exportFromIndex: false,
+    includeInEntry: false,
     metadata: false,
   },
   handler,

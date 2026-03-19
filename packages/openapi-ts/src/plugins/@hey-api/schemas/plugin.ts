@@ -1,11 +1,13 @@
-import { satisfies } from '~/config/utils/package';
-import type { Context } from '~/ir/context';
-import type { OpenApiV2_0_XTypes } from '~/openApi/2.0.x';
-import type { OpenApiV3_0_XTypes } from '~/openApi/3.0.x';
-import type { OpenApiV3_1_XTypes } from '~/openApi/3.1.x';
-import type { OpenApi } from '~/openApi/types';
-import { $ } from '~/ts-dsl';
+import type {
+  Context,
+  OpenApi,
+  OpenApiV2_0_XTypes,
+  OpenApiV3_0_XTypes,
+  OpenApiV3_1_XTypes,
+} from '@hey-api/shared';
+import { satisfies } from '@hey-api/shared';
 
+import { $ } from '../../../ts-dsl';
 import type { HeyApiSchemasPlugin } from './types';
 
 const stripSchema = ({
@@ -71,10 +73,7 @@ const schemaToJsonSchemaDraft_04 = ({
 
   stripSchema({ plugin, schema });
 
-  if (
-    schema.additionalProperties &&
-    typeof schema.additionalProperties !== 'boolean'
-  ) {
+  if (schema.additionalProperties && typeof schema.additionalProperties !== 'boolean') {
     schema.additionalProperties = schemaToJsonSchemaDraft_04({
       context,
       plugin,
@@ -124,12 +123,8 @@ const schemaToJsonSchemaDraft_05 = ({
 }: {
   context: Context;
   plugin: HeyApiSchemasPlugin['Instance'];
-  schema:
-    | OpenApiV3_0_XTypes['SchemaObject']
-    | OpenApiV3_0_XTypes['ReferenceObject'];
-}):
-  | OpenApiV3_0_XTypes['SchemaObject']
-  | OpenApiV3_0_XTypes['ReferenceObject'] => {
+  schema: OpenApiV3_0_XTypes['SchemaObject'] | OpenApiV3_0_XTypes['ReferenceObject'];
+}): OpenApiV3_0_XTypes['SchemaObject'] | OpenApiV3_0_XTypes['ReferenceObject'] => {
   if (Array.isArray(_schema)) {
     return _schema.map((item) =>
       schemaToJsonSchemaDraft_05({
@@ -137,9 +132,7 @@ const schemaToJsonSchemaDraft_05 = ({
         plugin,
         schema: item,
       }),
-    ) as unknown as
-      | OpenApiV3_0_XTypes['SchemaObject']
-      | OpenApiV3_0_XTypes['ReferenceObject'];
+    ) as unknown as OpenApiV3_0_XTypes['SchemaObject'] | OpenApiV3_0_XTypes['ReferenceObject'];
   }
 
   const schema = structuredClone(_schema);
@@ -153,10 +146,7 @@ const schemaToJsonSchemaDraft_05 = ({
 
   stripSchema({ plugin, schema });
 
-  if (
-    schema.additionalProperties &&
-    typeof schema.additionalProperties !== 'boolean'
-  ) {
+  if (schema.additionalProperties && typeof schema.additionalProperties !== 'boolean') {
     schema.additionalProperties = schemaToJsonSchemaDraft_05({
       context,
       plugin,
@@ -248,10 +238,7 @@ const schemaToJsonSchema2020_12 = ({
     schema.$ref = decodeURI(schema.$ref);
   }
 
-  if (
-    schema.additionalProperties &&
-    typeof schema.additionalProperties !== 'boolean'
-  ) {
+  if (schema.additionalProperties && typeof schema.additionalProperties !== 'boolean') {
     schema.additionalProperties = schemaToJsonSchema2020_12({
       context,
       plugin,

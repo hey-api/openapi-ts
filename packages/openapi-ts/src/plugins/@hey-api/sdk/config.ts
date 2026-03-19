@@ -1,15 +1,22 @@
-import { definePluginConfig } from '~/plugins/shared/utils/config';
+import { log } from '@hey-api/codegen-core';
+import { definePluginConfig } from '@hey-api/shared';
 
 import { resolveExamples } from './examples';
 import { resolveOperations } from './operations';
 import { handler } from './plugin';
 import type { HeyApiSdkPlugin } from './types';
 
+const transformerInferWarn =
+  'You set `transformer: true` but no transformer plugin was found in your plugins. Add a transformer plugin like `@hey-api/transformers` to enable this feature. The transformer option has been disabled.';
+const validatorInferWarn =
+  'You set `validator: true` but no validator plugin was found in your plugins. Add a validator plugin like `zod` to enable this feature. The validator option has been disabled.';
+
 export const defaultConfig: HeyApiSdkPlugin['Config'] = {
   config: {
     auth: true,
     client: true,
-    exportFromIndex: true,
+    comments: true,
+    includeInEntry: true,
     paramsStructure: 'grouped',
     responseStyle: 'fields',
     transformer: false,
@@ -37,10 +44,16 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
 
     if (plugin.config.transformer) {
       if (typeof plugin.config.transformer === 'boolean') {
-        plugin.config.transformer = context.pluginByTag('transformer');
+        try {
+          plugin.config.transformer = context.pluginByTag('transformer');
+          plugin.dependencies.add(plugin.config.transformer!);
+        } catch {
+          log.warn(transformerInferWarn);
+          plugin.config.transformer = false;
+        }
+      } else {
+        plugin.dependencies.add(plugin.config.transformer);
       }
-
-      plugin.dependencies.add(plugin.config.transformer!);
     } else {
       plugin.config.transformer = false;
     }
@@ -54,20 +67,32 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
 
     if (plugin.config.validator.request) {
       if (typeof plugin.config.validator.request === 'boolean') {
-        plugin.config.validator.request = context.pluginByTag('validator');
+        try {
+          plugin.config.validator.request = context.pluginByTag('validator');
+          plugin.dependencies.add(plugin.config.validator.request!);
+        } catch {
+          log.warn(validatorInferWarn);
+          plugin.config.validator.request = false;
+        }
+      } else {
+        plugin.dependencies.add(plugin.config.validator.request);
       }
-
-      plugin.dependencies.add(plugin.config.validator.request!);
     } else {
       plugin.config.validator.request = false;
     }
 
     if (plugin.config.validator.response) {
       if (typeof plugin.config.validator.response === 'boolean') {
-        plugin.config.validator.response = context.pluginByTag('validator');
+        try {
+          plugin.config.validator.response = context.pluginByTag('validator');
+          plugin.dependencies.add(plugin.config.validator.response!);
+        } catch {
+          log.warn(validatorInferWarn);
+          plugin.config.validator.response = false;
+        }
+      } else {
+        plugin.dependencies.add(plugin.config.validator.response);
       }
-
-      plugin.dependencies.add(plugin.config.validator.response!);
     } else {
       plugin.config.validator.response = false;
     }

@@ -1,7 +1,4 @@
 import { getInfo, getInfoFromPullRequest } from '@changesets/get-github-info';
-import { config } from 'dotenv';
-
-config();
 
 /**
  * @returns {string}
@@ -86,10 +83,7 @@ export default {
 
     const users = usersFromSummary.length
       ? usersFromSummary
-          .map(
-            (userFromSummary) =>
-              `[@${userFromSummary}](https://github.com/${userFromSummary})`,
-          )
+          .map((userFromSummary) => `[@${userFromSummary}](https://github.com/${userFromSummary})`)
           .join(', ')
       : links.user;
 

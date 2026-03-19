@@ -1,9 +1,4 @@
-import type {
-  AnalysisContext,
-  NodeName,
-  NodeScope,
-  Ref,
-} from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName, NodeScope, Ref } from '@hey-api/codegen-core';
 import { ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
@@ -34,6 +29,7 @@ export class TypeParamTsDsl extends Mixed {
     ctx.analyze(this.defaultValue);
   }
 
+  /** Sets the parameter default value. */
   default(value: TypeParamExpr): this {
     this.defaultValue = ref(value);
     return this;

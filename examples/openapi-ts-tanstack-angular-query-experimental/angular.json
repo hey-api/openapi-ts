@@ -24,10 +24,7 @@
                 "input": "public"
               }
             ],
-            "styles": [
-              "@angular/material/prebuilt-themes/azure-blue.css",
-              "src/styles.css"
-            ],
+            "styles": ["@angular/material/prebuilt-themes/azure-blue.css", "src/styles.css"],
             "scripts": []
           },
           "configurations": {

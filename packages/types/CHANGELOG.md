@@ -1,5 +1,17 @@
 # @hey-api/types
 
+## 0.1.4
+
+### Patch Changes
+
+- **internal**: remove TypeScript from peer dependencies ([#3566](https://github.com/hey-api/openapi-ts/pull/3566)) ([`b5f1e4b`](https://github.com/hey-api/openapi-ts/commit/b5f1e4b5f64cbf0bad2eff888177ac9c1881ba3e)) by [@mrlubos](https://github.com/mrlubos)
+
+## 0.1.3
+
+### Patch Changes
+
+- **types**: add `AnyString` utility type ([#3251](https://github.com/hey-api/openapi-ts/pull/3251)) ([`7f19d59`](https://github.com/hey-api/openapi-ts/commit/7f19d5921dadfa96ecae84a5298b7aee1daee56d)) by [@mrlubos](https://github.com/mrlubos)
+
 ## 0.1.2
 
 ### Patch Changes

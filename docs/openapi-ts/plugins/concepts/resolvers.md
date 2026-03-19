@@ -7,7 +7,7 @@ description: Understand the concepts behind plugins.
 
 Sometimes the default plugin behavior isn't what you need or expect. Resolvers let you patch plugins in a safe and performant way, without forking or reimplementing core logic.
 
-Currently available for [Valibot](/openapi-ts/plugins/valibot) and [Zod](/openapi-ts/plugins/zod).
+Currently available for [TypeScript](/openapi-ts/plugins/typescript), [Valibot](/openapi-ts/plugins/valibot), and [Zod](/openapi-ts/plugins/zod).
 
 ## Examples
 
@@ -130,7 +130,7 @@ export const vAmount = v.number();
 
 ### Replace default base
 
-You might want to replace the default base schema, e.g. `v.object()`.
+You might want to replace the default base schema, e.g., `v.object()`.
 
 ```js
 export const vUser = v.object({
@@ -214,10 +214,7 @@ This resolver creates a union that accepts both the known enum values and any ot
 ::: code-group
 
 ```js [after]
-export const zStatus = z.union([
-  z.enum(['active', 'inactive', 'pending']),
-  z.string(),
-]);
+export const zStatus = z.union([z.enum(['active', 'inactive', 'pending']), z.string()]);
 ```
 
 ```js [before]

@@ -1,13 +1,14 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import type { Context } from '~/ir/context';
-import { IntentContext } from '~/ir/intents';
-import { getClientPlugin } from '~/plugins/@hey-api/client-core/utils';
+import type { Context } from '@hey-api/shared';
+import { IntentContext } from '@hey-api/shared';
 
+import { getTypedConfig } from '../config/utils';
+import { getClientPlugin } from '../plugins/@hey-api/client-core/utils';
 import { generateClientBundle } from './client';
 
-export const generateOutput = async ({ context }: { context: Context }) => {
+export async function generateOutput(context: Context): Promise<void> {
   const outputPath = path.resolve(context.config.output.path);
 
   if (context.config.output.clean) {
@@ -16,18 +17,15 @@ export const generateOutput = async ({ context }: { context: Context }) => {
     }
   }
 
-  const client = getClientPlugin(context.config);
-  if (
-    'bundle' in client.config &&
-    client.config.bundle &&
-    !context.config.dryRun
-  ) {
+  const config = getTypedConfig(context);
+
+  const client = getClientPlugin(config);
+  if ('bundle' in client.config && client.config.bundle && !config.dryRun) {
     // not proud of this one
     // @ts-expect-error
-    context.config._FRAGILE_CLIENT_BUNDLE_RENAMED = generateClientBundle({
-      meta: {
-        importFileExtension: context.config.output.importFileExtension,
-      },
+    config._FRAGILE_CLIENT_BUNDLE_RENAMED = generateClientBundle({
+      header: config.output.header,
+      module: config.output.module,
       outputPath,
       // @ts-expect-error
       plugin: client,
@@ -57,8 +55,7 @@ export const generateOutput = async ({ context }: { context: Context }) => {
 
   const { source } = context.config.output;
   if (source.enabled) {
-    const sourcePath =
-      source.path === null ? undefined : path.resolve(outputPath, source.path);
+    const sourcePath = source.path === null ? undefined : path.resolve(outputPath, source.path);
     if (!context.config.dryRun && sourcePath && sourcePath !== outputPath) {
       fs.mkdirSync(sourcePath, { recursive: true });
     }
@@ -75,4 +72,4 @@ export const generateOutput = async ({ context }: { context: Context }) => {
       await source.callback(serialized);
     }
   }
-};
+}

@@ -1,20 +1,18 @@
-import type { SchemaWithType } from '~/plugins';
-import {
-  maybeBigInt,
-  shouldCoerceToBigInt,
-} from '~/plugins/shared/utils/coerce';
-import { getIntegerLimit } from '~/plugins/shared/utils/formats';
-import { $ } from '~/ts-dsl';
+import type { SchemaWithType } from '@hey-api/shared';
 
+import { maybeBigInt, shouldCoerceToBigInt } from '../../../../plugins/shared/utils/coerce';
+import { getIntegerLimit } from '../../../../plugins/shared/utils/formats';
+import { $ } from '../../../../ts-dsl';
 import type { NumberResolverContext } from '../../resolvers';
 import type { Pipe, PipeResult, Pipes } from '../../shared/pipes';
 import { pipes } from '../../shared/pipes';
-import type { IrSchemaToAstOptions } from '../../shared/types';
+import type { ValibotPlugin } from '../../types';
 import { identifiers } from '../constants';
 
 function baseNode(ctx: NumberResolverContext): PipeResult {
   const { schema, symbols } = ctx;
   const { v } = symbols;
+
   if (ctx.utils.shouldCoerceToBigInt(schema.format)) {
     return [
       $(v)
@@ -31,95 +29,109 @@ function baseNode(ctx: NumberResolverContext): PipeResult {
         .call($.func().param('x').do($('BigInt').call('x').return())),
     ];
   }
-  const pipes: Pipes = [];
-  pipes.push($(v).attr(identifiers.schemas.number).call());
+
+  const result: Pipes = [];
+  result.push($(v).attr(identifiers.schemas.number).call());
+
   if (schema.type === 'integer') {
-    pipes.push($(v).attr(identifiers.actions.integer).call());
+    result.push($(v).attr(identifiers.actions.integer).call());
   }
-  return pipes;
+
+  return result;
 }
 
-function constNode(ctx: NumberResolverContext): PipeResult | undefined {
+function constNode(ctx: NumberResolverContext): PipeResult {
   const { schema, symbols } = ctx;
   const { v } = symbols;
-  if (schema.const === undefined) return;
+
+  if (schema.const === undefined) {
+    return;
+  }
+
   return $(v)
     .attr(identifiers.schemas.literal)
     .call(ctx.utils.maybeBigInt(schema.const, schema.format));
 }
 
-function maxNode(ctx: NumberResolverContext): PipeResult | undefined {
+function maxNode(ctx: NumberResolverContext): PipeResult {
   const { schema, symbols } = ctx;
   const { v } = symbols;
+
   if (schema.exclusiveMaximum !== undefined) {
     return $(v)
       .attr(identifiers.actions.ltValue)
       .call(ctx.utils.maybeBigInt(schema.exclusiveMaximum, schema.format));
   }
+
   if (schema.maximum !== undefined) {
     return $(v)
       .attr(identifiers.actions.maxValue)
       .call(ctx.utils.maybeBigInt(schema.maximum, schema.format));
   }
+
   const limit = ctx.utils.getIntegerLimit(schema.format);
   if (limit) {
     return $(v)
       .attr(identifiers.actions.maxValue)
-      .call(
-        ctx.utils.maybeBigInt(limit.maxValue, schema.format),
-        $.literal(limit.maxError),
-      );
+      .call(ctx.utils.maybeBigInt(limit.maxValue, schema.format), $.literal(limit.maxError));
   }
-  return;
 }
 
-function minNode(ctx: NumberResolverContext): PipeResult | undefined {
+function minNode(ctx: NumberResolverContext): PipeResult {
   const { schema, symbols } = ctx;
   const { v } = symbols;
+
   if (schema.exclusiveMinimum !== undefined) {
     return $(v)
       .attr(identifiers.actions.gtValue)
       .call(ctx.utils.maybeBigInt(schema.exclusiveMinimum, schema.format));
   }
+
   if (schema.minimum !== undefined) {
     return $(v)
       .attr(identifiers.actions.minValue)
       .call(ctx.utils.maybeBigInt(schema.minimum, schema.format));
   }
+
   const limit = ctx.utils.getIntegerLimit(schema.format);
   if (limit) {
     return $(v)
       .attr(identifiers.actions.minValue)
-      .call(
-        ctx.utils.maybeBigInt(limit.minValue, schema.format),
-        $.literal(limit.minError),
-      );
+      .call(ctx.utils.maybeBigInt(limit.minValue, schema.format), $.literal(limit.minError));
   }
-  return;
 }
 
 function numberResolver(ctx: NumberResolverContext): Pipes {
-  const constNode = ctx.nodes.const(ctx);
-  if (constNode) return ctx.pipes.push(ctx.pipes.current, constNode);
+  const constResult = ctx.nodes.const(ctx);
+  if (constResult) {
+    return ctx.pipes.push(ctx.pipes.current, constResult);
+  }
 
-  const baseNode = ctx.nodes.base(ctx);
-  if (baseNode) ctx.pipes.push(ctx.pipes.current, baseNode);
+  const baseResult = ctx.nodes.base(ctx);
+  if (baseResult) {
+    ctx.pipes.push(ctx.pipes.current, baseResult);
+  }
 
-  const minNode = ctx.nodes.min(ctx);
-  if (minNode) ctx.pipes.push(ctx.pipes.current, minNode);
+  const minResult = ctx.nodes.min(ctx);
+  if (minResult) {
+    ctx.pipes.push(ctx.pipes.current, minResult);
+  }
 
-  const maxNode = ctx.nodes.max(ctx);
-  if (maxNode) ctx.pipes.push(ctx.pipes.current, maxNode);
+  const maxResult = ctx.nodes.max(ctx);
+  if (maxResult) {
+    ctx.pipes.push(ctx.pipes.current, maxResult);
+  }
 
   return ctx.pipes.current;
 }
 
-export const numberToNode = ({
+export function numberToPipes({
   plugin,
   schema,
-}: IrSchemaToAstOptions & {
+}: {
+  plugin: ValibotPlugin['Instance'];
   schema: SchemaWithType<'integer' | 'number'>;
-}): Pipe => {
+}): Pipe {
   const ctx: NumberResolverContext = {
     $,
     nodes: {
@@ -143,7 +155,8 @@ export const numberToNode = ({
       shouldCoerceToBigInt,
     },
   };
+
   const resolver = plugin.config['~resolvers']?.number;
   const node = resolver?.(ctx) ?? numberResolver(ctx);
   return ctx.pipes.toNode(node, plugin);
-};
+}

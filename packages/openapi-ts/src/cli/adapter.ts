@@ -1,10 +1,9 @@
 import type { ToArray } from '@hey-api/types';
 
-import type { UserConfig } from '~/config/types';
-
+import type { UserConfig } from '../config/types';
 import type { CliOptions } from './schema';
 
-export const cliToConfig = (cli: CliOptions): Partial<UserConfig> => {
+export function cliToConfig(cli: CliOptions): Partial<UserConfig> {
   const config: Partial<UserConfig> = {};
 
   if (cli.input) config.input = cli.input;
@@ -19,12 +18,12 @@ export const cliToConfig = (cli: CliOptions): Partial<UserConfig> => {
   if (cli.client) plugins.push(cli.client);
   if (plugins.length > 0) config.plugins = plugins;
 
-  if (cli.debug || cli.silent || cli.logs || cli.logFile !== undefined) {
+  if (cli.debug || cli.silent || cli.logs || cli.logFile === false) {
     config.logs = {
       ...(cli.logs && { path: cli.logs }),
       ...(cli.debug && { level: 'debug' as const }),
       ...(cli.silent && { level: 'silent' as const }),
-      ...(cli.logFile !== undefined && { file: cli.logFile }),
+      ...(cli.logFile === false && { file: false }),
     };
   }
 
@@ -37,4 +36,4 @@ export const cliToConfig = (cli: CliOptions): Partial<UserConfig> => {
   }
 
   return config;
-};
+}

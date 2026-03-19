@@ -11,9 +11,7 @@ import { TypeExprMixin } from '../mixins/type-expr';
 
 type Id = NodeName | MaybeTsDsl<ts.Expression>;
 
-const Mixed = AsMixin(
-  ExprMixin(OperatorMixin(TypeExprMixin(TsDsl<ts.Expression>))),
-);
+const Mixed = AsMixin(ExprMixin(OperatorMixin(TypeExprMixin(TsDsl<ts.Expression>))));
 
 export class ExprTsDsl extends Mixed {
   readonly '~dsl' = 'ExprTsDsl';

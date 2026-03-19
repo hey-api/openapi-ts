@@ -1,10 +1,6 @@
 import type * as getGitHubInfo from '@changesets/get-github-info';
 import parse from '@changesets/parse';
-import type {
-  ModCompWithPackage,
-  NewChangesetWithCommit,
-  VersionType,
-} from '@changesets/types';
+import type { ModCompWithPackage, NewChangesetWithCommit, VersionType } from '@changesets/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import changelog from '../.changeset/changelog.js';
@@ -100,9 +96,7 @@ describe('changelog', () => {
       repo: 'org/repo',
     });
 
-    expect(line).toEqual(
-      '### Updated Dependencies:\n  - @hey-api/openapi-ts@0.0.2',
-    );
+    expect(line).toEqual('### Updated Dependencies:\n  - @hey-api/openapi-ts@0.0.2');
   });
 
   it('formats regular release lines', async () => {
@@ -124,10 +118,7 @@ describe('changelog', () => {
   it('with multiple authors', async () => {
     expect(
       await changelog.getReleaseLine(
-        ...getChangeset(
-          ['author: @one', 'author: @two'].join('\n'),
-          data.commit,
-        ),
+        ...getChangeset(['author: @one', 'author: @two'].join('\n'), data.commit),
       ),
     ).toEqual(
       `\n- something ([#1613](https://github.com/hey-api/openapi-ts/pull/1613)) ([\`a085003\`](https://github.com/hey-api/openapi-ts/commit/a085003)) by [@one](https://github.com/one), [@two](https://github.com/two)`,
@@ -171,9 +162,7 @@ describe('changelog', () => {
     expect(line).not.toContain('````');
     // Should contain a markdown code block
     expect(line).toContain('```js\nexport default {');
-    expect(line).toContain(
-      '  input: "hey-api/backend", // sign up at app.heyapi.dev',
-    );
+    expect(line).toContain('  input: "hey-api/backend", // sign up at app.heyapi.dev');
     expect(line).toContain('  output: {');
     expect(line).toContain('    format: null,');
     expect(line).toContain('    lint: null,');
@@ -212,44 +201,35 @@ describe('changelog', () => {
     expect(line).toContain('Some text.');
   });
 
-  describe.each(['author', 'user'])(
-    'override author with %s keyword',
-    (keyword) => {
-      it.each(['with @', 'without @'])('%s', async (kind) => {
-        expect(
-          await changelog.getReleaseLine(
-            ...getChangeset(
-              `${keyword}: ${kind === 'with @' ? '@' : ''}other`,
-              data.commit,
-            ),
-          ),
-        ).toEqual(
-          `\n- something ([#1613](https://github.com/hey-api/openapi-ts/pull/1613)) ([\`a085003\`](https://github.com/hey-api/openapi-ts/commit/a085003)) by [@other](https://github.com/other)`,
-        );
-      });
-    },
-  );
+  describe.each(['author', 'user'])('override author with %s keyword', (keyword) => {
+    it.each(['with @', 'without @'])('%s', async (kind) => {
+      expect(
+        await changelog.getReleaseLine(
+          ...getChangeset(`${keyword}: ${kind === 'with @' ? '@' : ''}other`, data.commit),
+        ),
+      ).toEqual(
+        `\n- something ([#1613](https://github.com/hey-api/openapi-ts/pull/1613)) ([\`a085003\`](https://github.com/hey-api/openapi-ts/commit/a085003)) by [@other](https://github.com/other)`,
+      );
+    });
+  });
 
   describe.each([data.commit, 'wrongcommit', undefined])(
     'with commit from changeset of %s',
     (commitFromChangeset) => {
-      describe.each(['pr', 'pull request', 'pull'])(
-        'override pr with %s keyword',
-        (keyword) => {
-          it.each(['with #', 'without #'])('%s', async (kind) => {
-            expect(
-              await changelog.getReleaseLine(
-                ...getChangeset(
-                  `${keyword}: ${kind === 'with #' ? '#' : ''}${data.pull}`,
-                  commitFromChangeset,
-                ),
+      describe.each(['pr', 'pull request', 'pull'])('override pr with %s keyword', (keyword) => {
+        it.each(['with #', 'without #'])('%s', async (kind) => {
+          expect(
+            await changelog.getReleaseLine(
+              ...getChangeset(
+                `${keyword}: ${kind === 'with #' ? '#' : ''}${data.pull}`,
+                commitFromChangeset,
               ),
-            ).toEqual(
-              `\n- something ([#1613](https://github.com/hey-api/openapi-ts/pull/1613)) ([\`a085003\`](https://github.com/hey-api/openapi-ts/commit/a085003)) by [@someone](https://github.com/someone)`,
-            );
-          });
-        },
-      );
+            ),
+          ).toEqual(
+            `\n- something ([#1613](https://github.com/hey-api/openapi-ts/pull/1613)) ([\`a085003\`](https://github.com/hey-api/openapi-ts/commit/a085003)) by [@someone](https://github.com/someone)`,
+          );
+        });
+      });
 
       it('override commit with commit keyword', async () => {
         expect(

@@ -1,0 +1,18 @@
+{
+  "components": {
+    "schemas": {
+      "OtherSchema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "$ref": "#/components/schemas/Status"
+          }
+        }
+      },
+      "Status": {
+        "type": "integer",
+        "enum": [0, 1, 2]
+      }
+    }
+  }
+}

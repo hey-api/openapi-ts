@@ -1,15 +1,12 @@
-import type { SchemaWithType } from '~/plugins';
-import {
-  maybeBigInt,
-  shouldCoerceToBigInt,
-} from '~/plugins/shared/utils/coerce';
-import { getIntegerLimit } from '~/plugins/shared/utils/formats';
-import { $ } from '~/ts-dsl';
+import type { SchemaWithType } from '@hey-api/shared';
 
+import { maybeBigInt, shouldCoerceToBigInt } from '../../../../plugins/shared/utils/coerce';
+import { getIntegerLimit } from '../../../../plugins/shared/utils/formats';
+import { $ } from '../../../../ts-dsl';
 import { identifiers } from '../../constants';
 import type { NumberResolverContext } from '../../resolvers';
-import type { Chain } from '../../shared/chain';
-import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
+import type { Chain, ChainResult } from '../../shared/chain';
+import type { ZodPlugin } from '../../types';
 
 function baseNode(ctx: NumberResolverContext): Chain {
   const { schema, symbols } = ctx;
@@ -24,16 +21,14 @@ function baseNode(ctx: NumberResolverContext): Chain {
   return chain;
 }
 
-function constNode(ctx: NumberResolverContext): Chain | undefined {
+function constNode(ctx: NumberResolverContext): ChainResult {
   const { schema, symbols } = ctx;
   const { z } = symbols;
   if (schema.const === undefined) return;
-  return $(z)
-    .attr(identifiers.literal)
-    .call(ctx.utils.maybeBigInt(schema.const, schema.format));
+  return $(z).attr(identifiers.literal).call(ctx.utils.maybeBigInt(schema.const, schema.format));
 }
 
-function maxNode(ctx: NumberResolverContext): Chain | undefined {
+function maxNode(ctx: NumberResolverContext): ChainResult {
   const { chain, schema } = ctx;
   if (schema.exclusiveMaximum !== undefined) {
     return chain.current
@@ -57,7 +52,7 @@ function maxNode(ctx: NumberResolverContext): Chain | undefined {
   return;
 }
 
-function minNode(ctx: NumberResolverContext): Chain | undefined {
+function minNode(ctx: NumberResolverContext): ChainResult {
   const { chain, schema } = ctx;
   if (schema.exclusiveMinimum !== undefined) {
     return chain.current
@@ -100,14 +95,13 @@ function numberResolver(ctx: NumberResolverContext): Chain {
   return ctx.chain.current;
 }
 
-export const numberToNode = ({
+export function numberToNode({
   plugin,
   schema,
-  state,
-}: IrSchemaToAstOptions & {
+}: {
+  plugin: ZodPlugin['Instance'];
   schema: SchemaWithType<'integer' | 'number'>;
-}): Omit<Ast, 'typeName'> => {
-  const ast: Partial<Omit<Ast, 'typeName'>> = {};
+}): Chain {
   const z = plugin.external('zod.z');
   const ctx: NumberResolverContext = {
     $,
@@ -126,15 +120,11 @@ export const numberToNode = ({
       z,
     },
     utils: {
-      ast,
       getIntegerLimit,
       maybeBigInt,
       shouldCoerceToBigInt,
-      state,
     },
   };
   const resolver = plugin.config['~resolvers']?.number;
-  const node = resolver?.(ctx) ?? numberResolver(ctx);
-  ast.expression = node;
-  return ast as Omit<Ast, 'typeName'>;
-};
+  return resolver?.(ctx) ?? numberResolver(ctx);
+}

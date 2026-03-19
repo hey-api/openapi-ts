@@ -1,0 +1,38 @@
+{
+  "openapi": "3.1.0",
+  "info": { "title": "Collision Test", "version": "1.0.0" },
+  "paths": {
+    "/main": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "sibling-schema-collision-wrapper.json#/components/schemas/MainSchema"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/other": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "sibling-schema-collision-other.json#/components/schemas/OtherSchema"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

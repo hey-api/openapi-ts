@@ -1,25 +1,17 @@
 import { log } from '@hey-api/codegen-core';
-
-import type { OperationsStrategy } from '~/openApi/shared/locations';
-import type { PluginContext } from '~/plugins/types';
+import type { OperationsStrategy, PluginContext } from '@hey-api/shared';
 
 import type { UserConfig } from '../types';
 import type { OperationsConfig, UserOperationsConfig } from './types';
 
 type Config = Omit<UserConfig, 'name'>;
 
-export function resolveOperations(
-  config: Config,
-  context: PluginContext,
-): OperationsConfig {
+export function resolveOperations(config: Config, context: PluginContext): OperationsConfig {
   if (config.asClass !== undefined) {
     log.warnDeprecated({
       context: '@hey-api/sdk',
       field: 'asClass',
-      replacement: [
-        'operations: { strategy: "byTags" }',
-        'operations: { strategy: "single" }',
-      ],
+      replacement: ['operations: { strategy: "byTags" }', 'operations: { strategy: "single" }'],
     });
   }
 
@@ -35,10 +27,7 @@ export function resolveOperations(
     log.warnDeprecated({
       context: '@hey-api/sdk',
       field: 'classStructure',
-      replacement: [
-        'operations: { nesting: "operationId" }',
-        'operations: { nesting: "id" }',
-      ],
+      replacement: ['operations: { nesting: "operationId" }', 'operations: { nesting: "id" }'],
     });
   }
 
@@ -62,10 +51,7 @@ export function resolveOperations(
     log.warnDeprecated({
       context: '@hey-api/sdk',
       field: 'operationId',
-      replacement: [
-        'operations: { nesting: "operationId" }',
-        'operations: { nesting: "id" }',
-      ],
+      replacement: ['operations: { nesting: "operationId" }', 'operations: { nesting: "id" }'],
     });
   }
 
@@ -83,8 +69,7 @@ function normalizeConfig(
   }
 
   const strategy = legacy.strategy ?? input.strategy ?? 'flat';
-  const methods: OperationsConfig['methods'] =
-    strategy === 'single' ? 'instance' : 'static';
+  const methods: OperationsConfig['methods'] = strategy === 'single' ? 'instance' : 'static';
 
   return context.valueToObject({
     defaultValue: {

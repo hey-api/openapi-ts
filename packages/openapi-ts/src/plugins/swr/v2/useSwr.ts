@@ -1,12 +1,9 @@
-import type { IR } from '~/ir/types';
-import {
-  createOperationComment,
-  hasOperationSse,
-} from '~/plugins/shared/utils/operation';
-import type { TsDsl } from '~/ts-dsl';
-import { $ } from '~/ts-dsl';
-import { applyNaming } from '~/utils/naming';
+import type { IR } from '@hey-api/shared';
+import { applyNaming } from '@hey-api/shared';
 
+import { createOperationComment, hasOperationSse } from '../../../plugins/shared/utils/operation';
+import type { TsDsl } from '../../../ts-dsl';
+import { $ } from '../../../ts-dsl';
 import type { SwrPlugin } from '../types';
 
 export const createUseSwr = ({
@@ -21,9 +18,7 @@ export const createUseSwr = ({
   }
 
   const symbolUseSwr = plugin.external('swr');
-  const symbolUseQueryFn = plugin.symbol(
-    applyNaming(operation.id, plugin.config.useSwr),
-  );
+  const symbolUseQueryFn = plugin.symbol(applyNaming(operation.id, plugin.config.useSwr));
 
   const awaitSdkFn = $.lazy((ctx) =>
     ctx
@@ -42,17 +37,12 @@ export const createUseSwr = ({
   if (plugin.getPluginOrThrow('@hey-api/sdk').config.responseStyle === 'data') {
     statements.push($.return(awaitSdkFn));
   } else {
-    statements.push(
-      $.const().object('data').assign(awaitSdkFn),
-      $.return('data'),
-    );
+    statements.push($.const().object('data').assign(awaitSdkFn), $.return('data'));
   }
 
   const statement = $.const(symbolUseQueryFn)
     .export()
-    .$if(plugin.config.comments && createOperationComment(operation), (c, v) =>
-      c.doc(v),
-    )
+    .$if(plugin.config.comments && createOperationComment(operation), (c, v) => c.doc(v))
     .assign(
       $.func().do(
         $(symbolUseSwr)

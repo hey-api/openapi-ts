@@ -20,8 +20,8 @@ export {
   updatePet,
   updatePetWithForm,
   updateUser,
-  uploadFile
-} from './sdk.gen'
+  uploadFile,
+} from './sdk.gen';
 export type {
   AddPetData,
   AddPetErrors,
@@ -102,5 +102,5 @@ export type {
   UploadFileResponse,
   UploadFileResponses,
   User,
-  UserArray
-} from './types.gen'
+  UserArray,
+} from './types.gen';

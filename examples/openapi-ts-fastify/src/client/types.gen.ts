@@ -98,5 +98,4 @@ export type ShowPetByIdResponses = {
   200: Pet;
 };
 
-export type ShowPetByIdResponse =
-  ShowPetByIdResponses[keyof ShowPetByIdResponses];
+export type ShowPetByIdResponse = ShowPetByIdResponses[keyof ShowPetByIdResponses];

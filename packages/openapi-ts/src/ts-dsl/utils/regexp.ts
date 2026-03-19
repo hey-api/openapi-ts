@@ -13,8 +13,7 @@ const numberRegExp = /^-?\d+(\.\d+)?$/;
  * Javascript identifier regexp pattern retrieved from
  * {@link} https://developer.mozilla.org/docs/Web/JavaScript/Reference/Lexical_grammar#identifiers
  */
-const validTypescriptIdentifierRegExp =
-  /^[$_\p{ID_Start}][$\u200c\u200d\p{ID_Continue}]*$/u;
+const validTypescriptIdentifierRegExp = /^[$_\p{ID_Start}][$\u200c\u200d\p{ID_Continue}]*$/u;
 
 export const regexp = {
   /**

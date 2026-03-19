@@ -2,12 +2,12 @@
 
 export const ExternalRefASchema = {
     description: 'External ref to shared model (A)',
-    $ref: '#/definitions/external-shared_ExternalSharedModel'
+    $ref: '#/definitions/ExternalSharedModel'
 } as const;
 
 export const ExternalRefBSchema = {
     description: 'External ref to shared model (B)',
-    $ref: '#/definitions/external-shared_ExternalSharedModel'
+    $ref: '#/definitions/ExternalSharedModel'
 } as const;
 
 export const CommentWithBreaksSchema = {
@@ -687,6 +687,10 @@ export const ModelWithPatternSchema = {
         patternWithBacktick: {
             type: 'string',
             pattern: 'aaa`bbb'
+        },
+        patternWithUnicode: {
+            type: 'string',
+            pattern: '^\\p{L}+$'
         }
     }
 } as const;
@@ -748,7 +752,7 @@ export const failure_FailureSchema = {
     }
 } as const;
 
-export const external_shared_ExternalSharedModelSchema = {
+export const ExternalSharedModelSchema = {
     type: 'object',
     properties: {
         id: {
@@ -843,6 +847,10 @@ export const ModelWithPatternWritableSchema = {
         patternWithBacktick: {
             type: 'string',
             pattern: 'aaa`bbb'
+        },
+        patternWithUnicode: {
+            type: 'string',
+            pattern: '^\\p{L}+$'
         }
     }
 } as const;

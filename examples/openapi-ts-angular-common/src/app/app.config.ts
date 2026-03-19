@@ -1,10 +1,7 @@
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import type { ApplicationConfig } from '@angular/core';
 import { provideZoneChangeDetection } from '@angular/core';
-import {
-  provideClientHydration,
-  withEventReplay,
-} from '@angular/platform-browser';
+import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
 
 import { client } from '../client/client.gen';

@@ -1,9 +1,4 @@
-import type {
-  AnalysisContext,
-  NodeName,
-  NodeScope,
-  Ref,
-} from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName, NodeScope, Ref } from '@hey-api/codegen-core';
 import { isNode, ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
@@ -15,10 +10,7 @@ import { TypeAttrTsDsl } from './attr';
 
 export type TypeExprExpr = NodeName | TypeAttrTsDsl;
 export type TypeExprFn = (t: TypeExprTsDsl) => void;
-export type TypeExprCtor = (
-  nameOrFn?: NodeName | TypeExprFn,
-  fn?: TypeExprFn,
-) => TypeExprTsDsl;
+export type TypeExprCtor = (nameOrFn?: NodeName | TypeExprFn, fn?: TypeExprFn) => TypeExprTsDsl;
 
 const Mixed = TypeArgsMixin(TypeExprMixin(TsDsl<ts.TypeReferenceNode>));
 
@@ -47,6 +39,11 @@ export class TypeExprTsDsl extends Mixed {
     ctx.analyze(this._exprInput);
   }
 
+  /** Returns true when all required builder calls are present. */
+  get isValid(): boolean {
+    return this.missingRequiredCalls().length === 0;
+  }
+
   /** Accesses a nested type (e.g. `Foo.Bar`). */
   attr(right: string | ts.Identifier | TypeAttrTsDsl): this {
     this._exprInput = isNode(right)
@@ -56,15 +53,28 @@ export class TypeExprTsDsl extends Mixed {
   }
 
   override toAst() {
-    if (!this._exprInput) throw new Error('TypeExpr must have an expression');
+    this.$validate();
     return ts.factory.createTypeReferenceNode(
       this.$type(this._exprInput) as ts.EntityName,
       this.$generics(),
     );
   }
+
+  $validate(): asserts this is this & {
+    _exprInput: Ref<TypeExprExpr>;
+  } {
+    const missing = this.missingRequiredCalls();
+    if (missing.length === 0) return;
+    throw new Error(`Type expression missing ${missing.join(' and ')}`);
+  }
+
+  private missingRequiredCalls(): ReadonlyArray<string> {
+    const missing: Array<string> = [];
+    if (!this._exprInput) missing.push('name or .attr()');
+    return missing;
+  }
 }
 
 f.type.expr.set(
-  (...args) =>
-    new TypeExprTsDsl(...(args as ConstructorParameters<typeof TypeExprTsDsl>)),
+  (...args) => new TypeExprTsDsl(...(args as ConstructorParameters<typeof TypeExprTsDsl>)),
 );

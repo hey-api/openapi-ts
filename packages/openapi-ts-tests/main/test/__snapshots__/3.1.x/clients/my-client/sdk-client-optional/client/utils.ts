@@ -1,8 +1,5 @@
 import { getAuthToken } from './core/auth';
-import type {
-  QuerySerializer,
-  QuerySerializerOptions,
-} from './core/bodySerializer';
+import type { QuerySerializer, QuerySerializerOptions } from './core/bodySerializer';
 import { jsonBodySerializer } from './core/bodySerializer';
 import {
   serializeArrayParam,
@@ -51,10 +48,7 @@ const defaultPathSerializer = ({ path, url: _url }: PathSerializer) => {
       }
 
       if (Array.isArray(value)) {
-        url = url.replace(
-          match,
-          serializeArrayParam({ explode, name, style, value }),
-        );
+        url = url.replace(match, serializeArrayParam({ explode, name, style, value }));
         continue;
       }
 
@@ -155,9 +149,7 @@ export const createQuerySerializer = <T = unknown>({
 /**
  * Infers parseAs value from provided Content-Type header.
  */
-export const getParseAs = (
-  contentType: string | null,
-): Exclude<Config['parseAs'], 'auto'> => {
+export const getParseAs = (contentType: string | null): Exclude<Config['parseAs'], 'auto'> => {
   if (!contentType) {
     // If no Content-Type header is provided, the best we can do is return the raw response body,
     // which is effectively the same as the 'stream' option.
@@ -170,10 +162,7 @@ export const getParseAs = (
     return;
   }
 
-  if (
-    cleanContent.startsWith('application/json') ||
-    cleanContent.endsWith('+json')
-  ) {
+  if (cleanContent.startsWith('application/json') || cleanContent.endsWith('+json')) {
     return 'json';
   }
 
@@ -182,9 +171,7 @@ export const getParseAs = (
   }
 
   if (
-    ['application/', 'audio/', 'image/', 'video/'].some((type) =>
-      cleanContent.startsWith(type),
-    )
+    ['application/', 'audio/', 'image/', 'video/'].some((type) => cleanContent.startsWith(type))
   ) {
     return 'blob';
   }
@@ -292,8 +279,7 @@ export const mergeHeaders = (
       continue;
     }
 
-    const iterator =
-      header instanceof Headers ? header.entries() : Object.entries(header);
+    const iterator = header instanceof Headers ? header.entries() : Object.entries(header);
 
     for (const [key, value] of iterator) {
       if (value === null) {
@@ -322,10 +308,7 @@ type ErrInterceptor<Err, Res, Req, Options> = (
   options: Options,
 ) => Err | Promise<Err>;
 
-type ReqInterceptor<Req, Options> = (
-  request: Req,
-  options: Options,
-) => Req | Promise<Req>;
+type ReqInterceptor<Req, Options> = (request: Req, options: Options) => Req | Promise<Req>;
 
 type ResInterceptor<Res, Req, Options> = (
   response: Res,
@@ -359,10 +342,7 @@ class Interceptors<Interceptor> {
     return this.fns.indexOf(id);
   }
 
-  update(
-    id: number | Interceptor,
-    fn: Interceptor,
-  ): number | Interceptor | false {
+  update(id: number | Interceptor, fn: Interceptor): number | Interceptor | false {
     const index = this.getInterceptorIndex(id);
     if (this.fns[index]) {
       this.fns[index] = fn;

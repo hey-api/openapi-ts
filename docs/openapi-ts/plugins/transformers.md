@@ -21,7 +21,7 @@ Before deciding whether transformers are right for you, let's explain how they w
 
 Transformers handle only the most common scenarios. Some of the known limitations are:
 
-- union types are not transformed (e.g. if you have multiple possible response shapes)
+- union types are not transformed (e.g., if you have multiple possible response shapes)
 - only types defined through `$ref` are transformed
 - error responses are not transformed
 
@@ -121,9 +121,7 @@ const bazSchemaResponseTransformer = (data: any) => {
   return data;
 };
 
-export const getFooResponseTransformer = async (
-  data: any,
-): Promise<GetFooResponse> => {
+export const getFooResponseTransformer = async (data: any): Promise<GetFooResponse> => {
   data = bazSchemaResponseTransformer(data);
   return data;
 };
@@ -153,6 +151,6 @@ export type GetFooResponse = Baz;
 
 ## API
 
-You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/@hey-api/transformers/types.d.ts) interface.
+You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/@hey-api/transformers/types.ts) interface.
 
 <!--@include: ../partials/sponsors.md-->

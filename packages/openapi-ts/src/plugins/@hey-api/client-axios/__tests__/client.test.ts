@@ -1,6 +1,5 @@
 import type { AxiosInstance } from 'axios';
 import axios from 'axios';
-import { describe, expect, it, vi } from 'vitest';
 
 import { createClient } from '../bundle/client';
 
@@ -49,6 +48,18 @@ describe('buildUrl', () => {
   it.each(scenarios)('returns $url', ({ options, url }) => {
     expect(client.buildUrl(options)).toBe(url);
   });
+
+  it('uses baseURL from client config by default', () => {
+    const clientWithBase = createClient({ baseURL: 'https://example.com' });
+    expect(clientWithBase.buildUrl({ url: '/foo' })).toBe('https://example.com/foo');
+  });
+
+  it('allows overriding baseURL from client config', () => {
+    const clientWithBase = createClient({ baseURL: 'https://example.com' });
+    expect(clientWithBase.buildUrl({ baseURL: 'https://other.com', url: '/foo' })).toBe(
+      'https://other.com/foo',
+    );
+  });
 });
 
 describe('AxiosInstance', () => {
@@ -79,44 +90,34 @@ describe('AxiosInstance', () => {
 
     expect(client.instance).toBe(axiosInstance);
     expect(client.instance.defaults.baseURL).toBe('test-url');
-    expect((client.instance.interceptors.request as any).handlers.length).toBe(
-      1,
-    );
+    expect((client.instance.interceptors.request as any).handlers.length).toBe(1);
   });
 });
 
 describe('unserialized request body handling', () => {
   const client = createClient({ baseURL: 'https://example.com' });
 
-  const scenarios = [
-    { body: 0 },
-    { body: false },
-    { body: 'test string' },
-    { body: '' },
-  ];
+  const scenarios = [{ body: 0 }, { body: false }, { body: 'test string' }, { body: '' }];
 
-  it.each(scenarios)(
-    'handles plain text body with $body value',
-    async ({ body }) => {
-      const mockAxios = vi.fn();
+  it.each(scenarios)('handles plain text body with $body value', async ({ body }) => {
+    const mockAxios = vi.fn();
 
-      await client.post({
-        axios: mockAxios as Partial<AxiosInstance> as AxiosInstance,
-        body,
-        bodySerializer: null,
-        headers: {
-          'Content-Type': 'text/plain',
-        },
-        url: '/test',
-      });
+    await client.post({
+      axios: mockAxios as Partial<AxiosInstance> as AxiosInstance,
+      body,
+      bodySerializer: null,
+      headers: {
+        'Content-Type': 'text/plain',
+      },
+      url: '/test',
+    });
 
-      expect(mockAxios).toHaveBeenCalledWith(
-        expect.objectContaining({
-          data: body,
-        }),
-      );
-    },
-  );
+    expect(mockAxios).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: body,
+      }),
+    );
+  });
 });
 
 describe('serialized request body handling', () => {

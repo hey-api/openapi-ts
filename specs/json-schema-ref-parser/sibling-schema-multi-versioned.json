@@ -1,0 +1,28 @@
+{
+  "components": {
+    "schemas": {
+      "Resource_v1_Schema": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/Resource_v1_StatusEnum"
+          },
+          "health": {
+            "$ref": "#/components/schemas/Resource_v1_HealthEnum"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "Resource_v1_StatusEnum": {
+        "type": "string",
+        "enum": ["enabled", "disabled", "standby"]
+      },
+      "Resource_v1_HealthEnum": {
+        "type": "string",
+        "enum": ["ok", "warning", "critical"]
+      }
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "paths": {
+    "/test1/{pathId}": {
+      "get": {
+        "summary": "First endpoint using the same pathId schema",
+        "parameters": [
+          {
+            "$ref": "path-parameter.json#/components/parameters/pathId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Test 1 response"
+          }
+        }
+      }
+    },
+    "/test2/{pathId}": {
+      "get": {
+        "summary": "Second endpoint using the same pathId schema",
+        "parameters": [
+          {
+            "$ref": "path-parameter.json#/components/parameters/pathId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Test 2 response"
+          }
+        }
+      }
+    }
+  }
+}

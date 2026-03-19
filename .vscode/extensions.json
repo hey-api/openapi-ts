@@ -2,7 +2,6 @@
   "recommendations": [
     "dbaeumer.vscode-eslint",
     "EditorConfig.EditorConfig",
-    "esbenp.prettier-vscode",
     "hilleer.yaml-plus-json",
     "oxc.oxc-vscode",
     "streetsidesoftware.code-spell-checker",

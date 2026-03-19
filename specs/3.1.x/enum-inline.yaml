@@ -18,6 +18,9 @@ paths:
                     enum:
                       - foo
                       - bar
+                      - FooBar
+                      - fooBar
+                      - foo bar
     post:
       responses:
         '200':

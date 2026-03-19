@@ -1,5 +1,3 @@
-import { describe, expect, it, vi } from 'vitest';
-
 import { createClient } from '../bundle/client';
 import type { ResolvedRequestOptions } from '../bundle/types';
 
@@ -77,6 +75,18 @@ describe('buildUrl', () => {
 
   it.each(scenarios)('returns $url', ({ options, url }) => {
     expect(client.buildUrl(options)).toBe(url);
+  });
+
+  it('uses baseUrl from client config by default', () => {
+    const clientWithBase = createClient({ baseUrl: 'https://example.com' });
+    expect(clientWithBase.buildUrl({ url: '/foo' })).toBe('https://example.com/foo');
+  });
+
+  it('allows overriding baseUrl from client config', () => {
+    const clientWithBase = createClient({ baseUrl: 'https://example.com' });
+    expect(clientWithBase.buildUrl({ baseUrl: 'https://other.com', url: '/foo' })).toBe(
+      'https://other.com/foo',
+    );
   });
 });
 
@@ -239,32 +249,29 @@ describe('unserialized request body handling', () => {
     { body: '', textValue: '' },
   ];
 
-  it.each(scenarios)(
-    'handles plain text body with $body value',
-    async ({ body, textValue }) => {
-      const mockResponse = new Response(JSON.stringify({ success: true }), {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        status: 200,
-      });
+  it.each(scenarios)('handles plain text body with $body value', async ({ body, textValue }) => {
+    const mockResponse = new Response(JSON.stringify({ success: true }), {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      status: 200,
+    });
 
-      const mockOfetch = makeMockOfetch(mockResponse);
+    const mockOfetch = makeMockOfetch(mockResponse);
 
-      const result = await client.post({
-        body,
-        bodySerializer: null,
-        headers: {
-          'Content-Type': 'text/plain',
-        },
-        ofetch: mockOfetch as any,
-        url: '/test',
-      });
+    const result = await client.post({
+      body,
+      bodySerializer: null,
+      headers: {
+        'Content-Type': 'text/plain',
+      },
+      ofetch: mockOfetch as any,
+      url: '/test',
+    });
 
-      await expect(result.request.text()).resolves.toEqual(textValue);
-      expect(result.request.headers.get('Content-Type')).toEqual('text/plain');
-    },
-  );
+    await expect(result.request.text()).resolves.toEqual(textValue);
+    expect(result.request.headers.get('Content-Type')).toEqual('text/plain');
+  });
 });
 
 describe('serialized request body handling', () => {
@@ -303,13 +310,7 @@ describe('serialized request body handling', () => {
 
   it.each(scenarios)(
     'handles $serializedBody serializedBody value',
-    async ({
-      body,
-      expectBodyValue,
-      expectContentHeader,
-      serializedBody,
-      textValue,
-    }) => {
+    async ({ body, expectBodyValue, expectContentHeader, serializedBody, textValue }) => {
       const mockResponse = new Response(JSON.stringify({ success: true }), {
         headers: {
           'Content-Type': 'application/json',
@@ -355,7 +356,7 @@ describe('request interceptor', () => {
     },
     {
       body: { key: 'value' },
-      bodySerializer: (body: object) => JSON.stringify(body),
+      bodySerializer: (body: unknown) => JSON.stringify(body),
       contentType: 'application/json',
       expectedSerializedValue: '{"key":"value"}',
     },
@@ -375,17 +376,13 @@ describe('request interceptor', () => {
 
       const mockRequestInterceptor = vi
         .fn()
-        .mockImplementation(
-          (request: Request, options: ResolvedRequestOptions) => {
-            expect(options.serializedBody).toBe(expectedSerializedValue);
-            expect(options.body).toBe(body);
-            return request;
-          },
-        );
+        .mockImplementation((request: Request, options: ResolvedRequestOptions) => {
+          expect(options.serializedBody).toBe(expectedSerializedValue);
+          expect(options.body).toBe(body);
+          return request;
+        });
 
-      const interceptorId = client.interceptors.request.use(
-        mockRequestInterceptor,
-      );
+      const interceptorId = client.interceptors.request.use(mockRequestInterceptor);
 
       await client.post({
         body,
@@ -482,17 +479,13 @@ describe('FormData boundary handling', () => {
     const formData = new FormData();
     formData.append('field1', 'value1');
 
-    const mockRequestInterceptor = vi
-      .fn()
-      .mockImplementation((request: Request) => {
-        // Interceptor can modify headers but we should still remove Content-Type for FormData
-        request.headers.set('X-Custom-Header', 'custom-value');
-        return request;
-      });
+    const mockRequestInterceptor = vi.fn().mockImplementation((request: Request) => {
+      // Interceptor can modify headers but we should still remove Content-Type for FormData
+      request.headers.set('X-Custom-Header', 'custom-value');
+      return request;
+    });
 
-    const interceptorId = client.interceptors.request.use(
-      mockRequestInterceptor,
-    );
+    const interceptorId = client.interceptors.request.use(mockRequestInterceptor);
 
     await client.post({
       body: formData,

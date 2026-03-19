@@ -1,24 +1,30 @@
 {
   "name": "@hey-api/custom-client",
   "version": "0.1.1",
-  "description": "Custom client for `@hey-api/openapi-ts` codegen. Used for testing.",
   "private": true,
+  "description": "Custom client for `@hey-api/openapi-ts` codegen. Used for testing.",
   "homepage": "https://heyapi.dev/",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/hey-api/openapi-ts.git"
-  },
   "bugs": {
     "url": "https://github.com/hey-api/openapi-ts/issues"
   },
   "license": "MIT",
   "author": {
-    "email": "lubos@heyapi.dev",
     "name": "Hey API",
+    "email": "lubos@heyapi.dev",
     "url": "https://heyapi.dev"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hey-api/openapi-ts.git"
+  },
   "funding": "https://github.com/sponsors/hey-api",
+  "files": [
+    "dist",
+    "LICENSE.md",
+    "src"
+  ],
   "type": "module",
+  "sideEffects": false,
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.mts",
@@ -45,30 +51,20 @@
     },
     "./package.json": "./package.json"
   },
-  "sideEffects": false,
-  "files": [
-    "dist",
-    "LICENSE.md",
-    "src"
-  ],
   "scripts": {
     "build": "tsdown && rollup -c && pnpm check-exports",
     "check-exports": "attw --profile node16 --pack .",
     "dev": "tsdown --watch",
-    "prepublishOnly": "pnpm build",
-    "test:coverage": "vitest run --coverage",
-    "test:update": "vitest watch --update",
-    "test:watch": "vitest watch",
-    "test": "vitest run",
-    "typecheck": "vitest --typecheck --watch=false"
+    "prepublishOnly": "pnpm build"
+  },
+  "devDependencies": {
+    "@hey-api/codegen-core": "workspace:*",
+    "@hey-api/openapi-ts": "workspace:*",
+    "rollup": "4.56.0",
+    "rollup-plugin-dts": "6.1.1"
   },
   "peerDependencies": {
     "@hey-api/codegen-core": "<2",
     "@hey-api/openapi-ts": "<2"
-  },
-  "devDependencies": {
-    "@config/vite-base": "workspace:*",
-    "@hey-api/codegen-core": "workspace:*",
-    "@hey-api/openapi-ts": "workspace:*"
   }
 }

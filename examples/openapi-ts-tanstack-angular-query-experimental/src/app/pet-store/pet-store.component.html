@@ -1,8 +1,6 @@
 @let pet = petState.data();
 <div class="pet-store-header">
-  <button mat-raised-button color="primary" (click)="getRandomPet()">
-    Get Random Pet
-  </button>
+  <button mat-raised-button color="primary" (click)="getRandomPet()">Get Random Pet</button>
 
   <mat-card class="pet-card mat-elevation-z8">
     @if (petState.isLoading()) {
@@ -12,9 +10,7 @@
     @if (pet) {
       <mat-card-header>
         <mat-card-title class="pet-card-title">{{ pet.name }}</mat-card-title>
-        <mat-card-subtitle class="pet-card-subtitle">{{
-          pet.category?.name
-        }}</mat-card-subtitle>
+        <mat-card-subtitle class="pet-card-subtitle">{{ pet.category?.name }}</mat-card-subtitle>
       </mat-card-header>
       <!-- <img mat-card-image [src]="pet.photoUrls.at(0)" alt="{{ pet.name }}" class="pet-card-image" /> -->
       <mat-card-content>
@@ -41,9 +37,7 @@
 <form #petForm="ngForm" (submit)="onSubmit(petForm)">
   <mat-card class="pet-form-card mat-elevation-z4">
     <mat-card-header>
-      <mat-card-title
-        ><span class="pet-form-title">Pet Form</span></mat-card-title
-      >
+      <mat-card-title><span class="pet-form-title">Pet Form</span></mat-card-title>
     </mat-card-header>
     <mat-card-content class="pet-form-content">
       <mat-form-field appearance="fill">
@@ -54,11 +48,7 @@
     <mat-card-footer>
       <mat-card-actions class="actions">
         <button mat-raised-button color="primary" type="submit">Add Pet</button>
-        <button
-          mat-stroked-button
-          color="accent"
-          (click)="handleUpdatePet($event)"
-        >
+        <button mat-stroked-button color="accent" (click)="handleUpdatePet($event)">
           Update Pet
         </button>
       </mat-card-actions>

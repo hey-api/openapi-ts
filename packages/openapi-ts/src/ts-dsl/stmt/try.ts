@@ -54,6 +54,11 @@ export class TryTsDsl extends Mixed {
     }
   }
 
+  /** Returns true when all required builder calls are present. */
+  get isValid(): boolean {
+    return this.missingRequiredCalls().length === 0;
+  }
+
   catch(...items: Array<DoExpr>): this {
     this._catch = items;
     return this;
@@ -75,23 +80,30 @@ export class TryTsDsl extends Mixed {
   }
 
   override toAst() {
-    if (!this._try?.length) throw new Error('Missing try block');
-
-    const catchParam = this._catchArg
-      ? (this.$node(this._catchArg) as ts.BindingName)
-      : undefined;
+    this.$validate();
+    const catchParam = this._catchArg ? (this.$node(this._catchArg) as ts.BindingName) : undefined;
 
     return ts.factory.createTryStatement(
       this.$node(new BlockTsDsl(...this._try).pretty()),
       ts.factory.createCatchClause(
-        catchParam
-          ? ts.factory.createVariableDeclaration(catchParam)
-          : undefined,
+        catchParam ? ts.factory.createVariableDeclaration(catchParam) : undefined,
         this.$node(new BlockTsDsl(...(this._catch ?? [])).pretty()),
       ),
-      this._finally
-        ? this.$node(new BlockTsDsl(...this._finally).pretty())
-        : undefined,
+      this._finally ? this.$node(new BlockTsDsl(...this._finally).pretty()) : undefined,
     );
+  }
+
+  $validate(): asserts this is this & {
+    _try: Array<DoExpr>;
+  } {
+    const missing = this.missingRequiredCalls();
+    if (missing.length === 0) return;
+    throw new Error(`Try statement missing ${missing.join(' and ')}`);
+  }
+
+  private missingRequiredCalls(): ReadonlyArray<string> {
+    const missing: Array<string> = [];
+    if (!this._try || this._try.length === 0) missing.push('.try()');
+    return missing;
   }
 }

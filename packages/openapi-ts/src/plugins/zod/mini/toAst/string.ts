@@ -1,24 +1,24 @@
-import type { SchemaWithType } from '~/plugins';
-import { $ } from '~/ts-dsl';
+import type { SchemaWithType } from '@hey-api/shared';
 
+import { $ } from '../../../../ts-dsl';
 import { identifiers } from '../../constants';
 import type { StringResolverContext } from '../../resolvers';
-import type { Chain } from '../../shared/chain';
-import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
+import type { Chain, ChainResult } from '../../shared/chain';
+import type { ZodPlugin } from '../../types';
 
 function baseNode(ctx: StringResolverContext): Chain {
   const { z } = ctx.symbols;
   return $(z).attr(identifiers.string).call();
 }
 
-function constNode(ctx: StringResolverContext): Chain | undefined {
+function constNode(ctx: StringResolverContext): ChainResult {
   const { schema, symbols } = ctx;
   const { z } = symbols;
   if (typeof schema.const !== 'string') return;
   return $(z).attr(identifiers.literal).call($.literal(schema.const));
 }
 
-function formatNode(ctx: StringResolverContext): Chain | undefined {
+function formatNode(ctx: StringResolverContext): ChainResult {
   const { plugin, schema, symbols } = ctx;
   const { z } = symbols;
 
@@ -27,12 +27,8 @@ function formatNode(ctx: StringResolverContext): Chain | undefined {
       return $(z).attr(identifiers.iso).attr(identifiers.date).call();
     case 'date-time': {
       const obj = $.object()
-        .$if(plugin.config.dates.offset, (o) =>
-          o.prop('offset', $.literal(true)),
-        )
-        .$if(plugin.config.dates.local, (o) =>
-          o.prop('local', $.literal(true)),
-        );
+        .$if(plugin.config.dates.offset, (o) => o.prop('offset', $.literal(true)))
+        .$if(plugin.config.dates.local, (o) => o.prop('local', $.literal(true)));
       return $(z)
         .attr(identifiers.iso)
         .attr(identifiers.datetime)
@@ -40,6 +36,8 @@ function formatNode(ctx: StringResolverContext): Chain | undefined {
     }
     case 'email':
       return $(z).attr(identifiers.email).call();
+    case 'guid':
+      return $(z).attr(identifiers.guid).call();
     case 'ipv4':
       return $(z).attr(identifiers.ipv4).call();
     case 'ipv6':
@@ -55,33 +53,33 @@ function formatNode(ctx: StringResolverContext): Chain | undefined {
   return;
 }
 
-function lengthNode(ctx: StringResolverContext): Chain | undefined {
+function lengthNode(ctx: StringResolverContext): ChainResult {
   const { schema, symbols } = ctx;
   const { z } = symbols;
-  if (schema.minLength === undefined || schema.minLength !== schema.maxLength)
-    return;
+  if (schema.minLength === undefined || schema.minLength !== schema.maxLength) return;
   return $(z).attr(identifiers.length).call($.literal(schema.minLength));
 }
 
-function maxLengthNode(ctx: StringResolverContext): Chain | undefined {
+function maxLengthNode(ctx: StringResolverContext): ChainResult {
   const { schema, symbols } = ctx;
   const { z } = symbols;
   if (schema.maxLength === undefined) return;
   return $(z).attr(identifiers.maxLength).call($.literal(schema.maxLength));
 }
 
-function minLengthNode(ctx: StringResolverContext): Chain | undefined {
+function minLengthNode(ctx: StringResolverContext): ChainResult {
   const { schema, symbols } = ctx;
   const { z } = symbols;
   if (schema.minLength === undefined) return;
   return $(z).attr(identifiers.minLength).call($.literal(schema.minLength));
 }
 
-function patternNode(ctx: StringResolverContext): Chain | undefined {
+function patternNode(ctx: StringResolverContext): ChainResult {
   const { schema, symbols } = ctx;
   const { z } = symbols;
   if (!schema.pattern) return;
-  return $(z).attr(identifiers.regex).call($.regexp(schema.pattern));
+  const flags = /\\[pP]\{/.test(schema.pattern) ? 'u' : undefined;
+  return $(z).attr(identifiers.regex).call($.regexp(schema.pattern, flags));
 }
 
 function stringResolver(ctx: StringResolverContext): Chain {
@@ -114,20 +112,19 @@ function stringResolver(ctx: StringResolverContext): Chain {
   if (patternNode) checks.push(patternNode);
 
   if (checks.length > 0) {
-    ctx.chain.current = ctx.chain.current
-      .attr(identifiers.check)
-      .call(...checks);
+    ctx.chain.current = ctx.chain.current.attr(identifiers.check).call(...checks);
   }
 
   return ctx.chain.current;
 }
 
-export const stringToNode = ({
+export function stringToNode({
   plugin,
   schema,
-}: IrSchemaToAstOptions & {
+}: {
+  plugin: ZodPlugin['Instance'];
   schema: SchemaWithType<'string'>;
-}): Omit<Ast, 'typeName'> => {
+}): Chain {
   const z = plugin.external('zod.z');
   const ctx: StringResolverContext = {
     $,
@@ -150,8 +147,5 @@ export const stringToNode = ({
     },
   };
   const resolver = plugin.config['~resolvers']?.string;
-  const node = resolver?.(ctx) ?? stringResolver(ctx);
-  return {
-    expression: node,
-  };
-};
+  return resolver?.(ctx) ?? stringResolver(ctx);
+}

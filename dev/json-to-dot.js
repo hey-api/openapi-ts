@@ -5,9 +5,7 @@ import { fileURLToPath } from 'node:url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const nodes = JSON.parse(
-  fs.readFileSync(path.resolve(__dirname, 'graph.json'), 'utf-8'),
-);
+const nodes = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'graph.json'), 'utf-8'));
 
 // --- Filter nodes for readability ---
 const threshold = 10; // high-fanout threshold
@@ -33,8 +31,7 @@ let dot = 'digraph OpenAPIGraph {\nrankdir=LR;\nnode [style=filled];\n';
 // Add nodes with color based on fanout
 for (const n of filteredNodes) {
   const childCount = n.childrenPointers?.length ?? 0;
-  const color =
-    childCount > 50 ? 'red' : childCount > 20 ? 'orange' : 'lightgray';
+  const color = childCount > 50 ? 'red' : childCount > 20 ? 'orange' : 'lightgray';
   dot += `"${n.pointer}" [label="${n.pointer}\\n${childCount} children", fillcolor=${color}];\n`;
 }
 
