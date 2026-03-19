@@ -2,6 +2,7 @@ import { log } from '@hey-api/codegen-core';
 import type { OperationsStrategy, PluginContext } from '@hey-api/shared';
 import { definePluginConfig, resolveNaming } from '@hey-api/shared';
 
+import { resolveContracts } from './contracts/config';
 import { handler } from './plugin';
 import type { OrpcContractPlugin, RouterConfig, UserRouterConfig } from './types';
 
@@ -52,7 +53,6 @@ function resolveRouter(
 
 export const defaultConfig: OrpcContractPlugin['Config'] = {
   config: {
-    contractNameBuilder: (id: string) => `${id}Contract`,
     includeInEntry: false,
     router: {
       methodName: { casing: 'camelCase' },
@@ -67,7 +67,6 @@ export const defaultConfig: OrpcContractPlugin['Config'] = {
   handler,
   name: '@orpc/contract',
   resolveConfig: (plugin, context) => {
-    plugin.config.contractNameBuilder ??= (id: string) => `${id}Contract`;
     plugin.config.router = resolveRouter(plugin.config.router, context);
     plugin.config.routerName = resolveNaming(plugin.config.routerName);
     if (!plugin.config.routerName.name) {
@@ -124,6 +123,8 @@ export const defaultConfig: OrpcContractPlugin['Config'] = {
     } else {
       plugin.config.validator.output = false;
     }
+
+    plugin.config.contracts = resolveContracts(plugin.config, context);
   },
 };
 
