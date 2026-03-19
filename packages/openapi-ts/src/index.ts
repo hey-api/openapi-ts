@@ -47,6 +47,7 @@ declare module '@hey-api/codegen-core' {
       | 'arktype'
       | 'fastify'
       | 'json-schema'
+      | 'msw'
       | 'sdk'
       | 'typescript'
       | 'valibot'
@@ -80,6 +81,7 @@ declare module '@hey-api/shared' {
     '@tanstack/vue-query': Plugins.TanStackVueQuery.Types['Types'];
     arktype: Plugins.Arktype.Types['Types'];
     fastify: Plugins.Fastify.Types['Types'];
+    msw: Plugins.Msw.Types['Types'];
     nestjs: Plugins.NestJs.Types['Types'];
     orpc: Plugins.Orpc.Types['Types'];
     swr: Plugins.Swr.Types['Types'];
@@ -142,6 +144,7 @@ import type { TanStackSvelteQueryPlugin } from './plugins/@tanstack/svelte-query
 import type { TanStackVueQueryPlugin } from './plugins/@tanstack/vue-query';
 import type { ArktypePlugin } from './plugins/arktype';
 import type { FastifyPlugin } from './plugins/fastify';
+import type { MswPlugin } from './plugins/msw';
 import type { NestJsPlugin } from './plugins/nestjs';
 import type { OrpcPlugin } from './plugins/orpc';
 import type { SwrPlugin } from './plugins/swr';
@@ -262,6 +265,10 @@ export namespace Plugins {
   export namespace HeyApiTypeScript {
     export type Resolvers = Required<HeyApiTypeScriptResolvers>['~resolvers'];
     export type Types = HeyApiTypeScriptPlugin;
+  }
+
+  export namespace Msw {
+    export type Types = MswPlugin;
   }
 
   export namespace NestJs {
