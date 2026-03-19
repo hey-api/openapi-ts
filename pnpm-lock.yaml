@@ -1461,6 +1461,21 @@ importers:
         specifier: 0.16.0
         version: 0.16.0
 
+  packages/openapi-ts-tests/@orpc/contract/v1:
+    devDependencies:
+      '@hey-api/openapi-ts':
+        specifier: workspace:*
+        version: link:../../../../openapi-ts
+      '@orpc/contract':
+        specifier: 1.13.4
+        version: 1.13.4
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      zod:
+        specifier: 4.3.6
+        version: 4.3.6
+
   packages/openapi-ts-tests/main:
     devDependencies:
       '@angular-devkit/build-angular':

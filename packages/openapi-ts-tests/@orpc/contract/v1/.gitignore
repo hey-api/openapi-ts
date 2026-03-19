@@ -1,16 +1,9 @@
 .DS_Store
 .idea
 .tmp
-.tsdown
 logs
 node_modules
-temp
 
 .env
 coverage
 dist
-
-# test files
-.gen
-test/generated
-generated/
