@@ -53,6 +53,75 @@ describe(`OpenAPI ${version}`, () => {
       }),
       description: 'generate oRPC contracts with custom router name',
     },
+    {
+      config: createConfig({
+        input: 'orpc-contract.yaml',
+        output: 'contracts-strategy-by-tags',
+        plugins: [
+          'zod',
+          {
+            contracts: {
+              strategy: 'byTags',
+            },
+            name: '@orpc/contract',
+          },
+        ],
+      }),
+      description: 'generate oRPC contracts grouped by tags',
+    },
+    {
+      config: createConfig({
+        input: 'orpc-contract.yaml',
+        output: 'contracts-strategy-single',
+        plugins: [
+          'zod',
+          {
+            contracts: {
+              containerName: 'api',
+              strategy: 'single',
+            },
+            name: '@orpc/contract',
+          },
+        ],
+      }),
+      description: 'generate oRPC contracts in a single container',
+    },
+    {
+      config: createConfig({
+        input: 'orpc-contract.yaml',
+        output: 'contracts-nesting-id',
+        plugins: [
+          'zod',
+          {
+            contracts: {
+              nesting: 'id',
+              strategy: 'byTags',
+            },
+            name: '@orpc/contract',
+          },
+        ],
+      }),
+      description: 'generate oRPC contracts without operationId nesting',
+    },
+    {
+      config: createConfig({
+        input: 'orpc-contract.yaml',
+        output: 'contracts-custom-naming',
+        plugins: [
+          'zod',
+          {
+            contracts: {
+              containerName: '{{name}}Contracts',
+              contractName: { casing: 'PascalCase' },
+              segmentName: { casing: 'PascalCase' },
+              strategy: 'byTags',
+            },
+            name: '@orpc/contract',
+          },
+        ],
+      }),
+      description: 'generate oRPC contracts with custom naming',
+    },
   ];
 
   it.each(scenarios)('$description', async ({ config }) => {
