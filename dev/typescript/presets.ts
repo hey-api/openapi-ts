@@ -32,13 +32,7 @@ export const presets = {
   ],
   rpc: () => [
     /** RPC-style SDK with Zod validation */
-    {
-      contracts: {
-        containerName: 'contracted',
-        strategy: 'single',
-      },
-      name: '@orpc/contract',
-    },
+    'orpc',
     'zod',
   ],
   sdk: () => [
