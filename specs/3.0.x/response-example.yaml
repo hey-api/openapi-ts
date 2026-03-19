@@ -1,0 +1,53 @@
+openapi: 3.0.4
+info:
+  title: OpenAPI 3.0.4 body response application/json inline example
+  version: 1
+paths:
+  /foo:
+    post:
+      requestBody:
+        content:
+          'text/plain':
+            schema:
+              type: string
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  fullName:
+                    type: string
+                  age:
+                    type: number
+              example:
+                fullName: 'John Doe'
+                age: 34
+        '204':
+          description: SUCCESSFUL
+    get:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Person'
+components:
+  schemas:
+    Person:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        age:
+          type: number
+      example:
+        firstName: 'Marry'
+        lastName: 'Jane'
+        age: 30
