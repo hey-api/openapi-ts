@@ -116,8 +116,8 @@ importers:
         specifier: workspace:*
         version: link:../packages/openapi-ts
       '@opencode-ai/sdk':
-        specifier: 1.2.26
-        version: 1.2.26
+        specifier: 1.2.27
+        version: 1.2.27
       '@pinia/colada':
         specifier: 0.19.1
         version: 0.19.1(pinia@3.0.3(typescript@5.9.3)(vue@3.5.25(typescript@5.9.3)))(vue@3.5.25(typescript@5.9.3))
@@ -5128,8 +5128,8 @@ packages:
   '@one-ini/wasm@0.1.1':
     resolution: {integrity: sha512-XuySG1E38YScSJoMlqovLru4KTUNSjgVTIjyh7qMX6aNN5HY5Ct5LhRJdxO79JtTzKfzV/bnWpz+zquYrISsvw==}
 
-  '@opencode-ai/sdk@1.2.26':
-    resolution: {integrity: sha512-HPB+0pfvTMPj2KEjNLF3oqgldKW8koTJ7ssqXwzndazqxS+gUynzvdIKIQP4+QIInNcc5nJMG9JtfLcePGgTLQ==}
+  '@opencode-ai/sdk@1.2.27':
+    resolution: {integrity: sha512-Wk0o/I+Fo+wE3zgvlJDs8Fb67KlKqX0PrV8dK5adSDkANq6r4Z25zXJg2iOir+a8ntg3rAcpel1OY4FV/TwRUA==}
 
   '@oxc-minify/binding-android-arm-eabi@0.110.0':
     resolution: {integrity: sha512-43fMTO8/5bMlqfOiNSZNKUzIqeLIYuB9Hr1Ohyf58B1wU11S2dPGibTXOGNaWsfgHy99eeZ1bSgeIHy/fEYqbw==}
@@ -20604,7 +20604,7 @@ snapshots:
 
   '@one-ini/wasm@0.1.1': {}
 
-  '@opencode-ai/sdk@1.2.26': {}
+  '@opencode-ai/sdk@1.2.27': {}
 
   '@oxc-minify/binding-android-arm-eabi@0.110.0':
     optional: true
