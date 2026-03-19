@@ -1,0 +1,10 @@
+let s;
+let n;
+let b;
+let c;
+let none;
+s = "hello";
+n = 123;
+b = true;
+c = false;
+none = null;

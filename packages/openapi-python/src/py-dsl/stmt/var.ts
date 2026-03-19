@@ -44,10 +44,10 @@ export class VarPyDsl extends Mixed {
   override toAst() {
     this.$validate();
     const target = this.$node(this.name)!;
-    const annotation = this.$type();
+    const type = this.$type();
     const value = this.$value();
 
-    return py.factory.createAssignment(target, annotation, value);
+    return py.factory.createAssignment(target, type, value);
   }
 
   $validate(): asserts this {
