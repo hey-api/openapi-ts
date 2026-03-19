@@ -1,7 +1,4 @@
 import type { IR } from '@hey-api/shared';
-import { OperationPath, OperationStrategy } from '@hey-api/shared';
-
-import type { RouterConfig } from '../types';
 
 export function hasInput(operation: IR.OperationObject): boolean {
   const hasPathParams = Boolean(
@@ -38,40 +35,4 @@ export function getSuccessResponse(
 
 export function getTags(operation: IR.OperationObject, defaultTag: string): ReadonlyArray<string> {
   return operation.tags && operation.tags.length > 0 ? [...operation.tags] : [defaultTag];
-}
-
-export function getOperationPaths(
-  operation: IR.OperationObject,
-  routerConfig: RouterConfig,
-): ReadonlyArray<ReadonlyArray<string>> {
-  const { nesting, nestingDelimiters, strategy, strategyDefaultTag } = routerConfig;
-
-  // Get path derivation function
-  let pathFn = OperationPath.id();
-  if (typeof nesting === 'function') {
-    pathFn = nesting;
-  } else if (nesting === 'operationId') {
-    pathFn = OperationPath.fromOperationId({ delimiters: nestingDelimiters });
-  }
-
-  // Get structure strategy function
-  let strategyFn;
-  if (typeof strategy === 'function') {
-    strategyFn = strategy;
-  } else if (strategy === 'byTags') {
-    strategyFn = OperationStrategy.byTags({
-      fallback: strategyDefaultTag,
-      path: pathFn,
-    });
-  } else if (strategy === 'single') {
-    strategyFn = OperationStrategy.single({
-      path: pathFn,
-      root: strategyDefaultTag,
-    });
-  } else {
-    // flat
-    strategyFn = OperationStrategy.flat({ path: pathFn });
-  }
-
-  return strategyFn(operation);
 }
