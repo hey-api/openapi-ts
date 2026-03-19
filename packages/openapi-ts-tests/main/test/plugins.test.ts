@@ -9,7 +9,7 @@ import { getFilePaths, getSpecsPath } from '../../utils';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const versions = ['2.0.x', '3.0.x', '3.1.x'];
+const versions = ['2.0.x', '3.0.x', '3.1.x'] as const;
 
 for (const version of versions) {
   const namespace = 'plugins';
@@ -90,6 +90,47 @@ for (const version of versions) {
           plugins: ['fastify'],
         }),
         description: 'generate Fastify types with Fastify plugin',
+      },
+      {
+        config: createConfig({
+          output: 'default',
+          plugins: ['msw'],
+        }),
+        description: 'generate MSW mock handlers with MSW plugin',
+      },
+      {
+        config: createConfig({
+          input: 'response-example.yaml',
+          output: 'response-example',
+          plugins: ['msw'],
+        }),
+        description: 'generate MSW mock handlers from spec with example with MSW plugin',
+      },
+      {
+        config: createConfig({
+          input: 'response-example.yaml',
+          output: 'response-example-disabled',
+          plugins: [{ name: 'msw', valueSources: [] }],
+        }),
+        description:
+          'generate MSW mock handlers from spec with example with MSW plugin but disabled',
+      },
+      version !== '2.0.x' && {
+        config: createConfig({
+          input: 'response-types.yaml',
+          output: 'response-types',
+          plugins: ['msw'],
+        }),
+        description:
+          'generate MSW mock handlers from spec with multiple response types with MSW plugin',
+      },
+      {
+        config: createConfig({
+          input: 'servers.yaml',
+          output: 'servers',
+          plugins: ['msw'],
+        }),
+        description: 'generate MSW mock handlers from spec with servers field',
       },
       {
         config: createConfig({
@@ -203,7 +244,7 @@ for (const version of versions) {
         }),
         description: 'generate Angular requests and resources (class)',
       },
-    ];
+    ].filter((val) => typeof val === 'object');
 
     it.each(scenarios)('$description', async ({ config }) => {
       await createClient(config);

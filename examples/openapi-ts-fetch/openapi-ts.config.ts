@@ -18,6 +18,7 @@ const config: Promise<UserConfig> = defineConfig({
       enums: 'javascript',
       name: '@hey-api/typescript',
     },
+    'msw',
   ],
 });
 

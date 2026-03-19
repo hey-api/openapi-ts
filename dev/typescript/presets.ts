@@ -31,6 +31,7 @@ export const presets = {
       },
     }),
   ],
+  msw: () => ['@hey-api/typescript', 'msw'],
   none: () => [
     /** No plugins at all */
   ],

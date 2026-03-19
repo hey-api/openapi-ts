@@ -63,6 +63,7 @@ export const defaultPluginConfigs: {
   '@tanstack/vue-query': tanStackVueQuery,
   arktype,
   fastify,
+  msw,
   nestjs,
   orpc,
   swr,
