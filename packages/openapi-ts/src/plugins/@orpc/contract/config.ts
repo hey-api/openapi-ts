@@ -1,78 +1,20 @@
 import { log } from '@hey-api/codegen-core';
-import type { OperationsStrategy, PluginContext } from '@hey-api/shared';
-import { definePluginConfig, resolveNaming } from '@hey-api/shared';
+import { definePluginConfig } from '@hey-api/shared';
 
 import { resolveContracts } from './contracts/config';
 import { handler } from './plugin';
-import type { OrpcContractPlugin, RouterConfig, UserRouterConfig } from './types';
+import type { OrpcContractPlugin } from './types';
 
 const validatorInferWarn =
   'You set `validator: true` but no validator plugin was found in your plugins. Add a validator plugin like `zod` to enable this feature. The validator option has been disabled.';
 
-function resolveRouter(
-  input: OperationsStrategy | UserRouterConfig | undefined,
-  context: PluginContext,
-): RouterConfig {
-  if (!input || typeof input === 'string' || typeof input === 'function') {
-    input = { strategy: input };
-  }
-
-  const strategy = input.strategy ?? 'flat';
-
-  return context.valueToObject({
-    defaultValue: {
-      nesting: 'operationId',
-      nestingDelimiters: /[./]/,
-      strategy,
-      strategyDefaultTag: 'default',
-    },
-    mappers: {
-      object(value) {
-        value.methodName = context.valueToObject({
-          defaultValue: { casing: 'camelCase' },
-          mappers: {
-            function: (name) => ({ name }),
-            string: (name) => ({ name }),
-          },
-          value: value.methodName,
-        });
-        value.segmentName = context.valueToObject({
-          defaultValue: { casing: 'camelCase' },
-          mappers: {
-            function: (name) => ({ name }),
-            string: (name) => ({ name }),
-          },
-          value: value.segmentName,
-        });
-        return value;
-      },
-    },
-    value: input,
-  }) as RouterConfig;
-}
-
 export const defaultConfig: OrpcContractPlugin['Config'] = {
   config: {
     includeInEntry: false,
-    router: {
-      methodName: { casing: 'camelCase' },
-      nesting: 'operationId',
-      nestingDelimiters: /[./]/,
-      segmentName: { casing: 'camelCase' },
-      strategy: 'flat',
-      strategyDefaultTag: 'default',
-    },
-    routerName: { name: 'router' },
   },
   handler,
   name: '@orpc/contract',
   resolveConfig: (plugin, context) => {
-    plugin.config.router = resolveRouter(plugin.config.router, context);
-    plugin.config.routerName = resolveNaming(plugin.config.routerName);
-    if (!plugin.config.routerName.name) {
-      plugin.config.routerName.name = 'router';
-    }
-
     if (typeof plugin.config.validator !== 'object') {
       plugin.config.validator = {
         input: plugin.config.validator,
