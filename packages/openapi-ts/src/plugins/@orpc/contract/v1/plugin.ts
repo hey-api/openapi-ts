@@ -1,9 +1,11 @@
-import type { NodeName } from '@hey-api/codegen-core';
+import type { NodeName, Symbol } from '@hey-api/codegen-core';
+import { StructureModel } from '@hey-api/codegen-core';
 import { applyNaming, toCase } from '@hey-api/shared';
 
 import { $ } from '../../../../ts-dsl';
-import { createOperationComment } from '../../../shared/utils/operation';
-import { getOperationPaths, getSuccessResponse, getTags, hasInput } from '../shared/operation';
+import type { ContractItem } from '../contracts';
+import { createShell, resolveStrategy, source, toNode } from '../contracts';
+import { getOperationPaths } from '../shared/operation';
 import type { OrpcContractPlugin } from '../types';
 
 type NestedLeaf = { type: 'leaf'; value: NodeName };
@@ -37,84 +39,36 @@ export const handlerV1: OrpcContractPlugin['Handler'] = ({ plugin }) => {
     );
   plugin.node(baseNode);
 
-  const root: NestedNode = { children: new Map(), type: 'node' };
+  const contractsStructure = new StructureModel();
+  const contractsShell = createShell(plugin);
+  const contractsStrategy = resolveStrategy(plugin);
+
+  // Track contract symbols for router generation (keyed by operation ID)
+  const contractSymbols = new Map<string, Symbol>();
+  // Router nested structure (to be refactored later)
+  const routerRoot: NestedNode = { children: new Map(), type: 'node' };
+  // Track router leaf nodes by operation ID for later symbol assignment
+  const routerLeaves = new Map<string, NestedLeaf>();
 
   plugin.forEach(
     'operation',
     (event) => {
       const { operation } = event;
 
-      const tags = getTags(operation, plugin.config.router.strategyDefaultTag);
-      const successResponse = getSuccessResponse(operation);
+      const contractPaths = contractsStrategy(operation);
+      contractsStructure.insert({
+        data: {
+          operation,
+          path: event._path,
+          tags: event.tags,
+        } satisfies ContractItem,
+        locations: contractPaths.map((path) => ({ path, shell: contractsShell })),
+        source,
+      });
 
-      const contractSymbol = plugin.symbol(
-        applyNaming(operation.id, plugin.config.contracts.contractName),
-        {
-          meta: {
-            category: 'contract',
-            path: event._path,
-            resource: 'operation',
-            resourceId: operation.id,
-            role: 'contract',
-            tags,
-            tool: plugin.name,
-          },
-        },
-      );
-
-      let expression = $(baseSymbol)
-        .attr('route')
-        .call(
-          $.object()
-            .$if(operation.deprecated, (o, v) => o.prop('deprecated', $.literal(v)))
-            .$if(operation.description, (o, v) => o.prop('description', $.literal(v)))
-            .prop('method', $.literal(operation.method.toUpperCase()))
-            .$if(operation.operationId, (o, v) => o.prop('operationId', $.literal(v)))
-            .prop('path', $.literal(operation.path))
-            .$if(
-              successResponse.hasOutput &&
-                successResponse.statusCode !== 200 &&
-                successResponse.statusCode,
-              (o, v) => o.prop('successStatus', $.literal(v)),
-            )
-            .$if(operation.summary, (o, v) => o.prop('summary', $.literal(v)))
-            .$if(tags.length > 0 && tags, (o, v) => o.prop('tags', $.fromValue(v))),
-        );
-
-      if (hasInput(operation) && plugin.config.validator.input) {
-        expression = expression.attr('input').call(
-          plugin.referenceSymbol({
-            category: 'schema',
-            resource: 'operation',
-            resourceId: operation.id,
-            role: 'data',
-            tool: plugin.config.validator.input,
-          }),
-        );
-      }
-
-      if (successResponse.hasOutput && plugin.config.validator.output) {
-        // TODO: support outputStructure detailed
-        expression = expression.attr('output').call(
-          plugin.referenceSymbol({
-            category: 'schema',
-            resource: 'operation',
-            resourceId: operation.id,
-            role: 'responses',
-            tool: plugin.config.validator.output,
-          }),
-        );
-      }
-
-      const contractNode = $.const(contractSymbol)
-        .export()
-        .$if(createOperationComment(operation), (c, v) => c.doc(v))
-        .assign(expression);
-      plugin.node(contractNode);
-
-      const paths = getOperationPaths(operation, plugin.config.router);
-      for (const path of paths) {
-        let current: NestedNode = root;
+      const routerPaths = getOperationPaths(operation, plugin.config.router);
+      for (const path of routerPaths) {
+        let current: NestedNode = routerRoot;
         for (let i = 0; i < path.length; i++) {
           const isLast = i === path.length - 1;
           const segment = isLast
@@ -122,10 +76,12 @@ export const handlerV1: OrpcContractPlugin['Handler'] = ({ plugin }) => {
             : applyNaming(path[i]!, plugin.config.router.segmentName);
 
           if (isLast) {
-            current.children.set(segment, {
+            const leaf: NestedLeaf = {
               type: 'leaf',
-              value: contractSymbol,
-            });
+              value: undefined as unknown as NodeName, // placeholder, updated after contracts are generated
+            };
+            current.children.set(segment, leaf);
+            routerLeaves.set(operation.id, leaf);
           } else {
             if (!current.children.has(segment)) {
               current.children.set(segment, {
@@ -144,6 +100,27 @@ export const handlerV1: OrpcContractPlugin['Handler'] = ({ plugin }) => {
     { order: 'declarations' },
   );
 
+  for (const node of contractsStructure.walk()) {
+    const { nodes, symbols } = toNode(node, plugin, baseSymbol);
+
+    if (symbols) {
+      for (const [operationId, sym] of symbols) {
+        contractSymbols.set(operationId, sym);
+      }
+    }
+
+    for (const node of nodes) {
+      plugin.node(node);
+    }
+  }
+
+  for (const [operationId, leaf] of routerLeaves) {
+    const sym = contractSymbols.get(operationId);
+    if (sym) {
+      leaf.value = sym;
+    }
+  }
+
   const routerExportName = applyNaming('router', plugin.config.routerName);
   const routerSymbol = plugin.symbol(routerExportName, {
     meta: {
@@ -152,7 +129,7 @@ export const handlerV1: OrpcContractPlugin['Handler'] = ({ plugin }) => {
       tool: plugin.name,
     },
   });
-  const routerNode = $.const(routerSymbol).export().assign(buildNestedObject(root).pretty());
+  const routerNode = $.const(routerSymbol).export().assign(buildNestedObject(routerRoot).pretty());
   plugin.node(routerNode);
 
   const routerTypeName = toCase(routerExportName, 'PascalCase');
