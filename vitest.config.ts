@@ -70,6 +70,15 @@ export default defineConfig({
       {
         extends: true,
         test: {
+          globalSetup: ['./test/globalTeardown.ts'],
+          name: '@test/openapi-ts-orpc-contract-v1',
+          root: 'packages/openapi-ts-tests/@orpc/contract/v1',
+          setupFiles: ['./vitest.setup.ts'],
+        },
+      },
+      {
+        extends: true,
+        test: {
           name: '@test/openapi-ts-sdks',
           root: 'packages/openapi-ts-tests/sdks',
           setupFiles: ['./vitest.setup.ts'],

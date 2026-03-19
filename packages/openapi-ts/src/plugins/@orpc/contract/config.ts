@@ -1,7 +1,5 @@
-import type { OperationsStrategy } from '~/openApi/shared/locations';
-import { definePluginConfig } from '~/plugins/shared/utils/config';
-import type { PluginContext } from '~/plugins/types';
-import { resolveNaming } from '~/utils/naming';
+import type { OperationsStrategy, PluginContext } from '@hey-api/shared';
+import { definePluginConfig, resolveNaming } from '@hey-api/shared';
 
 import { handler } from './plugin';
 import type { OrpcContractPlugin, RouterConfig, UserRouterConfig } from './types';

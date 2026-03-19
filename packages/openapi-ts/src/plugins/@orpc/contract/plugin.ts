@@ -1,12 +1,9 @@
 import type { NodeName } from '@hey-api/codegen-core';
+import type { IR } from '@hey-api/shared';
+import { applyNaming, OperationPath, OperationStrategy, toCase } from '@hey-api/shared';
 
-import type { IR } from '~/ir/types';
-import { OperationPath, OperationStrategy } from '~/openApi/shared/locations';
-import { createOperationComment } from '~/plugins/shared/utils/operation';
-import { $ } from '~/ts-dsl';
-import type { ObjectTsDsl } from '~/ts-dsl/expr/object';
-import { applyNaming, toCase } from '~/utils/naming';
-
+import { $ } from '../../../ts-dsl';
+import { createOperationComment } from '../../shared/utils/operation';
 import type { OrpcContractPlugin, RouterConfig } from './types';
 
 function hasInput(operation: IR.OperationObject): boolean {
@@ -86,7 +83,7 @@ type NestedLeaf = { type: 'leaf'; value: NodeName };
 type NestedNode = { children: Map<string, NestedValue>; type: 'node' };
 type NestedValue = NestedLeaf | NestedNode;
 
-function buildNestedObject(node: NestedNode): ObjectTsDsl {
+function buildNestedObject(node: NestedNode): ReturnType<typeof $.object> {
   const obj = $.object();
   for (const [key, child] of node.children) {
     if (child.type === 'leaf') {
