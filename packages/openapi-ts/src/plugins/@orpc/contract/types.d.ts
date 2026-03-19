@@ -111,19 +111,14 @@ export interface RouterConfig {
 }
 
 export type UserConfig = Plugin.Name<'@orpc/contract'> &
-  Plugin.Hooks & {
+  Plugin.Hooks &
+  Plugin.UserExports & {
     /**
      * Custom naming function for contract symbols.
      *
      * @default (id) => `${id}Contract`
      */
     contractNameBuilder?: (operationId: string) => string;
-    /**
-     * Whether exports should be re-exported in the index file.
-     *
-     * @default false
-     */
-    exportFromIndex?: boolean;
     /**
      * Router configuration for grouping and nesting operations.
      *
@@ -165,24 +160,48 @@ export type UserConfig = Plugin.Name<'@orpc/contract'> &
      */
     routerName?: NamingRule;
     /**
-     * Validator plugin to use for input/output schemas.
+     * Validate input/output schemas.
      *
-     * Ensure you have declared the selected library as a dependency to avoid
-     * errors.
-     *
-     * @default 'zod'
+     * @default true
      */
-    validator?: PluginValidatorNames;
+    validator?:
+      | PluginValidatorNames
+      | boolean
+      | {
+          /**
+           * The validator plugin to use for input schemas.
+           *
+           * Can be a validator plugin name or boolean (true to auto-select, false
+           * to disable).
+           *
+           * @default true
+           */
+          input?: PluginValidatorNames | boolean;
+          /**
+           * The validator plugin to use for output schemas.
+           *
+           * Can be a validator plugin name or boolean (true to auto-select, false
+           * to disable).
+           *
+           * @default true
+           */
+          output?: PluginValidatorNames | boolean;
+        };
   };
 
 export type Config = Plugin.Name<'@orpc/contract'> &
-  Plugin.Hooks & {
+  Plugin.Hooks &
+  Plugin.Exports & {
     contractNameBuilder: (operationId: string) => string;
-    exportFromIndex: boolean;
-    output: string;
     router: RouterConfig;
     routerName: NamingConfig;
-    validator: PluginValidatorNames;
+    /** Validate input/output schemas. */
+    validator: {
+      /** The validator plugin to use for input schemas. */
+      input: PluginValidatorNames | false;
+      /** The validator plugin to use for output schemas. */
+      output: PluginValidatorNames | false;
+    };
   };
 
 export type OrpcContractPlugin = DefinePlugin<UserConfig, Config>;

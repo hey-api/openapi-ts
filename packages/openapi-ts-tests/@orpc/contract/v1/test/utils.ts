@@ -16,7 +16,7 @@ export const createOrpcContractConfig =
     const output = userConfig.output instanceof Array ? userConfig.output[0]! : userConfig.output;
     const outputPath = typeof output === 'string' ? output : (output?.path ?? '');
     return {
-      plugins: ['zod', '@orpc/contract'],
+      plugins: ['@orpc/contract'],
       ...userConfig,
       input:
         typeof userConfig.input === 'string'
