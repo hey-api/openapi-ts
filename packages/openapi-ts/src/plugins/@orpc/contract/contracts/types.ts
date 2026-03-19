@@ -5,57 +5,44 @@ import type {
   OperationsStrategy,
 } from '@hey-api/shared';
 
-export interface UserOperationsConfig {
+export interface UserContractsConfig {
   /**
-   * Type of container for grouped operations.
+   * Type of container for grouped contracts.
    *
    * Ignored when `strategy` is `'flat'`.
    *
-   * - `'class'` - Class with methods
+   * - `'object'` - Object with properties
    *
-   * @default 'class'
+   * @default 'object'
    */
-  container?: 'class';
-  // * - `'object'` - Object with properties
-  // container?: 'class' | 'object';
+  container?: 'object';
   /**
    * Customize container names.
    *
    * For `'single'` strategy, this sets the root container name.
    * For `'byTags'` strategy, this transforms tag names.
    *
-   * @default 'Sdk' for `'single'` strategy
+   * @default 'contract' for `'single'` strategy
    *
    * @example
    * // Set root name for single strategy
-   * containerName: 'MyApi'
+   * containerName: 'myContract'
    *
    * @example
    * // Transform tag names with suffix
-   * containerName: '{{name}}Service'
+   * containerName: '{{name}}Contract'
    *
    * @example
    * // With casing
-   * containerName: { name: '{{name}}Service', casing: 'PascalCase' }
+   * containerName: { name: '{{name}}Contract', casing: 'camelCase' }
    */
   containerName?: NamingRule;
   /**
-   * Customize method/function names.
+   * Customize contract names.
    *
-   * Applied to the final segment of the path (the method name).
+   * Applied to the final segment of the path (the contract name).
    */
-  methodName?: NamingRule;
-  /**
-   * How methods are attached to class containers.
-   *
-   * Only applies when `container` is `'class'`.
-   *
-   * - `'static'` - Static methods, no instantiation required
-   * - `'instance'` - Instance methods, requires `new ClassName(config)`
-   *
-   * @default 'instance'
-   */
-  methods?: 'instance' | 'static';
+  contractName?: NamingRule;
   /**
    * How to derive nesting structure from operations.
    *
@@ -77,15 +64,15 @@ export interface UserOperationsConfig {
   /**
    * Customize nesting segment names.
    *
-   * Applied to intermediate path segments (not the method name).
+   * Applied to intermediate path segments (not the contract name).
    */
   segmentName?: NamingRule;
   /**
    * Grouping strategy.
    *
-   * - `'flat'` - Standalone functions, no grouping
+   * - `'flat'` - Standalone contracts, no grouping
    * - `'byTags'` - One container per operation tag
-   * - `'single'` - All operations in one container
+   * - `'single'` - All contracts in one container
    * - Custom function for full control
    *
    * @default 'flat'
@@ -101,17 +88,13 @@ export interface UserOperationsConfig {
   strategyDefaultTag?: string;
 }
 
-export interface OperationsConfig {
+export interface ContractsConfig {
   /** Type of container for grouped operations. */
-  container: 'class';
-  // * - `'object'` - Object with properties
-  // container: 'class' | 'object';
+  container: 'object';
   /** Customize container names. */
   containerName: NamingConfig;
-  /** Customize method/function names. */
-  methodName: NamingConfig;
-  /** How methods are attached to class containers. */
-  methods: 'instance' | 'static';
+  /** Customize contract names. */
+  contractName: NamingConfig;
   /** How to derive nesting structure from operations. */
   nesting: 'operationId' | 'id' | OperationPathStrategy;
   /** Delimiters for splitting operationId. */

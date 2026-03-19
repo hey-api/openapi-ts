@@ -13,6 +13,7 @@ import type {
 } from '@hey-api/shared';
 
 import type { PluginValidatorNames } from '../../types';
+import type { ContractsConfig, UserContractsConfig } from './contracts/types';
 
 export interface UserRouterConfig {
   /**
@@ -114,11 +115,19 @@ export type UserConfig = Plugin.Name<'@orpc/contract'> &
   Plugin.Hooks &
   Plugin.UserExports & {
     /**
-     * Custom naming function for contract symbols.
+     * Define the structure of generated oRPC contracts.
      *
-     * @default (id) => `${id}Contract`
+     * String shorthand:
+     * - `'byTags'` – one container per operation tag
+     * - `'flat'` – standalone functions, no container
+     * - `'single'` – all operations in a single container
+     * - custom function for full control
+     *
+     * Use the object form for advanced configuration.
+     *
+     * @default 'flat'
      */
-    contractNameBuilder?: (operationId: string) => string;
+    contracts?: OperationsStrategy | UserContractsConfig;
     /**
      * Router configuration for grouping and nesting operations.
      *
@@ -192,7 +201,8 @@ export type UserConfig = Plugin.Name<'@orpc/contract'> &
 export type Config = Plugin.Name<'@orpc/contract'> &
   Plugin.Hooks &
   Plugin.Exports & {
-    contractNameBuilder: (operationId: string) => string;
+    /** Define the structure of generated oRPC contracts. */
+    contracts: ContractsConfig;
     router: RouterConfig;
     routerName: NamingConfig;
     /** Validate input/output schemas. */

@@ -44,21 +44,23 @@ export const handlerV1: OrpcContractPlugin['Handler'] = ({ plugin }) => {
     (event) => {
       const { operation } = event;
 
-      const contractName = plugin.config.contractNameBuilder(operation.id);
       const tags = getTags(operation, plugin.config.router.strategyDefaultTag);
       const successResponse = getSuccessResponse(operation);
 
-      const contractSymbol = plugin.symbol(contractName, {
-        meta: {
-          category: 'contract',
-          path: event._path,
-          resource: 'operation',
-          resourceId: operation.id,
-          role: 'contract',
-          tags,
-          tool: plugin.name,
+      const contractSymbol = plugin.symbol(
+        applyNaming(operation.id, plugin.config.contracts.contractName),
+        {
+          meta: {
+            category: 'contract',
+            path: event._path,
+            resource: 'operation',
+            resourceId: operation.id,
+            role: 'contract',
+            tags,
+            tool: plugin.name,
+          },
         },
-      });
+      );
 
       let expression = $(baseSymbol)
         .attr('route')

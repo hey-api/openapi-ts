@@ -9,7 +9,7 @@ export const base = oc.$route({ inputStructure: 'detailed' });
 /**
  * Get all users
  */
-export const getUsersContract = base.route({
+export const getUsers = base.route({
     method: 'GET',
     operationId: 'getUsers',
     path: '/users',
@@ -20,7 +20,7 @@ export const getUsersContract = base.route({
 /**
  * Create a new user
  */
-export const createUserContract = base.route({
+export const createUser = base.route({
     method: 'POST',
     operationId: 'createUser',
     path: '/users',
@@ -32,7 +32,7 @@ export const createUserContract = base.route({
 /**
  * Delete a user
  */
-export const deleteUserContract = base.route({
+export const deleteUser = base.route({
     method: 'DELETE',
     operationId: 'deleteUser',
     path: '/users/{userId}',
@@ -43,7 +43,7 @@ export const deleteUserContract = base.route({
 /**
  * Get a user by ID
  */
-export const getUserByIdContract = base.route({
+export const getUserById = base.route({
     method: 'GET',
     operationId: 'getUserById',
     path: '/users/{userId}',
@@ -54,7 +54,7 @@ export const getUserByIdContract = base.route({
 /**
  * Update a user
  */
-export const updateUserContract = base.route({
+export const updateUser = base.route({
     method: 'PUT',
     operationId: 'updateUser',
     path: '/users/{userId}',
@@ -65,7 +65,7 @@ export const updateUserContract = base.route({
 /**
  * Get all posts
  */
-export const getPostsContract = base.route({
+export const getPosts = base.route({
     method: 'GET',
     operationId: 'getPosts',
     path: '/posts',
@@ -76,7 +76,7 @@ export const getPostsContract = base.route({
 /**
  * Create a new post
  */
-export const createPostContract = base.route({
+export const createPost = base.route({
     method: 'POST',
     operationId: 'createPost',
     path: '/posts',
@@ -88,7 +88,7 @@ export const createPostContract = base.route({
 /**
  * Get a post by ID
  */
-export const getPostByIdContract = base.route({
+export const getPostById = base.route({
     method: 'GET',
     operationId: 'getPostById',
     path: '/posts/{postId}',
@@ -97,14 +97,14 @@ export const getPostByIdContract = base.route({
 }).input(zGetPostByIdData).output(zGetPostByIdResponse);
 
 export const router = {
-    getUsers: getUsersContract,
-    createUser: createUserContract,
-    deleteUser: deleteUserContract,
-    getUserById: getUserByIdContract,
-    updateUser: updateUserContract,
-    getPosts: getPostsContract,
-    createPost: createPostContract,
-    getPostById: getPostByIdContract
+    getUsers,
+    createUser,
+    deleteUser,
+    getUserById,
+    updateUser,
+    getPosts,
+    createPost,
+    getPostById
 };
 
 export type Router = typeof router;

@@ -30,7 +30,9 @@ describe(`OpenAPI ${version}`, () => {
         plugins: [
           'zod',
           {
-            contractNameBuilder: (id: string) => `${id}Rpc`,
+            contracts: {
+              contractName: '{{name}}Rpc',
+            },
             name: '@orpc/contract',
           },
         ],
