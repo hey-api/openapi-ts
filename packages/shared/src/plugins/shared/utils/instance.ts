@@ -373,6 +373,15 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
   }
 
   symbol(name: SymbolIn['name'], symbol?: Omit<SymbolIn, 'name'>): Symbol<ResolvedNode> {
+    if (symbol?.external) {
+      const meta = {
+        ...symbol.meta,
+        category: 'external' as const,
+        resource: symbol.external,
+      };
+      const existing = this.gen.symbols.query(meta).find((s) => s.name === name);
+      if (existing) return existing as Symbol<ResolvedNode>;
+    }
     const symbolIn: SymbolIn = {
       ...symbol,
       meta: {
@@ -399,7 +408,8 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
 
   /**
    * Registers a symbol only if it does not already exist based on the provided
-   * metadata. This prevents duplicate symbols from being created in the project.
+   * name and metadata. This prevents duplicate symbols from being created in
+   * the project.
    */
   symbolOnce(name: SymbolIn['name'], symbol?: Omit<SymbolIn, 'name'>): Symbol {
     const meta = {
@@ -409,7 +419,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
       meta.category = 'external';
       meta.resource = symbol.external;
     }
-    const existing = this.querySymbol(meta);
+    const existing = this.gen.symbols.query(meta).find((s) => s.name === name);
     if (existing) return existing;
     return this.symbol(name, { ...symbol, meta });
   }
