@@ -106,4 +106,22 @@ describe('SymbolRegistry', () => {
     const result = r.query(meta({ a: { b: { c: 123 } } }));
     expect(result).toEqual([a]);
   });
+
+  it('query() returns all symbols sharing the same meta but with different names', () => {
+    const r = new SymbolRegistry();
+
+    const sharedMeta = meta({ category: 'external', resource: '@shared/types' });
+
+    const a = r.register({ meta: sharedMeta, name: 'CustomNumber' });
+    const b = r.register({ meta: sharedMeta, name: 'FlakeIdString' });
+
+    const results = r.query(sharedMeta);
+    expect(results).toHaveLength(2);
+    expect(results).toContain(a);
+    expect(results).toContain(b);
+
+    // filtering by name correctly identifies each symbol independently
+    expect(results.find((s) => s.name === 'CustomNumber')).toBe(a);
+    expect(results.find((s) => s.name === 'FlakeIdString')).toBe(b);
+  });
 });
