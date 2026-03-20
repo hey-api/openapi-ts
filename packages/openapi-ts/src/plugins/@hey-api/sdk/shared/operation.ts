@@ -275,6 +275,11 @@ export function operationStatements({
   for (const name in operation.parameters?.query) {
     const parameter = operation.parameters.query[name]!;
 
+    // OpenAPI parameter `content` and schema/style are mutually exclusive.
+    if (parameter.contentType) {
+      continue;
+    }
+
     if (parameter.schema.type === 'array' || parameter.schema.type === 'tuple') {
       if (parameter.style !== 'form' || !parameter.explode) {
         // override the default settings for array serialization
