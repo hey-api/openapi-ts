@@ -373,6 +373,15 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
   }
 
   symbol(name: SymbolIn['name'], symbol?: Omit<SymbolIn, 'name'>): Symbol<ResolvedNode> {
+    if (symbol?.external) {
+      const meta = {
+        ...symbol.meta,
+        category: 'external' as const,
+        resource: symbol.external,
+      };
+      const existing = this.gen.symbols.query(meta).find((s) => s.name === name);
+      if (existing) return existing as Symbol<ResolvedNode>;
+    }
     const symbolIn: SymbolIn = {
       ...symbol,
       meta: {
