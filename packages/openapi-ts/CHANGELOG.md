@@ -1,5 +1,11 @@
 # @hey-api/openapi-ts
 
+## 0.94.4
+
+### Patch Changes
+
+- **plugin(orpc)**: initial release ([#3264](https://github.com/hey-api/openapi-ts/pull/3264)) ([`8e1e62d`](https://github.com/hey-api/openapi-ts/commit/8e1e62dbf88590542ac8bdf3584f9be881ea25fc)) by [@hyoban](https://github.com/hyoban)
+
 ## 0.94.3
 
 ### Patch Changes
