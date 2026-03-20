@@ -10,6 +10,11 @@ export default defineConfig({
     path: './src/client',
     postProcess: ['oxfmt', 'eslint'],
   },
+  parser: {
+    pagination: {
+      keywords: ['tags'],
+    },
+  },
   plugins: [
     '@hey-api/client-fetch',
     '@hey-api/schemas',
@@ -21,6 +26,9 @@ export default defineConfig({
       enums: 'javascript',
       name: '@hey-api/typescript',
     },
-    '@tanstack/react-query',
+    {
+      infiniteQueryOptions: true,
+      name: '@tanstack/react-query',
+    },
   ],
 });
