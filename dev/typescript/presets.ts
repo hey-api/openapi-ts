@@ -30,6 +30,11 @@ export const presets = {
       },
     },
   ],
+  rpc: () => [
+    /** RPC-style SDK with Zod validation */
+    'orpc',
+    'zod',
+  ],
   sdk: () => [
     /** SDK with types */
     '@hey-api/typescript',
