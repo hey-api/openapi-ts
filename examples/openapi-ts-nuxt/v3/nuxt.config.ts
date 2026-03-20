@@ -1,11 +1,8 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  compatibilityDate: '2024-11-01',
+  compatibilityDate: '2026-03-20',
   devtools: {
-    enabled: true,
-  },
-  future: {
-    compatibilityVersion: 4,
+    enabled: false,
   },
   heyApi: {
     config: {
@@ -28,4 +25,9 @@ export default defineNuxtConfig({
     },
   },
   modules: ['@hey-api/nuxt'],
+  vite: {
+    optimizeDeps: {
+      include: ['zod'],
+    },
+  },
 });
