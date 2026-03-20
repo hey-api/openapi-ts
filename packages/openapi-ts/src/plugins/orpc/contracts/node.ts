@@ -1,4 +1,10 @@
-import type { StructureItem, StructureNode, StructureShell, Symbol } from '@hey-api/codegen-core';
+import type {
+  StructureItem,
+  StructureNode,
+  StructureShell,
+  Symbol,
+  SymbolMeta,
+} from '@hey-api/codegen-core';
 import type { IR } from '@hey-api/shared';
 import { applyNaming } from '@hey-api/shared';
 
@@ -14,6 +20,15 @@ export interface ContractItem {
 }
 
 export const source = globalThis.Symbol('orpc');
+
+function createShellMeta(node: StructureNode): SymbolMeta {
+  return {
+    category: 'contract',
+    resource: 'container',
+    resourceId: node.getPath().join('.'),
+    tool: 'orpc',
+  };
+}
 
 function createContractSymbol(
   plugin: OrpcPlugin['Instance'],
@@ -100,16 +115,17 @@ function buildContainerObject(
     const contractSymbol = symbols.get(operation.id)!;
     const name = item.location[item.location.length - 1]!;
     const propName = applyNaming(name, plugin.config.contracts.contractName);
-    obj.prop(propName, $(contractSymbol));
+    obj.prop(propName, contractSymbol);
   }
 
   for (const child of node.children.values()) {
     if (child.shell) {
       const childShell = child.shell.define(child);
-      const childSymbol = (childShell.node as ReturnType<typeof $.const>).symbol;
+      const childNode = childShell.node as ReturnType<typeof $.const>;
+      const childSymbol = childNode.symbol;
       if (childSymbol) {
         const propName = applyNaming(child.name, plugin.config.contracts.segmentName);
-        obj.prop(propName, $(childSymbol));
+        obj.prop(propName, childSymbol);
       }
     }
   }
@@ -118,26 +134,29 @@ function buildContainerObject(
 }
 
 export function createShell(plugin: OrpcPlugin['Instance']): StructureShell {
+  const cache = new Map<string | number, ReturnType<typeof $.const>>();
+
   return {
     define: (node) => {
+      const resourceId = node.getPath().join('.');
+      const cached = cache.get(resourceId);
+      if (cached) {
+        return { dependencies: [], node: cached };
+      }
       const symbol = plugin.symbol(
         applyNaming(
           node.name,
           node.isRoot ? plugin.config.contracts.containerName : plugin.config.contracts.segmentName,
         ),
         {
-          meta: {
-            category: 'contract',
-            resource: 'container',
-            resourceId: node.getPath().join('.'),
-            tool: plugin.name,
-          },
+          meta: createShellMeta(node),
         },
       );
 
-      const placeholder = $.const(symbol).export().assign($.object());
+      const o = $.const(symbol).export().assign($.object());
+      cache.set(resourceId, o);
 
-      return { dependencies: [], node: placeholder };
+      return { dependencies: [], node: o };
     },
   };
 }

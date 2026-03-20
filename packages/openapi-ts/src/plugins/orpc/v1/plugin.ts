@@ -20,34 +20,34 @@ export const handlerV1: OrpcPlugin['Handler'] = ({ plugin }) => {
     );
   plugin.node(baseNode);
 
-  const contractsStructure = new StructureModel();
-  const contractsShell = createShell(plugin);
-  const contractsStrategy = resolveStrategy(plugin);
+  const structure = new StructureModel();
+  const shell = createShell(plugin);
+  const strategy = resolveStrategy(plugin);
 
   plugin.forEach(
     'operation',
     (event) => {
-      const { operation } = event;
-
-      const contractPaths = contractsStrategy(operation);
-      contractsStructure.insert({
+      structure.insert({
         data: {
-          operation,
+          operation: event.operation,
           path: event._path,
           tags: event.tags,
         } satisfies ContractItem,
-        locations: contractPaths.map((path) => ({ path, shell: contractsShell })),
+        locations: strategy(event.operation).map((path) => ({ path, shell })),
         source,
       });
     },
     { order: 'declarations' },
   );
 
-  for (const node of contractsStructure.walk()) {
-    const { nodes } = toNode(node, plugin, baseSymbol);
+  const allNodes: Array<ReturnType<typeof $.class | typeof $.var>> = [];
 
-    for (const node of nodes) {
-      plugin.node(node);
-    }
+  for (const node of structure.walk()) {
+    const { nodes } = toNode(node, plugin, baseSymbol);
+    allNodes.push(...nodes);
+  }
+
+  for (const node of allNodes) {
+    plugin.node(node);
   }
 };
