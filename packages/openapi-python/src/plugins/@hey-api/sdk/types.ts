@@ -1,7 +1,7 @@
 import type { DefinePlugin, OperationsStrategy, Plugin } from '@hey-api/shared';
 
-import type { PluginClientNames } from '../../../plugins/types';
-// import type { PluginClientNames, PluginValidatorNames } from '../../../plugins/types';
+import type { PluginClientNames } from '../../types';
+// import type { PluginClientNames, PluginValidatorNames } from '../../types';
 import type { ExamplesConfig, UserExamplesConfig } from './examples';
 import type { OperationsConfig, UserOperationsConfig } from './operations';
 

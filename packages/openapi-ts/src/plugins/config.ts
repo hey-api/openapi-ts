@@ -23,6 +23,7 @@ import { defaultConfig as tanStackVueQuery } from '../plugins/@tanstack/vue-quer
 import { defaultConfig as arktype } from '../plugins/arktype';
 import { defaultConfig as fastify } from '../plugins/fastify';
 import { defaultConfig as nestjs } from '../plugins/nestjs';
+import { defaultConfig as orpc } from '../plugins/orpc';
 import { defaultConfig as swr } from '../plugins/swr';
 import { defaultConfig as valibot } from '../plugins/valibot';
 import { defaultConfig as zod } from '../plugins/zod';
@@ -53,6 +54,7 @@ export const defaultPluginConfigs: {
   arktype,
   fastify,
   nestjs,
+  orpc,
   swr,
   valibot,
   zod,
