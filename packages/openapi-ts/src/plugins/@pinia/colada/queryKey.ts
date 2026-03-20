@@ -47,10 +47,6 @@ export const createQueryKeyFunction = ({ plugin }: { plugin: PiniaColadaPlugin['
   const clientModule = clientFolderAbsolutePath(getTypedConfig(plugin));
   const symbolSerializeQueryValue = plugin.symbol('serializeQueryKeyValue', {
     external: clientModule,
-    meta: {
-      category: 'external',
-      resource: `${clientModule}.serializeQueryKeyValue`,
-    },
   });
 
   const fn = $.const(symbolCreateQueryKey).assign(

@@ -16,7 +16,6 @@ export const handlerV1: HeyApiSdkPlugin['Handler'] = ({ plugin }) => {
   plugin.symbol('build_client_params', {
     external: clientModule,
     meta: {
-      category: 'external',
       resource: 'client.build_client_params',
       tool: client.name,
     },
@@ -24,7 +23,6 @@ export const handlerV1: HeyApiSdkPlugin['Handler'] = ({ plugin }) => {
   plugin.symbol('Client', {
     external: clientModule,
     meta: {
-      category: 'external',
       resource: 'client.Client',
       tool: client.name,
     },
@@ -33,26 +31,14 @@ export const handlerV1: HeyApiSdkPlugin['Handler'] = ({ plugin }) => {
   // functools
   plugin.symbol('cached_property', {
     external: 'functools',
-    meta: {
-      category: 'external',
-      resource: 'functools.cached_property',
-    },
   });
 
   // typing
   plugin.symbol('Any', {
     external: 'typing',
-    meta: {
-      category: 'external',
-      resource: 'typing.Any',
-    },
   });
   plugin.symbol('Union', {
     external: 'typing',
-    meta: {
-      category: 'external',
-      resource: 'typing.Union',
-    },
   });
 
   const structure = new StructureModel();

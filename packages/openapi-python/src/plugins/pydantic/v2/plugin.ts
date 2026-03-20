@@ -7,77 +7,37 @@ export const handlerV2: PydanticPlugin['Handler'] = ({ plugin }) => {
   // enum
   plugin.symbol('Enum', {
     external: 'enum',
-    meta: {
-      category: 'external',
-      resource: 'enum.Enum',
-    },
   });
 
   // typing
   plugin.symbol('Any', {
     external: 'typing',
-    meta: {
-      category: 'external',
-      resource: 'typing.Any',
-    },
   });
   plugin.symbol('Literal', {
     external: 'typing',
-    meta: {
-      category: 'external',
-      resource: 'typing.Literal',
-    },
   });
   plugin.symbol('NoReturn', {
     external: 'typing',
-    meta: {
-      category: 'external',
-      resource: 'typing.NoReturn',
-    },
   });
   plugin.symbol('Optional', {
     external: 'typing',
-    meta: {
-      category: 'external',
-      resource: 'typing.Optional',
-    },
   });
   plugin.symbol('TypeAlias', {
     external: 'typing',
-    meta: {
-      category: 'external',
-      resource: 'typing.TypeAlias',
-    },
   });
   plugin.symbol('Union', {
     external: 'typing',
-    meta: {
-      category: 'external',
-      resource: 'typing.Union',
-    },
   });
 
   // Pydantic
   plugin.symbol('BaseModel', {
     external: 'pydantic',
-    meta: {
-      category: 'external',
-      resource: 'pydantic.BaseModel',
-    },
   });
   plugin.symbol('ConfigDict', {
     external: 'pydantic',
-    meta: {
-      category: 'external',
-      resource: 'pydantic.ConfigDict',
-    },
   });
   plugin.symbol('Field', {
     external: 'pydantic',
-    meta: {
-      category: 'external',
-      resource: 'pydantic.Field',
-    },
   });
 
   const processor = createProcessor(plugin);

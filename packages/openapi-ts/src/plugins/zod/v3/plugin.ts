@@ -10,7 +10,6 @@ export const handlerV3: ZodPlugin['Handler'] = ({ plugin }) => {
   plugin.symbol('z', {
     external: getZodModule({ plugin }),
     meta: {
-      category: 'external',
       resource: 'zod.z',
     },
   });

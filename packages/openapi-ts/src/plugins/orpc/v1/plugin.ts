@@ -8,10 +8,6 @@ import type { OrpcPlugin } from '../types';
 export const handlerV1: OrpcPlugin['Handler'] = ({ plugin }) => {
   plugin.symbol('oc', {
     external: '@orpc/contract',
-    meta: {
-      category: 'external',
-      resource: '@orpc/contract.oc',
-    },
   });
 
   const structure = new StructureModel();
