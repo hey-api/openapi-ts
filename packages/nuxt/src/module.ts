@@ -39,7 +39,7 @@ export default defineNuxtModule<ModuleOptions>({
     configKey: 'heyApi',
     name: '@hey-api/nuxt',
   },
-  async setup(options) {
+  async setup(options: ModuleOptions) {
     const nuxt = useNuxt();
 
     const config = defu(options.config, {
