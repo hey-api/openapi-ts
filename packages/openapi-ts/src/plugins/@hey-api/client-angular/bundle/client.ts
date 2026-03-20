@@ -106,7 +106,10 @@ export const createClient = (config: Config = {}): Client => {
     }
 
     if (opts.requestValidator) {
-      await opts.requestValidator(opts);
+      await opts.requestValidator({
+        ...opts,
+        headers: Object.fromEntries(opts.headers.entries()),
+      });
     }
 
     return { opts, req, url };
