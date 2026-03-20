@@ -85,7 +85,7 @@ export const defaultConfig: TanStackPreactQueryPlugin['Config'] = {
     plugin.config.useQuery = context.valueToObject({
       defaultValue: {
         case: plugin.config.case ?? 'camelCase',
-        enabled: false,
+        enabled: true,
         name: 'use{{name}}Query',
       },
       mappers: {

@@ -1,9 +1,21 @@
-import type { PluginHandler } from '../types';
+import type { PluginHandler, PluginInstance } from '../types';
 import { createInfiniteQueryOptions } from './infiniteQueryOptions';
 import { createMutationOptions } from './mutationOptions';
 import { createQueryOptions } from './queryOptions';
 import { createUseMutation } from './useMutation';
 import { createUseQuery } from './useQuery';
+
+const createQueryStyleNames = new Set<PluginInstance['name']>([
+  '@tanstack/angular-query-experimental',
+  '@tanstack/solid-query',
+  '@tanstack/svelte-query',
+]);
+
+const getMutationOptionsType = (name: PluginInstance['name']) =>
+  createQueryStyleNames.has(name) ? 'MutationOptions' : 'UseMutationOptions';
+
+const getQueryOptionsType = (name: PluginInstance['name']) =>
+  createQueryStyleNames.has(name) ? 'CreateQueryOptions' : 'UseQueryOptions';
 
 export const handlerV5: PluginHandler = ({ plugin }) => {
   plugin.symbol('DefaultError', {
@@ -22,13 +34,7 @@ export const handlerV5: PluginHandler = ({ plugin }) => {
       resource: `${plugin.name}.InfiniteData`,
     },
   });
-  const mutationsType =
-    plugin.name === '@tanstack/angular-query-experimental' ||
-    plugin.name === '@tanstack/svelte-query' ||
-    plugin.name === '@tanstack/solid-query'
-      ? 'MutationOptions'
-      : 'UseMutationOptions';
-  plugin.symbol(mutationsType, {
+  plugin.symbol(getMutationOptionsType(plugin.name), {
     external: plugin.name,
     kind: 'type',
     meta: {
@@ -64,6 +70,22 @@ export const handlerV5: PluginHandler = ({ plugin }) => {
       resource: `${plugin.name}.useQuery`,
     },
   });
+  plugin.symbol(getQueryOptionsType(plugin.name), {
+    external: plugin.name,
+    kind: 'type',
+    meta: {
+      category: 'external',
+      resource: `${plugin.name}.QueryObserverOptions`,
+    },
+  });
+  plugin.symbol('skipToken', {
+    external: plugin.name,
+    meta: {
+      category: 'external',
+      resource: `${plugin.name}.skipToken`,
+    },
+  });
+
   plugin.symbol('AxiosError', {
     external: 'axios',
     kind: 'type',
