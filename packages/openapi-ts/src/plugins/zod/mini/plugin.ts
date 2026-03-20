@@ -11,7 +11,6 @@ export const handlerMini: ZodPlugin['Handler'] = ({ plugin }) => {
     external: getZodModule({ plugin }),
     importKind: 'namespace',
     meta: {
-      category: 'external',
       resource: 'zod.z',
     },
   });
