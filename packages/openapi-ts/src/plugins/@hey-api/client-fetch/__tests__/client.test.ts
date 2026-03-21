@@ -538,3 +538,60 @@ describe('error interceptor for fetch exceptions', () => {
     expect(result.error).toBe(abortError);
   });
 });
+
+describe('throwOnError for HTTP error responses', () => {
+  it('throws an Error instance with status and parsed body', async () => {
+    const client = createClient({ baseUrl: 'https://example.com' });
+    const mockResponse = new Response(
+      JSON.stringify({ message: 'auth.unauthenticated.wrong_token' }),
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        status: 401,
+      },
+    );
+    const mockFetch: MockFetch = vi.fn().mockResolvedValue(mockResponse);
+
+    let thrownError: unknown;
+    try {
+      await client.get({
+        fetch: mockFetch,
+        throwOnError: true,
+        url: '/protected',
+      });
+    } catch (error) {
+      thrownError = error;
+    }
+
+    expect(thrownError).toBeInstanceOf(Error);
+    expect(thrownError).toMatchObject({
+      body: { message: 'auth.unauthenticated.wrong_token' },
+      message: 'auth.unauthenticated.wrong_token',
+      status: 401,
+    });
+  });
+
+  it('falls back to a status-based message when body has no message', async () => {
+    const client = createClient({ baseUrl: 'https://example.com' });
+    const mockResponse = new Response(JSON.stringify({ error: 'unauthorized' }), {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      status: 403,
+    });
+    const mockFetch: MockFetch = vi.fn().mockResolvedValue(mockResponse);
+
+    await expect(
+      client.get({
+        fetch: mockFetch,
+        throwOnError: true,
+        url: '/protected',
+      }),
+    ).rejects.toMatchObject({
+      body: { error: 'unauthorized' },
+      message: 'Request failed with status 403',
+      status: 403,
+    });
+  });
+});
