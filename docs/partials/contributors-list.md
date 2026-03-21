@@ -87,6 +87,7 @@
 - [Simen Bekkhus](https://github.com/SimenB)
 - [Sipan Petrosyan](https://github.com/SipanP)
 - [Sjoerd Scheffer](https://github.com/ixnas)
+- [Stephen Zhou](https://github.com/hyoban)
 - [Stian Jensen](https://github.com/stianjensen)
 - [Vincent Olesen](https://github.com/volesen)
 - [Warren Seine](https://github.com/warrenseine)
