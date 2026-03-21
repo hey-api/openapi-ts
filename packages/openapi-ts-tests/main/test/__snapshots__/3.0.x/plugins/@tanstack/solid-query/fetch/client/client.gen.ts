@@ -19,6 +19,50 @@ type ReqInit = Omit<RequestInit, 'body' | 'headers'> & {
   headers: ReturnType<typeof mergeHeaders>;
 };
 
+const createHttpError = ({
+  error,
+  request,
+  response,
+}: {
+  error: unknown;
+  request: Request;
+  response: Response;
+}) => {
+  if (error instanceof Error) {
+    const enrichedError = error as Error & {
+      body?: unknown;
+      request?: Request;
+      response?: Response;
+      status?: number;
+    };
+
+    enrichedError.body ??= error;
+    enrichedError.request ??= request;
+    enrichedError.response ??= response;
+    enrichedError.status ??= response.status;
+    return enrichedError;
+  }
+
+  const message =
+    typeof error === 'string'
+      ? error
+      : ((error as { message?: unknown })?.message ??
+        `Request failed with status ${response.status}`);
+
+  const httpError = new Error(String(message)) as Error & {
+    body: unknown;
+    request: Request;
+    response: Response;
+    status: number;
+  };
+
+  httpError.body = error;
+  httpError.request = request;
+  httpError.response = response;
+  httpError.status = response.status;
+  return httpError;
+};
+
 export const createClient = (config: Config = {}): Client => {
   let _config = mergeConfigs(createConfig(), config);
 
@@ -222,7 +266,11 @@ export const createClient = (config: Config = {}): Client => {
     finalError = finalError || ({} as string);
 
     if (opts.throwOnError) {
-      throw finalError;
+      throw createHttpError({
+        error: finalError,
+        request,
+        response,
+      });
     }
 
     // TODO: we probably want to return error and improve types
