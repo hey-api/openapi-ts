@@ -1,0 +1,26 @@
+openapi: 3.0.4
+info:
+  title: OpenAPI 3.0.4 response types
+  version: '1'
+paths:
+  /foo:
+    get:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+              example:
+                name: 'Alice'
+            text/plain:
+              schema:
+                type: string
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary

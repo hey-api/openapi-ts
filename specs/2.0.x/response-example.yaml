@@ -1,0 +1,54 @@
+swagger: 2.0
+info:
+  title: OpenAPI 2.0 body response application/json inline example
+  version: 1
+paths:
+  /foo:
+    post:
+      consumes:
+        - text/plain
+      produces:
+        - application/json
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              fullName:
+                type: string
+              age:
+                type: number
+            example:
+              fullName: 'John Doe'
+              age: 34
+        '204':
+          description: SUCCESSFUL
+    get:
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Person'
+definitions:
+  Person:
+    type: object
+    properties:
+      firstName:
+        type: string
+      lastName:
+        type: string
+      age:
+        type: number
+    example:
+      firstName: 'Marry'
+      lastName: 'Jane'
+      age: 30
