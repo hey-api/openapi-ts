@@ -165,6 +165,11 @@ export const createMswHandlerFactory = (config?: {
                 }
             }
         };
+        handlers.push(mocks.callWithWeirdParameterNamesMock(overrides?.callWithWeirdParameterNamesMock));
+        addRequiredHandler(mocks.callWithResponseAndNoContentResponseMock, overrides?.callWithResponseAndNoContentResponseMock);
+        handlers.push(mocks.dummyAMock(overrides?.dummyAMock));
+        handlers.push(mocks.dummyBMock(overrides?.dummyBMock));
+        handlers.push(mocks.callWithParametersMock(overrides?.callWithParametersMock));
         handlers.push(mocks.serviceWithEmptyTagMock(overrides?.serviceWithEmptyTagMock));
         handlers.push(mocks.patchApiVbyApiVersionNoTagMock(overrides?.patchApiVbyApiVersionNoTagMock));
         handlers.push(mocks.fooWowMock(overrides?.fooWowMock));
@@ -176,8 +181,6 @@ export const createMswHandlerFactory = (config?: {
         handlers.push(mocks.postCallWithoutParametersAndResponseMock(overrides?.postCallWithoutParametersAndResponseMock));
         handlers.push(mocks.putCallWithoutParametersAndResponseMock(overrides?.putCallWithoutParametersAndResponseMock));
         handlers.push(mocks.callWithDescriptionsMock(overrides?.callWithDescriptionsMock));
-        handlers.push(mocks.callWithParametersMock(overrides?.callWithParametersMock));
-        handlers.push(mocks.callWithWeirdParameterNamesMock(overrides?.callWithWeirdParameterNamesMock));
         handlers.push(mocks.callWithDefaultParametersMock(overrides?.callWithDefaultParametersMock));
         handlers.push(mocks.callWithDefaultOptionalParametersMock(overrides?.callWithDefaultOptionalParametersMock));
         handlers.push(mocks.callToTestOrderOfParamsMock(overrides?.callToTestOrderOfParamsMock));
@@ -186,9 +189,6 @@ export const createMswHandlerFactory = (config?: {
         handlers.push(mocks.duplicateName3Mock(overrides?.duplicateName3Mock));
         handlers.push(mocks.duplicateName4Mock(overrides?.duplicateName4Mock));
         handlers.push(mocks.callWithNoContentResponseMock(overrides?.callWithNoContentResponseMock));
-        addRequiredHandler(mocks.callWithResponseAndNoContentResponseMock, overrides?.callWithResponseAndNoContentResponseMock);
-        handlers.push(mocks.dummyAMock(overrides?.dummyAMock));
-        handlers.push(mocks.dummyBMock(overrides?.dummyBMock));
         handlers.push(mocks.callWithResponseMock(overrides?.callWithResponseMock));
         addRequiredHandler(mocks.callWithDuplicateResponsesMock, overrides?.callWithDuplicateResponsesMock);
         addRequiredHandler(mocks.callWithResponsesMock, overrides?.callWithResponsesMock);
