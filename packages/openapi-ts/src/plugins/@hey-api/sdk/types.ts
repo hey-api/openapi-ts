@@ -1,10 +1,6 @@
 import type { DefinePlugin, NameTransformer, OperationsStrategy, Plugin } from '@hey-api/shared';
 
-import type {
-  PluginClientNames,
-  PluginTransformerNames,
-  PluginValidatorNames,
-} from '../../../plugins/types';
+import type { PluginClientNames, PluginTransformerNames, PluginValidatorNames } from '../../types';
 import type { ExamplesConfig, UserExamplesConfig } from './examples';
 import type { OperationsConfig, UserOperationsConfig } from './operations';
 
@@ -219,13 +215,9 @@ export type Config = Plugin.Name<'@hey-api/sdk'> &
      * @default true
      */
     client: PluginClientNames | false;
-    /**
-     * Configuration for generating SDK code examples.
-     */
+    /** Configuration for generating SDK code examples. */
     examples: ExamplesConfig;
-    /**
-     * Define the structure of generated SDK operations.
-     */
+    /** Define the structure of generated SDK operations. */
     operations: OperationsConfig;
     /**
      * Define how request parameters are structured in generated SDK methods.

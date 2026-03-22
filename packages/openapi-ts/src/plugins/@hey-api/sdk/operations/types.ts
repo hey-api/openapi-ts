@@ -16,7 +16,7 @@ export interface UserOperationsConfig {
    * @default 'class'
    */
   container?: 'class';
-  // * - `'object'` - Plain object literal
+  // * - `'object'` - Object with properties
   // container?: 'class' | 'object';
   /**
    * Customize container names.
@@ -102,85 +102,24 @@ export interface UserOperationsConfig {
 }
 
 export interface OperationsConfig {
-  /**
-   * Type of container for grouped operations.
-   *
-   * Ignored when `strategy` is `'flat'`.
-   *
-   * - `'class'` - Class with methods
-   */
+  /** Type of container for grouped operations. */
   container: 'class';
-  // * - `'object'` - Plain object literal
+  // * - `'object'` - Object with properties
   // container: 'class' | 'object';
-  /**
-   * Customize container names.
-   *
-   * For `'single'` strategy, this sets the root container name.
-   * For `'byTags'` strategy, this transforms tag names.
-   *
-   * @default 'Sdk' for `'single'` strategy
-   *
-   * @example
-   * // Set root name for single strategy
-   * containerName: 'MyApi'
-   *
-   * @example
-   * // Transform tag names with suffix
-   * containerName: '{{name}}Service'
-   *
-   * @example
-   * // With casing
-   * containerName: { name: '{{name}}Service', case: 'PascalCase' }
-   */
+  /** Customize container names. */
   containerName: NamingConfig;
-  /**
-   * Customize method/function names.
-   *
-   * Applied to the final segment of the path (the method name).
-   */
+  /** Customize method/function names. */
   methodName: NamingConfig;
-  /**
-   * How methods are attached to class containers.
-   *
-   * Only applies when `container` is `'class'`.
-   *
-   * - `'static'` - Static methods, no instantiation required
-   * - `'instance'` - Instance methods, requires `new ClassName(config)`
-   */
+  /** How methods are attached to class containers. */
   methods: 'instance' | 'static';
-  /**
-   * How to derive nesting structure from operations.
-   *
-   * - `'operationId'` - Split operationId by delimiters (e.g., `users.list` → `Users.list()`)
-   * - `'id'` - Use operation id as-is, no nesting
-   * - Custom function for full control
-   */
+  /** How to derive nesting structure from operations. */
   nesting: 'operationId' | 'id' | OperationPathStrategy;
-  /**
-   * Delimiters for splitting operationId.
-   *
-   * Only applies when `nesting` is `'operationId'`.
-   */
+  /** Delimiters for splitting operationId. */
   nestingDelimiters: RegExp;
-  /**
-   * Customize nesting segment names.
-   *
-   * Applied to intermediate path segments (not the method name).
-   */
+  /** Customize nesting segment names. */
   segmentName: NamingConfig;
-  /**
-   * Grouping strategy.
-   *
-   * - `'flat'` - Standalone functions, no grouping
-   * - `'byTags'` - One container per operation tag
-   * - `'single'` - All operations in one container
-   * - Custom function for full control
-   */
+  /** Grouping strategy. */
   strategy: OperationsStrategy;
-  /**
-   * Default container name for operations without tags.
-   *
-   * Only applies when `strategy` is `'byTags'`.
-   */
+  /** Default container name for operations without tags. */
   strategyDefaultTag: string;
 }

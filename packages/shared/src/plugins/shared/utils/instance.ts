@@ -24,8 +24,8 @@ import {
 import type { ExampleIntent } from '../../../ir/intents';
 import type { IR } from '../../../ir/types';
 import type { Hooks } from '../../../parser/hooks';
-import type { Plugin, PluginConfigMap } from '../../../plugins/types';
 import { jsonPointerToPath } from '../../../utils/ref';
+import type { Plugin, PluginConfigMap } from '../../types';
 import type { BaseEvent, WalkEvent } from '../types/instance';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
