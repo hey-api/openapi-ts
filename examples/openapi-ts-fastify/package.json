@@ -9,15 +9,15 @@
     "typecheck": "tsgo --noEmit"
   },
   "dependencies": {
-    "fastify": "5.7.4",
-    "fastify-openapi-glue": "4.8.0"
+    "fastify": "5.8.2",
+    "fastify-openapi-glue": "4.10.2"
   },
   "devDependencies": {
     "@hey-api/openapi-ts": "workspace:*",
-    "eslint": "9.17.0",
-    "oxfmt": "0.27.0",
+    "eslint": "9.39.4",
+    "oxfmt": "0.41.0",
     "typescript": "5.9.3",
     "vite": "7.3.1",
-    "vitest": "4.0.18"
+    "vitest": "4.1.0"
   }
 }
