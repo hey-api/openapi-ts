@@ -484,25 +484,25 @@ export const createMswHandlerFactory = (config?: { baseUrl?: string }): MswHandl
         }
       }
     };
-    addRequiredHandler(mocks.addPetMock, overrides?.addPetMock);
-    addRequiredHandler(mocks.updatePetMock, overrides?.updatePetMock);
-    addRequiredHandler(mocks.findPetsByStatusMock, overrides?.findPetsByStatusMock);
-    addRequiredHandler(mocks.findPetsByTagsMock, overrides?.findPetsByTagsMock);
-    handlers.push(mocks.deletePetMock(overrides?.deletePetMock));
-    addRequiredHandler(mocks.getPetByIdMock, overrides?.getPetByIdMock);
-    addRequiredHandler(mocks.updatePetWithFormMock, overrides?.updatePetWithFormMock);
-    addRequiredHandler(mocks.uploadFileMock, overrides?.uploadFileMock);
-    addRequiredHandler(mocks.getInventoryMock, overrides?.getInventoryMock);
-    addRequiredHandler(mocks.placeOrderMock, overrides?.placeOrderMock);
     handlers.push(mocks.deleteOrderMock(overrides?.deleteOrderMock));
     addRequiredHandler(mocks.getOrderByIdMock, overrides?.getOrderByIdMock);
-    addRequiredHandler(mocks.createUserMock, overrides?.createUserMock);
+    addRequiredHandler(mocks.uploadFileMock, overrides?.uploadFileMock);
+    addRequiredHandler(mocks.findPetsByStatusMock, overrides?.findPetsByStatusMock);
+    addRequiredHandler(mocks.findPetsByTagsMock, overrides?.findPetsByTagsMock);
+    addRequiredHandler(mocks.getInventoryMock, overrides?.getInventoryMock);
+    addRequiredHandler(mocks.placeOrderMock, overrides?.placeOrderMock);
     addRequiredHandler(mocks.createUsersWithListInputMock, overrides?.createUsersWithListInputMock);
     addRequiredHandler(mocks.loginUserMock, overrides?.loginUserMock);
     handlers.push(mocks.logoutUserMock(overrides?.logoutUserMock));
+    handlers.push(mocks.deletePetMock(overrides?.deletePetMock));
+    addRequiredHandler(mocks.getPetByIdMock, overrides?.getPetByIdMock);
+    addRequiredHandler(mocks.updatePetWithFormMock, overrides?.updatePetWithFormMock);
     handlers.push(mocks.deleteUserMock(overrides?.deleteUserMock));
     addRequiredHandler(mocks.getUserByNameMock, overrides?.getUserByNameMock);
     handlers.push(mocks.updateUserMock(overrides?.updateUserMock));
+    addRequiredHandler(mocks.addPetMock, overrides?.addPetMock);
+    addRequiredHandler(mocks.updatePetMock, overrides?.updatePetMock);
+    addRequiredHandler(mocks.createUserMock, overrides?.createUserMock);
     return handlers;
   };
   return { ...mocks, getAllMocks };

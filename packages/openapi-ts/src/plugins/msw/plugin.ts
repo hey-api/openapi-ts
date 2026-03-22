@@ -2,6 +2,7 @@ import { parseUrl } from '@hey-api/shared';
 
 import { $ } from '../../ts-dsl';
 import { operationToHandlerCreator } from './handlerCreator';
+import { sortHandlersBySpecificity } from './sortHandlersBySpecificity';
 import type { MswPlugin } from './types';
 
 export const handler: MswPlugin['Handler'] = ({ plugin }) => {
@@ -85,7 +86,7 @@ export const handler: MswPlugin['Handler'] = ({ plugin }) => {
   const symbolFactory = plugin.symbol('createMswHandlerFactory');
   const ofObject = $.object().pretty();
   const singleHandlerFactoriesType = $.type.object();
-  const handlerMeta: Array<{ isOptional: boolean; name: string }> = [];
+  const handlerMeta: Array<{ isOptional: boolean; name: string; path: string }> = [];
 
   plugin.forEach(
     'operation',
@@ -98,7 +99,11 @@ export const handler: MswPlugin['Handler'] = ({ plugin }) => {
       if (handlerCreator) {
         ofObject.prop(handlerCreator.name, handlerCreator.value);
         singleHandlerFactoriesType.prop(handlerCreator.name, (p) => p.type(handlerCreator.type));
-        handlerMeta.push({ isOptional: handlerCreator.isOptional, name: handlerCreator.name });
+        handlerMeta.push({
+          isOptional: handlerCreator.isOptional,
+          name: handlerCreator.name,
+          path: operation.path,
+        });
       }
     },
     {
@@ -236,7 +241,7 @@ export const handler: MswPlugin['Handler'] = ({ plugin }) => {
     );
   }
 
-  for (const handler of handlerMeta) {
+  for (const handler of sortHandlersBySpecificity(handlerMeta)) {
     if (handler.isOptional) {
       getAllMocksBodyStmts.push(
         $.stmt(
