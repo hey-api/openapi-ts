@@ -228,11 +228,20 @@ export const createMswHandlerFactory = (config?: {
                 }
             }
         };
+        handlers.push(mocks.deleteFooMock(overrides?.deleteFooMock));
+        handlers.push(mocks.callWithWeirdParameterNamesMock(overrides?.callWithWeirdParameterNamesMock));
+        addRequiredHandler(mocks.apiVVersionODataControllerCountMock, overrides?.apiVVersionODataControllerCountMock);
+        handlers.push(mocks.deprecatedCallMock(overrides?.deprecatedCallMock));
+        addRequiredHandler(mocks.callWithResponseAndNoContentResponseMock, overrides?.callWithResponseAndNoContentResponseMock);
+        addRequiredHandler(mocks.dummyAMock, overrides?.dummyAMock);
+        handlers.push(mocks.dummyBMock(overrides?.dummyBMock));
+        handlers.push(mocks.callWithParametersMock(overrides?.callWithParametersMock));
+        addRequiredHandler(mocks.fileResponseMock, overrides?.fileResponseMock);
+        addRequiredHandler(mocks.complexParamsMock, overrides?.complexParamsMock);
         handlers.push(mocks.exportMock(overrides?.exportMock));
         handlers.push(mocks.patchApiVbyApiVersionNoTagMock(overrides?.patchApiVbyApiVersionNoTagMock));
         addRequiredHandler(mocks.importMock, overrides?.importMock);
         handlers.push(mocks.fooWowMock(overrides?.fooWowMock));
-        addRequiredHandler(mocks.apiVVersionODataControllerCountMock, overrides?.apiVVersionODataControllerCountMock);
         addRequiredHandler(mocks.getApiVbyApiVersionSimpleOperationMock, overrides?.getApiVbyApiVersionSimpleOperationMock);
         handlers.push(mocks.deleteCallWithoutParametersAndResponseMock(overrides?.deleteCallWithoutParametersAndResponseMock));
         handlers.push(mocks.getCallWithoutParametersAndResponseMock(overrides?.getCallWithoutParametersAndResponseMock));
@@ -241,11 +250,7 @@ export const createMswHandlerFactory = (config?: {
         handlers.push(mocks.patchCallWithoutParametersAndResponseMock(overrides?.patchCallWithoutParametersAndResponseMock));
         handlers.push(mocks.postCallWithoutParametersAndResponseMock(overrides?.postCallWithoutParametersAndResponseMock));
         handlers.push(mocks.putCallWithoutParametersAndResponseMock(overrides?.putCallWithoutParametersAndResponseMock));
-        handlers.push(mocks.deleteFooMock(overrides?.deleteFooMock));
         handlers.push(mocks.callWithDescriptionsMock(overrides?.callWithDescriptionsMock));
-        handlers.push(mocks.deprecatedCallMock(overrides?.deprecatedCallMock));
-        handlers.push(mocks.callWithParametersMock(overrides?.callWithParametersMock));
-        handlers.push(mocks.callWithWeirdParameterNamesMock(overrides?.callWithWeirdParameterNamesMock));
         handlers.push(mocks.getCallWithOptionalParamMock(overrides?.getCallWithOptionalParamMock));
         addRequiredHandler(mocks.postCallWithOptionalParamMock, overrides?.postCallWithOptionalParamMock);
         handlers.push(mocks.postApiVbyApiVersionRequestBodyMock(overrides?.postApiVbyApiVersionRequestBodyMock));
@@ -258,20 +263,15 @@ export const createMswHandlerFactory = (config?: {
         handlers.push(mocks.duplicateName3Mock(overrides?.duplicateName3Mock));
         handlers.push(mocks.duplicateName4Mock(overrides?.duplicateName4Mock));
         handlers.push(mocks.callWithNoContentResponseMock(overrides?.callWithNoContentResponseMock));
-        addRequiredHandler(mocks.callWithResponseAndNoContentResponseMock, overrides?.callWithResponseAndNoContentResponseMock);
-        addRequiredHandler(mocks.dummyAMock, overrides?.dummyAMock);
-        handlers.push(mocks.dummyBMock(overrides?.dummyBMock));
         handlers.push(mocks.callWithResponseMock(overrides?.callWithResponseMock));
         addRequiredHandler(mocks.callWithDuplicateResponsesMock, overrides?.callWithDuplicateResponsesMock);
         addRequiredHandler(mocks.callWithResponsesMock, overrides?.callWithResponsesMock);
         handlers.push(mocks.collectionFormatMock(overrides?.collectionFormatMock));
         addRequiredHandler(mocks.typesMock, overrides?.typesMock);
         addRequiredHandler(mocks.uploadFileMock, overrides?.uploadFileMock);
-        addRequiredHandler(mocks.fileResponseMock, overrides?.fileResponseMock);
         addRequiredHandler(mocks.complexTypesMock, overrides?.complexTypesMock);
         addRequiredHandler(mocks.multipartResponseMock, overrides?.multipartResponseMock);
         handlers.push(mocks.multipartRequestMock(overrides?.multipartRequestMock));
-        addRequiredHandler(mocks.complexParamsMock, overrides?.complexParamsMock);
         handlers.push(mocks.callWithResultFromHeaderMock(overrides?.callWithResultFromHeaderMock));
         handlers.push(mocks.testErrorCodeMock(overrides?.testErrorCodeMock));
         addRequiredHandler(mocks.nonAsciiæøåÆøÅöôêÊ字符串Mock, overrides?.nonAsciiæøåÆøÅöôêÊ字符串Mock);
