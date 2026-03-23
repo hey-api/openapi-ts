@@ -13921,6 +13921,10 @@ packages:
   quick-format-unescaped@4.0.4:
     resolution: {integrity: sha512-tYC1Q1hgyRuHgloV/YXs2w15unPVh8qfu/qCTfhTYamaw7fyhumKa2yGpdSo87vY32rIclj+4fWYQXUMs9EHvg==}
 
+  radash@12.1.1:
+    resolution: {integrity: sha512-h36JMxKRqrAxVD8201FrCpyeNuUY9Y5zZwujr20fFO77tpUtGa6EZzfKw/3WaiBX95fq7+MpsuMLNdSnORAwSA==}
+    engines: {node: '>=14.18.0'}
+
   radix3@1.1.2:
     resolution: {integrity: sha512-b484I/7b8rDEdSDKckSSBA8knMpcdsXudlE/LNL639wFoHKwLbEkQFZHWEYwDC0wa0FKUcCY+GAF73Z7wxNVFA==}
 
@@ -21411,7 +21415,7 @@ snapshots:
   '@orpc/shared@1.13.4':
     dependencies:
       radash: 12.1.1
-      type-fest: 5.4.3
+      type-fest: 5.5.0
 
   '@orpc/standard-server-fetch@1.13.4':
     dependencies:
@@ -30044,7 +30048,7 @@ snapshots:
       vue: 3.5.25(typescript@5.9.3)
       vue-bundle-renderer: 2.2.0
       vue-devtools-stub: 0.1.0
-      vue-router: 4.5.0(vue@3.5.13(typescript@5.9.3))
+      vue-router: 4.5.0(vue@3.5.25(typescript@5.9.3))
     optionalDependencies:
       '@parcel/watcher': 2.5.1
       '@types/node': 25.5.0
@@ -31793,6 +31797,8 @@ snapshots:
   queue-microtask@1.2.3: {}
 
   quick-format-unescaped@4.0.4: {}
+
+  radash@12.1.1: {}
 
   radix3@1.1.2: {}
 
@@ -33870,7 +33876,7 @@ snapshots:
       unplugin: 2.0.0-beta.1
       yaml: 2.8.2
     optionalDependencies:
-      vue-router: 4.5.0(vue@3.5.13(typescript@5.9.3))
+      vue-router: 4.5.0(vue@3.5.25(typescript@5.9.3))
     transitivePeerDependencies:
       - rollup
       - vue
