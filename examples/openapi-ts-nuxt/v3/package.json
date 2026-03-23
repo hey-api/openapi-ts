@@ -1,0 +1,19 @@
+{
+  "name": "@example/openapi-ts-nuxt-v3",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "postinstall:disabled": "nuxt prepare",
+    "preview": "nuxt preview",
+    "typecheck:disabled": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@hey-api/nuxt": "workspace:*",
+    "nuxt": "^3.0.0",
+    "zod": "^4.0.0"
+  }
+}

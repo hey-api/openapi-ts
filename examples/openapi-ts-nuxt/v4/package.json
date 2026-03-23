@@ -1,6 +1,6 @@
 {
-  "name": "@example/openapi-ts-nuxt",
-  "version": "0.0.20",
+  "name": "@example/openapi-ts-nuxt-v4",
+  "version": "0.1.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -13,12 +13,7 @@
   },
   "dependencies": {
     "@hey-api/nuxt": "workspace:*",
-    "nuxt": "3.14.1592",
-    "vue": "3.5.13",
-    "vue-router": "4.5.0",
-    "zod": "4.0.5"
-  },
-  "devDependencies": {
-    "vite": "7.3.1"
+    "nuxt": "^4.0.0",
+    "zod": "^4.0.0"
   }
 }
