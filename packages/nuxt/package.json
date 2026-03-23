@@ -38,7 +38,13 @@
   "type": "module",
   "sideEffects": false,
   "main": "./dist/module.mjs",
-  "types": "./dist/types.d.mts",
+  "typesVersions": {
+    "*": {
+      ".": [
+        "./dist/types.d.mts"
+      ]
+    }
+  },
   "exports": {
     ".": {
       "types": "./dist/types.d.mts",
