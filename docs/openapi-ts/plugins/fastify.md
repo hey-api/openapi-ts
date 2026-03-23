@@ -87,9 +87,7 @@ export default {
   output: 'src/client',
   plugins: [
     // ...other plugins
-    {
-      name: 'fastify',
-    },
+    'fastify',
   ],
 };
 ```

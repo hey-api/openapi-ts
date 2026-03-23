@@ -1,24 +1,18 @@
 import { StructureModel } from '@hey-api/codegen-core';
 
-import { $ } from '../../../ts-dsl';
+import type { $ } from '../../../ts-dsl';
 import type { ContractItem } from '../contracts';
 import { createShell, resolveStrategy, source, toNode } from '../contracts';
 import type { OrpcPlugin } from '../types';
 
 export const handlerV1: OrpcPlugin['Handler'] = ({ plugin }) => {
-  const oc = plugin.symbol('oc', {
+  plugin.symbol('oc', {
     external: '@orpc/contract',
+    meta: {
+      category: 'external',
+      resource: '@orpc/contract.oc',
+    },
   });
-  const baseSymbol = plugin.symbol('base');
-
-  const baseNode = $.const(baseSymbol)
-    .export()
-    .assign(
-      $(oc)
-        .attr('$route')
-        .call($.object().prop('inputStructure', $.literal('detailed'))),
-    );
-  plugin.node(baseNode);
 
   const structure = new StructureModel();
   const shell = createShell(plugin);
@@ -43,7 +37,7 @@ export const handlerV1: OrpcPlugin['Handler'] = ({ plugin }) => {
   const allNodes: Array<ReturnType<typeof $.class | typeof $.var>> = [];
 
   for (const node of structure.walk()) {
-    const { nodes } = toNode(node, plugin, baseSymbol);
+    const { nodes } = toNode(node, plugin);
     allNodes.push(...nodes);
   }
 

@@ -52,17 +52,17 @@ function createContractSymbol(
 function createContractExpression(
   plugin: OrpcPlugin['Instance'],
   operation: IR.OperationObject,
-  baseSymbol: Symbol,
-) {
+): ReturnType<typeof $.call> {
   const successResponse = getSuccessResponse(operation);
   const tags = getTags(operation, plugin.config.contracts.strategyDefaultTag);
 
-  let expression = $(baseSymbol)
+  let expression = $(plugin.external('@orpc/contract.oc'))
     .attr('route')
     .call(
       $.object()
         .$if(operation.deprecated, (o, v) => o.prop('deprecated', $.literal(v)))
         .$if(operation.description, (o, v) => o.prop('description', $.literal(v)))
+        .prop('inputStructure', $.literal('detailed'))
         .prop('method', $.literal(operation.method.toUpperCase()))
         .$if(operation.operationId, (o, v) => o.prop('operationId', $.literal(v)))
         .prop('path', $.literal(operation.path))
@@ -164,7 +164,6 @@ export function createShell(plugin: OrpcPlugin['Instance']): StructureShell {
 export function toNode(
   model: StructureNode,
   plugin: OrpcPlugin['Instance'],
-  baseSymbol: Symbol,
 ): {
   nodes: ReadonlyArray<ReturnType<typeof $.const>>;
   symbols?: Map<string, Symbol>;
@@ -176,7 +175,7 @@ export function toNode(
     for (const item of model.itemsFrom<ContractItem>(source)) {
       const { operation } = item.data;
       const contractSymbol = createContractSymbol(plugin, item);
-      const expression = createContractExpression(plugin, operation, baseSymbol);
+      const expression = createContractExpression(plugin, operation);
 
       const node = $.const(contractSymbol)
         .export()
@@ -198,7 +197,7 @@ export function toNode(
   for (const item of model.itemsFrom<ContractItem>(source)) {
     const { operation } = item.data;
     const contractSymbol = createContractSymbol(plugin, item);
-    const expression = createContractExpression(plugin, operation, baseSymbol);
+    const expression = createContractExpression(plugin, operation);
 
     const node = $.const(contractSymbol)
       .export()
