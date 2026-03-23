@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import { useNuxtApp } from '#app';
 import { computed, ref } from 'vue';
 
+const nuxtApp = useNuxtApp();
 const name = ref('foo');
 const petId = ref(BigInt(8));
 const status = ref<NonNullable<FindPetsByStatusData['query']>['status']>('available');
@@ -112,7 +114,7 @@ async function handleFetch() {
 <template>
   <div style="max-width: 800px; margin: 0 auto; padding: 2rem; font-family: sans-serif">
     <h1 style="font-size: 2rem; font-weight: bold; margin-bottom: 1.5rem">
-      Get Random Pet Nuxt APIs
+      Get Random Pet APIs with Nuxt v{{ nuxtApp.versions.nuxt }} and Vue v{{ nuxtApp.versions.vue }}
     </h1>
 
     <div
