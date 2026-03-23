@@ -1,5 +1,5 @@
 {
-  "name": "@example/openapi-ts-nuxt",
+  "name": "@example/openapi-ts-nuxt-v4",
   "version": "0.0.20",
   "private": true,
   "type": "module",
