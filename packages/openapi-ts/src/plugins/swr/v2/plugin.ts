@@ -6,10 +6,6 @@ export const handlerV2: SwrPlugin['Handler'] = ({ plugin }) => {
     external: 'swr',
     importKind: 'default',
     kind: 'function',
-    meta: {
-      category: 'external',
-      resource: 'swr',
-    },
   });
 
   plugin.forEach(

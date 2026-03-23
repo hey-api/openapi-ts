@@ -19,7 +19,6 @@ export const handlerV1: HeyApiSdkPlugin['Handler'] = ({ plugin }) => {
   plugin.symbol('formDataBodySerializer', {
     external: clientModule,
     meta: {
-      category: 'external',
       resource: 'client.formDataBodySerializer',
       tool: client.name,
     },
@@ -27,7 +26,6 @@ export const handlerV1: HeyApiSdkPlugin['Handler'] = ({ plugin }) => {
   plugin.symbol('urlSearchParamsBodySerializer', {
     external: clientModule,
     meta: {
-      category: 'external',
       resource: 'client.urlSearchParamsBodySerializer',
       tool: client.name,
     },
@@ -35,7 +33,6 @@ export const handlerV1: HeyApiSdkPlugin['Handler'] = ({ plugin }) => {
   plugin.symbol('buildClientParams', {
     external: clientModule,
     meta: {
-      category: 'external',
       resource: 'client.buildClientParams',
       tool: client.name,
     },
@@ -45,7 +42,6 @@ export const handlerV1: HeyApiSdkPlugin['Handler'] = ({ plugin }) => {
       external: clientModule,
       kind: 'type',
       meta: {
-        category: 'external',
         resource: 'client.Composable',
         tool: client.name,
       },
@@ -54,10 +50,6 @@ export const handlerV1: HeyApiSdkPlugin['Handler'] = ({ plugin }) => {
   if (isAngularClient) {
     plugin.symbol('Injectable', {
       external: '@angular/core',
-      meta: {
-        category: 'external',
-        resource: '@angular/core.Injectable',
-      },
     });
   }
 
