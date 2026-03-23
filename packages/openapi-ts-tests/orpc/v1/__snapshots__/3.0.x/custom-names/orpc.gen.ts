@@ -4,12 +4,11 @@ import { oc } from '@orpc/contract';
 
 import { vCreatePostData, vCreatePostResponse, vCreateUserData, vCreateUserResponse, vDeleteUserData, vGetPostByIdData, vGetPostByIdResponse, vGetPostsData, vGetPostsResponse, vGetUserByIdData, vGetUserByIdResponse, vGetUsersData, vGetUsersResponse, vUpdateUserData, vUpdateUserResponse } from './valibot.gen';
 
-export const base = oc.$route({ inputStructure: 'detailed' });
-
 /**
  * Get all users
  */
-export const getUsersRpc = base.route({
+export const getUsersRpc = oc.route({
+    inputStructure: 'detailed',
     method: 'GET',
     operationId: 'getUsers',
     path: '/users',
@@ -20,7 +19,8 @@ export const getUsersRpc = base.route({
 /**
  * Create a new user
  */
-export const createUserRpc = base.route({
+export const createUserRpc = oc.route({
+    inputStructure: 'detailed',
     method: 'POST',
     operationId: 'createUser',
     path: '/users',
@@ -32,7 +32,8 @@ export const createUserRpc = base.route({
 /**
  * Delete a user
  */
-export const deleteUserRpc = base.route({
+export const deleteUserRpc = oc.route({
+    inputStructure: 'detailed',
     method: 'DELETE',
     operationId: 'deleteUser',
     path: '/users/{userId}',
@@ -43,7 +44,8 @@ export const deleteUserRpc = base.route({
 /**
  * Get a user by ID
  */
-export const getUserByIdRpc = base.route({
+export const getUserByIdRpc = oc.route({
+    inputStructure: 'detailed',
     method: 'GET',
     operationId: 'getUserById',
     path: '/users/{userId}',
@@ -54,7 +56,8 @@ export const getUserByIdRpc = base.route({
 /**
  * Update a user
  */
-export const updateUserRpc = base.route({
+export const updateUserRpc = oc.route({
+    inputStructure: 'detailed',
     method: 'PUT',
     operationId: 'updateUser',
     path: '/users/{userId}',
@@ -65,7 +68,8 @@ export const updateUserRpc = base.route({
 /**
  * Get all posts
  */
-export const getPostsRpc = base.route({
+export const getPostsRpc = oc.route({
+    inputStructure: 'detailed',
     method: 'GET',
     operationId: 'getPosts',
     path: '/posts',
@@ -76,7 +80,8 @@ export const getPostsRpc = base.route({
 /**
  * Create a new post
  */
-export const createPostRpc = base.route({
+export const createPostRpc = oc.route({
+    inputStructure: 'detailed',
     method: 'POST',
     operationId: 'createPost',
     path: '/posts',
@@ -88,7 +93,8 @@ export const createPostRpc = base.route({
 /**
  * Get a post by ID
  */
-export const getPostByIdRpc = base.route({
+export const getPostByIdRpc = oc.route({
+    inputStructure: 'detailed',
     method: 'GET',
     operationId: 'getPostById',
     path: '/posts/{postId}',

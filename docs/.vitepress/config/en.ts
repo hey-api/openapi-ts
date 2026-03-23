@@ -232,6 +232,10 @@ export default defineConfig({
                 text: 'Nest',
               },
               {
+                link: '/openapi-ts/plugins/orpc',
+                text: 'oRPC',
+              },
+              {
                 link: '/openapi-ts/plugins/adonis',
                 text: 'Adonis <span data-soon>soon</span>',
               },
@@ -330,7 +334,7 @@ export default defineConfig({
             text: 'License',
           },
           {
-            link: 'https://github.com/orgs/hey-api/discussions/1495',
+            link: 'https://github.com/orgs/hey-api/discussions/3159',
             text: 'Roadmap',
           },
         ],
