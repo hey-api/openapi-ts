@@ -8,7 +8,7 @@
     "noUncheckedIndexedAccess": true,
     "noUnusedLocals": true,
     "strict": true,
-    "target": "ES2022",
+    "target": "ESNext",
     "useUnknownInCatchVariables": false
   }
 }
