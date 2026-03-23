@@ -4,12 +4,11 @@ import { oc } from '@orpc/contract';
 
 import { zCreatePostData, zCreatePostResponse, zCreateUserData, zCreateUserResponse, zDeleteUserData, zGetPostByIdData, zGetPostByIdResponse, zGetPostsData, zGetPostsResponse, zGetUserByIdData, zGetUserByIdResponse, zGetUsersData, zGetUsersResponse, zUpdateUserData, zUpdateUserResponse } from './zod.gen';
 
-export const base = oc.$route({ inputStructure: 'detailed' });
-
 /**
  * Get all users
  */
-export const getUsers = base.route({
+export const getUsers = oc.route({
+    inputStructure: 'detailed',
     method: 'GET',
     operationId: 'getUsers',
     path: '/users',
@@ -20,7 +19,8 @@ export const getUsers = base.route({
 /**
  * Create a new user
  */
-export const createUser = base.route({
+export const createUser = oc.route({
+    inputStructure: 'detailed',
     method: 'POST',
     operationId: 'createUser',
     path: '/users',
@@ -32,7 +32,8 @@ export const createUser = base.route({
 /**
  * Delete a user
  */
-export const deleteUser = base.route({
+export const deleteUser = oc.route({
+    inputStructure: 'detailed',
     method: 'DELETE',
     operationId: 'deleteUser',
     path: '/users/{userId}',
@@ -43,7 +44,8 @@ export const deleteUser = base.route({
 /**
  * Get a user by ID
  */
-export const getUserById = base.route({
+export const getUserById = oc.route({
+    inputStructure: 'detailed',
     method: 'GET',
     operationId: 'getUserById',
     path: '/users/{userId}',
@@ -54,7 +56,8 @@ export const getUserById = base.route({
 /**
  * Update a user
  */
-export const updateUser = base.route({
+export const updateUser = oc.route({
+    inputStructure: 'detailed',
     method: 'PUT',
     operationId: 'updateUser',
     path: '/users/{userId}',
@@ -73,7 +76,8 @@ export const users = {
 /**
  * Get all posts
  */
-export const getPosts = base.route({
+export const getPosts = oc.route({
+    inputStructure: 'detailed',
     method: 'GET',
     operationId: 'getPosts',
     path: '/posts',
@@ -84,7 +88,8 @@ export const getPosts = base.route({
 /**
  * Create a new post
  */
-export const createPost = base.route({
+export const createPost = oc.route({
+    inputStructure: 'detailed',
     method: 'POST',
     operationId: 'createPost',
     path: '/posts',
@@ -96,7 +101,8 @@ export const createPost = base.route({
 /**
  * Get a post by ID
  */
-export const getPostById = base.route({
+export const getPostById = oc.route({
+    inputStructure: 'detailed',
     method: 'GET',
     operationId: 'getPostById',
     path: '/posts/{postId}',
