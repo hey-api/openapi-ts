@@ -306,9 +306,9 @@ Plugins are responsible for generating artifacts from your input. By default, He
 
 ### Client
 
-Clients are responsible for sending the actual HTTP requests. Using clients is not required, but you must add a client to `plugins` if you're generating SDKs (we default to Fetch).
+Clients are responsible for sending the actual HTTP requests. We default to Fetch client if you're generating SDKs, but you can choose a different option from the available clients.
 
-### Native Clients
+### Available Clients
 
 - [`@hey-api/client-fetch`](https://heyapi.dev/openapi-ts/clients/fetch)
 - [`@hey-api/client-angular`](https://heyapi.dev/openapi-ts/clients/angular)
@@ -318,15 +318,15 @@ Clients are responsible for sending the actual HTTP requests. Using clients is n
 - [`@hey-api/client-nuxt`](https://heyapi.dev/openapi-ts/clients/nuxt)
 - [`@hey-api/client-ofetch`](https://heyapi.dev/openapi-ts/clients/ofetch)
 
-### Planned Clients
+### Proposed Clients (Vote to Prioritize)
 
-The following clients are planned but not in development yet. You can help us prioritize them by voting on [GitHub](https://github.com/hey-api/openapi-ts/labels/RSVP%20%F0%9F%91%8D%F0%9F%91%8E).
+The following clients are roadmap proposals and are not started yet. You can help us prioritize them by voting on [GitHub](https://github.com/hey-api/openapi-ts/issues?q=state%3Aopen%20label%3A%22vote%20%F0%9F%93%A9%22).
 
 - [`@hey-api/client-effect`](https://heyapi.dev/openapi-ts/clients/effect)
 
 Don't see your client? [Build your own](https://heyapi.dev/openapi-ts/clients/custom) or let us know your interest by [opening an issue](https://github.com/hey-api/openapi-ts/issues).
 
-### Native Plugins
+### Available Plugins
 
 These plugins help reduce boilerplate associated with third-party dependencies. Hey API natively supports the most popular packages. Please open an issue on [GitHub](https://github.com/hey-api/openapi-ts/issues) if you'd like us to support your favorite package.
 
@@ -343,13 +343,14 @@ These plugins help reduce boilerplate associated with third-party dependencies. 
 - [`@tanstack/svelte-query`](https://heyapi.dev/openapi-ts/plugins/tanstack-query)
 - [`@tanstack/vue-query`](https://heyapi.dev/openapi-ts/plugins/tanstack-query)
 - [`fastify`](https://heyapi.dev/openapi-ts/plugins/fastify)
+- [`orpc`](https://heyapi.dev/openapi-ts/plugins/orpc)
 - [`nestjs`](https://heyapi.dev/openapi-ts/plugins/nest)
 - [`valibot`](https://heyapi.dev/openapi-ts/plugins/valibot)
 - [`zod`](https://heyapi.dev/openapi-ts/plugins/zod)
 
-### Planned Plugins
+### Proposed Plugins (Vote to Prioritize)
 
-The following plugins are planned but not in development yet. You can help us prioritize them by voting on [GitHub](https://github.com/hey-api/openapi-ts/labels/RSVP%20%F0%9F%91%8D%F0%9F%91%8E).
+The following plugins are roadmap proposals and are not started yet. You can help us prioritize them by voting on [GitHub](https://github.com/hey-api/openapi-ts/issues?q=state%3Aopen%20label%3A%22vote%20%F0%9F%93%A9%22).
 
 - [Adonis](https://heyapi.dev/openapi-ts/plugins/adonis)
 - [Ajv](https://heyapi.dev/openapi-ts/plugins/ajv)

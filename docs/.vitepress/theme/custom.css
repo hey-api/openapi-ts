@@ -303,6 +303,10 @@ html.dark .sponsors-list li {
   display: none;
 }
 
+.vp-doc img {
+  margin: 0;
+}
+
 .authors-list li > a:hover,
 .authors-list li > a:focus,
 .sponsors-list li:has(> a:hover),
