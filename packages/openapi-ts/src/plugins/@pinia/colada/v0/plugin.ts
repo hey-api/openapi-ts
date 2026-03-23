@@ -5,42 +5,22 @@ import type { PiniaColadaPlugin } from '../types';
 export const handlerV0: PiniaColadaPlugin['Handler'] = ({ plugin }) => {
   plugin.symbol('defineQueryOptions', {
     external: plugin.name,
-    meta: {
-      category: 'external',
-      resource: `${plugin.name}.defineQueryOptions`,
-    },
   });
   plugin.symbol('UseMutationOptions', {
     external: plugin.name,
     kind: 'type',
-    meta: {
-      category: 'external',
-      resource: `${plugin.name}.UseMutationOptions`,
-    },
   });
   plugin.symbol('UseQueryOptions', {
     external: plugin.name,
     kind: 'type',
-    meta: {
-      category: 'external',
-      resource: `${plugin.name}.UseQueryOptions`,
-    },
   });
   plugin.symbol('_JSONValue', {
     external: plugin.name,
     kind: 'type',
-    meta: {
-      category: 'external',
-      resource: `${plugin.name}._JSONValue`,
-    },
   });
   plugin.symbol('AxiosError', {
     external: 'axios',
     kind: 'type',
-    meta: {
-      category: 'external',
-      resource: 'axios.AxiosError',
-    },
   });
 
   plugin.forEach(
