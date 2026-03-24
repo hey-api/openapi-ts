@@ -4,28 +4,28 @@ export type ClientOptions = {
     baseUrl: `${string}://${string}` | (string & {});
 };
 
-export type User = {
+export type UserV100User = {
     id?: string;
     name?: string;
-    profile?: UserProfile;
+    profile?: UserProfileV100UserProfile;
 };
 
-export type UserProfile = {
+export type UserProfileV100UserProfile = {
     bio?: string;
     avatar?: string;
 };
 
-export type Post = {
+export type PostV213Post = {
     id?: string;
     title?: string;
-    author?: User;
-    comments?: Array<Comment>;
+    author?: UserV100User;
+    comments?: Array<CommentV152Comment>;
 };
 
-export type Comment = {
+export type CommentV152Comment = {
     id?: string;
     text?: string;
-    author?: User;
+    author?: UserV100User;
 };
 
 export type GetUsersData = {
@@ -39,13 +39,13 @@ export type GetUsersResponses = {
     /**
      * Success
      */
-    200: User;
+    200: UserV100User;
 };
 
 export type GetUsersResponse = GetUsersResponses[keyof GetUsersResponses];
 
 export type PostPostsData = {
-    body?: Post;
+    body?: PostV213Post;
     path?: never;
     query?: never;
     url: '/posts';
@@ -55,7 +55,7 @@ export type PostPostsResponses = {
     /**
      * Created
      */
-    201: Post;
+    201: PostV213Post;
 };
 
 export type PostPostsResponse = PostPostsResponses[keyof PostPostsResponses];
