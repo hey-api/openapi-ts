@@ -12,7 +12,7 @@ const dataVariableName = 'data';
 // can emit calls to transformers that will be implemented later.
 const buildingSymbols = new Set<number>();
 
-type Expr = ReturnType<typeof $.fromValue | typeof $.return | typeof $.if>;
+type Expr = ReturnType<typeof $.fromValue | typeof $.for | typeof $.if | typeof $.return>;
 
 function isNodeReturnStatement(node: Expr) {
   return node['~dsl'] === 'ReturnTsDsl';
@@ -195,48 +195,17 @@ function processSchemaType({
     }
 
     if (schema.additionalProperties && dataExpression) {
-      const entryValueExpression = $.expr('entry[1]');
       const entryValueNodes = processSchemaType({
-        dataExpression: entryValueExpression,
+        dataExpression: $(dataExpression).attr('key').computed(),
         plugin,
         schema: schema.additionalProperties,
       });
 
       if (entryValueNodes.length) {
-        const declaredProperties = Object.keys(schema.properties ?? {});
-        const mapCallbackNodes: Array<Expr> = [];
-
-        if (declaredProperties.length) {
-          mapCallbackNodes.push(
-            $.if(
-              $.expr($.array(...declaredProperties.map((name) => $.literal(name))))
-                .attr('includes')
-                .call($.expr('entry[0]')),
-            ).do($.return('entry')),
-          );
-        }
-
-        mapCallbackNodes.push(
-          ...entryValueNodes,
-          $.return($.array($.expr('entry[0]'), $.expr('entry[1]'))),
-        );
-
         nodes.push(
-          $(dataExpression).assign(
-            $('Object')
-              .attr('fromEntries')
-              .call(
-                $('Object')
-                  .attr('entries')
-                  .call(dataExpression)
-                  .attr('map')
-                  .call(
-                    $.func()
-                      .param('entry', (p) => p.type('any'))
-                      .do(...mapCallbackNodes),
-                  ),
-              ),
-          ),
+          $.for($.const('key'))
+            .of($('Object').attr('keys').call(dataExpression))
+            .do(...entryValueNodes),
         );
       }
     }

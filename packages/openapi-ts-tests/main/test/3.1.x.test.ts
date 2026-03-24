@@ -898,7 +898,7 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'transformers-additional-properties.json',
+        input: 'transformers-additional-properties.yaml',
         output: 'transformers-additional-properties',
         plugins: ['@hey-api/client-fetch', '@hey-api/transformers'],
       }),
