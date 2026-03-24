@@ -5,7 +5,7 @@ export type ClientOptions = {
 };
 
 export type BlogPostDto = {
-    $type: string;
+    $type: 'BlogPost';
     id: number;
     title: string;
 };
