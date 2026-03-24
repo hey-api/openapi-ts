@@ -95,7 +95,9 @@ export interface RequestOptions<
    * A function transforming response data before it's returned. This is useful
    * for post-processing data, e.g. converting ISO strings into Date objects.
    */
-  responseTransformer?: (data: TData) => Promise<TData>;
+  responseTransformer?: (
+    data: TData extends Record<string, unknown> ? TData[keyof TData] : TData,
+  ) => Promise<TData extends Record<string, unknown> ? TData[keyof TData] : TData>;
   /**
    * Security mechanism(s) to use for the request.
    */
