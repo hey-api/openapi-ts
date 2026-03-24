@@ -8,6 +8,8 @@ const resolveToNull = () => new HttpResponse(null);
 
 type OptionalHttpHandlerFactory<ResponseOrResolver> = (responseOrResolver?: ResponseOrResolver, options?: RequestHandlerOptions) => HttpHandler;
 
+type HttpHandlerFactory<ResponseOrResolver> = (responseOrResolver: ResponseOrResolver, options?: RequestHandlerOptions) => HttpHandler;
+
 type ToResponseUnion<T> = {
     [K in Extract<keyof T, number>]: {
         status: K;
@@ -15,24 +17,22 @@ type ToResponseUnion<T> = {
     };
 }[Extract<keyof T, number>];
 
-type HttpHandlerFactory<ResponseOrResolver> = (responseOrResolver: ResponseOrResolver, options?: RequestHandlerOptions) => HttpHandler;
-
 export type SingleHandlerFactories = {
     exportMock: OptionalHttpHandlerFactory<HttpResponseResolver>;
     patchApiVbyApiVersionNoTagMock: OptionalHttpHandlerFactory<HttpResponseResolver>;
     importMock: HttpHandlerFactory<{
         result: ImportResponses[200];
         status?: 200;
-    } | ToResponseUnion<ImportResponses> | HttpResponseResolver<never, ImportData['body']>>;
+    } | HttpResponseResolver<never, ImportData['body']>>;
     fooWowMock: OptionalHttpHandlerFactory<HttpResponseResolver>;
     apiVVersionODataControllerCountMock: HttpHandlerFactory<{
         result: ApiVVersionODataControllerCountResponses[200];
         status?: 200;
-    } | ToResponseUnion<ApiVVersionODataControllerCountResponses> | HttpResponseResolver>;
+    } | HttpResponseResolver>;
     getApiVbyApiVersionSimpleOperationMock: HttpHandlerFactory<{
         result: GetApiVbyApiVersionSimpleOperationResponses[200];
         status?: 200;
-    } | ToResponseUnion<GetApiVbyApiVersionSimpleOperationResponses> | HttpResponseResolver<{
+    } | HttpResponseResolver<{
         apiVersion: string;
     }, never>>;
     deleteCallWithoutParametersAndResponseMock: OptionalHttpHandlerFactory<HttpResponseResolver>;
@@ -76,7 +76,7 @@ export type SingleHandlerFactories = {
     callWithNoContentResponseMock: OptionalHttpHandlerFactory<{
         result: CallWithNoContentResponseResponses[204];
         status?: 204;
-    } | ToResponseUnion<CallWithNoContentResponseResponses> | HttpResponseResolver>;
+    } | HttpResponseResolver>;
     callWithResponseAndNoContentResponseMock: HttpHandlerFactory<{
         result: CallWithResponseAndNoContentResponseResponses[200];
         status?: 200;
@@ -84,11 +84,11 @@ export type SingleHandlerFactories = {
     dummyAMock: HttpHandlerFactory<{
         result: DummyAResponses[200];
         status?: 200;
-    } | ToResponseUnion<DummyAResponses> | HttpResponseResolver>;
+    } | HttpResponseResolver>;
     dummyBMock: OptionalHttpHandlerFactory<{
         result: DummyBResponses[204];
         status?: 204;
-    } | ToResponseUnion<DummyBResponses> | HttpResponseResolver>;
+    } | HttpResponseResolver>;
     callWithResponseMock: OptionalHttpHandlerFactory<HttpResponseResolver>;
     callWithDuplicateResponsesMock: HttpHandlerFactory<{
         result: CallWithDuplicateResponsesResponses[200];
@@ -108,44 +108,44 @@ export type SingleHandlerFactories = {
     uploadFileMock: HttpHandlerFactory<{
         result: UploadFileResponses[200];
         status?: 200;
-    } | ToResponseUnion<UploadFileResponses> | HttpResponseResolver<{
+    } | HttpResponseResolver<{
         apiVersion: string;
     }, UploadFileData['body']>>;
     fileResponseMock: HttpHandlerFactory<{
         result: FileResponseResponses[200];
         status?: 200;
-    } | ToResponseUnion<FileResponseResponses> | HttpResponseResolver<{
+    } | HttpResponseResolver<{
         apiVersion: string;
         id: string;
     }, never>>;
     complexTypesMock: HttpHandlerFactory<{
         result: ComplexTypesResponses[200];
         status?: 200;
-    } | ToResponseUnion<ComplexTypesResponses> | HttpResponseResolver>;
+    } | HttpResponseResolver>;
     multipartResponseMock: HttpHandlerFactory<{
         result: MultipartResponseResponses[200];
         status?: 200;
-    } | ToResponseUnion<MultipartResponseResponses> | HttpResponseResolver>;
+    } | HttpResponseResolver>;
     multipartRequestMock: OptionalHttpHandlerFactory<HttpResponseResolver<never, MultipartRequestData['body']>>;
     complexParamsMock: HttpHandlerFactory<{
         result: ComplexParamsResponses[200];
         status?: 200;
-    } | ToResponseUnion<ComplexParamsResponses> | HttpResponseResolver<{
+    } | HttpResponseResolver<{
         apiVersion: string;
         id: string;
     }, ComplexParamsData['body']>>;
     callWithResultFromHeaderMock: OptionalHttpHandlerFactory<{
         result: CallWithResultFromHeaderResponses[200];
         status?: 200;
-    } | ToResponseUnion<CallWithResultFromHeaderResponses> | HttpResponseResolver>;
+    } | HttpResponseResolver>;
     testErrorCodeMock: OptionalHttpHandlerFactory<{
         result: TestErrorCodeResponses[200];
         status?: 200;
-    } | ToResponseUnion<TestErrorCodeResponses> | HttpResponseResolver>;
+    } | HttpResponseResolver>;
     nonAsciiæøåÆøÅöôêÊ字符串Mock: HttpHandlerFactory<{
         result: NonAsciiæøåÆøÅöôêÊ字符串Responses[200];
         status?: 200;
-    } | ToResponseUnion<NonAsciiæøåÆøÅöôêÊ字符串Responses> | HttpResponseResolver>;
+    } | HttpResponseResolver>;
     putWithFormUrlEncodedMock: OptionalHttpHandlerFactory<HttpResponseResolver<never, PutWithFormUrlEncodedData['body']>>;
 };
 

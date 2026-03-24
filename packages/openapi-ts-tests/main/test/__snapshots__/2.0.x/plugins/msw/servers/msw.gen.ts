@@ -6,20 +6,13 @@ import type { GetFooResponses } from './types.gen';
 
 const resolveToNull = () => new HttpResponse(null);
 
-type ToResponseUnion<T> = {
-    [K in Extract<keyof T, number>]: {
-        status: K;
-        result: T[K];
-    };
-}[Extract<keyof T, number>];
-
 type HttpHandlerFactory<ResponseOrResolver> = (responseOrResolver: ResponseOrResolver, options?: RequestHandlerOptions) => HttpHandler;
 
 export type SingleHandlerFactories = {
     getFooMock: HttpHandlerFactory<{
         result: GetFooResponses[200];
         status?: 200;
-    } | ToResponseUnion<GetFooResponses> | HttpResponseResolver>;
+    } | HttpResponseResolver>;
 };
 
 export type GetAllMocksOptions = {

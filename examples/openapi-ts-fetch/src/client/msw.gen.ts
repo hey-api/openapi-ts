@@ -39,13 +39,6 @@ import type {
 
 const resolveToNull = () => new HttpResponse(null);
 
-type ToResponseUnion<T> = {
-  [K in Extract<keyof T, number>]: {
-    result: T[K];
-    status: K;
-  };
-}[Extract<keyof T, number>];
-
 type HttpHandlerFactory<ResponseOrResolver> = (
   responseOrResolver: ResponseOrResolver,
   options?: RequestHandlerOptions,
@@ -62,7 +55,6 @@ export type SingleHandlerFactories = {
         result: AddPetResponses[200];
         status?: 200;
       }
-    | ToResponseUnion<AddPetResponses>
     | HttpResponseResolver<never, AddPetData['body']>
   >;
   createUserMock: HttpHandlerFactory<
@@ -70,7 +62,6 @@ export type SingleHandlerFactories = {
         result: CreateUserResponses[200];
         status?: 200;
       }
-    | ToResponseUnion<CreateUserResponses>
     | HttpResponseResolver<never, CreateUserData['body']>
   >;
   createUsersWithListInputMock: HttpHandlerFactory<
@@ -78,7 +69,6 @@ export type SingleHandlerFactories = {
         result: CreateUsersWithListInputResponses[200];
         status?: 200;
       }
-    | ToResponseUnion<CreateUsersWithListInputResponses>
     | HttpResponseResolver<never, CreateUsersWithListInputData['body']>
   >;
   deleteOrderMock: OptionalHttpHandlerFactory<
@@ -86,7 +76,6 @@ export type SingleHandlerFactories = {
         result: DeleteOrderResponses[200];
         status?: 200;
       }
-    | ToResponseUnion<DeleteOrderResponses>
     | HttpResponseResolver<
         {
           orderId: string;
@@ -99,7 +88,6 @@ export type SingleHandlerFactories = {
         result: DeletePetResponses[200];
         status?: 200;
       }
-    | ToResponseUnion<DeletePetResponses>
     | HttpResponseResolver<
         {
           petId: string;
@@ -112,7 +100,6 @@ export type SingleHandlerFactories = {
         result: DeleteUserResponses[200];
         status?: 200;
       }
-    | ToResponseUnion<DeleteUserResponses>
     | HttpResponseResolver<
         {
           username: string;
@@ -125,7 +112,6 @@ export type SingleHandlerFactories = {
         result: FindPetsByStatusResponses[200];
         status?: 200;
       }
-    | ToResponseUnion<FindPetsByStatusResponses>
     | HttpResponseResolver
   >;
   findPetsByTagsMock: HttpHandlerFactory<
@@ -133,7 +119,6 @@ export type SingleHandlerFactories = {
         result: FindPetsByTagsResponses[200];
         status?: 200;
       }
-    | ToResponseUnion<FindPetsByTagsResponses>
     | HttpResponseResolver
   >;
   getInventoryMock: HttpHandlerFactory<
@@ -141,7 +126,6 @@ export type SingleHandlerFactories = {
         result: GetInventoryResponses[200];
         status?: 200;
       }
-    | ToResponseUnion<GetInventoryResponses>
     | HttpResponseResolver
   >;
   getOrderByIdMock: HttpHandlerFactory<
@@ -149,7 +133,6 @@ export type SingleHandlerFactories = {
         result: GetOrderByIdResponses[200];
         status?: 200;
       }
-    | ToResponseUnion<GetOrderByIdResponses>
     | HttpResponseResolver<
         {
           orderId: string;
@@ -162,7 +145,6 @@ export type SingleHandlerFactories = {
         result: GetPetByIdResponses[200];
         status?: 200;
       }
-    | ToResponseUnion<GetPetByIdResponses>
     | HttpResponseResolver<
         {
           petId: string;
@@ -175,7 +157,6 @@ export type SingleHandlerFactories = {
         result: GetUserByNameResponses[200];
         status?: 200;
       }
-    | ToResponseUnion<GetUserByNameResponses>
     | HttpResponseResolver<
         {
           username: string;
@@ -188,7 +169,6 @@ export type SingleHandlerFactories = {
         result: LoginUserResponses[200];
         status?: 200;
       }
-    | ToResponseUnion<LoginUserResponses>
     | HttpResponseResolver
   >;
   logoutUserMock: OptionalHttpHandlerFactory<
@@ -196,7 +176,6 @@ export type SingleHandlerFactories = {
         result: LogoutUserResponses[200];
         status?: 200;
       }
-    | ToResponseUnion<LogoutUserResponses>
     | HttpResponseResolver
   >;
   placeOrderMock: HttpHandlerFactory<
@@ -204,7 +183,6 @@ export type SingleHandlerFactories = {
         result: PlaceOrderResponses[200];
         status?: 200;
       }
-    | ToResponseUnion<PlaceOrderResponses>
     | HttpResponseResolver<never, PlaceOrderData['body']>
   >;
   updatePetMock: HttpHandlerFactory<
@@ -212,7 +190,6 @@ export type SingleHandlerFactories = {
         result: UpdatePetResponses[200];
         status?: 200;
       }
-    | ToResponseUnion<UpdatePetResponses>
     | HttpResponseResolver<never, UpdatePetData['body']>
   >;
   updatePetWithFormMock: HttpHandlerFactory<
@@ -220,7 +197,6 @@ export type SingleHandlerFactories = {
         result: UpdatePetWithFormResponses[200];
         status?: 200;
       }
-    | ToResponseUnion<UpdatePetWithFormResponses>
     | HttpResponseResolver<
         {
           petId: string;
@@ -233,7 +209,6 @@ export type SingleHandlerFactories = {
         result: UpdateUserResponses[200];
         status?: 200;
       }
-    | ToResponseUnion<UpdateUserResponses>
     | HttpResponseResolver<
         {
           username: string;
@@ -246,7 +221,6 @@ export type SingleHandlerFactories = {
         result: UploadFileResponses[200];
         status?: 200;
       }
-    | ToResponseUnion<UploadFileResponses>
     | HttpResponseResolver<
         {
           petId: string;
