@@ -4,28 +4,29 @@ export type ClientOptions = {
     baseUrl: `${string}://${string}` | (string & {});
 };
 
-export type ModelWithDate = {
-    modified: Date;
+export type Foo = {
+    foo: Date;
 };
 
-export type ModelMapResponse = {
-    items: {
-        [key: string]: ModelWithDate;
+export type Bar = {
+    bar: Date;
+    baz?: {
+        [key: string]: Foo;
     };
 };
 
-export type ModelMapData = {
+export type PostFooData = {
     body?: never;
     path?: never;
     query?: never;
-    url: '/api/model-map';
+    url: '/foo';
 };
 
-export type ModelMapResponses = {
+export type PostFooResponses = {
     /**
-     * Success
+     * OK
      */
-    200: ModelMapResponse;
+    200: Bar;
 };
 
-export type ModelMapResponse2 = ModelMapResponses[keyof ModelMapResponses];
+export type PostFooResponse = PostFooResponses[keyof PostFooResponses];
