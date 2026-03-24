@@ -1,20 +1,21 @@
 import type { NodeName } from '@hey-api/codegen-core';
 
-import type { py } from '../ts-python';
+import type { py } from '../py-compiler';
 import { ClassPyDsl } from './decl/class';
 // import { DecoratorPyDsl } from './decl/decorator';
 // import { EnumPyDsl } from './decl/enum';
 // import { FieldPyDsl } from './decl/field';
 import { FuncPyDsl } from './decl/func';
+import { ParamPyDsl } from './decl/param';
 // import { GetterPyDsl } from './decl/getter';
 // import { InitPyDsl } from './decl/init';
 // import { EnumMemberPyDsl } from './decl/member';
 // import { MethodPyDsl } from './decl/method';
-// import { ParamPyDsl } from './decl/param';
 // import { PatternPyDsl } from './decl/pattern';
 // import { SetterPyDsl } from './decl/setter';
 // import { ArrayPyDsl } from './expr/array';
 // import { AsPyDsl } from './expr/as';
+import { AttrPyDsl } from './expr/attr';
 // import { AwaitPyDsl } from './expr/await';
 import { BinaryPyDsl } from './expr/binary';
 import { CallPyDsl } from './expr/call';
@@ -22,15 +23,16 @@ import { DictPyDsl } from './expr/dict';
 import { ExprPyDsl } from './expr/expr';
 // import { fromValue as exprValue } from './expr/fromValue';
 import { IdPyDsl } from './expr/identifier';
+import { KwargPyDsl } from './expr/kwarg';
 import { ListPyDsl } from './expr/list';
 import { LiteralPyDsl } from './expr/literal';
-import { AttrPyDsl } from './expr/member';
 // import { NewPyDsl } from './expr/new';
 // import { ObjectPyDsl } from './expr/object';
 // import { PrefixPyDsl } from './expr/prefix';
 // import { ObjectPropPyDsl } from './expr/prop';
 // import { RegExpPyDsl } from './expr/regexp';
 import { SetPyDsl } from './expr/set';
+import { SubscriptPyDsl } from './expr/subscript';
 // import { TemplatePyDsl } from './expr/template';
 // import { TernaryPyDsl } from './expr/ternary';
 import { TuplePyDsl } from './expr/tuple';
@@ -69,6 +71,7 @@ import { WithPyDsl } from './stmt/with';
 // import { TypeTemplatePyDsl } from './type/template';
 // import { TypeTuplePyDsl } from './type/tuple';
 import { LazyPyDsl } from './utils/lazy';
+import { safeKeywordName } from './utils/name';
 
 const pyDsl = {
   /** Creates an array literal expression (e.g. `[1, 2, 3]`). */
@@ -148,6 +151,9 @@ const pyDsl = {
   /** Creates an initialization block or statement. */
   // init: (...args: ConstructorParameters<typeof InitTsDsl>) => new InitTsDsl(...args),
 
+  /** Creates a keyword argument expression (e.g. `name=value`). */
+  kwarg: (...args: ConstructorParameters<typeof KwargPyDsl>) => new KwargPyDsl(...args),
+
   /** Creates a lazy, context-aware node with deferred evaluation. */
   lazy: <T extends py.Node>(...args: ConstructorParameters<typeof LazyPyDsl<T>>) =>
     new LazyPyDsl<T>(...args),
@@ -161,8 +167,12 @@ const pyDsl = {
   /** Creates an enum member declaration. */
   // member: (...args: ConstructorParameters<typeof EnumMemberTsDsl>) => new EnumMemberTsDsl(...args),
 
-  /** Creates a method declaration inside a class or object. */
-  // method: (...args: ConstructorParameters<typeof MethodTsDsl>) => new MethodTsDsl(...args),
+  /** Creates a class method declaration. */
+  method: ((name: NodeName, fn?: (f: FuncPyDsl) => void) =>
+    new FuncPyDsl(name, fn, { nameSanitizer: safeKeywordName })) as {
+    (name: NodeName): FuncPyDsl;
+    (name: NodeName, fn: (f: FuncPyDsl) => void): FuncPyDsl;
+  },
 
   /** Creates a negation expression (`-x`). */
   // neg: (...args: ConstructorParameters<typeof PrefixTsDsl>) => new PrefixTsDsl(...args).neg(),
@@ -180,7 +190,7 @@ const pyDsl = {
   // object: (...args: ConstructorParameters<typeof ObjectTsDsl>) => new ObjectTsDsl(...args),
 
   /** Creates a parameter declaration for functions or methods. */
-  // param: (...args: ConstructorParameters<typeof ParamTsDsl>) => new ParamTsDsl(...args),
+  param: (...args: ConstructorParameters<typeof ParamPyDsl>) => new ParamPyDsl(...args),
 
   /** Creates a pattern for destructuring or matching. */
   // pattern: (...args: ConstructorParameters<typeof PatternTsDsl>) => new PatternTsDsl(...args),
@@ -208,6 +218,9 @@ const pyDsl = {
 
   /** Wraps an expression or statement-like value into a `StmtPyDsl`. */
   stmt: (...args: ConstructorParameters<typeof StmtPyDsl>) => new StmtPyDsl(...args),
+
+  /** Creates a subscript expression (e.g. `obj[index]` or `Type[Param]`). */
+  subscript: (...args: ConstructorParameters<typeof SubscriptPyDsl>) => new SubscriptPyDsl(...args),
 
   /** Creates a template literal expression. */
   // template: (...args: ConstructorParameters<typeof TemplateTsDsl>) => new TemplateTsDsl(...args),
@@ -312,6 +325,7 @@ export type { MaybePyDsl } from './base';
 // export type { MaybePyDsl, TypePyDsl } from './base';
 export { PyDsl } from './base';
 export type { CallArgs } from './expr/call';
+export type { VarType } from './stmt/var';
 export type { ExampleOptions } from './utils/context';
 export { ctx, PyDslContext } from './utils/context';
 export { keywords } from './utils/keywords';

@@ -1,15 +1,35 @@
 import type { SchemaWithType } from '@hey-api/shared';
 
-import type { TypeTsDsl } from '../../../../../ts-dsl';
 import { $ } from '../../../../../ts-dsl';
-import type { IrSchemaToAstOptions } from '../../shared/types';
+import type { NullResolverContext } from '../../resolvers';
+import type { Type } from '../../shared/types';
+import type { HeyApiTypeScriptPlugin } from '../../types';
 
-export const nullToAst = (
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _args: IrSchemaToAstOptions & {
-    schema: SchemaWithType<'null'>;
-  },
-): TypeTsDsl => {
-  const node = $.type.literal(null);
-  return node;
-};
+function baseNode(): Type {
+  return $.type.literal(null);
+}
+
+function nullResolver(ctx: NullResolverContext): Type {
+  return ctx.nodes.base(ctx);
+}
+
+export function nullToAst({
+  plugin,
+  schema,
+}: {
+  plugin: HeyApiTypeScriptPlugin['Instance'];
+  schema: SchemaWithType<'null'>;
+}): Type {
+  const ctx: NullResolverContext = {
+    $,
+    nodes: {
+      base: baseNode,
+    },
+    plugin,
+    schema,
+  };
+
+  const resolver = plugin.config['~resolvers']?.null;
+  const result = resolver?.(ctx);
+  return result ?? nullResolver(ctx);
+}

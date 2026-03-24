@@ -17,7 +17,7 @@ export const createUseSwr = ({
     return;
   }
 
-  const symbolUseSwr = plugin.external('swr');
+  const symbolUseSwr = plugin.external('swr.useSWR');
   const symbolUseQueryFn = plugin.symbol(applyNaming(operation.id, plugin.config.useSwr));
 
   const awaitSdkFn = $.lazy((ctx) =>

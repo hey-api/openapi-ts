@@ -1,7 +1,7 @@
 import type { AnalysisContext } from '@hey-api/codegen-core';
 import type { MaybeArray } from '@hey-api/types';
 
-import { py } from '../../ts-python';
+import { py } from '../../py-compiler';
 import { PyDsl } from '../base';
 import type { PyDslContext } from '../utils/context';
 import { ctx } from '../utils/context';
@@ -40,7 +40,7 @@ export class HintPyDsl extends PyDsl<py.Comment> {
     return node;
   }
 
-  override toAst(): py.Comment {
+  override toAst() {
     // Return a dummy comment node for compliance.
     const lines = this._resolveLines();
     return py.factory.createComment(lines.join('\n'));

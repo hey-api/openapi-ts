@@ -1,8 +1,8 @@
 {
   "include": ["src/**/*", "test/**/*"],
   "compilerOptions": {
-    "baseUrl": ".",
     "esModuleInterop": true,
+    "paths": { "*": ["./*"] },
     "lib": ["es2023", "dom", "dom.iterable"],
     "module": "ESNext",
     "moduleResolution": "Bundler",

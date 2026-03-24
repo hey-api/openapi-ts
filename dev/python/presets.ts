@@ -1,25 +1,28 @@
-import { pydantic, sdk } from './plugins';
+import type { UserConfig } from '@hey-api/openapi-python';
+
+export type PluginConfig = NonNullable<NonNullable<UserConfig['plugins']>[number]>;
 
 export const presets = {
   sdk: () => [
     /** SDK */
-    sdk({
-      '~hooks': {
-        symbols: {
-          // getExportFromFilePath(symbol) {
-          //   console.log(symbol.toString());
-          //   return undefined;
-          // },
-        },
+    {
+      name: '@hey-api/python-sdk',
+      operations: {
+        containerName: 'OpenCode',
+        strategy: 'single',
       },
-    }),
+      paramsStructure: 'flat',
+    },
   ],
   validated: () => [
     /** SDK + Pydantic validation */
-    sdk(),
-    pydantic(),
+    {
+      name: '@hey-api/python-sdk',
+      paramsStructure: 'flat',
+    },
+    'pydantic',
   ],
-} as const;
+} as const satisfies Record<string, () => ReadonlyArray<PluginConfig>>;
 
 export type PresetKey = keyof typeof presets;
 

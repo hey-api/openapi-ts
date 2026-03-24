@@ -1,25 +1,34 @@
-import { refs } from '@hey-api/codegen-core';
-import type { IR } from '@hey-api/shared';
-import { createSchemaProcessor, pathToJsonPointer } from '@hey-api/shared';
+import { ref } from '@hey-api/codegen-core';
+import type { Hooks, IR } from '@hey-api/shared';
+import { createSchemaProcessor, createSchemaWalker, pathToJsonPointer } from '@hey-api/shared';
 
 import { exportAst } from '../shared/export';
 import type { ProcessorContext, ProcessorResult } from '../shared/processor';
-import type { PluginState } from '../shared/types';
+import type { PydanticFinal } from '../shared/types';
 import type { PydanticPlugin } from '../types';
-import { irSchemaToAst } from './plugin';
+import { createVisitor } from './walker';
 
 export function createProcessor(plugin: PydanticPlugin['Instance']): ProcessorResult {
   const processor = createSchemaProcessor();
 
-  const hooks = [plugin.config['~hooks']?.schemas, plugin.context.config.parser.hooks.schemas];
+  const extractorHooks: ReadonlyArray<NonNullable<Hooks['schemas']>['shouldExtract']> = [
+    (ctx) =>
+      ctx.schema.type === 'object' &&
+      ctx.schema.properties !== undefined &&
+      Object.keys(ctx.schema.properties).length > 0,
+    (ctx) =>
+      ctx.schema.type === 'enum' && ctx.schema.items !== undefined && ctx.schema.items.length > 0,
+    plugin.config['~hooks']?.schemas?.shouldExtract,
+    plugin.context.config.parser.hooks.schemas?.shouldExtract,
+  ];
 
   function extractor(ctx: ProcessorContext): IR.SchemaObject {
     if (processor.hasEmitted(ctx.path)) {
       return ctx.schema;
     }
 
-    for (const hook of hooks) {
-      const result = hook?.shouldExtract?.(ctx);
+    for (const hook of extractorHooks) {
+      const result = hook?.(ctx);
       if (result) {
         process({
           namingAnchor: processor.context.anchor,
@@ -33,24 +42,31 @@ export function createProcessor(plugin: PydanticPlugin['Instance']): ProcessorRe
     return ctx.schema;
   }
 
-  function process(ctx: ProcessorContext): void {
+  function process(ctx: ProcessorContext): PydanticFinal | void {
     if (!processor.markEmitted(ctx.path)) return;
 
-    processor.withContext({ anchor: ctx.namingAnchor, tags: ctx.tags }, () => {
-      const state = refs<PluginState>({
-        hasLazyExpression: false,
-        path: ctx.path,
-        tags: ctx.tags,
-      });
+    const shouldExport = ctx.export !== false;
 
-      const ast = irSchemaToAst({
+    return processor.withContext({ anchor: ctx.namingAnchor, tags: ctx.tags }, () => {
+      const visitor = createVisitor({ schemaExtractor: extractor });
+      const walk = createSchemaWalker(visitor);
+
+      const result = walk(ctx.schema, {
+        path: ref(ctx.path),
         plugin,
-        schema: ctx.schema,
-        schemaExtractor: extractor,
-        state,
       });
 
-      exportAst({ ...ctx, ast, plugin, state });
+      const final = visitor.applyModifiers(result, {
+        path: ref(ctx.path),
+        plugin,
+      }) as PydanticFinal;
+
+      if (shouldExport) {
+        exportAst({ ...ctx, final, plugin });
+        return;
+      }
+
+      return final;
     });
   }
 

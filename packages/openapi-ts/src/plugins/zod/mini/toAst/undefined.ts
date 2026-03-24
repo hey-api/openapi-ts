@@ -2,15 +2,45 @@ import type { SchemaWithType } from '@hey-api/shared';
 
 import { $ } from '../../../../ts-dsl';
 import { identifiers } from '../../constants';
-import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
+import type { UndefinedResolverContext } from '../../resolvers';
+import type { Chain } from '../../shared/chain';
+import type { ZodPlugin } from '../../types';
+
+function baseNode(ctx: UndefinedResolverContext): Chain {
+  const { symbols } = ctx;
+  const { z } = symbols;
+  return $(z).attr(identifiers.undefined).call();
+}
+
+function undefinedResolver(ctx: UndefinedResolverContext): Chain {
+  const baseResult = ctx.nodes.base(ctx);
+  ctx.chain.current = baseResult;
+  return ctx.chain.current;
+}
 
 export function undefinedToAst({
   plugin,
-}: Pick<IrSchemaToAstOptions, 'plugin'> & {
+  schema,
+}: {
+  plugin: ZodPlugin['Instance'];
   schema: SchemaWithType<'undefined'>;
-}): Omit<Ast, 'typeName'> {
+}): Chain {
   const z = plugin.external('zod.z');
-  const result: Partial<Omit<Ast, 'typeName'>> = {};
-  result.expression = $(z).attr(identifiers.undefined).call();
-  return result as Omit<Ast, 'typeName'>;
+  const ctx: UndefinedResolverContext = {
+    $,
+    chain: {
+      current: $(z),
+    },
+    nodes: {
+      base: baseNode,
+    },
+    plugin,
+    schema,
+    symbols: {
+      z,
+    },
+  };
+
+  const resolver = plugin.config['~resolvers']?.undefined;
+  return resolver?.(ctx) ?? undefinedResolver(ctx);
 }

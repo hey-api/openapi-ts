@@ -7,6 +7,7 @@ export const defaultConfig: PydanticPlugin['Config'] = {
   config: {
     case: 'PascalCase',
     comments: true,
+    enums: 'enum',
     includeInEntry: false,
     strict: false,
   },

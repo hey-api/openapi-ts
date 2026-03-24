@@ -2,13 +2,15 @@ import type { Casing, FeatureToggle, NameTransformer, NamingOptions } from '@hey
 import type { DefinePlugin, Plugin } from '@hey-api/shared';
 
 import type { IApi } from './api';
+import type { HeyApiTypeScriptResolvers } from './resolvers';
 
 export type EnumsType = 'javascript' | 'typescript' | 'typescript-const';
 
 export type UserConfig = Plugin.Name<'@hey-api/typescript'> &
   Plugin.Hooks &
   Plugin.UserComments &
-  Plugin.UserExports & {
+  Plugin.UserExports &
+  HeyApiTypeScriptResolvers & {
     /**
      * Casing convention for generated names.
      *
@@ -232,7 +234,8 @@ export type UserConfig = Plugin.Name<'@hey-api/typescript'> &
 export type Config = Plugin.Name<'@hey-api/typescript'> &
   Plugin.Hooks &
   Plugin.Comments &
-  Plugin.Exports & {
+  Plugin.Exports &
+  HeyApiTypeScriptResolvers & {
     /**
      * Casing convention for generated names.
      */

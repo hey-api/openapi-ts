@@ -10,6 +10,7 @@ import { applyNaming, toCase } from '@hey-api/shared';
 
 import { $ } from '../../../../py-dsl';
 import { createOperationComment } from '../../../shared/utils/operation';
+import { operationParameters } from '../shared/operation';
 import type { HeyApiSdkPlugin } from '../types';
 
 export interface OperationItem {
@@ -68,19 +69,18 @@ function childToNode(
     plugin.config.operations.methodName.casing ?? 'camelCase',
   );
   const memberName = plugin.symbol(memberNameStr);
+  const cachedProp = plugin.external('functools.cached_property');
+
   return [
-    $.func(
-      memberName,
-      (f) => f.returns('None'),
-      // f.returns(refChild).do(
-      //   $('this')
-      //     .attr(privateName)
-      //     .nullishAssign(
-      //       $.new(refChild).args($.object().prop('client', $('this').attr('client'))),
-      //     )
-      //     .return(),
-      // ),
-    ),
+    $.method(memberName)
+      .decorator(cachedProp)
+      .param('self')
+      .returns(refChild)
+      .do(
+        $(refChild)
+          .call($.kwarg('client', $('self').attr('client')))
+          .return(),
+      ),
   ];
 }
 
@@ -101,7 +101,7 @@ export function createShell(plugin: HeyApiSdkPlugin['Instance']): StructureShell
 
       const symbolClient = plugin.external('client.Client');
 
-      const c = $.class(symbol).extends(symbolClient);
+      const c = $.class(symbol).export().extends(symbolClient);
 
       const dependencies: Array<ReturnType<typeof $.class>> = [];
 
@@ -115,25 +115,49 @@ function implementFn<T extends ReturnType<typeof $.func>>(args: {
   operation: IR.OperationObject;
   plugin: HeyApiSdkPlugin['Instance'];
 }): T {
-  const { node, operation } = args;
+  const { node, operation, plugin } = args;
+  const method = operation.method.toLowerCase();
+  const opParameters = operationParameters({ operation, plugin });
 
-  // Build the URL path
-  const path = operation.path;
+  if (plugin.config.paramsStructure === 'flat' && opParameters.fields.length > 0) {
+    const paramNames = opParameters.parameters.map((parameter) => parameter.name.toString());
 
-  // Get the HTTP method (default to GET)
-  const method = operation.method?.toLowerCase() || 'get';
+    const fieldsList = $.list();
+    for (const field of opParameters.fields) {
+      const fieldDict = $.dict();
+      fieldDict.entry($.literal('in'), $.literal(field.in));
+      fieldDict.entry($.literal('key'), $.literal(field.key));
+      if (field.map) {
+        fieldDict.entry($.literal('map'), $.literal(field.map));
+      }
+      fieldsList.element(fieldDict);
+    }
 
-  // Create the client call expression: self.client.get(path)
-  // self is the Python equivalent of 'this' for instance methods
-  const selfExpr = $.id('self');
-  const clientExpr = $.attr(selfExpr, 'client');
-  const methodExpr = $.attr(clientExpr, method);
-  const clientCall = $.call(methodExpr, $.literal(path));
+    return (
+      node
+        .params(...opParameters.parameters)
+        // TODO: extract operation statements into a separate function
+        .do(
+          $.var('params').assign(
+            $(plugin.external('client.build_client_params')).call(
+              fieldsList,
+              ...paramNames.map((name) => $.kwarg(name, name)),
+            ),
+          ),
+        )
+        .do(
+          $('self')
+            .attr('client')
+            .attr(method)
+            .call($.literal(operation.path), $.kwarg('params', $('params') as never))
+            .return(),
+        ) as T
+    );
+  }
 
-  // Return the client call
-  node.do($.return(clientCall));
-
-  return node;
+  return node
+    .params(...opParameters.parameters)
+    .do($('self').attr('client').attr(method).call($.literal(operation.path)).return()) as T;
 }
 
 export function toNode(
@@ -150,8 +174,7 @@ export function toNode(
         String(item.location[item.location.length - 1]),
         plugin.config.operations.methodName,
       );
-      const node = $.func(fnName);
-      node.do($.return($.id('None')));
+      const node = $.func(fnName).export().do($('None').return());
       nodes.push(node);
     }
     return { nodes };
@@ -173,13 +196,13 @@ export function toNode(
     } else {
       if (index > 0 || node.hasBody) node.newline();
       const method = implementFn({
-        node: $.func(createFnSymbol(plugin, item), (m) =>
+        node: $.method(createFnSymbol(plugin, item), (m) =>
           attachComment({
             node: m,
             operation,
             plugin,
           }),
-        ),
+        ).param('self'),
         operation,
         plugin,
       });

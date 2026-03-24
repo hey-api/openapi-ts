@@ -1,7 +1,8 @@
-import type { AnalysisContext, NodeName } from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName, Ref } from '@hey-api/codegen-core';
+import { ref } from '@hey-api/codegen-core';
 import type { MaybeArray } from '@hey-api/types';
 
-import { py } from '../../ts-python';
+import { py } from '../../py-compiler';
 import type { MaybePyDsl } from '../base';
 import { PyDsl } from '../base';
 import type { DoExpr } from '../mixins/do';
@@ -13,7 +14,7 @@ type ExceptType = string | MaybePyDsl<py.Expression>;
 
 interface ExceptEntry {
   body: Array<DoExpr>;
-  name?: NodeName;
+  name?: Ref<NodeName>;
   types: Array<ExceptType>;
 }
 
@@ -107,14 +108,14 @@ export class TryPyDsl extends Mixed {
     const typeArr = Array.isArray(types) ? types : [types];
     const key = exceptKey(typeArr);
 
-    let name: NodeName | undefined;
+    let name: Ref<NodeName> | undefined;
     let bodyItems: Array<DoExpr>;
 
     // Disambiguate: if the second arg is a plain string that looks like
     // an identifier (no dots, no spaces, not a DSL node) treat it as
     // the `as` name.  Otherwise it's the first body expression.
     if (nameOrBody !== undefined && this._isNodeName(nameOrBody)) {
-      name = nameOrBody as NodeName;
+      name = ref(nameOrBody as NodeName);
       bodyItems = body;
     } else if (nameOrBody !== undefined) {
       bodyItems = [nameOrBody as DoExpr, ...body];
@@ -172,15 +173,11 @@ export class TryPyDsl extends Mixed {
         if (entry.types.length === 1) {
           exceptionType = this.$node(entry.types[0]!);
         } else if (entry.types.length > 1) {
-          exceptionType = py.factory.createTupleExpression(
-            entry.types.map((t) => this.$node(t) as py.Expression),
-          );
+          exceptionType = py.factory.createTupleExpression(entry.types.map((t) => this.$node(t)));
         }
 
         const exceptionName = entry.name
-          ? py.factory.createIdentifier(
-              this.$name({ current: entry.name } as any) || String(entry.name),
-            )
+          ? py.factory.createIdentifier(this.$name(entry.name) || String(entry.name['~ref']))
           : undefined;
 
         return py.factory.createExceptClause([...bodyStatements], exceptionType, exceptionName);

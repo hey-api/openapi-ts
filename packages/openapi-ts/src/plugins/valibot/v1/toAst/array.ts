@@ -1,114 +1,141 @@
-import type { SchemaWithType } from '@hey-api/shared';
+import type { SchemaVisitorContext, SchemaWithType, Walker } from '@hey-api/shared';
 import { childContext, deduplicateSchema } from '@hey-api/shared';
 
 import { $ } from '../../../../ts-dsl';
-import { pipesToNode } from '../../shared/pipes';
-import type {
-  Ast,
-  IrSchemaToAstOptions,
-  ValibotAppliedResult,
-  ValibotSchemaResult,
-} from '../../shared/types';
+import type { ArrayResolverContext } from '../../resolvers';
+import type { PipeResult, Pipes } from '../../shared/pipes';
+import { pipes } from '../../shared/pipes';
+import type { CompositeHandlerResult, ValibotFinal, ValibotResult } from '../../shared/types';
+import type { ValibotPlugin } from '../../types';
 import { identifiers } from '../constants';
-import { unknownToAst } from './unknown';
+import { unknownToPipes } from './unknown';
 
-export function arrayToAst(
-  options: IrSchemaToAstOptions & {
-    applyModifiers: (
-      result: ValibotSchemaResult,
-      opts: { optional?: boolean },
-    ) => ValibotAppliedResult;
-    schema: SchemaWithType<'array'>;
-  },
-): Omit<Ast, 'typeName'> {
-  const { applyModifiers, plugin, walk } = options;
-  let { schema } = options;
+interface ArrayToPipesContext {
+  applyModifiers: (result: ValibotResult, options?: { optional?: boolean }) => ValibotFinal;
+  plugin: ValibotPlugin['Instance'];
+  schema: SchemaWithType<'array'>;
+  walk: Walker<ValibotResult, ValibotPlugin['Instance']>;
+  walkerCtx: SchemaVisitorContext<ValibotPlugin['Instance']>;
+}
 
-  const result: Omit<Ast, 'typeName'> = {
-    pipes: [],
+function baseNode(ctx: ArrayResolverContext): PipeResult {
+  const { plugin, symbols } = ctx;
+  const { v } = symbols;
+
+  const arrayFn = $(v).attr(identifiers.schemas.array);
+
+  let { schema: normalizedSchema } = ctx;
+  if (normalizedSchema.items) {
+    normalizedSchema = deduplicateSchema({ schema: normalizedSchema });
+  }
+
+  if (!normalizedSchema.items) {
+    return arrayFn.call(unknownToPipes({ plugin }));
+  }
+
+  const childResults: Array<ValibotResult> = [];
+  const { applyModifiers, pipes, walk, walkerCtx } = ctx;
+
+  for (let i = 0; i < normalizedSchema.items!.length; i++) {
+    const item = normalizedSchema.items![i]!;
+    const result = walk!(item, childContext(walkerCtx!, 'items', i));
+    childResults.push(result);
+  }
+
+  if (childResults.length === 1) {
+    const itemNode = pipes.toNode(applyModifiers!(childResults[0]!).pipes, plugin);
+    return arrayFn.call(itemNode);
+  }
+
+  return arrayFn.call(unknownToPipes({ plugin }));
+}
+
+function lengthNode(ctx: ArrayResolverContext): PipeResult {
+  const { schema, symbols } = ctx;
+  const { v } = symbols;
+  if (schema.minItems === schema.maxItems && schema.minItems !== undefined) {
+    return $(v).attr(identifiers.actions.length).call($.fromValue(schema.minItems));
+  }
+}
+
+function maxLengthNode(ctx: ArrayResolverContext): PipeResult {
+  const { schema, symbols } = ctx;
+  const { v } = symbols;
+  if (schema.maxItems === undefined) return;
+  return $(v).attr(identifiers.actions.maxLength).call($.fromValue(schema.maxItems));
+}
+
+function minLengthNode(ctx: ArrayResolverContext): PipeResult {
+  const { schema, symbols } = ctx;
+  const { v } = symbols;
+  if (schema.minItems === undefined) return;
+  return $(v).attr(identifiers.actions.minLength).call($.fromValue(schema.minItems));
+}
+
+function arrayResolver(ctx: ArrayResolverContext): Pipes {
+  const baseResult = ctx.nodes.base(ctx);
+  if (baseResult) {
+    ctx.pipes.push(ctx.pipes.current, baseResult);
+  }
+
+  const lengthResult = ctx.nodes.length(ctx);
+  if (lengthResult) {
+    ctx.pipes.push(ctx.pipes.current, lengthResult);
+  } else {
+    const minLengthResult = ctx.nodes.minLength(ctx);
+    if (minLengthResult) {
+      ctx.pipes.push(ctx.pipes.current, minLengthResult);
+    }
+
+    const maxLengthResult = ctx.nodes.maxLength(ctx);
+    if (maxLengthResult) {
+      ctx.pipes.push(ctx.pipes.current, maxLengthResult);
+    }
+  }
+
+  return ctx.pipes.current;
+}
+
+export function arrayToPipes(ctx: ArrayToPipesContext): CompositeHandlerResult {
+  const { plugin, schema, walk, walkerCtx } = ctx;
+  const childResults: Array<ValibotResult> = [];
+
+  if (schema.items) {
+    const normalizedSchema = deduplicateSchema({ schema });
+    for (let i = 0; i < normalizedSchema.items!.length; i++) {
+      const item = normalizedSchema.items![i]!;
+      const result = walk(item, childContext(walkerCtx, 'items', i));
+      childResults.push(result);
+    }
+  }
+
+  const resolverCtx: ArrayResolverContext = {
+    $,
+    applyModifiers: ctx.applyModifiers,
+    nodes: {
+      base: baseNode,
+      length: lengthNode,
+      maxLength: maxLengthNode,
+      minLength: minLengthNode,
+    },
+    pipes: {
+      ...pipes,
+      current: [],
+    },
+    plugin,
+    schema,
+    symbols: {
+      v: plugin.external('valibot.v'),
+    },
+    walk,
+    walkerCtx,
   };
 
-  const v = plugin.external('valibot.v');
-  const functionName = $(v).attr(identifiers.schemas.array);
+  const resolver = plugin.config['~resolvers']?.array;
+  const node = resolver?.(resolverCtx) ?? arrayResolver(resolverCtx);
 
-  if (!schema.items) {
-    const expression = functionName.call(
-      unknownToAst({
-        ...options,
-        schema: {
-          type: 'unknown',
-        },
-      }),
-    );
-    result.pipes.push(expression);
-  } else {
-    schema = deduplicateSchema({ schema });
-
-    // at least one item is guaranteed
-    const itemExpressions = schema.items!.map((item, index) => {
-      const itemResult = walk(
-        item,
-        childContext(
-          {
-            path: options.state.path,
-            plugin: options.plugin,
-          },
-          'items',
-          index,
-        ),
-      );
-      if (itemResult.hasLazyExpression) {
-        result.hasLazyExpression = true;
-      }
-
-      const finalExpr = applyModifiers(itemResult, { optional: false });
-      return pipesToNode(finalExpr.pipes, plugin);
-    });
-
-    if (itemExpressions.length === 1) {
-      const expression = functionName.call(...itemExpressions);
-      result.pipes.push(expression);
-    } else {
-      if (schema.logicalOperator === 'and') {
-        // TODO: parser - handle intersection
-        // return tsc.typeArrayNode(
-        //   tsc.typeIntersectionNode({ types: itemExpressions }),
-        // );
-      }
-
-      // TODO: parser - handle union
-      // return tsc.typeArrayNode(tsc.typeUnionNode({ types: itemExpressions }));
-
-      const expression = functionName.call(
-        unknownToAst({
-          ...options,
-          schema: {
-            type: 'unknown',
-          },
-        }),
-      );
-      result.pipes.push(expression);
-    }
-  }
-
-  if (schema.minItems === schema.maxItems && schema.minItems !== undefined) {
-    const expression = $(v).attr(identifiers.actions.length).call($.fromValue(schema.minItems));
-    result.pipes.push(expression);
-  } else {
-    if (schema.minItems !== undefined) {
-      const expression = $(v)
-        .attr(identifiers.actions.minLength)
-        .call($.fromValue(schema.minItems));
-      result.pipes.push(expression);
-    }
-
-    if (schema.maxItems !== undefined) {
-      const expression = $(v)
-        .attr(identifiers.actions.maxLength)
-        .call($.fromValue(schema.maxItems));
-      result.pipes.push(expression);
-    }
-  }
-
-  return result as Omit<Ast, 'typeName'>;
+  return {
+    childResults,
+    pipes: [resolverCtx.pipes.toNode(node, plugin)],
+  };
 }

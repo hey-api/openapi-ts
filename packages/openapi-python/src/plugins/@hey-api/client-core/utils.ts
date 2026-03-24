@@ -1,5 +1,5 @@
 import type { Config } from '../../../config/types';
-import type { PluginClientNames } from '../../../plugins/types';
+import type { PluginClientNames } from '../../types';
 
 export function getClientPlugin(
   config: Config,

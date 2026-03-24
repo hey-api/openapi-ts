@@ -1,23 +1,24 @@
-import type { AnalysisContext, NodeName } from '@hey-api/codegen-core';
-import { isSymbol } from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName, Ref } from '@hey-api/codegen-core';
+import { isSymbol, ref } from '@hey-api/codegen-core';
 
-import { py } from '../../ts-python';
+import { py } from '../../py-compiler';
 import { type MaybePyDsl, PyDsl } from '../base';
 import { NewlinePyDsl } from '../layout/newline';
 import { DecoratorMixin } from '../mixins/decorator';
 import { DocMixin } from '../mixins/doc';
 import { LayoutMixin } from '../mixins/layout';
+import { ExportMixin } from '../mixins/modifiers';
 import { safeRuntimeName } from '../utils/name';
 
 type Body = Array<MaybePyDsl<py.Statement>>;
 
-const Mixed = DecoratorMixin(DocMixin(LayoutMixin(PyDsl<py.ClassDeclaration>)));
+const Mixed = DecoratorMixin(DocMixin(ExportMixin(LayoutMixin(PyDsl<py.ClassDeclaration>))));
 
 export class ClassPyDsl extends Mixed {
   readonly '~dsl' = 'ClassPyDsl';
   override readonly nameSanitizer = safeRuntimeName;
 
-  protected baseClasses: Array<NodeName> = [];
+  protected baseClasses: Array<Ref<NodeName>> = [];
   protected body: Body = [];
 
   constructor(name: NodeName) {
@@ -62,7 +63,7 @@ export class ClassPyDsl extends Mixed {
 
   /** Records base classes to extend from. */
   extends(...baseClass: ReadonlyArray<NodeName>): this {
-    this.baseClasses.push(...baseClass);
+    this.baseClasses.push(...baseClass.map((item) => ref(item)));
     return this;
   }
 
@@ -72,7 +73,7 @@ export class ClassPyDsl extends Mixed {
     return this;
   }
 
-  override toAst(): py.ClassDeclaration {
+  override toAst() {
     this.$validate();
     // const uniqueClasses: Array<py.Expression> = [];
 
@@ -97,7 +98,7 @@ export class ClassPyDsl extends Mixed {
 
     return py.factory.createClassDeclaration(
       this.name.toString(),
-      this.$node(this.body) as ReadonlyArray<py.Statement>,
+      this.$node(this.body),
       this.$decorators(),
       this.baseClasses.map((c) => this.$node(c)),
       this.$docs(),

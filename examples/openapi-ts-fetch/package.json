@@ -4,12 +4,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "tsc && vite build",
+    "build": "tsgo --noEmit && vite build",
     "dev": "vite",
     "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
     "openapi-ts": "openapi-ts",
     "preview": "vite preview",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsgo --noEmit"
   },
   "dependencies": {
     "@radix-ui/react-form": "0.1.1",

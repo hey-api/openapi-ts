@@ -1,0 +1,90 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Discriminator allOf inline schema mapping",
+    "version": "1.0.0",
+    "description": "Reproduces a bug where a schema extending a parent whose allOf contains both a $ref (with a discriminator that doesn't map the child) and an inline schema (with a discriminator that does map the child) gets the wrong discriminator value. The inline discriminator mapping should win, not the $ref discriminator fallback."
+  },
+  "paths": {
+    "/foos": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    { "$ref": "#/components/schemas/Bar" },
+                    { "$ref": "#/components/schemas/Baz" },
+                    { "$ref": "#/components/schemas/Qux" }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Foo": {
+        "required": ["$type"],
+        "type": "object",
+        "properties": {
+          "$type": { "type": "string" },
+          "foo": { "type": "string" }
+        },
+        "discriminator": {
+          "propertyName": "$type",
+          "mapping": {
+            "FooBar": "#/components/schemas/Bar",
+            "FooBaz": "#/components/schemas/Baz"
+          }
+        }
+      },
+      "Bar": {
+        "allOf": [
+          { "$ref": "#/components/schemas/Foo" },
+          {
+            "required": ["$type"],
+            "type": "object",
+            "properties": {
+              "$type": { "type": "string" },
+              "bar": { "type": "string" }
+            },
+            "discriminator": {
+              "propertyName": "$type",
+              "mapping": {
+                "BarQux": "#/components/schemas/Qux"
+              }
+            }
+          }
+        ]
+      },
+      "Baz": {
+        "allOf": [
+          { "$ref": "#/components/schemas/Foo" },
+          {
+            "type": "object",
+            "properties": {
+              "baz": { "type": "string" }
+            }
+          }
+        ]
+      },
+      "Qux": {
+        "allOf": [
+          { "$ref": "#/components/schemas/Bar" },
+          {
+            "type": "object",
+            "properties": {
+              "qux": { "type": "string" }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

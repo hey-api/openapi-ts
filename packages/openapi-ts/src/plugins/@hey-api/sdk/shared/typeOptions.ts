@@ -19,7 +19,6 @@ export const createTypeOptions = ({ plugin }: { plugin: HeyApiSdkPlugin['Instanc
     external: clientModule,
     kind: 'type',
     meta: {
-      category: 'external',
       resource: 'client.Client',
       tool: client.name,
     },

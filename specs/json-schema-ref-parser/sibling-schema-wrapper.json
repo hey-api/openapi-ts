@@ -1,0 +1,9 @@
+{
+  "components": {
+    "schemas": {
+      "Wrapper_Schema": {
+        "$ref": "sibling-schema-versioned.json#/components/schemas/Versioned_Schema"
+      }
+    }
+  }
+}

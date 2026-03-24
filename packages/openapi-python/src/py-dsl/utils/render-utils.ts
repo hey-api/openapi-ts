@@ -2,7 +2,7 @@ import path from 'node:path';
 
 import type { ExportModule, File, ImportModule } from '@hey-api/codegen-core';
 
-import { py } from '../../ts-python';
+import { py } from '../../py-compiler';
 
 const printer = py.createPrinter({
   indentSize: 4,

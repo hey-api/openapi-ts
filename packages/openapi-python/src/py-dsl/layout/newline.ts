@@ -1,6 +1,6 @@
 import type { AnalysisContext } from '@hey-api/codegen-core';
 
-import { py } from '../../ts-python';
+import { py } from '../../py-compiler';
 import { PyDsl } from '../base';
 
 export class NewlinePyDsl extends PyDsl<py.EmptyStatement> {
@@ -10,7 +10,7 @@ export class NewlinePyDsl extends PyDsl<py.EmptyStatement> {
     super.analyze(ctx);
   }
 
-  override toAst(): py.EmptyStatement {
+  override toAst() {
     return py.factory.createEmptyStatement();
   }
 }

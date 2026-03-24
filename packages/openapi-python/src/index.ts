@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-namespace */
 // OVERRIDES
 // hard-coded here because build process doesn't pick up overrides from separate files
 import '@hey-api/codegen-core';
@@ -48,9 +49,9 @@ declare module '@hey-api/codegen-core' {
 
 declare module '@hey-api/shared' {
   interface PluginConfigMap {
-    '@hey-api/client-httpx': HeyApiClientHttpxPlugin['Types'];
-    '@hey-api/python-sdk': HeyApiSdkPlugin['Types'];
-    pydantic: PydanticPlugin['Types'];
+    '@hey-api/client-httpx': Plugins.HeyApiClientHttpx.Types['Types'];
+    '@hey-api/python-sdk': Plugins.HeyApiSdk.Types['Types'];
+    pydantic: Plugins.Pydantic.Types['Types'];
   }
 }
 // END OVERRIDES
@@ -63,7 +64,7 @@ import colorSupport from 'color-support';
 import type { UserConfig } from './config/types';
 import type { HeyApiClientHttpxPlugin } from './plugins/@hey-api/client-httpx';
 import type { HeyApiSdkPlugin } from './plugins/@hey-api/sdk';
-import type { PydanticPlugin } from './plugins/pydantic';
+import type { PydanticPlugin, PydanticResolvers } from './plugins/pydantic';
 
 colors.enabled = colorSupport().hasBasic;
 
@@ -105,9 +106,17 @@ export {
   utils,
 } from '@hey-api/shared';
 
-// Pydantic plugin
-export type { PydanticPlugin } from './plugins/pydantic';
-export {
-  defaultConfig as defaultPydanticConfig,
-  defineConfig as definePydanticConfig,
-} from './plugins/pydantic';
+export namespace Plugins {
+  export namespace HeyApiClientHttpx {
+    export type Types = HeyApiClientHttpxPlugin;
+  }
+
+  export namespace HeyApiSdk {
+    export type Types = HeyApiSdkPlugin;
+  }
+
+  export namespace Pydantic {
+    export type Resolvers = Required<PydanticResolvers>['~resolvers'];
+    export type Types = PydanticPlugin;
+  }
+}

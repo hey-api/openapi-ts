@@ -1,6 +1,6 @@
 import type { AnalysisContext } from '@hey-api/codegen-core';
 
-import { py } from '../../ts-python';
+import { py } from '../../py-compiler';
 import type { MaybePyDsl } from '../base';
 import { PyDsl } from '../base';
 import type { DoExpr } from '../mixins/do';
@@ -60,14 +60,14 @@ export class WhilePyDsl extends Mixed {
     return this;
   }
 
-  override toAst(): py.WhileStatement {
+  override toAst() {
     this.$validate();
 
     const body = new BlockPyDsl(...this._body!).$do();
     const elseBlock = this._else ? new BlockPyDsl(...this._else).$do() : undefined;
 
     return py.factory.createWhileStatement(
-      this.$node(this._condition!) as py.Expression,
+      this.$node(this._condition!),
       [...body],
       elseBlock ? [...elseBlock] : undefined,
     );

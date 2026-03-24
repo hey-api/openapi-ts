@@ -1,5 +1,5 @@
 import { log } from '@hey-api/codegen-core';
-import type { OperationsStrategy, PluginContext } from '@hey-api/shared';
+import type { PluginContext } from '@hey-api/shared';
 
 import type { UserConfig } from '../types';
 import type { OperationsConfig, UserOperationsConfig } from './types';
@@ -60,7 +60,7 @@ export function resolveOperations(config: Config, context: PluginContext): Opera
 }
 
 function normalizeConfig(
-  input: OperationsStrategy | UserOperationsConfig | undefined,
+  input: Config['operations'],
   legacy: Partial<OperationsConfig>,
   context: PluginContext,
 ): OperationsConfig {

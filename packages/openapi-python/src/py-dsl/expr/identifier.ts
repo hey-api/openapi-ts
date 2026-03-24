@@ -1,6 +1,6 @@
 import type { AnalysisContext, NodeName } from '@hey-api/codegen-core';
 
-import { py } from '../../ts-python';
+import { py } from '../../py-compiler';
 import { PyDsl } from '../base';
 
 const Mixed = PyDsl<py.Identifier>;
@@ -18,7 +18,7 @@ export class IdPyDsl extends Mixed {
     ctx.analyze(this.name);
   }
 
-  override toAst(): py.Identifier {
+  override toAst() {
     return py.factory.createIdentifier(this.name.toString());
   }
 }

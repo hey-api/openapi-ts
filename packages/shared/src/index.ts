@@ -1,4 +1,4 @@
-export { printCliIntro } from './cli';
+export { isEnvironment, printCliIntro } from './cli';
 export { checkNodeVersion } from './config/engine';
 export { getInput } from './config/input/input';
 export { compileInputPath, logInputPaths } from './config/input/path';
@@ -23,6 +23,7 @@ export type {
   FeatureToggle,
   IndexExportOption,
   NamingOptions,
+  ResolveModuleFn,
   UserCommentsOption,
   UserIndexExportOption,
 } from './config/shared';
@@ -67,7 +68,15 @@ export type {
 export { createSchemaProcessor } from './ir/schema-processor';
 export type { SchemaVisitor, SchemaVisitorContext, Walker } from './ir/schema-walker';
 export { childContext, createSchemaWalker } from './ir/schema-walker';
-export type { IR } from './ir/types';
+export type {
+  IR,
+  IRModel,
+  IROperationObject,
+  IRParameterObject,
+  IRParametersObject,
+  IRSchemaObject,
+  IRServerObject,
+} from './ir/types';
 export { addItemsToSchema } from './ir/utils';
 export { parseOpenApiSpec } from './openApi';
 export type { OpenApiV2_0_X, OpenApiV2_0_XTypes } from './openApi/2.0.x';
@@ -95,11 +104,12 @@ export type {
   OpenApiResponseObject,
   OpenApiSchemaObject,
 } from './openApi/types';
-export type { Hooks } from './parser/hooks';
+export type { GetNameContext, Hooks } from './parser/hooks';
 export type { SchemaWithType } from './plugins/shared/types/schema';
 export { definePluginConfig, mappers } from './plugins/shared/utils/config';
 export type { PluginInstanceTypes } from './plugins/shared/utils/instance';
 export { PluginInstance } from './plugins/shared/utils/instance';
+export { buildSymbolIn } from './plugins/symbol';
 export type {
   AnyPluginName,
   DefinePlugin,
@@ -108,11 +118,12 @@ export type {
   PluginContext,
   PluginNames,
 } from './plugins/types';
-export { findPackageJson, findTsConfigPath, loadPackageJson, loadTsConfig } from './tsConfig';
+export { findPackageJson, findTsConfigPath, loadPackageJson } from './tsConfig';
 export type { Logs } from './types/logs';
 export type { WatchValues } from './types/watch';
 export { escapeComment } from './utils/escape';
 export { utils } from './utils/exports';
+export { outputHeaderToPrefix } from './utils/header';
 export { inputToApiRegistry } from './utils/input';
 export { heyApiRegistryBaseUrl } from './utils/input/heyApi';
 export { MinHeap } from './utils/minHeap';

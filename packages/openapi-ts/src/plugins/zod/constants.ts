@@ -20,6 +20,7 @@ export const identifiers = {
   globalRegistry: 'globalRegistry',
   gt: 'gt',
   gte: 'gte',
+  guid: 'guid',
   infer: 'infer',
   int: 'int',
   intersection: 'intersection',

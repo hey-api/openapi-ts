@@ -101,7 +101,6 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'array-items-one-of-length-1.yaml',
         output: 'array-items-one-of-length-1',
-        plugins: ['@hey-api/typescript', 'valibot'],
       }),
       description: 'generates correct array when items are oneOf array with single item',
     },
@@ -195,6 +194,13 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'content-media-type.yaml',
+        output: 'content-media-type',
+      }),
+      description: 'handles contentMediaType schema property for file uploads',
+    },
+    {
+      config: createConfig({
         input: 'content-types.yaml',
         output: 'content-types',
         plugins: ['@hey-api/client-axios', '@hey-api/typescript', '@hey-api/sdk'],
@@ -238,6 +244,21 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'discriminator-allof-inline.json',
+        output: 'discriminator-allof-inline',
+      }),
+      description:
+        'handles allOf where inline schema discriminator mapping should take priority over $ref discriminator fallback',
+    },
+    {
+      config: createConfig({
+        input: 'discriminator-object-self-mapped.json',
+        output: 'discriminator-object-self-mapped',
+      }),
+      description: 'handles object discriminator mappings that include the schema itself',
+    },
+    {
+      config: createConfig({
         input: 'discriminator-non-string.yaml',
         output: 'discriminator-non-string',
       }),
@@ -273,7 +294,6 @@ describe(`OpenAPI ${version}`, () => {
             enums: 'root',
           },
         },
-        plugins: ['@hey-api/typescript'],
       }),
       description: 'exports inline enums',
     },
@@ -560,7 +580,6 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'union-types.json',
         output: 'union-types',
-        plugins: ['@hey-api/typescript'],
       }),
       description: 'handles union of primitive types',
     },
@@ -568,7 +587,6 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'enum-null.json',
         output: 'enum-null',
-        plugins: ['@hey-api/typescript', 'valibot'],
       }),
       description: 'handles null enums',
     },
@@ -680,7 +698,6 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'ref-deep.yaml',
         output: 'ref-deep',
-        plugins: ['@hey-api/typescript'],
       }),
       description: 'handles deep references',
     },
@@ -694,9 +711,29 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'transforms-schemas-name.yaml',
+        output: 'transforms-schemas-name',
+        parser: {
+          transforms: {
+            schemaName: (name: string) => {
+              // Strip version markers: User_v1_0_0_User → User
+              let clean = name.replace(/([A-Za-z\d]+)_v\d+_\d+_\d+_([A-Za-z\d]*)/g, (_, p1, p2) =>
+                p2.startsWith(p1) ? p2 : p1 + p2,
+              );
+              // Deduplicate prefixes: Foo_Foo → Foo
+              const m = clean.match(/^([A-Za-z\d]+)_\1([A-Za-z\d]*)$/);
+              if (m) clean = m[1]! + m[2]!;
+              return clean;
+            },
+          },
+        },
+      }),
+      description: 'handles schema name transforms',
+    },
+    {
+      config: createConfig({
         input: 'transforms-read-write-nested.yaml',
         output: 'transforms-read-write-nested',
-        plugins: ['@hey-api/typescript'],
       }),
       description: 'handles write-only types in nested schemas',
     },
@@ -704,9 +741,15 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'transforms-read-write-response.yaml',
         output: 'transforms-read-write-response',
-        plugins: ['@hey-api/typescript'],
       }),
       description: 'handles read-only types in nested response schemas',
+    },
+    {
+      config: createConfig({
+        input: 'transforms-read-write-unevaluated.yaml',
+        output: 'transforms-read-write-unevaluated',
+      }),
+      description: 'preserves unevaluatedProperties in schemas with readOnly fields',
     },
     {
       config: createConfig({
@@ -740,7 +783,6 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'schema-const.yaml',
         output: 'schema-const',
-        plugins: ['@hey-api/typescript', 'valibot'],
       }),
       description: 'handles various constants',
     },
@@ -887,76 +929,6 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'validators.yaml',
-        output: 'validators',
-        plugins: ['valibot'],
-      }),
-      description: 'generates validator schemas',
-    },
-    {
-      config: createConfig({
-        input: 'validators.yaml',
-        output: 'validators-metadata',
-        plugins: [
-          {
-            metadata: true,
-            name: 'valibot',
-          },
-        ],
-      }),
-      description: 'generates validator schemas with metadata',
-    },
-    {
-      config: createConfig({
-        input: 'validators.yaml',
-        output: 'validators-types',
-        plugins: ['valibot'],
-      }),
-      description: 'generates validator schemas with types',
-    },
-    {
-      config: createConfig({
-        input: 'validators-bigint-min-max.json',
-        output: 'validators-bigint-min-max',
-        plugins: ['valibot'],
-      }),
-      description: 'validator schemas with BigInt and min/max constraints',
-    },
-    {
-      config: createConfig({
-        input: 'validators-circular-ref.json',
-        output: 'validators-circular-ref',
-        plugins: ['valibot'],
-      }),
-      description: 'validator schemas with circular reference',
-    },
-    {
-      config: createConfig({
-        input: 'validators-circular-ref-2.yaml',
-        output: 'validators-circular-ref-2',
-        plugins: ['valibot'],
-      }),
-      description: 'validator schemas with circular reference 2',
-    },
-    {
-      config: createConfig({
-        input: 'validators-union-merge.json',
-        output: 'validators-union-merge',
-        plugins: ['valibot'],
-      }),
-      description: "validator schemas with merged unions (can't use .merge())",
-    },
-    {
-      config: createConfig({
-        input: 'integer-formats.yaml',
-        output: 'integer-formats',
-        plugins: ['valibot'],
-      }),
-      description:
-        'generates validator schemas for all integer format combinations (number/integer/string types with int8, int16, int32, int64, uint8, uint16, uint32, uint64 formats)',
-    },
-    {
-      config: createConfig({
         input: 'opencode.yaml',
         output: 'sse-angular',
         parser: {
@@ -1047,27 +1019,25 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'sse-post.yaml',
+        output: 'sse-tanstack-react-query',
+        plugins: ['@hey-api/client-fetch', '@tanstack/react-query'],
+      }),
+      description: 'SSE POST endpoint is excluded from TanStack React Query mutations',
+    },
+    {
+      config: createConfig({
         input: 'zoom-video-sdk.json',
         output: 'webhooks',
-        plugins: ['@hey-api/typescript', 'valibot', 'zod'],
       }),
-      description: 'webhook types and validator schemas',
+      description: 'webhook types',
     },
     {
       config: createConfig({
         input: 'string-with-format.yaml',
         output: 'string-with-format',
-        plugins: ['@hey-api/typescript', 'valibot', 'zod'],
       }),
       description: 'anyOf string and binary string',
-    },
-    {
-      config: createConfig({
-        input: 'time-format.yaml',
-        output: 'time-format',
-        plugins: ['valibot'],
-      }),
-      description: 'generates correct valibot schema for time format',
     },
   ];
 

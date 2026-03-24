@@ -38,10 +38,7 @@ export function irSchemaToAst({
 
   let ast: Partial<Ast> = {};
 
-  // const z = plugin.referenceSymbol({
-  //   category: 'external',
-  //   resource: 'arktype.type',
-  // });
+  // const type = plugin.external('arktype.type');
 
   if (schema.$ref) {
     const query: SymbolMeta = {
@@ -285,10 +282,6 @@ function handleComponent({
 export const handlerV2: ArktypePlugin['Handler'] = ({ plugin }) => {
   plugin.symbol('type', {
     external: 'arktype',
-    meta: {
-      category: 'external',
-      resource: 'arktype.type',
-    },
   });
 
   plugin.forEach('operation', 'parameter', 'requestBody', 'schema', 'webhook', (event) => {

@@ -1,6 +1,6 @@
 import type { AnalysisContext } from '@hey-api/codegen-core';
 
-import { py } from '../../ts-python';
+import { py } from '../../py-compiler';
 import type { MaybePyDsl } from '../base';
 import { PyDsl } from '../base';
 import type { DoExpr } from '../mixins/do';
@@ -72,17 +72,14 @@ export class WithPyDsl extends Mixed {
     return this;
   }
 
-  override toAst(): py.WithStatement {
+  override toAst() {
     this.$validate();
 
     const astItems = this._items.map((item) => {
       if (typeof item === 'object' && 'context' in item) {
-        return py.factory.createWithItem(
-          this.$node(item.context) as py.Expression,
-          item.alias ? (this.$node(item.alias) as py.Expression) : undefined,
-        );
+        return py.factory.createWithItem(this.$node(item.context), this.$node(item.alias));
       }
-      return py.factory.createWithItem(this.$node(item) as py.Expression, undefined);
+      return py.factory.createWithItem(this.$node(item), undefined);
     });
 
     const body = new BlockPyDsl(...this._body!).$do();
@@ -90,7 +87,7 @@ export class WithPyDsl extends Mixed {
     return py.factory.createWithStatement(
       astItems,
       [...body],
-      this._modifier ? [this.$node(this._modifier) as py.Expression] : undefined,
+      this._modifier ? [this.$node(this._modifier)] : undefined,
     );
   }
 

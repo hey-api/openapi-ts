@@ -24,6 +24,7 @@ coverage
 
 # test files
 .gen/
+dev/gen/
 test/generated
 
 # debug files

@@ -105,9 +105,10 @@ export async function getSpec({
 
         response = request.response;
       } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
         return {
           error: 'not-ok',
-          response: new Response(error instanceof Error ? error.message : String(error)),
+          response: new Response(message, { status: 500 }),
         };
       }
 
@@ -181,9 +182,10 @@ export async function getSpec({
 
       response = request.response;
     } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
       return {
         error: 'not-ok',
-        response: new Response(error instanceof Error ? error.message : String(error)),
+        response: new Response(message, { status: 500 }),
       };
     }
 

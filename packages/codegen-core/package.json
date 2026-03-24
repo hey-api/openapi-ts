@@ -1,6 +1,6 @@
 {
   "name": "@hey-api/codegen-core",
-  "version": "0.7.0",
+  "version": "0.7.4",
   "description": "🧱 TypeScript framework for generating files.",
   "keywords": [
     "codegen",
@@ -44,7 +44,7 @@
     "check-exports": "attw --pack . --profile esm-only --ignore-rules cjs-resolves-to-esm",
     "dev": "tsdown --watch",
     "prepublishOnly": "pnpm build",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsgo --noEmit"
   },
   "dependencies": {
     "@hey-api/types": "workspace:*",
@@ -55,9 +55,6 @@
   "devDependencies": {
     "eslint": "9.39.1",
     "typescript": "5.9.3"
-  },
-  "peerDependencies": {
-    "typescript": ">=5.5.3"
   },
   "engines": {
     "node": ">=20.19.0"

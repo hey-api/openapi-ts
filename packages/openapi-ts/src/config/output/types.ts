@@ -1,12 +1,10 @@
 import type { BaseOutput, BaseUserOutput, UserPostProcessor } from '@hey-api/shared';
 import type { AnyString } from '@hey-api/types';
-import type ts from 'typescript';
+import type { TsConfigJsonResolved } from 'get-tsconfig';
 
 import type { Formatters, Linters, PostProcessorPreset } from './postprocess';
 
-type ImportFileExtensions = '.js' | '.ts';
-
-export type UserOutput = BaseUserOutput & {
+export type UserOutput = BaseUserOutput<'.js' | '.ts'> & {
   /**
    * Which formatter to use to process output folder?
    *
@@ -21,8 +19,9 @@ export type UserOutput = BaseUserOutput & {
    * `node16`, we default to `.js`.
    *
    * @default undefined
+   * @deprecated Use `module.extension` instead.
    */
-  importFileExtension?: ImportFileExtensions | AnyString | null;
+  importFileExtension?: '.js' | '.ts' | AnyString | null;
   /**
    * Which linter to use to process output folder?
    *
@@ -60,18 +59,11 @@ export type UserOutput = BaseUserOutput & {
   tsConfigPath?: AnyString | null;
 };
 
-export type Output = BaseOutput & {
+export type Output = BaseOutput<'.js' | '.ts'> & {
   /**
    * Which formatter to use to process output folder?
    */
   format: Formatters | null;
-  /**
-   * If specified, this will be the file extension used when importing
-   * other modules. By default, we don't add a file extension and let the
-   * runtime resolve it. If you're using moduleResolution `nodenext` or
-   * `node16`, we default to `.js`.
-   */
-  importFileExtension: ImportFileExtensions | AnyString | null | undefined;
   /**
    * Which linter to use to process output folder?
    */
@@ -85,7 +77,7 @@ export type Output = BaseOutput & {
    * The parsed TypeScript configuration used to generate the output.
    * If no `tsconfig` file path was provided or found, this will be `null`.
    */
-  tsConfig: ts.ParsedCommandLine | null;
+  tsConfig: TsConfigJsonResolved | null;
   /**
    * Relative or absolute path to the tsconfig file we should use to
    * generate the output. If a path to tsconfig file is not provided, we

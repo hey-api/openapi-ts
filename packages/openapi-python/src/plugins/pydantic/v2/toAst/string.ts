@@ -1,14 +1,26 @@
 import type { SchemaWithType } from '@hey-api/shared';
 
-// import { $ } from '../../../../py-dsl';
-import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
+import { $ } from '../../../../py-dsl';
+import type { StringResolverContext } from '../../resolvers';
+import type { PydanticType } from '../../shared/types';
+import type { PydanticPlugin } from '../../types';
+import type { FieldConstraints } from '../constants';
 
-export function stringToNode({
-  schema,
-}: IrSchemaToAstOptions & {
-  schema: SchemaWithType<'string'>;
-}): Ast {
-  const constraints: Record<string, unknown> = {};
+function constNode(ctx: StringResolverContext): PydanticType | undefined {
+  const { plugin, schema } = ctx;
+
+  if (typeof schema.const === 'string') {
+    const literal = plugin.external('typing.Literal');
+    return {
+      type: $(literal).slice($.literal(schema.const)),
+    };
+  }
+}
+
+function baseNode(ctx: StringResolverContext): PydanticType {
+  const { schema } = ctx;
+
+  const constraints: FieldConstraints = {};
 
   if (schema.minLength !== undefined) {
     constraints.min_length = schema.minLength;
@@ -26,23 +38,36 @@ export function stringToNode({
     constraints.description = schema.description;
   }
 
-  if (typeof schema.const === 'string') {
-    return {
-      // expression: $.expr(`Literal["${schema.const}"]`),
-      fieldConstraints: constraints,
-      hasLazyExpression: false,
-      models: [],
-      // pipes: [],
-      typeAnnotation: `Literal["${schema.const}"]`,
-    };
-  }
-
   return {
-    // expression: $.expr('str'),
     fieldConstraints: constraints,
-    hasLazyExpression: false,
-    models: [],
-    // pipes: [],
-    typeAnnotation: 'str',
+    type: 'str',
   };
+}
+
+function stringResolver(ctx: StringResolverContext): PydanticType {
+  const constResult = ctx.nodes.const(ctx);
+  if (constResult) return constResult;
+
+  return ctx.nodes.base(ctx);
+}
+
+export function stringToType({
+  plugin,
+  schema,
+}: {
+  plugin: PydanticPlugin['Instance'];
+  schema: SchemaWithType<'string'>;
+}): PydanticType {
+  const ctx: StringResolverContext = {
+    $,
+    nodes: {
+      base: baseNode,
+      const: constNode,
+    },
+    plugin,
+    schema,
+  };
+
+  const resolver = plugin.config['~resolvers']?.string;
+  return resolver?.(ctx) ?? stringResolver(ctx);
 }

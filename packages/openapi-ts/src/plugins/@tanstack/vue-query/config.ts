@@ -38,6 +38,7 @@ export const defaultConfig: TanStackVueQueryPlugin['Config'] = {
       defaultValue: {
         case: plugin.config.case ?? 'camelCase',
         enabled: true,
+        exported: true,
         name: '{{name}}Mutation',
       },
       mappers,

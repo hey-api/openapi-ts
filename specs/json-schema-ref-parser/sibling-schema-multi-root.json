@@ -1,0 +1,25 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Multiple Siblings Test",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/resource": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "sibling-schema-multi-wrapper.json#/components/schemas/Resource_Schema"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

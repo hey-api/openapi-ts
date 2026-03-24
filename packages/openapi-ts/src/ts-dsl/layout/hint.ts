@@ -48,7 +48,7 @@ export class HintTsDsl extends TsDsl<ts.Node> {
     return node;
   }
 
-  override toAst(): ts.Node {
+  override toAst() {
     // this class does not build a standalone node;
     // it modifies other nodes via `apply()`.
     // Return a dummy comment node for compliance.

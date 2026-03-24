@@ -1,82 +1,148 @@
-import { applyNaming, pathToName } from '@hey-api/shared';
+import type { Symbol } from '@hey-api/codegen-core';
+import { buildSymbolIn, pathToName } from '@hey-api/shared';
 
-// import { createSchemaComment } from '../../../plugins/shared/utils/schema';
 import { $ } from '../../../py-dsl';
+import type { PydanticPlugin } from '../types';
+import { identifiers } from '../v2/constants';
+import { createFieldCall } from './field';
 import type { ProcessorContext } from './processor';
-// import { identifiers } from '../v2/constants';
-// import { pipesToNode } from './pipes';
-import type { Ast, IrSchemaToAstOptions } from './types';
+import type { PydanticField, PydanticFinal } from './types';
 
 export function exportAst({
+  final,
   meta,
   naming,
   namingAnchor,
   path,
   plugin,
+  schema,
   tags,
-}: Pick<IrSchemaToAstOptions, 'state'> &
-  ProcessorContext & {
-    ast: Ast;
-  }): void {
+}: ProcessorContext & {
+  final: PydanticFinal;
+}): void {
   const name = pathToName(path, { anchor: namingAnchor });
-  const symbol = plugin.symbol(applyNaming(name, naming), {
-    meta: {
-      category: 'schema',
-      path,
-      tags,
-      tool: 'pydantic',
-      ...meta,
-    },
-  });
+  const symbol = plugin.registerSymbol(
+    buildSymbolIn({
+      meta: {
+        category: 'schema',
+        path,
+        tags,
+        tool: 'pydantic',
+        ...meta,
+      },
+      name,
+      naming,
+      plugin,
+      schema,
+    }),
+  );
 
+  if (final.enumMembers) {
+    exportEnumClass({ final, plugin, symbol });
+  } else if (final.fields) {
+    exportClass({ final, plugin, symbol });
+  } else {
+    exportTypeAlias({ final, plugin, symbol });
+  }
+}
+
+function exportClass({
+  final,
+  plugin,
+  symbol,
+}: {
+  final: PydanticFinal;
+  plugin: PydanticPlugin['Instance'];
+  symbol: Symbol;
+}): void {
   const baseModel = plugin.external('pydantic.BaseModel');
   const classDef = $.class(symbol).extends(baseModel);
-  // .export()
-  // .$if(plugin.config.comments && createSchemaComment(schema), (c, v) => c.doc(v))
-  // .$if(state.hasLazyExpression['~ref'], (c) =>
-  //   c.type($.type(v).attr(ast.typeName || identifiers.types.GenericSchema)),
-  // )
-  // .assign(pipesToNode(ast.pipes, plugin));
+
+  if (plugin.config.strict) {
+    const configDict = plugin.external('pydantic.ConfigDict');
+    classDef.do(
+      $.var(identifiers.model_config).assign($(configDict).call($.kwarg('extra', 'forbid'))),
+    );
+  }
+
+  for (const field of final.fields!) {
+    const fieldStatement = createFieldStatement(field, plugin);
+    classDef.do(fieldStatement);
+  }
+
   plugin.node(classDef);
-  // if (schema.type === 'object' && schema.properties) {
-  //   const baseModelSymbol = plugin.external('pydantic.BaseModel');
-  //   const fieldSymbol = plugin.external('pydantic.Field');
-  //   const classDef = $.class(symbol).extends(baseModelSymbol);
+}
 
-  //   if (plugin.config.comments && schema.description) {
-  //     classDef.doc(schema.description);
-  //   }
+function exportEnumClass({
+  final,
+  plugin,
+  symbol,
+}: {
+  final: PydanticFinal;
+  plugin: PydanticPlugin['Instance'];
+  symbol: Symbol;
+}): void {
+  const members = final.enumMembers ?? [];
+  const hasStrings = members.some((m) => typeof m.value === 'string');
+  const hasNumbers = members.some((m) => typeof m.value === 'number');
 
-  //   for (const name in schema.properties) {
-  //     const property = schema.properties[name]!;
-  //     const isOptional = !schema.required?.includes(name);
+  const enumSymbol = plugin.external('enum.Enum');
+  const classDef = $.class(symbol).extends(enumSymbol);
 
-  //     const propertyAst = irSchemaToAst({
-  //       optional: isOptional,
-  //       plugin,
-  //       schema: property,
-  //       state: {
-  //         ...state,
-  //         path: ref([...fromRef(state.path), 'properties', name]),
-  //       },
-  //     });
+  if (hasStrings && !hasNumbers) {
+    classDef.extends('str');
+  } else if (!hasStrings && hasNumbers) {
+    classDef.extends('int');
+  }
 
-  //     let typeAnnotation = propertyAst.typeAnnotation;
+  for (const member of final.enumMembers ?? []) {
+    classDef.do($.var(member.name).assign($.literal(member.value)));
+  }
 
-  //     if (isOptional && !typeAnnotation.startsWith('Optional[')) {
-  //       typeAnnotation = `Optional[${typeAnnotation}]`;
-  //     }
+  plugin.node(classDef);
+}
 
-  //     if (propertyAst.fieldConstraints && Object.keys(propertyAst.fieldConstraints).length > 0) {
-  //       const constraints = Object.entries(propertyAst.fieldConstraints)
-  //         .map(([key, value]) => `${key}=${JSON.stringify(value)}`)
-  //         .join(', ');
-  //       classDef.do($.stmt($.expr(`${name}: ${typeAnnotation} = Field(${constraints})`)));
-  //     } else {
-  //       classDef.do($.stmt($.expr(`${name}: ${typeAnnotation}`)));
-  //     }
-  //   }
+function createFieldStatement(
+  field: PydanticField,
+  plugin: PydanticPlugin['Instance'],
+): ReturnType<typeof $.var> {
+  const fieldSymbol = field.name;
+  const varStatement = $.var(fieldSymbol).$if(field.type, (v, a) => v.type(a));
 
-  //   plugin.node(classDef);
-  // }
+  const originalName = field.originalName ?? fieldSymbol.name;
+  const needsAlias = field.originalName !== undefined && fieldSymbol.name !== originalName;
+
+  const constraints = {
+    ...field.fieldConstraints,
+    ...(needsAlias && !field.fieldConstraints?.alias && { alias: originalName }),
+  };
+
+  if (Object.keys(constraints).length > 0) {
+    const fieldCall = createFieldCall(constraints, plugin, {
+      required: !field.isOptional,
+    });
+    return varStatement.assign(fieldCall);
+  }
+
+  if (field.isOptional) {
+    return varStatement.assign('None');
+  }
+
+  return varStatement;
+}
+
+function exportTypeAlias({
+  final,
+  plugin,
+  symbol,
+}: {
+  final: PydanticFinal;
+  plugin: PydanticPlugin['Instance'];
+  symbol: Symbol;
+}): void {
+  const typeAlias = plugin.external('typing.TypeAlias');
+  const statement = $.var(symbol)
+    .type(typeAlias)
+    .assign(final.type ?? plugin.external('typing.Any'));
+  plugin.node(statement);
 }

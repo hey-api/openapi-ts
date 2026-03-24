@@ -23,10 +23,62 @@
           }
         }
       }
+    },
+    "/polls": {
+      "get": {
+        "operationId": "getPoll",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Poll"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/polls/nullable": {
+      "get": {
+        "operationId": "getNullablePoll",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/Poll"
+                    }
+                  ],
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "Poll": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": ["id", "createdAt"]
+      },
       "Foo": {
         "type": "object",
         "properties": {
