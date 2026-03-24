@@ -1,0 +1,36 @@
+openapi: 3.1.1
+info:
+  title: OpenAPI 3.1 transformers additional properties example
+  version: '1'
+paths:
+  /foo:
+    post:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bar'
+components:
+  schemas:
+    Foo:
+      type: object
+      required:
+        - foo
+      properties:
+        foo:
+          type: string
+          format: date-time
+    Bar:
+      type: object
+      required:
+        - bar
+      properties:
+        bar:
+          type: string
+          format: date-time
+        baz:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/Foo'

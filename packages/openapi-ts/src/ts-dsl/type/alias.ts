@@ -68,7 +68,7 @@ export class TypeAliasTsDsl extends Mixed {
 
   private missingRequiredCalls(): ReadonlyArray<string> {
     const missing: Array<string> = [];
-    if (!this.value) missing.push('.type()');
+    if (!this.value) missing.push('.\u200Btype()');
     return missing;
   }
 }

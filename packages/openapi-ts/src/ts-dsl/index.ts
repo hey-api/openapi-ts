@@ -24,6 +24,7 @@ import { IdTsDsl } from './expr/id';
 import { LiteralTsDsl } from './expr/literal';
 import { NewTsDsl } from './expr/new';
 import { ObjectTsDsl } from './expr/object';
+import { PostfixTsDsl } from './expr/postfix';
 import { PrefixTsDsl } from './expr/prefix';
 import { ObjectPropTsDsl } from './expr/prop';
 import { RegExpTsDsl } from './expr/regexp';
@@ -35,6 +36,8 @@ import { HintTsDsl } from './layout/hint';
 import { NewlineTsDsl } from './layout/newline';
 import { NoteTsDsl } from './layout/note';
 import { BlockTsDsl } from './stmt/block';
+import type { ForCondition, ForIterable, ForMode } from './stmt/for';
+import { ForTsDsl } from './stmt/for';
 import { IfTsDsl } from './stmt/if';
 import { ReturnTsDsl } from './stmt/return';
 import { StmtTsDsl } from './stmt/stmt';
@@ -88,6 +91,9 @@ const tsDsl = {
   /** Creates a constant variable declaration (`const`). */
   const: (...args: ConstructorParameters<typeof VarTsDsl>) => new VarTsDsl(...args).const(),
 
+  /** Creates a postfix decrement expression (`i--`). */
+  dec: (...args: ConstructorParameters<typeof PostfixTsDsl>) => new PostfixTsDsl(...args).dec(),
+
   /** Creates a decorator expression (e.g. `@decorator`). */
   decorator: (...args: ConstructorParameters<typeof DecoratorTsDsl>) => new DecoratorTsDsl(...args),
 
@@ -103,14 +109,28 @@ const tsDsl = {
   /** Creates a field declaration in a class or object. */
   field: (...args: ConstructorParameters<typeof FieldTsDsl>) => new FieldTsDsl(...args),
 
+  /** Creates a for loop (for, for...of, for...in, or for await...of). */
+  for: ((...args: ReadonlyArray<any>) => new ForTsDsl(...args)) as {
+    (variableOrInit?: VarTsDsl): ForTsDsl<ForMode>;
+    (
+      variableOrInit: VarTsDsl,
+      condition: ForCondition,
+      iterableOrUpdate?: ForIterable,
+    ): ForTsDsl<'for'>;
+    <T extends ForMode>(
+      variableOrInit: VarTsDsl,
+      mode: T,
+      iterableOrUpdate?: ForIterable,
+    ): ForTsDsl<T>;
+  },
+
   /** Converts a runtime value into a corresponding expression node. */
   fromValue: (...args: Parameters<typeof exprValue>) => exprValue(...args),
 
   /** Creates a function expression or declaration. */
   func: ((nameOrFn?: any, fn?: any) => {
     if (nameOrFn === undefined) return new FuncTsDsl();
-    if (typeof nameOrFn !== 'string') return new FuncTsDsl(nameOrFn);
-    if (fn === undefined) return new FuncTsDsl(nameOrFn);
+    if (typeof nameOrFn !== 'string' || fn === undefined) return new FuncTsDsl(nameOrFn);
     return new FuncTsDsl(nameOrFn, fn);
   }) as {
     (): FuncTsDsl<'arrow'>;
@@ -131,6 +151,9 @@ const tsDsl = {
 
   /** Creates an if statement. */
   if: (...args: ConstructorParameters<typeof IfTsDsl>) => new IfTsDsl(...args),
+
+  /** Creates a postfix increment expression (`i++`). */
+  inc: (...args: ConstructorParameters<typeof PostfixTsDsl>) => new PostfixTsDsl(...args).inc(),
 
   /** Creates an initialization block or statement. */
   init: (...args: ConstructorParameters<typeof InitTsDsl>) => new InitTsDsl(...args),
