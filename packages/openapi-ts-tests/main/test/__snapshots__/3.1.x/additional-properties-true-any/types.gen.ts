@@ -6,7 +6,7 @@ export type ClientOptions = {
 
 export type Foo = {
     foo: string;
-    [key: string]: any;
+    [key: string]: any | string;
 };
 
 export type Bar = Foo & {
@@ -15,7 +15,7 @@ export type Bar = Foo & {
 
 export type Baz = Foo & {
     bar: string;
-    [key: string]: any;
+    [key: string]: any | string;
 };
 
 export type Qux = {

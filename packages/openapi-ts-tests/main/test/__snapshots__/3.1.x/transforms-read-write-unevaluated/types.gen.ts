@@ -7,16 +7,10 @@ export type ClientOptions = {
 export type DisposableEmail = {
     domain: string;
     readonly disposable: boolean;
-    metadata: {
-        [key: string]: unknown;
-    };
 };
 
 export type DisposableEmailWritable = {
     domain: string;
-    metadata: {
-        [key: string]: unknown;
-    };
 };
 
 export type GetXData = {

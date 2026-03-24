@@ -8,14 +8,14 @@ export type FileUploadRequest = {
     /**
      * Binary file content
      */
-    file: Blob | File;
+    file: unknown;
 };
 
 export type FileUploadRequestTyped = {
     /**
      * Binary file content with explicit string type
      */
-    file: Blob | File;
+    file: string;
 };
 
 export type UploadFileData = {

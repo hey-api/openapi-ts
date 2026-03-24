@@ -21,7 +21,7 @@ export type Baz = Omit<Foo, '$type'> & {
 
 export type Qux = Omit<Bar, '$type'> & {
     qux?: string;
-    $type: 'BarQux';
+    $type: 'Qux';
 };
 
 export type GetFoosData = {

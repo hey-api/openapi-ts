@@ -45,7 +45,7 @@ export const createClient = (config: Config = {}): Client => {
       ..._config,
       ...options,
       headers: mergeHeaders(_config.headers, options.headers),
-      serializedBody: undefined as string | undefined,
+      serializedBody: undefined,
     };
 
     if (opts.security) {
@@ -60,7 +60,7 @@ export const createClient = (config: Config = {}): Client => {
     }
 
     if (opts.body !== undefined && opts.bodySerializer) {
-      opts.serializedBody = opts.bodySerializer(opts.body) as string | undefined;
+      opts.serializedBody = opts.bodySerializer(opts.body);
     }
 
     // remove Content-Type if body is empty to avoid invalid requests
@@ -231,10 +231,8 @@ export const createClient = (config: Config = {}): Client => {
     });
   };
 
-  const _buildUrl: Client['buildUrl'] = (options) => buildUrl({ ..._config, ...options });
-
   return {
-    buildUrl: _buildUrl,
+    buildUrl,
     connect: makeMethodFn('CONNECT'),
     delete: makeMethodFn('DELETE'),
     get: makeMethodFn('GET'),
