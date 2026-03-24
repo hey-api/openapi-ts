@@ -49,7 +49,7 @@ export type SingleHandlerFactories = {
     callWithNoContentResponseMock: OptionalHttpHandlerFactory<{
         result: CallWithNoContentResponseResponses[204];
         status?: 204;
-    } | ToResponseUnion<CallWithNoContentResponseResponses> | HttpResponseResolver>;
+    } | HttpResponseResolver>;
     callWithResponseAndNoContentResponseMock: HttpHandlerFactory<{
         result: CallWithResponseAndNoContentResponseResponses[200];
         status?: 200;
@@ -57,11 +57,11 @@ export type SingleHandlerFactories = {
     dummyAMock: OptionalHttpHandlerFactory<{
         result: DummyAResponses[204];
         status?: 204;
-    } | ToResponseUnion<DummyAResponses> | HttpResponseResolver>;
+    } | HttpResponseResolver>;
     dummyBMock: OptionalHttpHandlerFactory<{
         result: DummyBResponses[204];
         status?: 204;
-    } | ToResponseUnion<DummyBResponses> | HttpResponseResolver>;
+    } | HttpResponseResolver>;
     callWithResponseMock: OptionalHttpHandlerFactory<HttpResponseResolver>;
     callWithDuplicateResponsesMock: HttpHandlerFactory<{
         result: CallWithDuplicateResponsesResponses[201];
@@ -81,23 +81,23 @@ export type SingleHandlerFactories = {
     complexTypesMock: HttpHandlerFactory<{
         result: ComplexTypesResponses[200];
         status?: 200;
-    } | ToResponseUnion<ComplexTypesResponses> | HttpResponseResolver>;
+    } | HttpResponseResolver>;
     callWithResultFromHeaderMock: OptionalHttpHandlerFactory<{
         result: CallWithResultFromHeaderResponses[200];
         status?: 200;
-    } | ToResponseUnion<CallWithResultFromHeaderResponses> | HttpResponseResolver>;
+    } | HttpResponseResolver>;
     testErrorCodeMock: OptionalHttpHandlerFactory<{
         result: TestErrorCodeResponses[200];
         status?: 200;
-    } | ToResponseUnion<TestErrorCodeResponses> | HttpResponseResolver>;
+    } | HttpResponseResolver>;
     nonAsciiæøåÆøÅöôêÊ字符串Mock: HttpHandlerFactory<{
         result: NonAsciiæøåÆøÅöôêÊ字符串Responses[200];
         status?: 200;
-    } | ToResponseUnion<NonAsciiæøåÆøÅöôêÊ字符串Responses> | HttpResponseResolver>;
+    } | HttpResponseResolver>;
     postApiVbyApiVersionBodyMock: HttpHandlerFactory<{
         result: PostApiVbyApiVersionBodyResponses[200];
         status?: 200;
-    } | ToResponseUnion<PostApiVbyApiVersionBodyResponses> | HttpResponseResolver<never, PostApiVbyApiVersionBodyData['body']>>;
+    } | HttpResponseResolver<never, PostApiVbyApiVersionBodyData['body']>>;
 };
 
 export type GetAllMocksOptions = {

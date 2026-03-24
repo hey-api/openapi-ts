@@ -5,6 +5,7 @@ import type { MswPlugin } from './types';
 export type ResponseKind = 'binary' | 'json' | 'text' | 'void';
 
 export interface DominantResponse {
+  allCandidates: Array<ResponseCandidate>;
   example: unknown;
   kind: ResponseKind;
   statusCode: number | undefined;
@@ -130,7 +131,7 @@ export const computeDominantResponse = ({
   }
 
   if (candidates.length === 0) {
-    return { example: undefined, kind: 'void', statusCode: undefined };
+    return { allCandidates: [], example: undefined, kind: 'void', statusCode: undefined };
   }
 
   const dominant = candidates.reduce((best, cur) =>
@@ -138,6 +139,7 @@ export const computeDominantResponse = ({
   );
 
   return {
+    allCandidates: candidates,
     example: dominant.example,
     kind: dominant.kind,
     statusCode: dominant.statusCode,

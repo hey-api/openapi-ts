@@ -260,6 +260,8 @@ export const operationToHandlerCreator = ({
     return;
   }
 
+  const dominantResponse = computeDominantResponse({ operation, plugin });
+
   const symbolHttp = plugin.external('msw.http');
   const symbolHttpResponse = plugin.external('msw.HttpResponse');
   const symbolHttpResponseResolver = plugin.external('msw.HttpResponseResolver');
@@ -288,7 +290,8 @@ export const operationToHandlerCreator = ({
     role: 'responses',
   });
   let responsesOverrideType: ReturnType<typeof $.type> | undefined;
-  if (symbolResponsesType) {
+  if (symbolResponsesType && dominantResponse.allCandidates.length > 1) {
+    // We only neeed to add ToResponseUnion if there are multiple responses
     if (!plugin.getSymbol({ category: 'type', resource: 'to-response-union' })) {
       emitToResponseUnion(plugin);
     }
@@ -338,8 +341,6 @@ export const operationToHandlerCreator = ({
       )
     : $.type(symbolHttpResponseResolver);
 
-  const dominantResponse = computeDominantResponse({ operation, plugin });
-
   // When examples are disabled, strip the example from the dominant response
   if (!examples) {
     dominantResponse.example = undefined;
@@ -358,14 +359,14 @@ export const operationToHandlerCreator = ({
   const isOptional =
     // if there is no dominantResponse, it means there is no status code definition
     // so we can set the default response as null
-    !(dominantResponse.statusCode != null && responsesOverrideType) ||
+    !(dominantResponse.statusCode != null) ||
     // if there is example, the param is optional because example can be used
     // if it's void, the param is optional because we can define the default (`null`)
     dominantResponse.example != null ||
     dominantResponse.kind === 'void';
 
   let responseOrResolverType: ReturnType<typeof $.type> | ReturnType<typeof $.type.or>;
-  if (dominantResponse.statusCode != null && responsesOverrideType && symbolResponsesType) {
+  if (dominantResponse.statusCode != null && symbolResponsesType) {
     const dominantResponseType = $.type
       .object()
       .prop('result', (p) =>
@@ -376,7 +377,7 @@ export const operationToHandlerCreator = ({
       .prop('status', (p) => p.optional().type($.type.literal(dominantResponse.statusCode!)));
     responseOrResolverType = $.type.or(
       dominantResponseType,
-      $.type.or(responsesOverrideType, resolverType),
+      responsesOverrideType ? $.type.or(responsesOverrideType, resolverType) : resolverType,
     );
   } else {
     responseOrResolverType = resolverType;
