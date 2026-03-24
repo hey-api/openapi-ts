@@ -1,6 +1,6 @@
 {
   "name": "@hey-api/openapi-python",
-  "version": "0.0.7",
+  "version": "0.0.12",
   "private": true,
   "description": "🐍 OpenAPI to Python codegen.",
   "keywords": [
@@ -56,8 +56,8 @@
     "check-exports": "attw --pack . --profile esm-only --ignore-rules cjs-resolves-to-esm",
     "dev": "tsdown --watch",
     "prepublishOnly": "pnpm build",
-    "typecheck": "tsc --noEmit",
-    "typecheck:next": "tsc --noEmit && uv run mypy src/ts-python/__snapshots__"
+    "typecheck": "tsgo --noEmit",
+    "typecheck:next": "tsc --noEmit && uv run mypy src/py-compiler/__snapshots__"
   },
   "dependencies": {
     "@hey-api/codegen-core": "workspace:*",
@@ -72,9 +72,6 @@
     "eslint": "9.39.1",
     "typescript": "5.9.3",
     "yaml": "2.8.2"
-  },
-  "peerDependencies": {
-    "typescript": ">=5.5.3"
   },
   "engines": {
     "node": ">=20.19.0"

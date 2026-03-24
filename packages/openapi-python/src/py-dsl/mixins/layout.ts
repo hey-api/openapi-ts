@@ -1,6 +1,6 @@
 import type { AnalysisContext, Node } from '@hey-api/codegen-core';
 
-import type { py } from '../../ts-python';
+import type { py } from '../../py-compiler';
 import type { BaseCtor, MixinCtor } from './types';
 
 export interface LayoutMethods extends Node {

@@ -24,8 +24,8 @@ import {
 import type { ExampleIntent } from '../../../ir/intents';
 import type { IR } from '../../../ir/types';
 import type { Hooks } from '../../../parser/hooks';
-import type { Plugin, PluginConfigMap } from '../../../plugins/types';
 import { jsonPointerToPath } from '../../../utils/ref';
+import type { Plugin, PluginConfigMap } from '../../types';
 import type { BaseEvent, WalkEvent } from '../types/instance';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
@@ -39,6 +39,7 @@ type ResolvedNode = 'Node' extends keyof PluginInstanceTypes
     PluginInstanceTypes['Node']
   : Node;
 
+// TODO: abstract
 const defaultGetFilePath = (symbol: Symbol): string | undefined => {
   if (!symbol.meta?.pluginName || typeof symbol.meta.pluginName !== 'string') {
     return;
@@ -48,6 +49,9 @@ const defaultGetFilePath = (symbol: Symbol): string | undefined => {
   }
   if (symbol.meta.pluginName === '@hey-api/typescript') {
     return 'types';
+  }
+  if (symbol.meta.pluginName === '@hey-api/python-sdk') {
+    return 'sdk';
   }
   if (symbol.meta.pluginName.startsWith('@hey-api/')) {
     return symbol.meta.pluginName.split('/')[1];
@@ -113,7 +117,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
 
   external(
     resource: Required<SymbolMeta>['resource'],
-    meta?: Omit<SymbolMeta, 'category' | 'resource'>,
+    meta: Omit<SymbolMeta, 'category' | 'resource'> = {},
   ): Symbol {
     return this.gen.symbols.reference({
       ...meta,
@@ -349,7 +353,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
   }
 
   /**
-   * @deprecated use `plugin.symbol()` instead
+   * Alias for `symbol()` method with single argument.
    */
   registerSymbol(symbol: SymbolIn): Symbol<ResolvedNode> {
     return this.symbol(symbol.name, symbol) as Symbol<ResolvedNode>;
@@ -368,12 +372,19 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     }
   }
 
-  symbol(name: SymbolIn['name'], symbol?: Omit<SymbolIn, 'name'>): Symbol<ResolvedNode> {
+  symbol(name: SymbolIn['name'], symbol: Omit<SymbolIn, 'name'> = {}): Symbol<ResolvedNode> {
+    const meta = { ...symbol.meta };
+    if (symbol.external) {
+      if (!meta.category) meta.category = 'external';
+      if (!meta.resource) meta.resource = `${symbol.external}.${name}`;
+      const existing = this.gen.symbols.query(meta).find((s) => s.name === name);
+      if (existing) return existing;
+    }
     const symbolIn: SymbolIn = {
       ...symbol,
       meta: {
         pluginName: path.isAbsolute(this.name) ? 'custom' : this.name,
-        ...symbol?.meta,
+        ...meta,
       },
       name,
     };
@@ -395,19 +406,17 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
 
   /**
    * Registers a symbol only if it does not already exist based on the provided
-   * metadata. This prevents duplicate symbols from being created in the project.
+   * name and metadata. This prevents duplicate symbols from being created in
+   * the project.
    */
-  symbolOnce(name: SymbolIn['name'], symbol?: Omit<SymbolIn, 'name'>): Symbol {
-    const meta = {
-      ...symbol?.meta,
-    };
-    if (symbol?.external) {
-      meta.category = 'external';
-      meta.resource = symbol.external;
+  symbolOnce(name: SymbolIn['name'], symbol: Omit<SymbolIn, 'name'> = {}): Symbol {
+    // `.symbol()` will handle the external symbol deduplication
+    if (symbol.external) return this.symbol(name, symbol);
+    if (symbol.meta) {
+      const existing = this.gen.symbols.query(symbol.meta).find((s) => s.name === name);
+      if (existing) return existing;
     }
-    const existing = this.querySymbol(meta);
-    if (existing) return existing;
-    return this.symbol(name, { ...symbol, meta });
+    return this.symbol(name, symbol);
   }
 
   private buildEventHooks(): EventHooks {

@@ -1,6 +1,6 @@
 import type { AnalysisContext } from '@hey-api/codegen-core';
 
-import { py } from '../../ts-python';
+import { py } from '../../py-compiler';
 import type { MaybePyDsl } from '../base';
 import { PyDsl } from '../base';
 import { LayoutMixin } from '../mixins/layout';
@@ -42,10 +42,10 @@ export class DictPyDsl extends Mixed {
     return this;
   }
 
-  override toAst(): py.DictExpression {
+  override toAst() {
     const astEntries = this._entries.map((entry) => ({
-      key: this.$node(entry.key) as py.Expression,
-      value: this.$node(entry.value) as py.Expression,
+      key: this.$node(entry.key),
+      value: this.$node(entry.value),
     }));
     return py.factory.createDictExpression(astEntries);
   }

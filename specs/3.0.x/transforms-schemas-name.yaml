@@ -1,0 +1,70 @@
+openapi: 3.0.3
+info:
+  title: Schema Name Transform Test
+  version: 1.0.0
+paths:
+  /users:
+    get:
+      summary: Get users
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User_v1_0_0_User'
+  /posts:
+    post:
+      summary: Create post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Post_v2_1_3_Post'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post_v2_1_3_Post'
+components:
+  schemas:
+    User_v1_0_0_User:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        profile:
+          $ref: '#/components/schemas/UserProfile_v1_0_0_UserProfile'
+    UserProfile_v1_0_0_UserProfile:
+      type: object
+      properties:
+        bio:
+          type: string
+        avatar:
+          type: string
+    Post_v2_1_3_Post:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        author:
+          $ref: '#/components/schemas/User_v1_0_0_User'
+        comments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Comment_v1_5_2_Comment'
+    Comment_v1_5_2_Comment:
+      type: object
+      properties:
+        id:
+          type: string
+        text:
+          type: string
+        author:
+          $ref: '#/components/schemas/User_v1_0_0_User'

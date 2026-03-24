@@ -1,6 +1,6 @@
 import type { AnalysisContext } from '@hey-api/codegen-core';
 
-import { py } from '../../ts-python';
+import { py } from '../../py-compiler';
 import { PyDsl } from '../base';
 
 const Mixed = PyDsl<py.BreakStatement>;
@@ -12,7 +12,7 @@ export class BreakPyDsl extends Mixed {
     super.analyze(_ctx);
   }
 
-  override toAst(): py.BreakStatement {
+  override toAst() {
     return py.factory.createBreakStatement();
   }
 }

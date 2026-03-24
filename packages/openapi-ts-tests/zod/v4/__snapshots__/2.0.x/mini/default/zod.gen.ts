@@ -382,7 +382,8 @@ export const zModelWithPattern = z.object({
     text: z.optional(z.string().check(z.regex(/^\w+$/))),
     patternWithSingleQuotes: z.optional(z.string().check(z.regex(/^[a-zA-Z0-9']*$/))),
     patternWithNewline: z.optional(z.string().check(z.regex(/aaa\nbbb/))),
-    patternWithBacktick: z.optional(z.string().check(z.regex(/aaa`bbb/)))
+    patternWithBacktick: z.optional(z.string().check(z.regex(/aaa`bbb/))),
+    patternWithUnicode: z.optional(z.string().check(z.regex(/^\p{L}+$/u)))
 });
 
 export const zParameterActivityParams = z.object({
@@ -407,14 +408,14 @@ export const zFailureFailure = z.object({
     reference_code: z.optional(z.string())
 });
 
-export const zExternalSharedExternalSharedModel = z.object({
+export const zExternalSharedModel = z.object({
     id: z.string(),
     name: z.optional(z.string())
 });
 
-export const zExternalRefA = zExternalSharedExternalSharedModel;
+export const zExternalRefA = zExternalSharedModel;
 
-export const zExternalRefB = zExternalSharedExternalSharedModel;
+export const zExternalRefB = zExternalSharedModel;
 
 /**
  * This is a model with one nested property
@@ -447,7 +448,8 @@ export const zModelWithPatternWritable = z.object({
     text: z.optional(z.string().check(z.regex(/^\w+$/))),
     patternWithSingleQuotes: z.optional(z.string().check(z.regex(/^[a-zA-Z0-9']*$/))),
     patternWithNewline: z.optional(z.string().check(z.regex(/aaa\nbbb/))),
-    patternWithBacktick: z.optional(z.string().check(z.regex(/aaa`bbb/)))
+    patternWithBacktick: z.optional(z.string().check(z.regex(/aaa`bbb/))),
+    patternWithUnicode: z.optional(z.string().check(z.regex(/^\p{L}+$/u)))
 });
 
 export const zServiceWithEmptyTagData = z.object({

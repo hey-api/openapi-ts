@@ -1,5 +1,33 @@
 # @hey-api/codegen-core
 
+## 0.7.4
+
+### Patch Changes
+
+- **planner**: language-aware declaration sharing check ([#3606](https://github.com/hey-api/openapi-ts/pull/3606)) ([`86c7115`](https://github.com/hey-api/openapi-ts/commit/86c71151671b00821746659fa3be715224a28894)) by [@mrlubos](https://github.com/mrlubos)
+
+## 0.7.3
+
+### Patch Changes
+
+- **internal**: remove TypeScript from peer dependencies ([#3566](https://github.com/hey-api/openapi-ts/pull/3566)) ([`b5f1e4b`](https://github.com/hey-api/openapi-ts/commit/b5f1e4b5f64cbf0bad2eff888177ac9c1881ba3e)) by [@mrlubos](https://github.com/mrlubos)
+
+### Updated Dependencies:
+
+- @hey-api/types@0.1.4
+
+## 0.7.2
+
+### Patch Changes
+
+- **log**: make group optional in warn method ([#3540](https://github.com/hey-api/openapi-ts/pull/3540)) ([`0512650`](https://github.com/hey-api/openapi-ts/commit/0512650988ce3c411492172e6bbe300f5440408f)) by [@mrlubos](https://github.com/mrlubos)
+
+## 0.7.1
+
+### Patch Changes
+
+- **internal**: log symbol meta if name is falsy ([#3448](https://github.com/hey-api/openapi-ts/pull/3448)) ([`c50f7bc`](https://github.com/hey-api/openapi-ts/commit/c50f7bcf5676f2783a412288d243aeaeabd9f8bd)) by [@mrlubos](https://github.com/mrlubos)
+
 ## 0.7.0
 
 ### Minor Changes

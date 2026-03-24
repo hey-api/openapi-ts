@@ -7,12 +7,12 @@ export const _400Schema = {
 
 export const ExternalRefASchema = {
     description: 'External ref to shared model (A)',
-    $ref: '#/components/schemas/external-shared_ExternalSharedModel'
+    $ref: '#/components/schemas/ExternalSharedModel'
 } as const;
 
 export const ExternalRefBSchema = {
     description: 'External ref to shared model (B)',
-    $ref: '#/components/schemas/external-shared_ExternalSharedModel'
+    $ref: '#/components/schemas/ExternalSharedModel'
 } as const;
 
 export const camelCaseCommentWithBreaksSchema = {
@@ -1351,6 +1351,10 @@ export const ModelWithPatternSchema = {
         patternWithBacktick: {
             type: 'string',
             pattern: 'aaa`bbb'
+        },
+        patternWithUnicode: {
+            type: 'string',
+            pattern: '^\\p{L}+$'
         }
     }
 } as const;
@@ -1574,6 +1578,21 @@ export const ModelWithNullableObjectSchema = {
         data: {
             $ref: '#/components/schemas/NullableObject'
         }
+    }
+} as const;
+
+export const ModelWithAdditionalPropertiesRefSchema = {
+    type: 'object',
+    description: 'An object with additional properties that can be null (anyOf ref + null)',
+    additionalProperties: {
+        anyOf: [
+            {
+                $ref: '#/components/schemas/NullableObject'
+            },
+            {
+                type: 'null'
+            }
+        ]
     }
 } as const;
 
@@ -2178,7 +2197,7 @@ export const Generic_Schema_Duplicate_Issue_1_System_String_Schema = {
     additionalProperties: false
 } as const;
 
-export const external_shared_ExternalSharedModelSchema = {
+export const ExternalSharedModelSchema = {
     type: 'object',
     properties: {
         id: {
@@ -2306,6 +2325,10 @@ export const ModelWithPatternWritableSchema = {
         patternWithBacktick: {
             type: 'string',
             pattern: 'aaa`bbb'
+        },
+        patternWithUnicode: {
+            type: 'string',
+            pattern: '^\\p{L}+$'
         }
     }
 } as const;

@@ -1,4 +1,4 @@
-import type { py } from '../../ts-python';
+import type { py } from '../../py-compiler';
 import type { PyDsl } from '../base';
 
 export type BaseCtor<T extends py.Node> = abstract new (...args: Array<any>) => PyDsl<T>;

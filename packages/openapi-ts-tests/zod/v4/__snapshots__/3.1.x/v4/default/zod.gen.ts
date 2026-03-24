@@ -651,7 +651,8 @@ export const zModelWithPattern = z.object({
     text: z.string().regex(/^\w+$/).optional(),
     patternWithSingleQuotes: z.string().regex(/^[a-zA-Z0-9']*$/).optional(),
     patternWithNewline: z.string().regex(/aaa\nbbb/).optional(),
-    patternWithBacktick: z.string().regex(/aaa`bbb/).optional()
+    patternWithBacktick: z.string().regex(/aaa`bbb/).optional(),
+    patternWithUnicode: z.string().regex(/^\p{L}+$/u).optional()
 });
 
 export const zFile = z.object({
@@ -720,6 +721,11 @@ export const zCharactersInDescription = z.string();
 export const zModelWithNullableObject = z.object({
     data: zNullableObject.optional()
 });
+
+/**
+ * An object with additional properties that can be null (anyOf ref + null)
+ */
+export const zModelWithAdditionalPropertiesRef = z.record(z.string(), zNullableObject.nullable());
 
 export const zModelWithOneOfEnum = z.union([
     z.object({
@@ -949,7 +955,7 @@ export const zOneOfAllOfIssue = z.union([
     zGenericSchemaDuplicateIssue1SystemString
 ]);
 
-export const zExternalSharedExternalSharedModel = z.object({
+export const zExternalSharedModel = z.object({
     id: z.string(),
     name: z.string().optional()
 });
@@ -957,12 +963,12 @@ export const zExternalSharedExternalSharedModel = z.object({
 /**
  * External ref to shared model (A)
  */
-export const zExternalRefA = zExternalSharedExternalSharedModel;
+export const zExternalRefA = zExternalSharedModel;
 
 /**
  * External ref to shared model (B)
  */
-export const zExternalRefB = zExternalSharedExternalSharedModel;
+export const zExternalRefB = zExternalSharedModel;
 
 /**
  * This is a model with one nested property
@@ -996,7 +1002,8 @@ export const zModelWithPatternWritable = z.object({
     text: z.string().regex(/^\w+$/).optional(),
     patternWithSingleQuotes: z.string().regex(/^[a-zA-Z0-9']*$/).optional(),
     patternWithNewline: z.string().regex(/aaa\nbbb/).optional(),
-    patternWithBacktick: z.string().regex(/aaa`bbb/).optional()
+    patternWithBacktick: z.string().regex(/aaa`bbb/).optional(),
+    patternWithUnicode: z.string().regex(/^\p{L}+$/u).optional()
 });
 
 export const zFileWritable = z.object({

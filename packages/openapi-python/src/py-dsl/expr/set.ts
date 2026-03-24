@@ -1,6 +1,6 @@
 import type { AnalysisContext } from '@hey-api/codegen-core';
 
-import { py } from '../../ts-python';
+import { py } from '../../py-compiler';
 import type { MaybePyDsl } from '../base';
 import { PyDsl } from '../base';
 import { LayoutMixin } from '../mixins/layout';
@@ -34,8 +34,8 @@ export class SetPyDsl extends Mixed {
     return this;
   }
 
-  override toAst(): py.SetExpression {
-    const astElements = this._elements.map((el) => this.$node(el) as py.Expression);
+  override toAst() {
+    const astElements = this._elements.map((el) => this.$node(el));
     return py.factory.createSetExpression(astElements);
   }
 }

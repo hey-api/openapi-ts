@@ -13,12 +13,13 @@ Hey API natively supports the following frameworks.
 
 - [Angular](/openapi-ts/plugins/angular)
 - [Fastify](/openapi-ts/plugins/fastify)
+- [Nest](/openapi-ts/plugins/nest)
+- [oRPC](/openapi-ts/plugins/orpc)
 - [Adonis](/openapi-ts/plugins/adonis) <span data-soon>Soon</span>
 - [Elysia](/openapi-ts/plugins/elysia) <span data-soon>Soon</span>
 - [Express](/openapi-ts/plugins/express) <span data-soon>Soon</span>
 - [Hono](/openapi-ts/plugins/hono) <span data-soon>Soon</span>
 - [Koa](/openapi-ts/plugins/koa) <span data-soon>Soon</span>
-- [Nest](/openapi-ts/plugins/nest) <span data-soon>Soon</span>
 
 Don't see your framework? Let us know your interest by [opening an issue](https://github.com/hey-api/openapi-ts/issues).
 

@@ -1,4 +1,3 @@
-import { ref } from '@hey-api/codegen-core';
 import type { IR } from '@hey-api/shared';
 import { applyNaming, operationPagination } from '@hey-api/shared';
 
@@ -156,13 +155,7 @@ export const createInfiniteQueryOptions = ({
     ),
   );
   const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
-  const type = pluginTypeScript.api.schemaToType({
-    plugin: pluginTypeScript,
-    schema: pagination.schema,
-    state: {
-      path: ref([]),
-    },
-  });
+  const type = pluginTypeScript.api.schemaToType(pluginTypeScript, pagination.schema);
 
   const symbolInfiniteQueryKey = plugin.symbol(
     applyNaming(operation.id, plugin.config.infiniteQueryKeys),

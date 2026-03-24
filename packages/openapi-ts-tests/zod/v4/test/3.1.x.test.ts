@@ -88,6 +88,24 @@ for (const zodVersion of zodVersions) {
       {
         config: createConfig({
           input: 'validators.yaml',
+          output: 'validators-metadata-fn',
+          plugins: [
+            {
+              compatibilityVersion: zodVersion.compatibilityVersion,
+              metadata: ({ $, node, schema }) => {
+                node
+                  .prop('custom', $.literal('value'))
+                  .prop('title', $.literal(schema.description ?? schema.type ?? ''));
+              },
+              name: 'zod',
+            },
+          ],
+        }),
+        description: 'generates validator schemas with metadata function',
+      },
+      {
+        config: createConfig({
+          input: 'validators.yaml',
           output: 'validators-types',
           plugins: [
             {

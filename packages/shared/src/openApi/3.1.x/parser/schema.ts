@@ -1,4 +1,5 @@
 import type { Context } from '../../../ir/context';
+import { isMediaTypeFileLike } from '../../../ir/mediaType';
 import type { IR } from '../../../ir/types';
 import { addItemsToSchema } from '../../../ir/utils';
 import type {
@@ -231,6 +232,11 @@ const parseSchemaMeta = ({
 
   if (schema.format) {
     irSchema.format = schema.format;
+  } else if (
+    schema.contentMediaType &&
+    isMediaTypeFileLike({ mediaType: schema.contentMediaType })
+  ) {
+    irSchema.format = 'binary';
   }
 
   if (schema.maximum !== undefined) {
@@ -466,6 +472,36 @@ const parseObject = ({
     irSchema.required = schema.required;
   }
 
+  if (schema.discriminator && state.$ref) {
+    const values = getAllDiscriminatorValues({
+      discriminator: schema.discriminator,
+      schemaRef: state.$ref,
+    });
+
+    if (values.length) {
+      const propertyType = findDiscriminatorPropertyType({
+        context,
+        propertyName: schema.discriminator.propertyName,
+        schemas: [schema],
+      });
+      const valueSchemas: ReadonlyArray<IR.SchemaObject> = values.map((value) =>
+        convertDiscriminatorValue(value, propertyType),
+      );
+
+      if (!irSchema.properties) {
+        irSchema.properties = {};
+      }
+
+      irSchema.properties[schema.discriminator.propertyName] =
+        valueSchemas.length > 1
+          ? {
+              items: valueSchemas,
+              logicalOperator: 'or',
+            }
+          : valueSchemas[0]!;
+    }
+  }
+
   return irSchema;
 };
 
@@ -525,11 +561,11 @@ const parseAllOf = ({
   // Collect discriminator information to add after all compositions are processed
   type DiscriminatorInfo = {
     discriminator: NonNullable<SchemaObject['discriminator']>;
+    isExplicitMapping: boolean;
     isRequired: boolean;
     values: ReadonlyArray<string>;
   };
   const discriminatorsToAdd: Array<DiscriminatorInfo> = [];
-  const addedDiscriminators = new Set<string>();
 
   for (const compositionSchema of compositionSchemas) {
     const originalInAllOf = state.inAllOf;
@@ -567,13 +603,7 @@ const parseAllOf = ({
           schema: ref,
         });
 
-        // Process each discriminator found
         for (const { discriminator, oneOf } of discriminators) {
-          // Skip if we've already collected this discriminator property
-          if (addedDiscriminators.has(discriminator.propertyName)) {
-            continue;
-          }
-
           const values = discriminatorValues(
             state.$ref,
             discriminator.mapping,
@@ -583,29 +613,49 @@ const parseAllOf = ({
             oneOf ? () => oneOf.some((o) => '$ref' in o && o.$ref === state.$ref) : undefined,
           );
 
-          if (values.length > 0) {
-            // Check if the discriminator property is required in any of the discriminator schemas
-            const isRequired = discriminators.some(
-              (d) =>
-                d.discriminator.propertyName === discriminator.propertyName &&
-                // Check in the ref's required array or in the allOf components
-                (ref.required?.includes(d.discriminator.propertyName) ||
-                  (ref.allOf &&
-                    ref.allOf.some((item) => {
-                      const resolvedItem = item.$ref
-                        ? context.resolveRef<SchemaObject>(item.$ref)
-                        : item;
-                      return resolvedItem.required?.includes(d.discriminator.propertyName);
-                    }))),
-            );
-
-            discriminatorsToAdd.push({
-              discriminator,
-              isRequired,
-              values,
-            });
-            addedDiscriminators.add(discriminator.propertyName);
+          if (values.length === 0) {
+            continue;
           }
+
+          // True when state.$ref appears directly in the mapping; false when the
+          // value fell back to the schema name because no mapping entry matched.
+          const isExplicitMapping =
+            discriminator.mapping !== undefined &&
+            Object.values(discriminator.mapping).includes(state.$ref);
+
+          // An explicit mapping always beats a same-property fallback collected
+          // earlier (e.g. from a grandparent discriminator that doesn't list this
+          // schema). Replace it; otherwise skip the duplicate.
+          const existingIndex = discriminatorsToAdd.findIndex(
+            (d) => d.discriminator.propertyName === discriminator.propertyName,
+          );
+          if (existingIndex !== -1) {
+            if (isExplicitMapping && !discriminatorsToAdd[existingIndex]!.isExplicitMapping) {
+              discriminatorsToAdd.splice(existingIndex, 1);
+            } else {
+              continue;
+            }
+          }
+
+          const isRequired = discriminators.some(
+            (d) =>
+              d.discriminator.propertyName === discriminator.propertyName &&
+              (ref.required?.includes(d.discriminator.propertyName) ||
+                (ref.allOf &&
+                  ref.allOf.some((item) => {
+                    const resolvedItem = item.$ref
+                      ? context.resolveRef<SchemaObject>(item.$ref)
+                      : item;
+                    return resolvedItem.required?.includes(d.discriminator.propertyName);
+                  }))),
+          );
+
+          discriminatorsToAdd.push({
+            discriminator,
+            isExplicitMapping,
+            isRequired,
+            values,
+          });
         }
       }
     }
@@ -1360,6 +1410,15 @@ export const schemaToIrSchema = ({
     return parseType({
       context,
       schema: schema as SchemaWithRequired<SchemaObject, 'type'>,
+      state,
+    });
+  }
+
+  // infer string with binary format based on contentMediaType
+  if (schema.contentMediaType && isMediaTypeFileLike({ mediaType: schema.contentMediaType })) {
+    return parseType({
+      context,
+      schema: { ...schema, type: 'string' } as SchemaWithRequired<SchemaObject, 'type'>,
       state,
     });
   }

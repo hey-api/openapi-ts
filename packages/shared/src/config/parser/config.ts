@@ -36,6 +36,7 @@ export function getParser(userConfig: { parser?: UserParser }): Parser {
             name: '{{name}}',
           },
         },
+        schemaName: undefined,
       },
       validate_EXPERIMENTAL: false,
     },
@@ -137,6 +138,8 @@ export function getParser(userConfig: { parser?: UserParser }): Parser {
                 },
                 value: fields.readWrite,
               }),
+              schemaName:
+                fields.schemaName !== undefined ? fields.schemaName : defaultValue.schemaName,
             }),
           },
           value: fields.transforms,

@@ -1,4 +1,6 @@
+import { canDeclarationsShareIdentifier } from '../project/namespace';
 import { Project } from '../project/project';
+import type { SymbolKind } from '../symbols/types';
 
 // Mock Planner so we control what files appear in project.files
 vi.mock('../planner/planner', () => {
@@ -52,5 +54,46 @@ describe('Project', () => {
       meta: { hello: true },
       project: p,
     });
+  });
+});
+
+describe('canDeclarationsShareIdentifier', () => {
+  const kinds: ReadonlyArray<SymbolKind> = [
+    'class',
+    'enum',
+    'function',
+    'interface',
+    'namespace',
+    'type',
+    'var',
+  ];
+
+  it('matches TypeScript declaration merging matrix', () => {
+    const allowed = new Set([
+      'interface|interface',
+      'class|interface',
+      'class|namespace',
+      'enum|namespace',
+      'function|namespace',
+      'namespace|namespace',
+      'function|type',
+      'type|var',
+    ]);
+
+    for (const a of kinds) {
+      for (const b of kinds) {
+        expect(canDeclarationsShareIdentifier('typescript', a, b)).toBe(
+          allowed.has([a, b].sort().join('|')),
+        );
+      }
+    }
+  });
+
+  it('returns false for Python declaration pairs', () => {
+    for (const a of kinds) {
+      for (const b of kinds) {
+        expect(canDeclarationsShareIdentifier('python', a, b)).toBe(false);
+      }
+    }
   });
 });

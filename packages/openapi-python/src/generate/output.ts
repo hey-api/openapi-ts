@@ -24,9 +24,7 @@ export async function generateOutput(context: Context): Promise<void> {
     // not proud of this one
     // @ts-expect-error
     config._FRAGILE_CLIENT_BUNDLE_RENAMED = generateClientBundle({
-      meta: {
-        importFileExtension: config.output.importFileExtension,
-      },
+      header: config.output.header,
       outputPath,
       // @ts-expect-error
       plugin: client,

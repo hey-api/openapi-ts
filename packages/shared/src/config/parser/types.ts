@@ -175,6 +175,21 @@ export type UserParser = {
                 name?: NameTransformer;
               };
         };
+    /**
+     * Sometimes your schema names are auto-generated or follow a naming convention
+     * that produces verbose or awkward type names. You can rename schema component
+     * keys throughout the specification, automatically updating all `$ref` pointers.
+     *
+     * @example
+     * ```ts
+     * {
+     *   schemaName: (name) => name.replace(/_v\d+_\d+_\d+_/, '_')
+     * }
+     * ```
+     *
+     * @default undefined
+     */
+    schemaName?: NameTransformer;
   };
   /**
    * **This is an experimental feature.**
@@ -280,6 +295,13 @@ export type Parser = {
        */
       responses: NamingOptions;
     };
+    /**
+     * Rename schema component keys and automatically update all `$ref` pointers
+     * throughout the specification.
+     *
+     * @default undefined
+     */
+    schemaName?: NameTransformer;
   };
   /**
    * **This is an experimental feature.**

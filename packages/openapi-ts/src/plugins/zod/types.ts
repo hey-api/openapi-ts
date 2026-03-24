@@ -2,20 +2,22 @@ import type {
   Casing,
   DefinePlugin,
   FeatureToggle,
+  IR,
   NameTransformer,
   NamingOptions,
   Plugin,
 } from '@hey-api/shared';
 
+import type { $, DollarTsDsl } from '../../ts-dsl';
 import type { IApi } from './api';
-import type { Resolvers } from './resolvers';
+import type { ZodResolvers } from './resolvers';
 import type { TypeOptions } from './shared/types';
 
 export type UserConfig = Plugin.Name<'zod'> &
   Plugin.Hooks &
   Plugin.UserComments &
   Plugin.UserExports &
-  Resolvers & {
+  ZodResolvers & {
     /**
      * Casing convention for generated names.
      *
@@ -140,9 +142,23 @@ export type UserConfig = Plugin.Name<'zod'> &
      * some additional metadata for documentation, code generation, AI
      * structured outputs, form validation, and other purposes.
      *
+     * Can be:
+     * - `boolean`: Shorthand for the default metadata builder. When `true`,
+     *   attaches `{ description }` from the schema (if present) to the
+     *   generated Zod schema via the metadata API.
+     * - `function`: Custom metadata builder. Receives `{ $, node, schema }`,
+     *   where `node` is a pre-initialized `$.object().pretty()` node. Add
+     *   properties to `node` to populate the metadata object. Return value is
+     *   ignored; an empty `node` skips metadata for that schema.
+     *   Note: **not supported for Zod 3** (use `boolean` only).
+     *
      * @default false
      */
-    metadata?: boolean;
+    metadata?:
+      | boolean
+      | ((
+          ctx: DollarTsDsl & { node: ReturnType<typeof $.object>; schema: IR.SchemaObject },
+        ) => void);
     /**
      * Configuration for request-specific Zod schemas.
      *
@@ -410,7 +426,7 @@ export type Config = Plugin.Name<'zod'> &
   Plugin.Hooks &
   Plugin.Comments &
   Plugin.Exports &
-  Resolvers & {
+  ZodResolvers & {
     /** Casing convention for generated names. */
     case: Casing;
     /** The compatibility version to target for generated output. */
@@ -425,7 +441,11 @@ export type Config = Plugin.Name<'zod'> &
     /** Configuration for reusable schema definitions. */
     definitions: NamingOptions & FeatureToggle & TypeOptions;
     /** Enable Zod metadata support? */
-    metadata: boolean;
+    metadata:
+      | boolean
+      | ((
+          ctx: DollarTsDsl & { node: ReturnType<typeof $.object>; schema: IR.SchemaObject },
+        ) => void);
     /** Configuration for request-specific Zod schemas. */
     requests: NamingOptions & FeatureToggle & TypeOptions;
     /** Configuration for response-specific Zod schemas. */

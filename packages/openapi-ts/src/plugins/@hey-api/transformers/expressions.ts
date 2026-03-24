@@ -1,18 +1,5 @@
-import type { IR } from '@hey-api/shared';
-import type ts from 'typescript';
-
 import { $ } from '../../../ts-dsl';
-import type { UserConfig } from './types';
-
-export type ExpressionTransformer = ({
-  config,
-  dataExpression,
-  schema,
-}: {
-  config: Omit<UserConfig, 'name'>;
-  dataExpression?: ts.Expression | ReturnType<typeof $.expr | typeof $.attr> | string;
-  schema: IR.SchemaObject;
-}) => Array<ReturnType<typeof $.fromValue>> | undefined;
+import type { ExpressionTransformer } from './types';
 
 export const bigIntExpressions: ExpressionTransformer = ({ dataExpression, schema }) => {
   if (schema.type !== 'integer' || schema.format !== 'int64') {

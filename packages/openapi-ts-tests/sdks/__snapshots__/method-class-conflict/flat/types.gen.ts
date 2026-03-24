@@ -329,9 +329,7 @@ export type HttpValidationProblemDetails = {
     errors?: {
         [key: string]: Array<string>;
     };
-    [key: string]: unknown | string | null | string | null | number | null | string | null | string | null | {
-        [key: string]: Array<string>;
-    } | undefined;
+    [key: string]: unknown;
 };
 
 export type InfoRequest = {

@@ -14,15 +14,17 @@ const buildingSymbols = new Set<number>();
 
 type Expr = ReturnType<typeof $.fromValue | typeof $.return | typeof $.if>;
 
-const isNodeReturnStatement = (node: Expr) => node['~dsl'] === 'ReturnTsDsl';
+function isNodeReturnStatement(node: Expr) {
+  return node['~dsl'] === 'ReturnTsDsl';
+}
 
-const schemaResponseTransformerNodes = ({
+function schemaResponseTransformerNodes({
   plugin,
   schema,
 }: {
   plugin: HeyApiTransformersPlugin['Instance'];
   schema: IR.SchemaObject;
-}): Array<ts.Expression | ts.Statement | Expr> => {
+}): Array<ts.Expression | ts.Statement | Expr> {
   const nodes = processSchemaType({
     dataExpression: $(dataVariableName),
     plugin,
@@ -36,9 +38,9 @@ const schemaResponseTransformerNodes = ({
     }
   }
   return nodes;
-};
+}
 
-const processSchemaType = ({
+function processSchemaType({
   dataExpression,
   plugin,
   schema,
@@ -46,7 +48,7 @@ const processSchemaType = ({
   dataExpression?: ts.Expression | string | ReturnType<typeof $.attr | typeof $.expr>;
   plugin: HeyApiTransformersPlugin['Instance'];
   schema: IR.SchemaObject;
-}): Array<Expr> => {
+}): Array<Expr> {
   if (schema.$ref) {
     const query: SymbolMeta = {
       category: 'transform',
@@ -310,8 +312,10 @@ const processSchemaType = ({
 
   for (const transformer of plugin.config.transformers) {
     const t = transformer({
+      $,
       config: plugin.config,
       dataExpression,
+      plugin,
       schema,
     });
     if (t) {
@@ -320,7 +324,7 @@ const processSchemaType = ({
   }
 
   return [];
-};
+}
 
 // handles only response transformers for now
 export const handler: HeyApiTransformersPlugin['Handler'] = ({ plugin }) => {
@@ -330,7 +334,16 @@ export const handler: HeyApiTransformersPlugin['Handler'] = ({ plugin }) => {
       const { response } = operationResponsesMap(operation);
       if (!response) return;
 
-      if (response.items && response.items.length > 1 && response.logicalOperator !== 'and') {
+      const isNullableUnion =
+        response.items?.length === 2 &&
+        response.items.some((item) => item.type === 'null' || item.type === 'void');
+
+      if (
+        response.items &&
+        response.items.length > 1 &&
+        response.logicalOperator !== 'and' &&
+        !isNullableUnion
+      ) {
         if (plugin.context.config.logs.level === 'debug') {
           console.warn(
             `❗️ Transformers warning: route ${createOperationKey(operation)} has ${response.items.length} non-void success responses. This is currently not handled and we will not generate a response transformer. Please open an issue if you'd like this feature https://github.com/hey-api/openapi-ts/issues`,
@@ -353,6 +366,20 @@ export const handler: HeyApiTransformersPlugin['Handler'] = ({ plugin }) => {
         schema: response,
       });
       if (!nodes.length) return;
+
+      // For nullable union responses (e.g. anyOf: [SomeSchema, null]), wrap the
+      // transformation in a null guard so that null data is returned as-is.
+      // We require nodes.length >= 2 because we need at least one transformation
+      // statement AND a return statement (empty .do() would fail validation).
+      let finalNodes = nodes;
+      if (isNullableUnion && nodes.length >= 2) {
+        const lastNode = nodes[nodes.length - 1]!;
+        if (isNodeReturnStatement(lastNode as Expr)) {
+          const transformNodes = nodes.slice(0, -1) as Array<Expr>;
+          finalNodes = [$.if($(dataVariableName)).do(...transformNodes), lastNode];
+        }
+      }
+
       const symbol = plugin.symbol(
         applyNaming(operation.id, {
           case: 'camelCase',
@@ -375,7 +402,7 @@ export const handler: HeyApiTransformersPlugin['Handler'] = ({ plugin }) => {
             .async()
             .param(dataVariableName, (p) => p.type('any'))
             .returns($.type('Promise').generic(symbolResponse))
-            .do(...nodes),
+            .do(...finalNodes),
         );
       plugin.node(value);
     },

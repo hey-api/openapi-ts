@@ -1,6 +1,6 @@
 import type { AnalysisContext } from '@hey-api/codegen-core';
 
-import { py } from '../../ts-python';
+import { py } from '../../py-compiler';
 import { PyDsl } from '../base';
 
 type ImportName = { alias?: string; name: string };
@@ -46,12 +46,7 @@ export class ImportPyDsl extends Mixed {
     super.analyze(_ctx);
   }
 
-  override toAst(): py.ImportStatement {
-    return {
-      isFrom: this.isFrom,
-      kind: py.PyNodeKind.ImportStatement,
-      module: this.module,
-      names: this.names,
-    };
+  override toAst() {
+    return py.factory.createImportStatement(this.module, this.names, this.isFrom);
   }
 }

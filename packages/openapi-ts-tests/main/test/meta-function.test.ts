@@ -52,6 +52,11 @@ describe('TanStack Query Meta Function Customization', () => {
       name: '@tanstack/angular-query-experimental',
       output: 'angular-query-experimental',
     },
+    {
+      description: 'Preact Query',
+      name: '@tanstack/preact-query',
+      output: 'preact-query',
+    },
   ] as const;
 
   // Generate scenarios for each framework

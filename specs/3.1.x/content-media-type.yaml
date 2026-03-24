@@ -1,0 +1,46 @@
+openapi: 3.1.0
+info:
+  title: OpenAPI 3.1.0 contentMediaType example
+  version: '1'
+paths:
+  /upload:
+    post:
+      operationId: uploadFile
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FileUploadRequest'
+      responses:
+        '200':
+          description: OK
+  /upload-typed:
+    post:
+      operationId: uploadFileTyped
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FileUploadRequestTyped'
+      responses:
+        '200':
+          description: OK
+components:
+  schemas:
+    FileUploadRequest:
+      type: object
+      required:
+        - file
+      properties:
+        file:
+          contentMediaType: application/octet-stream
+          description: Binary file content
+    FileUploadRequestTyped:
+      type: object
+      required:
+        - file
+      properties:
+        file:
+          type: string
+          contentMediaType: application/octet-stream
+          description: Binary file content with explicit string type

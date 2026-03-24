@@ -81,7 +81,6 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'array-items-one-of-length-1.yaml',
         output: 'array-items-one-of-length-1',
-        plugins: ['@hey-api/typescript', 'valibot'],
       }),
       description: 'generates correct array when items are oneOf array with single item',
     },
@@ -219,6 +218,21 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'discriminator-allof-inline.json',
+        output: 'discriminator-allof-inline',
+      }),
+      description:
+        'handles allOf where inline schema discriminator mapping should take priority over $ref discriminator fallback',
+    },
+    {
+      config: createConfig({
+        input: 'discriminator-object-self-mapped.json',
+        output: 'discriminator-object-self-mapped',
+      }),
+      description: 'handles object discriminator mappings that include the schema itself',
+    },
+    {
+      config: createConfig({
         input: 'discriminator-non-string.yaml',
         output: 'discriminator-non-string',
       }),
@@ -240,7 +254,6 @@ describe(`OpenAPI ${version}`, () => {
             enums: 'root',
           },
         },
-        plugins: ['@hey-api/typescript'],
       }),
       description: 'exports inline enums',
     },
@@ -527,7 +540,6 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'enum-null.json',
         output: 'enum-null',
-        plugins: ['@hey-api/typescript', 'valibot'],
       }),
       description: 'handles null enums',
     },
@@ -578,7 +590,6 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         input: 'ref-deep.yaml',
         output: 'ref-deep',
-        plugins: ['@hey-api/typescript'],
       }),
       description: 'handles deep references',
     },
@@ -589,6 +600,42 @@ describe(`OpenAPI ${version}`, () => {
         plugins: ['@hey-api/client-fetch', '@hey-api/typescript'],
       }),
       description: 'handles read-only and write-only types',
+    },
+    {
+      config: createConfig({
+        input: 'transforms-schemas-name.yaml',
+        output: 'transforms-schemas-name',
+        parser: {
+          transforms: {
+            schemaName: (name: string) => {
+              // Strip version markers: User_v1_0_0_User → User
+              let clean = name.replace(/([A-Za-z\d]+)_v\d+_\d+_\d+_([A-Za-z\d]*)/g, (_, p1, p2) =>
+                p2.startsWith(p1) ? p2 : p1 + p2,
+              );
+              // Deduplicate prefixes: Foo_Foo → Foo
+              const m = clean.match(/^([A-Za-z\d]+)_\1([A-Za-z\d]*)$/);
+              if (m) clean = m[1]! + m[2]!;
+              return clean;
+            },
+          },
+        },
+      }),
+      description: 'handles schema name transforms',
+    },
+    {
+      config: createConfig({
+        input: 'transforms-schemas-name-collision.yaml',
+        output: 'transforms-schemas-name-collision',
+        parser: {
+          transforms: {
+            schemaName: (name: string) =>
+              // Try to rename all _vX_User schemas to "User"
+              // This should cause collisions since "User" already exists
+              name.replace(/_v\d+_User$/, ''),
+          },
+        },
+      }),
+      description: 'handles schema name collision prevention',
     },
     {
       config: createConfig({
@@ -717,7 +764,6 @@ describe(`OpenAPI ${version}`, () => {
             propertiesRequiredByDefault: true,
           },
         },
-        plugins: ['@hey-api/typescript'],
       }),
       description: 'makes all object properties required by default',
     },
@@ -727,14 +773,6 @@ describe(`OpenAPI ${version}`, () => {
         output: 'type-invalid',
       }),
       description: 'gracefully handles invalid type',
-    },
-    {
-      config: createConfig({
-        input: 'validators.json',
-        output: 'validators',
-        plugins: ['valibot'],
-      }),
-      description: 'generates validator schemas',
     },
   ];
 

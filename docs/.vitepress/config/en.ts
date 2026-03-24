@@ -228,6 +228,14 @@ export default defineConfig({
                 text: 'Fastify',
               },
               {
+                link: '/openapi-ts/plugins/nest',
+                text: 'Nest',
+              },
+              {
+                link: '/openapi-ts/plugins/orpc',
+                text: 'oRPC',
+              },
+              {
                 link: '/openapi-ts/plugins/adonis',
                 text: 'Adonis <span data-soon>soon</span>',
               },
@@ -246,10 +254,6 @@ export default defineConfig({
               {
                 link: '/openapi-ts/plugins/koa',
                 text: 'Koa <span data-soon>soon</span>',
-              },
-              {
-                link: '/openapi-ts/plugins/nest',
-                text: 'Nest <span data-soon>soon</span>',
               },
             ],
             link: '/openapi-ts/web-frameworks',
@@ -330,7 +334,7 @@ export default defineConfig({
             text: 'License',
           },
           {
-            link: 'https://github.com/orgs/hey-api/discussions/1495',
+            link: 'https://github.com/orgs/hey-api/discussions/3159',
             text: 'Roadmap',
           },
         ],

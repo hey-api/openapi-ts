@@ -157,11 +157,31 @@ const inventory$Ref = <S extends object = JSONSchema>({
       pointer = $refs._resolve($refPath, pathFromRoot, options);
     } catch (error) {
       if (error instanceof MissingPointerError) {
-        // Log warning but continue - common in complex schema ecosystems
-        console.warn(`Skipping unresolvable $ref: ${$refPath}`);
-        return;
+        // The ref couldn't be resolved in the target file. This commonly
+        // happens when a wrapper file redirects via $ref to a versioned
+        // file, and the bundler's crawl path retains the wrapper URL.
+        // Try resolving the hash fragment against other files in $refs
+        // that might contain the target schema.
+        const hash = url.getHash($refPath);
+        if (hash) {
+          const baseFile = url.stripHash($refPath);
+          for (const filePath of Object.keys($refs._$refs)) {
+            if (filePath === baseFile) continue;
+            try {
+              pointer = $refs._resolve(filePath + hash, pathFromRoot, options);
+              if (pointer) break;
+            } catch {
+              // try next file
+            }
+          }
+        }
+        if (!pointer) {
+          console.warn(`Skipping unresolvable $ref: ${$refPath}`);
+          return;
+        }
+      } else {
+        throw error;
       }
-      throw error; // Re-throw unexpected errors
     }
 
     if (pointer) {
@@ -217,8 +237,19 @@ const inventory$Ref = <S extends object = JSONSchema>({
   inventory.push(newEntry);
   inventoryLookup.add(newEntry);
 
-  // Recursively crawl the resolved value
+  // Recursively crawl the resolved value.
+  // When the resolution followed a $ref chain to a different file,
+  // use the resolved file as the base path so that local $ref values
+  // (e.g. #/components/schemas/SiblingSchema) inside the resolved
+  // value resolve against the correct file.
   if (!existingEntry || external) {
+    let crawlPath = pointer.path;
+
+    const originalFile = url.stripHash($refPath);
+    if (file !== originalFile) {
+      crawlPath = file + url.getHash(pointer.path);
+    }
+
     crawl({
       $refs,
       indirections: indirections + 1,
@@ -227,7 +258,7 @@ const inventory$Ref = <S extends object = JSONSchema>({
       key: null,
       options,
       parent: pointer.value,
-      path: pointer.path,
+      path: crawlPath,
       pathFromRoot,
       resolvedRefs,
       visitedObjects,
@@ -586,7 +617,22 @@ function remap(parser: $RefParser, inventory: Array<InventoryEntry>) {
       } catch {
         // Ignore errors
       }
-      const proposed = `${proposedBase}_${lastToken(entry.hash)}`;
+
+      // Try without prefix first (cleaner names)
+      const schemaName = lastToken(entry.hash);
+      let proposed = schemaName;
+
+      // Check if this name would conflict with existing schemas from other files
+      if (!usedNamesByObj.has(container)) {
+        usedNamesByObj.set(container, new Set<string>(Object.keys(container || {})));
+      }
+      const used = usedNamesByObj.get(container)!;
+
+      // If the name is already used, add the file prefix
+      if (used.has(proposed)) {
+        proposed = `${proposedBase}_${schemaName}`;
+      }
+
       defName = uniqueName(container, proposed);
       namesForPrefix.set(targetKey, defName);
       // Store the resolved value under the container

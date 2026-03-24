@@ -4,7 +4,7 @@ import type { ExportModule, ImportModule } from '../bindings';
 import type { IProjectRenderMeta } from '../extensions';
 import type { File } from '../files/file';
 import type { INode } from '../nodes/node';
-import { canShareName } from '../project/namespace';
+import { canDeclarationsShareIdentifier } from '../project/namespace';
 import type { IProject } from '../project/types';
 import { fromRef } from '../refs/refs';
 import type { RenderContext } from '../renderer';
@@ -417,12 +417,13 @@ export class Planner {
 
     const localNames = ctx.localNames(scope);
     while (true) {
+      const language = node?.language || symbol.node?.language || file.language;
+
       const kinds = [...(localNames.get(finalName) ?? [])];
 
-      const ok = kinds.every((kind) => canShareName(symbol.kind, kind));
+      const ok = kinds.every((kind) => canDeclarationsShareIdentifier(language, symbol.kind, kind));
       if (ok) break;
 
-      const language = node?.language || symbol.node?.language || file.language;
       const resolver =
         (language ? this.project.nameConflictResolvers[language] : undefined) ??
         this.project.defaultNameConflictResolver;

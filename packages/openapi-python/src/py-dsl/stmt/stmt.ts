@@ -1,6 +1,6 @@
 import type { AnalysisContext } from '@hey-api/codegen-core';
 
-import { py } from '../../ts-python';
+import { py } from '../../py-compiler';
 import { PyDsl } from '../base';
 
 const Mixed = PyDsl<py.Statement>;
@@ -23,7 +23,7 @@ export class StmtPyDsl extends Mixed {
   override toAst() {
     const node = this.$node(this._inner);
     if (isStatement(node)) return node;
-    return py.factory.createExpressionStatement(node as py.Expression);
+    return py.factory.createExpressionStatement(node);
   }
 }
 

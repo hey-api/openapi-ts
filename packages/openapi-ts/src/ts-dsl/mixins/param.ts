@@ -1,8 +1,8 @@
-import type { AnalysisContext, Node, NodeName } from '@hey-api/codegen-core';
+import type { AnalysisContext, Node } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
-import type { ParamCtor } from '../decl/param';
+import type { ParamCtor, ParamFn, ParamName } from '../decl/param';
 import { ParamTsDsl } from '../decl/param';
 import type { BaseCtor, MixinCtor } from './types';
 
@@ -26,10 +26,7 @@ export function ParamMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base: T
       }
     }
 
-    protected param(
-      name: NodeName | ((p: ParamTsDsl) => void),
-      fn?: (p: ParamTsDsl) => void,
-    ): this {
+    protected param(name: ParamName, fn?: ParamFn): this {
       const p = new ParamTsDsl(name, fn);
       this._params.push(p);
       return this;

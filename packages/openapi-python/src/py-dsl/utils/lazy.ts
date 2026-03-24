@@ -1,6 +1,6 @@
 import type { AnalysisContext } from '@hey-api/codegen-core';
 
-import type { py } from '../../ts-python';
+import type { py } from '../../py-compiler';
 import { PyDsl } from '../base';
 import type { PyDslContext } from './context';
 import { ctx } from './context';
@@ -26,7 +26,7 @@ export class LazyPyDsl<T extends py.Node = py.Node> extends PyDsl<T> {
     return this._thunk(ctx);
   }
 
-  override toAst(): T {
+  override toAst() {
     return this.toResult().toAst();
   }
 }

@@ -1,6 +1,6 @@
 import type { AnalysisContext } from '@hey-api/codegen-core';
 
-import { py } from '../../ts-python';
+import { py } from '../../py-compiler';
 import type { MaybePyDsl } from '../base';
 import { PyDsl } from '../base';
 import type { DoExpr } from '../mixins/do';
@@ -67,15 +67,15 @@ export class ForPyDsl extends Mixed {
     return this;
   }
 
-  override toAst(): py.ForStatement {
+  override toAst() {
     this.$validate();
 
     const body = new BlockPyDsl(...this._body!).$do();
     const elseBlock = this._else ? new BlockPyDsl(...this._else).$do() : undefined;
 
     return py.factory.createForStatement(
-      this.$node(this._target!) as py.Expression,
-      this.$node(this._iterable!) as py.Expression,
+      this.$node(this._target!),
+      this.$node(this._iterable!),
       [...body],
       elseBlock ? [...elseBlock] : undefined,
     );

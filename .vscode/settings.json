@@ -4,6 +4,7 @@
   },
   "editor.defaultFormatter": "oxc.oxc-vscode",
   "editor.quickSuggestions": {
+    "other": "on",
     "strings": "on"
   },
   "eslint.format.enable": true,
@@ -18,13 +19,16 @@
     "**/*.mjs": true,
     "**/*.mts": true,
     "**/.vitepress/dist": true,
+    "**/dist": true,
     "**/.mypy_cache": true,
     "**/__snapshots__": true,
     "**/coverage": true,
+    "**/openapi-python-tests/**/.gen": true,
     "**/openapi-ts-tests/**/generated": true,
     "**/openapi-ts-tests/**/.gen": true,
     "**/*.tsbuildinfo": true
   },
+  "typescript.experimental.useTsgo": true,
   "typescript.preferences.autoImportFileExcludePatterns": ["dist/**"],
   "typescript.preferences.autoImportSpecifierExcludeRegexes": ["^(node:)?os$"],
   "typescript.tsdk": "node_modules/typescript/lib",

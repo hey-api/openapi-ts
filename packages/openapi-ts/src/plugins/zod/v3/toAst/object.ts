@@ -5,31 +5,23 @@ import { $ } from '../../../../ts-dsl';
 import { identifiers } from '../../constants';
 import type { ObjectResolverContext } from '../../resolvers';
 import type { Chain } from '../../shared/chain';
-import type {
-  Ast,
-  IrSchemaToAstOptions,
-  ZodAppliedResult,
-  ZodSchemaResult,
-} from '../../shared/types';
+import type { CompositeHandlerResult, ZodFinal, ZodResult } from '../../shared/types';
 import type { ZodPlugin } from '../../types';
 
 type WalkerCtx = SchemaVisitorContext<ZodPlugin['Instance']>;
 
-interface ObjectToAstOptions extends IrSchemaToAstOptions {
-  applyModifiers: (result: ZodSchemaResult, opts: { optional?: boolean }) => ZodAppliedResult;
+interface ObjectToAstOptions {
+  applyModifiers: (result: ZodResult, opts: { optional?: boolean }) => ZodFinal;
+  plugin: ZodPlugin['Instance'];
   schema: SchemaWithType<'object'>;
-  walk: Walker<ZodSchemaResult, ZodPlugin['Instance']>;
+  walk: Walker<ZodResult, ZodPlugin['Instance']>;
   walkerCtx: WalkerCtx;
 }
 
-type ExtendedContext = ObjectResolverContext & {
-  applyModifiers: ObjectToAstOptions['applyModifiers'];
-  walk: ObjectToAstOptions['walk'];
-  walkerCtx: ObjectToAstOptions['walkerCtx'];
-};
+type ExtendedContext = ObjectResolverContext;
 
 function additionalPropertiesNode(ctx: ExtendedContext): Chain | null | undefined {
-  const { schema, walk, walkerCtx } = ctx;
+  const { applyModifiers, schema, walk, walkerCtx } = ctx;
 
   if (
     !schema.additionalProperties ||
@@ -42,8 +34,9 @@ function additionalPropertiesNode(ctx: ExtendedContext): Chain | null | undefine
     schema.additionalProperties,
     childContext(walkerCtx, 'additionalProperties'),
   );
-  if (additionalResult.hasLazyExpression) ctx.utils.ast.hasLazyExpression = true;
-  return additionalResult.expression.expression;
+  ctx._childResults.push(additionalResult);
+  const finalExpr = applyModifiers(additionalResult, {});
+  return finalExpr.expression;
 }
 
 function baseNode(ctx: ExtendedContext): Chain {
@@ -61,7 +54,6 @@ function baseNode(ctx: ExtendedContext): Chain {
 }
 
 function objectResolver(ctx: ExtendedContext): Chain {
-  // TODO: parser - handle constants
   return ctx.nodes.base(ctx);
 }
 
@@ -74,26 +66,26 @@ function shapeNode(ctx: ExtendedContext): ReturnType<typeof $.object> {
     const isOptional = !schema.required?.includes(name);
 
     const propertyResult = walk(property, childContext(walkerCtx, 'properties', name));
-    if (propertyResult.hasLazyExpression) ctx.utils.ast.hasLazyExpression = true;
+    ctx._childResults.push(propertyResult);
 
-    const ast = applyModifiers(propertyResult, {
+    const finalExpr = applyModifiers(propertyResult, {
       optional: isOptional,
     });
 
-    if (ast.hasLazyExpression) ctx.utils.ast.hasLazyExpression = true;
-    shape.prop(name, ast.expression);
+    shape.prop(name, finalExpr.expression);
   }
 
   return shape;
 }
 
-export function objectToAst(options: ObjectToAstOptions): Omit<Ast, 'typeName'> {
-  const { plugin } = options;
-  const ast: Partial<Omit<Ast, 'typeName'>> = {};
+export function objectToAst(options: ObjectToAstOptions): CompositeHandlerResult {
+  const { applyModifiers, plugin, schema, walk, walkerCtx } = options;
+  const childResults: Array<ZodResult> = [];
   const z = plugin.external('zod.z');
   const ctx: ExtendedContext = {
-    ...options,
     $,
+    _childResults: childResults,
+    applyModifiers,
     chain: {
       current: $(z),
     },
@@ -103,19 +95,18 @@ export function objectToAst(options: ObjectToAstOptions): Omit<Ast, 'typeName'> 
       shape: shapeNode,
     },
     plugin,
+    schema,
     symbols: {
       z,
     },
-    utils: {
-      ast,
-      state: options.state,
-    },
+    walk,
+    walkerCtx,
   };
   const resolver = plugin.config['~resolvers']?.object;
   const node = resolver?.(ctx) ?? objectResolver(ctx);
-  ast.expression = node;
+
   return {
-    ...ast,
-    anyType: identifiers.AnyZodObject,
-  } as Omit<Ast, 'typeName'>;
+    childResults,
+    expression: node,
+  };
 }

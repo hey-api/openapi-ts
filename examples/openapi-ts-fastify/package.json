@@ -6,7 +6,7 @@
   "scripts": {
     "openapi-ts": "openapi-ts",
     "test": "vitest",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsgo --noEmit"
   },
   "dependencies": {
     "fastify": "5.7.4",

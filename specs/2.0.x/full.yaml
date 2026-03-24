@@ -1127,6 +1127,9 @@ definitions:
       patternWithBacktick:
         type: string
         pattern: aaa`bbb
+      patternWithUnicode:
+        type: string
+        pattern: ^\p{L}+$
   parameter.ActivityParams:
     type: object
     properties:
