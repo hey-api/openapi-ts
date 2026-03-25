@@ -12,7 +12,7 @@ const dataVariableName = 'data';
 // can emit calls to transformers that will be implemented later.
 const buildingSymbols = new Set<number>();
 
-type Expr = ReturnType<typeof $.fromValue | typeof $.return | typeof $.if>;
+type Expr = ReturnType<typeof $.fromValue | typeof $.for | typeof $.if | typeof $.return>;
 
 function isNodeReturnStatement(node: Expr) {
   return node['~dsl'] === 'ReturnTsDsl';
@@ -190,6 +190,22 @@ function processSchemaType({
           // this place influences all underlying transformers, while it's not exactly transformer itself
           // Keep in mind that !!0 === false, so it already makes output for Bigint undesirable
           $.if(propertyAccessExpression).do(...propertyNodes),
+        );
+      }
+    }
+
+    if (schema.additionalProperties && dataExpression) {
+      const entryValueNodes = processSchemaType({
+        dataExpression: $(dataExpression).attr('key').computed(),
+        plugin,
+        schema: schema.additionalProperties,
+      });
+
+      if (entryValueNodes.length) {
+        nodes.push(
+          $.for($.const('key'))
+            .of($('Object').attr('keys').call(dataExpression))
+            .do(...entryValueNodes),
         );
       }
     }
