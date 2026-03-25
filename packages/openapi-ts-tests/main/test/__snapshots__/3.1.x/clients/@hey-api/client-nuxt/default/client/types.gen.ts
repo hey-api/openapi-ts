@@ -88,7 +88,7 @@ export interface RequestOptions<
    * A function transforming response data before it's returned. This is useful
    * for post-processing data, e.g. converting ISO strings into Date objects.
    */
-  responseTransformer?: (data: ResT) => Promise<ResT>;
+  responseTransformer?: (data: ResT) => Promise<unknown>;
   /**
    * Security mechanism(s) to use for the request.
    */
