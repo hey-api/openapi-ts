@@ -1,6 +1,6 @@
 import type { DiscriminatorObject, ExternalDocumentationObject, XMLObject } from './spec';
 
-export interface OpenApiSchemaExtensions {
+export interface OpenAPIV3_1SchemaExtensions {
   /**
    * Adds support for polymorphism. The discriminator is an object name that is used to differentiate between other schemas which may satisfy the payload description. See {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#composition-and-inheritance-polymorphism Composition and Inheritance} for more details.
    */

@@ -1,7 +1,8 @@
+import type { OpenAPIV3_1 } from '@hey-api/spec-types';
+
 import type { Context } from '../../../ir/context';
 import type { IR } from '../../../ir/types';
 import { refToName } from '../../../utils/ref';
-import type { RequestBodyObject, SchemaObject } from '../types/spec';
 import { mediaTypeObjects } from './mediaType';
 import { schemaToIrSchema } from './schema';
 
@@ -12,7 +13,7 @@ const requestBodyToIrRequestBody = ({
 }: {
   $ref: string;
   context: Context;
-  requestBody: RequestBodyObject;
+  requestBody: OpenAPIV3_1.RequestBodyObject;
 }): IR.RequestBodyObject => {
   // TODO: parser - fix
   const contents = mediaTypeObjects({ content: requestBody.content });
@@ -20,7 +21,7 @@ const requestBodyToIrRequestBody = ({
   const content = contents.find((content) => content.type === 'json') || contents[0];
   const schema = content ? content.schema : undefined;
 
-  const finalSchema: SchemaObject = {
+  const finalSchema: OpenAPIV3_1.SchemaObject = {
     description: requestBody.description,
     ...schema,
   };
@@ -54,7 +55,7 @@ export const parseRequestBody = ({
 }: {
   $ref: string;
   context: Context;
-  requestBody: RequestBodyObject;
+  requestBody: OpenAPIV3_1.RequestBodyObject;
 }) => {
   if (!context.ir.components) {
     context.ir.components = {};

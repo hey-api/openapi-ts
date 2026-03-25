@@ -1,3 +1,5 @@
+import type { OpenAPIV2 } from '@hey-api/spec-types';
+
 import type { Context } from '../../../ir/context';
 import { buildResourceMetadata } from '../../../openApi/shared/graph/meta';
 import { transformOpenApiSpec } from '../../../openApi/shared/transforms';
@@ -10,13 +12,6 @@ import {
 import { buildGraph } from '../../../openApi/shared/utils/graph';
 import { mergeParametersObjects } from '../../../openApi/shared/utils/parameter';
 import { handleValidatorResult } from '../../../openApi/shared/utils/validator';
-import type {
-  OpenApiV2_0_X,
-  OperationObject,
-  PathItemObject,
-  PathsObject,
-  SecuritySchemeObject,
-} from '../types/spec';
 import { filterSpec } from './filter';
 import { parsePathOperation } from './operation';
 import { parametersArrayToObject } from './parameter';
@@ -24,13 +19,10 @@ import { parseSchema } from './schema';
 import { parseServers } from './server';
 import { validateOpenApiSpec } from './validate';
 
-type PathKeys<T extends keyof PathsObject = keyof PathsObject> = keyof T extends infer K
-  ? K extends `/${string}`
-    ? K
-    : never
-  : never;
+type PathKeys<T extends keyof OpenAPIV2.PathsObject = keyof OpenAPIV2.PathsObject> =
+  keyof T extends infer K ? (K extends `/${string}` ? K : never) : never;
 
-export const parseV2_0_X = (context: Context<OpenApiV2_0_X>) => {
+export const parseV2_0_X = (context: Context<OpenAPIV2.Document>) => {
   if (context.config.parser.validate_EXPERIMENTAL) {
     const result = validateOpenApiSpec(context.spec, context.logger);
     handleValidatorResult({ context, result });
@@ -59,7 +51,7 @@ export const parseV2_0_X = (context: Context<OpenApiV2_0_X>) => {
   const state: State = {
     ids: new Map(),
   };
-  const securitySchemesMap = new Map<string, SecuritySchemeObject>();
+  const securitySchemesMap = new Map<string, OpenAPIV2.SecuritySchemeObject>();
 
   for (const name in context.spec.securityDefinitions) {
     const securitySchemeObject = context.spec.securityDefinitions[name]!;
@@ -87,12 +79,12 @@ export const parseV2_0_X = (context: Context<OpenApiV2_0_X>) => {
 
     const finalPathItem = pathItem.$ref
       ? {
-          ...context.resolveRef<PathItemObject>(pathItem.$ref),
+          ...context.resolveRef<OpenAPIV2.PathItemObject>(pathItem.$ref),
           ...pathItem,
         }
       : pathItem;
 
-    const commonOperation: OperationObject = {
+    const commonOperation: OpenAPIV2.OperationObject = {
       consumes: context.spec.consumes,
       produces: context.spec.produces,
       responses: {},

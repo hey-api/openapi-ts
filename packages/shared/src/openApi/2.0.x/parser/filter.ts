@@ -1,9 +1,9 @@
 import type { Logger } from '@hey-api/codegen-core';
+import type { OpenAPIV2 } from '@hey-api/spec-types';
 
 import { createOperationKey } from '../../../ir/operation';
 import { addNamespace, removeNamespace } from '../../../openApi/shared/utils/filter';
 import { httpMethods } from '../../../openApi/shared/utils/operation';
-import type { OpenApiV2_0_X, OperationObject, PathItemObject, PathsObject } from '../types/spec';
 
 /**
  * Replace source spec with filtered version.
@@ -22,7 +22,7 @@ export const filterSpec = ({
   requestBodies: Set<string>;
   responses: Set<string>;
   schemas: Set<string>;
-  spec: OpenApiV2_0_X;
+  spec: OpenAPIV2.Document;
 }) => {
   const eventFilterSpec = logger.timeEvent('filter-spec');
   if (spec.definitions) {
@@ -49,12 +49,12 @@ export const filterSpec = ({
 
   if (spec.paths) {
     for (const entry of Object.entries(spec.paths)) {
-      const path = entry[0] as keyof PathsObject;
-      const pathItem = entry[1] as PathItemObject;
+      const path = entry[0] as keyof OpenAPIV2.PathsObject;
+      const pathItem = entry[1] as OpenAPIV2.PathItemObject;
 
       for (const method of httpMethods) {
         // @ts-expect-error
-        const operation = pathItem[method] as OperationObject;
+        const operation = pathItem[method] as OpenAPIV2.OperationObject;
         if (!operation) {
           continue;
         }

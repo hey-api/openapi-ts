@@ -1,19 +1,22 @@
 import type { Logger } from '@hey-api/codegen-core';
+import type { OpenAPIV3_1 } from '@hey-api/spec-types';
 
 import { createOperationKey } from '../../../ir/operation';
 import { httpMethods } from '../../../openApi/shared/utils/operation';
 import type { ValidatorIssue, ValidatorResult } from '../../../openApi/shared/utils/validator';
-import type { OpenApiV3_1_X, PathItemObject, PathsObject } from '../types/spec';
 
-export const validateOpenApiSpec = (spec: OpenApiV3_1_X, logger: Logger): ValidatorResult => {
+export const validateOpenApiSpec = (
+  spec: OpenAPIV3_1.Document,
+  logger: Logger,
+): ValidatorResult => {
   const eventValidate = logger.timeEvent('validate');
   const issues: Array<ValidatorIssue> = [];
   const operationIds = new Map();
 
   if (spec.paths) {
     for (const entry of Object.entries(spec.paths)) {
-      const path = entry[0] as keyof PathsObject;
-      const pathItem = entry[1] as PathItemObject;
+      const path = entry[0] as keyof OpenAPIV3_1.PathsObject;
+      const pathItem = entry[1] as OpenAPIV3_1.PathItemObject;
       for (const method of httpMethods) {
         const operation = pathItem[method];
         if (!operation) {
