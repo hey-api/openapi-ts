@@ -286,7 +286,7 @@ export const mergeHeaders = (
         }
       } else if (value !== undefined) {
         const v = unwrapRefs(value);
-        // assume object headers are meant to be JSON stringified, i.e. their
+        // assume object headers are meant to be JSON stringified, i.e., their
         // content value in OpenAPI specification is 'application/json'
         mergedHeaders.set(key, typeof v === 'object' ? JSON.stringify(v) : (v as string));
       }

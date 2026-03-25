@@ -92,7 +92,7 @@ const getContainerTypeFromPath = (
 };
 
 /**
- * Inventories the given JSON Reference (i.e. records detailed information about it so we can
+ * Inventories the given JSON Reference (i.e., records detailed information about it so we can
  * optimize all $refs in the schema), and then crawls the resolved value.
  */
 const inventory$Ref = <S extends object = JSONSchema>({
@@ -214,9 +214,9 @@ const inventory$Ref = <S extends object = JSONSchema>({
 
   const newEntry: InventoryEntry = {
     $ref, // The JSON Reference (e.g., {$ref: string})
-    circular: pointer.circular, // Is this $ref pointer DIRECTLY circular? (i.e. it references itself)
+    circular: pointer.circular, // Is this $ref pointer DIRECTLY circular? (i.e., it references itself)
     depth, // How far from the JSON Schema root is this $ref pointer?
-    extended, // Does this $ref extend its resolved value? (i.e. it has extra properties, in addition to "$ref")
+    extended, // Does this $ref extend its resolved value? (i.e., it has extra properties, in addition to "$ref")
     external, // Does this $ref pointer point to a file other than the main JSON Schema file?
     file, // The file that the $ref pointer resolves to
     hash, // The hash within `file` that the $ref pointer resolves to
@@ -570,7 +570,7 @@ function remap(parser: $RefParser, inventory: Array<InventoryEntry>) {
     }
 
     // Keep internal refs internal. However, if the $ref extends the resolved value
-    // (i.e. it has additional properties in addition to "$ref"), then we must
+    // (i.e., it has additional properties in addition to "$ref"), then we must
     // preserve the original $ref rather than rewriting it to the resolved hash.
     if (!entry.external) {
       if (!entry.extended && entry.$ref && typeof entry.$ref === 'object') {

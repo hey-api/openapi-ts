@@ -87,7 +87,7 @@ Personal API keys can't be used to upload specifications.
 #### `GITHUB_TOKEN`
 
 This variable will be available inside your workflow by default. It's used to
-fetch information about your repository, i.e. default branch.
+fetch information about your repository, i.e., default branch.
 
 ## Generate Clients
 
