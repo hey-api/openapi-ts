@@ -4,36 +4,46 @@ description: MSW plugin for Hey API. Compatible with all our features.
 ---
 
 <script setup lang="ts">
+import AuthorsList from '@components/AuthorsList.vue';
+import Heading from '@components/Heading.vue';
+import { malcolmKee } from '@data/people.js';
+import VersionLabel from '@components/VersionLabel.vue';
 </script>
 
-# MSW
+<Heading>
+  <h1>MSW<span class="sr-only"> v2</span></h1>
+  <VersionLabel value="v2" />
+</Heading>
+
+::: warning
+MSW plugin is currently in beta. The interface might change before it becomes stable. We encourage you to leave feedback on [GitHub](https://github.com/hey-api/openapi-ts/issues).
+:::
 
 ### About
 
 [MSW](https://mswjs.io) is an API mocking library that allows you to write client-agnostic mocks and reuse them across any frameworks, tools, and environments.
 
-The MSW plugin for Hey API generates type-safe mock handler factories from your OpenAPI spec, removing the tedious work of defining mock endpoints and ensuring your mocks stay in sync with your API.
+The MSW plugin for Hey API generates type-safe mock handler factories from your OpenAPI spec, fully compatible with SDKs, transformers, and all core features.
+
+### Collaborators
+
+<AuthorsList :people="[malcolmKee]" />
 
 ## Features
 
-- type-safe mock handlers generated from your OpenAPI spec
+- MSW v2 support
 - seamless integration with `@hey-api/openapi-ts` ecosystem
-- support for static response values or custom MSW resolver functions
-- Helper to generate handlers for every operation at once
-- typed path parameters and request bodies
+- type-safe mock handlers
 - minimal learning curve thanks to extending the underlying technology
 
 ## Installation
-
-::: warning
-MSW plugin requires `msw@^2` as a peer dependency. Make sure to install it in your project.
-:::
 
 In your [configuration](/openapi-ts/get-started), add `msw` to your plugins and you'll be ready to generate MSW artifacts. :tada:
 
 ```js
 export default {
-  // ...other options
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
   plugins: [
     // ...other plugins
     'msw', // [!code ++]
@@ -43,7 +53,7 @@ export default {
 
 ## Output
 
-The MSW plugin will generate a `msw.gen.ts` file containing the following artifacts.
+The MSW plugin will generate the following artifacts, depending on the input specification.
 
 ### Handler Exports
 

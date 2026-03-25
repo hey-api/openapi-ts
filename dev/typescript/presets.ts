@@ -30,7 +30,11 @@ export const presets = {
       },
     },
   ],
-  msw: () => ['@hey-api/typescript', 'msw'],
+  msw: () => [
+    /** SDK + MSW handlers */
+    '@hey-api/sdk',
+    'msw',
+  ],
   rpc: () => [
     /** RPC-style SDK with Zod validation */
     'orpc',

@@ -18,14 +18,14 @@
   },
   "devDependencies": {
     "@hey-api/openapi-ts": "workspace:*",
-    "@nestjs/testing": "^11.0.1",
-    "@swc-node/register": "^1.10.10",
-    "@swc/core": "^1.11.29",
-    "eslint": "^9.18.0",
-    "oxfmt": "^0.27.0",
-    "typescript": "^5.9.3",
-    "unplugin-swc": "^1.5.5",
-    "vite": "^7.3.1",
-    "vitest": "^4.0.18"
+    "@nestjs/testing": "11.0.1",
+    "@swc-node/register": "1.10.10",
+    "@swc/core": "1.11.29",
+    "eslint": "9.39.2",
+    "oxfmt": "0.41.0",
+    "typescript": "5.9.3",
+    "unplugin-swc": "1.5.5",
+    "vite": "7.3.1",
+    "vitest": "4.1.0"
   }
 }
