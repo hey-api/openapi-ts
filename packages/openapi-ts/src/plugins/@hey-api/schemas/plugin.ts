@@ -1,11 +1,6 @@
-import type {
-  Context,
-  OpenApi,
-  OpenApiV2_0_XTypes,
-  OpenApiV3_0_XTypes,
-  OpenApiV3_1_XTypes,
-} from '@hey-api/shared';
+import type { Context, OpenApi } from '@hey-api/shared';
 import { satisfies } from '@hey-api/shared';
+import type { OpenAPIV2, OpenAPIV3, OpenAPIV3_1 } from '@hey-api/spec-types';
 
 import { $ } from '../../../ts-dsl';
 import type { HeyApiSchemasPlugin } from './types';
@@ -15,10 +10,7 @@ const stripSchema = ({
   schema,
 }: {
   plugin: HeyApiSchemasPlugin['Instance'];
-  schema:
-    | OpenApiV2_0_XTypes['SchemaObject']
-    | OpenApiV3_0_XTypes['SchemaObject']
-    | OpenApiV3_1_XTypes['SchemaObject'];
+  schema: OpenAPIV2.SchemaObject | OpenAPIV3.SchemaObject | OpenAPIV3_1.SchemaObject;
 }) => {
   if (plugin.config.type === 'form') {
     if (schema.description) {
@@ -50,8 +42,8 @@ const schemaToJsonSchemaDraft_04 = ({
 }: {
   context: Context;
   plugin: HeyApiSchemasPlugin['Instance'];
-  schema: OpenApiV2_0_XTypes['SchemaObject'];
-}): OpenApiV2_0_XTypes['SchemaObject'] => {
+  schema: OpenAPIV2.SchemaObject;
+}): OpenAPIV2.SchemaObject => {
   if (Array.isArray(_schema)) {
     return _schema.map((item) =>
       schemaToJsonSchemaDraft_04({
@@ -59,7 +51,7 @@ const schemaToJsonSchemaDraft_04 = ({
         plugin,
         schema: item,
       }),
-    ) as unknown as OpenApiV2_0_XTypes['SchemaObject'];
+    ) as unknown as OpenAPIV2.SchemaObject;
   }
 
   const schema = structuredClone(_schema);
@@ -95,7 +87,7 @@ const schemaToJsonSchemaDraft_04 = ({
     schema.items = schemaToJsonSchemaDraft_04({
       context,
       plugin,
-      schema: schema.items as OpenApiV2_0_XTypes['SchemaObject'],
+      schema: schema.items as OpenAPIV2.SchemaObject,
     });
   }
 
@@ -123,8 +115,8 @@ const schemaToJsonSchemaDraft_05 = ({
 }: {
   context: Context;
   plugin: HeyApiSchemasPlugin['Instance'];
-  schema: OpenApiV3_0_XTypes['SchemaObject'] | OpenApiV3_0_XTypes['ReferenceObject'];
-}): OpenApiV3_0_XTypes['SchemaObject'] | OpenApiV3_0_XTypes['ReferenceObject'] => {
+  schema: OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject;
+}): OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject => {
   if (Array.isArray(_schema)) {
     return _schema.map((item) =>
       schemaToJsonSchemaDraft_05({
@@ -132,7 +124,7 @@ const schemaToJsonSchemaDraft_05 = ({
         plugin,
         schema: item,
       }),
-    ) as unknown as OpenApiV3_0_XTypes['SchemaObject'] | OpenApiV3_0_XTypes['ReferenceObject'];
+    ) as unknown as OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject;
   }
 
   const schema = structuredClone(_schema);
@@ -216,8 +208,8 @@ const schemaToJsonSchema2020_12 = ({
 }: {
   context: Context;
   plugin: HeyApiSchemasPlugin['Instance'];
-  schema: OpenApiV3_1_XTypes['SchemaObject'];
-}): OpenApiV3_1_XTypes['SchemaObject'] => {
+  schema: OpenAPIV3_1.SchemaObject;
+}): OpenAPIV3_1.SchemaObject => {
   if (Array.isArray(_schema)) {
     return _schema.map((item) =>
       schemaToJsonSchema2020_12({
@@ -225,7 +217,7 @@ const schemaToJsonSchema2020_12 = ({
         plugin,
         schema: item,
       }),
-    ) as unknown as OpenApiV3_1_XTypes['SchemaObject'];
+    ) as unknown as OpenAPIV3_1.SchemaObject;
   }
 
   const schema = structuredClone(_schema);
@@ -319,10 +311,10 @@ const schemaName = ({
   name: string;
   plugin: HeyApiSchemasPlugin['Instance'];
   schema:
-    | OpenApiV2_0_XTypes['SchemaObject']
-    | OpenApiV3_0_XTypes['ReferenceObject']
-    | OpenApiV3_0_XTypes['SchemaObject']
-    | OpenApiV3_1_XTypes['SchemaObject'];
+    | OpenAPIV2.SchemaObject
+    | OpenAPIV3.ReferenceObject
+    | OpenAPIV3.SchemaObject
+    | OpenAPIV3_1.SchemaObject;
 }): string => {
   let customName = '';
 

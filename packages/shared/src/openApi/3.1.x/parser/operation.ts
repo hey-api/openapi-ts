@@ -1,21 +1,16 @@
+import type { OpenAPIV3_1 } from '@hey-api/spec-types';
+
 import type { Context } from '../../../ir/context';
 import type { IR } from '../../../ir/types';
 import type { State } from '../../../openApi/shared/types/state';
 import type { httpMethods } from '../../../openApi/shared/utils/operation';
 import { operationToId } from '../../../openApi/shared/utils/operation';
-import type {
-  OperationObject,
-  ReferenceObject,
-  RequestBodyObject,
-  ResponseObject,
-  SecuritySchemeObject,
-} from '../types/spec';
 import { contentToSchema, mediaTypeObjects } from './mediaType';
 import { paginationField } from './pagination';
 import { parseExtensions, schemaToIrSchema } from './schema';
 
 export interface Operation
-  extends Omit<OperationObject, 'parameters'>, Pick<IR.OperationObject, 'parameters'> {}
+  extends Omit<OpenAPIV3_1.OperationObject, 'parameters'>, Pick<IR.OperationObject, 'parameters'> {}
 
 const parseOperationJsDoc = ({
   irOperation,
@@ -91,7 +86,7 @@ const operationToIrOperation = ({
 }: Pick<IR.OperationObject, 'method' | 'path'> & {
   context: Context;
   operation: Operation;
-  securitySchemesMap: Map<string, SecuritySchemeObject>;
+  securitySchemesMap: Map<string, OpenAPIV3_1.SecuritySchemeObject>;
   state: State;
 }): IR.OperationObject => {
   const irOperation = initIrOperation({
@@ -109,7 +104,7 @@ const operationToIrOperation = ({
   if (operation.requestBody) {
     const requestBody =
       '$ref' in operation.requestBody
-        ? context.resolveRef<RequestBodyObject>(operation.requestBody.$ref)
+        ? context.resolveRef<OpenAPIV3_1.RequestBodyObject>(operation.requestBody.$ref)
         : operation.requestBody;
     const contents = mediaTypeObjects({ content: requestBody.content });
     // TODO: add support for multiple content types, for now prefer JSON
@@ -158,9 +153,11 @@ const operationToIrOperation = ({
       irOperation.responses = {};
     }
 
-    const response = operation.responses[name]! as ResponseObject | ReferenceObject;
+    const response = operation.responses[name]! as
+      | OpenAPIV3_1.ResponseObject
+      | OpenAPIV3_1.ReferenceObject;
     const responseObject =
-      '$ref' in response ? context.resolveRef<ResponseObject>(response.$ref) : response;
+      '$ref' in response ? context.resolveRef<OpenAPIV3_1.ResponseObject>(response.$ref) : response;
     const contents = mediaTypeObjects({ content: responseObject.content });
     // TODO: add support for multiple content types, for now prefer JSON
     const content = contents.find((content) => content.type === 'json') || contents[0];
@@ -227,7 +224,7 @@ const parseOperationObject = ({
   method: (typeof httpMethods)[number];
   operation: Operation;
   path: keyof IR.PathsObject;
-  securitySchemesMap: Map<string, SecuritySchemeObject>;
+  securitySchemesMap: Map<string, OpenAPIV3_1.SecuritySchemeObject>;
   state: State;
 }) => {
   if (operation.servers) {
@@ -256,7 +253,7 @@ export const parsePathOperation = ({
   method: (typeof httpMethods)[number];
   operation: Operation;
   path: keyof IR.PathsObject;
-  securitySchemesMap: Map<string, SecuritySchemeObject>;
+  securitySchemesMap: Map<string, OpenAPIV3_1.SecuritySchemeObject>;
   state: State;
 }) => {
   if (!context.ir.paths) {
@@ -287,7 +284,7 @@ export const parseWebhookOperation = ({
   key: string;
   method: (typeof httpMethods)[number];
   operation: Operation;
-  securitySchemesMap: Map<string, SecuritySchemeObject>;
+  securitySchemesMap: Map<string, OpenAPIV3_1.SecuritySchemeObject>;
   state: State;
 }) => {
   if (!context.ir.webhooks) {
