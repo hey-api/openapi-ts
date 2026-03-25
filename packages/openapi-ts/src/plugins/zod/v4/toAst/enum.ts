@@ -51,7 +51,7 @@ function baseNode(ctx: EnumResolverContext): Chain {
   const { z } = symbols;
   const { allStrings, enumMembers, literalMembers } = ctx.nodes.items(ctx);
 
-  if (allStrings && enumMembers.length > 0) {
+  if (allStrings && enumMembers.length) {
     return $(z)
       .attr(identifiers.enum)
       .call($.array(...enumMembers));

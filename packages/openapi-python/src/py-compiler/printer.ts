@@ -249,7 +249,7 @@ export function createPrinter(options?: PyPrinterOptions) {
       case PyNodeKind.ImportStatement: {
         const fromPrefix = node.isFrom ? `from ${node.module} ` : '';
         if (fromPrefix) {
-          if (node.names && node.names.length > 0) {
+          if (node.names && node.names.length) {
             const imports = node.names
               .map(({ alias, name }) => (alias ? `${name} as ${alias}` : name))
               .join(', ');
@@ -258,7 +258,7 @@ export function createPrinter(options?: PyPrinterOptions) {
             parts.push(printLine(`${fromPrefix}import *`));
           }
         } else {
-          if (node.names && node.names.length > 0) {
+          if (node.names && node.names.length) {
             const imports = node.names
               .map(({ alias, name }) => (alias ? `${name} as ${alias}` : name))
               .join(', ');

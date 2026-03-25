@@ -77,7 +77,7 @@ export function AsyncMixin<T extends py.Node, TBase extends BaseCtor<T>>(Base: T
 
   abstract class Async extends Mixed {
     protected async(condition?: boolean): this {
-      const cond = arguments.length === 0 ? true : Boolean(condition);
+      const cond = !arguments.length ? true : Boolean(condition);
       return this._m('async', cond);
     }
   }
@@ -109,7 +109,7 @@ export function ExportMixin<T extends py.Node, TBase extends BaseCtor<T>>(Base: 
      * @returns The target object for chaining.
      */
     protected export(condition?: boolean): this {
-      const cond = arguments.length === 0 ? true : Boolean(condition);
+      const cond = !arguments.length ? true : Boolean(condition);
       this.exported = cond;
       // TODO: remove this side-effect once planner handles exported flag
       if (this.symbol) this.symbol.setExported(cond);

@@ -20,12 +20,12 @@ export function OptionalMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base
     }
 
     protected optional(condition?: boolean): this {
-      this._optional = arguments.length === 0 ? true : Boolean(condition);
+      this._optional = !arguments.length ? true : Boolean(condition);
       return this;
     }
 
     protected required(condition?: boolean): this {
-      this._optional = arguments.length === 0 ? false : !condition;
+      this._optional = !arguments.length ? false : !condition;
       return this;
     }
   }

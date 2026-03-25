@@ -79,7 +79,7 @@ export class TypeOperatorTsDsl extends Mixed {
     _type: Type;
   } {
     const missing = this.missingRequiredCalls();
-    if (missing.length === 0) return;
+    if (!missing.length) return;
     throw new Error(`Type operator missing ${missing.join(' and ')}`);
   }
 

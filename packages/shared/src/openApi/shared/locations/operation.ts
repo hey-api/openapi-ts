@@ -49,7 +49,7 @@ export const OperationStrategy = {
       path?: OperationPathStrategy;
     }): OperationStructureStrategy =>
     (operation) => {
-      const tags = operation.tags && operation.tags.length > 0 ? operation.tags : [config.fallback];
+      const tags = operation.tags && operation.tags.length ? operation.tags : [config.fallback];
       const path = config.path ?? OperationPath.id();
       const pathSegments = path(operation);
       return tags.map((tag) => [tag, ...pathSegments]);
@@ -142,7 +142,7 @@ export const OperationPath = {
       if (!operation.operationId) return fallback(operation);
       const delimiters = config?.delimiters ?? /[./]/;
       const segments = operation.operationId.split(delimiters).filter(Boolean);
-      return segments.length === 0 ? fallback(operation) : segments;
+      return !segments.length ? fallback(operation) : segments;
     },
 
   /**

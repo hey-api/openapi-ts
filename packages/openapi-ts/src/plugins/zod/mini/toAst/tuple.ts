@@ -17,7 +17,7 @@ function baseNode(ctx: TupleResolverContext): Chain {
 
   const tupleFn = $(z).attr(identifiers.tuple);
 
-  if (childResults.length === 0) {
+  if (!childResults.length) {
     return tupleFn.call($.array());
   }
 

@@ -28,7 +28,7 @@ export class PrefixTsDsl extends Mixed {
 
   /** Returns true when all required builder calls are present. */
   get isValid(): boolean {
-    return this.missingRequiredCalls().length === 0;
+    return !this.missingRequiredCalls().length;
   }
 
   /** Sets the operand (the expression being prefixed). */
@@ -65,7 +65,7 @@ export class PrefixTsDsl extends Mixed {
     _op: PrefixOp;
   } {
     const missing = this.missingRequiredCalls();
-    if (missing.length === 0) return;
+    if (!missing.length) return;
     throw new Error(`Prefix unary expression missing ${missing.join(' and ')}`);
   }
 

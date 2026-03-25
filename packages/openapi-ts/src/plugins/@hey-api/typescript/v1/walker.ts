@@ -157,7 +157,7 @@ export function createVisitor(
         resourceId: $ref,
       });
 
-      if (schema.omit && schema.omit.length > 0) {
+      if (schema.omit && schema.omit.length) {
         const omittedKeys =
           schema.omit.length === 1
             ? $.type.literal(schema.omit[0]!)

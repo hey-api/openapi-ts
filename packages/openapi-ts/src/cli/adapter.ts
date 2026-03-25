@@ -12,11 +12,11 @@ export function cliToConfig(cli: CliOptions): Partial<UserConfig> {
   if (cli.dryRun !== undefined) config.dryRun = cli.dryRun;
 
   const plugins: ToArray<UserConfig['plugins']> = [];
-  if (cli.plugins instanceof Array && cli.plugins.length > 0) {
+  if (cli.plugins instanceof Array && cli.plugins.length) {
     plugins.push(...cli.plugins);
   }
   if (cli.client) plugins.push(cli.client);
-  if (plugins.length > 0) config.plugins = plugins;
+  if (plugins.length) config.plugins = plugins;
 
   if (cli.debug || cli.silent || cli.logs || cli.logFile === false) {
     config.logs = {

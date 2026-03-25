@@ -63,7 +63,7 @@ export async function createClient(
     const configErrors = jobs.flatMap((job) =>
       job.errors.map((error) => ({ error, jobIndex: job.index })),
     );
-    if (configErrors.length > 0) {
+    if (configErrors.length) {
       throw new ConfigValidationError(configErrors);
     }
 

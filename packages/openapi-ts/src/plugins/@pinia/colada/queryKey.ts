@@ -118,7 +118,7 @@ const createQueryKeyLiteral = ({
 }) => {
   const config = plugin.config.queryKeys;
   let tagsExpression: ReturnType<typeof $.array> | undefined;
-  if (config.tags && operation.tags && operation.tags.length > 0) {
+  if (config.tags && operation.tags && operation.tags.length) {
     tagsExpression = $.array(...operation.tags.map((tag) => $.literal(tag)));
   }
 

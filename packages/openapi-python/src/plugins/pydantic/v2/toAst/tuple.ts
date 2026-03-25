@@ -13,7 +13,7 @@ function baseNode(ctx: TupleResolverContext): PydanticType {
   const tuple = plugin.external('typing.Tuple');
   const any = plugin.external('typing.Any');
 
-  if (childResults.length === 0) {
+  if (!childResults.length) {
     return {
       type: $(tuple).slice(),
     };
@@ -28,7 +28,7 @@ function baseNode(ctx: TupleResolverContext): PydanticType {
     }
   }
 
-  if (itemTypes.length === 0) {
+  if (!itemTypes.length) {
     return {
       type: $(tuple).slice(any, '...'),
     };
@@ -57,7 +57,7 @@ function tupleResolver(ctx: TupleResolverContext): PydanticType {
 
   return {
     ...baseResult,
-    fieldConstraints: Object.keys(fieldConstraints).length > 0 ? fieldConstraints : undefined,
+    fieldConstraints: Object.keys(fieldConstraints).length ? fieldConstraints : undefined,
   };
 }
 
@@ -76,7 +76,7 @@ export function tupleToType(ctx: {
 
   const childResults: Array<PydanticResult> = [];
 
-  if (schema.items && schema.items.length > 0) {
+  if (schema.items && schema.items.length) {
     for (let i = 0; i < schema.items.length; i++) {
       const item = schema.items[i]!;
       const result = walk(item, childContext(walkerCtx, 'items', i));

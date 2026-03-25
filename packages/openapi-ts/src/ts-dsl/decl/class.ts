@@ -51,7 +51,7 @@ export class ClassTsDsl extends Mixed {
 
   /** Returns true if the class has any members. */
   get hasBody(): boolean {
-    return this.body.length > 0;
+    return Boolean(this.body.length);
   }
 
   /** Adds one or more class members (fields, methods, etc.). */

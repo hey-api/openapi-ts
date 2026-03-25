@@ -22,7 +22,7 @@ function baseNode(ctx: UnionResolverContext): PydanticType {
 
   isNullable = isNullable || childResults.some((r) => r.meta.nullable);
 
-  if (nonNullResults.length === 0) {
+  if (!nonNullResults.length) {
     return {
       type: 'None',
     };
@@ -103,10 +103,9 @@ export function unionToType({
   return {
     ...resolved,
     childResults,
-    fieldConstraints:
-      Object.keys(constraints).length > 0
-        ? { ...constraints, ...resolved.fieldConstraints }
-        : resolved.fieldConstraints,
+    fieldConstraints: Object.keys(constraints).length
+      ? { ...constraints, ...resolved.fieldConstraints }
+      : resolved.fieldConstraints,
     isNullable,
   };
 }

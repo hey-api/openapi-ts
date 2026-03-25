@@ -20,7 +20,7 @@ function baseNode(ctx: UnionResolverContext): PipeResult {
     }
   });
 
-  if (nonNullItems.length === 0) {
+  if (!nonNullItems.length) {
     return $(v).attr(identifiers.schemas.null).call();
   }
 

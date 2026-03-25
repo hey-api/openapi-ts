@@ -92,7 +92,7 @@ function numberResolver(ctx: NumberResolverContext): Chain {
   const maxNode = ctx.nodes.max(ctx);
   if (maxNode) checks.push(maxNode);
 
-  if (checks.length > 0) {
+  if (checks.length) {
     ctx.chain.current = ctx.chain.current.attr(identifiers.check).call(...checks);
   }
 

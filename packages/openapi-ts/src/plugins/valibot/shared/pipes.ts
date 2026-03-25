@@ -35,7 +35,7 @@ function toNode(pipes: Pipes | Pipe, plugin: ValibotPlugin['Instance']): Pipe {
   if (!(pipes instanceof Array)) {
     return pipes;
   }
-  if (pipes.length === 0) {
+  if (!pipes.length) {
     const v = plugin.external('valibot.v');
     return $(v).attr(identifiers.schemas.unknown).call();
   }

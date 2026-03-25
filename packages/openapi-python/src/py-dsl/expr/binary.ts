@@ -54,7 +54,7 @@ export class BinaryPyDsl extends Mixed {
 
   /** Returns true when all required builder calls are present. */
   get isValid(): boolean {
-    return this.missingRequiredCalls().length === 0;
+    return !this.missingRequiredCalls().length;
   }
 
   and(right: MaybePyDsl<py.Expression>): this {
@@ -149,7 +149,7 @@ export class BinaryPyDsl extends Mixed {
     _right: MaybePyDsl<py.Expression>;
   } {
     const missing = this.missingRequiredCalls();
-    if (missing.length === 0) return;
+    if (!missing.length) return;
     throw new Error(`Binary expression missing ${missing.join(' and ')}`);
   }
 

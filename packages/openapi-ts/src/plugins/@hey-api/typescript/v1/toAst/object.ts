@@ -54,14 +54,13 @@ function baseNode(ctx: ObjectResolverContext): Type {
     }
   }
 
-  const hasPatterns =
-    !!schema.patternProperties && Object.keys(schema.patternProperties).length > 0;
+  const hasPatterns = schema.patternProperties && Object.keys(schema.patternProperties).length;
 
   const addPropsRaw = schema.additionalProperties;
   const addPropsObj =
     addPropsRaw !== false && addPropsRaw ? (addPropsRaw as IR.SchemaObject) : undefined;
   const shouldCreateIndex =
-    hasPatterns || (!!addPropsObj && (addPropsObj.type !== 'never' || !indexSchemas.length));
+    hasPatterns || (addPropsObj && (addPropsObj.type !== 'never' || !indexSchemas.length));
 
   if (shouldCreateIndex) {
     const addProps = addPropsObj;
@@ -82,7 +81,7 @@ function baseNode(ctx: ObjectResolverContext): Type {
       indexSchemas.push({ type: 'undefined' });
     }
 
-    if (indexSchemas.length > 0) {
+    if (indexSchemas.length) {
       const unionSchema: IR.SchemaObject =
         indexSchemas.length === 1
           ? indexSchemas[0]!

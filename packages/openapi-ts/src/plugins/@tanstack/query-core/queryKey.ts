@@ -109,7 +109,7 @@ const createQueryKeyLiteral = ({
 }) => {
   const config = isInfinite ? plugin.config.infiniteQueryKeys : plugin.config.queryKeys;
   let tagsArray: TsDsl<ts.ArrayLiteralExpression> | undefined;
-  if (config.tags && operation.tags && operation.tags.length > 0) {
+  if (config.tags && operation.tags && operation.tags.length) {
     tagsArray = $.array().elements(...operation.tags);
   }
   const symbolCreateQueryKey = plugin.referenceSymbol({
