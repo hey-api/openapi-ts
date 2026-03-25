@@ -72,11 +72,7 @@ export interface RequestOptions<
    * for post-processing data, e.g. converting ISO strings into Date objects.
    */
   responseTransformer?: (
-    data: unknown extends TData
-      ? TData
-      : keyof TData extends number
-        ? TData[keyof TData]
-        : TData,
+    data: unknown extends TData ? TData : keyof TData extends number ? TData[keyof TData] : TData,
   ) => Promise<unknown>;
   /**
    * Security mechanism(s) to use for the request.
