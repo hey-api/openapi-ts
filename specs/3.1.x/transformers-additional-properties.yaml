@@ -26,6 +26,7 @@ components:
       type: object
       required:
         - bar
+        - baz
       properties:
         bar:
           type: string
@@ -34,3 +35,11 @@ components:
           type: object
           additionalProperties:
             $ref: '#/components/schemas/Foo'
+        qux:
+          type: object
+          properties:
+            quux:
+              type: string
+          additionalProperties:
+            type: string
+            format: date-time

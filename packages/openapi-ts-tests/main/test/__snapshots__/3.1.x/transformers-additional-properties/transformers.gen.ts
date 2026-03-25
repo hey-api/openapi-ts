@@ -9,9 +9,14 @@ const fooSchemaResponseTransformer = (data: any) => {
 
 const barSchemaResponseTransformer = (data: any) => {
     data.bar = new Date(data.bar);
-    if (data.baz) {
-        for (const key of Object.keys(data.baz)) {
-            data.baz[key] = fooSchemaResponseTransformer(data.baz[key]);
+    for (const key of Object.keys(data.baz)) {
+        data.baz[key] = fooSchemaResponseTransformer(data.baz[key]);
+    }
+    if (data.qux) {
+        for (const key of Object.keys(data.qux)) {
+            if (!['quux'].includes(key)) {
+                data.qux[key] = new Date(data.qux[key]);
+            }
         }
     }
     return data;
