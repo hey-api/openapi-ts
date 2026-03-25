@@ -202,10 +202,24 @@ function processSchemaType({
       });
 
       if (entryValueNodes.length) {
+        const properties = Object.keys(schema.properties ?? {});
         nodes.push(
           $.for($.const('key'))
             .of($('Object').attr('keys').call(dataExpression))
-            .do(...entryValueNodes),
+            .$if(
+              properties.length,
+              (f) =>
+                f.do(
+                  $.if(
+                    $.not(
+                      $.array(...properties)
+                        .attr('includes')
+                        .call('key'),
+                    ),
+                  ).do(...entryValueNodes),
+                ),
+              (f) => f.do(...entryValueNodes),
+            ),
         );
       }
     }
