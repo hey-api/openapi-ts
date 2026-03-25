@@ -195,6 +195,7 @@ function processSchemaType({
     }
 
     if (schema.additionalProperties && dataExpression) {
+      const declaredProperties = Object.keys(schema.properties ?? {});
       const entryValueNodes = processSchemaType({
         dataExpression: $(dataExpression).attr('key').computed(),
         plugin,
@@ -202,10 +203,20 @@ function processSchemaType({
       });
 
       if (entryValueNodes.length) {
+        const hasDeclaredProperties = declaredProperties.length > 0;
+        const keyIsDeclared = $.expr(
+          $.expr($.array(...declaredProperties.map((name) => $.literal(name))))
+            .attr('includes')
+            .call('key'),
+        );
         nodes.push(
           $.for($.const('key'))
             .of($('Object').attr('keys').call(dataExpression))
-            .do(...entryValueNodes),
+            .do(
+              ...(hasDeclaredProperties
+                ? [$.if($.not(keyIsDeclared)).do(...entryValueNodes)]
+                : entryValueNodes),
+            ),
         );
       }
     }

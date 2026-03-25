@@ -1,0 +1,48 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "OpenAPI 3.1 transformers additionalProperties with declared properties",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/model-map-with-declared": {
+      "put": {
+        "operationId": "modelMapWithDeclared",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelMapWithDeclaredResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ModelMapWithDeclaredResponse": {
+        "type": "object",
+        "required": ["items"],
+        "properties": {
+          "items": {
+            "type": "object",
+            "properties": {
+              "meta": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        }
+      }
+    }
+  }
+}

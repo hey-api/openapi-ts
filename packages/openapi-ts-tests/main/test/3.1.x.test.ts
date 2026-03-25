@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { createClient, type UserConfig } from '@hey-api/openapi-ts';
 
@@ -906,6 +906,15 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'transformers-additional-properties-declared.json',
+        output: 'transformers-additional-properties-declared',
+        plugins: ['@hey-api/client-fetch', '@hey-api/transformers'],
+      }),
+      description:
+        'transforms additionalProperties map values without touching declared properties',
+    },
+    {
+      config: createConfig({
         input: 'transformers-recursive.json',
         output: 'transformers-recursive',
         plugins: ['@hey-api/client-fetch', '@hey-api/transformers'],
@@ -1040,6 +1049,36 @@ describe(`OpenAPI ${version}`, () => {
       description: 'anyOf string and binary string',
     },
   ];
+
+  it('does not apply additionalProperties transform to declared object keys', async () => {
+    const config = createConfig({
+      input: 'transformers-additional-properties-declared.json',
+      output: 'transformers-additional-properties-declared',
+      plugins: ['@hey-api/client-fetch', '@hey-api/transformers'],
+    });
+
+    await createClient(config);
+
+    const transformersFilePath = path.join(config.output.path, 'transformers.gen.ts');
+    const transformersModule = await import(
+      `${pathToFileURL(transformersFilePath).href}?t=${Date.now()}`
+    );
+
+    const data = {
+      items: {
+        createdAt: '2026-01-01T00:00:00.000Z',
+        meta: 'not-a-date',
+      },
+    };
+
+    const transformed = await transformersModule.modelMapWithDeclaredResponseTransformer(
+      structuredClone(data),
+    );
+
+    expect(transformed.items.createdAt).toBeInstanceOf(Date);
+    expect(typeof transformed.items.meta).toBe('string');
+    expect(transformed.items.meta).toBe('not-a-date');
+  });
 
   it.each(scenarios)('$description', async ({ config }) => {
     await createClient(config);
