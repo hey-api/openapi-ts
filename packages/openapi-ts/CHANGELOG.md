@@ -1,5 +1,24 @@
 # @hey-api/openapi-ts
 
+## 0.94.5
+
+### Patch Changes
+
+- **plugin(orpc)**: remove `base` export ([#3638](https://github.com/hey-api/openapi-ts/pull/3638)) ([`c510098`](https://github.com/hey-api/openapi-ts/commit/c5100983cbdfa3f84aa41d30368d87eb4a807087)) by [@mrlubos](https://github.com/mrlubos)
+
+- **internal**: expand TypeScript peer dependency range ([#3640](https://github.com/hey-api/openapi-ts/pull/3640)) ([`5d3b8f9`](https://github.com/hey-api/openapi-ts/commit/5d3b8f9d9fee999a4ac55c3c678542552aea9811)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin**: fix: `symbolOnce()` method correctly handles multiple symbols with the same metadata ([#3635](https://github.com/hey-api/openapi-ts/pull/3635)) ([`6c1120c`](https://github.com/hey-api/openapi-ts/commit/6c1120cca981880718171327c4c0ae6c295c0638)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(@hey-api/transformers)**: fix: handle additional properties ([#3409](https://github.com/hey-api/openapi-ts/pull/3409)) ([`4de44fc`](https://github.com/hey-api/openapi-ts/commit/4de44fc8eefdb0c007de23c2e8d1eb3de6a6c32a)) by [@codercms](https://github.com/codercms)
+
+- **internal**: add `@hey-api/spec-types` dependency ([#3652](https://github.com/hey-api/openapi-ts/pull/3652)) ([`4852795`](https://github.com/hey-api/openapi-ts/commit/485279556f4c73d187a9a2172010b51b2b6ef902)) by [@mrlubos](https://github.com/mrlubos)
+
+### Updated Dependencies:
+
+- @hey-api/spec-types@0.1.0
+- @hey-api/shared@0.2.6
+
 ## 0.94.4
 
 ### Patch Changes
