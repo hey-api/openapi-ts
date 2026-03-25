@@ -1,5 +1,6 @@
+import type { OpenAPIV2 } from '@hey-api/spec-types';
+
 import type { Context } from '../../../../ir/context';
-import type { ParameterObject, SecuritySchemeObject } from '../../types/spec';
 import { parsePathOperation } from '../operation';
 
 type ParseOperationProps = Parameters<typeof parsePathOperation>[0];
@@ -48,7 +49,7 @@ describe('operation', () => {
       summary: 'Test Operation',
     };
     const path = '/test';
-    const securitySchemesMap = new Map<string, SecuritySchemeObject>([
+    const securitySchemesMap = new Map<string, OpenAPIV2.SecuritySchemeObject>([
       ['apiKeyAuth', { in: 'header', name: 'Auth', type: 'apiKey' }],
       ['basicAuthRule', { description: 'Basic Auth', type: 'basic' }],
       [
@@ -107,7 +108,7 @@ describe('operation', () => {
   it('should parse body parameter when consumes is undefined', () => {
     const context = createContext();
     const method = 'post';
-    const bodyParam: ParameterObject = {
+    const bodyParam: OpenAPIV2.ParameterObject = {
       description: 'Request body',
       in: 'body',
       name: 'body',
@@ -132,7 +133,7 @@ describe('operation', () => {
       summary: 'Create an item',
     };
     const path = '/items';
-    const securitySchemesMap = new Map<string, SecuritySchemeObject>();
+    const securitySchemesMap = new Map<string, OpenAPIV2.SecuritySchemeObject>();
     const state: ParseOperationProps['state'] = {
       ids: new Map<string, string>(),
     };
@@ -157,7 +158,7 @@ describe('operation', () => {
   it('should parse body parameter with array schema', () => {
     const context = createContext();
     const method = 'post';
-    const bodyParam: ParameterObject = {
+    const bodyParam: OpenAPIV2.ParameterObject = {
       description: 'add items',
       in: 'body',
       name: 'request',
@@ -183,7 +184,7 @@ describe('operation', () => {
       },
     };
     const path = '/api/v1/items';
-    const securitySchemesMap = new Map<string, SecuritySchemeObject>();
+    const securitySchemesMap = new Map<string, OpenAPIV2.SecuritySchemeObject>();
     const state: ParseOperationProps['state'] = {
       ids: new Map<string, string>(),
     };
@@ -208,7 +209,7 @@ describe('operation', () => {
   it('should use consumes when specified', () => {
     const context = createContext();
     const method = 'post';
-    const bodyParam: ParameterObject = {
+    const bodyParam: OpenAPIV2.ParameterObject = {
       description: 'XML body',
       in: 'body',
       name: 'body',
@@ -228,7 +229,7 @@ describe('operation', () => {
       },
     };
     const path = '/items';
-    const securitySchemesMap = new Map<string, SecuritySchemeObject>();
+    const securitySchemesMap = new Map<string, OpenAPIV2.SecuritySchemeObject>();
     const state: ParseOperationProps['state'] = {
       ids: new Map<string, string>(),
     };

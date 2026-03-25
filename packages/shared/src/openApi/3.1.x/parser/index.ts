@@ -1,3 +1,5 @@
+import type { OpenAPIV3_1 } from '@hey-api/spec-types';
+
 import type { Context } from '../../../ir/context';
 import { buildResourceMetadata } from '../../../openApi/shared/graph/meta';
 import { transformOpenApiSpec } from '../../../openApi/shared/transforms';
@@ -10,14 +12,6 @@ import {
 import { buildGraph } from '../../../openApi/shared/utils/graph';
 import { mergeParametersObjects } from '../../../openApi/shared/utils/parameter';
 import { handleValidatorResult } from '../../../openApi/shared/utils/validator';
-import type {
-  OpenApiV3_1_X,
-  ParameterObject,
-  PathItemObject,
-  PathsObject,
-  RequestBodyObject,
-  SecuritySchemeObject,
-} from '../types/spec';
 import { filterSpec } from './filter';
 import { parsePathOperation } from './operation';
 import { parametersArrayToObject, parseParameter } from './parameter';
@@ -27,7 +21,7 @@ import { parseServers } from './server';
 import { validateOpenApiSpec } from './validate';
 import { parseWebhooks } from './webhook';
 
-export const parseV3_1_X = (context: Context<OpenApiV3_1_X>) => {
+export const parseV3_1_X = (context: Context<OpenAPIV3_1.Document>) => {
   if (context.config.parser.validate_EXPERIMENTAL) {
     const result = validateOpenApiSpec(context.spec, context.logger);
     handleValidatorResult({ context, result });
@@ -56,7 +50,7 @@ export const parseV3_1_X = (context: Context<OpenApiV3_1_X>) => {
   const state: State = {
     ids: new Map(),
   };
-  const securitySchemesMap = new Map<string, SecuritySchemeObject>();
+  const securitySchemesMap = new Map<string, OpenAPIV3_1.SecuritySchemeObject>();
 
   // TODO: parser - handle more component types, old parser handles only parameters and schemas
   if (context.spec.components) {
@@ -64,7 +58,7 @@ export const parseV3_1_X = (context: Context<OpenApiV3_1_X>) => {
       const securityOrReference = context.spec.components.securitySchemes[name]!;
       const securitySchemeObject =
         '$ref' in securityOrReference
-          ? context.resolveRef<SecuritySchemeObject>(securityOrReference.$ref)
+          ? context.resolveRef<OpenAPIV3_1.SecuritySchemeObject>(securityOrReference.$ref)
           : securityOrReference;
       securitySchemesMap.set(name, securitySchemeObject);
     }
@@ -74,7 +68,7 @@ export const parseV3_1_X = (context: Context<OpenApiV3_1_X>) => {
       const parameterOrReference = context.spec.components.parameters[name]!;
       const parameter =
         '$ref' in parameterOrReference
-          ? context.resolveRef<ParameterObject>(parameterOrReference.$ref)
+          ? context.resolveRef<OpenAPIV3_1.ParameterObject>(parameterOrReference.$ref)
           : parameterOrReference;
 
       parseParameter({
@@ -89,7 +83,7 @@ export const parseV3_1_X = (context: Context<OpenApiV3_1_X>) => {
       const requestBodyOrReference = context.spec.components.requestBodies[name]!;
       const requestBody =
         '$ref' in requestBodyOrReference
-          ? context.resolveRef<RequestBodyObject>(requestBodyOrReference.$ref)
+          ? context.resolveRef<OpenAPIV3_1.RequestBodyObject>(requestBodyOrReference.$ref)
           : requestBodyOrReference;
 
       parseRequestBody({
@@ -115,11 +109,13 @@ export const parseV3_1_X = (context: Context<OpenApiV3_1_X>) => {
 
   for (const path in context.spec.paths) {
     if (path.startsWith('x-')) continue;
-    const pathItem = context.spec.paths[path as keyof PathsObject]! as PathItemObject;
+    const pathItem = context.spec.paths[
+      path as keyof OpenAPIV3_1.PathsObject
+    ]! as OpenAPIV3_1.PathItemObject;
 
     const finalPathItem = pathItem.$ref
       ? {
-          ...context.resolveRef<PathItemObject>(pathItem.$ref),
+          ...context.resolveRef<OpenAPIV3_1.PathItemObject>(pathItem.$ref),
           ...pathItem,
         }
       : pathItem;

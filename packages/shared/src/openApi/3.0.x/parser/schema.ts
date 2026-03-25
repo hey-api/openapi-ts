@@ -1,3 +1,5 @@
+import type { OpenAPIV3 } from '@hey-api/spec-types';
+
 import type { Context } from '../../../ir/context';
 import type { IR } from '../../../ir/types';
 import { addItemsToSchema } from '../../../ir/utils';
@@ -12,13 +14,12 @@ import {
   discriminatorValues,
 } from '../../../openApi/shared/utils/discriminator';
 import { isTopLevelComponent, refToName } from '../../../utils/ref';
-import type { ReferenceObject, SchemaObject } from '../types/spec';
 
 export const getSchemaType = ({
   schema,
 }: {
-  schema: SchemaObject;
-}): SchemaType<SchemaObject> | undefined => {
+  schema: OpenAPIV3.SchemaObject;
+}): SchemaType<OpenAPIV3.SchemaObject> | undefined => {
   if (schema.type) {
     return schema.type;
   }
@@ -42,16 +43,17 @@ const findDiscriminatorPropertyType = ({
 }: {
   context: Context;
   propertyName: string;
-  schemas: ReadonlyArray<SchemaObject | ReferenceObject>;
+  schemas: ReadonlyArray<OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject>;
 }): DiscriminatorPropertyType => {
   for (const schema of schemas) {
-    const resolved = '$ref' in schema ? context.resolveRef<SchemaObject>(schema.$ref) : schema;
+    const resolved =
+      '$ref' in schema ? context.resolveRef<OpenAPIV3.SchemaObject>(schema.$ref) : schema;
 
     // Check direct properties
     const property = resolved.properties?.[propertyName];
     if (property) {
       const resolvedProperty =
-        '$ref' in property ? context.resolveRef<SchemaObject>(property.$ref) : property;
+        '$ref' in property ? context.resolveRef<OpenAPIV3.SchemaObject>(property.$ref) : property;
       if (
         resolvedProperty.type === 'boolean' ||
         resolvedProperty.type === 'integer' ||
@@ -89,13 +91,13 @@ const findDiscriminatorsInSchema = ({
 }: {
   context: Context;
   discriminators?: Array<{
-    discriminator: NonNullable<SchemaObject['discriminator']>;
-    oneOf?: SchemaObject['oneOf'];
+    discriminator: NonNullable<OpenAPIV3.SchemaObject['discriminator']>;
+    oneOf?: OpenAPIV3.SchemaObject['oneOf'];
   }>;
-  schema: SchemaObject;
+  schema: OpenAPIV3.SchemaObject;
 }): Array<{
-  discriminator: NonNullable<SchemaObject['discriminator']>;
-  oneOf?: SchemaObject['oneOf'];
+  discriminator: NonNullable<OpenAPIV3.SchemaObject['discriminator']>;
+  oneOf?: OpenAPIV3.SchemaObject['oneOf'];
 }> => {
   // Check if this schema has a discriminator
   if (schema.discriminator) {
@@ -108,9 +110,9 @@ const findDiscriminatorsInSchema = ({
   // If this schema is an allOf composition, recursively search in its components
   if (schema.allOf) {
     for (const compositionSchema of schema.allOf) {
-      let resolvedSchema: SchemaObject;
+      let resolvedSchema: OpenAPIV3.SchemaObject;
       if ('$ref' in compositionSchema) {
-        resolvedSchema = context.resolveRef<SchemaObject>(compositionSchema.$ref);
+        resolvedSchema = context.resolveRef<OpenAPIV3.SchemaObject>(compositionSchema.$ref);
       } else {
         resolvedSchema = compositionSchema;
       }
@@ -134,7 +136,7 @@ const getAllDiscriminatorValues = ({
   discriminator,
   schemaRef,
 }: {
-  discriminator: NonNullable<SchemaObject['discriminator']>;
+  discriminator: NonNullable<OpenAPIV3.SchemaObject['discriminator']>;
   schemaRef: string;
 }): Array<string> => {
   const values: Array<string> = [];
@@ -155,7 +157,7 @@ const parseSchemaJsDoc = ({
   schema,
 }: {
   irSchema: IR.SchemaObject;
-  schema: SchemaObject;
+  schema: OpenAPIV3.SchemaObject;
 }) => {
   if (schema.deprecated !== undefined) {
     irSchema.deprecated = schema.deprecated;
@@ -179,7 +181,7 @@ const parseSchemaMeta = ({
   schema,
 }: {
   irSchema: IR.SchemaObject;
-  schema: SchemaObject;
+  schema: OpenAPIV3.SchemaObject;
 }) => {
   if (schema.default !== undefined) {
     irSchema.default = schema.default;
@@ -240,7 +242,7 @@ const parseArray = ({
 }: {
   context: Context;
   irSchema?: IR.SchemaObject;
-  schema: SchemaObject;
+  schema: OpenAPIV3.SchemaObject;
   state: SchemaState;
 }): IR.SchemaObject => {
   if (schema.maxItems && schema.maxItems === schema.minItems) {
@@ -291,7 +293,7 @@ const parseBoolean = ({
 }: {
   context: Context;
   irSchema?: IR.SchemaObject;
-  schema: SchemaObject;
+  schema: OpenAPIV3.SchemaObject;
   state: SchemaState;
 }): IR.SchemaObject => {
   irSchema.type = 'boolean';
@@ -305,7 +307,7 @@ const parseNumber = ({
 }: {
   context: Context;
   irSchema?: IR.SchemaObject;
-  schema: SchemaWithRequired<SchemaObject, 'type'>;
+  schema: SchemaWithRequired<OpenAPIV3.SchemaObject, 'type'>;
   state: SchemaState;
 }): IR.SchemaObject => {
   irSchema.type = schema.type;
@@ -321,7 +323,7 @@ const parseObject = ({
 }: {
   context: Context;
   irSchema?: IR.SchemaObject;
-  schema: SchemaObject;
+  schema: OpenAPIV3.SchemaObject;
   state: SchemaState;
 }): IR.SchemaObject => {
   irSchema.type = 'object';
@@ -415,7 +417,7 @@ const parseString = ({
 }: {
   context: Context;
   irSchema?: IR.SchemaObject;
-  schema: SchemaObject;
+  schema: OpenAPIV3.SchemaObject;
   state: SchemaState;
 }): IR.SchemaObject => {
   irSchema.type = 'string';
@@ -431,7 +433,7 @@ export const parseExtensions = ({ source, target }: { source: object; target: ob
   }
 };
 
-const initIrSchema = ({ schema }: { schema: SchemaObject }): IR.SchemaObject => {
+const initIrSchema = ({ schema }: { schema: OpenAPIV3.SchemaObject }): IR.SchemaObject => {
   const irSchema: IR.SchemaObject = {};
 
   parseSchemaJsDoc({
@@ -453,7 +455,7 @@ const parseAllOf = ({
   state,
 }: {
   context: Context;
-  schema: SchemaWithRequired<SchemaObject, 'allOf'>;
+  schema: SchemaWithRequired<OpenAPIV3.SchemaObject, 'allOf'>;
   state: SchemaState;
 }): IR.SchemaObject => {
   let irSchema = initIrSchema({ schema });
@@ -465,7 +467,7 @@ const parseAllOf = ({
 
   // Collect discriminator information to add after all compositions are processed
   type DiscriminatorInfo = {
-    discriminator: NonNullable<SchemaObject['discriminator']>;
+    discriminator: NonNullable<OpenAPIV3.SchemaObject['discriminator']>;
     isExplicitMapping: boolean;
     isRequired: boolean;
     values: ReadonlyArray<string>;
@@ -499,7 +501,7 @@ const parseAllOf = ({
     schemaItems.push(irCompositionSchema);
 
     if ('$ref' in compositionSchema) {
-      const ref = context.resolveRef<SchemaObject>(compositionSchema.$ref);
+      const ref = context.resolveRef<OpenAPIV3.SchemaObject>(compositionSchema.$ref);
       // `$ref` should be passed from the root `parseSchema()` call
       if (state.$ref) {
         // Find all discriminators in the referenced schema, including nested allOf compositions
@@ -549,7 +551,7 @@ const parseAllOf = ({
                 (ref.allOf &&
                   ref.allOf.some((item) => {
                     const resolvedItem =
-                      '$ref' in item ? context.resolveRef<SchemaObject>(item.$ref) : item;
+                      '$ref' in item ? context.resolveRef<OpenAPIV3.SchemaObject>(item.$ref) : item;
                     return resolvedItem.required?.includes(d.discriminator.propertyName);
                   }))),
           );
@@ -603,7 +605,7 @@ const parseAllOf = ({
         const hasProperty = (() => {
           if (!item.$ref) return false;
           try {
-            const refSchema = context.resolveRef<SchemaObject>(item.$ref);
+            const refSchema = context.resolveRef<OpenAPIV3.SchemaObject>(item.$ref);
             // Check if the discriminator property exists in the ref schema
             return (
               refSchema.properties?.[discriminator.propertyName] !== undefined ||
@@ -611,7 +613,7 @@ const parseAllOf = ({
                 refSchema.allOf.some((allOfItem) => {
                   const resolved =
                     '$ref' in allOfItem
-                      ? context.resolveRef<SchemaObject>(allOfItem.$ref)
+                      ? context.resolveRef<OpenAPIV3.SchemaObject>(allOfItem.$ref)
                       : allOfItem;
                   return resolved.properties?.[discriminator.propertyName] !== undefined;
                 }))
@@ -692,7 +694,7 @@ const parseAllOf = ({
             // TODO: parser - this could be probably resolved more accurately
             const finalCompositionSchema =
               '$ref' in compositionSchema
-                ? context.resolveRef<SchemaObject>(compositionSchema.$ref)
+                ? context.resolveRef<OpenAPIV3.SchemaObject>(compositionSchema.$ref)
                 : compositionSchema;
 
             if (getSchemaType({ schema: finalCompositionSchema }) === 'object') {
@@ -764,7 +766,7 @@ const parseAnyOf = ({
   state,
 }: {
   context: Context;
-  schema: SchemaWithRequired<SchemaObject, 'anyOf'>;
+  schema: SchemaWithRequired<OpenAPIV3.SchemaObject, 'anyOf'>;
   state: SchemaState;
 }): IR.SchemaObject => {
   let irSchema = initIrSchema({ schema });
@@ -855,7 +857,7 @@ const parseEnum = ({
   state,
 }: {
   context: Context;
-  schema: SchemaWithRequired<SchemaObject, 'enum'>;
+  schema: SchemaWithRequired<OpenAPIV3.SchemaObject, 'enum'>;
   state: SchemaState;
 }): IR.SchemaObject => {
   let irSchema = initIrSchema({ schema });
@@ -866,7 +868,7 @@ const parseEnum = ({
 
   for (const [index, enumValue] of schema.enum.entries()) {
     const typeOfEnumValue = typeof enumValue;
-    let enumType: SchemaType<SchemaObject> | 'null' | undefined;
+    let enumType: SchemaType<OpenAPIV3.SchemaObject> | 'null' | undefined;
 
     if (
       typeOfEnumValue === 'string' ||
@@ -932,7 +934,7 @@ const parseOneOf = ({
   state,
 }: {
   context: Context;
-  schema: SchemaWithRequired<SchemaObject, 'oneOf'>;
+  schema: SchemaWithRequired<OpenAPIV3.SchemaObject, 'oneOf'>;
   state: SchemaState;
 }): IR.SchemaObject => {
   let irSchema = initIrSchema({ schema });
@@ -1035,7 +1037,7 @@ const parseRef = ({
   state,
 }: {
   context: Context;
-  schema: ReferenceObject;
+  schema: OpenAPIV3.ReferenceObject;
   state: SchemaState;
 }): IR.SchemaObject => {
   // Inline non-component refs (e.g. #/paths/...) and deep path refs (e.g. #/components/schemas/Foo/properties/bar)
@@ -1043,7 +1045,7 @@ const parseRef = ({
   const isComponentsRef = isTopLevelComponent(schema.$ref);
   if (!isComponentsRef) {
     if (!state.circularReferenceTracker.has(schema.$ref)) {
-      const refSchema = context.resolveRef<SchemaObject>(schema.$ref);
+      const refSchema = context.resolveRef<OpenAPIV3.SchemaObject>(schema.$ref);
       const originalRef = state.$ref;
       state.$ref = schema.$ref;
       const irSchema = schemaToIrSchema({
@@ -1064,7 +1066,7 @@ const parseRef = ({
   irSchema.$ref = decodeURI(schema.$ref);
 
   if (!state.circularReferenceTracker.has(schema.$ref)) {
-    const refSchema = context.resolveRef<SchemaObject>(schema.$ref);
+    const refSchema = context.resolveRef<OpenAPIV3.SchemaObject>(schema.$ref);
     const originalRef = state.$ref;
     state.$ref = schema.$ref;
     schemaToIrSchema({
@@ -1086,7 +1088,7 @@ const parseNullableType = ({
 }: {
   context: Context;
   irSchema?: IR.SchemaObject;
-  schema: SchemaWithRequired<SchemaObject, 'type'>;
+  schema: SchemaWithRequired<OpenAPIV3.SchemaObject, 'type'>;
   state: SchemaState;
 }): IR.SchemaObject => {
   if (!irSchema) {
@@ -1129,7 +1131,7 @@ const parseType = ({
   state,
 }: {
   context: Context;
-  schema: SchemaWithRequired<SchemaObject, 'type'>;
+  schema: SchemaWithRequired<OpenAPIV3.SchemaObject, 'type'>;
   state: SchemaState;
 }): IR.SchemaObject => {
   const irSchema = initIrSchema({ schema });
@@ -1173,7 +1175,7 @@ const parseOneType = ({
 }: {
   context: Context;
   irSchema?: IR.SchemaObject;
-  schema: SchemaWithRequired<SchemaObject, 'type'>;
+  schema: SchemaWithRequired<OpenAPIV3.SchemaObject, 'type'>;
   state: SchemaState;
 }): IR.SchemaObject => {
   if (!irSchema) {
@@ -1235,7 +1237,7 @@ const parseUnknown = ({
 }: {
   context: Context;
   irSchema?: IR.SchemaObject;
-  schema: SchemaObject;
+  schema: OpenAPIV3.SchemaObject;
 }): IR.SchemaObject => {
   if (!irSchema) {
     irSchema = initIrSchema({ schema });
@@ -1254,7 +1256,7 @@ export const schemaToIrSchema = ({
   state,
 }: {
   context: Context;
-  schema: SchemaObject | ReferenceObject;
+  schema: OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject;
   state: SchemaState | undefined;
 }): IR.SchemaObject => {
   if (!state) {
@@ -1278,7 +1280,7 @@ export const schemaToIrSchema = ({
   if (schema.enum) {
     return parseEnum({
       context,
-      schema: schema as SchemaWithRequired<SchemaObject, 'enum'>,
+      schema: schema as SchemaWithRequired<OpenAPIV3.SchemaObject, 'enum'>,
       state,
     });
   }
@@ -1286,7 +1288,7 @@ export const schemaToIrSchema = ({
   if (schema.allOf) {
     return parseAllOf({
       context,
-      schema: schema as SchemaWithRequired<SchemaObject, 'allOf'>,
+      schema: schema as SchemaWithRequired<OpenAPIV3.SchemaObject, 'allOf'>,
       state,
     });
   }
@@ -1294,7 +1296,7 @@ export const schemaToIrSchema = ({
   if (schema.anyOf) {
     return parseAnyOf({
       context,
-      schema: schema as SchemaWithRequired<SchemaObject, 'anyOf'>,
+      schema: schema as SchemaWithRequired<OpenAPIV3.SchemaObject, 'anyOf'>,
       state,
     });
   }
@@ -1302,7 +1304,7 @@ export const schemaToIrSchema = ({
   if (schema.oneOf) {
     return parseOneOf({
       context,
-      schema: schema as SchemaWithRequired<SchemaObject, 'oneOf'>,
+      schema: schema as SchemaWithRequired<OpenAPIV3.SchemaObject, 'oneOf'>,
       state,
     });
   }
@@ -1311,7 +1313,7 @@ export const schemaToIrSchema = ({
   if (schema.type || schema.properties) {
     return parseType({
       context,
-      schema: schema as SchemaWithRequired<SchemaObject, 'type'>,
+      schema: schema as SchemaWithRequired<OpenAPIV3.SchemaObject, 'type'>,
       state,
     });
   }
@@ -1326,7 +1328,7 @@ export const parseSchema = ({
 }: {
   $ref: string;
   context: Context;
-  schema: SchemaObject | ReferenceObject;
+  schema: OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject;
 }) => {
   if (!context.ir.components) {
     context.ir.components = {};

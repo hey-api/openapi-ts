@@ -1,6 +1,7 @@
+import type { OpenAPIV3_1 } from '@hey-api/spec-types';
+
 import type { Context } from '../../../ir/context';
 import { mergeParametersObjects } from '../../../openApi/shared/utils/parameter';
-import type { OpenApiV3_1_X, PathItemObject } from '../types/spec';
 import { parseWebhookOperation } from './operation';
 import { parametersArrayToObject } from './parameter';
 
@@ -8,7 +9,7 @@ export const parseWebhooks = ({
   context,
   securitySchemesMap,
 }: Pick<Parameters<typeof parseWebhookOperation>[0], 'securitySchemesMap'> & {
-  context: Context<OpenApiV3_1_X>;
+  context: Context<OpenAPIV3_1.Document>;
 }) => {
   const state: Parameters<typeof parseWebhookOperation>[0]['state'] = {
     ids: new Map(),
@@ -20,7 +21,7 @@ export const parseWebhooks = ({
     const finalWebhook =
       '$ref' in webhook
         ? {
-            ...context.resolveRef<PathItemObject>(webhook.$ref!),
+            ...context.resolveRef<OpenAPIV3_1.PathItemObject>(webhook.$ref!),
             ...webhook,
           }
         : webhook;

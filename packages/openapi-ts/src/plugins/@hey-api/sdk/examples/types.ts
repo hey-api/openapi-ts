@@ -1,4 +1,5 @@
-import type { FeatureToggle, IR, LinguistLanguages } from '@hey-api/shared';
+import type { FeatureToggle, IR } from '@hey-api/shared';
+import type { LinguistLanguages } from '@hey-api/spec-types';
 import type { MaybeFunc } from '@hey-api/types';
 
 import type { CallArgs, DollarTsDsl, ExampleOptions } from '../../../../ts-dsl';

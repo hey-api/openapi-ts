@@ -1,15 +1,11 @@
+import type { OpenAPIV2 } from '@hey-api/spec-types';
+
 import type { Context } from '../../../ir/context';
 import type { IR } from '../../../ir/types';
-import type {
-  OperationObject,
-  ParameterObject,
-  ReferenceObject,
-  SchemaObject,
-} from '../types/spec';
 import { paginationField } from './pagination';
 import { parseExtensions, schemaToIrSchema } from './schema';
 
-type Parameter = Exclude<ParameterObject, { in: 'body' }>;
+type Parameter = Exclude<OpenAPIV2.ParameterObject, { in: 'body' }>;
 
 /**
  * Returns default parameter `explode` based on value of `collectionFormat`.
@@ -47,8 +43,8 @@ export const parametersArrayToObject = ({
   parameters,
 }: {
   context: Context;
-  operation: OperationObject;
-  parameters?: ReadonlyArray<ParameterObject | ReferenceObject>;
+  operation: OpenAPIV2.OperationObject;
+  parameters?: ReadonlyArray<OpenAPIV2.ParameterObject | OpenAPIV2.ReferenceObject>;
 }): IR.ParametersObject | undefined => {
   if (!parameters || !Object.keys(parameters).length) {
     return;
@@ -59,7 +55,7 @@ export const parametersArrayToObject = ({
   for (const parameterOrReference of parameters) {
     const parameter =
       '$ref' in parameterOrReference
-        ? context.dereference<ParameterObject>(parameterOrReference)
+        ? context.dereference<OpenAPIV2.ParameterObject>(parameterOrReference)
         : parameterOrReference;
 
     // push request body parameters into a separate field
@@ -101,7 +97,7 @@ const parameterToIrParameter = ({
 }): IR.ParameterObject => {
   const schema = parameter;
 
-  const finalSchema: SchemaObject =
+  const finalSchema: OpenAPIV2.SchemaObject =
     schema && '$ref' in schema
       ? {
           allOf: [
@@ -109,7 +105,7 @@ const parameterToIrParameter = ({
               ...schema,
               $ref: schema.$ref as string,
               required: Array.isArray(schema.required) ? schema.required : [],
-              type: schema.type as SchemaObject['type'],
+              type: schema.type as OpenAPIV2.SchemaObject['type'],
             },
           ],
           description: parameter.description,
@@ -118,7 +114,7 @@ const parameterToIrParameter = ({
           description: parameter.description,
           ...schema,
           required: Array.isArray(schema.required) ? schema.required : [],
-          type: schema.type as SchemaObject['type'],
+          type: schema.type as OpenAPIV2.SchemaObject['type'],
         };
 
   const pagination = paginationField({

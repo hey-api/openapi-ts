@@ -1,22 +1,8 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 import type { Symbol } from '@hey-api/codegen-core';
+import type { JSONSchemaDraft2020_12, OpenAPIExtensions, OpenAPIV3_1 } from '@hey-api/spec-types';
 
-import type { JsonSchemaDraft2020_12 } from '../openApi/3.1.x/types/json-schema-draft-2020-12';
-import type {
-  ReferenceObject as IRReferenceObject,
-  SecuritySchemeObject,
-  ServerObject,
-} from '../openApi/3.1.x/types/spec';
 import type { IRMediaType } from './mediaType';
-
-/**
- * OpenAPI Specification Extensions.
- *
- * See {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#specification-extensions Specification Extensions}.
- */
-export interface SpecificationExtensions {
-  [extension: `x-${string}`]: unknown;
-}
 
 interface IRBodyObject {
   mediaType: string;
@@ -36,7 +22,7 @@ interface IRComponentsObject {
   schemas?: Record<string, IRSchemaObject>;
 }
 
-export interface IROperationObject extends SpecificationExtensions {
+export interface IROperationObject extends OpenAPIExtensions {
   body?: IRBodyObject;
   deprecated?: boolean;
   description?: string;
@@ -60,7 +46,7 @@ export interface IRParametersObject {
 }
 
 export interface IRParameterObject
-  extends Pick<JsonSchemaDraft2020_12, 'deprecated' | 'description'>, SpecificationExtensions {
+  extends Pick<JSONSchemaDraft2020_12.Document, 'deprecated' | 'description'>, OpenAPIExtensions {
   /**
    * Determines whether the parameter value SHOULD allow reserved characters, as defined by RFC3986 `:/?#[]@!$&'()*+,;=` to be included without percent-encoding. The default value is `false`. This property SHALL be ignored if the request body media type is not `application/x-www-form-urlencoded` or `multipart/form-data`. If a value is explicitly defined, then the value of `contentType` (implicit or explicit) SHALL be ignored.
    */
@@ -102,7 +88,7 @@ interface IRPathItemObject {
   trace?: IROperationObject;
 }
 
-interface IRRequestBodyObject extends Pick<JsonSchemaDraft2020_12, 'description'> {
+interface IRRequestBodyObject extends Pick<JSONSchemaDraft2020_12.Document, 'description'> {
   required?: boolean;
   schema: IRSchemaObject;
 }
@@ -127,7 +113,7 @@ interface IRResponseObject {
 export interface IRSchemaObject
   extends
     Pick<
-      JsonSchemaDraft2020_12,
+      JSONSchemaDraft2020_12.Document,
       | '$ref'
       | 'const'
       | 'default'
@@ -146,7 +132,7 @@ export interface IRSchemaObject
       | 'title'
       | 'example'
     >,
-    SpecificationExtensions {
+    OpenAPIExtensions {
   /**
    * If the schema is intended to be used as an object property, it can be
    * marked as read-only or write-only. This value controls whether the schema
@@ -162,7 +148,7 @@ export interface IRSchemaObject
   /**
    * Any string value is accepted as `format`.
    */
-  format?: JsonSchemaDraft2020_12['format'] | 'binary' | 'integer';
+  format?: JSONSchemaDraft2020_12.Document['format'] | 'binary' | 'integer';
   /**
    * If schema resolves into multiple items instead of a simple `type`, they
    * will be included in `items` array.
@@ -219,10 +205,10 @@ export interface IRSchemaObject
     | 'void';
 }
 
-type IRSecurityObject = SecuritySchemeObject;
+type IRSecurityObject = OpenAPIV3_1.SecuritySchemeObject;
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type -- Interface rather than type alias avoids TS4023 errors when bundled dist is consumed by tsgo/TypeScript 7
-export interface IRServerObject extends ServerObject {}
+export interface IRServerObject extends OpenAPIV3_1.ServerObject {}
 
 type IRWebhookObject = IRPathItemObject;
 
@@ -242,7 +228,7 @@ export namespace IR {
   export type ParametersObject = IRParametersObject;
   export type PathItemObject = IRPathItemObject;
   export type PathsObject = IRPathsObject;
-  export type ReferenceObject = IRReferenceObject;
+  export type ReferenceObject = OpenAPIV3_1.ReferenceObject;
   export type RequestBodyObject = IRRequestBodyObject;
   export type ResponseObject = IRResponseObject;
   export type ResponsesObject = IRResponsesObject;

@@ -1,12 +1,12 @@
+import type { OpenAPIV3 } from '@hey-api/spec-types';
+
 import type { Context } from '../../../ir/context';
 import { getPaginationKeywordsRegExp } from '../../../ir/pagination';
 import type { SchemaType } from '../../../openApi/shared/types/schema';
-import type { ParameterObject, ReferenceObject, RequestBodyObject } from '../types/spec';
-import type { SchemaObject } from '../types/spec';
 import { mediaTypeObjects } from './mediaType';
 import { getSchemaType } from './schema';
 
-const isPaginationType = (schemaType: SchemaType<SchemaObject> | undefined): boolean =>
+const isPaginationType = (schemaType: SchemaType<OpenAPIV3.SchemaObject> | undefined): boolean =>
   schemaType === 'boolean' ||
   schemaType === 'integer' ||
   schemaType === 'number' ||
@@ -20,7 +20,7 @@ export const paginationField = ({
 }: {
   context: Context;
   name: string;
-  schema: SchemaObject | ReferenceObject;
+  schema: OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject;
 }): boolean | string => {
   const paginationRegExp = getPaginationKeywordsRegExp(context.config.parser.pagination);
   if (paginationRegExp.test(name)) {
@@ -28,10 +28,12 @@ export const paginationField = ({
   }
 
   if ('$ref' in schema) {
-    const ref = context.resolveRef<ParameterObject | RequestBodyObject | SchemaObject>(schema.$ref);
+    const ref = context.resolveRef<
+      OpenAPIV3.ParameterObject | OpenAPIV3.RequestBodyObject | OpenAPIV3.SchemaObject
+    >(schema.$ref);
 
     if ('content' in ref || 'in' in ref) {
-      let refSchema: SchemaObject | ReferenceObject | undefined;
+      let refSchema: OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject | undefined;
 
       if ('in' in ref) {
         refSchema = ref.schema;
