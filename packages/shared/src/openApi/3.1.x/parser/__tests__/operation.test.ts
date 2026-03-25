@@ -1,5 +1,6 @@
+import type { OpenAPIV3_1 } from '@hey-api/spec-types';
+
 import type { Context } from '../../../../ir/context';
-import type { SecuritySchemeObject } from '../../types/spec';
 import { parsePathOperation } from '../operation';
 
 type ParseOperationProps = Parameters<typeof parsePathOperation>[0];
@@ -38,7 +39,7 @@ describe('operation', () => {
     };
     const path = '/test';
 
-    const oauth2: SecuritySchemeObject = {
+    const oauth2: OpenAPIV3_1.SecuritySchemeObject = {
       description: 'OAuth2',
       flows: {
         password: {
@@ -51,7 +52,7 @@ describe('operation', () => {
       },
       type: 'oauth2',
     };
-    const securitySchemesMap = new Map<string, SecuritySchemeObject>([
+    const securitySchemesMap = new Map<string, OpenAPIV3_1.SecuritySchemeObject>([
       ['apiKeyAuth', { in: 'header', name: 'Auth', type: 'apiKey' }],
       ['basicAuthRule', { description: 'Basic Auth', scheme: 'basic', type: 'http' }],
       ['oauthRule', oauth2],

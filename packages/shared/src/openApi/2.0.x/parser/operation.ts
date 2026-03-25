@@ -1,22 +1,16 @@
+import type { OpenAPIV2 } from '@hey-api/spec-types';
+
 import type { Context } from '../../../ir/context';
 import type { IR } from '../../../ir/types';
 import type { State } from '../../../openApi/shared/types/state';
 import { operationToId } from '../../../openApi/shared/utils/operation';
-import type {
-  OperationObject,
-  ParameterObject,
-  PathItemObject,
-  ResponseObject,
-  SchemaObject,
-  SecuritySchemeObject,
-} from '../types/spec';
 import { contentToSchema, mediaTypeObjects } from './mediaType';
 import { paginationField } from './pagination';
 import { parseExtensions, schemaToIrSchema } from './schema';
 
 interface Operation
-  extends Omit<OperationObject, 'parameters'>, Pick<IR.OperationObject, 'parameters'> {
-  requestBody?: OperationObject['parameters'];
+  extends Omit<OpenAPIV2.OperationObject, 'parameters'>, Pick<IR.OperationObject, 'parameters'> {
+  requestBody?: OpenAPIV2.OperationObject['parameters'];
 }
 
 const parseOperationJsDoc = ({
@@ -93,7 +87,7 @@ const operationToIrOperation = ({
 }: Pick<IR.OperationObject, 'method' | 'path'> & {
   context: Context;
   operation: Operation;
-  securitySchemesMap: Map<string, SecuritySchemeObject>;
+  securitySchemesMap: Map<string, OpenAPIV2.SecuritySchemeObject>;
   state: State;
 }): IR.OperationObject => {
   const irOperation = initIrOperation({
@@ -121,16 +115,17 @@ const operationToIrOperation = ({
 
   // Check if there are any body parameters (not formData) to determine default media type
   const hasBodyParameter = operation.requestBody?.some((param) => {
-    const resolvedParam = '$ref' in param ? context.resolveRef<ParameterObject>(param.$ref) : param;
+    const resolvedParam =
+      '$ref' in param ? context.resolveRef<OpenAPIV2.ParameterObject>(param.$ref) : param;
     return resolvedParam.in === 'body';
   });
 
   for (const requestBodyParameter of operation.requestBody ?? []) {
     const requestBody =
       '$ref' in requestBodyParameter
-        ? context.resolveRef<ParameterObject>(requestBodyParameter.$ref)
+        ? context.resolveRef<OpenAPIV2.ParameterObject>(requestBodyParameter.$ref)
         : requestBodyParameter;
-    const schema: SchemaObject =
+    const schema: OpenAPIV2.SchemaObject =
       requestBody.in === 'body'
         ? requestBody.schema
         : {
@@ -242,7 +237,7 @@ const operationToIrOperation = ({
 
     const response = operation.responses[name]!;
     const responseObject =
-      '$ref' in response ? context.resolveRef<ResponseObject>(response.$ref) : response;
+      '$ref' in response ? context.resolveRef<OpenAPIV2.ResponseObject>(response.$ref) : response;
     const contents = mediaTypeObjects({
       // assume JSON by default
       mimeTypes: operation.produces ? operation.produces : ['application/json'],
@@ -365,12 +360,12 @@ export const parsePathOperation = ({
 }: {
   context: Context;
   method: Extract<
-    keyof PathItemObject,
+    keyof OpenAPIV2.PathItemObject,
     'delete' | 'get' | 'head' | 'options' | 'patch' | 'post' | 'put' | 'trace'
   >;
   operation: Operation;
   path: keyof IR.PathsObject;
-  securitySchemesMap: Map<string, SecuritySchemeObject>;
+  securitySchemesMap: Map<string, OpenAPIV2.SecuritySchemeObject>;
   state: State;
 }) => {
   if (!context.ir.paths) {

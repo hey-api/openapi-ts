@@ -1,14 +1,19 @@
+import type { OpenAPIV3 } from '@hey-api/spec-types';
+
 import type { IRMediaType } from '../../../ir/mediaType';
 import { isMediaTypeFileLike, mediaTypeToIrMediaType } from '../../../ir/mediaType';
-import type { MediaTypeObject, ReferenceObject, SchemaObject } from '../types/spec';
 
 interface Content {
   mediaType: string;
-  schema: SchemaObject | ReferenceObject | undefined;
+  schema: OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject | undefined;
   type: IRMediaType | undefined;
 }
 
-export const contentToSchema = ({ content }: { content: Content }): SchemaObject | undefined => {
+export const contentToSchema = ({
+  content,
+}: {
+  content: Content;
+}): OpenAPIV3.SchemaObject | undefined => {
   const { mediaType, schema } = content;
 
   if (schema && '$ref' in schema) {
@@ -40,7 +45,7 @@ export const contentToSchema = ({ content }: { content: Content }): SchemaObject
 export const mediaTypeObjects = ({
   content,
 }: {
-  content: Record<string, MediaTypeObject> | undefined;
+  content: Record<string, OpenAPIV3.MediaTypeObject> | undefined;
 }): ReadonlyArray<Content> => {
   const objects: Array<Content> = [];
 

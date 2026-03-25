@@ -1,11 +1,11 @@
+import type { OpenAPIV2 } from '@hey-api/spec-types';
+
 import type { Context } from '../../../ir/context';
 import { getPaginationKeywordsRegExp } from '../../../ir/pagination';
 import type { SchemaType } from '../../../openApi/shared/types/schema';
-import type { ParameterObject, ReferenceObject } from '../types/spec';
-import type { SchemaObject } from '../types/spec';
 import { getSchemaType } from './schema';
 
-const isPaginationType = (schemaType: SchemaType<SchemaObject> | undefined): boolean =>
+const isPaginationType = (schemaType: SchemaType<OpenAPIV2.SchemaObject> | undefined): boolean =>
   schemaType === 'boolean' ||
   schemaType === 'integer' ||
   schemaType === 'number' ||
@@ -20,9 +20,9 @@ export const paginationField = ({
   context: Context;
   name: string;
   schema:
-    | ParameterObject
-    | SchemaObject
-    | ReferenceObject
+    | OpenAPIV2.ParameterObject
+    | OpenAPIV2.SchemaObject
+    | OpenAPIV2.ReferenceObject
     | {
         in: undefined;
       };
@@ -33,7 +33,9 @@ export const paginationField = ({
   }
 
   if ('$ref' in schema) {
-    const ref = context.resolveRef<ParameterObject | SchemaObject>(schema.$ref ?? '');
+    const ref = context.resolveRef<OpenAPIV2.ParameterObject | OpenAPIV2.SchemaObject>(
+      schema.$ref ?? '',
+    );
 
     if ('in' in ref && ref.in) {
       const refSchema =

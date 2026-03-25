@@ -79,20 +79,12 @@ export type {
 } from './ir/types';
 export { addItemsToSchema } from './ir/utils';
 export { parseOpenApiSpec } from './openApi';
-export type { OpenApiV2_0_X, OpenApiV2_0_XTypes } from './openApi/2.0.x';
 export { parseV2_0_X } from './openApi/2.0.x';
-export type { OpenApiV3_0_X, OpenApiV3_0_XTypes } from './openApi/3.0.x';
 export { parseV3_0_X } from './openApi/3.0.x';
-export type { OpenApiV3_1_X, OpenApiV3_1_XTypes } from './openApi/3.1.x';
 export { parseV3_1_X } from './openApi/3.1.x';
 export type { OperationsStrategy } from './openApi/shared/locations';
 export type { OperationPathStrategy, OperationStructureStrategy } from './openApi/shared/locations';
 export { OperationPath, OperationStrategy } from './openApi/shared/locations';
-export type {
-  CodeSampleObject,
-  EnumExtensions,
-  LinguistLanguages,
-} from './openApi/shared/types/openapi-spec-extensions';
 export { buildGraph } from './openApi/shared/utils/graph';
 export { patchOpenApiSpec } from './openApi/shared/utils/patch';
 export type {
