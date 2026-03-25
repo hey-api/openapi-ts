@@ -4,8 +4,8 @@ export type UserConfig = Plugin.Name<'msw'> &
   Plugin.Hooks &
   Plugin.UserExports & {
     /**
-     * Sources for inferring default parameter values in generated handler
-     * factories. Order determines priority (earlier entries take precedence).
+     * Sources for default parameter values in handler factories. Order determines
+     * priority (earlier entries take precedence).
      *
      * - `'example'` - use OpenAPI example values
      *
@@ -14,6 +14,11 @@ export type UserConfig = Plugin.Name<'msw'> &
     valueSources?: ReadonlyArray<'example'>;
   };
 
-export type Config = UserConfig;
+export type Config = Plugin.Name<'msw'> &
+  Plugin.Hooks &
+  Plugin.Exports & {
+    /** Sources for default parameter values in handler factories. */
+    valueSources: ReadonlyArray<'example'>;
+  };
 
 export type MswPlugin = DefinePlugin<UserConfig, Config>;
