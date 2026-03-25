@@ -40,7 +40,7 @@ export function DecoratorMixin<T extends py.Node, TBase extends BaseCtor<T>>(Bas
 
     protected $decorators(): ReadonlyArray<py.Expression> {
       return this._decorators.map((decorator) =>
-        decorator.args.length > 0
+        decorator.args.length
           ? py.factory.createCallExpression(
               this.$node(decorator.name),
               decorator.args.map((arg) => this.$node(arg)),

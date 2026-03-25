@@ -37,7 +37,7 @@ export class TypeAliasTsDsl extends Mixed {
 
   /** Returns true when all required builder calls are present. */
   get isValid(): boolean {
-    return this.missingRequiredCalls().length === 0;
+    return !this.missingRequiredCalls().length;
   }
 
   /** Sets the type expression on the right-hand side of `= ...`. */
@@ -61,7 +61,7 @@ export class TypeAliasTsDsl extends Mixed {
     value: Value;
   } {
     const missing = this.missingRequiredCalls();
-    if (missing.length === 0) return;
+    if (!missing.length) return;
     const name = this.name.toString();
     throw new Error(`Type alias${name ? ` "${name}"` : ''} missing ${missing.join(' and ')}`);
   }

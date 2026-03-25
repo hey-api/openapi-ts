@@ -117,12 +117,12 @@ export class $RefParser {
 
     await resolveExternal(this, this.options);
     const errors = JSONParserErrorGroup.getParserErrors(this);
-    if (errors.length > 0) {
+    if (errors.length) {
       throw new JSONParserErrorGroup(this);
     }
     _bundle(this, this.options);
     const errors2 = JSONParserErrorGroup.getParserErrors(this);
-    if (errors2.length > 0) {
+    if (errors2.length) {
       throw new JSONParserErrorGroup(this);
     }
     return this.schema!;
@@ -148,14 +148,14 @@ export class $RefParser {
 
     await resolveExternal(this, this.options);
     const errors = JSONParserErrorGroup.getParserErrors(this);
-    if (errors.length > 0) {
+    if (errors.length) {
       throw new JSONParserErrorGroup(this);
     }
     _bundle(this, this.options);
     // Merged root is ready for bundling
 
     const errors2 = JSONParserErrorGroup.getParserErrors(this);
-    if (errors2.length > 0) {
+    if (errors2.length) {
       throw new JSONParserErrorGroup(this);
     }
     return this.schema!;
@@ -297,7 +297,7 @@ export class $RefParser {
 
   public mergeMany(): JSONSchema {
     const schemas = this.schemaMany || [];
-    if (schemas.length === 0) {
+    if (!schemas.length) {
       throw ono('mergeMany called with no schemas. Did you run parseMany?');
     }
 
@@ -335,7 +335,7 @@ export class $RefParser {
         }
       }
     }
-    if (Object.keys(infoAccumulator).length > 0) {
+    if (Object.keys(infoAccumulator).length) {
       merged.info = infoAccumulator;
     }
 
@@ -356,7 +356,7 @@ export class $RefParser {
         }
       }
     }
-    if (servers.length > 0) {
+    if (servers.length) {
       merged.servers = servers;
     }
 
@@ -568,7 +568,7 @@ export class $RefParser {
       }
     }
 
-    if (tags.length > 0) {
+    if (tags.length) {
       merged.tags = tags;
     }
 

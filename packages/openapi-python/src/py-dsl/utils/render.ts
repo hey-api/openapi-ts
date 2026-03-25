@@ -176,7 +176,7 @@ export class PythonRenderer implements Renderer {
       alias: imp.localName !== imp.sourceName ? imp.localName : undefined,
       name: imp.sourceName,
     }));
-    return py.factory.createImportStatement(group.modulePath, names, group.imports.length > 0);
+    return py.factory.createImportStatement(group.modulePath, names, Boolean(group.imports.length));
   }
 
   private getExports(ctx: RenderContext): Exports {

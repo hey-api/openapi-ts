@@ -62,7 +62,7 @@ export const createQueryOptions = ({
     });
     // Optionally include tags when configured
     let tagsExpr: ReturnType<typeof $.array> | undefined;
-    if (plugin.config.queryKeys.tags && operation.tags && operation.tags.length > 0) {
+    if (plugin.config.queryKeys.tags && operation.tags && operation.tags.length) {
       tagsExpr = $.array(...operation.tags.map((t) => $.literal(t)));
     }
     keyExpression = $(symbolCreateQueryKey).call(

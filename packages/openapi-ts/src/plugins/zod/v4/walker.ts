@@ -338,7 +338,7 @@ export function createVisitor(
       });
 
       let expression: Chain;
-      if (nonNullItems.length === 0) {
+      if (!nonNullItems.length) {
         expression = $(z).attr(identifiers.null).call();
       } else if (nonNullItems.length === 1) {
         expression = nonNullItems[0]!.expression;

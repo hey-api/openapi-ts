@@ -111,7 +111,7 @@ export function AbstractMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base
 
   abstract class Abstract extends Mixed {
     protected abstract(condition?: boolean): this {
-      const cond = arguments.length === 0 ? true : Boolean(condition);
+      const cond = !arguments.length ? true : Boolean(condition);
       return this._m('abstract', cond);
     }
   }
@@ -137,7 +137,7 @@ export function AsyncMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base: T
 
   abstract class Async extends Mixed {
     protected async(condition?: boolean): this {
-      const cond = arguments.length === 0 ? true : Boolean(condition);
+      const cond = !arguments.length ? true : Boolean(condition);
       return this._m('async', cond);
     }
   }
@@ -163,7 +163,7 @@ export function ConstMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base: T
 
   abstract class Const extends Mixed {
     protected const(condition?: boolean): this {
-      const cond = arguments.length === 0 ? true : Boolean(condition);
+      const cond = !arguments.length ? true : Boolean(condition);
       return this._m('const', cond);
     }
   }
@@ -189,7 +189,7 @@ export function DeclareMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base:
 
   abstract class Declare extends Mixed {
     protected declare(condition?: boolean): this {
-      const cond = arguments.length === 0 ? true : Boolean(condition);
+      const cond = !arguments.length ? true : Boolean(condition);
       return this._m('declare', cond);
     }
   }
@@ -221,7 +221,7 @@ export function DefaultMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base:
      * @returns The target object for chaining.
      */
     protected default(condition?: boolean): this {
-      const cond = arguments.length === 0 ? true : Boolean(condition);
+      const cond = !arguments.length ? true : Boolean(condition);
       return this._m('default', cond);
     }
   }
@@ -253,7 +253,7 @@ export function ExportMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base: 
      * @returns The target object for chaining.
      */
     protected export(condition?: boolean): this {
-      const cond = arguments.length === 0 ? true : Boolean(condition);
+      const cond = !arguments.length ? true : Boolean(condition);
       this.exported = cond;
       // TODO: remove this side-effect once planner handles exported flag
       if (this.symbol) this.symbol.setExported(cond);
@@ -282,7 +282,7 @@ export function OverrideMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base
 
   abstract class Override extends Mixed {
     protected override(condition?: boolean): this {
-      const cond = arguments.length === 0 ? true : Boolean(condition);
+      const cond = !arguments.length ? true : Boolean(condition);
       return this._m('override', cond);
     }
   }
@@ -308,7 +308,7 @@ export function PrivateMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base:
 
   abstract class Private extends Mixed {
     protected private(condition?: boolean): this {
-      const cond = arguments.length === 0 ? true : Boolean(condition);
+      const cond = !arguments.length ? true : Boolean(condition);
       return this._m('private', cond);
     }
   }
@@ -334,7 +334,7 @@ export function ProtectedMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Bas
 
   abstract class Protected extends Mixed {
     protected protected(condition?: boolean): this {
-      const cond = arguments.length === 0 ? true : Boolean(condition);
+      const cond = !arguments.length ? true : Boolean(condition);
       return this._m('protected', cond);
     }
   }
@@ -360,7 +360,7 @@ export function PublicMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base: 
 
   abstract class Public extends Mixed {
     protected public(condition?: boolean): this {
-      const cond = arguments.length === 0 ? true : Boolean(condition);
+      const cond = !arguments.length ? true : Boolean(condition);
       return this._m('public', cond);
     }
   }
@@ -386,7 +386,7 @@ export function ReadonlyMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base
 
   abstract class Readonly extends Mixed {
     protected readonly(condition?: boolean): this {
-      const cond = arguments.length === 0 ? true : Boolean(condition);
+      const cond = !arguments.length ? true : Boolean(condition);
       return this._m('readonly', cond);
     }
   }
@@ -412,7 +412,7 @@ export function StaticMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base: 
 
   abstract class Static extends Mixed {
     protected static(condition?: boolean): this {
-      const cond = arguments.length === 0 ? true : Boolean(condition);
+      const cond = !arguments.length ? true : Boolean(condition);
       return this._m('static', cond);
     }
   }

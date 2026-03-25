@@ -445,8 +445,8 @@ function remap(parser: $RefParser, inventory: Array<InventoryEntry>) {
   const ensureContainer = (
     type: 'schemas' | 'parameters' | 'requestBodies' | 'responses' | 'headers',
   ) => {
-    const isOas3 = !!(root && typeof root === 'object' && typeof root.openapi === 'string');
-    const isOas2 = !!(root && typeof root === 'object' && typeof root.swagger === 'string');
+    const isOas3 = Boolean(root && typeof root === 'object' && typeof root.openapi === 'string');
+    const isOas2 = Boolean(root && typeof root === 'object' && typeof root.swagger === 'string');
 
     if (isOas3) {
       if (!root.components || typeof root.components !== 'object') {

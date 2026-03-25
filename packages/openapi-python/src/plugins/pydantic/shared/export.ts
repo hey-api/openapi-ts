@@ -117,7 +117,7 @@ function createFieldStatement(
     ...(needsAlias && !field.fieldConstraints?.alias && { alias: originalName }),
   };
 
-  if (Object.keys(constraints).length > 0) {
+  if (Object.keys(constraints).length) {
     const fieldCall = createFieldCall(constraints, plugin, {
       required: !field.isOptional,
     });

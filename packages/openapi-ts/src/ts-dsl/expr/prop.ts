@@ -49,7 +49,7 @@ export class ObjectPropTsDsl extends Mixed {
   }
 
   get isValid(): boolean {
-    return this.missingRequiredCalls().length === 0;
+    return !this.missingRequiredCalls().length;
   }
 
   value(value: Expr | Stmt | ((p: ObjectPropTsDsl) => void)) {
@@ -104,7 +104,7 @@ export class ObjectPropTsDsl extends Mixed {
     kind: ObjectPropKind;
   } {
     const missing = this.missingRequiredCalls();
-    if (missing.length === 0) return;
+    if (!missing.length) return;
     throw new Error(
       `Object property${this._meta.name ? ` "${this._meta.name}"` : ''} missing ${missing.join(' and ')}`,
     );

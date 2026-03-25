@@ -47,12 +47,12 @@ export class ClassPyDsl extends Mixed {
 
   /** Returns true when all required builder calls are present. */
   get isValid(): boolean {
-    return this.missingRequiredCalls().length === 0;
+    return !this.missingRequiredCalls().length;
   }
 
   /** Returns true if the class has any members. */
   get hasBody(): boolean {
-    return this.body.length > 0;
+    return Boolean(this.body.length);
   }
 
   /** Adds one or more class members (fields, methods, etc.). */
@@ -107,7 +107,7 @@ export class ClassPyDsl extends Mixed {
 
   $validate(): asserts this {
     const missing = this.missingRequiredCalls();
-    if (missing.length === 0) return;
+    if (!missing.length) return;
     throw new Error(`Class declaration missing ${missing.join(' and ')}`);
   }
 

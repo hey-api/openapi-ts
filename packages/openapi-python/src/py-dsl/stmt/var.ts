@@ -32,7 +32,7 @@ export class VarPyDsl extends Mixed {
 
   /** Returns true when all required builder calls are present. */
   get isValid(): boolean {
-    return this.missingRequiredCalls().length === 0;
+    return !this.missingRequiredCalls().length;
   }
 
   /** Sets the type annotation for the variable. */
@@ -52,7 +52,7 @@ export class VarPyDsl extends Mixed {
 
   $validate(): asserts this {
     const missing = this.missingRequiredCalls();
-    if (missing.length === 0) return;
+    if (!missing.length) return;
     throw new Error(`Variable assignment missing ${missing.join(' and ')}`);
   }
 

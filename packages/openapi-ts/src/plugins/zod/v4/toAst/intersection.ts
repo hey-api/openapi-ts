@@ -18,7 +18,7 @@ function baseNode(ctx: IntersectionResolverContext): Chain {
   const { childResults, symbols } = ctx;
   const { z } = symbols;
 
-  if (childResults.length === 0) {
+  if (!childResults.length) {
     return $(z).attr(identifiers.never).call();
   }
 
