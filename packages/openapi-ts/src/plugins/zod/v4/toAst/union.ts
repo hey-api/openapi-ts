@@ -15,7 +15,7 @@ function baseNode(ctx: UnionResolverContext): Chain {
   const { childResults, schemas, symbols } = ctx;
   const { z } = symbols;
 
-  if (childResults.length === 0) {
+  if (!childResults.length) {
     return $(z).attr(identifiers.null).call();
   }
 
@@ -28,7 +28,7 @@ function baseNode(ctx: UnionResolverContext): Chain {
   });
 
   let expression: Chain;
-  if (nonNullItems.length === 0) {
+  if (!nonNullItems.length) {
     expression = $(z).attr(identifiers.null).call();
   } else if (nonNullItems.length === 1) {
     expression = nonNullItems[0]!.expression;

@@ -152,7 +152,7 @@ class $Ref<S extends object = JSONSchema> {
       value !== null &&
       '$ref' in value &&
       typeof value.$ref === 'string' &&
-      value.$ref.length > 0
+      Boolean(value.$ref.length)
     );
   }
 

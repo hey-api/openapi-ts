@@ -130,7 +130,7 @@ export const buildUrl: Client['buildUrl'] = (options) => {
   const instanceBaseUrl = options.axios?.defaults?.baseURL;
 
   const baseUrl =
-    !!options.baseURL && typeof options.baseURL === 'string' ? options.baseURL : instanceBaseUrl;
+    options.baseURL && typeof options.baseURL === 'string' ? options.baseURL : instanceBaseUrl;
 
   return getUrl({
     baseUrl: baseUrl as string,

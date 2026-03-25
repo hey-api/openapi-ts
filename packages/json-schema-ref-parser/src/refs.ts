@@ -224,7 +224,7 @@ function getPaths<S extends object = JSONSchema>($refs: $RefsMap<S>, types: stri
 
   // Filter the paths by type
   types = Array.isArray(types[0]) ? types[0] : Array.prototype.slice.call(types);
-  if (types.length > 0 && types[0]) {
+  if (types.length && types[0]) {
     paths = paths.filter((key) => types.includes($refs[key]!.pathType as string));
   }
 

@@ -53,7 +53,7 @@ class ImplForTsDsl<M extends ForMode = 'for'> extends Mixed {
 
   /** Returns true when all required builder calls are present. */
   get isValid(): boolean {
-    return this.missingRequiredCalls().length === 0;
+    return !this.missingRequiredCalls().length;
   }
 
   /** Enables async iteration (`for await...of`). Can only be called on for...of. */
@@ -147,7 +147,7 @@ class ImplForTsDsl<M extends ForMode = 'for'> extends Mixed {
     _variableOrInit: VarTsDsl;
   } {
     const missing = this.missingRequiredCalls();
-    if (missing.length === 0) return;
+    if (!missing.length) return;
     throw new Error(
       `For${this._mode === 'for' ? '' : `...${this._mode}`} statement missing ${missing.join(' and ')}`,
     );

@@ -10,7 +10,7 @@ import type { GetPointerPriorityFn, WalkFn } from './types/walk';
 const walkDeclarations: WalkFn = (graph, callback, options) => {
   const pointers = Array.from(graph.nodes.keys());
 
-  if (options?.preferGroups && options.preferGroups.length > 0) {
+  if (options?.preferGroups && options.preferGroups.length) {
     // emit nodes that match each preferred group in order, preserving insertion order
     const emitted = new Set<string>();
     if (options.matchPointerToGroup) {
@@ -137,7 +137,7 @@ const walkTopological: WalkFn = (graph, callback, options) => {
 
   // prefer specified groups when safe
   let finalOrder = order;
-  if (options?.preferGroups && options.preferGroups.length > 0) {
+  if (options?.preferGroups && options.preferGroups.length) {
     // build group priority map (lower = earlier)
     const groupPriority = new Map<string, number>();
     for (let i = 0; i < options.preferGroups.length; i++) {

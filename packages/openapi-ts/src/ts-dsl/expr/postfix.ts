@@ -28,7 +28,7 @@ export class PostfixTsDsl extends Mixed {
 
   /** Returns true when all required builder calls are present. */
   get isValid(): boolean {
-    return this.missingRequiredCalls().length === 0;
+    return !this.missingRequiredCalls().length;
   }
 
   /** Sets the operator to MinusMinusToken for decrement (`--`). */
@@ -65,7 +65,7 @@ export class PostfixTsDsl extends Mixed {
     _op: PostfixOp;
   } {
     const missing = this.missingRequiredCalls();
-    if (missing.length === 0) return;
+    if (!missing.length) return;
     throw new Error(`Postfix unary expression missing ${missing.join(' and ')}`);
   }
 

@@ -140,7 +140,7 @@ class Pointer<S extends object = JSONSchema> {
       }
     }
 
-    if (errors.length > 0) {
+    if (errors.length) {
       throw errors.length === 1
         ? errors[0]
         : new AggregateError(errors, 'Multiple missing pointer errors');
@@ -171,7 +171,7 @@ class Pointer<S extends object = JSONSchema> {
     const tokens = Pointer.parse(this.path);
     let token;
 
-    if (tokens.length === 0) {
+    if (!tokens.length) {
       // There are no tokens, replace the entire object with the new value
       this.value = value;
       return value;

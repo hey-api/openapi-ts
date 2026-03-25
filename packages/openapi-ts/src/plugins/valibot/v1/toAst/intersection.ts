@@ -12,7 +12,7 @@ function baseNode(ctx: IntersectionResolverContext): PipeResult {
   const { applyModifiers, childResults, plugin, symbols } = ctx;
   const { v } = symbols;
 
-  if (childResults.length === 0) {
+  if (!childResults.length) {
     return $(v).attr(identifiers.schemas.any).call();
   }
 

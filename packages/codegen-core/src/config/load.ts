@@ -28,7 +28,7 @@ export async function loadConfigFile<T extends AnyObject>({
 
   const fileConfigs = fileConfig instanceof Array ? fileConfig : [fileConfig];
   const mergedConfigs = fileConfigs.map((config) => mergeConfigs<T>(config, userConfig));
-  const foundConfig = fileConfigs.some((config) => Object.keys(config).length > 0);
+  const foundConfig = fileConfigs.some((config) => Object.keys(config).length);
 
   return { configFile: loadedConfigFile, configs: mergedConfigs, foundConfig };
 }

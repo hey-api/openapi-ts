@@ -14,7 +14,7 @@ import type { FieldConstraints } from '../constants';
 function baseNode(ctx: IntersectionResolverContext): PydanticType {
   const { applyModifiers, childResults, plugin } = ctx;
 
-  if (childResults.length === 0) {
+  if (!childResults.length) {
     return {
       type: plugin.external('typing.Any'),
     };
@@ -60,9 +60,9 @@ function baseNode(ctx: IntersectionResolverContext): PydanticType {
 
   let type: VarType;
 
-  if (baseClasses.length > 0 && mergedFields.length === 0) {
+  if (baseClasses.length && !mergedFields.length) {
     type = baseClasses[0]!;
-  } else if (mergedFields.length > 0) {
+  } else if (mergedFields.length) {
     // TODO: replace
     type = '__INTERSECTION_PLACEHOLDER__';
   } else {
@@ -151,12 +151,11 @@ export function intersectionToType({
 
   return {
     ...resolved,
-    baseClasses: baseClasses.length > 0 ? baseClasses : undefined,
+    baseClasses: baseClasses.length ? baseClasses : undefined,
     childResults,
-    fieldConstraints:
-      Object.keys(constraints).length > 0
-        ? { ...constraints, ...resolved.fieldConstraints }
-        : resolved.fieldConstraints,
-    mergedFields: mergedFields.length > 0 ? mergedFields : undefined,
+    fieldConstraints: Object.keys(constraints).length
+      ? { ...constraints, ...resolved.fieldConstraints }
+      : resolved.fieldConstraints,
+    mergedFields: mergedFields.length ? mergedFields : undefined,
   };
 }

@@ -77,7 +77,7 @@ export class Logger {
       if (!event.end) {
         event.end = performance.mark(idEnd(event.id));
       }
-      if (event.events.length > 0) {
+      if (event.events.length) {
         this.endAllEvents(event.events);
       }
     }

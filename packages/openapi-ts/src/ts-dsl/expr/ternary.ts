@@ -27,7 +27,7 @@ export class TernaryTsDsl extends Mixed {
 
   /** Returns true when all required builder calls are present. */
   get isValid(): boolean {
-    return this.missingRequiredCalls().length === 0;
+    return !this.missingRequiredCalls().length;
   }
 
   condition(condition: string | MaybeTsDsl<ts.Expression>) {
@@ -62,7 +62,7 @@ export class TernaryTsDsl extends Mixed {
     _then: string | MaybeTsDsl<ts.Expression>;
   } {
     const missing = this.missingRequiredCalls();
-    if (missing.length === 0) return;
+    if (!missing.length) return;
     throw new Error(`Ternary expression missing ${missing.join(' and ')}`);
   }
 

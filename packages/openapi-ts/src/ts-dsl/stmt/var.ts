@@ -38,7 +38,7 @@ export class VarTsDsl extends Mixed {
 
   /** Returns true when all required builder calls are present. */
   get isValid(): boolean {
-    return this.missingRequiredCalls().length === 0;
+    return !this.missingRequiredCalls().length;
   }
 
   const(): this {
@@ -83,7 +83,7 @@ export class VarTsDsl extends Mixed {
 
   $validate(): asserts this {
     const missing = this.missingRequiredCalls();
-    if (missing.length === 0) return;
+    if (!missing.length) return;
     throw new Error(`Variable declaration missing ${missing.join(' and ')}`);
   }
 

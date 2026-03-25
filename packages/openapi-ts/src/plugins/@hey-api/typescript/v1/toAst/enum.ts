@@ -63,14 +63,14 @@ function baseNode(ctx: EnumResolverContext): Type {
   const { schema } = ctx;
   const items = schema.items ?? [];
 
-  if (items.length === 0) {
+  if (!items.length) {
     return $.type('never');
   }
 
   const literalTypes = items
     .filter((item) => item.const !== undefined)
     .map((item) => $.type.fromValue(item.const));
-  return literalTypes.length > 0 ? $.type.or(...literalTypes) : $.type('string');
+  return literalTypes.length ? $.type.or(...literalTypes) : $.type('string');
 }
 
 function enumResolver(ctx: EnumResolverContext): Type {

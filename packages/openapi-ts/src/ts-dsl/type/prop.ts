@@ -44,7 +44,7 @@ export class TypePropTsDsl extends Mixed {
 
   /** Returns true when all required builder calls are present. */
   get isValid(): boolean {
-    return this.missingRequiredCalls().length === 0;
+    return !this.missingRequiredCalls().length;
   }
 
   /** Sets the property type. */
@@ -69,7 +69,7 @@ export class TypePropTsDsl extends Mixed {
     _type: Ref<TypePropType>;
   } {
     const missing = this.missingRequiredCalls();
-    if (missing.length === 0) return;
+    if (!missing.length) return;
     const name = this.name.toString();
     throw new Error(`Type property${name ? ` "${name}"` : ''} missing ${missing.join(' and ')}`);
   }
