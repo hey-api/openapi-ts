@@ -11,27 +11,23 @@ export function createConfigFactory({
   openApiVersion: string;
   outputDir: string;
 }) {
-  return (userConfig: UserConfig) => {
+  return (
+    userConfig: Omit<UserConfig, 'input'> & Partial<Pick<UserConfig, 'input'>>,
+  ): UserConfig => {
     const input = userConfig.input instanceof Array ? userConfig.input[0]! : userConfig.input;
     const inputPath = path.join(
       getSpecsPath(),
       openApiVersion,
-      typeof input === 'string' ? input : (input.path as string),
+      typeof input === 'string' ? input : 'full.yaml',
     );
     const output = userConfig.output instanceof Array ? userConfig.output[0]! : userConfig.output;
     const outputPath = typeof output === 'string' ? output : (output?.path ?? '');
     return {
-      plugins: ['orpc'],
+      plugins: ['msw'],
       ...userConfig,
-      input:
-        typeof userConfig.input === 'string'
-          ? inputPath
-          : {
-              ...userConfig.input,
-              path: inputPath,
-            },
+      input: inputPath,
       logs: { level: 'silent', path: './logs' },
       output: path.join(outputDir, outputPath),
-    } as UserConfig;
+    };
   };
 }

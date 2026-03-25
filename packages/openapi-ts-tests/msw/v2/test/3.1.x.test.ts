@@ -7,7 +7,7 @@ import { getFilePaths } from '../../../utils';
 import { snapshotsDir, tmpDir } from './constants';
 import { createConfigFactory } from './utils';
 
-const version = '3.0.x';
+const version = '3.1.x';
 
 const outputDir = path.join(tmpDir, version);
 
@@ -17,28 +17,43 @@ describe(`OpenAPI ${version}`, () => {
   const scenarios = [
     {
       config: createConfig({
-        input: 'orpc.yaml',
         output: 'default',
-        plugins: ['orpc', 'zod'],
       }),
-      description: 'generate oRPC contracts with Zod schemas',
+      description: 'generates mock handlers',
     },
     {
       config: createConfig({
-        input: 'orpc.yaml',
-        output: 'custom-names',
+        input: 'response-example.yaml',
+        output: 'response-example',
+      }),
+      description: 'generates mock handlers with example',
+    },
+    {
+      config: createConfig({
+        input: 'response-example.yaml',
+        output: 'response-example-disabled',
         plugins: [
-          'valibot',
           {
-            contracts: {
-              containerName: 'rpcContract',
-              contractName: '{{name}}Rpc',
-            },
-            name: 'orpc',
+            name: 'msw',
+            valueSources: [],
           },
         ],
       }),
-      description: 'generate oRPC contracts with custom names and Valibot schemas',
+      description: 'generates mock handlers with example but disabled',
+    },
+    {
+      config: createConfig({
+        input: 'response-types.yaml',
+        output: 'response-types',
+      }),
+      description: 'generates mock handlers with multiple response types',
+    },
+    {
+      config: createConfig({
+        input: 'servers.yaml',
+        output: 'servers',
+      }),
+      description: 'generates mock handlers with servers field',
     },
   ];
 

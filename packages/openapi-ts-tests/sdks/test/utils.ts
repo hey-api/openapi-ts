@@ -6,9 +6,8 @@ import { type UserConfig } from '@hey-api/openapi-ts';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export const createSdkConfig =
-  ({ outputDir }: { outputDir: string }) =>
-  (userConfig: UserConfig) =>
+export function createConfigFactory({ outputDir }: { outputDir: string }) {
+  return (userConfig: UserConfig) =>
     ({
       ...userConfig,
       logs: {
@@ -26,6 +25,7 @@ export const createSdkConfig =
               ),
             },
     }) as const satisfies UserConfig;
+}
 
 export const getSnapshotsPath = (): string => path.join(__dirname, '..', '__snapshots__');
 
