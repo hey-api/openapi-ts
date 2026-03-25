@@ -31,7 +31,7 @@ export class AttrPyDsl extends Mixed {
 
   /** Returns true when all required builder calls are present. */
   get isValid(): boolean {
-    return this.missingRequiredCalls().length === 0;
+    return !this.missingRequiredCalls().length;
   }
 
   override toAst() {
@@ -50,7 +50,7 @@ export class AttrPyDsl extends Mixed {
     left: MaybePyDsl<py.Expression>;
   } {
     const missing = this.missingRequiredCalls();
-    if (missing.length === 0) return;
+    if (!missing.length) return;
     throw new Error(`Attribute access missing ${missing.join(' and ')}`);
   }
 

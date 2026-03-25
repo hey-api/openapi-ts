@@ -32,7 +32,7 @@ export class CallPyDsl extends Mixed {
 
   /** Returns true when all required builder calls are present. */
   get isValid(): boolean {
-    return this.missingRequiredCalls().length === 0;
+    return !this.missingRequiredCalls().length;
   }
 
   override toAst() {
@@ -45,7 +45,7 @@ export class CallPyDsl extends Mixed {
     _callee: MaybePyDsl<py.Expression>;
   } {
     const missing = this.missingRequiredCalls();
-    if (missing.length === 0) return;
+    if (!missing.length) return;
     throw new Error(`Call expression missing ${missing.join(' and ')}`);
   }
 

@@ -50,7 +50,7 @@ function baseNode(ctx: EnumResolverContext): PydanticType {
   const { plugin } = ctx;
   const { enumMembers } = ctx.nodes.items(ctx);
 
-  if (enumMembers.length === 0) {
+  if (!enumMembers.length) {
     return {
       type: plugin.external('typing.Any'),
     };
@@ -59,7 +59,7 @@ function baseNode(ctx: EnumResolverContext): PydanticType {
   const mode = plugin.config.enums ?? 'enum';
 
   if (mode === 'literal') {
-    if (enumMembers.length === 0) {
+    if (!enumMembers.length) {
       return {
         type: plugin.external('typing.Any'),
       };

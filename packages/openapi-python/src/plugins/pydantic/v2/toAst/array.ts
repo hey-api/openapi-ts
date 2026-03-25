@@ -11,7 +11,7 @@ function baseNode(ctx: ArrayResolverContext): PydanticType {
   const { applyModifiers, childResults, plugin } = ctx;
   const any = plugin.external('typing.Any');
 
-  if (childResults.length === 0) {
+  if (!childResults.length) {
     return {
       type: $('list').slice(any),
     };
@@ -70,7 +70,7 @@ function arrayResolver(ctx: ArrayResolverContext): PydanticType {
 
   return {
     ...baseResult,
-    fieldConstraints: Object.keys(fieldConstraints).length > 0 ? fieldConstraints : undefined,
+    fieldConstraints: Object.keys(fieldConstraints).length ? fieldConstraints : undefined,
   };
 }
 

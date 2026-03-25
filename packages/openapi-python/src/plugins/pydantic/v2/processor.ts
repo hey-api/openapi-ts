@@ -15,9 +15,11 @@ export function createProcessor(plugin: PydanticPlugin['Instance']): ProcessorRe
     (ctx) =>
       ctx.schema.type === 'object' &&
       ctx.schema.properties !== undefined &&
-      Object.keys(ctx.schema.properties).length > 0,
+      Boolean(Object.keys(ctx.schema.properties).length),
     (ctx) =>
-      ctx.schema.type === 'enum' && ctx.schema.items !== undefined && ctx.schema.items.length > 0,
+      ctx.schema.type === 'enum' &&
+      ctx.schema.items !== undefined &&
+      Boolean(ctx.schema.items.length),
     plugin.config['~hooks']?.schemas?.shouldExtract,
     plugin.context.config.parser.hooks.schemas?.shouldExtract,
   ];

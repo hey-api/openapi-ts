@@ -80,7 +80,7 @@ export class TryPyDsl extends Mixed {
 
   /** Returns true when all required builder calls are present. */
   get isValid(): boolean {
-    return this.missingRequiredCalls().length === 0;
+    return !this.missingRequiredCalls().length;
   }
 
   /**
@@ -200,13 +200,13 @@ export class TryPyDsl extends Mixed {
     _try: Array<DoExpr>;
   } {
     const missing = this.missingRequiredCalls();
-    if (missing.length === 0) return;
+    if (!missing.length) return;
     throw new Error(`Try statement missing ${missing.join(' and ')}`);
   }
 
   private missingRequiredCalls(): ReadonlyArray<string> {
     const missing: Array<string> = [];
-    if (!this._try || this._try.length === 0) missing.push('.try()');
+    if (!this._try || !this._try.length) missing.push('.try()');
     return missing;
   }
 

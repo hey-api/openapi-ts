@@ -55,7 +55,7 @@ export class TokenTsDsl<K extends ts.SyntaxKind = never> extends TsDsl<ts.Token<
     _kind: K;
   } {
     const missing = this.missingRequiredCalls();
-    if (missing.length === 0) return;
+    if (!missing.length) return;
     throw new Error(`Token missing ${missing.join(' and ')}`);
   }
 
@@ -67,6 +67,6 @@ export class TokenTsDsl<K extends ts.SyntaxKind = never> extends TsDsl<ts.Token<
 
   /** Returns true when all required builder calls are present. */
   get isValid(): boolean {
-    return this.missingRequiredCalls().length === 0;
+    return !this.missingRequiredCalls().length;
   }
 }

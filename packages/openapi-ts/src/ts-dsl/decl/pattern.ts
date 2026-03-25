@@ -25,7 +25,7 @@ export class PatternTsDsl extends Mixed {
 
   /** Returns true when all required builder calls are present. */
   get isValid(): boolean {
-    return this.missingRequiredCalls().length === 0;
+    return !this.missingRequiredCalls().length;
   }
 
   /** Defines an array pattern (e.g., `[a, b, c]`). */
@@ -85,7 +85,7 @@ export class PatternTsDsl extends Mixed {
       | { kind: 'object'; values: Record<string, string> };
   } {
     const missing = this.missingRequiredCalls();
-    if (missing.length === 0) return;
+    if (!missing.length) return;
     throw new Error(`Binding pattern missing ${missing.join(' and ')}`);
   }
 

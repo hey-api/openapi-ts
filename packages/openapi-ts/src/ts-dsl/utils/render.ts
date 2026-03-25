@@ -163,7 +163,7 @@ export class TypeScriptRenderer implements Renderer {
       group.kind === 'default' ? $.id(group.localName ?? '').toAst() : undefined,
       group.kind === 'namespace'
         ? ts.factory.createNamespaceImport($.id(group.localName ?? '').toAst())
-        : specifiers.length > 0
+        : specifiers.length
           ? ts.factory.createNamedImports(specifiers)
           : undefined,
     );

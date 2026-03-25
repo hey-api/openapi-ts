@@ -613,7 +613,7 @@ const parseAllOf = ({
             oneOf ? () => oneOf.some((o) => '$ref' in o && o.$ref === state.$ref) : undefined,
           );
 
-          if (values.length === 0) {
+          if (!values.length) {
             continue;
           }
 
@@ -670,7 +670,7 @@ const parseAllOf = ({
     });
 
     // Use allValues if we found children, otherwise use the original values
-    const finalValues = allValues.length > 0 ? allValues : values;
+    const finalValues = allValues.length ? allValues : values;
 
     // Detect the actual type of the discriminator property
     const propertyType = findDiscriminatorPropertyType({

@@ -39,7 +39,7 @@ export class TypeAttrTsDsl extends Mixed {
 
   /** Returns true when all required builder calls are present. */
   get isValid(): boolean {
-    return this.missingRequiredCalls().length === 0;
+    return !this.missingRequiredCalls().length;
   }
 
   base(base?: Base | Ref<Base>): this {
@@ -70,7 +70,7 @@ export class TypeAttrTsDsl extends Mixed {
     _right: Ref<Right>;
   } {
     const missing = this.missingRequiredCalls();
-    if (missing.length === 0) return;
+    if (!missing.length) return;
     throw new Error(`Type attribute missing ${missing.join(' and ')}`);
   }
 

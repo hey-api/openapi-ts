@@ -82,7 +82,7 @@ export function moduleSortKey({
     pathSegments.push(moduleName);
   }
 
-  modulePath = pathSegments.length > 0 ? leadingDots + pathSegments.join('.') : leadingDots;
+  modulePath = pathSegments.length ? leadingDots + pathSegments.join('.') : leadingDots;
 
   return [2, parentCount, modulePath];
 }
