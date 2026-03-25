@@ -8,7 +8,7 @@ import type { BaseCtor, MixinCtor } from './types';
 export interface DecoratorMethods extends Node {
   /** Renders the decorators into an array of `ts.Decorator`s. */
   $decorators(): ReadonlyArray<ts.Decorator>;
-  /** Adds a decorator (e.g. `@sealed({ in: 'root' })`). */
+  /** Adds a decorator (e.g., `@sealed({ in: 'root' })`). */
   decorator(
     name: NodeName | MaybeTsDsl<ts.Expression>,
     ...args: ReadonlyArray<string | MaybeTsDsl<ts.Expression>>

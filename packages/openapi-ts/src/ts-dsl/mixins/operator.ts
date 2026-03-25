@@ -10,7 +10,7 @@ type Expr = NodeName | MaybeTsDsl<ts.Expression>;
 export interface OperatorMethods extends Node {
   /** Logical AND — `this && expr` */
   and(expr: Expr): BinaryTsDsl;
-  /** Creates an assignment expression (e.g. `this = expr`). */
+  /** Creates an assignment expression (e.g., `this = expr`). */
   assign(expr: Expr): BinaryTsDsl;
   /** Nullish coalescing — `this ?? expr` */
   coalesce(expr: Expr): BinaryTsDsl;

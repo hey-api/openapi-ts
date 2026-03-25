@@ -16,7 +16,7 @@ export type ISymbolIn = {
   exported?: boolean;
   /**
    * External module name if this symbol is imported from a module not managed
-   * by the project (e.g. "zod", "lodash").
+   * by the project (e.g., "zod", "lodash").
    *
    * @default undefined
    */

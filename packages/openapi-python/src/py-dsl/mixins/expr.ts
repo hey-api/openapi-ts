@@ -5,13 +5,13 @@ import { f } from '../utils/factories';
 import type { BaseCtor, DropFirst, MixinCtor } from './types';
 
 export interface ExprMethods extends Node {
-  /** Accesses a property on the current expression (e.g. `this.foo`). */
+  /** Accesses a property on the current expression (e.g., `this.foo`). */
   attr(...args: DropFirst<Parameters<typeof f.attr>>): ReturnType<typeof f.attr>;
-  /** Calls the current expression (e.g. `fn(arg1, arg2)`). */
+  /** Calls the current expression (e.g., `fn(arg1, arg2)`). */
   call(...args: DropFirst<Parameters<typeof f.call>>): ReturnType<typeof f.call>;
   /** Produces a `return` statement returning the current expression. */
   return(): ReturnType<typeof f.return>;
-  /** Produces a subscript/slice expression (e.g. `expr[args]`). */
+  /** Produces a subscript/slice expression (e.g., `expr[args]`). */
   slice(...args: DropFirst<Parameters<typeof f.slice>>): ReturnType<typeof f.slice>;
 }
 
