@@ -4,7 +4,9 @@ import type { ModelMapWithDeclaredResponse2 } from './types.gen';
 
 const modelMapWithDeclaredResponseSchemaResponseTransformer = (data: any) => {
     for (const key of Object.keys(data.items)) {
-        data.items[key] = new Date(data.items[key]);
+        if (!['meta'].includes(key)) {
+            data.items[key] = new Date(data.items[key]);
+        }
     }
     return data;
 };
