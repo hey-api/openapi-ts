@@ -4,10 +4,11 @@ import ts from 'typescript';
 import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
 import { AsMixin } from '../mixins/as';
+import { ExprMixin } from '../mixins/expr';
 import { LayoutMixin } from '../mixins/layout';
 import { LiteralTsDsl } from './literal';
 
-const Mixed = AsMixin(LayoutMixin(TsDsl<ts.ArrayLiteralExpression>));
+const Mixed = AsMixin(ExprMixin(LayoutMixin(TsDsl<ts.ArrayLiteralExpression>)));
 
 export class ArrayTsDsl extends Mixed {
   readonly '~dsl' = 'ArrayTsDsl';

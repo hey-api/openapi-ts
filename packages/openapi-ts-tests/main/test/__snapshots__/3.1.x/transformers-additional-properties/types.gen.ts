@@ -10,8 +10,12 @@ export type Foo = {
 
 export type Bar = {
     bar: Date;
-    baz?: {
+    baz: {
         [key: string]: Foo;
+    };
+    qux?: {
+        quux?: string;
+        [key: string]: Date | string | undefined;
     };
 };
 
