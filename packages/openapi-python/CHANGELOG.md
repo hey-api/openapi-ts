@@ -1,14 +1,5 @@
 # @hey-api/openapi-python
 
-## 0.0.13
-
-### Patch Changes
-
-### Updated Dependencies:
-
-- @hey-api/spec-types@0.1.0
-- @hey-api/shared@0.2.6
-
 ## 0.0.12
 
 ### Patch Changes
