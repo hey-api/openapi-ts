@@ -8,7 +8,7 @@ export type ValueExpr = string | MaybeTsDsl<ts.Expression>;
 
 export interface ValueMethods extends Node {
   $value(): ts.Expression | undefined;
-  /** Sets the initializer expression (e.g. `= expr`). */
+  /** Sets the initializer expression (e.g., `= expr`). */
   assign(expr: ValueExpr): this;
 }
 

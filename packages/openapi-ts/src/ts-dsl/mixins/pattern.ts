@@ -12,7 +12,7 @@ export interface PatternMethods extends Node {
   array(...props: ReadonlyArray<string> | [ReadonlyArray<string>]): this;
   /** Defines an object binding pattern. */
   object(...props: ReadonlyArray<MaybeArray<string> | Record<string, string>>): this;
-  /** Adds a spread element (e.g. `...args`, `...options`) to the pattern. */
+  /** Adds a spread element (e.g., `...args`, `...options`) to the pattern. */
   spread(name: string): this;
 }
 
@@ -38,7 +38,7 @@ export function PatternMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base:
       return this;
     }
 
-    /** Adds a spread element (e.g. `...args`, `...options`) to the pattern. */
+    /** Adds a spread element (e.g., `...args`, `...options`) to the pattern. */
     protected spread(name: string): this {
       (this.pattern ??= new PatternTsDsl()).spread(name);
       return this;

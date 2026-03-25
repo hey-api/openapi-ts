@@ -27,10 +27,10 @@ function createFactory<T extends Ctor>(name: string): Factory<T> {
 }
 
 export const f = {
-  /** Factory for creating property access expressions (e.g. `obj.foo`). */
+  /** Factory for creating property access expressions (e.g., `obj.foo`). */
   attr: createFactory<AttrCtor>('attr'),
 
-  /** Factory for creating function or method call expressions (e.g. `fn(arg)`). */
+  /** Factory for creating function or method call expressions (e.g., `fn(arg)`). */
   call: createFactory<CallCtor>('call'),
 
   /** Factory for creating return statements. */

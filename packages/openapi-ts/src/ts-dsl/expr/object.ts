@@ -42,7 +42,7 @@ export class ObjectTsDsl extends Mixed {
     return `${prop.kind}:${prop.propName}`;
   }
 
-  /** Adds a computed property (e.g. `{ [expr]: value }`), or removes if null. */
+  /** Adds a computed property (e.g., `{ [expr]: value }`), or removes if null. */
   computed(name: string, expr: ExprFn | null): this {
     if (expr === null) {
       this._props.delete(`computed:${name}`);
@@ -55,7 +55,7 @@ export class ObjectTsDsl extends Mixed {
     return this;
   }
 
-  /** Adds a getter property (e.g. `{ get foo() { ... } }`), or removes if null. */
+  /** Adds a getter property (e.g., `{ get foo() { ... } }`), or removes if null. */
   getter(name: string, stmt: StmtFn | null): this {
     if (stmt === null) {
       this._props.delete(`getter:${name}`);
@@ -93,7 +93,7 @@ export class ObjectTsDsl extends Mixed {
     return this;
   }
 
-  /** Adds a setter property (e.g. `{ set foo(v) { ... } }`), or removes if null. */
+  /** Adds a setter property (e.g., `{ set foo(v) { ... } }`), or removes if null. */
   setter(name: string, stmt: StmtFn | null): this {
     if (stmt === null) {
       this._props.delete(`setter:${name}`);
@@ -103,7 +103,7 @@ export class ObjectTsDsl extends Mixed {
     return this;
   }
 
-  /** Adds a spread property (e.g. `{ ...options }`). */
+  /** Adds a spread property (e.g., `{ ...options }`). */
   spread(expr: ExprFn): this {
     const key = `spread:${this._spreadCounter++}`;
     this._props.set(key, new ObjectPropTsDsl({ kind: 'spread' }).value(expr));

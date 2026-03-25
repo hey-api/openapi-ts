@@ -205,7 +205,7 @@ class Pointer<S extends object = JSONSchema> {
   /**
    * Parses a JSON pointer (or a path containing a JSON pointer in the hash)
    * and returns an array of the pointer's tokens.
-   * (e.g. "schema.json#/definitions/person/name" => ["definitions", "person", "name"])
+   * (e.g., "schema.json#/definitions/person/name" => ["definitions", "person", "name"])
    *
    * The pointer is parsed according to RFC 6901
    * {@link https://tools.ietf.org/html/rfc6901#section-3}
@@ -244,8 +244,8 @@ class Pointer<S extends object = JSONSchema> {
   /**
    * Creates a JSON pointer path, by joining one or more tokens to a base path.
    *
-   * @param base - The base path (e.g. "schema.json#/definitions/person")
-   * @param tokens - The token(s) to append (e.g. ["name", "first"])
+   * @param base - The base path (e.g., "schema.json#/definitions/person")
+   * @param tokens - The token(s) to append (e.g., ["name", "first"])
    * @returns
    */
   static join(base: string, tokens: string | string[]) {
