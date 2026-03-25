@@ -213,7 +213,7 @@ const inventory$Ref = <S extends object = JSONSchema>({
   }
 
   const newEntry: InventoryEntry = {
-    $ref, // The JSON Reference (e.g. {$ref: string})
+    $ref, // The JSON Reference (e.g., {$ref: string})
     circular: pointer.circular, // Is this $ref pointer DIRECTLY circular? (i.e. it references itself)
     depth, // How far from the JSON Schema root is this $ref pointer?
     extended, // Does this $ref extend its resolved value? (i.e. it has extra properties, in addition to "$ref")
@@ -240,7 +240,7 @@ const inventory$Ref = <S extends object = JSONSchema>({
   // Recursively crawl the resolved value.
   // When the resolution followed a $ref chain to a different file,
   // use the resolved file as the base path so that local $ref values
-  // (e.g. #/components/schemas/SiblingSchema) inside the resolved
+  // (e.g., #/components/schemas/SiblingSchema) inside the resolved
   // value resolve against the correct file.
   if (!existingEntry || external) {
     let crawlPath = pointer.path;

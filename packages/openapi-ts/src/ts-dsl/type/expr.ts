@@ -44,7 +44,7 @@ export class TypeExprTsDsl extends Mixed {
     return this.missingRequiredCalls().length === 0;
   }
 
-  /** Accesses a nested type (e.g. `Foo.Bar`). */
+  /** Accesses a nested type (e.g., `Foo.Bar`). */
   attr(right: string | ts.Identifier | TypeAttrTsDsl): this {
     this._exprInput = isNode(right)
       ? ref(right.base(this._exprInput))

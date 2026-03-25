@@ -60,7 +60,7 @@ export class BinaryTsDsl extends Mixed {
     return this.opAndExpr('&&', expr);
   }
 
-  /** Creates an assignment expression (e.g. `this = expr`). */
+  /** Creates an assignment expression (e.g., `this = expr`). */
   assign(expr: Expr): this {
     return this.opAndExpr('=', expr);
   }

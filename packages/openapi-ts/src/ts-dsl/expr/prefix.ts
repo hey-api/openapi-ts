@@ -49,7 +49,7 @@ export class PrefixTsDsl extends Mixed {
     return this;
   }
 
-  /** Sets the operator (e.g. `ts.SyntaxKind.ExclamationToken` for `!`). */
+  /** Sets the operator (e.g., `ts.SyntaxKind.ExclamationToken` for `!`). */
   op(op: PrefixOp): this {
     this._op = op;
     return this;

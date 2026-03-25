@@ -24,7 +24,7 @@ export class RaisePyDsl extends Mixed {
     // ctx.analyze(this.msg);
   }
 
-  // /** Sets the message argument for the exception (e.g. `raise ValueError('msg')`). */
+  // /** Sets the message argument for the exception (e.g., `raise ValueError('msg')`). */
   // message(value: string | MaybePyDsl<py.Expression>): this {
   //   this.msg = value;
   //   return this;

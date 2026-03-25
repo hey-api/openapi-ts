@@ -46,7 +46,7 @@ class $Ref<S extends object = JSONSchema> {
   $refs: $Refs<S>;
 
   /**
-   * Indicates the type of {@link $Ref#path} (e.g. "file", "http", etc.)
+   * Indicates the type of {@link $Ref#path} (e.g., "file", "http", etc.)
    */
   pathType: string | unknown;
 

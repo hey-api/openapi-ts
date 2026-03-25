@@ -33,7 +33,7 @@ type Signature = {
 
 /**
  * Collects and resolves all operation parameters for flattened SDK signatures.
- * - Prefixes all conflicting names with their location (e.g. path_foo, query_foo)
+ * - Prefixes all conflicting names with their location (e.g., path_foo, query_foo)
  * - Returns a flat map of resolved parameter names to their metadata
  */
 export function getSignatureParameters({
@@ -75,7 +75,7 @@ export function getSignatureParameters({
         addParameter(key, 'body');
       }
     } else if (operation.body.schema.$ref) {
-      // alias body for more ergonomic naming, e.g. user if the type is User
+      // alias body for more ergonomic naming, e.g., user if the type is User
       const name = refToName(operation.body.schema.$ref);
       const key = toCase(name, 'camelCase');
       addParameter(key, 'body');

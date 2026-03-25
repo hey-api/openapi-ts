@@ -5,7 +5,7 @@ import { f } from '../utils/factories';
 import type { BaseCtor, DropFirst, MixinCtor } from './types';
 
 export interface AsMethods extends Node {
-  /** Creates an `as` type assertion expression (e.g. `value as Type`). */
+  /** Creates an `as` type assertion expression (e.g., `value as Type`). */
   as(...args: DropFirst<Parameters<typeof f.as>>): ReturnType<typeof f.as>;
 }
 

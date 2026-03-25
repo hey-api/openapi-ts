@@ -336,7 +336,7 @@ export const handler: HeyApiTransformersPlugin['Handler'] = ({ plugin }) => {
       });
       if (!nodes.length) return;
 
-      // For nullable union responses (e.g. anyOf: [SomeSchema, null]), wrap the
+      // For nullable union responses (e.g., anyOf: [SomeSchema, null]), wrap the
       // transformation in a null guard so that null data is returned as-is.
       // We require nodes.length >= 2 because we need at least one transformation
       // statement AND a return statement (empty .do() would fail validation).
