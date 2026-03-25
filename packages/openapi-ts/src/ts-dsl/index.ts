@@ -64,25 +64,25 @@ import { TypeTupleTsDsl } from './type/tuple';
 import { LazyTsDsl } from './utils/lazy';
 
 const tsDsl = {
-  /** Creates an array literal expression (e.g. `[1, 2, 3]`). */
+  /** Creates an array literal expression (e.g., `[1, 2, 3]`). */
   array: (...args: ConstructorParameters<typeof ArrayTsDsl>) => new ArrayTsDsl(...args),
 
-  /** Creates an `as` type assertion expression (e.g. `value as Type`). */
+  /** Creates an `as` type assertion expression (e.g., `value as Type`). */
   as: (...args: ConstructorParameters<typeof AsTsDsl>) => new AsTsDsl(...args),
 
-  /** Creates a property access expression (e.g. `obj.foo`). */
+  /** Creates a property access expression (e.g., `obj.foo`). */
   attr: (...args: ConstructorParameters<typeof AttrTsDsl>) => new AttrTsDsl(...args),
 
-  /** Creates an await expression (e.g. `await promise`). */
+  /** Creates an await expression (e.g., `await promise`). */
   await: (...args: ConstructorParameters<typeof AwaitTsDsl>) => new AwaitTsDsl(...args),
 
-  /** Creates a binary expression (e.g. `a + b`). */
+  /** Creates a binary expression (e.g., `a + b`). */
   binary: (...args: ConstructorParameters<typeof BinaryTsDsl>) => new BinaryTsDsl(...args),
 
   /** Creates a statement block (`{ ... }`). */
   block: (...args: ConstructorParameters<typeof BlockTsDsl>) => new BlockTsDsl(...args),
 
-  /** Creates a function or method call expression (e.g. `fn(arg)`). */
+  /** Creates a function or method call expression (e.g., `fn(arg)`). */
   call: (...args: ConstructorParameters<typeof CallTsDsl>) => new CallTsDsl(...args),
 
   /** Creates a class declaration or expression. */
@@ -94,7 +94,7 @@ const tsDsl = {
   /** Creates a postfix decrement expression (`i--`). */
   dec: (...args: ConstructorParameters<typeof PostfixTsDsl>) => new PostfixTsDsl(...args).dec(),
 
-  /** Creates a decorator expression (e.g. `@decorator`). */
+  /** Creates a decorator expression (e.g., `@decorator`). */
   decorator: (...args: ConstructorParameters<typeof DecoratorTsDsl>) => new DecoratorTsDsl(...args),
 
   /** Creates a JSDoc documentation block. */
@@ -146,7 +146,7 @@ const tsDsl = {
   /** Creates a single-line comment (//). */
   hint: (...args: ConstructorParameters<typeof HintTsDsl>) => new HintTsDsl(...args),
 
-  /** Creates an identifier (e.g. `foo`). */
+  /** Creates an identifier (e.g., `foo`). */
   id: (...args: ConstructorParameters<typeof IdTsDsl>) => new IdTsDsl(...args),
 
   /** Creates an if statement. */
@@ -165,7 +165,7 @@ const tsDsl = {
   /** Creates a let variable declaration (`let`). */
   let: (...args: ConstructorParameters<typeof VarTsDsl>) => new VarTsDsl(...args).let(),
 
-  /** Creates a literal value (e.g. string, number, boolean). */
+  /** Creates a literal value (e.g., string, number, boolean). */
   literal: (...args: ConstructorParameters<typeof LiteralTsDsl>) => new LiteralTsDsl(...args),
 
   /** Creates an enum member declaration. */
@@ -177,7 +177,7 @@ const tsDsl = {
   /** Creates a negation expression (`-x`). */
   neg: (...args: ConstructorParameters<typeof PrefixTsDsl>) => new PrefixTsDsl(...args).neg(),
 
-  /** Creates a new expression (e.g. `new ClassName()`). */
+  /** Creates a new expression (e.g., `new ClassName()`). */
   new: (...args: ConstructorParameters<typeof NewTsDsl>) => new NewTsDsl(...args),
 
   /** Creates a newline (for formatting purposes). */
@@ -198,13 +198,13 @@ const tsDsl = {
   /** Creates a pattern for destructuring or matching. */
   pattern: (...args: ConstructorParameters<typeof PatternTsDsl>) => new PatternTsDsl(...args),
 
-  /** Creates a prefix unary expression (e.g. `-x`, `!x`, `~x`). */
+  /** Creates a prefix unary expression (e.g., `-x`, `!x`, `~x`). */
   prefix: (...args: ConstructorParameters<typeof PrefixTsDsl>) => new PrefixTsDsl(...args),
 
-  /** Creates an object literal property (e.g. `{ foo: bar }`). */
+  /** Creates an object literal property (e.g., `{ foo: bar }`). */
   prop: (...args: ConstructorParameters<typeof ObjectPropTsDsl>) => new ObjectPropTsDsl(...args),
 
-  /** Creates a regular expression literal (e.g. `/foo/gi`). */
+  /** Creates a regular expression literal (e.g., `/foo/gi`). */
   regexp: (...args: ConstructorParameters<typeof RegExpTsDsl>) => new RegExpTsDsl(...args),
 
   /** Creates a return statement. */
@@ -225,72 +225,72 @@ const tsDsl = {
   /** Creates a throw statement. */
   throw: (...args: ConstructorParameters<typeof ThrowTsDsl>) => new ThrowTsDsl(...args),
 
-  /** Creates a syntax token (e.g. `?`, `readonly`, `+`, `-`). */
+  /** Creates a syntax token (e.g., `?`, `readonly`, `+`, `-`). */
   token: (...args: ConstructorParameters<typeof TokenTsDsl>) => new TokenTsDsl(...args),
 
   /** Creates a try/catch/finally statement. */
   try: (...args: ConstructorParameters<typeof TryTsDsl>) => new TryTsDsl(...args),
 
-  /** Creates a basic type reference or type expression (e.g. Foo or Foo<T>). */
+  /** Creates a basic type reference or type expression (e.g., Foo or Foo<T>). */
   type: Object.assign(
     (...args: ConstructorParameters<typeof TypeExprTsDsl>) => new TypeExprTsDsl(...args),
     {
-      /** Creates a type alias declaration (e.g. `type Foo = Bar`). */
+      /** Creates a type alias declaration (e.g., `type Foo = Bar`). */
       alias: (...args: ConstructorParameters<typeof TypeAliasTsDsl>) => new TypeAliasTsDsl(...args),
 
-      /** Creates an intersection type (e.g. `A & B`). */
+      /** Creates an intersection type (e.g., `A & B`). */
       and: (...args: ConstructorParameters<typeof TypeAndTsDsl>) => new TypeAndTsDsl(...args),
 
-      /** Creates a qualified type reference (e.g. Foo.Bar). */
+      /** Creates a qualified type reference (e.g., Foo.Bar). */
       attr: (...args: ConstructorParameters<typeof TypeAttrTsDsl>) => new TypeAttrTsDsl(...args),
 
-      /** Creates a basic type reference or type expression (e.g. Foo or Foo<T>). */
+      /** Creates a basic type reference or type expression (e.g., Foo or Foo<T>). */
       expr: (...args: ConstructorParameters<typeof TypeExprTsDsl>) => new TypeExprTsDsl(...args),
 
       /** Converts a runtime value into a corresponding type expression node. */
       fromValue: (...args: Parameters<typeof typeValue>) => typeValue(...args),
 
-      /** Creates a function type node (e.g. `(a: string) => number`). */
+      /** Creates a function type node (e.g., `(a: string) => number`). */
       func: (...args: ConstructorParameters<typeof TypeFuncTsDsl>) => new TypeFuncTsDsl(...args),
 
-      /** Creates an indexed-access type (e.g. `Foo<T>[K]`). */
+      /** Creates an indexed-access type (e.g., `Foo<T>[K]`). */
       idx: (...args: ConstructorParameters<typeof TypeIdxTsDsl>) => new TypeIdxTsDsl(...args),
 
-      /** Creates a literal type node (e.g. 'foo', 42, or true). */
+      /** Creates a literal type node (e.g., 'foo', 42, or true). */
       literal: (...args: ConstructorParameters<typeof TypeLiteralTsDsl>) =>
         new TypeLiteralTsDsl(...args),
 
-      /** Creates a mapped type (e.g. `{ [K in keyof T]: U }`). */
+      /** Creates a mapped type (e.g., `{ [K in keyof T]: U }`). */
       mapped: (...args: ConstructorParameters<typeof TypeMappedTsDsl>) =>
         new TypeMappedTsDsl(...args),
 
-      /** Creates a type literal node (e.g. { foo: string }). */
+      /** Creates a type literal node (e.g., { foo: string }). */
       object: (...args: ConstructorParameters<typeof TypeObjectTsDsl>) =>
         new TypeObjectTsDsl(...args),
 
-      /** Creates a type operator node (e.g. `readonly T`, `keyof T`, `unique T`). */
+      /** Creates a type operator node (e.g., `readonly T`, `keyof T`, `unique T`). */
       operator: (...args: ConstructorParameters<typeof TypeOperatorTsDsl>) =>
         new TypeOperatorTsDsl(...args),
 
-      /** Represents a union type (e.g. `A | B | C`). */
+      /** Represents a union type (e.g., `A | B | C`). */
       or: (...args: ConstructorParameters<typeof TypeOrTsDsl>) => new TypeOrTsDsl(...args),
 
-      /** Creates a type parameter (e.g. `<T>`). */
+      /** Creates a type parameter (e.g., `<T>`). */
       param: (...args: ConstructorParameters<typeof TypeParamTsDsl>) => new TypeParamTsDsl(...args),
 
-      /** Creates a type query node (e.g. `typeof Foo`). */
+      /** Creates a type query node (e.g., `typeof Foo`). */
       query: (...args: ConstructorParameters<typeof TypeQueryTsDsl>) => new TypeQueryTsDsl(...args),
 
-      /** Builds a TypeScript template literal *type* (e.g. `${Foo}-${Bar}` as a type). */
+      /** Builds a TypeScript template literal *type* (e.g., `${Foo}-${Bar}` as a type). */
       template: (...args: ConstructorParameters<typeof TypeTemplateTsDsl>) =>
         new TypeTemplateTsDsl(...args),
 
-      /** Creates a tuple type (e.g. [A, B, C]). */
+      /** Creates a tuple type (e.g., [A, B, C]). */
       tuple: (...args: ConstructorParameters<typeof TypeTupleTsDsl>) => new TypeTupleTsDsl(...args),
     },
   ),
 
-  /** Creates a `typeof` expression (e.g. `typeof value`). */
+  /** Creates a `typeof` expression (e.g., `typeof value`). */
   typeofExpr: (...args: ConstructorParameters<typeof TypeOfExprTsDsl>) =>
     new TypeOfExprTsDsl(...args),
 

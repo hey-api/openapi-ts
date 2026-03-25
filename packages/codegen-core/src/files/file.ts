@@ -16,7 +16,7 @@ export class File<Node extends INode = INode> {
    */
   private _exports: Array<ExportModule> = [];
   /**
-   * File extension (e.g. `.ts`).
+   * File extension (e.g., `.ts`).
    */
   private _extension?: string;
   /**

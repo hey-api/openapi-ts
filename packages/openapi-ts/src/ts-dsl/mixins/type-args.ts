@@ -10,9 +10,9 @@ type Arg = NodeName | MaybeTsDsl<TypeTsDsl>;
 export interface TypeArgsMethods extends Node {
   /** Returns the type arguments as an array of ts.TypeNode nodes. */
   $generics(): ReadonlyArray<ts.TypeNode> | undefined;
-  /** Adds a single type argument (e.g. `string` in `Foo<string>`). */
+  /** Adds a single type argument (e.g., `string` in `Foo<string>`). */
   generic(arg: Arg): this;
-  /** Adds type arguments (e.g. `Map<string, number>`). */
+  /** Adds type arguments (e.g., `Map<string, number>`). */
   generics(...args: ReadonlyArray<Arg>): this;
 }
 

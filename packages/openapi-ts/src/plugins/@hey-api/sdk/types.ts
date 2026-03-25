@@ -30,7 +30,7 @@ export type UserConfig = Plugin.Name<'@hey-api/sdk'> &
     client?: PluginClientNames | boolean;
     /**
      * Generate code examples for SDK operations and attach them to the
-     * input source (e.g. via `x-codeSamples`).
+     * input source (e.g., via `x-codeSamples`).
      *
      * Set to `false` to disable example generation entirely, or provide an
      * object for fine-grained control over the output and post-processing.

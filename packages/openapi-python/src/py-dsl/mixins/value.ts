@@ -9,7 +9,7 @@ export type ValueExpr = NodeName | PyDsl<py.Expression>;
 
 export interface ValueMethods extends Node {
   $value(): py.Expression | undefined;
-  /** Sets the initializer expression (e.g. `= expr`). */
+  /** Sets the initializer expression (e.g., `= expr`). */
   assign(expr: ValueExpr): this;
 }
 

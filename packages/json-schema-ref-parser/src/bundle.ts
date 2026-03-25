@@ -92,7 +92,7 @@ const getContainerTypeFromPath = (
 };
 
 /**
- * Inventories the given JSON Reference (i.e. records detailed information about it so we can
+ * Inventories the given JSON Reference (i.e., records detailed information about it so we can
  * optimize all $refs in the schema), and then crawls the resolved value.
  */
 const inventory$Ref = <S extends object = JSONSchema>({
@@ -213,10 +213,10 @@ const inventory$Ref = <S extends object = JSONSchema>({
   }
 
   const newEntry: InventoryEntry = {
-    $ref, // The JSON Reference (e.g. {$ref: string})
-    circular: pointer.circular, // Is this $ref pointer DIRECTLY circular? (i.e. it references itself)
+    $ref, // The JSON Reference (e.g., {$ref: string})
+    circular: pointer.circular, // Is this $ref pointer DIRECTLY circular? (i.e., it references itself)
     depth, // How far from the JSON Schema root is this $ref pointer?
-    extended, // Does this $ref extend its resolved value? (i.e. it has extra properties, in addition to "$ref")
+    extended, // Does this $ref extend its resolved value? (i.e., it has extra properties, in addition to "$ref")
     external, // Does this $ref pointer point to a file other than the main JSON Schema file?
     file, // The file that the $ref pointer resolves to
     hash, // The hash within `file` that the $ref pointer resolves to
@@ -240,7 +240,7 @@ const inventory$Ref = <S extends object = JSONSchema>({
   // Recursively crawl the resolved value.
   // When the resolution followed a $ref chain to a different file,
   // use the resolved file as the base path so that local $ref values
-  // (e.g. #/components/schemas/SiblingSchema) inside the resolved
+  // (e.g., #/components/schemas/SiblingSchema) inside the resolved
   // value resolve against the correct file.
   if (!existingEntry || external) {
     let crawlPath = pointer.path;
@@ -570,7 +570,7 @@ function remap(parser: $RefParser, inventory: Array<InventoryEntry>) {
     }
 
     // Keep internal refs internal. However, if the $ref extends the resolved value
-    // (i.e. it has additional properties in addition to "$ref"), then we must
+    // (i.e., it has additional properties in addition to "$ref"), then we must
     // preserve the original $ref rather than rewriting it to the resolved hash.
     if (!entry.external) {
       if (!entry.extended && entry.$ref && typeof entry.$ref === 'object') {

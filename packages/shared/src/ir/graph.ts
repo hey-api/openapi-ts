@@ -14,7 +14,7 @@ export type IrTopLevelKind = (typeof irTopLevelKinds)[number];
 /**
  * Checks if a pointer matches a known top-level IR component (schema, parameter, etc) and returns match info.
  *
- * @param pointer - The IR pointer string (e.g. '#/components/schemas/Foo')
+ * @param pointer - The IR pointer string (e.g., '#/components/schemas/Foo')
  * @param kind - (Optional) The component kind to check
  * @returns { matched: true, kind: IrTopLevelKind } | { matched: false } - Whether it matched, and the matched kind if so
  */

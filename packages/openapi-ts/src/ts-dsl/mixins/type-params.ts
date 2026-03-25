@@ -9,9 +9,9 @@ import type { BaseCtor, MixinCtor } from './types';
 export interface TypeParamsMethods extends Node {
   /** Returns the type parameters as an array of ts.TypeParameterDeclaration nodes. */
   $generics(): ReadonlyArray<ts.TypeParameterDeclaration> | undefined;
-  /** Adds a single type parameter (e.g. `T` in `Array<T>`). */
+  /** Adds a single type parameter (e.g., `T` in `Array<T>`). */
   generic(...args: ConstructorParameters<typeof TypeParamTsDsl>): this;
-  /** Adds type parameters (e.g. `Map<string, T>`). */
+  /** Adds type parameters (e.g., `Map<string, T>`). */
   generics(...args: ReadonlyArray<NodeName | MaybeTsDsl<TypeParamTsDsl>>): this;
 }
 

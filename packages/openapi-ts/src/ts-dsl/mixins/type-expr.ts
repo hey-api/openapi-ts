@@ -6,7 +6,7 @@ import { f } from '../utils/factories';
 import type { BaseCtor, DropFirst, MixinCtor } from './types';
 
 export interface TypeExprMethods extends Node {
-  /** Creates an indexed-access type (e.g. `Foo<T>[K]`). */
+  /** Creates an indexed-access type (e.g., `Foo<T>[K]`). */
   idx(
     this: Parameters<typeof f.type.idx>[0],
     ...args: DropFirst<Parameters<typeof f.type.idx>>
