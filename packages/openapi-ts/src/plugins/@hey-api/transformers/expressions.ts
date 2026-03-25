@@ -8,7 +8,7 @@ export const bigIntExpressions: ExpressionTransformer = ({ dataExpression, schem
 
   const bigIntCallExpression =
     dataExpression !== undefined
-      ? $('BigInt').call($.expr(dataExpression).attr('toString').call())
+      ? $('BigInt').call($(dataExpression).attr('toString').call())
       : undefined;
 
   if (bigIntCallExpression) {
@@ -17,7 +17,7 @@ export const bigIntExpressions: ExpressionTransformer = ({ dataExpression, schem
     }
 
     if (dataExpression) {
-      return [$.expr(dataExpression).assign(bigIntCallExpression)];
+      return [$(dataExpression).assign(bigIntCallExpression)];
     }
   }
 
@@ -34,7 +34,7 @@ export const dateExpressions: ExpressionTransformer = ({ dataExpression, schema 
   }
 
   if (dataExpression) {
-    return [$.expr(dataExpression).assign($.new('Date').arg(dataExpression))];
+    return [$(dataExpression).assign($.new('Date').arg(dataExpression))];
   }
 
   return;

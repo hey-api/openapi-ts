@@ -4,15 +4,18 @@ import ts from 'typescript';
 import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
 
+export type PrefixExpr = string | MaybeTsDsl<ts.Expression>;
+export type PrefixOp = ts.PrefixUnaryOperator;
+
 const Mixed = TsDsl<ts.PrefixUnaryExpression>;
 
 export class PrefixTsDsl extends Mixed {
   readonly '~dsl' = 'PrefixTsDsl';
 
-  protected _expr?: string | MaybeTsDsl<ts.Expression>;
-  protected _op?: ts.PrefixUnaryOperator;
+  protected _expr?: PrefixExpr;
+  protected _op?: PrefixOp;
 
-  constructor(expr?: string | MaybeTsDsl<ts.Expression>, op?: ts.PrefixUnaryOperator) {
+  constructor(expr?: PrefixExpr, op?: PrefixOp) {
     super();
     this._expr = expr;
     this._op = op;
@@ -29,7 +32,7 @@ export class PrefixTsDsl extends Mixed {
   }
 
   /** Sets the operand (the expression being prefixed). */
-  expr(expr: string | MaybeTsDsl<ts.Expression>): this {
+  expr(expr: PrefixExpr): this {
     this._expr = expr;
     return this;
   }
@@ -47,7 +50,7 @@ export class PrefixTsDsl extends Mixed {
   }
 
   /** Sets the operator (e.g. `ts.SyntaxKind.ExclamationToken` for `!`). */
-  op(op: ts.PrefixUnaryOperator): this {
+  op(op: PrefixOp): this {
     this._op = op;
     return this;
   }
@@ -58,8 +61,8 @@ export class PrefixTsDsl extends Mixed {
   }
 
   $validate(): asserts this is this & {
-    _expr: string | MaybeTsDsl<ts.Expression>;
-    _op: ts.PrefixUnaryOperator;
+    _expr: PrefixExpr;
+    _op: PrefixOp;
   } {
     const missing = this.missingRequiredCalls();
     if (missing.length === 0) return;
