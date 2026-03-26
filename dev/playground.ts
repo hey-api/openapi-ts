@@ -5,7 +5,7 @@ import { setupServer } from 'msw/node';
 
 import { client } from './gen/typescript/client.gen';
 // import { createOpencode } from '@opencode-ai/sdk';
-import { createMswHandlerFactory, getAllMocks } from './gen/typescript/msw.gen';
+import { createMswHandlerFactory } from './gen/typescript/msw.gen';
 import { OpenCode } from './gen/typescript/sdk.gen';
 
 type MyPluginConfig = { readonly name: 'myplugin' };
@@ -22,12 +22,9 @@ export const handler: MyPlugin['Handler'] = ({ plugin }) => {
 };
 
 const server = setupServer(
-  // ...getAllMocks({
-  //   overrides: {
-  //     // ...
-  //   },
-  // }),
-  createMswHandlerFactory({ baseUrl: '*' }).tuiPublishMock(),
+  createMswHandlerFactory({
+    baseUrl: 'https://api.example.com',
+  }).tuiPublishMock(),
   // http.post('*/tui/publish', () => HttpResponse.json({
   //   firstName: 'John',
   //   id: 'abc-123',

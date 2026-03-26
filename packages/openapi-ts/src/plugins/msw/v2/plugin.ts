@@ -1,4 +1,4 @@
-import { parseUrl } from '@hey-api/shared';
+import { getBaseUrl } from '@hey-api/shared';
 
 import { $ } from '../../../ts-dsl';
 import { operationToHandlerCreator } from '../shared/handlerCreator';
@@ -38,21 +38,6 @@ export const handlerV2: MswPlugin['Handler'] = ({ plugin }) => {
   );
   plugin.node(resolveToNullFn);
 
-  // Resolve default baseUrl from spec servers
-  let defaultBaseUrl = '';
-  const { servers } = plugin.context.ir;
-  const firstServer = servers?.[0];
-  if (firstServer) {
-    const serverUrl = firstServer.url;
-    const url = parseUrl(serverUrl);
-    if (url.protocol && url.host && !serverUrl.includes('{')) {
-      defaultBaseUrl = serverUrl;
-    } else if (serverUrl !== '/' && serverUrl.startsWith('/')) {
-      defaultBaseUrl = serverUrl.endsWith('/') ? serverUrl.slice(0, -1) : serverUrl;
-    }
-  }
-
-  // Generate createMswHandlerFactory
   const symbolFactory = plugin.symbol('createMswHandlerFactory');
   const ofObject = $.object().pretty();
   const singleHandlerFactoriesType = $.type.object();
@@ -104,12 +89,9 @@ export const handlerV2: MswPlugin['Handler'] = ({ plugin }) => {
                 .key($.type.operator().keyof($.type(symbolSingleHandlerFactories)))
                 .optional()
                 .type(
-                  $.type.idx(
-                    $.type('Parameters').generic(
-                      $.type(symbolSingleHandlerFactories).idx($.type('K')),
-                    ),
-                    $.type.literal(0),
-                  ),
+                  $.type('Parameters')
+                    .generic($.type(symbolSingleHandlerFactories).idx($.type('K')))
+                    .idx($.type.literal(0)),
                 ),
             ),
           ),
@@ -230,6 +212,7 @@ export const handlerV2: MswPlugin['Handler'] = ({ plugin }) => {
     .returns($.type('Array').generic($.type(symbolHttpHandler)))
     .do(...getAllMocksBodyStmts);
 
+  const baseUrl = getBaseUrl(plugin.config.baseUrl, plugin.context.ir);
   const factoryFn = $.const(symbolFactory)
     .export()
     .assign(
@@ -240,7 +223,10 @@ export const handlerV2: MswPlugin['Handler'] = ({ plugin }) => {
         .returns($.type(symbolMswHandlerFactory))
         .do(
           $.const('baseUrl').assign(
-            $('config').attr('baseUrl').optional().coalesce($.literal(defaultBaseUrl)),
+            $('config')
+              .attr('baseUrl')
+              .optional()
+              .$if(baseUrl !== undefined, (b) => b.coalesce($.literal(baseUrl!))),
           ),
           $.const('mocks').type('SingleHandlerFactories').assign(ofObject),
           $.const('getAllMocks').assign(getAllMocksFn),
@@ -248,20 +234,4 @@ export const handlerV2: MswPlugin['Handler'] = ({ plugin }) => {
         ),
     );
   plugin.node(factoryFn);
-
-  // Export individual handlers with wildcard baseUrl for convenient direct imports
-  const symbolDefaults = plugin.symbol('_defaults');
-  plugin.node(
-    $.const(symbolDefaults).assign(
-      $(symbolFactory).call($.object().prop('baseUrl', $.literal('*'))),
-    ),
-  );
-  for (const handler of handlerMeta) {
-    const sym = plugin.symbol(handler.name);
-    plugin.node($.const(sym).export().assign($(symbolDefaults).attr(handler.name)));
-  }
-  const symbolGetAllMocksExport = plugin.symbol('getAllMocks');
-  plugin.node(
-    $.const(symbolGetAllMocksExport).export().assign($(symbolDefaults).attr('getAllMocks')),
-  );
 };

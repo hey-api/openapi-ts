@@ -40,7 +40,7 @@ export type MswHandlerFactory = SingleHandlerFactories & {
 export const createMswHandlerFactory = (config?: {
     baseUrl?: string;
 }): MswHandlerFactory => {
-    const baseUrl = config?.baseUrl ?? '';
+    const baseUrl = config?.baseUrl ?? '*';
     const mocks: SingleHandlerFactories = {
         getFooMock: (res = { result: {
                 firstName: 'Marry',
@@ -58,11 +58,3 @@ export const createMswHandlerFactory = (config?: {
     };
     return { ...mocks, getAllMocks };
 };
-
-const _defaults = createMswHandlerFactory({ baseUrl: '*' });
-
-export const getFooMock = _defaults.getFooMock;
-
-export const postFooMock = _defaults.postFooMock;
-
-export const getAllMocks = _defaults.getAllMocks;

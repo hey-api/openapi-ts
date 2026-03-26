@@ -163,7 +163,7 @@ export type MswHandlerFactory = SingleHandlerFactories & {
 export const createMswHandlerFactory = (config?: {
     baseUrl?: string;
 }): MswHandlerFactory => {
-    const baseUrl = config?.baseUrl ?? 'http://localhost:3000/base';
+    const baseUrl = config?.baseUrl ?? '*';
     const mocks: SingleHandlerFactories = {
         exportMock: (res, options) => http.get(`${baseUrl}${'/api/v:apiVersion/no+tag'}`, typeof res === 'function' ? res : resolveToNull, options),
         patchApiVbyApiVersionNoTagMock: (res, options) => http.patch(`${baseUrl}${'/api/v:apiVersion/no+tag'}`, typeof res === 'function' ? res : resolveToNull, options),
@@ -280,103 +280,3 @@ export const createMswHandlerFactory = (config?: {
     };
     return { ...mocks, getAllMocks };
 };
-
-const _defaults = createMswHandlerFactory({ baseUrl: '*' });
-
-export const exportMock = _defaults.exportMock;
-
-export const patchApiVbyApiVersionNoTagMock = _defaults.patchApiVbyApiVersionNoTagMock;
-
-export const importMock = _defaults.importMock;
-
-export const fooWowMock = _defaults.fooWowMock;
-
-export const apiVVersionODataControllerCountMock = _defaults.apiVVersionODataControllerCountMock;
-
-export const getApiVbyApiVersionSimpleOperationMock = _defaults.getApiVbyApiVersionSimpleOperationMock;
-
-export const deleteCallWithoutParametersAndResponseMock = _defaults.deleteCallWithoutParametersAndResponseMock;
-
-export const getCallWithoutParametersAndResponseMock = _defaults.getCallWithoutParametersAndResponseMock;
-
-export const headCallWithoutParametersAndResponseMock = _defaults.headCallWithoutParametersAndResponseMock;
-
-export const optionsCallWithoutParametersAndResponseMock = _defaults.optionsCallWithoutParametersAndResponseMock;
-
-export const patchCallWithoutParametersAndResponseMock = _defaults.patchCallWithoutParametersAndResponseMock;
-
-export const postCallWithoutParametersAndResponseMock = _defaults.postCallWithoutParametersAndResponseMock;
-
-export const putCallWithoutParametersAndResponseMock = _defaults.putCallWithoutParametersAndResponseMock;
-
-export const deleteFooMock = _defaults.deleteFooMock;
-
-export const callWithDescriptionsMock = _defaults.callWithDescriptionsMock;
-
-export const deprecatedCallMock = _defaults.deprecatedCallMock;
-
-export const callWithParametersMock = _defaults.callWithParametersMock;
-
-export const callWithWeirdParameterNamesMock = _defaults.callWithWeirdParameterNamesMock;
-
-export const getCallWithOptionalParamMock = _defaults.getCallWithOptionalParamMock;
-
-export const postCallWithOptionalParamMock = _defaults.postCallWithOptionalParamMock;
-
-export const postApiVbyApiVersionRequestBodyMock = _defaults.postApiVbyApiVersionRequestBodyMock;
-
-export const postApiVbyApiVersionFormDataMock = _defaults.postApiVbyApiVersionFormDataMock;
-
-export const callWithDefaultParametersMock = _defaults.callWithDefaultParametersMock;
-
-export const callWithDefaultOptionalParametersMock = _defaults.callWithDefaultOptionalParametersMock;
-
-export const callToTestOrderOfParamsMock = _defaults.callToTestOrderOfParamsMock;
-
-export const duplicateNameMock = _defaults.duplicateNameMock;
-
-export const duplicateName2Mock = _defaults.duplicateName2Mock;
-
-export const duplicateName3Mock = _defaults.duplicateName3Mock;
-
-export const duplicateName4Mock = _defaults.duplicateName4Mock;
-
-export const callWithNoContentResponseMock = _defaults.callWithNoContentResponseMock;
-
-export const callWithResponseAndNoContentResponseMock = _defaults.callWithResponseAndNoContentResponseMock;
-
-export const dummyAMock = _defaults.dummyAMock;
-
-export const dummyBMock = _defaults.dummyBMock;
-
-export const callWithResponseMock = _defaults.callWithResponseMock;
-
-export const callWithDuplicateResponsesMock = _defaults.callWithDuplicateResponsesMock;
-
-export const callWithResponsesMock = _defaults.callWithResponsesMock;
-
-export const collectionFormatMock = _defaults.collectionFormatMock;
-
-export const typesMock = _defaults.typesMock;
-
-export const uploadFileMock = _defaults.uploadFileMock;
-
-export const fileResponseMock = _defaults.fileResponseMock;
-
-export const complexTypesMock = _defaults.complexTypesMock;
-
-export const multipartResponseMock = _defaults.multipartResponseMock;
-
-export const multipartRequestMock = _defaults.multipartRequestMock;
-
-export const complexParamsMock = _defaults.complexParamsMock;
-
-export const callWithResultFromHeaderMock = _defaults.callWithResultFromHeaderMock;
-
-export const testErrorCodeMock = _defaults.testErrorCodeMock;
-
-export const nonAsciiæøåÆøÅöôêÊ字符串Mock = _defaults.nonAsciiæøåÆøÅöôêÊ字符串Mock;
-
-export const putWithFormUrlEncodedMock = _defaults.putWithFormUrlEncodedMock;
-
-export const getAllMocks = _defaults.getAllMocks;
