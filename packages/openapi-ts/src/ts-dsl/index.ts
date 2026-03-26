@@ -1,3 +1,4 @@
+import type { NodeName } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import { ClassTsDsl } from './decl/class';
@@ -135,9 +136,9 @@ const tsDsl = {
   }) as {
     (): FuncTsDsl<'arrow'>;
     (fn: (f: FuncTsDsl<'arrow'>) => void): FuncTsDsl<'arrow'>;
-    (name: string): FuncTsDsl<'decl'>;
-    (name: string, fn: (f: FuncTsDsl<'decl'>) => void): FuncTsDsl<'decl'>;
-    (name?: string, fn?: (f: FuncTsDsl<'decl'>) => void): FuncTsDsl<'arrow'> | FuncTsDsl<'decl'>;
+    (name: NodeName): FuncTsDsl<'decl'>;
+    (name: NodeName, fn: (f: FuncTsDsl<'decl'>) => void): FuncTsDsl<'decl'>;
+    (name?: NodeName, fn?: (f: FuncTsDsl<'decl'>) => void): FuncTsDsl<'arrow'> | FuncTsDsl<'decl'>;
   },
 
   /** Creates a getter method declaration. */

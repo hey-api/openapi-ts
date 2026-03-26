@@ -99,17 +99,6 @@ const toMswPath = (path: string) =>
     .replace(/:/g, String.raw`\:`)
     .replace(/\0/g, ':');
 
-const httpMethodMap: Record<string, string> = {
-  delete: 'delete',
-  get: 'get',
-  head: 'head',
-  options: 'options',
-  patch: 'patch',
-  post: 'post',
-  put: 'put',
-  trace: 'trace',
-};
-
 /**
  * Builds the response override expression for the `res` parameter.
  * When `res` is an object with a `result` property, it uses
@@ -162,7 +151,7 @@ function buildResponseOverrideExpr({
  * Builds an arrow function that creates an MSW handler for a single operation.
  * The response method and status code are inferred from the operation's responses.
  */
-function createHandlerCreatorFn({
+function createHandlerFuncNode({
   dominantResponse,
   hasResponseOverride,
   method,
@@ -237,9 +226,6 @@ export function operationToHandlerCreator({
   operation: IR.OperationObject;
   plugin: MswPlugin['Instance'];
 }) {
-  const method = httpMethodMap[operation.method];
-  if (!method) return;
-
   const dominantResponse = computeDominantResponse({ operation, plugin });
 
   const symbolHttp = plugin.external('msw.http');
@@ -327,16 +313,6 @@ export function operationToHandlerCreator({
     dominantResponse.example = undefined;
   }
 
-  const handlerCreator = createHandlerCreatorFn({
-    dominantResponse,
-    hasResponseOverride: dominantResponse.statusCode != null,
-    method,
-    operation,
-    symbolHttp,
-    symbolHttpResponse,
-    symbolResolveToNull,
-  });
-
   const isOptional =
     // if there is no dominantResponse, it means there is no status code definition
     // so we can set the default response as null
@@ -376,9 +352,17 @@ export function operationToHandlerCreator({
   }
 
   return {
+    funcNode: createHandlerFuncNode({
+      dominantResponse,
+      hasResponseOverride: dominantResponse.statusCode != null,
+      method: operation.method,
+      operation,
+      symbolHttp,
+      symbolHttpResponse,
+      symbolResolveToNull,
+    }),
     isOptional,
     name: `${operation.id}Mock`,
     type: handlerType,
-    value: handlerCreator,
   };
 }

@@ -5,7 +5,7 @@ import { setupServer } from 'msw/node';
 
 import { client } from './gen/typescript/client.gen';
 // import { createOpencode } from '@opencode-ai/sdk';
-import { createMswHandlerFactory } from './gen/typescript/msw.gen';
+import { createMswHandlers } from './gen/typescript/msw.gen';
 import { OpenCode } from './gen/typescript/sdk.gen';
 
 type MyPluginConfig = { readonly name: 'myplugin' };
@@ -22,9 +22,15 @@ export const handler: MyPlugin['Handler'] = ({ plugin }) => {
 };
 
 const server = setupServer(
-  createMswHandlerFactory({
+  // ...createMswHandlers({
+  //   baseUrl: 'https://api.example.com',
+  // }).getAllHandlers(),
+  createMswHandlers({
     baseUrl: 'https://api.example.com',
-  }).tuiPublishMock(),
+  }).tuiPublishMock({
+    result: false,
+    // status: 200,
+  }),
   // http.post('*/tui/publish', () => HttpResponse.json({
   //   firstName: 'John',
   //   id: 'abc-123',
@@ -40,7 +46,7 @@ async function run() {
     baseUrl: 'https://api.example.com',
   });
   const sdk = new OpenCode({ client });
-  sdk.tui.publish({
+  const published = await sdk.tui.publish({
     body: {
       properties: {
         message: 'Hello from Hey API OpenAPI TypeScript Playground!',
@@ -50,6 +56,7 @@ async function run() {
     },
     directory: 'main',
   });
+  console.log('Published:', published.data, published.error);
 }
 
 run();

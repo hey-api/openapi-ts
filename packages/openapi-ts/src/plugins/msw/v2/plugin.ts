@@ -38,8 +38,8 @@ export const handlerV2: MswPlugin['Handler'] = ({ plugin }) => {
   );
   plugin.node(resolveToNullFn);
 
-  const symbolFactory = plugin.symbol('createMswHandlerFactory');
-  const ofObject = $.object().pretty();
+  const symbolFactory = plugin.symbol('createMswHandlers');
+  const handlersObject = $.object().pretty();
   const singleHandlerFactoriesType = $.type.object();
   const handlerMeta: Array<{ isOptional: boolean; name: string; path: string }> = [];
 
@@ -52,7 +52,7 @@ export const handlerV2: MswPlugin['Handler'] = ({ plugin }) => {
         plugin,
       });
       if (handlerCreator) {
-        ofObject.prop(handlerCreator.name, handlerCreator.value);
+        handlersObject.prop(handlerCreator.name, handlerCreator.funcNode);
         singleHandlerFactoriesType.prop(handlerCreator.name, (p) => p.type(handlerCreator.type));
         handlerMeta.push({
           isOptional: handlerCreator.isOptional,
@@ -66,31 +66,29 @@ export const handlerV2: MswPlugin['Handler'] = ({ plugin }) => {
     },
   );
 
-  // Emit SingleHandlerFactories type
-  const symbolSingleHandlerFactories = plugin.symbol('SingleHandlerFactories');
-  plugin.node($.type.alias(symbolSingleHandlerFactories).export().type(singleHandlerFactoriesType));
+  const symbolMswHandlerCreators = plugin.symbol('MswHandlerCreators');
+  plugin.node($.type.alias(symbolMswHandlerCreators).export().type(singleHandlerFactoriesType));
 
-  // Emit GetAllMocksOptions type
-  const symbolGetAllMocksOptions = plugin.symbol('GetAllMocksOptions');
+  const symbolGetAllHandlersOptions = plugin.symbol('GetAllHandlersOptions');
   plugin.node(
     $.type
-      .alias(symbolGetAllMocksOptions)
+      .alias(symbolGetAllHandlersOptions)
       .export()
       .type(
         $.type
           .object()
-          .prop('onMissingMock', (p) =>
+          .prop('onMissingHandler', (p) =>
             p.optional().type($.type.or($.type.literal('error'), $.type.literal('skip'))),
           )
           .prop('overrides', (p) =>
             p.optional().type(
               $.type
                 .mapped('K')
-                .key($.type.operator().keyof($.type(symbolSingleHandlerFactories)))
+                .key($.type.operator().keyof($.type(symbolMswHandlerCreators)))
                 .optional()
                 .type(
                   $.type('Parameters')
-                    .generic($.type(symbolSingleHandlerFactories).idx($.type('K')))
+                    .generic($.type(symbolMswHandlerCreators).idx($.type('K')))
                     .idx($.type.literal(0)),
                 ),
             ),
@@ -98,42 +96,40 @@ export const handlerV2: MswPlugin['Handler'] = ({ plugin }) => {
       ),
   );
 
-  // Emit MswHandlerFactory type
-  const symbolMswHandlerFactory = plugin.symbol('MswHandlerFactory');
+  const symbolMswHandlers = plugin.symbol('MswHandlers');
   plugin.node(
     $.type
-      .alias(symbolMswHandlerFactory)
+      .alias(symbolMswHandlers)
       .export()
       .type(
         $.type.and(
-          $.type(symbolSingleHandlerFactories),
-          $.type.object().prop('getAllMocks', (p) =>
+          $.type(symbolMswHandlerCreators),
+          $.type.object().prop('getAllHandlers', (p) =>
             p.type(
               $.type
                 .func()
-                .param('options', (pp) => pp.type($.type(symbolGetAllMocksOptions)).optional())
-                .returns($.type('Array').generic($.type(symbolHttpHandler))),
+                .param('options', (pp) => pp.type(symbolGetAllHandlersOptions).optional())
+                .returns($.type('Array').generic(symbolHttpHandler)),
             ),
           ),
         ),
       ),
   );
 
-  // Build getAllMocks function body
-  const getAllMocksBodyStmts: Array<any> = [];
+  const getAllHandlersDo: Array<ReturnType<typeof $.var | typeof $.stmt | typeof $.return>> = [];
   const hasRequiredHandlers = handlerMeta.some((h) => !h.isOptional);
 
   if (hasRequiredHandlers) {
-    getAllMocksBodyStmts.push(
-      $.const('onMissingMock').assign(
-        $('options').attr('onMissingMock').optional().coalesce($.literal('skip')),
+    getAllHandlersDo.push(
+      $.const('onMissingHandler').assign(
+        $('options').attr('onMissingHandler').coalesce($.literal('skip')),
       ),
     );
   }
 
-  getAllMocksBodyStmts.push($.const('overrides').assign($('options').attr('overrides').optional()));
+  getAllHandlersDo.push($.const('overrides').assign($('options').attr('overrides')));
 
-  getAllMocksBodyStmts.push(
+  getAllHandlersDo.push(
     $.const('handlers')
       .type($.type('Array').generic($.type(symbolHttpHandler)))
       .assign($.array()),
@@ -159,7 +155,7 @@ export const handlerV2: MswPlugin['Handler'] = ({ plugin }) => {
       )
       .returns($.type(symbolHttpHandler));
 
-    getAllMocksBodyStmts.push(
+    getAllHandlersDo.push(
       $.const('addRequiredHandler').assign(
         $.func()
           .generic('Value')
@@ -175,7 +171,7 @@ export const handlerV2: MswPlugin['Handler'] = ({ plugin }) => {
                 ),
               )
               .otherwise(
-                $.if($('onMissingMock').eq($.literal('error'))).do(
+                $.if($('onMissingHandler').eq($.literal('error'))).do(
                   $.stmt($('handlers').attr('push').call($('handler').call(errorResolver))),
                 ),
               ),
@@ -186,7 +182,7 @@ export const handlerV2: MswPlugin['Handler'] = ({ plugin }) => {
 
   for (const handler of sortHandlersBySpecificity(handlerMeta)) {
     if (handler.isOptional) {
-      getAllMocksBodyStmts.push(
+      getAllHandlersDo.push(
         $.stmt(
           $('handlers')
             .attr('push')
@@ -194,7 +190,7 @@ export const handlerV2: MswPlugin['Handler'] = ({ plugin }) => {
         ),
       );
     } else {
-      getAllMocksBodyStmts.push(
+      getAllHandlersDo.push(
         $.stmt(
           $('addRequiredHandler').call(
             $('mocks').attr(handler.name),
@@ -205,33 +201,31 @@ export const handlerV2: MswPlugin['Handler'] = ({ plugin }) => {
     }
   }
 
-  getAllMocksBodyStmts.push($.return($('handlers')));
-
-  const getAllMocksFn = $.func()
-    .param('options', (p) => p.optional().type($.type(symbolGetAllMocksOptions)))
-    .returns($.type('Array').generic($.type(symbolHttpHandler)))
-    .do(...getAllMocksBodyStmts);
+  getAllHandlersDo.push($('handlers').return());
 
   const baseUrl = getBaseUrl(plugin.config.baseUrl, plugin.context.ir);
-  const factoryFn = $.const(symbolFactory)
+  const factoryFn = $.func(symbolFactory)
     .export()
-    .assign(
-      $.func()
-        .param('config', (p) =>
-          p.optional().type($.type.object().prop('baseUrl', (p) => p.optional().type('string'))),
-        )
-        .returns($.type(symbolMswHandlerFactory))
-        .do(
-          $.const('baseUrl').assign(
-            $('config')
-              .attr('baseUrl')
-              .optional()
-              .$if(baseUrl !== undefined, (b) => b.coalesce($.literal(baseUrl!))),
-          ),
-          $.const('mocks').type('SingleHandlerFactories').assign(ofObject),
-          $.const('getAllMocks').assign(getAllMocksFn),
-          $.return($.object().spread('mocks').prop('getAllMocks', 'getAllMocks')),
-        ),
+    .param('config', (p) =>
+      p
+        .type($.type.object().prop('baseUrl', (p) => p.optional().type('string')))
+        .assign($.object()),
+    )
+    .returns(symbolMswHandlers)
+    .do(
+      $.const('baseUrl').assign(
+        $('config')
+          .attr('baseUrl')
+          .$if(baseUrl !== undefined, (b) => b.coalesce($.literal(baseUrl!))),
+      ),
+      $.const('mocks').type(symbolMswHandlerCreators).assign(handlersObject),
+      $.const('getAllHandlers').assign(
+        $.func()
+          .param('options', (p) => p.type(symbolGetAllHandlersOptions).assign($.object()))
+          .returns($.type('Array').generic(symbolHttpHandler))
+          .do(...getAllHandlersDo),
+      ),
+      $.return($.object().spread('mocks').prop('getAllHandlers', 'getAllHandlers')),
     );
   plugin.node(factoryFn);
 };
