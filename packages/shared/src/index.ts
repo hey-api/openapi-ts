@@ -131,4 +131,4 @@ export {
   refToName,
   resolveRef,
 } from './utils/ref';
-export { parseUrl } from './utils/url';
+export { getBaseUrl, parseUrl } from './utils/url';

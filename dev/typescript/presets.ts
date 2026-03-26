@@ -44,7 +44,9 @@ export const presets = {
       },
       paramsStructure: 'flat',
     },
-    'msw',
+    {
+      name: 'msw',
+    },
   ],
   rpc: () => [
     /** RPC-style SDK with Zod validation */
