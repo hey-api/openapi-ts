@@ -1,8 +1,9 @@
+import type { Symbol } from '@hey-api/codegen-core';
 import type { IR } from '@hey-api/shared';
 
-import { $ } from '../../ts-dsl';
+import { $ } from '../../../ts-dsl';
+import type { MswPlugin } from '../types';
 import { computeDominantResponse, type DominantResponse } from './computeDominantResponse';
-import type { MswPlugin } from './types';
 
 const emitToResponseUnion = (plugin: MswPlugin['Instance']) => {
   const symbol = plugin.symbol('ToResponseUnion', {
@@ -11,9 +12,9 @@ const emitToResponseUnion = (plugin: MswPlugin['Instance']) => {
       resource: 'to-response-union',
     },
   });
-  const extractKeyofTNumber = $.type('Extract', (t) =>
-    t.generic($.type('keyof T')).generic($.type('number')),
-  );
+  const extractKeyofTNumber = $.type('Extract')
+    .generic($.type('keyof T'))
+    .generic($.type('number'));
   const toResponseUnionType = $.type
     .alias(symbol)
     .generic('T')
@@ -26,9 +27,9 @@ const emitToResponseUnion = (plugin: MswPlugin['Instance']) => {
             $.type
               .object()
               .prop('status', (p) => p.type('K'))
-              .prop('result', (p) => p.type($.type.idx($.type('T'), $.type('K')))),
+              .prop('result', (p) => p.type($.type('T').idx($.type('K')))),
           ),
-        $.type('Extract', (t) => t.generic($.type('keyof T')).generic($.type('number'))),
+        $.type('Extract').generic($.type('keyof T')).generic($.type('number')),
       ),
     );
   plugin.node(toResponseUnionType);
@@ -114,74 +115,54 @@ const httpMethodMap: Record<string, string> = {
  * When `res` is an object with a `result` property, it uses
  * `res.result` as the value and `res.status` as the status code.
  */
-const buildResponseOverrideExpr = ({
+function buildResponseOverrideExpr({
   dominantResponse: { kind: responseKind, statusCode: responseStatusCode },
   responseOrFnName,
   symbolHttpResponse,
 }: {
   dominantResponse: DominantResponse;
   responseOrFnName: string;
-  symbolHttpResponse: ReturnType<MswPlugin['Instance']['external']>;
-}) => {
+  symbolHttpResponse: Symbol;
+}) {
   const statusOption = $.object().prop(
     'status',
     responseStatusCode
-      ? $.binary($.attr(responseOrFnName, 'status'), '??', $.literal(responseStatusCode))
-      : $.attr(responseOrFnName, 'status'),
+      ? $(responseOrFnName).attr('status').coalesce($.literal(responseStatusCode))
+      : $(responseOrFnName).attr('status'),
   );
-  const resultExpr = $.attr(responseOrFnName, 'result');
+  const resultExpr = $(responseOrFnName).attr('result');
 
   switch (responseKind) {
-    case 'void': {
-      return $.func((f) =>
-        f.do(
-          $.new(
-            symbolHttpResponse,
-            $.binary(resultExpr, '??', $.literal(null)),
-            statusOption,
-          ).return(),
-        ),
+    case 'void':
+      return $.func().do(
+        $.new(symbolHttpResponse, resultExpr.coalesce($.literal(null)), statusOption).return(),
       );
-    }
-    case 'json': {
-      return $.func((f) =>
-        f.do(
-          $(symbolHttpResponse)
-            .attr('json')
-            .call($.binary(resultExpr, '??', $.literal(null)), statusOption)
-            .return(),
-        ),
+    case 'json':
+      return $.func().do(
+        $(symbolHttpResponse)
+          .attr('json')
+          .call(resultExpr.coalesce($.literal(null)), statusOption)
+          .return(),
       );
-    }
-    case 'text': {
-      return $.func((f) =>
-        f.do(
-          $(symbolHttpResponse)
-            .attr('text')
-            .call($.binary(resultExpr, '??', $.literal(null)), statusOption)
-            .return(),
-        ),
+    case 'text':
+      return $.func().do(
+        $(symbolHttpResponse)
+          .attr('text')
+          .call(resultExpr.coalesce($.literal(null)), statusOption)
+          .return(),
       );
-    }
-    case 'binary': {
-      return $.func((f) =>
-        f.do(
-          $.new(
-            symbolHttpResponse,
-            $.binary(resultExpr, '??', $.literal(null)),
-            statusOption,
-          ).return(),
-        ),
+    case 'binary':
+      return $.func().do(
+        $.new(symbolHttpResponse, resultExpr.coalesce($.literal(null)), statusOption).return(),
       );
-    }
   }
-};
+}
 
 /**
  * Builds an arrow function that creates an MSW handler for a single operation.
  * The response method and status code are inferred from the operation's responses.
  */
-const createHandlerCreatorFn = ({
+function createHandlerCreatorFn({
   dominantResponse,
   hasResponseOverride,
   method,
@@ -194,25 +175,21 @@ const createHandlerCreatorFn = ({
   hasResponseOverride: boolean;
   method: string;
   operation: IR.OperationObject;
-  symbolHttp: ReturnType<MswPlugin['Instance']['external']>;
-  symbolHttpResponse: ReturnType<MswPlugin['Instance']['external']>;
-  symbolResolveToNull: ReturnType<MswPlugin['Instance']['referenceSymbol']>;
-}) => {
+  symbolHttp: Symbol;
+  symbolHttpResponse: Symbol;
+  symbolResolveToNull: Symbol;
+}) {
   const responseOrFnName = 'res';
   const optionsName = 'options';
 
-  const fallbackTernary = $.ternary(
-    $.binary($.typeofExpr(responseOrFnName), '===', $.literal('function')),
-  )
+  const fallbackTernary = $.ternary($.typeofExpr(responseOrFnName).eq($.literal('function')))
     .do(responseOrFnName)
     .otherwise($(symbolResolveToNull));
 
   const resolverArg = hasResponseOverride
     ? $.ternary(
-        $.binary(
-          $.binary($.typeofExpr(responseOrFnName), '===', $.literal('object')),
-          '&&',
-          $.attr(responseOrFnName, 'result'),
+        $($.typeofExpr(responseOrFnName).eq($.literal('object'))).and(
+          $(responseOrFnName).attr('result'),
         ),
       )
         .do(
@@ -233,20 +210,25 @@ const createHandlerCreatorFn = ({
       optionsName,
     );
 
-  return $.func((f) => {
-    if (dominantResponse.example != null && dominantResponse.statusCode != null) {
-      const status = dominantResponse.statusCode;
-      const example = dominantResponse.example;
-      f.param(responseOrFnName, (p) => p.assign($.fromValue({ result: example, status })));
-    } else {
-      f.param(responseOrFnName);
-    }
-    f.param(optionsName);
-    f.do(httpCall.return());
-  });
-};
+  return $.func()
+    .$if(
+      dominantResponse.example != null && dominantResponse.statusCode != null,
+      (f) =>
+        f.param(responseOrFnName, (p) =>
+          p.assign(
+            $.fromValue({
+              result: dominantResponse.example,
+              status: dominantResponse.statusCode,
+            }),
+          ),
+        ),
+      (f) => f.param(responseOrFnName),
+    )
+    .param(optionsName)
+    .do(httpCall.return());
+}
 
-export const operationToHandlerCreator = ({
+export function operationToHandlerCreator({
   examples,
   operation,
   plugin,
@@ -254,11 +236,9 @@ export const operationToHandlerCreator = ({
   examples: boolean;
   operation: IR.OperationObject;
   plugin: MswPlugin['Instance'];
-}) => {
+}) {
   const method = httpMethodMap[operation.method];
-  if (!method) {
-    return;
-  }
+  if (!method) return;
 
   const dominantResponse = computeDominantResponse({ operation, plugin });
 
@@ -295,7 +275,7 @@ export const operationToHandlerCreator = ({
     if (!plugin.getSymbol({ category: 'type', resource: 'to-response-union' })) {
       emitToResponseUnion(plugin);
     }
-    responsesOverrideType = $.type(symbolToResponseUnion, (t) => t.generic(symbolResponsesType));
+    responsesOverrideType = $.type(symbolToResponseUnion).generic(symbolResponsesType);
   }
 
   // Query data type for parameters
@@ -312,7 +292,7 @@ export const operationToHandlerCreator = ({
     operation.parameters?.path && Object.keys(operation.parameters.path).length > 0;
   const hasBody = !!operation.body;
 
-  let pathParamsType: ReturnType<typeof $.type> | ReturnType<typeof $.type.object> | undefined;
+  let pathParamsType: ReturnType<typeof $.type | typeof $.type.object> | undefined;
   if (hasPathParams) {
     // Generate inline object type with sanitized param names derived from the
     // path string (not the IR keys, which are lowercased and may diverge from
@@ -327,17 +307,18 @@ export const operationToHandlerCreator = ({
     pathParamsType = objType;
   }
 
-  let bodyType: ReturnType<typeof $.type.idx> | ReturnType<typeof $.type> | undefined;
+  let bodyType: ReturnType<typeof $.type.idx | typeof $.type> | undefined;
   if (hasBody && symbolDataType) {
-    bodyType = $.type.idx($.type(symbolDataType), $.type.literal('body'));
+    bodyType = $.type(symbolDataType).idx($.type.literal('body'));
   }
 
   // Build the resolver type: HttpResponseResolver<Params, Body>
   // Omit response type generic to avoid MSW's DefaultBodyType constraint issues
   const hasResolverGenerics = pathParamsType || bodyType;
   const resolverType = hasResolverGenerics
-    ? $.type(symbolHttpResponseResolver, (t) =>
-        t.generics(pathParamsType ?? $.type('never'), bodyType ?? $.type('never')),
+    ? $.type(symbolHttpResponseResolver).generics(
+        pathParamsType ?? $.type('never'),
+        bodyType ?? $.type('never'),
       )
     : $.type(symbolHttpResponseResolver);
 
@@ -365,14 +346,12 @@ export const operationToHandlerCreator = ({
     dominantResponse.example != null ||
     dominantResponse.kind === 'void';
 
-  let responseOrResolverType: ReturnType<typeof $.type> | ReturnType<typeof $.type.or>;
+  let responseOrResolverType: ReturnType<typeof $.type | typeof $.type.or>;
   if (dominantResponse.statusCode != null && symbolResponsesType) {
     const dominantResponseType = $.type
       .object()
       .prop('result', (p) =>
-        p.type(
-          $.type.idx($.type(symbolResponsesType), $.type.literal(dominantResponse.statusCode!)),
-        ),
+        p.type($.type(symbolResponsesType).idx($.type.literal(dominantResponse.statusCode!))),
       )
       .prop('status', (p) => p.optional().type($.type.literal(dominantResponse.statusCode!)));
     responseOrResolverType = $.type.or(
@@ -388,14 +367,12 @@ export const operationToHandlerCreator = ({
     if (!plugin.getSymbol({ category: 'type', resource: 'optional-http-handler-factory' })) {
       emitOptionalParamHandlerFactory(plugin);
     }
-    handlerType = $.type(symbolOptionalHttpHandlerFactory, (t) =>
-      t.generic(responseOrResolverType),
-    );
+    handlerType = $.type(symbolOptionalHttpHandlerFactory).generic(responseOrResolverType);
   } else {
     if (!plugin.getSymbol({ category: 'type', resource: 'http-handler-factory' })) {
       emitHandlerFactory(plugin);
     }
-    handlerType = $.type(symbolHttpHandlerFactory, (t) => t.generic(responseOrResolverType));
+    handlerType = $.type(symbolHttpHandlerFactory).generic(responseOrResolverType);
   }
 
   return {
@@ -404,4 +381,4 @@ export const operationToHandlerCreator = ({
     type: handlerType,
     value: handlerCreator,
   };
-};
+}
