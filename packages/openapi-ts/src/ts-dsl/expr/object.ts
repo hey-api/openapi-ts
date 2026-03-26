@@ -3,16 +3,16 @@ import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
+import type { MethodTsDsl } from '../decl/method';
 import { AsMixin } from '../mixins/as';
 import { ExprMixin } from '../mixins/expr';
 import { HintMixin } from '../mixins/hint';
 import { LayoutMixin } from '../mixins/layout';
+import { f } from '../utils/factories';
 import { ObjectPropTsDsl } from './prop';
 
 type Expr = NodeName | MaybeTsDsl<ts.Expression>;
 type Stmt = NodeName | MaybeTsDsl<ts.Statement>;
-type ExprFn = Expr | ((p: ObjectPropTsDsl) => void);
-type StmtFn = Stmt | ((p: ObjectPropTsDsl) => void);
 
 const Mixed = AsMixin(ExprMixin(HintMixin(LayoutMixin(TsDsl<ts.ObjectLiteralExpression>))));
 
@@ -22,9 +22,13 @@ export class ObjectTsDsl extends Mixed {
   protected _props = new Map<string, ObjectPropTsDsl>();
   protected _spreadCounter = 0;
 
-  constructor(...props: Array<ObjectPropTsDsl>) {
+  constructor(...props: Array<ObjectPropTsDsl> | [(o: ObjectTsDsl) => void]) {
     super();
-    this.props(...props);
+    if (props.length === 1 && typeof props[0] === 'function') {
+      props[0](this);
+    } else {
+      this.props(...(props as Array<ObjectPropTsDsl>));
+    }
   }
 
   override analyze(ctx: AnalysisContext): void {
@@ -43,7 +47,7 @@ export class ObjectTsDsl extends Mixed {
   }
 
   /** Adds a computed property (e.g., `{ [expr]: value }`), or removes if null. */
-  computed(name: string, expr: ExprFn | null): this {
+  computed(name: string, expr: Expr | null): this {
     if (expr === null) {
       this._props.delete(`computed:${name}`);
     } else {
@@ -56,7 +60,7 @@ export class ObjectTsDsl extends Mixed {
   }
 
   /** Adds a getter property (e.g., `{ get foo() { ... } }`), or removes if null. */
-  getter(name: string, stmt: StmtFn | null): this {
+  getter(name: string, stmt: Stmt | null): this {
     if (stmt === null) {
       this._props.delete(`getter:${name}`);
     } else {
@@ -75,8 +79,21 @@ export class ObjectTsDsl extends Mixed {
     return this._props.size === 0;
   }
 
+  /** Adds a method property (e.g., `{ foo() { ... } }`), or removes if null. */
+  method(name: string, fn: ((m: MethodTsDsl) => void) | null): this {
+    if (fn === null) {
+      this._props.delete(`method:${name}`);
+    } else {
+      this._props.set(
+        `method:${name}`,
+        new ObjectPropTsDsl({ kind: 'method', name }).value(f.method(name, fn)),
+      );
+    }
+    return this;
+  }
+
   /** Adds a property assignment, or removes if null. */
-  prop(name: string, expr: ExprFn | null): this {
+  prop(name: string, expr: Expr | null): this {
     if (expr === null) {
       this._props.delete(`prop:${name}`);
     } else {
@@ -94,7 +111,7 @@ export class ObjectTsDsl extends Mixed {
   }
 
   /** Adds a setter property (e.g., `{ set foo(v) { ... } }`), or removes if null. */
-  setter(name: string, stmt: StmtFn | null): this {
+  setter(name: string, stmt: Stmt | null): this {
     if (stmt === null) {
       this._props.delete(`setter:${name}`);
     } else {
@@ -104,7 +121,7 @@ export class ObjectTsDsl extends Mixed {
   }
 
   /** Adds a spread property (e.g., `{ ...options }`). */
-  spread(expr: ExprFn): this {
+  spread(expr: Expr): this {
     const key = `spread:${this._spreadCounter++}`;
     this._props.set(key, new ObjectPropTsDsl({ kind: 'spread' }).value(expr));
     return this;

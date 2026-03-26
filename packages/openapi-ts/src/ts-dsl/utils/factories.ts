@@ -1,3 +1,4 @@
+import type { MethodCtor } from '../decl/method';
 import type { AsCtor } from '../expr/as';
 import type { AttrCtor } from '../expr/attr';
 import type { AwaitCtor } from '../expr/await';
@@ -45,6 +46,9 @@ export const f = {
 
   /** Factory for creating function or method call expressions (e.g., `fn(arg)`). */
   call: createFactory<CallCtor>('call'),
+
+  /** Factory for creating method declarations (e.g., `{ foo() { ... } }`). */
+  method: createFactory<MethodCtor>('method'),
 
   /** Factory for creating new expressions (e.g., `new ClassName()`). */
   new: createFactory<NewCtor>('new'),

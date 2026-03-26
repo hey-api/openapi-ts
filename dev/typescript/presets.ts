@@ -35,7 +35,6 @@ export const presets = {
   ],
   msw: () => [
     /** SDK + MSW handlers */
-    // '@hey-api/sdk',
     {
       name: '@hey-api/sdk',
       operations: {
