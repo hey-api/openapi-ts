@@ -1,6 +1,7 @@
-import { type IR, statusCodeToGroup } from '@hey-api/shared';
+import type { IR } from '@hey-api/shared';
+import { statusCodeToGroup } from '@hey-api/shared';
 
-import type { MswPlugin } from './types';
+import type { MswPlugin } from '../types';
 
 export type ResponseKind = 'binary' | 'json' | 'text' | 'void';
 
