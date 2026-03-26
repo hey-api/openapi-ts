@@ -51,15 +51,13 @@ export const handlerV2: MswPlugin['Handler'] = ({ plugin }) => {
         operation,
         plugin,
       });
-      if (handlerCreator) {
-        handlersObject.prop(handlerCreator.name, handlerCreator.funcNode);
-        singleHandlerFactoriesType.prop(handlerCreator.name, (p) => p.type(handlerCreator.type));
-        handlerMeta.push({
-          isOptional: handlerCreator.isOptional,
-          name: handlerCreator.name,
-          path: operation.path,
-        });
-      }
+      handlersObject.method(handlerCreator.name, handlerCreator.funcNode);
+      singleHandlerFactoriesType.prop(handlerCreator.name, (p) => p.type(handlerCreator.type));
+      handlerMeta.push({
+        isOptional: handlerCreator.isOptional,
+        name: handlerCreator.name,
+        path: operation.path,
+      });
     },
     {
       order: 'declarations',

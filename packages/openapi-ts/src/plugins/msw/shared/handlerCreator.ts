@@ -199,22 +199,20 @@ function createHandlerFuncNode({
       optionsName,
     );
 
-  return $.func()
-    .$if(
-      dominantResponse.example != null && dominantResponse.statusCode != null,
-      (f) =>
-        f.param(responseOrFnName, (p) =>
-          p.assign(
+  return (m: ReturnType<typeof $.method>) =>
+    m
+      .param(responseOrFnName, (p) =>
+        p.$if(dominantResponse.example != null && dominantResponse.statusCode != null, (pp) =>
+          pp.assign(
             $.fromValue({
               result: dominantResponse.example,
               status: dominantResponse.statusCode,
             }),
           ),
         ),
-      (f) => f.param(responseOrFnName),
-    )
-    .param(optionsName)
-    .do(httpCall.return());
+      )
+      .param(optionsName)
+      .do(httpCall.return());
 }
 
 export function operationToHandlerCreator({

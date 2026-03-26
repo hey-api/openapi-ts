@@ -31,11 +31,25 @@ const server = setupServer(
     result: false,
     // status: 200,
   }),
-  // http.post('*/tui/publish', () => HttpResponse.json({
-  //   firstName: 'John',
-  //   id: 'abc-123',
-  //   lastName: 'Maverick',
-  // })),
+  http.post(
+    '*/tui/publish',
+    (info) =>
+      HttpResponse.json(
+        {
+          firstName: 'John',
+          id: 'abc-123',
+          lastName: 'Maverick',
+        },
+        {
+          // status: 200,
+          // statusText: 'OK',
+          // type: 'default',
+        },
+      ),
+    {
+      // once: true,
+    },
+  ),
 );
 server.listen();
 
