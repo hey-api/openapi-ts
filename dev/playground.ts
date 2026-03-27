@@ -1,6 +1,4 @@
-/* eslint-disable */
 import type { DefinePlugin, IR } from '@hey-api/openapi-ts';
-import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 
 import { client } from './gen/typescript/client.gen';
@@ -21,38 +19,27 @@ export const handler: MyPlugin['Handler'] = ({ plugin }) => {
   });
 };
 
+const handlers = createMswHandlers({
+  baseUrl: 'https://api.example.com',
+});
+
 const server = setupServer(
-  ...createMswHandlers({
-    baseUrl: 'https://api.example.com',
-  }).getAllHandlers(),
+  ...handlers.all({
+    // overrides: {
+    //   tuiPublish: {
+    //     result: true,
+    //   },
+    // },
+  }),
   // handleTuiPublish({
   //   result: false
   // }),
-  // createMswHandlers({
-  //   baseUrl: 'https://api.example.com',
-  // }).tuiPublish({
+  // handlers.one.tuiPublish({
   //   result: false,
   //   // status: 200,
+  // }, {
+  //   // ...
   // }),
-  // http.post(
-  //   '*/tui/publish',
-  //   (info) =>
-  //     HttpResponse.json(
-  //       {
-  //         firstName: 'John',
-  //         id: 'abc-123',
-  //         lastName: 'Maverick',
-  //       },
-  //       {
-  //         // status: 200,
-  //         // statusText: 'OK',
-  //         // type: 'default',
-  //       },
-  //     ),
-  //   {
-  //     // once: true,
-  //   },
-  // ),
 );
 server.listen();
 

@@ -59,6 +59,7 @@ export default tseslint.config(
       '**/node_modules/',
       'temp/',
       'dev/gen/',
+      'dev/playground.ts',
       'examples/openapi-ts-nestjs/src/client/**/*.ts',
       'examples/openapi-ts-openai/src/client/**/*.ts',
       '**/test/generated/',
