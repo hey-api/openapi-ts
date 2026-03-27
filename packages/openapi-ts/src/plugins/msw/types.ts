@@ -2,6 +2,7 @@ import type { DefinePlugin, Plugin } from '@hey-api/shared';
 
 export type UserConfig = Plugin.Name<'msw'> &
   Plugin.Hooks &
+  Plugin.UserComments &
   Plugin.UserExports & {
     /**
      * Set a default base URL when creating the handlers? You can set `baseUrl`
@@ -29,6 +30,7 @@ export type UserConfig = Plugin.Name<'msw'> &
 
 export type Config = Plugin.Name<'msw'> &
   Plugin.Hooks &
+  Plugin.Comments &
   Plugin.Exports & {
     /** Set a default base URL when creating the handlers. */
     baseUrl: string | number | boolean;

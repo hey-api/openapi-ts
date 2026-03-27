@@ -24,22 +24,25 @@ const handlers = createMswHandlers({
 });
 
 const server = setupServer(
-  ...handlers.all({
-    // overrides: {
-    //   tuiPublish: {
-    //     result: true,
-    //   },
-    // },
+  // ...handlers.all({
+  //   // overrides: {
+  //   //   tuiPublish: {
+  //   //     result: true,
+  //   //   },
+  //   // },
+  // }),
+  handleTuiPublish({
+    result: false,
   }),
-  // handleTuiPublish({
-  //   result: false
-  // }),
-  // handlers.one.tuiPublish({
-  //   result: false,
-  //   // status: 200,
-  // }, {
-  //   // ...
-  // }),
+  handlers.one.tuiPublish(
+    {
+      result: false,
+      // status: 200,
+    },
+    {
+      // ...
+    },
+  ),
 );
 server.listen();
 

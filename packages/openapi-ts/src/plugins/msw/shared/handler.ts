@@ -5,6 +5,7 @@ import { applyNaming } from '@hey-api/shared';
 import { $ } from '../../../ts-dsl';
 import type { MswPlugin } from '../types';
 import { computeDominantResponse, type DominantResponse } from './computeDominantResponse';
+import { getOperationComment } from './operation';
 import { sanitizeParamName, sanitizePath } from './path';
 
 const emitToResponseUnion = (plugin: MswPlugin['Instance']) => {
@@ -37,28 +38,20 @@ const emitToResponseUnion = (plugin: MswPlugin['Instance']) => {
   plugin.node(toResponseUnionType);
 };
 
-const extractPathParamNames = (path: string) => {
-  const names: Array<string> = [];
-  for (const match of path.matchAll(/\{([^}]+)\}/g)) {
-    names.push(match[1]!);
-  }
-  return names;
-};
-
 /**
  * Builds the response override expression for the `res` parameter.
- * When `res` is an object with a `result` property, it uses
- * `res.result` as the value and `res.status` as the status code.
  */
 function buildResponseOverrideExpr({
   dominantResponse: { kind: responseKind, statusCode: responseStatusCode },
-  symbolHttpResponse,
+  plugin,
   symbolResolver,
 }: {
   dominantResponse: DominantResponse;
-  symbolHttpResponse: Symbol;
+  plugin: MswPlugin['Instance'];
   symbolResolver: Symbol;
 }) {
+  const symbolHttpResponse = plugin.external('msw.HttpResponse');
+
   const statusOption = $.object().prop(
     'status',
     responseStatusCode
@@ -85,42 +78,39 @@ function buildResponseOverrideExpr({
   }
 }
 
-/**
- * Builds an arrow function that creates an MSW handler for a single operation.
- * The response method and status code are inferred from the operation's responses.
- */
 function createHandlerFunc({
   baseUrl,
   bodyType,
   dominantResponse,
-  hasResponseOverride,
   method,
   operation,
   paramsType,
   plugin,
   responseOrResolverType,
-  symbol,
-  symbolHttp,
-  symbolHttpResponse,
 }: {
   baseUrl: string | undefined;
   bodyType: ReturnType<typeof $.type.idx | typeof $.type>;
   dominantResponse: DominantResponse;
-  hasResponseOverride: boolean;
   method: string;
   operation: IR.OperationObject;
   paramsType: ReturnType<typeof $.type | typeof $.type.object>;
   plugin: MswPlugin['Instance'];
   responseOrResolverType: ReturnType<typeof $.type | typeof $.type.or>;
-  symbol: Symbol;
-  symbolHttp: Symbol;
-  symbolHttpResponse: Symbol;
-}) {
+}): Symbol {
+  const symbolHttp = plugin.external('msw.http');
+  const symbolHttpResponse = plugin.external('msw.HttpResponse');
   const symbolResolver = plugin.symbol('resolver');
   const symbolOptions = plugin.symbol('options');
 
-  return $.func(symbol)
+  const symbol = plugin.symbol(
+    applyNaming(`handle-${operation.id}`, {
+      casing: 'camelCase', // TODO: expose as a config option
+    }),
+  );
+
+  const handlerFunc = $.func(symbol)
     .export()
+    .$if(plugin.config.comments && getOperationComment(operation), (f, v) => f.doc(v))
     .param(symbolResolver, (p) =>
       p
         .optional()
@@ -161,16 +151,12 @@ function createHandlerFunc({
                 $(symbolResolver).call('info').return(),
               ),
             )
-            .$if(hasResponseOverride, (f) =>
+            .$if(dominantResponse.statusCode != null, (f) =>
               f.do(
-                $.if(
-                  $($.typeofExpr(symbolResolver).eq($.literal('object'))).and(
-                    $(symbolResolver).attr('result'),
-                  ),
-                ).do(
+                $.if(symbolResolver).do(
                   buildResponseOverrideExpr({
                     dominantResponse,
-                    symbolHttpResponse,
+                    plugin,
                     symbolResolver,
                   }),
                 ),
@@ -182,6 +168,8 @@ function createHandlerFunc({
         .generics(paramsType, bodyType)
         .return(),
     );
+  plugin.node(handlerFunc);
+  return symbol;
 }
 
 export function getHandler({
@@ -194,13 +182,9 @@ export function getHandler({
   examples: boolean;
   operation: IR.OperationObject;
   plugin: MswPlugin['Instance'];
-}) {
+}): Symbol {
   const dominantResponse = computeDominantResponse({ operation, plugin });
 
-  const symbolHttp = plugin.external('msw.http');
-  const symbolHttpResponse = plugin.external('msw.HttpResponse');
-
-  // Query response type from @hey-api/typescript
   const symbolResponsesType = plugin.querySymbol({
     category: 'type',
     resource: 'operation',
@@ -209,7 +193,6 @@ export function getHandler({
   });
   let responsesOverrideType: ReturnType<typeof $.type> | undefined;
   if (symbolResponsesType && dominantResponse.allCandidates.length > 1) {
-    // We only neeed to add ToResponseUnion if there are multiple responses
     if (!plugin.getSymbol({ category: 'type', resource: 'to-response-union' })) {
       emitToResponseUnion(plugin);
     }
@@ -221,31 +204,12 @@ export function getHandler({
     ).generic(symbolResponsesType);
   }
 
-  // Query data type for parameters
   const symbolDataType = plugin.querySymbol({
     category: 'type',
     resource: 'operation',
     resourceId: operation.id,
     role: 'data',
-    tool: 'typescript',
   });
-
-  let paramsType: ReturnType<typeof $.type | typeof $.type.object>;
-  if (operation.parameters?.path && Object.keys(operation.parameters.path).length) {
-    // Generate inline object type with sanitized param names derived from the
-    // path string (not the IR keys, which are lowercased and may diverge from
-    // the original spec names that the TypeScript plugin preserves).
-    const objType = $.type.object();
-    for (const name of extractPathParamNames(operation.path)) {
-      // OpenAPI 3.x path params are always single-segment, so MSW (path-to-regexp v6)
-      // will always provide a single string. Multi-segment params ({path+}) are proposed
-      // for OpenAPI 4.0 — revisit this if/when that lands.
-      objType.prop(sanitizeParamName(name), (p) => p.type('string'));
-    }
-    paramsType = objType;
-  } else {
-    paramsType = $.type('never');
-  }
 
   let bodyType: ReturnType<typeof $.type.idx | typeof $.type>;
   if (operation.body && symbolDataType) {
@@ -254,10 +218,27 @@ export function getHandler({
     bodyType = $.type('never');
   }
 
-  // Omit response type generic to avoid MSW's DefaultBodyType constraint issues
+  let paramsType: ReturnType<typeof $.type | typeof $.type.object>;
+  if (operation.parameters?.path && Object.keys(operation.parameters.path).length) {
+    // Generate inline object type with sanitized param names derived from the
+    // path string (not the IR keys, which are lowercased and may diverge from
+    // the original spec names that the TypeScript plugin preserves).
+    const objType = $.type.object();
+    for (const parameter of Object.values(operation.parameters.path ?? {})) {
+      // OpenAPI 3.x path params are always single-segment, so MSW (path-to-regexp v6)
+      // will always provide a single string. Multi-segment params ({path+}) are proposed
+      // for OpenAPI 4.0 — revisit this if/when that lands.
+      objType.prop(sanitizeParamName(parameter.name), (p) => p.type('string'));
+    }
+    paramsType = objType;
+  } else {
+    paramsType = $.type('never');
+  }
+
   const resolverType = $.type(plugin.external('msw.HttpResponseResolver')).generics(
     paramsType,
     bodyType,
+    // omit response type to avoid DefaultBodyType constraint issues
   );
 
   // When examples are disabled, strip the example from the dominant response
@@ -281,26 +262,14 @@ export function getHandler({
     responseOrResolverType = resolverType;
   }
 
-  const symbol = plugin.symbol(
-    applyNaming(`handle-${operation.id}`, {
-      casing: 'camelCase', // TODO: expose as a config option
-    }),
-  );
-  return {
-    node: createHandlerFunc({
-      baseUrl,
-      bodyType,
-      dominantResponse,
-      hasResponseOverride: dominantResponse.statusCode != null,
-      method: operation.method,
-      operation,
-      paramsType,
-      plugin,
-      responseOrResolverType,
-      symbol,
-      symbolHttp,
-      symbolHttpResponse,
-    }),
-    symbol,
-  };
+  return createHandlerFunc({
+    baseUrl,
+    bodyType,
+    dominantResponse,
+    method: operation.method,
+    operation,
+    paramsType,
+    plugin,
+    responseOrResolverType,
+  });
 }

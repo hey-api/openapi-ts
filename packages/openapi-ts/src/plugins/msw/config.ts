@@ -6,6 +6,7 @@ import type { MswPlugin } from './types';
 export const defaultConfig: MswPlugin['Config'] = {
   config: {
     baseUrl: '*',
+    comments: true,
     includeInEntry: false,
     valueSources: ['example'],
   },
