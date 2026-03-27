@@ -1,8 +1,9 @@
 import { getBaseUrl } from '@hey-api/shared';
 
 import { $ } from '../../../ts-dsl';
-import { operationToHandlerCreator } from '../shared/handlerCreator';
+import { getHandler } from '../shared/handler';
 import { sortHandlersBySpecificity } from '../shared/sortHandlersBySpecificity';
+import { createRequestHandlerOptions } from '../shared/types';
 import type { MswPlugin } from '../types';
 
 export const handlerV2: MswPlugin['Handler'] = ({ plugin }) => {
@@ -25,18 +26,9 @@ export const handlerV2: MswPlugin['Handler'] = ({ plugin }) => {
     kind: 'type',
   });
 
-  // Generate resolveToNull helper
-  // const resolveToNull = () => new HttpResponse(null)
-  const symbolResolveToNull = plugin.symbol('resolveToNull', {
-    meta: {
-      category: 'function',
-      resource: 'resolve-to-null',
-    },
-  });
-  const resolveToNullFn = $.const(symbolResolveToNull).assign(
-    $.func().do($.new(symbolHttpResponse, $.literal(null)).return()),
-  );
-  plugin.node(resolveToNullFn);
+  const baseUrl = getBaseUrl(plugin.config.baseUrl, plugin.context.ir);
+
+  createRequestHandlerOptions(plugin);
 
   const symbolFactory = plugin.symbol('createMswHandlers');
   const handlersObject = $.object().pretty();
@@ -46,16 +38,36 @@ export const handlerV2: MswPlugin['Handler'] = ({ plugin }) => {
   plugin.forEach(
     'operation',
     ({ operation }) => {
-      const handlerCreator = operationToHandlerCreator({
+      const handler = getHandler({
+        baseUrl,
         examples: plugin.config.valueSources?.includes('example') ?? true,
         operation,
         plugin,
       });
-      handlersObject.method(handlerCreator.name, handlerCreator.funcNode);
-      singleHandlerFactoriesType.prop(handlerCreator.name, (p) => p.type(handlerCreator.type));
+      plugin.node(handler.node);
+      const symbolResponse = plugin.symbol('resolver');
+      const symbolOptions = plugin.symbol('options');
+      handlersObject.method(operation.id, (m) =>
+        m
+          .param(symbolResponse)
+          // , (p) =>
+          //   p.$if(dominantResponse.example != null && dominantResponse.statusCode != null, (pp) =>
+          //     pp.assign(
+          //       $.fromValue({
+          //         result: dominantResponse.example,
+          //         status: dominantResponse.statusCode,
+          //       }),
+          //     ),
+          //   ),
+          // )
+          .param(symbolOptions)
+          .do($(handler.symbol).call(symbolResponse, symbolOptions).return()),
+      );
+      // handlersObject.prop(operation.id, handler.symbol);
+      singleHandlerFactoriesType.prop(operation.id, (p) => p.type(handler.type));
       handlerMeta.push({
-        isOptional: handlerCreator.isOptional,
-        name: handlerCreator.name,
+        isOptional: handler.isOptional,
+        name: operation.id,
         path: operation.path,
       });
     },
@@ -94,26 +106,6 @@ export const handlerV2: MswPlugin['Handler'] = ({ plugin }) => {
       ),
   );
 
-  const symbolMswHandlers = plugin.symbol('MswHandlers');
-  plugin.node(
-    $.type
-      .alias(symbolMswHandlers)
-      .export()
-      .type(
-        $.type.and(
-          $.type(symbolMswHandlerCreators),
-          $.type.object().prop('getAllHandlers', (p) =>
-            p.type(
-              $.type
-                .func()
-                .param('options', (pp) => pp.type(symbolGetAllHandlersOptions).optional())
-                .returns($.type('Array').generic(symbolHttpHandler)),
-            ),
-          ),
-        ),
-      ),
-  );
-
   const getAllHandlersDo: Array<ReturnType<typeof $.var | typeof $.stmt | typeof $.return>> = [];
   const hasRequiredHandlers = handlerMeta.some((h) => !h.isOptional);
 
@@ -128,9 +120,7 @@ export const handlerV2: MswPlugin['Handler'] = ({ plugin }) => {
   getAllHandlersDo.push($.const('overrides').assign($('options').attr('overrides')));
 
   getAllHandlersDo.push(
-    $.const('handlers')
-      .type($.type('Array').generic($.type(symbolHttpHandler)))
-      .assign($.array()),
+    $.const('handlers').type($.type('Array').generic(symbolHttpHandler)).assign($.array()),
   );
 
   // Generate addRequiredHandler helper when there are required handlers
@@ -151,7 +141,7 @@ export const handlerV2: MswPlugin['Handler'] = ({ plugin }) => {
           $.type.or('Value', $.type.func().returns($.type(symbolHttpResponse).generic('any'))),
         ),
       )
-      .returns($.type(symbolHttpHandler));
+      .returns(symbolHttpHandler);
 
     getAllHandlersDo.push(
       $.const('addRequiredHandler').assign(
@@ -201,7 +191,6 @@ export const handlerV2: MswPlugin['Handler'] = ({ plugin }) => {
 
   getAllHandlersDo.push($('handlers').return());
 
-  const baseUrl = getBaseUrl(plugin.config.baseUrl, plugin.context.ir);
   const factoryFn = $.func(symbolFactory)
     .export()
     .param('config', (p) =>
@@ -209,7 +198,6 @@ export const handlerV2: MswPlugin['Handler'] = ({ plugin }) => {
         .type($.type.object().prop('baseUrl', (p) => p.optional().type('string')))
         .assign($.object()),
     )
-    .returns(symbolMswHandlers)
     .do(
       $.const('baseUrl').assign(
         $('config')

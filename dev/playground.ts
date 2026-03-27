@@ -5,7 +5,7 @@ import { setupServer } from 'msw/node';
 
 import { client } from './gen/typescript/client.gen';
 // import { createOpencode } from '@opencode-ai/sdk';
-import { createMswHandlers } from './gen/typescript/msw.gen';
+import { createMswHandlers, handleTuiPublish } from './gen/typescript/msw.gen';
 import { OpenCode } from './gen/typescript/sdk.gen';
 
 type MyPluginConfig = { readonly name: 'myplugin' };
@@ -22,34 +22,37 @@ export const handler: MyPlugin['Handler'] = ({ plugin }) => {
 };
 
 const server = setupServer(
-  // ...createMswHandlers({
-  //   baseUrl: 'https://api.example.com',
-  // }).getAllHandlers(),
-  createMswHandlers({
+  ...createMswHandlers({
     baseUrl: 'https://api.example.com',
-  }).tuiPublishMock({
-    result: false,
-    // status: 200,
-  }),
-  http.post(
-    '*/tui/publish',
-    (info) =>
-      HttpResponse.json(
-        {
-          firstName: 'John',
-          id: 'abc-123',
-          lastName: 'Maverick',
-        },
-        {
-          // status: 200,
-          // statusText: 'OK',
-          // type: 'default',
-        },
-      ),
-    {
-      // once: true,
-    },
-  ),
+  }).getAllHandlers(),
+  // handleTuiPublish({
+  //   result: false
+  // }),
+  // createMswHandlers({
+  //   baseUrl: 'https://api.example.com',
+  // }).tuiPublish({
+  //   result: false,
+  //   // status: 200,
+  // }),
+  // http.post(
+  //   '*/tui/publish',
+  //   (info) =>
+  //     HttpResponse.json(
+  //       {
+  //         firstName: 'John',
+  //         id: 'abc-123',
+  //         lastName: 'Maverick',
+  //       },
+  //       {
+  //         // status: 200,
+  //         // statusText: 'OK',
+  //         // type: 'default',
+  //       },
+  //     ),
+  //   {
+  //     // once: true,
+  //   },
+  // ),
 );
 server.listen();
 

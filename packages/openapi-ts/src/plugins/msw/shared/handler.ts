@@ -1,9 +1,11 @@
 import type { Symbol } from '@hey-api/codegen-core';
 import type { IR } from '@hey-api/shared';
+import { applyNaming } from '@hey-api/shared';
 
 import { $ } from '../../../ts-dsl';
 import type { MswPlugin } from '../types';
 import { computeDominantResponse, type DominantResponse } from './computeDominantResponse';
+import { sanitizeParamName, sanitizePath } from './path';
 
 const emitToResponseUnion = (plugin: MswPlugin['Instance']) => {
   const symbol = plugin.symbol('ToResponseUnion', {
@@ -42,8 +44,6 @@ const emitHandlerFactory = (plugin: MswPlugin['Instance']) => {
       resource: 'http-handler-factory',
     },
   });
-  const symbolHttpHandler = plugin.external('msw.HttpHandler');
-  const symbolRequestHandlerOptions = plugin.external('msw.RequestHandlerOptions');
   const handlerFactoryType = $.type
     .alias(symbol)
     .generic('ResponseOrResolver')
@@ -51,8 +51,8 @@ const emitHandlerFactory = (plugin: MswPlugin['Instance']) => {
       $.type
         .func()
         .param('responseOrResolver', (p) => p.type('ResponseOrResolver'))
-        .param('options', (p) => p.type($.type(symbolRequestHandlerOptions)).optional())
-        .returns($.type(symbolHttpHandler)),
+        .param('options', (p) => p.type(plugin.external('msw.RequestHandlerOptions')).optional())
+        .returns(plugin.external('msw.HttpHandler')),
     );
   plugin.node(handlerFactoryType);
 };
@@ -64,8 +64,6 @@ const emitOptionalParamHandlerFactory = (plugin: MswPlugin['Instance']) => {
       resource: 'optional-http-handler-factory',
     },
   });
-  const symbolHttpHandler = plugin.external('msw.HttpHandler');
-  const symbolRequestHandlerOptions = plugin.external('msw.RequestHandlerOptions');
   const optionalHandlerFactoryType = $.type
     .alias(symbol)
     .generic('ResponseOrResolver')
@@ -73,17 +71,11 @@ const emitOptionalParamHandlerFactory = (plugin: MswPlugin['Instance']) => {
       $.type
         .func()
         .param('responseOrResolver', (p) => p.type('ResponseOrResolver').optional())
-        .param('options', (p) => p.type($.type(symbolRequestHandlerOptions)).optional())
-        .returns($.type(symbolHttpHandler)),
+        .param('options', (p) => p.type(plugin.external('msw.RequestHandlerOptions')).optional())
+        .returns(plugin.external('msw.HttpHandler')),
     );
   plugin.node(optionalHandlerFactoryType);
 };
-
-// path-to-regexp v6 (used by MSW) only allows word characters in param names.
-// So transform what's necessary: replace non-word chars with camelCase transitions,
-// preserving the original casing to stay consistent with the TypeScript plugin's types.
-const sanitizeParamName = (name: string) =>
-  name.replace(/\W+(.)?/g, (_, char?: string) => (char ? char.toUpperCase() : ''));
 
 const extractPathParamNames = (path: string) => {
   const names: Array<string> = [];
@@ -93,12 +85,6 @@ const extractPathParamNames = (path: string) => {
   return names;
 };
 
-const toMswPath = (path: string) =>
-  path
-    .replace(/\{([^}]+)\}/g, (_, name: string) => `\0${sanitizeParamName(name)}`)
-    .replace(/:/g, String.raw`\:`)
-    .replace(/\0/g, ':');
-
 /**
  * Builds the response override expression for the `res` parameter.
  * When `res` is an object with a `result` property, it uses
@@ -106,44 +92,36 @@ const toMswPath = (path: string) =>
  */
 function buildResponseOverrideExpr({
   dominantResponse: { kind: responseKind, statusCode: responseStatusCode },
-  responseOrFnName,
   symbolHttpResponse,
+  symbolResolver,
 }: {
   dominantResponse: DominantResponse;
-  responseOrFnName: string;
   symbolHttpResponse: Symbol;
+  symbolResolver: Symbol;
 }) {
   const statusOption = $.object().prop(
     'status',
     responseStatusCode
-      ? $(responseOrFnName).attr('status').coalesce($.literal(responseStatusCode))
-      : $(responseOrFnName).attr('status'),
+      ? $(symbolResolver).attr('status').coalesce($.literal(responseStatusCode))
+      : $(symbolResolver).attr('status'),
   );
-  const resultExpr = $(responseOrFnName).attr('result');
+  const resultExpr = $(symbolResolver).attr('result');
 
   switch (responseKind) {
-    case 'void':
-      return $.func().do(
-        $.new(symbolHttpResponse, resultExpr.coalesce($.literal(null)), statusOption).return(),
-      );
-    case 'json':
-      return $.func().do(
-        $(symbolHttpResponse)
-          .attr('json')
-          .call(resultExpr.coalesce($.literal(null)), statusOption)
-          .return(),
-      );
-    case 'text':
-      return $.func().do(
-        $(symbolHttpResponse)
-          .attr('text')
-          .call(resultExpr.coalesce($.literal(null)), statusOption)
-          .return(),
-      );
     case 'binary':
-      return $.func().do(
-        $.new(symbolHttpResponse, resultExpr.coalesce($.literal(null)), statusOption).return(),
-      );
+      return $.new(symbolHttpResponse, resultExpr.coalesce($.literal(null)), statusOption).return();
+    case 'json':
+      return $(symbolHttpResponse)
+        .attr('json')
+        .call(resultExpr.coalesce($.literal(null)), statusOption)
+        .return();
+    case 'text':
+      return $(symbolHttpResponse)
+        .attr('text')
+        .call(resultExpr.coalesce($.literal(null)), statusOption)
+        .return();
+    case 'void':
+      return $.new(symbolHttpResponse, resultExpr.coalesce($.literal(null)), statusOption).return();
   }
 }
 
@@ -151,58 +129,42 @@ function buildResponseOverrideExpr({
  * Builds an arrow function that creates an MSW handler for a single operation.
  * The response method and status code are inferred from the operation's responses.
  */
-function createHandlerFuncNode({
+function createHandlerFunc({
+  baseUrl,
+  bodyType,
   dominantResponse,
   hasResponseOverride,
   method,
   operation,
+  paramsType,
+  plugin,
+  responseOrResolverType,
+  symbol,
   symbolHttp,
   symbolHttpResponse,
-  symbolResolveToNull,
 }: {
+  baseUrl: string | undefined;
+  bodyType: ReturnType<typeof $.type.idx | typeof $.type>;
   dominantResponse: DominantResponse;
   hasResponseOverride: boolean;
   method: string;
   operation: IR.OperationObject;
+  paramsType: ReturnType<typeof $.type | typeof $.type.object>;
+  plugin: MswPlugin['Instance'];
+  responseOrResolverType: ReturnType<typeof $.type | typeof $.type.or>;
+  symbol: Symbol;
   symbolHttp: Symbol;
   symbolHttpResponse: Symbol;
-  symbolResolveToNull: Symbol;
 }) {
-  const responseOrFnName = 'res';
-  const optionsName = 'options';
+  const symbolResolver = plugin.symbol('resolver');
+  const symbolOptions = plugin.symbol('options');
 
-  const fallbackTernary = $.ternary($.typeofExpr(responseOrFnName).eq($.literal('function')))
-    .do(responseOrFnName)
-    .otherwise($(symbolResolveToNull));
-
-  const resolverArg = hasResponseOverride
-    ? $.ternary(
-        $($.typeofExpr(responseOrFnName).eq($.literal('object'))).and(
-          $(responseOrFnName).attr('result'),
-        ),
-      )
-        .do(
-          buildResponseOverrideExpr({
-            dominantResponse,
-            responseOrFnName,
-            symbolHttpResponse,
-          }),
-        )
-        .otherwise(fallbackTernary)
-    : fallbackTernary;
-
-  const httpCall = $(symbolHttp)
-    .attr(method)
-    .call(
-      $.template($('baseUrl')).add($.literal(toMswPath(operation.path))),
-      resolverArg,
-      optionsName,
-    );
-
-  return (m: ReturnType<typeof $.method>) =>
-    m
-      .param(responseOrFnName, (p) =>
-        p.$if(dominantResponse.example != null && dominantResponse.statusCode != null, (pp) =>
+  return $.func(symbol)
+    .export()
+    .param(symbolResolver, (p) =>
+      p
+        .type(responseOrResolverType)
+        .$if(dominantResponse.example != null && dominantResponse.statusCode != null, (pp) =>
           pp.assign(
             $.fromValue({
               result: dominantResponse.example,
@@ -210,16 +172,71 @@ function createHandlerFuncNode({
             }),
           ),
         ),
-      )
-      .param(optionsName)
-      .do(httpCall.return());
+    )
+    .param(symbolOptions, (p) =>
+      p.optional().type(
+        plugin.referenceSymbol({
+          category: 'type',
+          resource: 'request-handler-options',
+          tool: 'msw',
+        }),
+      ),
+    )
+    .returns(plugin.external('msw.HttpHandler'))
+    .do(
+      $(symbolHttp)
+        .attr(method)
+        .call(
+          $.template(
+            $(symbolOptions)
+              .attr('baseUrl')
+              .optional()
+              .coalesce($.literal(baseUrl ?? '')),
+          ).add(sanitizePath(operation.path)),
+          $.func()
+            .param('info')
+            .$if(
+              hasResponseOverride,
+              (f) =>
+                f.do(
+                  $.if(
+                    $($.typeofExpr(symbolResolver).eq($.literal('object'))).and(
+                      $(symbolResolver).attr('result'),
+                    ),
+                  ).do(
+                    buildResponseOverrideExpr({
+                      dominantResponse,
+                      symbolHttpResponse,
+                      symbolResolver,
+                    }),
+                  ),
+                  $.if($.typeofExpr(symbolResolver).eq($.literal('function'))).do(
+                    $(symbolResolver).call('info').return(),
+                  ),
+                  $.new(symbolHttpResponse, $.literal(null)).return(),
+                ),
+              (f) =>
+                f.do(
+                  $.if($.typeofExpr(symbolResolver).eq($.literal('function'))).do(
+                    $(symbolResolver).call('info').return(),
+                  ),
+                  $.new(symbolHttpResponse, $.literal(null)).return(),
+                ),
+            ),
+          symbolOptions,
+        )
+        .generics(paramsType, bodyType)
+        .return(),
+    );
 }
 
-export function operationToHandlerCreator({
+export function getHandler({
+  baseUrl,
   examples,
   operation,
   plugin,
 }: {
+  baseUrl: string | undefined;
   examples: boolean;
   operation: IR.OperationObject;
   plugin: MswPlugin['Instance'];
@@ -228,23 +245,6 @@ export function operationToHandlerCreator({
 
   const symbolHttp = plugin.external('msw.http');
   const symbolHttpResponse = plugin.external('msw.HttpResponse');
-  const symbolHttpResponseResolver = plugin.external('msw.HttpResponseResolver');
-  const symbolHttpHandlerFactory = plugin.referenceSymbol({
-    category: 'type',
-    resource: 'http-handler-factory',
-  });
-  const symbolOptionalHttpHandlerFactory = plugin.referenceSymbol({
-    category: 'type',
-    resource: 'optional-http-handler-factory',
-  });
-  const symbolToResponseUnion = plugin.referenceSymbol({
-    category: 'type',
-    resource: 'to-response-union',
-  });
-  const symbolResolveToNull = plugin.referenceSymbol({
-    category: 'function',
-    resource: 'resolve-to-null',
-  });
 
   // Query response type from @hey-api/typescript
   const symbolResponsesType = plugin.querySymbol({
@@ -259,7 +259,12 @@ export function operationToHandlerCreator({
     if (!plugin.getSymbol({ category: 'type', resource: 'to-response-union' })) {
       emitToResponseUnion(plugin);
     }
-    responsesOverrideType = $.type(symbolToResponseUnion).generic(symbolResponsesType);
+    responsesOverrideType = $.type(
+      plugin.referenceSymbol({
+        category: 'type',
+        resource: 'to-response-union',
+      }),
+    ).generic(symbolResponsesType);
   }
 
   // Query data type for parameters
@@ -271,13 +276,8 @@ export function operationToHandlerCreator({
     tool: 'typescript',
   });
 
-  // Build HttpResponseResolver generics
-  const hasPathParams =
-    operation.parameters?.path && Object.keys(operation.parameters.path).length > 0;
-  const hasBody = !!operation.body;
-
-  let pathParamsType: ReturnType<typeof $.type | typeof $.type.object> | undefined;
-  if (hasPathParams) {
+  let paramsType: ReturnType<typeof $.type | typeof $.type.object>;
+  if (operation.parameters?.path && Object.keys(operation.parameters.path).length) {
     // Generate inline object type with sanitized param names derived from the
     // path string (not the IR keys, which are lowercased and may diverge from
     // the original spec names that the TypeScript plugin preserves).
@@ -288,23 +288,23 @@ export function operationToHandlerCreator({
       // for OpenAPI 4.0 — revisit this if/when that lands.
       objType.prop(sanitizeParamName(name), (p) => p.type('string'));
     }
-    pathParamsType = objType;
+    paramsType = objType;
+  } else {
+    paramsType = $.type('never');
   }
 
-  let bodyType: ReturnType<typeof $.type.idx | typeof $.type> | undefined;
-  if (hasBody && symbolDataType) {
+  let bodyType: ReturnType<typeof $.type.idx | typeof $.type>;
+  if (operation.body && symbolDataType) {
     bodyType = $.type(symbolDataType).idx($.type.literal('body'));
+  } else {
+    bodyType = $.type('never');
   }
 
-  // Build the resolver type: HttpResponseResolver<Params, Body>
   // Omit response type generic to avoid MSW's DefaultBodyType constraint issues
-  const hasResolverGenerics = pathParamsType || bodyType;
-  const resolverType = hasResolverGenerics
-    ? $.type(symbolHttpResponseResolver).generics(
-        pathParamsType ?? $.type('never'),
-        bodyType ?? $.type('never'),
-      )
-    : $.type(symbolHttpResponseResolver);
+  const resolverType = $.type(plugin.external('msw.HttpResponseResolver')).generics(
+    paramsType,
+    bodyType,
+  );
 
   // When examples are disabled, strip the example from the dominant response
   if (!examples) {
@@ -336,31 +336,51 @@ export function operationToHandlerCreator({
     responseOrResolverType = resolverType;
   }
 
-  let handlerType: ReturnType<typeof $.type>;
+  let type: ReturnType<typeof $.type>;
   if (isOptional) {
     if (!plugin.getSymbol({ category: 'type', resource: 'optional-http-handler-factory' })) {
       emitOptionalParamHandlerFactory(plugin);
     }
-    handlerType = $.type(symbolOptionalHttpHandlerFactory).generic(responseOrResolverType);
+    type = $.type(
+      plugin.referenceSymbol({
+        category: 'type',
+        resource: 'optional-http-handler-factory',
+      }),
+    ).generic(responseOrResolverType);
   } else {
     if (!plugin.getSymbol({ category: 'type', resource: 'http-handler-factory' })) {
       emitHandlerFactory(plugin);
     }
-    handlerType = $.type(symbolHttpHandlerFactory).generic(responseOrResolverType);
+    type = $.type(
+      plugin.referenceSymbol({
+        category: 'type',
+        resource: 'http-handler-factory',
+      }),
+    ).generic(responseOrResolverType);
   }
 
+  const symbol = plugin.symbol(
+    applyNaming(`handle-${operation.id}`, {
+      casing: 'camelCase', // TODO: expose as a config option
+    }),
+  );
   return {
-    funcNode: createHandlerFuncNode({
+    isOptional,
+    node: createHandlerFunc({
+      baseUrl,
+      bodyType,
       dominantResponse,
       hasResponseOverride: dominantResponse.statusCode != null,
       method: operation.method,
       operation,
+      paramsType,
+      plugin,
+      responseOrResolverType,
+      symbol,
       symbolHttp,
       symbolHttpResponse,
-      symbolResolveToNull,
     }),
-    isOptional,
-    name: `${operation.id}Mock`,
-    type: handlerType,
+    symbol,
+    type,
   };
 }
