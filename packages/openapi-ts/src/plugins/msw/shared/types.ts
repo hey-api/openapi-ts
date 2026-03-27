@@ -1,7 +1,9 @@
+import type { Symbol } from '@hey-api/codegen-core';
+
 import { $ } from '../../../ts-dsl';
 import type { MswPlugin } from '../types';
 
-export function createRequestHandlerOptions(plugin: MswPlugin['Instance']) {
+export function createRequestHandlerOptions(plugin: MswPlugin['Instance']): Symbol {
   const symbol = plugin.symbol('RequestHandlerOptions', {
     meta: {
       category: 'type',
@@ -19,4 +21,5 @@ export function createRequestHandlerOptions(plugin: MswPlugin['Instance']) {
       ),
     );
   plugin.node(node);
+  return symbol;
 }
