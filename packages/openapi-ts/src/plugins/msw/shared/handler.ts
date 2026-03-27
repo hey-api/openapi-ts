@@ -37,46 +37,6 @@ const emitToResponseUnion = (plugin: MswPlugin['Instance']) => {
   plugin.node(toResponseUnionType);
 };
 
-const emitHandlerFactory = (plugin: MswPlugin['Instance']) => {
-  const symbol = plugin.symbol('HttpHandlerFactory', {
-    meta: {
-      category: 'type',
-      resource: 'http-handler-factory',
-    },
-  });
-  const handlerFactoryType = $.type
-    .alias(symbol)
-    .generic('ResponseOrResolver')
-    .type(
-      $.type
-        .func()
-        .param('responseOrResolver', (p) => p.type('ResponseOrResolver'))
-        .param('options', (p) => p.type(plugin.external('msw.RequestHandlerOptions')).optional())
-        .returns(plugin.external('msw.HttpHandler')),
-    );
-  plugin.node(handlerFactoryType);
-};
-
-const emitOptionalParamHandlerFactory = (plugin: MswPlugin['Instance']) => {
-  const symbol = plugin.symbol('OptionalHttpHandlerFactory', {
-    meta: {
-      category: 'type',
-      resource: 'optional-http-handler-factory',
-    },
-  });
-  const optionalHandlerFactoryType = $.type
-    .alias(symbol)
-    .generic('ResponseOrResolver')
-    .type(
-      $.type
-        .func()
-        .param('responseOrResolver', (p) => p.type('ResponseOrResolver').optional())
-        .param('options', (p) => p.type(plugin.external('msw.RequestHandlerOptions')).optional())
-        .returns(plugin.external('msw.HttpHandler')),
-    );
-  plugin.node(optionalHandlerFactoryType);
-};
-
 const extractPathParamNames = (path: string) => {
   const names: Array<string> = [];
   for (const match of path.matchAll(/\{([^}]+)\}/g)) {
@@ -163,6 +123,7 @@ function createHandlerFunc({
     .export()
     .param(symbolResolver, (p) =>
       p
+        .optional()
         .type(responseOrResolverType)
         .$if(dominantResponse.example != null && dominantResponse.statusCode != null, (pp) =>
           pp.assign(
@@ -195,34 +156,27 @@ function createHandlerFunc({
           ).add(sanitizePath(operation.path)),
           $.func()
             .param('info')
-            .$if(
-              hasResponseOverride,
-              (f) =>
-                f.do(
-                  $.if(
-                    $($.typeofExpr(symbolResolver).eq($.literal('object'))).and(
-                      $(symbolResolver).attr('result'),
-                    ),
-                  ).do(
-                    buildResponseOverrideExpr({
-                      dominantResponse,
-                      symbolHttpResponse,
-                      symbolResolver,
-                    }),
+            .do(
+              $.if($.typeofExpr(symbolResolver).eq($.literal('function'))).do(
+                $(symbolResolver).call('info').return(),
+              ),
+            )
+            .$if(hasResponseOverride, (f) =>
+              f.do(
+                $.if(
+                  $($.typeofExpr(symbolResolver).eq($.literal('object'))).and(
+                    $(symbolResolver).attr('result'),
                   ),
-                  $.if($.typeofExpr(symbolResolver).eq($.literal('function'))).do(
-                    $(symbolResolver).call('info').return(),
-                  ),
-                  $.new(symbolHttpResponse, $.literal(null)).return(),
+                ).do(
+                  buildResponseOverrideExpr({
+                    dominantResponse,
+                    symbolHttpResponse,
+                    symbolResolver,
+                  }),
                 ),
-              (f) =>
-                f.do(
-                  $.if($.typeofExpr(symbolResolver).eq($.literal('function'))).do(
-                    $(symbolResolver).call('info').return(),
-                  ),
-                  $.new(symbolHttpResponse, $.literal(null)).return(),
-                ),
-            ),
+              ),
+            )
+            .do($.new(symbolHttpResponse, $.literal(null)).return()),
           symbolOptions,
         )
         .generics(paramsType, bodyType)
@@ -311,15 +265,6 @@ export function getHandler({
     dominantResponse.example = undefined;
   }
 
-  const isOptional =
-    // if there is no dominantResponse, it means there is no status code definition
-    // so we can set the default response as null
-    !(dominantResponse.statusCode != null) ||
-    // if there is example, the param is optional because example can be used
-    // if it's void, the param is optional because we can define the default (`null`)
-    dominantResponse.example != null ||
-    dominantResponse.kind === 'void';
-
   let responseOrResolverType: ReturnType<typeof $.type | typeof $.type.or>;
   if (dominantResponse.statusCode != null && symbolResponsesType) {
     const dominantResponseType = $.type
@@ -336,36 +281,12 @@ export function getHandler({
     responseOrResolverType = resolverType;
   }
 
-  let type: ReturnType<typeof $.type>;
-  if (isOptional) {
-    if (!plugin.getSymbol({ category: 'type', resource: 'optional-http-handler-factory' })) {
-      emitOptionalParamHandlerFactory(plugin);
-    }
-    type = $.type(
-      plugin.referenceSymbol({
-        category: 'type',
-        resource: 'optional-http-handler-factory',
-      }),
-    ).generic(responseOrResolverType);
-  } else {
-    if (!plugin.getSymbol({ category: 'type', resource: 'http-handler-factory' })) {
-      emitHandlerFactory(plugin);
-    }
-    type = $.type(
-      plugin.referenceSymbol({
-        category: 'type',
-        resource: 'http-handler-factory',
-      }),
-    ).generic(responseOrResolverType);
-  }
-
   const symbol = plugin.symbol(
     applyNaming(`handle-${operation.id}`, {
       casing: 'camelCase', // TODO: expose as a config option
     }),
   );
   return {
-    isOptional,
     node: createHandlerFunc({
       baseUrl,
       bodyType,
@@ -381,6 +302,5 @@ export function getHandler({
       symbolHttpResponse,
     }),
     symbol,
-    type,
   };
 }

@@ -2,7 +2,7 @@ import { getBaseUrl } from '@hey-api/shared';
 
 import { $ } from '../../../ts-dsl';
 import { getHandler } from '../shared/handler';
-import { sortHandlersBySpecificity } from '../shared/sortHandlersBySpecificity';
+import { type HandlerInfo, sortHandlers } from '../shared/sort';
 import { createRequestHandlerOptions } from '../shared/types';
 import type { MswPlugin } from '../types';
 
@@ -14,7 +14,7 @@ export const handlerV2: MswPlugin['Handler'] = ({ plugin }) => {
     external: 'msw',
     kind: 'type',
   });
-  const symbolHttpResponse = plugin.symbol('HttpResponse', {
+  plugin.symbol('HttpResponse', {
     external: 'msw',
   });
   plugin.symbol('HttpResponseResolver', {
@@ -30,10 +30,13 @@ export const handlerV2: MswPlugin['Handler'] = ({ plugin }) => {
 
   createRequestHandlerOptions(plugin);
 
+  const symbolAll = plugin.symbol('all');
+  const symbolBaseUrl = plugin.symbol('baseUrl');
   const symbolFactory = plugin.symbol('createMswHandlers');
-  const handlersObject = $.object().pretty();
-  const singleHandlerFactoriesType = $.type.object();
-  const handlerMeta: Array<{ isOptional: boolean; name: string; path: string }> = [];
+  const symbolOne = plugin.symbol('one');
+  const oneObject = $.object().pretty();
+  const oneType = $.type.object();
+  const handlerInfo: Array<HandlerInfo> = [];
 
   plugin.forEach(
     'operation',
@@ -45,151 +48,28 @@ export const handlerV2: MswPlugin['Handler'] = ({ plugin }) => {
         plugin,
       });
       plugin.node(handler.node);
+
       const symbolResponse = plugin.symbol('resolver');
       const symbolOptions = plugin.symbol('options');
-      handlersObject.method(operation.id, (m) =>
-        m
+      const name = operation.id;
+      oneType.prop(name, (p) => p.type($(handler.symbol).typeofType()));
+      oneObject.prop(
+        name,
+        $.func()
           .param(symbolResponse)
-          // , (p) =>
-          //   p.$if(dominantResponse.example != null && dominantResponse.statusCode != null, (pp) =>
-          //     pp.assign(
-          //       $.fromValue({
-          //         result: dominantResponse.example,
-          //         status: dominantResponse.statusCode,
-          //       }),
-          //     ),
-          //   ),
-          // )
           .param(symbolOptions)
-          .do($(handler.symbol).call(symbolResponse, symbolOptions).return()),
+          .do(
+            $(handler.symbol)
+              .call(symbolResponse, $.object().spread(symbolOptions).prop('baseUrl', symbolBaseUrl))
+              .return(),
+          ),
       );
-      // handlersObject.prop(operation.id, handler.symbol);
-      singleHandlerFactoriesType.prop(operation.id, (p) => p.type(handler.type));
-      handlerMeta.push({
-        isOptional: handler.isOptional,
-        name: operation.id,
-        path: operation.path,
-      });
+      handlerInfo.push({ name, path: operation.path });
     },
     {
       order: 'declarations',
     },
   );
-
-  const symbolMswHandlerCreators = plugin.symbol('MswHandlerCreators');
-  plugin.node($.type.alias(symbolMswHandlerCreators).export().type(singleHandlerFactoriesType));
-
-  const symbolGetAllHandlersOptions = plugin.symbol('GetAllHandlersOptions');
-  plugin.node(
-    $.type
-      .alias(symbolGetAllHandlersOptions)
-      .export()
-      .type(
-        $.type
-          .object()
-          .prop('onMissingHandler', (p) =>
-            p.optional().type($.type.or($.type.literal('error'), $.type.literal('skip'))),
-          )
-          .prop('overrides', (p) =>
-            p.optional().type(
-              $.type
-                .mapped('K')
-                .key($.type.operator().keyof($.type(symbolMswHandlerCreators)))
-                .optional()
-                .type(
-                  $.type('Parameters')
-                    .generic($.type(symbolMswHandlerCreators).idx($.type('K')))
-                    .idx($.type.literal(0)),
-                ),
-            ),
-          ),
-      ),
-  );
-
-  const getAllHandlersDo: Array<ReturnType<typeof $.var | typeof $.stmt | typeof $.return>> = [];
-  const hasRequiredHandlers = handlerMeta.some((h) => !h.isOptional);
-
-  if (hasRequiredHandlers) {
-    getAllHandlersDo.push(
-      $.const('onMissingHandler').assign(
-        $('options').attr('onMissingHandler').coalesce($.literal('skip')),
-      ),
-    );
-  }
-
-  getAllHandlersDo.push($.const('overrides').assign($('options').attr('overrides')));
-
-  getAllHandlersDo.push(
-    $.const('handlers').type($.type('Array').generic(symbolHttpHandler)).assign($.array()),
-  );
-
-  // Generate addRequiredHandler helper when there are required handlers
-  if (hasRequiredHandlers) {
-    const errorResolver = $.func().do(
-      $.new(
-        symbolHttpResponse,
-        $.literal('[heyapi-msw] The mock of this request is not implemented.'),
-        $.object().prop('status', $.literal(501)),
-      ).return(),
-    );
-
-    // handler: (value: Value | (() => HttpResponse<any>)) => HttpHandler
-    const handlerParamType = $.type
-      .func()
-      .param('value', (pp) =>
-        pp.type(
-          $.type.or('Value', $.type.func().returns($.type(symbolHttpResponse).generic('any'))),
-        ),
-      )
-      .returns(symbolHttpHandler);
-
-    getAllHandlersDo.push(
-      $.const('addRequiredHandler').assign(
-        $.func()
-          .generic('Value')
-          .param('handler', (p) => p.type(handlerParamType))
-          .param('override', (p) => p.type($.type.or('Value', 'undefined')))
-          .do(
-            $.if($('override').looseNeq($.literal(null)))
-              .do(
-                $.stmt(
-                  $('handlers')
-                    .attr('push')
-                    .call($('handler').call($('override'))),
-                ),
-              )
-              .otherwise(
-                $.if($('onMissingHandler').eq($.literal('error'))).do(
-                  $.stmt($('handlers').attr('push').call($('handler').call(errorResolver))),
-                ),
-              ),
-          ),
-      ),
-    );
-  }
-
-  for (const handler of sortHandlersBySpecificity(handlerMeta)) {
-    if (handler.isOptional) {
-      getAllHandlersDo.push(
-        $.stmt(
-          $('handlers')
-            .attr('push')
-            .call($('mocks').attr(handler.name).call($('overrides').attr(handler.name).optional())),
-        ),
-      );
-    } else {
-      getAllHandlersDo.push(
-        $.stmt(
-          $('addRequiredHandler').call(
-            $('mocks').attr(handler.name),
-            $('overrides').attr(handler.name).optional(),
-          ),
-        ),
-      );
-    }
-  }
-
-  getAllHandlersDo.push($('handlers').return());
 
   const factoryFn = $.func(symbolFactory)
     .export()
@@ -199,19 +79,42 @@ export const handlerV2: MswPlugin['Handler'] = ({ plugin }) => {
         .assign($.object()),
     )
     .do(
-      $.const('baseUrl').assign(
+      $.const(symbolBaseUrl).assign(
         $('config')
           .attr('baseUrl')
           .$if(baseUrl !== undefined, (b) => b.coalesce($.literal(baseUrl!))),
       ),
-      $.const('mocks').type(symbolMswHandlerCreators).assign(handlersObject),
-      $.const('getAllHandlers').assign(
-        $.func()
-          .param('options', (p) => p.type(symbolGetAllHandlersOptions).assign($.object()))
-          .returns($.type('Array').generic(symbolHttpHandler))
-          .do(...getAllHandlersDo),
-      ),
-      $.return($.object().spread('mocks').prop('getAllHandlers', 'getAllHandlers')),
+      $.const(symbolOne).type(oneType).assign(oneObject),
+      $.func(symbolAll)
+        .param('options', (p) =>
+          p
+            .type(
+              $.type.object().prop('overrides', (p) =>
+                p.optional().type(
+                  $.type
+                    .mapped('K')
+                    .key($.type.operator().keyof($(symbolOne).typeofType()))
+                    .optional()
+                    .type(
+                      $.type('Parameters')
+                        .generic($(symbolOne).typeofType().idx('K'))
+                        .idx($.type.literal(0)),
+                    ),
+                ),
+              ),
+            )
+            .assign($.object()),
+        )
+        .returns($.type('ReadonlyArray').generic(symbolHttpHandler))
+        .do(
+          $.const('overrides').assign($('options').attr('overrides').coalesce($.object())),
+          $.array(
+            ...sortHandlers(handlerInfo).map((info) =>
+              $(symbolOne).attr(info.name).call($('overrides').attr(info.name)),
+            ),
+          ).return(),
+        ),
+      $.object().prop('all', symbolAll).prop('one', symbolOne).return(),
     );
   plugin.node(factoryFn);
 };
