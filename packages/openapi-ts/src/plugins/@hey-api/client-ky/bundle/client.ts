@@ -28,7 +28,14 @@ export const createClient = (config: Config = {}): Client => {
 
   const interceptors = createInterceptors<Request, Response, unknown, ResolvedRequestOptions>();
 
-  const beforeRequest = async (options: RequestOptions) => {
+  const beforeRequest = async <
+    TData = unknown,
+    TResponseStyle extends 'data' | 'fields' = 'fields',
+    ThrowOnError extends boolean = boolean,
+    Url extends string = string,
+  >(
+    options: RequestOptions<TData, TResponseStyle, ThrowOnError, Url>,
+  ) => {
     const opts = {
       ..._config,
       ...options,
@@ -56,9 +63,11 @@ export const createClient = (config: Config = {}): Client => {
       opts.headers.delete('Content-Type');
     }
 
-    const url = buildUrl(opts);
+    const resolvedOpts = opts as typeof opts &
+      ResolvedRequestOptions<TResponseStyle, ThrowOnError, Url>;
+    const url = buildUrl(resolvedOpts);
 
-    return { opts, url };
+    return { opts: resolvedOpts, url };
   };
 
   const parseErrorResponse = async (
@@ -105,7 +114,6 @@ export const createClient = (config: Config = {}): Client => {
   };
 
   const request: Client['request'] = async (options) => {
-    // @ts-expect-error
     const { opts, url } = await beforeRequest(options);
 
     const kyInstance = opts.ky!;
