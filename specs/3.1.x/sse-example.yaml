@@ -1,0 +1,180 @@
+openapi: 3.1.0
+info:
+  title: Stock Ticker API
+  description: Example API demonstrating Server-Sent Events (SSE) with a stock ticker domain
+  version: 1.0.0
+paths:
+  /stock/watch:
+    get:
+      operationId: watchStockPrices
+      summary: Watch stock prices
+      description: Stream real-time stock price updates.
+      responses:
+        '200':
+          description: Real-time stock price stream
+          content:
+            text/event-stream:
+              schema:
+                $ref: '#/components/schemas/StockUpdate'
+  /stock/watchlist:
+    post:
+      operationId: watchSelectedStocks
+      summary: Watch selected stocks
+      description: Stream real-time price updates for selected stock symbols.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WatchlistRequest'
+      responses:
+        '200':
+          description: Filtered stock price stream
+          content:
+            text/event-stream:
+              schema:
+                $ref: '#/components/schemas/StockUpdate'
+  /stock/{symbol}/watch:
+    get:
+      operationId: watchSingleStock
+      summary: Watch a single stock
+      description: Stream real-time price updates for a specific stock symbol.
+      parameters:
+        - name: symbol
+          in: path
+          required: true
+          description: Stock ticker symbol (e.g. AAPL)
+          schema:
+            type: string
+        - name: interval
+          in: query
+          description: Update interval in seconds
+          schema:
+            type: integer
+            default: 5
+      responses:
+        '200':
+          description: Stock price stream for the requested symbol
+          content:
+            text/event-stream:
+              schema:
+                $ref: '#/components/schemas/StockUpdate'
+        '404':
+          description: Stock symbol not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /stock/history:
+    get:
+      operationId: getStockHistory
+      summary: Get stock history
+      description: Retrieve historical stock price data.
+      parameters:
+        - name: limit
+          in: query
+          description: Maximum number of records to return
+          schema:
+            type: integer
+            default: 50
+      responses:
+        '200':
+          description: List of historical stock updates
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StockUpdate'
+components:
+  schemas:
+    WatchlistRequest:
+      type: object
+      required:
+        - symbols
+      properties:
+        symbols:
+          type: array
+          items:
+            type: string
+          description: List of stock symbols to watch (e.g. AAPL, GOOG)
+    StockUpdate:
+      oneOf:
+        - $ref: '#/components/schemas/PriceChange'
+        - $ref: '#/components/schemas/TradeExecuted'
+        - $ref: '#/components/schemas/MarketAlert'
+      discriminator:
+        propertyName: type
+        mapping:
+          price_change: '#/components/schemas/PriceChange'
+          trade_executed: '#/components/schemas/TradeExecuted'
+          market_alert: '#/components/schemas/MarketAlert'
+    PriceChange:
+      type: object
+      required:
+        - type
+        - symbol
+        - price
+        - timestamp
+      properties:
+        type:
+          type: string
+          const: price_change
+        symbol:
+          type: string
+        price:
+          type: number
+        change:
+          type: number
+        timestamp:
+          type: string
+          format: date-time
+    TradeExecuted:
+      type: object
+      required:
+        - type
+        - symbol
+        - quantity
+        - price
+        - timestamp
+      properties:
+        type:
+          type: string
+          const: trade_executed
+        symbol:
+          type: string
+        quantity:
+          type: integer
+        price:
+          type: number
+        timestamp:
+          type: string
+          format: date-time
+    MarketAlert:
+      type: object
+      required:
+        - type
+        - severity
+        - message
+      properties:
+        type:
+          type: string
+          const: market_alert
+        severity:
+          type: string
+          enum:
+            - info
+            - warning
+            - critical
+        message:
+          type: string
+    ErrorResponse:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+        message:
+          type: string

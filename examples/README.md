@@ -13,6 +13,7 @@ This directory contains integration examples demonstrating how to use `@hey-api/
 - **openapi-ts-nuxt** - Nuxt.js integration with plugin
 - **openapi-ts-ofetch** - Using ofetch client
 - **openapi-ts-openai** - OpenAI API integration
+- **openapi-ts-sse** - Server-Sent Events (SSE) streaming with Fetch API client
 - **openapi-ts-pinia-colada** - Vue with Pinia Colada state management
 - **openapi-ts-sample** - Sample/template example (excluded from CI)
 - **openapi-ts-tanstack-angular-query-experimental** - Angular with TanStack Query
