@@ -33,7 +33,9 @@ export const createClient = (config: Config = {}): Client => {
     return getConfig();
   };
 
-  const beforeRequest = async (options: RequestOptions) => {
+  const beforeRequest = async <TData = unknown, Url extends string = string>(
+    options: RequestOptions<TData, boolean, Url>,
+  ) => {
     const opts = {
       ..._config,
       ...options,
@@ -56,14 +58,13 @@ export const createClient = (config: Config = {}): Client => {
       opts.body = opts.bodySerializer(opts.body);
     }
 
-    const url = buildUrl(opts);
+    const url = buildUrl(opts as RequestOptions<unknown, boolean, string>);
 
     return { opts, url };
   };
 
   // @ts-expect-error
   const request: Client['request'] = async (options) => {
-    // @ts-expect-error
     const { opts, url } = await beforeRequest(options);
     try {
       // assign Axios here for consistency with fetch
