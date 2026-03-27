@@ -97,7 +97,14 @@ export const createClient = (config: Config = {}): Client => {
     return { opts, req, url };
   };
 
-  const beforeRequest = async (options: RequestOptions) => {
+  const beforeRequest = async <
+    TData = unknown,
+    TResponseStyle extends ResponseStyle = 'fields',
+    ThrowOnError extends boolean = boolean,
+    Url extends string = string,
+  >(
+    options: RequestOptions<TData, TResponseStyle, ThrowOnError, Url>,
+  ) => {
     const { opts, req, url } = requestOptions(options);
 
     if (opts.security) {
@@ -115,7 +122,6 @@ export const createClient = (config: Config = {}): Client => {
   };
 
   const request: Client['request'] = async (options) => {
-    // @ts-expect-error
     const { opts, req: initialReq } = await beforeRequest(options);
 
     let req = initialReq;
