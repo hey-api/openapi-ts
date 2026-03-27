@@ -35,8 +35,12 @@ export const createClient = (config: Config = {}): Client => {
     return getConfig();
   };
 
-  const beforeRequest = async <TData = unknown, Url extends string = string>(
-    options: RequestOptions<TData, boolean, Url>,
+  const beforeRequest = async <
+    TData = unknown,
+    ThrowOnError extends boolean = boolean,
+    Url extends string = string,
+  >(
+    options: RequestOptions<TData, ThrowOnError, Url>,
   ) => {
     const opts = {
       ..._config,
@@ -60,7 +64,7 @@ export const createClient = (config: Config = {}): Client => {
       opts.body = opts.bodySerializer(opts.body);
     }
 
-    const url = buildUrl(opts as RequestOptions<unknown, boolean, string>);
+    const url = buildUrl(opts);
 
     return { opts, url };
   };
