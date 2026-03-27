@@ -216,6 +216,130 @@ client.setConfig({
 });
 ```
 
+## Server-Sent Events
+
+When your OpenAPI spec defines endpoints with `text/event-stream` responses, the SDK generates SSE-enabled functions that return an async stream instead of a regular response.
+
+::: warning
+SSE endpoints always return `{ stream }` with an `AsyncGenerator`. The `composable` option (`useAsyncData`, `useFetch`, etc.) does not apply to SSE — it is designed for request-response patterns with caching. SSE streams are consumed client-side only.
+
+Nuxt interceptors (`onRequest`, `onResponse`) are also not applied to SSE connections. The SSE client handles connections directly using the native Fetch API.
+:::
+
+### Consuming a stream
+
+```js
+import { watchStockPrices } from './client/sdk.gen';
+
+const { stream } = await watchStockPrices();
+
+for await (const event of stream) {
+  console.log(event);
+}
+```
+
+For more details on how to use the SSE-enabled functions, refer to the [SDK documentation](/openapi-ts/plugins/sdk#server-sent-events).
+
+### Vue component example
+
+With the `@hey-api/nuxt` module, SDK functions are auto-imported. Vue refs passed as parameters are automatically unwrapped.
+
+```vue
+<script setup lang="ts">
+import { ref, onUnmounted } from 'vue';
+// With @hey-api/nuxt, these imports are auto-generated:
+import { watchSingleStock } from '#hey-api/sdk.gen';
+import type { StockUpdate } from '#hey-api/types.gen';
+
+const updates = ref<StockUpdate[]>([]);
+const symbol = ref('AAPL');
+let controller: AbortController | null = null;
+
+onUnmounted(() => controller?.abort());
+
+async function connect() {
+  controller = new AbortController();
+
+  const { stream } = await watchSingleStock({
+    path: { symbol }, // Vue refs are unwrapped automatically
+    signal: controller.signal,
+  });
+
+  for await (const event of stream) {
+    updates.value.push(event);
+  }
+}
+</script>
+
+<template>
+  <input v-model="symbol" />
+  <button @click="connect">Connect</button>
+  <ul>
+    <li v-for="(update, i) in updates" :key="i">
+      {{ update }}
+    </li>
+  </ul>
+</template>
+```
+
+For more details on how to use the SSE-enabled functions, refer to the [SDK documentation](/openapi-ts/plugins/sdk#server-sent-events).
+
+### Custom composable
+
+For reusable SSE logic, extract a composable.
+
+```ts
+import { onUnmounted, ref } from 'vue';
+import { watchStockPrices } from './client/sdk.gen';
+import type { StockUpdate } from './client/types.gen';
+
+export function useStockStream() {
+  const updates = ref<StockUpdate[]>([]);
+  const status = ref<'connected' | 'disconnected' | 'error'>('disconnected');
+  let controller: AbortController | null = null;
+
+  async function connect() {
+    controller = new AbortController();
+    status.value = 'connected';
+    updates.value = [];
+
+    try {
+      const { stream } = await watchStockPrices({
+        signal: controller.signal,
+      });
+
+      for await (const event of stream) {
+        updates.value.push(event);
+      }
+    } catch {
+      if (!controller?.signal.aborted) {
+        status.value = 'error';
+        return;
+      }
+    }
+    status.value = 'disconnected';
+  }
+
+  function disconnect() {
+    controller?.abort();
+    controller = null;
+    status.value = 'disconnected';
+  }
+
+  onUnmounted(() => disconnect());
+
+  return { connect, disconnect, status, updates };
+}
+```
+
+```vue
+<script setup lang="ts">
+import { useStockStream } from '~/composables/useStockStream';
+
+const { updates, status, connect, disconnect } = useStockStream();
+</script>
+```
+
 ## Build URL
 
 If you need to access the compiled URL, you can use the `buildUrl()` method. It's loosely typed by default to accept almost any value; in practice, you will want to pass a type hint.

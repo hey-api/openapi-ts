@@ -245,6 +245,150 @@ client.interceptors.request.use((options) => {
 });
 ```
 
+## Server-Sent Events
+
+When your OpenAPI spec defines endpoints with `text/event-stream` responses, the SDK generates SSE-enabled functions that return an async stream instead of a regular response.
+
+### Consuming a stream
+
+```js
+import { watchStockPrices } from './client/sdk.gen';
+
+const { stream } = await watchStockPrices();
+
+for await (const event of stream) {
+  console.log(event);
+}
+```
+
+For more details on how to use the SSE-enabled functions, refer to the [SDK documentation](/openapi-ts/plugins/sdk#server-sent-events).
+
+### React component example
+
+::: warning
+Unlike regular SDK calls which support Next.js caching options (`cache`, `next: { revalidate, tags }`), SSE streams are long-lived connections and must run in client components.
+:::
+
+```tsx
+'use client';
+
+import { useRef, useState } from 'react';
+import { watchStockPrices } from './client/sdk.gen';
+import type { StockUpdate } from './client/types.gen';
+
+export function StockTicker() {
+  const [updates, setUpdates] = useState<StockUpdate[]>([]);
+  const controllerRef = useRef<AbortController | null>(null);
+
+  const connect = async () => {
+    const controller = new AbortController();
+    controllerRef.current = controller;
+
+    try {
+      const { stream } = await watchStockPrices({
+        signal: controller.signal,
+      });
+
+      for await (const event of stream) {
+        setUpdates((prev) => [...prev, event]);
+      }
+    } catch {
+      if (!controller.signal.aborted) {
+        console.error('Stream failed');
+      }
+    }
+  };
+
+  const disconnect = () => {
+    controllerRef.current?.abort();
+    controllerRef.current = null;
+  };
+
+  return (
+    <>
+      <button onClick={connect}>Connect</button>
+      <button onClick={disconnect}>Disconnect</button>
+      <ul>
+        {updates.map((u, i) => (
+          <li key={i}>{JSON.stringify(u)}</li>
+        ))}
+      </ul>
+    </>
+  );
+}
+```
+
+### Custom hook factory
+
+You can create a reusable factory that wraps any SSE SDK function into a React hook.
+
+```tsx
+'use client';
+
+import { useCallback, useRef, useState } from 'react';
+
+export function createUseSse<
+  TFn extends (...args: any[]) => Promise<{ stream: AsyncGenerator<any> }>,
+>(sseFn: TFn) {
+  type TEvent = Awaited<ReturnType<TFn>> extends { stream: AsyncGenerator<infer E> } ? E : never;
+  type TOptions = Parameters<TFn>[0];
+
+  return function useSse() {
+    const [events, setEvents] = useState<TEvent[]>([]);
+    const [status, setStatus] = useState<'connected' | 'disconnected' | 'error'>('disconnected');
+    const controllerRef = useRef<AbortController | null>(null);
+
+    const connect = useCallback(async (options?: Omit<TOptions, 'signal'>) => {
+      const controller = new AbortController();
+      controllerRef.current = controller;
+      setStatus('connected');
+      setEvents([]);
+
+      try {
+        const { stream } = await sseFn({
+          ...options,
+          signal: controller.signal,
+        } as TOptions);
+
+        for await (const event of stream) {
+          setEvents((prev) => [...prev, event as TEvent]);
+        }
+      } catch {
+        if (!controller.signal.aborted) {
+          setStatus('error');
+          return;
+        }
+      }
+      setStatus('disconnected');
+    }, []);
+
+    const disconnect = useCallback(() => {
+      controllerRef.current?.abort();
+      controllerRef.current = null;
+      setStatus('disconnected');
+    }, []);
+
+    return { connect, disconnect, events, status };
+  };
+}
+```
+
+```tsx
+import { watchStockPrices } from './client/sdk.gen';
+import { createUseSse } from './hooks/createUseSse';
+
+const useStockPrices = createUseSse(watchStockPrices);
+
+function StockTicker() {
+  const { events, status, connect, disconnect } = useStockPrices();
+  // ...
+}
+```
+
+::: tip
+Request interceptors registered through `client.interceptors.request` apply to SSE connections, including on each reconnect attempt.
+:::
+
 ## Build URL
 
 If you need to access the compiled URL, you can use the `buildUrl()` method. It's loosely typed by default to accept almost any value; in practice, you will want to pass a type hint.

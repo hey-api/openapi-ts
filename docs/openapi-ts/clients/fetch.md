@@ -262,6 +262,28 @@ client.interceptors.request.use((request, options) => {
 });
 ```
 
+## Server-Sent Events
+
+When your OpenAPI spec defines endpoints with `text/event-stream` responses, the SDK generates SSE-enabled functions that return an async stream instead of a regular response.
+
+::: info
+Request interceptors registered through `client.interceptors.request` apply to SSE connections, including on each reconnect attempt.
+:::
+
+### Consuming a stream
+
+```js
+import { watchStockPrices } from './client/sdk.gen';
+
+const { stream } = await watchStockPrices();
+
+for await (const event of stream) {
+  console.log(event);
+}
+```
+
+For more details on how to use the SSE-enabled functions, refer to the [SDK documentation](/openapi-ts/plugins/sdk#server-sent-events).
+
 ## Build URL
 
 If you need to access the compiled URL, you can use the `buildUrl()` method. It's loosely typed by default to accept almost any value; in practice, you will want to pass a type hint.

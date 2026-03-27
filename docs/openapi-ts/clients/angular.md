@@ -204,6 +204,157 @@ This section is under construction. We appreciate your patience.
 This section is under construction. We appreciate your patience.
 :::
 
+## Server-Sent Events
+
+When your OpenAPI spec defines endpoints with `text/event-stream` responses, the SDK generates SSE-enabled functions that return an async stream instead of a regular response.
+
+::: warning
+Angular `HttpClient` interceptors do not apply to SSE connections. The SSE client uses the native Fetch API under the hood.
+:::
+
+### Consuming a stream
+
+```js
+import { watchStockPrices } from './client/sdk.gen';
+
+const { stream } = await watchStockPrices();
+
+for await (const event of stream) {
+  console.log(event);
+}
+```
+
+For more details on how to use the SSE-enabled functions, refer to the [SDK documentation](/openapi-ts/plugins/sdk#server-sent-events).
+
+### Angular component example
+
+When using the [`@Injectable` configuration](#injectable), SSE methods are instance methods on the generated service classes.
+
+```ts
+// openapi-ts.config.ts
+export default defineConfig({
+  plugins: [
+    '@hey-api/client-angular',
+    {
+      name: '@hey-api/sdk',
+      asClass: true,
+      operations: {
+        containerName: '{{name}}Service',
+        strategy: 'byTags',
+      },
+    },
+  ],
+});
+```
+
+The generated service has SSE methods alongside regular methods:
+
+```ts
+// Generated: sdk.gen.ts
+@Injectable({ providedIn: 'root' })
+export class StockService {
+  public watchStockPrices<ThrowOnError extends boolean = false>(options?) {
+    return (options?.client ?? client).sse.get<...>({ url: '/stock/watch', ...options });
+  }
+}
+```
+
+Inject the service in your component. Use signals for state and `ngOnDestroy` for cleanup.
+
+```ts
+import { Component, inject, OnDestroy, signal } from '@angular/core';
+import { StockService } from './client/sdk.gen';
+import type { StockUpdate } from './client/types.gen';
+
+@Component({
+  selector: 'app-stock-ticker',
+  template: `
+    <button (click)="connect()">Connect</button>
+    <button (click)="disconnect()">Disconnect</button>
+    <p>Status: {{ status() }}</p>
+    <ul>
+      @for (update of updates(); track $index) {
+        <li>{{ update | json }}</li>
+      }
+    </ul>
+  `,
+})
+export class StockTickerComponent implements OnDestroy {
+  #stockService = inject(StockService);
+
+  updates = signal<StockUpdate[]>([]);
+  status = signal<'connected' | 'disconnected' | 'error'>('disconnected');
+  #controller: AbortController | null = null;
+
+  async connect() {
+    this.#controller = new AbortController();
+    this.status.set('connected');
+    this.updates.set([]);
+
+    try {
+      const { stream } = await this.#stockService.watchStockPrices({
+        signal: this.#controller.signal,
+      });
+
+      for await (const event of stream) {
+        this.updates.update((prev) => [...prev, event]);
+      }
+    } catch {
+      if (!this.#controller?.signal.aborted) {
+        this.status.set('error');
+        return;
+      }
+    }
+    this.status.set('disconnected');
+  }
+
+  disconnect() {
+    this.#controller?.abort();
+    this.#controller = null;
+    this.status.set('disconnected');
+  }
+
+  ngOnDestroy() {
+    this.disconnect();
+  }
+}
+```
+
+### RxJS alternative
+
+If your codebase uses RxJS pipelines, you can wrap the async generator in an Observable.
+
+```ts
+import { Observable } from 'rxjs';
+import { watchStockPrices } from './client/sdk.gen';
+import type { StockUpdate } from './client/types.gen';
+
+function watchPrices$(): Observable<StockUpdate> {
+  return new Observable((subscriber) => {
+    const controller = new AbortController();
+
+    (async () => {
+      try {
+        const { stream } = await watchStockPrices({
+          signal: controller.signal,
+        });
+
+        for await (const event of stream) {
+          subscriber.next(event);
+        }
+        subscriber.complete();
+      } catch (error) {
+        if (!controller.signal.aborted) {
+          subscriber.error(error);
+        }
+      }
+    })();
+
+    return () => controller.abort();
+  });
+}
+```
+
 ## Build URL
 
 If you need to access the compiled URL, you can use the `buildUrl()` method. It's loosely typed by default to accept almost any value; in practice, you will want to pass a type hint.
