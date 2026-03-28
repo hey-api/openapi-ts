@@ -176,6 +176,12 @@ export const createClient = (config: Config = {}): Client => {
       }
 
       if (opts.throwOnError) {
+        if (opts.responseStyle === 'fields') {
+          throw {
+            error: finalError,
+            ...result,
+          };
+        }
         throw finalError;
       }
 
