@@ -55,7 +55,7 @@
     "yaml": "2.8.2"
   },
   "devDependencies": {
-    "typescript": "5.9.3"
+    "typescript": "6.0.2"
   },
   "engines": {
     "node": ">=20.19.0"

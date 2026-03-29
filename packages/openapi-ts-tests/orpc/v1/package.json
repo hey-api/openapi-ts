@@ -9,7 +9,7 @@
   "devDependencies": {
     "@hey-api/openapi-ts": "workspace:*",
     "@orpc/contract": "1.13.9",
-    "typescript": "5.9.3",
+    "typescript": "6.0.2",
     "valibot": "1.2.0",
     "zod": "4.3.6"
   },
