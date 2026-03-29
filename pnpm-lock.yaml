@@ -621,8 +621,6 @@ importers:
       '@swc/core':
         specifier: 1.11.29
         version: 1.11.29
-        specifier: 1.11.29
-        version: 1.11.29
       eslint:
         specifier: 9.39.4
         version: 9.39.4(jiti@2.6.1)
@@ -1444,9 +1442,6 @@ importers:
       ky:
         specifier: 1.14.3
         version: 1.14.3
-      msw:
-        specifier: 2.10.2
-        version: 2.10.2(@types/node@24.13.2)(typescript@6.0.3)
       nuxt:
         specifier: 3.14.1592
         version: 3.14.1592(@netlify/blobs@9.1.2)(@parcel/watcher@2.5.1)(@types/node@24.13.2)(db0@0.3.4)(encoding@0.1.13)(eslint@9.39.4(jiti@2.6.1))(ioredis@5.9.2)(less@4.4.2)(lightningcss@1.32.0)(magicast@0.3.5)(optionator@0.9.4)(rolldown@1.1.0)(rollup@4.61.1)(sass@1.97.3)(terser@5.46.0)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.2)(esbuild@0.27.3)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.9.0))(vue-tsc@3.2.4(typescript@6.0.3))
@@ -4994,8 +4989,6 @@ packages:
 
   '@nestjs/testing@11.0.1':
     resolution: {integrity: sha512-s1hQAC46W/qp2JJqCeqhG/uT8IBtvgIoAHklUPl7sTYSJCs745q6X2+rrOPtAewVW8CuYNhQS7/0g94QR1IHXw==}
-  '@nestjs/testing@11.0.1':
-    resolution: {integrity: sha512-s1hQAC46W/qp2JJqCeqhG/uT8IBtvgIoAHklUPl7sTYSJCs745q6X2+rrOPtAewVW8CuYNhQS7/0g94QR1IHXw==}
     peerDependencies:
       '@nestjs/common': ^11.0.0
       '@nestjs/core': ^11.0.0
@@ -5688,11 +5681,6 @@ packages:
   '@oxc-resolver/binding-win32-arm64-msvc@5.3.0':
     resolution: {integrity: sha512-j1YYPLvUkMVNKmIFQZZJ7q6Do4cI3htUnyxNLwDSBVhSohvPIK2VG+IdtOAlWZGa7v+phEZsHfNbXVwB0oPYFQ==}
     cpu: [arm64]
-    os: [win32]
-
-  '@oxc-resolver/binding-win32-x64-msvc@5.3.0':
-    resolution: {integrity: sha512-LT9eOPPUqfZscQRd5mc08RBeDWOQf+dnOrKnanMallTGPe6g7+rcAlFTA8SWoJbcD45PV8yArFtCmSQSpzHZmg==}
-    cpu: [x64]
     os: [win32]
 
   '@oxc-resolver/binding-win32-x64-msvc@5.3.0':
@@ -7672,8 +7660,6 @@ packages:
       '@swc/core': '>= 1.13.3'
       '@swc/types': '>= 0.1'
 
-  '@swc-node/register@1.10.10':
-    resolution: {integrity: sha512-jYWaI2WNEKz8KZL3sExd2KVL1JMma1/J7z+9iTpv0+fRN7LGMF8VTGGuHI2bug/ztpdZU1G44FG/Kk6ElXL9CQ==}
   '@swc-node/register@1.10.10':
     resolution: {integrity: sha512-jYWaI2WNEKz8KZL3sExd2KVL1JMma1/J7z+9iTpv0+fRN7LGMF8VTGGuHI2bug/ztpdZU1G44FG/Kk6ElXL9CQ==}
     peerDependencies:
@@ -15919,8 +15905,8 @@ packages:
     resolution: {integrity: sha512-pjy2bYhSsufwWlKwPc+l3cN7+wuJlK6uz0YdJEOlQDbl6jo/YlPi4mb8agUkVC8BF7V8NuzeyPNqRksA3hztKQ==}
     engines: {node: '>= 0.8'}
 
-  unplugin-swc@1.5.5:
-    resolution: {integrity: sha512-BahYtYvQ/KSgOqHoy5FfQgp/oZNAB7jwERxNeFVeN/PtJhg4fpK/ybj9OwKtqGPseOadS7+TGbq6tH2DmDAYvA==}
+  unplugin-swc@1.5.9:
+    resolution: {integrity: sha512-RKwK3yf0M+MN17xZfF14bdKqfx0zMXYdtOdxLiE6jHAoidupKq3jGdJYANyIM1X/VmABhh1WpdO+/f4+Ol89+g==}
     peerDependencies:
       '@swc/core': ^1.2.108
 
@@ -21829,9 +21815,6 @@ snapshots:
   '@oxc-resolver/binding-win32-x64-msvc@5.3.0':
     optional: true
 
-  '@oxc-resolver/binding-win32-x64-msvc@5.3.0':
-    optional: true
-
   '@oxc-transform/binding-android-arm-eabi@0.110.0':
     optional: true
 
@@ -23138,14 +23121,12 @@ snapshots:
   '@rollup/plugin-replace@6.0.2(rollup@3.29.5)':
     dependencies:
       '@rollup/pluginutils': 5.3.0(rollup@3.29.5)
-      '@rollup/pluginutils': 5.3.0(rollup@3.29.5)
       magic-string: 0.30.21
     optionalDependencies:
       rollup: 3.29.5
 
   '@rollup/plugin-replace@6.0.2(rollup@4.56.0)':
     dependencies:
-      '@rollup/pluginutils': 5.3.0(rollup@4.56.0)
       '@rollup/pluginutils': 5.3.0(rollup@4.56.0)
       magic-string: 0.30.21
     optionalDependencies:
@@ -23160,7 +23141,6 @@ snapshots:
 
   '@rollup/plugin-replace@6.0.3(rollup@4.56.0)':
     dependencies:
-      '@rollup/pluginutils': 5.3.0(rollup@4.56.0)
       '@rollup/pluginutils': 5.3.0(rollup@4.56.0)
       magic-string: 0.30.21
     optionalDependencies:
@@ -23532,7 +23512,6 @@ snapshots:
       colorette: 2.0.20
       debug: 4.4.3
       oxc-resolver: 5.3.0
-      oxc-resolver: 5.3.0
       pirates: 4.0.7
       tslib: 2.8.1
       typescript: 6.0.3
@@ -23540,7 +23519,6 @@ snapshots:
       - '@swc/types'
       - supports-color
 
-  '@swc-node/sourcemap-support@0.5.1':
   '@swc-node/sourcemap-support@0.5.1':
     dependencies:
       source-map-support: 0.5.21

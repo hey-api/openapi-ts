@@ -33,7 +33,12 @@ export const handlerV2: MswPlugin['Handler'] = ({ plugin }) => {
 
   const symbolAll = plugin.symbol('all');
   const symbolFactory = plugin.symbol('createMswHandlers');
+  const symbolHandler = plugin.symbol('Handler');
+  const symbolInvoke = plugin.symbol('invoke');
   const symbolOne = plugin.symbol('one');
+  const symbolOverrideValue = plugin.symbol('OverrideValue');
+  const symbolWrap = plugin.symbol('wrap');
+
   const oneObject = $.object().pretty();
   const oneType = $.type.object();
   const handlerInfo: Array<HandlerInfo> = [];
@@ -48,25 +53,13 @@ export const handlerV2: MswPlugin['Handler'] = ({ plugin }) => {
         plugin,
       });
 
-      const symbolResponse = plugin.symbol('resolver');
-      const symbolOptions = plugin.symbol('options');
       const name = operation.id;
       oneType.prop(name, (p) =>
         p
           .type($(symbolHandler).typeofType())
           .$if(plugin.config.comments && getOperationComment(operation), (f, v) => f.doc(v)),
       );
-      oneObject.prop(
-        name,
-        $.func()
-          .param(symbolResponse)
-          .param(symbolOptions)
-          .do(
-            $(symbolHandler)
-              .call(symbolResponse, $.object().spread('config').spread(symbolOptions))
-              .return(),
-          ),
-      );
+      oneObject.prop(name, $(symbolWrap).call(symbolHandler));
       handlerInfo.push({ name, path: operation.path });
     },
     {
@@ -94,16 +87,21 @@ export const handlerV2: MswPlugin['Handler'] = ({ plugin }) => {
               .func()
               .param('options', (p) =>
                 p.optional().type(
-                  $.type.object().prop('overrides', (p) =>
+                  $.type.object().prop('one', (p) =>
                     p.optional().type(
                       $.type
                         .mapped('K')
                         .key($.type.operator().keyof($.type(symbolHandlerFactoriesType)))
                         .optional()
                         .type(
-                          $.type('Parameters')
-                            .generic($.type(symbolHandlerFactoriesType).idx('K'))
-                            .idx($.type.literal(0)),
+                          $.type.or(
+                            $.type('Parameters')
+                              .generic($.type(symbolHandlerFactoriesType).idx('K'))
+                              .idx($.type.literal(0)),
+                            $.type('Parameters').generic(
+                              $.type(symbolHandlerFactoriesType).idx('K'),
+                            ),
+                          ),
                         ),
                     ),
                   ),
@@ -121,6 +119,32 @@ export const handlerV2: MswPlugin['Handler'] = ({ plugin }) => {
     .param('config', (p) => p.type(symbolRequestHandlerOptions).assign($.object()))
     .returns(symbolFactoryReturnType)
     .do(
+      $.type
+        .alias(symbolHandler)
+        .generic('R')
+        .type(
+          $.type
+            .func()
+            .param('resolver', (p) => p.optional().type('R'))
+            .param('options', (p) => p.optional().type(symbolRequestHandlerOptions))
+            .returns(symbolHttpHandler),
+        ),
+      $.func(symbolWrap)
+        .generic('R')
+        .param('handler', (p) => p.type($.type(symbolHandler).generic('R')))
+        .returns($.type(symbolHandler).generic('R'))
+        .do(
+          $.return(
+            $.func()
+              .param('resolver')
+              .param('options')
+              .do(
+                $.return(
+                  $('handler').call('resolver', $.object().spread('config').spread('options')),
+                ),
+              ),
+          ),
+        ),
       $.const(symbolOne)
         .type($.type(symbolFactoryReturnType).idx($.type.literal(factoryResultOne)))
         .assign(oneObject),
@@ -130,10 +154,39 @@ export const handlerV2: MswPlugin['Handler'] = ({ plugin }) => {
           $.func()
             .param('options', (p) => p.assign($.object()))
             .do(
-              $.const('overrides').assign($('options').attr('overrides').coalesce($.object())),
+              $.type
+                .alias(symbolOverrideValue)
+                .generic('R')
+                .type(
+                  $.type.or(
+                    $.type('R'),
+                    $.type.tuple(
+                      $.type.tupleMember('resolver').optional().type('R'),
+                      $.type.tupleMember('options').optional().type(symbolRequestHandlerOptions),
+                    ),
+                  ),
+                ),
+              $.func(symbolInvoke)
+                .generic('R')
+                .param('fn', (p) => p.type($.type(symbolHandler).generic('R')))
+                .param('override', (p) =>
+                  p.optional().type($.type(symbolOverrideValue).generic('R')),
+                )
+                .returns(symbolHttpHandler)
+                .do(
+                  $.return(
+                    $.ternary($('Array').attr('isArray').call('override'))
+                      .do($('fn').call($.spread('override')))
+                      .otherwise($('fn').call('override')),
+                  ),
+                ),
+              $.const('overrides').assign($('options').attr('one').coalesce($.object())),
               $.array(
                 ...sortHandlers(handlerInfo).map((info) =>
-                  $(symbolOne).attr(info.name).call($('overrides').attr(info.name)),
+                  $(symbolInvoke).call(
+                    $(symbolOne).attr(info.name),
+                    $('overrides').attr(info.name),
+                  ),
                 ),
               ).return(),
             ),
