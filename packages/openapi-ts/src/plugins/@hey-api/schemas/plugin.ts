@@ -1,9 +1,18 @@
 import type { Context, OpenApi } from '@hey-api/shared';
-import { satisfies } from '@hey-api/shared';
+import { satisfies, toCase } from '@hey-api/shared';
 import type { OpenAPIV2, OpenAPIV3, OpenAPIV3_1 } from '@hey-api/spec-types';
 
 import { $ } from '../../../ts-dsl';
 import type { HeyApiSchemasPlugin } from './types';
+
+const httpMethods = ['delete', 'get', 'head', 'options', 'patch', 'post', 'put', 'trace'] as const;
+
+const paramLocations = [
+  { location: 'cookie', suffix: 'Cookies' },
+  { location: 'header', suffix: 'Headers' },
+  { location: 'path', suffix: 'Path' },
+  { location: 'query', suffix: 'Query' },
+] as const;
 
 const stripSchema = ({
   plugin,
@@ -340,10 +349,6 @@ const schemasV2_0_X = ({
   context: Context<OpenApi.V2_0_X>;
   plugin: HeyApiSchemasPlugin['Instance'];
 }) => {
-  if (!context.spec.definitions) {
-    return;
-  }
-
   for (const name in context.spec.definitions) {
     const schema = context.spec.definitions[name]!;
     const symbol = plugin.symbol(schemaName({ name, plugin, schema }), {
@@ -370,6 +375,100 @@ const schemasV2_0_X = ({
       );
     plugin.node(statement);
   }
+
+  for (const path in context.spec.paths) {
+    if (path.startsWith('x-')) {
+      continue;
+    }
+
+    const pathItem = context.spec.paths[path as `/${string}`]!;
+
+    for (const method of httpMethods) {
+      const operation = pathItem[method as keyof typeof pathItem] as
+        | OpenAPIV2.OperationObject
+        | undefined;
+      if (!operation) {
+        continue;
+      }
+
+      const irOperation = context.ir.paths?.[path as `/${string}`]?.[method];
+      if (!irOperation) {
+        continue;
+      }
+
+      for (const { location, suffix } of paramLocations) {
+        const params = new Map<string, OpenAPIV2.ParameterObject>();
+
+        for (const param of pathItem.parameters ?? []) {
+          if ('$ref' in param || param.in !== location) {
+            continue;
+          }
+          params.set(param.name, param as OpenAPIV2.ParameterObject);
+        }
+
+        for (const param of operation.parameters ?? []) {
+          if ('$ref' in param || param.in !== location) {
+            continue;
+          }
+          params.set(param.name, param as OpenAPIV2.ParameterObject);
+        }
+
+        if (params.size === 0) {
+          continue;
+        }
+
+        const properties: Record<string, OpenAPIV2.SchemaObject> = {};
+        const required: Array<string> = [];
+        for (const [paramName, param] of params) {
+          if (!('type' in param)) {
+            continue;
+          }
+          const propSchema: Record<string, unknown> = {};
+          for (const [key, value] of Object.entries(param)) {
+            if (key === 'allowEmptyValue' || key === 'in' || key === 'name' || key === 'required') {
+              continue;
+            }
+            propSchema[key] = value;
+          }
+          properties[paramName] = propSchema as OpenAPIV2.SchemaObject;
+          if (param.required) {
+            required.push(paramName);
+          }
+        }
+
+        const locationSchema = {
+          properties,
+          ...(required.length && { required }),
+          type: 'object',
+        } as OpenAPIV2.SchemaObject;
+
+        const name = `${toCase(irOperation.id, 'PascalCase')}${suffix}`;
+        const symbol = plugin.symbol(schemaName({ name, plugin, schema: locationSchema }), {
+          meta: {
+            category: 'schema',
+            resource: 'operation',
+            resourceId: irOperation.id,
+            tool: 'json-schema',
+          },
+        });
+        const obj = schemaToJsonSchemaDraft_04({
+          context,
+          plugin,
+          schema: locationSchema,
+        });
+        const statement = $.const(symbol)
+          .export()
+          .assign(
+            $(
+              $.fromValue(obj, {
+                layout: 'pretty',
+              }),
+            ).as('const'),
+          );
+        plugin.node(statement);
+      }
+    }
+  }
 };
 
 const schemasV3_0_X = ({
@@ -379,12 +478,8 @@ const schemasV3_0_X = ({
   context: Context<OpenApi.V3_0_X>;
   plugin: HeyApiSchemasPlugin['Instance'];
 }) => {
-  if (!context.spec.components) {
-    return;
-  }
-
-  for (const name in context.spec.components.schemas) {
-    const schema = context.spec.components.schemas[name]!;
+  for (const name in context.spec.components?.schemas) {
+    const schema = context.spec.components!.schemas![name]!;
     const symbol = plugin.symbol(schemaName({ name, plugin, schema }), {
       meta: {
         category: 'schema',
@@ -409,6 +504,104 @@ const schemasV3_0_X = ({
       );
     plugin.node(statement);
   }
+
+  for (const path in context.spec.paths) {
+    if (path.startsWith('x-')) {
+      continue;
+    }
+
+    const pathItem = context.spec.paths[path as `/${string}`]!;
+
+    for (const method of httpMethods) {
+      const operation = pathItem[method as keyof typeof pathItem] as
+        | OpenAPIV3.OperationObject
+        | undefined;
+      if (!operation) {
+        continue;
+      }
+
+      const irOperation = context.ir.paths?.[path as `/${string}`]?.[method];
+      if (!irOperation) {
+        continue;
+      }
+
+      for (const { location, suffix } of paramLocations) {
+        const params = new Map<string, OpenAPIV3.ParameterObject>();
+
+        for (const param of pathItem.parameters ?? []) {
+          if ('$ref' in param || param.in !== location) {
+            continue;
+          }
+          params.set(param.name, param);
+        }
+
+        for (const param of operation.parameters ?? []) {
+          if ('$ref' in param || param.in !== location) {
+            continue;
+          }
+          params.set(param.name, param);
+        }
+
+        if (params.size === 0) {
+          continue;
+        }
+
+        const properties: Record<string, OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject> = {};
+        const required: Array<string> = [];
+        for (const [paramName, param] of params) {
+          let propSchema: OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject | undefined;
+          if (param.schema) {
+            propSchema = { ...param.schema };
+            if (param.description && !('$ref' in propSchema)) {
+              propSchema.description = param.description;
+            }
+          } else if (param.content) {
+            const mediaType = Object.values(param.content)[0];
+            if (mediaType?.schema) {
+              propSchema = { ...mediaType.schema };
+            }
+          }
+          if (propSchema) {
+            properties[paramName] = propSchema;
+          }
+          if (param.required) {
+            required.push(paramName);
+          }
+        }
+
+        const locationSchema = {
+          properties,
+          ...(required.length && { required }),
+          type: 'object',
+        } as OpenAPIV3.SchemaObject;
+
+        const name = `${toCase(irOperation.id, 'PascalCase')}${suffix}`;
+        const symbol = plugin.symbol(schemaName({ name, plugin, schema: locationSchema }), {
+          meta: {
+            category: 'schema',
+            resource: 'operation',
+            resourceId: irOperation.id,
+            tool: 'json-schema',
+          },
+        });
+        const obj = schemaToJsonSchemaDraft_05({
+          context,
+          plugin,
+          schema: locationSchema,
+        });
+        const statement = $.const(symbol)
+          .export()
+          .assign(
+            $(
+              $.fromValue(obj, {
+                layout: 'pretty',
+              }),
+            ).as('const'),
+          );
+        plugin.node(statement);
+      }
+    }
+  }
 };
 
 const schemasV3_1_X = ({
@@ -418,12 +611,8 @@ const schemasV3_1_X = ({
   context: Context<OpenApi.V3_1_X>;
   plugin: HeyApiSchemasPlugin['Instance'];
 }) => {
-  if (!context.spec.components) {
-    return;
-  }
-
-  for (const name in context.spec.components.schemas) {
-    const schema = context.spec.components.schemas[name]!;
+  for (const name in context.spec.components?.schemas) {
+    const schema = context.spec.components!.schemas![name]!;
     const symbol = plugin.symbol(schemaName({ name, plugin, schema }), {
       meta: {
         category: 'schema',
@@ -447,6 +636,104 @@ const schemasV3_1_X = ({
         ).as('const'),
       );
     plugin.node(statement);
+  }
+
+  for (const path in context.spec.paths) {
+    if (path.startsWith('x-')) {
+      continue;
+    }
+
+    const pathItem = context.spec.paths![path as `/${string}`]!;
+
+    for (const method of httpMethods) {
+      const operation = pathItem[method as keyof typeof pathItem] as
+        | OpenAPIV3_1.OperationObject
+        | undefined;
+      if (!operation) {
+        continue;
+      }
+
+      const irOperation = context.ir.paths?.[path as `/${string}`]?.[method];
+      if (!irOperation) {
+        continue;
+      }
+
+      for (const { location, suffix } of paramLocations) {
+        const params = new Map<string, OpenAPIV3_1.ParameterObject>();
+
+        for (const param of pathItem.parameters ?? []) {
+          if ('$ref' in param || param.in !== location) {
+            continue;
+          }
+          params.set(param.name, param);
+        }
+
+        for (const param of operation.parameters ?? []) {
+          if ('$ref' in param || param.in !== location) {
+            continue;
+          }
+          params.set(param.name, param);
+        }
+
+        if (params.size === 0) {
+          continue;
+        }
+
+        const properties: Record<string, OpenAPIV3_1.SchemaObject> = {};
+        const required: Array<string> = [];
+        for (const [paramName, param] of params) {
+          let propSchema: OpenAPIV3_1.SchemaObject | undefined;
+          if (param.schema) {
+            propSchema = { ...param.schema };
+            if (param.description) {
+              propSchema.description = param.description;
+            }
+          } else if (param.content) {
+            const mediaType = Object.values(param.content)[0];
+            if (mediaType?.schema) {
+              propSchema = { ...mediaType.schema };
+            }
+          }
+          if (propSchema) {
+            properties[paramName] = propSchema;
+          }
+          if (param.required) {
+            required.push(paramName);
+          }
+        }
+
+        const locationSchema = {
+          properties,
+          ...(required.length && { required }),
+          type: 'object',
+        } as OpenAPIV3_1.SchemaObject;
+
+        const name = `${toCase(irOperation.id, 'PascalCase')}${suffix}`;
+        const symbol = plugin.symbol(schemaName({ name, plugin, schema: locationSchema }), {
+          meta: {
+            category: 'schema',
+            resource: 'operation',
+            resourceId: irOperation.id,
+            tool: 'json-schema',
+          },
+        });
+        const obj = schemaToJsonSchema2020_12({
+          context,
+          plugin,
+          schema: locationSchema,
+        });
+        const statement = $.const(symbol)
+          .export()
+          .assign(
+            $(
+              $.fromValue(obj, {
+                layout: 'pretty',
+              }),
+            ).as('const'),
+          );
+        plugin.node(statement);
+      }
+    }
   }
 };
 
