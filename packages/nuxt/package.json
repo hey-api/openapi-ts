@@ -53,14 +53,14 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "@nuxt/kit": "4.3.1",
+    "@nuxt/kit": "4.4.2",
     "defu": "6.1.4",
-    "mlly": "1.8.0"
+    "mlly": "1.8.2"
   },
   "devDependencies": {
     "@hey-api/openapi-ts": "workspace:*",
     "@nuxt/module-builder": "0.8.4",
-    "@nuxt/schema": "3.16.2",
+    "@nuxt/schema": "3.21.2",
     "@nuxt/test-utils": "4.0.0",
     "vite": "7.3.1"
   },
