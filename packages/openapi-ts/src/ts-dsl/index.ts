@@ -29,6 +29,7 @@ import { PostfixTsDsl } from './expr/postfix';
 import { PrefixTsDsl } from './expr/prefix';
 import { ObjectPropTsDsl } from './expr/prop';
 import { RegExpTsDsl } from './expr/regexp';
+import { SpreadTsDsl } from './expr/spread';
 import { TemplateTsDsl } from './expr/template';
 import { TernaryTsDsl } from './expr/ternary';
 import { TypeOfExprTsDsl } from './expr/typeof';
@@ -62,6 +63,7 @@ import { TypeParamTsDsl } from './type/param';
 import { TypeQueryTsDsl } from './type/query';
 import { TypeTemplateTsDsl } from './type/template';
 import { TypeTupleTsDsl } from './type/tuple';
+import { TypeTupleMemberTsDsl } from './type/tuple-member';
 import { LazyTsDsl } from './utils/lazy';
 
 const tsDsl = {
@@ -214,6 +216,9 @@ const tsDsl = {
   /** Creates a setter method declaration. */
   setter: (...args: ConstructorParameters<typeof SetterTsDsl>) => new SetterTsDsl(...args),
 
+  /** Creates a spread element from an expression (e.g., `...expr`). */
+  spread: (...args: ConstructorParameters<typeof SpreadTsDsl>) => new SpreadTsDsl(...args),
+
   /** Wraps an expression or statement-like value into a `StmtTsDsl`. */
   stmt: (...args: ConstructorParameters<typeof StmtTsDsl>) => new StmtTsDsl(...args),
 
@@ -288,6 +293,10 @@ const tsDsl = {
 
       /** Creates a tuple type (e.g., [A, B, C]). */
       tuple: (...args: ConstructorParameters<typeof TypeTupleTsDsl>) => new TypeTupleTsDsl(...args),
+
+      /** Creates a named tuple element (e.g., `[resolver?: R]`). */
+      tupleMember: (...args: ConstructorParameters<typeof TypeTupleMemberTsDsl>) =>
+        new TypeTupleMemberTsDsl(...args),
     },
   ),
 

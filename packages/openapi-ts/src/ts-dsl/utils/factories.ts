@@ -4,12 +4,14 @@ import type { AttrCtor } from '../expr/attr';
 import type { AwaitCtor } from '../expr/await';
 import type { CallCtor } from '../expr/call';
 import type { NewCtor } from '../expr/new';
+import type { SpreadCtor } from '../expr/spread';
 import type { TypeOfExprCtor } from '../expr/typeof';
 import type { ReturnCtor } from '../stmt/return';
 import type { TypeExprCtor } from '../type/expr';
 import type { TypeIdxCtor } from '../type/idx';
 import type { TypeOperatorCtor } from '../type/operator';
 import type { TypeQueryCtor } from '../type/query';
+import type { TypeTupleMemberCtor } from '../type/tuple-member';
 
 type Ctor = (...args: Array<any>) => any;
 
@@ -56,6 +58,9 @@ export const f = {
   /** Factory for creating return statements. */
   return: createFactory<ReturnCtor>('return'),
 
+  /** Factory for creating spread expressions (e.g., `...expr`). */
+  spread: createFactory<SpreadCtor>('spread'),
+
   /** Factories for creating type nodes. */
   type: {
     /** Factory for creating basic type references or type expressions (e.g., Foo or Foo<T>). */
@@ -69,6 +74,9 @@ export const f = {
 
     /** Factory for creating type query nodes (e.g., `typeof Foo`). */
     query: createFactory<TypeQueryCtor>('type.query'),
+
+    /** Factory for creating named tuple elements (e.g., `[resolver?: R]`). */
+    tupleMember: createFactory<TypeTupleMemberCtor>('type.tupleMember'),
   },
 
   /** Factory for creating `typeof` expressions (e.g., `typeof value`). */
