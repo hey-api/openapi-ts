@@ -59,7 +59,7 @@ export interface RequestOptions<
   Url extends string = string,
 >
   extends
-    Config,
+    Omit<Config, 'responseTransformer'>,
     WithRefs<{
       path?: FetchOptions<unknown>['query'];
       query?: FetchOptions<unknown>['query'];
@@ -82,6 +82,11 @@ export interface RequestOptions<
   composable?: TComposable;
   key?: string;
   rawBody?: NonNullable<unknown> | Ref<NonNullable<unknown>> | null;
+  /**
+   * A function transforming response data before it's returned. This is useful
+   * for post-processing data, e.g. converting ISO strings into Date objects.
+   */
+  responseTransformer?: (data: ResT) => Promise<unknown>;
   /**
    * Security mechanism(s) to use for the request.
    */
