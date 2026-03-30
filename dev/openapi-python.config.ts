@@ -21,6 +21,6 @@ export default defineConfig(() => [
     output: {
       path: path.resolve(__dirname, 'gen', 'python'),
     },
-    plugins: getPreset(),
+    plugins: [...getPreset()],
   },
 ]);

@@ -238,7 +238,7 @@ const rootMode = ({ config, spec }: { config: EnumsConfig; spec: unknown }) => {
   const schemasPointerNamespace = specToSchemasPointerNamespace(spec);
   for (const { key, parent, signature } of inlineEnums) {
     const name = signatureToName[signature];
-    if (name && key != null && parent && typeof parent === 'object') {
+    if (name && key !== null && parent && typeof parent === 'object') {
       (parent as Record<string, unknown>)[key] = {
         $ref: `${schemasPointerNamespace}${name}`,
       };

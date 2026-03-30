@@ -18,6 +18,11 @@ export const joshHemphill: Person = {
   name: 'Josh Hemphill',
 };
 
+export const malcolmKee: Person = {
+  github: 'https://github.com/malcolm-kee',
+  name: 'Malcolm Kee',
+};
+
 export const maxScopp: Person = {
   github: 'https://github.com/max-scopp',
   name: 'Max Scopp',
