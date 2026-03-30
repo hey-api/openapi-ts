@@ -81,6 +81,15 @@ const server = setupServer(
     },
   }),
   // handlers.one.projectUpdate(),
+  handlers.one.globalEvent({
+    result: {
+      directory: 'main',
+      payload: {
+        properties: {},
+        type: 'global.disposed',
+      },
+    },
+  }),
 );
 server.listen();
 
