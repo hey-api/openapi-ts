@@ -21,6 +21,7 @@
 - [David Bieregger](https://github.com/BierDav)
 - [David Ovčačík](https://github.com/dovca)
 - [Dmitriy Brolnickij](https://github.com/brolnickij)
+- [Dmitry](https://github.com/codercms)
 - [Erikwski](https://github.com/erikwski)
 - [Finn Poppinga](https://github.com/fpoppinga)
 - [Flo Edelmann](https://github.com/FloEdelmann)
