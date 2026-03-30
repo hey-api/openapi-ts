@@ -5,11 +5,11 @@ import type ts from 'typescript';
 import type { MaybeTsDsl } from '../base';
 import type { BaseCtor, MixinCtor } from './types';
 
-type Arg = NodeName | MaybeTsDsl<ts.Expression>;
+type Arg = NodeName | MaybeTsDsl<ts.Expression | ts.SpreadElement>;
 
 export interface ArgsMethods extends Node {
-  /** Renders the arguments into an array of `Expression`s. */
-  $args(): ReadonlyArray<ts.Expression>;
+  /** Renders the arguments into an array of `Expression`s or `SpreadElement`s. */
+  $args(): ReadonlyArray<ts.Expression | ts.SpreadElement>;
   /** Adds a single expression argument. */
   arg(arg: Arg | undefined): this;
   /** Adds one or more expression arguments. */
@@ -42,7 +42,7 @@ export function ArgsMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base: TB
       return this;
     }
 
-    protected $args(): ReadonlyArray<ts.Expression> {
+    protected $args(): ReadonlyArray<ts.Expression | ts.SpreadElement> {
       return this.$node(this._args).map((arg) => this.$node(arg));
     }
   }
