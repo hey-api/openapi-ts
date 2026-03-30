@@ -23,6 +23,15 @@ function formatNode(ctx: StringResolverContext): ChainResult {
   const { z } = symbols;
 
   switch (schema.format) {
+    case 'binary':
+      return $(z)
+        .attr(identifiers.union)
+        .call(
+          $.array(
+            $(z).attr(identifiers.instanceof).call($.id('Blob')),
+            $(z).attr(identifiers.instanceof).call($.id('File')),
+          ),
+        );
     case 'date':
       return $(z).attr(identifiers.iso).attr(identifiers.date).call();
     case 'date-time': {

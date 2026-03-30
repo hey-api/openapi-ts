@@ -22,6 +22,7 @@ export const identifiers = {
   gte: 'gte',
   guid: 'guid',
   infer: 'infer',
+  instanceof: 'instanceof',
   int: 'int',
   intersection: 'intersection',
   ip: 'ip',
