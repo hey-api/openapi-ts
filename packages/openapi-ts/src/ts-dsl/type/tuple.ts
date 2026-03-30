@@ -4,15 +4,17 @@ import ts from 'typescript';
 import type { TypeTsDsl } from '../base';
 import { TsDsl } from '../base';
 
+export type TupleElement = string | ts.TypeNode | TypeTsDsl;
+
 const Mixed = TsDsl<ts.TupleTypeNode>;
 
 export class TypeTupleTsDsl extends Mixed {
   readonly '~dsl' = 'TypeTupleTsDsl';
   override scope: NodeScope = 'type';
 
-  protected _elements: Array<string | ts.TypeNode | TypeTsDsl> = [];
+  protected _elements: Array<TupleElement> = [];
 
-  constructor(...nodes: Array<string | ts.TypeNode | TypeTsDsl>) {
+  constructor(...nodes: Array<TupleElement>) {
     super();
     this.elements(...nodes);
   }
@@ -24,7 +26,7 @@ export class TypeTupleTsDsl extends Mixed {
     }
   }
 
-  elements(...types: Array<string | ts.TypeNode | TypeTsDsl>): this {
+  elements(...types: Array<TupleElement>): this {
     this._elements.push(...types);
     return this;
   }
