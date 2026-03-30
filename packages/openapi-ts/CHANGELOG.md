@@ -1,5 +1,19 @@
 # @hey-api/openapi-ts
 
+## 0.94.6
+
+### Patch Changes
+
+- **plugin(@hey-api/client-axios)**: fix: improve `beforeRequest` typing ([#3660](https://github.com/hey-api/openapi-ts/pull/3660)) ([`f3f887e`](https://github.com/hey-api/openapi-ts/commit/f3f887e41931f11757ab9f1b90c4d04e0b023b6a)) by [@tomvdv](https://github.com/tomvdv)
+
+- **plugin(@hey-api/client-ky)**: fix: improve `beforeRequest` typing ([#3660](https://github.com/hey-api/openapi-ts/pull/3660)) ([`d65b5c7`](https://github.com/hey-api/openapi-ts/commit/d65b5c72335592244c833d1b6b95003de60428fe)) by [@tomvdv](https://github.com/tomvdv)
+
+- **plugin(@hey-api/client-next)**: fix: improve `beforeRequest` typing ([#3660](https://github.com/hey-api/openapi-ts/pull/3660)) ([`a4b13d4`](https://github.com/hey-api/openapi-ts/commit/a4b13d456ae5d2b6c66a9ddca84a25a60bc3cc6e)) by [@tomvdv](https://github.com/tomvdv)
+
+- **plugin(@hey-api/client-angular)**: fix: improve `beforeRequest` typing ([#3660](https://github.com/hey-api/openapi-ts/pull/3660)) ([`9ecc562`](https://github.com/hey-api/openapi-ts/commit/9ecc56250de985b372704c5ea80889342ddc4659)) by [@tomvdv](https://github.com/tomvdv)
+
+- **plugin(@hey-api/client-fetch)**: fix: improve `beforeRequest` typing ([#3660](https://github.com/hey-api/openapi-ts/pull/3660)) ([`11be579`](https://github.com/hey-api/openapi-ts/commit/11be579c46d5add69ed733f1f8a33f31794ec6c5)) by [@tomvdv](https://github.com/tomvdv)
+
 ## 0.94.5
 
 ### Patch Changes
