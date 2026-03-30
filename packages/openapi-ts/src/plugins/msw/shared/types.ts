@@ -17,7 +17,12 @@ export function createRequestHandlerOptions(plugin: MswPlugin['Instance']): Symb
     .type(
       $.type.and(
         $.type(plugin.external('msw.RequestHandlerOptions')),
-        $.type.object().prop('baseUrl', (p) => p.type('string').optional()),
+        $.type
+          .object()
+          .prop('baseUrl', (p) => p.type('string').optional())
+          .prop('responseFallback', (p) =>
+            p.type($.type.or($.type.literal('error'), $.type.literal('passthrough'))).optional(),
+          ),
       ),
     );
   plugin.node(node);

@@ -18,6 +18,16 @@ export type UserConfig = Plugin.Name<'msw'> &
      */
     baseUrl?: string | number | boolean;
     /**
+     * Behavior when a response cannot be generated (no response defined
+     * in the specification, or configured value sources cannot produce a value).
+     *
+     * - `'error'` - throw an error (fail fast)
+     * - `'passthrough'` - let the request pass through to the network
+     *
+     * @default 'error'
+     */
+    responseFallback?: 'error' | 'passthrough';
+    /**
      * Sources for default parameter values in handler factories. Order determines
      * priority (earlier entries take precedence).
      *
@@ -34,6 +44,8 @@ export type Config = Plugin.Name<'msw'> &
   Plugin.Exports & {
     /** Set a default base URL when creating the handlers. */
     baseUrl: string | number | boolean;
+    /** Behavior when a response cannot be generated. */
+    responseFallback: 'error' | 'passthrough';
     /** Sources for default parameter values in handler factories. */
     valueSources: ReadonlyArray<'example'>;
   };

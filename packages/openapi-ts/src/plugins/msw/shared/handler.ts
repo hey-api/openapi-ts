@@ -98,7 +98,7 @@ function createHandlerFunc({
   responseOrResolverType: ReturnType<typeof $.type | typeof $.type.or>;
 }): Symbol {
   const symbolHttp = plugin.external('msw.http');
-  const symbolHttpResponse = plugin.external('msw.HttpResponse');
+  // const symbolHttpResponse = plugin.external('msw.HttpResponse');
   const symbolResolver = plugin.symbol('resolver');
   const symbolOptions = plugin.symbol('options');
 
@@ -106,6 +106,15 @@ function createHandlerFunc({
     applyNaming(`handle-${operation.id}`, {
       casing: 'camelCase', // TODO: expose as a config option
     }),
+  );
+
+  const notImplementedResponse = $.new(
+    'Response',
+    $.literal('Not Implemented'),
+    $.object()
+      .pretty()
+      .prop('status', $.literal(501))
+      .prop('statusText', $.literal('Not Implemented')),
   );
 
   const handlerFunc = $.func(symbol)
@@ -162,7 +171,25 @@ function createHandlerFunc({
                 ),
               ),
             )
-            .do($.new(symbolHttpResponse, $.literal(null)).return()),
+            .$if(
+              plugin.config.responseFallback === 'error',
+              (f) =>
+                f.do(
+                  $.if(
+                    $(symbolOptions)
+                      .attr('responseFallback')
+                      .optional()
+                      .eq($.literal('passthrough')),
+                  ).do($.return()),
+                  notImplementedResponse.return(),
+                ),
+              (f) =>
+                f.do(
+                  $.if(
+                    $(symbolOptions).attr('responseFallback').optional().eq($.literal('error')),
+                  ).do(notImplementedResponse.return()),
+                ),
+            ),
           symbolOptions,
         )
         .generics(paramsType, bodyType)

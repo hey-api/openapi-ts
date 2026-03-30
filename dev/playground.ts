@@ -37,9 +37,10 @@ const server = setupServer(
       //   console.log('Received request for projectUpdate with info:', info);
       // },
       projectUpdate: [
-        (info) => {
-          console.log('Received request for projectUpdate with info:', info);
-        },
+        undefined,
+        // (info) => {
+        //   console.log('Received request for projectUpdate with info:', info);
+        // },
         // {
         //   result: {
         //     id: '123',
