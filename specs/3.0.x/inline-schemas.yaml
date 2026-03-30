@@ -1,0 +1,75 @@
+openapi: 3.0.4
+info:
+  title: Inline Schemas
+  version: v1
+servers:
+  - url: http://localhost:3000/base
+components:
+  schemas:
+    Cat:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+paths:
+  /cats:
+    parameters:
+      - name: is_adopted
+        description: Filter by adoption status
+        in: query
+        schema:
+          type: boolean
+        required: false
+    get:
+      parameters:
+        - name: color
+          description: Filter by fur color
+          in: query
+          schema:
+            type: string
+          required: false
+        - name: vaccination
+          in: query
+          content:
+            'application/json':
+              schema:
+                type: object
+                additionalProperties: false
+                required:
+                  - vaccine_name
+                properties:
+                  vaccine_name:
+                    type: string
+                  dose_count:
+                    type: number
+          required: false
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema: {}
+  /cats/{cat_id}:
+    parameters:
+      - name: cat_id
+        description: The ID of the cat
+        in: path
+        schema:
+          type: integer
+        required: true
+    get:
+      parameters:
+        - name: x-api-key
+          description: API key for authentication
+          in: header
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema: {}

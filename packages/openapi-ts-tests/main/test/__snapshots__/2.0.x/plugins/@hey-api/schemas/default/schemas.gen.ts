@@ -854,3 +854,389 @@ export const ModelWithPatternWritableSchema = {
         }
     }
 } as const;
+
+export const CallWithDescriptionsQuerySchema = {
+    properties: {
+        parameterWithBreaks: {
+            description: 'Testing multiline comments in string: First line\nSecond line\n\nFourth line',
+            type: 'string'
+        },
+        parameterWithBackticks: {
+            description: 'Testing backticks in string: `backticks` and ```multiple backticks``` should work',
+            type: 'string'
+        },
+        parameterWithSlashes: {
+            description: 'Testing slashes in string: \\backwards\\\\\\ and /forwards/// should work',
+            type: 'string'
+        },
+        parameterWithExpressionPlaceholders: {
+            description: 'Testing expression placeholders in string: ${expression} should work',
+            type: 'string'
+        },
+        parameterWithQuotes: {
+            description: 'Testing quotes in string: \'single quote\'\'\' and "double quotes""" should work',
+            type: 'string'
+        },
+        parameterWithReservedCharacters: {
+            description: 'Testing reserved characters in string: /* inline */ and /** inline **/ should work',
+            type: 'string'
+        }
+    },
+    type: 'object'
+} as const;
+
+export const CallWithParametersHeadersSchema = {
+    properties: {
+        parameterHeader: {
+            description: 'This is the parameter that goes into the header',
+            type: 'string'
+        }
+    },
+    required: [
+        'parameterHeader'
+    ],
+    type: 'object'
+} as const;
+
+export const CallWithParametersPathSchema = {
+    properties: {
+        parameterPath: {
+            description: 'This is the parameter that goes into the path',
+            type: 'string'
+        },
+        'api-version': {
+            description: 'api-version should be required in standalone clients',
+            type: 'string'
+        }
+    },
+    required: [
+        'parameterPath',
+        'api-version'
+    ],
+    type: 'object'
+} as const;
+
+export const CallWithParametersQuerySchema = {
+    properties: {
+        parameterQuery: {
+            description: 'This is the parameter that goes into the query params',
+            type: 'string'
+        }
+    },
+    required: [
+        'parameterQuery'
+    ],
+    type: 'object'
+} as const;
+
+export const CallWithWeirdParameterNamesHeadersSchema = {
+    properties: {
+        'parameter.header': {
+            description: 'This is the parameter that goes into the request header',
+            type: 'string'
+        }
+    },
+    required: [
+        'parameter.header'
+    ],
+    type: 'object'
+} as const;
+
+export const CallWithWeirdParameterNamesPathSchema = {
+    properties: {
+        'parameter.path.1': {
+            description: 'This is the parameter that goes into the path',
+            type: 'string'
+        },
+        'parameter-path-2': {
+            description: 'This is the parameter that goes into the path',
+            type: 'string'
+        },
+        'PARAMETER-PATH-3': {
+            description: 'This is the parameter that goes into the path',
+            type: 'string'
+        },
+        'api-version': {
+            description: 'api-version should be required in standalone clients',
+            type: 'string'
+        }
+    },
+    required: [
+        'api-version'
+    ],
+    type: 'object'
+} as const;
+
+export const CallWithWeirdParameterNamesQuerySchema = {
+    properties: {
+        default: {
+            description: 'This is the parameter with a reserved keyword',
+            type: 'string'
+        },
+        'parameter-query': {
+            description: 'This is the parameter that goes into the request query params',
+            type: 'string'
+        }
+    },
+    required: [
+        'parameter-query'
+    ],
+    type: 'object'
+} as const;
+
+export const CallWithDefaultParametersQuerySchema = {
+    properties: {
+        parameterString: {
+            description: 'This is a simple string with default value',
+            default: 'Hello World!',
+            type: 'string'
+        },
+        parameterNumber: {
+            description: 'This is a simple number with default value',
+            default: 123,
+            type: 'number'
+        },
+        parameterBoolean: {
+            description: 'This is a simple boolean with default value',
+            default: true,
+            type: 'boolean'
+        }
+    },
+    required: [
+        'parameterString',
+        'parameterNumber',
+        'parameterBoolean'
+    ],
+    type: 'object'
+} as const;
+
+export const CallWithDefaultOptionalParametersQuerySchema = {
+    properties: {
+        parameterString: {
+            description: 'This is a simple string that is optional with default value',
+            default: 'Hello World!',
+            type: 'string'
+        },
+        parameterNumber: {
+            description: 'This is a simple number that is optional with default value',
+            default: 123,
+            type: 'number'
+        },
+        parameterBoolean: {
+            description: 'This is a simple boolean that is optional with default value',
+            default: true,
+            type: 'boolean'
+        }
+    },
+    type: 'object'
+} as const;
+
+export const CallToTestOrderOfParamsQuerySchema = {
+    properties: {
+        parameterOptionalStringWithDefault: {
+            description: 'This is a optional string with default',
+            default: 'Hello World!',
+            type: 'string'
+        },
+        parameterOptionalStringWithEmptyDefault: {
+            description: 'This is a optional string with empty default',
+            default: '',
+            type: 'string'
+        },
+        parameterOptionalStringWithNoDefault: {
+            description: 'This is a optional string with no default',
+            type: 'string'
+        },
+        parameterStringWithDefault: {
+            description: 'This is a string with default',
+            default: 'Hello World!',
+            type: 'string'
+        },
+        parameterStringWithEmptyDefault: {
+            description: 'This is a string with empty default',
+            default: '',
+            type: 'string'
+        },
+        parameterStringWithNoDefault: {
+            description: 'This is a string with no default',
+            type: 'string'
+        },
+        parameterStringNullableWithNoDefault: {
+            'x-nullable': true,
+            description: 'This is a string that can be null with no default',
+            type: 'string'
+        },
+        parameterStringNullableWithDefault: {
+            'x-nullable': true,
+            description: 'This is a string that can be null with default',
+            type: 'string',
+            default: null
+        }
+    },
+    required: [
+        'parameterStringWithDefault',
+        'parameterStringWithEmptyDefault',
+        'parameterStringWithNoDefault'
+    ],
+    type: 'object'
+} as const;
+
+export const CollectionFormatQuerySchema = {
+    properties: {
+        parameterArrayCSV: {
+            description: 'This is an array parameter that is sent as csv format (comma-separated values)',
+            type: 'array',
+            items: {
+                type: 'string'
+            },
+            collectionFormat: 'csv'
+        },
+        parameterArraySSV: {
+            description: 'This is an array parameter that is sent as ssv format (space-separated values)',
+            type: 'array',
+            items: {
+                type: 'string'
+            },
+            collectionFormat: 'ssv'
+        },
+        parameterArrayTSV: {
+            description: 'This is an array parameter that is sent as tsv format (tab-separated values)',
+            type: 'array',
+            items: {
+                type: 'string'
+            },
+            collectionFormat: 'tsv'
+        },
+        parameterArrayPipes: {
+            description: 'This is an array parameter that is sent as pipes format (pipe-separated values)',
+            type: 'array',
+            items: {
+                type: 'string'
+            },
+            collectionFormat: 'pipes'
+        },
+        parameterArrayMulti: {
+            description: 'This is an array parameter that is sent as multi format (multiple parameter instances)',
+            type: 'array',
+            items: {
+                type: 'string'
+            },
+            collectionFormat: 'multi'
+        }
+    },
+    required: [
+        'parameterArrayCSV',
+        'parameterArraySSV',
+        'parameterArrayTSV',
+        'parameterArrayPipes',
+        'parameterArrayMulti'
+    ],
+    type: 'object'
+} as const;
+
+export const TypesPathSchema = {
+    properties: {
+        id: {
+            description: 'This is a number parameter',
+            type: 'integer',
+            format: 'int32'
+        }
+    },
+    type: 'object'
+} as const;
+
+export const TypesQuerySchema = {
+    properties: {
+        parameterNumber: {
+            description: 'This is a number parameter',
+            default: 123,
+            type: 'number'
+        },
+        parameterString: {
+            description: 'This is a string parameter',
+            default: 'default',
+            type: 'string'
+        },
+        parameterBoolean: {
+            description: 'This is a boolean parameter',
+            default: true,
+            type: 'boolean'
+        },
+        parameterArray: {
+            description: 'This is an array parameter',
+            type: 'array',
+            items: {
+                type: 'string'
+            }
+        },
+        parameterDictionary: {
+            description: 'This is a dictionary parameter',
+            type: 'object',
+            items: {
+                type: 'string'
+            }
+        }
+    },
+    required: [
+        'parameterNumber',
+        'parameterString',
+        'parameterBoolean',
+        'parameterArray',
+        'parameterDictionary'
+    ],
+    type: 'object'
+} as const;
+
+export const ComplexTypesQuerySchema = {
+    properties: {
+        parameterObject: {
+            description: 'Parameter containing object',
+            type: 'object',
+            properties: {
+                first: {
+                    type: 'object',
+                    properties: {
+                        second: {
+                            type: 'object',
+                            properties: {
+                                third: {
+                                    type: 'string'
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    required: [
+        'parameterObject'
+    ],
+    type: 'object'
+} as const;
+
+export const TestErrorCodeQuerySchema = {
+    properties: {
+        status: {
+            description: 'Status code to return',
+            type: 'string'
+        }
+    },
+    required: [
+        'status'
+    ],
+    type: 'object'
+} as const;
+
+export const NonAsciiæøåÆøÅöôêÊ字符串QuerySchema = {
+    properties: {
+        nonAsciiParamæøåÆØÅöôêÊ: {
+            description: 'Dummy input param',
+            type: 'integer'
+        }
+    },
+    required: [
+        'nonAsciiParamæøåÆØÅöôêÊ'
+    ],
+    type: 'object'
+} as const;
