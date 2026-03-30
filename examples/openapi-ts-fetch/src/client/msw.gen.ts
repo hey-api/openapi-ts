@@ -5,7 +5,7 @@ import {
   type HttpHandler,
   HttpResponse,
   type HttpResponseResolver,
-  type RequestHandlerOptions,
+  type RequestHandlerOptions as RequestHandlerOptions2,
 } from 'msw';
 
 import type {
@@ -37,53 +37,148 @@ import type {
   UploadFileResponses,
 } from './types.gen';
 
-const resolveToNull = () => new HttpResponse(null);
+export type RequestHandlerOptions = RequestHandlerOptions2 & {
+  baseUrl?: string;
+  responseFallback?: 'error' | 'passthrough';
+};
 
-type HttpHandlerFactory<ResponseOrResolver> = (
-  responseOrResolver: ResponseOrResolver,
-  options?: RequestHandlerOptions,
-) => HttpHandler;
-
-type OptionalHttpHandlerFactory<ResponseOrResolver> = (
-  responseOrResolver?: ResponseOrResolver,
-  options?: RequestHandlerOptions,
-) => HttpHandler;
-
-export type SingleHandlerFactories = {
-  addPetMock: HttpHandlerFactory<
+/**
+ * Handler for the `POST /pet` operation.
+ */
+export function handleAddPet(
+  resolver?:
     | {
         result: AddPetResponses[200];
         status?: 200;
       }
-    | HttpResponseResolver<never, AddPetData['body']>
-  >;
-  createUserMock: HttpHandlerFactory<
+    | HttpResponseResolver<never, AddPetData['body']>,
+  options?: RequestHandlerOptions,
+): HttpHandler {
+  return http.post<never, AddPetData['body']>(
+    `${options?.baseUrl ?? '*'}/pet`,
+    (info) => {
+      if (typeof resolver === 'function') {
+        return resolver(info);
+      }
+      if (resolver) {
+        return HttpResponse.json(resolver.result ?? null, { status: resolver.status ?? 200 });
+      }
+      if (options?.responseFallback === 'passthrough') {
+        return;
+      }
+      return new Response('Not Implemented', {
+        status: 501,
+        statusText: 'Not Implemented',
+      });
+    },
+    options,
+  );
+}
+
+/**
+ * Handler for the `PUT /pet` operation.
+ */
+export function handleUpdatePet(
+  resolver?:
     | {
-        result: CreateUserResponses[200];
+        result: UpdatePetResponses[200];
         status?: 200;
       }
-    | HttpResponseResolver<never, CreateUserData['body']>
-  >;
-  createUsersWithListInputMock: HttpHandlerFactory<
+    | HttpResponseResolver<never, UpdatePetData['body']>,
+  options?: RequestHandlerOptions,
+): HttpHandler {
+  return http.put<never, UpdatePetData['body']>(
+    `${options?.baseUrl ?? '*'}/pet`,
+    (info) => {
+      if (typeof resolver === 'function') {
+        return resolver(info);
+      }
+      if (resolver) {
+        return HttpResponse.json(resolver.result ?? null, { status: resolver.status ?? 200 });
+      }
+      if (options?.responseFallback === 'passthrough') {
+        return;
+      }
+      return new Response('Not Implemented', {
+        status: 501,
+        statusText: 'Not Implemented',
+      });
+    },
+    options,
+  );
+}
+
+/**
+ * Handler for the `GET /pet/findByStatus` operation.
+ */
+export function handleFindPetsByStatus(
+  resolver?:
     | {
-        result: CreateUsersWithListInputResponses[200];
+        result: FindPetsByStatusResponses[200];
         status?: 200;
       }
-    | HttpResponseResolver<never, CreateUsersWithListInputData['body']>
-  >;
-  deleteOrderMock: OptionalHttpHandlerFactory<
+    | HttpResponseResolver<never, never>,
+  options?: RequestHandlerOptions,
+): HttpHandler {
+  return http.get<never, never>(
+    `${options?.baseUrl ?? '*'}/pet/findByStatus`,
+    (info) => {
+      if (typeof resolver === 'function') {
+        return resolver(info);
+      }
+      if (resolver) {
+        return HttpResponse.json(resolver.result ?? null, { status: resolver.status ?? 200 });
+      }
+      if (options?.responseFallback === 'passthrough') {
+        return;
+      }
+      return new Response('Not Implemented', {
+        status: 501,
+        statusText: 'Not Implemented',
+      });
+    },
+    options,
+  );
+}
+
+/**
+ * Handler for the `GET /pet/findByTags` operation.
+ */
+export function handleFindPetsByTags(
+  resolver?:
     | {
-        result: DeleteOrderResponses[200];
+        result: FindPetsByTagsResponses[200];
         status?: 200;
       }
-    | HttpResponseResolver<
-        {
-          orderId: string;
-        },
-        never
-      >
-  >;
-  deletePetMock: OptionalHttpHandlerFactory<
+    | HttpResponseResolver<never, never>,
+  options?: RequestHandlerOptions,
+): HttpHandler {
+  return http.get<never, never>(
+    `${options?.baseUrl ?? '*'}/pet/findByTags`,
+    (info) => {
+      if (typeof resolver === 'function') {
+        return resolver(info);
+      }
+      if (resolver) {
+        return HttpResponse.json(resolver.result ?? null, { status: resolver.status ?? 200 });
+      }
+      if (options?.responseFallback === 'passthrough') {
+        return;
+      }
+      return new Response('Not Implemented', {
+        status: 501,
+        statusText: 'Not Implemented',
+      });
+    },
+    options,
+  );
+}
+
+/**
+ * Handler for the `DELETE /pet/{petId}` operation.
+ */
+export function handleDeletePet(
+  resolver?:
     | {
         result: DeletePetResponses[200];
         status?: 200;
@@ -93,54 +188,40 @@ export type SingleHandlerFactories = {
           petId: string;
         },
         never
-      >
-  >;
-  deleteUserMock: OptionalHttpHandlerFactory<
-    | {
-        result: DeleteUserResponses[200];
-        status?: 200;
+      >,
+  options?: RequestHandlerOptions,
+): HttpHandler {
+  return http.delete<
+    {
+      petId: string;
+    },
+    never
+  >(
+    `${options?.baseUrl ?? '*'}/pet/:petId`,
+    (info) => {
+      if (typeof resolver === 'function') {
+        return resolver(info);
       }
-    | HttpResponseResolver<
-        {
-          username: string;
-        },
-        never
-      >
-  >;
-  findPetsByStatusMock: HttpHandlerFactory<
-    | {
-        result: FindPetsByStatusResponses[200];
-        status?: 200;
+      if (resolver) {
+        return new HttpResponse(resolver.result ?? null, { status: resolver.status ?? 200 });
       }
-    | HttpResponseResolver
-  >;
-  findPetsByTagsMock: HttpHandlerFactory<
-    | {
-        result: FindPetsByTagsResponses[200];
-        status?: 200;
+      if (options?.responseFallback === 'passthrough') {
+        return;
       }
-    | HttpResponseResolver
-  >;
-  getInventoryMock: HttpHandlerFactory<
-    | {
-        result: GetInventoryResponses[200];
-        status?: 200;
-      }
-    | HttpResponseResolver
-  >;
-  getOrderByIdMock: HttpHandlerFactory<
-    | {
-        result: GetOrderByIdResponses[200];
-        status?: 200;
-      }
-    | HttpResponseResolver<
-        {
-          orderId: string;
-        },
-        never
-      >
-  >;
-  getPetByIdMock: HttpHandlerFactory<
+      return new Response('Not Implemented', {
+        status: 501,
+        statusText: 'Not Implemented',
+      });
+    },
+    options,
+  );
+}
+
+/**
+ * Handler for the `GET /pet/{petId}` operation.
+ */
+export function handleGetPetById(
+  resolver?:
     | {
         result: GetPetByIdResponses[200];
         status?: 200;
@@ -150,49 +231,40 @@ export type SingleHandlerFactories = {
           petId: string;
         },
         never
-      >
-  >;
-  getUserByNameMock: HttpHandlerFactory<
-    | {
-        result: GetUserByNameResponses[200];
-        status?: 200;
+      >,
+  options?: RequestHandlerOptions,
+): HttpHandler {
+  return http.get<
+    {
+      petId: string;
+    },
+    never
+  >(
+    `${options?.baseUrl ?? '*'}/pet/:petId`,
+    (info) => {
+      if (typeof resolver === 'function') {
+        return resolver(info);
       }
-    | HttpResponseResolver<
-        {
-          username: string;
-        },
-        never
-      >
-  >;
-  loginUserMock: HttpHandlerFactory<
-    | {
-        result: LoginUserResponses[200];
-        status?: 200;
+      if (resolver) {
+        return HttpResponse.json(resolver.result ?? null, { status: resolver.status ?? 200 });
       }
-    | HttpResponseResolver
-  >;
-  logoutUserMock: OptionalHttpHandlerFactory<
-    | {
-        result: LogoutUserResponses[200];
-        status?: 200;
+      if (options?.responseFallback === 'passthrough') {
+        return;
       }
-    | HttpResponseResolver
-  >;
-  placeOrderMock: HttpHandlerFactory<
-    | {
-        result: PlaceOrderResponses[200];
-        status?: 200;
-      }
-    | HttpResponseResolver<never, PlaceOrderData['body']>
-  >;
-  updatePetMock: HttpHandlerFactory<
-    | {
-        result: UpdatePetResponses[200];
-        status?: 200;
-      }
-    | HttpResponseResolver<never, UpdatePetData['body']>
-  >;
-  updatePetWithFormMock: HttpHandlerFactory<
+      return new Response('Not Implemented', {
+        status: 501,
+        statusText: 'Not Implemented',
+      });
+    },
+    options,
+  );
+}
+
+/**
+ * Handler for the `POST /pet/{petId}` operation.
+ */
+export function handleUpdatePetWithForm(
+  resolver?:
     | {
         result: UpdatePetWithFormResponses[200];
         status?: 200;
@@ -202,21 +274,40 @@ export type SingleHandlerFactories = {
           petId: string;
         },
         never
-      >
-  >;
-  updateUserMock: OptionalHttpHandlerFactory<
-    | {
-        result: UpdateUserResponses[200];
-        status?: 200;
+      >,
+  options?: RequestHandlerOptions,
+): HttpHandler {
+  return http.post<
+    {
+      petId: string;
+    },
+    never
+  >(
+    `${options?.baseUrl ?? '*'}/pet/:petId`,
+    (info) => {
+      if (typeof resolver === 'function') {
+        return resolver(info);
       }
-    | HttpResponseResolver<
-        {
-          username: string;
-        },
-        UpdateUserData['body']
-      >
-  >;
-  uploadFileMock: HttpHandlerFactory<
+      if (resolver) {
+        return HttpResponse.json(resolver.result ?? null, { status: resolver.status ?? 200 });
+      }
+      if (options?.responseFallback === 'passthrough') {
+        return;
+      }
+      return new Response('Not Implemented', {
+        status: 501,
+        statusText: 'Not Implemented',
+      });
+    },
+    options,
+  );
+}
+
+/**
+ * Handler for the `POST /pet/{petId}/uploadImage` operation.
+ */
+export function handleUploadFile(
+  resolver?:
     | {
         result: UploadFileResponses[200];
         status?: 200;
@@ -226,300 +317,591 @@ export type SingleHandlerFactories = {
           petId: string;
         },
         UploadFileData['body']
-      >
-  >;
-};
-
-export type GetAllMocksOptions = {
-  onMissingMock?: 'error' | 'skip';
-  overrides?: {
-    [K in keyof SingleHandlerFactories]?: Parameters<SingleHandlerFactories[K]>[0];
-  };
-};
-
-export type MswHandlerFactory = SingleHandlerFactories & {
-  getAllMocks: (options?: GetAllMocksOptions) => Array<HttpHandler>;
-};
-
-export const createMswHandlerFactory = (config?: { baseUrl?: string }): MswHandlerFactory => {
-  const baseUrl = config?.baseUrl ?? 'https://petstore3.swagger.io/api/v3';
-  const mocks: SingleHandlerFactories = {
-    addPetMock: (res, options) =>
-      http.post(
-        `${baseUrl}${'/pet'}`,
-        typeof res === 'object' && res.result
-          ? () => HttpResponse.json(res.result ?? null, { status: res.status ?? 200 })
-          : typeof res === 'function'
-            ? res
-            : resolveToNull,
-        options,
-      ),
-    createUserMock: (res, options) =>
-      http.post(
-        `${baseUrl}${'/user'}`,
-        typeof res === 'object' && res.result
-          ? () => HttpResponse.json(res.result ?? null, { status: res.status ?? 200 })
-          : typeof res === 'function'
-            ? res
-            : resolveToNull,
-        options,
-      ),
-    createUsersWithListInputMock: (res, options) =>
-      http.post(
-        `${baseUrl}${'/user/createWithList'}`,
-        typeof res === 'object' && res.result
-          ? () => HttpResponse.json(res.result ?? null, { status: res.status ?? 200 })
-          : typeof res === 'function'
-            ? res
-            : resolveToNull,
-        options,
-      ),
-    deleteOrderMock: (res, options) =>
-      http.delete(
-        `${baseUrl}${'/store/order/:orderId'}`,
-        typeof res === 'object' && res.result
-          ? () => new HttpResponse(res.result ?? null, { status: res.status ?? 200 })
-          : typeof res === 'function'
-            ? res
-            : resolveToNull,
-        options,
-      ),
-    deletePetMock: (res, options) =>
-      http.delete(
-        `${baseUrl}${'/pet/:petId'}`,
-        typeof res === 'object' && res.result
-          ? () => new HttpResponse(res.result ?? null, { status: res.status ?? 200 })
-          : typeof res === 'function'
-            ? res
-            : resolveToNull,
-        options,
-      ),
-    deleteUserMock: (res, options) =>
-      http.delete(
-        `${baseUrl}${'/user/:username'}`,
-        typeof res === 'object' && res.result
-          ? () => new HttpResponse(res.result ?? null, { status: res.status ?? 200 })
-          : typeof res === 'function'
-            ? res
-            : resolveToNull,
-        options,
-      ),
-    findPetsByStatusMock: (res, options) =>
-      http.get(
-        `${baseUrl}${'/pet/findByStatus'}`,
-        typeof res === 'object' && res.result
-          ? () => HttpResponse.json(res.result ?? null, { status: res.status ?? 200 })
-          : typeof res === 'function'
-            ? res
-            : resolveToNull,
-        options,
-      ),
-    findPetsByTagsMock: (res, options) =>
-      http.get(
-        `${baseUrl}${'/pet/findByTags'}`,
-        typeof res === 'object' && res.result
-          ? () => HttpResponse.json(res.result ?? null, { status: res.status ?? 200 })
-          : typeof res === 'function'
-            ? res
-            : resolveToNull,
-        options,
-      ),
-    getInventoryMock: (res, options) =>
-      http.get(
-        `${baseUrl}${'/store/inventory'}`,
-        typeof res === 'object' && res.result
-          ? () => HttpResponse.json(res.result ?? null, { status: res.status ?? 200 })
-          : typeof res === 'function'
-            ? res
-            : resolveToNull,
-        options,
-      ),
-    getOrderByIdMock: (res, options) =>
-      http.get(
-        `${baseUrl}${'/store/order/:orderId'}`,
-        typeof res === 'object' && res.result
-          ? () => HttpResponse.json(res.result ?? null, { status: res.status ?? 200 })
-          : typeof res === 'function'
-            ? res
-            : resolveToNull,
-        options,
-      ),
-    getPetByIdMock: (res, options) =>
-      http.get(
-        `${baseUrl}${'/pet/:petId'}`,
-        typeof res === 'object' && res.result
-          ? () => HttpResponse.json(res.result ?? null, { status: res.status ?? 200 })
-          : typeof res === 'function'
-            ? res
-            : resolveToNull,
-        options,
-      ),
-    getUserByNameMock: (res, options) =>
-      http.get(
-        `${baseUrl}${'/user/:username'}`,
-        typeof res === 'object' && res.result
-          ? () => HttpResponse.json(res.result ?? null, { status: res.status ?? 200 })
-          : typeof res === 'function'
-            ? res
-            : resolveToNull,
-        options,
-      ),
-    loginUserMock: (res, options) =>
-      http.get(
-        `${baseUrl}${'/user/login'}`,
-        typeof res === 'object' && res.result
-          ? () => HttpResponse.json(res.result ?? null, { status: res.status ?? 200 })
-          : typeof res === 'function'
-            ? res
-            : resolveToNull,
-        options,
-      ),
-    logoutUserMock: (res, options) =>
-      http.get(
-        `${baseUrl}${'/user/logout'}`,
-        typeof res === 'object' && res.result
-          ? () => new HttpResponse(res.result ?? null, { status: res.status ?? 200 })
-          : typeof res === 'function'
-            ? res
-            : resolveToNull,
-        options,
-      ),
-    placeOrderMock: (res, options) =>
-      http.post(
-        `${baseUrl}${'/store/order'}`,
-        typeof res === 'object' && res.result
-          ? () => HttpResponse.json(res.result ?? null, { status: res.status ?? 200 })
-          : typeof res === 'function'
-            ? res
-            : resolveToNull,
-        options,
-      ),
-    updatePetMock: (res, options) =>
-      http.put(
-        `${baseUrl}${'/pet'}`,
-        typeof res === 'object' && res.result
-          ? () => HttpResponse.json(res.result ?? null, { status: res.status ?? 200 })
-          : typeof res === 'function'
-            ? res
-            : resolveToNull,
-        options,
-      ),
-    updatePetWithFormMock: (res, options) =>
-      http.post(
-        `${baseUrl}${'/pet/:petId'}`,
-        typeof res === 'object' && res.result
-          ? () => HttpResponse.json(res.result ?? null, { status: res.status ?? 200 })
-          : typeof res === 'function'
-            ? res
-            : resolveToNull,
-        options,
-      ),
-    updateUserMock: (res, options) =>
-      http.put(
-        `${baseUrl}${'/user/:username'}`,
-        typeof res === 'object' && res.result
-          ? () => new HttpResponse(res.result ?? null, { status: res.status ?? 200 })
-          : typeof res === 'function'
-            ? res
-            : resolveToNull,
-        options,
-      ),
-    uploadFileMock: (res, options) =>
-      http.post(
-        `${baseUrl}${'/pet/:petId/uploadImage'}`,
-        typeof res === 'object' && res.result
-          ? () => HttpResponse.json(res.result ?? null, { status: res.status ?? 200 })
-          : typeof res === 'function'
-            ? res
-            : resolveToNull,
-        options,
-      ),
-  };
-  const getAllMocks = (options?: GetAllMocksOptions): Array<HttpHandler> => {
-    const onMissingMock = options?.onMissingMock ?? 'skip';
-    const overrides = options?.overrides;
-    const handlers: Array<HttpHandler> = [];
-    const addRequiredHandler = <Value>(
-      handler: (value: Value | (() => HttpResponse<any>)) => HttpHandler,
-      override: Value | undefined,
-    ) => {
-      if (override != null) {
-        handlers.push(handler(override));
-      } else {
-        if (onMissingMock === 'error') {
-          handlers.push(
-            handler(
-              () =>
-                new HttpResponse('[heyapi-msw] The mock of this request is not implemented.', {
-                  status: 501,
-                }),
-            ),
-          );
-        }
+      >,
+  options?: RequestHandlerOptions,
+): HttpHandler {
+  return http.post<
+    {
+      petId: string;
+    },
+    UploadFileData['body']
+  >(
+    `${options?.baseUrl ?? '*'}/pet/:petId/uploadImage`,
+    (info) => {
+      if (typeof resolver === 'function') {
+        return resolver(info);
       }
-    };
-    handlers.push(mocks.deleteOrderMock(overrides?.deleteOrderMock));
-    addRequiredHandler(mocks.getOrderByIdMock, overrides?.getOrderByIdMock);
-    addRequiredHandler(mocks.uploadFileMock, overrides?.uploadFileMock);
-    addRequiredHandler(mocks.findPetsByStatusMock, overrides?.findPetsByStatusMock);
-    addRequiredHandler(mocks.findPetsByTagsMock, overrides?.findPetsByTagsMock);
-    addRequiredHandler(mocks.getInventoryMock, overrides?.getInventoryMock);
-    addRequiredHandler(mocks.placeOrderMock, overrides?.placeOrderMock);
-    addRequiredHandler(mocks.createUsersWithListInputMock, overrides?.createUsersWithListInputMock);
-    addRequiredHandler(mocks.loginUserMock, overrides?.loginUserMock);
-    handlers.push(mocks.logoutUserMock(overrides?.logoutUserMock));
-    handlers.push(mocks.deletePetMock(overrides?.deletePetMock));
-    addRequiredHandler(mocks.getPetByIdMock, overrides?.getPetByIdMock);
-    addRequiredHandler(mocks.updatePetWithFormMock, overrides?.updatePetWithFormMock);
-    handlers.push(mocks.deleteUserMock(overrides?.deleteUserMock));
-    addRequiredHandler(mocks.getUserByNameMock, overrides?.getUserByNameMock);
-    handlers.push(mocks.updateUserMock(overrides?.updateUserMock));
-    addRequiredHandler(mocks.addPetMock, overrides?.addPetMock);
-    addRequiredHandler(mocks.updatePetMock, overrides?.updatePetMock);
-    addRequiredHandler(mocks.createUserMock, overrides?.createUserMock);
-    return handlers;
-  };
-  return { ...mocks, getAllMocks };
+      if (resolver) {
+        return HttpResponse.json(resolver.result ?? null, { status: resolver.status ?? 200 });
+      }
+      if (options?.responseFallback === 'passthrough') {
+        return;
+      }
+      return new Response('Not Implemented', {
+        status: 501,
+        statusText: 'Not Implemented',
+      });
+    },
+    options,
+  );
+}
+
+/**
+ * Handler for the `GET /store/inventory` operation.
+ */
+export function handleGetInventory(
+  resolver?:
+    | {
+        result: GetInventoryResponses[200];
+        status?: 200;
+      }
+    | HttpResponseResolver<never, never>,
+  options?: RequestHandlerOptions,
+): HttpHandler {
+  return http.get<never, never>(
+    `${options?.baseUrl ?? '*'}/store/inventory`,
+    (info) => {
+      if (typeof resolver === 'function') {
+        return resolver(info);
+      }
+      if (resolver) {
+        return HttpResponse.json(resolver.result ?? null, { status: resolver.status ?? 200 });
+      }
+      if (options?.responseFallback === 'passthrough') {
+        return;
+      }
+      return new Response('Not Implemented', {
+        status: 501,
+        statusText: 'Not Implemented',
+      });
+    },
+    options,
+  );
+}
+
+/**
+ * Handler for the `POST /store/order` operation.
+ */
+export function handlePlaceOrder(
+  resolver?:
+    | {
+        result: PlaceOrderResponses[200];
+        status?: 200;
+      }
+    | HttpResponseResolver<never, PlaceOrderData['body']>,
+  options?: RequestHandlerOptions,
+): HttpHandler {
+  return http.post<never, PlaceOrderData['body']>(
+    `${options?.baseUrl ?? '*'}/store/order`,
+    (info) => {
+      if (typeof resolver === 'function') {
+        return resolver(info);
+      }
+      if (resolver) {
+        return HttpResponse.json(resolver.result ?? null, { status: resolver.status ?? 200 });
+      }
+      if (options?.responseFallback === 'passthrough') {
+        return;
+      }
+      return new Response('Not Implemented', {
+        status: 501,
+        statusText: 'Not Implemented',
+      });
+    },
+    options,
+  );
+}
+
+/**
+ * Handler for the `DELETE /store/order/{orderId}` operation.
+ */
+export function handleDeleteOrder(
+  resolver?:
+    | {
+        result: DeleteOrderResponses[200];
+        status?: 200;
+      }
+    | HttpResponseResolver<
+        {
+          orderId: string;
+        },
+        never
+      >,
+  options?: RequestHandlerOptions,
+): HttpHandler {
+  return http.delete<
+    {
+      orderId: string;
+    },
+    never
+  >(
+    `${options?.baseUrl ?? '*'}/store/order/:orderId`,
+    (info) => {
+      if (typeof resolver === 'function') {
+        return resolver(info);
+      }
+      if (resolver) {
+        return new HttpResponse(resolver.result ?? null, { status: resolver.status ?? 200 });
+      }
+      if (options?.responseFallback === 'passthrough') {
+        return;
+      }
+      return new Response('Not Implemented', {
+        status: 501,
+        statusText: 'Not Implemented',
+      });
+    },
+    options,
+  );
+}
+
+/**
+ * Handler for the `GET /store/order/{orderId}` operation.
+ */
+export function handleGetOrderById(
+  resolver?:
+    | {
+        result: GetOrderByIdResponses[200];
+        status?: 200;
+      }
+    | HttpResponseResolver<
+        {
+          orderId: string;
+        },
+        never
+      >,
+  options?: RequestHandlerOptions,
+): HttpHandler {
+  return http.get<
+    {
+      orderId: string;
+    },
+    never
+  >(
+    `${options?.baseUrl ?? '*'}/store/order/:orderId`,
+    (info) => {
+      if (typeof resolver === 'function') {
+        return resolver(info);
+      }
+      if (resolver) {
+        return HttpResponse.json(resolver.result ?? null, { status: resolver.status ?? 200 });
+      }
+      if (options?.responseFallback === 'passthrough') {
+        return;
+      }
+      return new Response('Not Implemented', {
+        status: 501,
+        statusText: 'Not Implemented',
+      });
+    },
+    options,
+  );
+}
+
+/**
+ * Handler for the `POST /user` operation.
+ */
+export function handleCreateUser(
+  resolver?:
+    | {
+        result: CreateUserResponses[200];
+        status?: 200;
+      }
+    | HttpResponseResolver<never, CreateUserData['body']>,
+  options?: RequestHandlerOptions,
+): HttpHandler {
+  return http.post<never, CreateUserData['body']>(
+    `${options?.baseUrl ?? '*'}/user`,
+    (info) => {
+      if (typeof resolver === 'function') {
+        return resolver(info);
+      }
+      if (resolver) {
+        return HttpResponse.json(resolver.result ?? null, { status: resolver.status ?? 200 });
+      }
+      if (options?.responseFallback === 'passthrough') {
+        return;
+      }
+      return new Response('Not Implemented', {
+        status: 501,
+        statusText: 'Not Implemented',
+      });
+    },
+    options,
+  );
+}
+
+/**
+ * Handler for the `POST /user/createWithList` operation.
+ */
+export function handleCreateUsersWithListInput(
+  resolver?:
+    | {
+        result: CreateUsersWithListInputResponses[200];
+        status?: 200;
+      }
+    | HttpResponseResolver<never, CreateUsersWithListInputData['body']>,
+  options?: RequestHandlerOptions,
+): HttpHandler {
+  return http.post<never, CreateUsersWithListInputData['body']>(
+    `${options?.baseUrl ?? '*'}/user/createWithList`,
+    (info) => {
+      if (typeof resolver === 'function') {
+        return resolver(info);
+      }
+      if (resolver) {
+        return HttpResponse.json(resolver.result ?? null, { status: resolver.status ?? 200 });
+      }
+      if (options?.responseFallback === 'passthrough') {
+        return;
+      }
+      return new Response('Not Implemented', {
+        status: 501,
+        statusText: 'Not Implemented',
+      });
+    },
+    options,
+  );
+}
+
+/**
+ * Handler for the `GET /user/login` operation.
+ */
+export function handleLoginUser(
+  resolver?:
+    | {
+        result: LoginUserResponses[200];
+        status?: 200;
+      }
+    | HttpResponseResolver<never, never>,
+  options?: RequestHandlerOptions,
+): HttpHandler {
+  return http.get<never, never>(
+    `${options?.baseUrl ?? '*'}/user/login`,
+    (info) => {
+      if (typeof resolver === 'function') {
+        return resolver(info);
+      }
+      if (resolver) {
+        return HttpResponse.json(resolver.result ?? null, { status: resolver.status ?? 200 });
+      }
+      if (options?.responseFallback === 'passthrough') {
+        return;
+      }
+      return new Response('Not Implemented', {
+        status: 501,
+        statusText: 'Not Implemented',
+      });
+    },
+    options,
+  );
+}
+
+/**
+ * Handler for the `GET /user/logout` operation.
+ */
+export function handleLogoutUser(
+  resolver?:
+    | {
+        result: LogoutUserResponses[200];
+        status?: 200;
+      }
+    | HttpResponseResolver<never, never>,
+  options?: RequestHandlerOptions,
+): HttpHandler {
+  return http.get<never, never>(
+    `${options?.baseUrl ?? '*'}/user/logout`,
+    (info) => {
+      if (typeof resolver === 'function') {
+        return resolver(info);
+      }
+      if (resolver) {
+        return new HttpResponse(resolver.result ?? null, { status: resolver.status ?? 200 });
+      }
+      if (options?.responseFallback === 'passthrough') {
+        return;
+      }
+      return new Response('Not Implemented', {
+        status: 501,
+        statusText: 'Not Implemented',
+      });
+    },
+    options,
+  );
+}
+
+/**
+ * Handler for the `DELETE /user/{username}` operation.
+ */
+export function handleDeleteUser(
+  resolver?:
+    | {
+        result: DeleteUserResponses[200];
+        status?: 200;
+      }
+    | HttpResponseResolver<
+        {
+          username: string;
+        },
+        never
+      >,
+  options?: RequestHandlerOptions,
+): HttpHandler {
+  return http.delete<
+    {
+      username: string;
+    },
+    never
+  >(
+    `${options?.baseUrl ?? '*'}/user/:username`,
+    (info) => {
+      if (typeof resolver === 'function') {
+        return resolver(info);
+      }
+      if (resolver) {
+        return new HttpResponse(resolver.result ?? null, { status: resolver.status ?? 200 });
+      }
+      if (options?.responseFallback === 'passthrough') {
+        return;
+      }
+      return new Response('Not Implemented', {
+        status: 501,
+        statusText: 'Not Implemented',
+      });
+    },
+    options,
+  );
+}
+
+/**
+ * Handler for the `GET /user/{username}` operation.
+ */
+export function handleGetUserByName(
+  resolver?:
+    | {
+        result: GetUserByNameResponses[200];
+        status?: 200;
+      }
+    | HttpResponseResolver<
+        {
+          username: string;
+        },
+        never
+      >,
+  options?: RequestHandlerOptions,
+): HttpHandler {
+  return http.get<
+    {
+      username: string;
+    },
+    never
+  >(
+    `${options?.baseUrl ?? '*'}/user/:username`,
+    (info) => {
+      if (typeof resolver === 'function') {
+        return resolver(info);
+      }
+      if (resolver) {
+        return HttpResponse.json(resolver.result ?? null, { status: resolver.status ?? 200 });
+      }
+      if (options?.responseFallback === 'passthrough') {
+        return;
+      }
+      return new Response('Not Implemented', {
+        status: 501,
+        statusText: 'Not Implemented',
+      });
+    },
+    options,
+  );
+}
+
+/**
+ * Handler for the `PUT /user/{username}` operation.
+ */
+export function handleUpdateUser(
+  resolver?:
+    | {
+        result: UpdateUserResponses[200];
+        status?: 200;
+      }
+    | HttpResponseResolver<
+        {
+          username: string;
+        },
+        UpdateUserData['body']
+      >,
+  options?: RequestHandlerOptions,
+): HttpHandler {
+  return http.put<
+    {
+      username: string;
+    },
+    UpdateUserData['body']
+  >(
+    `${options?.baseUrl ?? '*'}/user/:username`,
+    (info) => {
+      if (typeof resolver === 'function') {
+        return resolver(info);
+      }
+      if (resolver) {
+        return new HttpResponse(resolver.result ?? null, { status: resolver.status ?? 200 });
+      }
+      if (options?.responseFallback === 'passthrough') {
+        return;
+      }
+      return new Response('Not Implemented', {
+        status: 501,
+        statusText: 'Not Implemented',
+      });
+    },
+    options,
+  );
+}
+
+export type MswHandlerFactories = {
+  /**
+   * Handler for the `POST /pet` operation.
+   */
+  addPet: typeof handleAddPet;
+  /**
+   * Handler for the `POST /user` operation.
+   */
+  createUser: typeof handleCreateUser;
+  /**
+   * Handler for the `POST /user/createWithList` operation.
+   */
+  createUsersWithListInput: typeof handleCreateUsersWithListInput;
+  /**
+   * Handler for the `DELETE /store/order/{orderId}` operation.
+   */
+  deleteOrder: typeof handleDeleteOrder;
+  /**
+   * Handler for the `DELETE /pet/{petId}` operation.
+   */
+  deletePet: typeof handleDeletePet;
+  /**
+   * Handler for the `DELETE /user/{username}` operation.
+   */
+  deleteUser: typeof handleDeleteUser;
+  /**
+   * Handler for the `GET /pet/findByStatus` operation.
+   */
+  findPetsByStatus: typeof handleFindPetsByStatus;
+  /**
+   * Handler for the `GET /pet/findByTags` operation.
+   */
+  findPetsByTags: typeof handleFindPetsByTags;
+  /**
+   * Handler for the `GET /store/inventory` operation.
+   */
+  getInventory: typeof handleGetInventory;
+  /**
+   * Handler for the `GET /store/order/{orderId}` operation.
+   */
+  getOrderById: typeof handleGetOrderById;
+  /**
+   * Handler for the `GET /pet/{petId}` operation.
+   */
+  getPetById: typeof handleGetPetById;
+  /**
+   * Handler for the `GET /user/{username}` operation.
+   */
+  getUserByName: typeof handleGetUserByName;
+  /**
+   * Handler for the `GET /user/login` operation.
+   */
+  loginUser: typeof handleLoginUser;
+  /**
+   * Handler for the `GET /user/logout` operation.
+   */
+  logoutUser: typeof handleLogoutUser;
+  /**
+   * Handler for the `POST /store/order` operation.
+   */
+  placeOrder: typeof handlePlaceOrder;
+  /**
+   * Handler for the `PUT /pet` operation.
+   */
+  updatePet: typeof handleUpdatePet;
+  /**
+   * Handler for the `POST /pet/{petId}` operation.
+   */
+  updatePetWithForm: typeof handleUpdatePetWithForm;
+  /**
+   * Handler for the `PUT /user/{username}` operation.
+   */
+  updateUser: typeof handleUpdateUser;
+  /**
+   * Handler for the `POST /pet/{petId}/uploadImage` operation.
+   */
+  uploadFile: typeof handleUploadFile;
 };
 
-const _defaults = createMswHandlerFactory({ baseUrl: '*' });
+export type CreateMswHandlersResult = {
+  all: (options?: {
+    one?: {
+      [K in keyof MswHandlerFactories]?:
+        | Parameters<MswHandlerFactories[K]>[0]
+        | Parameters<MswHandlerFactories[K]>;
+    };
+  }) => ReadonlyArray<HttpHandler>;
+  one: MswHandlerFactories;
+};
 
-export const addPetMock = _defaults.addPetMock;
-
-export const updatePetMock = _defaults.updatePetMock;
-
-export const findPetsByStatusMock = _defaults.findPetsByStatusMock;
-
-export const findPetsByTagsMock = _defaults.findPetsByTagsMock;
-
-export const deletePetMock = _defaults.deletePetMock;
-
-export const getPetByIdMock = _defaults.getPetByIdMock;
-
-export const updatePetWithFormMock = _defaults.updatePetWithFormMock;
-
-export const uploadFileMock = _defaults.uploadFileMock;
-
-export const getInventoryMock = _defaults.getInventoryMock;
-
-export const placeOrderMock = _defaults.placeOrderMock;
-
-export const deleteOrderMock = _defaults.deleteOrderMock;
-
-export const getOrderByIdMock = _defaults.getOrderByIdMock;
-
-export const createUserMock = _defaults.createUserMock;
-
-export const createUsersWithListInputMock = _defaults.createUsersWithListInputMock;
-
-export const loginUserMock = _defaults.loginUserMock;
-
-export const logoutUserMock = _defaults.logoutUserMock;
-
-export const deleteUserMock = _defaults.deleteUserMock;
-
-export const getUserByNameMock = _defaults.getUserByNameMock;
-
-export const updateUserMock = _defaults.updateUserMock;
-
-export const getAllMocks = _defaults.getAllMocks;
+export function createMswHandlers(config: RequestHandlerOptions = {}): CreateMswHandlersResult {
+  type Handler<R> = (resolver?: R, options?: RequestHandlerOptions) => HttpHandler;
+  function wrap<R>(handler: Handler<R>): Handler<R> {
+    return (resolver, options) => handler(resolver, { ...config, ...options });
+  }
+  const one: CreateMswHandlersResult['one'] = {
+    addPet: wrap(handleAddPet),
+    createUser: wrap(handleCreateUser),
+    createUsersWithListInput: wrap(handleCreateUsersWithListInput),
+    deleteOrder: wrap(handleDeleteOrder),
+    deletePet: wrap(handleDeletePet),
+    deleteUser: wrap(handleDeleteUser),
+    findPetsByStatus: wrap(handleFindPetsByStatus),
+    findPetsByTags: wrap(handleFindPetsByTags),
+    getInventory: wrap(handleGetInventory),
+    getOrderById: wrap(handleGetOrderById),
+    getPetById: wrap(handleGetPetById),
+    getUserByName: wrap(handleGetUserByName),
+    loginUser: wrap(handleLoginUser),
+    logoutUser: wrap(handleLogoutUser),
+    placeOrder: wrap(handlePlaceOrder),
+    updatePet: wrap(handleUpdatePet),
+    updatePetWithForm: wrap(handleUpdatePetWithForm),
+    updateUser: wrap(handleUpdateUser),
+    uploadFile: wrap(handleUploadFile),
+  };
+  const all: CreateMswHandlersResult['all'] = (options = {}) => {
+    type OverrideValue<R> = R | [resolver?: R, options?: RequestHandlerOptions];
+    function invoke<R>(fn: Handler<R>, override?: OverrideValue<R>): HttpHandler {
+      return Array.isArray(override) ? fn(...override) : fn(override);
+    }
+    const overrides = options.one ?? {};
+    return [
+      invoke(one.deleteOrder, overrides.deleteOrder),
+      invoke(one.getOrderById, overrides.getOrderById),
+      invoke(one.uploadFile, overrides.uploadFile),
+      invoke(one.findPetsByStatus, overrides.findPetsByStatus),
+      invoke(one.findPetsByTags, overrides.findPetsByTags),
+      invoke(one.getInventory, overrides.getInventory),
+      invoke(one.placeOrder, overrides.placeOrder),
+      invoke(one.createUsersWithListInput, overrides.createUsersWithListInput),
+      invoke(one.loginUser, overrides.loginUser),
+      invoke(one.logoutUser, overrides.logoutUser),
+      invoke(one.deletePet, overrides.deletePet),
+      invoke(one.getPetById, overrides.getPetById),
+      invoke(one.updatePetWithForm, overrides.updatePetWithForm),
+      invoke(one.deleteUser, overrides.deleteUser),
+      invoke(one.getUserByName, overrides.getUserByName),
+      invoke(one.updateUser, overrides.updateUser),
+      invoke(one.addPet, overrides.addPet),
+      invoke(one.updatePet, overrides.updatePet),
+      invoke(one.createUser, overrides.createUser),
+    ];
+  };
+  return { all, one };
+}

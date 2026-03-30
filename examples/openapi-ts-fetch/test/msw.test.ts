@@ -3,7 +3,7 @@ import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
 import { client } from '../src/client/client.gen';
-import { createMswHandlerFactory } from '../src/client/msw.gen';
+import { createMswHandlers } from '../src/client/msw.gen';
 import {
   addPet,
   findPetsByStatus,
@@ -17,7 +17,7 @@ import type { Pet } from '../src/client/types.gen';
 
 const BASE_URL = 'http://localhost:3000/api/v3';
 
-const createMock = createMswHandlerFactory({ baseUrl: BASE_URL });
+const handlers = createMswHandlers({ baseUrl: BASE_URL });
 
 const server = setupServer();
 
@@ -38,7 +38,7 @@ describe('MSW plugin runtime tests', () => {
   describe('static response value', () => {
     it('returns static response for GET without path params', async () => {
       const mockInventory = { available: 10, pending: 5 };
-      server.use(createMock.getInventoryMock({ result: mockInventory, status: 200 }));
+      server.use(handlers.one.getInventory({ result: mockInventory, status: 200 }));
 
       const result = await getInventory({ client });
 
@@ -52,7 +52,7 @@ describe('MSW plugin runtime tests', () => {
         photoUrls: ['https://example.com/fido.jpg'],
         status: 'available',
       };
-      server.use(createMock.getPetByIdMock({ result: mockPet, status: 200 }));
+      server.use(handlers.one.getPetById({ result: mockPet, status: 200 }));
 
       const result = await getPetById({
         client,
@@ -67,7 +67,7 @@ describe('MSW plugin runtime tests', () => {
         { id: 1, name: 'Fido', photoUrls: [], status: 'available' },
         { id: 2, name: 'Rex', photoUrls: [], status: 'available' },
       ];
-      server.use(createMock.findPetsByStatusMock({ result: mockPets, status: 200 }));
+      server.use(handlers.one.findPetsByStatus({ result: mockPets, status: 200 }));
 
       const result = await findPetsByStatus({
         client,
@@ -84,7 +84,7 @@ describe('MSW plugin runtime tests', () => {
         photoUrls: ['https://example.com/new.jpg'],
         status: 'pending',
       };
-      server.use(createMock.addPetMock({ result: mockPet, status: 200 }));
+      server.use(handlers.one.addPet({ result: mockPet, status: 200 }));
 
       const result = await addPet({
         body: {
@@ -106,7 +106,7 @@ describe('MSW plugin runtime tests', () => {
         photoUrls: ['https://example.com/fido.jpg'],
         status: 'available',
       };
-      server.use(createMock.getPetByIdMock({ result: mockPet }));
+      server.use(handlers.one.getPetById({ result: mockPet }));
 
       const result = await getPetById({
         client,
@@ -123,7 +123,7 @@ describe('MSW plugin runtime tests', () => {
         photoUrls: ['https://example.com/new.jpg'],
         status: 'pending',
       };
-      server.use(createMock.addPetMock({ result: mockPet }));
+      server.use(handlers.one.addPet({ result: mockPet }));
 
       const result = await addPet({
         body: {
@@ -140,7 +140,7 @@ describe('MSW plugin runtime tests', () => {
   describe('custom resolver function', () => {
     it('supports custom resolver for GET', async () => {
       server.use(
-        createMock.getPetByIdMock(({ params }) =>
+        handlers.one.getPetById(({ params }) =>
           HttpResponse.json({
             id: Number(params.petId),
             name: `Pet-${params.petId}`,
@@ -165,7 +165,7 @@ describe('MSW plugin runtime tests', () => {
 
     it('supports custom resolver with request body', async () => {
       server.use(
-        createMock.addPetMock(async ({ request }) => {
+        handlers.one.addPet(async ({ request }) => {
           const body = await request.json();
           return HttpResponse.json({
             id: 99,
@@ -190,9 +190,7 @@ describe('MSW plugin runtime tests', () => {
 
     it('supports custom status codes', async () => {
       server.use(
-        createMock.getPetByIdMock(() =>
-          HttpResponse.json({ message: 'not found' }, { status: 404 }),
-        ),
+        handlers.one.getPetById(() => HttpResponse.json({ message: 'not found' }, { status: 404 })),
       );
 
       const result = await getPetById({
@@ -212,7 +210,7 @@ describe('MSW plugin runtime tests', () => {
         name: 'PathTest',
         photoUrls: [],
       };
-      server.use(createMock.getPetByIdMock({ result: mockPet, status: 200 }));
+      server.use(handlers.one.getPetById({ result: mockPet, status: 200 }));
 
       const result = await getPetById({
         client,
@@ -231,7 +229,7 @@ describe('MSW plugin runtime tests', () => {
         lastName: 'Doe',
         username: 'john_doe',
       };
-      server.use(createMock.getUserByNameMock({ result: mockUser, status: 200 }));
+      server.use(handlers.one.getUserByName({ result: mockUser, status: 200 }));
 
       const result = await getUserByName({
         client,
@@ -244,7 +242,7 @@ describe('MSW plugin runtime tests', () => {
 
     it('handles path param mid-path (e.g. /pet/{petId}/uploadImage)', async () => {
       const mockResponse = { code: 200, message: 'uploaded', type: 'ok' };
-      server.use(createMock.uploadFileMock({ result: mockResponse, status: 200 }));
+      server.use(handlers.one.uploadFile({ result: mockResponse, status: 200 }));
 
       const result = await uploadFile({
         body: new Blob(['fake-image']),
@@ -258,7 +256,7 @@ describe('MSW plugin runtime tests', () => {
 
     it('resolver receives correct path param values', async () => {
       server.use(
-        createMock.getOrderByIdMock(({ params }) => {
+        handlers.one.getOrderById(({ params }) => {
           // MSW normalizes path params to strings
           expect(typeof params.orderId).toBe('string');
           return HttpResponse.json({
@@ -282,8 +280,8 @@ describe('MSW plugin runtime tests', () => {
 
   describe('handler override', () => {
     it('later handlers override earlier ones', async () => {
-      server.use(createMock.getInventoryMock({ result: { available: 1 }, status: 200 }));
-      server.use(createMock.getInventoryMock({ result: { available: 999 }, status: 200 }));
+      server.use(handlers.one.getInventory({ result: { available: 1 }, status: 200 }));
+      server.use(handlers.one.getInventory({ result: { available: 999 }, status: 200 }));
 
       const result = await getInventory({ client });
 
@@ -293,7 +291,7 @@ describe('MSW plugin runtime tests', () => {
 
   describe('void operations', () => {
     it('handles operations with no response body', async () => {
-      server.use(createMock.logoutUserMock());
+      server.use(handlers.one.logoutUser());
 
       const result = await (await import('../src/client/sdk.gen')).logoutUser({ client });
 
