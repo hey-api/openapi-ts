@@ -26,15 +26,15 @@
     "@sveltejs/kit": "2.17.1",
     "@sveltejs/vite-plugin-svelte": "5.0.3",
     "@types/eslint": "9.6.0",
-    "eslint": "9.17.0",
+    "eslint": "9.39.2",
     "eslint-plugin-svelte": "2.36.0",
     "globals": "15.14.0",
-    "oxfmt": "0.27.0",
+    "oxfmt": "0.41.0",
     "svelte": "5.19.9",
     "svelte-check": "4.1.4",
     "typescript": "5.9.3",
     "typescript-eslint": "8.29.1",
     "vite": "7.3.1",
-    "vitest": "4.0.18"
+    "vitest": "4.1.0"
   }
 }

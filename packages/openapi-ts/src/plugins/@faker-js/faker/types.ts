@@ -61,22 +61,13 @@ export type Config = Plugin.Name<'@faker-js/faker'> &
   Plugin.Hooks &
   Plugin.Exports & {
     // Resolvers & {
-    /**
-     * Casing convention for generated names.
-     */
+    /** Casing convention for generated names. */
     case: Casing;
-    /**
-     * Configuration for reusable schema definitions.
-     */
+    /** Configuration for reusable schema definitions. */
     definitions: NamingOptions & FeatureToggle;
-    /**
-     * Faker locale for generated data.
-     */
+    /** Faker locale for generated data. */
     locale: string;
-    /**
-     * Seed for deterministic output. When set, Faker will produce
-     * the same values across runs.
-     */
+    /** Seed for deterministic output. */
     seed?: number;
   };
 

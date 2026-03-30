@@ -8,17 +8,16 @@ import { getSpecsPath } from '../../../utils';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export const createZodConfig =
-  ({
-    openApiVersion,
-    outputDir,
-    zodVersion,
-  }: {
-    openApiVersion: string;
-    outputDir: string;
-    zodVersion: (typeof zodVersions)[number];
-  }) =>
-  (userConfig: UserConfig) => {
+export function createConfigFactory({
+  openApiVersion,
+  outputDir,
+  zodVersion,
+}: {
+  openApiVersion: string;
+  outputDir: string;
+  zodVersion: (typeof zodVersions)[number];
+}) {
+  return (userConfig: UserConfig) => {
     const input = userConfig.input instanceof Array ? userConfig.input[0]! : userConfig.input;
     const inputPath = path.join(
       getSpecsPath(),
@@ -47,6 +46,7 @@ export const createZodConfig =
       output: path.join(outputDir, typeof userConfig.output === 'string' ? userConfig.output : ''),
     } as const satisfies UserConfig;
   };
+}
 
 export const getSnapshotsPath = (): string => path.join(__dirname, '..', '__snapshots__');
 
