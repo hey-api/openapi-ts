@@ -4,7 +4,7 @@ import path from 'node:path';
 import { createClient } from '@hey-api/openapi-ts';
 
 import { getFilePaths } from '../../../utils';
-import { createZodConfig, getSnapshotsPath, getTempSnapshotsPath, zodVersions } from './utils';
+import { createConfigFactory, getSnapshotsPath, getTempSnapshotsPath, zodVersions } from './utils';
 
 const version = '3.1.x';
 
@@ -13,7 +13,7 @@ for (const zodVersion of zodVersions) {
   const snapshotsDir = path.join(getSnapshotsPath(), version, zodVersion.folder);
 
   describe(`OpenAPI ${version}`, () => {
-    const createConfig = createZodConfig({
+    const createConfig = createConfigFactory({
       openApiVersion: version,
       outputDir,
       zodVersion,

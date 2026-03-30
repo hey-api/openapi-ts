@@ -4,9 +4,14 @@ import type { UserConfig } from '@hey-api/openapi-ts';
 
 import { getSpecsPath } from '../../../utils';
 
-export const createOrpcConfig =
-  ({ openApiVersion, outputDir }: { openApiVersion: string; outputDir: string }) =>
-  (userConfig: UserConfig) => {
+export function createConfigFactory({
+  openApiVersion,
+  outputDir,
+}: {
+  openApiVersion: string;
+  outputDir: string;
+}) {
+  return (userConfig: UserConfig) => {
     const input = userConfig.input instanceof Array ? userConfig.input[0]! : userConfig.input;
     const inputPath = path.join(
       getSpecsPath(),
@@ -29,3 +34,4 @@ export const createOrpcConfig =
       output: path.join(outputDir, outputPath),
     } as UserConfig;
   };
+}

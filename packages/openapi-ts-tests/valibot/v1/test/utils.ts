@@ -1,22 +1,20 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 
 import { createClient, type UserConfig } from '@hey-api/openapi-ts';
 import * as v from 'valibot';
 
 import { getSpecsPath } from '../../../utils';
+import { tmpDir } from './constants';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-export const getSnapshotsPath = (): string => path.join(__dirname, '..', '__snapshots__');
-
-export const getTempSnapshotsPath = (): string => path.join(__dirname, '..', '.gen', 'snapshots');
-
-export const createValibotConfig =
-  ({ openApiVersion, outputDir }: { openApiVersion: string; outputDir: string }) =>
-  (userConfig: UserConfig) => {
+export function createConfigFactory({
+  openApiVersion,
+  outputDir,
+}: {
+  openApiVersion: string;
+  outputDir: string;
+}) {
+  return (userConfig: UserConfig) => {
     const input = userConfig.input instanceof Array ? userConfig.input[0]! : userConfig.input;
     const inputPath = path.join(
       getSpecsPath(),
@@ -39,6 +37,7 @@ export const createValibotConfig =
       output: path.join(outputDir, outputPath),
     } as UserConfig;
   };
+}
 
 function loadGeneratedSchemas(generatedPath: string): any {
   if (!fs.existsSync(generatedPath)) {
@@ -79,7 +78,7 @@ export async function setupValibotTest(
   version = '3.1.x',
 ): Promise<any> {
   const inputPath = path.join(getSpecsPath(), version, input);
-  const outputPath = path.join(__dirname, '.gen', version, output);
+  const outputPath = path.join(tmpDir, '.integration', version, output);
 
   fs.mkdirSync(outputPath, { recursive: true });
 
