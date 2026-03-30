@@ -33,7 +33,7 @@
     "arktype": "2.1.29",
     "axios": "1.13.4",
     "cross-spawn": "7.0.6",
-    "eslint": "9.39.1",
+    "eslint": "9.39.2",
     "fastify": "5.7.4",
     "ky": "1.14.3",
     "node-fetch": "3.3.2",

@@ -4,7 +4,7 @@ import path from 'node:path';
 import { createClient } from '@hey-api/openapi-ts';
 
 import { getFilePaths, getSpecsPath } from '../../utils';
-import { createSdkConfig, getSnapshotsPath, getTempSnapshotsPath } from './utils';
+import { createConfigFactory, getSnapshotsPath, getTempSnapshotsPath } from './utils';
 
 const namespace = 'opencode';
 
@@ -14,9 +14,7 @@ const snapshotsDir = path.join(getSnapshotsPath(), namespace);
 const specPath = path.join(getSpecsPath(), '3.1.x', 'opencode.yaml');
 
 describe(`SDK: ${namespace}`, () => {
-  const createConfig = createSdkConfig({
-    outputDir,
-  });
+  const createConfig = createConfigFactory({ outputDir });
 
   const scenarios = [
     {

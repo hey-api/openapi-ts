@@ -4,15 +4,15 @@ import path from 'node:path';
 import { createClient } from '@hey-api/openapi-ts';
 
 import { getFilePaths } from '../../../utils';
-import { createValibotConfig, getSnapshotsPath, getTempSnapshotsPath } from './utils';
+import { snapshotsDir, tmpDir } from './constants';
+import { createConfigFactory } from './utils';
 
 const version = '3.0.x';
 
-const outputDir = path.join(getTempSnapshotsPath(), version);
-const snapshotsDir = path.join(getSnapshotsPath(), version);
+const outputDir = path.join(tmpDir, version);
 
 describe(`OpenAPI ${version}`, () => {
-  const createConfig = createValibotConfig({ openApiVersion: version, outputDir });
+  const createConfig = createConfigFactory({ openApiVersion: version, outputDir });
 
   const scenarios = [
     {
@@ -48,7 +48,7 @@ describe(`OpenAPI ${version}`, () => {
       filePaths.map(async (filePath) => {
         const fileContent = fs.readFileSync(filePath, 'utf-8');
         await expect(fileContent).toMatchFileSnapshot(
-          path.join(snapshotsDir, filePath.slice(outputDir.length + 1)),
+          path.join(snapshotsDir, version, filePath.slice(outputDir.length + 1)),
         );
       }),
     );
