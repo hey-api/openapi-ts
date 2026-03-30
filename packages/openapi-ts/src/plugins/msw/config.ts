@@ -8,6 +8,7 @@ export const defaultConfig: MswPlugin['Config'] = {
     baseUrl: '*',
     comments: true,
     includeInEntry: false,
+    responseFallback: 'error',
     valueSources: ['example'],
   },
   dependencies: ['@hey-api/typescript'],
