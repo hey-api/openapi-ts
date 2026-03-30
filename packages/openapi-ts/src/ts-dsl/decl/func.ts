@@ -10,6 +10,7 @@ import { DocMixin } from '../mixins/doc';
 import {
   AbstractMixin,
   AsyncMixin,
+  ExportMixin,
   PrivateMixin,
   ProtectedMixin,
   PublicMixin,
@@ -29,11 +30,13 @@ const Mixed = AbstractMixin(
       DecoratorMixin(
         DoMixin(
           DocMixin(
-            ParamMixin(
-              PrivateMixin(
-                ProtectedMixin(
-                  PublicMixin(
-                    StaticMixin(TypeParamsMixin(TypeReturnsMixin(TsDsl<ts.ArrowFunction>))),
+            ExportMixin(
+              ParamMixin(
+                PrivateMixin(
+                  ProtectedMixin(
+                    PublicMixin(
+                      StaticMixin(TypeParamsMixin(TypeReturnsMixin(TsDsl<ts.ArrowFunction>))),
+                    ),
                   ),
                 ),
               ),

@@ -1,4 +1,4 @@
-import type { AnalysisContext } from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -6,7 +6,7 @@ import { TsDsl } from '../base';
 import { OperatorMixin } from '../mixins/operator';
 import { f } from '../utils/factories';
 
-export type TypeOfExpr = string | MaybeTsDsl<ts.Expression>;
+export type TypeOfExpr = NodeName | MaybeTsDsl<ts.Expression>;
 export type TypeOfExprCtor = (expr: TypeOfExpr) => TypeOfExprTsDsl;
 
 const Mixed = OperatorMixin(TsDsl<ts.TypeOfExpression>);

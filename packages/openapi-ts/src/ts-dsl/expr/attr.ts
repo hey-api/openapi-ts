@@ -8,6 +8,7 @@ import { AsMixin } from '../mixins/as';
 import { ExprMixin } from '../mixins/expr';
 import { OperatorMixin } from '../mixins/operator';
 import { OptionalMixin } from '../mixins/optional';
+import { SpreadMixin } from '../mixins/spread';
 import { TokenTsDsl } from '../token';
 import { f } from '../utils/factories';
 import { regexp } from '../utils/regexp';
@@ -18,7 +19,9 @@ export type AttrCtor = (left: AttrLeft, right: NodeName) => AttrTsDsl;
 
 const Mixed = AsMixin(
   ExprMixin(
-    OperatorMixin(OptionalMixin(TsDsl<ts.PropertyAccessExpression | ts.ElementAccessExpression>)),
+    OperatorMixin(
+      OptionalMixin(SpreadMixin(TsDsl<ts.PropertyAccessExpression | ts.ElementAccessExpression>)),
+    ),
   ),
 );
 
