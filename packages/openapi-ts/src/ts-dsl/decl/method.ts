@@ -19,7 +19,10 @@ import { TypeParamsMixin } from '../mixins/type-params';
 import { TypeReturnsMixin } from '../mixins/type-returns';
 import { BlockTsDsl } from '../stmt/block';
 import { TokenTsDsl } from '../token';
+import { f } from '../utils/factories';
 import { safeAccessorName } from '../utils/name';
+
+export type MethodCtor = (name: NodeName, fn?: (m: MethodTsDsl) => void) => MethodTsDsl;
 
 const Mixed = AbstractMixin(
   AsyncMixin(
@@ -78,3 +81,5 @@ export class MethodTsDsl extends Mixed {
     return this.$docs(node);
   }
 }
+
+f.method.set((...args) => new MethodTsDsl(...args));

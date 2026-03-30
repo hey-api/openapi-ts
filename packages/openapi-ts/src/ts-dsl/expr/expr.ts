@@ -7,11 +7,12 @@ import { TsDsl } from '../base';
 import { AsMixin } from '../mixins/as';
 import { ExprMixin } from '../mixins/expr';
 import { OperatorMixin } from '../mixins/operator';
+import { SpreadMixin } from '../mixins/spread';
 import { TypeExprMixin } from '../mixins/type-expr';
 
 type Id = NodeName | MaybeTsDsl<ts.Expression>;
 
-const Mixed = AsMixin(ExprMixin(OperatorMixin(TypeExprMixin(TsDsl<ts.Expression>))));
+const Mixed = AsMixin(ExprMixin(OperatorMixin(SpreadMixin(TypeExprMixin(TsDsl<ts.Expression>)))));
 
 export class ExprTsDsl extends Mixed {
   readonly '~dsl' = 'ExprTsDsl';

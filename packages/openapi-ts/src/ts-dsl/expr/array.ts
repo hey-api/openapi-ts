@@ -6,19 +6,19 @@ import { TsDsl } from '../base';
 import { AsMixin } from '../mixins/as';
 import { ExprMixin } from '../mixins/expr';
 import { LayoutMixin } from '../mixins/layout';
+import { SpreadMixin } from '../mixins/spread';
 import { LiteralTsDsl } from './literal';
 
-const Mixed = AsMixin(ExprMixin(LayoutMixin(TsDsl<ts.ArrayLiteralExpression>)));
+export type ArrayExpr = string | number | boolean | MaybeTsDsl<ts.Expression>;
+
+const Mixed = AsMixin(ExprMixin(LayoutMixin(SpreadMixin(TsDsl<ts.ArrayLiteralExpression>))));
 
 export class ArrayTsDsl extends Mixed {
   readonly '~dsl' = 'ArrayTsDsl';
 
-  protected _elements: Array<
-    | { expr: MaybeTsDsl<ts.Expression>; kind: 'element' }
-    | { expr: MaybeTsDsl<ts.Expression>; kind: 'spread' }
-  > = [];
+  protected _elements: Array<MaybeTsDsl<ts.Expression>> = [];
 
-  constructor(...exprs: Array<string | number | boolean | MaybeTsDsl<ts.Expression>>) {
+  constructor(...exprs: Array<ArrayExpr>) {
     super();
     this.elements(...exprs);
   }
@@ -26,40 +26,29 @@ export class ArrayTsDsl extends Mixed {
   override analyze(ctx: AnalysisContext): void {
     super.analyze(ctx);
     for (const item of this._elements) {
-      ctx.analyze(item.expr);
+      ctx.analyze(item);
     }
   }
 
   /** Adds a single array element. */
-  element(expr: string | number | boolean | MaybeTsDsl<ts.Expression>): this {
+  element(expr: ArrayExpr): this {
     const node =
       typeof expr === 'string' || typeof expr === 'number' || typeof expr === 'boolean'
         ? new LiteralTsDsl(expr)
         : expr;
-    this._elements.push({ expr: node, kind: 'element' });
+    this._elements.push(node);
     return this;
   }
 
   /** Adds multiple array elements. */
-  elements(...exprs: ReadonlyArray<string | number | boolean | MaybeTsDsl<ts.Expression>>): this {
+  elements(...exprs: ReadonlyArray<ArrayExpr>): this {
     for (const expr of exprs) this.element(expr);
     return this;
   }
 
-  /** Adds a spread element (`...expr`). */
-  spread(expr: MaybeTsDsl<ts.Expression>): this {
-    this._elements.push({ expr, kind: 'spread' });
-    return this;
-  }
-
   override toAst() {
-    const elements = this._elements.map((item) => {
-      const node = this.$node(item.expr);
-      return item.kind === 'spread' ? ts.factory.createSpreadElement(node) : node;
-    });
-
     return ts.factory.createArrayLiteralExpression(
-      elements,
+      this._elements.map((item) => this.$node(item)),
       this.$multiline(this._elements.length),
     );
   }

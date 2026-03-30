@@ -1,4 +1,4 @@
-import type { AnalysisContext } from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -7,7 +7,7 @@ import type { DoExpr } from '../mixins/do';
 import { DoMixin } from '../mixins/do';
 import { BlockTsDsl } from './block';
 
-export type IfCondition = string | MaybeTsDsl<ts.Expression>;
+export type IfCondition = NodeName | MaybeTsDsl<ts.Expression>;
 
 const Mixed = DoMixin(TsDsl<ts.IfStatement>);
 

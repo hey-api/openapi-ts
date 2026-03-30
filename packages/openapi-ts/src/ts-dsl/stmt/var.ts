@@ -52,8 +52,8 @@ export class VarTsDsl extends Mixed {
   }
 
   /** Sets the variable type. */
-  type(type: string | TypeTsDsl): this {
-    this._type = type instanceof TypeTsDsl ? type : new TypeExprTsDsl(type);
+  type(node: NodeName | TypeTsDsl): this {
+    this._type = node instanceof TypeTsDsl ? node : new TypeExprTsDsl(node);
     return this;
   }
 
