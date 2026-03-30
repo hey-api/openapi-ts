@@ -291,6 +291,19 @@ export type UserConfig = Plugin.Name<'@tanstack/solid-query'> &
            */
           name?: NameTransformer;
         };
+    /**
+     * Style of response handling in generated query/mutation functions.
+     *
+     * `'data'` returns only the parsed response data (default, backwards compatible).
+     * `'fields'` returns `{ data, request, response }` on success and
+     * throws `{ error, request, response }` on errors, giving access to
+     * HTTP status codes, headers, and other response metadata.
+     *
+     * Can be overridden per-query by passing `responseStyle` in options.
+     *
+     * @default 'data'
+     */
+    responseStyle?: 'data' | 'fields';
   };
 
 export type Config = Plugin.Name<'@tanstack/solid-query'> &
@@ -433,6 +446,7 @@ export type Config = Plugin.Name<'@tanstack/solid-query'> &
          */
         meta: (operation: IR.OperationObject) => Record<string, unknown>;
       };
+    responseStyle: 'data' | 'fields';
   };
 
 export type TanStackSolidQueryPlugin = DefinePlugin<UserConfig, Config>;

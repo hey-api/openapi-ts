@@ -334,6 +334,20 @@ for (const version of versions) {
       },
       {
         config: createConfig({
+          output: 'responseStyle',
+          plugins: [
+            {
+              name: '@tanstack/react-query',
+              responseStyle: 'fields',
+            },
+            '@hey-api/client-fetch',
+          ],
+        }),
+        description:
+          'generate Fetch API client with TanStack React Query plugin with responseStyle fields',
+      },
+      {
+        config: createConfig({
           input: 'sdk-instance.yaml',
           output: 'name-builder',
           plugins: [
