@@ -139,6 +139,10 @@ export const createInfiniteQueryOptions = ({
   const typeData = useTypeData({ operation, plugin });
   const typeResponse = useTypeResponse({ operation, plugin });
 
+  const symbolSkipToken = $(plugin.external(`${plugin.name}.skipToken`));
+
+  const optsName = 'opts';
+
   const symbolQueryKeyType = plugin.referenceSymbol({
     category: 'type',
     resource: 'QueryKey',
@@ -180,7 +184,7 @@ export const createInfiniteQueryOptions = ({
       )
       .call(
         $.object()
-          .spread('options')
+          .spread(optsName)
           .spread('params')
           .prop('signal', $('signal'))
           .prop('throwOnError', $.literal(true)),
@@ -216,6 +220,13 @@ export const createInfiniteQueryOptions = ({
     statements.push($.const().object('data').assign(awaitSdkFn), $.return('data'));
   }
 
+  const asyncQueryFn = $.func()
+    .async()
+    .param((p) => p.object('pageParam', 'queryKey', 'signal'))
+    .do(...statements);
+
+  const paramType = $.type.or(typeData, $.type.query(symbolSkipToken));
+
   const symbolInfiniteQueryOptionsFn = plugin.symbol(
     applyNaming(operation.id, plugin.config.infiniteQueryOptions),
   );
@@ -224,8 +235,11 @@ export const createInfiniteQueryOptions = ({
     .$if(plugin.config.comments && createOperationComment(operation), (c, v) => c.doc(v))
     .assign(
       $.func()
-        .param('options', (p) => p.required(isRequiredOptions).type(typeData))
+        .param('options', (p) => p.required(isRequiredOptions).type(paramType))
         .do(
+          $.const(optsName).assign(
+            $.ternary($('options').neq(symbolSkipToken)).do($('options')).otherwise($('undefined')),
+          ),
           $.return(
             $(symbolInfiniteQueryOptions)
               .call(
@@ -234,12 +248,16 @@ export const createInfiniteQueryOptions = ({
                   .hint('@ts-ignore')
                   .prop(
                     'queryFn',
-                    $.func()
-                      .async()
-                      .param((p) => p.object('pageParam', 'queryKey', 'signal'))
-                      .do(...statements),
+                    $.ternary($('options').eq(symbolSkipToken))
+                      .do(symbolSkipToken)
+                      .otherwise(asyncQueryFn),
                   )
-                  .prop('queryKey', $(symbolInfiniteQueryKey).call('options'))
+                  .prop(
+                    'queryKey',
+                    $(symbolInfiniteQueryKey).call(
+                      isRequiredOptions ? $(optsName).as(typeData) : $(optsName),
+                    ),
+                  )
                   .$if(handleMeta(plugin, operation, 'infiniteQueryOptions'), (o, v) =>
                     o.prop('meta', v),
                   ),
