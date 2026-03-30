@@ -127,7 +127,7 @@ function createHandlerFunc({
                     dominantResponse,
                     plugin,
                     symbolResolver,
-                  }),
+                  }).return(),
                 ),
               ),
             )

@@ -15,7 +15,7 @@ export function createHandlerResponse({
   dominantResponse: DominantResponse;
   plugin: MswPlugin['Instance'];
   symbolResolver: Symbol;
-}) {
+}): ReturnType<typeof $.call | typeof $.new> {
   const symbolHttpResponse = plugin.external('msw.HttpResponse');
 
   const statusOption = $.object().prop(
@@ -28,18 +28,21 @@ export function createHandlerResponse({
 
   switch (responseKind) {
     case 'binary':
-      return $.new(symbolHttpResponse, resultExpr.coalesce($.literal(null)), statusOption).return();
+      return $.new(symbolHttpResponse, resultExpr.coalesce($.literal(null)), statusOption);
     case 'json':
       return $(symbolHttpResponse)
         .attr('json')
-        .call(resultExpr.coalesce($.literal(null)), statusOption)
-        .return();
+        .call(resultExpr.coalesce($.literal(null)), statusOption);
     case 'text':
       return $(symbolHttpResponse)
         .attr('text')
-        .call(resultExpr.coalesce($.literal(null)), statusOption)
-        .return();
+        .call(
+          $('JSON')
+            .attr('stringify')
+            .call(resultExpr.coalesce($.literal(''))),
+          statusOption,
+        );
     case 'void':
-      return $.new(symbolHttpResponse, resultExpr.coalesce($.literal(null)), statusOption).return();
+      return $.new(symbolHttpResponse, resultExpr.coalesce($.literal(null)), statusOption);
   }
 }
