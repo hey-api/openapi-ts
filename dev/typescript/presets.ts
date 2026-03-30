@@ -4,6 +4,7 @@ export type PluginConfig = NonNullable<NonNullable<UserConfig['plugins']>[number
 
 export const presets = {
   angular: () => [
+    /** Angular HttpClient with typed services */
     {
       httpRequests: 'flat',
       name: '@angular/common',
@@ -11,7 +12,9 @@ export const presets = {
   ],
   full: () => [
     /** Full kitchen sink for comprehensive testing */
-    '@hey-api/typescript',
+    {
+      name: '@hey-api/typescript',
+    },
     {
       name: '@hey-api/sdk',
       paramsStructure: 'flat',
@@ -30,6 +33,20 @@ export const presets = {
       },
     },
   ],
+  msw: () => [
+    /** SDK + MSW handlers */
+    {
+      name: '@hey-api/sdk',
+      operations: {
+        containerName: 'OpenCode',
+        strategy: 'single',
+      },
+      paramsStructure: 'flat',
+    },
+    {
+      name: 'msw',
+    },
+  ],
   rpc: () => [
     /** RPC-style SDK with Zod validation */
     'orpc',
@@ -37,7 +54,6 @@ export const presets = {
   ],
   sdk: () => [
     /** SDK with types */
-    '@hey-api/typescript',
     {
       name: '@hey-api/sdk',
       operations: {
@@ -49,8 +65,6 @@ export const presets = {
   ],
   tanstack: () => [
     /** SDK + TanStack Query */
-    '@hey-api/typescript',
-    '@hey-api/sdk',
     {
       name: '@tanstack/react-query',
       queryKeys: {
@@ -64,7 +78,6 @@ export const presets = {
   ],
   validated: () => [
     /** SDK + Zod validation */
-    '@hey-api/typescript',
     {
       name: '@hey-api/sdk',
       validator: 'zod',
