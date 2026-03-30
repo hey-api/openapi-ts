@@ -7,6 +7,7 @@ import type { MswPlugin } from '../types';
 import { computeDominantResponse, type DominantResponse } from './computeDominantResponse';
 import { getOperationComment } from './operation';
 import { sanitizeParamName, sanitizePath } from './path';
+import { createHandlerResponse } from './response';
 
 const emitToResponseUnion = (plugin: MswPlugin['Instance']) => {
   const symbol = plugin.symbol('ToResponseUnion', {
@@ -38,46 +39,6 @@ const emitToResponseUnion = (plugin: MswPlugin['Instance']) => {
   plugin.node(toResponseUnionType);
 };
 
-/**
- * Builds the response override expression for the `res` parameter.
- */
-function buildResponseOverrideExpr({
-  dominantResponse: { kind: responseKind, statusCode: responseStatusCode },
-  plugin,
-  symbolResolver,
-}: {
-  dominantResponse: DominantResponse;
-  plugin: MswPlugin['Instance'];
-  symbolResolver: Symbol;
-}) {
-  const symbolHttpResponse = plugin.external('msw.HttpResponse');
-
-  const statusOption = $.object().prop(
-    'status',
-    responseStatusCode
-      ? $(symbolResolver).attr('status').coalesce($.literal(responseStatusCode))
-      : $(symbolResolver).attr('status'),
-  );
-  const resultExpr = $(symbolResolver).attr('result');
-
-  switch (responseKind) {
-    case 'binary':
-      return $.new(symbolHttpResponse, resultExpr.coalesce($.literal(null)), statusOption).return();
-    case 'json':
-      return $(symbolHttpResponse)
-        .attr('json')
-        .call(resultExpr.coalesce($.literal(null)), statusOption)
-        .return();
-    case 'text':
-      return $(symbolHttpResponse)
-        .attr('text')
-        .call(resultExpr.coalesce($.literal(null)), statusOption)
-        .return();
-    case 'void':
-      return $.new(symbolHttpResponse, resultExpr.coalesce($.literal(null)), statusOption).return();
-  }
-}
-
 function createHandlerFunc({
   baseUrl,
   bodyType,
@@ -98,7 +59,6 @@ function createHandlerFunc({
   responseOrResolverType: ReturnType<typeof $.type | typeof $.type.or>;
 }): Symbol {
   const symbolHttp = plugin.external('msw.http');
-  // const symbolHttpResponse = plugin.external('msw.HttpResponse');
   const symbolResolver = plugin.symbol('resolver');
   const symbolOptions = plugin.symbol('options');
 
@@ -163,7 +123,7 @@ function createHandlerFunc({
             .$if(dominantResponse.statusCode != null, (f) =>
               f.do(
                 $.if(symbolResolver).do(
-                  buildResponseOverrideExpr({
+                  createHandlerResponse({
                     dominantResponse,
                     plugin,
                     symbolResolver,
