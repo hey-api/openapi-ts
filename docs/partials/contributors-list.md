@@ -90,6 +90,7 @@
 - [Sjoerd Scheffer](https://github.com/ixnas)
 - [Stephen Zhou](https://github.com/hyoban)
 - [Stian Jensen](https://github.com/stianjensen)
+- [Tom van de Velde](https://github.com/tomvdv)
 - [Vincent Olesen](https://github.com/volesen)
 - [Warren Seine](https://github.com/warrenseine)
 - [Will Mitchell](https://github.com/wn-mitch)
