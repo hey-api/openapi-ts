@@ -5,6 +5,12 @@ import type ts from 'typescript';
 import type { $ } from '../../../ts-dsl';
 import type { ArktypePlugin } from '../types';
 
+export type ValidatorArgs = {
+  operation: IR.OperationObject;
+  /** The plugin instance. */
+  plugin: ArktypePlugin['Instance'];
+};
+
 export type Ast = {
   def: string;
   expression: ReturnType<typeof $.call | typeof $.expr | typeof $.object>;
@@ -25,8 +31,3 @@ export type PluginState = Pick<Required<SymbolMeta>, 'path'> &
   Pick<Partial<SymbolMeta>, 'tags'> & {
     hasLazyExpression: boolean;
   };
-
-export type ValidatorArgs = {
-  operation: IR.OperationObject;
-  plugin: ArktypePlugin['Instance'];
-};

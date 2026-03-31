@@ -7,6 +7,7 @@ import type {
   NamingOptions,
   Plugin,
 } from '@hey-api/shared';
+import type { MaybeFunc } from '@hey-api/types';
 
 import type { $, DollarTsDsl } from '../../ts-dsl';
 import type { IApi } from './api';
@@ -98,6 +99,39 @@ export type UserConfig = Plugin.Name<'valibot'> &
       | NameTransformer
       | {
           /**
+           * Configuration for request body Valibot schemas.
+           *
+           * Can be:
+           * - `boolean`: Shorthand for `{ enabled: boolean }`
+           * - `string` or `function`: Shorthand for `{ name: string | function }`
+           * - `object`: Full configuration object
+           *
+           * @default true
+           */
+          body?:
+            | boolean
+            | NameTransformer
+            | {
+                /**
+                 * Casing convention for generated names.
+                 *
+                 * @default 'camelCase'
+                 */
+                case?: Casing;
+                /**
+                 * Whether this feature is enabled.
+                 *
+                 * @default true
+                 */
+                enabled?: boolean;
+                /**
+                 * Naming pattern for generated names.
+                 *
+                 * @default 'v{{name}}Body'
+                 */
+                name?: NameTransformer;
+              };
+          /**
            * Casing convention for generated names.
            *
            * @default 'camelCase'
@@ -110,11 +144,139 @@ export type UserConfig = Plugin.Name<'valibot'> &
            */
           enabled?: boolean;
           /**
+           * Configuration for request headers Valibot schemas.
+           *
+           * Can be:
+           * - `boolean`: Shorthand for `{ enabled: boolean }`
+           * - `string` or `function`: Shorthand for `{ name: string | function }`
+           * - `object`: Full configuration object
+           *
+           * @default true
+           */
+          headers?:
+            | boolean
+            | NameTransformer
+            | {
+                /**
+                 * Casing convention for generated names.
+                 *
+                 * @default 'camelCase'
+                 */
+                case?: Casing;
+                /**
+                 * Whether this feature is enabled.
+                 *
+                 * @default true
+                 */
+                enabled?: boolean;
+                /**
+                 * Naming pattern for generated names.
+                 *
+                 * @default 'v{{name}}Headers'
+                 */
+                name?: NameTransformer;
+              };
+          /**
            * Naming pattern for generated names.
            *
            * @default 'v{{name}}Data'
            */
           name?: NameTransformer;
+          /**
+           * Configuration for request path parameters Valibot schemas.
+           *
+           * Can be:
+           * - `boolean`: Shorthand for `{ enabled: boolean }`
+           * - `string` or `function`: Shorthand for `{ name: string | function }`
+           * - `object`: Full configuration object
+           *
+           * @default true
+           */
+          path?:
+            | boolean
+            | NameTransformer
+            | {
+                /**
+                 * Casing convention for generated names.
+                 *
+                 * @default 'camelCase'
+                 */
+                case?: Casing;
+                /**
+                 * Whether this feature is enabled.
+                 *
+                 * @default true
+                 */
+                enabled?: boolean;
+                /**
+                 * Naming pattern for generated names.
+                 *
+                 * @default 'v{{name}}Path'
+                 */
+                name?: NameTransformer;
+              };
+          /**
+           * Configuration for request query parameters Valibot schemas.
+           *
+           * Can be:
+           * - `boolean`: Shorthand for `{ enabled: boolean }`
+           * - `string` or `function`: Shorthand for `{ name: string | function }`
+           * - `object`: Full configuration object
+           *
+           * @default true
+           */
+          query?:
+            | boolean
+            | NameTransformer
+            | {
+                /**
+                 * Casing convention for generated names.
+                 *
+                 * @default 'camelCase'
+                 */
+                case?: Casing;
+                /**
+                 * Whether this feature is enabled.
+                 *
+                 * @default true
+                 */
+                enabled?: boolean;
+                /**
+                 * Naming pattern for generated names.
+                 *
+                 * @default 'v{{name}}Query'
+                 */
+                name?: NameTransformer;
+              };
+          /**
+           * Whether to extract the request schema into a named export.
+           *
+           * When `true`, generates a reusable schema like `vProjectListData`.
+           * When `false`, the schema is built inline within the caller plugin.
+           *
+           * Can be a boolean or a function for per-operation control.
+           *
+           * @default false
+           * @example
+           * ```ts
+           * // Always extract
+           * shouldExtract: true
+           *
+           * // Extract only for operations with complex request bodies
+           * shouldExtract: ({ operation }) =>
+           *   operation.body !== undefined && operation.parameters !== undefined
+           *
+           * // Extract based on custom extension
+           * shouldExtract: ({ operation }) =>
+           *   operation['x-custom']?.extractRequestSchema === true
+           * ```
+           */
+          shouldExtract?: MaybeFunc<
+            (ctx: {
+              /** The operation being processed */
+              operation: IR.OperationObject;
+            }) => boolean
+          >;
         };
     /**
      * Configuration for response-specific Valibot schemas.
@@ -205,7 +367,22 @@ export type Config = Plugin.Name<'valibot'> &
           ctx: DollarTsDsl & { node: ReturnType<typeof $.object>; schema: IR.SchemaObject },
         ) => void);
     /** Configuration for request-specific Valibot schemas. */
-    requests: NamingOptions & FeatureToggle;
+    requests: NamingOptions &
+      FeatureToggle & {
+        /** Configuration for request body Valibot schemas. */
+        body: NamingOptions & FeatureToggle;
+        /** Configuration for request headers Valibot schemas. */
+        headers: NamingOptions & FeatureToggle;
+        /** Configuration for request path parameters Valibot schemas. */
+        path: NamingOptions & FeatureToggle;
+        /** Configuration for request query parameters Valibot schemas. */
+        query: NamingOptions & FeatureToggle;
+        /** Whether to extract the request schema into a named export. */
+        shouldExtract: (ctx: {
+          /** The operation being processed */
+          operation: IR.OperationObject;
+        }) => boolean;
+      };
     /** Configuration for response-specific Valibot schemas. */
     responses: NamingOptions & FeatureToggle;
     /** Configuration for webhook-specific Valibot schemas. */

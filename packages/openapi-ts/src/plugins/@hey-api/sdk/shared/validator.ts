@@ -1,33 +1,33 @@
-import type { IR } from '@hey-api/shared';
+import type { IR, RequestSchemaContext } from '@hey-api/shared';
 
 import type { $ } from '../../../../ts-dsl';
 import type { HeyApiSdkPlugin } from '../types';
 
-interface ValidatorProps {
-  operation: IR.OperationObject;
-  plugin: HeyApiSdkPlugin['Instance'];
-}
-
-export const createRequestValidator = ({
-  operation,
+export function createRequestValidator({
   plugin,
-}: ValidatorProps): ReturnType<typeof $.func> | undefined => {
+  ...args
+}: RequestSchemaContext<HeyApiSdkPlugin['Instance']>): ReturnType<typeof $.func> | undefined {
   if (!plugin.config.validator.request) return;
 
   const validator = plugin.getPluginOrThrow(plugin.config.validator.request);
   if (!validator.api.createRequestValidator) return;
 
   return validator.api.createRequestValidator({
-    operation,
+    ...args,
     // @ts-expect-error
     plugin: validator,
   });
-};
+}
 
-export const createResponseValidator = ({
+export function createResponseValidator({
   operation,
   plugin,
-}: ValidatorProps): ReturnType<typeof $.func> | undefined => {
+}: {
+  /** The operation object. */
+  operation: IR.OperationObject;
+  /** The plugin instance. */
+  plugin: HeyApiSdkPlugin['Instance'];
+}): ReturnType<typeof $.func> | undefined {
   if (!plugin.config.validator.response) return;
 
   const validator = plugin.getPluginOrThrow(plugin.config.validator.response);
@@ -38,4 +38,4 @@ export const createResponseValidator = ({
     // @ts-expect-error
     plugin: validator,
   });
-};
+}

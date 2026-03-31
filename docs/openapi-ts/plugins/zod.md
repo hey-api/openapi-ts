@@ -68,22 +68,21 @@ The Zod plugin will generate the following artifacts, depending on the input spe
 
 ## Requests
 
-A single request schema is generated for each endpoint. It may contain a request body, parameters, and headers.
+A Zod schema is generated for every request layer of each endpoint.
 
 ::: code-group
 
 ```ts [example]
-const zData = z.object({
-  body: z
-    .object({
-      foo: z.optional(z.string()),
-      bar: z.optional(z.union([z.number(), z.null()])),
-    })
-    .optional(),
-  path: z.object({
-    baz: z.string(),
-  }),
-  query: z.optional(z.never()),
+const zDeletePetHeaders = z.object({
+  api_key: z.string().optional(),
+});
+
+const zDeletePetPath = z.object({
+  petId: z.number(),
+});
+
+const zDeletePetQuery = z.object({
+  additionalMetadata: z.string(),
 });
 ```
 
@@ -101,10 +100,6 @@ export default {
 };
 ```
 
-:::
-
-::: tip
-If you need to access individual fields, you can do so using the [`.shape`](https://zod.dev/api?id=shape) API. For example, we can get the request body schema with `zData.shape.body`.
 :::
 
 You can customize the naming and casing pattern for `requests` schemas using the `.name` and `.case` options.

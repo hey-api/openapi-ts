@@ -46,28 +46,24 @@ export const zFoo3 = z.object({
 
 export type FooZodType3 = z.infer<typeof zFoo3>;
 
-export const zPatchFooData = z.object({
-    body: z.object({
-        foo: z.optional(z.string())
-    }),
-    path: z.optional(z.never()),
-    query: z.optional(z.object({
-        foo: z.optional(z.string()),
-        bar: z.optional(zBar),
-        baz: z.optional(z.object({
-            baz: z.optional(z.string())
-        })),
-        qux: z.optional(z.iso.date()),
-        quux: z.optional(z.iso.datetime())
-    }))
+export const zPatchFooBody = z.object({
+    foo: z.optional(z.string())
 });
 
-export type PatchFooDataZodType = z.infer<typeof zPatchFooData>;
+export type PatchFooBodyZodType = z.infer<typeof zPatchFooBody>;
 
-export const zPostFooData = z.object({
-    body: zFoo3,
-    path: z.optional(z.never()),
-    query: z.optional(z.never())
+export const zPatchFooQuery = z.object({
+    foo: z.optional(z.string()),
+    bar: z.optional(zBar),
+    baz: z.optional(z.object({
+        baz: z.optional(z.string())
+    })),
+    qux: z.optional(z.iso.date()),
+    quux: z.optional(z.iso.datetime())
 });
 
-export type PostFooDataZodType = z.infer<typeof zPostFooData>;
+export type PatchFooQueryZodType = z.infer<typeof zPatchFooQuery>;
+
+export const zPostFooBody = zFoo3;
+
+export type PostFooBodyZodType = z.infer<typeof zPostFooBody>;

@@ -34,24 +34,18 @@ export const vFoo3 = v.pipe(v.object({
     foo: v.optional(vBar)
 }), v.metadata({ custom: 'value', title: 'object' }));
 
-export const vPatchFooData = v.pipe(v.object({
-    body: v.pipe(v.object({
-        foo: v.optional(v.pipe(v.string(), v.metadata({ custom: 'value', title: 'string' })))
-    }), v.metadata({ custom: 'value', title: 'object' })),
-    path: v.optional(v.pipe(v.never(), v.metadata({ custom: 'value', title: 'never' }))),
-    query: v.optional(v.pipe(v.object({
-        foo: v.optional(v.pipe(v.string(), v.metadata({ custom: 'value', title: 'This is Foo parameter.' }))),
-        bar: v.optional(vBar),
-        baz: v.optional(v.pipe(v.object({
-            baz: v.optional(v.pipe(v.string(), v.metadata({ custom: 'value', title: 'string' })))
-        }), v.metadata({ custom: 'value', title: 'object' }))),
-        qux: v.optional(v.pipe(v.pipe(v.string(), v.isoDate()), v.metadata({ custom: 'value', title: 'string' }))),
-        quux: v.optional(v.pipe(v.pipe(v.string(), v.isoTimestamp()), v.metadata({ custom: 'value', title: 'string' })))
-    }), v.metadata({ custom: 'value', title: 'object' })))
+export const vPatchFooBody = v.pipe(v.object({
+    foo: v.optional(v.pipe(v.string(), v.metadata({ custom: 'value', title: 'string' })))
 }), v.metadata({ custom: 'value', title: 'object' }));
 
-export const vPostFooData = v.pipe(v.object({
-    body: vFoo3,
-    path: v.optional(v.pipe(v.never(), v.metadata({ custom: 'value', title: 'never' }))),
-    query: v.optional(v.pipe(v.never(), v.metadata({ custom: 'value', title: 'never' })))
+export const vPatchFooQuery = v.pipe(v.object({
+    foo: v.optional(v.pipe(v.string(), v.metadata({ custom: 'value', title: 'This is Foo parameter.' }))),
+    bar: v.optional(vBar),
+    baz: v.optional(v.pipe(v.object({
+        baz: v.optional(v.pipe(v.string(), v.metadata({ custom: 'value', title: 'string' })))
+    }), v.metadata({ custom: 'value', title: 'object' }))),
+    qux: v.optional(v.pipe(v.pipe(v.string(), v.isoDate()), v.metadata({ custom: 'value', title: 'string' }))),
+    quux: v.optional(v.pipe(v.pipe(v.string(), v.isoTimestamp()), v.metadata({ custom: 'value', title: 'string' })))
 }), v.metadata({ custom: 'value', title: 'object' }));
+
+export const vPostFooBody = vFoo3;
