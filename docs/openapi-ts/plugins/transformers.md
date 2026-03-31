@@ -83,7 +83,7 @@ This will generate types that use `Date` instead of `string` and appropriate tra
 
 ## BigInt
 
-The `@hey-api/transformers` plugin will natively type all BigInts as `bigint` instead of `number`, which can affect arithmetic operations if your application previously used `number`. To force BigInts to be numbers, use the `bigint` configuration option.
+The `@hey-api/transformers` plugin will natively type all BigInts as `bigint` instead of `number`, which can affect arithmetic operations if your application previously used `number`. To force BigInts to be numbers, use the `bigInt` configuration option.
 
 ```js
 export default {
@@ -92,7 +92,7 @@ export default {
   plugins: [
     // ...other plugins
     {
-      bigint: true, // [!code ++]
+      bigInt: true, // [!code ++]
       name: '@hey-api/transformers',
     },
   ],
