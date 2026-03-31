@@ -1,11 +1,14 @@
+import type { RequestSchemaContext } from '@hey-api/shared';
+
 import { $ } from '../../../ts-dsl';
 import type { ValidatorArgs } from '../shared/types';
+import type { ArktypePlugin } from '../types';
 
-export const createRequestValidatorV2 = ({
+export function createRequestValidatorV2({
   operation,
   plugin,
-}: ValidatorArgs): ReturnType<typeof $.func> | undefined => {
-  const symbol = plugin.getSymbol({
+}: RequestSchemaContext<ArktypePlugin['Instance']>): ReturnType<typeof $.func> | undefined {
+  const symbol = plugin.querySymbol({
     category: 'schema',
     resource: 'operation',
     resourceId: operation.id,
@@ -33,13 +36,13 @@ export const createRequestValidatorV2 = ({
     .async()
     .param(dataParameterName)
     .do($(symbol).attr('parseAsync').call(dataParameterName).await().return());
-};
+}
 
-export const createResponseValidatorV2 = ({
+export function createResponseValidatorV2({
   operation,
   plugin,
-}: ValidatorArgs): ReturnType<typeof $.func> | undefined => {
-  const symbol = plugin.getSymbol({
+}: ValidatorArgs): ReturnType<typeof $.func> | undefined {
+  const symbol = plugin.querySymbol({
     category: 'schema',
     resource: 'operation',
     resourceId: operation.id,
@@ -53,4 +56,4 @@ export const createResponseValidatorV2 = ({
     .async()
     .param(dataParameterName)
     .do($(symbol).attr('parseAsync').call(dataParameterName).await().return());
-};
+}

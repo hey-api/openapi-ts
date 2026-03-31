@@ -30,7 +30,7 @@ export interface VisitorConfig {
 }
 
 export function createVisitor(
-  config: VisitorConfig,
+  config: VisitorConfig = {},
 ): SchemaVisitor<ZodResult, ZodPlugin['Instance']> {
   const { schemaExtractor } = config;
 
@@ -128,6 +128,12 @@ export function createVisitor(
         if (extracted !== schema) {
           return walk(extracted, ctx);
         }
+      }
+      if (schema.symbolRef) {
+        return {
+          expression: $(schema.symbolRef),
+          meta: defaultMeta(schema),
+        };
       }
     },
     intersection(items, schemas, parentSchema, ctx) {

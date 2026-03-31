@@ -34,24 +34,18 @@ export const vFoo3 = v.object({
     foo: v.optional(vBar)
 });
 
-export const vPatchFooData = v.object({
-    body: v.object({
-        foo: v.optional(v.string())
-    }),
-    path: v.optional(v.never()),
-    query: v.optional(v.object({
-        foo: v.optional(v.string()),
-        bar: v.optional(vBar),
-        baz: v.optional(v.object({
-            baz: v.optional(v.string())
-        })),
-        qux: v.optional(v.pipe(v.string(), v.isoDate())),
-        quux: v.optional(v.pipe(v.string(), v.isoTimestamp()))
-    }))
+export const vPatchFooBody = v.object({
+    foo: v.optional(v.string())
 });
 
-export const vPostFooData = v.object({
-    body: vFoo3,
-    path: v.optional(v.never()),
-    query: v.optional(v.never())
+export const vPatchFooQuery = v.object({
+    foo: v.optional(v.string()),
+    bar: v.optional(vBar),
+    baz: v.optional(v.object({
+        baz: v.optional(v.string())
+    })),
+    qux: v.optional(v.pipe(v.string(), v.isoDate())),
+    quux: v.optional(v.pipe(v.string(), v.isoTimestamp()))
 });
+
+export const vPostFooBody = vFoo3;

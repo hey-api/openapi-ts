@@ -1,3 +1,4 @@
+import type { Symbol } from '@hey-api/codegen-core';
 import { buildSymbolIn, pathToName } from '@hey-api/shared';
 
 import { createSchemaComment } from '../../../plugins/shared/utils/schema';
@@ -15,9 +16,12 @@ export function exportAst({
   plugin,
   schema,
   tags,
-}: ProcessorContext & {
+}: Pick<
+  ProcessorContext,
+  'meta' | 'naming' | 'namingAnchor' | 'path' | 'plugin' | 'schema' | 'tags'
+> & {
   final: ValibotFinal;
-}): void {
+}): Symbol {
   const v = plugin.external('valibot.v');
 
   const name = pathToName(path, { anchor: namingAnchor });
@@ -45,4 +49,6 @@ export function exportAst({
     .assign(pipesToNode(final.pipes, plugin));
 
   plugin.node(statement);
+
+  return symbol;
 }

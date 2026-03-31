@@ -39,13 +39,9 @@ export const vCreatePostInput = v.object({
     status: v.optional(v.picklist(['draft', 'published']))
 });
 
-export const vGetUsersData = v.object({
-    body: v.optional(v.never()),
-    path: v.optional(v.never()),
-    query: v.optional(v.object({
-        limit: v.optional(v.pipe(v.number(), v.integer()), 10),
-        offset: v.optional(v.pipe(v.number(), v.integer()), 0)
-    }))
+export const vGetUsersQuery = v.object({
+    limit: v.optional(v.pipe(v.number(), v.integer()), 10),
+    offset: v.optional(v.pipe(v.number(), v.integer()), 0)
 });
 
 /**
@@ -53,26 +49,19 @@ export const vGetUsersData = v.object({
  */
 export const vGetUsersResponse = v.array(vUser);
 
-export const vCreateUserData = v.object({
-    body: vCreateUserInput,
-    path: v.optional(v.never()),
-    query: v.optional(v.never())
-});
+export const vCreateUserBody = vCreateUserInput;
 
 /**
  * User created
  */
 export const vCreateUserResponse = vUser;
 
-export const vDeleteUserData = v.object({
-    body: v.optional(v.never()),
-    path: v.object({
-        userId: v.string()
-    }),
-    query: v.optional(v.never()),
-    headers: v.optional(v.object({
-        'X-Request-Id': v.optional(v.string())
-    }))
+export const vDeleteUserHeaders = v.object({
+    'X-Request-Id': v.optional(v.string())
+});
+
+export const vDeleteUserPath = v.object({
+    userId: v.string()
 });
 
 /**
@@ -80,12 +69,8 @@ export const vDeleteUserData = v.object({
  */
 export const vDeleteUserResponse = v.void();
 
-export const vGetUserByIdData = v.object({
-    body: v.optional(v.never()),
-    path: v.object({
-        userId: v.string()
-    }),
-    query: v.optional(v.never())
+export const vGetUserByIdPath = v.object({
+    userId: v.string()
 });
 
 /**
@@ -93,12 +78,10 @@ export const vGetUserByIdData = v.object({
  */
 export const vGetUserByIdResponse = vUser;
 
-export const vUpdateUserData = v.object({
-    body: vUpdateUserInput,
-    path: v.object({
-        userId: v.string()
-    }),
-    query: v.optional(v.never())
+export const vUpdateUserBody = vUpdateUserInput;
+
+export const vUpdateUserPath = v.object({
+    userId: v.string()
 });
 
 /**
@@ -106,17 +89,13 @@ export const vUpdateUserData = v.object({
  */
 export const vUpdateUserResponse = vUser;
 
-export const vGetPostsData = v.object({
-    body: v.optional(v.never()),
-    path: v.optional(v.never()),
-    query: v.optional(v.object({
-        authorId: v.optional(v.string()),
-        status: v.optional(v.picklist([
-            'draft',
-            'published',
-            'archived'
-        ]))
-    }))
+export const vGetPostsQuery = v.object({
+    authorId: v.optional(v.string()),
+    status: v.optional(v.picklist([
+        'draft',
+        'published',
+        'archived'
+    ]))
 });
 
 /**
@@ -124,13 +103,10 @@ export const vGetPostsData = v.object({
  */
 export const vGetPostsResponse = v.array(vPost);
 
-export const vCreatePostData = v.object({
-    body: vCreatePostInput,
-    path: v.optional(v.never()),
-    query: v.optional(v.never()),
-    headers: v.object({
-        'X-Author-Id': v.string()
-    })
+export const vCreatePostBody = vCreatePostInput;
+
+export const vCreatePostHeaders = v.object({
+    'X-Author-Id': v.string()
 });
 
 /**
@@ -138,14 +114,12 @@ export const vCreatePostData = v.object({
  */
 export const vCreatePostResponse = vPost;
 
-export const vGetPostByIdData = v.object({
-    body: v.optional(v.never()),
-    path: v.object({
-        postId: v.string()
-    }),
-    query: v.optional(v.object({
-        includeComments: v.optional(v.boolean(), false)
-    }))
+export const vGetPostByIdPath = v.object({
+    postId: v.string()
+});
+
+export const vGetPostByIdQuery = v.object({
+    includeComments: v.optional(v.boolean(), false)
 });
 
 /**

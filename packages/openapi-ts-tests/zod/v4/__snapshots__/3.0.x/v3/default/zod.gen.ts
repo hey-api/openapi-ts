@@ -1081,55 +1081,23 @@ export const zSimpleRequestBody = zModelWithString;
 
 export const zSimpleFormData = zModelWithString;
 
-export const zExportData = z.object({
-    body: z.never().optional(),
-    path: z.never().optional(),
-    query: z.never().optional()
-});
-
-export const zPatchApiVbyApiVersionNoTagData = z.object({
-    body: z.never().optional(),
-    path: z.never().optional(),
-    query: z.never().optional()
-});
-
-export const zImportData = z.object({
-    body: z.union([
-        zModelWithReadOnlyAndWriteOnlyWritable,
-        zModelWithArrayReadOnlyAndWriteOnlyWritable
-    ]),
-    path: z.never().optional(),
-    query: z.never().optional()
-});
+export const zImportBody = z.union([
+    zModelWithReadOnlyAndWriteOnlyWritable,
+    zModelWithArrayReadOnlyAndWriteOnlyWritable
+]);
 
 export const zImportResponse = z.union([
     zModelFromZendesk,
     zModelWithReadOnlyAndWriteOnly
 ]);
 
-export const zFooWowData = z.object({
-    body: z.never().optional(),
-    path: z.never().optional(),
-    query: z.never().optional()
-});
-
-export const zApiVVersionODataControllerCountData = z.object({
-    body: z.never().optional(),
-    path: z.never().optional(),
-    query: z.never().optional()
-});
-
 /**
  * Success
  */
 export const zApiVVersionODataControllerCountResponse = zModelFromZendesk;
 
-export const zGetApiVbyApiVersionSimpleOperationData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        foo_param: z.string()
-    }),
-    query: z.never().optional()
+export const zGetApiVbyApiVersionSimpleOperationPath = z.object({
+    foo_param: z.string()
 });
 
 /**
@@ -1137,131 +1105,87 @@ export const zGetApiVbyApiVersionSimpleOperationData = z.object({
  */
 export const zGetApiVbyApiVersionSimpleOperationResponse = z.number();
 
-export const zDeleteCallWithoutParametersAndResponseData = z.object({
-    body: z.never().optional(),
-    path: z.never().optional(),
-    query: z.never().optional()
+export const zDeleteFooHeaders = z.object({
+    'x-Foo-Bar': zModelWithString
 });
 
-export const zGetCallWithoutParametersAndResponseData = z.object({
-    body: z.never().optional(),
-    path: z.never().optional(),
-    query: z.never().optional()
+export const zDeleteFooPath = z.object({
+    foo_param: z.string(),
+    BarParam: z.string()
 });
 
-export const zHeadCallWithoutParametersAndResponseData = z.object({
-    body: z.never().optional(),
-    path: z.never().optional(),
-    query: z.never().optional()
+export const zCallWithDescriptionsQuery = z.object({
+    parameterWithBreaks: z.string().optional(),
+    parameterWithBackticks: z.string().optional(),
+    parameterWithSlashes: z.string().optional(),
+    parameterWithExpressionPlaceholders: z.string().optional(),
+    parameterWithQuotes: z.string().optional(),
+    parameterWithReservedCharacters: z.string().optional()
 });
 
-export const zOptionsCallWithoutParametersAndResponseData = z.object({
-    body: z.never().optional(),
-    path: z.never().optional(),
-    query: z.never().optional()
+export const zDeprecatedCallHeaders = z.object({
+    parameter: zDeprecatedModel.nullable()
 });
 
-export const zPatchCallWithoutParametersAndResponseData = z.object({
-    body: z.never().optional(),
-    path: z.never().optional(),
-    query: z.never().optional()
+/**
+ * This is the parameter that goes into the body
+ */
+export const zCallWithParametersBody = z.record(z.unknown()).nullable();
+
+export const zCallWithParametersHeaders = z.object({
+    parameterHeader: z.string().nullable()
 });
 
-export const zPostCallWithoutParametersAndResponseData = z.object({
-    body: z.never().optional(),
-    path: z.never().optional(),
-    query: z.never().optional()
+export const zCallWithParametersPath = z.object({
+    parameterPath: z.string().nullable(),
+    'api-version': z.string().nullable()
 });
 
-export const zPutCallWithoutParametersAndResponseData = z.object({
-    body: z.never().optional(),
-    path: z.never().optional(),
-    query: z.never().optional()
+export const zCallWithParametersQuery = z.object({
+    foo_ref_enum: zModelWithNestedArrayEnumsDataFoo.optional(),
+    foo_all_of_enum: zModelWithNestedArrayEnumsDataFoo,
+    cursor: z.string().nullable()
 });
 
-export const zDeleteFooData3 = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        foo_param: z.string(),
-        BarParam: z.string()
-    }),
-    query: z.never().optional(),
-    headers: z.object({
-        'x-Foo-Bar': zModelWithString
-    })
+/**
+ * This is the parameter that goes into the body
+ */
+export const zCallWithWeirdParameterNamesBody = zModelWithString.nullable();
+
+export const zCallWithWeirdParameterNamesHeaders = z.object({
+    'parameter.header': z.string().nullable()
 });
 
-export const zCallWithDescriptionsData = z.object({
-    body: z.never().optional(),
-    path: z.never().optional(),
-    query: z.object({
-        parameterWithBreaks: z.string().optional(),
-        parameterWithBackticks: z.string().optional(),
-        parameterWithSlashes: z.string().optional(),
-        parameterWithExpressionPlaceholders: z.string().optional(),
-        parameterWithQuotes: z.string().optional(),
-        parameterWithReservedCharacters: z.string().optional()
-    }).optional()
+export const zCallWithWeirdParameterNamesPath = z.object({
+    'parameter.path.1': z.string().optional(),
+    'parameter-path-2': z.string().optional(),
+    'PARAMETER-PATH-3': z.string().optional(),
+    'api-version': z.string().nullable()
 });
 
-export const zDeprecatedCallData = z.object({
-    body: z.never().optional(),
-    path: z.never().optional(),
-    query: z.never().optional(),
-    headers: z.object({
-        parameter: zDeprecatedModel.nullable()
-    })
+export const zCallWithWeirdParameterNamesQuery = z.object({
+    default: z.string().optional(),
+    'parameter-query': z.string().nullable()
 });
 
-export const zCallWithParametersData = z.object({
-    body: z.record(z.unknown()).nullable(),
-    path: z.object({
-        parameterPath: z.string().nullable(),
-        'api-version': z.string().nullable()
-    }),
-    query: z.object({
-        foo_ref_enum: zModelWithNestedArrayEnumsDataFoo.optional(),
-        foo_all_of_enum: zModelWithNestedArrayEnumsDataFoo,
-        cursor: z.string().nullable()
-    }),
-    headers: z.object({
-        parameterHeader: z.string().nullable()
-    })
+/**
+ * This is a required parameter
+ */
+export const zGetCallWithOptionalParamBody = zModelWithOneOfEnum;
+
+export const zGetCallWithOptionalParamQuery = z.object({
+    page: z.number().optional()
 });
 
-export const zCallWithWeirdParameterNamesData = z.object({
-    body: zModelWithString.nullable(),
-    path: z.object({
-        'parameter.path.1': z.string().optional(),
-        'parameter-path-2': z.string().optional(),
-        'PARAMETER-PATH-3': z.string().optional(),
-        'api-version': z.string().nullable()
-    }),
-    query: z.object({
-        default: z.string().optional(),
-        'parameter-query': z.string().nullable()
-    }),
-    headers: z.object({
-        'parameter.header': z.string().nullable()
-    })
+/**
+ * This is an optional parameter
+ */
+export const zPostCallWithOptionalParamBody = z.object({
+    offset: z.number().nullish()
 });
 
-export const zGetCallWithOptionalParamData = z.object({
-    body: zModelWithOneOfEnum,
-    path: z.never().optional(),
-    query: z.object({
-        page: z.number().optional()
-    }).optional()
-});
-
-export const zPostCallWithOptionalParamData = z.object({
-    body: z.object({
-        offset: z.number().nullish()
-    }).optional(),
-    path: z.never().optional(),
-    query: z.object({
-        parameter: zPageable
-    })
+export const zPostCallWithOptionalParamQuery = z.object({
+    parameter: zPageable
 });
 
 export const zPostCallWithOptionalParamResponse = z.union([
@@ -1269,97 +1193,57 @@ export const zPostCallWithOptionalParamResponse = z.union([
     z.void()
 ]);
 
-export const zPostApiVbyApiVersionRequestBodyData = z.object({
-    body: zSimpleRequestBody.optional(),
-    path: z.never().optional(),
-    query: z.object({
-        parameter: z.string().optional()
-    }).optional()
+/**
+ * A reusable request body
+ */
+export const zPostApiVbyApiVersionRequestBodyBody = zSimpleRequestBody;
+
+export const zPostApiVbyApiVersionRequestBodyQuery = z.object({
+    parameter: z.string().optional()
 });
 
-export const zPostApiVbyApiVersionFormDataData = z.object({
-    body: zSimpleFormData.optional(),
-    path: z.never().optional(),
-    query: z.object({
-        parameter: z.string().optional()
-    }).optional()
+/**
+ * A reusable request body
+ */
+export const zPostApiVbyApiVersionFormDataBody = zSimpleFormData;
+
+export const zPostApiVbyApiVersionFormDataQuery = z.object({
+    parameter: z.string().optional()
 });
 
-export const zCallWithDefaultParametersData = z.object({
-    body: z.never().optional(),
-    path: z.never().optional(),
-    query: z.object({
-        parameterString: z.string().nullish().default('Hello World!'),
-        parameterNumber: z.number().nullish().default(123),
-        parameterBoolean: z.boolean().nullish().default(true),
-        parameterEnum: z.enum([
-            'Success',
-            'Warning',
-            'Error'
-        ]).optional(),
-        parameterModel: zModelWithString.nullish()
-    }).optional()
+export const zCallWithDefaultParametersQuery = z.object({
+    parameterString: z.string().nullish().default('Hello World!'),
+    parameterNumber: z.number().nullish().default(123),
+    parameterBoolean: z.boolean().nullish().default(true),
+    parameterEnum: z.enum([
+        'Success',
+        'Warning',
+        'Error'
+    ]).optional(),
+    parameterModel: zModelWithString.nullish()
 });
 
-export const zCallWithDefaultOptionalParametersData = z.object({
-    body: z.never().optional(),
-    path: z.never().optional(),
-    query: z.object({
-        parameterString: z.string().optional().default('Hello World!'),
-        parameterNumber: z.number().optional().default(123),
-        parameterBoolean: z.boolean().optional().default(true),
-        parameterEnum: z.enum([
-            'Success',
-            'Warning',
-            'Error'
-        ]).optional(),
-        parameterModel: zModelWithString.optional()
-    }).optional()
+export const zCallWithDefaultOptionalParametersQuery = z.object({
+    parameterString: z.string().optional().default('Hello World!'),
+    parameterNumber: z.number().optional().default(123),
+    parameterBoolean: z.boolean().optional().default(true),
+    parameterEnum: z.enum([
+        'Success',
+        'Warning',
+        'Error'
+    ]).optional(),
+    parameterModel: zModelWithString.optional()
 });
 
-export const zCallToTestOrderOfParamsData = z.object({
-    body: z.never().optional(),
-    path: z.never().optional(),
-    query: z.object({
-        parameterOptionalStringWithDefault: z.string().optional().default('Hello World!'),
-        parameterOptionalStringWithEmptyDefault: z.string().optional().default(''),
-        parameterOptionalStringWithNoDefault: z.string().optional(),
-        parameterStringWithDefault: z.string().default('Hello World!'),
-        parameterStringWithEmptyDefault: z.string().default(''),
-        parameterStringWithNoDefault: z.string(),
-        parameterStringNullableWithNoDefault: z.string().nullish(),
-        parameterStringNullableWithDefault: z.string().nullish().default(null)
-    })
-});
-
-export const zDuplicateNameData = z.object({
-    body: z.never().optional(),
-    path: z.never().optional(),
-    query: z.never().optional()
-});
-
-export const zDuplicateName2Data = z.object({
-    body: z.never().optional(),
-    path: z.never().optional(),
-    query: z.never().optional()
-});
-
-export const zDuplicateName3Data = z.object({
-    body: z.never().optional(),
-    path: z.never().optional(),
-    query: z.never().optional()
-});
-
-export const zDuplicateName4Data = z.object({
-    body: z.never().optional(),
-    path: z.never().optional(),
-    query: z.never().optional()
-});
-
-export const zCallWithNoContentResponseData = z.object({
-    body: z.never().optional(),
-    path: z.never().optional(),
-    query: z.never().optional()
+export const zCallToTestOrderOfParamsQuery = z.object({
+    parameterOptionalStringWithDefault: z.string().optional().default('Hello World!'),
+    parameterOptionalStringWithEmptyDefault: z.string().optional().default(''),
+    parameterOptionalStringWithNoDefault: z.string().optional(),
+    parameterStringWithDefault: z.string().default('Hello World!'),
+    parameterStringWithEmptyDefault: z.string().default(''),
+    parameterStringWithNoDefault: z.string(),
+    parameterStringNullableWithNoDefault: z.string().nullish(),
+    parameterStringNullableWithDefault: z.string().nullish().default(null)
 });
 
 /**
@@ -1367,60 +1251,24 @@ export const zCallWithNoContentResponseData = z.object({
  */
 export const zCallWithNoContentResponseResponse = z.void();
 
-export const zCallWithResponseAndNoContentResponseData = z.object({
-    body: z.never().optional(),
-    path: z.never().optional(),
-    query: z.never().optional()
-});
-
 export const zCallWithResponseAndNoContentResponseResponse = z.union([
     z.number(),
     z.void()
 ]);
 
-export const zDummyAData = z.object({
-    body: z.never().optional(),
-    path: z.never().optional(),
-    query: z.never().optional()
-});
-
 export const zDummyAResponse = z400;
-
-export const zDummyBData = z.object({
-    body: z.never().optional(),
-    path: z.never().optional(),
-    query: z.never().optional()
-});
 
 /**
  * Success
  */
 export const zDummyBResponse = z.void();
 
-export const zCallWithResponseData = z.object({
-    body: z.never().optional(),
-    path: z.never().optional(),
-    query: z.never().optional()
-});
-
 export const zCallWithResponseResponse = zImport;
-
-export const zCallWithDuplicateResponsesData = z.object({
-    body: z.never().optional(),
-    path: z.never().optional(),
-    query: z.never().optional()
-});
 
 export const zCallWithDuplicateResponsesResponse = z.union([
     zModelWithBoolean.and(zModelWithInteger),
     zModelWithString
 ]);
-
-export const zCallWithResponsesData = z.object({
-    body: z.never().optional(),
-    path: z.never().optional(),
-    query: z.never().optional()
-});
 
 export const zCallWithResponsesResponse = z.union([
     z.object({
@@ -1432,36 +1280,30 @@ export const zCallWithResponsesResponse = z.union([
     zModelThatExtendsExtends
 ]);
 
-export const zCollectionFormatData = z.object({
-    body: z.never().optional(),
-    path: z.never().optional(),
-    query: z.object({
-        parameterArrayCSV: z.array(z.string()).nullable(),
-        parameterArraySSV: z.array(z.string()).nullable(),
-        parameterArrayTSV: z.array(z.string()).nullable(),
-        parameterArrayPipes: z.array(z.string()).nullable(),
-        parameterArrayMulti: z.array(z.string()).nullable()
-    })
+export const zCollectionFormatQuery = z.object({
+    parameterArrayCSV: z.array(z.string()).nullable(),
+    parameterArraySSV: z.array(z.string()).nullable(),
+    parameterArrayTSV: z.array(z.string()).nullable(),
+    parameterArrayPipes: z.array(z.string()).nullable(),
+    parameterArrayMulti: z.array(z.string()).nullable()
 });
 
-export const zTypesData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        id: z.number().int().min(-2147483648, { message: 'Invalid value: Expected int32 to be >= -2147483648' }).max(2147483647, { message: 'Invalid value: Expected int32 to be <= 2147483647' }).optional()
-    }).optional(),
-    query: z.object({
-        parameterNumber: z.number().default(123),
-        parameterString: z.string().nullable().default('default'),
-        parameterBoolean: z.boolean().nullable().default(true),
-        parameterObject: z.record(z.unknown()).nullable().default(null),
-        parameterArray: z.array(z.string()).nullable(),
-        parameterDictionary: z.record(z.unknown()).nullable(),
-        parameterEnum: z.enum([
-            'Success',
-            'Warning',
-            'Error'
-        ])
-    })
+export const zTypesPath = z.object({
+    id: z.number().int().min(-2147483648, { message: 'Invalid value: Expected int32 to be >= -2147483648' }).max(2147483647, { message: 'Invalid value: Expected int32 to be <= 2147483647' }).optional()
+});
+
+export const zTypesQuery = z.object({
+    parameterNumber: z.number().default(123),
+    parameterString: z.string().nullable().default('default'),
+    parameterBoolean: z.boolean().nullable().default(true),
+    parameterObject: z.record(z.unknown()).nullable().default(null),
+    parameterArray: z.array(z.string()).nullable(),
+    parameterDictionary: z.record(z.unknown()).nullable(),
+    parameterEnum: z.enum([
+        'Success',
+        'Warning',
+        'Error'
+    ])
 });
 
 export const zTypesResponse = z.union([
@@ -1471,23 +1313,17 @@ export const zTypesResponse = z.union([
     z.record(z.unknown())
 ]);
 
-export const zUploadFileData = z.object({
-    body: z.string(),
-    path: z.object({
-        'api-version': z.string().nullable()
-    }),
-    query: z.never().optional()
+export const zUploadFileBody = z.string();
+
+export const zUploadFilePath = z.object({
+    'api-version': z.string().nullable()
 });
 
 export const zUploadFileResponse = z.boolean();
 
-export const zFileResponseData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        id: z.string(),
-        'api-version': z.string()
-    }),
-    query: z.never().optional()
+export const zFileResponsePath = z.object({
+    id: z.string(),
+    'api-version': z.string()
 });
 
 /**
@@ -1495,31 +1331,21 @@ export const zFileResponseData = z.object({
  */
 export const zFileResponseResponse = z.string();
 
-export const zComplexTypesData = z.object({
-    body: z.never().optional(),
-    path: z.never().optional(),
-    query: z.object({
-        parameterObject: z.object({
-            first: z.object({
-                second: z.object({
-                    third: z.string().optional()
-                }).optional()
+export const zComplexTypesQuery = z.object({
+    parameterObject: z.object({
+        first: z.object({
+            second: z.object({
+                third: z.string().optional()
             }).optional()
-        }),
-        parameterReference: zModelWithString
-    })
+        }).optional()
+    }),
+    parameterReference: zModelWithString
 });
 
 /**
  * Successful response
  */
 export const zComplexTypesResponse = z.array(zModelWithString);
-
-export const zMultipartResponseData = z.object({
-    body: z.never().optional(),
-    path: z.never().optional(),
-    query: z.never().optional()
-});
 
 /**
  * OK
@@ -1532,43 +1358,37 @@ export const zMultipartResponseResponse = z.object({
     }).optional()
 });
 
-export const zMultipartRequestData = z.object({
-    body: z.object({
-        content: z.string().optional(),
-        data: zModelWithString.nullish()
-    }).optional(),
-    path: z.never().optional(),
-    query: z.never().optional()
+export const zMultipartRequestBody = z.object({
+    content: z.string().optional(),
+    data: zModelWithString.nullish()
 });
 
-export const zComplexParamsData = z.object({
-    body: z.object({
-        key: z.string().max(64).regex(/^[a-zA-Z0-9_]*$/).readonly().nullable(),
-        name: z.string().max(255).nullable(),
-        enabled: z.boolean().optional().default(true),
-        type: z.enum([
-            'Monkey',
-            'Horse',
-            'Bird'
-        ]),
-        listOfModels: z.array(zModelWithString).nullish(),
-        listOfStrings: z.array(z.string()).nullish(),
-        parameters: z.union([
-            zModelWithString,
-            zModelWithEnum,
-            zModelWithArray,
-            zModelWithDictionary
-        ]),
-        user: z.object({
-            id: z.number().int().min(-2147483648, { message: 'Invalid value: Expected int32 to be >= -2147483648' }).max(2147483647, { message: 'Invalid value: Expected int32 to be <= 2147483647' }).readonly().optional(),
-            name: z.string().readonly().nullish()
-        }).readonly().optional()
-    }).optional(),
-    path: z.object({
-        id: z.number().int().min(-2147483648, { message: 'Invalid value: Expected int32 to be >= -2147483648' }).max(2147483647, { message: 'Invalid value: Expected int32 to be <= 2147483647' }),
-        'api-version': z.string()
-    }),
-    query: z.never().optional()
+export const zComplexParamsBody = z.object({
+    key: z.string().max(64).regex(/^[a-zA-Z0-9_]*$/).readonly().nullable(),
+    name: z.string().max(255).nullable(),
+    enabled: z.boolean().optional().default(true),
+    type: z.enum([
+        'Monkey',
+        'Horse',
+        'Bird'
+    ]),
+    listOfModels: z.array(zModelWithString).nullish(),
+    listOfStrings: z.array(z.string()).nullish(),
+    parameters: z.union([
+        zModelWithString,
+        zModelWithEnum,
+        zModelWithArray,
+        zModelWithDictionary
+    ]),
+    user: z.object({
+        id: z.number().int().min(-2147483648, { message: 'Invalid value: Expected int32 to be >= -2147483648' }).max(2147483647, { message: 'Invalid value: Expected int32 to be <= 2147483647' }).readonly().optional(),
+        name: z.string().readonly().nullish()
+    }).readonly().optional()
+});
+
+export const zComplexParamsPath = z.object({
+    id: z.number().int().min(-2147483648, { message: 'Invalid value: Expected int32 to be >= -2147483648' }).max(2147483647, { message: 'Invalid value: Expected int32 to be <= 2147483647' }),
+    'api-version': z.string()
 });
 
 /**
@@ -1576,26 +1396,12 @@ export const zComplexParamsData = z.object({
  */
 export const zComplexParamsResponse = zModelWithString;
 
-export const zCallWithResultFromHeaderData = z.object({
-    body: z.never().optional(),
-    path: z.never().optional(),
-    query: z.never().optional()
+export const zTestErrorCodeQuery = z.object({
+    status: z.number().int()
 });
 
-export const zTestErrorCodeData = z.object({
-    body: z.never().optional(),
-    path: z.never().optional(),
-    query: z.object({
-        status: z.number().int()
-    })
-});
-
-export const zNonAsciiæøåÆøÅöôêÊ字符串Data = z.object({
-    body: z.never().optional(),
-    path: z.never().optional(),
-    query: z.object({
-        nonAsciiParamæøåÆØÅöôêÊ: z.number().int()
-    })
+export const zNonAsciiæøåÆøÅöôêÊ字符串Query = z.object({
+    nonAsciiParamæøåÆØÅöôêÊ: z.number().int()
 });
 
 /**
@@ -1603,8 +1409,4 @@ export const zNonAsciiæøåÆøÅöôêÊ字符串Data = z.object({
  */
 export const zNonAsciiæøåÆøÅöôêÊ字符串Response = z.array(zNonAsciiStringæøåÆøÅöôêÊ字符串);
 
-export const zPutWithFormUrlEncodedData = z.object({
-    body: zArrayWithStrings,
-    path: z.never().optional(),
-    query: z.never().optional()
-});
+export const zPutWithFormUrlEncodedBody = zArrayWithStrings;

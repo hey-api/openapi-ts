@@ -174,8 +174,6 @@ export type Hooks = {
      *
      * This affects how schemas are processed and output.
      *
-     * **Default behavior:** No schemas are extracted.
-     *
      * @param ctx - The processing context for the schema.
      * @returns true to extract the schema, false to keep it inline, or undefined to fallback to default behavior.
      * @example
@@ -188,7 +186,7 @@ export type Hooks = {
      * }
      * ```
      */
-    shouldExtract?: (ctx: SchemaProcessorContext) => boolean;
+    shouldExtract?: MaybeFunc<(ctx: SchemaProcessorContext) => boolean>;
   };
   /**
    * Hooks specifically for overriding symbols behavior.

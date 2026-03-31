@@ -202,7 +202,10 @@ export function exportAst({
   plugin,
   schema,
   tags,
-}: ProcessorContext & {
+}: Pick<
+  ProcessorContext,
+  'meta' | 'naming' | 'namingAnchor' | 'path' | 'plugin' | 'schema' | 'tags'
+> & {
   final: TypeScriptFinal;
 }): void {
   const $ref = meta.resourceId || pathToJsonPointer(path);

@@ -296,10 +296,6 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     return plugin as any;
   }
 
-  getSymbol(identifier: SymbolIdentifier): Symbol | undefined {
-    return this.gen.symbols.get(identifier);
-  }
-
   hooks = {
     operation: {
       isMutation: (operation: IR.OperationObject): boolean =>

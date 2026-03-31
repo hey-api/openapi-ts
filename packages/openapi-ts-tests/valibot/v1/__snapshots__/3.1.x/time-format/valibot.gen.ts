@@ -2,13 +2,9 @@
 
 import * as v from 'valibot';
 
-export const vGetSearchData = v.object({
-    body: v.optional(v.never()),
-    path: v.optional(v.never()),
-    query: v.object({
-        start_time: v.optional(v.pipe(v.string(), v.isoTimeSecond())),
-        end_time: v.pipe(v.string(), v.isoTimeSecond())
-    })
+export const vGetSearchQuery = v.object({
+    start_time: v.optional(v.pipe(v.string(), v.isoTimeSecond())),
+    end_time: v.pipe(v.string(), v.isoTimeSecond())
 });
 
 /**

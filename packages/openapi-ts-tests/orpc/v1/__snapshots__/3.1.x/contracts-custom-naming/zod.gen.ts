@@ -39,13 +39,9 @@ export const zCreatePostInput = z.object({
     status: z.enum(['draft', 'published']).optional()
 });
 
-export const zGetUsersData = z.object({
-    body: z.never().optional(),
-    path: z.never().optional(),
-    query: z.object({
-        limit: z.int().optional().default(10),
-        offset: z.int().optional().default(0)
-    }).optional()
+export const zGetUsersQuery = z.object({
+    limit: z.int().optional().default(10),
+    offset: z.int().optional().default(0)
 });
 
 /**
@@ -53,26 +49,19 @@ export const zGetUsersData = z.object({
  */
 export const zGetUsersResponse = z.array(zUser);
 
-export const zCreateUserData = z.object({
-    body: zCreateUserInput,
-    path: z.never().optional(),
-    query: z.never().optional()
-});
+export const zCreateUserBody = zCreateUserInput;
 
 /**
  * User created
  */
 export const zCreateUserResponse = zUser;
 
-export const zDeleteUserData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        userId: z.string()
-    }),
-    query: z.never().optional(),
-    headers: z.object({
-        'X-Request-Id': z.string().optional()
-    }).optional()
+export const zDeleteUserHeaders = z.object({
+    'X-Request-Id': z.string().optional()
+});
+
+export const zDeleteUserPath = z.object({
+    userId: z.string()
 });
 
 /**
@@ -80,12 +69,8 @@ export const zDeleteUserData = z.object({
  */
 export const zDeleteUserResponse = z.void();
 
-export const zGetUserByIdData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        userId: z.string()
-    }),
-    query: z.never().optional()
+export const zGetUserByIdPath = z.object({
+    userId: z.string()
 });
 
 /**
@@ -93,12 +78,10 @@ export const zGetUserByIdData = z.object({
  */
 export const zGetUserByIdResponse = zUser;
 
-export const zUpdateUserData = z.object({
-    body: zUpdateUserInput,
-    path: z.object({
-        userId: z.string()
-    }),
-    query: z.never().optional()
+export const zUpdateUserBody = zUpdateUserInput;
+
+export const zUpdateUserPath = z.object({
+    userId: z.string()
 });
 
 /**
@@ -106,17 +89,13 @@ export const zUpdateUserData = z.object({
  */
 export const zUpdateUserResponse = zUser;
 
-export const zGetPostsData = z.object({
-    body: z.never().optional(),
-    path: z.never().optional(),
-    query: z.object({
-        authorId: z.string().optional(),
-        status: z.enum([
-            'draft',
-            'published',
-            'archived'
-        ]).optional()
-    }).optional()
+export const zGetPostsQuery = z.object({
+    authorId: z.string().optional(),
+    status: z.enum([
+        'draft',
+        'published',
+        'archived'
+    ]).optional()
 });
 
 /**
@@ -124,13 +103,10 @@ export const zGetPostsData = z.object({
  */
 export const zGetPostsResponse = z.array(zPost);
 
-export const zCreatePostData = z.object({
-    body: zCreatePostInput,
-    path: z.never().optional(),
-    query: z.never().optional(),
-    headers: z.object({
-        'X-Author-Id': z.string()
-    })
+export const zCreatePostBody = zCreatePostInput;
+
+export const zCreatePostHeaders = z.object({
+    'X-Author-Id': z.string()
 });
 
 /**
@@ -138,14 +114,12 @@ export const zCreatePostData = z.object({
  */
 export const zCreatePostResponse = zPost;
 
-export const zGetPostByIdData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        postId: z.string()
-    }),
-    query: z.object({
-        includeComments: z.boolean().optional().default(false)
-    }).optional()
+export const zGetPostByIdPath = z.object({
+    postId: z.string()
+});
+
+export const zGetPostByIdQuery = z.object({
+    includeComments: z.boolean().optional().default(false)
 });
 
 /**

@@ -1,4 +1,4 @@
-import type { IR, NamingConfig, SchemaProcessorContext } from '@hey-api/shared';
+import type { NamingConfig, SchemaProcessorContext } from '@hey-api/shared';
 
 import type { HeyApiTypeScriptPlugin } from '../types';
 import type { TypeScriptFinal } from './types';
@@ -9,7 +9,6 @@ export type ProcessorContext = SchemaProcessorContext & {
   naming: NamingConfig;
   /** The plugin instance. */
   plugin: HeyApiTypeScriptPlugin['Instance'];
-  schema: IR.SchemaObject;
 };
 
 export type ProcessorResult = {

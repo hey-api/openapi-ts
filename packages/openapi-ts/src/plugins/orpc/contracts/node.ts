@@ -77,15 +77,23 @@ function createContractExpression(
     );
 
   if (hasInput(operation) && plugin.config.validator.input) {
-    expression = expression.attr('input').call(
-      plugin.referenceSymbol({
-        category: 'schema',
-        resource: 'operation',
-        resourceId: operation.id,
-        role: 'data',
-        tool: plugin.config.validator.input,
-      }),
-    );
+    const validator = plugin.getPluginOrThrow(plugin.config.validator.input);
+    if ('createRequestSchema' in validator.api) {
+      const requestSchema = validator.api.createRequestSchema({
+        layers: {
+          body: { whenEmpty: 'omit' },
+          headers: { whenEmpty: 'omit' },
+          path: { as: 'params', whenEmpty: 'omit' },
+          query: { whenEmpty: 'omit' },
+        },
+        operation,
+        // @ts-expect-error
+        plugin: validator,
+      });
+      if (requestSchema) {
+        expression = expression.attr('input').call(requestSchema);
+      }
+    }
   }
 
   if (successResponse.hasOutput && plugin.config.validator.output) {

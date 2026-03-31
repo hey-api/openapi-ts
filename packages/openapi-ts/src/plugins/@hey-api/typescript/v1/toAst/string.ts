@@ -41,7 +41,7 @@ function formatNode(ctx: StringResolverContext): Type | undefined {
       resourceId: typeidBase,
       tool: 'typescript',
     };
-    if (!plugin.getSymbol(typeidQuery)) {
+    if (!plugin.querySymbol(typeidQuery)) {
       const containerQuery: SymbolMeta = {
         category: 'type',
         resource: 'type-id',
@@ -49,7 +49,7 @@ function formatNode(ctx: StringResolverContext): Type | undefined {
         variant: 'container',
       };
 
-      if (!plugin.getSymbol(containerQuery)) {
+      if (!plugin.querySymbol(containerQuery)) {
         const symbolTypeId = plugin.symbol('TypeID', {
           meta: containerQuery,
         });

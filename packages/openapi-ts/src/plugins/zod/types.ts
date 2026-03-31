@@ -7,6 +7,7 @@ import type {
   NamingOptions,
   Plugin,
 } from '@hey-api/shared';
+import type { MaybeFunc } from '@hey-api/types';
 
 import type { $, DollarTsDsl } from '../../ts-dsl';
 import type { IApi } from './api';
@@ -162,7 +163,7 @@ export type UserConfig = Plugin.Name<'zod'> &
     /**
      * Configuration for request-specific Zod schemas.
      *
-     * Controls generation of Zod schemas for request bodies, query parameters, path
+     * Controls generation of Zod schemas for request bodies, path parameters, query
      * parameters, and headers.
      *
      * Can be:
@@ -177,6 +178,79 @@ export type UserConfig = Plugin.Name<'zod'> &
       | NameTransformer
       | {
           /**
+           * Configuration for request body Zod schemas.
+           *
+           * Can be:
+           * - `boolean`: Shorthand for `{ enabled: boolean }`
+           * - `string` or `function`: Shorthand for `{ name: string | function }`
+           * - `object`: Full configuration object
+           *
+           * @default true
+           */
+          body?:
+            | boolean
+            | NameTransformer
+            | {
+                /**
+                 * Casing convention for generated names.
+                 *
+                 * @default 'camelCase'
+                 */
+                case?: Casing;
+                /**
+                 * Whether this feature is enabled.
+                 *
+                 * @default true
+                 */
+                enabled?: boolean;
+                /**
+                 * Naming pattern for generated names.
+                 *
+                 * @default 'z{{name}}Body'
+                 */
+                name?: NameTransformer;
+                /**
+                 * Configuration for TypeScript type generation from Zod schemas.
+                 *
+                 * Controls generation of TypeScript types based on the generated Zod schemas.
+                 */
+                types?: {
+                  /**
+                   * Configuration for `infer` types.
+                   *
+                   * Can be:
+                   * - `boolean`: Shorthand for `{ enabled: boolean }`
+                   * - `string` or `function`: Shorthand for `{ name: string | function }`
+                   * - `object`: Full configuration object
+                   *
+                   * @default false
+                   */
+                  infer?:
+                    | boolean
+                    | NameTransformer
+                    | {
+                        /**
+                         * Casing convention for generated names.
+                         *
+                         * @default 'PascalCase'
+                         */
+                        case?: Casing;
+                        /**
+                         * Whether this feature is enabled.
+                         *
+                         * @default true
+                         */
+                        enabled?: boolean;
+                        /**
+                         * Naming pattern for generated names.
+                         *
+                         * @default '{{name}}BodyZodType'
+                         */
+                        name?: NameTransformer;
+                      };
+                };
+              };
+          /**
            * Casing convention for generated names.
            *
            * @default 'camelCase'
@@ -189,11 +263,259 @@ export type UserConfig = Plugin.Name<'zod'> &
            */
           enabled?: boolean;
           /**
+           * Configuration for request headers Zod schemas.
+           *
+           * Can be:
+           * - `boolean`: Shorthand for `{ enabled: boolean }`
+           * - `string` or `function`: Shorthand for `{ name: string | function }`
+           * - `object`: Full configuration object
+           *
+           * @default true
+           */
+          headers?:
+            | boolean
+            | NameTransformer
+            | {
+                /**
+                 * Casing convention for generated names.
+                 *
+                 * @default 'camelCase'
+                 */
+                case?: Casing;
+                /**
+                 * Whether this feature is enabled.
+                 *
+                 * @default true
+                 */
+                enabled?: boolean;
+                /**
+                 * Naming pattern for generated names.
+                 *
+                 * @default 'z{{name}}Headers'
+                 */
+                name?: NameTransformer;
+                /**
+                 * Configuration for TypeScript type generation from Zod schemas.
+                 *
+                 * Controls generation of TypeScript types based on the generated Zod schemas.
+                 */
+                types?: {
+                  /**
+                   * Configuration for `infer` types.
+                   *
+                   * Can be:
+                   * - `boolean`: Shorthand for `{ enabled: boolean }`
+                   * - `string` or `function`: Shorthand for `{ name: string | function }`
+                   * - `object`: Full configuration object
+                   *
+                   * @default false
+                   */
+                  infer?:
+                    | boolean
+                    | NameTransformer
+                    | {
+                        /**
+                         * Casing convention for generated names.
+                         *
+                         * @default 'PascalCase'
+                         */
+                        case?: Casing;
+                        /**
+                         * Whether this feature is enabled.
+                         *
+                         * @default true
+                         */
+                        enabled?: boolean;
+                        /**
+                         * Naming pattern for generated names.
+                         *
+                         * @default '{{name}}HeadersZodType'
+                         */
+                        name?: NameTransformer;
+                      };
+                };
+              };
+          /**
            * Naming pattern for generated names.
            *
            * @default 'z{{name}}Data'
            */
           name?: NameTransformer;
+          /**
+           * Configuration for request path parameters Zod schemas.
+           *
+           * Can be:
+           * - `boolean`: Shorthand for `{ enabled: boolean }`
+           * - `string` or `function`: Shorthand for `{ name: string | function }`
+           * - `object`: Full configuration object
+           *
+           * @default true
+           */
+          path?:
+            | boolean
+            | NameTransformer
+            | {
+                /**
+                 * Casing convention for generated names.
+                 *
+                 * @default 'camelCase'
+                 */
+                case?: Casing;
+                /**
+                 * Whether this feature is enabled.
+                 *
+                 * @default true
+                 */
+                enabled?: boolean;
+                /**
+                 * Naming pattern for generated names.
+                 *
+                 * @default 'z{{name}}Path'
+                 */
+                name?: NameTransformer;
+                /**
+                 * Configuration for TypeScript type generation from Zod schemas.
+                 *
+                 * Controls generation of TypeScript types based on the generated Zod schemas.
+                 */
+                types?: {
+                  /**
+                   * Configuration for `infer` types.
+                   *
+                   * Can be:
+                   * - `boolean`: Shorthand for `{ enabled: boolean }`
+                   * - `string` or `function`: Shorthand for `{ name: string | function }`
+                   * - `object`: Full configuration object
+                   *
+                   * @default false
+                   */
+                  infer?:
+                    | boolean
+                    | NameTransformer
+                    | {
+                        /**
+                         * Casing convention for generated names.
+                         *
+                         * @default 'PascalCase'
+                         */
+                        case?: Casing;
+                        /**
+                         * Whether this feature is enabled.
+                         *
+                         * @default true
+                         */
+                        enabled?: boolean;
+                        /**
+                         * Naming pattern for generated names.
+                         *
+                         * @default '{{name}}PathZodType'
+                         */
+                        name?: NameTransformer;
+                      };
+                };
+              };
+          /**
+           * Configuration for request query parameters Zod schemas.
+           *
+           * Can be:
+           * - `boolean`: Shorthand for `{ enabled: boolean }`
+           * - `string` or `function`: Shorthand for `{ name: string | function }`
+           * - `object`: Full configuration object
+           *
+           * @default true
+           */
+          query?:
+            | boolean
+            | NameTransformer
+            | {
+                /**
+                 * Casing convention for generated names.
+                 *
+                 * @default 'camelCase'
+                 */
+                case?: Casing;
+                /**
+                 * Whether this feature is enabled.
+                 *
+                 * @default true
+                 */
+                enabled?: boolean;
+                /**
+                 * Naming pattern for generated names.
+                 *
+                 * @default 'z{{name}}Query'
+                 */
+                name?: NameTransformer;
+                /**
+                 * Configuration for TypeScript type generation from Zod schemas.
+                 *
+                 * Controls generation of TypeScript types based on the generated Zod schemas.
+                 */
+                types?: {
+                  /**
+                   * Configuration for `infer` types.
+                   *
+                   * Can be:
+                   * - `boolean`: Shorthand for `{ enabled: boolean }`
+                   * - `string` or `function`: Shorthand for `{ name: string | function }`
+                   * - `object`: Full configuration object
+                   *
+                   * @default false
+                   */
+                  infer?:
+                    | boolean
+                    | NameTransformer
+                    | {
+                        /**
+                         * Casing convention for generated names.
+                         *
+                         * @default 'PascalCase'
+                         */
+                        case?: Casing;
+                        /**
+                         * Whether this feature is enabled.
+                         *
+                         * @default true
+                         */
+                        enabled?: boolean;
+                        /**
+                         * Naming pattern for generated names.
+                         *
+                         * @default '{{name}}QueryZodType'
+                         */
+                        name?: NameTransformer;
+                      };
+                };
+              };
+          /**
+           * Whether to extract the request schema into a named export.
+           *
+           * When `true`, generates a reusable schema like `zProjectListData`.
+           * When `false`, the schema is built inline within the caller plugin.
+           *
+           * Can be a boolean or a function for per-operation control.
+           *
+           * @default false
+           * @example
+           * ```ts
+           * // Always extract
+           * shouldExtract: true
+           *
+           * // Extract only for operations with complex request bodies
+           * shouldExtract: ({ operation }) =>
+           *   operation.body !== undefined && operation.parameters !== undefined
+           *
+           * // Extract based on custom extension
+           * shouldExtract: ({ operation }) =>
+           *   operation['x-custom']?.extractRequestSchema === true
+           * ```
+           */
+          shouldExtract?: MaybeFunc<
+            (ctx: {
+              /** The operation being processed */
+              operation: IR.OperationObject;
+            }) => boolean
+          >;
           /**
            * Configuration for TypeScript type generation from Zod schemas.
            *
@@ -447,7 +769,23 @@ export type Config = Plugin.Name<'zod'> &
           ctx: DollarTsDsl & { node: ReturnType<typeof $.object>; schema: IR.SchemaObject },
         ) => void);
     /** Configuration for request-specific Zod schemas. */
-    requests: NamingOptions & FeatureToggle & TypeOptions;
+    requests: NamingOptions &
+      FeatureToggle &
+      TypeOptions & {
+        /** Configuration for request body Zod schemas. */
+        body: NamingOptions & FeatureToggle & TypeOptions;
+        /** Configuration for request headers Zod schemas. */
+        headers: NamingOptions & FeatureToggle & TypeOptions;
+        /** Configuration for request path parameters Zod schemas. */
+        path: NamingOptions & FeatureToggle & TypeOptions;
+        /** Configuration for request query parameters Zod schemas. */
+        query: NamingOptions & FeatureToggle & TypeOptions;
+        /** Whether to extract the request schema into a named export. */
+        shouldExtract: (ctx: {
+          /** The operation being processed */
+          operation: IR.OperationObject;
+        }) => boolean;
+      };
     /** Configuration for response-specific Zod schemas. */
     responses: NamingOptions & FeatureToggle & TypeOptions;
     /** Configuration for TypeScript type generation from Zod schemas. */

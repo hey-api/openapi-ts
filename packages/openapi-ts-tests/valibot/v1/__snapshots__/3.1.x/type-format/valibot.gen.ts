@@ -16,12 +16,6 @@ export const vBar = v.objectWithRest({
     foo: v.pipe(v.number(), v.integer())
 }, v.pipe(v.number(), v.integer()));
 
-export const vPostFooData = v.object({
-    body: v.optional(v.never()),
-    path: v.optional(v.never()),
-    query: v.optional(v.never())
-});
-
 /**
  * OK
  */
