@@ -155,7 +155,7 @@ useQuery(() => ({
   ...getPetByIdQuery({
     path: { petId: petId.value as number },
   }),
-  enabled: () => petId.value != null,
+  enabled: () => petId.value !== null,
 }));
 ```
 

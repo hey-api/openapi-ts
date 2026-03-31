@@ -9,7 +9,7 @@ import { TokenTsDsl } from '../token';
 const Mixed = TsDsl<ts.BindingName>;
 
 /**
- * Builds binding patterns (e.g. `{ foo, bar }`, `[a, b, ...rest]`).
+ * Builds binding patterns (e.g., `{ foo, bar }`, `[a, b, ...rest]`).
  */
 export class PatternTsDsl extends Mixed {
   readonly '~dsl' = 'PatternTsDsl';
@@ -25,17 +25,17 @@ export class PatternTsDsl extends Mixed {
 
   /** Returns true when all required builder calls are present. */
   get isValid(): boolean {
-    return this.missingRequiredCalls().length === 0;
+    return !this.missingRequiredCalls().length;
   }
 
-  /** Defines an array pattern (e.g. `[a, b, c]`). */
+  /** Defines an array pattern (e.g., `[a, b, c]`). */
   array(...props: ReadonlyArray<string> | [ReadonlyArray<string>]): this {
     const values = props[0] instanceof Array ? [...props[0]] : (props as ReadonlyArray<string>);
     this.pattern = { kind: 'array', values };
     return this;
   }
 
-  /** Defines an object pattern (e.g. `{ a, b: alias }`). */
+  /** Defines an object pattern (e.g., `{ a, b: alias }`). */
   object(...props: ReadonlyArray<MaybeArray<string> | Record<string, string>>): this {
     const entries: Record<string, string> = {};
     for (const p of props) {
@@ -47,7 +47,7 @@ export class PatternTsDsl extends Mixed {
     return this;
   }
 
-  /** Adds a spread element (e.g. `...rest`, `...options`, `...args`). */
+  /** Adds a spread element (e.g., `...rest`, `...options`, `...args`). */
   spread(name: string): this {
     this._spread = name;
     return this;
@@ -85,7 +85,7 @@ export class PatternTsDsl extends Mixed {
       | { kind: 'object'; values: Record<string, string> };
   } {
     const missing = this.missingRequiredCalls();
-    if (missing.length === 0) return;
+    if (!missing.length) return;
     throw new Error(`Binding pattern missing ${missing.join(' and ')}`);
   }
 

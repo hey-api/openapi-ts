@@ -73,7 +73,7 @@ function createContractExpression(
           (o, v) => o.prop('successStatus', $.literal(v)),
         )
         .$if(operation.summary, (o, v) => o.prop('summary', $.literal(v)))
-        .$if(tags.length > 0 && tags, (o, v) => o.prop('tags', $.fromValue(v))),
+        .$if(Boolean(tags.length) && tags, (o, v) => o.prop('tags', $.fromValue(v))),
     );
 
   if (hasInput(operation) && plugin.config.validator.input) {

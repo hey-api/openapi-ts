@@ -108,7 +108,7 @@ type MethodFn = <TData = unknown, TError = unknown, ThrowOnError extends boolean
 ) => RequestResult<TData, TError, ThrowOnError>;
 
 type SseFn = <TData = unknown, TError = unknown, ThrowOnError extends boolean = false>(
-  options: Omit<RequestOptions<TData, ThrowOnError>, 'method'>,
+  options: Omit<RequestOptions<never, ThrowOnError>, 'method'>,
 ) => Promise<ServerSentEventsResult<TData, TError>>;
 
 type RequestFn = <TData = unknown, TError = unknown, ThrowOnError extends boolean = false>(
@@ -118,13 +118,16 @@ type RequestFn = <TData = unknown, TError = unknown, ThrowOnError extends boolea
 
 type BuildUrlFn = <
   TData extends {
-    body?: unknown;
     path?: Record<string, unknown>;
     query?: Record<string, unknown>;
     url: string;
   },
 >(
-  options: TData & Options<TData>,
+  options: TData &
+    Pick<
+      RequestOptions<unknown, boolean>,
+      'axios' | 'baseURL' | 'paramsSerializer' | 'querySerializer'
+    >,
 ) => string;
 
 export type Client = CoreClient<RequestFn, Config, MethodFn, BuildUrlFn, SseFn> & {

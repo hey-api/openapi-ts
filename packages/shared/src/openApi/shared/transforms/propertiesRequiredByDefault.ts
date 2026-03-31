@@ -82,7 +82,7 @@ export const propertiesRequiredByDefaultTransform = ({ spec }: { spec: unknown }
         !('required' in nodeInfo.node)
       ) {
         const propKeys = Object.keys(nodeInfo.node.properties as Record<string, unknown>);
-        if (propKeys.length > 0) {
+        if (propKeys.length) {
           (nodeInfo.node as Record<string, unknown>).required = propKeys;
         }
       }

@@ -57,7 +57,7 @@ export class TemplateTsDsl extends Mixed {
       }
     }
 
-    if (normalized.length === 0 || typeof normalized[0] !== 'string') {
+    if (!normalized.length || typeof normalized[0] !== 'string') {
       normalized.unshift('');
     }
 
@@ -81,7 +81,7 @@ export class TemplateTsDsl extends Mixed {
     while (normalized.length) {
       const expr = normalized.shift() as ts.Expression;
       const next = typeof normalized[0] === 'string' ? (normalized.shift() as string) : '';
-      const isLast = normalized.length === 0;
+      const isLast = !normalized.length;
       spans.push(
         ts.factory.createTemplateSpan(
           expr,

@@ -59,7 +59,7 @@ function accessChainToNode<T = AccessResult>(accessChain: NodeChain): T {
 function getAccessChainForNode(node: TsDsl): NodeChain {
   const structuralChain = [...getStructuralChainForNode(node, new Set())];
   const accessChain = structuralToAccessChain(structuralChain);
-  if (accessChain.length === 0) {
+  if (!accessChain.length) {
     // I _think_ this should not happen, but it does and this fix works for now.
     // I assume this will cause issues with imports in some cases, investigate
     // when it actually happens.
@@ -83,7 +83,7 @@ function getStructuralChainForNode(node: TsDsl, visited: Set<TsDsl>): NodeChain 
       if (getScope(parent) !== getScope(node)) continue;
 
       const chain = getStructuralChainForNode(parent, visited);
-      if (chain.length > 0) return [...chain, node];
+      if (chain.length) return [...chain, node];
     }
   }
 

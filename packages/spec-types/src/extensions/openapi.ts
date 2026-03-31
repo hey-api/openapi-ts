@@ -56,3 +56,12 @@ export interface EnumExtensions {
    */
   'x-enumNames'?: ReadonlyArray<string>;
 }
+
+/**
+ * OpenAPI Specification Extensions.
+ *
+ * See {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#specification-extensions Specification Extensions}.
+ */
+export interface OpenAPIExtensions {
+  [extension: `x-${string}`]: unknown;
+}

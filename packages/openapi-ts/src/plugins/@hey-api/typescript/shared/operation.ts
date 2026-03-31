@@ -99,7 +99,7 @@ export const operationToType = ({
 
   dataRequired.push('url');
 
-  if (dataRequired.length > 0) {
+  if (dataRequired.length) {
     data.required = dataRequired;
   }
 

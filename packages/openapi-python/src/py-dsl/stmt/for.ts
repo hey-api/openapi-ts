@@ -54,7 +54,7 @@ export class ForPyDsl extends Mixed {
 
   /** Returns true when all required builder calls are present. */
   get isValid(): boolean {
-    return this.missingRequiredCalls().length === 0;
+    return !this.missingRequiredCalls().length;
   }
 
   body(...items: Array<DoExpr>): this {
@@ -87,7 +87,7 @@ export class ForPyDsl extends Mixed {
     _target: MaybePyDsl<py.Expression>;
   } {
     const missing = this.missingRequiredCalls();
-    if (missing.length === 0) return;
+    if (!missing.length) return;
     throw new Error(`For statement missing ${missing.join(' and ')}`);
   }
 
@@ -95,7 +95,7 @@ export class ForPyDsl extends Mixed {
     const missing: Array<string> = [];
     if (!this._target) missing.push('target');
     if (!this._iterable) missing.push('iterable');
-    if (!this._body || this._body.length === 0) missing.push('body');
+    if (!this._body || !this._body.length) missing.push('body');
     return missing;
   }
 }

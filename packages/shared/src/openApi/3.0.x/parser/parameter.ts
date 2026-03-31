@@ -1,7 +1,8 @@
+import type { OpenAPIV3 } from '@hey-api/spec-types';
+
 import type { Context } from '../../../ir/context';
 import type { IR } from '../../../ir/types';
 import { refToName } from '../../../utils/ref';
-import type { ParameterObject, ReferenceObject, SchemaObject } from '../types/spec';
 import { mediaTypeObjects } from './mediaType';
 import { paginationField } from './pagination';
 import { parseExtensions, schemaToIrSchema } from './schema';
@@ -9,7 +10,7 @@ import { parseExtensions, schemaToIrSchema } from './schema';
 /**
  * Returns default parameter `allowReserved` based on value of `in`.
  */
-const defaultAllowReserved = (_in: ParameterObject['in']): boolean | undefined => {
+const defaultAllowReserved = (_in: OpenAPIV3.ParameterObject['in']): boolean | undefined => {
   switch (_in) {
     // this keyword only applies to parameters with an `in` value of `query`
     case 'query':
@@ -22,7 +23,7 @@ const defaultAllowReserved = (_in: ParameterObject['in']): boolean | undefined =
 /**
  * Returns default parameter `explode` based on value of `style`.
  */
-const defaultExplode = (style: Required<ParameterObject>['style']): boolean => {
+const defaultExplode = (style: Required<OpenAPIV3.ParameterObject>['style']): boolean => {
   switch (style) {
     // default value for `deepObject` is `false`, but that behavior is undefined
     // so we use `true` to make this work with the `client-fetch` package
@@ -37,7 +38,9 @@ const defaultExplode = (style: Required<ParameterObject>['style']): boolean => {
 /**
  * Returns default parameter `style` based on value of `in`.
  */
-const defaultStyle = (_in: ParameterObject['in']): Required<IR.ParameterObject>['style'] => {
+const defaultStyle = (
+  _in: OpenAPIV3.ParameterObject['in'],
+): Required<IR.ParameterObject>['style'] => {
   switch (_in) {
     case 'header':
     case 'path':
@@ -53,7 +56,7 @@ export const parametersArrayToObject = ({
   parameters,
 }: {
   context: Context;
-  parameters?: ReadonlyArray<ParameterObject | ReferenceObject>;
+  parameters?: ReadonlyArray<OpenAPIV3.ParameterObject | OpenAPIV3.ReferenceObject>;
 }): IR.ParametersObject | undefined => {
   if (!parameters || !Object.keys(parameters).length) {
     return;
@@ -64,7 +67,7 @@ export const parametersArrayToObject = ({
   for (const parameterOrReference of parameters) {
     const parameter =
       '$ref' in parameterOrReference
-        ? context.dereference<ParameterObject>(parameterOrReference)
+        ? context.dereference<OpenAPIV3.ParameterObject>(parameterOrReference)
         : parameterOrReference;
 
     if (!parametersObject[parameter.in]) {
@@ -89,7 +92,7 @@ const parameterToIrParameter = ({
 }: {
   $ref: string;
   context: Context;
-  parameter: ParameterObject;
+  parameter: OpenAPIV3.ParameterObject;
 }): IR.ParameterObject => {
   // TODO: parser - fix
   let schema = parameter.schema;
@@ -103,7 +106,7 @@ const parameterToIrParameter = ({
     }
   }
 
-  const finalSchema: SchemaObject =
+  const finalSchema: OpenAPIV3.SchemaObject =
     schema && '$ref' in schema
       ? {
           allOf: [{ ...schema }],
@@ -176,7 +179,7 @@ export const parseParameter = ({
 }: {
   $ref: string;
   context: Context;
-  parameter: ParameterObject;
+  parameter: OpenAPIV3.ParameterObject;
 }) => {
   if (!context.ir.components) {
     context.ir.components = {};

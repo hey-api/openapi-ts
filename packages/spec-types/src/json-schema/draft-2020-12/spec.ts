@@ -1,19 +1,18 @@
 import type { AnyString, MaybeArray } from '@hey-api/types';
 
-import type { EnumExtensions } from '../../../openApi/shared/types';
-import type { SpecificationExtensions } from './spec';
-import type { OpenApiSchemaExtensions } from './spec-extensions';
+import type { EnumExtensions, OpenAPIExtensions } from '../../extensions/openapi';
+import type { OpenAPIV3_1SchemaExtensions } from '../../openapi/v3-1/extensions';
 
 // TODO: left out some keywords related to structuring a complex schema and declaring a dialect
-export interface JsonSchemaDraft2020_12
+export interface Document
   extends
     ArrayKeywords,
     NumberKeywords,
     ObjectKeywords,
     StringKeywords,
     EnumExtensions,
-    OpenApiSchemaExtensions,
-    SpecificationExtensions {
+    OpenAPIV3_1SchemaExtensions,
+    OpenAPIExtensions {
   /**
    * The `$comment` {@link https://json-schema.org/learn/glossary#keyword keyword} is strictly intended for adding comments to a schema. Its value must always be a string. Unlike the annotations `title`, `description`, and `examples`, JSON schema {@link https://json-schema.org/learn/glossary#implementation implementations} aren't allowed to attach any meaning or behavior to it whatsoever, and may even strip them at any time. Therefore, they are useful for leaving notes to future editors of a JSON schema, but should not be used to communicate to users of the schema.
    */
@@ -31,13 +30,13 @@ export interface JsonSchemaDraft2020_12
    *
    * {@link https://json-schema.org/understanding-json-schema/reference/combining#allof allOf} can not be used to "extend" a schema to add more details to it in the sense of object-oriented inheritance. {@link https://json-schema.org/learn/glossary#instance Instances} must independently be valid against "all of" the schemas in the `allOf`. See the section on {@link https://json-schema.org/understanding-json-schema/reference/object#extending Extending Closed Schemas} for more information.
    */
-  allOf?: ReadonlyArray<JsonSchemaDraft2020_12>;
+  allOf?: ReadonlyArray<Document>;
   /**
    * `anyOf`: (OR) Must be valid against _any_ of the subschemas
    *
    * To validate against `anyOf`, the given data must be valid against any (one or more) of the given subschemas.
    */
-  anyOf?: ReadonlyArray<JsonSchemaDraft2020_12>;
+  anyOf?: ReadonlyArray<Document>;
   /**
    * The `const` keyword is used to restrict a value to a single value.
    */
@@ -67,7 +66,7 @@ export interface JsonSchemaDraft2020_12
   /**
    * The `dependentSchemas` keyword conditionally applies a {@link https://json-schema.org/learn/glossary#subschema subschema} when a given property is present. This schema is applied in the same way {@link https://json-schema.org/understanding-json-schema/reference/combining#allof allOf} applies schemas. Nothing is merged or extended. Both schemas apply independently.
    */
-  dependentSchemas?: Record<string, JsonSchemaDraft2020_12>;
+  dependentSchemas?: Record<string, Document>;
   /**
    * The `deprecated` keyword is a boolean that indicates that the {@link https://json-schema.org/learn/glossary#instance instance} value the keyword applies to should not be used and may be removed in the future.
    */
@@ -85,7 +84,7 @@ export interface JsonSchemaDraft2020_12
    *
    * If `then` and/or `else` appear in a schema without `if`, `then` and `else` are ignored.
    */
-  else?: JsonSchemaDraft2020_12;
+  else?: Document;
   /**
    * The `enum` {@link https://json-schema.org/learn/glossary#keyword keyword} is used to restrict a value to a fixed set of values. It must be an array with at least one element, where each element is unique.
    *
@@ -113,13 +112,13 @@ export interface JsonSchemaDraft2020_12
    *
    * If `then` and/or `else` appear in a schema without `if`, `then` and `else` are ignored.
    */
-  if?: JsonSchemaDraft2020_12;
+  if?: Document;
   /**
    * `not`: (NOT) Must _not_ be valid against the given schema
    *
    * The `not` keyword declares that an instance validates if it doesn't validate against the given subschema.
    */
-  not?: JsonSchemaDraft2020_12;
+  not?: Document;
   /**
    * `oneOf`: (XOR) Must be valid against _exactly one_ of the subschemas
    *
@@ -127,7 +126,7 @@ export interface JsonSchemaDraft2020_12
    *
    * Careful consideration should be taken when using `oneOf` entries as the nature of it requires verification of _every_ sub-schema which can lead to increased processing times. Prefer `anyOf` where possible.
    */
-  oneOf?: ReadonlyArray<JsonSchemaDraft2020_12>;
+  oneOf?: ReadonlyArray<Document>;
   /**
    * The boolean keywords `readOnly` and `writeOnly` are typically used in an API context. `readOnly` indicates that a value should not be modified. It could be used to indicate that a `PUT` request that changes a value would result in a `400 Bad Request` response. `writeOnly` indicates that a value may be set, but will remain hidden. In could be used to indicate you can set a value with a `PUT` request, but it would not be included when retrieving that record with a `GET` request.
    */
@@ -141,7 +140,7 @@ export interface JsonSchemaDraft2020_12
    *
    * If `then` and/or `else` appear in a schema without `if`, `then` and `else` are ignored.
    */
-  then?: JsonSchemaDraft2020_12;
+  then?: Document;
   /**
    * The `title` and `description` keywords must be strings. A "title" will preferably be short, whereas a "description" will provide a more lengthy explanation about the purpose of the data described by the schema.
    */
@@ -156,11 +155,11 @@ export interface JsonSchemaDraft2020_12
   writeOnly?: boolean;
 }
 
-interface ArrayKeywords {
+export interface ArrayKeywords {
   /**
    * While the `items` schema must be valid for every item in the array, the `contains` schema only needs to validate against one or more items in the array.
    */
-  contains?: JsonSchemaDraft2020_12;
+  contains?: Document;
   /**
    * List validation is useful for arrays of arbitrary length where each item matches the same schema. For this kind of array, set the `items` {@link https://json-schema.org/learn/glossary#keyword keyword} to a single schema that will be used to validate all of the items in the array.
    *
@@ -168,7 +167,7 @@ interface ArrayKeywords {
    *
    * Note that `items` doesn't "see inside" any {@link https://json-schema.org/learn/glossary#instance instances} of `allOf`, `anyOf`, or `oneOf` in the same {@link https://json-schema.org/learn/glossary#subschema subschema}.
    */
-  items?: JsonSchemaDraft2020_12 | false;
+  items?: Document | false;
   /**
    * `minContains` and `maxContains` can be used with `contains` to further specify how many times a schema matches a `contains` constraint. These keywords can be any non-negative number including zero.
    */
@@ -188,7 +187,7 @@ interface ArrayKeywords {
   /**
    * `prefixItems` is an array, where each item is a schema that corresponds to each index of the document's array. That is, an array where the first element validates the first element of the input array, the second element validates the second element of the input array, etc.
    */
-  prefixItems?: ReadonlyArray<JsonSchemaDraft2020_12>;
+  prefixItems?: ReadonlyArray<Document>;
   /**
    * The `unevaluatedItems` keyword is useful mainly when you want to add or disallow extra items to an array.
    *
@@ -198,14 +197,14 @@ interface ArrayKeywords {
    *
    * Like with `items`, if you set `unevaluatedItems` to false, you can disallow extra items in the array.
    */
-  unevaluatedItems?: JsonSchemaDraft2020_12 | false;
+  unevaluatedItems?: Document | false;
   /**
    * A schema can ensure that each of the items in an array is unique. Simply set the `uniqueItems` keyword to `true`.
    */
   uniqueItems?: boolean;
 }
 
-interface NumberKeywords {
+export interface NumberKeywords {
   /**
    * Ranges of numbers are specified using a combination of the `minimum` and `maximum` keywords, (or `exclusiveMinimum` and `exclusiveMaximum` for expressing exclusive range).
    *
@@ -272,7 +271,7 @@ interface NumberKeywords {
   multipleOf?: number;
 }
 
-interface ObjectKeywords {
+export interface ObjectKeywords {
   /**
    * The `additionalProperties` keyword is used to control the handling of extra stuff, that is, properties whose names are not listed in the `properties` keyword or match any of the regular expressions in the `patternProperties` keyword. By default any additional properties are allowed.
    *
@@ -280,7 +279,7 @@ interface ObjectKeywords {
    *
    * It's important to note that `additionalProperties` only recognizes properties declared in the same {@link https://json-schema.org/learn/glossary#subschema subschema} as itself. So, `additionalProperties` can restrict you from "extending" a schema using {@link https://json-schema.org/understanding-json-schema/reference/combining combining} keywords such as {@link https://json-schema.org/understanding-json-schema/reference/combining#allof allOf}.
    */
-  additionalProperties?: JsonSchemaDraft2020_12 | false;
+  additionalProperties?: Document | false;
   /**
    * The number of properties on an object can be restricted using the `minProperties` and `maxProperties` keywords. Each of these must be a non-negative integer.
    */
@@ -292,11 +291,11 @@ interface ObjectKeywords {
   /**
    * Sometimes you want to say that, given a particular kind of property name, the value should match a particular schema. That's where `patternProperties` comes in: it maps regular expressions to schemas. If a property name matches the given regular expression, the property value must validate against the corresponding schema.
    */
-  patternProperties?: Record<string, JsonSchemaDraft2020_12>;
+  patternProperties?: Record<string, Document>;
   /**
    * The properties (key-value pairs) on an object are defined using the `properties` {@link https://json-schema.org/learn/glossary#keyword keyword}. The value of `properties` is an object, where each key is the name of a property and each value is a {@link https://json-schema.org/learn/glossary#schema schema} used to validate that property. Any property that doesn't match any of the property names in the `properties` keyword is ignored by this keyword.
    */
-  properties?: Record<string, JsonSchemaDraft2020_12 | true>;
+  properties?: Record<string, Document | true>;
   /**
    * The names of properties can be validated against a schema, irrespective of their values. This can be useful if you don't want to enforce specific properties, but you want to make sure that the names of those properties follow a specific convention. You might, for example, want to enforce that all names are valid ASCII tokens so they can be used as attributes in a particular programming language.
    *
@@ -306,7 +305,7 @@ interface ObjectKeywords {
    * { "type": "string" }
    * ```
    */
-  propertyNames?: JsonSchemaDraft2020_12;
+  propertyNames?: Document;
   /**
    * By default, the properties defined by the `properties` keyword are not required. However, one can provide a list of required properties using the `required` keyword.
    *
@@ -318,10 +317,10 @@ interface ObjectKeywords {
    *
    * `unevaluatedProperties` works by collecting any properties that are successfully validated when processing the schemas and using those as the allowed list of properties. This allows you to do more complex things like conditionally adding properties.
    */
-  unevaluatedProperties?: JsonSchemaDraft2020_12 | false;
+  unevaluatedProperties?: Document | false;
 }
 
-interface StringKeywords {
+export interface StringKeywords {
   /**
    * The length of a string can be constrained using the `minLength` and `maxLength` {@link https://json-schema.org/learn/glossary#keyword keywords}. For both keywords, the value must be a non-negative number.
    */
@@ -336,7 +335,7 @@ interface StringKeywords {
   pattern?: string;
 }
 
-type JsonSchemaFormats =
+export type JsonSchemaFormats =
   | 'date'
   | 'date-time'
   | 'duration'
@@ -358,4 +357,11 @@ type JsonSchemaFormats =
   | 'uuid'
   | AnyString;
 
-type JsonSchemaTypes = 'array' | 'boolean' | 'integer' | 'null' | 'number' | 'object' | 'string';
+export type JsonSchemaTypes =
+  | 'array'
+  | 'boolean'
+  | 'integer'
+  | 'null'
+  | 'number'
+  | 'object'
+  | 'string';

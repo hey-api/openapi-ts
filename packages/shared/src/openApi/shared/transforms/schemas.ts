@@ -73,7 +73,7 @@ export const schemaNameTransform = ({
     schemasObj[newName] = schema;
   }
 
-  if (Object.keys(renameMap).length > 0) {
+  if (Object.keys(renameMap).length) {
     rewriteRefs(spec, renameMap);
   }
 };

@@ -5,14 +5,14 @@ import { createClient } from '@hey-api/openapi-ts';
 
 import { getFilePaths } from '../../../utils';
 import { snapshotsDir, tmpDir } from './constants';
-import { createOrpcConfig } from './utils';
+import { createConfigFactory } from './utils';
 
 const version = '3.1.x';
 
 const outputDir = path.join(tmpDir, version);
 
 describe(`OpenAPI ${version}`, () => {
-  const createConfig = createOrpcConfig({ openApiVersion: version, outputDir });
+  const createConfig = createConfigFactory({ openApiVersion: version, outputDir });
 
   const scenarios = [
     {

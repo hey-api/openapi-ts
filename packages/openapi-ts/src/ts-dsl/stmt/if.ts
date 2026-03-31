@@ -1,4 +1,4 @@
-import type { AnalysisContext } from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
@@ -7,7 +7,7 @@ import type { DoExpr } from '../mixins/do';
 import { DoMixin } from '../mixins/do';
 import { BlockTsDsl } from './block';
 
-export type IfCondition = string | MaybeTsDsl<ts.Expression>;
+export type IfCondition = NodeName | MaybeTsDsl<ts.Expression>;
 
 const Mixed = DoMixin(TsDsl<ts.IfStatement>);
 
@@ -39,7 +39,7 @@ export class IfTsDsl extends Mixed {
 
   /** Returns true when all required builder calls are present. */
   get isValid(): boolean {
-    return this.missingRequiredCalls().length === 0;
+    return !this.missingRequiredCalls().length;
   }
 
   condition(condition: IfCondition): this {
@@ -65,14 +65,14 @@ export class IfTsDsl extends Mixed {
     _condition: IfCondition;
   } {
     const missing = this.missingRequiredCalls();
-    if (missing.length === 0) return;
+    if (!missing.length) return;
     throw new Error(`If statement missing ${missing.join(' and ')}`);
   }
 
   private missingRequiredCalls(): ReadonlyArray<string> {
     const missing: Array<string> = [];
     if (!this._condition) missing.push('.condition()');
-    if (this._do.length === 0) missing.push('.do()');
+    if (!this._do.length) missing.push('.do()');
     return missing;
   }
 }

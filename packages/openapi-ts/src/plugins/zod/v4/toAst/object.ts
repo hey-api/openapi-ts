@@ -29,7 +29,7 @@ function additionalPropertiesNode(ctx: ExtendedContext): Chain | null | undefine
 
   if (
     !schema.additionalProperties ||
-    (schema.properties && Object.keys(schema.properties).length > 0)
+    (schema.properties && Object.keys(schema.properties).length)
   ) {
     return;
   }

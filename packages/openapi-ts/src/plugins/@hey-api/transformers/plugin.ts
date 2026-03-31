@@ -12,7 +12,7 @@ const dataVariableName = 'data';
 // can emit calls to transformers that will be implemented later.
 const buildingSymbols = new Set<number>();
 
-type Expr = ReturnType<typeof $.fromValue | typeof $.return | typeof $.if>;
+type Expr = ReturnType<typeof $.fromValue | typeof $.for | typeof $.if | typeof $.return>;
 
 function isNodeReturnStatement(node: Expr) {
   return node['~dsl'] === 'ReturnTsDsl';
@@ -194,6 +194,36 @@ function processSchemaType({
       }
     }
 
+    if (schema.additionalProperties && dataExpression) {
+      const entryValueNodes = processSchemaType({
+        dataExpression: $(dataExpression).attr('key').computed(),
+        plugin,
+        schema: schema.additionalProperties,
+      });
+
+      if (entryValueNodes.length) {
+        const properties = Object.keys(schema.properties ?? {});
+        nodes.push(
+          $.for($.const('key'))
+            .of($('Object').attr('keys').call(dataExpression))
+            .$if(
+              properties.length,
+              (f) =>
+                f.do(
+                  $.if(
+                    $.not(
+                      $.array(...properties)
+                        .attr('includes')
+                        .call('key'),
+                    ),
+                  ).do(...entryValueNodes),
+                ),
+              (f) => f.do(...entryValueNodes),
+            ),
+        );
+      }
+    }
+
     return nodes;
   }
 
@@ -320,7 +350,7 @@ export const handler: HeyApiTransformersPlugin['Handler'] = ({ plugin }) => {
       });
       if (!nodes.length) return;
 
-      // For nullable union responses (e.g. anyOf: [SomeSchema, null]), wrap the
+      // For nullable union responses (e.g., anyOf: [SomeSchema, null]), wrap the
       // transformation in a null guard so that null data is returned as-is.
       // We require nodes.length >= 2 because we need at least one transformation
       // statement AND a return statement (empty .do() would fail validation).

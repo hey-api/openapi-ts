@@ -10,6 +10,7 @@ import { DocMixin } from '../mixins/doc';
 import {
   AbstractMixin,
   AsyncMixin,
+  ExportMixin,
   PrivateMixin,
   ProtectedMixin,
   PublicMixin,
@@ -29,11 +30,13 @@ const Mixed = AbstractMixin(
       DecoratorMixin(
         DoMixin(
           DocMixin(
-            ParamMixin(
-              PrivateMixin(
-                ProtectedMixin(
-                  PublicMixin(
-                    StaticMixin(TypeParamsMixin(TypeReturnsMixin(TsDsl<ts.ArrowFunction>))),
+            ExportMixin(
+              ParamMixin(
+                PrivateMixin(
+                  ProtectedMixin(
+                    PublicMixin(
+                      StaticMixin(TypeParamsMixin(TypeReturnsMixin(TsDsl<ts.ArrowFunction>))),
+                    ),
                   ),
                 ),
               ),
@@ -85,7 +88,7 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends Mixed {
 
   /** Returns true when all required builder calls are present. */
   get isValid(): boolean {
-    return this.missingRequiredCalls().length === 0;
+    return !this.missingRequiredCalls().length;
   }
 
   /** Switches the function to an arrow function form. */
@@ -158,7 +161,7 @@ class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends Mixed {
 
   $validate(): asserts this {
     const missing = this.missingRequiredCalls();
-    if (missing.length === 0) return;
+    if (!missing.length) return;
     throw new Error(`Function ${this.mode} missing ${missing.join(' and ')}`);
   }
 

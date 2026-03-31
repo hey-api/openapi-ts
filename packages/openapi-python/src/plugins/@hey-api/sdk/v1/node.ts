@@ -119,7 +119,7 @@ function implementFn<T extends ReturnType<typeof $.func>>(args: {
   const method = operation.method.toLowerCase();
   const opParameters = operationParameters({ operation, plugin });
 
-  if (plugin.config.paramsStructure === 'flat' && opParameters.fields.length > 0) {
+  if (plugin.config.paramsStructure === 'flat' && opParameters.fields.length) {
     const paramNames = opParameters.parameters.map((parameter) => parameter.name.toString());
 
     const fieldsList = $.list();

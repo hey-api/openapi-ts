@@ -46,7 +46,7 @@ class $Ref<S extends object = JSONSchema> {
   $refs: $Refs<S>;
 
   /**
-   * Indicates the type of {@link $Ref#path} (e.g. "file", "http", etc.)
+   * Indicates the type of {@link $Ref#path} (e.g., "file", "http", etc.)
    */
   pathType: string | unknown;
 
@@ -152,7 +152,7 @@ class $Ref<S extends object = JSONSchema> {
       value !== null &&
       '$ref' in value &&
       typeof value.$ref === 'string' &&
-      value.$ref.length > 0
+      Boolean(value.$ref.length)
     );
   }
 

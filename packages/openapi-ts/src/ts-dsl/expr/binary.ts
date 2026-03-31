@@ -52,7 +52,7 @@ export class BinaryTsDsl extends Mixed {
 
   /** Returns true when all required builder calls are present. */
   get isValid(): boolean {
-    return this.missingRequiredCalls().length === 0;
+    return !this.missingRequiredCalls().length;
   }
 
   /** Logical AND — `this && expr` */
@@ -60,7 +60,7 @@ export class BinaryTsDsl extends Mixed {
     return this.opAndExpr('&&', expr);
   }
 
-  /** Creates an assignment expression (e.g. `this = expr`). */
+  /** Creates an assignment expression (e.g., `this = expr`). */
   assign(expr: Expr): this {
     return this.opAndExpr('=', expr);
   }
@@ -152,7 +152,7 @@ export class BinaryTsDsl extends Mixed {
     _op: Op;
   } {
     const missing = this.missingRequiredCalls();
-    if (missing.length === 0) return;
+    if (!missing.length) return;
     throw new Error(`Binary expression missing ${missing.join(' and ')}`);
   }
 

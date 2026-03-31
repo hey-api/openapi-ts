@@ -9,10 +9,6 @@ export const handlerV1: ValibotPlugin['Handler'] = ({ plugin }) => {
   plugin.symbol('v', {
     external: 'valibot',
     importKind: 'namespace',
-    meta: {
-      category: 'external',
-      resource: 'valibot.v',
-    },
   });
 
   const processor = createProcessor(plugin);

@@ -1,6 +1,6 @@
+import type { CodeSampleObject } from '@hey-api/spec-types';
 import type { MaybePromise } from '@hey-api/types';
 
-import type { CodeSampleObject } from '..//openApi/shared/types';
 import type { IR } from './types';
 
 export interface ExampleIntent {

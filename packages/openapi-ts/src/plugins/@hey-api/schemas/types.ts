@@ -1,17 +1,12 @@
-import type {
-  DefinePlugin,
-  OpenApiV2_0_XTypes,
-  OpenApiV3_0_XTypes,
-  OpenApiV3_1_XTypes,
-  Plugin,
-} from '@hey-api/shared';
+import type { DefinePlugin, Plugin } from '@hey-api/shared';
+import type { OpenAPIV2, OpenAPIV3, OpenAPIV3_1 } from '@hey-api/spec-types';
 
 export type UserConfig = Plugin.Name<'@hey-api/schemas'> &
   Plugin.Hooks &
   Plugin.UserExports & {
     /**
      * Customise the schema name. By default, `{{name}}Schema` is used. `name` is a
-     * valid JavaScript/TypeScript identifier, e.g. if your schema name is
+     * valid JavaScript/TypeScript identifier, e.g., if your schema name is
      * "Foo-Bar", `name` value would be "FooBar".
      *
      * @default '{{name}}Schema'
@@ -21,10 +16,10 @@ export type UserConfig = Plugin.Name<'@hey-api/schemas'> &
       | ((
           name: string,
           schema:
-            | OpenApiV2_0_XTypes['SchemaObject']
-            | OpenApiV3_0_XTypes['ReferenceObject']
-            | OpenApiV3_0_XTypes['SchemaObject']
-            | OpenApiV3_1_XTypes['SchemaObject'],
+            | OpenAPIV2.SchemaObject
+            | OpenAPIV3.ReferenceObject
+            | OpenAPIV3.SchemaObject
+            | OpenAPIV3_1.SchemaObject,
         ) => string);
     /**
      * Choose schema type to generate. Select 'form' if you don't want

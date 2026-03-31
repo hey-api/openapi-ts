@@ -20,12 +20,12 @@ export type SortModule = string;
 export type SortKey = [SortGroup, SortDistance, SortModule];
 
 export type ModuleExport = Omit<ExportModule, 'from'> & {
-  /** Module specifier for re-exports, e.g. `./foo`. */
+  /** Module specifier for re-exports, e.g., `./foo`. */
   modulePath: string;
 };
 
 export type ModuleImport = Omit<ImportModule, 'from'> & {
-  /** Module specifier for imports, e.g. `./foo`. */
+  /** Module specifier for imports, e.g., `./foo`. */
   modulePath: string;
 };
 
@@ -82,7 +82,7 @@ export function moduleSortKey({
     pathSegments.push(moduleName);
   }
 
-  modulePath = pathSegments.length > 0 ? leadingDots + pathSegments.join('.') : leadingDots;
+  modulePath = pathSegments.length ? leadingDots + pathSegments.join('.') : leadingDots;
 
   return [2, parentCount, modulePath];
 }

@@ -47,10 +47,6 @@ export const createQueryKeyFunction = ({ plugin }: { plugin: PiniaColadaPlugin['
   const clientModule = clientFolderAbsolutePath(getTypedConfig(plugin));
   const symbolSerializeQueryValue = plugin.symbol('serializeQueryKeyValue', {
     external: clientModule,
-    meta: {
-      category: 'external',
-      resource: `${clientModule}.serializeQueryKeyValue`,
-    },
   });
 
   const fn = $.const(symbolCreateQueryKey).assign(
@@ -122,7 +118,7 @@ const createQueryKeyLiteral = ({
 }) => {
   const config = plugin.config.queryKeys;
   let tagsExpression: ReturnType<typeof $.array> | undefined;
-  if (config.tags && operation.tags && operation.tags.length > 0) {
+  if (config.tags && operation.tags && operation.tags.length) {
     tagsExpression = $.array(...operation.tags.map((tag) => $.literal(tag)));
   }
 

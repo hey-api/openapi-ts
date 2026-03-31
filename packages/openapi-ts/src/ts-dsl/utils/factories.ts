@@ -1,14 +1,17 @@
+import type { MethodCtor } from '../decl/method';
 import type { AsCtor } from '../expr/as';
 import type { AttrCtor } from '../expr/attr';
 import type { AwaitCtor } from '../expr/await';
 import type { CallCtor } from '../expr/call';
 import type { NewCtor } from '../expr/new';
+import type { SpreadCtor } from '../expr/spread';
 import type { TypeOfExprCtor } from '../expr/typeof';
 import type { ReturnCtor } from '../stmt/return';
 import type { TypeExprCtor } from '../type/expr';
 import type { TypeIdxCtor } from '../type/idx';
 import type { TypeOperatorCtor } from '../type/operator';
 import type { TypeQueryCtor } from '../type/query';
+import type { TypeTupleMemberCtor } from '../type/tuple-member';
 
 type Ctor = (...args: Array<any>) => any;
 
@@ -34,39 +37,48 @@ function createFactory<T extends Ctor>(name: string): Factory<T> {
 }
 
 export const f = {
-  /** Factory for creating `as` type assertion expressions (e.g. `value as Type`). */
+  /** Factory for creating `as` type assertion expressions (e.g., `value as Type`). */
   as: createFactory<AsCtor>('as'),
 
-  /** Factory for creating property access expressions (e.g. `obj.foo`). */
+  /** Factory for creating property access expressions (e.g., `obj.foo`). */
   attr: createFactory<AttrCtor>('attr'),
 
-  /** Factory for creating await expressions (e.g. `await promise`). */
+  /** Factory for creating await expressions (e.g., `await promise`). */
   await: createFactory<AwaitCtor>('await'),
 
-  /** Factory for creating function or method call expressions (e.g. `fn(arg)`). */
+  /** Factory for creating function or method call expressions (e.g., `fn(arg)`). */
   call: createFactory<CallCtor>('call'),
 
-  /** Factory for creating new expressions (e.g. `new ClassName()`). */
+  /** Factory for creating method declarations (e.g., `{ foo() { ... } }`). */
+  method: createFactory<MethodCtor>('method'),
+
+  /** Factory for creating new expressions (e.g., `new ClassName()`). */
   new: createFactory<NewCtor>('new'),
 
   /** Factory for creating return statements. */
   return: createFactory<ReturnCtor>('return'),
 
+  /** Factory for creating spread expressions (e.g., `...expr`). */
+  spread: createFactory<SpreadCtor>('spread'),
+
   /** Factories for creating type nodes. */
   type: {
-    /** Factory for creating basic type references or type expressions (e.g. Foo or Foo<T>). */
+    /** Factory for creating basic type references or type expressions (e.g., Foo or Foo<T>). */
     expr: createFactory<TypeExprCtor>('type.expr'),
 
-    /** Factory for creating indexed-access types (e.g. `Foo<T>[K]`). */
+    /** Factory for creating indexed-access types (e.g., `Foo<T>[K]`). */
     idx: createFactory<TypeIdxCtor>('type.idx'),
 
-    /** Factory for creating type operator nodes (e.g. `readonly T`, `keyof T`, `unique T`). */
+    /** Factory for creating type operator nodes (e.g., `readonly T`, `keyof T`, `unique T`). */
     operator: createFactory<TypeOperatorCtor>('type.operator'),
 
-    /** Factory for creating type query nodes (e.g. `typeof Foo`). */
+    /** Factory for creating type query nodes (e.g., `typeof Foo`). */
     query: createFactory<TypeQueryCtor>('type.query'),
+
+    /** Factory for creating named tuple elements (e.g., `[resolver?: R]`). */
+    tupleMember: createFactory<TypeTupleMemberCtor>('type.tupleMember'),
   },
 
-  /** Factory for creating `typeof` expressions (e.g. `typeof value`). */
+  /** Factory for creating `typeof` expressions (e.g., `typeof value`). */
   typeofExpr: createFactory<TypeOfExprCtor>('typeofExpr'),
 };

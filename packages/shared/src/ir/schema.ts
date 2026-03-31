@@ -1,7 +1,7 @@
 import type { IR } from './types';
 
 /**
- * Ensure we don't produce redundant types, e.g. string | string.
+ * Ensure we don't produce redundant types, e.g., string | string.
  */
 export function deduplicateSchema<T extends IR.SchemaObject>({
   detectFormat = true,

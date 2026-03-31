@@ -2,13 +2,13 @@ import type { IR } from '@hey-api/shared';
 
 export function hasInput(operation: IR.OperationObject): boolean {
   const hasPathParams = Boolean(
-    operation.parameters?.path && Object.keys(operation.parameters.path).length > 0,
+    operation.parameters?.path && Object.keys(operation.parameters.path).length,
   );
   const hasQueryParams = Boolean(
-    operation.parameters?.query && Object.keys(operation.parameters.query).length > 0,
+    operation.parameters?.query && Object.keys(operation.parameters.query).length,
   );
   const hasHeaderParams = Boolean(
-    operation.parameters?.header && Object.keys(operation.parameters.header).length > 0,
+    operation.parameters?.header && Object.keys(operation.parameters.header).length,
   );
   const hasBody = Boolean(operation.body);
   return hasPathParams || hasQueryParams || hasHeaderParams || hasBody;
@@ -34,5 +34,5 @@ export function getSuccessResponse(
 }
 
 export function getTags(operation: IR.OperationObject, defaultTag: string): ReadonlyArray<string> {
-  return operation.tags && operation.tags.length > 0 ? [...operation.tags] : [defaultTag];
+  return operation.tags && operation.tags.length ? [...operation.tags] : [defaultTag];
 }
