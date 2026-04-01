@@ -63,7 +63,7 @@ export const zNonAsciiStringæøåÆøÅöôêÊ字符串 = z.string();
 /**
  * This is a simple file
  */
-export const zSimpleFile = z.string();
+export const zSimpleFile = z.union([z.instanceof(Blob), z.instanceof(File)]);
 
 /**
  * This is a simple string
@@ -272,7 +272,7 @@ export const zModelWithNestedEnums = z.object({
  */
 export const zModelWithArray = z.object({
     prop: z.optional(z.array(zModelWithString)),
-    propWithFile: z.optional(z.array(z.string())),
+    propWithFile: z.optional(z.array(z.union([z.instanceof(Blob), z.instanceof(File)]))),
     propWithNumber: z.optional(z.array(z.number()))
 });
 

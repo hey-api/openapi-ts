@@ -19,9 +19,19 @@ function constNode(ctx: StringResolverContext): ChainResult {
 }
 
 function formatNode(ctx: StringResolverContext): ChainResult {
-  const { chain, plugin, schema } = ctx;
+  const { chain, plugin, schema, symbols } = ctx;
+  const { z } = symbols;
 
   switch (schema.format) {
+    case 'binary':
+      return $(z)
+        .attr(identifiers.union)
+        .call(
+          $.array(
+            $(z).attr(identifiers.instanceof).call($.id('Blob')),
+            $(z).attr(identifiers.instanceof).call($.id('File')),
+          ),
+        );
     case 'date':
       return chain.current.attr(identifiers.date).call();
     case 'date-time': {

@@ -76,7 +76,7 @@ export const zNonAsciiStringæøåÆøÅöôêÊ字符串 = z.string();
 /**
  * This is a simple file
  */
-export const zSimpleFile = z.string();
+export const zSimpleFile = z.union([z.instanceof(Blob), z.instanceof(File)]);
 
 /**
  * This is a simple string
@@ -352,7 +352,7 @@ export const zModelWithNestedEnums = z.object({
  */
 export const zModelWithArray = z.object({
     prop: z.optional(z.array(zModelWithString)),
-    propWithFile: z.optional(z.array(z.string())),
+    propWithFile: z.optional(z.array(z.union([z.instanceof(Blob), z.instanceof(File)]))),
     propWithNumber: z.optional(z.array(z.number()))
 });
 
@@ -775,7 +775,7 @@ export const zModelWithReadOnlyAndWriteOnly = z.object({
  */
 export const zModelWithArrayReadOnlyAndWriteOnly = z.object({
     prop: z.optional(z.array(zModelWithReadOnlyAndWriteOnly)),
-    propWithFile: z.optional(z.array(z.string())),
+    propWithFile: z.optional(z.array(z.union([z.instanceof(Blob), z.instanceof(File)]))),
     propWithNumber: z.optional(z.array(z.number()))
 });
 
@@ -1011,7 +1011,7 @@ export const zModelWithReadOnlyAndWriteOnlyWritable = z.object({
  */
 export const zModelWithArrayReadOnlyAndWriteOnlyWritable = z.object({
     prop: z.optional(z.array(zModelWithReadOnlyAndWriteOnlyWritable)),
-    propWithFile: z.optional(z.array(z.string())),
+    propWithFile: z.optional(z.array(z.union([z.instanceof(Blob), z.instanceof(File)]))),
     propWithNumber: z.optional(z.array(z.number()))
 });
 
@@ -1472,7 +1472,7 @@ export const zTypesResponse = z.union([
 ]);
 
 export const zUploadFileData = z.object({
-    body: z.string(),
+    body: z.union([z.instanceof(Blob), z.instanceof(File)]),
     path: z.object({
         'api-version': z.nullable(z.string())
     }),
@@ -1493,7 +1493,7 @@ export const zFileResponseData = z.object({
 /**
  * Success
  */
-export const zFileResponseResponse = z.string();
+export const zFileResponseResponse = z.union([z.instanceof(Blob), z.instanceof(File)]);
 
 export const zComplexTypesData = z.object({
     body: z.optional(z.never()),
@@ -1525,7 +1525,7 @@ export const zMultipartResponseData = z.object({
  * OK
  */
 export const zMultipartResponseResponse = z.object({
-    file: z.optional(z.string()),
+    file: z.optional(z.union([z.instanceof(Blob), z.instanceof(File)])),
     metadata: z.optional(z.object({
         foo: z.optional(z.string()),
         bar: z.optional(z.string())
@@ -1534,7 +1534,7 @@ export const zMultipartResponseResponse = z.object({
 
 export const zMultipartRequestData = z.object({
     body: z.optional(z.object({
-        content: z.optional(z.string()),
+        content: z.optional(z.union([z.instanceof(Blob), z.instanceof(File)])),
         data: z.nullish(zModelWithString)
     })),
     path: z.optional(z.never()),
