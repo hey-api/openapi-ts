@@ -82,6 +82,7 @@
 - [Philipp Katz](https://github.com/qqilihq)
 - [Phuc Tran](https://github.com/Glup3)
 - [Rico](https://github.com/btmnk)
+- [Roland Weiss](https://github.com/rolego)
 - [Ryo Yamada](https://github.com/Liooo)
 - [Sebastiaan Wouters](https://github.com/SebastiaanWouters)
 - [Shinigami](https://github.com/Shinigami92)
