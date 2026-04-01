@@ -6,13 +6,13 @@ import { client } from '../client.gen';
 import { apiVVersionODataControllerCount, callToTestOrderOfParams, callWithDefaultOptionalParameters, callWithDefaultParameters, callWithDescriptions, callWithDuplicateResponses, callWithNoContentResponse, callWithParameters, callWithResponse, callWithResponseAndNoContentResponse, callWithResponses, callWithResultFromHeader, callWithWeirdParameterNames, collectionFormat, complexParams, complexTypes, deleteCallWithoutParametersAndResponse, deleteFoo, deprecatedCall, dummyA, dummyB, duplicateName, duplicateName2, duplicateName3, duplicateName4, export_, fileResponse, fooWow, getApiVbyApiVersionSimpleOperation, getCallWithOptionalParam, getCallWithoutParametersAndResponse, import_, multipartRequest, multipartResponse, nonAsciiæøåÆøÅöôêÊ字符串, type Options, patchApiVbyApiVersionNoTag, patchCallWithoutParametersAndResponse, postApiVbyApiVersionFormData, postApiVbyApiVersionRequestBody, postCallWithOptionalParam, postCallWithoutParametersAndResponse, putCallWithoutParametersAndResponse, putWithFormUrlEncoded, testErrorCode, types, uploadFile } from '../sdk.gen';
 import type { ApiVVersionODataControllerCountData, ApiVVersionODataControllerCountResponse, CallToTestOrderOfParamsData, CallWithDefaultOptionalParametersData, CallWithDefaultParametersData, CallWithDescriptionsData, CallWithDuplicateResponsesData, CallWithDuplicateResponsesError, CallWithDuplicateResponsesResponse, CallWithNoContentResponseData, CallWithNoContentResponseResponse, CallWithParametersData, CallWithResponseAndNoContentResponseData, CallWithResponseAndNoContentResponseResponse, CallWithResponseData, CallWithResponseResponse, CallWithResponsesData, CallWithResponsesError, CallWithResponsesResponse, CallWithResultFromHeaderData, CallWithWeirdParameterNamesData, CollectionFormatData, ComplexParamsData, ComplexParamsResponse, ComplexTypesData, ComplexTypesResponse, DeleteCallWithoutParametersAndResponseData, DeleteFooData3, DeprecatedCallData, DummyAData, DummyAResponse, DummyBData, DummyBResponse, DuplicateName2Data, DuplicateName3Data, DuplicateName4Data, DuplicateNameData, ExportData, FileResponseData, FileResponseResponse, FooWowData, GetApiVbyApiVersionSimpleOperationData, GetApiVbyApiVersionSimpleOperationError, GetApiVbyApiVersionSimpleOperationResponse, GetCallWithOptionalParamData, GetCallWithoutParametersAndResponseData, ImportData, ImportResponse, MultipartRequestData, MultipartResponseData, MultipartResponseResponse, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, PatchApiVbyApiVersionNoTagData, PatchCallWithoutParametersAndResponseData, PostApiVbyApiVersionFormDataData, PostApiVbyApiVersionRequestBodyData, PostCallWithOptionalParamData, PostCallWithOptionalParamResponse, PostCallWithoutParametersAndResponseData, PutCallWithoutParametersAndResponseData, PutWithFormUrlEncodedData, TestErrorCodeData, TypesData, TypesResponse, UploadFileData, UploadFileResponse } from '../types.gen';
 
-type ResponseResult<TData, TStyle extends 'data' | 'fields' = 'fields'> = TStyle extends "fields" ? {
+type ResponseResult<TData, TStyle extends 'data' | 'fields' = 'data'> = TStyle extends "fields" ? {
     data: TData;
     request: Request;
     response: Response;
 } : TData;
 
-type ResponseError<TError, TStyle extends 'data' | 'fields' = 'fields'> = TStyle extends "fields" ? {
+type ResponseError<TError, TStyle extends 'data' | 'fields' = 'data'> = TStyle extends "fields" ? {
     error: TError;
     request: Request;
     response: Response;
@@ -53,7 +53,7 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
 
 export const exportQueryKey = (options?: Options<ExportData>) => createQueryKey('export', options);
 
-export const exportOptions = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Options<ExportData> & {
+export const exportOptions = <TStyle extends 'data' | 'fields' = 'data'>(options?: Options<ExportData> & {
     responseStyle?: TStyle;
 }) => queryOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, ResponseResult<unknown, TStyle>, ReturnType<typeof exportQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
@@ -70,7 +70,7 @@ export const exportOptions = <TStyle extends 'data' | 'fields' = 'fields'>(optio
     queryKey: exportQueryKey(options)
 });
 
-export const patchApiVbyApiVersionNoTagMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<PatchApiVbyApiVersionNoTagData>> & {
+export const patchApiVbyApiVersionNoTagMutation = <TStyle extends 'data' | 'fields' = 'data'>(options?: Partial<Options<PatchApiVbyApiVersionNoTagData>> & {
     responseStyle?: TStyle;
 }): UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<PatchApiVbyApiVersionNoTagData>> => {
     const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<PatchApiVbyApiVersionNoTagData>> = {
@@ -88,7 +88,7 @@ export const patchApiVbyApiVersionNoTagMutation = <TStyle extends 'data' | 'fiel
     return mutationOptions;
 };
 
-export const importMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<ImportData>> & {
+export const importMutation = <TStyle extends 'data' | 'fields' = 'data'>(options?: Partial<Options<ImportData>> & {
     responseStyle?: TStyle;
 }): UseMutationOptions<ResponseResult<ImportResponse, TStyle>, ResponseError<DefaultError, TStyle>, Options<ImportData>> => {
     const mutationOptions: UseMutationOptions<ResponseResult<ImportResponse, TStyle>, ResponseError<DefaultError, TStyle>, Options<ImportData>> = {
@@ -106,7 +106,7 @@ export const importMutation = <TStyle extends 'data' | 'fields' = 'fields'>(opti
     return mutationOptions;
 };
 
-export const fooWowMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<FooWowData>> & {
+export const fooWowMutation = <TStyle extends 'data' | 'fields' = 'data'>(options?: Partial<Options<FooWowData>> & {
     responseStyle?: TStyle;
 }): UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<FooWowData>> => {
     const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<FooWowData>> = {
@@ -126,7 +126,7 @@ export const fooWowMutation = <TStyle extends 'data' | 'fields' = 'fields'>(opti
 
 export const apiVVersionODataControllerCountQueryKey = (options?: Options<ApiVVersionODataControllerCountData>) => createQueryKey('apiVVersionODataControllerCount', options);
 
-export const apiVVersionODataControllerCountOptions = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Options<ApiVVersionODataControllerCountData> & {
+export const apiVVersionODataControllerCountOptions = <TStyle extends 'data' | 'fields' = 'data'>(options?: Options<ApiVVersionODataControllerCountData> & {
     responseStyle?: TStyle;
 }) => queryOptions<ResponseResult<ApiVVersionODataControllerCountResponse, TStyle>, ResponseError<DefaultError, TStyle>, ResponseResult<ApiVVersionODataControllerCountResponse, TStyle>, ReturnType<typeof apiVVersionODataControllerCountQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
@@ -145,7 +145,7 @@ export const apiVVersionODataControllerCountOptions = <TStyle extends 'data' | '
 
 export const getApiVbyApiVersionSimpleOperationQueryKey = (options: Options<GetApiVbyApiVersionSimpleOperationData>) => createQueryKey('getApiVbyApiVersionSimpleOperation', options);
 
-export const getApiVbyApiVersionSimpleOperationOptions = <TStyle extends 'data' | 'fields' = 'fields'>(options: Options<GetApiVbyApiVersionSimpleOperationData> & {
+export const getApiVbyApiVersionSimpleOperationOptions = <TStyle extends 'data' | 'fields' = 'data'>(options: Options<GetApiVbyApiVersionSimpleOperationData> & {
     responseStyle?: TStyle;
 }) => queryOptions<ResponseResult<GetApiVbyApiVersionSimpleOperationResponse, TStyle>, ResponseError<GetApiVbyApiVersionSimpleOperationError, TStyle>, ResponseResult<GetApiVbyApiVersionSimpleOperationResponse, TStyle>, ReturnType<typeof getApiVbyApiVersionSimpleOperationQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
@@ -162,7 +162,7 @@ export const getApiVbyApiVersionSimpleOperationOptions = <TStyle extends 'data' 
     queryKey: getApiVbyApiVersionSimpleOperationQueryKey(options)
 });
 
-export const deleteCallWithoutParametersAndResponseMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<DeleteCallWithoutParametersAndResponseData>> & {
+export const deleteCallWithoutParametersAndResponseMutation = <TStyle extends 'data' | 'fields' = 'data'>(options?: Partial<Options<DeleteCallWithoutParametersAndResponseData>> & {
     responseStyle?: TStyle;
 }): UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<DeleteCallWithoutParametersAndResponseData>> => {
     const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<DeleteCallWithoutParametersAndResponseData>> = {
@@ -182,7 +182,7 @@ export const deleteCallWithoutParametersAndResponseMutation = <TStyle extends 'd
 
 export const getCallWithoutParametersAndResponseQueryKey = (options?: Options<GetCallWithoutParametersAndResponseData>) => createQueryKey('getCallWithoutParametersAndResponse', options);
 
-export const getCallWithoutParametersAndResponseOptions = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Options<GetCallWithoutParametersAndResponseData> & {
+export const getCallWithoutParametersAndResponseOptions = <TStyle extends 'data' | 'fields' = 'data'>(options?: Options<GetCallWithoutParametersAndResponseData> & {
     responseStyle?: TStyle;
 }) => queryOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, ResponseResult<unknown, TStyle>, ReturnType<typeof getCallWithoutParametersAndResponseQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
@@ -199,7 +199,7 @@ export const getCallWithoutParametersAndResponseOptions = <TStyle extends 'data'
     queryKey: getCallWithoutParametersAndResponseQueryKey(options)
 });
 
-export const patchCallWithoutParametersAndResponseMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<PatchCallWithoutParametersAndResponseData>> & {
+export const patchCallWithoutParametersAndResponseMutation = <TStyle extends 'data' | 'fields' = 'data'>(options?: Partial<Options<PatchCallWithoutParametersAndResponseData>> & {
     responseStyle?: TStyle;
 }): UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<PatchCallWithoutParametersAndResponseData>> => {
     const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<PatchCallWithoutParametersAndResponseData>> = {
@@ -217,7 +217,7 @@ export const patchCallWithoutParametersAndResponseMutation = <TStyle extends 'da
     return mutationOptions;
 };
 
-export const postCallWithoutParametersAndResponseMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<PostCallWithoutParametersAndResponseData>> & {
+export const postCallWithoutParametersAndResponseMutation = <TStyle extends 'data' | 'fields' = 'data'>(options?: Partial<Options<PostCallWithoutParametersAndResponseData>> & {
     responseStyle?: TStyle;
 }): UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<PostCallWithoutParametersAndResponseData>> => {
     const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<PostCallWithoutParametersAndResponseData>> = {
@@ -235,7 +235,7 @@ export const postCallWithoutParametersAndResponseMutation = <TStyle extends 'dat
     return mutationOptions;
 };
 
-export const putCallWithoutParametersAndResponseMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<PutCallWithoutParametersAndResponseData>> & {
+export const putCallWithoutParametersAndResponseMutation = <TStyle extends 'data' | 'fields' = 'data'>(options?: Partial<Options<PutCallWithoutParametersAndResponseData>> & {
     responseStyle?: TStyle;
 }): UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<PutCallWithoutParametersAndResponseData>> => {
     const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<PutCallWithoutParametersAndResponseData>> = {
@@ -253,7 +253,7 @@ export const putCallWithoutParametersAndResponseMutation = <TStyle extends 'data
     return mutationOptions;
 };
 
-export const deleteFooMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<DeleteFooData3>> & {
+export const deleteFooMutation = <TStyle extends 'data' | 'fields' = 'data'>(options?: Partial<Options<DeleteFooData3>> & {
     responseStyle?: TStyle;
 }): UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<DeleteFooData3>> => {
     const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<DeleteFooData3>> = {
@@ -271,7 +271,7 @@ export const deleteFooMutation = <TStyle extends 'data' | 'fields' = 'fields'>(o
     return mutationOptions;
 };
 
-export const callWithDescriptionsMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<CallWithDescriptionsData>> & {
+export const callWithDescriptionsMutation = <TStyle extends 'data' | 'fields' = 'data'>(options?: Partial<Options<CallWithDescriptionsData>> & {
     responseStyle?: TStyle;
 }): UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<CallWithDescriptionsData>> => {
     const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<CallWithDescriptionsData>> = {
@@ -292,7 +292,7 @@ export const callWithDescriptionsMutation = <TStyle extends 'data' | 'fields' = 
 /**
  * @deprecated
  */
-export const deprecatedCallMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<DeprecatedCallData>> & {
+export const deprecatedCallMutation = <TStyle extends 'data' | 'fields' = 'data'>(options?: Partial<Options<DeprecatedCallData>> & {
     responseStyle?: TStyle;
 }): UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<DeprecatedCallData>> => {
     const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<DeprecatedCallData>> = {
@@ -310,7 +310,7 @@ export const deprecatedCallMutation = <TStyle extends 'data' | 'fields' = 'field
     return mutationOptions;
 };
 
-export const callWithParametersMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<CallWithParametersData>> & {
+export const callWithParametersMutation = <TStyle extends 'data' | 'fields' = 'data'>(options?: Partial<Options<CallWithParametersData>> & {
     responseStyle?: TStyle;
 }): UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<CallWithParametersData>> => {
     const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<CallWithParametersData>> = {
@@ -328,7 +328,7 @@ export const callWithParametersMutation = <TStyle extends 'data' | 'fields' = 'f
     return mutationOptions;
 };
 
-export const callWithWeirdParameterNamesMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<CallWithWeirdParameterNamesData>> & {
+export const callWithWeirdParameterNamesMutation = <TStyle extends 'data' | 'fields' = 'data'>(options?: Partial<Options<CallWithWeirdParameterNamesData>> & {
     responseStyle?: TStyle;
 }): UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<CallWithWeirdParameterNamesData>> => {
     const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<CallWithWeirdParameterNamesData>> = {
@@ -348,7 +348,7 @@ export const callWithWeirdParameterNamesMutation = <TStyle extends 'data' | 'fie
 
 export const getCallWithOptionalParamQueryKey = (options: Options<GetCallWithOptionalParamData>) => createQueryKey('getCallWithOptionalParam', options);
 
-export const getCallWithOptionalParamOptions = <TStyle extends 'data' | 'fields' = 'fields'>(options: Options<GetCallWithOptionalParamData> & {
+export const getCallWithOptionalParamOptions = <TStyle extends 'data' | 'fields' = 'data'>(options: Options<GetCallWithOptionalParamData> & {
     responseStyle?: TStyle;
 }) => queryOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, ResponseResult<unknown, TStyle>, ReturnType<typeof getCallWithOptionalParamQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
@@ -396,7 +396,7 @@ const createInfiniteParams = <K extends Pick<QueryKey<Options>[0], 'body' | 'hea
 
 export const getCallWithOptionalParamInfiniteQueryKey = (options: Options<GetCallWithOptionalParamData>): QueryKey<Options<GetCallWithOptionalParamData>> => createQueryKey('getCallWithOptionalParam', options, true);
 
-export const getCallWithOptionalParamInfiniteOptions = <TStyle extends 'data' | 'fields' = 'fields'>(options: Options<GetCallWithOptionalParamData> & {
+export const getCallWithOptionalParamInfiniteOptions = <TStyle extends 'data' | 'fields' = 'data'>(options: Options<GetCallWithOptionalParamData> & {
     responseStyle?: TStyle;
 }) => infiniteQueryOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, InfiniteData<ResponseResult<unknown, TStyle>>, QueryKey<Options<GetCallWithOptionalParamData>>, number | Pick<QueryKey<Options<GetCallWithOptionalParamData>>[0], 'body' | 'headers' | 'path' | 'query'>>(
 // @ts-ignore
@@ -422,7 +422,7 @@ export const getCallWithOptionalParamInfiniteOptions = <TStyle extends 'data' | 
     queryKey: getCallWithOptionalParamInfiniteQueryKey(options)
 });
 
-export const postCallWithOptionalParamMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<PostCallWithOptionalParamData>> & {
+export const postCallWithOptionalParamMutation = <TStyle extends 'data' | 'fields' = 'data'>(options?: Partial<Options<PostCallWithOptionalParamData>> & {
     responseStyle?: TStyle;
 }): UseMutationOptions<ResponseResult<PostCallWithOptionalParamResponse, TStyle>, ResponseError<DefaultError, TStyle>, Options<PostCallWithOptionalParamData>> => {
     const mutationOptions: UseMutationOptions<ResponseResult<PostCallWithOptionalParamResponse, TStyle>, ResponseError<DefaultError, TStyle>, Options<PostCallWithOptionalParamData>> = {
@@ -440,7 +440,7 @@ export const postCallWithOptionalParamMutation = <TStyle extends 'data' | 'field
     return mutationOptions;
 };
 
-export const postApiVbyApiVersionRequestBodyMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<PostApiVbyApiVersionRequestBodyData>> & {
+export const postApiVbyApiVersionRequestBodyMutation = <TStyle extends 'data' | 'fields' = 'data'>(options?: Partial<Options<PostApiVbyApiVersionRequestBodyData>> & {
     responseStyle?: TStyle;
 }): UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<PostApiVbyApiVersionRequestBodyData>> => {
     const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<PostApiVbyApiVersionRequestBodyData>> = {
@@ -458,7 +458,7 @@ export const postApiVbyApiVersionRequestBodyMutation = <TStyle extends 'data' | 
     return mutationOptions;
 };
 
-export const postApiVbyApiVersionFormDataMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<PostApiVbyApiVersionFormDataData>> & {
+export const postApiVbyApiVersionFormDataMutation = <TStyle extends 'data' | 'fields' = 'data'>(options?: Partial<Options<PostApiVbyApiVersionFormDataData>> & {
     responseStyle?: TStyle;
 }): UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<PostApiVbyApiVersionFormDataData>> => {
     const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<PostApiVbyApiVersionFormDataData>> = {
@@ -478,7 +478,7 @@ export const postApiVbyApiVersionFormDataMutation = <TStyle extends 'data' | 'fi
 
 export const callWithDefaultParametersQueryKey = (options?: Options<CallWithDefaultParametersData>) => createQueryKey('callWithDefaultParameters', options);
 
-export const callWithDefaultParametersOptions = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Options<CallWithDefaultParametersData> & {
+export const callWithDefaultParametersOptions = <TStyle extends 'data' | 'fields' = 'data'>(options?: Options<CallWithDefaultParametersData> & {
     responseStyle?: TStyle;
 }) => queryOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, ResponseResult<unknown, TStyle>, ReturnType<typeof callWithDefaultParametersQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
@@ -495,7 +495,7 @@ export const callWithDefaultParametersOptions = <TStyle extends 'data' | 'fields
     queryKey: callWithDefaultParametersQueryKey(options)
 });
 
-export const callWithDefaultOptionalParametersMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<CallWithDefaultOptionalParametersData>> & {
+export const callWithDefaultOptionalParametersMutation = <TStyle extends 'data' | 'fields' = 'data'>(options?: Partial<Options<CallWithDefaultOptionalParametersData>> & {
     responseStyle?: TStyle;
 }): UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<CallWithDefaultOptionalParametersData>> => {
     const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<CallWithDefaultOptionalParametersData>> = {
@@ -513,7 +513,7 @@ export const callWithDefaultOptionalParametersMutation = <TStyle extends 'data' 
     return mutationOptions;
 };
 
-export const callToTestOrderOfParamsMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<CallToTestOrderOfParamsData>> & {
+export const callToTestOrderOfParamsMutation = <TStyle extends 'data' | 'fields' = 'data'>(options?: Partial<Options<CallToTestOrderOfParamsData>> & {
     responseStyle?: TStyle;
 }): UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<CallToTestOrderOfParamsData>> => {
     const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<CallToTestOrderOfParamsData>> = {
@@ -531,7 +531,7 @@ export const callToTestOrderOfParamsMutation = <TStyle extends 'data' | 'fields'
     return mutationOptions;
 };
 
-export const duplicateNameMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<DuplicateNameData>> & {
+export const duplicateNameMutation = <TStyle extends 'data' | 'fields' = 'data'>(options?: Partial<Options<DuplicateNameData>> & {
     responseStyle?: TStyle;
 }): UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<DuplicateNameData>> => {
     const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<DuplicateNameData>> = {
@@ -551,7 +551,7 @@ export const duplicateNameMutation = <TStyle extends 'data' | 'fields' = 'fields
 
 export const duplicateName2QueryKey = (options?: Options<DuplicateName2Data>) => createQueryKey('duplicateName2', options);
 
-export const duplicateName2Options = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Options<DuplicateName2Data> & {
+export const duplicateName2Options = <TStyle extends 'data' | 'fields' = 'data'>(options?: Options<DuplicateName2Data> & {
     responseStyle?: TStyle;
 }) => queryOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, ResponseResult<unknown, TStyle>, ReturnType<typeof duplicateName2QueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
@@ -568,7 +568,7 @@ export const duplicateName2Options = <TStyle extends 'data' | 'fields' = 'fields
     queryKey: duplicateName2QueryKey(options)
 });
 
-export const duplicateName3Mutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<DuplicateName3Data>> & {
+export const duplicateName3Mutation = <TStyle extends 'data' | 'fields' = 'data'>(options?: Partial<Options<DuplicateName3Data>> & {
     responseStyle?: TStyle;
 }): UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<DuplicateName3Data>> => {
     const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<DuplicateName3Data>> = {
@@ -586,7 +586,7 @@ export const duplicateName3Mutation = <TStyle extends 'data' | 'fields' = 'field
     return mutationOptions;
 };
 
-export const duplicateName4Mutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<DuplicateName4Data>> & {
+export const duplicateName4Mutation = <TStyle extends 'data' | 'fields' = 'data'>(options?: Partial<Options<DuplicateName4Data>> & {
     responseStyle?: TStyle;
 }): UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<DuplicateName4Data>> => {
     const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<DuplicateName4Data>> = {
@@ -606,7 +606,7 @@ export const duplicateName4Mutation = <TStyle extends 'data' | 'fields' = 'field
 
 export const callWithNoContentResponseQueryKey = (options?: Options<CallWithNoContentResponseData>) => createQueryKey('callWithNoContentResponse', options);
 
-export const callWithNoContentResponseOptions = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Options<CallWithNoContentResponseData> & {
+export const callWithNoContentResponseOptions = <TStyle extends 'data' | 'fields' = 'data'>(options?: Options<CallWithNoContentResponseData> & {
     responseStyle?: TStyle;
 }) => queryOptions<ResponseResult<CallWithNoContentResponseResponse, TStyle>, ResponseError<DefaultError, TStyle>, ResponseResult<CallWithNoContentResponseResponse, TStyle>, ReturnType<typeof callWithNoContentResponseQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
@@ -625,7 +625,7 @@ export const callWithNoContentResponseOptions = <TStyle extends 'data' | 'fields
 
 export const callWithResponseAndNoContentResponseQueryKey = (options?: Options<CallWithResponseAndNoContentResponseData>) => createQueryKey('callWithResponseAndNoContentResponse', options);
 
-export const callWithResponseAndNoContentResponseOptions = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Options<CallWithResponseAndNoContentResponseData> & {
+export const callWithResponseAndNoContentResponseOptions = <TStyle extends 'data' | 'fields' = 'data'>(options?: Options<CallWithResponseAndNoContentResponseData> & {
     responseStyle?: TStyle;
 }) => queryOptions<ResponseResult<CallWithResponseAndNoContentResponseResponse, TStyle>, ResponseError<DefaultError, TStyle>, ResponseResult<CallWithResponseAndNoContentResponseResponse, TStyle>, ReturnType<typeof callWithResponseAndNoContentResponseQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
@@ -644,7 +644,7 @@ export const callWithResponseAndNoContentResponseOptions = <TStyle extends 'data
 
 export const dummyAQueryKey = (options?: Options<DummyAData>) => createQueryKey('dummyA', options);
 
-export const dummyAOptions = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Options<DummyAData> & {
+export const dummyAOptions = <TStyle extends 'data' | 'fields' = 'data'>(options?: Options<DummyAData> & {
     responseStyle?: TStyle;
 }) => queryOptions<ResponseResult<DummyAResponse, TStyle>, ResponseError<DefaultError, TStyle>, ResponseResult<DummyAResponse, TStyle>, ReturnType<typeof dummyAQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
@@ -663,7 +663,7 @@ export const dummyAOptions = <TStyle extends 'data' | 'fields' = 'fields'>(optio
 
 export const dummyBQueryKey = (options?: Options<DummyBData>) => createQueryKey('dummyB', options);
 
-export const dummyBOptions = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Options<DummyBData> & {
+export const dummyBOptions = <TStyle extends 'data' | 'fields' = 'data'>(options?: Options<DummyBData> & {
     responseStyle?: TStyle;
 }) => queryOptions<ResponseResult<DummyBResponse, TStyle>, ResponseError<DefaultError, TStyle>, ResponseResult<DummyBResponse, TStyle>, ReturnType<typeof dummyBQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
@@ -682,7 +682,7 @@ export const dummyBOptions = <TStyle extends 'data' | 'fields' = 'fields'>(optio
 
 export const callWithResponseQueryKey = (options?: Options<CallWithResponseData>) => createQueryKey('callWithResponse', options);
 
-export const callWithResponseOptions = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Options<CallWithResponseData> & {
+export const callWithResponseOptions = <TStyle extends 'data' | 'fields' = 'data'>(options?: Options<CallWithResponseData> & {
     responseStyle?: TStyle;
 }) => queryOptions<ResponseResult<CallWithResponseResponse, TStyle>, ResponseError<DefaultError, TStyle>, ResponseResult<CallWithResponseResponse, TStyle>, ReturnType<typeof callWithResponseQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
@@ -699,7 +699,7 @@ export const callWithResponseOptions = <TStyle extends 'data' | 'fields' = 'fiel
     queryKey: callWithResponseQueryKey(options)
 });
 
-export const callWithDuplicateResponsesMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<CallWithDuplicateResponsesData>> & {
+export const callWithDuplicateResponsesMutation = <TStyle extends 'data' | 'fields' = 'data'>(options?: Partial<Options<CallWithDuplicateResponsesData>> & {
     responseStyle?: TStyle;
 }): UseMutationOptions<ResponseResult<CallWithDuplicateResponsesResponse, TStyle>, ResponseError<CallWithDuplicateResponsesError, TStyle>, Options<CallWithDuplicateResponsesData>> => {
     const mutationOptions: UseMutationOptions<ResponseResult<CallWithDuplicateResponsesResponse, TStyle>, ResponseError<CallWithDuplicateResponsesError, TStyle>, Options<CallWithDuplicateResponsesData>> = {
@@ -717,7 +717,7 @@ export const callWithDuplicateResponsesMutation = <TStyle extends 'data' | 'fiel
     return mutationOptions;
 };
 
-export const callWithResponsesMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<CallWithResponsesData>> & {
+export const callWithResponsesMutation = <TStyle extends 'data' | 'fields' = 'data'>(options?: Partial<Options<CallWithResponsesData>> & {
     responseStyle?: TStyle;
 }): UseMutationOptions<ResponseResult<CallWithResponsesResponse, TStyle>, ResponseError<CallWithResponsesError, TStyle>, Options<CallWithResponsesData>> => {
     const mutationOptions: UseMutationOptions<ResponseResult<CallWithResponsesResponse, TStyle>, ResponseError<CallWithResponsesError, TStyle>, Options<CallWithResponsesData>> = {
@@ -737,7 +737,7 @@ export const callWithResponsesMutation = <TStyle extends 'data' | 'fields' = 'fi
 
 export const collectionFormatQueryKey = (options: Options<CollectionFormatData>) => createQueryKey('collectionFormat', options);
 
-export const collectionFormatOptions = <TStyle extends 'data' | 'fields' = 'fields'>(options: Options<CollectionFormatData> & {
+export const collectionFormatOptions = <TStyle extends 'data' | 'fields' = 'data'>(options: Options<CollectionFormatData> & {
     responseStyle?: TStyle;
 }) => queryOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, ResponseResult<unknown, TStyle>, ReturnType<typeof collectionFormatQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
@@ -756,7 +756,7 @@ export const collectionFormatOptions = <TStyle extends 'data' | 'fields' = 'fiel
 
 export const typesQueryKey = (options: Options<TypesData>) => createQueryKey('types', options);
 
-export const typesOptions = <TStyle extends 'data' | 'fields' = 'fields'>(options: Options<TypesData> & {
+export const typesOptions = <TStyle extends 'data' | 'fields' = 'data'>(options: Options<TypesData> & {
     responseStyle?: TStyle;
 }) => queryOptions<ResponseResult<TypesResponse, TStyle>, ResponseError<DefaultError, TStyle>, ResponseResult<TypesResponse, TStyle>, ReturnType<typeof typesQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
@@ -773,7 +773,7 @@ export const typesOptions = <TStyle extends 'data' | 'fields' = 'fields'>(option
     queryKey: typesQueryKey(options)
 });
 
-export const uploadFileMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<UploadFileData>> & {
+export const uploadFileMutation = <TStyle extends 'data' | 'fields' = 'data'>(options?: Partial<Options<UploadFileData>> & {
     responseStyle?: TStyle;
 }): UseMutationOptions<ResponseResult<UploadFileResponse, TStyle>, ResponseError<DefaultError, TStyle>, Options<UploadFileData>> => {
     const mutationOptions: UseMutationOptions<ResponseResult<UploadFileResponse, TStyle>, ResponseError<DefaultError, TStyle>, Options<UploadFileData>> = {
@@ -793,7 +793,7 @@ export const uploadFileMutation = <TStyle extends 'data' | 'fields' = 'fields'>(
 
 export const fileResponseQueryKey = (options: Options<FileResponseData>) => createQueryKey('fileResponse', options);
 
-export const fileResponseOptions = <TStyle extends 'data' | 'fields' = 'fields'>(options: Options<FileResponseData> & {
+export const fileResponseOptions = <TStyle extends 'data' | 'fields' = 'data'>(options: Options<FileResponseData> & {
     responseStyle?: TStyle;
 }) => queryOptions<ResponseResult<FileResponseResponse, TStyle>, ResponseError<DefaultError, TStyle>, ResponseResult<FileResponseResponse, TStyle>, ReturnType<typeof fileResponseQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
@@ -812,7 +812,7 @@ export const fileResponseOptions = <TStyle extends 'data' | 'fields' = 'fields'>
 
 export const complexTypesQueryKey = (options: Options<ComplexTypesData>) => createQueryKey('complexTypes', options);
 
-export const complexTypesOptions = <TStyle extends 'data' | 'fields' = 'fields'>(options: Options<ComplexTypesData> & {
+export const complexTypesOptions = <TStyle extends 'data' | 'fields' = 'data'>(options: Options<ComplexTypesData> & {
     responseStyle?: TStyle;
 }) => queryOptions<ResponseResult<ComplexTypesResponse, TStyle>, ResponseError<DefaultError, TStyle>, ResponseResult<ComplexTypesResponse, TStyle>, ReturnType<typeof complexTypesQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
@@ -831,7 +831,7 @@ export const complexTypesOptions = <TStyle extends 'data' | 'fields' = 'fields'>
 
 export const multipartResponseQueryKey = (options?: Options<MultipartResponseData>) => createQueryKey('multipartResponse', options);
 
-export const multipartResponseOptions = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Options<MultipartResponseData> & {
+export const multipartResponseOptions = <TStyle extends 'data' | 'fields' = 'data'>(options?: Options<MultipartResponseData> & {
     responseStyle?: TStyle;
 }) => queryOptions<ResponseResult<MultipartResponseResponse, TStyle>, ResponseError<DefaultError, TStyle>, ResponseResult<MultipartResponseResponse, TStyle>, ReturnType<typeof multipartResponseQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
@@ -848,7 +848,7 @@ export const multipartResponseOptions = <TStyle extends 'data' | 'fields' = 'fie
     queryKey: multipartResponseQueryKey(options)
 });
 
-export const multipartRequestMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<MultipartRequestData>> & {
+export const multipartRequestMutation = <TStyle extends 'data' | 'fields' = 'data'>(options?: Partial<Options<MultipartRequestData>> & {
     responseStyle?: TStyle;
 }): UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<MultipartRequestData>> => {
     const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<MultipartRequestData>> = {
@@ -866,7 +866,7 @@ export const multipartRequestMutation = <TStyle extends 'data' | 'fields' = 'fie
     return mutationOptions;
 };
 
-export const complexParamsMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<ComplexParamsData>> & {
+export const complexParamsMutation = <TStyle extends 'data' | 'fields' = 'data'>(options?: Partial<Options<ComplexParamsData>> & {
     responseStyle?: TStyle;
 }): UseMutationOptions<ResponseResult<ComplexParamsResponse, TStyle>, ResponseError<DefaultError, TStyle>, Options<ComplexParamsData>> => {
     const mutationOptions: UseMutationOptions<ResponseResult<ComplexParamsResponse, TStyle>, ResponseError<DefaultError, TStyle>, Options<ComplexParamsData>> = {
@@ -884,7 +884,7 @@ export const complexParamsMutation = <TStyle extends 'data' | 'fields' = 'fields
     return mutationOptions;
 };
 
-export const callWithResultFromHeaderMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<CallWithResultFromHeaderData>> & {
+export const callWithResultFromHeaderMutation = <TStyle extends 'data' | 'fields' = 'data'>(options?: Partial<Options<CallWithResultFromHeaderData>> & {
     responseStyle?: TStyle;
 }): UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<CallWithResultFromHeaderData>> => {
     const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<CallWithResultFromHeaderData>> = {
@@ -902,7 +902,7 @@ export const callWithResultFromHeaderMutation = <TStyle extends 'data' | 'fields
     return mutationOptions;
 };
 
-export const testErrorCodeMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<TestErrorCodeData>> & {
+export const testErrorCodeMutation = <TStyle extends 'data' | 'fields' = 'data'>(options?: Partial<Options<TestErrorCodeData>> & {
     responseStyle?: TStyle;
 }): UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<TestErrorCodeData>> => {
     const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<TestErrorCodeData>> = {
@@ -920,7 +920,7 @@ export const testErrorCodeMutation = <TStyle extends 'data' | 'fields' = 'fields
     return mutationOptions;
 };
 
-export const nonAsciiæøåÆøÅöôêÊ字符串Mutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<NonAsciiæøåÆøÅöôêÊ字符串Data>> & {
+export const nonAsciiæøåÆøÅöôêÊ字符串Mutation = <TStyle extends 'data' | 'fields' = 'data'>(options?: Partial<Options<NonAsciiæøåÆøÅöôêÊ字符串Data>> & {
     responseStyle?: TStyle;
 }): UseMutationOptions<ResponseResult<NonAsciiæøåÆøÅöôêÊ字符串Response, TStyle>, ResponseError<DefaultError, TStyle>, Options<NonAsciiæøåÆøÅöôêÊ字符串Data>> => {
     const mutationOptions: UseMutationOptions<ResponseResult<NonAsciiæøåÆøÅöôêÊ字符串Response, TStyle>, ResponseError<DefaultError, TStyle>, Options<NonAsciiæøåÆøÅöôêÊ字符串Data>> = {
@@ -941,7 +941,7 @@ export const nonAsciiæøåÆøÅöôêÊ字符串Mutation = <TStyle extends 'da
 /**
  * Login User
  */
-export const putWithFormUrlEncodedMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<PutWithFormUrlEncodedData>> & {
+export const putWithFormUrlEncodedMutation = <TStyle extends 'data' | 'fields' = 'data'>(options?: Partial<Options<PutWithFormUrlEncodedData>> & {
     responseStyle?: TStyle;
 }): UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<PutWithFormUrlEncodedData>> => {
     const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<PutWithFormUrlEncodedData>> = {

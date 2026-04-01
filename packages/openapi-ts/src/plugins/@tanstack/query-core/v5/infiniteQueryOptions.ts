@@ -181,7 +181,8 @@ export const createInfiniteQueryOptions = ({
 
   if (plugin.config.responseStyle === 'fields') {
     // --- 'fields' code path: TStyle generic, ResponseResult/ResponseError wrappers ---
-    const defaultStyle = plugin.config.responseStyle;
+    // Default to 'data' so omitting responseStyle preserves backward-compatible behavior
+    const defaultStyle = 'data' as const;
 
     const symbolResponseResult = plugin.referenceSymbol({
       category: 'type',

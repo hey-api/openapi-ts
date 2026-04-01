@@ -1,7 +1,6 @@
 import ts from 'typescript';
 
-import { TsDsl } from '../../../../ts-dsl';
-import { $ } from '../../../../ts-dsl';
+import { $, TsDsl } from '../../../../ts-dsl';
 import type { PluginHandler, PluginInstance } from '../types';
 import { createInfiniteQueryOptions } from './infiniteQueryOptions';
 import { createMutationOptions } from './mutationOptions';
@@ -168,7 +167,8 @@ export const handlerV5: PluginHandler = ({ plugin }) => {
 
   // Generate ResponseResult and ResponseError utility types only when responseStyle is 'fields'
   if (plugin.config.responseStyle === 'fields') {
-    createResponseStyleTypes(plugin.config.responseStyle, plugin);
+    // Default to 'data' so omitting responseStyle preserves backward-compatible behavior
+    createResponseStyleTypes('data', plugin);
   }
 
   plugin.forEach(
