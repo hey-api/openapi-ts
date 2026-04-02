@@ -1,5 +1,19 @@
 # @hey-api/shared
 
+## 0.3.0
+
+### Minor Changes
+
+- **internal**: remove `plugin.getSymbol()` function ([#3671](https://github.com/hey-api/openapi-ts/pull/3671)) ([`96f60ad`](https://github.com/hey-api/openapi-ts/commit/96f60adb6af144e39133884e97e74a6693b6c059)) by [@mrlubos](https://github.com/mrlubos)
+
+### Removed `plugin.getSymbol()` function
+
+This function has been removed. You can use `plugin.querySymbol()` instead. It accepts the same arguments and returns the same result.
+
+### Patch Changes
+
+- **plugins**: add request validator helpers ([#3671](https://github.com/hey-api/openapi-ts/pull/3671)) ([`96f60ad`](https://github.com/hey-api/openapi-ts/commit/96f60adb6af144e39133884e97e74a6693b6c059)) by [@mrlubos](https://github.com/mrlubos)
+
 ## 0.2.6
 
 ### Patch Changes
