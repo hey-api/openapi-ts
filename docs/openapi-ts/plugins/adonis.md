@@ -7,7 +7,7 @@ description: AdonisJS plugin for Hey API. Compatible with all our features.
 import FeatureStatus from '@components/FeatureStatus.vue';
 </script>
 
-# AdonisJS <span data-soon>soon</span>
+# AdonisJS <span data-badge>vote</span>
 
 <FeatureStatus issueNumber=2364 name="AdonisJS" />
 

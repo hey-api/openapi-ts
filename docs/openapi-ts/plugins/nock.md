@@ -7,7 +7,7 @@ description: Nock plugin for Hey API. Compatible with all our features.
 import FeatureStatus from '@components/FeatureStatus.vue';
 </script>
 
-# Nock <span data-soon>soon</span>
+# Nock <span data-badge>vote</span>
 
 <FeatureStatus issueNumber=1487 name="Nock" />
 

@@ -7,7 +7,7 @@ description: SWR plugin for Hey API. Compatible with all our features.
 import FeatureStatus from '@components/FeatureStatus.vue';
 </script>
 
-# SWR <span data-soon>soon</span>
+# SWR <span data-badge>vote</span>
 
 <FeatureStatus issueNumber=1479 name="SWR" />
 

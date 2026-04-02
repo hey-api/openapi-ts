@@ -7,7 +7,7 @@ description: Yup plugin for Hey API. Compatible with all our features.
 import FeatureStatus from '@components/FeatureStatus.vue';
 </script>
 
-# Yup <span data-soon>soon</span>
+# Yup <span data-badge>vote</span>
 
 <FeatureStatus issueNumber=1478 name="Yup" />
 

@@ -7,7 +7,7 @@ description: Hono plugin for Hey API. Compatible with all our features.
 import FeatureStatus from '@components/FeatureStatus.vue';
 </script>
 
-# Hono <span data-soon>soon</span>
+# Hono <span data-badge>vote</span>
 
 <FeatureStatus issueNumber=1483 name="Hono" />
 

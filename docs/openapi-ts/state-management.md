@@ -13,8 +13,8 @@ Hey API natively supports the following state managers.
 
 - [Pinia Colada](/openapi-ts/plugins/pinia-colada)
 - [TanStack Query](/openapi-ts/plugins/tanstack-query)
-- [SWR](/openapi-ts/plugins/swr) <span data-soon>Soon</span>
-- [Zustand](/openapi-ts/plugins/zustand) <span data-soon>Soon</span>
+- [SWR](/openapi-ts/plugins/swr) <span data-badge>vote</span>
+- [Zustand](/openapi-ts/plugins/zustand) <span data-badge>vote</span>
 
 Don't see your state manager? Let us know your interest by [opening an issue](https://github.com/hey-api/openapi-ts/issues).
 
