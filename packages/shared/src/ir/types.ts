@@ -17,6 +17,7 @@ interface IRBodyObject {
 }
 
 interface IRComponentsObject {
+  headers?: Record<string, IRSchemaObject>;
   parameters?: Record<string, IRParameterObject>;
   requestBodies?: Record<string, IRRequestBodyObject>;
   schemas?: Record<string, IRSchemaObject>;

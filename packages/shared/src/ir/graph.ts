@@ -23,7 +23,7 @@ export const matchIrPointerToGroup: MatchPointerToGroupFn<IrTopLevelKind> = (poi
     operation: /^#\/paths\/[^/]+\/(get|put|post|delete|options|head|patch|trace)$/,
     parameter: /^#\/components\/parameters\/[^/]+$/,
     requestBody: /^#\/components\/requestBodies\/[^/]+$/,
-    schema: /^#\/components\/schemas\/[^/]+$/,
+    schema: /^#\/components\/(headers|schemas)\/[^/]+$/,
     server: /^#\/servers\/(\d+|[^/]+)$/,
     webhook: /^#\/webhooks\/[^/]+\/(get|put|post|delete|options|head|patch|trace)$/,
   };
