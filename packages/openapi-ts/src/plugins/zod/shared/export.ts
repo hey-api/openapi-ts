@@ -1,3 +1,4 @@
+import type { Symbol } from '@hey-api/codegen-core';
 import { buildSymbolIn, pathToName } from '@hey-api/shared';
 
 import { createSchemaComment } from '../../../plugins/shared/utils/schema';
@@ -15,10 +16,10 @@ export function exportAst({
   plugin,
   schema,
   tags,
-}: ProcessorContext & {
+}: Pick<ProcessorContext, 'naming' | 'namingAnchor' | 'path' | 'plugin' | 'schema' | 'tags'> & {
   final: ZodFinal;
   meta?: Record<string, unknown>;
-}): void {
+}): Symbol {
   const z = plugin.external('zod.z');
 
   const name = pathToName(path, { anchor: namingAnchor });
@@ -72,4 +73,6 @@ export function exportAst({
       .type($.type(z).attr(identifiers.infer).generic($(symbol).typeofType()));
     plugin.node(inferType);
   }
+
+  return symbol;
 }

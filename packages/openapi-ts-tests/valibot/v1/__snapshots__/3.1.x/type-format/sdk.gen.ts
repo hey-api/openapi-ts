@@ -6,7 +6,7 @@ import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
 import { postFooResponseTransformer } from './transformers.gen';
 import type { PostFooData, PostFooResponses } from './types.gen';
-import { vPostFooData, vPostFooResponse } from './valibot.gen';
+import { vPostFooResponse } from './valibot.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -23,7 +23,11 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
 };
 
 export const postFoo = <ThrowOnError extends boolean = false>(options?: Options<PostFooData, ThrowOnError>) => (options?.client ?? client).post<PostFooResponses, unknown, ThrowOnError>({
-    requestValidator: async (data) => await v.parseAsync(vPostFooData, data),
+    requestValidator: async (data) => await v.parseAsync(v.object({
+        body: v.optional(v.never()),
+        path: v.optional(v.never()),
+        query: v.optional(v.never())
+    }), data),
     responseTransformer: postFooResponseTransformer,
     responseValidator: async (data) => await v.parseAsync(vPostFooResponse, data),
     url: '/foo',

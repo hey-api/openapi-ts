@@ -27,11 +27,75 @@ export const defaultConfig: ValibotPlugin['Config'] = {
 
     plugin.config.requests = context.valueToObject({
       defaultValue: {
+        body: {
+          case: plugin.config.case ?? 'camelCase',
+          enabled: true,
+          name: 'v{{name}}Body',
+        },
         case: plugin.config.case ?? 'camelCase',
         enabled: true,
+        headers: {
+          case: plugin.config.case ?? 'camelCase',
+          enabled: true,
+          name: 'v{{name}}Headers',
+        },
         name: 'v{{name}}Data',
+        path: {
+          case: plugin.config.case ?? 'camelCase',
+          enabled: true,
+          name: 'v{{name}}Path',
+        },
+        query: {
+          case: plugin.config.case ?? 'camelCase',
+          enabled: true,
+          name: 'v{{name}}Query',
+        },
+        shouldExtract: () => false,
       },
-      mappers,
+      mappers: {
+        ...mappers,
+        object: (fields, defaultValue) => ({
+          ...fields,
+          body: context.valueToObject({
+            defaultValue: defaultValue.body as Extract<
+              typeof defaultValue.body,
+              Record<string, unknown>
+            >,
+            mappers,
+            value: fields.body,
+          }),
+          headers: context.valueToObject({
+            defaultValue: defaultValue.headers as Extract<
+              typeof defaultValue.headers,
+              Record<string, unknown>
+            >,
+            mappers,
+            value: fields.headers,
+          }),
+          path: context.valueToObject({
+            defaultValue: defaultValue.path as Extract<
+              typeof defaultValue.path,
+              Record<string, unknown>
+            >,
+            mappers,
+            value: fields.path,
+          }),
+          query: context.valueToObject({
+            defaultValue: defaultValue.query as Extract<
+              typeof defaultValue.query,
+              Record<string, unknown>
+            >,
+            mappers,
+            value: fields.query,
+          }),
+          shouldExtract:
+            fields.shouldExtract !== undefined
+              ? typeof fields.shouldExtract === 'function'
+                ? fields.shouldExtract
+                : () => Boolean(fields.shouldExtract)
+              : defaultValue.shouldExtract,
+        }),
+      },
       value: plugin.config.requests,
     });
 

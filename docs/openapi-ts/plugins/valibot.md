@@ -68,22 +68,21 @@ The Valibot plugin will generate the following artifacts, depending on the input
 
 ## Requests
 
-A single request schema is generated for each endpoint. It may contain a request body, parameters, and headers.
+A Valibot schema is generated for every request layer of each endpoint.
 
 ::: code-group
 
 ```ts [example]
-const vData = v.object({
-  body: v.optional(
-    v.object({
-      foo: v.optional(v.string()),
-      bar: v.optional(v.union([v.number(), v.null()])),
-    }),
-  ),
-  path: v.object({
-    baz: v.string(),
-  }),
-  query: v.optional(v.never()),
+const vDeletePetHeaders = v.object({
+  api_key: v.optional(v.string()),
+});
+
+const vDeletePetPath = v.object({
+  petId: v.number(),
+});
+
+const vDeletePetQuery = v.object({
+  additionalMetadata: v.string(),
 });
 ```
 
@@ -101,10 +100,6 @@ export default {
 };
 ```
 
-:::
-
-::: tip
-If you need to access individual fields, you can do so using the [`.entries`](https://valibot.dev/api/object/) API. For example, we can get the request body schema with `vData.entries.body`.
 :::
 
 You can customize the naming and casing pattern for `requests` schemas using the `.name` and `.case` options.

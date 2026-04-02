@@ -32,7 +32,7 @@ export const createQueryOptions = ({
   });
 
   if (
-    !plugin.getSymbol({
+    !plugin.querySymbol({
       category: 'utility',
       resource: 'createQueryKey',
       tool: plugin.name,

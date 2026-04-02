@@ -65,7 +65,7 @@ export const createClientClass = ({
   plugin: HeyApiSdkPlugin['Instance'];
   symbol: Symbol;
 }): ReturnType<typeof $.class> => {
-  const symClient = plugin.getSymbol({ category: 'client' });
+  const symClient = plugin.querySymbol({ category: 'client' });
   const optionalClient = Boolean(plugin.config.client && symClient);
   const symbolClient = plugin.external('client.Client');
   return $.class(symbol)

@@ -99,7 +99,7 @@ For a more granular approach, manually add a validator plugin and set `validator
 ```js [example]
 import { oc } from '@orpc/contract';
 
-import { vAddPetData, vAddPetResponse } from './valibot.gen';
+import { vAddPetBody, vAddPetResponse } from './valibot.gen';
 
 const addPet = oc
   .route({
@@ -111,7 +111,7 @@ const addPet = oc
     summary: 'Add a new pet to the store.',
     tags: ['pet'],
   })
-  .input(vAddPetData) // [!code ++]
+  .input(v.object({ body: vAddPetBody })) // [!code ++]
   .output(vAddPetResponse); // [!code ++]
 ```
 

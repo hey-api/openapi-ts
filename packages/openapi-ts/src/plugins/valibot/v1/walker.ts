@@ -37,7 +37,7 @@ function getDefaultValue(meta: ValibotMeta): ReturnType<typeof $.fromValue> {
 }
 
 export function createVisitor(
-  config: VisitorConfig,
+  config: VisitorConfig = {},
 ): SchemaVisitor<ValibotResult, ValibotPlugin['Instance']> {
   const { schemaExtractor } = config;
 
@@ -142,6 +142,12 @@ export function createVisitor(
         if (extracted !== schema) {
           return walk(extracted, ctx);
         }
+      }
+      if (schema.symbolRef) {
+        return {
+          meta: defaultMeta(schema),
+          pipes: [$(schema.symbolRef)],
+        };
       }
     },
     intersection(items, schemas, parentSchema, ctx) {

@@ -40,7 +40,7 @@ export const createQueryKeyFunction = ({ plugin }: { plugin: PiniaColadaPlugin['
     resource: 'client-options',
     tool: 'sdk',
   });
-  const symbolClient = plugin.getSymbol({
+  const symbolClient = plugin.querySymbol({
     category: 'client',
   });
 

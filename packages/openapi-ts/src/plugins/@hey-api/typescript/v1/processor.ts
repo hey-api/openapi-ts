@@ -22,7 +22,7 @@ export function createProcessor(plugin: HeyApiTypeScriptPlugin['Instance']): Pro
     }
 
     for (const hook of extractorHooks) {
-      const result = hook?.(ctx);
+      const result = typeof hook === 'boolean' ? hook : (hook?.(ctx) ?? false);
       if (result) {
         process({
           namingAnchor: processor.context.anchor,
