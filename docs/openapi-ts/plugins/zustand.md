@@ -7,7 +7,7 @@ description: Zustand plugin for Hey API. Compatible with all our features.
 import FeatureStatus from '@components/FeatureStatus.vue';
 </script>
 
-# Zustand <span data-soon>soon</span>
+# Zustand <span data-badge>vote</span>
 
 <FeatureStatus issueNumber=1480 name="Zustand" />
 

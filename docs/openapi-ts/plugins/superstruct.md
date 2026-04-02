@@ -7,7 +7,7 @@ description: Superstruct plugin for Hey API. Compatible with all our features.
 import FeatureStatus from '@components/FeatureStatus.vue';
 </script>
 
-# Superstruct <span data-soon>soon</span>
+# Superstruct <span data-badge>vote</span>
 
 <FeatureStatus issueNumber=1489 name="Superstruct" />
 

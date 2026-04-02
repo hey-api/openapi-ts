@@ -7,7 +7,7 @@ description: TypeBox plugin for Hey API. Compatible with all our features.
 import FeatureStatus from '@components/FeatureStatus.vue';
 </script>
 
-# TypeBox <span data-soon>soon</span>
+# TypeBox <span data-badge>vote</span>
 
 <FeatureStatus issueNumber=1475 name="TypeBox" />
 

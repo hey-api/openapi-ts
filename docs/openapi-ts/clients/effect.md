@@ -7,7 +7,7 @@ description: Effect client for Hey API. Compatible with all our features.
 import FeatureStatus from '@components/FeatureStatus.vue';
 </script>
 
-# Effect <span data-soon>soon</span>
+# Effect <span data-badge>vote</span>
 
 <FeatureStatus issueNumber=2082 name="Effect" />
 
