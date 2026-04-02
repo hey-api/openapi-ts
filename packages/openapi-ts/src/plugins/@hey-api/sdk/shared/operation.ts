@@ -4,6 +4,7 @@ import { statusCodeToGroup } from '@hey-api/shared';
 
 import { getTypedConfig } from '../../../../config/utils';
 import { getClientPlugin } from '../../../../plugins/@hey-api/client-core/utils';
+import { hasOperationSse } from '../../../../plugins/shared/utils/operation';
 import { $ } from '../../../../ts-dsl';
 import type { Field, Fields } from '../../client-core/bundle/params';
 import type { HeyApiSdkPlugin } from '../types';
@@ -56,6 +57,22 @@ export const operationOptionsType = ({
       .generic(isDataAllowed ? (symbolDataType ?? 'unknown') : 'never')
       .generic(symbolResponseType ?? 'unknown')
       .generic(nuxtTypeDefault);
+  }
+
+  const isSse = hasOperationSse({ operation });
+
+  if (isSse) {
+    const symbolResponseType = plugin.querySymbol({
+      category: 'type',
+      resource: 'operation',
+      resourceId: operation.id,
+      role: 'response',
+    });
+
+    return $.type(symbolOptions)
+      .generic(isDataAllowed ? (symbolDataType ?? 'unknown') : 'never')
+      .generic(throwOnError !== undefined ? throwOnError : 'boolean')
+      .generic(symbolResponseType ?? 'unknown');
   }
 
   // TODO: refactor this to be more generic, works for now
@@ -431,7 +448,7 @@ export function operationStatements({
   }
 
   const symbolClient = plugin.config.client
-    ? plugin.getSymbol({
+    ? plugin.querySymbol({
         category: 'client',
       })
     : undefined;

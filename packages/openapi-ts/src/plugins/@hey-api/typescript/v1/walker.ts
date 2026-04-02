@@ -28,7 +28,7 @@ export interface VisitorConfig {
 }
 
 export function createVisitor(
-  config: VisitorConfig,
+  config: VisitorConfig = {},
 ): SchemaVisitor<TypeScriptResult, HeyApiTypeScriptPlugin['Instance']> {
   const { schemaExtractor } = config;
 

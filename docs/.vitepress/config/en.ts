@@ -113,11 +113,11 @@ export default defineConfig({
               },
               {
                 link: '/openapi-ts/clients/effect',
-                text: 'Effect <span data-soon>soon</span>',
+                text: 'Effect <span data-badge>vote</span>',
               },
               {
                 link: '/openapi-ts/clients/got',
-                text: 'Got <span data-soon>soon</span>',
+                text: 'Got <span data-badge>vote</span>',
               },
             ],
             link: '/openapi-ts/clients',
@@ -136,27 +136,27 @@ export default defineConfig({
               },
               {
                 link: '/openapi-ts/plugins/ajv',
-                text: 'Ajv <span data-soon>soon</span>',
+                text: 'Ajv <span data-badge>vote</span>',
               },
               {
                 link: '/openapi-ts/plugins/arktype',
-                text: 'Arktype <span data-soon>soon</span>',
+                text: 'Arktype <span data-badge>vote</span>',
               },
               {
                 link: '/openapi-ts/plugins/joi',
-                text: 'Joi <span data-soon>soon</span>',
+                text: 'Joi <span data-badge>vote</span>',
               },
               {
                 link: '/openapi-ts/plugins/superstruct',
-                text: 'Superstruct <span data-soon>soon</span>',
+                text: 'Superstruct <span data-badge>vote</span>',
               },
               {
                 link: '/openapi-ts/plugins/typebox',
-                text: 'TypeBox <span data-soon>soon</span>',
+                text: 'TypeBox <span data-badge>vote</span>',
               },
               {
                 link: '/openapi-ts/plugins/yup',
-                text: 'Yup <span data-soon>soon</span>',
+                text: 'Yup <span data-badge>vote</span>',
               },
             ],
             link: '/openapi-ts/validators',
@@ -175,11 +175,11 @@ export default defineConfig({
               },
               {
                 link: '/openapi-ts/plugins/swr',
-                text: 'SWR <span data-soon>soon</span>',
+                text: 'SWR <span data-badge>vote</span>',
               },
               {
                 link: '/openapi-ts/plugins/zustand',
-                text: 'Zustand <span data-soon>soon</span>',
+                text: 'Zustand <span data-badge>vote</span>',
               },
             ],
             link: '/openapi-ts/state-management',
@@ -194,23 +194,23 @@ export default defineConfig({
               },
               {
                 link: '/openapi-ts/plugins/chance',
-                text: 'Chance <span data-soon>soon</span>',
+                text: 'Chance <span data-badge>vote</span>',
               },
               {
                 link: '/openapi-ts/plugins/faker',
-                text: 'Faker <span data-soon>soon</span>',
+                text: 'Faker <span data-badge>vote</span>',
               },
               {
                 link: '/openapi-ts/plugins/falso',
-                text: 'Falso <span data-soon>soon</span>',
+                text: 'Falso <span data-badge>vote</span>',
               },
               {
                 link: '/openapi-ts/plugins/nock',
-                text: 'Nock <span data-soon>soon</span>',
+                text: 'Nock <span data-badge>vote</span>',
               },
               {
                 link: '/openapi-ts/plugins/supertest',
-                text: 'Supertest <span data-soon>soon</span>',
+                text: 'Supertest <span data-badge>vote</span>',
               },
             ],
             link: '/openapi-ts/mocks',
@@ -237,23 +237,23 @@ export default defineConfig({
               },
               {
                 link: '/openapi-ts/plugins/adonis',
-                text: 'Adonis <span data-soon>soon</span>',
+                text: 'Adonis <span data-badge>vote</span>',
               },
               {
                 link: '/openapi-ts/plugins/elysia',
-                text: 'Elysia <span data-soon>soon</span>',
+                text: 'Elysia <span data-badge>vote</span>',
               },
               {
                 link: '/openapi-ts/plugins/express',
-                text: 'Express <span data-soon>soon</span>',
+                text: 'Express <span data-badge>vote</span>',
               },
               {
                 link: '/openapi-ts/plugins/hono',
-                text: 'Hono <span data-soon>soon</span>',
+                text: 'Hono <span data-badge>vote</span>',
               },
               {
                 link: '/openapi-ts/plugins/koa',
-                text: 'Koa <span data-soon>soon</span>',
+                text: 'Koa <span data-badge>vote</span>',
               },
             ],
             link: '/openapi-ts/web-frameworks',

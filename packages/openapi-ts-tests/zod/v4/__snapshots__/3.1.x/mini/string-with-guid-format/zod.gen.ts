@@ -2,10 +2,6 @@
 
 import * as z from 'zod/mini';
 
-export const zGetFooData = z.object({
-    body: z.optional(z.never()),
-    path: z.object({
-        guidId: z.guid()
-    }),
-    query: z.optional(z.never())
+export const zGetFooPath = z.object({
+    guidId: z.guid()
 });

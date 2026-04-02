@@ -34,24 +34,18 @@ export const zFoo3 = z.object({
     foo: zBar.optional()
 });
 
-export const zPatchFooData = z.object({
-    body: z.object({
-        foo: z.string().optional()
-    }),
-    path: z.never().optional(),
-    query: z.object({
-        foo: z.string().optional(),
-        bar: zBar.optional(),
-        baz: z.object({
-            baz: z.string().optional()
-        }).optional(),
-        qux: z.string().date().optional(),
-        quux: z.string().datetime({ offset: true }).optional()
-    }).optional()
+export const zPatchFooBody = z.object({
+    foo: z.string().optional()
 });
 
-export const zPostFooData = z.object({
-    body: zFoo3,
-    path: z.never().optional(),
-    query: z.never().optional()
+export const zPatchFooQuery = z.object({
+    foo: z.string().optional(),
+    bar: zBar.optional(),
+    baz: z.object({
+        baz: z.string().optional()
+    }).optional(),
+    qux: z.string().date().optional(),
+    quux: z.string().datetime({ offset: true }).optional()
 });
+
+export const zPostFooBody = zFoo3;
