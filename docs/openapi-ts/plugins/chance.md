@@ -7,7 +7,7 @@ description: Chance plugin for Hey API. Compatible with all our features.
 import FeatureStatus from '@components/FeatureStatus.vue';
 </script>
 
-# Chance <span data-soon>soon</span>
+# Chance <span data-badge>vote</span>
 
 <FeatureStatus issueNumber=2497 name="Chance" />
 

@@ -7,7 +7,7 @@ description: MSW plugin for Hey API. Compatible with all our features.
 import FeatureStatus from '@components/FeatureStatus.vue';
 </script>
 
-# MSW <span data-soon>soon</span>
+# MSW <span data-badge>vote</span>
 
 <FeatureStatus issueNumber=1486 name="MSW" />
 

@@ -52,7 +52,7 @@ html.mac {
   --vs-width: auto;
 }
 
-[data-soon] {
+[data-badge] {
   background-color: var(--vp-button-brand-bg);
   border-radius: 1em;
   color: var(--vp-button-brand-text);

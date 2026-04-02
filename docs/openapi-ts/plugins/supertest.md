@@ -7,7 +7,7 @@ description: Supertest plugin for Hey API. Compatible with all our features.
 import FeatureStatus from '@components/FeatureStatus.vue';
 </script>
 
-# Supertest <span data-soon>soon</span>
+# Supertest <span data-badge>vote</span>
 
 <FeatureStatus issueNumber=1488 name="Supertest" />
 

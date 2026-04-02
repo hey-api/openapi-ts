@@ -7,7 +7,7 @@ description: Ajv plugin for Hey API. Compatible with all our features.
 import FeatureStatus from '@components/FeatureStatus.vue';
 </script>
 
-# Ajv <span data-soon>soon</span>
+# Ajv <span data-badge>vote</span>
 
 <FeatureStatus issueNumber=1476 name="Ajv" />
 
