@@ -448,7 +448,7 @@ export function operationStatements({
   }
 
   const symbolClient = plugin.config.client
-    ? plugin.getSymbol({
+    ? plugin.querySymbol({
         category: 'client',
       })
     : undefined;

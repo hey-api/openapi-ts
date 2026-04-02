@@ -2,10 +2,6 @@
 
 import { z } from 'zod/v3';
 
-export const zGetFooData = z.object({
-    body: z.never().optional(),
-    path: z.object({
-        guidId: z.string()
-    }),
-    query: z.never().optional()
+export const zGetFooPath = z.object({
+    guidId: z.string()
 });

@@ -1,4 +1,4 @@
-import type { IR, NamingConfig, SchemaProcessorContext } from '@hey-api/shared';
+import type { NamingConfig, SchemaProcessorContext } from '@hey-api/shared';
 
 import type { PydanticPlugin } from '../types';
 import type { PydanticFinal } from './types';
@@ -9,7 +9,6 @@ export type ProcessorContext = SchemaProcessorContext & {
   naming: NamingConfig;
   /** The plugin instance. */
   plugin: PydanticPlugin['Instance'];
-  schema: IR.SchemaObject;
 };
 
 export type ProcessorResult = {
