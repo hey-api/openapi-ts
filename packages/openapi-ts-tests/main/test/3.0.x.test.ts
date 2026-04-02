@@ -557,6 +557,22 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'filter-path-parameters.yaml',
+        output: 'filter-path-parameters',
+        parser: {
+          filters: {
+            orphans: false,
+            tags: {
+              include: ['pets'],
+            },
+          },
+        },
+        plugins: ['@hey-api/typescript', '@hey-api/sdk'],
+      }),
+      description: 'filters by tags without error when path-level parameters are used',
+    },
+    {
+      config: createConfig({
         input: 'internal-name-conflict.json',
         output: 'internal-name-conflict',
         plugins: ['@hey-api/client-fetch', '@tanstack/react-query'],

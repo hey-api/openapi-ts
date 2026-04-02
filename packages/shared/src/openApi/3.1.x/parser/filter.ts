@@ -136,7 +136,7 @@ export const filterSpec = ({
       }
 
       // remove paths that have no operations left
-      if (!Object.keys(pathItem).length) {
+      if (!httpMethods.some((method) => method in pathItem)) {
         delete spec.paths[path];
       }
     }

@@ -2,7 +2,7 @@ import type { Logger } from '@hey-api/codegen-core';
 
 import type { Graph } from '../../../graph';
 import { createOperationKey } from '../../../ir/operation';
-import { jsonPointerToPath } from '../../../utils/ref';
+import { jsonPointerToPath, pathToJsonPointer } from '../../../utils/ref';
 import { addNamespace, stringToNamespace } from '../utils/filter';
 import { httpMethods } from '../utils/operation';
 
@@ -134,8 +134,19 @@ export const buildResourceMetadata = (
           method,
           path: operationPath,
         });
+        const dependencies = getDependencies(pointer);
+        // Path-level parameters are defined on the path item (parent of the operation),
+        // not on the operation itself, so they're not in the operation's transitive
+        // dependencies. We need to include them explicitly so they are not dropped as
+        // orphans when tag filtering is applied.
+        // getDependencies returns an empty set when the pointer is not found in the
+        // graph (i.e., when the path item has no path-level parameters).
+        const pathItemParamsPointer = pathToJsonPointer([...path.slice(0, -1), 'parameters']);
+        for (const dep of getDependencies(pathItemParamsPointer)) {
+          dependencies.add(dep);
+        }
         resourceMetadata.operations.set(addNamespace('operation', operationKey), {
-          dependencies: getDependencies(pointer),
+          dependencies,
           deprecated: nodeInfo.deprecated ?? false,
           tags: nodeInfo.tags ?? new Set(),
         });
