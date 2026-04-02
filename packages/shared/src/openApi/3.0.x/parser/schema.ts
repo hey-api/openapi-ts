@@ -1347,3 +1347,30 @@ export const parseSchema = ({
     },
   });
 };
+
+export const parseHeader = ({
+  $ref,
+  context,
+  schema,
+}: {
+  $ref: string;
+  context: Context;
+  schema: OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject;
+}) => {
+  if (!context.ir.components) {
+    context.ir.components = {};
+  }
+
+  if (!context.ir.components.headers) {
+    context.ir.components.headers = {};
+  }
+
+  context.ir.components.headers[refToName($ref)] = schemaToIrSchema({
+    context,
+    schema,
+    state: {
+      $ref,
+      circularReferenceTracker: new Set(),
+    },
+  });
+};

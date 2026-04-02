@@ -4,6 +4,12 @@ export type ClientOptions = {
     baseUrl: `${string}://${string}` | (string & {});
 };
 
+export type ExternalIdHeader = Id;
+
+export type ExternalUuidHeader = ExternalSharedModelWithUuid;
+
+export type ExternalDeepHeader = Deep;
+
 export type _1 = string;
 
 /**
