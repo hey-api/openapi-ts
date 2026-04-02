@@ -585,3 +585,17 @@ export class $RefParser {
 
 export { sendRequest } from './resolvers/url';
 export type { JSONSchema } from './types';
+export type { JSONParserErrorType } from './util/errors';
+export {
+  InvalidPointerError,
+  isHandledError,
+  JSONParserError,
+  JSONParserErrorGroup,
+  MissingPointerError,
+  normalizeError,
+  ParserError,
+  ResolverError,
+  TimeoutError,
+  UnmatchedParserError,
+  UnmatchedResolverError,
+} from './util/errors';

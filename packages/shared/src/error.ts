@@ -38,6 +38,21 @@ export class ConfigValidationError extends Error {
 }
 
 /**
+ * Represents an error caused by invalid or inaccessible input.
+ *
+ * Used for errors like file not found, URL not reachable, etc.
+ */
+export class InputError extends Error {
+  readonly originalError: Error & { source?: string };
+
+  constructor(message: string, originalError: Error & { source?: string }) {
+    super(message);
+    this.name = 'InputError';
+    this.originalError = originalError;
+  }
+}
+
+/**
  * Represents a runtime error originating from a specific job.
  *
  * Used for reporting job-level failures that are not config validation errors.
@@ -83,7 +98,11 @@ export class HeyApiError extends Error {
 }
 
 export function logCrashReport(error: unknown, logsDir: string): string | undefined {
-  if (error instanceof ConfigError || error instanceof ConfigValidationError) {
+  if (
+    error instanceof ConfigError ||
+    error instanceof ConfigValidationError ||
+    error instanceof InputError
+  ) {
     return;
   }
 
@@ -157,6 +176,15 @@ export async function openGitHubIssueWithCrashReport(
   await open(url);
 }
 
+export function getInputError(error: unknown): InputError | undefined {
+  if (error instanceof InputError) {
+    return error;
+  }
+  if (error instanceof JobError && error.originalError.error instanceof InputError) {
+    return error.originalError.error;
+  }
+}
+
 export function printCrashReport({
   error,
   logPath,
@@ -193,6 +221,30 @@ export function printCrashReport({
       error = error.originalError.error;
     }
 
+    if (error instanceof InputError) {
+      const source = (error.originalError as { source?: string }).source;
+      const itemPrefixStr = `  `;
+
+      const isNetworkError = error.message.startsWith('Input request failed');
+      if (isNetworkError) {
+        console.error(`${jobPrefix}${colors.red(`❌ ${error.message}`)}`);
+        if (source) console.error(colors.gray(source));
+        console.error(colors.gray('\nPlease verify that:'));
+        console.error(colors.gray(`${itemPrefixStr}• The URL is correct`));
+        console.error(colors.gray(`${itemPrefixStr}• Your API key is valid`));
+        console.error(colors.gray(`${itemPrefixStr}• You have network access`));
+        return;
+      }
+
+      console.error(`${jobPrefix}${colors.red('❌ Input file not found:')}`);
+      if (source) console.error(colors.gray(source));
+      console.error(colors.gray('\nPlease verify that:'));
+      console.error(colors.gray(`${itemPrefixStr}• The file exists`));
+      console.error(colors.gray(`${itemPrefixStr}• The path is correct`));
+      console.error(colors.gray(`${itemPrefixStr}• You have read permissions`));
+      return;
+    }
+
     const baseString = colors.red('Failed with the message:');
     console.error(`${jobPrefix}❌ ${baseString}`);
     const itemPrefixStr = `  `;
@@ -215,7 +267,12 @@ export async function shouldReportCrash({
   error: unknown;
   isInteractive: boolean | undefined;
 }): Promise<boolean> {
-  if (!isInteractive || error instanceof ConfigError || error instanceof ConfigValidationError) {
+  if (
+    !isInteractive ||
+    error instanceof ConfigError ||
+    error instanceof ConfigValidationError ||
+    error instanceof InputError
+  ) {
     return false;
   }
 
