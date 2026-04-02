@@ -7,7 +7,7 @@ description: Got client for Hey API. Compatible with all our features.
 import FeatureStatus from '@components/FeatureStatus.vue';
 </script>
 
-# Got <span data-soon>soon</span>
+# Got <span data-badge>vote</span>
 
 <FeatureStatus issueNumber=586 name="Got" />
 

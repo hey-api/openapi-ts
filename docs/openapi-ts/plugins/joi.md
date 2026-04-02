@@ -7,7 +7,7 @@ description: Joi plugin for Hey API. Compatible with all our features.
 import FeatureStatus from '@components/FeatureStatus.vue';
 </script>
 
-# Joi <span data-soon>soon</span>
+# Joi <span data-badge>vote</span>
 
 <FeatureStatus issueNumber=1477 name="Joi" />
 

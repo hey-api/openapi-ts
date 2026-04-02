@@ -7,7 +7,7 @@ description: Faker plugin for Hey API. Compatible with all our features.
 import FeatureStatus from '@components/FeatureStatus.vue';
 </script>
 
-# Faker <span data-soon>soon</span>
+# Faker <span data-badge>vote</span>
 
 <FeatureStatus issueNumber=1485 name="Faker" />
 
