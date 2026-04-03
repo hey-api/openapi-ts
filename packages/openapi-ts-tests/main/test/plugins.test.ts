@@ -66,6 +66,20 @@ for (const version of versions) {
       },
       {
         config: createConfig({
+          output: 'useQuery-disabled',
+          plugins: [
+            {
+              name: '@tanstack/react-query',
+              useQuery: false,
+            },
+            '@hey-api/client-fetch',
+          ],
+        }),
+        description:
+          'generate Fetch API client with TanStack React Query plugin with useQuery disabled',
+      },
+      {
+        config: createConfig({
           output: 'fetch',
           plugins: ['@tanstack/solid-query', '@hey-api/client-fetch'],
         }),
