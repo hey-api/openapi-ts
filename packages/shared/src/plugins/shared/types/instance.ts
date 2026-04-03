@@ -19,6 +19,12 @@ export type BaseEvent = {
 type WalkEvents = BaseEvent &
   (
     | {
+        /** Name of the header (e.g., "X-Rate-Limit" for a header defined as "#/components/headers/X-Rate-Limit"). */
+        name: string;
+        schema: IR.SchemaObject;
+        type: Extract<IrTopLevelKind, 'header'>;
+      }
+    | {
         method: keyof IR.PathItemObject;
         operation: IR.OperationObject;
         path: string;
@@ -35,6 +41,12 @@ type WalkEvents = BaseEvent &
         name: string;
         requestBody: IR.RequestBodyObject;
         type: Extract<IrTopLevelKind, 'requestBody'>;
+      }
+    | {
+        /** Name of the response (e.g., "NotFound" for a response defined as "#/components/responses/NotFound"). */
+        name: string;
+        response: IR.ResponseObject;
+        type: Extract<IrTopLevelKind, 'response'>;
       }
     | {
         /** Name of the schema (e.g., "User" for a schema defined as "#/components/schemas/User"). */

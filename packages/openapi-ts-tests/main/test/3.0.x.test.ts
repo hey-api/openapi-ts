@@ -156,7 +156,7 @@ describe(`OpenAPI ${version}`, () => {
         input: 'components-headers.yaml',
         output: 'components-headers',
       }),
-      description: 'handles reusable header components',
+      description: 'handles reusable header and response components',
     },
     {
       config: createConfig({

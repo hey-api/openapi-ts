@@ -5,6 +5,9 @@ describe('matchIrPointerToGroup', () => {
   const cases: Array<
     [string, IrTopLevelKind | undefined, { kind?: IrTopLevelKind; matched: boolean }]
   > = [
+    ['#/components/headers/X-Rate-Limit', undefined, { kind: 'header', matched: true }],
+    ['#/components/headers/X-Rate-Limit', 'header', { kind: 'header', matched: true }],
+    ['#/components/headers/X-Rate-Limit', 'schema', { matched: false }],
     ['#/components/schemas/Foo', undefined, { kind: 'schema', matched: true }],
     ['#/components/schemas/Foo', 'schema', { kind: 'schema', matched: true }],
     ['#/components/schemas/Foo', 'parameter', { matched: false }],
@@ -14,6 +17,9 @@ describe('matchIrPointerToGroup', () => {
     ['#/components/requestBodies/Baz', undefined, { kind: 'requestBody', matched: true }],
     ['#/components/requestBodies/Baz', 'requestBody', { kind: 'requestBody', matched: true }],
     ['#/components/requestBodies/Baz', 'schema', { matched: false }],
+    ['#/components/responses/NotFound', undefined, { kind: 'response', matched: true }],
+    ['#/components/responses/NotFound', 'response', { kind: 'response', matched: true }],
+    ['#/components/responses/NotFound', 'schema', { matched: false }],
     ['#/servers/0', undefined, { kind: 'server', matched: true }],
     ['#/servers/foo', undefined, { kind: 'server', matched: true }],
     ['#/paths/~1users/get', undefined, { kind: 'operation', matched: true }],

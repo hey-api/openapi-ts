@@ -16,7 +16,7 @@ import { filterSpec } from './filter';
 import { parsePathOperation } from './operation';
 import { parametersArrayToObject, parseParameter } from './parameter';
 import { parseRequestBody } from './requestBody';
-import { parseHeader, parseSchema } from './schema';
+import { parseHeader, parseResponse, parseSchema } from './schema';
 import { parseServers } from './server';
 import { validateOpenApiSpec } from './validate';
 import { parseWebhooks } from './webhook';
@@ -78,6 +78,21 @@ export const parseV3_1_X = (context: Context<OpenAPIV3_1.Document>) => {
           schema: header.schema as OpenAPIV3_1.SchemaObject,
         });
       }
+    }
+
+    for (const name in context.spec.components.responses) {
+      const $ref = `#/components/responses/${name}`;
+      const responseOrReference = context.spec.components.responses[name]!;
+      const response =
+        '$ref' in responseOrReference
+          ? context.resolveRef<OpenAPIV3_1.ResponseObject>(responseOrReference.$ref)
+          : responseOrReference;
+
+      parseResponse({
+        $ref,
+        context,
+        response,
+      });
     }
 
     for (const name in context.spec.components.parameters) {
