@@ -1,5 +1,9 @@
+import fs from 'node:fs';
+
 import colors from 'ansi-colors';
 import { sync } from 'cross-spawn';
+
+import { ConfigError } from '../../error';
 
 type Output = {
   /**
@@ -50,6 +54,15 @@ export function postprocessOutput(
   postProcessors: Record<string, PostProcessor>,
   jobPrefix: string,
 ): void {
+  if (!config.postProcess.length) {
+    return;
+  }
+
+  // skip post-processing when the output directory doesn't exist or is empty
+  if (!fs.existsSync(config.path) || fs.readdirSync(config.path).length === 0) {
+    return;
+  }
+
   for (const processor of config.postProcess) {
     const resolved = typeof processor === 'string' ? postProcessors[processor] : processor;
 
@@ -63,16 +76,16 @@ export function postprocessOutput(
     const result = sync(resolved.command, args);
 
     if (result.error) {
-      throw new Error(`Post-processor "${name}" failed to run: ${result.error.message}`);
+      throw new ConfigError(`Post-processor "${name}" failed to run: ${result.error.message}`);
     }
 
-    if (result.status !== 0) {
+    if (result.status !== null && result.status !== 0) {
       let message = `Post-processor "${name}" exited with code ${result.status}`;
       const stderr = result.stderr?.toString().trim();
       if (stderr) {
         message += `:\n${stderr}`;
       }
-      throw new Error(message);
+      throw new ConfigError(message);
     }
   }
 }
