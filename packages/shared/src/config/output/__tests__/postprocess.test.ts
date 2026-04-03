@@ -1,11 +1,17 @@
+import fs from 'node:fs';
+
 import { sync } from 'cross-spawn';
 import { vi } from 'vitest';
 
+import { ConfigError } from '../../../error';
 import { postprocessOutput } from '../postprocess';
 
 vi.mock('cross-spawn');
+vi.mock('node:fs');
 
 const mockSync = vi.mocked(sync);
+const mockExistsSync = vi.mocked(fs.existsSync);
+const mockReaddirSync = vi.mocked(fs.readdirSync);
 
 const baseConfig = {
   path: '/output',
@@ -17,10 +23,36 @@ const noopPostProcessors = {};
 describe('postprocessOutput', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockExistsSync.mockReturnValue(true);
+    mockReaddirSync.mockReturnValue(['index.ts'] as any);
   });
 
   it('should not call sync when postProcess is empty', () => {
     postprocessOutput(baseConfig, noopPostProcessors, '');
+    expect(mockSync).not.toHaveBeenCalled();
+  });
+
+  it('should not call sync when output directory does not exist', () => {
+    mockExistsSync.mockReturnValue(false);
+
+    postprocessOutput(
+      { ...baseConfig, postProcess: [{ args: ['{{path}}'], command: 'prettier' }] },
+      noopPostProcessors,
+      '',
+    );
+
+    expect(mockSync).not.toHaveBeenCalled();
+  });
+
+  it('should not call sync when output directory is empty', () => {
+    mockReaddirSync.mockReturnValue([] as any);
+
+    postprocessOutput(
+      { ...baseConfig, postProcess: [{ args: ['{{path}}'], command: 'prettier' }] },
+      noopPostProcessors,
+      '',
+    );
+
     expect(mockSync).not.toHaveBeenCalled();
   });
 
@@ -48,7 +80,20 @@ describe('postprocessOutput', () => {
     expect(mockSync).toHaveBeenCalledWith('prettier', ['/my/output', '--write']);
   });
 
-  it('should throw when the process fails to spawn (e.g., ENOENT)', () => {
+  it('should throw ConfigError when the process fails to spawn (e.g., ENOENT)', () => {
+    const spawnError = new Error('spawnSync oxfmt ENOENT');
+    mockSync.mockReturnValue({ error: spawnError, status: null } as any);
+
+    expect(() =>
+      postprocessOutput(
+        { ...baseConfig, postProcess: [{ args: ['{{path}}'], command: 'oxfmt' }] },
+        noopPostProcessors,
+        '',
+      ),
+    ).toThrow(ConfigError);
+  });
+
+  it('should include the error message when the process fails to spawn', () => {
     const spawnError = new Error('spawnSync oxfmt ENOENT');
     mockSync.mockReturnValue({ error: spawnError, status: null } as any);
 
@@ -77,7 +122,19 @@ describe('postprocessOutput', () => {
     ).toThrow('Post-processor "My Formatter" failed to run: spawnSync my-formatter ENOENT');
   });
 
-  it('should throw when the process exits with a non-zero status code', () => {
+  it('should throw ConfigError when the process exits with a non-zero status code', () => {
+    mockSync.mockReturnValue({ error: undefined, status: 1, stderr: Buffer.from('') } as any);
+
+    expect(() =>
+      postprocessOutput(
+        { ...baseConfig, postProcess: [{ args: ['{{path}}'], command: 'prettier' }] },
+        noopPostProcessors,
+        '',
+      ),
+    ).toThrow(ConfigError);
+  });
+
+  it('should include exit code in error message', () => {
     mockSync.mockReturnValue({ error: undefined, status: 1, stderr: Buffer.from('') } as any);
 
     expect(() =>
@@ -103,6 +160,18 @@ describe('postprocessOutput', () => {
         '',
       ),
     ).toThrow('Post-processor "biome" exited with code 2:\nerror: file not found');
+  });
+
+  it('should not throw when the process is killed by a signal (null status)', () => {
+    mockSync.mockReturnValue({ error: undefined, signal: 'SIGTERM', status: null } as any);
+
+    expect(() =>
+      postprocessOutput(
+        { ...baseConfig, postProcess: [{ args: ['{{path}}'], command: 'prettier' }] },
+        noopPostProcessors,
+        '',
+      ),
+    ).not.toThrow();
   });
 
   it('should skip unknown string preset processors', () => {
