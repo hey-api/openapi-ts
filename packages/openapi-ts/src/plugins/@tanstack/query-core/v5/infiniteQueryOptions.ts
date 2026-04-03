@@ -9,6 +9,7 @@ import type { TsDsl } from '../../../../ts-dsl';
 import { $ } from '../../../../ts-dsl';
 import { createQueryKeyFunction, createQueryKeyType, queryKeyStatement } from '../queryKey';
 import { handleMeta } from '../shared/meta';
+import { createUnwrapSkipTokenFunction } from '../shared/unwrapSkipToken';
 import { useTypeData, useTypeError, useTypeResponse } from '../shared/useType';
 import type { PluginInstance } from '../types';
 
@@ -133,6 +134,16 @@ export const createInfiniteQueryOptions = ({
     createInfiniteParamsFunction({ plugin });
   }
 
+  if (
+    !plugin.querySymbol({
+      category: 'utility',
+      resource: 'unwrapSkipToken',
+      tool: plugin.name,
+    })
+  ) {
+    createUnwrapSkipTokenFunction({ plugin });
+  }
+
   const symbolInfiniteQueryOptions = plugin.external(`${plugin.name}.infiniteQueryOptions`);
   const symbolInfiniteDataType = plugin.external(`${plugin.name}.InfiniteData`);
 
@@ -141,7 +152,12 @@ export const createInfiniteQueryOptions = ({
 
   const symbolSkipToken = $(plugin.external(`${plugin.name}.skipToken`));
 
-  const optsName = 'opts';
+  const symbolUnwrapSkipToken = plugin.referenceSymbol({
+    category: 'utility',
+    resource: 'unwrapSkipToken',
+    tool: plugin.name,
+  });
+  const unwrappedOptions = $(symbolUnwrapSkipToken).call('options');
 
   const symbolQueryKeyType = plugin.referenceSymbol({
     category: 'type',
@@ -184,7 +200,7 @@ export const createInfiniteQueryOptions = ({
       )
       .call(
         $.object()
-          .spread(optsName)
+          .spread(unwrappedOptions)
           .spread('params')
           .prop('signal', $('signal'))
           .prop('throwOnError', $.literal(true)),
@@ -237,39 +253,35 @@ export const createInfiniteQueryOptions = ({
       $.func()
         .param('options', (p) => p.required(isRequiredOptions).type(paramType))
         .do(
-          $.const(optsName).assign(
-            $.ternary($('options').neq(symbolSkipToken)).do($('options')).otherwise($('undefined')),
-          ),
-          $.return(
-            $(symbolInfiniteQueryOptions)
-              .call(
-                $.object()
-                  .pretty()
-                  .prop(
-                    'queryFn',
-                    $.ternary($('options').eq(symbolSkipToken))
-                      .do(symbolSkipToken)
-                      .otherwise(asyncQueryFn),
-                  )
-                  .prop(
-                    'queryKey',
-                    $(symbolInfiniteQueryKey).call(
-                      isRequiredOptions ? $(optsName).as(typeData) : $(optsName),
-                    ),
-                  )
-                  .$if(handleMeta(plugin, operation, 'infiniteQueryOptions'), (o, v) =>
-                    o.prop('meta', v),
+          $(symbolInfiniteQueryOptions)
+            .call(
+              $.object()
+                .pretty()
+                .prop(
+                  'queryFn',
+                  $.ternary($('options').eq(symbolSkipToken))
+                    .do(symbolSkipToken)
+                    .otherwise(asyncQueryFn),
+                )
+                .prop(
+                  'queryKey',
+                  $(symbolInfiniteQueryKey).call(
+                    isRequiredOptions ? unwrappedOptions.as(typeData) : unwrappedOptions,
                   ),
-              )
-              .hint('@ts-ignore')
-              .generics(
-                typeResponse,
-                useTypeError({ operation, plugin }),
-                $.type(symbolInfiniteDataType).generic(typeResponse),
-                typeQueryKey,
-                $.type.or(type, typePageObjectParam),
-              ),
-          ),
+                )
+                .$if(handleMeta(plugin, operation, 'infiniteQueryOptions'), (o, v) =>
+                  o.prop('meta', v),
+                ),
+            )
+            .hint('@ts-ignore')
+            .generics(
+              typeResponse,
+              useTypeError({ operation, plugin }),
+              $.type(symbolInfiniteDataType).generic(typeResponse),
+              typeQueryKey,
+              $.type.or(type, typePageObjectParam),
+            )
+            .return(),
         ),
     );
   plugin.node(statement);
