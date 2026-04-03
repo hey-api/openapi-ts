@@ -60,6 +60,18 @@ export function postprocessOutput(
     const args = resolved.args.map((arg) => arg.replace('{{path}}', config.path));
 
     console.log(`${jobPrefix}🧹 Running ${colors.cyanBright(name)}`);
-    sync(resolved.command, args);
+    const result = sync(resolved.command, args);
+
+    if (result.error) {
+      throw new Error(`Post-processor "${name}" failed to run: ${result.error.message}`);
+    }
+
+    if (result.status !== 0) {
+      const stderr = result.stderr?.toString().trim();
+      const message = stderr
+        ? `Post-processor "${name}" exited with code ${result.status}:\n${stderr}`
+        : `Post-processor "${name}" exited with code ${result.status}`;
+      throw new Error(message);
+    }
   }
 }
