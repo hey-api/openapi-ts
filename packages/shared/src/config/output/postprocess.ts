@@ -67,10 +67,11 @@ export function postprocessOutput(
     }
 
     if (result.status !== 0) {
+      let message = `Post-processor "${name}" exited with code ${result.status}`;
       const stderr = result.stderr?.toString().trim();
-      const message = stderr
-        ? `Post-processor "${name}" exited with code ${result.status}:\n${stderr}`
-        : `Post-processor "${name}" exited with code ${result.status}`;
+      if (stderr) {
+        message += `:\n${stderr}`;
+      }
       throw new Error(message);
     }
   }
