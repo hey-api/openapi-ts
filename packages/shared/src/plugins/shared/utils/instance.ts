@@ -204,6 +204,14 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
           tags: nodeInfo.tags ? Array.from(nodeInfo.tags) : undefined,
         };
         switch (result.kind) {
+          case 'header':
+            event = {
+              ...baseEvent,
+              name: nodeInfo.key as string,
+              schema: nodeInfo.node as IR.SchemaObject,
+              type: result.kind,
+            } satisfies WalkEvent<'header'>;
+            break;
           case 'operation':
             event = {
               ...baseEvent,
@@ -228,6 +236,14 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
               requestBody: nodeInfo.node as IR.RequestBodyObject,
               type: result.kind,
             } satisfies WalkEvent<'requestBody'>;
+            break;
+          case 'response':
+            event = {
+              ...baseEvent,
+              name: nodeInfo.key as string,
+              response: nodeInfo.node as IR.ResponseObject,
+              type: result.kind,
+            } satisfies WalkEvent<'response'>;
             break;
           case 'schema':
             event = {

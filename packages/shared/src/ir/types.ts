@@ -20,6 +20,7 @@ interface IRComponentsObject {
   headers?: Record<string, IRSchemaObject>;
   parameters?: Record<string, IRParameterObject>;
   requestBodies?: Record<string, IRRequestBodyObject>;
+  responses?: Record<string, IRResponseObject>;
   schemas?: Record<string, IRSchemaObject>;
 }
 

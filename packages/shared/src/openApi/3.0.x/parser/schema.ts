@@ -14,6 +14,7 @@ import {
   discriminatorValues,
 } from '../../../openApi/shared/utils/discriminator';
 import { isTopLevelComponent, refToName } from '../../../utils/ref';
+import { contentToSchema, mediaTypeObjects } from './mediaType';
 
 export const getSchemaType = ({
   schema,
@@ -1321,7 +1322,7 @@ export const schemaToIrSchema = ({
   return parseUnknown({ context, schema });
 };
 
-export const parseSchema = ({
+export function parseSchema({
   $ref,
   context,
   schema,
@@ -1329,7 +1330,7 @@ export const parseSchema = ({
   $ref: string;
   context: Context;
   schema: OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject;
-}) => {
+}) {
   if (!context.ir.components) {
     context.ir.components = {};
   }
@@ -1346,9 +1347,9 @@ export const parseSchema = ({
       circularReferenceTracker: new Set(),
     },
   });
-};
+}
 
-export const parseHeader = ({
+export function parseHeader({
   $ref,
   context,
   schema,
@@ -1356,7 +1357,7 @@ export const parseHeader = ({
   $ref: string;
   context: Context;
   schema: OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject;
-}) => {
+}) {
   if (!context.ir.components) {
     context.ir.components = {};
   }
@@ -1373,4 +1374,49 @@ export const parseHeader = ({
       circularReferenceTracker: new Set(),
     },
   });
-};
+}
+
+export function parseResponse({
+  $ref,
+  context,
+  response,
+}: {
+  $ref: string;
+  context: Context;
+  response: OpenAPIV3.ResponseObject;
+}) {
+  if (!context.ir.components) {
+    context.ir.components = {};
+  }
+
+  if (!context.ir.components.responses) {
+    context.ir.components.responses = {};
+  }
+
+  const contents = mediaTypeObjects({ content: response.content });
+  const content = contents.find((content) => content.type === 'json') || contents[0];
+
+  if (content) {
+    context.ir.components.responses[refToName($ref)] = {
+      mediaType: content.mediaType,
+      schema: schemaToIrSchema({
+        context,
+        schema: {
+          description: response.description,
+          ...contentToSchema({ content }),
+        },
+        state: {
+          $ref,
+          circularReferenceTracker: new Set(),
+        },
+      }),
+    };
+  } else {
+    context.ir.components.responses[refToName($ref)] = {
+      schema: {
+        description: response.description,
+        type: 'unknown',
+      },
+    };
+  }
+}

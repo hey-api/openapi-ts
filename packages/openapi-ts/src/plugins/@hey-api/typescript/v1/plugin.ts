@@ -19,14 +19,29 @@ export const handlerV1: HeyApiTypeScriptPlugin['Handler'] = ({ plugin }) => {
   const processor = createProcessor(plugin);
 
   plugin.forEach(
+    'header',
     'operation',
     'parameter',
     'requestBody',
+    'response',
     'schema',
     'server',
     'webhook',
     (event) => {
       switch (event.type) {
+        case 'header':
+          processor.process({
+            meta: {
+              resource: 'definition',
+              resourceId: pathToJsonPointer(event._path),
+            },
+            naming: plugin.config.definitions,
+            path: event._path,
+            plugin,
+            schema: event.schema,
+            tags: event.tags,
+          });
+          break;
         case 'operation':
           operationToType({
             operation: event.operation,
@@ -58,6 +73,19 @@ export const handlerV1: HeyApiTypeScriptPlugin['Handler'] = ({ plugin }) => {
             path: event._path,
             plugin,
             schema: event.requestBody.schema,
+            tags: event.tags,
+          });
+          break;
+        case 'response':
+          processor.process({
+            meta: {
+              resource: 'definition',
+              resourceId: pathToJsonPointer(event._path),
+            },
+            naming: plugin.config.definitions,
+            path: event._path,
+            plugin,
+            schema: event.response.schema,
             tags: event.tags,
           });
           break;

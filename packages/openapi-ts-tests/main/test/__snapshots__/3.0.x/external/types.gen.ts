@@ -10,6 +10,31 @@ export type ExternalUuidHeader = ExternalSharedModelWithUuid;
 
 export type ExternalDeepHeader = Deep;
 
+/**
+ * Response using external model
+ */
+export type ExternalModelResponse = ExternalSharedModel;
+
+/**
+ * Response using external UUID
+ */
+export type ExternalUuidResponse = ExternalSharedModelWithUuid;
+
+/**
+ * Response using external nested object
+ */
+export type ExternalNestedResponse = ExternalNested;
+
+/**
+ * Response with array of external models
+ */
+export type ExternalArrayResponse = Array<ExternalSharedModel>;
+
+/**
+ * Response with union of external types
+ */
+export type ExternalUnionResponse = ExternalSharedModel | ExternalSharedModelWithUuid | ExternalNested;
+
 export type _1 = string;
 
 export type ExternalSchemaA = ExternalSharedModel;
