@@ -122,42 +122,44 @@ describe('postprocessOutput', () => {
     ).toThrow('Post-processor "My Formatter" failed to run: spawnSync my-formatter ENOENT');
   });
 
-  it('should silently ignore non-zero exit codes', () => {
-    mockSync.mockReturnValue({
-      error: undefined,
-      status: 1,
-      stderr: Buffer.from('some error'),
-    } as any);
-    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+  it('should throw ConfigError when the process exits with a non-zero status code', () => {
+    mockSync.mockReturnValue({ error: undefined, status: 1, stderr: Buffer.from('') } as any);
 
-    postprocessOutput(
-      { ...baseConfig, postProcess: [{ args: ['{{path}}'], command: 'prettier' }] },
-      noopPostProcessors,
-      '',
-    );
-
-    expect(warnSpy).not.toHaveBeenCalled();
-    warnSpy.mockRestore();
+    expect(() =>
+      postprocessOutput(
+        { ...baseConfig, postProcess: [{ args: ['{{path}}'], command: 'prettier' }] },
+        noopPostProcessors,
+        '',
+      ),
+    ).toThrow(ConfigError);
   });
 
-  it('should continue processing after a non-zero exit code', () => {
-    mockSync
-      .mockReturnValueOnce({ error: undefined, status: 1, stderr: Buffer.from('') } as any)
-      .mockReturnValueOnce({ error: undefined, status: 0 } as any);
+  it('should include exit code in error message', () => {
+    mockSync.mockReturnValue({ error: undefined, status: 1, stderr: Buffer.from('') } as any);
 
-    postprocessOutput(
-      {
-        ...baseConfig,
-        postProcess: [
-          { args: ['{{path}}'], command: 'first' },
-          { args: ['{{path}}'], command: 'second' },
-        ],
-      },
-      noopPostProcessors,
-      '',
-    );
+    expect(() =>
+      postprocessOutput(
+        { ...baseConfig, postProcess: [{ args: ['{{path}}'], command: 'prettier' }] },
+        noopPostProcessors,
+        '',
+      ),
+    ).toThrow('Post-processor "prettier" exited with code 1');
+  });
 
-    expect(mockSync).toHaveBeenCalledTimes(2);
+  it('should include stderr output in error message when process fails', () => {
+    mockSync.mockReturnValue({
+      error: undefined,
+      status: 2,
+      stderr: Buffer.from('error: file not found'),
+    } as any);
+
+    expect(() =>
+      postprocessOutput(
+        { ...baseConfig, postProcess: [{ args: ['{{path}}'], command: 'biome' }] },
+        noopPostProcessors,
+        '',
+      ),
+    ).toThrow('Post-processor "biome" exited with code 2:\nerror: file not found');
   });
 
   it('should not throw when the process is killed by a signal (null status)', () => {
