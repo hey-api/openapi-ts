@@ -79,13 +79,9 @@ export function postprocessOutput(
       throw new ConfigError(`Post-processor "${name}" failed to run: ${result.error.message}`);
     }
 
-    if (result.status !== null && result.status !== 0) {
-      let message = `Post-processor "${name}" exited with code ${result.status}`;
-      const stderr = result.stderr?.toString().trim();
-      if (stderr) {
-        message += `:\n${stderr}`;
-      }
-      console.warn(`${jobPrefix}${colors.yellow(`⚠️ ${message}`)}`);
-    }
+    // non-zero exit codes are silently ignored — post-processors like
+    // ESLint and Oxfmt exit non-zero for non-fatal reasons (e.g. all
+    // files ignored, no matching files) and warnings break CI pipelines
+    // that treat any stderr output as an error
   }
 }
