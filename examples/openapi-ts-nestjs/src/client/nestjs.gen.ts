@@ -15,9 +15,9 @@ import type {
 } from './types.gen';
 
 export type PetsControllerMethods = {
-  listPets: (query?: ListPetsData['query']) => Promise<ListPetsResponse>;
   createPet: (body: CreatePetData['body']) => Promise<CreatePetResponse>;
   deletePet: (path: DeletePetData['path']) => Promise<DeletePetResponse>;
+  listPets: (query?: ListPetsData['query']) => Promise<ListPetsResponse>;
   showPetById: (path: ShowPetByIdData['path']) => Promise<ShowPetByIdResponse>;
   updatePet: (
     path: UpdatePetData['path'],
