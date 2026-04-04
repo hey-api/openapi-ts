@@ -32,7 +32,7 @@ const handlers = createMswHandlers({
 const server = setupServer(
   // ...sourceHandlers,
   ...handlers.all({
-    one: {
+    pick: {
       // projectUpdate(info) {
       //   console.log('Received request for projectUpdate with info:', info);
       // },
@@ -80,8 +80,8 @@ const server = setupServer(
       // },
     },
   }),
-  // handlers.one.projectUpdate(),
-  handlers.one.globalEvent({
+  // handlers.pick.projectUpdate(),
+  handlers.pick.globalEvent({
     result: {
       directory: 'main',
       payload: {
