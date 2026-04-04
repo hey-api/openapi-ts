@@ -6,6 +6,7 @@ import type { Context } from '@hey-api/shared';
 import {
   checkNodeVersion,
   ConfigValidationError,
+  getInputError,
   getLogs,
   JobError,
   logCrashReport,
@@ -100,17 +101,24 @@ export async function createClient(
       rawLogs;
     const dryRun =
       jobs.some((job) => job.config.dryRun) ?? userConfigs.some((config) => config.dryRun) ?? false;
-    const logPath = logs?.file && !dryRun ? logCrashReport(error, logs.path ?? '') : undefined;
+
+    const inputError = getInputError(error);
+    const normalizedError = inputError ?? error;
+
+    const logPath =
+      logs?.file && !dryRun ? logCrashReport(normalizedError, logs.path ?? '') : undefined;
     if (!logs || logs.level !== 'silent') {
       printCrashReport({ error, logPath });
       const isInteractive =
         jobs.some((job) => job.config.interactive) ??
         userConfigs.some((config) => config.interactive) ??
         false;
-      if (await shouldReportCrash({ error, isInteractive })) {
+      if (await shouldReportCrash({ error: normalizedError, isInteractive })) {
         await openGitHubIssueWithCrashReport(error, __dirname);
       }
     }
+
+    if (inputError) return [];
 
     throw error;
   }

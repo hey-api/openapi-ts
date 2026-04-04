@@ -35,7 +35,9 @@ export { debugTools } from './debug';
 export {
   ConfigError,
   ConfigValidationError,
+  getInputError,
   HeyApiError,
+  InputError,
   JobError,
   logCrashReport,
   openGitHubIssueWithCrashReport,
