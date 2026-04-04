@@ -35,12 +35,12 @@ export const handlerV2: MswPlugin['Handler'] = ({ plugin }) => {
   const symbolFactory = plugin.symbol('createMswHandlers');
   const symbolHandler = plugin.symbol('Handler');
   const symbolInvoke = plugin.symbol('invoke');
-  const symbolOne = plugin.symbol('one');
+  const symbolPick = plugin.symbol('pick');
   const symbolOverrideValue = plugin.symbol('OverrideValue');
   const symbolWrap = plugin.symbol('wrap');
 
-  const oneObject = $.object().pretty();
-  const oneType = $.type.object();
+  const pickObject = $.object().pretty();
+  const pickType = $.type.object();
   const handlerInfo: Array<HandlerInfo> = [];
 
   plugin.forEach(
@@ -54,12 +54,12 @@ export const handlerV2: MswPlugin['Handler'] = ({ plugin }) => {
       });
 
       const name = operation.id;
-      oneType.prop(name, (p) =>
+      pickType.prop(name, (p) =>
         p
           .type($(symbolHandler).typeofType())
           .$if(plugin.config.comments && getOperationComment(operation), (f, v) => f.doc(v)),
       );
-      oneObject.prop(name, $(symbolWrap).call(symbolHandler));
+      pickObject.prop(name, $(symbolWrap).call(symbolHandler));
       handlerInfo.push({ name, path: operation.path });
     },
     {
@@ -68,11 +68,11 @@ export const handlerV2: MswPlugin['Handler'] = ({ plugin }) => {
   );
 
   const symbolHandlerFactoriesType = plugin.symbol('MswHandlerFactories');
-  const handlerFactoriesType = $.type.alias(symbolHandlerFactoriesType).export().type(oneType);
+  const handlerFactoriesType = $.type.alias(symbolHandlerFactoriesType).export().type(pickType);
   plugin.node(handlerFactoriesType);
 
   const factoryResultAll = 'all';
-  const factoryResultOne = 'one';
+  const factoryResultPick = 'pick';
 
   const symbolFactoryReturnType = plugin.symbol('CreateMswHandlersResult');
   const factoryReturnType = $.type
@@ -87,7 +87,7 @@ export const handlerV2: MswPlugin['Handler'] = ({ plugin }) => {
               .func()
               .param('options', (p) =>
                 p.optional().type(
-                  $.type.object().prop('one', (p) =>
+                  $.type.object().prop(factoryResultPick, (p) =>
                     p.optional().type(
                       $.type
                         .mapped('K')
@@ -110,7 +110,7 @@ export const handlerV2: MswPlugin['Handler'] = ({ plugin }) => {
               .returns($.type('ReadonlyArray').generic(symbolHttpHandler)),
           ),
         )
-        .prop(factoryResultOne, (p) => p.type(symbolHandlerFactoriesType)),
+        .prop(factoryResultPick, (p) => p.type(symbolHandlerFactoriesType)),
     );
   plugin.node(factoryReturnType);
 
@@ -145,9 +145,9 @@ export const handlerV2: MswPlugin['Handler'] = ({ plugin }) => {
               ),
           ),
         ),
-      $.const(symbolOne)
-        .type($.type(symbolFactoryReturnType).idx($.type.literal(factoryResultOne)))
-        .assign(oneObject),
+      $.const(symbolPick)
+        .type($.type(symbolFactoryReturnType).idx($.type.literal(factoryResultPick)))
+        .assign(pickObject),
       $.const(symbolAll)
         .type($.type(symbolFactoryReturnType).idx($.type.literal(factoryResultAll)))
         .assign(
@@ -180,18 +180,20 @@ export const handlerV2: MswPlugin['Handler'] = ({ plugin }) => {
                       .otherwise($('fn').call('override')),
                   ),
                 ),
-              $.const('overrides').assign($('options').attr('one').coalesce($.object())),
+              $.const('overrides').assign(
+                $('options').attr(factoryResultPick).coalesce($.object()),
+              ),
               $.array(
                 ...sortHandlers(handlerInfo).map((info) =>
                   $(symbolInvoke).call(
-                    $(symbolOne).attr(info.name),
+                    $(symbolPick).attr(info.name),
                     $('overrides').attr(info.name),
                   ),
                 ),
               ).return(),
             ),
         ),
-      $.object().prop(factoryResultAll, symbolAll).prop(factoryResultOne, symbolOne).return(),
+      $.object().prop(factoryResultAll, symbolAll).prop(factoryResultPick, symbolPick).return(),
     );
   plugin.node(factoryFn);
 };
