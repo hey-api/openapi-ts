@@ -35,7 +35,9 @@ export { debugTools } from './debug';
 export {
   ConfigError,
   ConfigValidationError,
+  getInputError,
   HeyApiError,
+  InputError,
   JobError,
   logCrashReport,
   openGitHubIssueWithCrashReport,
@@ -110,6 +112,16 @@ export type {
   PluginContext,
   PluginNames,
 } from './plugins/types';
+export type {
+  DefaultRequestValidatorLayers,
+  DefaultValidatorLayers,
+  RequestSchemaContext,
+  RequestValidatorLayer,
+  RequestValidatorLayers,
+  ResolvedRequestValidatorLayer,
+  ValidatorLayers,
+} from './plugins/validator';
+export { requestValidatorLayers, resolveValidatorLayer } from './plugins/validator';
 export { findPackageJson, findTsConfigPath, loadPackageJson } from './tsConfig';
 export type { Logs } from './types/logs';
 export type { WatchValues } from './types/watch';

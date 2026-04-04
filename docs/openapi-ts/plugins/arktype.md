@@ -7,7 +7,7 @@ description: Arktype plugin for Hey API. Compatible with all our features.
 import FeatureStatus from '@components/FeatureStatus.vue';
 </script>
 
-# Arktype <span data-soon>soon</span>
+# Arktype <span data-badge>vote</span>
 
 <FeatureStatus issueNumber=1473 name="Arktype" />
 

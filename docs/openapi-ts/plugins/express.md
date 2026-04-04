@@ -7,7 +7,7 @@ description: Express plugin for Hey API. Compatible with all our features.
 import FeatureStatus from '@components/FeatureStatus.vue';
 </script>
 
-# Express <span data-soon>soon</span>
+# Express <span data-badge>vote</span>
 
 <FeatureStatus issueNumber=1484 name="Express" />
 

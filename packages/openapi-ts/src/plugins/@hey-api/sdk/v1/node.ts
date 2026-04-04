@@ -193,7 +193,7 @@ function enrichRootClass(args: {
       symbol: symbolRegistry,
     }),
   );
-  const isClientRequired = !plugin.config.client || !plugin.getSymbol({ category: 'client' });
+  const isClientRequired = !plugin.config.client || !plugin.querySymbol({ category: 'client' });
   const registry = plugin.symbol('__registry');
   node.toAccessNode = (node, options) => {
     if (options.context) return;

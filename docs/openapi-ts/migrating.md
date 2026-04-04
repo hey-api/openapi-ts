@@ -7,6 +7,63 @@ description: Migrating to @hey-api/openapi-ts.
 
 While we try to avoid breaking changes, sometimes it's unavoidable in order to offer you the latest features. This page lists changes that require updates to your code. If you run into a problem with migration, please [open an issue](https://github.com/hey-api/openapi-ts/issues).
 
+## v0.95.0
+
+### Validator request schemas
+
+Valibot and Zod plugins no longer export composite request `Data` schemas. Instead, each layer is exported as a separate schema. If you're using validators with SDKs, you can preserve the composite schema with `shouldExtract`:
+
+::: code-group
+
+<!-- prettier-ignore-start -->
+```js [Zod]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: 'sdk',
+      validator: 'zod',
+    },
+    {
+      name: 'zod',
+      requests: { // [!code ++]
+        shouldExtract: true, // [!code ++]
+      }, // [!code ++]
+    },
+  ],
+};
+```
+<!-- prettier-ignore-end -->
+<!-- prettier-ignore-start -->
+```js [Valibot]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: 'sdk',
+      validator: 'valibot',
+    },
+    {
+      name: 'valibot',
+      requests: { // [!code ++]
+        shouldExtract: true, // [!code ++]
+      }, // [!code ++]
+    },
+  ],
+};
+```
+<!-- prettier-ignore-end -->
+
+:::
+
+### Removed `plugin.getSymbol()` function
+
+This function has been removed. You can use `plugin.querySymbol()` instead. It accepts the same arguments and returns the same result.
+
 ## v0.93.0
 
 ### Removed resolver node
@@ -422,7 +479,7 @@ If you need to access individual fields, you can do so using the [`.shape`](http
 
 ### Bundle `@hey-api/client-*` plugins
 
-In previous releases, you had to install a separate client package to generate a fully working output, e.g., `npm install @hey-api/client-fetch`. This created a few challenges: getting started was slower, upgrading was sometimes painful, and bundling too. Beginning with v0.73.0, all Hey API clients are bundled by default and don't require installing any additional dependencies. You can remove any installed client packages and re-run `@hey-api/openapi-ts`.
+In previous releases, you had to install a separate client package to generate a fully working output, e.g., `npm add @hey-api/client-fetch`. This created a few challenges: getting started was slower, upgrading was sometimes painful, and bundling too. Beginning with v0.73.0, all Hey API clients are bundled by default and don't require installing any additional dependencies. You can remove any installed client packages and re-run `@hey-api/openapi-ts`.
 
 ```sh
 npm uninstall @hey-api/client-fetch

@@ -34,24 +34,18 @@ export const zFoo3 = z.object({
     foo: zBar.optional()
 }).register(z.globalRegistry, { custom: 'value', title: 'object' });
 
-export const zPatchFooData = z.object({
-    body: z.object({
-        foo: z.string().register(z.globalRegistry, { custom: 'value', title: 'string' }).optional()
-    }).register(z.globalRegistry, { custom: 'value', title: 'object' }),
-    path: z.never().register(z.globalRegistry, { custom: 'value', title: 'never' }).optional(),
-    query: z.object({
-        foo: z.string().register(z.globalRegistry, { custom: 'value', title: 'This is Foo parameter.' }).optional(),
-        bar: zBar.optional(),
-        baz: z.object({
-            baz: z.string().register(z.globalRegistry, { custom: 'value', title: 'string' }).optional()
-        }).register(z.globalRegistry, { custom: 'value', title: 'object' }).optional(),
-        qux: z.iso.date().register(z.globalRegistry, { custom: 'value', title: 'string' }).optional(),
-        quux: z.iso.datetime().register(z.globalRegistry, { custom: 'value', title: 'string' }).optional()
-    }).register(z.globalRegistry, { custom: 'value', title: 'object' }).optional()
+export const zPatchFooBody = z.object({
+    foo: z.string().register(z.globalRegistry, { custom: 'value', title: 'string' }).optional()
 }).register(z.globalRegistry, { custom: 'value', title: 'object' });
 
-export const zPostFooData = z.object({
-    body: zFoo3,
-    path: z.never().register(z.globalRegistry, { custom: 'value', title: 'never' }).optional(),
-    query: z.never().register(z.globalRegistry, { custom: 'value', title: 'never' }).optional()
+export const zPatchFooQuery = z.object({
+    foo: z.string().register(z.globalRegistry, { custom: 'value', title: 'This is Foo parameter.' }).optional(),
+    bar: zBar.optional(),
+    baz: z.object({
+        baz: z.string().register(z.globalRegistry, { custom: 'value', title: 'string' }).optional()
+    }).register(z.globalRegistry, { custom: 'value', title: 'object' }).optional(),
+    qux: z.iso.date().register(z.globalRegistry, { custom: 'value', title: 'string' }).optional(),
+    quux: z.iso.datetime().register(z.globalRegistry, { custom: 'value', title: 'string' }).optional()
 }).register(z.globalRegistry, { custom: 'value', title: 'object' });
+
+export const zPostFooBody = zFoo3;

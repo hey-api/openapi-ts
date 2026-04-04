@@ -1,20 +1,19 @@
 import path from 'node:path';
 
 import { type Logger, Project } from '@hey-api/codegen-core';
-import { $RefParser } from '@hey-api/json-schema-ref-parser';
+import { $RefParser, ResolverError } from '@hey-api/json-schema-ref-parser';
+import type { Input, OpenApi, WatchValues } from '@hey-api/shared';
 import {
   applyNaming,
   buildGraph,
   compileInputPath,
   Context,
   getSpec,
-  type Input,
+  InputError,
   logInputPaths,
-  type OpenApi,
   parseOpenApiSpec,
   patchOpenApiSpec,
   postprocessOutput,
-  type WatchValues,
 } from '@hey-api/shared';
 import colors from 'ansi-colors';
 
@@ -66,10 +65,20 @@ export async function createClient({
     // if in watch mode, subsequent errors won't throw to gracefully handle
     // cases where server might be reloading
     if (error && !_watches) {
-      const text = await response.text().catch(() => '');
-      throw new Error(
-        `Request failed with status ${response.status}: ${text || response.statusText}`,
-      );
+      const text = await response.text().catch((): string => '');
+      const message = `Request failed with status ${response.status}: ${text || response.statusText}`;
+      // Handle 4xx client errors as input errors (bad URL, bad API key, etc.)
+      if (response.status >= 400 && response.status < 500) {
+        const statusText = response.statusText || 'Unknown';
+        const originalError = new Error(message) as Error & { source?: string };
+        originalError.source = String(inputPaths[index]!.path);
+        throw new InputError(
+          `Input request failed: ${response.status} ${statusText}`,
+          originalError,
+        );
+      }
+      // For 5xx server errors, keep the generic error (could be a bug)
+      throw new Error(message);
     }
 
     return { arrayBuffer, resolvedInput };
@@ -82,18 +91,26 @@ export async function createClient({
 
   if (specData.length) {
     const refParser = new $RefParser();
-    const data =
-      specData.length > 1
-        ? await refParser.bundleMany({
-            arrayBuffer: specData.map((data) => data.arrayBuffer!),
-            pathOrUrlOrSchemas: [],
-            resolvedInputs: specData.map((data) => data.resolvedInput!),
-          })
-        : await refParser.bundle({
-            arrayBuffer: specData[0]!.arrayBuffer,
-            pathOrUrlOrSchema: undefined,
-            resolvedInput: specData[0]!.resolvedInput!,
-          });
+    let data: unknown;
+    try {
+      data =
+        specData.length > 1
+          ? await refParser.bundleMany({
+              arrayBuffer: specData.map((data) => data.arrayBuffer!),
+              pathOrUrlOrSchemas: [],
+              resolvedInputs: specData.map((data) => data.resolvedInput!),
+            })
+          : await refParser.bundle({
+              arrayBuffer: specData[0]!.arrayBuffer,
+              pathOrUrlOrSchema: undefined,
+              resolvedInput: specData[0]!.resolvedInput!,
+            });
+    } catch (err) {
+      if (err instanceof ResolverError && err.ioErrorCode === 'ENOENT') {
+        throw new InputError('Input file not found', err);
+      }
+      throw err;
+    }
 
     // on subsequent runs in watch mode, print the message only if we know we're
     // generating the output

@@ -34,7 +34,7 @@ export const createQueryOptions = ({
     operation,
   });
   if (
-    !plugin.getSymbol({
+    !plugin.querySymbol({
       category: 'utility',
       resource: 'createQueryKey',
       tool: plugin.name,

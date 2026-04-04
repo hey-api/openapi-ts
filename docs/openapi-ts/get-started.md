@@ -51,7 +51,7 @@ You can download `@hey-api/openapi-ts` from npm using your favorite package mana
 ::: code-group
 
 ```sh [npm]
-npm install @hey-api/openapi-ts -D -E
+npm add @hey-api/openapi-ts -D -E
 ```
 
 ```sh [pnpm]
@@ -104,6 +104,54 @@ createClient({
 ```
 
 :::
+
+### Vite
+
+If you're using [Vite](https://vite.dev), you can integrate `@hey-api/openapi-ts` directly into your build pipeline with `@hey-api/vite-plugin`. Install it alongside the main package:
+
+::: code-group
+
+```sh [npm]
+npm add @hey-api/vite-plugin -D -E
+```
+
+```sh [pnpm]
+pnpm add @hey-api/vite-plugin -D -E
+```
+
+```sh [yarn]
+yarn add @hey-api/vite-plugin -D -E
+```
+
+```sh [bun]
+bun add @hey-api/vite-plugin -D -E
+```
+
+:::
+
+Then add the plugin to your Vite configuration:
+
+::: code-group
+
+```ts [vite.config.ts]
+import { heyApiPlugin } from '@hey-api/vite-plugin';
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+  plugins: [
+    heyApiPlugin({
+      config: {
+        input: 'hey-api/backend', // sign up at app.heyapi.dev
+        output: 'src/client',
+      },
+    }),
+  ],
+});
+```
+
+:::
+
+See the [Vite](/openapi-ts/configuration/vite) page for full configuration options.
 
 ### Configuration
 

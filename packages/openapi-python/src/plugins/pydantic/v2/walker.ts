@@ -29,7 +29,7 @@ export interface VisitorConfig {
 }
 
 export function createVisitor(
-  config: VisitorConfig,
+  config: VisitorConfig = {},
 ): SchemaVisitor<PydanticResult, PydanticPlugin['Instance']> {
   const { schemaExtractor } = config;
 

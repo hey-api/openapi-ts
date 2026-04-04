@@ -206,7 +206,7 @@ function implementHttpRequestFn<T extends ReturnType<typeof $.func | typeof $.me
   });
 
   const symbolHttpRequest = plugin.external('@angular/common/http.HttpRequest');
-  const symbolClient = plugin.getSymbol({ category: 'client' });
+  const symbolClient = plugin.querySymbol({ category: 'client' });
   const symbolOptions = plugin.referenceSymbol({
     category: 'type',
     resource: 'client-options',

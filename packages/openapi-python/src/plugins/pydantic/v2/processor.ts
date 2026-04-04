@@ -30,7 +30,7 @@ export function createProcessor(plugin: PydanticPlugin['Instance']): ProcessorRe
     }
 
     for (const hook of extractorHooks) {
-      const result = hook?.(ctx);
+      const result = typeof hook === 'boolean' ? hook : (hook?.(ctx) ?? false);
       if (result) {
         process({
           namingAnchor: processor.context.anchor,

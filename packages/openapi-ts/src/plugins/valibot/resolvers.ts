@@ -1,5 +1,13 @@
 import type { Symbol } from '@hey-api/codegen-core';
-import type { IR, Plugin, SchemaVisitorContext, SchemaWithType, Walker } from '@hey-api/shared';
+import type {
+  IR,
+  Plugin,
+  RequestSchemaContext,
+  ResolvedRequestValidatorLayer,
+  SchemaVisitorContext,
+  SchemaWithType,
+  Walker,
+} from '@hey-api/shared';
 
 import type { MaybeBigInt, ShouldCoerceToBigInt } from '../../plugins/shared/utils/coerce';
 import type { GetIntegerLimit } from '../../plugins/shared/utils/formats';
@@ -118,25 +126,23 @@ export type ValibotResolvers = Plugin.Resolvers<{
    *
    * Allow customization of validator function bodies.
    *
-   * Example path: `~resolvers.validator.request` or `~resolvers.validator.response`
-   *
    * Returning `undefined` will execute the default resolver logic.
    */
   validator?:
-    | ValidatorResolver
+    | ((ctx: ValidatorResolverContext) => PipeResult | null | undefined)
     | {
         /**
          * Controls how the request validator function body is generated.
          *
          * Returning `undefined` will execute the default resolver logic.
          */
-        request?: ValidatorResolver;
+        request?: (ctx: RequestValidatorResolverContext) => PipeResult | null | undefined;
         /**
          * Controls how the response validator function body is generated.
          *
          * Returning `undefined` will execute the default resolver logic.
          */
-        response?: ValidatorResolver;
+        response?: (ctx: ResponseValidatorResolverContext) => PipeResult | null | undefined;
       };
   /**
    * Resolver for void schemas.
@@ -148,9 +154,7 @@ export type ValibotResolvers = Plugin.Resolvers<{
   void?: (ctx: VoidResolverContext) => PipeResult;
 }>;
 
-type ValidatorResolver = (ctx: ValidatorResolverContext) => PipeResult | null | undefined;
-
-interface BaseContext extends DollarTsDsl {
+export interface BaseContext extends DollarTsDsl {
   /**
    * Functions for working with pipes.
    */
@@ -363,15 +367,73 @@ export interface UnknownResolverContext extends BaseContext {
   schema: SchemaWithType<'unknown'>;
 }
 
-export interface ValidatorResolverContext extends BaseContext {
+export interface RequestValidatorResolverContext
+  extends BaseContext, RequestSchemaContext<ValibotPlugin['Instance']> {
+  /**
+   * Nodes used to build different parts of the result.
+   */
+  nodes: {
+    /**
+     * Returns the composite schema combining all layers.
+     *
+     * Returns `undefined` if all layers are omitted.
+     */
+    composite: (ctx: RequestValidatorResolverContext) => Pipe | undefined;
+    /**
+     * Returns an empty/fallback schema for a layer based on its `whenEmpty` config.
+     *
+     * @throws if `whenEmpty` is `'omit'` (no schema should be generated)
+     */
+    empty: (
+      ctx: RequestValidatorResolverContext & {
+        /** Resolved configuration for the request layer. */
+        layer: ResolvedRequestValidatorLayer;
+      },
+    ) => Pipe;
+    /**
+     * Returns an optional schema based on the layer's config.
+     */
+    optional: (
+      ctx: RequestValidatorResolverContext & {
+        /** Resolved configuration for the request layer. */
+        layer: ResolvedRequestValidatorLayer;
+        /** The schema to conditionally wrap. */
+        schema: Pipe;
+      },
+    ) => Pipe;
+  };
+  /**
+   * Provides access to commonly used symbols within the plugin.
+   */
+  symbols: BaseContext['symbols'] & {
+    /**
+     * The schema to use in the validator body.
+     *
+     * This is either:
+     * - an inline AST expression
+     * - a Symbol reference to a named export
+     */
+    schema: Symbol | Pipe;
+  };
+}
+
+export interface ResponseValidatorResolverContext extends BaseContext {
+  /** The operation being processed. */
   operation: IR.OperationObject;
   /**
    * Provides access to commonly used symbols within the plugin.
    */
   symbols: BaseContext['symbols'] & {
+    /**
+     * The response schema symbol.
+     */
     schema: Symbol;
   };
 }
+
+export type ValidatorResolverContext =
+  | RequestValidatorResolverContext
+  | ResponseValidatorResolverContext;
 
 export interface VoidResolverContext extends BaseContext {
   /**

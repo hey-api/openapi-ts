@@ -33,7 +33,7 @@ export const createQueryKeyFunction = ({ plugin }: { plugin: PluginInstance }) =
 
   const baseUrlKey = getClientBaseUrlKey(getTypedConfig(plugin));
 
-  const symbolClient = plugin.getSymbol({
+  const symbolClient = plugin.querySymbol({
     category: 'client',
   });
 

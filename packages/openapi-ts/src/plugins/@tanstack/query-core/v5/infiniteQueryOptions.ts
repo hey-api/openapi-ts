@@ -116,7 +116,7 @@ export const createInfiniteQueryOptions = ({
   });
 
   if (
-    !plugin.getSymbol({
+    !plugin.querySymbol({
       category: 'utility',
       resource: 'createQueryKey',
       tool: plugin.name,
@@ -127,7 +127,7 @@ export const createInfiniteQueryOptions = ({
   }
 
   if (
-    !plugin.getSymbol({
+    !plugin.querySymbol({
       category: 'utility',
       resource: 'createInfiniteParams',
       tool: plugin.name,

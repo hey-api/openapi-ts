@@ -56,7 +56,7 @@ function processSchemaType({
       resourceId: schema.$ref,
     };
     const symbol =
-      plugin.getSymbol(query) ??
+      plugin.querySymbol(query) ??
       plugin.symbol(
         applyNaming(refToName(schema.$ref), {
           case: 'camelCase',

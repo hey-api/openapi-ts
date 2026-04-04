@@ -12,12 +12,6 @@ export const zBar = z.object({
     foo: z.int()
 });
 
-export const zPostFooData = z.object({
-    body: z.optional(z.never()),
-    path: z.optional(z.never()),
-    query: z.optional(z.never())
-});
-
 /**
  * OK
  */
