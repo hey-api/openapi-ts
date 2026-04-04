@@ -44,6 +44,10 @@ export default defineConfig({
                 link: '/openapi-ts/configuration/parser',
                 text: 'Parser',
               },
+              {
+                link: '/openapi-ts/configuration/vite',
+                text: 'Vite',
+              },
             ],
             link: '/openapi-ts/configuration',
             text: 'Configuration',

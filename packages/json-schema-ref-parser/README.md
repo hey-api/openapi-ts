@@ -7,7 +7,8 @@
 Install using [npm](https://docs.npmjs.com/about-npm/):
 
 ```bash
-npm install @hey-api/json-schema-ref-parser
+npm add @hey-api/json-schema-ref-parser
+pnpm add @hey-api/json-schema-ref-parser
 yarn add @hey-api/json-schema-ref-parser
 bun add @hey-api/json-schema-ref-parser
 ```

@@ -41,7 +41,7 @@ Start by adding `@hey-api/nuxt` to your dependencies.
 ::: code-group
 
 ```sh [npm]
-npm install @hey-api/nuxt
+npm add @hey-api/nuxt
 ```
 
 ```sh [pnpm]
