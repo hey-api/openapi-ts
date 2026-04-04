@@ -54,11 +54,6 @@ export function postprocessOutput(
   postProcessors: Record<string, PostProcessor>,
   jobPrefix: string,
 ): void {
-  if (!config.postProcess.length) {
-    return;
-  }
-
-  // skip post-processing when the output directory doesn't exist or is empty
   if (!fs.existsSync(config.path) || fs.readdirSync(config.path).length === 0) {
     return;
   }
@@ -79,9 +74,13 @@ export function postprocessOutput(
       throw new ConfigError(`Post-processor "${name}" failed to run: ${result.error.message}`);
     }
 
-    // non-zero exit codes are silently ignored — post-processors like
-    // ESLint and Oxfmt exit non-zero for non-fatal reasons (e.g. all
-    // files ignored, no matching files) and warnings break CI pipelines
-    // that treat any stderr output as an error
+    if (result.status !== null && result.status !== 0) {
+      let message = `Post-processor "${name}" exited with code ${result.status}`;
+      const stderr = result.stderr?.toString().trim();
+      if (stderr) {
+        message += `:\n${stderr}`;
+      }
+      throw new ConfigError(message);
+    }
   }
 }
