@@ -85,7 +85,7 @@ export function postprocessOutput(
       if (stderr) {
         message += `:\n${stderr}`;
       }
-      throw new ConfigError(message);
+      console.warn(`${jobPrefix}${colors.yellow(`⚠️ ${message}`)}`);
     }
   }
 }
