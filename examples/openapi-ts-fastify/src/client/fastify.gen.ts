@@ -11,12 +11,12 @@ import type {
 } from './types.gen';
 
 export type RouteHandlers = {
-  createPets: RouteHandler<{
-    Reply: CreatePetsResponses;
-  }>;
   listPets: RouteHandler<{
     Querystring?: ListPetsData['query'];
     Reply: ListPetsResponses;
+  }>;
+  createPets: RouteHandler<{
+    Reply: CreatePetsResponses;
   }>;
   showPetById: RouteHandler<{
     Params: ShowPetByIdData['path'];
