@@ -9,13 +9,15 @@ export type RequestHandlerOptions = RequestHandlerOptions2 & {
     responseFallback?: 'error' | 'passthrough';
 };
 
+export type HandleGetFooResponse = {
+    body: GetFooResponses[200];
+    status?: 200;
+};
+
 /**
  * Handler for the `GET /foo` operation.
  */
-export function handleGetFoo(response?: {
-    body: GetFooResponses[200];
-    status?: 200;
-} | HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
+export function handleGetFoo(response?: HandleGetFooResponse | HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
     return http.get<never, never>(`${options?.baseUrl ?? '*'}/foo`, info => {
         if (typeof response === 'function') {
             return response(info);
@@ -31,6 +33,11 @@ export function handleGetFoo(response?: {
     }, options);
 }
 
+export type HandlePostFooResponse = {
+    body: PostFooResponses[200];
+    status?: 200;
+};
+
 type ToResponseUnion<T> = {
     [K in Extract<keyof T, number>]: {
         status: K;
@@ -41,10 +48,7 @@ type ToResponseUnion<T> = {
 /**
  * Handler for the `POST /foo` operation.
  */
-export function handlePostFoo(response?: {
-    body: PostFooResponses[200];
-    status?: 200;
-} | ToResponseUnion<PostFooResponses> | HttpResponseResolver<never, PostFooData['body']>, options?: RequestHandlerOptions): HttpHandler {
+export function handlePostFoo(response?: HandlePostFooResponse | ToResponseUnion<PostFooResponses> | HttpResponseResolver<never, PostFooData['body']>, options?: RequestHandlerOptions): HttpHandler {
     return http.post<never, PostFooData['body']>(`${options?.baseUrl ?? '*'}/foo`, info => {
         if (typeof response === 'function') {
             return response(info);
@@ -56,13 +60,15 @@ export function handlePostFoo(response?: {
     }, options);
 }
 
+export type HandlePutFooResponse = {
+    body: PutFooResponses[200];
+    status?: 200;
+};
+
 /**
  * Handler for the `PUT /foo` operation.
  */
-export function handlePutFoo(response?: {
-    body: PutFooResponses[200];
-    status?: 200;
-} | HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
+export function handlePutFoo(response?: HandlePutFooResponse | HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
     return http.put<never, never>(`${options?.baseUrl ?? '*'}/foo`, info => {
         if (typeof response === 'function') {
             return response(info);

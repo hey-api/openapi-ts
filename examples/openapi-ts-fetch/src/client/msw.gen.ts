@@ -11,6 +11,7 @@ import {
 import type {
   AddPetData,
   AddPetResponses,
+  ClientOptions,
   CreateUserData,
   CreateUserResponses,
   CreateUsersWithListInputData,
@@ -38,20 +39,20 @@ import type {
 } from './types.gen';
 
 export type RequestHandlerOptions = RequestHandlerOptions2 & {
-  baseUrl?: string;
+  baseUrl?: ClientOptions['baseUrl'];
   responseFallback?: 'error' | 'passthrough';
+};
+
+export type HandleAddPetResponse = {
+  body: AddPetResponses[200];
+  status?: 200;
 };
 
 /**
  * Handler for the `POST /pet` operation.
  */
 export function handleAddPet(
-  response?:
-    | {
-        body: AddPetResponses[200];
-        status?: 200;
-      }
-    | HttpResponseResolver<never, AddPetData['body']>,
+  response?: HandleAddPetResponse | HttpResponseResolver<never, AddPetData['body']>,
   options?: RequestHandlerOptions,
 ): HttpHandler {
   return http.post<never, AddPetData['body']>(
@@ -76,16 +77,16 @@ export function handleAddPet(
   );
 }
 
+export type HandleUpdatePetResponse = {
+  body: UpdatePetResponses[200];
+  status?: 200;
+};
+
 /**
  * Handler for the `PUT /pet` operation.
  */
 export function handleUpdatePet(
-  response?:
-    | {
-        body: UpdatePetResponses[200];
-        status?: 200;
-      }
-    | HttpResponseResolver<never, UpdatePetData['body']>,
+  response?: HandleUpdatePetResponse | HttpResponseResolver<never, UpdatePetData['body']>,
   options?: RequestHandlerOptions,
 ): HttpHandler {
   return http.put<never, UpdatePetData['body']>(
@@ -110,16 +111,16 @@ export function handleUpdatePet(
   );
 }
 
+export type HandleFindPetsByStatusResponse = {
+  body: FindPetsByStatusResponses[200];
+  status?: 200;
+};
+
 /**
  * Handler for the `GET /pet/findByStatus` operation.
  */
 export function handleFindPetsByStatus(
-  response?:
-    | {
-        body: FindPetsByStatusResponses[200];
-        status?: 200;
-      }
-    | HttpResponseResolver<never, never>,
+  response?: HandleFindPetsByStatusResponse | HttpResponseResolver<never, never>,
   options?: RequestHandlerOptions,
 ): HttpHandler {
   return http.get<never, never>(
@@ -144,16 +145,16 @@ export function handleFindPetsByStatus(
   );
 }
 
+export type HandleFindPetsByTagsResponse = {
+  body: FindPetsByTagsResponses[200];
+  status?: 200;
+};
+
 /**
  * Handler for the `GET /pet/findByTags` operation.
  */
 export function handleFindPetsByTags(
-  response?:
-    | {
-        body: FindPetsByTagsResponses[200];
-        status?: 200;
-      }
-    | HttpResponseResolver<never, never>,
+  response?: HandleFindPetsByTagsResponse | HttpResponseResolver<never, never>,
   options?: RequestHandlerOptions,
 ): HttpHandler {
   return http.get<never, never>(
@@ -178,15 +179,17 @@ export function handleFindPetsByTags(
   );
 }
 
+export type HandleDeletePetResponse = {
+  body: DeletePetResponses[200];
+  status?: 200;
+};
+
 /**
  * Handler for the `DELETE /pet/{petId}` operation.
  */
 export function handleDeletePet(
   response?:
-    | {
-        body: DeletePetResponses[200];
-        status?: 200;
-      }
+    | HandleDeletePetResponse
     | HttpResponseResolver<
         {
           petId: string;
@@ -222,15 +225,17 @@ export function handleDeletePet(
   );
 }
 
+export type HandleGetPetByIdResponse = {
+  body: GetPetByIdResponses[200];
+  status?: 200;
+};
+
 /**
  * Handler for the `GET /pet/{petId}` operation.
  */
 export function handleGetPetById(
   response?:
-    | {
-        body: GetPetByIdResponses[200];
-        status?: 200;
-      }
+    | HandleGetPetByIdResponse
     | HttpResponseResolver<
         {
           petId: string;
@@ -266,15 +271,17 @@ export function handleGetPetById(
   );
 }
 
+export type HandleUpdatePetWithFormResponse = {
+  body: UpdatePetWithFormResponses[200];
+  status?: 200;
+};
+
 /**
  * Handler for the `POST /pet/{petId}` operation.
  */
 export function handleUpdatePetWithForm(
   response?:
-    | {
-        body: UpdatePetWithFormResponses[200];
-        status?: 200;
-      }
+    | HandleUpdatePetWithFormResponse
     | HttpResponseResolver<
         {
           petId: string;
@@ -310,15 +317,17 @@ export function handleUpdatePetWithForm(
   );
 }
 
+export type HandleUploadFileResponse = {
+  body: UploadFileResponses[200];
+  status?: 200;
+};
+
 /**
  * Handler for the `POST /pet/{petId}/uploadImage` operation.
  */
 export function handleUploadFile(
   response?:
-    | {
-        body: UploadFileResponses[200];
-        status?: 200;
-      }
+    | HandleUploadFileResponse
     | HttpResponseResolver<
         {
           petId: string;
@@ -354,16 +363,16 @@ export function handleUploadFile(
   );
 }
 
+export type HandleGetInventoryResponse = {
+  body: GetInventoryResponses[200];
+  status?: 200;
+};
+
 /**
  * Handler for the `GET /store/inventory` operation.
  */
 export function handleGetInventory(
-  response?:
-    | {
-        body: GetInventoryResponses[200];
-        status?: 200;
-      }
-    | HttpResponseResolver<never, never>,
+  response?: HandleGetInventoryResponse | HttpResponseResolver<never, never>,
   options?: RequestHandlerOptions,
 ): HttpHandler {
   return http.get<never, never>(
@@ -388,16 +397,16 @@ export function handleGetInventory(
   );
 }
 
+export type HandlePlaceOrderResponse = {
+  body: PlaceOrderResponses[200];
+  status?: 200;
+};
+
 /**
  * Handler for the `POST /store/order` operation.
  */
 export function handlePlaceOrder(
-  response?:
-    | {
-        body: PlaceOrderResponses[200];
-        status?: 200;
-      }
-    | HttpResponseResolver<never, PlaceOrderData['body']>,
+  response?: HandlePlaceOrderResponse | HttpResponseResolver<never, PlaceOrderData['body']>,
   options?: RequestHandlerOptions,
 ): HttpHandler {
   return http.post<never, PlaceOrderData['body']>(
@@ -422,15 +431,17 @@ export function handlePlaceOrder(
   );
 }
 
+export type HandleDeleteOrderResponse = {
+  body: DeleteOrderResponses[200];
+  status?: 200;
+};
+
 /**
  * Handler for the `DELETE /store/order/{orderId}` operation.
  */
 export function handleDeleteOrder(
   response?:
-    | {
-        body: DeleteOrderResponses[200];
-        status?: 200;
-      }
+    | HandleDeleteOrderResponse
     | HttpResponseResolver<
         {
           orderId: string;
@@ -466,15 +477,17 @@ export function handleDeleteOrder(
   );
 }
 
+export type HandleGetOrderByIdResponse = {
+  body: GetOrderByIdResponses[200];
+  status?: 200;
+};
+
 /**
  * Handler for the `GET /store/order/{orderId}` operation.
  */
 export function handleGetOrderById(
   response?:
-    | {
-        body: GetOrderByIdResponses[200];
-        status?: 200;
-      }
+    | HandleGetOrderByIdResponse
     | HttpResponseResolver<
         {
           orderId: string;
@@ -510,16 +523,16 @@ export function handleGetOrderById(
   );
 }
 
+export type HandleCreateUserResponse = {
+  body: CreateUserResponses[200];
+  status?: 200;
+};
+
 /**
  * Handler for the `POST /user` operation.
  */
 export function handleCreateUser(
-  response?:
-    | {
-        body: CreateUserResponses[200];
-        status?: 200;
-      }
-    | HttpResponseResolver<never, CreateUserData['body']>,
+  response?: HandleCreateUserResponse | HttpResponseResolver<never, CreateUserData['body']>,
   options?: RequestHandlerOptions,
 ): HttpHandler {
   return http.post<never, CreateUserData['body']>(
@@ -544,15 +557,17 @@ export function handleCreateUser(
   );
 }
 
+export type HandleCreateUsersWithListInputResponse = {
+  body: CreateUsersWithListInputResponses[200];
+  status?: 200;
+};
+
 /**
  * Handler for the `POST /user/createWithList` operation.
  */
 export function handleCreateUsersWithListInput(
   response?:
-    | {
-        body: CreateUsersWithListInputResponses[200];
-        status?: 200;
-      }
+    | HandleCreateUsersWithListInputResponse
     | HttpResponseResolver<never, CreateUsersWithListInputData['body']>,
   options?: RequestHandlerOptions,
 ): HttpHandler {
@@ -578,16 +593,16 @@ export function handleCreateUsersWithListInput(
   );
 }
 
+export type HandleLoginUserResponse = {
+  body: LoginUserResponses[200];
+  status?: 200;
+};
+
 /**
  * Handler for the `GET /user/login` operation.
  */
 export function handleLoginUser(
-  response?:
-    | {
-        body: LoginUserResponses[200];
-        status?: 200;
-      }
-    | HttpResponseResolver<never, never>,
+  response?: HandleLoginUserResponse | HttpResponseResolver<never, never>,
   options?: RequestHandlerOptions,
 ): HttpHandler {
   return http.get<never, never>(
@@ -612,16 +627,16 @@ export function handleLoginUser(
   );
 }
 
+export type HandleLogoutUserResponse = {
+  body: LogoutUserResponses[200];
+  status?: 200;
+};
+
 /**
  * Handler for the `GET /user/logout` operation.
  */
 export function handleLogoutUser(
-  response?:
-    | {
-        body: LogoutUserResponses[200];
-        status?: 200;
-      }
-    | HttpResponseResolver<never, never>,
+  response?: HandleLogoutUserResponse | HttpResponseResolver<never, never>,
   options?: RequestHandlerOptions,
 ): HttpHandler {
   return http.get<never, never>(
@@ -646,15 +661,17 @@ export function handleLogoutUser(
   );
 }
 
+export type HandleDeleteUserResponse = {
+  body: DeleteUserResponses[200];
+  status?: 200;
+};
+
 /**
  * Handler for the `DELETE /user/{username}` operation.
  */
 export function handleDeleteUser(
   response?:
-    | {
-        body: DeleteUserResponses[200];
-        status?: 200;
-      }
+    | HandleDeleteUserResponse
     | HttpResponseResolver<
         {
           username: string;
@@ -690,15 +707,17 @@ export function handleDeleteUser(
   );
 }
 
+export type HandleGetUserByNameResponse = {
+  body: GetUserByNameResponses[200];
+  status?: 200;
+};
+
 /**
  * Handler for the `GET /user/{username}` operation.
  */
 export function handleGetUserByName(
   response?:
-    | {
-        body: GetUserByNameResponses[200];
-        status?: 200;
-      }
+    | HandleGetUserByNameResponse
     | HttpResponseResolver<
         {
           username: string;
@@ -734,15 +753,17 @@ export function handleGetUserByName(
   );
 }
 
+export type HandleUpdateUserResponse = {
+  body: UpdateUserResponses[200];
+  status?: 200;
+};
+
 /**
  * Handler for the `PUT /user/{username}` operation.
  */
 export function handleUpdateUser(
   response?:
-    | {
-        body: UpdateUserResponses[200];
-        status?: 200;
-      }
+    | HandleUpdateUserResponse
     | HttpResponseResolver<
         {
           username: string;

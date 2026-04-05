@@ -4,10 +4,7 @@ import { $ } from '../../../ts-dsl';
 import type { MswPlugin } from '../types';
 import type { DominantResponse } from './computeDominantResponse';
 
-/**
- * Builds the response override expression for the `res` parameter.
- */
-export function createHandlerResponse({
+export function createHttpResponse({
   plugin,
   response,
   symbol,

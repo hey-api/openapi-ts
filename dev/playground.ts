@@ -36,9 +36,7 @@ const server = setupServer(
   // }),
   ...handlers.all({
     pick: {
-      // get(info) {
-      //   console.log('Received request for projectUpdate with info:', info);
-      // },
+      // ...
     },
   }),
 );
@@ -47,9 +45,6 @@ server.listen();
 async function run() {
   // const { client, server } = await createOpencode();
   // console.log(client, server);
-  client.setConfig({
-    baseUrl: 'https://api.heyapi.dev/',
-  });
   const sdk = new Sdk({ client });
   // const published = await sdk.tui.publish({
   //   body: {
@@ -62,7 +57,7 @@ async function run() {
   //   directory: 'main',
   // });
   // console.log('Published:', published.data, published.error);
-  const project = await sdk.get({
+  const project = await sdk.getFoo({
     // ...
   });
   console.log('Updated Project:', project.data, project.error);
