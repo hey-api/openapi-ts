@@ -1,9 +1,11 @@
 import type { GetPointerPriorityFn, MatchPointerToGroupFn } from '../graph';
 
 export const irTopLevelKinds = [
+  'header',
   'operation',
   'parameter',
   'requestBody',
+  'response',
   'schema',
   'server',
   'webhook',
@@ -20,9 +22,11 @@ export type IrTopLevelKind = (typeof irTopLevelKinds)[number];
  */
 export const matchIrPointerToGroup: MatchPointerToGroupFn<IrTopLevelKind> = (pointer, kind) => {
   const patterns: Record<IrTopLevelKind, RegExp> = {
+    header: /^#\/components\/headers\/[^/]+$/,
     operation: /^#\/paths\/[^/]+\/(get|put|post|delete|options|head|patch|trace)$/,
     parameter: /^#\/components\/parameters\/[^/]+$/,
     requestBody: /^#\/components\/requestBodies\/[^/]+$/,
+    response: /^#\/components\/responses\/[^/]+$/,
     schema: /^#\/components\/schemas\/[^/]+$/,
     server: /^#\/servers\/(\d+|[^/]+)$/,
     webhook: /^#\/webhooks\/[^/]+\/(get|put|post|delete|options|head|patch|trace)$/,
@@ -42,6 +46,8 @@ export const matchIrPointerToGroup: MatchPointerToGroupFn<IrTopLevelKind> = (poi
 // default grouping preference (earlier groups emitted first when safe)
 export const preferGroups = [
   'server',
+  'header',
+  'response',
   'schema',
   'parameter',
   'requestBody',

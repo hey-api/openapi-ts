@@ -16,7 +16,7 @@ import { filterSpec } from './filter';
 import { parsePathOperation } from './operation';
 import { parametersArrayToObject, parseParameter } from './parameter';
 import { parseRequestBody } from './requestBody';
-import { parseSchema } from './schema';
+import { parseHeader, parseResponse, parseSchema } from './schema';
 import { parseServers } from './server';
 import { validateOpenApiSpec } from './validate';
 
@@ -60,6 +60,38 @@ export const parseV3_0_X = (context: Context<OpenAPIV3.Document>) => {
           ? context.resolveRef<OpenAPIV3.SecuritySchemeObject>(securityOrReference.$ref)
           : securityOrReference;
       securitySchemesMap.set(name, securitySchemeObject);
+    }
+
+    for (const name in context.spec.components.headers) {
+      const $ref = `#/components/headers/${name}`;
+      const headerOrReference = context.spec.components.headers[name]!;
+      const header =
+        '$ref' in headerOrReference
+          ? context.resolveRef<OpenAPIV3.HeaderObject>(headerOrReference.$ref)
+          : headerOrReference;
+
+      if (header.schema) {
+        parseHeader({
+          $ref,
+          context,
+          schema: header.schema,
+        });
+      }
+    }
+
+    for (const name in context.spec.components.responses) {
+      const $ref = `#/components/responses/${name}`;
+      const responseOrReference = context.spec.components.responses[name]!;
+      const response =
+        '$ref' in responseOrReference
+          ? context.resolveRef<OpenAPIV3.ResponseObject>(responseOrReference.$ref)
+          : responseOrReference;
+
+      parseResponse({
+        $ref,
+        context,
+        response,
+      });
     }
 
     for (const name in context.spec.components.parameters) {

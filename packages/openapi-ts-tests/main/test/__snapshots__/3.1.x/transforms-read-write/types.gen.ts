@@ -4,6 +4,11 @@ export type ClientOptions = {
     baseUrl: `${string}://${string}` | (string & {});
 };
 
+/**
+ * OK
+ */
+export type Foo = FooWrite;
+
 export type FooReadWrite = BarRead;
 
 export type FooRead = BarRead & {
@@ -84,12 +89,12 @@ export type FooReadWriteRef2Writable = FooReadWriteWritable;
 /**
  * Query parameter
  */
-export type Foo = string;
+export type Foo2 = string;
 
 /**
  * PUT /foo-write payload
  */
-export type Foo2 = {
+export type Foo3 = {
     foo?: BarReadWritable;
 };
 
@@ -145,7 +150,7 @@ export type PutFooWriteData = {
     /**
      * PUT /foo-write payload
      */
-    body: Foo2;
+    body: Foo3;
     path?: never;
     query?: {
         /**

@@ -1,0 +1,39 @@
+openapi: 3.0.4
+info:
+  title: OpenAPI 3.0.4 components headers and responses example
+  version: 1
+paths:
+  /foo:
+    get:
+      operationId: getFoo
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Foo'
+components:
+  headers:
+    X-Rate-Limit:
+      description: The number of allowed requests in the current period
+      schema:
+        type: integer
+  responses:
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+              message:
+                type: string
+  schemas:
+    Foo:
+      type: object
+      properties:
+        rateLimit:
+          $ref: '#/components/headers/X-Rate-Limit'
