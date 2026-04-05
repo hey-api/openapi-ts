@@ -1,0 +1,107 @@
+openapi: 3.0.0
+info:
+  title: Filter Path Parameters Test
+  version: 1.0.0
+paths:
+  /pets:
+    get:
+      operationId: listPets
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pet'
+      tags:
+        - pets
+  /pets/{petId}:
+    parameters:
+      - $ref: '#/components/parameters/petId'
+    get:
+      operationId: getPet
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+      tags:
+        - pets
+    delete:
+      operationId: deletePet
+      responses:
+        '204':
+          description: No Content
+      tags:
+        - pets
+  /owners:
+    get:
+      operationId: listOwners
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Owner'
+      tags:
+        - owners
+  /owners/{ownerId}:
+    parameters:
+      - $ref: '#/components/parameters/ownerId'
+    get:
+      operationId: getOwner
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Owner'
+      tags:
+        - owners
+components:
+  parameters:
+    petId:
+      in: path
+      name: petId
+      required: true
+      schema:
+        format: uuid
+        type: string
+    ownerId:
+      in: path
+      name: ownerId
+      required: true
+      schema:
+        format: uuid
+        type: string
+  schemas:
+    Pet:
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+        name:
+          type: string
+      required:
+        - id
+        - name
+    Owner:
+      type: object
+      properties:
+        id:
+          format: uuid
+          type: string
+        name:
+          type: string
+      required:
+        - id
+        - name
