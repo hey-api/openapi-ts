@@ -8,41 +8,33 @@ import type { DominantResponse } from './computeDominantResponse';
  * Builds the response override expression for the `res` parameter.
  */
 export function createHandlerResponse({
-  dominantResponse: { kind: responseKind, statusCode: responseStatusCode },
   plugin,
-  symbolResolver,
+  response,
+  symbol,
 }: {
-  dominantResponse: DominantResponse;
   plugin: MswPlugin['Instance'];
-  symbolResolver: Symbol;
+  response: DominantResponse;
+  symbol: Symbol; // response
 }): ReturnType<typeof $.call | typeof $.new> {
   const symbolHttpResponse = plugin.external('msw.HttpResponse');
 
-  const statusOption = $.object().prop(
+  const init = $.object().prop(
     'status',
-    responseStatusCode
-      ? $(symbolResolver).attr('status').coalesce($.literal(responseStatusCode))
-      : $(symbolResolver).attr('status'),
+    $(symbol)
+      .attr('status')
+      .optional()
+      .$if(response.statusCode !== undefined, (e) => e.coalesce($.literal(response.statusCode!))),
   );
-  const resultExpr = $(symbolResolver).attr('result');
+  const body = 'body';
 
-  switch (responseKind) {
+  switch (response.kind) {
     case 'binary':
-      return $.new(symbolHttpResponse, resultExpr.coalesce($.literal(null)), statusOption);
+      return $.new(symbolHttpResponse, body, init);
     case 'json':
-      return $(symbolHttpResponse)
-        .attr('json')
-        .call(resultExpr.coalesce($.literal(null)), statusOption);
+      return $(symbolHttpResponse).attr('json').call(body, init);
     case 'text':
-      return $(symbolHttpResponse)
-        .attr('text')
-        .call(
-          $('JSON')
-            .attr('stringify')
-            .call(resultExpr.coalesce($.literal(''))),
-          statusOption,
-        );
+      return $(symbolHttpResponse).attr('text').call(body, init);
     case 'void':
-      return $.new(symbolHttpResponse, resultExpr.coalesce($.literal(null)), statusOption);
+      return $.new(symbolHttpResponse, body, init);
   }
 }

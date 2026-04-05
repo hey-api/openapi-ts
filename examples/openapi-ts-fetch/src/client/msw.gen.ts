@@ -46,9 +46,9 @@ export type RequestHandlerOptions = RequestHandlerOptions2 & {
  * Handler for the `POST /pet` operation.
  */
 export function handleAddPet(
-  resolver?:
+  response?:
     | {
-        result: AddPetResponses[200];
+        body: AddPetResponses[200];
         status?: 200;
       }
     | HttpResponseResolver<never, AddPetData['body']>,
@@ -57,11 +57,12 @@ export function handleAddPet(
   return http.post<never, AddPetData['body']>(
     `${options?.baseUrl ?? '*'}/pet`,
     (info) => {
-      if (typeof resolver === 'function') {
-        return resolver(info);
+      if (typeof response === 'function') {
+        return response(info);
       }
-      if (resolver) {
-        return HttpResponse.json(resolver.result ?? null, { status: resolver.status ?? 200 });
+      const body = response?.body;
+      if (body !== undefined) {
+        return HttpResponse.json(body, { status: response?.status ?? 200 });
       }
       if (options?.responseFallback === 'passthrough') {
         return;
@@ -79,9 +80,9 @@ export function handleAddPet(
  * Handler for the `PUT /pet` operation.
  */
 export function handleUpdatePet(
-  resolver?:
+  response?:
     | {
-        result: UpdatePetResponses[200];
+        body: UpdatePetResponses[200];
         status?: 200;
       }
     | HttpResponseResolver<never, UpdatePetData['body']>,
@@ -90,11 +91,12 @@ export function handleUpdatePet(
   return http.put<never, UpdatePetData['body']>(
     `${options?.baseUrl ?? '*'}/pet`,
     (info) => {
-      if (typeof resolver === 'function') {
-        return resolver(info);
+      if (typeof response === 'function') {
+        return response(info);
       }
-      if (resolver) {
-        return HttpResponse.json(resolver.result ?? null, { status: resolver.status ?? 200 });
+      const body = response?.body;
+      if (body !== undefined) {
+        return HttpResponse.json(body, { status: response?.status ?? 200 });
       }
       if (options?.responseFallback === 'passthrough') {
         return;
@@ -112,9 +114,9 @@ export function handleUpdatePet(
  * Handler for the `GET /pet/findByStatus` operation.
  */
 export function handleFindPetsByStatus(
-  resolver?:
+  response?:
     | {
-        result: FindPetsByStatusResponses[200];
+        body: FindPetsByStatusResponses[200];
         status?: 200;
       }
     | HttpResponseResolver<never, never>,
@@ -123,11 +125,12 @@ export function handleFindPetsByStatus(
   return http.get<never, never>(
     `${options?.baseUrl ?? '*'}/pet/findByStatus`,
     (info) => {
-      if (typeof resolver === 'function') {
-        return resolver(info);
+      if (typeof response === 'function') {
+        return response(info);
       }
-      if (resolver) {
-        return HttpResponse.json(resolver.result ?? null, { status: resolver.status ?? 200 });
+      const body = response?.body;
+      if (body !== undefined) {
+        return HttpResponse.json(body, { status: response?.status ?? 200 });
       }
       if (options?.responseFallback === 'passthrough') {
         return;
@@ -145,9 +148,9 @@ export function handleFindPetsByStatus(
  * Handler for the `GET /pet/findByTags` operation.
  */
 export function handleFindPetsByTags(
-  resolver?:
+  response?:
     | {
-        result: FindPetsByTagsResponses[200];
+        body: FindPetsByTagsResponses[200];
         status?: 200;
       }
     | HttpResponseResolver<never, never>,
@@ -156,11 +159,12 @@ export function handleFindPetsByTags(
   return http.get<never, never>(
     `${options?.baseUrl ?? '*'}/pet/findByTags`,
     (info) => {
-      if (typeof resolver === 'function') {
-        return resolver(info);
+      if (typeof response === 'function') {
+        return response(info);
       }
-      if (resolver) {
-        return HttpResponse.json(resolver.result ?? null, { status: resolver.status ?? 200 });
+      const body = response?.body;
+      if (body !== undefined) {
+        return HttpResponse.json(body, { status: response?.status ?? 200 });
       }
       if (options?.responseFallback === 'passthrough') {
         return;
@@ -178,9 +182,9 @@ export function handleFindPetsByTags(
  * Handler for the `DELETE /pet/{petId}` operation.
  */
 export function handleDeletePet(
-  resolver?:
+  response?:
     | {
-        result: DeletePetResponses[200];
+        body: DeletePetResponses[200];
         status?: 200;
       }
     | HttpResponseResolver<
@@ -199,11 +203,12 @@ export function handleDeletePet(
   >(
     `${options?.baseUrl ?? '*'}/pet/:petId`,
     (info) => {
-      if (typeof resolver === 'function') {
-        return resolver(info);
+      if (typeof response === 'function') {
+        return response(info);
       }
-      if (resolver) {
-        return new HttpResponse(resolver.result ?? null, { status: resolver.status ?? 200 });
+      const body = response?.body;
+      if (body !== undefined) {
+        return new HttpResponse(body, { status: response?.status ?? 200 });
       }
       if (options?.responseFallback === 'passthrough') {
         return;
@@ -221,9 +226,9 @@ export function handleDeletePet(
  * Handler for the `GET /pet/{petId}` operation.
  */
 export function handleGetPetById(
-  resolver?:
+  response?:
     | {
-        result: GetPetByIdResponses[200];
+        body: GetPetByIdResponses[200];
         status?: 200;
       }
     | HttpResponseResolver<
@@ -242,11 +247,12 @@ export function handleGetPetById(
   >(
     `${options?.baseUrl ?? '*'}/pet/:petId`,
     (info) => {
-      if (typeof resolver === 'function') {
-        return resolver(info);
+      if (typeof response === 'function') {
+        return response(info);
       }
-      if (resolver) {
-        return HttpResponse.json(resolver.result ?? null, { status: resolver.status ?? 200 });
+      const body = response?.body;
+      if (body !== undefined) {
+        return HttpResponse.json(body, { status: response?.status ?? 200 });
       }
       if (options?.responseFallback === 'passthrough') {
         return;
@@ -264,9 +270,9 @@ export function handleGetPetById(
  * Handler for the `POST /pet/{petId}` operation.
  */
 export function handleUpdatePetWithForm(
-  resolver?:
+  response?:
     | {
-        result: UpdatePetWithFormResponses[200];
+        body: UpdatePetWithFormResponses[200];
         status?: 200;
       }
     | HttpResponseResolver<
@@ -285,11 +291,12 @@ export function handleUpdatePetWithForm(
   >(
     `${options?.baseUrl ?? '*'}/pet/:petId`,
     (info) => {
-      if (typeof resolver === 'function') {
-        return resolver(info);
+      if (typeof response === 'function') {
+        return response(info);
       }
-      if (resolver) {
-        return HttpResponse.json(resolver.result ?? null, { status: resolver.status ?? 200 });
+      const body = response?.body;
+      if (body !== undefined) {
+        return HttpResponse.json(body, { status: response?.status ?? 200 });
       }
       if (options?.responseFallback === 'passthrough') {
         return;
@@ -307,9 +314,9 @@ export function handleUpdatePetWithForm(
  * Handler for the `POST /pet/{petId}/uploadImage` operation.
  */
 export function handleUploadFile(
-  resolver?:
+  response?:
     | {
-        result: UploadFileResponses[200];
+        body: UploadFileResponses[200];
         status?: 200;
       }
     | HttpResponseResolver<
@@ -328,11 +335,12 @@ export function handleUploadFile(
   >(
     `${options?.baseUrl ?? '*'}/pet/:petId/uploadImage`,
     (info) => {
-      if (typeof resolver === 'function') {
-        return resolver(info);
+      if (typeof response === 'function') {
+        return response(info);
       }
-      if (resolver) {
-        return HttpResponse.json(resolver.result ?? null, { status: resolver.status ?? 200 });
+      const body = response?.body;
+      if (body !== undefined) {
+        return HttpResponse.json(body, { status: response?.status ?? 200 });
       }
       if (options?.responseFallback === 'passthrough') {
         return;
@@ -350,9 +358,9 @@ export function handleUploadFile(
  * Handler for the `GET /store/inventory` operation.
  */
 export function handleGetInventory(
-  resolver?:
+  response?:
     | {
-        result: GetInventoryResponses[200];
+        body: GetInventoryResponses[200];
         status?: 200;
       }
     | HttpResponseResolver<never, never>,
@@ -361,11 +369,12 @@ export function handleGetInventory(
   return http.get<never, never>(
     `${options?.baseUrl ?? '*'}/store/inventory`,
     (info) => {
-      if (typeof resolver === 'function') {
-        return resolver(info);
+      if (typeof response === 'function') {
+        return response(info);
       }
-      if (resolver) {
-        return HttpResponse.json(resolver.result ?? null, { status: resolver.status ?? 200 });
+      const body = response?.body;
+      if (body !== undefined) {
+        return HttpResponse.json(body, { status: response?.status ?? 200 });
       }
       if (options?.responseFallback === 'passthrough') {
         return;
@@ -383,9 +392,9 @@ export function handleGetInventory(
  * Handler for the `POST /store/order` operation.
  */
 export function handlePlaceOrder(
-  resolver?:
+  response?:
     | {
-        result: PlaceOrderResponses[200];
+        body: PlaceOrderResponses[200];
         status?: 200;
       }
     | HttpResponseResolver<never, PlaceOrderData['body']>,
@@ -394,11 +403,12 @@ export function handlePlaceOrder(
   return http.post<never, PlaceOrderData['body']>(
     `${options?.baseUrl ?? '*'}/store/order`,
     (info) => {
-      if (typeof resolver === 'function') {
-        return resolver(info);
+      if (typeof response === 'function') {
+        return response(info);
       }
-      if (resolver) {
-        return HttpResponse.json(resolver.result ?? null, { status: resolver.status ?? 200 });
+      const body = response?.body;
+      if (body !== undefined) {
+        return HttpResponse.json(body, { status: response?.status ?? 200 });
       }
       if (options?.responseFallback === 'passthrough') {
         return;
@@ -416,9 +426,9 @@ export function handlePlaceOrder(
  * Handler for the `DELETE /store/order/{orderId}` operation.
  */
 export function handleDeleteOrder(
-  resolver?:
+  response?:
     | {
-        result: DeleteOrderResponses[200];
+        body: DeleteOrderResponses[200];
         status?: 200;
       }
     | HttpResponseResolver<
@@ -437,11 +447,12 @@ export function handleDeleteOrder(
   >(
     `${options?.baseUrl ?? '*'}/store/order/:orderId`,
     (info) => {
-      if (typeof resolver === 'function') {
-        return resolver(info);
+      if (typeof response === 'function') {
+        return response(info);
       }
-      if (resolver) {
-        return new HttpResponse(resolver.result ?? null, { status: resolver.status ?? 200 });
+      const body = response?.body;
+      if (body !== undefined) {
+        return new HttpResponse(body, { status: response?.status ?? 200 });
       }
       if (options?.responseFallback === 'passthrough') {
         return;
@@ -459,9 +470,9 @@ export function handleDeleteOrder(
  * Handler for the `GET /store/order/{orderId}` operation.
  */
 export function handleGetOrderById(
-  resolver?:
+  response?:
     | {
-        result: GetOrderByIdResponses[200];
+        body: GetOrderByIdResponses[200];
         status?: 200;
       }
     | HttpResponseResolver<
@@ -480,11 +491,12 @@ export function handleGetOrderById(
   >(
     `${options?.baseUrl ?? '*'}/store/order/:orderId`,
     (info) => {
-      if (typeof resolver === 'function') {
-        return resolver(info);
+      if (typeof response === 'function') {
+        return response(info);
       }
-      if (resolver) {
-        return HttpResponse.json(resolver.result ?? null, { status: resolver.status ?? 200 });
+      const body = response?.body;
+      if (body !== undefined) {
+        return HttpResponse.json(body, { status: response?.status ?? 200 });
       }
       if (options?.responseFallback === 'passthrough') {
         return;
@@ -502,9 +514,9 @@ export function handleGetOrderById(
  * Handler for the `POST /user` operation.
  */
 export function handleCreateUser(
-  resolver?:
+  response?:
     | {
-        result: CreateUserResponses[200];
+        body: CreateUserResponses[200];
         status?: 200;
       }
     | HttpResponseResolver<never, CreateUserData['body']>,
@@ -513,11 +525,12 @@ export function handleCreateUser(
   return http.post<never, CreateUserData['body']>(
     `${options?.baseUrl ?? '*'}/user`,
     (info) => {
-      if (typeof resolver === 'function') {
-        return resolver(info);
+      if (typeof response === 'function') {
+        return response(info);
       }
-      if (resolver) {
-        return HttpResponse.json(resolver.result ?? null, { status: resolver.status ?? 200 });
+      const body = response?.body;
+      if (body !== undefined) {
+        return HttpResponse.json(body, { status: response?.status ?? 200 });
       }
       if (options?.responseFallback === 'passthrough') {
         return;
@@ -535,9 +548,9 @@ export function handleCreateUser(
  * Handler for the `POST /user/createWithList` operation.
  */
 export function handleCreateUsersWithListInput(
-  resolver?:
+  response?:
     | {
-        result: CreateUsersWithListInputResponses[200];
+        body: CreateUsersWithListInputResponses[200];
         status?: 200;
       }
     | HttpResponseResolver<never, CreateUsersWithListInputData['body']>,
@@ -546,11 +559,12 @@ export function handleCreateUsersWithListInput(
   return http.post<never, CreateUsersWithListInputData['body']>(
     `${options?.baseUrl ?? '*'}/user/createWithList`,
     (info) => {
-      if (typeof resolver === 'function') {
-        return resolver(info);
+      if (typeof response === 'function') {
+        return response(info);
       }
-      if (resolver) {
-        return HttpResponse.json(resolver.result ?? null, { status: resolver.status ?? 200 });
+      const body = response?.body;
+      if (body !== undefined) {
+        return HttpResponse.json(body, { status: response?.status ?? 200 });
       }
       if (options?.responseFallback === 'passthrough') {
         return;
@@ -568,9 +582,9 @@ export function handleCreateUsersWithListInput(
  * Handler for the `GET /user/login` operation.
  */
 export function handleLoginUser(
-  resolver?:
+  response?:
     | {
-        result: LoginUserResponses[200];
+        body: LoginUserResponses[200];
         status?: 200;
       }
     | HttpResponseResolver<never, never>,
@@ -579,11 +593,12 @@ export function handleLoginUser(
   return http.get<never, never>(
     `${options?.baseUrl ?? '*'}/user/login`,
     (info) => {
-      if (typeof resolver === 'function') {
-        return resolver(info);
+      if (typeof response === 'function') {
+        return response(info);
       }
-      if (resolver) {
-        return HttpResponse.json(resolver.result ?? null, { status: resolver.status ?? 200 });
+      const body = response?.body;
+      if (body !== undefined) {
+        return HttpResponse.json(body, { status: response?.status ?? 200 });
       }
       if (options?.responseFallback === 'passthrough') {
         return;
@@ -601,9 +616,9 @@ export function handleLoginUser(
  * Handler for the `GET /user/logout` operation.
  */
 export function handleLogoutUser(
-  resolver?:
+  response?:
     | {
-        result: LogoutUserResponses[200];
+        body: LogoutUserResponses[200];
         status?: 200;
       }
     | HttpResponseResolver<never, never>,
@@ -612,11 +627,12 @@ export function handleLogoutUser(
   return http.get<never, never>(
     `${options?.baseUrl ?? '*'}/user/logout`,
     (info) => {
-      if (typeof resolver === 'function') {
-        return resolver(info);
+      if (typeof response === 'function') {
+        return response(info);
       }
-      if (resolver) {
-        return new HttpResponse(resolver.result ?? null, { status: resolver.status ?? 200 });
+      const body = response?.body;
+      if (body !== undefined) {
+        return new HttpResponse(body, { status: response?.status ?? 200 });
       }
       if (options?.responseFallback === 'passthrough') {
         return;
@@ -634,9 +650,9 @@ export function handleLogoutUser(
  * Handler for the `DELETE /user/{username}` operation.
  */
 export function handleDeleteUser(
-  resolver?:
+  response?:
     | {
-        result: DeleteUserResponses[200];
+        body: DeleteUserResponses[200];
         status?: 200;
       }
     | HttpResponseResolver<
@@ -655,11 +671,12 @@ export function handleDeleteUser(
   >(
     `${options?.baseUrl ?? '*'}/user/:username`,
     (info) => {
-      if (typeof resolver === 'function') {
-        return resolver(info);
+      if (typeof response === 'function') {
+        return response(info);
       }
-      if (resolver) {
-        return new HttpResponse(resolver.result ?? null, { status: resolver.status ?? 200 });
+      const body = response?.body;
+      if (body !== undefined) {
+        return new HttpResponse(body, { status: response?.status ?? 200 });
       }
       if (options?.responseFallback === 'passthrough') {
         return;
@@ -677,9 +694,9 @@ export function handleDeleteUser(
  * Handler for the `GET /user/{username}` operation.
  */
 export function handleGetUserByName(
-  resolver?:
+  response?:
     | {
-        result: GetUserByNameResponses[200];
+        body: GetUserByNameResponses[200];
         status?: 200;
       }
     | HttpResponseResolver<
@@ -698,11 +715,12 @@ export function handleGetUserByName(
   >(
     `${options?.baseUrl ?? '*'}/user/:username`,
     (info) => {
-      if (typeof resolver === 'function') {
-        return resolver(info);
+      if (typeof response === 'function') {
+        return response(info);
       }
-      if (resolver) {
-        return HttpResponse.json(resolver.result ?? null, { status: resolver.status ?? 200 });
+      const body = response?.body;
+      if (body !== undefined) {
+        return HttpResponse.json(body, { status: response?.status ?? 200 });
       }
       if (options?.responseFallback === 'passthrough') {
         return;
@@ -720,9 +738,9 @@ export function handleGetUserByName(
  * Handler for the `PUT /user/{username}` operation.
  */
 export function handleUpdateUser(
-  resolver?:
+  response?:
     | {
-        result: UpdateUserResponses[200];
+        body: UpdateUserResponses[200];
         status?: 200;
       }
     | HttpResponseResolver<
@@ -741,11 +759,12 @@ export function handleUpdateUser(
   >(
     `${options?.baseUrl ?? '*'}/user/:username`,
     (info) => {
-      if (typeof resolver === 'function') {
-        return resolver(info);
+      if (typeof response === 'function') {
+        return response(info);
       }
-      if (resolver) {
-        return new HttpResponse(resolver.result ?? null, { status: resolver.status ?? 200 });
+      const body = response?.body;
+      if (body !== undefined) {
+        return new HttpResponse(body, { status: response?.status ?? 200 });
       }
       if (options?.responseFallback === 'passthrough') {
         return;
@@ -840,21 +859,21 @@ export type MswHandlerFactories = {
 
 export type CreateMswHandlersResult = {
   all: (options?: {
-    one?: {
+    pick?: {
       [K in keyof MswHandlerFactories]?:
         | Parameters<MswHandlerFactories[K]>[0]
         | Parameters<MswHandlerFactories[K]>;
     };
   }) => ReadonlyArray<HttpHandler>;
-  one: MswHandlerFactories;
+  pick: MswHandlerFactories;
 };
 
 export function createMswHandlers(config: RequestHandlerOptions = {}): CreateMswHandlersResult {
-  type Handler<R> = (resolver?: R, options?: RequestHandlerOptions) => HttpHandler;
+  type Handler<R> = (response?: R, options?: RequestHandlerOptions) => HttpHandler;
   function wrap<R>(handler: Handler<R>): Handler<R> {
-    return (resolver, options) => handler(resolver, { ...config, ...options });
+    return (response, options) => handler(response, { ...config, ...options });
   }
-  const one: CreateMswHandlersResult['one'] = {
+  const pick: CreateMswHandlersResult['pick'] = {
     addPet: wrap(handleAddPet),
     createUser: wrap(handleCreateUser),
     createUsersWithListInput: wrap(handleCreateUsersWithListInput),
@@ -876,32 +895,32 @@ export function createMswHandlers(config: RequestHandlerOptions = {}): CreateMsw
     uploadFile: wrap(handleUploadFile),
   };
   const all: CreateMswHandlersResult['all'] = (options = {}) => {
-    type OverrideValue<R> = R | [resolver?: R, options?: RequestHandlerOptions];
+    type OverrideValue<R> = R | [response?: R, options?: RequestHandlerOptions];
     function invoke<R>(fn: Handler<R>, override?: OverrideValue<R>): HttpHandler {
       return Array.isArray(override) ? fn(...override) : fn(override);
     }
-    const overrides = options.one ?? {};
+    const overrides = options.pick ?? {};
     return [
-      invoke(one.deleteOrder, overrides.deleteOrder),
-      invoke(one.getOrderById, overrides.getOrderById),
-      invoke(one.uploadFile, overrides.uploadFile),
-      invoke(one.findPetsByStatus, overrides.findPetsByStatus),
-      invoke(one.findPetsByTags, overrides.findPetsByTags),
-      invoke(one.getInventory, overrides.getInventory),
-      invoke(one.placeOrder, overrides.placeOrder),
-      invoke(one.createUsersWithListInput, overrides.createUsersWithListInput),
-      invoke(one.loginUser, overrides.loginUser),
-      invoke(one.logoutUser, overrides.logoutUser),
-      invoke(one.deletePet, overrides.deletePet),
-      invoke(one.getPetById, overrides.getPetById),
-      invoke(one.updatePetWithForm, overrides.updatePetWithForm),
-      invoke(one.deleteUser, overrides.deleteUser),
-      invoke(one.getUserByName, overrides.getUserByName),
-      invoke(one.updateUser, overrides.updateUser),
-      invoke(one.addPet, overrides.addPet),
-      invoke(one.updatePet, overrides.updatePet),
-      invoke(one.createUser, overrides.createUser),
+      invoke(pick.deleteOrder, overrides.deleteOrder),
+      invoke(pick.getOrderById, overrides.getOrderById),
+      invoke(pick.uploadFile, overrides.uploadFile),
+      invoke(pick.findPetsByStatus, overrides.findPetsByStatus),
+      invoke(pick.findPetsByTags, overrides.findPetsByTags),
+      invoke(pick.getInventory, overrides.getInventory),
+      invoke(pick.placeOrder, overrides.placeOrder),
+      invoke(pick.createUsersWithListInput, overrides.createUsersWithListInput),
+      invoke(pick.loginUser, overrides.loginUser),
+      invoke(pick.logoutUser, overrides.logoutUser),
+      invoke(pick.deletePet, overrides.deletePet),
+      invoke(pick.getPetById, overrides.getPetById),
+      invoke(pick.updatePetWithForm, overrides.updatePetWithForm),
+      invoke(pick.deleteUser, overrides.deleteUser),
+      invoke(pick.getUserByName, overrides.getUserByName),
+      invoke(pick.updateUser, overrides.updateUser),
+      invoke(pick.addPet, overrides.addPet),
+      invoke(pick.updatePet, overrides.updatePet),
+      invoke(pick.createUser, overrides.createUser),
     ];
   };
-  return { all, one };
+  return { all, pick };
 }

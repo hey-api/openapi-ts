@@ -31,7 +31,7 @@ const emitToResponseUnion = (plugin: MswPlugin['Instance']) => {
             $.type
               .object()
               .prop('status', (p) => p.type('K'))
-              .prop('result', (p) => p.type($.type('T').idx($.type('K')))),
+              .prop('body', (p) => p.type($.type('T').idx($.type('K')))),
           ),
         $.type('Extract').generic($.type('keyof T')).generic($.type('number')),
       ),
@@ -39,27 +39,27 @@ const emitToResponseUnion = (plugin: MswPlugin['Instance']) => {
   plugin.node(toResponseUnionType);
 };
 
-function createHandlerFunc({
+function createHandlerNode({
   baseUrl,
   bodyType,
-  dominantResponse,
   method,
   operation,
   paramsType,
   plugin,
+  response,
   responseOrResolverType,
 }: {
   baseUrl: string | undefined;
   bodyType: ReturnType<typeof $.type.idx | typeof $.type>;
-  dominantResponse: DominantResponse;
   method: string;
   operation: IR.OperationObject;
   paramsType: ReturnType<typeof $.type | typeof $.type.object>;
   plugin: MswPlugin['Instance'];
+  response: DominantResponse;
   responseOrResolverType: ReturnType<typeof $.type | typeof $.type.or>;
 }): Symbol {
   const symbolHttp = plugin.external('msw.http');
-  const symbolResolver = plugin.symbol('resolver');
+  const symbolResponse = plugin.symbol('response');
   const symbolOptions = plugin.symbol('options');
 
   const symbol = plugin.symbol(
@@ -77,22 +77,12 @@ function createHandlerFunc({
       .prop('statusText', $.literal('Not Implemented')),
   );
 
+  const hasResponse = response.example !== undefined;
+
   const handlerFunc = $.func(symbol)
     .export()
     .$if(plugin.config.comments && getOperationComment(operation), (f, v) => f.doc(v))
-    .param(symbolResolver, (p) =>
-      p
-        .optional()
-        .type(responseOrResolverType)
-        .$if(dominantResponse.example != null && dominantResponse.statusCode != null, (pp) =>
-          pp.assign(
-            $.fromValue({
-              result: dominantResponse.example,
-              status: dominantResponse.statusCode,
-            }),
-          ),
-        ),
-    )
+    .param(symbolResponse, (p) => p.optional().type(responseOrResolverType))
     .param(symbolOptions, (p) =>
       p.optional().type(
         plugin.referenceSymbol({
@@ -116,39 +106,43 @@ function createHandlerFunc({
           $.func()
             .param('info')
             .do(
-              $.if($.typeofExpr(symbolResolver).eq($.literal('function'))).do(
-                $(symbolResolver).call('info').return(),
+              $.if($.typeofExpr(symbolResponse).eq($.literal('function'))).do(
+                $(symbolResponse).call('info').return(),
+              ),
+              $.const('body').assign(
+                $(symbolResponse)
+                  .attr('body')
+                  .optional()
+                  .$if(hasResponse, (c) => c.coalesce($.fromValue(response.example))),
+              ),
+              $.if($('body').neq($('undefined'))).do(
+                createHandlerResponse({
+                  plugin,
+                  response,
+                  symbol: symbolResponse,
+                }).return(),
               ),
             )
-            .$if(dominantResponse.statusCode != null, (f) =>
-              f.do(
-                $.if(symbolResolver).do(
-                  createHandlerResponse({
-                    dominantResponse,
-                    plugin,
-                    symbolResolver,
-                  }).return(),
-                ),
+            .$if(!hasResponse, (f) =>
+              f.$if(
+                plugin.config.responseFallback === 'error',
+                (f) =>
+                  f.do(
+                    $.if(
+                      $(symbolOptions)
+                        .attr('responseFallback')
+                        .optional()
+                        .eq($.literal('passthrough')),
+                    ).do($.return()),
+                    notImplementedResponse.return(),
+                  ),
+                (f) =>
+                  f.do(
+                    $.if(
+                      $(symbolOptions).attr('responseFallback').optional().eq($.literal('error')),
+                    ).do(notImplementedResponse.return()),
+                  ),
               ),
-            )
-            .$if(
-              plugin.config.responseFallback === 'error',
-              (f) =>
-                f.do(
-                  $.if(
-                    $(symbolOptions)
-                      .attr('responseFallback')
-                      .optional()
-                      .eq($.literal('passthrough')),
-                  ).do($.return()),
-                  notImplementedResponse.return(),
-                ),
-              (f) =>
-                f.do(
-                  $.if(
-                    $(symbolOptions).attr('responseFallback').optional().eq($.literal('error')),
-                  ).do(notImplementedResponse.return()),
-                ),
             ),
           symbolOptions,
         )
@@ -170,7 +164,7 @@ export function getHandler({
   operation: IR.OperationObject;
   plugin: MswPlugin['Instance'];
 }): Symbol {
-  const dominantResponse = computeDominantResponse({ operation, plugin });
+  const response = computeDominantResponse({ operation, plugin });
 
   const symbolResponsesType = plugin.querySymbol({
     category: 'type',
@@ -179,8 +173,8 @@ export function getHandler({
     role: 'responses',
   });
   let responsesOverrideType: ReturnType<typeof $.type> | undefined;
-  if (symbolResponsesType && dominantResponse.allCandidates.length > 1) {
-    if (!plugin.getSymbol({ category: 'type', resource: 'to-response-union' })) {
+  if (symbolResponsesType && response.allCandidates.length > 1) {
+    if (!plugin.querySymbol({ category: 'type', resource: 'to-response-union' })) {
       emitToResponseUnion(plugin);
     }
     responsesOverrideType = $.type(
@@ -230,33 +224,33 @@ export function getHandler({
 
   // When examples are disabled, strip the example from the dominant response
   if (!examples) {
-    dominantResponse.example = undefined;
+    response.example = undefined;
   }
 
   let responseOrResolverType: ReturnType<typeof $.type | typeof $.type.or>;
-  if (dominantResponse.statusCode != null && symbolResponsesType) {
-    const dominantResponseType = $.type
+  if (response.statusCode != null && symbolResponsesType) {
+    const responseType = $.type
       .object()
-      .prop('result', (p) =>
-        p.type($.type(symbolResponsesType).idx($.type.literal(dominantResponse.statusCode!))),
+      .prop('body', (p) =>
+        p.type($.type(symbolResponsesType).idx($.type.literal(response.statusCode!))),
       )
-      .prop('status', (p) => p.optional().type($.type.literal(dominantResponse.statusCode!)));
+      .prop('status', (p) => p.optional().type($.type.literal(response.statusCode!)));
     responseOrResolverType = $.type.or(
-      dominantResponseType,
+      responseType,
       responsesOverrideType ? $.type.or(responsesOverrideType, resolverType) : resolverType,
     );
   } else {
     responseOrResolverType = resolverType;
   }
 
-  return createHandlerFunc({
+  return createHandlerNode({
     baseUrl,
     bodyType,
-    dominantResponse,
     method: operation.method,
     operation,
     paramsType,
     plugin,
+    response,
     responseOrResolverType,
   });
 }

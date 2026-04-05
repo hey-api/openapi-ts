@@ -12,24 +12,18 @@ export type RequestHandlerOptions = RequestHandlerOptions2 & {
 /**
  * Handler for the `GET /foo` operation.
  */
-export function handleGetFoo(resolver?: {
-    result: GetFooResponses[200];
+export function handleGetFoo(response?: {
+    body: GetFooResponses[200];
     status?: 200;
-} | HttpResponseResolver<never, never> = { result: { name: 'Alice' }, status: 200 }, options?: RequestHandlerOptions): HttpHandler {
+} | HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
     return http.get<never, never>(`${options?.baseUrl ?? '*'}/foo`, info => {
-        if (typeof resolver === 'function') {
-            return resolver(info);
+        if (typeof response === 'function') {
+            return response(info);
         }
-        if (resolver) {
-            return HttpResponse.json(resolver.result ?? null, { status: resolver.status ?? 200 });
+        const body = response?.body ?? { name: 'Alice' };
+        if (body !== undefined) {
+            return HttpResponse.json(body, { status: response?.status ?? 200 });
         }
-        if (options?.responseFallback === 'passthrough') {
-            return;
-        }
-        return new Response('Not Implemented', {
-            status: 501,
-            statusText: 'Not Implemented'
-        });
     }, options);
 }
 
@@ -42,31 +36,31 @@ export type MswHandlerFactories = {
 
 export type CreateMswHandlersResult = {
     all: (options?: {
-        one?: {
+        pick?: {
             [K in keyof MswHandlerFactories]?: Parameters<MswHandlerFactories[K]>[0] | Parameters<MswHandlerFactories[K]>;
         };
     }) => ReadonlyArray<HttpHandler>;
-    one: MswHandlerFactories;
+    pick: MswHandlerFactories;
 };
 
 export function createMswHandlers(config: RequestHandlerOptions = {}): CreateMswHandlersResult {
-    type Handler<R> = (resolver?: R, options?: RequestHandlerOptions) => HttpHandler;
+    type Handler<R> = (response?: R, options?: RequestHandlerOptions) => HttpHandler;
     function wrap<R>(handler: Handler<R>): Handler<R> {
-        return (resolver, options) => handler(resolver, { ...config, ...options });
+        return (response, options) => handler(response, { ...config, ...options });
     }
-    const one: CreateMswHandlersResult['one'] = {
+    const pick: CreateMswHandlersResult['pick'] = {
         getFoo: wrap(handleGetFoo)
     };
     const all: CreateMswHandlersResult['all'] = (options = {}) => {
         type OverrideValue<R> = R | [
-            resolver?: R,
+            response?: R,
             options?: RequestHandlerOptions
         ];
         function invoke<R>(fn: Handler<R>, override?: OverrideValue<R>): HttpHandler {
             return Array.isArray(override) ? fn(...override) : fn(override);
         }
-        const overrides = options.one ?? {};
-        return [invoke(one.getFoo, overrides.getFoo)];
+        const overrides = options.pick ?? {};
+        return [invoke(pick.getFoo, overrides.getFoo)];
     };
-    return { all, one };
+    return { all, pick };
 }

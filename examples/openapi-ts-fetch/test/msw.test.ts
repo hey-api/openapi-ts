@@ -38,7 +38,7 @@ describe('MSW plugin runtime tests', () => {
   describe('static response value', () => {
     it('returns static response for GET without path params', async () => {
       const mockInventory = { available: 10, pending: 5 };
-      server.use(handlers.one.getInventory({ result: mockInventory, status: 200 }));
+      server.use(handlers.pick.getInventory({ body: mockInventory, status: 200 }));
 
       const result = await getInventory({ client });
 
@@ -52,7 +52,7 @@ describe('MSW plugin runtime tests', () => {
         photoUrls: ['https://example.com/fido.jpg'],
         status: 'available',
       };
-      server.use(handlers.one.getPetById({ result: mockPet, status: 200 }));
+      server.use(handlers.pick.getPetById({ body: mockPet, status: 200 }));
 
       const result = await getPetById({
         client,
@@ -67,7 +67,7 @@ describe('MSW plugin runtime tests', () => {
         { id: 1, name: 'Fido', photoUrls: [], status: 'available' },
         { id: 2, name: 'Rex', photoUrls: [], status: 'available' },
       ];
-      server.use(handlers.one.findPetsByStatus({ result: mockPets, status: 200 }));
+      server.use(handlers.pick.findPetsByStatus({ body: mockPets, status: 200 }));
 
       const result = await findPetsByStatus({
         client,
@@ -84,7 +84,7 @@ describe('MSW plugin runtime tests', () => {
         photoUrls: ['https://example.com/new.jpg'],
         status: 'pending',
       };
-      server.use(handlers.one.addPet({ result: mockPet, status: 200 }));
+      server.use(handlers.pick.addPet({ body: mockPet, status: 200 }));
 
       const result = await addPet({
         body: {
@@ -106,7 +106,7 @@ describe('MSW plugin runtime tests', () => {
         photoUrls: ['https://example.com/fido.jpg'],
         status: 'available',
       };
-      server.use(handlers.one.getPetById({ result: mockPet }));
+      server.use(handlers.pick.getPetById({ body: mockPet }));
 
       const result = await getPetById({
         client,
@@ -123,7 +123,7 @@ describe('MSW plugin runtime tests', () => {
         photoUrls: ['https://example.com/new.jpg'],
         status: 'pending',
       };
-      server.use(handlers.one.addPet({ result: mockPet }));
+      server.use(handlers.pick.addPet({ body: mockPet }));
 
       const result = await addPet({
         body: {
@@ -140,7 +140,7 @@ describe('MSW plugin runtime tests', () => {
   describe('custom resolver function', () => {
     it('supports custom resolver for GET', async () => {
       server.use(
-        handlers.one.getPetById(({ params }) =>
+        handlers.pick.getPetById(({ params }) =>
           HttpResponse.json({
             id: Number(params.petId),
             name: `Pet-${params.petId}`,
@@ -165,7 +165,7 @@ describe('MSW plugin runtime tests', () => {
 
     it('supports custom resolver with request body', async () => {
       server.use(
-        handlers.one.addPet(async ({ request }) => {
+        handlers.pick.addPet(async ({ request }) => {
           const body = await request.json();
           return HttpResponse.json({
             id: 99,
@@ -190,7 +190,9 @@ describe('MSW plugin runtime tests', () => {
 
     it('supports custom status codes', async () => {
       server.use(
-        handlers.one.getPetById(() => HttpResponse.json({ message: 'not found' }, { status: 404 })),
+        handlers.pick.getPetById(() =>
+          HttpResponse.json({ message: 'not found' }, { status: 404 }),
+        ),
       );
 
       const result = await getPetById({
@@ -210,7 +212,7 @@ describe('MSW plugin runtime tests', () => {
         name: 'PathTest',
         photoUrls: [],
       };
-      server.use(handlers.one.getPetById({ result: mockPet, status: 200 }));
+      server.use(handlers.pick.getPetById({ body: mockPet, status: 200 }));
 
       const result = await getPetById({
         client,
@@ -229,7 +231,7 @@ describe('MSW plugin runtime tests', () => {
         lastName: 'Doe',
         username: 'john_doe',
       };
-      server.use(handlers.one.getUserByName({ result: mockUser, status: 200 }));
+      server.use(handlers.pick.getUserByName({ body: mockUser, status: 200 }));
 
       const result = await getUserByName({
         client,
@@ -242,7 +244,7 @@ describe('MSW plugin runtime tests', () => {
 
     it('handles path param mid-path (e.g. /pet/{petId}/uploadImage)', async () => {
       const mockResponse = { code: 200, message: 'uploaded', type: 'ok' };
-      server.use(handlers.one.uploadFile({ result: mockResponse, status: 200 }));
+      server.use(handlers.pick.uploadFile({ body: mockResponse, status: 200 }));
 
       const result = await uploadFile({
         body: new Blob(['fake-image']),
@@ -256,7 +258,7 @@ describe('MSW plugin runtime tests', () => {
 
     it('resolver receives correct path param values', async () => {
       server.use(
-        handlers.one.getOrderById(({ params }) => {
+        handlers.pick.getOrderById(({ params }) => {
           // MSW normalizes path params to strings
           expect(typeof params.orderId).toBe('string');
           return HttpResponse.json({
@@ -280,8 +282,8 @@ describe('MSW plugin runtime tests', () => {
 
   describe('handler override', () => {
     it('later handlers override earlier ones', async () => {
-      server.use(handlers.one.getInventory({ result: { available: 1 }, status: 200 }));
-      server.use(handlers.one.getInventory({ result: { available: 999 }, status: 200 }));
+      server.use(handlers.pick.getInventory({ body: { available: 1 }, status: 200 }));
+      server.use(handlers.pick.getInventory({ body: { available: 999 }, status: 200 }));
 
       const result = await getInventory({ client });
 
@@ -291,9 +293,15 @@ describe('MSW plugin runtime tests', () => {
 
   describe('void operations', () => {
     it('handles operations with no response body', async () => {
-      server.use(handlers.one.logoutUser());
+      server.use(
+        handlers.pick.logoutUser({
+          body: null,
+        }),
+      );
 
       const result = await (await import('../src/client/sdk.gen')).logoutUser({ client });
+
+      console.log(result);
 
       expect(result.response.ok).toBe(true);
     });

@@ -12,10 +12,14 @@ export type RequestHandlerOptions = RequestHandlerOptions2 & {
 /**
  * Handler for the `GET /api/v{api-version}/no+tag` operation.
  */
-export function handleExport(resolver?: HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
+export function handleExport(response?: HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
     return http.get<never, never>(`${options?.baseUrl ?? '*'}/api/v:apiVersion/no+tag`, info => {
-        if (typeof resolver === 'function') {
-            return resolver(info);
+        if (typeof response === 'function') {
+            return response(info);
+        }
+        const body = response?.body;
+        if (body !== undefined) {
+            return new HttpResponse(body, { status: response?.status });
         }
         if (options?.responseFallback === 'passthrough') {
             return;
@@ -30,10 +34,14 @@ export function handleExport(resolver?: HttpResponseResolver<never, never>, opti
 /**
  * Handler for the `PATCH /api/v{api-version}/no+tag` operation.
  */
-export function handlePatchApiVbyApiVersionNoTag(resolver?: HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
+export function handlePatchApiVbyApiVersionNoTag(response?: HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
     return http.patch<never, never>(`${options?.baseUrl ?? '*'}/api/v:apiVersion/no+tag`, info => {
-        if (typeof resolver === 'function') {
-            return resolver(info);
+        if (typeof response === 'function') {
+            return response(info);
+        }
+        const body = response?.body;
+        if (body !== undefined) {
+            return new HttpResponse(body, { status: response?.status });
         }
         if (options?.responseFallback === 'passthrough') {
             return;
@@ -48,16 +56,17 @@ export function handlePatchApiVbyApiVersionNoTag(resolver?: HttpResponseResolver
 /**
  * Handler for the `POST /api/v{api-version}/no+tag` operation.
  */
-export function handleImport(resolver?: {
-    result: ImportResponses[200];
+export function handleImport(response?: {
+    body: ImportResponses[200];
     status?: 200;
 } | HttpResponseResolver<never, ImportData['body']>, options?: RequestHandlerOptions): HttpHandler {
     return http.post<never, ImportData['body']>(`${options?.baseUrl ?? '*'}/api/v:apiVersion/no+tag`, info => {
-        if (typeof resolver === 'function') {
-            return resolver(info);
+        if (typeof response === 'function') {
+            return response(info);
         }
-        if (resolver) {
-            return HttpResponse.json(resolver.result ?? null, { status: resolver.status ?? 200 });
+        const body = response?.body;
+        if (body !== undefined) {
+            return HttpResponse.json(body, { status: response?.status ?? 200 });
         }
         if (options?.responseFallback === 'passthrough') {
             return;
@@ -72,10 +81,14 @@ export function handleImport(resolver?: {
 /**
  * Handler for the `PUT /api/v{api-version}/no+tag` operation.
  */
-export function handleFooWow(resolver?: HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
+export function handleFooWow(response?: HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
     return http.put<never, never>(`${options?.baseUrl ?? '*'}/api/v:apiVersion/no+tag`, info => {
-        if (typeof resolver === 'function') {
-            return resolver(info);
+        if (typeof response === 'function') {
+            return response(info);
+        }
+        const body = response?.body;
+        if (body !== undefined) {
+            return new HttpResponse(body, { status: response?.status });
         }
         if (options?.responseFallback === 'passthrough') {
             return;
@@ -90,16 +103,17 @@ export function handleFooWow(resolver?: HttpResponseResolver<never, never>, opti
 /**
  * Handler for the `GET /api/v{api-version}/simple/$count` operation.
  */
-export function handleApiVVersionODataControllerCount(resolver?: {
-    result: ApiVVersionODataControllerCountResponses[200];
+export function handleApiVVersionODataControllerCount(response?: {
+    body: ApiVVersionODataControllerCountResponses[200];
     status?: 200;
 } | HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
     return http.get<never, never>(`${options?.baseUrl ?? '*'}/api/v:apiVersion/simple/$count`, info => {
-        if (typeof resolver === 'function') {
-            return resolver(info);
+        if (typeof response === 'function') {
+            return response(info);
         }
-        if (resolver) {
-            return HttpResponse.json(resolver.result ?? null, { status: resolver.status ?? 200 });
+        const body = response?.body;
+        if (body !== undefined) {
+            return HttpResponse.json(body, { status: response?.status ?? 200 });
         }
         if (options?.responseFallback === 'passthrough') {
             return;
@@ -114,8 +128,8 @@ export function handleApiVVersionODataControllerCount(resolver?: {
 /**
  * Handler for the `GET /api/v{api-version}/simple:operation` operation.
  */
-export function handleGetApiVbyApiVersionSimpleOperation(resolver?: {
-    result: GetApiVbyApiVersionSimpleOperationResponses[200];
+export function handleGetApiVbyApiVersionSimpleOperation(response?: {
+    body: GetApiVbyApiVersionSimpleOperationResponses[200];
     status?: 200;
 } | HttpResponseResolver<{
     foo_param: string;
@@ -123,11 +137,12 @@ export function handleGetApiVbyApiVersionSimpleOperation(resolver?: {
     return http.get<{
         foo_param: string;
     }, never>(`${options?.baseUrl ?? '*'}/api/v:apiVersion/simple\\:operation`, info => {
-        if (typeof resolver === 'function') {
-            return resolver(info);
+        if (typeof response === 'function') {
+            return response(info);
         }
-        if (resolver) {
-            return HttpResponse.json(resolver.result ?? null, { status: resolver.status ?? 200 });
+        const body = response?.body;
+        if (body !== undefined) {
+            return HttpResponse.json(body, { status: response?.status ?? 200 });
         }
         if (options?.responseFallback === 'passthrough') {
             return;
@@ -142,10 +157,14 @@ export function handleGetApiVbyApiVersionSimpleOperation(resolver?: {
 /**
  * Handler for the `DELETE /api/v{api-version}/simple` operation.
  */
-export function handleDeleteCallWithoutParametersAndResponse(resolver?: HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
+export function handleDeleteCallWithoutParametersAndResponse(response?: HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
     return http.delete<never, never>(`${options?.baseUrl ?? '*'}/api/v:apiVersion/simple`, info => {
-        if (typeof resolver === 'function') {
-            return resolver(info);
+        if (typeof response === 'function') {
+            return response(info);
+        }
+        const body = response?.body;
+        if (body !== undefined) {
+            return new HttpResponse(body, { status: response?.status });
         }
         if (options?.responseFallback === 'passthrough') {
             return;
@@ -160,10 +179,14 @@ export function handleDeleteCallWithoutParametersAndResponse(resolver?: HttpResp
 /**
  * Handler for the `GET /api/v{api-version}/simple` operation.
  */
-export function handleGetCallWithoutParametersAndResponse(resolver?: HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
+export function handleGetCallWithoutParametersAndResponse(response?: HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
     return http.get<never, never>(`${options?.baseUrl ?? '*'}/api/v:apiVersion/simple`, info => {
-        if (typeof resolver === 'function') {
-            return resolver(info);
+        if (typeof response === 'function') {
+            return response(info);
+        }
+        const body = response?.body;
+        if (body !== undefined) {
+            return new HttpResponse(body, { status: response?.status });
         }
         if (options?.responseFallback === 'passthrough') {
             return;
@@ -178,10 +201,14 @@ export function handleGetCallWithoutParametersAndResponse(resolver?: HttpRespons
 /**
  * Handler for the `HEAD /api/v{api-version}/simple` operation.
  */
-export function handleHeadCallWithoutParametersAndResponse(resolver?: HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
+export function handleHeadCallWithoutParametersAndResponse(response?: HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
     return http.head<never, never>(`${options?.baseUrl ?? '*'}/api/v:apiVersion/simple`, info => {
-        if (typeof resolver === 'function') {
-            return resolver(info);
+        if (typeof response === 'function') {
+            return response(info);
+        }
+        const body = response?.body;
+        if (body !== undefined) {
+            return new HttpResponse(body, { status: response?.status });
         }
         if (options?.responseFallback === 'passthrough') {
             return;
@@ -196,10 +223,14 @@ export function handleHeadCallWithoutParametersAndResponse(resolver?: HttpRespon
 /**
  * Handler for the `OPTIONS /api/v{api-version}/simple` operation.
  */
-export function handleOptionsCallWithoutParametersAndResponse(resolver?: HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
+export function handleOptionsCallWithoutParametersAndResponse(response?: HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
     return http.options<never, never>(`${options?.baseUrl ?? '*'}/api/v:apiVersion/simple`, info => {
-        if (typeof resolver === 'function') {
-            return resolver(info);
+        if (typeof response === 'function') {
+            return response(info);
+        }
+        const body = response?.body;
+        if (body !== undefined) {
+            return new HttpResponse(body, { status: response?.status });
         }
         if (options?.responseFallback === 'passthrough') {
             return;
@@ -214,10 +245,14 @@ export function handleOptionsCallWithoutParametersAndResponse(resolver?: HttpRes
 /**
  * Handler for the `PATCH /api/v{api-version}/simple` operation.
  */
-export function handlePatchCallWithoutParametersAndResponse(resolver?: HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
+export function handlePatchCallWithoutParametersAndResponse(response?: HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
     return http.patch<never, never>(`${options?.baseUrl ?? '*'}/api/v:apiVersion/simple`, info => {
-        if (typeof resolver === 'function') {
-            return resolver(info);
+        if (typeof response === 'function') {
+            return response(info);
+        }
+        const body = response?.body;
+        if (body !== undefined) {
+            return new HttpResponse(body, { status: response?.status });
         }
         if (options?.responseFallback === 'passthrough') {
             return;
@@ -232,10 +267,14 @@ export function handlePatchCallWithoutParametersAndResponse(resolver?: HttpRespo
 /**
  * Handler for the `POST /api/v{api-version}/simple` operation.
  */
-export function handlePostCallWithoutParametersAndResponse(resolver?: HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
+export function handlePostCallWithoutParametersAndResponse(response?: HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
     return http.post<never, never>(`${options?.baseUrl ?? '*'}/api/v:apiVersion/simple`, info => {
-        if (typeof resolver === 'function') {
-            return resolver(info);
+        if (typeof response === 'function') {
+            return response(info);
+        }
+        const body = response?.body;
+        if (body !== undefined) {
+            return new HttpResponse(body, { status: response?.status });
         }
         if (options?.responseFallback === 'passthrough') {
             return;
@@ -250,10 +289,14 @@ export function handlePostCallWithoutParametersAndResponse(resolver?: HttpRespon
 /**
  * Handler for the `PUT /api/v{api-version}/simple` operation.
  */
-export function handlePutCallWithoutParametersAndResponse(resolver?: HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
+export function handlePutCallWithoutParametersAndResponse(response?: HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
     return http.put<never, never>(`${options?.baseUrl ?? '*'}/api/v:apiVersion/simple`, info => {
-        if (typeof resolver === 'function') {
-            return resolver(info);
+        if (typeof response === 'function') {
+            return response(info);
+        }
+        const body = response?.body;
+        if (body !== undefined) {
+            return new HttpResponse(body, { status: response?.status });
         }
         if (options?.responseFallback === 'passthrough') {
             return;
@@ -268,7 +311,7 @@ export function handlePutCallWithoutParametersAndResponse(resolver?: HttpRespons
 /**
  * Handler for the `DELETE /api/v{api-version}/foo/{foo_param}/bar/{BarParam}` operation.
  */
-export function handleDeleteFoo(resolver?: HttpResponseResolver<{
+export function handleDeleteFoo(response?: HttpResponseResolver<{
     foo_param: string;
     BarParam: string;
 }, never>, options?: RequestHandlerOptions): HttpHandler {
@@ -276,8 +319,12 @@ export function handleDeleteFoo(resolver?: HttpResponseResolver<{
         foo_param: string;
         BarParam: string;
     }, never>(`${options?.baseUrl ?? '*'}/api/v:apiVersion/foo/:foo_param/bar/:BarParam`, info => {
-        if (typeof resolver === 'function') {
-            return resolver(info);
+        if (typeof response === 'function') {
+            return response(info);
+        }
+        const body = response?.body;
+        if (body !== undefined) {
+            return new HttpResponse(body, { status: response?.status });
         }
         if (options?.responseFallback === 'passthrough') {
             return;
@@ -292,10 +339,14 @@ export function handleDeleteFoo(resolver?: HttpResponseResolver<{
 /**
  * Handler for the `POST /api/v{api-version}/descriptions` operation.
  */
-export function handleCallWithDescriptions(resolver?: HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
+export function handleCallWithDescriptions(response?: HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
     return http.post<never, never>(`${options?.baseUrl ?? '*'}/api/v:apiVersion/descriptions`, info => {
-        if (typeof resolver === 'function') {
-            return resolver(info);
+        if (typeof response === 'function') {
+            return response(info);
+        }
+        const body = response?.body;
+        if (body !== undefined) {
+            return new HttpResponse(body, { status: response?.status });
         }
         if (options?.responseFallback === 'passthrough') {
             return;
@@ -310,10 +361,14 @@ export function handleCallWithDescriptions(resolver?: HttpResponseResolver<never
 /**
  * Handler for the `POST /api/v{api-version}/parameters/deprecated` operation.
  */
-export function handleDeprecatedCall(resolver?: HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
+export function handleDeprecatedCall(response?: HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
     return http.post<never, never>(`${options?.baseUrl ?? '*'}/api/v:apiVersion/parameters/deprecated`, info => {
-        if (typeof resolver === 'function') {
-            return resolver(info);
+        if (typeof response === 'function') {
+            return response(info);
+        }
+        const body = response?.body;
+        if (body !== undefined) {
+            return new HttpResponse(body, { status: response?.status });
         }
         if (options?.responseFallback === 'passthrough') {
             return;
@@ -328,7 +383,7 @@ export function handleDeprecatedCall(resolver?: HttpResponseResolver<never, neve
 /**
  * Handler for the `POST /api/v{api-version}/parameters/{parameterPath}` operation.
  */
-export function handleCallWithParameters(resolver?: HttpResponseResolver<{
+export function handleCallWithParameters(response?: HttpResponseResolver<{
     parameterPath: string;
     apiVersion: string;
 }, CallWithParametersData['body']>, options?: RequestHandlerOptions): HttpHandler {
@@ -336,8 +391,12 @@ export function handleCallWithParameters(resolver?: HttpResponseResolver<{
         parameterPath: string;
         apiVersion: string;
     }, CallWithParametersData['body']>(`${options?.baseUrl ?? '*'}/api/v:apiVersion/parameters/:parameterPath`, info => {
-        if (typeof resolver === 'function') {
-            return resolver(info);
+        if (typeof response === 'function') {
+            return response(info);
+        }
+        const body = response?.body;
+        if (body !== undefined) {
+            return new HttpResponse(body, { status: response?.status });
         }
         if (options?.responseFallback === 'passthrough') {
             return;
@@ -352,7 +411,7 @@ export function handleCallWithParameters(resolver?: HttpResponseResolver<{
 /**
  * Handler for the `POST /api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}` operation.
  */
-export function handleCallWithWeirdParameterNames(resolver?: HttpResponseResolver<{
+export function handleCallWithWeirdParameterNames(response?: HttpResponseResolver<{
     parameterPath1: string;
     parameterPath2: string;
     PARAMETERPATH3: string;
@@ -364,8 +423,12 @@ export function handleCallWithWeirdParameterNames(resolver?: HttpResponseResolve
         PARAMETERPATH3: string;
         apiVersion: string;
     }, CallWithWeirdParameterNamesData['body']>(`${options?.baseUrl ?? '*'}/api/v:apiVersion/parameters/:parameterPath1/:parameterPath2/:PARAMETERPATH3`, info => {
-        if (typeof resolver === 'function') {
-            return resolver(info);
+        if (typeof response === 'function') {
+            return response(info);
+        }
+        const body = response?.body;
+        if (body !== undefined) {
+            return new HttpResponse(body, { status: response?.status });
         }
         if (options?.responseFallback === 'passthrough') {
             return;
@@ -380,10 +443,14 @@ export function handleCallWithWeirdParameterNames(resolver?: HttpResponseResolve
 /**
  * Handler for the `GET /api/v{api-version}/parameters` operation.
  */
-export function handleGetCallWithOptionalParam(resolver?: HttpResponseResolver<never, GetCallWithOptionalParamData['body']>, options?: RequestHandlerOptions): HttpHandler {
+export function handleGetCallWithOptionalParam(response?: HttpResponseResolver<never, GetCallWithOptionalParamData['body']>, options?: RequestHandlerOptions): HttpHandler {
     return http.get<never, GetCallWithOptionalParamData['body']>(`${options?.baseUrl ?? '*'}/api/v:apiVersion/parameters`, info => {
-        if (typeof resolver === 'function') {
-            return resolver(info);
+        if (typeof response === 'function') {
+            return response(info);
+        }
+        const body = response?.body;
+        if (body !== undefined) {
+            return new HttpResponse(body, { status: response?.status });
         }
         if (options?.responseFallback === 'passthrough') {
             return;
@@ -398,23 +465,24 @@ export function handleGetCallWithOptionalParam(resolver?: HttpResponseResolver<n
 type ToResponseUnion<T> = {
     [K in Extract<keyof T, number>]: {
         status: K;
-        result: T[K];
+        body: T[K];
     };
 }[Extract<keyof T, number>];
 
 /**
  * Handler for the `POST /api/v{api-version}/parameters` operation.
  */
-export function handlePostCallWithOptionalParam(resolver?: {
-    result: PostCallWithOptionalParamResponses[200];
+export function handlePostCallWithOptionalParam(response?: {
+    body: PostCallWithOptionalParamResponses[200];
     status?: 200;
 } | ToResponseUnion<PostCallWithOptionalParamResponses> | HttpResponseResolver<never, PostCallWithOptionalParamData['body']>, options?: RequestHandlerOptions): HttpHandler {
     return http.post<never, PostCallWithOptionalParamData['body']>(`${options?.baseUrl ?? '*'}/api/v:apiVersion/parameters`, info => {
-        if (typeof resolver === 'function') {
-            return resolver(info);
+        if (typeof response === 'function') {
+            return response(info);
         }
-        if (resolver) {
-            return HttpResponse.json(resolver.result ?? null, { status: resolver.status ?? 200 });
+        const body = response?.body;
+        if (body !== undefined) {
+            return HttpResponse.json(body, { status: response?.status ?? 200 });
         }
         if (options?.responseFallback === 'passthrough') {
             return;
@@ -429,10 +497,14 @@ export function handlePostCallWithOptionalParam(resolver?: {
 /**
  * Handler for the `POST /api/v{api-version}/requestBody` operation.
  */
-export function handlePostApiVbyApiVersionRequestBody(resolver?: HttpResponseResolver<never, PostApiVbyApiVersionRequestBodyData['body']>, options?: RequestHandlerOptions): HttpHandler {
+export function handlePostApiVbyApiVersionRequestBody(response?: HttpResponseResolver<never, PostApiVbyApiVersionRequestBodyData['body']>, options?: RequestHandlerOptions): HttpHandler {
     return http.post<never, PostApiVbyApiVersionRequestBodyData['body']>(`${options?.baseUrl ?? '*'}/api/v:apiVersion/requestBody`, info => {
-        if (typeof resolver === 'function') {
-            return resolver(info);
+        if (typeof response === 'function') {
+            return response(info);
+        }
+        const body = response?.body;
+        if (body !== undefined) {
+            return new HttpResponse(body, { status: response?.status });
         }
         if (options?.responseFallback === 'passthrough') {
             return;
@@ -447,10 +519,14 @@ export function handlePostApiVbyApiVersionRequestBody(resolver?: HttpResponseRes
 /**
  * Handler for the `POST /api/v{api-version}/formData` operation.
  */
-export function handlePostApiVbyApiVersionFormData(resolver?: HttpResponseResolver<never, PostApiVbyApiVersionFormDataData['body']>, options?: RequestHandlerOptions): HttpHandler {
+export function handlePostApiVbyApiVersionFormData(response?: HttpResponseResolver<never, PostApiVbyApiVersionFormDataData['body']>, options?: RequestHandlerOptions): HttpHandler {
     return http.post<never, PostApiVbyApiVersionFormDataData['body']>(`${options?.baseUrl ?? '*'}/api/v:apiVersion/formData`, info => {
-        if (typeof resolver === 'function') {
-            return resolver(info);
+        if (typeof response === 'function') {
+            return response(info);
+        }
+        const body = response?.body;
+        if (body !== undefined) {
+            return new HttpResponse(body, { status: response?.status });
         }
         if (options?.responseFallback === 'passthrough') {
             return;
@@ -465,10 +541,14 @@ export function handlePostApiVbyApiVersionFormData(resolver?: HttpResponseResolv
 /**
  * Handler for the `GET /api/v{api-version}/defaults` operation.
  */
-export function handleCallWithDefaultParameters(resolver?: HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
+export function handleCallWithDefaultParameters(response?: HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
     return http.get<never, never>(`${options?.baseUrl ?? '*'}/api/v:apiVersion/defaults`, info => {
-        if (typeof resolver === 'function') {
-            return resolver(info);
+        if (typeof response === 'function') {
+            return response(info);
+        }
+        const body = response?.body;
+        if (body !== undefined) {
+            return new HttpResponse(body, { status: response?.status });
         }
         if (options?.responseFallback === 'passthrough') {
             return;
@@ -483,10 +563,14 @@ export function handleCallWithDefaultParameters(resolver?: HttpResponseResolver<
 /**
  * Handler for the `POST /api/v{api-version}/defaults` operation.
  */
-export function handleCallWithDefaultOptionalParameters(resolver?: HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
+export function handleCallWithDefaultOptionalParameters(response?: HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
     return http.post<never, never>(`${options?.baseUrl ?? '*'}/api/v:apiVersion/defaults`, info => {
-        if (typeof resolver === 'function') {
-            return resolver(info);
+        if (typeof response === 'function') {
+            return response(info);
+        }
+        const body = response?.body;
+        if (body !== undefined) {
+            return new HttpResponse(body, { status: response?.status });
         }
         if (options?.responseFallback === 'passthrough') {
             return;
@@ -501,10 +585,14 @@ export function handleCallWithDefaultOptionalParameters(resolver?: HttpResponseR
 /**
  * Handler for the `PUT /api/v{api-version}/defaults` operation.
  */
-export function handleCallToTestOrderOfParams(resolver?: HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
+export function handleCallToTestOrderOfParams(response?: HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
     return http.put<never, never>(`${options?.baseUrl ?? '*'}/api/v:apiVersion/defaults`, info => {
-        if (typeof resolver === 'function') {
-            return resolver(info);
+        if (typeof response === 'function') {
+            return response(info);
+        }
+        const body = response?.body;
+        if (body !== undefined) {
+            return new HttpResponse(body, { status: response?.status });
         }
         if (options?.responseFallback === 'passthrough') {
             return;
@@ -519,10 +607,14 @@ export function handleCallToTestOrderOfParams(resolver?: HttpResponseResolver<ne
 /**
  * Handler for the `DELETE /api/v{api-version}/duplicate` operation.
  */
-export function handleDuplicateName(resolver?: HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
+export function handleDuplicateName(response?: HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
     return http.delete<never, never>(`${options?.baseUrl ?? '*'}/api/v:apiVersion/duplicate`, info => {
-        if (typeof resolver === 'function') {
-            return resolver(info);
+        if (typeof response === 'function') {
+            return response(info);
+        }
+        const body = response?.body;
+        if (body !== undefined) {
+            return new HttpResponse(body, { status: response?.status });
         }
         if (options?.responseFallback === 'passthrough') {
             return;
@@ -537,10 +629,14 @@ export function handleDuplicateName(resolver?: HttpResponseResolver<never, never
 /**
  * Handler for the `GET /api/v{api-version}/duplicate` operation.
  */
-export function handleDuplicateName2(resolver?: HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
+export function handleDuplicateName2(response?: HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
     return http.get<never, never>(`${options?.baseUrl ?? '*'}/api/v:apiVersion/duplicate`, info => {
-        if (typeof resolver === 'function') {
-            return resolver(info);
+        if (typeof response === 'function') {
+            return response(info);
+        }
+        const body = response?.body;
+        if (body !== undefined) {
+            return new HttpResponse(body, { status: response?.status });
         }
         if (options?.responseFallback === 'passthrough') {
             return;
@@ -555,10 +651,14 @@ export function handleDuplicateName2(resolver?: HttpResponseResolver<never, neve
 /**
  * Handler for the `POST /api/v{api-version}/duplicate` operation.
  */
-export function handleDuplicateName3(resolver?: HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
+export function handleDuplicateName3(response?: HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
     return http.post<never, never>(`${options?.baseUrl ?? '*'}/api/v:apiVersion/duplicate`, info => {
-        if (typeof resolver === 'function') {
-            return resolver(info);
+        if (typeof response === 'function') {
+            return response(info);
+        }
+        const body = response?.body;
+        if (body !== undefined) {
+            return new HttpResponse(body, { status: response?.status });
         }
         if (options?.responseFallback === 'passthrough') {
             return;
@@ -573,10 +673,14 @@ export function handleDuplicateName3(resolver?: HttpResponseResolver<never, neve
 /**
  * Handler for the `PUT /api/v{api-version}/duplicate` operation.
  */
-export function handleDuplicateName4(resolver?: HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
+export function handleDuplicateName4(response?: HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
     return http.put<never, never>(`${options?.baseUrl ?? '*'}/api/v:apiVersion/duplicate`, info => {
-        if (typeof resolver === 'function') {
-            return resolver(info);
+        if (typeof response === 'function') {
+            return response(info);
+        }
+        const body = response?.body;
+        if (body !== undefined) {
+            return new HttpResponse(body, { status: response?.status });
         }
         if (options?.responseFallback === 'passthrough') {
             return;
@@ -591,16 +695,17 @@ export function handleDuplicateName4(resolver?: HttpResponseResolver<never, neve
 /**
  * Handler for the `GET /api/v{api-version}/no-content` operation.
  */
-export function handleCallWithNoContentResponse(resolver?: {
-    result: CallWithNoContentResponseResponses[204];
+export function handleCallWithNoContentResponse(response?: {
+    body: CallWithNoContentResponseResponses[204];
     status?: 204;
 } | HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
     return http.get<never, never>(`${options?.baseUrl ?? '*'}/api/v:apiVersion/no-content`, info => {
-        if (typeof resolver === 'function') {
-            return resolver(info);
+        if (typeof response === 'function') {
+            return response(info);
         }
-        if (resolver) {
-            return new HttpResponse(resolver.result ?? null, { status: resolver.status ?? 204 });
+        const body = response?.body;
+        if (body !== undefined) {
+            return new HttpResponse(body, { status: response?.status ?? 204 });
         }
         if (options?.responseFallback === 'passthrough') {
             return;
@@ -615,16 +720,17 @@ export function handleCallWithNoContentResponse(resolver?: {
 /**
  * Handler for the `GET /api/v{api-version}/multiple-tags/response-and-no-content` operation.
  */
-export function handleCallWithResponseAndNoContentResponse(resolver?: {
-    result: CallWithResponseAndNoContentResponseResponses[200];
+export function handleCallWithResponseAndNoContentResponse(response?: {
+    body: CallWithResponseAndNoContentResponseResponses[200];
     status?: 200;
 } | ToResponseUnion<CallWithResponseAndNoContentResponseResponses> | HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
     return http.get<never, never>(`${options?.baseUrl ?? '*'}/api/v:apiVersion/multiple-tags/response-and-no-content`, info => {
-        if (typeof resolver === 'function') {
-            return resolver(info);
+        if (typeof response === 'function') {
+            return response(info);
         }
-        if (resolver) {
-            return HttpResponse.json(resolver.result ?? null, { status: resolver.status ?? 200 });
+        const body = response?.body;
+        if (body !== undefined) {
+            return HttpResponse.json(body, { status: response?.status ?? 200 });
         }
         if (options?.responseFallback === 'passthrough') {
             return;
@@ -639,16 +745,17 @@ export function handleCallWithResponseAndNoContentResponse(resolver?: {
 /**
  * Handler for the `GET /api/v{api-version}/multiple-tags/a` operation.
  */
-export function handleDummyA(resolver?: {
-    result: DummyAResponses[200];
+export function handleDummyA(response?: {
+    body: DummyAResponses[200];
     status?: 200;
 } | HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
     return http.get<never, never>(`${options?.baseUrl ?? '*'}/api/v:apiVersion/multiple-tags/a`, info => {
-        if (typeof resolver === 'function') {
-            return resolver(info);
+        if (typeof response === 'function') {
+            return response(info);
         }
-        if (resolver) {
-            return HttpResponse.json(resolver.result ?? null, { status: resolver.status ?? 200 });
+        const body = response?.body;
+        if (body !== undefined) {
+            return HttpResponse.json(body, { status: response?.status ?? 200 });
         }
         if (options?.responseFallback === 'passthrough') {
             return;
@@ -663,16 +770,17 @@ export function handleDummyA(resolver?: {
 /**
  * Handler for the `GET /api/v{api-version}/multiple-tags/b` operation.
  */
-export function handleDummyB(resolver?: {
-    result: DummyBResponses[204];
+export function handleDummyB(response?: {
+    body: DummyBResponses[204];
     status?: 204;
 } | HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
     return http.get<never, never>(`${options?.baseUrl ?? '*'}/api/v:apiVersion/multiple-tags/b`, info => {
-        if (typeof resolver === 'function') {
-            return resolver(info);
+        if (typeof response === 'function') {
+            return response(info);
         }
-        if (resolver) {
-            return new HttpResponse(resolver.result ?? null, { status: resolver.status ?? 204 });
+        const body = response?.body;
+        if (body !== undefined) {
+            return new HttpResponse(body, { status: response?.status ?? 204 });
         }
         if (options?.responseFallback === 'passthrough') {
             return;
@@ -687,10 +795,14 @@ export function handleDummyB(resolver?: {
 /**
  * Handler for the `GET /api/v{api-version}/response` operation.
  */
-export function handleCallWithResponse(resolver?: HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
+export function handleCallWithResponse(response?: HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
     return http.get<never, never>(`${options?.baseUrl ?? '*'}/api/v:apiVersion/response`, info => {
-        if (typeof resolver === 'function') {
-            return resolver(info);
+        if (typeof response === 'function') {
+            return response(info);
+        }
+        const body = response?.body;
+        if (body !== undefined) {
+            return new HttpResponse(body, { status: response?.status });
         }
         if (options?.responseFallback === 'passthrough') {
             return;
@@ -705,16 +817,17 @@ export function handleCallWithResponse(resolver?: HttpResponseResolver<never, ne
 /**
  * Handler for the `POST /api/v{api-version}/response` operation.
  */
-export function handleCallWithDuplicateResponses(resolver?: {
-    result: CallWithDuplicateResponsesResponses[200];
+export function handleCallWithDuplicateResponses(response?: {
+    body: CallWithDuplicateResponsesResponses[200];
     status?: 200;
 } | ToResponseUnion<CallWithDuplicateResponsesResponses> | HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
     return http.post<never, never>(`${options?.baseUrl ?? '*'}/api/v:apiVersion/response`, info => {
-        if (typeof resolver === 'function') {
-            return resolver(info);
+        if (typeof response === 'function') {
+            return response(info);
         }
-        if (resolver) {
-            return HttpResponse.json(resolver.result ?? null, { status: resolver.status ?? 200 });
+        const body = response?.body;
+        if (body !== undefined) {
+            return HttpResponse.json(body, { status: response?.status ?? 200 });
         }
         if (options?.responseFallback === 'passthrough') {
             return;
@@ -729,16 +842,17 @@ export function handleCallWithDuplicateResponses(resolver?: {
 /**
  * Handler for the `PUT /api/v{api-version}/response` operation.
  */
-export function handleCallWithResponses(resolver?: {
-    result: CallWithResponsesResponses[200];
+export function handleCallWithResponses(response?: {
+    body: CallWithResponsesResponses[200];
     status?: 200;
 } | ToResponseUnion<CallWithResponsesResponses> | HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
     return http.put<never, never>(`${options?.baseUrl ?? '*'}/api/v:apiVersion/response`, info => {
-        if (typeof resolver === 'function') {
-            return resolver(info);
+        if (typeof response === 'function') {
+            return response(info);
         }
-        if (resolver) {
-            return HttpResponse.json(resolver.result ?? null, { status: resolver.status ?? 200 });
+        const body = response?.body;
+        if (body !== undefined) {
+            return HttpResponse.json(body, { status: response?.status ?? 200 });
         }
         if (options?.responseFallback === 'passthrough') {
             return;
@@ -753,10 +867,14 @@ export function handleCallWithResponses(resolver?: {
 /**
  * Handler for the `GET /api/v{api-version}/collectionFormat` operation.
  */
-export function handleCollectionFormat(resolver?: HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
+export function handleCollectionFormat(response?: HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
     return http.get<never, never>(`${options?.baseUrl ?? '*'}/api/v:apiVersion/collectionFormat`, info => {
-        if (typeof resolver === 'function') {
-            return resolver(info);
+        if (typeof response === 'function') {
+            return response(info);
+        }
+        const body = response?.body;
+        if (body !== undefined) {
+            return new HttpResponse(body, { status: response?.status });
         }
         if (options?.responseFallback === 'passthrough') {
             return;
@@ -771,8 +889,8 @@ export function handleCollectionFormat(resolver?: HttpResponseResolver<never, ne
 /**
  * Handler for the `GET /api/v{api-version}/types` operation.
  */
-export function handleTypes(resolver?: {
-    result: TypesResponses[200];
+export function handleTypes(response?: {
+    body: TypesResponses[200];
     status?: 200;
 } | ToResponseUnion<TypesResponses> | HttpResponseResolver<{
     id: string;
@@ -780,11 +898,12 @@ export function handleTypes(resolver?: {
     return http.get<{
         id: string;
     }, never>(`${options?.baseUrl ?? '*'}/api/v:apiVersion/types`, info => {
-        if (typeof resolver === 'function') {
-            return resolver(info);
+        if (typeof response === 'function') {
+            return response(info);
         }
-        if (resolver) {
-            return HttpResponse.json(resolver.result ?? null, { status: resolver.status ?? 200 });
+        const body = response?.body;
+        if (body !== undefined) {
+            return HttpResponse.json(body, { status: response?.status ?? 200 });
         }
         if (options?.responseFallback === 'passthrough') {
             return;
@@ -799,8 +918,8 @@ export function handleTypes(resolver?: {
 /**
  * Handler for the `POST /api/v{api-version}/upload` operation.
  */
-export function handleUploadFile(resolver?: {
-    result: UploadFileResponses[200];
+export function handleUploadFile(response?: {
+    body: UploadFileResponses[200];
     status?: 200;
 } | HttpResponseResolver<{
     apiVersion: string;
@@ -808,11 +927,12 @@ export function handleUploadFile(resolver?: {
     return http.post<{
         apiVersion: string;
     }, UploadFileData['body']>(`${options?.baseUrl ?? '*'}/api/v:apiVersion/upload`, info => {
-        if (typeof resolver === 'function') {
-            return resolver(info);
+        if (typeof response === 'function') {
+            return response(info);
         }
-        if (resolver) {
-            return HttpResponse.json(resolver.result ?? null, { status: resolver.status ?? 200 });
+        const body = response?.body;
+        if (body !== undefined) {
+            return HttpResponse.json(body, { status: response?.status ?? 200 });
         }
         if (options?.responseFallback === 'passthrough') {
             return;
@@ -827,8 +947,8 @@ export function handleUploadFile(resolver?: {
 /**
  * Handler for the `GET /api/v{api-version}/file/{id}` operation.
  */
-export function handleFileResponse(resolver?: {
-    result: FileResponseResponses[200];
+export function handleFileResponse(response?: {
+    body: FileResponseResponses[200];
     status?: 200;
 } | HttpResponseResolver<{
     id: string;
@@ -838,11 +958,12 @@ export function handleFileResponse(resolver?: {
         id: string;
         apiVersion: string;
     }, never>(`${options?.baseUrl ?? '*'}/api/v:apiVersion/file/:id`, info => {
-        if (typeof resolver === 'function') {
-            return resolver(info);
+        if (typeof response === 'function') {
+            return response(info);
         }
-        if (resolver) {
-            return new HttpResponse(resolver.result ?? null, { status: resolver.status ?? 200 });
+        const body = response?.body;
+        if (body !== undefined) {
+            return new HttpResponse(body, { status: response?.status ?? 200 });
         }
         if (options?.responseFallback === 'passthrough') {
             return;
@@ -857,16 +978,17 @@ export function handleFileResponse(resolver?: {
 /**
  * Handler for the `GET /api/v{api-version}/complex` operation.
  */
-export function handleComplexTypes(resolver?: {
-    result: ComplexTypesResponses[200];
+export function handleComplexTypes(response?: {
+    body: ComplexTypesResponses[200];
     status?: 200;
 } | HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
     return http.get<never, never>(`${options?.baseUrl ?? '*'}/api/v:apiVersion/complex`, info => {
-        if (typeof resolver === 'function') {
-            return resolver(info);
+        if (typeof response === 'function') {
+            return response(info);
         }
-        if (resolver) {
-            return HttpResponse.json(resolver.result ?? null, { status: resolver.status ?? 200 });
+        const body = response?.body;
+        if (body !== undefined) {
+            return HttpResponse.json(body, { status: response?.status ?? 200 });
         }
         if (options?.responseFallback === 'passthrough') {
             return;
@@ -881,16 +1003,17 @@ export function handleComplexTypes(resolver?: {
 /**
  * Handler for the `GET /api/v{api-version}/multipart` operation.
  */
-export function handleMultipartResponse(resolver?: {
-    result: MultipartResponseResponses[200];
+export function handleMultipartResponse(response?: {
+    body: MultipartResponseResponses[200];
     status?: 200;
 } | HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
     return http.get<never, never>(`${options?.baseUrl ?? '*'}/api/v:apiVersion/multipart`, info => {
-        if (typeof resolver === 'function') {
-            return resolver(info);
+        if (typeof response === 'function') {
+            return response(info);
         }
-        if (resolver) {
-            return HttpResponse.json(resolver.result ?? null, { status: resolver.status ?? 200 });
+        const body = response?.body;
+        if (body !== undefined) {
+            return HttpResponse.json(body, { status: response?.status ?? 200 });
         }
         if (options?.responseFallback === 'passthrough') {
             return;
@@ -905,10 +1028,14 @@ export function handleMultipartResponse(resolver?: {
 /**
  * Handler for the `POST /api/v{api-version}/multipart` operation.
  */
-export function handleMultipartRequest(resolver?: HttpResponseResolver<never, MultipartRequestData['body']>, options?: RequestHandlerOptions): HttpHandler {
+export function handleMultipartRequest(response?: HttpResponseResolver<never, MultipartRequestData['body']>, options?: RequestHandlerOptions): HttpHandler {
     return http.post<never, MultipartRequestData['body']>(`${options?.baseUrl ?? '*'}/api/v:apiVersion/multipart`, info => {
-        if (typeof resolver === 'function') {
-            return resolver(info);
+        if (typeof response === 'function') {
+            return response(info);
+        }
+        const body = response?.body;
+        if (body !== undefined) {
+            return new HttpResponse(body, { status: response?.status });
         }
         if (options?.responseFallback === 'passthrough') {
             return;
@@ -923,8 +1050,8 @@ export function handleMultipartRequest(resolver?: HttpResponseResolver<never, Mu
 /**
  * Handler for the `PUT /api/v{api-version}/complex/{id}` operation.
  */
-export function handleComplexParams(resolver?: {
-    result: ComplexParamsResponses[200];
+export function handleComplexParams(response?: {
+    body: ComplexParamsResponses[200];
     status?: 200;
 } | HttpResponseResolver<{
     id: string;
@@ -934,11 +1061,12 @@ export function handleComplexParams(resolver?: {
         id: string;
         apiVersion: string;
     }, ComplexParamsData['body']>(`${options?.baseUrl ?? '*'}/api/v:apiVersion/complex/:id`, info => {
-        if (typeof resolver === 'function') {
-            return resolver(info);
+        if (typeof response === 'function') {
+            return response(info);
         }
-        if (resolver) {
-            return HttpResponse.json(resolver.result ?? null, { status: resolver.status ?? 200 });
+        const body = response?.body;
+        if (body !== undefined) {
+            return HttpResponse.json(body, { status: response?.status ?? 200 });
         }
         if (options?.responseFallback === 'passthrough') {
             return;
@@ -953,16 +1081,17 @@ export function handleComplexParams(resolver?: {
 /**
  * Handler for the `POST /api/v{api-version}/header` operation.
  */
-export function handleCallWithResultFromHeader(resolver?: {
-    result: CallWithResultFromHeaderResponses[200];
+export function handleCallWithResultFromHeader(response?: {
+    body: CallWithResultFromHeaderResponses[200];
     status?: 200;
 } | HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
     return http.post<never, never>(`${options?.baseUrl ?? '*'}/api/v:apiVersion/header`, info => {
-        if (typeof resolver === 'function') {
-            return resolver(info);
+        if (typeof response === 'function') {
+            return response(info);
         }
-        if (resolver) {
-            return new HttpResponse(resolver.result ?? null, { status: resolver.status ?? 200 });
+        const body = response?.body;
+        if (body !== undefined) {
+            return new HttpResponse(body, { status: response?.status ?? 200 });
         }
         if (options?.responseFallback === 'passthrough') {
             return;
@@ -977,16 +1106,17 @@ export function handleCallWithResultFromHeader(resolver?: {
 /**
  * Handler for the `POST /api/v{api-version}/error` operation.
  */
-export function handleTestErrorCode(resolver?: {
-    result: TestErrorCodeResponses[200];
+export function handleTestErrorCode(response?: {
+    body: TestErrorCodeResponses[200];
     status?: 200;
 } | HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
     return http.post<never, never>(`${options?.baseUrl ?? '*'}/api/v:apiVersion/error`, info => {
-        if (typeof resolver === 'function') {
-            return resolver(info);
+        if (typeof response === 'function') {
+            return response(info);
         }
-        if (resolver) {
-            return new HttpResponse(resolver.result ?? null, { status: resolver.status ?? 200 });
+        const body = response?.body;
+        if (body !== undefined) {
+            return new HttpResponse(body, { status: response?.status ?? 200 });
         }
         if (options?.responseFallback === 'passthrough') {
             return;
@@ -1001,16 +1131,17 @@ export function handleTestErrorCode(resolver?: {
 /**
  * Handler for the `POST /api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串` operation.
  */
-export function handleNonAsciiæøåÆøÅöôêÊ字符串(resolver?: {
-    result: NonAsciiæøåÆøÅöôêÊ字符串Responses[200];
+export function handleNonAsciiæøåÆøÅöôêÊ字符串(response?: {
+    body: NonAsciiæøåÆøÅöôêÊ字符串Responses[200];
     status?: 200;
 } | HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
     return http.post<never, never>(`${options?.baseUrl ?? '*'}/api/v:apiVersion/non-ascii-æøåÆØÅöôêÊ字符串`, info => {
-        if (typeof resolver === 'function') {
-            return resolver(info);
+        if (typeof response === 'function') {
+            return response(info);
         }
-        if (resolver) {
-            return HttpResponse.json(resolver.result ?? null, { status: resolver.status ?? 200 });
+        const body = response?.body;
+        if (body !== undefined) {
+            return HttpResponse.json(body, { status: response?.status ?? 200 });
         }
         if (options?.responseFallback === 'passthrough') {
             return;
@@ -1025,10 +1156,14 @@ export function handleNonAsciiæøåÆøÅöôêÊ字符串(resolver?: {
 /**
  * Handler for the `PUT /api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串` operation.
  */
-export function handlePutWithFormUrlEncoded(resolver?: HttpResponseResolver<never, PutWithFormUrlEncodedData['body']>, options?: RequestHandlerOptions): HttpHandler {
+export function handlePutWithFormUrlEncoded(response?: HttpResponseResolver<never, PutWithFormUrlEncodedData['body']>, options?: RequestHandlerOptions): HttpHandler {
     return http.put<never, PutWithFormUrlEncodedData['body']>(`${options?.baseUrl ?? '*'}/api/v:apiVersion/non-ascii-æøåÆØÅöôêÊ字符串`, info => {
-        if (typeof resolver === 'function') {
-            return resolver(info);
+        if (typeof response === 'function') {
+            return response(info);
+        }
+        const body = response?.body;
+        if (body !== undefined) {
+            return new HttpResponse(body, { status: response?.status });
         }
         if (options?.responseFallback === 'passthrough') {
             return;
@@ -1237,19 +1372,19 @@ export type MswHandlerFactories = {
 
 export type CreateMswHandlersResult = {
     all: (options?: {
-        one?: {
+        pick?: {
             [K in keyof MswHandlerFactories]?: Parameters<MswHandlerFactories[K]>[0] | Parameters<MswHandlerFactories[K]>;
         };
     }) => ReadonlyArray<HttpHandler>;
-    one: MswHandlerFactories;
+    pick: MswHandlerFactories;
 };
 
 export function createMswHandlers(config: RequestHandlerOptions = {}): CreateMswHandlersResult {
-    type Handler<R> = (resolver?: R, options?: RequestHandlerOptions) => HttpHandler;
+    type Handler<R> = (response?: R, options?: RequestHandlerOptions) => HttpHandler;
     function wrap<R>(handler: Handler<R>): Handler<R> {
-        return (resolver, options) => handler(resolver, { ...config, ...options });
+        return (response, options) => handler(response, { ...config, ...options });
     }
-    const one: CreateMswHandlersResult['one'] = {
+    const pick: CreateMswHandlersResult['pick'] = {
         export: wrap(handleExport),
         patchApiVbyApiVersionNoTag: wrap(handlePatchApiVbyApiVersionNoTag),
         import: wrap(handleImport),
@@ -1301,63 +1436,63 @@ export function createMswHandlers(config: RequestHandlerOptions = {}): CreateMsw
     };
     const all: CreateMswHandlersResult['all'] = (options = {}) => {
         type OverrideValue<R> = R | [
-            resolver?: R,
+            response?: R,
             options?: RequestHandlerOptions
         ];
         function invoke<R>(fn: Handler<R>, override?: OverrideValue<R>): HttpHandler {
             return Array.isArray(override) ? fn(...override) : fn(override);
         }
-        const overrides = options.one ?? {};
+        const overrides = options.pick ?? {};
         return [
-            invoke(one.deleteFoo, overrides.deleteFoo),
-            invoke(one.callWithWeirdParameterNames, overrides.callWithWeirdParameterNames),
-            invoke(one.apiVVersionODataControllerCount, overrides.apiVVersionODataControllerCount),
-            invoke(one.deprecatedCall, overrides.deprecatedCall),
-            invoke(one.callWithResponseAndNoContentResponse, overrides.callWithResponseAndNoContentResponse),
-            invoke(one.dummyA, overrides.dummyA),
-            invoke(one.dummyB, overrides.dummyB),
-            invoke(one.callWithParameters, overrides.callWithParameters),
-            invoke(one.fileResponse, overrides.fileResponse),
-            invoke(one.complexParams, overrides.complexParams),
-            invoke(one.export, overrides.export),
-            invoke(one.patchApiVbyApiVersionNoTag, overrides.patchApiVbyApiVersionNoTag),
-            invoke(one.import, overrides.import),
-            invoke(one.fooWow, overrides.fooWow),
-            invoke(one.getApiVbyApiVersionSimpleOperation, overrides.getApiVbyApiVersionSimpleOperation),
-            invoke(one.deleteCallWithoutParametersAndResponse, overrides.deleteCallWithoutParametersAndResponse),
-            invoke(one.getCallWithoutParametersAndResponse, overrides.getCallWithoutParametersAndResponse),
-            invoke(one.headCallWithoutParametersAndResponse, overrides.headCallWithoutParametersAndResponse),
-            invoke(one.optionsCallWithoutParametersAndResponse, overrides.optionsCallWithoutParametersAndResponse),
-            invoke(one.patchCallWithoutParametersAndResponse, overrides.patchCallWithoutParametersAndResponse),
-            invoke(one.postCallWithoutParametersAndResponse, overrides.postCallWithoutParametersAndResponse),
-            invoke(one.putCallWithoutParametersAndResponse, overrides.putCallWithoutParametersAndResponse),
-            invoke(one.callWithDescriptions, overrides.callWithDescriptions),
-            invoke(one.getCallWithOptionalParam, overrides.getCallWithOptionalParam),
-            invoke(one.postCallWithOptionalParam, overrides.postCallWithOptionalParam),
-            invoke(one.postApiVbyApiVersionRequestBody, overrides.postApiVbyApiVersionRequestBody),
-            invoke(one.postApiVbyApiVersionFormData, overrides.postApiVbyApiVersionFormData),
-            invoke(one.callWithDefaultParameters, overrides.callWithDefaultParameters),
-            invoke(one.callWithDefaultOptionalParameters, overrides.callWithDefaultOptionalParameters),
-            invoke(one.callToTestOrderOfParams, overrides.callToTestOrderOfParams),
-            invoke(one.duplicateName, overrides.duplicateName),
-            invoke(one.duplicateName2, overrides.duplicateName2),
-            invoke(one.duplicateName3, overrides.duplicateName3),
-            invoke(one.duplicateName4, overrides.duplicateName4),
-            invoke(one.callWithNoContentResponse, overrides.callWithNoContentResponse),
-            invoke(one.callWithResponse, overrides.callWithResponse),
-            invoke(one.callWithDuplicateResponses, overrides.callWithDuplicateResponses),
-            invoke(one.callWithResponses, overrides.callWithResponses),
-            invoke(one.collectionFormat, overrides.collectionFormat),
-            invoke(one.types, overrides.types),
-            invoke(one.uploadFile, overrides.uploadFile),
-            invoke(one.complexTypes, overrides.complexTypes),
-            invoke(one.multipartResponse, overrides.multipartResponse),
-            invoke(one.multipartRequest, overrides.multipartRequest),
-            invoke(one.callWithResultFromHeader, overrides.callWithResultFromHeader),
-            invoke(one.testErrorCode, overrides.testErrorCode),
-            invoke(one.nonAsciiæøåÆøÅöôêÊ字符串, overrides.nonAsciiæøåÆøÅöôêÊ字符串),
-            invoke(one.putWithFormUrlEncoded, overrides.putWithFormUrlEncoded)
+            invoke(pick.deleteFoo, overrides.deleteFoo),
+            invoke(pick.callWithWeirdParameterNames, overrides.callWithWeirdParameterNames),
+            invoke(pick.apiVVersionODataControllerCount, overrides.apiVVersionODataControllerCount),
+            invoke(pick.deprecatedCall, overrides.deprecatedCall),
+            invoke(pick.callWithResponseAndNoContentResponse, overrides.callWithResponseAndNoContentResponse),
+            invoke(pick.dummyA, overrides.dummyA),
+            invoke(pick.dummyB, overrides.dummyB),
+            invoke(pick.callWithParameters, overrides.callWithParameters),
+            invoke(pick.fileResponse, overrides.fileResponse),
+            invoke(pick.complexParams, overrides.complexParams),
+            invoke(pick.export, overrides.export),
+            invoke(pick.patchApiVbyApiVersionNoTag, overrides.patchApiVbyApiVersionNoTag),
+            invoke(pick.import, overrides.import),
+            invoke(pick.fooWow, overrides.fooWow),
+            invoke(pick.getApiVbyApiVersionSimpleOperation, overrides.getApiVbyApiVersionSimpleOperation),
+            invoke(pick.deleteCallWithoutParametersAndResponse, overrides.deleteCallWithoutParametersAndResponse),
+            invoke(pick.getCallWithoutParametersAndResponse, overrides.getCallWithoutParametersAndResponse),
+            invoke(pick.headCallWithoutParametersAndResponse, overrides.headCallWithoutParametersAndResponse),
+            invoke(pick.optionsCallWithoutParametersAndResponse, overrides.optionsCallWithoutParametersAndResponse),
+            invoke(pick.patchCallWithoutParametersAndResponse, overrides.patchCallWithoutParametersAndResponse),
+            invoke(pick.postCallWithoutParametersAndResponse, overrides.postCallWithoutParametersAndResponse),
+            invoke(pick.putCallWithoutParametersAndResponse, overrides.putCallWithoutParametersAndResponse),
+            invoke(pick.callWithDescriptions, overrides.callWithDescriptions),
+            invoke(pick.getCallWithOptionalParam, overrides.getCallWithOptionalParam),
+            invoke(pick.postCallWithOptionalParam, overrides.postCallWithOptionalParam),
+            invoke(pick.postApiVbyApiVersionRequestBody, overrides.postApiVbyApiVersionRequestBody),
+            invoke(pick.postApiVbyApiVersionFormData, overrides.postApiVbyApiVersionFormData),
+            invoke(pick.callWithDefaultParameters, overrides.callWithDefaultParameters),
+            invoke(pick.callWithDefaultOptionalParameters, overrides.callWithDefaultOptionalParameters),
+            invoke(pick.callToTestOrderOfParams, overrides.callToTestOrderOfParams),
+            invoke(pick.duplicateName, overrides.duplicateName),
+            invoke(pick.duplicateName2, overrides.duplicateName2),
+            invoke(pick.duplicateName3, overrides.duplicateName3),
+            invoke(pick.duplicateName4, overrides.duplicateName4),
+            invoke(pick.callWithNoContentResponse, overrides.callWithNoContentResponse),
+            invoke(pick.callWithResponse, overrides.callWithResponse),
+            invoke(pick.callWithDuplicateResponses, overrides.callWithDuplicateResponses),
+            invoke(pick.callWithResponses, overrides.callWithResponses),
+            invoke(pick.collectionFormat, overrides.collectionFormat),
+            invoke(pick.types, overrides.types),
+            invoke(pick.uploadFile, overrides.uploadFile),
+            invoke(pick.complexTypes, overrides.complexTypes),
+            invoke(pick.multipartResponse, overrides.multipartResponse),
+            invoke(pick.multipartRequest, overrides.multipartRequest),
+            invoke(pick.callWithResultFromHeader, overrides.callWithResultFromHeader),
+            invoke(pick.testErrorCode, overrides.testErrorCode),
+            invoke(pick.nonAsciiæøåÆøÅöôêÊ字符串, overrides.nonAsciiæøåÆøÅöôêÊ字符串),
+            invoke(pick.putWithFormUrlEncoded, overrides.putWithFormUrlEncoded)
         ];
     };
-    return { all, one };
+    return { all, pick };
 }
