@@ -53,6 +53,14 @@ export default tseslint.config(
     },
   },
   {
+    files: ['**/*.gen.ts'],
+    rules: {
+      'sort-keys-fix/sort-keys-fix': 'off',
+      'typescript-sort-keys/interface': 'off',
+      'typescript-sort-keys/string-enum': 'off',
+    },
+  },
+  {
     ignores: [
       '**/.tsdown/',
       '**/dist/',
@@ -60,8 +68,6 @@ export default tseslint.config(
       'temp/',
       'dev/gen/',
       'dev/playground.ts',
-      'examples/openapi-ts-nestjs/src/client/**/*.ts',
-      'examples/openapi-ts-openai/src/client/**/*.ts',
       '**/test/generated/',
       '**/__snapshots__/',
       '**/.next/',
