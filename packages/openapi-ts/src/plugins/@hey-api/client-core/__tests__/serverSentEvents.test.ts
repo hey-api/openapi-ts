@@ -1,6 +1,6 @@
 import { createSseClient } from '../bundle/serverSentEvents';
 
-function makeStream(chunks: string[]) {
+function makeStream(chunks: ReadonlyArray<string>) {
   let index = 0;
   return new ReadableStream({
     pull(controller) {
@@ -47,7 +47,7 @@ describe('createSseClient', () => {
       url: 'http://localhost/sse',
     });
 
-    const result: any[] = [];
+    const result: Array<any> = [];
     for await (const ev of stream) result.push(ev);
 
     expect(result).toEqual([{ foo: 'bar' }]);
@@ -66,7 +66,7 @@ describe('createSseClient', () => {
     });
 
     const { stream } = createSseClient({ url: 'http://localhost/sse' });
-    const result: any[] = [];
+    const result: Array<any> = [];
     for await (const ev of stream) result.push(ev);
 
     expect(result).toEqual(['hello']);
@@ -131,7 +131,7 @@ describe('createSseClient', () => {
     });
 
     const { stream } = createSseClient({ url: 'http://localhost/sse' });
-    const result: any[] = [];
+    const result: Array<any> = [];
     for await (const ev of stream) result.push(ev);
     expect(result).toEqual([1, 2, 3]);
   });
@@ -143,7 +143,7 @@ describe('createSseClient', () => {
     });
 
     const { stream } = createSseClient({ url: 'http://localhost/sse' });
-    const result: any[] = [];
+    const result: Array<any> = [];
     for await (const ev of stream) result.push(ev);
     expect(result).toEqual(['partial']);
   });
@@ -204,7 +204,7 @@ describe('createSseClient', () => {
     });
 
     const { stream } = createSseClient({ url: 'http://localhost/sse' });
-    const result: any[] = [];
+    const result: Array<any> = [];
     for await (const ev of stream) result.push(ev);
     expect(result).toEqual([{ foo: 1 }, 'bar', { baz: 2 }]);
   });
@@ -239,7 +239,7 @@ describe('createSseClient', () => {
     });
 
     const { stream } = createSseClient({ url: 'http://localhost/sse' });
-    const result: any[] = [];
+    const result: Array<any> = [];
     for await (const ev of stream) result.push(ev);
     expect(result).toEqual([{ foo: 'bar' }]);
   });
@@ -270,7 +270,7 @@ describe('createSseClient', () => {
       url: 'http://localhost/sse',
     });
 
-    const result: any[] = [];
+    const result: Array<any> = [];
     for await (const ev of stream) result.push(ev);
 
     expect(onError).toHaveBeenCalled();
@@ -535,7 +535,7 @@ describe('createSseClient', () => {
       url: 'http://localhost/sse',
     });
 
-    const result: any[] = [];
+    const result: Array<any> = [];
     for await (const ev of stream) result.push(ev);
 
     expect(result).toEqual([{ foo: 'bar' }]);
@@ -557,7 +557,7 @@ describe('createSseClient', () => {
       url: 'http://localhost/sse',
     });
 
-    const result: any[] = [];
+    const result: Array<any> = [];
     for await (const ev of stream) result.push(ev);
 
     expect(result).toEqual([{ doubled: 4 }]);
@@ -608,7 +608,7 @@ describe('createSseClient', () => {
       url: 'http://localhost/sse',
     });
 
-    const result: any[] = [];
+    const result: Array<any> = [];
     for await (const ev of stream) result.push(ev);
 
     expect(result).toEqual(['rawstring']);
@@ -628,7 +628,7 @@ describe('createSseClient', () => {
       url: 'http://localhost/sse',
     });
 
-    const result: any[] = [];
+    const result: Array<any> = [];
     for await (const ev of stream) result.push(ev);
 
     expect(result).toEqual([{ foo: 'bar' }]);
@@ -652,7 +652,7 @@ describe('createSseClient', () => {
       url: 'http://localhost/sse',
     });
 
-    const result: any[] = [];
+    const result: Array<any> = [];
     for await (const ev of stream) result.push(ev);
 
     expect(result).toEqual([{ baz: 'qux' }]);
@@ -671,7 +671,7 @@ describe('createSseClient', () => {
     });
 
     const { stream } = createSseClient({ url: 'http://localhost/sse' });
-    const result: any[] = [];
+    const result: Array<any> = [];
     for await (const ev of stream) result.push(ev);
     expect(result).toEqual([1, 2, 3]);
   });
