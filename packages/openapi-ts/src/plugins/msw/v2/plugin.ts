@@ -125,7 +125,7 @@ export const handlerV2: MswPlugin['Handler'] = ({ plugin }) => {
         .type(
           $.type
             .func()
-            .param('resolver', (p) => p.optional().type('R'))
+            .param('response', (p) => p.optional().type('R'))
             .param('options', (p) => p.optional().type(symbolRequestHandlerOptions))
             .returns(symbolHttpHandler),
         ),
@@ -136,11 +136,11 @@ export const handlerV2: MswPlugin['Handler'] = ({ plugin }) => {
         .do(
           $.return(
             $.func()
-              .param('resolver')
+              .param('response')
               .param('options')
               .do(
                 $.return(
-                  $('handler').call('resolver', $.object().spread('config').spread('options')),
+                  $('handler').call('response', $.object().spread('config').spread('options')),
                 ),
               ),
           ),
@@ -161,7 +161,7 @@ export const handlerV2: MswPlugin['Handler'] = ({ plugin }) => {
                   $.type.or(
                     $.type('R'),
                     $.type.tuple(
-                      $.type.tupleMember('resolver').optional().type('R'),
+                      $.type.tupleMember('response').optional().type('R'),
                       $.type.tupleMember('options').optional().type(symbolRequestHandlerOptions),
                     ),
                   ),

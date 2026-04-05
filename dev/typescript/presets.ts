@@ -38,7 +38,7 @@ export const presets = {
     {
       name: '@hey-api/sdk',
       operations: {
-        containerName: 'OpenCode',
+        containerName: 'Sdk',
         strategy: 'single',
       },
       paramsStructure: 'flat',

@@ -5,6 +5,7 @@ const specsPath = path.join(__dirname, '..', 'specs');
 export const inputs = {
   circular: path.resolve(specsPath, '3.0.x', 'circular.yaml'),
   full: path.resolve(specsPath, '3.1.x', 'full.yaml'),
+  heyapi: 'hey-api/backend',
   local: 'http://localhost:8000/openapi.json',
   opencode: path.resolve(specsPath, '3.1.x', 'opencode.yaml'),
   petstore:
