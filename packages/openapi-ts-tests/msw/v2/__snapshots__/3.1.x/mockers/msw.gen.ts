@@ -2,10 +2,10 @@
 
 import { http, type HttpHandler, HttpResponse, type HttpResponseResolver, type RequestHandlerOptions as RequestHandlerOptions2 } from 'msw';
 
-import type { GetFooResponses } from './types.gen';
+import type { ClientOptions, GetFooResponses, PostFooData, PostFooResponses, PutFooResponses } from './types.gen';
 
 export type RequestHandlerOptions = RequestHandlerOptions2 & {
-    baseUrl?: string;
+    baseUrl?: ClientOptions['baseUrl'];
     responseFallback?: 'error' | 'passthrough';
 };
 
@@ -17,6 +17,53 @@ export function handleGetFoo(response?: {
     status?: 200;
 } | HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
     return http.get<never, never>(`${options?.baseUrl ?? '*'}/foo`, info => {
+        if (typeof response === 'function') {
+            return response(info);
+        }
+        const body = response?.body ?? {
+            firstName: 'Marry',
+            lastName: 'Jane',
+            age: 30
+        };
+        if (body !== undefined) {
+            return HttpResponse.json(body, { status: response?.status ?? 200 });
+        }
+    }, options);
+}
+
+type ToResponseUnion<T> = {
+    [K in Extract<keyof T, number>]: {
+        status: K;
+        body: T[K];
+    };
+}[Extract<keyof T, number>];
+
+/**
+ * Handler for the `POST /foo` operation.
+ */
+export function handlePostFoo(response?: {
+    body: PostFooResponses[200];
+    status?: 200;
+} | ToResponseUnion<PostFooResponses> | HttpResponseResolver<never, PostFooData['body']>, options?: RequestHandlerOptions): HttpHandler {
+    return http.post<never, PostFooData['body']>(`${options?.baseUrl ?? '*'}/foo`, info => {
+        if (typeof response === 'function') {
+            return response(info);
+        }
+        const body = response?.body ?? { fullName: 'John Doe', age: 34 };
+        if (body !== undefined) {
+            return HttpResponse.json(body, { status: response?.status ?? 200 });
+        }
+    }, options);
+}
+
+/**
+ * Handler for the `PUT /foo` operation.
+ */
+export function handlePutFoo(response?: {
+    body: PutFooResponses[200];
+    status?: 200;
+} | HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
+    return http.put<never, never>(`${options?.baseUrl ?? '*'}/foo`, info => {
         if (typeof response === 'function') {
             return response(info);
         }
@@ -32,6 +79,14 @@ export type MswHandlerFactories = {
      * Handler for the `GET /foo` operation.
      */
     getFoo: typeof handleGetFoo;
+    /**
+     * Handler for the `POST /foo` operation.
+     */
+    postFoo: typeof handlePostFoo;
+    /**
+     * Handler for the `PUT /foo` operation.
+     */
+    putFoo: typeof handlePutFoo;
 };
 
 export type CreateMswHandlersResult = {
@@ -49,7 +104,9 @@ export function createMswHandlers(config: RequestHandlerOptions = {}): CreateMsw
         return (response, options) => handler(response, { ...config, ...options });
     }
     const pick: CreateMswHandlersResult['pick'] = {
-        getFoo: wrap(handleGetFoo)
+        getFoo: wrap(handleGetFoo),
+        postFoo: wrap(handlePostFoo),
+        putFoo: wrap(handlePutFoo)
     };
     const all: CreateMswHandlersResult['all'] = (options = {}) => {
         type OverrideValue<R> = R | [
@@ -60,7 +117,11 @@ export function createMswHandlers(config: RequestHandlerOptions = {}): CreateMsw
             return Array.isArray(override) ? fn(...override) : fn(override);
         }
         const overrides = options.pick ?? {};
-        return [invoke(pick.getFoo, overrides.getFoo)];
+        return [
+            invoke(pick.getFoo, overrides.getFoo),
+            invoke(pick.postFoo, overrides.postFoo),
+            invoke(pick.putFoo, overrides.putFoo)
+        ];
     };
     return { all, pick };
 }

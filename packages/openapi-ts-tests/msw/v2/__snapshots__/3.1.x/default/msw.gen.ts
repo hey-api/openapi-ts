@@ -2,10 +2,10 @@
 
 import { http, type HttpHandler, HttpResponse, type HttpResponseResolver, type RequestHandlerOptions as RequestHandlerOptions2 } from 'msw';
 
-import type { ApiVVersionODataControllerCountResponses, CallWithDuplicateResponsesResponses, CallWithNoContentResponseResponses, CallWithParametersData, CallWithResponseAndNoContentResponseResponses, CallWithResponsesResponses, CallWithResultFromHeaderResponses, CallWithWeirdParameterNamesData, ComplexParamsData, ComplexParamsResponses, ComplexTypesResponses, DummyAResponses, DummyBResponses, FileResponseResponses, GetApiVbyApiVersionSimpleOperationResponses, GetCallWithOptionalParamData, ImportData, ImportResponses, MultipartRequestData, MultipartResponseResponses, NonAsciiæøåÆøÅöôêÊ字符串Responses, PostApiVbyApiVersionFormDataData, PostApiVbyApiVersionRequestBodyData, PostCallWithOptionalParamData, PostCallWithOptionalParamResponses, PutWithFormUrlEncodedData, TestErrorCodeResponses, TypesResponses, UploadFileData, UploadFileResponses } from './types.gen';
+import type { ApiVVersionODataControllerCountResponses, CallWithDuplicateResponsesResponses, CallWithNoContentResponseResponses, CallWithParametersData, CallWithResponseAndNoContentResponseResponses, CallWithResponsesResponses, CallWithResultFromHeaderResponses, CallWithWeirdParameterNamesData, ClientOptions, ComplexParamsData, ComplexParamsResponses, ComplexTypesResponses, DummyAResponses, DummyBResponses, FileResponseResponses, GetApiVbyApiVersionSimpleOperationResponses, GetCallWithOptionalParamData, ImportData, ImportResponses, MultipartRequestData, MultipartResponseResponses, NonAsciiæøåÆøÅöôêÊ字符串Responses, PostApiVbyApiVersionFormDataData, PostApiVbyApiVersionRequestBodyData, PostCallWithOptionalParamData, PostCallWithOptionalParamResponses, PutWithFormUrlEncodedData, TestErrorCodeResponses, TypesResponses, UploadFileData, UploadFileResponses } from './types.gen';
 
 export type RequestHandlerOptions = RequestHandlerOptions2 & {
-    baseUrl?: string;
+    baseUrl?: ClientOptions['baseUrl'];
     responseFallback?: 'error' | 'passthrough';
 };
 

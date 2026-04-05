@@ -1,9 +1,17 @@
 openapi: 3.1.1
 info:
-  title: OpenAPI 3.1.1 body response application/json inline example
+  title: OpenAPI 3.1.1 mockers example
   version: 1
 paths:
   /foo:
+    get:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Person'
     post:
       requestBody:
         content:
@@ -28,14 +36,26 @@ paths:
                   age: 34
         '204':
           description: SUCCESSFUL
-    get:
+    put:
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Person'
+                type: object
+                properties:
+                  name:
+                    type: string
+                example:
+                  name: 'Alice'
+            text/plain:
+              schema:
+                type: string
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
 components:
   schemas:
     Person:

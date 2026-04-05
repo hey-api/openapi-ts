@@ -19,19 +19,19 @@ describe(`OpenAPI ${version}`, () => {
       config: createConfig({
         output: 'default',
       }),
-      description: 'generates mock handlers',
+      description: 'generates handlers',
     },
     {
       config: createConfig({
-        input: 'response-example.yaml',
-        output: 'response-example',
+        input: 'mockers.yaml',
+        output: 'mockers',
       }),
-      description: 'generates mock handlers with example',
+      description: 'generates handlers with examples',
     },
     {
       config: createConfig({
-        input: 'response-example.yaml',
-        output: 'response-example-disabled',
+        input: 'mockers.yaml',
+        output: 'mockers-disabled',
         plugins: [
           {
             name: 'msw',
@@ -39,21 +39,7 @@ describe(`OpenAPI ${version}`, () => {
           },
         ],
       }),
-      description: 'generates mock handlers with example but disabled',
-    },
-    {
-      config: createConfig({
-        input: 'response-types.yaml',
-        output: 'response-types',
-      }),
-      description: 'generates mock handlers with multiple response types',
-    },
-    {
-      config: createConfig({
-        input: 'servers.yaml',
-        output: 'servers',
-      }),
-      description: 'generates mock handlers with servers field',
+      description: 'generates handlers with examples but disabled',
     },
   ];
 

@@ -2,10 +2,10 @@
 
 import { http, type HttpHandler, HttpResponse, type HttpResponseResolver, type RequestHandlerOptions as RequestHandlerOptions2 } from 'msw';
 
-import type { GetFooResponses, PostFooData, PostFooResponses } from './types.gen';
+import type { ClientOptions, GetFooResponses, PostFooData, PostFooResponses, PutFooResponses } from './types.gen';
 
 export type RequestHandlerOptions = RequestHandlerOptions2 & {
-    baseUrl?: string;
+    baseUrl?: ClientOptions['baseUrl'];
     responseFallback?: 'error' | 'passthrough';
 };
 
@@ -20,14 +20,17 @@ export function handleGetFoo(response?: {
         if (typeof response === 'function') {
             return response(info);
         }
-        const body = response?.body ?? {
-            firstName: 'Marry',
-            lastName: 'Jane',
-            age: 30
-        };
+        const body = response?.body;
         if (body !== undefined) {
             return HttpResponse.json(body, { status: response?.status ?? 200 });
         }
+        if (options?.responseFallback === 'passthrough') {
+            return;
+        }
+        return new Response('Not Implemented', {
+            status: 501,
+            statusText: 'Not Implemented'
+        });
     }, options);
 }
 
@@ -49,10 +52,42 @@ export function handlePostFoo(response?: {
         if (typeof response === 'function') {
             return response(info);
         }
-        const body = response?.body ?? { fullName: 'John Doe', age: 34 };
+        const body = response?.body;
         if (body !== undefined) {
             return HttpResponse.json(body, { status: response?.status ?? 200 });
         }
+        if (options?.responseFallback === 'passthrough') {
+            return;
+        }
+        return new Response('Not Implemented', {
+            status: 501,
+            statusText: 'Not Implemented'
+        });
+    }, options);
+}
+
+/**
+ * Handler for the `PUT /foo` operation.
+ */
+export function handlePutFoo(response?: {
+    body: PutFooResponses[200];
+    status?: 200;
+} | HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
+    return http.put<never, never>(`${options?.baseUrl ?? '*'}/foo`, info => {
+        if (typeof response === 'function') {
+            return response(info);
+        }
+        const body = response?.body;
+        if (body !== undefined) {
+            return HttpResponse.json(body, { status: response?.status ?? 200 });
+        }
+        if (options?.responseFallback === 'passthrough') {
+            return;
+        }
+        return new Response('Not Implemented', {
+            status: 501,
+            statusText: 'Not Implemented'
+        });
     }, options);
 }
 
@@ -65,6 +100,10 @@ export type MswHandlerFactories = {
      * Handler for the `POST /foo` operation.
      */
     postFoo: typeof handlePostFoo;
+    /**
+     * Handler for the `PUT /foo` operation.
+     */
+    putFoo: typeof handlePutFoo;
 };
 
 export type CreateMswHandlersResult = {
@@ -83,7 +122,8 @@ export function createMswHandlers(config: RequestHandlerOptions = {}): CreateMsw
     }
     const pick: CreateMswHandlersResult['pick'] = {
         getFoo: wrap(handleGetFoo),
-        postFoo: wrap(handlePostFoo)
+        postFoo: wrap(handlePostFoo),
+        putFoo: wrap(handlePutFoo)
     };
     const all: CreateMswHandlersResult['all'] = (options = {}) => {
         type OverrideValue<R> = R | [
@@ -94,7 +134,11 @@ export function createMswHandlers(config: RequestHandlerOptions = {}): CreateMsw
             return Array.isArray(override) ? fn(...override) : fn(override);
         }
         const overrides = options.pick ?? {};
-        return [invoke(pick.getFoo, overrides.getFoo), invoke(pick.postFoo, overrides.postFoo)];
+        return [
+            invoke(pick.getFoo, overrides.getFoo),
+            invoke(pick.postFoo, overrides.postFoo),
+            invoke(pick.putFoo, overrides.putFoo)
+        ];
     };
     return { all, pick };
 }
