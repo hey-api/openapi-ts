@@ -11,6 +11,10 @@ export const handlerV2: MswPlugin['Handler'] = ({ plugin }) => {
   plugin.symbol('http', {
     external: 'msw',
   });
+  plugin.symbol('DefaultBodyType', {
+    external: 'msw',
+    kind: 'type',
+  });
   const symbolHttpHandler = plugin.symbol('HttpHandler', {
     external: 'msw',
     kind: 'type',

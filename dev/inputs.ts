@@ -7,6 +7,7 @@ export const inputs = {
   full: path.resolve(specsPath, '3.1.x', 'full.yaml'),
   heyapi: 'hey-api/backend',
   local: 'http://localhost:8000/openapi.json',
+  mockers: path.resolve(specsPath, '3.1.x', 'mockers.yaml'),
   opencode: path.resolve(specsPath, '3.1.x', 'opencode.yaml'),
   petstore:
     'https://raw.githubusercontent.com/swagger-api/swagger-petstore/master/src/main/resources/openapi.yaml',
