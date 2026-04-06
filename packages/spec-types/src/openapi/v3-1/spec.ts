@@ -34,15 +34,15 @@ export interface Document extends OpenAPIExtensions {
   /**
    * A declaration of which security mechanisms can be used across the API. The list of values includes alternative security requirement objects that can be used. Only one of the security requirement objects need to be satisfied to authorize a request. Individual operations can override this definition. To make security optional, an empty security requirement (`{}`) can be included in the array.
    */
-  security?: ReadonlyArray<SecurityRequirementObject>;
+  security?: Array<SecurityRequirementObject>;
   /**
    * An array of Server Objects, which provide connectivity information to a target server. If the `servers` property is not provided, or is an empty array, the default value would be a {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#server-object Server Object} with a {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#serverUrl url} value of `/`.
    */
-  servers?: ReadonlyArray<ServerObject>;
+  servers?: Array<ServerObject>;
   /**
    * A list of tags used by the document with additional metadata. The order of the tags can be used to reflect on their order by the parsing tools. Not all tags that are used by the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#operation-object Operation Object} must be declared. The tags that are not declared MAY be organized randomly or based on the tools' logic. Each tag name in the list MUST be unique.
    */
-  tags?: ReadonlyArray<TagObject>;
+  tags?: Array<TagObject>;
   /**
    * The incoming webhooks that MAY be received as part of this API and that the API consumer MAY choose to implement. Closely related to the `callbacks` feature, this section describes requests initiated other than by an API call, for example by an out of band registration. The key name is a unique string to refer to each webhook, while the (optionally referenced) Path Item Object describes a request that may be initiated by the API provider and the expected responses. An {@link https://github.com/OAI/OpenAPI-Specification/blob/main/examples/v3.1/webhook-example.yaml example} is available.
    */
@@ -1070,7 +1070,7 @@ export interface OperationObject extends OpenAPIExtensions {
   /**
    * A list of parameters that are applicable for this operation. If a parameter is already defined at the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#pathItemParameters Path Item}, the new definition will override it but can never remove it. The list MUST NOT include duplicated parameters. A unique parameter is defined by a combination of a {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#parameterName name} and {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#parameterIn location}. The list can use the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#reference-object Reference Object} to link to parameters that are defined at the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#componentsParameters OpenAPI Object's components/parameters}.
    */
-  parameters?: ReadonlyArray<ParameterObject | ReferenceObject>;
+  parameters?: Array<ParameterObject | ReferenceObject>;
   /**
    * The request body applicable for this operation. The `requestBody` is fully supported in HTTP methods where the HTTP 1.1 specification {@link https://datatracker.ietf.org/doc/html/rfc7231#section-4.3.1 RFC7231} has explicitly defined semantics for request bodies. In other cases where the HTTP spec is vague (such as {@link https://datatracker.ietf.org/doc/html/rfc7231#section-4.3.1 GET}, {@link https://datatracker.ietf.org/doc/html/rfc7231#section-4.3.2 HEAD} and {@link https://datatracker.ietf.org/doc/html/rfc7231#section-4.3.5 DELETE}), `requestBody` is permitted but does not have well-defined semantics and SHOULD be avoided if possible.
    */
@@ -1082,11 +1082,11 @@ export interface OperationObject extends OpenAPIExtensions {
   /**
    * A declaration of which security mechanisms can be used for this operation. The list of values includes alternative security requirement objects that can be used. Only one of the security requirement objects need to be satisfied to authorize a request. To make security optional, an empty security requirement (`{}`) can be included in the array. This definition overrides any declared top-level {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#oasSecurity `security`}. To remove a top-level security declaration, an empty array can be used.
    */
-  security?: ReadonlyArray<SecurityRequirementObject>;
+  security?: Array<SecurityRequirementObject>;
   /**
    * An alternative `server` array to service this operation. If an alternative `server` object is specified at the Path Item Object or Root level, it will be overridden by this value.
    */
-  servers?: ReadonlyArray<ServerObject>;
+  servers?: Array<ServerObject>;
   /**
    * A short summary of what the operation does.
    */
@@ -1094,11 +1094,11 @@ export interface OperationObject extends OpenAPIExtensions {
   /**
    * A list of tags for API documentation control. Tags can be used for logical grouping of operations by resources or any other qualifier.
    */
-  tags?: ReadonlyArray<string>;
+  tags?: Array<string>;
   /**
    * A list of code samples associated with an operation.
    */
-  'x-codeSamples'?: ReadonlyArray<CodeSampleObject>;
+  'x-codeSamples'?: Array<CodeSampleObject>;
 }
 
 /**
@@ -1329,7 +1329,7 @@ export interface PathItemObject extends OpenAPIExtensions {
   /**
    * A list of parameters that are applicable for all the operations described under this path. These parameters can be overridden at the operation level, but cannot be removed there. The list MUST NOT include duplicated parameters. A unique parameter is defined by a combination of a {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#parameterName name} and {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#parameterIn location}. The list can use the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#reference-object Reference Object} to link to parameters that are defined at the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#componentsParameters OpenAPI Object's components/parameters}.
    */
-  parameters?: ReadonlyArray<ParameterObject | ReferenceObject>;
+  parameters?: Array<ParameterObject | ReferenceObject>;
   /**
    * A definition of a PATCH operation on this path.
    */
@@ -1345,7 +1345,7 @@ export interface PathItemObject extends OpenAPIExtensions {
   /**
    * An alternative `server` array to service all operations in this path.
    */
-  servers?: ReadonlyArray<ServerObject>;
+  servers?: Array<ServerObject>;
   /**
    * An optional, string summary, intended to apply to all operations in this path.
    */
@@ -1705,7 +1705,7 @@ export interface SecurityRequirementObject {
   /**
    * Each name MUST correspond to a security scheme which is declared in the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#componentsSecuritySchemes Security Schemes} under the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#components-object Components Object}. If the security scheme is of type `"oauth2"` or `"openIdConnect"`, then the value is a list of scope names required for the execution, and the list MAY be empty if authorization does not require a specified scope. For other security scheme types, the array MAY contain a list of role names which are required for the execution, but are not otherwise defined or exchanged in-band.
    */
-  [name: string]: ReadonlyArray<string>;
+  [name: string]: Array<string>;
 }
 
 /**
@@ -1857,7 +1857,7 @@ export interface ServerVariableObject extends OpenAPIExtensions {
   /**
    * An enumeration of string values to be used if the substitution options are from a limited set. The array MUST NOT be empty.
    */
-  enum?: ReadonlyArray<string>;
+  enum?: Array<string>;
 }
 
 /**

@@ -22,7 +22,7 @@ export interface Document extends EnumExtensions {
    *
    * You can use `enum` even without a type, to accept values of different types.
    */
-  enum?: ReadonlyArray<unknown>;
+  enum?: Array<unknown>;
   /**
    * Ranges of numbers are specified using a combination of the `minimum` and `maximum` keywords, (or `exclusiveMinimum` and `exclusiveMaximum` for expressing exclusive range).
    *
@@ -128,7 +128,7 @@ export interface Document extends EnumExtensions {
    *
    * The `required` keyword takes an array of zero or more strings. Each of these strings must be unique.
    */
-  required?: ReadonlyArray<string>;
+  required?: Array<string>;
   /**
    * The `title` and `description` keywords must be strings. A "title" will preferably be short, whereas a "description" will provide a more lengthy explanation about the purpose of the data described by the schema.
    */
