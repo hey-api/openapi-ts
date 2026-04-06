@@ -25,7 +25,7 @@
     "@hey-api/openapi-ts": "workspace:*",
     "@rushstack/eslint-patch": "1.10.5",
     "@tsconfig/node24": "24.0.4",
-    "@types/jsdom": "27.0.0",
+    "@types/jsdom": "28.0.1",
     "@types/node": "24.12.0",
     "@vitejs/plugin-vue": "6.0.4",
     "@vitejs/plugin-vue-jsx": "5.1.4",
