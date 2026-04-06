@@ -1149,8 +1149,8 @@ importers:
         specifier: 2.36.0
         version: 2.36.0(eslint@9.39.2(jiti@2.6.1))(svelte@5.19.9)(ts-node@10.9.2(@swc/core@1.15.18)(@types/node@25.2.1)(typescript@5.9.3))
       globals:
-        specifier: 15.14.0
-        version: 15.14.0
+        specifier: 17.4.0
+        version: 17.4.0
       oxfmt:
         specifier: 0.41.0
         version: 0.41.0
@@ -10831,10 +10831,6 @@ packages:
 
   globals@14.0.0:
     resolution: {integrity: sha512-oahGvuMGQlPw/ivIYBjVSrWAfWLBeku5tpPE2fOPLi+WHffIWbuh2tCjhyQhTBPMf5E9jDEH4FOmTYgYwbKwtQ==}
-    engines: {node: '>=18'}
-
-  globals@15.14.0:
-    resolution: {integrity: sha512-OkToC372DtlQeje9/zHIo5CT8lRP/FUgEOKBEhU4e0abL7J7CD24fD9ohiLN5hagG/kWCYj4K5oaxxtj2Z0Dig==}
     engines: {node: '>=18'}
 
   globals@17.4.0:
@@ -26816,8 +26812,6 @@ snapshots:
       type-fest: 0.20.2
 
   globals@14.0.0: {}
-
-  globals@15.14.0: {}
 
   globals@17.4.0: {}
 
