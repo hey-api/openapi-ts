@@ -1,7 +1,7 @@
 import type { CodeSampleObject } from '../../extensions/code-samples';
 import type { EnumExtensions } from '../../extensions/enum';
 import type { SpecExtensions } from '../../extensions/spec';
-import type { Document as JSONSchemaDraft2020_12 } from '../../json-schema/draft-2020-12';
+import type { BaseDocument as JSONSchemaDraft2020_12 } from '../../json-schema/draft-2020-12';
 import type { OpenAPIV3_1SchemaExtensions } from './extensions';
 
 /**
@@ -1668,10 +1668,12 @@ export interface ResponsesObject extends SpecExtensions {
  *
  * This object MAY be extended with {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#specification-extensions Specification Extensions}, though as noted, additional properties MAY omit the `x-` prefix within this object.
  */
-export type SchemaObject = JSONSchemaDraft2020_12 &
-  OpenAPIV3_1SchemaExtensions &
-  SpecExtensions &
-  EnumExtensions;
+export interface SchemaObject
+  extends
+    JSONSchemaDraft2020_12<SchemaObject>,
+    OpenAPIV3_1SchemaExtensions,
+    SpecExtensions,
+    EnumExtensions {}
 
 /**
  * Lists the required security schemes to execute this operation. The name used for each property MUST correspond to a security scheme declared in the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#componentsSecuritySchemes Security Schemes} under the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#components-object Components Object}.

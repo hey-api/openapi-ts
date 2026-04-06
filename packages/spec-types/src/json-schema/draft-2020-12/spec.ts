@@ -1,7 +1,8 @@
 import type { AnyString, MaybeArray } from '@hey-api/types';
 
 // TODO: left out some keywords related to structuring a complex schema and declaring a dialect
-export interface Document extends ArrayKeywords, NumberKeywords, ObjectKeywords, StringKeywords {
+export interface BaseDocument<TDocument = unknown>
+  extends ArrayKeywords<TDocument>, NumberKeywords, ObjectKeywords<TDocument>, StringKeywords {
   /**
    * The `$comment` {@link https://json-schema.org/learn/glossary#keyword keyword} is strictly intended for adding comments to a schema. Its value must always be a string. Unlike the annotations `title`, `description`, and `examples`, JSON schema {@link https://json-schema.org/learn/glossary#implementation implementations} aren't allowed to attach any meaning or behavior to it whatsoever, and may even strip them at any time. Therefore, they are useful for leaving notes to future editors of a JSON schema, but should not be used to communicate to users of the schema.
    */
@@ -19,13 +20,13 @@ export interface Document extends ArrayKeywords, NumberKeywords, ObjectKeywords,
    *
    * {@link https://json-schema.org/understanding-json-schema/reference/combining#allof allOf} can not be used to "extend" a schema to add more details to it in the sense of object-oriented inheritance. {@link https://json-schema.org/learn/glossary#instance Instances} must independently be valid against "all of" the schemas in the `allOf`. See the section on {@link https://json-schema.org/understanding-json-schema/reference/object#extending Extending Closed Schemas} for more information.
    */
-  allOf?: Array<Document>;
+  allOf?: Array<TDocument>;
   /**
    * `anyOf`: (OR) Must be valid against _any_ of the subschemas
    *
    * To validate against `anyOf`, the given data must be valid against any (one or more) of the given subschemas.
    */
-  anyOf?: Array<Document>;
+  anyOf?: Array<TDocument>;
   /**
    * The `const` keyword is used to restrict a value to a single value.
    */
@@ -55,7 +56,7 @@ export interface Document extends ArrayKeywords, NumberKeywords, ObjectKeywords,
   /**
    * The `dependentSchemas` keyword conditionally applies a {@link https://json-schema.org/learn/glossary#subschema subschema} when a given property is present. This schema is applied in the same way {@link https://json-schema.org/understanding-json-schema/reference/combining#allof allOf} applies schemas. Nothing is merged or extended. Both schemas apply independently.
    */
-  dependentSchemas?: Record<string, Document>;
+  dependentSchemas?: Record<string, TDocument>;
   /**
    * The `deprecated` keyword is a boolean that indicates that the {@link https://json-schema.org/learn/glossary#instance instance} value the keyword applies to should not be used and may be removed in the future.
    */
@@ -73,7 +74,7 @@ export interface Document extends ArrayKeywords, NumberKeywords, ObjectKeywords,
    *
    * If `then` and/or `else` appear in a schema without `if`, `then` and `else` are ignored.
    */
-  else?: Document;
+  else?: TDocument;
   /**
    * The `enum` {@link https://json-schema.org/learn/glossary#keyword keyword} is used to restrict a value to a fixed set of values. It must be an array with at least one element, where each element is unique.
    *
@@ -101,13 +102,13 @@ export interface Document extends ArrayKeywords, NumberKeywords, ObjectKeywords,
    *
    * If `then` and/or `else` appear in a schema without `if`, `then` and `else` are ignored.
    */
-  if?: Document;
+  if?: TDocument;
   /**
    * `not`: (NOT) Must _not_ be valid against the given schema
    *
    * The `not` keyword declares that an instance validates if it doesn't validate against the given subschema.
    */
-  not?: Document;
+  not?: TDocument;
   /**
    * `oneOf`: (XOR) Must be valid against _exactly one_ of the subschemas
    *
@@ -115,7 +116,7 @@ export interface Document extends ArrayKeywords, NumberKeywords, ObjectKeywords,
    *
    * Careful consideration should be taken when using `oneOf` entries as the nature of it requires verification of _every_ sub-schema which can lead to increased processing times. Prefer `anyOf` where possible.
    */
-  oneOf?: Array<Document>;
+  oneOf?: Array<TDocument>;
   /**
    * The boolean keywords `readOnly` and `writeOnly` are typically used in an API context. `readOnly` indicates that a value should not be modified. It could be used to indicate that a `PUT` request that changes a value would result in a `400 Bad Request` response. `writeOnly` indicates that a value may be set, but will remain hidden. In could be used to indicate you can set a value with a `PUT` request, but it would not be included when retrieving that record with a `GET` request.
    */
@@ -129,7 +130,7 @@ export interface Document extends ArrayKeywords, NumberKeywords, ObjectKeywords,
    *
    * If `then` and/or `else` appear in a schema without `if`, `then` and `else` are ignored.
    */
-  then?: Document;
+  then?: TDocument;
   /**
    * The `title` and `description` keywords must be strings. A "title" will preferably be short, whereas a "description" will provide a more lengthy explanation about the purpose of the data described by the schema.
    */
@@ -144,11 +145,13 @@ export interface Document extends ArrayKeywords, NumberKeywords, ObjectKeywords,
   writeOnly?: boolean;
 }
 
-export interface ArrayKeywords {
+export type Document = BaseDocument<Document>;
+
+export interface ArrayKeywords<TDocument = unknown> {
   /**
    * While the `items` schema must be valid for every item in the array, the `contains` schema only needs to validate against one or more items in the array.
    */
-  contains?: Document;
+  contains?: TDocument;
   /**
    * List validation is useful for arrays of arbitrary length where each item matches the same schema. For this kind of array, set the `items` {@link https://json-schema.org/learn/glossary#keyword keyword} to a single schema that will be used to validate all of the items in the array.
    *
@@ -156,7 +159,7 @@ export interface ArrayKeywords {
    *
    * Note that `items` doesn't "see inside" any {@link https://json-schema.org/learn/glossary#instance instances} of `allOf`, `anyOf`, or `oneOf` in the same {@link https://json-schema.org/learn/glossary#subschema subschema}.
    */
-  items?: Document | false;
+  items?: TDocument | false;
   /**
    * `minContains` and `maxContains` can be used with `contains` to further specify how many times a schema matches a `contains` constraint. These keywords can be any non-negative number including zero.
    */
@@ -176,7 +179,7 @@ export interface ArrayKeywords {
   /**
    * `prefixItems` is an array, where each item is a schema that corresponds to each index of the document's array. That is, an array where the first element validates the first element of the input array, the second element validates the second element of the input array, etc.
    */
-  prefixItems?: Array<Document>;
+  prefixItems?: Array<TDocument>;
   /**
    * The `unevaluatedItems` keyword is useful mainly when you want to add or disallow extra items to an array.
    *
@@ -186,7 +189,7 @@ export interface ArrayKeywords {
    *
    * Like with `items`, if you set `unevaluatedItems` to false, you can disallow extra items in the array.
    */
-  unevaluatedItems?: Document | false;
+  unevaluatedItems?: TDocument | false;
   /**
    * A schema can ensure that each of the items in an array is unique. Simply set the `uniqueItems` keyword to `true`.
    */
@@ -260,7 +263,7 @@ export interface NumberKeywords {
   multipleOf?: number;
 }
 
-export interface ObjectKeywords {
+export interface ObjectKeywords<TDocument = unknown> {
   /**
    * The `additionalProperties` keyword is used to control the handling of extra stuff, that is, properties whose names are not listed in the `properties` keyword or match any of the regular expressions in the `patternProperties` keyword. By default any additional properties are allowed.
    *
@@ -268,7 +271,7 @@ export interface ObjectKeywords {
    *
    * It's important to note that `additionalProperties` only recognizes properties declared in the same {@link https://json-schema.org/learn/glossary#subschema subschema} as itself. So, `additionalProperties` can restrict you from "extending" a schema using {@link https://json-schema.org/understanding-json-schema/reference/combining combining} keywords such as {@link https://json-schema.org/understanding-json-schema/reference/combining#allof allOf}.
    */
-  additionalProperties?: Document | false;
+  additionalProperties?: TDocument | false;
   /**
    * The number of properties on an object can be restricted using the `minProperties` and `maxProperties` keywords. Each of these must be a non-negative integer.
    */
@@ -280,11 +283,11 @@ export interface ObjectKeywords {
   /**
    * Sometimes you want to say that, given a particular kind of property name, the value should match a particular schema. That's where `patternProperties` comes in: it maps regular expressions to schemas. If a property name matches the given regular expression, the property value must validate against the corresponding schema.
    */
-  patternProperties?: Record<string, Document>;
+  patternProperties?: Record<string, TDocument>;
   /**
    * The properties (key-value pairs) on an object are defined using the `properties` {@link https://json-schema.org/learn/glossary#keyword keyword}. The value of `properties` is an object, where each key is the name of a property and each value is a {@link https://json-schema.org/learn/glossary#schema schema} used to validate that property. Any property that doesn't match any of the property names in the `properties` keyword is ignored by this keyword.
    */
-  properties?: Record<string, Document | true>;
+  properties?: Record<string, TDocument | true>;
   /**
    * The names of properties can be validated against a schema, irrespective of their values. This can be useful if you don't want to enforce specific properties, but you want to make sure that the names of those properties follow a specific convention. You might, for example, want to enforce that all names are valid ASCII tokens so they can be used as attributes in a particular programming language.
    *
@@ -294,7 +297,7 @@ export interface ObjectKeywords {
    * { "type": "string" }
    * ```
    */
-  propertyNames?: Document;
+  propertyNames?: TDocument;
   /**
    * By default, the properties defined by the `properties` keyword are not required. However, one can provide a list of required properties using the `required` keyword.
    *
@@ -306,7 +309,7 @@ export interface ObjectKeywords {
    *
    * `unevaluatedProperties` works by collecting any properties that are successfully validated when processing the schemas and using those as the allowed list of properties. This allows you to do more complex things like conditionally adding properties.
    */
-  unevaluatedProperties?: Document | false;
+  unevaluatedProperties?: TDocument | false;
 }
 
 export interface StringKeywords {
