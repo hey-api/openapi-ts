@@ -1,18 +1,7 @@
 import type { AnyString, MaybeArray } from '@hey-api/types';
 
-import type { EnumExtensions, OpenAPIExtensions } from '../../extensions/openapi';
-import type { OpenAPIV3_1SchemaExtensions } from '../../openapi/v3-1/extensions';
-
 // TODO: left out some keywords related to structuring a complex schema and declaring a dialect
-export interface Document
-  extends
-    ArrayKeywords,
-    NumberKeywords,
-    ObjectKeywords,
-    StringKeywords,
-    EnumExtensions,
-    OpenAPIV3_1SchemaExtensions,
-    OpenAPIExtensions {
+export interface Document extends ArrayKeywords, NumberKeywords, ObjectKeywords, StringKeywords {
   /**
    * The `$comment` {@link https://json-schema.org/learn/glossary#keyword keyword} is strictly intended for adding comments to a schema. Its value must always be a string. Unlike the annotations `title`, `description`, and `examples`, JSON schema {@link https://json-schema.org/learn/glossary#implementation implementations} aren't allowed to attach any meaning or behavior to it whatsoever, and may even strip them at any time. Therefore, they are useful for leaving notes to future editors of a JSON schema, but should not be used to communicate to users of the schema.
    */

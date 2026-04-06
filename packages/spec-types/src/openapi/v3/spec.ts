@@ -1,11 +1,13 @@
-import type { CodeSampleObject, EnumExtensions, OpenAPIExtensions } from '../../extensions/openapi';
+import type { CodeSampleObject } from '../../extensions/code-samples';
+import type { EnumExtensions } from '../../extensions/enum';
+import type { SpecExtensions } from '../../extensions/spec';
 
 /**
  * This is the root object of the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#openapi-description OpenAPI Description}.
  *
  * This object MAY be extended with {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#specification-extensions Specification Extensions}.
  */
-export interface Document extends OpenAPIExtensions {
+export interface Document extends SpecExtensions {
   /**
    * An element to hold various Objects for the OpenAPI Description.
    */
@@ -47,7 +49,7 @@ export interface Document extends OpenAPIExtensions {
  *
  * TODO: examples
  */
-export interface CallbackObject extends OpenAPIExtensions {
+export interface CallbackObject extends SpecExtensions {
   /**
    * A Path Item Object used to define a callback request and expected responses. A {@link https://learn.openapis.org/examples/v3.0/callback-example.html complete example} is available.
    */
@@ -63,7 +65,7 @@ export interface CallbackObject extends OpenAPIExtensions {
  *
  * TODO: examples
  */
-export interface ComponentsObject extends OpenAPIExtensions {
+export interface ComponentsObject extends SpecExtensions {
   /**
    * An object to hold reusable {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#callback-object Callback Objects}.
    */
@@ -113,7 +115,7 @@ export interface ComponentsObject extends OpenAPIExtensions {
  * email: support@example.com
  * ```
  */
-export interface ContactObject extends OpenAPIExtensions {
+export interface ContactObject extends SpecExtensions {
   /**
    * The email address of the contact person/organization. This MUST be in the form of an email address.
    */
@@ -160,7 +162,7 @@ export interface DiscriminatorObject {
  * TODO: default values examples
  * TODO: examples
  */
-export interface EncodingObject extends OpenAPIExtensions {
+export interface EncodingObject extends SpecExtensions {
   /**
    * When this is true, parameter values are serialized using reserved expansion, as defined by {@link https://datatracker.ietf.org/doc/html/rfc6570#section-3.2.3 RFC6570}, which allows {@link https://datatracker.ietf.org/doc/html/rfc3986#section-2.2 RFC3986's reserved character set}, as well as percent-encoded triples, to pass through unchanged, while still percent-encoding all other disallowed characters (including `%` outside of percent-encoded triples). Applications are still responsible for percent-encoding reserved characters that are {@link https://datatracker.ietf.org/doc/html/rfc3986#section-3.4 not allowed in the query string} (`[`, `]`, `#`), or have a special meaning in `application/x-www-form-urlencoded` (`-`, `&`, `+`); see Appendices {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#appendix-c-using-rfc6570-based-serialization C} and {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#appendix-e-percent-encoding-and-form-media-types E} for details. The default value is `false`. This field SHALL be ignored if the request body media type is not `application/x-www-form-urlencoded`.
    */
@@ -201,7 +203,7 @@ export interface EncodingObject extends OpenAPIExtensions {
  *
  * TODO: examples
  */
-export interface ExampleObject extends OpenAPIExtensions {
+export interface ExampleObject extends SpecExtensions {
   /**
    * Long description for the example. {@link https://spec.commonmark.org/ CommonMark syntax} MAY be used for rich text representation.
    */
@@ -232,7 +234,7 @@ export interface ExampleObject extends OpenAPIExtensions {
  * url: https://example.com
  * ```
  */
-export interface ExternalDocumentationObject extends OpenAPIExtensions {
+export interface ExternalDocumentationObject extends SpecExtensions {
   /**
    * A description of the target documentation. {@link https://spec.commonmark.org/ CommonMark syntax} MAY be used for rich text representation.
    */
@@ -276,7 +278,7 @@ export type HeaderObject = Omit<ParameterObject, 'in' | 'name'>;
  * version: 1.0.1
  * ```
  */
-export interface InfoObject extends OpenAPIExtensions {
+export interface InfoObject extends SpecExtensions {
   /**
    * The contact information for the exposed API.
    */
@@ -313,7 +315,7 @@ export interface InfoObject extends OpenAPIExtensions {
  * url: https://www.apache.org/licenses/LICENSE-2.0.html
  * ```
  */
-export interface LicenseObject extends OpenAPIExtensions {
+export interface LicenseObject extends SpecExtensions {
   /**
    * **REQUIRED**. The license name used for the API.
    */
@@ -339,7 +341,7 @@ export interface LicenseObject extends OpenAPIExtensions {
  *
  * TODO: examples
  */
-export interface LinkObject extends OpenAPIExtensions {
+export interface LinkObject extends SpecExtensions {
   /**
    * A description of the link. {@link https://spec.commonmark.org/ CommonMark syntax} MAY be used for rich text representation.
    */
@@ -375,7 +377,7 @@ export interface LinkObject extends OpenAPIExtensions {
  *
  * TODO: examples
  */
-export interface MediaTypeObject extends OpenAPIExtensions {
+export interface MediaTypeObject extends SpecExtensions {
   /**
    * A map between a property name and its encoding information. The key, being the property name, MUST exist in the schema as a property. The `encoding` field SHALL only apply to {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#request-body-object Request Body Objects}, and only when the media type is `multipart` or `application/x-www-form-urlencoded`. If no Encoding Object is provided for a property, the behavior is determined by the default values documented for the Encoding Object.
    */
@@ -401,7 +403,7 @@ export interface MediaTypeObject extends OpenAPIExtensions {
  *
  * TODO: examples
  */
-export interface OAuthFlowObject extends OpenAPIExtensions {
+export interface OAuthFlowObject extends SpecExtensions {
   /**
    * **REQUIRED (`"implicit"`, `"authorizationCode"`)**. The authorization URL to be used for this flow. This MUST be in the form of a URL. The OAuth2 standard requires the use of TLS.
    */
@@ -425,7 +427,7 @@ export interface OAuthFlowObject extends OpenAPIExtensions {
  *
  * This object MAY be extended with {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#specification-extensions Specification Extensions}.
  */
-export interface OAuthFlowsObject extends OpenAPIExtensions {
+export interface OAuthFlowsObject extends SpecExtensions {
   /**
    * Configuration for the OAuth Authorization Code flow. Previously called `accessCode` in OpenAPI 2.0.
    */
@@ -451,7 +453,7 @@ export interface OAuthFlowsObject extends OpenAPIExtensions {
  *
  * TODO: examples
  */
-export interface OperationObject extends OpenAPIExtensions {
+export interface OperationObject extends SpecExtensions {
   /**
    * A map of possible out-of band callbacks related to the parent operation. The key is a unique identifier for the Callback Object. Each value in the map is a {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#callback-object Callback Object} that describes a request that may be initiated by the API provider and the expected responses.
    */
@@ -550,7 +552,7 @@ export interface OperationObject extends OpenAPIExtensions {
  *
  * TODO: examples
  */
-export interface ParameterObject extends OpenAPIExtensions {
+export interface ParameterObject extends SpecExtensions {
   /**
    * If `true`, clients MAY pass a zero-length string value in place of parameters that would otherwise be omitted entirely, which the server SHOULD interpret as the parameter being unused. Default value is `false`. If {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#parameter-style `style`} is used, and if {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#style-examples behavior is _n/a_ (cannot be serialized)}, the value of `allowEmptyValue` SHALL be ignored. Interactions between this field and the parameter's {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#schema-object Schema Object} are implementation-defined. This field is valid only for `query` parameters. Use of this field is NOT RECOMMENDED, and it is likely to be removed in a later revision.
    */
@@ -622,7 +624,7 @@ export interface ParameterObject extends OpenAPIExtensions {
  *
  * TODO: examples
  */
-export interface PathItemObject extends OpenAPIExtensions {
+export interface PathItemObject extends SpecExtensions {
   /**
    * Allows for a referenced definition of this path item. The value MUST be in the form of a URL, and the referenced structure MUST be in the form of a {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#path-item-object Path Item Object}. In case a Path Item Object field appears both in the defined object and the referenced object, the behavior is undefined. See the rules for resolving {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#relative-references-in-urls Relative References}.
    */
@@ -684,7 +686,7 @@ export interface PathItemObject extends OpenAPIExtensions {
  *
  * TODO: examples
  */
-export interface PathsObject extends OpenAPIExtensions {
+export interface PathsObject extends SpecExtensions {
   /**
    * A relative path to an individual endpoint. The field name MUST begin with a forward slash (`/`). The path is **appended** (no relative URL resolution) to the expanded URL from the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#server-object Server Object}'s `url` field in order to construct the full URL. {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#path-templating Path templating} is allowed. When matching URLs, concrete (non-templated) paths would be matched before their templated counterparts. Templated paths with the same hierarchy but different templated names MUST NOT exist as they are identical. In case of ambiguous matching, it's up to the tooling to decide which one to use.
    */
@@ -732,7 +734,7 @@ export interface ReferenceObject {
  *
  * TODO: examples
  */
-export interface RequestBodyObject extends OpenAPIExtensions {
+export interface RequestBodyObject extends SpecExtensions {
   /**
    * **REQUIRED**. The content of the request body. The key is a media type or {@link https://tools.ietf.org/html/rfc7231#appendix-D media type range} and the value describes it. For requests that match multiple keys, only the most specific key is applicable. e.g. `"text/plain"` overrides `"text/*"`
    */
@@ -754,7 +756,7 @@ export interface RequestBodyObject extends OpenAPIExtensions {
  *
  * TODO: examples
  */
-export interface ResponseObject extends OpenAPIExtensions {
+export interface ResponseObject extends SpecExtensions {
   /**
    * A map containing descriptions of potential response payloads. The key is a media type or {@link https://tools.ietf.org/html/rfc7231#appendix-D media type range} and the value describes it. For responses that match multiple keys, only the most specific key is applicable. e.g. `"text/plain"` overrides `"text/*"`
    */
@@ -786,7 +788,7 @@ export interface ResponseObject extends OpenAPIExtensions {
  *
  * TODO: examples
  */
-export interface ResponsesObject extends OpenAPIExtensions {
+export interface ResponsesObject extends SpecExtensions {
   /**
    * Any {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#http-status-codes HTTP status code} can be used as the property name, but only one property per code, to describe the expected response for that HTTP status code. A {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#reference-object Reference Object} can link to a response that is defined in the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#components-responses OpenAPI Object's `components.responses`} section. This field MUST be enclosed in quotation marks (for example, "200") for compatibility between JSON and YAML. To define a range of response codes, this field MAY contain the uppercase wildcard character `X`. For example, `2XX` represents all response codes between `200` and `299`. Only the following range definitions are allowed: `1XX`, `2XX`, `3XX`, `4XX`, and `5XX`. If a response is defined using an explicit code, the explicit code definition takes precedence over the range definition for that code.
    */
@@ -848,7 +850,7 @@ export interface ResponsesObject extends OpenAPIExtensions {
  *
  * TODO: content, examples
  */
-export interface SchemaObject extends EnumExtensions, OpenAPIExtensions {
+export interface SchemaObject extends EnumExtensions, SpecExtensions {
   /**
    * The value of "additionalProperties" MUST be a boolean or a schema.
    *
@@ -1101,7 +1103,7 @@ export interface SecurityRequirementObject {
  *
  * TODO: examples
  */
-export type SecuritySchemeObject = OpenAPIExtensions & {
+export type SecuritySchemeObject = SpecExtensions & {
   /**
    * A description for security scheme. {@link https://spec.commonmark.org/ CommonMark syntax} MAY be used for rich text representation.
    */
@@ -1164,7 +1166,7 @@ export type SecuritySchemeObject = OpenAPIExtensions & {
  *
  * TODO: examples
  */
-export interface ServerObject extends OpenAPIExtensions {
+export interface ServerObject extends SpecExtensions {
   /**
    * An optional string describing the host designated by the URL. {@link https://spec.commonmark.org/ CommonMark syntax} MAY be used for rich text representation.
    */
@@ -1184,7 +1186,7 @@ export interface ServerObject extends OpenAPIExtensions {
  *
  * This object MAY be extended with {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#specification-extensions Specification Extensions}.
  */
-export interface ServerVariableObject extends OpenAPIExtensions {
+export interface ServerVariableObject extends SpecExtensions {
   /**
    * **REQUIRED**. The default value to use for substitution, which SHALL be sent if an alternate value is _not_ supplied. If the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#server-variable-enum `enum`} is defined, the value SHOULD exist in the enum's values. Note that this behavior is different from the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#schema-object Schema Object}'s `default` keyword, which documents the receiver's behavior rather than inserting the value into the data.
    */
@@ -1211,7 +1213,7 @@ export interface ServerVariableObject extends OpenAPIExtensions {
  * description: Pets operations
  * ```
  */
-export interface TagObject extends OpenAPIExtensions {
+export interface TagObject extends SpecExtensions {
   /**
    * A description for the tag. {@link https://spec.commonmark.org/ CommonMark syntax} MAY be used for rich text representation.
    */
@@ -1240,7 +1242,7 @@ export interface TagObject extends OpenAPIExtensions {
  *
  * TODO: examples
  */
-export interface XMLObject extends OpenAPIExtensions {
+export interface XMLObject extends SpecExtensions {
   /**
    * Declares whether the property definition translates to an attribute instead of an element. Default value is `false`.
    */

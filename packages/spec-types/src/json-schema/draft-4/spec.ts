@@ -1,8 +1,6 @@
 import type { AnyString } from '@hey-api/types';
 
-import type { EnumExtensions } from '../../extensions/openapi';
-
-export interface Document extends EnumExtensions {
+export interface Document {
   /**
    * A schema can reference another schema using the `$ref` keyword. The value of `$ref` is a URI-reference that is resolved against the schema's {@link https://json-schema.org/understanding-json-schema/structuring#base-uri Base URI}. When evaluating a `$ref`, an implementation uses the resolved identifier to retrieve the referenced schema and applies that schema to the {@link https://json-schema.org/learn/glossary#instance instance}.
    *
