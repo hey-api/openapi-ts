@@ -1,6 +1,6 @@
 import type { CodeSampleObject } from '../../extensions/code-samples';
 import type { EnumExtensions } from '../../extensions/enum';
-import type { Document as JSONSchemaDraft4 } from '../../json-schema/draft-4/spec';
+import type { Document as JSONSchemaDraft4 } from '../../json-schema/draft-4';
 import type { OpenAPIV2NullableExtensions } from './extensions';
 
 /**
