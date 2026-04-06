@@ -722,8 +722,8 @@ importers:
         specifier: 4.5.0
         version: 4.5.0(vue@3.5.13(typescript@5.9.3))
       zod:
-        specifier: 4.0.5
-        version: 4.0.5
+        specifier: 4.3.6
+        version: 4.3.6
     devDependencies:
       vite:
         specifier: 7.3.1
@@ -16122,9 +16122,6 @@ packages:
 
   zod@3.25.3:
     resolution: {integrity: sha512-VGZqnyYNrl8JpEJRZaFPqeVNIuqgXNu4cXZ5cOb6zEUO1OxKbRnWB4UdDIXMmiERWncs0yDQukssHov8JUxykQ==}
-
-  zod@4.0.5:
-    resolution: {integrity: sha512-/5UuuRPStvHXu7RS+gmvRf4NXrNxpSllGwDnCBcJZtQsKrviYXm54yDGV2KYNLT5kq0lHGcl7lqWJLgSaG+tgA==}
 
   zod@4.3.5:
     resolution: {integrity: sha512-k7Nwx6vuWx1IJ9Bjuf4Zt1PEllcwe7cls3VNzm4CQ1/hgtFUK2bRNG3rvnpPUhFjmqJKAKtjV576KnUkHocg/g==}
@@ -33953,8 +33950,6 @@ snapshots:
       zod: 4.3.5
 
   zod@3.25.3: {}
-
-  zod@4.0.5: {}
 
   zod@4.3.5: {}
 
