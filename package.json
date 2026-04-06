@@ -21,6 +21,9 @@
   "type": "module",
   "scripts": {
     "build": "turbo run build",
+    "changelog:assemble": "tsx scripts/changelog/assemble/index.ts",
+    "changelog:release:notes": "tsx scripts/changelog/release/notes.ts",
+    "changelog:release:tag": "tsx scripts/changelog/release/tag.ts",
     "changeset": "changeset",
     "examples:check": "sh ./scripts/examples-check.sh",
     "examples:generate": "sh ./scripts/examples-generate.sh",

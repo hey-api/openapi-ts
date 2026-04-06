@@ -49,12 +49,31 @@ jobs:
         uses: changesets/action@v1.7.0
         with:
           commit: 'ci: release'
+          createGithubReleases: false
           publish: pnpm changeset publish
           title: 'ci: release'
-          version: pnpm changeset version
+          version: pnpm changeset version && pnpm changelog:assemble
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
           NPM_CONFIG_PROVENANCE: true
+
+      - name: Generate Release Tag
+        id: tag
+        run: echo "tag=$(pnpm changelog:release:tag)" >> $GITHUB_OUTPUT
+
+      - name: Generate Release Notes
+        id: notes
+        run: pnpm changelog:release:notes > release-notes.md
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.tag }}
+          name: Release ${{ steps.tag.outputs.tag }}
+          body_path: release-notes.md
+          generate_release_notes: false
+        env:
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
 
       - name: Get current branch
         run: echo "CURRENT_BRANCH=$(git branch --show-current)" >> $GITHUB_ENV
