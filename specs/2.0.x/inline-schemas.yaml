@@ -1,0 +1,51 @@
+swagger: '2.0'
+info:
+  title: Inline Schemas
+  version: v1
+host: localhost:3000
+basePath: /base
+schemes:
+  - http
+definitions:
+  Cat:
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+paths:
+  /cats:
+    parameters:
+      - name: is_adopted
+        description: Filter by adoption status
+        in: query
+        type: boolean
+        required: false
+    get:
+      parameters:
+        - name: color
+          description: Filter by fur color
+          in: query
+          type: string
+          required: false
+      responses:
+        '200':
+          description: OK
+  /cats/{cat_id}:
+    parameters:
+      - name: cat_id
+        description: The ID of the cat
+        in: path
+        type: integer
+        required: true
+    get:
+      parameters:
+        - name: x-api-key
+          description: API key for authentication
+          in: header
+          type: string
+          required: true
+      responses:
+        '200':
+          description: OK
