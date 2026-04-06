@@ -94,7 +94,7 @@
     "rxjs": "7.8.2",
     "typescript": "5.9.3",
     "vue": "3.5.25",
-    "yaml": "2.8.2",
+    "yaml": "2.8.3",
     "zone.js": "0.16.0"
   },
   "peerDependencies": {

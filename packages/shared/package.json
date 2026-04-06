@@ -54,7 +54,7 @@
     "@types/semver": "7.7.1",
     "eslint": "9.39.2",
     "typescript": "5.9.3",
-    "yaml": "2.8.2"
+    "yaml": "2.8.3"
   },
   "engines": {
     "node": ">=22.13.0"
