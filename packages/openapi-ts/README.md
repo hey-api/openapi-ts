@@ -33,7 +33,7 @@ Part of the Hey API ecosystem.
 ## Features
 
 - production-ready code that compiles
-- runs in any Node.js 20+ environment
+- runs in any Node.js 22+ environment
 - accepts any OpenAPI specification
 - core plugins for SDKs, types, and schemas
 - HTTP clients for Fetch API, Angular, Axios, Next.js, Nuxt, and more
