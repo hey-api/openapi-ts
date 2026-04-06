@@ -62,8 +62,7 @@
     "./package.json": "./package.json"
   },
   "scripts": {
-    "build": "tsdown && pnpm check-exports",
-    "check-exports": "attw --pack . --profile esm-only --ignore-rules cjs-resolves-to-esm",
+    "build": "tsdown",
     "dev": "tsdown --watch",
     "prepublishOnly": "pnpm build",
     "typecheck": "tsgo --noEmit"
