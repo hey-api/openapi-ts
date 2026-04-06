@@ -28,7 +28,7 @@
     "@types/eslint": "9.6.1",
     "eslint": "9.39.2",
     "eslint-plugin-svelte": "2.36.0",
-    "globals": "15.14.0",
+    "globals": "17.4.0",
     "oxfmt": "0.41.0",
     "svelte": "5.19.9",
     "svelte-check": "4.1.4",
