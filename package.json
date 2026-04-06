@@ -48,7 +48,7 @@
     "dev:py": "cd dev && HEYAPI_CODEGEN_ENV=development tsx watch --clear-screen=false ../packages/openapi-python/src/run.ts"
   },
   "devDependencies": {
-    "@arethetypeswrong/cli": "0.18.2",
+    "@arethetypeswrong/core": "0.18.2",
     "@changesets/cli": "2.30.0",
     "@changesets/get-github-info": "0.8.0",
     "@changesets/parse": "0.4.3",
@@ -56,9 +56,9 @@
     "@eslint/js": "9.39.2",
     "@hey-api/custom-client": "workspace:*",
     "@hey-api/openapi-ts": "workspace:*",
-    "@types/node": "24.10.10",
+    "@types/node": "24.12.0",
     "@typescript-eslint/eslint-plugin": "8.54.0",
-    "@typescript/native-preview": "7.0.0-dev.20260321.1",
+    "@typescript/native-preview": "7.0.0-dev.20260401.1",
     "@vitest/coverage-v8": "4.1.0",
     "eslint": "9.39.2",
     "eslint-plugin-simple-import-sort": "12.1.1",
@@ -69,16 +69,17 @@
     "globals": "17.4.0",
     "husky": "9.1.7",
     "lint-staged": "16.4.0",
-    "oxfmt": "0.41.0",
-    "tsdown": "0.21.4",
+    "oxfmt": "0.43.0",
+    "publint": "0.3.18",
+    "tsdown": "0.21.7",
     "tsx": "4.21.0",
-    "turbo": "2.8.20",
+    "turbo": "2.9.3",
     "typescript": "5.9.3",
     "typescript-eslint": "8.54.0",
     "vitest": "4.1.0"
   },
   "engines": {
-    "node": ">=20.19.0"
+    "node": ">=22.13.0"
   },
-  "packageManager": "pnpm@10.32.1"
+  "packageManager": "pnpm@10.33.0"
 }
