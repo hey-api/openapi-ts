@@ -256,8 +256,8 @@ importers:
         specifier: 4.17.21
         version: 4.17.21
       '@types/jasmine':
-        specifier: 5.1.9
-        version: 5.1.9
+        specifier: 5.1.15
+        version: 5.1.15
       '@types/node':
         specifier: 24.10.10
         version: 24.10.10
@@ -350,8 +350,8 @@ importers:
         specifier: 4.17.21
         version: 4.17.21
       '@types/jasmine':
-        specifier: 5.1.9
-        version: 5.1.9
+        specifier: 5.1.15
+        version: 5.1.15
       '@types/node':
         specifier: 24.10.10
         version: 24.10.10
@@ -1021,8 +1021,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/openapi-ts
       '@types/jasmine':
-        specifier: 5.1.9
-        version: 5.1.9
+        specifier: 5.1.15
+        version: 5.1.15
       jasmine-core:
         specifier: 5.6.0
         version: 5.6.0
@@ -7701,8 +7701,8 @@ packages:
   '@types/http-proxy@1.17.16':
     resolution: {integrity: sha512-sdWoUajOB1cd0A8cRRQ1cfyWNbmFKLAqBB89Y8x5iYyG/mkJHc0YUH8pdWBy2omi9qtCpiIgGjuwO0dQST2l5w==}
 
-  '@types/jasmine@5.1.9':
-    resolution: {integrity: sha512-8t4HtkW4wxiPVedMpeZ63n3vlWxEIquo/zc1Tm8ElU+SqVV7+D3Na2PWaJUp179AzTragMWVwkMv7mvty0NfyQ==}
+  '@types/jasmine@5.1.15':
+    resolution: {integrity: sha512-ZAC8KjmV2MJxbNTrwXFN+HKeajpXQZp6KpPiR6Aa4XvaEnjP6qh23lL/Rqb7AYzlp3h/rcwDrQ7Gg7q28cQTQg==}
 
   '@types/jsdom@27.0.0':
     resolution: {integrity: sha512-NZyFl/PViwKzdEkQg96gtnB8wm+1ljhdDay9ahn4hgb+SfVtPCbm3TlmDUFXTA+MGN3CijicnMhG18SI5H3rFw==}
@@ -22741,7 +22741,7 @@ snapshots:
     dependencies:
       '@types/node': 24.10.10
 
-  '@types/jasmine@5.1.9': {}
+  '@types/jasmine@5.1.15': {}
 
   '@types/jsdom@27.0.0':
     dependencies:
