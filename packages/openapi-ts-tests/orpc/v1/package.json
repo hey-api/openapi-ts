@@ -8,7 +8,7 @@
   },
   "devDependencies": {
     "@hey-api/openapi-ts": "workspace:*",
-    "@orpc/contract": "1.13.9",
+    "@orpc/contract": "1.13.13",
     "typescript": "5.9.3",
     "valibot": "1.2.0",
     "zod": "4.3.6"
