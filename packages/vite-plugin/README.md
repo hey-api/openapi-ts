@@ -1,12 +1,39 @@
 <div align="center">
-  <img alt="Hey API logo" height="150" src="https://heyapi.dev/assets/.gen/logo-astronaut-300w.png" width="150">
-  <h1 align="center"><b>Vite Plugin</b></h1>
-  <p align="center">🚀 Vite plugin for <code>@hey-api/openapi-ts</code> codegen.</p>
+  <img alt="Hey API presents openapi-ts" height="214" src="https://heyapi.dev/assets/.gen/openapi-ts-hero-640w.png" width="438">
+  <h1><b>Vite Plugin</b></h1>
+  <p>Vite plugin for <code>@hey-api/openapi-ts</code>.</p>
 </div>
 
-## Dashboard
+<p align="center">
+  <a href="https://www.devtrends.dev/trends?c=v1.kZIAzQaO"><img src="https://api.devtrends.dev/badge/npm/%40hey-api%2Fvite-plugin?period=month&style=flat&view=value" alt="DevTrends badge for @hey-api/vite-plugin" /></a>
+  <a href="https://www.devtrends.dev/trends?c=v1.kZIAzQaO&v=change"><img src="https://api.devtrends.dev/badge/npm/%40hey-api%2Fvite-plugin?period=year&style=flat&view=change" alt="DevTrends badge for @hey-api/vite-plugin" /></a>
+  <a href="https://github.com/hey-api/openapi-ts/actions?query=branch%3Amain"><img src="https://github.com/hey-api/openapi-ts/actions/workflows/ci.yml/badge.svg?event=push&branch=main" alt="CI status" /></a>
+  <a href="https://github.com/hey-api/openapi-ts"><img src="https://img.shields.io/github/stars/hey-api/openapi-ts?style=flat&logo=github&label=GitHub&color=54C82D" alt="GitHub stars" /></a>
+  <a href="https://github.com/hey-api/openapi-ts/blob/main/LICENSE.md"><img src="https://img.shields.io/github/license/hey-api/openapi-ts" alt="MIT License"></a>
+</p>
 
-Access your projects and OpenAPI specifications in the [Hey API Platform](https://app.heyapi.dev/).
+<p align="center">
+  <a href="https://heyapi.dev">Manual</a>
+  <span>&nbsp;•&nbsp;</span>
+  <a href="https://github.com/hey-api/openapi-ts/issues">Issues</a>
+  <span>&nbsp;•&nbsp;</span>
+  <a href="https://heyapi.dev/openapi-ts/community/contributing">Contribute</a>
+</p>
+
+## About
+
+[Vite](https://vite.dev) is a blazing fast frontend build tool powering the next generation of web applications.
+
+The Vite plugin integrates [`@hey-api/openapi-ts`](https://heyapi.dev/openapi-ts) into the Vite build pipeline, running automatically whenever Vite resolves its configuration – no separate script or manual step required.
+
+Part of the Hey API ecosystem.
+
+## Features
+
+- runs automatically as part of your Vite build
+- reads your existing configuration (or accepts inline config)
+- works with any Vite-based project
+- [sync with Hey API Registry](https://heyapi.dev/openapi-ts/integrations) for spec management
 
 ## Contributing
 
@@ -14,13 +41,9 @@ Want to see your code in products used by millions?
 
 Start with our [Contributing](https://heyapi.dev/openapi-ts/community/contributing) guide and release your first feature.
 
-## Documentation
-
-Please visit our [website](https://heyapi.dev) for documentation, guides, migrating, and more.
-
 ## Sponsors
 
-Help Hey API stay around for the long haul by becoming a [sponsor](https://github.com/sponsors/hey-api).
+Hey API is sponsor-funded. If you rely on Hey API in production, consider becoming a [sponsor](https://github.com/sponsors/hey-api) to accelerate the roadmap.
 
 <h3 align="center">Gold</h3>
 
@@ -125,20 +148,65 @@ Help Hey API stay around for the long haul by becoming a [sponsor](https://githu
   </tbody>
 </table>
 
+## Installation
+
+You can download `@hey-api/vite-plugin` from npm using your favorite package manager.
+
+#### npm
+
+```sh
+npm add @hey-api/vite-plugin -D -E
+```
+
+#### pnpm
+
+```sh
+pnpm add @hey-api/vite-plugin -D -E
+```
+
+#### yarn
+
+```sh
+yarn add @hey-api/vite-plugin -D -E
+```
+
+#### bun
+
+```sh
+bun add @hey-api/vite-plugin -D -E
+```
+
 ## Usage
 
-Add to `plugins` inside your Vite configuration.
+Add the plugin to your `vite.config.ts`:
 
 ```ts
 import { heyApiPlugin } from '@hey-api/vite-plugin';
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+  plugins: [heyApiPlugin()],
+});
+```
+
+The plugin will automatically pick up your [configuration](https://heyapi.dev/openapi-ts/configuration) file. You can also pass options inline using the `config` option:
+
+```ts
+import { heyApiPlugin } from '@hey-api/vite-plugin';
+import { defineConfig } from 'vite';
 
 export default defineConfig({
   plugins: [
     heyApiPlugin({
       config: {
-        // optional configuration instead of using the configuration file
+        input: 'hey-api/backend', // sign up at app.heyapi.dev
+        output: 'src/client',
       },
     }),
   ],
 });
 ```
+
+## License
+
+Released under the [MIT License](https://github.com/hey-api/openapi-ts/blob/main/LICENSE.md).
