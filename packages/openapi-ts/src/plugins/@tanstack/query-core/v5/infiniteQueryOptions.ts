@@ -91,6 +91,9 @@ const createInfiniteParamsFunction = ({ plugin }: { plugin: PluginInstance }) =>
   plugin.node(fn);
 };
 
+const TStyle = 'TStyle';
+const styleUnion = () => $.type.or($.type.literal('data'), $.type.literal('fields'));
+
 export const createInfiniteQueryOptions = ({
   operation,
   plugin,
@@ -138,6 +141,7 @@ export const createInfiniteQueryOptions = ({
 
   const typeData = useTypeData({ operation, plugin });
   const typeResponse = useTypeResponse({ operation, plugin });
+  const typeError = useTypeError({ operation, plugin });
 
   const symbolQueryKeyType = plugin.referenceSymbol({
     category: 'type',
@@ -169,90 +173,206 @@ export const createInfiniteQueryOptions = ({
   });
   plugin.node(node);
 
-  const awaitSdkFn = $.lazy((ctx) =>
-    ctx
-      .access(
-        plugin.referenceSymbol({
-          category: 'sdk',
-          resource: 'operation',
-          resourceId: operation.id,
-        }),
-      )
-      .call(
-        $.object()
-          .spread('options')
-          .spread('params')
-          .prop('signal', $('signal'))
-          .prop('throwOnError', $.literal(true)),
-      )
-      .await(),
-  );
-
   const symbolCreateInfiniteParams = plugin.referenceSymbol({
     category: 'utility',
     resource: 'createInfiniteParams',
     tool: plugin.name,
   });
 
-  const statements: Array<TsDsl<any>> = [
-    $.const('page')
-      .type(typePageObjectParam)
-      .hint('@ts-ignore')
-      .assign(
-        $.ternary($('pageParam').typeofExpr().eq($.literal('object')))
-          .do('pageParam')
-          .otherwise(
-            $.object()
-              .pretty()
-              .prop(pagination.in, $.object().pretty().prop(pagination.name, $('pageParam'))),
-          ),
-      ),
-    $.const('params').assign($(symbolCreateInfiniteParams).call('queryKey', 'page')),
-  ];
+  if (plugin.config.responseStyle === 'fields') {
+    // --- 'fields' code path: TStyle generic, ResponseResult/ResponseError wrappers ---
+    // Default to 'data' so omitting responseStyle preserves backward-compatible behavior
+    const defaultStyle = 'data' as const;
 
-  if (plugin.getPluginOrThrow('@hey-api/sdk').config.responseStyle === 'data') {
-    statements.push($.return(awaitSdkFn));
-  } else {
-    statements.push($.const().object('data').assign(awaitSdkFn), $.return('data'));
-  }
+    const symbolResponseResult = plugin.referenceSymbol({
+      category: 'type',
+      resource: 'ResponseResult',
+      tool: plugin.name,
+    });
+    const symbolResponseError = plugin.referenceSymbol({
+      category: 'type',
+      resource: 'ResponseError',
+      tool: plugin.name,
+    });
 
-  const symbolInfiniteQueryOptionsFn = plugin.symbol(
-    applyNaming(operation.id, plugin.config.infiniteQueryOptions),
-  );
-  const statement = $.const(symbolInfiniteQueryOptionsFn)
-    .export()
-    .$if(plugin.config.comments && createOperationComment(operation), (c, v) => c.doc(v))
-    .assign(
-      $.func()
-        .param('options', (p) => p.required(isRequiredOptions).type(typeData))
-        .do(
-          $.return(
-            $(symbolInfiniteQueryOptions)
-              .call(
-                $.object()
-                  .pretty()
-                  .hint('@ts-ignore')
-                  .prop(
-                    'queryFn',
-                    $.func()
-                      .async()
-                      .param((p) => p.object('pageParam', 'queryKey', 'signal'))
-                      .do(...statements),
-                  )
-                  .prop('queryKey', $(symbolInfiniteQueryKey).call('options'))
-                  .$if(handleMeta(plugin, operation, 'infiniteQueryOptions'), (o, v) =>
-                    o.prop('meta', v),
-                  ),
-              )
-              .generics(
-                typeResponse,
-                useTypeError({ operation, plugin }),
-                $.type(symbolInfiniteDataType).generic(typeResponse),
-                typeQueryKey,
-                $.type.or(type, typePageObjectParam),
-              ),
-          ),
-        ),
+    const typeResponseResult = $.type(symbolResponseResult).generic(typeResponse).generic(TStyle);
+    const typeResponseError = $.type(symbolResponseError).generic(typeError).generic(TStyle);
+
+    const awaitSdkFn = $.lazy((ctx) =>
+      ctx
+        .access(
+          plugin.referenceSymbol({
+            category: 'sdk',
+            resource: 'operation',
+            resourceId: operation.id,
+          }),
+        )
+        .call(
+          $.object()
+            .spread('options')
+            .spread('params')
+            .prop('signal', $('signal'))
+            .prop('throwOnError', $.literal(true))
+            .prop('responseStyle', $.literal('fields')),
+        )
+        .await(),
     );
-  plugin.node(statement);
+
+    const statements: Array<TsDsl<any>> = [
+      $.const('page')
+        .type(typePageObjectParam)
+        .hint('@ts-ignore')
+        .assign(
+          $.ternary($('pageParam').typeofExpr().eq($.literal('object')))
+            .do('pageParam')
+            .otherwise(
+              $.object()
+                .pretty()
+                .prop(pagination.in, $.object().pretty().prop(pagination.name, $('pageParam'))),
+            ),
+        ),
+      $.const('params').assign($(symbolCreateInfiniteParams).call('queryKey', 'page')),
+    ];
+
+    // Always assign full result, then conditionally return based on responseStyle
+    statements.push(
+      $.const('result').assign(awaitSdkFn),
+      $.const('_data').assign(
+        $.ternary($('options').attr('responseStyle').optional().eq($.literal('fields')))
+          .do('result')
+          .otherwise($('result').attr('data')),
+      ),
+      $.return($.as($('_data'), typeResponseResult)),
+    );
+
+    const symbolInfiniteQueryOptionsFn = plugin.symbol(
+      applyNaming(operation.id, plugin.config.infiniteQueryOptions),
+    );
+    const statement = $.const(symbolInfiniteQueryOptionsFn)
+      .export()
+      .$if(plugin.config.comments && createOperationComment(operation), (c, v) => c.doc(v))
+      .assign(
+        $.func()
+          .generic(TStyle, (g) => g.extends(styleUnion()).default($.type.literal(defaultStyle)))
+          .param('options', (p) =>
+            p.required(isRequiredOptions).type(
+              $.type.and(
+                typeData,
+                $.type.object().prop('responseStyle', (tp) => tp.optional().type(TStyle)),
+              ),
+            ),
+          )
+          .do(
+            $.return(
+              $(symbolInfiniteQueryOptions)
+                .call(
+                  $.object()
+                    .pretty()
+                    .hint('@ts-ignore')
+                    .prop(
+                      'queryFn',
+                      $.func()
+                        .async()
+                        .param((p) => p.object('pageParam', 'queryKey', 'signal'))
+                        .do(...statements),
+                    )
+                    .prop('queryKey', $(symbolInfiniteQueryKey).call('options'))
+                    .$if(handleMeta(plugin, operation, 'infiniteQueryOptions'), (o, v) =>
+                      o.prop('meta', v),
+                    ),
+                )
+                .generics(
+                  typeResponseResult,
+                  typeResponseError,
+                  $.type(symbolInfiniteDataType).generic(typeResponseResult),
+                  typeQueryKey,
+                  $.type.or(type, typePageObjectParam),
+                ),
+            ),
+          ),
+      );
+    plugin.node(statement);
+  } else {
+    // --- 'data' code path (default): original code, no TStyle, no ResponseResult/ResponseError ---
+    const awaitSdkFn = $.lazy((ctx) =>
+      ctx
+        .access(
+          plugin.referenceSymbol({
+            category: 'sdk',
+            resource: 'operation',
+            resourceId: operation.id,
+          }),
+        )
+        .call(
+          $.object()
+            .spread('options')
+            .spread('params')
+            .prop('signal', $('signal'))
+            .prop('throwOnError', $.literal(true)),
+        )
+        .await(),
+    );
+
+    const statements: Array<TsDsl<any>> = [
+      $.const('page')
+        .type(typePageObjectParam)
+        .hint('@ts-ignore')
+        .assign(
+          $.ternary($('pageParam').typeofExpr().eq($.literal('object')))
+            .do('pageParam')
+            .otherwise(
+              $.object()
+                .pretty()
+                .prop(pagination.in, $.object().pretty().prop(pagination.name, $('pageParam'))),
+            ),
+        ),
+      $.const('params').assign($(symbolCreateInfiniteParams).call('queryKey', 'page')),
+    ];
+
+    if (plugin.getPluginOrThrow('@hey-api/sdk').config.responseStyle === 'data') {
+      statements.push($.return(awaitSdkFn));
+    } else {
+      statements.push($.const().object('data').assign(awaitSdkFn), $.return('data'));
+    }
+
+    const symbolInfiniteQueryOptionsFn = plugin.symbol(
+      applyNaming(operation.id, plugin.config.infiniteQueryOptions),
+    );
+    const statement = $.const(symbolInfiniteQueryOptionsFn)
+      .export()
+      .$if(plugin.config.comments && createOperationComment(operation), (c, v) => c.doc(v))
+      .assign(
+        $.func()
+          .param('options', (p) => p.required(isRequiredOptions).type(typeData))
+          .do(
+            $.return(
+              $(symbolInfiniteQueryOptions)
+                .call(
+                  $.object()
+                    .pretty()
+                    .hint('@ts-ignore')
+                    .prop(
+                      'queryFn',
+                      $.func()
+                        .async()
+                        .param((p) => p.object('pageParam', 'queryKey', 'signal'))
+                        .do(...statements),
+                    )
+                    .prop('queryKey', $(symbolInfiniteQueryKey).call('options'))
+                    .$if(handleMeta(plugin, operation, 'infiniteQueryOptions'), (o, v) =>
+                      o.prop('meta', v),
+                    ),
+                )
+                .generics(
+                  typeResponse,
+                  useTypeError({ operation, plugin }),
+                  $.type(symbolInfiniteDataType).generic(typeResponse),
+                  typeQueryKey,
+                  $.type.or(type, typePageObjectParam),
+                ),
+            ),
+          ),
+      );
+    plugin.node(statement);
+  }
 };
