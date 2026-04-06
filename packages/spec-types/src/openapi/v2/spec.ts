@@ -1,4 +1,5 @@
-import type { CodeSampleObject, EnumExtensions } from '../../extensions/openapi';
+import type { CodeSampleObject } from '../../extensions/code-samples';
+import type { EnumExtensions } from '../../extensions/enum';
 import type { Document as JSONSchemaDraft4 } from '../../json-schema/draft-4/spec';
 import type { OpenAPIV2NullableExtensions } from './extensions';
 
@@ -1306,7 +1307,8 @@ export interface ResponsesObject {
  *       - packSize
  * ```
  */
-export interface SchemaObject extends JSONSchemaDraft4, OpenAPIV2NullableExtensions {
+export interface SchemaObject
+  extends JSONSchemaDraft4, EnumExtensions, OpenAPIV2NullableExtensions {
   /**
    * Allows extensions to the Swagger Schema. The field name MUST begin with `x-`, for example, `x-internal-id`. The value can be `null`, a primitive, an array or an object. See {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/2.0.md#specification-extensions Vendor Extensions} for further details.
    */
