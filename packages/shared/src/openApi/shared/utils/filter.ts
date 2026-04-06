@@ -11,29 +11,28 @@ type FilterNamespace = 'body' | 'operation' | 'parameter' | 'response' | 'schema
 
 const namespaceNeedle = '/';
 
-export const addNamespace = (namespace: FilterNamespace, value: string = ''): string =>
-  `${namespace}${namespaceNeedle}${value}`;
+export function addNamespace(namespace: FilterNamespace, value: string = ''): string {
+  return `${namespace}${namespaceNeedle}${value}`;
+}
 
-export const removeNamespace = (
-  key: string,
-): {
+export function removeNamespace(key: string): {
   name: string;
   namespace: FilterNamespace;
-} => {
+} {
   const index = key.indexOf(namespaceNeedle);
   const name = key.slice(index + 1);
   return {
     name,
     namespace: key.slice(0, index)! as FilterNamespace,
   };
-};
+}
 
 /**
  * Converts reference strings from OpenAPI $ref keywords into namespaces.
  *
  * @example '#/components/schemas/Foo' -> 'schema'
  */
-export const stringToNamespace = (value: string): FilterNamespace => {
+export function stringToNamespace(value: string): FilterNamespace {
   switch (value) {
     case 'parameters':
       return 'parameter';
@@ -47,7 +46,29 @@ export const stringToNamespace = (value: string): FilterNamespace => {
     default:
       return 'unknown';
   }
-};
+}
+
+function getResourceDependencies(
+  key: string,
+  resourceMetadata: ResourceMetadata,
+): Set<string> | undefined {
+  const { namespace } = removeNamespace(key);
+  if (namespace === 'body') {
+    return resourceMetadata.requestBodies.get(key)?.dependencies;
+  }
+  if (namespace === 'operation') {
+    return resourceMetadata.operations.get(key)?.dependencies;
+  }
+  if (namespace === 'parameter') {
+    return resourceMetadata.parameters.get(key)?.dependencies;
+  }
+  if (namespace === 'response') {
+    return resourceMetadata.responses.get(key)?.dependencies;
+  }
+  if (namespace === 'schema') {
+    return resourceMetadata.schemas.get(key)?.dependencies;
+  }
+}
 
 type FiltersConfigToState<T> = {
   [K in keyof T]-?: NonNullable<T[K]> extends ReadonlyArray<infer U>
@@ -64,10 +85,10 @@ interface SetAndRegExps {
   set: Set<string>;
 }
 
-const createFiltersSetAndRegExps = (
+function createFiltersSetAndRegExps(
   type: FilterNamespace,
   filters: ReadonlyArray<string> | undefined,
-): SetAndRegExps => {
+): SetAndRegExps {
   const keys: Array<string> = [];
   const regexps: Array<RegExp> = [];
   if (filters) {
@@ -83,7 +104,7 @@ const createFiltersSetAndRegExps = (
     regexps,
     set: new Set(keys),
   };
-};
+}
 
 interface CollectFiltersSetFromRegExps {
   excludeOperations: SetAndRegExps;
@@ -98,7 +119,7 @@ interface CollectFiltersSetFromRegExps {
   includeSchemas: SetAndRegExps;
 }
 
-const collectFiltersSetFromRegExpsOpenApiV2 = ({
+function collectFiltersSetFromRegExpsOpenApiV2({
   excludeOperations,
   excludeSchemas,
   includeOperations,
@@ -106,7 +127,7 @@ const collectFiltersSetFromRegExpsOpenApiV2 = ({
   spec,
 }: CollectFiltersSetFromRegExps & {
   spec: OpenApi.V2_0_X;
-}) => {
+}): void {
   if ((excludeOperations.regexps.length || includeOperations.regexps.length) && spec.paths) {
     for (const entry of Object.entries(spec.paths)) {
       const path = entry[0] as keyof OpenAPIV3_1.PathsObject;
@@ -142,9 +163,9 @@ const collectFiltersSetFromRegExpsOpenApiV2 = ({
       }
     }
   }
-};
+}
 
-const collectFiltersSetFromRegExpsOpenApiV3 = ({
+function collectFiltersSetFromRegExpsOpenApiV3({
   excludeOperations,
   excludeParameters,
   excludeRequestBodies,
@@ -158,7 +179,7 @@ const collectFiltersSetFromRegExpsOpenApiV3 = ({
   spec,
 }: CollectFiltersSetFromRegExps & {
   spec: OpenApi.V3_0_X | OpenApi.V3_1_X;
-}) => {
+}): void {
   if ((excludeOperations.regexps.length || includeOperations.regexps.length) && spec.paths) {
     for (const entry of Object.entries(spec.paths)) {
       const path = entry[0] as keyof OpenAPIV3_1.PathsObject;
@@ -237,26 +258,26 @@ const collectFiltersSetFromRegExpsOpenApiV3 = ({
       }
     }
   }
-};
+}
 
-const collectFiltersSetFromRegExps = ({
+function collectFiltersSetFromRegExps({
   spec,
   ...filters
 }: CollectFiltersSetFromRegExps & {
   spec: OpenApi.V2_0_X | OpenApi.V3_0_X | OpenApi.V3_1_X;
-}): void => {
+}): void {
   if ('swagger' in spec) {
     collectFiltersSetFromRegExpsOpenApiV2({ ...filters, spec });
   } else {
     collectFiltersSetFromRegExpsOpenApiV3({ ...filters, spec });
   }
-};
+}
 
-export const createFilters = (
+export function createFilters(
   config: Parser['filters'],
   spec: OpenApi.V2_0_X | OpenApi.V3_0_X | OpenApi.V3_1_X,
   logger: Logger,
-): Filters => {
+): Filters {
   const eventCreateFilters = logger.timeEvent('create-filters');
   const excludeOperations = createFiltersSetAndRegExps('operation', config?.operations?.exclude);
   const includeOperations = createFiltersSetAndRegExps('operation', config?.operations?.include);
@@ -314,9 +335,9 @@ export const createFilters = (
   };
   eventCreateFilters.timeEnd();
   return filters;
-};
+}
 
-export const hasFilters = (config: Parser['filters']): boolean => {
+export function hasFilters(config: Parser['filters']): boolean {
   if (!config) {
     return false;
   }
@@ -340,12 +361,14 @@ export const hasFilters = (config: Parser['filters']): boolean => {
     config.tags?.exclude?.length ||
     config.tags?.include?.length,
   );
-};
+}
 
 /**
  * Collect operations that satisfy the include/exclude filters and schema dependencies.
+ *
+ * Must be called after dropping components.
  */
-const collectOperations = ({
+function collectOperations({
   filters,
   parameters,
   requestBodies,
@@ -361,7 +384,7 @@ const collectOperations = ({
   schemas: Set<string>;
 }): {
   operations: Set<string>;
-} => {
+} {
   const finalSet = new Set<string>();
   const initialSet = filters.operations.include.size
     ? filters.operations.include
@@ -423,12 +446,12 @@ const collectOperations = ({
     finalSet.add(key);
   }
   return { operations: finalSet };
-};
+}
 
 /**
  * Collect parameters that satisfy the include/exclude filters and schema dependencies.
  */
-const collectParameters = ({
+function collectParameters({
   filters,
   resourceMetadata,
   schemas,
@@ -438,7 +461,7 @@ const collectParameters = ({
   schemas: Set<string>;
 }): {
   parameters: Set<string>;
-} => {
+} {
   const finalSet = new Set<string>();
   const initialSet = filters.parameters.include.size
     ? filters.parameters.include
@@ -490,12 +513,12 @@ const collectParameters = ({
     }
   }
   return { parameters: finalSet };
-};
+}
 
 /**
  * Collect request bodies that satisfy the include/exclude filters and schema dependencies.
  */
-const collectRequestBodies = ({
+function collectRequestBodies({
   filters,
   resourceMetadata,
   schemas,
@@ -505,7 +528,7 @@ const collectRequestBodies = ({
   schemas: Set<string>;
 }): {
   requestBodies: Set<string>;
-} => {
+} {
   const finalSet = new Set<string>();
   const initialSet = filters.requestBodies.include.size
     ? filters.requestBodies.include
@@ -557,12 +580,12 @@ const collectRequestBodies = ({
     }
   }
   return { requestBodies: finalSet };
-};
+}
 
 /**
  * Collect responses that satisfy the include/exclude filters and schema dependencies.
  */
-const collectResponses = ({
+function collectResponses({
   filters,
   resourceMetadata,
   schemas,
@@ -572,7 +595,7 @@ const collectResponses = ({
   schemas: Set<string>;
 }): {
   responses: Set<string>;
-} => {
+} {
   const finalSet = new Set<string>();
   const initialSet = filters.responses.include.size
     ? filters.responses.include
@@ -624,12 +647,12 @@ const collectResponses = ({
     }
   }
   return { responses: finalSet };
-};
+}
 
 /**
  * Collect schemas that satisfy the include/exclude filters.
  */
-const collectSchemas = ({
+function collectSchemas({
   filters,
   resourceMetadata,
 }: {
@@ -637,7 +660,7 @@ const collectSchemas = ({
   resourceMetadata: ResourceMetadata;
 }): {
   schemas: Set<string>;
-} => {
+} {
   const finalSet = new Set<string>();
   const initialSet = filters.schemas.include.size
     ? filters.schemas.include
@@ -679,12 +702,12 @@ const collectSchemas = ({
     }
   }
   return { schemas: finalSet };
-};
+}
 
 /**
  * Drop parameters that depend on already excluded parameters.
  */
-const dropExcludedParameters = ({
+function dropExcludedParameters({
   filters,
   parameters,
   resourceMetadata,
@@ -692,7 +715,7 @@ const dropExcludedParameters = ({
   filters: Filters;
   parameters: Set<string>;
   resourceMetadata: ResourceMetadata;
-}): void => {
+}): void {
   if (!filters.parameters.exclude.size) {
     return;
   }
@@ -711,12 +734,12 @@ const dropExcludedParameters = ({
       }
     }
   }
-};
+}
 
 /**
  * Drop request bodies that depend on already excluded request bodies.
  */
-const dropExcludedRequestBodies = ({
+function dropExcludedRequestBodies({
   filters,
   requestBodies,
   resourceMetadata,
@@ -724,7 +747,7 @@ const dropExcludedRequestBodies = ({
   filters: Filters;
   requestBodies: Set<string>;
   resourceMetadata: ResourceMetadata;
-}): void => {
+}): void {
   if (!filters.requestBodies.exclude.size) {
     return;
   }
@@ -743,12 +766,12 @@ const dropExcludedRequestBodies = ({
       }
     }
   }
-};
+}
 
 /**
  * Drop responses that depend on already excluded responses.
  */
-const dropExcludedResponses = ({
+function dropExcludedResponses({
   filters,
   resourceMetadata,
   responses,
@@ -756,7 +779,7 @@ const dropExcludedResponses = ({
   filters: Filters;
   resourceMetadata: ResourceMetadata;
   responses: Set<string>;
-}): void => {
+}): void {
   if (!filters.responses.exclude.size) {
     return;
   }
@@ -775,12 +798,12 @@ const dropExcludedResponses = ({
       }
     }
   }
-};
+}
 
 /**
  * Drop schemas that depend on already excluded schemas.
  */
-const dropExcludedSchemas = ({
+function dropExcludedSchemas({
   filters,
   resourceMetadata,
   schemas,
@@ -788,7 +811,7 @@ const dropExcludedSchemas = ({
   filters: Filters;
   resourceMetadata: ResourceMetadata;
   schemas: Set<string>;
-}): void => {
+}): void {
   if (!filters.schemas.exclude.size) {
     return;
   }
@@ -807,44 +830,131 @@ const dropExcludedSchemas = ({
       }
     }
   }
-};
+}
 
-const dropOrphans = ({
+function dropOrphans({
+  includedDependencies,
   operationDependencies,
   parameters,
   requestBodies,
   responses,
   schemas,
 }: {
+  includedDependencies: Set<string>;
   operationDependencies: Set<string>;
   parameters: Set<string>;
   requestBodies: Set<string>;
   responses: Set<string>;
   schemas: Set<string>;
-}) => {
+}): void {
   for (const key of schemas) {
-    if (!operationDependencies.has(key)) {
+    if (!operationDependencies.has(key) && !includedDependencies.has(key)) {
       schemas.delete(key);
     }
   }
   for (const key of parameters) {
-    if (!operationDependencies.has(key)) {
+    if (!operationDependencies.has(key) && !includedDependencies.has(key)) {
       parameters.delete(key);
     }
   }
   for (const key of requestBodies) {
-    if (!operationDependencies.has(key)) {
+    if (!operationDependencies.has(key) && !includedDependencies.has(key)) {
       requestBodies.delete(key);
     }
   }
   for (const key of responses) {
-    if (!operationDependencies.has(key)) {
+    if (!operationDependencies.has(key) && !includedDependencies.has(key)) {
       responses.delete(key);
     }
   }
-};
+}
 
-const collectOperationDependencies = ({
+function collectDependencies({
+  resourceMetadata,
+  seeds,
+}: {
+  resourceMetadata: ResourceMetadata;
+  seeds: Set<string>;
+}): {
+  dependencies: Set<string>;
+} {
+  const finalSet = new Set<string>();
+  const stack = [...seeds];
+  while (stack.length) {
+    const key = stack.pop()!;
+
+    if (finalSet.has(key)) {
+      continue;
+    }
+
+    finalSet.add(key);
+    const dependencies = getResourceDependencies(key, resourceMetadata);
+
+    if (!dependencies?.size) {
+      continue;
+    }
+
+    for (const dependency of dependencies) {
+      if (!finalSet.has(dependency)) {
+        stack.push(dependency);
+      }
+    }
+  }
+  return { dependencies: finalSet };
+}
+
+function collectExplicitDependencies({
+  filters,
+  resourceMetadata,
+}: {
+  filters: Filters;
+  resourceMetadata: ResourceMetadata;
+}): {
+  explicitDependencies: Set<string>;
+} {
+  // Exclude wins over include. Start from non-excluded include seeds.
+  const seeds = new Set<string>();
+
+  for (const key of filters.parameters.include) {
+    if (!filters.parameters.exclude.has(key)) {
+      seeds.add(key);
+    }
+  }
+  for (const key of filters.requestBodies.include) {
+    if (!filters.requestBodies.exclude.has(key)) {
+      seeds.add(key);
+    }
+  }
+  for (const key of filters.responses.include) {
+    if (!filters.responses.exclude.has(key)) {
+      seeds.add(key);
+    }
+  }
+  for (const key of filters.schemas.include) {
+    if (!filters.schemas.exclude.has(key)) {
+      seeds.add(key);
+    }
+  }
+
+  const { dependencies } = collectDependencies({ resourceMetadata, seeds });
+
+  // Exclude wins for transitive dependencies as well.
+  for (const key of dependencies) {
+    const { namespace } = removeNamespace(key);
+    if (
+      (namespace === 'body' && filters.requestBodies.exclude.has(key)) ||
+      (namespace === 'parameter' && filters.parameters.exclude.has(key)) ||
+      (namespace === 'response' && filters.responses.exclude.has(key)) ||
+      (namespace === 'schema' && filters.schemas.exclude.has(key))
+    ) {
+      dependencies.delete(key);
+    }
+  }
+
+  return { explicitDependencies: dependencies };
+}
+
+function collectOperationDependencies({
   operations,
   resourceMetadata,
 }: {
@@ -852,7 +962,7 @@ const collectOperationDependencies = ({
   resourceMetadata: ResourceMetadata;
 }): {
   operationDependencies: Set<string>;
-} => {
+} {
   const finalSet = new Set<string>();
   const initialSet = new Set(
     [...operations].flatMap((key) => [
@@ -868,20 +978,7 @@ const collectOperationDependencies = ({
     }
 
     finalSet.add(key);
-
-    const { namespace } = removeNamespace(key);
-    let dependencies: Set<string> | undefined;
-    if (namespace === 'body') {
-      dependencies = resourceMetadata.requestBodies.get(key)?.dependencies;
-    } else if (namespace === 'operation') {
-      dependencies = resourceMetadata.operations.get(key)?.dependencies;
-    } else if (namespace === 'parameter') {
-      dependencies = resourceMetadata.parameters.get(key)?.dependencies;
-    } else if (namespace === 'response') {
-      dependencies = resourceMetadata.responses.get(key)?.dependencies;
-    } else if (namespace === 'schema') {
-      dependencies = resourceMetadata.schemas.get(key)?.dependencies;
-    }
+    const dependencies = getResourceDependencies(key, resourceMetadata);
 
     if (!dependencies?.size) {
       continue;
@@ -894,9 +991,9 @@ const collectOperationDependencies = ({
     }
   }
   return { operationDependencies: finalSet };
-};
+}
 
-export const createFilteredDependencies = ({
+export function createFilteredDependencies({
   filters,
   logger,
   resourceMetadata,
@@ -910,7 +1007,7 @@ export const createFilteredDependencies = ({
   requestBodies: Set<string>;
   responses: Set<string>;
   schemas: Set<string>;
-} => {
+} {
   const eventCreateFilteredDependencies = logger.timeEvent('create-filtered-dependencies');
   const { schemas } = collectSchemas({ filters, resourceMetadata });
   const { parameters } = collectParameters({
@@ -949,7 +1046,12 @@ export const createFilteredDependencies = ({
       operations,
       resourceMetadata,
     });
+    const { explicitDependencies } = collectExplicitDependencies({
+      filters,
+      resourceMetadata,
+    });
     dropOrphans({
+      includedDependencies: explicitDependencies,
       operationDependencies,
       parameters,
       requestBodies,
@@ -966,4 +1068,4 @@ export const createFilteredDependencies = ({
     responses,
     schemas,
   };
-};
+}
