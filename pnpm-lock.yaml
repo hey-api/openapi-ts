@@ -748,8 +748,8 @@ importers:
         specifier: 24.0.4
         version: 24.0.4
       '@types/jsdom':
-        specifier: 27.0.0
-        version: 27.0.0
+        specifier: 28.0.1
+        version: 28.0.1
       '@types/node':
         specifier: 24.12.0
         version: 24.12.0
@@ -903,8 +903,8 @@ importers:
         specifier: 24.0.4
         version: 24.0.4
       '@types/jsdom':
-        specifier: 27.0.0
-        version: 27.0.0
+        specifier: 28.0.1
+        version: 28.0.1
       '@types/node':
         specifier: 24.12.0
         version: 24.12.0
@@ -1201,8 +1201,8 @@ importers:
         specifier: 24.0.4
         version: 24.0.4
       '@types/jsdom':
-        specifier: 27.0.0
-        version: 27.0.0
+        specifier: 28.0.1
+        version: 28.0.1
       '@types/node':
         specifier: 24.12.0
         version: 24.12.0
@@ -7712,8 +7712,8 @@ packages:
   '@types/jasmine@5.1.15':
     resolution: {integrity: sha512-ZAC8KjmV2MJxbNTrwXFN+HKeajpXQZp6KpPiR6Aa4XvaEnjP6qh23lL/Rqb7AYzlp3h/rcwDrQ7Gg7q28cQTQg==}
 
-  '@types/jsdom@27.0.0':
-    resolution: {integrity: sha512-NZyFl/PViwKzdEkQg96gtnB8wm+1ljhdDay9ahn4hgb+SfVtPCbm3TlmDUFXTA+MGN3CijicnMhG18SI5H3rFw==}
+  '@types/jsdom@28.0.1':
+    resolution: {integrity: sha512-GJq2QE4TAZ5ajSoCasn5DOFm8u1mI3tIFvM5tIq3W5U/RTB6gsHwc6Yhpl91X9VSDOUVblgXmG+2+sSvFQrdlw==}
 
   '@types/jsesc@2.5.1':
     resolution: {integrity: sha512-9VN+6yxLOPLOav+7PwjZbxiID2bVaeq0ED4qSQmdQTdjnXJSaCVKTR58t15oqH1H5t8Ng2ZX1SabJVoN9Q34bw==}
@@ -14923,6 +14923,9 @@ packages:
 
   undici-types@7.16.0:
     resolution: {integrity: sha512-Zz+aZWSj8LE6zoxD+xrjh4VfkIG8Ya6LvYkZqtUQGJPZjYl53ypCaUwWqo7eI0x66KBGeRo+mlBEkMSeSZ38Nw==}
+
+  undici-types@7.24.7:
+    resolution: {integrity: sha512-XA+gOBkzYD3C74sZowtCLTpgtaCdqZhqCvR6y9LXvrKTt/IVU6bz49T4D+BPi475scshCCkb0IklJRw6T1ZlgQ==}
 
   undici@7.18.2:
     resolution: {integrity: sha512-y+8YjDFzWdQlSE9N5nzKMT3g4a5UBX1HKowfdXh0uvAnTaqqwqB92Jt4UXBAeKekDs5IaDKyJFR4X1gYVCgXcw==}
@@ -22762,11 +22765,12 @@ snapshots:
 
   '@types/jasmine@5.1.15': {}
 
-  '@types/jsdom@27.0.0':
+  '@types/jsdom@28.0.1':
     dependencies:
       '@types/node': 24.12.0
       '@types/tough-cookie': 4.0.5
       parse5: 7.3.0
+      undici-types: 7.24.7
 
   '@types/jsesc@2.5.1': {}
 
@@ -32350,6 +32354,8 @@ snapshots:
       unplugin: 2.3.11
 
   undici-types@7.16.0: {}
+
+  undici-types@7.24.7: {}
 
   undici@7.18.2: {}
 
