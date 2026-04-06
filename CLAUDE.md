@@ -69,7 +69,7 @@ scripts/               # Build and test scripts
 ## Tooling
 
 - **Package manager**: pnpm 10.28.2 (strict engine, exact versions)
-- **Node**: >=20.19.0 (see .nvmrc for exact version)
+- **Node**: >=22.13.0 (see .nvmrc for exact version)
 - **Build**: Turbo 2.8.0 + tsdown + Rollup
 - **Language**: TypeScript 5.9.3, ESM only
 - **Formatter**: oxfmt 0.27.0 (single quotes via .oxfmtrc.json)
