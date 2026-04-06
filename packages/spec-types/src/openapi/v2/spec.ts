@@ -65,7 +65,7 @@ export interface Document {
   /**
    * **Required**. Specifies the Swagger Specification version being used. It can be used by the Swagger UI and other clients to interpret the API listing. The value MUST be `"2.0"`.
    */
-  swagger: string;
+  swagger: '2.0';
   /**
    * A list of tags used by the specification with additional metadata. The order of the tags can be used to reflect on their order by the parsing tools. Not all tags that are used by the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/2.0.md#operation-object Operation Object} must be declared. The tags that are not declared may be organized randomly or based on the tools' logic. Each tag name in the list MUST be unique.
    */
