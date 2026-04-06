@@ -1,5 +1,11 @@
 # @hey-api/codegen-core
 
+## 0.8.0
+
+### Minor Changes
+
+- **BREAKING**: This release bumps the minimum required Node version to 22.13. ([#3694](https://github.com/hey-api/openapi-ts/pull/3694)) ([`e930278`](https://github.com/hey-api/openapi-ts/commit/e930278d5fcd74545b0fc5d600b524e895d4fe6a)) by [@mrlubos](https://github.com/mrlubos)
+
 ## 0.7.4
 
 ### Patch Changes

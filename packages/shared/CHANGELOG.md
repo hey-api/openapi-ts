@@ -1,5 +1,20 @@
 # @hey-api/shared
 
+## 0.4.0
+
+### Minor Changes
+
+- **BREAKING**: This release bumps the minimum required Node version to 22.13. ([#3694](https://github.com/hey-api/openapi-ts/pull/3694)) ([`e930278`](https://github.com/hey-api/openapi-ts/commit/e930278d5fcd74545b0fc5d600b524e895d4fe6a)) by [@mrlubos](https://github.com/mrlubos)
+
+### Patch Changes
+
+- **error**: handle InputError ([#3679](https://github.com/hey-api/openapi-ts/pull/3679)) ([`b643d7d`](https://github.com/hey-api/openapi-ts/commit/b643d7d400492489a24918534991dfb3f1443abc)) by [@mrlubos](https://github.com/mrlubos)
+
+### Updated Dependencies:
+
+- @hey-api/json-schema-ref-parser@1.4.0
+- @hey-api/codegen-core@0.8.0
+
 ## 0.3.0
 
 ### Minor Changes
