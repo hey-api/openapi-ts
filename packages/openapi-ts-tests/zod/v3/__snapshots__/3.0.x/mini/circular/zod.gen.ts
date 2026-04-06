@@ -2,6 +2,23 @@
 
 import * as z from 'zod/v4-mini';
 
+export const zTreeNode = z.object({
+    id: z.string(),
+    value: z.string(),
+    children: z.optional(z.array(z.lazy((): any => zTreeNode)))
+});
+
+export const zWrapper = z.object({
+    label: z.string(),
+    tree: zTreeNode
+});
+
+export const zComment = z.object({
+    id: z.string(),
+    text: z.string(),
+    parent: z.nullable(z.lazy((): any => zComment))
+});
+
 export const zFoo = z.object({
     quux: z.optional(z.lazy((): any => zQuux))
 });
@@ -30,4 +47,34 @@ export const zQuux = z.object({
 
 export const zCorge = z.object({
     baz: z.optional(z.array(zBaz))
+});
+
+export const zOrg = z.object({
+    id: z.string(),
+    name: z.string(),
+    members: z.optional(z.array(z.lazy((): any => zMember)))
+});
+
+export const zMember = z.object({
+    id: z.string(),
+    name: z.string(),
+    org: z.optional(zOrg)
+});
+
+export const zDepartment = z.object({
+    id: z.string(),
+    name: z.string(),
+    employees: z.optional(z.array(z.lazy((): any => zEmployee)))
+});
+
+export const zEmployee = z.object({
+    id: z.string(),
+    name: z.string(),
+    projects: z.array(z.lazy((): any => zProject))
+});
+
+export const zProject = z.object({
+    id: z.string(),
+    name: z.string(),
+    department: z.optional(zDepartment)
 });

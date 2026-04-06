@@ -233,5 +233,5 @@ const mockServer = setupServer(getPetByIdMock({ result: { id: 1, name: 'Fido' } 
 - Query parameters are not typed in the resolver. MSW doesn't provide typed query params natively — use `new URL(request.url).searchParams` instead.
 - The response type generic is omitted from `HttpResponseResolver` to avoid MSW's `DefaultBodyType` constraint issues with union and void response types.
 
-<UserConfig plugin="msw" />
+<UserConfig package="openapi-ts" plugin="msw" />
 <Examples />

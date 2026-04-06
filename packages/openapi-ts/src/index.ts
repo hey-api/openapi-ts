@@ -215,8 +215,8 @@ export namespace Plugins {
   }
 
   export namespace FakerJsFaker {
-    export type Types = FakerJsFakerPlugin;
     export type Resolvers = Required<FakerJsFakerResolvers>['$resolvers'];
+    export type Types = FakerJsFakerPlugin;
   }
 
   export namespace Fastify {

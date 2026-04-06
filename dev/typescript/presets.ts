@@ -13,6 +13,10 @@ export const presets = {
     /** Just the client */
     plugins.clientAxios(),
   ],
+  fake: () => [
+    /** Just the faker */
+    plugins.faker(),
+  ],
   full: () => [
     /** Full kitchen sink for comprehensive testing */
     plugins.typescript(),

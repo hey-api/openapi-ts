@@ -2,6 +2,23 @@
 
 import { z } from 'zod';
 
+export const zTreeNode: z.AnyZodObject = z.object({
+    id: z.string(),
+    value: z.string(),
+    children: z.array(z.lazy(() => zTreeNode)).optional()
+});
+
+export const zWrapper = z.object({
+    label: z.string(),
+    tree: zTreeNode
+});
+
+export const zComment: z.AnyZodObject = z.object({
+    id: z.string(),
+    text: z.string(),
+    parent: z.lazy(() => zComment).nullable()
+});
+
 export const zFoo: z.AnyZodObject = z.object({
     quux: z.lazy(() => zQuux).optional()
 });
@@ -30,4 +47,34 @@ export const zQuux = z.object({
 
 export const zCorge = z.object({
     baz: z.array(zBaz).optional()
+});
+
+export const zOrg: z.AnyZodObject = z.object({
+    id: z.string(),
+    name: z.string(),
+    members: z.array(z.lazy(() => zMember)).optional()
+});
+
+export const zMember = z.object({
+    id: z.string(),
+    name: z.string(),
+    org: zOrg.optional()
+});
+
+export const zDepartment: z.AnyZodObject = z.object({
+    id: z.string(),
+    name: z.string(),
+    employees: z.array(z.lazy(() => zEmployee)).optional()
+});
+
+export const zEmployee: z.AnyZodObject = z.object({
+    id: z.string(),
+    name: z.string(),
+    projects: z.array(z.lazy(() => zProject))
+});
+
+export const zProject = z.object({
+    id: z.string(),
+    name: z.string(),
+    department: zDepartment.optional()
 });
