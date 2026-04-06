@@ -1,0 +1,523 @@
+swagger: '2.0'
+info:
+  title: Faker plugin coverage test
+  version: '1'
+host: localhost
+basePath: /
+schemes:
+  - https
+produces:
+  - application/json
+consumes:
+  - application/json
+paths:
+  /pets:
+    get:
+      operationId: listPets
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          type: integer
+          minimum: 1
+          maximum: 100
+      responses:
+        '200':
+          description: A list of pets
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Pet'
+    post:
+      operationId: createPet
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+              tag:
+                type: string
+            required:
+              - name
+      responses:
+        '201':
+          description: Pet created
+          schema:
+            $ref: '#/definitions/Pet'
+        '204':
+          description: No content
+  /pets/{id}:
+    get:
+      operationId: getPet
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: A pet
+          schema:
+            $ref: '#/definitions/Pet'
+        '404':
+          description: Not found
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      operationId: updatePet
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: dryRun
+          in: query
+          required: false
+          type: boolean
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+              tag:
+                $ref: '#/definitions/Tag'
+            required:
+              - name
+      responses:
+        '200':
+          description: Updated pet
+          schema:
+            $ref: '#/definitions/Pet'
+    delete:
+      operationId: deletePet
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: Not found
+          schema:
+            $ref: '#/definitions/Error'
+  /health:
+    get:
+      operationId: healthCheck
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+definitions:
+  # --- Primitive types ---
+  Price:
+    type: number
+  Quantity:
+    type: integer
+  Active:
+    type: boolean
+
+  # --- Enums ---
+  NumericEnum:
+    type: integer
+    enum:
+      - 1
+      - 2
+      - 3
+
+  # --- String formats ---
+  Email:
+    type: string
+    format: email
+  DateTime:
+    type: string
+    format: date-time
+  DateOnly:
+    type: string
+    format: date
+  UniqueId:
+    type: string
+    format: uuid
+  Website:
+    type: string
+    format: uri
+  IPv4Address:
+    type: string
+    format: ipv4
+  IPv6Address:
+    type: string
+    format: ipv6
+
+  # --- String with pattern ---
+  ZipCode:
+    type: string
+    pattern: '^\d{5}(-\d{4})?$'
+
+  # --- String with length constraints ---
+  ShortName:
+    type: string
+    minLength: 2
+    maxLength: 50
+  MinOnlyString:
+    type: string
+    minLength: 10
+  MaxOnlyString:
+    type: string
+    maxLength: 5
+
+  # --- Format takes priority over length constraints ---
+  EmailWithLength:
+    type: string
+    format: email
+    minLength: 5
+    maxLength: 100
+
+  # --- Numeric constraints ---
+  BoundedInt:
+    type: integer
+    minimum: 1
+    maximum: 100
+  BoundedFloat:
+    type: number
+    minimum: 0.0
+    maximum: 1.0
+  ExclusiveInt:
+    type: integer
+    minimum: 0
+    exclusiveMinimum: true
+    maximum: 10
+    exclusiveMaximum: true
+  MinOnlyNumber:
+    type: number
+    minimum: 0
+  MaxOnlyInt:
+    type: integer
+    maximum: 999
+  ExclusiveFloat:
+    type: number
+    minimum: 0
+    exclusiveMinimum: true
+    maximum: 1
+    exclusiveMaximum: true
+  ExclusiveFloatNarrow:
+    type: number
+    minimum: 10.1
+    exclusiveMinimum: true
+    maximum: 10.2
+    exclusiveMaximum: true
+
+  # --- Array types and constraints ---
+  Tags:
+    type: array
+    items:
+      type: string
+  TagList:
+    type: array
+    items:
+      type: string
+    minItems: 1
+    maxItems: 10
+  MinOnlyArray:
+    type: array
+    items:
+      type: integer
+    minItems: 3
+  MaxOnlyArray:
+    type: array
+    items:
+      type: string
+    maxItems: 5
+
+  # --- Default values ---
+  DefaultString:
+    type: string
+    default: 'unknown'
+  DefaultInt:
+    type: integer
+    default: 0
+  DefaultBool:
+    type: boolean
+    default: true
+  DefaultOverridesConstraints:
+    type: integer
+    minimum: 1
+    maximum: 100
+    default: 42
+
+  # --- Nullable types ---
+  NullableString:
+    type: string
+    x-nullable: true
+  NullableInt:
+    type: integer
+    x-nullable: true
+
+  # --- Objects ---
+  ObjectWithDefaultProp:
+    type: object
+    properties:
+      name:
+        type: string
+      status:
+        type: string
+        default: 'active'
+    required:
+      - name
+  UserProfile:
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      bio:
+        type: string
+      age:
+        type: integer
+    required:
+      - id
+      - name
+  Pet:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      age:
+        type: integer
+      tag:
+        $ref: '#/definitions/Tag'
+    required:
+      - id
+      - name
+  Tag:
+    type: object
+    properties:
+      id:
+        type: integer
+      label:
+        type: string
+    required:
+      - id
+      - label
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+    required:
+      - code
+      - message
+
+  # --- Nested $ref ---
+  Address:
+    type: object
+    properties:
+      street:
+        type: string
+        minLength: 1
+        maxLength: 200
+      zip:
+        $ref: '#/definitions/ZipCode'
+    required:
+      - street
+      - zip
+  Person:
+    type: object
+    properties:
+      name:
+        $ref: '#/definitions/ShortName'
+      email:
+        $ref: '#/definitions/Email'
+      address:
+        $ref: '#/definitions/Address'
+    required:
+      - name
+      - email
+  PersonList:
+    type: array
+    items:
+      $ref: '#/definitions/Person'
+    minItems: 1
+    maxItems: 20
+  PetList:
+    type: array
+    items:
+      $ref: '#/definitions/Pet'
+  Team:
+    type: object
+    properties:
+      lead:
+        $ref: '#/definitions/Person'
+      config:
+        $ref: '#/definitions/ObjectWithDefaultProp'
+    required:
+      - lead
+      - config
+
+  # --- allOf intersection ---
+  PetWithOwner:
+    allOf:
+      - $ref: '#/definitions/Pet'
+      - type: object
+        properties:
+          owner:
+            type: string
+        required:
+          - owner
+
+  # --- Property name inference ---
+  PersonProfile:
+    type: object
+    properties:
+      firstName:
+        type: string
+      last_name:
+        type: string
+      email:
+        type: string
+      phone:
+        type: string
+      age:
+        type: integer
+      city:
+        type: string
+      postalCode:
+        type: string
+      bio:
+        type: string
+      website:
+        type: string
+        format: uri
+      zipCode:
+        type: string
+        pattern: '^\d{5}$'
+      username:
+        type: string
+        minLength: 3
+        maxLength: 20
+      someRandomField:
+        type: string
+    required:
+      - firstName
+      - last_name
+      - email
+      - phone
+      - age
+      - city
+      - postalCode
+      - bio
+      - website
+      - zipCode
+      - username
+      - someRandomField
+
+  # --- Number constraint merging with name defaults ---
+  PersonWithConstraints:
+    type: object
+    properties:
+      age:
+        type: integer
+        minimum: 18
+      seniorAge:
+        type: integer
+        minimum: 65
+        maximum: 100
+    required:
+      - age
+
+  # --- Ancestor-aware inference ---
+  User:
+    type: object
+    properties:
+      name:
+        type: string
+      email:
+        type: string
+    required:
+      - name
+      - email
+  Company:
+    type: object
+    properties:
+      name:
+        type: string
+    required:
+      - name
+  Config:
+    type: object
+    properties:
+      name:
+        type: string
+    required:
+      - name
+
+  # --- Never types (impossible intersections) ---
+  # Tuple with never elements — should be skipped entirely
+  NeverTuple:
+    type: array
+    items:
+      allOf:
+        - type: number
+        - type: string
+    minItems: 2
+    maxItems: 2
+  # Array with never items — should produce empty array []
+  NeverArray:
+    type: array
+    items:
+      allOf:
+        - type: number
+        - type: string
+  # Object with a required property that is never — should be skipped
+  ObjectWithRequiredNever:
+    type: object
+    properties:
+      id:
+        type: integer
+      impossible:
+        allOf:
+          - type: number
+          - type: string
+    required:
+      - id
+      - impossible
+  # Object with an optional property that is never — should still be exported
+  ObjectWithOptionalNever:
+    type: object
+    properties:
+      id:
+        type: integer
+      impossible:
+        allOf:
+          - type: number
+          - type: string
+    required:
+      - id
+
+  # --- String id ---
+  Document:
+    type: object
+    properties:
+      id:
+        type: string
+      _id:
+        type: string
+      numericId:
+        type: integer
+    required:
+      - id
+      - _id
+      - numericId

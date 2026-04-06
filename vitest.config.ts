@@ -88,6 +88,15 @@ export default defineConfig({
         extends: true,
         test: {
           globalSetup: ['./test/globalTeardown.ts'],
+          name: '@test/openapi-ts-faker-v10',
+          root: 'packages/openapi-ts-tests/faker/v10',
+          setupFiles: ['./vitest.setup.ts'],
+        },
+      },
+      {
+        extends: true,
+        test: {
+          globalSetup: ['./test/globalTeardown.ts'],
           name: '@test/openapi-ts-valibot-v1',
           root: 'packages/openapi-ts-tests/valibot/v1',
           setupFiles: ['./vitest.setup.ts'],

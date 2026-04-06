@@ -198,7 +198,7 @@ export default defineConfig({
               },
               {
                 link: '/openapi-ts/plugins/faker',
-                text: 'Faker <span data-badge>vote</span>',
+                text: 'Faker',
               },
               {
                 link: '/openapi-ts/plugins/falso',
