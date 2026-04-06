@@ -17,7 +17,7 @@ export interface Document {
   /**
    * A list of MIME types the APIs can consume. This is global to all APIs but can be overridden on specific API calls. Value MUST be as described under {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/2.0.md#mime-types Mime Types}.
    */
-  consumes?: ReadonlyArray<string>;
+  consumes?: Array<string>;
   /**
    * An object to hold data types produced and consumed by operations.
    */
@@ -45,7 +45,7 @@ export interface Document {
   /**
    * A list of MIME types the APIs can produce. This is global to all APIs but can be overridden on specific API calls. Value MUST be as described under {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/2.0.md#mime-types Mime Types}.
    */
-  produces?: ReadonlyArray<string>;
+  produces?: Array<string>;
   /**
    * An object to hold responses that can be used across operations. This property _does not_ define global responses for all operations.
    */
@@ -53,11 +53,11 @@ export interface Document {
   /**
    * The transfer protocol of the API. Values MUST be from the list: `"http"`, `"https"`, `"ws"`, `"wss"`. If the `schemes` is not included, the default scheme to be used is the one used to access the Swagger definition itself.
    */
-  schemes?: ReadonlyArray<'http' | 'https' | 'ws' | 'wss'>;
+  schemes?: Array<'http' | 'https' | 'ws' | 'wss'>;
   /**
    * A declaration of which security schemes are applied for the API as a whole. The list of values describes alternative security schemes that can be used (that is, there is a logical OR between the security requirements). Individual operations can override this definition.
    */
-  security?: ReadonlyArray<SecurityRequirementObject>;
+  security?: Array<SecurityRequirementObject>;
   /**
    * Security scheme definitions that can be used across the specification.
    */
@@ -69,7 +69,7 @@ export interface Document {
   /**
    * A list of tags used by the specification with additional metadata. The order of the tags can be used to reflect on their order by the parsing tools. Not all tags that are used by the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/2.0.md#operation-object Operation Object} must be declared. The tags that are not declared may be organized randomly or based on the tools' logic. Each tag name in the list MUST be unique.
    */
-  tags?: ReadonlyArray<TagObject>;
+  tags?: Array<TagObject>;
 }
 
 /**
@@ -219,7 +219,7 @@ export interface HeaderObject extends EnumExtensions, OpenAPIV2NullableExtension
   /**
    * See {@link https://tools.ietf.org/html/draft-fge-json-schema-validation-00#section-5.5.1 https://tools.ietf.org/html/draft-fge-json-schema-validation-00#section-5.5.1}.
    */
-  enum?: ReadonlyArray<unknown>;
+  enum?: Array<unknown>;
   /**
    * See {@link https://tools.ietf.org/html/draft-fge-json-schema-validation-00#section-5.1.2 https://tools.ietf.org/html/draft-fge-json-schema-validation-00#section-5.1.2}.
    */
@@ -401,7 +401,7 @@ export interface ItemsObject extends EnumExtensions, OpenAPIV2NullableExtensions
   /**
    * See {@link https://tools.ietf.org/html/draft-fge-json-schema-validation-00#section-5.5.1 https://tools.ietf.org/html/draft-fge-json-schema-validation-00#section-5.5.1}.
    */
-  enum?: ReadonlyArray<unknown>;
+  enum?: Array<unknown>;
   /**
    * See {@link https://tools.ietf.org/html/draft-fge-json-schema-validation-00#section-5.1.2 https://tools.ietf.org/html/draft-fge-json-schema-validation-00#section-5.1.2}.
    */
@@ -534,7 +534,7 @@ export interface OperationObject {
   /**
    * A list of MIME types the operation can consume. This overrides the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/2.0.md#swaggerConsumes `consumes`} definition at the Swagger Object. An empty value MAY be used to clear the global definition. Value MUST be as described under {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/2.0.md#mime-types Mime Types}.
    */
-  consumes?: ReadonlyArray<string>;
+  consumes?: Array<string>;
   /**
    * Declares this operation to be deprecated. Usage of the declared operation should be refrained. Default value is `false`.
    */
@@ -554,11 +554,11 @@ export interface OperationObject {
   /**
    * A list of parameters that are applicable for this operation. If a parameter is already defined at the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/2.0.md#pathItemParameters Path Item}, the new definition will override it, but can never remove it. The list MUST NOT include duplicated parameters. A unique parameter is defined by a combination of a {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/2.0.md#parameterName name} and {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/2.0.md#parameterIn location}. The list can use the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/2.0.md#reference-object Reference Object} to link to parameters that are defined at the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/2.0.md#swaggerParameters Swagger Object's parameters}. There can be one "body" parameter at most.
    */
-  parameters?: ReadonlyArray<ParameterObject | ReferenceObject>;
+  parameters?: Array<ParameterObject | ReferenceObject>;
   /**
    * A list of MIME types the operation can produce. This overrides the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/2.0.md#swaggerProduces `produces`} definition at the Swagger Object. An empty value MAY be used to clear the global definition. Value MUST be as described under {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/2.0.md#mime-types Mime Types}.
    */
-  produces?: ReadonlyArray<string>;
+  produces?: Array<string>;
   /**
    * **Required**. The list of possible responses as they are returned from executing this operation.
    */
@@ -566,11 +566,11 @@ export interface OperationObject {
   /**
    * The transfer protocol for the operation. Values MUST be from the list: `"http"`, `"https"`, `"ws"`, `"wss"`. The value overrides the Swagger Object {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/2.0.md#swaggerSchemes `schemes`} definition.
    */
-  schemes?: ReadonlyArray<'http' | 'https' | 'ws' | 'wss'>;
+  schemes?: Array<'http' | 'https' | 'ws' | 'wss'>;
   /**
    * A declaration of which security schemes are applied for this operation. The list of values describes alternative security schemes that can be used (that is, there is a logical OR between the security requirements). This definition overrides any declared top-level {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/2.0.md#swaggerSecurity `security`}. To remove a top-level security declaration, an empty array can be used.
    */
-  security?: ReadonlyArray<SecurityRequirementObject>;
+  security?: Array<SecurityRequirementObject>;
   /**
    * A short summary of what the operation does. For maximum readability in the swagger-ui, this field SHOULD be less than 120 characters.
    */
@@ -578,11 +578,11 @@ export interface OperationObject {
   /**
    * A list of tags for API documentation control. Tags can be used for logical grouping of operations by resources or any other qualifier.
    */
-  tags?: ReadonlyArray<string>;
+  tags?: Array<string>;
   /**
    * A list of code samples associated with an operation.
    */
-  'x-codeSamples'?: ReadonlyArray<CodeSampleObject>;
+  'x-codeSamples'?: Array<CodeSampleObject>;
 }
 
 /**
@@ -739,7 +739,7 @@ export type ParameterObject = EnumExtensions &
         /**
          * See {@link https://tools.ietf.org/html/draft-fge-json-schema-validation-00#section-5.5.1 https://tools.ietf.org/html/draft-fge-json-schema-validation-00#section-5.5.1}.
          */
-        enum?: ReadonlyArray<unknown>;
+        enum?: Array<unknown>;
         /**
          * See {@link https://tools.ietf.org/html/draft-fge-json-schema-validation-00#section-5.1.2 https://tools.ietf.org/html/draft-fge-json-schema-validation-00#section-5.1.2}.
          */
@@ -897,7 +897,7 @@ export interface PathItemObject {
   /**
    * A list of parameters that are applicable for all the operations described under this path. These parameters can be overridden at the operation level, but cannot be removed there. The list MUST NOT include duplicated parameters. A unique parameter is defined by a combination of a {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/2.0.md#parameterName name} and {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/2.0.md#parameterIn location}. The list can use the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/2.0.md#reference-object Reference Object} to link to parameters that are defined at the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/2.0.md#swaggerParameters Swagger Object's parameters}. There can be one "body" parameter at most.
    */
-  parameters?: ReadonlyArray<ParameterObject | ReferenceObject>;
+  parameters?: Array<ParameterObject | ReferenceObject>;
   /**
    * A definition of a PATCH operation on this path.
    */
@@ -1326,7 +1326,7 @@ export interface SchemaObject extends JSONSchemaDraft4, OpenAPIV2NullableExtensi
    *
    * {@link https://json-schema.org/understanding-json-schema/reference/combining#allof allOf} can not be used to "extend" a schema to add more details to it in the sense of object-oriented inheritance. {@link https://json-schema.org/learn/glossary#instance Instances} must independently be valid against "all of" the schemas in the `allOf`. See the section on {@link https://json-schema.org/understanding-json-schema/reference/object#extending Extending Closed Schemas} for more information.
    */
-  allOf?: ReadonlyArray<SchemaObject>;
+  allOf?: Array<SchemaObject>;
   /**
    * Adds support for polymorphism. The discriminator is the schema property name that is used to differentiate between other schema that inherit this schema. The property name used MUST be defined at this schema and it MUST be in the `required` property list. When used, the value MUST be the name of this schema or any schema that inherits it.
    */
@@ -1441,7 +1441,7 @@ export interface SecurityRequirementObject {
   /**
    * Each name must correspond to a security scheme which is declared in the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/2.0.md#securityDefinitions Security Definitions}. If the security scheme is of type `"oauth2"`, then the value is a list of scope names required for the execution. For other security scheme types, the array MUST be empty.
    */
-  [name: string]: ReadonlyArray<string>;
+  [name: string]: Array<string>;
 }
 
 /**

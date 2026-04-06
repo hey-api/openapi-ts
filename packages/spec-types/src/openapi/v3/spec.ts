@@ -29,15 +29,15 @@ export interface Document extends OpenAPIExtensions {
   /**
    * A declaration of which security mechanisms can be used across the API. The list of values includes alternative Security Requirement Objects that can be used. Only one of the Security Requirement Objects need to be satisfied to authorize a request. Individual operations can override this definition. The list can be incomplete, up to being empty or absent. To make security explicitly optional, an empty security requirement (`{}`) can be included in the array.
    */
-  security?: ReadonlyArray<SecurityRequirementObject>;
+  security?: Array<SecurityRequirementObject>;
   /**
    * An array of Server Objects, which provide connectivity information to a target server. If the `servers` field is not provided, or is an empty array, the default value would be a {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#server-object Server Object} with a {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#server-url url} value of `/`.
    */
-  servers?: ReadonlyArray<ServerObject>;
+  servers?: Array<ServerObject>;
   /**
    * A list of tags used by the OpenAPI Description with additional metadata. The order of the tags can be used to reflect on their order by the parsing tools. Not all tags that are used by the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#operation-object Operation Object} must be declared. The tags that are not declared MAY be organized randomly or based on the tools' logic. Each tag name in the list MUST be unique.
    */
-  tags?: ReadonlyArray<TagObject>;
+  tags?: Array<TagObject>;
 }
 
 /**
@@ -475,7 +475,7 @@ export interface OperationObject extends OpenAPIExtensions {
   /**
    * A list of parameters that are applicable for this operation. If a parameter is already defined in the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#path-item-parameters Path Item}, the new definition will override it but can never remove it. The list MUST NOT include duplicated parameters. A unique parameter is defined by a combination of a {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#parameter-name name} and {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#parameter-in location}. The list can use the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#reference-object Reference Object} to link to parameters that are defined in the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#components-parameters OpenAPI Object's `components.parameters`}.
    */
-  parameters?: ReadonlyArray<ParameterObject | ReferenceObject>;
+  parameters?: Array<ParameterObject | ReferenceObject>;
   /**
    * The request body applicable for this operation. The `requestBody` is only supported in HTTP methods where the HTTP 1.1 specification {@link https://tools.ietf.org/html/rfc7231#section-4.3.1 RFC7231} has explicitly defined semantics for request bodies. In other cases where the HTTP spec is vague (such as {@link https://tools.ietf.org/html/rfc7231#section-4.3.1 GET}, {@link https://tools.ietf.org/html/rfc7231#section-4.3.2 HEAD} and {@link https://tools.ietf.org/html/rfc7231#section-4.3.5 DELETE}), `requestBody` SHALL be ignored by consumers.
    */
@@ -487,11 +487,11 @@ export interface OperationObject extends OpenAPIExtensions {
   /**
    * A declaration of which security mechanisms can be used for this operation. The list of values includes alternative Security Requirement Objects that can be used. Only one of the Security Requirement Objects need to be satisfied to authorize a request. To make security optional, an empty security requirement (`{}`) can be included in the array. This definition overrides any declared top-level {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#oas-security `security`}. To remove a top-level security declaration, an empty array can be used.
    */
-  security?: ReadonlyArray<SecurityRequirementObject>;
+  security?: Array<SecurityRequirementObject>;
   /**
    * An alternative `servers` array to service this operation. If a `servers` array is specified at the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#path-item-servers Path Item Object} or {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#oas-servers OpenAPI Object} level, it will be overridden by this value.
    */
-  servers?: ReadonlyArray<ServerObject>;
+  servers?: Array<ServerObject>;
   /**
    * A short summary of what the operation does.
    */
@@ -499,11 +499,11 @@ export interface OperationObject extends OpenAPIExtensions {
   /**
    * A list of tags for API documentation control. Tags can be used for logical grouping of operations by resources or any other qualifier.
    */
-  tags?: ReadonlyArray<string>;
+  tags?: Array<string>;
   /**
    * A list of code samples associated with an operation.
    */
-  'x-codeSamples'?: ReadonlyArray<CodeSampleObject>;
+  'x-codeSamples'?: Array<CodeSampleObject>;
 }
 
 /**
@@ -650,7 +650,7 @@ export interface PathItemObject extends OpenAPIExtensions {
   /**
    * A list of parameters that are applicable for all the operations described under this path. These parameters can be overridden at the operation level, but cannot be removed there. The list MUST NOT include duplicated parameters. A unique parameter is defined by a combination of a {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#parameter-name name} and {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#parameter-in location}. The list can use the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#reference-object Reference Object} to link to parameters that are defined in the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#components-parameters OpenAPI Object's `components.parameters`}.
    */
-  parameters?: ReadonlyArray<ParameterObject | ReferenceObject>;
+  parameters?: Array<ParameterObject | ReferenceObject>;
   /**
    * A definition of a PATCH operation on this path.
    */
@@ -666,7 +666,7 @@ export interface PathItemObject extends OpenAPIExtensions {
   /**
    * An alternative `servers` array to service all operations in this path. If a `servers` array is specified at the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#oas-servers OpenAPI Object} level, it will be overridden by this value.
    */
-  servers?: ReadonlyArray<ServerObject>;
+  servers?: Array<ServerObject>;
   /**
    * An optional string summary, intended to apply to all operations in this path.
    */
@@ -870,7 +870,7 @@ export interface SchemaObject extends EnumExtensions, OpenAPIExtensions {
    *
    * An instance validates successfully against this keyword if it validates successfully against all schemas defined by this keyword's value.
    */
-  allOf?: ReadonlyArray<SchemaObject | ReferenceObject>;
+  allOf?: Array<SchemaObject | ReferenceObject>;
   /**
    * This keyword's value MUST be an array.  This array MUST have at least one element.
    *
@@ -879,7 +879,7 @@ export interface SchemaObject extends EnumExtensions, OpenAPIExtensions {
    * An instance validates successfully against this keyword if it validates successfully against at least one schema defined by this
    keyword's value.
    */
-  anyOf?: ReadonlyArray<SchemaObject | ReferenceObject>;
+  anyOf?: Array<SchemaObject | ReferenceObject>;
   /**
    * The default value represents what would be assumed by the consumer of the input as the value of the schema if one is not provided. Unlike JSON Schema, the value MUST conform to the defined `type` for the Schema Object defined at the same level. For example, if `type` is `"string"`, then `default` can be `"foo"` but cannot be `1`.
    */
@@ -907,7 +907,7 @@ export interface SchemaObject extends EnumExtensions, OpenAPIExtensions {
    *
    * An instance validates successfully against this keyword if its value is equal to one of the elements in this keyword's array value.
    */
-  enum?: ReadonlyArray<unknown>;
+  enum?: Array<unknown>;
   /**
    * A free-form field to include an example of an instance for this schema. To represent examples that cannot be naturally represented in JSON or YAML, a string value can be used to contain the example with escaping where necessary.
    */
@@ -1019,7 +1019,7 @@ export interface SchemaObject extends EnumExtensions, OpenAPIExtensions {
    *
    * An instance validates successfully against this keyword if it validates successfully against exactly one schema defined by this keyword's value.
    */
-  oneOf?: ReadonlyArray<SchemaObject | ReferenceObject>;
+  oneOf?: Array<SchemaObject | ReferenceObject>;
   /**
    * The value of this keyword MUST be a string.  This string SHOULD be a valid regular expression, according to the ECMA 262 regular expression dialect.
    *
@@ -1041,7 +1041,7 @@ export interface SchemaObject extends EnumExtensions, OpenAPIExtensions {
    *
    * An object instance is valid against this keyword if its property set contains all elements in this keyword's array value.
    */
-  required?: ReadonlyArray<string>;
+  required?: Array<string>;
   /**
    * The value of both of these keywords MUST be a string.
    *
@@ -1089,7 +1089,7 @@ export interface SecurityRequirementObject {
   /**
    * Each name MUST correspond to a security scheme which is declared in the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#security-scheme-object Security Schemes} under the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#components-object Components Object}. If the security scheme is of type `"oauth2"` or `"openIdConnect"`, then the value is a list of scope names required for the execution, and the list MAY be empty if authorization does not require a specified scope. For other security scheme types, the array MUST be empty.
    */
-  [name: string]: ReadonlyArray<string>;
+  [name: string]: Array<string>;
 }
 
 /**
@@ -1196,7 +1196,7 @@ export interface ServerVariableObject extends OpenAPIExtensions {
   /**
    * An enumeration of string values to be used if the substitution options are from a limited set. The array SHOULD NOT be empty.
    */
-  enum?: ReadonlyArray<string>;
+  enum?: Array<string>;
 }
 
 /**

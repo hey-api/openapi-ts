@@ -30,13 +30,13 @@ export interface Document
    *
    * {@link https://json-schema.org/understanding-json-schema/reference/combining#allof allOf} can not be used to "extend" a schema to add more details to it in the sense of object-oriented inheritance. {@link https://json-schema.org/learn/glossary#instance Instances} must independently be valid against "all of" the schemas in the `allOf`. See the section on {@link https://json-schema.org/understanding-json-schema/reference/object#extending Extending Closed Schemas} for more information.
    */
-  allOf?: ReadonlyArray<Document>;
+  allOf?: Array<Document>;
   /**
    * `anyOf`: (OR) Must be valid against _any_ of the subschemas
    *
    * To validate against `anyOf`, the given data must be valid against any (one or more) of the given subschemas.
    */
-  anyOf?: ReadonlyArray<Document>;
+  anyOf?: Array<Document>;
   /**
    * The `const` keyword is used to restrict a value to a single value.
    */
@@ -62,7 +62,7 @@ export interface Document
   /**
    * The `dependentRequired` {@link https://json-schema.org/learn/glossary#keyword keyword} conditionally requires that certain properties must be present if a given property is present in an object. For example, suppose we have a {@link https://json-schema.org/learn/glossary#schema schema} representing a customer. If you have their credit card number, you also want to ensure you have a billing address. If you don't have their credit card number, a billing address would not be required. We represent this dependency of one property on another using the `dependentRequired` keyword. The value of the `dependentRequired` keyword is an object. Each entry in the object maps from the name of a property, _p_, to an array of strings listing properties that are required if _p_ is present.
    */
-  dependentRequired?: Record<string, ReadonlyArray<string>>;
+  dependentRequired?: Record<string, Array<string>>;
   /**
    * The `dependentSchemas` keyword conditionally applies a {@link https://json-schema.org/learn/glossary#subschema subschema} when a given property is present. This schema is applied in the same way {@link https://json-schema.org/understanding-json-schema/reference/combining#allof allOf} applies schemas. Nothing is merged or extended. Both schemas apply independently.
    */
@@ -90,11 +90,11 @@ export interface Document
    *
    * You can use `enum` even without a type, to accept values of different types.
    */
-  enum?: ReadonlyArray<unknown>;
+  enum?: Array<unknown>;
   /**
    * The `examples` keyword is a place to provide an array of examples that validate against the schema. This isn't used for validation, but may help with explaining the effect and purpose of the schema to a reader. Each entry should validate against the schema in which it resides, but that isn't strictly required. There is no need to duplicate the `default` value in the `examples` array, since `default` will be treated as another example.
    */
-  examples?: ReadonlyArray<unknown>;
+  examples?: Array<unknown>;
   /**
    * The `format` keyword allows for basic semantic identification of certain kinds of string values that are commonly used. For example, because JSON doesn't have a "DateTime" type, dates need to be encoded as strings. `format` allows the schema author to indicate that the string value should be interpreted as a date. By default, `format` is just an annotation and does not effect validation.
    *
@@ -126,7 +126,7 @@ export interface Document
    *
    * Careful consideration should be taken when using `oneOf` entries as the nature of it requires verification of _every_ sub-schema which can lead to increased processing times. Prefer `anyOf` where possible.
    */
-  oneOf?: ReadonlyArray<Document>;
+  oneOf?: Array<Document>;
   /**
    * The boolean keywords `readOnly` and `writeOnly` are typically used in an API context. `readOnly` indicates that a value should not be modified. It could be used to indicate that a `PUT` request that changes a value would result in a `400 Bad Request` response. `writeOnly` indicates that a value may be set, but will remain hidden. In could be used to indicate you can set a value with a `PUT` request, but it would not be included when retrieving that record with a `GET` request.
    */
@@ -187,7 +187,7 @@ export interface ArrayKeywords {
   /**
    * `prefixItems` is an array, where each item is a schema that corresponds to each index of the document's array. That is, an array where the first element validates the first element of the input array, the second element validates the second element of the input array, etc.
    */
-  prefixItems?: ReadonlyArray<Document>;
+  prefixItems?: Array<Document>;
   /**
    * The `unevaluatedItems` keyword is useful mainly when you want to add or disallow extra items to an array.
    *
@@ -311,7 +311,7 @@ export interface ObjectKeywords {
    *
    * The `required` keyword takes an array of zero or more strings. Each of these strings must be unique.
    */
-  required?: ReadonlyArray<string>;
+  required?: Array<string>;
   /**
    * The `unevaluatedProperties` keyword is similar to `additionalProperties` except that it can recognize properties declared in subschemas. So, the example from the previous section can be rewritten without the need to redeclare properties.
    *
