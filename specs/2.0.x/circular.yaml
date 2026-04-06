@@ -1,0 +1,112 @@
+swagger: '2.0'
+info:
+  title: Circular references examples - including self reference and mutual recursive
+  version: '1'
+paths: {}
+definitions:
+  # Self-referencing (A -> A)
+  TreeNode:
+    type: object
+    properties:
+      id:
+        type: string
+      value:
+        type: string
+      children:
+        type: array
+        items:
+          $ref: '#/definitions/TreeNode'
+    required:
+      - id
+      - value
+
+  # Mutual reference (A -> B -> A)
+  Org:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      members:
+        type: array
+        items:
+          $ref: '#/definitions/Member'
+    required:
+      - id
+      - name
+
+  Member:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      org:
+        $ref: '#/definitions/Org'
+    required:
+      - id
+      - name
+
+  # Three-way circular reference (A -> B -> C -> A)
+  Department:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      employees:
+        type: array
+        items:
+          $ref: '#/definitions/Employee'
+    required:
+      - id
+      - name
+
+  Employee:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      projects:
+        type: array
+        items:
+          $ref: '#/definitions/Project'
+    required:
+      - id
+      - name
+      - projects
+
+  Project:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      department:
+        $ref: '#/definitions/Department'
+    required:
+      - id
+      - name
+
+  # Nullable circular reference (required property, nullable type)
+  Comment:
+    type: object
+    properties:
+      id:
+        type: string
+      text:
+        type: string
+      parent:
+        x-nullable: true
+        allOf:
+          - $ref: '#/definitions/Comment'
+    required:
+      - id
+      - text
+      - parent

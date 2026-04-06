@@ -1,45 +1,61 @@
 import type { IR } from '@hey-api/shared';
 
-import type { $ } from '../../../ts-dsl';
-
-type Expression = ReturnType<typeof $.expr>;
+import type { Expression } from './shared/types';
+import type { FakerJsFakerPlugin } from './types';
+import { toNodeRefV10, toNodeV10 } from './v10/api';
 
 export type IApi = {
   /**
-   * Generate a Faker expression for a schema.
+   * Generate an inline Faker expression for a schema.
    *
    * Returns an expression that produces a valid instance when executed.
-   * Use when you need one-off generation without referencing shared artifacts.
+   * The returned expression may reference faker symbols (`ensureFaker`,
+   * `options`) — cross-plugin references resolve imports automatically.
    *
    * @example
    * ```ts
+   * // For { type: 'object', properties: { name: string, email: string } }:
    * {
-   *   name: faker.person.fullName(),
-   *   email: faker.internet.email()
+   *   name: ensureFaker(options).person.fullName(),
+   *   email: ensureFaker(options).internet.email()
    * }
    * ```
    */
-  toNode(schema: IR.SchemaObject): Expression;
+  toNode(args: { plugin: FakerJsFakerPlugin['Instance']; schema: IR.SchemaObject }): Expression;
   /**
-   * Get a reference to a generated Faker expression for a schema.
+   * Get a reference to an existing Faker factory for a schema.
    *
-   * Returns a call expression referencing the shared artifact.
-   * If the artifact doesn't exist, it will be created.
+   * For `$ref` schemas, looks up the registered factory symbol via
+   * `referenceSymbol` and returns a call expression (e.g. `fakeUser(options)`).
+   * For non-`$ref` schemas, falls back to an inline expression via `toNode`.
    *
    * @example
-   * // Returns: fakeUser()
+   * ```ts
+   * // For { $ref: '#/components/schemas/User' }:
+   * fakeUser(options)
+   * ```
    */
-  toNodeRef(schema: IR.SchemaObject): Expression;
+  toNodeRef(args: { plugin: FakerJsFakerPlugin['Instance']; schema: IR.SchemaObject }): Expression;
 };
 
 export class Api implements IApi {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  toNode(_schema: IR.SchemaObject): Expression {
-    return undefined as any;
+  toNode(args: { plugin: FakerJsFakerPlugin['Instance']; schema: IR.SchemaObject }): Expression {
+    const { plugin } = args;
+    switch (plugin.config.compatibilityVersion) {
+      case 9:
+      case 10:
+      default:
+        return toNodeV10(args);
+    }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  toNodeRef(_schema: IR.SchemaObject): Expression {
-    return undefined as any;
+  toNodeRef(args: { plugin: FakerJsFakerPlugin['Instance']; schema: IR.SchemaObject }): Expression {
+    const { plugin } = args;
+    switch (plugin.config.compatibilityVersion) {
+      case 9:
+      case 10:
+      default:
+        return toNodeRefV10(args);
+    }
   }
 }
