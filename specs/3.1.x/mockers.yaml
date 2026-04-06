@@ -1,0 +1,73 @@
+openapi: 3.1.1
+info:
+  title: OpenAPI 3.1.1 mockers example
+  version: 1
+paths:
+  /foo:
+    get:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Person'
+    post:
+      requestBody:
+        content:
+          'text/plain':
+            schema:
+              type: string
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  fullName:
+                    type: string
+                  age:
+                    type: number
+                example:
+                  fullName: 'John Doe'
+                  age: 34
+        '204':
+          description: SUCCESSFUL
+    put:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                example:
+                  name: 'Alice'
+            text/plain:
+              schema:
+                type: string
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+components:
+  schemas:
+    Person:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string;
+        age:
+          type: number
+      example:
+        firstName: 'Marry'
+        lastName: 'Jane'
+        age: 30
