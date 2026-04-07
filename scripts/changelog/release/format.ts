@@ -1,6 +1,6 @@
-import type { ReleaseGroup } from '../assemble/grouper.js';
-import { repo } from '../config.js';
-import type { Contributor } from './contributors.js';
+import type { ReleaseGroup } from '../assemble/grouper';
+import { repo } from '../config';
+import type { Contributor } from './contributors';
 
 export interface ReleaseNotes {
   body: string;
@@ -28,7 +28,7 @@ function extractEntriesFromContent(content: string): Array<string> {
 
     // Start of new section or version header
     if (line.match(/^#{1,3}\s/)) {
-      if (currentEntry.length > 0) {
+      if (currentEntry.length) {
         entries.push(currentEntry.join('\n').trim());
         currentEntry = [];
       }
@@ -37,19 +37,19 @@ function extractEntriesFromContent(content: string): Array<string> {
 
     // Bullet points are entries
     if (line.match(/^-\s/) || line.match(/^\*\s/)) {
-      if (currentEntry.length > 0 && !currentEntry[currentEntry.length - 1].match(/^-\s/)) {
+      if (currentEntry.length && !currentEntry[currentEntry.length - 1].match(/^-\s/)) {
         // Previous was description, save it
         entries.push(currentEntry.join('\n').trim());
         currentEntry = [];
       }
       currentEntry.push(line);
-    } else if (currentEntry.length > 0) {
+    } else if (currentEntry.length) {
       // Continuation of previous entry
       currentEntry.push(line);
     }
   }
 
-  if (currentEntry.length > 0) {
+  if (currentEntry.length) {
     entries.push(currentEntry.join('\n').trim());
   }
 
@@ -69,7 +69,7 @@ export function formatReleaseNotes(
   const packagesWithChanges = releaseGroup.packages.filter((p) => p.hasUserFacingChanges);
 
   for (const pkg of packagesWithChanges) {
-    lines.push(`### @hey-api/${pkg.name.replace('@hey-api/', '')} ${pkg.version}`);
+    lines.push(`### @hey-api/${pkg.packageName.replace('@hey-api/', '')} ${pkg.version}`);
     lines.push('');
 
     // Extract entries from content
@@ -87,7 +87,7 @@ export function formatReleaseNotes(
   }
 
   // Add contributors
-  if (contributors.length > 0) {
+  if (contributors.length) {
     lines.push('## Contributors');
     lines.push('');
     // Just list contributors without PR numbers (cleaner for release notes)

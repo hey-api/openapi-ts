@@ -5,14 +5,11 @@ export interface Contributor {
   username: string;
 }
 
-const BOT_USERS = new Set([
-  'renovate[bot]',
-  'dependabot[bot]',
-  'github-actions[bot]',
-  'copilot-swe-agent',
-]);
+const AGENT_USERS = new Set(['copilot-swe-agent']);
 
-export async function extractContributors(prNumbers: Array<number>): Promise<Array<Contributor>> {
+export async function getContributorsFromPullRequests(
+  prNumbers: Array<number>,
+): Promise<Array<Contributor>> {
   const contributorsMap = new Map<string, Array<number>>();
 
   for (const pr of prNumbers) {
@@ -22,7 +19,7 @@ export async function extractContributors(prNumbers: Array<number>): Promise<Arr
         encoding: 'utf-8',
       }).trim();
 
-      if (output && !BOT_USERS.has(output)) {
+      if (output && !output.includes('[bot]') && !AGENT_USERS.has(output)) {
         const existing = contributorsMap.get(output) || [];
         existing.push(pr);
         contributorsMap.set(output, existing);
@@ -36,16 +33,4 @@ export async function extractContributors(prNumbers: Array<number>): Promise<Arr
     prNumbers,
     username,
   }));
-}
-
-export function formatContributors(contributors: Array<Contributor>): string {
-  if (contributors.length === 0) return '';
-
-  const names = contributors.map((c) => `@${c.username}`);
-  if (names.length === 1) {
-    return `Thanks to ${names[0]}!`;
-  }
-
-  const last = names.pop();
-  return `Thanks to ${names.join(', ')}, and ${last}!`;
 }

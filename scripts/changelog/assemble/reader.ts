@@ -1,98 +1,94 @@
-import { existsSync, readFileSync } from 'node:fs';
-import { join } from 'node:path';
+import fs from 'node:fs';
 
-import { packageOrder } from '../config.js';
+import type { ChangelogPackage } from '../config';
+import { getChangelogPackages } from '../config';
+
+export type Changelogs = Map<string, PackageChangelog>;
 
 export interface PackageChangelog {
   package: string;
-  versions: Array<{
-    content: string;
-    hasUserFacingChanges: boolean;
-    version: string;
-  }>;
+  releases: Array<ReleaseBlock>;
 }
 
-function extractVersionBlock(content: string): {
+export interface ReleaseBlock {
   content: string;
   hasUserFacingChanges: boolean;
   version: string;
-} | null {
-  // Match version header like "## 0.95.0" or "## @hey-api/openapi-ts 0.95.0"
-  const versionMatch = content.match(/^##\s+(?:@hey-api\/[^ ]+\s+)?(\d+\.\d+\.\d+)/m);
-  if (!versionMatch) return null;
+  versionHeading: string;
+}
 
-  const version = versionMatch[1];
-  const versionStart = content.indexOf(`##`);
+const versionHeadingPattern = new RegExp(
+  `^##\\s+(?:@hey-api\\/[^ ]+\\s+)?(\\d+\\.\\d+\\.\\d+)`,
+  'm',
+);
 
-  // Find next version header or end of file
-  const afterVersion = content.slice(versionStart + 2);
-  const nextVersionMatch = afterVersion.match(/^##\s+/m);
-  const nextVersionStart = nextVersionMatch
-    ? versionStart + 2 + (nextVersionMatch.index ?? 0)
+function extractReleaseBlock(content: string): ReleaseBlock | undefined {
+  const versionMatch = content.match(versionHeadingPattern);
+  if (!versionMatch) return;
+
+  const versionStartIndex = versionMatch.index ?? 0;
+  const versionHeading = versionMatch[0];
+  const versionEndIndex = versionStartIndex + versionHeading.length;
+
+  // find next version header (or end of file)
+  const nextVersionMatch = content.slice(versionEndIndex).match(versionHeadingPattern);
+  const nextVersionStartIndex = nextVersionMatch
+    ? versionEndIndex + (nextVersionMatch.index ?? 0)
     : content.length;
 
-  const blockContent = content.slice(versionStart, nextVersionStart).trim();
+  const versionBlockContent = content.slice(versionStartIndex, nextVersionStartIndex).trim();
+  const contentWithoutUpdatedDependencies = versionBlockContent
+    .replace(/\n###\s+Updated Dependencies:?\s*(?:\n[\s\S]*?)?(?=\n#{2,6}\s|$)/gi, '')
+    .trim();
 
-  // Check for "Updated dependencies" only (no user-facing changes)
-  const hasUserFacingChanges = !(
-    blockContent.includes('### Updated Dependencies') &&
-    !blockContent.match(/^##\s+[^#]*\n### (?!Updated Dependencies)/m)
+  // Check for "Updated dependencies" only (no user-facing changes, changelogs quirk)
+  const hasUpdatedDependencies = /^###\s+Updated Dependencies:?\s*$/im.test(versionBlockContent);
+  const hasOtherSectionHeadings = /^###\s+(?!Updated Dependencies:?\s*$).+/im.test(
+    versionBlockContent,
   );
+  const hasUserFacingChanges = !(hasUpdatedDependencies && !hasOtherSectionHeadings);
 
-  return { content: blockContent, hasUserFacingChanges, version };
+  return {
+    content: contentWithoutUpdatedDependencies,
+    hasUserFacingChanges,
+    version: versionMatch[1],
+    versionHeading,
+  };
 }
 
-export function readPackageChangelog(packagePath: string): PackageChangelog | null {
-  const changelogPath = join(packagePath, 'CHANGELOG.md');
+function readPackageChangelog(pkg: ChangelogPackage): PackageChangelog | undefined {
+  if (!pkg.changelogPath) return;
 
-  if (!existsSync(changelogPath)) {
-    return null;
-  }
+  const content = fs.readFileSync(pkg.changelogPath, 'utf-8');
+  const releases: PackageChangelog['releases'] = [];
 
-  const content = readFileSync(changelogPath, 'utf-8');
-
-  // Skip the package title "# @hey-api/package-name"
-  const body = content.replace(/^#\s+@hey-api\/[^ ]+\n\n?/, '');
-
-  const versions: PackageChangelog['versions'] = [];
-  let remaining = body;
-
+  let remaining = content.replace(/^#\s+.*\n\n?/, ''); // strip title
   while (remaining.trim()) {
-    const block = extractVersionBlock(remaining);
-    if (!block) break;
+    const release = extractReleaseBlock(remaining);
+    if (!release) break;
 
-    versions.push(block);
+    releases.push(release);
 
-    // Move past this block
-    const blockStart = remaining.indexOf(`## ${block.version}`);
-    const afterBlock = remaining.slice(blockStart + 2);
-    const nextVersionMatch = afterBlock.match(/^##\s+/m);
-    const nextStart = nextVersionMatch
-      ? blockStart + 2 + (nextVersionMatch.index ?? 0)
-      : remaining.length;
-    remaining = remaining.slice(nextStart);
+    // move past this release
+    const releaseStart = remaining.indexOf(release.versionHeading);
+    const afterVersionHeading = remaining.slice(releaseStart + release.versionHeading.length);
+    const nextVersionMatch = afterVersionHeading.match(versionHeadingPattern);
+    if (!nextVersionMatch) break;
+
+    const nextStart = releaseStart + release.versionHeading.length + (nextVersionMatch.index ?? 0);
+    remaining = remaining.slice(nextStart).trimStart();
   }
 
-  return { package: '', versions };
+  return { package: pkg.name, releases };
 }
 
-export function readAllPackageChangelogs(): Map<string, PackageChangelog> {
-  const results = new Map<string, PackageChangelog>();
+export function readAllPackageChangelogs(): Changelogs {
+  const changelogs: Changelogs = new Map();
 
-  for (const packageName of packageOrder) {
-    // Convert package name to path (e.g., @hey-api/openapi-ts -> packages/openapi-ts)
-    const packagePath = packageName.replace('@hey-api/', 'packages/');
-    const changelog = readPackageChangelog(packagePath);
-
-    if (changelog) {
-      changelog.package = packageName;
-      results.set(packageName, changelog);
-    }
+  for (const pkg of getChangelogPackages()) {
+    const changelog = readPackageChangelog(pkg);
+    if (changelog) changelogs.set(pkg.name, changelog);
   }
 
-  return results;
-}
-
-export function getChangelogPath(packageName: string): string {
-  return packageName.replace('@hey-api/', 'packages/') + '/CHANGELOG.md';
+  return changelogs;
 }

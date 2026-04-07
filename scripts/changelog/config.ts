@@ -1,43 +1,48 @@
-export type SemverType = 'major' | 'minor' | 'patch';
+import fs from 'node:fs';
+import path from 'node:path';
 
-export const packageOrder = [
-  '@hey-api/openapi-ts',
-  '@hey-api/vite-plugin',
-  '@hey-api/nuxt',
-  '@hey-api/openapi-python',
-  '@hey-api/custom-client',
-  '@hey-api/json-schema-ref-parser',
-  '@hey-api/codegen-core',
-  '@hey-api/shared',
-  '@hey-api/types',
-  '@hey-api/spec-types',
-] as const;
+export interface ChangelogPackage {
+  changelogPath?: string;
+  name: string;
+  path: string;
+}
 
-export type PackageName = (typeof packageOrder)[number];
+interface PackageJson {
+  name?: string;
+  private?: boolean;
+}
 
-export const sectionMap: Record<string, string> = {
-  build: 'Core',
-  cli: 'Core',
-  config: 'Core',
-  error: 'Core',
-  input: 'Core',
-  internal: 'Core',
-  output: 'Core',
-  parser: 'Core',
-};
+let changelogPackagesCache: Array<ChangelogPackage> | undefined;
 
-export const sectionPatterns: Array<[RegExp, string]> = [[/^plugin\(/, 'Plugins']];
+export function getChangelogPackages(): Array<ChangelogPackage> {
+  if (changelogPackagesCache) return changelogPackagesCache;
 
-export const sectionOrder = ['Breaking', 'Core', 'Plugins', 'Other'] as const;
+  const packagesDirectory = path.join(process.cwd(), 'packages');
+  const packageDirectories = fs.readdirSync(packagesDirectory, { withFileTypes: true });
 
-export const breakingPatterns = [/^BREAKING[:\s]/i, /\bBREAKING CHANGE\b/i];
+  changelogPackagesCache = packageDirectories.flatMap((entry) => {
+    if (!entry.isDirectory()) return [];
 
-export const v0MinorBreakingSignals = [/removed/i, /renamed/i, /changed.*signature/i, /breaking/i];
+    const packageJsonPath = path.join(packagesDirectory, entry.name, 'package.json');
+    if (!fs.existsSync(packageJsonPath)) return [];
 
-export const semverFallback: Record<SemverType, string> = {
-  major: 'Breaking',
-  minor: 'Added',
-  patch: 'Changed',
-};
+    const packageManifest = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8')) as PackageJson;
+    if (packageManifest.private || !packageManifest.name) return [];
+
+    const packagePath = path.join(packagesDirectory, entry.name);
+    let changelogPath: string | undefined = path.join(packagePath, 'CHANGELOG.md');
+    if (!fs.existsSync(changelogPath)) changelogPath = undefined;
+
+    return [
+      {
+        changelogPath,
+        name: packageManifest.name,
+        path: packagePath,
+      },
+    ];
+  });
+
+  return changelogPackagesCache;
+}
 
 export const repo = 'hey-api/openapi-ts';

@@ -1,7 +1,11 @@
-import { writeFileSync } from 'node:fs';
+import fs from 'node:fs';
+import path from 'node:path';
+import url from 'node:url';
 
-import { groupByRelease, type ParsedEntry, type ReleaseGroup } from './grouper.js';
-import { readAllPackageChangelogs } from './reader.js';
+import { repo } from '../config';
+import type { ParsedEntry, ReleaseGroup, ReleasePackage } from './grouper';
+import { groupByRelease, isFlagshipPackage } from './grouper';
+import { readAllPackageChangelogs } from './reader';
 
 const sectionOrder: Array<'Breaking' | 'Core' | 'Plugins' | 'Other'> = [
   'Breaking',
@@ -10,9 +14,7 @@ const sectionOrder: Array<'Breaking' | 'Core' | 'Plugins' | 'Other'> = [
   'Other',
 ];
 
-const IS_OPENAPI_TS = '@hey-api/openapi-ts';
-
-function transformScope(scope: string | null): string {
+function transformScope(scope: string | undefined): string {
   if (!scope) return '';
   if (scope.startsWith('plugin(') && scope.endsWith(')')) {
     return scope.slice(7, -1);
@@ -24,43 +26,37 @@ function transformDescription(description: string): string {
   return description.replace(/^fix:\s*/i, '');
 }
 
-function formatEntry(entry: ParsedEntry): string {
-  const parts: Array<string> = [];
+function formatEntry(entry: ParsedEntry, options?: { hideScope?: boolean }): string {
+  const displayScope = entry.scope ? transformScope(entry.scope) : undefined;
+  const [firstLine = '', ...bodyLines] = entry.description.split('\n');
+  const displayDescription = transformDescription(firstLine);
+  const hideScope = options?.hideScope === true;
 
-  const displayScope = entry.scope ? transformScope(entry.scope) : null;
-  const displayDescription = transformDescription(entry.description);
-
-  if (displayScope) {
-    parts.push(`**${displayScope}**: ${displayDescription}`);
-  } else {
-    parts.push(displayDescription);
-  }
-
+  let header =
+    displayScope && !hideScope ? `${displayScope}: ${displayDescription}` : displayDescription;
   if (entry.prNumber) {
-    parts.push(
-      `([#${entry.prNumber}](https://github.com/hey-api/openapi-ts/pull/${entry.prNumber}))`,
-    );
+    header += ` ([#${entry.prNumber}](https://github.com/${repo}/pull/${entry.prNumber}))`;
   }
 
-  return `- ${parts.join(' ')}`;
+  if (!bodyLines.length) {
+    return `- ${header}`;
+  }
+
+  return `- ${header}\n${bodyLines.join('\n')}`;
 }
 
-function formatPackageBlock(pkg: ReleaseGroup['packages'][number]): string {
+function formatPackageBlock(pkg: ReleasePackage): string {
   const lines: Array<string> = [];
-  const useSections = pkg.name === IS_OPENAPI_TS;
 
-  lines.push(`### @hey-api/${pkg.name.replace('@hey-api/', '')} ${pkg.version}`);
-  lines.push('');
+  lines.push(`## ${pkg.packageName} ${pkg.version}\n`);
 
   if (!pkg.hasUserFacingChanges) {
-    lines.push('No user-facing changes.');
-    lines.push('');
+    lines.push('No user-facing changes.\n');
     return lines.join('\n');
   }
 
-  if (pkg.entries.length === 0) {
-    lines.push('(No parsed entries)');
-    lines.push('');
+  if (!pkg.entries.length) {
+    lines.push('(No parsed entries)\n');
     return lines.join('\n');
   }
 
@@ -75,19 +71,20 @@ function formatPackageBlock(pkg: ReleaseGroup['packages'][number]): string {
 
   const categoryOrder: Array<string> = ['Breaking', 'Added', 'Fixed', 'Changed'];
 
-  if (useSections) {
-    const sectionEntries: Map<string, Array<{ category: string, entry: ParsedEntry; }>> = new Map();
+  if (isFlagshipPackage(pkg.packageName)) {
+    const sectionEntries: Map<string, Array<ParsedEntry>> = new Map();
 
     for (const entry of pkg.entries) {
-      if (!sectionEntries.has(entry.section)) {
-        sectionEntries.set(entry.section, []);
+      const section = entry.section || 'Core';
+      if (!sectionEntries.has(section)) {
+        sectionEntries.set(section, []);
       }
-      sectionEntries.get(entry.section)!.push({ category: entry.category, entry });
+      sectionEntries.get(section)!.push(entry);
     }
 
     const breakingEntries = entriesByCategory.get('Breaking') ?? [];
 
-    if (breakingEntries.length > 0) {
+    if (breakingEntries.length) {
       lines.push('### ⚠️ Breaking');
       for (const entry of breakingEntries) {
         lines.push(formatEntry(entry));
@@ -100,23 +97,22 @@ function formatPackageBlock(pkg: ReleaseGroup['packages'][number]): string {
       if (!entriesWithCategory?.length) continue;
 
       if (section === 'Plugins') {
-        const pluginEntries: Map<
-          string,
-          Array<{ category: string, entry: ParsedEntry; }>
-        > = new Map();
+        const pluginEntries: Map<string, Array<ParsedEntry>> = new Map();
 
-        for (const { category, entry } of entriesWithCategory) {
+        for (const entry of entriesWithCategory) {
           const pluginName = transformScope(entry.scope);
           if (!pluginEntries.has(pluginName)) {
             pluginEntries.set(pluginName, []);
           }
-          pluginEntries.get(pluginName)!.push({ category, entry });
+          pluginEntries.get(pluginName)!.push(entry);
         }
 
         const sortedPlugins = Array.from(pluginEntries.keys()).sort();
 
+        lines.push(`### ${section}\n`);
+
         for (const pluginName of sortedPlugins) {
-          lines.push(`#### ${pluginName}`);
+          lines.push(`#### ${pluginName}\n`);
 
           const pluginCategoryEntries = pluginEntries.get(pluginName)!;
           pluginCategoryEntries.sort((a, b) => {
@@ -128,20 +124,20 @@ function formatPackageBlock(pkg: ReleaseGroup['packages'][number]): string {
           });
 
           let lastCategory = '';
-          for (const { category, entry } of pluginCategoryEntries) {
-            if (category !== lastCategory) {
-              lines.push(`###### ${category}`);
-              lastCategory = category;
+          for (const entry of pluginCategoryEntries) {
+            if (entry.category !== lastCategory) {
+              // lines.push(`###### ${entry.category}`);
+              lastCategory = entry.category;
             }
-            lines.push(formatEntry(entry));
+            lines.push(formatEntry(entry, { hideScope: true }));
           }
 
           lines.push('');
         }
       } else {
         entriesWithCategory.sort((a, b) => {
-          const scopeA = a.entry.scope ? transformScope(a.entry.scope) : '';
-          const scopeB = b.entry.scope ? transformScope(b.entry.scope) : '';
+          const scopeA = a.scope ? transformScope(a.scope) : '';
+          const scopeB = b.scope ? transformScope(b.scope) : '';
           const cmp = scopeA.localeCompare(scopeB);
           if (cmp !== 0) return cmp;
           const catOrder = { Added: 1, Breaking: 0, Changed: 3, Fixed: 2 };
@@ -152,12 +148,12 @@ function formatPackageBlock(pkg: ReleaseGroup['packages'][number]): string {
         });
 
         if (section === 'Breaking') {
-          lines.push('#### ⚠️ Breaking');
+          lines.push('### ⚠️ Breaking\n');
         } else if (section !== 'Other') {
-          lines.push(`#### ${section}`);
+          lines.push(`### ${section}\n`);
         }
 
-        for (const { entry } of entriesWithCategory) {
+        for (const entry of entriesWithCategory) {
           lines.push(formatEntry(entry));
         }
 
@@ -176,9 +172,9 @@ function formatPackageBlock(pkg: ReleaseGroup['packages'][number]): string {
       });
 
       if (category === 'Breaking') {
-        lines.push('### ⚠️ Breaking');
+        lines.push('### ⚠️ Breaking\n');
       } else {
-        lines.push(`### ${category}`);
+        lines.push(`### ${category}\n`);
       }
 
       for (const entry of categoryEntries) {
@@ -192,34 +188,40 @@ function formatPackageBlock(pkg: ReleaseGroup['packages'][number]): string {
   return lines.join('\n').trim();
 }
 
-export function formatRootChangelog(releaseGroups: ReturnType<typeof groupByRelease>): string {
-  const lines: Array<string> = [];
-
-  lines.push('# Changelog');
-  lines.push('');
+function formatRootChangelog(releaseGroups: Array<ReleaseGroup>): string {
+  const lines: Array<string> = ['# Changelog\n'];
 
   for (const group of releaseGroups) {
-    lines.push(`## ${group.date}`);
-    lines.push('');
+    lines.push(`# ${group.date}\n`);
 
     for (const pkg of group.packages) {
-      lines.push(formatPackageBlock(pkg));
-      lines.push('');
-      lines.push('---');
-      lines.push('');
+      lines.push(`${formatPackageBlock(pkg)}\n`, '<br>\n<br>\n');
     }
   }
 
   return lines.join('\n').trim();
 }
 
-export async function assembleRootChangelog(): Promise<string> {
+async function assembleRootChangelog(): Promise<string> {
   const changelogs = readAllPackageChangelogs();
   const groups = groupByRelease(changelogs);
+  // fs.writeFileSync('DEBUG_CHANGELOG.json', `${JSON.stringify(groups, null, 2)}\n`, 'utf-8');
   return formatRootChangelog(groups);
 }
 
-export async function writeRootChangelog(): Promise<void> {
+async function writeRootChangelog(): Promise<void> {
   const content = await assembleRootChangelog();
-  writeFileSync('CHANGELOG.md', content, 'utf-8');
+  fs.writeFileSync('CHANGELOG.md', content, 'utf-8');
+  console.log('✓ Synced CHANGELOG.md');
+}
+
+const isMain =
+  typeof process.argv[1] === 'string' &&
+  path.resolve(process.argv[1]) === url.fileURLToPath(import.meta.url);
+
+if (isMain) {
+  writeRootChangelog().catch((error: unknown) => {
+    console.error(error);
+    process.exitCode = 1;
+  });
 }

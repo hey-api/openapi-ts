@@ -30,11 +30,8 @@ export default {
     /** @type string[] */
     const usersFromSummary = [];
 
-    // Parse summary to extract scope and description
-    const summary = changeset.summary;
-
     // Remove PR, commit, author/user lines from summary
-    const replacedChangelog = summary
+    const replacedChangelog = changeset.summary
       .replace(/^\s*(?:pr|pull|pull\s+request):\s*#?(\d+)/im, (_, pr) => {
         const num = Number(pr);
         if (!Number.isNaN(num)) {
@@ -51,24 +48,6 @@ export default {
         return '';
       })
       .trim();
-
-    // Detect scope from **scope**: format
-    const scopeMatch = replacedChangelog.match(/^\*\*([^:]+)\*\*:?\s*(.*)$/);
-    const scope = scopeMatch ? scopeMatch[1] : null;
-    const description = scopeMatch ? scopeMatch[2] : replacedChangelog;
-
-    // Detect breaking changes (explicit BREAKING or major version) - for future use
-    const explicitBreaking =
-      /^BREAKING[:\s]/i.test(replacedChangelog) || /\bBREAKING CHANGE\b/i.test(replacedChangelog);
-    void explicitBreaking;
-
-    // Build formatted entry
-    const entryParts = [];
-    if (scope) {
-      entryParts.push(`**${scope}**: ${description}`);
-    } else {
-      entryParts.push(description);
-    }
 
     const links = await (async () => {
       if (prFromSummary !== undefined) {
@@ -102,13 +81,27 @@ export default {
       };
     })();
 
-    // Add PR link at end
-    if (links.pull) {
-      entryParts.push(`(${links.pull})`);
-    } else if (prFromSummary !== undefined) {
-      entryParts.push(`([#${prFromSummary}](https://github.com/${repo}/pull/${prFromSummary}))`);
-    }
+    const users = usersFromSummary.length
+      ? usersFromSummary
+          .map((userFromSummary) => `[@${userFromSummary}](https://github.com/${userFromSummary})`)
+          .join(', ')
+      : links.user;
 
-    return `\n- ${entryParts.join(' ')}`;
+    const metadata = [
+      links.pull === null ? '' : ` (${links.pull})`,
+      links.commit === null ? '' : ` (${links.commit})`,
+      users === null ? '' : ` by ${users}`,
+    ].join('');
+
+    // Split summary into first line and the rest
+    const [firstLine, ...rest] = replacedChangelog.split('\n');
+    const restSummary = rest.join('\n').trim();
+
+    // No code block conversion: preserve original triple backtick code blocks and indentation
+    let releaseLine = `\n- ${firstLine}${metadata}`;
+    if (restSummary) {
+      releaseLine += '\n\n' + restSummary;
+    }
+    return releaseLine;
   },
 };

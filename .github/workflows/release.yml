@@ -59,19 +59,19 @@ jobs:
 
       - name: Generate Release Tag
         id: tag
-        run: echo "tag=$(pnpm changelog:release:tag)" >> $GITHUB_OUTPUT
+        run: echo "tag=$(pnpm -s changelog:release:tag)" >> $GITHUB_OUTPUT
 
       - name: Generate Release Notes
         id: notes
-        run: pnpm changelog:release:notes > release-notes.md
+        run: pnpm -s changelog:release:notes > release-notes.md
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v2.6.1
         with:
-          tag_name: ${{ steps.tag.outputs.tag }}
-          name: Release ${{ steps.tag.outputs.tag }}
           body_path: release-notes.md
           generate_release_notes: false
+          name: Release ${{ steps.tag.outputs.tag }}
+          tag_name: ${{ steps.tag.outputs.tag }}
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
 
