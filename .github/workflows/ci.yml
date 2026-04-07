@@ -36,9 +36,9 @@ jobs:
         include:
           # All Node versions on Ubuntu (fast, catches Node issues)
           - os: ubuntu-latest
-            node-version: '20.19.0'
+            node-version: '22.13.0'
           - os: ubuntu-latest
-            node-version: '22.12.0'
+            node-version: '24.14.0'
           - os: ubuntu-latest
             node-version: ${{ needs.setup.outputs.node-version }}
             is-primary: true # Primary runner for examples/previews
