@@ -38,5 +38,6 @@
   },
   "[typescript]": {
     "editor.defaultFormatter": "oxc.oxc-vscode"
-  }
+  },
+  "vsicons.presets.nestjs": true
 }

@@ -1,5 +1,5 @@
-import type { HTTPError, Options as KyOptions } from 'ky';
-import ky from 'ky';
+import type { Options as KyOptions } from 'ky';
+import ky, { isHTTPError } from 'ky';
 
 import { createSseClient } from '../../client-core/bundle/serverSentEvents';
 import type { HttpMethod } from '../../client-core/bundle/types';
@@ -75,22 +75,44 @@ export const createClient = (config: Config = {}): Client => {
     request: Request,
     opts: ResolvedRequestOptions,
     interceptorsMiddleware: Middleware<Request, Response, unknown, ResolvedRequestOptions>,
+    kyHttpError?: { bodyConsumed: true; data: unknown },
   ) => {
     const result = {
       request,
       response,
     };
 
-    const textError = await response.text();
-    let jsonError: unknown;
+    let error: unknown;
 
-    try {
-      jsonError = JSON.parse(textError);
-    } catch {
-      jsonError = undefined;
+    if (kyHttpError) {
+      if (kyHttpError.data !== undefined) {
+        if (typeof kyHttpError.data === 'string') {
+          let jsonError: unknown;
+          try {
+            jsonError = JSON.parse(kyHttpError.data);
+          } catch {
+            jsonError = undefined;
+          }
+          error = jsonError ?? kyHttpError.data;
+        } else {
+          error = kyHttpError.data;
+        }
+      } else {
+        error = '';
+      }
+    } else {
+      const textError = await response.text();
+      let jsonError: unknown;
+
+      try {
+        jsonError = JSON.parse(textError);
+      } catch {
+        jsonError = undefined;
+      }
+
+      error = jsonError ?? textError;
     }
 
-    const error = jsonError ?? textError;
     let finalError = error;
 
     for (const fn of interceptorsMiddleware.error.fns) {
@@ -166,9 +188,8 @@ export const createClient = (config: Config = {}): Client => {
     try {
       response = await kyInstance(request, kyOptions);
     } catch (error) {
-      if (error && typeof error === 'object' && 'response' in error) {
-        const httpError = error as HTTPError;
-        response = httpError.response;
+      if (isHTTPError(error)) {
+        response = error.response;
 
         for (const fn of interceptors.response.fns) {
           if (fn) {
@@ -176,7 +197,21 @@ export const createClient = (config: Config = {}): Client => {
           }
         }
 
-        return parseErrorResponse(response, request, opts, interceptors);
+        if (error.data !== undefined) {
+          return parseErrorResponse(response, request, opts, interceptors, {
+            bodyConsumed: true,
+            data: error.data,
+          });
+        }
+
+        if (!response.bodyUsed) {
+          return parseErrorResponse(response, request, opts, interceptors);
+        }
+
+        return parseErrorResponse(response, request, opts, interceptors, {
+          bodyConsumed: true,
+          data: error.data,
+        });
       }
 
       throw error;

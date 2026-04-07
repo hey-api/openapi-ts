@@ -32,7 +32,6 @@ export const OrderSchema = {
     },
   },
   type: 'object',
-  'x-swagger-router-model': 'io.swagger.petstore.model.Order',
   xml: {
     name: 'order',
   },
@@ -51,7 +50,6 @@ export const CategorySchema = {
     },
   },
   type: 'object',
-  'x-swagger-router-model': 'io.swagger.petstore.model.Category',
   xml: {
     name: 'category',
   },
@@ -96,7 +94,6 @@ export const UserSchema = {
     },
   },
   type: 'object',
-  'x-swagger-router-model': 'io.swagger.petstore.model.User',
   xml: {
     name: 'user',
   },
@@ -113,7 +110,6 @@ export const TagSchema = {
     },
   },
   type: 'object',
-  'x-swagger-router-model': 'io.swagger.petstore.model.Tag',
   xml: {
     name: 'tag',
   },
@@ -162,7 +158,6 @@ export const PetSchema = {
   },
   required: ['name', 'photoUrls'],
   type: 'object',
-  'x-swagger-router-model': 'io.swagger.petstore.model.Pet',
   xml: {
     name: 'pet',
   },
