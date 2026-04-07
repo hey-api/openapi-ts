@@ -1,177 +1,237 @@
 import { execSync } from 'node:child_process';
 
-import { packageOrder } from '../config.js';
-import type { PackageChangelog } from './reader.js';
+import { getChangelogPackages } from '../config';
+import { getAllTags } from '../release/tag';
+import type { Changelogs } from './reader';
 
 export interface ReleaseGroup {
   date: string;
-  packages: Array<{
-    content: string;
-    entries: Array<ParsedEntry>;
-    hasUserFacingChanges: boolean;
-    name: string;
-    version: string;
-  }>;
+  packages: Array<ReleasePackage>;
   tag: string;
+}
+
+export interface ReleasePackage {
+  content: string;
+  entries: Array<ParsedEntry>;
+  hasUserFacingChanges: boolean;
+  packageName: string;
+  version: string;
 }
 
 export interface ParsedEntry {
   category: 'Breaking' | 'Added' | 'Fixed' | 'Changed';
   description: string;
-  prNumber: number | null;
-  scope: string | null;
-  section: 'Core' | 'Plugins' | 'Other';
+  prNumber: number | undefined;
+  scope: string | undefined;
+  section: string | undefined;
 }
 
 interface TagInfo {
+  /** The date of the tag in YYYY-MM-DD format. */
   date: string;
-  package: string;
+  /** The name of the package associated with the tag. */
+  packageName: string;
+  /** Parsed timestamp used for deterministic sorting. */
+  timestamp: number;
+  /** The version of the package associated with the tag. */
   version: string;
+}
+
+const LEGACY_TAG_MAIN_PACKAGE = '@hey-api/openapi-ts';
+
+function getPackageBaseName(packageName: string): string {
+  if (packageName.startsWith('@') && packageName.includes('/')) {
+    return packageName.split('/')[1]!;
+  }
+  return packageName;
+}
+
+export function isFlagshipPackage(packageName: string): boolean {
+  const baseName = getPackageBaseName(packageName);
+  return baseName.startsWith('openapi-');
+}
+
+function getPackageGroupRank(packageName: string): number {
+  return isFlagshipPackage(packageName) ? 0 : 1;
+}
+
+function getTagDate(tag: string): Pick<TagInfo, 'date' | 'timestamp'> {
+  const fullDate = execSync(`git log -1 --format=%ci ${tag}`, { encoding: 'utf-8' }).trim();
+
+  const timestamp = getTimestamp(fullDate);
+  if (timestamp > 0) {
+    const normalized = new Date(timestamp).toISOString();
+    const date = normalized.slice(0, 10);
+    return {
+      date,
+      timestamp,
+    };
+  }
+
+  const match = fullDate.match(/^(\d{4}-\d{2}-\d{2})\s+(\d{2}:\d{2}:\d{2})/);
+  const date = match?.[1] ?? fullDate;
+  return {
+    date,
+    timestamp: 0,
+  };
+}
+
+function getTimestamp(fullDate: string): number {
+  const match = fullDate.match(/^(\d{4}-\d{2}-\d{2})\s+(\d{2}:\d{2}:\d{2})\s+([+-]\d{2})(\d{2})$/);
+  if (!match) {
+    return Date.parse(fullDate) || 0;
+  }
+
+  const [, date, time, offsetHour, offsetMinute] = match;
+  const iso = `${date}T${time}${offsetHour}:${offsetMinute}`;
+  return Date.parse(iso) || 0;
+}
+
+function getLegacyTagPackageName(): string | undefined {
+  const packages = getChangelogPackages();
+  return packages.find((pkg) => pkg.name === LEGACY_TAG_MAIN_PACKAGE)?.name;
 }
 
 function getGitTags(): Array<TagInfo> {
   try {
-    const output = execSync('git tag --list', { encoding: 'utf-8' });
-    const tags = output.split('\n').filter(Boolean);
+    const tags = getAllTags();
+    const legacyTagPackage = getLegacyTagPackageName();
 
-    const result: Array<TagInfo> = [];
+    const results: Array<TagInfo> = [];
     for (const tag of tags) {
-      // Match pattern: @hey-api/package@version (e.g., @hey-api/openapi-ts@0.95.0)
-      const match = tag.match(/^@hey-api\/([^@]+)@(\d+\.\d+\.\d+)$/);
-      if (match) {
-        // Get tag date
-        const dateOutput = execSync(`git log -1 --format=%ci ${tag}`, { encoding: 'utf-8' });
-        const date = dateOutput.trim().split(' ')[0]; // Get YYYY-MM-DD
-
-        result.push({
-          date,
-          package: `@hey-api/${match[1]}`,
-          version: match[2],
+      // Match pattern: <package-name>@<version> (e.g., @hey-api/types@0.1.4)
+      const packageTagMatch = tag.match(/^(.+)@(\d+\.\d+\.\d+)$/);
+      if (packageTagMatch) {
+        results.push({
+          ...getTagDate(tag),
+          packageName: packageTagMatch[1],
+          version: packageTagMatch[2],
         });
+
+        continue;
+      }
+
+      if (legacyTagPackage) {
+        // Match legacy pattern: v<version> (e.g., v0.29.0)
+        const legacyTagMatch = tag.match(/^v(\d+\.\d+\.\d+)$/);
+        if (legacyTagMatch) {
+          results.push({
+            ...getTagDate(tag),
+            packageName: legacyTagPackage,
+            version: legacyTagMatch[1],
+          });
+        }
       }
     }
 
-    return result;
+    return results;
   } catch {
     return [];
   }
 }
 
-function parseEntryFromLine(line: string): ParsedEntry | null {
-  // Match changelog entry format:
-  // Old: - **scope**: description [#PR](url) [`commit`](url) by [@author](url)
-  // New: - **scope**: description (#PR)
+function parseEntryFromLine(line: string): ParsedEntry | undefined {
+  let scope: string | undefined;
+  let content: string | undefined;
 
-  // Extract scope from **scope**: pattern
-  const scopeMatch = line.match(/^\s*-\s+\*\*([^:]+)\*\*:?\s*/);
-  const scope = scopeMatch ? scopeMatch[1] : null;
-
-  // Get the content after the scope (or after dash for no-scope)
-  const contentMatch = scope
-    ? line.match(/^\s*-\s+\*\*[^:]+\*\*:?\s+(.+)$/)
-    : line.match(/^\s*-\s+(.+)$/);
-
-  if (!contentMatch) return null;
-
-  let content = contentMatch[1];
-
-  // Step 1: Extract PR number - look for patterns like [#1234](url) or (#1234)
-  let prNumber: number | null = null;
-  const prMatch1 = content.match(/\[#(\d+)\]\([^)]+\)/);
-  if (prMatch1) {
-    prNumber = parseInt(prMatch1[1], 10);
+  // - **scope**: content
+  const boldScopeMatch = line.match(/^\s*-\s+\*\*([^:]+)\*\*:\s+(.+)$/);
+  if (boldScopeMatch) {
+    scope = boldScopeMatch[1];
+    content = boldScopeMatch[2];
   } else {
-    const prMatch2 = content.match(/\(#(\d+)\)/);
-    if (prMatch2) {
-      prNumber = parseInt(prMatch2[1], 10);
+    // - scope: content
+    const plainScopeMatch = line.match(/^\s*-\s+([^:]+):\s+(.+)$/);
+    if (plainScopeMatch) {
+      scope = plainScopeMatch[1];
+      content = plainScopeMatch[2];
+    } else {
+      // - content
+      const noScopeMatch = line.match(/^\s*-\s+(.+)$/);
+      if (noScopeMatch) {
+        content = noScopeMatch[1];
+      }
     }
   }
 
-  // Step 2: Clean up in specific order
-  // A. Remove author patterns: " by [@user]" OR "[by @user](url)" OR " by [@user](url)"
+  if (!content) return;
+
+  // [#1234](url) or (#1234)
+  const prMatch = content.match(/\[#(\d+)\]\([^)]+\)|\(#(\d+)\)/);
+  const prValue = prMatch?.[1] ?? prMatch?.[2];
+  const prNumber = prValue ? Number.parseInt(prValue, 10) : undefined;
+
+  // remove trailing author pattern: " by [@user]" or " by [@user](url)"
   content = content.replace(/\s+by\s+\[@[^\]]+\](?:\([^)]+\))?/gi, '');
-  content = content.replace(/\[by\s+@[^\]]+\]\([^)]+\)/gi, '');
 
-  // B. Remove PR link patterns: [#PR](url) OR (#PR)
-  content = content.replace(/\[#\d+\]\([^)]+\)/g, '');
-  content = content.replace(/\(\s*#\d+\s*\)/g, '');
+  // remove PR link patterns, optionally wrapped in extra parentheses
+  content = content.replace(/\(?\s*(?:\[#\d+\]\([^)]+\)|\(\s*#\d+\s*\))\s*\)?/g, '');
 
-  // C. Remove commit patterns: [`commit`](url) OR `commit`
-  content = content.replace(/\[`[a-f0-9]+`\]\([^)]+\)/gi, '');
-  content = content.replace(/`[a-f0-9]+`/gi, '');
+  // remove commit patterns, optionally wrapped in extra parentheses
+  content = content.replace(/\(?\s*(?:\[`[a-f0-9]+`\]\([^)]+\)|`[a-f0-9]+`)\s*\)?/gi, '');
 
-  // D. Remove any remaining markdown links keeping text
-  content = content.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
+  // remove only a leading '- ' prefix
+  content = content.replace(/^- /, '').trim();
 
-  // E. Clean up: remove empty parentheses, whitespace, and leading punctuation
-  content = content.replace(/\(\s*\)/g, ''); // Remove empty ()
-  content = content.replace(/\s+/g, ' ').trim();
-  content = content.replace(/^[-:]\s*/, '').trim();
+  if (!content) return;
 
-  const description = content;
-
-  // Filter out dependency-only entries (e.g., "- @hey-api/shared@0.3.0")
-  if (!scope && /^@hey-api\/[^@]+@\d+\.\d+\.\d+$/.test(description)) {
-    return null;
-  }
-
-  if (!description) return null;
-
-  // Detect section from scope
-  let section: 'Core' | 'Plugins' | 'Other' = 'Other';
+  let section: string | undefined;
   if (scope && /^plugin\(/.test(scope)) {
     section = 'Plugins';
-  } else if (
-    scope &&
-    [
-      'cli',
-      'config',
-      'error',
-      'input',
-      'internal',
-      'output',
-      'parser',
-      'planner',
-      'project',
-      'symbols',
-      'build',
-    ].includes(scope)
-  ) {
-    section = 'Core';
   }
 
-  // Detect category from description keywords or scope
+  // Detect category from content keywords or scope
   let category: 'Breaking' | 'Added' | 'Fixed' | 'Changed' = 'Changed';
-  if (/BREAKING/i.test(description) || (scope && /BREAKING/i.test(scope))) {
+  if (/BREAKING/i.test(content) || (scope && /BREAKING/i.test(scope))) {
     category = 'Breaking';
-  } else if (/^feat[\s:]/i.test(description) || /^(feat|add)\b/i.test(description)) {
+  } else if (/^feat[\s:]/i.test(content) || /^(feat|add)\b/i.test(content)) {
     category = 'Added';
-  } else if (/^fix[\s:]/i.test(description) || /^fix\b/i.test(description)) {
+  } else if (/^fix[\s:]/i.test(content) || /^fix\b/i.test(content)) {
     category = 'Fixed';
   }
 
-  return { category, description, prNumber, scope, section };
+  return { category, description: content, prNumber, scope, section };
 }
 
 function extractEntries(content: string): Array<ParsedEntry> {
   const entries: Array<ParsedEntry> = [];
-  const lines = content.split('\n');
+  // Strip changelog structural headings before parsing so they don't attach to entry bodies
+  const cleanedContent = content.replace(/^### (?:Minor|Major|Patch) Changes\s*$/gm, '');
+  const lines = cleanedContent.split('\n');
+
+  let currentBlock: Array<string> = [];
+
+  const flushCurrentBlock = () => {
+    if (!currentBlock.length) return;
+
+    const parsed = parseEntryFromLine(currentBlock[0]!);
+    if (parsed) {
+      entries.push({
+        ...parsed,
+        description: [parsed.description, currentBlock.slice(1).join('\n')]
+          .filter(Boolean)
+          .join('\n'),
+      });
+    }
+
+    currentBlock = [];
+  };
 
   for (const line of lines) {
-    const entry = parseEntryFromLine(line.trim());
-    if (entry) {
-      entries.push(entry);
+    if (/^-\s+/.test(line)) {
+      flushCurrentBlock();
     }
+    currentBlock.push(line);
   }
+
+  flushCurrentBlock();
 
   return entries;
 }
 
-export function groupByRelease(changelogs: Map<string, PackageChangelog>): Array<ReleaseGroup> {
-  // Get all git tags with dates
+export function groupByRelease(changelogs: Changelogs): Array<ReleaseGroup> {
   const tags = getGitTags();
 
-  // Group tags by date
   const dateGroups = new Map<string, Array<TagInfo>>();
   for (const tag of tags) {
     if (!dateGroups.has(tag.date)) {
@@ -180,51 +240,54 @@ export function groupByRelease(changelogs: Map<string, PackageChangelog>): Array
     dateGroups.get(tag.date)!.push(tag);
   }
 
-  // Sort dates descending (newest first)
-  const sortedDates = Array.from(dateGroups.keys()).sort().reverse();
+  const sortedDates = Array.from(dateGroups.keys()).sort((a, b) => {
+    const aLatest = Math.max(...dateGroups.get(a)!.map((tag) => tag.timestamp));
+    const bLatest = Math.max(...dateGroups.get(b)!.map((tag) => tag.timestamp));
+    if (aLatest === bLatest) return b.localeCompare(a);
+    return bLatest - aLatest;
+  });
 
+  const knownPackages = new Set(getChangelogPackages().map((pkg) => pkg.name));
   const releaseGroups: Array<ReleaseGroup> = [];
 
   for (const date of sortedDates) {
-    const tagsInGroup = dateGroups.get(date)!;
-
-    // Sort packages by packageOrder
-    const sortedPackages = tagsInGroup
+    const sortedPackages = dateGroups
+      .get(date)!
+      .filter((tag) => knownPackages.has(tag.packageName))
       .sort((a, b) => {
-        const aIdx = packageOrder.indexOf(a.package as (typeof packageOrder)[number]);
-        const bIdx = packageOrder.indexOf(b.package as (typeof packageOrder)[number]);
-        return aIdx - bIdx;
-      })
-      .filter((t) => packageOrder.includes(t.package as (typeof packageOrder)[number]));
+        const aGroup = getPackageGroupRank(a.packageName);
+        const bGroup = getPackageGroupRank(b.packageName);
+        if (aGroup !== bGroup) return aGroup - bGroup;
 
-    // Build package list from tags
-    const packages: ReleaseGroup['packages'] = [];
+        const nameCompare = a.packageName.localeCompare(b.packageName);
+        if (nameCompare !== 0) return nameCompare;
+
+        return b.timestamp - a.timestamp;
+      });
+
+    const packages: Array<ReleasePackage> = [];
 
     for (const tagInfo of sortedPackages) {
-      const changelog = changelogs.get(tagInfo.package);
+      const changelog = changelogs.get(tagInfo.packageName);
       if (!changelog) continue;
 
-      const versionData = changelog.versions.find((v) => v.version === tagInfo.version);
-      if (!versionData) continue;
-
-      const entries = extractEntries(versionData.content);
+      const release = changelog.releases.find((r) => r.version === tagInfo.version);
+      if (!release) continue;
 
       packages.push({
-        content: versionData.content,
-        entries,
-        hasUserFacingChanges: versionData.hasUserFacingChanges,
-        name: tagInfo.package,
+        content: release.content,
+        entries: extractEntries(release.content),
+        hasUserFacingChanges: release.hasUserFacingChanges,
+        packageName: tagInfo.packageName,
         version: tagInfo.version,
       });
     }
 
-    if (packages.length > 0) {
-      // Generate tag from date + sequence (placeholder for release workflow)
+    if (packages.length) {
       releaseGroups.push({
         date,
         packages,
-        // Placeholder - will be overridden by release tag
-        tag: `${date}.${packages.length}`,
+        tag: `${date}.placeholder`, // release tag will override
       });
     }
   }
