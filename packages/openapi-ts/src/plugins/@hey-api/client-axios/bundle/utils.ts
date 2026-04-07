@@ -24,7 +24,16 @@ export const createQuerySerializer = <T = unknown>({
 
         const options = parameters[name] || args;
 
-        if (Array.isArray(value)) {
+        if (value instanceof Date) {
+          const dateValue =
+            options.date === 'date' ? value.toISOString().slice(0, 10) : value.toISOString();
+          const serializedPrimitive = serializePrimitiveParam({
+            allowReserved: options.allowReserved,
+            name,
+            value: dateValue,
+          });
+          if (serializedPrimitive) search.push(serializedPrimitive);
+        } else if (Array.isArray(value)) {
           const serializedArray = serializeArrayParam({
             allowReserved: options.allowReserved,
             explode: true,

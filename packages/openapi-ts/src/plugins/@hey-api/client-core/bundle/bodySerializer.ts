@@ -7,6 +7,7 @@ export type BodySerializer = (body: unknown) => unknown;
 type QuerySerializerOptionsObject = {
   allowReserved?: boolean;
   array?: Partial<SerializerOptions<ArrayStyle>>;
+  date?: 'date' | 'date-time';
   object?: Partial<SerializerOptions<ObjectStyle>>;
 };
 

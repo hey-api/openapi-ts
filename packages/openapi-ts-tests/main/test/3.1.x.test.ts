@@ -890,6 +890,21 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'transformers-date-query-params.json',
+        output: 'transformers-date-query-params',
+        plugins: [
+          '@hey-api/client-fetch',
+          '@hey-api/transformers',
+          {
+            name: '@hey-api/sdk',
+            transformer: true,
+          },
+        ],
+      }),
+      description: 'serializes format: date query params as YYYY-MM-DD',
+    },
+    {
+      config: createConfig({
         input: 'transformers-array.json',
         output: 'transformers-array',
         plugins: ['@hey-api/client-fetch', '@hey-api/transformers'],

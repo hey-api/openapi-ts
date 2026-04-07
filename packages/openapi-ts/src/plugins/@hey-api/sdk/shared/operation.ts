@@ -324,6 +324,14 @@ export function operationStatements({
           ),
         );
       }
+    } else if (
+      parameter.schema.type === 'string' &&
+      (parameter.schema.format === 'date' || parameter.schema.format === 'date-time')
+    ) {
+      paramSerializers.prop(
+        parameter.name,
+        $.object().prop('date', $.literal(parameter.schema.format)),
+      );
     }
   }
 

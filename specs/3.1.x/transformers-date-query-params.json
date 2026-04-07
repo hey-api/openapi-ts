@@ -1,0 +1,57 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "OpenAPI 3.1.0 transformers date query params example",
+    "version": "1"
+  },
+  "paths": {
+    "/foo": {
+      "get": {
+        "operationId": "getFoo",
+        "parameters": [
+          {
+            "name": "stichdatum",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "timestamp",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "validDate": {
+                      "type": "string",
+                      "format": "date"
+                    }
+                  },
+                  "required": ["createdAt", "validDate"]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
