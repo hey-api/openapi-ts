@@ -210,7 +210,7 @@ export const createClient = (config: Config = {}): Client => {
 
         return parseErrorResponse(response, request, opts, interceptors, {
           bodyConsumed: true,
-          data: error.data,
+          data: undefined,
         });
       }
 
