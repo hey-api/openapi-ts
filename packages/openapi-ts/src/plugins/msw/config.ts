@@ -9,15 +9,23 @@ export const defaultConfig: MswPlugin['Config'] = {
     comments: true,
     includeInEntry: false,
     responseFallback: 'error',
-    valueSources: ['example'],
+    source: ['@hey-api/examples'],
   },
   dependencies: ['@hey-api/typescript'],
   handler,
   name: 'msw',
-  tags: ['mocker'],
+  resolveConfig: (plugin) => {
+    if (!(plugin.config.source instanceof Array)) {
+      plugin.config.source = plugin.config.source ? [plugin.config.source] : [];
+    }
+    for (const source of plugin.config.source) {
+      plugin.dependencies.add(source);
+    }
+  },
+  tags: ['handler'],
 };
 
 /**
- * Type helper for `msw` plugin, returns {@link Plugin.Config} object
+ * Type helper for MSW plugin, returns {@link Plugin.Config} object
  */
 export const defineConfig = definePluginConfig(defaultConfig);

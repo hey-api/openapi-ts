@@ -153,12 +153,10 @@ function createHandlerNode({
 
 export function getHandler({
   baseUrl,
-  examples,
   operation,
   plugin,
 }: {
   baseUrl: string | undefined;
-  examples: boolean;
   operation: IR.OperationObject;
   plugin: MswPlugin['Instance'];
 }): Symbol {
@@ -212,8 +210,8 @@ export function getHandler({
     // omit response type to avoid DefaultBodyType constraint issues
   );
 
-  // When examples are disabled, strip the example from the dominant response
-  if (!examples) {
+  if (!plugin.config.source.includes('@hey-api/examples')) {
+    // examples are disabled, strip the example from the dominant response
     response.example = undefined;
   }
 
