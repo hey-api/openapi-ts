@@ -1960,7 +1960,7 @@ export type ComplexParamsData = {
         readonly key: string | null;
         name: string | null;
         enabled?: boolean;
-        type: 'Monkey' | 'Horse' | 'Bird';
+        readonly type: 'Monkey' | 'Horse' | 'Bird';
         listOfModels?: Array<ModelWithString> | null;
         listOfStrings?: Array<string> | null;
         parameters: ModelWithString | ModelWithEnum | ModelWithArray | ModelWithDictionary;
