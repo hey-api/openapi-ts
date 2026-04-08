@@ -217,10 +217,7 @@ export function collectDeps(
 
   if ($dependencies) {
     for (const key of $dependencies) {
-      const value = resolved[key];
-      if (value && typeof value === 'string') {
-        deps.add(value);
-      }
+      addDependencyValue(resolved[key], deps);
     }
   }
 
@@ -228,6 +225,21 @@ export function collectDeps(
     if (key.startsWith('$')) continue;
     if (isPlainObject(specVal) && isPlainObject(resolved[key])) {
       collectDeps(specVal, resolved[key], deps);
+    }
+  }
+}
+
+function addDependencyValue(value: unknown, deps: Set<string>): void {
+  if (!value) return;
+
+  if (typeof value === 'string') {
+    deps.add(value);
+    return;
+  }
+
+  if (Array.isArray(value)) {
+    for (const item of value) {
+      addDependencyValue(item, deps);
     }
   }
 }

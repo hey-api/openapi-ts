@@ -88,7 +88,7 @@ export const handler: HeyApiExamplesPlugin['Handler'] = ({ plugin }) => {
 
       generateOperationFactory({
         examples: operationExamples,
-        functionName: `${toCase(operation.operationId!, 'camelCase')}Example`,
+        functionName: `${toCase(operation.operationId ?? '', 'camelCase')}Example`,
         plugin,
       });
     }

@@ -9,7 +9,7 @@ import { getOperationComment } from './operation';
 import { sanitizeParamName, sanitizePath } from './path';
 import { createHttpResponse } from './response';
 
-const emitToResponseUnion = (plugin: MswPlugin['Instance']) => {
+function emitToResponseUnion(plugin: MswPlugin['Instance']) {
   const symbol = plugin.symbol('ToResponseUnion', {
     meta: {
       category: 'type',
@@ -37,7 +37,7 @@ const emitToResponseUnion = (plugin: MswPlugin['Instance']) => {
       ),
     );
   plugin.node(toResponseUnionType);
-};
+}
 
 function createHandlerNode({
   baseUrl,
@@ -56,7 +56,7 @@ function createHandlerNode({
   response: DominantResponse;
   responseParamType: ReturnType<typeof $.type | typeof $.type.or>;
 }): Symbol {
-  const symbolHttp = plugin.external('msw.http');
+  const symbolHttp = plugin.imports.http;
   const symbolResponse = plugin.symbol('response');
   const symbolOptions = plugin.symbol('options');
 
@@ -84,13 +84,13 @@ function createHandlerNode({
     .param(symbolOptions, (p) =>
       p.optional().type(
         plugin.referenceSymbol({
+          artifact: 'msw',
           category: 'type',
           resource: 'request-handler-options',
-          tool: 'msw',
         }),
       ),
     )
-    .returns(plugin.external('msw.HttpHandler'))
+    .returns(plugin.imports.HttpHandler)
     .do(
       $(symbolHttp)
         .attr(operation.method)
@@ -179,7 +179,7 @@ export function getHandler({
   let bodyType: ReturnType<typeof $.type.idx | typeof $.type>;
   if (operation.body && symbolDataType) {
     if (operation.body?.schema.type === 'unknown') {
-      bodyType = $.type(plugin.external('msw.DefaultBodyType'));
+      bodyType = $.type(plugin.imports.DefaultBodyType);
     } else {
       bodyType = $.type(symbolDataType).idx($.type.literal('body'));
     }
@@ -204,7 +204,7 @@ export function getHandler({
     paramsType = $.type('never');
   }
 
-  const resolverType = $.type(plugin.external('msw.HttpResponseResolver')).generics(
+  const resolverType = $.type(plugin.imports.HttpResponseResolver).generics(
     paramsType,
     bodyType,
     // omit response type to avoid DefaultBodyType constraint issues
@@ -221,7 +221,7 @@ export function getHandler({
       p.type(
         response.statusCode !== undefined && symbolResponsesType
           ? $.type(symbolResponsesType).idx($.type.literal(response.statusCode))
-          : $.type(plugin.external('msw.DefaultBodyType')),
+          : $.type(plugin.imports.DefaultBodyType),
       ),
     )
     .prop('status', (p) =>

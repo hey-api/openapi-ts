@@ -13,8 +13,6 @@ export function createHttpResponse({
   response: DominantResponse;
   symbol: Symbol; // response
 }): ReturnType<typeof $.call | typeof $.new> {
-  const symbolHttpResponse = plugin.external('msw.HttpResponse');
-
   const init = $.object().prop(
     'status',
     $(symbol)
@@ -26,11 +24,11 @@ export function createHttpResponse({
 
   switch (response.kind) {
     case 'binary':
-      return $.new(symbolHttpResponse, body, init);
+      return $.new(plugin.imports.HttpResponse, body, init);
     case 'json':
-      return $(symbolHttpResponse).attr('json').call(body, init);
+      return $(plugin.imports.HttpResponse).attr('json').call(body, init);
     case 'text':
-      return $(symbolHttpResponse)
+      return $(plugin.imports.HttpResponse)
         .attr('text')
         .call(
           $.ternary($(body).typeofExpr().eq($.literal('string')))
@@ -39,6 +37,6 @@ export function createHttpResponse({
           init,
         );
     case 'void':
-      return $.new(symbolHttpResponse, body, init);
+      return $.new(plugin.imports.HttpResponse, body, init);
   }
 }

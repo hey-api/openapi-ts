@@ -1043,7 +1043,7 @@ export type AdditionalPropertiesUnknownIssueWritable = {
     [key: string]: string | number;
 };
 
-export type OneOfAllOfIssueWritable = ((ConstValue | GenericSchemaDuplicateIssue1SystemBoolean) & _3eNum1Период) | GenericSchemaDuplicateIssue1SystemString;
+export type OneOfAllOfIssueWritable = ((ConstValue | GenericSchemaDuplicateIssue1SystemBooleanWritable) & _3eNum1Период) | GenericSchemaDuplicateIssue1SystemStringWritable;
 
 export type GenericSchemaDuplicateIssue1SystemBooleanWritable = {
     item?: boolean;
@@ -1960,7 +1960,7 @@ export type ComplexParamsData = {
         readonly key: string | null;
         name: string | null;
         enabled?: boolean;
-        type: 'Monkey' | 'Horse' | 'Bird';
+        readonly type: 'Monkey' | 'Horse' | 'Bird';
         listOfModels?: Array<ModelWithString> | null;
         listOfStrings?: Array<string> | null;
         parameters: ModelWithString | ModelWithEnum | ModelWithArray | ModelWithDictionary;

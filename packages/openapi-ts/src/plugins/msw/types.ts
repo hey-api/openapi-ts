@@ -2,6 +2,7 @@ import type { DefinePlugin, Plugin } from '@hey-api/shared';
 import type { MaybeArray } from '@hey-api/types';
 
 import type { PluginSourceNames } from '../types';
+import type { MswImports } from './imports';
 
 export type UserConfig = Plugin.Name<'msw'> &
   Plugin.Hooks &
@@ -53,4 +54,4 @@ export type Config = Plugin.Name<'msw'> &
     source: ReadonlyArray<PluginSourceNames>;
   };
 
-export type MswPlugin = DefinePlugin<UserConfig, Config>;
+export type MswPlugin = DefinePlugin<UserConfig, Config, never, MswImports>;

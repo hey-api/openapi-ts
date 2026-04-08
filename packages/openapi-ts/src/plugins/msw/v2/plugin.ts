@@ -8,29 +8,6 @@ import { createRequestHandlerOptions } from '../shared/types';
 import type { MswPlugin } from '../types';
 
 export const handlerV2: MswPlugin['Handler'] = ({ plugin }) => {
-  plugin.symbol('http', {
-    external: 'msw',
-  });
-  plugin.symbol('DefaultBodyType', {
-    external: 'msw',
-    kind: 'type',
-  });
-  const symbolHttpHandler = plugin.symbol('HttpHandler', {
-    external: 'msw',
-    kind: 'type',
-  });
-  plugin.symbol('HttpResponse', {
-    external: 'msw',
-  });
-  plugin.symbol('HttpResponseResolver', {
-    external: 'msw',
-    kind: 'type',
-  });
-  plugin.symbol('RequestHandlerOptions', {
-    external: 'msw',
-    kind: 'type',
-  });
-
   const baseUrl = getBaseUrl(plugin.config.baseUrl, plugin.context.ir);
 
   const symbolRequestHandlerOptions = createRequestHandlerOptions(plugin);
@@ -106,7 +83,7 @@ export const handlerV2: MswPlugin['Handler'] = ({ plugin }) => {
                   ),
                 ),
               )
-              .returns($.type('ReadonlyArray').generic(symbolHttpHandler)),
+              .returns($.type('ReadonlyArray').generic(plugin.imports.HttpHandler)),
           ),
         )
         .prop(factoryResultPick, (p) => p.type(symbolHandlerFactoriesType)),
@@ -126,7 +103,7 @@ export const handlerV2: MswPlugin['Handler'] = ({ plugin }) => {
             .func()
             .param('response', (p) => p.optional().type('R'))
             .param('options', (p) => p.optional().type(symbolRequestHandlerOptions))
-            .returns(symbolHttpHandler),
+            .returns(plugin.imports.HttpHandler),
         ),
       $.func(symbolWrap)
         .generic('R')
@@ -171,7 +148,7 @@ export const handlerV2: MswPlugin['Handler'] = ({ plugin }) => {
                 .param('override', (p) =>
                   p.optional().type($.type(symbolOverrideValue).generic('R')),
                 )
-                .returns(symbolHttpHandler)
+                .returns(plugin.imports.HttpHandler)
                 .do(
                   $.return(
                     $.ternary($('Array').attr('isArray').call('override'))

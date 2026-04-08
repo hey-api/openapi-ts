@@ -1,26 +1,34 @@
-import { definePluginConfig } from '@hey-api/shared';
+import { coerce, definePluginConfig } from '@hey-api/shared';
 
+import { mswImports } from './imports';
 import { handler } from './plugin';
 import type { MswPlugin } from './types';
 
 export const defaultConfig: MswPlugin['Config'] = {
   config: {
+    $dependencies: ['source'],
     baseUrl: '*',
     comments: true,
     includeInEntry: false,
     responseFallback: 'error',
-    source: ['@hey-api/examples'],
+    source: coerce((value) => {
+      if (!value) {
+        return ['@hey-api/examples'];
+      }
+      if (value instanceof Array) {
+        return value;
+      }
+      return [value];
+    }),
   },
   dependencies: ['@hey-api/typescript'],
   handler,
+  imports: mswImports,
   name: 'msw',
-  resolveConfig: (plugin) => {
-    if (!(plugin.config.source instanceof Array)) {
-      plugin.config.source = plugin.config.source ? [plugin.config.source] : [];
-    }
-    for (const source of plugin.config.source) {
-      plugin.dependencies.add(source);
-    }
+  symbolMeta() {
+    return {
+      artifact: 'msw',
+    };
   },
   tags: ['handler'],
 };

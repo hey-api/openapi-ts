@@ -8,23 +8,23 @@ import type { MswPlugin } from '../types';
 export function createRequestHandlerOptions(plugin: MswPlugin['Instance']): Symbol {
   const symbol = plugin.symbol('RequestHandlerOptions', {
     meta: {
+      artifact: 'msw',
       category: 'type',
       resource: 'request-handler-options',
-      tool: 'msw',
     },
   });
   const symbolBaseUrl = plugin.querySymbol({
+    artifact: 'types',
     category: 'type',
     resource: 'client',
     role: 'options',
-    tool: 'typescript',
   });
   const node = $.type
     .alias(symbol)
     .export()
     .type(
       $.type.and(
-        $.type(plugin.external('msw.RequestHandlerOptions')),
+        $.type(plugin.imports.RequestHandlerOptions),
         $.type
           .object()
           .prop('baseUrl', (p) =>

@@ -110,7 +110,7 @@ for (const version of versions) {
         config: createConfig({
           input: 'response-example.yaml',
           output: 'response-example-disabled',
-          plugins: [{ name: 'msw', valueSources: [] }],
+          plugins: [{ name: 'msw', source: [] }],
         }),
         description:
           'generate MSW mock handlers from spec with example with MSW plugin but disabled',

@@ -12,7 +12,7 @@ export interface DominantResponse {
   statusCode: number | undefined;
 }
 
-const isValidExample = (example: unknown): boolean => {
+function isValidExample(example: unknown): boolean {
   if (example === undefined) {
     return false;
   }
@@ -30,7 +30,7 @@ const isValidExample = (example: unknown): boolean => {
     return Object.values(example as Record<string, unknown>).every(isValidExample);
   }
   return false;
-};
+}
 
 const KIND_PRIORITY: Record<ResponseKind, number> = {
   binary: 1,
@@ -45,7 +45,7 @@ interface ResponseCandidate {
   statusCode: number;
 }
 
-const computeResponse = ({
+function computeResponse({
   plugin,
   response,
   statusCode,
@@ -53,7 +53,7 @@ const computeResponse = ({
   plugin: MswPlugin['Instance'];
   response: IR.ResponseObject;
   statusCode: string;
-}): ResponseCandidate => {
+}): ResponseCandidate {
   const numericStatus = Number(statusCode);
 
   if (response.schema.type === 'void') {
@@ -79,9 +79,9 @@ const computeResponse = ({
 
   const kind = mediaTypeToKind(response.mediaType);
   return { example, kind, statusCode: numericStatus };
-};
+}
 
-const mediaTypeToKind = (mediaType: string | undefined): ResponseKind => {
+function mediaTypeToKind(mediaType: string | undefined): ResponseKind {
   if (!mediaType) {
     return 'json';
   }
@@ -107,15 +107,15 @@ const mediaTypeToKind = (mediaType: string | undefined): ResponseKind => {
 
   // unknown media type, default to json
   return 'json';
-};
+}
 
-export const computeDominantResponse = ({
+export function computeDominantResponse({
   operation,
   plugin,
 }: {
   operation: IR.OperationObject;
   plugin: MswPlugin['Instance'];
-}): DominantResponse => {
+}): DominantResponse {
   const candidates: Array<ResponseCandidate> = [];
 
   for (const statusCode in operation.responses) {
@@ -145,4 +145,4 @@ export const computeDominantResponse = ({
     kind: dominant.kind,
     statusCode: dominant.statusCode,
   };
-};
+}

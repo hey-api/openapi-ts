@@ -33,8 +33,8 @@ export const presets = {
   ],
   msw: () => [
     /** SDK + MSW handlers */
-    '@hey-api/sdk',
-    'msw',
+    plugins.sdk(),
+    plugins.msw(),
   ],
   none: () => [
     /** No plugins at all */

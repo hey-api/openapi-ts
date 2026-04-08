@@ -2,20 +2,22 @@
 
 import { http, type HttpHandler, HttpResponse, type HttpResponseResolver, type RequestHandlerOptions as RequestHandlerOptions2 } from 'msw';
 
-import type { GetFooResponses } from './types.gen';
+import type { ClientOptions, GetFooResponses } from './types.gen';
 
 export type RequestHandlerOptions = RequestHandlerOptions2 & {
-    baseUrl?: string;
+    baseUrl?: ClientOptions['baseUrl'];
     responseFallback?: 'error' | 'passthrough';
+};
+
+export type HandleGetFooResponse = {
+    body: GetFooResponses[200];
+    status?: 200;
 };
 
 /**
  * Handler for the `GET /foo` operation.
  */
-export function handleGetFoo(response?: {
-    body: GetFooResponses[200];
-    status?: 200;
-} | HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
+export function handleGetFoo(response?: HandleGetFooResponse | HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
     return http.get<never, never>(`${options?.baseUrl ?? '*'}/foo`, info => {
         if (typeof response === 'function') {
             return response(info);

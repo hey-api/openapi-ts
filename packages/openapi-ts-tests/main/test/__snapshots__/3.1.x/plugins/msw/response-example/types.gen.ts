@@ -6,7 +6,7 @@ export type ClientOptions = {
 
 export type Person = {
     firstName?: string;
-    lastName?: unknown;
+    lastName?: string;
     age?: number;
 };
 
@@ -48,21 +48,3 @@ export type PostFooResponses = {
 };
 
 export type PostFooResponse = PostFooResponses[keyof PostFooResponses];
-
-export type PutFooData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/foo';
-};
-
-export type PutFooResponses = {
-    /**
-     * OK
-     */
-    200: {
-        name?: string;
-    };
-};
-
-export type PutFooResponse = PutFooResponses[keyof PutFooResponses];

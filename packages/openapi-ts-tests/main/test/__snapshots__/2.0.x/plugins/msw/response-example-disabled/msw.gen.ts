@@ -2,7 +2,7 @@
 
 import { http, type HttpHandler, HttpResponse, type HttpResponseResolver, type RequestHandlerOptions as RequestHandlerOptions2 } from 'msw';
 
-import type { ClientOptions, GetFooResponses, PostFooData, PostFooResponses, PutFooResponses } from './types.gen';
+import type { ClientOptions, GetFooResponses, PostFooData, PostFooResponses } from './types.gen';
 
 export type RequestHandlerOptions = RequestHandlerOptions2 & {
     baseUrl?: ClientOptions['baseUrl'];
@@ -70,33 +70,6 @@ export function handlePostFoo(response?: HandlePostFooResponse | ToResponseUnion
     }, options);
 }
 
-export type HandlePutFooResponse = {
-    body: PutFooResponses[200];
-    status?: 200;
-};
-
-/**
- * Handler for the `PUT /foo` operation.
- */
-export function handlePutFoo(response?: HandlePutFooResponse | HttpResponseResolver<never, never>, options?: RequestHandlerOptions): HttpHandler {
-    return http.put<never, never>(`${options?.baseUrl ?? '*'}/foo`, info => {
-        if (typeof response === 'function') {
-            return response(info);
-        }
-        const body = response?.body;
-        if (body !== undefined) {
-            return HttpResponse.json(body, { status: response?.status ?? 200 });
-        }
-        if (options?.responseFallback === 'passthrough') {
-            return;
-        }
-        return new Response('Not Implemented', {
-            status: 501,
-            statusText: 'Not Implemented'
-        });
-    }, options);
-}
-
 export type MswHandlerFactories = {
     /**
      * Handler for the `GET /foo` operation.
@@ -106,10 +79,6 @@ export type MswHandlerFactories = {
      * Handler for the `POST /foo` operation.
      */
     postFoo: typeof handlePostFoo;
-    /**
-     * Handler for the `PUT /foo` operation.
-     */
-    putFoo: typeof handlePutFoo;
 };
 
 export type CreateMswHandlersResult = {
@@ -128,8 +97,7 @@ export function createMswHandlers(config: RequestHandlerOptions = {}): CreateMsw
     }
     const pick: CreateMswHandlersResult['pick'] = {
         getFoo: wrap(handleGetFoo),
-        postFoo: wrap(handlePostFoo),
-        putFoo: wrap(handlePutFoo)
+        postFoo: wrap(handlePostFoo)
     };
     const all: CreateMswHandlersResult['all'] = (options = {}) => {
         type OverrideValue<R> = R | [
@@ -140,11 +108,7 @@ export function createMswHandlers(config: RequestHandlerOptions = {}): CreateMsw
             return Array.isArray(override) ? fn(...override) : fn(override);
         }
         const overrides = options.pick ?? {};
-        return [
-            invoke(pick.getFoo, overrides.getFoo),
-            invoke(pick.postFoo, overrides.postFoo),
-            invoke(pick.putFoo, overrides.putFoo)
-        ];
+        return [invoke(pick.getFoo, overrides.getFoo), invoke(pick.postFoo, overrides.postFoo)];
     };
     return { all, pick };
 }
