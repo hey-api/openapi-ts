@@ -9,6 +9,7 @@ import { defaultConfig as heyApiClientKy } from '../plugins/@hey-api/client-ky';
 import { defaultConfig as heyApiClientNext } from '../plugins/@hey-api/client-next';
 import { defaultConfig as heyApiClientNuxt } from '../plugins/@hey-api/client-nuxt';
 import { defaultConfig as heyApiClientOfetch } from '../plugins/@hey-api/client-ofetch';
+import { defaultConfig as heyApiExamples } from '../plugins/@hey-api/examples';
 import { defaultConfig as heyApiSchemas } from '../plugins/@hey-api/schemas';
 import { defaultConfig as heyApiSdk } from '../plugins/@hey-api/sdk';
 import { defaultConfig as heyApiTransformers } from '../plugins/@hey-api/transformers';
@@ -41,6 +42,7 @@ export const defaultPluginConfigs: {
   '@hey-api/client-next': heyApiClientNext,
   '@hey-api/client-nuxt': heyApiClientNuxt,
   '@hey-api/client-ofetch': heyApiClientOfetch,
+  '@hey-api/examples': heyApiExamples,
   '@hey-api/schemas': heyApiSchemas,
   '@hey-api/sdk': heyApiSdk,
   '@hey-api/transformers': heyApiTransformers,

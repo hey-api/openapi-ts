@@ -1,4 +1,7 @@
 import type { DefinePlugin, Plugin } from '@hey-api/shared';
+import type { MaybeArray } from '@hey-api/types';
+
+import type { PluginSourceNames } from '../types';
 
 export type UserConfig = Plugin.Name<'msw'> &
   Plugin.Hooks &
@@ -28,14 +31,14 @@ export type UserConfig = Plugin.Name<'msw'> &
      */
     responseFallback?: 'error' | 'passthrough';
     /**
-     * Sources for default parameter values in handler factories. Order determines
-     * priority (earlier entries take precedence).
+     * Where to pull mock data from. When an array, earlier entries take
+     * precedence.
      *
-     * - `'example'` - use OpenAPI example values
+     * - `'example'` - example values defined in the input
      *
-     * @default ['example']
+     * @default ['@hey-api/examples']
      */
-    valueSources?: ReadonlyArray<'example'>;
+    source?: MaybeArray<PluginSourceNames>;
   };
 
 export type Config = Plugin.Name<'msw'> &
@@ -46,8 +49,8 @@ export type Config = Plugin.Name<'msw'> &
     baseUrl: string | number | boolean;
     /** Behavior when a response cannot be generated. */
     responseFallback: 'error' | 'passthrough';
-    /** Sources for default parameter values in handler factories. */
-    valueSources: ReadonlyArray<'example'>;
+    /** Where to pull mock data from. */
+    source: ReadonlyArray<PluginSourceNames>;
   };
 
 export type MswPlugin = DefinePlugin<UserConfig, Config>;

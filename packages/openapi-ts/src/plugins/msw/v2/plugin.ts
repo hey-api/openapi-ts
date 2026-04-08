@@ -50,12 +50,7 @@ export const handlerV2: MswPlugin['Handler'] = ({ plugin }) => {
   plugin.forEach(
     'operation',
     ({ operation }) => {
-      const symbolHandler = getHandler({
-        baseUrl,
-        examples: plugin.config.valueSources?.includes('example') ?? true,
-        operation,
-        plugin,
-      });
+      const symbolHandler = getHandler({ baseUrl, operation, plugin });
 
       const name = operation.id;
       pickType.prop(name, (p) =>
