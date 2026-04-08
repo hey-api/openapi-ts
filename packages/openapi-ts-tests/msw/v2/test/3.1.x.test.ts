@@ -24,22 +24,22 @@ describe(`OpenAPI ${version}`, () => {
     {
       config: createConfig({
         input: 'mockers.yaml',
-        output: 'mockers',
+        output: 'source-default',
       }),
-      description: 'generates handlers with examples',
+      description: 'generates handlers',
     },
     {
       config: createConfig({
         input: 'mockers.yaml',
-        output: 'mockers-disabled',
+        output: 'source-disabled',
         plugins: [
           {
             name: 'msw',
-            valueSources: [],
+            source: [],
           },
         ],
       }),
-      description: 'generates handlers with examples but disabled',
+      description: 'generates handlers without response sources',
     },
   ];
 
