@@ -862,6 +862,8 @@ const parseEnum = ({
 }): IR.SchemaObject => {
   let irSchema = initIrSchema({ schema });
 
+  parseSchemaMeta({ irSchema, schema });
+
   irSchema.type = 'enum';
 
   const schemaItems: Array<IR.SchemaObject> = [];

@@ -36,7 +36,7 @@ export const zPost = z.object({
 export const zCreatePostInput = z.object({
     title: z.string(),
     content: z.string(),
-    status: z.enum(['draft', 'published']).optional()
+    status: z.enum(['draft', 'published']).optional().default('draft')
 });
 
 export const zGetUsersQuery = z.object({
