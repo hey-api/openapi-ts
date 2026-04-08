@@ -503,7 +503,7 @@ export const zCallWithDefaultParametersQuery = z.object({
         'Success',
         'Warning',
         'Error'
-    ]), 0),
+    ]), 'Success'),
     parameterModel: z._default(z.object({
         prop: z.optional(z.string())
     }), { prop: 'Hello World!' })
@@ -517,7 +517,7 @@ export const zCallWithDefaultOptionalParametersQuery = z.object({
         'Success',
         'Warning',
         'Error'
-    ])), 0)
+    ])), 'Success')
 });
 
 export const zCallToTestOrderOfParamsQuery = z.object({

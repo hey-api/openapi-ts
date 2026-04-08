@@ -1237,7 +1237,7 @@ export const zCallWithDefaultParametersQuery = z.object({
         'Success',
         'Warning',
         'Error'
-    ])), 0),
+    ])), 'Success'),
     parameterModel: z.nullish(zModelWithString)
 });
 
@@ -1249,7 +1249,7 @@ export const zCallWithDefaultOptionalParametersQuery = z.object({
         'Success',
         'Warning',
         'Error'
-    ])), 0),
+    ])), 'Success'),
     parameterModel: z._default(z.optional(zModelWithString), { prop: 'Hello World!' })
 });
 

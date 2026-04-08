@@ -439,7 +439,7 @@ paths:
               - Success
               - Warning
               - Error
-            default: 0
+            default: Success
         - description: This is a simple model with default value
           name: parameterModel
           in: query
@@ -484,7 +484,7 @@ paths:
               - Success
               - Warning
               - Error
-            default: 0
+            default: Success
         - description: This is a simple model that is optional with default value
           name: parameterModel
           in: query
