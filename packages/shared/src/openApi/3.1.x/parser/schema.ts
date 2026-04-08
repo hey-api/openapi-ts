@@ -15,6 +15,7 @@ import {
   discriminatorValues,
 } from '../../../openApi/shared/utils/discriminator';
 import { isTopLevelComponent, refToName } from '../../../utils/ref';
+import { contentToSchema, mediaTypeObjects } from './mediaType';
 
 export const getSchemaTypes = ({
   schema,
@@ -1429,7 +1430,7 @@ export const schemaToIrSchema = ({
   return parseUnknown({ context, schema });
 };
 
-export const parseSchema = ({
+export function parseSchema({
   $ref,
   context,
   schema,
@@ -1437,7 +1438,7 @@ export const parseSchema = ({
   $ref: string;
   context: Context;
   schema: OpenAPIV3_1.SchemaObject;
-}) => {
+}) {
   if (!context.ir.components) {
     context.ir.components = {};
   }
@@ -1454,4 +1455,76 @@ export const parseSchema = ({
       circularReferenceTracker: new Set(),
     },
   });
-};
+}
+
+export function parseHeader({
+  $ref,
+  context,
+  schema,
+}: {
+  $ref: string;
+  context: Context;
+  schema: OpenAPIV3_1.SchemaObject;
+}) {
+  if (!context.ir.components) {
+    context.ir.components = {};
+  }
+
+  if (!context.ir.components.headers) {
+    context.ir.components.headers = {};
+  }
+
+  context.ir.components.headers[refToName($ref)] = schemaToIrSchema({
+    context,
+    schema,
+    state: {
+      $ref,
+      circularReferenceTracker: new Set(),
+    },
+  });
+}
+
+export function parseResponse({
+  $ref,
+  context,
+  response,
+}: {
+  $ref: string;
+  context: Context;
+  response: OpenAPIV3_1.ResponseObject;
+}) {
+  if (!context.ir.components) {
+    context.ir.components = {};
+  }
+
+  if (!context.ir.components.responses) {
+    context.ir.components.responses = {};
+  }
+
+  const contents = mediaTypeObjects({ content: response.content });
+  const content = contents.find((content) => content.type === 'json') || contents[0];
+
+  if (content) {
+    context.ir.components.responses[refToName($ref)] = {
+      mediaType: content.mediaType,
+      schema: schemaToIrSchema({
+        context,
+        schema: {
+          description: response.description,
+          ...contentToSchema({ content }),
+        } as OpenAPIV3_1.SchemaObject,
+        state: {
+          $ref,
+          circularReferenceTracker: new Set(),
+        },
+      }),
+    };
+  } else {
+    context.ir.components.responses[refToName($ref)] = {
+      schema: {
+        description: response.description,
+        type: 'unknown',
+      },
+    };
+  }
+}

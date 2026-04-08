@@ -173,6 +173,13 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'components-headers.yaml',
+        output: 'components-headers',
+      }),
+      description: 'handles reusable header and response components',
+    },
+    {
+      config: createConfig({
         input: 'components-request-bodies.json',
         output: 'components-request-bodies',
       }),
