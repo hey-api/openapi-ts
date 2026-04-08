@@ -1,11 +1,13 @@
-import type { CodeSampleObject, EnumExtensions, OpenAPIExtensions } from '../../extensions/openapi';
+import type { CodeSampleObject } from '../../extensions/code-samples';
+import type { EnumExtensions } from '../../extensions/enum';
+import type { SpecExtensions } from '../../extensions/spec';
 
 /**
  * This is the root object of the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#openapi-description OpenAPI Description}.
  *
  * This object MAY be extended with {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#specification-extensions Specification Extensions}.
  */
-export interface Document extends OpenAPIExtensions {
+export interface Document extends SpecExtensions {
   /**
    * An element to hold various Objects for the OpenAPI Description.
    */
@@ -29,15 +31,15 @@ export interface Document extends OpenAPIExtensions {
   /**
    * A declaration of which security mechanisms can be used across the API. The list of values includes alternative Security Requirement Objects that can be used. Only one of the Security Requirement Objects need to be satisfied to authorize a request. Individual operations can override this definition. The list can be incomplete, up to being empty or absent. To make security explicitly optional, an empty security requirement (`{}`) can be included in the array.
    */
-  security?: ReadonlyArray<SecurityRequirementObject>;
+  security?: Array<SecurityRequirementObject>;
   /**
    * An array of Server Objects, which provide connectivity information to a target server. If the `servers` field is not provided, or is an empty array, the default value would be a {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#server-object Server Object} with a {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#server-url url} value of `/`.
    */
-  servers?: ReadonlyArray<ServerObject>;
+  servers?: Array<ServerObject>;
   /**
    * A list of tags used by the OpenAPI Description with additional metadata. The order of the tags can be used to reflect on their order by the parsing tools. Not all tags that are used by the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#operation-object Operation Object} must be declared. The tags that are not declared MAY be organized randomly or based on the tools' logic. Each tag name in the list MUST be unique.
    */
-  tags?: ReadonlyArray<TagObject>;
+  tags?: Array<TagObject>;
 }
 
 /**
@@ -47,7 +49,7 @@ export interface Document extends OpenAPIExtensions {
  *
  * TODO: examples
  */
-export interface CallbackObject extends OpenAPIExtensions {
+export interface CallbackObject extends SpecExtensions {
   /**
    * A Path Item Object used to define a callback request and expected responses. A {@link https://learn.openapis.org/examples/v3.0/callback-example.html complete example} is available.
    */
@@ -63,7 +65,7 @@ export interface CallbackObject extends OpenAPIExtensions {
  *
  * TODO: examples
  */
-export interface ComponentsObject extends OpenAPIExtensions {
+export interface ComponentsObject extends SpecExtensions {
   /**
    * An object to hold reusable {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#callback-object Callback Objects}.
    */
@@ -113,7 +115,7 @@ export interface ComponentsObject extends OpenAPIExtensions {
  * email: support@example.com
  * ```
  */
-export interface ContactObject extends OpenAPIExtensions {
+export interface ContactObject extends SpecExtensions {
   /**
    * The email address of the contact person/organization. This MUST be in the form of an email address.
    */
@@ -160,7 +162,7 @@ export interface DiscriminatorObject {
  * TODO: default values examples
  * TODO: examples
  */
-export interface EncodingObject extends OpenAPIExtensions {
+export interface EncodingObject extends SpecExtensions {
   /**
    * When this is true, parameter values are serialized using reserved expansion, as defined by {@link https://datatracker.ietf.org/doc/html/rfc6570#section-3.2.3 RFC6570}, which allows {@link https://datatracker.ietf.org/doc/html/rfc3986#section-2.2 RFC3986's reserved character set}, as well as percent-encoded triples, to pass through unchanged, while still percent-encoding all other disallowed characters (including `%` outside of percent-encoded triples). Applications are still responsible for percent-encoding reserved characters that are {@link https://datatracker.ietf.org/doc/html/rfc3986#section-3.4 not allowed in the query string} (`[`, `]`, `#`), or have a special meaning in `application/x-www-form-urlencoded` (`-`, `&`, `+`); see Appendices {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#appendix-c-using-rfc6570-based-serialization C} and {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#appendix-e-percent-encoding-and-form-media-types E} for details. The default value is `false`. This field SHALL be ignored if the request body media type is not `application/x-www-form-urlencoded`.
    */
@@ -201,7 +203,7 @@ export interface EncodingObject extends OpenAPIExtensions {
  *
  * TODO: examples
  */
-export interface ExampleObject extends OpenAPIExtensions {
+export interface ExampleObject extends SpecExtensions {
   /**
    * Long description for the example. {@link https://spec.commonmark.org/ CommonMark syntax} MAY be used for rich text representation.
    */
@@ -232,7 +234,7 @@ export interface ExampleObject extends OpenAPIExtensions {
  * url: https://example.com
  * ```
  */
-export interface ExternalDocumentationObject extends OpenAPIExtensions {
+export interface ExternalDocumentationObject extends SpecExtensions {
   /**
    * A description of the target documentation. {@link https://spec.commonmark.org/ CommonMark syntax} MAY be used for rich text representation.
    */
@@ -276,7 +278,7 @@ export type HeaderObject = Omit<ParameterObject, 'in' | 'name'>;
  * version: 1.0.1
  * ```
  */
-export interface InfoObject extends OpenAPIExtensions {
+export interface InfoObject extends SpecExtensions {
   /**
    * The contact information for the exposed API.
    */
@@ -313,7 +315,7 @@ export interface InfoObject extends OpenAPIExtensions {
  * url: https://www.apache.org/licenses/LICENSE-2.0.html
  * ```
  */
-export interface LicenseObject extends OpenAPIExtensions {
+export interface LicenseObject extends SpecExtensions {
   /**
    * **REQUIRED**. The license name used for the API.
    */
@@ -339,7 +341,7 @@ export interface LicenseObject extends OpenAPIExtensions {
  *
  * TODO: examples
  */
-export interface LinkObject extends OpenAPIExtensions {
+export interface LinkObject extends SpecExtensions {
   /**
    * A description of the link. {@link https://spec.commonmark.org/ CommonMark syntax} MAY be used for rich text representation.
    */
@@ -375,7 +377,7 @@ export interface LinkObject extends OpenAPIExtensions {
  *
  * TODO: examples
  */
-export interface MediaTypeObject extends OpenAPIExtensions {
+export interface MediaTypeObject extends SpecExtensions {
   /**
    * A map between a property name and its encoding information. The key, being the property name, MUST exist in the schema as a property. The `encoding` field SHALL only apply to {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#request-body-object Request Body Objects}, and only when the media type is `multipart` or `application/x-www-form-urlencoded`. If no Encoding Object is provided for a property, the behavior is determined by the default values documented for the Encoding Object.
    */
@@ -401,7 +403,7 @@ export interface MediaTypeObject extends OpenAPIExtensions {
  *
  * TODO: examples
  */
-export interface OAuthFlowObject extends OpenAPIExtensions {
+export interface OAuthFlowObject extends SpecExtensions {
   /**
    * **REQUIRED (`"implicit"`, `"authorizationCode"`)**. The authorization URL to be used for this flow. This MUST be in the form of a URL. The OAuth2 standard requires the use of TLS.
    */
@@ -425,7 +427,7 @@ export interface OAuthFlowObject extends OpenAPIExtensions {
  *
  * This object MAY be extended with {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#specification-extensions Specification Extensions}.
  */
-export interface OAuthFlowsObject extends OpenAPIExtensions {
+export interface OAuthFlowsObject extends SpecExtensions {
   /**
    * Configuration for the OAuth Authorization Code flow. Previously called `accessCode` in OpenAPI 2.0.
    */
@@ -451,7 +453,7 @@ export interface OAuthFlowsObject extends OpenAPIExtensions {
  *
  * TODO: examples
  */
-export interface OperationObject extends OpenAPIExtensions {
+export interface OperationObject extends SpecExtensions {
   /**
    * A map of possible out-of band callbacks related to the parent operation. The key is a unique identifier for the Callback Object. Each value in the map is a {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#callback-object Callback Object} that describes a request that may be initiated by the API provider and the expected responses.
    */
@@ -475,7 +477,7 @@ export interface OperationObject extends OpenAPIExtensions {
   /**
    * A list of parameters that are applicable for this operation. If a parameter is already defined in the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#path-item-parameters Path Item}, the new definition will override it but can never remove it. The list MUST NOT include duplicated parameters. A unique parameter is defined by a combination of a {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#parameter-name name} and {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#parameter-in location}. The list can use the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#reference-object Reference Object} to link to parameters that are defined in the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#components-parameters OpenAPI Object's `components.parameters`}.
    */
-  parameters?: ReadonlyArray<ParameterObject | ReferenceObject>;
+  parameters?: Array<ParameterObject | ReferenceObject>;
   /**
    * The request body applicable for this operation. The `requestBody` is only supported in HTTP methods where the HTTP 1.1 specification {@link https://tools.ietf.org/html/rfc7231#section-4.3.1 RFC7231} has explicitly defined semantics for request bodies. In other cases where the HTTP spec is vague (such as {@link https://tools.ietf.org/html/rfc7231#section-4.3.1 GET}, {@link https://tools.ietf.org/html/rfc7231#section-4.3.2 HEAD} and {@link https://tools.ietf.org/html/rfc7231#section-4.3.5 DELETE}), `requestBody` SHALL be ignored by consumers.
    */
@@ -487,11 +489,11 @@ export interface OperationObject extends OpenAPIExtensions {
   /**
    * A declaration of which security mechanisms can be used for this operation. The list of values includes alternative Security Requirement Objects that can be used. Only one of the Security Requirement Objects need to be satisfied to authorize a request. To make security optional, an empty security requirement (`{}`) can be included in the array. This definition overrides any declared top-level {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#oas-security `security`}. To remove a top-level security declaration, an empty array can be used.
    */
-  security?: ReadonlyArray<SecurityRequirementObject>;
+  security?: Array<SecurityRequirementObject>;
   /**
    * An alternative `servers` array to service this operation. If a `servers` array is specified at the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#path-item-servers Path Item Object} or {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#oas-servers OpenAPI Object} level, it will be overridden by this value.
    */
-  servers?: ReadonlyArray<ServerObject>;
+  servers?: Array<ServerObject>;
   /**
    * A short summary of what the operation does.
    */
@@ -499,11 +501,11 @@ export interface OperationObject extends OpenAPIExtensions {
   /**
    * A list of tags for API documentation control. Tags can be used for logical grouping of operations by resources or any other qualifier.
    */
-  tags?: ReadonlyArray<string>;
+  tags?: Array<string>;
   /**
    * A list of code samples associated with an operation.
    */
-  'x-codeSamples'?: ReadonlyArray<CodeSampleObject>;
+  'x-codeSamples'?: Array<CodeSampleObject>;
 }
 
 /**
@@ -550,7 +552,7 @@ export interface OperationObject extends OpenAPIExtensions {
  *
  * TODO: examples
  */
-export interface ParameterObject extends OpenAPIExtensions {
+export interface ParameterObject extends SpecExtensions {
   /**
    * If `true`, clients MAY pass a zero-length string value in place of parameters that would otherwise be omitted entirely, which the server SHOULD interpret as the parameter being unused. Default value is `false`. If {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#parameter-style `style`} is used, and if {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#style-examples behavior is _n/a_ (cannot be serialized)}, the value of `allowEmptyValue` SHALL be ignored. Interactions between this field and the parameter's {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#schema-object Schema Object} are implementation-defined. This field is valid only for `query` parameters. Use of this field is NOT RECOMMENDED, and it is likely to be removed in a later revision.
    */
@@ -622,7 +624,7 @@ export interface ParameterObject extends OpenAPIExtensions {
  *
  * TODO: examples
  */
-export interface PathItemObject extends OpenAPIExtensions {
+export interface PathItemObject extends SpecExtensions {
   /**
    * Allows for a referenced definition of this path item. The value MUST be in the form of a URL, and the referenced structure MUST be in the form of a {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#path-item-object Path Item Object}. In case a Path Item Object field appears both in the defined object and the referenced object, the behavior is undefined. See the rules for resolving {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#relative-references-in-urls Relative References}.
    */
@@ -650,7 +652,7 @@ export interface PathItemObject extends OpenAPIExtensions {
   /**
    * A list of parameters that are applicable for all the operations described under this path. These parameters can be overridden at the operation level, but cannot be removed there. The list MUST NOT include duplicated parameters. A unique parameter is defined by a combination of a {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#parameter-name name} and {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#parameter-in location}. The list can use the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#reference-object Reference Object} to link to parameters that are defined in the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#components-parameters OpenAPI Object's `components.parameters`}.
    */
-  parameters?: ReadonlyArray<ParameterObject | ReferenceObject>;
+  parameters?: Array<ParameterObject | ReferenceObject>;
   /**
    * A definition of a PATCH operation on this path.
    */
@@ -666,7 +668,7 @@ export interface PathItemObject extends OpenAPIExtensions {
   /**
    * An alternative `servers` array to service all operations in this path. If a `servers` array is specified at the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#oas-servers OpenAPI Object} level, it will be overridden by this value.
    */
-  servers?: ReadonlyArray<ServerObject>;
+  servers?: Array<ServerObject>;
   /**
    * An optional string summary, intended to apply to all operations in this path.
    */
@@ -684,7 +686,7 @@ export interface PathItemObject extends OpenAPIExtensions {
  *
  * TODO: examples
  */
-export interface PathsObject extends OpenAPIExtensions {
+export interface PathsObject extends SpecExtensions {
   /**
    * A relative path to an individual endpoint. The field name MUST begin with a forward slash (`/`). The path is **appended** (no relative URL resolution) to the expanded URL from the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#server-object Server Object}'s `url` field in order to construct the full URL. {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#path-templating Path templating} is allowed. When matching URLs, concrete (non-templated) paths would be matched before their templated counterparts. Templated paths with the same hierarchy but different templated names MUST NOT exist as they are identical. In case of ambiguous matching, it's up to the tooling to decide which one to use.
    */
@@ -732,7 +734,7 @@ export interface ReferenceObject {
  *
  * TODO: examples
  */
-export interface RequestBodyObject extends OpenAPIExtensions {
+export interface RequestBodyObject extends SpecExtensions {
   /**
    * **REQUIRED**. The content of the request body. The key is a media type or {@link https://tools.ietf.org/html/rfc7231#appendix-D media type range} and the value describes it. For requests that match multiple keys, only the most specific key is applicable. e.g. `"text/plain"` overrides `"text/*"`
    */
@@ -754,7 +756,7 @@ export interface RequestBodyObject extends OpenAPIExtensions {
  *
  * TODO: examples
  */
-export interface ResponseObject extends OpenAPIExtensions {
+export interface ResponseObject extends SpecExtensions {
   /**
    * A map containing descriptions of potential response payloads. The key is a media type or {@link https://tools.ietf.org/html/rfc7231#appendix-D media type range} and the value describes it. For responses that match multiple keys, only the most specific key is applicable. e.g. `"text/plain"` overrides `"text/*"`
    */
@@ -786,7 +788,7 @@ export interface ResponseObject extends OpenAPIExtensions {
  *
  * TODO: examples
  */
-export interface ResponsesObject extends OpenAPIExtensions {
+export interface ResponsesObject extends SpecExtensions {
   /**
    * Any {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#http-status-codes HTTP status code} can be used as the property name, but only one property per code, to describe the expected response for that HTTP status code. A {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#reference-object Reference Object} can link to a response that is defined in the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#components-responses OpenAPI Object's `components.responses`} section. This field MUST be enclosed in quotation marks (for example, "200") for compatibility between JSON and YAML. To define a range of response codes, this field MAY contain the uppercase wildcard character `X`. For example, `2XX` represents all response codes between `200` and `299`. Only the following range definitions are allowed: `1XX`, `2XX`, `3XX`, `4XX`, and `5XX`. If a response is defined using an explicit code, the explicit code definition takes precedence over the range definition for that code.
    */
@@ -848,7 +850,7 @@ export interface ResponsesObject extends OpenAPIExtensions {
  *
  * TODO: content, examples
  */
-export interface SchemaObject extends EnumExtensions, OpenAPIExtensions {
+export interface SchemaObject extends EnumExtensions, SpecExtensions {
   /**
    * The value of "additionalProperties" MUST be a boolean or a schema.
    *
@@ -870,7 +872,7 @@ export interface SchemaObject extends EnumExtensions, OpenAPIExtensions {
    *
    * An instance validates successfully against this keyword if it validates successfully against all schemas defined by this keyword's value.
    */
-  allOf?: ReadonlyArray<SchemaObject | ReferenceObject>;
+  allOf?: Array<SchemaObject | ReferenceObject>;
   /**
    * This keyword's value MUST be an array.  This array MUST have at least one element.
    *
@@ -879,7 +881,7 @@ export interface SchemaObject extends EnumExtensions, OpenAPIExtensions {
    * An instance validates successfully against this keyword if it validates successfully against at least one schema defined by this
    keyword's value.
    */
-  anyOf?: ReadonlyArray<SchemaObject | ReferenceObject>;
+  anyOf?: Array<SchemaObject | ReferenceObject>;
   /**
    * The default value represents what would be assumed by the consumer of the input as the value of the schema if one is not provided. Unlike JSON Schema, the value MUST conform to the defined `type` for the Schema Object defined at the same level. For example, if `type` is `"string"`, then `default` can be `"foo"` but cannot be `1`.
    */
@@ -907,7 +909,7 @@ export interface SchemaObject extends EnumExtensions, OpenAPIExtensions {
    *
    * An instance validates successfully against this keyword if its value is equal to one of the elements in this keyword's array value.
    */
-  enum?: ReadonlyArray<unknown>;
+  enum?: Array<unknown>;
   /**
    * A free-form field to include an example of an instance for this schema. To represent examples that cannot be naturally represented in JSON or YAML, a string value can be used to contain the example with escaping where necessary.
    */
@@ -1019,7 +1021,7 @@ export interface SchemaObject extends EnumExtensions, OpenAPIExtensions {
    *
    * An instance validates successfully against this keyword if it validates successfully against exactly one schema defined by this keyword's value.
    */
-  oneOf?: ReadonlyArray<SchemaObject | ReferenceObject>;
+  oneOf?: Array<SchemaObject | ReferenceObject>;
   /**
    * The value of this keyword MUST be a string.  This string SHOULD be a valid regular expression, according to the ECMA 262 regular expression dialect.
    *
@@ -1041,7 +1043,7 @@ export interface SchemaObject extends EnumExtensions, OpenAPIExtensions {
    *
    * An object instance is valid against this keyword if its property set contains all elements in this keyword's array value.
    */
-  required?: ReadonlyArray<string>;
+  required?: Array<string>;
   /**
    * The value of both of these keywords MUST be a string.
    *
@@ -1089,7 +1091,7 @@ export interface SecurityRequirementObject {
   /**
    * Each name MUST correspond to a security scheme which is declared in the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#security-scheme-object Security Schemes} under the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#components-object Components Object}. If the security scheme is of type `"oauth2"` or `"openIdConnect"`, then the value is a list of scope names required for the execution, and the list MAY be empty if authorization does not require a specified scope. For other security scheme types, the array MUST be empty.
    */
-  [name: string]: ReadonlyArray<string>;
+  [name: string]: Array<string>;
 }
 
 /**
@@ -1101,7 +1103,7 @@ export interface SecurityRequirementObject {
  *
  * TODO: examples
  */
-export type SecuritySchemeObject = OpenAPIExtensions & {
+export type SecuritySchemeObject = SpecExtensions & {
   /**
    * A description for security scheme. {@link https://spec.commonmark.org/ CommonMark syntax} MAY be used for rich text representation.
    */
@@ -1164,7 +1166,7 @@ export type SecuritySchemeObject = OpenAPIExtensions & {
  *
  * TODO: examples
  */
-export interface ServerObject extends OpenAPIExtensions {
+export interface ServerObject extends SpecExtensions {
   /**
    * An optional string describing the host designated by the URL. {@link https://spec.commonmark.org/ CommonMark syntax} MAY be used for rich text representation.
    */
@@ -1184,7 +1186,7 @@ export interface ServerObject extends OpenAPIExtensions {
  *
  * This object MAY be extended with {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#specification-extensions Specification Extensions}.
  */
-export interface ServerVariableObject extends OpenAPIExtensions {
+export interface ServerVariableObject extends SpecExtensions {
   /**
    * **REQUIRED**. The default value to use for substitution, which SHALL be sent if an alternate value is _not_ supplied. If the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#server-variable-enum `enum`} is defined, the value SHOULD exist in the enum's values. Note that this behavior is different from the {@link https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.4.md#schema-object Schema Object}'s `default` keyword, which documents the receiver's behavior rather than inserting the value into the data.
    */
@@ -1196,7 +1198,7 @@ export interface ServerVariableObject extends OpenAPIExtensions {
   /**
    * An enumeration of string values to be used if the substitution options are from a limited set. The array SHOULD NOT be empty.
    */
-  enum?: ReadonlyArray<string>;
+  enum?: Array<string>;
 }
 
 /**
@@ -1211,7 +1213,7 @@ export interface ServerVariableObject extends OpenAPIExtensions {
  * description: Pets operations
  * ```
  */
-export interface TagObject extends OpenAPIExtensions {
+export interface TagObject extends SpecExtensions {
   /**
    * A description for the tag. {@link https://spec.commonmark.org/ CommonMark syntax} MAY be used for rich text representation.
    */
@@ -1240,7 +1242,7 @@ export interface TagObject extends OpenAPIExtensions {
  *
  * TODO: examples
  */
-export interface XMLObject extends OpenAPIExtensions {
+export interface XMLObject extends SpecExtensions {
   /**
    * Declares whether the property definition translates to an attribute instead of an element. Default value is `false`.
    */

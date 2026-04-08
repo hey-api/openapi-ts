@@ -37,16 +37,16 @@
   ],
   "type": "module",
   "sideEffects": false,
-  "types": "./dist/index.d.ts",
+  "types": "./dist/index.d.mts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts"
+      "types": "./dist/index.d.mts"
     },
     "./package.json": "./package.json"
   },
   "scripts": {
-    "build": "tsc --build",
-    "dev": "tsc --build --watch",
+    "build": "tsdown",
+    "dev": "tsdown --watch",
     "prepublishOnly": "pnpm build",
     "typecheck": "tsgo --noEmit"
   },

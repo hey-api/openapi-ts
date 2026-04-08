@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 import type { Symbol } from '@hey-api/codegen-core';
-import type { JSONSchemaDraft2020_12, OpenAPIExtensions, OpenAPIV3_1 } from '@hey-api/spec-types';
+import type { JSONSchemaDraft2020_12, OpenAPIV3_1, SpecExtensions } from '@hey-api/spec-types';
 
 import type { IRMediaType } from './mediaType';
 
@@ -22,7 +22,7 @@ interface IRComponentsObject {
   schemas?: Record<string, IRSchemaObject>;
 }
 
-export interface IROperationObject extends OpenAPIExtensions {
+export interface IROperationObject extends SpecExtensions {
   body?: IRBodyObject;
   deprecated?: boolean;
   description?: string;
@@ -46,7 +46,7 @@ export interface IRParametersObject {
 }
 
 export interface IRParameterObject
-  extends Pick<JSONSchemaDraft2020_12.Document, 'deprecated' | 'description'>, OpenAPIExtensions {
+  extends Pick<JSONSchemaDraft2020_12.Document, 'deprecated' | 'description'>, SpecExtensions {
   /**
    * Determines whether the parameter value SHOULD allow reserved characters, as defined by RFC3986 `:/?#[]@!$&'()*+,;=` to be included without percent-encoding. The default value is `false`. This property SHALL be ignored if the request body media type is not `application/x-www-form-urlencoded` or `multipart/form-data`. If a value is explicitly defined, then the value of `contentType` (implicit or explicit) SHALL be ignored.
    */
@@ -130,9 +130,9 @@ export interface IRSchemaObject
       | 'pattern'
       | 'required'
       | 'title'
-      | 'example'
     >,
-    OpenAPIExtensions {
+    Pick<OpenAPIV3_1.SchemaObject, 'example'>,
+    SpecExtensions {
   /**
    * If the schema is intended to be used as an object property, it can be
    * marked as read-only or write-only. This value controls whether the schema
