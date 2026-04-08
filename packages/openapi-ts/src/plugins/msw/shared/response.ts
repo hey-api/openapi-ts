@@ -30,7 +30,14 @@ export function createHttpResponse({
     case 'json':
       return $(symbolHttpResponse).attr('json').call(body, init);
     case 'text':
-      return $(symbolHttpResponse).attr('text').call(body, init);
+      return $(symbolHttpResponse)
+        .attr('text')
+        .call(
+          $.ternary($(body).typeofExpr().eq($.literal('string')))
+            .do(body)
+            .otherwise($('JSON').attr('stringify').call(body)),
+          init,
+        );
     case 'void':
       return $.new(symbolHttpResponse, body, init);
   }

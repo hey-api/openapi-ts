@@ -180,7 +180,11 @@ export function getHandler({
 
   let bodyType: ReturnType<typeof $.type.idx | typeof $.type>;
   if (operation.body && symbolDataType) {
-    bodyType = $.type(symbolDataType).idx($.type.literal('body'));
+    if (operation.body?.schema.type === 'unknown') {
+      bodyType = $.type(plugin.external('msw.DefaultBodyType'));
+    } else {
+      bodyType = $.type(symbolDataType).idx($.type.literal('body'));
+    }
   } else {
     bodyType = $.type('never');
   }
