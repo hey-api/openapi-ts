@@ -499,11 +499,11 @@ export const zCallWithDefaultParametersQuery = z.object({
     parameterString: z._default(z.string(), 'Hello World!'),
     parameterNumber: z._default(z.number(), 123),
     parameterBoolean: z._default(z.boolean(), true),
-    parameterEnum: z.enum([
+    parameterEnum: z._default(z.enum([
         'Success',
         'Warning',
         'Error'
-    ]),
+    ]), 'Success'),
     parameterModel: z._default(z.object({
         prop: z.optional(z.string())
     }), { prop: 'Hello World!' })
@@ -513,11 +513,11 @@ export const zCallWithDefaultOptionalParametersQuery = z.object({
     parameterString: z._default(z.optional(z.string()), 'Hello World!'),
     parameterNumber: z._default(z.optional(z.number()), 123),
     parameterBoolean: z._default(z.optional(z.boolean()), true),
-    parameterEnum: z.optional(z.enum([
+    parameterEnum: z._default(z.optional(z.enum([
         'Success',
         'Warning',
         'Error'
-    ]))
+    ])), 'Success')
 });
 
 export const zCallToTestOrderOfParamsQuery = z.object({

@@ -194,7 +194,7 @@ paths:
           name: parameterEnum
           in: query
           required: true
-          default: 0
+          default: Success
           enum:
             - Success
             - Warning
@@ -229,7 +229,7 @@ paths:
         - description: This is a simple enum that is optional with default value
           name: parameterEnum
           in: query
-          default: 0
+          default: Success
           enum:
             - Success
             - Warning
