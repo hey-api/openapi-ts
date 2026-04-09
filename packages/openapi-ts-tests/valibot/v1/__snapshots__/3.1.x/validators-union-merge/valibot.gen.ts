@@ -29,7 +29,7 @@ export const vCatDetails = v.object({
 export const vPetStore = v.object({
     animals: v.array(v.object({
         name: v.string(),
-        type: v.optional(v.picklist(['dog', 'cat'])),
+        type: v.optional(v.picklist(['dog', 'cat']), 'dog'),
         details: v.union([vDogDetails, vCatDetails])
     }))
 });
