@@ -1,6 +1,6 @@
 export type { CodeSampleObject, LinguistLanguages } from './extensions/code-samples';
 export type { EnumExtensions } from './extensions/enum';
-export type { SpecExtensions } from './extensions/spec';
+export type { SpecExtensions, WithSpecExtensions } from './extensions/spec';
 export type * as JSONSchemaDraft4 from './json-schema/draft-4';
 export type * as JSONSchemaDraft2020_12 from './json-schema/draft-2020-12';
 export * as JSONSchema from './json-schema/union';
