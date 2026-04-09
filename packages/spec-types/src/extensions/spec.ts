@@ -6,3 +6,8 @@
 export interface SpecExtensions {
   [extension: `x-${string}`]: unknown;
 }
+
+/**
+ * Type utility to wrap any type with specification extensions.
+ */
+export type WithSpecExtensions<T> = T & SpecExtensions;
