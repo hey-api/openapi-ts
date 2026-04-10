@@ -31,6 +31,7 @@
     "lint:fix": "oxfmt . && eslint . --fix",
     "lint:fix:next": "oxfmt . && eslint . --fix && uv run ruff check --fix packages/openapi-python/src/py-compiler/__snapshots__",
     "prepare": "husky",
+    "readme:sync": "tsx scripts/readme-sync.ts",
     "test:changelog": "vitest run __tests__/*.test.ts",
     "test:changelog:watch": "vitest watch __tests__/*.test.ts",
     "test:coverage": "turbo run build && vitest run --coverage",
