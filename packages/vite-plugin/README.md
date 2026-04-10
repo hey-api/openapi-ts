@@ -35,11 +35,17 @@ Part of the Hey API ecosystem.
 - works with any Vite-based project
 - [sync with Hey API Registry](https://heyapi.dev/openapi-ts/integrations) for spec management
 
+<!-- template-contributing-start -->
+
 ## Contributing
 
 Want to see your code in products used by millions?
 
 Start with our [Contributing](https://heyapi.dev/openapi-ts/community/contributing) guide and release your first feature.
+
+<!-- template-contributing-end -->
+
+<!-- template-sponsors-start -->
 
 ## Sponsors
 
@@ -148,6 +154,8 @@ Hey API is sponsor-funded. If you rely on Hey API in production, consider becomi
   </tbody>
 </table>
 
+<!-- template-sponsors-end -->
+
 ## Installation
 
 You can download `@hey-api/vite-plugin` from npm using your favorite package manager.
@@ -207,6 +215,10 @@ export default defineConfig({
 });
 ```
 
+<!-- template-license-start -->
+
 ## License
 
 Released under the [MIT License](https://github.com/hey-api/openapi-ts/blob/main/LICENSE.md).
+
+<!-- template-license-end -->
