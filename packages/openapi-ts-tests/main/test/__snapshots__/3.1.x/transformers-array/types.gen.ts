@@ -19,6 +19,8 @@ export type GetFooResponses = {
         foo: Array<{
             baz: Date;
         }>;
+        bar: Array<bigint>;
+        baz: Array<Date>;
     };
 };
 
