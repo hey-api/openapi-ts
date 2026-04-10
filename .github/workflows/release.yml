@@ -64,6 +64,8 @@ jobs:
       - name: Generate Release Notes
         id: notes
         run: pnpm -s changelog:release:notes > release-notes.md
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2.6.1
