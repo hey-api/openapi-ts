@@ -184,6 +184,9 @@ export const zModelWithString = z.object({
     prop: z.string().optional()
 });
 
+/**
+ * This is a simple reference
+ */
 export const zSimpleReference = zModelWithString;
 
 /**
@@ -413,8 +416,14 @@ export const zExternalSharedModel = z.object({
     name: z.string().optional()
 });
 
+/**
+ * External ref to shared model (A)
+ */
 export const zExternalRefA = zExternalSharedModel;
 
+/**
+ * External ref to shared model (B)
+ */
 export const zExternalRefB = zExternalSharedModel;
 
 /**

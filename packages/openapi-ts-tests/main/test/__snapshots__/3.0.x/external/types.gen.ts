@@ -6,14 +6,29 @@ export type ClientOptions = {
 
 export type _1 = string;
 
+/**
+ * External schema (A)
+ */
 export type ExternalSchemaA = ExternalSharedModel;
 
+/**
+ * External schema (B) - second use of ExternalSharedModel
+ */
 export type ExternalSchemaB = ExternalSharedModel;
 
+/**
+ * External schema (C) - third use of ExternalSharedModel
+ */
 export type ExternalSchemaC = ExternalSharedModel;
 
+/**
+ * External schema via path reference (A)
+ */
 export type ExternalSchemaPathA = ExternalSharedModel;
 
+/**
+ * External schema via path reference (B) - second use
+ */
 export type ExternalSchemaPathB = ExternalSharedModel;
 
 /**
@@ -77,12 +92,24 @@ export type ExternalDoubleNestedNumeric = {
     numeric2?: _1;
 };
 
+/**
+ * External nested object reference (A)
+ */
 export type ExternalNestedObjectA = ExternalNested;
 
+/**
+ * External nested object reference (B) - second use
+ */
 export type ExternalNestedObjectB = ExternalNested;
 
+/**
+ * External numeric nested object reference (A)
+ */
 export type ExternalNestedNumericObjectA = ExternalNestedNumeric;
 
+/**
+ * External numeric nested object reference (B) - second use
+ */
 export type ExternalNestedNumericObjectB = ExternalNestedNumeric;
 
 /**
@@ -154,10 +181,19 @@ export type ExternalDeepParam = Deep;
 
 export type ExternalNumericParam = _1;
 
+/**
+ * Request body using external model
+ */
 export type ExternalModelBody = ExternalSharedModel;
 
+/**
+ * Request body using external UUID
+ */
 export type ExternalUuidBody = ExternalSharedModelWithUuid;
 
+/**
+ * Request body using external nested object
+ */
 export type ExternalNestedBody = ExternalNested;
 
 /**

@@ -957,8 +957,14 @@ export const zExternalSharedModel = z.object({
     name: z.optional(z.string())
 });
 
+/**
+ * External ref to shared model (A)
+ */
 export const zExternalRefA = zExternalSharedModel;
 
+/**
+ * External ref to shared model (B)
+ */
 export const zExternalRefB = zExternalSharedModel;
 
 /**
@@ -1077,8 +1083,14 @@ export const zModelWithOneOfAndProperties = z.intersection(z.union([
  */
 export const zXFooBar = zModelWithString;
 
+/**
+ * A reusable request body
+ */
 export const zSimpleRequestBody = zModelWithString;
 
+/**
+ * A reusable request body
+ */
 export const zSimpleFormData = zModelWithString;
 
 export const zImportBody = z.union([

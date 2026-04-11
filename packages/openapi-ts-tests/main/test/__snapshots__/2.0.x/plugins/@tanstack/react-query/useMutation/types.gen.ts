@@ -4,8 +4,14 @@ export type ClientOptions = {
     baseUrl: 'http://localhost:3000/base' | (string & {});
 };
 
+/**
+ * External ref to shared model (A)
+ */
 export type ExternalRefA = ExternalSharedModel;
 
+/**
+ * External ref to shared model (B)
+ */
 export type ExternalRefB = ExternalSharedModel;
 
 /**
@@ -71,6 +77,9 @@ export type NonAsciiStringæøåÆøÅöôêÊ字符串 = string;
  */
 export type SimpleFile = Blob | File;
 
+/**
+ * This is a simple reference
+ */
 export type SimpleReference = ModelWithString;
 
 /**

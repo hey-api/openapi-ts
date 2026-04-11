@@ -9,8 +9,14 @@ export type ClientOptions = {
  */
 export type _400 = string;
 
+/**
+ * External ref to shared model (A)
+ */
 export type ExternalRefA = ExternalSharedModel;
 
+/**
+ * External ref to shared model (B)
+ */
 export type ExternalRefB = ExternalSharedModel;
 
 /**
@@ -1068,8 +1074,14 @@ export type SimpleParameter = string;
  */
 export type XFooBar = ModelWithString;
 
+/**
+ * A reusable request body
+ */
 export type SimpleRequestBody = ModelWithString;
 
+/**
+ * A reusable request body
+ */
 export type SimpleFormData = ModelWithString;
 
 export type ExportData = {
