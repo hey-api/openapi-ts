@@ -1039,7 +1039,7 @@ function parseRef({
   state,
 }: {
   context: Context;
-  schema: OpenAPIV3.ReferenceObject;
+  schema: OpenAPIV3.SchemaObject & OpenAPIV3.ReferenceObject;
   state: SchemaState;
 }): IR.SchemaObject {
   // Inline non-component refs (e.g. #/paths/...) and deep path refs (e.g. #/components/schemas/Foo/properties/bar)
@@ -1061,7 +1061,7 @@ function parseRef({
     // Fallback to preserving the ref if circular
   }
 
-  const irSchema: IR.SchemaObject = {};
+  const irSchema: IR.SchemaObject = initIrSchema({ schema });
 
   // refs using unicode characters become encoded, didn't investigate why
   // but the suspicion is this comes from `@hey-api/json-schema-ref-parser`
@@ -1274,7 +1274,7 @@ export function schemaToIrSchema({
   if ('$ref' in schema) {
     return parseRef({
       context,
-      schema,
+      schema: schema as OpenAPIV3.SchemaObject & OpenAPIV3.ReferenceObject,
       state,
     });
   }
