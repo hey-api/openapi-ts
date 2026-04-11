@@ -397,6 +397,13 @@ describe(`OpenAPI ${version}`, () => {
       }),
       description: 'generates baseUrl from host',
     },
+    {
+      config: createConfig({
+        input: 'description-of-$ref-properties.json',
+        output: 'description-of-$ref-properties',
+      }),
+      description: 'Description of $ref properties',
+    },
   ];
 
   it.each(scenarios)('$description', async ({ config }) => {

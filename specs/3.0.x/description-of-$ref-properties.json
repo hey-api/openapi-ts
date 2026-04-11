@@ -1,0 +1,41 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "OpenAPI 3.0.0 description of $ref properties.",
+    "version": "1",
+    "description": "The description of the fields `pointA` and `pointB` are present even if they use a $ref."
+  },
+  "components": {
+    "schemas": {
+      "Point": {
+        "type": "object",
+        "properties": {
+          "x": {
+            "type": "number",
+            "description": "X-component of the point."
+          },
+          "y": {
+            "type": "number",
+            "description": "Y-component of the point."
+          }
+        },
+        "required": ["x", "y"],
+        "additionalProperties": false
+      },
+      "SomePoints": {
+        "type": "object",
+        "properties": {
+          "pointA": {
+            "$ref": "#/components/schemas/Point",
+            "description": "Point A - This description should be in the generated code."
+          },
+          "pointB": {
+            "$ref": "#/components/schemas/Point",
+            "description": "Point B - This description should be in the generated code."
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "OpenAPI 2.0 description of $ref properties.",
+    "version": "1",
+    "description": "The description of the fields `pointA` and `pointB` are present even if they use a $ref."
+  },
+  "definitions": {
+    "Point": {
+      "type": "object",
+      "properties": {
+        "x": {
+          "type": "number",
+          "description": "X-component of the point."
+        },
+        "y": {
+          "type": "number",
+          "description": "Y-component of the point."
+        }
+      },
+      "required": ["x", "y"],
+      "additionalProperties": false
+    },
+    "SomePoints": {
+      "type": "object",
+      "properties": {
+        "pointA": {
+          "$ref": "#/definitions/Point",
+          "description": "Point A - This description should be in the generated code."
+        },
+        "pointB": {
+          "$ref": "#/definitions/Point",
+          "description": "Point B - This description should be in the generated code."
+        }
+      },
+      "required": ["pointA"],
+      "additionalProperties": false
+    }
+  }
+}
