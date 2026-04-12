@@ -4,6 +4,7 @@ Hey API is sponsor-funded. If you rely on Hey API in production, consider becomi
 
 <h3 align="center">Gold</h3>
 
+<!-- template-sponsors-table-gold-start -->
 <table align="center" style="justify-content: center;align-items: center;display: flex;">
   <tbody>
     <tr>
@@ -46,9 +47,11 @@ Hey API is sponsor-funded. If you rely on Hey API in production, consider becomi
     </tr>
   </tbody>
 </table>
+<!-- template-sponsors-table-gold-end -->
 
 <h3 align="center">Silver</h3>
 
+<!-- template-sponsors-table-silver-start -->
 <table align="center" style="justify-content: center;align-items: center;display: flex;">
   <tbody>
     <tr>
@@ -79,9 +82,11 @@ Hey API is sponsor-funded. If you rely on Hey API in production, consider becomi
     </tr>
   </tbody>
 </table>
+<!-- template-sponsors-table-silver-end -->
 
 <h3 align="center">Bronze</h3>
 
+<!-- template-sponsors-table-bronze-start -->
 <table align="center" style="justify-content: center;align-items: center;display: flex;">
   <tbody>
     <tr>
@@ -104,3 +109,4 @@ Hey API is sponsor-funded. If you rely on Hey API in production, consider becomi
     </tr>
   </tbody>
 </table>
+<!-- template-sponsors-table-bronze-end -->

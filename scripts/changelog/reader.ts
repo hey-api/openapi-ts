@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 
-import type { ChangelogPackage } from '../config';
-import { getChangelogPackages } from '../config';
+import { getChangelogPackages } from './config';
+import type { ChangelogPackage } from './types';
 
 export type Changelogs = Map<string, PackageChangelog>;
 
@@ -38,19 +38,19 @@ function extractReleaseBlock(content: string): ReleaseBlock | undefined {
 
   const versionBlockContent = content.slice(versionStartIndex, nextVersionStartIndex).trim();
   const contentWithoutUpdatedDependencies = versionBlockContent
+    .replace(versionHeadingPattern, '')
+    .trimStart()
     .replace(/\n###\s+Updated Dependencies:?\s*(?:\n[\s\S]*?)?(?=\n#{2,6}\s|$)/gi, '')
     .trim();
 
-  // Check for "Updated dependencies" only (no user-facing changes, changelogs quirk)
-  const hasUpdatedDependencies = /^###\s+Updated Dependencies:?\s*$/im.test(versionBlockContent);
-  const hasOtherSectionHeadings = /^###\s+(?!Updated Dependencies:?\s*$).+/im.test(
-    versionBlockContent,
-  );
-  const hasUserFacingChanges = !(hasUpdatedDependencies && !hasOtherSectionHeadings);
+  const meaningfulLines = contentWithoutUpdatedDependencies
+    .split('\n')
+    .map((line) => line.trim())
+    .filter((line) => line && !/^#+\s/.test(line));
 
   return {
     content: contentWithoutUpdatedDependencies,
-    hasUserFacingChanges,
+    hasUserFacingChanges: meaningfulLines.length > 0,
     version: versionMatch[1],
     versionHeading,
   };
