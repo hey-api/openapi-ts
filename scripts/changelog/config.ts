@@ -1,16 +1,26 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import url from 'node:url';
 
-export interface ChangelogPackage {
-  changelogPath?: string;
-  name: string;
-  path: string;
-}
+import type { ChangelogPackage, PackageJson } from './types';
 
-interface PackageJson {
-  name?: string;
-  private?: boolean;
-}
+export const AGENT_USERS = new Set(['copilot-swe-agent', 'claude']);
+export const REPOSITORY_ROOT = path.resolve(
+  path.dirname(url.fileURLToPath(import.meta.url)),
+  '..',
+  '..',
+);
+export const CONFIG_PATH = path.resolve(REPOSITORY_ROOT, '.heyapi.json');
+
+export const SPONSORS_TABLE_GOLD_PATH = path.resolve(
+  REPOSITORY_ROOT,
+  'scripts',
+  'templates',
+  'sponsors-table-gold.md',
+);
+
+/** The package used for legacy tag patterns (e.g., v0.27.39) */
+export const LEGACY_TAG_PACKAGE = '@hey-api/openapi-ts';
 
 let changelogPackagesCache: Array<ChangelogPackage> | undefined;
 
@@ -46,3 +56,22 @@ export function getChangelogPackages(): Array<ChangelogPackage> {
 }
 
 export const repo = 'hey-api/openapi-ts';
+
+function getPackageBaseName(packageName: string): string {
+  if (packageName.startsWith('@') && packageName.includes('/')) {
+    return packageName.split('/')[1]!;
+  }
+  return packageName;
+}
+
+export function isFlagshipPackage(packageName: string): boolean {
+  const baseName = getPackageBaseName(packageName);
+  return baseName.startsWith('openapi-');
+}
+
+export function isExecutedDirectly(fileUrl: string): boolean {
+  return (
+    typeof process.argv[1] === 'string' &&
+    path.resolve(process.argv[1]) === url.fileURLToPath(fileUrl)
+  );
+}

@@ -72,7 +72,6 @@ jobs:
         with:
           body_path: release-notes.md
           generate_release_notes: false
-          name: Release ${{ steps.tag.outputs.tag }}
           tag_name: ${{ steps.tag.outputs.tag }}
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
