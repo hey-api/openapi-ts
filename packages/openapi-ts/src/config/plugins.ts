@@ -1,5 +1,6 @@
 import type { AnyPluginName, PluginContext, PluginNames } from '@hey-api/shared';
 import { dependencyFactory, valueToObject } from '@hey-api/shared';
+import colors from 'ansi-colors';
 
 import { defaultPluginConfigs } from '../plugins/config';
 import type { Config, UserConfig } from './types';
@@ -146,15 +147,30 @@ export function getPlugins({
     }
   }
 
+  const seenPlugins = new Set<string>();
+
   const userPlugins = definedPlugins
     .map((plugin) => {
       if (typeof plugin === 'string') {
+        if (seenPlugins.has(plugin)) {
+          console.warn(
+            `⚙️ ${colors.yellow('Warning:')} Duplicate plugin ${colors.cyan(`"${plugin}"`)} detected. The last configuration will be used.`,
+          );
+        }
+        seenPlugins.add(plugin);
         return plugin;
       }
 
       const pluginName = plugin.name;
 
       if (pluginName) {
+        if (seenPlugins.has(pluginName)) {
+          console.warn(
+            `⚙️ ${colors.yellow('Warning:')} Duplicate plugin ${colors.cyan(`"${pluginName}"`)} detected. The last configuration will be used.`,
+          );
+        }
+        seenPlugins.add(pluginName);
+
         // @ts-expect-error
         if (plugin.handler) {
           // @ts-expect-error
