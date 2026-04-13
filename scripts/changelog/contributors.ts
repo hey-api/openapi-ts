@@ -28,6 +28,7 @@ export async function getContributorsFromPullRequests(
       if (
         github &&
         !github.includes('[bot]') &&
+        !github.startsWith('app/') &&
         !AGENT_USERS.has(github) &&
         !maintainers.has(github)
       ) {
