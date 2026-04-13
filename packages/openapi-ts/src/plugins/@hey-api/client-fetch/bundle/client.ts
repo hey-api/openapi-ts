@@ -101,7 +101,7 @@ export const createClient = (config: Config = {}): Client => {
 
       for (const fn of interceptors.error.fns) {
         if (fn) {
-          finalError = (await fn(error, undefined as any, request, opts)) as unknown;
+          finalError = (await fn(error, undefined, request, opts)) as unknown;
         }
       }
 
@@ -117,7 +117,7 @@ export const createClient = (config: Config = {}): Client => {
         : {
             error: finalError,
             request,
-            response: undefined as any,
+            response: undefined,
           };
     }
 
