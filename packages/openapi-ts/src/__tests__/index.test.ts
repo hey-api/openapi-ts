@@ -286,6 +286,32 @@ describe('createClient', () => {
     expect(results).toHaveLength(4);
   });
 
+  it('warns when duplicate plugins are specified', async () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+    await createClient({
+      dryRun: true,
+      input: {
+        info: { title: 'duplicate-plugin-test', version: '1.0.0' },
+        openapi: '3.1.0',
+      },
+      logs: {
+        level: 'silent',
+      },
+      output: 'output',
+      plugins: [
+        { name: '@hey-api/typescript' },
+        { name: '@hey-api/typescript' },
+      ],
+    });
+
+    expect(warnSpy).toHaveBeenCalledWith(
+      expect.stringContaining('Duplicate plugin'),
+    );
+
+    warnSpy.mockRestore();
+  });
+
   it('executes @angular/common HttpRequest builder path', async () => {
     const results = await createClient({
       dryRun: true,
