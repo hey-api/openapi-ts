@@ -36,7 +36,7 @@ export const vPost = v.object({
 export const vCreatePostInput = v.object({
     title: v.string(),
     content: v.string(),
-    status: v.optional(v.picklist(['draft', 'published']))
+    status: v.optional(v.picklist(['draft', 'published']), 'draft')
 });
 
 export const vGetUsersQuery = v.object({

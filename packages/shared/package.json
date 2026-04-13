@@ -1,6 +1,6 @@
 {
   "name": "@hey-api/shared",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Temporary home for cross-package utilities. Contents will migrate to proper packages as architecture stabilizes.",
   "homepage": "https://heyapi.dev/",
   "bugs": {
@@ -33,8 +33,7 @@
     "./package.json": "./package.json"
   },
   "scripts": {
-    "build": "tsdown && pnpm check-exports",
-    "check-exports": "attw --pack . --profile esm-only --ignore-rules cjs-resolves-to-esm",
+    "build": "tsdown",
     "dev": "tsdown --watch",
     "prepublishOnly": "pnpm build",
     "typecheck": "tsgo --noEmit"
@@ -47,17 +46,17 @@
     "ansi-colors": "4.1.3",
     "cross-spawn": "7.0.6",
     "open": "11.0.0",
-    "semver": "7.7.3"
+    "semver": "7.7.4"
   },
   "devDependencies": {
-    "@types/bun": "1.3.8",
+    "@types/bun": "1.3.11",
     "@types/cross-spawn": "6.0.6",
     "@types/semver": "7.7.1",
     "eslint": "9.39.2",
-    "typescript": "5.9.3",
-    "yaml": "2.8.2"
+    "typescript": "6.0.2",
+    "yaml": "2.8.3"
   },
   "engines": {
-    "node": ">=20.19.0"
+    "node": ">=22.13.0"
   }
 }

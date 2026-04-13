@@ -22,19 +22,25 @@
 
 Access your projects and OpenAPI specifications in the [Hey API Platform](https://app.heyapi.dev/).
 
+<!-- template-contributing-start -->
+
 ## Contributing
 
 Want to see your code in products used by millions?
 
 Start with our [Contributing](https://heyapi.dev/openapi-ts/community/contributing) guide and release your first feature.
 
+<!-- template-contributing-end -->
+
 ## Documentation
 
 Please visit our [website](https://heyapi.dev) for documentation, guides, migrating, and more.
 
+<!-- template-sponsors-start -->
+
 ## Sponsors
 
-Help Hey API stay around for the long haul by becoming a [sponsor](https://github.com/sponsors/hey-api).
+Hey API is sponsor-funded. If you rely on Hey API in production, consider becoming a [sponsor](https://github.com/sponsors/hey-api) to accelerate the roadmap.
 
 <h3 align="center">Gold</h3>
 
@@ -138,11 +144,16 @@ Help Hey API stay around for the long haul by becoming a [sponsor](https://githu
     </tr>
   </tbody>
 </table>
+<!-- template-sponsors-end -->
 
 ## Migrating
 
 You can learn more on the [Migrating](https://heyapi.dev/openapi-ts/migrating) page.
 
+<!-- template-license-start -->
+
 ## License
 
 Released under the [MIT License](https://github.com/hey-api/openapi-ts/blob/main/LICENSE.md).
+
+<!-- template-license-end -->

@@ -14,7 +14,10 @@ const replaceCoreImports = (filePath: string) => {
 };
 
 export default defineConfig({
-  clean: true,
+  attw: {
+    ignoreRules: ['cjs-resolves-to-esm'],
+    profile: 'esm-only',
+  },
   deps: {
     neverBundle: [
       '@angular/common/http',
@@ -27,10 +30,7 @@ export default defineConfig({
       'vue',
     ],
   },
-  dts: true,
   entry: ['./src/{index,internal,run}.ts'],
-  format: ['esm'],
-  minify: false,
   onSuccess: async () => {
     // Copy client files to dist folder for runtime access
     const pluginNames = [
@@ -65,6 +65,6 @@ export default defineConfig({
       }
     }
   },
+  publint: true,
   sourcemap: true,
-  treeshake: true,
 });

@@ -46,15 +46,47 @@ jobs:
           private-key: ${{ secrets.GIT_APP_PRIVATE_KEY }}
 
       - name: Create Release Pull Request
+        id: changesets
         uses: changesets/action@v1.7.0
         with:
           commit: 'ci: release'
+          createGithubReleases: false
           publish: pnpm changeset publish
           title: 'ci: release'
-          version: pnpm changeset version
+          version: pnpm changelog:version
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
           NPM_CONFIG_PROVENANCE: true
+
+      - name: Generate Release Tag
+        if: steps.changesets.outputs.published == 'true'
+        id: tag
+        run: echo "tag=$(pnpm -s changelog:release:tag)" >> $GITHUB_OUTPUT
+
+      - name: Generate Release Notes
+        if: steps.changesets.outputs.published == 'true'
+        id: notes
+        run: pnpm -s changelog:release:notes > release-notes.md
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+
+      - name: Resolve Release Commit
+        if: steps.changesets.outputs.published == 'true'
+        id: release-commit
+        run: |
+          sha=$(git log --format=%H --grep='^ci: release$' -n 1)
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub Release
+        if: steps.changesets.outputs.published == 'true'
+        uses: softprops/action-gh-release@v3.0.0
+        with:
+          body_path: release-notes.md
+          generate_release_notes: false
+          tag_name: ${{ steps.tag.outputs.tag }}
+          target_commitish: ${{ steps.release-commit.outputs.sha || github.sha }}
+        env:
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
 
       - name: Get current branch
         run: echo "CURRENT_BRANCH=$(git branch --show-current)" >> $GITHUB_ENV

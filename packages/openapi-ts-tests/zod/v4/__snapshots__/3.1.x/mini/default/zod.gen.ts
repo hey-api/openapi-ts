@@ -106,7 +106,7 @@ export const zEnumWithReplacedCharacters = z.union([
 /**
  * This is a simple enum with numbers
  */
-export const zEnumWithNumbers = z.union([
+export const zEnumWithNumbers = z._default(z.union([
     z.literal(1),
     z.literal(2),
     z.literal(3),
@@ -122,7 +122,7 @@ export const zEnumWithNumbers = z.union([
     z.literal(-1.1),
     z.literal(-1.2),
     z.literal(-1.3)
-]);
+]), 200);
 
 /**
  * Success=1,Warning=2,Error=3
@@ -313,7 +313,7 @@ export const zModelWithEnum = z.object({
  * This is a model with one enum with escaped name
  */
 export const zModelWithEnumWithHyphen = z.object({
-    'foo-bar-baz-qux': z.optional(z.enum(['3.0']))
+    'foo-bar-baz-qux': z._default(z.optional(z.enum(['3.0'])), '3.0')
 });
 
 /**
@@ -1233,11 +1233,11 @@ export const zCallWithDefaultParametersQuery = z.object({
     parameterString: z._default(z.nullish(z.string()), 'Hello World!'),
     parameterNumber: z._default(z.nullish(z.number()), 123),
     parameterBoolean: z._default(z.nullish(z.boolean()), true),
-    parameterEnum: z.optional(z.enum([
+    parameterEnum: z._default(z.optional(z.enum([
         'Success',
         'Warning',
         'Error'
-    ])),
+    ])), 'Success'),
     parameterModel: z.nullish(zModelWithString)
 });
 
@@ -1245,11 +1245,11 @@ export const zCallWithDefaultOptionalParametersQuery = z.object({
     parameterString: z._default(z.optional(z.string()), 'Hello World!'),
     parameterNumber: z._default(z.optional(z.number()), 123),
     parameterBoolean: z._default(z.optional(z.boolean()), true),
-    parameterEnum: z.optional(z.enum([
+    parameterEnum: z._default(z.optional(z.enum([
         'Success',
         'Warning',
         'Error'
-    ])),
+    ])), 'Success'),
     parameterModel: z._default(z.optional(zModelWithString), { prop: 'Hello World!' })
 });
 
@@ -1385,11 +1385,11 @@ export const zComplexParamsBody = z.object({
     key: z.nullable(z.readonly(z.string().check(z.maxLength(64), z.regex(/^[a-zA-Z0-9_]*$/)))),
     name: z.nullable(z.string().check(z.maxLength(255))),
     enabled: z._default(z.optional(z.boolean()), true),
-    type: z.enum([
+    type: z.readonly(z.enum([
         'Monkey',
         'Horse',
         'Bird'
-    ]),
+    ])),
     listOfModels: z.nullish(z.array(zModelWithString)),
     listOfStrings: z.nullish(z.array(z.string())),
     parameters: z.union([
