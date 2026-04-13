@@ -232,6 +232,40 @@ export default {
 The SDK plugin currently supports only the `bearer` and `basic` auth schemes. [Open an issue](https://github.com/hey-api/openapi-ts/issues) if you'd like support for additional mechanisms.
 :::
 
+## Query Serializer
+
+By default, the SDK plugin generates per-operation `querySerializer` code from OpenAPI query parameter schemas. This covers object and array query parameters that need custom serialization.
+
+If you already provide your own client-level serializer, you can disable the generated SDK serializer with `querySerializer: false`.
+
+::: code-group
+
+```ts [example]
+import { client } from './client.gen';
+
+client.setConfig({
+  querySerializer: (parameters) => {
+    // your custom serializer logic
+  },
+});
+```
+
+```js
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: '@hey-api/sdk',
+      querySerializer: false, // [!code ++]
+    },
+  ],
+};
+```
+
+:::
+
 ## Validators
 
 Validating data at runtime comes with a performance cost, which is why it's not enabled by default. To enable validation, set `validator` to `zod` or one of the available [validator plugins](/openapi-ts/validators). This will implicitly add the selected plugin with default values.
