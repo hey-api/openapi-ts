@@ -52,7 +52,7 @@ jobs:
           createGithubReleases: false
           publish: pnpm changeset publish
           title: 'ci: release'
-          version: pnpm changeset version && pnpm changelog:assemble
+          version: pnpm changelog:version
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
           NPM_CONFIG_PROVENANCE: true
@@ -68,7 +68,7 @@ jobs:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2.6.1
+        uses: softprops/action-gh-release@v3.0.0
         with:
           body_path: release-notes.md
           generate_release_notes: false
