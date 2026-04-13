@@ -54,7 +54,7 @@ export function postprocessOutput(
   postProcessors: Record<string, PostProcessor>,
   jobPrefix: string,
 ): void {
-  if (!fs.existsSync(config.path) || fs.readdirSync(config.path).length === 0) {
+  if (!fs.existsSync(config.path) || !fs.readdirSync(config.path).length) {
     return;
   }
 
