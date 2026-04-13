@@ -7,5 +7,7 @@ export const getFooResponseTransformer = async (data: any): Promise<GetFooRespon
         item.baz = new Date(item.baz);
         return item;
     });
+    data.bar = data.bar.map((item: any) => BigInt(item.toString()));
+    data.baz = data.baz.map((item: any) => new Date(item));
     return data;
 };
