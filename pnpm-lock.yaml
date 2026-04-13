@@ -563,8 +563,8 @@ importers:
         specifier: 3.1.6
         version: 3.1.6(@types/react-dom@19.0.1)(@types/react@19.0.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       ky:
-        specifier: 1.14.0
-        version: 1.14.0
+        specifier: 2.0.0
+        version: 2.0.0
       react:
         specifier: 19.0.0
         version: 19.0.0
@@ -1461,8 +1461,8 @@ importers:
         specifier: 9.39.2
         version: 9.39.2(jiti@2.6.1)
       ky:
-        specifier: 1.14.3
-        version: 1.14.3
+        specifier: 2.0.0
+        version: 2.0.0
       nuxt:
         specifier: 3.14.1592
         version: 3.14.1592(@netlify/blobs@9.1.2)(@parcel/watcher@2.5.1)(@types/node@25.2.1)(db0@0.3.4)(encoding@0.1.13)(eslint@9.39.2(jiti@2.6.1))(ioredis@5.9.2)(less@4.4.2)(magicast@0.3.5)(optionator@0.9.4)(rolldown@1.0.0-rc.12)(rollup@4.56.0)(sass@1.97.3)(terser@5.46.0)(typescript@6.0.2)(vite@7.3.1(@types/node@25.2.1)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3))(vue-tsc@3.2.4(typescript@6.0.2))
@@ -1572,8 +1572,8 @@ importers:
         specifier: 5.7.4
         version: 5.7.4
       ky:
-        specifier: 1.14.3
-        version: 1.14.3
+        specifier: 2.0.0
+        version: 2.0.0
       node-fetch:
         specifier: 3.3.2
         version: 3.3.2
@@ -12033,13 +12033,9 @@ packages:
   kuler@2.0.0:
     resolution: {integrity: sha512-Xq9nH7KlWZmXAtodXDDRE7vs6DU1gTU8zYDHDiWLSip45Egwq3plLHzPn27NgvzL2r1LMPC1vdqh98sQxtqj4A==}
 
-  ky@1.14.0:
-    resolution: {integrity: sha512-Rczb6FMM6JT0lvrOlP5WUOCB7s9XKxzwgErzhKlKde1bEV90FXplV1o87fpt4PU/asJFiqjYJxAJyzJhcrxOsQ==}
-    engines: {node: '>=18'}
-
-  ky@1.14.3:
-    resolution: {integrity: sha512-9zy9lkjac+TR1c2tG+mkNSVlyOpInnWdSMiue4F+kq8TwJSgv6o8jhLRg8Ho6SnZ9wOYUq/yozts9qQCfk7bIw==}
-    engines: {node: '>=18'}
+  ky@2.0.0:
+    resolution: {integrity: sha512-KzI4Vz5AbZFAUFYGx28PCSfFWUo6/qj9Br/P6KRwDieE1xfdz0tIONepJcLw/1xLocN13GgvfJGasa+pfSkbHg==}
+    engines: {node: '>=22'}
 
   lambda-local@2.2.0:
     resolution: {integrity: sha512-bPcgpIXbHnVGfI/omZIlgucDqlf4LrsunwoKue5JdZeGybt8L6KyJz2Zu19ffuZwIwLj2NAI2ZyaqNT6/cetcg==}
@@ -28235,9 +28231,7 @@ snapshots:
 
   kuler@2.0.0: {}
 
-  ky@1.14.0: {}
-
-  ky@1.14.3: {}
+  ky@2.0.0: {}
 
   lambda-local@2.2.0:
     dependencies:

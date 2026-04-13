@@ -34,7 +34,7 @@ export interface RetryOptions {
 
 export interface Config<T extends ClientOptions = ClientOptions>
   extends
-    Omit<KyOptions, 'body' | 'headers' | 'method' | 'prefixUrl' | 'retry' | 'throwHttpErrors'>,
+    Omit<KyOptions, 'body' | 'headers' | 'method' | 'prefix' | 'retry' | 'throwHttpErrors'>,
     CoreConfig {
   /**
    * Base URL for all requests made by this client.
@@ -49,7 +49,7 @@ export interface Config<T extends ClientOptions = ClientOptions>
    * Additional ky-specific options that will be passed directly to ky.
    * This allows you to use any ky option not explicitly exposed in the config.
    */
-  kyOptions?: Omit<KyOptions, 'method' | 'prefixUrl'>;
+  kyOptions?: Omit<KyOptions, 'method' | 'prefix'>;
   /**
    * Return the response data parsed in a specified format. By default, `auto`
    * will infer the appropriate method from the `Content-Type` response header.

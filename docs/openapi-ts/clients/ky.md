@@ -1,6 +1,6 @@
 ---
-title: Ky v1 Client
-description: Generate a type-safe Ky v1 client from OpenAPI with the Ky client for openapi-ts. Fully compatible with validators, transformers, and all core features.
+title: Ky Client
+description: Generate a type-safe Ky 2 client from OpenAPI with the Ky client for openapi-ts. Fully compatible with validators, transformers, and all core features.
 ---
 
 <script setup lang="ts">
@@ -11,8 +11,8 @@ import { sebastiaanWouters } from '@data/people.js';
 </script>
 
 <Heading>
-  <h1>Ky<span class="sr-only"> v1</span></h1>
-  <VersionLabel value="v1" />
+  <h1>Ky<span class="sr-only"> v2</span></h1>
+  <VersionLabel value="v2" />
 </Heading>
 
 ### About
@@ -23,7 +23,7 @@ The Ky client for Hey API generates a type-safe client from your OpenAPI spec, f
 
 ### Collaborators
 
-<AuthorsList :people="[sebastiaanWouters]" />
+<AuthorsList :people="[sebastiaanWouters,atomicpages]" />
 
 ## Features
 
@@ -61,6 +61,22 @@ npx @hey-api/openapi-ts \
 ## Configuration
 
 The Ky client is built as a thin wrapper on top of Ky, extending its functionality to work with Hey API. If you're already familiar with Ky, configuring your client will feel like working directly with Ky.
+
+The generated client targets **Ky 2.x** (Ky 2 requires [Node.js 22](https://github.com/sindresorhus/ky/releases/tag/v2.0.0) or newer). Install `ky@^2` in your application.
+
+### Ky options and upgrading from Ky 1
+
+Hey API types omit several Ky options that the wrapper sets itself (for example `method`, `body`, and `prefix`). For any other Ky settings, pass them in **`kyOptions`** or on the top-level config where the generated types allow it.
+
+If you are upgrading from Ky 1, rename **`prefixUrl` to `prefix`** anywhere you pass Ky configuration (including inside `kyOptions`). Ky 2 also adds a standard **`baseUrl`** option for URL resolution; see the [Ky v2.0.0 release notes](https://github.com/sindresorhus/ky/releases/tag/v2.0.0) for hooks, `HTTPError.data`, and other breaking changes.
+
+```js
+client.setConfig({
+  kyOptions: {
+    prefix: 'https://api.example.com/v1/', // was `prefixUrl` in Ky 1
+  },
+});
+```
 
 When we installed the client above, it created a [`client.gen.ts`](/openapi-ts/output#client) file. You will most likely want to configure the exported `client` instance. There are two ways to do that.
 

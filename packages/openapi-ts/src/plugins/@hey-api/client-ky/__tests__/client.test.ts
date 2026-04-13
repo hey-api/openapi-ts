@@ -478,6 +478,35 @@ describe('response interceptor', () => {
 describe('error handling', () => {
   const client = createClient({ baseUrl: 'https://example.com' });
 
+  it('uses HTTPError.data when Ky has consumed the response body', async () => {
+    const errorResponse = new Response(JSON.stringify({ message: 'Not found' }), {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      status: 404,
+    });
+
+    vi.spyOn(errorResponse, 'text').mockRejectedValue(new Error('body already consumed'));
+
+    const httpError = Object.assign(
+      new HTTPError(errorResponse, new Request('https://example.com/test'), {
+        method: 'GET',
+      } as any),
+      { data: { message: 'Not found' } },
+    );
+
+    const mockKy = vi.fn().mockRejectedValue(httpError);
+
+    const result = await client.get({
+      ky: mockKy as Partial<KyInstance> as KyInstance,
+      throwOnError: false,
+      url: '/test',
+    });
+
+    expect(result.error).toEqual({ message: 'Not found' });
+    expect(result.response.status).toBe(404);
+  });
+
   it('handles HTTP errors with throwOnError: false', async () => {
     const errorResponse = new Response(JSON.stringify({ message: 'Not found' }), {
       headers: {
