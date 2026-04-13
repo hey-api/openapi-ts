@@ -7,7 +7,6 @@
     "**/node_modules/",
     "temp/",
     "dev/.gen/",
-    "examples/openapi-ts-openai/src/client/**/*.ts",
     "**/test/generated/",
     "**/__snapshots__/",
     "**/.next/",
