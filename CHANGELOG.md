@@ -1,5 +1,128 @@
 # Changelog
 
+# 2026-04-13
+
+## @hey-api/openapi-ts 0.96.0
+
+### ⚠️ Breaking
+
+This release has 1 breaking change. Please review the release notes carefully before upgrading.
+
+### Updates
+
+- **⚠️ Breaking:** This release bumps the minimum required Node version to 22.13. ([#3694](https://github.com/hey-api/openapi-ts/pull/3694))
+- cli: improve error message on invalid input ([#3679](https://github.com/hey-api/openapi-ts/pull/3679))
+- parser: keep orphans when explicitly included in filters ([#3714](https://github.com/hey-api/openapi-ts/pull/3714))
+- parser: process enum metadata ([#3727](https://github.com/hey-api/openapi-ts/pull/3727))
+
+### Plugins
+
+#### @angular/common
+
+- requests and resources broken default configuration ([#3678](https://github.com/hey-api/openapi-ts/pull/3678))
+
+#### @hey-api/client-angular
+
+- simplify SSE line endings normalization ([#3686](https://github.com/hey-api/openapi-ts/pull/3686))
+
+#### @hey-api/client-axios
+
+- simplify SSE line endings normalization ([#3686](https://github.com/hey-api/openapi-ts/pull/3686))
+
+#### @hey-api/client-fetch
+
+- simplify SSE line endings normalization ([#3686](https://github.com/hey-api/openapi-ts/pull/3686))
+
+#### @hey-api/client-ky
+
+- simplify SSE line endings normalization ([#3686](https://github.com/hey-api/openapi-ts/pull/3686))
+
+#### @hey-api/client-next
+
+- simplify SSE line endings normalization ([#3686](https://github.com/hey-api/openapi-ts/pull/3686))
+
+#### @hey-api/client-nuxt
+
+- simplify SSE line endings normalization ([#3686](https://github.com/hey-api/openapi-ts/pull/3686))
+
+#### @hey-api/client-ofetch
+
+- simplify SSE line endings normalization ([#3686](https://github.com/hey-api/openapi-ts/pull/3686))
+
+#### @hey-api/transformers
+
+- return value for primitive array entries ([#3733](https://github.com/hey-api/openapi-ts/pull/3733))
+
+---
+
+## @hey-api/codegen-core 0.8.0
+
+### ⚠️ Breaking
+
+This release has 1 breaking change. Please review the release notes carefully before upgrading.
+
+### Updates
+
+- **⚠️ Breaking:** This release bumps the minimum required Node version to 22.13. ([#3694](https://github.com/hey-api/openapi-ts/pull/3694))
+
+---
+
+## @hey-api/json-schema-ref-parser 1.4.0
+
+### ⚠️ Breaking
+
+This release has 1 breaking change. Please review the release notes carefully before upgrading.
+
+### Updates
+
+- **⚠️ Breaking:** This release bumps the minimum required Node version to 22.13. ([#3694](https://github.com/hey-api/openapi-ts/pull/3694))
+- internal: export errors ([#3679](https://github.com/hey-api/openapi-ts/pull/3679))
+
+---
+
+## @hey-api/shared 0.4.0
+
+### ⚠️ Breaking
+
+This release has 1 breaking change. Please review the release notes carefully before upgrading.
+
+### Updates
+
+- **⚠️ Breaking:** This release bumps the minimum required Node version to 22.13. ([#3694](https://github.com/hey-api/openapi-ts/pull/3694))
+- parser: keep orphans when explicitly included in filters ([#3714](https://github.com/hey-api/openapi-ts/pull/3714))
+- parser: process enum metadata ([#3727](https://github.com/hey-api/openapi-ts/pull/3727))
+- error: handle InputError ([#3679](https://github.com/hey-api/openapi-ts/pull/3679))
+
+---
+
+## @hey-api/spec-types 0.2.0
+
+### ⚠️ Breaking
+
+This release has 2 breaking changes. Please review the release notes carefully before upgrading.
+
+### Updates
+
+- **⚠️ Breaking:** remove OpenAPI types from JSON Schema documents ([#3715](https://github.com/hey-api/openapi-ts/pull/3715))
+- **⚠️ Breaking:** rename `OpenAPIExtensions` to `SpecExtensions` ([#3715](https://github.com/hey-api/openapi-ts/pull/3715))
+- types: add `WithSpecExtensions` type ([#3734](https://github.com/hey-api/openapi-ts/pull/3734))
+- openapi: stricter 2.0 version type ([#3715](https://github.com/hey-api/openapi-ts/pull/3715))
+- types: use mutable arrays ([#3715](https://github.com/hey-api/openapi-ts/pull/3715))
+
+---
+
+## @hey-api/vite-plugin 0.3.0
+
+### ⚠️ Breaking
+
+This release has 1 breaking change. Please review the release notes carefully before upgrading.
+
+### Updates
+
+- **⚠️ Breaking:** This package is now ESM-only. ([#3688](https://github.com/hey-api/openapi-ts/pull/3688))
+
+---
+
 # 2026-04-02
 
 ## @hey-api/openapi-ts 0.95.0

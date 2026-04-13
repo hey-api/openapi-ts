@@ -70,6 +70,13 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
 
+      - name: Resolve Release Commit
+        if: steps.changesets.outputs.published == 'true'
+        id: release-commit
+        run: |
+          sha=$(git log --format=%H --grep='^ci: release$' -n 1)
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+
       - name: Create GitHub Release
         if: steps.changesets.outputs.published == 'true'
         uses: softprops/action-gh-release@v3.0.0
@@ -77,6 +84,7 @@ jobs:
           body_path: release-notes.md
           generate_release_notes: false
           tag_name: ${{ steps.tag.outputs.tag }}
+          target_commitish: ${{ steps.release-commit.outputs.sha || github.sha }}
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
 
