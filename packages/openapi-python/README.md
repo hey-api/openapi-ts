@@ -122,7 +122,6 @@ Hey API is sponsor-funded. If you rely on Hey API in production, consider becomi
     </tr>
   </tbody>
 </table>
-
 <!-- template-sponsors-end -->
 
 <!-- template-license-start -->
