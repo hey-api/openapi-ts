@@ -436,6 +436,13 @@ for (const version of versions) {
       },
       {
         config: createConfig({
+          output: 'query-serializer-disabled',
+          plugins: [{ name: '@hey-api/sdk', querySerializer: false }, '@hey-api/client-fetch'],
+        }),
+        description: 'generate SDK without schema-driven query serializer',
+      },
+      {
+        config: createConfig({
           output: 'throwOnError',
           plugins: [
             '@hey-api/sdk',

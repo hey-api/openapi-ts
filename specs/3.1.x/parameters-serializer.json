@@ -1,0 +1,44 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "OpenAPI 3.1.0 parameters query serializer example",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/foo": {
+      "get": {
+        "parameters": [
+          {
+            "name": "filter",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          {
+            "name": "tags",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}
