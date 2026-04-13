@@ -308,6 +308,9 @@ describe('createClient', () => {
     expect(warnSpy).toHaveBeenCalledWith(
       expect.stringContaining('Duplicate plugin'),
     );
+    expect(warnSpy).toHaveBeenCalledWith(
+      expect.stringContaining('"@hey-api/typescript"'),
+    );
 
     warnSpy.mockRestore();
   });
