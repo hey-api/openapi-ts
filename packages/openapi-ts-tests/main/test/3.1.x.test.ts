@@ -708,7 +708,7 @@ describe(`OpenAPI ${version}`, () => {
         output: 'parameters-serializer-no-query-serializer',
         plugins: ['@hey-api/client-fetch', { name: '@hey-api/sdk', querySerializer: false }],
       }),
-      description: 'handles query parameters without SDK genarated query serializer',
+      description: 'handles query parameters without SDK generated query serializer',
     },
     {
       config: createConfig({
