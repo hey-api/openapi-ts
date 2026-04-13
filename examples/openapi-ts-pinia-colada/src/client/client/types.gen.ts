@@ -124,7 +124,7 @@ export type RequestResult<
               }
           ) & {
             request: Request;
-            response: Response;
+            response: Response | undefined;
           }
     >;
 
