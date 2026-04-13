@@ -40,9 +40,9 @@ function formatReleaseNotes(release: Release, contributors: Array<Contributor>):
   const sponsorsBlock = getSponsorsBlock();
   if (sponsorsBlock) lines.push(sponsorsBlock);
 
+  lines.push('## Contributors', '');
   if (contributors.length) {
     const sortedContributors = contributors.sort((a, b) => a.github.localeCompare(b.github));
-    lines.push('## Contributors', '');
     const names = sortedContributors.map((c) => `@${c.github}`);
     if (names.length === 1) {
       lines.push(`Built with contributions from ${names[0]}.`, '');
@@ -52,6 +52,11 @@ function formatReleaseNotes(release: Release, contributors: Array<Contributor>):
       const last = names.pop();
       lines.push(`Built with contributions from ${names.join(', ')}, and ${last}.`, '');
     }
+  } else {
+    lines.push(
+      `Be the first to contribute to the next release! [Browse open issues →](https://github.com/${repo}/issues)`,
+      '',
+    );
   }
 
   lines.push(`[View full changelog →](https://github.com/${repo}/blob/main/CHANGELOG.md)`, '');
