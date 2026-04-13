@@ -26,6 +26,6 @@ describe('/pet/findByTags', () => {
         petId: '123',
       },
     });
-    expect(result.response.status).toBe(200);
+    expect(result.response?.status).toBe(200);
   });
 });
