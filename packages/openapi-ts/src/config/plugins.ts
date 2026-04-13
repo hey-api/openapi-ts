@@ -149,13 +149,16 @@ export function getPlugins({
 
   const seenPlugins = new Set<string>();
 
+  const warnDuplicatePlugin = (name: string) =>
+    console.warn(
+      `⚙️ ${colors.yellow('Warning:')} Duplicate plugin ${colors.cyan(`"${name}"`)} detected. Only the last occurrence will take effect.`,
+    );
+
   const userPlugins = definedPlugins
     .map((plugin) => {
       if (typeof plugin === 'string') {
         if (seenPlugins.has(plugin)) {
-          console.warn(
-            `⚙️ ${colors.yellow('Warning:')} Duplicate plugin ${colors.cyan(`"${plugin}"`)} detected. The last configuration will be used.`,
-          );
+          warnDuplicatePlugin(plugin);
         }
         seenPlugins.add(plugin);
         return plugin;
@@ -165,9 +168,7 @@ export function getPlugins({
 
       if (pluginName) {
         if (seenPlugins.has(pluginName)) {
-          console.warn(
-            `⚙️ ${colors.yellow('Warning:')} Duplicate plugin ${colors.cyan(`"${pluginName}"`)} detected. The last configuration will be used.`,
-          );
+          warnDuplicatePlugin(pluginName);
         }
         seenPlugins.add(pluginName);
 
