@@ -30,6 +30,7 @@ test/generated
 
 # debug files
 openapi-ts-debug-*
+DEBUG_*
 # error files
 logs
 openapi-ts-error-*
