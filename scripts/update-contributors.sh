@@ -16,7 +16,6 @@ if [[ -n "${GITHUB_TOKEN:-}" ]]; then
   AUTH_HEADER=(-H "Authorization: token $GITHUB_TOKEN")
 fi
 
-EXCLUDED_FILE="./docs/.contributorsignore"
 SINCE_FILE="./docs/.contributorssince"
 
 # disabled for now, we'd need to append to the list instead of write
@@ -73,28 +72,26 @@ while :; do
       continue
     fi
 
-    if ! grep -Fxq "$login" "$EXCLUDED_FILE"; then
-      if ! printf '%s\n' "${USERS[@]}" | grep -qx "$login"; then
-        CACHE_FILE="$CACHE_DIR/$login.json"
-        if [ -f "$CACHE_FILE" ]; then
-          USER_JSON=$(<"$CACHE_FILE")
-        else
-          echo "Fetching user $login"
-          USER_JSON=$(curl -s "${AUTH_HEADER[@]}" "https://api.github.com/users/$login")
-          echo "$USER_JSON" > "$CACHE_FILE"
-        fi
-
-        SANITIZED_JSON=$(echo "$USER_JSON" | tr -d '\000-\037')
-
-        USER_TYPE=$(jq -r '.type // "User"' <<< "$SANITIZED_JSON")
-        if [[ "$USER_TYPE" == "Bot" ]]; then
-          continue
-        fi
-
-        USERS+=("$login")
-        NAME=$(jq -r '.name // empty' <<< "$SANITIZED_JSON")
-        echo "$login|$NAME" >> "$TMP_USERS"
+    if ! printf '%s\n' "${USERS[@]}" | grep -qx "$login"; then
+      CACHE_FILE="$CACHE_DIR/$login.json"
+      if [ -f "$CACHE_FILE" ]; then
+        USER_JSON=$(<"$CACHE_FILE")
+      else
+        echo "Fetching user $login"
+        USER_JSON=$(curl -s "${AUTH_HEADER[@]}" "https://api.github.com/users/$login")
+        echo "$USER_JSON" > "$CACHE_FILE"
       fi
+
+      SANITIZED_JSON=$(echo "$USER_JSON" | tr -d '\000-\037')
+
+      USER_TYPE=$(jq -r '.type // "User"' <<< "$SANITIZED_JSON")
+      if [[ "$USER_TYPE" == "Bot" ]]; then
+        continue
+      fi
+
+      USERS+=("$login")
+      NAME=$(jq -r '.name // empty' <<< "$SANITIZED_JSON")
+      echo "$login|$NAME" >> "$TMP_USERS"
     fi
   done < "$TMP_LOGINS"
 
