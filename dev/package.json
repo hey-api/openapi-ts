@@ -23,7 +23,7 @@
     "@tanstack/svelte-query": "5.90.2",
     "@tanstack/vue-query": "5.92.9",
     "arktype": "2.2.0",
-    "msw": "2.12.14",
+    "msw": "2.13.2",
     "nuxt": "3.21.0",
     "swr": "2.4.1",
     "tsx": "4.21.0",
