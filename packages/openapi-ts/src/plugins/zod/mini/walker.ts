@@ -51,24 +51,15 @@ export function createVisitor(
       const needsDefault = result.meta.default !== undefined;
       const needsNullable = result.meta.nullable;
 
-      let hasDefault = false;
-
       if (optional && needsNullable) {
         expression = $(z).attr(identifiers.nullish).call(expression);
       } else if (optional) {
-        if (needsDefault) {
-          expression = $(z)
-            .attr(identifiers._default)
-            .call(expression, getDefaultValue(result.meta));
-          hasDefault = true;
-        }
-
         expression = $(z).attr(identifiers.optional).call(expression);
       } else if (needsNullable) {
         expression = $(z).attr(identifiers.nullable).call(expression);
       }
 
-      if (needsDefault && !hasDefault) {
+      if (needsDefault) {
         expression = $(z).attr(identifiers._default).call(expression, getDefaultValue(result.meta));
       }
 

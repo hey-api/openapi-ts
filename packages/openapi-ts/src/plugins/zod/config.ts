@@ -76,6 +76,14 @@ export const defaultConfig: ZodPlugin['Config'] = {
           case: 'PascalCase',
           enabled: false,
         },
+        input: {
+          case: 'PascalCase',
+          enabled: false,
+        },
+        output: {
+          case: 'PascalCase',
+          enabled: false,
+        },
       },
       mappers: {
         object: (fields, defaultValue) => ({
@@ -99,6 +107,44 @@ export const defaultConfig: ZodPlugin['Config'] = {
             mappers,
             value: fields.infer,
           }),
+          input: context.valueToObject({
+            defaultValue: {
+              ...(defaultValue.input as Extract<
+                typeof defaultValue.input,
+                Record<string, unknown>
+              >),
+              enabled:
+                fields.input !== undefined
+                  ? Boolean(fields.input)
+                  : (
+                      defaultValue.input as Extract<
+                        typeof defaultValue.input,
+                        Record<string, unknown>
+                      >
+                    ).enabled,
+            },
+            mappers,
+            value: fields.input,
+          }),
+          output: context.valueToObject({
+            defaultValue: {
+              ...(defaultValue.output as Extract<
+                typeof defaultValue.output,
+                Record<string, unknown>
+              >),
+              enabled:
+                fields.output !== undefined
+                  ? Boolean(fields.output)
+                  : (
+                      defaultValue.output as Extract<
+                        typeof defaultValue.output,
+                        Record<string, unknown>
+                      >
+                    ).enabled,
+            },
+            mappers,
+            value: fields.output,
+          }),
         }),
       },
       value: plugin.config.types,
@@ -117,6 +163,20 @@ export const defaultConfig: ZodPlugin['Config'] = {
               Record<string, unknown>
             >),
             name: '{{name}}ZodType',
+          },
+          input: {
+            ...(plugin.config.types.input as Extract<
+              typeof plugin.config.types.input,
+              Record<string, unknown>
+            >),
+            name: '{{name}}ZodInput',
+          },
+          output: {
+            ...(plugin.config.types.output as Extract<
+              typeof plugin.config.types.output,
+              Record<string, unknown>
+            >),
+            name: '{{name}}ZodOutput',
           },
         },
       },
@@ -148,6 +208,44 @@ export const defaultConfig: ZodPlugin['Config'] = {
                   mappers,
                   value: fields.infer,
                 }),
+                input: context.valueToObject({
+                  defaultValue: {
+                    ...(defaultValue.input as Extract<
+                      typeof defaultValue.input,
+                      Record<string, unknown>
+                    >),
+                    enabled:
+                      fields.input !== undefined
+                        ? Boolean(fields.input)
+                        : (
+                            defaultValue.input as Extract<
+                              typeof defaultValue.input,
+                              Record<string, unknown>
+                            >
+                          ).enabled,
+                  },
+                  mappers,
+                  value: fields.input,
+                }),
+                output: context.valueToObject({
+                  defaultValue: {
+                    ...(defaultValue.output as Extract<
+                      typeof defaultValue.output,
+                      Record<string, unknown>
+                    >),
+                    enabled:
+                      fields.output !== undefined
+                        ? Boolean(fields.output)
+                        : (
+                            defaultValue.output as Extract<
+                              typeof defaultValue.output,
+                              Record<string, unknown>
+                            >
+                          ).enabled,
+                  },
+                  mappers,
+                  value: fields.output,
+                }),
               }),
             },
             value: fields.types,
@@ -172,6 +270,20 @@ export const defaultConfig: ZodPlugin['Config'] = {
               >),
               name: '{{name}}BodyZodType',
             },
+            input: {
+              ...(plugin.config.types.input as Extract<
+                typeof plugin.config.types.input,
+                Record<string, unknown>
+              >),
+              name: '{{name}}BodyZodInput',
+            },
+            output: {
+              ...(plugin.config.types.output as Extract<
+                typeof plugin.config.types.output,
+                Record<string, unknown>
+              >),
+              name: '{{name}}BodyZodOutput',
+            },
           },
         },
         case: plugin.config.case ?? 'camelCase',
@@ -189,6 +301,20 @@ export const defaultConfig: ZodPlugin['Config'] = {
               >),
               name: '{{name}}HeadersZodType',
             },
+            input: {
+              ...(plugin.config.types.input as Extract<
+                typeof plugin.config.types.input,
+                Record<string, unknown>
+              >),
+              name: '{{name}}HeadersZodInput',
+            },
+            output: {
+              ...(plugin.config.types.output as Extract<
+                typeof plugin.config.types.output,
+                Record<string, unknown>
+              >),
+              name: '{{name}}HeadersZodOutput',
+            },
           },
         },
         name: 'z{{name}}Data',
@@ -205,6 +331,20 @@ export const defaultConfig: ZodPlugin['Config'] = {
               >),
               name: '{{name}}PathZodType',
             },
+            input: {
+              ...(plugin.config.types.input as Extract<
+                typeof plugin.config.types.input,
+                Record<string, unknown>
+              >),
+              name: '{{name}}PathZodInput',
+            },
+            output: {
+              ...(plugin.config.types.output as Extract<
+                typeof plugin.config.types.output,
+                Record<string, unknown>
+              >),
+              name: '{{name}}PathZodOutput',
+            },
           },
         },
         query: {
@@ -220,6 +360,20 @@ export const defaultConfig: ZodPlugin['Config'] = {
               >),
               name: '{{name}}QueryZodType',
             },
+            input: {
+              ...(plugin.config.types.input as Extract<
+                typeof plugin.config.types.input,
+                Record<string, unknown>
+              >),
+              name: '{{name}}QueryZodInput',
+            },
+            output: {
+              ...(plugin.config.types.output as Extract<
+                typeof plugin.config.types.output,
+                Record<string, unknown>
+              >),
+              name: '{{name}}QueryZodOutput',
+            },
           },
         },
         shouldExtract: () => false,
@@ -231,6 +385,20 @@ export const defaultConfig: ZodPlugin['Config'] = {
               Record<string, unknown>
             >),
             name: '{{name}}DataZodType',
+          },
+          input: {
+            ...(plugin.config.types.input as Extract<
+              typeof plugin.config.types.input,
+              Record<string, unknown>
+            >),
+            name: '{{name}}DataZodInput',
+          },
+          output: {
+            ...(plugin.config.types.output as Extract<
+              typeof plugin.config.types.output,
+              Record<string, unknown>
+            >),
+            name: '{{name}}DataZodOutput',
           },
         },
       },
@@ -270,6 +438,44 @@ export const defaultConfig: ZodPlugin['Config'] = {
                         },
                         mappers,
                         value: fields.infer,
+                      }),
+                      input: context.valueToObject({
+                        defaultValue: {
+                          ...(defaultValue.input as Extract<
+                            typeof defaultValue.input,
+                            Record<string, unknown>
+                          >),
+                          enabled:
+                            fields.input !== undefined
+                              ? Boolean(fields.input)
+                              : (
+                                  defaultValue.input as Extract<
+                                    typeof defaultValue.input,
+                                    Record<string, unknown>
+                                  >
+                                ).enabled,
+                        },
+                        mappers,
+                        value: fields.input,
+                      }),
+                      output: context.valueToObject({
+                        defaultValue: {
+                          ...(defaultValue.output as Extract<
+                            typeof defaultValue.output,
+                            Record<string, unknown>
+                          >),
+                          enabled:
+                            fields.output !== undefined
+                              ? Boolean(fields.output)
+                              : (
+                                  defaultValue.output as Extract<
+                                    typeof defaultValue.output,
+                                    Record<string, unknown>
+                                  >
+                                ).enabled,
+                        },
+                        mappers,
+                        value: fields.output,
                       }),
                     }),
                   },
@@ -312,6 +518,44 @@ export const defaultConfig: ZodPlugin['Config'] = {
                         mappers,
                         value: fields.infer,
                       }),
+                      input: context.valueToObject({
+                        defaultValue: {
+                          ...(defaultValue.input as Extract<
+                            typeof defaultValue.input,
+                            Record<string, unknown>
+                          >),
+                          enabled:
+                            fields.input !== undefined
+                              ? Boolean(fields.input)
+                              : (
+                                  defaultValue.input as Extract<
+                                    typeof defaultValue.input,
+                                    Record<string, unknown>
+                                  >
+                                ).enabled,
+                        },
+                        mappers,
+                        value: fields.input,
+                      }),
+                      output: context.valueToObject({
+                        defaultValue: {
+                          ...(defaultValue.output as Extract<
+                            typeof defaultValue.output,
+                            Record<string, unknown>
+                          >),
+                          enabled:
+                            fields.output !== undefined
+                              ? Boolean(fields.output)
+                              : (
+                                  defaultValue.output as Extract<
+                                    typeof defaultValue.output,
+                                    Record<string, unknown>
+                                  >
+                                ).enabled,
+                        },
+                        mappers,
+                        value: fields.output,
+                      }),
                     }),
                   },
                   value: fields.types,
@@ -352,6 +596,44 @@ export const defaultConfig: ZodPlugin['Config'] = {
                         },
                         mappers,
                         value: fields.infer,
+                      }),
+                      input: context.valueToObject({
+                        defaultValue: {
+                          ...(defaultValue.input as Extract<
+                            typeof defaultValue.input,
+                            Record<string, unknown>
+                          >),
+                          enabled:
+                            fields.input !== undefined
+                              ? Boolean(fields.input)
+                              : (
+                                  defaultValue.input as Extract<
+                                    typeof defaultValue.input,
+                                    Record<string, unknown>
+                                  >
+                                ).enabled,
+                        },
+                        mappers,
+                        value: fields.input,
+                      }),
+                      output: context.valueToObject({
+                        defaultValue: {
+                          ...(defaultValue.output as Extract<
+                            typeof defaultValue.output,
+                            Record<string, unknown>
+                          >),
+                          enabled:
+                            fields.output !== undefined
+                              ? Boolean(fields.output)
+                              : (
+                                  defaultValue.output as Extract<
+                                    typeof defaultValue.output,
+                                    Record<string, unknown>
+                                  >
+                                ).enabled,
+                        },
+                        mappers,
+                        value: fields.output,
                       }),
                     }),
                   },
@@ -394,6 +676,44 @@ export const defaultConfig: ZodPlugin['Config'] = {
                         mappers,
                         value: fields.infer,
                       }),
+                      input: context.valueToObject({
+                        defaultValue: {
+                          ...(defaultValue.input as Extract<
+                            typeof defaultValue.input,
+                            Record<string, unknown>
+                          >),
+                          enabled:
+                            fields.input !== undefined
+                              ? Boolean(fields.input)
+                              : (
+                                  defaultValue.input as Extract<
+                                    typeof defaultValue.input,
+                                    Record<string, unknown>
+                                  >
+                                ).enabled,
+                        },
+                        mappers,
+                        value: fields.input,
+                      }),
+                      output: context.valueToObject({
+                        defaultValue: {
+                          ...(defaultValue.output as Extract<
+                            typeof defaultValue.output,
+                            Record<string, unknown>
+                          >),
+                          enabled:
+                            fields.output !== undefined
+                              ? Boolean(fields.output)
+                              : (
+                                  defaultValue.output as Extract<
+                                    typeof defaultValue.output,
+                                    Record<string, unknown>
+                                  >
+                                ).enabled,
+                        },
+                        mappers,
+                        value: fields.output,
+                      }),
                     }),
                   },
                   value: fields.types,
@@ -432,6 +752,44 @@ export const defaultConfig: ZodPlugin['Config'] = {
                   mappers,
                   value: fields.infer,
                 }),
+                input: context.valueToObject({
+                  defaultValue: {
+                    ...(defaultValue.input as Extract<
+                      typeof defaultValue.input,
+                      Record<string, unknown>
+                    >),
+                    enabled:
+                      fields.input !== undefined
+                        ? Boolean(fields.input)
+                        : (
+                            defaultValue.input as Extract<
+                              typeof defaultValue.input,
+                              Record<string, unknown>
+                            >
+                          ).enabled,
+                  },
+                  mappers,
+                  value: fields.input,
+                }),
+                output: context.valueToObject({
+                  defaultValue: {
+                    ...(defaultValue.output as Extract<
+                      typeof defaultValue.output,
+                      Record<string, unknown>
+                    >),
+                    enabled:
+                      fields.output !== undefined
+                        ? Boolean(fields.output)
+                        : (
+                            defaultValue.output as Extract<
+                              typeof defaultValue.output,
+                              Record<string, unknown>
+                            >
+                          ).enabled,
+                  },
+                  mappers,
+                  value: fields.output,
+                }),
               }),
             },
             value: fields.types,
@@ -454,6 +812,20 @@ export const defaultConfig: ZodPlugin['Config'] = {
               Record<string, unknown>
             >),
             name: '{{name}}ResponseZodType',
+          },
+          input: {
+            ...(plugin.config.types.input as Extract<
+              typeof plugin.config.types.input,
+              Record<string, unknown>
+            >),
+            name: '{{name}}ResponseZodInput',
+          },
+          output: {
+            ...(plugin.config.types.output as Extract<
+              typeof plugin.config.types.output,
+              Record<string, unknown>
+            >),
+            name: '{{name}}ResponseZodOutput',
           },
         },
       },
@@ -485,6 +857,44 @@ export const defaultConfig: ZodPlugin['Config'] = {
                   mappers,
                   value: fields.infer,
                 }),
+                input: context.valueToObject({
+                  defaultValue: {
+                    ...(defaultValue.input as Extract<
+                      typeof defaultValue.input,
+                      Record<string, unknown>
+                    >),
+                    enabled:
+                      fields.input !== undefined
+                        ? Boolean(fields.input)
+                        : (
+                            defaultValue.input as Extract<
+                              typeof defaultValue.input,
+                              Record<string, unknown>
+                            >
+                          ).enabled,
+                  },
+                  mappers,
+                  value: fields.input,
+                }),
+                output: context.valueToObject({
+                  defaultValue: {
+                    ...(defaultValue.output as Extract<
+                      typeof defaultValue.output,
+                      Record<string, unknown>
+                    >),
+                    enabled:
+                      fields.output !== undefined
+                        ? Boolean(fields.output)
+                        : (
+                            defaultValue.output as Extract<
+                              typeof defaultValue.output,
+                              Record<string, unknown>
+                            >
+                          ).enabled,
+                  },
+                  mappers,
+                  value: fields.output,
+                }),
               }),
             },
             value: fields.types,
@@ -507,6 +917,20 @@ export const defaultConfig: ZodPlugin['Config'] = {
               Record<string, unknown>
             >),
             name: '{{name}}WebhookRequestZodType',
+          },
+          input: {
+            ...(plugin.config.types.input as Extract<
+              typeof plugin.config.types.input,
+              Record<string, unknown>
+            >),
+            name: '{{name}}WebhookRequestZodInput',
+          },
+          output: {
+            ...(plugin.config.types.output as Extract<
+              typeof plugin.config.types.output,
+              Record<string, unknown>
+            >),
+            name: '{{name}}WebhookRequestZodOutput',
           },
         },
       },
@@ -537,6 +961,44 @@ export const defaultConfig: ZodPlugin['Config'] = {
                   },
                   mappers,
                   value: fields.infer,
+                }),
+                input: context.valueToObject({
+                  defaultValue: {
+                    ...(defaultValue.input as Extract<
+                      typeof defaultValue.input,
+                      Record<string, unknown>
+                    >),
+                    enabled:
+                      fields.input !== undefined
+                        ? Boolean(fields.input)
+                        : (
+                            defaultValue.input as Extract<
+                              typeof defaultValue.input,
+                              Record<string, unknown>
+                            >
+                          ).enabled,
+                  },
+                  mappers,
+                  value: fields.input,
+                }),
+                output: context.valueToObject({
+                  defaultValue: {
+                    ...(defaultValue.output as Extract<
+                      typeof defaultValue.output,
+                      Record<string, unknown>
+                    >),
+                    enabled:
+                      fields.output !== undefined
+                        ? Boolean(fields.output)
+                        : (
+                            defaultValue.output as Extract<
+                              typeof defaultValue.output,
+                              Record<string, unknown>
+                            >
+                          ).enabled,
+                  },
+                  mappers,
+                  value: fields.output,
                 }),
               }),
             },

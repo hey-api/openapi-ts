@@ -40,6 +40,13 @@ export function exportAst({
     }),
   );
 
+  const statement = $.const(symbol)
+    .export()
+    .$if(plugin.config.comments && createSchemaComment(schema), (c, v) => c.doc(v))
+    .$if(final.typeName, (c) => c.type($.type(z).attr(final.typeName!)))
+    .assign(final.expression);
+  plugin.node(statement);
+
   const typeInferSymbol = naming.types.infer.enabled
     ? plugin.registerSymbol(
         buildSymbolIn({
@@ -59,19 +66,66 @@ export function exportAst({
       )
     : undefined;
 
-  const statement = $.const(symbol)
-    .export()
-    .$if(plugin.config.comments && createSchemaComment(schema), (c, v) => c.doc(v))
-    .$if(final.typeName, (c) => c.type($.type(z).attr(final.typeName!)))
-    .assign(final.expression);
-  plugin.node(statement);
-
   if (typeInferSymbol) {
     const inferType = $.type
       .alias(typeInferSymbol)
       .export()
       .type($.type(z).attr(identifiers.infer).generic($(symbol).typeofType()));
     plugin.node(inferType);
+  }
+
+  const typeInputSymbol = naming.types.input.enabled
+    ? plugin.registerSymbol(
+        buildSymbolIn({
+          meta: {
+            category: 'type',
+            path,
+            tags,
+            tool: 'zod',
+            variant: 'input',
+            ...meta,
+          },
+          name,
+          naming: naming.types.input,
+          plugin,
+          schema,
+        }),
+      )
+    : undefined;
+
+  if (typeInputSymbol) {
+    const inputType = $.type
+      .alias(typeInputSymbol)
+      .export()
+      .type($.type(z).attr(identifiers.input).generic($(symbol).typeofType()));
+    plugin.node(inputType);
+  }
+
+  const typeOutputSymbol = naming.types.output.enabled
+    ? plugin.registerSymbol(
+        buildSymbolIn({
+          meta: {
+            category: 'type',
+            path,
+            tags,
+            tool: 'zod',
+            variant: 'output',
+            ...meta,
+          },
+          name,
+          naming: naming.types.output,
+          plugin,
+          schema,
+        }),
+      )
+    : undefined;
+
+  if (typeOutputSymbol) {
+    const outputType = $.type
+      .alias(typeOutputSymbol)
+      .export()
+      .type($.type(z).attr(identifiers.output).generic($(symbol).typeofType()));
+    plugin.node(outputType);
   }
 
   return symbol;

@@ -19,9 +19,9 @@ export const zFoo = z._default(z.nullable(z.object({
     baz: z.optional(z.array(z.lazy((): any => zFoo)).register(z.globalRegistry, {
         description: 'This is baz property.'
     })),
-    qux: z.optional(z._default(z.int().check(z.gt(0)).register(z.globalRegistry, {
+    qux: z._default(z.optional(z.int().check(z.gt(0)).register(z.globalRegistry, {
         description: 'This is qux property.'
-    }), 0))
+    })), 0)
 })), null);
 
 /**

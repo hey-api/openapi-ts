@@ -6,11 +6,19 @@ export const zBaz = z.string().regex(/foo\nbar/).readonly().default('baz');
 
 export type BazZodType = z.infer<typeof zBaz>;
 
+export type BazZodInput = z.input<typeof zBaz>;
+
+export type BazZodOutput = z.output<typeof zBaz>;
+
 export const zQux = z.record(z.object({
     qux: z.string().optional()
 }));
 
 export type QuxZodType = z.infer<typeof zQux>;
+
+export type QuxZodInput = z.input<typeof zQux>;
+
+export type QuxZodOutput = z.output<typeof zQux>;
 
 /**
  * This is Foo schema.
@@ -19,10 +27,14 @@ export const zFoo: z.ZodTypeAny = z.object({
     foo: z.string().regex(/^\d{3}-\d{2}-\d{4}$/).optional(),
     bar: z.lazy(() => zBar).optional(),
     baz: z.array(z.lazy(() => zFoo)).optional(),
-    qux: z.number().int().gt(0).default(0).optional()
+    qux: z.number().int().gt(0).optional().default(0)
 }).nullable().default(null);
 
 export type FooZodType = z.infer<typeof zFoo>;
+
+export type FooZodInput = z.input<typeof zFoo>;
+
+export type FooZodOutput = z.output<typeof zFoo>;
 
 /**
  * This is Bar schema.
@@ -33,6 +45,10 @@ export const zBar = z.object({
 
 export type BarZodType = z.infer<typeof zBar>;
 
+export type BarZodInput = z.input<typeof zBar>;
+
+export type BarZodOutput = z.output<typeof zBar>;
+
 /**
  * This is Foo parameter.
  */
@@ -40,17 +56,29 @@ export const zFoo2 = z.string();
 
 export type FooZodType2 = z.infer<typeof zFoo2>;
 
+export type FooZodInput2 = z.input<typeof zFoo2>;
+
+export type FooZodOutput2 = z.output<typeof zFoo2>;
+
 export const zFoo3 = z.object({
     foo: zBar.optional()
 });
 
 export type FooZodType3 = z.infer<typeof zFoo3>;
 
+export type FooZodInput3 = z.input<typeof zFoo3>;
+
+export type FooZodOutput3 = z.output<typeof zFoo3>;
+
 export const zPatchFooBody = z.object({
     foo: z.string().optional()
 });
 
 export type PatchFooBodyZodType = z.infer<typeof zPatchFooBody>;
+
+export type PatchFooBodyZodInput = z.input<typeof zPatchFooBody>;
+
+export type PatchFooBodyZodOutput = z.output<typeof zPatchFooBody>;
 
 export const zPatchFooQuery = z.object({
     foo: z.string().optional(),
@@ -64,6 +92,14 @@ export const zPatchFooQuery = z.object({
 
 export type PatchFooQueryZodType = z.infer<typeof zPatchFooQuery>;
 
+export type PatchFooQueryZodInput = z.input<typeof zPatchFooQuery>;
+
+export type PatchFooQueryZodOutput = z.output<typeof zPatchFooQuery>;
+
 export const zPostFooBody = zFoo3;
 
 export type PostFooBodyZodType = z.infer<typeof zPostFooBody>;
+
+export type PostFooBodyZodInput = z.input<typeof zPostFooBody>;
+
+export type PostFooBodyZodOutput = z.output<typeof zPostFooBody>;

@@ -113,6 +113,8 @@ for (const zodVersion of zodVersions) {
               name: 'zod',
               types: {
                 infer: true,
+                input: true,
+                output: true,
               },
             },
           ],
