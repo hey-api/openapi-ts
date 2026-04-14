@@ -510,19 +510,19 @@ export const zCallWithDefaultParametersQuery = z.object({
 });
 
 export const zCallWithDefaultOptionalParametersQuery = z.object({
-    parameterString: z._default(z.optional(z.string()), 'Hello World!'),
-    parameterNumber: z._default(z.optional(z.number()), 123),
-    parameterBoolean: z._default(z.optional(z.boolean()), true),
-    parameterEnum: z._default(z.optional(z.enum([
+    parameterString: z.optional(z._default(z.string(), 'Hello World!')),
+    parameterNumber: z.optional(z._default(z.number(), 123)),
+    parameterBoolean: z.optional(z._default(z.boolean(), true)),
+    parameterEnum: z.optional(z._default(z.enum([
         'Success',
         'Warning',
         'Error'
-    ])), 'Success')
+    ]), 'Success'))
 });
 
 export const zCallToTestOrderOfParamsQuery = z.object({
-    parameterOptionalStringWithDefault: z._default(z.optional(z.string()), 'Hello World!'),
-    parameterOptionalStringWithEmptyDefault: z._default(z.optional(z.string()), ''),
+    parameterOptionalStringWithDefault: z.optional(z._default(z.string(), 'Hello World!')),
+    parameterOptionalStringWithEmptyDefault: z.optional(z._default(z.string(), '')),
     parameterOptionalStringWithNoDefault: z.optional(z.string()),
     parameterStringWithDefault: z._default(z.string(), 'Hello World!'),
     parameterStringWithEmptyDefault: z._default(z.string(), ''),

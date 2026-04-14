@@ -32,7 +32,7 @@ export const zCatDetails = z.object({
 export const zPetStore = z.object({
     animals: z.array(z.object({
         name: z.string(),
-        type: z._default(z.optional(z.enum(['dog', 'cat'])), 'dog'),
+        type: z.optional(z._default(z.enum(['dog', 'cat']), 'dog')),
         details: z.union([
             zDogDetails,
             zCatDetails

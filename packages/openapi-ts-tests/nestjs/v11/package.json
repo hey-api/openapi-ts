@@ -9,8 +9,5 @@
   "devDependencies": {
     "@hey-api/openapi-ts": "workspace:*",
     "typescript": "6.0.2"
-  },
-  "engines": {
-    "node": ">=22.13.0"
   }
 }
