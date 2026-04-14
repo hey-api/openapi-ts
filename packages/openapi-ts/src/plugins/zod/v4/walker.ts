@@ -50,22 +50,15 @@ export function createVisitor(
       const needsDefault = result.meta.default !== undefined;
       const needsNullable = result.meta.nullable;
 
-      let hasDefault = false;
-
       if (optional && needsNullable) {
         expression = expression.attr(identifiers.nullish).call();
       } else if (optional) {
-        if (needsDefault) {
-          expression = expression.attr(identifiers.default).call(getDefaultValue(result.meta));
-          hasDefault = true;
-        }
-
         expression = expression.attr(identifiers.optional).call();
       } else if (needsNullable) {
         expression = expression.attr(identifiers.nullable).call();
       }
 
-      if (needsDefault && !hasDefault) {
+      if (needsDefault) {
         expression = expression.attr(identifiers.default).call(getDefaultValue(result.meta));
       }
 
