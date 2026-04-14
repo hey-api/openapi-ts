@@ -69,10 +69,12 @@ while :; do
   jq -r '.[].author | select(.login != null) | .login' "$TMP_JSON" | sort -u > "$TMP_LOGINS"
 
   while read -r login; do
+    if [[ "$login" == *"[bot]" ]]; then
+      continue
+    fi
+
     if ! grep -Fxq "$login" "$EXCLUDED_FILE"; then
       if ! printf '%s\n' "${USERS[@]}" | grep -qx "$login"; then
-        USERS+=("$login")
-
         CACHE_FILE="$CACHE_DIR/$login.json"
         if [ -f "$CACHE_FILE" ]; then
           USER_JSON=$(<"$CACHE_FILE")
@@ -83,6 +85,13 @@ while :; do
         fi
 
         SANITIZED_JSON=$(echo "$USER_JSON" | tr -d '\000-\037')
+
+        USER_TYPE=$(jq -r '.type // "User"' <<< "$SANITIZED_JSON")
+        if [[ "$USER_TYPE" == "Bot" ]]; then
+          continue
+        fi
+
+        USERS+=("$login")
         NAME=$(jq -r '.name // empty' <<< "$SANITIZED_JSON")
         echo "$login|$NAME" >> "$TMP_USERS"
       fi
