@@ -97,6 +97,7 @@ export type {
   OpenApiSchemaObject,
 } from './openApi/types';
 export type { GetNameContext, Hooks } from './parser/hooks';
+export { warnDuplicatePlugins } from './plugins/duplicate';
 export type { SchemaWithType } from './plugins/shared/types/schema';
 export { definePluginConfig, mappers } from './plugins/shared/utils/config';
 export type { PluginInstanceTypes } from './plugins/shared/utils/instance';
