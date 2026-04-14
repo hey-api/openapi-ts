@@ -1,3 +1,5 @@
+import path from 'node:path';
+
 import { parseUrl } from '@hey-api/shared';
 
 import { getTypedConfig } from '../../../config/utils';
@@ -5,6 +7,23 @@ import { clientFolderAbsolutePath } from '../../../generate/client';
 import { $ } from '../../../ts-dsl';
 import type { PluginHandler } from './types';
 import { getClientBaseUrlKey } from './utils';
+
+const resolveRuntimeConfigPath = ({
+  outputPath,
+  runtimeConfigPath,
+}: {
+  outputPath: string;
+  runtimeConfigPath: string;
+}): string => {
+  if (!path.isAbsolute(runtimeConfigPath) && !runtimeConfigPath.startsWith('./')) {
+    return runtimeConfigPath;
+  }
+  const absoluteInputPath = path.isAbsolute(runtimeConfigPath)
+    ? runtimeConfigPath
+    : path.resolve(process.cwd(), runtimeConfigPath);
+  const relative = path.relative(outputPath, absoluteInputPath).split(path.sep).join('/');
+  return relative.startsWith('.') ? relative : `./${relative}`;
+};
 
 const resolveBaseUrlString = ({ plugin }: Parameters<PluginHandler>[0]): string | undefined => {
   const { baseUrl } = plugin.config;
@@ -43,7 +62,10 @@ export const createClient: PluginHandler = ({ plugin }) => {
   const { runtimeConfigPath } = plugin.config;
   const symbolCreateClientConfig = runtimeConfigPath
     ? plugin.symbol('createClientConfig', {
-        external: runtimeConfigPath,
+        external: resolveRuntimeConfigPath({
+          outputPath: getTypedConfig(plugin).output.path,
+          runtimeConfigPath,
+        }),
       })
     : undefined;
 

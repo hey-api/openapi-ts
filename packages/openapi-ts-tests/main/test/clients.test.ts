@@ -173,6 +173,19 @@ for (const client of clients) {
         }),
         description: 'avoid appending extension multiple times | twice',
       },
+      {
+        config: createConfig({
+          output: 'runtime-config-path',
+          plugins: [
+            {
+              name: client,
+              runtimeConfigPath: './runtime-config/my-config.ts',
+            },
+            '@hey-api/sdk',
+          ],
+        }),
+        description: 'client with runtimeConfigPath',
+      },
     ];
 
     it.each(scenarios)('$description', async ({ config, description }) => {
