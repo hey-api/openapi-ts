@@ -115,6 +115,4 @@
 - [jcx0](https://github.com/jcx0)
 - [maxdew-envelio](https://github.com/maxdew-envelio)
 - [nnzhadow](https://github.com/nnzhadow)
-- [pullfrog[bot]](https://github.com/pullfrog[bot])
-- [pullfrog[bot]](https://github.com/pullfrog[bot])
 - [renoschubert](https://github.com/renoschubert)
