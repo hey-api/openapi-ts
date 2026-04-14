@@ -286,33 +286,133 @@ describe('createClient', () => {
     expect(results).toHaveLength(4);
   });
 
-  it('warns when duplicate plugins are specified', async () => {
-    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-
-    await createClient({
-      dryRun: true,
+  describe('duplicate plugin warnings', () => {
+    const baseConfig = {
+      dryRun: true as const,
       input: {
         info: { title: 'duplicate-plugin-test', version: '1.0.0' },
-        openapi: '3.1.0',
+        openapi: '3.1.0' as const,
       },
       logs: {
-        level: 'silent',
+        level: 'silent' as const,
       },
       output: 'output',
-      plugins: [
-        { name: '@hey-api/typescript' },
-        { name: '@hey-api/typescript' },
-      ],
+    };
+
+    const conflictWarnings = (warnSpy: ReturnType<typeof vi.spyOn>) =>
+      warnSpy.mock.calls.filter(
+        (args: unknown[]) => typeof args[0] === 'string' && args[0].includes('conflicting options'),
+      );
+
+    it('warns when the same plugin is specified with conflicting options', async () => {
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+      await createClient({
+        ...baseConfig,
+        plugins: [
+          { case: 'PascalCase', name: '@hey-api/typescript' },
+          { case: 'camelCase', name: '@hey-api/typescript' },
+        ],
+      });
+
+      expect(conflictWarnings(warnSpy)).toHaveLength(1);
+      expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('"@hey-api/typescript"'));
+
+      warnSpy.mockRestore();
     });
 
-    expect(warnSpy).toHaveBeenCalledWith(
-      expect.stringContaining('Duplicate plugin'),
-    );
-    expect(warnSpy).toHaveBeenCalledWith(
-      expect.stringContaining('"@hey-api/typescript"'),
-    );
+    it('does not warn when the same plugin is specified twice as a string', async () => {
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
-    warnSpy.mockRestore();
+      await createClient({
+        ...baseConfig,
+        plugins: ['@hey-api/typescript', '@hey-api/typescript'],
+      });
+
+      expect(conflictWarnings(warnSpy)).toHaveLength(0);
+
+      warnSpy.mockRestore();
+    });
+
+    it('does not warn when a string and an object with only name are specified', async () => {
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+      await createClient({
+        ...baseConfig,
+        plugins: ['@hey-api/typescript', { name: '@hey-api/typescript' }],
+      });
+
+      expect(conflictWarnings(warnSpy)).toHaveLength(0);
+
+      warnSpy.mockRestore();
+    });
+
+    it('does not warn when two identical object configurations are specified', async () => {
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+      await createClient({
+        ...baseConfig,
+        plugins: [
+          { case: 'PascalCase', name: '@hey-api/typescript' },
+          { case: 'PascalCase', name: '@hey-api/typescript' },
+        ],
+      });
+
+      expect(conflictWarnings(warnSpy)).toHaveLength(0);
+
+      warnSpy.mockRestore();
+    });
+
+    it('does not warn when objects differ only in key order', async () => {
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+      await createClient({
+        ...baseConfig,
+        plugins: [
+          { case: 'PascalCase', name: '@hey-api/typescript' },
+          { name: '@hey-api/typescript', case: 'PascalCase' },
+        ],
+      });
+
+      expect(conflictWarnings(warnSpy)).toHaveLength(0);
+
+      warnSpy.mockRestore();
+    });
+
+    it('does not warn when nested object configs differ only in key order', async () => {
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+      await createClient({
+        ...baseConfig,
+        plugins: [
+          {
+            definitions: { case: 'PascalCase', name: 'foo' },
+            name: '@hey-api/typescript',
+          },
+          {
+            name: '@hey-api/typescript',
+            definitions: { name: 'foo', case: 'PascalCase' },
+          },
+        ],
+      });
+
+      expect(conflictWarnings(warnSpy)).toHaveLength(0);
+
+      warnSpy.mockRestore();
+    });
+
+    it('warns when an object adds extra config compared to a string entry', async () => {
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+      await createClient({
+        ...baseConfig,
+        plugins: ['@hey-api/typescript', { case: 'PascalCase', name: '@hey-api/typescript' }],
+      });
+
+      expect(conflictWarnings(warnSpy)).toHaveLength(1);
+
+      warnSpy.mockRestore();
+    });
   });
 
   it('executes @angular/common HttpRequest builder path', async () => {
