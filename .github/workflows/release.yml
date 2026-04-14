@@ -85,8 +85,7 @@ jobs:
           generate_release_notes: false
           tag_name: ${{ steps.tag.outputs.tag }}
           target_commitish: ${{ steps.release-commit.outputs.sha || github.sha }}
-        env:
-          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+          token: ${{ steps.app-token.outputs.token }}
 
       - name: Get current branch
         run: echo "CURRENT_BRANCH=$(git branch --show-current)" >> $GITHUB_ENV
