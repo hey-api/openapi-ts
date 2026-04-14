@@ -15,7 +15,7 @@ export const zFoo: z.ZodTypeAny = z.object({
     foo: z.string().regex(/^\d{3}-\d{2}-\d{4}$/).describe('This is foo property.').optional(),
     bar: z.lazy(() => zBar).optional(),
     baz: z.array(z.lazy(() => zFoo)).describe('This is baz property.').optional(),
-    qux: z.number().int().gt(0).describe('This is qux property.').optional().default(0)
+    qux: z.number().int().gt(0).describe('This is qux property.').default(0).optional()
 }).nullable().default(null);
 
 /**

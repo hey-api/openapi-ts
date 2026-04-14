@@ -171,7 +171,7 @@ export const zArrayWithProperties = z.array(z.object({
  * This is a simple array with any of properties
  */
 export const zArrayWithAnyOfProperties = z.array(z.union([z.object({
-        foo: z._default(z.optional(z.string()), 'test')
+        foo: z.optional(z._default(z.string(), 'test'))
     }), z.object({
         bar: z.optional(z.string())
     })]));
@@ -313,7 +313,7 @@ export const zModelWithEnum = z.object({
  * This is a model with one enum with escaped name
  */
 export const zModelWithEnumWithHyphen = z.object({
-    'foo-bar-baz-qux': z._default(z.optional(z.enum(['3.0'])), '3.0')
+    'foo-bar-baz-qux': z.optional(z._default(z.enum(['3.0']), '3.0'))
 });
 
 /**
@@ -668,7 +668,7 @@ export const zDefault = z.object({
 });
 
 export const zPageable = z.object({
-    page: z._default(z.optional(z.int().check(z.gte(0), z.maximum(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' }))), 0),
+    page: z.optional(z._default(z.int().check(z.gte(0), z.maximum(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' })), 0)),
     size: z.optional(z.int().check(z.gte(1), z.maximum(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' }))),
     sort: z.optional(z.array(z.string()))
 });
@@ -1215,29 +1215,29 @@ export const zCallWithDefaultParametersQuery = z.object({
     parameterString: z._default(z.nullish(z.string()), 'Hello World!'),
     parameterNumber: z._default(z.nullish(z.number()), 123),
     parameterBoolean: z._default(z.nullish(z.boolean()), true),
-    parameterEnum: z._default(z.optional(z.enum([
+    parameterEnum: z.optional(z._default(z.enum([
         'Success',
         'Warning',
         'Error'
-    ])), 'Success'),
+    ]), 'Success')),
     parameterModel: z.nullish(zModelWithString)
 });
 
 export const zCallWithDefaultOptionalParametersQuery = z.object({
-    parameterString: z._default(z.optional(z.string()), 'Hello World!'),
-    parameterNumber: z._default(z.optional(z.number()), 123),
-    parameterBoolean: z._default(z.optional(z.boolean()), true),
-    parameterEnum: z._default(z.optional(z.enum([
+    parameterString: z.optional(z._default(z.string(), 'Hello World!')),
+    parameterNumber: z.optional(z._default(z.number(), 123)),
+    parameterBoolean: z.optional(z._default(z.boolean(), true)),
+    parameterEnum: z.optional(z._default(z.enum([
         'Success',
         'Warning',
         'Error'
-    ])), 'Success'),
+    ]), 'Success')),
     parameterModel: z.optional(zModelWithString)
 });
 
 export const zCallToTestOrderOfParamsQuery = z.object({
-    parameterOptionalStringWithDefault: z._default(z.optional(z.string()), 'Hello World!'),
-    parameterOptionalStringWithEmptyDefault: z._default(z.optional(z.string()), ''),
+    parameterOptionalStringWithDefault: z.optional(z._default(z.string(), 'Hello World!')),
+    parameterOptionalStringWithEmptyDefault: z.optional(z._default(z.string(), '')),
     parameterOptionalStringWithNoDefault: z.optional(z.string()),
     parameterStringWithDefault: z._default(z.string(), 'Hello World!'),
     parameterStringWithEmptyDefault: z._default(z.string(), ''),
@@ -1366,7 +1366,7 @@ export const zMultipartRequestBody = z.object({
 export const zComplexParamsBody = z.object({
     key: z.nullable(z.readonly(z.string().check(z.maxLength(64), z.regex(/^[a-zA-Z0-9_]*$/)))),
     name: z.nullable(z.string().check(z.maxLength(255))),
-    enabled: z._default(z.optional(z.boolean()), true),
+    enabled: z.optional(z._default(z.boolean(), true)),
     type: z.readonly(z.enum([
         'Monkey',
         'Horse',

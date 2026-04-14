@@ -37,8 +37,8 @@ export function createVisitor(
     applyModifiers(result, ctx, options = {}): PydanticFinal {
       const { optional } = options;
 
-      const hasDefault = result.meta.default !== undefined;
-      const needsOptional = optional || hasDefault;
+      const needsDefault = result.meta.default !== undefined;
+      const needsOptional = optional || needsDefault;
       const needsNullable = result.meta.nullable;
 
       let type = result.type;
@@ -48,7 +48,7 @@ export function createVisitor(
         const optionalType = ctx.plugin.external('typing.Optional');
         type = $(optionalType).slice(type ?? ctx.plugin.external('typing.Any'));
         if (needsOptional) {
-          fieldConstraints.default = hasDefault ? result.meta.default : null;
+          fieldConstraints.default = needsDefault ? result.meta.default : null;
         }
       }
 
