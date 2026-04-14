@@ -1,7 +1,0 @@
-# Accounts with a [bot] suffix are filtered automatically by the script.
-# The entries below are kept as an extra safeguard.
-dependabot-preview[bot]
-dependabot[bot]
-github-actions[bot]
-renovate[bot]
-Copilot
