@@ -414,6 +414,50 @@ describe('createClient', () => {
       warnSpy.mockRestore();
     });
 
+    it('does not warn when array-valued options differ only in element key order', async () => {
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+      await createClient({
+        ...baseConfig,
+        plugins: [
+          {
+            items: [{ from: 'foo', name: 'bar' }],
+            name: '@hey-api/typescript',
+          } as never,
+          {
+            items: [{ name: 'bar', from: 'foo' }],
+            name: '@hey-api/typescript',
+          } as never,
+        ],
+      });
+
+      expect(conflictWarnings(warnSpy)).toHaveLength(0);
+
+      warnSpy.mockRestore();
+    });
+
+    it('warns when array-valued options differ in element order', async () => {
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+      await createClient({
+        ...baseConfig,
+        plugins: [
+          {
+            items: [{ from: 'a', name: 'x' }, { from: 'b', name: 'y' }],
+            name: '@hey-api/typescript',
+          } as never,
+          {
+            items: [{ from: 'b', name: 'y' }, { from: 'a', name: 'x' }],
+            name: '@hey-api/typescript',
+          } as never,
+        ],
+      });
+
+      expect(conflictWarnings(warnSpy)).toHaveLength(1);
+
+      warnSpy.mockRestore();
+    });
+
     it('does not warn when function-valued options have identical source', async () => {
       const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
       const transform = (s: string) => s.toUpperCase();
