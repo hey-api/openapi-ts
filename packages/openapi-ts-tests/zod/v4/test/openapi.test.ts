@@ -4,14 +4,14 @@ import path from 'node:path';
 import { createClient } from '@hey-api/openapi-ts';
 
 import { getFilePaths } from '../../../utils';
-import { createConfigFactory, getSnapshotsPath, getTempSnapshotsPath, zodVersions } from './utils';
+import { snapshotsDir, tmpDir } from './constants';
+import { createConfigFactory, zodVersions } from './utils';
 
 const versions = ['2.0.x', '3.0.x', '3.1.x'];
 
 for (const version of versions) {
   for (const zodVersion of zodVersions) {
-    const outputDir = path.join(getTempSnapshotsPath(), version, zodVersion.folder);
-    const snapshotsDir = path.join(getSnapshotsPath(), version, zodVersion.folder);
+    const outputDir = path.join(tmpDir, version, zodVersion.folder);
 
     describe(`OpenAPI ${version}`, () => {
       const createConfig = createConfigFactory({
@@ -66,7 +66,12 @@ for (const version of versions) {
           filePaths.map(async (filePath) => {
             const fileContent = fs.readFileSync(filePath, 'utf-8');
             await expect(fileContent).toMatchFileSnapshot(
-              path.join(snapshotsDir, filePath.slice(outputDir.length + 1)),
+              path.join(
+                snapshotsDir,
+                version,
+                zodVersion.folder,
+                filePath.slice(outputDir.length + 1),
+              ),
             );
           }),
         );

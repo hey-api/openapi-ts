@@ -21,7 +21,7 @@ export const zFoo = z.object({
     }).optional(),
     qux: z.int().gt(0).register(z.globalRegistry, {
         description: 'This is qux property.'
-    }).optional().default(0)
+    }).default(0).optional()
 }).nullable().default(null);
 
 /**

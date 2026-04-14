@@ -1,7 +1,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { createClient, type UserConfig } from '@hey-api/openapi-ts';
+import type { UserConfig } from '@hey-api/openapi-ts';
+import { createClient } from '@hey-api/openapi-ts';
 import * as v from 'valibot';
 
 import { getSpecsPath } from '../../../utils';
