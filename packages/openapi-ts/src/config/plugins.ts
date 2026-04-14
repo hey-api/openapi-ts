@@ -147,30 +147,47 @@ export function getPlugins({
     }
   }
 
-  const seenPlugins = new Set<string>();
+  const seenPlugins = new Map<string, string>();
 
-  const warnDuplicatePlugin = (name: string) =>
-    console.warn(
-      `⚙️ ${colors.yellow('Warning:')} Duplicate plugin ${colors.cyan(`"${name}"`)} detected. Only the last occurrence will take effect.`,
+  const stableStringify = (value: unknown): string =>
+    JSON.stringify(value, (_, v) =>
+      v && typeof v === 'object' && !Array.isArray(v)
+        ? Object.fromEntries(
+            Object.entries(v as Record<string, unknown>).sort(([a], [b]) => a.localeCompare(b)),
+          )
+        : v,
     );
+
+  const warnConflictingPlugin = (name: string) =>
+    console.warn(
+      `⚙️ ${colors.yellow('Warning:')} Plugin ${colors.cyan(`"${name}"`)} is configured more than once with conflicting options. Only the last occurrence will take effect.`,
+    );
+
+  const checkDuplicate = (name: string, config: Record<string, unknown>) => {
+    const serialized = stableStringify(config);
+    const previous = seenPlugins.get(name);
+    if (previous !== undefined && previous !== serialized) {
+      warnConflictingPlugin(name);
+    }
+    seenPlugins.set(name, serialized);
+  };
 
   const userPlugins = definedPlugins
     .map((plugin) => {
       if (typeof plugin === 'string') {
-        if (seenPlugins.has(plugin)) {
-          warnDuplicatePlugin(plugin);
-        }
-        seenPlugins.add(plugin);
+        checkDuplicate(plugin, {});
         return plugin;
       }
 
       const pluginName = plugin.name;
 
       if (pluginName) {
-        if (seenPlugins.has(pluginName)) {
-          warnDuplicatePlugin(pluginName);
-        }
-        seenPlugins.add(pluginName);
+        const config = Object.fromEntries(
+          Object.entries(plugin as unknown as Record<string, unknown>).filter(
+            ([key]) => key !== 'name',
+          ),
+        );
+        checkDuplicate(pluginName, config);
 
         // @ts-expect-error
         if (plugin.handler) {
