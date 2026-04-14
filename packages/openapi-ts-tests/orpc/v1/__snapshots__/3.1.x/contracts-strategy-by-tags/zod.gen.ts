@@ -36,12 +36,12 @@ export const zPost = z.object({
 export const zCreatePostInput = z.object({
     title: z.string(),
     content: z.string(),
-    status: z.enum(['draft', 'published']).optional().default('draft')
+    status: z.enum(['draft', 'published']).default('draft').optional()
 });
 
 export const zGetUsersQuery = z.object({
-    limit: z.int().optional().default(10),
-    offset: z.int().optional().default(0)
+    limit: z.int().default(10).optional(),
+    offset: z.int().default(0).optional()
 });
 
 /**
@@ -119,7 +119,7 @@ export const zGetPostByIdPath = z.object({
 });
 
 export const zGetPostByIdQuery = z.object({
-    includeComments: z.boolean().optional().default(false)
+    includeComments: z.boolean().default(false).optional()
 });
 
 /**

@@ -1,12 +1,8 @@
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 
-import { type UserConfig } from '@hey-api/openapi-ts';
+import type { UserConfig } from '@hey-api/openapi-ts';
 
 import { getSpecsPath } from '../../../utils';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 export function createConfigFactory({
   openApiVersion,
@@ -47,10 +43,6 @@ export function createConfigFactory({
     } as const satisfies UserConfig;
   };
 }
-
-export const getSnapshotsPath = (): string => path.join(__dirname, '..', '__snapshots__');
-
-export const getTempSnapshotsPath = (): string => path.join(__dirname, '..', '.gen', 'snapshots');
 
 export const zodVersions = [
   {
