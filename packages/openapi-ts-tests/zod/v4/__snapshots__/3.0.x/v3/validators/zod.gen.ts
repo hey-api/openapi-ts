@@ -8,7 +8,7 @@ export const zFoo: z.ZodTypeAny = z.object({
     foo: z.string().regex(/^\d{3}-\d{2}-\d{4}$/).optional(),
     bar: z.lazy(() => zBar).optional(),
     baz: z.array(z.lazy(() => zFoo)).optional(),
-    qux: z.number().int().gt(0).default(0).optional()
+    qux: z.number().int().gt(0).optional().default(0)
 }).nullable().default(null);
 
 export const zBar = z.object({
