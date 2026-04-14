@@ -1,6 +1,6 @@
+import { log } from '@hey-api/codegen-core';
 import type { AnyPluginName, PluginContext, PluginNames } from '@hey-api/shared';
 import { dependencyFactory, valueToObject } from '@hey-api/shared';
-import colors from 'ansi-colors';
 
 import { defaultPluginConfigs } from '../plugins/config';
 import type { Config, UserConfig } from './types';
@@ -150,24 +150,27 @@ export function getPlugins({
   const seenPlugins = new Map<string, string>();
 
   const stableStringify = (value: unknown): string =>
-    JSON.stringify(value, (_, v) =>
-      v && typeof v === 'object' && !Array.isArray(v)
-        ? Object.fromEntries(
-            Object.entries(v as Record<string, unknown>).sort(([a], [b]) => a.localeCompare(b)),
-          )
-        : v,
-    );
-
-  const warnConflictingPlugin = (name: string) =>
-    console.warn(
-      `⚙️ ${colors.yellow('Warning:')} Plugin ${colors.cyan(`"${name}"`)} is configured more than once with conflicting options. Only the last occurrence will take effect.`,
-    );
+    JSON.stringify(value, (_, v) => {
+      if (typeof v === 'function') {
+        return `[function:${(v as () => unknown).toString()}]`;
+      }
+      if (v && typeof v === 'object' && !Array.isArray(v)) {
+        return Object.fromEntries(
+          Object.entries(v as Record<string, unknown>).sort(([a], [b]) =>
+            a.localeCompare(b),
+          ),
+        );
+      }
+      return v;
+    });
 
   const checkDuplicate = (name: string, config: Record<string, unknown>) => {
     const serialized = stableStringify(config);
     const previous = seenPlugins.get(name);
     if (previous !== undefined && previous !== serialized) {
-      warnConflictingPlugin(name);
+      log.warn(
+        `Plugin "${name}" is configured more than once with conflicting options. Only the last occurrence will take effect.`,
+      );
     }
     seenPlugins.set(name, serialized);
   };

@@ -413,6 +413,45 @@ describe('createClient', () => {
 
       warnSpy.mockRestore();
     });
+
+    it('does not warn when function-valued options have identical source', async () => {
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      const transform = (s: string) => s.toUpperCase();
+
+      await createClient({
+        ...baseConfig,
+        plugins: [
+          { definitions: { name: transform }, name: '@hey-api/typescript' },
+          { definitions: { name: transform }, name: '@hey-api/typescript' },
+        ],
+      });
+
+      expect(conflictWarnings(warnSpy)).toHaveLength(0);
+
+      warnSpy.mockRestore();
+    });
+
+    it('warns when function-valued options differ', async () => {
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+      await createClient({
+        ...baseConfig,
+        plugins: [
+          {
+            definitions: { name: (s: string) => s.toUpperCase() },
+            name: '@hey-api/typescript',
+          },
+          {
+            definitions: { name: (s: string) => s.toLowerCase() },
+            name: '@hey-api/typescript',
+          },
+        ],
+      });
+
+      expect(conflictWarnings(warnSpy)).toHaveLength(1);
+
+      warnSpy.mockRestore();
+    });
   });
 
   it('executes @angular/common HttpRequest builder path', async () => {
