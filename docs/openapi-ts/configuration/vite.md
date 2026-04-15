@@ -94,7 +94,7 @@ export default defineConfig({
   plugins: [
     heyApiPlugin({
       config: {
-        input: 'hey-api/backend',
+        input: 'hey-api/backend', // sign up at app.heyapi.dev
         output: 'src/client',
       },
       vite: {
