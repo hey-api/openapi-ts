@@ -1,6 +1,6 @@
 ---
 title: Vite Plugin
-description: Integrate @hey-api/openapi-ts into your Vite build pipeline with the official Vite plugin.
+description: Integrate @hey-api/openapi-ts into your Vite 5, 6, 7, or 8 build pipeline with the official Vite plugin.
 ---
 
 # Vite
@@ -15,7 +15,7 @@ The Vite plugin integrates `@hey-api/openapi-ts` into the Vite build pipeline, r
 
 - runs automatically as part of your Vite build
 - reads your existing [configuration](/openapi-ts/get-started) (or accepts inline config)
-- works with any Vite-based project
+- supports Vite 5, 6, 7, and 8
 
 ## Installation
 
@@ -62,7 +62,7 @@ The plugin will automatically pick up your [configuration](/openapi-ts/configura
 
 ::: code-group
 
-```ts [vite.config.ts]
+```js [vite.config.ts]
 import { heyApiPlugin } from '@hey-api/vite-plugin';
 import { defineConfig } from 'vite';
 
@@ -72,6 +72,33 @@ export default defineConfig({
       config: {
         input: 'hey-api/backend', // sign up at app.heyapi.dev
         output: 'src/client',
+      },
+    }),
+  ],
+});
+```
+
+:::
+
+## Vite Options
+
+You can pass Vite Plugin API options using the `vite` option. For example, to run the plugin only during development:
+
+::: code-group
+
+```js [vite.config.ts]
+import { heyApiPlugin } from '@hey-api/vite-plugin';
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+  plugins: [
+    heyApiPlugin({
+      config: {
+        input: 'hey-api/backend',
+        output: 'src/client',
+      },
+      vite: {
+        apply: 'serve',
       },
     }),
   ],

@@ -5,6 +5,9 @@ export default defineConfig({
     ignoreRules: ['cjs-resolves-to-esm'],
     profile: 'esm-only',
   },
+  deps: {
+    neverBundle: ['vite'],
+  },
   publint: true,
   sourcemap: true,
 });
