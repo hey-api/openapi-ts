@@ -9,8 +9,10 @@ export function resolveHttpResources(config: Config, context: PluginContext): Ht
   let input = config.httpResources;
   if (typeof input === 'string' || typeof input === 'function') {
     input = { strategy: input };
-  } else if (typeof input === 'boolean' || !input) {
-    input = { enabled: Boolean(input) };
+  } else if (typeof input === 'boolean') {
+    input = { enabled: input };
+  } else if (!input) {
+    input = {};
   }
 
   const strategy = input.strategy ?? 'flat';

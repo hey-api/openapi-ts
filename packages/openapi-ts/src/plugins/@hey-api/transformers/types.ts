@@ -15,7 +15,7 @@ export type ExpressionTransformer = (
     config: Omit<UserConfig, 'name'>;
     dataExpression?: ts.Expression | ReturnType<typeof $.attr | typeof $.expr> | string;
   },
-) => Array<TsDsl<ts.Expression>> | undefined;
+) => Array<TsDsl<ts.Expression> | ReturnType<typeof $.return>> | undefined;
 
 /**
  * Returns the TypeScript type node for a schema with a specific format.
