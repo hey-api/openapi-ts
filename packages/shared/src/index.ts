@@ -164,4 +164,4 @@ export {
 } from './utils/ref';
 export type { EventHooks, PluginInstanceTypes, ResolvedNode } from './utils/symbols';
 export { SymbolFactory } from './utils/symbols';
-export { parseUrl } from './utils/url';
+export { getBaseUrl, parseUrl } from './utils/url';

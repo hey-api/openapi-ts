@@ -7,7 +7,7 @@ import { $ } from '../../../../ts-dsl';
 import { getClientBaseUrlKey, getClientPlugin } from '../../client-core/utils';
 import type { HeyApiTypeScriptPlugin } from '../types';
 
-const serverToBaseUrlType = ({ server }: { server: IR.ServerObject }) => {
+function serverToBaseUrlType({ server }: { server: IR.ServerObject }): TypeTsDsl {
   const url = parseUrl(server.url);
 
   if (url.protocol && url.host) {
@@ -21,9 +21,9 @@ const serverToBaseUrlType = ({ server }: { server: IR.ServerObject }) => {
     .add(url.host || $.type('string'))
     .add(url.port ? `:${url.port}` : '')
     .add(url.path || '');
-};
+}
 
-export const createClientOptions = ({
+export function createClientOptions({
   nodeIndex,
   plugin,
   servers,
@@ -31,7 +31,7 @@ export const createClientOptions = ({
   nodeIndex: number;
   plugin: HeyApiTypeScriptPlugin['Instance'];
   servers: ReadonlyArray<IR.ServerObject>;
-}) => {
+}) {
   const client = getClientPlugin(getTypedConfig(plugin));
 
   const types: Array<TypeTsDsl> = servers.map((server) => serverToBaseUrlType({ server }));
@@ -66,4 +66,4 @@ export const createClientOptions = ({
         .prop(getClientBaseUrlKey(getTypedConfig(plugin)), (p) => p.type($.type.or(...types))),
     );
   plugin.node(node, nodeIndex);
-};
+}

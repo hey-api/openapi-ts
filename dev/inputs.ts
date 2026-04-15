@@ -9,6 +9,7 @@ export const inputs = {
   full: path.resolve(specsPath, '3.1.x', 'full.yaml'),
   'hey-api': 'hey-api/backend',
   local: 'http://localhost:8000/openapi.json',
+  mockers: path.resolve(specsPath, '3.1.x', 'mockers.yaml'),
   opencode: path.resolve(specsPath, '3.1.x', 'opencode.yaml'),
   petstore:
     'https://raw.githubusercontent.com/swagger-api/swagger-petstore/master/src/main/resources/openapi.yaml',
@@ -30,6 +31,7 @@ export const inputs = {
   'readme-uuid': 'readme:nysezql0wwo236',
   redfish:
     'https://raw.githubusercontent.com/DMTF/Redfish-Publications/refs/heads/main/openapi/openapi.yaml',
+  rpc: path.resolve(specsPath, '3.1.x', 'rpc.yaml'),
   scalar: 'scalar:@scalar/access-service',
   transformers: path.resolve(specsPath, '3.1.x', 'transformers.json'),
   validators: path.resolve(specsPath, '3.1.x', 'validators.yaml'),
