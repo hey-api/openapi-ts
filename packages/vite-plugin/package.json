@@ -55,6 +55,7 @@
     "vite": "8.0.8"
   },
   "peerDependencies": {
-    "@hey-api/openapi-ts": "<2"
+    "@hey-api/openapi-ts": "<2",
+    "vite": "^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0"
   }
 }

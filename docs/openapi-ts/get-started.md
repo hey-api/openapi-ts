@@ -107,7 +107,7 @@ createClient({
 
 ### Vite
 
-If you're using [Vite](https://vite.dev), you can integrate `@hey-api/openapi-ts` directly into your build pipeline with `@hey-api/vite-plugin`. Install it alongside the main package:
+If you're using [Vite](https://vite.dev) 5, 6, 7, or 8, you can integrate `@hey-api/openapi-ts` directly into your build pipeline with `@hey-api/vite-plugin`. Install it alongside the main package:
 
 ::: code-group
 
