@@ -24,7 +24,7 @@ export const defaultConfig: FakerJsFakerPlugin['Config'] = {
       value: plugin.config.definitions,
     });
   },
-  tags: ['mocker'],
+  tags: ['source'],
 };
 
 /**

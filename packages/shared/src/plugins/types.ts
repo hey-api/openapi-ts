@@ -19,7 +19,7 @@ export type PluginNames = keyof PluginConfigMap extends never ? string : keyof P
 
 export type AnyPluginName = PluginNames | AnyString;
 
-type PluginTag = 'client' | 'mocker' | 'sdk' | 'transformer' | 'validator';
+type PluginTag = 'client' | 'handler' | 'sdk' | 'source' | 'transformer' | 'validator';
 
 export type PluginContext = {
   package: Dependency;
