@@ -220,7 +220,7 @@ export const createClient = (config: Config = {}): Client => {
         };
         for (const fn of interceptors.request.fns) {
           if (fn) {
-            await fn(requestInit);
+            await fn(requestInit as unknown as ResolvedRequestOptions);
             request = new Request(requestInit.url, requestInit);
           }
         }

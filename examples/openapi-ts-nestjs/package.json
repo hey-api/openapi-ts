@@ -25,7 +25,7 @@
     "oxfmt": "0.43.0",
     "typescript": "6.0.2",
     "unplugin-swc": "1.5.5",
-    "vite": "7.3.1",
+    "vite": "8.0.8",
     "vitest": "4.1.0"
   }
 }

@@ -13,6 +13,8 @@ export type ValidatorArgs = {
 export type TypeOptions = {
   types: {
     infer: NamingOptions & FeatureToggle;
+    input: NamingOptions & FeatureToggle;
+    output: NamingOptions & FeatureToggle;
   };
 };
 

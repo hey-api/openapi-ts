@@ -52,7 +52,7 @@
   "devDependencies": {
     "@hey-api/openapi-ts": "workspace:*",
     "typescript": "6.0.2",
-    "vite": "7.3.1"
+    "vite": "8.0.8"
   },
   "peerDependencies": {
     "@hey-api/openapi-ts": "<2"

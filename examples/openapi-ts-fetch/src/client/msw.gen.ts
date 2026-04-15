@@ -805,25 +805,9 @@ export type MswHandlerFactories = {
    */
   addPet: typeof handleAddPet;
   /**
-   * Handler for the `POST /user` operation.
+   * Handler for the `PUT /pet` operation.
    */
-  createUser: typeof handleCreateUser;
-  /**
-   * Handler for the `POST /user/createWithList` operation.
-   */
-  createUsersWithListInput: typeof handleCreateUsersWithListInput;
-  /**
-   * Handler for the `DELETE /store/order/{orderId}` operation.
-   */
-  deleteOrder: typeof handleDeleteOrder;
-  /**
-   * Handler for the `DELETE /pet/{petId}` operation.
-   */
-  deletePet: typeof handleDeletePet;
-  /**
-   * Handler for the `DELETE /user/{username}` operation.
-   */
-  deleteUser: typeof handleDeleteUser;
+  updatePet: typeof handleUpdatePet;
   /**
    * Handler for the `GET /pet/findByStatus` operation.
    */
@@ -833,21 +817,45 @@ export type MswHandlerFactories = {
    */
   findPetsByTags: typeof handleFindPetsByTags;
   /**
-   * Handler for the `GET /store/inventory` operation.
+   * Handler for the `DELETE /pet/{petId}` operation.
    */
-  getInventory: typeof handleGetInventory;
-  /**
-   * Handler for the `GET /store/order/{orderId}` operation.
-   */
-  getOrderById: typeof handleGetOrderById;
+  deletePet: typeof handleDeletePet;
   /**
    * Handler for the `GET /pet/{petId}` operation.
    */
   getPetById: typeof handleGetPetById;
   /**
-   * Handler for the `GET /user/{username}` operation.
+   * Handler for the `POST /pet/{petId}` operation.
    */
-  getUserByName: typeof handleGetUserByName;
+  updatePetWithForm: typeof handleUpdatePetWithForm;
+  /**
+   * Handler for the `POST /pet/{petId}/uploadImage` operation.
+   */
+  uploadFile: typeof handleUploadFile;
+  /**
+   * Handler for the `GET /store/inventory` operation.
+   */
+  getInventory: typeof handleGetInventory;
+  /**
+   * Handler for the `POST /store/order` operation.
+   */
+  placeOrder: typeof handlePlaceOrder;
+  /**
+   * Handler for the `DELETE /store/order/{orderId}` operation.
+   */
+  deleteOrder: typeof handleDeleteOrder;
+  /**
+   * Handler for the `GET /store/order/{orderId}` operation.
+   */
+  getOrderById: typeof handleGetOrderById;
+  /**
+   * Handler for the `POST /user` operation.
+   */
+  createUser: typeof handleCreateUser;
+  /**
+   * Handler for the `POST /user/createWithList` operation.
+   */
+  createUsersWithListInput: typeof handleCreateUsersWithListInput;
   /**
    * Handler for the `GET /user/login` operation.
    */
@@ -857,25 +865,17 @@ export type MswHandlerFactories = {
    */
   logoutUser: typeof handleLogoutUser;
   /**
-   * Handler for the `POST /store/order` operation.
+   * Handler for the `DELETE /user/{username}` operation.
    */
-  placeOrder: typeof handlePlaceOrder;
+  deleteUser: typeof handleDeleteUser;
   /**
-   * Handler for the `PUT /pet` operation.
+   * Handler for the `GET /user/{username}` operation.
    */
-  updatePet: typeof handleUpdatePet;
-  /**
-   * Handler for the `POST /pet/{petId}` operation.
-   */
-  updatePetWithForm: typeof handleUpdatePetWithForm;
+  getUserByName: typeof handleGetUserByName;
   /**
    * Handler for the `PUT /user/{username}` operation.
    */
   updateUser: typeof handleUpdateUser;
-  /**
-   * Handler for the `POST /pet/{petId}/uploadImage` operation.
-   */
-  uploadFile: typeof handleUploadFile;
 };
 
 export type CreateMswHandlersResult = {
@@ -896,24 +896,24 @@ export function createMswHandlers(config: RequestHandlerOptions = {}): CreateMsw
   }
   const pick: CreateMswHandlersResult['pick'] = {
     addPet: wrap(handleAddPet),
-    createUser: wrap(handleCreateUser),
-    createUsersWithListInput: wrap(handleCreateUsersWithListInput),
-    deleteOrder: wrap(handleDeleteOrder),
-    deletePet: wrap(handleDeletePet),
-    deleteUser: wrap(handleDeleteUser),
+    updatePet: wrap(handleUpdatePet),
     findPetsByStatus: wrap(handleFindPetsByStatus),
     findPetsByTags: wrap(handleFindPetsByTags),
-    getInventory: wrap(handleGetInventory),
-    getOrderById: wrap(handleGetOrderById),
+    deletePet: wrap(handleDeletePet),
     getPetById: wrap(handleGetPetById),
-    getUserByName: wrap(handleGetUserByName),
+    updatePetWithForm: wrap(handleUpdatePetWithForm),
+    uploadFile: wrap(handleUploadFile),
+    getInventory: wrap(handleGetInventory),
+    placeOrder: wrap(handlePlaceOrder),
+    deleteOrder: wrap(handleDeleteOrder),
+    getOrderById: wrap(handleGetOrderById),
+    createUser: wrap(handleCreateUser),
+    createUsersWithListInput: wrap(handleCreateUsersWithListInput),
     loginUser: wrap(handleLoginUser),
     logoutUser: wrap(handleLogoutUser),
-    placeOrder: wrap(handlePlaceOrder),
-    updatePet: wrap(handleUpdatePet),
-    updatePetWithForm: wrap(handleUpdatePetWithForm),
+    deleteUser: wrap(handleDeleteUser),
+    getUserByName: wrap(handleGetUserByName),
     updateUser: wrap(handleUpdateUser),
-    uploadFile: wrap(handleUploadFile),
   };
   const all: CreateMswHandlersResult['all'] = (options = {}) => {
     type OverrideValue<R> = R | [response?: R, options?: RequestHandlerOptions];

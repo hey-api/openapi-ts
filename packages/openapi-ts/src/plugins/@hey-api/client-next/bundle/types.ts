@@ -73,6 +73,7 @@ export interface ResolvedRequestOptions<
   ThrowOnError extends boolean = boolean,
   Url extends string = string,
 > extends RequestOptions<unknown, ThrowOnError, Url> {
+  headers: Headers;
   serializedBody?: string;
 }
 
