@@ -7,11 +7,11 @@ import { defineConfig } from 'tsdown';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
-  clean: true,
-  dts: true,
+  attw: {
+    ignoreRules: ['cjs-resolves-to-esm'],
+    profile: 'esm-only',
+  },
   entry: ['./src/{index,run}.ts'],
-  format: ['esm'],
-  minify: false,
   onSuccess: async () => {
     // Copy client files to dist folder for runtime access
     const pluginNames = ['client-httpx'];
@@ -37,6 +37,6 @@ export default defineConfig({
       }
     }
   },
+  publint: true,
   sourcemap: true,
-  treeshake: true,
 });

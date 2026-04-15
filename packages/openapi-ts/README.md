@@ -33,7 +33,7 @@ Part of the Hey API ecosystem.
 ## Features
 
 - production-ready code that compiles
-- runs in any Node.js 20+ environment
+- runs in any Node.js 22+ environment
 - accepts any OpenAPI specification
 - core plugins for SDKs, types, and schemas
 - HTTP clients for Fetch API, Angular, Axios, Next.js, Nuxt, and more
@@ -41,11 +41,17 @@ Part of the Hey API ecosystem.
 - highly customizable via plugins
 - [sync with Hey API Registry](https://heyapi.dev/openapi-ts/integrations) for spec management
 
+<!-- template-contributing-start -->
+
 ## Contributing
 
 Want to see your code in products used by millions?
 
 Start with our [Contributing](https://heyapi.dev/openapi-ts/community/contributing) guide and release your first feature.
+
+<!-- template-contributing-end -->
+
+<!-- template-sponsors-start -->
 
 ## Sponsors
 
@@ -153,6 +159,7 @@ Hey API is sponsor-funded. If you rely on Hey API in production, consider becomi
     </tr>
   </tbody>
 </table>
+<!-- template-sponsors-end -->
 
 ## Quick Start
 
@@ -171,7 +178,7 @@ You can download `@hey-api/openapi-ts` from npm using your favorite package mana
 #### npm
 
 ```sh
-npm install @hey-api/openapi-ts -D -E
+npm add @hey-api/openapi-ts -D -E
 ```
 
 #### pnpm
@@ -226,6 +233,56 @@ createClient({
   output: 'src/client',
 });
 ```
+
+### Vite
+
+If you're using [Vite](https://vite.dev), you can integrate `@hey-api/openapi-ts` directly into your build pipeline with `@hey-api/vite-plugin`. Install it alongside the main package:
+
+#### npm
+
+```sh
+npm add @hey-api/vite-plugin -D -E
+```
+
+#### pnpm
+
+```sh
+pnpm add @hey-api/vite-plugin -D -E
+```
+
+#### yarn
+
+```sh
+yarn add @hey-api/vite-plugin -D -E
+```
+
+#### bun
+
+```sh
+bun add @hey-api/vite-plugin -D -E
+```
+
+Then add the plugin to your Vite configuration:
+
+#### `vite.config.ts`
+
+```ts
+import { heyApiPlugin } from '@hey-api/vite-plugin';
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+  plugins: [
+    heyApiPlugin({
+      config: {
+        input: 'hey-api/backend', // sign up at app.heyapi.dev
+        output: 'src/client',
+      },
+    }),
+  ],
+});
+```
+
+See the [Vite](https://heyapi.dev/openapi-ts/configuration/vite) page for full configuration options.
 
 ## Configuration
 
@@ -358,6 +415,10 @@ Don't see your plugin? [Build your own](https://heyapi.dev/openapi-ts/plugins/cu
 
 You can learn more on the [Migrating](https://heyapi.dev/openapi-ts/migrating) page.
 
+<!-- template-license-start -->
+
 ## License
 
 Released under the [MIT License](https://github.com/hey-api/openapi-ts/blob/main/LICENSE.md).
+
+<!-- template-license-end -->

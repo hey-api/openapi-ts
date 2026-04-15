@@ -7,6 +7,12 @@ description: Migrating to @hey-api/openapi-ts.
 
 While we try to avoid breaking changes, sometimes it's unavoidable in order to offer you the latest features. This page lists changes that require updates to your code. If you run into a problem with migration, please [open an issue](https://github.com/hey-api/openapi-ts/issues).
 
+## v0.96.0
+
+### Removed Node 20 support
+
+This release bumps the minimum required Node version to 22.13.
+
 ## v0.95.0
 
 ### Validator request schemas
@@ -479,7 +485,7 @@ If you need to access individual fields, you can do so using the [`.shape`](http
 
 ### Bundle `@hey-api/client-*` plugins
 
-In previous releases, you had to install a separate client package to generate a fully working output, e.g., `npm install @hey-api/client-fetch`. This created a few challenges: getting started was slower, upgrading was sometimes painful, and bundling too. Beginning with v0.73.0, all Hey API clients are bundled by default and don't require installing any additional dependencies. You can remove any installed client packages and re-run `@hey-api/openapi-ts`.
+In previous releases, you had to install a separate client package to generate a fully working output, e.g., `npm add @hey-api/client-fetch`. This created a few challenges: getting started was slower, upgrading was sometimes painful, and bundling too. Beginning with v0.73.0, all Hey API clients are bundled by default and don't require installing any additional dependencies. You can remove any installed client packages and re-run `@hey-api/openapi-ts`.
 
 ```sh
 npm uninstall @hey-api/client-fetch

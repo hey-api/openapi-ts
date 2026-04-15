@@ -1,5 +1,11 @@
 # @hey-api/vite-plugin
 
+## 0.3.0
+
+### Minor Changes
+
+- **BREAKING**: This package is now ESM-only. ([#3688](https://github.com/hey-api/openapi-ts/pull/3688)) ([`d2198d5`](https://github.com/hey-api/openapi-ts/commit/d2198d538bbf0b0b805a3dfdc2acc7b3ebf9481c)) by [@renovate](https://github.com/apps/renovate)
+
 ## 0.2.1
 
 ### Patch Changes

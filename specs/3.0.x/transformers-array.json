@@ -27,9 +27,23 @@
                         },
                         "required": ["baz"]
                       }
+                    },
+                    "bar": {
+                      "type": "array",
+                      "items": {
+                        "type": "integer",
+                        "format": "int64"
+                      }
+                    },
+                    "baz": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "format": "date-time"
+                      }
                     }
                   },
-                  "required": ["foo"]
+                  "required": ["foo", "bar", "baz"]
                 }
               }
             }

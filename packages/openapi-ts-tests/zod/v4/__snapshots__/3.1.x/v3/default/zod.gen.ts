@@ -122,7 +122,7 @@ export const zEnumWithNumbers = z.union([
     z.literal(-1.1),
     z.literal(-1.2),
     z.literal(-1.3)
-]);
+]).default(200);
 
 /**
  * Success=1,Warning=2,Error=3
@@ -313,7 +313,7 @@ export const zModelWithEnum = z.object({
  * This is a model with one enum with escaped name
  */
 export const zModelWithEnumWithHyphen = z.object({
-    'foo-bar-baz-qux': z.enum(['3.0']).optional()
+    'foo-bar-baz-qux': z.enum(['3.0']).optional().default('3.0')
 });
 
 /**
@@ -1237,7 +1237,7 @@ export const zCallWithDefaultParametersQuery = z.object({
         'Success',
         'Warning',
         'Error'
-    ]).optional(),
+    ]).optional().default('Success'),
     parameterModel: zModelWithString.nullish()
 });
 
@@ -1249,7 +1249,7 @@ export const zCallWithDefaultOptionalParametersQuery = z.object({
         'Success',
         'Warning',
         'Error'
-    ]).optional(),
+    ]).optional().default('Success'),
     parameterModel: zModelWithString.optional().default({ prop: 'Hello World!' })
 });
 
@@ -1389,7 +1389,7 @@ export const zComplexParamsBody = z.object({
         'Monkey',
         'Horse',
         'Bird'
-    ]),
+    ]).readonly(),
     listOfModels: z.array(zModelWithString).nullish(),
     listOfStrings: z.array(z.string()).nullish(),
     parameters: z.union([

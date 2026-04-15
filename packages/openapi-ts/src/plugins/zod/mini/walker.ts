@@ -9,7 +9,7 @@ import { identifiers } from '../constants';
 import type { Chain } from '../shared/chain';
 import { defaultMeta, inheritMeta } from '../shared/meta';
 import type { ProcessorContext } from '../shared/processor';
-import type { ZodFinal, ZodResult } from '../shared/types';
+import type { ZodFinal, ZodMeta, ZodResult } from '../shared/types';
 import type { ZodPlugin } from '../types';
 import { arrayToAst } from './toAst/array';
 import { booleanToAst } from './toAst/boolean';
@@ -29,6 +29,10 @@ export interface VisitorConfig {
   schemaExtractor?: SchemaExtractor<ProcessorContext>;
 }
 
+function getDefaultValue(meta: ZodMeta): ReturnType<typeof $.fromValue> {
+  return meta.format ? maybeBigInt(meta.default, meta.format) : $.fromValue(meta.default);
+}
+
 export function createVisitor(
   config: VisitorConfig = {},
 ): SchemaVisitor<ZodResult, ZodPlugin['Instance']> {
@@ -44,7 +48,7 @@ export function createVisitor(
         expression = $(z).attr(identifiers.readonly).call(expression);
       }
 
-      const hasDefault = result.meta.default !== undefined;
+      const needsDefault = result.meta.default !== undefined;
       const needsNullable = result.meta.nullable;
 
       if (optional && needsNullable) {
@@ -55,15 +59,8 @@ export function createVisitor(
         expression = $(z).attr(identifiers.nullable).call(expression);
       }
 
-      if (hasDefault) {
-        expression = $(z)
-          .attr(identifiers._default)
-          .call(
-            expression,
-            result.meta.format
-              ? maybeBigInt(result.meta.default, result.meta.format)
-              : $.fromValue(result.meta.default),
-          );
+      if (needsDefault) {
+        expression = $(z).attr(identifiers._default).call(expression, getDefaultValue(result.meta));
       }
 
       return {

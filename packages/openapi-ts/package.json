@@ -1,6 +1,6 @@
 {
   "name": "@hey-api/openapi-ts",
-  "version": "0.95.0",
+  "version": "0.96.0",
   "description": "🌀 OpenAPI to TypeScript codegen. Production-ready SDKs, Zod schemas, TanStack Query hooks, and 20+ plugins. Used by Vercel, OpenCode, and PayPal.",
   "keywords": [
     "angular",
@@ -62,8 +62,7 @@
     "./package.json": "./package.json"
   },
   "scripts": {
-    "build": "tsdown && pnpm check-exports",
-    "check-exports": "attw --pack . --profile esm-only --ignore-rules cjs-resolves-to-esm",
+    "build": "tsdown",
     "dev": "tsdown --watch",
     "prepublishOnly": "pnpm build",
     "typecheck": "tsgo --noEmit"
@@ -77,31 +76,31 @@
     "ansi-colors": "4.1.3",
     "color-support": "1.1.3",
     "commander": "14.0.3",
-    "get-tsconfig": "4.13.6"
+    "get-tsconfig": "4.13.7"
   },
   "devDependencies": {
-    "@angular/common": "21.1.2",
-    "@angular/compiler": "21.1.2",
-    "@angular/compiler-cli": "21.1.2",
-    "@angular/core": "21.1.2",
-    "@angular/platform-browser": "21.1.2",
-    "@angular/platform-browser-dynamic": "21.1.2",
-    "@angular/router": "21.1.2",
+    "@angular/common": "21.2.7",
+    "@angular/compiler": "21.2.7",
+    "@angular/compiler-cli": "21.2.7",
+    "@angular/core": "21.2.7",
+    "@angular/platform-browser": "21.2.7",
+    "@angular/platform-browser-dynamic": "21.2.7",
+    "@angular/router": "21.2.7",
     "axios": "1.13.4",
     "eslint": "9.39.2",
     "ky": "1.14.3",
     "nuxt": "3.14.1592",
     "ofetch": "1.5.1",
     "rxjs": "7.8.2",
-    "typescript": "5.9.3",
+    "typescript": "6.0.2",
     "vue": "3.5.25",
-    "yaml": "2.8.2",
+    "yaml": "2.8.3",
     "zone.js": "0.16.0"
   },
   "peerDependencies": {
     "typescript": ">=5.5.3 || >=6.0.0 || 6.0.1-rc"
   },
   "engines": {
-    "node": ">=20.19.0"
+    "node": ">=22.13.0"
   }
 }

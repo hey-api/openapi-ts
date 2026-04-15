@@ -1,8 +1,6 @@
 import type { AnyString } from '@hey-api/types';
 
-import type { EnumExtensions } from '../../extensions/openapi';
-
-export interface Document extends EnumExtensions {
+export interface Document {
   /**
    * A schema can reference another schema using the `$ref` keyword. The value of `$ref` is a URI-reference that is resolved against the schema's {@link https://json-schema.org/understanding-json-schema/structuring#base-uri Base URI}. When evaluating a `$ref`, an implementation uses the resolved identifier to retrieve the referenced schema and applies that schema to the {@link https://json-schema.org/learn/glossary#instance instance}.
    *
@@ -22,7 +20,7 @@ export interface Document extends EnumExtensions {
    *
    * You can use `enum` even without a type, to accept values of different types.
    */
-  enum?: ReadonlyArray<unknown>;
+  enum?: Array<unknown>;
   /**
    * Ranges of numbers are specified using a combination of the `minimum` and `maximum` keywords, (or `exclusiveMinimum` and `exclusiveMaximum` for expressing exclusive range).
    *
@@ -128,7 +126,7 @@ export interface Document extends EnumExtensions {
    *
    * The `required` keyword takes an array of zero or more strings. Each of these strings must be unique.
    */
-  required?: ReadonlyArray<string>;
+  required?: Array<string>;
   /**
    * The `title` and `description` keywords must be strings. A "title" will preferably be short, whereas a "description" will provide a more lengthy explanation about the purpose of the data described by the schema.
    */
