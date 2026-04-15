@@ -2,7 +2,7 @@ import type { AnyPluginName, PluginContext, PluginNames } from '@hey-api/shared'
 import {
   dependencyFactory,
   valueToObject,
-  warnDuplicatePlugins,
+  warnOnConflictingDuplicatePlugins,
 } from '@hey-api/shared';
 
 import { defaultPluginConfigs } from '../plugins/config';
@@ -150,7 +150,7 @@ export function getPlugins({
     }
   }
 
-  warnDuplicatePlugins(definedPlugins as ReadonlyArray<never>);
+  warnOnConflictingDuplicatePlugins(definedPlugins);
 
   const userPlugins = definedPlugins
     .map((plugin) => {
