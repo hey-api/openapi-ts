@@ -1,54 +1,64 @@
 import { log } from '@hey-api/codegen-core';
 
-type PluginEntry = string | ({ name: string } & Record<string, unknown>);
+import type { PluginNames } from './types';
 
-const stableStringify = (value: unknown): string =>
-  JSON.stringify(value, (_, v) => {
+type PluginConfig = {
+  name: PluginNames;
+};
+
+type PluginDefinition<TConfig extends PluginConfig = PluginConfig> = PluginNames | TConfig;
+
+function stableStringify(value: unknown): string {
+  return JSON.stringify(value, (_, v) => {
     if (typeof v === 'function') {
       return `[function:${(v as () => unknown).toString()}]`;
     }
     if (v && typeof v === 'object' && !Array.isArray(v)) {
       return Object.fromEntries(
-        Object.entries(v as Record<string, unknown>).sort(([a], [b]) =>
-          a.localeCompare(b),
-        ),
+        Object.entries(v as Record<string, unknown>).sort(([a], [b]) => a.localeCompare(b)),
       );
     }
     return v;
   });
+}
 
-export const warnDuplicatePlugins = (
-  plugins: ReadonlyArray<PluginEntry>,
-): void => {
+function normalizePluginEntry<TConfig extends PluginConfig>(
+  plugin: PluginDefinition<TConfig>,
+): {
+  name: PluginNames;
+  serialized: string;
+} {
+  if (typeof plugin === 'string') {
+    return {
+      name: plugin,
+      serialized: '{}',
+    };
+  }
+
+  const { name, ...config } = plugin;
+
+  return {
+    name,
+    serialized: stableStringify(config),
+  };
+}
+
+export function warnOnConflictingDuplicatePlugins<TConfig extends PluginConfig>(
+  plugins: ReadonlyArray<PluginDefinition<TConfig>>,
+): void {
   const seen = new Map<string, string>();
 
   for (const plugin of plugins) {
-    if (typeof plugin === 'string') {
-      const previous = seen.get(plugin);
-      if (previous !== undefined && previous !== '{}') {
-        log.warn(
-          `Plugin "${plugin}" is configured more than once with conflicting options. Only the last occurrence will take effect.`,
-        );
-      }
-      seen.set(plugin, '{}');
-      continue;
-    }
-
-    const name = plugin.name;
+    const { name, serialized } = normalizePluginEntry(plugin);
     if (!name) continue;
 
-    const config = Object.fromEntries(
-      Object.entries(plugin as Record<string, unknown>).filter(
-        ([key]) => key !== 'name',
-      ),
-    );
-    const serialized = stableStringify(config);
     const previous = seen.get(name);
     if (previous !== undefined && previous !== serialized) {
       log.warn(
-        `Plugin "${name}" is configured more than once with conflicting options. Only the last occurrence will take effect.`,
+        `Plugin "${name}" is configured multiple times. Only the last instance will take effect.`,
       );
     }
+
     seen.set(name, serialized);
   }
-};
+}

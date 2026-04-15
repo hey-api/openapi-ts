@@ -1,5 +1,6 @@
 ---
 "@hey-api/openapi-ts": patch
+"@hey-api/shared": patch
 ---
 
-Warn when the same plugin is specified multiple times in the plugins array
+**config**: warn on duplicated plugin configurations
