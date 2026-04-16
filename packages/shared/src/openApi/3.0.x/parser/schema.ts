@@ -848,6 +848,10 @@ function parseAnyOf({
     }
   }
 
+  if (schema.discriminator && irSchema.logicalOperator === 'or') {
+    irSchema.discriminator = { propertyName: schema.discriminator.propertyName };
+  }
+
   return irSchema;
 }
 
@@ -1028,6 +1032,10 @@ function parseOneOf({
         logicalOperator: 'and',
       };
     }
+  }
+
+  if (schema.discriminator && irSchema.logicalOperator === 'or') {
+    irSchema.discriminator = { propertyName: schema.discriminator.propertyName };
   }
 
   return irSchema;

@@ -8,68 +8,28 @@ import type { Chain } from './chain';
 import type { ZodResult } from './types';
 
 /**
- * Returns the discriminator key if all non-null items in the union follow the
- * pattern produced by the OpenAPI discriminator parser:
- *   `{ logicalOperator: 'and', items: [discrimObj, ref] }`
- * where `discrimObj` is an object with exactly one const-valued property.
- *
- * Returns `null` when the pattern is not recognised.
- */
-function detectDiscriminatorKey(schemas: ReadonlyArray<IR.SchemaObject>): string | null {
-  let key: string | undefined;
-
-  for (const schema of schemas) {
-    if (schema.type === 'null' || schema.const === null) {
-      continue;
-    }
-
-    if (schema.logicalOperator !== 'and' || !schema.items || schema.items.length !== 2) {
-      return null;
-    }
-
-    const discrimPart = schema.items[0]!;
-
-    if (discrimPart.type !== 'object' || !discrimPart.properties) {
-      return null;
-    }
-
-    const props = Object.entries(discrimPart.properties);
-    if (props.length !== 1 || props[0]![1].const === undefined) {
-      return null;
-    }
-
-    const propKey = props[0]![0];
-
-    if (key === undefined) {
-      key = propKey;
-    } else if (key !== propKey) {
-      // All items must share the same discriminator key
-      return null;
-    }
-  }
-
-  return key ?? null;
-}
-
-/**
- * Attempts to build a `z.discriminatedUnion()` expression when all non-null
- * union items follow the discriminator intersection pattern
- * `{ discrimObject, ref }` produced by the OpenAPI discriminator parser.
+ * Attempts to build a `z.discriminatedUnion()` expression when the parent
+ * schema carries a `discriminator` set by the IR parser. Each non-null union
+ * item is expected to follow the pattern
+ * `{ logicalOperator: 'and', items: [discrimObj, ref] }`
+ * produced by the OpenAPI discriminator parser.
  *
  * Returns the expression on success, or `null` to fall back to `z.union()`.
  */
 export function tryBuildDiscriminatedUnion({
   ctx,
   items,
+  parentSchema,
   schemas,
   z,
 }: {
   ctx: SchemaVisitorContext<ZodPlugin['Instance']>;
   items: ReadonlyArray<ZodResult>;
+  parentSchema: IR.SchemaObject;
   schemas: ReadonlyArray<IR.SchemaObject>;
   z: ReturnType<typeof ctx.plugin.external>;
 }): Chain | null {
-  const discriminatorKey = detectDiscriminatorKey(schemas);
+  const discriminatorKey = parentSchema.discriminator?.propertyName;
   if (!discriminatorKey) {
     return null;
   }
@@ -83,8 +43,16 @@ export function tryBuildDiscriminatedUnion({
       continue;
     }
 
-    const refPart = schema.items![1]!;
-    const discrimValue = schema.items![0]!.properties![discriminatorKey]!.const;
+    if (schema.logicalOperator !== 'and' || !schema.items || schema.items.length !== 2) {
+      return null;
+    }
+
+    const refPart = schema.items[1]!;
+    const discrimValue = schema.items[0]!.properties?.[discriminatorKey]?.const;
+
+    if (discrimValue === undefined) {
+      return null;
+    }
 
     // Lazy references can't be used in a discriminated union directly
     if (items[i]!.meta.hasLazy) {
