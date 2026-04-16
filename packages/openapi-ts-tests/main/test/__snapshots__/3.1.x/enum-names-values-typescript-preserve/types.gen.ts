@@ -41,3 +41,27 @@ export type Arrays = [
 export type MyFooRef = {
     foo?: Array<MyFoo2>;
 };
+
+/**
+ * An enum with x-enum-descriptions
+ */
+export enum EnumWithDescriptions {
+    /**
+     * Success
+     *
+     * Some description
+     */
+    Success = 'S',
+    /**
+     * Warning
+     *
+     * A comment here
+     */
+    Warning = 'Z',
+    /**
+     * Error
+     *
+     * A comment there
+     */
+    Error = 'E'
+}

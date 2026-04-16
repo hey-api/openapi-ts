@@ -48,3 +48,32 @@ export type Arrays = typeof Arrays[keyof typeof Arrays];
 export type MyFooRef = {
     foo?: Array<MyFoo2>;
 };
+
+/**
+ * An enum with x-enum-descriptions
+ */
+export const EnumWithDescriptions = {
+    /**
+     * Success
+     *
+     * Some description
+     */
+    Success: 'S',
+    /**
+     * Warning
+     *
+     * A comment here
+     */
+    Warning: 'Z',
+    /**
+     * Error
+     *
+     * A comment there
+     */
+    Error: 'E'
+} as const;
+
+/**
+ * An enum with x-enum-descriptions
+ */
+export type EnumWithDescriptions = typeof EnumWithDescriptions[keyof typeof EnumWithDescriptions];

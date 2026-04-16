@@ -37,3 +37,27 @@ export type Arrays = [
 ] | [
     'baz'
 ];
+
+/**
+ * An enum with x-enum-descriptions
+ */
+export const enum EnumWithDescriptions {
+    /**
+     * Success
+     *
+     * Some description
+     */
+    success = 'S',
+    /**
+     * Warning
+     *
+     * A comment here
+     */
+    warning = 'Z',
+    /**
+     * Error
+     *
+     * A comment there
+     */
+    error = 'E'
+}

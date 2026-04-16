@@ -1,6 +1,8 @@
 import type { SchemaWithType } from '@hey-api/shared';
 
 import { $ } from '../../../../../ts-dsl';
+import { TypeLiteralTsDsl } from '../../../../../ts-dsl/type/literal';
+import { createSchemaComment } from '../../../../shared/utils/schema';
 import type { EnumResolverContext } from '../../resolvers';
 import type { Type } from '../../shared/types';
 import type { TypeScriptEnumData } from '../../shared/types';
@@ -60,7 +62,7 @@ function itemsNode(ctx: EnumResolverContext): ReturnType<EnumResolverContext['no
 }
 
 function baseNode(ctx: EnumResolverContext): Type {
-  const { schema } = ctx;
+  const { plugin, schema } = ctx;
   const items = schema.items ?? [];
 
   if (!items.length) {
@@ -69,7 +71,16 @@ function baseNode(ctx: EnumResolverContext): Type {
 
   const literalTypes = items
     .filter((item) => item.const !== undefined)
-    .map((item) => $.type.fromValue(item.const));
+    .map((item) => {
+      const type = $.type.fromValue(item.const);
+      if (plugin.config.comments && type instanceof TypeLiteralTsDsl) {
+        const comment = createSchemaComment(item);
+        if (comment) {
+          type.doc(comment);
+        }
+      }
+      return type;
+    });
   return literalTypes.length ? $.type.or(...literalTypes) : $.type('string');
 }
 

@@ -578,6 +578,53 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'enum-names-values.yaml',
+        output: 'enum-names-values-descriptions',
+        plugins: [
+          {
+            comments: true,
+            name: '@hey-api/typescript',
+          },
+        ],
+      }),
+      description: 'emits per-member JSDoc comments for x-enum-descriptions (type union)',
+    },
+    {
+      config: createConfig({
+        input: 'enum-names-values.yaml',
+        output: 'enum-names-values-descriptions-javascript',
+        plugins: [
+          {
+            comments: true,
+            enums: {
+              case: 'SCREAMING_SNAKE_CASE',
+              mode: 'javascript',
+            },
+            name: '@hey-api/typescript',
+          },
+        ],
+      }),
+      description: 'emits per-member JSDoc comments for x-enum-descriptions (JavaScript object)',
+    },
+    {
+      config: createConfig({
+        input: 'enum-names-values.yaml',
+        output: 'enum-names-values-descriptions-typescript',
+        plugins: [
+          {
+            comments: true,
+            enums: {
+              case: 'SCREAMING_SNAKE_CASE',
+              mode: 'typescript',
+            },
+            name: '@hey-api/typescript',
+          },
+        ],
+      }),
+      description: 'emits per-member JSDoc comments for x-enum-descriptions (TypeScript enum)',
+    },
+    {
+      config: createConfig({
         input: 'union-types.json',
         output: 'union-types',
       }),

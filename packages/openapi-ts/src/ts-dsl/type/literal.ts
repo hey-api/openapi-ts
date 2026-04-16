@@ -4,8 +4,9 @@ import tsOld from 'typescript';
 import type { ts } from '../../ts-compiler';
 import { TsDsl } from '../base';
 import { LiteralTsDsl } from '../expr/literal';
+import { DocMixin } from '../mixins/doc';
 
-const Mixed = TsDsl<tsOld.LiteralTypeNode>;
+const Mixed = DocMixin(TsDsl<tsOld.LiteralTypeNode>);
 
 export class TypeLiteralTsDsl extends Mixed {
   readonly '~dsl' = 'TypeLiteralTsDsl';
@@ -23,6 +24,8 @@ export class TypeLiteralTsDsl extends Mixed {
   }
 
   override toAst() {
-    return tsOld.factory.createLiteralTypeNode(this.$node(new LiteralTsDsl(this.value)));
+    return this.$docs(
+      tsOld.factory.createLiteralTypeNode(this.$node(new LiteralTsDsl(this.value))),
+    );
   }
 }

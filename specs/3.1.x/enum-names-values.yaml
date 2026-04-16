@@ -52,3 +52,18 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/MyFoo'
+    EnumWithDescriptions:
+      description: An enum with x-enum-descriptions
+      enum:
+        - S
+        - Z
+        - E
+      type: string
+      x-enum-descriptions:
+        - Some description
+        - A comment here
+        - A comment there
+      x-enum-varnames:
+        - Success
+        - Warning
+        - Error
