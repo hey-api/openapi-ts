@@ -77,7 +77,10 @@ export const buildResourceMetadata = (
           if (namespace === 'unknown') {
             console.warn(`unsupported type: ${type}`);
           }
-          dependencies.add(addNamespace(namespace, name));
+          // Decode URI components to handle cases where $ref values were
+          // URL-encoded by the JSON schema ref-parser (e.g. angle brackets
+          // in generic schema names like Foo<Bar> become Foo%3CBar%3E).
+          dependencies.add(addNamespace(namespace, decodeURI(name)));
         }
       }
     }
