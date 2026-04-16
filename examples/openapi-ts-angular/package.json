@@ -14,28 +14,28 @@
     "watch": "ng build --watch --configuration development"
   },
   "dependencies": {
-    "@angular/common": "21.1.2",
-    "@angular/compiler": "21.1.2",
-    "@angular/core": "21.1.2",
-    "@angular/forms": "21.1.2",
-    "@angular/platform-browser": "21.1.2",
-    "@angular/platform-browser-dynamic": "21.1.2",
-    "@angular/platform-server": "21.1.2",
-    "@angular/router": "21.1.2",
-    "@angular/ssr": "21.1.2",
+    "@angular/common": "21.2.7",
+    "@angular/compiler": "21.2.7",
+    "@angular/core": "21.2.7",
+    "@angular/forms": "21.2.7",
+    "@angular/platform-browser": "21.2.7",
+    "@angular/platform-browser-dynamic": "21.2.7",
+    "@angular/platform-server": "21.2.7",
+    "@angular/router": "21.2.7",
+    "@angular/ssr": "21.2.6",
     "express": "4.21.0",
     "rxjs": "7.8.2",
     "tslib": "2.8.1",
     "zone.js": "0.16.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "21.1.2",
-    "@angular/cli": "21.1.2",
-    "@angular/compiler-cli": "21.1.2",
+    "@angular-devkit/build-angular": "21.2.6",
+    "@angular/cli": "21.2.6",
+    "@angular/compiler-cli": "21.2.7",
     "@hey-api/openapi-ts": "workspace:*",
     "@types/express": "4.17.21",
     "@types/jasmine": "6.0.0",
-    "@types/node": "24.12.0",
+    "@types/node": "24.12.2",
     "@typescript-eslint/eslint-plugin": "8.29.1",
     "@typescript-eslint/parser": "8.29.1",
     "eslint": "9.39.2",
@@ -45,6 +45,6 @@
     "karma-coverage": "2.2.1",
     "karma-jasmine": "5.1.0",
     "karma-jasmine-html-reporter": "2.1.0",
-    "typescript": "5.9.3"
+    "typescript": "6.0.2"
   }
 }

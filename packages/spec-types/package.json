@@ -1,17 +1,29 @@
 {
   "name": "@hey-api/spec-types",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "📃 TypeScript definitions for OpenAPI and JSON Schema specifications with complete inline documentation.",
   "keywords": [
+    "api-types",
     "definitions",
     "documentation",
+    "intellisense",
+    "jsdoc",
     "json",
+    "json-schema",
+    "json-schema-draft-2020-12",
+    "json-schema-draft-4",
     "jsonschema",
     "openapi",
+    "openapi-2.0",
+    "openapi-3.0",
+    "openapi-3.1",
+    "openapi-types",
     "schema",
     "spec",
     "specification",
     "swagger",
+    "swagger-2.0",
+    "type-definitions",
     "types",
     "typescript"
   ],
@@ -54,6 +66,6 @@
     "@hey-api/types": "workspace:*"
   },
   "devDependencies": {
-    "typescript": "5.9.3"
+    "typescript": "6.0.2"
   }
 }

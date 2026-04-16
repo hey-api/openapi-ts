@@ -13,7 +13,7 @@ export const bigIntExpressions: ExpressionTransformer = ({ dataExpression, schem
 
   if (bigIntCallExpression) {
     if (typeof dataExpression === 'string') {
-      return [bigIntCallExpression];
+      return [$.return(bigIntCallExpression)];
     }
 
     if (dataExpression) {
@@ -30,7 +30,7 @@ export const dateExpressions: ExpressionTransformer = ({ dataExpression, schema 
   }
 
   if (typeof dataExpression === 'string') {
-    return [$.new('Date').arg(dataExpression)];
+    return [$.return($.new('Date').arg(dataExpression))];
   }
 
   if (dataExpression) {

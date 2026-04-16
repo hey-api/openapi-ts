@@ -51,15 +51,15 @@ export function createVisitor(
         pipes.push($(v).attr(identifiers.actions.readonly).call());
       }
 
-      const hasDefault = result.meta.default !== undefined;
-      const needsOptional = optional || hasDefault;
+      const needsDefault = result.meta.default !== undefined;
+      const needsOptional = optional || needsDefault;
       const needsNullable = result.meta.nullable;
       const innerNode = pipesToNode(pipes, ctx.plugin);
 
       let finalPipes: Pipes;
 
       if (needsOptional && needsNullable) {
-        if (hasDefault) {
+        if (needsDefault) {
           finalPipes = [
             $(v).attr(identifiers.schemas.nullish).call(innerNode, getDefaultValue(result.meta)),
           ];
@@ -67,7 +67,7 @@ export function createVisitor(
           finalPipes = [$(v).attr(identifiers.schemas.nullish).call(innerNode)];
         }
       } else if (needsOptional) {
-        if (hasDefault) {
+        if (needsDefault) {
           finalPipes = [
             $(v).attr(identifiers.schemas.optional).call(innerNode, getDefaultValue(result.meta)),
           ];

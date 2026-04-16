@@ -41,11 +41,17 @@ Part of the Hey API ecosystem.
 - highly customizable via plugins
 - [sync with Hey API Registry](https://heyapi.dev/openapi-ts/integrations) for spec management
 
+<!-- template-contributing-start -->
+
 ## Contributing
 
 Want to see your code in products used by millions?
 
 Start with our [Contributing](https://heyapi.dev/openapi-ts/community/contributing) guide and release your first feature.
+
+<!-- template-contributing-end -->
+
+<!-- template-sponsors-start -->
 
 ## Sponsors
 
@@ -153,6 +159,7 @@ Hey API is sponsor-funded. If you rely on Hey API in production, consider becomi
     </tr>
   </tbody>
 </table>
+<!-- template-sponsors-end -->
 
 ## Quick Start
 
@@ -408,6 +415,10 @@ Don't see your plugin? [Build your own](https://heyapi.dev/openapi-ts/plugins/cu
 
 You can learn more on the [Migrating](https://heyapi.dev/openapi-ts/migrating) page.
 
+<!-- template-license-start -->
+
 ## License
 
 Released under the [MIT License](https://github.com/hey-api/openapi-ts/blob/main/LICENSE.md).
+
+<!-- template-license-end -->

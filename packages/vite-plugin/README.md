@@ -32,14 +32,20 @@ Part of the Hey API ecosystem.
 
 - runs automatically as part of your Vite build
 - reads your existing configuration (or accepts inline config)
-- works with any Vite-based project
+- supports Vite 5, 6, 7, and 8
 - [sync with Hey API Registry](https://heyapi.dev/openapi-ts/integrations) for spec management
+
+<!-- template-contributing-start -->
 
 ## Contributing
 
 Want to see your code in products used by millions?
 
 Start with our [Contributing](https://heyapi.dev/openapi-ts/community/contributing) guide and release your first feature.
+
+<!-- template-contributing-end -->
+
+<!-- template-sponsors-start -->
 
 ## Sponsors
 
@@ -147,6 +153,7 @@ Hey API is sponsor-funded. If you rely on Hey API in production, consider becomi
     </tr>
   </tbody>
 </table>
+<!-- template-sponsors-end -->
 
 ## Installation
 
@@ -207,6 +214,10 @@ export default defineConfig({
 });
 ```
 
+<!-- template-license-start -->
+
 ## License
 
 Released under the [MIT License](https://github.com/hey-api/openapi-ts/blob/main/LICENSE.md).
+
+<!-- template-license-end -->
