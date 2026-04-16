@@ -8,6 +8,47 @@ import type { CompositeHandlerResult, ValibotFinal, ValibotResult } from '../../
 import type { ValibotPlugin } from '../../types';
 import { identifiers } from '../constants';
 
+/**
+ * Returns the discriminator key if all non-null items follow the pattern
+ * produced by the OpenAPI discriminator parser:
+ *   `{ logicalOperator: 'and', items: [discrimObj, ref] }`
+ * where `discrimObj` is an object with exactly one const-valued property.
+ */
+function detectDiscriminatorKey(schemas: ReadonlyArray<IR.SchemaObject>): string | null {
+  let key: string | undefined;
+
+  for (const schema of schemas) {
+    if (schema.type === 'null' || schema.const === null) {
+      continue;
+    }
+
+    if (schema.logicalOperator !== 'and' || !schema.items || schema.items.length !== 2) {
+      return null;
+    }
+
+    const discrimPart = schema.items[0]!;
+
+    if (discrimPart.type !== 'object' || !discrimPart.properties) {
+      return null;
+    }
+
+    const props = Object.entries(discrimPart.properties);
+    if (props.length !== 1 || props[0]![1].const === undefined) {
+      return null;
+    }
+
+    const propKey = props[0]![0];
+
+    if (key === undefined) {
+      key = propKey;
+    } else if (key !== propKey) {
+      return null;
+    }
+  }
+
+  return key ?? null;
+}
+
 function baseNode(ctx: UnionResolverContext): PipeResult {
   const { childResults, plugin, schemas, symbols } = ctx;
   const { v } = symbols;
@@ -26,6 +67,14 @@ function baseNode(ctx: UnionResolverContext): PipeResult {
 
   if (nonNullItems.length === 1) {
     return nonNullItems[0]!.pipes;
+  }
+
+  const discriminatorKey = detectDiscriminatorKey(schemas);
+  if (discriminatorKey) {
+    const itemNodes = nonNullItems.map((i) => pipesToNode(i.pipes, plugin));
+    return $(v)
+      .attr(identifiers.schemas.variant)
+      .call($.literal(discriminatorKey), $.array(...itemNodes));
   }
 
   const itemNodes = nonNullItems.map((i) => pipesToNode(i.pipes, plugin));

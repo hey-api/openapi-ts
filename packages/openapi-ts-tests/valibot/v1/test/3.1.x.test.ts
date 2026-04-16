@@ -132,6 +132,27 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'discriminator-all-of.yaml',
+        output: 'discriminator-all-of',
+      }),
+      description: 'generates discriminated union for oneOf with discriminator mapping',
+    },
+    {
+      config: createConfig({
+        input: 'discriminator-any-of.yaml',
+        output: 'discriminator-any-of',
+      }),
+      description: 'generates discriminated union for anyOf with discriminator mapping',
+    },
+    {
+      config: createConfig({
+        input: 'discriminator-one-of.yaml',
+        output: 'discriminator-one-of',
+      }),
+      description: 'generates discriminated union for oneOf discriminator mapping',
+    },
+    {
+      config: createConfig({
         input: 'time-format.yaml',
         output: 'time-format',
       }),

@@ -351,7 +351,6 @@ export function createVisitor(
         const discriminatedExpression = tryBuildDiscriminatedUnion({
           ctx,
           items,
-          parentSchema,
           schemas,
           z,
         });
