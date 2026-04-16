@@ -771,6 +771,10 @@ function parseAnyOf({
 }): IR.SchemaObject {
   let irSchema = initIrSchema({ schema });
 
+  if (schema.discriminator) {
+    irSchema.discriminator = { propertyName: schema.discriminator.propertyName };
+  }
+
   const schemaItems: Array<IR.SchemaObject> = [];
   const schemaType = getSchemaType({ schema });
 
@@ -940,6 +944,10 @@ function parseOneOf({
   state: SchemaState;
 }): IR.SchemaObject {
   let irSchema = initIrSchema({ schema });
+
+  if (schema.discriminator) {
+    irSchema.discriminator = { propertyName: schema.discriminator.propertyName };
+  }
 
   let schemaItems: Array<IR.SchemaObject> = [];
   const schemaType = getSchemaType({ schema });
