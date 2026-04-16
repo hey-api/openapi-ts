@@ -29,19 +29,13 @@ export type MyFooRef = {
 /**
  * An enum with x-enum-descriptions
  */
-export type EnumWithDescriptions = /**
- * Success
- *
- * Some description
- */
-'S' | /**
- * Warning
- *
- * A comment here
- */
-'Z' | /**
- * Error
- *
- * A comment there
- */
+export type EnumWithDescriptions = 
+// Success
+// Some description
+'S' | 
+// Warning
+// A comment here
+'Z' | 
+// Error
+// A comment there
 'E';

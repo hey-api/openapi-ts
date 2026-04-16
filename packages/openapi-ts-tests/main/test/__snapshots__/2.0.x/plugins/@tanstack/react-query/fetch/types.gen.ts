@@ -96,21 +96,15 @@ export type EnumFromDescription = number;
 /**
  * This is a simple enum with numbers
  */
-export type EnumWithExtensions = /**
- * CUSTOM_SUCCESS
- *
- * Used when the status of something is successful
- */
-200 | /**
- * CUSTOM_WARNING
- *
- * Used when the status of something has a warning
- */
-400 | /**
- * CUSTOM_ERROR
- *
- * Used when the status of something has an error
- */
+export type EnumWithExtensions = 
+// CUSTOM_SUCCESS
+// Used when the status of something is successful
+200 | 
+// CUSTOM_WARNING
+// Used when the status of something has a warning
+400 | 
+// CUSTOM_ERROR
+// Used when the status of something has an error
 500;
 
 /**

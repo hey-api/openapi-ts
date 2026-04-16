@@ -76,7 +76,7 @@ function baseNode(ctx: EnumResolverContext): Type {
       if (plugin.config.comments && type instanceof TypeLiteralTsDsl) {
         const comment = createSchemaComment(item);
         if (comment) {
-          type.doc(comment);
+          type.hint(comment.filter(Boolean));
         }
       }
       return type;
