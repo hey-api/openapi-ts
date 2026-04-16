@@ -7,6 +7,7 @@ import { $ } from '../../../ts-dsl';
 import { maybeBigInt, shouldCoerceToBigInt } from '../../shared/utils/coerce';
 import { identifiers } from '../constants';
 import type { Chain } from '../shared/chain';
+import { tryBuildDiscriminatedUnion } from '../shared/discriminated-union';
 import { defaultMeta, inheritMeta } from '../shared/meta';
 import type { ProcessorContext } from '../shared/processor';
 import type { ZodFinal, ZodMeta, ZodResult } from '../shared/types';
@@ -347,13 +348,22 @@ export function createVisitor(
       } else if (nonNullItems.length === 1) {
         expression = nonNullItems[0]!.expression;
       } else {
-        expression = $(z)
-          .attr(identifiers.union)
-          .call(
-            $.array()
-              .pretty()
-              .elements(...nonNullItems.map((item) => item.expression)),
-          );
+        const discriminatedExpression = tryBuildDiscriminatedUnion({
+          ctx,
+          items,
+          parentSchema,
+          schemas,
+          z,
+        });
+        expression =
+          discriminatedExpression ??
+          $(z)
+            .attr(identifiers.union)
+            .call(
+              $.array()
+                .pretty()
+                .elements(...nonNullItems.map((item) => item.expression)),
+            );
       }
 
       return {

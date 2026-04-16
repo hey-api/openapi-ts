@@ -146,6 +146,14 @@ export interface IRSchemaObject
    */
   additionalProperties?: IRSchemaObject | false;
   /**
+   * When present, indicates this schema uses a discriminator for polymorphism.
+   * Used by code generators to produce optimized discriminated union output
+   * (e.g. `z.discriminatedUnion()`).
+   */
+  discriminator?: {
+    propertyName: string;
+  };
+  /**
    * Any string value is accepted as `format`.
    */
   format?: JSONSchemaDraft2020_12.Document['format'] | 'binary' | 'integer';
