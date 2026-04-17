@@ -2,6 +2,7 @@ import type { IR } from '@hey-api/shared';
 
 import { $ } from '../../../../ts-dsl';
 import type { UnionResolverContext } from '../../resolvers';
+import { hasIntersectionDiscriminatorBranches } from '../../shared/discriminated-union';
 import type { PipeResult, Pipes } from '../../shared/pipes';
 import { pipes, pipesToNode } from '../../shared/pipes';
 import type { CompositeHandlerResult, ValibotFinal, ValibotResult } from '../../shared/types';
@@ -9,7 +10,7 @@ import type { ValibotPlugin } from '../../types';
 import { identifiers } from '../constants';
 
 function baseNode(ctx: UnionResolverContext): PipeResult {
-  const { childResults, plugin, schemas, symbols } = ctx;
+  const { childResults, parentSchema, plugin, schemas, symbols } = ctx;
   const { v } = symbols;
 
   const nonNullItems: Array<ValibotResult> = [];
@@ -29,6 +30,19 @@ function baseNode(ctx: UnionResolverContext): PipeResult {
   }
 
   const itemNodes = nonNullItems.map((i) => pipesToNode(i.pipes, plugin));
+  const hasIntersectionBranch = hasIntersectionDiscriminatorBranches({
+    items: childResults,
+    parentSchema,
+    schemas,
+  });
+
+  const discriminatorKey = parentSchema.discriminator?.propertyName;
+  if (discriminatorKey && !hasIntersectionBranch) {
+    return $(v)
+      .attr(identifiers.schemas.variant)
+      .call($.literal(discriminatorKey), $.array(...itemNodes));
+  }
+
   return $(v)
     .attr(identifiers.schemas.union)
     .call($.array(...itemNodes));

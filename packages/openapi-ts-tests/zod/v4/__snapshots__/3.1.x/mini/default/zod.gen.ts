@@ -423,13 +423,9 @@ export const zModelSquare = z.object({
 /**
  * This is a model with one property with a 'one of' relationship where the options are not $ref
  */
-export const zCompositionWithOneOfDiscriminator = z.union([
-    z.intersection(z.object({
-        kind: z.literal('circle')
-    }), zModelCircle),
-    z.intersection(z.object({
-        kind: z.literal('square')
-    }), zModelSquare)
+export const zCompositionWithOneOfDiscriminator = z.discriminatedUnion('kind', [
+    z.extend(zModelCircle, { kind: z.literal('circle') }),
+    z.extend(zModelSquare, { kind: z.literal('square') })
 ]);
 
 /**
