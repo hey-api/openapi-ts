@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -10,6 +11,10 @@ const __dirname = path.dirname(__filename);
 
 const getSnapshotsPath = () => path.join(__dirname, '__snapshots__');
 const getTempSnapshotsPath = () => path.join(__dirname, '.gen', 'snapshots');
+
+const writeJsonFile = (filePath: string, value: unknown) => {
+  fs.writeFileSync(filePath, JSON.stringify(value, null, 2));
+};
 
 /**
  * Helper function to compare a bundled schema with a snapshot file.
@@ -44,6 +49,176 @@ describe('bundle', () => {
     const schema = await refParser.bundle({ pathOrUrlOrSchema });
 
     await expectBundledSchemaToMatchSnapshot(schema, 'circular-ref-with-description.json');
+  });
+
+  it('emits decoded internal refs for generic component names', async () => {
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'json-schema-ref-parser-'));
+
+    try {
+      const rootPath = path.join(tempDir, 'root.json');
+
+      writeJsonFile(rootPath, {
+        components: {
+          schemas: {
+            ClientResponse: {
+              properties: {
+                id: {
+                  type: 'string',
+                },
+              },
+              type: 'object',
+            },
+            'PaginatedListItems<ClientResponse>': {
+              properties: {
+                items: {
+                  items: {
+                    $ref: '#/components/schemas/ClientResponse',
+                  },
+                  type: 'array',
+                },
+              },
+              type: 'object',
+            },
+          },
+        },
+        info: {
+          title: 'Test API',
+          version: '1.0.0',
+        },
+        openapi: '3.0.0',
+        paths: {
+          '/clients': {
+            get: {
+              responses: {
+                '200': {
+                  content: {
+                    'application/json': {
+                      schema: {
+                        $ref: '#/components/schemas/PaginatedListItems<ClientResponse>',
+                      },
+                    },
+                  },
+                  description: 'ok',
+                },
+              },
+            },
+          },
+        },
+      });
+
+      const refParser = new $RefParser();
+      const schema = (await refParser.bundle({ pathOrUrlOrSchema: rootPath })) as any;
+
+      expect(
+        schema.paths['/clients'].get.responses['200'].content['application/json'].schema.$ref,
+      ).toBe('#/components/schemas/PaginatedListItems<ClientResponse>');
+
+      const bundledJson = JSON.stringify(schema);
+      expect(bundledJson).not.toContain('PaginatedListItems%3CClientResponse%3E');
+    } finally {
+      fs.rmSync(tempDir, { force: true, recursive: true });
+    }
+  });
+
+  it('emits decoded refs for external schemas with generic and unicode names', async () => {
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'json-schema-ref-parser-'));
+
+    try {
+      const externalPath = path.join(tempDir, 'external.json');
+      const rootPath = path.join(tempDir, 'root.json');
+
+      writeJsonFile(externalPath, {
+        components: {
+          schemas: {
+            'PaginatedList<ClientItem>': {
+              description: 'generic schema',
+              properties: {
+                next: {
+                  $ref: '#/components/schemas/PaginatedList<ClientItem>',
+                },
+              },
+              type: 'object',
+            },
+            Überschrift: {
+              description: 'unicode schema',
+              properties: {
+                next: {
+                  $ref: '#/components/schemas/Überschrift',
+                },
+              },
+              type: 'object',
+            },
+          },
+        },
+      });
+
+      writeJsonFile(rootPath, {
+        info: {
+          title: 'Test API',
+          version: '1.0.0',
+        },
+        openapi: '3.0.0',
+        paths: {
+          '/generic': {
+            get: {
+              responses: {
+                '200': {
+                  content: {
+                    'application/json': {
+                      schema: {
+                        $ref: 'external.json#/components/schemas/PaginatedList<ClientItem>',
+                      },
+                    },
+                  },
+                  description: 'ok',
+                },
+              },
+            },
+          },
+          '/unicode': {
+            get: {
+              responses: {
+                '200': {
+                  content: {
+                    'application/json': {
+                      schema: {
+                        $ref: 'external.json#/components/schemas/Überschrift',
+                      },
+                    },
+                  },
+                  description: 'ok',
+                },
+              },
+            },
+          },
+        },
+      });
+
+      const refParser = new $RefParser();
+      const schema = (await refParser.bundle({ pathOrUrlOrSchema: rootPath })) as any;
+      const schemas = schema.components.schemas as Record<string, any>;
+
+      const findSchemaByDescription = (description: string) =>
+        Object.entries(schemas).find(([, value]) => value.description === description);
+
+      const genericSchema = findSchemaByDescription('generic schema');
+      const unicodeSchema = findSchemaByDescription('unicode schema');
+
+      expect(genericSchema).toBeDefined();
+      expect(unicodeSchema).toBeDefined();
+
+      const [genericName, genericValue] = genericSchema!;
+      const [unicodeName, unicodeValue] = unicodeSchema!;
+
+      expect(genericValue.properties.next.$ref).toBe(`#/components/schemas/${genericName}`);
+      expect(unicodeValue.properties.next.$ref).toBe(`#/components/schemas/${unicodeName}`);
+
+      const bundledJson = JSON.stringify(schema);
+      expect(bundledJson).not.toContain('PaginatedList%3CClientItem%3E');
+      expect(bundledJson).not.toContain('%C3%9Cberschrift');
+    } finally {
+      fs.rmSync(tempDir, { force: true, recursive: true });
+    }
   });
 
   it('bundles multiple references to the same file correctly', async () => {
