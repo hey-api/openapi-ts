@@ -15,7 +15,7 @@
   "devDependencies": {
     "@hey-api/openapi-ts": "workspace:*",
     "eslint": "9.39.2",
-    "oxfmt": "0.44.0",
+    "oxfmt": "0.45.0",
     "typescript": "6.0.2",
     "vite": "8.0.8",
     "vitest": "4.1.0"
