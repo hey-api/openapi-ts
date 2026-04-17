@@ -2,6 +2,7 @@ import type { IR } from '@hey-api/shared';
 
 import { $ } from '../../../../ts-dsl';
 import type { UnionResolverContext } from '../../resolvers';
+import { hasIntersectionDiscriminatorBranches } from '../../shared/discriminated-union';
 import type { PipeResult, Pipes } from '../../shared/pipes';
 import { pipes, pipesToNode } from '../../shared/pipes';
 import type { CompositeHandlerResult, ValibotFinal, ValibotResult } from '../../shared/types';
@@ -29,9 +30,14 @@ function baseNode(ctx: UnionResolverContext): PipeResult {
   }
 
   const itemNodes = nonNullItems.map((i) => pipesToNode(i.pipes, plugin));
+  const hasIntersectionBranch = hasIntersectionDiscriminatorBranches({
+    items: childResults,
+    parentSchema,
+    schemas,
+  });
 
   const discriminatorKey = parentSchema.discriminator?.propertyName;
-  if (discriminatorKey) {
+  if (discriminatorKey && !hasIntersectionBranch) {
     return $(v)
       .attr(identifiers.schemas.variant)
       .call($.literal(discriminatorKey), $.array(...itemNodes));

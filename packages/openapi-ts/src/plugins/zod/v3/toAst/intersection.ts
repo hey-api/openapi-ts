@@ -33,7 +33,7 @@ function baseNode(ctx: IntersectionResolverContext): Chain {
     expression = expression
       .attr(identifiers.and)
       .call(
-        item.meta.hasLazy
+        item.meta.hasLazy && !item.meta.isLazy
           ? $(z).attr(identifiers.lazy).call($.func().do(item.expression.return()))
           : item.expression,
       );

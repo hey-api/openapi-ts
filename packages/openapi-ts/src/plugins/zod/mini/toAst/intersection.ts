@@ -10,29 +10,19 @@ type IntersectionToAstOptions = Pick<
 >;
 
 function baseNode(ctx: IntersectionResolverContext): Chain {
-  const { childResults, schemas, symbols } = ctx;
+  const { childResults, symbols } = ctx;
   const { z } = symbols;
 
   if (!childResults.length) {
     return $(z).attr(identifiers.never).call();
   }
 
-  const firstSchema = schemas[0];
-
-  if (
-    firstSchema?.logicalOperator === 'or' ||
-    (firstSchema?.type && firstSchema.type !== 'object')
-  ) {
-    return $(z)
-      .attr(identifiers.intersection)
-      .call(...childResults.map((result) => result.expression));
-  }
-
   let expression = childResults[0]!.expression;
   childResults.slice(1).forEach((item) => {
-    expression = expression
-      .attr(identifiers.and)
+    expression = $(z)
+      .attr(identifiers.intersection)
       .call(
+        expression,
         item.meta.hasLazy
           ? $(z).attr(identifiers.lazy).call($.func().do(item.expression.return()))
           : item.expression,

@@ -26,51 +26,50 @@ function baseNode(ctx: UnionResolverContext): Chain {
     }
   });
 
-  let expression: Chain;
   if (!nonNullItems.length) {
-    expression = $(z).attr(identifiers.null).call();
-  } else if (nonNullItems.length === 1) {
-    expression = nonNullItems[0]!.expression;
-  } else {
-    const discriminatedExpression = tryBuildDiscriminatedUnion({
-      items: childResults,
-      parentSchema,
-      plugin,
-      schemas,
-    });
-
-    if (discriminatedExpression) {
-      const unionMembers = discriminatedExpression.members.map((member) =>
-        member.refExpression
-          .attr(identifiers.extend)
-          .call(
-            $.object().prop(
-              discriminatedExpression.discriminatorKey,
-              $(z).attr(identifiers.literal).call($.fromValue(member.discriminatedValue)),
-            ),
-          ),
-      );
-
-      expression = $(z)
-        .attr(identifiers.discriminatedUnion)
-        .call(
-          $.literal(discriminatedExpression.discriminatorKey),
-          $.array()
-            .pretty()
-            .elements(...unionMembers),
-        );
-    } else {
-      expression = $(z)
-        .attr(identifiers.union)
-        .call(
-          $.array()
-            .pretty()
-            .elements(...nonNullItems.map((item) => item.expression)),
-        );
-    }
+    return $(z).attr(identifiers.null).call();
   }
 
-  return expression;
+  if (nonNullItems.length === 1) {
+    return nonNullItems[0]!.expression;
+  }
+
+  const discriminatedExpression = tryBuildDiscriminatedUnion({
+    items: childResults,
+    parentSchema,
+    plugin,
+    schemas,
+  });
+
+  if (discriminatedExpression) {
+    const unionMembers = discriminatedExpression.members.map((member) =>
+      member.refExpression
+        .attr(identifiers.extend)
+        .call(
+          $.object().prop(
+            discriminatedExpression.discriminatorKey,
+            $(z).attr(identifiers.literal).call($.fromValue(member.discriminatedValue)),
+          ),
+        ),
+    );
+
+    return $(z)
+      .attr(identifiers.discriminatedUnion)
+      .call(
+        $.literal(discriminatedExpression.discriminatorKey),
+        $.array()
+          .pretty()
+          .elements(...unionMembers),
+      );
+  }
+
+  return $(z)
+    .attr(identifiers.union)
+    .call(
+      $.array()
+        .pretty()
+        .elements(...nonNullItems.map((item) => item.expression)),
+    );
 }
 
 function unionResolver(ctx: UnionResolverContext): Chain {

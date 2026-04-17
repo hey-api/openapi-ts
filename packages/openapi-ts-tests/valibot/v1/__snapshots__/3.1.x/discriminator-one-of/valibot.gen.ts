@@ -13,7 +13,7 @@ export const vBaz = vQux;
 
 export const vBar = vQux;
 
-export const vFoo = v.variant('type', [v.intersect([v.object({
+export const vFoo = v.union([v.intersect([v.object({
             type: v.literal('Bar')
         }), vBar]), v.intersect([v.object({
             type: v.literal('Baz')
@@ -21,7 +21,7 @@ export const vFoo = v.variant('type', [v.intersect([v.object({
 
 export const vSpæcial = vQux;
 
-export const vQuuz = v.variant('type', [
+export const vQuuz = v.union([
     v.intersect([v.object({
             type: v.literal('bar')
         }), vBar]),
