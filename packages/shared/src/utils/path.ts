@@ -136,7 +136,5 @@ export function pathToName(
     index++;
   }
 
-  // refs using unicode characters become encoded, didn't investigate why
-  // but the suspicion is this comes from `@hey-api/json-schema-ref-parser`
-  return decodeURI(names.join('-'));
+  return names.join('-');
 }
