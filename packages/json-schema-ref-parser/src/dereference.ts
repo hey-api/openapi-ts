@@ -228,7 +228,7 @@ function dereference$Ref<S extends object = JSONSchema>(
   if (directCircular) {
     // The pointer is a DIRECT circular reference (i.e., it references itself).
     // So replace the $ref path with the absolute path from the JSON Schema root
-    dereferencedValue.$ref = pathFromRoot;
+    dereferencedValue.$ref = decodeURI(pathFromRoot);
   }
 
   const dereferencedObject = {
