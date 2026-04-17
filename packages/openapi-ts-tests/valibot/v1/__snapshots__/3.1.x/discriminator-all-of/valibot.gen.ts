@@ -50,7 +50,7 @@ export const vBazUnion = v.object({
     baz: v.optional(v.string())
 });
 
-export const vFooUnion = v.variant('id', [v.intersect([v.object({
+export const vFooUnion = v.union([v.intersect([v.object({
             id: v.literal('bar')
         }), vBarUnion]), v.intersect([v.object({
             id: v.literal('baz')

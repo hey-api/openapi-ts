@@ -13,25 +13,15 @@ export const zBaz = zQux;
 
 export const zBar = zQux;
 
-export const zFoo = z.union([
-    z.intersection(z.object({
-        type: z.literal('Bar')
-    }), zBar),
-    z.intersection(z.object({
-        type: z.literal('Baz')
-    }), zBaz)
+export const zFoo = z.discriminatedUnion('type', [
+    z.extend(zBar, { type: z.literal('Bar') }),
+    z.extend(zBaz, { type: z.literal('Baz') })
 ]);
 
 export const zSpæcial = zQux;
 
-export const zQuuz = z.union([
-    z.intersection(z.object({
-        type: z.literal('bar')
-    }), zBar),
-    z.intersection(z.object({
-        type: z.literal('baz')
-    }), zBaz),
-    z.intersection(z.object({
-        type: z.literal('non-ascii')
-    }), zSpæcial)
+export const zQuuz = z.discriminatedUnion('type', [
+    z.extend(zBar, { type: z.literal('bar') }),
+    z.extend(zBaz, { type: z.literal('baz') }),
+    z.extend(zSpæcial, { type: z.literal('non-ascii') })
 ]);

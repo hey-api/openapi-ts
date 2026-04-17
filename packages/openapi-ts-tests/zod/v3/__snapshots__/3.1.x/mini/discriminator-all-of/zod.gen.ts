@@ -50,13 +50,9 @@ export const zBazUnion = z.object({
     baz: z.optional(z.string())
 });
 
-export const zFooUnion = z.union([
-    z.intersection(z.object({
-        id: z.literal('bar')
-    }), zBarUnion),
-    z.intersection(z.object({
-        id: z.literal('baz')
-    }), zBazUnion)
+export const zFooUnion = z.discriminatedUnion('id', [
+    z.extend(zBarUnion, { id: z.literal('bar') }),
+    z.extend(zBazUnion, { id: z.literal('baz') })
 ]);
 
 export const zQuxExtend = zFooUnion;

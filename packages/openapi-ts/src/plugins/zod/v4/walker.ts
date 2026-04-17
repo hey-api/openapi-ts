@@ -6,8 +6,6 @@ import { pathToJsonPointer } from '@hey-api/shared';
 import { $ } from '../../../ts-dsl';
 import { maybeBigInt, shouldCoerceToBigInt } from '../../shared/utils/coerce';
 import { identifiers } from '../constants';
-import type { Chain } from '../shared/chain';
-import { tryBuildDiscriminatedUnion } from '../shared/discriminated-union';
 import { defaultMeta, inheritMeta } from '../shared/meta';
 import type { ProcessorContext } from '../shared/processor';
 import type { ZodFinal, ZodMeta, ZodResult } from '../shared/types';
@@ -15,6 +13,7 @@ import type { ZodPlugin } from '../types';
 import { arrayToAst } from './toAst/array';
 import { booleanToAst } from './toAst/boolean';
 import { enumToAst } from './toAst/enum';
+import { intersectionToAst } from './toAst/intersection';
 import { neverToAst } from './toAst/never';
 import { nullToAst } from './toAst/null';
 import { numberToNode } from './toAst/number';
@@ -22,6 +21,7 @@ import { objectToAst } from './toAst/object';
 import { stringToNode } from './toAst/string';
 import { tupleToAst } from './toAst/tuple';
 import { undefinedToAst } from './toAst/undefined';
+import { unionToAst } from './toAst/union';
 import { unknownToAst } from './toAst/unknown';
 import { voidToAst } from './toAst/void';
 
@@ -136,31 +136,14 @@ export function createVisitor(
       }
     },
     intersection(items, schemas, parentSchema, ctx) {
-      const z = ctx.plugin.external('zod.z');
       const hasAnyLazy = items.some((item) => item.meta.hasLazy);
 
-      const firstSchema = schemas[0];
-      let expression: Chain;
-
-      if (
-        firstSchema?.logicalOperator === 'or' ||
-        (firstSchema?.type && firstSchema.type !== 'object')
-      ) {
-        expression = $(z)
-          .attr(identifiers.intersection)
-          .call(...items.map((item) => item.expression));
-      } else {
-        expression = items[0]!.expression;
-        items.slice(1).forEach((item) => {
-          expression = expression
-            .attr(identifiers.and)
-            .call(
-              item.meta.hasLazy
-                ? $(z).attr(identifiers.lazy).call($.func().do(item.expression.return()))
-                : item.expression,
-            );
-        });
-      }
+      const { expression } = intersectionToAst({
+        childResults: items,
+        parentSchema,
+        plugin: ctx.plugin,
+        schemas,
+      });
 
       return {
         expression,
@@ -328,43 +311,16 @@ export function createVisitor(
       };
     },
     union(items, schemas, parentSchema, ctx) {
-      const z = ctx.plugin.external('zod.z');
       const hasAnyLazy = items.some((item) => item.meta.hasLazy);
 
       const hasNull = schemas.some((s) => s.type === 'null') || items.some((i) => i.meta.nullable);
 
-      const nonNullItems: typeof items = [];
-
-      items.forEach((item, index) => {
-        const schema = schemas[index]!;
-        if (schema.type !== 'null' && schema.const !== null) {
-          nonNullItems.push(item);
-        }
+      const { expression } = unionToAst({
+        childResults: items,
+        parentSchema,
+        plugin: ctx.plugin,
+        schemas,
       });
-
-      let expression: Chain;
-      if (!nonNullItems.length) {
-        expression = $(z).attr(identifiers.null).call();
-      } else if (nonNullItems.length === 1) {
-        expression = nonNullItems[0]!.expression;
-      } else {
-        const discriminatedExpression = tryBuildDiscriminatedUnion({
-          ctx,
-          items,
-          parentSchema,
-          schemas,
-          z,
-        });
-        expression =
-          discriminatedExpression ??
-          $(z)
-            .attr(identifiers.union)
-            .call(
-              $.array()
-                .pretty()
-                .elements(...nonNullItems.map((item) => item.expression)),
-            );
-      }
 
       return {
         expression,
