@@ -1,15 +1,15 @@
 import { definePluginConfig } from '@hey-api/shared';
 
-// import { handler } from './plugin';
+import { handler } from './plugin';
 import type { HeyApiExamplesPlugin } from './types';
 
 export const defaultConfig: HeyApiExamplesPlugin['Config'] = {
   config: {
+    $cascade: ['case'],
     case: 'camelCase',
     includeInEntry: false,
   },
-  // handler,
-  handler: () => {},
+  handler,
   name: '@hey-api/examples',
   tags: ['source'],
 };

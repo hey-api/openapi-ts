@@ -1,3 +1,5 @@
+import path from 'node:path';
+
 import { getBaseUrl } from '@hey-api/shared';
 
 import { getTypedConfig } from '../../../config/utils';
@@ -5,6 +7,27 @@ import { clientFolderAbsolutePath } from '../../../generate/client';
 import { $ } from '../../../ts-dsl';
 import type { PluginHandler } from './types';
 import { getClientBaseUrlKey } from './utils';
+
+export function resolveRuntimeConfigPath({
+  outputPath,
+  runtimeConfigPath,
+}: {
+  outputPath: string;
+  runtimeConfigPath: string;
+}): string {
+  const isAbsolutePath = path.isAbsolute(runtimeConfigPath);
+  // Use a single regex to match './' or '../' at the start
+  const isFileSystemPath = isAbsolutePath || /^\.\.?\//.test(runtimeConfigPath);
+  if (!isFileSystemPath) {
+    return runtimeConfigPath;
+  }
+
+  const absoluteInputPath = isAbsolutePath
+    ? runtimeConfigPath
+    : path.resolve(process.cwd(), runtimeConfigPath);
+  const relative = path.relative(outputPath, absoluteInputPath).split(path.sep).join('/');
+  return relative.startsWith('.') ? relative : `./${relative}`;
+}
 
 export const createClient: PluginHandler = ({ plugin }) => {
   const clientModule = clientFolderAbsolutePath(getTypedConfig(plugin));
