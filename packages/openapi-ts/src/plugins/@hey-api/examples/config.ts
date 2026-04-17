@@ -1,6 +1,6 @@
 import { definePluginConfig } from '@hey-api/shared';
 
-// import { handler } from './plugin';
+import { handler } from './plugin';
 import type { HeyApiExamplesPlugin } from './types';
 
 export const defaultConfig: HeyApiExamplesPlugin['Config'] = {
@@ -8,9 +8,14 @@ export const defaultConfig: HeyApiExamplesPlugin['Config'] = {
     case: 'camelCase',
     includeInEntry: false,
   },
-  // handler,
-  handler: () => {},
+  handler,
   name: '@hey-api/examples',
+  resolveConfig: (plugin, context) => {
+    plugin.config.case = context.valueToObject({
+      defaultValue: 'camelCase' as const,
+      value: plugin.config.case,
+    });
+  },
   tags: ['source'],
 };
 

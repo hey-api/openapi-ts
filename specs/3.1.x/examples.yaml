@@ -1,0 +1,84 @@
+openapi: 3.1.0
+info:
+  title: Examples API
+  version: 1.0.0
+paths:
+  /users/{id}:
+    get:
+      operationId: getUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: User found
+          content:
+            application/json:
+              example:
+                id: 1
+                name: John
+        '404':
+          description: User not found
+          content:
+            application/json:
+              examples:
+                basic:
+                  value:
+                    code: NOT_FOUND
+                    message: User not found
+                detailed:
+                  value:
+                    code: NOT_FOUND
+                    message: User not found
+                    timestamp: '2024-01-01T00:00:00Z'
+  /users:
+    post:
+      operationId: createUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+      responses:
+        '201':
+          description: User created
+          content:
+            application/json:
+              example:
+                id: 2
+                name: Jane
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+      example:
+        id: 1
+        name: John
+    Organization:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+      examples:
+        basic:
+          value:
+            id: 1
+            name: Acme Corp
+        detailed:
+          value:
+            id: 1
+            name: Acme Corporation
+            founded: '2000-01-01'
