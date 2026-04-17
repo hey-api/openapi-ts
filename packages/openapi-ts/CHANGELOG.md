@@ -1,5 +1,44 @@
 # @hey-api/openapi-ts
 
+## 0.96.0
+
+### Minor Changes
+
+- **BREAKING**: This release bumps the minimum required Node version to 22.13. ([#3694](https://github.com/hey-api/openapi-ts/pull/3694)) ([`e930278`](https://github.com/hey-api/openapi-ts/commit/e930278d5fcd74545b0fc5d600b524e895d4fe6a)) by [@mrlubos](https://github.com/mrlubos)
+
+### Patch Changes
+
+- **plugin(@hey-api/client-axios)**: simplify SSE line endings normalization ([#3686](https://github.com/hey-api/openapi-ts/pull/3686)) ([`c9c1d44`](https://github.com/hey-api/openapi-ts/commit/c9c1d44132f0eb44273fbf3b878a832bae3ee968)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@hey-api/client-fetch)**: simplify SSE line endings normalization ([#3686](https://github.com/hey-api/openapi-ts/pull/3686)) ([`c9c1d44`](https://github.com/hey-api/openapi-ts/commit/c9c1d44132f0eb44273fbf3b878a832bae3ee968)) by [@mrlubos](https://github.com/mrlubos)
+
+- **parser**: fix: keep orphans when explicitly included in filters ([#3714](https://github.com/hey-api/openapi-ts/pull/3714)) ([`8e2c4b1`](https://github.com/hey-api/openapi-ts/commit/8e2c4b1f2a1624f27d5da74a4816cdc10435e4b1)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@hey-api/client-next)**: simplify SSE line endings normalization ([#3686](https://github.com/hey-api/openapi-ts/pull/3686)) ([`c9c1d44`](https://github.com/hey-api/openapi-ts/commit/c9c1d44132f0eb44273fbf3b878a832bae3ee968)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@hey-api/client-nuxt)**: simplify SSE line endings normalization ([#3686](https://github.com/hey-api/openapi-ts/pull/3686)) ([`c9c1d44`](https://github.com/hey-api/openapi-ts/commit/c9c1d44132f0eb44273fbf3b878a832bae3ee968)) by [@mrlubos](https://github.com/mrlubos)
+
+- **cli**: improve error message on invalid input ([#3679](https://github.com/hey-api/openapi-ts/pull/3679)) ([`b643d7d`](https://github.com/hey-api/openapi-ts/commit/b643d7d400492489a24918534991dfb3f1443abc)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@angular/common)**: fix: requests and resources broken default configuration ([#3678](https://github.com/hey-api/openapi-ts/pull/3678)) ([`7ad5a2c`](https://github.com/hey-api/openapi-ts/commit/7ad5a2c26e0c009e0cf32a6b526b83f505258fe4)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(@hey-api/client-ky)**: simplify SSE line endings normalization ([#3686](https://github.com/hey-api/openapi-ts/pull/3686)) ([`c9c1d44`](https://github.com/hey-api/openapi-ts/commit/c9c1d44132f0eb44273fbf3b878a832bae3ee968)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@hey-api/transformers)**: fix: return value for primitive array entries ([#3733](https://github.com/hey-api/openapi-ts/pull/3733)) ([`43ff064`](https://github.com/hey-api/openapi-ts/commit/43ff06437e6c9230bfcca324f28f337959201697)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(@hey-api/client-angular)**: simplify SSE line endings normalization ([#3686](https://github.com/hey-api/openapi-ts/pull/3686)) ([`c9c1d44`](https://github.com/hey-api/openapi-ts/commit/c9c1d44132f0eb44273fbf3b878a832bae3ee968)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@hey-api/client-ofetch)**: simplify SSE line endings normalization ([#3686](https://github.com/hey-api/openapi-ts/pull/3686)) ([`c9c1d44`](https://github.com/hey-api/openapi-ts/commit/c9c1d44132f0eb44273fbf3b878a832bae3ee968)) by [@mrlubos](https://github.com/mrlubos)
+
+- **parser**: fix: process enum metadata ([#3727](https://github.com/hey-api/openapi-ts/pull/3727)) ([`397b63f`](https://github.com/hey-api/openapi-ts/commit/397b63fe6e1093181f7f4a0b99d3cf0db9daab93)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+### Updated Dependencies:
+
+- @hey-api/shared@0.4.0
+- @hey-api/spec-types@0.2.0
+- @hey-api/json-schema-ref-parser@1.4.0
+- @hey-api/codegen-core@0.8.0
+
 ## 0.95.0
 
 ### Minor Changes

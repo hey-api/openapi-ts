@@ -1,6 +1,6 @@
 {
   "name": "@hey-api/vite-plugin",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "🚀 Vite plugin for `@hey-api/openapi-ts` codegen.",
   "keywords": [
     "codegen",
@@ -52,9 +52,10 @@
   "devDependencies": {
     "@hey-api/openapi-ts": "workspace:*",
     "typescript": "6.0.2",
-    "vite": "7.3.1"
+    "vite": "8.0.8"
   },
   "peerDependencies": {
-    "@hey-api/openapi-ts": "<2"
+    "@hey-api/openapi-ts": "<2",
+    "vite": "^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0"
   }
 }

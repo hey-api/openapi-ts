@@ -30,10 +30,10 @@
     "eslint": "9.39.2",
     "eslint-plugin-react-hooks": "5.2.0",
     "eslint-plugin-react-refresh": "0.4.7",
-    "oxfmt": "0.43.0",
+    "oxfmt": "0.45.0",
     "postcss": "8.4.41",
     "tailwindcss": "3.4.9",
     "typescript": "6.0.2",
-    "vite": "7.3.1"
+    "vite": "8.0.8"
   }
 }
