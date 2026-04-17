@@ -158,6 +158,27 @@ for (const zodVersion of zodVersions) {
       },
       {
         config: createConfig({
+          input: 'discriminator-all-of.yaml',
+          output: 'discriminator-all-of',
+        }),
+        description: 'generates discriminated union for oneOf with discriminator mapping',
+      },
+      {
+        config: createConfig({
+          input: 'discriminator-any-of.yaml',
+          output: 'discriminator-any-of',
+        }),
+        description: 'generates discriminated union for anyOf with discriminator mapping',
+      },
+      {
+        config: createConfig({
+          input: 'discriminator-one-of.yaml',
+          output: 'discriminator-one-of',
+        }),
+        description: 'handles oneOf discriminator (falls back to z.union when needed)',
+      },
+      {
+        config: createConfig({
           input: 'enum-null.json',
           output: 'enum-resolver-permissive',
           plugins: [

@@ -1,18 +1,17 @@
-import { childContext } from '@hey-api/shared';
-
 import { $ } from '../../../../ts-dsl';
 import { identifiers } from '../../constants';
 import type { UnionResolverContext } from '../../resolvers';
 import type { Chain } from '../../shared/chain';
+import { tryBuildDiscriminatedUnion } from '../../shared/discriminated-union';
 import type { ZodResult } from '../../shared/types';
 
 type UnionToAstOptions = Pick<
   UnionResolverContext,
-  'parentSchema' | 'plugin' | 'schemas' | 'walk' | 'walkerCtx'
+  'childResults' | 'parentSchema' | 'plugin' | 'schemas'
 >;
 
 function baseNode(ctx: UnionResolverContext): Chain {
-  const { childResults, schemas, symbols } = ctx;
+  const { childResults, parentSchema, plugin, schemas, symbols } = ctx;
   const { z } = symbols;
 
   if (!childResults.length) {
@@ -33,13 +32,42 @@ function baseNode(ctx: UnionResolverContext): Chain {
   } else if (nonNullItems.length === 1) {
     expression = nonNullItems[0]!.expression;
   } else {
-    expression = $(z)
-      .attr(identifiers.union)
-      .call(
-        $.array()
-          .pretty()
-          .elements(...nonNullItems.map((item) => item.expression)),
+    const discriminatedExpression = tryBuildDiscriminatedUnion({
+      items: childResults,
+      parentSchema,
+      plugin,
+      schemas,
+    });
+
+    if (discriminatedExpression) {
+      const unionMembers = discriminatedExpression.members.map((member) =>
+        member.refExpression
+          .attr(identifiers.extend)
+          .call(
+            $.object().prop(
+              discriminatedExpression.discriminatorKey,
+              $(z).attr(identifiers.literal).call($.fromValue(member.discriminatedValue)),
+            ),
+          ),
       );
+
+      expression = $(z)
+        .attr(identifiers.discriminatedUnion)
+        .call(
+          $.literal(discriminatedExpression.discriminatorKey),
+          $.array()
+            .pretty()
+            .elements(...unionMembers),
+        );
+    } else {
+      expression = $(z)
+        .attr(identifiers.union)
+        .call(
+          $.array()
+            .pretty()
+            .elements(...nonNullItems.map((item) => item.expression)),
+        );
+    }
   }
 
   return expression;
@@ -51,17 +79,11 @@ function unionResolver(ctx: UnionResolverContext): Chain {
   return ctx.chain.current;
 }
 
-export function unionToAst({ parentSchema, plugin, schemas, walk, walkerCtx }: UnionToAstOptions): {
+export function unionToAst({ childResults, parentSchema, plugin, schemas }: UnionToAstOptions): {
   childResults: Array<ZodResult>;
   expression: Chain;
 } {
   const z = plugin.external('zod.z');
-
-  const childResults: Array<ZodResult> = [];
-  schemas.forEach((schema, index) => {
-    const itemResult = walk(schema, childContext(walkerCtx, 'anyOf', index));
-    childResults.push(itemResult);
-  });
 
   const ctx: UnionResolverContext = {
     $,
@@ -79,8 +101,6 @@ export function unionToAst({ parentSchema, plugin, schemas, walk, walkerCtx }: U
     symbols: {
       z,
     },
-    walk,
-    walkerCtx,
   };
 
   const resolver = plugin.config['~resolvers']?.union;

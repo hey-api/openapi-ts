@@ -282,8 +282,7 @@ export interface IntersectionResolverContext extends BaseContext {
   };
   parentSchema: IR.SchemaObject;
   schema: IR.SchemaObject;
-  walk: Walker<ZodResult, ZodPlugin['Instance']>;
-  walkerCtx: SchemaVisitorContext<ZodPlugin['Instance']>;
+  schemas: ReadonlyArray<IR.SchemaObject>;
 }
 
 export interface NeverResolverContext extends BaseContext {
@@ -459,8 +458,6 @@ export interface UnionResolverContext extends BaseContext {
   parentSchema: IR.SchemaObject;
   schema: IR.SchemaObject;
   schemas: ReadonlyArray<IR.SchemaObject>;
-  walk: Walker<ZodResult, ZodPlugin['Instance']>;
-  walkerCtx: SchemaVisitorContext<ZodPlugin['Instance']>;
 }
 
 export interface UnknownResolverContext extends BaseContext {
