@@ -2,9 +2,8 @@ import type { Casing } from '@hey-api/shared';
 import type { DefinePlugin, Plugin } from '@hey-api/shared';
 
 export type UserConfig = Plugin.Name<'@hey-api/examples'> &
-  // Plugin.Hooks &
+  Plugin.Hooks &
   Plugin.UserExports & {
-    // Resolvers & {
     /**
      * Casing convention for generated names.
      *
@@ -14,9 +13,8 @@ export type UserConfig = Plugin.Name<'@hey-api/examples'> &
   };
 
 export type Config = Plugin.Name<'@hey-api/examples'> &
-  // Plugin.Hooks &
+  Plugin.Hooks &
   Plugin.Exports & {
-    // Resolvers & {
     /** Casing convention for generated names. */
     case: Casing;
   };
