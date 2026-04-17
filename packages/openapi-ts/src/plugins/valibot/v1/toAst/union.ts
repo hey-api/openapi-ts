@@ -28,15 +28,15 @@ function baseNode(ctx: UnionResolverContext): PipeResult {
     return nonNullItems[0]!.pipes;
   }
 
+  const itemNodes = nonNullItems.map((i) => pipesToNode(i.pipes, plugin));
+
   const discriminatorKey = parentSchema.discriminator?.propertyName;
   if (discriminatorKey) {
-    const itemNodes = nonNullItems.map((i) => pipesToNode(i.pipes, plugin));
     return $(v)
       .attr(identifiers.schemas.variant)
       .call($.literal(discriminatorKey), $.array(...itemNodes));
   }
 
-  const itemNodes = nonNullItems.map((i) => pipesToNode(i.pipes, plugin));
   return $(v)
     .attr(identifiers.schemas.union)
     .call($.array(...itemNodes));
