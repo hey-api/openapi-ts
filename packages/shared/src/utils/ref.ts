@@ -7,9 +7,7 @@ const jsonPointerTilde = /~0/g;
 export function refToName($ref: string): string {
   const path = jsonPointerToPath($ref);
   const name = path[path.length - 1]!;
-  // refs using unicode characters become encoded, didn't investigate why
-  // but the suspicion is this comes from `@hey-api/json-schema-ref-parser`
-  return decodeURI(name);
+  return name;
 }
 
 /**
@@ -121,9 +119,7 @@ export function isTopLevelComponent(refOrPath: string | ReadonlyArray<string | n
 }
 
 export function resolveRef<T>({ $ref, spec }: { $ref: string; spec: Record<string, any> }): T {
-  // refs using unicode characters become encoded, didn't investigate why
-  // but the suspicion is this comes from `@hey-api/json-schema-ref-parser`
-  const path = jsonPointerToPath(decodeURI($ref));
+  const path = jsonPointerToPath($ref);
 
   let current = spec;
 

@@ -1028,14 +1028,6 @@ export const zAdditionalPropertiesUnknownIssueWritable = z.record(z.string(), z.
     z.number()
 ]));
 
-export const zOneOfAllOfIssueWritable = z.union([
-    z.intersection(z.union([
-        zConstValue,
-        zGenericSchemaDuplicateIssue1SystemBoolean
-    ]), z3eNum1Период),
-    zGenericSchemaDuplicateIssue1SystemString
-]);
-
 export const zGenericSchemaDuplicateIssue1SystemBooleanWritable = z.object({
     item: z.optional(z.boolean()),
     error: z.nullish(z.string()),
@@ -1046,6 +1038,14 @@ export const zGenericSchemaDuplicateIssue1SystemStringWritable = z.object({
     item: z.nullish(z.string()),
     error: z.nullish(z.string())
 });
+
+export const zOneOfAllOfIssueWritable = z.union([
+    z.intersection(z.union([
+        zConstValue,
+        zGenericSchemaDuplicateIssue1SystemBooleanWritable
+    ]), z3eNum1Период),
+    zGenericSchemaDuplicateIssue1SystemStringWritable
+]);
 
 /**
  * This is a reusable parameter
