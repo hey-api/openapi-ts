@@ -1149,9 +1149,7 @@ function parseRef({
 
   const irRefSchema: IR.SchemaObject = {};
 
-  // refs using unicode characters become encoded, didn't investigate why
-  // but the suspicion is this comes from `@hey-api/json-schema-ref-parser`
-  irRefSchema.$ref = decodeURI(schema.$ref);
+  irRefSchema.$ref = schema.$ref;
 
   if (!state.circularReferenceTracker.has(schema.$ref)) {
     const refSchema = context.resolveRef<OpenAPIV3_1.SchemaObject>(schema.$ref);

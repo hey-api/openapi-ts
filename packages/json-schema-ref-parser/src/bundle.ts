@@ -574,7 +574,7 @@ function remap(parser: $RefParser, inventory: Array<InventoryEntry>) {
     // preserve the original $ref rather than rewriting it to the resolved hash.
     if (!entry.external) {
       if (!entry.extended && entry.$ref && typeof entry.$ref === 'object') {
-        entry.$ref.$ref = entry.hash;
+        entry.$ref.$ref = decodeURI(entry.hash);
       }
       continue;
     }
@@ -582,7 +582,7 @@ function remap(parser: $RefParser, inventory: Array<InventoryEntry>) {
     // Avoid changing direct self-references; keep them internal
     if (entry.circular) {
       if (entry.$ref && typeof entry.$ref === 'object') {
-        entry.$ref.$ref = entry.pathFromRoot;
+        entry.$ref.$ref = decodeURI(entry.pathFromRoot);
       }
       continue;
     }
