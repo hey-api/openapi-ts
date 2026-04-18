@@ -63,6 +63,11 @@ jobs:
         id: tag
         run: echo "tag=$(pnpm -s changelog:release:tag)" >> $GITHUB_OUTPUT
 
+      - name: Get Release Name
+        if: steps.changesets.outputs.published == 'true'
+        id: release-name
+        run: echo "name=$(pnpm -s changelog:release:name ${{ steps.tag.outputs.tag }})" >> $GITHUB_OUTPUT
+
       - name: Generate Release Notes
         if: steps.changesets.outputs.published == 'true'
         id: notes
@@ -83,6 +88,7 @@ jobs:
         with:
           body_path: release-notes.md
           generate_release_notes: false
+          name: ${{ steps.release-name.outputs.name }}
           tag_name: ${{ steps.tag.outputs.tag }}
           target_commitish: ${{ steps.release-commit.outputs.sha || github.sha }}
           token: ${{ steps.app-token.outputs.token }}

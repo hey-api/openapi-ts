@@ -75,3 +75,9 @@ export function isExecutedDirectly(fileUrl: string): boolean {
     path.resolve(process.argv[1]) === url.fileURLToPath(fileUrl)
   );
 }
+
+export function writeDebugFile(filename: string, data: () => string): void {
+  if (process.env.DEBUG !== 'true') return;
+
+  fs.writeFileSync(path.join(REPOSITORY_ROOT, `DEBUG_${filename}`), data(), 'utf-8');
+}

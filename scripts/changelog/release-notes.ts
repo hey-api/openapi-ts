@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 
 import { formatReleasePackage } from './assemble';
-import { isExecutedDirectly, repo, SPONSORS_TABLE_GOLD_PATH } from './config';
+import { isExecutedDirectly, repo, SPONSORS_TABLE_GOLD_PATH, writeDebugFile } from './config';
 import { getContributorsFromPullRequests } from './contributors';
 import { getDateRangeFilterFromEnv } from './date-filter';
 import { getPullRequestsFromRelease } from './pull-request';
@@ -79,14 +79,10 @@ export async function generateReleaseNotes(): Promise<string> {
   const contributors = await getContributorsFromPullRequests(pullRequests);
   const notes = formatReleaseNotes(latest, contributors);
 
-  if (process.env.DEBUG === 'true') {
-    fs.writeFileSync(
-      'DEBUG_RELEASE_NOTES.json',
-      JSON.stringify({ contributors, latest, notes, pullRequests, releases }, null, 2),
-      'utf-8',
-    );
-    fs.writeFileSync('DEBUG_RELEASE_NOTES.md', notes, 'utf-8');
-  }
+  writeDebugFile('RELEASE_NOTES.json', () =>
+    JSON.stringify({ contributors, latest, notes, pullRequests, releases }, null, 2),
+  );
+  writeDebugFile('RELEASE_NOTES.md', () => notes);
 
   return notes;
 }
