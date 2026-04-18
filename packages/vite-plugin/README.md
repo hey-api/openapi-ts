@@ -162,7 +162,7 @@ You can download `@hey-api/vite-plugin` from npm using your favorite package man
 #### npm
 
 ```sh
-npm add @hey-api/vite-plugin -D -E
+npm install @hey-api/vite-plugin -D -E
 ```
 
 #### pnpm
@@ -180,7 +180,7 @@ yarn add @hey-api/vite-plugin -D -E
 #### bun
 
 ```sh
-bun add @hey-api/vite-plugin -D -E
+bun add @hey-api/vite-plugin -D
 ```
 
 ## Usage

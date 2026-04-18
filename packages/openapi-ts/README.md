@@ -26,13 +26,13 @@
 
 The OpenAPI to TypeScript code generator used by Vercel, OpenCode, and PayPal.
 
-Generate production-ready SDKs, Zod schemas, TanStack Query hooks, or choose from 20+ other plugins.
+Generate production-grade SDKs, Zod schemas, TanStack Query hooks, or choose from 20+ other plugins.
 
 Part of the Hey API ecosystem.
 
 ## Features
 
-- production-ready code that compiles
+- production-grade code that compiles
 - runs in any Node.js 22+ environment
 - accepts any OpenAPI specification
 - core plugins for SDKs, types, and schemas
@@ -178,7 +178,7 @@ You can download `@hey-api/openapi-ts` from npm using your favorite package mana
 #### npm
 
 ```sh
-npm add @hey-api/openapi-ts -D -E
+npm install @hey-api/openapi-ts -D -E
 ```
 
 #### pnpm
@@ -196,7 +196,7 @@ yarn add @hey-api/openapi-ts -D -E
 #### bun
 
 ```sh
-bun add @hey-api/openapi-ts -D -E
+bun add @hey-api/openapi-ts -D
 ```
 
 ### Versioning
@@ -241,7 +241,7 @@ If you're using [Vite](https://vite.dev), you can integrate `@hey-api/openapi-ts
 #### npm
 
 ```sh
-npm add @hey-api/vite-plugin -D -E
+npm install @hey-api/vite-plugin -D -E
 ```
 
 #### pnpm
@@ -259,7 +259,7 @@ yarn add @hey-api/vite-plugin -D -E
 #### bun
 
 ```sh
-bun add @hey-api/vite-plugin -D -E
+bun add @hey-api/vite-plugin -D
 ```
 
 Then add the plugin to your Vite configuration:

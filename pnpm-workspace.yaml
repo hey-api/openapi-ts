@@ -3,6 +3,7 @@ packages:
   - dev/**
   - examples/**/*
   - packages/**/*
+  - web
   - '!examples/*/.output'
 
 patchedDependencies:

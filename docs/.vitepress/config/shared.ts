@@ -98,7 +98,7 @@ export default defineConfig({
         {
           content:
             pageData.frontmatter.description ||
-            '🌀 OpenAPI to TypeScript codegen. Production-ready SDKs, Zod schemas, TanStack Query hooks, and 20+ plugins. Used by Vercel, OpenCode, and PayPal.',
+            '🌀 OpenAPI to TypeScript codegen. Production-grade SDKs, Zod schemas, TanStack Query hooks, and 20+ plugins. Used by Vercel, OpenCode, and PayPal.',
           property: 'og:description',
         },
       ],

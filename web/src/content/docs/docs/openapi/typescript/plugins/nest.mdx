@@ -1,0 +1,103 @@
+---
+title: NestJS v11 Plugin
+description: Generate NestJS v11 controller methods from OpenAPI with the NestJS plugin for openapi-ts. Fully compatible with validators, transformers, and all core features.
+sidebar:
+  label: Nest
+custom:
+  version: v11
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import AuthorsList from '@/components/AuthorsList.astro';
+import Examples from '@/components/Examples.astro';
+import FeatureStatus from '@/components/FeatureStatus.astro';
+import { yuriMikhin } from '@/data/people';
+
+# NestJS
+
+<FeatureStatus status="beta" />
+
+### About
+
+[Nest](https://nestjs.com) is a progressive Node.js framework for building efficient, reliable and scalable server-side applications.
+
+The NestJS plugin for Hey API generates type-safe controller method signatures from your OpenAPI spec, fully compatible with all core features.
+
+### Collaborators
+
+<AuthorsList people={[yuriMikhin]} />
+
+## Features
+
+- NestJS v11 support
+- seamless integration with `@hey-api/openapi-ts` ecosystem
+- type-safe controller methods
+- minimal learning curve thanks to extending the underlying technology
+
+## Installation
+
+In your [configuration](/openapi-ts/get-started), add `nestjs` to your plugins and you'll be ready to generate NestJS artifacts. 🎉
+
+```js {6} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    'nestjs',
+  ],
+};
+```
+
+## Output
+
+The NestJS plugin will generate the following artifacts, depending on the input specification.
+
+## Controller Methods
+
+Operations are grouped by their first tag into separate types.
+
+<Tabs>
+  <TabItem label="example">
+```ts title="nestjs.gen.ts"
+export type PetsControllerMethods = {
+  createPet: (body: CreatePetData['body']) => Promise<CreatePetResponse>;
+  listPets: (query?: ListPetsData['query']) => Promise<ListPetsResponse>;
+  showPetById: (path: ShowPetByIdData['path']) => Promise<ShowPetByIdResponse>;
+};
+
+export type StoreControllerMethods = {
+  getInventory: () => Promise<GetInventoryResponse>;
+};
+```
+  </TabItem>
+  <TabItem label="usage">
+```ts title="pets.controller.ts"
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+
+import type { PetsControllerMethods } from '../client/nestjs.gen';
+import type { CreatePetData, ListPetsData, ShowPetByIdData } from '../client/types.gen';
+
+@Controller('pets')
+export class PetsController implements Pick<
+  PetsControllerMethods,
+  'createPet' | 'listPets' | 'showPetById'
+> {
+  @Post()
+  async createPet(@Body() body: CreatePetData['body']) {}
+
+  @Get()
+  async listPets(@Query() query?: ListPetsData['query']) {}
+
+  @Get(':petId')
+  async showPetById(@Param() path: ShowPetByIdData['path']) {}
+}
+```
+  </TabItem>
+</Tabs>
+
+## API
+
+You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/nestjs/types.ts) interface.
+
+<Examples githubExamplePath="/openapi-ts-nestjs" />

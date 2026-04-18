@@ -1,0 +1,225 @@
+---
+import type { SidebarEntry } from '@/utils/sidebar';
+import { isCurrentEntry, hasCurrentEntry, flattenSidebar } from '@/utils/sidebar';
+
+interface Props {
+  entries: Array<SidebarEntry>;
+  nested?: boolean;
+  currentPath?: string;
+}
+
+const {
+  entries,
+  nested = false,
+  currentPath = Astro.url.pathname,
+} = Astro.props;
+---
+
+<ul class:list={['sb-list', { 'sb-list--root': !nested }]}>
+  {entries.map((entry) => (
+    <li class="sb-item">
+      {entry.type === 'link' ? (
+        <a
+          href={entry.href}
+          class:list={['sb-link', { 'sb-link--section': !nested, 'is-current': isCurrentEntry(entry, currentPath) }]}
+          aria-current={isCurrentEntry(entry, currentPath) ? 'page' : undefined}
+        >
+          {entry.label}
+          {entry.badge && <span class="sb-badge">{entry.badge.text}</span>}
+        </a>
+      ) : !nested ? (
+        <div class="sb-group">
+          <span class:list={['sb-group-label', { 'has-current': hasCurrentEntry(flattenSidebar(entry.entries ?? []), currentPath) }]}>
+            {entry.label}
+            {entry.badge && <span class="sb-badge">{entry.badge.text}</span>}
+          </span>
+          <Astro.self entries={entry.entries ?? []} nested currentPath={currentPath} />
+        </div>
+      ) : (
+        <details
+          class="sb-subgroup"
+          open={hasCurrentEntry(flattenSidebar(entry.entries ?? []), currentPath) || !entry.collapsed}
+        >
+          <summary class:list={['sb-subgroup-label', { 'has-current': hasCurrentEntry(flattenSidebar(entry.entries ?? []), currentPath) }]}>
+            {entry.label}
+            {entry.badge && <span class="sb-badge">{entry.badge.text}</span>}
+            <svg class="sb-caret" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M9 18l6-6-6-6"/>
+            </svg>
+          </summary>
+          <ul class="sb-subgroup-items">
+            {(entry.entries ?? []).map((child) => (
+              <li class="sb-item">
+                {child.type === 'link' ? (
+                  <a
+                    href={child.href}
+                    class:list={['sb-link', { 'is-current': isCurrentEntry(child, currentPath) }]}
+                    aria-current={isCurrentEntry(child, currentPath) ? 'page' : undefined}
+                  >
+                    {child.label}
+                    {child.badge && <span class="sb-badge">{child.badge.text}</span>}
+                  </a>
+                ) : null}
+              </li>
+            ))}
+          </ul>
+        </details>
+      )}
+    </li>
+  ))}
+</ul>
+
+<style is:global>
+  .sb-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .sb-list--root > .sb-item + .sb-item {
+    margin-top: 12px;
+  }
+
+  .sb-group-label {
+    color: var(--sl-color-text);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    margin-top: 4px;
+    padding: 0 8px 4px;
+    text-transform: uppercase;
+  }
+
+  .sb-group-label.has-current {
+    color: var(--vp-c-brand-1);
+  }
+
+  .sb-subgroup {
+    margin-top: 4px;
+  }
+
+  .sb-subgroup > summary {
+    list-style: none;
+  }
+
+  .sb-subgroup > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .sb-subgroup-label {
+    color: var(--sl-color-gray-2);
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    opacity: 1;
+    padding: 4px 8px 2px;
+    text-transform: uppercase;
+  }
+
+  .sb-subgroup-label:hover {
+    color: var(--sl-color-text);
+    opacity: 1;
+  }
+
+  .sb-subgroup-label.has-current {
+    color: var(--vp-c-brand-1);
+    opacity: 1;
+  }
+
+  .sb-caret {
+    color: currentColor;
+    flex-shrink: 0;
+    margin-left: auto;
+    opacity: 0.5;
+    transition: transform 200ms ease;
+  }
+
+  .sb-subgroup[open] > .sb-subgroup-label .sb-caret {
+    transform: rotate(90deg);
+  }
+
+  .sb-subgroup-items {
+    border-left: 1px solid var(--vp-c-divider);
+    list-style: none;
+    margin: 2px 0 0 8px;
+    padding: 0 0 0 8px;
+    transition: border-color 200ms ease;
+  }
+
+  .sb-subgroup:hover > .sb-subgroup-items {
+    border-left-color: color-mix(in srgb, var(--vp-c-brand-1) 45%, var(--vp-c-divider));
+  }
+
+  .sb-subgroup-items:has(.is-current) {
+    border-left-color: var(--vp-c-brand-1);
+  }
+
+  .sb-subgroup:hover > .sb-subgroup-items:has(.is-current) {
+    border-left-color: var(--vp-c-brand-1);
+  }
+
+  .sb-subgroup-items > .sb-item + .sb-item {
+    margin-top: 2px;
+  }
+
+  .sb-link {
+    align-items: center;
+    border-radius: 6px;
+    color: var(--sl-color-gray-3);
+    display: flex;
+    font-size: 14px;
+    gap: 6px;
+    line-height: 1.4;
+    padding: 6px 8px;
+    text-decoration: none;
+    transition: background 150ms ease, color 150ms ease;
+  }
+
+  .sb-link--section {
+    color: var(--sl-color-gray-2);
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .sb-link:hover,
+  .sb-link:focus-visible {
+    background: var(--sb-link-hover-bg);
+    color: var(--sl-color-text);
+  }
+
+  .sb-link.is-current {
+    background: color-mix(in srgb, var(--vp-c-brand-1) 10%, transparent);
+    color: var(--vp-c-brand-1);
+    font-weight: 600;
+  }
+
+  .sb-link.is-current:hover {
+    background: color-mix(in srgb, var(--vp-c-brand-1) 14%, transparent);
+    color: var(--vp-c-brand-1);
+  }
+
+  .sb-badge {
+    align-items: center;
+    background: color-mix(in srgb, var(--vp-c-brand-1) 15%, transparent);
+    border-radius: 999px;
+    color: var(--vp-c-brand-1);
+    display: inline-flex;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    padding: 2px 6px;
+    text-transform: uppercase;
+  }
+
+  @media (min-width: 50rem) {
+    .sb-subgroup-label {
+      flex-direction: row-reverse;
+      justify-content: flex-end;
+    }
+
+    .sb-caret {
+      margin-left: 0;
+    }
+  }
+</style>

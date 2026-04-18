@@ -121,7 +121,7 @@ NO_NAMES_SORTED=$(awk -F'|' '$2 == ""' "$TMP_USERS" | sort -t'|' -k1,1)
   else
     echo "- [$login](https://github.com/$login)"
   fi
-done > ./docs/partials/contributors-list.md
+done > ./CONTRIBUTORS.md
 
 if [[ -f "$TMP_USERS" ]]; then
   rm "$TMP_USERS"

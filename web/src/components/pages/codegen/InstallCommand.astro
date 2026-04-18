@@ -1,0 +1,145 @@
+---
+import checkSvg from '@/assets/icons/check.svg?raw';
+import copySvg from '@/assets/icons/copy.svg?raw';
+import { CODEGEN_OUTPUT_ATTR } from '@/utils/codegen-context';
+
+interface Props {
+  command: string;
+  downloads?: string;
+  outputOptions?: Array<{ value: string; installCommand?: string; downloads?: string }>;
+}
+
+const { command, downloads, outputOptions } = Astro.props;
+---
+
+<button class="install" data-command={command} aria-label={`Copy: ${command}`} data-copy>
+  <span class="terminal-prompt" aria-hidden="true">$</span>
+  <code class="terminal-command">{command}</code>
+  <span class="icon copy-icon" set:html={copySvg} aria-hidden="true" />
+  <span class="icon check-icon" set:html={checkSvg} aria-hidden="true" />
+</button>
+<p class="downloads" aria-live="polite">{downloads ?? ''}</p>
+<script is:inline define:vars={{ outputOptions: outputOptions ?? [], outputAttr: CODEGEN_OUTPUT_ATTR }}>
+  (function () {
+    var output = document.documentElement.dataset[outputAttr];
+    var opt = outputOptions.find(function (o) { return o.value === output; });
+    if (!opt) return;
+    var btn = document.currentScript.previousElementSibling.previousElementSibling;
+    var stat = document.currentScript.previousElementSibling;
+    if (opt.installCommand) {
+      var code = btn.querySelector('.terminal-command');
+      if (code) code.textContent = opt.installCommand;
+      btn.dataset.command = opt.installCommand;
+      btn.setAttribute('aria-label', 'Copy: ' + opt.installCommand);
+    }
+    stat.textContent = opt.downloads ?? '';
+  })();
+</script>
+
+<script>
+  import { writeText } from '@/utils/clipboard';
+  import { createCopyFeedback } from '@/utils/copy-feedback';
+
+  document.querySelectorAll<HTMLButtonElement>('.install[data-command]').forEach((el) => {
+    const code = el.querySelector<HTMLElement>('.terminal-command');
+
+    const observer = new MutationObserver(() => {
+      const command = el.dataset.command ?? '';
+      if (code) code.textContent = command;
+      el.setAttribute('aria-label', `Copy: ${command}`);
+    });
+    observer.observe(el, { attributeFilter: ['data-command'] });
+
+    const trigger = createCopyFeedback({
+      onCopied: () => { el.classList.add('copied'); },
+      onReset: () => { el.classList.remove('copied'); },
+    });
+
+    el.addEventListener('click', async () => {
+      const command = el.dataset.command?.trim() ?? '';
+      await trigger(() => writeText(command));
+    });
+  });
+</script>
+
+<style>
+  .install {
+    align-items: center;
+    background: var(--dt-bg-2);
+    border-radius: 8px;
+    border: 1px solid var(--vp-c-divider);
+    box-sizing: border-box;
+    color: var(--sl-color-text);
+    cursor: pointer;
+    display: inline-flex;
+    font-family: var(--sl-font-mono, ui-monospace, monospace);
+    font-size: 15px;
+    gap: 16px;
+    margin-bottom: 8px;
+    margin-top: 0;
+    max-width: 100%;
+    padding: 13px 20px 13px 22px;
+    text-align: left;
+    transition: border-color 150ms ease;
+  }
+
+  .install:hover {
+    border-color: var(--vp-c-brand-1);
+  }
+
+  .terminal-prompt {
+    color: var(--sl-color-gray-3);
+    flex-shrink: 0;
+    user-select: none;
+  }
+
+  .terminal-command {
+    background: none;
+    border: none;
+    color: var(--sl-color-text);
+    flex: 1;
+    font-family: inherit;
+    font-size: 15px;
+    min-width: 0;
+    overflow: hidden;
+    padding: 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .icon {
+    align-items: center;
+    color: var(--sl-color-gray-3);
+    display: flex;
+    flex-shrink: 0;
+    height: 20px;
+    justify-content: center;
+    margin-left: auto;
+    transition: color 150ms ease;
+    width: 20px;
+  }
+
+  .check-icon { display: none; }
+  .install.copied .copy-icon { display: none; }
+  .install.copied .check-icon {
+    color: var(--vp-c-brand-1);
+    display: block;
+  }
+  .install:hover .copy-icon { color: var(--sl-color-text); }
+
+  .downloads {
+    color: var(--sl-color-gray-3);
+    font-size: 13px;
+    line-height: 1;
+    margin: 0 0 2rem;
+    min-height: 1lh;
+    padding-left: 2px;
+  }
+
+  @media (max-width: 640px) {
+    .install {
+      display: flex;
+      width: 100%;
+    }
+  }
+</style>
