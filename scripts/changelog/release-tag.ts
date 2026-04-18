@@ -1,7 +1,6 @@
 import { execSync } from 'node:child_process';
-import fs from 'node:fs';
 
-import { isExecutedDirectly } from './config';
+import { isExecutedDirectly, writeDebugFile } from './config';
 
 export function getAllTags(): Array<string> {
   const tagsOutput = execSync('git tag --list', { encoding: 'utf-8' });
@@ -32,13 +31,9 @@ export async function generateReleaseTag(): Promise<string> {
 
   const tag = !maxSequence ? today : `${today}.${maxSequence + 1}`;
 
-  if (process.env.DEBUG === 'true') {
-    fs.writeFileSync(
-      'DEBUG_RELEASE_TAG.json',
-      JSON.stringify({ maxSequence, tag, tags, today, todayTags }, null, 2),
-      'utf-8',
-    );
-  }
+  writeDebugFile('RELEASE_TAG.json', () =>
+    JSON.stringify({ maxSequence, tag, tags, today, todayTags }, null, 2),
+  );
 
   return tag;
 }
