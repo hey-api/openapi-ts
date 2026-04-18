@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 
-import { isExecutedDirectly, isFlagshipPackage, repo } from './config';
+import { isExecutedDirectly, isFlagshipPackage, repo, writeDebugFile } from './config';
 import { getDateRangeFilterFromEnv } from './date-filter';
 import { readAllPackageChangelogs } from './reader';
 import { createReleases } from './releases';
@@ -195,9 +195,7 @@ async function assembleRootChangelog(): Promise<string> {
   const dateRange = getDateRangeFilterFromEnv();
   const releases = createReleases(changelogs, { dateRange });
 
-  if (process.env.DEBUG === 'true') {
-    fs.writeFileSync('DEBUG_CHANGELOG.json', JSON.stringify(releases, null, 2), 'utf-8');
-  }
+  writeDebugFile('CHANGELOG.json', () => JSON.stringify(releases, null, 2));
 
   return formatChangelog(releases);
 }
