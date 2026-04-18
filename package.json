@@ -22,6 +22,7 @@
   "scripts": {
     "build": "turbo run build",
     "changelog:assemble": "tsx scripts/changelog/assemble.ts",
+    "changelog:release:name": "tsx scripts/changelog/release-name.ts",
     "changelog:release:notes": "tsx scripts/changelog/release-notes.ts",
     "changelog:release:tag": "tsx scripts/changelog/release-tag.ts",
     "changelog:version": "changeset version && pnpm changelog:assemble",
