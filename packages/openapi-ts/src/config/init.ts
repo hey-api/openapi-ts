@@ -31,7 +31,9 @@ export async function resolveJobs({
   let dependencies: Record<string, string> = {};
 
   const eventLoad = logger.timeEvent('load');
-  for (const userConfig of userConfigs) {
+  const isImplicit = !userConfigs.length;
+  const configsToProcess = isImplicit ? ([{}] as ReadonlyArray<UserConfig>) : userConfigs;
+  for (const userConfig of configsToProcess) {
     let configFile: string | undefined;
     if (userConfig.configFile) {
       const parts = userConfig.configFile.split('.');
@@ -50,7 +52,9 @@ export async function resolveJobs({
       dependencies = getProjectDependencies(loaded.foundConfig ? loaded.configFile : undefined);
     }
 
-    configs.push(...loaded.configs);
+    if (loaded.foundConfig || !isImplicit) {
+      configs.push(...loaded.configs);
+    }
   }
   eventLoad.timeEnd();
 
