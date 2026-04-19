@@ -117,6 +117,38 @@ describe('createFilteredDependencies', () => {
     expect(schemas).toEqual(new Set(['schema/Baz']));
   });
 
+  it('keeps non-deprecated operations that transitively reference deprecated schemas', () => {
+    const filters = createFilters();
+    filters.deprecated = false;
+
+    const resourceMetadata = createResourceMetadata();
+    // Add a deprecated schema referenced via a oneOf in the response
+    resourceMetadata.schemas.set('schema/DeprecatedWidget', {
+      dependencies: new Set(),
+      deprecated: true,
+    });
+    // Operation transitively depends on the deprecated schema
+    resourceMetadata.operations.set('operation/GET /v1/widgets', {
+      dependencies: new Set([
+        'response/UsedResponse',
+        'schema/Foo',
+        'schema/DeprecatedWidget',
+      ]),
+      deprecated: false,
+      tags: new Set(),
+    });
+
+    const { operations, schemas } = createFilteredDependencies({
+      filters,
+      logger: loggerStub,
+      resourceMetadata,
+    });
+
+    expect(operations.has('operation/GET /v1/widgets')).toBe(true);
+    // The deprecated schema should be re-added since the operation needs it
+    expect(schemas.has('schema/DeprecatedWidget')).toBe(true);
+  });
+
   it('prioritizes excludes when the same schema is explicitly included and excluded', () => {
     const filters = createFilters();
     filters.schemas.include.add('schema/Foo');
