@@ -433,8 +433,16 @@ function collectOperations({
             return !parameters.has(dependency);
           case 'response':
             return !responses.has(dependency);
-          case 'schema':
-            return !schemas.has(dependency);
+          case 'schema': {
+            if (schemas.has(dependency)) {
+              return false;
+            }
+            if (filters.schemas.exclude.has(dependency)) {
+              return true;
+            }
+            schemas.add(dependency);
+            return false;
+          }
           default:
             return false;
         }
