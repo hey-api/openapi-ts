@@ -44,8 +44,15 @@ export function buildSymbolIn({
     }
   }
 
+  // When casing is 'preserve' and the symbol is for an operation with an original
+  // operationId, use the original operationId to preserve acronym casing.
+  // Check both `casing` (preferred) and `case` (deprecated) to handle all config forms.
+  const casing = ctx.naming?.casing ?? ctx.naming?.case;
+  const name =
+    casing === 'preserve' && ctx.operation?.operationId ? ctx.operation.operationId : ctx.name;
+
   return {
     meta: ctx.meta,
-    name: ctx.naming ? applyNaming(ctx.name, ctx.naming) : ctx.name,
+    name: ctx.naming ? applyNaming(name, ctx.naming) : name,
   };
 }
