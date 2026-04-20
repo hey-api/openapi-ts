@@ -90,6 +90,7 @@
 - [Simen Bekkhus](https://github.com/SimenB)
 - [Sipan Petrosyan](https://github.com/SipanP)
 - [Sjoerd Scheffer](https://github.com/ixnas)
+- [Spencer Sargent](https://github.com/sbs44)
 - [Stephen Zhou](https://github.com/hyoban)
 - [Stian Jensen](https://github.com/stianjensen)
 - [Tom van de Velde](https://github.com/tomvdv)
