@@ -19,11 +19,15 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     env:
+      CURRENT_BRANCH: ${{ github.ref_name }}
       TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
       TURBO_TELEMETRY_DISABLED: 1
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
     steps:
       - uses: actions/checkout@v6.0.2
+        with:
+          fetch-depth: 0 # needs to fetch all commits for changelog
+          fetch-tags: true # needs to get the latest tag for changelog
 
       - uses: pnpm/action-setup@v5.0.0
 
@@ -32,20 +36,20 @@ jobs:
           node-version-file: '.nvmrc'
           cache: pnpm
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Build packages
         run: pnpm tb "@hey-api/**"
 
-      - name: Generate GitHub App Token
+      - name: Generate GitHub App token
         id: app-token
         uses: actions/create-github-app-token@v3.0.0
         with:
           app-id: ${{ secrets.GIT_APP_CLIENT_ID }}
           private-key: ${{ secrets.GIT_APP_PRIVATE_KEY }}
 
-      - name: Create Release Pull Request
+      - name: Create release pull request
         id: changesets
         uses: changesets/action@v1.7.0
         with:
@@ -53,36 +57,36 @@ jobs:
           createGithubReleases: false
           publish: pnpm changeset publish
           title: 'ci: release'
-          version: pnpm changelog:version
+          version: pnpm changeset version
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
           NPM_CONFIG_PROVENANCE: true
 
-      - name: Generate Release Tag
+      - name: Generate release tag
         if: steps.changesets.outputs.published == 'true'
         id: tag
         run: echo "tag=$(pnpm -s changelog:release:tag)" >> $GITHUB_OUTPUT
 
-      - name: Get Release Name
+      - name: Get release name
         if: steps.changesets.outputs.published == 'true'
         id: release-name
         run: echo "name=$(pnpm -s changelog:release:name ${{ steps.tag.outputs.tag }})" >> $GITHUB_OUTPUT
 
-      - name: Generate Release Notes
+      - name: Generate release notes
         if: steps.changesets.outputs.published == 'true'
         id: notes
         run: pnpm -s changelog:release:notes > release-notes.md
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
 
-      - name: Resolve Release Commit
+      - name: Resolve release commit
         if: steps.changesets.outputs.published == 'true'
         id: release-commit
         run: |
           sha=$(git log --format=%H --grep='^ci: release$' -n 1)
           echo "sha=$sha" >> "$GITHUB_OUTPUT"
 
-      - name: Create GitHub Release
+      - name: Create GitHub release
         if: steps.changesets.outputs.published == 'true'
         uses: softprops/action-gh-release@v3.0.0
         with:
@@ -93,8 +97,17 @@ jobs:
           target_commitish: ${{ steps.release-commit.outputs.sha || github.sha }}
           token: ${{ steps.app-token.outputs.token }}
 
-      - name: Get current branch
-        run: echo "CURRENT_BRANCH=$(git branch --show-current)" >> $GITHUB_ENV
+      - name: Rebuild changelog
+        if: steps.changesets.outputs.published == 'true'
+        run: pnpm changelog:assemble
+
+      - name: Commit changelog
+        if: steps.changesets.outputs.published == 'true'
+        uses: stefanzweifel/git-auto-commit-action@v7.1.0
+        with:
+          branch: ${{ env.CURRENT_BRANCH }}
+          commit_message: 'chore: sync changelog [skip ci]'
+          file_pattern: CHANGELOG.md
 
       - name: Update lock file
         if: env.CURRENT_BRANCH == 'changeset-release/main'
@@ -126,7 +139,7 @@ jobs:
           node-version-file: '.nvmrc'
           cache: pnpm
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Build packages
