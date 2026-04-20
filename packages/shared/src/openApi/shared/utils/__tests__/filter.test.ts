@@ -129,11 +129,7 @@ describe('createFilteredDependencies', () => {
     });
     // Operation transitively depends on the deprecated schema
     resourceMetadata.operations.set('operation/GET /v1/widgets', {
-      dependencies: new Set([
-        'response/UsedResponse',
-        'schema/Foo',
-        'schema/DeprecatedWidget',
-      ]),
+      dependencies: new Set(['response/UsedResponse', 'schema/Foo', 'schema/DeprecatedWidget']),
       deprecated: false,
       tags: new Set(),
     });
