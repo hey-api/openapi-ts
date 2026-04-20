@@ -72,6 +72,24 @@ export type IntegerAllOfChildB = Omit<IntegerAllOfBase, 'kind'> & {
     kind: 2;
 };
 
+export type InlineIntegerOneOf = {
+    value: ({
+        kind: 100;
+    } & InlineTypeA) | ({
+        kind: 200;
+    } & InlineTypeB);
+};
+
+export type InlineTypeA = {
+    kind?: 100;
+    data_a?: string;
+};
+
+export type InlineTypeB = {
+    kind?: 200;
+    data_b?: string;
+};
+
 export type NullableIntegerOneOf = ({
     tag: 10;
 } & NullableVariantX) | ({

@@ -154,6 +154,40 @@ components:
             child_b_field:
               type: string
 
+    # --- Inline property with integer discriminator (issue: non-string tag in nested oneOf) ---
+    InlineIntegerOneOf:
+      type: object
+      required:
+        - value
+      properties:
+        value:
+          oneOf:
+            - $ref: '#/components/schemas/InlineTypeA'
+            - $ref: '#/components/schemas/InlineTypeB'
+          discriminator:
+            propertyName: kind
+            mapping:
+              '100': '#/components/schemas/InlineTypeA'
+              '200': '#/components/schemas/InlineTypeB'
+
+    InlineTypeA:
+      type: object
+      properties:
+        kind:
+          type: integer
+          const: 100
+        data_a:
+          type: string
+
+    InlineTypeB:
+      type: object
+      properties:
+        kind:
+          type: integer
+          const: 200
+        data_b:
+          type: string
+
     # --- 3.1.x-specific: discriminator property with type array (e.g. nullable integer) ---
     NullableIntegerOneOf:
       oneOf:
