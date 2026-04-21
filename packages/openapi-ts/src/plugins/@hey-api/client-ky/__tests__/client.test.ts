@@ -581,6 +581,61 @@ describe('error interceptor', () => {
 
     client.interceptors.error.eject(interceptorId);
   });
+
+  // Regression test for a bug where each error interceptor received the
+  // original `error` rather than the previous interceptor's output, silently
+  // dropping transformations earlier in the chain.
+  it('passes each interceptor the previous interceptor output, not the original error', async () => {
+    const client = createClient({ baseUrl: 'https://example.com' });
+
+    const errorResponse = new Response(JSON.stringify({ message: 'original' }), {
+      headers: { 'Content-Type': 'application/json' },
+      status: 404,
+    });
+
+    const mockKy = vi.fn().mockRejectedValue(
+      new HTTPError(errorResponse, new Request('https://example.com/test'), {
+        method: 'GET',
+      } as any),
+    );
+
+    const firstInterceptor = vi.fn((error: unknown) => ({
+      ...(error as object),
+      first: true,
+    }));
+    const secondInterceptor = vi.fn((error: unknown) => ({
+      ...(error as object),
+      second: true,
+    }));
+
+    const firstId = client.interceptors.error.use(firstInterceptor);
+    const secondId = client.interceptors.error.use(secondInterceptor);
+
+    const result = await client.get({
+      ky: mockKy as Partial<KyInstance> as KyInstance,
+      throwOnError: false,
+      url: '/test',
+    });
+
+    // The second interceptor must see the first interceptor's output
+    // (including `first: true`), not the original payload.
+    expect(secondInterceptor).toHaveBeenCalledWith(
+      expect.objectContaining({ first: true, message: 'original' }),
+      expect.any(Response),
+      expect.any(Request),
+      expect.any(Object),
+    );
+
+    // The returned error should carry transformations from both interceptors.
+    expect(result.error).toEqual({
+      first: true,
+      message: 'original',
+      second: true,
+    });
+
+    client.interceptors.error.eject(firstId);
+    client.interceptors.error.eject(secondId);
+  });
 });
 
 describe('retry configuration', () => {

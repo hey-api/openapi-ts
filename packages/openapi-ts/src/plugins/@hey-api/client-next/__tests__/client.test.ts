@@ -286,3 +286,134 @@ describe('request interceptor', () => {
     },
   );
 });
+
+describe('request interceptor URL mutation', () => {
+  // Regression tests for a bug where the final URL was computed before request
+  // interceptors ran, causing interceptor mutations to `opts.baseUrl`,
+  // `opts.url`, `opts.path`, and `opts.query` to be silently ignored.
+  const buildOkResponse = () =>
+    new Response(JSON.stringify({ success: true }), {
+      headers: { 'Content-Type': 'application/json' },
+      status: 200,
+    });
+
+  it('honors interceptor mutations to opts.baseUrl in the fetched URL', async () => {
+    const client = createClient({ baseUrl: 'https://example.com' });
+    const mockFetch: MockFetch = vi.fn().mockResolvedValue(buildOkResponse());
+
+    const interceptorId = client.interceptors.request.use((options: ResolvedRequestOptions) => {
+      options.baseUrl = 'https://rerouted.com';
+    });
+
+    await client.get({ fetch: mockFetch, url: '/test' });
+
+    expect(mockFetch).toHaveBeenCalledExactlyOnceWith(
+      'https://rerouted.com/test',
+      expect.any(Object),
+    );
+
+    client.interceptors.request.eject(interceptorId);
+  });
+
+  it('honors interceptor mutations to opts.url in the fetched URL', async () => {
+    const client = createClient({ baseUrl: 'https://example.com' });
+    const mockFetch: MockFetch = vi.fn().mockResolvedValue(buildOkResponse());
+
+    const interceptorId = client.interceptors.request.use((options: ResolvedRequestOptions) => {
+      options.url = '/rewritten';
+    });
+
+    await client.get({ fetch: mockFetch, url: '/original' });
+
+    expect(mockFetch).toHaveBeenCalledExactlyOnceWith(
+      'https://example.com/rewritten',
+      expect.any(Object),
+    );
+
+    client.interceptors.request.eject(interceptorId);
+  });
+
+  it('honors interceptor mutations to opts.path in the fetched URL', async () => {
+    const client = createClient({ baseUrl: 'https://example.com' });
+    const mockFetch: MockFetch = vi.fn().mockResolvedValue(buildOkResponse());
+
+    const interceptorId = client.interceptors.request.use((options: ResolvedRequestOptions) => {
+      options.path = { id: 42 };
+    });
+
+    await client.get({ fetch: mockFetch, url: '/items/{id}' });
+
+    expect(mockFetch).toHaveBeenCalledExactlyOnceWith(
+      'https://example.com/items/42',
+      expect.any(Object),
+    );
+
+    client.interceptors.request.eject(interceptorId);
+  });
+
+  it('honors interceptor mutations to opts.query in the fetched URL', async () => {
+    const client = createClient({ baseUrl: 'https://example.com' });
+    const mockFetch: MockFetch = vi.fn().mockResolvedValue(buildOkResponse());
+
+    const interceptorId = client.interceptors.request.use((options: ResolvedRequestOptions) => {
+      options.query = { bar: 'baz' };
+    });
+
+    await client.get({ fetch: mockFetch, url: '/items' });
+
+    expect(mockFetch).toHaveBeenCalledExactlyOnceWith(
+      'https://example.com/items?bar=baz',
+      expect.any(Object),
+    );
+
+    client.interceptors.request.eject(interceptorId);
+  });
+});
+
+describe('error interceptor chain composition', () => {
+  // Regression test for a bug where each error interceptor received the
+  // original `error` rather than the previous interceptor's output, silently
+  // dropping transformations earlier in the chain.
+  it('passes each interceptor the previous interceptor output, not the original error', async () => {
+    const client = createClient({ baseUrl: 'https://example.com' });
+
+    const errorResponse = new Response(JSON.stringify({ message: 'original' }), {
+      headers: { 'Content-Type': 'application/json' },
+      status: 500,
+    });
+
+    const mockFetch: MockFetch = vi.fn().mockResolvedValue(errorResponse);
+
+    const firstInterceptor = vi.fn((error: unknown) => ({
+      ...(error as object),
+      first: true,
+    }));
+    const secondInterceptor = vi.fn((error: unknown) => ({
+      ...(error as object),
+      second: true,
+    }));
+
+    const firstId = client.interceptors.error.use(firstInterceptor);
+    const secondId = client.interceptors.error.use(secondInterceptor);
+
+    const result = await client.get({ fetch: mockFetch, url: '/test' });
+
+    // The second interceptor must see the first interceptor's output
+    // (including `first: true`), not the original payload.
+    expect(secondInterceptor).toHaveBeenCalledWith(
+      expect.objectContaining({ first: true, message: 'original' }),
+      expect.any(Response),
+      expect.any(Object),
+    );
+
+    // The returned error should carry transformations from both interceptors.
+    expect(result.error).toEqual({
+      first: true,
+      message: 'original',
+      second: true,
+    });
+
+    client.interceptors.error.eject(firstId);
+    client.interceptors.error.eject(secondId);
+  });
+});
