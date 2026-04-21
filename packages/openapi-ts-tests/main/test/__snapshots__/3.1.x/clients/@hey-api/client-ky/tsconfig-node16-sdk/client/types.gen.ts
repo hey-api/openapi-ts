@@ -27,6 +27,7 @@ export interface Config<T extends ClientOptions = ClientOptions>
       | 'redirect'
       | 'referrer'
       | 'referrerPolicy'
+      | 'timeout'
     >,
     CoreConfig {
   /**
@@ -68,12 +69,6 @@ export interface Config<T extends ClientOptions = ClientOptions>
    * @default false
    */
   throwOnError?: T['throwOnError'];
-  /**
-   * Request timeout in milliseconds
-   *
-   * @default 10000
-   */
-  timeout?: number;
 }
 
 export interface RequestOptions<
