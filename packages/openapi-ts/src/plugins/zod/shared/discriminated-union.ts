@@ -47,6 +47,7 @@ export function tryBuildDiscriminatedUnion({
 
     let refExpression: Chain;
     if (refPart.symbolRef) {
+      if (refPart.symbolRef.meta?.['isIntersection'] === true) return null;
       refExpression = $(refPart.symbolRef);
     } else if (refPart.$ref) {
       const query: SymbolMeta = {
@@ -55,6 +56,7 @@ export function tryBuildDiscriminatedUnion({
         resourceId: refPart.$ref,
         tool: 'zod',
       };
+      if (plugin.querySymbol(query)?.meta?.['isIntersection'] === true) return null;
       refExpression = $(plugin.referenceSymbol(query));
     } else {
       return null;
