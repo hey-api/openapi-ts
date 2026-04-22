@@ -126,6 +126,7 @@ export const createClient = (config: Config = {}): Client => {
 
     let request: Request | undefined;
     let response: KyResponse | undefined;
+    let errorInterceptorsInvoked = false;
 
     try {
       const { opts, url } = await beforeRequest(options);
@@ -177,6 +178,10 @@ export const createClient = (config: Config = {}): Client => {
             }
           }
 
+          // parseErrorResponse will run error interceptors, and re-throw when
+          // throwOnError is true, which bubbles already intercepted error to
+          // outer catch. With this flag, we can avoid outer catch running interceptors again
+          errorInterceptorsInvoked = true;
           return parseErrorResponse(response, request, opts, interceptors);
         }
 
@@ -269,17 +274,31 @@ export const createClient = (config: Config = {}): Client => {
             };
       }
 
+      // parseErrorResponse will run error interceptors, and re-throw when
+      // throwOnError is true, which bubbles already intercepted error to
+      // outer catch. With this flag, we can avoid outer catch running interceptors again
+      errorInterceptorsInvoked = true;
       return parseErrorResponse(response, request, opts, interceptors);
     } catch (error) {
       let finalError = error;
 
-      for (const fn of interceptors.error.fns) {
-        if (fn) {
-          finalError = (await fn(finalError, response, request, options as any)) as string;
+      // error may already be processed by parseErrorResponse, in this case
+      // we can skip running interceptors again
+      if (!errorInterceptorsInvoked) {
+        // parseErrorResponse already ran interceptors and threw (throwOnError=true); just re-throw
+        for (const fn of interceptors.error.fns) {
+          if (fn) {
+            finalError = (await fn(
+              finalError,
+              response as any,
+              request as any,
+              options as any,
+            )) as string;
+          }
         }
-      }
 
-      finalError = finalError || ({} as string);
+        finalError = finalError || ({} as string);
+      }
 
       if (throwOnError) {
         throw finalError;
