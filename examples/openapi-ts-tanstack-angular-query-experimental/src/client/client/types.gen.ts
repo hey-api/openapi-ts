@@ -129,7 +129,8 @@ export type RequestResult<
           | {
               data: undefined;
               error: TError[keyof TError];
-              request: HttpRequest<unknown>;
+              /** request may be undefined, because error may be from building the request object itself */
+              request?: HttpRequest<unknown>;
               response: HttpErrorResponse & {
                 error: TError[keyof TError] | null;
               };
