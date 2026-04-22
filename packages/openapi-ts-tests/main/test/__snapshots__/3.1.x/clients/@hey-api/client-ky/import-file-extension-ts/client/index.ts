@@ -20,7 +20,6 @@ export type {
   RequestResult,
   ResolvedRequestOptions,
   ResponseStyle,
-  RetryOptions,
   TDataShape,
 } from './types.gen.ts';
 export { createConfig, mergeHeaders } from './utils.gen.ts';

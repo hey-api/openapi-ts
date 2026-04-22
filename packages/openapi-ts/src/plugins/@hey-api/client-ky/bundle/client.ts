@@ -1,10 +1,10 @@
-import type { HTTPError, Options as KyOptions } from 'ky';
-import ky from 'ky';
+import type { KyResponse, Options as KyOptions } from 'ky';
+import ky, { isHTTPError } from 'ky';
 
 import { createSseClient } from '../../client-core/bundle/serverSentEvents';
 import type { HttpMethod } from '../../client-core/bundle/types';
 import { getValidRequestBody } from '../../client-core/bundle/utils';
-import type { Client, Config, RequestOptions, ResolvedRequestOptions, RetryOptions } from './types';
+import type { Client, Config, RequestOptions, ResolvedRequestOptions } from './types';
 import type { Middleware } from './utils';
 import {
   buildUrl,
@@ -41,6 +41,11 @@ export const createClient = (config: Config = {}): Client => {
       ...options,
       headers: mergeHeaders(_config.headers, options.headers),
       ky: options.ky ?? _config.ky ?? ky,
+      // deep merge kyOptions to ensure base _config is being respected
+      kyOptions: {
+        ..._config.kyOptions,
+        ...options.kyOptions,
+      },
       serializedBody: undefined as string | undefined,
     };
 
@@ -122,32 +127,22 @@ export const createClient = (config: Config = {}): Client => {
 
     const kyOptions: KyOptions = {
       body: validBody as BodyInit,
-      cache: opts.cache,
-      credentials: opts.credentials,
-      headers: opts.headers,
-      integrity: opts.integrity,
-      keepalive: opts.keepalive,
-      method: opts.method as KyOptions['method'],
-      mode: opts.mode,
-      redirect: 'follow',
-      referrer: opts.referrer,
-      referrerPolicy: opts.referrerPolicy,
-      signal: opts.signal,
+      ...(opts.cache !== undefined ? { cache: opts.cache } : {}),
+      ...(opts.credentials !== undefined ? { credentials: opts.credentials } : {}),
+      ...(opts.headers !== undefined ? { headers: opts.headers } : {}),
+      ...(opts.integrity !== undefined ? { integrity: opts.integrity } : {}),
+      ...(opts.keepalive !== undefined ? { keepalive: opts.keepalive } : {}),
+      ...(opts.method !== undefined ? { method: opts.method } : {}),
+      ...(opts.mode !== undefined ? { mode: opts.mode } : {}),
+      redirect: opts.redirect ?? 'follow',
+      ...(opts.referrer !== undefined ? { referrer: opts.referrer } : {}),
+      ...(opts.referrerPolicy !== undefined ? { referrerPolicy: opts.referrerPolicy } : {}),
+      ...(opts.signal !== undefined ? { signal: opts.signal } : {}),
       throwHttpErrors: opts.throwOnError ?? false,
-      timeout: opts.timeout,
+      ...(opts.timeout !== undefined ? { timeout: opts.timeout } : {}),
       ...opts.kyOptions,
+      retry: opts.retry ?? opts.kyOptions?.retry ?? 2,
     };
-
-    if (opts.retry && typeof opts.retry === 'object') {
-      const retryOpts = opts.retry as RetryOptions;
-      kyOptions.retry = {
-        limit: retryOpts.limit ?? 2,
-        methods: retryOpts.methods as Array<
-          'get' | 'post' | 'put' | 'patch' | 'head' | 'delete' | 'options' | 'trace'
-        >,
-        statusCodes: retryOpts.statusCodes,
-      };
-    }
 
     let request = new Request(url, {
       body: kyOptions.body as BodyInit,
@@ -161,14 +156,13 @@ export const createClient = (config: Config = {}): Client => {
       }
     }
 
-    let response: Response;
+    let response: KyResponse;
 
     try {
       response = await kyInstance(request, kyOptions);
     } catch (error) {
-      if (error && typeof error === 'object' && 'response' in error) {
-        const httpError = error as HTTPError;
-        response = httpError.response;
+      if (isHTTPError(error)) {
+        response = error.response;
 
         for (const fn of interceptors.response.fns) {
           if (fn) {
