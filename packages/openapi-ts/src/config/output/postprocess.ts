@@ -11,13 +11,18 @@ export type Formatters = 'biome' | 'prettier';
 export type Linters = 'biome' | 'eslint' | 'oxlint';
 
 export const postProcessors = {
+  'biome:check': {
+    args: ['check', '--write', '{{path}}'],
+    command: 'biome',
+    name: 'Biome (Check)',
+  },
   'biome:format': {
     args: ['format', '--write', '{{path}}'],
     command: 'biome',
     name: 'Biome (Format)',
   },
   'biome:lint': {
-    args: ['lint', '--apply', '{{path}}'],
+    args: ['lint', '--write', '{{path}}'],
     command: 'biome',
     name: 'Biome (Lint)',
   },
