@@ -143,67 +143,77 @@ export const createClient = (config: Config = {}): Client => {
   };
 
   const request: Client['request'] = async (options) => {
-    const { networkBody: initialNetworkBody, opts, url } = await resolveOptions(options as any);
-    // map parseAs -> ofetch responseType once per request
-    const ofetchResponseType: OfetchResponseType | undefined = mapParseAsToResponseType(
-      opts.parseAs,
-      opts.responseType,
-    );
+    const throwOnError = (options as any).throwOnError ?? _config.throwOnError;
+    const responseStyle = (options as any).responseStyle ?? _config.responseStyle;
 
-    const $ofetch = opts.ofetch ?? ofetch;
+    let request: Request | undefined;
+    let response: Awaited<ReturnType<typeof ofetch.raw>> | undefined;
 
-    // create Request before network to run middleware consistently
-    const networkBody = initialNetworkBody;
-    const requestInit: ReqInit = {
-      body: networkBody,
-      headers: opts.headers as Headers,
-      method: opts.method,
-      redirect: 'follow',
-      signal: opts.signal,
-    };
-    let request = new Request(url, requestInit);
+    try {
+      const { networkBody: initialNetworkBody, opts, url } = await resolveOptions(options as any);
+      // map parseAs -> ofetch responseType once per request
+      const ofetchResponseType: OfetchResponseType | undefined = mapParseAsToResponseType(
+        opts.parseAs,
+        opts.responseType,
+      );
 
-    request = await applyRequestInterceptors(request, opts, networkBody);
-    const finalUrl = request.url;
+      const $ofetch = opts.ofetch ?? ofetch;
 
-    // build ofetch options and perform the request (.raw keeps the Response)
-    const responseOptions = buildNetworkOptions(
-      opts as ResolvedRequestOptions,
-      networkBody,
-      ofetchResponseType,
-    );
+      // create Request before network to run middleware consistently
+      const networkBody = initialNetworkBody;
+      const requestInit: ReqInit = {
+        body: networkBody,
+        headers: opts.headers as Headers,
+        method: opts.method,
+        redirect: 'follow',
+        signal: opts.signal,
+      };
+      request = new Request(url, requestInit);
 
-    let response = await $ofetch.raw(finalUrl, responseOptions);
+      request = await applyRequestInterceptors(request, opts, networkBody);
+      const finalUrl = request.url;
 
-    for (const fn of interceptors.response.fns) {
-      if (fn) {
-        response = await fn(response, request, opts);
+      // build ofetch options and perform the request (.raw keeps the Response)
+      const responseOptions = buildNetworkOptions(
+        opts as ResolvedRequestOptions,
+        networkBody,
+        ofetchResponseType,
+      );
+
+      response = await $ofetch.raw(finalUrl, responseOptions);
+
+      for (const fn of interceptors.response.fns) {
+        if (fn) {
+          response = await fn(response, request, opts);
+        }
       }
-    }
 
-    const result = { request, response };
+      const result = { request, response };
 
-    if (response.ok) {
-      const data = await parseSuccess(response, opts, ofetchResponseType);
-      return wrapDataReturn(data, result, opts.responseStyle);
-    }
-
-    let finalError = await parseError(response);
-
-    for (const fn of interceptors.error.fns) {
-      if (fn) {
-        finalError = await fn(finalError, response, request, opts);
+      if (response.ok) {
+        const data = await parseSuccess(response, opts, ofetchResponseType);
+        return wrapDataReturn(data, result, opts.responseStyle);
       }
+
+      throw await parseError(response);
+    } catch (error) {
+      let finalError = error;
+
+      for (const fn of interceptors.error.fns) {
+        if (fn) {
+          finalError = await fn(finalError, response, request, options as any);
+        }
+      }
+
+      // ensure error is never undefined after interceptors
+      finalError = (finalError as any) || ({} as string);
+
+      if (throwOnError) {
+        throw finalError;
+      }
+
+      return wrapErrorReturn(finalError, { request, response }, responseStyle) as any;
     }
-
-    // ensure error is never undefined after interceptors
-    finalError = (finalError as any) || ({} as string);
-
-    if (opts.throwOnError) {
-      throw finalError;
-    }
-
-    return wrapErrorReturn(finalError, result, opts.responseStyle) as any;
   };
 
   const makeMethodFn = (method: Uppercase<HttpMethod>) => (options: RequestOptions) =>

@@ -119,150 +119,178 @@ export const createClient = (config: Config = {}): Client => {
   };
 
   const request: Client['request'] = async (options) => {
-    const { opts, url } = await beforeRequest(options);
+    const throwOnError = options.throwOnError ?? _config.throwOnError;
+    const responseStyle = options.responseStyle ?? _config.responseStyle;
 
-    const kyInstance = opts.ky!;
-
-    const validBody = getValidRequestBody(opts);
-
-    const kyOptions: KyOptions = {
-      body: validBody as BodyInit,
-      ...(opts.cache !== undefined ? { cache: opts.cache } : {}),
-      ...(opts.credentials !== undefined ? { credentials: opts.credentials } : {}),
-      ...(opts.headers !== undefined ? { headers: opts.headers } : {}),
-      ...(opts.integrity !== undefined ? { integrity: opts.integrity } : {}),
-      ...(opts.keepalive !== undefined ? { keepalive: opts.keepalive } : {}),
-      ...(opts.method !== undefined ? { method: opts.method } : {}),
-      ...(opts.mode !== undefined ? { mode: opts.mode } : {}),
-      redirect: opts.redirect ?? 'follow',
-      ...(opts.referrer !== undefined ? { referrer: opts.referrer } : {}),
-      ...(opts.referrerPolicy !== undefined ? { referrerPolicy: opts.referrerPolicy } : {}),
-      ...(opts.signal !== undefined ? { signal: opts.signal } : {}),
-      throwHttpErrors: opts.throwOnError ?? false,
-      ...(opts.timeout !== undefined ? { timeout: opts.timeout } : {}),
-      ...opts.kyOptions,
-      retry: opts.retry ?? opts.kyOptions?.retry ?? 2,
-    };
-
-    let request = new Request(url, {
-      body: kyOptions.body as BodyInit,
-      headers: kyOptions.headers as HeadersInit,
-      method: kyOptions.method,
-    });
-
-    for (const fn of interceptors.request.fns) {
-      if (fn) {
-        request = await fn(request, opts);
-      }
-    }
-
-    let response: KyResponse;
+    let request: Request | undefined;
+    let response: KyResponse | undefined;
 
     try {
-      response = await kyInstance(request, kyOptions);
-    } catch (error) {
-      if (isHTTPError(error)) {
-        response = error.response;
+      const { opts, url } = await beforeRequest(options);
 
-        for (const fn of interceptors.response.fns) {
-          if (fn) {
-            response = await fn(response, request, opts);
+      const kyInstance = opts.ky!;
+
+      const validBody = getValidRequestBody(opts);
+
+      const kyOptions: KyOptions = {
+        body: validBody as BodyInit,
+        ...(opts.cache !== undefined ? { cache: opts.cache } : {}),
+        ...(opts.credentials !== undefined ? { credentials: opts.credentials } : {}),
+        ...(opts.headers !== undefined ? { headers: opts.headers } : {}),
+        ...(opts.integrity !== undefined ? { integrity: opts.integrity } : {}),
+        ...(opts.keepalive !== undefined ? { keepalive: opts.keepalive } : {}),
+        ...(opts.method !== undefined ? { method: opts.method } : {}),
+        ...(opts.mode !== undefined ? { mode: opts.mode } : {}),
+        redirect: opts.redirect ?? 'follow',
+        ...(opts.referrer !== undefined ? { referrer: opts.referrer } : {}),
+        ...(opts.referrerPolicy !== undefined ? { referrerPolicy: opts.referrerPolicy } : {}),
+        ...(opts.signal !== undefined ? { signal: opts.signal } : {}),
+        throwHttpErrors: opts.throwOnError ?? false,
+        ...(opts.timeout !== undefined ? { timeout: opts.timeout } : {}),
+        ...opts.kyOptions,
+        retry: opts.retry ?? opts.kyOptions?.retry ?? 2,
+      };
+
+      request = new Request(url, {
+        body: kyOptions.body as BodyInit,
+        headers: kyOptions.headers as HeadersInit,
+        method: kyOptions.method,
+      });
+
+      for (const fn of interceptors.request.fns) {
+        if (fn) {
+          request = await fn(request, opts);
+        }
+      }
+
+      try {
+        response = await kyInstance(request, kyOptions);
+      } catch (error) {
+        if (isHTTPError(error)) {
+          response = error.response;
+
+          for (const fn of interceptors.response.fns) {
+            if (fn) {
+              response = await fn(response, request, opts);
+            }
           }
+
+          return parseErrorResponse(response, request, opts, interceptors);
         }
 
-        return parseErrorResponse(response, request, opts, interceptors);
+        throw error;
       }
 
-      throw error;
-    }
-
-    for (const fn of interceptors.response.fns) {
-      if (fn) {
-        response = await fn(response, request, opts);
+      for (const fn of interceptors.response.fns) {
+        if (fn) {
+          response = await fn(response, request, opts);
+        }
       }
-    }
 
-    const result = {
-      request,
-      response,
-    };
+      const result = {
+        request,
+        response,
+      };
 
-    if (response.ok) {
-      const parseAs =
-        (opts.parseAs === 'auto'
-          ? getParseAs(response.headers.get('Content-Type'))
-          : opts.parseAs) ?? 'json';
+      if (response.ok) {
+        const parseAs =
+          (opts.parseAs === 'auto'
+            ? getParseAs(response.headers.get('Content-Type'))
+            : opts.parseAs) ?? 'json';
 
-      if (response.status === 204 || response.headers.get('Content-Length') === '0') {
-        let emptyData: any;
+        if (response.status === 204 || response.headers.get('Content-Length') === '0') {
+          let emptyData: any;
+          switch (parseAs) {
+            case 'arrayBuffer':
+            case 'blob':
+            case 'text':
+              emptyData = await response[parseAs]();
+              break;
+            case 'formData':
+              emptyData = new FormData();
+              break;
+            case 'stream':
+              emptyData = response.body;
+              break;
+            case 'json':
+            default:
+              emptyData = {};
+              break;
+          }
+          return opts.responseStyle === 'data'
+            ? emptyData
+            : {
+                data: emptyData,
+                ...result,
+              };
+        }
+
+        let data: any;
         switch (parseAs) {
           case 'arrayBuffer':
           case 'blob':
-          case 'text':
-            emptyData = await response[parseAs]();
-            break;
           case 'formData':
-            emptyData = new FormData();
+          case 'text':
+            data = await response[parseAs]();
             break;
+          case 'json': {
+            // Some servers return 200 with no Content-Length and empty body.
+            // response.json() would throw; read as text and parse if non-empty.
+            const text = await response.text();
+            data = text ? JSON.parse(text) : {};
+            break;
+          }
           case 'stream':
-            emptyData = response.body;
-            break;
-          case 'json':
-          default:
-            emptyData = {};
-            break;
+            return opts.responseStyle === 'data'
+              ? response.body
+              : {
+                  data: response.body,
+                  ...result,
+                };
         }
+
+        if (parseAs === 'json') {
+          if (opts.responseValidator) {
+            await opts.responseValidator(data);
+          }
+
+          if (opts.responseTransformer) {
+            data = await opts.responseTransformer(data);
+          }
+        }
+
         return opts.responseStyle === 'data'
-          ? emptyData
+          ? data
           : {
-              data: emptyData,
+              data,
               ...result,
             };
       }
 
-      let data: any;
-      switch (parseAs) {
-        case 'arrayBuffer':
-        case 'blob':
-        case 'formData':
-        case 'text':
-          data = await response[parseAs]();
-          break;
-        case 'json': {
-          // Some servers return 200 with no Content-Length and empty body.
-          // response.json() would throw; read as text and parse if non-empty.
-          const text = await response.text();
-          data = text ? JSON.parse(text) : {};
-          break;
-        }
-        case 'stream':
-          return opts.responseStyle === 'data'
-            ? response.body
-            : {
-                data: response.body,
-                ...result,
-              };
-      }
+      return parseErrorResponse(response, request, opts, interceptors);
+    } catch (error) {
+      let finalError = error;
 
-      if (parseAs === 'json') {
-        if (opts.responseValidator) {
-          await opts.responseValidator(data);
-        }
-
-        if (opts.responseTransformer) {
-          data = await opts.responseTransformer(data);
+      for (const fn of interceptors.error.fns) {
+        if (fn) {
+          finalError = (await fn(error, response, request, options as any)) as string;
         }
       }
 
-      return opts.responseStyle === 'data'
-        ? data
+      finalError = finalError || ({} as string);
+
+      if (throwOnError) {
+        throw finalError;
+      }
+
+      return responseStyle === 'data'
+        ? undefined
         : {
-            data,
-            ...result,
+            error: finalError,
+            request,
+            response,
           };
     }
-
-    return parseErrorResponse(response, request, opts, interceptors);
   };
 
   const makeMethodFn = (method: Uppercase<HttpMethod>) => (options: RequestOptions) =>
