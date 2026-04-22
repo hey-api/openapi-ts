@@ -218,7 +218,7 @@ export const createClient = (config: Config = {}): Client => {
         : {
             error: finalError,
             request,
-            response: response as any,
+            response,
           };
     }
   };

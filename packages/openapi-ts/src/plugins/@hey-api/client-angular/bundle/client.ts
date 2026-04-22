@@ -125,10 +125,10 @@ export const createClient = (config: Config = {}): Client => {
 
     const result: {
       request?: HttpRequest<unknown>;
-      response: any;
+      response?: any;
     } = {
       request: undefined,
-      response: null,
+      response: undefined,
     };
 
     try {
@@ -178,7 +178,7 @@ export const createClient = (config: Config = {}): Client => {
         if (fn) {
           finalError = (await fn(
             finalError,
-            result.response as any,
+            result.response,
             result.request,
             options as any,
           )) as string;
