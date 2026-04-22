@@ -127,7 +127,8 @@ export type RequestResult<
           ) & {
             /** request may be undefined, because error may be from building the request object itself */
             request?: Request;
-            response: Response;
+            /** response may be undefined, because error may be from building the request object itself or from a network error */
+            response?: Response;
           }
     >;
 

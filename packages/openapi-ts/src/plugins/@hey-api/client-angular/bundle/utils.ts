@@ -312,7 +312,8 @@ export const mergeHeaders = (
 
 type ErrInterceptor<Err, Res, Req, Options> = (
   error: Err,
-  response: Res,
+  /** response may be undefined due to a network error where no response object is produced */
+  response: Res | undefined,
   /** request may be undefined, because error may be from building the request object itself */
   request: Req | undefined,
   options: Options,
