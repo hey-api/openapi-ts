@@ -28,6 +28,8 @@ export interface ZodMeta {
   format?: string;
   /** Whether this or any child contains a lazy reference. */
   hasLazy: boolean;
+  /** Whether this schema generates a ZodIntersection (e.g. via allOf). */
+  isIntersection: boolean;
   /** Whether this schema itself is emitted as lazy. */
   isLazy: boolean;
   /** Whether this schema resolves to an object shape. */

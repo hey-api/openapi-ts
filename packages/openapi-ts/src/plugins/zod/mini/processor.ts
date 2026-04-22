@@ -56,7 +56,12 @@ export function createProcessor(plugin: ZodPlugin['Instance']): ProcessorResult 
       }) as ZodFinal;
 
       if (shouldExport) {
-        exportAst({ ...ctx, final, plugin });
+        exportAst({
+          ...ctx,
+          final,
+          meta: result.meta.isIntersection ? { ...ctx.meta, isIntersection: true } : ctx.meta,
+          plugin,
+        });
         return;
       }
 
