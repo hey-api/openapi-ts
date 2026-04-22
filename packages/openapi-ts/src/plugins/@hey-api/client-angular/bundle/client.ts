@@ -120,25 +120,30 @@ export const createClient = (config: Config = {}): Client => {
   };
 
   const request: Client['request'] = async (options) => {
-    const { opts, req: initialReq } = await beforeRequest(options);
-
-    let req = initialReq;
-
-    for (const fn of interceptors.request.fns) {
-      if (fn) {
-        req = await fn(req, opts as any);
-      }
-    }
+    const throwOnError = options.throwOnError ?? _config.throwOnError;
+    const responseStyle = options.responseStyle ?? _config.responseStyle;
 
     const result: {
-      request: HttpRequest<unknown>;
+      request?: HttpRequest<unknown>;
       response: any;
     } = {
-      request: req,
+      request: undefined,
       response: null,
     };
 
     try {
+      const { opts, req: initialReq } = await beforeRequest(options);
+
+      let req = initialReq;
+      result.request = req;
+
+      for (const fn of interceptors.request.fns) {
+        if (fn) {
+          req = await fn(req, opts as any);
+          result.request = req;
+        }
+      }
+
       result.response = (await firstValueFrom(
         opts
           .httpClient!.request(req)
@@ -171,15 +176,20 @@ export const createClient = (config: Config = {}): Client => {
 
       for (const fn of interceptors.error.fns) {
         if (fn) {
-          finalError = (await fn(finalError, result.response as any, req, opts as any)) as string;
+          finalError = (await fn(
+            finalError,
+            result.response as any,
+            result.request,
+            options as any,
+          )) as string;
         }
       }
 
-      if (opts.throwOnError) {
+      if (throwOnError) {
         throw finalError;
       }
 
-      return opts.responseStyle === 'data'
+      return responseStyle === 'data'
         ? undefined
         : {
             error: finalError,
