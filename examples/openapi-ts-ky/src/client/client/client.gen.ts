@@ -275,7 +275,7 @@ export const createClient = (config: Config = {}): Client => {
 
       for (const fn of interceptors.error.fns) {
         if (fn) {
-          finalError = (await fn(error, response, request, options as any)) as string;
+          finalError = (await fn(finalError, response, request, options as any)) as string;
         }
       }
 
