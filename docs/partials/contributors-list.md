@@ -93,6 +93,7 @@
 - [Spencer Sargent](https://github.com/sbs44)
 - [Stephen Zhou](https://github.com/hyoban)
 - [Stian Jensen](https://github.com/stianjensen)
+- [Sukka](https://github.com/SukkaW)
 - [Tom van de Velde](https://github.com/tomvdv)
 - [Vincent Olesen](https://github.com/volesen)
 - [Warren Seine](https://github.com/warrenseine)
