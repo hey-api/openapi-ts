@@ -8,6 +8,7 @@ export const defaultConfig: TanStackAngularQueryPlugin['Config'] = {
     case: 'camelCase',
     comments: true,
     includeInEntry: false,
+    responseStyle: 'data',
   },
   dependencies: ['@hey-api/sdk', '@hey-api/typescript'],
   handler: handler as TanStackAngularQueryPlugin['Handler'],
