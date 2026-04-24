@@ -64,6 +64,14 @@ export type UserConfig = Plugin.Name<'@hey-api/sdk'> &
      */
     paramsStructure?: 'flat' | 'grouped';
     /**
+     * Generate schema-driven per-operation `querySerializer` output?
+     *
+     * Set to `false` to omit generated `querySerializer` code entirely.
+     *
+     * @default true
+     */
+    querySerializer?: boolean;
+    /**
      * **This feature works only with the Fetch client**
      *
      * Should we return only data or multiple fields (data, error, response, etc.)?
@@ -230,6 +238,14 @@ export type Config = Plugin.Name<'@hey-api/sdk'> &
      * @default 'grouped'
      */
     paramsStructure: 'flat' | 'grouped';
+    /**
+     * Generate schema-driven per-operation `querySerializer` output?
+     *
+     * Set to `false` to omit generated `querySerializer` code entirely.
+     *
+     * @default true
+     */
+    querySerializer: boolean;
     /**
      * **This feature works only with the Fetch client**
      *

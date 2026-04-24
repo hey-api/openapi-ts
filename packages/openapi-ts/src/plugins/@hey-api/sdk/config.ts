@@ -18,6 +18,7 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
     comments: true,
     includeInEntry: true,
     paramsStructure: 'grouped',
+    querySerializer: true,
     responseStyle: 'fields',
     transformer: false,
     validator: false,

@@ -696,6 +696,22 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'parameters-serializer.json',
+        output: 'parameters-serializer-schema-query-serializer',
+        plugins: ['@hey-api/client-fetch', { name: '@hey-api/sdk', querySerializer: true }],
+      }),
+      description: 'handles query parameters with SDK generated query serializer from schema',
+    },
+    {
+      config: createConfig({
+        input: 'parameters-serializer.json',
+        output: 'parameters-serializer-no-query-serializer',
+        plugins: ['@hey-api/client-fetch', { name: '@hey-api/sdk', querySerializer: false }],
+      }),
+      description: 'handles query parameters without SDK generated query serializer',
+    },
+    {
+      config: createConfig({
         input: 'ref-deep.yaml',
         output: 'ref-deep',
       }),
