@@ -160,10 +160,27 @@ const walkTopological: WalkFn = (graph, callback, options) => {
     };
 
     // proposed order: sort by (groupPriority, originalIndex)
+    // Precompute original indices to avoid O(N) indexOf inside the comparator.
+    const orderIndex = new Map<string, number>();
+    for (let i = 0; i < order.length; i++) {
+      orderIndex.set(order[i]!, i);
+    }
+
+    // Memoize getGroup results since matchPointerToGroup can be expensive.
+    const groupCache = new Map<string, number>();
+    const getCachedGroup = (pointer: string): number => {
+      let g = groupCache.get(pointer);
+      if (g === undefined) {
+        g = getGroup(pointer);
+        groupCache.set(pointer, g);
+      }
+      return g;
+    };
+
     const proposed = [...order].sort((a, b) => {
-      const ga = getGroup(a);
-      const gb = getGroup(b);
-      return ga !== gb ? ga - gb : order.indexOf(a) - order.indexOf(b);
+      const ga = getCachedGroup(a);
+      const gb = getCachedGroup(b);
+      return ga !== gb ? ga - gb : orderIndex.get(a)! - orderIndex.get(b)!;
     });
 
     // build quick lookup of original index and proposed index
@@ -176,8 +193,8 @@ const walkTopological: WalkFn = (graph, callback, options) => {
     const violated = (() => {
       for (const [node, deps] of depsOf) {
         for (const dep of deps) {
-          const gDep = getGroup(dep);
-          const gNode = getGroup(node);
+          const gDep = getCachedGroup(dep);
+          const gNode = getCachedGroup(node);
           if (gDep <= gNode) continue; // not a crossing edge, cannot be violated by grouping
           const pDep = proposedIndex.get(dep)!;
           const pNode = proposedIndex.get(node)!;
