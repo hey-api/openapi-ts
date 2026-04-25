@@ -2,7 +2,6 @@ import type { Logger } from '@hey-api/codegen-core';
 
 import type { Graph, NodeInfo } from '../../../graph';
 import { normalizeJsonPointer, pathToJsonPointer } from '../../../utils/ref';
-import { childSchemaRelationships } from './schemaChildRelationships';
 
 /**
  * Represents the possible access scopes for OpenAPI nodes.
@@ -137,148 +136,45 @@ const collectPointerDependencies = ({
 };
 
 /**
- * Propagates scopes through the graph using a worklist algorithm.
- * Each node's scopes will be updated to include any scopes inherited via $ref dependencies, combinator/child relationships, and parent relationships.
- * Handles cycles and deep chains efficiently.
+ * Propagates scopes through the graph using a multi-pass linear scan.
  *
- * Whenever a node's scopes change, all dependents are notified:
- *   - Its parent (if any)
- *   - All nodes that reference it via $ref (reverse dependencies)
- *   - Combinator parents (allOf/anyOf/oneOf) if applicable
+ * Nodes are visited in reverse DFS-pre-order (bottom-up): children tend to
+ * appear before their parents so each node can push its scopes to its parent
+ * within the same pass.  For typical OpenAPI specs (components declared after
+ * paths) $ref targets also appear before $ref sources in this order, meaning
+ * both tree propagation and $ref propagation usually converge in a single pass.
  *
- * @param graph - The Graph structure containing nodes, dependencies, and reverseNodeDependencies.
+ * The outer `while (changed)` loop guarantees correctness for any ordering:
+ * it re-runs until no new scope values were added anywhere.  Because scopes
+ * can only grow (at most 3 values: 'normal', 'read', 'write'), the loop
+ * terminates in at most a handful of passes even for pathological specs.
+ *
+ * @param graph - The Graph structure containing nodes and dependencies.
  */
 export const propagateScopes = (graph: Graph): void => {
-  const worklist: Set<string> = new Set(
-    Array.from(graph.nodes.entries())
-      .filter(([, nodeInfo]) => nodeInfo.scopes && nodeInfo.scopes.size > 0)
-      .map(([pointer]) => pointer),
-  );
+  // Reverse of insertion order (DFS pre-order) ≈ bottom-up: children before parents.
+  const nodesBottomUp = [...graph.nodes].reverse();
 
-  /**
-   * Notifies all dependents of a node that its scopes may have changed.
-   * Dependents include:
-   *   - The parent node (if any)
-   *   - All nodes that reference this node via $ref (reverse dependencies)
-   *   - Combinator parents (allOf/anyOf/oneOf) if this node is a combinator child
-   *
-   * @param pointer - The JSON pointer of the node whose dependents to notify
-   * @param nodeInfo - The NodeInfo of the node
-   * @param childPointer - (Optional) The pointer of the child, used to detect combinator parents
-   */
-  const notifyAllDependents = (pointer: string, nodeInfo: NodeInfo, childPointer?: string) => {
-    if (nodeInfo.parentPointer) {
-      worklist.add(nodeInfo.parentPointer);
-    }
-    const reverseNodeDependencies = graph.reverseNodeDependencies.get(pointer);
-    if (reverseNodeDependencies) {
-      for (const dependentPointer of reverseNodeDependencies) {
-        worklist.add(dependentPointer);
-      }
-    }
-    if (childPointer) {
-      // If this is a combinator child, notify the combinator parent
-      const combinatorChildMatch = childPointer.match(/(.*)\/(allOf|anyOf|oneOf)\/\d+$/);
-      if (combinatorChildMatch) {
-        const combinatorParentPointer = combinatorChildMatch[1];
-        if (combinatorParentPointer) {
-          worklist.add(combinatorParentPointer);
-        }
-      }
-    }
-  };
-
-  /**
-   * Propagates scopes from a child node to its parent node.
-   * If the parent's scopes change, notifies all dependents.
-   *
-   * @param pointer - The parent node's pointer
-   * @param nodeInfo - The parent node's NodeInfo
-   * @param childPointer - The child node's pointer
-   */
-  const propagateChildScopes = (
-    pointer: string,
-    nodeInfo: NodeInfo,
-    childPointer: string,
-  ): void => {
-    if (!nodeInfo?.scopes) return;
-    const childInfo = graph.nodes.get(childPointer);
-    if (!childInfo?.scopes) return;
-    const changed = propagateScopesToNode(childInfo, nodeInfo);
-    if (changed) {
-      notifyAllDependents(pointer, nodeInfo, childPointer);
-    }
-  };
-
-  while (worklist.size > 0) {
-    const pointer = worklist.values().next().value!;
-    worklist.delete(pointer);
-
-    const nodeInfo = graph.nodes.get(pointer);
-    if (!nodeInfo) continue;
-
-    if (!nodeInfo.scopes) {
-      nodeInfo.scopes = new Set();
-    }
-
-    const node = nodeInfo.node as Record<string, unknown>;
-
-    // Propagate scopes from all child schema relationships (combinators, properties, etc.)
-    for (const [keyword, type] of childSchemaRelationships) {
-      if (!node || typeof node !== 'object' || !(keyword in node)) continue;
-      const value = node[keyword];
-      if (type === 'array' && value instanceof Array) {
-        for (let index = 0; index < value.length; index++) {
-          const childPointer = `${pointer}/${keyword}/${index}`;
-          propagateChildScopes(pointer, nodeInfo, childPointer);
-        }
-      } else if (
-        type === 'objectMap' &&
-        typeof value === 'object' &&
-        value !== null &&
-        !(value instanceof Array)
-      ) {
-        for (const key of Object.keys(value)) {
-          const childPointer = `${pointer}/${keyword}/${key}`;
-          propagateChildScopes(pointer, nodeInfo, childPointer);
-        }
-      } else if (type === 'single' && typeof value === 'object' && value !== null) {
-        const childPointer = `${pointer}/${keyword}`;
-        propagateChildScopes(pointer, nodeInfo, childPointer);
-      } else if (type === 'singleOrArray') {
-        if (value instanceof Array) {
-          for (let index = 0; index < value.length; index++) {
-            const childPointer = `${pointer}/${keyword}/${index}`;
-            propagateChildScopes(pointer, nodeInfo, childPointer);
-          }
-        } else if (typeof value === 'object' && value !== null) {
-          const childPointer = `${pointer}/${keyword}`;
-          propagateChildScopes(pointer, nodeInfo, childPointer);
-        }
-      }
-    }
-
-    // Propagate scopes from $ref dependencies
-    const nodeDependencies = graph.nodeDependencies.get(pointer);
-    if (nodeDependencies) {
-      for (const depPointer of nodeDependencies) {
-        const depNode = graph.nodes.get(depPointer);
-        if (depNode?.scopes) {
-          const changed = propagateScopesToNode(depNode, nodeInfo);
-          if (changed) {
-            notifyAllDependents(pointer, nodeInfo);
+  let changed = true;
+  while (changed) {
+    changed = false;
+    for (const [pointer, nodeInfo] of nodesBottomUp) {
+      // Pull scopes from $ref dependencies into this node.
+      const nodeDeps = graph.nodeDependencies.get(pointer);
+      if (nodeDeps) {
+        for (const depPointer of nodeDeps) {
+          const depInfo = graph.nodes.get(depPointer);
+          if (depInfo?.scopes && propagateScopesToNode(depInfo, nodeInfo)) {
+            changed = true;
           }
         }
       }
-    }
 
-    // Propagate scopes up the parent chain
-    if (nodeInfo.parentPointer) {
-      const parentInfo = graph.nodes.get(nodeInfo.parentPointer);
-      if (parentInfo) {
-        const changed = propagateScopesToNode(nodeInfo, parentInfo);
-        if (changed) {
-          notifyAllDependents(nodeInfo.parentPointer, parentInfo);
+      // Push this node's scopes up to its parent.
+      if (nodeInfo.scopes && nodeInfo.parentPointer) {
+        const parentInfo = graph.nodes.get(nodeInfo.parentPointer);
+        if (parentInfo && propagateScopesToNode(nodeInfo, parentInfo)) {
+          changed = true;
         }
       }
     }
