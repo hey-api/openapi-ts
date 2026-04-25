@@ -538,3 +538,86 @@ describe('error interceptor for fetch exceptions', () => {
     expect(result.error).toBe(abortError);
   });
 });
+
+describe('error interceptor chain composition', () => {
+  // Regression tests for a bug where each error interceptor received the
+  // original `error` rather than the previous interceptor's output, silently
+  // dropping transformations earlier in the chain.
+
+  it('threads finalError through the fetch-exception error path', async () => {
+    const client = createClient({ baseUrl: 'https://example.com' });
+
+    const networkError = new TypeError('Failed to fetch');
+    const mockFetch: MockFetch = vi.fn().mockRejectedValue(networkError);
+
+    const firstInterceptor = vi.fn(() => ({ stage: 'first' }));
+    const secondInterceptor = vi.fn((error: unknown) => ({
+      ...(error as object),
+      stage: 'second',
+    }));
+
+    const firstId = client.interceptors.error.use(firstInterceptor);
+    const secondId = client.interceptors.error.use(secondInterceptor);
+
+    const result = await client.get({ fetch: mockFetch, url: '/test' });
+
+    // The second interceptor must receive the first interceptor's output, not
+    // the original TypeError.
+    expect(secondInterceptor).toHaveBeenCalledWith(
+      { stage: 'first' },
+      undefined,
+      expect.any(Request),
+      expect.any(Object),
+    );
+
+    // The returned error should carry transformations from both interceptors.
+    expect(result.error).toEqual({ stage: 'second' });
+
+    client.interceptors.error.eject(firstId);
+    client.interceptors.error.eject(secondId);
+  });
+
+  it('threads finalError through the response-error path', async () => {
+    const client = createClient({ baseUrl: 'https://example.com' });
+
+    const errorResponse = new Response(JSON.stringify({ message: 'original' }), {
+      headers: { 'Content-Type': 'application/json' },
+      status: 500,
+    });
+
+    const mockFetch: MockFetch = vi.fn().mockResolvedValue(errorResponse);
+
+    const firstInterceptor = vi.fn((error: unknown) => ({
+      ...(error as object),
+      first: true,
+    }));
+    const secondInterceptor = vi.fn((error: unknown) => ({
+      ...(error as object),
+      second: true,
+    }));
+
+    const firstId = client.interceptors.error.use(firstInterceptor);
+    const secondId = client.interceptors.error.use(secondInterceptor);
+
+    const result = await client.get({ fetch: mockFetch, url: '/test' });
+
+    // The second interceptor must see the first interceptor's output
+    // (including `first: true`), not the original payload.
+    expect(secondInterceptor).toHaveBeenCalledWith(
+      expect.objectContaining({ first: true, message: 'original' }),
+      expect.any(Response),
+      expect.any(Request),
+      expect.any(Object),
+    );
+
+    // The returned error should carry transformations from both interceptors.
+    expect(result.error).toEqual({
+      first: true,
+      message: 'original',
+      second: true,
+    });
+
+    client.interceptors.error.eject(firstId);
+    client.interceptors.error.eject(secondId);
+  });
+});
