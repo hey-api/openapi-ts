@@ -97,21 +97,6 @@ export const defaultConfig: TanStackReactQueryPlugin['Config'] = {
       value: plugin.config.useMutation,
     });
 
-    plugin.config.useSetQueryData = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
-        enabled: false,
-        name: 'use{{name}}SetQueryData',
-      },
-      mappers: {
-        boolean: (enabled) => ({ enabled }),
-        function: (name) => ({ enabled: true, name }),
-        object: (fields) => ({ enabled: true, ...fields }),
-        string: (name) => ({ enabled: true, name }),
-      },
-      value: plugin.config.useSetQueryData,
-    });
-
     plugin.config.useQuery = context.valueToObject({
       defaultValue: {
         case: plugin.config.case ?? 'camelCase',
@@ -125,6 +110,21 @@ export const defaultConfig: TanStackReactQueryPlugin['Config'] = {
         string: (name) => ({ enabled: true, name }),
       },
       value: plugin.config.useQuery,
+    });
+
+    plugin.config.useSetQueryData = context.valueToObject({
+      defaultValue: {
+        case: plugin.config.case ?? 'camelCase',
+        enabled: false,
+        name: 'use{{name}}SetQueryData',
+      },
+      mappers: {
+        boolean: (enabled) => ({ enabled }),
+        function: (name) => ({ enabled: true, name }),
+        object: (fields) => ({ enabled: true, ...fields }),
+        string: (name) => ({ enabled: true, name }),
+      },
+      value: plugin.config.useSetQueryData,
     });
 
     if (plugin.config.useMutation.enabled) {
