@@ -1,7 +1,7 @@
 import type { Logger } from '@hey-api/codegen-core';
 
 import type { Graph, NodeInfo } from '../../../graph';
-import { normalizeJsonPointer, pathToJsonPointer } from '../../../utils/ref';
+import { encodeJsonPointerSegment, normalizeJsonPointer } from '../../../utils/ref';
 
 /**
  * Represents the possible access scopes for OpenAPI nodes.
@@ -274,15 +274,16 @@ export function buildGraph(
     key,
     node,
     parentPointer,
-    path,
-  }: NodeInfo & {
-    path: ReadonlyArray<string | number>;
+    pointer,
+  }: {
+    key: string | number | null;
+    node: unknown;
+    parentPointer: string | null;
+    pointer: string;
   }) => {
     if (typeof node !== 'object' || node === null) {
       return;
     }
-
-    const pointer = pathToJsonPointer(path);
 
     let deprecated: boolean | undefined;
     let tags: Set<string> | undefined;
@@ -314,7 +315,7 @@ export function buildGraph(
           key: index,
           node: item,
           parentPointer: pointer,
-          path: [...path, index],
+          pointer: pointer + '/' + encodeJsonPointerSegment(index),
         }),
       );
     } else {
@@ -323,7 +324,7 @@ export function buildGraph(
           key: childKey,
           node: value,
           parentPointer: pointer,
-          path: [...path, childKey],
+          pointer: pointer + '/' + encodeJsonPointerSegment(childKey),
         });
       }
     }
@@ -333,7 +334,7 @@ export function buildGraph(
     key: null,
     node: root,
     parentPointer: null,
-    path: [],
+    pointer: '#',
   });
 
   const cache: Cache = {
