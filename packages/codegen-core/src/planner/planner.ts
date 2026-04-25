@@ -418,7 +418,7 @@ export class Planner {
     while (true) {
       const language = node?.language || symbol.node?.language || file.language;
 
-      const ok = this.nameIsAvailable(scope, finalName, language, symbol.kind);
+      const ok = this.nameIsAvailable({ kind: symbol.kind, language, name: finalName, scope });
       if (ok) break;
 
       const resolver =
@@ -451,12 +451,17 @@ export class Planner {
    * that name is compatible (i.e., can share the same identifier) with `kind`.
    * This avoids copying the entire accumulated name map on every call.
    */
-  private nameIsAvailable(
-    scope: Scope,
-    name: string,
-    language: string | undefined,
-    kind: SymbolKind,
-  ): boolean {
+  private nameIsAvailable({
+    kind,
+    language,
+    name,
+    scope,
+  }: {
+    kind: SymbolKind;
+    language: string | undefined;
+    name: string;
+    scope: Scope;
+  }): boolean {
     let current: Scope | undefined = scope;
     while (current) {
       const kinds = current.localNames.get(name);

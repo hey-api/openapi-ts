@@ -8,13 +8,13 @@ type QueryCacheKey = string;
 type SymbolId = number;
 
 export class SymbolRegistry implements ISymbolRegistry {
+  /** Forward index: cache key → serialized entries it depends on. */
+  private _cacheDependencies: Map<QueryCacheKey, ReadonlyArray<string>> = new Map();
+  /** Reverse index: serialized index entry → set of cache keys that depend on it. */
+  private _dependencyToCache: Map<QueryCacheKey, Set<QueryCacheKey>> = new Map();
   private _id: SymbolId = 0;
   private _indices: Map<IndexEntry[0], Map<IndexEntry[1], Set<SymbolId>>> = new Map();
   private _queryCache: Map<QueryCacheKey, ReadonlyArray<Symbol>> = new Map();
-  /** Reverse index: serialized index entry → set of cache keys that depend on it. */
-  private _dependencyToCache: Map<QueryCacheKey, Set<QueryCacheKey>> = new Map();
-  /** Forward index: cache key → serialized entries it depends on, for clean eviction. */
-  private _cacheDependencies: Map<QueryCacheKey, ReadonlyArray<string>> = new Map();
   private _registered: Set<SymbolId> = new Set();
   private _stubs: Set<SymbolId> = new Set();
   private _stubCache: Map<QueryCacheKey, SymbolId> = new Map();
@@ -80,88 +80,6 @@ export class SymbolRegistry implements ISymbolRegistry {
     }
   }
 
-  private queryByKeySpace(
-    indexKeySpace: IndexKeySpace,
-    cacheKey: QueryCacheKey,
-  ): ReadonlyArray<Symbol> {
-    const cached = this._queryCache.get(cacheKey);
-    if (cached) {
-      return cached;
-    }
-    const sets: Array<Set<SymbolId>> = [];
-    let missed = false;
-    for (const indexEntry of indexKeySpace) {
-      const values = this._indices.get(indexEntry[0]);
-      if (!values) {
-        missed = true;
-        break;
-      }
-      const set = values.get(indexEntry[1]);
-      if (!set) {
-        missed = true;
-        break;
-      }
-      sets.push(set);
-    }
-    if (missed || !sets.length) {
-      this._queryCache.set(cacheKey, []);
-      this.registerCacheDependencies(cacheKey, indexKeySpace);
-      return [];
-    }
-
-    // We are basically trying to do Set intersection here. But with large OpenAPI spec
-    // we may get a few very large sets.
-    //
-    // The flamegraph/profiling shows that the Set operations (has, delete) became
-    // a very huge bottleneck.
-    //
-    // To avoid iterating over large sets multiple times, we sort the sets by size
-    // and use the smallest set as the base to minimise iterations and deletions.
-    sets.sort((a, b) => a.size - b.size);
-    const result = new Set(sets[0]);
-    for (let i = 1; i < sets.length; i++) {
-      const set = sets[i]!;
-      for (const symbolId of result) {
-        if (!set.has(symbolId)) result.delete(symbolId);
-      }
-    }
-
-    const symbols = Array.from(result, (symbolId) => this._values.get(symbolId)!);
-    this._queryCache.set(cacheKey, symbols);
-    this.registerCacheDependencies(cacheKey, indexKeySpace);
-    return symbols;
-  }
-
-  /**
-   * Derives a stable, order-insensitive cache key from a pre-built key space.
-   * Avoids rebuilding the key space when it's already available.
-   */
-  private cacheKeyFromKeySpace(indexKeySpace: IndexKeySpace): QueryCacheKey {
-    return indexKeySpace
-      .map((indexEntry) => this.serializeIndexEntry(indexEntry))
-      .sort() // ensure order-insensitivity
-      .join('|');
-  }
-
-  /**
-   * Registers reverse-index entries so that when any of the given index entries
-   * are invalidated, the cache key is evicted in O(1) per entry.
-   */
-  private registerCacheDependencies(cacheKey: QueryCacheKey, indexKeySpace: IndexKeySpace): void {
-    const serializedEntries: Array<string> = [];
-    for (const indexEntry of indexKeySpace) {
-      const serialized = this.serializeIndexEntry(indexEntry);
-      serializedEntries.push(serialized);
-      let cacheKeys = this._dependencyToCache.get(serialized);
-      if (!cacheKeys) {
-        cacheKeys = new Set();
-        this._dependencyToCache.set(serialized, cacheKeys);
-      }
-      cacheKeys.add(cacheKey);
-    }
-    this._cacheDependencies.set(cacheKey, serializedEntries);
-  }
-
   private buildIndexKeySpace(meta: ISymbolMeta, prefix = ''): IndexKeySpace {
     const entries: Array<IndexEntry> = [];
     for (const [key, value] of Object.entries(meta)) {
@@ -173,6 +91,17 @@ export class SymbolRegistry implements ISymbolRegistry {
       }
     }
     return entries;
+  }
+
+  /**
+   * Derives a stable, order-insensitive cache key from a pre-built key space.
+   * Avoids rebuilding the key space when it's already available.
+   */
+  private cacheKeyFromKeySpace(indexKeySpace: IndexKeySpace): QueryCacheKey {
+    return indexKeySpace
+      .map((indexEntry) => this.serializeIndexEntry(indexEntry))
+      .sort() // ensure order-insensitivity
+      .join('|');
   }
 
   private indexSymbol(symbolId: SymbolId, indexKeySpace: IndexKeySpace): void {
@@ -216,6 +145,75 @@ export class SymbolRegistry implements ISymbolRegistry {
       }
     }
     return true;
+  }
+
+  private queryByKeySpace(
+    indexKeySpace: IndexKeySpace,
+    cacheKey: QueryCacheKey,
+  ): ReadonlyArray<Symbol> {
+    const cached = this._queryCache.get(cacheKey);
+    if (cached) {
+      return cached;
+    }
+    const sets: Array<Set<SymbolId>> = [];
+    let missed = false;
+    for (const indexEntry of indexKeySpace) {
+      const values = this._indices.get(indexEntry[0]);
+      if (!values) {
+        missed = true;
+        break;
+      }
+      const set = values.get(indexEntry[1]);
+      if (!set) {
+        missed = true;
+        break;
+      }
+      sets.push(set);
+    }
+    if (missed || !sets.length) {
+      this._queryCache.set(cacheKey, []);
+      this.registerCacheDependencies(cacheKey, indexKeySpace);
+      return [];
+    }
+
+    // We want to do a Set intersection, but large inputs may contain a few very
+    // large sets. The profiling showed that Set operations became a huge bottleneck
+    // on such inputs.
+    //
+    // To avoid iterating over large sets multiple times, we sort the sets by size
+    // and use the smallest set as the base to minimize iterations and deletions.
+    sets.sort((a, b) => a.size - b.size);
+    const result = new Set(sets[0]);
+    for (let i = 1; i < sets.length; i++) {
+      const set = sets[i]!;
+      for (const symbolId of result) {
+        if (!set.has(symbolId)) result.delete(symbolId);
+      }
+    }
+
+    const symbols = Array.from(result, (symbolId) => this._values.get(symbolId)!);
+    this._queryCache.set(cacheKey, symbols);
+    this.registerCacheDependencies(cacheKey, indexKeySpace);
+    return symbols;
+  }
+
+  /**
+   * Registers reverse-index entries so that when any of the given index entries
+   * are invalidated, the cache key is evicted in O(1) per entry.
+   */
+  private registerCacheDependencies(cacheKey: QueryCacheKey, indexKeySpace: IndexKeySpace): void {
+    const serializedEntries: Array<string> = [];
+    for (const indexEntry of indexKeySpace) {
+      const serialized = this.serializeIndexEntry(indexEntry);
+      serializedEntries.push(serialized);
+      let cacheKeys = this._dependencyToCache.get(serialized);
+      if (!cacheKeys) {
+        cacheKeys = new Set();
+        this._dependencyToCache.set(serialized, cacheKeys);
+      }
+      cacheKeys.add(cacheKey);
+    }
+    this._cacheDependencies.set(cacheKey, serializedEntries);
   }
 
   private replaceStubs(symbol: Symbol, indexKeySpace: IndexKeySpace): void {
