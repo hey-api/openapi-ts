@@ -9,20 +9,14 @@ import { $ } from '../../../../ts-dsl';
 import { useTypeData, useTypeResponse } from '../shared/useType';
 import type { PluginInstance } from '../types';
 
-export const createSetQueryData = ({
+export function createSetQueryData({
   operation,
   plugin,
 }: {
   operation: IR.OperationObject;
   plugin: PluginInstance;
-}): void => {
-  if (hasOperationSse({ operation })) {
-    return;
-  }
-
-  if (!('setQueryData' in plugin.config)) {
-    return;
-  }
+}): void {
+  if (hasOperationSse({ operation })) return;
 
   // setQueryData reuses the queryOptions function to get the queryKey,
   // mirroring how useQuery wraps queryOptions. This requires queryOptions
@@ -82,4 +76,4 @@ export const createSetQueryData = ({
         ),
     );
   plugin.node(statement);
-};
+}
