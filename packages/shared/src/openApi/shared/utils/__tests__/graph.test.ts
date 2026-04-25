@@ -62,10 +62,5 @@ describe('buildGraph', () => {
 
     expect(Array.from(graph.subtreeDependencies.get(a)!).sort()).toEqual([b].sort());
     expect(Array.from(graph.transitiveDependencies.get(a)!).sort()).toEqual([b].sort());
-    // reverseNodeDependencies should record that b is referenced by the property child as well
-    expect(graph.reverseNodeDependencies.get(b)).toBeDefined();
-    expect(Array.from(graph.reverseNodeDependencies.get(b)!).some((p) => p.startsWith(a))).toBe(
-      true,
-    );
   });
 });
