@@ -10,7 +10,7 @@ type SymbolId = number;
 export class SymbolRegistry implements ISymbolRegistry {
   private _id: SymbolId = 0;
   private _indices: Map<IndexEntry[0], Map<IndexEntry[1], Set<SymbolId>>> = new Map();
-  private _queryCache: Map<QueryCacheKey, ReadonlyArray<SymbolId>> = new Map();
+  private _queryCache: Map<QueryCacheKey, ReadonlyArray<Symbol>> = new Map();
   private _queryCacheDependencies: Map<QueryCacheKey, Set<QueryCacheKey>> = new Map();
   private _registered: Set<SymbolId> = new Set();
   private _stubs: Set<SymbolId> = new Set();
@@ -34,9 +34,9 @@ export class SymbolRegistry implements ISymbolRegistry {
 
   query(filter: ISymbolMeta): ReadonlyArray<Symbol> {
     const cacheKey = this.buildCacheKey(filter);
-    const cachedIds = this._queryCache.get(cacheKey);
-    if (cachedIds) {
-      return cachedIds.map((symbolId) => this._values.get(symbolId)!);
+    const cached = this._queryCache.get(cacheKey);
+    if (cached) {
+      return cached;
     }
     const sets: Array<Set<SymbolId>> = [];
     const indexKeySpace = this.buildIndexKeySpace(filter);
@@ -61,14 +61,17 @@ export class SymbolRegistry implements ISymbolRegistry {
       this._queryCache.set(cacheKey, []);
       return [];
     }
-    let result = new Set(sets[0]);
-    for (const set of sets.slice(1)) {
-      result = new Set([...result].filter((symbolId) => set.has(symbolId)));
+    const result = new Set(sets[0]);
+    for (let i = 1; i < sets.length; i++) {
+      const set = sets[i]!;
+      for (const symbolId of result) {
+        if (!set.has(symbolId)) result.delete(symbolId);
+      }
     }
-    const resultIds = [...result];
+    const symbols = Array.from(result, (symbolId) => this._values.get(symbolId)!);
     this._queryCacheDependencies.set(cacheKey, cacheDependencies);
-    this._queryCache.set(cacheKey, resultIds);
-    return resultIds.map((symbolId) => this._values.get(symbolId)!);
+    this._queryCache.set(cacheKey, symbols);
+    return symbols;
   }
 
   reference(meta: ISymbolMeta): Symbol {
