@@ -67,6 +67,21 @@ export const defaultConfig: TanStackPreactQueryPlugin['Config'] = {
       value: plugin.config.queryOptions,
     });
 
+    plugin.config.setQueryData = context.valueToObject({
+      defaultValue: {
+        case: plugin.config.case ?? 'camelCase',
+        enabled: false,
+        name: '{{name}}SetQueryData',
+      },
+      mappers: {
+        boolean: (enabled) => ({ enabled }),
+        function: (name) => ({ enabled: true, name }),
+        object: (fields) => ({ enabled: true, ...fields }),
+        string: (name) => ({ enabled: true, name }),
+      },
+      value: plugin.config.setQueryData,
+    });
+
     plugin.config.useMutation = context.valueToObject({
       defaultValue: {
         case: plugin.config.case ?? 'camelCase',
@@ -80,6 +95,21 @@ export const defaultConfig: TanStackPreactQueryPlugin['Config'] = {
         string: (name) => ({ enabled: true, name }),
       },
       value: plugin.config.useMutation,
+    });
+
+    plugin.config.useSetQueryData = context.valueToObject({
+      defaultValue: {
+        case: plugin.config.case ?? 'camelCase',
+        enabled: false,
+        name: 'use{{name}}SetQueryData',
+      },
+      mappers: {
+        boolean: (enabled) => ({ enabled }),
+        function: (name) => ({ enabled: true, name }),
+        object: (fields) => ({ enabled: true, ...fields }),
+        string: (name) => ({ enabled: true, name }),
+      },
+      value: plugin.config.useSetQueryData,
     });
 
     plugin.config.useQuery = context.valueToObject({

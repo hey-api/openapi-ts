@@ -293,6 +293,43 @@ export type UserConfig = Plugin.Name<'@tanstack/vue-query'> &
            */
           name?: NameTransformer;
         };
+    /**
+     * Configuration for generated type-safe `setQueryData` helpers.
+     *
+     * When enabled, generates a helper per query operation that wraps
+     * `queryClient.setQueryData()` with the correct query key and response
+     * type already wired up.
+     *
+     * Can be:
+     * - `boolean`: Shorthand for `{ enabled: boolean }`
+     * - `string` or `function`: Shorthand for `{ name: string | function }`
+     * - `object`: Full configuration object
+     *
+     * @default false
+     */
+    setQueryData?:
+      | boolean
+      | NameTransformer
+      | {
+          /**
+           * Casing convention for generated names.
+           *
+           * @default 'camelCase'
+           */
+          case?: Casing;
+          /**
+           * Whether this feature is enabled.
+           *
+           * @default true
+           */
+          enabled?: boolean;
+          /**
+           * Naming pattern for generated names.
+           *
+           * @default '{{name}}SetQueryData'
+           */
+          name?: NameTransformer;
+        };
   };
 
 export type Config = Plugin.Name<'@tanstack/vue-query'> &
@@ -438,6 +475,10 @@ export type Config = Plugin.Name<'@tanstack/vue-query'> &
          */
         meta: (operation: IR.OperationObject) => Record<string, unknown>;
       };
+    /**
+     * Resolved configuration for generated type-safe `setQueryData` helpers.
+     */
+    setQueryData: NamingOptions & FeatureToggle;
   };
 
 export type TanStackVueQueryPlugin = DefinePlugin<UserConfig, Config>;

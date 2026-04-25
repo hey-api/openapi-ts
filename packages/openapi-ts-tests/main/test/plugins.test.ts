@@ -334,6 +334,34 @@ for (const version of versions) {
       },
       {
         config: createConfig({
+          output: 'setQueryData',
+          plugins: [
+            {
+              name: '@tanstack/react-query',
+              setQueryData: true,
+            },
+            '@hey-api/client-fetch',
+          ],
+        }),
+        description:
+          'generate Fetch API client with TanStack React Query plugin with setQueryData helpers',
+      },
+      {
+        config: createConfig({
+          output: 'useSetQueryData',
+          plugins: [
+            {
+              name: '@tanstack/react-query',
+              useSetQueryData: true,
+            },
+            '@hey-api/client-fetch',
+          ],
+        }),
+        description:
+          'generate Fetch API client with TanStack React Query plugin with useSetQueryData hooks',
+      },
+      {
+        config: createConfig({
           input: 'sdk-instance.yaml',
           output: 'name-builder',
           plugins: [
