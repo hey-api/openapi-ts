@@ -1691,6 +1691,9 @@ importers:
       cross-spawn:
         specifier: 7.0.6
         version: 7.0.6
+      dequal:
+        specifier: 2.0.3
+        version: 2.0.3
       open:
         specifier: 11.0.0
         version: 11.0.0
@@ -30369,7 +30372,7 @@ snapshots:
       unhead: 1.11.20
       unimport: 3.14.6(rollup@4.56.0)
       unplugin: 1.16.1
-      unplugin-vue-router: 0.10.9(rollup@4.56.0)(vue-router@4.5.0(vue@3.5.25(typescript@6.0.2)))(vue@3.5.25(typescript@6.0.2))
+      unplugin-vue-router: 0.10.9(rollup@4.56.0)(vue-router@4.5.0(vue@3.5.13(typescript@6.0.2)))(vue@3.5.25(typescript@6.0.2))
       unstorage: 1.17.0(@netlify/blobs@9.1.2)(db0@0.3.4)(ioredis@5.9.2)
       untyped: 1.5.2
       vue: 3.5.25(typescript@6.0.2)
@@ -33758,6 +33761,28 @@ snapshots:
       yaml: 2.8.3
     optionalDependencies:
       vue-router: 4.5.0(vue@3.5.25(typescript@6.0.2))
+    transitivePeerDependencies:
+      - rollup
+      - vue
+
+  unplugin-vue-router@0.10.9(rollup@4.56.0)(vue-router@4.5.0(vue@3.5.13(typescript@6.0.2)))(vue@3.5.25(typescript@6.0.2)):
+    dependencies:
+      '@babel/types': 7.28.5
+      '@rollup/pluginutils': 5.2.0(rollup@4.56.0)
+      '@vue-macros/common': 1.16.1(vue@3.5.25(typescript@6.0.2))
+      ast-walker-scope: 0.6.2
+      chokidar: 3.6.0
+      fast-glob: 3.3.3
+      json5: 2.2.3
+      local-pkg: 0.5.1
+      magic-string: 0.30.21
+      mlly: 1.8.0
+      pathe: 1.1.2
+      scule: 1.3.0
+      unplugin: 2.0.0-beta.1
+      yaml: 2.8.3
+    optionalDependencies:
+      vue-router: 4.5.0(vue@3.5.13(typescript@6.0.2))
     transitivePeerDependencies:
       - rollup
       - vue
