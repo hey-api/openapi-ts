@@ -40,11 +40,6 @@ describe('buildGraph', () => {
     // Qux transitive deps should include Baz (and vice-versa because of the cycle)
     expect(graph.transitiveDependencies.get(qux)).toBeDefined();
     expect(Array.from(graph.transitiveDependencies.get(qux)!).sort()).toEqual([baz].sort());
-
-    // Reverse dependencies should reflect the mutual references
-    expect(graph.reverseNodeDependencies.get(qux)).toBeDefined();
-    expect(Array.from(graph.reverseNodeDependencies.get(qux)!).sort()).toEqual([baz].sort());
-    expect(Array.from(graph.reverseNodeDependencies.get(baz)!).sort()).toEqual([qux].sort());
   });
 
   it('handles a small hand-constructed tree with child-level $ref', () => {

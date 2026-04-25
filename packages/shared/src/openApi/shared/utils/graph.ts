@@ -246,14 +246,12 @@ export const seedLocalScopes = (nodes: Graph['nodes']): void => {
  * - All keys in the returned maps are normalized JSON Pointers (RFC 6901, always starting with '#').
  * - The `nodes` map allows fast lookup of any node and its parent/key context.
  * - The `dependencies` map records, for each node, the set of normalized pointers it references via $ref.
- * - The `reverseNodeDependencies` map records, for each node, the set of nodes that reference it via $ref.
  * - After construction, all nodes will have their local and propagated scopes annotated.
  *
  * @param root The root object (e.g., the OpenAPI spec)
  * @returns An object with:
  *   - nodes: Map from normalized JSON Pointer string to NodeInfo
  *   - dependencies: Map from normalized JSON Pointer string to Set of referenced normalized JSON Pointers
- *   - reverseNodeDependencies: Map from normalized JSON Pointer string to Set of referencing normalized JSON Pointers
  */
 export function buildGraph(
   root: unknown,
@@ -265,7 +263,6 @@ export function buildGraph(
   const graph: Graph = {
     nodeDependencies: new Map(),
     nodes: new Map(),
-    reverseNodeDependencies: new Map(),
     subtreeDependencies: new Map(),
     transitiveDependencies: new Map(),
   };
@@ -350,15 +347,6 @@ export function buildGraph(
       cache.parentToChildren.set(parent, []);
     }
     cache.parentToChildren.get(parent)!.push(pointer);
-  }
-
-  for (const [pointerFrom, pointers] of graph.nodeDependencies) {
-    for (const pointerTo of pointers) {
-      if (!graph.reverseNodeDependencies.has(pointerTo)) {
-        graph.reverseNodeDependencies.set(pointerTo, new Set());
-      }
-      graph.reverseNodeDependencies.get(pointerTo)!.add(pointerFrom);
-    }
   }
 
   seedLocalScopes(graph.nodes);
