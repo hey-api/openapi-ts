@@ -20,7 +20,7 @@ export const createSetQueryData = ({
     return;
   }
 
-  if (!('setQueryData' in plugin.config) || !plugin.config.setQueryData.enabled) {
+  if (!('setQueryData' in plugin.config)) {
     return;
   }
 
