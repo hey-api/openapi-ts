@@ -293,7 +293,9 @@ export function operationStatements({
     const parameter = operation.parameters.query[name]!;
 
     if (parameter.schema.type === 'array' || parameter.schema.type === 'tuple') {
-      if (parameter.style !== 'form' || !parameter.explode) {
+      // deepObject is only valid for object parameters; treat as default 'form' for arrays
+      const arrayStyle = parameter.style === 'deepObject' ? 'form' : parameter.style;
+      if (arrayStyle !== 'form' || !parameter.explode) {
         // override the default settings for array serialization
         paramSerializers.prop(
           parameter.name,
@@ -303,7 +305,7 @@ export function operationStatements({
               .$if(parameter.explode === false, (o) =>
                 o.prop('explode', $.literal(parameter.explode)),
               )
-              .$if(parameter.style !== 'form', (o) => o.prop('style', $.literal(parameter.style))),
+              .$if(arrayStyle !== 'form', (o) => o.prop('style', $.literal(arrayStyle))),
           ),
         );
       }
