@@ -293,6 +293,43 @@ export type UserConfig = Plugin.Name<'@tanstack/preact-query'> &
           name?: NameTransformer;
         };
     /**
+     * Configuration for generated type-safe `setQueryData` helpers.
+     *
+     * When enabled, generates a helper per query operation that wraps
+     * `queryClient.setQueryData()` with the correct query key and response
+     * type already wired up.
+     *
+     * Can be:
+     * - `boolean`: Shorthand for `{ enabled: boolean }`
+     * - `string` or `function`: Shorthand for `{ name: string | function }`
+     * - `object`: Full configuration object
+     *
+     * @default false
+     */
+    setQueryData?:
+      | boolean
+      | NameTransformer
+      | {
+          /**
+           * Casing convention for generated names.
+           *
+           * @default 'camelCase'
+           */
+          case?: Casing;
+          /**
+           * Whether this feature is enabled.
+           *
+           * @default true
+           */
+          enabled?: boolean;
+          /**
+           * Naming pattern for generated names.
+           *
+           * @default '{{name}}SetQueryData'
+           */
+          name?: NameTransformer;
+        };
+    /**
      * Configuration for generated `useMutation()` function helpers.
      *
      * See {@link https://tanstack.com/query/v5/docs/framework/preact/reference/useMutation useMutation}
@@ -326,6 +363,42 @@ export type UserConfig = Plugin.Name<'@tanstack/preact-query'> &
            * See {@link https://tanstack.com/query/v5/docs/framework/preact/reference/useMutation useMutation}
            *
            * @default 'use{{name}}Mutation'
+           */
+          name?: NameTransformer;
+        };
+    /**
+     * Configuration for generated Preact Query hook variant of `setQueryData`.
+     *
+     * When enabled, generates a hook per query operation that calls
+     * `useQueryClient()` internally and returns a typed setter function.
+     *
+     * Can be:
+     * - `boolean`: Shorthand for `{ enabled: boolean }`
+     * - `string` or `function`: Shorthand for `{ name: string | function }`
+     * - `object`: Full configuration object
+     *
+     * @default false
+     */
+    useSetQueryData?:
+      | boolean
+      | NameTransformer
+      | {
+          /**
+           * Casing convention for generated names.
+           *
+           * @default 'camelCase'
+           */
+          case?: Casing;
+          /**
+           * Whether this feature is enabled.
+           *
+           * @default true
+           */
+          enabled?: boolean;
+          /**
+           * Naming pattern for generated names.
+           *
+           * @default 'use{{name}}SetQueryData'
            */
           name?: NameTransformer;
         };
@@ -512,11 +585,19 @@ export type Config = Plugin.Name<'@tanstack/preact-query'> &
         meta: (operation: IR.OperationObject) => Record<string, unknown>;
       };
     /**
+     * Resolved configuration for generated type-safe `setQueryData` helpers.
+     */
+    setQueryData: NamingOptions & FeatureToggle;
+    /**
      * Configuration for generated `useMutation()` function helpers.
      *
      * See {@link https://tanstack.com/query/v5/docs/framework/preact/reference/useMutation useMutation}
      */
     useMutation: NamingOptions & FeatureToggle;
+    /**
+     * Configuration for generated Preact Query hook variant of `setQueryData`.
+     */
+    useSetQueryData: NamingOptions & FeatureToggle;
     /**
      * Configuration for generated `useQuery()` function helpers.
      *
