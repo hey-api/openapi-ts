@@ -4,6 +4,8 @@ const specsPath = path.join(__dirname, '..', 'specs');
 
 export const inputs = {
   circular: path.resolve(specsPath, '3.0.x', 'circular.yaml'),
+  clerk: path.resolve(specsPath, '3.0.x', 'clerk-2025-11-10.yaml'),
+  cloudflare: path.resolve(specsPath, '3.0.x', 'cloudflare-v4.json'),
   full: path.resolve(specsPath, '3.1.x', 'full.yaml'),
   local: 'http://localhost:8000/openapi.json',
   opencode: path.resolve(specsPath, '3.1.x', 'opencode.yaml'),
