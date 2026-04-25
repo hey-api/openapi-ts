@@ -11,10 +11,10 @@ Realistic mock data is an important component of every robust development proces
 
 Hey API natively supports the following mocking frameworks.
 
+- [MSW](/openapi-ts/plugins/msw)
 - [Chance](/openapi-ts/plugins/chance) <span data-badge>vote</span>
 - [Faker](/openapi-ts/plugins/faker) <span data-badge>vote</span>
 - [Falso](/openapi-ts/plugins/falso) <span data-badge>vote</span>
-- [MSW](/openapi-ts/plugins/msw) <span data-badge>vote</span>
 - [Nock](/openapi-ts/plugins/nock) <span data-badge>vote</span>
 - [Supertest](/openapi-ts/plugins/supertest) <span data-badge>vote</span>
 

@@ -1,8 +1,12 @@
 import type { DefinePlugin, IR } from '@hey-api/openapi-ts';
+import { fromOpenApi } from '@msw/source/open-api';
+import { setupServer } from 'msw/node';
 
-// import { createOpencode } from '@opencode-ai/sdk';
 import { client } from './gen/typescript/client.gen';
-import { OpenCode } from './gen/typescript/sdk.gen';
+// import { createOpencode } from '@opencode-ai/sdk';
+import { createMswHandlers } from './gen/typescript/msw.gen';
+import { Sdk } from './gen/typescript/sdk.gen';
+import spec from './opencode.json';
 
 type MyPluginConfig = { readonly name: 'myplugin' };
 type MyPlugin = DefinePlugin<MyPluginConfig>;
@@ -17,23 +21,46 @@ export const handler: MyPlugin['Handler'] = ({ plugin }) => {
   });
 };
 
+const sourceHandlers = await fromOpenApi({
+  ...(spec as any),
+  basePath: 'https://api.example.com',
+});
+const handlers = createMswHandlers({
+  baseUrl: 'https://api.heyapi.dev',
+});
+
+const server = setupServer(
+  // ...sourceHandlers,
+  // handlers.pick.get({
+  //   body: 'Hi',
+  // }),
+  ...handlers.all({
+    pick: {
+      // ...
+    },
+  }),
+);
+server.listen();
+
 async function run() {
   // const { client, server } = await createOpencode();
   // console.log(client, server);
-  client.setConfig({
-    baseUrl: 'https://api.example.com',
+  const sdk = new Sdk({ client });
+  // const published = await sdk.tui.publish({
+  //   body: {
+  //     properties: {
+  //       message: 'Hello from Hey API OpenAPI TypeScript Playground!',
+  //       variant: 'success',
+  //     },
+  //     type: 'tui.toast.show',
+  //   },
+  //   directory: 'main',
+  // });
+  // console.log('Published:', published.data, published.error);
+  const project = await sdk.getFoo({
+    // ...
   });
-  const sdk = new OpenCode({ client });
-  sdk.tui.publish({
-    body: {
-      properties: {
-        message: 'Hello from Hey API OpenAPI TypeScript Playground!',
-        variant: 'success',
-      },
-      type: 'tui.toast.show',
-    },
-    directory: 'main',
-  });
+  console.log('Updated Project:', project.data, project.error);
 }
 
 run();

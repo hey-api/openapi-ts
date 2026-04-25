@@ -47,6 +47,7 @@ declare module '@hey-api/codegen-core' {
       | 'arktype'
       | 'fastify'
       | 'json-schema'
+      | 'msw'
       | 'sdk'
       | 'typescript'
       | 'valibot'
@@ -67,6 +68,7 @@ declare module '@hey-api/shared' {
     '@hey-api/client-next': Plugins.HeyApiClientNext.Types['Types'];
     '@hey-api/client-nuxt': Plugins.HeyApiClientNuxt.Types['Types'];
     '@hey-api/client-ofetch': Plugins.HeyApiClientOfetch.Types['Types'];
+    '@hey-api/examples': Plugins.HeyApiExamples.Types['Types'];
     '@hey-api/schemas': Plugins.HeyApiSchemas.Types['Types'];
     '@hey-api/sdk': Plugins.HeyApiSdk.Types['Types'];
     '@hey-api/transformers': Plugins.HeyApiTransformers.Types['Types'];
@@ -80,6 +82,7 @@ declare module '@hey-api/shared' {
     '@tanstack/vue-query': Plugins.TanStackVueQuery.Types['Types'];
     arktype: Plugins.Arktype.Types['Types'];
     fastify: Plugins.Fastify.Types['Types'];
+    msw: Plugins.Msw.Types['Types'];
     nestjs: Plugins.NestJs.Types['Types'];
     orpc: Plugins.Orpc.Types['Types'];
     swr: Plugins.Swr.Types['Types'];
@@ -126,6 +129,7 @@ import type {
   HeyApiClientOfetchPlugin,
   OfetchClient as OfetchClientImp,
 } from './plugins/@hey-api/client-ofetch';
+import type { HeyApiExamplesPlugin } from './plugins/@hey-api/examples';
 import type { HeyApiSchemasPlugin } from './plugins/@hey-api/schemas';
 import type { HeyApiSdkPlugin } from './plugins/@hey-api/sdk';
 import type { HeyApiTransformersPlugin } from './plugins/@hey-api/transformers';
@@ -142,6 +146,7 @@ import type { TanStackSvelteQueryPlugin } from './plugins/@tanstack/svelte-query
 import type { TanStackVueQueryPlugin } from './plugins/@tanstack/vue-query';
 import type { ArktypePlugin } from './plugins/arktype';
 import type { FastifyPlugin } from './plugins/fastify';
+import type { MswPlugin } from './plugins/msw';
 import type { NestJsPlugin } from './plugins/nestjs';
 import type { OrpcPlugin } from './plugins/orpc';
 import type { SwrPlugin } from './plugins/swr';
@@ -247,6 +252,10 @@ export namespace Plugins {
     export type Types = HeyApiClientOfetchPlugin;
   }
 
+  export namespace HeyApiExamples {
+    export type Types = HeyApiExamplesPlugin;
+  }
+
   export namespace HeyApiSchemas {
     export type Types = HeyApiSchemasPlugin;
   }
@@ -262,6 +271,10 @@ export namespace Plugins {
   export namespace HeyApiTypeScript {
     export type Resolvers = Required<HeyApiTypeScriptResolvers>['~resolvers'];
     export type Types = HeyApiTypeScriptPlugin;
+  }
+
+  export namespace Msw {
+    export type Types = MswPlugin;
   }
 
   export namespace NestJs {

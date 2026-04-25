@@ -9,6 +9,7 @@
     "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
     "openapi-ts": "openapi-ts",
     "preview": "vite preview",
+    "test": "vitest run",
     "typecheck": "tsgo --noEmit"
   },
   "dependencies": {
