@@ -115,7 +115,7 @@ const walkTopological: WalkFn = (graph, callback, options) => {
   }
 
   // emit remaining nodes (cycles) in declaration order
-  const remaining = pointers.filter((pointer) => emitted.has(pointer) === false);
+    const remaining = pointers.filter((pointer) => !emitted.has(pointer));
   remaining.sort((a, b) => declIndex.get(a)! - declIndex.get(b)!);
   for (const pointer of remaining) {
     emitted.add(pointer);
