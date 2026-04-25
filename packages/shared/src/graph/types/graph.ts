@@ -5,7 +5,6 @@ import type { Scope } from '../../openApi/shared/utils/graph';
  *
  * @property nodeDependencies - For each node with at least one dependency, the set of normalized JSON Pointers it references via $ref. Nodes with no dependencies are omitted.
  * @property nodes - Map from normalized JSON Pointer to NodeInfo for every node in the spec.
- * @property reverseNodeDependencies - For each node with at least one dependent, the set of nodes that reference it via $ref. Nodes with no dependents are omitted.
  */
 export type Graph = {
   /**
@@ -17,11 +16,6 @@ export type Graph = {
    * Map from normalized JSON Pointer to NodeInfo for every node in the spec.
    */
   nodes: Map<string, NodeInfo>;
-  /**
-   * For each node with at least one dependent, the set of nodes that reference it via $ref.
-   * Nodes with no dependents are omitted from this map.
-   */
-  reverseNodeDependencies: Map<string, Set<string>>;
   /**
    * For each node, the set of direct $ref targets that appear anywhere inside the node's
    * subtree (the node itself and its children). This is populated during graph construction
