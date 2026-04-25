@@ -61,7 +61,7 @@ export class SymbolRegistry implements ISymbolRegistry {
       return [];
     }
 
-    // We basically trying to to Set intersection here. But with large OpenAPI spec
+    // We are basically trying to do Set intersection here. But with large OpenAPI spec
     // we may get a few very large sets.
     //
     // The flamegraph/profiling shows that the Set operations (has, delete) became
