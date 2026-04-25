@@ -407,7 +407,7 @@ export class Planner {
       symbol: Symbol;
     },
   ): void {
-    const { ctx, file, node, scope, scopesToUpdate, symbol } = args;
+    const { file, node, scope, scopesToUpdate, symbol } = args;
     if (this.cacheResolvedNames.has(symbol.id)) return;
 
     const baseName = symbol.name;
@@ -415,13 +415,10 @@ export class Planner {
       node?.nameSanitizer?.(baseName) ?? symbol.node?.nameSanitizer?.(baseName) ?? baseName;
     let attempt = 1;
 
-    const localNames = ctx.localNames(scope);
     while (true) {
       const language = node?.language || symbol.node?.language || file.language;
 
-      const kinds = [...(localNames.get(finalName) ?? [])];
-
-      const ok = kinds.every((kind) => canDeclarationsShareIdentifier(language, symbol.kind, kind));
+      const ok = this.nameIsAvailable({ kind: symbol.kind, language, name: finalName, scope });
       if (ok) break;
 
       const resolver =
@@ -445,6 +442,39 @@ export class Planner {
     for (const scope of updateScopes) {
       this.updateScope(symbol, scope);
     }
+  }
+
+  /**
+   * Checks whether `name` can be used for a new symbol of `kind` in `scope`.
+   *
+   * Walks up the scope chain and verifies that every existing declaration with
+   * that name is compatible (i.e., can share the same identifier) with `kind`.
+   * This avoids copying the entire accumulated name map on every call.
+   */
+  private nameIsAvailable({
+    kind,
+    language,
+    name,
+    scope,
+  }: {
+    kind: SymbolKind;
+    language: string | undefined;
+    name: string;
+    scope: Scope;
+  }): boolean {
+    let current: Scope | undefined = scope;
+    while (current) {
+      const kinds = current.localNames.get(name);
+      if (kinds) {
+        for (const existingKind of kinds) {
+          if (!canDeclarationsShareIdentifier(language, kind, existingKind)) {
+            return false;
+          }
+        }
+      }
+      current = current.parent;
+    }
+    return true;
   }
 
   /**
