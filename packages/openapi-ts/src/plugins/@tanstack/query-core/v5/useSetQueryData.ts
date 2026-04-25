@@ -9,20 +9,16 @@ import { $ } from '../../../../ts-dsl';
 import { useTypeData, useTypeResponse } from '../shared/useType';
 import type { PluginInstance } from '../types';
 
-export const createUseSetQueryData = ({
+export function createUseSetQueryData({
   operation,
   plugin,
 }: {
   operation: IR.OperationObject;
   plugin: PluginInstance;
-}): void => {
-  if (hasOperationSse({ operation })) {
-    return;
-  }
+}): void {
+  if (hasOperationSse({ operation })) return;
 
-  if (!('useSetQueryData' in plugin.config)) {
-    return;
-  }
+  if (!('useSetQueryData' in plugin.config)) return;
 
   const symbolUseQueryClient = plugin.external(`${plugin.name}.useQueryClient`);
   const symbolQueryOptionsFn = plugin.referenceSymbol({
@@ -84,4 +80,4 @@ export const createUseSetQueryData = ({
       ),
     );
   plugin.node(statement);
-};
+}

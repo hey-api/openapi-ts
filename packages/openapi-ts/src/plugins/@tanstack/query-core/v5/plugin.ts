@@ -68,16 +68,16 @@ export const handlerV5: PluginHandler = ({ plugin }) => {
           createInfiniteQueryOptions({ operation, plugin });
         }
 
-        if ('setQueryData' in plugin.config && plugin.config.setQueryData.enabled) {
+        if (plugin.config.setQueryData.enabled) {
           createSetQueryData({ operation, plugin });
-        }
-
-        if ('useSetQueryData' in plugin.config && plugin.config.useSetQueryData.enabled) {
-          createUseSetQueryData({ operation, plugin });
         }
 
         if ('useQuery' in plugin.config && plugin.config.useQuery.enabled) {
           createUseQuery({ operation, plugin });
+        }
+
+        if ('useSetQueryData' in plugin.config && plugin.config.useSetQueryData.enabled) {
+          createUseSetQueryData({ operation, plugin });
         }
       }
 
