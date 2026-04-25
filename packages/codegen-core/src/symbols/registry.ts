@@ -123,10 +123,6 @@ export class SymbolRegistry implements ISymbolRegistry {
     }
   }
 
-  private buildCacheKey(filter: ISymbolMeta): QueryCacheKey {
-    return this.cacheKeyFromKeySpace(this.buildIndexKeySpace(filter));
-  }
-
   /**
    * Derives a stable, order-insensitive cache key from a pre-built key space.
    * Avoids rebuilding the key space when it's already available.
