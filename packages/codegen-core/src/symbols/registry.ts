@@ -13,6 +13,8 @@ export class SymbolRegistry implements ISymbolRegistry {
   private _queryCache: Map<QueryCacheKey, ReadonlyArray<Symbol>> = new Map();
   /** Reverse index: serialized index entry → set of cache keys that depend on it. */
   private _dependencyToCache: Map<QueryCacheKey, Set<QueryCacheKey>> = new Map();
+  /** Forward index: cache key → serialized entries it depends on, for clean eviction. */
+  private _cacheDependencies: Map<QueryCacheKey, ReadonlyArray<string>> = new Map();
   private _registered: Set<SymbolId> = new Set();
   private _stubs: Set<SymbolId> = new Set();
   private _stubCache: Map<QueryCacheKey, SymbolId> = new Map();
@@ -36,6 +38,52 @@ export class SymbolRegistry implements ISymbolRegistry {
   query(filter: ISymbolMeta): ReadonlyArray<Symbol> {
     const indexKeySpace = this.buildIndexKeySpace(filter);
     const cacheKey = this.cacheKeyFromKeySpace(indexKeySpace);
+    return this.queryByKeySpace(indexKeySpace, cacheKey);
+  }
+
+  reference(meta: ISymbolMeta): Symbol {
+    const indexKeySpace = this.buildIndexKeySpace(meta);
+    const cacheKey = this.cacheKeyFromKeySpace(indexKeySpace);
+    const [registered] = this.queryByKeySpace(indexKeySpace, cacheKey);
+    if (registered) return registered;
+
+    const cachedId = this._stubCache.get(cacheKey);
+    if (cachedId !== undefined) return this._values.get(cachedId)!;
+
+    const stub = new Symbol({ meta, name: '' }, this.nextId);
+
+    this._values.set(stub.id, stub);
+    this._stubs.add(stub.id);
+    this._stubCache.set(cacheKey, stub.id);
+    return stub;
+  }
+
+  register(symbol: ISymbolIn): Symbol {
+    const result = new Symbol(symbol, this.nextId);
+
+    this._values.set(result.id, result);
+    this._registered.add(result.id);
+
+    if (result.meta) {
+      const indexKeySpace = this.buildIndexKeySpace(result.meta);
+      this.indexSymbol(result.id, indexKeySpace);
+      this.invalidateCache(indexKeySpace);
+      this.replaceStubs(result, indexKeySpace);
+    }
+
+    return result;
+  }
+
+  *registered(): IterableIterator<Symbol> {
+    for (const id of this._registered.values()) {
+      yield this._values.get(id)!;
+    }
+  }
+
+  private queryByKeySpace(
+    indexKeySpace: IndexKeySpace,
+    cacheKey: QueryCacheKey,
+  ): ReadonlyArray<Symbol> {
     const cached = this._queryCache.get(cacheKey);
     if (cached) {
       return cached;
@@ -84,45 +132,6 @@ export class SymbolRegistry implements ISymbolRegistry {
     return symbols;
   }
 
-  reference(meta: ISymbolMeta): Symbol {
-    const [registered] = this.query(meta);
-    if (registered) return registered;
-
-    const indexKeySpace = this.buildIndexKeySpace(meta);
-    const cacheKey = this.cacheKeyFromKeySpace(indexKeySpace);
-    const cachedId = this._stubCache.get(cacheKey);
-    if (cachedId !== undefined) return this._values.get(cachedId)!;
-
-    const stub = new Symbol({ meta, name: '' }, this.nextId);
-
-    this._values.set(stub.id, stub);
-    this._stubs.add(stub.id);
-    this._stubCache.set(cacheKey, stub.id);
-    return stub;
-  }
-
-  register(symbol: ISymbolIn): Symbol {
-    const result = new Symbol(symbol, this.nextId);
-
-    this._values.set(result.id, result);
-    this._registered.add(result.id);
-
-    if (result.meta) {
-      const indexKeySpace = this.buildIndexKeySpace(result.meta);
-      this.indexSymbol(result.id, indexKeySpace);
-      this.invalidateCache(indexKeySpace);
-      this.replaceStubs(result, indexKeySpace);
-    }
-
-    return result;
-  }
-
-  *registered(): IterableIterator<Symbol> {
-    for (const id of this._registered.values()) {
-      yield this._values.get(id)!;
-    }
-  }
-
   /**
    * Derives a stable, order-insensitive cache key from a pre-built key space.
    * Avoids rebuilding the key space when it's already available.
@@ -139,8 +148,10 @@ export class SymbolRegistry implements ISymbolRegistry {
    * are invalidated, the cache key is evicted in O(1) per entry.
    */
   private registerCacheDependencies(cacheKey: QueryCacheKey, indexKeySpace: IndexKeySpace): void {
+    const serializedEntries: Array<string> = [];
     for (const indexEntry of indexKeySpace) {
       const serialized = this.serializeIndexEntry(indexEntry);
+      serializedEntries.push(serialized);
       let cacheKeys = this._dependencyToCache.get(serialized);
       if (!cacheKeys) {
         cacheKeys = new Set();
@@ -148,6 +159,7 @@ export class SymbolRegistry implements ISymbolRegistry {
       }
       cacheKeys.add(cacheKey);
     }
+    this._cacheDependencies.set(cacheKey, serializedEntries);
   }
 
   private buildIndexKeySpace(meta: ISymbolMeta, prefix = ''): IndexKeySpace {
@@ -180,6 +192,17 @@ export class SymbolRegistry implements ISymbolRegistry {
       if (!cacheKeys) continue;
       for (const cacheKey of cacheKeys) {
         this._queryCache.delete(cacheKey);
+        // Clean up stale reverse-index references so _dependencyToCache doesn't
+        // accumulate orphaned entries for evicted cache keys.
+        const deps = this._cacheDependencies.get(cacheKey);
+        if (deps) {
+          for (const dep of deps) {
+            if (dep !== serialized) {
+              this._dependencyToCache.get(dep)?.delete(cacheKey);
+            }
+          }
+          this._cacheDependencies.delete(cacheKey);
+        }
       }
       this._dependencyToCache.delete(serialized);
     }
