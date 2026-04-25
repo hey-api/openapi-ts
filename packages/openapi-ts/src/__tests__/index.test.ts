@@ -286,6 +286,37 @@ describe('createClient', () => {
     expect(results).toHaveLength(4);
   });
 
+  it('does not emit deepObject style for array query parameters', async () => {
+    const results = await createClient({
+      dryRun: true,
+      input: {
+        info: { title: 'deep-object-array-test', version: '1.0.0' },
+        openapi: '3.1.0',
+        paths: {
+          '/foo': {
+            get: {
+              operationId: 'getFoo',
+              parameters: [
+                {
+                  in: 'query',
+                  name: 'products',
+                  schema: { items: { type: 'string' }, type: 'array' },
+                  style: 'deepObject',
+                },
+              ],
+              responses: { default: { description: 'OK' } },
+            },
+          },
+        },
+      },
+      logs: { level: 'silent' },
+      output: 'output',
+      plugins: ['@hey-api/client-fetch', '@hey-api/sdk'],
+    });
+
+    expect(results).toHaveLength(1);
+  });
+
   it('executes @angular/common HttpRequest builder path', async () => {
     const results = await createClient({
       dryRun: true,
