@@ -1,6 +1,6 @@
-openapi: 3.1.1
+openapi: 3.0.4
 info:
-  title: OpenAPI 3.1.1 oRPC example
+  title: OpenAPI 3.0.4 RPC example
   version: 1
 paths:
   /users:

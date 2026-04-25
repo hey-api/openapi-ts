@@ -17,7 +17,7 @@ describe(`OpenAPI ${version}`, () => {
   const scenarios = [
     {
       config: createConfig({
-        input: 'orpc.yaml',
+        input: 'rpc.yaml',
         output: 'default',
         plugins: ['orpc', 'zod'],
       }),
@@ -25,7 +25,7 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'orpc.yaml',
+        input: 'rpc.yaml',
         output: 'custom-names',
         plugins: [
           'valibot',
@@ -42,7 +42,7 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'orpc.yaml',
+        input: 'rpc.yaml',
         output: 'contracts-strategy-by-tags',
         plugins: [
           'zod',
@@ -58,7 +58,7 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'orpc.yaml',
+        input: 'rpc.yaml',
         output: 'contracts-strategy-single',
         plugins: [
           'zod',
@@ -75,7 +75,7 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'orpc.yaml',
+        input: 'rpc.yaml',
         output: 'contracts-nesting-id',
         plugins: [
           'zod',
@@ -92,7 +92,7 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'orpc.yaml',
+        input: 'rpc.yaml',
         output: 'contracts-custom-naming',
         plugins: [
           'zod',

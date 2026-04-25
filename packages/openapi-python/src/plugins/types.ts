@@ -4,7 +4,7 @@ export type PluginClientNames =
   | '@hey-api/client-requests'
   | '@hey-api/client-urllib3';
 
-export type PluginMockNames = 'factory_boy' | 'faker' | 'mimesis';
+export type PluginSourceNames = 'factory_boy' | 'faker' | 'mimesis';
 
 export type PluginTransformerNames = never;
 

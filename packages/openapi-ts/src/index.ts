@@ -47,6 +47,7 @@ declare module '@hey-api/codegen-core' {
       | 'arktype'
       | 'fastify'
       | 'json-schema'
+      | 'msw'
       | 'sdk'
       | 'typescript'
       | 'valibot'
@@ -67,6 +68,7 @@ declare module '@hey-api/shared' {
     '@hey-api/client-next': Plugins.HeyApiClientNext.Types['Types'];
     '@hey-api/client-nuxt': Plugins.HeyApiClientNuxt.Types['Types'];
     '@hey-api/client-ofetch': Plugins.HeyApiClientOfetch.Types['Types'];
+    '@hey-api/examples': Plugins.HeyApiExamples.Types['Types'];
     '@hey-api/schemas': Plugins.HeyApiSchemas.Types['Types'];
     '@hey-api/sdk': Plugins.HeyApiSdk.Types['Types'];
     '@hey-api/transformers': Plugins.HeyApiTransformers.Types['Types'];
@@ -126,6 +128,7 @@ import type {
   HeyApiClientOfetchPlugin,
   OfetchClient as OfetchClientImp,
 } from './plugins/@hey-api/client-ofetch';
+import type { HeyApiExamplesPlugin } from './plugins/@hey-api/examples';
 import type { HeyApiSchemasPlugin } from './plugins/@hey-api/schemas';
 import type { HeyApiSdkPlugin } from './plugins/@hey-api/sdk';
 import type { HeyApiTransformersPlugin } from './plugins/@hey-api/transformers';
@@ -245,6 +248,10 @@ export namespace Plugins {
   export namespace HeyApiClientOfetch {
     export type Client = OfetchClientImp;
     export type Types = HeyApiClientOfetchPlugin;
+  }
+
+  export namespace HeyApiExamples {
+    export type Types = HeyApiExamplesPlugin;
   }
 
   export namespace HeyApiSchemas {
