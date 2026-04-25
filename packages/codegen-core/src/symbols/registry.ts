@@ -60,6 +60,16 @@ export class SymbolRegistry implements ISymbolRegistry {
       this.registerCacheDependencies(cacheKey, indexKeySpace);
       return [];
     }
+
+    // We basically trying to to Set intersection here. But with large OpenAPI spec
+    // we may get a few very large sets.
+    //
+    // The flamegraph/profiling shows that the Set operations (has, delete) became
+    // a very huge bottleneck.
+    //
+    // To avoid iterating over large sets multiple times, we sort the sets by size
+    // and use the smallest set as the base to minimise iterations and deletions.
+    sets.sort((a, b) => a.size - b.size);
     const result = new Set(sets[0]);
     for (let i = 1; i < sets.length; i++) {
       const set = sets[i]!;
@@ -67,6 +77,7 @@ export class SymbolRegistry implements ISymbolRegistry {
         if (!set.has(symbolId)) result.delete(symbolId);
       }
     }
+
     const symbols = Array.from(result, (symbolId) => this._values.get(symbolId)!);
     this._queryCache.set(cacheKey, symbols);
     this.registerCacheDependencies(cacheKey, indexKeySpace);
