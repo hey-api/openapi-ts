@@ -27,7 +27,8 @@ const deepEqual = (a: unknown, b: unknown): boolean => {
   let len = 0;
   for (const key in objA) {
     if (Object.hasOwn(objA, key)) {
-      if (++len && !Object.hasOwn(objB, key)) return false;
+      ++len;
+      if (!Object.hasOwn(objB, key)) return false;
       if (!deepEqual(objA[key], objB[key])) return false;
     }
   }
