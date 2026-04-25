@@ -11,17 +11,23 @@ const walkDeclarations: WalkFn = (graph, callback, options) => {
   const pointers = Array.from(graph.nodes.keys());
 
   if (options?.preferGroups && options.preferGroups.length) {
-    // emit nodes that match each preferred group in order, preserving insertion order
-    const emitted = new Set<string>();
+    // Precompute each pointer's group once so matchPointerToGroup is not called
+    // O(groups × pointers) times.
+    const pointerGroup = new Map<string, string | undefined>();
     if (options.matchPointerToGroup) {
-      for (const kind of options.preferGroups) {
-        for (const pointer of pointers) {
-          const result = options.matchPointerToGroup(pointer);
-          if (!result.matched) continue;
-          if (result.kind === kind) {
-            emitted.add(pointer);
-            callback(pointer, graph.nodes.get(pointer)!);
-          }
+      for (const pointer of pointers) {
+        const result = options.matchPointerToGroup(pointer);
+        pointerGroup.set(pointer, result.matched ? result.kind : undefined);
+      }
+    }
+
+    // emit nodes that match each preferred group in order
+    const emitted = new Set<string>();
+    for (const kind of options.preferGroups) {
+      for (const pointer of pointers) {
+        if (pointerGroup.get(pointer) === kind) {
+          emitted.add(pointer);
+          callback(pointer, graph.nodes.get(pointer)!);
         }
       }
     }
