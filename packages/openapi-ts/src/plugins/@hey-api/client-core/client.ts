@@ -8,24 +8,24 @@ import { $ } from '../../../ts-dsl';
 import type { PluginHandler } from './types';
 import { getClientBaseUrlKey } from './utils';
 
-const resolveRuntimeConfigPath = ({
+function resolveRuntimeConfigPath({
   outputPath,
   runtimeConfigPath,
 }: {
   outputPath: string;
   runtimeConfigPath: string;
-}): string => {
-  if (!path.isAbsolute(runtimeConfigPath) && !runtimeConfigPath.startsWith('./')) {
-    return runtimeConfigPath;
-  }
+}): string {
+  // if (!path.isAbsolute(runtimeConfigPath) && !runtimeConfigPath.startsWith('./')) {
+  //   return runtimeConfigPath;
+  // }
   const absoluteInputPath = path.isAbsolute(runtimeConfigPath)
     ? runtimeConfigPath
     : path.resolve(process.cwd(), runtimeConfigPath);
   const relative = path.relative(outputPath, absoluteInputPath).split(path.sep).join('/');
   return relative.startsWith('.') ? relative : `./${relative}`;
-};
+}
 
-const resolveBaseUrlString = ({ plugin }: Parameters<PluginHandler>[0]): string | undefined => {
+function resolveBaseUrlString({ plugin }: Parameters<PluginHandler>[0]): string | undefined {
   const { baseUrl } = plugin.config;
 
   if (baseUrl === false) {
@@ -43,7 +43,7 @@ const resolveBaseUrlString = ({ plugin }: Parameters<PluginHandler>[0]): string 
   }
 
   return servers[typeof baseUrl === 'number' ? baseUrl : 0]?.url;
-};
+}
 
 export const createClient: PluginHandler = ({ plugin }) => {
   const clientModule = clientFolderAbsolutePath(getTypedConfig(plugin));

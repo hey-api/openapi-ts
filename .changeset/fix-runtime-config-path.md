@@ -1,5 +1,5 @@
 ---
-"@hey-api/openapi-ts": patch
+"@hey-api/openapi-ts": minor
 ---
 
-**plugin(@hey-api/client-core)**: resolve `runtimeConfigPath` relative to the generated output so imports are correct regardless of where the user's config file lives
+**BREAKING** **client**: resolve `runtimeConfigPath` relative to the output folder
