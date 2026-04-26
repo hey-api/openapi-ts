@@ -16,9 +16,8 @@ export function resolveRuntimeConfigPath({
   runtimeConfigPath: string;
 }): string {
   const isAbsolutePath = path.isAbsolute(runtimeConfigPath);
-
-  const isFileSystemPath =
-    isAbsolutePath || runtimeConfigPath.startsWith('./') || runtimeConfigPath.startsWith('../');
+  // Use a single regex to match './' or '../' at the start
+  const isFileSystemPath = isAbsolutePath || /^\.\.?\//.test(runtimeConfigPath);
   if (!isFileSystemPath) {
     return runtimeConfigPath;
   }
