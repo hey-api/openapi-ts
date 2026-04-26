@@ -35,6 +35,10 @@ export function createUseSetQueryData({
     tool: plugin.name,
   });
 
+  const isRequiredOptions = isOperationOptionsRequired({
+    context: plugin.context,
+    operation,
+  });
   const typeData = useTypeData({ operation, plugin });
   const typeResponse = useTypeResponse({ operation, plugin });
 
