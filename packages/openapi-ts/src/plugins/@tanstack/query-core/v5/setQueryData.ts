@@ -4,6 +4,7 @@ import { applyNaming } from '@hey-api/shared';
 import {
   createOperationComment,
   hasOperationSse,
+  isOperationOptionsRequired,
 } from '../../../../plugins/shared/utils/operation';
 import { $ } from '../../../../ts-dsl';
 import { useTypeData, useTypeResponse } from '../shared/useType';
@@ -17,6 +18,11 @@ export function createSetQueryData({
   plugin: PluginInstance;
 }): void {
   if (hasOperationSse({ operation })) return;
+
+  const isRequiredOptions = isOperationOptionsRequired({
+    context: plugin.context,
+    operation,
+  });
 
   // setQueryData reuses the queryOptions function to get the queryKey,
   // mirroring how useQuery wraps queryOptions. This requires queryOptions
@@ -66,7 +72,7 @@ export function createSetQueryData({
     .assign(
       $.func()
         .param(queryClientParam, (p) => p.type($.type(symbolQueryClient)))
-        .param(optionsParam, (p) => p.type(typeData))
+        .param(optionsParam, (p) => p.required(isRequiredOptions).type(typeData))
         .param(updaterParam, (p) => p.type(updaterType))
         .do(
           $(queryClientParam)
