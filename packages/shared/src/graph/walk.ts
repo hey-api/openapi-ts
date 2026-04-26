@@ -10,22 +10,27 @@ import type { GetPointerPriorityFn, WalkFn } from './types/walk';
 const walkDeclarations: WalkFn = (graph, callback, options) => {
   if (options?.preferGroups && options.preferGroups.length) {
     // Single pass: bucket each pointer into its group (or unmatched).
-    // This avoids re-scanning all pointers K times (once per preferred group).
+    // A Set of preferGroups provides O(1) membership check; buckets are created
+    // lazily on first match so no separate pre-init loop is needed.
+    const preferGroupsSet = new Set(options.preferGroups);
     const buckets = new Map<string, string[]>();
-    for (const kind of options.preferGroups) {
-      if (!buckets.has(kind)) {
-        buckets.set(kind, []);
-      }
-    }
     const unmatched: string[] = [];
 
     for (const pointer of graph.nodes.keys()) {
       if (options.matchPointerToGroup) {
         const result = options.matchPointerToGroup(pointer);
         if (result.matched) {
-          const bucket = buckets.get(result.kind);
-          // kind not in preferGroups → treat as unmatched
-          (bucket ?? unmatched).push(pointer);
+          if (preferGroupsSet.has(result.kind)) {
+            let bucket = buckets.get(result.kind);
+            if (!bucket) {
+              bucket = [];
+              buckets.set(result.kind, bucket);
+            }
+            bucket.push(pointer);
+          } else {
+            // kind not in preferGroups → treat as unmatched
+            unmatched.push(pointer);
+          }
           continue;
         }
       }
@@ -37,8 +42,11 @@ const walkDeclarations: WalkFn = (graph, callback, options) => {
     for (const kind of options.preferGroups) {
       if (emittedGroups.has(kind)) continue;
       emittedGroups.add(kind);
-      for (const pointer of buckets.get(kind)!) {
-        callback(pointer, graph.nodes.get(pointer)!);
+      const pointers = buckets.get(kind);
+      if (pointers) {
+        for (const pointer of pointers) {
+          callback(pointer, graph.nodes.get(pointer)!);
+        }
       }
     }
     for (const pointer of unmatched) {
