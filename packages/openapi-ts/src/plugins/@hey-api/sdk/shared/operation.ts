@@ -324,6 +324,15 @@ export function operationStatements({
           ),
         );
       }
+    } else if (
+      plugin.getPlugin('@hey-api/transformers')?.config.dates &&
+      parameter.schema.type === 'string' &&
+      (parameter.schema.format === 'date' || parameter.schema.format === 'date-time')
+    ) {
+      paramSerializers.prop(
+        parameter.name,
+        $.object().prop('date', $.literal(parameter.schema.format)),
+      );
     }
   }
 

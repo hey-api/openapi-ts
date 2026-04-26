@@ -1,6 +1,30 @@
 import type { Auth } from '../../client-core/bundle/auth';
 import type { Client } from '../bundle/types';
-import { buildUrl, getParseAs, setAuthParams } from '../bundle/utils';
+import { buildUrl, createQuerySerializer, getParseAs, setAuthParams } from '../bundle/utils';
+
+describe('createQuerySerializer', () => {
+  it('serializes a Date value as full ISO string by default', () => {
+    const serialize = createQuerySerializer();
+    const date = new Date('2025-06-15T12:00:00.000Z');
+    expect(serialize({ createdAt: date })).toBe('createdAt=2025-06-15T12%3A00%3A00.000Z');
+  });
+
+  it('serializes a Date value as YYYY-MM-DD when date option is "date"', () => {
+    const serialize = createQuerySerializer({
+      parameters: { createdAt: { date: 'date' } },
+    });
+    const date = new Date('2025-06-15T12:00:00.000Z');
+    expect(serialize({ createdAt: date })).toBe('createdAt=2025-06-15');
+  });
+
+  it('serializes a Date value as full ISO string when date option is "date-time"', () => {
+    const serialize = createQuerySerializer({
+      parameters: { createdAt: { date: 'date-time' } },
+    });
+    const date = new Date('2025-06-15T12:00:00.000Z');
+    expect(serialize({ createdAt: date })).toBe('createdAt=2025-06-15T12%3A00%3A00.000Z');
+  });
+});
 
 describe('buildUrl', () => {
   const scenarios: Array<{
