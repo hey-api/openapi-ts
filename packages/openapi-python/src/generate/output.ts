@@ -8,9 +8,7 @@ import { getTypedConfig } from '../config/utils';
 import { getClientPlugin } from '../plugins/@hey-api/client-core/utils';
 import { generateClientBundle } from './client';
 
-export async function generateOutput(
-  context: Context,
-): Promise<{ codegenMs: number; fileCount: number; writeMs: number }> {
+export async function generateOutput(context: Context): Promise<{ fileCount: number }> {
   const outputPath = path.resolve(context.config.output.path);
 
   if (context.config.output.clean) {
@@ -39,7 +37,6 @@ export async function generateOutput(
     });
   }
 
-  const codegenStart = Date.now();
   for (const plugin of context.registerPlugins()) {
     await plugin.run();
   }
@@ -65,9 +62,6 @@ export async function generateOutput(
     }
     fileCount++;
   }
-  const codegenMs = Date.now() - codegenStart;
-
-  const writeStart = Date.now();
   await Promise.all(writes);
 
   const { source } = context.config.output;
@@ -91,6 +85,5 @@ export async function generateOutput(
     }
   }
 
-  const writeMs = Date.now() - writeStart;
-  return { codegenMs, fileCount, writeMs };
+  return { fileCount };
 }
