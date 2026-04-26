@@ -38,6 +38,10 @@ export function createSetQueryData({
   const symbolQueryClient = plugin.referenceSymbol({
     resource: `${plugin.name}.QueryClient`,
   });
+  const isRequiredOptions = isOperationOptionsRequired({
+    context: plugin.context,
+    operation,
+  });
   const typeData = useTypeData({ operation, plugin });
   const typeResponse = useTypeResponse({ operation, plugin });
 
