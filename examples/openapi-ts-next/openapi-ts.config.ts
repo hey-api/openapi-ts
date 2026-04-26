@@ -13,7 +13,7 @@ export default defineConfig({
   plugins: [
     {
       name: '@hey-api/client-next',
-      runtimeConfigPath: '../hey-api',
+      runtimeConfigPath: './src/hey-api',
     },
     '@hey-api/sdk',
     {
