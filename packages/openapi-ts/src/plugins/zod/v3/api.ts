@@ -1,6 +1,6 @@
 import type { Symbol } from '@hey-api/codegen-core';
 import type { RequestSchemaContext, ResolvedRequestValidatorLayer } from '@hey-api/shared';
-import { requestValidatorLayers, resolveValidatorLayer } from '@hey-api/shared';
+import { operationBaseName, requestValidatorLayers, resolveValidatorLayer } from '@hey-api/shared';
 
 import { $ } from '../../../ts-dsl';
 import { identifiers } from '../constants';
@@ -174,7 +174,7 @@ export function createRequestSchemaV3(
       role: 'data',
     },
     naming: plugin.config.requests,
-    namingAnchor: operation.id,
+    namingAnchor: operationBaseName(operation),
     path: [],
     plugin,
     schema: {},
