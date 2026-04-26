@@ -325,12 +325,13 @@ for (const version of versions) {
             {
               name: '@tanstack/react-query',
               useMutation: true,
+              useQuery: true,
+              useSetQueryData: true,
             },
             '@hey-api/client-fetch',
           ],
         }),
-        description:
-          'generate Fetch API client with TanStack React Query plugin with useMutation hooks',
+        description: 'generate Fetch API client with TanStack React Query plugin with hooks',
       },
       {
         config: createConfig({
@@ -345,20 +346,6 @@ for (const version of versions) {
         }),
         description:
           'generate Fetch API client with TanStack React Query plugin with setQueryData helpers',
-      },
-      {
-        config: createConfig({
-          output: 'useSetQueryData',
-          plugins: [
-            {
-              name: '@tanstack/react-query',
-              useSetQueryData: true,
-            },
-            '@hey-api/client-fetch',
-          ],
-        }),
-        description:
-          'generate Fetch API client with TanStack React Query plugin with useSetQueryData hooks',
       },
       {
         config: createConfig({
