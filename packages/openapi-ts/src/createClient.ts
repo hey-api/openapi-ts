@@ -166,9 +166,7 @@ export async function createClient({
     eventParser.timeEnd();
 
     const eventGenerator = logger.timeEvent('generator');
-    const genStart = Date.now();
-    const { fileCount } = await generateOutput(context);
-    const genMs = Date.now() - genStart;
+    const { codegenMs, fileCount, writeMs } = await generateOutput(context);
     eventGenerator.timeEnd();
 
     const eventPostprocess = logger.timeEvent('postprocess');
@@ -181,7 +179,7 @@ export async function createClient({
           ? `./${path.relative(process.env.INIT_CWD, config.output.path)}`
           : config.output.path;
         console.log(
-          `${jobPrefix}${colors.green('✅ Done!')} Your output is in ${colors.cyanBright(outputPath)} ${colors.gray(`(${fileCount} files written in ${(genMs / 1000).toFixed(2)}s)`)}`,
+          `${jobPrefix}${colors.green('✅ Done!')} Your output is in ${colors.cyanBright(outputPath)} ${colors.gray(`(${fileCount} files, codegen ${(codegenMs / 1000).toFixed(2)}s, write ${(writeMs / 1000).toFixed(2)}s)`)}`,
         );
       }
     }
