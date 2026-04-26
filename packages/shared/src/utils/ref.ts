@@ -1,15 +1,10 @@
-const jsonPointerSlash = /~1/g;
-const jsonPointerTilde = /~0/g;
-
 /**
  * Returns the reusable component name from `$ref`.
  */
 export function refToName($ref: string): string {
   const path = jsonPointerToPath($ref);
   const name = path[path.length - 1]!;
-  // refs using unicode characters become encoded, didn't investigate why
-  // but the suspicion is this comes from `@hey-api/json-schema-ref-parser`
-  return decodeURI(name);
+  return name;
 }
 
 /**
@@ -25,7 +20,7 @@ export function refToName($ref: string): string {
  * @returns The encoded segment as a string.
  */
 export function encodeJsonPointerSegment(segment: string | number): string {
-  return String(segment).replace(/~/g, '~0').replace(/\//g, '~1');
+  return String(segment).replaceAll('~', '~0').replaceAll('/', '~1');
 }
 
 /**
@@ -50,9 +45,7 @@ export function jsonPointerToPath(pointer: string): ReadonlyArray<string> {
   if (!clean) {
     return [];
   }
-  return clean
-    .split('/')
-    .map((part) => part.replace(jsonPointerSlash, '/').replace(jsonPointerTilde, '~'));
+  return clean.split('/').map((part) => part.replaceAll('~1', '/').replaceAll('~0', '~'));
 }
 
 /**
@@ -121,9 +114,7 @@ export function isTopLevelComponent(refOrPath: string | ReadonlyArray<string | n
 }
 
 export function resolveRef<T>({ $ref, spec }: { $ref: string; spec: Record<string, any> }): T {
-  // refs using unicode characters become encoded, didn't investigate why
-  // but the suspicion is this comes from `@hey-api/json-schema-ref-parser`
-  const path = jsonPointerToPath(decodeURI($ref));
+  const path = jsonPointerToPath($ref);
 
   let current = spec;
 

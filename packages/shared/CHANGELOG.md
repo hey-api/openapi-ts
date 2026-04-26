@@ -1,5 +1,21 @@
 # @hey-api/shared
 
+## 0.4.1
+
+### Patch Changes
+
+- **parser**: fix: re-add implicitly-filtered schemas in collectOperations ([#3791](https://github.com/hey-api/openapi-ts/pull/3791)) ([`0d3cb9f`](https://github.com/hey-api/openapi-ts/commit/0d3cb9f49b9f1d9fa5b47b73a2c85141c0cd78b6)) by [@sbs44](https://github.com/sbs44)
+
+- **parser**: fix: avoid encoding url unsafe characters ([#3782](https://github.com/hey-api/openapi-ts/pull/3782)) ([`290c14f`](https://github.com/hey-api/openapi-ts/commit/290c14fba3c104a6e820eaa981b29c3b6a378e16)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **output**: fix: surface postprocess errors ([#3683](https://github.com/hey-api/openapi-ts/pull/3683)) ([`e69d79f`](https://github.com/hey-api/openapi-ts/commit/e69d79f0d7de8a0a2f955457a522b88f505ae80d)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **config**: warn on duplicated plugin configurations ([#3753](https://github.com/hey-api/openapi-ts/pull/3753)) ([`e78ce75`](https://github.com/hey-api/openapi-ts/commit/e78ce75bcc63374cd9ec4178bfe18a2e09ca128d)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+### Updated Dependencies:
+
+- @hey-api/json-schema-ref-parser@1.4.1
+
 ## 0.4.0
 
 ### Minor Changes

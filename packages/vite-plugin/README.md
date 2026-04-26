@@ -32,7 +32,7 @@ Part of the Hey API ecosystem.
 
 - runs automatically as part of your Vite build
 - reads your existing configuration (or accepts inline config)
-- works with any Vite-based project
+- supports Vite 5, 6, 7, and 8
 - [sync with Hey API Registry](https://heyapi.dev/openapi-ts/integrations) for spec management
 
 <!-- template-contributing-start -->
@@ -49,7 +49,7 @@ Start with our [Contributing](https://heyapi.dev/openapi-ts/community/contributi
 
 ## Sponsors
 
-Hey API is sponsor-funded. If you rely on Hey API in production, consider becoming a [sponsor](https://github.com/sponsors/hey-api) to accelerate the roadmap.
+Partners behind the future of API tooling. [Become a sponsor](https://github.com/sponsors/hey-api).
 
 <h3 align="center">Gold</h3>
 

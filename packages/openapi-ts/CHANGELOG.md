@@ -1,5 +1,38 @@
 # @hey-api/openapi-ts
 
+## 0.96.1
+
+### Patch Changes
+
+- **parser**: fix: re-add implicitly-filtered schemas in collectOperations ([#3791](https://github.com/hey-api/openapi-ts/pull/3791)) ([`0d3cb9f`](https://github.com/hey-api/openapi-ts/commit/0d3cb9f49b9f1d9fa5b47b73a2c85141c0cd78b6)) by [@sbs44](https://github.com/sbs44)
+
+- **plugin(@hey-api/client-fetch)**: fix: narrow `headers` to `Headers` in `ResolvedRequestOptions` ([#3757](https://github.com/hey-api/openapi-ts/pull/3757)) ([`f69b192`](https://github.com/hey-api/openapi-ts/commit/f69b192eb1afc16c85c547a25287905f9f38b2cb)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+- **plugin(zod)**: add support for `.discriminatedUnion()` ([#3780](https://github.com/hey-api/openapi-ts/pull/3780)) ([`3d8db90`](https://github.com/hey-api/openapi-ts/commit/3d8db9030fcc5c4a3b26d9da19c79eb1dd96989f)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **parser**: fix: avoid encoding url unsafe characters ([#3782](https://github.com/hey-api/openapi-ts/pull/3782)) ([`290c14f`](https://github.com/hey-api/openapi-ts/commit/290c14fba3c104a6e820eaa981b29c3b6a378e16)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(@hey-api/client-next)**: fix: narrow `headers` to `Headers` in `ResolvedRequestOptions` ([#3757](https://github.com/hey-api/openapi-ts/pull/3757)) ([`aa75345`](https://github.com/hey-api/openapi-ts/commit/aa753455f827f0a558de7f3bf5856e521b2df7bb)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+- **plugin(valibot)**: add support for `.variant()` ([#3780](https://github.com/hey-api/openapi-ts/pull/3780)) ([`3d8db90`](https://github.com/hey-api/openapi-ts/commit/3d8db9030fcc5c4a3b26d9da19c79eb1dd96989f)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(zod)**: support generating `z.input` and `z.output` types ([#3759](https://github.com/hey-api/openapi-ts/pull/3759)) ([`cda5297`](https://github.com/hey-api/openapi-ts/commit/cda5297d1e0ff0a603cb49f55d88668931aa4afe)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@hey-api/client-ky)**: fix: narrow `headers` to `Headers` in `ResolvedRequestOptions` ([#3757](https://github.com/hey-api/openapi-ts/pull/3757)) ([`ab2b315`](https://github.com/hey-api/openapi-ts/commit/ab2b315f4ab848d886b81cb374ea2e3490a39dff)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+- **output**: fix: surface postprocess errors ([#3683](https://github.com/hey-api/openapi-ts/pull/3683)) ([`e69d79f`](https://github.com/hey-api/openapi-ts/commit/e69d79f0d7de8a0a2f955457a522b88f505ae80d)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(@hey-api/client-angular)**: fix: narrow `headers` to `Headers` in `ResolvedRequestOptions` ([#3757](https://github.com/hey-api/openapi-ts/pull/3757)) ([`4ee9bd3`](https://github.com/hey-api/openapi-ts/commit/4ee9bd303855162ade829ba16d8259dea0e73514)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+- **plugin(@hey-api/client-ofetch)**: fix: narrow `headers` to `Headers` in `ResolvedRequestOptions` ([#3757](https://github.com/hey-api/openapi-ts/pull/3757)) ([`4f5afb9`](https://github.com/hey-api/openapi-ts/commit/4f5afb98355784765a7dfc4d905d3893ea5799a0)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+- **config**: warn on duplicated plugin configurations ([#3753](https://github.com/hey-api/openapi-ts/pull/3753)) ([`e78ce75`](https://github.com/hey-api/openapi-ts/commit/e78ce75bcc63374cd9ec4178bfe18a2e09ca128d)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+### Updated Dependencies:
+
+- @hey-api/shared@0.4.1
+- @hey-api/json-schema-ref-parser@1.4.1
+
 ## 0.96.0
 
 ### Minor Changes

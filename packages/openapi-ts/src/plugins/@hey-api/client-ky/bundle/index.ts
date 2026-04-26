@@ -18,7 +18,6 @@ export type {
   RequestResult,
   ResolvedRequestOptions,
   ResponseStyle,
-  RetryOptions,
   TDataShape,
 } from './types';
 export { createConfig, mergeHeaders } from './utils';

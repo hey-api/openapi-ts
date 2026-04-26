@@ -551,9 +551,7 @@ function parseRef({
     // Fallback to preserving the ref if circular
   }
 
-  // refs using unicode characters become encoded, didn't investigate why
-  // but the suspicion is this comes from `@hey-api/json-schema-ref-parser`
-  irSchema.$ref = decodeURI(schema.$ref);
+  irSchema.$ref = schema.$ref;
 
   // rewrite definitions refs as the internal schema follows OpenAPI 3.x syntax
   // and stores all definitions as reusable schemas

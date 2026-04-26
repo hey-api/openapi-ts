@@ -259,6 +259,16 @@ You can use built-in presets for common tools:
 
 ::: code-group
 
+```js [biome:check]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: {
+    path: 'src/client',
+    postProcess: ['biome:check'], // [!code ++]
+  },
+};
+```
+
 ```js [biome:format]
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev

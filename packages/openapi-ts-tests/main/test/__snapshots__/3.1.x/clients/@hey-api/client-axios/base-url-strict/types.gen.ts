@@ -1056,7 +1056,7 @@ export type AdditionalPropertiesUnknownIssueWritable = {
     [key: string]: string | number;
 };
 
-export type OneOfAllOfIssueWritable = ((ConstValue | GenericSchemaDuplicateIssue1SystemBoolean) & _3eNum1Период) | GenericSchemaDuplicateIssue1SystemString;
+export type OneOfAllOfIssueWritable = ((ConstValue | GenericSchemaDuplicateIssue1SystemBooleanWritable) & _3eNum1Период) | GenericSchemaDuplicateIssue1SystemStringWritable;
 
 export type GenericSchemaDuplicateIssue1SystemBooleanWritable = {
     item?: boolean;
