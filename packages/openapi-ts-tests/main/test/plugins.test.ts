@@ -324,13 +324,16 @@ for (const version of versions) {
           plugins: [
             {
               name: '@tanstack/react-query',
+              setQueryData: true,
               useMutation: true,
+              useQuery: true,
+              useSetQueryData: true,
             },
             '@hey-api/client-fetch',
           ],
         }),
         description:
-          'generate Fetch API client with TanStack React Query plugin with useMutation hooks',
+          'generate Fetch API client with TanStack React Query plugin with optional fields',
       },
       {
         config: createConfig({

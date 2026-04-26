@@ -15,16 +15,14 @@ import type { PluginInstance } from '../types';
 
 const optionsParamName = 'options';
 
-export const createQueryOptions = ({
+export function createQueryOptions({
   operation,
   plugin,
 }: {
   operation: IR.OperationObject;
   plugin: PluginInstance;
-}): void => {
-  if (hasOperationSse({ operation })) {
-    return;
-  }
+}): void {
+  if (hasOperationSse({ operation })) return;
 
   const isRequiredOptions = isOperationOptionsRequired({
     context: plugin.context,
@@ -128,4 +126,4 @@ export const createQueryOptions = ({
         ),
     );
   plugin.node(statement);
-};
+}
