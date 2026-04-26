@@ -3,7 +3,7 @@ import { clientFolderAbsolutePath } from '../../../generate/client';
 import { $ } from '../../../ts-dsl';
 import type { PluginHandler } from './types';
 
-export const createClientConfigType = ({ plugin }: Parameters<PluginHandler>[0]) => {
+export function createClientConfigType({ plugin }: Parameters<PluginHandler>[0]): void {
   const clientModule = clientFolderAbsolutePath(getTypedConfig(plugin));
   const symbolClientOptions = plugin.referenceSymbol({
     category: 'type',
@@ -47,4 +47,4 @@ export const createClientConfigType = ({ plugin }: Parameters<PluginHandler>[0])
         ),
     );
   plugin.node(typeCreateClientConfig);
-};
+}
