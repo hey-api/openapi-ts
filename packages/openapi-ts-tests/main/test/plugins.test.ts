@@ -324,7 +324,9 @@ for (const version of versions) {
           plugins: [
             {
               name: '@tanstack/react-query',
+              getQueryData: true,
               setQueryData: true,
+              useGetQueryData: true,
               useMutation: true,
               useQuery: true,
               useSetQueryData: true,
@@ -334,6 +336,85 @@ for (const version of versions) {
         }),
         description:
           'generate Fetch API client with TanStack React Query plugin with optional fields',
+      },
+      {
+        config: createConfig({
+          output: 'useMutation',
+          plugins: [
+            {
+              getQueryData: true,
+              name: '@tanstack/preact-query',
+              setQueryData: true,
+              useGetQueryData: true,
+              useMutation: true,
+              useQuery: true,
+              useSetQueryData: true,
+            },
+            '@hey-api/client-fetch',
+          ],
+        }),
+        description:
+          'generate Fetch API client with TanStack Preact Query plugin with optional fields',
+      },
+      {
+        config: createConfig({
+          output: 'useMutation',
+          plugins: [
+            {
+              getQueryData: true,
+              name: '@tanstack/vue-query',
+              setQueryData: true,
+            },
+            '@hey-api/client-fetch',
+          ],
+        }),
+        description:
+          'generate Fetch API client with TanStack Vue Query plugin with optional fields',
+      },
+      {
+        config: createConfig({
+          output: 'useMutation',
+          plugins: [
+            {
+              getQueryData: true,
+              name: '@tanstack/svelte-query',
+              setQueryData: true,
+            },
+            '@hey-api/client-fetch',
+          ],
+        }),
+        description:
+          'generate Fetch API client with TanStack Svelte Query plugin with optional fields',
+      },
+      {
+        config: createConfig({
+          output: 'useMutation',
+          plugins: [
+            {
+              getQueryData: true,
+              name: '@tanstack/angular-query-experimental',
+              setQueryData: true,
+            },
+            '@hey-api/client-fetch',
+          ],
+        }),
+        description:
+          'generate Fetch API client with TanStack Angular Query Experimental plugin with optional fields',
+      },
+      {
+        config: createConfig({
+          output: 'useMutation',
+          plugins: [
+            {
+              getQueryData: true,
+              name: '@tanstack/solid-query',
+              setQueryData: true,
+            },
+            '@hey-api/client-fetch',
+          ],
+        }),
+        description:
+          'generate Fetch API client with TanStack Solid Query plugin with optional fields',
       },
       {
         config: createConfig({

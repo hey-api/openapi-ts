@@ -13,6 +13,21 @@ export const defaultConfig: TanStackSvelteQueryPlugin['Config'] = {
   handler: handler as TanStackSvelteQueryPlugin['Handler'],
   name: '@tanstack/svelte-query',
   resolveConfig: (plugin, context) => {
+    plugin.config.getQueryData = context.valueToObject({
+      defaultValue: {
+        case: plugin.config.case ?? 'camelCase',
+        enabled: false,
+        name: '{{name}}GetQueryData',
+      },
+      mappers: {
+        boolean: (enabled) => ({ enabled }),
+        function: (name) => ({ enabled: true, name }),
+        object: (fields) => ({ enabled: true, ...fields }),
+        string: (name) => ({ enabled: true, name }),
+      },
+      value: plugin.config.getQueryData,
+    });
+
     plugin.config.infiniteQueryKeys = context.valueToObject({
       defaultValue: {
         case: plugin.config.case ?? 'camelCase',
