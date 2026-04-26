@@ -36,6 +36,14 @@ for (const zodVersion of zodVersions) {
       },
       {
         config: createConfig({
+          input: 'discriminator-allof-member.yaml',
+          output: 'discriminator-allof-member',
+        }),
+        description:
+          'falls back to z.union() when discriminated union members have allOf (intersection)',
+      },
+      {
+        config: createConfig({
           input: 'enum-null.json',
           output: 'enum-null',
         }),
