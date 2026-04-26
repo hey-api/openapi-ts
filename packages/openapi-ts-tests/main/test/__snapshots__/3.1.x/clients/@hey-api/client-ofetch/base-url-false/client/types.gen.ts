@@ -124,10 +124,13 @@ export interface RequestOptions<
   Url extends string = string,
 >
   extends
-    Config<{
-      responseStyle: TResponseStyle;
-      throwOnError: ThrowOnError;
-    }>,
+    Omit<
+      Config<{
+        responseStyle: TResponseStyle;
+        throwOnError: ThrowOnError;
+      }>,
+      'responseTransformer'
+    >,
     Pick<
       ServerSentEventsOptions<TData>,
       | 'onSseError'
@@ -144,6 +147,13 @@ export interface RequestOptions<
   body?: unknown;
   path?: Record<string, unknown>;
   query?: Record<string, unknown>;
+  /**
+   * A function transforming response data before it's returned. This is useful
+   * for post-processing data, e.g. converting ISO strings into Date objects.
+   */
+  responseTransformer?: (
+    data: unknown extends TData ? TData : keyof TData extends number ? TData[keyof TData] : TData,
+  ) => Promise<unknown>;
   /**
    * Security mechanism(s) to use for the request.
    */
