@@ -35,10 +35,6 @@ export function createUseSetQueryData({
     tool: plugin.name,
   });
 
-  const isRequiredOptions = isOperationOptionsRequired({
-    context: plugin.context,
-    operation,
-  });
   const typeData = useTypeData({ operation, plugin });
   const typeResponse = useTypeResponse({ operation, plugin });
 
@@ -78,8 +74,8 @@ export function createUseSetQueryData({
         $.const(queryClientVar).assign($(symbolUseQueryClient).call()),
         $.return(
           $.func()
-            .param(optionsParam, (p) => p.required(isRequiredOptions).type(typeData))
             .param(updaterParam, (p) => p.type(updaterType))
+            .param(optionsParam, (p) => p.required(isRequiredOptions).type(typeData))
             .do(
               $(queryClientVar)
                 .attr('setQueryData')
