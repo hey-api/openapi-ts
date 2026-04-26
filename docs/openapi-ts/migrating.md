@@ -7,6 +7,16 @@ description: Migrating to @hey-api/openapi-ts.
 
 While we try to avoid breaking changes, sometimes it's unavoidable in order to offer you the latest features. This page lists changes that require updates to your code. If you run into a problem with migration, please [open an issue](https://github.com/hey-api/openapi-ts/issues).
 
+## v0.97.0
+
+### Changed `runtimeConfigPath` behavior
+
+This was a known, long-standing issue confusing first-time users. Before, defining client `runtimeConfigPath` value would paste it verbatim to the generated output. This release changes the behavior to resolve relative to the output folder.
+
+### Changed Ky client behavior
+
+The Ky client was updated to be more intuitive. Some Ky options now need to be passed via the `kyOptions` field and you need to pass `undefined` to unset an option.
+
 ## v0.96.0
 
 ### Removed Node 20 support

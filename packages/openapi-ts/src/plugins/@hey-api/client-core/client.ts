@@ -15,16 +15,15 @@ export function resolveRuntimeConfigPath({
   outputPath: string;
   runtimeConfigPath: string;
 }): string {
-  const isFileSystemPath =
-    path.isAbsolute(runtimeConfigPath) ||
-    runtimeConfigPath.startsWith('./') ||
-    runtimeConfigPath.startsWith('../');
+  const isAbsolutePath = path.isAbsolute(runtimeConfigPath);
 
+  const isFileSystemPath =
+    isAbsolutePath || runtimeConfigPath.startsWith('./') || runtimeConfigPath.startsWith('../');
   if (!isFileSystemPath) {
     return runtimeConfigPath;
   }
 
-  const absoluteInputPath = path.isAbsolute(runtimeConfigPath)
+  const absoluteInputPath = isAbsolutePath
     ? runtimeConfigPath
     : path.resolve(process.cwd(), runtimeConfigPath);
   const relative = path.relative(outputPath, absoluteInputPath).split(path.sep).join('/');
