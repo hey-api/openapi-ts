@@ -8,16 +8,22 @@ import { $ } from '../../../ts-dsl';
 import type { PluginHandler } from './types';
 import { getClientBaseUrlKey } from './utils';
 
-function resolveRuntimeConfigPath({
+export function resolveRuntimeConfigPath({
   outputPath,
   runtimeConfigPath,
 }: {
   outputPath: string;
   runtimeConfigPath: string;
 }): string {
-  // if (!path.isAbsolute(runtimeConfigPath) && !runtimeConfigPath.startsWith('./')) {
-  //   return runtimeConfigPath;
-  // }
+  const isFileSystemPath =
+    path.isAbsolute(runtimeConfigPath) ||
+    runtimeConfigPath.startsWith('./') ||
+    runtimeConfigPath.startsWith('../');
+
+  if (!isFileSystemPath) {
+    return runtimeConfigPath;
+  }
+
   const absoluteInputPath = path.isAbsolute(runtimeConfigPath)
     ? runtimeConfigPath
     : path.resolve(process.cwd(), runtimeConfigPath);
