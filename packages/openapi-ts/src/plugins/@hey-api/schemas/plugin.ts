@@ -5,13 +5,13 @@ import type { OpenAPIV2, OpenAPIV3, OpenAPIV3_1 } from '@hey-api/spec-types';
 import { $ } from '../../../ts-dsl';
 import type { HeyApiSchemasPlugin } from './types';
 
-const stripSchema = ({
+function stripSchema({
   plugin,
   schema,
 }: {
   plugin: HeyApiSchemasPlugin['Instance'];
   schema: OpenAPIV2.SchemaObject | OpenAPIV3.SchemaObject | OpenAPIV3_1.SchemaObject;
-}) => {
+}) {
   if (plugin.config.type === 'form') {
     if (schema.description) {
       delete schema.description;
@@ -33,9 +33,9 @@ const stripSchema = ({
       delete schema.title;
     }
   }
-};
+}
 
-const schemaToJsonSchemaDraft_04 = ({
+function schemaToJsonSchemaDraft_04({
   context,
   plugin,
   schema: _schema,
@@ -43,7 +43,7 @@ const schemaToJsonSchemaDraft_04 = ({
   context: Context;
   plugin: HeyApiSchemasPlugin['Instance'];
   schema: OpenAPIV2.SchemaObject;
-}): OpenAPIV2.SchemaObject => {
+}): OpenAPIV2.SchemaObject {
   if (Array.isArray(_schema)) {
     return _schema.map((item) =>
       schemaToJsonSchemaDraft_04({
@@ -57,9 +57,6 @@ const schemaToJsonSchemaDraft_04 = ({
   const schema = structuredClone(_schema);
 
   if (schema.$ref) {
-    // refs using unicode characters become encoded, didn't investigate why
-    // but the suspicion is this comes from `@hey-api/json-schema-ref-parser`
-    schema.$ref = decodeURI(schema.$ref);
     return schema;
   }
 
@@ -106,9 +103,9 @@ const schemaToJsonSchemaDraft_04 = ({
   }
 
   return schema;
-};
+}
 
-const schemaToJsonSchemaDraft_05 = ({
+function schemaToJsonSchemaDraft_05({
   context,
   plugin,
   schema: _schema,
@@ -116,7 +113,7 @@ const schemaToJsonSchemaDraft_05 = ({
   context: Context;
   plugin: HeyApiSchemasPlugin['Instance'];
   schema: OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject;
-}): OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject => {
+}): OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject {
   if (Array.isArray(_schema)) {
     return _schema.map((item) =>
       schemaToJsonSchemaDraft_05({
@@ -130,9 +127,6 @@ const schemaToJsonSchemaDraft_05 = ({
   const schema = structuredClone(_schema);
 
   if ('$ref' in schema) {
-    // refs using unicode characters become encoded, didn't investigate why
-    // but the suspicion is this comes from `@hey-api/json-schema-ref-parser`
-    schema.$ref = decodeURI(schema.$ref);
     return schema;
   }
 
@@ -199,9 +193,9 @@ const schemaToJsonSchemaDraft_05 = ({
   }
 
   return schema;
-};
+}
 
-const schemaToJsonSchema2020_12 = ({
+function schemaToJsonSchema2020_12({
   context,
   plugin,
   schema: _schema,
@@ -209,7 +203,7 @@ const schemaToJsonSchema2020_12 = ({
   context: Context;
   plugin: HeyApiSchemasPlugin['Instance'];
   schema: OpenAPIV3_1.SchemaObject;
-}): OpenAPIV3_1.SchemaObject => {
+}): OpenAPIV3_1.SchemaObject {
   if (Array.isArray(_schema)) {
     return _schema.map((item) =>
       schemaToJsonSchema2020_12({
@@ -223,12 +217,6 @@ const schemaToJsonSchema2020_12 = ({
   const schema = structuredClone(_schema);
 
   stripSchema({ plugin, schema });
-
-  if (schema.$ref) {
-    // refs using unicode characters become encoded, didn't investigate why
-    // but the suspicion is this comes from `@hey-api/json-schema-ref-parser`
-    schema.$ref = decodeURI(schema.$ref);
-  }
 
   if (schema.additionalProperties && typeof schema.additionalProperties !== 'boolean') {
     schema.additionalProperties = schemaToJsonSchema2020_12({
@@ -301,9 +289,9 @@ const schemaToJsonSchema2020_12 = ({
   }
 
   return schema;
-};
+}
 
-const schemaName = ({
+function schemaName({
   name,
   plugin,
   schema,
@@ -315,7 +303,7 @@ const schemaName = ({
     | OpenAPIV3.ReferenceObject
     | OpenAPIV3.SchemaObject
     | OpenAPIV3_1.SchemaObject;
-}): string => {
+}): string {
   let customName = '';
 
   if (plugin.config.nameBuilder) {
@@ -331,15 +319,15 @@ const schemaName = ({
   }
 
   return customName;
-};
+}
 
-const schemasV2_0_X = ({
+function schemasV2_0_X({
   context,
   plugin,
 }: {
   context: Context<OpenApi.V2_0_X>;
   plugin: HeyApiSchemasPlugin['Instance'];
-}) => {
+}) {
   if (!context.spec.definitions) {
     return;
   }
@@ -370,15 +358,15 @@ const schemasV2_0_X = ({
       );
     plugin.node(statement);
   }
-};
+}
 
-const schemasV3_0_X = ({
+function schemasV3_0_X({
   context,
   plugin,
 }: {
   context: Context<OpenApi.V3_0_X>;
   plugin: HeyApiSchemasPlugin['Instance'];
-}) => {
+}) {
   if (!context.spec.components) {
     return;
   }
@@ -409,15 +397,15 @@ const schemasV3_0_X = ({
       );
     plugin.node(statement);
   }
-};
+}
 
-const schemasV3_1_X = ({
+function schemasV3_1_X({
   context,
   plugin,
 }: {
   context: Context<OpenApi.V3_1_X>;
   plugin: HeyApiSchemasPlugin['Instance'];
-}) => {
+}) {
   if (!context.spec.components) {
     return;
   }
@@ -448,7 +436,7 @@ const schemasV3_1_X = ({
       );
     plugin.node(statement);
   }
-};
+}
 
 export const handler: HeyApiSchemasPlugin['Handler'] = ({ plugin }) => {
   if ('swagger' in plugin.context.spec) {

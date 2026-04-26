@@ -423,13 +423,9 @@ export const zModelSquare = z.object({
 /**
  * This is a model with one property with a 'one of' relationship where the options are not $ref
  */
-export const zCompositionWithOneOfDiscriminator = z.union([
-    z.intersection(z.object({
-        kind: z.literal('circle')
-    }), zModelCircle),
-    z.intersection(z.object({
-        kind: z.literal('square')
-    }), zModelSquare)
+export const zCompositionWithOneOfDiscriminator = z.discriminatedUnion('kind', [
+    z.extend(zModelCircle, { kind: z.literal('circle') }),
+    z.extend(zModelSquare, { kind: z.literal('square') })
 ]);
 
 /**
@@ -1028,14 +1024,6 @@ export const zAdditionalPropertiesUnknownIssueWritable = z.record(z.string(), z.
     z.number()
 ]));
 
-export const zOneOfAllOfIssueWritable = z.union([
-    z.intersection(z.union([
-        zConstValue,
-        zGenericSchemaDuplicateIssue1SystemBoolean
-    ]), z3eNum1Период),
-    zGenericSchemaDuplicateIssue1SystemString
-]);
-
 export const zGenericSchemaDuplicateIssue1SystemBooleanWritable = z.object({
     item: z.optional(z.boolean()),
     error: z.nullish(z.string()),
@@ -1046,6 +1034,14 @@ export const zGenericSchemaDuplicateIssue1SystemStringWritable = z.object({
     item: z.nullish(z.string()),
     error: z.nullish(z.string())
 });
+
+export const zOneOfAllOfIssueWritable = z.union([
+    z.intersection(z.union([
+        zConstValue,
+        zGenericSchemaDuplicateIssue1SystemBooleanWritable
+    ]), z3eNum1Период),
+    zGenericSchemaDuplicateIssue1SystemStringWritable
+]);
 
 /**
  * This is a reusable parameter

@@ -1,6 +1,6 @@
 ## Sponsors
 
-Hey API is sponsor-funded. If you rely on Hey API in production, consider becoming a [sponsor](https://github.com/sponsors/hey-api) to accelerate the roadmap.
+Partners behind the future of API tooling. [Become a sponsor](https://github.com/sponsors/hey-api).
 
 <h3 align="center">Gold</h3>
 

@@ -1,5 +1,76 @@
 # Changelog
 
+# 2026-04-20
+
+## @hey-api/openapi-ts 0.96.1
+
+### Updates
+
+- config: warn on duplicated plugin configurations ([#3753](https://github.com/hey-api/openapi-ts/pull/3753))
+- output: surface postprocess errors ([#3683](https://github.com/hey-api/openapi-ts/pull/3683))
+- parser: re-add implicitly-filtered schemas in collectOperations ([#3791](https://github.com/hey-api/openapi-ts/pull/3791))
+- parser: avoid encoding url unsafe characters ([#3782](https://github.com/hey-api/openapi-ts/pull/3782))
+
+### Plugins
+
+#### @hey-api/client-angular
+
+- narrow `headers` to `Headers` in `ResolvedRequestOptions` ([#3757](https://github.com/hey-api/openapi-ts/pull/3757))
+
+#### @hey-api/client-fetch
+
+- narrow `headers` to `Headers` in `ResolvedRequestOptions` ([#3757](https://github.com/hey-api/openapi-ts/pull/3757))
+
+#### @hey-api/client-ky
+
+- narrow `headers` to `Headers` in `ResolvedRequestOptions` ([#3757](https://github.com/hey-api/openapi-ts/pull/3757))
+
+#### @hey-api/client-next
+
+- narrow `headers` to `Headers` in `ResolvedRequestOptions` ([#3757](https://github.com/hey-api/openapi-ts/pull/3757))
+
+#### @hey-api/client-ofetch
+
+- narrow `headers` to `Headers` in `ResolvedRequestOptions` ([#3757](https://github.com/hey-api/openapi-ts/pull/3757))
+
+#### valibot
+
+- add support for `.variant()` ([#3780](https://github.com/hey-api/openapi-ts/pull/3780))
+
+#### zod
+
+- add support for `.discriminatedUnion()` ([#3780](https://github.com/hey-api/openapi-ts/pull/3780))
+- support generating `z.input` and `z.output` types ([#3759](https://github.com/hey-api/openapi-ts/pull/3759))
+
+---
+
+## @hey-api/json-schema-ref-parser 1.4.1
+
+### Updates
+
+- parser: avoid encoding url unsafe characters ([#3782](https://github.com/hey-api/openapi-ts/pull/3782))
+
+---
+
+## @hey-api/shared 0.4.1
+
+### Updates
+
+- output: surface postprocess errors ([#3683](https://github.com/hey-api/openapi-ts/pull/3683))
+- parser: avoid encoding url unsafe characters ([#3782](https://github.com/hey-api/openapi-ts/pull/3782))
+- parser: re-add implicitly-filtered schemas in collectOperations ([#3791](https://github.com/hey-api/openapi-ts/pull/3791))
+- config: warn on duplicated plugin configurations ([#3753](https://github.com/hey-api/openapi-ts/pull/3753))
+
+---
+
+## @hey-api/vite-plugin 0.3.1
+
+### Updates
+
+- api: expose `vite` options ([#3776](https://github.com/hey-api/openapi-ts/pull/3776))
+
+---
+
 # 2026-04-13
 
 ## @hey-api/openapi-ts 0.96.0

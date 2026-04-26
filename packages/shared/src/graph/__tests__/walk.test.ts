@@ -11,7 +11,6 @@ describe('walkTopological', () => {
   const makeGraph = (deps: Array<[string, Array<string>]>, nodes: Array<string>) => {
     const nodeDependencies = new Map<string, Set<string>>();
     const subtreeDependencies = new Map<string, Set<string>>();
-    const reverseNodeDependencies = new Map<string, Set<string>>();
     const nodesMap = new Map<string, any>();
 
     for (const name of nodes) {
@@ -22,16 +21,11 @@ describe('walkTopological', () => {
       const s = new Set<string>(toList);
       nodeDependencies.set(from, s);
       subtreeDependencies.set(from, new Set<string>(toList));
-      for (const to of toList) {
-        if (!reverseNodeDependencies.has(to)) reverseNodeDependencies.set(to, new Set());
-        reverseNodeDependencies.get(to)!.add(from);
-      }
     }
 
     return {
       nodeDependencies,
       nodes: nodesMap,
-      reverseNodeDependencies,
       subtreeDependencies,
       transitiveDependencies: new Map<string, Set<string>>(),
     } as unknown as Graph;
@@ -183,13 +177,11 @@ describe('walkTopological', () => {
     const nodeDependencies = new Map<string, Set<string>>();
     nodeDependencies.set(schema, new Set([param]));
     const subtreeDependencies = new Map<string, Set<string>>();
-    const reverseNodeDependencies = new Map<string, Set<string>>();
     const nodesMap = new Map<string, any>();
     for (const n of nodes) nodesMap.set(n, { key: null, node: {}, parentPointer: null });
     const graph = {
       nodeDependencies,
       nodes: nodesMap,
-      reverseNodeDependencies,
       subtreeDependencies,
       transitiveDependencies: new Map<string, Set<string>>(),
     } as unknown as Graph;
@@ -215,7 +207,6 @@ describe('walkTopological', () => {
     const graph = {
       nodeDependencies,
       nodes: nodesMap,
-      reverseNodeDependencies: new Map<string, Set<string>>(),
       subtreeDependencies: new Map<string, Set<string>>(),
       transitiveDependencies: new Map<string, Set<string>>(),
     } as unknown as Graph;
@@ -240,7 +231,6 @@ describe('walkTopological', () => {
     const graph = {
       nodeDependencies,
       nodes: nodesMap,
-      reverseNodeDependencies: new Map<string, Set<string>>(),
       subtreeDependencies,
       transitiveDependencies: new Map<string, Set<string>>(),
     } as unknown as Graph;

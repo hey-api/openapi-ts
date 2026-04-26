@@ -4,18 +4,19 @@
  */
 const deepEqual = (a: unknown, b: unknown): boolean => {
   if (a === b) return true;
-  if (a === null || b === null) return a === b;
-  const typeA = typeof a;
-  const typeB = typeof b;
-  if (typeA !== typeB) return false;
-  if (typeA !== 'object') return false;
+  if (!a || !b || typeof a !== 'object' || typeof b !== 'object') return false;
+
+  const ctor = (a as object).constructor;
+  if (ctor !== (b as object).constructor) return false;
 
   // Arrays
-  if (Array.isArray(a) || Array.isArray(b)) {
-    if (!Array.isArray(a) || !Array.isArray(b)) return false;
-    if (a.length !== b.length) return false;
-    for (let i = 0; i < a.length; i++) {
-      if (!deepEqual(a[i], b[i])) return false;
+  if (Array.isArray(a)) {
+    const arrA = a as unknown[];
+    const arrB = b as unknown[];
+    let len = arrA.length;
+    if (len !== arrB.length) return false;
+    while (len--) {
+      if (!deepEqual(arrA[len], arrB[len])) return false;
     }
     return true;
   }
@@ -23,16 +24,15 @@ const deepEqual = (a: unknown, b: unknown): boolean => {
   // Plain objects
   const objA = a as Record<string, unknown>;
   const objB = b as Record<string, unknown>;
-  const keysA = Object.keys(objA).sort();
-  const keysB = Object.keys(objB).sort();
-  if (keysA.length !== keysB.length) return false;
-  for (let i = 0; i < keysA.length; i++) {
-    if (keysA[i] !== keysB[i]) return false;
+  let len = 0;
+  for (const key in objA) {
+    if (Object.hasOwn(objA, key)) {
+      ++len;
+      if (!Object.hasOwn(objB, key)) return false;
+      if (!deepEqual(objA[key], objB[key])) return false;
+    }
   }
-  for (const key of keysA) {
-    if (!deepEqual(objA[key], objB[key])) return false;
-  }
-  return true;
+  return Object.keys(objB).length === len;
 };
 
 export default deepEqual;

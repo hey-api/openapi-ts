@@ -1,5 +1,11 @@
 # @hey-api/vite-plugin
 
+## 0.3.1
+
+### Patch Changes
+
+- **api**: expose `vite` options ([#3776](https://github.com/hey-api/openapi-ts/pull/3776)) ([`664cf85`](https://github.com/hey-api/openapi-ts/commit/664cf853eb6841e69289e8f780ae2b0b573fd46e)) by [@mrlubos](https://github.com/mrlubos)
+
 ## 0.3.0
 
 ### Minor Changes
