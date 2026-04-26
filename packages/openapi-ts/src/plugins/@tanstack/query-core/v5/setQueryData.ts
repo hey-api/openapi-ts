@@ -38,10 +38,6 @@ export function createSetQueryData({
   const symbolQueryClient = plugin.referenceSymbol({
     resource: `${plugin.name}.QueryClient`,
   });
-  const isRequiredOptions = isOperationOptionsRequired({
-    context: plugin.context,
-    operation,
-  });
   const typeData = useTypeData({ operation, plugin });
   const typeResponse = useTypeResponse({ operation, plugin });
 
@@ -76,8 +72,8 @@ export function createSetQueryData({
     .assign(
       $.func()
         .param(queryClientParam, (p) => p.type($.type(symbolQueryClient)))
-        .param(optionsParam, (p) => p.required(isRequiredOptions).type(typeData))
         .param(updaterParam, (p) => p.type(updaterType))
+        .param(optionsParam, (p) => p.required(isRequiredOptions).type(typeData))
         .do(
           $(queryClientParam)
             .attr('setQueryData')
