@@ -66,14 +66,16 @@ export function createSetQueryData({
   const optionsParam = 'options';
   const updaterParam = 'updater';
 
+  const optionsType = isRequiredOptions ? typeData : $.type.or(typeData, $.type('undefined'));
+
   const statement = $.const(symbolSetQueryData)
     .export()
     .$if(plugin.config.comments && createOperationComment(operation), (c, v) => c.doc(v))
     .assign(
       $.func()
         .param(queryClientParam, (p) => p.type($.type(symbolQueryClient)))
+        .param(optionsParam, (p) => p.type(optionsType))
         .param(updaterParam, (p) => p.type(updaterType))
-        .param(optionsParam, (p) => p.required(isRequiredOptions).type(typeData))
         .do(
           $(queryClientParam)
             .attr('setQueryData')
