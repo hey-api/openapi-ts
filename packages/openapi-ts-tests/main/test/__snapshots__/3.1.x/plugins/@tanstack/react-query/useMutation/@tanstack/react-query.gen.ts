@@ -54,13 +54,13 @@ export const exportOptions = (options?: Options<ExportData>) => queryOptions<unk
     queryKey: exportQueryKey(options)
 });
 
-export const exportSetQueryData = (queryClient: QueryClient, updater: unknown | undefined | ((old: unknown | undefined) => unknown | undefined), options?: Options<ExportData>) => queryClient.setQueryData(exportOptions(options).queryKey, updater);
+export const exportSetQueryData = (queryClient: QueryClient, options: Options<ExportData> | undefined, updater: unknown | undefined | ((old: unknown | undefined) => unknown | undefined)) => queryClient.setQueryData(exportOptions(options).queryKey, updater);
 
 export const useExportQuery = (options?: Options<ExportData>) => useQuery(exportOptions(options));
 
 export const useExportSetQueryData = () => {
     const queryClient = useQueryClient();
-    return (updater: unknown | undefined | ((old: unknown | undefined) => unknown | undefined), options?: Options<ExportData>) => queryClient.setQueryData(exportOptions(options).queryKey, updater);
+    return (options: Options<ExportData> | undefined, updater: unknown | undefined | ((old: unknown | undefined) => unknown | undefined)) => queryClient.setQueryData(exportOptions(options).queryKey, updater);
 };
 
 export const patchApiVbyApiVersionNoTagMutation = (options?: Partial<Options<PatchApiVbyApiVersionNoTagData>>): UseMutationOptions<unknown, DefaultError, Options<PatchApiVbyApiVersionNoTagData>> => {
@@ -126,13 +126,13 @@ export const apiVVersionODataControllerCountOptions = (options?: Options<ApiVVer
     queryKey: apiVVersionODataControllerCountQueryKey(options)
 });
 
-export const apiVVersionODataControllerCountSetQueryData = (queryClient: QueryClient, updater: ApiVVersionODataControllerCountResponse | undefined | ((old: ApiVVersionODataControllerCountResponse | undefined) => ApiVVersionODataControllerCountResponse | undefined), options?: Options<ApiVVersionODataControllerCountData>) => queryClient.setQueryData(apiVVersionODataControllerCountOptions(options).queryKey, updater);
+export const apiVVersionODataControllerCountSetQueryData = (queryClient: QueryClient, options: Options<ApiVVersionODataControllerCountData> | undefined, updater: ApiVVersionODataControllerCountResponse | undefined | ((old: ApiVVersionODataControllerCountResponse | undefined) => ApiVVersionODataControllerCountResponse | undefined)) => queryClient.setQueryData(apiVVersionODataControllerCountOptions(options).queryKey, updater);
 
 export const useApiVVersionODataControllerCountQuery = (options?: Options<ApiVVersionODataControllerCountData>) => useQuery(apiVVersionODataControllerCountOptions(options));
 
 export const useApiVVersionODataControllerCountSetQueryData = () => {
     const queryClient = useQueryClient();
-    return (updater: ApiVVersionODataControllerCountResponse | undefined | ((old: ApiVVersionODataControllerCountResponse | undefined) => ApiVVersionODataControllerCountResponse | undefined), options?: Options<ApiVVersionODataControllerCountData>) => queryClient.setQueryData(apiVVersionODataControllerCountOptions(options).queryKey, updater);
+    return (options: Options<ApiVVersionODataControllerCountData> | undefined, updater: ApiVVersionODataControllerCountResponse | undefined | ((old: ApiVVersionODataControllerCountResponse | undefined) => ApiVVersionODataControllerCountResponse | undefined)) => queryClient.setQueryData(apiVVersionODataControllerCountOptions(options).queryKey, updater);
 };
 
 export const getApiVbyApiVersionSimpleOperationQueryKey = (options: Options<GetApiVbyApiVersionSimpleOperationData>) => createQueryKey('getApiVbyApiVersionSimpleOperation', options);
@@ -150,13 +150,13 @@ export const getApiVbyApiVersionSimpleOperationOptions = (options: Options<GetAp
     queryKey: getApiVbyApiVersionSimpleOperationQueryKey(options)
 });
 
-export const getApiVbyApiVersionSimpleOperationSetQueryData = (queryClient: QueryClient, updater: GetApiVbyApiVersionSimpleOperationResponse | undefined | ((old: GetApiVbyApiVersionSimpleOperationResponse | undefined) => GetApiVbyApiVersionSimpleOperationResponse | undefined), options: Options<GetApiVbyApiVersionSimpleOperationData>) => queryClient.setQueryData(getApiVbyApiVersionSimpleOperationOptions(options).queryKey, updater);
+export const getApiVbyApiVersionSimpleOperationSetQueryData = (queryClient: QueryClient, options: Options<GetApiVbyApiVersionSimpleOperationData>, updater: GetApiVbyApiVersionSimpleOperationResponse | undefined | ((old: GetApiVbyApiVersionSimpleOperationResponse | undefined) => GetApiVbyApiVersionSimpleOperationResponse | undefined)) => queryClient.setQueryData(getApiVbyApiVersionSimpleOperationOptions(options).queryKey, updater);
 
 export const useGetApiVbyApiVersionSimpleOperationQuery = (options: Options<GetApiVbyApiVersionSimpleOperationData>) => useQuery(getApiVbyApiVersionSimpleOperationOptions(options));
 
 export const useGetApiVbyApiVersionSimpleOperationSetQueryData = () => {
     const queryClient = useQueryClient();
-    return (updater: GetApiVbyApiVersionSimpleOperationResponse | undefined | ((old: GetApiVbyApiVersionSimpleOperationResponse | undefined) => GetApiVbyApiVersionSimpleOperationResponse | undefined), options: Options<GetApiVbyApiVersionSimpleOperationData>) => queryClient.setQueryData(getApiVbyApiVersionSimpleOperationOptions(options).queryKey, updater);
+    return (options: Options<GetApiVbyApiVersionSimpleOperationData>, updater: GetApiVbyApiVersionSimpleOperationResponse | undefined | ((old: GetApiVbyApiVersionSimpleOperationResponse | undefined) => GetApiVbyApiVersionSimpleOperationResponse | undefined)) => queryClient.setQueryData(getApiVbyApiVersionSimpleOperationOptions(options).queryKey, updater);
 };
 
 export const deleteCallWithoutParametersAndResponseMutation = (options?: Partial<Options<DeleteCallWithoutParametersAndResponseData>>): UseMutationOptions<unknown, DefaultError, Options<DeleteCallWithoutParametersAndResponseData>> => {
@@ -190,13 +190,13 @@ export const getCallWithoutParametersAndResponseOptions = (options?: Options<Get
     queryKey: getCallWithoutParametersAndResponseQueryKey(options)
 });
 
-export const getCallWithoutParametersAndResponseSetQueryData = (queryClient: QueryClient, updater: unknown | undefined | ((old: unknown | undefined) => unknown | undefined), options?: Options<GetCallWithoutParametersAndResponseData>) => queryClient.setQueryData(getCallWithoutParametersAndResponseOptions(options).queryKey, updater);
+export const getCallWithoutParametersAndResponseSetQueryData = (queryClient: QueryClient, options: Options<GetCallWithoutParametersAndResponseData> | undefined, updater: unknown | undefined | ((old: unknown | undefined) => unknown | undefined)) => queryClient.setQueryData(getCallWithoutParametersAndResponseOptions(options).queryKey, updater);
 
 export const useGetCallWithoutParametersAndResponseQuery = (options?: Options<GetCallWithoutParametersAndResponseData>) => useQuery(getCallWithoutParametersAndResponseOptions(options));
 
 export const useGetCallWithoutParametersAndResponseSetQueryData = () => {
     const queryClient = useQueryClient();
-    return (updater: unknown | undefined | ((old: unknown | undefined) => unknown | undefined), options?: Options<GetCallWithoutParametersAndResponseData>) => queryClient.setQueryData(getCallWithoutParametersAndResponseOptions(options).queryKey, updater);
+    return (options: Options<GetCallWithoutParametersAndResponseData> | undefined, updater: unknown | undefined | ((old: unknown | undefined) => unknown | undefined)) => queryClient.setQueryData(getCallWithoutParametersAndResponseOptions(options).queryKey, updater);
 };
 
 export const patchCallWithoutParametersAndResponseMutation = (options?: Partial<Options<PatchCallWithoutParametersAndResponseData>>): UseMutationOptions<unknown, DefaultError, Options<PatchCallWithoutParametersAndResponseData>> => {
@@ -401,13 +401,13 @@ export const getCallWithOptionalParamInfiniteOptions = (options: Options<GetCall
     queryKey: getCallWithOptionalParamInfiniteQueryKey(options)
 });
 
-export const getCallWithOptionalParamSetQueryData = (queryClient: QueryClient, updater: unknown | undefined | ((old: unknown | undefined) => unknown | undefined), options: Options<GetCallWithOptionalParamData>) => queryClient.setQueryData(getCallWithOptionalParamOptions(options).queryKey, updater);
+export const getCallWithOptionalParamSetQueryData = (queryClient: QueryClient, options: Options<GetCallWithOptionalParamData>, updater: unknown | undefined | ((old: unknown | undefined) => unknown | undefined)) => queryClient.setQueryData(getCallWithOptionalParamOptions(options).queryKey, updater);
 
 export const useGetCallWithOptionalParamQuery = (options: Options<GetCallWithOptionalParamData>) => useQuery(getCallWithOptionalParamOptions(options));
 
 export const useGetCallWithOptionalParamSetQueryData = () => {
     const queryClient = useQueryClient();
-    return (updater: unknown | undefined | ((old: unknown | undefined) => unknown | undefined), options: Options<GetCallWithOptionalParamData>) => queryClient.setQueryData(getCallWithOptionalParamOptions(options).queryKey, updater);
+    return (options: Options<GetCallWithOptionalParamData>, updater: unknown | undefined | ((old: unknown | undefined) => unknown | undefined)) => queryClient.setQueryData(getCallWithOptionalParamOptions(options).queryKey, updater);
 };
 
 export const postCallWithOptionalParamMutation = (options?: Partial<Options<PostCallWithOptionalParamData>>): UseMutationOptions<PostCallWithOptionalParamResponse, DefaultError, Options<PostCallWithOptionalParamData>> => {
@@ -473,13 +473,13 @@ export const callWithDefaultParametersOptions = (options?: Options<CallWithDefau
     queryKey: callWithDefaultParametersQueryKey(options)
 });
 
-export const callWithDefaultParametersSetQueryData = (queryClient: QueryClient, updater: unknown | undefined | ((old: unknown | undefined) => unknown | undefined), options?: Options<CallWithDefaultParametersData>) => queryClient.setQueryData(callWithDefaultParametersOptions(options).queryKey, updater);
+export const callWithDefaultParametersSetQueryData = (queryClient: QueryClient, options: Options<CallWithDefaultParametersData> | undefined, updater: unknown | undefined | ((old: unknown | undefined) => unknown | undefined)) => queryClient.setQueryData(callWithDefaultParametersOptions(options).queryKey, updater);
 
 export const useCallWithDefaultParametersQuery = (options?: Options<CallWithDefaultParametersData>) => useQuery(callWithDefaultParametersOptions(options));
 
 export const useCallWithDefaultParametersSetQueryData = () => {
     const queryClient = useQueryClient();
-    return (updater: unknown | undefined | ((old: unknown | undefined) => unknown | undefined), options?: Options<CallWithDefaultParametersData>) => queryClient.setQueryData(callWithDefaultParametersOptions(options).queryKey, updater);
+    return (options: Options<CallWithDefaultParametersData> | undefined, updater: unknown | undefined | ((old: unknown | undefined) => unknown | undefined)) => queryClient.setQueryData(callWithDefaultParametersOptions(options).queryKey, updater);
 };
 
 export const callWithDefaultOptionalParametersMutation = (options?: Partial<Options<CallWithDefaultOptionalParametersData>>): UseMutationOptions<unknown, DefaultError, Options<CallWithDefaultOptionalParametersData>> => {
@@ -545,13 +545,13 @@ export const duplicateName2Options = (options?: Options<DuplicateName2Data>) => 
     queryKey: duplicateName2QueryKey(options)
 });
 
-export const duplicateName2SetQueryData = (queryClient: QueryClient, updater: unknown | undefined | ((old: unknown | undefined) => unknown | undefined), options?: Options<DuplicateName2Data>) => queryClient.setQueryData(duplicateName2Options(options).queryKey, updater);
+export const duplicateName2SetQueryData = (queryClient: QueryClient, options: Options<DuplicateName2Data> | undefined, updater: unknown | undefined | ((old: unknown | undefined) => unknown | undefined)) => queryClient.setQueryData(duplicateName2Options(options).queryKey, updater);
 
 export const useDuplicateName2Query = (options?: Options<DuplicateName2Data>) => useQuery(duplicateName2Options(options));
 
 export const useDuplicateName2SetQueryData = () => {
     const queryClient = useQueryClient();
-    return (updater: unknown | undefined | ((old: unknown | undefined) => unknown | undefined), options?: Options<DuplicateName2Data>) => queryClient.setQueryData(duplicateName2Options(options).queryKey, updater);
+    return (options: Options<DuplicateName2Data> | undefined, updater: unknown | undefined | ((old: unknown | undefined) => unknown | undefined)) => queryClient.setQueryData(duplicateName2Options(options).queryKey, updater);
 };
 
 export const duplicateName3Mutation = (options?: Partial<Options<DuplicateName3Data>>): UseMutationOptions<unknown, DefaultError, Options<DuplicateName3Data>> => {
@@ -601,13 +601,13 @@ export const callWithNoContentResponseOptions = (options?: Options<CallWithNoCon
     queryKey: callWithNoContentResponseQueryKey(options)
 });
 
-export const callWithNoContentResponseSetQueryData = (queryClient: QueryClient, updater: CallWithNoContentResponseResponse | undefined | ((old: CallWithNoContentResponseResponse | undefined) => CallWithNoContentResponseResponse | undefined), options?: Options<CallWithNoContentResponseData>) => queryClient.setQueryData(callWithNoContentResponseOptions(options).queryKey, updater);
+export const callWithNoContentResponseSetQueryData = (queryClient: QueryClient, options: Options<CallWithNoContentResponseData> | undefined, updater: CallWithNoContentResponseResponse | undefined | ((old: CallWithNoContentResponseResponse | undefined) => CallWithNoContentResponseResponse | undefined)) => queryClient.setQueryData(callWithNoContentResponseOptions(options).queryKey, updater);
 
 export const useCallWithNoContentResponseQuery = (options?: Options<CallWithNoContentResponseData>) => useQuery(callWithNoContentResponseOptions(options));
 
 export const useCallWithNoContentResponseSetQueryData = () => {
     const queryClient = useQueryClient();
-    return (updater: CallWithNoContentResponseResponse | undefined | ((old: CallWithNoContentResponseResponse | undefined) => CallWithNoContentResponseResponse | undefined), options?: Options<CallWithNoContentResponseData>) => queryClient.setQueryData(callWithNoContentResponseOptions(options).queryKey, updater);
+    return (options: Options<CallWithNoContentResponseData> | undefined, updater: CallWithNoContentResponseResponse | undefined | ((old: CallWithNoContentResponseResponse | undefined) => CallWithNoContentResponseResponse | undefined)) => queryClient.setQueryData(callWithNoContentResponseOptions(options).queryKey, updater);
 };
 
 export const callWithResponseAndNoContentResponseQueryKey = (options?: Options<CallWithResponseAndNoContentResponseData>) => createQueryKey('callWithResponseAndNoContentResponse', options);
@@ -625,13 +625,13 @@ export const callWithResponseAndNoContentResponseOptions = (options?: Options<Ca
     queryKey: callWithResponseAndNoContentResponseQueryKey(options)
 });
 
-export const callWithResponseAndNoContentResponseSetQueryData = (queryClient: QueryClient, updater: CallWithResponseAndNoContentResponseResponse | undefined | ((old: CallWithResponseAndNoContentResponseResponse | undefined) => CallWithResponseAndNoContentResponseResponse | undefined), options?: Options<CallWithResponseAndNoContentResponseData>) => queryClient.setQueryData(callWithResponseAndNoContentResponseOptions(options).queryKey, updater);
+export const callWithResponseAndNoContentResponseSetQueryData = (queryClient: QueryClient, options: Options<CallWithResponseAndNoContentResponseData> | undefined, updater: CallWithResponseAndNoContentResponseResponse | undefined | ((old: CallWithResponseAndNoContentResponseResponse | undefined) => CallWithResponseAndNoContentResponseResponse | undefined)) => queryClient.setQueryData(callWithResponseAndNoContentResponseOptions(options).queryKey, updater);
 
 export const useCallWithResponseAndNoContentResponseQuery = (options?: Options<CallWithResponseAndNoContentResponseData>) => useQuery(callWithResponseAndNoContentResponseOptions(options));
 
 export const useCallWithResponseAndNoContentResponseSetQueryData = () => {
     const queryClient = useQueryClient();
-    return (updater: CallWithResponseAndNoContentResponseResponse | undefined | ((old: CallWithResponseAndNoContentResponseResponse | undefined) => CallWithResponseAndNoContentResponseResponse | undefined), options?: Options<CallWithResponseAndNoContentResponseData>) => queryClient.setQueryData(callWithResponseAndNoContentResponseOptions(options).queryKey, updater);
+    return (options: Options<CallWithResponseAndNoContentResponseData> | undefined, updater: CallWithResponseAndNoContentResponseResponse | undefined | ((old: CallWithResponseAndNoContentResponseResponse | undefined) => CallWithResponseAndNoContentResponseResponse | undefined)) => queryClient.setQueryData(callWithResponseAndNoContentResponseOptions(options).queryKey, updater);
 };
 
 export const dummyAQueryKey = (options?: Options<DummyAData>) => createQueryKey('dummyA', options);
@@ -649,13 +649,13 @@ export const dummyAOptions = (options?: Options<DummyAData>) => queryOptions<Dum
     queryKey: dummyAQueryKey(options)
 });
 
-export const dummyASetQueryData = (queryClient: QueryClient, updater: DummyAResponse | undefined | ((old: DummyAResponse | undefined) => DummyAResponse | undefined), options?: Options<DummyAData>) => queryClient.setQueryData(dummyAOptions(options).queryKey, updater);
+export const dummyASetQueryData = (queryClient: QueryClient, options: Options<DummyAData> | undefined, updater: DummyAResponse | undefined | ((old: DummyAResponse | undefined) => DummyAResponse | undefined)) => queryClient.setQueryData(dummyAOptions(options).queryKey, updater);
 
 export const useDummyAQuery = (options?: Options<DummyAData>) => useQuery(dummyAOptions(options));
 
 export const useDummyASetQueryData = () => {
     const queryClient = useQueryClient();
-    return (updater: DummyAResponse | undefined | ((old: DummyAResponse | undefined) => DummyAResponse | undefined), options?: Options<DummyAData>) => queryClient.setQueryData(dummyAOptions(options).queryKey, updater);
+    return (options: Options<DummyAData> | undefined, updater: DummyAResponse | undefined | ((old: DummyAResponse | undefined) => DummyAResponse | undefined)) => queryClient.setQueryData(dummyAOptions(options).queryKey, updater);
 };
 
 export const dummyBQueryKey = (options?: Options<DummyBData>) => createQueryKey('dummyB', options);
@@ -673,13 +673,13 @@ export const dummyBOptions = (options?: Options<DummyBData>) => queryOptions<Dum
     queryKey: dummyBQueryKey(options)
 });
 
-export const dummyBSetQueryData = (queryClient: QueryClient, updater: DummyBResponse | undefined | ((old: DummyBResponse | undefined) => DummyBResponse | undefined), options?: Options<DummyBData>) => queryClient.setQueryData(dummyBOptions(options).queryKey, updater);
+export const dummyBSetQueryData = (queryClient: QueryClient, options: Options<DummyBData> | undefined, updater: DummyBResponse | undefined | ((old: DummyBResponse | undefined) => DummyBResponse | undefined)) => queryClient.setQueryData(dummyBOptions(options).queryKey, updater);
 
 export const useDummyBQuery = (options?: Options<DummyBData>) => useQuery(dummyBOptions(options));
 
 export const useDummyBSetQueryData = () => {
     const queryClient = useQueryClient();
-    return (updater: DummyBResponse | undefined | ((old: DummyBResponse | undefined) => DummyBResponse | undefined), options?: Options<DummyBData>) => queryClient.setQueryData(dummyBOptions(options).queryKey, updater);
+    return (options: Options<DummyBData> | undefined, updater: DummyBResponse | undefined | ((old: DummyBResponse | undefined) => DummyBResponse | undefined)) => queryClient.setQueryData(dummyBOptions(options).queryKey, updater);
 };
 
 export const callWithResponseQueryKey = (options?: Options<CallWithResponseData>) => createQueryKey('callWithResponse', options);
@@ -697,13 +697,13 @@ export const callWithResponseOptions = (options?: Options<CallWithResponseData>)
     queryKey: callWithResponseQueryKey(options)
 });
 
-export const callWithResponseSetQueryData = (queryClient: QueryClient, updater: CallWithResponseResponse | undefined | ((old: CallWithResponseResponse | undefined) => CallWithResponseResponse | undefined), options?: Options<CallWithResponseData>) => queryClient.setQueryData(callWithResponseOptions(options).queryKey, updater);
+export const callWithResponseSetQueryData = (queryClient: QueryClient, options: Options<CallWithResponseData> | undefined, updater: CallWithResponseResponse | undefined | ((old: CallWithResponseResponse | undefined) => CallWithResponseResponse | undefined)) => queryClient.setQueryData(callWithResponseOptions(options).queryKey, updater);
 
 export const useCallWithResponseQuery = (options?: Options<CallWithResponseData>) => useQuery(callWithResponseOptions(options));
 
 export const useCallWithResponseSetQueryData = () => {
     const queryClient = useQueryClient();
-    return (updater: CallWithResponseResponse | undefined | ((old: CallWithResponseResponse | undefined) => CallWithResponseResponse | undefined), options?: Options<CallWithResponseData>) => queryClient.setQueryData(callWithResponseOptions(options).queryKey, updater);
+    return (options: Options<CallWithResponseData> | undefined, updater: CallWithResponseResponse | undefined | ((old: CallWithResponseResponse | undefined) => CallWithResponseResponse | undefined)) => queryClient.setQueryData(callWithResponseOptions(options).queryKey, updater);
 };
 
 export const callWithDuplicateResponsesMutation = (options?: Partial<Options<CallWithDuplicateResponsesData>>): UseMutationOptions<CallWithDuplicateResponsesResponse, CallWithDuplicateResponsesError, Options<CallWithDuplicateResponsesData>> => {
@@ -753,13 +753,13 @@ export const collectionFormatOptions = (options: Options<CollectionFormatData>) 
     queryKey: collectionFormatQueryKey(options)
 });
 
-export const collectionFormatSetQueryData = (queryClient: QueryClient, updater: unknown | undefined | ((old: unknown | undefined) => unknown | undefined), options: Options<CollectionFormatData>) => queryClient.setQueryData(collectionFormatOptions(options).queryKey, updater);
+export const collectionFormatSetQueryData = (queryClient: QueryClient, options: Options<CollectionFormatData>, updater: unknown | undefined | ((old: unknown | undefined) => unknown | undefined)) => queryClient.setQueryData(collectionFormatOptions(options).queryKey, updater);
 
 export const useCollectionFormatQuery = (options: Options<CollectionFormatData>) => useQuery(collectionFormatOptions(options));
 
 export const useCollectionFormatSetQueryData = () => {
     const queryClient = useQueryClient();
-    return (updater: unknown | undefined | ((old: unknown | undefined) => unknown | undefined), options: Options<CollectionFormatData>) => queryClient.setQueryData(collectionFormatOptions(options).queryKey, updater);
+    return (options: Options<CollectionFormatData>, updater: unknown | undefined | ((old: unknown | undefined) => unknown | undefined)) => queryClient.setQueryData(collectionFormatOptions(options).queryKey, updater);
 };
 
 export const typesQueryKey = (options: Options<TypesData>) => createQueryKey('types', options);
@@ -777,13 +777,13 @@ export const typesOptions = (options: Options<TypesData>) => queryOptions<TypesR
     queryKey: typesQueryKey(options)
 });
 
-export const typesSetQueryData = (queryClient: QueryClient, updater: TypesResponse | undefined | ((old: TypesResponse | undefined) => TypesResponse | undefined), options: Options<TypesData>) => queryClient.setQueryData(typesOptions(options).queryKey, updater);
+export const typesSetQueryData = (queryClient: QueryClient, options: Options<TypesData>, updater: TypesResponse | undefined | ((old: TypesResponse | undefined) => TypesResponse | undefined)) => queryClient.setQueryData(typesOptions(options).queryKey, updater);
 
 export const useTypesQuery = (options: Options<TypesData>) => useQuery(typesOptions(options));
 
 export const useTypesSetQueryData = () => {
     const queryClient = useQueryClient();
-    return (updater: TypesResponse | undefined | ((old: TypesResponse | undefined) => TypesResponse | undefined), options: Options<TypesData>) => queryClient.setQueryData(typesOptions(options).queryKey, updater);
+    return (options: Options<TypesData>, updater: TypesResponse | undefined | ((old: TypesResponse | undefined) => TypesResponse | undefined)) => queryClient.setQueryData(typesOptions(options).queryKey, updater);
 };
 
 export const uploadFileMutation = (options?: Partial<Options<UploadFileData>>): UseMutationOptions<UploadFileResponse, DefaultError, Options<UploadFileData>> => {
@@ -817,13 +817,13 @@ export const fileResponseOptions = (options: Options<FileResponseData>) => query
     queryKey: fileResponseQueryKey(options)
 });
 
-export const fileResponseSetQueryData = (queryClient: QueryClient, updater: FileResponseResponse | undefined | ((old: FileResponseResponse | undefined) => FileResponseResponse | undefined), options: Options<FileResponseData>) => queryClient.setQueryData(fileResponseOptions(options).queryKey, updater);
+export const fileResponseSetQueryData = (queryClient: QueryClient, options: Options<FileResponseData>, updater: FileResponseResponse | undefined | ((old: FileResponseResponse | undefined) => FileResponseResponse | undefined)) => queryClient.setQueryData(fileResponseOptions(options).queryKey, updater);
 
 export const useFileResponseQuery = (options: Options<FileResponseData>) => useQuery(fileResponseOptions(options));
 
 export const useFileResponseSetQueryData = () => {
     const queryClient = useQueryClient();
-    return (updater: FileResponseResponse | undefined | ((old: FileResponseResponse | undefined) => FileResponseResponse | undefined), options: Options<FileResponseData>) => queryClient.setQueryData(fileResponseOptions(options).queryKey, updater);
+    return (options: Options<FileResponseData>, updater: FileResponseResponse | undefined | ((old: FileResponseResponse | undefined) => FileResponseResponse | undefined)) => queryClient.setQueryData(fileResponseOptions(options).queryKey, updater);
 };
 
 export const complexTypesQueryKey = (options: Options<ComplexTypesData>) => createQueryKey('complexTypes', options);
@@ -841,13 +841,13 @@ export const complexTypesOptions = (options: Options<ComplexTypesData>) => query
     queryKey: complexTypesQueryKey(options)
 });
 
-export const complexTypesSetQueryData = (queryClient: QueryClient, updater: ComplexTypesResponse | undefined | ((old: ComplexTypesResponse | undefined) => ComplexTypesResponse | undefined), options: Options<ComplexTypesData>) => queryClient.setQueryData(complexTypesOptions(options).queryKey, updater);
+export const complexTypesSetQueryData = (queryClient: QueryClient, options: Options<ComplexTypesData>, updater: ComplexTypesResponse | undefined | ((old: ComplexTypesResponse | undefined) => ComplexTypesResponse | undefined)) => queryClient.setQueryData(complexTypesOptions(options).queryKey, updater);
 
 export const useComplexTypesQuery = (options: Options<ComplexTypesData>) => useQuery(complexTypesOptions(options));
 
 export const useComplexTypesSetQueryData = () => {
     const queryClient = useQueryClient();
-    return (updater: ComplexTypesResponse | undefined | ((old: ComplexTypesResponse | undefined) => ComplexTypesResponse | undefined), options: Options<ComplexTypesData>) => queryClient.setQueryData(complexTypesOptions(options).queryKey, updater);
+    return (options: Options<ComplexTypesData>, updater: ComplexTypesResponse | undefined | ((old: ComplexTypesResponse | undefined) => ComplexTypesResponse | undefined)) => queryClient.setQueryData(complexTypesOptions(options).queryKey, updater);
 };
 
 export const multipartResponseQueryKey = (options?: Options<MultipartResponseData>) => createQueryKey('multipartResponse', options);
@@ -865,13 +865,13 @@ export const multipartResponseOptions = (options?: Options<MultipartResponseData
     queryKey: multipartResponseQueryKey(options)
 });
 
-export const multipartResponseSetQueryData = (queryClient: QueryClient, updater: MultipartResponseResponse | undefined | ((old: MultipartResponseResponse | undefined) => MultipartResponseResponse | undefined), options?: Options<MultipartResponseData>) => queryClient.setQueryData(multipartResponseOptions(options).queryKey, updater);
+export const multipartResponseSetQueryData = (queryClient: QueryClient, options: Options<MultipartResponseData> | undefined, updater: MultipartResponseResponse | undefined | ((old: MultipartResponseResponse | undefined) => MultipartResponseResponse | undefined)) => queryClient.setQueryData(multipartResponseOptions(options).queryKey, updater);
 
 export const useMultipartResponseQuery = (options?: Options<MultipartResponseData>) => useQuery(multipartResponseOptions(options));
 
 export const useMultipartResponseSetQueryData = () => {
     const queryClient = useQueryClient();
-    return (updater: MultipartResponseResponse | undefined | ((old: MultipartResponseResponse | undefined) => MultipartResponseResponse | undefined), options?: Options<MultipartResponseData>) => queryClient.setQueryData(multipartResponseOptions(options).queryKey, updater);
+    return (options: Options<MultipartResponseData> | undefined, updater: MultipartResponseResponse | undefined | ((old: MultipartResponseResponse | undefined) => MultipartResponseResponse | undefined)) => queryClient.setQueryData(multipartResponseOptions(options).queryKey, updater);
 };
 
 export const multipartRequestMutation = (options?: Partial<Options<MultipartRequestData>>): UseMutationOptions<unknown, DefaultError, Options<MultipartRequestData>> => {

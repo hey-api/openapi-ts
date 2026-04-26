@@ -66,6 +66,8 @@ export function createUseSetQueryData({
   const optionsParam = 'options';
   const updaterParam = 'updater';
 
+  const optionsType = isRequiredOptions ? typeData : $.type.or(typeData, $.type('undefined'));
+
   const statement = $.const(symbolUseSetQueryData)
     .export()
     .$if(plugin.config.comments && createOperationComment(operation), (c, v) => c.doc(v))
@@ -74,8 +76,8 @@ export function createUseSetQueryData({
         $.const(queryClientVar).assign($(symbolUseQueryClient).call()),
         $.return(
           $.func()
+            .param(optionsParam, (p) => p.type(optionsType))
             .param(updaterParam, (p) => p.type(updaterType))
-            .param(optionsParam, (p) => p.required(isRequiredOptions).type(typeData))
             .do(
               $(queryClientVar)
                 .attr('setQueryData')
