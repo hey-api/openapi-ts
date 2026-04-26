@@ -157,22 +157,40 @@ export class SymbolRegistry implements ISymbolRegistry {
     }
     const sets: Array<Set<SymbolId>> = [];
     let missed = false;
+
+    // Build index sets and register cache dependencies inline within a single pass.
     for (const indexEntry of indexKeySpace) {
-      const values = this._indices.get(indexEntry[0]);
-      if (!values) {
-        missed = true;
-        break;
+      const serialized = indexEntry[2];
+      let cacheKeys: Set<string>;
+
+      if (this._dependencyToCache.has(serialized)) {
+        cacheKeys = this._dependencyToCache.get(serialized)!;
+      } else {
+        cacheKeys = new Set();
+        this._dependencyToCache.set(serialized, cacheKeys);
       }
-      const set = values.get(indexEntry[1]);
-      if (!set) {
-        missed = true;
-        break;
+
+      cacheKeys.add(cacheKey);
+
+      if (!missed) {
+        const values = this._indices.get(indexEntry[0]);
+        if (!values) {
+          missed = true;
+          continue;
+        }
+        const set = values.get(indexEntry[1]);
+        if (!set) {
+          missed = true;
+          continue;
+        }
+        sets.push(set);
       }
-      sets.push(set);
     }
+
+    this._cacheDependencies.set(cacheKey, indexKeySpace);
+
     if (missed || !sets.length) {
       this._queryCache.set(cacheKey, []);
-      this.registerCacheDependencies(cacheKey, indexKeySpace);
       return [];
     }
 
@@ -193,25 +211,7 @@ export class SymbolRegistry implements ISymbolRegistry {
 
     const symbols = Array.from(result, (symbolId) => this._values.get(symbolId)!);
     this._queryCache.set(cacheKey, symbols);
-    this.registerCacheDependencies(cacheKey, indexKeySpace);
     return symbols;
-  }
-
-  /**
-   * Registers reverse-index entries so that when any of the given index entries
-   * are invalidated, the cache key is evicted in O(1) per entry.
-   */
-  private registerCacheDependencies(cacheKey: QueryCacheKey, indexKeySpace: IndexKeySpace): void {
-    for (const indexEntry of indexKeySpace) {
-      const serialized = indexEntry[2];
-      let cacheKeys = this._dependencyToCache.get(serialized);
-      if (!cacheKeys) {
-        cacheKeys = new Set();
-        this._dependencyToCache.set(serialized, cacheKeys);
-      }
-      cacheKeys.add(cacheKey);
-    }
-    this._cacheDependencies.set(cacheKey, indexKeySpace);
   }
 
   private replaceStubs(symbol: Symbol, indexKeySpace: IndexKeySpace): void {
