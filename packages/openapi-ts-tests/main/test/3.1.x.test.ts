@@ -673,6 +673,14 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'parameter-array-deep-object.json',
+        output: 'parameter-array-deep-object',
+        plugins: ['@hey-api/client-fetch', '@hey-api/sdk'],
+      }),
+      description: 'handles array query parameter with deepObject style (falls back to form)',
+    },
+    {
+      config: createConfig({
         input: 'parameter-explode-false.json',
         output: 'parameter-explode-false',
         plugins: ['@hey-api/client-fetch', '@hey-api/sdk'],
