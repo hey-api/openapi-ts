@@ -8,7 +8,7 @@ import { getTypedConfig } from '../config/utils';
 import { getClientPlugin } from '../plugins/@hey-api/client-core/utils';
 import { generateClientBundle } from './client';
 
-export async function generateOutput(context: Context): Promise<void> {
+export async function generateOutput(context: Context): Promise<{ fileCount: number }> {
   const outputPath = path.resolve(context.config.output.path);
 
   if (context.config.output.clean) {
@@ -44,6 +44,7 @@ export async function generateOutput(context: Context): Promise<void> {
     await intent.run(ctx);
   }
 
+  let fileCount = 0;
   for (const file of context.gen.render()) {
     const filePath = path.resolve(outputPath, file.path);
     const dir = path.dirname(filePath);
@@ -51,6 +52,7 @@ export async function generateOutput(context: Context): Promise<void> {
       fs.mkdirSync(dir, { recursive: true });
       fs.writeFileSync(filePath, file.content, { encoding: 'utf8' });
     }
+    fileCount++;
   }
 
   const { source } = context.config.output;
@@ -72,4 +74,6 @@ export async function generateOutput(context: Context): Promise<void> {
       await source.callback(serialized);
     }
   }
+
+  return { fileCount };
 }
