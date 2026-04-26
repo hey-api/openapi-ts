@@ -15,6 +15,7 @@ import {
   patchOpenApiSpec,
   postprocessOutput,
 } from '@hey-api/shared';
+import { format as ms } from '@lukeed/ms';
 import colors from 'ansi-colors';
 
 import { postProcessors } from './config/output/postprocess';
@@ -44,6 +45,7 @@ export async function createClient({
       headers: new Headers(),
     }));
 
+  const jobStart = Date.now();
   const inputPaths = config.input.map((input) => compileInputPath(input));
 
   // on first run, print the message as soon as possible
@@ -166,8 +168,10 @@ export async function createClient({
     eventParser.timeEnd();
 
     const eventGenerator = logger.timeEvent('generator');
-    const { codegenMs, fileCount, writeMs } = await generateOutput(context);
+    const { fileCount } = await generateOutput(context);
     eventGenerator.timeEnd();
+
+    const totalMs = Date.now() - jobStart;
 
     const eventPostprocess = logger.timeEvent('postprocess');
     if (!config.dryRun) {
@@ -179,7 +183,7 @@ export async function createClient({
           ? `./${path.relative(process.env.INIT_CWD, config.output.path)}`
           : config.output.path;
         console.log(
-          `${jobPrefix}${colors.green('✅ Done!')} Your output is in ${colors.cyanBright(outputPath)} ${colors.gray(`(${fileCount} files, codegen ${(codegenMs / 1000).toFixed(2)}s, write ${(writeMs / 1000).toFixed(2)}s)`)}`,
+          `${jobPrefix}${colors.green('✅ Done!')} Your output is in ${colors.cyanBright(outputPath)} ${colors.gray(`(${fileCount} files in ${ms(totalMs)})`)}`,
         );
       }
     }

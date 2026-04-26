@@ -1368,6 +1368,9 @@ importers:
       '@hey-api/types':
         specifier: workspace:*
         version: link:../types
+      '@lukeed/ms':
+        specifier: 2.0.2
+        version: 2.0.2
       ansi-colors:
         specifier: 4.1.3
         version: 4.1.3
@@ -1423,6 +1426,9 @@ importers:
       '@hey-api/types':
         specifier: workspace:*
         version: link:../types
+      '@lukeed/ms':
+        specifier: 2.0.2
+        version: 2.0.2
       ansi-colors:
         specifier: 4.1.3
         version: 4.1.3
@@ -4799,6 +4805,10 @@ packages:
 
   '@lukeed/csprng@1.1.0':
     resolution: {integrity: sha512-Z7C/xXCiGWsg0KuKsHTKJxbWhpI3Vs5GwLfOean7MGyVFGqdRgBbAjOCh6u4bbjPc/8MJ2pZmK/0DLdCbivLDA==}
+    engines: {node: '>=8'}
+
+  '@lukeed/ms@2.0.2':
+    resolution: {integrity: sha512-9I2Zn6+NJLfaGoz9jN3lpwDgAYvfGeNYdbAIjJOqzs4Tpc+VU3Jqq4IofSUBKajiDS8k9fZIg18/z13mpk1bsA==}
     engines: {node: '>=8'}
 
   '@manypkg/find-root@1.1.0':
@@ -20030,6 +20040,8 @@ snapshots:
       '@braidai/lang': 1.1.2
 
   '@lukeed/csprng@1.1.0': {}
+
+  '@lukeed/ms@2.0.2': {}
 
   '@manypkg/find-root@1.1.0':
     dependencies:
