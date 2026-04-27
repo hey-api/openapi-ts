@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-export const getFilePaths = (dirPath: string): Array<string> => {
+export function getFilePaths(dirPath: string): Array<string> {
   let filePaths: Array<string> = [];
   const files = fs.readdirSync(dirPath);
 
@@ -17,6 +17,8 @@ export const getFilePaths = (dirPath: string): Array<string> => {
   }
 
   return filePaths;
-};
+}
 
-export const getSpecsPath = (): string => path.join(__dirname, '..', '..', 'specs');
+export function getSpecsPath(): string {
+  return path.join(__dirname, '..', '..', 'specs');
+}

@@ -88,6 +88,15 @@ export default defineConfig({
         extends: true,
         test: {
           globalSetup: ['./test/globalTeardown.ts'],
+          name: '@test/openapi-ts-tanstack-query-v5',
+          root: 'packages/openapi-ts-tests/tanstack-query/v5',
+          setupFiles: ['./vitest.setup.ts'],
+        },
+      },
+      {
+        extends: true,
+        test: {
+          globalSetup: ['./test/globalTeardown.ts'],
           name: '@test/openapi-ts-valibot-v1',
           root: 'packages/openapi-ts-tests/valibot/v1',
           setupFiles: ['./vitest.setup.ts'],
