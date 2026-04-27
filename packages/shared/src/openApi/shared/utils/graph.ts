@@ -212,34 +212,6 @@ const propagateScopesToNode = (fromNodeInfo: NodeInfo, toNodeInfo: NodeInfo): bo
 };
 
 /**
- * Seeds each node in the graph with its local access scope(s) based on its own properties.
- * - 'read' if readOnly: true
- * - 'write' if writeOnly: true
- * - 'normal' if node is an object property
- *
- * Only non-array objects are considered for scope seeding.
- *
- * @param nodes - Map of JSON Pointer to NodeInfo.
- */
-export const seedLocalScopes = (nodes: Graph['nodes']): void => {
-  for (const [pointer, nodeInfo] of nodes) {
-    const { node } = nodeInfo;
-
-    if (typeof node !== 'object' || node === null || node instanceof Array) {
-      continue;
-    }
-
-    if ('readOnly' in node && node.readOnly === true) {
-      nodeInfo.scopes = new Set(['read']);
-    } else if ('writeOnly' in node && node.writeOnly === true) {
-      nodeInfo.scopes = new Set(['write']);
-    } else if (pointer.match(/\/properties\/[^/]+$/)) {
-      nodeInfo.scopes = new Set(['normal']);
-    }
-  }
-};
-
-/**
  * Builds a graph of all nodes in an OpenAPI spec, indexed by normalized JSON Pointer,
  * and tracks all $ref dependencies and reverse dependencies between nodes.
  *
@@ -299,14 +271,14 @@ export function buildGraph(
         graph.nodeDependencies.get(pointer)!.add(refPointer);
       }
       // Check for tags property (should be an array of strings)
-      if ('tags' in node && node.tags instanceof Array) {
+      if ('tags' in node && Array.isArray(node.tags)) {
         tags = new Set(node.tags.filter((tag) => typeof tag === 'string'));
       }
     }
 
     graph.nodes.set(pointer, { deprecated, key, node, parentPointer, tags });
 
-    if (node instanceof Array) {
+    if (Array.isArray(node)) {
       node.forEach((item, index) =>
         walk({
           key: index,
@@ -340,16 +312,44 @@ export function buildGraph(
     transitiveDependencies: new Map(),
   };
 
+  // Merge parentToChildren cache build + scope seeding into one pass over graph.nodes.
   for (const [pointer, nodeInfo] of graph.nodes) {
     const parent = nodeInfo.parentPointer;
-    if (!parent) continue;
-    if (!cache.parentToChildren.has(parent)) {
-      cache.parentToChildren.set(parent, []);
+    if (parent) {
+      let arr = cache.parentToChildren.get(parent);
+      if (!arr) {
+        arr = [];
+        cache.parentToChildren.set(parent, arr);
+      }
+      arr.push(pointer);
     }
-    cache.parentToChildren.get(parent)!.push(pointer);
+
+    // Seeds each node in the graph with its local access scope(s) based on its own properties.
+    // - 'read' if readOnly: true
+    // - 'write' if writeOnly: true
+    // - 'normal' if node is an object property
+    //
+    // Only non-array objects are considered for scope seeding.
+    const { node } = nodeInfo;
+    if (typeof node === 'object' && node !== null && !Array.isArray(node)) {
+      if ('readOnly' in node && node.readOnly === true) {
+        nodeInfo.scopes = new Set(['read']);
+      } else if ('writeOnly' in node && node.writeOnly === true) {
+        nodeInfo.scopes = new Set(['write']);
+      } else {
+        // Check /properties/{key} without a regex: compare the segment before the
+        // last slash to the string 'properties'.
+        const lastSlash = pointer.lastIndexOf('/');
+        if (lastSlash > 0) {
+          const prevSlash = pointer.lastIndexOf('/', lastSlash - 1);
+          if (prevSlash >= 0 && pointer.slice(prevSlash + 1, lastSlash) === 'properties') {
+            nodeInfo.scopes = new Set(['normal']);
+          }
+        }
+      }
+    }
   }
 
-  seedLocalScopes(graph.nodes);
   propagateScopes(graph);
   annotateChildScopes(graph.nodes);
 
