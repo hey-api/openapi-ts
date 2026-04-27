@@ -1541,24 +1541,6 @@ importers:
       '@pinia/colada':
         specifier: 0.19.1
         version: 0.19.1(pinia@3.0.3(typescript@6.0.2)(vue@3.5.25(typescript@6.0.2)))(vue@3.5.25(typescript@6.0.2))
-      '@tanstack/angular-query-experimental':
-        specifier: 5.90.25
-        version: 5.90.25(@angular/common@21.2.7(@angular/core@21.2.7(@angular/compiler@21.2.7)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.7(@angular/compiler@21.2.7)(rxjs@7.8.2)(zone.js@0.16.0))
-      '@tanstack/preact-query':
-        specifier: 5.93.0
-        version: 5.93.0(preact@10.28.4)
-      '@tanstack/react-query':
-        specifier: 5.90.21
-        version: 5.90.21(react@19.0.0)
-      '@tanstack/solid-query':
-        specifier: 5.90.23
-        version: 5.90.23(solid-js@1.9.9)
-      '@tanstack/svelte-query':
-        specifier: 5.90.2
-        version: 5.90.2(svelte@5.19.9)
-      '@tanstack/vue-query':
-        specifier: 5.92.9
-        version: 5.92.9(vue@3.5.25(typescript@6.0.2))
       '@types/cross-spawn':
         specifier: 6.0.6
         version: 6.0.6
@@ -1640,6 +1622,36 @@ importers:
       '@hey-api/openapi-ts':
         specifier: workspace:*
         version: link:../../openapi-ts
+      typescript:
+        specifier: 6.0.2
+        version: 6.0.2
+
+  packages/openapi-ts-tests/tanstack-query/v5:
+    devDependencies:
+      '@hey-api/openapi-ts':
+        specifier: workspace:*
+        version: link:../../../openapi-ts
+      '@tanstack/angular-query-experimental':
+        specifier: 5.90.25
+        version: 5.90.25(@angular/common@21.2.7(@angular/core@21.2.7(@angular/compiler@21.2.7)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.7(@angular/compiler@21.2.7)(rxjs@7.8.2)(zone.js@0.16.0))
+      '@tanstack/preact-query':
+        specifier: 5.93.0
+        version: 5.93.0(preact@10.28.4)
+      '@tanstack/react-query':
+        specifier: 5.90.21
+        version: 5.90.21(react@19.0.0)
+      '@tanstack/solid-query':
+        specifier: 5.90.23
+        version: 5.90.23(solid-js@1.9.9)
+      '@tanstack/svelte-query':
+        specifier: 5.90.2
+        version: 5.90.2(svelte@5.19.9)
+      '@tanstack/vue-query':
+        specifier: 5.92.9
+        version: 5.92.9(vue@3.5.32(typescript@6.0.2))
+      axios:
+        specifier: 1.13.4
+        version: 1.13.4
       typescript:
         specifier: 6.0.2
         version: 6.0.2
@@ -23446,6 +23458,14 @@ snapshots:
       vue: 3.5.25(typescript@6.0.2)
       vue-demi: 0.14.10(vue@3.5.25(typescript@6.0.2))
 
+  '@tanstack/vue-query@5.92.9(vue@3.5.32(typescript@6.0.2))':
+    dependencies:
+      '@tanstack/match-sorter-utils': 8.19.4
+      '@tanstack/query-core': 5.90.20
+      '@vue/devtools-api': 6.6.4
+      vue: 3.5.32(typescript@6.0.2)
+      vue-demi: 0.14.10(vue@3.5.32(typescript@6.0.2))
+
   '@tsconfig/node10@1.0.12':
     optional: true
 
@@ -34637,6 +34657,10 @@ snapshots:
   vue-demi@0.14.10(vue@3.5.25(typescript@6.0.2)):
     dependencies:
       vue: 3.5.25(typescript@6.0.2)
+
+  vue-demi@0.14.10(vue@3.5.32(typescript@6.0.2)):
+    dependencies:
+      vue: 3.5.32(typescript@6.0.2)
 
   vue-devtools-stub@0.1.0: {}
 
