@@ -150,6 +150,12 @@ export const createClient = (config: Config = {}): Client => {
             emptyData = new FormData();
             break;
           case 'stream':
+            if (opts.parseAs === 'auto') {
+              await response.body?.cancel();
+              emptyData = undefined;
+              break;
+            }
+
             emptyData = response.body;
             break;
           case 'json':
@@ -181,6 +187,16 @@ export const createClient = (config: Config = {}): Client => {
           break;
         }
         case 'stream':
+          if (opts.parseAs === 'auto') {
+            await response.body?.cancel();
+            return opts.responseStyle === 'data'
+              ? undefined
+              : {
+                  data: undefined,
+                  ...result,
+                };
+          }
+
           return opts.responseStyle === 'data'
             ? response.body
             : {
