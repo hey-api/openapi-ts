@@ -253,9 +253,14 @@ describe('zero-length body handling', () => {
     expect(result.data).toEqual({});
   });
 
-  it('returns empty object for empty response without Content-Length header and no Content-Type (defaults to JSON)', async () => {
-    // Tests the auto-detection behavior when no Content-Type is provided
-    const mockResponse = new Response('', {
+  it('cancels inferred stream response without Content-Length and no Content-Type', async () => {
+    let canceled = false;
+    const mockBody = new ReadableStream({
+      cancel() {
+        canceled = true;
+      },
+    });
+    const mockResponse = new Response(mockBody, {
       status: 200,
     });
 
@@ -267,8 +272,32 @@ describe('zero-length body handling', () => {
       url: '/test',
     });
 
-    // When parseAs is 'auto' and no Content-Type header exists, it should handle empty body gracefully
-    expect(result.data).toBeDefined();
+    expect(result.data).toBeUndefined();
+    expect(canceled).toBe(true);
+  });
+
+  it('preserves stream response when parseAs is explicitly stream', async () => {
+    let canceled = false;
+    const mockBody = new ReadableStream({
+      cancel() {
+        canceled = true;
+      },
+    });
+    const mockResponse = new Response(mockBody, {
+      status: 200,
+    });
+
+    const mockFetch: MockFetch = vi.fn().mockResolvedValue(mockResponse);
+
+    const result = await client.request({
+      fetch: mockFetch,
+      method: 'GET',
+      parseAs: 'stream',
+      url: '/test',
+    });
+
+    expect(result.data).toBe(mockBody);
+    expect(canceled).toBe(false);
   });
 });
 
