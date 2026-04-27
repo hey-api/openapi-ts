@@ -276,6 +276,29 @@ describe('zero-length body handling', () => {
     expect(canceled).toBe(true);
   });
 
+  it('cancels inferred stream response for status 204 with no Content-Type', async () => {
+    let canceled = false;
+    const mockBody = new ReadableStream({
+      cancel() {
+        canceled = true;
+      },
+    });
+    const mockResponse = new Response(mockBody, {
+      status: 204,
+    });
+
+    const mockFetch: MockFetch = vi.fn().mockResolvedValue(mockResponse);
+
+    const result = await client.request({
+      fetch: mockFetch,
+      method: 'GET',
+      url: '/test',
+    });
+
+    expect(result.data).toBeUndefined();
+    expect(canceled).toBe(true);
+  });
+
   it('preserves stream response when parseAs is explicitly stream', async () => {
     let canceled = false;
     const mockBody = new ReadableStream({
