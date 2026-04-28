@@ -308,8 +308,8 @@ describe('unserialized request body handling', () => {
       }),
     );
 
-    await expect(result.request.text()).resolves.toEqual(textValue);
-    expect(result.request.headers.get('Content-Type')).toEqual('text/plain');
+    await expect(result.request!.text()).resolves.toEqual(textValue);
+    expect(result.request!.headers.get('Content-Type')).toEqual('text/plain');
   });
 });
 
@@ -375,8 +375,8 @@ describe('serialized request body handling', () => {
         }),
       );
 
-      await expect(result.request.text()).resolves.toEqual(textValue);
-      expect(result.request.headers.get('Content-Type')).toEqual(
+      await expect(result.request!.text()).resolves.toEqual(textValue);
+      expect(result.request!.headers.get('Content-Type')).toEqual(
         expectContentHeader ? 'application/json' : null,
       );
     },
