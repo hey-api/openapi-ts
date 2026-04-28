@@ -443,21 +443,6 @@ export default {
 };
 ```
 
-```js [disable-per-variant]
-export default {
-  input: 'hey-api/backend', // sign up at app.heyapi.dev
-  output: 'src/client',
-  parser: {
-    transforms: {
-      readWrite: {
-        requests: false, // [!code ++]
-        responses: false, // [!code ++]
-      },
-    },
-  },
-};
-```
-
 :::
 
 You can customize the naming and casing pattern for `requests` and `responses` schemas using the `.name` and `.case` options.
