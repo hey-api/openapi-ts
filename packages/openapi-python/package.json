@@ -1,6 +1,6 @@
 {
   "name": "@hey-api/openapi-python",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "private": true,
   "description": "🐍 OpenAPI to Python codegen.",
   "keywords": [

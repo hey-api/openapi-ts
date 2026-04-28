@@ -1,5 +1,17 @@
 # @hey-api/shared
 
+## 0.4.2
+
+### Patch Changes
+
+- **utils**: speed up deep equality check ([#3823](https://github.com/hey-api/openapi-ts/pull/3823)) ([`b05bfd7`](https://github.com/hey-api/openapi-ts/commit/b05bfd7442203d768b831fccac5dfdeb4112ea6c)) by [@SukkaW](https://github.com/SukkaW)
+
+- **graph**: speed up graph builder ([#3823](https://github.com/hey-api/openapi-ts/pull/3823)) ([`b05bfd7`](https://github.com/hey-api/openapi-ts/commit/b05bfd7442203d768b831fccac5dfdeb4112ea6c)) by [@SukkaW](https://github.com/SukkaW)
+
+### Updated Dependencies:
+
+- @hey-api/codegen-core@0.8.1
+
 ## 0.4.1
 
 ### Patch Changes

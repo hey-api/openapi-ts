@@ -1,5 +1,13 @@
 # @hey-api/codegen-core
 
+## 0.8.1
+
+### Patch Changes
+
+- **symbol**: speed up symbol registry cache ([#3823](https://github.com/hey-api/openapi-ts/pull/3823)) ([`b05bfd7`](https://github.com/hey-api/openapi-ts/commit/b05bfd7442203d768b831fccac5dfdeb4112ea6c)) by [@SukkaW](https://github.com/SukkaW)
+
+- **planner**: speed up identifier conflict detector ([#3823](https://github.com/hey-api/openapi-ts/pull/3823)) ([`b05bfd7`](https://github.com/hey-api/openapi-ts/commit/b05bfd7442203d768b831fccac5dfdeb4112ea6c)) by [@SukkaW](https://github.com/SukkaW)
+
 ## 0.8.0
 
 ### Minor Changes
