@@ -1,4 +1,4 @@
-import fs from 'node:fs';
+import fsPromises from 'node:fs/promises';
 import path from 'node:path';
 
 import type { Context } from '@hey-api/shared';
@@ -8,12 +8,17 @@ import { getTypedConfig } from '../config/utils';
 import { getClientPlugin } from '../plugins/@hey-api/client-core/utils';
 import { generateClientBundle } from './client';
 
-export async function generateOutput(context: Context): Promise<void> {
+export async function generateOutput(context: Context): Promise<{ fileCount: number }> {
   const outputPath = path.resolve(context.config.output.path);
 
   if (context.config.output.clean) {
-    if (fs.existsSync(outputPath)) {
-      fs.rmSync(outputPath, { force: true, recursive: true });
+    if (
+      await fsPromises
+        .access(outputPath)
+        .then(() => true)
+        .catch(() => false)
+    ) {
+      await fsPromises.rm(outputPath, { force: true, recursive: true });
     }
   }
 
@@ -43,32 +48,42 @@ export async function generateOutput(context: Context): Promise<void> {
     await intent.run(ctx);
   }
 
+  let fileCount = 0;
+  const writes: Promise<void>[] = [];
   for (const file of context.gen.render()) {
     const filePath = path.resolve(outputPath, file.path);
     const dir = path.dirname(filePath);
     if (!context.config.dryRun) {
-      fs.mkdirSync(dir, { recursive: true });
-      fs.writeFileSync(filePath, file.content, { encoding: 'utf8' });
+      writes.push(
+        fsPromises
+          .mkdir(dir, { recursive: true })
+          .then(() => fsPromises.writeFile(filePath, file.content, { encoding: 'utf8' })),
+      );
     }
+    fileCount++;
   }
+  await Promise.all(writes);
 
   const { source } = context.config.output;
   if (source.enabled) {
     const sourcePath = source.path === null ? undefined : path.resolve(outputPath, source.path);
     if (!context.config.dryRun && sourcePath && sourcePath !== outputPath) {
-      fs.mkdirSync(sourcePath, { recursive: true });
+      await fsPromises.mkdir(sourcePath, { recursive: true });
     }
     const serialized = await source.serialize(context.spec);
     // TODO: handle yaml (convert before writing)
     if (!context.config.dryRun && sourcePath) {
-      fs.writeFileSync(
+      await fsPromises.writeFile(
         path.resolve(sourcePath, `${source.fileName}.${source.extension}`),
         serialized,
         { encoding: 'utf8' },
       );
+      fileCount++;
     }
     if (source.callback) {
       await source.callback(serialized);
     }
   }
+
+  return { fileCount };
 }

@@ -1,0 +1,70 @@
+openapi: 3.0.0
+info:
+  title: discriminator allOf member example
+  version: 0.0.0
+paths:
+  /notification:
+    get:
+      operationId: getNotification
+      parameters: []
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserNotificationDeleteContent'
+components:
+  schemas:
+    UserNotificationDeleteContent:
+      type: object
+      oneOf:
+        - $ref: '#/components/schemas/UserNotificationDeleteContentRunning'
+        - $ref: '#/components/schemas/UserNotificationDeleteContentSuccess'
+        - $ref: '#/components/schemas/UserNotificationDeleteContentError'
+      discriminator:
+        propertyName: status
+        mapping:
+          running: '#/components/schemas/UserNotificationDeleteContentRunning'
+          success: '#/components/schemas/UserNotificationDeleteContentSuccess'
+          error: '#/components/schemas/UserNotificationDeleteContentError'
+    UserNotificationDeleteContentBase:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+    UserNotificationDeleteContentError:
+      type: object
+      required:
+        - finishedAt
+        - error
+      properties:
+        finishedAt:
+          type: string
+          format: date-time
+        error:
+          type: string
+      allOf:
+        - $ref: '#/components/schemas/UserNotificationDeleteContentBase'
+    UserNotificationDeleteContentRunning:
+      type: object
+      required:
+        - startedAt
+      properties:
+        startedAt:
+          type: string
+          format: date-time
+      allOf:
+        - $ref: '#/components/schemas/UserNotificationDeleteContentBase'
+    UserNotificationDeleteContentSuccess:
+      type: object
+      required:
+        - finishedAt
+      properties:
+        finishedAt:
+          type: string
+          format: date-time
+      allOf:
+        - $ref: '#/components/schemas/UserNotificationDeleteContentBase'

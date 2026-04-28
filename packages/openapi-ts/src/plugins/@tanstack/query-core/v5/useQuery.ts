@@ -12,20 +12,16 @@ import type { PluginInstance } from '../types';
 
 const optionsParamName = 'options';
 
-export const createUseQuery = ({
+export function createUseQuery({
   operation,
   plugin,
 }: {
   operation: IR.OperationObject;
   plugin: PluginInstance;
-}): void => {
-  if (hasOperationSse({ operation })) {
-    return;
-  }
+}): void {
+  if (hasOperationSse({ operation })) return;
 
-  if (!('useQuery' in plugin.config)) {
-    return;
-  }
+  if (!('useQuery' in plugin.config)) return;
 
   const symbolUseQueryFn = plugin.symbol(applyNaming(operation.id, plugin.config.useQuery));
 
@@ -53,4 +49,4 @@ export const createUseQuery = ({
         .do($(symbolUseQuery).call($(symbolQueryOptionsFn).call(optionsParamName)).return()),
     );
   plugin.node(statement);
-};
+}

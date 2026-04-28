@@ -66,6 +66,21 @@ export const defaultConfig: TanStackSvelteQueryPlugin['Config'] = {
       mappers,
       value: plugin.config.queryOptions,
     });
+
+    plugin.config.setQueryData = context.valueToObject({
+      defaultValue: {
+        case: plugin.config.case ?? 'camelCase',
+        enabled: false,
+        name: '{{name}}SetQueryData',
+      },
+      mappers: {
+        boolean: (enabled) => ({ enabled }),
+        function: (name) => ({ enabled: true, name }),
+        object: (fields) => ({ enabled: true, ...fields }),
+        string: (name) => ({ enabled: true, name }),
+      },
+      value: plugin.config.setQueryData,
+    });
   },
 };
 

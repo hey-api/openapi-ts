@@ -293,151 +293,87 @@ export type UserConfig = Plugin.Name<'@tanstack/vue-query'> &
            */
           name?: NameTransformer;
         };
+    /**
+     * Configuration for generated `setQueryData` helpers.
+     *
+     * When enabled, generates a helper per query operation that wraps
+     * `queryClient.setQueryData()` with the correct query key and response
+     * type already wired up.
+     *
+     * Can be:
+     * - `boolean`: Shorthand for `{ enabled: boolean }`
+     * - `string` or `function`: Shorthand for `{ name: string | function }`
+     * - `object`: Full configuration object
+     *
+     * @default false
+     */
+    setQueryData?:
+      | boolean
+      | NameTransformer
+      | {
+          /**
+           * Casing convention for generated names.
+           *
+           * @default 'camelCase'
+           */
+          case?: Casing;
+          /**
+           * Whether this feature is enabled.
+           *
+           * @default true
+           */
+          enabled?: boolean;
+          /**
+           * Naming pattern for generated names.
+           *
+           * @default '{{name}}SetQueryData'
+           */
+          name?: NameTransformer;
+        };
   };
 
 export type Config = Plugin.Name<'@tanstack/vue-query'> &
   Plugin.Hooks &
   Plugin.Comments &
   Plugin.Exports & {
-    /**
-     * Casing convention for generated names.
-     */
+    /** Casing convention for generated names. */
     case: Casing;
-    /**
-     * Resolved configuration for generated infinite query key helpers.
-     *
-     * @see https://tanstack.com/query/v5/docs/framework/vue/reference/infiniteQueryOptions
-     */
+    /** Resolved configuration for generated infinite query key helpers. */
     infiniteQueryKeys: NamingOptions &
       FeatureToggle & {
-        /**
-         * Whether to include operation tags in infinite query keys.
-         * This will make query keys larger but provides better cache invalidation capabilities.
-         *
-         * @default false
-         */
+        /** Whether to include operation tags in infinite query keys. */
         tags: boolean;
       };
-    /**
-     * Resolved configuration for generated infinite query options helpers.
-     *
-     * @see https://tanstack.com/query/v5/docs/framework/vue/reference/infiniteQueryOptions
-     */
+    /** Resolved configuration for generated infinite query options helpers. */
     infiniteQueryOptions: NamingOptions &
       FeatureToggle & {
-        /**
-         * Custom function to generate metadata for the operation.
-         * Can return any valid meta object that will be included in the generated infinite query options.
-         *
-         * @param operation - The operation object containing all available metadata
-         * @returns A meta object with any properties you want to include
-         *
-         * @example
-         * ```ts
-         * meta: (operation) => ({
-         *   customField: operation.id,
-         *   isDeprecated: operation.deprecated,
-         *   tags: operation.tags,
-         *   customObject: {
-         *     method: operation.method,
-         *     path: operation.path
-         *   }
-         * })
-         * ```
-         *
-         * @default undefined
-         */
+        /** Custom function to generate metadata for the operation. */
         meta: (operation: IR.OperationObject) => Record<string, unknown>;
       };
-    /**
-     * Resolved configuration for generated mutation options helpers.
-     *
-     * @see https://tanstack.com/query/v5/docs/framework/vue/reference/useMutation
-     */
+    /** Resolved configuration for generated mutation options helpers. */
     mutationOptions: NamingOptions &
       FeatureToggle & {
-        /**
-         * Whether to export generated symbols.
-         *
-         * @default true
-         */
+        /** Whether to export generated symbols. */
         exported: boolean;
-        /**
-         * Custom function to generate metadata for the operation.
-         * Can return any valid meta object that will be included in the generated mutation options.
-         *
-         * @param operation - The operation object containing all available metadata
-         * @returns A meta object with any properties you want to include
-         *
-         * @example
-         * ```ts
-         * meta: (operation) => ({
-         *   customField: operation.id,
-         *   isDeprecated: operation.deprecated,
-         *   tags: operation.tags,
-         *   customObject: {
-         *     method: operation.method,
-         *     path: operation.path
-         *   }
-         * })
-         * ```
-         *
-         * @default undefined
-         */
+        /** Custom function to generate metadata for the operation. */
         meta: (operation: IR.OperationObject) => Record<string, unknown>;
       };
-    /**
-     * Resolved configuration for generated query keys.
-     *
-     * @see https://tanstack.com/query/v5/docs/framework/vue/reference/queryKey
-     */
+    /** Resolved configuration for generated query keys. */
     queryKeys: NamingOptions &
       FeatureToggle & {
-        /**
-         * Whether to include operation tags in query keys.
-         * This will make query keys larger but provides better cache invalidation capabilities.
-         *
-         * @default false
-         */
+        /** Whether to include operation tags in query keys. */
         tags: boolean;
       };
-    /**
-     * Resolved configuration for generated query options helpers.
-     *
-     * @see https://tanstack.com/query/v5/docs/framework/vue/reference/queryOptions
-     */
+    /** Resolved configuration for generated query options helpers. */
     queryOptions: NamingOptions &
       FeatureToggle & {
-        /**
-         * Whether to export generated symbols.
-         *
-         * @default true
-         */
+        /** Whether to export generated symbols. */
         exported: boolean;
-        /**
-         * Custom function to generate metadata for the operation.
-         * Can return any valid meta object that will be included in the generated query options.
-         *
-         * @param operation - The operation object containing all available metadata
-         * @returns A meta object with any properties you want to include
-         *
-         * @example
-         * ```ts
-         * meta: (operation) => ({
-         *   customField: operation.id,
-         *   isDeprecated: operation.deprecated,
-         *   tags: operation.tags,
-         *   customObject: {
-         *     method: operation.method,
-         *     path: operation.path
-         *   }
-         * })
-         * ```
-         *
-         * @default undefined
-         */
+        /** Custom function to generate metadata for the operation. */
         meta: (operation: IR.OperationObject) => Record<string, unknown>;
       };
+    /** Resolved configuration for generated `setQueryData` helpers. */
+    setQueryData: NamingOptions & FeatureToggle;
   };
 
 export type TanStackVueQueryPlugin = DefinePlugin<UserConfig, Config>;
