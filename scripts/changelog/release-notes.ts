@@ -9,6 +9,8 @@ import { readAllPackageChangelogs } from './reader';
 import { createReleases } from './releases';
 import type { Contributor, Release } from './types';
 
+const SPOTLIGHT_PATH = '.release/spotlight.md';
+
 function getSponsorsBlock(): string | undefined {
   try {
     const sponsorsTable = fs.readFileSync(SPONSORS_TABLE_GOLD_PATH, 'utf-8').trim();
@@ -31,6 +33,13 @@ function getSponsorsBlock(): string | undefined {
 
 function formatReleaseNotes(release: Release, contributors: Array<Contributor>): string {
   const lines: Array<string> = [];
+
+  try {
+    const content = fs.readFileSync(SPOTLIGHT_PATH, 'utf-8').trim();
+    if (content) lines.push(content, '---', '');
+  } catch {
+    // noop
+  }
 
   for (const pkg of release.packages.filter((p) => p.hasUserFacingChanges)) {
     formatReleasePackage(pkg, lines);
