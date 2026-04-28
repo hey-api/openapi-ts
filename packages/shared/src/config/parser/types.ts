@@ -142,6 +142,12 @@ export type UserParser = {
                  */
                 case?: Casing;
                 /**
+                 * Whether request-specific schema variants are enabled.
+                 *
+                 * @default true
+                 */
+                enabled?: boolean;
+                /**
                  * Customize the generated name of schemas used in requests or
                  * containing write-only fields.
                  *
@@ -169,6 +175,12 @@ export type UserParser = {
                  * @default 'preserve'
                  */
                 case?: Casing;
+                /**
+                 * Whether response-specific schema variants are enabled.
+                 *
+                 * @default true
+                 */
+                enabled?: boolean;
                 /**
                  * Customize the generated name of schemas used in responses or
                  * containing read-only fields. We default to the original name
