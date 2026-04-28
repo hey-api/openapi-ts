@@ -87,7 +87,7 @@ export const createClient = (config: Config = {}): Client => {
       opts.headers.delete('Content-Type');
     }
 
-    const url = buildUrl(opts as any);
+    const url = buildUrl(opts as Config & RequestOptions);
 
     const req = new HttpRequest<unknown>(opts.method ?? 'GET', url, getValidRequestBody(opts), {
       redirect: 'follow',
@@ -141,20 +141,20 @@ export const createClient = (config: Config = {}): Client => {
 
       for (const fn of interceptors.request.fns) {
         if (fn) {
-          req = await fn(req, opts as any);
+          req = await fn(req, opts as ResolvedRequestOptions);
           result.request = req;
         }
       }
 
-      result.response = (await firstValueFrom(
+      result.response = await firstValueFrom(
         opts
           .httpClient!.request(req)
           .pipe(filter((event) => event.type === HttpEventType.Response)),
-      )) as HttpResponse<unknown>;
+      );
 
       for (const fn of interceptors.response.fns) {
         if (fn) {
-          result.response = await fn(result.response, req, opts as any);
+          result.response = await fn(result.response, req, opts as ResolvedRequestOptions);
         }
       }
 
@@ -178,12 +178,12 @@ export const createClient = (config: Config = {}): Client => {
 
       for (const fn of interceptors.error.fns) {
         if (fn) {
-          finalError = (await fn(
+          finalError = await fn(
             finalError,
             result.response,
             result.request,
-            options as any,
-          )) as string;
+            options as ResolvedRequestOptions,
+          );
         }
       }
 

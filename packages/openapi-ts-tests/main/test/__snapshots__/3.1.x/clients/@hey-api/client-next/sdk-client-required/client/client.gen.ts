@@ -191,11 +191,11 @@ export const createClient = (config: Config = {}): Client => {
 
       for (const fn of interceptors.error.fns) {
         if (fn) {
-          finalError = (await fn(finalError, response, options as any)) as unknown;
+          finalError = await fn(finalError, response, options as ResolvedRequestOptions);
         }
       }
 
-      finalError = finalError || ({} as unknown);
+      finalError = finalError || {};
 
       if (throwOnError) {
         throw finalError;
@@ -216,18 +216,13 @@ export const createClient = (config: Config = {}): Client => {
     return createSseClient({
       ...opts,
       body: opts.body as BodyInit | null | undefined,
-      headers: opts.headers as unknown as Record<string, string>,
       method,
       onRequest: async (url, init) => {
         let request = new Request(url, init);
-        const requestInit = {
-          ...init,
-          method: init.method as Config['method'],
-          url,
-        };
+        const requestInit = { ...init, url };
         for (const fn of interceptors.request.fns) {
           if (fn) {
-            await fn(requestInit as unknown as ResolvedRequestOptions);
+            await fn(requestInit as ResolvedRequestOptions);
             request = new Request(requestInit.url, requestInit);
           }
         }
