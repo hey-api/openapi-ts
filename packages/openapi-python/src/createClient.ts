@@ -183,7 +183,7 @@ export async function createClient({
           ? `./${path.relative(process.env.INIT_CWD, config.output.path)}`
           : config.output.path;
         console.log(
-          `${jobPrefix}${colors.green('✅ Done!')} Your output is in ${colors.cyanBright(outputPath)} ${colors.gray(`(${fileCount} files in ${ms(totalMs)})`)}`,
+          `${jobPrefix}${colors.green('✅ Done!')} Your output is in ${colors.cyanBright(outputPath)} ${colors.gray(`(${fileCount} ${fileCount === 1 ? 'file' : 'files'} in ${ms(totalMs)})`)}`,
         );
       }
     }
