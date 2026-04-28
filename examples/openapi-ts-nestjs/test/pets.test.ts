@@ -28,7 +28,7 @@ afterAll(async () => {
 describe('PetsController', () => {
   test('listPets', async () => {
     const result = await listPets({ client });
-    expect(result.response.status).toBe(200);
+    expect(result.response!.status).toBe(200);
     expect(Array.isArray(result.data)).toBe(true);
   });
 
@@ -37,7 +37,7 @@ describe('PetsController', () => {
       client,
       path: { petId: '1' },
     });
-    expect(result.response.status).toBe(200);
+    expect(result.response!.status).toBe(200);
   });
 
   test('createPet', async () => {
@@ -45,7 +45,7 @@ describe('PetsController', () => {
       body: { name: 'Buddy' },
       client,
     });
-    expect(result.response.status).toBe(201);
+    expect(result.response!.status).toBe(201);
     expect(result.data).toMatchObject({ name: 'Buddy' });
   });
 });
@@ -53,6 +53,6 @@ describe('PetsController', () => {
 describe('StoreController', () => {
   test('getInventory', async () => {
     const result = await getInventory({ client });
-    expect(result.response.status).toBe(200);
+    expect(result.response!.status).toBe(200);
   });
 });

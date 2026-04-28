@@ -97,7 +97,8 @@ export type RequestResult<
             error: TError extends Record<string, unknown> ? TError[keyof TError] : TError;
           }
       ) & {
-        response: Response;
+        /** response may be undefined due to a network error where no response object is produced */
+        response?: Response;
       }
     >;
 
