@@ -100,7 +100,7 @@ export const createClient = (config: Config = {}): Client => {
 
     for (const fn of interceptorsMiddleware.error.fns) {
       if (fn) {
-        finalError = (await fn(error, response, request, opts)) as string;
+        finalError = (await fn(finalError, response, request, opts)) as string;
       }
     }
 
@@ -283,7 +283,7 @@ export const createClient = (config: Config = {}): Client => {
       // error may already be processed by parseErrorResponse, in this case
       // we can skip running interceptors again
       if (!errorInterceptorsInvoked) {
-        // parseErrorResponse already ran interceptors and threw (throwOnError=true); just re-throw
+        // run error interceptors for errors not already handled by parseErrorResponse
         for (const fn of interceptors.error.fns) {
           if (fn) {
             finalError = await fn(finalError, response, request, options as ResolvedRequestOptions);
