@@ -1,6 +1,5 @@
 ---
 '@hey-api/openapi-ts': patch
-'@hey-api/shared': patch
 ---
 
 Add new configuration toggles to reduce generated TypeScript artifacts and improve parser read/write controls.
