@@ -94,7 +94,9 @@ export const handlerV1: HeyApiTypeScriptPlugin['Handler'] = ({ plugin }) => {
     },
   );
 
-  createClientOptions({ nodeIndex: nodeClientIndex, plugin, servers });
+  if (plugin.config.clientOptions) {
+    createClientOptions({ nodeIndex: nodeClientIndex, plugin, servers });
+  }
 
   if (webhooks.length) {
     const symbol = plugin.registerSymbol(

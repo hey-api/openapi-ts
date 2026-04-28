@@ -125,12 +125,14 @@ export type UserParser = {
            * Configuration for generated request-specific schemas.
            *
            * Can be:
+           * - `false`: Disable generation of request-specific schemas
            * - `string` or `function`: Shorthand for `{ name: string | function }`
            * - `object`: Full configuration object
            *
            * @default '{{name}}Writable'
            */
           requests?:
+            | false
             | NameTransformer
             | {
                 /**
@@ -151,12 +153,14 @@ export type UserParser = {
            * Configuration for generated response-specific schemas.
            *
            * Can be:
+           * - `false`: Disable generation of response-specific schemas
            * - `string` or `function`: Shorthand for `{ name: string | function }`
            * - `object`: Full configuration object
            *
            * @default '{{name}}'
            */
           responses?:
+            | false
             | NameTransformer
             | {
                 /**
@@ -289,11 +293,11 @@ export type Parser = {
       /**
        * Configuration for generated request-specific schemas.
        */
-      requests: NamingOptions;
+      requests: NamingOptions & FeatureToggle;
       /**
        * Configuration for generated response-specific schemas.
        */
-      responses: NamingOptions;
+      responses: NamingOptions & FeatureToggle;
     };
     /**
      * Rename schema component keys and automatically update all `$ref` pointers

@@ -559,24 +559,22 @@ export const splitSchemas = ({
       continue;
     }
 
-    // read variant
-    const readSchema = deepClone<unknown>(nodeInfo.node);
-    pruneSchemaByScope(graph, readSchema, 'writeOnly');
-    const readBase = applyNaming(name, config.responses);
-    const readName =
-      readBase === name
-        ? readBase
-        : getUniqueComponentName({
-            base: readBase,
-            components: existingNames,
-          });
-    existingNames.add(readName);
-    split.schemas[readName] = readSchema;
-    const readPointer = `${schemasPointerNamespace}${readName}`;
+    const responseVariantsEnabled = config.responses.enabled;
+    const requestVariantsEnabled = config.requests.enabled;
+    const mapping: SplitMapping[keyof SplitMapping] = {};
+    let readSchema!: unknown;
+    let writeSchema!: unknown;
+    let readName: string | undefined;
+    let readPointer: string | undefined;
 
-    // write variant
-    const writeSchema = deepClone<unknown>(nodeInfo.node);
-    pruneSchemaByScope(graph, writeSchema, 'readOnly');
+    if (responseVariantsEnabled) {
+      readSchema = deepClone<unknown>(nodeInfo.node);
+      pruneSchemaByScope(graph, readSchema, 'writeOnly');
+    }
+    if (requestVariantsEnabled) {
+      writeSchema = deepClone<unknown>(nodeInfo.node);
+      pruneSchemaByScope(graph, writeSchema, 'readOnly');
+    }
 
     // Check if this schema (or any of its descendants) references any schema that
     // will need read/write variants. This is determined by checking transitive
@@ -594,30 +592,50 @@ export const splitSchemas = ({
     // and the schema doesn't reference any schemas that will have read/write variants,
     // skip splitting and keep the original single schema.
     if (
+      responseVariantsEnabled &&
+      requestVariantsEnabled &&
       !referencesReadWriteSchemas &&
       deepEqual(readSchema, writeSchema) &&
       deepEqual(readSchema, nodeInfo.node)
     ) {
       continue;
     }
-    const writeBase = applyNaming(name, config.requests);
-    const writeName =
-      writeBase === name && writeBase !== readName
-        ? writeBase
-        : getUniqueComponentName({
-            base: writeBase,
-            components: existingNames,
-          });
-    existingNames.add(writeName);
-    split.schemas[writeName] = writeSchema;
-    const writePointer = `${schemasPointerNamespace}${writeName}`;
 
-    split.mapping[pointer] = {
-      read: readPointer,
-      write: writePointer,
-    };
-    split.reverseMapping[readPointer] = pointer;
-    split.reverseMapping[writePointer] = pointer;
+    if (responseVariantsEnabled) {
+      const readBase = applyNaming(name, config.responses);
+      readName =
+        readBase === name
+          ? readBase
+          : getUniqueComponentName({
+              base: readBase,
+              components: existingNames,
+            });
+      existingNames.add(readName);
+      split.schemas[readName] = readSchema;
+      readPointer = `${schemasPointerNamespace}${readName}`;
+      mapping.read = readPointer;
+      split.reverseMapping[readPointer] = pointer;
+    }
+
+    if (requestVariantsEnabled) {
+      const writeBase = applyNaming(name, config.requests);
+      const writeName =
+        writeBase === name && writeBase !== readName
+          ? writeBase
+          : getUniqueComponentName({
+              base: writeBase,
+              components: existingNames,
+            });
+      existingNames.add(writeName);
+      split.schemas[writeName] = writeSchema;
+      const writePointer = `${schemasPointerNamespace}${writeName}`;
+      mapping.write = writePointer;
+      split.reverseMapping[writePointer] = pointer;
+    }
+
+    if (mapping.read || mapping.write) {
+      split.mapping[pointer] = mapping;
+    }
   }
 
   splitDiscriminatorSchemas({

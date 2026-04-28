@@ -29,10 +29,12 @@ export function getParser(userConfig: { parser?: UserParser }): Parser {
           enabled: true,
           requests: {
             case: 'preserve',
+            enabled: true,
             name: '{{name}}Writable',
           },
           responses: {
             case: 'preserve',
+            enabled: true,
             name: '{{name}}',
           },
         },
@@ -114,8 +116,18 @@ export function getParser(userConfig: { parser?: UserParser }): Parser {
                           typeof defaultValue.requests,
                           Record<string, unknown>
                         >),
+                        enabled:
+                          fields.requests !== undefined
+                            ? Boolean(fields.requests)
+                            : (
+                                defaultValue.requests as Extract<
+                                  typeof defaultValue.requests,
+                                  Record<string, unknown>
+                                >
+                              ).enabled,
                       },
                       mappers: {
+                        boolean: (enabled) => ({ enabled }),
                         function: (name) => ({ name }),
                         string: (name) => ({ name }),
                       },
@@ -127,8 +139,18 @@ export function getParser(userConfig: { parser?: UserParser }): Parser {
                           typeof defaultValue.responses,
                           Record<string, unknown>
                         >),
+                        enabled:
+                          fields.responses !== undefined
+                            ? Boolean(fields.responses)
+                            : (
+                                defaultValue.responses as Extract<
+                                  typeof defaultValue.responses,
+                                  Record<string, unknown>
+                                >
+                              ).enabled,
                       },
                       mappers: {
+                        boolean: (enabled) => ({ enabled }),
                         function: (name) => ({ name }),
                         string: (name) => ({ name }),
                       },
