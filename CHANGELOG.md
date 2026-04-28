@@ -1,5 +1,108 @@
 # Changelog
 
+# 2026-04-28
+
+## @hey-api/openapi-ts 0.97.0
+
+### ⚠️ Breaking
+
+This release has 15 breaking changes. Please review the release notes carefully before upgrading.
+
+### Updates
+
+- cli: print file count and generator speed ([#3828](https://github.com/hey-api/openapi-ts/pull/3828))
+- **⚠️ Breaking:** client: resolve `runtimeConfigPath` relative to the output folder ([#3770](https://github.com/hey-api/openapi-ts/pull/3770))
+
+### Changed `runtimeConfigPath` behavior
+
+This was a known, long-standing issue confusing first-time users. Before, defining client `runtimeConfigPath` value would paste it verbatim to the generated output. This release changes the behavior to resolve relative to the current working directory the same way output path works.
+- config: remove `--apply` flag from Biome post-processor commands ([#3812](https://github.com/hey-api/openapi-ts/pull/3812))
+
+### Plugins
+
+#### @hey-api/client-angular
+
+- **⚠️ Breaking:** `request` and `response` objects might be undefined ([#3814](https://github.com/hey-api/openapi-ts/pull/3814))
+- **⚠️ Breaking:** respect `throwOnError` when request validation fails ([#3814](https://github.com/hey-api/openapi-ts/pull/3814))
+
+#### @hey-api/client-fetch
+
+- **⚠️ Breaking:** pass previous result to error interceptors ([#3814](https://github.com/hey-api/openapi-ts/pull/3814))
+- **⚠️ Breaking:** `request` and `response` objects might be undefined ([#3814](https://github.com/hey-api/openapi-ts/pull/3814))
+- **⚠️ Breaking:** respect `throwOnError` when request validation fails ([#3814](https://github.com/hey-api/openapi-ts/pull/3814))
+
+#### @hey-api/client-ky
+
+- **⚠️ Breaking:** pass previous result to error interceptors ([#3814](https://github.com/hey-api/openapi-ts/pull/3814))
+- **⚠️ Breaking:** `request` and `response` objects might be undefined ([#3814](https://github.com/hey-api/openapi-ts/pull/3814))
+- **⚠️ Breaking:** respect `throwOnError` when request validation fails ([#3814](https://github.com/hey-api/openapi-ts/pull/3814))
+- **⚠️ Breaking:** respect ky instance defaults ([#3806](https://github.com/hey-api/openapi-ts/pull/3806))
+
+### Changed Ky client behavior
+
+The Ky client was updated to be more intuitive. Some Ky options now need to be passed via the `kyOptions` field and you need to pass `undefined` to unset an option.
+
+#### @hey-api/client-next
+
+- **⚠️ Breaking:** `request` and `response` objects might be undefined ([#3814](https://github.com/hey-api/openapi-ts/pull/3814))
+- **⚠️ Breaking:** pass previous result to error interceptors ([#3814](https://github.com/hey-api/openapi-ts/pull/3814))
+- **⚠️ Breaking:** respect `throwOnError` when request validation fails ([#3814](https://github.com/hey-api/openapi-ts/pull/3814))
+
+#### @hey-api/client-ofetch
+
+- **⚠️ Breaking:** `request` and `response` objects might be undefined ([#3814](https://github.com/hey-api/openapi-ts/pull/3814))
+- **⚠️ Breaking:** respect `throwOnError` when request validation fails ([#3814](https://github.com/hey-api/openapi-ts/pull/3814))
+
+#### @tanstack/angular-query-experimental
+
+- add `setQueryData` option ([#3824](https://github.com/hey-api/openapi-ts/pull/3824))
+
+#### @tanstack/preact-query
+
+- add `useSetQueryData` option ([#3824](https://github.com/hey-api/openapi-ts/pull/3824))
+- add `setQueryData` option ([#3824](https://github.com/hey-api/openapi-ts/pull/3824))
+
+#### @tanstack/react-query
+
+- add `useSetQueryData` option ([#3824](https://github.com/hey-api/openapi-ts/pull/3824))
+- add `setQueryData` option ([#3824](https://github.com/hey-api/openapi-ts/pull/3824))
+
+#### @tanstack/solid-query
+
+- add `setQueryData` option ([#3824](https://github.com/hey-api/openapi-ts/pull/3824))
+
+#### @tanstack/svelte-query
+
+- add `setQueryData` option ([#3824](https://github.com/hey-api/openapi-ts/pull/3824))
+
+#### @tanstack/vue-query
+
+- add `setQueryData` option ([#3824](https://github.com/hey-api/openapi-ts/pull/3824))
+
+#### zod
+
+- fallback `.discriminatedUnion` to `.union` if members contain intersection ([#3813](https://github.com/hey-api/openapi-ts/pull/3813))
+
+---
+
+## @hey-api/codegen-core 0.8.1
+
+### Updates
+
+- planner: speed up identifier conflict detector ([#3823](https://github.com/hey-api/openapi-ts/pull/3823))
+- symbol: speed up symbol registry cache ([#3823](https://github.com/hey-api/openapi-ts/pull/3823))
+
+---
+
+## @hey-api/shared 0.4.2
+
+### Updates
+
+- graph: speed up graph builder ([#3823](https://github.com/hey-api/openapi-ts/pull/3823))
+- utils: speed up deep equality check ([#3823](https://github.com/hey-api/openapi-ts/pull/3823))
+
+---
+
 # 2026-04-20
 
 ## @hey-api/openapi-ts 0.96.1
