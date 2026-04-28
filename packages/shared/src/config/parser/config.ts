@@ -11,6 +11,14 @@ export const defaultPaginationKeywords = [
 ] as const;
 
 export function getParser(userConfig: { parser?: UserParser }): Parser {
+  const resolveEnabled = ({
+    defaultObject,
+    fieldValue,
+  }: {
+    defaultObject: Record<string, unknown>;
+    fieldValue: unknown;
+  }) => (fieldValue !== undefined ? Boolean(fieldValue) : Boolean(defaultObject.enabled));
+
   const parser = valueToObject({
     defaultValue: {
       hooks: {},
@@ -116,15 +124,13 @@ export function getParser(userConfig: { parser?: UserParser }): Parser {
                           typeof defaultValue.requests,
                           Record<string, unknown>
                         >),
-                        enabled:
-                          fields.requests !== undefined
-                            ? Boolean(fields.requests)
-                            : (
-                                defaultValue.requests as Extract<
-                                  typeof defaultValue.requests,
-                                  Record<string, unknown>
-                                >
-                              ).enabled,
+                        enabled: resolveEnabled({
+                          defaultObject: defaultValue.requests as Extract<
+                            typeof defaultValue.requests,
+                            Record<string, unknown>
+                          >,
+                          fieldValue: fields.requests,
+                        }),
                       },
                       mappers: {
                         boolean: (enabled) => ({ enabled }),
@@ -139,15 +145,13 @@ export function getParser(userConfig: { parser?: UserParser }): Parser {
                           typeof defaultValue.responses,
                           Record<string, unknown>
                         >),
-                        enabled:
-                          fields.responses !== undefined
-                            ? Boolean(fields.responses)
-                            : (
-                                defaultValue.responses as Extract<
-                                  typeof defaultValue.responses,
-                                  Record<string, unknown>
-                                >
-                              ).enabled,
+                        enabled: resolveEnabled({
+                          defaultObject: defaultValue.responses as Extract<
+                            typeof defaultValue.responses,
+                            Record<string, unknown>
+                          >,
+                          fieldValue: fields.responses,
+                        }),
                       },
                       mappers: {
                         boolean: (enabled) => ({ enabled }),

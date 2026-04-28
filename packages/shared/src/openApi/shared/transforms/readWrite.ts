@@ -562,8 +562,8 @@ export const splitSchemas = ({
     const responseVariantsEnabled = config.responses.enabled;
     const requestVariantsEnabled = config.requests.enabled;
     const mapping: SplitMapping[keyof SplitMapping] = {};
-    let readSchema!: unknown;
-    let writeSchema!: unknown;
+    let readSchema: unknown = undefined;
+    let writeSchema: unknown = undefined;
     let readName: string | undefined;
     let readPointer: string | undefined;
 
@@ -677,6 +677,21 @@ export const updateRefsInSpec = ({
 }): void => {
   const event = logger.timeEvent('update-refs-in-spec');
   const schemasPointerNamespace = specToSchemasPointerNamespace(spec);
+  const resolveVariantRefWithFallback = ({
+    context,
+    map,
+  }: {
+    context: Scope | null;
+    map: SplitMapping[keyof SplitMapping];
+  }): string | undefined => {
+    if (context === 'read') {
+      return map.read ?? map.write;
+    }
+    if (context === 'write') {
+      return map.write ?? map.read;
+    }
+    return map.read ?? map.write;
+  };
 
   const walk = ({
     context,
@@ -829,14 +844,12 @@ export const updateRefsInSpec = ({
           // Prefer exact match first
           const map = split.mapping[value];
           if (map) {
-            if (nextContext === 'read' && map.read) {
-              (node as Record<string, unknown>)[key] = map.read;
-            } else if (nextContext === 'write' && map.write) {
-              (node as Record<string, unknown>)[key] = map.write;
-            } else if (!nextContext && map.read) {
-              // For schemas with no context (unused in operations), default to read variant
-              // This ensures $refs in unused schemas don't point to removed originals
-              (node as Record<string, unknown>)[key] = map.read;
+            const resolvedVariantRef = resolveVariantRefWithFallback({
+              context: nextContext,
+              map,
+            });
+            if (resolvedVariantRef) {
+              (node as Record<string, unknown>)[key] = resolvedVariantRef;
             }
           }
         } else if (key === 'discriminator' && typeof value === 'object' && value !== null) {
@@ -846,15 +859,11 @@ export const updateRefsInSpec = ({
             for (const [discriminatorValue, originalRef] of Object.entries(value.mapping)) {
               const map = split.mapping[originalRef];
               if (map) {
-                if (nextContext === 'read' && map.read) {
-                  updatedMapping[discriminatorValue] = map.read;
-                } else if (nextContext === 'write' && map.write) {
-                  updatedMapping[discriminatorValue] = map.write;
-                } else {
-                  // For schemas with no context, don't update the mapping.
-                  // This preserves the original mapping for base schemas.
-                  updatedMapping[discriminatorValue] = originalRef;
-                }
+                const resolvedVariantRef = resolveVariantRefWithFallback({
+                  context: nextContext,
+                  map,
+                });
+                updatedMapping[discriminatorValue] = resolvedVariantRef ?? originalRef;
               } else {
                 updatedMapping[discriminatorValue] = originalRef;
               }
