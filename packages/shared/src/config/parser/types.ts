@@ -125,14 +125,12 @@ export type UserParser = {
            * Configuration for generated request-specific schemas.
            *
            * Can be:
-           * - `false`: Disable generation of request-specific schemas
            * - `string` or `function`: Shorthand for `{ name: string | function }`
            * - `object`: Full configuration object
            *
            * @default '{{name}}Writable'
            */
           requests?:
-            | false
             | NameTransformer
             | {
                 /**
@@ -141,12 +139,6 @@ export type UserParser = {
                  * @default 'preserve'
                  */
                 case?: Casing;
-                /**
-                 * Whether request-specific schema variants are enabled.
-                 *
-                 * @default true
-                 */
-                enabled?: boolean;
                 /**
                  * Customize the generated name of schemas used in requests or
                  * containing write-only fields.
@@ -159,14 +151,12 @@ export type UserParser = {
            * Configuration for generated response-specific schemas.
            *
            * Can be:
-           * - `false`: Disable generation of response-specific schemas
            * - `string` or `function`: Shorthand for `{ name: string | function }`
            * - `object`: Full configuration object
            *
            * @default '{{name}}'
            */
           responses?:
-            | false
             | NameTransformer
             | {
                 /**
@@ -175,12 +165,6 @@ export type UserParser = {
                  * @default 'preserve'
                  */
                 case?: Casing;
-                /**
-                 * Whether response-specific schema variants are enabled.
-                 *
-                 * @default true
-                 */
-                enabled?: boolean;
                 /**
                  * Customize the generated name of schemas used in responses or
                  * containing read-only fields. We default to the original name
@@ -305,11 +289,11 @@ export type Parser = {
       /**
        * Configuration for generated request-specific schemas.
        */
-      requests: NamingOptions & FeatureToggle;
+      requests: NamingOptions;
       /**
        * Configuration for generated response-specific schemas.
        */
-      responses: NamingOptions & FeatureToggle;
+      responses: NamingOptions;
     };
     /**
      * Rename schema component keys and automatically update all `$ref` pointers

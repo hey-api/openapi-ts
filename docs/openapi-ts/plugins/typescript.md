@@ -30,9 +30,9 @@ The `@hey-api/typescript` plugin might be implicitly added to your `plugins` if 
 
 The TypeScript plugin will generate the following artifacts, depending on the input specification.
 
-## Disable generated operation artifacts
+## Disable generated artifacts
 
-You can disable generation of operation request, response, and error aliases, as well as `ClientOptions`.
+You can disable generated artifacts by combining parser `readWrite` transform settings with TypeScript plugin toggles.
 
 ```js
 export default {
@@ -46,10 +46,9 @@ export default {
   plugins: [
     {
       name: '@hey-api/typescript',
-      requests: false, // disable {{name}}Data
-      responses: false, // disable {{name}}Responses and {{name}}Response
-      errors: false, // disable {{name}}Errors and {{name}}Error
-      clientOptions: false, // disable ClientOptions
+      responses: false,
+      errors: false,
+      clientOptions: false,
     },
   ],
 };
@@ -73,7 +72,7 @@ export type AddPetData = {
 
 You can customize the naming and casing pattern for `requests` types using the `.name` and `.case` options.
 
-Set `requests` to `false` to disable generation of request aliases (`{{name}}Data`).
+Set `requests` to `false` to disable generation of requests
 
 ## Responses
 
@@ -92,7 +91,7 @@ export type AddPetResponse = AddPetResponses[keyof AddPetResponses];
 
 You can customize the naming and casing pattern for `responses` types using the `.name` and `.case` options.
 
-Set `responses` to `false` to disable generation of response aliases (`{{name}}Responses`, `{{name}}Response`).
+Set `responses` to `false` to disable generation of responses
 
 ## Errors
 
@@ -106,7 +105,7 @@ export type AddPetErrors = {
 export type AddPetError = AddPetErrors[keyof AddPetErrors];
 ```
 
-Set `errors` to `false` to disable generation of error aliases (`{{name}}Errors`, `{{name}}Error`).
+Set `errors` to `false` to disable generation of error types
 
 ## Definitions
 
