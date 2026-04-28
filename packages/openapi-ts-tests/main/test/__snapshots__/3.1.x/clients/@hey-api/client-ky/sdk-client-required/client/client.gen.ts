@@ -155,7 +155,7 @@ export const createClient = (config: Config = {}): Client => {
       };
 
       request = new Request(url, {
-        body: kyOptions.body as BodyInit,
+        body: kyOptions.body,
         headers: kyOptions.headers as HeadersInit,
         method: kyOptions.method,
       });
@@ -288,12 +288,7 @@ export const createClient = (config: Config = {}): Client => {
         // parseErrorResponse already ran interceptors and threw (throwOnError=true); just re-throw
         for (const fn of interceptors.error.fns) {
           if (fn) {
-            finalError = (await fn(
-              finalError,
-              response as any,
-              request as any,
-              options as any,
-            )) as string;
+            finalError = await fn(finalError, response, request, options as ResolvedRequestOptions);
           }
         }
 
@@ -323,7 +318,6 @@ export const createClient = (config: Config = {}): Client => {
       ...opts,
       body: opts.body as BodyInit | null | undefined,
       fetch: globalThis.fetch,
-      headers: opts.headers as unknown as Record<string, string>,
       method,
       onRequest: async (url, init) => {
         let request = new Request(url, init);

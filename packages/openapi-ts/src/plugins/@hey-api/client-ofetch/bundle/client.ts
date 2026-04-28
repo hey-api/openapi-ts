@@ -116,7 +116,7 @@ export const createClient = (config: Config = {}): Client => {
     // ignore request.body changes to avoid turning serialized bodies into streams
     // body comes only from getValidRequestBody(options)
     // reflect signal if present
-    opts.signal = (request as any).signal as AbortSignal | undefined;
+    opts.signal = request.signal;
 
     // When body is FormData, remove Content-Type header to avoid boundary mismatch.
     // Note: We already delete Content-Type in resolveOptions for FormData, but the
@@ -138,19 +138,23 @@ export const createClient = (config: Config = {}): Client => {
     body: BodyInit | null | undefined,
     responseType: OfetchResponseType | undefined,
   ) => {
-    const effectiveRetry = isRepeatableBody(body) ? (opts.retry as any) : (0 as any);
+    const effectiveRetry = isRepeatableBody(body) ? opts.retry : 0;
     return buildOfetchOptions(opts, body, responseType, effectiveRetry);
   };
 
   const request: Client['request'] = async (options) => {
-    const throwOnError = (options as any).throwOnError ?? _config.throwOnError;
-    const responseStyle = (options as any).responseStyle ?? _config.responseStyle;
+    const throwOnError = options.throwOnError ?? _config.throwOnError;
+    const responseStyle = options.responseStyle ?? _config.responseStyle;
 
     let request: Request | undefined;
     let response: Awaited<ReturnType<typeof ofetch.raw>> | undefined;
 
     try {
-      const { networkBody: initialNetworkBody, opts, url } = await resolveOptions(options as any);
+      const {
+        networkBody: initialNetworkBody,
+        opts,
+        url,
+      } = await resolveOptions(options as RequestOptions);
       // map parseAs -> ofetch responseType once per request
       const ofetchResponseType: OfetchResponseType | undefined = mapParseAsToResponseType(
         opts.parseAs,
@@ -163,7 +167,7 @@ export const createClient = (config: Config = {}): Client => {
       const networkBody = initialNetworkBody;
       const requestInit: ReqInit = {
         body: networkBody,
-        headers: opts.headers as Headers,
+        headers: opts.headers,
         method: opts.method,
         redirect: 'follow',
         signal: opts.signal,
@@ -174,11 +178,7 @@ export const createClient = (config: Config = {}): Client => {
       const finalUrl = request.url;
 
       // build ofetch options and perform the request (.raw keeps the Response)
-      const responseOptions = buildNetworkOptions(
-        opts as ResolvedRequestOptions,
-        networkBody,
-        ofetchResponseType,
-      );
+      const responseOptions = buildNetworkOptions(opts, networkBody, ofetchResponseType);
 
       response = await $ofetch.raw(finalUrl, responseOptions);
 
@@ -201,12 +201,12 @@ export const createClient = (config: Config = {}): Client => {
 
       for (const fn of interceptors.error.fns) {
         if (fn) {
-          finalError = await fn(finalError, response, request, options as any);
+          finalError = await fn(finalError, response, request, options as ResolvedRequestOptions);
         }
       }
 
       // ensure error is never undefined after interceptors
-      finalError = (finalError as any) || ({} as string);
+      finalError = finalError || ({} as string);
 
       if (throwOnError) {
         throw finalError;
@@ -217,23 +217,23 @@ export const createClient = (config: Config = {}): Client => {
   };
 
   const makeMethodFn = (method: Uppercase<HttpMethod>) => (options: RequestOptions) =>
-    request({ ...options, method } as any);
+    request({ ...options, method });
 
   const makeSseFn = (method: Uppercase<HttpMethod>) => async (options: RequestOptions) => {
     const { networkBody, opts, url } = await resolveOptions(options);
-    const optsForSse: any = { ...opts };
+    const optsForSse = { ...opts };
     delete optsForSse.body; // body is provided via serializedBody below
     return createSseClient({
-      ...optsForSse,
+      ...(optsForSse as Omit<typeof opts, 'body'>),
       fetch: opts.fetch,
-      headers: opts.headers as Headers,
+      headers: opts.headers,
       method,
       onRequest: async (url, init) => {
         let request = new Request(url, init);
         request = await applyRequestInterceptors(request, opts, networkBody);
         return request;
       },
-      serializedBody: networkBody as BodyInit | null | undefined,
+      serializedBody: networkBody,
       signal: opts.signal,
       url,
     });
