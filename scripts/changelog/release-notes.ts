@@ -36,7 +36,17 @@ function formatReleaseNotes(release: Release, contributors: Array<Contributor>):
 
   try {
     const content = fs.readFileSync(SPOTLIGHT_PATH, 'utf-8').trim();
-    if (content) lines.push(content, '---', '');
+    if (content)
+      lines.push(
+        '## Spotlight',
+        '',
+        content,
+        '',
+        '[Contribute →](https://heyapi.dev/openapi-ts/community/contributing)',
+        '',
+        '---',
+        '',
+      );
   } catch {
     // noop
   }
