@@ -1,6 +1,3 @@
-const jsonPointerSlash = /~1/g;
-const jsonPointerTilde = /~0/g;
-
 /**
  * Returns the reusable component name from `$ref`.
  */
@@ -23,7 +20,7 @@ export function refToName($ref: string): string {
  * @returns The encoded segment as a string.
  */
 export function encodeJsonPointerSegment(segment: string | number): string {
-  return String(segment).replace(/~/g, '~0').replace(/\//g, '~1');
+  return String(segment).replaceAll('~', '~0').replaceAll('/', '~1');
 }
 
 /**
@@ -48,9 +45,7 @@ export function jsonPointerToPath(pointer: string): ReadonlyArray<string> {
   if (!clean) {
     return [];
   }
-  return clean
-    .split('/')
-    .map((part) => part.replace(jsonPointerSlash, '/').replace(jsonPointerTilde, '~'));
+  return clean.split('/').map((part) => part.replaceAll('~1', '/').replaceAll('~0', '~'));
 }
 
 /**

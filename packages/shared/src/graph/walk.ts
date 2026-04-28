@@ -8,35 +8,56 @@ import type { GetPointerPriorityFn, WalkFn } from './types/walk';
  * added to the graph.
  */
 const walkDeclarations: WalkFn = (graph, callback, options) => {
-  const pointers = Array.from(graph.nodes.keys());
-
   if (options?.preferGroups && options.preferGroups.length) {
-    // emit nodes that match each preferred group in order, preserving insertion order
-    const emitted = new Set<string>();
-    if (options.matchPointerToGroup) {
-      for (const kind of options.preferGroups) {
-        for (const pointer of pointers) {
-          const result = options.matchPointerToGroup(pointer);
-          if (!result.matched) continue;
-          if (result.kind === kind) {
-            emitted.add(pointer);
-            callback(pointer, graph.nodes.get(pointer)!);
+    // Single pass: bucket each pointer into its group (or unmatched).
+    // A Set of preferGroups provides O(1) membership check; buckets are created
+    // lazily on first match so no separate pre-init loop is needed.
+    const preferGroupsSet = new Set(options.preferGroups);
+    const buckets = new Map<string, string[]>();
+    const unmatched: string[] = [];
+
+    for (const pointer of graph.nodes.keys()) {
+      if (options.matchPointerToGroup) {
+        const result = options.matchPointerToGroup(pointer);
+        if (result.matched) {
+          if (preferGroupsSet.has(result.kind)) {
+            let bucket = buckets.get(result.kind);
+            if (!bucket) {
+              bucket = [];
+              buckets.set(result.kind, bucket);
+            }
+            bucket.push(pointer);
+          } else {
+            // kind not in preferGroups → treat as unmatched
+            unmatched.push(pointer);
           }
+          continue;
+        }
+      }
+      unmatched.push(pointer);
+    }
+
+    // emit in group order, then unmatched in declaration order
+    const emittedGroups = new Set<string>();
+    for (const kind of options.preferGroups) {
+      if (emittedGroups.has(kind)) continue;
+      emittedGroups.add(kind);
+      const pointers = buckets.get(kind);
+      if (pointers) {
+        for (const pointer of pointers) {
+          callback(pointer, graph.nodes.get(pointer)!);
         }
       }
     }
-
-    // emit anything not covered by the preferGroups (in declaration order)
-    for (const pointer of pointers) {
-      if (emitted.has(pointer)) continue;
+    for (const pointer of unmatched) {
       callback(pointer, graph.nodes.get(pointer)!);
     }
     return;
   }
 
-  // fallback: simple declaration order
-  for (const pointer of pointers) {
-    callback(pointer, graph.nodes.get(pointer)!);
+  // fallback: simple declaration order, no need to materialise an array
+  for (const [pointer, node] of graph.nodes) {
+    callback(pointer, node);
   }
 };
 
@@ -51,60 +72,41 @@ const walkDeclarations: WalkFn = (graph, callback, options) => {
 const walkTopological: WalkFn = (graph, callback, options) => {
   // stable Kahn's algorithm that respects declaration order as a tiebreaker.
   const pointers = Array.from(graph.nodes.keys());
-  // base insertion order
-  const baseIndex = new Map<string, number>();
-  pointers.forEach((pointer, index) => baseIndex.set(pointer, index));
 
   // composite decl index: group priority then base insertion order
   const declIndex = new Map<string, number>();
-  for (const pointer of pointers) {
-    const priority = options?.getPointerPriority?.(pointer) ?? 10;
-    const composite = priority * 1_000_000 + (baseIndex.get(pointer) ?? 0);
-    declIndex.set(pointer, composite);
-  }
 
-  // build dependency sets for each pointer
+  // dependency sets, in-degree, reverse adjacency, and initial heap — all
+  // built in a single pass over pointers to avoid repeated iteration.
   const depsOf = new Map<string, Set<string>>();
-  for (const pointer of pointers) {
-    const raw = graph.subtreeDependencies?.get(pointer) ?? new Set();
-    const filtered = new Set<string>();
-    for (const rawPointer of raw) {
-      if (rawPointer === pointer) continue; // ignore self-dependencies for ordering
-      if (graph.nodes.has(rawPointer)) {
-        filtered.add(rawPointer);
-      }
-    }
-    depsOf.set(pointer, filtered);
-  }
-
-  // build inDegree and dependents adjacency
   const inDegree = new Map<string, number>();
   const dependents = new Map<string, Set<string>>();
-  for (const pointer of pointers) {
-    inDegree.set(pointer, 0);
-  }
-  for (const [pointer, deps] of depsOf) {
-    inDegree.set(pointer, deps.size);
-    for (const d of deps) {
-      if (!dependents.has(d)) {
-        dependents.set(d, new Set());
-      }
-      dependents.get(d)!.add(pointer);
-    }
-  }
-
-  // sort pointers by declaration order
-  const sortByDecl = (arr: Array<string>) =>
-    arr.sort((a, b) => declIndex.get(a)! - declIndex.get(b)!);
-
-  // initialize queue with zero-inDegree nodes in declaration order
-  // use min-heap prioritized by declaration index to avoid repeated full sorts
   const heap = new MinHeap(declIndex);
-  for (const pointer of pointers) {
-    if ((inDegree.get(pointer) ?? 0) === 0) {
-      heap.push(pointer);
+
+  pointers.forEach((pointer, index) => {
+    const priority = options?.getPointerPriority?.(pointer) ?? 10;
+    declIndex.set(pointer, priority * 1_000_000 + index);
+
+    const raw = graph.subtreeDependencies?.get(pointer) ?? new Set();
+    const deps = new Set<string>();
+    for (const rawPointer of raw) {
+      if (rawPointer === pointer) continue; // ignore self-dependencies for ordering
+      if (graph.nodes.has(rawPointer)) deps.add(rawPointer);
     }
-  }
+    depsOf.set(pointer, deps);
+    inDegree.set(pointer, deps.size);
+
+    for (const d of deps) {
+      let dep = dependents.get(d);
+      if (!dep) {
+        dep = new Set();
+        dependents.set(d, dep);
+      }
+      dep.add(pointer);
+    }
+
+    if (deps.size === 0) heap.push(pointer);
+  });
 
   const emitted = new Set<string>();
   const order: Array<string> = [];
@@ -129,7 +131,7 @@ const walkTopological: WalkFn = (graph, callback, options) => {
 
   // emit remaining nodes (cycles) in declaration order
   const remaining = pointers.filter((pointer) => !emitted.has(pointer));
-  sortByDecl(remaining);
+  remaining.sort((a, b) => declIndex.get(a)! - declIndex.get(b)!);
   for (const pointer of remaining) {
     emitted.add(pointer);
     order.push(pointer);
@@ -160,10 +162,27 @@ const walkTopological: WalkFn = (graph, callback, options) => {
     };
 
     // proposed order: sort by (groupPriority, originalIndex)
+    // Precompute original indices to avoid O(N) indexOf inside the comparator.
+    const orderIndex = new Map<string, number>();
+    for (let i = 0; i < order.length; i++) {
+      orderIndex.set(order[i]!, i);
+    }
+
+    // Memoize getGroup results since matchPointerToGroup can be expensive.
+    const groupCache = new Map<string, number>();
+    const getCachedGroup = (pointer: string): number => {
+      let g = groupCache.get(pointer);
+      if (g === undefined) {
+        g = getGroup(pointer);
+        groupCache.set(pointer, g);
+      }
+      return g;
+    };
+
     const proposed = [...order].sort((a, b) => {
-      const ga = getGroup(a);
-      const gb = getGroup(b);
-      return ga !== gb ? ga - gb : order.indexOf(a) - order.indexOf(b);
+      const ga = getCachedGroup(a);
+      const gb = getCachedGroup(b);
+      return ga !== gb ? ga - gb : orderIndex.get(a)! - orderIndex.get(b)!;
     });
 
     // build quick lookup of original index and proposed index
@@ -176,8 +195,8 @@ const walkTopological: WalkFn = (graph, callback, options) => {
     const violated = (() => {
       for (const [node, deps] of depsOf) {
         for (const dep of deps) {
-          const gDep = getGroup(dep);
-          const gNode = getGroup(node);
+          const gDep = getCachedGroup(dep);
+          const gNode = getCachedGroup(node);
           if (gDep <= gNode) continue; // not a crossing edge, cannot be violated by grouping
           const pDep = proposedIndex.get(dep)!;
           const pNode = proposedIndex.get(node)!;

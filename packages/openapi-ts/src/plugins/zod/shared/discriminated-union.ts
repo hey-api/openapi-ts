@@ -4,7 +4,7 @@ import type { IR } from '@hey-api/shared';
 import { $ } from '../../../ts-dsl';
 import type { ZodPlugin } from '../types';
 import type { Chain } from './chain';
-import type { ZodResult } from './types';
+import type { ZodMeta, ZodResult } from './types';
 
 export interface DiscriminatedUnionMember {
   discriminatedValue: unknown;
@@ -47,6 +47,7 @@ export function tryBuildDiscriminatedUnion({
 
     let refExpression: Chain;
     if (refPart.symbolRef) {
+      if ((refPart.symbolRef.meta as unknown as ZodMeta)?.isIntersection) return null;
       refExpression = $(refPart.symbolRef);
     } else if (refPart.$ref) {
       const query: SymbolMeta = {
@@ -55,6 +56,7 @@ export function tryBuildDiscriminatedUnion({
         resourceId: refPart.$ref,
         tool: 'zod',
       };
+      if ((plugin.querySymbol(query)?.meta as unknown as ZodMeta)?.isIntersection) return null;
       refExpression = $(plugin.referenceSymbol(query));
     } else {
       return null;

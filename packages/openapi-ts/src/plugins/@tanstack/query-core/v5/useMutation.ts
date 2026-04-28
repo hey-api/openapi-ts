@@ -8,16 +8,14 @@ import type { PluginInstance } from '../types';
 
 const mutationOptionsParamName = 'mutationOptions';
 
-export const createUseMutation = ({
+export function createUseMutation({
   operation,
   plugin,
 }: {
   operation: IR.OperationObject;
   plugin: PluginInstance;
-}): void => {
-  if (!('useMutation' in plugin.config)) {
-    return;
-  }
+}): void {
+  if (!('useMutation' in plugin.config)) return;
 
   const symbolUseMutationFn = plugin.symbol(applyNaming(operation.id, plugin.config.useMutation));
 
@@ -60,4 +58,4 @@ export const createUseMutation = ({
     .$if(plugin.config.comments && createOperationComment(operation), (c, v) => c.doc(v))
     .assign(func);
   plugin.node(statement);
-};
+}

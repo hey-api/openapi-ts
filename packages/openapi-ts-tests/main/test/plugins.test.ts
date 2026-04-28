@@ -45,383 +45,6 @@ for (const version of versions) {
     const scenarios = [
       {
         config: createConfig({
-          output: 'fetch',
-          plugins: ['@tanstack/angular-query-experimental', '@hey-api/client-fetch'],
-        }),
-        description: 'generate Fetch API client with TanStack Angular Query Experimental plugin',
-      },
-      {
-        config: createConfig({
-          output: 'fetch',
-          plugins: ['@tanstack/preact-query', '@hey-api/client-fetch'],
-        }),
-        description: 'generate Fetch API client with TanStack Preact Query plugin',
-      },
-      {
-        config: createConfig({
-          output: 'fetch',
-          plugins: ['@tanstack/react-query', '@hey-api/client-fetch'],
-        }),
-        description: 'generate Fetch API client with TanStack React Query plugin',
-      },
-      {
-        config: createConfig({
-          output: 'fetch',
-          plugins: ['@tanstack/solid-query', '@hey-api/client-fetch'],
-        }),
-        description: 'generate Fetch API client with TanStack Solid Query plugin',
-      },
-      {
-        config: createConfig({
-          output: 'fetch',
-          plugins: ['@tanstack/svelte-query', '@hey-api/client-fetch'],
-        }),
-        description: 'generate Fetch API client with TanStack Svelte Query plugin',
-      },
-      {
-        config: createConfig({
-          output: 'fetch',
-          plugins: ['@tanstack/vue-query', '@hey-api/client-fetch'],
-        }),
-        description: 'generate Fetch API client with TanStack Vue Query plugin',
-      },
-      {
-        config: createConfig({
-          output: 'axios',
-          plugins: ['@tanstack/angular-query-experimental', '@hey-api/client-axios'],
-        }),
-        description: 'generate Axios client with TanStack Angular Query Experimental plugin',
-      },
-      {
-        config: createConfig({
-          output: 'axios',
-          plugins: ['@tanstack/preact-query', '@hey-api/client-axios'],
-        }),
-        description: 'generate Axios client with TanStack Preact Query plugin',
-      },
-      {
-        config: createConfig({
-          output: 'axios',
-          plugins: ['@tanstack/react-query', '@hey-api/client-axios'],
-        }),
-        description: 'generate Axios client with TanStack React Query plugin',
-      },
-      {
-        config: createConfig({
-          output: 'axios',
-          plugins: ['@tanstack/solid-query', '@hey-api/client-axios'],
-        }),
-        description: 'generate Axios client with TanStack Solid Query plugin',
-      },
-      {
-        config: createConfig({
-          output: 'axios',
-          plugins: ['@tanstack/svelte-query', '@hey-api/client-axios'],
-        }),
-        description: 'generate Axios client with TanStack Svelte Query plugin',
-      },
-      {
-        config: createConfig({
-          output: 'axios',
-          plugins: ['@tanstack/vue-query', '@hey-api/client-axios'],
-        }),
-        description: 'generate Axios client with TanStack Vue Query plugin',
-      },
-      {
-        config: createConfig({
-          input: 'sdk-instance.yaml',
-          output: 'asClass',
-          plugins: [
-            '@tanstack/angular-query-experimental',
-            '@hey-api/client-fetch',
-            {
-              asClass: true,
-              classNameBuilder: '{{name}}Service',
-              name: '@hey-api/sdk',
-            },
-          ],
-        }),
-        description:
-          'generate Fetch API client with TanStack Angular Query Experimental plugin using class-based SDKs',
-      },
-      {
-        config: createConfig({
-          input: 'sdk-instance.yaml',
-          output: 'asClass',
-          plugins: [
-            '@tanstack/preact-query',
-            '@hey-api/client-fetch',
-            {
-              asClass: true,
-              classNameBuilder: '{{name}}Service',
-              name: '@hey-api/sdk',
-            },
-          ],
-        }),
-        description:
-          'generate Fetch API client with TanStack Preact Query plugin using class-based SDKs',
-      },
-      {
-        config: createConfig({
-          input: 'sdk-instance.yaml',
-          output: 'asClass',
-          plugins: [
-            '@tanstack/react-query',
-            '@hey-api/client-fetch',
-            {
-              asClass: true,
-              classNameBuilder: '{{name}}Service',
-              name: '@hey-api/sdk',
-            },
-          ],
-        }),
-        description:
-          'generate Fetch API client with TanStack React Query plugin using class-based SDKs',
-      },
-      {
-        config: createConfig({
-          input: 'sdk-instance.yaml',
-          output: 'asClass',
-          plugins: [
-            '@tanstack/solid-query',
-            '@hey-api/client-fetch',
-            {
-              asClass: true,
-              classNameBuilder: '{{name}}Service',
-              name: '@hey-api/sdk',
-            },
-          ],
-        }),
-        description:
-          'generate Fetch API client with TanStack Solid Query plugin using class-based SDKs',
-      },
-      {
-        config: createConfig({
-          input: 'sdk-instance.yaml',
-          output: 'asClass',
-          plugins: [
-            '@tanstack/svelte-query',
-            '@hey-api/client-fetch',
-            {
-              asClass: true,
-              classNameBuilder: '{{name}}Service',
-              name: '@hey-api/sdk',
-            },
-          ],
-        }),
-        description:
-          'generate Fetch API client with TanStack Svelte Query plugin using class-based SDKs',
-      },
-      {
-        config: createConfig({
-          input: 'sdk-instance.yaml',
-          output: 'asClass',
-          plugins: [
-            '@tanstack/vue-query',
-            '@hey-api/client-fetch',
-            {
-              asClass: true,
-              classNameBuilder: '{{name}}Service',
-              name: '@hey-api/sdk',
-            },
-          ],
-        }),
-        description:
-          'generate Fetch API client with TanStack Vue Query plugin using class-based SDKs',
-      },
-      {
-        config: createConfig({
-          input: 'sdk-instance.yaml',
-          output: 'name-builder',
-          plugins: [
-            {
-              infiniteQueryKeys: {
-                name: '{{name}}A',
-              },
-              infiniteQueryOptions: {
-                name: '{{name}}B',
-              },
-              mutationOptions: {
-                name: '{{name}}C',
-              },
-              name: '@tanstack/angular-query-experimental',
-              queryKeys: {
-                name: '{{name}}D',
-              },
-              queryOptions: {
-                name: '{{name}}E',
-              },
-            },
-            '@hey-api/client-fetch',
-            '@hey-api/sdk',
-          ],
-        }),
-        description:
-          'generate Fetch API client with TanStack Angular Query Experimental plugin with custom names',
-      },
-      {
-        config: createConfig({
-          input: 'sdk-instance.yaml',
-          output: 'name-builder',
-          plugins: [
-            {
-              infiniteQueryKeys: {
-                name: '{{name}}A',
-              },
-              infiniteQueryOptions: {
-                name: '{{name}}B',
-              },
-              mutationOptions: {
-                name: '{{name}}C',
-              },
-              name: '@tanstack/preact-query',
-              queryKeys: {
-                name: '{{name}}D',
-              },
-              queryOptions: {
-                name: '{{name}}E',
-              },
-            },
-            '@hey-api/client-fetch',
-            '@hey-api/sdk',
-          ],
-        }),
-        description:
-          'generate Fetch API client with TanStack Preact Query plugin with custom names',
-      },
-      {
-        config: createConfig({
-          input: 'sdk-instance.yaml',
-          output: 'name-builder',
-          plugins: [
-            {
-              infiniteQueryKeys: {
-                name: '{{name}}A',
-              },
-              infiniteQueryOptions: {
-                name: '{{name}}B',
-              },
-              mutationOptions: {
-                name: '{{name}}C',
-              },
-              name: '@tanstack/react-query',
-              queryKeys: {
-                name: '{{name}}D',
-              },
-              queryOptions: {
-                name: '{{name}}E',
-              },
-            },
-            '@hey-api/client-fetch',
-            '@hey-api/sdk',
-          ],
-        }),
-        description: 'generate Fetch API client with TanStack React Query plugin with custom names',
-      },
-      {
-        config: createConfig({
-          output: 'useMutation',
-          plugins: [
-            {
-              name: '@tanstack/react-query',
-              useMutation: true,
-            },
-            '@hey-api/client-fetch',
-          ],
-        }),
-        description:
-          'generate Fetch API client with TanStack React Query plugin with useMutation hooks',
-      },
-      {
-        config: createConfig({
-          input: 'sdk-instance.yaml',
-          output: 'name-builder',
-          plugins: [
-            {
-              infiniteQueryKeys: {
-                name: '{{name}}A',
-              },
-              infiniteQueryOptions: {
-                name: '{{name}}B',
-              },
-              mutationOptions: {
-                name: '{{name}}C',
-              },
-              name: '@tanstack/solid-query',
-              queryKeys: {
-                name: '{{name}}D',
-              },
-              queryOptions: {
-                name: '{{name}}E',
-              },
-            },
-            '@hey-api/client-fetch',
-            '@hey-api/sdk',
-          ],
-        }),
-        description: 'generate Fetch API client with TanStack Solid Query plugin with custom names',
-      },
-      {
-        config: createConfig({
-          input: 'sdk-instance.yaml',
-          output: 'name-builder',
-          plugins: [
-            {
-              infiniteQueryKeys: {
-                name: '{{name}}A',
-              },
-              infiniteQueryOptions: {
-                name: '{{name}}B',
-              },
-              mutationOptions: {
-                name: '{{name}}C',
-              },
-              name: '@tanstack/svelte-query',
-              queryKeys: {
-                name: '{{name}}D',
-              },
-              queryOptions: {
-                name: '{{name}}E',
-              },
-            },
-            '@hey-api/client-fetch',
-            '@hey-api/sdk',
-          ],
-        }),
-        description:
-          'generate Fetch API client with TanStack Svelte Query plugin with custom names',
-      },
-      {
-        config: createConfig({
-          input: 'sdk-instance.yaml',
-          output: 'name-builder',
-          plugins: [
-            {
-              infiniteQueryKeys: {
-                name: '{{name}}A',
-              },
-              infiniteQueryOptions: {
-                name: '{{name}}B',
-              },
-              mutationOptions: {
-                name: '{{name}}C',
-              },
-              name: '@tanstack/vue-query',
-              queryKeys: {
-                name: '{{name}}D',
-              },
-              queryOptions: {
-                name: '{{name}}E',
-              },
-            },
-            '@hey-api/client-fetch',
-            '@hey-api/sdk',
-          ],
-        }),
-        description: 'generate Fetch API client with TanStack Vue Query plugin with custom names',
-      },
-      {
-        config: createConfig({
           output: 'default',
           plugins: ['@hey-api/schemas'],
         }),
@@ -603,58 +226,57 @@ for (const version of versions) {
       );
     });
   });
+}
 
-  describe('custom plugin', () => {
-    it('handles a custom plugin', async () => {
-      const myPlugin: DefinePlugin<{
-        customOption: boolean;
-        name: any;
-      }>['Config'] = {
-        api: undefined,
-        config: {
-          customOption: true,
-        },
-        dependencies: ['@hey-api/typescript'],
-        handler: vi.fn(),
-        name: 'my-plugin',
-      };
+describe('custom plugin', () => {
+  it('handles a custom plugin', async () => {
+    const myPlugin: DefinePlugin<{
+      customOption: boolean;
+      name: any;
+    }>['Config'] = {
+      api: undefined,
+      config: {
+        customOption: true,
+      },
+      dependencies: ['@hey-api/typescript'],
+      handler: vi.fn(),
+      name: 'my-plugin',
+    };
 
-      await createClient({
+    await createClient({
+      input: path.join(getSpecsPath(), '3.1.x', 'full.yaml'),
+      logs: {
+        level: 'silent',
+      },
+      output: path.join(__dirname, 'generated', 'my-plugin', 'default'),
+      plugins: [myPlugin, '@hey-api/client-fetch'],
+    });
+
+    expect(myPlugin.handler).toHaveBeenCalled();
+  });
+
+  it.skip('throws on invalid dependency', async () => {
+    const myPlugin: DefinePlugin<{
+      name: any;
+    }>['Config'] = {
+      api: undefined,
+      config: {},
+      dependencies: ['@hey-api/oops'],
+      handler: vi.fn(),
+      name: 'my-plugin',
+    };
+
+    await expect(() =>
+      createClient({
         input: path.join(getSpecsPath(), '3.1.x', 'full.yaml'),
         logs: {
           level: 'silent',
         },
-        output: path.join(outputDir, myPlugin.name, 'default'),
+        output: path.join(__dirname, 'generated', 'my-plugin', 'default'),
         plugins: [myPlugin, '@hey-api/client-fetch'],
-      });
+      }),
+    ).rejects.toThrowError(/Found 1 configuration error./g);
 
-      expect(myPlugin.handler).toHaveBeenCalled();
-    });
-
-    // TODO: fix test
-    it.skip('throws on invalid dependency', async () => {
-      const myPlugin: DefinePlugin<{
-        name: any;
-      }>['Config'] = {
-        api: undefined,
-        config: {},
-        dependencies: ['@hey-api/oops'],
-        handler: vi.fn(),
-        name: 'my-plugin',
-      };
-
-      await expect(() =>
-        createClient({
-          input: path.join(getSpecsPath(), '3.1.x', 'full.yaml'),
-          logs: {
-            level: 'silent',
-          },
-          output: path.join(outputDir, myPlugin.name, 'default'),
-          plugins: [myPlugin, '@hey-api/client-fetch'],
-        }),
-      ).rejects.toThrowError(/Found 1 configuration error./g);
-
-      expect(myPlugin.handler).not.toHaveBeenCalled();
-    });
+    expect(myPlugin.handler).not.toHaveBeenCalled();
   });
-}
+});

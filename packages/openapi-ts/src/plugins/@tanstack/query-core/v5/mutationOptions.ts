@@ -11,16 +11,14 @@ import { handleMeta } from '../shared/meta';
 import { useTypeData, useTypeError, useTypeResponse } from '../shared/useType';
 import type { PluginInstance } from '../types';
 
-export const createMutationOptions = ({
+export function createMutationOptions({
   operation,
   plugin,
 }: {
   operation: IR.OperationObject;
   plugin: PluginInstance;
-}): void => {
-  if (hasOperationSse({ operation })) {
-    return;
-  }
+}): void {
+  if (hasOperationSse({ operation })) return;
 
   const symbolMutationOptionsType = plugin.external(`${plugin.name}.MutationOptions`);
 
@@ -91,4 +89,4 @@ export const createMutationOptions = ({
         ),
     );
   plugin.node(statement);
-};
+}
