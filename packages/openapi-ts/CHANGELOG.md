@@ -1,5 +1,76 @@
 # @hey-api/openapi-ts
 
+## 0.97.0
+
+### Minor Changes
+
+- **BREAKING** **plugin(@hey-api/client-ky)**: fix: pass previous result to error interceptors ([#3814](https://github.com/hey-api/openapi-ts/pull/3814)) ([`0d388de`](https://github.com/hey-api/openapi-ts/commit/0d388de3b85748a6827bcd6407e1e1400f39c3a3)) by [@SukkaW](https://github.com/SukkaW)
+
+- **BREAKING** **client**: resolve `runtimeConfigPath` relative to the output folder ([#3770](https://github.com/hey-api/openapi-ts/pull/3770)) ([`296da55`](https://github.com/hey-api/openapi-ts/commit/296da551f83c6d1ea2a24153b072a4a86617a9e0)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+### Changed `runtimeConfigPath` behavior
+
+This was a known, long-standing issue confusing first-time users. Before, defining client `runtimeConfigPath` value would paste it verbatim to the generated output. This release changes the behavior to resolve relative to the current working directory the same way output path works.
+
+- **BREAKING** **plugin(@hey-api/client-angular)**: `request` and `response` objects might be undefined ([#3814](https://github.com/hey-api/openapi-ts/pull/3814)) ([`0d388de`](https://github.com/hey-api/openapi-ts/commit/0d388de3b85748a6827bcd6407e1e1400f39c3a3)) by [@SukkaW](https://github.com/SukkaW)
+
+- **BREAKING** **plugin(@hey-api/client-angular)**: fix: respect `throwOnError` when request validation fails ([#3814](https://github.com/hey-api/openapi-ts/pull/3814)) ([`0d388de`](https://github.com/hey-api/openapi-ts/commit/0d388de3b85748a6827bcd6407e1e1400f39c3a3)) by [@SukkaW](https://github.com/SukkaW)
+
+- **BREAKING** **plugin(@hey-api/client-next)**: `request` and `response` objects might be undefined ([#3814](https://github.com/hey-api/openapi-ts/pull/3814)) ([`0d388de`](https://github.com/hey-api/openapi-ts/commit/0d388de3b85748a6827bcd6407e1e1400f39c3a3)) by [@SukkaW](https://github.com/SukkaW)
+
+- **BREAKING** **plugin(@hey-api/client-fetch)**: fix: pass previous result to error interceptors ([#3814](https://github.com/hey-api/openapi-ts/pull/3814)) ([`0d388de`](https://github.com/hey-api/openapi-ts/commit/0d388de3b85748a6827bcd6407e1e1400f39c3a3)) by [@SukkaW](https://github.com/SukkaW)
+
+- **BREAKING** **plugin(@hey-api/client-ky)**: `request` and `response` objects might be undefined ([#3814](https://github.com/hey-api/openapi-ts/pull/3814)) ([`0d388de`](https://github.com/hey-api/openapi-ts/commit/0d388de3b85748a6827bcd6407e1e1400f39c3a3)) by [@SukkaW](https://github.com/SukkaW)
+
+- **BREAKING** **plugin(@hey-api/client-fetch)**: `request` and `response` objects might be undefined ([#3814](https://github.com/hey-api/openapi-ts/pull/3814)) ([`0d388de`](https://github.com/hey-api/openapi-ts/commit/0d388de3b85748a6827bcd6407e1e1400f39c3a3)) by [@SukkaW](https://github.com/SukkaW)
+
+- **BREAKING** **plugin(@hey-api/client-ofetch)**: `request` and `response` objects might be undefined ([#3814](https://github.com/hey-api/openapi-ts/pull/3814)) ([`0d388de`](https://github.com/hey-api/openapi-ts/commit/0d388de3b85748a6827bcd6407e1e1400f39c3a3)) by [@SukkaW](https://github.com/SukkaW)
+
+- **BREAKING** **plugin(@hey-api/client-ky)**: fix: respect `throwOnError` when request validation fails ([#3814](https://github.com/hey-api/openapi-ts/pull/3814)) ([`0d388de`](https://github.com/hey-api/openapi-ts/commit/0d388de3b85748a6827bcd6407e1e1400f39c3a3)) by [@SukkaW](https://github.com/SukkaW)
+
+- **BREAKING** **plugin(@hey-api/client-fetch)**: fix: respect `throwOnError` when request validation fails ([#3814](https://github.com/hey-api/openapi-ts/pull/3814)) ([`0d388de`](https://github.com/hey-api/openapi-ts/commit/0d388de3b85748a6827bcd6407e1e1400f39c3a3)) by [@SukkaW](https://github.com/SukkaW)
+
+- **BREAKING** **plugin(@hey-api/client-next)**: fix: pass previous result to error interceptors ([#3814](https://github.com/hey-api/openapi-ts/pull/3814)) ([`0d388de`](https://github.com/hey-api/openapi-ts/commit/0d388de3b85748a6827bcd6407e1e1400f39c3a3)) by [@SukkaW](https://github.com/SukkaW)
+
+- **BREAKING** **plugin(@hey-api/client-ky)**: respect ky instance defaults ([#3806](https://github.com/hey-api/openapi-ts/pull/3806)) ([`d16cf1c`](https://github.com/hey-api/openapi-ts/commit/d16cf1c1413849bc491a758b096222caa5a82d25)) by [@SukkaW](https://github.com/SukkaW)
+
+### Changed Ky client behavior
+
+The Ky client was updated to be more intuitive. Some Ky options now need to be passed via the `kyOptions` field and you need to pass `undefined` to unset an option.
+
+- **BREAKING** **plugin(@hey-api/client-ofetch)**: fix: respect `throwOnError` when request validation fails ([#3814](https://github.com/hey-api/openapi-ts/pull/3814)) ([`0d388de`](https://github.com/hey-api/openapi-ts/commit/0d388de3b85748a6827bcd6407e1e1400f39c3a3)) by [@SukkaW](https://github.com/SukkaW)
+
+- **BREAKING** **plugin(@hey-api/client-next)**: fix: respect `throwOnError` when request validation fails ([#3814](https://github.com/hey-api/openapi-ts/pull/3814)) ([`0d388de`](https://github.com/hey-api/openapi-ts/commit/0d388de3b85748a6827bcd6407e1e1400f39c3a3)) by [@SukkaW](https://github.com/SukkaW)
+
+### Patch Changes
+
+- **plugin(@tanstack/vue-query)**: add `setQueryData` option ([#3824](https://github.com/hey-api/openapi-ts/pull/3824)) ([`1ef4af0`](https://github.com/hey-api/openapi-ts/commit/1ef4af06d817506134b9077c7c3f034831f4457a)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+- **plugin(@tanstack/react-query)**: add `useSetQueryData` option ([#3824](https://github.com/hey-api/openapi-ts/pull/3824)) ([`1ef4af0`](https://github.com/hey-api/openapi-ts/commit/1ef4af06d817506134b9077c7c3f034831f4457a)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+- **cli**: print file count and generator speed ([#3828](https://github.com/hey-api/openapi-ts/pull/3828)) ([`6e5249f`](https://github.com/hey-api/openapi-ts/commit/6e5249ff3bb10b142e5911697601ad7d2c7d9dbc)) by [@SukkaW](https://github.com/SukkaW)
+
+- **plugin(@tanstack/preact-query)**: add `useSetQueryData` option ([#3824](https://github.com/hey-api/openapi-ts/pull/3824)) ([`1ef4af0`](https://github.com/hey-api/openapi-ts/commit/1ef4af06d817506134b9077c7c3f034831f4457a)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+- **plugin(@tanstack/svelte-query)**: add `setQueryData` option ([#3824](https://github.com/hey-api/openapi-ts/pull/3824)) ([`1ef4af0`](https://github.com/hey-api/openapi-ts/commit/1ef4af06d817506134b9077c7c3f034831f4457a)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+- **plugin(zod)**: fix: fallback `.discriminatedUnion` to `.union` if members contain intersection ([#3813](https://github.com/hey-api/openapi-ts/pull/3813)) ([`b88e8b5`](https://github.com/hey-api/openapi-ts/commit/b88e8b5139d62d8d3710aea9d86f15efa3612eb9)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **config**: fix: remove `--apply` flag from Biome post-processor commands ([#3812](https://github.com/hey-api/openapi-ts/pull/3812)) ([`084de63`](https://github.com/hey-api/openapi-ts/commit/084de63aa35b09df735e05eb739df3bda508a08f)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(@tanstack/react-query)**: add `setQueryData` option ([#3824](https://github.com/hey-api/openapi-ts/pull/3824)) ([`1ef4af0`](https://github.com/hey-api/openapi-ts/commit/1ef4af06d817506134b9077c7c3f034831f4457a)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+- **plugin(@tanstack/solid-query)**: add `setQueryData` option ([#3824](https://github.com/hey-api/openapi-ts/pull/3824)) ([`1ef4af0`](https://github.com/hey-api/openapi-ts/commit/1ef4af06d817506134b9077c7c3f034831f4457a)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+- **plugin(@tanstack/preact-query)**: add `setQueryData` option ([#3824](https://github.com/hey-api/openapi-ts/pull/3824)) ([`1ef4af0`](https://github.com/hey-api/openapi-ts/commit/1ef4af06d817506134b9077c7c3f034831f4457a)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+- **plugin(@tanstack/angular-query-experimental)**: add `setQueryData` option ([#3824](https://github.com/hey-api/openapi-ts/pull/3824)) ([`1ef4af0`](https://github.com/hey-api/openapi-ts/commit/1ef4af06d817506134b9077c7c3f034831f4457a)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+### Updated Dependencies:
+
+- @hey-api/codegen-core@0.8.1
+- @hey-api/shared@0.4.2
+
 ## 0.96.1
 
 ### Patch Changes
