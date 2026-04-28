@@ -8,41 +8,56 @@ import type { GetPointerPriorityFn, WalkFn } from './types/walk';
  * added to the graph.
  */
 const walkDeclarations: WalkFn = (graph, callback, options) => {
-  const pointers = Array.from(graph.nodes.keys());
-
   if (options?.preferGroups && options.preferGroups.length) {
-    // Precompute each pointer's group once so matchPointerToGroup is not called
-    // O(groups × pointers) times.
-    const pointerGroup = new Map<string, string | undefined>();
-    if (options.matchPointerToGroup) {
-      for (const pointer of pointers) {
+    // Single pass: bucket each pointer into its group (or unmatched).
+    // A Set of preferGroups provides O(1) membership check; buckets are created
+    // lazily on first match so no separate pre-init loop is needed.
+    const preferGroupsSet = new Set(options.preferGroups);
+    const buckets = new Map<string, string[]>();
+    const unmatched: string[] = [];
+
+    for (const pointer of graph.nodes.keys()) {
+      if (options.matchPointerToGroup) {
         const result = options.matchPointerToGroup(pointer);
-        pointerGroup.set(pointer, result.matched ? result.kind : undefined);
+        if (result.matched) {
+          if (preferGroupsSet.has(result.kind)) {
+            let bucket = buckets.get(result.kind);
+            if (!bucket) {
+              bucket = [];
+              buckets.set(result.kind, bucket);
+            }
+            bucket.push(pointer);
+          } else {
+            // kind not in preferGroups → treat as unmatched
+            unmatched.push(pointer);
+          }
+          continue;
+        }
       }
+      unmatched.push(pointer);
     }
 
-    // emit nodes that match each preferred group in order
-    const emitted = new Set<string>();
+    // emit in group order, then unmatched in declaration order
+    const emittedGroups = new Set<string>();
     for (const kind of options.preferGroups) {
-      for (const pointer of pointers) {
-        if (pointerGroup.get(pointer) === kind) {
-          emitted.add(pointer);
+      if (emittedGroups.has(kind)) continue;
+      emittedGroups.add(kind);
+      const pointers = buckets.get(kind);
+      if (pointers) {
+        for (const pointer of pointers) {
           callback(pointer, graph.nodes.get(pointer)!);
         }
       }
     }
-
-    // emit anything not covered by the preferGroups (in declaration order)
-    for (const pointer of pointers) {
-      if (emitted.has(pointer)) continue;
+    for (const pointer of unmatched) {
       callback(pointer, graph.nodes.get(pointer)!);
     }
     return;
   }
 
-  // fallback: simple declaration order
-  for (const pointer of pointers) {
-    callback(pointer, graph.nodes.get(pointer)!);
+  // fallback: simple declaration order, no need to materialise an array
+  for (const [pointer, node] of graph.nodes) {
+    callback(pointer, node);
   }
 };
 
