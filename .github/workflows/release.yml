@@ -101,13 +101,17 @@ jobs:
         if: steps.changesets.outputs.published == 'true'
         run: pnpm changelog:assemble
 
+      - name: Delete spotlight
+        if: steps.changesets.outputs.published == 'true'
+        run: rm -f .release/spotlight.md
+
       - name: Commit changelog
         if: steps.changesets.outputs.published == 'true'
         uses: stefanzweifel/git-auto-commit-action@v7.1.0
         with:
           branch: ${{ env.CURRENT_BRANCH }}
           commit_message: 'chore: sync changelog [skip ci]'
-          file_pattern: CHANGELOG.md
+          file_pattern: CHANGELOG.md .release/spotlight.md
 
       - name: Update lock file
         if: env.CURRENT_BRANCH == 'changeset-release/main'
