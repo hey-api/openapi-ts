@@ -130,8 +130,10 @@ export type RequestResult<
           | {
               data: undefined;
               error: TError[keyof TError];
-              request: HttpRequest<unknown>;
-              response: HttpErrorResponse & {
+              /** request may be undefined, because error may be from building the request object itself */
+              request?: HttpRequest<unknown>;
+              /** response may be undefined, because error may be from building the request object itself or from a network error */
+              response?: HttpErrorResponse & {
                 error: TError[keyof TError] | null;
               };
             }

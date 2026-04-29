@@ -308,8 +308,8 @@ describe('unserialized request body handling', () => {
       expect.any(Object),
     );
 
-    await expect(result.request.text()).resolves.toEqual(textValue);
-    expect(result.request.headers.get('Content-Type')).toEqual('text/plain');
+    await expect(result.request!.text()).resolves.toEqual(textValue);
+    expect(result.request!.headers.get('Content-Type')).toEqual('text/plain');
   });
 });
 
@@ -376,8 +376,8 @@ describe('serialized request body handling', () => {
         expect.any(Object),
       );
 
-      await expect(result.request.text()).resolves.toEqual(textValue);
-      expect(result.request.headers.get('Content-Type')).toEqual(
+      await expect(result.request!.text()).resolves.toEqual(textValue);
+      expect(result.request!.headers.get('Content-Type')).toEqual(
         expectContentHeader ? 'application/json' : null,
       );
     },
@@ -499,7 +499,7 @@ describe('error handling', () => {
     });
 
     expect(result.error).toEqual({ message: 'Not found' });
-    expect(result.response.status).toBe(404);
+    expect(result.response!.status).toBe(404);
   });
 
   it('throws HTTP errors with throwOnError: true', async () => {
@@ -543,7 +543,7 @@ describe('error handling', () => {
     });
 
     expect(result.error).toBe('Internal Server Error');
-    expect(result.response.status).toBe(500);
+    expect(result.response!.status).toBe(500);
   });
 });
 

@@ -12,7 +12,7 @@ import { handleMeta } from '../shared/meta';
 import { useTypeData, useTypeError, useTypeResponse } from '../shared/useType';
 import type { PluginInstance } from '../types';
 
-const createInfiniteParamsFunction = ({ plugin }: { plugin: PluginInstance }) => {
+function createInfiniteParamsFunction({ plugin }: { plugin: PluginInstance }): void {
   const symbolCreateInfiniteParams = plugin.symbol(
     applyNaming('createInfiniteParams', {
       case: plugin.config.case,
@@ -89,15 +89,15 @@ const createInfiniteParamsFunction = ({ plugin }: { plugin: PluginInstance }) =>
       ),
   );
   plugin.node(fn);
-};
+}
 
-export const createInfiniteQueryOptions = ({
+export function createInfiniteQueryOptions({
   operation,
   plugin,
 }: {
   operation: IR.OperationObject;
   plugin: PluginInstance;
-}): void => {
+}): void {
   const pagination = operationPagination({
     context: plugin.context,
     operation,
@@ -255,4 +255,4 @@ export const createInfiniteQueryOptions = ({
         ),
     );
   plugin.node(statement);
-};
+}
