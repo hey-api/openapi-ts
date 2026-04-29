@@ -286,3 +286,86 @@ describe('request interceptor', () => {
     },
   );
 });
+
+describe('request interceptor URL mutation', () => {
+  // Regression tests for a bug where the final URL was computed before request
+  // interceptors ran, causing interceptor mutations to `opts.baseUrl`,
+  // `opts.url`, `opts.path`, and `opts.query` to be ignored.
+  const buildOkResponse = () =>
+    new Response(JSON.stringify({ success: true }), {
+      headers: { 'Content-Type': 'application/json' },
+      status: 200,
+    });
+
+  it('honors interceptor mutations to opts.baseUrl in the fetched URL', async () => {
+    const client = createClient({ baseUrl: 'https://example.com' });
+    const mockFetch: MockFetch = vi.fn().mockResolvedValue(buildOkResponse());
+
+    const interceptorId = client.interceptors.request.use((options: ResolvedRequestOptions) => {
+      options.baseUrl = 'https://rerouted.com';
+    });
+
+    await client.get({ fetch: mockFetch, url: '/test' });
+
+    expect(mockFetch).toHaveBeenCalledExactlyOnceWith(
+      'https://rerouted.com/test',
+      expect.any(Object),
+    );
+
+    client.interceptors.request.eject(interceptorId);
+  });
+
+  it('honors interceptor mutations to opts.url in the fetched URL', async () => {
+    const client = createClient({ baseUrl: 'https://example.com' });
+    const mockFetch: MockFetch = vi.fn().mockResolvedValue(buildOkResponse());
+
+    const interceptorId = client.interceptors.request.use((options: ResolvedRequestOptions) => {
+      options.url = '/rewritten';
+    });
+
+    await client.get({ fetch: mockFetch, url: '/original' });
+
+    expect(mockFetch).toHaveBeenCalledExactlyOnceWith(
+      'https://example.com/rewritten',
+      expect.any(Object),
+    );
+
+    client.interceptors.request.eject(interceptorId);
+  });
+
+  it('honors interceptor mutations to opts.path in the fetched URL', async () => {
+    const client = createClient({ baseUrl: 'https://example.com' });
+    const mockFetch: MockFetch = vi.fn().mockResolvedValue(buildOkResponse());
+
+    const interceptorId = client.interceptors.request.use((options: ResolvedRequestOptions) => {
+      options.path = { id: 42 };
+    });
+
+    await client.get({ fetch: mockFetch, url: '/items/{id}' });
+
+    expect(mockFetch).toHaveBeenCalledExactlyOnceWith(
+      'https://example.com/items/42',
+      expect.any(Object),
+    );
+
+    client.interceptors.request.eject(interceptorId);
+  });
+
+  it('honors interceptor mutations to opts.query in the fetched URL', async () => {
+    const client = createClient({ baseUrl: 'https://example.com' });
+    const mockFetch: MockFetch = vi.fn().mockResolvedValue(buildOkResponse());
+
+    const interceptorId = client.interceptors.request.use((options: ResolvedRequestOptions) => {
+      options.query = { bar: 'baz' };
+    });
+
+    await client.get({ fetch: mockFetch, url: '/items' });
+
+    expect(mockFetch).toHaveBeenCalledExactlyOnceWith(
+      'https://example.com/items?bar=baz',
+      expect.any(Object),
+    );
+
+    client.interceptors.request.eject(interceptorId);
+  });
+});
