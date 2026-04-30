@@ -2,4 +2,4 @@
 "@hey-api/json-schema-ref-parser": patch
 ---
 
-fix: publish package
+**yaml**: swap `yaml` back to `js-yaml`
