@@ -6,6 +6,7 @@ import {
   buildUrl,
   createConfig,
   createInterceptors,
+  FetchError,
   getParseAs,
   mergeConfigs,
   mergeHeaders,
@@ -74,6 +75,7 @@ export const createClient = (config: Config = {}): Client => {
 
   const request: Client['request'] = async (options) => {
     const throwOnError = options.throwOnError ?? _config.throwOnError;
+    const throwOnErrorStyle = options.throwOnErrorStyle ?? _config.throwOnErrorStyle;
     const responseStyle = options.responseStyle ?? _config.responseStyle;
 
     let request: Request | undefined;
@@ -209,6 +211,15 @@ export const createClient = (config: Config = {}): Client => {
       finalError = finalError || {};
 
       if (throwOnError) {
+        if (throwOnErrorStyle === 'wrapper') {
+          throw finalError instanceof FetchError
+            ? finalError
+            : new FetchError({
+                error: finalError,
+                request,
+                response,
+              });
+        }
         throw finalError;
       }
 

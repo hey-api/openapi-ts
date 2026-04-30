@@ -550,6 +550,39 @@ export default {
 
 :::
 
+When you use `@hey-api/client-fetch`, generated query and mutation errors are typed as the operation-specific backend error body by default. You can opt into `FetchError<OperationError>` by setting `throwOnErrorStyle: 'wrapper'` on the Fetch client plugin. The `.error` field contains the operation-specific backend error body, and the wrapper exposes Fetch metadata such as `.request`, `.response`, `.status`, `.statusText`, and `.headers`.
+
+```js
+export default {
+  input: 'hey-api/backend',
+  output: 'src/client',
+  plugins: [
+    {
+      name: '@hey-api/client-fetch',
+      throwOnErrorStyle: 'wrapper',
+    },
+    '@tanstack/react-query',
+  ],
+};
+```
+
+```ts
+import { FetchError } from './client/client';
+
+const addPet = useMutation({
+  ...addPetMutation(),
+  onError: (error) => {
+    if (error instanceof FetchError) {
+      console.log(error.error);
+      console.log(error.status);
+      console.log(error.response);
+    }
+  },
+});
+```
+
+Network errors and aborted requests are also wrapped by the Fetch client when `throwOnErrorStyle: 'wrapper'` is enabled. In those cases, `.response`, `.status`, and `.headers` may be `undefined`.
+
 You can customize the naming and casing pattern for `mutationOptions` functions using the `.name` and `.case` options.
 
 ### Meta

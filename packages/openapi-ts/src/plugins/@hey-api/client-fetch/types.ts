@@ -10,6 +10,13 @@ export type UserConfig = Plugin.Name<'@hey-api/client-fetch'> &
      * @default false
      */
     throwOnError?: boolean;
+    /**
+     * Error shape to throw when `throwOnError` is enabled. By default, the
+     * parsed backend error body is thrown to preserve legacy behavior.
+     *
+     * @default 'body'
+     */
+    throwOnErrorStyle?: 'body' | 'wrapper';
   };
 
 export type HeyApiClientFetchPlugin = DefinePlugin<UserConfig, UserConfig>;

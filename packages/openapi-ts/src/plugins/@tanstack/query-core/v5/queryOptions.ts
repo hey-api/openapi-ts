@@ -10,6 +10,7 @@ import type { TsDsl } from '../../../../ts-dsl';
 import { $ } from '../../../../ts-dsl';
 import { createQueryKeyFunction, createQueryKeyType, queryKeyStatement } from '../queryKey';
 import { handleMeta } from '../shared/meta';
+import { sdkCallOptions } from '../shared/sdkCall';
 import { useTypeData, useTypeError, useTypeResponse } from '../shared/useType';
 import type { PluginInstance } from '../types';
 
@@ -63,11 +64,13 @@ export function createQueryOptions({
         }),
       )
       .call(
-        $.object()
-          .spread(optionsParamName)
-          .spread($('queryKey').attr(0))
-          .prop('signal', $('signal'))
-          .prop('throwOnError', $.literal(true)),
+        sdkCallOptions({
+          options: $.object()
+            .spread(optionsParamName)
+            .spread($('queryKey').attr(0))
+            .prop('signal', $('signal')),
+          plugin,
+        }),
       )
       .await(),
   );

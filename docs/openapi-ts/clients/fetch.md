@@ -144,6 +144,43 @@ const response = await getFoo({
 });
 ```
 
+## Error Handling
+
+By default, the Fetch client returns errors in the response object. The `error` field contains the typed backend error body and the same result includes HTTP metadata.
+
+```ts
+const result = await getFoo();
+
+if (result.error) {
+  console.log(result.error);
+  console.log(result.response?.status);
+  console.log(result.response);
+}
+```
+
+When `throwOnError` is enabled, the client throws the typed backend error body by default. This preserves legacy behavior for existing applications.
+
+You can opt into a `FetchError<TError>` wrapper with `throwOnErrorStyle: 'wrapper'`. The `.error` field contains the typed backend error body, and the wrapper exposes `.request`, `.response`, `.status`, `.statusText`, and `.headers` for retry, auth, and reporting logic.
+
+```ts
+import { FetchError } from './client/client';
+
+try {
+  await getFoo({
+    throwOnError: true,
+    throwOnErrorStyle: 'wrapper',
+  });
+} catch (error) {
+  if (error instanceof FetchError) {
+    console.log(error.error);
+    console.log(error.status);
+    console.log(error.headers?.get('X-Request-Id'));
+  }
+}
+```
+
+Network errors, aborted requests, and interceptor-thrown errors are also wrapped when `throwOnErrorStyle: 'wrapper'` is enabled. They may not have `.response`, `.status`, or `.headers` because no HTTP response was received.
+
 ## Interceptors
 
 Interceptors (middleware) can be used to modify requests before they're sent or responses before they're returned to your application.

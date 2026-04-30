@@ -51,6 +51,13 @@ export interface Config<T extends ClientOptions = ClientOptions>
    * @default false
    */
   throwOnError?: T['throwOnError'];
+  /**
+   * Error shape to throw when `throwOnError` is enabled. By default, the
+   * parsed backend error body is thrown to preserve legacy behavior.
+   *
+   * @default 'body'
+   */
+  throwOnErrorStyle?: T['throwOnErrorStyle'];
 }
 
 export interface RequestOptions<
@@ -138,6 +145,7 @@ export interface ClientOptions {
   baseUrl?: string;
   responseStyle?: ResponseStyle;
   throwOnError?: boolean;
+  throwOnErrorStyle?: 'body' | 'wrapper';
 }
 
 type MethodFn = <

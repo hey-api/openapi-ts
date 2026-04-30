@@ -41,6 +41,25 @@ for (const version of versions) {
       {
         config: createConfig({
           input: 'full.yaml',
+          output: 'fetch-wrapper',
+          plugins: [
+            '@tanstack/angular-query-experimental',
+            '@tanstack/preact-query',
+            '@tanstack/react-query',
+            '@tanstack/solid-query',
+            '@tanstack/svelte-query',
+            '@tanstack/vue-query',
+            {
+              name: '@hey-api/client-fetch',
+              throwOnErrorStyle: 'wrapper',
+            },
+          ],
+        }),
+        description: 'generate Fetch API client with TanStack Query plugins using error wrapper',
+      },
+      {
+        config: createConfig({
+          input: 'full.yaml',
           output: 'axios',
           plugins: [
             '@tanstack/angular-query-experimental',

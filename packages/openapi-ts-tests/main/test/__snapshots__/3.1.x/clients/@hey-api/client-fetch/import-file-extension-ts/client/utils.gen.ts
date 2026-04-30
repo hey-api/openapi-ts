@@ -11,6 +11,55 @@ import {
 import { getUrl } from '../core/utils.gen.ts';
 import type { Client, ClientOptions, Config, RequestOptions } from './types.gen.ts';
 
+const getFetchErrorMessage = ({
+  error,
+  response,
+}: {
+  error: unknown;
+  response?: Response;
+}): string => {
+  if (response) {
+    const status = response.statusText
+      ? `${response.status} ${response.statusText}`
+      : `${response.status}`;
+    return `Response returned ${status}`;
+  }
+
+  if (error instanceof Error && error.message) {
+    return error.message;
+  }
+
+  return 'Request failed';
+};
+
+export class FetchError<TError = unknown> extends Error {
+  error: TError;
+  headers?: Headers;
+  request?: Request;
+  response?: Response;
+  status?: number;
+  statusText?: string;
+
+  constructor({
+    error,
+    request,
+    response,
+  }: {
+    error: TError;
+    request?: Request;
+    response?: Response;
+  }) {
+    super(getFetchErrorMessage({ error, response }));
+    this.name = 'FetchError';
+    this.error = error;
+    this.request = request;
+    this.response = response;
+    this.status = response?.status;
+    this.statusText = response?.statusText;
+    this.headers = response?.headers;
+  }
+}
+
 export const createQuerySerializer = <T = unknown>({
   parameters = {},
   ...args
