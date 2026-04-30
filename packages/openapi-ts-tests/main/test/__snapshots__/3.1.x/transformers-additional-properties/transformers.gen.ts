@@ -13,9 +13,9 @@ const barSchemaResponseTransformer = (data: any) => {
         data.baz[key] = fooSchemaResponseTransformer(data.baz[key]);
     }
     if (data.qux) {
-        for (const key of Object.keys(data.qux)) {
-            if (!['quux'].includes(key)) {
-                data.qux[key] = new Date(data.qux[key]);
+        for (const key2 of Object.keys(data.qux)) {
+            if (!['quux'].includes(key2)) {
+                data.qux[key2] = new Date(data.qux[key2]);
             }
         }
     }
