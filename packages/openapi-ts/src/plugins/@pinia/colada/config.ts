@@ -13,6 +13,27 @@ export const defaultConfig: PiniaColadaPlugin['Config'] = {
   handler: handler as PiniaColadaPlugin['Handler'],
   name: '@pinia/colada',
   resolveConfig: (plugin, context) => {
+    plugin.config.infiniteQueryKeys = context.valueToObject({
+      defaultValue: {
+        case: plugin.config.case ?? 'camelCase',
+        enabled: true,
+        name: '{{name}}InfiniteQueryKey',
+        tags: false,
+      },
+      mappers,
+      value: plugin.config.infiniteQueryKeys,
+    });
+
+    plugin.config.infiniteQueryOptions = context.valueToObject({
+      defaultValue: {
+        case: plugin.config.case ?? 'camelCase',
+        enabled: true,
+        name: '{{name}}InfiniteQuery',
+      },
+      mappers,
+      value: plugin.config.infiniteQueryOptions,
+    });
+
     plugin.config.mutationOptions = context.valueToObject({
       defaultValue: {
         case: plugin.config.case ?? 'camelCase',

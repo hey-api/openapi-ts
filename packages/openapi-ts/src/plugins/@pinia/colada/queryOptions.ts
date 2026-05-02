@@ -48,6 +48,7 @@ export const createQueryOptions = ({
   if (plugin.config.queryKeys.enabled) {
     const symbolQueryKey = plugin.symbol(applyNaming(operation.id, plugin.config.queryKeys));
     const node = queryKeyStatement({
+      isInfinite: false,
       operation,
       plugin,
       symbol: symbolQueryKey,

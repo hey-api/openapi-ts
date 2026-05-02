@@ -174,6 +174,29 @@ for (const version of versions) {
         }),
         description: 'generate Fetch API client with Pinia Colada plugin using class-based SDKs',
       },
+      ...(version === '3.1.x'
+        ? [
+            {
+              config: createConfig({
+                input: 'pagination-ref.yaml',
+                output: 'pagination',
+                plugins: ['@pinia/colada', '@hey-api/client-fetch'],
+              }),
+              description: 'detects pagination fields with Pinia Colada plugin',
+            },
+            {
+              config: createConfig({
+                input: 'pagination-ref.yaml',
+                output: 'pagination-disabled',
+                plugins: [
+                  { infiniteQueryOptions: false, name: '@pinia/colada' },
+                  '@hey-api/client-fetch',
+                ],
+              }),
+              description: 'omits infinite query helpers when disabled (Pinia Colada)',
+            },
+          ]
+        : []),
       {
         config: createConfig({
           output: 'default',

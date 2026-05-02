@@ -1,10 +1,18 @@
+import { createInfiniteQueryOptions } from '../infiniteQueryOptions';
 import { createMutationOptions } from '../mutationOptions';
 import { createQueryOptions } from '../queryOptions';
 import type { PiniaColadaPlugin } from '../types';
 
 export const handlerV0: PiniaColadaPlugin['Handler'] = ({ plugin }) => {
+  plugin.symbol('defineInfiniteQueryOptions', {
+    external: plugin.name,
+  });
   plugin.symbol('defineQueryOptions', {
     external: plugin.name,
+  });
+  plugin.symbol('DefineInfiniteQueryOptions', {
+    external: plugin.name,
+    kind: 'type',
   });
   plugin.symbol('UseMutationOptions', {
     external: plugin.name,
@@ -29,6 +37,9 @@ export const handlerV0: PiniaColadaPlugin['Handler'] = ({ plugin }) => {
       if (plugin.hooks.operation.isQuery(operation)) {
         if (plugin.config.queryOptions.enabled) {
           createQueryOptions({ operation, plugin });
+        }
+        if (plugin.config.infiniteQueryOptions.enabled) {
+          createInfiniteQueryOptions({ operation, plugin });
         }
       }
 
