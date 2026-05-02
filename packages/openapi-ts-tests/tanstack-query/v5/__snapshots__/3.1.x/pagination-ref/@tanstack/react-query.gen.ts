@@ -3,8 +3,8 @@
 import { type DefaultError, type InfiniteData, infiniteQueryOptions, queryOptions, type UseMutationOptions } from '@tanstack/react-query';
 
 import { client } from '../client.gen';
-import { getFoo, type Options, postFoo } from '../sdk.gen';
-import type { GetFooData, GetFooResponse, PostFooData } from '../types.gen';
+import { getAlbums, getFoo, getProducts, type Options, postFoo } from '../sdk.gen';
+import type { GetAlbumsData, GetAlbumsResponse, GetFooData, GetFooResponse, GetProductsData, GetProductsResponse, PostFooData } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
@@ -120,3 +120,81 @@ export const postFooMutation = (options?: Partial<Options<PostFooData>>): UseMut
     };
     return mutationOptions;
 };
+
+export const getAlbumsQueryKey = (options?: Options<GetAlbumsData>) => createQueryKey('getAlbums', options);
+
+export const getAlbumsOptions = (options?: Options<GetAlbumsData>) => queryOptions<GetAlbumsResponse, DefaultError, GetAlbumsResponse, ReturnType<typeof getAlbumsQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await getAlbums({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getAlbumsQueryKey(options)
+});
+
+export const getAlbumsInfiniteQueryKey = (options?: Options<GetAlbumsData>): QueryKey<Options<GetAlbumsData>> => createQueryKey('getAlbums', options, true);
+
+export const getAlbumsInfiniteOptions = (options?: Options<GetAlbumsData>) => infiniteQueryOptions<GetAlbumsResponse, DefaultError, InfiniteData<GetAlbumsResponse>, QueryKey<Options<GetAlbumsData>>, number | null | Pick<QueryKey<Options<GetAlbumsData>>[0], 'body' | 'headers' | 'path' | 'query'>>(
+// @ts-ignore
+{
+    queryFn: async ({ pageParam, queryKey, signal }) => {
+        // @ts-ignore
+        const page: Pick<QueryKey<Options<GetAlbumsData>>[0], 'body' | 'headers' | 'path' | 'query'> = typeof pageParam === 'object' ? pageParam : {
+            query: {
+                cursor: pageParam
+            }
+        };
+        const params = createInfiniteParams(queryKey, page);
+        const { data } = await getAlbums({
+            ...options,
+            ...params,
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getAlbumsInfiniteQueryKey(options)
+});
+
+export const getProductsQueryKey = (options?: Options<GetProductsData>) => createQueryKey('getProducts', options);
+
+export const getProductsOptions = (options?: Options<GetProductsData>) => queryOptions<GetProductsResponse, DefaultError, GetProductsResponse, ReturnType<typeof getProductsQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await getProducts({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getProductsQueryKey(options)
+});
+
+export const getProductsInfiniteQueryKey = (options?: Options<GetProductsData>): QueryKey<Options<GetProductsData>> => createQueryKey('getProducts', options, true);
+
+export const getProductsInfiniteOptions = (options?: Options<GetProductsData>) => infiniteQueryOptions<GetProductsResponse, DefaultError, InfiniteData<GetProductsResponse>, QueryKey<Options<GetProductsData>>, string | null | Pick<QueryKey<Options<GetProductsData>>[0], 'body' | 'headers' | 'path' | 'query'>>(
+// @ts-ignore
+{
+    queryFn: async ({ pageParam, queryKey, signal }) => {
+        // @ts-ignore
+        const page: Pick<QueryKey<Options<GetProductsData>>[0], 'body' | 'headers' | 'path' | 'query'> = typeof pageParam === 'object' ? pageParam : {
+            query: {
+                cursor: pageParam
+            }
+        };
+        const params = createInfiniteParams(queryKey, page);
+        const { data } = await getProducts({
+            ...options,
+            ...params,
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getProductsInfiniteQueryKey(options)
+});

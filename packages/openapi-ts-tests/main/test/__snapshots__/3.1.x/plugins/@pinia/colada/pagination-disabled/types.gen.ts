@@ -45,3 +45,44 @@ export type PostFooResponses = {
      */
     200: unknown;
 };
+
+export type GetAlbumsData = {
+    body?: never;
+    path?: never;
+    query?: {
+        cursor?: number | null;
+        limit?: number | null;
+    };
+    url: '/albums';
+};
+
+export type GetAlbumsResponses = {
+    /**
+     * OK
+     */
+    200: Array<{
+        [key: string]: unknown;
+    }>;
+};
+
+export type GetAlbumsResponse = GetAlbumsResponses[keyof GetAlbumsResponses];
+
+export type GetProductsData = {
+    body?: never;
+    path?: never;
+    query?: {
+        cursor?: string | null;
+    };
+    url: '/products';
+};
+
+export type GetProductsResponses = {
+    /**
+     * OK
+     */
+    200: Array<{
+        [key: string]: unknown;
+    }>;
+};
+
+export type GetProductsResponse = GetProductsResponses[keyof GetProductsResponses];

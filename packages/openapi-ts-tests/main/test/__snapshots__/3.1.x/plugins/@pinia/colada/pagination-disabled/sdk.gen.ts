@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { GetFooData, GetFooResponses, PostFooData, PostFooResponses } from './types.gen';
+import type { GetAlbumsData, GetAlbumsResponses, GetFooData, GetFooResponses, GetProductsData, GetProductsResponses, PostFooData, PostFooResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -28,3 +28,7 @@ export const postFoo = <ThrowOnError extends boolean = false>(options: Options<P
         ...options.headers
     }
 });
+
+export const getAlbums = <ThrowOnError extends boolean = false>(options?: Options<GetAlbumsData, ThrowOnError>) => (options?.client ?? client).get<GetAlbumsResponses, unknown, ThrowOnError>({ url: '/albums', ...options });
+
+export const getProducts = <ThrowOnError extends boolean = false>(options?: Options<GetProductsData, ThrowOnError>) => (options?.client ?? client).get<GetProductsResponses, unknown, ThrowOnError>({ url: '/products', ...options });

@@ -1,11 +1,12 @@
 import type { IR } from '@hey-api/shared';
 import { applyNaming, operationPagination } from '@hey-api/shared';
+import ts from 'typescript';
 
 import {
   createOperationComment,
   isOperationOptionsRequired,
 } from '../../../plugins/shared/utils/operation';
-import type { TsDsl } from '../../../ts-dsl';
+import type { TsDsl, TypeTsDsl } from '../../../ts-dsl';
 import { $ } from '../../../ts-dsl';
 import { handleMeta } from './meta';
 import { createQueryKeyFunction, createQueryKeyType, queryKeyStatement } from './queryKey';
@@ -35,7 +36,7 @@ const createInfiniteParamsFunction = ({
       .generic('K', (g) =>
         g.extends(
           $.type('Pick').generics(
-            $.type('QueryKey').generic('Options').idx(0),
+            $.type('Options'),
             $.type.or($.type.literal('body'), $.type.literal('path'), $.type.literal('query')),
           ),
         ),
@@ -139,9 +140,11 @@ export const createInfiniteQueryOptions = ({
     tool: plugin.name,
   });
   const typeQueryKey = $.type(symbolQueryKeyType).generic(typeData);
-  const typePageObjectParam = $.type('Pick').generics(
-    typeQueryKey.idx(0),
-    $.type.or($.type.literal('body'), $.type.literal('path'), $.type.literal('query')),
+  const typePageObjectParam = $.type('Partial').generic(
+    $.type('Pick').generics(
+      typeData,
+      $.type.or($.type.literal('body'), $.type.literal('path'), $.type.literal('query')),
+    ),
   );
 
   const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
@@ -200,16 +203,46 @@ export const createInfiniteQueryOptions = ({
       .await(),
   );
 
+  const paginationTypeRef = paginationType as TypeTsDsl;
+  const buildNestedPageObject = (parts: ReadonlyArray<string>): ReturnType<typeof $.object> => {
+    const [first, ...rest] = parts;
+    return $.object()
+      .pretty()
+      .prop(
+        first!,
+        rest.length ? buildNestedPageObject(rest) : $('pageParam').as(paginationTypeRef),
+      );
+  };
+
+  const hasKey = (key: string) => $.binary($.literal(key), ts.SyntaxKind.InKeyword, $('pageParam'));
+  const isPageObjectCondition = $.binary(
+    $.binary(
+      $('pageParam').typeofExpr().eq($.literal('object')),
+      '&&',
+      $('pageParam').neq($.literal(null)),
+    ),
+    '&&',
+    $.binary($.binary(hasKey('body'), '||', hasKey('path')), '||', hasKey('query')),
+  );
+
+  const paginationParts = pagination.name.split('.');
+  const otherwiseLiteral = $.object()
+    .pretty()
+    .prop(pagination.in, buildNestedPageObject(paginationParts));
   const queryStatements: Array<TsDsl<any>> = [
     $.const('page')
       .type(typePageObjectParam)
       .assign(
-        $.ternary($('pageParam').typeofExpr().eq($.literal('object')))
+        $.ternary(isPageObjectCondition)
           .do('pageParam')
           .otherwise(
-            $.object()
-              .pretty()
-              .prop(pagination.in, $.object().pretty().prop(pagination.name, $('pageParam'))),
+            paginationParts.length > 1
+              ? // nested pagination params (e.g. `foo.page`) produce a partial of a
+                // possibly fully-required parent schema; surface the override shape
+                // via cast so the SDK call typechecks while createInfiniteParams
+                // still merges it back with the queryKey snapshot at runtime.
+                otherwiseLiteral.as('unknown').as(typePageObjectParam)
+              : otherwiseLiteral,
           ),
       ),
     $.const('params').assign($(symbolCreateInfiniteParams).call('key', 'page')),
@@ -251,7 +284,12 @@ export const createInfiniteQueryOptions = ({
     .$if(plugin.config.comments && createOperationComment(operation), (c, v) => c.doc(v))
     .assign(
       $.func()
-        .param('options', (p) => p.required(isRequiredOptions).type(typeData))
+        .param('options', (p) => {
+          p.type(typeData);
+          if (!isRequiredOptions) {
+            p.assign($.object());
+          }
+        })
         .param('init', (p) => p.type(typeInit))
         .do(
           $.const('key').assign($(symbolInfiniteQueryKey).call('options')),

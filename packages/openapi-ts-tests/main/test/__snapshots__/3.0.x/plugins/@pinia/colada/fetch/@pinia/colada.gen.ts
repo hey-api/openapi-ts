@@ -251,7 +251,7 @@ export const getCallWithOptionalParamQuery = defineQueryOptions<Options<GetCallW
     }
 }));
 
-const createInfiniteParams = <K extends Pick<QueryKey<Options>[0], 'body' | 'path' | 'query'>>(queryKey: QueryKey<Options>, page: K) => {
+const createInfiniteParams = <K extends Pick<Options, 'body' | 'path' | 'query'>>(queryKey: QueryKey<Options>, page: K) => {
     const params = { ...queryKey[0] };
     if (page.body) {
         params.body = {
@@ -276,14 +276,14 @@ const createInfiniteParams = <K extends Pick<QueryKey<Options>[0], 'body' | 'pat
 
 export const getCallWithOptionalParamInfiniteQueryKey = (options: Options<GetCallWithOptionalParamData>): QueryKey<Options<GetCallWithOptionalParamData>> => createQueryKey('getCallWithOptionalParam', options, true);
 
-export const getCallWithOptionalParamInfiniteQuery = (options: Options<GetCallWithOptionalParamData>, init: Pick<DefineInfiniteQueryOptions<unknown, Error, number | Pick<QueryKey<Options<GetCallWithOptionalParamData>>[0], 'body' | 'path' | 'query'>, undefined>, 'initialPageParam' | 'getNextPageParam' | 'maxPages' | 'getPreviousPageParam'>) => {
+export const getCallWithOptionalParamInfiniteQuery = (options: Options<GetCallWithOptionalParamData>, init: Pick<DefineInfiniteQueryOptions<unknown, Error, number | Partial<Pick<Options<GetCallWithOptionalParamData>, 'body' | 'path' | 'query'>>, undefined>, 'initialPageParam' | 'getNextPageParam' | 'maxPages' | 'getPreviousPageParam'>) => {
     const key = getCallWithOptionalParamInfiniteQueryKey(options);
     return defineInfiniteQueryOptions({
         key,
         query: async ({ pageParam, signal }) => {
-            const page: Pick<QueryKey<Options<GetCallWithOptionalParamData>>[0], 'body' | 'path' | 'query'> = typeof pageParam === 'object' ? pageParam : {
+            const page: Partial<Pick<Options<GetCallWithOptionalParamData>, 'body' | 'path' | 'query'>> = typeof pageParam === 'object' && pageParam !== null && ('body' in pageParam || 'path' in pageParam || 'query' in pageParam) ? pageParam : {
                 query: {
-                    page: pageParam
+                    page: pageParam as number
                 }
             };
             const params = createInfiniteParams(key, page);
