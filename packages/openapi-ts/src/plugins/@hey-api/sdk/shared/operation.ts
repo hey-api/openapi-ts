@@ -12,6 +12,7 @@ import { isInstance } from '../v1/node';
 import { operationAuth } from './auth';
 import { nuxtTypeComposable, nuxtTypeDefault } from './constants';
 import { getSignatureParameters } from './signature';
+import { createResponseTransformer } from './transformer';
 import { createRequestValidator, createResponseValidator } from './validator';
 
 /** TODO: needs complete refactor */
@@ -339,16 +340,26 @@ export function operationStatements({
     reqOptions.prop('requestValidator', requestValidator.arrow());
   }
 
-  if (plugin.config.transformer) {
-    const query: SymbolMeta = {
-      category: 'transform',
-      resource: 'operation',
-      resourceId: operation.id,
-      role: 'response',
-    };
-    if (plugin.isSymbolRegistered(query)) {
-      const ref = plugin.referenceSymbol(query);
-      reqOptions.prop('responseTransformer', $(ref));
+  if (plugin.config.transformer.response) {
+    const transformerPlugin = plugin.getPlugin(plugin.config.transformer.response);
+    if (transformerPlugin?.api && 'createResponseTransformer' in transformerPlugin.api) {
+      // Zod-style transformer: inline arrow function wrapping parseAsync
+      const responseTransformerFn = createResponseTransformer({ operation, plugin });
+      if (responseTransformerFn) {
+        reqOptions.prop('responseTransformer', responseTransformerFn.arrow());
+      }
+    } else {
+      // @hey-api/transformers-style: reference to a named transformer function
+      const query: SymbolMeta = {
+        category: 'transform',
+        resource: 'operation',
+        resourceId: operation.id,
+        role: 'response',
+      };
+      if (plugin.isSymbolRegistered(query)) {
+        const ref = plugin.referenceSymbol(query);
+        reqOptions.prop('responseTransformer', $(ref));
+      }
     }
   }
 
