@@ -80,9 +80,30 @@ export type UserConfig = Plugin.Name<'@hey-api/sdk'> &
      * can also set `transformer` to `true` to automatically choose the
      * transformer from your defined plugins.
      *
+     * When set to `'zod'`, the Zod plugin's `parseAsync` is used as the
+     * response transformer, which applies Zod's coercion and transformation
+     * rules (e.g., converting strings to `Date` objects via `z.coerce.date()`).
+     * This requires the `zod` plugin to be configured in your plugins.
+     *
+     * Use the object form for fine-grained control over response transformation.
+     *
      * @default false
      */
-    transformer?: PluginTransformerNames | boolean;
+    transformer?:
+      | PluginTransformerNames
+      | 'zod'
+      | boolean
+      | {
+          /**
+           * Transform response data using the specified transformer.
+           *
+           * Can be a transformer plugin name, `'zod'`, or a boolean (`true` to
+           * auto-select, `false` to disable).
+           *
+           * @default false
+           */
+          response?: PluginTransformerNames | 'zod' | boolean;
+        };
     /**
      * Validate request and/or response data against schema before returning.
      * This is useful if you want to ensure the request and/or response conforms
@@ -191,6 +212,7 @@ export type UserConfig = Plugin.Name<'@hey-api/sdk'> &
     response?: 'body' | 'response';
   };
 
+/** Normalized configuration */
 export type Config = Plugin.Name<'@hey-api/sdk'> &
   Plugin.Hooks &
   Plugin.Comments &
@@ -239,17 +261,17 @@ export type Config = Plugin.Name<'@hey-api/sdk'> &
      */
     responseStyle: 'data' | 'fields';
     /**
-     * Transform response data before returning. This is useful if you want to
-     * convert for example ISO strings into Date objects. However, transformation
-     * adds runtime overhead, so it's not recommended to use unless necessary.
-     *
-     * You can customize the selected transformer output through its plugin. You
-     * can also set `transformer` to `true` to automatically choose the
-     * transformer from your defined plugins.
-     *
-     * @default false
+     * Configuration for response data transformation.
      */
-    transformer: PluginTransformerNames | false;
+    transformer: {
+      /**
+       * The transformer plugin to use for response transformation, or false to
+       * disable.
+       *
+       * @default false
+       */
+      response: PluginTransformerNames | 'zod' | false;
+    };
     /**
      * Validate request and/or response data against schema before returning.
      * This is useful if you want to ensure the request and/or response conforms
