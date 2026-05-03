@@ -226,3 +226,10 @@ export function createResponseValidatorV4({
   };
   return runResponseResolver(resolverCtx);
 }
+
+export function createResponseTransformerV4({
+  operation,
+  plugin,
+}: ValidatorArgs): ReturnType<typeof $.func> | undefined {
+  return createResponseValidatorV4({ operation, plugin });
+}

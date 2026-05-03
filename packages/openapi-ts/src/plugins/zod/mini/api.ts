@@ -227,3 +227,10 @@ export function createResponseValidatorMini({
   };
   return runResponseResolver(resolverCtx);
 }
+
+export function createResponseTransformerMini({
+  operation,
+  plugin,
+}: ValidatorArgs): ReturnType<typeof $.func> | undefined {
+  return createResponseValidatorMini({ operation, plugin });
+}

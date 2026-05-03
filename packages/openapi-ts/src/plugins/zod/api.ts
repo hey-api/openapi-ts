@@ -5,6 +5,7 @@ import type { $ } from '../../ts-dsl';
 import {
   createRequestSchemaMini,
   createRequestValidatorMini,
+  createResponseTransformerMini,
   createResponseValidatorMini,
 } from './mini/api';
 import type { Chain } from './shared/chain';
@@ -13,11 +14,13 @@ import type { ZodPlugin } from './types';
 import {
   createRequestSchemaV3,
   createRequestValidatorV3,
+  createResponseTransformerV3,
   createResponseValidatorV3,
 } from './v3/api';
 import {
   createRequestSchemaV4,
   createRequestValidatorV4,
+  createResponseTransformerV4,
   createResponseValidatorV4,
 } from './v4/api';
 
@@ -28,6 +31,7 @@ export type IApi = {
   createRequestValidator: (
     ctx: RequestSchemaContext<ZodPlugin['Instance']>,
   ) => ReturnType<typeof $.func> | undefined;
+  createResponseTransformer: (ctx: ValidatorArgs) => ReturnType<typeof $.func> | undefined;
   createResponseValidator: (ctx: ValidatorArgs) => ReturnType<typeof $.func> | undefined;
 };
 
@@ -61,6 +65,19 @@ export class Api implements IApi {
       case 4:
       default:
         return createRequestValidatorV4(ctx);
+    }
+  }
+
+  createResponseTransformer(ctx: ValidatorArgs): ReturnType<typeof $.func> | undefined {
+    const { plugin } = ctx;
+    switch (plugin.config.compatibilityVersion) {
+      case 3:
+        return createResponseTransformerV3(ctx);
+      case 'mini':
+        return createResponseTransformerMini(ctx);
+      case 4:
+      default:
+        return createResponseTransformerV4(ctx);
     }
   }
 
