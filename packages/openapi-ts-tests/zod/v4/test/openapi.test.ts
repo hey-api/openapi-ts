@@ -55,6 +55,25 @@ for (const version of versions) {
           }),
           description: 'handles various schema types and formats',
         },
+        {
+          config: createConfig({
+            input: 'type-format.yaml',
+            output: 'zod-transformer',
+            plugins: [
+              '@hey-api/client-fetch',
+              {
+                compatibilityVersion: zodVersion.compatibilityVersion,
+                name: 'zod',
+              },
+              {
+                name: '@hey-api/sdk',
+                transformer: 'zod',
+                validator: true,
+              },
+            ],
+          }),
+          description: 'uses zod as response transformer',
+        },
       ];
 
       it.each(scenarios)('$description', async ({ config }) => {
