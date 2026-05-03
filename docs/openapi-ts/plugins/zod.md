@@ -62,6 +62,55 @@ export default {
 
 Learn more about data validators in your SDKs on the [SDKs](/openapi-ts/plugins/sdk#validators) page.
 
+### Zod as a response transformer
+
+You can also use Zod as a **response transformer** by setting `sdk.transformer` to `'zod'`. This causes the SDK to call `parseAsync` on the response and use its return value, so Zod's coercion and transformation rules are applied before the data is returned to you.
+
+```js
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    'zod',
+    {
+      name: '@hey-api/sdk', // [!code ++]
+      transformer: 'zod', // [!code ++]
+    },
+  ],
+};
+```
+
+This generates an inline `responseTransformer` in each SDK function:
+
+```ts
+// sdk.gen.ts (generated)
+export const getFoo = (options?) =>
+  client.get({
+    responseTransformer: async (data) => await zGetFooResponse.parseAsync(data),
+    url: '/foo',
+    ...options,
+  });
+```
+
+::: warning Avoid duplicate `parseAsync` calls
+When `transformer: 'zod'` is enabled, `parseAsync` is already called on the response as part of transformation. If you also enable `validator: true` (or `validator: { response: true }`), `parseAsync` will be called a **second time** for response validation, which is redundant and adds unnecessary overhead.
+
+To avoid this, disable response validation when using Zod as a transformer:
+
+```js
+{
+  name: '@hey-api/sdk',
+  transformer: 'zod', // [!code ++]
+  validator: { // [!code ++]
+    request: true, // still validate outgoing requests // [!code ++]
+    response: false, // skip — transformer already runs parseAsync // [!code ++]
+  }, // [!code ++]
+}
+```
+
+:::
+
 ## Output
 
 The Zod plugin will generate the following artifacts, depending on the input specification.

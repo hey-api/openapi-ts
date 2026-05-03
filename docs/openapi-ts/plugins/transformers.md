@@ -3,6 +3,14 @@ title: Transformers
 description: Learn about transforming data with @hey-api/openapi-ts.
 ---
 
+::: tip Using Zod instead of `@hey-api/transformers`
+This page covers the `@hey-api/transformers` plugin, which provides a built-in way to transform response data.
+
+If you're already using the Zod plugin for validation, you may also use Zod as your response transformer. This lets Zod's `parseAsync` handle response transformation directly.
+
+See the [Zod plugin docs](/openapi-ts/plugins/zod#zod-as-a-response-transformer) for details.
+:::
+
 # Transformers
 
 JSON is the most commonly used data format in REST APIs. However, it does not map well to complex data types. For example, both regular strings and date strings become simple strings in JSON.
