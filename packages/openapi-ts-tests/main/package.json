@@ -21,7 +21,7 @@
     "@hey-api/codegen-core": "workspace:*",
     "@hey-api/custom-client": "workspace:*",
     "@hey-api/openapi-ts": "workspace:*",
-    "@pinia/colada": "^1.2.1",
+    "@pinia/colada": "1.2.1",
     "@types/cross-spawn": "6.0.6",
     "ajv": "8.17.1",
     "arktype": "2.1.29",

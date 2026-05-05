@@ -128,7 +128,7 @@ importers:
         specifier: 1.13.14
         version: 1.13.14
       '@pinia/colada':
-        specifier: ^1.2.1
+        specifier: 1.2.1
         version: 1.2.1(pinia@3.0.3(typescript@6.0.2)(vue@3.5.25(typescript@6.0.2)))(vue@3.5.25(typescript@6.0.2))
       '@tanstack/angular-query-experimental':
         specifier: 5.90.25
@@ -242,7 +242,7 @@ importers:
     devDependencies:
       '@angular-devkit/build-angular':
         specifier: 21.2.6
-        version: 21.2.6(164e95b2154e8c32f6590d1aaea3d326)
+        version: 21.2.6(cb90c28a1f4ba556555295318cce0e5b)
       '@angular/cli':
         specifier: 21.2.6
         version: 21.2.6(@types/node@24.12.2)(chokidar@5.0.0)
@@ -336,7 +336,7 @@ importers:
     devDependencies:
       '@angular-devkit/build-angular':
         specifier: 21.2.6
-        version: 21.2.6(cb90c28a1f4ba556555295318cce0e5b)
+        version: 21.2.6(164e95b2154e8c32f6590d1aaea3d326)
       '@angular/cli':
         specifier: 21.2.6
         version: 21.2.6(@types/node@24.12.2)(chokidar@5.0.0)
@@ -878,7 +878,7 @@ importers:
   examples/openapi-ts-pinia-colada:
     dependencies:
       '@pinia/colada':
-        specifier: ^1.2.1
+        specifier: 1.2.1
         version: 1.2.1(pinia@3.0.3(typescript@6.0.2)(vue@3.5.13(typescript@6.0.2)))(vue@3.5.13(typescript@6.0.2))
       pinia:
         specifier: 3.0.3
@@ -1539,7 +1539,7 @@ importers:
         specifier: workspace:*
         version: link:../../openapi-ts
       '@pinia/colada':
-        specifier: ^1.2.1
+        specifier: 1.2.1
         version: 1.2.1(pinia@3.0.3(typescript@6.0.2)(vue@3.5.25(typescript@6.0.2)))(vue@3.5.25(typescript@6.0.2))
       '@types/cross-spawn':
         specifier: 6.0.6
