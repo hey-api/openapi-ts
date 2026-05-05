@@ -1,4 +1,4 @@
-import type { PluginHandler } from '../types';
+import type { PluginHandler, PluginInstance } from '../types';
 import { createInfiniteQueryOptions } from './infiniteQueryOptions';
 import { createMutationOptions } from './mutationOptions';
 import { createQueryOptions } from './queryOptions';
@@ -6,6 +6,15 @@ import { createSetQueryData } from './setQueryData';
 import { createUseMutation } from './useMutation';
 import { createUseQuery } from './useQuery';
 import { createUseSetQueryData } from './useSetQueryData';
+
+const createQueryStyleNames = new Set<PluginInstance['name']>([
+  '@tanstack/angular-query-experimental',
+  '@tanstack/solid-query',
+  '@tanstack/svelte-query',
+]);
+
+const getMutationOptionsType = (name: PluginInstance['name']) =>
+  createQueryStyleNames.has(name) ? 'MutationOptions' : 'UseMutationOptions';
 
 export const handlerV5: PluginHandler = ({ plugin }) => {
   plugin.symbol('DefaultError', {
@@ -16,13 +25,7 @@ export const handlerV5: PluginHandler = ({ plugin }) => {
     external: plugin.name,
     kind: 'type',
   });
-  const mutationsType =
-    plugin.name === '@tanstack/angular-query-experimental' ||
-    plugin.name === '@tanstack/svelte-query' ||
-    plugin.name === '@tanstack/solid-query'
-      ? 'MutationOptions'
-      : 'UseMutationOptions';
-  plugin.symbol(mutationsType, {
+  plugin.symbol(getMutationOptionsType(plugin.name), {
     external: plugin.name,
     kind: 'type',
     meta: {
