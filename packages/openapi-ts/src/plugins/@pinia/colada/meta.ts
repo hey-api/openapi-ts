@@ -6,7 +6,7 @@ import type { PiniaColadaPlugin } from './types';
 export const handleMeta = (
   plugin: PiniaColadaPlugin['Instance'],
   operation: IR.OperationObject,
-  configPath: 'queryOptions' | 'mutationOptions',
+  configPath: 'infiniteQueryOptions' | 'mutationOptions' | 'queryOptions',
 ): ReturnType<typeof $.fromValue> | undefined => {
   const metaFn = plugin.config[configPath].meta;
   if (!metaFn) return;

@@ -28,6 +28,75 @@ paths:
       responses:
         '200':
           description: OK
+  /albums:
+    get:
+      operationId: getAlbums
+      parameters:
+        - in: query
+          name: cursor
+          schema:
+            anyOf:
+              - type: integer
+              - type: 'null'
+        - in: query
+          name: limit
+          schema:
+            anyOf:
+              - type: integer
+              - type: 'null'
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  type: object
+  /products:
+    get:
+      operationId: getProducts
+      parameters:
+        - in: query
+          name: cursor
+          schema:
+            anyOf:
+              - type: string
+                format: date-time
+              - type: 'null'
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  type: object
+  /orders:
+    get:
+      operationId: getOrders
+      parameters:
+        - in: query
+          name: tenantId
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: offset
+          schema:
+            anyOf:
+              - type: integer
+              - type: 'null'
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  type: object
 components:
   schemas:
     Foo:

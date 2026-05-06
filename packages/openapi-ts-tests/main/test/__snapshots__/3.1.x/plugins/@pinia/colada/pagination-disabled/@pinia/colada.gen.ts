@@ -4,8 +4,8 @@ import { type _JSONValue, defineQueryOptions, type UseMutationOptions } from '@p
 
 import { serializeQueryKeyValue } from '../client';
 import { client } from '../client.gen';
-import { BarBazService, BarService, FooBazService, FooService, type Options } from '../sdk.gen';
-import type { FooBarPostData, FooBarPostResponse, FooBarPutData, FooBarPutResponse, FooPostData, FooPostResponse, FooPutData, FooPutResponse, GetFooBarData, GetFooBarResponse, GetFooData, GetFooResponse } from '../types.gen';
+import { getAlbums, getFoo, getOrders, getProducts, type Options, postFoo } from '../sdk.gen';
+import type { GetAlbumsData, GetAlbumsResponse, GetFooData, GetFooResponse, GetOrdersData, GetOrdersResponse, GetProductsData, GetProductsResponse, PostFooData } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'path'> & {
@@ -46,12 +46,12 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
     return [params];
 };
 
-export const getFooQueryKey = (options?: Options<GetFooData>) => createQueryKey('getFoo', options);
+export const getFooQueryKey = (options: Options<GetFooData>) => createQueryKey('getFoo', options);
 
-export const getFooQuery = defineQueryOptions<Options<GetFooData>, GetFooResponse, Error>((options?: Options<GetFooData>) => ({
+export const getFooQuery = defineQueryOptions<Options<GetFooData>, GetFooResponse, Error>((options: Options<GetFooData>) => ({
     key: getFooQueryKey(options),
     query: async (context) => {
-        const { data } = await FooBazService.getFoo({
+        const { data } = await getFoo({
             ...options,
             ...context,
             throwOnError: true
@@ -60,9 +60,9 @@ export const getFooQuery = defineQueryOptions<Options<GetFooData>, GetFooRespons
     }
 }));
 
-export const fooPostMutation = (options?: Partial<Options<FooPostData>>): UseMutationOptions<FooPostResponse, Options<FooPostData>, Error> => ({
+export const postFooMutation = (options?: Partial<Options<PostFooData>>): UseMutationOptions<unknown, Options<PostFooData>, Error> => ({
     mutation: async (vars) => {
-        const { data } = await FooService.post({
+        const { data } = await postFoo({
             ...options,
             ...vars,
             throwOnError: true
@@ -71,23 +71,12 @@ export const fooPostMutation = (options?: Partial<Options<FooPostData>>): UseMut
     }
 });
 
-export const fooPutMutation = (options?: Partial<Options<FooPutData>>): UseMutationOptions<FooPutResponse, Options<FooPutData>, Error> => ({
-    mutation: async (vars) => {
-        const { data } = await FooService.put({
-            ...options,
-            ...vars,
-            throwOnError: true
-        });
-        return data;
-    }
-});
+export const getAlbumsQueryKey = (options?: Options<GetAlbumsData>) => createQueryKey('getAlbums', options);
 
-export const getFooBarQueryKey = (options?: Options<GetFooBarData>) => createQueryKey('getFooBar', options);
-
-export const getFooBarQuery = defineQueryOptions<Options<GetFooBarData>, GetFooBarResponse, Error>((options?: Options<GetFooBarData>) => ({
-    key: getFooBarQueryKey(options),
+export const getAlbumsQuery = defineQueryOptions<Options<GetAlbumsData>, GetAlbumsResponse, Error>((options?: Options<GetAlbumsData>) => ({
+    key: getAlbumsQueryKey(options),
     query: async (context) => {
-        const { data } = await BarBazService.getFooBar({
+        const { data } = await getAlbums({
             ...options,
             ...context,
             throwOnError: true
@@ -96,24 +85,30 @@ export const getFooBarQuery = defineQueryOptions<Options<GetFooBarData>, GetFooB
     }
 }));
 
-export const fooBarPostMutation = (options?: Partial<Options<FooBarPostData>>): UseMutationOptions<FooBarPostResponse, Options<FooBarPostData>, Error> => ({
-    mutation: async (vars) => {
-        const { data } = await BarService.post({
-            ...options,
-            ...vars,
-            throwOnError: true
-        });
-        return data;
-    }
-});
+export const getProductsQueryKey = (options?: Options<GetProductsData>) => createQueryKey('getProducts', options);
 
-export const fooBarPutMutation = (options?: Partial<Options<FooBarPutData>>): UseMutationOptions<FooBarPutResponse, Options<FooBarPutData>, Error> => ({
-    mutation: async (vars) => {
-        const { data } = await BarService.put({
+export const getProductsQuery = defineQueryOptions<Options<GetProductsData>, GetProductsResponse, Error>((options?: Options<GetProductsData>) => ({
+    key: getProductsQueryKey(options),
+    query: async (context) => {
+        const { data } = await getProducts({
             ...options,
-            ...vars,
+            ...context,
             throwOnError: true
         });
         return data;
     }
-});
+}));
+
+export const getOrdersQueryKey = (options: Options<GetOrdersData>) => createQueryKey('getOrders', options);
+
+export const getOrdersQuery = defineQueryOptions<Options<GetOrdersData>, GetOrdersResponse, Error>((options: Options<GetOrdersData>) => ({
+    key: getOrdersQueryKey(options),
+    query: async (context) => {
+        const { data } = await getOrders({
+            ...options,
+            ...context,
+            throwOnError: true
+        });
+        return data;
+    }
+}));

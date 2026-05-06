@@ -7,6 +7,7 @@ import { clientFolderAbsolutePath } from '../../../generate/client';
 import { getClientBaseUrlKey, getClientPlugin } from '../../../plugins/@hey-api/client-core/utils';
 import { $ } from '../../../ts-dsl';
 import type { PiniaColadaPlugin } from './types';
+import { useTypeData } from './useType';
 import { getPublicTypeData } from './utils';
 
 const TOptionsType = 'TOptions';
@@ -53,6 +54,7 @@ export const createQueryKeyFunction = ({ plugin }: { plugin: PiniaColadaPlugin['
     $.func()
       .param('id', (p) => p.type('string'))
       .param('options', (p) => p.optional().type(TOptionsType))
+      .param('infinite', (p) => p.optional().type('boolean'))
       .param('tags', (p) => p.optional().type('ReadonlyArray<string>'))
       .returns($.type.tuple(returnType))
       .generic(TOptionsType, (g) => g.extends(symbolOptions))
@@ -79,6 +81,7 @@ export const createQueryKeyFunction = ({ plugin }: { plugin: PiniaColadaPlugin['
               )
               .as(returnType),
           ),
+        $.if('infinite').do($('params').attr('_infinite').assign('infinite')),
         $.if('tags').do(
           $('params').attr('tags').assign($('tags').as('unknown').as(symbolJsonValue)),
         ),
@@ -109,14 +112,16 @@ export const createQueryKeyFunction = ({ plugin }: { plugin: PiniaColadaPlugin['
 
 const createQueryKeyLiteral = ({
   id,
+  isInfinite,
   operation,
   plugin,
 }: {
   id: string;
+  isInfinite?: boolean;
   operation: IR.OperationObject;
   plugin: PiniaColadaPlugin['Instance'];
 }) => {
-  const config = plugin.config.queryKeys;
+  const config = isInfinite ? plugin.config.infiniteQueryKeys : plugin.config.queryKeys;
   let tagsExpression: ReturnType<typeof $.array> | undefined;
   if (config.tags && operation.tags && operation.tags.length) {
     tagsExpression = $.array(...operation.tags.map((tag) => $.literal(tag)));
@@ -130,6 +135,7 @@ const createQueryKeyLiteral = ({
   const createQueryKeyCallExpression = $(symbolCreateQueryKey).call(
     $.literal(id),
     'options',
+    isInfinite || tagsExpression ? $.literal(Boolean(isInfinite)) : undefined,
     tagsExpression,
   );
   return createQueryKeyCallExpression;
@@ -161,6 +167,7 @@ export const createQueryKeyType = ({ plugin }: { plugin: PiniaColadaPlugin['Inst
           $.type
             .object()
             .prop('_id', (p) => p.type('string'))
+            .prop('_infinite', (p) => p.optional().type('boolean'))
             .prop(getClientBaseUrlKey(getTypedConfig(plugin)), (p) =>
               p.optional().type(symbolJsonValue),
             )
@@ -174,28 +181,33 @@ export const createQueryKeyType = ({ plugin }: { plugin: PiniaColadaPlugin['Inst
 };
 
 export const queryKeyStatement = ({
+  isInfinite,
   operation,
   plugin,
   symbol,
+  typeQueryKey,
 }: {
+  isInfinite: boolean;
   operation: IR.OperationObject;
   plugin: PiniaColadaPlugin['Instance'];
   symbol: Symbol;
+  typeQueryKey?: ReturnType<typeof $.type>;
 }) => {
   const client = getClientPlugin(getTypedConfig(plugin));
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
+  const optionsType = isInfinite
+    ? useTypeData({ operation, plugin })
+    : getPublicTypeData({ isNuxtClient, operation, plugin });
   const statement = $.const(symbol)
     .export()
     .assign(
       $.func()
-        .param('options', (p) =>
-          p
-            .required(hasOperationDataRequired(operation))
-            .type(getPublicTypeData({ isNuxtClient, operation, plugin })),
-        )
+        .param('options', (p) => p.required(hasOperationDataRequired(operation)).type(optionsType))
+        .$if(isInfinite && typeQueryKey, (f, v) => f.returns(v))
         .do(
           createQueryKeyLiteral({
             id: operation.id,
+            isInfinite,
             operation,
             plugin,
           }).return(),
