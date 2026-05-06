@@ -42,8 +42,8 @@ class ImplForTsDsl<M extends ForMode = 'for'> extends Mixed {
   override analyze(ctx: AnalysisContext): void {
     ctx.analyze(this._condition);
     ctx.analyze(this._iterableOrUpdate);
-    ctx.analyze(this._variableOrInit);
     ctx.pushScope();
+    ctx.analyze(this._variableOrInit);
     try {
       super.analyze(ctx);
     } finally {

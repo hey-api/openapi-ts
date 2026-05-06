@@ -195,8 +195,9 @@ function processSchemaType({
     }
 
     if (schema.additionalProperties && dataExpression) {
+      const key = plugin.symbol('key');
       const entryValueNodes = processSchemaType({
-        dataExpression: $(dataExpression).attr('key').computed(),
+        dataExpression: $(dataExpression).attr(key).computed(),
         plugin,
         schema: schema.additionalProperties,
       });
@@ -204,7 +205,7 @@ function processSchemaType({
       if (entryValueNodes.length) {
         const properties = Object.keys(schema.properties ?? {});
         nodes.push(
-          $.for($.const('key'))
+          $.for($.const(key))
             .of($('Object').attr('keys').call(dataExpression))
             .$if(
               properties.length,
@@ -214,7 +215,7 @@ function processSchemaType({
                     $.not(
                       $.array(...properties)
                         .attr('includes')
-                        .call('key'),
+                        .call(key),
                     ),
                   ).do(...entryValueNodes),
                 ),
