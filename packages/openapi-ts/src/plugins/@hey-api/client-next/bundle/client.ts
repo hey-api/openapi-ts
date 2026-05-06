@@ -65,9 +65,10 @@ export const createClient = (config: Config = {}): Client => {
     }
 
     const resolvedOpts = opts as typeof opts & ResolvedRequestOptions<ThrowOnError, Url>;
-    const url = buildUrl(resolvedOpts);
 
-    return { opts: resolvedOpts, url };
+    // NOTE: buildUrl is no longer called here to allow request interceptors
+    // to mutate opts (baseUrl, path, query) before the final URL is constructed.
+    return { opts: resolvedOpts };
   };
 
   // @ts-expect-error
@@ -77,13 +78,18 @@ export const createClient = (config: Config = {}): Client => {
     let response: Response | undefined;
 
     try {
-      const { opts, url } = await beforeRequest(options);
+      const { opts } = await beforeRequest(options);
 
+      // Execute request interceptors before building the URL
       for (const fn of interceptors.request.fns) {
         if (fn) {
           await fn(opts);
         }
       }
+
+      // FIX (#3803): Build the final URL after all request interceptors have finished.
+      // This ensures mutations to baseUrl, path, or query are respected.
+      const url = buildUrl(opts);
 
       // fetch must be assigned here, otherwise it would throw the error:
       // TypeError: Failed to execute 'fetch' on 'Window': Illegal invocation
@@ -189,6 +195,7 @@ export const createClient = (config: Config = {}): Client => {
 
       for (const fn of interceptors.error.fns) {
         if (fn) {
+          // Thread the error through interceptors so each one receives the result of the previous.
           finalError = await fn(finalError, response, options as ResolvedRequestOptions);
         }
       }
@@ -210,21 +217,25 @@ export const createClient = (config: Config = {}): Client => {
     request({ ...options, method });
 
   const makeSseFn = (method: Uppercase<HttpMethod>) => async (options: RequestOptions) => {
-    const { opts, url } = await beforeRequest(options);
+    const { opts } = await beforeRequest(options);
+
+    // Build initial URL for SSE client
+    const url = buildUrl(opts);
+
     return createSseClient({
       ...opts,
       body: opts.body as BodyInit | null | undefined,
       method,
-      onRequest: async (url, init) => {
-        let request = new Request(url, init);
-        const requestInit = { ...init, url };
+      onRequest: async (_unusedUrl, init) => {
+        // We re-run request interceptors and rebuild the URL to stay consistent
+        // with the standard request flow.
         for (const fn of interceptors.request.fns) {
           if (fn) {
-            await fn(requestInit as ResolvedRequestOptions);
-            request = new Request(requestInit.url, requestInit);
+            await fn(opts);
           }
         }
-        return request;
+        const finalizedUrl = buildUrl(opts);
+        return new Request(finalizedUrl, init);
       },
       serializedBody: getValidRequestBody(opts) as BodyInit | null | undefined,
       url,
