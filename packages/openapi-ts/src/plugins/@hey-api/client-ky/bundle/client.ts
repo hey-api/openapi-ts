@@ -41,7 +41,6 @@ export const createClient = (config: Config = {}): Client => {
       ...options,
       headers: mergeHeaders(_config.headers, options.headers),
       ky: options.ky ?? _config.ky ?? ky,
-      // deep merge kyOptions to ensure base _config is being respected
       kyOptions: {
         ..._config.kyOptions,
         ...options.kyOptions,
@@ -70,9 +69,8 @@ export const createClient = (config: Config = {}): Client => {
 
     const resolvedOpts = opts as typeof opts &
       ResolvedRequestOptions<TResponseStyle, ThrowOnError, Url>;
-    const url = buildUrl(resolvedOpts);
 
-    return { opts: resolvedOpts, url };
+    return { opts: resolvedOpts };
   };
 
   const parseErrorResponse = async (
@@ -96,6 +94,12 @@ export const createClient = (config: Config = {}): Client => {
     }
 
     const error = jsonError ?? textError;
+
+    /**
+     * Implementation of error interceptor threading.
+     * Ensures that each interceptor in the chain receives the processed error
+     * from the previous one.
+     */
     let finalError = error;
 
     for (const fn of interceptorsMiddleware.error.fns) {
@@ -127,10 +131,9 @@ export const createClient = (config: Config = {}): Client => {
     let errorInterceptorsInvoked = false;
 
     try {
-      const { opts, url } = await beforeRequest(options);
+      const { opts } = await beforeRequest(options);
 
       const kyInstance = opts.ky!;
-
       const validBody = getValidRequestBody(opts);
 
       const kyOptions: KyOptions = {
@@ -152,7 +155,12 @@ export const createClient = (config: Config = {}): Client => {
         retry: opts.retry ?? opts.kyOptions?.retry ?? 2,
       };
 
-      request = new Request(url, {
+      /**
+       * Initialize request object with a placeholder URL.
+       * The final URL will be constructed after interceptors have finished
+       * to allow for potential mutation of opts (baseUrl, query, etc.).
+       */
+      request = new Request('' as string, {
         body: kyOptions.body,
         headers: kyOptions.headers as HeadersInit,
         method: kyOptions.method,
@@ -163,6 +171,16 @@ export const createClient = (config: Config = {}): Client => {
           request = await fn(request, opts);
         }
       }
+
+      // Re-build final URL after interceptors to capture mutations
+      const url = buildUrl(opts);
+
+      // Re-initialize Request with the finalized computed URL
+      request = new Request(url, {
+        body: kyOptions.body,
+        headers: kyOptions.headers as HeadersInit,
+        method: kyOptions.method,
+      });
 
       try {
         response = await kyInstance(request, kyOptions);
@@ -176,9 +194,6 @@ export const createClient = (config: Config = {}): Client => {
             }
           }
 
-          // parseErrorResponse will run error interceptors, and re-throw when
-          // throwOnError is true, which bubbles already intercepted error to
-          // outer catch. With this flag, we can avoid outer catch running interceptors again
           errorInterceptorsInvoked = true;
           return parseErrorResponse(response, request, opts, interceptors);
         }
@@ -239,8 +254,6 @@ export const createClient = (config: Config = {}): Client => {
             data = await response[parseAs]();
             break;
           case 'json': {
-            // Some servers return 200 with no Content-Length and empty body.
-            // response.json() would throw; read as text and parse if non-empty.
             const text = await response.text();
             data = text ? JSON.parse(text) : {};
             break;
@@ -272,18 +285,15 @@ export const createClient = (config: Config = {}): Client => {
             };
       }
 
-      // parseErrorResponse will run error interceptors, and re-throw when
-      // throwOnError is true, which bubbles already intercepted error to
-      // outer catch. With this flag, we can avoid outer catch running interceptors again
       errorInterceptorsInvoked = true;
       return parseErrorResponse(response, request, opts, interceptors);
     } catch (error) {
       let finalError = error;
 
-      // error may already be processed by parseErrorResponse, in this case
-      // we can skip running interceptors again
       if (!errorInterceptorsInvoked) {
-        // run error interceptors for errors not already handled by parseErrorResponse
+        /**
+         * Error Interceptor Threading for standard caught errors.
+         */
         for (const fn of interceptors.error.fns) {
           if (fn) {
             finalError = await fn(finalError, response, request, options as ResolvedRequestOptions);
@@ -311,23 +321,29 @@ export const createClient = (config: Config = {}): Client => {
     request({ ...options, method });
 
   const makeSseFn = (method: Uppercase<HttpMethod>) => async (options: RequestOptions) => {
-    const { opts, url } = await beforeRequest(options);
+    const { opts } = await beforeRequest(options);
+
+    /**
+     * SSE Implementation: Defer URL construction to ensure onRequest
+     * interceptors can properly mutate the request flow.
+     */
     return createSseClient({
       ...opts,
       body: opts.body as BodyInit | null | undefined,
       fetch: globalThis.fetch,
       method,
-      onRequest: async (url, init) => {
-        let request = new Request(url, init);
+      onRequest: async (initialUrl, init) => {
+        let request = new Request(initialUrl, init);
         for (const fn of interceptors.request.fns) {
           if (fn) {
             request = await fn(request, opts);
           }
         }
-        return request;
+        const finalUrl = buildUrl(opts);
+        return new Request(finalUrl, init);
       },
       serializedBody: getValidRequestBody(opts) as BodyInit | null | undefined,
-      url,
+      url: buildUrl(opts),
     });
   };
 

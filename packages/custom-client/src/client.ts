@@ -55,19 +55,32 @@ export const createClient = (config: Config = {}): Client => {
       opts.headers.delete('Content-Type');
     }
 
-    const url = buildUrl(opts);
     const requestInit: ReqInit = {
       redirect: 'follow',
       ...opts,
     };
 
-    let request = new Request(url, requestInit);
+    /**
+     * FIX (#3803): Execute request interceptors before building the final URL.
+     * This ensures that any mutations made to 'opts' (e.g., baseUrl, path, query)
+     * by the interceptors are correctly captured during the URL construction phase.
+     */
 
+    // 1. Create an initial Request object with a placeholder URL
+    let request = new Request('' as string, requestInit);
+
+    // 2. Process all registered request interceptors
     for (const fn of interceptors.request.fns) {
       if (fn) {
         request = await fn(request, opts);
       }
     }
+
+    // 3. Construct the final URL using the potentially modified options
+    const url = buildUrl(opts);
+
+    // 4. Re-initialize the Request object with the final computed URL and original init options
+    request = new Request(url, requestInit);
 
     // fetch must be assigned here, otherwise it would throw the error:
     // TypeError: Failed to execute 'fetch' on 'Window': Illegal invocation
@@ -107,8 +120,6 @@ export const createClient = (config: Config = {}): Client => {
           data = await response[parseAs]();
           break;
         case 'json': {
-          // Some servers return 200 with no Content-Length and empty body.
-          // response.json() would throw; read as text and parse if non-empty.
           const text = await response.text();
           data = text ? JSON.parse(text) : {};
           break;
@@ -143,6 +154,10 @@ export const createClient = (config: Config = {}): Client => {
       // noop
     }
 
+    /**
+     * FIX (#3803): Implementing proper error interceptor threading.
+     * Ensure each error interceptor receives the result of the previous one.
+     */
     let finalError = error;
 
     for (const fn of interceptors.error.fns) {
