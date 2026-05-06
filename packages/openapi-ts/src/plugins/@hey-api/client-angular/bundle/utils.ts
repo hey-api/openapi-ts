@@ -181,12 +181,11 @@ export const getParseAs = (
 };
 
 export const setAuthParams = async (
-  options: Pick<Required<RequestOptions>, 'security'> &
-    Pick<RequestOptions, 'auth' | 'query'> & {
-      headers: HttpHeaders;
-    },
+  options: Pick<RequestOptions, 'auth' | 'query' | 'security'> & {
+    headers: HttpHeaders;
+  },
 ) => {
-  for (const auth of options.security) {
+  for (const auth of options.security ?? []) {
     const token = await getAuthToken(auth, options.auth);
 
     if (!token) {
