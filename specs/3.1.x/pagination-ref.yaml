@@ -73,6 +73,30 @@ paths:
                 type: array
                 items:
                   type: object
+  /orders:
+    get:
+      operationId: getOrders
+      parameters:
+        - in: query
+          name: tenantId
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: offset
+          schema:
+            anyOf:
+              - type: integer
+              - type: 'null'
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  type: object
 components:
   schemas:
     Foo:

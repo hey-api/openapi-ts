@@ -1,3 +1,10 @@
+import { randomUUID } from 'node:crypto';
+import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
+
+import { vi } from 'vitest';
+
 import { createClient } from '../../../../index';
 
 type Config = Parameters<typeof createClient>[0];
@@ -9,6 +16,24 @@ const baseConfig = (overrides: Partial<Config>): Config =>
     output: 'output',
     ...overrides,
   }) as Config;
+
+const tmpRoots: Array<string> = [];
+const createTmpOutput = (): string => {
+  const dir = mkdtempSync(path.join(tmpdir(), `openapi-ts-pinia-${randomUUID()}-`));
+  tmpRoots.push(dir);
+  return dir;
+};
+
+afterAll(() => {
+  for (const dir of tmpRoots) {
+    try {
+      rmSync(dir, { force: true, recursive: true });
+    } catch {
+      // best-effort cleanup
+    }
+  }
+  tmpRoots.length = 0;
+});
 
 describe('@pinia/colada infiniteQueryOptions', () => {
   it('emits InfiniteQuery helpers for numeric cursor pagination', async () => {
@@ -235,5 +260,76 @@ describe('@pinia/colada infiniteQueryOptions', () => {
 
     const results = await createClient(config);
     expect(results).toHaveLength(1);
+  });
+
+  it('emits deep-partial override type for pagination with required sibling query field', async () => {
+    // Bundle copy in createClient resolves client-fetch sources via dev paths only
+    // when HEYAPI_CODEGEN_ENV=development. In-source tests run from src/, where the
+    // prod path (dist/clients/) does not exist — stub the env for this test only.
+    vi.stubEnv('HEYAPI_CODEGEN_ENV', 'development');
+    const outputDir = createTmpOutput();
+    const config = baseConfig({
+      dryRun: false,
+      input: {
+        info: { title: 'required-sibling', version: '1.0.0' },
+        openapi: '3.1.0',
+        paths: {
+          '/orders': {
+            get: {
+              operationId: 'getOrders',
+              parameters: [
+                {
+                  in: 'query',
+                  name: 'tenantId',
+                  required: true,
+                  schema: { type: 'integer' },
+                },
+                {
+                  in: 'query',
+                  name: 'offset',
+                  schema: {
+                    anyOf: [{ type: 'integer' }, { type: 'null' }],
+                  },
+                },
+              ],
+              responses: {
+                '200': {
+                  content: {
+                    'application/json': {
+                      schema: { items: { type: 'object' }, type: 'array' },
+                    },
+                  },
+                  description: 'ok',
+                },
+              },
+            },
+          },
+        },
+      },
+      output: { path: outputDir },
+      plugins: ['@hey-api/typescript', '@hey-api/sdk', '@pinia/colada', '@hey-api/client-fetch'],
+    });
+
+    try {
+      const results = await createClient(config);
+      expect(results).toHaveLength(1);
+
+      const generated = readFileSync(path.join(outputDir, '@pinia', 'colada.gen.ts'), 'utf-8');
+
+      // The override-type literal must NOT carry a cast — deep-partial must hold without it.
+      expect(generated).not.toContain('as unknown as Partial<Pick<');
+      // Pinia plugin must never use @ts-ignore (sanity check).
+      expect(generated).not.toMatch(/@ts-ignore/);
+      // Override-type is generated as inline deep-partial literal, keyed off the operation's data type.
+      expect(generated).toContain("query?: Partial<Options<GetOrdersData>['query']>");
+      expect(generated).toContain("body?: Partial<Options<GetOrdersData>['body']>");
+      expect(generated).toContain("path?: Partial<Options<GetOrdersData>['path']>");
+      // Structural narrowing between primitive- and object-form pageParam is preserved.
+      expect(generated).toContain("'body' in pageParam");
+      expect(generated).toContain("'path' in pageParam");
+      expect(generated).toContain("'query' in pageParam");
+    } finally {
+      vi.unstubAllEnvs();
+    }
   });
 });

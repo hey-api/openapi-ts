@@ -251,7 +251,11 @@ export const getCallWithOptionalParamQuery = defineQueryOptions<Options<GetCallW
     }
 }));
 
-const createInfiniteParams = <K extends Pick<Options, 'body' | 'path' | 'query'>>(queryKey: QueryKey<Options>, page: K) => {
+const createInfiniteParams = <TData extends Options, K extends {
+    body?: unknown;
+    path?: unknown;
+    query?: unknown;
+}>(queryKey: QueryKey<TData>, page: K): Pick<TData, 'body' | 'path' | 'query'> => {
     const params = { ...queryKey[0] };
     if (page.body) {
         params.body = {
@@ -271,17 +275,25 @@ const createInfiniteParams = <K extends Pick<Options, 'body' | 'path' | 'query'>
             ...page.query as any
         };
     }
-    return params as unknown as typeof page;
+    return params as unknown as Pick<TData, 'body' | 'path' | 'query'>;
 };
 
 export const getCallWithOptionalParamInfiniteQueryKey = (options: Options<GetCallWithOptionalParamData>): QueryKey<Options<GetCallWithOptionalParamData>> => createQueryKey('getCallWithOptionalParam', options, true);
 
-export const getCallWithOptionalParamInfiniteQuery = (options: Options<GetCallWithOptionalParamData>, init: Pick<DefineInfiniteQueryOptions<unknown, Error, number | Partial<Pick<Options<GetCallWithOptionalParamData>, 'body' | 'path' | 'query'>>, undefined>, 'initialPageParam' | 'getNextPageParam' | 'maxPages' | 'getPreviousPageParam'>) => {
+export const getCallWithOptionalParamInfiniteQuery = (options: Options<GetCallWithOptionalParamData>, init: Pick<DefineInfiniteQueryOptions<unknown, Error, number | {
+    body?: Partial<Options<GetCallWithOptionalParamData>['body']>;
+    path?: Partial<Options<GetCallWithOptionalParamData>['path']>;
+    query?: Partial<Options<GetCallWithOptionalParamData>['query']>;
+}, undefined>, 'initialPageParam' | 'getNextPageParam' | 'maxPages' | 'getPreviousPageParam'>) => {
     const key = getCallWithOptionalParamInfiniteQueryKey(options);
     return defineInfiniteQueryOptions({
         key,
         query: async ({ pageParam, signal }) => {
-            const page: Partial<Pick<Options<GetCallWithOptionalParamData>, 'body' | 'path' | 'query'>> = typeof pageParam === 'object' && pageParam !== null && ('body' in pageParam || 'path' in pageParam || 'query' in pageParam) ? pageParam : {
+            const page: {
+                body?: Partial<Options<GetCallWithOptionalParamData>['body']>;
+                path?: Partial<Options<GetCallWithOptionalParamData>['path']>;
+                query?: Partial<Options<GetCallWithOptionalParamData>['query']>;
+            } = typeof pageParam === 'object' && pageParam !== null && ('body' in pageParam || 'path' in pageParam || 'query' in pageParam) ? pageParam : {
                 query: {
                     page: pageParam as number
                 }

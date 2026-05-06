@@ -86,3 +86,24 @@ export type GetProductsResponses = {
 };
 
 export type GetProductsResponse = GetProductsResponses[keyof GetProductsResponses];
+
+export type GetOrdersData = {
+    body?: never;
+    path?: never;
+    query: {
+        tenantId: number;
+        offset?: number | null;
+    };
+    url: '/orders';
+};
+
+export type GetOrdersResponses = {
+    /**
+     * OK
+     */
+    200: Array<{
+        [key: string]: unknown;
+    }>;
+};
+
+export type GetOrdersResponse = GetOrdersResponses[keyof GetOrdersResponses];

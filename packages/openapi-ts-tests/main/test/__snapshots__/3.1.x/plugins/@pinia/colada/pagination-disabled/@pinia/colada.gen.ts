@@ -4,8 +4,8 @@ import { type _JSONValue, defineQueryOptions, type UseMutationOptions } from '@p
 
 import { serializeQueryKeyValue } from '../client';
 import { client } from '../client.gen';
-import { getAlbums, getFoo, getProducts, type Options, postFoo } from '../sdk.gen';
-import type { GetAlbumsData, GetAlbumsResponse, GetFooData, GetFooResponse, GetProductsData, GetProductsResponse, PostFooData } from '../types.gen';
+import { getAlbums, getFoo, getOrders, getProducts, type Options, postFoo } from '../sdk.gen';
+import type { GetAlbumsData, GetAlbumsResponse, GetFooData, GetFooResponse, GetOrdersData, GetOrdersResponse, GetProductsData, GetProductsResponse, PostFooData } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'path'> & {
@@ -91,6 +91,20 @@ export const getProductsQuery = defineQueryOptions<Options<GetProductsData>, Get
     key: getProductsQueryKey(options),
     query: async (context) => {
         const { data } = await getProducts({
+            ...options,
+            ...context,
+            throwOnError: true
+        });
+        return data;
+    }
+}));
+
+export const getOrdersQueryKey = (options: Options<GetOrdersData>) => createQueryKey('getOrders', options);
+
+export const getOrdersQuery = defineQueryOptions<Options<GetOrdersData>, GetOrdersResponse, Error>((options: Options<GetOrdersData>) => ({
+    key: getOrdersQueryKey(options),
+    query: async (context) => {
+        const { data } = await getOrders({
             ...options,
             ...context,
             throwOnError: true

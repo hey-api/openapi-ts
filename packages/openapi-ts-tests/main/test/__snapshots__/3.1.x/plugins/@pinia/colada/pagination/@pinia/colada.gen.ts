@@ -4,8 +4,8 @@ import { type _JSONValue, defineInfiniteQueryOptions, type DefineInfiniteQueryOp
 
 import { serializeQueryKeyValue } from '../client';
 import { client } from '../client.gen';
-import { getAlbums, getFoo, getProducts, type Options, postFoo } from '../sdk.gen';
-import type { GetAlbumsData, GetAlbumsResponse, GetFooData, GetFooResponse, GetProductsData, GetProductsResponse, PostFooData } from '../types.gen';
+import { getAlbums, getFoo, getOrders, getProducts, type Options, postFoo } from '../sdk.gen';
+import type { GetAlbumsData, GetAlbumsResponse, GetFooData, GetFooResponse, GetOrdersData, GetOrdersResponse, GetProductsData, GetProductsResponse, PostFooData } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'path'> & {
@@ -60,7 +60,11 @@ export const getFooQuery = defineQueryOptions<Options<GetFooData>, GetFooRespons
     }
 }));
 
-const createInfiniteParams = <K extends Pick<Options, 'body' | 'path' | 'query'>>(queryKey: QueryKey<Options>, page: K) => {
+const createInfiniteParams = <TData extends Options, K extends {
+    body?: unknown;
+    path?: unknown;
+    query?: unknown;
+}>(queryKey: QueryKey<TData>, page: K): Pick<TData, 'body' | 'path' | 'query'> => {
     const params = { ...queryKey[0] };
     if (page.body) {
         params.body = {
@@ -80,23 +84,35 @@ const createInfiniteParams = <K extends Pick<Options, 'body' | 'path' | 'query'>
             ...page.query as any
         };
     }
-    return params as unknown as typeof page;
+    return params as unknown as Pick<TData, 'body' | 'path' | 'query'>;
 };
 
 export const getFooInfiniteQueryKey = (options: Options<GetFooData>): QueryKey<Options<GetFooData>> => createQueryKey('getFoo', options, true);
 
-export const getFooInfiniteQuery = (options: Options<GetFooData>, init: Pick<DefineInfiniteQueryOptions<GetFooResponse, Error, number | null | Partial<Pick<Options<GetFooData>, 'body' | 'path' | 'query'>>, undefined>, 'initialPageParam' | 'getNextPageParam' | 'maxPages' | 'getPreviousPageParam'>) => {
+export const getFooInfiniteQuery = (options: Options<GetFooData>, init: Pick<DefineInfiniteQueryOptions<GetFooResponse, Error, number | null | {
+    body?: Partial<Options<GetFooData>['body']>;
+    path?: Partial<Options<GetFooData>['path']>;
+    query?: Partial<Options<GetFooData>['query']>;
+}, undefined>, 'initialPageParam' | 'getNextPageParam' | 'maxPages' | 'getPreviousPageParam'>) => {
     const key = getFooInfiniteQueryKey(options);
     return defineInfiniteQueryOptions({
         key,
         query: async ({ pageParam, signal }) => {
-            const page: Partial<Pick<Options<GetFooData>, 'body' | 'path' | 'query'>> = typeof pageParam === 'object' && pageParam !== null && ('body' in pageParam || 'path' in pageParam || 'query' in pageParam) ? pageParam : {
+            const page: {
+                body?: Partial<Options<GetFooData>['body']>;
+                path?: Partial<Options<GetFooData>['path']>;
+                query?: Partial<Options<GetFooData>['query']>;
+            } = typeof pageParam === 'object' && pageParam !== null && ('body' in pageParam || 'path' in pageParam || 'query' in pageParam) ? pageParam : {
                 query: {
                     foo: {
                         page: pageParam as number | null
                     }
                 }
-            } as unknown as Partial<Pick<Options<GetFooData>, 'body' | 'path' | 'query'>>;
+            } as unknown as {
+                body?: Partial<Options<GetFooData>['body']>;
+                path?: Partial<Options<GetFooData>['path']>;
+                query?: Partial<Options<GetFooData>['query']>;
+            };
             const params = createInfiniteParams(key, page);
             const { data } = await getFoo({
                 ...options,
@@ -137,12 +153,20 @@ export const getAlbumsQuery = defineQueryOptions<Options<GetAlbumsData>, GetAlbu
 
 export const getAlbumsInfiniteQueryKey = (options?: Options<GetAlbumsData>): QueryKey<Options<GetAlbumsData>> => createQueryKey('getAlbums', options, true);
 
-export const getAlbumsInfiniteQuery = (options: Options<GetAlbumsData> = {}, init: Pick<DefineInfiniteQueryOptions<GetAlbumsResponse, Error, number | null | Partial<Pick<Options<GetAlbumsData>, 'body' | 'path' | 'query'>>, undefined>, 'initialPageParam' | 'getNextPageParam' | 'maxPages' | 'getPreviousPageParam'>) => {
+export const getAlbumsInfiniteQuery = (options: Options<GetAlbumsData> = {}, init: Pick<DefineInfiniteQueryOptions<GetAlbumsResponse, Error, number | null | {
+    body?: Partial<Options<GetAlbumsData>['body']>;
+    path?: Partial<Options<GetAlbumsData>['path']>;
+    query?: Partial<Options<GetAlbumsData>['query']>;
+}, undefined>, 'initialPageParam' | 'getNextPageParam' | 'maxPages' | 'getPreviousPageParam'>) => {
     const key = getAlbumsInfiniteQueryKey(options);
     return defineInfiniteQueryOptions({
         key,
         query: async ({ pageParam, signal }) => {
-            const page: Partial<Pick<Options<GetAlbumsData>, 'body' | 'path' | 'query'>> = typeof pageParam === 'object' && pageParam !== null && ('body' in pageParam || 'path' in pageParam || 'query' in pageParam) ? pageParam : {
+            const page: {
+                body?: Partial<Options<GetAlbumsData>['body']>;
+                path?: Partial<Options<GetAlbumsData>['path']>;
+                query?: Partial<Options<GetAlbumsData>['query']>;
+            } = typeof pageParam === 'object' && pageParam !== null && ('body' in pageParam || 'path' in pageParam || 'query' in pageParam) ? pageParam : {
                 query: {
                     cursor: pageParam as number | null
                 }
@@ -176,18 +200,73 @@ export const getProductsQuery = defineQueryOptions<Options<GetProductsData>, Get
 
 export const getProductsInfiniteQueryKey = (options?: Options<GetProductsData>): QueryKey<Options<GetProductsData>> => createQueryKey('getProducts', options, true);
 
-export const getProductsInfiniteQuery = (options: Options<GetProductsData> = {}, init: Pick<DefineInfiniteQueryOptions<GetProductsResponse, Error, string | null | Partial<Pick<Options<GetProductsData>, 'body' | 'path' | 'query'>>, undefined>, 'initialPageParam' | 'getNextPageParam' | 'maxPages' | 'getPreviousPageParam'>) => {
+export const getProductsInfiniteQuery = (options: Options<GetProductsData> = {}, init: Pick<DefineInfiniteQueryOptions<GetProductsResponse, Error, string | null | {
+    body?: Partial<Options<GetProductsData>['body']>;
+    path?: Partial<Options<GetProductsData>['path']>;
+    query?: Partial<Options<GetProductsData>['query']>;
+}, undefined>, 'initialPageParam' | 'getNextPageParam' | 'maxPages' | 'getPreviousPageParam'>) => {
     const key = getProductsInfiniteQueryKey(options);
     return defineInfiniteQueryOptions({
         key,
         query: async ({ pageParam, signal }) => {
-            const page: Partial<Pick<Options<GetProductsData>, 'body' | 'path' | 'query'>> = typeof pageParam === 'object' && pageParam !== null && ('body' in pageParam || 'path' in pageParam || 'query' in pageParam) ? pageParam : {
+            const page: {
+                body?: Partial<Options<GetProductsData>['body']>;
+                path?: Partial<Options<GetProductsData>['path']>;
+                query?: Partial<Options<GetProductsData>['query']>;
+            } = typeof pageParam === 'object' && pageParam !== null && ('body' in pageParam || 'path' in pageParam || 'query' in pageParam) ? pageParam : {
                 query: {
                     cursor: pageParam as string | null
                 }
             };
             const params = createInfiniteParams(key, page);
             const { data } = await getProducts({
+                ...options,
+                ...params,
+                signal,
+                throwOnError: true
+            });
+            return data;
+        },
+        ...init
+    });
+};
+
+export const getOrdersQueryKey = (options: Options<GetOrdersData>) => createQueryKey('getOrders', options);
+
+export const getOrdersQuery = defineQueryOptions<Options<GetOrdersData>, GetOrdersResponse, Error>((options: Options<GetOrdersData>) => ({
+    key: getOrdersQueryKey(options),
+    query: async (context) => {
+        const { data } = await getOrders({
+            ...options,
+            ...context,
+            throwOnError: true
+        });
+        return data;
+    }
+}));
+
+export const getOrdersInfiniteQueryKey = (options: Options<GetOrdersData>): QueryKey<Options<GetOrdersData>> => createQueryKey('getOrders', options, true);
+
+export const getOrdersInfiniteQuery = (options: Options<GetOrdersData>, init: Pick<DefineInfiniteQueryOptions<GetOrdersResponse, Error, number | null | {
+    body?: Partial<Options<GetOrdersData>['body']>;
+    path?: Partial<Options<GetOrdersData>['path']>;
+    query?: Partial<Options<GetOrdersData>['query']>;
+}, undefined>, 'initialPageParam' | 'getNextPageParam' | 'maxPages' | 'getPreviousPageParam'>) => {
+    const key = getOrdersInfiniteQueryKey(options);
+    return defineInfiniteQueryOptions({
+        key,
+        query: async ({ pageParam, signal }) => {
+            const page: {
+                body?: Partial<Options<GetOrdersData>['body']>;
+                path?: Partial<Options<GetOrdersData>['path']>;
+                query?: Partial<Options<GetOrdersData>['query']>;
+            } = typeof pageParam === 'object' && pageParam !== null && ('body' in pageParam || 'path' in pageParam || 'query' in pageParam) ? pageParam : {
+                query: {
+                    offset: pageParam as number | null
+                }
+            };
+            const params = createInfiniteParams(key, page);
+            const { data } = await getOrders({
                 ...options,
                 ...params,
                 signal,

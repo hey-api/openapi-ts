@@ -31,18 +31,25 @@ const createInfiniteParamsFunction = ({
     },
   );
 
+  const sdkParamsReturnType = $.type('Pick').generics(
+    'TData',
+    $.type.or($.type.literal('body'), $.type.literal('path'), $.type.literal('query')),
+  );
   const fn = $.const(symbolCreateInfiniteParams).assign(
     $.func()
+      .generic('TData', (g) => g.extends('Options'))
       .generic('K', (g) =>
         g.extends(
-          $.type('Pick').generics(
-            $.type('Options'),
-            $.type.or($.type.literal('body'), $.type.literal('path'), $.type.literal('query')),
-          ),
+          $.type
+            .object()
+            .prop('body', (p) => p.optional().type('unknown'))
+            .prop('path', (p) => p.optional().type('unknown'))
+            .prop('query', (p) => p.optional().type('unknown')),
         ),
       )
-      .param('queryKey', (p) => p.type('QueryKey<Options>'))
+      .param('queryKey', (p) => p.type('QueryKey<TData>'))
       .param('page', (p) => p.type('K'))
+      .returns(sdkParamsReturnType)
       .do(
         $.const('params').assign($.object().spread($('queryKey').attr(0))),
         $.if($('page').attr('body')).do(
@@ -75,7 +82,7 @@ const createInfiniteParamsFunction = ({
                 .spread($('page').attr('query').as('any')),
             ),
         ),
-        $.return($('params').as('unknown').as($('page').typeofType())),
+        $.return($('params').as('unknown').as(sdkParamsReturnType)),
       ),
   );
   plugin.node(fn);
@@ -140,12 +147,17 @@ export const createInfiniteQueryOptions = ({
     tool: plugin.name,
   });
   const typeQueryKey = $.type(symbolQueryKeyType).generic(typeData);
-  const typePageObjectParam = $.type('Partial').generic(
-    $.type('Pick').generics(
-      typeData,
-      $.type.or($.type.literal('body'), $.type.literal('path'), $.type.literal('query')),
-    ),
-  );
+  const typePageObjectParam = $.type
+    .object()
+    .prop('body', (p) =>
+      p.optional().type($.type('Partial').generic($.type.idx(typeData, $.type.literal('body')))),
+    )
+    .prop('path', (p) =>
+      p.optional().type($.type('Partial').generic($.type.idx(typeData, $.type.literal('path')))),
+    )
+    .prop('query', (p) =>
+      p.optional().type($.type('Partial').generic($.type.idx(typeData, $.type.literal('query')))),
+    );
 
   const pluginTypeScript = plugin.getPluginOrThrow('@hey-api/typescript');
   const paginationType = pluginTypeScript.api.schemaToType(pluginTypeScript, pagination.schema);
@@ -226,25 +238,24 @@ export const createInfiniteQueryOptions = ({
   );
 
   const paginationParts = pagination.name.split('.');
-  const otherwiseLiteral = $.object()
+  const otherwiseLiteralBase = $.object()
     .pretty()
     .prop(pagination.in, buildNestedPageObject(paginationParts));
+  // For nested pagination paths (e.g. `foo.page` where `foo` is a required object
+  // with required siblings of its own), the runtime override only fills the leaf
+  // pagination key. The inline deep-partial type makes top-level body/path/query
+  // optional and their direct children optional, but stops there — nested objects
+  // keep their original required shape. Cast through `unknown` so the literal
+  // assigns to the override type; `createInfiniteParams` merges with the queryKey
+  // snapshot at runtime to restore the full shape for the SDK call.
+  const otherwiseLiteral =
+    paginationParts.length > 1
+      ? otherwiseLiteralBase.as('unknown').as(typePageObjectParam)
+      : otherwiseLiteralBase;
   const queryStatements: Array<TsDsl<any>> = [
     $.const('page')
       .type(typePageObjectParam)
-      .assign(
-        $.ternary(isPageObjectCondition)
-          .do('pageParam')
-          .otherwise(
-            paginationParts.length > 1
-              ? // nested pagination params (e.g. `foo.page`) produce a partial of a
-                // possibly fully-required parent schema; surface the override shape
-                // via cast so the SDK call typechecks while createInfiniteParams
-                // still merges it back with the queryKey snapshot at runtime.
-                otherwiseLiteral.as('unknown').as(typePageObjectParam)
-              : otherwiseLiteral,
-          ),
-      ),
+      .assign($.ternary(isPageObjectCondition).do('pageParam').otherwise(otherwiseLiteral)),
     $.const('params').assign($(symbolCreateInfiniteParams).call('key', 'page')),
   ];
 
