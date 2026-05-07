@@ -11,6 +11,7 @@ export class LazyPyDsl<T extends py.Node = py.Node> extends PyDsl<T> {
   readonly '~dsl' = 'LazyPyDsl';
 
   private _thunk: LazyThunk<T>;
+  private _result?: PyDsl<T>;
 
   constructor(thunk: LazyThunk<T>) {
     super();
@@ -23,7 +24,8 @@ export class LazyPyDsl<T extends py.Node = py.Node> extends PyDsl<T> {
   }
 
   toResult(): PyDsl<T> {
-    return this._thunk(ctx);
+    this._result ??= this._thunk(ctx);
+    return this._result;
   }
 
   override toAst() {
