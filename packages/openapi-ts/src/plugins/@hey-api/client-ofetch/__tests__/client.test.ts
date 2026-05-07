@@ -510,5 +510,62 @@ describe('FormData boundary handling', () => {
   });
 });
 
+describe('non-2xx response handling', () => {
+  const client = createClient({ baseUrl: 'https://example.com' });
+
+  const makeMockOfetchWithError = (response: Response): MockOfetch => {
+    const fn: any = vi.fn();
+    const error: any = new Error('FetchError');
+    error.response = response;
+    fn.raw = vi.fn().mockRejectedValue(error);
+    return fn as MockOfetch;
+  };
+
+  it('response interceptors still run for 4xx responses', async () => {
+    const mockResponse = new Response(JSON.stringify({ message: 'Not Found' }), {
+      headers: { 'Content-Type': 'application/json' },
+      status: 404,
+    });
+
+    const mockOfetch = makeMockOfetchWithError(mockResponse);
+    const responseInterceptor = vi.fn().mockImplementation((r: Response) => r);
+    const interceptorId = client.interceptors.response.use(responseInterceptor);
+
+    await client.request({ method: 'GET', ofetch: mockOfetch as any, url: '/test' });
+
+    expect(responseInterceptor).toHaveBeenCalledOnce();
+    expect(responseInterceptor.mock.calls[0]![0]).toHaveProperty('status', 404);
+
+    client.interceptors.response.eject(interceptorId);
+  });
+
+  it('returns error payload when ofetch throws for 4xx', async () => {
+    const mockResponse = new Response(JSON.stringify({ message: 'Not Found' }), {
+      headers: { 'Content-Type': 'application/json' },
+      status: 404,
+    });
+    (mockResponse as any)._data = { message: 'Not Found' };
+
+    const mockOfetch = makeMockOfetchWithError(mockResponse);
+
+    const result = await client.request({ method: 'GET', ofetch: mockOfetch as any, url: '/test' });
+
+    expect(result.error).toEqual({ message: 'Not Found' });
+    expect(result.response?.status).toBe(404);
+  });
+
+  it('handles network errors (no response) via error interceptors', async () => {
+    const fn: any = vi.fn();
+    fn.raw = vi.fn().mockRejectedValue(new Error('Network error'));
+    const mockOfetch = fn as MockOfetch;
+
+    const result = await client.request({ method: 'GET', ofetch: mockOfetch as any, url: '/test' });
+
+    expect(result.error).toBeInstanceOf(Error);
+    expect((result.error as Error).message).toBe('Network error');
+    expect(result.response).toBeUndefined();
+  });
+});
+
 // Note: дополнительные проверки поведения ofetch (responseType/responseStyle/retry)
 // не дублируем, чтобы набор тестов оставался сопоставим с другими клиентами.
