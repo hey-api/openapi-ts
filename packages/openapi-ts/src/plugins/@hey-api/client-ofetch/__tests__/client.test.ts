@@ -510,6 +510,65 @@ describe('FormData boundary handling', () => {
   });
 });
 
+describe('ignoreResponseError config', () => {
+  it('createClient default config has ignoreResponseError: false', () => {
+    expect(createClient({}).getConfig().ignoreResponseError).toBe(false);
+  });
+
+  it('passes ignoreResponseError: false to ofetch.raw by default', async () => {
+    const mockResponse = new Response(JSON.stringify({ ok: true }), {
+      headers: { 'Content-Type': 'application/json' },
+      status: 200,
+    });
+    const mockOfetch = makeMockOfetch(mockResponse);
+    const client = createClient({ baseUrl: 'https://example.com' });
+
+    await client.request({ method: 'GET', ofetch: mockOfetch as any, url: '/test' });
+
+    const opts = (mockOfetch.raw as any).mock.calls[0][1];
+    expect(opts.ignoreResponseError).toBe(false);
+  });
+
+  it('passes ignoreResponseError: true to ofetch.raw when opted in', async () => {
+    const mockResponse = new Response(JSON.stringify({ ok: true }), {
+      headers: { 'Content-Type': 'application/json' },
+      status: 200,
+    });
+    const mockOfetch = makeMockOfetch(mockResponse);
+    const client = createClient({ baseUrl: 'https://example.com', ignoreResponseError: true });
+
+    await client.request({ method: 'GET', ofetch: mockOfetch as any, url: '/test' });
+
+    const opts = (mockOfetch.raw as any).mock.calls[0][1];
+    expect(opts.ignoreResponseError).toBe(true);
+  });
+
+  it('ignoreResponseError: true opt-out — ofetch resolves 404 without entering FetchError catch', async () => {
+    // When ignoreResponseError is true, ofetch resolves the FetchResponse instead of throwing.
+    // Verify: the new catch branch is never entered (raw resolves, not rejects),
+    // and the client still surfaces { error, response } for non-2xx.
+    const mockResponse = new Response(JSON.stringify({ message: 'Not Found' }), {
+      headers: { 'Content-Type': 'application/json' },
+      status: 404,
+    });
+    (mockResponse as any)._data = { message: 'Not Found' };
+
+    const mockOfetch = makeMockOfetch(mockResponse); // resolves, not rejects
+    const client = createClient({ baseUrl: 'https://example.com', ignoreResponseError: true });
+
+    const result = await client.request({ method: 'GET', ofetch: mockOfetch as any, url: '/test' });
+
+    // ofetch.raw resolved normally — raw should have been called once with no rejection
+    expect(mockOfetch.raw).toHaveBeenCalledOnce();
+    const opts = (mockOfetch.raw as any).mock.calls[0][1];
+    expect(opts.ignoreResponseError).toBe(true);
+
+    // client still identifies the non-2xx as an error and returns it in fields style
+    expect(result.error).toEqual({ message: 'Not Found' });
+    expect(result.response?.status).toBe(404);
+  });
+});
+
 describe('non-2xx response handling', () => {
   const client = createClient({ baseUrl: 'https://example.com' });
 
