@@ -121,6 +121,9 @@ const createMutationKey = <TOptions extends Partial<Options>>(id: string, option
     if (tags) {
         params.tags = tags;
     }
+    if (options?.body) {
+        params.body = options.body;
+    }
     if (options?.headers) {
         params.headers = options.headers;
     }

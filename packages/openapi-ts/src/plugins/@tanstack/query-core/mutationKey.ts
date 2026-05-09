@@ -75,6 +75,9 @@ export const createMutationKeyFunction = ({ plugin }: { plugin: PluginInstance }
               ),
           ),
         $.if('tags').do($('params').attr('tags').assign('tags')),
+        $.if($('options').attr('body').optional()).do(
+          $('params').attr('body').assign($('options').attr('body')),
+        ),
         $.if($('options').attr('headers').optional()).do(
           $('params').attr('headers').assign($('options').attr('headers')),
         ),
