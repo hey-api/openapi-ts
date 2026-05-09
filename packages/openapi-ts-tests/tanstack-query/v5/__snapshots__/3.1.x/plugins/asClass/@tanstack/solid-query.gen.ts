@@ -54,17 +54,17 @@ export const getFooOptions = (options?: Options<GetFooData>) => queryOptions<Get
     queryKey: getFooQueryKey(options)
 });
 
-export type MutationKey<TOptions extends Options> = [
+export type MutationKey<TOptions extends Partial<Options>> = [
     Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
         _id: string;
         tags?: ReadonlyArray<string>;
     }
 ];
 
-const createMutationKey = <TOptions extends Options>(id: string, options?: TOptions, tags?: ReadonlyArray<string>): [
+const createMutationKey = <TOptions extends Partial<Options>>(id: string, options?: TOptions, tags?: ReadonlyArray<string>): [
     MutationKey<TOptions>[0]
 ] => {
-    const params: MutationKey<TOptions>[0] = { _id: id, baseUrl: options?.baseUrl || (options?.client ?? client).getConfig().baseUrl } as MutationKey<TOptions>[0];
+    const params: MutationKey<TOptions>[0] = { _id: id, baseUrl: options?.baseUrl || (options?.client ?? client).getConfig().baseUrl };
     if (tags) {
         params.tags = tags;
     }
@@ -83,7 +83,7 @@ const createMutationKey = <TOptions extends Options>(id: string, options?: TOpti
     return [params];
 };
 
-export const fooPostMutationKey = (options?: Options<FooPostData>): MutationKey<Options<FooPostData>>[0] => createMutationKey('fooPost', options);
+export const fooPostMutationKey = (options?: Partial<Options<FooPostData>>) => createMutationKey('fooPost', options);
 
 export const fooPostMutation = (options?: Partial<Options<FooPostData>>): MutationOptions<FooPostResponse, DefaultError, Options<FooPostData>> => {
     const mutationOptions: MutationOptions<FooPostResponse, DefaultError, Options<FooPostData>> = {
@@ -100,7 +100,7 @@ export const fooPostMutation = (options?: Partial<Options<FooPostData>>): Mutati
     return mutationOptions;
 };
 
-export const fooPutMutationKey = (options?: Options<FooPutData>): MutationKey<Options<FooPutData>>[0] => createMutationKey('fooPut', options);
+export const fooPutMutationKey = (options?: Partial<Options<FooPutData>>) => createMutationKey('fooPut', options);
 
 export const fooPutMutation = (options?: Partial<Options<FooPutData>>): MutationOptions<FooPutResponse, DefaultError, Options<FooPutData>> => {
     const mutationOptions: MutationOptions<FooPutResponse, DefaultError, Options<FooPutData>> = {
@@ -132,7 +132,7 @@ export const getFooBarOptions = (options?: Options<GetFooBarData>) => queryOptio
     queryKey: getFooBarQueryKey(options)
 });
 
-export const fooBarPostMutationKey = (options?: Options<FooBarPostData>): MutationKey<Options<FooBarPostData>>[0] => createMutationKey('fooBarPost', options);
+export const fooBarPostMutationKey = (options?: Partial<Options<FooBarPostData>>) => createMutationKey('fooBarPost', options);
 
 export const fooBarPostMutation = (options?: Partial<Options<FooBarPostData>>): MutationOptions<FooBarPostResponse, DefaultError, Options<FooBarPostData>> => {
     const mutationOptions: MutationOptions<FooBarPostResponse, DefaultError, Options<FooBarPostData>> = {
@@ -149,7 +149,7 @@ export const fooBarPostMutation = (options?: Partial<Options<FooBarPostData>>): 
     return mutationOptions;
 };
 
-export const fooBarPutMutationKey = (options?: Options<FooBarPutData>): MutationKey<Options<FooBarPutData>>[0] => createMutationKey('fooBarPut', options);
+export const fooBarPutMutationKey = (options?: Partial<Options<FooBarPutData>>) => createMutationKey('fooBarPut', options);
 
 export const fooBarPutMutation = (options?: Partial<Options<FooBarPutData>>): MutationOptions<FooBarPutResponse, DefaultError, Options<FooBarPutData>> => {
     const mutationOptions: MutationOptions<FooBarPutResponse, DefaultError, Options<FooBarPutData>> = {

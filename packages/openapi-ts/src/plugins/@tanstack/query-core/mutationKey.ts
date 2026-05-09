@@ -50,7 +50,7 @@ export const createMutationKeyFunction = ({ plugin }: { plugin: PluginInstance }
       .param('id', (p) => p.type('string'))
       .param('options', (p) => p.optional().type(TOptionsType))
       .param('tags', (p) => p.optional().type('ReadonlyArray<string>'))
-      .generic(TOptionsType, (g) => g.extends(symbolOptions))
+      .generic(TOptionsType, (g) => g.extends($.type('Partial').generic(symbolOptions)))
       .returns($.type.tuple(returnType))
       .do(
         $.const('params')
@@ -72,8 +72,7 @@ export const createMutationKeyFunction = ({ plugin }: { plugin: PluginInstance }
                       .call()
                       .attr(baseUrlKey),
                   ),
-              )
-              .as(returnType),
+              ),
           ),
         $.if('tags').do($('params').attr('tags').assign('tags')),
         $.if($('options').attr('body').optional()).do(
@@ -95,9 +94,11 @@ export const createMutationKeyFunction = ({ plugin }: { plugin: PluginInstance }
 };
 
 const createMutationKeyLiteral = ({
+  id,
   operation,
   plugin,
 }: {
+  id: string;
   operation: IR.OperationObject;
   plugin: PluginInstance;
 }) => {
@@ -112,7 +113,7 @@ const createMutationKeyLiteral = ({
     tool: plugin.name,
   });
   const createMutationKeyCallExpression = $(symbolCreateMutationKey).call(
-    $.literal(operation.id),
+    $.literal(id),
     'options',
     tagsArray,
   );
@@ -135,7 +136,7 @@ export const createMutationKeyType = ({ plugin }: { plugin: PluginInstance }) =>
   const mutationKeyType = $.type
     .alias(symbolMutationKeyType)
     .export()
-    .generic(TOptionsType, (g) => g.extends(symbolOptions))
+    .generic(TOptionsType, (g) => g.extends($.type('Partial').generic(symbolOptions)))
     .type(
       $.type.tuple(
         $.type.and(
@@ -156,22 +157,22 @@ export const mutationKeyStatement = ({
   operation,
   plugin,
   symbol,
-  typeMutationKey,
 }: {
   operation: IR.OperationObject;
   plugin: PluginInstance;
   symbol: Symbol;
-  typeMutationKey?: ReturnType<typeof $.type>;
 }) => {
   const typeData = useTypeData({ operation, plugin });
   const statement = $.const(symbol)
     .export()
     .assign(
       $.func()
-        .param('options', (p) => p.required(hasOperationDataRequired(operation)).type(typeData))
-        .$if(typeMutationKey, (f, v) => f.returns(v))
+        .param('options', (p) =>
+          p.required(hasOperationDataRequired(operation)).type($.type('Partial').generic(typeData)),
+        )
         .do(
           createMutationKeyLiteral({
+            id: operation.id,
             operation,
             plugin,
           }).return(),

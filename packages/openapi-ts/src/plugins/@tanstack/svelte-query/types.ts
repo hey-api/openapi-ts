@@ -120,6 +120,27 @@ export type UserConfig = Plugin.Name<'@tanstack/svelte-query'> &
           name?: NameTransformer;
         };
     /**
+     * Configuration for generated mutation keys.
+     *
+     * See {@link https://tanstack.com/query/v5/docs/framework/svelte/reference/functions/createmutation}
+     *
+     * Can be:
+     * - `boolean`: Shorthand for `{ enabled: boolean }`
+     * - `string` or `function`: Shorthand for `{ name: string | function }`
+     * - `object`: Full configuration object
+     *
+     * @default true
+     */
+    mutationKeys?:
+      | boolean
+      | NameTransformer
+      | {
+          case?: Casing;
+          enabled?: boolean;
+          name?: NameTransformer;
+          tags?: boolean;
+        };
+    /**
      * Configuration for generated mutation options helpers.
      *
      * See {@link https://tanstack.com/query/v5/docs/framework/svelte/reference/functions/createmutation}
@@ -182,27 +203,6 @@ export type UserConfig = Plugin.Name<'@tanstack/svelte-query'> &
            * @see https://tanstack.com/query/v5/docs/framework/svelte/reference/functions/createmutation
            */
           name?: NameTransformer;
-        };
-    /**
-     * Configuration for generated mutation keys.
-     *
-     * See {@link https://tanstack.com/query/v5/docs/framework/svelte/reference/functions/createmutation}
-     *
-     * Can be:
-     * - `boolean`: Shorthand for `{ enabled: boolean }`
-     * - `string` or `function`: Shorthand for `{ name: string | function }`
-     * - `object`: Full configuration object
-     *
-     * @default true
-     */
-    mutationKeys?:
-      | boolean
-      | NameTransformer
-      | {
-          case?: Casing;
-          enabled?: boolean;
-          name?: NameTransformer;
-          tags?: boolean;
         };
     /**
      * Configuration for generated query keys.
@@ -368,6 +368,12 @@ export type Config = Plugin.Name<'@tanstack/svelte-query'> &
         /** Custom function to generate metadata for the operation. */
         meta: (operation: IR.OperationObject) => Record<string, unknown>;
       };
+    /** Resolved configuration for generated mutation keys. */
+    mutationKeys: NamingOptions &
+      FeatureToggle & {
+        /** Whether to include operation tags in mutation keys. */
+        tags: boolean;
+      };
     /** Resolved configuration for generated mutation options helpers. */
     mutationOptions: NamingOptions &
       FeatureToggle & {
@@ -375,12 +381,6 @@ export type Config = Plugin.Name<'@tanstack/svelte-query'> &
         exported: boolean;
         /** Custom function to generate metadata for the operation. */
         meta: (operation: IR.OperationObject) => Record<string, unknown>;
-      };
-    /** Resolved configuration for generated mutation keys. */
-    mutationKeys: NamingOptions &
-      FeatureToggle & {
-        /** Whether to include operation tags in mutation keys. */
-        tags: boolean;
       };
     /** Resolved configuration for generated query keys. */
     queryKeys: NamingOptions &

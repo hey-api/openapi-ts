@@ -54,17 +54,17 @@ export const createOptions = (options?: Options<CreateData>) => queryOptions<unk
     queryKey: createQueryKey2(options)
 });
 
-export type MutationKey<TOptions extends Options> = [
+export type MutationKey<TOptions extends Partial<Options>> = [
     Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
         _id: string;
         tags?: ReadonlyArray<string>;
     }
 ];
 
-const createMutationKey = <TOptions extends Options>(id: string, options?: TOptions, tags?: ReadonlyArray<string>): [
+const createMutationKey = <TOptions extends Partial<Options>>(id: string, options?: TOptions, tags?: ReadonlyArray<string>): [
     MutationKey<TOptions>[0]
 ] => {
-    const params: MutationKey<TOptions>[0] = { _id: id, baseUrl: options?.baseUrl || (options?.client ?? client).getConfig().baseUrl } as MutationKey<TOptions>[0];
+    const params: MutationKey<TOptions>[0] = { _id: id, baseUrl: options?.baseUrl || (options?.client ?? client).getConfig().baseUrl };
     if (tags) {
         params.tags = tags;
     }
@@ -83,7 +83,7 @@ const createMutationKey = <TOptions extends Options>(id: string, options?: TOpti
     return [params];
 };
 
-export const create2MutationKey = (options?: Options<Create2Data>): MutationKey<Options<Create2Data>>[0] => createMutationKey('create2', options);
+export const create2MutationKey = (options?: Partial<Options<Create2Data>>) => createMutationKey('create2', options);
 
 export const create2Mutation = (options?: Partial<Options<Create2Data>>): UseMutationOptions<unknown, DefaultError, Options<Create2Data>> => {
     const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<Create2Data>> = {
@@ -100,7 +100,7 @@ export const create2Mutation = (options?: Partial<Options<Create2Data>>): UseMut
     return mutationOptions;
 };
 
-export const create3MutationKey = (options?: Options<Create3Data>): MutationKey<Options<Create3Data>>[0] => createMutationKey('create3', options);
+export const create3MutationKey = (options?: Partial<Options<Create3Data>>) => createMutationKey('create3', options);
 
 export const create3Mutation = (options?: Partial<Options<Create3Data>>): UseMutationOptions<unknown, DefaultError, Options<Create3Data>> => {
     const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<Create3Data>> = {

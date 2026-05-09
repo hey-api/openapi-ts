@@ -1,5 +1,5 @@
 import type { IR } from '@hey-api/shared';
-import { applyNaming } from '@hey-api/shared';
+import { applyNaming, hasOperationDataRequired } from '@hey-api/shared';
 
 import {
   createOperationComment,
@@ -36,12 +36,6 @@ export function createMutationOptions({
     createMutationKeyFunction({ plugin });
   }
 
-  const symbolMutationKeyType = plugin.referenceSymbol({
-    category: 'type',
-    resource: 'MutationKey',
-    tool: plugin.name,
-  });
-
   const symbolMutationOptionsType = plugin.external(`${plugin.name}.MutationOptions`);
 
   const typeData = useTypeData({ operation, plugin });
@@ -77,7 +71,6 @@ export function createMutationOptions({
     operation,
     plugin,
     symbol: symbolMutationKey,
-    typeMutationKey: $.type(symbolMutationKeyType).generic(typeData).idx(0),
   });
   plugin.node(node);
 
@@ -99,7 +92,9 @@ export function createMutationOptions({
     .$if(plugin.config.comments && createOperationComment(operation), (c, v) => c.doc(v))
     .assign(
       $.func()
-        .param('options', (p) => p.optional().type($.type('Partial').generic(typeData)))
+        .param('options', (p) =>
+          p.required(hasOperationDataRequired(operation)).type($.type('Partial').generic(typeData)),
+        )
         .returns(mutationType)
         .do(
           $.const(mutationOptionsFn)
