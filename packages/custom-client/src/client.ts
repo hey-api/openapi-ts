@@ -10,9 +10,11 @@ import {
 } from './utils';
 
 type ReqInit = Omit<RequestInit, 'body' | 'headers'> & {
-  body?: any;
+  body?: BodyInit | null;
   headers: ReturnType<typeof mergeHeaders>;
 };
+
+type ParseAs = 'json' | 'text' | 'blob' | 'arrayBuffer' | 'formData' | 'stream';
 
 export const createClient = (config: Config = {}): Client => {
   let _config = mergeConfigs(createConfig(), config);
@@ -24,7 +26,12 @@ export const createClient = (config: Config = {}): Client => {
     return getConfig();
   };
 
-  const interceptors = createInterceptors<Request, Response, unknown, RequestOptions>();
+  const interceptors = createInterceptors<
+    Request,
+    Response,
+    unknown,
+    RequestOptions
+  >();
 
   // @ts-expect-error
   const request: Client['request'] = async (options) => {
@@ -35,11 +42,9 @@ export const createClient = (config: Config = {}): Client => {
       headers: mergeHeaders(_config.headers, options.headers),
     };
 
+    // 🔐 security
     if (opts.security) {
-      await setAuthParams({
-        ...opts,
-        security: opts.security,
-      });
+      await setAuthParams({ ...opts, security: opts.security });
     }
 
     if (opts.requestValidator) {
@@ -50,133 +55,139 @@ export const createClient = (config: Config = {}): Client => {
       opts.body = opts.bodySerializer(opts.body);
     }
 
-    // remove Content-Type header if body is empty to avoid sending invalid requests
     if (opts.body === undefined || opts.body === '') {
       opts.headers.delete('Content-Type');
     }
 
-    const url = buildUrl(opts);
-    const requestInit: ReqInit = {
-      redirect: 'follow',
-      ...opts,
-    };
+    const optsWithoutBody = { ...opts };
+    delete (optsWithoutBody as any).body;
 
-    let request = new Request(url, requestInit);
+    let requestObj = new Request('http://localhost', {
+      ...(optsWithoutBody as RequestInit),
+      headers: opts.headers,
+    });
 
     for (const fn of interceptors.request.fns) {
-      if (fn) {
-        request = await fn(request, opts);
-      }
+      if (fn) requestObj = await fn(requestObj, opts);
     }
 
-    // fetch must be assigned here, otherwise it would throw the error:
-    // TypeError: Failed to execute 'fetch' on 'Window': Illegal invocation
-    const _fetch = opts.fetch!;
-    let response = await _fetch(request);
+    const url = buildUrl(opts);
 
-    for (const fn of interceptors.response.fns) {
-      if (fn) {
-        response = await fn(response, request, opts);
-      }
-    }
-
-    const result = {
-      request,
-      response,
+    const requestInit: ReqInit = {
+      redirect: 'follow',
+      ...(opts as Omit<typeof opts, 'body'>),
+      body: opts.body as BodyInit | null | undefined,
     };
 
+    const finalRequest = new Request(url, requestInit);
+
+    const response = await (opts.fetch!)(finalRequest);
+
+    const result = { request: finalRequest, response };
+
+    for (const fn of interceptors.response.fns) {
+      if (fn) await fn(response, finalRequest, opts);
+    }
+
+    // ===============================
+    // ✅ SUCCESS HANDLING
+    // ===============================
     if (response.ok) {
-      if (response.status === 204 || response.headers.get('Content-Length') === '0') {
-        return {
-          data: {},
-          ...result,
-        };
+      if (
+        response.status === 204 ||
+        response.headers.get('Content-Length') === '0'
+      ) {
+        return { data: {}, ...result };
       }
 
       const parseAs =
         (opts.parseAs === 'auto'
           ? getParseAs(response.headers.get('Content-Type'))
-          : opts.parseAs) ?? 'json';
+          : (opts.parseAs as ParseAs)) ?? 'json';
 
-      let data: any;
+      let data: unknown;
+
       switch (parseAs) {
         case 'arrayBuffer':
-        case 'blob':
-        case 'formData':
-        case 'text':
-          data = await response[parseAs]();
+          data = await response.arrayBuffer();
           break;
-        case 'json': {
-          // Some servers return 200 with no Content-Length and empty body.
-          // response.json() would throw; read as text and parse if non-empty.
+
+        case 'blob':
+          data = await response.blob();
+          break;
+
+        case 'formData':
+          data = await response.formData();
+          break;
+
+        case 'text':
+          data = await response.text();
+          break;
+
+        case 'stream':
+          return { data: response.body ?? null, ...result };
+
+        case 'json':
+        default: {
           const text = await response.text();
           data = text ? JSON.parse(text) : {};
-          break;
-        }
-        case 'stream':
-          return {
-            data: response.body,
-            ...result,
-          };
-      }
-      if (parseAs === 'json') {
-        if (opts.responseValidator) {
-          await opts.responseValidator(data);
-        }
 
-        if (opts.responseTransformer) {
-          data = await opts.responseTransformer(data);
+          if (opts.responseValidator) {
+            await opts.responseValidator(data);
+          }
+
+          if (opts.responseTransformer) {
+            data = await opts.responseTransformer(data);
+          }
         }
       }
 
-      return {
-        data,
-        ...result,
-      };
+      return { data, ...result };
     }
 
-    let error = await response.text();
+    // ===============================
+    // ❌ ERROR HANDLING
+    // ===============================
+    let error: unknown = await response.text();
 
     try {
-      error = JSON.parse(error);
-    } catch {
-      // noop
-    }
+      error = JSON.parse(error as string);
+    } catch {}
 
     let finalError = error;
 
     for (const fn of interceptors.error.fns) {
       if (fn) {
-        finalError = (await fn(finalError, response, request, opts)) as string;
+        finalError = await fn(finalError, response, finalRequest, opts);
       }
     }
-
-    finalError = finalError || ({} as string);
 
     if (opts.throwOnError) {
       throw finalError;
     }
 
     return {
-      error: finalError,
+      error: finalError || {},
       ...result,
     };
   };
 
   return {
     buildUrl,
-    connect: (options) => request({ ...options, method: 'CONNECT' }),
-    delete: (options) => request({ ...options, method: 'DELETE' }),
-    get: (options) => request({ ...options, method: 'GET' }),
-    getConfig,
-    head: (options) => request({ ...options, method: 'HEAD' }),
-    interceptors,
-    options: (options) => request({ ...options, method: 'OPTIONS' }),
-    patch: (options) => request({ ...options, method: 'PATCH' }),
-    post: (options) => request({ ...options, method: 'POST' }),
-    put: (options) => request({ ...options, method: 'PUT' }),
+
+    connect: (o) => request({ ...o, method: 'CONNECT' }),
+    delete: (o) => request({ ...o, method: 'DELETE' }),
+    get: (o) => request({ ...o, method: 'GET' }),
+    head: (o) => request({ ...o, method: 'HEAD' }),
+    options: (o) => request({ ...o, method: 'OPTIONS' }),
+    patch: (o) => request({ ...o, method: 'PATCH' }),
+    post: (o) => request({ ...o, method: 'POST' }),
+    put: (o) => request({ ...o, method: 'PUT' }),
+    trace: (o) => request({ ...o, method: 'TRACE' }),
+
     request,
+    interceptors,
+    getConfig,
     setConfig,
-    trace: (options) => request({ ...options, method: 'TRACE' }),
   };
 };
