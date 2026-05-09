@@ -552,6 +552,40 @@ export default {
 
 You can customize the naming and casing pattern for `mutationOptions` functions using the `.name` and `.case` options.
 
+## Mutation Keys
+
+Mutation keys contain normalized SDK function parameters and additional metadata.
+
+::: code-group
+
+```ts [example]
+const mutationKey = [
+  {
+    _id: 'addPet',
+    baseUrl: 'https://app.heyapi.dev',
+    body: {
+      name: 'Kitty',
+    },
+  },
+];
+```
+
+```js [config]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: '@tanstack/react-query',
+      mutationKeys: true, // [!code ++]
+    },
+  ],
+};
+```
+
+:::
+
 ### Meta
 
 You can use the `meta` field to attach arbitrary information to a mutation. To generate metadata for `mutationOptions`, provide a function to the `.meta` option.
