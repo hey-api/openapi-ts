@@ -1,28 +1,33 @@
-const { execSync } = require("child_process");
-const fs = require("fs");
-const path = require("path");
+import { execSync } from 'node:child_process';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const ROOT_DIR = path.resolve(__dirname, "..");
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-console.log("Generating examples...");
+const ROOT_DIR = path.resolve(__dirname, '..');
 
-const examplesDir = path.join(ROOT_DIR, "examples");
+console.log('Generating examples...');
+
+const examplesDir = path.join(ROOT_DIR, 'examples');
 
 fs.readdirSync(examplesDir).forEach((dir) => {
   const fullPath = path.join(examplesDir, dir);
-  const pkg = path.join(fullPath, "package.json");
+  const pkg = path.join(fullPath, 'package.json');
 
   if (fs.existsSync(pkg)) {
-    const content = fs.readFileSync(pkg, "utf-8");
+    const content = fs.readFileSync(pkg, 'utf-8');
 
-    if (content.includes("openapi-ts")) {
-      console.log("📦 Processing:", dir);
-      execSync("pnpm run openapi-ts", {
+    if (content.includes('openapi-ts')) {
+      console.log('📦 Processing:', dir);
+
+      execSync('pnpm run openapi-ts', {
         cwd: fullPath,
-        stdio: "inherit",
+        stdio: 'inherit',
       });
     }
   }
 });
 
-console.log("✨ Done generating!");
+console.log('✨ Done generating!');

@@ -55,10 +55,7 @@ const defaultPathSerializer = ({ path, url: _url }: PathSerializer): string => {
     if (value == null) continue;
 
     if (Array.isArray(value)) {
-      url = url.replace(
-        match,
-        serializeArrayParam({ explode, name, style, value }),
-      );
+      url = url.replace(match, serializeArrayParam({ explode, name, style, value }));
       continue;
     }
 
@@ -101,12 +98,9 @@ const defaultPathSerializer = ({ path, url: _url }: PathSerializer): string => {
    QUERY SERIALIZER
 ----------------------------- */
 
-export const createQuerySerializer = <T = unknown>({
-  allowReserved,
-  array,
-  object,
-}: QuerySerializerOptions = {}) => {
-  return (queryParams: T): string => {
+export const createQuerySerializer =
+  <T = unknown>({ allowReserved, array, object }: QuerySerializerOptions = {}) =>
+  (queryParams: T): string => {
     const search: string[] = [];
 
     if (queryParams && typeof queryParams === 'object') {
@@ -147,7 +141,6 @@ export const createQuerySerializer = <T = unknown>({
 
     return search.join('&');
   };
-};
 
 /* -----------------------------
    🔥 FIXED: RESPONSE TYPE DETECTOR
@@ -234,8 +227,8 @@ export const setAuthParams = async ({
    URL BUILDER
 ----------------------------- */
 
-export const buildUrl: Client['buildUrl'] = (options) => {
-  return getUrl({
+export const buildUrl: Client['buildUrl'] = (options) =>
+  getUrl({
     baseUrl: options.baseUrl as string,
     path: options.path,
     query: options.query,
@@ -245,7 +238,6 @@ export const buildUrl: Client['buildUrl'] = (options) => {
         : createQuerySerializer(options.querySerializer),
     url: options.url,
   });
-};
 
 export const getUrl = ({
   baseUrl,
@@ -297,8 +289,7 @@ export const mergeHeaders = (
   for (const header of headers) {
     if (!header || typeof header !== 'object') continue;
 
-    const iterator =
-      header instanceof Headers ? header.entries() : Object.entries(header);
+    const iterator = header instanceof Headers ? header.entries() : Object.entries(header);
 
     for (const [key, value] of iterator) {
       if (value == null) {
@@ -306,10 +297,7 @@ export const mergeHeaders = (
       } else if (Array.isArray(value)) {
         for (const v of value) merged.append(key, String(v));
       } else {
-        merged.set(
-          key,
-          typeof value === 'object' ? JSON.stringify(value) : String(value),
-        );
+        merged.set(key, typeof value === 'object' ? JSON.stringify(value) : String(value));
       }
     }
   }
@@ -328,10 +316,7 @@ type ErrInterceptor<Err, Res, Req, Options> = (
   options: Options,
 ) => Err | Promise<Err>;
 
-type ReqInterceptor<Req, Options> = (
-  request: Req,
-  options: Options,
-) => Req | Promise<Req>;
+type ReqInterceptor<Req, Options> = (request: Req, options: Options) => Req | Promise<Req>;
 
 type ResInterceptor<Res, Req, Options> = (
   response: Res,

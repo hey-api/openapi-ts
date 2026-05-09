@@ -1,7 +1,9 @@
-const { execSync } = require("child_process");
+import { execSync } from 'node:child_process';
 
-console.log("🔍 Checking examples...");
+console.log('🔍 Checking examples...');
 
-execSync("node scripts/examples-generate.js", { stdio: "inherit" });
+execSync('node scripts/examples-generate.js', {
+  stdio: 'inherit',
+});
 
-console.log("✨ Check complete!");
+console.log('✨ Check complete!');

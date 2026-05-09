@@ -27,36 +27,19 @@
 
     "lint": {
       "dependsOn": ["^build"],
-      "inputs": [
-        "src/**",
-        "test/**",
-        "*.config.*",
-        "package.json"
-      ]
+      "inputs": ["src/**", "test/**", "*.config.*", "package.json"]
     },
 
     "test": {
       "cache": true,
       "dependsOn": ["^build"],
-      "inputs": [
-        "src/**",
-        "test/**",
-        "*.config.*",
-        "package.json",
-        "vitest.config.ts"
-      ],
+      "inputs": ["src/**", "test/**", "*.config.*", "package.json", "vitest.config.ts"],
       "outputs": ["coverage/**"]
     },
 
     "test:coverage": {
       "dependsOn": ["^build"],
-      "inputs": [
-        "src/**",
-        "test/**",
-        "*.config.*",
-        "package.json",
-        "vitest.config.ts"
-      ],
+      "inputs": ["src/**", "test/**", "*.config.*", "package.json", "vitest.config.ts"],
       "outputs": ["coverage/**"]
     },
 

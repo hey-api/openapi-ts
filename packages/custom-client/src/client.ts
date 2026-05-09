@@ -26,12 +26,7 @@ export const createClient = (config: Config = {}): Client => {
     return getConfig();
   };
 
-  const interceptors = createInterceptors<
-    Request,
-    Response,
-    unknown,
-    RequestOptions
-  >();
+  const interceptors = createInterceptors<Request, Response, unknown, RequestOptions>();
 
   // @ts-expect-error
   const request: Client['request'] = async (options) => {
@@ -42,33 +37,39 @@ export const createClient = (config: Config = {}): Client => {
       headers: mergeHeaders(_config.headers, options.headers),
     };
 
-    // 🔐 security
+    // security
     if (opts.security) {
-      await setAuthParams({ ...opts, security: opts.security });
+      await setAuthParams({
+        ...opts,
+        security: opts.security,
+      });
     }
 
+    // request validator
     if (opts.requestValidator) {
       await opts.requestValidator(opts);
     }
 
+    // serialize body
     if (opts.body && opts.bodySerializer) {
       opts.body = opts.bodySerializer(opts.body);
     }
 
+    // remove content-type if empty body
     if (opts.body === undefined || opts.body === '') {
       opts.headers.delete('Content-Type');
     }
 
-    const optsWithoutBody = { ...opts };
-    delete (optsWithoutBody as any).body;
-
     let requestObj = new Request('http://localhost', {
-      ...(optsWithoutBody as RequestInit),
+      ...(opts as RequestInit),
       headers: opts.headers,
     });
 
+    // request interceptors
     for (const fn of interceptors.request.fns) {
-      if (fn) requestObj = await fn(requestObj, opts);
+      if (fn) {
+        requestObj = await fn(requestObj, opts);
+      }
     }
 
     const url = buildUrl(opts);
@@ -81,23 +82,27 @@ export const createClient = (config: Config = {}): Client => {
 
     const finalRequest = new Request(url, requestInit);
 
-    const response = await (opts.fetch!)(finalRequest);
+    const response = await opts.fetch!(finalRequest);
 
-    const result = { request: finalRequest, response };
+    const result = {
+      request: finalRequest,
+      response,
+    };
 
+    // response interceptors
     for (const fn of interceptors.response.fns) {
-      if (fn) await fn(response, finalRequest, opts);
+      if (fn) {
+        await fn(response, finalRequest, opts);
+      }
     }
 
-    // ===============================
-    // ✅ SUCCESS HANDLING
-    // ===============================
+    // SUCCESS HANDLING
     if (response.ok) {
-      if (
-        response.status === 204 ||
-        response.headers.get('Content-Length') === '0'
-      ) {
-        return { data: {}, ...result };
+      if (response.status === 204 || response.headers.get('Content-Length') === '0') {
+        return {
+          data: {},
+          ...result,
+        };
       }
 
       const parseAs =
@@ -125,11 +130,15 @@ export const createClient = (config: Config = {}): Client => {
           break;
 
         case 'stream':
-          return { data: response.body ?? null, ...result };
+          return {
+            data: response.body ?? null,
+            ...result,
+          };
 
         case 'json':
         default: {
           const text = await response.text();
+
           data = text ? JSON.parse(text) : {};
 
           if (opts.responseValidator) {
@@ -142,17 +151,20 @@ export const createClient = (config: Config = {}): Client => {
         }
       }
 
-      return { data, ...result };
+      return {
+        data,
+        ...result,
+      };
     }
 
-    // ===============================
-    // ❌ ERROR HANDLING
-    // ===============================
+    // ERROR HANDLING
     let error: unknown = await response.text();
 
     try {
       error = JSON.parse(error as string);
-    } catch {}
+    } catch {
+      // ignore JSON parse errors
+    }
 
     let finalError = error;
 
@@ -176,18 +188,29 @@ export const createClient = (config: Config = {}): Client => {
     buildUrl,
 
     connect: (o) => request({ ...o, method: 'CONNECT' }),
+
     delete: (o) => request({ ...o, method: 'DELETE' }),
+
     get: (o) => request({ ...o, method: 'GET' }),
+
+    getConfig,
+
     head: (o) => request({ ...o, method: 'HEAD' }),
+
+    interceptors,
+
     options: (o) => request({ ...o, method: 'OPTIONS' }),
+
     patch: (o) => request({ ...o, method: 'PATCH' }),
+
     post: (o) => request({ ...o, method: 'POST' }),
+
     put: (o) => request({ ...o, method: 'PUT' }),
-    trace: (o) => request({ ...o, method: 'TRACE' }),
 
     request,
-    interceptors,
-    getConfig,
+
     setConfig,
+
+    trace: (o) => request({ ...o, method: 'TRACE' }),
   };
 };

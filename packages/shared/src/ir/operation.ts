@@ -112,9 +112,7 @@ interface OperationResponsesMap {
 /** MAIN FIX FUNCTION
  * (IMPORTANT: handles parseAs including "blob")
  */
-export const operationResponsesMap = (
-  operation: IR.OperationObject
-): OperationResponsesMap => {
+export const operationResponsesMap = (operation: IR.OperationObject): OperationResponsesMap => {
   const result: OperationResponsesMap = {};
 
   if (!operation.responses) {
@@ -165,18 +163,18 @@ export const operationResponsesMap = (
    */
   if (parseAs === 'blob') {
     const blobSchema: IR.SchemaObject = {
-      type: 'string',
       format: 'binary',
+      type: 'string',
     };
 
     return {
       response: blobSchema,
       responses: {
-        type: 'object',
         properties: {
           '200': blobSchema,
         },
         required: ['200'],
+        type: 'object',
       } as IR.SchemaObject,
     };
   }
@@ -197,22 +195,14 @@ export const operationResponsesMap = (
 
     const successKeywords = ['success'];
     if (
-      successKeywords.some(
-        (keyword) =>
-          description.includes(keyword) || $ref.includes(keyword)
-      )
+      successKeywords.some((keyword) => description.includes(keyword) || $ref.includes(keyword))
     ) {
       responses.properties.default = defaultResponse.schema;
       inferred = true;
     }
 
     const errorKeywords = ['error', 'problem'];
-    if (
-      errorKeywords.some(
-        (keyword) =>
-          description.includes(keyword) || $ref.includes(keyword)
-      )
-    ) {
+    if (errorKeywords.some((keyword) => description.includes(keyword) || $ref.includes(keyword))) {
       errors.properties.default = defaultResponse.schema;
       inferred = true;
     }
@@ -238,10 +228,7 @@ export const operationResponsesMap = (
 
     errorUnion = deduplicateSchema({ schema: errorUnion });
 
-    if (
-      Object.keys(errorUnion).length &&
-      errorUnion.type !== 'unknown'
-    ) {
+    if (Object.keys(errorUnion).length && errorUnion.type !== 'unknown') {
       result.error = errorUnion;
     }
   }
@@ -262,10 +249,7 @@ export const operationResponsesMap = (
 
     responseUnion = deduplicateSchema({ schema: responseUnion });
 
-    if (
-      Object.keys(responseUnion).length &&
-      responseUnion.type !== 'unknown'
-    ) {
+    if (Object.keys(responseUnion).length && responseUnion.type !== 'unknown') {
       result.response = responseUnion;
     }
   }
