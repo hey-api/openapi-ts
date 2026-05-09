@@ -9,16 +9,16 @@ describe('buildUrl', () => {
     options: Parameters<Client['buildUrl']>[0];
     url: string;
   }> = [
-    {
-      options: {
-        path: {
-          id: new Date('2025-01-01T00:00:00.000Z'),
+      {
+        options: {
+          path: {
+            id: new Date('2025-01-01T00:00:00.000Z'),
+          },
+          url: '/foo/{id}',
         },
-        url: '/foo/{id}',
+        url: '/foo/2025-01-01T00:00:00.000Z',
       },
-      url: '/foo/2025-01-01T00:00:00.000Z',
-    },
-  ];
+    ];
 
   it.each(scenarios)('builds $url', async ({ options, url }) => {
     expect(buildUrl(options)).toEqual(url);
@@ -30,55 +30,55 @@ describe('getParseAs', () => {
     content: Parameters<typeof getParseAs>[0];
     parseAs: ReturnType<typeof getParseAs>;
   }> = [
-    {
-      content: null,
-      parseAs: 'stream',
-    },
-    {
-      content: 'application/json',
-      parseAs: 'json',
-    },
-    {
-      content: 'application/ld+json',
-      parseAs: 'json',
-    },
-    {
-      content: 'application/ld+json;charset=utf-8',
-      parseAs: 'json',
-    },
-    {
-      content: 'application/ld+json; charset=utf-8',
-      parseAs: 'json',
-    },
-    {
-      content: 'multipart/form-data',
-      parseAs: 'formData',
-    },
-    {
-      content: 'application/*',
-      parseAs: 'blob',
-    },
-    {
-      content: 'audio/*',
-      parseAs: 'blob',
-    },
-    {
-      content: 'image/*',
-      parseAs: 'blob',
-    },
-    {
-      content: 'video/*',
-      parseAs: 'blob',
-    },
-    {
-      content: 'text/*',
-      parseAs: 'text',
-    },
-    {
-      content: 'unsupported',
-      parseAs: undefined,
-    },
-  ];
+      {
+        content: null,
+        parseAs: 'stream',
+      },
+      {
+        content: 'application/json',
+        parseAs: 'json',
+      },
+      {
+        content: 'application/ld+json',
+        parseAs: 'json',
+      },
+      {
+        content: 'application/ld+json;charset=utf-8',
+        parseAs: 'json',
+      },
+      {
+        content: 'application/ld+json; charset=utf-8',
+        parseAs: 'json',
+      },
+      {
+        content: 'multipart/form-data',
+        parseAs: 'formData',
+      },
+      {
+        content: 'application/*',
+        parseAs: 'blob',
+      },
+      {
+        content: 'audio/*',
+        parseAs: 'blob',
+      },
+      {
+        content: 'image/*',
+        parseAs: 'blob',
+      },
+      {
+        content: 'video/*',
+        parseAs: 'blob',
+      },
+      {
+        content: 'text/*',
+        parseAs: 'text',
+      },
+      {
+        content: 'unsupported',
+        parseAs: undefined,
+      },
+    ];
 
   it.each(scenarios)('detects $content as $parseAs', async ({ content, parseAs }) => {
     expect(getParseAs(content)).toEqual(parseAs);
@@ -102,7 +102,7 @@ describe('setAuthParams', () => {
         },
       ],
     };
-    await setAuthParams(options);
+    await setAuthParams(options, options.security);
     expect(auth).toHaveBeenCalled();
     expect(options.headers.get('baz')).toBe('Bearer foo');
     expect(Object.keys(query).length).toBe(0);
@@ -116,15 +116,14 @@ describe('setAuthParams', () => {
       auth,
       headers,
       query,
-      security: [
-        {
-          in: 'query',
-          name: 'baz',
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
-    });
+    }, [
+      {
+        in: 'query',
+        name: 'baz',
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ]);
     expect(auth).toHaveBeenCalled();
     expect(headers.get('baz')).toBeNull();
     expect(query.baz).toBe('Bearer foo');
@@ -144,7 +143,7 @@ describe('setAuthParams', () => {
         },
       ],
     };
-    await setAuthParams(options);
+    await setAuthParams(options, options.security);
     expect(auth).toHaveBeenCalled();
     expect(options.headers.get('Authorization')).toBe('foo');
     expect(query).toEqual({});
@@ -172,7 +171,7 @@ describe('setAuthParams', () => {
         },
       ],
     };
-    await setAuthParams(options);
+    await setAuthParams(options, options.security);
     expect(auth).toHaveBeenCalled();
     expect(options.headers.get('baz')).toBe('Bearer foo');
     expect(Object.keys(query).length).toBe(0);
@@ -191,19 +190,18 @@ describe('setAuthParams', () => {
       auth,
       headers,
       query,
-      security: [
-        {
-          name: 'baz',
-          type: 'apiKey',
-        },
-        {
-          in: 'query',
-          name: 'baz',
-          scheme: 'bearer',
-          type: 'http',
-        },
-      ],
-    });
+    }, [
+      {
+        name: 'baz',
+        type: 'apiKey',
+      },
+      {
+        in: 'query',
+        name: 'baz',
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ]);
     expect(auth).toHaveBeenCalled();
     expect(headers.get('baz')).toBeNull();
     expect(query.baz).toBe('Bearer foo');
@@ -225,7 +223,7 @@ describe('setAuthParams', () => {
         },
       ],
     };
-    await setAuthParams(options);
+    await setAuthParams(options, options.security);
     expect(auth).toHaveBeenCalled();
     expect(options.headers.get('Cookie')).toBe('baz=foo');
     expect(query).toEqual({});
