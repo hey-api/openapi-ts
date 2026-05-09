@@ -54,6 +54,37 @@ export const getFooOptions = (options?: Options<GetFooData>) => queryOptions<Get
     queryKey: getFooQueryKey(options)
 });
 
+export type MutationKey<TOptions extends Options> = [
+    Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
+        _id: string;
+        tags?: ReadonlyArray<string>;
+    }
+];
+
+const createMutationKey = <TOptions extends Options>(id: string, options?: TOptions, tags?: ReadonlyArray<string>): [
+    MutationKey<TOptions>[0]
+] => {
+    const params: MutationKey<TOptions>[0] = { _id: id, baseUrl: options?.baseUrl || (options?.client ?? client).getConfig().baseUrl } as MutationKey<TOptions>[0];
+    if (tags) {
+        params.tags = tags;
+    }
+    if (options?.body) {
+        params.body = options.body;
+    }
+    if (options?.headers) {
+        params.headers = options.headers;
+    }
+    if (options?.path) {
+        params.path = options.path;
+    }
+    if (options?.query) {
+        params.query = options.query;
+    }
+    return [params];
+};
+
+export const fooPostMutationKey = (options?: Options<FooPostData>): MutationKey<Options<FooPostData>>[0] => createMutationKey('fooPost', options);
+
 export const fooPostMutation = (options?: Partial<Options<FooPostData>>): UseMutationOptions<FooPostResponse, DefaultError, Options<FooPostData>> => {
     const mutationOptions: UseMutationOptions<FooPostResponse, DefaultError, Options<FooPostData>> = {
         mutationFn: async (fnOptions) => {
@@ -63,10 +94,13 @@ export const fooPostMutation = (options?: Partial<Options<FooPostData>>): UseMut
                 throwOnError: true
             });
             return data;
-        }
+        },
+        mutationKey: fooPostMutationKey(options)
     };
     return mutationOptions;
 };
+
+export const fooPutMutationKey = (options?: Options<FooPutData>): MutationKey<Options<FooPutData>>[0] => createMutationKey('fooPut', options);
 
 export const fooPutMutation = (options?: Partial<Options<FooPutData>>): UseMutationOptions<FooPutResponse, DefaultError, Options<FooPutData>> => {
     const mutationOptions: UseMutationOptions<FooPutResponse, DefaultError, Options<FooPutData>> = {
@@ -77,7 +111,8 @@ export const fooPutMutation = (options?: Partial<Options<FooPutData>>): UseMutat
                 throwOnError: true
             });
             return data;
-        }
+        },
+        mutationKey: fooPutMutationKey(options)
     };
     return mutationOptions;
 };
@@ -97,6 +132,8 @@ export const getFooBarOptions = (options?: Options<GetFooBarData>) => queryOptio
     queryKey: getFooBarQueryKey(options)
 });
 
+export const fooBarPostMutationKey = (options?: Options<FooBarPostData>): MutationKey<Options<FooBarPostData>>[0] => createMutationKey('fooBarPost', options);
+
 export const fooBarPostMutation = (options?: Partial<Options<FooBarPostData>>): UseMutationOptions<FooBarPostResponse, DefaultError, Options<FooBarPostData>> => {
     const mutationOptions: UseMutationOptions<FooBarPostResponse, DefaultError, Options<FooBarPostData>> = {
         mutationFn: async (fnOptions) => {
@@ -106,10 +143,13 @@ export const fooBarPostMutation = (options?: Partial<Options<FooBarPostData>>): 
                 throwOnError: true
             });
             return data;
-        }
+        },
+        mutationKey: fooBarPostMutationKey(options)
     };
     return mutationOptions;
 };
+
+export const fooBarPutMutationKey = (options?: Options<FooBarPutData>): MutationKey<Options<FooBarPutData>>[0] => createMutationKey('fooBarPut', options);
 
 export const fooBarPutMutation = (options?: Partial<Options<FooBarPutData>>): UseMutationOptions<FooBarPutResponse, DefaultError, Options<FooBarPutData>> => {
     const mutationOptions: UseMutationOptions<FooBarPutResponse, DefaultError, Options<FooBarPutData>> = {
@@ -120,7 +160,8 @@ export const fooBarPutMutation = (options?: Partial<Options<FooBarPutData>>): Us
                 throwOnError: true
             });
             return data;
-        }
+        },
+        mutationKey: fooBarPutMutationKey(options)
     };
     return mutationOptions;
 };

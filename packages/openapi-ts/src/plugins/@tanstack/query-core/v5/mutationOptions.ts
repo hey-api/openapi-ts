@@ -7,6 +7,11 @@ import {
 } from '../../../../plugins/shared/utils/operation';
 import type { TsDsl } from '../../../../ts-dsl';
 import { $ } from '../../../../ts-dsl';
+import {
+  createMutationKeyFunction,
+  createMutationKeyType,
+  mutationKeyStatement,
+} from '../mutationKey';
 import { handleMeta } from '../shared/meta';
 import { useTypeData, useTypeError, useTypeResponse } from '../shared/useType';
 import type { PluginInstance } from '../types';
@@ -19,6 +24,23 @@ export function createMutationOptions({
   plugin: PluginInstance;
 }): void {
   if (hasOperationSse({ operation })) return;
+
+  if (
+    !plugin.querySymbol({
+      category: 'utility',
+      resource: 'createMutationKey',
+      tool: plugin.name,
+    })
+  ) {
+    createMutationKeyType({ plugin });
+    createMutationKeyFunction({ plugin });
+  }
+
+  const symbolMutationKeyType = plugin.referenceSymbol({
+    category: 'type',
+    resource: 'MutationKey',
+    tool: plugin.name,
+  });
 
   const symbolMutationOptionsType = plugin.external(`${plugin.name}.MutationOptions`);
 
@@ -49,6 +71,15 @@ export function createMutationOptions({
   } else {
     statements.push($.const().object('data').assign(awaitSdkFn), $.return('data'));
   }
+
+  const symbolMutationKey = plugin.symbol(applyNaming(operation.id, plugin.config.mutationKeys));
+  const node = mutationKeyStatement({
+    operation,
+    plugin,
+    symbol: symbolMutationKey,
+    typeMutationKey: $.type(symbolMutationKeyType).generic(typeData).idx(0),
+  });
+  plugin.node(node);
 
   const mutationOptionsFn = 'mutationOptions';
   const symbolMutationOptions = plugin.symbol(
@@ -83,6 +114,7 @@ export function createMutationOptions({
                     .param(fnOptions)
                     .do(...statements),
                 )
+                .prop('mutationKey', $(symbolMutationKey).call('options'))
                 .$if(handleMeta(plugin, operation, 'mutationOptions'), (c, v) => c.prop('meta', v)),
             ),
           $(mutationOptionsFn).return(),

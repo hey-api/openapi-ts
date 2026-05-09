@@ -1,0 +1,181 @@
+import type { Symbol } from '@hey-api/codegen-core';
+import type { IR } from '@hey-api/shared';
+import { applyNaming, hasOperationDataRequired } from '@hey-api/shared';
+import type ts from 'typescript';
+
+import { getTypedConfig } from '../../../config/utils';
+import { getClientBaseUrlKey } from '../../../plugins/@hey-api/client-core/utils';
+import type { TsDsl } from '../../../ts-dsl';
+import { $ } from '../../../ts-dsl';
+import { useTypeData } from './shared/useType';
+import type { PluginInstance } from './types';
+
+const TOptionsType = 'TOptions';
+
+export const createMutationKeyFunction = ({ plugin }: { plugin: PluginInstance }) => {
+  const symbolCreateMutationKey = plugin.symbol(
+    applyNaming('createMutationKey', {
+      case: plugin.config.case,
+    }),
+    {
+      meta: {
+        category: 'utility',
+        resource: 'createMutationKey',
+        tool: plugin.name,
+      },
+    },
+  );
+  const symbolMutationKeyType = plugin.referenceSymbol({
+    category: 'type',
+    resource: 'MutationKey',
+    tool: plugin.name,
+  });
+
+  const baseUrlKey = getClientBaseUrlKey(getTypedConfig(plugin));
+
+  const symbolClient = plugin.querySymbol({
+    category: 'client',
+  });
+
+  const symbolOptions = plugin.referenceSymbol({
+    category: 'type',
+    resource: 'client-options',
+    tool: 'sdk',
+  });
+
+  const returnType = $.type(symbolMutationKeyType).generic(TOptionsType).idx(0);
+
+  const fn = $.const(symbolCreateMutationKey).assign(
+    $.func()
+      .param('id', (p) => p.type('string'))
+      .param('options', (p) => p.optional().type(TOptionsType))
+      .param('tags', (p) => p.optional().type('ReadonlyArray<string>'))
+      .generic(TOptionsType, (g) => g.extends(symbolOptions))
+      .returns($.type.tuple(returnType))
+      .do(
+        $.const('params')
+          .type(returnType)
+          .assign(
+            $.object()
+              .prop('_id', 'id')
+              .prop(
+                baseUrlKey,
+                $('options')
+                  .attr(baseUrlKey)
+                  .optional()
+                  .or(
+                    $('options')
+                      .attr('client')
+                      .optional()
+                      .$if(symbolClient, (a, v) => a.coalesce(v))
+                      .attr('getConfig')
+                      .call()
+                      .attr(baseUrlKey),
+                  ),
+              )
+              .as(returnType),
+          ),
+        $.if('tags').do($('params').attr('tags').assign('tags')),
+        $.if($('options').attr('body').optional()).do(
+          $('params').attr('body').assign($('options').attr('body')),
+        ),
+        $.if($('options').attr('headers').optional()).do(
+          $('params').attr('headers').assign($('options').attr('headers')),
+        ),
+        $.if($('options').attr('path').optional()).do(
+          $('params').attr('path').assign($('options').attr('path')),
+        ),
+        $.if($('options').attr('query').optional()).do(
+          $('params').attr('query').assign($('options').attr('query')),
+        ),
+        $.return($.array().element($('params'))),
+      ),
+  );
+  plugin.node(fn);
+};
+
+const createMutationKeyLiteral = ({
+  operation,
+  plugin,
+}: {
+  operation: IR.OperationObject;
+  plugin: PluginInstance;
+}) => {
+  const config = plugin.config.mutationKeys;
+  let tagsArray: TsDsl<ts.ArrayLiteralExpression> | undefined;
+  if (config.tags && operation.tags && operation.tags.length) {
+    tagsArray = $.array().elements(...operation.tags);
+  }
+  const symbolCreateMutationKey = plugin.referenceSymbol({
+    category: 'utility',
+    resource: 'createMutationKey',
+    tool: plugin.name,
+  });
+  const createMutationKeyCallExpression = $(symbolCreateMutationKey).call(
+    $.literal(operation.id),
+    'options',
+    tagsArray,
+  );
+  return createMutationKeyCallExpression;
+};
+
+export const createMutationKeyType = ({ plugin }: { plugin: PluginInstance }) => {
+  const symbolOptions = plugin.referenceSymbol({
+    category: 'type',
+    resource: 'client-options',
+    tool: 'sdk',
+  });
+  const symbolMutationKeyType = plugin.symbol('MutationKey', {
+    meta: {
+      category: 'type',
+      resource: 'MutationKey',
+      tool: plugin.name,
+    },
+  });
+  const mutationKeyType = $.type
+    .alias(symbolMutationKeyType)
+    .export()
+    .generic(TOptionsType, (g) => g.extends(symbolOptions))
+    .type(
+      $.type.tuple(
+        $.type.and(
+          $.type(
+            `Pick<${TOptionsType}, '${getClientBaseUrlKey(getTypedConfig(plugin))}' | 'body' | 'headers' | 'path' | 'query'>`,
+          ),
+          $.type
+            .object()
+            .prop('_id', (p) => p.type('string'))
+            .prop('tags', (p) => p.optional().type('ReadonlyArray<string>')),
+        ),
+      ),
+    );
+  plugin.node(mutationKeyType);
+};
+
+export const mutationKeyStatement = ({
+  operation,
+  plugin,
+  symbol,
+  typeMutationKey,
+}: {
+  operation: IR.OperationObject;
+  plugin: PluginInstance;
+  symbol: Symbol;
+  typeMutationKey?: ReturnType<typeof $.type>;
+}) => {
+  const typeData = useTypeData({ operation, plugin });
+  const statement = $.const(symbol)
+    .export()
+    .assign(
+      $.func()
+        .param('options', (p) => p.required(hasOperationDataRequired(operation)).type(typeData))
+        .$if(typeMutationKey, (f, v) => f.returns(v))
+        .do(
+          createMutationKeyLiteral({
+            operation,
+            plugin,
+          }).return(),
+        ),
+    );
+  return statement;
+};

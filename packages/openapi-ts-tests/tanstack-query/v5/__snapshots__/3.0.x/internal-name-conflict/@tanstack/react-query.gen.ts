@@ -54,6 +54,37 @@ export const createOptions = (options?: Options<CreateData>) => queryOptions<unk
     queryKey: createQueryKey2(options)
 });
 
+export type MutationKey<TOptions extends Options> = [
+    Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
+        _id: string;
+        tags?: ReadonlyArray<string>;
+    }
+];
+
+const createMutationKey = <TOptions extends Options>(id: string, options?: TOptions, tags?: ReadonlyArray<string>): [
+    MutationKey<TOptions>[0]
+] => {
+    const params: MutationKey<TOptions>[0] = { _id: id, baseUrl: options?.baseUrl || (options?.client ?? client).getConfig().baseUrl } as MutationKey<TOptions>[0];
+    if (tags) {
+        params.tags = tags;
+    }
+    if (options?.body) {
+        params.body = options.body;
+    }
+    if (options?.headers) {
+        params.headers = options.headers;
+    }
+    if (options?.path) {
+        params.path = options.path;
+    }
+    if (options?.query) {
+        params.query = options.query;
+    }
+    return [params];
+};
+
+export const create2MutationKey = (options?: Options<Create2Data>): MutationKey<Options<Create2Data>>[0] => createMutationKey('create2', options);
+
 export const create2Mutation = (options?: Partial<Options<Create2Data>>): UseMutationOptions<unknown, DefaultError, Options<Create2Data>> => {
     const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<Create2Data>> = {
         mutationFn: async (fnOptions) => {
@@ -63,10 +94,13 @@ export const create2Mutation = (options?: Partial<Options<Create2Data>>): UseMut
                 throwOnError: true
             });
             return data;
-        }
+        },
+        mutationKey: create2MutationKey(options)
     };
     return mutationOptions;
 };
+
+export const create3MutationKey = (options?: Options<Create3Data>): MutationKey<Options<Create3Data>>[0] => createMutationKey('create3', options);
 
 export const create3Mutation = (options?: Partial<Options<Create3Data>>): UseMutationOptions<unknown, DefaultError, Options<Create3Data>> => {
     const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<Create3Data>> = {
@@ -77,7 +111,8 @@ export const create3Mutation = (options?: Partial<Options<Create3Data>>): UseMut
                 throwOnError: true
             });
             return data;
-        }
+        },
+        mutationKey: create3MutationKey(options)
     };
     return mutationOptions;
 };
