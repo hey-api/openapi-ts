@@ -1,4 +1,4 @@
-import type { HttpResponse } from '@angular/common/http';
+import type { HttpHeaders, HttpResponse } from '@angular/common/http';
 import { HttpClient, HttpErrorResponse, HttpEventType, HttpRequest } from '@angular/common/http';
 import {
   assertInInjectionContext,
@@ -88,7 +88,15 @@ export const createClient = (config: Config = {}): Client => {
     return opts;
   };
 
-  const finalizeRequest = (opts: any) => {
+  const finalizeRequest = <
+    TData = unknown,
+    ThrowOnError extends boolean = false,
+    TResponseStyle extends ResponseStyle = 'fields',
+  >(
+    opts: RequestOptions<TData, TResponseStyle, ThrowOnError> & {
+      headers: HttpHeaders;
+    },
+  ) => {
     const url = buildUrl(opts as Config & RequestOptions);
 
     const req = new HttpRequest<unknown>(opts.method ?? 'GET', url, getValidRequestBody(opts), {
