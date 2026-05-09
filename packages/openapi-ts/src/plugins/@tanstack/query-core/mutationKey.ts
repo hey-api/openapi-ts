@@ -1,6 +1,6 @@
 import type { Symbol } from '@hey-api/codegen-core';
 import type { IR } from '@hey-api/shared';
-import { applyNaming, hasOperationDataRequired } from '@hey-api/shared';
+import { applyNaming } from '@hey-api/shared';
 import type ts from 'typescript';
 
 import { getTypedConfig } from '../../../config/utils';
@@ -75,9 +75,6 @@ export const createMutationKeyFunction = ({ plugin }: { plugin: PluginInstance }
               ),
           ),
         $.if('tags').do($('params').attr('tags').assign('tags')),
-        $.if($('options').attr('body').optional()).do(
-          $('params').attr('body').assign($('options').attr('body')),
-        ),
         $.if($('options').attr('headers').optional()).do(
           $('params').attr('headers').assign($('options').attr('headers')),
         ),
@@ -167,9 +164,7 @@ export const mutationKeyStatement = ({
     .export()
     .assign(
       $.func()
-        .param('options', (p) =>
-          p.required(hasOperationDataRequired(operation)).type($.type('Partial').generic(typeData)),
-        )
+        .param('options', (p) => p.optional().type($.type('Partial').generic(typeData)))
         .do(
           createMutationKeyLiteral({
             id: operation.id,

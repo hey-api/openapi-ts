@@ -69,9 +69,6 @@ const createMutationKey = <TOptions extends Partial<Options>>(id: string, option
     if (tags) {
         params.tags = tags;
     }
-    if (options?.body) {
-        params.body = options.body;
-    }
     if (options?.headers) {
         params.headers = options.headers;
     }
@@ -101,9 +98,9 @@ export const patchApiVbyApiVersionNoTagMutation = (options?: Partial<Options<Pat
     return mutationOptions;
 };
 
-export const importMutationKey = (options: Partial<Options<ImportData>>) => createMutationKey('import', options);
+export const importMutationKey = (options?: Partial<Options<ImportData>>) => createMutationKey('import', options);
 
-export const importMutation = (options: Partial<Options<ImportData>>): UseMutationOptions<ImportResponse, AxiosError<DefaultError>, Options<ImportData>> => {
+export const importMutation = (options?: Partial<Options<ImportData>>): UseMutationOptions<ImportResponse, AxiosError<DefaultError>, Options<ImportData>> => {
     const mutationOptions: UseMutationOptions<ImportResponse, AxiosError<DefaultError>, Options<ImportData>> = {
         mutationFn: async (fnOptions) => {
             const { data } = await import_({
@@ -248,9 +245,9 @@ export const putCallWithoutParametersAndResponseMutation = (options?: Partial<Op
     return mutationOptions;
 };
 
-export const deleteFooMutationKey = (options: Partial<Options<DeleteFooData3>>) => createMutationKey('deleteFoo', options);
+export const deleteFooMutationKey = (options?: Partial<Options<DeleteFooData3>>) => createMutationKey('deleteFoo', options);
 
-export const deleteFooMutation = (options: Partial<Options<DeleteFooData3>>): UseMutationOptions<unknown, AxiosError<DefaultError>, Options<DeleteFooData3>> => {
+export const deleteFooMutation = (options?: Partial<Options<DeleteFooData3>>): UseMutationOptions<unknown, AxiosError<DefaultError>, Options<DeleteFooData3>> => {
     const mutationOptions: UseMutationOptions<unknown, AxiosError<DefaultError>, Options<DeleteFooData3>> = {
         mutationFn: async (fnOptions) => {
             const { data } = await deleteFoo({
@@ -282,12 +279,12 @@ export const callWithDescriptionsMutation = (options?: Partial<Options<CallWithD
     return mutationOptions;
 };
 
-export const deprecatedCallMutationKey = (options: Partial<Options<DeprecatedCallData>>) => createMutationKey('deprecatedCall', options);
+export const deprecatedCallMutationKey = (options?: Partial<Options<DeprecatedCallData>>) => createMutationKey('deprecatedCall', options);
 
 /**
  * @deprecated
  */
-export const deprecatedCallMutation = (options: Partial<Options<DeprecatedCallData>>): UseMutationOptions<unknown, AxiosError<DefaultError>, Options<DeprecatedCallData>> => {
+export const deprecatedCallMutation = (options?: Partial<Options<DeprecatedCallData>>): UseMutationOptions<unknown, AxiosError<DefaultError>, Options<DeprecatedCallData>> => {
     const mutationOptions: UseMutationOptions<unknown, AxiosError<DefaultError>, Options<DeprecatedCallData>> = {
         mutationFn: async (fnOptions) => {
             const { data } = await deprecatedCall({
@@ -302,9 +299,9 @@ export const deprecatedCallMutation = (options: Partial<Options<DeprecatedCallDa
     return mutationOptions;
 };
 
-export const callWithParametersMutationKey = (options: Partial<Options<CallWithParametersData>>) => createMutationKey('callWithParameters', options);
+export const callWithParametersMutationKey = (options?: Partial<Options<CallWithParametersData>>) => createMutationKey('callWithParameters', options);
 
-export const callWithParametersMutation = (options: Partial<Options<CallWithParametersData>>): UseMutationOptions<unknown, AxiosError<DefaultError>, Options<CallWithParametersData>> => {
+export const callWithParametersMutation = (options?: Partial<Options<CallWithParametersData>>): UseMutationOptions<unknown, AxiosError<DefaultError>, Options<CallWithParametersData>> => {
     const mutationOptions: UseMutationOptions<unknown, AxiosError<DefaultError>, Options<CallWithParametersData>> = {
         mutationFn: async (fnOptions) => {
             const { data } = await callWithParameters({
@@ -319,9 +316,9 @@ export const callWithParametersMutation = (options: Partial<Options<CallWithPara
     return mutationOptions;
 };
 
-export const callWithWeirdParameterNamesMutationKey = (options: Partial<Options<CallWithWeirdParameterNamesData>>) => createMutationKey('callWithWeirdParameterNames', options);
+export const callWithWeirdParameterNamesMutationKey = (options?: Partial<Options<CallWithWeirdParameterNamesData>>) => createMutationKey('callWithWeirdParameterNames', options);
 
-export const callWithWeirdParameterNamesMutation = (options: Partial<Options<CallWithWeirdParameterNamesData>>): UseMutationOptions<unknown, AxiosError<DefaultError>, Options<CallWithWeirdParameterNamesData>> => {
+export const callWithWeirdParameterNamesMutation = (options?: Partial<Options<CallWithWeirdParameterNamesData>>): UseMutationOptions<unknown, AxiosError<DefaultError>, Options<CallWithWeirdParameterNamesData>> => {
     const mutationOptions: UseMutationOptions<unknown, AxiosError<DefaultError>, Options<CallWithWeirdParameterNamesData>> = {
         mutationFn: async (fnOptions) => {
             const { data } = await callWithWeirdParameterNames({
@@ -404,9 +401,9 @@ export const getCallWithOptionalParamInfiniteOptions = (options: Options<GetCall
     queryKey: getCallWithOptionalParamInfiniteQueryKey(options)
 });
 
-export const postCallWithOptionalParamMutationKey = (options: Partial<Options<PostCallWithOptionalParamData>>) => createMutationKey('postCallWithOptionalParam', options);
+export const postCallWithOptionalParamMutationKey = (options?: Partial<Options<PostCallWithOptionalParamData>>) => createMutationKey('postCallWithOptionalParam', options);
 
-export const postCallWithOptionalParamMutation = (options: Partial<Options<PostCallWithOptionalParamData>>): UseMutationOptions<PostCallWithOptionalParamResponse, AxiosError<DefaultError>, Options<PostCallWithOptionalParamData>> => {
+export const postCallWithOptionalParamMutation = (options?: Partial<Options<PostCallWithOptionalParamData>>): UseMutationOptions<PostCallWithOptionalParamResponse, AxiosError<DefaultError>, Options<PostCallWithOptionalParamData>> => {
     const mutationOptions: UseMutationOptions<PostCallWithOptionalParamResponse, AxiosError<DefaultError>, Options<PostCallWithOptionalParamData>> = {
         mutationFn: async (fnOptions) => {
             const { data } = await postCallWithOptionalParam({
@@ -487,9 +484,9 @@ export const callWithDefaultOptionalParametersMutation = (options?: Partial<Opti
     return mutationOptions;
 };
 
-export const callToTestOrderOfParamsMutationKey = (options: Partial<Options<CallToTestOrderOfParamsData>>) => createMutationKey('callToTestOrderOfParams', options);
+export const callToTestOrderOfParamsMutationKey = (options?: Partial<Options<CallToTestOrderOfParamsData>>) => createMutationKey('callToTestOrderOfParams', options);
 
-export const callToTestOrderOfParamsMutation = (options: Partial<Options<CallToTestOrderOfParamsData>>): UseMutationOptions<unknown, AxiosError<DefaultError>, Options<CallToTestOrderOfParamsData>> => {
+export const callToTestOrderOfParamsMutation = (options?: Partial<Options<CallToTestOrderOfParamsData>>): UseMutationOptions<unknown, AxiosError<DefaultError>, Options<CallToTestOrderOfParamsData>> => {
     const mutationOptions: UseMutationOptions<unknown, AxiosError<DefaultError>, Options<CallToTestOrderOfParamsData>> = {
         mutationFn: async (fnOptions) => {
             const { data } = await callToTestOrderOfParams({
@@ -709,9 +706,9 @@ export const typesOptions = (options: Options<TypesData>) => queryOptions<TypesR
     queryKey: typesQueryKey(options)
 });
 
-export const uploadFileMutationKey = (options: Partial<Options<UploadFileData>>) => createMutationKey('uploadFile', options);
+export const uploadFileMutationKey = (options?: Partial<Options<UploadFileData>>) => createMutationKey('uploadFile', options);
 
-export const uploadFileMutation = (options: Partial<Options<UploadFileData>>): UseMutationOptions<UploadFileResponse, AxiosError<DefaultError>, Options<UploadFileData>> => {
+export const uploadFileMutation = (options?: Partial<Options<UploadFileData>>): UseMutationOptions<UploadFileResponse, AxiosError<DefaultError>, Options<UploadFileData>> => {
     const mutationOptions: UseMutationOptions<UploadFileResponse, AxiosError<DefaultError>, Options<UploadFileData>> = {
         mutationFn: async (fnOptions) => {
             const { data } = await uploadFile({
@@ -788,9 +785,9 @@ export const multipartRequestMutation = (options?: Partial<Options<MultipartRequ
     return mutationOptions;
 };
 
-export const complexParamsMutationKey = (options: Partial<Options<ComplexParamsData>>) => createMutationKey('complexParams', options);
+export const complexParamsMutationKey = (options?: Partial<Options<ComplexParamsData>>) => createMutationKey('complexParams', options);
 
-export const complexParamsMutation = (options: Partial<Options<ComplexParamsData>>): UseMutationOptions<ComplexParamsResponse, AxiosError<DefaultError>, Options<ComplexParamsData>> => {
+export const complexParamsMutation = (options?: Partial<Options<ComplexParamsData>>): UseMutationOptions<ComplexParamsResponse, AxiosError<DefaultError>, Options<ComplexParamsData>> => {
     const mutationOptions: UseMutationOptions<ComplexParamsResponse, AxiosError<DefaultError>, Options<ComplexParamsData>> = {
         mutationFn: async (fnOptions) => {
             const { data } = await complexParams({
@@ -822,9 +819,9 @@ export const callWithResultFromHeaderMutation = (options?: Partial<Options<CallW
     return mutationOptions;
 };
 
-export const testErrorCodeMutationKey = (options: Partial<Options<TestErrorCodeData>>) => createMutationKey('testErrorCode', options);
+export const testErrorCodeMutationKey = (options?: Partial<Options<TestErrorCodeData>>) => createMutationKey('testErrorCode', options);
 
-export const testErrorCodeMutation = (options: Partial<Options<TestErrorCodeData>>): UseMutationOptions<unknown, AxiosError<DefaultError>, Options<TestErrorCodeData>> => {
+export const testErrorCodeMutation = (options?: Partial<Options<TestErrorCodeData>>): UseMutationOptions<unknown, AxiosError<DefaultError>, Options<TestErrorCodeData>> => {
     const mutationOptions: UseMutationOptions<unknown, AxiosError<DefaultError>, Options<TestErrorCodeData>> = {
         mutationFn: async (fnOptions) => {
             const { data } = await testErrorCode({
@@ -839,9 +836,9 @@ export const testErrorCodeMutation = (options: Partial<Options<TestErrorCodeData
     return mutationOptions;
 };
 
-export const nonAsciiæøåÆøÅöôêÊ字符串MutationKey = (options: Partial<Options<NonAsciiæøåÆøÅöôêÊ字符串Data>>) => createMutationKey('nonAsciiæøåÆøÅöôêÊ字符串', options);
+export const nonAsciiæøåÆøÅöôêÊ字符串MutationKey = (options?: Partial<Options<NonAsciiæøåÆøÅöôêÊ字符串Data>>) => createMutationKey('nonAsciiæøåÆøÅöôêÊ字符串', options);
 
-export const nonAsciiæøåÆøÅöôêÊ字符串Mutation = (options: Partial<Options<NonAsciiæøåÆøÅöôêÊ字符串Data>>): UseMutationOptions<NonAsciiæøåÆøÅöôêÊ字符串Response, AxiosError<DefaultError>, Options<NonAsciiæøåÆøÅöôêÊ字符串Data>> => {
+export const nonAsciiæøåÆøÅöôêÊ字符串Mutation = (options?: Partial<Options<NonAsciiæøåÆøÅöôêÊ字符串Data>>): UseMutationOptions<NonAsciiæøåÆøÅöôêÊ字符串Response, AxiosError<DefaultError>, Options<NonAsciiæøåÆøÅöôêÊ字符串Data>> => {
     const mutationOptions: UseMutationOptions<NonAsciiæøåÆøÅöôêÊ字符串Response, AxiosError<DefaultError>, Options<NonAsciiæøåÆøÅöôêÊ字符串Data>> = {
         mutationFn: async (fnOptions) => {
             const { data } = await nonAsciiæøåÆøÅöôêÊ字符串({
@@ -856,12 +853,12 @@ export const nonAsciiæøåÆøÅöôêÊ字符串Mutation = (options: Partial<O
     return mutationOptions;
 };
 
-export const putWithFormUrlEncodedMutationKey = (options: Partial<Options<PutWithFormUrlEncodedData>>) => createMutationKey('putWithFormUrlEncoded', options);
+export const putWithFormUrlEncodedMutationKey = (options?: Partial<Options<PutWithFormUrlEncodedData>>) => createMutationKey('putWithFormUrlEncoded', options);
 
 /**
  * Login User
  */
-export const putWithFormUrlEncodedMutation = (options: Partial<Options<PutWithFormUrlEncodedData>>): UseMutationOptions<unknown, AxiosError<DefaultError>, Options<PutWithFormUrlEncodedData>> => {
+export const putWithFormUrlEncodedMutation = (options?: Partial<Options<PutWithFormUrlEncodedData>>): UseMutationOptions<unknown, AxiosError<DefaultError>, Options<PutWithFormUrlEncodedData>> => {
     const mutationOptions: UseMutationOptions<unknown, AxiosError<DefaultError>, Options<PutWithFormUrlEncodedData>> = {
         mutationFn: async (fnOptions) => {
             const { data } = await putWithFormUrlEncoded({

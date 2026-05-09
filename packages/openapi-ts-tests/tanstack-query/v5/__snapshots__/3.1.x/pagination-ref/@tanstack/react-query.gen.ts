@@ -121,9 +121,6 @@ const createMutationKey = <TOptions extends Partial<Options>>(id: string, option
     if (tags) {
         params.tags = tags;
     }
-    if (options?.body) {
-        params.body = options.body;
-    }
     if (options?.headers) {
         params.headers = options.headers;
     }
@@ -136,9 +133,9 @@ const createMutationKey = <TOptions extends Partial<Options>>(id: string, option
     return [params];
 };
 
-export const postFooMutationKey = (options: Partial<Options<PostFooData>>) => createMutationKey('postFoo', options);
+export const postFooMutationKey = (options?: Partial<Options<PostFooData>>) => createMutationKey('postFoo', options);
 
-export const postFooMutation = (options: Partial<Options<PostFooData>>): UseMutationOptions<unknown, DefaultError, Options<PostFooData>> => {
+export const postFooMutation = (options?: Partial<Options<PostFooData>>): UseMutationOptions<unknown, DefaultError, Options<PostFooData>> => {
     const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<PostFooData>> = {
         mutationFn: async (fnOptions) => {
             const { data } = await postFoo({

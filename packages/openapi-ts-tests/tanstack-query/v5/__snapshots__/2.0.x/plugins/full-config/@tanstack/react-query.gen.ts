@@ -77,9 +77,6 @@ const createMutationKey = <TOptions extends Partial<Options>>(id: string, option
     if (tags) {
         params.tags = tags;
     }
-    if (options?.body) {
-        params.body = options.body;
-    }
     if (options?.headers) {
         params.headers = options.headers;
     }
@@ -249,9 +246,9 @@ export const callWithDescriptionsMutation = (options?: Partial<Options<CallWithD
 
 export const useCallWithDescriptionsMutation = (mutationOptions?: Partial<Omit<UseMutationOptions<unknown, DefaultError, Options<CallWithDescriptionsData>>, 'mutationFn'>>) => useMutation({ ...callWithDescriptionsMutation(), ...mutationOptions });
 
-export const callWithParametersMutationKey = (options: Partial<Options<CallWithParametersData>>) => createMutationKey('callWithParameters', options);
+export const callWithParametersMutationKey = (options?: Partial<Options<CallWithParametersData>>) => createMutationKey('callWithParameters', options);
 
-export const callWithParametersMutation = (options: Partial<Options<CallWithParametersData>>): UseMutationOptions<unknown, DefaultError, Options<CallWithParametersData>> => {
+export const callWithParametersMutation = (options?: Partial<Options<CallWithParametersData>>): UseMutationOptions<unknown, DefaultError, Options<CallWithParametersData>> => {
     const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<CallWithParametersData>> = {
         mutationFn: async (fnOptions) => {
             const { data } = await callWithParameters({
@@ -268,9 +265,9 @@ export const callWithParametersMutation = (options: Partial<Options<CallWithPara
 
 export const useCallWithParametersMutation = (mutationOptions?: Partial<Omit<UseMutationOptions<unknown, DefaultError, Options<CallWithParametersData>>, 'mutationFn'>>) => useMutation({ ...callWithParametersMutation(), ...mutationOptions });
 
-export const callWithWeirdParameterNamesMutationKey = (options: Partial<Options<CallWithWeirdParameterNamesData>>) => createMutationKey('callWithWeirdParameterNames', options);
+export const callWithWeirdParameterNamesMutationKey = (options?: Partial<Options<CallWithWeirdParameterNamesData>>) => createMutationKey('callWithWeirdParameterNames', options);
 
-export const callWithWeirdParameterNamesMutation = (options: Partial<Options<CallWithWeirdParameterNamesData>>): UseMutationOptions<unknown, DefaultError, Options<CallWithWeirdParameterNamesData>> => {
+export const callWithWeirdParameterNamesMutation = (options?: Partial<Options<CallWithWeirdParameterNamesData>>): UseMutationOptions<unknown, DefaultError, Options<CallWithWeirdParameterNamesData>> => {
     const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<CallWithWeirdParameterNamesData>> = {
         mutationFn: async (fnOptions) => {
             const { data } = await callWithWeirdParameterNames({
@@ -330,9 +327,9 @@ export const callWithDefaultOptionalParametersMutation = (options?: Partial<Opti
 
 export const useCallWithDefaultOptionalParametersMutation = (mutationOptions?: Partial<Omit<UseMutationOptions<unknown, DefaultError, Options<CallWithDefaultOptionalParametersData>>, 'mutationFn'>>) => useMutation({ ...callWithDefaultOptionalParametersMutation(), ...mutationOptions });
 
-export const callToTestOrderOfParamsMutationKey = (options: Partial<Options<CallToTestOrderOfParamsData>>) => createMutationKey('callToTestOrderOfParams', options);
+export const callToTestOrderOfParamsMutationKey = (options?: Partial<Options<CallToTestOrderOfParamsData>>) => createMutationKey('callToTestOrderOfParams', options);
 
-export const callToTestOrderOfParamsMutation = (options: Partial<Options<CallToTestOrderOfParamsData>>): UseMutationOptions<unknown, DefaultError, Options<CallToTestOrderOfParamsData>> => {
+export const callToTestOrderOfParamsMutation = (options?: Partial<Options<CallToTestOrderOfParamsData>>): UseMutationOptions<unknown, DefaultError, Options<CallToTestOrderOfParamsData>> => {
     const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<CallToTestOrderOfParamsData>> = {
         mutationFn: async (fnOptions) => {
             const { data } = await callToTestOrderOfParams({
@@ -679,9 +676,9 @@ export const callWithResultFromHeaderMutation = (options?: Partial<Options<CallW
 
 export const useCallWithResultFromHeaderMutation = (mutationOptions?: Partial<Omit<UseMutationOptions<unknown, DefaultError, Options<CallWithResultFromHeaderData>>, 'mutationFn'>>) => useMutation({ ...callWithResultFromHeaderMutation(), ...mutationOptions });
 
-export const testErrorCodeMutationKey = (options: Partial<Options<TestErrorCodeData>>) => createMutationKey('testErrorCode', options);
+export const testErrorCodeMutationKey = (options?: Partial<Options<TestErrorCodeData>>) => createMutationKey('testErrorCode', options);
 
-export const testErrorCodeMutation = (options: Partial<Options<TestErrorCodeData>>): UseMutationOptions<unknown, DefaultError, Options<TestErrorCodeData>> => {
+export const testErrorCodeMutation = (options?: Partial<Options<TestErrorCodeData>>): UseMutationOptions<unknown, DefaultError, Options<TestErrorCodeData>> => {
     const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<TestErrorCodeData>> = {
         mutationFn: async (fnOptions) => {
             const { data } = await testErrorCode({
@@ -698,9 +695,9 @@ export const testErrorCodeMutation = (options: Partial<Options<TestErrorCodeData
 
 export const useTestErrorCodeMutation = (mutationOptions?: Partial<Omit<UseMutationOptions<unknown, DefaultError, Options<TestErrorCodeData>>, 'mutationFn'>>) => useMutation({ ...testErrorCodeMutation(), ...mutationOptions });
 
-export const nonAsciiæøåÆøÅöôêÊ字符串MutationKey = (options: Partial<Options<NonAsciiæøåÆøÅöôêÊ字符串Data>>) => createMutationKey('nonAsciiæøåÆøÅöôêÊ字符串', options);
+export const nonAsciiæøåÆøÅöôêÊ字符串MutationKey = (options?: Partial<Options<NonAsciiæøåÆøÅöôêÊ字符串Data>>) => createMutationKey('nonAsciiæøåÆøÅöôêÊ字符串', options);
 
-export const nonAsciiæøåÆøÅöôêÊ字符串Mutation = (options: Partial<Options<NonAsciiæøåÆøÅöôêÊ字符串Data>>): UseMutationOptions<NonAsciiæøåÆøÅöôêÊ字符串Response, DefaultError, Options<NonAsciiæøåÆøÅöôêÊ字符串Data>> => {
+export const nonAsciiæøåÆøÅöôêÊ字符串Mutation = (options?: Partial<Options<NonAsciiæøåÆøÅöôêÊ字符串Data>>): UseMutationOptions<NonAsciiæøåÆøÅöôêÊ字符串Response, DefaultError, Options<NonAsciiæøåÆøÅöôêÊ字符串Data>> => {
     const mutationOptions: UseMutationOptions<NonAsciiæøåÆøÅöôêÊ字符串Response, DefaultError, Options<NonAsciiæøåÆøÅöôêÊ字符串Data>> = {
         mutationFn: async (fnOptions) => {
             const { data } = await nonAsciiæøåÆøÅöôêÊ字符串({
@@ -717,14 +714,14 @@ export const nonAsciiæøåÆøÅöôêÊ字符串Mutation = (options: Partial<O
 
 export const useNonAsciiæøåÆøÅöôêÊ字符串Mutation = (mutationOptions?: Partial<Omit<UseMutationOptions<NonAsciiæøåÆøÅöôêÊ字符串Response, DefaultError, Options<NonAsciiæøåÆøÅöôêÊ字符串Data>>, 'mutationFn'>>) => useMutation({ ...nonAsciiæøåÆøÅöôêÊ字符串Mutation(), ...mutationOptions });
 
-export const postApiVbyApiVersionBodyMutationKey = (options: Partial<Options<PostApiVbyApiVersionBodyData>>) => createMutationKey('postApiVbyApiVersionBody', options);
+export const postApiVbyApiVersionBodyMutationKey = (options?: Partial<Options<PostApiVbyApiVersionBodyData>>) => createMutationKey('postApiVbyApiVersionBody', options);
 
 /**
  * Body should not be unknown
  *
  * Body should not be unknown
  */
-export const postApiVbyApiVersionBodyMutation = (options: Partial<Options<PostApiVbyApiVersionBodyData>>): UseMutationOptions<PostApiVbyApiVersionBodyResponse, PostApiVbyApiVersionBodyError, Options<PostApiVbyApiVersionBodyData>> => {
+export const postApiVbyApiVersionBodyMutation = (options?: Partial<Options<PostApiVbyApiVersionBodyData>>): UseMutationOptions<PostApiVbyApiVersionBodyResponse, PostApiVbyApiVersionBodyError, Options<PostApiVbyApiVersionBodyData>> => {
     const mutationOptions: UseMutationOptions<PostApiVbyApiVersionBodyResponse, PostApiVbyApiVersionBodyError, Options<PostApiVbyApiVersionBodyData>> = {
         mutationFn: async (fnOptions) => {
             const { data } = await postApiVbyApiVersionBody({
