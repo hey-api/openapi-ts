@@ -180,12 +180,13 @@ export const getParseAs = (
   return;
 };
 
-export async function setAuthParams(
-  options: Pick<RequestOptions, 'auth' | 'query' | 'security'> & {
+export const setAuthParams = async (
+  options: Pick<RequestOptions, 'auth' | 'query'> & {
     headers: HttpHeaders;
   },
-): Promise<HttpHeaders> {
-  for (const auth of options.security ?? []) {
+  security: Pick<Required<RequestOptions>, 'security'>['security']
+) => {
+  for (const auth of security) {
     const token = await getAuthToken(auth, options.auth);
 
     if (!token) {
@@ -210,9 +211,8 @@ export async function setAuthParams(
         break;
     }
 
-    return options.headers;
+    return;
   }
-  return options.headers;
 };
 
 export const buildUrl: Client['buildUrl'] = (options) => {
