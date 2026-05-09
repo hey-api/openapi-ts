@@ -184,7 +184,7 @@ export async function setAuthParams(
   options: Pick<RequestOptions, 'auth' | 'query' | 'security'> & {
     headers: HttpHeaders;
   },
-): Promise<void> {
+): Promise<HttpHeaders> {
   for (const auth of options.security ?? []) {
     const token = await getAuthToken(auth, options.auth);
 
@@ -210,9 +210,10 @@ export async function setAuthParams(
         break;
     }
 
-    return;
+    return options.headers;
   }
-}
+  return options.headers;
+};
 
 export const buildUrl: Client['buildUrl'] = (options) => {
   const url = getUrl({
