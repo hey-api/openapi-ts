@@ -461,6 +461,14 @@ export class $RefParser {
           }
         } else if (k === 'tags' && Array.isArray(v) && v.every((x) => typeof x === 'string')) {
           out[k] = v.map((t) => tagMap.get(t) || t);
+        } else if (k === 'security' && Array.isArray(v)) {
+          out[k] = v.map((s) => {
+            const securityScheme: Record<string, any> = {};
+            for (const [key, value] of Object.entries(s)) {
+              securityScheme[`${opIdPrefix}_${key}`] = value;
+            }
+            return securityScheme;
+          });
         } else if (k === 'operationId' && typeof v === 'string') {
           out[k] = unique(usedOpIds, `${opIdPrefix}_${v}`);
         } else {
