@@ -211,8 +211,9 @@ export const setAuthParams = async (
         break;
     }
 
-    return;
+    return options.headers;
   }
+  return options.headers;
 };
 
 export const buildUrl: Client['buildUrl'] = (options) => {
