@@ -210,8 +210,6 @@ export const setAuthParams = async (
         options.headers = options.headers.set(name, token);
         break;
     }
-
-    return;
   }
 };
 
