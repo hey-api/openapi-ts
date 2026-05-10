@@ -19,6 +19,15 @@ export default defineConfig({
           root: 'packages/codegen-core',
         },
       },
+
+      {
+        extends: true,
+        test: {
+          name: '@hey-api/vite-plugin',
+          root: 'packages/vite-plugin',
+          setupFiles: ['./vitest.setup.ts'],
+        },
+      },
       {
         extends: true,
         test: {
@@ -144,6 +153,7 @@ export default defineConfig({
         },
       },
     ],
+
     testTimeout: platform() === 'win32' ? 10000 : 5000,
   },
 });

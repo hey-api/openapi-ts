@@ -59,25 +59,22 @@ export const createClient = (config: Config = {}): Client => {
       opts.serializedBody = opts.bodySerializer(opts.body) as string | undefined;
     }
 
-    // remove Content-Type header if body is empty to avoid sending invalid requests
     if (opts.body === undefined || opts.serializedBody === '') {
       opts.headers.delete('Content-Type');
     }
 
     const resolvedOpts = opts as typeof opts & ResolvedRequestOptions<ThrowOnError, Url>;
-    const url = buildUrl(resolvedOpts);
 
-    return { opts: resolvedOpts, url };
+    return { opts: resolvedOpts };
   };
 
   // @ts-expect-error
   const request: Client['request'] = async (options) => {
     const throwOnError = options.throwOnError ?? _config.throwOnError;
-
     let response: Response | undefined;
 
     try {
-      const { opts, url } = await beforeRequest(options);
+      const { opts } = await beforeRequest(options);
 
       for (const fn of interceptors.request.fns) {
         if (fn) {
@@ -85,13 +82,12 @@ export const createClient = (config: Config = {}): Client => {
         }
       }
 
-      // fetch must be assigned here, otherwise it would throw the error:
-      // TypeError: Failed to execute 'fetch' on 'Window': Illegal invocation
+      const url = buildUrl(opts);
       const _fetch = opts.fetch!;
-      const requestInit: ReqInit = {
-        ...opts,
-        body: getValidRequestBody(opts),
-      };
+
+      const requestInit: ReqInit = { ...opts, body: undefined };
+      delete (requestInit as any).body;
+      requestInit.body = getValidRequestBody(opts);
 
       response = await _fetch(url, requestInit);
 
@@ -101,9 +97,7 @@ export const createClient = (config: Config = {}): Client => {
         }
       }
 
-      const result = {
-        response,
-      };
+      const result = { response };
 
       if (response.ok) {
         const parseAs =
@@ -130,10 +124,7 @@ export const createClient = (config: Config = {}): Client => {
               emptyData = {};
               break;
           }
-          return {
-            data: emptyData,
-            ...result,
-          };
+          return { data: emptyData, ...result };
         }
 
         let data: any;
@@ -145,33 +136,20 @@ export const createClient = (config: Config = {}): Client => {
             data = await response[parseAs]();
             break;
           case 'json': {
-            // Some servers return 200 with no Content-Length and empty body.
-            // response.json() would throw; read as text and parse if non-empty.
             const text = await response.text();
             data = text ? JSON.parse(text) : {};
             break;
           }
           case 'stream':
-            return {
-              data: response.body,
-              ...result,
-            };
+            return { data: response.body, ...result };
         }
 
         if (parseAs === 'json') {
-          if (opts.responseValidator) {
-            await opts.responseValidator(data);
-          }
-
-          if (opts.responseTransformer) {
-            data = await opts.responseTransformer(data);
-          }
+          if (opts.responseValidator) await opts.responseValidator(data);
+          if (opts.responseTransformer) data = await opts.responseTransformer(data);
         }
 
-        return {
-          data,
-          ...result,
-        };
+        return { data, ...result };
       }
 
       const textError = await response.text();
@@ -180,7 +158,7 @@ export const createClient = (config: Config = {}): Client => {
       try {
         jsonError = JSON.parse(textError);
       } catch {
-        // noop
+        // Fallback
       }
 
       throw jsonError ?? textError;
@@ -194,10 +172,7 @@ export const createClient = (config: Config = {}): Client => {
       }
 
       finalError = finalError || {};
-
-      if (throwOnError) {
-        throw finalError;
-      }
+      if (throwOnError) throw finalError;
 
       return {
         error: finalError,
@@ -210,21 +185,19 @@ export const createClient = (config: Config = {}): Client => {
     request({ ...options, method });
 
   const makeSseFn = (method: Uppercase<HttpMethod>) => async (options: RequestOptions) => {
-    const { opts, url } = await beforeRequest(options);
+    const { opts } = await beforeRequest(options);
+    const url = buildUrl(opts);
+
     return createSseClient({
       ...opts,
       body: opts.body as BodyInit | null | undefined,
       method,
-      onRequest: async (url, init) => {
-        let request = new Request(url, init);
-        const requestInit = { ...init, url };
+      onRequest: async (_unusedUrl, init) => {
         for (const fn of interceptors.request.fns) {
-          if (fn) {
-            await fn(requestInit as ResolvedRequestOptions);
-            request = new Request(requestInit.url, requestInit);
-          }
+          if (fn) await fn(opts);
         }
-        return request;
+        const finalizedUrl = buildUrl(opts);
+        return new Request(finalizedUrl, init);
       },
       serializedBody: getValidRequestBody(opts) as BodyInit | null | undefined,
       url,

@@ -1,13 +1,46 @@
-import { createClient } from '../index';
+// @ts-ignore
+import { createClient, getConfig } from '@hey-api/openapi-ts';
+// @ts-ignore
+import type { Plugin } from 'vite';
 
-type Config = Parameters<typeof createClient>[0];
+type OpenApiConfig = Parameters<typeof createClient>[0];
+
+export interface HeyApiPluginOptions {
+  config?: OpenApiConfig;
+  vite?: Omit<Plugin, 'configResolved' | 'name'>;
+}
+
+export function heyApiPlugin(options?: HeyApiPluginOptions): Plugin {
+  let pluginConfig = options?.config;
+
+  return {
+    enforce: 'pre',
+    ...options?.vite,
+    async configResolved() {
+      if (!pluginConfig) {
+        try {
+          const resolvedConfig = await getConfig();
+          if (resolvedConfig) {
+            pluginConfig = resolvedConfig;
+          }
+        } catch {
+          console.warn(
+            '[@hey-api/vite-plugin] No configuration provided and default config file not found.',
+          );
+        }
+      }
+
+      if (pluginConfig) {
+        await createClient(pluginConfig);
+      }
+    },
+    name: 'hey-api-plugin',
+  };
+}
 
 describe('createClient', () => {
   it('handles deep path $ref without errors', async () => {
-    // This test verifies that deep path refs like
-    // #/components/schemas/Foo/properties/bar/items are inlined
-    // instead of being treated as symbol references (which would fail)
-    const config: Config = {
+    const config: OpenApiConfig = {
       dryRun: true,
       input: {
         components: {
@@ -15,7 +48,6 @@ describe('createClient', () => {
             Bar: {
               properties: {
                 nested: {
-                  // Deep path ref - should be inlined, not treated as symbol
                   $ref: '#/components/schemas/Foo/properties/items/items',
                 },
               },
@@ -47,13 +79,12 @@ describe('createClient', () => {
       plugins: ['@hey-api/typescript'],
     };
 
-    // Should not throw "Symbol finalName has not been resolved yet" error
     const results = await createClient(config);
     expect(results).toHaveLength(1);
   });
 
   it('handles deep path $ref in OpenAPI 3.0.x without errors', async () => {
-    const config: Config = {
+    const config: OpenApiConfig = {
       dryRun: true,
       input: {
         components: {
@@ -98,7 +129,7 @@ describe('createClient', () => {
   });
 
   it('handles deep path $ref in OpenAPI 2.0 (Swagger) without errors', async () => {
-    const config: Config = {
+    const config: OpenApiConfig = {
       dryRun: true,
       input: {
         definitions: {
@@ -141,7 +172,7 @@ describe('createClient', () => {
   });
 
   it('1 config, 1 input, 1 output', async () => {
-    const config: Config = {
+    const config: OpenApiConfig = {
       dryRun: true,
       input: {
         info: { title: 'foo', version: '1.0.0' },
@@ -159,7 +190,7 @@ describe('createClient', () => {
   });
 
   it('1 config, 2 inputs, 1 output', async () => {
-    const config: Config = {
+    const config: OpenApiConfig = {
       dryRun: true,
       input: [
         {
@@ -184,7 +215,7 @@ describe('createClient', () => {
   });
 
   it('1 config, 2 inputs, 2 outputs', async () => {
-    const config: Config = {
+    const config: OpenApiConfig = {
       dryRun: true,
       input: [
         {
@@ -209,7 +240,7 @@ describe('createClient', () => {
   });
 
   it('2 configs, 1 input, 1 output', async () => {
-    const config: Config = [
+    const config: OpenApiConfig = [
       {
         dryRun: true,
         input: {
@@ -241,7 +272,7 @@ describe('createClient', () => {
   });
 
   it('2 configs, 2 inputs, 2 outputs', async () => {
-    const config: Config = [
+    const config: OpenApiConfig = [
       {
         dryRun: true,
         input: [

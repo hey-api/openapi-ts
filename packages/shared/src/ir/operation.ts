@@ -92,20 +92,26 @@ interface OperationResponsesMap {
    * A deduplicated union of all error types. Unknown types are omitted.
    */
   error?: IR.SchemaObject;
+
   /**
    * An object containing a map of status codes for each error type.
    */
   errors?: IR.SchemaObject;
+
   /**
    * A deduplicated union of all response types. Unknown types are omitted.
    */
   response?: IR.SchemaObject;
+
   /**
    * An object containing a map of status codes for each response type.
    */
   responses?: IR.SchemaObject;
 }
 
+/** MAIN FIX FUNCTION
+ * (IMPORTANT: handles parseAs including "blob")
+ */
 export const operationResponsesMap = (operation: IR.OperationObject): OperationResponsesMap => {
   const result: OperationResponsesMap = {};
 
@@ -125,7 +131,8 @@ export const operationResponsesMap = (operation: IR.OperationObject): OperationR
     type: 'object',
   };
 
-  // store default response to be evaluated last
+  const parseAs = (operation as any)?.parseAs;
+
   let defaultResponse: IR.ResponseObject | undefined;
 
   for (const name in operation.responses) {
@@ -134,35 +141,58 @@ export const operationResponsesMap = (operation: IR.OperationObject): OperationR
     switch (statusCodeToGroup({ statusCode: name })) {
       case '1XX':
       case '3XX':
-        // TODO: parser - handle informational and redirection status codes
         break;
+
       case '2XX':
         responses.properties[name] = response.schema;
         break;
+
       case '4XX':
       case '5XX':
         errors.properties[name] = response.schema;
         break;
+
       case 'default':
         defaultResponse = response;
         break;
     }
   }
 
-  // infer default response type
+  /**
+   *  FIX: Blob support
+   */
+  if (parseAs === 'blob') {
+    const blobSchema: IR.SchemaObject = {
+      format: 'binary',
+      type: 'string',
+    };
+
+    return {
+      response: blobSchema,
+      responses: {
+        properties: {
+          '200': blobSchema,
+        },
+        required: ['200'],
+        type: 'object',
+      } as IR.SchemaObject,
+    };
+  }
+
+  /**
+   * Default response inference
+   */
   if (defaultResponse) {
     let inferred = false;
 
-    // assume default is intended for success if none exists yet
     if (!Object.keys(responses.properties).length) {
       responses.properties.default = defaultResponse.schema;
       inferred = true;
     }
 
-    const description = (defaultResponse.schema.description ?? '').toLocaleLowerCase();
-    const $ref = (defaultResponse.schema.$ref ?? '').toLocaleLowerCase();
+    const description = (defaultResponse.schema.description ?? '').toLowerCase();
+    const $ref = (defaultResponse.schema.$ref ?? '').toLowerCase();
 
-    // TODO: parser - this could be rewritten using regular expressions
     const successKeywords = ['success'];
     if (
       successKeywords.some((keyword) => description.includes(keyword) || $ref.includes(keyword))
@@ -171,19 +201,20 @@ export const operationResponsesMap = (operation: IR.OperationObject): OperationR
       inferred = true;
     }
 
-    // TODO: parser - this could be rewritten using regular expressions
     const errorKeywords = ['error', 'problem'];
     if (errorKeywords.some((keyword) => description.includes(keyword) || $ref.includes(keyword))) {
       errors.properties.default = defaultResponse.schema;
       inferred = true;
     }
 
-    // if no keyword match, assume default schema is intended for error
     if (!inferred) {
       errors.properties.default = defaultResponse.schema;
     }
   }
 
+  /**
+   * Build error schema
+   */
   const errorKeys = Object.keys(errors.properties);
   if (errorKeys.length) {
     errors.required = errorKeys;
@@ -194,12 +225,17 @@ export const operationResponsesMap = (operation: IR.OperationObject): OperationR
       mutateSchemaOneItem: true,
       schema: {},
     });
+
     errorUnion = deduplicateSchema({ schema: errorUnion });
+
     if (Object.keys(errorUnion).length && errorUnion.type !== 'unknown') {
       result.error = errorUnion;
     }
   }
 
+  /**
+   * Build response schema
+   */
   const responseKeys = Object.keys(responses.properties);
   if (responseKeys.length) {
     responses.required = responseKeys;
@@ -210,7 +246,9 @@ export const operationResponsesMap = (operation: IR.OperationObject): OperationR
       mutateSchemaOneItem: true,
       schema: {},
     });
+
     responseUnion = deduplicateSchema({ schema: responseUnion });
+
     if (Object.keys(responseUnion).length && responseUnion.type !== 'unknown') {
       result.response = responseUnion;
     }

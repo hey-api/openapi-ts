@@ -10,9 +10,11 @@ import {
 } from './utils';
 
 type ReqInit = Omit<RequestInit, 'body' | 'headers'> & {
-  body?: any;
+  body?: BodyInit | null;
   headers: ReturnType<typeof mergeHeaders>;
 };
+
+type ParseAs = 'json' | 'text' | 'blob' | 'arrayBuffer' | 'formData' | 'stream';
 
 export const createClient = (config: Config = {}): Client => {
   let _config = mergeConfigs(createConfig(), config);
@@ -35,6 +37,7 @@ export const createClient = (config: Config = {}): Client => {
       headers: mergeHeaders(_config.headers, options.headers),
     };
 
+    // security
     if (opts.security) {
       await setAuthParams({
         ...opts,
@@ -42,49 +45,58 @@ export const createClient = (config: Config = {}): Client => {
       });
     }
 
+    // request validator
     if (opts.requestValidator) {
       await opts.requestValidator(opts);
     }
 
+    // serialize body
     if (opts.body && opts.bodySerializer) {
       opts.body = opts.bodySerializer(opts.body);
     }
 
-    // remove Content-Type header if body is empty to avoid sending invalid requests
+    // remove content-type if empty body
     if (opts.body === undefined || opts.body === '') {
       opts.headers.delete('Content-Type');
     }
 
-    const url = buildUrl(opts);
-    const requestInit: ReqInit = {
-      redirect: 'follow',
-      ...opts,
-    };
+    let requestObj = new Request('http://localhost', {
+      ...(opts as RequestInit),
+      headers: opts.headers,
+    });
 
-    let request = new Request(url, requestInit);
-
+    // request interceptors
     for (const fn of interceptors.request.fns) {
       if (fn) {
-        request = await fn(request, opts);
+        requestObj = await fn(requestObj, opts);
       }
     }
 
-    // fetch must be assigned here, otherwise it would throw the error:
-    // TypeError: Failed to execute 'fetch' on 'Window': Illegal invocation
-    const _fetch = opts.fetch!;
-    let response = await _fetch(request);
+    const url = buildUrl(opts);
 
-    for (const fn of interceptors.response.fns) {
-      if (fn) {
-        response = await fn(response, request, opts);
-      }
-    }
+    const requestInit: ReqInit = {
+      redirect: 'follow',
+      ...(opts as Omit<typeof opts, 'body'>),
+      body: opts.body as BodyInit | null | undefined,
+    };
+
+    const finalRequest = new Request(url, requestInit);
+
+    const response = await opts.fetch!(finalRequest);
 
     const result = {
-      request,
+      request: finalRequest,
       response,
     };
 
+    // response interceptors
+    for (const fn of interceptors.response.fns) {
+      if (fn) {
+        await fn(response, finalRequest, opts);
+      }
+    }
+
+    // SUCCESS HANDLING
     if (response.ok) {
       if (response.status === 204 || response.headers.get('Content-Length') === '0') {
         return {
@@ -96,36 +108,46 @@ export const createClient = (config: Config = {}): Client => {
       const parseAs =
         (opts.parseAs === 'auto'
           ? getParseAs(response.headers.get('Content-Type'))
-          : opts.parseAs) ?? 'json';
+          : (opts.parseAs as ParseAs)) ?? 'json';
 
-      let data: any;
+      let data: unknown;
+
       switch (parseAs) {
         case 'arrayBuffer':
+          data = await response.arrayBuffer();
+          break;
+
         case 'blob':
+          data = await response.blob();
+          break;
+
         case 'formData':
+          data = await response.formData();
+          break;
+
         case 'text':
-          data = await response[parseAs]();
+          data = await response.text();
           break;
-        case 'json': {
-          // Some servers return 200 with no Content-Length and empty body.
-          // response.json() would throw; read as text and parse if non-empty.
-          const text = await response.text();
-          data = text ? JSON.parse(text) : {};
-          break;
-        }
+
         case 'stream':
           return {
-            data: response.body,
+            data: response.body ?? null,
             ...result,
           };
-      }
-      if (parseAs === 'json') {
-        if (opts.responseValidator) {
-          await opts.responseValidator(data);
-        }
 
-        if (opts.responseTransformer) {
-          data = await opts.responseTransformer(data);
+        case 'json':
+        default: {
+          const text = await response.text();
+
+          data = text ? JSON.parse(text) : {};
+
+          if (opts.responseValidator) {
+            await opts.responseValidator(data);
+          }
+
+          if (opts.responseTransformer) {
+            data = await opts.responseTransformer(data);
+          }
         }
       }
 
@@ -135,48 +157,60 @@ export const createClient = (config: Config = {}): Client => {
       };
     }
 
-    let error = await response.text();
+    // ERROR HANDLING
+    let error: unknown = await response.text();
 
     try {
-      error = JSON.parse(error);
+      error = JSON.parse(error as string);
     } catch {
-      // noop
+      // ignore JSON parse errors
     }
 
     let finalError = error;
 
     for (const fn of interceptors.error.fns) {
       if (fn) {
-        finalError = (await fn(finalError, response, request, opts)) as string;
+        finalError = await fn(finalError, response, finalRequest, opts);
       }
     }
-
-    finalError = finalError || ({} as string);
 
     if (opts.throwOnError) {
       throw finalError;
     }
 
     return {
-      error: finalError,
+      error: finalError || {},
       ...result,
     };
   };
 
   return {
     buildUrl,
-    connect: (options) => request({ ...options, method: 'CONNECT' }),
-    delete: (options) => request({ ...options, method: 'DELETE' }),
-    get: (options) => request({ ...options, method: 'GET' }),
+
+    connect: (o) => request({ ...o, method: 'CONNECT' }),
+
+    delete: (o) => request({ ...o, method: 'DELETE' }),
+
+    get: (o) => request({ ...o, method: 'GET' }),
+
     getConfig,
-    head: (options) => request({ ...options, method: 'HEAD' }),
+
+    head: (o) => request({ ...o, method: 'HEAD' }),
+
     interceptors,
-    options: (options) => request({ ...options, method: 'OPTIONS' }),
-    patch: (options) => request({ ...options, method: 'PATCH' }),
-    post: (options) => request({ ...options, method: 'POST' }),
-    put: (options) => request({ ...options, method: 'PUT' }),
+
+    options: (o) => request({ ...o, method: 'OPTIONS' }),
+
+    patch: (o) => request({ ...o, method: 'PATCH' }),
+
+    post: (o) => request({ ...o, method: 'POST' }),
+
+    put: (o) => request({ ...o, method: 'PUT' }),
+
     request,
+
     setConfig,
-    trace: (options) => request({ ...options, method: 'TRACE' }),
+
+    trace: (o) => request({ ...o, method: 'TRACE' }),
   };
 };
