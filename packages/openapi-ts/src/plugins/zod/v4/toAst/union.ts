@@ -41,16 +41,24 @@ function baseNode(ctx: UnionResolverContext): Chain {
 
     if (discriminatedExpression) {
       const unionMembers = discriminatedExpression.members.map((member) =>
-        member.refExpression
-          .attr(identifiers.extend)
-          .call(
-            $.object().prop(
-              discriminatedExpression.discriminatorKey,
-              Array.isArray(member.discriminatedValue)
+        member.refExpression.attr(identifiers.extend).call(
+          $.object().prop(
+            discriminatedExpression.discriminatorKey,
+            Array.isArray(member.discriminatedValue)
+              ? member.discriminatedValue.every((v) => typeof v === 'string')
                 ? $(z).attr(identifiers.enum).call($.fromValue(member.discriminatedValue))
-                : $(z).attr(identifiers.literal).call($.fromValue(member.discriminatedValue)),
-            ),
+                : $(z)
+                    .attr(identifiers.union)
+                    .call(
+                      $.array(
+                        ...member.discriminatedValue.map((v) =>
+                          $(z).attr(identifiers.literal).call($.fromValue(v)),
+                        ),
+                      ),
+                    )
+              : $(z).attr(identifiers.literal).call($.fromValue(member.discriminatedValue)),
           ),
+        ),
       );
 
       expression = $(z)

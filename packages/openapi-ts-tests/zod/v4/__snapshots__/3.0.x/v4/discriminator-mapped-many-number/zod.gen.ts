@@ -11,6 +11,6 @@ export const zBaz = z.object({
 });
 
 export const zFoo = z.discriminatedUnion('code', [
-    zBar.extend({ code: z.enum([1, 2]) }),
+    zBar.extend({ code: z.union([z.literal(1), z.literal(2)]) }),
     zBaz.extend({ code: z.literal(3) })
 ]);
