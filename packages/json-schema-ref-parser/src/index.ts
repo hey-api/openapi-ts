@@ -42,15 +42,20 @@ export function getResolvedInput({
     resolvedInput.path = url.fromFileSystemPath(resolvedInput.path);
     resolvedInput.type = 'file';
   } else if (!resolvedInput.path && pathOrUrlOrSchema && typeof pathOrUrlOrSchema === 'object') {
-    if ('$id' in pathOrUrlOrSchema && pathOrUrlOrSchema.$id) {
+    if (
+      ('openapi' in pathOrUrlOrSchema && pathOrUrlOrSchema.openapi) ||
+      ('swagger' in pathOrUrlOrSchema && pathOrUrlOrSchema.swagger)
+    ) {
+      resolvedInput.schema = pathOrUrlOrSchema;
+      resolvedInput.type = 'json';
+      if ('$id' in pathOrUrlOrSchema && pathOrUrlOrSchema.$id)
+        resolvedInput.path = pathOrUrlOrSchema.$id as string;
+    } else if ('$id' in pathOrUrlOrSchema && pathOrUrlOrSchema.$id) {
       // when schema id has defined an URL should use that hostname to request the references,
       // instead of using the current page URL
       const { hostname, protocol } = new URL(pathOrUrlOrSchema.$id as string);
       resolvedInput.path = `${protocol}//${hostname}:${protocol === 'https:' ? 443 : 80}`;
       resolvedInput.type = 'url';
-    } else {
-      resolvedInput.schema = pathOrUrlOrSchema;
-      resolvedInput.type = 'json';
     }
   }
 
@@ -385,7 +390,8 @@ export class $RefParser {
     const baseName = (p: string) => {
       try {
         const withoutHash = p.split('#')[0]!;
-        const parts = withoutHash.split('/');
+        const withoutTrailingSlash = withoutHash.replace(/\/+$/, '');
+        const parts = withoutTrailingSlash.split('/');
         const filename = parts[parts.length - 1] || 'schema';
         const dot = filename.lastIndexOf('.');
         const raw = dot > 0 ? filename.substring(0, dot) : filename;
