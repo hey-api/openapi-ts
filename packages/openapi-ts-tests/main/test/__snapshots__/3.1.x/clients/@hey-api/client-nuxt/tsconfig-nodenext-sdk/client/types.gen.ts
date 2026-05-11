@@ -19,7 +19,7 @@ import type {
 import type { Client as CoreClient, Config as CoreConfig } from '../core/types.gen.js';
 
 export type ArraySeparatorStyle = ArrayStyle | MatrixStyle;
-type ArrayStyle = 'form' | 'spaceDelimited' | 'pipeDelimited';
+type ArrayStyle = 'deepObject' | 'form' | 'spaceDelimited' | 'pipeDelimited';
 type MatrixStyle = 'label' | 'matrix' | 'simple';
 export type ObjectSeparatorStyle = ObjectStyle | MatrixStyle;
 type ObjectStyle = 'form' | 'deepObject';
