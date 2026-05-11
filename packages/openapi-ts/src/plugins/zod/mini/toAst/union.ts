@@ -49,7 +49,9 @@ function baseNode(ctx: UnionResolverContext): Chain {
           member.refExpression,
           $.object().prop(
             discriminatedExpression.discriminatorKey,
-            $(z).attr(identifiers.literal).call($.fromValue(member.discriminatedValue)),
+            Array.isArray(member.discriminatedValue)
+              ? $(z).attr(identifiers.enum).call($.fromValue(member.discriminatedValue))
+              : $(z).attr(identifiers.literal).call($.fromValue(member.discriminatedValue)),
           ),
         ),
     );

@@ -36,6 +36,14 @@ for (const zodVersion of zodVersions) {
       },
       {
         config: createConfig({
+          input: 'discriminator-mapped-many.yaml',
+          output: 'discriminator-mapped-many',
+        }),
+        description:
+          'generates discriminated union when multiple mapping values point to same schema',
+      },
+      {
+        config: createConfig({
           input: 'enum-null.json',
           output: 'enum-null',
         }),

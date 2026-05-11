@@ -40,7 +40,16 @@ export function tryBuildDiscriminatedUnion({
     if (schema.logicalOperator !== 'and' || !schema.items || schema.items.length !== 2) return null;
 
     const refPart = schema.items[1]!;
-    const discriminatedValue = schema.items[0]!.properties?.[discriminatorKey]?.const;
+    const discriminatorProp = schema.items[0]!.properties?.[discriminatorKey];
+    let discriminatedValue: unknown;
+    if (discriminatorProp?.const !== undefined) {
+      discriminatedValue = discriminatorProp.const;
+    } else if (
+      discriminatorProp?.logicalOperator === 'or' &&
+      discriminatorProp.items?.every((item) => item.const !== undefined)
+    ) {
+      discriminatedValue = discriminatorProp.items.map((item) => item.const);
+    }
 
     // lazy references can't be used in a discriminated union directly
     if (discriminatedValue === undefined || items[index]!.meta.hasLazy) return null;
