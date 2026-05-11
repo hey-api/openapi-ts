@@ -22,28 +22,22 @@
   "scripts": {
     "build": "turbo run build",
     "tb": "turbo run build",
-
     "examples:generate": "node scripts/examples-generate.js",
     "examples:check": "node scripts/examples-check.js",
     "gen": "pnpm examples:generate",
     "check": "pnpm examples:check",
-
     "changelog:assemble": "tsx scripts/changelog/assemble.ts",
     "changelog:release:name": "tsx scripts/changelog/release-name.ts",
     "changelog:release:notes": "tsx scripts/changelog/release-notes.ts",
     "changelog:release:tag": "tsx scripts/changelog/release-tag.ts",
-
     "changeset": "changeset",
     "format": "oxfmt .",
     "lint": "oxfmt --check . && eslint .",
     "lint:fix": "oxfmt . && eslint . --fix",
-
     "test": "turbo run build && vitest",
     "test:watch": "turbo run build && vitest watch",
     "test:coverage": "turbo run build && vitest run --coverage",
-
     "typecheck": "turbo run typecheck",
-
     "dev:ts": "cd dev && set HEYAPI_CODEGEN_ENV=development && tsx watch ../packages/openapi-ts/src/run.ts",
     "dev:py": "cd dev && set HEYAPI_CODEGEN_ENV=development && tsx watch ../packages/openapi-python/src/run.ts"
   },

@@ -76,13 +76,16 @@ export const createClient = (config: Config = {}): Client => {
     try {
       const { opts } = await beforeRequest(options);
 
+      // Run request interceptors BEFORE building the URL
       for (const fn of interceptors.request.fns) {
         if (fn) {
           await fn(opts);
         }
       }
 
+      // Build URL after interceptor mutations
       const url = buildUrl(opts);
+
       const _fetch = opts.fetch!;
 
       const requestInit: ReqInit = { ...opts, body: undefined };
@@ -107,27 +110,33 @@ export const createClient = (config: Config = {}): Client => {
 
         if (response.status === 204 || response.headers.get('Content-Length') === '0') {
           let emptyData: any;
+
           switch (parseAs) {
             case 'arrayBuffer':
             case 'blob':
             case 'text':
               emptyData = await response[parseAs]();
               break;
+
             case 'formData':
               emptyData = new FormData();
               break;
+
             case 'stream':
               emptyData = response.body;
               break;
+
             case 'json':
             default:
               emptyData = {};
               break;
           }
+
           return { data: emptyData, ...result };
         }
 
         let data: any;
+
         switch (parseAs) {
           case 'arrayBuffer':
           case 'blob':
@@ -135,18 +144,25 @@ export const createClient = (config: Config = {}): Client => {
           case 'text':
             data = await response[parseAs]();
             break;
+
           case 'json': {
             const text = await response.text();
             data = text ? JSON.parse(text) : {};
             break;
           }
+
           case 'stream':
             return { data: response.body, ...result };
         }
 
         if (parseAs === 'json') {
-          if (opts.responseValidator) await opts.responseValidator(data);
-          if (opts.responseTransformer) data = await opts.responseTransformer(data);
+          if (opts.responseValidator) {
+            await opts.responseValidator(data);
+          }
+
+          if (opts.responseTransformer) {
+            data = await opts.responseTransformer(data);
+          }
         }
 
         return { data, ...result };
@@ -158,7 +174,7 @@ export const createClient = (config: Config = {}): Client => {
       try {
         jsonError = JSON.parse(textError);
       } catch {
-        // Fallback
+        // fallback
       }
 
       throw jsonError ?? textError;
@@ -172,7 +188,10 @@ export const createClient = (config: Config = {}): Client => {
       }
 
       finalError = finalError || {};
-      if (throwOnError) throw finalError;
+
+      if (throwOnError) {
+        throw finalError;
+      }
 
       return {
         error: finalError,
@@ -186,19 +205,21 @@ export const createClient = (config: Config = {}): Client => {
 
   const makeSseFn = (method: Uppercase<HttpMethod>) => async (options: RequestOptions) => {
     const { opts } = await beforeRequest(options);
+
+    // Run request interceptors BEFORE building URL
+    for (const fn of interceptors.request.fns) {
+      if (fn) {
+        await fn(opts);
+      }
+    }
+
+    // Build URL after interceptor mutations
     const url = buildUrl(opts);
 
     return createSseClient({
       ...opts,
       body: opts.body as BodyInit | null | undefined,
       method,
-      onRequest: async (_unusedUrl, init) => {
-        for (const fn of interceptors.request.fns) {
-          if (fn) await fn(opts);
-        }
-        const finalizedUrl = buildUrl(opts);
-        return new Request(finalizedUrl, init);
-      },
       serializedBody: getValidRequestBody(opts) as BodyInit | null | undefined,
       url,
     });
@@ -220,6 +241,7 @@ export const createClient = (config: Config = {}): Client => {
     put: makeMethodFn('PUT'),
     request,
     setConfig,
+
     sse: {
       connect: makeSseFn('CONNECT'),
       delete: makeSseFn('DELETE'),
@@ -231,6 +253,7 @@ export const createClient = (config: Config = {}): Client => {
       put: makeSseFn('PUT'),
       trace: makeSseFn('TRACE'),
     },
+
     trace: makeMethodFn('TRACE'),
   } as Client;
 };
