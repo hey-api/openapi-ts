@@ -1,4 +1,5 @@
 import type { ResolvedRequestOptions } from '../bundle';
+import { FetchError } from '../bundle';
 import { createClient } from '../bundle/client';
 
 type MockFetch = ((...args: any[]) => any) & {
@@ -444,6 +445,122 @@ describe('request interceptor', () => {
 });
 
 describe('error interceptor for fetch exceptions', () => {
+  it('throws raw error body by default when throwOnError is true', async () => {
+    const client = createClient({ baseUrl: 'https://example.com' });
+    const errorBody = { code: 'bad_request', message: 'Invalid request' };
+    const mockResponse = new Response(JSON.stringify(errorBody), {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      status: 400,
+      statusText: 'Bad Request',
+    });
+    const mockFetch: MockFetch = vi.fn().mockResolvedValue(mockResponse);
+
+    await expect(
+      client.get({
+        fetch: mockFetch,
+        throwOnError: true,
+        url: '/test',
+      }),
+    ).rejects.toEqual(errorBody);
+  });
+
+  it('throws FetchError with HTTP metadata when throwOnErrorStyle is wrapper', async () => {
+    const client = createClient({ baseUrl: 'https://example.com' });
+    const errorBody = { code: 'bad_request', message: 'Invalid request' };
+    const mockResponse = new Response(JSON.stringify(errorBody), {
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Request-Id': 'req_123',
+      },
+      status: 400,
+      statusText: 'Bad Request',
+    });
+    const mockFetch: MockFetch = vi.fn().mockResolvedValue(mockResponse);
+
+    let thrown: unknown;
+
+    try {
+      await client.get({
+        fetch: mockFetch,
+        throwOnError: true,
+        throwOnErrorStyle: 'wrapper',
+        url: '/test',
+      });
+    } catch (error) {
+      thrown = error;
+    }
+
+    expect(thrown).toBeInstanceOf(FetchError);
+    expect(thrown).toMatchObject({
+      error: errorBody,
+      message: 'Response returned 400 Bad Request',
+      name: 'FetchError',
+      response: mockResponse,
+      status: 400,
+      statusText: 'Bad Request',
+    });
+    expect((thrown as FetchError).headers?.get('X-Request-Id')).toBe('req_123');
+    expect((thrown as FetchError).request).toBeInstanceOf(Request);
+  });
+
+  it('omits empty HTTP status text from FetchError message', async () => {
+    const client = createClient({ baseUrl: 'https://example.com' });
+    const mockResponse = new Response(JSON.stringify({ message: 'Invalid request' }), {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      status: 400,
+    });
+    const mockFetch: MockFetch = vi.fn().mockResolvedValue(mockResponse);
+
+    await expect(
+      client.get({
+        fetch: mockFetch,
+        throwOnError: true,
+        throwOnErrorStyle: 'wrapper',
+        url: '/test',
+      }),
+    ).rejects.toMatchObject({
+      message: 'Response returned 400',
+    });
+  });
+
+  it('throws FetchError with HTTP error interceptor result when throwOnErrorStyle is wrapper', async () => {
+    const client = createClient({ baseUrl: 'https://example.com' });
+    const mockResponse = new Response(JSON.stringify({ message: 'Invalid request' }), {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      status: 400,
+      statusText: 'Bad Request',
+    });
+    const mockFetch: MockFetch = vi.fn().mockResolvedValue(mockResponse);
+    const transformedError = { code: 'normalized' };
+
+    const interceptorId = client.interceptors.error.use((error, response, request) => {
+      expect(error).toEqual({ message: 'Invalid request' });
+      expect(response).toBe(mockResponse);
+      expect(request).toBeInstanceOf(Request);
+      return transformedError;
+    });
+
+    await expect(
+      client.get({
+        fetch: mockFetch,
+        throwOnError: true,
+        throwOnErrorStyle: 'wrapper',
+        url: '/test',
+      }),
+    ).rejects.toMatchObject({
+      error: transformedError,
+      status: 400,
+    });
+
+    client.interceptors.error.eject(interceptorId);
+  });
+
   it('intercepts AbortError when fetch is aborted', async () => {
     const client = createClient({ baseUrl: 'https://example.com' });
 
@@ -498,7 +615,7 @@ describe('error interceptor for fetch exceptions', () => {
     client.interceptors.error.eject(interceptorId);
   });
 
-  it('throws AbortError when throwOnError is true', async () => {
+  it('throws raw interceptor result for AbortError when throwOnError is true', async () => {
     const client = createClient({ baseUrl: 'https://example.com' });
 
     const abortError = new DOMException('The operation was aborted', 'AbortError');
@@ -522,6 +639,27 @@ describe('error interceptor for fetch exceptions', () => {
     expect(mockErrorInterceptor).toHaveBeenCalledOnce();
 
     client.interceptors.error.eject(interceptorId);
+  });
+
+  it('throws FetchError for AbortError when throwOnErrorStyle is wrapper', async () => {
+    const client = createClient({ baseUrl: 'https://example.com' });
+
+    const abortError = new DOMException('The operation was aborted', 'AbortError');
+    const mockFetch: MockFetch = vi.fn().mockRejectedValue(abortError);
+
+    await expect(
+      client.get({
+        fetch: mockFetch,
+        throwOnError: true,
+        throwOnErrorStyle: 'wrapper',
+        url: '/test',
+      }),
+    ).rejects.toMatchObject({
+      error: abortError,
+      name: 'FetchError',
+      response: undefined,
+      status: undefined,
+    });
   });
 
   it('handles fetch exceptions without error interceptor', async () => {

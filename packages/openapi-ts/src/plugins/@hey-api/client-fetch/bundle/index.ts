@@ -20,4 +20,4 @@ export type {
   ResponseStyle,
   TDataShape,
 } from './types';
-export { createConfig, mergeHeaders } from './utils';
+export { createConfig, FetchError, mergeHeaders } from './utils';

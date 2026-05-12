@@ -94,6 +94,10 @@ export const createClient: PluginHandler = ({ plugin }) => {
     defaultVals.prop('throwOnError', $.literal(true));
   }
 
+  if ('throwOnErrorStyle' in plugin.config && plugin.config.throwOnErrorStyle) {
+    defaultVals.prop('throwOnErrorStyle', $.literal(plugin.config.throwOnErrorStyle));
+  }
+
   const createConfigParameters = [
     $(symbolCreateConfig)
       .call(defaultVals.hasProps() ? defaultVals : undefined)

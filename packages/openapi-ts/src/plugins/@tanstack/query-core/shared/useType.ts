@@ -1,6 +1,7 @@
 import type { IR } from '@hey-api/shared';
 
 import { getTypedConfig } from '../../../../config/utils';
+import { clientFolderAbsolutePath } from '../../../../generate/client';
 import { getClientPlugin } from '../../../../plugins/@hey-api/client-core/utils';
 import { operationOptionsType } from '../../../../plugins/@hey-api/sdk/shared/operation';
 import { $ } from '../../../../ts-dsl';
@@ -34,6 +35,13 @@ export const useTypeError = ({
   const symbolError = symbolErrorType || plugin.external(`${plugin.name}.DefaultError`);
   if (client.name === '@hey-api/client-axios') {
     const symbol = plugin.external('axios.AxiosError');
+    return $.type(symbol).generic(symbolError);
+  }
+  if (client.name === '@hey-api/client-fetch' && client.config.throwOnErrorStyle === 'wrapper') {
+    const symbol = plugin.symbol('FetchError', {
+      external: clientFolderAbsolutePath(getTypedConfig(plugin)),
+      kind: 'type',
+    });
     return $.type(symbol).generic(symbolError);
   }
   return $.type(symbolError);

@@ -8,6 +8,7 @@ import {
 import type { TsDsl } from '../../../../ts-dsl';
 import { $ } from '../../../../ts-dsl';
 import { handleMeta } from '../shared/meta';
+import { sdkCallOptions } from '../shared/sdkCall';
 import { useTypeData, useTypeError, useTypeResponse } from '../shared/useType';
 import type { PluginInstance } from '../types';
 
@@ -39,7 +40,12 @@ export function createMutationOptions({
           resourceId: operation.id,
         }),
       )
-      .call($.object().spread('options').spread(fnOptions).prop('throwOnError', $.literal(true)))
+      .call(
+        sdkCallOptions({
+          options: $.object().spread('options').spread(fnOptions),
+          plugin,
+        }),
+      )
       .await(),
   );
 
