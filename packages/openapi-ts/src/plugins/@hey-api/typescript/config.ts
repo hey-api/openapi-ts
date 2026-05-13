@@ -44,10 +44,12 @@ export const defaultConfig: HeyApiTypeScriptPlugin['Config'] = {
     plugin.config.errors = context.valueToObject({
       defaultValue: {
         case: plugin.config.case ?? 'PascalCase',
+        enabled: true,
         error: '{{name}}Error',
         name: '{{name}}Errors',
       },
       mappers: {
+        boolean: (enabled) => ({ enabled }),
         function: (name) => ({ name }),
         string: (name) => ({ name }),
       },
@@ -57,9 +59,11 @@ export const defaultConfig: HeyApiTypeScriptPlugin['Config'] = {
     plugin.config.requests = context.valueToObject({
       defaultValue: {
         case: plugin.config.case ?? 'PascalCase',
+        enabled: true,
         name: '{{name}}Data',
       },
       mappers: {
+        boolean: (enabled) => ({ enabled }),
         function: (name) => ({ name }),
         string: (name) => ({ name }),
       },
@@ -69,10 +73,12 @@ export const defaultConfig: HeyApiTypeScriptPlugin['Config'] = {
     plugin.config.responses = context.valueToObject({
       defaultValue: {
         case: plugin.config.case ?? 'PascalCase',
+        enabled: true,
         name: '{{name}}Responses',
         response: '{{name}}Response',
       },
       mappers: {
+        boolean: (enabled) => ({ enabled }),
         function: (name) => ({ name }),
         string: (name) => ({ name }),
       },
