@@ -97,7 +97,6 @@
 - [Tom van de Velde](https://github.com/tomvdv)
 - [Vincent Olesen](https://github.com/volesen)
 - [Warren Seine](https://github.com/warrenseine)
-- [Will Mitchell](https://github.com/wn-mitch)
 - [Yuri Mikhin](https://github.com/mikhin)
 - [a1mer](https://github.com/a1mersnow)
 - [carson](https://github.com/carson2222)

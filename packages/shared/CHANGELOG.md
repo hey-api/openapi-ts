@@ -1,5 +1,13 @@
 # @hey-api/shared
 
+## 0.4.3
+
+### Patch Changes
+
+### Updated Dependencies:
+
+- @hey-api/json-schema-ref-parser@1.4.2
+
 ## 0.4.2
 
 ### Patch Changes

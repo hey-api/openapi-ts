@@ -1,5 +1,16 @@
 # @hey-api/openapi-ts
 
+## 0.97.1
+
+### Patch Changes
+
+- **plugin(@hey-api/transformers)**: fix: use symbols for `additionalProperties` key variables ([#3841](https://github.com/hey-api/openapi-ts/pull/3841)) ([`d880caa`](https://github.com/hey-api/openapi-ts/commit/d880caabb46a712b1fc0087615b8f9ee4b88c227)) by [@pullfrog](https://github.com/apps/pullfrog)
+
+### Updated Dependencies:
+
+- @hey-api/json-schema-ref-parser@1.4.2
+- @hey-api/shared@0.4.3
+
 ## 0.97.0
 
 ### Minor Changes
