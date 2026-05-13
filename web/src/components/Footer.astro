@@ -1,0 +1,404 @@
+---
+import Default from '@astrojs/starlight/components/Footer.astro';
+import { Icon } from '@astrojs/starlight/components';
+import type { ComponentProps } from 'astro/types';
+import { EXAMPLES_URL, GITHUB_URL } from '@/data/constants';
+
+import LanguageToggle from './LanguageToggle.astro';
+import SponsorStrip from './SponsorStrip.astro';
+import ThemeToggle from './ThemeToggle.astro';
+
+interface FooterLink {
+  label: string;
+  link: string;
+}
+
+interface FooterColumn {
+  heading: string;
+  links: Array<FooterLink>;
+}
+
+const footerColumns: Array<FooterColumn> = [
+  {
+    heading: 'Products',
+    links: [
+      { label: 'Codegen', link: '/codegen/openapi/typescript' },
+    ],
+  },
+  {
+    heading: 'Resources',
+    links: [
+      { label: 'Docs', link: '/docs' },
+      { label: 'Examples', link: EXAMPLES_URL },
+      { label: 'Sponsors', link: '/sponsors' },
+    ],
+  },
+  {
+    heading: 'Open Source',
+    links: [
+      { label: 'OpenAPI TypeScript', link: 'https://npmx.dev/@hey-api/openapi-ts' },
+      { label: 'Spec Types', link: 'https://npmx.dev/@hey-api/spec-types' },
+    ],
+  },
+];
+
+interface Social {
+  handle: string;
+  icon: ComponentProps<typeof Icon>['name'];
+  label: string;
+  link: string;
+}
+
+const socials = [
+  {
+    handle: 'hey-api/openapi-ts',
+    icon: 'github',
+    label: 'Star us on GitHub',
+    link: GITHUB_URL,
+  },
+  {
+    handle: 'heyapi',
+    icon: 'linkedin',
+    label: 'Follow on LinkedIn',
+    link: 'https://linkedin.com/company/heyapi',
+  },
+  {
+    handle: '@heyapi.dev',
+    icon: 'blueSky',
+    label: 'Follow on Bluesky',
+    link: 'https://bsky.app/profile/heyapi.dev',
+  },
+  {
+    handle: '@mrlubos',
+    icon: 'x.com',
+    label: 'Follow on X',
+    link: 'https://x.com/mrlubos',
+  },
+] satisfies Array<Social>;
+
+const entry = Astro.locals.starlightRoute?.entry;
+const isSplash = entry?.data?.template === 'splash';
+
+const pathname = Astro.url.pathname;
+const isSponsorsPage = pathname === '/sponsors';
+---
+
+{isSplash ? (
+  <footer class="site-footer">
+    <div class="site-footer-inner">
+
+      <div class="site-footer-top">
+        <div class="site-footer-brand">
+          <a href="/" class="site-footer-logo">Hey API</a>
+          <p class="site-footer-tagline">Turn API specifications into production-ready code.</p>
+          <div class="site-footer-socials">
+            {socials.map(({ icon, label, link }) => (
+              <a href={link} aria-label={label} target="_blank" rel="noopener noreferrer" class="site-footer-social">
+                <Icon name={icon} size="1rem" />
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <nav class="site-footer-cols" aria-label="Footer navigation">
+          {footerColumns.map((col) => (
+            <div class="site-footer-col">
+              <div class="site-footer-col-heading">{col.heading}</div>
+              <div class="site-footer-col-links">
+                {col.links.map(({ label, link }) => (
+                  <a
+                    class="site-footer-link"
+                    href={link}
+                    rel={link.startsWith('http') ? 'noopener noreferrer' : undefined}
+                    target={link.startsWith('http') ? '_blank' : undefined}
+                  >{label}</a>
+                ))}
+              </div>
+            </div>
+          ))}
+        </nav>
+      </div>
+
+      <div class="site-footer-bottom">
+        <p class="site-footer-copy">Hey API · {new Date().getFullYear()}</p>
+        <div class="site-footer-controls">
+          <ThemeToggle />
+          <LanguageToggle />
+        </div>
+      </div>
+
+    </div>
+  </footer>
+) : (
+  <>
+    {!isSponsorsPage && <SponsorStrip />}
+    <Default><slot /></Default>
+    <div class="footer-controls">
+      <div class="social-icons">
+        {socials.map(({ handle, icon, label, link }) => (
+          <a href={link} rel="noopener noreferrer" target="_blank" aria-label={label}>
+            <Icon name={icon} size="1rem" />
+            <span class="social-label">
+              <span class="label-default">{label}</span>
+              <span class="label-hover" aria-hidden="true">{handle}</span>
+            </span>
+          </a>
+        ))}
+      </div>
+      <div class="selects">
+        <ThemeToggle />
+        <LanguageToggle />
+      </div>
+    </div>
+  </>
+)}
+
+<style>
+  .footer-controls {
+    align-items: center;
+    border-top: 1px solid var(--sl-color-hairline);
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    justify-content: space-between;
+    padding: 1.25rem 0 0.75rem;
+  }
+
+  .social-icons {
+    display: grid;
+    gap: 0.25rem 1.25rem;
+    grid-template-columns: 1fr;
+    justify-content: start;
+  }
+
+  .social-icons a {
+    align-items: center;
+    color: var(--sl-color-gray-3);
+    display: flex;
+    font-size: var(--sl-text-sm);
+    gap: 0.5rem;
+    text-decoration: none;
+    transition: color 200ms ease;
+  }
+
+  .social-icons a:hover,
+  .social-icons a:focus-visible {
+    color: var(--sl-color-white);
+    outline: none;
+  }
+
+  .social-label {
+    display: inline-grid;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .label-default,
+  .label-hover {
+    display: flex;
+    grid-area: 1 / 1;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  .label-hover {
+    opacity: 0;
+    transform: translateY(0.3rem);
+  }
+
+  .social-icons a:hover .label-default,
+  .social-icons a:focus-visible .label-default {
+    opacity: 0;
+    transform: translateY(-0.3rem);
+  }
+
+  .social-icons a:hover .label-hover,
+  .social-icons a:focus-visible .label-hover {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .selects {
+    align-items: stretch;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  @media (max-width: 50rem) {
+    .footer-controls {
+      padding-bottom: 80px;
+    }
+  }
+
+  @media (min-width: 50rem) {
+    .footer-controls {
+      padding: 0.75rem 0;
+    }
+
+    .social-icons {
+      grid-template-columns: repeat(2, auto);
+    }
+  }
+</style>
+
+<style is:global>
+  .site-footer {
+    background: var(--dt-bg-2);
+    border-top: 1px solid var(--vp-c-divider);
+    box-sizing: border-box;
+    margin-inline: calc(50% - 50vw);
+    padding: 56px 0 0;
+    width: 100vw;
+  }
+
+  .site-footer-inner {
+    margin: 0 auto;
+    max-width: 1000px;
+    padding: 0 24px;
+  }
+
+  .site-footer-top {
+    display: grid;
+    gap: 64px;
+    grid-template-columns: 200px 1fr;
+    padding-bottom: 48px;
+  }
+
+  .site-footer-brand {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .site-footer-logo {
+    color: var(--sl-color-text) !important;
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.01em;
+    text-decoration: none !important;
+    transition: color 150ms ease;
+  }
+
+  .site-footer-logo:hover {
+    color: var(--vp-c-brand-1) !important;
+  }
+
+  .site-footer-tagline {
+    color: var(--sl-color-gray-3);
+    font-size: 13px;
+    line-height: 1.65;
+    margin: 0;
+  }
+
+  .site-footer-socials {
+    display: flex;
+    gap: 8px;
+    margin-top: 6px;
+  }
+
+  .site-footer-social {
+    align-items: center;
+    border-radius: 6px;
+    border: 1px solid var(--vp-c-divider);
+    color: var(--sl-color-gray-3) !important;
+    display: flex !important;
+    height: 30px;
+    justify-content: center;
+    text-decoration: none !important;
+    transition: color 150ms ease, border-color 150ms ease, background 150ms ease;
+    width: 30px;
+  }
+
+  .site-footer-social:hover {
+    background: var(--dt-bg);
+    border-color: var(--sl-color-gray-3);
+    color: var(--sl-color-text) !important;
+  }
+
+  .site-footer-cols {
+    display: grid !important;
+    gap: 24px;
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+
+  .site-footer-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .site-footer-col-heading {
+    color: var(--sl-color-text);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    margin: 0 0 14px;
+    padding: 0;
+    text-transform: uppercase;
+  }
+
+  .site-footer-col-links {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .site-footer-link {
+    color: var(--sl-color-gray-3) !important;
+    font-size: 13px !important;
+    font-weight: 400 !important;
+    line-height: 1.4;
+    text-decoration: none !important;
+    transition: color 150ms ease;
+  }
+
+  .site-footer-link:hover {
+    color: var(--sl-color-text) !important;
+  }
+
+  .site-footer-bottom {
+    align-items: center;
+    border-top: 1px solid var(--vp-c-divider);
+    display: flex;
+    gap: 16px;
+    justify-content: space-between;
+    padding: 20px 0;
+  }
+
+  .site-footer-copy {
+    color: var(--sl-color-gray-3);
+    font-size: 12px;
+    margin: 0;
+  }
+
+  .site-footer-controls {
+    align-items: center;
+    display: flex;
+    gap: 8px;
+  }
+
+  @media (max-width: 768px) {
+    .site-footer-top {
+      gap: 36px;
+      grid-template-columns: 1fr !important;
+    }
+
+    .site-footer-cols {
+      gap: 32px 24px;
+      grid-template-columns: repeat(2, 1fr) !important;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .site-footer {
+      padding-top: 40px;
+    }
+
+    .site-footer-bottom {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 12px;
+      padding-bottom: 80px;
+    }
+  }
+</style>

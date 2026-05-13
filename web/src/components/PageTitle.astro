@@ -1,0 +1,69 @@
+---
+import { getVersionedBasePath, versionedRoutes } from '@/data/versions';
+
+import VersionLabel from './VersionLabel.astro';
+import VersionToggle from './VersionToggle.astro';
+
+const entry = Astro.locals.starlightRoute.entry;
+
+const isSplash = entry.data.template === 'splash';
+
+const body = entry.body ?? '';
+
+let leadingContent = body.trimStart();
+let prev = '';
+while (leadingContent !== prev) {
+  prev = leadingContent;
+  leadingContent = leadingContent
+    .replace(/^\s*import[\s\S]*?from\s+['"][^'"]+['"]\s*;?\s*/i, '')
+    .replace(/^\s*export\s+[^;]+;?\s*/i, '')
+    .replace(/^\s*{\/\*[\s\S]*?\*\/}\s*/i, '')
+    .replace(/^\s*<!--[\s\S]*?-->\s*/i, '')
+    .replace(/^\s*<script[\s\S]*?<\/script>\s*/i, '')
+    .trimStart();
+}
+
+const mdMatch = leadingContent.match(/^#\s+(.+)/);
+const htmlMatch = leadingContent.match(/^<h1[^>]*>([\s\S]*?)<\/h1>/i);
+const h1Content = htmlMatch?.[1] ?? mdMatch?.[1] ?? entry.data.title;
+const hasHtml = /<[^>]+>/.test(h1Content);
+
+const currentPath = Astro.url.pathname.replace(/\/$/, '');
+const basePath = getVersionedBasePath(currentPath) ?? currentPath;
+const route = versionedRoutes[basePath];
+
+const showToggle = route?.versions && route.versions.length > 1;
+const showLabel = !showToggle && (route?.versions.length === 1 || Boolean(entry.data.custom?.version));
+const versionLabel = showLabel
+  ? (entry.data.custom?.version ?? route?.versions[0]?.short ?? route?.versions[0]?.label)
+  : undefined;
+---
+
+{!isSplash && (
+  <div class="title-row">
+    <h1 id="_top">
+      {hasHtml ? <Fragment set:html={h1Content} /> : h1Content}
+      {entry.data.custom?.version && <span class="sr-only"> {entry.data.custom.version}</span>}
+    </h1>
+    {showToggle && <VersionToggle versions={route.versions} activeHref={currentPath} />}
+    {versionLabel && <VersionLabel label={versionLabel} />}
+  </div>
+)}
+
+<style>
+  .title-row {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.75rem;
+    margin-top: calc(var(--announcement-height-budget))
+  }
+
+  .title-row h1 {
+    color: var(--sl-color-white);
+    font-size: var(--sl-text-h1);
+    font-weight: 600;
+    line-height: var(--sl-line-height-headings);
+    margin: 0;
+  }
+</style>

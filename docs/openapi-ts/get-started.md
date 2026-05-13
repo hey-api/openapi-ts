@@ -9,7 +9,7 @@ import { embedProject } from '../embed'
 
 # Get Started
 
-[@hey-api/openapi-ts](https://github.com/hey-api/openapi-ts) generates TypeScript code from OpenAPI specifications. Point it at your spec, pick your plugins, and get production-ready code in seconds.
+[@hey-api/openapi-ts](https://github.com/hey-api/openapi-ts) generates TypeScript code from OpenAPI specifications. Point it at your spec, pick your plugins, and get production-grade code in seconds.
 
 Used by companies like Vercel, OpenCode, and PayPal.
 
@@ -25,7 +25,7 @@ Launch demo
 
 ## Features
 
-- production-ready code that compiles
+- production-grade code that compiles
 - runs in any Node.js 22+ environment
 - accepts any OpenAPI specification
 - core plugins for SDKs, types, and schemas
@@ -51,7 +51,7 @@ You can download `@hey-api/openapi-ts` from npm using your favorite package mana
 ::: code-group
 
 ```sh [npm]
-npm add @hey-api/openapi-ts -D -E
+npm install @hey-api/openapi-ts -D -E
 ```
 
 ```sh [pnpm]
@@ -63,7 +63,7 @@ yarn add @hey-api/openapi-ts -D -E
 ```
 
 ```sh [bun]
-bun add @hey-api/openapi-ts -D -E
+bun add @hey-api/openapi-ts -D
 ```
 
 :::
@@ -112,7 +112,7 @@ If you're using [Vite](https://vite.dev) 5, 6, 7, or 8, you can integrate `@hey-
 ::: code-group
 
 ```sh [npm]
-npm add @hey-api/vite-plugin -D -E
+npm install @hey-api/vite-plugin -D -E
 ```
 
 ```sh [pnpm]
@@ -124,7 +124,7 @@ yarn add @hey-api/vite-plugin -D -E
 ```
 
 ```sh [bun]
-bun add @hey-api/vite-plugin -D -E
+bun add @hey-api/vite-plugin -D
 ```
 
 :::

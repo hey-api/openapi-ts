@@ -1,0 +1,210 @@
+---
+import { Image } from 'astro:assets';
+import { Icon } from '@astrojs/starlight/components';
+import { lubos } from '@/data/people';
+
+const lede = 'The API tooling I always wanted.';
+
+const body = [
+  "I built API clients for years using every tool out there. They all felt like an afterthought – I was always sacrificing quality, workflow, cost, or speed.",
+  "Eventually, I decided to reject those trade-offs. But I didn't want to build yet another code generator. I wanted to create the last code generator. After years of work, I'm excited to finally share it with you.",
+  "Hey API is purpose-built from scratch to handle all kinds of APIs, yours included. It's fast, open source, and deeply customizable. The output is production-grade. Most importantly, it just works.",
+  "I can't wait to see what you build with it.",
+];
+---
+
+<section class="founder-statement">
+  <div class="fs-inner">
+
+    <div class="fs-rule" aria-hidden="true"></div>
+
+    <blockquote class="fs-blockquote">
+      <p class="fs-lede">{lede}</p>
+      {body.map((paragraph) => (
+        <p class="fs-body">{paragraph}</p>
+      ))}
+    </blockquote>
+
+    <footer class="fs-footer">
+      <a
+        href={lubos.linkedin}
+        class="fs-profile-link"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Lubos on LinkedIn"
+      >
+        <div class="fs-photo-wrap">
+          <div class="fs-photo fs-photo--placeholder" aria-hidden="true">L</div>
+          <Image
+            src={lubos.avatar}
+            alt="Lubos"
+            width={40}
+            height={40}
+            class="fs-photo fs-photo--img"
+            loading="lazy"
+            decoding="async"
+            onerror="this.style.display='none'"
+          />
+        </div>
+        <div class="fs-attribution">
+          <span class="fs-name-row">
+            <strong class="fs-name">Lubos</strong>
+            <Icon name="linkedin" size="0.9rem" class="fs-linkedin-icon" />
+          </span>
+          <span class="fs-role">Founder, Hey API</span>
+        </div>
+      </a>
+    </footer>
+
+  </div>
+</section>
+
+<style>
+  .founder-statement {
+    margin-top: 0;
+    padding: 96px 0;
+  }
+
+  .fs-inner {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    max-width: 680px;
+    padding: 0 24px;
+    text-align: center;
+  }
+
+  .fs-rule {
+    background: linear-gradient(90deg, var(--vp-c-brand-1), var(--vp-c-brand-3));
+    border-radius: 1px;
+    flex-shrink: 0;
+    height: 2px;
+    margin-bottom: 48px;
+    width: 40px;
+  }
+
+  .fs-blockquote {
+    border: none;
+    margin: 0 0 40px;
+    padding: 0;
+  }
+
+  .fs-lede {
+    color: var(--sl-color-text);
+    font-size: clamp(22px, 3.5vw, 32px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin: 0 0 28px;
+  }
+
+  .fs-body {
+    color: var(--sl-color-gray-2);
+    font-size: 16px;
+    line-height: 1.75;
+    margin: 0 0 16px;
+    max-width: 580px;
+  }
+
+  .fs-body:last-child {
+    margin-bottom: 0;
+  }
+
+  .fs-footer {
+    margin-top: 0;
+  }
+
+  .fs-profile-link {
+    align-items: center;
+    border-radius: 8px;
+    color: inherit;
+    display: flex;
+    gap: 12px;
+    padding: 6px 10px 6px 6px;
+    text-decoration: none;
+    transition: background 0.15s ease;
+  }
+
+  .fs-profile-link:hover {
+    background: var(--sl-color-gray-6, rgba(0, 0, 0, 0.05));
+  }
+
+  .fs-photo-wrap {
+    flex-shrink: 0;
+    height: 40px;
+    position: relative;
+    width: 40px;
+  }
+
+  .fs-photo {
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+  }
+
+  .fs-photo--placeholder {
+    align-items: center;
+    background: linear-gradient(135deg, var(--vp-c-brand-1), var(--vp-c-brand-2));
+    color: white;
+    display: flex;
+    font-size: 13px;
+    font-weight: 700;
+    inset: 0;
+    justify-content: center;
+    position: absolute;
+  }
+
+  .fs-photo--img {
+    display: block;
+    inset: 0;
+    object-fit: cover;
+    position: absolute;
+  }
+
+  .fs-attribution {
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    margin-top: 0;
+  }
+
+  .fs-name {
+    color: var(--sl-color-text);
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .fs-name-row {
+    align-items: center;
+    display: flex;
+    gap: 5px;
+  }
+
+  .fs-linkedin-icon {
+    color: var(--sl-color-gray-3);
+    display: flex;
+    line-height: 1;
+    transition: color 0.15s ease;
+  }
+
+  .fs-profile-link:hover .fs-linkedin-icon {
+    color: var(--sl-color-text);
+  }
+
+  .fs-role {
+    color: var(--sl-color-gray-3);
+    font-size: 12px;
+  }
+
+  @media (max-width: 640px) {
+    .founder-statement {
+      padding: 64px 0;
+    }
+
+    .fs-rule {
+      margin-bottom: 36px;
+    }
+  }
+</style>

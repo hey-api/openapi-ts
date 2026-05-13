@@ -1,0 +1,220 @@
+---
+export interface Feature {
+  description: string;
+  icon: string;
+  link: string;
+  linkText: string;
+  rotation: number;
+  title: string;
+}
+
+interface Props extends Feature {
+  index: number;
+}
+
+const { description, icon, index, link, linkText, rotation, title } = Astro.props;
+---
+
+<div
+  class="feature-card is-dealt"
+  data-card={index}
+  style={`--rotation: ${rotation}deg; --stack-i: ${index}`}
+>
+  <div class="card-frame" />
+  <div class="card-corner card-corner--tl" aria-hidden="true" set:html={icon} />
+  <div class="card-corner card-corner--br" aria-hidden="true" set:html={icon} />
+  <div class="card-content">
+    <h3 class="feature-title">{title}</h3>
+    <p class="feature-desc">{description}</p>
+    <a href={link} class="feature-link">{linkText} →</a>
+  </div>
+</div>
+
+<style>
+  .feature-card {
+    background: var(--dt-bg-2);
+    border: 1px solid var(--vp-c-divider);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 0;
+    min-height: 360px;
+    padding: 48px 28px;
+    position: relative;
+    transition:
+      transform 560ms cubic-bezier(0.22, 0.68, 0, 1.2),
+      opacity 400ms ease,
+      border-color 150ms ease,
+      box-shadow 560ms cubic-bezier(0.22, 0.68, 0, 1.2);
+  }
+
+  .feature-card:hover {
+    border-color: var(--vp-c-brand-1);
+  }
+
+  .feature-card.is-dealt {
+    box-shadow:
+      0 2px 10px rgba(0, 0, 0, 0.35),
+      0 1px 3px rgba(0, 0, 0, 0.25);
+    transform: rotate(var(--rotation));
+    z-index: 20;
+  }
+
+  .feature-card:not(.is-dealt) {
+    box-shadow: none;
+    pointer-events: none;
+    transform:
+      translateX(var(--deck-dx, 0px))
+      translateY(var(--deck-dy, 0px))
+      rotate(calc(var(--stack-i) * 1.5deg - 2deg))
+      translateY(calc(var(--stack-i) * 5px))
+      scale(0.88);
+    z-index: calc(10 - var(--stack-i));
+  }
+
+  .feature-card.is-lifting {
+    animation: card-deal 680ms cubic-bezier(0.22, 0.68, 0, 1.2) forwards;
+    transition: border-color 150ms ease !important;
+    z-index: 30;
+  }
+
+  @keyframes card-deal {
+    0% {
+      transform:
+        translateX(var(--deck-dx, 0px))
+        translateY(var(--deck-dy, 0px))
+        rotate(calc(var(--stack-i, 0) * 1.5deg - 2deg))
+        translateY(calc(var(--stack-i, 0) * 5px))
+        scale(0.88);
+
+      box-shadow: none;
+    }
+
+    38% {
+      transform:
+        translateX(calc(var(--deck-dx, 0px) * 0.12))
+        translateY(calc(var(--deck-dy, 0px) * 0.12 - 56px))
+        rotate(calc(var(--rotation, 0deg) * 0.15))
+        scale(1.07);
+
+      box-shadow:
+        0 40px 90px rgba(0, 0, 0, 0.45),
+        0 10px 30px rgba(0, 0, 0, 0.30);
+    }
+
+    100% {
+      transform: rotate(var(--rotation, 0deg)) scale(1);
+
+      box-shadow:
+        0 6px 18px rgba(0, 0, 0, 0.28),
+        0 2px 6px rgba(0, 0, 0, 0.22);
+    }
+  }
+
+  .card-frame {
+    border: 1px solid var(--vp-c-divider);
+    border-radius: 7px;
+    inset: 9px;
+    opacity: 0.5;
+    pointer-events: none;
+    position: absolute;
+  }
+
+  .card-corner {
+    color: var(--vp-c-brand-1);
+    margin-top: 0;
+    position: absolute;
+  }
+
+  .card-corner--tl {
+    left: 20px;
+    top: 20px;
+  }
+
+  .card-corner--br {
+    bottom: 20px;
+    right: 20px;
+    transform: rotate(180deg);
+  }
+
+  .card-corner :global(svg) {
+    display: block;
+    height: 16px;
+    width: 16px;
+  }
+
+  .card-content {
+    margin-top: 0;
+    text-align: center;
+  }
+
+  .feature-title {
+    color: var(--sl-color-text);
+    font-family: Georgia, serif;
+    font-size: 17px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+    margin: 0 0 12px;
+  }
+
+  .feature-desc {
+    color: var(--sl-color-gray-2);
+    font-size: 13px;
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  .feature-link {
+    color: var(--vp-c-brand-1);
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 500;
+    margin-top: 20px;
+    text-decoration: none;
+    transition: opacity 150ms ease;
+  }
+
+  .feature-link:hover {
+    opacity: 0.75;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .feature-card {
+      animation: none;
+      box-shadow: none !important;
+      opacity: 1 !important;
+      transform: rotate(var(--rotation)) !important;
+      transition: border-color 150ms ease;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .feature-card {
+      animation: none !important;
+      box-shadow: none !important;
+      min-height: 0;
+      opacity: 1 !important;
+      padding: 28px 24px;
+      transform: none !important;
+      transition: border-color 150ms ease !important;
+    }
+
+    .card-frame,
+    .card-corner {
+      display: none;
+    }
+
+    .card-content {
+      text-align: left;
+    }
+  }
+
+  @media (min-width: 640px) and (max-width: 1023px) {
+    .feature-card {
+      min-height: 280px;
+      padding: 36px 24px;
+    }
+  }
+</style>

@@ -1,0 +1,354 @@
+---
+title: Zod Mini Plugin
+description: Generate Zod Mini schemas from OpenAPI with the Zod plugin for openapi-ts. Fully compatible with validators, transformers, and all core features.
+custom:
+  version: Mini
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import Examples from '@/components/Examples.astro';
+
+# Zod
+
+### About
+
+[Zod](https://zod.dev) is a TypeScript-first schema validation library with static type inference.
+
+The Zod plugin for Hey API generates schemas from your OpenAPI spec, fully compatible with validators, transformers, and all core features.
+
+## Features
+
+- Zod Mini support
+- seamless integration with `@hey-api/openapi-ts` ecosystem
+- Zod schemas for requests, responses, and reusable definitions
+- minimal learning curve thanks to extending the underlying technology
+
+## Installation
+
+In your [configuration](/openapi-ts/get-started), add `zod` to your plugins and you'll be ready to generate Zod artifacts. 🎉
+
+```js {7-8} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: 'zod',
+      compatibilityVersion: 'mini',
+    },
+  ],
+};
+```
+
+### SDKs
+
+To add data validators to your SDKs, set `sdk.validator` to `true`.
+
+```js {11-12} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: 'zod',
+      compatibilityVersion: 'mini',
+    },
+    {
+      name: '@hey-api/sdk',
+      validator: true,
+    },
+  ],
+};
+```
+
+Learn more about data validators in your SDKs on the [SDKs](/openapi-ts/plugins/sdk#validators) page.
+
+## Output
+
+The Zod plugin will generate the following artifacts, depending on the input specification.
+
+## Requests
+
+A Zod schema is generated for every request layer of each endpoint.
+
+<Tabs>
+  <TabItem label="example">
+```ts title="zod.gen.ts"
+const zDeletePetHeaders = z.object({
+  api_key: z.optional(z.string()),
+});
+
+const zDeletePetPath = z.object({
+  petId: z.number(),
+});
+
+const zDeletePetQuery = z.object({
+  additionalMetadata: z.string(),
+});
+```
+  </TabItem>
+  <TabItem label="config">
+```js {9} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: 'zod',
+      compatibilityVersion: 'mini',
+      requests: true,
+    },
+  ],
+};
+```
+  </TabItem>
+</Tabs>
+
+You can customize the naming and casing pattern for `requests` schemas using the `.name` and `.case` options.
+
+## Responses
+
+A single Zod schema is generated for all endpoint's responses. If the endpoint describes multiple responses, the generated schema is a union of all possible response shapes.
+
+<Tabs>
+  <TabItem label="example">
+```ts title="zod.gen.ts"
+const zResponse = z.union([
+  z.object({
+    foo: z.optional(z.string()),
+  }),
+  z.object({
+    bar: z.optional(z.number()),
+  }),
+]);
+```
+  </TabItem>
+  <TabItem label="config">
+```js {9} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: 'zod',
+      compatibilityVersion: 'mini',
+      responses: true,
+    },
+  ],
+};
+```
+  </TabItem>
+</Tabs>
+
+You can customize the naming and casing pattern for `responses` schemas using the `.name` and `.case` options.
+
+## Definitions
+
+A Zod schema is generated for every reusable definition from your input.
+
+<Tabs>
+  <TabItem label="example">
+```ts title="zod.gen.ts"
+const zFoo = z.int();
+
+const zBar = z.object({
+  bar: z.optional(z.array(z.int())),
+});
+```
+  </TabItem>
+  <TabItem label="config">
+```js {9} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: 'zod',
+      compatibilityVersion: 'mini',
+      definitions: true,
+    },
+  ],
+};
+```
+  </TabItem>
+</Tabs>
+
+You can customize the naming and casing pattern for `definitions` schemas using the `.name` and `.case` options.
+
+## ISO Datetimes
+
+By default, values without a timezone or with a timezone offset are not allowed in the `z.iso.datetime()` method.
+
+### Timezone offsets
+
+You can allow values with timezone offsets by setting `dates.offset` to `true`.
+
+<Tabs>
+  <TabItem label="example">
+```ts title="zod.gen.ts"
+export const zFoo = z.iso.datetime({ offset: true });
+```
+  </TabItem>
+  <TabItem label="config">
+```js {10} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: 'zod',
+      compatibilityVersion: 'mini',
+      dates: {
+        offset: true,
+      },
+    },
+  ],
+};
+```
+  </TabItem>
+</Tabs>
+
+### Local times
+
+You can allow values without a timezone by setting `dates.local` to `true`.
+
+<Tabs>
+  <TabItem label="example">
+```ts title="zod.gen.ts"
+export const zFoo = z.iso.datetime({ local: true });
+```
+  </TabItem>
+  <TabItem label="config">
+```js {10} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: 'zod',
+      compatibilityVersion: 'mini',
+      dates: {
+        local: true,
+      },
+    },
+  ],
+};
+```
+  </TabItem>
+</Tabs>
+
+## Metadata
+
+It's often useful to associate a schema with some additional [metadata](https://zod.dev/metadata) for documentation, code generation, AI structured outputs, form validation, and other purposes. You can set `metadata` to `true` to attach descriptions to schemas when available.
+
+<Tabs>
+  <TabItem label="example">
+```ts title="zod.gen.ts"
+export const zFoo = z.string().register(z.globalRegistry, {
+  description: 'Additional metadata',
+});
+```
+  </TabItem>
+  <TabItem label="config">
+```js {9} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: 'zod',
+      compatibilityVersion: 'mini',
+      metadata: true,
+    },
+  ],
+};
+```
+  </TabItem>
+</Tabs>
+
+For more control over metadata, you can provide your own function. It receives the source `schema`, the target `node` object, and the `$` builder for populating metadata.
+
+<Tabs>
+  <TabItem label="example">
+```ts title="zod.gen.ts"
+export const zFoo = z.string().register(z.globalRegistry, {
+  hasTitle: true,
+  createdAt: 1735732800000,
+});
+```
+  </TabItem>
+  <TabItem label="config">
+```js {9-12} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: 'zod',
+      compatibilityVersion: 'mini',
+      metadata({ $, node, schema }) {
+        node.prop('hasTitle', $.literal(Boolean(schema.title)));
+        node.prop('createdAt', $.literal(Date.now()));
+      },
+    },
+  ],
+};
+```
+  </TabItem>
+</Tabs>
+
+## Types
+
+In addition to Zod schemas, you can generate schema-specific types. These can be generated for all schemas or for specific resources.
+
+<Tabs>
+  <TabItem label="example">
+```ts title="zod.gen.ts"
+export type ResponseZodType = z.infer<typeof zResponse>;
+```
+  </TabItem>
+  <TabItem label="config">
+```js {10,14} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: 'zod',
+      compatibilityVersion: 'mini',
+      types: {
+        infer: false, // by default, no `z.infer` types
+      },
+      responses: {
+        types: {
+          infer: true, // `z.infer` types only for response schemas
+        },
+      },
+    },
+  ],
+};
+```
+  </TabItem>
+</Tabs>
+
+You can customize the naming and casing pattern for schema-specific `types` using the `.name` and `.case` options.
+
+## Resolvers
+
+You can further customize this plugin's behavior using [resolvers](/openapi-ts/plugins/concepts/resolvers).
+
+## API
+
+You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/zod/types.ts) interface.
+
+<Examples />
