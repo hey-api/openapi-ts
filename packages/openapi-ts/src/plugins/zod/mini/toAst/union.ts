@@ -2,7 +2,10 @@ import { $ } from '../../../../ts-dsl';
 import { identifiers } from '../../constants';
 import type { UnionResolverContext } from '../../resolvers';
 import type { Chain } from '../../shared/chain';
-import { tryBuildDiscriminatedUnion } from '../../shared/discriminated-union';
+import {
+  buildDiscriminatorExpression,
+  tryBuildDiscriminatedUnion,
+} from '../../shared/discriminated-union';
 import type { ZodResult } from '../../shared/types';
 
 type UnionToAstOptions = Pick<
@@ -42,6 +45,9 @@ function baseNode(ctx: UnionResolverContext): Chain {
   });
 
   if (discriminatedExpression) {
+    // z.discriminatedUnion requires each branch discriminator to be a type that
+    // z.discriminatedUnion's internal getDiscriminator can extract a value from.
+    // See buildDiscriminatorExpression for the three cases handled.
     const unionMembers = discriminatedExpression.members.map((member) =>
       $(z)
         .attr(identifiers.extend)
@@ -49,7 +55,7 @@ function baseNode(ctx: UnionResolverContext): Chain {
           member.refExpression,
           $.object().prop(
             discriminatedExpression.discriminatorKey,
-            $(z).attr(identifiers.literal).call($.fromValue(member.discriminatedValue)),
+            buildDiscriminatorExpression(z, member.discriminatedValue),
           ),
         ),
     );
