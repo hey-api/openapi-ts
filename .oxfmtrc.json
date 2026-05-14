@@ -13,8 +13,6 @@
     "**/.nuxt/",
     "**/.output/",
     "**/.svelte-kit/",
-    "**/.vitepress/cache",
-    "**/.vitepress/dist",
     "**/.angular",
     "**/web/.astro/",
     "**/web/.cache/",

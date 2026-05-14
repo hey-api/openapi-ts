@@ -103,7 +103,7 @@ export async function fetchSponsorGoal(): Promise<SponsorGoal | null> {
         headers: {
           Authorization: `bearer ${token}`,
           'Content-Type': 'application/json',
-          'User-Agent': 'hey-api-docs',
+          'User-Agent': 'hey-api-web',
         },
         method: 'POST',
       }),
