@@ -25,6 +25,7 @@ coverage
 
 # test files
 .gen/
+!web/public/assets/.gen
 dev/gen/
 test/generated
 
