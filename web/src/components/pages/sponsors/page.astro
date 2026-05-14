@@ -3,7 +3,6 @@ import arrowRightSvg from '@/assets/icons/arrow-right.svg?raw';
 import crownSvg from '@/assets/icons/crown.svg?raw';
 import eyeSvg from '@/assets/icons/eye.svg?raw';
 import fileHighlightSvg from '@/assets/icons/file-highlight.svg?raw';
-import heartSvg from '@/assets/icons/heart.svg?raw';
 import historySvg from '@/assets/icons/history.svg?raw';
 import mailSvg from '@/assets/icons/mail.svg?raw';
 import mapSvg from '@/assets/icons/map.svg?raw';
@@ -12,6 +11,8 @@ import CurrentSponsors from '@/components/Sponsors.astro';
 import { SPONSOR_TIERS, SPONSORS_URL } from '@/data/constants';
 import { fetchRepoStars } from '@/utils/github';
 import { fetchWeeklyDownloads, formatDownloads } from '@/utils/npm';
+
+import Hero from './Hero.astro';
 
 const [tsDownloads, repoStars] = await Promise.all([
   fetchWeeklyDownloads('@hey-api/openapi-ts'),
@@ -133,30 +134,13 @@ const enterprise = {
 ---
 
 <section class="sponsors-page">
-  <div class="hero">
-    <span class="hero-eyebrow">
-      <span class="hero-eyebrow-icon" aria-hidden="true">
-        <Fragment set:html={heartSvg} />
-      </span>
-      {eyebrow}
-    </span>
-
-    <h1 class="hero-title">
-      {titleStart}<br />
-      <span class="shimmer-text">{titleAccent}</span>
-    </h1>
-
-    <p class="hero-body">{heroBody}</p>
-
-    <div class="hero-stats">
-      {stats.map((s) => (
-        <div class="stat-item">
-          <span class="stat-num">{s.num}</span>
-          <span class="stat-label">{s.label}</span>
-        </div>
-      ))}
-    </div>
-  </div>
+  <Hero
+    eyebrow={eyebrow}
+    titleStart={titleStart}
+    titleAccent={titleAccent}
+    heroBody={heroBody}
+    stats={stats}
+  />
 
   <div class="section">
     <p class="section-label">Why sponsor</p>
@@ -267,116 +251,8 @@ const enterprise = {
     padding: calc(80px + var(--announcement-height-budget)) 0 5rem;
   }
 
-  .hero {
-    text-align: center;
-    padding: 0 1.5rem 3rem;
-    max-width: 680px;
-    margin: 0 auto;
-  }
-
-  .hero-eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--vp-c-brand-1);
-    border: 1px solid color-mix(in srgb, var(--vp-c-brand-1) 35%, transparent);
-    border-radius: 999px;
-    padding: 3px 10px 3px 8px;
-    margin-bottom: 1.25rem;
-    background: color-mix(in srgb, var(--vp-c-brand-1) 8%, transparent);
-    text-decoration: none;
-  }
-
-  .hero-eyebrow-icon :global(svg) {
-    width: 12px;
-    height: 12px;
-    display: block;
-  }
-
-  .hero-title {
-    font-size: clamp(28px, 5vw, 44px);
-    font-weight: 700;
-    letter-spacing: -0.03em;
-    line-height: 1.2;
-    color: var(--sl-color-text);
-    margin: 0 0 1.25rem;
-  }
-
-  @keyframes shimmer {
-    0%   { background-position: 200% center; }
-    100% { background-position: -200% center; }
-  }
-
-  .shimmer-text {
-    background: linear-gradient(
-      110deg,
-      var(--vp-c-brand-3) 0%,
-      var(--vp-c-brand-1) 30%,
-      var(--vp-c-brand-2) 50%,
-      var(--vp-c-brand-1) 70%,
-      var(--vp-c-brand-3) 100%
-    );
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: shimmer 4s linear infinite;
-  }
-
   @media (prefers-reduced-motion: reduce) {
-    .shimmer-text,
     .btn-sponsor--primary { animation: none; }
-  }
-
-  .hero-body {
-    font-size: 16px;
-    line-height: 1.7;
-    color: var(--sl-color-gray-2);
-    max-width: 500px;
-    margin: 0 auto 2.25rem;
-  }
-
-  .hero-stats {
-    display: flex;
-    justify-content: center;
-    align-items: stretch;
-    width: fit-content;
-    margin: 0 auto;
-    border: 1px solid var(--vp-c-divider);
-    border-radius: 10px;
-    overflow: hidden;
-    background: var(--dt-bg-2);
-  }
-
-  .stat-item {
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    margin-top: 0;
-    min-width: 140px;
-    padding: 12px 24px;
-  }
-
-  .stat-item + .stat-item {
-    border-left: 1px solid var(--vp-c-divider);
-  }
-
-  .stat-num {
-    font-size: 20px;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    color: var(--vp-c-text-1);
-  }
-
-  .stat-label {
-    font-size: 11px;
-    color: var(--vp-c-text-2);
-    white-space: nowrap;
   }
 
   .section {
@@ -821,16 +697,6 @@ const enterprise = {
     .tiers-featured,
     .tiers-minor {
       grid-template-columns: 1fr;
-    }
-
-    .hero-stats {
-      width: 100%;
-      flex-direction: column;
-    }
-
-    .stat-item + .stat-item {
-      border-left: none;
-      border-top: 1px solid var(--vp-c-divider);
     }
 
     .enterprise-inner {

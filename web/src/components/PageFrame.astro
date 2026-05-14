@@ -26,6 +26,10 @@ const { hasSidebar } = Astro.locals.starlightRoute;
   })();
 </script>
 
+<div style="display:none" aria-hidden="true">
+  For the complete documentation index, see <a href="/llms.txt">llms.txt</a>
+</div>
+
 <div class:list={['page sl-flex', { 'has-sidebar': hasSidebar }]}>
   <header class="header">
     <slot name="header" />
