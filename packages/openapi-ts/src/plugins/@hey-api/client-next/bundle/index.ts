@@ -7,6 +7,7 @@ export {
 } from '../../client-core/bundle/bodySerializer';
 export { buildClientParams } from '../../client-core/bundle/params';
 export { serializeQueryKeyValue } from '../../client-core/bundle/queryKeySerializer';
+export type { ServerSentEventsResult } from '../../client-core/bundle/serverSentEvents';
 export { createClient } from './client';
 export type {
   Client,

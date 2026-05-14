@@ -17,7 +17,7 @@ import {
 import { $, ctx } from '../../../../ts-dsl';
 import { createClientClass, createRegistryClass } from '../shared/class';
 import { nuxtTypeComposable, nuxtTypeDefault } from '../shared/constants';
-import { operationParameters, operationStatements } from '../shared/operation';
+import { operationParameters, operationReturnType, operationStatements } from '../shared/operation';
 import type { HeyApiSdkPlugin } from '../types';
 
 export interface OperationItem {
@@ -282,10 +282,7 @@ function implementFn<T extends ReturnType<typeof $.func | typeof $.method>>(args
     operation,
     plugin,
   });
-
-  const hasServerSentEvents = Object.values(operation.responses ?? {}).some(
-    (response) => response?.mediaType === 'text/event-stream',
-  );
+  const returnType = operationReturnType({ operation, plugin });
 
   return node
     .$if(
@@ -317,31 +314,7 @@ function implementFn<T extends ReturnType<typeof $.func | typeof $.method>>(args
         ),
     )
     .params(...opParameters.parameters)
-    .$if(!isNuxtClient && !hasServerSentEvents, (m) =>
-      m.returns(
-        $.type(plugin.external('client.RequestResult'))
-          .generic(
-            plugin.querySymbol({
-              category: 'type',
-              resource: 'operation',
-              resourceId: operation.id,
-              role: 'responses',
-            }) ?? 'unknown',
-          )
-          .generic(
-            plugin.querySymbol({
-              category: 'type',
-              resource: 'operation',
-              resourceId: operation.id,
-              role: 'errors',
-            }) ?? 'unknown',
-          )
-          .generic('ThrowOnError')
-          .$if(plugin.config.responseStyle === 'data', (t) =>
-            t.generic($.type.literal(plugin.config.responseStyle)),
-          ),
-      ),
-    )
+    .$if(returnType, (m, t) => m.returns(t))
     .do(...statements) as T;
 }
 
