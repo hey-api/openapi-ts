@@ -578,9 +578,9 @@ You can customize the naming and casing pattern for `mutationOptions` functions 
 
 Mutation keys contain normalized SDK function parameters and additional metadata.
 
-::: code-group
-
-```ts [example]
+<Tabs>
+  <TabItem label="example">
+```ts title="react-query.gen.ts"
 const mutationKey = [
   {
     _id: 'addPet',
@@ -591,8 +591,9 @@ const mutationKey = [
   },
 ];
 ```
-
-```js [config]
+  </TabItem>
+  <TabItem label="config">
+```js {8} title="openapi-ts.config.ts"
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
@@ -600,13 +601,13 @@ export default {
     // ...other plugins
     {
       name: '@tanstack/react-query',
-      mutationKeys: true, // [!code ++]
+      mutationKeys: true,
     },
   ],
 };
 ```
-
-:::
+  </TabItem>
+</Tabs>
 
 ### Meta
 
