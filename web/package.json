@@ -2,7 +2,7 @@
   "name": "web",
   "version": "0.0.1",
   "private": true,
-  "description": "Hey API documentation.",
+  "description": "Hey API website.",
   "type": "module",
   "scripts": {
     "astro": "astro",

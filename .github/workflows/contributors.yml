@@ -26,5 +26,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add ./CONTRIBUTORS.md
-          git diff --cached --quiet || git commit -m "chore(docs): update contributors list"
+          git diff --cached --quiet || git commit -m "chore: update contributors list"
           git push

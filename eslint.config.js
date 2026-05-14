@@ -81,8 +81,6 @@ export default tseslint.config(
       '**/.nuxt/',
       '**/.output/',
       '**/.svelte-kit/',
-      '**/.vitepress/cache',
-      '**/.vitepress/dist',
       '**/.vercel',
       '**/.angular',
       '**/web/src/components/pages/**/previews/',
