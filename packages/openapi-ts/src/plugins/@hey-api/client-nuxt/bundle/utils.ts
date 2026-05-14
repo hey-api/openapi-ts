@@ -95,8 +95,8 @@ const defaultPathSerializer = ({ path, url: _url }: PathSerializer) => {
 export const createQuerySerializer = <T = unknown>({
   parameters = {},
   ...args
-}: QuerySerializerOptions = {}) => {
-  const querySerializer = (queryParams: T) => {
+}: QuerySerializerOptions = {}): ((queryParams: T) => string) => {
+  const querySerializer = (queryParams: T): string => {
     const search: string[] = [];
     const qParams = toValue(queryParams);
     if (qParams && typeof qParams === 'object') {
@@ -225,7 +225,7 @@ export const getUrl = ({
 }: Pick<BuildUrlOptions, 'path' | 'query' | 'url'> & {
   baseUrl?: string;
   querySerializer: QuerySerializer;
-}) => {
+}): string => {
   const pathUrl = _url.startsWith('/') ? _url : `/${_url}`;
   let url = (baseUrl ?? '') + pathUrl;
   if (path) {

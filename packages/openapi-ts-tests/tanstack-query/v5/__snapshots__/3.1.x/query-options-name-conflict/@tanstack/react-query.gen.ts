@@ -58,7 +58,7 @@ export const getMembersOptionsQueryKey = (options?: Options<GetMembersOptionsDat
 
 export const getMembersOptionsOptions = (options?: Options<GetMembersOptionsData>) => queryOptions<GetMembersOptionsResponse, DefaultError, GetMembersOptionsResponse, ReturnType<typeof getMembersOptionsQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
-        const { data } = await getMembersOptions2({
+        const { data } = await getMembersOptions({
             ...options,
             ...queryKey[0],
             signal,

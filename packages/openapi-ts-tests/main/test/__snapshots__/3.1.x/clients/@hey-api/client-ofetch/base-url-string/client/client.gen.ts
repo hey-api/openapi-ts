@@ -49,7 +49,10 @@ export const createClient = (config: Config = {}): Client => {
     };
 
     if (opts.security) {
-      await setAuthParams(opts);
+      await setAuthParams({
+        ...opts,
+        security: opts.security,
+      });
     }
 
     if (opts.requestValidator) {
