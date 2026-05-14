@@ -490,11 +490,12 @@ export function operationReturnType({
 }: {
   operation: IR.OperationObject;
   plugin: HeyApiSdkPlugin['Instance'];
-}): ReturnType<typeof $.type> | undefined {
+}): ReturnType<typeof $.type> {
   const client = getClientPlugin(getTypedConfig(plugin));
-  if (client.name === '@hey-api/client-nuxt') return undefined;
+  const isNuxt = client.name === '@hey-api/client-nuxt';
+  const isSse = hasOperationSse({ operation });
 
-  const queryType = (role: 'responses' | 'errors') =>
+  const queryType = (role: 'response' | 'responses' | 'error' | 'errors') =>
     plugin.querySymbol({
       category: 'type',
       resource: 'operation',
@@ -502,16 +503,28 @@ export function operationReturnType({
       role,
     }) ?? 'unknown';
 
-  if (hasOperationSse({ operation })) {
+  const requestResult = $.type(plugin.external('client.RequestResult'));
+  const sseResult = $.type(plugin.external('client.ServerSentEventsResult'));
+
+  if (isNuxt) {
+    const inner = requestResult
+      .generic(nuxtTypeComposable)
+      .generic($.type.or(queryType('response'), nuxtTypeDefault));
+    return isSse
+      ? $.type('Promise').generic(sseResult.generic(inner.generic('unknown')))
+      : inner.generic(nuxtTypeDefault);
+  }
+
+  if (isSse) {
     return $.type('Promise').generic(
-      $.type(plugin.external('client.ServerSentEventsResult'))
+      sseResult
         .generic(queryType('responses'))
         .generic(queryType('errors'))
         .generic('ThrowOnError'),
     );
   }
 
-  return $.type(plugin.external('client.RequestResult'))
+  return requestResult
     .generic(queryType('responses'))
     .generic(queryType('errors'))
     .generic('ThrowOnError')

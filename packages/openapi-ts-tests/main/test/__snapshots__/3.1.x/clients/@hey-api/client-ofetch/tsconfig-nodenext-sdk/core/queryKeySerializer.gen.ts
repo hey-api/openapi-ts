@@ -14,11 +14,7 @@ export type JsonValue =
 /**
  * Replacer that converts non-JSON values (bigint, Date, etc.) to safe substitutes.
  */
-<<<<<<< HEAD
-export const queryKeyJsonReplacer = (_key: string, value: unknown): unknown | undefined => {
-=======
 export const queryKeyJsonReplacer = (_key: string, value: unknown): unknown => {
->>>>>>> 4a5f34551 (updated test snapshots)
   if (value === undefined || typeof value === 'function' || typeof value === 'symbol') {
     return undefined;
   }

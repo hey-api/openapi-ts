@@ -27,7 +27,7 @@ export const postFoo = <ThrowOnError extends boolean = false>(options?: Options<
         path: z.optional(z.never()),
         query: z.optional(z.never())
     }).parseAsync(data),
-    responseValidator: async (data) => await zPostFooResponse.parseAsync(data),
+    responseTransformer: async (data) => await zPostFooResponse.parseAsync(data),
     url: '/foo',
     ...options
 });
