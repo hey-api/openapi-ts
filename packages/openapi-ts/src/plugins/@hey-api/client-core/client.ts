@@ -105,8 +105,17 @@ export const createClient: PluginHandler = ({ plugin }) => {
       category: 'client',
     },
   });
+  const symbolClientType = plugin.symbol('Client', {
+    external: clientModule,
+    kind: 'type',
+    meta: {
+      resource: 'client.Client',
+      tool: plugin.name,
+    },
+  });
   const statement = $.const(symbolClient)
     .export()
+    .type(symbolClientType)
     .assign(
       $(symbolCreateClient).$if(
         symbolCreateClientConfig,

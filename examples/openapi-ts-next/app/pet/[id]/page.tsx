@@ -23,7 +23,11 @@ async function getPet(id: string) {
   return pet;
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<{ name: string }> {
   const { id } = await params;
   const pet = await getPet(id);
   return {
@@ -31,7 +35,11 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   };
 }
 
-export default async function Blog({ params }: { params: Promise<{ id: string }> }) {
+export default async function Blog({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<React.ReactNode> {
   const { id } = await params;
   const pet = await getPet(id);
 

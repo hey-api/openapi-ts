@@ -91,8 +91,8 @@ const defaultPathSerializer = ({ path, url: _url }: PathSerializer) => {
 export const createQuerySerializer = <T = unknown>({
   parameters = {},
   ...args
-}: QuerySerializerOptions = {}) => {
-  const querySerializer = (queryParams: T) => {
+}: QuerySerializerOptions = {}): ((queryParams: T) => string) => {
+  const querySerializer = (queryParams: T): string => {
     const search: string[] = [];
     if (queryParams && typeof queryParams === 'object') {
       for (const name in queryParams) {
@@ -198,9 +198,14 @@ const checkForExistence = (
 export async function setAuthParams(
   options: Pick<RequestOptions, 'auth' | 'query' | 'security'> & {
     headers: Headers;
+<<<<<<< HEAD
   },
 ): Promise<void> {
   for (const auth of options.security ?? []) {
+=======
+  }): Promise<void> => {
+  for (const auth of security) {
+>>>>>>> f77da83ab (FEATURE-3879: added support for typescript isolatedDeclarations)
     if (checkForExistence(options, auth.name)) {
       continue;
     }
@@ -256,7 +261,7 @@ export const getUrl = ({
   query?: Record<string, unknown>;
   querySerializer: QuerySerializer;
   url: string;
-}) => {
+}): string => {
   const pathUrl = _url.startsWith('/') ? _url : `/${_url}`;
   let url = (baseUrl ?? '') + pathUrl;
   if (path) {

@@ -201,7 +201,12 @@ function enrichRootClass(args: {
   };
   node.do(
     $.field(registry, (f) =>
-      f.public().static().readonly().assign($.new(symbolRegistry).generic(symbol)),
+      f
+        .public()
+        .static()
+        .readonly()
+        .type($.type(symbolRegistry).generic(symbol))
+        .assign($.new(symbolRegistry).generic(symbol)),
     ),
     $.newline(),
     $.init((i) =>
@@ -307,6 +312,29 @@ function implementFn<T extends ReturnType<typeof $.func | typeof $.method>>(args
         ),
     )
     .params(...opParameters.parameters)
+    .returns(
+      $.type(plugin.external('client.RequestResult'))
+        .generic(
+          plugin.querySymbol({
+            category: 'type',
+            resource: 'operation',
+            resourceId: operation.id,
+            role: 'responses',
+          }) ?? 'unknown',
+        )
+        .generic(
+          plugin.querySymbol({
+            category: 'type',
+            resource: 'operation',
+            resourceId: operation.id,
+            role: 'errors',
+          }) ?? 'unknown',
+        )
+        .generic('ThrowOnError')
+        .$if(plugin.config.responseStyle === 'data', (t) =>
+          t.generic($.type.literal(plugin.config.responseStyle)),
+        ),
+    )
     .do(...statements) as T;
 }
 
