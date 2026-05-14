@@ -1,6 +1,7 @@
 ---
 import checkSvg from '@/assets/icons/check.svg?raw';
 import copySvg from '@/assets/icons/copy.svg?raw';
+import downloadSvg from '@/assets/icons/download.svg?raw';
 import { CODEGEN_OUTPUT_ATTR } from '@/utils/codegen-context';
 
 interface Props {
@@ -18,21 +19,27 @@ const { command, downloads, outputOptions } = Astro.props;
   <span class="icon copy-icon" set:html={copySvg} aria-hidden="true" />
   <span class="icon check-icon" set:html={checkSvg} aria-hidden="true" />
 </button>
-<p class="downloads" aria-live="polite">{downloads ?? ''}</p>
+<p class="downloads" aria-live="polite">
+  {downloads && <span class="downloads-icon" set:html={downloadSvg} aria-hidden="true" />}
+  <span class="downloads-text">{downloads ?? ''}</span>
+</p>
 <script is:inline define:vars={{ outputOptions: outputOptions ?? [], outputAttr: CODEGEN_OUTPUT_ATTR }}>
   (function () {
     var output = document.documentElement.dataset[outputAttr];
     var opt = outputOptions.find(function (o) { return o.value === output; });
     if (!opt) return;
     var btn = document.currentScript.previousElementSibling.previousElementSibling;
-    var stat = document.currentScript.previousElementSibling;
     if (opt.installCommand) {
       var code = btn.querySelector('.terminal-command');
       if (code) code.textContent = opt.installCommand;
       btn.dataset.command = opt.installCommand;
       btn.setAttribute('aria-label', 'Copy: ' + opt.installCommand);
     }
-    stat.textContent = opt.downloads ?? '';
+    var stat = document.currentScript.previousElementSibling;
+    var text = stat.querySelector('.downloads-text');
+    var icon = stat.querySelector('.downloads-icon');
+    if (text) text.textContent = opt.downloads ?? '';
+    if (icon) icon.style.display = opt.downloads ? '' : 'none';
   })();
 </script>
 
@@ -128,13 +135,23 @@ const { command, downloads, outputOptions } = Astro.props;
   .install:hover .copy-icon { color: var(--sl-color-text); }
 
   .downloads {
-    border-left: 2px solid var(--vp-c-divider);
+    align-items: center;
     color: var(--sl-color-gray-3);
+    display: flex;
     font-size: 13px;
+    gap: 5px;
     line-height: 1;
-    margin: 0 0 2rem;
+    margin: 0 0 1.25rem;
     min-height: 1lh;
-    padding-left: 10px;
+  }
+
+  .downloads-icon {
+    align-items: center;
+    color: var(--sl-color-gray-3);
+    display: flex;
+    flex-shrink: 0;
+    height: 12px;
+    width: 12px;
   }
 
   @media (max-width: 640px) {

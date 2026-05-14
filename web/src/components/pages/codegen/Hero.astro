@@ -205,7 +205,12 @@ const outputOptions = OUTPUT_OPTIONS.map(({ description, downloads, installComma
       if (cta && opt.link) cta.href = opt.link;
 
       const stat = document.querySelector<HTMLElement>('.downloads');
-      if (stat) stat.textContent = opt.downloads ?? '';
+      if (stat) {
+        const text = stat.querySelector<HTMLElement>('.downloads-text');
+        const icon = stat.querySelector<HTMLElement>('.downloads-icon');
+        if (text) text.textContent = opt.downloads ?? '';
+        if (icon) icon.style.display = opt.downloads ? '' : 'none';
+      }
 
       document.querySelectorAll<HTMLElement>('[data-preview-group]').forEach(
         (group) => {
