@@ -45,6 +45,14 @@ export const handlerV1: HeyApiSdkPlugin['Handler'] = ({ plugin }) => {
       tool: client.name,
     },
   });
+  plugin.symbol('ServerSentEventsResult', {
+    external: clientModule,
+    kind: 'type',
+    meta: {
+      resource: 'client.ServerSentEventsResult',
+      tool: client.name,
+    },
+  });
   if (isNuxtClient) {
     plugin.symbol('Composable', {
       external: clientModule,
