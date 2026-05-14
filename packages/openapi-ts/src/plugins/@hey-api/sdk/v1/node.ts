@@ -282,6 +282,11 @@ function implementFn<T extends ReturnType<typeof $.func | typeof $.method>>(args
     operation,
     plugin,
   });
+
+  const hasServerSentEvents = Object.values(operation.responses ?? {}).some(
+    (response) => response?.mediaType === 'text/event-stream',
+  );
+
   return node
     .$if(
       isNuxtClient,
@@ -312,7 +317,7 @@ function implementFn<T extends ReturnType<typeof $.func | typeof $.method>>(args
         ),
     )
     .params(...opParameters.parameters)
-    .$if(!isNuxtClient, (m) =>
+    .$if(!isNuxtClient && !hasServerSentEvents, (m) =>
       m.returns(
         $.type(plugin.external('client.RequestResult'))
           .generic(
