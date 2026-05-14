@@ -314,7 +314,7 @@ function implementFn<T extends ReturnType<typeof $.func | typeof $.method>>(args
         ),
     )
     .params(...opParameters.parameters)
-    .$if(returnType, (m, t) => m.returns(t))
+    .returns(returnType)
     .do(...statements) as T;
 }
 

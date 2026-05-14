@@ -179,22 +179,12 @@ export const getParseAs = (
   return;
 };
 
-<<<<<<< HEAD
 export async function setAuthParams(
   options: Pick<RequestOptions, 'auth' | 'query' | 'security'> & {
     headers: HttpHeaders;
   },
 ): Promise<void> {
   for (const auth of options.security ?? []) {
-=======
-export const setAuthParams = async (
-  options: Pick<Required<RequestOptions>, 'security'> &
-    Pick<RequestOptions, 'auth' | 'query'> & {
-      headers: HttpHeaders;
-    },
-): Promise<void> => {
-  for (const auth of options.security) {
->>>>>>> f77da83ab (FEATURE-3879: added support for typescript isolatedDeclarations)
     const token = await getAuthToken(auth, options.auth);
 
     if (!token) {
