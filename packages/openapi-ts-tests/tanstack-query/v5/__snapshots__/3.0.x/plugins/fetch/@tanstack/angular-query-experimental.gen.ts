@@ -54,37 +54,6 @@ export const exportOptions = (options?: Options<ExportData>) => queryOptions<unk
     queryKey: exportQueryKey(options)
 });
 
-export type MutationKey<TOptions extends Partial<Options>> = [
-    Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
-        _id: string;
-        tags?: ReadonlyArray<string>;
-    }
-];
-
-const createMutationKey = <TOptions extends Partial<Options>>(id: string, options?: TOptions, tags?: ReadonlyArray<string>): [
-    MutationKey<TOptions>[0]
-] => {
-    const params: MutationKey<TOptions>[0] = { _id: id, baseUrl: options?.baseUrl || (options?.client ?? client).getConfig().baseUrl };
-    if (tags) {
-        params.tags = tags;
-    }
-    if (options?.body) {
-        params.body = options.body;
-    }
-    if (options?.headers) {
-        params.headers = options.headers;
-    }
-    if (options?.path) {
-        params.path = options.path;
-    }
-    if (options?.query) {
-        params.query = options.query;
-    }
-    return [params];
-};
-
-export const patchApiVbyApiVersionNoTagMutationKey = (options?: Partial<Options<PatchApiVbyApiVersionNoTagData>>) => createMutationKey('patchApiVbyApiVersionNoTag', options);
-
 export const patchApiVbyApiVersionNoTagMutation = (options?: Partial<Options<PatchApiVbyApiVersionNoTagData>>): MutationOptions<unknown, DefaultError, Options<PatchApiVbyApiVersionNoTagData>> => {
     const mutationOptions: MutationOptions<unknown, DefaultError, Options<PatchApiVbyApiVersionNoTagData>> = {
         mutationFn: async (fnOptions) => {
@@ -94,13 +63,10 @@ export const patchApiVbyApiVersionNoTagMutation = (options?: Partial<Options<Pat
                 throwOnError: true
             });
             return data;
-        },
-        mutationKey: patchApiVbyApiVersionNoTagMutationKey(options)
+        }
     };
     return mutationOptions;
 };
-
-export const importMutationKey = (options?: Partial<Options<ImportData>>) => createMutationKey('import', options);
 
 export const importMutation = (options?: Partial<Options<ImportData>>): MutationOptions<ImportResponse, DefaultError, Options<ImportData>> => {
     const mutationOptions: MutationOptions<ImportResponse, DefaultError, Options<ImportData>> = {
@@ -111,13 +77,10 @@ export const importMutation = (options?: Partial<Options<ImportData>>): Mutation
                 throwOnError: true
             });
             return data;
-        },
-        mutationKey: importMutationKey(options)
+        }
     };
     return mutationOptions;
 };
-
-export const fooWowMutationKey = (options?: Partial<Options<FooWowData>>) => createMutationKey('fooWow', options);
 
 export const fooWowMutation = (options?: Partial<Options<FooWowData>>): MutationOptions<unknown, DefaultError, Options<FooWowData>> => {
     const mutationOptions: MutationOptions<unknown, DefaultError, Options<FooWowData>> = {
@@ -128,8 +91,7 @@ export const fooWowMutation = (options?: Partial<Options<FooWowData>>): Mutation
                 throwOnError: true
             });
             return data;
-        },
-        mutationKey: fooWowMutationKey(options)
+        }
     };
     return mutationOptions;
 };
@@ -164,8 +126,6 @@ export const getApiVbyApiVersionSimpleOperationOptions = (options: Options<GetAp
     queryKey: getApiVbyApiVersionSimpleOperationQueryKey(options)
 });
 
-export const deleteCallWithoutParametersAndResponseMutationKey = (options?: Partial<Options<DeleteCallWithoutParametersAndResponseData>>) => createMutationKey('deleteCallWithoutParametersAndResponse', options);
-
 export const deleteCallWithoutParametersAndResponseMutation = (options?: Partial<Options<DeleteCallWithoutParametersAndResponseData>>): MutationOptions<unknown, DefaultError, Options<DeleteCallWithoutParametersAndResponseData>> => {
     const mutationOptions: MutationOptions<unknown, DefaultError, Options<DeleteCallWithoutParametersAndResponseData>> = {
         mutationFn: async (fnOptions) => {
@@ -175,8 +135,7 @@ export const deleteCallWithoutParametersAndResponseMutation = (options?: Partial
                 throwOnError: true
             });
             return data;
-        },
-        mutationKey: deleteCallWithoutParametersAndResponseMutationKey(options)
+        }
     };
     return mutationOptions;
 };
@@ -196,8 +155,6 @@ export const getCallWithoutParametersAndResponseOptions = (options?: Options<Get
     queryKey: getCallWithoutParametersAndResponseQueryKey(options)
 });
 
-export const patchCallWithoutParametersAndResponseMutationKey = (options?: Partial<Options<PatchCallWithoutParametersAndResponseData>>) => createMutationKey('patchCallWithoutParametersAndResponse', options);
-
 export const patchCallWithoutParametersAndResponseMutation = (options?: Partial<Options<PatchCallWithoutParametersAndResponseData>>): MutationOptions<unknown, DefaultError, Options<PatchCallWithoutParametersAndResponseData>> => {
     const mutationOptions: MutationOptions<unknown, DefaultError, Options<PatchCallWithoutParametersAndResponseData>> = {
         mutationFn: async (fnOptions) => {
@@ -207,13 +164,10 @@ export const patchCallWithoutParametersAndResponseMutation = (options?: Partial<
                 throwOnError: true
             });
             return data;
-        },
-        mutationKey: patchCallWithoutParametersAndResponseMutationKey(options)
+        }
     };
     return mutationOptions;
 };
-
-export const postCallWithoutParametersAndResponseMutationKey = (options?: Partial<Options<PostCallWithoutParametersAndResponseData>>) => createMutationKey('postCallWithoutParametersAndResponse', options);
 
 export const postCallWithoutParametersAndResponseMutation = (options?: Partial<Options<PostCallWithoutParametersAndResponseData>>): MutationOptions<unknown, DefaultError, Options<PostCallWithoutParametersAndResponseData>> => {
     const mutationOptions: MutationOptions<unknown, DefaultError, Options<PostCallWithoutParametersAndResponseData>> = {
@@ -224,13 +178,10 @@ export const postCallWithoutParametersAndResponseMutation = (options?: Partial<O
                 throwOnError: true
             });
             return data;
-        },
-        mutationKey: postCallWithoutParametersAndResponseMutationKey(options)
+        }
     };
     return mutationOptions;
 };
-
-export const putCallWithoutParametersAndResponseMutationKey = (options?: Partial<Options<PutCallWithoutParametersAndResponseData>>) => createMutationKey('putCallWithoutParametersAndResponse', options);
 
 export const putCallWithoutParametersAndResponseMutation = (options?: Partial<Options<PutCallWithoutParametersAndResponseData>>): MutationOptions<unknown, DefaultError, Options<PutCallWithoutParametersAndResponseData>> => {
     const mutationOptions: MutationOptions<unknown, DefaultError, Options<PutCallWithoutParametersAndResponseData>> = {
@@ -241,13 +192,10 @@ export const putCallWithoutParametersAndResponseMutation = (options?: Partial<Op
                 throwOnError: true
             });
             return data;
-        },
-        mutationKey: putCallWithoutParametersAndResponseMutationKey(options)
+        }
     };
     return mutationOptions;
 };
-
-export const deleteFooMutationKey = (options?: Partial<Options<DeleteFooData3>>) => createMutationKey('deleteFoo', options);
 
 export const deleteFooMutation = (options?: Partial<Options<DeleteFooData3>>): MutationOptions<unknown, DefaultError, Options<DeleteFooData3>> => {
     const mutationOptions: MutationOptions<unknown, DefaultError, Options<DeleteFooData3>> = {
@@ -258,13 +206,10 @@ export const deleteFooMutation = (options?: Partial<Options<DeleteFooData3>>): M
                 throwOnError: true
             });
             return data;
-        },
-        mutationKey: deleteFooMutationKey(options)
+        }
     };
     return mutationOptions;
 };
-
-export const callWithDescriptionsMutationKey = (options?: Partial<Options<CallWithDescriptionsData>>) => createMutationKey('callWithDescriptions', options);
 
 export const callWithDescriptionsMutation = (options?: Partial<Options<CallWithDescriptionsData>>): MutationOptions<unknown, DefaultError, Options<CallWithDescriptionsData>> => {
     const mutationOptions: MutationOptions<unknown, DefaultError, Options<CallWithDescriptionsData>> = {
@@ -275,13 +220,10 @@ export const callWithDescriptionsMutation = (options?: Partial<Options<CallWithD
                 throwOnError: true
             });
             return data;
-        },
-        mutationKey: callWithDescriptionsMutationKey(options)
+        }
     };
     return mutationOptions;
 };
-
-export const deprecatedCallMutationKey = (options?: Partial<Options<DeprecatedCallData>>) => createMutationKey('deprecatedCall', options);
 
 /**
  * @deprecated
@@ -295,13 +237,10 @@ export const deprecatedCallMutation = (options?: Partial<Options<DeprecatedCallD
                 throwOnError: true
             });
             return data;
-        },
-        mutationKey: deprecatedCallMutationKey(options)
+        }
     };
     return mutationOptions;
 };
-
-export const callWithParametersMutationKey = (options?: Partial<Options<CallWithParametersData>>) => createMutationKey('callWithParameters', options);
 
 export const callWithParametersMutation = (options?: Partial<Options<CallWithParametersData>>): MutationOptions<unknown, DefaultError, Options<CallWithParametersData>> => {
     const mutationOptions: MutationOptions<unknown, DefaultError, Options<CallWithParametersData>> = {
@@ -312,13 +251,10 @@ export const callWithParametersMutation = (options?: Partial<Options<CallWithPar
                 throwOnError: true
             });
             return data;
-        },
-        mutationKey: callWithParametersMutationKey(options)
+        }
     };
     return mutationOptions;
 };
-
-export const callWithWeirdParameterNamesMutationKey = (options?: Partial<Options<CallWithWeirdParameterNamesData>>) => createMutationKey('callWithWeirdParameterNames', options);
 
 export const callWithWeirdParameterNamesMutation = (options?: Partial<Options<CallWithWeirdParameterNamesData>>): MutationOptions<unknown, DefaultError, Options<CallWithWeirdParameterNamesData>> => {
     const mutationOptions: MutationOptions<unknown, DefaultError, Options<CallWithWeirdParameterNamesData>> = {
@@ -329,8 +265,7 @@ export const callWithWeirdParameterNamesMutation = (options?: Partial<Options<Ca
                 throwOnError: true
             });
             return data;
-        },
-        mutationKey: callWithWeirdParameterNamesMutationKey(options)
+        }
     };
     return mutationOptions;
 };
@@ -403,8 +338,6 @@ export const getCallWithOptionalParamInfiniteOptions = (options: Options<GetCall
     queryKey: getCallWithOptionalParamInfiniteQueryKey(options)
 });
 
-export const postCallWithOptionalParamMutationKey = (options?: Partial<Options<PostCallWithOptionalParamData>>) => createMutationKey('postCallWithOptionalParam', options);
-
 export const postCallWithOptionalParamMutation = (options?: Partial<Options<PostCallWithOptionalParamData>>): MutationOptions<PostCallWithOptionalParamResponse, DefaultError, Options<PostCallWithOptionalParamData>> => {
     const mutationOptions: MutationOptions<PostCallWithOptionalParamResponse, DefaultError, Options<PostCallWithOptionalParamData>> = {
         mutationFn: async (fnOptions) => {
@@ -414,13 +347,10 @@ export const postCallWithOptionalParamMutation = (options?: Partial<Options<Post
                 throwOnError: true
             });
             return data;
-        },
-        mutationKey: postCallWithOptionalParamMutationKey(options)
+        }
     };
     return mutationOptions;
 };
-
-export const postApiVbyApiVersionRequestBodyMutationKey = (options?: Partial<Options<PostApiVbyApiVersionRequestBodyData>>) => createMutationKey('postApiVbyApiVersionRequestBody', options);
 
 export const postApiVbyApiVersionRequestBodyMutation = (options?: Partial<Options<PostApiVbyApiVersionRequestBodyData>>): MutationOptions<unknown, DefaultError, Options<PostApiVbyApiVersionRequestBodyData>> => {
     const mutationOptions: MutationOptions<unknown, DefaultError, Options<PostApiVbyApiVersionRequestBodyData>> = {
@@ -431,13 +361,10 @@ export const postApiVbyApiVersionRequestBodyMutation = (options?: Partial<Option
                 throwOnError: true
             });
             return data;
-        },
-        mutationKey: postApiVbyApiVersionRequestBodyMutationKey(options)
+        }
     };
     return mutationOptions;
 };
-
-export const postApiVbyApiVersionFormDataMutationKey = (options?: Partial<Options<PostApiVbyApiVersionFormDataData>>) => createMutationKey('postApiVbyApiVersionFormData', options);
 
 export const postApiVbyApiVersionFormDataMutation = (options?: Partial<Options<PostApiVbyApiVersionFormDataData>>): MutationOptions<unknown, DefaultError, Options<PostApiVbyApiVersionFormDataData>> => {
     const mutationOptions: MutationOptions<unknown, DefaultError, Options<PostApiVbyApiVersionFormDataData>> = {
@@ -448,8 +375,7 @@ export const postApiVbyApiVersionFormDataMutation = (options?: Partial<Options<P
                 throwOnError: true
             });
             return data;
-        },
-        mutationKey: postApiVbyApiVersionFormDataMutationKey(options)
+        }
     };
     return mutationOptions;
 };
@@ -469,8 +395,6 @@ export const callWithDefaultParametersOptions = (options?: Options<CallWithDefau
     queryKey: callWithDefaultParametersQueryKey(options)
 });
 
-export const callWithDefaultOptionalParametersMutationKey = (options?: Partial<Options<CallWithDefaultOptionalParametersData>>) => createMutationKey('callWithDefaultOptionalParameters', options);
-
 export const callWithDefaultOptionalParametersMutation = (options?: Partial<Options<CallWithDefaultOptionalParametersData>>): MutationOptions<unknown, DefaultError, Options<CallWithDefaultOptionalParametersData>> => {
     const mutationOptions: MutationOptions<unknown, DefaultError, Options<CallWithDefaultOptionalParametersData>> = {
         mutationFn: async (fnOptions) => {
@@ -480,13 +404,10 @@ export const callWithDefaultOptionalParametersMutation = (options?: Partial<Opti
                 throwOnError: true
             });
             return data;
-        },
-        mutationKey: callWithDefaultOptionalParametersMutationKey(options)
+        }
     };
     return mutationOptions;
 };
-
-export const callToTestOrderOfParamsMutationKey = (options?: Partial<Options<CallToTestOrderOfParamsData>>) => createMutationKey('callToTestOrderOfParams', options);
 
 export const callToTestOrderOfParamsMutation = (options?: Partial<Options<CallToTestOrderOfParamsData>>): MutationOptions<unknown, DefaultError, Options<CallToTestOrderOfParamsData>> => {
     const mutationOptions: MutationOptions<unknown, DefaultError, Options<CallToTestOrderOfParamsData>> = {
@@ -497,13 +418,10 @@ export const callToTestOrderOfParamsMutation = (options?: Partial<Options<CallTo
                 throwOnError: true
             });
             return data;
-        },
-        mutationKey: callToTestOrderOfParamsMutationKey(options)
+        }
     };
     return mutationOptions;
 };
-
-export const duplicateNameMutationKey = (options?: Partial<Options<DuplicateNameData>>) => createMutationKey('duplicateName', options);
 
 export const duplicateNameMutation = (options?: Partial<Options<DuplicateNameData>>): MutationOptions<unknown, DefaultError, Options<DuplicateNameData>> => {
     const mutationOptions: MutationOptions<unknown, DefaultError, Options<DuplicateNameData>> = {
@@ -514,8 +432,7 @@ export const duplicateNameMutation = (options?: Partial<Options<DuplicateNameDat
                 throwOnError: true
             });
             return data;
-        },
-        mutationKey: duplicateNameMutationKey(options)
+        }
     };
     return mutationOptions;
 };
@@ -535,8 +452,6 @@ export const duplicateName2Options = (options?: Options<DuplicateName2Data>) => 
     queryKey: duplicateName2QueryKey(options)
 });
 
-export const duplicateName3MutationKey = (options?: Partial<Options<DuplicateName3Data>>) => createMutationKey('duplicateName3', options);
-
 export const duplicateName3Mutation = (options?: Partial<Options<DuplicateName3Data>>): MutationOptions<unknown, DefaultError, Options<DuplicateName3Data>> => {
     const mutationOptions: MutationOptions<unknown, DefaultError, Options<DuplicateName3Data>> = {
         mutationFn: async (fnOptions) => {
@@ -546,13 +461,10 @@ export const duplicateName3Mutation = (options?: Partial<Options<DuplicateName3D
                 throwOnError: true
             });
             return data;
-        },
-        mutationKey: duplicateName3MutationKey(options)
+        }
     };
     return mutationOptions;
 };
-
-export const duplicateName4MutationKey = (options?: Partial<Options<DuplicateName4Data>>) => createMutationKey('duplicateName4', options);
 
 export const duplicateName4Mutation = (options?: Partial<Options<DuplicateName4Data>>): MutationOptions<unknown, DefaultError, Options<DuplicateName4Data>> => {
     const mutationOptions: MutationOptions<unknown, DefaultError, Options<DuplicateName4Data>> = {
@@ -563,8 +475,7 @@ export const duplicateName4Mutation = (options?: Partial<Options<DuplicateName4D
                 throwOnError: true
             });
             return data;
-        },
-        mutationKey: duplicateName4MutationKey(options)
+        }
     };
     return mutationOptions;
 };
@@ -644,8 +555,6 @@ export const callWithResponseOptions = (options?: Options<CallWithResponseData>)
     queryKey: callWithResponseQueryKey(options)
 });
 
-export const callWithDuplicateResponsesMutationKey = (options?: Partial<Options<CallWithDuplicateResponsesData>>) => createMutationKey('callWithDuplicateResponses', options);
-
 export const callWithDuplicateResponsesMutation = (options?: Partial<Options<CallWithDuplicateResponsesData>>): MutationOptions<CallWithDuplicateResponsesResponse, CallWithDuplicateResponsesError, Options<CallWithDuplicateResponsesData>> => {
     const mutationOptions: MutationOptions<CallWithDuplicateResponsesResponse, CallWithDuplicateResponsesError, Options<CallWithDuplicateResponsesData>> = {
         mutationFn: async (fnOptions) => {
@@ -655,13 +564,10 @@ export const callWithDuplicateResponsesMutation = (options?: Partial<Options<Cal
                 throwOnError: true
             });
             return data;
-        },
-        mutationKey: callWithDuplicateResponsesMutationKey(options)
+        }
     };
     return mutationOptions;
 };
-
-export const callWithResponsesMutationKey = (options?: Partial<Options<CallWithResponsesData>>) => createMutationKey('callWithResponses', options);
 
 export const callWithResponsesMutation = (options?: Partial<Options<CallWithResponsesData>>): MutationOptions<CallWithResponsesResponse, CallWithResponsesError, Options<CallWithResponsesData>> => {
     const mutationOptions: MutationOptions<CallWithResponsesResponse, CallWithResponsesError, Options<CallWithResponsesData>> = {
@@ -672,8 +578,7 @@ export const callWithResponsesMutation = (options?: Partial<Options<CallWithResp
                 throwOnError: true
             });
             return data;
-        },
-        mutationKey: callWithResponsesMutationKey(options)
+        }
     };
     return mutationOptions;
 };
@@ -708,8 +613,6 @@ export const typesOptions = (options: Options<TypesData>) => queryOptions<TypesR
     queryKey: typesQueryKey(options)
 });
 
-export const uploadFileMutationKey = (options?: Partial<Options<UploadFileData>>) => createMutationKey('uploadFile', options);
-
 export const uploadFileMutation = (options?: Partial<Options<UploadFileData>>): MutationOptions<UploadFileResponse, DefaultError, Options<UploadFileData>> => {
     const mutationOptions: MutationOptions<UploadFileResponse, DefaultError, Options<UploadFileData>> = {
         mutationFn: async (fnOptions) => {
@@ -719,8 +622,7 @@ export const uploadFileMutation = (options?: Partial<Options<UploadFileData>>): 
                 throwOnError: true
             });
             return data;
-        },
-        mutationKey: uploadFileMutationKey(options)
+        }
     };
     return mutationOptions;
 };
@@ -770,8 +672,6 @@ export const multipartResponseOptions = (options?: Options<MultipartResponseData
     queryKey: multipartResponseQueryKey(options)
 });
 
-export const multipartRequestMutationKey = (options?: Partial<Options<MultipartRequestData>>) => createMutationKey('multipartRequest', options);
-
 export const multipartRequestMutation = (options?: Partial<Options<MultipartRequestData>>): MutationOptions<unknown, DefaultError, Options<MultipartRequestData>> => {
     const mutationOptions: MutationOptions<unknown, DefaultError, Options<MultipartRequestData>> = {
         mutationFn: async (fnOptions) => {
@@ -781,13 +681,10 @@ export const multipartRequestMutation = (options?: Partial<Options<MultipartRequ
                 throwOnError: true
             });
             return data;
-        },
-        mutationKey: multipartRequestMutationKey(options)
+        }
     };
     return mutationOptions;
 };
-
-export const complexParamsMutationKey = (options?: Partial<Options<ComplexParamsData>>) => createMutationKey('complexParams', options);
 
 export const complexParamsMutation = (options?: Partial<Options<ComplexParamsData>>): MutationOptions<ComplexParamsResponse, DefaultError, Options<ComplexParamsData>> => {
     const mutationOptions: MutationOptions<ComplexParamsResponse, DefaultError, Options<ComplexParamsData>> = {
@@ -798,13 +695,10 @@ export const complexParamsMutation = (options?: Partial<Options<ComplexParamsDat
                 throwOnError: true
             });
             return data;
-        },
-        mutationKey: complexParamsMutationKey(options)
+        }
     };
     return mutationOptions;
 };
-
-export const callWithResultFromHeaderMutationKey = (options?: Partial<Options<CallWithResultFromHeaderData>>) => createMutationKey('callWithResultFromHeader', options);
 
 export const callWithResultFromHeaderMutation = (options?: Partial<Options<CallWithResultFromHeaderData>>): MutationOptions<unknown, DefaultError, Options<CallWithResultFromHeaderData>> => {
     const mutationOptions: MutationOptions<unknown, DefaultError, Options<CallWithResultFromHeaderData>> = {
@@ -815,13 +709,10 @@ export const callWithResultFromHeaderMutation = (options?: Partial<Options<CallW
                 throwOnError: true
             });
             return data;
-        },
-        mutationKey: callWithResultFromHeaderMutationKey(options)
+        }
     };
     return mutationOptions;
 };
-
-export const testErrorCodeMutationKey = (options?: Partial<Options<TestErrorCodeData>>) => createMutationKey('testErrorCode', options);
 
 export const testErrorCodeMutation = (options?: Partial<Options<TestErrorCodeData>>): MutationOptions<unknown, DefaultError, Options<TestErrorCodeData>> => {
     const mutationOptions: MutationOptions<unknown, DefaultError, Options<TestErrorCodeData>> = {
@@ -832,13 +723,10 @@ export const testErrorCodeMutation = (options?: Partial<Options<TestErrorCodeDat
                 throwOnError: true
             });
             return data;
-        },
-        mutationKey: testErrorCodeMutationKey(options)
+        }
     };
     return mutationOptions;
 };
-
-export const nonAsciiæøåÆøÅöôêÊ字符串MutationKey = (options?: Partial<Options<NonAsciiæøåÆøÅöôêÊ字符串Data>>) => createMutationKey('nonAsciiæøåÆøÅöôêÊ字符串', options);
 
 export const nonAsciiæøåÆøÅöôêÊ字符串Mutation = (options?: Partial<Options<NonAsciiæøåÆøÅöôêÊ字符串Data>>): MutationOptions<NonAsciiæøåÆøÅöôêÊ字符串Response, DefaultError, Options<NonAsciiæøåÆøÅöôêÊ字符串Data>> => {
     const mutationOptions: MutationOptions<NonAsciiæøåÆøÅöôêÊ字符串Response, DefaultError, Options<NonAsciiæøåÆøÅöôêÊ字符串Data>> = {
@@ -849,13 +737,10 @@ export const nonAsciiæøåÆøÅöôêÊ字符串Mutation = (options?: Partial<
                 throwOnError: true
             });
             return data;
-        },
-        mutationKey: nonAsciiæøåÆøÅöôêÊ字符串MutationKey(options)
+        }
     };
     return mutationOptions;
 };
-
-export const putWithFormUrlEncodedMutationKey = (options?: Partial<Options<PutWithFormUrlEncodedData>>) => createMutationKey('putWithFormUrlEncoded', options);
 
 /**
  * Login User
@@ -869,8 +754,7 @@ export const putWithFormUrlEncodedMutation = (options?: Partial<Options<PutWithF
                 throwOnError: true
             });
             return data;
-        },
-        mutationKey: putWithFormUrlEncodedMutationKey(options)
+        }
     };
     return mutationOptions;
 };

@@ -65,43 +65,6 @@ import type {
   UploadFileResponse,
 } from '../types.gen';
 
-export type MutationKey<TOptions extends Partial<Options>> = [
-  Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
-    _id: string;
-    tags?: ReadonlyArray<string>;
-  },
-];
-
-const createMutationKey = <TOptions extends Partial<Options>>(
-  id: string,
-  options?: TOptions,
-  tags?: ReadonlyArray<string>,
-): [MutationKey<TOptions>[0]] => {
-  const params: MutationKey<TOptions>[0] = {
-    _id: id,
-    baseUrl: options?.baseUrl || (options?.client ?? client).getConfig().baseUrl,
-  };
-  if (tags) {
-    params.tags = tags;
-  }
-  if (options?.body) {
-    params.body = options.body;
-  }
-  if (options?.headers) {
-    params.headers = options.headers;
-  }
-  if (options?.path) {
-    params.path = options.path;
-  }
-  if (options?.query) {
-    params.query = options.query;
-  }
-  return [params];
-};
-
-export const addPetMutationKey = (options?: Partial<Options<AddPetData>>) =>
-  createMutationKey('addPet', options);
-
 /**
  * Add a new pet to the store.
  *
@@ -119,13 +82,9 @@ export const addPetMutation = (
       });
       return data;
     },
-    mutationKey: addPetMutationKey(options),
   };
   return mutationOptions;
 };
-
-export const updatePetMutationKey = (options?: Partial<Options<UpdatePetData>>) =>
-  createMutationKey('updatePet', options);
 
 /**
  * Update an existing pet.
@@ -148,7 +107,6 @@ export const updatePetMutation = (
       });
       return data;
     },
-    mutationKey: updatePetMutationKey(options),
   };
   return mutationOptions;
 };
@@ -246,9 +204,6 @@ export const findPetsByTagsOptions = (options: Options<FindPetsByTagsData>) =>
     queryKey: findPetsByTagsQueryKey(options),
   });
 
-export const deletePetMutationKey = (options?: Partial<Options<DeletePetData>>) =>
-  createMutationKey('deletePet', options);
-
 /**
  * Deletes a pet.
  *
@@ -266,7 +221,6 @@ export const deletePetMutation = (
       });
       return data;
     },
-    mutationKey: deletePetMutationKey(options),
   };
   return mutationOptions;
 };
@@ -298,9 +252,6 @@ export const getPetByIdOptions = (options: Options<GetPetByIdData>) =>
     queryKey: getPetByIdQueryKey(options),
   });
 
-export const updatePetWithFormMutationKey = (options?: Partial<Options<UpdatePetWithFormData>>) =>
-  createMutationKey('updatePetWithForm', options);
-
 /**
  * Updates a pet in the store with form data.
  *
@@ -322,13 +273,9 @@ export const updatePetWithFormMutation = (
       });
       return data;
     },
-    mutationKey: updatePetWithFormMutationKey(options),
   };
   return mutationOptions;
 };
-
-export const uploadFileMutationKey = (options?: Partial<Options<UploadFileData>>) =>
-  createMutationKey('uploadFile', options);
 
 /**
  * Uploads an image.
@@ -351,7 +298,6 @@ export const uploadFileMutation = (
       });
       return data;
     },
-    mutationKey: uploadFileMutationKey(options),
   };
   return mutationOptions;
 };
@@ -383,9 +329,6 @@ export const getInventoryOptions = (options?: Options<GetInventoryData>) =>
     queryKey: getInventoryQueryKey(options),
   });
 
-export const placeOrderMutationKey = (options?: Partial<Options<PlaceOrderData>>) =>
-  createMutationKey('placeOrder', options);
-
 /**
  * Place an order for a pet.
  *
@@ -407,13 +350,9 @@ export const placeOrderMutation = (
       });
       return data;
     },
-    mutationKey: placeOrderMutationKey(options),
   };
   return mutationOptions;
 };
-
-export const deleteOrderMutationKey = (options?: Partial<Options<DeleteOrderData>>) =>
-  createMutationKey('deleteOrder', options);
 
 /**
  * Delete purchase order by identifier.
@@ -432,7 +371,6 @@ export const deleteOrderMutation = (
       });
       return data;
     },
-    mutationKey: deleteOrderMutationKey(options),
   };
   return mutationOptions;
 };
@@ -464,9 +402,6 @@ export const getOrderByIdOptions = (options: Options<GetOrderByIdData>) =>
     queryKey: getOrderByIdQueryKey(options),
   });
 
-export const createUserMutationKey = (options?: Partial<Options<CreateUserData>>) =>
-  createMutationKey('createUser', options);
-
 /**
  * Create user.
  *
@@ -488,14 +423,9 @@ export const createUserMutation = (
       });
       return data;
     },
-    mutationKey: createUserMutationKey(options),
   };
   return mutationOptions;
 };
-
-export const createUsersWithListInputMutationKey = (
-  options?: Partial<Options<CreateUsersWithListInputData>>,
-) => createMutationKey('createUsersWithListInput', options);
 
 /**
  * Creates list of users with given input array.
@@ -522,7 +452,6 @@ export const createUsersWithListInputMutation = (
       });
       return data;
     },
-    mutationKey: createUsersWithListInputMutationKey(options),
   };
   return mutationOptions;
 };
@@ -576,9 +505,6 @@ export const logoutUserOptions = (options?: Options<LogoutUserData>) =>
     queryKey: logoutUserQueryKey(options),
   });
 
-export const deleteUserMutationKey = (options?: Partial<Options<DeleteUserData>>) =>
-  createMutationKey('deleteUser', options);
-
 /**
  * Delete user resource.
  *
@@ -596,7 +522,6 @@ export const deleteUserMutation = (
       });
       return data;
     },
-    mutationKey: deleteUserMutationKey(options),
   };
   return mutationOptions;
 };
@@ -628,9 +553,6 @@ export const getUserByNameOptions = (options: Options<GetUserByNameData>) =>
     queryKey: getUserByNameQueryKey(options),
   });
 
-export const updateUserMutationKey = (options?: Partial<Options<UpdateUserData>>) =>
-  createMutationKey('updateUser', options);
-
 /**
  * Update user resource.
  *
@@ -648,7 +570,6 @@ export const updateUserMutation = (
       });
       return data;
     },
-    mutationKey: updateUserMutationKey(options),
   };
   return mutationOptions;
 };

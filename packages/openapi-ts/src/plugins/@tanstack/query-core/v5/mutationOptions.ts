@@ -1,3 +1,4 @@
+import type { Symbol } from '@hey-api/codegen-core';
 import type { IR } from '@hey-api/shared';
 import { applyNaming } from '@hey-api/shared';
 
@@ -26,6 +27,7 @@ export function createMutationOptions({
   if (hasOperationSse({ operation })) return;
 
   if (
+    plugin.config.mutationKeys.enabled &&
     !plugin.querySymbol({
       category: 'utility',
       resource: 'createMutationKey',
@@ -66,13 +68,16 @@ export function createMutationOptions({
     statements.push($.const().object('data').assign(awaitSdkFn), $.return('data'));
   }
 
-  const symbolMutationKey = plugin.symbol(applyNaming(operation.id, plugin.config.mutationKeys));
-  const node = mutationKeyStatement({
-    operation,
-    plugin,
-    symbol: symbolMutationKey,
-  });
-  plugin.node(node);
+  let symbolMutationKey: Symbol | undefined;
+  if (plugin.config.mutationKeys.enabled) {
+    symbolMutationKey = plugin.symbol(applyNaming(operation.id, plugin.config.mutationKeys));
+    const node = mutationKeyStatement({
+      operation,
+      plugin,
+      symbol: symbolMutationKey,
+    });
+    plugin.node(node);
+  }
 
   const mutationOptionsFn = 'mutationOptions';
   const symbolMutationOptions = plugin.symbol(
@@ -107,7 +112,7 @@ export function createMutationOptions({
                     .param(fnOptions)
                     .do(...statements),
                 )
-                .prop('mutationKey', $(symbolMutationKey).call('options'))
+                .$if(symbolMutationKey, (c, v) => c.prop('mutationKey', $(v).call('options')))
                 .$if(handleMeta(plugin, operation, 'mutationOptions'), (c, v) => c.prop('meta', v)),
             ),
           $(mutationOptionsFn).return(),

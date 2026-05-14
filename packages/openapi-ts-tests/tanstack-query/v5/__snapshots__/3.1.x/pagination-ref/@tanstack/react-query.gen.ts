@@ -107,37 +107,6 @@ export const getFooInfiniteOptions = (options: Options<GetFooData>) => infiniteQ
     queryKey: getFooInfiniteQueryKey(options)
 });
 
-export type MutationKey<TOptions extends Partial<Options>> = [
-    Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
-        _id: string;
-        tags?: ReadonlyArray<string>;
-    }
-];
-
-const createMutationKey = <TOptions extends Partial<Options>>(id: string, options?: TOptions, tags?: ReadonlyArray<string>): [
-    MutationKey<TOptions>[0]
-] => {
-    const params: MutationKey<TOptions>[0] = { _id: id, baseUrl: options?.baseUrl || (options?.client ?? client).getConfig().baseUrl };
-    if (tags) {
-        params.tags = tags;
-    }
-    if (options?.body) {
-        params.body = options.body;
-    }
-    if (options?.headers) {
-        params.headers = options.headers;
-    }
-    if (options?.path) {
-        params.path = options.path;
-    }
-    if (options?.query) {
-        params.query = options.query;
-    }
-    return [params];
-};
-
-export const postFooMutationKey = (options?: Partial<Options<PostFooData>>) => createMutationKey('postFoo', options);
-
 export const postFooMutation = (options?: Partial<Options<PostFooData>>): UseMutationOptions<unknown, DefaultError, Options<PostFooData>> => {
     const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<PostFooData>> = {
         mutationFn: async (fnOptions) => {
@@ -147,8 +116,7 @@ export const postFooMutation = (options?: Partial<Options<PostFooData>>): UseMut
                 throwOnError: true
             });
             return data;
-        },
-        mutationKey: postFooMutationKey(options)
+        }
     };
     return mutationOptions;
 };

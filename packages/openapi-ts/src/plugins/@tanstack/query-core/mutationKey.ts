@@ -1,18 +1,16 @@
 import type { Symbol } from '@hey-api/codegen-core';
 import type { IR } from '@hey-api/shared';
 import { applyNaming } from '@hey-api/shared';
-import type ts from 'typescript';
 
 import { getTypedConfig } from '../../../config/utils';
 import { getClientBaseUrlKey } from '../../../plugins/@hey-api/client-core/utils';
-import type { TsDsl } from '../../../ts-dsl';
 import { $ } from '../../../ts-dsl';
 import { useTypeData } from './shared/useType';
 import type { PluginInstance } from './types';
 
 const TOptionsType = 'TOptions';
 
-export const createMutationKeyFunction = ({ plugin }: { plugin: PluginInstance }) => {
+export function createMutationKeyFunction({ plugin }: { plugin: PluginInstance }): void {
   const symbolCreateMutationKey = plugin.symbol(
     applyNaming('createMutationKey', {
       case: plugin.config.case,
@@ -91,9 +89,9 @@ export const createMutationKeyFunction = ({ plugin }: { plugin: PluginInstance }
       ),
   );
   plugin.node(fn);
-};
+}
 
-const createMutationKeyLiteral = ({
+function createMutationKeyLiteral({
   id,
   operation,
   plugin,
@@ -101,9 +99,9 @@ const createMutationKeyLiteral = ({
   id: string;
   operation: IR.OperationObject;
   plugin: PluginInstance;
-}) => {
+}): ReturnType<typeof $.call> {
   const config = plugin.config.mutationKeys;
-  let tagsArray: TsDsl<ts.ArrayLiteralExpression> | undefined;
+  let tagsArray: ReturnType<typeof $.array> | undefined;
   if (config.tags && operation.tags && operation.tags.length) {
     tagsArray = $.array().elements(...operation.tags);
   }
@@ -118,9 +116,9 @@ const createMutationKeyLiteral = ({
     tagsArray,
   );
   return createMutationKeyCallExpression;
-};
+}
 
-export const createMutationKeyType = ({ plugin }: { plugin: PluginInstance }) => {
+export function createMutationKeyType({ plugin }: { plugin: PluginInstance }): void {
   const symbolOptions = plugin.referenceSymbol({
     category: 'type',
     resource: 'client-options',
@@ -151,9 +149,9 @@ export const createMutationKeyType = ({ plugin }: { plugin: PluginInstance }) =>
       ),
     );
   plugin.node(mutationKeyType);
-};
+}
 
-export const mutationKeyStatement = ({
+export function mutationKeyStatement({
   operation,
   plugin,
   symbol,
@@ -161,7 +159,7 @@ export const mutationKeyStatement = ({
   operation: IR.OperationObject;
   plugin: PluginInstance;
   symbol: Symbol;
-}) => {
+}): ReturnType<typeof $.const> {
   const typeData = useTypeData({ operation, plugin });
   const statement = $.const(symbol)
     .export()
@@ -177,4 +175,4 @@ export const mutationKeyStatement = ({
         ),
     );
   return statement;
-};
+}

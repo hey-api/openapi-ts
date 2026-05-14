@@ -130,7 +130,7 @@ export type UserConfig = Plugin.Name<'@tanstack/solid-query'> &
      * - `string` or `function`: Shorthand for `{ name: string | function }`
      * - `object`: Full configuration object
      *
-     * @default true
+     * @default false
      */
     mutationKeys?:
       | boolean

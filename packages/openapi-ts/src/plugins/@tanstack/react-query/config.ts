@@ -34,6 +34,18 @@ export const defaultConfig: TanStackReactQueryPlugin['Config'] = {
       value: plugin.config.infiniteQueryOptions,
     });
 
+    plugin.config.mutationKeys = context.valueToObject({
+      defaultValue: {
+        case: plugin.config.case ?? 'camelCase',
+        enabled: false,
+        name: '{{name}}MutationKey',
+        tags: false,
+      },
+      mappers,
+      value: plugin.config.mutationKeys,
+    });
+    console.log('mutationKeys', plugin.config.mutationKeys);
+
     plugin.config.mutationOptions = context.valueToObject({
       defaultValue: {
         case: plugin.config.case ?? 'camelCase',
@@ -43,17 +55,6 @@ export const defaultConfig: TanStackReactQueryPlugin['Config'] = {
       },
       mappers,
       value: plugin.config.mutationOptions,
-    });
-
-    plugin.config.mutationKeys = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
-        enabled: true,
-        name: '{{name}}MutationKey',
-        tags: false,
-      },
-      mappers,
-      value: plugin.config.mutationKeys,
     });
 
     plugin.config.queryKeys = context.valueToObject({
