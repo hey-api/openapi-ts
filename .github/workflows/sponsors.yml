@@ -1,0 +1,13 @@
+name: Deploy website
+
+on:
+  schedule:
+    - cron: '0 8 * * *'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger deploy hook
+        run: curl -X POST "${{ secrets.DEPLOY_HOOK_URL }}"

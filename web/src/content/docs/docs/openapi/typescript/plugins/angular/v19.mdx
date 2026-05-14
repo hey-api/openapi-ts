@@ -1,0 +1,119 @@
+---
+title: Angular v19 Plugin
+description: Generate Angular v19 HTTP requests and resources from OpenAPI with the Angular plugin for openapi-ts. Fully compatible with validators, transformers, and all core features.
+custom:
+  version: v19
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import AuthorsList from '@/components/AuthorsList.astro';
+import Examples from '@/components/Examples.astro';
+import FeatureStatus from '@/components/FeatureStatus.astro';
+import { maxScopp } from '@/data/people';
+
+# Angular
+
+<FeatureStatus status="beta" />
+
+### About
+
+[Angular](https://angular.dev/) is a web framework that empowers developers to build fast, reliable applications.
+
+The Angular plugin for Hey API generates HTTP requests and resources from your OpenAPI spec, fully compatible with validators, transformers, and all core features.
+
+### Collaborators
+
+<AuthorsList people={[maxScopp]} />
+
+## Features
+
+- Angular v19 support
+- seamless integration with `@hey-api/openapi-ts` ecosystem
+- generate HTTP requests
+- generate HTTP resources
+- minimal learning curve thanks to extending the underlying technology
+
+## Installation
+
+In your [configuration](/openapi-ts/get-started), add `@angular/common` to your plugins and you'll be ready to generate Angular artifacts. 🎉
+
+```js {6} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    '@angular/common',
+  ],
+};
+```
+
+## Output
+
+The Angular plugin will generate the following artifacts, depending on the input specification.
+
+## Requests
+
+A single function is generated for each endpoint. It returns an [`HttpRequest`](https://v19.angular.dev/api/common/http/HttpRequest) result.
+
+<Tabs>
+  <TabItem label="example">
+```ts title="common.gen.ts"
+export const addPetRequest = (options) =>
+  client.requestOptions({
+    method: 'POST',
+    responseStyle: 'data',
+    url: '/pet',
+    ...options,
+  });
+```
+  </TabItem>
+  <TabItem label="config">
+```js {8} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: '@angular/common',
+      httpRequests: true,
+    },
+  ],
+};
+```
+  </TabItem>
+</Tabs>
+
+## Resources
+
+A single function is generated for each endpoint. It returns a result from [`httpResource`](https://v19.angular.dev/api/common/http/httpResource) call.
+
+<Tabs>
+  <TabItem label="example">
+```ts title="common.gen.ts"
+export const addPetResource = (options) => httpResource(() => addPetRequest(options()));
+```
+  </TabItem>
+  <TabItem label="config">
+```js {8} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: '@angular/common',
+      httpResources: true,
+    },
+  ],
+};
+```
+  </TabItem>
+</Tabs>
+
+## API
+
+You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/@angular/common/types.ts) interface.
+
+<Examples />

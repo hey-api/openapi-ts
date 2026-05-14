@@ -47,6 +47,13 @@ export default tseslint.config(
     },
   },
   {
+    files: ['web/.astro/**/*'],
+    rules: {
+      '@typescript-eslint/no-empty-object-type': 'off',
+      '@typescript-eslint/triple-slash-reference': 'off',
+    },
+  },
+  {
     files: ['**/*.cjs'],
     rules: {
       '@typescript-eslint/no-require-imports': 'off',
@@ -74,9 +81,9 @@ export default tseslint.config(
       '**/.nuxt/',
       '**/.output/',
       '**/.svelte-kit/',
-      '**/.vitepress/cache',
-      '**/.vitepress/dist',
+      '**/.vercel',
       '**/.angular',
+      '**/web/src/components/pages/**/previews/',
     ],
   },
 );

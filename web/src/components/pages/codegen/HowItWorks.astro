@@ -1,0 +1,560 @@
+---
+import { Code } from '@astrojs/starlight/components';
+import SkipButton from '@/components/SkipButton.astro';
+import { scrollerHeight } from '@/utils/scroll-stepper';
+
+import codeSpec from './previews/trading/openapi/operation.yaml?raw';
+import codeConfigIO from './previews/trading/typescript/config-io?raw';
+import codeConfigPlugins from './previews/trading/typescript/config-plugins?raw';
+import codeOutput from './previews/trading/typescript/output?raw';
+
+const DWELL_VH = 75;
+const TAIL_VH = DWELL_VH;
+
+interface Step {
+  code: string;
+  description: string;
+  title: string;
+}
+
+const STEPS: Array<Step> = [
+  {
+    code: codeSpec,
+    description: 'Start with an existing spec or create one from scratch. OpenAPI is the foundation that powers everything.',
+    title: 'Define your API',
+  },
+  {
+    code: codeConfigIO,
+    description: 'Pass a local path, remote URL, or an API registry shorthand. All valid OpenAPI versions and file formats supported, including inline spec objects.',
+    title: 'Connect your spec',
+  },
+  {
+    code: codeConfigPlugins,
+    description: 'Choose exactly what gets generated – nothing more, nothing less. Each plugin is independent and composable.',
+    title: 'Compose your output',
+  },
+  {
+    code: codeOutput,
+    description: 'Run once or integrate into CI. Generated code is fully typed and deterministic. Same spec, same output, every time.',
+    title: 'Use it',
+  },
+];
+---
+
+<div class="how-it-works">
+  <div
+    class="hiw-outer"
+    id="hiw-outer"
+    style={`--scroll-height: ${scrollerHeight(STEPS.length, DWELL_VH, 0, TAIL_VH)}`}
+  >
+    <div class="hiw-sticky">
+      <div class="section-inner hiw-inner">
+        <div class="section-header">
+          <h2 class="section-title">Up and running in minutes</h2>
+          <p class="section-subtitle">One config file. One command. Every time your spec changes.</p>
+        </div>
+
+        <div class="hiw-mobile-indicator" id="hiw-mobile-indicator" aria-live="polite" aria-atomic="true">
+          <span class="hiw-mi-count">
+            <span class="hiw-mi-current" id="hiw-mi-current">01</span>
+            <span class="hiw-mi-sep">/</span>
+            <span class="hiw-mi-total">{String(STEPS.length).padStart(2, '0')}</span>
+          </span>
+          <span class="hiw-mi-title" id="hiw-mi-title">{STEPS[0].title}</span>
+          <div class="hiw-mi-dots" aria-hidden="true">
+            {STEPS.map((_, i) => (
+              <span class="hiw-mi-dot" data-dot={i} class:list={[i === 0 && 'is-active']} />
+            ))}
+          </div>
+        </div>
+
+        <div class="hiw-layout">
+          <nav class="hiw-nav" aria-label="Steps">
+            <div class="hiw-nav-track" aria-hidden="true" />
+            {STEPS.map((step, i) => (
+              <div class="hiw-nav-item" data-nav={i}>
+                <div class="hiw-nav-num">{String(i + 1).padStart(2, '0')}</div>
+                <div class="hiw-nav-title">{step.title}</div>
+              </div>
+            ))}
+          </nav>
+
+          <div class="hiw-panels" aria-live="polite">
+            {STEPS.map((step, i) => (
+              <div
+                class="hiw-panel"
+                data-panel={i}
+                aria-hidden={i !== 0 ? 'true' : 'false'}
+              >
+                <h3 class="hiw-panel-title">{step.title}</h3>
+                <p class="hiw-panel-desc">{step.description}</p>
+                <div class="hiw-code">
+                  <Code code={step.code} lang="typescript" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <SkipButton id="hiw-skip" class="hiw-skip" />
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { createResizableInit } from '@/utils/resizable-init';
+  import { createScrollStepper, getNextSection } from '@/utils/scroll-stepper';
+  import { createSkipButton } from '@/utils/skip-button';
+
+  const DWELL_VH = 75;
+
+  const { setup, destroy } = createResizableInit(() => {
+    const outer = document.getElementById('hiw-outer');
+    if (!outer) return;
+    const out = outer;
+    const wrapper = out.closest<HTMLElement>('.how-it-works');
+
+    const panels   = Array.from(out.querySelectorAll<HTMLElement>('[data-panel]'));
+    const navItems = Array.from(out.querySelectorAll<HTMLElement>('[data-nav]'));
+
+    if (window.matchMedia('(max-width: 640px)').matches) {
+      const currentEl = document.getElementById('hiw-mi-current');
+      const titleEl   = document.getElementById('hiw-mi-title');
+      const dots      = Array.from(out.querySelectorAll<HTMLElement>('[data-dot]'));
+
+      panels.forEach(el => el.removeAttribute('aria-hidden'));
+
+      let activePanelIndex = -1;
+
+      function setMobileStep(index: number) {
+        if (index === activePanelIndex) return;
+        activePanelIndex = index;
+
+        const panel = panels[index];
+        if (!panel) return;
+
+        if (currentEl) currentEl.textContent = String(index + 1).padStart(2, '0');
+        if (titleEl)   titleEl.textContent   = panel.querySelector<HTMLElement>('.hiw-panel-title')?.textContent ?? '';
+
+        dots.forEach((dot, i) => dot.classList.toggle('is-active', i === index));
+        panels.forEach((p, i) => p.classList.toggle('is-active', i === index));
+      }
+
+      const ratios = new Array<number>(panels.length).fill(0);
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            const index = Number((entry.target as HTMLElement).dataset.panel);
+            ratios[index] = entry.intersectionRatio;
+          }
+          let bestIndex = 0;
+          for (let i = 1; i < ratios.length; i++) {
+            if (ratios[i] > ratios[bestIndex]) bestIndex = i;
+          }
+          setMobileStep(bestIndex);
+        },
+        { threshold: Array.from({ length: 11 }, (_, i) => i / 10) },
+      );
+
+      panels.forEach(panel => observer.observe(panel));
+      setMobileStep(0);
+
+      return () => observer.disconnect();
+    }
+
+    function setStep(index: number) {
+      panels.forEach((el, i) => {
+        const on = i === index;
+        el.classList.toggle('is-active', on);
+        el.setAttribute('aria-hidden', String(!on));
+      });
+      navItems.forEach((el, i) => el.classList.toggle('is-active', i === index));
+    }
+
+    const stepper = createScrollStepper({
+      outer: out,
+      stepCount: panels.length,
+      dwellVh: DWELL_VH,
+      onStep: setStep,
+    });
+
+    navItems.forEach((navEl, i) => {
+      navEl.style.cursor = 'pointer';
+      navEl.addEventListener('click', () => stepper.scrollToStep(i));
+    });
+
+    const maxPull = window.innerHeight;
+    const skipButton = createSkipButton(
+      out.querySelector<HTMLElement>('#hiw-skip'),
+      () => out.offsetTop + out.offsetHeight - maxPull,
+    );
+
+    const nextSection = getNextSection(wrapper);
+    let isMargined = false;
+
+    function applyExitParallax() {
+      if (!nextSection) return;
+
+      const scrolledIn = -out.getBoundingClientRect().top;
+      const exitAt     = out.offsetHeight - window.innerHeight;
+      const parallaxAt = exitAt - maxPull;
+      const pull       = Math.max(0, Math.min(scrolledIn - parallaxAt, maxPull));
+
+      nextSection.style.transition = 'none';
+
+      if (scrolledIn < parallaxAt) {
+        nextSection.style.marginTop = '';
+        nextSection.style.transform = '';
+        nextSection.style.zIndex    = '';
+        isMargined = false;
+      } else if (scrolledIn >= exitAt) {
+        nextSection.style.marginTop = `-${Math.round(maxPull)}px`;
+        nextSection.style.transform = '';
+        nextSection.style.zIndex    = '';
+        isMargined = true;
+      } else if (isMargined) {
+        nextSection.style.transform = `translateY(${Math.round(maxPull - pull)}px)`;
+        nextSection.style.zIndex    = '1';
+      } else {
+        nextSection.style.transform = `translateY(-${Math.round(pull)}px)`;
+        nextSection.style.zIndex    = '1';
+      }
+
+      skipButton.setVisible(nextSection.getBoundingClientRect().top >= window.innerHeight);
+    }
+
+    window.addEventListener('scroll', applyExitParallax, { passive: true });
+    applyExitParallax();
+
+    return () => {
+      stepper.destroy();
+      skipButton.destroy();
+      window.removeEventListener('scroll', applyExitParallax);
+      if (nextSection) {
+        nextSection.style.marginTop  = '';
+        nextSection.style.transform  = '';
+        nextSection.style.transition = '';
+        nextSection.style.zIndex     = '';
+      }
+      isMargined = false;
+    };
+  });
+
+  document.addEventListener('astro:before-swap', destroy, { once: true });
+
+  setup();
+  document.addEventListener('astro:page-load', setup);
+</script>
+
+<style>
+  .how-it-works {
+    border-bottom: 1px solid var(--vp-c-divider);
+    margin-top: 0;
+  }
+
+  .hiw-outer {
+    height: var(--scroll-height);
+  }
+
+  .hiw-sticky {
+    align-items: start;
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+    padding-top: calc(var(--sl-nav-height, 0px) + 3rem);
+    position: sticky;
+    top: 0;
+  }
+
+  .hiw-inner {
+    width: 100%;
+  }
+
+  .section-header {
+    margin-bottom: 48px;
+  }
+
+  .hiw-mobile-indicator {
+    display: none;
+  }
+
+  .hiw-layout {
+    align-items: start;
+    display: grid;
+    gap: 64px;
+    grid-template-columns: 200px 1fr;
+    margin-top: 0;
+  }
+
+  .hiw-nav {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  .hiw-nav-track {
+    background: var(--vp-c-divider);
+    bottom: 28px;
+    left: 13px;
+    pointer-events: none;
+    position: absolute;
+    top: 28px;
+    width: 1px;
+  }
+
+  .hiw-nav-item {
+    align-items: center;
+    cursor: pointer;
+    display: grid;
+    gap: 12px;
+    grid-template-columns: 28px 1fr;
+    margin-top: 0;
+    opacity: 0.3;
+    padding: 14px 0;
+    transition: opacity 350ms ease;
+  }
+
+  .hiw-nav-item.is-active {
+    opacity: 1;
+  }
+
+  .hiw-nav-num {
+    align-items: center;
+    background: var(--dt-bg-2);
+    border-radius: 4px;
+    border: 1px solid var(--vp-c-divider);
+    color: var(--vp-c-brand-1);
+    display: flex;
+    font-family: var(--sl-font-mono, ui-monospace, monospace);
+    font-size: 10px;
+    font-weight: 700;
+    height: 28px;
+    justify-content: center;
+    letter-spacing: 0.08em;
+    position: relative;
+    transition: border-color 350ms ease, background 350ms ease;
+    width: 28px;
+  }
+
+  .hiw-nav-item.is-active .hiw-nav-num {
+    background: color-mix(in srgb, var(--vp-c-brand-1) 10%, var(--dt-bg-2));
+    border-color: var(--vp-c-brand-1);
+  }
+
+  .hiw-nav-title {
+    color: var(--sl-color-text);
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.3;
+    margin-top: 0;
+  }
+
+  .hiw-panels {
+    margin-top: 0;
+    min-height: 300px;
+    position: relative;
+  }
+
+  .hiw-panel {
+    inset: 0;
+    margin-top: 0;
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    transform: translateY(18px);
+    transition: opacity 400ms ease, transform 400ms ease;
+  }
+
+  .hiw-panel.is-active {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .hiw-panel-title {
+    color: var(--sl-color-text);
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0 0 10px;
+  }
+
+  .hiw-panel-desc {
+    color: var(--sl-color-gray-2);
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0 0 20px;
+    max-width: 520px;
+  }
+
+  .hiw-code {
+    background: var(--dt-bg-2);
+    border-radius: 8px;
+    border: 1px solid var(--vp-c-divider);
+    margin-top: 0;
+    max-width: 560px;
+    overflow: hidden;
+  }
+
+  .hiw-code :global(figure) {
+    margin-top: 0;
+  }
+
+  .hiw-code :global(pre) {
+    background: transparent !important;
+    line-height: 1.6;
+    margin: 0;
+    padding: 14px 18px !important;
+  }
+
+  .hiw-skip {
+    margin-top: 44px;
+  }
+
+  @media (max-width: 900px) {
+    .hiw-layout {
+      gap: 40px;
+      grid-template-columns: 160px 1fr;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .hiw-outer {
+      height: auto;
+    }
+
+    .hiw-sticky {
+      height: auto;
+      overflow: visible;
+      padding: 48px 0 56px;
+      position: relative;
+    }
+
+    .hiw-inner {
+      box-sizing: border-box;
+      width: 100%;
+    }
+
+    .section-header {
+      margin-bottom: 0;
+    }
+
+    .hiw-mobile-indicator {
+      align-items: center;
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(12px) saturate(160%);
+      -webkit-backdrop-filter: blur(12px) saturate(160%);
+      border-bottom: 0.5px solid rgba(255, 255, 255, 0.35);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-inline: calc(-1 * var(--sl-content-pad-x, 1rem));
+      padding: 10px var(--sl-content-pad-x, 1rem) 12px;
+      position: sticky;
+      top: var(--sl-nav-height, 0px);
+      z-index: 10;
+    }
+
+    .hiw-mi-count {
+      align-items: baseline;
+      display: flex;
+      font-family: var(--sl-font-mono, ui-monospace, monospace);
+      gap: 4px;
+    }
+
+    .hiw-mi-current {
+      color: var(--vp-c-brand-1);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      transition: color 200ms ease;
+    }
+
+    .hiw-mi-sep {
+      color: var(--sl-color-gray-4);
+      font-size: 11px;
+    }
+
+    .hiw-mi-total {
+      color: var(--sl-color-gray-4);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+    }
+
+    .hiw-mi-title {
+      color: var(--sl-color-text);
+      font-size: 13px;
+      font-weight: 500;
+      position: relative;
+      top: -4px;
+      transition: opacity 200ms ease;
+    }
+
+    .hiw-mi-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .hiw-mi-dot {
+      background: var(--vp-c-divider);
+      border-radius: 50%;
+      display: block;
+      height: 5px;
+      transition: background 250ms ease, transform 250ms ease;
+      width: 5px;
+    }
+
+    .hiw-mi-dot.is-active {
+      background: var(--vp-c-brand-1);
+      transform: scale(1.4);
+    }
+
+    .hiw-layout {
+      display: block;
+      margin-top: 32px;
+    }
+
+    .hiw-nav {
+      display: none;
+    }
+
+    .hiw-panels {
+      min-height: unset;
+      position: static;
+    }
+
+    .hiw-panel {
+      inset: auto;
+      margin-bottom: 56px;
+      opacity: 0.4;
+      pointer-events: auto;
+      position: static;
+      transform: none;
+      transition: opacity 300ms ease;
+    }
+
+    .hiw-panel:last-child {
+      margin-bottom: 0;
+    }
+
+    .hiw-panel.is-active {
+      opacity: 1;
+      transform: none;
+    }
+
+    .hiw-panel-desc {
+      max-width: 100%;
+    }
+
+    .hiw-code {
+      max-width: 100%;
+      overflow: hidden;
+    }
+
+    .hiw-code :global(pre) {
+      max-width: 100%;
+      overflow-x: auto;
+    }
+  }
+</style>

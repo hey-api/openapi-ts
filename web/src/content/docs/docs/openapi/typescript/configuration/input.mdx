@@ -1,0 +1,130 @@
+---
+title: Input
+description: Configure @hey-api/openapi-ts.
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import Examples from '@/components/Examples.astro';
+import InputTabs from '@/components/code-groups/InputTabs.mdx';
+
+# Input
+
+You must provide an input so we can load your OpenAPI specification.
+
+## Input
+
+The input can be a string path, URL, [API registry](#api-registry), an object containing any of these, or an object representing an OpenAPI specification. Hey API supports all valid OpenAPI versions and file formats.
+
+<InputTabs />
+
+You can learn more about complex use cases in the [Advanced](/openapi-ts/configuration#advanced) section.
+
+:::tip
+If you use an HTTPS URL with a self-signed certificate in development, you will need to set [`NODE_TLS_REJECT_UNAUTHORIZED=0`](https://github.com/hey-api/openapi-ts/issues/276#issuecomment-2043143501) in your environment.
+:::
+
+### Request options
+
+You can pass any valid Fetch API [options](https://developer.mozilla.org/docs/Web/API/RequestInit) to the request for fetching your specification. This is useful if your file is behind auth for example.
+
+```js {4-8} title="openapi-ts.config.ts"
+export default {
+  input: {
+    path: 'https://secret.com/protected-spec',
+    fetch: {
+      headers: {
+        Authorization: 'Bearer xxx',
+      },
+    },
+  },
+};
+```
+
+## API Registry
+
+You can store your specifications in an API registry to serve as a single source of truth. This helps prevent drift, improves discoverability, enables version tracking, and more.
+
+### Hey API
+
+You can learn more about [Hey API Platform](https://app.heyapi.dev) on the [Integrations](/openapi-ts/integrations) page.
+
+```js {2} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+};
+```
+
+The `input` object lets you provide additional options to construct the correct URL.
+
+```js {4} title="openapi-ts.config.ts"
+export default {
+  input: {
+    path: 'hey-api/backend', // sign up at app.heyapi.dev
+    branch: 'main',
+  },
+};
+```
+
+We also provide shorthands for other registries:
+
+<details>
+<summary>Scalar</summary>
+Prefix your input with `scalar:` to use the Scalar API Registry.
+
+```js {2} title="openapi-ts.config.ts"
+export default {
+  input: 'scalar:@scalar/access-service',
+};
+```
+
+</details>
+
+<details>
+<summary>ReadMe</summary>
+Prefix your input with `readme:` to use the ReadMe API Registry.
+
+<Tabs>
+  <TabItem label="uuid">
+```js {2} title="openapi-ts.config.ts"
+export default {
+  input: 'readme:nysezql0wwo236',
+};
+```
+  </TabItem>
+  <TabItem label="long">
+```js {2} title="openapi-ts.config.ts"
+export default {
+  input: 'readme:@developers/v2.0#nysezql0wwo236',
+};
+```
+  </TabItem>
+</Tabs>
+</details>
+
+## Watch Mode
+
+:::caution
+Watch mode currently supports only remote files via URL.
+:::
+
+If your schema changes frequently, you may want to automatically regenerate the output during development. To watch your input file for changes, enable `input.watch` mode in your configuration or pass the `--watch` flag to the CLI.
+
+<Tabs>
+  <TabItem label="config">
+```js {4} title="openapi-ts.config.ts"
+export default {
+  input: {
+    path: 'hey-api/backend', // sign up at app.heyapi.dev
+    watch: true,
+  },
+};
+```
+  </TabItem>
+  <TabItem label="cli">
+```sh "-w"
+npx @hey-api/openapi-ts -i hey-api/backend -o src/client -w
+```
+  </TabItem>
+</Tabs>
+
+<Examples />

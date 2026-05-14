@@ -5,10 +5,10 @@ on:
     branches:
       - main
     paths-ignore:
-      - docs/**
+      - web/**
   pull_request:
     paths-ignore:
-      - docs/**
+      - web/**
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -27,7 +27,7 @@ jobs:
 
       - uses: pnpm/action-setup@v6.0.3
 
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v6.4.0
         with:
           node-version-file: '.nvmrc'
           cache: pnpm

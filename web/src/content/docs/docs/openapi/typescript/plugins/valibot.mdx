@@ -1,0 +1,250 @@
+---
+title: Valibot v1 Plugin
+description: Generate Valibot v1 schemas from OpenAPI with the Valibot plugin for openapi-ts. Fully compatible with validators, transformers, and all core features.
+sidebar:
+  label: Valibot
+custom:
+  version: v1
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import Examples from '@/components/Examples.astro';
+
+# Valibot
+
+### About
+
+[Valibot](https://valibot.dev) is the open source schema library for TypeScript with bundle size, type safety and developer experience in mind.
+
+The Valibot plugin for Hey API generates schemas from your OpenAPI spec, fully compatible with validators, transformers, and all core features.
+
+## Features
+
+- Valibot v1 support
+- seamless integration with `@hey-api/openapi-ts` ecosystem
+- Valibot schemas for requests, responses, and reusable definitions
+- minimal learning curve thanks to extending the underlying technology
+
+## Installation
+
+In your [configuration](/openapi-ts/get-started), add `valibot` to your plugins and you'll be ready to generate Valibot artifacts. 🎉
+
+```js {6} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    'valibot',
+  ],
+};
+```
+
+### SDKs
+
+To add data validators to your SDKs, set `sdk.validator` to `true`.
+
+```js {8-9} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    'valibot',
+    {
+      name: '@hey-api/sdk',
+      validator: true,
+    },
+  ],
+};
+```
+
+Learn more about data validators in your SDKs on the [SDKs](/openapi-ts/plugins/sdk#validators) page.
+
+## Output
+
+The Valibot plugin will generate the following artifacts, depending on the input specification.
+
+## Requests
+
+A Valibot schema is generated for every request layer of each endpoint.
+
+<Tabs>
+  <TabItem label="example">
+```ts title="valibot.gen.ts"
+const vDeletePetHeaders = v.object({
+  api_key: v.optional(v.string()),
+});
+
+const vDeletePetPath = v.object({
+  petId: v.number(),
+});
+
+const vDeletePetQuery = v.object({
+  additionalMetadata: v.string(),
+});
+```
+  </TabItem>
+  <TabItem label="config">
+```js {8} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: 'valibot',
+      requests: true,
+    },
+  ],
+};
+```
+  </TabItem>
+</Tabs>
+
+You can customize the naming and casing pattern for `requests` schemas using the `.name` and `.case` options.
+
+## Responses
+
+A single Valibot schema is generated for all endpoint's responses. If the endpoint describes multiple responses, the generated schema is a union of all possible response shapes.
+
+<Tabs>
+  <TabItem label="example">
+```ts title="valibot.gen.ts"
+const vResponse = v.union([
+  v.object({
+    foo: v.optional(v.string()),
+  }),
+  v.object({
+    bar: v.optional(v.number()),
+  }),
+]);
+```
+  </TabItem>
+  <TabItem label="config">
+```js {8} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: 'valibot',
+      responses: true,
+    },
+  ],
+};
+```
+  </TabItem>
+</Tabs>
+
+You can customize the naming and casing pattern for `responses` schemas using the `.name` and `.case` options.
+
+## Definitions
+
+A Valibot schema is generated for every reusable definition from your input.
+
+<Tabs>
+  <TabItem label="example">
+```ts title="valibot.gen.ts"
+const vFoo = v.pipe(v.number(), v.integer());
+
+const vBar = v.object({
+  bar: v.optional(v.array(v.pipe(v.number(), v.integer()))),
+});
+```
+  </TabItem>
+  <TabItem label="config">
+```js {8} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: 'valibot',
+      definitions: true,
+    },
+  ],
+};
+```
+  </TabItem>
+</Tabs>
+
+You can customize the naming and casing pattern for `definitions` schemas using the `.name` and `.case` options.
+
+## Metadata
+
+It's often useful to associate a schema with some additional [metadata](https://valibot.dev/api/metadata/) for documentation, code generation, AI structured outputs, form validation, and other purposes. You can set `metadata` to `true` to attach descriptions to schemas when available.
+
+<Tabs>
+  <TabItem label="example">
+```ts title="valibot.gen.ts"
+export const vFoo = v.pipe(
+  v.string(),
+  v.metadata({
+    description: 'Additional metadata',
+  }),
+);
+```
+  </TabItem>
+  <TabItem label="config">
+```js {8} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: 'valibot',
+      metadata: true,
+    },
+  ],
+};
+```
+  </TabItem>
+</Tabs>
+
+For more control over metadata, you can provide your own function. It receives the source `schema`, the target `node` object, and the `$` builder for populating metadata.
+
+<Tabs>
+  <TabItem label="example">
+```ts title="valibot.gen.ts"
+export const vFoo = v.pipe(
+  v.string(),
+  v.metadata({
+    hasTitle: false,
+    createdAt: 1735732800000,
+  }),
+);
+```
+  </TabItem>
+  <TabItem label="config">
+```js {8-11} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: 'valibot',
+      metadata({ $, node, schema }) {
+        node.prop('hasTitle', $.literal(Boolean(schema.title)));
+        node.prop('createdAt', $.literal(Date.now()));
+      },
+    },
+  ],
+};
+```
+  </TabItem>
+</Tabs>
+
+## Resolvers
+
+You can further customize this plugin's behavior using [resolvers](/openapi-ts/plugins/concepts/resolvers).
+
+## API
+
+You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/valibot/types.ts) interface.
+
+<Examples />

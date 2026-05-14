@@ -1,0 +1,682 @@
+---
+title: TanStack Query v5 Plugin
+description: Generate TanStack Query v5 functions and query keys from OpenAPI with the TanStack Query plugin for openapi-ts. Fully compatible with validators, transformers, and all core features.
+sidebar:
+  label: TanStack Query
+custom:
+  version: v5
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import Examples from '@/components/Examples.astro';
+import StackBlitz from '@/components/StackBlitz.astro';
+
+# TanStack Query
+
+### About
+
+[TanStack Query](https://tanstack.com/query) is a powerful asynchronous state management solution for TypeScript/JavaScript, React, Solid, Vue, Svelte, Angular, and Preact.
+
+The TanStack Query plugin for Hey API generates functions and query keys from your OpenAPI spec, fully compatible with SDKs, transformers, and all core features.
+
+### Demo
+
+<StackBlitz
+  example="hey-api-client-fetch-plugin-tanstack-react-query-example"
+  openFile={[
+    'openapi-ts.config.ts',
+    'src/client/@tanstack/react-query.gen.ts',
+    'src/client/types.gen.ts',
+    'src/App.tsx',
+  ]}
+/>
+
+## Features
+
+- TanStack Query v5 support
+- seamless integration with `@hey-api/openapi-ts` ecosystem
+- create query keys following the best practices
+- type-safe query options, infinite query options, and mutation options
+- minimal learning curve thanks to extending the underlying technology
+
+## Installation
+
+In your [configuration](/openapi-ts/get-started), add TanStack Query to your plugins and you'll be ready to generate TanStack Query artifacts. 🎉
+
+<Tabs>
+  <TabItem label="react">
+```js {6} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    '@tanstack/react-query',
+  ],
+};
+```
+  </TabItem>
+  <TabItem label="vue">
+```js {6} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    '@tanstack/vue-query',
+  ],
+};
+```
+  </TabItem>
+  <TabItem label="angular">
+```js {6} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    '@tanstack/angular-query-experimental',
+  ],
+};
+```
+  </TabItem>
+  <TabItem label="svelte">
+```js {6} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    '@tanstack/svelte-query',
+  ],
+};
+```
+  </TabItem>
+  <TabItem label="solid">
+```js {6} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    '@tanstack/solid-query',
+  ],
+};
+```
+  </TabItem>
+  <TabItem label="preact">
+```js {6} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    '@tanstack/preact-query',
+  ],
+};
+```
+  </TabItem>
+</Tabs>
+
+## Output
+
+The TanStack Query plugin will generate the following artifacts, depending on the input specification.
+
+## Queries
+
+Queries are generated from [query operations](/openapi-ts/configuration/parser#hooks-query-operations). The generated query functions follow the naming convention of SDK functions and by default append `Options`, e.g., `getPetByIdOptions()`.
+
+<Tabs>
+  <TabItem label="example">
+```ts title="react-query.gen.ts"
+const query = useQuery({
+  ...getPetByIdOptions({
+    path: {
+      petId: 1,
+    },
+  }),
+});
+```
+  </TabItem>
+  <TabItem label="config">
+```js {8} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: '@tanstack/react-query',
+      queryOptions: true,
+    },
+  ],
+};
+```
+  </TabItem>
+</Tabs>
+
+You can customize the naming and casing pattern for `queryOptions` functions using the `.name` and `.case` options.
+
+### Meta
+
+You can use the `meta` field to attach arbitrary information to a query. To generate metadata for `queryOptions`, provide a function to the `.meta` option.
+
+<Tabs>
+  <TabItem label="example">
+```ts title="react-query.gen.ts"
+queryOptions({
+  // ...other fields
+  meta: {
+    id: 'getPetById',
+  },
+});
+```
+  </TabItem>
+  <TabItem label="config">
+```js {9} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: '@tanstack/react-query',
+      queryOptions: {
+        meta: (operation) => ({ id: operation.id }),
+      },
+    },
+  ],
+};
+```
+  </TabItem>
+</Tabs>
+
+## Query Keys
+
+Query keys contain normalized SDK function parameters and additional metadata.
+
+<Tabs>
+  <TabItem label="example">
+```ts title="react-query.gen.ts"
+const queryKey = [
+  {
+    _id: 'getPetById',
+    baseUrl: 'https://app.heyapi.dev',
+    path: {
+      petId: 1,
+    },
+  },
+];
+```
+  </TabItem>
+  <TabItem label="config">
+```js {8} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: '@tanstack/react-query',
+      queryKeys: true,
+    },
+  ],
+};
+```
+  </TabItem>
+</Tabs>
+
+### Tags
+
+You can include operation tags in your query keys by setting `tags` to `true`. This will make query keys larger but provides better cache invalidation capabilities.
+
+<Tabs>
+  <TabItem label="example">
+```ts {8} title="react-query.gen.ts"
+const queryKey = [
+  {
+    _id: 'getPetById',
+    baseUrl: 'https://app.heyapi.dev',
+    path: {
+      petId: 1,
+    },
+    tags: ['pets', 'one', 'get'],
+  },
+];
+```
+  </TabItem>
+  <TabItem label="config">
+```js {9} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: '@tanstack/react-query',
+      queryKeys: {
+        tags: true,
+      },
+    },
+  ],
+};
+```
+  </TabItem>
+</Tabs>
+
+### Accessing Query Keys
+
+If you have access to the result of query options function, you can get the query key from the `queryKey` field.
+
+<Tabs>
+  <TabItem label="example">
+```ts title="react-query.gen.ts"
+const { queryKey } = getPetByIdOptions({
+  path: {
+    petId: 1,
+  },
+});
+```
+  </TabItem>
+  <TabItem label="config">
+```js {8} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: '@tanstack/react-query',
+      queryOptions: true,
+    },
+  ],
+};
+```
+  </TabItem>
+</Tabs>
+
+Alternatively, you can access the same query key by calling query key functions. The generated query key functions follow the naming convention of SDK functions and by default append `QueryKey`, e.g., `getPetByIdQueryKey()`.
+
+<Tabs>
+  <TabItem label="example">
+```ts title="react-query.gen.ts"
+const queryKey = getPetByIdQueryKey({
+  path: {
+    petId: 1,
+  },
+});
+```
+  </TabItem>
+  <TabItem label="config">
+```js {8} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: '@tanstack/react-query',
+      queryKeys: true,
+    },
+  ],
+};
+```
+  </TabItem>
+</Tabs>
+
+You can customize the naming and casing pattern for `queryKeys` functions using the `.name` and `.case` options.
+
+## Infinite Queries
+
+Infinite queries are generated from [query operations](/openapi-ts/configuration/parser#hooks-query-operations) if we detect a [pagination](/openapi-ts/configuration/parser#pagination) parameter. The generated infinite query functions follow the naming convention of SDK functions and by default append `InfiniteOptions`, e.g., `getFooInfiniteOptions()`.
+
+<Tabs>
+  <TabItem label="example">
+```ts title="react-query.gen.ts"
+const query = useInfiniteQuery({
+  ...getFooInfiniteOptions({
+    path: {
+      fooId: 1,
+    },
+  }),
+  getNextPageParam: (lastPage, pages) => lastPage.nextCursor,
+  initialPageParam: 0,
+});
+```
+  </TabItem>
+  <TabItem label="config">
+```js {8} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: '@tanstack/react-query',
+      infiniteQueryOptions: true,
+    },
+  ],
+};
+```
+  </TabItem>
+</Tabs>
+
+You can customize the naming and casing pattern for `infiniteQueryOptions` functions using the `.name` and `.case` options.
+
+### Meta
+
+You can use the `meta` field to attach arbitrary information to a query. To generate metadata for `infiniteQueryOptions`, provide a function to the `.meta` option.
+
+<Tabs>
+  <TabItem label="example">
+```ts title="react-query.gen.ts"
+infiniteQueryOptions({
+  // ...other fields
+  meta: {
+    id: 'getPetById',
+  },
+});
+```
+  </TabItem>
+  <TabItem label="config">
+```js {9} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: '@tanstack/react-query',
+      infiniteQueryOptions: {
+        meta: (operation) => ({ id: operation.id }),
+      },
+    },
+  ],
+};
+```
+  </TabItem>
+</Tabs>
+
+## Infinite Query Keys
+
+Infinite query keys contain normalized SDK function parameters and additional metadata.
+
+<Tabs>
+  <TabItem label="example">
+```ts title="react-query.gen.ts"
+const queryKey = [
+  {
+    _id: 'getPetById',
+    _infinite: true,
+    baseUrl: 'https://app.heyapi.dev',
+    path: {
+      petId: 1,
+    },
+  },
+];
+```
+  </TabItem>
+  <TabItem label="config">
+```js {8} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: '@tanstack/react-query',
+      infiniteQueryKeys: true,
+    },
+  ],
+};
+```
+  </TabItem>
+</Tabs>
+
+### Tags
+
+You can include operation tags in your infinite query keys by setting `tags` to `true`. This will make query keys larger but provides better cache invalidation capabilities.
+
+<Tabs>
+  <TabItem label="example">
+```ts {9} title="react-query.gen.ts"
+const queryKey = [
+  {
+    _id: 'getPetById',
+    _infinite: true,
+    baseUrl: 'https://app.heyapi.dev',
+    path: {
+      petId: 1,
+    },
+    tags: ['pets', 'one', 'get'],
+  },
+];
+```
+  </TabItem>
+  <TabItem label="config">
+```js {9} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: '@tanstack/react-query',
+      infiniteQueryKeys: {
+        tags: true,
+      },
+    },
+  ],
+};
+```
+  </TabItem>
+</Tabs>
+
+### Accessing Infinite Query Keys
+
+If you have access to the result of infinite query options function, you can get the query key from the `queryKey` field.
+
+<Tabs>
+  <TabItem label="example">
+```ts title="react-query.gen.ts"
+const { queryKey } = getPetByIdInfiniteOptions({
+  path: {
+    petId: 1,
+  },
+});
+```
+  </TabItem>
+  <TabItem label="config">
+```js {8} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: '@tanstack/react-query',
+      infiniteQueryOptions: true,
+    },
+  ],
+};
+```
+  </TabItem>
+</Tabs>
+
+Alternatively, you can access the same query key by calling query key functions. The generated query key functions follow the naming convention of SDK functions and by default append `InfiniteQueryKey`, e.g., `getPetByIdInfiniteQueryKey()`.
+
+<Tabs>
+  <TabItem label="example">
+```ts title="react-query.gen.ts"
+const queryKey = getPetByIdInfiniteQueryKey({
+  path: {
+    petId: 1,
+  },
+});
+```
+  </TabItem>
+  <TabItem label="config">
+```js {8} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: '@tanstack/react-query',
+      infiniteQueryKeys: true,
+    },
+  ],
+};
+```
+  </TabItem>
+</Tabs>
+
+You can customize the naming and casing pattern for `infiniteQueryKeys` functions using the `.name` and `.case` options.
+
+## Mutations
+
+Mutations are generated from [mutation operations](/openapi-ts/configuration/parser#hooks-mutation-operations). The generated mutation functions follow the naming convention of SDK functions and by default append `Mutation`, e.g., `addPetMutation()`.
+
+<Tabs>
+  <TabItem label="example">
+```ts title="react-query.gen.ts"
+const addPet = useMutation({
+  ...addPetMutation(),
+  onError: (error) => {
+    console.log(error);
+  },
+});
+
+addPet.mutate({
+  body: {
+    name: 'Kitty',
+  },
+});
+```
+  </TabItem>
+  <TabItem label="config">
+```js {8} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: '@tanstack/react-query',
+      mutationOptions: true,
+    },
+  ],
+};
+```
+  </TabItem>
+</Tabs>
+
+You can customize the naming and casing pattern for `mutationOptions` functions using the `.name` and `.case` options.
+
+## Mutation Keys
+
+Mutation keys contain normalized SDK function parameters and additional metadata.
+
+::: code-group
+
+```ts [example]
+const mutationKey = [
+  {
+    _id: 'addPet',
+    baseUrl: 'https://app.heyapi.dev',
+    body: {
+      name: 'Kitty',
+    },
+  },
+];
+```
+
+```js [config]
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: '@tanstack/react-query',
+      mutationKeys: true, // [!code ++]
+    },
+  ],
+};
+```
+
+:::
+
+### Meta
+
+You can use the `meta` field to attach arbitrary information to a mutation. To generate metadata for `mutationOptions`, provide a function to the `.meta` option.
+
+<Tabs>
+  <TabItem label="example">
+```ts title="react-query.gen.ts"
+const mutationOptions = {
+  // ...other fields
+  meta: {
+    id: 'getPetById',
+  },
+};
+```
+  </TabItem>
+  <TabItem label="config">
+```js {9} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: '@tanstack/react-query',
+      mutationOptions: {
+        meta: (operation) => ({ id: operation.id }),
+      },
+    },
+  ],
+};
+```
+  </TabItem>
+</Tabs>
+
+## Reactivity
+
+In Vue applications, you need to wrap the options functions in [`computed()`](https://vuejs.org/guide/essentials/computed) to make them reactive. Otherwise, TanStack Query won't know it should execute the query when its dependencies change.
+
+<Tabs>
+  <TabItem label="reactive">
+```js title="react-query.gen.ts"
+// ✅ Query will execute on `petId` change
+const query = useQuery(
+  computed(() =>
+    getPetByIdOptions({
+      path: {
+        petId: petId.value,
+      },
+    }),
+  ),
+);
+```
+  </TabItem>
+  <TabItem label="static">
+```js title="react-query.gen.ts"
+// ❌ Query will execute only once
+const query = useQuery(
+  getPetByIdOptions({
+    path: {
+      petId: petId.value,
+    },
+  }),
+);
+```
+  </TabItem>
+</Tabs>
+
+## API
+
+You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/@tanstack/react-query/types.ts) interface.
+
+<Examples />
