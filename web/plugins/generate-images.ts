@@ -120,7 +120,7 @@ fs.mkdirSync(outputDir, { recursive: true });
 
 export async function processImages() {
   for (const image of images) {
-    const inputPath = path.join('src', 'assets', 'raw', image.source);
+    const inputPath = path.join('public', 'assets', 'raw', image.source);
     const ext = path.extname(image.source).toLowerCase();
     const name = path.basename(image.source, ext);
 
