@@ -386,12 +386,18 @@ const DECK = {
     }
 
     .features-sticky {
+      background: var(--features-felt-start);
       height: auto;
       margin-inline: 0;
       overflow: visible;
       padding: 48px 0 56px;
       position: relative;
       width: 100%;
+    }
+
+    .features-sticky::before,
+    .features-sticky::after {
+      display: none;
     }
 
     .features-layout {
