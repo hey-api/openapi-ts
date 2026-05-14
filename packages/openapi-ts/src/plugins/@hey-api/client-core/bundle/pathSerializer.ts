@@ -23,7 +23,7 @@ interface SerializePrimitiveParam extends SerializePrimitiveOptions {
   value: string;
 }
 
-export const separatorArrayExplode = (style: ArraySeparatorStyle): string => {
+export const separatorArrayExplode = (style: ArraySeparatorStyle): '.' | ';' | ',' | '&' => {
   switch (style) {
     case 'label':
       return '.';
@@ -36,7 +36,7 @@ export const separatorArrayExplode = (style: ArraySeparatorStyle): string => {
   }
 };
 
-export const separatorArrayNoExplode = (style: ArraySeparatorStyle): string => {
+export const separatorArrayNoExplode = (style: ArraySeparatorStyle): ',' | '|' | '%20' => {
   switch (style) {
     case 'form':
       return ',';
@@ -49,7 +49,7 @@ export const separatorArrayNoExplode = (style: ArraySeparatorStyle): string => {
   }
 };
 
-export const separatorObjectExplode = (style: ObjectSeparatorStyle): string => {
+export const separatorObjectExplode = (style: ObjectSeparatorStyle): '.' | ';' | ',' | '&' => {
   switch (style) {
     case 'label':
       return '.';
