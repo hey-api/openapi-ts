@@ -1,5 +1,17 @@
 # @hey-api/openapi-ts
 
+## Unreleased
+
+### Patch Changes
+
+- **parser**: allow disabling read/write schema split variants independently via `parser.transforms.readWrite.requests = false` and `parser.transforms.readWrite.responses = false`
+
+- **plugin(@hey-api/typescript)**: allow disabling generated operation aliases and client options via:
+  - `requests: false`
+  - `responses: false`
+  - `errors: false`
+  - `clientOptions: false`
+
 ## 0.97.1
 
 ### Patch Changes

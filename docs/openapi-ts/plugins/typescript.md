@@ -30,6 +30,30 @@ The `@hey-api/typescript` plugin might be implicitly added to your `plugins` if 
 
 The TypeScript plugin will generate the following artifacts, depending on the input specification.
 
+## Disable generated artifacts
+
+You can disable generated artifacts by combining parser `readWrite` transform settings with TypeScript plugin toggles.
+
+```js
+export default {
+  input: 'hey-api/backend',
+  output: 'src/client',
+  parser: {
+    transforms: {
+      readWrite: false, // disable *Writable/*Readable schema variants
+    },
+  },
+  plugins: [
+    {
+      name: '@hey-api/typescript',
+      responses: false,
+      errors: false,
+      clientOptions: false,
+    },
+  ],
+};
+```
+
 ## Requests
 
 A single request type is generated for each endpoint. It may contain a request body, parameters, and headers.
@@ -48,6 +72,8 @@ export type AddPetData = {
 
 You can customize the naming and casing pattern for `requests` types using the `.name` and `.case` options.
 
+Set `requests` to `false` to disable generation of requests
+
 ## Responses
 
 A single type is generated for all endpoint's responses.
@@ -64,6 +90,22 @@ export type AddPetResponse = AddPetResponses[keyof AddPetResponses];
 ```
 
 You can customize the naming and casing pattern for `responses` types using the `.name` and `.case` options.
+
+Set `responses` to `false` to disable generation of responses
+
+## Errors
+
+Error aliases are generated for non-2xx operation responses.
+
+```ts
+export type AddPetErrors = {
+  400: unknown;
+};
+
+export type AddPetError = AddPetErrors[keyof AddPetErrors];
+```
+
+Set `errors` to `false` to disable generation of error types
 
 ## Definitions
 
