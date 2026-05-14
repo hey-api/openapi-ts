@@ -4,6 +4,10 @@ import MobileMenuToggle from '@astrojs/starlight/components/MobileMenuToggle.ast
 const { hasSidebar } = Astro.locals.starlightRoute;
 ---
 
+<blockquote class="sr-only" aria-hidden="true">
+  For the complete documentation index, see <a href="/llms.txt">llms.txt</a>.
+</blockquote>
+
 <div id="heyapi-announcement" class="announcement-bar">
   <a href="https://app.heyapi.dev" class="announcement-link">
     <span class="announcement-text">Host your specs. Generate from anywhere.</span>
@@ -25,10 +29,6 @@ const { hasSidebar } = Astro.locals.starlightRoute;
     }
   })();
 </script>
-
-<div style="display:none" aria-hidden="true">
-  For the complete documentation index, see <a href="/llms.txt">llms.txt</a>
-</div>
 
 <div class:list={['page sl-flex', { 'has-sidebar': hasSidebar }]}>
   <header class="header">

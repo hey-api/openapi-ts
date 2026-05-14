@@ -4,6 +4,17 @@
   "cleanUrls": true,
   "devCommand": "cd web && pnpm dev",
   "installCommand": "cd web && pnpm install",
+  "headers": [
+    {
+      "source": "/",
+      "headers": [
+        {
+          "key": "Link",
+          "value": "</docs>; rel=\"service-doc\""
+        }
+      ]
+    }
+  ],
   "redirects": [
     {
       "source": "/docs",
@@ -61,7 +72,13 @@
       "permanent": true
     },
     {
-      "source": "/:slug((?!.*\\.md$).*)",
+      "source": "/",
+      "has": [{ "type": "header", "key": "accept", "value": "(.*)text/markdown(.*)" }],
+      "destination": "/index.md",
+      "permanent": false
+    },
+    {
+      "source": "/:slug((?!.*\\.md$).+)",
       "has": [{ "type": "header", "key": "accept", "value": "(.*)text/markdown(.*)" }],
       "destination": "/:slug.md",
       "permanent": false

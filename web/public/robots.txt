@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://heyapi.dev/sitemap.xml
+Content-Signal: ai-train=yes, search=yes, ai-input=yes
