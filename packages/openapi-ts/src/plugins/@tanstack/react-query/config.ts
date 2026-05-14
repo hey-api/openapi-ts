@@ -44,7 +44,6 @@ export const defaultConfig: TanStackReactQueryPlugin['Config'] = {
       mappers,
       value: plugin.config.mutationKeys,
     });
-    console.log('mutationKeys', plugin.config.mutationKeys);
 
     plugin.config.mutationOptions = context.valueToObject({
       defaultValue: {
