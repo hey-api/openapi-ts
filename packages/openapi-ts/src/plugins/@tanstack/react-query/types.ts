@@ -13,6 +13,43 @@ export type UserConfig = Plugin.Name<'@tanstack/react-query'> &
      */
     case?: Casing;
     /**
+     * Configuration for generated `getQueryData` helpers.
+     *
+     * When enabled, generates a helper per query operation that wraps
+     * `queryClient.getQueryData()` with the correct query key and response
+     * type already wired up.
+     *
+     * Can be:
+     * - `boolean`: Shorthand for `{ enabled: boolean }`
+     * - `string` or `function`: Shorthand for `{ name: string | function }`
+     * - `object`: Full configuration object
+     *
+     * @default false
+     */
+    getQueryData?:
+      | boolean
+      | NameTransformer
+      | {
+          /**
+           * Casing convention for generated names.
+           *
+           * @default 'camelCase'
+           */
+          case?: Casing;
+          /**
+           * Whether this feature is enabled.
+           *
+           * @default true
+           */
+          enabled?: boolean;
+          /**
+           * Naming pattern for generated names.
+           *
+           * @default '{{name}}GetQueryData'
+           */
+          name?: NameTransformer;
+        };
+    /**
      * Configuration for generated infinite query key helpers.
      *
      * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/infiniteQueryOptions infiniteQueryOptions}
@@ -330,6 +367,42 @@ export type UserConfig = Plugin.Name<'@tanstack/react-query'> &
           name?: NameTransformer;
         };
     /**
+     * Configuration for generated React Query hook variant of `getQueryData`.
+     *
+     * When enabled, generates a hook per query operation that calls
+     * `useQueryClient()` internally and returns a typed getter function.
+     *
+     * Can be:
+     * - `boolean`: Shorthand for `{ enabled: boolean }`
+     * - `string` or `function`: Shorthand for `{ name: string | function }`
+     * - `object`: Full configuration object
+     *
+     * @default false
+     */
+    useGetQueryData?:
+      | boolean
+      | NameTransformer
+      | {
+          /**
+           * Casing convention for generated names.
+           *
+           * @default 'camelCase'
+           */
+          case?: Casing;
+          /**
+           * Whether this feature is enabled.
+           *
+           * @default true
+           */
+          enabled?: boolean;
+          /**
+           * Naming pattern for generated names.
+           *
+           * @default 'use{{name}}GetQueryData'
+           */
+          name?: NameTransformer;
+        };
+    /**
      * Configuration for generated `useMutation()` function helpers.
      *
      * See {@link https://tanstack.com/query/v5/docs/framework/react/reference/useMutation useMutation}
@@ -447,6 +520,8 @@ export type Config = Plugin.Name<'@tanstack/react-query'> &
   Plugin.Exports & {
     /** Casing convention for generated names. */
     case: Casing;
+    /** Resolved configuration for generated `getQueryData` helpers. */
+    getQueryData: NamingOptions & FeatureToggle;
     /** Resolved configuration for generated infinite query key helpers. */
     infiniteQueryKeys: NamingOptions &
       FeatureToggle & {
@@ -483,6 +558,8 @@ export type Config = Plugin.Name<'@tanstack/react-query'> &
       };
     /** Resolved configuration for generated `setQueryData` helpers. */
     setQueryData: NamingOptions & FeatureToggle;
+    /** Configuration for generated React Query hook variant of `getQueryData`. */
+    useGetQueryData: NamingOptions & FeatureToggle;
     /** Configuration for generated `useMutation()` function helpers. */
     useMutation: NamingOptions & FeatureToggle;
     /** Configuration for generated `useQuery()` function helpers. */
