@@ -77,10 +77,10 @@ export function createVisitor(
         this.applyModifiers(result, ctx, opts) as ZodFinal;
       const { childResults, expression } = arrayToAst({
         applyModifiers,
+        path: ctx.path,
         plugin: ctx.plugin,
         schema,
         walk,
-        walkerCtx: ctx,
       });
 
       return {
@@ -89,14 +89,14 @@ export function createVisitor(
       };
     },
     boolean(schema, ctx) {
-      const expression = booleanToAst({ plugin: ctx.plugin, schema });
+      const expression = booleanToAst({ path: ctx.path, plugin: ctx.plugin, schema });
       return {
         expression,
         meta: defaultMeta(schema),
       };
     },
     enum(schema, ctx) {
-      const expression = enumToAst({ plugin: ctx.plugin, schema });
+      const expression = enumToAst({ path: ctx.path, plugin: ctx.plugin, schema });
       const hasNull =
         schema.items?.some((item) => item.type === 'null' || item.const === null) ?? false;
       return {
@@ -108,7 +108,7 @@ export function createVisitor(
       };
     },
     integer(schema, ctx) {
-      const expression = numberToNode({ plugin: ctx.plugin, schema });
+      const expression = numberToNode({ path: ctx.path, plugin: ctx.plugin, schema });
       return {
         expression,
         meta: {
@@ -146,6 +146,7 @@ export function createVisitor(
       const { expression } = intersectionToAst({
         childResults: items,
         parentSchema,
+        path: ctx.path,
         plugin: ctx.plugin,
         schemas,
       });
@@ -164,7 +165,7 @@ export function createVisitor(
       };
     },
     never(schema, ctx) {
-      const expression = neverToAst({ plugin: ctx.plugin, schema });
+      const expression = neverToAst({ path: ctx.path, plugin: ctx.plugin, schema });
       return {
         expression,
         meta: {
@@ -175,7 +176,7 @@ export function createVisitor(
       };
     },
     null(schema, ctx) {
-      const expression = nullToAst({ plugin: ctx.plugin, schema });
+      const expression = nullToAst({ path: ctx.path, plugin: ctx.plugin, schema });
       return {
         expression,
         meta: {
@@ -186,7 +187,7 @@ export function createVisitor(
       };
     },
     number(schema, ctx) {
-      const expression = numberToNode({ plugin: ctx.plugin, schema });
+      const expression = numberToNode({ path: ctx.path, plugin: ctx.plugin, schema });
       return {
         expression,
         meta: {
@@ -200,10 +201,10 @@ export function createVisitor(
         this.applyModifiers(result, ctx, opts) as ZodFinal;
       const { childResults, expression } = objectToAst({
         applyModifiers,
+        path: ctx.path,
         plugin: ctx.plugin,
         schema,
         walk,
-        walkerCtx: ctx,
       });
 
       return {
@@ -257,6 +258,7 @@ export function createVisitor(
     string(schema, ctx) {
       if (shouldCoerceToBigInt(schema.format)) {
         const expression = numberToNode({
+          path: ctx.path,
           plugin: ctx.plugin,
           schema: { ...schema, type: 'number' },
         });
@@ -266,7 +268,7 @@ export function createVisitor(
         };
       }
 
-      const expression = stringToNode({ plugin: ctx.plugin, schema });
+      const expression = stringToNode({ path: ctx.path, plugin: ctx.plugin, schema });
       return {
         expression,
         meta: defaultMeta(schema),
@@ -277,10 +279,10 @@ export function createVisitor(
         this.applyModifiers(result, ctx, opts) as ZodFinal;
       const { childResults, expression } = tupleToAst({
         applyModifiers,
+        path: ctx.path,
         plugin: ctx.plugin,
         schema,
         walk,
-        walkerCtx: ctx,
       });
 
       return {
@@ -289,7 +291,7 @@ export function createVisitor(
       };
     },
     undefined(schema, ctx) {
-      const expression = undefinedToAst({ plugin: ctx.plugin, schema });
+      const expression = undefinedToAst({ path: ctx.path, plugin: ctx.plugin, schema });
       return {
         expression,
         meta: {
@@ -307,6 +309,7 @@ export function createVisitor(
       const { expression } = unionToAst({
         childResults: items,
         parentSchema,
+        path: ctx.path,
         plugin: ctx.plugin,
         schemas,
       });
@@ -325,7 +328,7 @@ export function createVisitor(
       };
     },
     unknown(schema, ctx) {
-      const expression = unknownToAst({ plugin: ctx.plugin, schema });
+      const expression = unknownToAst({ path: ctx.path, plugin: ctx.plugin, schema });
       return {
         expression,
         meta: {
@@ -336,7 +339,7 @@ export function createVisitor(
       };
     },
     void(schema, ctx) {
-      const expression = voidToAst({ plugin: ctx.plugin, schema });
+      const expression = voidToAst({ path: ctx.path, plugin: ctx.plugin, schema });
       return {
         expression,
         meta: {

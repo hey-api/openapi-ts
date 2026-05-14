@@ -91,10 +91,10 @@ export function createVisitor(
 
       const { childResults, pipes } = arrayToPipes({
         applyModifiers,
+        path: ctx.path,
         plugin: ctx.plugin,
         schema,
         walk,
-        walkerCtx: ctx,
       });
 
       return {
@@ -103,14 +103,16 @@ export function createVisitor(
       };
     },
     boolean(schema, ctx) {
-      const pipe = booleanToPipes({ plugin: ctx.plugin, schema });
+      const pipe = booleanToPipes({ path: ctx.path, plugin: ctx.plugin, schema });
       return {
         meta: defaultMeta(schema),
         pipes: [pipe],
       };
     },
     enum(schema, ctx) {
-      const { isNullable, pipe } = enumToPipes({ plugin: ctx.plugin, schema });
+      const pipe = enumToPipes({ path: ctx.path, plugin: ctx.plugin, schema });
+      const isNullable =
+        schema.items?.some((item) => item.type === 'null' || item.const === null) ?? false;
       return {
         meta: {
           ...defaultMeta(schema),
@@ -120,7 +122,7 @@ export function createVisitor(
       };
     },
     integer(schema, ctx) {
-      const pipe = numberToPipes({ plugin: ctx.plugin, schema });
+      const pipe = numberToPipes({ path: ctx.path, plugin: ctx.plugin, schema });
       return {
         meta: defaultMeta(schema),
         pipes: [pipe],
@@ -160,6 +162,7 @@ export function createVisitor(
         applyModifiers,
         childResults: items,
         parentSchema,
+        path: ctx.path,
         plugin: ctx.plugin,
       });
 
@@ -169,7 +172,7 @@ export function createVisitor(
       };
     },
     never(schema, ctx) {
-      const pipe = neverToPipes({ plugin: ctx.plugin, schema });
+      const pipe = neverToPipes({ path: ctx.path, plugin: ctx.plugin, schema });
       return {
         meta: {
           ...defaultMeta(schema),
@@ -180,7 +183,7 @@ export function createVisitor(
       };
     },
     null(schema, ctx) {
-      const pipe = nullToPipes({ plugin: ctx.plugin, schema });
+      const pipe = nullToPipes({ path: ctx.path, plugin: ctx.plugin, schema });
       return {
         meta: {
           ...defaultMeta(schema),
@@ -191,7 +194,7 @@ export function createVisitor(
       };
     },
     number(schema, ctx) {
-      const pipe = numberToPipes({ plugin: ctx.plugin, schema });
+      const pipe = numberToPipes({ path: ctx.path, plugin: ctx.plugin, schema });
       return {
         meta: defaultMeta(schema),
         pipes: [pipe],
@@ -205,10 +208,10 @@ export function createVisitor(
 
       const { childResults, pipes } = objectToPipes({
         applyModifiers,
+        path: ctx.path,
         plugin: ctx.plugin,
         schema,
         walk,
-        walkerCtx: ctx,
       });
 
       return {
@@ -270,7 +273,7 @@ export function createVisitor(
       };
     },
     string(schema, ctx) {
-      const pipe = stringToPipes({ plugin: ctx.plugin, schema });
+      const pipe = stringToPipes({ path: ctx.path, plugin: ctx.plugin, schema });
       return {
         meta: defaultMeta(schema),
         pipes: [pipe],
@@ -282,10 +285,10 @@ export function createVisitor(
 
       const { childResults, pipes } = tupleToPipes({
         applyModifiers,
+        path: ctx.path,
         plugin: ctx.plugin,
         schema,
         walk,
-        walkerCtx: ctx,
       });
 
       return {
@@ -294,7 +297,7 @@ export function createVisitor(
       };
     },
     undefined(schema, ctx) {
-      const pipe = undefinedToPipes({ plugin: ctx.plugin, schema });
+      const pipe = undefinedToPipes({ path: ctx.path, plugin: ctx.plugin, schema });
       return {
         meta: {
           ...defaultMeta(schema),
@@ -314,6 +317,7 @@ export function createVisitor(
         applyModifiers,
         childResults: items,
         parentSchema,
+        path: ctx.path,
         plugin: ctx.plugin,
         schemas,
       });
@@ -327,7 +331,7 @@ export function createVisitor(
       };
     },
     unknown(schema, ctx) {
-      const pipe = unknownToPipes({ plugin: ctx.plugin });
+      const pipe = unknownToPipes({ path: ctx.path, plugin: ctx.plugin });
       return {
         meta: {
           ...defaultMeta(schema),
@@ -338,7 +342,7 @@ export function createVisitor(
       };
     },
     void(schema, ctx) {
-      const pipe = voidToPipes({ plugin: ctx.plugin, schema });
+      const pipe = voidToPipes({ path: ctx.path, plugin: ctx.plugin, schema });
       return {
         meta: {
           ...defaultMeta(schema),

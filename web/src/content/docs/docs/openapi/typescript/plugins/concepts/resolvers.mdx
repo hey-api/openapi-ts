@@ -199,9 +199,9 @@ You might want to accept unknown enum values, for example when the API adds new 
     enum(ctx) {
       const { $, symbols } = ctx;
       const { z } = symbols;
-      const { allStrings, enumMembers, literalMembers } = ctx.nodes.items(ctx);
+      const { enumMembers, literalSchemas } = ctx.nodes.items(ctx);
 
-      if (!allStrings || !enumMembers.length) {
+      if (!enumMembers.length || enumMembers.length !== literalSchemas.length) {
         return;
       }
 

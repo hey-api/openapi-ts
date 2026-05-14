@@ -6,7 +6,7 @@ import { exportAst } from '../shared/export';
 import type { ProcessorContext, ProcessorResult } from '../shared/processor';
 import type { ZodFinal } from '../shared/types';
 import type { ZodPlugin } from '../types';
-import { createVisitor } from './walker';
+import { createVisitor } from './visitor';
 
 export function createProcessor(plugin: ZodPlugin['Instance']): ProcessorResult {
   const processor = createSchemaProcessor();

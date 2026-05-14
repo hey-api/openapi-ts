@@ -1,4 +1,4 @@
-import type { SchemaWithType } from '@hey-api/shared';
+import type { SchemaVisitorContext, SchemaWithType } from '@hey-api/shared';
 
 import { maybeBigInt, shouldCoerceToBigInt } from '../../../../plugins/shared/utils/coerce';
 import { getIntegerLimit } from '../../../../plugins/shared/utils/formats';
@@ -126,10 +126,10 @@ function numberResolver(ctx: NumberResolverContext): Pipes {
 }
 
 export function numberToPipes({
+  path,
   plugin,
   schema,
-}: {
-  plugin: ValibotPlugin['Instance'];
+}: SchemaVisitorContext<ValibotPlugin['Instance']> & {
   schema: SchemaWithType<'integer' | 'number'>;
 }): Pipe {
   const ctx: NumberResolverContext = {
@@ -140,6 +140,7 @@ export function numberToPipes({
       max: maxNode,
       min: minNode,
     },
+    path,
     pipes: {
       ...pipes,
       current: [],

@@ -160,7 +160,7 @@ export type ZodResolvers = Plugin.Resolvers<{
   void?: (ctx: VoidResolverContext) => ChainResult;
 }>;
 
-export interface BaseContext extends DollarTsDsl {
+export interface BaseContext extends DollarTsDsl, SchemaVisitorContext<ZodPlugin['Instance']> {
   /**
    * Functions for working with chains.
    */
@@ -176,8 +176,6 @@ export interface BaseContext extends DollarTsDsl {
      */
     current: Chain;
   };
-  /** The plugin instance. */
-  plugin: ZodPlugin['Instance'];
   /**
    * Provides access to commonly used symbols within the plugin.
    */
@@ -215,7 +213,6 @@ export interface ArrayResolverContext extends BaseContext {
   };
   schema: SchemaWithType<'array'>;
   walk: Walker<ZodResult, ZodPlugin['Instance']>;
-  walkerCtx: SchemaVisitorContext<ZodPlugin['Instance']>;
 }
 
 export interface BooleanResolverContext extends BaseContext {
@@ -249,21 +246,13 @@ export interface EnumResolverContext extends BaseContext {
      */
     items: (ctx: EnumResolverContext) => {
       /**
-       * Whether all enum members are strings.
-       */
-      allStrings: boolean;
-      /**
-       * String literal values for use with z.enum([...]).
+       * String literal nodes for each string-typed enum member.
        */
       enumMembers: Array<ReturnType<typeof $.literal>>;
       /**
-       * Whether the enum includes a null value.
+       * Schema expressions for each non-null enum member (e.g. z.literal(...)).
        */
-      isNullable: boolean;
-      /**
-       * Zod literal expressions for each enum member.
-       */
-      literalMembers: Array<Chain>;
+      literalSchemas: Array<Chain>;
     };
   };
   schema: SchemaWithType<'enum'>;
@@ -370,7 +359,6 @@ export interface ObjectResolverContext extends BaseContext {
   };
   schema: SchemaWithType<'object'>;
   walk: Walker<ZodResult, ZodPlugin['Instance']>;
-  walkerCtx: SchemaVisitorContext<ZodPlugin['Instance']>;
 }
 
 export interface StringResolverContext extends BaseContext {
@@ -428,7 +416,6 @@ export interface TupleResolverContext extends BaseContext {
   };
   schema: SchemaWithType<'tuple'>;
   walk: Walker<ZodResult, ZodPlugin['Instance']>;
-  walkerCtx: SchemaVisitorContext<ZodPlugin['Instance']>;
 }
 
 export interface UndefinedResolverContext extends BaseContext {
