@@ -574,6 +574,41 @@ export default {
 
 You can customize the naming and casing pattern for `mutationOptions` functions using the `.name` and `.case` options.
 
+## Mutation Keys
+
+Mutation keys contain normalized SDK function parameters and additional metadata.
+
+<Tabs>
+  <TabItem label="example">
+```ts title="react-query.gen.ts"
+const mutationKey = [
+  {
+    _id: 'addPet',
+    baseUrl: 'https://app.heyapi.dev',
+    body: {
+      name: 'Kitty',
+    },
+  },
+];
+```
+  </TabItem>
+  <TabItem label="config">
+```js {8} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: '@tanstack/react-query',
+      mutationKeys: true,
+    },
+  ],
+};
+```
+  </TabItem>
+</Tabs>
+
 ### Meta
 
 You can use the `meta` field to attach arbitrary information to a mutation. To generate metadata for `mutationOptions`, provide a function to the `.meta` option.

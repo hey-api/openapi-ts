@@ -1,6 +1,6 @@
 import type { Symbol } from '@hey-api/codegen-core';
 import type { IR } from '@hey-api/shared';
-import { applyNaming, hasOperationDataRequired } from '@hey-api/shared';
+import { applyNaming } from '@hey-api/shared';
 
 import { getTypedConfig } from '../../../config/utils';
 import { getClientBaseUrlKey } from '../../../plugins/@hey-api/client-core/utils';
@@ -10,22 +10,22 @@ import type { PluginInstance } from './types';
 
 const TOptionsType = 'TOptions';
 
-export function createQueryKeyFunction({ plugin }: { plugin: PluginInstance }): void {
-  const symbolCreateQueryKey = plugin.symbol(
-    applyNaming('createQueryKey', {
+export function createMutationKeyFunction({ plugin }: { plugin: PluginInstance }): void {
+  const symbolCreateMutationKey = plugin.symbol(
+    applyNaming('createMutationKey', {
       case: plugin.config.case,
     }),
     {
       meta: {
         category: 'utility',
-        resource: 'createQueryKey',
+        resource: 'createMutationKey',
         tool: plugin.name,
       },
     },
   );
-  const symbolQueryKeyType = plugin.referenceSymbol({
+  const symbolMutationKeyType = plugin.referenceSymbol({
     category: 'type',
-    resource: 'QueryKey',
+    resource: 'MutationKey',
     tool: plugin.name,
   });
 
@@ -41,15 +41,14 @@ export function createQueryKeyFunction({ plugin }: { plugin: PluginInstance }): 
     tool: 'sdk',
   });
 
-  const returnType = $.type(symbolQueryKeyType).generic(TOptionsType).idx(0);
+  const returnType = $.type(symbolMutationKeyType).generic(TOptionsType).idx(0);
 
-  const fn = $.const(symbolCreateQueryKey).assign(
+  const fn = $.const(symbolCreateMutationKey).assign(
     $.func()
       .param('id', (p) => p.type('string'))
       .param('options', (p) => p.optional().type(TOptionsType))
-      .param('infinite', (p) => p.optional().type('boolean'))
       .param('tags', (p) => p.optional().type('ReadonlyArray<string>'))
-      .generic(TOptionsType, (g) => g.extends(symbolOptions))
+      .generic(TOptionsType, (g) => g.extends($.type('Partial').generic(symbolOptions)))
       .returns($.type.tuple(returnType))
       .do(
         $.const('params')
@@ -71,10 +70,8 @@ export function createQueryKeyFunction({ plugin }: { plugin: PluginInstance }): 
                       .call()
                       .attr(baseUrlKey),
                   ),
-              )
-              .as(returnType),
+              ),
           ),
-        $.if('infinite').do($('params').attr('_infinite').assign('infinite')),
         $.if('tags').do($('params').attr('tags').assign('tags')),
         $.if($('options').attr('body').optional()).do(
           $('params').attr('body').assign($('options').attr('body')),
@@ -94,53 +91,50 @@ export function createQueryKeyFunction({ plugin }: { plugin: PluginInstance }): 
   plugin.node(fn);
 }
 
-function createQueryKeyLiteral({
+function createMutationKeyLiteral({
   id,
-  isInfinite,
   operation,
   plugin,
 }: {
   id: string;
-  isInfinite?: boolean;
   operation: IR.OperationObject;
   plugin: PluginInstance;
 }): ReturnType<typeof $.call> {
-  const config = isInfinite ? plugin.config.infiniteQueryKeys : plugin.config.queryKeys;
+  const config = plugin.config.mutationKeys;
   let tagsArray: ReturnType<typeof $.array> | undefined;
   if (config.tags && operation.tags && operation.tags.length) {
     tagsArray = $.array().elements(...operation.tags);
   }
-  const symbolCreateQueryKey = plugin.referenceSymbol({
+  const symbolCreateMutationKey = plugin.referenceSymbol({
     category: 'utility',
-    resource: 'createQueryKey',
+    resource: 'createMutationKey',
     tool: plugin.name,
   });
-  const createQueryKeyCallExpression = $(symbolCreateQueryKey).call(
+  const createMutationKeyCallExpression = $(symbolCreateMutationKey).call(
     $.literal(id),
     'options',
-    isInfinite || tagsArray ? $.literal(Boolean(isInfinite)) : undefined,
     tagsArray,
   );
-  return createQueryKeyCallExpression;
+  return createMutationKeyCallExpression;
 }
 
-export function createQueryKeyType({ plugin }: { plugin: PluginInstance }): void {
+export function createMutationKeyType({ plugin }: { plugin: PluginInstance }): void {
   const symbolOptions = plugin.referenceSymbol({
     category: 'type',
     resource: 'client-options',
     tool: 'sdk',
   });
-  const symbolQueryKeyType = plugin.symbol('QueryKey', {
+  const symbolMutationKeyType = plugin.symbol('MutationKey', {
     meta: {
       category: 'type',
-      resource: 'QueryKey',
+      resource: 'MutationKey',
       tool: plugin.name,
     },
   });
-  const queryKeyType = $.type
-    .alias(symbolQueryKeyType)
+  const mutationKeyType = $.type
+    .alias(symbolMutationKeyType)
     .export()
-    .generic(TOptionsType, (g) => g.extends(symbolOptions))
+    .generic(TOptionsType, (g) => g.extends($.type('Partial').generic(symbolOptions)))
     .type(
       $.type.tuple(
         $.type.and(
@@ -150,38 +144,31 @@ export function createQueryKeyType({ plugin }: { plugin: PluginInstance }): void
           $.type
             .object()
             .prop('_id', (p) => p.type('string'))
-            .prop('_infinite', (p) => p.optional().type('boolean'))
             .prop('tags', (p) => p.optional().type('ReadonlyArray<string>')),
         ),
       ),
     );
-  plugin.node(queryKeyType);
+  plugin.node(mutationKeyType);
 }
 
-export function queryKeyStatement({
-  isInfinite,
+export function mutationKeyStatement({
   operation,
   plugin,
   symbol,
-  typeQueryKey,
 }: {
-  isInfinite: boolean;
   operation: IR.OperationObject;
   plugin: PluginInstance;
   symbol: Symbol;
-  typeQueryKey?: ReturnType<typeof $.type>;
 }): ReturnType<typeof $.const> {
   const typeData = useTypeData({ operation, plugin });
   const statement = $.const(symbol)
     .export()
     .assign(
       $.func()
-        .param('options', (p) => p.required(hasOperationDataRequired(operation)).type(typeData))
-        .$if(isInfinite && typeQueryKey, (f, v) => f.returns(v))
+        .param('options', (p) => p.optional().type($.type('Partial').generic(typeData)))
         .do(
-          createQueryKeyLiteral({
+          createMutationKeyLiteral({
             id: operation.id,
-            isInfinite,
             operation,
             plugin,
           }).return(),
