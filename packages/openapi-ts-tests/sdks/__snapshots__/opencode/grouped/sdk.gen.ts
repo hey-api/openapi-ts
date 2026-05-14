@@ -35,10 +35,14 @@ export const globalHealth = <ThrowOnError extends boolean = false>(options?: Opt
  * Subscribe to global events from the OpenCode system using server-sent events.
  */
 <<<<<<< HEAD
+<<<<<<< HEAD
 export const globalEvent = <ThrowOnError extends boolean = false>(options?: Options<GlobalEventData, ThrowOnError, GlobalEventResponse>): Promise<ServerSentEventsResult<GlobalEventResponses, unknown, ThrowOnError>> => (options?.client ?? client).sse.get<GlobalEventResponses, unknown, ThrowOnError>({ url: '/global/event', ...options });
 =======
 export const globalEvent = <ThrowOnError extends boolean = false>(options?: Options<GlobalEventData, ThrowOnError, GlobalEventResponse>): RequestResult<GlobalEventResponses, unknown, ThrowOnError> => (options?.client ?? client).sse.get<GlobalEventResponses, unknown, ThrowOnError>({ url: '/global/event', ...options });
 >>>>>>> 4a5f34551 (updated test snapshots)
+=======
+export const globalEvent = (options?: Options<GlobalEventData, false, GlobalEventResponse>) => (options?.client ?? client).sse.get<GlobalEventResponses, unknown>({ url: '/global/event', ...options });
+>>>>>>> d54cb4956 (ignored nuxt client)
 
 /**
  * Dispose instance
@@ -810,7 +814,11 @@ export const authSet = <ThrowOnError extends boolean = false>(options: Options<A
  * Get events
  */
 <<<<<<< HEAD
+<<<<<<< HEAD
 export const eventSubscribe = <ThrowOnError extends boolean = false>(options?: Options<EventSubscribeData, ThrowOnError, EventSubscribeResponse>): Promise<ServerSentEventsResult<EventSubscribeResponses, unknown, ThrowOnError>> => (options?.client ?? client).sse.get<EventSubscribeResponses, unknown, ThrowOnError>({ url: '/event', ...options });
 =======
 export const eventSubscribe = <ThrowOnError extends boolean = false>(options?: Options<EventSubscribeData, ThrowOnError, EventSubscribeResponse>): RequestResult<EventSubscribeResponses, unknown, ThrowOnError> => (options?.client ?? client).sse.get<EventSubscribeResponses, unknown, ThrowOnError>({ url: '/event', ...options });
 >>>>>>> 4a5f34551 (updated test snapshots)
+=======
+export const eventSubscribe = (options?: Options<EventSubscribeData, false, EventSubscribeResponse>) => (options?.client ?? client).sse.get<EventSubscribeResponses, unknown>({ url: '/event', ...options });
+>>>>>>> d54cb4956 (ignored nuxt client)

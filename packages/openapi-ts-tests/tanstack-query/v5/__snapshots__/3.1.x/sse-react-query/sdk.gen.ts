@@ -26,10 +26,14 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
  * Subscribe to event stream
  */
 <<<<<<< HEAD
+<<<<<<< HEAD
 export const subscribeToEventStream = <ThrowOnError extends boolean = false>(options?: Options<SubscribeToEventStreamData, ThrowOnError, SubscribeToEventStreamResponse>): Promise<ServerSentEventsResult<SubscribeToEventStreamResponses, unknown, ThrowOnError>> => (options?.client ?? client).sse.post<SubscribeToEventStreamResponses, unknown, ThrowOnError>({ url: '/events/subscribe', ...options });
 =======
 export const subscribeToEventStream = <ThrowOnError extends boolean = false>(options?: Options<SubscribeToEventStreamData, ThrowOnError, SubscribeToEventStreamResponse>): RequestResult<SubscribeToEventStreamResponses, unknown, ThrowOnError> => (options?.client ?? client).sse.post<SubscribeToEventStreamResponses, unknown, ThrowOnError>({ url: '/events/subscribe', ...options });
 >>>>>>> 4a5f34551 (updated test snapshots)
+=======
+export const subscribeToEventStream = (options?: Options<SubscribeToEventStreamData, false, SubscribeToEventStreamResponse>) => (options?.client ?? client).sse.post<SubscribeToEventStreamResponses, unknown>({ url: '/events/subscribe', ...options });
+>>>>>>> d54cb4956 (ignored nuxt client)
 
 /**
  * List events
