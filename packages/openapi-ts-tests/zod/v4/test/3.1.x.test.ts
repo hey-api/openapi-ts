@@ -216,6 +216,24 @@ for (const zodVersion of zodVersions) {
         }),
         description: 'generates permissive enums with enum resolver',
       },
+      {
+        config: createConfig({
+          input: 'type-format.yaml',
+          output: 'transformer',
+          plugins: [
+            {
+              compatibilityVersion: zodVersion.compatibilityVersion,
+              name: 'zod',
+            },
+            {
+              name: '@hey-api/sdk',
+              transformer: 'zod',
+              validator: true,
+            },
+          ],
+        }),
+        description: 'uses zod as response transformer',
+      },
     ];
 
     it.each(scenarios)('$description', async ({ config }) => {
