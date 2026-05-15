@@ -11,6 +11,7 @@ export class LazyTsDsl<T extends ts.Node = ts.Node> extends TsDsl<T> {
   readonly '~dsl' = 'LazyTsDsl';
 
   private _thunk: LazyThunk<T>;
+  private _result?: TsDsl<T>;
 
   constructor(thunk: LazyThunk<T>) {
     super();
@@ -23,7 +24,8 @@ export class LazyTsDsl<T extends ts.Node = ts.Node> extends TsDsl<T> {
   }
 
   toResult(): TsDsl<T> {
-    return this._thunk(ctx);
+    this._result ??= this._thunk(ctx);
+    return this._result;
   }
 
   override toAst() {
