@@ -1,6 +1,6 @@
 import { $ } from '../../index';
 
-describe('LazyTsDsl', () => {
+describe('LazyPyDsl', () => {
   it('returns the same instance on every call to toResult()', () => {
     const lazy = $.lazy(() => $('x'));
     const first = lazy.toResult();
