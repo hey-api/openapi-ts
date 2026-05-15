@@ -180,11 +180,11 @@ export const getParseAs = (
   return;
 };
 
-export const setAuthParams = async (
+export async function setAuthParams(
   options: Pick<RequestOptions, 'auth' | 'query' | 'security'> & {
     headers: HttpHeaders;
   },
-) => {
+): Promise<void> {
   for (const auth of options.security ?? []) {
     const token = await getAuthToken(auth, options.auth);
 
@@ -212,7 +212,7 @@ export const setAuthParams = async (
 
     return;
   }
-};
+}
 
 export const buildUrl: Client['buildUrl'] = (options) => {
   const url = getUrl({

@@ -69,10 +69,10 @@ export const createClient = (config: Config = {}): Client => {
       opts.onRequest = [
         async ({ options }) => {
           if (security) {
-            const authOpts = {
+            const authOpts: Parameters<typeof setAuthParams>[0] = {
               auth: opts.auth,
               headers: options.headers,
-              query: options.query as Record<string, unknown> | undefined,
+              query: options.query,
               security,
             };
             await setAuthParams(authOpts);

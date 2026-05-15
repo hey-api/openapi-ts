@@ -108,12 +108,7 @@ describe('setAuthParams', () => {
   it('sets access token in query when query is initially undefined', async () => {
     const auth = vi.fn().mockReturnValue('foo');
     const headers = new Headers();
-    const opts: {
-      auth: typeof auth;
-      headers: typeof headers;
-      query?: Record<string, unknown>;
-      security: Parameters<typeof setAuthParams>[0]['security'];
-    } = {
+    const opts: Parameters<typeof setAuthParams>[0] = {
       auth,
       headers,
       security: [
