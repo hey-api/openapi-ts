@@ -1,4 +1,3 @@
-import type { SymbolMeta } from '@hey-api/codegen-core';
 import type { IR } from '@hey-api/shared';
 import { statusCodeToGroup } from '@hey-api/shared';
 
@@ -335,32 +334,15 @@ export function operationStatements({
   }
 
   const requestValidator = createRequestValidator({ operation, plugin });
+  const responseTransformer = createResponseTransformer({ operation, plugin });
   const responseValidator = createResponseValidator({ operation, plugin });
+
   if (requestValidator) {
-    reqOptions.prop('requestValidator', requestValidator.arrow());
+    reqOptions.prop('requestValidator', requestValidator);
   }
 
-  if (plugin.config.transformer.response) {
-    const transformerPlugin = plugin.getPlugin(plugin.config.transformer.response);
-    if (transformerPlugin?.api && 'createResponseTransformer' in transformerPlugin.api) {
-      // Zod-style transformer: inline arrow function wrapping parseAsync
-      const responseTransformerFn = createResponseTransformer({ operation, plugin });
-      if (responseTransformerFn) {
-        reqOptions.prop('responseTransformer', responseTransformerFn.arrow());
-      }
-    } else {
-      // @hey-api/transformers-style: reference to a named transformer function
-      const query: SymbolMeta = {
-        category: 'transform',
-        resource: 'operation',
-        resourceId: operation.id,
-        role: 'response',
-      };
-      if (plugin.isSymbolRegistered(query)) {
-        const ref = plugin.referenceSymbol(query);
-        reqOptions.prop('responseTransformer', $(ref));
-      }
-    }
+  if (responseTransformer) {
+    reqOptions.prop('responseTransformer', responseTransformer);
   }
 
   let hasServerSentEvents = false;
@@ -388,7 +370,7 @@ export function operationStatements({
   }
 
   if (responseValidator) {
-    reqOptions.prop('responseValidator', responseValidator.arrow());
+    reqOptions.prop('responseValidator', responseValidator);
   }
 
   if (plugin.config.responseStyle === 'data') {

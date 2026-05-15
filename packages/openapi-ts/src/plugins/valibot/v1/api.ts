@@ -15,6 +15,8 @@ import { getDefaultRequestValidatorLayers } from '../shared/validator';
 import type { ValibotPlugin } from '../types';
 import { identifiers } from './constants';
 
+type ArrowFunc = Extract<ReturnType<typeof $.func>, { '~mode': 'arrow' }>;
+
 function emptyNode(
   ctx: RequestValidatorResolverContext & {
     layer: ResolvedRequestValidatorLayer;
@@ -93,9 +95,7 @@ function responseValidatorResolver(
   return $(v).attr(identifiers.async.parseAsync).call(schema, 'data').await().return();
 }
 
-function runRequestResolver(
-  ctx: RequestValidatorResolverContext,
-): ReturnType<typeof $.func> | undefined {
+function runRequestResolver(ctx: RequestValidatorResolverContext): ArrowFunc | undefined {
   const validator = ctx.plugin.config['~resolvers']?.validator;
   const resolver = typeof validator === 'function' ? validator : validator?.request;
   const candidates = [resolver, requestValidatorResolver];
@@ -111,9 +111,7 @@ function runRequestResolver(
   }
 }
 
-function runResponseResolver(
-  ctx: ResponseValidatorResolverContext,
-): ReturnType<typeof $.func> | undefined {
+function runResponseResolver(ctx: ResponseValidatorResolverContext): ArrowFunc | undefined {
   const validator = ctx.plugin.config['~resolvers']?.validator;
   const resolver = typeof validator === 'function' ? validator : validator?.response;
   const candidates = [resolver, responseValidatorResolver];
@@ -187,7 +185,7 @@ export function createRequestSchemaV1(
 
 export function createRequestValidatorV1(
   ctx: RequestSchemaContext<ValibotPlugin['Instance']>,
-): ReturnType<typeof $.func> | undefined {
+): ArrowFunc | undefined {
   const symbolOrSchema = createRequestSchemaV1(ctx);
   if (!symbolOrSchema) return;
 
@@ -205,7 +203,7 @@ export function createRequestValidatorV1(
 export function createResponseValidatorV1({
   operation,
   plugin,
-}: ValidatorArgs): ReturnType<typeof $.func> | undefined {
+}: ValidatorArgs): ArrowFunc | undefined {
   const symbol = plugin.querySymbol({
     category: 'schema',
     resource: 'operation',

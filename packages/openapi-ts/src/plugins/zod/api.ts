@@ -24,15 +24,17 @@ import {
   createResponseValidatorV4,
 } from './v4/api';
 
+type ArrowFunc = Extract<ReturnType<typeof $.func>, { '~mode': 'arrow' }>;
+
 export type IApi = {
   createRequestSchema: (
     ctx: RequestSchemaContext<ZodPlugin['Instance']>,
   ) => Symbol | Chain | undefined;
   createRequestValidator: (
     ctx: RequestSchemaContext<ZodPlugin['Instance']>,
-  ) => ReturnType<typeof $.func> | undefined;
-  createResponseTransformer: (ctx: ValidatorArgs) => ReturnType<typeof $.func> | undefined;
-  createResponseValidator: (ctx: ValidatorArgs) => ReturnType<typeof $.func> | undefined;
+  ) => ArrowFunc | undefined;
+  createResponseTransformer: (ctx: ValidatorArgs) => ArrowFunc | undefined;
+  createResponseValidator: (ctx: ValidatorArgs) => ArrowFunc | undefined;
 };
 
 export class Api implements IApi {
@@ -52,9 +54,7 @@ export class Api implements IApi {
     }
   }
 
-  createRequestValidator(
-    ctx: RequestSchemaContext<ZodPlugin['Instance']>,
-  ): ReturnType<typeof $.func> | undefined {
+  createRequestValidator(ctx: RequestSchemaContext<ZodPlugin['Instance']>): ArrowFunc | undefined {
     const { plugin } = ctx;
     if (!plugin.config.requests.enabled) return;
     switch (plugin.config.compatibilityVersion) {
@@ -68,7 +68,7 @@ export class Api implements IApi {
     }
   }
 
-  createResponseTransformer(ctx: ValidatorArgs): ReturnType<typeof $.func> | undefined {
+  createResponseTransformer(ctx: ValidatorArgs): ArrowFunc | undefined {
     const { plugin } = ctx;
     switch (plugin.config.compatibilityVersion) {
       case 3:
@@ -81,7 +81,7 @@ export class Api implements IApi {
     }
   }
 
-  createResponseValidator(ctx: ValidatorArgs): ReturnType<typeof $.func> | undefined {
+  createResponseValidator(ctx: ValidatorArgs): ArrowFunc | undefined {
     const { plugin } = ctx;
     switch (plugin.config.compatibilityVersion) {
       case 3:

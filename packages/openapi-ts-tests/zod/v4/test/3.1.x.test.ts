@@ -227,12 +227,12 @@ for (const zodVersion of zodVersions) {
             },
             {
               name: '@hey-api/sdk',
-              transformer: 'zod',
+              transformer: true,
               validator: true,
             },
           ],
         }),
-        description: 'uses zod as response transformer',
+        description: 'handles various schema types and formats',
       },
     ];
 

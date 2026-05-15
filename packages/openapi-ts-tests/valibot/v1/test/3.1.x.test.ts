@@ -164,7 +164,6 @@ describe(`OpenAPI ${version}`, () => {
         output: 'type-format',
         plugins: [
           '@hey-api/transformers',
-          '@hey-api/client-fetch',
           'valibot',
           {
             name: '@hey-api/sdk',

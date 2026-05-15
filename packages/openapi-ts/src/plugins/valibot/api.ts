@@ -11,14 +11,16 @@ import {
   createResponseValidatorV1,
 } from './v1/api';
 
+type ArrowFunc = Extract<ReturnType<typeof $.func>, { '~mode': 'arrow' }>;
+
 export type IApi = {
   createRequestSchema: (
     ctx: RequestSchemaContext<ValibotPlugin['Instance']>,
   ) => Symbol | Pipe | undefined;
   createRequestValidator: (
     args: RequestSchemaContext<ValibotPlugin['Instance']>,
-  ) => ReturnType<typeof $.func> | undefined;
-  createResponseValidator: (args: ValidatorArgs) => ReturnType<typeof $.func> | undefined;
+  ) => ArrowFunc | undefined;
+  createResponseValidator: (args: ValidatorArgs) => ArrowFunc | undefined;
 };
 
 export class Api implements IApi {
@@ -32,13 +34,13 @@ export class Api implements IApi {
 
   createRequestValidator(
     args: RequestSchemaContext<ValibotPlugin['Instance']>,
-  ): ReturnType<typeof $.func> | undefined {
+  ): ArrowFunc | undefined {
     const { plugin } = args;
     if (!plugin.config.requests.enabled) return;
     return createRequestValidatorV1(args);
   }
 
-  createResponseValidator(args: ValidatorArgs): ReturnType<typeof $.func> | undefined {
+  createResponseValidator(args: ValidatorArgs): ArrowFunc | undefined {
     return createResponseValidatorV1(args);
   }
 }

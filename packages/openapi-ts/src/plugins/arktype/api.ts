@@ -5,21 +5,23 @@ import type { ValidatorArgs } from './shared/types';
 import type { ArktypePlugin } from './types';
 import { createRequestValidatorV2, createResponseValidatorV2 } from './v2/api';
 
+type ArrowFunc = Extract<ReturnType<typeof $.func>, { '~mode': 'arrow' }>;
+
 export type IApi = {
   createRequestValidator: (
     args: RequestSchemaContext<ArktypePlugin['Instance']>,
-  ) => ReturnType<typeof $.func> | undefined;
-  createResponseValidator: (args: ValidatorArgs) => ReturnType<typeof $.func> | undefined;
+  ) => ArrowFunc | undefined;
+  createResponseValidator: (args: ValidatorArgs) => ArrowFunc | undefined;
 };
 
 export class Api implements IApi {
   createRequestValidator(
     args: RequestSchemaContext<ArktypePlugin['Instance']>,
-  ): ReturnType<typeof $.func> | undefined {
+  ): ArrowFunc | undefined {
     return createRequestValidatorV2(args);
   }
 
-  createResponseValidator(args: ValidatorArgs): ReturnType<typeof $.func> | undefined {
+  createResponseValidator(args: ValidatorArgs): ArrowFunc | undefined {
     return createResponseValidatorV2(args);
   }
 }
