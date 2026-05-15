@@ -76,33 +76,28 @@ export type UserConfig = Plugin.Name<'@hey-api/sdk'> &
      * convert for example ISO strings into Date objects. However, transformation
      * adds runtime overhead, so it's not recommended to use unless necessary.
      *
-     * You can customize the selected transformer output through its plugin. You
-     * can also set `transformer` to `true` to automatically choose the
-     * transformer from your defined plugins.
+     * You can customize the transformer output through its plugin. You can also
+     * set `transformer` to `true` to automatically choose the transformer from your
+     * defined plugins.
      *
-     * When set to `'zod'`, the Zod plugin's `parseAsync` is used as the
-     * response transformer, which applies Zod's coercion and transformation
-     * rules (e.g., converting strings to `Date` objects via `z.coerce.date()`).
-     * This requires the `zod` plugin to be configured in your plugins.
-     *
-     * Use the object form for fine-grained control over response transformation.
+     * Ensure you have declared the selected library as a dependency to avoid
+     * errors.
      *
      * @default false
      */
     transformer?:
       | PluginTransformerNames
-      | 'zod'
       | boolean
       | {
           /**
-           * Transform response data using the specified transformer.
+           * Transform response data before returning.
            *
-           * Can be a transformer plugin name, `'zod'`, or a boolean (`true` to
-           * auto-select, `false` to disable).
+           * Can be a transformer plugin name or boolean (true to auto-select, false
+           * to disable).
            *
            * @default false
            */
-          response?: PluginTransformerNames | 'zod' | boolean;
+          response?: PluginTransformerNames | boolean;
         };
     /**
      * Validate request and/or response data against schema before returning.
@@ -212,45 +207,19 @@ export type UserConfig = Plugin.Name<'@hey-api/sdk'> &
     response?: 'body' | 'response';
   };
 
-/** Normalized configuration */
 export type Config = Plugin.Name<'@hey-api/sdk'> &
   Plugin.Hooks &
   Plugin.Comments &
   Plugin.Exports & {
-    /**
-     * Should the generated functions contain auth mechanisms? You may want to
-     * disable this option if you're handling auth yourself or defining it
-     * globally on the client and want to reduce the size of generated code.
-     *
-     * @default true
-     */
+    /** Should the generated functions contain auth mechanisms? */
     auth: boolean;
-    /**
-     * Use an internal client instance to send HTTP requests? This is useful if
-     * you don't want to manually pass the client to each SDK function.
-     *
-     * You can customize the selected client output through its plugin. You can
-     * also set `client` to `true` to automatically choose the client from your
-     * defined plugins. If we can't detect a client plugin when using `true`, we
-     * will default to `@hey-api/client-fetch`.
-     *
-     * @default true
-     */
+    /** Use an internal client instance to send HTTP requests? */
     client: PluginClientNames | false;
     /** Configuration for generating SDK code examples. */
     examples: ExamplesConfig;
     /** Define the structure of generated SDK operations. */
     operations: OperationsConfig;
-    /**
-     * Define how request parameters are structured in generated SDK methods.
-     *
-     * - `'flat'` merges parameters into a single object.
-     * - `'grouped'` separates parameters by transport layer.
-     *
-     * Use `'flat'` for simpler calls or `'grouped'` for stricter typing and code clarity.
-     *
-     * @default 'grouped'
-     */
+    /** Define how request parameters are structured in generated SDK methods. */
     paramsStructure: 'flat' | 'grouped';
     /**
      * **This feature works only with the Fetch client**
@@ -260,36 +229,16 @@ export type Config = Plugin.Name<'@hey-api/sdk'> &
      * @default 'fields'
      */
     responseStyle: 'data' | 'fields';
-    /**
-     * Configuration for response data transformation.
-     */
+    /** Transform response data before returning. */
     transformer: {
-      /**
-       * The transformer plugin to use for response transformation, or false to
-       * disable.
-       *
-       * @default false
-       */
-      response: PluginTransformerNames | 'zod' | false;
+      /** The transformer plugin to use for response transformation, or false to disable. */
+      response: PluginTransformerNames | false;
     };
-    /**
-     * Validate request and/or response data against schema before returning.
-     * This is useful if you want to ensure the request and/or response conforms
-     * to a desired shape. However, validation adds runtime overhead, so it's
-     * not recommended to use unless absolutely necessary.
-     */
+    /** Validate request and/or response data against schema before returning. */
     validator: {
-      /**
-       * The validator plugin to use for request validation, or false to disable.
-       *
-       * @default false
-       */
+      /** The validator plugin to use for request validation, or false to disable. */
       request: PluginValidatorNames | false;
-      /**
-       * The validator plugin to use for response validation, or false to disable.
-       *
-       * @default false
-       */
+      /** The validator plugin to use for response validation, or false to disable. */
       response: PluginValidatorNames | false;
     };
 
