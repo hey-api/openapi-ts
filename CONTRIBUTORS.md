@@ -85,6 +85,7 @@
 - [Rico](https://github.com/btmnk)
 - [Roland Weiss](https://github.com/rolego)
 - [Ryo Yamada](https://github.com/Liooo)
+- [Salman Shaikh](https://github.com/slmnsh)
 - [Sebastiaan Wouters](https://github.com/SebastiaanWouters)
 - [Shinigami](https://github.com/Shinigami92)
 - [Simen Bekkhus](https://github.com/SimenB)
