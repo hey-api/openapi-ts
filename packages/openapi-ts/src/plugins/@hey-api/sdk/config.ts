@@ -7,7 +7,7 @@ import { handler } from './plugin';
 import type { HeyApiSdkPlugin } from './types';
 
 const transformerInferWarn =
-  'You set `transformer: true` but no transformer plugin was found in your plugins. Add a transformer plugin like `@hey-api/transformers` or a validator plugin like `zod` to enable this feature. The transformer option has been disabled.';
+  'You set `transformer: true` but no transformer plugin was found in your plugins. Add a transformer plugin like `@hey-api/transformers` to enable this feature. The transformer option has been disabled.';
 const validatorInferWarn =
   'You set `validator: true` but no validator plugin was found in your plugins. Add a validator plugin like `zod` to enable this feature. The validator option has been disabled.';
 
@@ -19,7 +19,7 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
     includeInEntry: true,
     paramsStructure: 'grouped',
     responseStyle: 'fields',
-    transformer: { response: false },
+    transformer: false,
     validator: false,
 
     // Deprecated - kept for backward compatibility
@@ -42,29 +42,20 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
       plugin.config.client = false;
     }
 
-    // Normalize transformer to object form
-    if (typeof plugin.config.transformer !== 'object' || plugin.config.transformer === null) {
+    if (typeof plugin.config.transformer !== 'object') {
       plugin.config.transformer = {
-        response: plugin.config.transformer as Exclude<typeof plugin.config.transformer, object>,
+        response: plugin.config.transformer,
       };
     }
 
     if (plugin.config.transformer.response) {
       if (typeof plugin.config.transformer.response === 'boolean') {
-        // `true`: auto-select transformer plugin, fall back to validator plugin
-        let resolved: string | undefined | false = false;
         try {
-          resolved = context.pluginByTag('transformer');
+          plugin.config.transformer.response = context.pluginByTag('transformer');
+          plugin.dependencies.add(plugin.config.transformer.response!);
         } catch {
-          try {
-            resolved = context.pluginByTag('validator');
-          } catch {
-            log.warn(transformerInferWarn);
-          }
-        }
-        plugin.config.transformer.response = resolved as typeof plugin.config.transformer.response;
-        if (resolved) {
-          plugin.dependencies.add(resolved);
+          log.warn(transformerInferWarn);
+          plugin.config.transformer.response = false;
         }
       } else {
         plugin.dependencies.add(plugin.config.transformer.response);
