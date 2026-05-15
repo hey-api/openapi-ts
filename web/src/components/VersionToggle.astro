@@ -1,0 +1,152 @@
+---
+import { Icon } from '@astrojs/starlight/components';
+import type { VersionOption } from '@/data/versions';
+
+interface Props {
+  versions: Array<VersionOption>;
+  activeHref: string;
+}
+
+const { versions, activeHref } = Astro.props;
+---
+
+<details
+  class="version-toggle"
+  data-versions={JSON.stringify(versions)}
+  data-active-href={activeHref}
+>
+  <summary>
+    <span class="stack">
+      {versions.map((v) => (
+        <span data-vh={v.href} data-active={String(v.href === activeHref)}>
+          {v.short ?? v.label}
+        </span>
+      ))}
+    </span>
+    <Icon name="down-caret" size="0.625rem" class="caret" />
+  </summary>
+  <div class="dropdown">
+    {versions.map((v) => (
+      <a href={v.href} data-vh={v.href} data-active={String(v.href === activeHref)}>
+        {v.label}
+      </a>
+    ))}
+  </div>
+</details>
+
+<script>
+  function init() {
+    document.querySelectorAll<HTMLElement>('.version-toggle').forEach((el) => {
+      el.querySelectorAll<HTMLAnchorElement>('.dropdown a').forEach((a) => {
+        a.addEventListener('click', () => el.removeAttribute('open'));
+      });
+    });
+  }
+
+  function initClickOutside() {
+    document.addEventListener('click', (e) => {
+      document.querySelectorAll<HTMLDetailsElement>('details.version-toggle[open]').forEach((el) => {
+        if (!el.contains(e.target as Node)) {
+          el.removeAttribute('open');
+        }
+      });
+    });
+  }
+
+  init();
+  initClickOutside();
+  document.addEventListener('astro:after-swap', init);
+</script>
+
+<style>
+  .version-toggle {
+    margin: 0;
+    position: relative;
+  }
+
+  summary {
+    align-items: center;
+    background: var(--sl-color-bg-nav);
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: 0.5rem;
+    color: var(--sl-color-gray-2);
+    cursor: pointer;
+    display: flex;
+    font-size: var(--sl-text-xs);
+    gap: 0.375rem;
+    list-style: none;
+    padding: 0.3125rem 0.625rem;
+    transition: color 150ms ease, border-color 150ms ease;
+    user-select: none;
+    white-space: nowrap;
+  }
+
+  summary::-webkit-details-marker { display: none; }
+
+  summary:hover {
+    border-color: var(--sl-color-gray-3);
+    color: var(--sl-color-white);
+  }
+
+  .stack {
+    display: grid;
+  }
+
+  .stack > [data-vh] {
+    grid-area: 1 / 1;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .stack > [data-active='true'] {
+    opacity: 1;
+  }
+
+  .caret {
+    transition: transform 150ms ease;
+  }
+
+  .version-toggle[open] .caret {
+    transform: rotate(180deg);
+  }
+
+  .dropdown {
+    background: var(--sl-color-bg-nav);
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    min-width: 100%;
+    padding: 0.25rem;
+    position: absolute;
+    top: calc(100% + 0.375rem);
+    left: 0;
+    z-index: 10;
+  }
+
+  .dropdown a {
+    border-radius: 0.3125rem;
+    color: var(--sl-color-gray-3);
+    cursor: pointer;
+    font-size: var(--sl-text-xs);
+    padding: 0.25rem 0.625rem;
+    text-decoration: none;
+    transition: background 150ms ease, color 150ms ease;
+    white-space: nowrap;
+  }
+
+  .dropdown a:hover {
+    background: var(--sl-color-bg-sidebar);
+    color: var(--sl-color-white);
+  }
+
+  .dropdown a[data-active='true'] {
+    color: var(--sl-color-white);
+  }
+
+  summary::after,
+  .dropdown a::after {
+    display: none;
+  }
+</style>

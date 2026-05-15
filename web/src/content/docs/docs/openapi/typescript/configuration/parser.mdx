@@ -1,0 +1,745 @@
+---
+title: Parser
+description: Configure @hey-api/openapi-ts.
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import Examples from '@/components/Examples.astro';
+
+# Parser
+
+We parse your input before making it available to plugins. Configuring the parser is optional, but it provides an ideal opportunity to modify or validate your input as needed.
+
+## Patch
+
+Sometimes you need to modify raw input before it's processed further. A common use case is fixing an invalid specification or adding a missing field. For this reason, custom patches are applied before any parsing takes place.
+
+You can add custom patches with `patch`.
+
+```js {7-23} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  parser: {
+    patch: {
+      schemas: {
+        Foo: (schema) => {
+          // convert date-time format to timestamp
+          delete schema.properties.updatedAt.format;
+          schema.properties.updatedAt.type = 'number';
+        },
+        Bar: (schema) => {
+          // add missing property
+          schema.properties.meta = {
+            additionalProperties: true,
+            type: 'object',
+          };
+          schema.required = ['meta'];
+        },
+        Baz: (schema) => {
+          // remove property
+          delete schema.properties.internalField;
+        },
+      },
+    },
+  },
+};
+```
+
+## Validate
+
+:::caution
+The validator feature is very limited. You can help improve it by submitting more [use cases](https://github.com/hey-api/openapi-ts/issues/1970#issuecomment-2933189789).
+:::
+
+If you don't control or trust your input, you might want to validate it. Any detected errors in your input will exit `@hey-api/openapi-ts` and no plugins will be executed.
+
+To validate your input, set `validate_EXPERIMENTAL` to `true`.
+
+```js {5} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  parser: {
+    validate_EXPERIMENTAL: true,
+  },
+};
+```
+
+## Filters
+
+Filters allow you to trim your input before it's processed further, so your output contains only relevant resources.
+
+### Operations
+
+Set `include` to match operations to be included or `exclude` to match operations to be excluded. Both exact keys and regular expressions are supported. When both rules match the same operation, `exclude` takes precedence over `include`.
+
+<Tabs>
+  <TabItem label="include">
+```js {7} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  parser: {
+    filters: {
+      operations: {
+        include: ['GET /api/v1/foo', '/^[A-Z]+ /api/v1//'],
+      },
+    },
+  },
+};
+```
+  </TabItem>
+  <TabItem label="exclude">
+```js {7} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  parser: {
+    filters: {
+      operations: {
+        exclude: ['GET /api/v1/foo', '/^[A-Z]+ /api/v1//'],
+      },
+    },
+  },
+};
+```
+  </TabItem>
+</Tabs>
+
+### Tags
+
+Set `include` to match tags to be included or `exclude` to match tags to be excluded. When both rules match the same tag, `exclude` takes precedence over `include`.
+
+<Tabs>
+  <TabItem label="include">
+```js {7} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  parser: {
+    filters: {
+      tags: {
+        include: ['v2'],
+      },
+    },
+  },
+};
+```
+  </TabItem>
+  <TabItem label="exclude">
+```js {7} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  parser: {
+    filters: {
+      tags: {
+        exclude: ['v1'],
+      },
+    },
+  },
+};
+```
+  </TabItem>
+</Tabs>
+
+### Deprecated
+
+You can filter out deprecated resources by setting `deprecated` to `false`.
+
+```js {6} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  parser: {
+    filters: {
+      deprecated: false,
+    },
+  },
+};
+```
+
+### Schemas
+
+Set `include` to match schemas to be included or `exclude` to match schemas to be excluded. Both exact keys and regular expressions are supported. When both rules match the same schema, `exclude` takes precedence over `include`.
+
+<Tabs>
+  <TabItem label="include">
+```js {7} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  parser: {
+    filters: {
+      schemas: {
+        include: ['Foo', '/^Bar/'],
+      },
+    },
+  },
+};
+```
+  </TabItem>
+  <TabItem label="exclude">
+```js {7} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  parser: {
+    filters: {
+      schemas: {
+        exclude: ['Foo', '/^Bar/'],
+      },
+    },
+  },
+};
+```
+  </TabItem>
+</Tabs>
+
+### Parameters
+
+Set `include` to match parameters to be included or `exclude` to match parameters to be excluded. Both exact keys and regular expressions are supported. When both rules match the same parameter, `exclude` takes precedence over `include`.
+
+<Tabs>
+  <TabItem label="include">
+```js {7} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  parser: {
+    filters: {
+      parameters: {
+        include: ['QueryParameter', '/^MyQueryParameter/'],
+      },
+    },
+  },
+};
+```
+  </TabItem>
+  <TabItem label="exclude">
+```js {7} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  parser: {
+    filters: {
+      parameters: {
+        exclude: ['QueryParameter', '/^MyQueryParameter/'],
+      },
+    },
+  },
+};
+```
+  </TabItem>
+</Tabs>
+
+### Request Bodies
+
+Set `include` to match request bodies to be included or `exclude` to match request bodies to be excluded. Both exact keys and regular expressions are supported. When both rules match the same request body, `exclude` takes precedence over `include`.
+
+<Tabs>
+  <TabItem label="include">
+```js {7} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  parser: {
+    filters: {
+      requestBodies: {
+        include: ['Payload', '/^SpecialPayload/'],
+      },
+    },
+  },
+};
+```
+  </TabItem>
+  <TabItem label="exclude">
+```js {7} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  parser: {
+    filters: {
+      requestBodies: {
+        exclude: ['Payload', '/^SpecialPayload/'],
+      },
+    },
+  },
+};
+```
+  </TabItem>
+</Tabs>
+
+### Responses
+
+Set `include` to match responses to be included or `exclude` to match responses to be excluded. Both exact keys and regular expressions are supported. When both rules match the same response, `exclude` takes precedence over `include`.
+
+<Tabs>
+  <TabItem label="include">
+```js {7} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  parser: {
+    filters: {
+      responses: {
+        include: ['Foo', '/^Bar/'],
+      },
+    },
+  },
+};
+```
+  </TabItem>
+  <TabItem label="exclude">
+```js {7} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  parser: {
+    filters: {
+      responses: {
+        exclude: ['Foo', '/^Bar/'],
+      },
+    },
+  },
+};
+```
+  </TabItem>
+</Tabs>
+
+### Orphaned resources
+
+If you only want to exclude orphaned resources, set `orphans` to `false`. This is the default value when combined with any other filters. If this isn't the desired behavior, you may want to set `orphans` to `true` to always preserve unused resources.
+
+```js {6} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  parser: {
+    filters: {
+      orphans: false,
+    },
+  },
+};
+```
+
+### Order
+
+For performance reasons, we don't preserve the original order when filtering out resources. If maintaining the original order is important to you, set `preserveOrder` to `true`.
+
+```js {6} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  parser: {
+    filters: {
+      preserveOrder: true,
+    },
+  },
+};
+```
+
+## Transforms
+
+You can think of transforms as deterministic [patches](#patch). They provide an easy way to apply the most commonly used input transformations.
+
+### Enums
+
+Your input might contain two types of enums:
+
+- enums defined as reusable components (root enums)
+- non-reusable enums nested within other schemas (inline enums)
+
+You may want all enums to be reusable. This is because only root enums are typically exported by plugins. Inline enums will never be directly importable since they're nested inside other schemas.
+
+<Tabs>
+  <TabItem label="root">
+```js {6} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  parser: {
+    transforms: {
+      enums: 'root',
+    },
+  },
+};
+```
+  </TabItem>
+  <TabItem label="inline">
+```js {6} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  parser: {
+    transforms: {
+      enums: 'inline',
+    },
+  },
+};
+```
+  </TabItem>
+</Tabs>
+
+You can customize the naming and casing pattern for `enums` schemas using the `.name` and `.case` options.
+
+### Properties required by default
+
+By default, any object schema with a missing `required` keyword is interpreted as "no properties are required." This is the correct behavior according to the OpenAPI standard. However, some specifications interpret a missing `required` keyword as "all properties should be required."
+
+This option allows you to change the default behavior so that properties are required by default unless explicitly marked as optional.
+
+<Tabs>
+  <TabItem label="default">
+```js {6} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  parser: {
+    transforms: {
+      propertiesRequiredByDefault: false,
+    },
+  },
+};
+```
+  </TabItem>
+  <TabItem label="required">
+```js {6} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  parser: {
+    transforms: {
+      propertiesRequiredByDefault: true,
+    },
+  },
+};
+```
+  </TabItem>
+</Tabs>
+
+### Read-write
+
+Your schemas might contain read-only or write-only fields. Using such schemas directly could mean asking the user to provide a read-only field in requests, or expecting a write-only field in responses. We separate schemas for requests and responses if direct usage would result in such scenarios.
+
+<Tabs>
+  <TabItem label="default">
+```js {7-8} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  parser: {
+    transforms: {
+      readWrite: {
+        requests: '{{name}}Writable',
+        responses: '{{name}}',
+      },
+    },
+  },
+};
+```
+  </TabItem>
+  <TabItem label="disabled">
+```js {6} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  parser: {
+    transforms: {
+      readWrite: false,
+    },
+  },
+};
+```
+  </TabItem>
+</Tabs>
+
+You can customize the naming and casing pattern for `requests` and `responses` schemas using the `.name` and `.case` options.
+
+### Schema Name
+
+Sometimes your schema names are auto-generated or follow a naming convention that produces verbose or awkward type names. You can rename schema component keys throughout the specification, automatically updating all `$ref` pointers. For example, stripping version markers from schema names, removing vendor prefixes, converting naming conventions, or shortening deeply qualified names.
+
+<Tabs>
+  <TabItem label="function">
+```js {6-16} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  parser: {
+    transforms: {
+      schemaName: (name) => {
+        // Strip version markers: ServiceRoot_v1_20_0_ServiceRoot → ServiceRoot
+        let clean = name.replace(
+          /([A-Za-z\d]+)_v\d+_\d+_\d+_([A-Za-z\d]*)/g,
+          (_, p1, p2) => (p2.startsWith(p1) ? p2 : p1 + p2),
+        );
+        // Deduplicate prefixes: Foo_Foo → Foo
+        const m = clean.match(/^([A-Za-z\d]+)_\1([A-Za-z\d]*)$/);
+        if (m) clean = m[1] + m[2];
+        return clean;
+      },
+    },
+  },
+};
+```
+  </TabItem>
+  <TabItem label="template">
+```js {6} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  parser: {
+    transforms: {
+      schemaName: 'Api{{name}}',
+    },
+  },
+};
+```
+  </TabItem>
+</Tabs>
+
+:::note[Name Collisions]
+If a transformed schema name conflicts with an existing schema, the rename is skipped for that schema to prevent overwrites. The original name is preserved.
+:::
+
+## Pagination
+
+Paginated operations are detected by having a pagination keyword in its parameters or request body. By default, we consider the following to be pagination keywords: `after`, `before`, `cursor`, `offset`, `page`, and `start`.
+
+You can provide custom pagination keywords using `pagination.keywords`.
+
+<Tabs>
+  <TabItem label="extend">
+```js {9-12} title="openapi-ts.config.ts"
+import { defaultPaginationKeywords } from '@hey-api/openapi-ts';
+
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  parser: {
+    pagination: {
+      keywords: [
+        ...defaultPaginationKeywords,
+        'extra',
+        'pagination',
+        'keywords',
+      ],
+    },
+  },
+};
+```
+  </TabItem>
+  <TabItem label="override">
+```js {7-9} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  parser: {
+    pagination: {
+      keywords: [
+        'custom',
+        'pagination',
+        'keywords',
+      ],
+    },
+  },
+};
+```
+  </TabItem>
+</Tabs>
+
+## Hooks
+
+Hooks affect runtime behavior but aren't tied to any single plugin. They can be configured globally via `hooks` or per plugin through the `~hooks` property.
+
+<Tabs>
+  <TabItem label="parser">
+```js {5} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  parser: {
+    hooks: {}, // configure global hooks
+  },
+};
+```
+  </TabItem>
+  <TabItem label="plugin">
+```js {7} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    {
+      name: '@tanstack/react-query',
+      '~hooks': {}, // configure plugin hooks
+    },
+  ],
+};
+```
+  </TabItem>
+</Tabs>
+
+We always use the first hook that returns a value. If a hook returns no value, we fall back to less specific hooks until one does.
+
+<h3 id="hooks-operations">Operations</h3>
+
+Each operation has a list of classifiers that can include `query`, `mutation`, both, or none. Plugins may use these values to decide whether to generate specific output. For example, you usually don't want to generate [TanStack Query options](/openapi-ts/plugins/tanstack-query#queries) for PATCH operations.
+
+<h4 id="hooks-query-operations">Query operations</h4>
+
+By default, GET operations are classified as `query` operations.
+
+<h4 id="hooks-mutation-operations">Mutation operations</h4>
+
+By default, DELETE, PATCH, POST, and PUT operations are classified as `mutation` operations.
+
+#### Example: POST search query
+
+Imagine your API has a POST `/search` endpoint that accepts a large payload. By default, it's classified as a `mutation`, but in practice it behaves like a `query`, and your [state management](/openapi-ts/state-management) plugin should generate query hooks.
+
+You can achieve this by classifying the operation as `query` in a matcher.
+
+<Tabs>
+  <TabItem label="isQuery">
+```js {8-10} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  parser: {
+    hooks: {
+      operations: {
+        isQuery: (op) => {
+          if (op.method === 'post' && op.path === '/search') {
+            return true;
+          }
+        },
+      },
+    },
+  },
+};
+```
+  </TabItem>
+  <TabItem label="getKind">
+```js {8-10} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  parser: {
+    hooks: {
+      operations: {
+        getKind: (op) => {
+          if (op.method === 'post' && op.path === '/search') {
+            return ['query'];
+          }
+        },
+      },
+    },
+  },
+};
+```
+  </TabItem>
+</Tabs>
+
+<h3 id="hooks-symbols">Symbols</h3>
+
+Each symbol can have a placement function deciding its output location.
+
+#### Example: Alphabetic sort
+
+While we work on a better example, let's imagine a world where it's desirable to place every symbol in a file named after its initial letter. For example, a function named `Foo` should end up in the file `f.ts`.
+
+You can achieve this by using the symbol's name.
+
+```js {7-11} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  parser: {
+    hooks: {
+      symbols: {
+        getFilePath: (symbol) => {
+          if (symbol.name) {
+            return symbol.name[0]?.toLowerCase();
+          }
+        },
+      },
+    },
+  },
+};
+```
+
+Most plugins expose configuration options that allow you to rename many of the generated symbols. If you need even more control, use the `getName()` hook.
+
+#### Example: Enum naming
+
+By default, generated enums use the same name for both the type and the runtime value.
+
+<Tabs>
+  <TabItem label="example">
+```ts title="index.gen.ts"
+export const Flags = {
+  ALPHA: 'alpha',
+  BETA: 'beta',
+} as const;
+
+export type Flags = (typeof Flags)[keyof typeof Flags];
+```
+  </TabItem>
+  <TabItem label="config">
+```js title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    {
+      enums: 'javascript',
+      name: '@hey-api/typescript',
+    },
+  ],
+};
+```
+  </TabItem>
+</Tabs>
+
+While this code works perfectly fine due to TypeScript's declaration merging, let's say we want to use a different name for the type. We can accomplish this with the `getName()` hook.
+
+<Tabs>
+  <TabItem label="example">
+```ts title="index.gen.ts" "FlagsType"
+export const Flags = {
+  ALPHA: 'alpha',
+  BETA: 'beta',
+} as const;
+
+export type FlagsType = (typeof Flags)[keyof typeof Flags];
+```
+  </TabItem>
+  <TabItem label="config">
+```js {10-14} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    {
+      enums: 'javascript',
+      name: '@hey-api/typescript',
+      '~hooks': {
+        symbols: {
+          getName({ meta, name, schema }) {
+            if (schema?.type === 'enum' && meta.category === 'type') {
+              return `${name}Type`;
+            }
+          },
+        },
+      },
+    },
+  ],
+};
+```
+  </TabItem>
+</Tabs>
+
+<Examples />

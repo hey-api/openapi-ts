@@ -1,9 +1,6 @@
 packages:
-  - docs
   - dev/**
   - examples/**/*
   - packages/**/*
+  - web
   - '!examples/*/.output'
-
-patchedDependencies:
-  vitepress: patches/vitepress.patch

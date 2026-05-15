@@ -28,6 +28,15 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'query-options-name-conflict.yaml',
+        output: 'query-options-name-conflict',
+        plugins: ['@hey-api/client-fetch', '@tanstack/react-query'],
+      }),
+      description:
+        'queryFn calls the SDK alias when operationId collides with a generated queryOptions name',
+    },
+    {
+      config: createConfig({
         input: 'pagination-ref.yaml',
         output: 'pagination-ref',
         plugins: ['@hey-api/client-fetch', '@tanstack/react-query'],

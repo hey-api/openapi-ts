@@ -1,4 +1,5 @@
 import type { Symbol } from '@hey-api/codegen-core';
+import { ref } from '@hey-api/codegen-core';
 import type { RequestSchemaContext, ResolvedRequestValidatorLayer } from '@hey-api/shared';
 import { requestValidatorLayers, resolveValidatorLayer } from '@hey-api/shared';
 
@@ -144,6 +145,7 @@ function createRequestSchemaContext(
       empty: emptyNode,
       optional: optionalNode,
     },
+    path: ref([]),
     symbols: {
       schema: $(''),
       z,
@@ -218,6 +220,7 @@ export function createResponseValidatorV3({
       current: $(z),
     },
     operation,
+    path: ref([]),
     plugin,
     symbols: {
       schema: symbol,

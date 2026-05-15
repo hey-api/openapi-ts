@@ -1,4 +1,4 @@
-import type { SchemaWithType } from '@hey-api/shared';
+import type { SchemaVisitorContext, SchemaWithType } from '@hey-api/shared';
 
 import { shouldCoerceToBigInt } from '../../../../plugins/shared/utils/coerce';
 import { $ } from '../../../../ts-dsl';
@@ -100,14 +100,15 @@ function stringResolver(ctx: StringResolverContext): Pipes {
 }
 
 export function stringToPipes({
+  path,
   plugin,
   schema,
-}: {
-  plugin: ValibotPlugin['Instance'];
+}: SchemaVisitorContext<ValibotPlugin['Instance']> & {
   schema: SchemaWithType<'string'>;
 }): Pipe {
   if (shouldCoerceToBigInt(schema.format)) {
     return numberToPipes({
+      path,
       plugin,
       schema: { ...schema, type: 'number' },
     });
@@ -124,6 +125,7 @@ export function stringToPipes({
       minLength: minLengthNode,
       pattern: patternNode,
     },
+    path,
     pipes: {
       ...pipes,
       current: [],

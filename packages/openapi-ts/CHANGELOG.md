@@ -1,5 +1,16 @@
 # @hey-api/openapi-ts
 
+## 0.97.1
+
+### Patch Changes
+
+- **plugin(@hey-api/transformers)**: fix: use symbols for `additionalProperties` key variables ([#3841](https://github.com/hey-api/openapi-ts/pull/3841)) ([`d880caa`](https://github.com/hey-api/openapi-ts/commit/d880caabb46a712b1fc0087615b8f9ee4b88c227)) by [@pullfrog](https://github.com/apps/pullfrog)
+
+### Updated Dependencies:
+
+- @hey-api/json-schema-ref-parser@1.4.2
+- @hey-api/shared@0.4.3
+
 ## 0.97.0
 
 ### Minor Changes
@@ -1779,7 +1790,7 @@ export default {
 
   ### Bundle `@hey-api/client-*` plugins
 
-  In previous releases, you had to install a separate client package to generate a fully working output, e.g. `npm add @hey-api/client-fetch`. This created a few challenges: getting started was slower, upgrading was sometimes painful, and bundling too. Beginning with v0.73.0, all Hey API clients are bundled by default and don't require installing any additional dependencies. You can remove any installed client packages and re-run `@hey-api/openapi-ts`.
+  In previous releases, you had to install a separate client package to generate a fully working output, e.g. `npm install @hey-api/client-fetch`. This created a few challenges: getting started was slower, upgrading was sometimes painful, and bundling too. Beginning with v0.73.0, all Hey API clients are bundled by default and don't require installing any additional dependencies. You can remove any installed client packages and re-run `@hey-api/openapi-ts`.
 
   ```sh
   npm uninstall @hey-api/client-fetch

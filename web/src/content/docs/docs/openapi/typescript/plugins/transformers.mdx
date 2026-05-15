@@ -1,0 +1,165 @@
+---
+title: Transformers
+description: Learn about transforming data with @hey-api/openapi-ts.
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+::: tip Using Zod instead of `@hey-api/transformers`
+This page covers the `@hey-api/transformers` plugin, which provides a built-in way to transform response data.
+
+If you're already using the Zod plugin for validation, you may also use Zod as your response transformer. This lets Zod's `parseAsync` handle response transformation directly.
+
+See the [Zod plugin docs](/openapi-ts/plugins/zod#zod-as-a-response-transformer) for details.
+:::
+
+# Transformers
+
+JSON is the most commonly used data format in REST APIs. However, it does not map well to complex data types. For example, both regular strings and date strings become simple strings in JSON.
+
+One approach to this problem is using a [JSON superset](https://github.com/blitz-js/superjson). For most people, switching formats is not feasible. That's why we provide the `@hey-api/transformers` plugin.
+
+:::caution
+Transformers currently handle only the most common use cases. If your data isn't being transformed as expected, we encourage you to leave feedback on [GitHub](https://github.com/hey-api/openapi-ts/issues).
+:::
+
+## Considerations
+
+Before deciding whether transformers are right for you, let's explain how they work. Transformers generate a runtime file, therefore they impact the bundle size. We generate a single transformer per operation response for the most efficient result, just like a human engineer would.
+
+### Limitations
+
+Transformers handle only the most common scenarios. Some of the known limitations are:
+
+- union types are not transformed (e.g., if you have multiple possible response shapes)
+- only types defined through `$ref` are transformed
+- error responses are not transformed
+
+If your data isn't being transformed as expected, we encourage you to leave feedback on [GitHub](https://github.com/hey-api/openapi-ts/issues).
+
+## Installation
+
+In your [configuration](/openapi-ts/get-started), add `@hey-api/transformers` to your plugins and you'll be ready to generate transformers. 🎉
+
+```js {6} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    '@hey-api/transformers',
+  ],
+};
+```
+
+## SDKs
+
+To automatically transform response data in your SDKs, set `sdk.transformer` to `true`.
+
+```js {8-9} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    '@hey-api/transformers',
+    {
+      name: '@hey-api/sdk',
+      transformer: true,
+    },
+  ],
+};
+```
+
+## Dates
+
+To convert date strings into `Date` objects, use the `dates` configuration option.
+
+```js {7} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      dates: true,
+      name: '@hey-api/transformers',
+    },
+  ],
+};
+```
+
+This will generate types that use `Date` instead of `string` and appropriate transformers. Note that third-party date packages are not supported at the moment.
+
+## BigInt
+
+The `@hey-api/transformers` plugin will natively type all BigInts as `bigint` instead of `number`, which can affect arithmetic operations if your application previously used `number`. To force BigInts to be numbers, use the `bigInt` configuration option.
+
+```js {7} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      bigInt: true,
+      name: '@hey-api/transformers',
+    },
+  ],
+};
+```
+
+## Example
+
+A generated response transformer might look something like this. Please note the example has been edited for brevity.
+
+<Tabs>
+  <TabItem label="transformers.gen.ts">
+```ts title="transformers.gen.ts"
+import type { GetFooResponse } from './types.gen';
+
+const quxSchemaResponseTransformer = (data: any) => {
+  if (data.baz) {
+    data.baz = new Date(data.baz);
+  }
+  return data;
+};
+
+const bazSchemaResponseTransformer = (data: any) => {
+  data = quxSchemaResponseTransformer(data);
+  data.bar = new Date(data.bar);
+  return data;
+};
+
+export const getFooResponseTransformer = async (data: any): Promise<GetFooResponse> => {
+  data = bazSchemaResponseTransformer(data);
+  return data;
+};
+```
+  </TabItem>
+  <TabItem label="types.gen.ts">
+```ts title="types.gen.ts"
+export type Baz = Qux & {
+  id: 'Baz';
+} & {
+  foo: number;
+  bar: Date;
+  baz: 'foo' | 'bar' | 'baz';
+  qux: number;
+};
+
+export type Qux = {
+  foo: number;
+  bar: number;
+  baz?: Date;
+  id: string;
+};
+
+export type GetFooResponse = Baz;
+```
+  </TabItem>
+</Tabs>
+
+## API
+
+You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/@hey-api/transformers/types.ts) interface.

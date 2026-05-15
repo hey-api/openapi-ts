@@ -1,0 +1,173 @@
+---
+import { sponsors } from '@/data/sponsors';
+import { getVisibleSponsorTiers } from '@/utils/sponsors';
+
+import SponsorLogo from './SponsorLogo.astro';
+
+const HEIGHT = 28;
+const DURATION_MS = 25_000;
+const SESSION_KEY = 'hey-api:sponsor-strip-start';
+
+const { activeTiers } = getVisibleSponsorTiers(sponsors);
+const featured = sponsors.filter((s) => activeTiers.includes(s.tier));
+---
+
+<div class="sponsor-strip">
+  <p class="sponsor-strip__heading">Supported by</p>
+  <div class="sponsor-strip__track">
+    <ul class="sponsor-strip__list" aria-label="Sponsors" style="visibility:hidden">
+      {featured.map((s) => (
+        <li>
+          <a href={s.url} target="_blank" rel="noopener noreferrer" aria-label={s.displayUrl}>
+            <SponsorLogo logo={s.logo} height={HEIGHT} />
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+  <a class="sponsor-strip__cta" href="/sponsors">Become a sponsor →</a>
+</div>
+
+<script define:vars={{ DURATION_MS, SESSION_KEY }}>
+  function initMarquee() {
+    const list = document.querySelector('.sponsor-strip__list');
+    if (!list) return;
+
+    list.style.visibility = 'visible';
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const track = list.parentElement;
+    const originals = Array.from(list.children);
+
+    function setWidth() {
+      return list.children[originals.length]?.offsetLeft ?? list.scrollWidth / 2;
+    }
+
+    function cloneSet() {
+      originals.forEach((item) => {
+        const clone = item.cloneNode(true);
+        clone.setAttribute('aria-hidden', 'true');
+        clone.querySelector('a')?.setAttribute('tabindex', '-1');
+        list.appendChild(clone);
+      });
+    }
+
+    cloneSet();
+    while (list.scrollWidth < setWidth() + track.offsetWidth + 1) cloneSet();
+
+    list.style.setProperty('--marquee-offset', `-${setWidth()}px`);
+
+    let start = Number(sessionStorage.getItem(SESSION_KEY));
+    if (!start) sessionStorage.setItem(SESSION_KEY, String(start = Date.now()));
+    list.style.animationDelay = `-${(Date.now() - start) % DURATION_MS}ms`;
+    list.style.animationName = 'marquee';
+  }
+
+  initMarquee();
+  document.addEventListener('astro:page-load', initMarquee);
+</script>
+
+<style>
+  .sponsor-strip {
+    border-top: 1px solid var(--sl-color-hairline);
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+  }
+
+  .sponsor-strip__heading {
+    color: var(--sl-color-gray-3);
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+    margin: 0 0 1.25rem;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .sponsor-strip__track {
+    mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+    overflow: hidden;
+  }
+
+  .sponsor-strip__list {
+    align-items: center;
+    animation-duration: 25s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    display: flex;
+    gap: 3rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    width: max-content;
+    will-change: transform;
+  }
+
+  .sponsor-strip__track:hover .sponsor-strip__list {
+    animation-play-state: paused;
+  }
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(var(--marquee-offset)); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sponsor-strip__list {
+      justify-content: center;
+      width: 100%;
+    }
+  }
+
+  .sponsor-strip__list li {
+    display: flex;
+    flex-shrink: 0;
+    margin: 0;
+  }
+
+  .sponsor-strip__list a {
+    align-items: center;
+    display: flex;
+    opacity: 0.75;
+    transition: opacity 150ms ease;
+  }
+
+  .sponsor-strip__list a:hover,
+  .sponsor-strip__list a:focus {
+    opacity: 1;
+  }
+
+  .sponsor-strip__list a::after,
+  .sponsor-strip__cta::after {
+    display: none;
+  }
+
+  .sponsor-strip__list :global(svg) {
+    color: var(--sl-color-text);
+    height: 28px;
+    width: auto;
+  }
+
+  .sponsor-strip__list :global(.logo-composite svg) {
+    height: 100%;
+  }
+
+  .sponsor-strip__list :global(img) {
+    height: 28px;
+    width: auto;
+  }
+
+  .sponsor-strip__cta {
+    color: var(--sl-color-gray-3);
+    display: block;
+    font-size: 0.8rem;
+    margin-top: 1.25rem;
+    text-align: center;
+    text-decoration: none;
+    transition: color 150ms ease;
+  }
+
+  .sponsor-strip__cta:hover {
+    color: var(--sl-color-text);
+  }
+</style>

@@ -1,0 +1,28 @@
+---
+import defaultOgImage from '@/assets/openapi-ts-hero-640w.png';
+
+const { entry, head } = Astro.locals.starlightRoute;
+const site = Astro.site;
+
+const ogImage = entry.data.og?.image
+  ? entry.data.og.image.src
+  : defaultOgImage.src;
+
+const extraHead: typeof head = [
+  { tag: 'meta', attrs: { property: 'og:type', content: 'website' } },
+  { tag: 'meta', attrs: { property: 'og:image', content: ogImage } },
+];
+---
+
+{[...head, ...extraHead].map(({ tag: Tag, attrs, content }) => {
+  if (attrs?.rel === 'shortcut icon') return;
+  return <Tag {...attrs} set:html={content} />
+})}
+
+{site && (
+  <link
+    rel="alternate"
+    type="text/markdown"
+    href={new URL(`${entry.id}.md`, site).toString()}
+  />
+)}
