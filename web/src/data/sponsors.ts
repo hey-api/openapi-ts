@@ -5,6 +5,7 @@ import fastapiSvg from '@/assets/brands/fastapi.svg?raw';
 import kindeSvg from '@/assets/brands/kinde.svg?raw';
 import opencodeSvg from '@/assets/brands/opencode.svg?raw';
 import openstatusSvg from '@/assets/brands/openstatus.svg?raw';
+import photonSvg from '@/assets/brands/photon.svg?raw';
 import scalarSvg from '@/assets/brands/scalar.svg?raw';
 import stainlessPng from '@/assets/brands/stainless.png';
 import stainlessSvg from '@/assets/brands/stainless.svg?raw';
@@ -94,6 +95,17 @@ export const sponsors: Array<Sponsor> = [
     name: 'Cella',
     tier: 'bronze',
     url: 'https://kutt.to/KkqSaw',
+  },
+  {
+    class: 'photon',
+    displayUrl: 'photon.codes',
+    logo: {
+      src: photonSvg,
+      type: 'svg',
+    },
+    name: 'Photon',
+    tier: 'bronze',
+    url: 'https://kutt.to/HW4GYR',
   },
   {
     class: 'openstatus',
