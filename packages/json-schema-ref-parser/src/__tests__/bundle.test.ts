@@ -594,7 +594,7 @@ describe('bundle', () => {
       const spec1Prefix = 'spec1';
       const spec2Prefix = 'spec2';
 
-      console.dir(merged, { depth: null });
+      
 
       // Component security scheme names should be prefixed
       expect(merged.components.securitySchemes[`${spec1Prefix}_bearerAuth`]).toBeDefined();
