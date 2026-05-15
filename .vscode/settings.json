@@ -18,7 +18,6 @@
     "**/*.map": true,
     "**/*.mjs": true,
     "**/*.mts": true,
-    "**/.vitepress/dist": true,
     "**/dist": true,
     "**/.mypy_cache": true,
     "**/__snapshots__": true,
@@ -26,7 +25,12 @@
     "**/openapi-python-tests/**/.gen": true,
     "**/openapi-ts-tests/**/generated": true,
     "**/openapi-ts-tests/**/.gen": true,
-    "**/*.tsbuildinfo": true
+    "**/*.tsbuildinfo": true,
+    "**/.astro/data-store.json": true,
+    "**/.vercel/output": true
+  },
+  "workbench.editorAssociations": {
+    "*.svg": "default"
   },
   "typescript.experimental.useTsgo": true,
   "typescript.preferences.autoImportFileExcludePatterns": ["dist/**"],

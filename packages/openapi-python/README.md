@@ -119,6 +119,14 @@ Partners behind the future of API tooling. [Become a sponsor](https://github.com
           </picture>
         </a>
       </td>
+      <td align="center" width="136px">
+        <a href="https://kutt.to/HW4GYR" target="_blank">
+          <picture height="34px">
+            <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/photon/logo-light.svg">
+            <img alt="Photon logo" height="34px" src="https://heyapi.dev/assets/photon/logo-dark.svg">
+          </picture>
+        </a>
+      </td>
     </tr>
   </tbody>
 </table>

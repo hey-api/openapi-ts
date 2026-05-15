@@ -7,7 +7,7 @@
 Install using [npm](https://docs.npmjs.com/about-npm/):
 
 ```bash
-npm add @hey-api/json-schema-ref-parser
+npm install @hey-api/json-schema-ref-parser
 pnpm add @hey-api/json-schema-ref-parser
 yarn add @hey-api/json-schema-ref-parser
 bun add @hey-api/json-schema-ref-parser
@@ -215,6 +215,14 @@ Partners behind the future of API tooling. [Become a sponsor](https://github.com
           <picture height="34px">
             <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/cella/logo-light.svg">
             <img alt="Cella logo" height="34px" src="https://heyapi.dev/assets/cella/logo-dark.svg">
+          </picture>
+        </a>
+      </td>
+      <td align="center" width="136px">
+        <a href="https://kutt.to/HW4GYR" target="_blank">
+          <picture height="34px">
+            <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/photon/logo-light.svg">
+            <img alt="Photon logo" height="34px" src="https://heyapi.dev/assets/photon/logo-dark.svg">
           </picture>
         </a>
       </td>

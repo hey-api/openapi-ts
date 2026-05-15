@@ -5,11 +5,6 @@ import type { Chain } from '../../shared/chain';
 import { tryBuildDiscriminatedUnion } from '../../shared/discriminated-union';
 import type { ZodResult } from '../../shared/types';
 
-type UnionToAstOptions = Pick<
-  UnionResolverContext,
-  'childResults' | 'parentSchema' | 'plugin' | 'schemas'
->;
-
 function baseNode(ctx: UnionResolverContext): Chain {
   const { childResults, parentSchema, plugin, schemas, symbols } = ctx;
   const { z } = symbols;
@@ -78,7 +73,13 @@ function unionResolver(ctx: UnionResolverContext): Chain {
   return ctx.chain.current;
 }
 
-export function unionToAst({ childResults, parentSchema, plugin, schemas }: UnionToAstOptions): {
+export function unionToAst({
+  childResults,
+  parentSchema,
+  path,
+  plugin,
+  schemas,
+}: Pick<UnionResolverContext, 'childResults' | 'parentSchema' | 'path' | 'plugin' | 'schemas'>): {
   childResults: Array<ZodResult>;
   expression: Chain;
 } {
@@ -94,6 +95,7 @@ export function unionToAst({ childResults, parentSchema, plugin, schemas }: Unio
       base: baseNode,
     },
     parentSchema,
+    path,
     plugin,
     schema: parentSchema,
     schemas,

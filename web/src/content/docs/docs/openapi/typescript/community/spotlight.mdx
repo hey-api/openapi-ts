@@ -1,0 +1,34 @@
+---
+title: Spotlight
+description: Meet the people behind Hey API.
+---
+
+import { coreTeam, hallOfFame } from '@/data/people';
+import Contributors from '@/components/Contributors.astro';
+import TeamMembers from '@/components/TeamMembers.astro';
+
+# Spotlight
+
+Meet the people behind Hey API. To join this list, please refer to the [contributing](/openapi-ts/community/contributing) guide.
+
+## Core Team
+
+These people actively maintain Hey API.
+
+<TeamMembers members={coreTeam} />
+
+Do you want to join the core team? Send us a short [email](mailto:lubos@heyapi.dev?subject=Join%20Core%20Team) describing your interest in Hey API, any relevant experience, and what you're hoping to work on.
+
+## Hall of Fame
+
+These are the people with significant contributions to Hey API. A special thank you goes to [Ferdi Koomen](https://madebyferdi.com) for allowing us to use the original source code from OpenAPI TypeScript Codegen. None of this would've been possible without you!
+
+<TeamMembers members={hallOfFame} />
+
+## Contributors
+
+The complete list of contributors to Hey API.
+
+<Contributors />
+
+A sincere thank you for your contributions.

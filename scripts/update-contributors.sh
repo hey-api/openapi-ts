@@ -16,7 +16,7 @@ if [[ -n "${GITHUB_TOKEN:-}" ]]; then
   AUTH_HEADER=(-H "Authorization: token $GITHUB_TOKEN")
 fi
 
-SINCE_FILE="./docs/.contributorssince"
+# SINCE_FILE="./docs/.contributorssince"
 
 # disabled for now, we'd need to append to the list instead of write
 # if [[ -f "$SINCE_FILE" ]]; then
@@ -105,7 +105,7 @@ if [ "$MAX_COMMIT_EPOCH" -gt 0 ]; then
   BUFFER_SECONDS=$((BUFFER_DAYS * 86400))
   BUFFERED_EPOCH=$((MAX_COMMIT_EPOCH - BUFFER_SECONDS))
   BUFFERED_DATE=$(date -u -r "$BUFFERED_EPOCH" "+%Y-%m-%dT%H:%M:%SZ")
-  echo "$BUFFERED_DATE" > "$SINCE_FILE"
+  # echo "$BUFFERED_DATE" > "$SINCE_FILE"
   echo "Updated SINCE to $BUFFERED_DATE"
 fi
 
@@ -121,7 +121,7 @@ NO_NAMES_SORTED=$(awk -F'|' '$2 == ""' "$TMP_USERS" | sort -t'|' -k1,1)
   else
     echo "- [$login](https://github.com/$login)"
   fi
-done > ./docs/partials/contributors-list.md
+done > ./CONTRIBUTORS.md
 
 if [[ -f "$TMP_USERS" ]]; then
   rm "$TMP_USERS"

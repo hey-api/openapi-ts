@@ -1,0 +1,282 @@
+---
+import MobileMenuToggle from '@astrojs/starlight/components/MobileMenuToggle.astro';
+
+const { hasSidebar } = Astro.locals.starlightRoute;
+---
+
+<blockquote class="sr-only" aria-hidden="true">
+  For the complete documentation index, see <a href="/llms.txt">llms.txt</a>.
+</blockquote>
+
+<div id="heyapi-announcement" class="announcement-bar">
+  <a href="https://app.heyapi.dev" class="announcement-link">
+    <span class="announcement-text">Host your specs. Generate from anywhere.</span>
+    <span class="announcement-cta" aria-hidden="true">
+      <span class="cta-text">Get Started</span>
+      →
+    </span>
+  </a>
+</div>
+
+<script is:inline>
+  (function () {
+    var banner = document.getElementById('heyapi-announcement');
+    if (banner) {
+      document.documentElement.style.setProperty(
+        '--announcement-height',
+        banner.offsetHeight + 'px'
+      );
+    }
+  })();
+</script>
+
+<div class:list={['page sl-flex', { 'has-sidebar': hasSidebar }]}>
+  <header class="header">
+    <slot name="header" />
+    {hasSidebar && <MobileMenuToggle />}
+  </header>
+  {
+    hasSidebar && (
+      <nav class="sidebar print:hidden" aria-label={Astro.locals.t('sidebarNav.accessibleLabel')}>
+        <div id="starlight__sidebar" class="sidebar-pane">
+          <div class="sidebar-content sl-flex">
+            <slot name="sidebar" />
+          </div>
+        </div>
+      </nav>
+    )
+  }
+  <div class="main-frame"><slot /></div>
+</div>
+
+<style>
+  :root {
+    --announcement-height-budget: 40px;
+  }
+
+  .announcement-bar {
+    align-items: center;
+    background-color: var(--dt-bg-2);
+    border-bottom: 1px solid var(--vp-c-divider);
+    box-shadow: inset 0 1px 0 0 color-mix(in srgb, var(--vp-c-brand-2) 40%, transparent);
+    display: flex;
+    flex-wrap: wrap;
+    font-size: var(--sl-text-sm);
+    gap: 0.75rem;
+    justify-content: center;
+    padding: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: calc(var(--sl-z-index-navbar) + 1);
+    transition: transform 200ms ease, opacity 200ms ease;
+  }
+
+  .announcement-bar.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-100%);
+  }
+
+  .announcement-link {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: center;
+    padding: 0.55rem 1.5rem;
+    text-decoration: none;
+    width: 100%;
+  }
+
+  .announcement-link:hover .announcement-cta {
+    background: color-mix(in srgb, var(--vp-c-brand-1) 18%, transparent);
+    border-color: var(--vp-c-brand-2);
+    color: var(--vp-c-brand-2);
+  }
+
+  .announcement-text {
+    color: var(--vp-c-text-2);
+    font-weight: 400;
+    letter-spacing: 0.01em;
+  }
+
+  .announcement-cta {
+    align-items: center;
+    background: color-mix(in srgb, var(--vp-c-brand-1) 10%, transparent);
+    border-radius: 999px;
+    border: 1px solid color-mix(in srgb, var(--vp-c-brand-1) 50%, transparent);
+    color: var(--vp-c-brand-1);
+    display: inline-flex;
+    font-size: var(--sl-text-xs);
+    font-weight: 600;
+    gap: 0.25rem;
+    letter-spacing: 0.02em;
+    padding: 0.2rem 0.75rem;
+    text-decoration: none;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+    white-space: nowrap;
+  }
+
+  .page {
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  .header {
+    background-color: var(--sl-color-bg-nav);
+    border-bottom: 1px solid var(--sl-color-hairline-shade);
+    height: var(--sl-nav-height);
+    padding: var(--sl-nav-pad-y) var(--sl-nav-pad-x);
+    position: sticky;
+    top: var(--announcement-height);
+    width: 100%;
+    z-index: var(--sl-z-index-navbar);
+    transition: top 200ms ease;
+  }
+
+  :global([data-has-sidebar]) .header {
+    padding-inline-end: calc(
+      var(--sl-nav-gap) + var(--sl-nav-pad-x) + var(--sl-menu-button-size)
+    );
+  }
+
+  :global(starlight-menu-button) {
+    inset-block-start: var(--sl-nav-pad-y);
+    inset-inline-end: var(--sl-nav-pad-x);
+    position: absolute;
+  }
+
+  :global(starlight-menu-button button) {
+    position: static;
+  }
+
+  .sidebar-pane {
+    background-color: var(--sl-color-black);
+    inset-block-start: var(--sl-nav-height);
+    inset-block-end: 0;
+    inset-inline-start: 0;
+    overflow-y: auto;
+    position: fixed;
+    visibility: var(--sl-sidebar-visibility, hidden);
+    width: 100%;
+    z-index: var(--sl-z-index-menu);
+  }
+
+  :global(.page:has(starlight-menu-button [aria-expanded='true'])) .sidebar-pane {
+    --sl-sidebar-visibility: visible;
+  }
+
+  .sidebar-content {
+    flex-direction: column;
+    gap: 1rem;
+    height: 100%;
+    min-height: max-content;
+    padding: 1rem var(--sl-sidebar-pad-x);
+  }
+
+  .main-frame {
+    padding-inline-start: var(--sl-content-inline-start);
+  }
+
+  @media (max-width: 640px) {
+    .cta-text {
+      display: none;
+    }
+
+    .announcement-link {
+      flex-wrap: nowrap;
+    }
+  }
+
+  @media (max-width: 50rem) {
+    :global(starlight-menu-button) {
+      display: none !important;
+    }
+
+    :global([data-has-sidebar]) .header {
+      padding-inline-end: var(--sl-nav-pad-x);
+    }
+  }
+
+  @media (min-width: 50rem) {
+    .page {
+      display: grid;
+      grid-template-areas:
+        'header'
+        'main';
+      grid-template-columns: 1fr;
+      grid-template-rows: auto 1fr;
+    }
+
+    .page.has-sidebar {
+      grid-template-areas:
+        'header header'
+        'sidebar main';
+      grid-template-columns: var(--sl-sidebar-width) 1fr;
+    }
+
+    .header {
+      grid-area: header;
+      width: auto;
+    }
+
+    :global([data-has-sidebar]) .header {
+      padding-inline-end: var(--sl-nav-pad-x);
+    }
+
+    .sidebar {
+      grid-area: sidebar;
+    }
+
+    .sidebar-pane {
+      background-color: var(--sl-color-bg-sidebar);
+      border-inline-end: 1px solid var(--sl-color-hairline-shade);
+      height: calc(100vh - var(--sl-nav-height) - var(--announcement-height, 0px));
+      inset: unset;
+      overflow-y: auto;
+      position: sticky;
+      top: calc(var(--sl-nav-height) + var(--announcement-height, 0px));
+      transition: top 200ms ease, height 200ms ease;
+      visibility: visible;
+      width: var(--sl-sidebar-width);
+      z-index: unset;
+    }
+
+    .main-frame {
+      grid-area: main;
+      padding-inline-start: 0;
+    }
+
+    :global(mobile-starlight-toc nav) {
+      top: calc(var(--sl-nav-height) + var(--announcement-height));
+    }
+
+    .sidebar-content::after {
+      content: '';
+      padding-bottom: 1px;
+    }
+  }
+</style>
+
+<script>
+  const banner = document.getElementById('heyapi-announcement');
+
+  if (banner) {
+    const root = document.documentElement;
+
+    root.style.setProperty('--announcement-height', `${banner.offsetHeight}px`);
+
+    function update() {
+      if (!banner) return;
+      const hidden = window.scrollY > 0;
+      banner.classList.toggle('hidden', hidden);
+      const h = hidden ? '0px' : `${banner.offsetHeight}px`;
+      root.style.setProperty('--announcement-height', h);
+    }
+
+    window.addEventListener('scroll', update, { passive: true });
+    update();
+  }
+</script>

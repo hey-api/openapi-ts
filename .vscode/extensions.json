@@ -1,5 +1,6 @@
 {
   "recommendations": [
+    "astro-build.astro-vscode",
     "dbaeumer.vscode-eslint",
     "EditorConfig.EditorConfig",
     "hilleer.yaml-plus-json",
