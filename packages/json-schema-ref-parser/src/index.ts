@@ -56,6 +56,9 @@ export function getResolvedInput({
       const { hostname, protocol } = new URL(pathOrUrlOrSchema.$id as string);
       resolvedInput.path = `${protocol}//${hostname}:${protocol === 'https:' ? 443 : 80}`;
       resolvedInput.type = 'url';
+    } else {
+      resolvedInput.schema = pathOrUrlOrSchema;
+      resolvedInput.type = 'json';
     }
   }
 
