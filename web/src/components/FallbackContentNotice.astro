@@ -1,0 +1,23 @@
+---
+import Default from '@astrojs/starlight/components/FallbackContentNotice.astro';
+---
+
+<div class="fallback-notice-wrapper">
+  <Default {...Astro.props}><slot /></Default>
+</div>
+
+<style is:global>
+  .contextual-menu-parent {
+    flex-wrap: wrap;
+  }
+
+  .fallback-notice-wrapper {
+    flex-basis: 100%;
+    margin-top: 1rem !important;
+    order: 1;
+  }
+
+  .fallback-notice-wrapper > p{
+    width: 100%;
+  }
+</style>

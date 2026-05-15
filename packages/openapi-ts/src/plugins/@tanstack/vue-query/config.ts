@@ -34,6 +34,17 @@ export const defaultConfig: TanStackVueQueryPlugin['Config'] = {
       value: plugin.config.infiniteQueryOptions,
     });
 
+    plugin.config.mutationKeys = context.valueToObject({
+      defaultValue: {
+        case: plugin.config.case ?? 'camelCase',
+        enabled: false,
+        name: '{{name}}MutationKey',
+        tags: false,
+      },
+      mappers,
+      value: plugin.config.mutationKeys,
+    });
+
     plugin.config.mutationOptions = context.valueToObject({
       defaultValue: {
         case: plugin.config.case ?? 'camelCase',

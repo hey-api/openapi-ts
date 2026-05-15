@@ -13,8 +13,9 @@
     "**/.nuxt/",
     "**/.output/",
     "**/.svelte-kit/",
-    "**/.vitepress/cache",
-    "**/.vitepress/dist",
-    "**/.angular"
+    "**/.angular",
+    "**/web/.astro/",
+    "**/web/.cache/",
+    "**/*.mdx"
   ]
 }

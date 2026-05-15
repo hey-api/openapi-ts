@@ -1,0 +1,241 @@
+---
+import { Code } from '@astrojs/starlight/components';
+import { CODEGEN_OUTPUT_ATTR } from '@/utils/codegen-context';
+import type { SyncKey } from '@/utils/sync-storage';
+
+export interface PreviewFile {
+  code: string;
+  lang: string;
+  name: string;
+}
+
+interface Props {
+  files: Array<PreviewFile>;
+  syncKey?: SyncKey;
+  value: string;
+}
+
+const { files, value, syncKey } = Astro.props;
+---
+
+<div
+  class="preview-window"
+  data-preview-group={value}
+  data-sync-key={syncKey}
+  hidden
+>
+  <div class="preview-file-tabs">
+    {files.map((file, index) => (
+      <button
+        class:list={['preview-tab']}
+        data-tab={index}
+      >
+        {file.name}
+      </button>
+    ))}
+    <div class="preview-tab-spacer" aria-hidden="true"></div>
+  </div>
+
+  <div class="preview-codes">
+    {files.map((file, index) => (
+      <div
+        class:list={['preview-code']}
+        data-panel={index}
+      >
+        <Code code={file.code} lang={file.lang} />
+      </div>
+    ))}
+  </div>
+</div>
+<script is:inline define:vars={{ value, outputAttr: CODEGEN_OUTPUT_ATTR, syncKey }}>
+  (function () {
+    var el = document.currentScript.previousElementSibling;
+    el.hidden = el.dataset.previewGroup !== document.documentElement.dataset[outputAttr];
+
+    var index = 0;
+    if (syncKey) {
+      var stored = localStorage.getItem('hey-api__' + syncKey);
+      if (stored !== null) {
+        var parsed = Number(stored);
+        if (Number.isInteger(parsed)) index = parsed;
+      }
+    }
+
+    el.querySelector('[data-tab="' + index + '"]')?.classList.add('active');
+    el.querySelector('[data-panel="' + index + '"]')?.classList.add('active');
+  })();
+</script>
+
+<script>
+  import type { SyncKey } from '@/utils/sync-storage';
+  import { getSynced, setSynced } from '@/utils/sync-storage';
+
+  let activeRoot: HTMLElement | null = null;
+  const selectTabMap = new Map<HTMLElement, (index: number) => void>();
+
+  document.querySelectorAll<HTMLElement>('[data-preview-group]').forEach((root) => {
+    const syncKey = root.dataset.syncKey as SyncKey | undefined;
+
+    function selectTab(index: number) {
+      root.querySelectorAll('[data-tab]').forEach((t) => t.classList.remove('active'));
+      root.querySelectorAll('[data-panel]').forEach((p) => p.classList.remove('active'));
+      root.querySelector(`[data-tab="${index}"]`)?.classList.add('active');
+      root.querySelector(`[data-panel="${index}"]`)?.classList.add('active');
+    }
+
+    selectTabMap.set(root, selectTab);
+
+    new MutationObserver(() => {
+      if (!root.hidden) activeRoot = root;
+    }).observe(root, { attributes: true, attributeFilter: ['hidden'] });
+
+    if (syncKey) {
+      const stored = getSynced(syncKey);
+      if (stored !== null) selectTab(stored as number);
+    }
+
+    root.querySelectorAll<HTMLElement>('[data-tab]').forEach((tab) => {
+      tab.addEventListener('click', () => {
+        const index = Number(tab.dataset.tab);
+        activeRoot = root;
+        selectTab(index);
+        if (syncKey) setSynced(syncKey, index);
+      });
+    });
+
+    if (!activeRoot && !root.hidden) {
+      activeRoot = root;
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (!e.altKey || e.metaKey || e.ctrlKey) return;
+    if (!/^Digit[0-9]$/.test(e.code)) return;
+
+    if (!activeRoot) return;
+
+    const digit = e.code.slice(-1);
+    const count = activeRoot.querySelectorAll('[data-tab]').length;
+    const index = digit === '0' ? count - 1 : Number(digit) - 1;
+    if (index < 0 || index >= count) return;
+
+    e.preventDefault();
+
+    const selectTab = selectTabMap.get(activeRoot);
+    selectTab?.(index);
+
+    const syncKey = activeRoot.dataset.syncKey as SyncKey | undefined;
+    if (syncKey) setSynced(syncKey, index);
+  });
+</script>
+
+<style>
+  .preview-window {
+    background: var(--sl-color-bg);
+    border: 1px solid var(--vp-c-divider);
+    border-radius: 12px;
+    box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.25);
+    margin-top: 0;
+    overflow: hidden;
+  }
+
+  .preview-window[hidden] {
+    display: none;
+  }
+
+  .preview-file-tabs {
+    background: var(--dt-bg-2);
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .preview-file-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .preview-tab {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--vp-c-divider);
+    border-right: 1px solid var(--vp-c-divider);
+    color: var(--sl-color-gray-3);
+    cursor: pointer;
+    flex-shrink: 0;
+    font-family: var(--sl-font-mono, ui-monospace, monospace);
+    font-size: 12px;
+    margin-top: 0;
+    padding: 8px 16px;
+    transition: color 150ms ease, background 150ms ease;
+    white-space: nowrap;
+  }
+
+  .preview-tab:hover {
+    color: var(--sl-color-text);
+  }
+
+  .preview-tab.active {
+    background: var(--sl-color-bg);
+    border-bottom-color: transparent;
+    color: var(--sl-color-text);
+  }
+
+  .preview-tab-spacer {
+    border-bottom: 1px solid var(--vp-c-divider);
+    flex: 1;
+  }
+
+  .preview-codes {
+    display: flex;
+    flex-direction: column;
+    height: 400px;
+    margin-top: 0;
+    overflow: hidden;
+  }
+
+  .preview-code {
+    display: none;
+    flex: 1;
+    margin-top: 0;
+    min-height: 0;
+    overflow: auto;
+  }
+
+  .preview-code.active {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .preview-code .expressive-code {
+    display: flex;
+    flex: 1;
+    padding: 20px 0;
+  }
+
+  .preview-code .expressive-code :global(.copy) {
+    display: none !important;
+  }
+
+  .preview-code :global(figure) {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    margin: 0;
+    min-height: 0;
+  }
+
+  .preview-code :global(pre) {
+    background: transparent;
+    border: none;
+    flex: 1;
+    line-height: 1.6;
+    margin: 0;
+    min-height: 0;
+    padding: 0 10px;
+  }
+
+  .preview-code :global(code) {
+    background: none;
+    padding: 0;
+  }
+</style>

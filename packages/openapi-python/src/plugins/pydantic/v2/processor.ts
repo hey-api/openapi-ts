@@ -6,7 +6,7 @@ import { exportAst } from '../shared/export';
 import type { ProcessorContext, ProcessorResult } from '../shared/processor';
 import type { PydanticFinal } from '../shared/types';
 import type { PydanticPlugin } from '../types';
-import { createVisitor } from './walker';
+import { createVisitor } from './visitor';
 
 export function createProcessor(plugin: PydanticPlugin['Instance']): ProcessorResult {
   const processor = createSchemaProcessor();

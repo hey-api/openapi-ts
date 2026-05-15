@@ -154,7 +154,7 @@ export type ValibotResolvers = Plugin.Resolvers<{
   void?: (ctx: VoidResolverContext) => PipeResult;
 }>;
 
-export interface BaseContext extends DollarTsDsl {
+export interface BaseContext extends DollarTsDsl, SchemaVisitorContext<ValibotPlugin['Instance']> {
   /**
    * Functions for working with pipes.
    */
@@ -170,8 +170,6 @@ export interface BaseContext extends DollarTsDsl {
      */
     current: Pipes;
   };
-  /** The plugin instance. */
-  plugin: ValibotPlugin['Instance'];
   /**
    * Provides access to commonly used symbols within the plugin.
    */
@@ -193,7 +191,6 @@ export interface ArrayResolverContext extends BaseContext {
   };
   schema: SchemaWithType<'array'>;
   walk: Walker<ValibotResult, ValibotPlugin['Instance']>;
-  walkerCtx: SchemaVisitorContext<ValibotPlugin['Instance']>;
 }
 
 export interface BooleanResolverContext extends BaseContext {
@@ -221,13 +218,9 @@ export interface EnumResolverContext extends BaseContext {
      */
     items: (ctx: EnumResolverContext) => {
       /**
-       * String literal values for use with v.picklist([...]).
+       * Literal nodes for each enum member.
        */
       enumMembers: Array<ReturnType<typeof $.literal>>;
-      /**
-       * Whether the enum includes a null value.
-       */
-      isNullable: boolean;
     };
   };
   schema: SchemaWithType<'enum'>;
@@ -300,7 +293,6 @@ export interface ObjectResolverContext extends BaseContext {
   };
   schema: SchemaWithType<'object'>;
   walk: Walker<ValibotResult, ValibotPlugin['Instance']>;
-  walkerCtx: SchemaVisitorContext<ValibotPlugin['Instance']>;
 }
 
 export interface StringResolverContext extends BaseContext {
@@ -330,7 +322,6 @@ export interface TupleResolverContext extends BaseContext {
   };
   schema: SchemaWithType<'tuple'>;
   walk: Walker<ValibotResult, ValibotPlugin['Instance']>;
-  walkerCtx: SchemaVisitorContext<ValibotPlugin['Instance']>;
 }
 
 export interface UndefinedResolverContext extends BaseContext {

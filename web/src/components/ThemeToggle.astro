@@ -1,0 +1,132 @@
+---
+import { Icon } from '@astrojs/starlight/components';
+import type { ComponentProps } from 'astro/types';
+
+const themes = ['light', 'auto', 'dark'] as const
+const meta = {
+  light: { icon: 'sun',    label: 'Light'  },
+  auto:  { icon: 'laptop', label: 'System' },
+  dark:  { icon: 'moon',   label: 'Dark'   },
+} satisfies Record<typeof themes[number], { icon: ComponentProps<typeof Icon>['name']; label: string }>
+---
+
+<button class="theme-toggle" aria-label="Toggle theme">
+  <span class="stack" style="visibility:hidden">
+    {themes.map((t) => (
+      <span data-t={t}><Icon name={meta[t].icon} size="0.875rem" /></span>
+    ))}
+  </span>
+  <span class="stack" style="visibility:hidden">
+    {themes.map((t) => (
+      <span data-t={t}>{meta[t].label}</span>
+    ))}
+  </span>
+</button>
+
+<script>
+  import { preloadSound } from '@/utils/sound';
+
+  const selectSound = preloadSound('ui-select');
+
+  type Theme = 'light' | 'auto' | 'dark'
+  const ORDER: Array<Theme> = ['light', 'auto', 'dark']
+  let keyBound = false
+
+  function getTheme(): Theme {
+    const s = localStorage.getItem('starlight-theme') as Theme
+    return ORDER.includes(s) ? s : 'auto'
+  }
+
+  function applyTheme(t: Theme) {
+    if (t === 'auto') {
+      localStorage.removeItem('starlight-theme')
+      document.documentElement.dataset.theme =
+        window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    } else {
+      localStorage.setItem('starlight-theme', t)
+      document.documentElement.dataset.theme = t
+    }
+  }
+
+  function syncToggle(t: Theme) {
+    document.querySelectorAll<HTMLElement>('[data-t]').forEach((el) => {
+      el.dataset.active = String(el.dataset.t === t)
+    })
+  }
+
+  function cycle() {
+    selectSound.play();
+    const next = ORDER[(ORDER.indexOf(getTheme()) + 1) % ORDER.length]
+    applyTheme(next)
+    syncToggle(next)
+  }
+
+  function init() {
+    const btn = document.querySelector<HTMLButtonElement>('.theme-toggle')
+    if (!btn) return
+    delete btn.dataset.ready
+    syncToggle(getTheme())
+    btn.querySelectorAll<HTMLElement>('.stack').forEach((s) => s.style.visibility = '')
+    requestAnimationFrame(() => { btn.dataset.ready = '' })
+    btn.addEventListener('click', cycle)
+    if (!keyBound) {
+      document.addEventListener('keydown', (e) => {
+        if (!e.altKey || e.code !== 'KeyT' || e.metaKey || e.ctrlKey) return
+        cycle()
+      })
+      keyBound = true
+    }
+  }
+
+  init()
+  document.addEventListener('astro:after-swap', init)
+</script>
+
+<style>
+  .theme-toggle {
+    align-items: center;
+    background: var(--sl-color-bg-nav);
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: 0.5rem;
+    color: var(--sl-color-gray-2);
+    cursor: pointer;
+    display: flex;
+    font-size: var(--sl-text-xs);
+    gap: 0.375rem;
+    padding: 0.3125rem 0.625rem;
+    transition: color 150ms ease, border-color 150ms ease;
+    width: 100%;
+  }
+
+  .theme-toggle:hover {
+    border-color: var(--sl-color-gray-3);
+    color: var(--sl-color-white);
+  }
+
+  .stack {
+    display: grid;
+  }
+
+  .stack > [data-t] {
+    align-items: center;
+    display: flex;
+    grid-area: 1 / 1;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(0.375rem);
+  }
+
+  .theme-toggle[data-ready] .stack > [data-t] {
+    transition: opacity 150ms ease, transform 150ms ease;
+  }
+
+  .stack > [data-active='true'] {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .theme-toggle::after {
+    display: none;
+  }
+</style>

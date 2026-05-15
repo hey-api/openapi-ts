@@ -1,25 +1,15 @@
-import type { SchemaVisitorContext, SchemaWithType, Walker } from '@hey-api/shared';
 import { childContext, deduplicateSchema } from '@hey-api/shared';
 
 import { $ } from '../../../../ts-dsl';
 import type { ArrayResolverContext } from '../../resolvers';
 import type { PipeResult, Pipes } from '../../shared/pipes';
 import { pipes } from '../../shared/pipes';
-import type { CompositeHandlerResult, ValibotFinal, ValibotResult } from '../../shared/types';
-import type { ValibotPlugin } from '../../types';
+import type { CompositeHandlerResult, ValibotResult } from '../../shared/types';
 import { identifiers } from '../constants';
 import { unknownToPipes } from './unknown';
 
-interface ArrayToPipesContext {
-  applyModifiers: (result: ValibotResult, options?: { optional?: boolean }) => ValibotFinal;
-  plugin: ValibotPlugin['Instance'];
-  schema: SchemaWithType<'array'>;
-  walk: Walker<ValibotResult, ValibotPlugin['Instance']>;
-  walkerCtx: SchemaVisitorContext<ValibotPlugin['Instance']>;
-}
-
 function baseNode(ctx: ArrayResolverContext): PipeResult {
-  const { plugin, symbols } = ctx;
+  const { applyModifiers, path, pipes, plugin, symbols, walk } = ctx;
   const { v } = symbols;
 
   const arrayFn = $(v).attr(identifiers.schemas.array);
@@ -30,15 +20,14 @@ function baseNode(ctx: ArrayResolverContext): PipeResult {
   }
 
   if (!normalizedSchema.items) {
-    return arrayFn.call(unknownToPipes({ plugin }));
+    return arrayFn.call(unknownToPipes({ path, plugin }));
   }
 
   const childResults: Array<ValibotResult> = [];
-  const { applyModifiers, pipes, walk, walkerCtx } = ctx;
 
   for (let i = 0; i < normalizedSchema.items!.length; i++) {
     const item = normalizedSchema.items![i]!;
-    const result = walk!(item, childContext(walkerCtx!, 'items', i));
+    const result = walk!(item, childContext({ path, plugin }, 'items', i));
     childResults.push(result);
   }
 
@@ -47,7 +36,7 @@ function baseNode(ctx: ArrayResolverContext): PipeResult {
     return arrayFn.call(itemNode);
   }
 
-  return arrayFn.call(unknownToPipes({ plugin }));
+  return arrayFn.call(unknownToPipes({ path, plugin }));
 }
 
 function lengthNode(ctx: ArrayResolverContext): PipeResult {
@@ -96,15 +85,17 @@ function arrayResolver(ctx: ArrayResolverContext): Pipes {
   return ctx.pipes.current;
 }
 
-export function arrayToPipes(ctx: ArrayToPipesContext): CompositeHandlerResult {
-  const { plugin, schema, walk, walkerCtx } = ctx;
+export function arrayToPipes(
+  ctx: Pick<ArrayResolverContext, 'applyModifiers' | 'path' | 'plugin' | 'schema' | 'walk'>,
+): CompositeHandlerResult {
+  const { path, plugin, schema, walk } = ctx;
   const childResults: Array<ValibotResult> = [];
 
   if (schema.items) {
     const normalizedSchema = deduplicateSchema({ schema });
     for (let i = 0; i < normalizedSchema.items!.length; i++) {
       const item = normalizedSchema.items![i]!;
-      const result = walk(item, childContext(walkerCtx, 'items', i));
+      const result = walk(item, childContext({ path, plugin }, 'items', i));
       childResults.push(result);
     }
   }
@@ -118,6 +109,7 @@ export function arrayToPipes(ctx: ArrayToPipesContext): CompositeHandlerResult {
       maxLength: maxLengthNode,
       minLength: minLengthNode,
     },
+    path,
     pipes: {
       ...pipes,
       current: [],
@@ -128,7 +120,6 @@ export function arrayToPipes(ctx: ArrayToPipesContext): CompositeHandlerResult {
       v: plugin.external('valibot.v'),
     },
     walk,
-    walkerCtx,
   };
 
   const resolver = plugin.config['~resolvers']?.array;

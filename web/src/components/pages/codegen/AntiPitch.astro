@@ -1,0 +1,130 @@
+---
+const DISQUALIFIERS = [
+  "Your spec is broken or out of date.",
+  "You're building a one-off integration, not a long-term API contract.",
+  "You already have a codegen workflow that works.",
+  "You want zero build steps.",
+  "We don't support your language yet.",
+];
+---
+
+<div class="anti-pitch">
+  <div class="section-inner">
+    <div class="anti-pitch-layout">
+      <div class="anti-pitch-header">
+        <p class="anti-pitch-eyebrow">Honest take</p>
+        <h2 class="anti-pitch-title">Not the right fit if&hellip;</h2>
+      </div>
+      <ul class="anti-pitch-list">
+        {DISQUALIFIERS.map((item) => (
+          <li class="anti-pitch-item">
+            <span class="anti-pitch-marker" aria-hidden="true">—</span>
+            <span>{item}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+    <p class="anti-pitch-closer">If none of these apply, you'll probably love it.</p>
+  </div>
+</div>
+
+<style>
+  .anti-pitch {
+    border-bottom: 1px solid var(--vp-c-divider);
+    margin-top: 0;
+    padding: 80px 0;
+  }
+
+  .anti-pitch-layout {
+    align-items: start;
+    display: grid;
+    gap: 48px;
+    grid-template-columns: 1fr 2fr;
+  }
+
+  .anti-pitch-header {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: sticky;
+    top: 80px;
+  }
+
+  .anti-pitch-eyebrow {
+    color: var(--vp-c-brand-1);
+    font-family: var(--sl-font-mono, ui-monospace, monospace);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    margin: 0;
+    text-transform: uppercase;
+  }
+
+  .anti-pitch-title {
+    color: var(--sl-color-text);
+    font-size: clamp(22px, 3vw, 28px);
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  .anti-pitch-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .anti-pitch-item {
+    align-items: baseline;
+    border-bottom: 1px solid var(--vp-c-divider);
+    color: var(--sl-color-text);
+    display: grid;
+    font-size: 15px;
+    gap: 16px;
+    grid-template-columns: 16px 1fr;
+    line-height: 1.6;
+    margin-top: 0;
+    padding: 18px 0;
+  }
+
+  .anti-pitch-item:first-child {
+    border-top: 1px solid var(--vp-c-divider);
+  }
+
+  .anti-pitch-marker {
+    color: var(--sl-color-gray-3);
+    font-size: 14px;
+    line-height: 1.6;
+    user-select: none;
+  }
+
+  .anti-pitch-closer {
+    color: var(--sl-color-gray-3);
+    font-size: 13px;
+    font-style: italic;
+    margin: 40px 0 0;
+    text-align: right;
+  }
+
+  @media (max-width: 768px) {
+    .anti-pitch {
+      padding: 56px 0;
+    }
+
+    .anti-pitch-layout {
+      gap: 32px;
+      grid-template-columns: 1fr;
+    }
+
+    .anti-pitch-header {
+      position: static;
+    }
+
+    .anti-pitch-closer {
+      text-align: left;
+    }
+  }
+</style>

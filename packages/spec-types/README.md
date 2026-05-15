@@ -160,7 +160,7 @@ You can download `@hey-api/spec-types` from npm using your favorite package mana
 #### npm
 
 ```sh
-npm add @hey-api/spec-types -D -E
+npm install @hey-api/spec-types -D -E
 ```
 
 #### pnpm
@@ -178,7 +178,7 @@ yarn add @hey-api/spec-types -D -E
 #### bun
 
 ```sh
-bun add @hey-api/spec-types -D -E
+bun add @hey-api/spec-types -D
 ```
 
 ## Usage

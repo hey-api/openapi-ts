@@ -1,0 +1,36 @@
+---
+title: Validators
+description: Learn about validating data with @hey-api/openapi-ts.
+sidebar:
+  label: Overview
+---
+
+import { Badge } from '@astrojs/starlight/components';
+import Examples from '@/components/Examples.astro';
+
+# Validators
+
+There are times when you cannot blindly trust the server to return the correct data. You might be working on a critical application where any mistakes would be costly, or you're simply dealing with a legacy or undocumented system.
+
+Whatever your reason to use validators might be, you can rest assured that you're working with the correct data.
+
+## Features
+
+- seamless integration with `@hey-api/openapi-ts` ecosystem
+- schemas for requests, responses, and reusable definitions
+
+## Options
+
+Hey API natively supports the following validators.
+
+- [Valibot](/openapi-ts/plugins/valibot)
+- [Zod](/openapi-ts/plugins/zod)
+- [Ajv](/openapi-ts/plugins/ajv) <Badge text="Vote" variant="tip" />
+- [Arktype](/openapi-ts/plugins/arktype) <Badge text="Vote" variant="tip" />
+- [Joi](/openapi-ts/plugins/joi) <Badge text="Vote" variant="tip" />
+- [TypeBox](/openapi-ts/plugins/typebox) <Badge text="Vote" variant="tip" />
+- [Yup](/openapi-ts/plugins/yup) <Badge text="Vote" variant="tip" />
+
+Don't see your validator? Let us know your interest by [opening an issue](https://github.com/hey-api/openapi-ts/issues).
+
+<Examples />

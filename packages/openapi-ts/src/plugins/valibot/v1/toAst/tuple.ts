@@ -1,28 +1,18 @@
-import type { SchemaVisitorContext, SchemaWithType, Walker } from '@hey-api/shared';
 import { childContext } from '@hey-api/shared';
 
 import { $ } from '../../../../ts-dsl';
 import type { TupleResolverContext } from '../../resolvers';
 import type { PipeResult, Pipes } from '../../shared/pipes';
 import { pipes } from '../../shared/pipes';
-import type { CompositeHandlerResult, ValibotFinal, ValibotResult } from '../../shared/types';
-import type { ValibotPlugin } from '../../types';
+import type { CompositeHandlerResult, ValibotResult } from '../../shared/types';
 import { identifiers } from '../constants';
 import { unknownToPipes } from './unknown';
 
-interface TupleToPipesContext {
-  applyModifiers: (result: ValibotResult, options?: { optional?: boolean }) => ValibotFinal;
-  plugin: ValibotPlugin['Instance'];
-  schema: SchemaWithType<'tuple'>;
-  walk: Walker<ValibotResult, ValibotPlugin['Instance']>;
-  walkerCtx: SchemaVisitorContext<ValibotPlugin['Instance']>;
-}
-
 function baseNode(ctx: TupleResolverContext): PipeResult {
-  const { applyModifiers, pipes, plugin, schema, symbols, walk, walkerCtx } = ctx;
+  const { applyModifiers, path, pipes, plugin, schema, symbols, walk } = ctx;
 
   if (!schema.items) {
-    return unknownToPipes({ plugin });
+    return unknownToPipes({ path, plugin });
   }
 
   const { v } = symbols;
@@ -30,7 +20,7 @@ function baseNode(ctx: TupleResolverContext): PipeResult {
 
   for (let i = 0; i < schema.items.length; i++) {
     const item = schema.items[i]!;
-    const result = walk!(item, childContext(walkerCtx!, 'items', i));
+    const result = walk!(item, childContext({ path, plugin }, 'items', i));
     childResults.push(result);
   }
 
@@ -70,14 +60,16 @@ function tupleResolver(ctx: TupleResolverContext): Pipes {
   return ctx.pipes.current;
 }
 
-export function tupleToPipes(ctx: TupleToPipesContext): CompositeHandlerResult {
-  const { plugin, schema, walk, walkerCtx } = ctx;
+export function tupleToPipes(
+  ctx: Pick<TupleResolverContext, 'applyModifiers' | 'path' | 'plugin' | 'schema' | 'walk'>,
+): CompositeHandlerResult {
+  const { path, plugin, schema, walk } = ctx;
   const childResults: Array<ValibotResult> = [];
 
   if (schema.items) {
     for (let i = 0; i < schema.items.length; i++) {
       const item = schema.items[i]!;
-      const result = walk(item, childContext(walkerCtx, 'items', i));
+      const result = walk(item, childContext({ path, plugin }, 'items', i));
       childResults.push(result);
     }
   }
@@ -89,6 +81,7 @@ export function tupleToPipes(ctx: TupleToPipesContext): CompositeHandlerResult {
       base: baseNode,
       const: constNode,
     },
+    path,
     pipes: {
       ...pipes,
       current: [],
@@ -99,7 +92,6 @@ export function tupleToPipes(ctx: TupleToPipesContext): CompositeHandlerResult {
       v: plugin.external('valibot.v'),
     },
     walk,
-    walkerCtx,
   };
 
   const resolver = plugin.config['~resolvers']?.tuple;

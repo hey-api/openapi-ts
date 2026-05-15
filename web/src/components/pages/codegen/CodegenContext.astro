@@ -1,0 +1,69 @@
+---
+import {
+  CODEGEN_INPUT_ATTR,
+  CODEGEN_INPUT_STORAGE_KEY,
+  CODEGEN_OUTPUT_ATTR,
+  CODEGEN_OUTPUT_STORAGE_KEY,
+} from '@/utils/codegen-context';
+import { CODEGEN_DEFAULT_INPUT, CODEGEN_DEFAULT_OUTPUT, CODEGEN_URL_PATTERN } from '@/utils/codegen-url';
+---
+
+<script is:inline define:vars={{
+  defaultInput: CODEGEN_DEFAULT_INPUT,
+  defaultOutput: CODEGEN_DEFAULT_OUTPUT,
+  inputAttr: CODEGEN_INPUT_ATTR,
+  inputKey: CODEGEN_INPUT_STORAGE_KEY,
+  outputAttr: CODEGEN_OUTPUT_ATTR,
+  outputKey: CODEGEN_OUTPUT_STORAGE_KEY,
+  pattern: CODEGEN_URL_PATTERN.source,
+}}>
+  (function () {
+    var match = window.location.pathname.match(new RegExp(pattern));
+    var input = match ? match[1] : null;
+    var output = match ? match[2] : null;
+
+    if (!input) {
+      try { input = localStorage.getItem(inputKey); } catch (_) {}
+    }
+    if (!output) {
+      try { output = localStorage.getItem(outputKey); } catch (_) {}
+    }
+
+    document.documentElement.dataset[inputAttr] = input || defaultInput;
+    document.documentElement.dataset[outputAttr] = output || defaultOutput;
+  })();
+</script>
+
+<script>
+  import { broadcastCodegenParams, resolveCodegenParams } from '@/utils/codegen-context';
+  import { parseCodegenUrl } from '@/utils/codegen-url';
+  import type { SyncEventDetail } from '@/utils/sync-storage';
+  import { SYNC_CUSTOM_EVENT, SYNC_STORAGE_PREFIX } from '@/utils/sync-storage';
+
+  broadcastCodegenParams(resolveCodegenParams());
+
+  window.addEventListener(SYNC_CUSTOM_EVENT, (e) => {
+    const { detail } = e as CustomEvent<SyncEventDetail>;
+    if (detail.key !== 'toggle:codegen-input' && detail.key !== 'toggle:codegen-output') return;
+
+    const params = resolveCodegenParams();
+    broadcastCodegenParams(params);
+
+    const urlParams = parseCodegenUrl(window.location.pathname);
+    const input = detail.key === 'toggle:codegen-input' ? detail.value : params.input;
+    const output = detail.key === 'toggle:codegen-output' ? detail.value : params.output;
+    const next = `/codegen/${input}/${output}`;
+    if (window.location.pathname !== next && urlParams) {
+      window.location.href = next;
+    }
+  });
+
+  window.addEventListener('storage', (e) => {
+    if (
+      e.key === `${SYNC_STORAGE_PREFIX}toggle:codegen-input` ||
+      e.key === `${SYNC_STORAGE_PREFIX}toggle:codegen-output`
+    ) {
+      broadcastCodegenParams(resolveCodegenParams());
+    }
+  });
+</script>
