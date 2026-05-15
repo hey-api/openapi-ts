@@ -341,7 +341,11 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
   }
 
   querySymbol(filter: SymbolMeta): Symbol<ResolvedNode> | undefined {
-    return this.gen.symbols.query(filter)[0] as Symbol<ResolvedNode> | undefined;
+    return this.querySymbols(filter)[0];
+  }
+
+  querySymbols(filter: SymbolMeta): Array<Symbol<ResolvedNode>> {
+    return this.gen.symbols.query(filter) as Array<Symbol<ResolvedNode>>;
   }
 
   referenceSymbol(meta: SymbolMeta): Symbol<ResolvedNode> {
@@ -373,7 +377,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     if (symbol.external) {
       if (!meta.category) meta.category = 'external';
       if (!meta.resource) meta.resource = `${symbol.external}.${name}`;
-      const existing = this.gen.symbols.query(meta).find((s) => s.name === name);
+      const existing = this.querySymbols(meta).find((s) => s.name === name);
       if (existing) return existing;
     }
     const symbolIn: SymbolIn = {
@@ -409,7 +413,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     // `.symbol()` will handle the external symbol deduplication
     if (symbol.external) return this.symbol(name, symbol);
     if (symbol.meta) {
-      const existing = this.gen.symbols.query(symbol.meta).find((s) => s.name === name);
+      const existing = this.querySymbols(symbol.meta).find((s) => s.name === name);
       if (existing) return existing;
     }
     return this.symbol(name, symbol);

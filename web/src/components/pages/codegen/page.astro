@@ -1,0 +1,31 @@
+---
+import type { CodegenOutput } from '@/utils/codegen-url';
+
+import AntiPitch from './AntiPitch.astro';
+import CodegenContext from './CodegenContext.astro';
+import EmailCTA from './EmailCTA.astro';
+import Features from './Features.astro';
+import FinalCTA from './FinalCTA.astro';
+import FounderStatement from './FounderStatement.astro';
+import Hero from './Hero.astro';
+import HowItWorks from './HowItWorks.astro';
+import SocialProof from './SocialProof.astro';
+import Sponsors from './Sponsors.astro';
+
+interface Props {
+  defaultOutput?: CodegenOutput;
+}
+
+const { defaultOutput } = Astro.props;
+---
+
+<CodegenContext />
+<Hero defaultOutput={defaultOutput} />
+<SocialProof />
+<HowItWorks />
+<Features />
+<AntiPitch />
+<FounderStatement />
+<EmailCTA />
+<Sponsors />
+<FinalCTA defaultOutput={defaultOutput} />

@@ -121,6 +121,48 @@ export type UserConfig = Plugin.Name<'@tanstack/solid-query'> &
           name?: NameTransformer;
         };
     /**
+     * Configuration for generated mutation keys.
+     *
+     * See {@link https://tanstack.com/query/v5/docs/framework/solid/reference/createMutation}
+     *
+     * Can be:
+     * - `boolean`: Shorthand for `{ enabled: boolean }`
+     * - `string` or `function`: Shorthand for `{ name: string | function }`
+     * - `object`: Full configuration object
+     *
+     * @default false
+     */
+    mutationKeys?:
+      | boolean
+      | NameTransformer
+      | {
+          /**
+           * Casing convention for generated names.
+           *
+           * @default 'camelCase'
+           */
+          case?: Casing;
+          /**
+           * Whether this feature is enabled.
+           *
+           * @default true
+           */
+          enabled?: boolean;
+          /**
+           * Naming pattern for generated names.
+           *
+           * @default '{{name}}MutationKey'
+           */
+          name?: NameTransformer;
+          /**
+           * Whether to include operation tags in mutation keys.
+           * This will make mutation keys larger but provides better cache invalidation capabilities.
+           *
+           * @default false
+           */
+          tags?: boolean;
+        };
+    /**
      * Configuration for generated mutation options helpers.
      *
      * See {@link https://tanstack.com/query/v5/docs/framework/solid/reference/createMutation}
@@ -347,6 +389,12 @@ export type Config = Plugin.Name<'@tanstack/solid-query'> &
       FeatureToggle & {
         /** Custom function to generate metadata for the operation. */
         meta: (operation: IR.OperationObject) => Record<string, unknown>;
+      };
+    /** Resolved configuration for generated mutation keys. */
+    mutationKeys: NamingOptions &
+      FeatureToggle & {
+        /** Whether to include operation tags in mutation keys. */
+        tags: boolean;
       };
     /** Resolved configuration for generated mutation options helpers. */
     mutationOptions: NamingOptions &

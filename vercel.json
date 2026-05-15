@@ -1,46 +1,87 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "pnpm --filter docs build",
+  "buildCommand": "cd web && pnpm build && cp -r .vercel/output ../.vercel/output",
   "cleanUrls": true,
-  "devCommand": "pnpm --filter docs dev",
-  "framework": "vitepress",
-  "installCommand": "pnpm install --filter docs",
-  "outputDirectory": "docs/.vitepress/dist",
+  "devCommand": "cd web && pnpm dev",
+  "installCommand": "cd web && pnpm install",
+  "headers": [
+    {
+      "source": "/",
+      "headers": [
+        {
+          "key": "Link",
+          "value": "</docs>; rel=\"service-doc\""
+        }
+      ]
+    }
+  ],
   "redirects": [
     {
-      "source": "/openapi-ts",
-      "destination": "/openapi-ts/get-started",
-      "permanent": true
+      "source": "/docs",
+      "destination": "/docs/openapi/typescript/get-started",
+      "permanent": false
+    },
+    {
+      "source": "/docs/openapi",
+      "destination": "/docs/openapi/typescript/get-started",
+      "permanent": false
+    },
+    {
+      "source": "/docs/openapi/typescript",
+      "destination": "/docs/openapi/typescript/get-started",
+      "permanent": false
     },
     {
       "source": "/openapi-ts/custom-plugin",
-      "destination": "/openapi-ts/plugins/custom",
+      "destination": "/docs/openapi/typescript/plugins/custom",
       "permanent": true
     },
     {
       "source": "/openapi-ts/plugins",
-      "destination": "/openapi-ts/core",
+      "destination": "/docs/openapi/typescript/core",
       "permanent": true
     },
     {
       "source": "/openapi-ts/output/json-schema",
-      "destination": "/openapi-ts/plugins/schemas",
+      "destination": "/docs/openapi/typescript/plugins/schemas",
       "permanent": true
     },
     {
       "source": "/openapi-ts/output/sdk",
-      "destination": "/openapi-ts/plugins/sdk",
-      "permanent": true
-    },
-    {
-      "source": "/openapi-ts/transformers",
-      "destination": "/openapi-ts/plugins/transformers",
+      "destination": "/docs/openapi/typescript/plugins/sdk",
       "permanent": true
     },
     {
       "source": "/openapi-ts/output/typescript",
-      "destination": "/openapi-ts/plugins/typescript",
+      "destination": "/docs/openapi/typescript/plugins/typescript",
       "permanent": true
+    },
+    {
+      "source": "/openapi-ts/transformers",
+      "destination": "/docs/openapi/typescript/plugins/transformers",
+      "permanent": true
+    },
+    {
+      "source": "/openapi-ts",
+      "destination": "/docs/openapi/typescript/get-started",
+      "permanent": true
+    },
+    {
+      "source": "/openapi-ts/:path*",
+      "destination": "/docs/openapi/typescript/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/",
+      "has": [{ "type": "header", "key": "accept", "value": "(.*)text/markdown(.*)" }],
+      "destination": "/index.md",
+      "permanent": false
+    },
+    {
+      "source": "/:slug((?!.*\\.md$).+)",
+      "has": [{ "type": "header", "key": "accept", "value": "(.*)text/markdown(.*)" }],
+      "destination": "/:slug.md",
+      "permanent": false
     }
   ],
   "trailingSlash": false

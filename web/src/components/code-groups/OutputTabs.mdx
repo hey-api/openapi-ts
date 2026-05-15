@@ -1,0 +1,23 @@
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs>
+  <TabItem label="path">
+```js {3}
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+};
+```
+  </TabItem>
+  <TabItem label="object">
+```js {3-6}
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: {
+    path: 'src/client',
+    // ...other options
+  },
+};
+```
+  </TabItem>
+</Tabs>

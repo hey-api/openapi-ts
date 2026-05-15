@@ -1,0 +1,552 @@
+---
+import { Icon } from '@astrojs/starlight/components';
+import FloatingPill from '@/components/FloatingPill.astro';
+import { navigation } from '@/data/navigation';
+---
+
+<nav class="nav-dropdown" role="navigation" aria-label="Main navigation">
+  <div class="dropdown-bg"></div>
+  {navigation.map((menu, menuIndex) => (
+    <div class="nav-item" data-menu-index={String(menuIndex)}>
+      <button class="nav-trigger" aria-expanded="false" aria-haspopup="true">
+        {menu.label}
+        <Icon name="down-caret" class="nav-caret" />
+      </button>
+      <div
+        class="dropdown-content"
+        style={`--columns: ${Math.min(menu.columns ?? 1, 5)}`}
+      >
+        {menu.items.map((item) => (
+          <a
+            href={item.link}
+            class="dropdown-item"
+            target={item.link?.startsWith('http') ? '_blank' : undefined}
+            rel={item.link?.startsWith('http') ? 'noopener noreferrer' : undefined}
+          >
+            {item.icon && <Icon class="item-icon" name={item.icon} />}
+            <span class="item-text">
+              <span class="item-label">
+                {item.label}
+                {item.badge && (
+                  <span class="item-badge">{item.badge}</span>
+                )}
+              </span>
+              {item.description && (
+                <span class="item-desc">{item.description}</span>
+              )}
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  ))}
+</nav>
+
+<FloatingPill items={[{ label: 'Menu', value: 'menu', icon: true }]} />
+
+<div class="sheet-backdrop" aria-hidden="true"></div>
+<div
+  class="sheet"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Navigation"
+>
+  <div class="sheet-handle-area">
+    <div class="sheet-handle"></div>
+  </div>
+  <div class="sheet-body">
+    {navigation.map((menu) => (
+      <div class="sheet-section">
+        <span class="sheet-section-label">{menu.label}</span>
+        <div class="sheet-items">
+          {menu.items.map((item) => (
+            <a
+              href={item.link}
+              class="sheet-item"
+              target={item.link?.startsWith('http') ? '_blank' : undefined}
+              rel={item.link?.startsWith('http') ? 'noopener noreferrer' : undefined}
+            >
+              {item.icon && <Icon class="sheet-item-icon" name={item.icon} />}
+              <span class="sheet-item-text">
+                <span class="sheet-item-label">
+                  {item.label}
+                  {item.badge && <span class="item-badge">{item.badge}</span>}
+                </span>
+                {item.description && (
+                  <span class="sheet-item-desc">{item.description}</span>
+                )}
+              </span>
+            </a>
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
+
+<script>
+  import { createSheet } from '@/utils/sheet';
+
+  interface MenuRefs {
+    item: HTMLElement;
+    trigger: HTMLButtonElement;
+    content: HTMLElement;
+  }
+
+  class NavDropdown {
+    private readonly container: HTMLElement;
+    private readonly bg: HTMLElement;
+    private readonly menus: Array<MenuRefs>;
+    private readonly pill: HTMLElement | null;
+
+    private activeIndex = -1;
+    private pinnedIndex = -1;
+
+    constructor(container: HTMLElement) {
+      this.container = container;
+      this.bg = container.querySelector<HTMLElement>('.dropdown-bg')!;
+      this.pill = document.querySelector<HTMLElement>('hey-api-pill');
+
+      this.menus = Array.from(
+        container.querySelectorAll<HTMLElement>('.nav-item'),
+      ).flatMap((item) => {
+        const trigger = item.querySelector<HTMLButtonElement>('.nav-trigger');
+        const content = item.querySelector<HTMLElement>('.dropdown-content');
+        return trigger && content ? [{ item, trigger, content }] : [];
+      });
+
+      this.bindDesktopEvents();
+      this.bindMobileEvents();
+    }
+
+    private bindDesktopEvents(): void {
+      this.menus.forEach((_refs, index) => {
+        const { item } = _refs;
+        item.addEventListener('mouseenter', () => this.open(index, 'hover'));
+        item.addEventListener('mouseleave', () => this.onLeave(index));
+        item.addEventListener('click', () => this.onTriggerClick(index));
+      });
+
+      document.addEventListener('click', (e) => {
+        if (this.pinnedIndex === -1) return;
+        const { item } = this.menus[this.pinnedIndex]!;
+        if (!item.contains(e.target as Node)) this.unpin();
+      });
+    }
+
+    private open(index: number, reason: 'hover' | 'click'): void {
+      const refs = this.menus[index];
+      if (!refs) return;
+
+      if (reason === 'hover' && this.pinnedIndex !== -1 && this.pinnedIndex !== index) {
+        this.closeAt(this.pinnedIndex);
+        this.pinnedIndex = -1;
+      }
+
+      const direction = this.activeIndex !== -1 && this.activeIndex !== index
+        ? (index > this.activeIndex ? 'right' : 'left')
+        : 'none';
+
+      this.activeIndex = index;
+
+      const slideX = direction === 'right' ? '-24px' : direction === 'left' ? '24px' : '0';
+      refs.content.style.setProperty('--slide-x', slideX);
+      void refs.content.offsetHeight;
+      refs.content.classList.add('visible');
+      refs.trigger.classList.add('active');
+      refs.trigger.setAttribute('aria-expanded', 'true');
+
+      this.positionBg(refs);
+    }
+
+    private positionBg(refs: MenuRefs): void {
+      const containerRect = this.container.getBoundingClientRect();
+      const itemRect = refs.item.getBoundingClientRect();
+      const contentRect = refs.content.getBoundingClientRect();
+
+      const left = itemRect.left - containerRect.left;
+      this.bg.style.setProperty('--bg-x', `${left}px`);
+      this.bg.style.width = `${contentRect.width}px`;
+      this.bg.style.height = `${contentRect.height}px`;
+
+      requestAnimationFrame(() => this.bg.classList.add('active'));
+    }
+
+    private onLeave(index: number): void {
+      if (this.pinnedIndex === index) return;
+      this.closeAt(index);
+    }
+
+    private onTriggerClick(index: number): void {
+      if (this.pinnedIndex === index) {
+        this.unpin();
+      } else {
+        if (this.pinnedIndex !== -1) this.closeAt(this.pinnedIndex);
+        this.pinnedIndex = index;
+        this.open(index, 'click');
+      }
+    }
+
+    private unpin(): void {
+      this.closeAt(this.pinnedIndex);
+      this.pinnedIndex = -1;
+    }
+
+    private closeAt(index: number): void {
+      const refs = this.menus[index];
+      if (!refs) return;
+      refs.trigger.classList.remove('active');
+      refs.trigger.setAttribute('aria-expanded', 'false');
+      refs.content.classList.remove('visible');
+      this.bg.classList.remove('active');
+    }
+
+    private bindMobileEvents(): void {
+      const sheetEl = document.querySelector<HTMLElement>('.sheet');
+      const backdropEl = document.querySelector<HTMLElement>('.sheet-backdrop');
+      if (!sheetEl || !backdropEl || !this.pill) return;
+
+      const sheet = createSheet(sheetEl, backdropEl, {
+        onClose: () => (this.pill as any)?.reset?.(),
+      });
+
+      this.pill.addEventListener('pill:click', () => sheet.open());
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const container = document.querySelector<HTMLElement>('.nav-dropdown');
+    if (container) new NavDropdown(container);
+  });
+</script>
+
+<style>
+  .nav-dropdown {
+    align-items: center;
+    display: flex;
+    gap: 20px;
+    height: 100%;
+    position: relative;
+  }
+
+  .nav-item {
+    align-items: center;
+    display: flex;
+    height: 100%;
+    position: relative;
+  }
+
+  .nav-item::after {
+    content: '';
+    height: 24px;
+    left: -8px;
+    position: absolute;
+    right: -8px;
+    top: 100%;
+    z-index: -1;
+  }
+
+  .dropdown-bg {
+    background: var(--sl-color-bg);
+    border-radius: 8px;
+    border: 1px solid var(--vp-c-divider);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    left: 0;
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    top: 100%;
+    transition:
+      opacity 150ms cubic-bezier(0.4, 0, 0.2, 1),
+      transform 150ms cubic-bezier(0.4, 0, 0.2, 1),
+      width 200ms ease,
+      height 200ms ease;
+    transform: translateX(var(--bg-x, 0)) scale(0.96);
+    z-index: 0;
+  }
+
+  .dropdown-bg.active {
+    opacity: 1;
+    transform: translateX(var(--bg-x, 0)) scale(1);
+  }
+
+  .nav-trigger {
+    align-items: center;
+    background: none;
+    border-radius: 4px;
+    border: none;
+    color: var(--sl-color-gray-3);
+    cursor: pointer;
+    display: flex;
+    font-size: 14px;
+    font-weight: 500;
+    gap: 4px;
+    margin: 0 -10px;
+    padding: 8px 12px;
+    position: relative;
+    transition: color 150ms ease, background 150ms ease;
+    z-index: 1;
+  }
+
+  .nav-caret {
+    color: currentColor;
+    flex-shrink: 0;
+    height: 12px;
+    transition: opacity 150ms ease, transform 150ms ease;
+    width: 12px;
+  }
+
+  .nav-trigger:hover .nav-caret,
+  .nav-trigger:focus-visible .nav-caret {
+    opacity: 0.7;
+  }
+
+  .nav-trigger.active .nav-caret {
+    opacity: 1;
+    transform: rotate(180deg);
+  }
+
+  .nav-trigger:hover,
+  .nav-trigger:focus-visible {
+    background: var(--dt-bg-2);
+    color: var(--sl-color-text);
+    outline: none;
+  }
+
+  .nav-trigger.active {
+    color: var(--sl-color-text);
+  }
+
+  .dropdown-content {
+    display: grid;
+    gap: 4px 16px;
+    grid-template-columns: repeat(var(--columns, 1), 1fr);
+    left: 0;
+    min-width: calc(280px * var(--columns, 1));
+    opacity: 0;
+    padding: 12px;
+    pointer-events: none;
+    position: absolute;
+    top: 100%;
+    transform: translateX(var(--slide-x, 0)) translateY(-4px);
+    transition: opacity 200ms ease 50ms, transform 200ms ease 50ms;
+    z-index: 1;
+  }
+
+  .dropdown-content.visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(0) translateY(0);
+  }
+
+  .dropdown-item {
+    align-items: flex-start;
+    border-radius: 6px;
+    display: flex;
+    gap: 12px;
+    padding: 10px 12px;
+    text-decoration: none;
+    transition: background 150ms ease;
+  }
+
+  .dropdown-item:hover {
+    background: var(--dt-bg-2);
+  }
+
+  .item-icon {
+    align-items: center;
+    color: var(--sl-color-gray-3);
+    display: flex;
+    flex-shrink: 0;
+    height: 20px;
+    justify-content: center;
+    position: relative;
+    top: 2px;
+    width: 20px;
+  }
+
+  .item-text {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+  }
+
+  .item-label {
+    align-items: center;
+    color: var(--sl-color-text);
+    display: flex;
+    font-size: 14px;
+    font-weight: 500;
+    gap: 6px;
+  }
+
+  .item-desc {
+    color: var(--sl-color-gray-3);
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  .dropdown-item:hover .item-desc {
+    color: var(--sl-color-gray-2);
+  }
+
+  .item-badge {
+    align-items: center;
+    background: color-mix(in srgb, var(--vp-c-brand-1) 15%, transparent);
+    border-radius: 999px;
+    color: var(--vp-c-brand-1);
+    display: inline-flex;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    line-height: 1;
+    padding: 2px 6px;
+    text-transform: uppercase;
+    vertical-align: middle;
+  }
+
+  .sheet-backdrop {
+    background: rgba(0, 0, 0, 0.4);
+    display: none;
+    inset: 0;
+    opacity: 0;
+    position: fixed;
+    transition: opacity 300ms ease;
+    z-index: 60;
+  }
+
+  .sheet-backdrop.open {
+    display: block;
+    opacity: 1;
+  }
+
+  .sheet {
+    background: var(--sl-color-bg);
+    border-radius: 16px 16px 0 0;
+    border-top: 1px solid var(--vp-c-divider);
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    height: 50vh;
+    left: 0;
+    position: fixed;
+    right: 0;
+    transform: translateY(100%);
+    transition: transform 350ms cubic-bezier(0.32, 0.72, 0, 1);
+    will-change: transform;
+    z-index: 70;
+  }
+
+  .sheet.open {
+    transform: translateY(0);
+  }
+
+  .sheet-handle-area {
+    align-items: center;
+    display: flex;
+    flex-shrink: 0;
+    justify-content: center;
+    padding: 12px 0 8px;
+    touch-action: none;
+  }
+
+  .sheet-handle {
+    background: var(--sl-color-gray-5);
+    border-radius: 999px;
+    height: 4px;
+    width: 36px;
+  }
+
+  .sheet-body {
+    -webkit-overflow-scrolling: touch;
+    background:
+      linear-gradient(var(--sl-color-bg) 30%, transparent) center top,
+      linear-gradient(transparent, var(--sl-color-bg) 70%) center bottom,
+      radial-gradient(farthest-side at 50% 0, rgba(0, 0, 0, 0.08), transparent) center top,
+      radial-gradient(farthest-side at 50% 100%, rgba(0, 0, 0, 0.08), transparent) center bottom;
+    background-attachment: local, local, scroll, scroll;
+    background-repeat: no-repeat;
+    background-size: 100% 40px, 100% 40px, 100% 12px, 100% 12px;
+    overflow-y: auto;
+    padding: 8px 16px 40px;
+  }
+
+  .sheet-section {
+    margin-bottom: 24px;
+  }
+
+  .sheet-section-label {
+    color: var(--sl-color-gray-3);
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    margin-bottom: 6px;
+    padding: 0 8px;
+    text-transform: uppercase;
+  }
+
+  .sheet-items {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .sheet-item {
+    align-items: center;
+    border-radius: 8px;
+    color: var(--sl-color-text);
+    display: flex;
+    gap: 12px;
+    padding: 10px 8px;
+    text-decoration: none;
+    transition: background 150ms ease;
+  }
+
+  .sheet-item:hover,
+  .sheet-item:active {
+    background: var(--dt-bg-2);
+  }
+
+  .sheet-item-icon {
+    color: var(--sl-color-gray-3);
+    flex-shrink: 0;
+    height: 18px;
+    width: 18px;
+  }
+
+  .sheet-item-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .sheet-item-label {
+    align-items: center;
+    display: flex;
+    font-size: 15px;
+    font-weight: 500;
+    gap: 6px;
+  }
+
+  .sheet-item-desc {
+    color: var(--sl-color-gray-3);
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  @media (max-width: 50rem) {
+    .nav-dropdown {
+      display: none;
+    }
+  }
+
+  @media (min-width: 50rem) {
+    .sheet,
+    .sheet-backdrop {
+      display: none !important;
+    }
+  }
+</style>

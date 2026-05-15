@@ -1,0 +1,25 @@
+---
+import { Icon } from '@astrojs/starlight/components';
+import { GITHUB_URL } from '@/data/constants';
+---
+
+<a href={GITHUB_URL} class="github-link" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+  <Icon name="github" size="22px" />
+</a>
+
+<style>
+  .github-link {
+    align-items: center;
+    color: var(--sl-color-gray-3);
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    padding: 4px;
+    text-decoration: none;
+    transition: color 150ms ease;
+  }
+
+  .github-link:hover {
+    color: var(--sl-color-text);
+  }
+</style>
