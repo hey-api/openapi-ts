@@ -45,10 +45,7 @@ export const createClient = (config: Config = {}): Client => {
     };
 
     if (opts.security) {
-      await setAuthParams({
-        ...opts,
-        security: opts.security,
-      });
+      await setAuthParams({ ...opts, security: opts.security });
     }
 
     if (opts.requestValidator) {
@@ -59,19 +56,15 @@ export const createClient = (config: Config = {}): Client => {
       opts.serializedBody = opts.bodySerializer(opts.body) as string | undefined;
     }
 
-    // remove Content-Type header if body is empty to avoid sending invalid requests
     if (opts.body === undefined || opts.serializedBody === '') {
       opts.headers.delete('Content-Type');
     }
 
-    const resolvedOpts = opts as typeof opts & ResolvedRequestOptions<ThrowOnError, Url>;
-
-    // NOTE: buildUrl is no longer called here to allow request interceptors
-    // to mutate opts (baseUrl, path, query) before the final URL is constructed.
-    return { opts: resolvedOpts };
+    return {
+      opts: opts as typeof opts & ResolvedRequestOptions<ThrowOnError, Url>,
+    };
   };
 
-  // @ts-expect-error
   const request: Client['request'] = async (options) => {
     const throwOnError = options.throwOnError ?? _config.throwOnError;
 
@@ -80,19 +73,13 @@ export const createClient = (config: Config = {}): Client => {
     try {
       const { opts } = await beforeRequest(options);
 
-      // Execute request interceptors before building the URL
+      // request interceptors
       for (const fn of interceptors.request.fns) {
-        if (fn) {
-          await fn(opts);
-        }
+        if (fn) await fn(opts);
       }
 
-      // FIX (#3803): Build the final URL after all request interceptors have finished.
-      // This ensures mutations to baseUrl, path, or query are respected.
       const url = buildUrl(opts);
 
-      // fetch must be assigned here, otherwise it would throw the error:
-      // TypeError: Failed to execute 'fetch' on 'Window': Illegal invocation
       const _fetch = opts.fetch!;
       const requestInit: ReqInit = {
         ...opts,
@@ -101,15 +88,12 @@ export const createClient = (config: Config = {}): Client => {
 
       response = await _fetch(url, requestInit);
 
+      // response interceptors
       for (const fn of interceptors.response.fns) {
-        if (fn) {
-          response = await fn(response, opts);
-        }
+        if (fn) response = await fn(response, opts);
       }
 
-      const result = {
-        response,
-      };
+      const result = { response };
 
       if (response.ok) {
         const parseAs =
@@ -118,7 +102,8 @@ export const createClient = (config: Config = {}): Client => {
             : opts.parseAs) ?? 'json';
 
         if (response.status === 204 || response.headers.get('Content-Length') === '0') {
-          let emptyData: any;
+          let emptyData: any = {};
+
           switch (parseAs) {
             case 'arrayBuffer':
             case 'blob':
@@ -131,18 +116,13 @@ export const createClient = (config: Config = {}): Client => {
             case 'stream':
               emptyData = response.body;
               break;
-            case 'json':
-            default:
-              emptyData = {};
-              break;
           }
-          return {
-            data: emptyData,
-            ...result,
-          };
+
+          return { data: emptyData, ...result };
         }
 
         let data: any;
+
         switch (parseAs) {
           case 'arrayBuffer':
           case 'blob':
@@ -150,34 +130,23 @@ export const createClient = (config: Config = {}): Client => {
           case 'text':
             data = await response[parseAs]();
             break;
+
           case 'json': {
-            // Some servers return 200 with no Content-Length and empty body.
-            // response.json() would throw; read as text and parse if non-empty.
             const text = await response.text();
             data = text ? JSON.parse(text) : {};
             break;
           }
+
           case 'stream':
-            return {
-              data: response.body,
-              ...result,
-            };
+            return { data: response.body, ...result };
         }
 
         if (parseAs === 'json') {
-          if (opts.responseValidator) {
-            await opts.responseValidator(data);
-          }
-
-          if (opts.responseTransformer) {
-            data = await opts.responseTransformer(data);
-          }
+          if (opts.responseValidator) await opts.responseValidator(data);
+          if (opts.responseTransformer) data = await opts.responseTransformer(data);
         }
 
-        return {
-          data,
-          ...result,
-        };
+        return { data, ...result };
       }
 
       const textError = await response.text();
@@ -186,7 +155,7 @@ export const createClient = (config: Config = {}): Client => {
       try {
         jsonError = JSON.parse(textError);
       } catch {
-        // noop
+        // ignore JSON parse error
       }
 
       throw jsonError ?? textError;
@@ -195,21 +164,13 @@ export const createClient = (config: Config = {}): Client => {
 
       for (const fn of interceptors.error.fns) {
         if (fn) {
-          // Thread the error through interceptors so each one receives the result of the previous.
           finalError = await fn(finalError, response, options as ResolvedRequestOptions);
         }
       }
 
-      finalError = finalError || {};
+      if (throwOnError) throw finalError;
 
-      if (throwOnError) {
-        throw finalError;
-      }
-
-      return {
-        error: finalError,
-        response,
-      };
+      return { error: finalError || {}, response };
     }
   };
 
@@ -219,26 +180,23 @@ export const createClient = (config: Config = {}): Client => {
   const makeSseFn = (method: Uppercase<HttpMethod>) => async (options: RequestOptions) => {
     const { opts } = await beforeRequest(options);
 
-    // Build initial URL for SSE client
-    const url = buildUrl(opts);
-
     return createSseClient({
       ...opts,
       body: opts.body as BodyInit | null | undefined,
       method,
+
       onRequest: async (_unusedUrl, init) => {
-        // We re-run request interceptors and rebuild the URL to stay consistent
-        // with the standard request flow.
+        const clonedOpts = { ...opts };
+
         for (const fn of interceptors.request.fns) {
-          if (fn) {
-            await fn(opts);
-          }
+          if (fn) await fn(clonedOpts);
         }
-        const finalizedUrl = buildUrl(opts);
+
+        const finalizedUrl = buildUrl(clonedOpts);
         return new Request(finalizedUrl, init);
       },
+
       serializedBody: getValidRequestBody(opts) as BodyInit | null | undefined,
-      url,
     });
   };
 
@@ -260,15 +218,15 @@ export const createClient = (config: Config = {}): Client => {
     setConfig,
     sse: {
       connect: makeSseFn('CONNECT'),
-      delete: makeSseFn('DELETE'),
-      get: makeSseFn('GET'),
-      head: makeSseFn('HEAD'),
-      options: makeSseFn('OPTIONS'),
-      patch: makeSseFn('PATCH'),
-      post: makeSseFn('POST'),
-      put: makeSseFn('PUT'),
-      trace: makeSseFn('TRACE'),
+      delete: makeMethodFn('DELETE'),
+      get: makeMethodFn('GET'),
+      head: makeMethodFn('HEAD'),
+      options: makeMethodFn('OPTIONS'),
+      patch: makeMethodFn('PATCH'),
+      post: makeMethodFn('POST'),
+      put: makeMethodFn('PUT'),
+      trace: makeMethodFn('TRACE'),
     },
     trace: makeMethodFn('TRACE'),
-  } as Client;
+  } as unknown as Client;
 };
