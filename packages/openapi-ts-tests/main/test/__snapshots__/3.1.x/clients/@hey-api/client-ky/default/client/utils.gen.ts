@@ -116,11 +116,11 @@ const checkForExistence = (
   return false;
 };
 
-export const setAuthParams = async (
+export async function setAuthParams(
   options: Pick<RequestOptions, 'auth' | 'query' | 'security'> & {
     headers: Headers;
   },
-) => {
+): Promise<void> {
   for (const auth of options.security ?? []) {
     if (checkForExistence(options, auth.name)) {
       continue;
@@ -150,7 +150,7 @@ export const setAuthParams = async (
         break;
     }
   }
-};
+}
 
 export const buildUrl: Client['buildUrl'] = (options) =>
   getUrl({
