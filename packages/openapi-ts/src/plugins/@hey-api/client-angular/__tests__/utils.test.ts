@@ -102,7 +102,7 @@ describe('setAuthParams', () => {
         },
       ],
     };
-    await setAuthParams(options);
+    await setAuthParams(options, options.security);
     expect(auth).toHaveBeenCalled();
     expect(options.headers.get('baz')).toBe('Bearer foo');
     expect(Object.keys(query).length).toBe(0);
@@ -112,11 +112,13 @@ describe('setAuthParams', () => {
     const auth = vi.fn().mockReturnValue('foo');
     const headers = new HttpHeaders();
     const query: Record<any, unknown> = {};
-    await setAuthParams({
-      auth,
-      headers,
-      query,
-      security: [
+    await setAuthParams(
+      {
+        auth,
+        headers,
+        query,
+      },
+      [
         {
           in: 'query',
           name: 'baz',
@@ -124,7 +126,7 @@ describe('setAuthParams', () => {
           type: 'http',
         },
       ],
-    });
+    );
     expect(auth).toHaveBeenCalled();
     expect(headers.get('baz')).toBeNull();
     expect(query.baz).toBe('Bearer foo');
@@ -144,7 +146,7 @@ describe('setAuthParams', () => {
         },
       ],
     };
-    await setAuthParams(options);
+    await setAuthParams(options, options.security);
     expect(auth).toHaveBeenCalled();
     expect(options.headers.get('Authorization')).toBe('foo');
     expect(query).toEqual({});
@@ -172,7 +174,7 @@ describe('setAuthParams', () => {
         },
       ],
     };
-    await setAuthParams(options);
+    await setAuthParams(options, options.security);
     expect(auth).toHaveBeenCalled();
     expect(options.headers.get('baz')).toBe('Bearer foo');
     expect(Object.keys(query).length).toBe(0);
@@ -187,11 +189,13 @@ describe('setAuthParams', () => {
     });
     const headers = new HttpHeaders();
     const query: Record<any, unknown> = {};
-    await setAuthParams({
-      auth,
-      headers,
-      query,
-      security: [
+    await setAuthParams(
+      {
+        auth,
+        headers,
+        query,
+      },
+      [
         {
           name: 'baz',
           type: 'apiKey',
@@ -203,7 +207,7 @@ describe('setAuthParams', () => {
           type: 'http',
         },
       ],
-    });
+    );
     expect(auth).toHaveBeenCalled();
     expect(headers.get('baz')).toBeNull();
     expect(query.baz).toBe('Bearer foo');
@@ -225,7 +229,7 @@ describe('setAuthParams', () => {
         },
       ],
     };
-    await setAuthParams(options);
+    await setAuthParams(options, options.security);
     expect(auth).toHaveBeenCalled();
     expect(options.headers.get('Cookie')).toBe('baz=foo');
     expect(query).toEqual({});

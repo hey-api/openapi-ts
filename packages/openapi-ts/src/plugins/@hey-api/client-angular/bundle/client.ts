@@ -1,4 +1,4 @@
-import type { HttpResponse } from '@angular/common/http';
+import type { HttpHeaders, HttpResponse } from '@angular/common/http';
 import { HttpClient, HttpErrorResponse, HttpEventType, HttpRequest } from '@angular/common/http';
 import {
   assertInInjectionContext,
@@ -85,6 +85,18 @@ export const createClient = (config: Config = {}): Client => {
       opts.headers.delete('Content-Type');
     }
 
+    return opts;
+  };
+
+  const finalizeRequest = <
+    TData = unknown,
+    ThrowOnError extends boolean = false,
+    TResponseStyle extends ResponseStyle = 'fields',
+  >(
+    opts: RequestOptions<TData, TResponseStyle, ThrowOnError> & {
+      headers: HttpHeaders;
+    },
+  ) => {
     const url = buildUrl(opts as Config & RequestOptions);
 
     const req = new HttpRequest<unknown>(opts.method ?? 'GET', url, getValidRequestBody(opts), {
@@ -92,7 +104,7 @@ export const createClient = (config: Config = {}): Client => {
       ...opts,
     });
 
-    return { opts, req, url };
+    return { req, url };
   };
 
   const beforeRequest = async <
@@ -103,18 +115,17 @@ export const createClient = (config: Config = {}): Client => {
   >(
     options: RequestOptions<TData, TResponseStyle, ThrowOnError, Url>,
   ) => {
-    const { opts, req, url } = requestOptions(options);
+    const opts = requestOptions(options);
 
     if (opts.security) {
-      await setAuthParams({
-        ...opts,
-        security: opts.security,
-      });
+      await setAuthParams(opts, opts.security);
     }
 
     if (opts.requestValidator) {
       await opts.requestValidator(opts);
     }
+
+    const { req, url } = finalizeRequest(opts);
 
     return { opts, req, url };
   };
@@ -237,7 +248,7 @@ export const createClient = (config: Config = {}): Client => {
         throw new Error('Request validation is not supported in requestOptions');
       }
 
-      return requestOptions(options).req;
+      return finalizeRequest(requestOptions(options)).req;
     },
     setConfig,
     sse: {
