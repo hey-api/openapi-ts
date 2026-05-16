@@ -3,13 +3,12 @@ import { Image } from 'astro:assets';
 import { Icon } from '@astrojs/starlight/components';
 import { lubos } from '@/data/people';
 
-const lede = 'The API tooling I always wanted.';
+const lede = 'The standard for API tooling.';
 
 const body = [
-  "I built API clients for years using every tool out there. They all felt like an afterthought – I was always sacrificing quality, workflow, cost, or speed.",
-  "Eventually, I decided to reject those trade-offs. But I didn't want to build yet another code generator. I wanted to create the last code generator. After years of work, I'm excited to finally share it with you.",
-  "Hey API is purpose-built from scratch to handle all kinds of APIs, yours included. It's fast, open source, and deeply customizable. The output is production-grade. Most importantly, it just works.",
-  "I can't wait to see what you build with it.",
+  "Every API tool forces a trade-off: quality, workflow, cost, or speed. Often more than one. I wanted to know what happens when you refuse to compromise.",
+  "Hey API was built with one goal in mind: to be the last code generator you will ever need. Purpose-built from scratch, held to the standard the best engineering teams apply to their own codebase.",
+  "The result of that work is yours, one install away.",
 ];
 ---
 
@@ -61,8 +60,9 @@ const body = [
 
 <style>
   .founder-statement {
+    border-bottom: 1px solid var(--vp-c-divider);
     margin-top: 0;
-    padding: 96px 0;
+    padding: 80px 0;
   }
 
   .fs-inner {
@@ -199,12 +199,14 @@ const body = [
   }
 
   @media (max-width: 640px) {
-    .founder-statement {
-      padding: 64px 0;
-    }
-
     .fs-rule {
       margin-bottom: 36px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .founder-statement {
+      padding: 56px 0;
     }
   }
 </style>
