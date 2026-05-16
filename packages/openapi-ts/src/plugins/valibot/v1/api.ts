@@ -230,3 +230,17 @@ export function createResponseValidatorV1({
   };
   return runResponseResolver(resolverCtx);
 }
+
+export function createResponseTransformerV1(ctx: ValidatorArgs): ArrowFunc | undefined {
+  return createResponseValidatorV1(ctx);
+}
+
+export function createResponseHandlersV1(ctx: ValidatorArgs): {
+  transformer: ArrowFunc | undefined;
+  validator: ArrowFunc | undefined;
+} {
+  return {
+    transformer: createResponseTransformerV1(ctx),
+    validator: undefined,
+  };
+}

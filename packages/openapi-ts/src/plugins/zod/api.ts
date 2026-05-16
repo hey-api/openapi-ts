@@ -5,6 +5,7 @@ import type { $ } from '../../ts-dsl';
 import {
   createRequestSchemaMini,
   createRequestValidatorMini,
+  createResponseHandlersMini,
   createResponseTransformerMini,
   createResponseValidatorMini,
 } from './mini/api';
@@ -14,12 +15,14 @@ import type { ZodPlugin } from './types';
 import {
   createRequestSchemaV3,
   createRequestValidatorV3,
+  createResponseHandlersV3,
   createResponseTransformerV3,
   createResponseValidatorV3,
 } from './v3/api';
 import {
   createRequestSchemaV4,
   createRequestValidatorV4,
+  createResponseHandlersV4,
   createResponseTransformerV4,
   createResponseValidatorV4,
 } from './v4/api';
@@ -33,6 +36,10 @@ export type IApi = {
   createRequestValidator: (
     ctx: RequestSchemaContext<ZodPlugin['Instance']>,
   ) => ArrowFunc | undefined;
+  createResponseHandlers: (ctx: ValidatorArgs) => {
+    transformer: ArrowFunc | undefined;
+    validator: ArrowFunc | undefined;
+  };
   createResponseTransformer: (ctx: ValidatorArgs) => ArrowFunc | undefined;
   createResponseValidator: (ctx: ValidatorArgs) => ArrowFunc | undefined;
 };
@@ -40,7 +47,7 @@ export type IApi = {
 export class Api implements IApi {
   createRequestSchema(
     ctx: RequestSchemaContext<ZodPlugin['Instance']>,
-  ): Symbol | Chain | undefined {
+  ): ReturnType<IApi['createRequestSchema']> {
     const { plugin } = ctx;
     if (!plugin.config.requests.enabled) return;
     switch (plugin.config.compatibilityVersion) {
@@ -54,7 +61,9 @@ export class Api implements IApi {
     }
   }
 
-  createRequestValidator(ctx: RequestSchemaContext<ZodPlugin['Instance']>): ArrowFunc | undefined {
+  createRequestValidator(
+    ctx: RequestSchemaContext<ZodPlugin['Instance']>,
+  ): ReturnType<IApi['createRequestValidator']> {
     const { plugin } = ctx;
     if (!plugin.config.requests.enabled) return;
     switch (plugin.config.compatibilityVersion) {
@@ -68,7 +77,20 @@ export class Api implements IApi {
     }
   }
 
-  createResponseTransformer(ctx: ValidatorArgs): ArrowFunc | undefined {
+  createResponseHandlers(ctx: ValidatorArgs): ReturnType<IApi['createResponseHandlers']> {
+    const { plugin } = ctx;
+    switch (plugin.config.compatibilityVersion) {
+      case 3:
+        return createResponseHandlersV3(ctx);
+      case 'mini':
+        return createResponseHandlersMini(ctx);
+      case 4:
+      default:
+        return createResponseHandlersV4(ctx);
+    }
+  }
+
+  createResponseTransformer(ctx: ValidatorArgs): ReturnType<IApi['createResponseTransformer']> {
     const { plugin } = ctx;
     switch (plugin.config.compatibilityVersion) {
       case 3:
@@ -81,7 +103,7 @@ export class Api implements IApi {
     }
   }
 
-  createResponseValidator(ctx: ValidatorArgs): ArrowFunc | undefined {
+  createResponseValidator(ctx: ValidatorArgs): ReturnType<IApi['createResponseValidator']> {
     const { plugin } = ctx;
     switch (plugin.config.compatibilityVersion) {
       case 3:

@@ -228,9 +228,16 @@ export function createResponseValidatorV4({
   return runResponseResolver(resolverCtx);
 }
 
-export function createResponseTransformerV4({
-  operation,
-  plugin,
-}: ValidatorArgs): ArrowFunc | undefined {
-  return createResponseValidatorV4({ operation, plugin });
+export function createResponseTransformerV4(ctx: ValidatorArgs): ArrowFunc | undefined {
+  return createResponseValidatorV4(ctx);
+}
+
+export function createResponseHandlersV4(ctx: ValidatorArgs): {
+  transformer: ArrowFunc | undefined;
+  validator: ArrowFunc | undefined;
+} {
+  return {
+    transformer: createResponseTransformerV4(ctx),
+    validator: undefined,
+  };
 }

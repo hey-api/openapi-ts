@@ -92,24 +92,6 @@ export const getFoo = (options?) =>
   });
 ```
 
-::: warning Avoid duplicate `parseAsync` calls
-When `transformer: 'zod'` is enabled, `parseAsync` is already called on the response as part of transformation. If you also enable `validator: true` (or `validator: { response: true }`), `parseAsync` will be called a **second time** for response validation, which is redundant and adds unnecessary overhead.
-
-To avoid this, disable response validation when using Zod as a transformer:
-
-```js
-{
-  name: '@hey-api/sdk',
-  transformer: 'zod', // [!code ++]
-  validator: { // [!code ++]
-    request: true, // still validate outgoing requests // [!code ++]
-    response: false, // skip — transformer already runs parseAsync // [!code ++]
-  }, // [!code ++]
-}
-```
-
-:::
-
 ## Output
 
 The Zod plugin will generate the following artifacts, depending on the input specification.

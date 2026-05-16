@@ -229,9 +229,16 @@ export function createResponseValidatorMini({
   return runResponseResolver(resolverCtx);
 }
 
-export function createResponseTransformerMini({
-  operation,
-  plugin,
-}: ValidatorArgs): ArrowFunc | undefined {
-  return createResponseValidatorMini({ operation, plugin });
+export function createResponseTransformerMini(ctx: ValidatorArgs): ArrowFunc | undefined {
+  return createResponseValidatorMini(ctx);
+}
+
+export function createResponseHandlersMini(ctx: ValidatorArgs): {
+  transformer: ArrowFunc | undefined;
+  validator: ArrowFunc | undefined;
+} {
+  return {
+    transformer: createResponseTransformerMini(ctx),
+    validator: undefined,
+  };
 }

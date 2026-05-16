@@ -10,9 +10,9 @@ import type { HeyApiSdkPlugin } from '../types';
 import { isInstance } from '../v1/node';
 import { operationAuth } from './auth';
 import { nuxtTypeComposable, nuxtTypeDefault } from './constants';
+import { createResponseHandlers } from './handlers';
 import { getSignatureParameters } from './signature';
-import { createResponseTransformer } from './transformer';
-import { createRequestValidator, createResponseValidator } from './validator';
+import { createRequestValidator } from './validator';
 
 /** TODO: needs complete refactor */
 export const operationOptionsType = ({
@@ -334,15 +334,14 @@ export function operationStatements({
   }
 
   const requestValidator = createRequestValidator({ operation, plugin });
-  const responseTransformer = createResponseTransformer({ operation, plugin });
-  const responseValidator = createResponseValidator({ operation, plugin });
+  const responseHandlers = createResponseHandlers({ operation, plugin });
 
   if (requestValidator) {
     reqOptions.prop('requestValidator', requestValidator);
   }
 
-  if (responseTransformer) {
-    reqOptions.prop('responseTransformer', responseTransformer);
+  if (responseHandlers.transformer) {
+    reqOptions.prop('responseTransformer', responseHandlers.transformer);
   }
 
   let hasServerSentEvents = false;
@@ -369,8 +368,8 @@ export function operationStatements({
     }
   }
 
-  if (responseValidator) {
-    reqOptions.prop('responseValidator', responseValidator);
+  if (responseHandlers.validator) {
+    reqOptions.prop('responseValidator', responseHandlers.validator);
   }
 
   if (plugin.config.responseStyle === 'data') {
