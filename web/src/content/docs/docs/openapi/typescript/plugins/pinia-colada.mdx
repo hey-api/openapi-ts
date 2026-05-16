@@ -34,7 +34,7 @@ The Pinia Colada plugin for Hey API generates functions and query keys from your
 
 ## Installation
 
-In your [configuration](/openapi-ts/get-started), add `@pinia/colada` to your plugins and you'll be ready to generate Pinia Colada artifacts. 🎉
+In your [configuration](/docs/openapi/typescript/get-started), add `@pinia/colada` to your plugins and you'll be ready to generate Pinia Colada artifacts. 🎉
 
 ```js {6} title="openapi-ts.config.ts"
 export default {
@@ -48,9 +48,9 @@ export default {
 ```
 
 :::tip
-When using this plugin in a Nuxt app, prefer the [ofetch client](/openapi-ts/clients/ofetch) for universal compatibility.
+When using this plugin in a Nuxt app, prefer the [ofetch client](/docs/openapi/typescript/clients/ofetch) for universal compatibility.
 
-The [nuxt client](/openapi-ts/clients/nuxt) is tailored for working directly with Nuxt composables (`$fetch` / `useFetch` / `useAsyncData`) and is not intended as a universal HTTP client for libraries like `@pinia/colada`.
+The [nuxt client](/docs/openapi/typescript/clients/nuxt) is tailored for working directly with Nuxt composables (`$fetch` / `useFetch` / `useAsyncData`) and is not intended as a universal HTTP client for libraries like `@pinia/colada`.
 :::
 
 ## Output
@@ -59,7 +59,7 @@ The Pinia Colada plugin will generate the following artifacts, depending on the 
 
 ## Queries
 
-Queries are generated from [query operations](/openapi-ts/configuration/parser#hooks-query-operations). The generated query functions follow the naming convention of SDK functions and by default append `Query`, e.g., `getPetByIdQuery()`.
+Queries are generated from [query operations](/docs/openapi/typescript/configuration/parser#hooks-query-operations). The generated query functions follow the naming convention of SDK functions and by default append `Query`, e.g., `getPetByIdQuery()`.
 
 <Tabs>
   <TabItem label="example">
@@ -227,7 +227,7 @@ You can customize the naming and casing pattern for `queryKeys` functions using 
 
 ## Mutations
 
-Mutations are generated from [mutation operations](/openapi-ts/configuration/parser#hooks-mutation-operations). The generated mutation functions follow the naming convention of SDK functions and by default append `Mutation`, e.g., `addPetMutation()`.
+Mutations are generated from [mutation operations](/docs/openapi/typescript/configuration/parser#hooks-mutation-operations). The generated mutation functions follow the naming convention of SDK functions and by default append `Mutation`, e.g., `addPetMutation()`.
 
 <Tabs>
   <TabItem label="example">

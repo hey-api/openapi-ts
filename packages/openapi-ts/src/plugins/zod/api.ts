@@ -5,6 +5,8 @@ import type { $ } from '../../ts-dsl';
 import {
   createRequestSchemaMini,
   createRequestValidatorMini,
+  createResponseHandlersMini,
+  createResponseTransformerMini,
   createResponseValidatorMini,
 } from './mini/api';
 import type { Chain } from './shared/chain';
@@ -13,13 +15,19 @@ import type { ZodPlugin } from './types';
 import {
   createRequestSchemaV3,
   createRequestValidatorV3,
+  createResponseHandlersV3,
+  createResponseTransformerV3,
   createResponseValidatorV3,
 } from './v3/api';
 import {
   createRequestSchemaV4,
   createRequestValidatorV4,
+  createResponseHandlersV4,
+  createResponseTransformerV4,
   createResponseValidatorV4,
 } from './v4/api';
+
+type ArrowFunc = Extract<ReturnType<typeof $.func>, { '~mode': 'arrow' }>;
 
 export type IApi = {
   createRequestSchema: (
@@ -27,14 +35,19 @@ export type IApi = {
   ) => Symbol | Chain | undefined;
   createRequestValidator: (
     ctx: RequestSchemaContext<ZodPlugin['Instance']>,
-  ) => ReturnType<typeof $.func> | undefined;
-  createResponseValidator: (ctx: ValidatorArgs) => ReturnType<typeof $.func> | undefined;
+  ) => ArrowFunc | undefined;
+  createResponseHandlers: (ctx: ValidatorArgs) => {
+    transformer: ArrowFunc | undefined;
+    validator: ArrowFunc | undefined;
+  };
+  createResponseTransformer: (ctx: ValidatorArgs) => ArrowFunc | undefined;
+  createResponseValidator: (ctx: ValidatorArgs) => ArrowFunc | undefined;
 };
 
 export class Api implements IApi {
   createRequestSchema(
     ctx: RequestSchemaContext<ZodPlugin['Instance']>,
-  ): Symbol | Chain | undefined {
+  ): ReturnType<IApi['createRequestSchema']> {
     const { plugin } = ctx;
     if (!plugin.config.requests.enabled) return;
     switch (plugin.config.compatibilityVersion) {
@@ -50,7 +63,7 @@ export class Api implements IApi {
 
   createRequestValidator(
     ctx: RequestSchemaContext<ZodPlugin['Instance']>,
-  ): ReturnType<typeof $.func> | undefined {
+  ): ReturnType<IApi['createRequestValidator']> {
     const { plugin } = ctx;
     if (!plugin.config.requests.enabled) return;
     switch (plugin.config.compatibilityVersion) {
@@ -64,7 +77,33 @@ export class Api implements IApi {
     }
   }
 
-  createResponseValidator(ctx: ValidatorArgs): ReturnType<typeof $.func> | undefined {
+  createResponseHandlers(ctx: ValidatorArgs): ReturnType<IApi['createResponseHandlers']> {
+    const { plugin } = ctx;
+    switch (plugin.config.compatibilityVersion) {
+      case 3:
+        return createResponseHandlersV3(ctx);
+      case 'mini':
+        return createResponseHandlersMini(ctx);
+      case 4:
+      default:
+        return createResponseHandlersV4(ctx);
+    }
+  }
+
+  createResponseTransformer(ctx: ValidatorArgs): ReturnType<IApi['createResponseTransformer']> {
+    const { plugin } = ctx;
+    switch (plugin.config.compatibilityVersion) {
+      case 3:
+        return createResponseTransformerV3(ctx);
+      case 'mini':
+        return createResponseTransformerMini(ctx);
+      case 4:
+      default:
+        return createResponseTransformerV4(ctx);
+    }
+  }
+
+  createResponseValidator(ctx: ValidatorArgs): ReturnType<IApi['createResponseValidator']> {
     const { plugin } = ctx;
     switch (plugin.config.compatibilityVersion) {
       case 3:

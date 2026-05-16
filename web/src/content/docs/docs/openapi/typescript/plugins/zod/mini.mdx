@@ -25,9 +25,9 @@ The Zod plugin for Hey API generates schemas from your OpenAPI spec, fully compa
 
 ## Installation
 
-In your [configuration](/openapi-ts/get-started), add `zod` to your plugins and you'll be ready to generate Zod artifacts. 🎉
+In your [configuration](/docs/openapi/typescript/get-started), add `zod` to your plugins and you'll be ready to generate Zod artifacts. 🎉
 
-```js {7-8} title="openapi-ts.config.ts"
+```js {6-9} title="openapi-ts.config.ts"
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
@@ -43,9 +43,11 @@ export default {
 
 ### SDKs
 
-To add data validators to your SDKs, set `sdk.validator` to `true`.
+Zod can validate or transform data directly in your SDK. Set `validator` or `transformer` to `true` on the SDK plugin to enable it.
 
-```js {11-12} title="openapi-ts.config.ts"
+<Tabs>
+  <TabItem label="validator">
+```js {10-13} title="openapi-ts.config.ts"
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
@@ -62,8 +64,29 @@ export default {
   ],
 };
 ```
+  </TabItem>
+  <TabItem label="transformer">
+```js {10-13} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: 'zod',
+      compatibilityVersion: 'mini',
+    },
+    {
+      name: '@hey-api/sdk',
+      transformer: true,
+    },
+  ],
+};
+```
+  </TabItem>
+</Tabs>
 
-Learn more about data validators in your SDKs on the [SDKs](/openapi-ts/plugins/sdk#validators) page.
+The SDK page covers [validators](/docs/openapi/typescript/plugins/sdk#validators) and [transformers](/docs/openapi/typescript/plugins/sdk#transformers) in more detail.
 
 ## Output
 
@@ -345,7 +368,7 @@ You can customize the naming and casing pattern for schema-specific `types` usin
 
 ## Resolvers
 
-You can further customize this plugin's behavior using [resolvers](/openapi-ts/plugins/concepts/resolvers).
+You can further customize this plugin's behavior using [resolvers](/docs/openapi/typescript/plugins/concepts/resolvers).
 
 ## API
 
