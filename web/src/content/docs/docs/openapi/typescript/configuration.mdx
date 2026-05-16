@@ -51,9 +51,9 @@ Alternatively, you can use `openapi-ts.config.js` and configure the export state
 
 You must provide an input so we can load your OpenAPI specification.
 
-The input can be a string path, URL, [API registry](/openapi-ts/configuration/input#api-registry) shorthand, an object containing any of these, or an object representing an OpenAPI specification. Hey API supports all valid OpenAPI versions and file formats.
+The input can be a string path, URL, [API registry](/docs/openapi/typescript/configuration/input#api-registry) shorthand, an object containing any of these, or an object representing an OpenAPI specification. Hey API supports all valid OpenAPI versions and file formats.
 
-You can learn more on the [Input](/openapi-ts/configuration/input) page.
+You can learn more on the [Input](/docs/openapi/typescript/configuration/input) page.
 
 <InputTabs />
 
@@ -65,7 +65,7 @@ If you use an HTTPS URL with a self-signed certificate in development, you will 
 
 You must set the output so we know where to generate your files. It can be a path to the destination folder or an object containing the destination folder path and optional settings.
 
-You can learn more on the [Output](/openapi-ts/configuration/output) page.
+You can learn more on the [Output](/docs/openapi/typescript/configuration/output) page.
 
 <OutputTabs />
 
@@ -77,13 +77,13 @@ You should treat the output folder as a dependency. Do not directly modify its c
 
 We parse your input before making it available to plugins. Configuring the parser is optional, but it provides an ideal opportunity to modify or validate your input as needed.
 
-You can learn more on the [Parser](/openapi-ts/configuration/parser) page.
+You can learn more on the [Parser](/docs/openapi/typescript/configuration/parser) page.
 
 ## Plugins
 
 Plugins are responsible for generating artifacts from your input. By default, Hey API will generate TypeScript interfaces and SDK from your OpenAPI specification. You can add, remove, or customize any of the plugins. In fact, we highly encourage you to do so!
 
-You can learn more on the [Output](/openapi-ts/output) page.
+You can learn more on the [Output](/docs/openapi/typescript/output) page.
 
 ## Advanced
 

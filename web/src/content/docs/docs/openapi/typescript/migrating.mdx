@@ -134,13 +134,13 @@ If your environment cannot use ESM, pin to a previous version.
 
 ### Resolvers API
 
-The [Resolvers API](/openapi-ts/plugins/concepts/resolvers) has been simplified and expanded to provide a more consistent behavior across plugins. You can view a few common examples on the [Resolvers](/openapi-ts/plugins/concepts/resolvers) page.
+The [Resolvers API](/docs/openapi/typescript/plugins/concepts/resolvers) has been simplified and expanded to provide a more consistent behavior across plugins. You can view a few common examples on the [Resolvers](/docs/openapi/typescript/plugins/concepts/resolvers) page.
 
 ### Structure API
 
-The [SDK plugin](/openapi-ts/plugins/sdk) and [Angular plugin](/openapi-ts/plugins/angular) now implement the Structure API, enabling more complex structures and fixing several known issues.
+The [SDK plugin](/docs/openapi/typescript/plugins/sdk) and [Angular plugin](/docs/openapi/typescript/plugins/angular) now implement the Structure API, enabling more complex structures and fixing several known issues.
 
-Some Structure APIs are incompatible with the previous configuration, most notably the `methodNameBuilder` function, which accepted the operation object as an argument. You can read the [SDK Output](/openapi-ts/plugins/sdk#output) section to familiarize yourself with the Structure API.
+Some Structure APIs are incompatible with the previous configuration, most notably the `methodNameBuilder` function, which accepted the operation object as an argument. You can read the [SDK Output](/docs/openapi/typescript/plugins/sdk#output) section to familiarize yourself with the Structure API.
 
 Please [open an issue](https://github.com/hey-api/openapi-ts/issues) if you're unable to migrate your configuration to the new syntax.
 
@@ -255,7 +255,7 @@ useQuery(() => ({
 
 This release improves the Symbol API, which adds the capability to place symbols in arbitrary files. We preserved the previous output structure for all plugins except Angular.
 
-You can preserve the previous Angular output by writing your own [placement function](/openapi-ts/configuration/parser#hooks-symbols).
+You can preserve the previous Angular output by writing your own [placement function](/docs/openapi/typescript/configuration/parser#hooks-symbols).
 
 ### TypeScript renderer
 
@@ -271,7 +271,7 @@ Due to the Symbol API release, this option has been removed from the Plugin API.
 
 This release adds the Symbol API, which significantly reduces the risk of naming collisions. While the generated output should only include formatting changes, this feature introduces breaking changes to the Plugin API that affect custom plugins.
 
-We will update the [custom plugin guide](/openapi-ts/plugins/custom) once the Plugin API becomes more stable.
+We will update the [custom plugin guide](/docs/openapi/typescript/plugins/custom) once the Plugin API becomes more stable.
 
 ### Removed `groupByTag` Pinia Colada option
 
@@ -281,7 +281,7 @@ This option has been removed to provide a more consistent API across plugins. We
 
 ### Hooks API
 
-This release adds the [Hooks API](/openapi-ts/configuration/parser#hooks), giving you granular control over which operations generate queries and mutations. As a result, we tightened the previous behavior and POST operations no longer generate queries by default. To preserve the old behavior, add a custom matcher.
+This release adds the [Hooks API](/docs/openapi/typescript/configuration/parser#hooks), giving you granular control over which operations generate queries and mutations. As a result, we tightened the previous behavior and POST operations no longer generate queries by default. To preserve the old behavior, add a custom matcher.
 
 ```js {7} title="openapi-ts.config.ts"
 export default {
@@ -373,7 +373,7 @@ Previously, `@hey-api/typescript` would generate correct types, but the validato
 
 Since neither option was ideal, this release adds a dedicated place for `parser` options. Parser is responsible for preparing the input so plugins can generate more accurate output with less effort.
 
-You can learn more about configuring parser on the [Parser](/openapi-ts/configuration/parser) page.
+You can learn more about configuring parser on the [Parser](/docs/openapi/typescript/configuration/parser) page.
 
 ### Moved `input` options
 
@@ -430,7 +430,7 @@ export default {
 
 ### Updated Plugin API
 
-Please refer to the [custom plugin](/openapi-ts/plugins/custom) tutorial for the latest guide.
+Please refer to the [custom plugin](/docs/openapi/typescript/plugins/custom) tutorial for the latest guide.
 
 ## v0.76.0
 
@@ -1638,7 +1638,7 @@ This command is now called `openapi-ts`.
 
 ### Removed `indent`
 
-This config option has been removed. Use a [code formatter](/openapi-ts/configuration/output#post-process) to modify the generated files code style according to your preferences.
+This config option has been removed. Use a [code formatter](/docs/openapi/typescript/configuration/output#post-process) to modify the generated files code style according to your preferences.
 
 ## v0.27.24
 

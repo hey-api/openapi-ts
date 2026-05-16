@@ -27,7 +27,7 @@ The Valibot plugin for Hey API generates schemas from your OpenAPI spec, fully c
 
 ## Installation
 
-In your [configuration](/openapi-ts/get-started), add `valibot` to your plugins and you'll be ready to generate Valibot artifacts. 🎉
+In your [configuration](/docs/openapi/typescript/get-started), add `valibot` to your plugins and you'll be ready to generate Valibot artifacts. 🎉
 
 ```js {6} title="openapi-ts.config.ts"
 export default {
@@ -42,9 +42,11 @@ export default {
 
 ### SDKs
 
-To add data validators to your SDKs, set `sdk.validator` to `true`.
+To add data validators or transformers to your SDKs, set `validator` or `transformer` to `true`.
 
-```js {8-9} title="openapi-ts.config.ts"
+<Tabs>
+  <TabItem label="validator">
+```js {7-10} title="openapi-ts.config.ts"
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
@@ -58,8 +60,26 @@ export default {
   ],
 };
 ```
+  </TabItem>
+  <TabItem label="transformer">
+```js {7-10} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    'valibot',
+    {
+      name: '@hey-api/sdk',
+      transformer: true,
+    },
+  ],
+};
+```
+  </TabItem>
+</Tabs>
 
-Learn more about data validators in your SDKs on the [SDKs](/openapi-ts/plugins/sdk#validators) page.
+The SDK page contains more information about data [validators](/docs/openapi/typescript/plugins/sdk#validators) and [transformers](/docs/openapi/typescript/plugins/sdk#transformers).
 
 ## Output
 
@@ -241,7 +261,7 @@ export default {
 
 ## Resolvers
 
-You can further customize this plugin's behavior using [resolvers](/openapi-ts/plugins/concepts/resolvers).
+You can further customize this plugin's behavior using [resolvers](/docs/openapi/typescript/plugins/concepts/resolvers).
 
 ## API
 

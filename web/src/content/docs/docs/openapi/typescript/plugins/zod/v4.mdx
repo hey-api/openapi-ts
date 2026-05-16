@@ -27,7 +27,7 @@ The Zod plugin for Hey API generates schemas from your OpenAPI spec, fully compa
 
 ## Installation
 
-In your [configuration](/openapi-ts/get-started), add `zod` to your plugins and you'll be ready to generate Zod artifacts. 🎉
+In your [configuration](/docs/openapi/typescript/get-started), add `zod` to your plugins and you'll be ready to generate Zod artifacts. 🎉
 
 ```js {6} title="openapi-ts.config.ts"
 export default {
@@ -42,9 +42,11 @@ export default {
 
 ### SDKs
 
-To add data validators to your SDKs, set `sdk.validator` to `true`.
+To add data validators or transformers to your SDKs, set `validator` or `transformer` to `true`.
 
-```js {8-9} title="openapi-ts.config.ts"
+<Tabs>
+  <TabItem label="validator">
+```js {7-10} title="openapi-ts.config.ts"
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
@@ -58,14 +60,9 @@ export default {
   ],
 };
 ```
-
-Learn more about data validators in your SDKs on the [SDKs](/openapi-ts/plugins/sdk#validators) page.
-
-### Zod as a response transformer
-
-You can also use Zod as a **response transformer** by setting `sdk.transformer` to `'zod'`. This causes the SDK to call `parseAsync` on the response and use its return value, so Zod's coercion and transformation rules are applied before the data is returned to you.
-
-```js
+  </TabItem>
+  <TabItem label="transformer">
+```js {7-10} title="openapi-ts.config.ts"
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
@@ -73,24 +70,16 @@ export default {
     // ...other plugins
     'zod',
     {
-      name: '@hey-api/sdk', // [!code ++]
-      transformer: 'zod', // [!code ++]
+      name: '@hey-api/sdk',
+      transformer: true,
     },
   ],
 };
 ```
+  </TabItem>
+</Tabs>
 
-This generates an inline `responseTransformer` in each SDK function:
-
-```ts
-// sdk.gen.ts (generated)
-export const getFoo = (options?) =>
-  client.get({
-    responseTransformer: async (data) => await zGetFooResponse.parseAsync(data),
-    url: '/foo',
-    ...options,
-  });
-```
+The SDK page contains more information about data [validators](/docs/openapi/typescript/plugins/sdk#validators) and [transformers](/docs/openapi/typescript/plugins/sdk#transformers).
 
 ## Output
 
@@ -364,7 +353,7 @@ You can customize the naming and casing pattern for schema-specific `types` usin
 
 ## Resolvers
 
-You can further customize this plugin's behavior using [resolvers](/openapi-ts/plugins/concepts/resolvers).
+You can further customize this plugin's behavior using [resolvers](/docs/openapi/typescript/plugins/concepts/resolvers).
 
 ## API
 

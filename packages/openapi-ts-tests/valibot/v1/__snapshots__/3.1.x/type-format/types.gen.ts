@@ -10,7 +10,7 @@ export type UserId = TypeID<'user'>;
 
 export type Foo = {
     bar?: number;
-    foo: bigint;
+    foo: number;
     id: UserId;
 };
 

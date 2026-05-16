@@ -41,7 +41,7 @@ The TanStack Query plugin for Hey API generates functions and query keys from yo
 
 ## Installation
 
-In your [configuration](/openapi-ts/get-started), add TanStack Query to your plugins and you'll be ready to generate TanStack Query artifacts. 🎉
+In your [configuration](/docs/openapi/typescript/get-started), add TanStack Query to your plugins and you'll be ready to generate TanStack Query artifacts. 🎉
 
 <Tabs>
   <TabItem label="react">
@@ -124,7 +124,7 @@ The TanStack Query plugin will generate the following artifacts, depending on th
 
 ## Queries
 
-Queries are generated from [query operations](/openapi-ts/configuration/parser#hooks-query-operations). The generated query functions follow the naming convention of SDK functions and by default append `Options`, e.g., `getPetByIdOptions()`.
+Queries are generated from [query operations](/docs/openapi/typescript/configuration/parser#hooks-query-operations). The generated query functions follow the naming convention of SDK functions and by default append `Options`, e.g., `getPetByIdOptions()`.
 
 <Tabs>
   <TabItem label="example">
@@ -328,7 +328,7 @@ You can customize the naming and casing pattern for `queryKeys` functions using 
 
 ## Infinite Queries
 
-Infinite queries are generated from [query operations](/openapi-ts/configuration/parser#hooks-query-operations) if we detect a [pagination](/openapi-ts/configuration/parser#pagination) parameter. The generated infinite query functions follow the naming convention of SDK functions and by default append `InfiniteOptions`, e.g., `getFooInfiniteOptions()`.
+Infinite queries are generated from [query operations](/docs/openapi/typescript/configuration/parser#hooks-query-operations) if we detect a [pagination](/docs/openapi/typescript/configuration/parser#pagination) parameter. The generated infinite query functions follow the naming convention of SDK functions and by default append `InfiniteOptions`, e.g., `getFooInfiniteOptions()`.
 
 <Tabs>
   <TabItem label="example">
@@ -536,7 +536,7 @@ You can customize the naming and casing pattern for `infiniteQueryKeys` function
 
 ## Mutations
 
-Mutations are generated from [mutation operations](/openapi-ts/configuration/parser#hooks-mutation-operations). The generated mutation functions follow the naming convention of SDK functions and by default append `Mutation`, e.g., `addPetMutation()`.
+Mutations are generated from [mutation operations](/docs/openapi/typescript/configuration/parser#hooks-mutation-operations). The generated mutation functions follow the naming convention of SDK functions and by default append `Mutation`, e.g., `addPetMutation()`.
 
 <Tabs>
   <TabItem label="example">

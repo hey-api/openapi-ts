@@ -586,7 +586,7 @@ We always use the first hook that returns a value. If a hook returns no value, w
 
 <h3 id="hooks-operations">Operations</h3>
 
-Each operation has a list of classifiers that can include `query`, `mutation`, both, or none. Plugins may use these values to decide whether to generate specific output. For example, you usually don't want to generate [TanStack Query options](/openapi-ts/plugins/tanstack-query#queries) for PATCH operations.
+Each operation has a list of classifiers that can include `query`, `mutation`, both, or none. Plugins may use these values to decide whether to generate specific output. For example, you usually don't want to generate [TanStack Query options](/docs/openapi/typescript/plugins/tanstack-query#queries) for PATCH operations.
 
 <h4 id="hooks-query-operations">Query operations</h4>
 
@@ -598,7 +598,7 @@ By default, DELETE, PATCH, POST, and PUT operations are classified as `mutation`
 
 #### Example: POST search query
 
-Imagine your API has a POST `/search` endpoint that accepts a large payload. By default, it's classified as a `mutation`, but in practice it behaves like a `query`, and your [state management](/openapi-ts/state-management) plugin should generate query hooks.
+Imagine your API has a POST `/search` endpoint that accepts a large payload. By default, it's classified as a `mutation`, but in practice it behaves like a `query`, and your [state management](/docs/openapi/typescript/state-management) plugin should generate query hooks.
 
 You can achieve this by classifying the operation as `query` in a matcher.
 

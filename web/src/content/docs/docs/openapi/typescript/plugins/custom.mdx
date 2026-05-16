@@ -13,7 +13,7 @@ Plugin API is in development. The interface might change before it becomes stabl
 :::
 
 :::caution
-This page is out of date as of [v0.83.0](/openapi-ts/migrating#v0-83-0). If you have an existing custom plugin, we recommend waiting for a more stable Plugin API to avoid multiple plugin rewrites.
+This page is out of date as of [v0.83.0](/docs/openapi/typescript/migrating#v0-83-0). If you have an existing custom plugin, we recommend waiting for a more stable Plugin API to avoid multiple plugin rewrites.
 :::
 
 You may need to write your own plugin if the available plugins do not suit your needs or you're working on a proprietary use case. This can be easily achieved using the Plugin API. But don't take our word for it – all Hey API plugins are written this way!
@@ -136,7 +136,7 @@ You can also define an optional `handlerLegacy` function in `config.ts`. This me
 
 ## Usage
 
-Once we're satisfied with our plugin, we can register it in the [configuration](/openapi-ts/configuration) file.
+Once we're satisfied with our plugin, we can register it in the [configuration](/docs/openapi/typescript/configuration) file.
 
 ```js title="openapi-ts.config.ts"
 import { defineConfig } from 'path/to/my-plugin';

@@ -36,7 +36,7 @@ The oRPC plugin for Hey API generates contracts from your OpenAPI spec, fully co
 
 ## Installation
 
-In your [configuration](/openapi-ts/get-started), add `orpc` to your plugins and you'll be ready to generate oRPC artifacts. 🎉
+In your [configuration](/docs/openapi/typescript/get-started), add `orpc` to your plugins and you'll be ready to generate oRPC artifacts. 🎉
 
 ```js {6} title="openapi-ts.config.ts"
 export default {
@@ -89,7 +89,7 @@ export default {
 
 ### Validators
 
-To enable schema validation, set `validator` to `zod` or one of the available [validator plugins](/openapi-ts/validators). This will implicitly add the selected plugin with default values.
+To enable schema validation, set `validator` to `zod` or one of the available [validator plugins](/docs/openapi/typescript/validators). This will implicitly add the selected plugin with default values.
 
 For a more granular approach, manually add a validator plugin and set `validator` to the plugin name or `true` to automatically select a compatible plugin. Until you customize the validator plugin, both approaches will produce the same default output.
 
@@ -174,7 +174,7 @@ export default {
   </TabItem>
 </Tabs>
 
-Learn more about available validators on the [Validators](/openapi-ts/validators) page.
+Learn more about available validators on the [Validators](/docs/openapi/typescript/validators) page.
 
 ## API
 

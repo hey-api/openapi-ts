@@ -26,7 +26,7 @@ It exposes typed functions or methods for each operation, with built-in auth han
 
 ## Installation
 
-In your [configuration](/openapi-ts/get-started), add `@hey-api/sdk` to your plugins and you'll be ready to generate SDK artifacts. 🎉
+In your [configuration](/docs/openapi/typescript/get-started), add `@hey-api/sdk` to your plugins and you'll be ready to generate SDK artifacts. 🎉
 
 ```js {6} title="openapi-ts.config.ts"
 export default {
@@ -241,7 +241,7 @@ The SDK plugin currently supports only the `bearer` and `basic` auth schemes. [O
 
 ## Validators
 
-Validating data at runtime comes with a performance cost, which is why it's not enabled by default. To enable validation, set `validator` to `zod` or one of the available [validator plugins](/openapi-ts/validators). This will implicitly add the selected plugin with default values.
+Validating data at runtime comes with a performance cost, which is why it's not enabled by default. To enable validation, set `validator` to `zod` or one of the available [validator plugins](/docs/openapi/typescript/validators). This will implicitly add the selected plugin with default values.
 
 For a more granular approach, manually add a validator plugin and set `validator` to the plugin name or `true` to automatically select a compatible plugin. Until you customize the validator plugin, both approaches will produce the same default output.
 
@@ -320,7 +320,11 @@ export default {
   </TabItem>
 </Tabs>
 
-Learn more about available validators on the [Validators](/openapi-ts/validators) page.
+Learn more about available validators on the [Validators](/docs/openapi/typescript/validators) page.
+
+## Transformers
+
+TODO
 
 ## Code Examples
 
@@ -557,7 +561,7 @@ export default {
 
 ### Display
 
-Enabling examples does not produce visible output on its own. Examples are written into the source specification and can be consumed by documentation tools such as [Scalar](https://kutt.to/skQUVd). To persist that specification, enable [Source](/openapi-ts/configuration/output#source) generation.
+Enabling examples does not produce visible output on its own. Examples are written into the source specification and can be consumed by documentation tools such as [Scalar](https://kutt.to/skQUVd). To persist that specification, enable [Source](/docs/openapi/typescript/configuration/output#source) generation.
 
 ## API
 
