@@ -89,7 +89,7 @@ export default {
 
 ### Validators
 
-To enable schema validation, set `validator` to `zod` or one of the available [validator plugins](/docs/openapi/typescript/validators). This will implicitly add the selected plugin with default values.
+To enable schema validation, set `validator` to `zod` or one of the available [validator plugins](/docs/openapi/typescript/validators). This will automatically add the selected plugin with its default configuration.
 
 For a more granular approach, manually add a validator plugin and set `validator` to the plugin name or `true` to automatically select a compatible plugin. Until you customize the validator plugin, both approaches will produce the same default output.
 

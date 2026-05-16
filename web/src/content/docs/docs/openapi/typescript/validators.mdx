@@ -1,6 +1,6 @@
 ---
 title: Validators
-description: Learn about validating data with @hey-api/openapi-ts.
+description: Learn about validating and transforming data with @hey-api/openapi-ts.
 sidebar:
   label: Overview
 ---
@@ -12,14 +12,16 @@ import Examples from '@/components/Examples.astro';
 
 There are times when you cannot blindly trust the server to return the correct data. You might be working on a critical application where any mistakes would be costly, or you're simply dealing with a legacy or undocumented system.
 
-Whatever your reason to use validators might be, you can rest assured that you're working with the correct data.
+Validator plugins generate schemas from your input. You can connect them to your client as [validators](/docs/openapi/typescript/plugins/sdk#validators) or [transformers](/docs/openapi/typescript/plugins/sdk#transformers) via the SDK plugin.
 
 ## Features
 
 - seamless integration with `@hey-api/openapi-ts` ecosystem
 - schemas for requests, responses, and reusable definitions
+- static type inference from schemas
+- tree-shakeable output
 
-## Options
+## Plugins
 
 Hey API natively supports the following validators.
 
@@ -31,6 +33,6 @@ Hey API natively supports the following validators.
 - [TypeBox](/docs/openapi/typescript/plugins/typebox) <Badge text="Vote" variant="tip" />
 - [Yup](/docs/openapi/typescript/plugins/yup) <Badge text="Vote" variant="tip" />
 
-Don't see your validator? Let us know your interest by [opening an issue](https://github.com/hey-api/openapi-ts/issues).
+Don't see your validator? Let us know by [opening an issue](https://github.com/hey-api/openapi-ts/issues).
 
 <Examples />

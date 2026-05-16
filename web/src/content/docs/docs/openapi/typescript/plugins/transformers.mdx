@@ -5,25 +5,17 @@ description: Learn about transforming data with @hey-api/openapi-ts.
 
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-:::tip
-title="Using Zod instead of `@hey-api/transformers`"
-
-This page covers the `@hey-api/transformers` plugin, which provides a built-in way to transform response data.
-
-If you're already using the Zod plugin for validation, you may also use Zod as your response transformer. This lets Zod's `parseAsync` handle response transformation directly.
-
-See the [Zod plugin docs](/docs/openapi/typescript/plugins/zod#zod-as-a-response-transformer) for details.
-:::
-
 # Transformers
+
+:::tip
+If you're already using a [validator](/docs/openapi/typescript/validators) plugin such as Zod or Valibot, you can use it as a transformer too. See your validator plugin's docs for details.
+
+Otherwise, `@hey-api/transformers` is the right choice.
+:::
 
 JSON is the most commonly used data format in REST APIs. However, it does not map well to complex data types. For example, both regular strings and date strings become simple strings in JSON.
 
 One approach to this problem is using a [JSON superset](https://github.com/blitz-js/superjson). For most people, switching formats is not feasible. That's why we provide the `@hey-api/transformers` plugin.
-
-:::caution
-Transformers currently handle only the most common use cases. If your data isn't being transformed as expected, we encourage you to leave feedback on [GitHub](https://github.com/hey-api/openapi-ts/issues).
-:::
 
 ## Considerations
 
@@ -56,9 +48,9 @@ export default {
 
 ## SDKs
 
-To automatically transform response data in your SDKs, set `sdk.transformer` to `true`.
+To transform response data in your SDKs, set `transformer` to `true` on the SDK plugin.
 
-```js {8-9} title="openapi-ts.config.ts"
+```js {7-10} title="openapi-ts.config.ts"
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',

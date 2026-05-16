@@ -241,7 +241,7 @@ The SDK plugin currently supports only the `bearer` and `basic` auth schemes. [O
 
 ## Validators
 
-Validating data at runtime comes with a performance cost, which is why it's not enabled by default. To enable validation, set `validator` to `zod` or one of the available [validator plugins](/docs/openapi/typescript/validators). This will implicitly add the selected plugin with default values.
+Validating data at runtime comes with a performance cost, which is why it's not enabled by default. To enable validation, set `validator` to `zod` or one of the available [validator plugins](/docs/openapi/typescript/validators). This will automatically add the selected plugin with its default configuration.
 
 For a more granular approach, manually add a validator plugin and set `validator` to the plugin name or `true` to automatically select a compatible plugin. Until you customize the validator plugin, both approaches will produce the same default output.
 
@@ -324,7 +324,43 @@ Learn more about available validators on the [Validators](/docs/openapi/typescri
 
 ## Transformers
 
-TODO
+Transformers work similarly to [validators](#validators), with two differences: transformation applies to responses only, and you use the `transformer` option instead of `validator`.
+
+<Tabs>
+  <TabItem label="example">
+```ts {5-6} title="sdk.gen.ts"
+import * as v from 'valibot';
+
+export const addPet = (options: Options<AddPetData>) =>
+  (options.client ?? client).post<AddPetResponses, AddPetErrors>({
+    responseTransformer: async (data) =>
+      await v.parseAsync(vAddPetResponse, data),
+    /** ... */
+  });
+```
+  </TabItem>
+  <TabItem label="config">
+```js {8,11} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: '@hey-api/sdk',
+      transformer: true, // or 'valibot'
+    },
+    {
+      name: 'valibot', // customize (optional)
+      // other options
+    },
+  ],
+};
+```
+  </TabItem>
+</Tabs>
+
+Learn more about available transformers on the [Validators](/docs/openapi/typescript/validators) page.
 
 ## Code Examples
 
