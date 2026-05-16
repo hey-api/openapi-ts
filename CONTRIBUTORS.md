@@ -84,6 +84,7 @@
 - [Phuc Tran](https://github.com/Glup3)
 - [Rico](https://github.com/btmnk)
 - [Roland Weiss](https://github.com/rolego)
+- [Roya](https://github.com/awdr74100)
 - [Ryo Yamada](https://github.com/Liooo)
 - [Salman Shaikh](https://github.com/slmnsh)
 - [Sebastiaan Wouters](https://github.com/SebastiaanWouters)
