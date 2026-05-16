@@ -43,7 +43,7 @@ const versionLabel = showLabel
   <div class="title-row">
     <h1 id="_top">
       {hasHtml ? <Fragment set:html={h1Content} /> : h1Content}
-      {entry.data.custom?.version && <span class="sr-only">{ `${entry.data.custom.version}`}</span>}
+      {entry.data.custom?.version && <span class="sr-only">{` ${entry.data.custom.version}`}</span>}
     </h1>
     {showToggle && <VersionToggle versions={route.versions} activeHref={currentPath} />}
     {versionLabel && <VersionLabel label={versionLabel} />}
