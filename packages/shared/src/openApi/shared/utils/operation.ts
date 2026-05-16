@@ -1,7 +1,36 @@
 import type { Context } from '../../../ir/context';
 import { createOperationKey } from '../../../ir/operation';
+import type { IROperationObject } from '../../../ir/types';
 import { toCase } from '../../../utils/naming/naming';
 import type { State } from '../types/state';
+
+/**
+ * Returns the best raw string to use as the base for deriving names
+ * (types, SDK method names, etc.) from an operation.
+ *
+ * Prefers the spec's `operationId` verbatim so acronyms and separators
+ * survive `case: 'preserve'`. Falls back to the normalized IR `id` when
+ * no `operationId` is present, or when `operation.id` was disambiguated
+ * (suffix appended) because the sanitized operationId collided — in that
+ * case the disambiguator is carried in `operation.id` and must be kept.
+ *
+ * The comparison is case- and separator-insensitive because `operation.id`
+ * is built via `toCase(sanitized, output.case)` and the target casing is
+ * not available here. Stripping non-alphanumerics and lowercasing both
+ * sides isolates the disambiguation signal (the numeric suffix).
+ */
+export const operationBaseName = (
+  operation: Pick<IROperationObject, 'id' | 'operationId'>,
+): string => {
+  if (!operation.operationId) {
+    return operation.id;
+  }
+
+  const canonical = (value: string) => value.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+  return canonical(operation.id) === canonical(operation.operationId)
+    ? operation.operationId
+    : operation.id;
+};
 
 export const httpMethods = [
   'delete',

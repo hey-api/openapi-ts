@@ -88,6 +88,7 @@ export type { OperationsStrategy } from './openApi/shared/locations';
 export type { OperationPathStrategy, OperationStructureStrategy } from './openApi/shared/locations';
 export { OperationPath, OperationStrategy } from './openApi/shared/locations';
 export { buildGraph } from './openApi/shared/utils/graph';
+export { operationBaseName } from './openApi/shared/utils/operation';
 export { patchOpenApiSpec } from './openApi/shared/utils/patch';
 export type {
   OpenApi,

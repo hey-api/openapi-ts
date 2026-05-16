@@ -134,6 +134,39 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'acronym-operationid-preserve.yaml',
+        output: 'acronym-operationid-preserve',
+        plugins: [
+          {
+            case: 'preserve',
+            name: '@hey-api/typescript',
+          },
+        ],
+      }),
+      description: 'preserves acronym casing from operationId when case is preserve',
+    },
+    {
+      config: createConfig({
+        input: 'acronym-operationid-preserve.yaml',
+        output: 'acronym-operationid-preserve-sdk',
+        plugins: [
+          '@hey-api/client-fetch',
+          {
+            case: 'preserve',
+            name: '@hey-api/typescript',
+          },
+          {
+            name: '@hey-api/sdk',
+            operations: {
+              methodName: { casing: 'preserve' },
+            },
+          },
+        ],
+      }),
+      description: 'preserves acronym casing from operationId in SDK method names',
+    },
+    {
+      config: createConfig({
         input: 'case.yaml',
         output: 'case-PascalCase',
         plugins: [
