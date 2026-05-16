@@ -1,5 +1,5 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://heyapi.dev/sitemap.xml
+Sitemap: https://heyapi.dev/sitemap-index.xml
 Content-Signal: ai-train=yes, search=yes, ai-input=yes
