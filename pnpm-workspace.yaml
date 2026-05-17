@@ -4,3 +4,9 @@ packages:
   - packages/**/*
   - web
   - '!examples/*/.output'
+engineStrict: true
+saveExact: true
+packageConfigs:
+  '@example/openapi-ts-nuxt':
+    engineStrict: true
+    saveExact: true
