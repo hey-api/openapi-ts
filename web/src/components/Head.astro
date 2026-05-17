@@ -8,10 +8,21 @@ const ogImage = entry.data.og?.image
   ? entry.data.og.image.src
   : defaultOgImage.src;
 
+const version = entry.data.custom?.versionSynonym ?? entry.data.custom?.version;
+
+let pageRank: string | undefined;
+if (version && version.startsWith('v')) {
+  pageRank = version.slice(1);
+}
+
 const extraHead: typeof head = [
   { tag: 'meta', attrs: { property: 'og:type', content: 'website' } },
   { tag: 'meta', attrs: { property: 'og:image', content: ogImage } },
 ];
+
+if (pageRank !== undefined && pageRank !== '0') {
+  extraHead.push({ tag: 'meta', attrs: { name: 'algolia-page-rank', content: pageRank } });
+}
 ---
 
 {[...head, ...extraHead].map(({ tag: Tag, attrs, content }) => {

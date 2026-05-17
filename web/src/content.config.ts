@@ -12,6 +12,7 @@ export const collections = {
           custom: z
             .object({
               version: z.string().optional(),
+              versionSynonym: z.string().optional(),
             })
             .optional(),
           og: z
