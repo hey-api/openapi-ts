@@ -4,3 +4,14 @@ packages:
   - packages/**/*
   - web
   - '!examples/*/.output'
+allowBuilds:
+  '@nestjs/core': true
+  '@parcel/watcher': true
+  '@swc/core': true
+  esbuild: true
+  lmdb: true
+  msgpackr-extract: true
+  msw: true
+  sharp: true
+  unrs-resolver: true
+  vue-demi: true
