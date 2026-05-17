@@ -17,7 +17,7 @@
   <span>&nbsp;•&nbsp;</span>
   <a href="https://github.com/hey-api/openapi-ts/issues">Issues</a>
   <span>&nbsp;•&nbsp;</span>
-  <a href="https://heyapi.dev/openapi-ts/community/contributing">Contribute</a>
+  <a href="https://heyapi.dev/docs/openapi/typescript/community/contributing">Contribute</a>
 </p>
 
 ## About
@@ -41,7 +41,7 @@ Part of the Hey API ecosystem.
 
 Want to see your code in products used by millions?
 
-Start with our [Contributing](https://heyapi.dev/openapi-ts/community/contributing) guide and release your first feature.
+Start with our [Contributing](https://heyapi.dev/docs/openapi/typescript/community/contributing) guide and release your first feature.
 
 <!-- template-contributing-end -->
 
