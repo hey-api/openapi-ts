@@ -87,13 +87,15 @@ function exportEnumClass({
   const hasNumbers = members.some((m) => typeof m.value === 'number');
 
   const enumSymbol = plugin.external('enum.Enum');
-  const classDef = $.class(symbol).extends(enumSymbol);
+  const classDef = $.class(symbol);
 
   if (hasStrings && !hasNumbers) {
     classDef.extends('str');
   } else if (!hasStrings && hasNumbers) {
     classDef.extends('int');
   }
+
+  classDef.extends(enumSymbol);
 
   for (const member of final.enumMembers ?? []) {
     classDef.do($.var(member.name).assign($.literal(member.value)));

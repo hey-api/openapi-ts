@@ -65,10 +65,10 @@ export function createVisitor(
 
       const { childResults, fieldConstraints, type } = arrayToType({
         applyModifiers,
+        path: ctx.path,
         plugin: ctx.plugin,
         schema,
         walk,
-        walkerCtx: ctx,
       });
 
       return {
@@ -165,10 +165,10 @@ export function createVisitor(
 
       const { childResults, fields, type } = objectToFields({
         applyModifiers,
+        path: ctx.path,
         plugin: ctx.plugin,
         schema,
         walk,
-        walkerCtx: ctx,
       });
 
       return {
@@ -212,10 +212,10 @@ export function createVisitor(
 
       const { childResults, fieldConstraints, type } = tupleToType({
         applyModifiers,
+        path: ctx.path,
         plugin: ctx.plugin,
         schema,
         walk,
-        walkerCtx: ctx,
       });
 
       return {

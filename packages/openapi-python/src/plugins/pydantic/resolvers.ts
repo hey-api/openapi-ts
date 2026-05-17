@@ -121,10 +121,8 @@ export type PydanticResolvers = Plugin.Resolvers<{
   void?: (ctx: VoidResolverContext) => PydanticType | undefined;
 }>;
 
-interface BaseContext extends DollarPyDsl {
-  /** The plugin instance. */
-  plugin: PydanticPlugin['Instance'];
-}
+export interface BaseContext
+  extends DollarPyDsl, SchemaVisitorContext<PydanticPlugin['Instance']> {}
 
 export interface ArrayResolverContext extends BaseContext {
   applyModifiers: (result: PydanticResult, opts?: { optional?: boolean }) => PydanticFinal;
@@ -139,7 +137,6 @@ export interface ArrayResolverContext extends BaseContext {
   };
   schema: SchemaWithType<'array'>;
   walk: Walker<PydanticResult, PydanticPlugin['Instance']>;
-  walkerCtx: SchemaVisitorContext<PydanticPlugin['Instance']>;
 }
 
 export interface BooleanResolverContext extends BaseContext {
@@ -224,7 +221,6 @@ export interface ObjectResolverContext extends BaseContext {
   };
   schema: SchemaWithType<'object'>;
   walk: Walker<PydanticResult, PydanticPlugin['Instance']>;
-  walkerCtx: SchemaVisitorContext<PydanticPlugin['Instance']>;
 }
 
 export interface StringResolverContext extends BaseContext {
@@ -250,7 +246,6 @@ export interface TupleResolverContext extends BaseContext {
   };
   schema: SchemaWithType<'tuple'>;
   walk: Walker<PydanticResult, PydanticPlugin['Instance']>;
-  walkerCtx: SchemaVisitorContext<PydanticPlugin['Instance']>;
 }
 
 export interface UndefinedResolverContext extends BaseContext {
