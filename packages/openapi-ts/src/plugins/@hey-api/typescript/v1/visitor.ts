@@ -1,4 +1,4 @@
-import { fromRef } from '@hey-api/codegen-core';
+import { fromRef, ref } from '@hey-api/codegen-core';
 import type { SchemaExtractor, SchemaVisitor } from '@hey-api/shared';
 import { pathToJsonPointer } from '@hey-api/shared';
 
@@ -74,6 +74,29 @@ export function createVisitor(
       };
     },
     intercept(schema, ctx, walk) {
+      if (schema.$ref?.startsWith('#typeParam/')) {
+        const paramName = schema.$ref.slice('#typeParam/'.length);
+        return {
+          meta: defaultMeta(schema),
+          type: $.type(paramName),
+        };
+      }
+
+      if (schema.$ref && schema.typeArgs?.length) {
+        const symbol = ctx.plugin.referenceSymbol({
+          category: 'type',
+          resource: 'definition',
+          resourceId: schema.$ref,
+        });
+        const argTypes = schema.typeArgs.map(
+          (arg) => walk(arg, { path: ref([]), plugin: ctx.plugin }).type,
+        );
+        return {
+          meta: defaultMeta(schema),
+          type: $.type(symbol).generics(...argTypes),
+        };
+      }
+
       if (schemaExtractor && !schema.$ref) {
         const extracted = schemaExtractor({
           meta: {

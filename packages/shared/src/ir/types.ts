@@ -210,6 +210,20 @@ export interface IRSchemaObject
     | 'undefined'
     | 'unknown'
     | 'void';
+  /**
+   * Type arguments for generic schema references. Set on `$ref` schemas that
+   * instantiate a generic template (e.g., `PaginatedTemplate<User>`).
+   */
+  typeArgs?: Array<IRSchemaObject>;
+  /**
+   * Type parameters for generic schema templates. Set on template schemas
+   * (e.g., `PaginatedTemplate`) to indicate generic parameters derived from
+   * `$dynamicAnchor` declarations.
+   */
+  typeParams?: ReadonlyArray<{
+    anchor: string;
+    paramName: string;
+  }>;
 }
 
 type IRSecurityObject = OpenAPIV3_1.SecuritySchemeObject;
