@@ -1,5 +1,11 @@
 # @hey-api/shared
 
+## 0.4.4
+
+### Patch Changes
+
+- **plugin**: add `querySymbols()` function ([#3884](https://github.com/hey-api/openapi-ts/pull/3884)) ([`abc8ceb`](https://github.com/hey-api/openapi-ts/commit/abc8ceb43f37e7c9739fe010d3fcdb3be0bb5290)) by [@mrlubos](https://github.com/mrlubos)
+
 ## 0.4.3
 
 ### Patch Changes
