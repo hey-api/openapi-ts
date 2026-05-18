@@ -119,10 +119,8 @@ export type HeyApiTypeScriptResolvers = Plugin.Resolvers<{
   void?: (ctx: VoidResolverContext) => Type | undefined;
 }>;
 
-interface BaseContext extends DollarTsDsl {
-  /** The plugin instance. */
-  plugin: HeyApiTypeScriptPlugin['Instance'];
-}
+interface BaseContext
+  extends DollarTsDsl, SchemaVisitorContext<HeyApiTypeScriptPlugin['Instance']> {}
 
 export interface ArrayResolverContext extends BaseContext {
   /**
@@ -136,7 +134,6 @@ export interface ArrayResolverContext extends BaseContext {
   };
   schema: SchemaWithType<'array'>;
   walk: Walker<TypeScriptResult, HeyApiTypeScriptPlugin['Instance']>;
-  walkerCtx: SchemaVisitorContext<HeyApiTypeScriptPlugin['Instance']>;
 }
 
 export interface BooleanResolverContext extends BaseContext {
@@ -265,7 +262,6 @@ export interface ObjectResolverContext extends BaseContext {
   };
   schema: SchemaWithType<'object'>;
   walk: Walker<TypeScriptResult, HeyApiTypeScriptPlugin['Instance']>;
-  walkerCtx: SchemaVisitorContext<HeyApiTypeScriptPlugin['Instance']>;
 }
 
 export interface StringResolverContext extends BaseContext {
@@ -305,7 +301,6 @@ export interface TupleResolverContext extends BaseContext {
   };
   schema: SchemaWithType<'tuple'>;
   walk: Walker<TypeScriptResult, HeyApiTypeScriptPlugin['Instance']>;
-  walkerCtx: SchemaVisitorContext<HeyApiTypeScriptPlugin['Instance']>;
 }
 
 export interface UnionResolverContext extends BaseContext {
