@@ -178,97 +178,90 @@ export interface BaseContext extends DollarTsDsl, SchemaVisitorContext<ValibotPl
   };
 }
 
-export interface ArrayResolverContext extends BaseContext {
+export interface ArrayResolverContext
+  extends
+    BaseContext,
+    Plugin.ResolverNodes<{
+      base: (ctx: ArrayResolverContext) => PipeResult;
+      length: (ctx: ArrayResolverContext) => PipeResult;
+      maxLength: (ctx: ArrayResolverContext) => PipeResult;
+      minLength: (ctx: ArrayResolverContext) => PipeResult;
+    }> {
   applyModifiers: (result: ValibotResult, opts?: { optional?: boolean }) => ValibotFinal;
-  /**
-   * Nodes used to build different parts of the result.
-   */
-  nodes: {
-    base: (ctx: ArrayResolverContext) => PipeResult;
-    length: (ctx: ArrayResolverContext) => PipeResult;
-    maxLength: (ctx: ArrayResolverContext) => PipeResult;
-    minLength: (ctx: ArrayResolverContext) => PipeResult;
-  };
   schema: SchemaWithType<'array'>;
   walk: Walker<ValibotResult, ValibotPlugin['Instance']>;
 }
 
-export interface BooleanResolverContext extends BaseContext {
-  /**
-   * Nodes used to build different parts of the result.
-   */
-  nodes: {
-    base: (ctx: BooleanResolverContext) => PipeResult;
-    const: (ctx: BooleanResolverContext) => PipeResult;
-  };
+export interface BooleanResolverContext
+  extends
+    BaseContext,
+    Plugin.ResolverNodes<{
+      base: (ctx: BooleanResolverContext) => PipeResult;
+      const: (ctx: BooleanResolverContext) => PipeResult;
+    }> {
   schema: SchemaWithType<'boolean'>;
 }
 
-export interface EnumResolverContext extends BaseContext {
-  /**
-   * Nodes used to build different parts of the result.
-   */
-  nodes: {
-    /**
-     * Returns the base enum expression (v.picklist([...])).
-     */
-    base: (ctx: EnumResolverContext) => PipeResult;
-    /**
-     * Returns parsed enum items with metadata about the enum members.
-     */
-    items: (ctx: EnumResolverContext) => {
+export interface EnumResolverContext
+  extends
+    BaseContext,
+    Plugin.ResolverNodes<{
       /**
-       * Literal nodes for each enum member.
+       * Returns the base enum expression (v.picklist([...])).
        */
-      enumMembers: Array<ReturnType<typeof $.literal>>;
-    };
-  };
+      base: (ctx: EnumResolverContext) => PipeResult;
+      /**
+       * Returns parsed enum items with metadata about the enum members.
+       */
+      items: (ctx: EnumResolverContext) => {
+        /**
+         * Literal nodes for each enum member.
+         */
+        enumMembers: Array<ReturnType<typeof $.literal>>;
+      };
+    }> {
   schema: SchemaWithType<'enum'>;
 }
 
-export interface IntersectionResolverContext extends BaseContext {
+export interface IntersectionResolverContext
+  extends
+    BaseContext,
+    Plugin.ResolverNodes<{
+      base: (ctx: IntersectionResolverContext) => PipeResult;
+    }> {
   applyModifiers: (result: ValibotResult, opts?: { optional?: boolean }) => ValibotFinal;
   childResults: Array<ValibotResult>;
-  /**
-   * Nodes used to build different parts of the result.
-   */
-  nodes: {
-    base: (ctx: IntersectionResolverContext) => PipeResult;
-  };
   parentSchema: IR.SchemaObject;
   schema: IR.SchemaObject;
 }
 
-export interface NeverResolverContext extends BaseContext {
-  /**
-   * Nodes used to build different parts of the result.
-   */
-  nodes: {
-    base: (ctx: NeverResolverContext) => PipeResult;
-  };
+export interface NeverResolverContext
+  extends
+    BaseContext,
+    Plugin.ResolverNodes<{
+      base: (ctx: NeverResolverContext) => PipeResult;
+    }> {
   schema: SchemaWithType<'never'>;
 }
 
-export interface NullResolverContext extends BaseContext {
-  /**
-   * Nodes used to build different parts of the result.
-   */
-  nodes: {
-    base: (ctx: NullResolverContext) => PipeResult;
-  };
+export interface NullResolverContext
+  extends
+    BaseContext,
+    Plugin.ResolverNodes<{
+      base: (ctx: NullResolverContext) => PipeResult;
+    }> {
   schema: SchemaWithType<'null'>;
 }
 
-export interface NumberResolverContext extends BaseContext {
-  /**
-   * Nodes used to build different parts of the result.
-   */
-  nodes: {
-    base: (ctx: NumberResolverContext) => PipeResult;
-    const: (ctx: NumberResolverContext) => PipeResult;
-    max: (ctx: NumberResolverContext) => PipeResult;
-    min: (ctx: NumberResolverContext) => PipeResult;
-  };
+export interface NumberResolverContext
+  extends
+    BaseContext,
+    Plugin.ResolverNodes<{
+      base: (ctx: NumberResolverContext) => PipeResult;
+      const: (ctx: NumberResolverContext) => PipeResult;
+      max: (ctx: NumberResolverContext) => PipeResult;
+      min: (ctx: NumberResolverContext) => PipeResult;
+    }> {
   schema: SchemaWithType<'integer' | 'number'>;
   /**
    * Utility functions for number schema processing.
@@ -280,119 +273,112 @@ export interface NumberResolverContext extends BaseContext {
   };
 }
 
-export interface ObjectResolverContext extends BaseContext {
+export interface ObjectResolverContext
+  extends
+    BaseContext,
+    Plugin.ResolverNodes<{
+      additionalProperties: (ctx: ObjectResolverContext) => Pipe | null | undefined;
+      base: (ctx: ObjectResolverContext) => Pipes | Pipe;
+      shape: (ctx: ObjectResolverContext) => ReturnType<typeof $.object>;
+    }> {
   _childResults: Array<ValibotResult>;
   applyModifiers: (result: ValibotResult, opts: { optional?: boolean }) => ValibotFinal;
-  /**
-   * Nodes used to build different parts of the result.
-   */
-  nodes: {
-    additionalProperties: (ctx: ObjectResolverContext) => Pipe | null | undefined;
-    base: (ctx: ObjectResolverContext) => Pipes | Pipe;
-    shape: (ctx: ObjectResolverContext) => ReturnType<typeof $.object>;
-  };
   schema: SchemaWithType<'object'>;
   walk: Walker<ValibotResult, ValibotPlugin['Instance']>;
 }
 
-export interface StringResolverContext extends BaseContext {
-  /**
-   * Nodes used to build different parts of the result.
-   */
-  nodes: {
-    base: (ctx: StringResolverContext) => PipeResult;
-    const: (ctx: StringResolverContext) => PipeResult;
-    format: (ctx: StringResolverContext) => PipeResult;
-    length: (ctx: StringResolverContext) => PipeResult;
-    maxLength: (ctx: StringResolverContext) => PipeResult;
-    minLength: (ctx: StringResolverContext) => PipeResult;
-    pattern: (ctx: StringResolverContext) => PipeResult;
-  };
+export interface StringResolverContext
+  extends
+    BaseContext,
+    Plugin.ResolverNodes<{
+      base: (ctx: StringResolverContext) => PipeResult;
+      const: (ctx: StringResolverContext) => PipeResult;
+      format: (ctx: StringResolverContext) => PipeResult;
+      length: (ctx: StringResolverContext) => PipeResult;
+      maxLength: (ctx: StringResolverContext) => PipeResult;
+      minLength: (ctx: StringResolverContext) => PipeResult;
+      pattern: (ctx: StringResolverContext) => PipeResult;
+    }> {
   schema: SchemaWithType<'string'>;
 }
 
-export interface TupleResolverContext extends BaseContext {
+export interface TupleResolverContext
+  extends
+    BaseContext,
+    Plugin.ResolverNodes<{
+      base: (ctx: TupleResolverContext) => PipeResult;
+      const: (ctx: TupleResolverContext) => PipeResult;
+    }> {
   applyModifiers: (result: ValibotResult, opts?: { optional?: boolean }) => ValibotFinal;
-  /**
-   * Nodes used to build different parts of the result.
-   */
-  nodes: {
-    base: (ctx: TupleResolverContext) => PipeResult;
-    const: (ctx: TupleResolverContext) => PipeResult;
-  };
   schema: SchemaWithType<'tuple'>;
   walk: Walker<ValibotResult, ValibotPlugin['Instance']>;
 }
 
-export interface UndefinedResolverContext extends BaseContext {
-  /**
-   * Nodes used to build different parts of the result.
-   */
-  nodes: {
-    base: (ctx: UndefinedResolverContext) => PipeResult;
-  };
+export interface UndefinedResolverContext
+  extends
+    BaseContext,
+    Plugin.ResolverNodes<{
+      base: (ctx: UndefinedResolverContext) => PipeResult;
+    }> {
   schema: SchemaWithType<'undefined'>;
 }
 
-export interface UnionResolverContext extends BaseContext {
+export interface UnionResolverContext
+  extends
+    BaseContext,
+    Plugin.ResolverNodes<{
+      base: (ctx: UnionResolverContext) => PipeResult;
+    }> {
   applyModifiers: (result: ValibotResult, opts?: { optional?: boolean }) => ValibotFinal;
   childResults: Array<ValibotResult>;
-  /**
-   * Nodes used to build different parts of the result.
-   */
-  nodes: {
-    base: (ctx: UnionResolverContext) => PipeResult;
-  };
   parentSchema: IR.SchemaObject;
   schema: IR.SchemaObject;
   schemas: ReadonlyArray<IR.SchemaObject>;
 }
 
-export interface UnknownResolverContext extends BaseContext {
-  /**
-   * Nodes used to build different parts of the result.
-   */
-  nodes: {
-    base: (ctx: UnknownResolverContext) => PipeResult;
-  };
+export interface UnknownResolverContext
+  extends
+    BaseContext,
+    Plugin.ResolverNodes<{
+      base: (ctx: UnknownResolverContext) => PipeResult;
+    }> {
   schema: SchemaWithType<'unknown'>;
 }
 
 export interface RequestValidatorResolverContext
-  extends BaseContext, RequestSchemaContext<ValibotPlugin['Instance']> {
-  /**
-   * Nodes used to build different parts of the result.
-   */
-  nodes: {
-    /**
-     * Returns the composite schema combining all layers.
-     *
-     * Returns `undefined` if all layers are omitted.
-     */
-    composite: (ctx: RequestValidatorResolverContext) => Pipe | undefined;
-    /**
-     * Returns an empty/fallback schema for a layer based on its `whenEmpty` config.
-     *
-     * @throws if `whenEmpty` is `'omit'` (no schema should be generated)
-     */
-    empty: (
-      ctx: RequestValidatorResolverContext & {
-        /** Resolved configuration for the request layer. */
-        layer: ResolvedRequestValidatorLayer;
-      },
-    ) => Pipe;
-    /**
-     * Returns an optional schema based on the layer's config.
-     */
-    optional: (
-      ctx: RequestValidatorResolverContext & {
-        /** Resolved configuration for the request layer. */
-        layer: ResolvedRequestValidatorLayer;
-        /** The schema to conditionally wrap. */
-        schema: Pipe;
-      },
-    ) => Pipe;
-  };
+  extends
+    BaseContext,
+    RequestSchemaContext<ValibotPlugin['Instance']>,
+    Plugin.ResolverNodes<{
+      /**
+       * Returns the composite schema combining all layers.
+       *
+       * Returns `undefined` if all layers are omitted.
+       */
+      composite: (ctx: RequestValidatorResolverContext) => Pipe | undefined;
+      /**
+       * Returns an empty/fallback schema for a layer based on its `whenEmpty` config.
+       *
+       * @throws if `whenEmpty` is `'omit'` (no schema should be generated)
+       */
+      empty: (
+        ctx: RequestValidatorResolverContext & {
+          /** Resolved configuration for the request layer. */
+          layer: ResolvedRequestValidatorLayer;
+        },
+      ) => Pipe;
+      /**
+       * Returns an optional schema based on the layer's config.
+       */
+      optional: (
+        ctx: RequestValidatorResolverContext & {
+          /** Resolved configuration for the request layer. */
+          layer: ResolvedRequestValidatorLayer;
+          /** The schema to conditionally wrap. */
+          schema: Pipe;
+        },
+      ) => Pipe;
+    }> {
   /**
    * Provides access to commonly used symbols within the plugin.
    */
@@ -426,12 +412,11 @@ export type ValidatorResolverContext =
   | RequestValidatorResolverContext
   | ResponseValidatorResolverContext;
 
-export interface VoidResolverContext extends BaseContext {
-  /**
-   * Nodes used to build different parts of the result.
-   */
-  nodes: {
-    base: (ctx: VoidResolverContext) => PipeResult;
-  };
+export interface VoidResolverContext
+  extends
+    BaseContext,
+    Plugin.ResolverNodes<{
+      base: (ctx: VoidResolverContext) => PipeResult;
+    }> {
   schema: SchemaWithType<'void'>;
 }
