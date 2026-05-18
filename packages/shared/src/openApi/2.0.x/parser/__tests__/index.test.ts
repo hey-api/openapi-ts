@@ -15,12 +15,16 @@ function createContext(spec: OpenAPIV2.Document) {
         entryFile: false,
         path: '',
       },
-      // @ts-expect-error
+      // @ts-expect-error - partial config for testing
       parser: {
         transforms: {
-          enums: { enabled: false, mode: 'root' },
+          enums: { case: 'PascalCase', enabled: false, mode: 'root', name: '{{name}}Enum' },
           propertiesRequiredByDefault: false,
-          readWrite: { enabled: false, requests: {}, responses: {} },
+          readWrite: {
+            enabled: false,
+            requests: { case: 'preserve', name: '{{name}}Writable' },
+            responses: { case: 'preserve', name: '{{name}}' },
+          },
         },
       },
       pluginOrder: [],
