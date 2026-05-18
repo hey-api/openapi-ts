@@ -50,7 +50,9 @@
     "tb": "turbo run build --filter",
     "ty": "turbo run typecheck --filter",
     "dev:ts": "cd dev && HEYAPI_CODEGEN_ENV=development tsx watch --clear-screen=false --include='./typescript/**/*.ts' --include='./inputs.ts' --include='./hey-api.ts' --include='*.config.ts' ../packages/openapi-ts/src/run.ts",
-    "dev:py": "cd dev && HEYAPI_CODEGEN_ENV=development tsx watch --clear-screen=false --include='./python/**/*.ts' --include='./inputs.ts' --include='./hey-api.ts' --include='*.config.ts' ../packages/openapi-python/src/run.ts"
+    "dev:py": "cd dev && HEYAPI_CODEGEN_ENV=development tsx watch --clear-screen=false --include='./python/**/*.ts' --include='./inputs.ts' --include='./hey-api.ts' --include='*.config.ts' ../packages/openapi-python/src/run.ts",
+    "play:ts": "turbo run dev --filter @test/playground",
+    "play:py": "python ./dev/playground.py"
   },
   "devDependencies": {
     "@arethetypeswrong/core": "0.18.2",
