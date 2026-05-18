@@ -1,11 +1,9 @@
 import { ref } from '@hey-api/codegen-core';
-import type { SchemaVisitorContext, SchemaWithType, Walker } from '@hey-api/shared';
 import { deduplicateSchema } from '@hey-api/shared';
 
 import { $ } from '../../../../../ts-dsl';
 import type { ArrayResolverContext } from '../../resolvers';
 import type { Type, TypeScriptResult } from '../../shared/types';
-import type { HeyApiTypeScriptPlugin } from '../../types';
 
 function baseNode(ctx: ArrayResolverContext): Type {
   const { plugin, schema, walk } = ctx;
@@ -39,25 +37,20 @@ function arrayResolver(ctx: ArrayResolverContext): Type {
 }
 
 export function arrayToAst({
+  path,
   plugin,
   schema,
   walk,
-  walkerCtx,
-}: {
-  plugin: HeyApiTypeScriptPlugin['Instance'];
-  schema: SchemaWithType<'array'>;
-  walk: Walker<TypeScriptResult, HeyApiTypeScriptPlugin['Instance']>;
-  walkerCtx: SchemaVisitorContext<HeyApiTypeScriptPlugin['Instance']>;
-}): Type {
+}: Pick<ArrayResolverContext, 'path' | 'plugin' | 'schema' | 'walk'>): Type {
   const ctx: ArrayResolverContext = {
     $,
     nodes: {
       base: baseNode,
     },
+    path,
     plugin,
     schema,
     walk,
-    walkerCtx,
   };
 
   const resolver = plugin.config['~resolvers']?.array;

@@ -41,10 +41,10 @@ export function createVisitor(
     },
     array(schema, ctx, walk) {
       const type = arrayToAst({
+        path: ctx.path,
         plugin: ctx.plugin,
         schema,
         walk,
-        walkerCtx: ctx,
       });
       return {
         meta: defaultMeta(schema),
@@ -52,14 +52,14 @@ export function createVisitor(
       };
     },
     boolean(schema, ctx) {
-      const type = booleanToAst({ plugin: ctx.plugin, schema });
+      const type = booleanToAst({ path: ctx.path, plugin: ctx.plugin, schema });
       return {
         meta: defaultMeta(schema),
         type,
       };
     },
     enum(schema, ctx) {
-      const { enumData, type } = enumToAst({ plugin: ctx.plugin, schema });
+      const { enumData, type } = enumToAst({ path: ctx.path, plugin: ctx.plugin, schema });
       return {
         enumData,
         meta: defaultMeta(schema),
@@ -67,7 +67,7 @@ export function createVisitor(
       };
     },
     integer(schema, ctx) {
-      const type = numberToAst({ plugin: ctx.plugin, schema });
+      const type = numberToAst({ path: ctx.path, plugin: ctx.plugin, schema });
       return {
         meta: defaultMeta(schema),
         type,
@@ -105,6 +105,7 @@ export function createVisitor(
       const type = intersectionToAst({
         childResults: items,
         parentSchema,
+        path: ctx.path,
         plugin: ctx.plugin,
         schemas,
       });
@@ -115,21 +116,21 @@ export function createVisitor(
       };
     },
     never(schema, ctx) {
-      const type = neverToAst({ plugin: ctx.plugin, schema });
+      const type = neverToAst({ path: ctx.path, plugin: ctx.plugin, schema });
       return {
         meta: defaultMeta(schema),
         type,
       };
     },
     null(schema, ctx) {
-      const type = nullToAst({ plugin: ctx.plugin, schema });
+      const type = nullToAst({ path: ctx.path, plugin: ctx.plugin, schema });
       return {
         meta: defaultMeta(schema),
         type,
       };
     },
     number(schema, ctx) {
-      const type = numberToAst({ plugin: ctx.plugin, schema });
+      const type = numberToAst({ path: ctx.path, plugin: ctx.plugin, schema });
       return {
         meta: defaultMeta(schema),
         type,
@@ -137,10 +138,10 @@ export function createVisitor(
     },
     object(schema, ctx, walk) {
       const type = objectToAst({
+        path: ctx.path,
         plugin: ctx.plugin,
         schema,
         walk,
-        walkerCtx: ctx,
       });
       return {
         meta: defaultMeta(schema),
@@ -174,7 +175,7 @@ export function createVisitor(
       };
     },
     string(schema, ctx) {
-      const type = stringToAst({ plugin: ctx.plugin, schema });
+      const type = stringToAst({ path: ctx.path, plugin: ctx.plugin, schema });
       return {
         meta: defaultMeta(schema),
         type,
@@ -182,10 +183,10 @@ export function createVisitor(
     },
     tuple(schema, ctx, walk) {
       const type = tupleToAst({
+        path: ctx.path,
         plugin: ctx.plugin,
         schema,
         walk,
-        walkerCtx: ctx,
       });
       return {
         meta: defaultMeta(schema),
@@ -193,7 +194,7 @@ export function createVisitor(
       };
     },
     undefined(schema, ctx) {
-      const type = undefinedToAst({ plugin: ctx.plugin, schema });
+      const type = undefinedToAst({ path: ctx.path, plugin: ctx.plugin, schema });
       return {
         meta: defaultMeta(schema),
         type,
@@ -203,6 +204,7 @@ export function createVisitor(
       const type = unionToAst({
         childResults: items,
         parentSchema,
+        path: ctx.path,
         plugin: ctx.plugin,
         schemas,
       });
@@ -213,14 +215,14 @@ export function createVisitor(
       };
     },
     unknown(schema, ctx) {
-      const type = unknownToAst({ plugin: ctx.plugin, schema });
+      const type = unknownToAst({ path: ctx.path, plugin: ctx.plugin, schema });
       return {
         meta: defaultMeta(schema),
         type,
       };
     },
     void(schema, ctx) {
-      const type = voidToAst({ plugin: ctx.plugin, schema });
+      const type = voidToAst({ path: ctx.path, plugin: ctx.plugin, schema });
       return {
         meta: defaultMeta(schema),
         type,
