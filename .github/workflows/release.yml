@@ -111,7 +111,7 @@ jobs:
         with:
           branch: ${{ env.CURRENT_BRANCH }}
           commit_message: 'chore: sync changelog [skip ci]'
-          file_pattern: CHANGELOG.md .release/spotlight.md
+          file_pattern: CHANGELOG.md
 
       - name: Update lock file
         if: env.CURRENT_BRANCH == 'changeset-release/main'

@@ -1,5 +1,116 @@
 # Changelog
 
+# 2026-05-17
+
+## @hey-api/openapi-ts 0.97.2
+
+### Updates
+
+- dsl: cache lazy node result ([#3855](https://github.com/hey-api/openapi-ts/pull/3855))
+
+### Plugins
+
+#### @hey-api/client-angular
+
+- preserve query auth when when there are no other query parameters ([#3853](https://github.com/hey-api/openapi-ts/pull/3853))
+
+#### @hey-api/client-axios
+
+- preserve query auth when when there are no other query parameters ([#3853](https://github.com/hey-api/openapi-ts/pull/3853))
+
+#### @hey-api/client-fetch
+
+- preserve query auth when when there are no other query parameters ([#3853](https://github.com/hey-api/openapi-ts/pull/3853))
+
+#### @hey-api/client-ky
+
+- preserve query auth when when there are no other query parameters ([#3853](https://github.com/hey-api/openapi-ts/pull/3853))
+
+#### @hey-api/client-next
+
+- preserve query auth when when there are no other query parameters ([#3853](https://github.com/hey-api/openapi-ts/pull/3853))
+
+#### @hey-api/client-nuxt
+
+- preserve query auth when when there are no other query parameters ([#3853](https://github.com/hey-api/openapi-ts/pull/3853))
+
+#### @hey-api/client-ofetch
+
+- preserve query auth when when there are no other query parameters ([#3853](https://github.com/hey-api/openapi-ts/pull/3853))
+
+#### @hey-api/sdk
+
+- support `valibot` as response transformer ([#3847](https://github.com/hey-api/openapi-ts/pull/3847))
+- support `zod` as response transformer ([#3847](https://github.com/hey-api/openapi-ts/pull/3847))
+
+#### @tanstack/angular-query-experimental
+
+- add `mutationKeys` option ([#3858](https://github.com/hey-api/openapi-ts/pull/3858))
+
+#### @tanstack/preact-query
+
+- add `mutationKeys` option ([#3858](https://github.com/hey-api/openapi-ts/pull/3858))
+
+#### @tanstack/react-query
+
+- add `mutationKeys` option ([#3858](https://github.com/hey-api/openapi-ts/pull/3858))
+
+#### @tanstack/solid-query
+
+- add `mutationKeys` option ([#3858](https://github.com/hey-api/openapi-ts/pull/3858))
+
+#### @tanstack/svelte-query
+
+- add `mutationKeys` option ([#3858](https://github.com/hey-api/openapi-ts/pull/3858))
+
+#### @tanstack/vue-query
+
+- add `mutationKeys` option ([#3858](https://github.com/hey-api/openapi-ts/pull/3858))
+
+#### valibot
+
+- use enums from TypeScript if available ([#3884](https://github.com/hey-api/openapi-ts/pull/3884))
+
+#### zod
+
+- use enums from TypeScript if available ([#3884](https://github.com/hey-api/openapi-ts/pull/3884))
+
+---
+
+## @hey-api/shared 0.4.4
+
+### Updates
+
+- plugin: add `querySymbols()` function ([#3884](https://github.com/hey-api/openapi-ts/pull/3884))
+
+---
+
+# 2026-04-30
+
+## @hey-api/openapi-ts 0.97.1
+
+### Plugins
+
+#### @hey-api/transformers
+
+- use symbols for `additionalProperties` key variables ([#3841](https://github.com/hey-api/openapi-ts/pull/3841))
+
+---
+
+## @hey-api/json-schema-ref-parser 1.4.2
+
+### Updates
+
+- yaml: swap `yaml` back to `js-yaml` ([#3843](https://github.com/hey-api/openapi-ts/pull/3843))
+
+---
+
+## @hey-api/shared 0.4.3
+
+No user-facing changes.
+
+---
+
 # 2026-04-28
 
 ## @hey-api/openapi-ts 0.97.0
