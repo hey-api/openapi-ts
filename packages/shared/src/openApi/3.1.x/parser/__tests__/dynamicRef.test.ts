@@ -701,6 +701,26 @@ describe('getTemplateParams', () => {
       }),
     ).toEqual([{ anchor: 'item-type', paramName: 'ItemType' }]);
   });
+
+  it('deduplicates paramName collisions with numeric suffix', () => {
+    expect(
+      getTemplateParams({
+        $defs: {
+          itemType: {
+            $dynamicAnchor: 'item_type',
+            not: {},
+          },
+          itemType2: {
+            $dynamicAnchor: 'item-type',
+            not: {},
+          },
+        },
+      }),
+    ).toEqual([
+      { anchor: 'item_type', paramName: 'ItemType' },
+      { anchor: 'item-type', paramName: 'ItemType2' },
+    ]);
+  });
 });
 
 describe('buildGenericRef', () => {
