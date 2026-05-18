@@ -1396,7 +1396,8 @@ export function schemaToIrSchema({
         // circularReferenceTracker intentionally shares the same Set instance
         // with the parent state so circular refs are detected across the
         // entire parsing tree. dynamicScope is always a fresh object so
-        // inner scopes don't mutate parent scope.
+        // inner scopes don't mutate parent scope. Outer (inherited) scope
+        // wins on collision per JSON Schema 2020-12 §8.2.3.2.
         dynamicScope: buildCurrentDynamicScope({
           inheritedScope: state.dynamicScope,
           schema,

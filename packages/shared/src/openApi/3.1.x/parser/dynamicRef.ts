@@ -146,8 +146,8 @@ export function buildCurrentDynamicScope({
   schema: OpenAPIV3_1.SchemaObject;
 }): Record<string, string> {
   return {
-    ...inheritedScope,
     ...buildDynamicScope(schema),
+    ...inheritedScope,
   };
 }
 

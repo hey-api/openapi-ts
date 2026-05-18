@@ -219,7 +219,7 @@ describe('buildCurrentDynamicScope', () => {
     });
   });
 
-  it('current scope wins for same key', () => {
+  it('inherited (outer) scope wins for same key per JSON Schema 2020-12 §8.2.3.2', () => {
     expect(
       buildCurrentDynamicScope({
         inheritedScope: { itemType: '#/components/schemas/Parent' },
@@ -228,7 +228,7 @@ describe('buildCurrentDynamicScope', () => {
           $ref: '#/components/schemas/Child',
         },
       }),
-    ).toEqual({ itemType: '#/components/schemas/Child' });
+    ).toEqual({ itemType: '#/components/schemas/Parent' });
   });
 
   it('returns empty scope for plain schema with no inherited', () => {
