@@ -191,6 +191,12 @@ export function materializeDynamicRefBinding({
     ...refSchema,
     ...schema,
   };
+  if (refSchema.$defs && schema.$defs) {
+    materializedSchema.$defs = {
+      ...refSchema.$defs,
+      ...schema.$defs,
+    };
+  }
   delete (materializedSchema as Record<string, unknown>).$ref;
   delete (materializedSchema as Record<string, unknown>).$dynamicAnchor;
   delete (materializedSchema as Record<string, unknown>).$id;
@@ -224,10 +230,10 @@ export function containsRefTo(
   const composites: Array<unknown> | undefined = schema.allOf ?? schema.anyOf ?? schema.oneOf;
   if (Array.isArray(composites)) {
     for (const item of composites) {
-      if (typeof item === 'object' && item !== null) {
+      if (isSchemaObject(item)) {
         if (item.$ref === ref) return true;
         if (item.allOf || item.anyOf || item.oneOf) {
-          if (containsRefTo(item as OpenAPIV3_1.SchemaObject, ref)) return true;
+          if (containsRefTo(item, ref)) return true;
         }
       }
     }
