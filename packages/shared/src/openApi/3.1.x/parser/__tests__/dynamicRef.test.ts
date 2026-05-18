@@ -4,6 +4,7 @@ import {
   buildCurrentDynamicScope,
   buildDynamicScope,
   buildGenericRef,
+  containsRefTo,
   getDynamicDefsBindings,
   getTemplateParams,
   hasDynamicRefBindings,
@@ -831,5 +832,93 @@ describe('buildGenericRef', () => {
       ],
       logicalOperator: 'or',
     });
+  });
+});
+
+describe('containsRefTo', () => {
+  const targetRef = '#/components/schemas/Foo';
+
+  it('detects direct $ref match', () => {
+    expect(containsRefTo({ $ref: targetRef }, targetRef)).toBe(true);
+  });
+
+  it('returns false for non-matching $ref', () => {
+    expect(containsRefTo({ $ref: '#/components/schemas/Bar' }, targetRef)).toBe(false);
+  });
+
+  it('detects $ref inside allOf', () => {
+    expect(
+      containsRefTo(
+        {
+          allOf: [{ $ref: targetRef }, { type: 'object' }],
+        },
+        targetRef,
+      ),
+    ).toBe(true);
+  });
+
+  it('detects $ref inside anyOf', () => {
+    expect(
+      containsRefTo(
+        {
+          anyOf: [{ type: 'null' }, { $ref: targetRef }],
+        },
+        targetRef,
+      ),
+    ).toBe(true);
+  });
+
+  it('detects $ref inside oneOf', () => {
+    expect(
+      containsRefTo(
+        {
+          oneOf: [{ $ref: targetRef }, { type: 'string' }],
+        },
+        targetRef,
+      ),
+    ).toBe(true);
+  });
+
+  it('detects nested cycles through allOf containing oneOf', () => {
+    expect(
+      containsRefTo(
+        {
+          allOf: [
+            {
+              oneOf: [{ $ref: targetRef }, { type: 'string' }],
+            },
+            { type: 'object' },
+          ],
+        },
+        targetRef,
+      ),
+    ).toBe(true);
+  });
+
+  it('detects two-hop allOf chain', () => {
+    expect(
+      containsRefTo(
+        {
+          allOf: [
+            {
+              allOf: [{ $ref: targetRef }],
+            },
+          ],
+        },
+        targetRef,
+      ),
+    ).toBe(true);
+  });
+
+  it('returns false for null schema', () => {
+    expect(containsRefTo(null, targetRef)).toBe(false);
+  });
+
+  it('returns false for undefined schema', () => {
+    expect(containsRefTo(undefined, targetRef)).toBe(false);
+  });
+
+  it('returns false for schema without composites', () => {
+    expect(containsRefTo({ type: 'string' }, targetRef)).toBe(false);
   });
 });

@@ -214,3 +214,23 @@ export function shouldInlineDynamicRefTarget({
     !state.circularReferenceTracker.has(ref),
   );
 }
+
+export function containsRefTo(
+  schema: OpenAPIV3_1.SchemaObject | undefined | null,
+  ref: string,
+): boolean {
+  if (!schema) return false;
+  if (schema.$ref === ref) return true;
+  const composites: Array<unknown> | undefined = schema.allOf ?? schema.anyOf ?? schema.oneOf;
+  if (Array.isArray(composites)) {
+    for (const item of composites) {
+      if (typeof item === 'object' && item !== null) {
+        if (item.$ref === ref) return true;
+        if (item.allOf || item.anyOf || item.oneOf) {
+          if (containsRefTo(item as OpenAPIV3_1.SchemaObject, ref)) return true;
+        }
+      }
+    }
+  }
+  return false;
+}

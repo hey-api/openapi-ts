@@ -1064,6 +1064,13 @@ describe(`OpenAPI ${version}`, () => {
       }),
       description: 'keeps $dynamicRef bindings isolated between sibling schemas',
     },
+    {
+      config: createConfig({
+        input: 'dynamicref-circular-oneof.yaml',
+        output: 'dynamicref-circular-oneof',
+      }),
+      description: 'detects circular $dynamicRef through oneOf',
+    },
   ];
 
   it.each(scenarios)('$description', async ({ config }) => {

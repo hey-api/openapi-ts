@@ -19,6 +19,7 @@ import {
   buildCurrentDynamicScope,
   buildDynamicScope,
   buildGenericRef,
+  containsRefTo,
   getDynamicDefsBindings,
   getTemplateParams,
   materializeDynamicRefBinding,
@@ -1360,19 +1361,7 @@ export function schemaToIrSchema({
         const bindings = getDynamicDefsBindings(schema);
         const hasCircularBinding = bindings.some(([, ref]) => {
           const bindingSchema = context.resolveRef<OpenAPIV3_1.SchemaObject>(ref);
-          if (!bindingSchema) return false;
-          if (bindingSchema.$ref === schema.$ref) return true;
-          const allOf = bindingSchema.allOf;
-          if (Array.isArray(allOf)) {
-            return allOf.some(
-              (item) =>
-                typeof item === 'object' &&
-                item !== null &&
-                '$ref' in item &&
-                item.$ref === schema.$ref,
-            );
-          }
-          return false;
+          return containsRefTo(bindingSchema, schema.$ref!);
         });
         if (hasCircularBinding) {
           return schemaToIrSchema({
