@@ -48,6 +48,8 @@ const extraPrefixesMap: Record<string, Slot> = {
 };
 const extraPrefixes = Object.entries(extraPrefixesMap);
 
+const UNSAFE_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
+
 type KeyMap = Map<
   string,
   | {
@@ -147,11 +149,16 @@ export const buildClientParams = (args: ReadonlyArray<unknown>, fields: FieldsCo
 
           if (extra) {
             const [prefix, slot] = extra;
-            (params[slot] as Record<string, unknown>)[key.slice(prefix.length)] = value;
+            const subKey = key.slice(prefix.length);
+            if (!UNSAFE_KEYS.has(subKey)) {
+              (params[slot] as Record<string, unknown>)[subKey] = value;
+            }
           } else if ('allowExtra' in config && config.allowExtra) {
             for (const [slot, allowed] of Object.entries(config.allowExtra)) {
               if (allowed) {
-                (params[slot as Slot] as Record<string, unknown>)[key] = value;
+                if (!UNSAFE_KEYS.has(key)) {
+                  (params[slot as Slot] as Record<string, unknown>)[key] = value;
+                }
                 break;
               }
             }
