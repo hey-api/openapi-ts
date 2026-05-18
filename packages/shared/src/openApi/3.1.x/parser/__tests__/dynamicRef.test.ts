@@ -430,6 +430,38 @@ describe('materializeDynamicRefBinding', () => {
 
     expect(result!.description).toBe('overridden');
   });
+
+  it('merges $defs from refSchema and caller schema', () => {
+    mockResolveRef.mockReturnValue({
+      $defs: {
+        helper: { type: 'string' },
+        placeholder: { $dynamicAnchor: 'itemType', not: {} },
+      },
+      type: 'object',
+    });
+
+    const result = materializeDynamicRefBinding({
+      context: createContext(),
+      schema: {
+        $defs: {
+          itemType: {
+            $dynamicAnchor: 'itemType',
+            $ref: '#/components/schemas/User',
+          },
+        },
+        $ref: '#/components/schemas/Template',
+      },
+    });
+
+    expect(result!.$defs).toEqual({
+      helper: { type: 'string' },
+      itemType: {
+        $dynamicAnchor: 'itemType',
+        $ref: '#/components/schemas/User',
+      },
+      placeholder: { $dynamicAnchor: 'itemType', not: {} },
+    });
+  });
 });
 
 describe('shouldInlineDynamicRefTarget', () => {

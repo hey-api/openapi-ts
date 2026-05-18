@@ -7,15 +7,18 @@ export type ClientOptions = {
 export type TreeNodeTemplate<NodeType> = {
     id: string;
     label: string;
-    children: Array<NodeType>;
+    child?: NodeType;
 };
 
-export type WrapperNode = BoundTreeNode | {
-    leaf?: boolean;
+export type TreeNode = TreeNodeLeaf | {
+    id: string;
+    label: string;
+    child?: TreeNode;
 };
 
-export type BoundTreeNode = TreeNodeTemplate<WrapperNode> & {
-    depth?: number;
+export type TreeNodeLeaf = {
+    id: string;
+    label: string;
 };
 
 export type GetTreeData = {
@@ -27,9 +30,9 @@ export type GetTreeData = {
 
 export type GetTreeResponses = {
     /**
-     * Tree nodes with recursive structure through oneOf
+     * Tree nodes
      */
-    200: Array<BoundTreeNode>;
+    200: Array<TreeNode>;
 };
 
 export type GetTreeResponse = GetTreeResponses[keyof GetTreeResponses];

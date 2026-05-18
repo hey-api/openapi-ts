@@ -2,10 +2,8 @@ openapi: 3.1.0
 info:
   title: DynamicRef Circular oneOf Test
   description: >
-    Tests that hasCircularBinding detects cycles routed through oneOf/anyOf,
-    not just direct $ref and single-level allOf. The WrapperNode schema
-    references back to the template through oneOf, which the narrow
-    hasCircularBinding check would miss.
+    Tests that hasCircularBinding detects cycles routed through oneOf,
+    not just direct $ref and single-level allOf.
   version: 0.1.0
 servers:
   - url: https://api.example.com
@@ -19,13 +17,13 @@ paths:
       tags: [Tree]
       responses:
         '200':
-          description: Tree nodes with recursive structure through oneOf
+          description: Tree nodes
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/bound-tree-node'
+                  $ref: '#/components/schemas/TreeNode'
 
 components:
   schemas:
@@ -36,34 +34,29 @@ components:
           $dynamicAnchor: nodeType
           not: {}
       type: object
-      required: [id, label, children]
+      required: [id, label]
       properties:
         id:
           type: string
         label:
           type: string
-        children:
-          type: array
-          items:
-            $dynamicRef: '#nodeType'
+        child:
+          $dynamicRef: '#nodeType'
 
-    WrapperNode:
-      type: object
+    TreeNode:
       oneOf:
-        - $ref: '#/components/schemas/bound-tree-node'
-        - type: object
-          properties:
-            leaf:
-              type: boolean
-
-    bound-tree-node:
-      allOf:
+        - $ref: '#/components/schemas/TreeNodeLeaf'
         - $defs:
             nodeType:
               $dynamicAnchor: nodeType
-              $ref: '#/components/schemas/WrapperNode'
+              $ref: '#/components/schemas/TreeNode'
           $ref: '#/components/schemas/TreeNodeTemplate'
-        - type: object
-          properties:
-            depth:
-              type: integer
+
+    TreeNodeLeaf:
+      type: object
+      required: [id, label]
+      properties:
+        id:
+          type: string
+        label:
+          type: string
