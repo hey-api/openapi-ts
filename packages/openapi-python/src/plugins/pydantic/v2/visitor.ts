@@ -65,10 +65,10 @@ export function createVisitor(
 
       const { childResults, fieldConstraints, type } = arrayToType({
         applyModifiers,
+        path: ctx.path,
         plugin: ctx.plugin,
         schema,
         walk,
-        walkerCtx: ctx,
       });
 
       return {
@@ -78,21 +78,21 @@ export function createVisitor(
       };
     },
     boolean(schema, ctx) {
-      const result = booleanToType({ plugin: ctx.plugin, schema });
+      const result = booleanToType({ path: ctx.path, plugin: ctx.plugin, schema });
       return {
         ...result,
         meta: defaultMeta(schema),
       };
     },
     enum(schema, ctx) {
-      const result = enumToType({ plugin: ctx.plugin, schema });
+      const result = enumToType({ path: ctx.path, plugin: ctx.plugin, schema });
       return {
         ...result,
         meta: defaultMeta(schema),
       };
     },
     integer(schema, ctx) {
-      const result = numberToType({ plugin: ctx.plugin, schema });
+      const result = numberToType({ path: ctx.path, plugin: ctx.plugin, schema });
       return {
         ...result,
         meta: defaultMeta(schema),
@@ -120,6 +120,7 @@ export function createVisitor(
         applyModifiers,
         childResults: items,
         parentSchema,
+        path: ctx.path,
         plugin: ctx.plugin,
       });
 
@@ -129,7 +130,7 @@ export function createVisitor(
       };
     },
     never(schema, ctx) {
-      const result = neverToType({ plugin: ctx.plugin, schema });
+      const result = neverToType({ path: ctx.path, plugin: ctx.plugin, schema });
       return {
         ...result,
         meta: {
@@ -140,7 +141,7 @@ export function createVisitor(
       };
     },
     null(schema, ctx) {
-      const result = nullToType({ plugin: ctx.plugin, schema });
+      const result = nullToType({ path: ctx.path, plugin: ctx.plugin, schema });
       return {
         ...result,
         meta: {
@@ -151,7 +152,7 @@ export function createVisitor(
       };
     },
     number(schema, ctx) {
-      const result = numberToType({ plugin: ctx.plugin, schema });
+      const result = numberToType({ path: ctx.path, plugin: ctx.plugin, schema });
       return {
         ...result,
         meta: defaultMeta(schema),
@@ -165,10 +166,10 @@ export function createVisitor(
 
       const { childResults, fields, type } = objectToFields({
         applyModifiers,
+        path: ctx.path,
         plugin: ctx.plugin,
         schema,
         walk,
-        walkerCtx: ctx,
       });
 
       return {
@@ -200,7 +201,7 @@ export function createVisitor(
       };
     },
     string(schema, ctx) {
-      const result = stringToType({ plugin: ctx.plugin, schema });
+      const result = stringToType({ path: ctx.path, plugin: ctx.plugin, schema });
       return {
         ...result,
         meta: defaultMeta(schema),
@@ -212,10 +213,10 @@ export function createVisitor(
 
       const { childResults, fieldConstraints, type } = tupleToType({
         applyModifiers,
+        path: ctx.path,
         plugin: ctx.plugin,
         schema,
         walk,
-        walkerCtx: ctx,
       });
 
       return {
@@ -225,7 +226,7 @@ export function createVisitor(
       };
     },
     undefined(schema, ctx) {
-      const result = undefinedToType({ plugin: ctx.plugin, schema });
+      const result = undefinedToType({ path: ctx.path, plugin: ctx.plugin, schema });
       return {
         ...result,
         meta: {
@@ -243,6 +244,7 @@ export function createVisitor(
         applyModifiers,
         childResults: items,
         parentSchema,
+        path: ctx.path,
         plugin: ctx.plugin,
         schemas,
       });
@@ -253,7 +255,7 @@ export function createVisitor(
       };
     },
     unknown(schema, ctx) {
-      const result = unknownToType({ plugin: ctx.plugin, schema });
+      const result = unknownToType({ path: ctx.path, plugin: ctx.plugin, schema });
       return {
         ...result,
         meta: {
@@ -264,7 +266,7 @@ export function createVisitor(
       };
     },
     void(schema, ctx) {
-      const result = voidToType({ plugin: ctx.plugin, schema });
+      const result = voidToType({ path: ctx.path, plugin: ctx.plugin, schema });
       return {
         ...result,
         meta: {
