@@ -43,12 +43,17 @@ export function getTemplateParams(
 ): ReadonlyArray<{ anchor: string; paramName: string }> {
   if (!schema.$defs) return [];
   const params: Array<{ anchor: string; paramName: string }> = [];
+  const seen = new Set<string>();
   for (const defSchema of Object.values(schema.$defs)) {
     if (isSchemaObject(defSchema) && defSchema.$dynamicAnchor && !defSchema.$ref) {
-      params.push({
-        anchor: defSchema.$dynamicAnchor,
-        paramName: anchorToParamName(defSchema.$dynamicAnchor),
-      });
+      let paramName = anchorToParamName(defSchema.$dynamicAnchor);
+      if (seen.has(paramName)) {
+        let i = 2;
+        while (seen.has(`${paramName}${i}`)) i++;
+        paramName = `${paramName}${i}`;
+      }
+      seen.add(paramName);
+      params.push({ anchor: defSchema.$dynamicAnchor, paramName });
     }
   }
   return params;
