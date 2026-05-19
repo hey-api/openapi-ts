@@ -215,7 +215,7 @@ importers:
     devDependencies:
       '@angular-devkit/build-angular':
         specifier: 21.2.6
-        version: 21.2.6(6851b179126df035f5fd32d32ec7dfdb)
+        version: 21.2.6(e8bb21bbe6660562629faf22c04bb33e)
       '@angular/cli':
         specifier: 21.2.6
         version: 21.2.6(@types/node@24.12.2)(chokidar@5.0.0)
@@ -1447,7 +1447,7 @@ importers:
         version: 1.14.3
       nuxt:
         specifier: 3.14.1592
-        version: 3.14.1592(@netlify/blobs@9.1.2)(@parcel/watcher@2.5.1)(@types/node@24.12.2)(db0@0.3.2)(encoding@0.1.13)(eslint@9.39.2(jiti@2.6.1))(ioredis@5.7.0)(less@4.4.2)(lightningcss@1.32.0)(magicast@0.3.5)(optionator@0.9.4)(rolldown@1.0.0-rc.15)(rollup@4.56.0)(sass@1.97.3)(terser@5.46.0)(typescript@6.0.2)(vite@5.4.19(@types/node@24.12.2)(less@4.4.2)(lightningcss@1.32.0)(sass@1.97.3)(terser@5.46.0))(vue-tsc@3.2.4(typescript@6.0.2))
+        version: 3.14.1592(@netlify/blobs@9.1.2)(@parcel/watcher@2.5.1)(@types/node@24.12.2)(db0@0.3.4)(encoding@0.1.13)(eslint@9.39.2(jiti@2.6.1))(ioredis@5.9.2)(less@4.4.2)(lightningcss@1.32.0)(magicast@0.3.5)(optionator@0.9.4)(rolldown@1.0.0-rc.15)(rollup@4.56.0)(sass@1.97.3)(terser@5.46.0)(typescript@6.0.2)(vite@8.0.8(@types/node@24.12.2)(esbuild@0.27.3)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3))(vue-tsc@3.2.4(typescript@6.0.2))
       ofetch:
         specifier: 1.5.1
         version: 1.5.1
@@ -1471,7 +1471,7 @@ importers:
     devDependencies:
       '@angular-devkit/build-angular':
         specifier: 21.2.6
-        version: 21.2.6(e8bb21bbe6660562629faf22c04bb33e)
+        version: 21.2.6(d29aee3c150149ba3b11ca11367be335)
       '@angular/animations':
         specifier: 21.2.7
         version: 21.2.7(@angular/core@21.2.7(@angular/compiler@21.2.7)(rxjs@7.8.2)(zone.js@0.16.0))
@@ -1543,13 +1543,16 @@ importers:
         version: 3.3.2
       nuxt:
         specifier: 3.14.1592
-        version: 3.14.1592(@netlify/blobs@9.1.2)(@parcel/watcher@2.5.1)(@types/node@24.12.2)(db0@0.3.4)(encoding@0.1.13)(eslint@9.39.2(jiti@2.6.1))(ioredis@5.9.2)(less@4.4.2)(lightningcss@1.32.0)(magicast@0.3.5)(optionator@0.9.4)(rolldown@1.0.0-rc.15)(rollup@4.56.0)(sass@1.97.3)(terser@5.46.0)(typescript@6.0.2)(vite@8.0.8(@types/node@24.12.2)(esbuild@0.27.3)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3))(vue-tsc@3.2.4(typescript@6.0.2))
+        version: 3.14.1592(@netlify/blobs@9.1.2)(@parcel/watcher@2.5.1)(@types/node@24.12.2)(db0@0.3.2)(encoding@0.1.13)(eslint@9.39.2(jiti@2.6.1))(ioredis@5.7.0)(less@4.4.2)(lightningcss@1.32.0)(magicast@0.3.5)(optionator@0.9.4)(rolldown@1.0.0-rc.15)(rollup@4.56.0)(sass@1.97.3)(terser@5.46.0)(typescript@6.0.2)(vite@5.4.19(@types/node@24.12.2)(less@4.4.2)(lightningcss@1.32.0)(sass@1.97.3)(terser@5.46.0))(vue-tsc@3.2.4(typescript@6.0.2))
       ofetch:
         specifier: 1.5.1
         version: 1.5.1
       rxjs:
         specifier: 7.8.2
         version: 7.8.2
+      temporal-polyfill:
+        specifier: 0.3.0
+        version: 0.3.0
       tslib:
         specifier: 2.8.1
         version: 2.8.1
@@ -15431,6 +15434,12 @@ packages:
     engines: {node: '>=18'}
     deprecated: Old versions of tar are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
+  temporal-polyfill@0.3.0:
+    resolution: {integrity: sha512-qNsTkX9K8hi+FHDfHmf22e/OGuXmfBm9RqNismxBrnSmZVJKegQ+HYYXT+R7Ha8F/YSm2Y34vmzD4cxMu2u95g==}
+
+  temporal-spec@0.3.0:
+    resolution: {integrity: sha512-n+noVpIqz4hYgFSMOSiINNOUOMFtV5cZQNCmmszA6GiVFVRt3G7AqVyhXjhCSmowvQn+NsGn+jMDMKJYHd3bSQ==}
+
   term-size@2.2.1:
     resolution: {integrity: sha512-wK0Ri4fOGjv/XPy8SBHZChl8CM7uMc5VML7SqiQ0zG7+J5Vr+RMQDoHa2CNT6KHUnTGIXH34UDMkPzAUyapBZg==}
     engines: {node: '>=8'}
@@ -17195,13 +17204,13 @@ snapshots:
     transitivePeerDependencies:
       - chokidar
 
-  '@angular-devkit/build-angular@21.2.6(6851b179126df035f5fd32d32ec7dfdb)':
+  '@angular-devkit/build-angular@21.2.6(d29aee3c150149ba3b11ca11367be335)':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@angular-devkit/architect': 0.2102.6(chokidar@5.0.0)
       '@angular-devkit/build-webpack': 0.2102.6(chokidar@5.0.0)(webpack-dev-server@5.2.3(tslib@2.8.1)(webpack@5.105.2(esbuild@0.27.3)))(webpack@5.105.2(esbuild@0.27.3))
       '@angular-devkit/core': 21.2.6(chokidar@5.0.0)
-      '@angular/build': 21.2.6(1c0a8b1cf60b87144ce804f425dc14b9)
+      '@angular/build': 21.2.6(7f927f65b1b257a116ff1f045560ebd6)
       '@angular/compiler-cli': 21.2.7(@angular/compiler@21.2.7)(typescript@6.0.2)
       '@babel/core': 7.29.0
       '@babel/generator': 7.29.1
@@ -17412,7 +17421,7 @@ snapshots:
       '@angular/core': 21.2.7(@angular/compiler@21.2.7)(rxjs@7.8.2)(zone.js@0.16.0)
       tslib: 2.8.1
 
-  '@angular/build@21.2.6(1c0a8b1cf60b87144ce804f425dc14b9)':
+  '@angular/build@21.2.6(7f927f65b1b257a116ff1f045560ebd6)':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@angular-devkit/architect': 0.2102.6(chokidar@5.0.0)
@@ -17455,7 +17464,7 @@ snapshots:
       lmdb: 3.5.1
       postcss: 8.5.6
       tailwindcss: 3.4.9
-      vitest: 4.1.0(@types/node@24.12.2)(jsdom@29.0.1)(msw@2.13.2(@types/node@24.12.2)(typescript@6.0.2))(vite@7.3.1(@types/node@24.12.2)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.32.0)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3))
+      vitest: 4.1.0(@types/node@24.12.2)(jsdom@29.0.1)(msw@2.13.2(@types/node@24.12.2)(typescript@6.0.2))(vite@5.4.19(@types/node@24.12.2)(less@4.4.2)(lightningcss@1.32.0)(sass@1.97.3)(terser@5.46.0))
     transitivePeerDependencies:
       - '@emnapi/core'
       - '@emnapi/runtime'
@@ -24396,14 +24405,14 @@ snapshots:
       chai: 6.2.2
       tinyrainbow: 3.0.3
 
-  '@vitest/mocker@4.1.0(msw@2.13.2(@types/node@24.12.2)(typescript@6.0.2))(vite@7.3.1(@types/node@24.12.2)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.32.0)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3))':
+  '@vitest/mocker@4.1.0(msw@2.13.2(@types/node@24.12.2)(typescript@6.0.2))(vite@5.4.19(@types/node@24.12.2)(less@4.4.2)(lightningcss@1.32.0)(sass@1.97.3)(terser@5.46.0))':
     dependencies:
       '@vitest/spy': 4.1.0
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
       msw: 2.13.2(@types/node@24.12.2)(typescript@6.0.2)
-      vite: 7.3.1(@types/node@24.12.2)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.32.0)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3)
+      vite: 5.4.19(@types/node@24.12.2)(less@4.4.2)(lightningcss@1.32.0)(sass@1.97.3)(terser@5.46.0)
     optional: true
 
   '@vitest/mocker@4.1.0(msw@2.13.2(@types/node@24.12.2)(typescript@6.0.2))(vite@8.0.8(@types/node@24.12.2)(esbuild@0.27.3)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3))':
@@ -31149,7 +31158,7 @@ snapshots:
       unhead: 1.11.20
       unimport: 3.14.6(rollup@4.56.0)
       unplugin: 1.16.1
-      unplugin-vue-router: 0.10.9(rollup@4.56.0)(vue-router@4.5.0(vue@3.5.13(typescript@6.0.2)))(vue@3.5.25(typescript@6.0.2))
+      unplugin-vue-router: 0.10.9(rollup@4.56.0)(vue-router@4.5.0(vue@3.5.25(typescript@6.0.2)))(vue@3.5.25(typescript@6.0.2))
       unstorage: 1.17.0(@netlify/blobs@9.1.2)(db0@0.3.4)(ioredis@5.9.2)
       untyped: 1.5.2
       vue: 3.5.25(typescript@6.0.2)
@@ -33962,6 +33971,12 @@ snapshots:
       minizlib: 3.1.0
       yallist: 5.0.0
 
+  temporal-polyfill@0.3.0:
+    dependencies:
+      temporal-spec: 0.3.0
+
+  temporal-spec@0.3.0: {}
+
   term-size@2.2.1: {}
 
   terser-webpack-plugin@5.3.16(esbuild@0.27.3)(webpack@5.105.2(esbuild@0.27.3)):
@@ -34615,28 +34630,6 @@ snapshots:
       - rollup
       - vue
 
-  unplugin-vue-router@0.10.9(rollup@4.56.0)(vue-router@4.5.0(vue@3.5.13(typescript@6.0.2)))(vue@3.5.25(typescript@6.0.2)):
-    dependencies:
-      '@babel/types': 7.28.5
-      '@rollup/pluginutils': 5.2.0(rollup@4.56.0)
-      '@vue-macros/common': 1.16.1(vue@3.5.25(typescript@6.0.2))
-      ast-walker-scope: 0.6.2
-      chokidar: 3.6.0
-      fast-glob: 3.3.3
-      json5: 2.2.3
-      local-pkg: 0.5.1
-      magic-string: 0.30.21
-      mlly: 1.8.0
-      pathe: 1.1.2
-      scule: 1.3.0
-      unplugin: 2.0.0-beta.1
-      yaml: 2.8.3
-    optionalDependencies:
-      vue-router: 4.5.0(vue@3.5.13(typescript@6.0.2))
-    transitivePeerDependencies:
-      - rollup
-      - vue
-
   unplugin-vue-router@0.10.9(rollup@4.56.0)(vue-router@4.5.0(vue@3.5.25(typescript@6.0.2)))(vue@3.5.25(typescript@6.0.2)):
     dependencies:
       '@babel/types': 7.28.5
@@ -35230,10 +35223,10 @@ snapshots:
       - vite
       - vitest
 
-  vitest@4.1.0(@types/node@24.12.2)(jsdom@29.0.1)(msw@2.13.2(@types/node@24.12.2)(typescript@6.0.2))(vite@7.3.1(@types/node@24.12.2)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.32.0)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3)):
+  vitest@4.1.0(@types/node@24.12.2)(jsdom@29.0.1)(msw@2.13.2(@types/node@24.12.2)(typescript@6.0.2))(vite@5.4.19(@types/node@24.12.2)(less@4.4.2)(lightningcss@1.32.0)(sass@1.97.3)(terser@5.46.0)):
     dependencies:
       '@vitest/expect': 4.1.0
-      '@vitest/mocker': 4.1.0(msw@2.13.2(@types/node@24.12.2)(typescript@6.0.2))(vite@7.3.1(@types/node@24.12.2)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.32.0)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3))
+      '@vitest/mocker': 4.1.0(msw@2.13.2(@types/node@24.12.2)(typescript@6.0.2))(vite@5.4.19(@types/node@24.12.2)(less@4.4.2)(lightningcss@1.32.0)(sass@1.97.3)(terser@5.46.0))
       '@vitest/pretty-format': 4.1.0
       '@vitest/runner': 4.1.0
       '@vitest/snapshot': 4.1.0
@@ -35250,7 +35243,7 @@ snapshots:
       tinyexec: 1.0.2
       tinyglobby: 0.2.15
       tinyrainbow: 3.0.3
-      vite: 7.3.1(@types/node@24.12.2)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.32.0)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.3)
+      vite: 5.4.19(@types/node@24.12.2)(less@4.4.2)(lightningcss@1.32.0)(sass@1.97.3)(terser@5.46.0)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 24.12.2

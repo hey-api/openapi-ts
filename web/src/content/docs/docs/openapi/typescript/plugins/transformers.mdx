@@ -83,7 +83,27 @@ export default {
 };
 ```
 
-This will generate types that use `Date` instead of `string` and appropriate transformers. Note that third-party date packages are not supported at the moment.
+This will generate types that use `Date` instead of `string` and appropriate transformers.
+
+### Temporal
+
+To use the [Temporal API](https://tc39.es/proposal-temporal/docs/) instead of `Date`, set `dates` to `'temporal'`. `Temporal` is imported from [`temporal-polyfill`](https://www.npmjs.com/package/temporal-polyfill), which must be installed in your project.
+
+```js {7} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      dates: 'temporal',
+      name: '@hey-api/transformers',
+    },
+  ],
+};
+```
+
+`date-time` is emitted as `Temporal.Instant` and `date` as `Temporal.PlainDate`. Response transformers call `Temporal.Instant.from(value)` and `Temporal.PlainDate.from(value)` respectively.
 
 ## BigInt
 
