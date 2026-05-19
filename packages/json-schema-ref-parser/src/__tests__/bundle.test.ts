@@ -527,6 +527,89 @@ describe('bundle', () => {
       expect(pathKeys).toHaveLength(1);
     });
 
+    it('prefixes operation-level security scheme names with source prefix', async () => {
+      const refParser = new $RefParser();
+      const spec1 = {
+        components: {
+          securitySchemes: {
+            bearerAuth: {
+              bearerFormat: 'JWT',
+              scheme: 'bearer',
+              type: 'http',
+            },
+          },
+        },
+        info: { title: 'Spec 1', version: '1.0.0' },
+        openapi: '3.0.0',
+        paths: {
+          '/users': {
+            get: {
+              operationId: 'listUsers',
+              responses: { '200': { description: 'OK' } },
+              security: [{ bearerAuth: [] }],
+            },
+          },
+        },
+      };
+      const spec2 = {
+        components: {
+          securitySchemes: {
+            bearerAuth: {
+              bearerFormat: 'JWT',
+              scheme: 'bearer',
+              type: 'http',
+            },
+            oauth2: {
+              flows: {
+                authorizationCode: {
+                  authorizationUrl: 'https://example.com/oauth/authorize',
+                  scopes: { read: 'read access', write: 'write access' },
+                  tokenUrl: 'https://example.com/oauth/token',
+                },
+              },
+              type: 'oauth2',
+            },
+          },
+        },
+        info: { title: 'Spec 2', version: '1.0.0' },
+        openapi: '3.0.0',
+        paths: {
+          '/orders': {
+            get: {
+              operationId: 'listOrders',
+              responses: { '200': { description: 'OK' } },
+              security: [{ oauth2: ['read'] }, { bearerAuth: [] }],
+            },
+          },
+        },
+      };
+
+      const merged = (await refParser.bundleMany({
+        pathOrUrlOrSchemas: [
+          { ...spec1, $id: 'file:///spec1.json' },
+          { ...spec2, $id: 'file:///spec2.json' },
+        ],
+      })) as any;
+
+      const spec1Prefix = 'spec1';
+      const spec2Prefix = 'spec2';
+
+      // Component security scheme names should be prefixed
+      expect(merged.components.securitySchemes[`${spec1Prefix}_bearerAuth`]).toBeDefined();
+      expect(merged.components.securitySchemes[`${spec2Prefix}_bearerAuth`]).toBeDefined();
+      expect(merged.components.securitySchemes[`${spec2Prefix}_oauth2`]).toBeDefined();
+
+      // Operation-level security references should also be prefixed
+      const usersSecurity = merged.paths['/users'].get.security;
+      expect(usersSecurity).toEqual([{ [`${spec1Prefix}_bearerAuth`]: [] }]);
+
+      const ordersSecurity = merged.paths['/orders'].get.security;
+      expect(ordersSecurity).toEqual([
+        { [`${spec2Prefix}_oauth2`]: ['read'] },
+        { [`${spec2Prefix}_bearerAuth`]: [] },
+      ]);
+    });
+
     it('adds prefix to path when HTTP methods conflict', async () => {
       const refParser = new $RefParser();
       const spec1 = {
