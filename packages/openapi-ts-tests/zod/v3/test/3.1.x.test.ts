@@ -164,9 +164,9 @@ for (const zodVersion of zodVersions) {
                 enum(ctx) {
                   const { $, symbols } = ctx;
                   const { z } = symbols;
-                  const { allStrings, enumMembers } = ctx.nodes.items(ctx);
+                  const { enumMembers, literalSchemas } = ctx.nodes.items(ctx);
 
-                  if (!allStrings || !enumMembers.length) {
+                  if (!enumMembers.length || enumMembers.length !== literalSchemas.length) {
                     return;
                   }
 

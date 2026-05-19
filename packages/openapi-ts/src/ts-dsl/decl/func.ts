@@ -50,6 +50,7 @@ const Mixed = AbstractMixin(
 
 class ImplFuncTsDsl<M extends FuncMode = 'arrow'> extends Mixed {
   readonly '~dsl' = 'FuncTsDsl';
+  readonly '~mode'!: M; // type-only brand, never assigned at runtime
   override readonly nameSanitizer = safeRuntimeName;
 
   protected mode?: FuncMode;

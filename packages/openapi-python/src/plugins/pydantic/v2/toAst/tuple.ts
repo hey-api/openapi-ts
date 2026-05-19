@@ -1,10 +1,8 @@
-import type { SchemaVisitorContext, SchemaWithType, Walker } from '@hey-api/shared';
 import { childContext } from '@hey-api/shared';
 
 import { $, type VarType } from '../../../../py-dsl';
 import type { TupleResolverContext } from '../../resolvers';
-import type { PydanticFinal, PydanticResult, PydanticType } from '../../shared/types';
-import type { PydanticPlugin } from '../../types';
+import type { PydanticResult, PydanticType } from '../../shared/types';
 import type { FieldConstraints } from '../constants';
 
 function baseNode(ctx: TupleResolverContext): PydanticType {
@@ -65,21 +63,17 @@ export interface TupleToTypeResult extends PydanticType {
   childResults: Array<PydanticResult>;
 }
 
-export function tupleToType(ctx: {
-  applyModifiers: (result: PydanticResult, options?: { optional?: boolean }) => PydanticFinal;
-  plugin: PydanticPlugin['Instance'];
-  schema: SchemaWithType<'tuple'>;
-  walk: Walker<PydanticResult, PydanticPlugin['Instance']>;
-  walkerCtx: SchemaVisitorContext<PydanticPlugin['Instance']>;
-}): TupleToTypeResult {
-  const { applyModifiers, plugin, schema, walk, walkerCtx } = ctx;
+export function tupleToType(
+  ctx: Pick<TupleResolverContext, 'applyModifiers' | 'path' | 'plugin' | 'schema' | 'walk'>,
+): TupleToTypeResult {
+  const { applyModifiers, path, plugin, schema, walk } = ctx;
 
   const childResults: Array<PydanticResult> = [];
 
   if (schema.items && schema.items.length) {
     for (let i = 0; i < schema.items.length; i++) {
       const item = schema.items[i]!;
-      const result = walk(item, childContext(walkerCtx, 'items', i));
+      const result = walk(item, childContext({ path, plugin }, 'items', i));
       childResults.push(result);
     }
   }
@@ -92,10 +86,10 @@ export function tupleToType(ctx: {
       base: baseNode,
       const: constNode,
     },
+    path,
     plugin,
     schema,
     walk,
-    walkerCtx,
   };
 
   const resolver = plugin.config['~resolvers']?.tuple;

@@ -1,12 +1,9 @@
-import type { IR } from '@hey-api/shared';
-
 import { $ } from '../../../../ts-dsl';
 import type { UnionResolverContext } from '../../resolvers';
 import { hasIntersectionDiscriminatorBranches } from '../../shared/discriminated-union';
 import type { PipeResult, Pipes } from '../../shared/pipes';
 import { pipes, pipesToNode } from '../../shared/pipes';
-import type { CompositeHandlerResult, ValibotFinal, ValibotResult } from '../../shared/types';
-import type { ValibotPlugin } from '../../types';
+import type { CompositeHandlerResult, ValibotResult } from '../../shared/types';
 import { identifiers } from '../constants';
 
 function baseNode(ctx: UnionResolverContext): PipeResult {
@@ -56,15 +53,17 @@ function unionResolver(ctx: UnionResolverContext): Pipes {
   return ctx.pipes.current;
 }
 
-export function unionToPipes(ctx: {
-  applyModifiers: (result: ValibotResult, options?: { optional?: boolean }) => ValibotFinal;
-  childResults: Array<ValibotResult>;
-  parentSchema: IR.SchemaObject;
-  plugin: ValibotPlugin['Instance'];
-  schemas: ReadonlyArray<IR.SchemaObject>;
-}): CompositeHandlerResult {
-  const { applyModifiers, childResults, parentSchema, plugin, schemas } = ctx;
-
+export function unionToPipes({
+  applyModifiers,
+  childResults,
+  parentSchema,
+  path,
+  plugin,
+  schemas,
+}: Pick<
+  UnionResolverContext,
+  'applyModifiers' | 'childResults' | 'parentSchema' | 'path' | 'plugin' | 'schemas'
+>): CompositeHandlerResult {
   const resolverCtx: UnionResolverContext = {
     $,
     applyModifiers,
@@ -73,6 +72,7 @@ export function unionToPipes(ctx: {
       base: baseNode,
     },
     parentSchema,
+    path,
     pipes: {
       ...pipes,
       current: [],

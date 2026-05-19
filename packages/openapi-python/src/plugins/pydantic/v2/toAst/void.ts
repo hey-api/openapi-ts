@@ -1,4 +1,4 @@
-import type { SchemaWithType } from '@hey-api/shared';
+import type { SchemaVisitorContext, SchemaWithType } from '@hey-api/shared';
 
 import { $ } from '../../../../py-dsl';
 import type { VoidResolverContext } from '../../resolvers';
@@ -17,10 +17,10 @@ function voidResolver(ctx: VoidResolverContext): PydanticType {
 }
 
 export function voidToType({
+  path,
   plugin,
   schema,
-}: {
-  plugin: PydanticPlugin['Instance'];
+}: SchemaVisitorContext<PydanticPlugin['Instance']> & {
   schema: SchemaWithType<'void'>;
 }): PydanticType {
   const ctx: VoidResolverContext = {
@@ -28,6 +28,7 @@ export function voidToType({
     nodes: {
       base: baseNode,
     },
+    path,
     plugin,
     schema,
   };

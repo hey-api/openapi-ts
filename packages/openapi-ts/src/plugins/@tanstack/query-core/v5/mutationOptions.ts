@@ -1,3 +1,4 @@
+import type { Symbol } from '@hey-api/codegen-core';
 import type { IR } from '@hey-api/shared';
 import { applyNaming } from '@hey-api/shared';
 
@@ -7,6 +8,11 @@ import {
 } from '../../../../plugins/shared/utils/operation';
 import type { TsDsl } from '../../../../ts-dsl';
 import { $ } from '../../../../ts-dsl';
+import {
+  createMutationKeyFunction,
+  createMutationKeyType,
+  mutationKeyStatement,
+} from '../mutationKey';
 import { handleMeta } from '../shared/meta';
 import { useTypeData, useTypeError, useTypeResponse } from '../shared/useType';
 import type { PluginInstance } from '../types';
@@ -19,6 +25,18 @@ export function createMutationOptions({
   plugin: PluginInstance;
 }): void {
   if (hasOperationSse({ operation })) return;
+
+  if (
+    plugin.config.mutationKeys.enabled &&
+    !plugin.querySymbol({
+      category: 'utility',
+      resource: 'createMutationKey',
+      tool: plugin.name,
+    })
+  ) {
+    createMutationKeyType({ plugin });
+    createMutationKeyFunction({ plugin });
+  }
 
   const symbolMutationOptionsType = plugin.external(`${plugin.name}.MutationOptions`);
 
@@ -48,6 +66,17 @@ export function createMutationOptions({
     statements.push($.return(awaitSdkFn));
   } else {
     statements.push($.const().object('data').assign(awaitSdkFn), $.return('data'));
+  }
+
+  let symbolMutationKey: Symbol | undefined;
+  if (plugin.config.mutationKeys.enabled) {
+    symbolMutationKey = plugin.symbol(applyNaming(operation.id, plugin.config.mutationKeys));
+    const node = mutationKeyStatement({
+      operation,
+      plugin,
+      symbol: symbolMutationKey,
+    });
+    plugin.node(node);
   }
 
   const mutationOptionsFn = 'mutationOptions';
@@ -83,6 +112,7 @@ export function createMutationOptions({
                     .param(fnOptions)
                     .do(...statements),
                 )
+                .$if(symbolMutationKey, (c, v) => c.prop('mutationKey', $(v).call('options')))
                 .$if(handleMeta(plugin, operation, 'mutationOptions'), (c, v) => c.prop('meta', v)),
             ),
           $(mutationOptionsFn).return(),

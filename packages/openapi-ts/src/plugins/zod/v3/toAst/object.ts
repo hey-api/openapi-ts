@@ -1,27 +1,20 @@
-import type { SchemaVisitorContext, SchemaWithType, Walker } from '@hey-api/shared';
 import { childContext } from '@hey-api/shared';
 
 import { $ } from '../../../../ts-dsl';
 import { identifiers } from '../../constants';
 import type { ObjectResolverContext } from '../../resolvers';
 import type { Chain } from '../../shared/chain';
-import type { CompositeHandlerResult, ZodFinal, ZodResult } from '../../shared/types';
-import type { ZodPlugin } from '../../types';
+import type { CompositeHandlerResult, ZodResult } from '../../shared/types';
 
-type WalkerCtx = SchemaVisitorContext<ZodPlugin['Instance']>;
-
-interface ObjectToAstOptions {
-  applyModifiers: (result: ZodResult, opts: { optional?: boolean }) => ZodFinal;
-  plugin: ZodPlugin['Instance'];
-  schema: SchemaWithType<'object'>;
-  walk: Walker<ZodResult, ZodPlugin['Instance']>;
-  walkerCtx: WalkerCtx;
-}
+type ObjectToAstOptions = Pick<
+  ObjectResolverContext,
+  'applyModifiers' | 'path' | 'plugin' | 'schema' | 'walk'
+>;
 
 type ExtendedContext = ObjectResolverContext;
 
 function additionalPropertiesNode(ctx: ExtendedContext): Chain | null | undefined {
-  const { applyModifiers, schema, walk, walkerCtx } = ctx;
+  const { applyModifiers, path, plugin, schema, walk } = ctx;
 
   if (
     !schema.additionalProperties ||
@@ -32,7 +25,7 @@ function additionalPropertiesNode(ctx: ExtendedContext): Chain | null | undefine
 
   const additionalResult = walk(
     schema.additionalProperties,
-    childContext(walkerCtx, 'additionalProperties'),
+    childContext({ path, plugin }, 'additionalProperties'),
   );
   ctx._childResults.push(additionalResult);
   const finalExpr = applyModifiers(additionalResult, {});
@@ -58,14 +51,14 @@ function objectResolver(ctx: ExtendedContext): Chain {
 }
 
 function shapeNode(ctx: ExtendedContext): ReturnType<typeof $.object> {
-  const { applyModifiers, schema, walk, walkerCtx } = ctx;
+  const { applyModifiers, path, plugin, schema, walk } = ctx;
   const shape = $.object().pretty();
 
   for (const name in schema.properties) {
     const property = schema.properties[name]!;
     const isOptional = !schema.required?.includes(name);
 
-    const propertyResult = walk(property, childContext(walkerCtx, 'properties', name));
+    const propertyResult = walk(property, childContext({ path, plugin }, 'properties', name));
     ctx._childResults.push(propertyResult);
 
     const finalExpr = applyModifiers(propertyResult, {
@@ -79,7 +72,7 @@ function shapeNode(ctx: ExtendedContext): ReturnType<typeof $.object> {
 }
 
 export function objectToAst(options: ObjectToAstOptions): CompositeHandlerResult {
-  const { applyModifiers, plugin, schema, walk, walkerCtx } = options;
+  const { applyModifiers, path, plugin, schema, walk } = options;
   const childResults: Array<ZodResult> = [];
   const z = plugin.external('zod.z');
   const ctx: ExtendedContext = {
@@ -94,13 +87,13 @@ export function objectToAst(options: ObjectToAstOptions): CompositeHandlerResult
       base: baseNode,
       shape: shapeNode,
     },
+    path,
     plugin,
     schema,
     symbols: {
       z,
     },
     walk,
-    walkerCtx,
   };
   const resolver = plugin.config['~resolvers']?.object;
   const node = resolver?.(ctx) ?? objectResolver(ctx);

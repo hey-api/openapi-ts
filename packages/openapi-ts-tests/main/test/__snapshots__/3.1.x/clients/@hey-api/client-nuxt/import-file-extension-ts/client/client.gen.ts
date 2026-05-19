@@ -40,10 +40,7 @@ export const createClient = (config: Config = {}): Client => {
     };
 
     if (opts.security) {
-      await setAuthParams({
-        ...opts,
-        security: opts.security,
-      });
+      await setAuthParams(opts);
     }
 
     if (opts.requestValidator) {
@@ -74,12 +71,16 @@ export const createClient = (config: Config = {}): Client => {
       opts.onRequest = [
         async ({ options }) => {
           if (security) {
-            await setAuthParams({
+            const authOpts: Parameters<typeof setAuthParams>[0] = {
               auth: opts.auth,
               headers: options.headers,
               query: options.query,
               security,
-            });
+            };
+            await setAuthParams(authOpts);
+            if (authOpts.query !== options.query) {
+              options.query = authOpts.query;
+            }
           }
 
           if (requestValidator) {

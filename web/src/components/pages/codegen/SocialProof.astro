@@ -1,0 +1,323 @@
+---
+import { Image } from 'astro:assets'
+import autodeskSvg from '@/assets/brands/autodesk.svg?raw';
+import awsSvg from '@/assets/brands/aws.svg?raw';
+import opencodeSvg from '@/assets/brands/opencode.svg?raw';
+import paypalSvg from '@/assets/brands/paypal.svg?raw';
+import vercelSvg from '@/assets/brands/vercel.svg?raw';
+import guillermoRauchPng from '@/assets/people/guillermo-rauch.png';
+
+interface Quote {
+  author: string;
+  image: ImageMetadata;
+  initials: string;
+  role: string;
+  text: string;
+  url?: string;
+}
+
+const quote: Quote = {
+  author: 'Guillermo Rauch',
+  image: guillermoRauchPng,
+  initials: 'GR',
+  role: 'CEO of Vercel',
+  text: 'OpenAPI codegen that just works.',
+};
+
+const customers = [
+  { name: 'Vercel', svg: vercelSvg, url: 'https://vercel.com/blog/how-we-built-the-v0-ios-app' },
+  { name: 'OpenCode', svg: opencodeSvg },
+  { name: 'PayPal', svg: paypalSvg },
+  { name: 'Amazon', svg: awsSvg },
+  { name: 'Autodesk', svg: autodeskSvg },
+];
+
+const QuoteTag = quote.url ? 'a' : 'div';
+---
+
+<div class="social-proof">
+  <div class="section-inner">
+    <div class="social-proof-inner">
+
+      <QuoteTag
+        class="sp-quote"
+        href={quote.url || undefined}
+        target={quote.url ? '_blank' : undefined}
+        rel={quote.url ? 'noopener noreferrer' : undefined}
+      >
+        <div class="sp-avatar">
+          <span class="sp-avatar-initials" aria-hidden="true">{quote.initials}</span>
+          <Image
+            densities={[1, 2, 3]}
+            src={quote.image}
+            alt={quote.author}
+            width={32}
+            height={32}
+            class="sp-avatar-img"
+          />
+        </div>
+        <div class="sp-quote-body">
+          <p class="sp-quote-text">"{quote.text}"</p>
+          <div class="sp-meta">
+            <span class="sp-author">{quote.author}</span>
+            <span class="sp-role">{quote.role}</span>
+          </div>
+        </div>
+      </QuoteTag>
+
+      <div class="sp-customers">
+        <p class="sp-customers-label">Trusted by</p>
+        <div class="sp-logos">
+          {customers.map((c) => (
+            c.url
+              ? (
+                <a
+                  class="sp-logo-item"
+                  href={c.url}
+                  aria-label={`${c.name} — read case study`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {c.svg
+                    ? <span class="sp-logo-svg" set:html={c.svg} aria-hidden="true" />
+                    : <span class="sp-logo-text">{c.name}</span>
+                  }
+                  <span class="sp-logo-name">{c.name}</span>
+                </a>
+              )
+              : (
+                <div class="sp-logo-item" aria-label={c.name}>
+                  {c.svg
+                    ? <>
+                        <span class="sp-logo-svg" set:html={c.svg} aria-hidden="true" />
+                        <span class="sp-logo-name">{c.name}</span>
+                      </>
+                    : <span class="sp-logo-text">{c.name}</span>
+                  }
+                </div>
+              )
+          ))}
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<style>
+  .section-inner {
+    margin: 0 auto;
+    max-width: 1100px;
+    padding: 0 24px;
+  }
+
+  .social-proof {
+    background: var(--dt-bg-2);
+    border-bottom: 1px solid var(--vp-c-divider);
+    border-top: 1px solid var(--vp-c-divider);
+    overflow: hidden;
+    padding: 20px 0;
+    position: relative;
+  }
+
+  .social-proof-inner {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    margin-top: 0;
+    position: relative;
+  }
+
+  .sp-quote {
+    align-items: center;
+    border-right: 1px solid var(--vp-c-divider);
+    color: inherit;
+    display: flex;
+    flex: 1;
+    gap: 12px;
+    margin-top: 0;
+    padding-right: 32px;
+    text-decoration: none;
+  }
+
+  .sp-avatar {
+    background: linear-gradient(135deg, var(--vp-c-brand-1), var(--vp-c-brand-2));
+    border-radius: 50%;
+    flex-shrink: 0;
+    height: 32px;
+    margin-top: 0;
+    overflow: hidden;
+    position: relative;
+    width: 32px;
+  }
+
+  .sp-avatar-initials {
+    align-items: center;
+    color: white;
+    display: flex;
+    font-size: 10px;
+    font-weight: 700;
+    inset: 0;
+    justify-content: center;
+    letter-spacing: 0.03em;
+    margin-top: 0;
+    position: absolute;
+  }
+
+  .sp-avatar-img {
+    border-radius: 50%;
+    height: 100%;
+    inset: 0;
+    margin-top: 0;
+    object-fit: cover;
+    position: absolute;
+    width: 100%;
+  }
+
+  .sp-quote-text {
+    color: var(--sl-color-text);
+    font-size: 14px;
+    font-style: italic;
+    letter-spacing: -0.01em;
+    line-height: 1.5;
+    margin: 0;
+    transition: color 200ms ease;
+  }
+
+  .sp-quote-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 3px;
+    margin-top: 0;
+    min-width: 0;
+  }
+
+  .sp-meta {
+    align-items: center;
+    display: flex;
+    flex-shrink: 0;
+    gap: 6px;
+    margin-top: 0;
+  }
+
+  .sp-author {
+    color: var(--sl-color-text);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    transition: color 200ms ease;
+    white-space: nowrap;
+  }
+
+  .sp-role {
+    color: var(--sl-color-gray-3);
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .sp-customers {
+    align-items: center;
+    display: flex;
+    flex-shrink: 0;
+    gap: 20px;
+    margin-top: 0;
+  }
+
+  .sp-customers-label {
+    color: var(--sl-color-gray-3);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    margin: 0;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .sp-logos {
+    align-items: center;
+    display: flex;
+    gap: 24px;
+    margin-top: 0;
+  }
+
+  .sp-logo-item {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    margin-top: 0;
+    opacity: 0.4;
+    text-decoration: none;
+    transition: opacity 200ms ease;
+  }
+
+  .sp-logo-item:hover {
+    opacity: 0.85;
+  }
+
+  .sp-logo-text {
+    color: var(--sl-color-text);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+  }
+
+  .sp-logo-name {
+    border: 0;
+    clip: rect(0, 0, 0, 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+  }
+
+  .sp-logo-svg {
+    align-items: center;
+    display: flex;
+    margin-top: 0;
+  }
+
+  .sp-logo-svg :global(svg) {
+    color: var(--sl-color-text);
+    fill: var(--sl-color-text);
+    height: 18px;
+    width: auto;
+  }
+
+  @media (max-width: 900px) {
+    .social-proof-inner {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .sp-quote {
+      border-bottom: 1px solid var(--vp-c-divider);
+      border-right: none;
+      flex-wrap: wrap;
+      min-width: unset;
+      padding-bottom: 16px;
+      padding-right: 0;
+      width: 100%;
+    }
+
+    .sp-quote-text {
+      white-space: normal;
+    }
+
+    .sp-customers {
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .sp-logos {
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+  }
+</style>

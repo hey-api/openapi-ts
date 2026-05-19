@@ -6,7 +6,7 @@ import { exportAst } from '../shared/export';
 import type { ProcessorContext, ProcessorResult } from '../shared/processor';
 import type { TypeScriptFinal } from '../shared/types';
 import type { HeyApiTypeScriptPlugin } from '../types';
-import { createVisitor } from './walker';
+import { createVisitor } from './visitor';
 
 export function createProcessor(plugin: HeyApiTypeScriptPlugin['Instance']): ProcessorResult {
   const processor = createSchemaProcessor();

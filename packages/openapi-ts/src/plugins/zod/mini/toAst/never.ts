@@ -1,4 +1,4 @@
-import type { SchemaWithType } from '@hey-api/shared';
+import type { SchemaVisitorContext, SchemaWithType } from '@hey-api/shared';
 
 import { $ } from '../../../../ts-dsl';
 import { identifiers } from '../../constants';
@@ -19,10 +19,10 @@ function neverResolver(ctx: NeverResolverContext): Chain {
 }
 
 export function neverToAst({
+  path,
   plugin,
   schema,
-}: {
-  plugin: ZodPlugin['Instance'];
+}: SchemaVisitorContext<ZodPlugin['Instance']> & {
   schema: SchemaWithType<'never'>;
 }): Chain {
   const z = plugin.external('zod.z');
@@ -34,6 +34,7 @@ export function neverToAst({
     nodes: {
       base: baseNode,
     },
+    path,
     plugin,
     schema,
     symbols: {

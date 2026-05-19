@@ -42,20 +42,26 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
       plugin.config.client = false;
     }
 
-    if (plugin.config.transformer) {
-      if (typeof plugin.config.transformer === 'boolean') {
+    if (typeof plugin.config.transformer !== 'object') {
+      plugin.config.transformer = {
+        response: plugin.config.transformer,
+      };
+    }
+
+    if (plugin.config.transformer.response) {
+      if (typeof plugin.config.transformer.response === 'boolean') {
         try {
-          plugin.config.transformer = context.pluginByTag('transformer');
-          plugin.dependencies.add(plugin.config.transformer!);
+          plugin.config.transformer.response = context.pluginByTag('transformer');
+          plugin.dependencies.add(plugin.config.transformer.response!);
         } catch {
           log.warn(transformerInferWarn);
-          plugin.config.transformer = false;
+          plugin.config.transformer.response = false;
         }
       } else {
-        plugin.dependencies.add(plugin.config.transformer);
+        plugin.dependencies.add(plugin.config.transformer.response);
       }
     } else {
-      plugin.config.transformer = false;
+      plugin.config.transformer.response = false;
     }
 
     if (typeof plugin.config.validator !== 'object') {

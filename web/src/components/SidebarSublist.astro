@@ -1,0 +1,13 @@
+---
+import SidebarItems from '@/components/SidebarItems.astro';
+import type { SidebarEntry } from '@/utils/sidebar';
+
+interface Props {
+  sublist: Array<SidebarEntry>;
+  nested?: boolean;
+}
+
+const { sublist, nested } = Astro.props;
+---
+
+<SidebarItems entries={sublist} nested={nested} />

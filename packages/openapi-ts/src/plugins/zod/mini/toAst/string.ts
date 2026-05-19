@@ -1,4 +1,4 @@
-import type { SchemaWithType } from '@hey-api/shared';
+import type { SchemaVisitorContext, SchemaWithType } from '@hey-api/shared';
 
 import { $ } from '../../../../ts-dsl';
 import { identifiers } from '../../constants';
@@ -119,10 +119,10 @@ function stringResolver(ctx: StringResolverContext): Chain {
 }
 
 export function stringToNode({
+  path,
   plugin,
   schema,
-}: {
-  plugin: ZodPlugin['Instance'];
+}: SchemaVisitorContext<ZodPlugin['Instance']> & {
   schema: SchemaWithType<'string'>;
 }): Chain {
   const z = plugin.external('zod.z');
@@ -140,6 +140,7 @@ export function stringToNode({
       minLength: minLengthNode,
       pattern: patternNode,
     },
+    path,
     plugin,
     schema,
     symbols: {

@@ -1,0 +1,173 @@
+---
+import type { Sponsor, SponsorTier } from '@/data/sponsors';
+import SponsorLogo from './SponsorLogo.astro';
+
+interface Props {
+  label: string;
+  sponsors: Array<Sponsor>;
+  tier: SponsorTier;
+}
+
+const TIER_HEIGHT: Record<SponsorTier, number> = {
+  platinum: 52,
+  gold:     44,
+  silver:   32,
+  bronze:   22,
+  friends:  20,
+};
+
+const TIER_VARIANT: Record<SponsorTier, 'featured' | 'standard' | 'compact'> = {
+  platinum: 'featured',
+  gold:     'featured',
+  silver:   'standard',
+  bronze:   'compact',
+  friends:  'compact',
+};
+
+const { tier, label, sponsors } = Astro.props;
+const height = TIER_HEIGHT[tier];
+const variant = TIER_VARIANT[tier];
+const showTagline = tier === 'platinum' || tier === 'gold';
+---
+
+<div class="tier">
+  <p class="tier-label">{label}</p>
+
+  <ul class:list={['tier-list', `tier-list--${variant}`]}>
+    {sponsors.map((sponsor) => (
+      <li class:list={['tier-item', `tier-item--${variant}`, sponsor.class]}>
+        <a
+          href={sponsor.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="tier-link"
+          aria-label={sponsor.name}
+        >
+          <span class="tier-logo" style={`--logo-height: ${height}px`}>
+            <SponsorLogo logo={sponsor.logo} height={height} />
+          </span>
+          {showTagline && sponsor.tagline && (
+            <p class="tier-tagline">{sponsor.tagline}</p>
+          )}
+        </a>
+      </li>
+    ))}
+  </ul>
+</div>
+
+<style>
+  .tier {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .tier-label {
+    color: var(--vp-c-text-2);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    margin: 0;
+    text-transform: uppercase;
+  }
+
+  .tier-list {
+    display: grid;
+    gap: 1rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .tier-list--featured {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .tier-list--standard {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .tier-list--compact {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .tier-item {
+    margin: 0;
+  }
+
+  .tier-link {
+    background: var(--dt-bg);
+    border-radius: 10px;
+    border: 1px solid var(--vp-c-divider);
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    justify-content: center;
+    text-decoration: none;
+    transition: border-color 180ms ease, transform 120ms ease;
+  }
+
+  .tier-link:hover {
+    border-color: color-mix(in srgb, var(--vp-c-brand-1) 40%, transparent);
+    transform: translateY(-1px);
+  }
+
+  .tier-item--featured .tier-link {
+    border-color: color-mix(in srgb, var(--vp-c-brand-1) 25%, transparent);
+    min-height: 110px;
+    padding: 1.5rem;
+  }
+
+  .tier-item--standard .tier-link {
+    align-items: flex-start;
+    min-height: 80px;
+    padding: 1.25rem 1.5rem;
+  }
+
+  .tier-item--compact .tier-link {
+    align-items: center;
+    flex-direction: row;
+    padding: 0.75rem 1.25rem;
+  }
+
+  .tier-logo {
+    align-items: center;
+    display: flex;
+    flex-shrink: 0;
+    height: var(--logo-height);
+  }
+
+  .tier-logo :global(picture),
+  .tier-logo :global(img),
+  .tier-logo :global(.logo),
+  .tier-logo :global(.logo-composite) {
+    height: 100%;
+    width: auto;
+  }
+
+  .tier-logo :global(svg) {
+    color: var(--sl-color-text) !important;
+    height: 100% !important;
+    width: auto !important;
+  }
+
+  .tier-tagline {
+    color: var(--vp-c-text-2);
+    font-size: 12px;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .tier-link::after {
+    display: none !important;
+  }
+
+  @media (max-width: 700px) {
+    .tier-list--featured,
+    .tier-list--standard {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

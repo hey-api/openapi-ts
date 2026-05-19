@@ -1,0 +1,31 @@
+openapi: 3.2.0
+info:
+  title: Equity Trading API
+  version: 1.2.0
+components:
+  schemas:
+    Order:
+      type: object
+      required: [id, symbol, side, type, quantity, status, createdAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+        symbol:
+          type: string
+        side:
+          type: string
+          enum: [buy, sell]
+        type:
+          type: string
+          enum: [market, limit, stop, stop_limit]
+        quantity:
+          type: number
+        price:
+          type: number
+        status:
+          type: string
+          enum: [pending, open, filled, partially_filled, cancelled, rejected]
+        createdAt:
+          type: string
+          format: date-time

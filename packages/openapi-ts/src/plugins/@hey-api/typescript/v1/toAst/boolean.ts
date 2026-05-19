@@ -1,4 +1,4 @@
-import type { SchemaWithType } from '@hey-api/shared';
+import type { SchemaVisitorContext, SchemaWithType } from '@hey-api/shared';
 
 import { $ } from '../../../../../ts-dsl';
 import type { BooleanResolverContext } from '../../resolvers';
@@ -24,10 +24,10 @@ function booleanResolver(ctx: BooleanResolverContext): Type {
 }
 
 export function booleanToAst({
+  path,
   plugin,
   schema,
-}: {
-  plugin: HeyApiTypeScriptPlugin['Instance'];
+}: SchemaVisitorContext<HeyApiTypeScriptPlugin['Instance']> & {
   schema: SchemaWithType<'boolean'>;
 }): Type {
   const ctx: BooleanResolverContext = {
@@ -36,6 +36,7 @@ export function booleanToAst({
       base: baseNode,
       const: constNode,
     },
+    path,
     plugin,
     schema,
   };

@@ -1009,7 +1009,7 @@ export const defaultConfig: ZodPlugin['Config'] = {
       value: plugin.config.webhooks,
     });
   },
-  tags: ['validator'],
+  tags: ['transformer', 'validator'],
 };
 
 /**

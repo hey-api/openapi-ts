@@ -4,7 +4,6 @@ import * as v from 'valibot';
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import { postFooResponseTransformer } from './transformers.gen';
 import type { PostFooData, PostFooResponses } from './types.gen';
 import { vPostFooResponse } from './valibot.gen';
 
@@ -28,8 +27,7 @@ export const postFoo = <ThrowOnError extends boolean = false>(options?: Options<
         path: v.optional(v.never()),
         query: v.optional(v.never())
     }), data),
-    responseTransformer: postFooResponseTransformer,
-    responseValidator: async (data) => await v.parseAsync(vPostFooResponse, data),
+    responseTransformer: async (data) => await v.parseAsync(vPostFooResponse, data),
     url: '/foo',
     ...options
 });

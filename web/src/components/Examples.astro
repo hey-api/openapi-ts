@@ -1,0 +1,15 @@
+---
+import { EXAMPLES_URL, GITHUB_URL } from '@/data/constants';
+
+interface Props {
+  githubExamplePath?: string;
+}
+
+const { githubExamplePath = '' } = Astro.props;
+---
+
+<h2>Examples</h2>
+
+<p>
+  You can view live examples on <a href={EXAMPLES_URL} target="_blank" rel="noopener noreferrer">StackBlitz</a> or on <a href={`${GITHUB_URL}/tree/main/examples${githubExamplePath}`} target="_blank" rel="noopener noreferrer">GitHub</a>.
+</p>

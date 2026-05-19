@@ -1,4 +1,4 @@
-import type { SchemaWithType } from '@hey-api/shared';
+import type { SchemaVisitorContext, SchemaWithType } from '@hey-api/shared';
 
 import { $ } from '../../../../py-dsl';
 import type { UnknownResolverContext } from '../../resolvers';
@@ -17,10 +17,10 @@ function unknownResolver(ctx: UnknownResolverContext): PydanticType {
 }
 
 export function unknownToType({
+  path,
   plugin,
   schema,
-}: {
-  plugin: PydanticPlugin['Instance'];
+}: SchemaVisitorContext<PydanticPlugin['Instance']> & {
   schema: SchemaWithType<'unknown'>;
 }): PydanticType {
   const ctx: UnknownResolverContext = {
@@ -28,6 +28,7 @@ export function unknownToType({
     nodes: {
       base: baseNode,
     },
+    path,
     plugin,
     schema,
   };

@@ -1,0 +1,207 @@
+---
+import config from 'virtual:starlight/user-config';
+import { Icon } from '@astrojs/starlight/components';
+
+const locales = Object.entries(config.locales ?? {}).map(([code, locale]) => ({
+  code: code === 'root' ? '' : code,
+  label: locale?.label ?? code,
+}))
+---
+
+{locales.length > 1 && (
+  <details class="lang-toggle" data-locales={JSON.stringify(locales)}>
+    <summary>
+      <Icon name="translate" size="0.875rem" />
+      <span class="stack" style="visibility:hidden">
+        {locales.map(({ code, label }) => (
+          <span data-lc={code}>{label}</span>
+        ))}
+      </span>
+      <Icon name="down-caret" size="0.625rem" class="caret" />
+    </summary>
+    <div class="dropdown">
+      {locales.map(({ code, label }) => (
+        <a data-lang-code={code}>{label}</a>
+      ))}
+    </div>
+  </details>
+)}
+
+<script>
+  interface Locale { code: string; label: string }
+  let keyBound = false;
+
+  function getCurrentCode(locales: Array<Locale>): string {
+    const { pathname } = window.location;
+    return (
+      locales.find(
+        ({ code }) =>
+          code &&
+          (pathname.startsWith(`/${code}/`) || pathname === `/${code}`)
+      )?.code ?? ''
+    )
+  }
+
+  function navigateTo(current: string, next: string) {
+    const { pathname, search, hash } = window.location;
+
+    let bare: string;
+    if (current) {
+      if (pathname.startsWith(`/${current}/`)) {
+        bare = pathname.slice(current.length + 1);
+      } else if (pathname === `/${current}`) {
+        bare = '/';
+      } else {
+        bare = pathname;
+      }
+    } else {
+      bare = pathname;
+    }
+
+    const newPath = (next ? `/${next}${bare}` : bare).replace(/\/$/, '') || '/';
+    window.location.href = newPath + search + hash;
+  }
+
+  function init() {
+    document.querySelectorAll<HTMLElement>('.lang-toggle').forEach((toggle) => {
+      const locales: Array<Locale> = JSON.parse(toggle.dataset.locales!)
+      const current = getCurrentCode(locales)
+
+      toggle.querySelectorAll<HTMLElement>('[data-lc]').forEach((el) => {
+        el.dataset.active = String(el.dataset.lc === current)
+      })
+
+      toggle.querySelectorAll<HTMLAnchorElement>('[data-lang-code]').forEach((a) => {
+        a.dataset.active = String(a.dataset.langCode === current)
+        a.addEventListener('click', (e) => {
+          e.preventDefault()
+          toggle.removeAttribute('open')
+          navigateTo(current, a.dataset.langCode!)
+        })
+      })
+
+      toggle.querySelectorAll<HTMLElement>('.stack').forEach((s) => s.style.visibility = '')
+    })
+
+    if (!keyBound) {
+      document.addEventListener('keydown', (e) => {
+        if (!e.altKey || e.code !== 'KeyL' || e.metaKey || e.ctrlKey) return
+        const toggle = document.querySelector<HTMLElement>('.lang-toggle')
+        if (!toggle) return
+        const locales: Array<Locale> = JSON.parse(toggle.dataset.locales!)
+        const current = getCurrentCode(locales)
+        const next = locales[(locales.findIndex((l) => l.code === current) + 1) % locales.length]
+        navigateTo(current, next.code)
+      })
+      keyBound = true
+    }
+  }
+
+  function initClickOutside() {
+    document.addEventListener('click', (e) => {
+      document.querySelectorAll<HTMLDetailsElement>('details.lang-toggle[open]').forEach((el) => {
+        if (!el.contains(e.target as Node)) {
+          el.removeAttribute('open');
+        }
+      });
+    });
+  }
+
+  init();
+  initClickOutside();
+  document.addEventListener('astro:after-swap', init);
+</script>
+
+<style>
+  .lang-toggle {
+    position: relative;
+  }
+
+  summary {
+    align-items: center;
+    background: var(--sl-color-bg-nav);
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: 0.5rem;
+    color: var(--sl-color-gray-2);
+    cursor: pointer;
+    display: flex;
+    font-size: var(--sl-text-xs);
+    gap: 0.375rem;
+    list-style: none;
+    padding: 0.3125rem 0.625rem;
+    transition: color 150ms ease, border-color 150ms ease;
+    user-select: none;
+    white-space: nowrap;
+    width: 100%;
+  }
+
+  summary::-webkit-details-marker { display: none; }
+
+  summary:hover {
+    border-color: var(--sl-color-gray-3);
+    color: var(--sl-color-white);
+  }
+
+  .stack {
+    display: grid;
+  }
+
+  .stack > [data-lc] {
+    grid-area: 1 / 1;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .stack > [data-active='true'] {
+    opacity: 1;
+  }
+
+  .caret {
+    margin-left: auto;
+    transition: transform 150ms ease;
+  }
+
+  .lang-toggle[open] .caret {
+    transform: rotate(180deg);
+  }
+
+  .dropdown {
+    background: var(--sl-color-bg-nav);
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: 0.5rem;
+    bottom: calc(100% + 0.375rem);
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    min-width: 100%;
+    padding: 0.25rem;
+    position: absolute;
+    right: 0;
+    z-index: 10;
+  }
+
+  .dropdown a {
+    border-radius: 0.3125rem;
+    color: var(--sl-color-gray-3);
+    cursor: pointer;
+    font-size: var(--sl-text-xs);
+    padding: 0.25rem 0.625rem;
+    text-decoration: none;
+    transition: background 150ms ease, color 150ms ease;
+    white-space: nowrap;
+  }
+
+  .dropdown a:hover {
+    background: var(--sl-color-bg-sidebar);
+    color: var(--sl-color-white);
+  }
+
+  .dropdown a[data-active='true'] {
+    color: var(--sl-color-white);
+  }
+
+  .lang-toggle summary::after,
+  .dropdown a::after {
+    display: none;
+  }
+</style>

@@ -1,0 +1,491 @@
+---
+const eyebrow = "Coming soon";
+const title = "Python is next.";
+const description =
+  "The ecosystem trusted by TypeScript developers is coming to Python codebases. Production-grade SDKs, Pydantic models, and more. Sign up for early access.";
+const placeholder = "stan.smith@company.com";
+const buttonLabel = "Notify me";
+const labelSending = "Sending…";
+const labelSuccess = "You're in";
+const messageSuccess = "We'll reach out as Python support launches.";
+const messageError = "Something went wrong. Please try again.";
+---
+
+<div class="email-cta" id="email-cta">
+  <div class="hex-bg" aria-hidden="true"></div>
+  <div class="glow-orb" aria-hidden="true"></div>
+  <div class="smoke" aria-hidden="true">
+    <div class="smoke-orb s1"></div>
+    <div class="smoke-orb s2"></div>
+    <div class="smoke-orb s3"></div>
+    <div class="smoke-orb s4"></div>
+    <div class="smoke-orb s5"></div>
+  </div>
+
+  <div class="section-inner">
+    <div class="email-cta-inner">
+      <div class="email-cta-text">
+        <span class="eyebrow">{eyebrow}</span>
+        <h2 class="email-cta-title">{title}</h2>
+        <p class="email-cta-desc">{description}</p>
+      </div>
+      <form
+        action="#"
+        class="email-form"
+        data-email-form
+        data-button-label={buttonLabel}
+        data-label-sending={labelSending}
+        data-label-success={labelSuccess}
+        data-message-error={messageError}
+        data-message-success={messageSuccess}
+        method="post"
+      >
+        <input
+          type="email"
+          name="email"
+          placeholder={placeholder}
+          required
+          class="email-input"
+          aria-label="Email address"
+        />
+        <button type="submit" class="btn-notify">
+          {buttonLabel}
+        </button>
+        <p class="form-message" aria-live="polite"></p>
+      </form>
+    </div>
+  </div>
+</div>
+
+<style>
+  .email-cta {
+    --cta-bg: #0a091a;
+    --cta-border-gold: rgba(212, 134, 184, 0.3);
+    --cta-hex-stroke: rgba(245, 175, 35, 0.07);
+    --cta-text-muted: rgba(205, 214, 244, 0.7);
+    --cta-input-bg: rgba(255, 255, 255, 0.05);
+    --cta-input-border: rgba(255, 255, 255, 0.1);
+    --cta-input-border-focus: rgba(232, 160, 32, 0.55);
+    --cta-input-text: rgba(205, 214, 244, 0.85);
+    --cta-input-placeholder: rgba(166, 173, 200, 0.4);
+
+    position: relative;
+    padding: 80px 0;
+    background: var(--cta-bg);
+    border-top: 1px solid var(--cta-border-gold);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    overflow: hidden;
+  }
+
+  :root[data-theme='light'] .email-cta {
+    --cta-bg: #100f20;
+    --cta-border-gold: rgba(212, 134, 184, 0.3);
+  }
+
+  .hex-bg {
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='50' viewBox='0 0 56 50'%3E%3Cpolygon points='28,1 55,15 55,35 28,49 1,35 1,15' fill='none' stroke='rgba(245,175,35,0.06)' stroke-width='1'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 56px 50px;
+    mask-image: radial-gradient(ellipse 80% 100% at 50% 50%, black 20%, transparent 80%);
+    -webkit-mask-image: radial-gradient(ellipse 80% 100% at 50% 50%, black 20%, transparent 80%);
+  }
+
+  .glow-orb {
+    position: absolute;
+    top: 50%;
+    left: -120px;
+    transform: translateY(-50%);
+    width: 500px;
+    height: 300px;
+    background: radial-gradient(ellipse at center, rgba(245, 165, 30, 0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .section-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  .email-cta-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+
+  .email-cta-text {
+    flex: 1;
+    min-width: 280px;
+  }
+
+  .eyebrow {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #e8a020;
+    border: 1px solid rgba(232, 160, 32, 0.35);
+    border-radius: 100px;
+    padding: 3px 10px;
+    margin-bottom: 16px;
+    background: rgba(232, 160, 32, 0.08);
+  }
+
+  .email-cta-title {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    margin: 0 0 12px;
+    line-height: 1.1;
+    background: linear-gradient(135deg, #f7d060 10%, #e09820 60%, #c87810 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .email-cta-desc {
+    font-size: 14px;
+    color: var(--cta-text-muted);
+    margin: 0;
+    line-height: 1.65;
+    max-width: 420px;
+  }
+
+  .email-form {
+    align-items: flex-start;
+    display: flex;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 0;
+    width: 360px;
+  }
+
+  .form-message {
+    color: transparent;
+    font-size: 13px;
+    line-height: 1.5;
+    margin: 6px 2px 0;
+    min-height: 1.5em;
+    width: 100%;
+  }
+
+  .form-message[data-type='success'] {
+    color: rgba(232, 160, 32, 0.85);
+  }
+
+  .form-message[data-type='error'] {
+    color: rgba(220, 80, 60, 0.9);
+  }
+
+  .email-input {
+    background: var(--cta-input-bg);
+    border-radius: 8px;
+    border: 1px solid var(--cta-input-border);
+    color: var(--cta-input-text);
+    flex: 1;
+    font-size: 14px;
+    min-width: 0;
+    outline: none;
+    padding: 11px 14px;
+    transition: border-color 150ms ease, background 150ms ease;
+    width: auto;
+  }
+
+  .email-input::placeholder {
+    color: var(--cta-input-placeholder);
+  }
+
+  .email-input:focus {
+    border-color: var(--cta-input-border-focus);
+    background: rgba(255, 255, 255, 0.07);
+  }
+
+  @keyframes shimmer {
+    0%   { background-position: 200% center; }
+    100% { background-position: -200% center; }
+  }
+
+  .btn-notify {
+    align-items: center;
+    animation: shimmer 3.5s linear infinite;
+    background: linear-gradient(
+      110deg,
+      #c87810 0%,
+      #e8a020 30%,
+      #f7d060 50%,
+      #e8a020 70%,
+      #c87810 100%
+    );
+    background-size: 200% auto;
+    border-radius: 8px;
+    border: none;
+    color: #1a1100;
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 14px;
+    font-weight: 600;
+    justify-content: center;
+    letter-spacing: -0.01em;
+    min-width: 110px;
+    padding: 11px 22px;
+    transition: opacity 150ms ease, transform 100ms ease;
+    white-space: nowrap;
+  }
+
+  .btn-notify:hover {
+    opacity: 0.92;
+    transform: translateY(-1px);
+  }
+
+  .btn-notify:active {
+    transform: translateY(0);
+  }
+
+  .btn-notify:disabled {
+    animation: none;
+    opacity: 0.5;
+    cursor: default;
+    transform: none;
+  }
+
+  .email-input,
+  .btn-notify {
+    box-sizing: border-box;
+    height: 48px;
+  }
+
+  @keyframes smoke-rise {
+    0%   { transform: translateY(0)   scale(1);    opacity: 0; }
+    15%  { opacity: 1; }
+    80%  { opacity: 0.7; }
+    100% { transform: translateY(-120px) scale(1.4); opacity: 0; }
+  }
+
+  .smoke {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 160px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .smoke-orb {
+    position: absolute;
+    bottom: -40px;
+    border-radius: 50%;
+    filter: blur(38px);
+    animation: smoke-rise linear infinite;
+    background: radial-gradient(circle, rgba(245, 175, 35, 0.18) 0%, transparent 70%);
+  }
+
+  .s1 {
+    width: 220px; height: 220px;
+    left: 8%;
+    animation-duration: 22s;
+    animation-delay: 0s;
+    opacity: 0.09;
+  }
+
+  .s2 {
+    width: 180px; height: 180px;
+    left: 28%;
+    animation-duration: 28s;
+    animation-delay: -9s;
+    opacity: 0.07;
+    background: radial-gradient(circle, rgba(255, 200, 60, 0.15) 0%, transparent 70%);
+  }
+
+  .s3 {
+    width: 260px; height: 260px;
+    left: 48%;
+    animation-duration: 33s;
+    animation-delay: -5s;
+    opacity: 0.08;
+  }
+
+  .s4 {
+    width: 160px; height: 160px;
+    left: 68%;
+    animation-duration: 25s;
+    animation-delay: -14s;
+    opacity: 0.06;
+    background: radial-gradient(circle, rgba(212, 134, 184, 0.12) 0%, transparent 70%);
+  }
+
+  .s5 {
+    width: 200px; height: 200px;
+    left: 82%;
+    animation-duration: 30s;
+    animation-delay: -3s;
+    opacity: 0.07;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .smoke-orb { animation: none; opacity: 0; }
+  }
+
+  @media (max-width: 640px) {
+    .email-cta { padding: 56px 0; }
+    .email-cta-title { font-size: 24px; }
+    .glow-orb { display: none; }
+    .email-input { font-size: 16px; }
+  }
+
+  @media (max-width: 900px) {
+    .email-cta-inner {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .email-form { width: 100%; }
+    .email-input { flex: 1; width: auto; }
+  }
+</style>
+
+<script>
+  import { subscribeEmail } from '@/utils/email';
+  import { preloadSound } from '@/utils/sound';
+
+  const successSound = preloadSound('ui-success');
+
+  const emailForm = document.querySelector<HTMLFormElement>('[data-email-form]');
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const { buttonLabel, labelSending, labelSuccess, messageSuccess, messageError } = emailForm?.dataset ?? {};
+
+  function launchConfetti(origin: HTMLButtonElement) {
+    if (reducedMotion) return;
+
+    const canvas = document.createElement('canvas');
+    document.body.appendChild(canvas);
+    canvas.style.inset = '0';
+    canvas.style.pointerEvents = 'none';
+    canvas.style.position = 'fixed';
+    canvas.style.zIndex = '9999';
+
+    requestAnimationFrame(() => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const ctx = canvas.getContext('2d');
+      const rect = origin.getBoundingClientRect();
+      const ox = rect.left + rect.width / 2;
+      const oy = rect.top + rect.height / 2;
+
+      const COLORS = [
+        'rgba(247, 208, 96, 0.9)',
+        'rgba(232, 160, 32, 0.85)',
+        'rgba(200, 120, 16, 0.8)',
+        'rgba(255, 220, 100, 0.9)',
+        'rgba(212, 134, 184, 0.7)',
+      ];
+
+      const particles = Array.from({ length: 60 }, () => {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 3 + Math.random() * 5;
+        return {
+          color: COLORS[Math.floor(Math.random() * COLORS.length)],
+          opacity: 1,
+          rotation: Math.random() * Math.PI * 2,
+          rotationSpeed: (Math.random() - 0.5) * 0.2,
+          shape: Math.random() > 0.35 ? 'rect' : 'circle',
+          size: 4 + Math.random() * 5,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed - 3,
+          x: ox,
+          y: oy,
+        };
+      });
+
+      const GRAVITY = 0.18;
+      const DRAG = 0.97;
+      const DURATION = 120;
+      let tick = 0;
+      let frame: number;
+
+      function draw() {
+        if (!ctx) return;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        tick++;
+
+        for (const p of particles) {
+          p.vy += GRAVITY;
+          p.vx *= DRAG;
+          p.vy *= DRAG;
+          p.x += p.vx;
+          p.y += p.vy;
+          p.rotation += p.rotationSpeed;
+          p.opacity = Math.max(0, 1 - tick / DURATION);
+
+          ctx.save();
+          ctx.globalAlpha = p.opacity;
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.rotation);
+          ctx.fillStyle = p.color;
+
+          if (p.shape === 'circle') {
+            ctx.beginPath();
+            ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2);
+            ctx.fill();
+          } else {
+            ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.5);
+          }
+
+          ctx.restore();
+        }
+
+        if (tick < DURATION) {
+          frame = requestAnimationFrame(draw);
+        } else {
+          cancelAnimationFrame(frame);
+          canvas.remove();
+        }
+      }
+
+      frame = requestAnimationFrame(draw);
+    });
+  }
+
+  emailForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const input = emailForm.querySelector<HTMLInputElement>('input[type="email"]');
+    const btn = emailForm.querySelector<HTMLButtonElement>('button[type="submit"]');
+    if (!input || !btn) return;
+
+    if (labelSending) btn.textContent = labelSending;
+    btn.disabled = true;
+    input.disabled = true;
+    setMessage('', null);
+
+    try {
+      await subscribeEmail(input.value);
+      if (labelSuccess) btn.textContent = labelSuccess;
+      successSound.play();
+      setMessage(messageSuccess, 'success');
+      launchConfetti(btn);
+    } catch {
+      if (buttonLabel) btn.textContent = buttonLabel;
+      btn.disabled = false;
+      input.disabled = false;
+      setMessage(messageError, 'error');
+    }
+  });
+
+  function setMessage(text: string | undefined, type: 'success' | 'error' | null) {
+    const el = emailForm?.querySelector<HTMLParagraphElement>('.form-message');
+    if (!el) return;
+    if (text) el.textContent = text;
+    el.dataset.type = type ?? '';
+  }
+</script>

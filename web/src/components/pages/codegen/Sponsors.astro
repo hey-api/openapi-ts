@@ -1,0 +1,96 @@
+---
+import { sponsors } from '@/data/sponsors';
+import SponsorTierComponent from '@/components/SponsorTier.astro';
+import { getVisibleSponsorTiers } from '@/utils/sponsors';
+
+const HEADING = 'Sponsors';
+const SUBHEADING = 'They make this possible. We make it worth sponsoring.';
+
+const { activeTiers } = getVisibleSponsorTiers(sponsors);
+const visibleSponsors = sponsors.filter((s) => activeTiers.includes(s.tier));
+---
+
+<div class="homepage-sponsors">
+  <div class="hs-inner">
+    <div class="hs-header">
+      <h2 class="hs-title">{HEADING}</h2>
+      <p class="hs-subtitle">{SUBHEADING}</p>
+    </div>
+
+    <div class="sponsors-strip">
+      {activeTiers.map((tier) => {
+        const tierSponsors = visibleSponsors.filter((s) => s.tier === tier);
+        if (!tierSponsors.length) return null;
+        return <SponsorTierComponent tier={tier} label={tier} sponsors={tierSponsors} />;
+      })}
+    </div>
+
+    <div class="sponsors-footer not-content">
+      <a href="/sponsors" class="sponsors-cta">Become a sponsor →</a>
+    </div>
+  </div>
+</div>
+
+<style>
+  .homepage-sponsors {
+    border-bottom: 1px solid var(--vp-c-divider);
+    padding: 80px 0;
+  }
+
+  .hs-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin: 0 auto;
+    max-width: 900px;
+    padding: 0 24px;
+  }
+
+  .hs-header {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 0.5rem;
+  }
+
+  .hs-title {
+    color: var(--sl-color-text);
+    font-size: clamp(22px, 3.5vw, 32px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin: 0;
+  }
+
+  .hs-subtitle {
+    color: var(--sl-color-gray-2);
+    font-size: 15px;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .sponsors-strip {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .sponsors-footer {
+    align-items: center;
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
+
+  .sponsors-cta {
+    color: var(--vp-c-text-2);
+    font-size: 12px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: opacity 150ms ease;
+  }
+
+  .sponsors-cta:hover {
+    opacity: 0.75;
+  }
+</style>

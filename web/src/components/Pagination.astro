@@ -1,0 +1,120 @@
+---
+import { Icon } from '@astrojs/starlight/components';
+import { getVersionedBasePath } from '@/data/versions';
+
+const { dir, pagination, sidebar } = Astro.locals.starlightRoute;
+const isRtl = dir === 'rtl';
+
+type SidebarEntry = typeof sidebar[number];
+
+function flattenSidebar(entries: typeof sidebar): Array<SidebarEntry> {
+  return entries.flatMap((e) =>
+    e.type === 'group' ? flattenSidebar(e.entries ?? []) : [e]
+  );
+}
+
+const currentPath = Astro.url.pathname.replace(/\/$/, '');
+const basePath = getVersionedBasePath(currentPath) ?? currentPath;
+const isVersioned = basePath !== currentPath;
+
+let { prev, next } = pagination;
+
+if (isVersioned) {
+  const flat = flattenSidebar(sidebar);
+  const idx = flat.findIndex(
+    (e) => e.type === 'link' && e.href?.replace(/\/$/, '') === basePath
+  );
+  if (idx !== -1) {
+    const prevEntry = flat[idx - 1];
+    const nextEntry = flat[idx + 1];
+    prev = prevEntry?.type === 'link' ? ({
+      attrs: {},
+      badge: undefined,
+      href: prevEntry.href,
+      isCurrent: false,
+      label: prevEntry.label,
+      type: 'link',
+    } satisfies Extract<SidebarEntry, { type: 'link' }>) : undefined;
+    next = nextEntry?.type === 'link' ? ({
+      attrs: {},
+      badge: undefined,
+      href: nextEntry.href,
+      isCurrent: false,
+      label: nextEntry.label,
+      type: 'link',
+    } satisfies Extract<SidebarEntry, { type: 'link' }>) : undefined;
+  }
+}
+
+if (!prev && !next) {
+  return;
+}
+---
+
+<div class="pagination-links print:hidden" {dir}>
+  {
+    prev && (
+      <a href={prev.href} rel="prev" class="sl-flex">
+        <span class="eyebrow sl-flex">
+          <Icon name={isRtl ? 'right-arrow' : 'left-arrow'} size="1.5em" />
+          {Astro.locals.t('page.previousLink')}
+        </span>
+        <span class="link-title">{prev.label}</span>
+      </a>
+    )
+  }
+  {
+    next && (
+      <a href={next.href} rel="next" class="sl-flex">
+        <span class="eyebrow sl-flex">
+          {Astro.locals.t('page.nextLink')}
+          <Icon name={isRtl ? 'left-arrow' : 'right-arrow'} size="1.5em" />
+        </span>
+        <span class="link-title">{next.label}</span>
+      </a>
+    )
+  }
+</div>
+
+<style>
+  .pagination-links {
+    display: flex;
+    gap: 1rem;
+    border-top: 1px solid var(--sl-flexoki-shadow-shade);
+    padding-block: 2rem;
+  }
+
+  a {
+    flex-direction: column;
+    font-size: var(--sl-text-body-sm);
+    text-decoration: none;
+    color: var(--sl-color-gray-3);
+    width: 100%;
+    flex-grow: 1;
+
+    &[rel='next'] {
+      align-items: flex-end;
+    }
+
+    &:hover,
+    &:focus-visible {
+      color: var(--sl-color-text);
+      outline-offset: 0.375rem;
+    }
+  }
+  .eyebrow {
+    align-items: center;
+    gap: 0.1875rem;
+  }
+  svg {
+    margin-inline: -0.1875em 0;
+    [rel='next'] & {
+      margin-inline: 0 -0.1875em;
+    }
+  }
+  .link-title {
+    font-size: var(--sl-text-lg);
+    line-height: var(--sl-line-height-headings);
+    font-weight: 600;
+  }
+</style>

@@ -1,4 +1,4 @@
-import type { SchemaWithType } from '@hey-api/shared';
+import type { SchemaVisitorContext, SchemaWithType } from '@hey-api/shared';
 
 import { maybeBigInt, shouldCoerceToBigInt } from '../../../../plugins/shared/utils/coerce';
 import { getIntegerLimit } from '../../../../plugins/shared/utils/formats';
@@ -96,10 +96,10 @@ function numberResolver(ctx: NumberResolverContext): Chain {
 }
 
 export function numberToNode({
+  path,
   plugin,
   schema,
-}: {
-  plugin: ZodPlugin['Instance'];
+}: SchemaVisitorContext<ZodPlugin['Instance']> & {
   schema: SchemaWithType<'integer' | 'number'>;
 }): Chain {
   const z = plugin.external('zod.z');
@@ -114,6 +114,7 @@ export function numberToNode({
       max: maxNode,
       min: minNode,
     },
+    path,
     plugin,
     schema,
     symbols: {

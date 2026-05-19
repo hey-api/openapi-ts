@@ -1,0 +1,77 @@
+---
+import { Image } from 'astro:assets';
+
+import type { Person } from '@/data/people';
+
+interface Props {
+  people: Array<Person>;
+}
+
+const { people } = Astro.props;
+---
+
+<ul>
+  {people.map((person) => (
+    <li>
+      <a href={person.github} rel="noopener noreferrer" target="_blank">
+        <Image src={person.avatar} alt={person.name} width={48} height={48} />
+        <span>{person.name}</span>
+      </a>
+    </li>
+  ))}
+</ul>
+
+<style>
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4em;
+    list-style: none;
+    margin-block: 1rem;
+    padding: 0;
+  }
+
+  li {
+    margin: 0;
+  }
+
+  a {
+    align-items: center;
+    background: var(--sl-color-bg-sidebar);
+    border-radius: 999px;
+    border: 1px solid var(--vp-c-divider);
+    column-gap: 0.5em;
+    display: inline-flex;
+    padding: 0.2em 0.75em 0.2em 0.2em;
+    text-decoration: none;
+    transition:
+      border-color 150ms ease,
+      background 150ms ease;
+  }
+
+  a:hover,
+  a:focus-visible {
+    background: transparent;
+    border-color: var(--vp-c-brand-1);
+    outline: none;
+  }
+
+  a::after {
+    display: none !important;
+  }
+
+  img {
+    border-radius: 50%;
+    display: block;
+    height: 1.5rem;
+    width: 1.5rem;
+  }
+
+  span {
+    color: var(--sl-color-text);
+    font-size: 0.85rem;
+    font-weight: 500;
+    line-height: 1;
+    white-space: nowrap;
+  }
+</style>

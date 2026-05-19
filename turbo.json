@@ -10,14 +10,7 @@
         "tsconfig.json",
         "tsdown.config.ts"
       ],
-      "outputs": [
-        ".next/**",
-        "!.next/cache/**",
-        ".output/**",
-        ".svelte-kit/**",
-        ".vitepress/dist/**",
-        "dist/**"
-      ]
+      "outputs": [".next/**", "!.next/cache/**", ".output/**", ".svelte-kit/**", "dist/**"]
     },
     "dev": {
       "cache": false,

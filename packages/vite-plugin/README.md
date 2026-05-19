@@ -17,7 +17,7 @@
   <span>&nbsp;•&nbsp;</span>
   <a href="https://github.com/hey-api/openapi-ts/issues">Issues</a>
   <span>&nbsp;•&nbsp;</span>
-  <a href="https://heyapi.dev/openapi-ts/community/contributing">Contribute</a>
+  <a href="https://heyapi.dev/docs/openapi/typescript/community/contributing">Contribute</a>
 </p>
 
 ## About
@@ -41,7 +41,7 @@ Part of the Hey API ecosystem.
 
 Want to see your code in products used by millions?
 
-Start with our [Contributing](https://heyapi.dev/openapi-ts/community/contributing) guide and release your first feature.
+Start with our [Contributing](https://heyapi.dev/docs/openapi/typescript/community/contributing) guide and release your first feature.
 
 <!-- template-contributing-end -->
 
@@ -150,6 +150,14 @@ Partners behind the future of API tooling. [Become a sponsor](https://github.com
           </picture>
         </a>
       </td>
+      <td align="center" width="136px">
+        <a href="https://kutt.to/HW4GYR" target="_blank">
+          <picture height="34px">
+            <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/photon/logo-light.svg">
+            <img alt="Photon logo" height="34px" src="https://heyapi.dev/assets/photon/logo-dark.svg">
+          </picture>
+        </a>
+      </td>
     </tr>
   </tbody>
 </table>
@@ -162,7 +170,7 @@ You can download `@hey-api/vite-plugin` from npm using your favorite package man
 #### npm
 
 ```sh
-npm add @hey-api/vite-plugin -D -E
+npm install @hey-api/vite-plugin -D -E
 ```
 
 #### pnpm
@@ -180,7 +188,7 @@ yarn add @hey-api/vite-plugin -D -E
 #### bun
 
 ```sh
-bun add @hey-api/vite-plugin -D -E
+bun add @hey-api/vite-plugin -D
 ```
 
 ## Usage

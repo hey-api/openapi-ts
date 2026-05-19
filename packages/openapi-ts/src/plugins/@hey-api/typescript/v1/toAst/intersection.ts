@@ -1,9 +1,6 @@
-import type { IR } from '@hey-api/shared';
-
 import { $ } from '../../../../../ts-dsl';
 import type { IntersectionResolverContext } from '../../resolvers';
-import type { Type, TypeScriptResult } from '../../shared/types';
-import type { HeyApiTypeScriptPlugin } from '../../types';
+import type { Type } from '../../shared/types';
 
 function baseNode(ctx: IntersectionResolverContext): Type {
   const { childResults } = ctx;
@@ -22,14 +19,13 @@ function intersectionResolver(ctx: IntersectionResolverContext): Type {
 export function intersectionToAst({
   childResults,
   parentSchema,
+  path,
   plugin,
   schemas,
-}: {
-  childResults: ReadonlyArray<TypeScriptResult>;
-  parentSchema: IR.SchemaObject;
-  plugin: HeyApiTypeScriptPlugin['Instance'];
-  schemas: ReadonlyArray<IR.SchemaObject>;
-}): Type {
+}: Pick<
+  IntersectionResolverContext,
+  'childResults' | 'parentSchema' | 'path' | 'plugin' | 'schemas'
+>): Type {
   const ctx: IntersectionResolverContext = {
     $,
     childResults,
@@ -37,6 +33,7 @@ export function intersectionToAst({
       base: baseNode,
     },
     parentSchema,
+    path,
     plugin,
     schemas,
   };

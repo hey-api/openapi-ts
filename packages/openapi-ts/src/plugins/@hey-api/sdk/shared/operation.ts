@@ -1,4 +1,3 @@
-import type { SymbolMeta } from '@hey-api/codegen-core';
 import type { IR } from '@hey-api/shared';
 import { statusCodeToGroup } from '@hey-api/shared';
 
@@ -11,8 +10,9 @@ import type { HeyApiSdkPlugin } from '../types';
 import { isInstance } from '../v1/node';
 import { operationAuth } from './auth';
 import { nuxtTypeComposable, nuxtTypeDefault } from './constants';
+import { createResponseHandlers } from './handlers';
 import { getSignatureParameters } from './signature';
-import { createRequestValidator, createResponseValidator } from './validator';
+import { createRequestValidator } from './validator';
 
 /** TODO: needs complete refactor */
 export const operationOptionsType = ({
@@ -334,22 +334,14 @@ export function operationStatements({
   }
 
   const requestValidator = createRequestValidator({ operation, plugin });
-  const responseValidator = createResponseValidator({ operation, plugin });
+  const responseHandlers = createResponseHandlers({ operation, plugin });
+
   if (requestValidator) {
-    reqOptions.prop('requestValidator', requestValidator.arrow());
+    reqOptions.prop('requestValidator', requestValidator);
   }
 
-  if (plugin.config.transformer) {
-    const query: SymbolMeta = {
-      category: 'transform',
-      resource: 'operation',
-      resourceId: operation.id,
-      role: 'response',
-    };
-    if (plugin.isSymbolRegistered(query)) {
-      const ref = plugin.referenceSymbol(query);
-      reqOptions.prop('responseTransformer', $(ref));
-    }
+  if (responseHandlers.transformer) {
+    reqOptions.prop('responseTransformer', responseHandlers.transformer);
   }
 
   let hasServerSentEvents = false;
@@ -376,8 +368,8 @@ export function operationStatements({
     }
   }
 
-  if (responseValidator) {
-    reqOptions.prop('responseValidator', responseValidator.arrow());
+  if (responseHandlers.validator) {
+    reqOptions.prop('responseValidator', responseHandlers.validator);
   }
 
   if (plugin.config.responseStyle === 'data') {

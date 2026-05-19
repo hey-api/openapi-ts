@@ -1,0 +1,712 @@
+---
+import arrowRightSvg from '@/assets/icons/arrow-right.svg?raw';
+import crownSvg from '@/assets/icons/crown.svg?raw';
+import eyeSvg from '@/assets/icons/eye.svg?raw';
+import fileHighlightSvg from '@/assets/icons/file-highlight.svg?raw';
+import historySvg from '@/assets/icons/history.svg?raw';
+import mailSvg from '@/assets/icons/mail.svg?raw';
+import mapSvg from '@/assets/icons/map.svg?raw';
+import starSvg from '@/assets/icons/star.svg?raw';
+import CurrentSponsors from '@/components/Sponsors.astro';
+import { SPONSOR_TIERS, SPONSORS_URL } from '@/data/constants';
+import { fetchRepoStars } from '@/utils/github';
+import { fetchWeeklyDownloads, formatDownloads } from '@/utils/npm';
+
+import Hero from './Hero.astro';
+
+const [tsDownloads, repoStars] = await Promise.all([
+  fetchWeeklyDownloads('@hey-api/openapi-ts'),
+  fetchRepoStars('hey-api/openapi-ts'),
+]);
+
+function formatStars(n: number): string {
+  if (n >= 1000) return `${(n / 1000).toFixed(1)}K`;
+  return String(n);
+}
+
+const eyebrow = 'Open source';
+const titleStart = 'Fuel the future of';
+const titleAccent = 'API tooling.';
+const heroBody = 'The open source API tooling standard. Built to last, not to exit. Your sponsorship funds full-time development and keeps the project independent.';
+
+const stats = [
+  { num: tsDownloads ? formatDownloads(tsDownloads) : undefined, label: 'weekly downloads' },
+  { num: repoStars !== null ? formatStars(repoStars) : undefined, label: 'GitHub stars' },
+  { num: '1', label: 'maintainer' },
+];
+
+const whyItems = [
+  {
+    icon: eyeSvg,
+    title: 'Elite audience',
+    body: 'The best engineers use the best tools. Your brand in front of developers other tools don\'t reach.',
+  },
+  {
+    icon: fileHighlightSvg,
+    title: 'Contextual endorsement',
+    body: 'Where your product is relevant, we say so. Sponsors are woven into the content developers are already reading.',
+  },
+  {
+    icon: mapSvg,
+    title: 'Shape the roadmap',
+    body: 'Gold and above sponsors get their use cases prioritized. Your priorities become our priorities.',
+  },
+  {
+    icon: historySvg,
+    title: 'Evergreen attribution',
+    body: 'Listed in every changelog and release note. Searchable, permanent visibility that compounds as the project grows.',
+  },
+];
+
+function tierUrl(id: string): string {
+  return `${SPONSORS_URL}/sponsorships?tier_id=${id}`;
+}
+
+const featuredTiers = [
+  {
+    badge: 'Platinum',
+    badgeIcon: crownSvg,
+    price: '$2,500',
+    description: 'For companies that want maximum visibility and a direct stake in the project\'s direction.',
+    features: [
+      'Your brand, top-positioned across all docs pages',
+      'Your brand on GitHub README',
+      'Listed in every release changelog',
+      'Spotlight post on joining',
+      'Contextual mentions across relevant docs and content',
+      'Priority bug fixes and feature requests',
+      'Direct line to the maintainer',
+    ],
+    cta: 'Become a Platinum sponsor',
+    href: tierUrl(SPONSOR_TIERS.platinum),
+  },
+  {
+    badge: 'Gold',
+    badgeIcon: starSvg,
+    price: '$1,000',
+    description: 'For companies that depend on Hey API day-to-day and want to invest in its future.',
+    features: [
+      'Your brand across all docs pages',
+      'Your brand on GitHub README',
+      'Listed in every release changelog',
+      'Contextual mentions across relevant docs and content',
+      'Priority bug fixes and feature requests',
+    ],
+    cta: 'Become a Gold sponsor',
+    href: tierUrl(SPONSOR_TIERS.gold),
+  },
+];
+
+const minorTiers = [
+  {
+    name: 'Silver',
+    price: '$500',
+    features: [
+      'Your brand, prominently placed in docs and GitHub README',
+      'Contextual mentions across relevant docs and content',
+    ],
+    cta: 'Become a Silver sponsor',
+    href: tierUrl(SPONSOR_TIERS.silver),
+  },
+  {
+    name: 'Bronze',
+    price: '$250',
+    features: [
+      'Your brand in docs and GitHub README',
+      'Contextual mentions across relevant docs and content',
+    ],
+    cta: 'Become a Bronze sponsor',
+    href: tierUrl(SPONSOR_TIERS.bronze),
+  },
+];
+
+const individualTiers = [
+  { label: '$50 (Copper)', href: tierUrl(SPONSOR_TIERS.copper) },
+  { label: '$10', href: tierUrl(SPONSOR_TIERS.individual) },
+];
+
+const enterprise = {
+  heading: 'Need custom terms?',
+  body: 'Enterprise arrangements, invoice billing, and multi-year agreements available on request.',
+  email: 'lubos@heyapi.dev',
+  cta: 'Get in touch',
+};
+---
+
+<section class="sponsors-page">
+  <Hero
+    eyebrow={eyebrow}
+    titleStart={titleStart}
+    titleAccent={titleAccent}
+    heroBody={heroBody}
+    stats={stats}
+  />
+
+  <div class="section">
+    <p class="section-label">Why sponsor</p>
+    <div class="why-grid">
+      {whyItems.map((item) => (
+        <div class="why-item">
+          <div class="why-icon" aria-hidden="true">
+            <Fragment set:html={item.icon} />
+          </div>
+          <p class="why-title">{item.title}</p>
+          <p class="why-body">{item.body}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <div class="section">
+    <p class="section-label">Sponsorship tiers</p>
+
+    <div class="tiers-featured">
+      {featuredTiers.map((tier) => (
+        <div class="tier-card tier-card--featured">
+          <div class="tier-badge">
+            <span class="tier-badge-icon" aria-hidden="true">
+              <Fragment set:html={tier.badgeIcon} />
+            </span>
+            {tier.badge}
+          </div>
+          <p class="tier-price">{tier.price} <span>/ month</span></p>
+          <p class="tier-desc">{tier.description}</p>
+          <ul class="tier-features">
+            {tier.features.map((f) => (
+              <li>{f}</li>
+            ))}
+          </ul>
+          <a href={tier.href} class="btn-sponsor btn-sponsor--primary">
+            {tier.cta}
+            <span class="btn-icon" aria-hidden="true">
+              <Fragment set:html={arrowRightSvg} />
+            </span>
+          </a>
+        </div>
+      ))}
+    </div>
+
+    <div class="tiers-minor">
+      {minorTiers.map((tier) => (
+        <div class="tier-minor">
+          <div class="tier-minor-header">
+            <p class="tier-minor-name">{tier.name}</p>
+            <p class="tier-minor-price">{tier.price} <span>/ month</span></p>
+          </div>
+          <ul class="tier-minor-features">
+            {tier.features.map((f) => (
+              <li>{f}</li>
+            ))}
+          </ul>
+          <a href={tier.href} class="tier-minor-cta">
+            {tier.cta}
+            <span class="btn-icon" aria-hidden="true">
+              <Fragment set:html={arrowRightSvg} />
+            </span>
+          </a>
+        </div>
+      ))}
+    </div>
+
+    <p class="individual-row">
+      Individual tiers also available at
+      {individualTiers.map((t, i) => (
+        <>
+          <a href={t.href}>{t.label}</a>
+          {i < individualTiers.length - 1 ? ' and ' : ''}
+        </>
+      ))}
+      per month.
+    </p>
+  </div>
+
+  <div class="section enterprise-section">
+    <div class="enterprise-inner">
+      <div class="enterprise-text">
+        <h3>{enterprise.heading}</h3>
+        <p>{enterprise.body}</p>
+      </div>
+      <a href={`mailto:${enterprise.email}`} class="btn-secondary">
+        <span class="btn-icon" aria-hidden="true">
+          <Fragment set:html={mailSvg} />
+        </span>
+        {enterprise.cta}
+      </a>
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <div class="section sponsors-section">
+    <p class="section-label">Current sponsors</p>
+    <CurrentSponsors />
+  </div>
+
+</section>
+
+<style>
+  .sponsors-page {
+    padding: calc(80px + var(--announcement-height-budget)) 0 5rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .btn-sponsor--primary { animation: none; }
+  }
+
+  .section {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  .section + .section {
+    margin-top: 4rem;
+  }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--vp-c-text-2);
+    margin: 0 0 1.25rem;
+  }
+
+  .divider {
+    border: none;
+    border-top: 1px solid var(--vp-c-divider);
+    margin: 3.5rem auto;
+    max-width: 900px;
+  }
+
+  .why-grid {
+    border-radius: 12px;
+    border: 1px solid var(--vp-c-divider);
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    left: 50%;
+    margin-top: 0;
+    overflow: hidden;
+    position: relative;
+    transform: translateX(-50%);
+    width: min(1200px, calc(100vw - 48px));
+  }
+
+  .why-item {
+    background: var(--dt-bg);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0;
+    padding: 1.5rem;
+  }
+
+  .why-item + .why-item {
+    border-left: 1px solid var(--vp-c-divider);
+  }
+
+  .why-item:nth-child(even) {
+    border-left: 1px solid var(--vp-c-divider);
+  }
+
+  .why-item:nth-child(n+3) {
+    border-top: none;
+  }
+
+  .why-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--vp-c-brand-1) 10%, transparent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.25rem;
+    color: var(--vp-c-brand-1);
+    flex-shrink: 0;
+  }
+
+  .why-icon :global(svg) {
+    width: 16px;
+    height: 16px;
+    display: block;
+  }
+
+  .why-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--vp-c-text-1);
+    line-height: 1.3;
+    margin: 0;
+  }
+
+  .why-body {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--vp-c-text-2);
+    margin: 0;
+  }
+
+  .tiers-featured {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-bottom: 1rem;
+    margin-top: 0;
+  }
+
+  .tier-card {
+    background: var(--dt-bg);
+    border-radius: 12px;
+    border: 1px solid var(--vp-c-divider);
+    display: flex;
+    flex-direction: column;
+    margin-top: 0;
+    padding: 1.5rem;
+    transition: border-color 180ms ease;
+  }
+
+  .tier-card:hover {
+    border-color: color-mix(in srgb, var(--vp-c-brand-1) 40%, transparent);
+  }
+
+  .tier-card--featured {
+    border-color: color-mix(in srgb, var(--vp-c-brand-1) 50%, transparent);
+  }
+
+  .tier-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--vp-c-brand-1);
+    background: color-mix(in srgb, var(--vp-c-brand-1) 10%, transparent);
+    border-radius: 5px;
+    padding: 3px 8px;
+    margin-bottom: 1rem;
+    width: fit-content;
+  }
+
+  .tier-badge-icon :global(svg) {
+    display: block;
+    height: 12px;
+    width: 12px;
+  }
+
+  .tier-price {
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--vp-c-text-1);
+    margin: 0 0 0.2rem;
+    line-height: 1;
+  }
+
+  .tier-price span {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--vp-c-text-2);
+  }
+
+  .tier-desc {
+    font-size: 13px;
+    color: var(--vp-c-text-2);
+    line-height: 1.55;
+    margin: 0.75rem 0 1.25rem;
+  }
+
+  .tier-features {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    flex: 1;
+    margin: 0 0 1.5rem;
+  }
+
+  .tier-features li {
+    color: var(--vp-c-text-2);
+    font-size: 13px;
+    line-height: 1.4;
+    margin-top: 0;
+    padding-left: 1rem;
+    position: relative;
+  }
+
+  .tier-features li::before {
+    content: '–';
+    color: var(--vp-c-brand-1);
+    position: absolute;
+    left: 0;
+  }
+
+  .btn-icon {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .btn-icon :global(svg) {
+    width: 14px;
+    height: 14px;
+    display: block;
+  }
+
+  .btn-sponsor {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    padding: 10px 16px;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 600 !important;
+    text-decoration: none;
+    border: none;
+    transition: opacity 150ms ease, transform 100ms ease;
+    margin-top: auto;
+  }
+
+  .btn-sponsor:hover {
+    opacity: 0.88;
+    transform: translateY(-1px);
+  }
+
+  .btn-sponsor:active {
+    transform: translateY(0);
+  }
+
+  @keyframes shimmer-btn {
+    0%   { background-position: 200% center; }
+    100% { background-position: -200% center; }
+  }
+
+  .btn-sponsor--primary {
+    background: linear-gradient(
+      110deg,
+      var(--vp-c-brand-3) 0%,
+      var(--vp-c-brand-1) 30%,
+      var(--vp-c-brand-2) 50%,
+      var(--vp-c-brand-1) 70%,
+      var(--vp-c-brand-3) 100%
+    );
+    background-size: 200% auto;
+    animation: shimmer-btn 3.5s linear infinite;
+    color: #fff !important;
+  }
+
+  .tiers-minor {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-top: 0;
+  }
+
+  .tier-minor {
+    background: var(--dt-bg-2);
+    border-radius: 12px;
+    border: 1px solid var(--vp-c-divider);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 0;
+    padding: 1.25rem 1.5rem;
+    transition: border-color 180ms ease;
+  }
+
+  .tier-minor:hover {
+    border-color: color-mix(in srgb, var(--vp-c-brand-1) 40%, transparent);
+  }
+
+  .tier-minor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .tier-minor-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--vp-c-text-1);
+    margin: 0;
+  }
+
+  .tier-minor-price {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--vp-c-text-1);
+    margin: 0;
+  }
+
+  .tier-minor-price span {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--vp-c-text-2);
+  }
+
+  .tier-minor-features {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    flex: 1;
+    margin: 0;
+  }
+
+  .tier-minor-features li {
+    font-size: 12px;
+    color: var(--vp-c-text-2);
+    line-height: 1.4;
+    padding-left: 1rem;
+    position: relative;
+  }
+
+  .tier-minor-features li::before {
+    content: '–';
+    color: var(--vp-c-brand-1);
+    position: absolute;
+    left: 0;
+  }
+
+  .tier-minor-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--vp-c-brand-1);
+    text-decoration: none;
+    margin-top: auto;
+    padding-top: 0.25rem;
+    transition: opacity 150ms ease;
+    width: fit-content;
+  }
+
+  .tier-minor-cta:hover {
+    opacity: 0.75;
+  }
+
+  .tier-minor-cta .btn-icon :global(svg) {
+    width: 12px;
+    height: 12px;
+  }
+
+  .individual-row {
+    margin-top: 1.25rem;
+    font-size: 13px;
+    color: var(--vp-c-text-2);
+  }
+
+  .individual-row a {
+    color: var(--vp-c-brand-1);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .individual-row a:hover {
+    text-decoration: underline;
+  }
+
+  .enterprise-section {
+    margin-top: 3rem !important;
+  }
+
+  .enterprise-inner {
+    background: var(--dt-bg-2);
+    border: 1px solid var(--vp-c-divider);
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+
+  .enterprise-text h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--vp-c-text-1);
+    margin: 0 0 0.3rem;
+  }
+
+  .enterprise-text p {
+    font-size: 13px;
+    color: var(--vp-c-text-2);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  @media (max-width: 900px) {
+    .sponsors-page {
+      padding-top: calc(48px + var(--announcement-height-budget));
+    }
+
+    .why-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100vw - 48px);
+    }
+
+    .why-item + .why-item {
+      border-left: none;
+    }
+
+    .why-item:nth-child(even) {
+      border-left: 1px solid var(--vp-c-divider);
+    }
+
+    .why-item:nth-child(n+3) {
+      border-top: 1px solid var(--vp-c-divider);
+    }
+  }
+
+  @media (max-width: 700px) {
+    .sponsors-page {
+      padding-top: calc(40px + var(--announcement-height-budget));
+    }
+
+    .why-grid {
+      grid-template-columns: 1fr;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100vw - 48px);
+    }
+
+    .why-item + .why-item {
+      border-left: none;
+      border-top: 1px solid var(--vp-c-divider);
+    }
+
+    .why-item:nth-child(even) {
+      border-left: none;
+    }
+
+    .why-item:nth-child(n+3) {
+      border-top: 1px solid var(--vp-c-divider);
+    }
+
+    .tiers-featured,
+    .tiers-minor {
+      grid-template-columns: 1fr;
+    }
+
+    .enterprise-inner {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .enterprise-inner .btn-secondary {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>

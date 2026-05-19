@@ -1,4 +1,4 @@
-import type { SchemaWithType } from '@hey-api/shared';
+import type { SchemaVisitorContext, SchemaWithType } from '@hey-api/shared';
 
 import { $ } from '../../../../../ts-dsl';
 import type { NumberResolverContext } from '../../resolvers';
@@ -32,10 +32,10 @@ function numberResolver(ctx: NumberResolverContext): Type {
 }
 
 export function numberToAst({
+  path,
   plugin,
   schema,
-}: {
-  plugin: HeyApiTypeScriptPlugin['Instance'];
+}: SchemaVisitorContext<HeyApiTypeScriptPlugin['Instance']> & {
   schema: SchemaWithType<'integer' | 'number'>;
 }): Type {
   const ctx: NumberResolverContext = {
@@ -44,6 +44,7 @@ export function numberToAst({
       base: baseNode,
       const: constNode,
     },
+    path,
     plugin,
     schema,
   };

@@ -1,10 +1,8 @@
 import { ref } from '@hey-api/codegen-core';
-import type { SchemaVisitorContext, SchemaWithType, Walker } from '@hey-api/shared';
 
 import { $ } from '../../../../../ts-dsl';
 import type { TupleResolverContext } from '../../resolvers';
-import type { Type, TypeScriptResult } from '../../shared/types';
-import type { HeyApiTypeScriptPlugin } from '../../types';
+import type { Type } from '../../shared/types';
 
 function baseNode(ctx: TupleResolverContext): Type {
   const { plugin, schema, walk } = ctx;
@@ -39,26 +37,21 @@ function tupleResolver(ctx: TupleResolverContext): Type {
 }
 
 export function tupleToAst({
+  path,
   plugin,
   schema,
   walk,
-  walkerCtx,
-}: {
-  plugin: HeyApiTypeScriptPlugin['Instance'];
-  schema: SchemaWithType<'tuple'>;
-  walk: Walker<TypeScriptResult, HeyApiTypeScriptPlugin['Instance']>;
-  walkerCtx: SchemaVisitorContext<HeyApiTypeScriptPlugin['Instance']>;
-}): Type {
+}: Pick<TupleResolverContext, 'path' | 'plugin' | 'schema' | 'walk'>): Type {
   const ctx: TupleResolverContext = {
     $,
     nodes: {
       base: baseNode,
       const: constNode,
     },
+    path,
     plugin,
     schema,
     walk,
-    walkerCtx,
   };
 
   const resolver = plugin.config['~resolvers']?.tuple;

@@ -23,6 +23,12 @@
       "preLaunchTask": "build:openapi-python",
       "program": "${workspaceFolder}/packages/openapi-python/dist/run.mjs",
       "cwd": "${workspaceFolder}/dev"
+    },
+    {
+      "name": "Docs development server",
+      "request": "launch",
+      "command": "./node_modules/.bin/astro dev",
+      "type": "node-terminal"
     }
   ]
 }

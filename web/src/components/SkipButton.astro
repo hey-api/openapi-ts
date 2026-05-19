@@ -1,0 +1,45 @@
+---
+interface Props {
+  class?: string;
+  id: string;
+}
+const { class: className, id } = Astro.props;
+---
+
+<button class:list={['skip-btn', className]} id={id} aria-label="Skip to next section">
+  Skip section <span aria-hidden="true">↓</span>
+</button>
+
+<style>
+  .skip-btn {
+    background: none;
+    border: none;
+    color: var(--sl-color-gray-3);
+    cursor: pointer;
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    opacity: 1;
+    padding: 0;
+    transform: translateY(0);
+    transition: color 200ms ease, opacity 250ms ease, transform 250ms ease, visibility 0ms linear;
+    visibility: visible;
+  }
+
+  .skip-btn.is-hidden {
+    opacity: 0;
+    transform: translateY(6px);
+    transition: color 200ms ease, opacity 250ms ease, transform 250ms ease, visibility 0ms linear 250ms;
+    visibility: hidden;
+  }
+
+  .skip-btn:hover {
+    color: var(--sl-color-text);
+  }
+
+  @media (max-width: 640px) {
+    .skip-btn {
+      display: none;
+    }
+  }
+</style>

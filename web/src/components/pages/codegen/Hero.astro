@@ -1,0 +1,365 @@
+---
+import pythonSvg from '@/assets/lang/python.svg?raw';
+import typescriptSvg from '@/assets/lang/typescript.svg?raw';
+import type { ToggleOption } from '@/components/ToggleDropdown.astro';
+import ToggleDropdown from '@/components/ToggleDropdown.astro';
+import { announcement } from '@/data/announcement';
+import { CODEGEN_OUTPUT_ATTR } from '@/utils/codegen-context';
+import { CODEGEN_DEFAULT_OUTPUT } from '@/utils/codegen-url';
+import type { CodegenOutput } from '@/utils/codegen-url';
+import { fetchWeeklyDownloads, formatDownloads } from '@/utils/npm';
+
+import InstallCommand from './InstallCommand.astro';
+import type { PreviewFile } from './PreviewWindow.astro';
+import PreviewWindow from './PreviewWindow.astro';
+import pyCodePydantic from './previews/trading/python/pydantic.py?raw';
+import pyCodeSdk from './previews/trading/python/sdk.py?raw';
+import tsCodeReactQuery from './previews/trading/typescript/react-query.ts?raw';
+import tsCodeSdk from './previews/trading/typescript/sdk.ts?raw';
+import tsCodeTypes from './previews/trading/typescript/types.ts?raw';
+import tsCodeValibot from './previews/trading/typescript/valibot.ts?raw';
+import tsCodeZod from './previews/trading/typescript/zod.ts?raw';
+
+interface Props {
+  defaultOutput?: CodegenOutput;
+}
+
+interface InputOutputOption extends ToggleOption {
+  description?: string;
+  downloads?: string;
+  installCommand?: string;
+  link?: string;
+  previewFiles?: Array<PreviewFile>;
+}
+
+const { defaultOutput = CODEGEN_DEFAULT_OUTPUT } = Astro.props;
+
+const INPUT_OPTIONS: Array<InputOutputOption> = [
+  {
+    label: 'OpenAPI',
+    value: 'openapi',
+  },
+];
+
+const [tsDownloads, pyDownloads] = await Promise.all([
+  fetchWeeklyDownloads('@hey-api/openapi-ts'),
+  fetchWeeklyDownloads('@hey-api/openapi-python'),
+]);
+
+const OUTPUT_OPTIONS: Array<InputOutputOption> = [
+  {
+    description: 'Production-grade API infrastructure. Typed SDKs, Zod schemas, TanStack Query hooks, and 20+ plugins. Free and open source.',
+    downloads: tsDownloads ? `${formatDownloads(tsDownloads)} downloads last week` : undefined,
+    icon: typescriptSvg,
+    installCommand: 'npx @hey-api/openapi-ts',
+    label: 'TypeScript',
+    link: '/docs/openapi/typescript/get-started',
+    previewFiles: [
+      { name: 'types', code: tsCodeTypes, lang: 'typescript' },
+      { name: 'Zod', code: tsCodeZod, lang: 'typescript' },
+      { name: 'Valibot', code: tsCodeValibot, lang: 'typescript' },
+      { name: 'SDK', code: tsCodeSdk, lang: 'typescript' },
+      { name: 'TanStack Query', code: tsCodeReactQuery, lang: 'typescript' },
+    ],
+    value: 'typescript',
+  },
+  {
+    description: 'Production-grade API infrastructure. Typed SDKs and Pydantic models. Free and open source.',
+    downloads: pyDownloads ? `${formatDownloads(pyDownloads)} downloads last week` : undefined,
+    icon: pythonSvg,
+    installCommand: 'npx @hey-api/openapi-python',
+    label: 'Python',
+    link: '/docs/openapi/python/get-started',
+    previewFiles: [
+      { name: 'Pydantic', code: pyCodePydantic, lang: 'python' },
+      { name: 'SDK', code: pyCodeSdk, lang: 'python' },
+    ],
+    value: 'python',
+  },
+];
+
+const defaultOutputOption = OUTPUT_OPTIONS.find((o) => o.value === defaultOutput) ?? OUTPUT_OPTIONS[0]!;
+
+const outputOptions = OUTPUT_OPTIONS.map(({ description, downloads, installCommand, link, value }) => ({
+  description,
+  downloads,
+  installCommand,
+  link,
+  value,
+}));
+---
+
+<section class="landing-hero" data-options={JSON.stringify(outputOptions)}>
+  <div class="hero-inner">
+    <div class="hero-content">
+      {announcement && (
+        <a
+          href={announcement.link ?? '#'}
+          class="announcement-pill"
+          {...(announcement.scrollTo ? { 'data-scroll-to': announcement.scrollTo } : {})}
+          {...(!announcement.link && !announcement.scrollTo ? { role: 'presentation' } : {})}
+        >
+          {announcement.badge && <span class="announcement-badge">{announcement.badge}</span>}
+          {announcement.text}
+        </a>
+      )}
+      <h1 class="headline">
+        <ToggleDropdown
+          options={INPUT_OPTIONS}
+          defaultValue="openapi"
+          label="input"
+          shimmer
+          shortcut="KeyI"
+          syncKey="toggle:codegen-input"
+        />
+        to
+        <ToggleDropdown
+          options={OUTPUT_OPTIONS}
+          defaultValue={defaultOutputOption.value}
+          label="output"
+          shimmer
+          shortcut="KeyO"
+          syncKey="toggle:codegen-output"
+        />
+        in seconds.
+      </h1>
+
+      <p class="description">{defaultOutputOption.description}</p>
+      <script is:inline define:vars={{ outputOptions, outputAttr: CODEGEN_OUTPUT_ATTR }}>
+        (function () {
+          var output = document.documentElement.dataset[outputAttr];
+          var opt = outputOptions.find(function (o) { return o.value === output; });
+          if (!opt?.description) return;
+          var el = document.currentScript.previousElementSibling;
+          if (el) el.textContent = opt.description;
+        })();
+      </script>
+
+      <InstallCommand
+        command={defaultOutputOption.installCommand ?? ''}
+        downloads={defaultOutputOption.downloads}
+        outputOptions={outputOptions}
+      />
+
+      <div class="cta-section">
+        <a href={defaultOutputOption.link} class="btn-primary cta-get-started">
+          Get Started <span aria-hidden="true">→</span>
+        </a>
+        <script is:inline define:vars={{ outputOptions, outputAttr: CODEGEN_OUTPUT_ATTR }}>
+          (function () {
+            var output = document.documentElement.dataset[outputAttr];
+            var opt = outputOptions.find(function (o) { return o.value === output; });
+            if (!opt?.link) return;
+            var el = document.currentScript.previousElementSibling;
+            if (el) el.href = opt.link;
+          })();
+        </script>
+        <a
+          href="https://stackblitz.com/edit/hey-api-example"
+          class="btn-secondary"
+          target="_blank"
+          rel="noopener"
+        >
+          View Demo ↗
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-preview">
+      {OUTPUT_OPTIONS.map((option) => (
+        <PreviewWindow
+          files={option.previewFiles ?? []}
+          syncKey={`preview:${option.value as CodegenOutput}:tab`}
+          value={option.value}
+        />
+      ))}
+    </div>
+  </div>
+
+  <script>
+    import { onCodegenParams } from '@/utils/codegen-context';
+
+    type ToggleOption = {
+      description?: string;
+      downloads?: string;
+      installCommand?: string;
+      link?: string;
+      value: string;
+    };
+
+    const section = document.querySelector<HTMLElement>('.landing-hero');
+    const outputOptions: Array<ToggleOption> = JSON.parse(
+      section?.dataset.options ?? '[]',
+    );
+
+    onCodegenParams(({ output }) => {
+      const opt = outputOptions.find((o) => o.value === output);
+      if (!opt) return;
+
+      const description = document.querySelector('.description');
+      const cta = document.querySelector<HTMLAnchorElement>('.cta-get-started');
+      const installEl = document.querySelector<HTMLElement>('.install[data-command]');
+
+      if (description) description.textContent = opt.description ?? '';
+      if (installEl && opt.installCommand) installEl.dataset.command = opt.installCommand;
+      if (cta && opt.link) cta.href = opt.link;
+
+      const stat = document.querySelector<HTMLElement>('.downloads');
+      if (stat) {
+        const text = stat.querySelector<HTMLElement>('.downloads-text');
+        const icon = stat.querySelector<HTMLElement>('.downloads-icon');
+        if (text) text.textContent = opt.downloads ?? '';
+        if (icon) icon.style.display = opt.downloads ? '' : 'none';
+      }
+
+      document.querySelectorAll<HTMLElement>('[data-preview-group]').forEach(
+        (group) => {
+          group.hidden = group.dataset.previewGroup !== output;
+        },
+      );
+    });
+
+    const scrollTarget = document.querySelector<HTMLElement>('[data-scroll-to]');
+    scrollTarget?.addEventListener('click', (e) => {
+      const id = (e.currentTarget as HTMLElement).dataset.scrollTo;
+      const target = id && document.getElementById(id);
+      if (!target) return;
+      e.preventDefault();
+      target.scrollIntoView({ block: 'start' });
+    });
+  </script>
+</section>
+
+<style>
+  .landing-hero {
+    margin-inline: calc(50% - 50vw);
+    margin-top: 0;
+    padding: calc(80px + var(--announcement-height-budget)) 0 64px;
+    width: 100vw;
+  }
+
+  .hero-inner {
+    align-items: center;
+    display: flex;
+    gap: 48px;
+    justify-content: center;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  .hero-content {
+    flex: 1;
+    max-width: 620px;
+  }
+
+  .hero-preview {
+    flex: 1;
+    margin-top: 0;
+    max-width: 500px;
+    min-height: 441px; /* 400px codes + ~40px tabs + 1px borders */
+    position: relative;
+  }
+
+  .announcement-pill {
+    align-items: center;
+    background: color-mix(in srgb, var(--vp-c-brand-1) 10%, transparent);
+    border-radius: 999px;
+    border: 1px solid color-mix(in srgb, var(--vp-c-brand-1) 40%, transparent);
+    color: var(--vp-c-brand-1) !important;
+    display: inline-flex;
+    font-size: 12px;
+    font-weight: 600;
+    gap: 8px;
+    margin-bottom: 16px;
+    padding: 5px 12px;
+    text-decoration: none;
+    transition: background 150ms ease, transform 100ms ease;
+  }
+
+  .announcement-pill:has(.announcement-badge) {
+    padding: 3px 12px 3px 3px;
+  }
+
+  .announcement-badge {
+    background: var(--vp-c-brand-1);
+    border-radius: 999px;
+    color: var(--sl-color-bg);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    line-height: 1.4;
+    padding: 5px 8px;
+    text-transform: uppercase;
+  }
+
+  .announcement-pill:hover {
+    background: color-mix(in srgb, var(--vp-c-brand-1) 16%, transparent);
+    color: var(--vp-c-brand-1) !important;
+    transform: translateY(-1px);
+  }
+
+  .headline {
+    color: var(--sl-color-text);
+    font-size: clamp(36px, 6vw, 56px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin: 0 0 24px;
+  }
+
+  .description {
+    color: var(--sl-color-gray-2);
+    font-size: 17px;
+    line-height: 1.6;
+    margin: 0 0 28px;
+    max-width: 520px;
+  }
+
+  .cta-section {
+    display: flex;
+    gap: 12px;
+  }
+
+  @media (max-width: 900px) {
+    .landing-hero {
+      margin-inline: 0;
+      padding: calc(48px + var(--announcement-height-budget)) 0 32px;
+      width: auto;
+    }
+
+    .hero-inner {
+      flex-direction: column;
+      padding: 0 24px;
+    }
+
+    .hero-content {
+      max-width: 100%;
+      width: 100%;
+    }
+
+    .hero-preview {
+      margin-bottom: 0;
+      max-width: 100%;
+      width: 100%;
+    }
+
+    .description {
+      max-width: 100%;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .landing-hero {
+      padding: calc(40px + var(--announcement-height-budget)) 0 32px;
+    }
+
+    .headline {
+      font-size: 32px;
+    }
+
+    .hero-preview {
+      overflow: hidden;
+      width: 100%;
+    }
+  }
+</style>

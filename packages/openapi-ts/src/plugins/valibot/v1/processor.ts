@@ -6,7 +6,7 @@ import { exportAst } from '../shared/export';
 import type { ProcessorContext, ProcessorResult } from '../shared/processor';
 import type { ValibotFinal } from '../shared/types';
 import type { ValibotPlugin } from '../types';
-import { createVisitor } from './walker';
+import { createVisitor } from './visitor';
 
 export function createProcessor(plugin: ValibotPlugin['Instance']): ProcessorResult {
   const processor = createSchemaProcessor();

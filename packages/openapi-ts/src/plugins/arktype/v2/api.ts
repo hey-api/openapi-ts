@@ -4,10 +4,12 @@ import { $ } from '../../../ts-dsl';
 import type { ValidatorArgs } from '../shared/types';
 import type { ArktypePlugin } from '../types';
 
+type ArrowFunc = Extract<ReturnType<typeof $.func>, { '~mode': 'arrow' }>;
+
 export function createRequestValidatorV2({
   operation,
   plugin,
-}: RequestSchemaContext<ArktypePlugin['Instance']>): ReturnType<typeof $.func> | undefined {
+}: RequestSchemaContext<ArktypePlugin['Instance']>): ArrowFunc | undefined {
   const symbol = plugin.querySymbol({
     category: 'schema',
     resource: 'operation',
@@ -41,7 +43,7 @@ export function createRequestValidatorV2({
 export function createResponseValidatorV2({
   operation,
   plugin,
-}: ValidatorArgs): ReturnType<typeof $.func> | undefined {
+}: ValidatorArgs): ArrowFunc | undefined {
   const symbol = plugin.querySymbol({
     category: 'schema',
     resource: 'operation',

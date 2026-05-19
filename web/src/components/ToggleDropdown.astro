@@ -1,0 +1,395 @@
+---
+import type { SyncKey } from '@/utils/sync-storage';
+
+export interface ToggleOption {
+  badge?: 'soon';
+  icon?: string;
+  label: string;
+  value: string;
+}
+
+interface Props {
+  defaultValue?: string;
+  label?: string;
+  options: Array<ToggleOption>;
+  shimmer?: boolean;
+  shortcut?: string;
+  syncKey?: SyncKey;
+}
+
+const { options, defaultValue, label, shimmer, shortcut, syncKey } = Astro.props;
+
+const activeOption = options.find(opt => opt.value === defaultValue) || options[0];
+---
+
+{(options.length === 1 || !label) ? (
+  <span class="toggle-static">{activeOption?.label}</span>
+) : (
+  <span class="toggle-wrapper">
+    <button
+      class:list={['headline-toggle', { 'headline-toggle--shimmer': shimmer }]}
+      data-dropdown={label}
+      data-shortcut={shortcut}
+      data-sync-key={syncKey}
+      data-value={activeOption?.value}
+      set:html={activeOption?.label}
+    />
+    <div class="dropdown-panel" data-panel={label}>
+      {options.map((opt) => (
+        <button
+          class:list={['dropdown-item', { available: opt.badge !== 'soon', active: opt.value === defaultValue }]}
+          data-value={opt.value}
+          disabled={opt.badge === 'soon'}
+        >
+          <span class="item-label">
+            {opt.icon && <span class="item-icon" set:html={opt.icon} />}
+            {opt.label}
+          </span>
+          {opt.badge === 'soon' ? (
+            <span class="soon-badge">soon</span>
+          ) : (
+            <span class:list={['check-icon', { visible: opt.value === defaultValue }]}>✓</span>
+          )}
+        </button>
+      ))}
+    </div>
+  </span>
+)}
+
+{syncKey && options.length > 1 && label && (
+  <script is:inline define:vars={{ syncKey }}>
+    (function () {
+      var stored = localStorage.getItem('hey-api__' + syncKey);
+      if (!stored) return;
+
+      var wrapper = document.currentScript.previousElementSibling;
+      if (!wrapper || !wrapper.classList.contains('toggle-wrapper')) return;
+
+      var toggle = wrapper.querySelector('.headline-toggle');
+      var match  = wrapper.querySelector('.dropdown-item[data-value="' + stored + '"]');
+      if (!toggle || !match) return;
+
+      var labelEl = match.querySelector('.item-label');
+      var label = Array.from(labelEl ? labelEl.childNodes : [])
+        .filter(function (n) { return n.nodeType === 3; })
+        .map(function (n) { return (n.textContent || '').trim(); })
+        .filter(Boolean)
+        .join('');
+      if (!label) return;
+
+      toggle.textContent = label;
+      toggle.dataset.value = stored;
+
+      wrapper.querySelectorAll('.dropdown-item').forEach(function (item) {
+        var active = item.dataset.value === stored;
+        item.classList.toggle('active', active);
+        var check = item.querySelector('.check-icon');
+        if (check) check.classList.toggle('visible', active);
+      });
+    })();
+  </script>
+)}
+
+<script>
+  import { parseCodegenUrl } from '@/utils/codegen-url';
+  import { createHoverDropdown } from '@/utils/hover-dropdown';
+  import { preloadSound } from '@/utils/sound';
+  import type { SyncKey, SyncRegistry } from '@/utils/sync-storage';
+  import { getSynced, setSynced, onSynced } from '@/utils/sync-storage';
+
+  const shortcutHandlers = new Map<string, () => void>();
+  const selectSound = preloadSound('ui-select');
+
+  function initToggles() {
+    document.querySelectorAll<HTMLElement>('.toggle-wrapper').forEach((wrapper) => {
+      if (wrapper.dataset.initialized) return;
+      wrapper.dataset.initialized = 'true';
+
+      const toggle = wrapper.querySelector<HTMLButtonElement>('.headline-toggle');
+      const panel = wrapper.querySelector<HTMLElement>('.dropdown-panel');
+      const items = [...wrapper.querySelectorAll<HTMLButtonElement>('.dropdown-item')];
+
+      if (!toggle || !panel) return;
+
+      const t = toggle;
+      const p = panel;
+
+      const syncKey = t.dataset.syncKey as SyncKey | undefined;
+
+      function select(value: string, item: HTMLElement, emit = true, sound = emit) {
+        if (sound) selectSound.play();
+
+        const labelEl = item.querySelector<HTMLElement>('.item-label');
+        const label = [...(labelEl?.childNodes ?? [])]
+          .filter((n) => n.nodeType === Node.TEXT_NODE)
+          .map((n) => n.textContent?.trim())
+          .filter(Boolean)
+          .join('');
+
+        if (!label) return;
+
+        t.textContent = label;
+        t.dataset.value = value;
+
+        items.forEach((i) => {
+          const isActive = i === item;
+          i.classList.toggle('active', isActive);
+          const check = i.querySelector<HTMLElement>('.check-icon');
+          if (check) check.classList.toggle('visible', isActive);
+        });
+
+        if (syncKey && emit) {
+          setSynced(syncKey, value as SyncRegistry[typeof syncKey]);
+        }
+      }
+
+      function restore() {
+        if (!syncKey) return;
+
+        const urlParams = parseCodegenUrl(window.location.pathname);
+        if (urlParams) {
+          const urlValue = syncKey === 'toggle:codegen-output'
+            ? urlParams.output
+              : syncKey === 'toggle:codegen-input'
+                ? urlParams.input
+                : null;
+          if (urlValue && urlValue !== t.dataset.value) {
+            const item = items.find((i) => i.dataset.value === urlValue);
+            if (item) select(urlValue, item, true, false);
+          }
+          return;
+        }
+
+        const stored = getSynced(syncKey);
+        if (!stored) return;
+        const item = items.find((i) => i.dataset.value === stored);
+        if (item) select(stored as string, item, false);
+      }
+
+      restore();
+
+      const dropdown = createHoverDropdown({ wrapper, trigger: t, panel: p });
+
+      const shortcut = t.dataset.shortcut;
+      if (shortcut) {
+        shortcutHandlers.set(shortcut, () => {
+          const available = items.filter((i) => i.classList.contains('available'));
+          const current = available.findIndex((i) => i.dataset.value === t.dataset.value);
+          const next = available[(current + 1) % available.length];
+          if (next) select(next.dataset.value!, next);
+        });
+      }
+
+      items.forEach((item) => {
+        item.addEventListener('click', () => {
+          if (!item.classList.contains('available')) return;
+          if (item.dataset.value === t.dataset.value) return;
+          select(item.dataset.value!, item);
+          dropdown.close();
+        });
+      });
+
+      if (syncKey) {
+        onSynced(syncKey, (value) => {
+          if (t.dataset.value === value) return;
+          const item = items.find((i) => i.dataset.value === value);
+          if (item) select(value as string, item, false);
+        });
+      }
+    });
+  }
+
+  initToggles();
+  document.addEventListener('astro:page-load', initToggles);
+
+  document.addEventListener('click', () => {
+    document
+      .querySelectorAll<HTMLElement>('.dropdown-panel.open')
+      .forEach((el) => el.classList.remove('open'));
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      document
+        .querySelectorAll<HTMLElement>('.dropdown-panel.open')
+        .forEach((el) => el.classList.remove('open'));
+    }
+
+    if (!e.altKey || e.metaKey || e.ctrlKey) return;
+    const handler = shortcutHandlers.get(e.code);
+    if (!handler) return;
+    e.preventDefault();
+    handler();
+  });
+</script>
+
+<style>
+  .toggle-wrapper {
+    display: inline-block;
+    position: relative;
+  }
+
+  .toggle-wrapper::after {
+    content: '';
+    height: 0.5rem; /* must be >= dropdown-panel margin-top */
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 100%;
+  }
+
+  .toggle-static {
+    color: var(--sl-color-text);
+  }
+
+  .headline-toggle {
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    font-weight: inherit;
+    font: inherit;
+    padding: 0;
+    position: relative;
+    text-decoration: underline var(--vp-c-brand-1) 0.08em;
+    text-underline-offset: 5px;
+    transition: color 150ms ease, text-decoration-color 150ms ease;
+  }
+
+  .headline-toggle:hover {
+    color: var(--vp-c-brand-1);
+  }
+
+  .headline-toggle--shimmer {
+    background: linear-gradient(
+      110deg,
+      var(--vp-c-brand-3) 0%,
+      var(--vp-c-brand-1) 30%,
+      var(--vp-c-brand-2) 50%,
+      var(--vp-c-brand-1) 70%,
+      var(--vp-c-brand-3) 100%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 4s linear infinite;
+    text-decoration-color: transparent;
+  }
+
+  .headline-toggle--shimmer:hover {
+    color: inherit;
+    text-decoration-color: color-mix(in srgb, var(--vp-c-brand-1) 60%, transparent);
+  }
+
+  @keyframes shimmer {
+    0%   { background-position: 200% center; }
+    100% { background-position: -200% center; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .headline-toggle--shimmer {
+      animation: none;
+    }
+  }
+
+  .dropdown-panel {
+    background: var(--sl-color-bg-nav, #1e1e2e);
+    border-radius: 0.5rem;
+    border: 1px solid var(--vp-c-divider);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    left: 0;
+    margin-top: 0.375rem;
+    min-width: 160px;
+    opacity: 0;
+    padding: 0.25rem;
+    pointer-events: none;
+    position: absolute;
+    top: 100%;
+    transform: translateY(-4px);
+    transition: opacity 150ms ease, transform 150ms ease;
+    width: 100%;
+    z-index: 10;
+  }
+
+  .dropdown-panel.open {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .dropdown-item {
+    align-items: center;
+    background: transparent;
+    border-radius: 0.3125rem;
+    border: none;
+    color: var(--sl-color-gray-2);
+    cursor: pointer;
+    display: flex;
+    font-size: var(--sl-text-sm, 14px);
+    justify-content: space-between;
+    margin-top: 0 !important;
+    padding: 0.5rem 0.75rem;
+    text-align: left;
+    transition: background 150ms ease, color 150ms ease;
+    width: 100%;
+  }
+
+  .dropdown-item.available {
+    color: var(--sl-color-text);
+  }
+
+  .dropdown-item.available:hover {
+    background: var(--sl-color-bg-sidebar);
+    color: var(--sl-color-white);
+  }
+
+  .dropdown-item.available.active {
+    color: var(--vp-c-brand-1);
+    font-weight: 500;
+  }
+
+  .item-label {
+    align-items: center;
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .item-icon {
+    font-size: 0.75rem;
+    font-weight: 600;
+    height: 14px;
+    opacity: 0.7;
+    width: 14px;
+  }
+
+  .item-icon :global(svg) {
+    height: 100%;
+    width: 100%;
+  }
+
+  .check-icon {
+    display: none;
+    font-size: 0.875rem;
+    margin-left: 0.5rem;
+  }
+
+  .check-icon.visible {
+    display: inline;
+  }
+
+  .soon-badge {
+    background: var(--sl-color-bg-sidebar);
+    border-radius: 0.25rem;
+    color: var(--sl-color-gray-3);
+    font-size: 0.625rem;
+    font-weight: 500;
+    letter-spacing: 0.025em;
+    margin-left: 0.5rem;
+    padding: 0.125rem 0.375rem;
+    text-transform: uppercase;
+  }
+</style>

@@ -69,7 +69,6 @@ npx @hey-api/openapi-ts --help
 
 ### Build Issues and Workarounds
 
-- **Docs build may fail** due to pnpm version mismatch in VitePress - this is expected in some environments
 - Use `pnpm build --filter="@hey-api/**"` to build packages without docs
 - **Some tests may fail** in sandboxed environments due to network restrictions (OpenAPI spec downloads)
 - **Generated test files** in `packages/openapi-ts-tests/` contain auto-generated snapshots that may have linting warnings - this is expected

@@ -1,4 +1,4 @@
-import type { SchemaWithType } from '@hey-api/shared';
+import type { SchemaVisitorContext, SchemaWithType } from '@hey-api/shared';
 
 import { $ } from '../../../../py-dsl';
 import type { NeverResolverContext } from '../../resolvers';
@@ -17,10 +17,10 @@ function neverResolver(ctx: NeverResolverContext): PydanticType {
 }
 
 export function neverToType({
+  path,
   plugin,
   schema,
-}: {
-  plugin: PydanticPlugin['Instance'];
+}: SchemaVisitorContext<PydanticPlugin['Instance']> & {
   schema: SchemaWithType<'never'>;
 }): PydanticType {
   const ctx: NeverResolverContext = {
@@ -28,6 +28,7 @@ export function neverToType({
     nodes: {
       base: baseNode,
     },
+    path,
     plugin,
     schema,
   };

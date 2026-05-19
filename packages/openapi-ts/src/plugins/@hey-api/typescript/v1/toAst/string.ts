@@ -1,5 +1,5 @@
 import type { SymbolMeta } from '@hey-api/codegen-core';
-import type { SchemaWithType } from '@hey-api/shared';
+import type { SchemaVisitorContext, SchemaWithType } from '@hey-api/shared';
 import { toCase } from '@hey-api/shared';
 
 import { $ } from '../../../../../ts-dsl';
@@ -93,10 +93,10 @@ function stringResolver(ctx: StringResolverContext): Type {
 }
 
 export function stringToAst({
+  path,
   plugin,
   schema,
-}: {
-  plugin: HeyApiTypeScriptPlugin['Instance'];
+}: SchemaVisitorContext<HeyApiTypeScriptPlugin['Instance']> & {
   schema: SchemaWithType<'string'>;
 }): Type {
   const ctx: StringResolverContext = {
@@ -106,6 +106,7 @@ export function stringToAst({
       const: constNode,
       format: formatNode,
     },
+    path,
     plugin,
     schema,
   };

@@ -1,4 +1,5 @@
 import type { Symbol } from '@hey-api/codegen-core';
+import { ref } from '@hey-api/codegen-core';
 import type { RequestSchemaContext, ResolvedRequestValidatorLayer } from '@hey-api/shared';
 import { requestValidatorLayers, resolveValidatorLayer } from '@hey-api/shared';
 
@@ -13,6 +14,8 @@ import { exportAst } from '../shared/export';
 import type { ValidatorArgs } from '../shared/types';
 import { getDefaultRequestValidatorLayers } from '../shared/validator';
 import type { ZodPlugin } from '../types';
+
+type ArrowFunc = Extract<ReturnType<typeof $.func>, { '~mode': 'arrow' }>;
 
 function emptyNode(
   ctx: RequestValidatorResolverContext & {
@@ -92,9 +95,7 @@ function responseValidatorResolver(
   return $(schema).attr(identifiers.parseAsync).call('data').await().return();
 }
 
-function runRequestResolver(
-  ctx: RequestValidatorResolverContext,
-): ReturnType<typeof $.func> | undefined {
+function runRequestResolver(ctx: RequestValidatorResolverContext): ArrowFunc | undefined {
   const validator = ctx.plugin.config['~resolvers']?.validator;
   const resolver = typeof validator === 'function' ? validator : validator?.request;
   const candidates = [resolver, requestValidatorResolver];
@@ -110,9 +111,7 @@ function runRequestResolver(
   }
 }
 
-function runResponseResolver(
-  ctx: ResponseValidatorResolverContext,
-): ReturnType<typeof $.func> | undefined {
+function runResponseResolver(ctx: ResponseValidatorResolverContext): ArrowFunc | undefined {
   const validator = ctx.plugin.config['~resolvers']?.validator;
   const resolver = typeof validator === 'function' ? validator : validator?.response;
   const candidates = [resolver, responseValidatorResolver];
@@ -145,6 +144,7 @@ function createRequestSchemaContext(
       empty: emptyNode,
       optional: optionalNode,
     },
+    path: ref([]),
     symbols: {
       schema: $(''),
       z,
@@ -184,7 +184,7 @@ export function createRequestSchemaMini(
 
 export function createRequestValidatorMini(
   ctx: RequestSchemaContext<ZodPlugin['Instance']>,
-): ReturnType<typeof $.func> | undefined {
+): ArrowFunc | undefined {
   const symbolOrSchema = createRequestSchemaMini(ctx);
   if (!symbolOrSchema) return;
 
@@ -202,7 +202,7 @@ export function createRequestValidatorMini(
 export function createResponseValidatorMini({
   operation,
   plugin,
-}: ValidatorArgs): ReturnType<typeof $.func> | undefined {
+}: ValidatorArgs): ArrowFunc | undefined {
   const symbol = plugin.querySymbol({
     category: 'schema',
     resource: 'operation',
@@ -219,6 +219,7 @@ export function createResponseValidatorMini({
       current: $(z),
     },
     operation,
+    path: ref([]),
     plugin,
     symbols: {
       schema: symbol,
@@ -226,4 +227,18 @@ export function createResponseValidatorMini({
     },
   };
   return runResponseResolver(resolverCtx);
+}
+
+export function createResponseTransformerMini(ctx: ValidatorArgs): ArrowFunc | undefined {
+  return createResponseValidatorMini(ctx);
+}
+
+export function createResponseHandlersMini(ctx: ValidatorArgs): {
+  transformer: ArrowFunc | undefined;
+  validator: ArrowFunc | undefined;
+} {
+  return {
+    transformer: createResponseTransformerMini(ctx),
+    validator: undefined,
+  };
 }

@@ -1,18 +1,16 @@
 import type { Symbol } from '@hey-api/codegen-core';
 import type { IR } from '@hey-api/shared';
 import { applyNaming, hasOperationDataRequired } from '@hey-api/shared';
-import type ts from 'typescript';
 
 import { getTypedConfig } from '../../../config/utils';
 import { getClientBaseUrlKey } from '../../../plugins/@hey-api/client-core/utils';
-import type { TsDsl } from '../../../ts-dsl';
 import { $ } from '../../../ts-dsl';
 import { useTypeData } from './shared/useType';
 import type { PluginInstance } from './types';
 
 const TOptionsType = 'TOptions';
 
-export const createQueryKeyFunction = ({ plugin }: { plugin: PluginInstance }) => {
+export function createQueryKeyFunction({ plugin }: { plugin: PluginInstance }): void {
   const symbolCreateQueryKey = plugin.symbol(
     applyNaming('createQueryKey', {
       case: plugin.config.case,
@@ -94,9 +92,9 @@ export const createQueryKeyFunction = ({ plugin }: { plugin: PluginInstance }) =
       ),
   );
   plugin.node(fn);
-};
+}
 
-const createQueryKeyLiteral = ({
+function createQueryKeyLiteral({
   id,
   isInfinite,
   operation,
@@ -106,9 +104,9 @@ const createQueryKeyLiteral = ({
   isInfinite?: boolean;
   operation: IR.OperationObject;
   plugin: PluginInstance;
-}) => {
+}): ReturnType<typeof $.call> {
   const config = isInfinite ? plugin.config.infiniteQueryKeys : plugin.config.queryKeys;
-  let tagsArray: TsDsl<ts.ArrayLiteralExpression> | undefined;
+  let tagsArray: ReturnType<typeof $.array> | undefined;
   if (config.tags && operation.tags && operation.tags.length) {
     tagsArray = $.array().elements(...operation.tags);
   }
@@ -124,9 +122,9 @@ const createQueryKeyLiteral = ({
     tagsArray,
   );
   return createQueryKeyCallExpression;
-};
+}
 
-export const createQueryKeyType = ({ plugin }: { plugin: PluginInstance }) => {
+export function createQueryKeyType({ plugin }: { plugin: PluginInstance }): void {
   const symbolOptions = plugin.referenceSymbol({
     category: 'type',
     resource: 'client-options',
@@ -158,9 +156,9 @@ export const createQueryKeyType = ({ plugin }: { plugin: PluginInstance }) => {
       ),
     );
   plugin.node(queryKeyType);
-};
+}
 
-export const queryKeyStatement = ({
+export function queryKeyStatement({
   isInfinite,
   operation,
   plugin,
@@ -172,7 +170,7 @@ export const queryKeyStatement = ({
   plugin: PluginInstance;
   symbol: Symbol;
   typeQueryKey?: ReturnType<typeof $.type>;
-}) => {
+}): ReturnType<typeof $.const> {
   const typeData = useTypeData({ operation, plugin });
   const statement = $.const(symbol)
     .export()
@@ -190,4 +188,4 @@ export const queryKeyStatement = ({
         ),
     );
   return statement;
-};
+}

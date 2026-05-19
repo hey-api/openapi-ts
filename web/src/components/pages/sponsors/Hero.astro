@@ -1,0 +1,164 @@
+---
+import heartSvg from '@/assets/icons/heart.svg?raw';
+
+interface Stat {
+  num: string | undefined;
+  label: string;
+}
+
+interface Props {
+  eyebrow: string;
+  heroBody: string;
+  stats: Array<Stat>;
+  titleAccent: string;
+  titleStart: string;
+}
+
+const { eyebrow, titleStart, titleAccent, heroBody, stats } = Astro.props;
+---
+
+<div class="hero">
+  <span class="hero-eyebrow">
+    <span class="hero-eyebrow-icon" aria-hidden="true">
+      <Fragment set:html={heartSvg} />
+    </span>
+    {eyebrow}
+  </span>
+
+  <h1 class="hero-title">
+    {titleStart}<br />
+    <span class="shimmer-text">{titleAccent}</span>
+  </h1>
+
+  <p class="hero-body">{heroBody}</p>
+
+  <div class="hero-stats">
+    {stats.map((s) => (
+      <div class="stat-item">
+        <span class="stat-num">{s.num}</span>
+        <span class="stat-label">{s.label}</span>
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+  .hero {
+    margin: 0 auto;
+    max-width: 680px;
+    padding: 0 1.5rem 3rem;
+    text-align: center;
+  }
+
+  .hero-eyebrow {
+    align-items: center;
+    background: color-mix(in srgb, var(--vp-c-brand-1) 8%, transparent);
+    border-radius: 999px;
+    border: 1px solid color-mix(in srgb, var(--vp-c-brand-1) 35%, transparent);
+    color: var(--vp-c-brand-1);
+    display: inline-flex;
+    font-size: 11px;
+    font-weight: 600;
+    gap: 6px;
+    letter-spacing: 0.08em;
+    margin-bottom: 1.25rem;
+    padding: 3px 10px 3px 8px;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .hero-eyebrow-icon :global(svg) {
+    display: block;
+    height: 12px;
+    width: 12px;
+  }
+
+  .hero-title {
+    color: var(--sl-color-text);
+    font-size: clamp(28px, 5vw, 44px);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+    margin: 0 0 1.25rem;
+  }
+
+  @keyframes shimmer {
+    0%   { background-position: 200% center; }
+    100% { background-position: -200% center; }
+  }
+
+  .shimmer-text {
+    background: linear-gradient(
+      110deg,
+      var(--vp-c-brand-3) 0%,
+      var(--vp-c-brand-1) 30%,
+      var(--vp-c-brand-2) 50%,
+      var(--vp-c-brand-1) 70%,
+      var(--vp-c-brand-3) 100%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 4s linear infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .shimmer-text {
+      animation: none;
+    }
+  }
+
+  .hero-body {
+    color: var(--sl-color-gray-2);
+    font-size: 16px;
+    line-height: 1.7;
+    margin: 0 auto 2.25rem;
+    max-width: 500px;
+  }
+
+  .hero-stats {
+    align-items: stretch;
+    background: var(--dt-bg-2);
+    border-radius: 10px;
+    border: 1px solid var(--vp-c-divider);
+    display: flex;
+    justify-content: center;
+    margin: 0 auto;
+    overflow: hidden;
+    width: fit-content;
+  }
+
+  .stat-item {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-top: 0;
+    min-width: 140px;
+    padding: 12px 24px;
+  }
+
+  .stat-item + .stat-item {
+    border-left: 1px solid var(--vp-c-divider);
+  }
+
+  .stat-num {
+    color: var(--vp-c-text-1);
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .stat-label {
+    color: var(--vp-c-text-2);
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 700px) {
+    .stat-item {
+      min-width: 0;
+    }
+  }
+</style>

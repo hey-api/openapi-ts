@@ -4,11 +4,6 @@ import type { IntersectionResolverContext } from '../../resolvers';
 import type { Chain } from '../../shared/chain';
 import type { ZodResult } from '../../shared/types';
 
-type IntersectionToAstOptions = Pick<
-  IntersectionResolverContext,
-  'childResults' | 'parentSchema' | 'plugin' | 'schemas'
->;
-
 function baseNode(ctx: IntersectionResolverContext): Chain {
   const { childResults, schemas, symbols } = ctx;
   const { z } = symbols;
@@ -51,9 +46,13 @@ function intersectionResolver(ctx: IntersectionResolverContext): Chain {
 export function intersectionToAst({
   childResults,
   parentSchema,
+  path,
   plugin,
   schemas,
-}: IntersectionToAstOptions): {
+}: Pick<
+  IntersectionResolverContext,
+  'childResults' | 'parentSchema' | 'path' | 'plugin' | 'schemas'
+>): {
   childResults: Array<ZodResult>;
   expression: Chain;
 } {
@@ -69,6 +68,7 @@ export function intersectionToAst({
       base: baseNode,
     },
     parentSchema,
+    path,
     plugin,
     schema: parentSchema,
     schemas,

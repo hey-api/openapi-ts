@@ -1,0 +1,218 @@
+---
+import { GITHUB_URL } from '@/data/constants';
+import type { CodegenOutput } from '@/utils/codegen-url';
+
+interface Props {
+  defaultOutput?: CodegenOutput;
+}
+
+const { defaultOutput = 'typescript' } = Astro.props;
+
+const title = "Ready when you are.";
+const primaryCta = {
+  label: "Get Started →",
+  href: `/docs/openapi/${defaultOutput}/get-started`
+};
+const secondaryCta = { label: "View on GitHub ↗", href: GITHUB_URL };
+const p1 = { label: "Player 1", name: "OpenAPI Spec" };
+const p2 = { label: "Player 2", name: "Your Client" };
+---
+
+<div class="final-cta">
+  <div class="section-inner">
+    <h2 class="final-cta-title">{title}</h2>
+
+    <div class="players" id="playersZone" role="button" tabindex="0" aria-label="Click to get started">
+      <div class="player">
+        <span class="player-label">{p1.label}</span>
+        <span class="player-name">{p1.name}</span>
+        <span class="player-status ready">READY</span>
+      </div>
+      <div class="vs">VS</div>
+      <div class="player">
+        <span class="player-label">{p2.label}</span>
+        <span class="player-name">{p2.name}</span>
+        <span class="player-status waiting blink-slow" id="p2status">READY?</span>
+      </div>
+    </div>
+
+    <div class="final-cta-actions">
+      <a href={primaryCta.href} class="btn-primary btn-large" id="startBtn">
+        {primaryCta.label}
+      </a>
+      <a href={secondaryCta.href} class="btn-secondary btn-large" target="_blank" rel="noopener">
+        {secondaryCta.label}
+      </a>
+    </div>
+  </div>
+</div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+  .final-cta {
+    margin-top: 0;
+    padding: 100px 0;
+    text-align: center;
+  }
+
+  .final-cta-title {
+    color: var(--sl-color-text);
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(14px, 2.5vw, 22px);
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    line-height: 1.4;
+    margin: 0 0 3rem;
+    text-transform: uppercase;
+  }
+
+  .players {
+    align-items: center;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    display: inline-flex;
+    gap: clamp(2rem, 8vw, 6rem);
+    justify-content: center;
+    margin-bottom: 3rem;
+    margin-top: 0;
+    padding: 1.5rem 2.5rem;
+    transition: border-color 0.15s, background 0.15s;
+  }
+
+  .players:hover {
+    background: var(--sl-color-bg-nav);
+  }
+
+  .player {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 0;
+  }
+
+  .player-label {
+    color: var(--sl-color-text-accent);
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(8px, 1.5vw, 11px);
+    letter-spacing: 0.1em;
+    opacity: 0.6;
+    text-transform: uppercase;
+  }
+
+  .player-name {
+    color: var(--sl-color-text);
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(10px, 2vw, 14px);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .player-status {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(11px, 2.2vw, 16px);
+    letter-spacing: 0.08em;
+    margin-top: 4px;
+    text-transform: uppercase;
+  }
+
+  .player-status.ready { color: #1D9E75; }
+  .player-status.waiting { color: #BA7517; }
+
+  .vs {
+    align-self: center;
+    color: var(--sl-color-text);
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(16px, 4vw, 28px);
+    margin-top: 20px;
+    opacity: 0.2;
+  }
+
+  .blink-slow { animation: blink 1.4s step-end infinite; }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  @keyframes flash {
+    0%, 40% { color: #1D9E75; opacity: 1; }
+    20%, 60% { opacity: 0; }
+    80%, 100% { color: #1D9E75; opacity: 1; }
+  }
+
+  .final-cta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 0;
+  }
+
+  @media (max-width: 640px) {
+    .final-cta { padding: 56px 0; }
+  }
+</style>
+
+<script>
+  import { onCodegenParams } from '@/utils/codegen-context';
+  import { preloadSound } from '@/utils/sound';
+
+  const readySound = preloadSound('ui-ready');
+
+  onCodegenParams(({ input, output }) => {
+    const cta = document.querySelector<HTMLAnchorElement>('.final-cta .btn-primary');
+    if (cta) {
+      cta.href = `/docs/${input}/${output}/get-started`;
+    }
+  });
+
+  const zone = document.getElementById('playersZone');
+  const p2 = document.getElementById('p2status');
+  const startBtn = document.getElementById('startBtn') as HTMLAnchorElement | null;
+
+  let activated = false;
+
+  function activate(then?: () => void) {
+    if (!p2) return;
+    if (activated) { then?.(); return; }
+    activated = true;
+
+    readySound.play();
+
+    p2.classList.remove('blink-slow');
+    p2.style.animation = 'flash 0.4s steps(1) forwards';
+    p2.textContent = 'READY';
+    setTimeout(() => {
+      p2.style.animation = '';
+      p2.classList.replace('waiting', 'ready');
+      setTimeout(() => then?.(), 300);
+    }, 450);
+  }
+
+  zone?.addEventListener('click', (e) => {
+    if (e.metaKey || e.ctrlKey || e.button === 1) return;
+    activate(() => {
+      if (startBtn) {
+        window.location.href = startBtn.href;
+      }
+    });
+  });
+  zone?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      activate(() => {
+        if (startBtn) {
+          window.location.href = startBtn.href;
+        }
+      });
+    }
+  });
+
+  startBtn?.addEventListener('click', (e) => {
+    if (e.metaKey || e.ctrlKey || e.button === 1) return;
+    e.preventDefault();
+    activate(() => { window.location.href = startBtn.getAttribute('href')!; });
+  });
+</script>

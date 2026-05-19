@@ -734,7 +734,21 @@ export const vSessionUserRoomSystemCalloutFailedWebhookRequest = v.object({
                 host_id: v.string(),
                 message_id: v.string(),
                 inviter_name: v.string(),
-                reason_type: v.unknown(),
+                reason_type: v.picklist([
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    7,
+                    8,
+                    9,
+                    10,
+                    11,
+                    12,
+                    13,
+                    14
+                ]),
                 participant: v.objectWithRest({
                     call_type: v.string(),
                     device_ip: v.string()

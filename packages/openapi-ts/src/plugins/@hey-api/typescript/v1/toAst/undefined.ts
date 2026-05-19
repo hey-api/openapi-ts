@@ -1,4 +1,4 @@
-import type { SchemaWithType } from '@hey-api/shared';
+import type { SchemaVisitorContext, SchemaWithType } from '@hey-api/shared';
 
 import { $ } from '../../../../../ts-dsl';
 import type { UndefinedResolverContext } from '../../resolvers';
@@ -14,10 +14,10 @@ function undefinedResolver(ctx: UndefinedResolverContext): Type {
 }
 
 export function undefinedToAst({
+  path,
   plugin,
   schema,
-}: {
-  plugin: HeyApiTypeScriptPlugin['Instance'];
+}: SchemaVisitorContext<HeyApiTypeScriptPlugin['Instance']> & {
   schema: SchemaWithType<'undefined'>;
 }): Type {
   const ctx: UndefinedResolverContext = {
@@ -25,6 +25,7 @@ export function undefinedToAst({
     nodes: {
       base: baseNode,
     },
+    path,
     plugin,
     schema,
   };

@@ -197,9 +197,9 @@ for (const zodVersion of zodVersions) {
                 enum(ctx) {
                   const { $, symbols } = ctx;
                   const { z } = symbols;
-                  const { allStrings, enumMembers } = ctx.nodes.items(ctx);
+                  const { enumMembers, literalSchemas } = ctx.nodes.items(ctx);
 
-                  if (!allStrings || !enumMembers.length) {
+                  if (!enumMembers.length || enumMembers.length !== literalSchemas.length) {
                     return;
                   }
 
@@ -215,6 +215,24 @@ for (const zodVersion of zodVersions) {
           ],
         }),
         description: 'generates permissive enums with enum resolver',
+      },
+      {
+        config: createConfig({
+          input: 'type-format.yaml',
+          output: 'transformer',
+          plugins: [
+            {
+              compatibilityVersion: zodVersion.compatibilityVersion,
+              name: 'zod',
+            },
+            {
+              name: '@hey-api/sdk',
+              transformer: true,
+              validator: true,
+            },
+          ],
+        }),
+        description: 'handles various schema types and formats',
       },
     ];
 

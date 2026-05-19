@@ -1,4 +1,4 @@
-import type { SchemaWithType } from '@hey-api/shared';
+import type { SchemaVisitorContext, SchemaWithType } from '@hey-api/shared';
 
 import { $ } from '../../../../../ts-dsl';
 import type { EnumResolverContext } from '../../resolvers';
@@ -78,10 +78,10 @@ function enumResolver(ctx: EnumResolverContext): Type {
 }
 
 export function enumToAst({
+  path,
   plugin,
   schema,
-}: {
-  plugin: HeyApiTypeScriptPlugin['Instance'];
+}: SchemaVisitorContext<HeyApiTypeScriptPlugin['Instance']> & {
   schema: SchemaWithType<'enum'>;
 }): {
   enumData?: TypeScriptEnumData;
@@ -95,6 +95,7 @@ export function enumToAst({
       base: baseNode,
       items: itemsNode,
     },
+    path,
     plugin,
     schema,
   };

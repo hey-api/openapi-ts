@@ -37,7 +37,7 @@ export const convertDiscriminatorValue = (
       };
     }
     case 'integer': {
-      const parsed = parseInt(value, 10);
+      const parsed = Number.parseInt(value, 10);
       if (Number.isNaN(parsed)) {
         console.warn(
           '🚨',

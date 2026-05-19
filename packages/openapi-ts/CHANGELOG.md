@@ -1,5 +1,49 @@
 # @hey-api/openapi-ts
 
+## 0.97.2
+
+### Patch Changes
+
+- **plugin(zod)**: use enums from TypeScript if available ([#3884](https://github.com/hey-api/openapi-ts/pull/3884)) ([`abc8ceb`](https://github.com/hey-api/openapi-ts/commit/abc8ceb43f37e7c9739fe010d3fcdb3be0bb5290)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@hey-api/client-next)**: fix: preserve query auth when when there are no other query parameters ([#3853](https://github.com/hey-api/openapi-ts/pull/3853)) ([`a6ee7eb`](https://github.com/hey-api/openapi-ts/commit/a6ee7eb11cc6e8f1d5093d2c211d77874f337bbe)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(@hey-api/sdk)**: support `valibot` as response transformer ([#3847](https://github.com/hey-api/openapi-ts/pull/3847)) ([`6770f78`](https://github.com/hey-api/openapi-ts/commit/6770f78dec53b1bf8f37c361c7b9c2e2eb4157fa)) by [@SukkaW](https://github.com/SukkaW)
+
+- **plugin(@tanstack/vue-query)**: add `mutationKeys` option ([#3858](https://github.com/hey-api/openapi-ts/pull/3858)) ([`d86680a`](https://github.com/hey-api/openapi-ts/commit/d86680a8e94995032d315ac884d8de83ef8aa1a3)) by [@slmnsh](https://github.com/slmnsh)
+
+- **plugin(@hey-api/client-nuxt)**: fix: preserve query auth when when there are no other query parameters ([#3853](https://github.com/hey-api/openapi-ts/pull/3853)) ([`a6ee7eb`](https://github.com/hey-api/openapi-ts/commit/a6ee7eb11cc6e8f1d5093d2c211d77874f337bbe)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(@tanstack/svelte-query)**: add `mutationKeys` option ([#3858](https://github.com/hey-api/openapi-ts/pull/3858)) ([`d86680a`](https://github.com/hey-api/openapi-ts/commit/d86680a8e94995032d315ac884d8de83ef8aa1a3)) by [@slmnsh](https://github.com/slmnsh)
+
+- **plugin(@hey-api/sdk)**: support `zod` as response transformer ([#3847](https://github.com/hey-api/openapi-ts/pull/3847)) ([`6770f78`](https://github.com/hey-api/openapi-ts/commit/6770f78dec53b1bf8f37c361c7b9c2e2eb4157fa)) by [@SukkaW](https://github.com/SukkaW)
+
+- **plugin(@hey-api/client-angular)**: fix: preserve query auth when when there are no other query parameters ([#3853](https://github.com/hey-api/openapi-ts/pull/3853)) ([`a6ee7eb`](https://github.com/hey-api/openapi-ts/commit/a6ee7eb11cc6e8f1d5093d2c211d77874f337bbe)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(@hey-api/client-fetch)**: fix: preserve query auth when when there are no other query parameters ([#3853](https://github.com/hey-api/openapi-ts/pull/3853)) ([`a6ee7eb`](https://github.com/hey-api/openapi-ts/commit/a6ee7eb11cc6e8f1d5093d2c211d77874f337bbe)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(@hey-api/client-axios)**: fix: preserve query auth when when there are no other query parameters ([#3853](https://github.com/hey-api/openapi-ts/pull/3853)) ([`a6ee7eb`](https://github.com/hey-api/openapi-ts/commit/a6ee7eb11cc6e8f1d5093d2c211d77874f337bbe)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(valibot)**: use enums from TypeScript if available ([#3884](https://github.com/hey-api/openapi-ts/pull/3884)) ([`abc8ceb`](https://github.com/hey-api/openapi-ts/commit/abc8ceb43f37e7c9739fe010d3fcdb3be0bb5290)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@tanstack/react-query)**: add `mutationKeys` option ([#3858](https://github.com/hey-api/openapi-ts/pull/3858)) ([`d86680a`](https://github.com/hey-api/openapi-ts/commit/d86680a8e94995032d315ac884d8de83ef8aa1a3)) by [@slmnsh](https://github.com/slmnsh)
+
+- **plugin(@tanstack/solid-query)**: add `mutationKeys` option ([#3858](https://github.com/hey-api/openapi-ts/pull/3858)) ([`d86680a`](https://github.com/hey-api/openapi-ts/commit/d86680a8e94995032d315ac884d8de83ef8aa1a3)) by [@slmnsh](https://github.com/slmnsh)
+
+- **plugin(@hey-api/client-ofetch)**: fix: preserve query auth when when there are no other query parameters ([#3853](https://github.com/hey-api/openapi-ts/pull/3853)) ([`a6ee7eb`](https://github.com/hey-api/openapi-ts/commit/a6ee7eb11cc6e8f1d5093d2c211d77874f337bbe)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(@hey-api/client-ky)**: fix: preserve query auth when when there are no other query parameters ([#3853](https://github.com/hey-api/openapi-ts/pull/3853)) ([`a6ee7eb`](https://github.com/hey-api/openapi-ts/commit/a6ee7eb11cc6e8f1d5093d2c211d77874f337bbe)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(@tanstack/preact-query)**: add `mutationKeys` option ([#3858](https://github.com/hey-api/openapi-ts/pull/3858)) ([`d86680a`](https://github.com/hey-api/openapi-ts/commit/d86680a8e94995032d315ac884d8de83ef8aa1a3)) by [@slmnsh](https://github.com/slmnsh)
+
+- **dsl**: fix: cache lazy node result ([#3855](https://github.com/hey-api/openapi-ts/pull/3855)) ([`7dee3c2`](https://github.com/hey-api/openapi-ts/commit/7dee3c25d2d7150aa6cbc1e9d4dba0d9de1e64b2)) by [@awdr74100](https://github.com/awdr74100)
+
+- **plugin(@tanstack/angular-query-experimental)**: add `mutationKeys` option ([#3858](https://github.com/hey-api/openapi-ts/pull/3858)) ([`d86680a`](https://github.com/hey-api/openapi-ts/commit/d86680a8e94995032d315ac884d8de83ef8aa1a3)) by [@slmnsh](https://github.com/slmnsh)
+
+### Updated Dependencies:
+
+- @hey-api/shared@0.4.4
+
 ## 0.97.1
 
 ### Patch Changes
@@ -1790,7 +1834,7 @@ export default {
 
   ### Bundle `@hey-api/client-*` plugins
 
-  In previous releases, you had to install a separate client package to generate a fully working output, e.g. `npm add @hey-api/client-fetch`. This created a few challenges: getting started was slower, upgrading was sometimes painful, and bundling too. Beginning with v0.73.0, all Hey API clients are bundled by default and don't require installing any additional dependencies. You can remove any installed client packages and re-run `@hey-api/openapi-ts`.
+  In previous releases, you had to install a separate client package to generate a fully working output, e.g. `npm install @hey-api/client-fetch`. This created a few challenges: getting started was slower, upgrading was sometimes painful, and bundling too. Beginning with v0.73.0, all Hey API clients are bundled by default and don't require installing any additional dependencies. You can remove any installed client packages and re-run `@hey-api/openapi-ts`.
 
   ```sh
   npm uninstall @hey-api/client-fetch

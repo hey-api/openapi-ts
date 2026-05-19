@@ -121,178 +121,159 @@ export type PydanticResolvers = Plugin.Resolvers<{
   void?: (ctx: VoidResolverContext) => PydanticType | undefined;
 }>;
 
-interface BaseContext extends DollarPyDsl {
-  /** The plugin instance. */
-  plugin: PydanticPlugin['Instance'];
-}
+export interface BaseContext
+  extends DollarPyDsl, SchemaVisitorContext<PydanticPlugin['Instance']> {}
 
-export interface ArrayResolverContext extends BaseContext {
+export interface ArrayResolverContext
+  extends
+    BaseContext,
+    Plugin.ResolverNodes<{
+      base: (ctx: ArrayResolverContext) => PydanticType;
+      maxLength: (ctx: ArrayResolverContext) => PydanticType | undefined;
+      minLength: (ctx: ArrayResolverContext) => PydanticType | undefined;
+    }> {
   applyModifiers: (result: PydanticResult, opts?: { optional?: boolean }) => PydanticFinal;
   childResults: Array<PydanticResult>;
-  /**
-   * Nodes used to build different parts of the result.
-   */
-  nodes: {
-    base: (ctx: ArrayResolverContext) => PydanticType;
-    maxLength: (ctx: ArrayResolverContext) => PydanticType | undefined;
-    minLength: (ctx: ArrayResolverContext) => PydanticType | undefined;
-  };
   schema: SchemaWithType<'array'>;
   walk: Walker<PydanticResult, PydanticPlugin['Instance']>;
-  walkerCtx: SchemaVisitorContext<PydanticPlugin['Instance']>;
 }
 
-export interface BooleanResolverContext extends BaseContext {
-  /**
-   * Nodes used to build different parts of the result.
-   */
-  nodes: {
-    base: (ctx: BooleanResolverContext) => PydanticType;
-    const: (ctx: BooleanResolverContext) => PydanticType | undefined;
-  };
+export interface BooleanResolverContext
+  extends
+    BaseContext,
+    Plugin.ResolverNodes<{
+      base: (ctx: BooleanResolverContext) => PydanticType;
+      const: (ctx: BooleanResolverContext) => PydanticType | undefined;
+    }> {
   schema: SchemaWithType<'boolean'>;
 }
 
-export interface EnumResolverContext extends BaseContext {
-  /**
-   * Nodes used to build different parts of the result.
-   */
-  nodes: {
-    base: (ctx: EnumResolverContext) => PydanticType;
-    items: (ctx: EnumResolverContext) => {
-      enumMembers: Required<PydanticFinal>['enumMembers'];
-      isNullable: boolean;
-    };
-  };
+export interface EnumResolverContext
+  extends
+    BaseContext,
+    Plugin.ResolverNodes<{
+      base: (ctx: EnumResolverContext) => PydanticType;
+      items: (ctx: EnumResolverContext) => {
+        enumMembers: Required<PydanticFinal>['enumMembers'];
+        isNullable: boolean;
+      };
+    }> {
   schema: SchemaWithType<'enum'>;
 }
 
-export interface IntersectionResolverContext extends BaseContext {
+export interface IntersectionResolverContext
+  extends
+    BaseContext,
+    Plugin.ResolverNodes<{
+      base: (ctx: IntersectionResolverContext) => PydanticType;
+    }> {
   applyModifiers: (result: PydanticResult, opts?: { optional?: boolean }) => PydanticFinal;
   childResults: Array<PydanticResult>;
-  /**
-   * Nodes used to build different parts of the result.
-   */
-  nodes: {
-    base: (ctx: IntersectionResolverContext) => PydanticType;
-  };
   parentSchema: IR.SchemaObject;
   schema: IR.SchemaObject;
 }
 
-export interface NeverResolverContext extends BaseContext {
-  /**
-   * Nodes used to build different parts of the result.
-   */
-  nodes: {
-    base: (ctx: NeverResolverContext) => PydanticType;
-  };
+export interface NeverResolverContext
+  extends
+    BaseContext,
+    Plugin.ResolverNodes<{
+      base: (ctx: NeverResolverContext) => PydanticType;
+    }> {
   schema: SchemaWithType<'never'>;
 }
 
-export interface NullResolverContext extends BaseContext {
-  /**
-   * Nodes used to build different parts of the result.
-   */
-  nodes: {
-    base: (ctx: NullResolverContext) => PydanticType;
-  };
+export interface NullResolverContext
+  extends
+    BaseContext,
+    Plugin.ResolverNodes<{
+      base: (ctx: NullResolverContext) => PydanticType;
+    }> {
   schema: SchemaWithType<'null'>;
 }
 
-export interface NumberResolverContext extends BaseContext {
-  /**
-   * Nodes used to build different parts of the result.
-   */
-  nodes: {
-    base: (ctx: NumberResolverContext) => PydanticType;
-    const: (ctx: NumberResolverContext) => PydanticType | undefined;
-  };
+export interface NumberResolverContext
+  extends
+    BaseContext,
+    Plugin.ResolverNodes<{
+      base: (ctx: NumberResolverContext) => PydanticType;
+      const: (ctx: NumberResolverContext) => PydanticType | undefined;
+    }> {
   schema: SchemaWithType<'integer' | 'number'>;
 }
 
-export interface ObjectResolverContext extends BaseContext {
+export interface ObjectResolverContext
+  extends
+    BaseContext,
+    Plugin.ResolverNodes<{
+      additionalProperties: (ctx: ObjectResolverContext) => PydanticType | null | undefined;
+      base: (ctx: ObjectResolverContext) => PydanticType & { fields?: Array<PydanticField> };
+      fields: (ctx: ObjectResolverContext) => Array<PydanticField>;
+    }> {
   _childResults: Array<PydanticResult>;
   applyModifiers: (result: PydanticResult, opts: { optional?: boolean }) => PydanticFinal;
-  /**
-   * Nodes used to build different parts of the result.
-   */
-  nodes: {
-    additionalProperties: (ctx: ObjectResolverContext) => PydanticType | null | undefined;
-    base: (ctx: ObjectResolverContext) => PydanticType & { fields?: Array<PydanticField> };
-    fields: (ctx: ObjectResolverContext) => Array<PydanticField>;
-  };
   schema: SchemaWithType<'object'>;
   walk: Walker<PydanticResult, PydanticPlugin['Instance']>;
-  walkerCtx: SchemaVisitorContext<PydanticPlugin['Instance']>;
 }
 
-export interface StringResolverContext extends BaseContext {
-  /**
-   * Nodes used to build different parts of the result.
-   */
-  nodes: {
-    base: (ctx: StringResolverContext) => PydanticType;
-    const: (ctx: StringResolverContext) => PydanticType | undefined;
-  };
+export interface StringResolverContext
+  extends
+    BaseContext,
+    Plugin.ResolverNodes<{
+      base: (ctx: StringResolverContext) => PydanticType;
+      const: (ctx: StringResolverContext) => PydanticType | undefined;
+    }> {
   schema: SchemaWithType<'string'>;
 }
 
-export interface TupleResolverContext extends BaseContext {
+export interface TupleResolverContext
+  extends
+    BaseContext,
+    Plugin.ResolverNodes<{
+      base: (ctx: TupleResolverContext) => PydanticType;
+      const: (ctx: TupleResolverContext) => PydanticType | undefined;
+    }> {
   applyModifiers: (result: PydanticResult, opts?: { optional?: boolean }) => PydanticFinal;
   childResults: Array<PydanticResult>;
-  /**
-   * Nodes used to build different parts of the result.
-   */
-  nodes: {
-    base: (ctx: TupleResolverContext) => PydanticType;
-    const: (ctx: TupleResolverContext) => PydanticType | undefined;
-  };
   schema: SchemaWithType<'tuple'>;
   walk: Walker<PydanticResult, PydanticPlugin['Instance']>;
-  walkerCtx: SchemaVisitorContext<PydanticPlugin['Instance']>;
 }
 
-export interface UndefinedResolverContext extends BaseContext {
-  /**
-   * Nodes used to build different parts of the result.
-   */
-  nodes: {
-    base: (ctx: UndefinedResolverContext) => PydanticType;
-  };
+export interface UndefinedResolverContext
+  extends
+    BaseContext,
+    Plugin.ResolverNodes<{
+      base: (ctx: UndefinedResolverContext) => PydanticType;
+    }> {
   schema: SchemaWithType<'undefined'>;
 }
 
-export interface UnionResolverContext extends BaseContext {
+export interface UnionResolverContext
+  extends
+    BaseContext,
+    Plugin.ResolverNodes<{
+      base: (ctx: UnionResolverContext) => PydanticType;
+    }> {
   applyModifiers: (result: PydanticResult, opts?: { optional?: boolean }) => PydanticFinal;
   childResults: Array<PydanticResult>;
-  /**
-   * Nodes used to build different parts of the result.
-   */
-  nodes: {
-    base: (ctx: UnionResolverContext) => PydanticType;
-  };
   parentSchema: IR.SchemaObject;
   schema: IR.SchemaObject;
   schemas: ReadonlyArray<IR.SchemaObject>;
 }
 
-export interface UnknownResolverContext extends BaseContext {
-  /**
-   * Nodes used to build different parts of the result.
-   */
-  nodes: {
-    base: (ctx: UnknownResolverContext) => PydanticType;
-  };
+export interface UnknownResolverContext
+  extends
+    BaseContext,
+    Plugin.ResolverNodes<{
+      base: (ctx: UnknownResolverContext) => PydanticType;
+    }> {
   schema: SchemaWithType<'unknown'>;
 }
 
-export interface VoidResolverContext extends BaseContext {
-  /**
-   * Nodes used to build different parts of the result.
-   */
-  nodes: {
-    base: (ctx: VoidResolverContext) => PydanticType;
-  };
+export interface VoidResolverContext
+  extends
+    BaseContext,
+    Plugin.ResolverNodes<{
+      base: (ctx: VoidResolverContext) => PydanticType;
+    }> {
   schema: SchemaWithType<'void'>;
 }

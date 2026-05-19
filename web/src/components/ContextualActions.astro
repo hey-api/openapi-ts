@@ -1,0 +1,128 @@
+---
+import chatgptSvg from '@/assets/icons/chatgpt.svg?raw';
+import claudeSvg from '@/assets/icons/claude.svg?raw';
+import markdownSvg from '@/assets/icons/markdown.svg?raw';
+
+interface Props {
+  heading?: string | false;
+  class?: string;
+}
+
+const { heading = 'Ask AI', class: className } = Astro.props;
+---
+
+<div class:list={['contextual-actions', className]}>
+  {heading !== false && (
+    <h2 class="actions-label">{heading}</h2>
+  )}
+  <ul>
+    <li>
+      <a href="#" data-action="copy">
+        <span class="action-icon" set:html={markdownSvg} aria-hidden="true" />
+        <span>Copy as Markdown</span>
+      </a>
+    </li>
+    <li>
+      <a href="#" data-action="ai" data-ai-url="https://claude.ai/new?q=">
+        <span class="action-icon" set:html={claudeSvg} aria-hidden="true" />
+        Open in Claude
+      </a>
+    </li>
+    <li>
+      <a href="#" data-action="ai" data-ai-url="https://chatgpt.com/?q=">
+        <span class="action-icon" set:html={chatgptSvg} aria-hidden="true" />
+        Open in ChatGPT
+      </a>
+    </li>
+  </ul>
+</div>
+
+<style>
+  .contextual-actions {
+    border-top: 1px solid var(--sl-color-hairline-light);
+    margin-top: 16px;
+    padding-top: 16px;
+  }
+
+  .actions-label {
+    color: var(--sl-color-gray-3);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    margin: 0 0 4px;
+    padding: 0 8px;
+    text-transform: uppercase;
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  a {
+    align-items: center;
+    border-radius: 6px;
+    color: var(--sl-color-gray-3);
+    display: flex;
+    font-size: 14px;
+    gap: 8px;
+    padding: 7px 8px;
+    text-decoration: none;
+    transition: background 150ms ease, color 150ms ease;
+  }
+
+  a:hover {
+    background: var(--dt-bg-2);
+    color: var(--sl-color-text);
+  }
+
+  .action-icon {
+    align-items: center;
+    display: flex;
+    flex-shrink: 0;
+    height: 14px;
+    width: 14px;
+  }
+</style>
+
+<script>
+  import { writeBlob } from '@/utils/clipboard';
+  import { createCopyFeedback } from '@/utils/copy-feedback';
+
+  function markdownUrl(): string {
+    const path = window.location.pathname.replace(/\/?$/, '');
+    return new URL(path + '.md', window.location.origin).toString();
+  }
+
+  function initContextualActions(root: HTMLElement): void {
+    const copyLink = root.querySelector<HTMLAnchorElement>('a[data-action="copy"]');
+    const span = copyLink?.querySelector('span:last-of-type')!;
+    const original = span.textContent!;
+
+    const trigger = createCopyFeedback({
+      onCopied: () => { span.textContent = 'Copied!'; },
+      onFailed: () => { span.textContent = 'Failed'; },
+      onReset: () => { span.textContent = original; },
+    });
+
+    copyLink?.addEventListener('click', async (e) => {
+      e.preventDefault();
+      const url = markdownUrl();
+      await trigger(() => writeBlob(
+        fetch(url).then((r) => r.text()).then((t) => new Blob([t], { type: 'text/plain' })),
+        () => fetch(url).then((r) => r.text()),
+      ));
+    });
+
+    root.querySelectorAll<HTMLAnchorElement>('a[data-action="ai"]').forEach((el) => {
+      el.addEventListener('click', (e) => {
+        e.preventDefault();
+        const msg = `Read ${window.location.href} so I can ask questions about it.`;
+        window.open(el.dataset.aiUrl + encodeURIComponent(msg), '_blank');
+      });
+    });
+  }
+
+  document.querySelectorAll<HTMLElement>('.contextual-actions').forEach(initContextualActions);
+</script>

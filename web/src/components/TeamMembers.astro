@@ -1,0 +1,120 @@
+---
+import { Image } from 'astro:assets';
+import { Icon } from '@astrojs/starlight/components';
+
+import type { Person } from '@/data/people';
+
+interface Props {
+  members: Array<Person>;
+}
+
+const { members } = Astro.props;
+---
+
+<ul class="team-members">
+  {members.map((member) => (
+    <li class="team-member">
+      <Image
+        src={member.avatar}
+        alt={member.name}
+        width={56}
+        height={56}
+        class="team-member__avatar"
+      />
+      <div class="team-member__info">
+        <span class="team-member__name">{member.name}</span>
+        {member.title && (
+          <span class="team-member__title">{member.title}</span>
+        )}
+        <a
+          href={member.github}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`${member.name} on GitHub`}
+          class="team-member__github"
+        >
+          <Icon name="github" size="1rem" />
+        </a>
+      </div>
+    </li>
+  ))}
+</ul>
+
+<style>
+  .team-members {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+    list-style: none;
+    padding: 0;
+    margin-block: 1.5rem;
+  }
+
+  .team-member {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--vp-c-divider);
+    border-radius: 0.75rem;
+    background: var(--sl-color-bg-sidebar);
+    transition:
+      border-color 150ms ease,
+      background 150ms ease;
+  }
+
+  .team-member:hover {
+    background: transparent;
+    border-color: var(--vp-c-brand-1);
+  }
+
+  .team-member__avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: block;
+  }
+
+  .team-member__info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    margin: 0;
+    min-width: 0;
+  }
+
+  .team-member__name {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--sl-color-white);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .team-member__title {
+    font-size: 0.8125rem;
+    color: var(--sl-color-gray-3);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .team-member__github {
+    display: flex;
+    align-items: center;
+    margin-top: 0.25rem;
+    color: var(--sl-color-gray-3);
+    transition: color 150ms ease;
+    width: fit-content;
+  }
+
+  .team-member__github:hover {
+    color: var(--sl-color-white);
+  }
+
+  .team-member__github::after {
+    display: none !important;
+  }
+</style>

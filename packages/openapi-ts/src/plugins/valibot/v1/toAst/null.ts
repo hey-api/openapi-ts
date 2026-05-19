@@ -1,4 +1,4 @@
-import type { SchemaWithType } from '@hey-api/shared';
+import type { SchemaVisitorContext, SchemaWithType } from '@hey-api/shared';
 
 import { $ } from '../../../../ts-dsl';
 import type { NullResolverContext } from '../../resolvers';
@@ -20,10 +20,10 @@ function nullResolver(ctx: NullResolverContext): Pipes {
 }
 
 export function nullToPipes({
+  path,
   plugin,
   schema,
-}: {
-  plugin: ValibotPlugin['Instance'];
+}: SchemaVisitorContext<ValibotPlugin['Instance']> & {
   schema: SchemaWithType<'null'>;
 }): Pipe {
   const ctx: NullResolverContext = {
@@ -31,6 +31,7 @@ export function nullToPipes({
     nodes: {
       base: baseNode,
     },
+    path,
     pipes: {
       ...pipes,
       current: [],

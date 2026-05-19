@@ -1,0 +1,31 @@
+---
+import { sponsors } from '@/data/sponsors';
+import type { SponsorTier as Tier } from '@/data/sponsors';
+
+import SponsorTier from './SponsorTier.astro';
+
+const TIERS: Array<{ id: Tier; label: string }> = [
+  { id: 'platinum', label: 'Platinum' },
+  { id: 'gold', label: 'Gold' },
+  { id: 'silver', label: 'Silver' },
+  { id: 'bronze', label: 'Bronze' },
+  { id: 'friends', label: 'Friends' },
+];
+---
+
+<div class="sponsors">
+  {TIERS.map(({ id, label }) => {
+    const tierSponsors = sponsors.filter((s) => s.tier === id);
+    if (!tierSponsors.length) return null;
+    return <SponsorTier tier={id} label={label} sponsors={tierSponsors} />;
+  })}
+</div>
+
+<style>
+  .sponsors {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    text-align: left;
+  }
+</style>

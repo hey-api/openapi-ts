@@ -1,0 +1,27 @@
+---
+import { Code, Tabs, TabItem } from '@astrojs/starlight/components';
+import { getPackageManagerItems } from '@/utils/package-managers';
+
+interface Props {
+  bun?: string;
+  npm?: string;
+  pnpm?: string;
+  yarn?: string;
+}
+
+const { bun, npm, pnpm, yarn } = Astro.props;
+
+const items = getPackageManagerItems({ bun, npm, pnpm, yarn });
+---
+
+{items.length > 1 ? (
+  <Tabs syncKey="package-manager">
+    {items.map((item) => (
+      <TabItem label={item.label} icon={item.icon}>
+        <Code code={item.command} lang="sh" />
+      </TabItem>
+    ))}
+  </Tabs>
+) : items.length === 1 ? (
+  <Code code={items[0].command} lang="sh" />
+) : null}

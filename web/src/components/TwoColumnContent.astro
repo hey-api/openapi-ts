@@ -1,0 +1,47 @@
+---
+---
+
+<div class="lg:sl-flex">
+  {
+    Astro.locals.starlightRoute.toc && (
+      <aside class="right-sidebar-container print:hidden">
+        <div class="right-sidebar">
+          <slot name="right-sidebar" />
+        </div>
+      </aside>
+    )
+  }
+  <div class="main-pane"><slot /></div>
+</div>
+
+<style>
+  .main-pane {
+    isolation: isolate;
+  }
+
+  @media (min-width: 72rem) {
+    .right-sidebar-container {
+      order: 2;
+      width: calc((100% - var(--sl-content-width)) / 2);
+    }
+
+    .right-sidebar {
+      height: calc(100vh - var(--sl-nav-height) - var(--announcement-height, 0px));
+      overflow-y: auto;
+      position: sticky;
+      scrollbar-width: none;
+      top: calc(var(--sl-nav-height) + var(--announcement-height, 0px));
+      transition: top 200ms ease, height 200ms ease;
+      width: 100%;
+    }
+
+    .main-pane {
+      width: 100%;
+    }
+
+    :global([data-has-sidebar][data-has-toc]) .main-pane {
+      order: 1;
+      width: calc(var(--sl-content-width) + (100% - var(--sl-content-width)) / 2);
+    }
+  }
+</style>

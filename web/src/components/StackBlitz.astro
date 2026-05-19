@@ -1,0 +1,136 @@
+---
+interface Props {
+  /** Set to true to display a modal and defer loading the project until a user clicks. */
+	clickToLoad?: boolean;
+  /** Description of this example to display in the StackBlitz embed. */
+	description?: string;
+	/** Name of the directory in `examples/` that contains the code for this example. */
+	example: string;
+  /** Open files to display in the StackBlitz editor. Comma-separated file names are displayed as tabs. An array of file names is displayed as side-by-side panels. */
+	openFile: string | Array<string>;
+  /** Optional StackBlitz project ID to embed a specific project instead of loading the example from the `examples/` directory. This is useful for embedding projects that are not part of the repository, such as a reproduction of an issue. */
+  projectId?: string;
+	/** Set to true to expand the sidebar on load (only works on larger screens). */
+	showSidebar?: boolean;
+  /** Set the default view for the embed. `editor` will show the file tree and code editor, while `preview` will show the live preview. */
+  view?: 'editor' | 'preview';
+	/** Title for this example to display in the StackBlitz embed. Also used to provide an accessible label for the embed iframe. */
+	title?: string;
+}
+const { description, example, openFile, projectId, showSidebar, title } = Astro.props;
+if (!example && !projectId) {
+	throw new Error('Missing props for `<StackBlitz>` component. `example` or `projectId` is required.');
+}
+
+let { clickToLoad, view } = Astro.props;
+
+if (clickToLoad === undefined) clickToLoad = true;
+if (view === undefined) view = 'editor';
+
+const embedUrl = new URL(`https://stackblitz.com/edit/${projectId || example}`);
+embedUrl.searchParams.set('embed', '1');
+if (Array.isArray(openFile)) {
+  embedUrl.searchParams.append('file', openFile.join(','));
+} else {
+	embedUrl.searchParams.set('file', openFile);
+}
+if (description) embedUrl.searchParams.set('description', description);
+if (showSidebar) embedUrl.searchParams.set('showSidebar', '1');
+if (title) embedUrl.searchParams.set('title', title);
+if (view) embedUrl.searchParams.set('view', view);
+
+const fallbackTitle = title || example || projectId || 'Demo';
+const iframeTitle = `StackBlitz embedded IDE: ${fallbackTitle}`;
+const launchLabel = `Launch demo: ${fallbackTitle}`;
+---
+
+<div
+  class="sb-container"
+  data-stackblitz-container
+  data-stackblitz-title={iframeTitle}
+  data-stackblitz-url={embedUrl.href}
+>
+  {clickToLoad ? (
+    <button
+      class="sb-launch"
+      type="button"
+      aria-label={launchLabel}
+      data-stackblitz-launch
+    >
+      Launch demo
+    </button>
+	) : (
+		<iframe
+      class="sb-iframe"
+      height="300"
+      src={embedUrl.href}
+      title={iframeTitle}></iframe>
+	)}
+</div>
+
+{
+	clickToLoad && (
+		<script is:inline>
+      const container = document.currentScript.previousElementSibling;
+      const button = container?.querySelector('[data-stackblitz-launch]');
+      button?.addEventListener('click', () => {
+        const iframe = document.createElement('iframe');
+        iframe.className = 'sb-iframe';
+        iframe.height = '300';
+        iframe.src = container.dataset.stackblitzUrl;
+        iframe.title = container.dataset.stackblitzTitle;
+        iframe.loading = 'lazy';
+        container.append(iframe);
+        button.remove();
+        iframe.focus();
+      });
+		</script>
+	)
+}
+
+<style>
+	.sb-container {
+		position: relative;
+	}
+
+	.sb-launch {
+		background: none;
+		border-bottom: 1px solid currentColor;
+		border-radius: 0;
+		border: none;
+		color: var(--sl-color-text-accent);
+		cursor: pointer;
+		font: inherit;
+		padding: 0;
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+		transition: opacity 0.2s ease;
+	}
+
+	.sb-launch:hover {
+		opacity: 0.75;
+	}
+
+	.sb-launch:focus-visible {
+		outline: 2px solid var(--sl-color-text-accent);
+		outline-offset: 2px;
+	}
+
+	:global(.sb-iframe) {
+		margin-block: 2rem;
+		border: none;
+		background-color: var(--sl-color-gray-6);
+		box-shadow: var(--sl-shadow-lg);
+		width: 100%;
+		--vheight: 100vh;
+		height: min(
+			calc(var(--vheight) - var(--sl-nav-height) - var(--sl-content-pad-x)),
+			40rem
+		) !important;
+	}
+	@supports (height: 100svh) {
+		:global(.sb-iframe) {
+			--vheight: 100svh;
+		}
+	}
+</style>

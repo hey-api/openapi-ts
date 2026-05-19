@@ -1,0 +1,439 @@
+---
+import boxSvg from '@/assets/icons/box.svg?raw';
+import fileAddSvg from '@/assets/icons/file-add.svg?raw';
+import layersSvg from '@/assets/icons/layers.svg?raw';
+import layoutSvg from '@/assets/icons/layout.svg?raw';
+import SkipButton from '@/components/SkipButton.astro';
+import { scrollerHeight } from '@/utils/scroll-stepper';
+
+import type { Feature } from './FeatureCard.astro';
+import FeatureCard from './FeatureCard.astro';
+
+const DWELL_VH = 60;
+const PRE_DWELL_VH = 30;
+const TAIL_VH = DWELL_VH;
+
+const SECTION = {
+  title: 'Everything your API layer needs',
+  subtitle: "Pick what you need. Everything works together.",
+};
+
+const FEATURES: Array<Feature> = [
+  {
+    description: 'Typed SDK clients that regenerate as your API evolves. No handwritten interfaces to maintain.',
+    icon: fileAddSvg,
+    link: '/docs/openapi/typescript/get-started',
+    linkText: 'Get started',
+    rotation: -1.8,
+    title: 'SDKs & Types',
+  },
+  {
+    description: 'From TanStack Query to Zod. Every plugin is opt-in, independently useful, and built to work together.',
+    icon: layersSvg,
+    link: '/docs/openapi/typescript/core',
+    linkText: 'Explore plugins',
+    rotation: 1.3,
+    title: 'Plugin Ecosystem',
+  },
+  {
+    description: 'Native support for your runtime. Fetch API, Axios, Angular, Next.js, Nuxt, and more.',
+    icon: boxSvg,
+    link: '/docs/openapi/typescript/clients',
+    linkText: 'Explore clients',
+    rotation: 0.9,
+    title: 'HTTP Clients',
+  },
+  {
+    description: 'Build custom plugins and clients with the same APIs powering the built-ins. A platform, not a black box.',
+    icon: layoutSvg,
+    link: '/docs/openapi/typescript/plugins/custom',
+    linkText: 'Build a plugin',
+    rotation: -1.1,
+    title: 'Extensibility',
+  },
+];
+
+const DECK = {
+  count: '20+',
+  title: 'plugins available',
+  sub: 'TanStack Query, Zod, Valibot, Fastify, and more.',
+  link: {
+    href: '/docs/openapi/typescript/core',
+    text: 'Find your plugin',
+  },
+};
+---
+
+<div class="features">
+  <div
+    class="features-outer"
+    id="features-outer"
+    style={`--scroll-height: ${scrollerHeight(FEATURES.length, DWELL_VH, PRE_DWELL_VH, TAIL_VH)}`}
+  >
+    <div class="features-sticky">
+      <div class="section-inner features-inner">
+        <div class="section-header">
+          <h2 class="section-title">{SECTION.title}</h2>
+          <p class="section-subtitle">{SECTION.subtitle}</p>
+        </div>
+
+        <div class="features-layout">
+          <div class="features-table">
+            <div class="features-grid" id="features-grid">
+              {FEATURES.map((feature, i) => (
+                <FeatureCard {...feature} index={i} />
+              ))}
+            </div>
+          </div>
+
+          <div class="features-deck" id="features-deck" aria-hidden="true">
+            <div class="deck-teaser">
+              <span class="deck-teaser-count">{DECK.count}</span>
+              <p class="deck-teaser-label">{DECK.title}</p>
+              <p class="deck-teaser-sub">{DECK.sub}</p>
+              <a href={DECK.link.href} class="deck-teaser-link">{DECK.link.text} →</a>
+            </div>
+          </div>
+        </div>
+
+        <SkipButton id="features-skip" class="features-skip" />
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { createResizableInit } from '@/utils/resizable-init';
+  import { createScrollStepper, getNextSection } from '@/utils/scroll-stepper';
+  import { createSkipButton } from '@/utils/skip-button';
+
+  const DWELL_VH = 60;
+  const PRE_DWELL_VH = 30;
+
+  function setupDeck(cards: Array<HTMLElement>, deckRef: HTMLElement) {
+    const dr = deckRef.getBoundingClientRect();
+    const deckCx = dr.left + dr.width / 2;
+    const deckCy = dr.top + dr.height / 2;
+
+    cards.forEach((card) => {
+      const r = card.getBoundingClientRect();
+      card.style.setProperty('--deck-dx', `${deckCx - (r.left + r.width / 2)}px`);
+      card.style.setProperty('--deck-dy', `${deckCy - (r.top + r.height / 2)}px`);
+    });
+
+    cards.forEach((card) => {
+      card.style.transition = 'none';
+      card.classList.remove('is-dealt');
+    });
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        cards.forEach((card) => card.style.removeProperty('transition'));
+      });
+    });
+  }
+
+  const { setup, destroy } = createResizableInit(() => {
+    const outer = document.getElementById('features-outer');
+    if (!outer) return;
+    const out = outer;
+    const wrapper = out.closest<HTMLElement>('.features');
+
+    if (window.matchMedia('(max-width: 640px)').matches) return;
+
+    const cards   = Array.from(out.querySelectorAll<HTMLElement>('[data-card]'));
+    const deckRef = out.querySelector<HTMLElement>('#features-deck');
+
+    if (!deckRef) return;
+    const deck = deckRef;
+
+    function updateFeltBackground() {
+      const rect = out.getBoundingClientRect();
+      const progress = Math.max(
+        0,
+        Math.min(1, (window.innerHeight - rect.top) / window.innerHeight)
+      );
+      out.style.setProperty('--felt-progress', String(progress));
+    }
+
+    setupDeck(cards, deck);
+    updateFeltBackground();
+    window.addEventListener('scroll', updateFeltBackground, { passive: true });
+
+    let currentStep = 0;
+
+    const skipButton = createSkipButton(
+      out.querySelector<HTMLElement>('#features-skip'),
+      () => {
+        const nextSection = getNextSection(wrapper);
+        if (nextSection) return nextSection.getBoundingClientRect().top + window.scrollY;
+      },
+    );
+
+    function setDealt(index: number) {
+      currentStep = index;
+
+      cards.forEach((card, i) => {
+        const wasDealt      = card.classList.contains('is-dealt');
+        const shouldBeDealt = index >= 0 && i <= index;
+
+        if (!wasDealt && shouldBeDealt) {
+          card.classList.add('is-lifting');
+          card.addEventListener('animationend', () => {
+            card.classList.remove('is-lifting');
+          }, { once: true });
+        }
+
+        card.classList.toggle('is-dealt', shouldBeDealt);
+      });
+
+      const remaining = index < 0 ? cards.length : cards.length - 1 - index;
+      deck.dataset.remaining = String(remaining);
+      deck.setAttribute('aria-hidden', remaining === 0 ? 'false' : 'true');
+
+      skipButton.setVisible(index < cards.length - 1)
+    }
+
+    const stepper = createScrollStepper({
+      dwellVh: DWELL_VH,
+      onStep: setDealt,
+      outer,
+      preDwellVh: PRE_DWELL_VH,
+      startStep: -1,
+      stepCount: cards.length,
+    });
+
+    deck.addEventListener('click', () => {
+      if (currentStep < cards.length - 1) {
+        stepper.scrollToStep(currentStep + 1);
+      }
+    });
+
+    return () => {
+      stepper.destroy();
+      skipButton.destroy();
+      window.removeEventListener('scroll', updateFeltBackground);
+    };
+  });
+
+  document.addEventListener('astro:before-swap', destroy, { once: true });
+
+  setup();
+  document.addEventListener('astro:page-load', setup);
+</script>
+
+<style>
+  .features {
+    border-bottom: 1px solid var(--vp-c-divider);
+    margin-top: 0;
+  }
+
+  .features-outer {
+    height: var(--scroll-height);
+    position: relative;
+  }
+
+  .features-sticky {
+    align-items: start;
+    background: var(--sl-color-bg);
+    border-top: 1px solid var(--vp-c-divider);
+    display: flex;
+    height: 100vh;
+    margin-inline: calc(50% - 50vw);
+    overflow: hidden;
+    padding-top: calc(var(--sl-nav-height, 0px) + 3rem);
+    position: sticky;
+    transition: background 200ms linear;
+    top: 0;
+    width: 100vw;
+  }
+
+  .features-sticky::after {
+    background: var(--features-felt-start);
+    content: '';
+    inset: 0;
+    opacity: var(--felt-progress, 0);
+    pointer-events: none;
+    position: absolute;
+    transition: opacity 200ms linear;
+    z-index: 0;
+  }
+
+  .features-sticky::before {
+    background: radial-gradient(
+      ellipse at center,
+      transparent 0%,
+      var(--features-felt-overlay)
+    );
+    content: '';
+    inset: 0;
+    pointer-events: none;
+    position: absolute;
+    z-index: 0;
+  }
+
+  .features-inner {
+    margin: 0 auto;
+    max-width: 1400px;
+    position: relative;
+    width: 100%;
+    z-index: 1;
+  }
+
+  .features-layout {
+    align-items: center;
+    display: flex;
+    gap: 40px;
+    margin-top: 0;
+  }
+
+  .features-grid {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(2, 220px);
+    position: relative;
+  }
+
+  .features-deck {
+    border: 1px dashed var(--vp-c-divider);
+    border-radius: 12px;
+    cursor: pointer;
+    flex: 0 0 220px;
+    margin-left: auto;
+    margin-top: 0;
+    min-height: 360px;
+    position: relative;
+    transition: opacity 300ms ease, border-color 300ms ease;
+  }
+
+  .features-deck:not([data-remaining="0"]):hover {
+    border-color: var(--vp-c-brand-1);
+  }
+
+  .features-deck[data-remaining="0"] {
+    border-color: var(--vp-c-brand-1);
+    border-style: solid;
+    cursor: default;
+    pointer-events: none;
+  }
+
+  .deck-teaser {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: center;
+    left: 0;
+    opacity: 0;
+    padding: 32px 20px;
+    pointer-events: none;
+    position: absolute;
+    text-align: center;
+    top: 0;
+    transition: opacity 400ms ease 150ms;
+    width: 100%;
+  }
+
+  .features-deck[data-remaining="0"] .deck-teaser {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .deck-teaser-count {
+    color: var(--vp-c-brand-1);
+    display: block;
+    font-family: var(--sl-font-mono, ui-monospace, monospace);
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .deck-teaser-label {
+    color: var(--sl-color-text);
+    font-size: 13px;
+    font-weight: 600;
+    margin: 0 0 14px;
+  }
+
+  .deck-teaser-sub {
+    color: var(--sl-color-gray-2);
+    font-size: 12px;
+    line-height: 1.6;
+    margin: 0 0 20px;
+  }
+
+  .deck-teaser-link {
+    color: var(--vp-c-brand-1);
+    font-size: 12px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: opacity 150ms ease;
+  }
+
+  .deck-teaser-link:hover {
+    opacity: 0.75;
+  }
+
+  .features-skip {
+    margin: 4rem auto 0;
+  }
+
+  @media (max-width: 640px) {
+    .features-outer {
+      height: auto;
+    }
+
+    .features-sticky {
+      background: var(--features-felt-start);
+      height: auto;
+      margin-inline: 0;
+      overflow: visible;
+      padding: 48px 0 56px;
+      position: relative;
+      width: 100%;
+    }
+
+    .features-sticky::before,
+    .features-sticky::after {
+      display: none;
+    }
+
+    .features-layout {
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .features-deck {
+      display: none;
+    }
+
+    .features-grid {
+      gap: 16px;
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .features-inner {
+      max-width: 1400px;
+    }
+
+    .features-table {
+      flex: 1;
+      max-width: 880px;
+    }
+
+    .features-grid {
+      grid-template-columns: repeat(4, 1fr);
+      max-width: none;
+    }
+  }
+
+  @media (min-width: 640px) {
+    .features-inner {
+      padding: 0 40px;
+    }
+  }
+</style>

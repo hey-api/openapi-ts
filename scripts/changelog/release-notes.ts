@@ -42,7 +42,7 @@ function formatReleaseNotes(release: Release, contributors: Array<Contributor>):
         '',
         content,
         '',
-        '[Contribute →](https://heyapi.dev/openapi-ts/community/contributing)',
+        '[Contribute →](https://heyapi.dev/docs/openapi/typescript/community/contributing)',
         '',
         '---',
         '',

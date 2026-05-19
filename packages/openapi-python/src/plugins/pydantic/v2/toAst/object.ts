@@ -10,14 +10,14 @@ export interface ObjectToFieldsResult extends Pick<PydanticResult, 'fields' | 't
 }
 
 function additionalPropertiesNode(ctx: ObjectResolverContext): PydanticType | null | undefined {
-  const { schema } = ctx;
+  const { path, plugin, schema } = ctx;
 
   if (!schema.additionalProperties || !schema.additionalProperties.type) return;
   if (schema.additionalProperties.type === 'never') return null;
 
   const result = ctx.walk(
     schema.additionalProperties,
-    childContext(ctx.walkerCtx, 'additionalProperties'),
+    childContext({ path, plugin }, 'additionalProperties'),
   );
   ctx._childResults.push(result);
 
@@ -27,14 +27,14 @@ function additionalPropertiesNode(ctx: ObjectResolverContext): PydanticType | nu
 }
 
 function fieldsNode(ctx: ObjectResolverContext): Array<PydanticField> {
-  const { schema } = ctx;
+  const { path, plugin, schema } = ctx;
   const fields: Array<PydanticField> = [];
 
   for (const name in schema.properties) {
     const property = schema.properties[name]!;
     const isOptional = !schema.required?.includes(name);
 
-    const propertyResult = ctx.walk(property, childContext(ctx.walkerCtx, 'properties', name));
+    const propertyResult = ctx.walk(property, childContext({ path, plugin }, 'properties', name));
     ctx._childResults.push(propertyResult);
 
     const final = ctx.applyModifiers(propertyResult, { optional: isOptional });
@@ -42,7 +42,9 @@ function fieldsNode(ctx: ObjectResolverContext): Array<PydanticField> {
     fields.push({
       fieldConstraints: final.fieldConstraints,
       isOptional,
-      name: ctx.plugin.symbol(snakeCaseName),
+      // name: plugin.symbol(name),
+      // TODO: remove this, should be handled by DSL
+      name: plugin.symbol(snakeCaseName),
       originalName: name,
       type: final.type,
     });
@@ -82,9 +84,9 @@ function objectResolver(ctx: ObjectResolverContext): PydanticType {
 }
 
 export function objectToFields(
-  ctx: Pick<ObjectResolverContext, 'applyModifiers' | 'plugin' | 'schema' | 'walk' | 'walkerCtx'>,
+  ctx: Pick<ObjectResolverContext, 'applyModifiers' | 'path' | 'plugin' | 'schema' | 'walk'>,
 ): ObjectToFieldsResult {
-  const { applyModifiers, plugin, schema, walk, walkerCtx } = ctx;
+  const { applyModifiers, path, plugin, schema, walk } = ctx;
   const childResults: Array<PydanticResult> = [];
 
   const extendedCtx: ObjectResolverContext = {
@@ -96,10 +98,10 @@ export function objectToFields(
       base: baseNode,
       fields: fieldsNode,
     },
+    path,
     plugin,
     schema,
     walk,
-    walkerCtx,
   };
 
   const resolver = plugin.config['~resolvers']?.object;

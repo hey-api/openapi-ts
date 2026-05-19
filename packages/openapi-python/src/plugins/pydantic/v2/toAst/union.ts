@@ -1,9 +1,6 @@
-import type { IR } from '@hey-api/shared';
-
 import { $ } from '../../../../py-dsl';
 import type { UnionResolverContext } from '../../resolvers';
-import type { PydanticFinal, PydanticResult, PydanticType } from '../../shared/types';
-import type { PydanticPlugin } from '../../types';
+import type { PydanticResult, PydanticType } from '../../shared/types';
 import type { FieldConstraints } from '../constants';
 
 function baseNode(ctx: UnionResolverContext): PydanticType {
@@ -60,15 +57,13 @@ export function unionToType({
   applyModifiers,
   childResults,
   parentSchema,
+  path,
   plugin,
   schemas,
-}: {
-  applyModifiers: (result: PydanticResult, options?: { optional?: boolean }) => PydanticFinal;
-  childResults: Array<PydanticResult>;
-  parentSchema: IR.SchemaObject;
-  plugin: PydanticPlugin['Instance'];
-  schemas: ReadonlyArray<IR.SchemaObject>;
-}): UnionToTypeResult {
+}: Pick<
+  UnionResolverContext,
+  'applyModifiers' | 'childResults' | 'parentSchema' | 'path' | 'plugin' | 'schemas'
+>): UnionToTypeResult {
   const constraints: FieldConstraints = {};
 
   if (parentSchema.description !== undefined) {
@@ -92,6 +87,7 @@ export function unionToType({
       base: baseNode,
     },
     parentSchema,
+    path,
     plugin,
     schema: parentSchema,
     schemas,

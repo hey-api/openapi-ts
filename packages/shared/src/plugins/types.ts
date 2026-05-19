@@ -109,6 +109,13 @@ export namespace Plugin {
     '~resolvers'?: T;
   };
 
+  export interface ResolverNodes<T> {
+    /**
+     * Nodes used to build different parts of the result.
+     */
+    nodes: T;
+  }
+
   export type Types<
     Config extends PluginBaseConfig = PluginBaseConfig,
     ResolvedConfig extends PluginBaseConfig = Config,

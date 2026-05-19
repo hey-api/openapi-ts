@@ -8,14 +8,14 @@ import type { CompositeHandlerResult, ValibotResult } from '../../shared/types';
 import { identifiers } from '../constants';
 
 function additionalPropertiesNode(ctx: ObjectResolverContext): Pipe | null | undefined {
-  const { pipes, schema } = ctx;
+  const { path, pipes, plugin, schema } = ctx;
 
   if (!schema.additionalProperties || !schema.additionalProperties.type) return;
   if (schema.additionalProperties.type === 'never') return null;
 
   const additionalResult = ctx.walk(
     schema.additionalProperties,
-    childContext(ctx.walkerCtx, 'additionalProperties'),
+    childContext({ path, plugin }, 'additionalProperties'),
   );
   ctx._childResults.push(additionalResult);
 
@@ -51,14 +51,14 @@ function objectResolver(ctx: ObjectResolverContext): Pipes | Pipe {
 }
 
 function shapeNode(ctx: ObjectResolverContext): ReturnType<typeof $.object> {
-  const { pipes, schema } = ctx;
+  const { path, pipes, plugin, schema } = ctx;
   const shape = $.object().pretty();
 
   for (const name in schema.properties) {
     const property = schema.properties[name]!;
     const isOptional = !schema.required?.includes(name);
 
-    const propertyResult = ctx.walk(property, childContext(ctx.walkerCtx, 'properties', name));
+    const propertyResult = ctx.walk(property, childContext({ path, plugin }, 'properties', name));
     ctx._childResults.push(propertyResult);
 
     const finalExpr = ctx.applyModifiers(propertyResult, { optional: isOptional });
@@ -69,9 +69,9 @@ function shapeNode(ctx: ObjectResolverContext): ReturnType<typeof $.object> {
 }
 
 export function objectToPipes(
-  ctx: Pick<ObjectResolverContext, 'applyModifiers' | 'plugin' | 'schema' | 'walk' | 'walkerCtx'>,
+  ctx: Pick<ObjectResolverContext, 'applyModifiers' | 'path' | 'plugin' | 'schema' | 'walk'>,
 ): CompositeHandlerResult {
-  const { applyModifiers, plugin, schema, walk, walkerCtx } = ctx;
+  const { applyModifiers, path, plugin, schema, walk } = ctx;
 
   const childResults: Array<ValibotResult> = [];
 
@@ -84,6 +84,7 @@ export function objectToPipes(
       base: baseNode,
       shape: shapeNode,
     },
+    path,
     pipes: {
       ...pipes,
       current: [],
@@ -94,7 +95,6 @@ export function objectToPipes(
       v: plugin.external('valibot.v'),
     },
     walk,
-    walkerCtx,
   };
 
   const resolver = plugin.config['~resolvers']?.object;

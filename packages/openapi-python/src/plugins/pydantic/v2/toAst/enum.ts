@@ -1,4 +1,4 @@
-import type { SchemaWithType } from '@hey-api/shared';
+import type { SchemaVisitorContext, SchemaWithType } from '@hey-api/shared';
 import { toCase } from '@hey-api/shared';
 
 import { $ } from '../../../../py-dsl';
@@ -84,10 +84,10 @@ function enumResolver(ctx: EnumResolverContext): PydanticType {
 }
 
 export function enumToType({
+  path,
   plugin,
   schema,
-}: {
-  plugin: PydanticPlugin['Instance'];
+}: SchemaVisitorContext<PydanticPlugin['Instance']> & {
   schema: SchemaWithType<'enum'>;
 }): EnumToTypeResult {
   const ctx: EnumResolverContext = {
@@ -96,6 +96,7 @@ export function enumToType({
       base: baseNode,
       items: itemsNode,
     },
+    path,
     plugin,
     schema,
   };

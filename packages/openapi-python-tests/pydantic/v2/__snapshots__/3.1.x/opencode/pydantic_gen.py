@@ -500,7 +500,7 @@ class EventPermissionAsked(BaseModel):
     properties: PermissionRequest
 
 
-class EventPermissionRepliedPropertiesReply(Enum, str):
+class EventPermissionRepliedPropertiesReply(str, Enum):
     ONCE = "once"
     ALWAYS = "always"
     REJECT = "reject"
@@ -598,7 +598,7 @@ class EventTuiPromptAppend(BaseModel):
     properties: EventTuiPromptAppendProperties
 
 
-class EventTuiCommandExecutePropertiesCommand(Enum, str):
+class EventTuiCommandExecutePropertiesCommand(str, Enum):
     SESSION_LIST = "session.list"
     SESSION_NEW = "session.new"
     SESSION_SHARE = "session.share"
@@ -624,7 +624,7 @@ class EventTuiCommandExecute(BaseModel):
     properties: EventTuiCommandExecuteProperties
 
 
-class EventTuiToastShowPropertiesVariant(Enum, str):
+class EventTuiToastShowPropertiesVariant(str, Enum):
     INFO = "info"
     SUCCESS = "success"
     WARNING = "warning"
@@ -664,7 +664,7 @@ class EventCommandExecuted(BaseModel):
     properties: EventCommandExecutedProperties
 
 
-class PermissionAction(Enum, str):
+class PermissionAction(str, Enum):
     ALLOW = "allow"
     DENY = "deny"
     ASK = "ask"
@@ -784,7 +784,7 @@ class EventVcsBranchUpdated(BaseModel):
     properties: EventVcsBranchUpdatedProperties
 
 
-class PtyStatus(Enum, str):
+class PtyStatus(str, Enum):
     RUNNING = "running"
     EXITED = "exited"
 
@@ -959,7 +959,7 @@ class KeybindsConfig(BaseModel):
     tips_toggle: Optional[str] = Field(default="<leader>h", description="Toggle tips on home screen")
 
 
-class LogLevel(Enum, str):
+class LogLevel(str, Enum):
     DEBUG = "DEBUG"
     INFO = "INFO"
     WARN = "WARN"
@@ -973,7 +973,7 @@ class ServerConfig(BaseModel):
     cors: Optional[list[str]] = Field(default=None, description="Additional domains to allow for CORS")
 
 
-class PermissionActionConfig(Enum, str):
+class PermissionActionConfig(str, Enum):
     ASK = "ask"
     ALLOW = "allow"
     DENY = "deny"
@@ -1009,7 +1009,7 @@ PermissionConfig_2: TypeAlias = Union[PermissionConfig, PermissionActionConfig]
 AgentConfig: TypeAlias = dict[str, Any]
 
 
-class ProviderConfigModelsValueInterleavedField(Enum, str):
+class ProviderConfigModelsValueInterleavedField(str, Enum):
     REASONING_CONTENT = "reasoning_content"
     REASONING_DETAILS = "reasoning_details"
 
@@ -1038,7 +1038,7 @@ class ProviderConfigModelsValueLimit(BaseModel):
     output: float
 
 
-class ProviderConfigModelsValueModalitiesInput(Enum, str):
+class ProviderConfigModelsValueModalitiesInput(str, Enum):
     TEXT = "text"
     AUDIO = "audio"
     IMAGE = "image"
@@ -1046,7 +1046,7 @@ class ProviderConfigModelsValueModalitiesInput(Enum, str):
     PDF = "pdf"
 
 
-class ProviderConfigModelsValueModalitiesOutput(Enum, str):
+class ProviderConfigModelsValueModalitiesOutput(str, Enum):
     TEXT = "text"
     AUDIO = "audio"
     IMAGE = "image"
@@ -1059,7 +1059,7 @@ class ProviderConfigModelsValueModalities(BaseModel):
     output: list[ProviderConfigModelsValueModalitiesOutput]
 
 
-class ProviderConfigModelsValueStatus(Enum, str):
+class ProviderConfigModelsValueStatus(str, Enum):
     ALPHA = "alpha"
     BETA = "beta"
     DEPRECATED = "deprecated"
@@ -1131,7 +1131,7 @@ class McpRemoteConfig(BaseModel):
     timeout: Optional[int] = Field(default=None, description="Timeout in ms for fetching tools from the MCP server. Defaults to 5000 (5 seconds) if not specified.", gt=0, le=9007199254740991)
 
 
-class LayoutConfig(Enum, str):
+class LayoutConfig(str, Enum):
     AUTO = "auto"
     STRETCH = "stretch"
 
@@ -1140,7 +1140,7 @@ class ConfigTuiScrollAcceleration(BaseModel):
     enabled: bool
 
 
-class ConfigTuiDiffStyle(Enum, str):
+class ConfigTuiDiffStyle(str, Enum):
     AUTO = "auto"
     STACKED = "stacked"
 
@@ -1163,7 +1163,7 @@ class ConfigWatcher(BaseModel):
     ignore: Optional[list[str]] = Field(default=None)
 
 
-class ConfigShare(Enum, str):
+class ConfigShare(str, Enum):
     MANUAL = "manual"
     AUTO = "auto"
     DISABLED = "disabled"
@@ -1364,7 +1364,7 @@ class ModelCapabilitiesOutput(BaseModel):
     pdf: bool
 
 
-class ModelCapabilitiesInterleavedField(Enum, str):
+class ModelCapabilitiesInterleavedField(str, Enum):
     REASONING_CONTENT = "reasoning_content"
     REASONING_DETAILS = "reasoning_details"
 
@@ -1411,7 +1411,7 @@ class ModelLimit(BaseModel):
     output: float
 
 
-class ModelStatus(Enum, str):
+class ModelStatus(str, Enum):
     ALPHA = "alpha"
     BETA = "beta"
     DEPRECATED = "deprecated"
@@ -1434,7 +1434,7 @@ class Model(BaseModel):
     variants: Optional[dict[str, Any]] = Field(default=None)
 
 
-class ProviderSource(Enum, str):
+class ProviderSource(str, Enum):
     ENV = "env"
     CONFIG = "config"
     CUSTOM = "custom"
@@ -1473,7 +1473,7 @@ class Symbol(BaseModel):
     location: SymbolLocation
 
 
-class FileNodeType(Enum, str):
+class FileNodeType(str, Enum):
     FILE = "file"
     DIRECTORY = "directory"
 
@@ -1512,7 +1512,7 @@ class FileContent(BaseModel):
     mime_type: Optional[str] = Field(default=None, alias="mimeType")
 
 
-class FileStatus(Enum, str):
+class FileStatus(str, Enum):
     ADDED = "added"
     DELETED = "deleted"
     MODIFIED = "modified"
@@ -1525,7 +1525,7 @@ class File(BaseModel):
     status: FileStatus
 
 
-class AgentMode(Enum, str):
+class AgentMode(str, Enum):
     SUBAGENT = "subagent"
     PRIMARY = "primary"
     ALL = "all"

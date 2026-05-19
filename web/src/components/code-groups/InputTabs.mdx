@@ -1,0 +1,45 @@
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs>
+  <TabItem label="path">
+```js {2} title="openapi-ts.config.ts"
+export default {
+  input: './path/to/openapi.json',
+};
+```
+  </TabItem>
+  <TabItem label="url">
+```js {2} title="openapi-ts.config.ts"
+export default {
+  input: 'https://get.heyapi.dev/hey-api/backend', // sign up at app.heyapi.dev
+};
+```
+  </TabItem>
+  <TabItem label="registry">
+```js {2} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+};
+```
+  </TabItem>
+  <TabItem label="object">
+```js {2-5} title="openapi-ts.config.ts"
+export default {
+  input: {
+    path: 'hey-api/backend', // sign up at app.heyapi.dev
+    // ...other options
+  },
+};
+```
+  </TabItem>
+  <TabItem label="spec">
+```js {2-5} title="openapi-ts.config.ts"
+export default {
+  input: {
+    openapi: '3.1.1',
+    // ...rest of your spec
+  },
+};
+```
+  </TabItem>
+</Tabs>
