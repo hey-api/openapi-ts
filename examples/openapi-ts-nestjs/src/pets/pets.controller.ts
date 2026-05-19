@@ -1,7 +1,15 @@
 import { Body, Controller, Get, NotFoundException, Param, Post, Query } from '@nestjs/common';
 
 import type { PetsControllerMethods } from '../client/nestjs.gen';
-import type { CreatePetData, ListPetsData, Pet, ShowPetByIdData } from '../client/types.gen';
+import type {
+  CreatePetData,
+  CreatePetResponse,
+  ListPetsData,
+  ListPetsResponse,
+  Pet,
+  ShowPetByIdData,
+  ShowPetByIdResponse,
+} from '../client/types.gen';
 
 @Controller('pets')
 export class PetsController implements Pick<
@@ -14,14 +22,14 @@ export class PetsController implements Pick<
   ];
 
   @Get()
-  async listPets(@Query() query?: ListPetsData['query']) {
+  async listPets(@Query() query?: ListPetsData['query']): Promise<ListPetsResponse> {
     const limit = query?.limit ?? 20;
 
     return this.pets.slice(0, limit);
   }
 
   @Post()
-  async createPet(@Body() body: CreatePetData['body']) {
+  async createPet(@Body() body: CreatePetData['body']): Promise<CreatePetResponse> {
     const pet: Pet = {
       id: crypto.randomUUID(),
       name: body.name,
@@ -35,7 +43,7 @@ export class PetsController implements Pick<
   }
 
   @Get(':petId')
-  async showPetById(@Param() path: ShowPetByIdData['path']) {
+  async showPetById(@Param() path: ShowPetByIdData['path']): Promise<ShowPetByIdResponse> {
     const pet = this.pets.find((p) => p.id === path.petId);
 
     if (!pet) {

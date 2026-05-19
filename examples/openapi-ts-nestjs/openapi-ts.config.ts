@@ -1,6 +1,6 @@
-import { defineConfig } from '@hey-api/openapi-ts';
+import { defineConfig, type UserConfig } from '@hey-api/openapi-ts';
 
-export default defineConfig({
+const config: Promise<UserConfig> = defineConfig({
   input: './openapi.json',
   logs: {
     path: './logs',
@@ -11,3 +11,5 @@ export default defineConfig({
   },
   plugins: ['nestjs', '@hey-api/sdk'],
 });
+
+export default config;

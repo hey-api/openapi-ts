@@ -4,7 +4,7 @@ import * as Form from '@radix-ui/react-form';
 import { PlusIcon } from '@radix-ui/react-icons';
 import { Box, Button, Container, Flex, Heading, Section, TextField } from '@radix-ui/themes';
 import OpenAI from 'openai';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 import { client as baseClient } from './client/client.gen';
 import { OpenAi } from './client/sdk.gen';
@@ -24,7 +24,7 @@ const client = new OpenAi({
   client: baseClient,
 });
 
-function App() {
+function App(): React.ReactNode {
   const [isRequiredNameError] = useState(false);
 
   const onCreateResponse = async (values: FormData) => {

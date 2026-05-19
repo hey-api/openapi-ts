@@ -14,7 +14,7 @@ import {
   Text,
   TextField,
 } from '@radix-ui/themes';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 import { createClient } from './client/client';
 import { PetSchema } from './client/schemas.gen';
@@ -49,7 +49,7 @@ localClient.interceptors.error.use((error) => {
   return error;
 });
 
-function App() {
+function App(): React.ReactNode {
   const [pet, setPet] = useState<Pet>();
   const [isRequiredNameError, setIsRequiredNameError] = useState(false);
 

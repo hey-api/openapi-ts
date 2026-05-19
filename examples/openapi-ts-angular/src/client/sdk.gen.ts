@@ -2,7 +2,7 @@
 
 import { Injectable } from '@angular/core';
 
-import type { Client, Options as Options2, TDataShape } from './client';
+import type { Client, Options as Options2, RequestResult, TDataShape } from './client';
 import { client } from './client.gen';
 import type {
   AddPetData,
@@ -89,7 +89,9 @@ export class PetService {
    *
    * Add a new pet to the store.
    */
-  public addPet<ThrowOnError extends boolean = false>(options: Options<AddPetData, ThrowOnError>) {
+  public addPet<ThrowOnError extends boolean = false>(
+    options: Options<AddPetData, ThrowOnError>,
+  ): RequestResult<AddPetResponses, AddPetErrors, ThrowOnError> {
     return (options.client ?? client).post<AddPetResponses, AddPetErrors, ThrowOnError>({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/pet',
@@ -108,7 +110,7 @@ export class PetService {
    */
   public updatePet<ThrowOnError extends boolean = false>(
     options: Options<UpdatePetData, ThrowOnError>,
-  ) {
+  ): RequestResult<UpdatePetResponses, UpdatePetErrors, ThrowOnError> {
     return (options.client ?? client).put<UpdatePetResponses, UpdatePetErrors, ThrowOnError>({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/pet',
@@ -127,7 +129,7 @@ export class PetService {
    */
   public findPetsByStatus<ThrowOnError extends boolean = false>(
     options: Options<FindPetsByStatusData, ThrowOnError>,
-  ) {
+  ): RequestResult<FindPetsByStatusResponses, FindPetsByStatusErrors, ThrowOnError> {
     return (options.client ?? client).get<
       FindPetsByStatusResponses,
       FindPetsByStatusErrors,
@@ -146,7 +148,7 @@ export class PetService {
    */
   public findPetsByTags<ThrowOnError extends boolean = false>(
     options: Options<FindPetsByTagsData, ThrowOnError>,
-  ) {
+  ): RequestResult<FindPetsByTagsResponses, FindPetsByTagsErrors, ThrowOnError> {
     return (options.client ?? client).get<
       FindPetsByTagsResponses,
       FindPetsByTagsErrors,
@@ -165,7 +167,7 @@ export class PetService {
    */
   public deletePet<ThrowOnError extends boolean = false>(
     options: Options<DeletePetData, ThrowOnError>,
-  ) {
+  ): RequestResult<DeletePetResponses, DeletePetErrors, ThrowOnError> {
     return (options.client ?? client).delete<DeletePetResponses, DeletePetErrors, ThrowOnError>({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/pet/{petId}',
@@ -180,7 +182,7 @@ export class PetService {
    */
   public getPetById<ThrowOnError extends boolean = false>(
     options: Options<GetPetByIdData, ThrowOnError>,
-  ) {
+  ): RequestResult<GetPetByIdResponses, GetPetByIdErrors, ThrowOnError> {
     return (options.client ?? client).get<GetPetByIdResponses, GetPetByIdErrors, ThrowOnError>({
       security: [
         { name: 'api_key', type: 'apiKey' },
@@ -198,7 +200,7 @@ export class PetService {
    */
   public updatePetWithForm<ThrowOnError extends boolean = false>(
     options: Options<UpdatePetWithFormData, ThrowOnError>,
-  ) {
+  ): RequestResult<UpdatePetWithFormResponses, UpdatePetWithFormErrors, ThrowOnError> {
     return (options.client ?? client).post<
       UpdatePetWithFormResponses,
       UpdatePetWithFormErrors,
@@ -217,7 +219,7 @@ export class PetService {
    */
   public uploadFile<ThrowOnError extends boolean = false>(
     options: Options<UploadFileData, ThrowOnError>,
-  ) {
+  ): RequestResult<UploadFileResponses, UploadFileErrors, ThrowOnError> {
     return (options.client ?? client).post<UploadFileResponses, UploadFileErrors, ThrowOnError>({
       bodySerializer: null,
       security: [{ scheme: 'bearer', type: 'http' }],
@@ -240,7 +242,7 @@ export class StoreService {
    */
   public getInventory<ThrowOnError extends boolean = false>(
     options?: Options<GetInventoryData, ThrowOnError>,
-  ) {
+  ): RequestResult<GetInventoryResponses, GetInventoryErrors, ThrowOnError> {
     return (options?.client ?? client).get<GetInventoryResponses, GetInventoryErrors, ThrowOnError>(
       {
         security: [{ name: 'api_key', type: 'apiKey' }],
@@ -257,7 +259,7 @@ export class StoreService {
    */
   public placeOrder<ThrowOnError extends boolean = false>(
     options?: Options<PlaceOrderData, ThrowOnError>,
-  ) {
+  ): RequestResult<PlaceOrderResponses, PlaceOrderErrors, ThrowOnError> {
     return (options?.client ?? client).post<PlaceOrderResponses, PlaceOrderErrors, ThrowOnError>({
       url: '/store/order',
       ...options,
@@ -275,7 +277,7 @@ export class StoreService {
    */
   public deleteOrder<ThrowOnError extends boolean = false>(
     options: Options<DeleteOrderData, ThrowOnError>,
-  ) {
+  ): RequestResult<DeleteOrderResponses, DeleteOrderErrors, ThrowOnError> {
     return (options.client ?? client).delete<DeleteOrderResponses, DeleteOrderErrors, ThrowOnError>(
       { url: '/store/order/{orderId}', ...options },
     );
@@ -288,7 +290,7 @@ export class StoreService {
    */
   public getOrderById<ThrowOnError extends boolean = false>(
     options: Options<GetOrderByIdData, ThrowOnError>,
-  ) {
+  ): RequestResult<GetOrderByIdResponses, GetOrderByIdErrors, ThrowOnError> {
     return (options.client ?? client).get<GetOrderByIdResponses, GetOrderByIdErrors, ThrowOnError>({
       url: '/store/order/{orderId}',
       ...options,
@@ -305,7 +307,7 @@ export class UserService {
    */
   public createUser<ThrowOnError extends boolean = false>(
     options?: Options<CreateUserData, ThrowOnError>,
-  ) {
+  ): RequestResult<CreateUserResponses, CreateUserErrors, ThrowOnError> {
     return (options?.client ?? client).post<CreateUserResponses, CreateUserErrors, ThrowOnError>({
       url: '/user',
       ...options,
@@ -323,7 +325,11 @@ export class UserService {
    */
   public createUsersWithListInput<ThrowOnError extends boolean = false>(
     options?: Options<CreateUsersWithListInputData, ThrowOnError>,
-  ) {
+  ): RequestResult<
+    CreateUsersWithListInputResponses,
+    CreateUsersWithListInputErrors,
+    ThrowOnError
+  > {
     return (options?.client ?? client).post<
       CreateUsersWithListInputResponses,
       CreateUsersWithListInputErrors,
@@ -345,7 +351,7 @@ export class UserService {
    */
   public loginUser<ThrowOnError extends boolean = false>(
     options?: Options<LoginUserData, ThrowOnError>,
-  ) {
+  ): RequestResult<LoginUserResponses, LoginUserErrors, ThrowOnError> {
     return (options?.client ?? client).get<LoginUserResponses, LoginUserErrors, ThrowOnError>({
       url: '/user/login',
       ...options,
@@ -359,7 +365,7 @@ export class UserService {
    */
   public logoutUser<ThrowOnError extends boolean = false>(
     options?: Options<LogoutUserData, ThrowOnError>,
-  ) {
+  ): RequestResult<LogoutUserResponses, LogoutUserErrors, ThrowOnError> {
     return (options?.client ?? client).get<LogoutUserResponses, LogoutUserErrors, ThrowOnError>({
       url: '/user/logout',
       ...options,
@@ -373,7 +379,7 @@ export class UserService {
    */
   public deleteUser<ThrowOnError extends boolean = false>(
     options: Options<DeleteUserData, ThrowOnError>,
-  ) {
+  ): RequestResult<DeleteUserResponses, DeleteUserErrors, ThrowOnError> {
     return (options.client ?? client).delete<DeleteUserResponses, DeleteUserErrors, ThrowOnError>({
       url: '/user/{username}',
       ...options,
@@ -387,7 +393,7 @@ export class UserService {
    */
   public getUserByName<ThrowOnError extends boolean = false>(
     options: Options<GetUserByNameData, ThrowOnError>,
-  ) {
+  ): RequestResult<GetUserByNameResponses, GetUserByNameErrors, ThrowOnError> {
     return (options.client ?? client).get<
       GetUserByNameResponses,
       GetUserByNameErrors,
@@ -402,7 +408,7 @@ export class UserService {
    */
   public updateUser<ThrowOnError extends boolean = false>(
     options: Options<UpdateUserData, ThrowOnError>,
-  ) {
+  ): RequestResult<UpdateUserResponses, UpdateUserErrors, ThrowOnError> {
     return (options.client ?? client).put<UpdateUserResponses, UpdateUserErrors, ThrowOnError>({
       url: '/user/{username}',
       ...options,

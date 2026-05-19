@@ -1,8 +1,8 @@
 import path from 'node:path';
 
-import { defineConfig } from '@hey-api/openapi-ts';
+import { defineConfig, type UserConfig } from '@hey-api/openapi-ts';
 
-export default defineConfig({
+const config: Promise<UserConfig> = defineConfig({
   input: path.resolve('..', '..', 'specs', '3.1.x', 'openai.yaml'),
   logs: {
     path: './logs',
@@ -23,3 +23,5 @@ export default defineConfig({
     },
   ],
 });
+
+export default config;

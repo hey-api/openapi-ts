@@ -100,7 +100,7 @@ const stripEmptySlots = (params: Params) => {
   }
 };
 
-export const buildClientParams = (args: ReadonlyArray<unknown>, fields: FieldsConfig) => {
+export const buildClientParams = (args: ReadonlyArray<unknown>, fields: FieldsConfig): Params => {
   const params: Params = {
     body: Object.create(null),
     headers: Object.create(null),

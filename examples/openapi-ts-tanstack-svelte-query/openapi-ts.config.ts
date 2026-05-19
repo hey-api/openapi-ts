@@ -1,6 +1,6 @@
-import { defineConfig } from '@hey-api/openapi-ts';
+import { defineConfig, type UserConfig } from '@hey-api/openapi-ts';
 
-export default defineConfig({
+const config: Promise<UserConfig> = defineConfig({
   input:
     'https://raw.githubusercontent.com/swagger-api/swagger-petstore/master/src/main/resources/openapi.yaml',
   logs: {
@@ -21,3 +21,5 @@ export default defineConfig({
     '@tanstack/svelte-query',
   ],
 });
+
+export default config;

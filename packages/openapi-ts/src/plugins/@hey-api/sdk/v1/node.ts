@@ -17,7 +17,7 @@ import {
 import { $, ctx } from '../../../../ts-dsl';
 import { createClientClass, createRegistryClass } from '../shared/class';
 import { nuxtTypeComposable, nuxtTypeDefault } from '../shared/constants';
-import { operationParameters, operationStatements } from '../shared/operation';
+import { operationParameters, operationReturnType, operationStatements } from '../shared/operation';
 import type { HeyApiSdkPlugin } from '../types';
 
 export interface OperationItem {
@@ -201,7 +201,12 @@ function enrichRootClass(args: {
   };
   node.do(
     $.field(registry, (f) =>
-      f.public().static().readonly().assign($.new(symbolRegistry).generic(symbol)),
+      f
+        .public()
+        .static()
+        .readonly()
+        .type($.type(symbolRegistry).generic(symbol))
+        .assign($.new(symbolRegistry).generic(symbol)),
     ),
     $.newline(),
     $.init((i) =>
@@ -277,6 +282,8 @@ function implementFn<T extends ReturnType<typeof $.func | typeof $.method>>(args
     operation,
     plugin,
   });
+  const returnType = operationReturnType({ operation, plugin });
+
   return node
     .$if(
       isNuxtClient,
@@ -307,6 +314,7 @@ function implementFn<T extends ReturnType<typeof $.func | typeof $.method>>(args
         ),
     )
     .params(...opParameters.parameters)
+    .returns(returnType)
     .do(...statements) as T;
 }
 

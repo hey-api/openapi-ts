@@ -344,7 +344,7 @@ export function operationStatements({
     reqOptions.prop('responseTransformer', responseHandlers.transformer);
   }
 
-  let hasServerSentEvents = false;
+  const isSse = hasOperationSse({ operation });
   let responseTypeValue: ReturnType<typeof getResponseType> | undefined;
 
   for (const statusCode in operation.responses) {
@@ -361,10 +361,6 @@ export function operationStatements({
           reqOptions.prop('responseType', $.literal(responseTypeValue));
         }
       }
-    }
-
-    if (response.mediaType === 'text/event-stream') {
-      hasServerSentEvents = true;
     }
   }
 
@@ -455,7 +451,7 @@ export function operationStatements({
     clientExpression = optionsClient;
   }
 
-  let functionName = hasServerSentEvents ? clientExpression.attr('sse') : clientExpression;
+  let functionName = isSse ? clientExpression.attr('sse') : clientExpression;
   functionName = functionName.attr(operation.method);
 
   statements.push(
@@ -483,4 +479,56 @@ export function operationStatements({
   );
 
   return statements;
+}
+
+/**
+ * Builds the return type annotation for an SDK operation function.
+ */
+export function operationReturnType({
+  operation,
+  plugin,
+}: {
+  operation: IR.OperationObject;
+  plugin: HeyApiSdkPlugin['Instance'];
+}): ReturnType<typeof $.type> {
+  const client = getClientPlugin(getTypedConfig(plugin));
+  const isNuxt = client.name === '@hey-api/client-nuxt';
+  const isSse = hasOperationSse({ operation });
+
+  const queryType = (role: 'response' | 'responses' | 'error' | 'errors') =>
+    plugin.querySymbol({
+      category: 'type',
+      resource: 'operation',
+      resourceId: operation.id,
+      role,
+    }) ?? 'unknown';
+
+  const requestResult = $.type(plugin.external('client.RequestResult'));
+  const sseResult = $.type(plugin.external('client.ServerSentEventsResult'));
+
+  if (isNuxt) {
+    const inner = requestResult
+      .generic(nuxtTypeComposable)
+      .generic($.type.or(queryType('response'), nuxtTypeDefault));
+    return isSse
+      ? $.type('Promise').generic(sseResult.generic(inner.generic('unknown')))
+      : inner.generic(nuxtTypeDefault);
+  }
+
+  if (isSse) {
+    return $.type('Promise').generic(
+      sseResult
+        .generic(queryType('responses'))
+        .generic(queryType('errors'))
+        .generic('ThrowOnError'),
+    );
+  }
+
+  return requestResult
+    .generic(queryType('responses'))
+    .generic(queryType('errors'))
+    .generic('ThrowOnError')
+    .$if(plugin.config.responseStyle === 'data', (t) =>
+      t.generic($.type.literal(plugin.config.responseStyle)),
+    );
 }

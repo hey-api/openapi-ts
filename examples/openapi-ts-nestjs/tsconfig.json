@@ -23,6 +23,8 @@
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
     "forceConsistentCasingInFileNames": true,
+    "declaration": true,
+    "isolatedDeclarations": true,
     "isolatedModules": true
   },
   "references": [{ "path": "./tsconfig.node.json" }]

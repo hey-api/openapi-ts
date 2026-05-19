@@ -2,7 +2,7 @@
 
 import { z } from 'zod/v3';
 
-import type { Client, Options as Options2, TDataShape } from './client';
+import type { Client, Options as Options2, RequestResult, TDataShape } from './client';
 import { client } from './client.gen';
 import type { PostFooData, PostFooResponses } from './types.gen';
 import { zPostFooResponse } from './zod.gen';
@@ -21,7 +21,7 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
     meta?: Record<string, unknown>;
 };
 
-export const postFoo = <ThrowOnError extends boolean = false>(options?: Options<PostFooData, ThrowOnError>) => (options?.client ?? client).post<PostFooResponses, unknown, ThrowOnError>({
+export const postFoo = <ThrowOnError extends boolean = false>(options?: Options<PostFooData, ThrowOnError>): RequestResult<PostFooResponses, unknown, ThrowOnError> => (options?.client ?? client).post<PostFooResponses, unknown, ThrowOnError>({
     requestValidator: async (data) => await z.object({
         body: z.never().optional(),
         path: z.never().optional(),
