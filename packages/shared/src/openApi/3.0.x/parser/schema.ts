@@ -270,10 +270,7 @@ function parseArray({
         const ofArray = schema.items.allOf || schema.items.anyOf || schema.items.oneOf;
         if (ofArray && ofArray.length > 1 && !schema.items.nullable) {
           // bring composition up to avoid incorrectly nested arrays
-          irSchema = {
-            ...irSchema,
-            ...irItemsSchema,
-          };
+          Object.assign(irSchema, irItemsSchema);
         } else {
           schemaItems.push(irItemsSchema);
         }
@@ -496,7 +493,7 @@ function parseAllOf({
 
     if (schema.required) {
       if (irCompositionSchema.required) {
-        irCompositionSchema.required = [...irCompositionSchema.required, ...schema.required];
+        irCompositionSchema.required.push(...schema.required);
       } else {
         irCompositionSchema.required = schema.required;
       }
@@ -662,7 +659,7 @@ function parseAllOf({
           inlineSchema.required = [];
         }
         if (!inlineSchema.required.includes(discriminator.propertyName)) {
-          inlineSchema.required = [...inlineSchema.required, discriminator.propertyName];
+          inlineSchema.required.push(discriminator.propertyName);
         }
       }
     } else {
