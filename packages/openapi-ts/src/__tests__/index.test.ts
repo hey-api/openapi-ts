@@ -286,6 +286,39 @@ describe('createClient', () => {
     expect(results).toHaveLength(4);
   });
 
+  it('preserves deepObject style for array query parameters without TypeScript errors', async () => {
+    const results = await createClient({
+      dryRun: true,
+      input: {
+        info: { title: 'deep-object-array-test', version: '1.0.0' },
+        openapi: '3.1.0',
+        paths: {
+          '/foo': {
+            get: {
+              operationId: 'getFoo',
+              parameters: [
+                {
+                  in: 'query',
+                  name: 'products',
+                  schema: { items: { type: 'string' }, type: 'array' },
+                  style: 'deepObject',
+                },
+              ],
+              responses: { default: { description: 'OK' } },
+            },
+          },
+        },
+      },
+      logs: { level: 'silent' },
+      output: 'output',
+      plugins: ['@hey-api/client-fetch', '@hey-api/sdk'],
+    });
+
+    expect(results).toHaveLength(1);
+    const sdkFile = results[0]!.gen.render().find((f) => f.path.endsWith('sdk.gen.ts'));
+    expect(sdkFile?.content).toContain("style: 'deepObject'");
+  });
+
   it('executes @angular/common HttpRequest builder path', async () => {
     const results = await createClient({
       dryRun: true,

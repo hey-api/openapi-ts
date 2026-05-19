@@ -13,7 +13,7 @@ export interface SerializerOptions<T> {
   style: T;
 }
 
-export type ArrayStyle = 'form' | 'spaceDelimited' | 'pipeDelimited';
+export type ArrayStyle = 'deepObject' | 'form' | 'spaceDelimited' | 'pipeDelimited';
 export type ArraySeparatorStyle = ArrayStyle | MatrixStyle;
 type MatrixStyle = 'label' | 'matrix' | 'simple';
 export type ObjectStyle = 'form' | 'deepObject';
