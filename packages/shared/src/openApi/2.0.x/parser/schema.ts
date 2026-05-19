@@ -139,10 +139,7 @@ function parseArray({
         const ofArray = schema.items.allOf;
         if (ofArray && ofArray.length > 1 && !schema.items['x-nullable']) {
           // bring composition up to avoid incorrectly nested arrays
-          irSchema = {
-            ...irSchema,
-            ...irItemsSchema,
-          };
+          Object.assign(irSchema, irItemsSchema);
         } else {
           schemaItems.push(irItemsSchema);
         }
@@ -327,7 +324,7 @@ function parseAllOf({
 
     if (schema.required) {
       if (irCompositionSchema.required) {
-        irCompositionSchema.required = [...irCompositionSchema.required, ...schema.required];
+        irCompositionSchema.required.push(...schema.required);
       } else {
         irCompositionSchema.required = schema.required;
       }
