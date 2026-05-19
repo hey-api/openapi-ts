@@ -16,11 +16,9 @@ import {
 } from '../../../openApi/shared/utils/discriminator';
 import { isTopLevelComponent, refToName } from '../../../utils/ref';
 
-export function getSchemaTypes({
-  schema,
-}: {
-  schema: OpenAPIV3_1.SchemaObject;
-}): ReadonlyArray<SchemaType<OpenAPIV3_1.SchemaObject>> {
+export function getSchemaTypes(
+  schema: OpenAPIV3_1.SchemaObject,
+): ReadonlyArray<SchemaType<OpenAPIV3_1.SchemaObject>> {
   if (typeof schema.type === 'string') {
     return [schema.type];
   }
@@ -321,11 +319,7 @@ function parseArray({
       schemaItems = Array(schema.maxItems).fill(irItemsSchema);
     } else {
       const ofArray = schema.items.allOf || schema.items.anyOf || schema.items.oneOf;
-      if (
-        ofArray &&
-        ofArray.length > 1 &&
-        !getSchemaTypes({ schema: schema.items }).includes('null')
-      ) {
+      if (ofArray && ofArray.length > 1 && !getSchemaTypes(schema.items).includes('null')) {
         // bring composition up to avoid incorrectly nested arrays
         Object.assign(irSchema, irItemsSchema);
       } else {
@@ -564,7 +558,7 @@ function parseAllOf({
   parseSchemaMeta({ irSchema, schema });
 
   const schemaItems: Array<IR.SchemaObject> = [];
-  const schemaTypes = getSchemaTypes({ schema });
+  const schemaTypes = getSchemaTypes(schema);
 
   const compositionSchemas = schema.allOf;
 
@@ -796,7 +790,7 @@ function parseAllOf({
               ? context.resolveRef<OpenAPIV3_1.SchemaObject>(compositionSchema.$ref)
               : compositionSchema;
 
-            if (getSchemaTypes({ schema: finalCompositionSchema }).includes('object')) {
+            if (getSchemaTypes(finalCompositionSchema).includes('object')) {
               const irCompositionSchema = parseOneType({
                 context,
                 schema: {
@@ -860,7 +854,7 @@ function parseAnyOf({
   parseSchemaMeta({ irSchema, schema });
 
   const schemaItems: Array<IR.SchemaObject> = [];
-  const schemaTypes = getSchemaTypes({ schema });
+  const schemaTypes = getSchemaTypes(schema);
 
   const compositionSchemas = schema.anyOf;
 
@@ -959,7 +953,7 @@ function parseEnum({
   irSchema.type = 'enum';
 
   const schemaItems: Array<IR.SchemaObject> = [];
-  const schemaTypes = getSchemaTypes({ schema });
+  const schemaTypes = getSchemaTypes(schema);
   const xEnumDescriptions = schema['x-enum-descriptions'];
   const xEnumVarnames = schema['x-enum-varnames'];
   const xEnumNames = schema['x-enumNames'];
@@ -1029,7 +1023,7 @@ function parseOneOf({
   parseSchemaMeta({ irSchema, schema });
 
   let schemaItems: Array<IR.SchemaObject> = [];
-  const schemaTypes = getSchemaTypes({ schema });
+  const schemaTypes = getSchemaTypes(schema);
 
   const compositionSchemas = schema.oneOf;
 
@@ -1321,7 +1315,7 @@ function parseType({
 
   parseSchemaMeta({ irSchema, schema });
 
-  const schemaTypes = getSchemaTypes({ schema });
+  const schemaTypes = getSchemaTypes(schema);
 
   if (schemaTypes.length === 1) {
     return parseOneType({
