@@ -39,3 +39,24 @@ export const dateExpressions: ExpressionTransformer = ({ dataExpression, schema 
 
   return;
 };
+
+export const temporalExpressions: ExpressionTransformer = ({ dataExpression, plugin, schema }) => {
+  if (schema.type !== 'string' || !(schema.format === 'date' || schema.format === 'date-time')) {
+    return;
+  }
+
+  const temporal = plugin.symbolOnce('Temporal', { external: 'temporal-polyfill' });
+  const memberName = schema.format === 'date' ? 'PlainDate' : 'Instant';
+
+  if (typeof dataExpression === 'string') {
+    return [$.return($(temporal).attr(memberName).attr('from').call(dataExpression))];
+  }
+
+  if (dataExpression) {
+    return [
+      $(dataExpression).assign($(temporal).attr(memberName).attr('from').call(dataExpression)),
+    ];
+  }
+
+  return;
+};

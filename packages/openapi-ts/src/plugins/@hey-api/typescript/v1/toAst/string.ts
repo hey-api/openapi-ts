@@ -25,7 +25,12 @@ function formatNode(ctx: StringResolverContext): Type | undefined {
   }
 
   if (format === 'date-time' || format === 'date') {
-    if (plugin.getPlugin('@hey-api/transformers')?.config.dates) {
+    const dates = plugin.getPlugin('@hey-api/transformers')?.config.dates;
+    if (dates) {
+      if (dates === 'temporal') {
+        const temporal = plugin.symbolOnce('Temporal', { external: 'temporal-polyfill' });
+        return $.type(temporal).attr(format === 'date' ? 'PlainDate' : 'Instant');
+      }
       return $.type('Date');
     }
   }

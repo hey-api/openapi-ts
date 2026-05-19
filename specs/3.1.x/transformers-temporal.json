@@ -1,0 +1,43 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "OpenAPI 3.1.0 transformers temporal example",
+    "version": "1"
+  },
+  "paths": {
+    "/foo": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "birthday": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "events": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "format": "date-time"
+                      }
+                    }
+                  },
+                  "required": ["createdAt", "birthday", "events"]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

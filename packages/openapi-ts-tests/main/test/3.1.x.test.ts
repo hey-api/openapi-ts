@@ -906,6 +906,20 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'transformers-temporal.json',
+        output: 'transformers-temporal',
+        plugins: [
+          '@hey-api/client-fetch',
+          {
+            dates: 'temporal',
+            name: '@hey-api/transformers',
+          },
+        ],
+      }),
+      description: 'transforms dates using the Temporal API',
+    },
+    {
+      config: createConfig({
         input: 'type-invalid.json',
         output: 'type-invalid',
       }),
