@@ -1,5 +1,5 @@
 import { ref } from '@hey-api/codegen-core';
-import type { Hooks, IR } from '@hey-api/shared';
+import type { IR } from '@hey-api/shared';
 import { createSchemaProcessor, createSchemaWalker, pathToJsonPointer } from '@hey-api/shared';
 
 import { exportAst } from '../shared/export';
@@ -11,10 +11,7 @@ import { createVisitor } from './visitor';
 export function createProcessor(plugin: ValibotPlugin['Instance']): ProcessorResult {
   const processor = createSchemaProcessor();
 
-  const extractorHooks: ReadonlyArray<NonNullable<Hooks['schemas']>['shouldExtract']> = [
-    plugin.config['~hooks']?.schemas?.shouldExtract,
-    plugin.context.config.parser.hooks.schemas?.shouldExtract,
-  ];
+  const extractorHooks = plugin.getHooks((hooks) => hooks.schemas?.shouldExtract);
 
   function extractor(ctx: ProcessorContext): IR.SchemaObject {
     if (processor.hasEmitted(ctx.path)) {
@@ -22,7 +19,7 @@ export function createProcessor(plugin: ValibotPlugin['Instance']): ProcessorRes
     }
 
     for (const hook of extractorHooks) {
-      const result = typeof hook === 'boolean' ? hook : (hook?.(ctx) ?? false);
+      const result = typeof hook === 'boolean' ? hook : hook(ctx);
       if (result) {
         process({
           namingAnchor: processor.context.anchor,

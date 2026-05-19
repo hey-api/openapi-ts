@@ -1,5 +1,5 @@
 import { ref } from '@hey-api/codegen-core';
-import type { Hooks, IR } from '@hey-api/shared';
+import type { IR } from '@hey-api/shared';
 import { createSchemaProcessor, createSchemaWalker, pathToJsonPointer } from '@hey-api/shared';
 
 import { exportAst } from '../shared/export';
@@ -11,7 +11,8 @@ import { createVisitor } from './visitor';
 export function createProcessor(plugin: PydanticPlugin['Instance']): ProcessorResult {
   const processor = createSchemaProcessor();
 
-  const extractorHooks: ReadonlyArray<NonNullable<Hooks['schemas']>['shouldExtract']> = [
+  const extractorHooks = plugin.getHooks(
+    (hooks) => hooks.schemas?.shouldExtract,
     (ctx) =>
       ctx.schema.type === 'object' &&
       ctx.schema.properties !== undefined &&
@@ -20,9 +21,7 @@ export function createProcessor(plugin: PydanticPlugin['Instance']): ProcessorRe
       ctx.schema.type === 'enum' &&
       ctx.schema.items !== undefined &&
       Boolean(ctx.schema.items.length),
-    plugin.config['~hooks']?.schemas?.shouldExtract,
-    plugin.context.config.parser.hooks.schemas?.shouldExtract,
-  ];
+  );
 
   function extractor(ctx: ProcessorContext): IR.SchemaObject {
     if (processor.hasEmitted(ctx.path)) {
@@ -30,7 +29,7 @@ export function createProcessor(plugin: PydanticPlugin['Instance']): ProcessorRe
     }
 
     for (const hook of extractorHooks) {
-      const result = typeof hook === 'boolean' ? hook : (hook?.(ctx) ?? false);
+      const result = typeof hook === 'boolean' ? hook : hook(ctx);
       if (result) {
         process({
           namingAnchor: processor.context.anchor,
