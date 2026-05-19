@@ -12,6 +12,7 @@ import {
 import { buildGraph } from '../../../openApi/shared/utils/graph';
 import { mergeParametersObjects } from '../../../openApi/shared/utils/parameter';
 import { handleValidatorResult } from '../../../openApi/shared/utils/validator';
+import { pathToJsonPointer } from '../../../utils/ref';
 import { filterSpec } from './filter';
 import { parsePathOperation } from './operation';
 import { parametersArrayToObject, parseParameter } from './parameter';
@@ -64,7 +65,7 @@ export const parseV3_1_X = (context: Context<OpenAPIV3_1.Document>) => {
     }
 
     for (const name in context.spec.components.parameters) {
-      const $ref = `#/components/parameters/${name}`;
+      const $ref = pathToJsonPointer(['components', 'parameters', name]);
       const parameterOrReference = context.spec.components.parameters[name]!;
       const parameter =
         '$ref' in parameterOrReference
@@ -79,7 +80,7 @@ export const parseV3_1_X = (context: Context<OpenAPIV3_1.Document>) => {
     }
 
     for (const name in context.spec.components.requestBodies) {
-      const $ref = `#/components/requestBodies/${name}`;
+      const $ref = pathToJsonPointer(['components', 'requestBodies', name]);
       const requestBodyOrReference = context.spec.components.requestBodies[name]!;
       const requestBody =
         '$ref' in requestBodyOrReference
@@ -94,7 +95,7 @@ export const parseV3_1_X = (context: Context<OpenAPIV3_1.Document>) => {
     }
 
     for (const name in context.spec.components.schemas) {
-      const $ref = `#/components/schemas/${name}`;
+      const $ref = pathToJsonPointer(['components', 'schemas', name]);
       const schema = context.spec.components.schemas[name]!;
 
       parseSchema({

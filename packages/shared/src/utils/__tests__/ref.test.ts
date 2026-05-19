@@ -30,6 +30,24 @@ describe('pathToJsonPointer', () => {
   it('converts path to pointer', () => {
     expect(pathToJsonPointer(['components', 'schemas', 'Foo'])).toBe('#/components/schemas/Foo');
   });
+
+  it('encodes ~ in segment as ~0 (RFC 6901)', () => {
+    expect(pathToJsonPointer(['components', 'schemas', 'type~special'])).toBe(
+      '#/components/schemas/type~0special',
+    );
+  });
+
+  it('encodes / in segment as ~1 (RFC 6901)', () => {
+    expect(pathToJsonPointer(['components', 'schemas', 'node/type'])).toBe(
+      '#/components/schemas/node~1type',
+    );
+  });
+
+  it('encodes both ~ and / in segment (RFC 6901)', () => {
+    expect(pathToJsonPointer(['components', 'schemas', 'node/type~special'])).toBe(
+      '#/components/schemas/node~1type~0special',
+    );
+  });
 });
 
 describe('isTopLevelComponent', () => {

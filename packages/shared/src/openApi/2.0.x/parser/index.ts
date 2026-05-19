@@ -12,6 +12,7 @@ import {
 import { buildGraph } from '../../../openApi/shared/utils/graph';
 import { mergeParametersObjects } from '../../../openApi/shared/utils/parameter';
 import { handleValidatorResult } from '../../../openApi/shared/utils/validator';
+import { pathToJsonPointer } from '../../../utils/ref';
 import { filterSpec } from './filter';
 import { parsePathOperation } from './operation';
 import { parametersArrayToObject } from './parameter';
@@ -60,7 +61,7 @@ export const parseV2_0_X = (context: Context<OpenAPIV2.Document>) => {
 
   if (context.spec.definitions) {
     for (const name in context.spec.definitions) {
-      const $ref = `#/definitions/${name}`;
+      const $ref = pathToJsonPointer(['definitions', name]);
       const schema = context.spec.definitions[name]!;
 
       parseSchema({
