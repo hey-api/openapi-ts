@@ -876,8 +876,12 @@ function parseEnum({
   irSchema.type = 'enum';
 
   const schemaItems: Array<IR.SchemaObject> = [];
+  const xEnumDescriptions = schema['x-enum-descriptions'];
+  const xEnumVarnames = schema['x-enum-varnames'];
+  const xEnumNames = schema['x-enumNames'];
 
-  for (const [index, enumValue] of schema.enum.entries()) {
+  for (let index = 0, len = schema.enum.length; index < len; index++) {
+    const enumValue = schema.enum[index];
     const typeOfEnumValue = typeof enumValue;
     let enumType: SchemaType<OpenAPIV3.SchemaObject> | 'null' | undefined;
 
@@ -909,8 +913,8 @@ function parseEnum({
     const irTypeSchema = parseOneType({
       context,
       schema: {
-        description: schema['x-enum-descriptions']?.[index],
-        title: schema['x-enum-varnames']?.[index] ?? schema['x-enumNames']?.[index],
+        description: xEnumDescriptions?.[index],
+        title: xEnumVarnames?.[index] ?? xEnumNames?.[index],
         // cast enum to string temporarily
         type: enumType === 'null' ? 'string' : enumType,
       },

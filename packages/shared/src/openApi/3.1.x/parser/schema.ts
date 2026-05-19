@@ -964,8 +964,12 @@ function parseEnum({
 
   const schemaItems: Array<IR.SchemaObject> = [];
   const schemaTypes = getSchemaTypes({ schema });
+  const xEnumDescriptions = schema['x-enum-descriptions'];
+  const xEnumVarnames = schema['x-enum-varnames'];
+  const xEnumNames = schema['x-enumNames'];
 
-  for (const [index, enumValue] of schema.enum.entries()) {
+  for (let index = 0, len = schema.enum.length; index < len; index++) {
+    const enumValue = schema.enum[index];
     const typeOfEnumValue = typeof enumValue;
     let enumType: SchemaType<OpenAPIV3_1.SchemaObject> | undefined;
 
@@ -998,8 +1002,8 @@ function parseEnum({
       context,
       schema: {
         const: enumValue,
-        description: schema['x-enum-descriptions']?.[index],
-        title: schema['x-enum-varnames']?.[index] ?? schema['x-enumNames']?.[index],
+        description: xEnumDescriptions?.[index],
+        title: xEnumVarnames?.[index] ?? xEnumNames?.[index],
         type: enumType,
       },
       state,
