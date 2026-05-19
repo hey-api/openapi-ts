@@ -592,9 +592,6 @@ function parseAllOf({
       state,
     });
     state.inAllOf = originalInAllOf;
-    if (state.inAllOf === undefined) {
-      delete state.inAllOf;
-    }
 
     if (schema.required) {
       if (irCompositionSchema.required) {
