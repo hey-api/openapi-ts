@@ -1,5 +1,13 @@
 # @hey-api/openapi-ts
 
+## 0.97.3
+
+### Patch Changes
+
+### Updated Dependencies:
+
+- @hey-api/shared@0.4.5
+
 ## 0.97.2
 
 ### Patch Changes

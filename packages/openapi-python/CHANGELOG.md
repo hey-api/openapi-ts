@@ -1,5 +1,13 @@
 # @hey-api/openapi-python
 
+## 0.0.20
+
+### Patch Changes
+
+### Updated Dependencies:
+
+- @hey-api/shared@0.4.5
+
 ## 0.0.19
 
 ### Patch Changes
