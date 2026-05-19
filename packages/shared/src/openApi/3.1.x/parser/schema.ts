@@ -156,7 +156,8 @@ function getAllDiscriminatorValues({
   const values: Array<string> = [];
 
   // Check each entry in the discriminator mapping
-  for (const [value, mappedSchemaRef] of Object.entries(discriminator.mapping || {})) {
+  for (const value in discriminator.mapping) {
+    const mappedSchemaRef = discriminator.mapping[value]!;
     if (mappedSchemaRef === schemaRef) {
       // This is the current schema's own value
       values.push(value);
@@ -398,7 +399,11 @@ function parseObject({
 
   const schemaProperties: Record<string, IR.SchemaObject> = {};
 
+  let isSchemaPropertiesEmpty = true;
+
   for (const name in schema.properties) {
+    isSchemaPropertiesEmpty = false;
+
     const property = schema.properties[name]!;
     if (typeof property === 'boolean') {
       // TODO: parser - handle boolean properties
@@ -412,8 +417,29 @@ function parseObject({
     }
   }
 
-  if (Object.keys(schemaProperties).length) {
+  if (!isSchemaPropertiesEmpty) {
     irSchema.properties = schemaProperties;
+  }
+
+  let isPatternPropertiesEmpty = true;
+
+  if (schema.patternProperties) {
+    const patternProperties: Record<string, IR.SchemaObject> = {};
+
+    for (const pattern in schema.patternProperties) {
+      const patternSchema = schema.patternProperties[pattern]!;
+      const irPatternSchema = schemaToIrSchema({
+        context,
+        schema: patternSchema,
+        state,
+      });
+      patternProperties[pattern] = irPatternSchema;
+      isPatternPropertiesEmpty = false;
+    }
+
+    if (!isPatternPropertiesEmpty) {
+      irSchema.patternProperties = patternProperties;
+    }
   }
 
   if (schema.additionalProperties === undefined) {
@@ -428,8 +454,8 @@ function parseObject({
     const isEmptyObjectInAllOf =
       state.inAllOf &&
       schema.additionalProperties === false &&
-      (!schema.properties || !Object.keys(schema.properties).length) &&
-      (!schema.patternProperties || !Object.keys(schema.patternProperties).length);
+      (!schema.properties || isSchemaPropertiesEmpty) &&
+      (!schema.patternProperties || isPatternPropertiesEmpty);
 
     if (!isEmptyObjectInAllOf) {
       irSchema.additionalProperties = {
@@ -443,24 +469,6 @@ function parseObject({
       state,
     });
     irSchema.additionalProperties = irAdditionalPropertiesSchema;
-  }
-
-  if (schema.patternProperties) {
-    const patternProperties: Record<string, IR.SchemaObject> = {};
-
-    for (const pattern in schema.patternProperties) {
-      const patternSchema = schema.patternProperties[pattern]!;
-      const irPatternSchema = schemaToIrSchema({
-        context,
-        schema: patternSchema,
-        state,
-      });
-      patternProperties[pattern] = irPatternSchema;
-    }
-
-    if (Object.keys(patternProperties).length) {
-      irSchema.patternProperties = patternProperties;
-    }
   }
 
   if (schema.propertyNames) {
