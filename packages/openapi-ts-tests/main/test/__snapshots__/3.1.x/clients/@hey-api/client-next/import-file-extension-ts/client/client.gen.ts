@@ -64,9 +64,8 @@ export const createClient = (config: Config = {}): Client => {
     }
 
     const resolvedOpts = opts as typeof opts & ResolvedRequestOptions<ThrowOnError, Url>;
-    const url = buildUrl(resolvedOpts);
 
-    return { opts: resolvedOpts, url };
+    return { opts: resolvedOpts };
   };
 
   // @ts-expect-error
@@ -76,13 +75,17 @@ export const createClient = (config: Config = {}): Client => {
     let response: Response | undefined;
 
     try {
-      const { opts, url } = await beforeRequest(options);
+      const { opts } = await beforeRequest(options);
 
       for (const fn of interceptors.request.fns) {
         if (fn) {
           await fn(opts);
         }
       }
+
+      // Build the URL after request interceptors have run so any mutations to
+      // `opts.baseUrl`, `opts.url`, `opts.path`, or `opts.query` are honored.
+      const url = buildUrl(opts);
 
       // fetch must be assigned here, otherwise it would throw the error:
       // TypeError: Failed to execute 'fetch' on 'Window': Illegal invocation
@@ -209,7 +212,11 @@ export const createClient = (config: Config = {}): Client => {
     request({ ...options, method });
 
   const makeSseFn = (method: Uppercase<HttpMethod>) => async (options: RequestOptions) => {
-    const { opts, url } = await beforeRequest(options);
+    const { opts } = await beforeRequest(options);
+    // The SSE path applies request interceptors again inside `onRequest`
+    // (see below), so the URL we seed `createSseClient` with is only the
+    // initial value; any per-request URL mutation happens there.
+    const url = buildUrl(opts);
     return createSseClient({
       ...opts,
       body: opts.body as BodyInit | null | undefined,
