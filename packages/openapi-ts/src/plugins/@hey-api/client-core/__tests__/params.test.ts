@@ -365,49 +365,34 @@ describe('buildClientParams', () => {
   describe('prototype pollution guards (GHSA-hhx9-57xq-r5rw)', () => {
     const queryFields: FieldsConfig = [{ args: [{ in: 'query', key: 'q' }] }];
 
-    it('drops $query___proto__ and preserves prototype chain', () => {
+    it('slot objects have null prototype', () => {
+      const result = buildClientParams([{ q: 'hello' }], queryFields);
+      expect(Object.getPrototypeOf(result.query)).toBeNull();
+    });
+
+    it('$query___proto__ writes a plain property, does not substitute prototype', () => {
       const result = buildClientParams(
         [{ $query___proto__: { isAdmin: true }, q: 'hello' }],
         queryFields,
       );
-      const q = result.query as Record<string, unknown>;
-      expect(Object.getPrototypeOf(q)).toBe(Object.prototype);
-      expect(q.isAdmin).toBeUndefined();
-      expect(q.q).toBe('hello');
+      expect(Object.getPrototypeOf(result.query)).toBeNull();
+      expect(result.query.q).toBe('hello');
     });
 
-    it('drops $headers___proto__ (slot stripped when empty)', () => {
-      const result = buildClientParams(
-        [{ $headers___proto__: { injected: true }, q: 'hello' }],
-        queryFields,
-      );
-      // slot has no own properties after guard → stripEmptySlots removes it
-      expect(result.headers).toBeUndefined();
-    });
-
-    it('drops $path___proto__ (slot stripped when empty)', () => {
-      const result = buildClientParams(
-        [{ $path___proto__: { injected: true }, q: 'hello' }],
-        queryFields,
-      );
-      // slot has no own properties after guard → stripEmptySlots removes it
-      expect(result.path).toBeUndefined();
-    });
-
-    it('drops $query_constructor', () => {
+    it('$query_constructor writes a plain property', () => {
       const result = buildClientParams(
         [{ $query_constructor: { prototype: { injected: true } }, q: 'hello' }],
         queryFields,
       );
-      expect((result.query as any).constructor).toBe(Object);
+      expect(Object.getPrototypeOf(result.query)).toBeNull();
     });
 
-    it('drops __proto__ key in allowExtra branch', () => {
+    it('__proto__ in allowExtra branch writes a plain property', () => {
       const result = buildClientParams(
         [{ __proto__: { isAdmin: true }, q: 'hello' }],
         [{ allowExtra: { query: true } }],
       );
-      expect(Object.getPrototypeOf(result.query)).toBe(Object.prototype);
+      expect(Object.getPrototypeOf(result.query)).toBeNull();
     });
 
     it('does not affect global Object.prototype', () => {
@@ -417,9 +402,8 @@ describe('buildClientParams', () => {
 
     it('still processes legitimate $query_ extra keys', () => {
       const result = buildClientParams([{ $query_extra: 'value', q: 'hello' }], queryFields);
-      const q = result.query as Record<string, unknown>;
-      expect(q.extra).toBe('value');
-      expect(q.q).toBe('hello');
+      expect(result.query.extra).toBe('value');
+      expect(result.query.q).toBe('hello');
     });
   });
 });
