@@ -329,27 +329,29 @@ function parseObject({
 }): IR.SchemaObject {
   irSchema.type = 'object';
 
-  const schemaProperties: Record<string, IR.SchemaObject> = {};
-
   let isSchemaPropertiesEmpty = true;
 
-  for (const name in schema.properties) {
-    isSchemaPropertiesEmpty = false;
+  if (schema.properties) {
+    const schemaProperties: Record<string, IR.SchemaObject> = {};
 
-    const property = schema.properties[name]!;
-    if (typeof property === 'boolean') {
-      // TODO: parser - handle boolean properties
-    } else {
-      schemaProperties[name] = schemaToIrSchema({
-        context,
-        schema: property,
-        state,
-      });
+    for (const name in schema.properties) {
+      isSchemaPropertiesEmpty = false;
+
+      const property = schema.properties[name]!;
+      if (typeof property === 'boolean') {
+        // TODO: parser - handle boolean properties
+      } else {
+        schemaProperties[name] = schemaToIrSchema({
+          context,
+          schema: property,
+          state,
+        });
+      }
     }
-  }
 
-  if (!isSchemaPropertiesEmpty) {
-    irSchema.properties = schemaProperties;
+    if (!isSchemaPropertiesEmpty) {
+      irSchema.properties = schemaProperties;
+    }
   }
 
   if (schema.additionalProperties === undefined) {
