@@ -38,3 +38,6 @@ openapi-ts-error-*
 # But DO NOT ignore generated snapshots!
 !test/__snapshots__/test/generated
 !test/__snapshots__/test/generated/**
+
+# gstack (global install)
+.amazonq/rules/gstack.md

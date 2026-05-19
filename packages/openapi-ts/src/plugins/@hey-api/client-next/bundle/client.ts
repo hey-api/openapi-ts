@@ -205,6 +205,7 @@ export const createClient = (config: Config = {}): Client => {
   return {
     buildUrl: _buildUrl,
     connect: makeMethodFn('CONNECT'),
+
     delete: makeMethodFn('DELETE'),
     get: makeMethodFn('GET'),
     getConfig,
