@@ -2,7 +2,10 @@ import { $ } from '../../../../ts-dsl';
 import { identifiers } from '../../constants';
 import type { UnionResolverContext } from '../../resolvers';
 import type { Chain } from '../../shared/chain';
-import { tryBuildDiscriminatedUnion } from '../../shared/discriminated-union';
+import {
+  buildDiscriminatorExpression,
+  tryBuildDiscriminatedUnion,
+} from '../../shared/discriminated-union';
 import type { ZodResult } from '../../shared/types';
 
 function baseNode(ctx: UnionResolverContext): Chain {
@@ -35,13 +38,16 @@ function baseNode(ctx: UnionResolverContext): Chain {
     });
 
     if (discriminatedExpression) {
+      // In v4-native, z.union([z.literal(1), z.literal(2)]) is a valid discriminator
+      // branch because $ZodDiscriminatedUnion derives per-branch values via
+      // option._zod.values, which flattens through ZodUnion of literals.
       const unionMembers = discriminatedExpression.members.map((member) =>
         member.refExpression
           .attr(identifiers.extend)
           .call(
             $.object().prop(
               discriminatedExpression.discriminatorKey,
-              $(z).attr(identifiers.literal).call($.fromValue(member.discriminatedValue)),
+              buildDiscriminatorExpression(z, member.discriminatedValue),
             ),
           ),
       );

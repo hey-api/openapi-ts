@@ -2,7 +2,10 @@ import { $ } from '../../../../ts-dsl';
 import { identifiers } from '../../constants';
 import type { UnionResolverContext } from '../../resolvers';
 import type { Chain } from '../../shared/chain';
-import { tryBuildDiscriminatedUnion } from '../../shared/discriminated-union';
+import {
+  buildDiscriminatorExpression,
+  tryBuildDiscriminatedUnion,
+} from '../../shared/discriminated-union';
 import type { ZodResult } from '../../shared/types';
 
 function baseNode(ctx: UnionResolverContext): Chain {
@@ -37,16 +40,41 @@ function baseNode(ctx: UnionResolverContext): Chain {
   });
 
   if (discriminatedExpression) {
-    const unionMembers = discriminatedExpression.members.map((member) =>
-      member.refExpression
-        .attr(identifiers.extend)
-        .call(
-          $.object().prop(
-            discriminatedExpression.discriminatorKey,
-            $(z).attr(identifiers.literal).call($.fromValue(member.discriminatedValue)),
+    // getDiscriminator in zod v3 only recognises ZodLiteral and ZodEnum — ZodUnion
+    // is not supported. When a member maps multiple non-string values to one schema,
+    // expand it into one branch per literal so every entry resolves to a ZodLiteral.
+    //   [1, 2]      → two branches: extend({ code: z.literal(1) }), extend({ code: z.literal(2) })
+    //   ["a", "b"]  → one branch:   extend({ code: z.enum(["a", "b"]) })   (ZodEnum is fine)
+    //   "cat"       → one branch:   extend({ code: z.literal("cat") })
+    const unionMembers = discriminatedExpression.members.flatMap((member) => {
+      const isNonStringArray =
+        Array.isArray(member.discriminatedValue) &&
+        !member.discriminatedValue.every((v) => typeof v === 'string');
+
+      if (isNonStringArray) {
+        return (member.discriminatedValue as unknown[]).map((v) =>
+          member.refExpression
+            .attr(identifiers.extend)
+            .call(
+              $.object().prop(
+                discriminatedExpression.discriminatorKey,
+                $(z).attr(identifiers.literal).call($.fromValue(v)),
+              ),
+            ),
+        );
+      }
+
+      return [
+        member.refExpression
+          .attr(identifiers.extend)
+          .call(
+            $.object().prop(
+              discriminatedExpression.discriminatorKey,
+              buildDiscriminatorExpression(z, member.discriminatedValue),
+            ),
           ),
-        ),
-    );
+      ];
+    });
 
     return $(z)
       .attr(identifiers.discriminatedUnion)
