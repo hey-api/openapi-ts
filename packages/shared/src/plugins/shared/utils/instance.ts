@@ -266,6 +266,21 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     );
   }
 
+  getHooks<T>(
+    selector: (hooks: Hooks) => T | undefined,
+    ...customHooks: ReadonlyArray<T | undefined>
+  ): Array<NonNullable<T>> {
+    const result: Array<NonNullable<T>> = [];
+    for (const hook of customHooks) {
+      if (hook) result.push(hook);
+    }
+    const local = selector(this.config['~hooks'] ?? {});
+    if (local) result.push(local);
+    const global = selector(this.context.config.parser.hooks);
+    if (global) result.push(global);
+    return result;
+  }
+
   /**
    * Retrieves a registered plugin instance by its name from the context. This
    * allows plugins to access other plugins that have been registered in the
@@ -452,9 +467,8 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
   }
 
   private getSymbolExportFromFilePath(symbol: Symbol): ReadonlyArray<string> | undefined {
-    const hooks = [this.config['~hooks']?.symbols, this.context.config.parser.hooks.symbols];
-    for (const hook of hooks) {
-      const result = hook?.getExportFromFilePath?.(symbol);
+    for (const hook of this.getHooks((hooks) => hooks.symbols?.getExportFromFilePath)) {
+      const result = hook(symbol);
       if (result !== undefined) return result;
     }
 
@@ -480,9 +494,8 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
   }
 
   private getSymbolFilePath(symbol: Symbol): string | undefined {
-    const hooks = [this.config['~hooks']?.symbols, this.context.config.parser.hooks.symbols];
-    for (const hook of hooks) {
-      const result = hook?.getFilePath?.(symbol);
+    for (const hook of this.getHooks((hooks) => hooks.symbols?.getFilePath)) {
+      const result = hook(symbol);
       if (result !== undefined) return result;
     }
     return defaultGetFilePath(symbol);
