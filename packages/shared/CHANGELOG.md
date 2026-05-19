@@ -1,5 +1,13 @@
 # @hey-api/shared
 
+## 0.4.5
+
+### Patch Changes
+
+- **types**: export `ResolverNodes` type on `Plugin` ([#3907](https://github.com/hey-api/openapi-ts/pull/3907)) ([`3aabff2`](https://github.com/hey-api/openapi-ts/commit/3aabff24719d7e5ed82ce9b0ba64a9d8050e94c2)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin**: expose getHooks method ([#3913](https://github.com/hey-api/openapi-ts/pull/3913)) ([`7c330bc`](https://github.com/hey-api/openapi-ts/commit/7c330bcc6bc1849aba979e1028a7d5e9dd97e0dd)) by [@mrlubos](https://github.com/mrlubos)
+
 ## 0.4.4
 
 ### Patch Changes
