@@ -45,6 +45,10 @@ export function jsonPointerToPath(pointer: string): ReadonlyArray<string> {
   if (!clean) {
     return [];
   }
+  // fast path: if the pointer doesn't contain '~', we can skip the decoding step entirely
+  if (!clean.includes('~')) {
+    return clean.split('/');
+  }
   return clean.split('/').map((part) => part.replaceAll('~1', '/').replaceAll('~0', '~'));
 }
 
