@@ -10,6 +10,7 @@ import type { TsDsl } from '../../../../ts-dsl';
 import { $ } from '../../../../ts-dsl';
 import { createQueryKeyFunction, createQueryKeyType, queryKeyStatement } from '../queryKey';
 import { handleMeta } from '../shared/meta';
+import { createUnwrapSkipTokenFunction } from '../shared/unwrapSkipToken';
 import { useTypeData, useTypeError, useTypeResponse } from '../shared/useType';
 import type { PluginInstance } from '../types';
 
@@ -40,6 +41,16 @@ export function createQueryOptions({
     createQueryKeyFunction({ plugin });
   }
 
+  if (
+    !plugin.querySymbol({
+      category: 'utility',
+      resource: 'unwrapSkipToken',
+      tool: plugin.name,
+    })
+  ) {
+    createUnwrapSkipTokenFunction({ plugin });
+  }
+
   const symbolQueryOptions = plugin.external(`${plugin.name}.queryOptions`);
 
   const symbolQueryKey = plugin.symbol(applyNaming(operation.id, plugin.config.queryKeys));
@@ -53,6 +64,15 @@ export function createQueryOptions({
 
   const typeResponse = useTypeResponse({ operation, plugin });
 
+  const symbolSkipToken = $(plugin.external(`${plugin.name}.skipToken`));
+
+  const symbolUnwrapSkipToken = plugin.referenceSymbol({
+    category: 'utility',
+    resource: 'unwrapSkipToken',
+    tool: plugin.name,
+  });
+  const unwrappedOptions = $(symbolUnwrapSkipToken).call(optionsParamName);
+
   const awaitSdkFn = $.lazy((ctx) =>
     ctx
       .access(
@@ -64,7 +84,7 @@ export function createQueryOptions({
       )
       .call(
         $.object()
-          .spread(optionsParamName)
+          .spread(unwrappedOptions)
           .spread($('queryKey').attr(0))
           .prop('signal', $('signal'))
           .prop('throwOnError', $.literal(true)),
@@ -79,17 +99,26 @@ export function createQueryOptions({
     statements.push($.const().object('data').assign(awaitSdkFn), $.return('data'));
   }
 
+  const asyncQueryFn = $.func()
+    .async()
+    .param((p) => p.object('queryKey', 'signal'))
+    .do(...statements);
+
+  const typeData = useTypeData({ operation, plugin });
+
+  const optsForQueryKey = isRequiredOptions ? unwrappedOptions.as(typeData) : unwrappedOptions;
+
   const queryOptionsObj = $.object()
     .pretty()
     .prop(
       'queryFn',
-      $.func()
-        .async()
-        .param((p) => p.object('queryKey', 'signal'))
-        .do(...statements),
+      $.ternary($(optionsParamName).eq(symbolSkipToken))
+        .do(symbolSkipToken)
+        .otherwise(asyncQueryFn),
     )
-    .prop('queryKey', $(symbolQueryKey).call(optionsParamName))
+    .prop('queryKey', $(symbolQueryKey).call(optsForQueryKey))
     .$if(handleMeta(plugin, operation, 'queryOptions'), (o, v) => o.prop('meta', v));
+  const paramType = $.type.or(typeData, $.type.query(symbolSkipToken));
 
   const symbolQueryOptionsFn = plugin.symbol(
     applyNaming(operation.id, plugin.config.queryOptions),
@@ -110,9 +139,7 @@ export function createQueryOptions({
     .$if(plugin.config.comments && createOperationComment(operation), (c, v) => c.doc(v))
     .assign(
       $.func()
-        .param(optionsParamName, (p) =>
-          p.required(isRequiredOptions).type(useTypeData({ operation, plugin })),
-        )
+        .param(optionsParamName, (p) => p.required(isRequiredOptions).type(paramType))
         .do(
           $(symbolQueryOptions)
             .call(queryOptionsObj)
