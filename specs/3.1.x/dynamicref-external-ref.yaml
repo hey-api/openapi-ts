@@ -1,0 +1,37 @@
+openapi: 3.1.0
+info:
+  title: DynamicRef External Reference Test
+  version: 0.1.0
+  license:
+    name: MIT
+    identifier: MIT
+servers:
+  - url: https://api.dynamicref.test
+security: []
+paths:
+  /containers:
+    get:
+      summary: Get containers
+      operationId: getContainers
+      tags: [Containers]
+      responses:
+        '200':
+          description: Container list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Container'
+        default:
+          description: Error response
+components:
+  schemas:
+    Container:
+      type: object
+      required: [id, item]
+      properties:
+        id:
+          type: string
+        item:
+          $dynamicRef: 'other.json#node'

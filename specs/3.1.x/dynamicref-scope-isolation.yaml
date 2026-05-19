@@ -1,0 +1,50 @@
+openapi: 3.1.0
+info:
+  title: DynamicRef Scope Isolation API
+  version: 0.1.0
+  license:
+    name: MIT
+    identifier: MIT
+servers:
+  - url: https://api.dynamicref.test
+security: []
+paths:
+  /scope:
+    get:
+      summary: Get scope isolation example
+      operationId: getScope
+      tags: [Scope]
+      responses:
+        '200':
+          description: Scope isolation example
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScopeIsolationResponse'
+        default:
+          description: Error response
+components:
+  schemas:
+    User:
+      type: object
+      required: [id, email]
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+          format: email
+    ScopeIsolationResponse:
+      type: object
+      required: [boundItems, unboundItem]
+      properties:
+        boundItems:
+          $defs:
+            itemType:
+              $dynamicAnchor: itemType
+              $ref: '#/components/schemas/User'
+          type: array
+          items:
+            $dynamicRef: '#itemType'
+        unboundItem:
+          $dynamicRef: '#itemType'

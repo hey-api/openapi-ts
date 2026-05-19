@@ -1,0 +1,62 @@
+openapi: 3.1.0
+info:
+  title: DynamicRef Circular oneOf Test
+  description: >
+    Tests that hasCircularBinding detects cycles routed through oneOf,
+    not just direct $ref and single-level allOf.
+  version: 0.1.0
+servers:
+  - url: https://api.example.com
+security: []
+
+paths:
+  /tree:
+    get:
+      summary: Get tree nodes
+      operationId: getTree
+      tags: [Tree]
+      responses:
+        '200':
+          description: Tree nodes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TreeNode'
+
+components:
+  schemas:
+    TreeNodeTemplate:
+      $id: https://example.com/schemas/TreeNodeTemplate
+      $defs:
+        nodeType:
+          $dynamicAnchor: nodeType
+          not: {}
+      type: object
+      required: [id, label]
+      properties:
+        id:
+          type: string
+        label:
+          type: string
+        child:
+          $dynamicRef: '#nodeType'
+
+    TreeNode:
+      oneOf:
+        - $ref: '#/components/schemas/TreeNodeLeaf'
+        - $defs:
+            nodeType:
+              $dynamicAnchor: nodeType
+              $ref: '#/components/schemas/TreeNode'
+          $ref: '#/components/schemas/TreeNodeTemplate'
+
+    TreeNodeLeaf:
+      type: object
+      required: [id, label]
+      properties:
+        id:
+          type: string
+        label:
+          type: string

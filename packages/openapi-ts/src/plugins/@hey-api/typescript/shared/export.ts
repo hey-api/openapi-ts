@@ -59,5 +59,12 @@ export function exportAst({
     .export()
     .$if(plugin.config.comments && createSchemaComment(schema), (t, v) => t.doc(v))
     .type(final.type);
+
+  if (schema.typeParams?.length) {
+    for (const param of schema.typeParams) {
+      node.generic(param.paramName);
+    }
+  }
+
   plugin.node(node);
 }

@@ -15,6 +15,17 @@ import {
   discriminatorValues,
 } from '../../../openApi/shared/utils/discriminator';
 import { isTopLevelComponent, refToName } from '../../../utils/ref';
+import {
+  buildCurrentDynamicScope,
+  buildDynamicScope,
+  buildGenericRef,
+  containsRefTo,
+  getDynamicDefsBindings,
+  getTemplateParams,
+  materializeDynamicRefBinding,
+  resolveDynamicRef,
+  shouldInlineDynamicRefTarget,
+} from './dynamicRef';
 
 export function getSchemaTypes({
   schema,
@@ -1153,6 +1164,19 @@ function parseRef({
 
   if (!state.circularReferenceTracker.has(schema.$ref)) {
     const refSchema = context.resolveRef<OpenAPIV3_1.SchemaObject>(schema.$ref);
+
+    if (shouldInlineDynamicRefTarget({ ref: schema.$ref, refSchema, state })) {
+      const originalRef = state.$ref;
+      state.$ref = schema.$ref;
+      const inlinedSchema = schemaToIrSchema({
+        context,
+        schema: refSchema,
+        state,
+      });
+      state.$ref = originalRef;
+      return inlinedSchema;
+    }
+
     const originalRef = state.$ref;
     state.$ref = schema.$ref;
     schemaToIrSchema({
@@ -1366,29 +1390,109 @@ export function schemaToIrSchema({
   schema: OpenAPIV3_1.SchemaObject;
   state: SchemaState | undefined;
 }): IR.SchemaObject {
-  if (!state) {
-    state = {
-      circularReferenceTracker: new Set(),
-    };
+  const currentState: SchemaState = state
+    ? {
+        ...state,
+        // circularReferenceTracker intentionally shares the same Set instance
+        // with the parent state so circular refs are detected across the
+        // entire parsing tree. dynamicScope is always a fresh object so
+        // inner scopes don't mutate parent scope. Outer (inherited) scope
+        // wins on collision per JSON Schema 2020-12 §8.2.3.2.
+        dynamicScope: buildCurrentDynamicScope({
+          inheritedScope: state.dynamicScope,
+          schema,
+        }),
+      }
+    : {
+        circularReferenceTracker: new Set(),
+        dynamicScope: buildDynamicScope(schema),
+      };
+
+  if (currentState.$ref) {
+    currentState.circularReferenceTracker.add(currentState.$ref);
   }
 
-  if (state.$ref) {
-    state.circularReferenceTracker.add(state.$ref);
+  const materializedSchema = materializeDynamicRefBinding({ context, schema });
+  if (materializedSchema) {
+    if (isTopLevelComponent(schema.$ref!) && schema.$defs) {
+      const targetSchema = context.resolveRef<OpenAPIV3_1.SchemaObject>(schema.$ref!);
+      const templateParams = getTemplateParams(targetSchema);
+
+      if (templateParams.length > 0) {
+        const bindings = getDynamicDefsBindings(schema);
+        const hasCircularBinding = bindings.some(([, ref]) => {
+          const bindingSchema = context.resolveRef<OpenAPIV3_1.SchemaObject>(ref);
+          return containsRefTo(bindingSchema, schema.$ref!);
+        });
+        if (hasCircularBinding) {
+          return schemaToIrSchema({
+            context,
+            schema: materializedSchema,
+            state: currentState,
+          });
+        }
+        return buildGenericRef({
+          bindings,
+          schema,
+          targetRef: schema.$ref!,
+          templateParams,
+        });
+      }
+    }
+
+    return schemaToIrSchema({
+      context,
+      schema: materializedSchema,
+      state: currentState,
+    });
   }
 
   if (schema.$ref) {
     return parseRef({
       context,
       schema: schema as SchemaWithRequired<OpenAPIV3_1.SchemaObject, '$ref'>,
-      state,
+      state: currentState,
     });
+  }
+
+  if (schema.$dynamicRef) {
+    const resolvedRef = resolveDynamicRef({
+      dynamicRef: schema.$dynamicRef,
+      dynamicScope: currentState.dynamicScope,
+    });
+
+    if (resolvedRef) {
+      return parseRef({
+        context,
+        schema: {
+          ...schema,
+          $ref: resolvedRef,
+        } as SchemaWithRequired<OpenAPIV3_1.SchemaObject, '$ref'>,
+        state: currentState,
+      });
+    }
+
+    if (currentState.typeParams) {
+      const anchorName =
+        schema.$dynamicRef.startsWith('#') && !schema.$dynamicRef.includes('/')
+          ? schema.$dynamicRef.slice(1)
+          : null;
+      if (anchorName) {
+        const param = currentState.typeParams.find((p) => p.anchor === anchorName);
+        if (param) {
+          return { $ref: `#typeParam/${param.paramName}` };
+        }
+      }
+    }
+
+    return parseUnknown({ context, schema });
   }
 
   if (schema.enum) {
     return parseEnum({
       context,
       schema: schema as SchemaWithRequired<OpenAPIV3_1.SchemaObject, 'enum'>,
-      state,
+      state: currentState,
     });
   }
 
@@ -1396,7 +1500,7 @@ export function schemaToIrSchema({
     return parseAllOf({
       context,
       schema: schema as SchemaWithRequired<OpenAPIV3_1.SchemaObject, 'allOf'>,
-      state,
+      state: currentState,
     });
   }
 
@@ -1404,7 +1508,7 @@ export function schemaToIrSchema({
     return parseAnyOf({
       context,
       schema: schema as SchemaWithRequired<OpenAPIV3_1.SchemaObject, 'anyOf'>,
-      state,
+      state: currentState,
     });
   }
 
@@ -1412,7 +1516,7 @@ export function schemaToIrSchema({
     return parseOneOf({
       context,
       schema: schema as SchemaWithRequired<OpenAPIV3_1.SchemaObject, 'oneOf'>,
-      state,
+      state: currentState,
     });
   }
 
@@ -1421,7 +1525,7 @@ export function schemaToIrSchema({
     return parseType({
       context,
       schema: schema as SchemaWithRequired<OpenAPIV3_1.SchemaObject, 'type'>,
-      state,
+      state: currentState,
     });
   }
 
@@ -1430,7 +1534,7 @@ export function schemaToIrSchema({
     return parseType({
       context,
       schema: { ...schema, type: 'string' } as SchemaWithRequired<OpenAPIV3_1.SchemaObject, 'type'>,
-      state,
+      state: currentState,
     });
   }
 
@@ -1454,12 +1558,23 @@ export function parseSchema({
     context.ir.components.schemas = {};
   }
 
-  context.ir.components.schemas[refToName($ref)] = schemaToIrSchema({
+  const dynamicScope = buildDynamicScope(schema, $ref);
+  const typeParams = getTemplateParams(schema);
+
+  const irSchema = schemaToIrSchema({
     context,
     schema,
     state: {
       $ref,
       circularReferenceTracker: new Set(),
+      dynamicScope,
+      typeParams: typeParams.length > 0 ? typeParams : undefined,
     },
   });
+
+  if (typeParams.length > 0) {
+    irSchema.typeParams = typeParams;
+  }
+
+  context.ir.components.schemas[refToName($ref)] = irSchema;
 }

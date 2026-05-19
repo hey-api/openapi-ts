@@ -1015,6 +1015,34 @@ describe(`OpenAPI ${version}`, () => {
       }),
       description: 'anyOf string and binary string',
     },
+    {
+      config: createConfig({
+        input: 'dynamicref-petstore-showcase.yaml',
+        output: 'dynamicref-petstore-showcase',
+      }),
+      description: 'resolves $dynamicRef in petstore showcase',
+    },
+    {
+      config: createConfig({
+        input: 'dynamicref-external-ref.yaml',
+        output: 'dynamicref-external-ref',
+      }),
+      description: 'handles external $dynamicRef without crashing',
+    },
+    {
+      config: createConfig({
+        input: 'dynamicref-scope-isolation.yaml',
+        output: 'dynamicref-scope-isolation',
+      }),
+      description: 'keeps $dynamicRef bindings isolated between sibling schemas',
+    },
+    {
+      config: createConfig({
+        input: 'dynamicref-circular-oneof.yaml',
+        output: 'dynamicref-circular-oneof',
+      }),
+      description: 'detects circular $dynamicRef through oneOf',
+    },
   ];
 
   it.each(scenarios)('$description', async ({ config }) => {
