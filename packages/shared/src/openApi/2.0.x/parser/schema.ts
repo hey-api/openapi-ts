@@ -11,11 +11,9 @@ import type {
 import { discriminatorValues } from '../../../openApi/shared/utils/discriminator';
 import { isTopLevelComponent, refToName } from '../../../utils/ref';
 
-export function getSchemaType({
-  schema,
-}: {
-  schema: OpenAPIV2.SchemaObject;
-}): SchemaType<OpenAPIV2.SchemaObject> | undefined {
+export function getSchemaType(
+  schema: OpenAPIV2.SchemaObject,
+): SchemaType<OpenAPIV2.SchemaObject> | undefined {
   if (schema.type) {
     return schema.type;
   }
@@ -305,7 +303,7 @@ function parseAllOf({
   let irSchema = initIrSchema({ schema });
 
   const schemaItems: Array<IR.SchemaObject> = [];
-  const schemaType = getSchemaType({ schema });
+  const schemaType = getSchemaType(schema);
 
   const compositionSchemas = schema.allOf;
 
@@ -380,7 +378,7 @@ function parseAllOf({
               ? context.resolveRef<OpenAPIV2.SchemaObject>(compositionSchema.$ref)
               : compositionSchema;
 
-            if (getSchemaType({ schema: finalCompositionSchema }) === 'object') {
+            if (getSchemaType(finalCompositionSchema) === 'object') {
               const irCompositionSchema = parseOneType({
                 context,
                 schema: {
@@ -634,7 +632,7 @@ function parseType({
 
   parseSchemaMeta({ irSchema, schema });
 
-  const type = getSchemaType({ schema });
+  const type = getSchemaType(schema);
 
   if (!type) {
     return irSchema;

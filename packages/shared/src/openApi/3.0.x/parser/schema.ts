@@ -15,11 +15,9 @@ import {
 } from '../../../openApi/shared/utils/discriminator';
 import { isTopLevelComponent, refToName } from '../../../utils/ref';
 
-export function getSchemaType({
-  schema,
-}: {
-  schema: OpenAPIV3.SchemaObject;
-}): SchemaType<OpenAPIV3.SchemaObject> | undefined {
+export function getSchemaType(
+  schema: OpenAPIV3.SchemaObject,
+): SchemaType<OpenAPIV3.SchemaObject> | undefined {
   if (schema.type) {
     return schema.type;
   }
@@ -465,7 +463,7 @@ function parseAllOf({
   let irSchema = initIrSchema({ schema });
 
   const schemaItems: Array<IR.SchemaObject> = [];
-  const schemaType = getSchemaType({ schema });
+  const schemaType = getSchemaType(schema);
 
   const compositionSchemas = schema.allOf;
 
@@ -698,7 +696,7 @@ function parseAllOf({
                 ? context.resolveRef<OpenAPIV3.SchemaObject>(compositionSchema.$ref)
                 : compositionSchema;
 
-            if (getSchemaType({ schema: finalCompositionSchema }) === 'object') {
+            if (getSchemaType(finalCompositionSchema) === 'object') {
               const irCompositionSchema = parseOneType({
                 context,
                 schema: {
@@ -773,7 +771,7 @@ function parseAnyOf({
   let irSchema = initIrSchema({ schema });
 
   const schemaItems: Array<IR.SchemaObject> = [];
-  const schemaType = getSchemaType({ schema });
+  const schemaType = getSchemaType(schema);
 
   const compositionSchemas = schema.anyOf;
 
@@ -951,7 +949,7 @@ function parseOneOf({
   let irSchema = initIrSchema({ schema });
 
   let schemaItems: Array<IR.SchemaObject> = [];
-  const schemaType = getSchemaType({ schema });
+  const schemaType = getSchemaType(schema);
 
   const compositionSchemas = schema.oneOf;
 
@@ -1151,7 +1149,7 @@ function parseType({
 
   parseSchemaMeta({ irSchema, schema });
 
-  const type = getSchemaType({ schema });
+  const type = getSchemaType(schema);
 
   if (!type) {
     return irSchema;
