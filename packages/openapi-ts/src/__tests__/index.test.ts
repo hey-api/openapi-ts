@@ -325,4 +325,87 @@ describe('createClient', () => {
 
     expect(results.length).toBeGreaterThanOrEqual(1);
   });
+
+  it('can disable readWrite split and TypeScript request/response/error/client options artifacts', async () => {
+    const results = await createClient({
+      dryRun: true,
+      input: {
+        components: {
+          schemas: {
+            Demo: {
+              properties: {
+                id: { readOnly: true, type: 'string' },
+                secret: { type: 'string', writeOnly: true },
+                value: { type: 'string' },
+              },
+              required: ['value'],
+              type: 'object',
+            },
+          },
+        },
+        info: { title: 'disable-artifacts-test', version: '1.0.0' },
+        openapi: '3.1.0',
+        paths: {
+          '/demo': {
+            get: {
+              operationId: 'getDemo',
+              responses: {
+                200: {
+                  content: {
+                    'application/json': {
+                      schema: {
+                        $ref: '#/components/schemas/Demo',
+                      },
+                    },
+                  },
+                  description: 'ok',
+                },
+                400: {
+                  content: {
+                    'application/json': {
+                      schema: {
+                        type: 'object',
+                      },
+                    },
+                  },
+                  description: 'bad request',
+                },
+              },
+            },
+          },
+        },
+      },
+      logs: { level: 'silent' },
+      output: 'out',
+      parser: {
+        transforms: {
+          readWrite: false,
+        },
+      },
+      plugins: [
+        {
+          clientOptions: false,
+          errors: false,
+          name: '@hey-api/typescript',
+          requests: false,
+          responses: false,
+        },
+      ],
+    });
+
+    expect(results).toHaveLength(1);
+
+    const output = results[0]!.gen
+      .render()
+      .map((file) => file.content)
+      .join('\n');
+
+    expect(output).not.toContain('type ClientOptions');
+    expect(output).not.toContain('type GetDemoData');
+    expect(output).not.toContain('type GetDemoResponses');
+    expect(output).not.toContain('type GetDemoResponse');
+    expect(output).not.toContain('type GetDemoErrors');
+    expect(output).not.toContain('type GetDemoError');
+    expect(output).not.toContain('Writable');
+  });
 });
