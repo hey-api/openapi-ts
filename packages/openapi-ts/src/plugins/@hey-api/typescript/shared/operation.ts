@@ -103,44 +103,46 @@ export const operationToType = ({
     data.required = dataRequired;
   }
 
-  const dataResult = processor.process({
-    export: false,
-    meta: {
-      resource: 'operation',
-      resourceId: operation.id,
-    },
-    naming: plugin.config.definitions,
-    path: [...path, operation.id, 'data'],
-    plugin,
-    schema: data,
-  });
-
-  const dataSymbol = plugin.registerSymbol(
-    buildSymbolIn({
+  if (plugin.config.requests.enabled) {
+    const dataResult = processor.process({
+      export: false,
       meta: {
-        category: 'type',
-        path,
         resource: 'operation',
         resourceId: operation.id,
-        role: 'data',
-        tags,
-        tool: 'typescript',
       },
-      name: operation.id,
-      naming: plugin.config.requests,
-      operation,
+      naming: plugin.config.definitions,
+      path: [...path, operation.id, 'data'],
       plugin,
-    }),
-  );
-  const dataNode = $.type
-    .alias(dataSymbol)
-    .export()
-    .type(dataResult?.type ?? $.type('never'));
-  plugin.node(dataNode);
+      schema: data,
+    });
+
+    const dataSymbol = plugin.registerSymbol(
+      buildSymbolIn({
+        meta: {
+          category: 'type',
+          path,
+          resource: 'operation',
+          resourceId: operation.id,
+          role: 'data',
+          tags,
+          tool: 'typescript',
+        },
+        name: operation.id,
+        naming: plugin.config.requests,
+        operation,
+        plugin,
+      }),
+    );
+    const dataNode = $.type
+      .alias(dataSymbol)
+      .export()
+      .type(dataResult?.type ?? $.type('never'));
+    plugin.node(dataNode);
+  }
 
   const { error, errors, response, responses } = operationResponsesMap(operation);
 
-  if (errors) {
+  if (plugin.config.errors.enabled && errors) {
     const errorsResult = processor.process({
       export: false,
       meta: {
@@ -205,7 +207,7 @@ export const operationToType = ({
     }
   }
 
-  if (responses) {
+  if (plugin.config.responses.enabled && responses) {
     const responsesResult = processor.process({
       export: false,
       meta: {
