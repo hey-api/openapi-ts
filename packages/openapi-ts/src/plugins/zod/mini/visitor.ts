@@ -43,35 +43,35 @@ export function createVisitor(
     applyModifiers(result, ctx, options = {}): ZodFinal {
       const { optional } = options;
       const z = ctx.plugin.external('zod.z');
-      let expression = result.expression;
+      let chain = result.chain;
 
       if (result.meta.readonly) {
-        expression = $(z).attr(identifiers.readonly).call(expression);
+        chain = $(z).attr(identifiers.readonly).call(chain);
       }
 
       const needsDefault = result.meta.default !== undefined;
       const needsNullable = result.meta.nullable;
 
       if (optional && needsNullable) {
-        expression = $(z).attr(identifiers.nullish).call(expression);
+        chain = $(z).attr(identifiers.nullish).call(chain);
       } else if (optional) {
-        expression = $(z).attr(identifiers.optional).call(expression);
+        chain = $(z).attr(identifiers.optional).call(chain);
       } else if (needsNullable) {
-        expression = $(z).attr(identifiers.nullable).call(expression);
+        chain = $(z).attr(identifiers.nullable).call(chain);
       }
 
       if (needsDefault) {
-        expression = $(z).attr(identifiers._default).call(expression, getDefaultValue(result.meta));
+        chain = $(z).attr(identifiers._default).call(chain, getDefaultValue(result.meta));
       }
 
       return {
-        expression,
+        chain,
       };
     },
     array(schema, ctx, walk) {
       const applyModifiers: Parameters<typeof arrayToAst>[0]['applyModifiers'] = (result, opts) =>
         this.applyModifiers(result, ctx, opts) as ZodFinal;
-      const { childResults, expression } = arrayToAst({
+      const { chain, childResults } = arrayToAst({
         applyModifiers,
         path: ctx.path,
         plugin: ctx.plugin,
@@ -80,23 +80,23 @@ export function createVisitor(
       });
 
       return {
-        expression,
+        chain,
         meta: inheritMeta(schema, childResults),
       };
     },
     boolean(schema, ctx) {
-      const expression = booleanToAst({ path: ctx.path, plugin: ctx.plugin, schema });
+      const chain = booleanToAst({ path: ctx.path, plugin: ctx.plugin, schema });
       return {
-        expression,
+        chain,
         meta: defaultMeta(schema),
       };
     },
     enum(schema, ctx) {
-      const expression = enumToAst({ path: ctx.path, plugin: ctx.plugin, schema });
+      const chain = enumToAst({ path: ctx.path, plugin: ctx.plugin, schema });
       const hasNull =
         schema.items?.some((item) => item.type === 'null' || item.const === null) ?? false;
       return {
-        expression,
+        chain,
         meta: {
           ...defaultMeta(schema),
           nullable: hasNull,
@@ -104,9 +104,9 @@ export function createVisitor(
       };
     },
     integer(schema, ctx) {
-      const expression = numberToNode({ path: ctx.path, plugin: ctx.plugin, schema });
+      const chain = numberToNode({ path: ctx.path, plugin: ctx.plugin, schema });
       return {
-        expression,
+        chain,
         meta: {
           ...defaultMeta(schema),
           format: schema.format,
@@ -131,7 +131,7 @@ export function createVisitor(
       }
       if (schema.symbolRef) {
         return {
-          expression: $(schema.symbolRef),
+          chain: $(schema.symbolRef),
           meta: defaultMeta(schema),
         };
       }
@@ -139,7 +139,7 @@ export function createVisitor(
     intersection(items, schemas, parentSchema, ctx) {
       const hasAnyLazy = items.some((item) => item.meta.hasLazy);
 
-      const { expression } = intersectionToAst({
+      const { chain } = intersectionToAst({
         childResults: items,
         parentSchema,
         path: ctx.path,
@@ -148,7 +148,7 @@ export function createVisitor(
       });
 
       return {
-        expression,
+        chain,
         meta: {
           default: parentSchema.default,
           format: parentSchema.format,
@@ -161,9 +161,9 @@ export function createVisitor(
       };
     },
     never(schema, ctx) {
-      const expression = neverToAst({ path: ctx.path, plugin: ctx.plugin, schema });
+      const chain = neverToAst({ path: ctx.path, plugin: ctx.plugin, schema });
       return {
-        expression,
+        chain,
         meta: {
           ...defaultMeta(schema),
           nullable: false,
@@ -172,9 +172,9 @@ export function createVisitor(
       };
     },
     null(schema, ctx) {
-      const expression = nullToAst({ path: ctx.path, plugin: ctx.plugin, schema });
+      const chain = nullToAst({ path: ctx.path, plugin: ctx.plugin, schema });
       return {
-        expression,
+        chain,
         meta: {
           ...defaultMeta(schema),
           nullable: false,
@@ -183,9 +183,9 @@ export function createVisitor(
       };
     },
     number(schema, ctx) {
-      const expression = numberToNode({ path: ctx.path, plugin: ctx.plugin, schema });
+      const chain = numberToNode({ path: ctx.path, plugin: ctx.plugin, schema });
       return {
-        expression,
+        chain,
         meta: {
           ...defaultMeta(schema),
           format: schema.format,
@@ -195,7 +195,7 @@ export function createVisitor(
     object(schema, ctx, walk) {
       const applyModifiers: Parameters<typeof objectToAst>[0]['applyModifiers'] = (result, opts) =>
         this.applyModifiers(result, ctx, opts) as ZodFinal;
-      const { childResults, expression } = objectToAst({
+      const { chain, childResults } = objectToAst({
         applyModifiers,
         path: ctx.path,
         plugin: ctx.plugin,
@@ -204,7 +204,7 @@ export function createVisitor(
       });
 
       return {
-        expression,
+        chain,
         meta: inheritMeta(schema, childResults),
       };
     },
@@ -234,7 +234,7 @@ export function createVisitor(
 
       return {
         ...result,
-        expression: result.expression
+        chain: result.chain
           .attr(identifiers.register)
           .call($(z).attr(identifiers.globalRegistry), node),
       };
@@ -252,13 +252,13 @@ export function createVisitor(
 
       if (ctx.plugin.isSymbolRegistered(query)) {
         return {
-          expression: $(refSymbol),
+          chain: $(refSymbol),
           meta: defaultMeta(schema),
         };
       }
 
       return {
-        expression: $(z)
+        chain: $(z)
           .attr(identifiers.lazy)
           .call($.func().returns('any').do($(refSymbol).return())),
         meta: {
@@ -270,27 +270,27 @@ export function createVisitor(
     },
     string(schema, ctx) {
       if (shouldCoerceToBigInt(schema.format)) {
-        const expression = numberToNode({
+        const chain = numberToNode({
           path: ctx.path,
           plugin: ctx.plugin,
           schema: { ...schema, type: 'number' },
         });
         return {
-          expression,
+          chain,
           meta: defaultMeta(schema),
         };
       }
 
-      const expression = stringToNode({ path: ctx.path, plugin: ctx.plugin, schema });
+      const chain = stringToNode({ path: ctx.path, plugin: ctx.plugin, schema });
       return {
-        expression,
+        chain,
         meta: defaultMeta(schema),
       };
     },
     tuple(schema, ctx, walk) {
       const applyModifiers: Parameters<typeof tupleToAst>[0]['applyModifiers'] = (result, opts) =>
         this.applyModifiers(result, ctx, opts) as ZodFinal;
-      const { childResults, expression } = tupleToAst({
+      const { chain, childResults } = tupleToAst({
         applyModifiers,
         path: ctx.path,
         plugin: ctx.plugin,
@@ -299,14 +299,14 @@ export function createVisitor(
       });
 
       return {
-        expression,
+        chain,
         meta: inheritMeta(schema, childResults),
       };
     },
     undefined(schema, ctx) {
-      const expression = undefinedToAst({ path: ctx.path, plugin: ctx.plugin, schema });
+      const chain = undefinedToAst({ path: ctx.path, plugin: ctx.plugin, schema });
       return {
-        expression,
+        chain,
         meta: {
           ...defaultMeta(schema),
           nullable: false,
@@ -318,7 +318,7 @@ export function createVisitor(
       const hasAnyLazy = items.some((item) => item.meta.hasLazy);
       const hasNull = schemas.some((s) => s.type === 'null') || items.some((i) => i.meta.nullable);
 
-      const { expression } = unionToAst({
+      const { chain } = unionToAst({
         childResults: items,
         parentSchema,
         path: ctx.path,
@@ -327,7 +327,7 @@ export function createVisitor(
       });
 
       return {
-        expression,
+        chain,
         meta: {
           default: parentSchema.default,
           format: parentSchema.format,
@@ -340,9 +340,9 @@ export function createVisitor(
       };
     },
     unknown(schema, ctx) {
-      const expression = unknownToAst({ path: ctx.path, plugin: ctx.plugin, schema });
+      const chain = unknownToAst({ path: ctx.path, plugin: ctx.plugin, schema });
       return {
-        expression,
+        chain,
         meta: {
           ...defaultMeta(schema),
           nullable: false,
@@ -351,9 +351,9 @@ export function createVisitor(
       };
     },
     void(schema, ctx) {
-      const expression = voidToAst({ path: ctx.path, plugin: ctx.plugin, schema });
+      const chain = voidToAst({ path: ctx.path, plugin: ctx.plugin, schema });
       return {
-        expression,
+        chain,
         meta: {
           ...defaultMeta(schema),
           nullable: false,

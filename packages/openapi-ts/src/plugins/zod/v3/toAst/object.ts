@@ -29,7 +29,7 @@ function additionalPropertiesNode(ctx: ExtendedContext): Chain | null | undefine
   );
   ctx._childResults.push(additionalResult);
   const finalExpr = applyModifiers(additionalResult, {});
-  return finalExpr.expression;
+  return finalExpr.chain;
 }
 
 function baseNode(ctx: ExtendedContext): Chain {
@@ -65,7 +65,7 @@ function shapeNode(ctx: ExtendedContext): ReturnType<typeof $.object> {
       optional: isOptional,
     });
 
-    shape.prop(name, finalExpr.expression);
+    shape.prop(name, finalExpr.chain);
   }
 
   return shape;
@@ -99,7 +99,7 @@ export function objectToAst(options: ObjectToAstOptions): CompositeHandlerResult
   const node = resolver?.(ctx) ?? objectResolver(ctx);
 
   return {
+    chain: node,
     childResults,
-    expression: node,
   };
 }
