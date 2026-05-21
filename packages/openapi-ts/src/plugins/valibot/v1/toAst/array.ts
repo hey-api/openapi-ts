@@ -1,4 +1,5 @@
-import { childContext, deduplicateSchema } from '@hey-api/shared';
+import { fromRef, ref } from '@hey-api/codegen-core';
+import { deduplicateSchema } from '@hey-api/shared';
 
 import { $ } from '../../../../ts-dsl';
 import type { ArrayResolverContext } from '../../resolvers';
@@ -27,12 +28,15 @@ function baseNode(ctx: ArrayResolverContext): PipeResult {
 
   for (let i = 0; i < normalizedSchema.items!.length; i++) {
     const item = normalizedSchema.items![i]!;
-    const result = walk!(item, childContext({ path, plugin }, 'items', i));
+    const result = walk(item, {
+      path: ref([...fromRef(ctx.path), 'items', i]),
+      plugin: ctx.plugin,
+    });
     childResults.push(result);
   }
 
   if (childResults.length === 1) {
-    const itemNode = pipes.toNode(applyModifiers!(childResults[0]!).pipes, plugin);
+    const itemNode = pipes.toNode(applyModifiers(childResults[0]!).pipes, plugin);
     return arrayFn.call(itemNode);
   }
 
@@ -95,7 +99,10 @@ export function arrayToPipes(
     const normalizedSchema = deduplicateSchema({ schema });
     for (let i = 0; i < normalizedSchema.items!.length; i++) {
       const item = normalizedSchema.items![i]!;
-      const result = walk(item, childContext({ path, plugin }, 'items', i));
+      const result = walk(item, {
+        path: ref([...fromRef(ctx.path), 'items', i]),
+        plugin: ctx.plugin,
+      });
       childResults.push(result);
     }
   }
