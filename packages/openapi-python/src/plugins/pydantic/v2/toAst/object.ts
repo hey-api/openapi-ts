@@ -1,7 +1,6 @@
-import { childContext, toCase } from '@hey-api/shared';
+import { childContext } from '@hey-api/shared';
 
 import { $ } from '../../../../py-dsl';
-import { safeRuntimeName } from '../../../../py-dsl/utils/name';
 import type { ObjectResolverContext } from '../../resolvers';
 import type { PydanticField, PydanticResult, PydanticType } from '../../shared/types';
 
@@ -38,13 +37,10 @@ function fieldsNode(ctx: ObjectResolverContext): Array<PydanticField> {
     ctx._childResults.push(propertyResult);
 
     const final = ctx.applyModifiers(propertyResult, { optional: isOptional });
-    const snakeCaseName = safeRuntimeName(toCase(name, 'snake_case'));
     fields.push({
       fieldConstraints: final.fieldConstraints,
       isOptional,
-      // name: plugin.symbol(name),
-      // TODO: remove this, should be handled by DSL
-      name: plugin.symbol(snakeCaseName),
+      name: plugin.symbol(name),
       originalName: name,
       type: final.type,
     });
