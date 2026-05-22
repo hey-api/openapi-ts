@@ -26,6 +26,8 @@ import { unknownToAst } from './toAst/unknown';
 import { voidToAst } from './toAst/void';
 
 export interface VisitorConfig {
+  /** The plugin instance. */
+  plugin: ZodPlugin['Instance'];
   /** Optional schema extractor function. */
   schemaExtractor?: SchemaExtractor<ProcessorContext>;
 }
@@ -35,9 +37,9 @@ function getDefaultValue(meta: ZodMeta): ReturnType<typeof $.fromValue> {
 }
 
 export function createVisitor(
-  config: VisitorConfig = {},
+  config: VisitorConfig,
 ): SchemaVisitor<ZodResult, ZodPlugin['Instance']> {
-  const { schemaExtractor } = config;
+  const { plugin, schemaExtractor } = config;
 
   return {
     applyModifiers(result, ctx, options = {}): ZodFinal {
@@ -73,12 +75,10 @@ export function createVisitor(
       };
     },
     array(schema, ctx, walk) {
-      const applyModifiers: Parameters<typeof arrayToAst>[0]['applyModifiers'] = (result, opts) =>
-        this.applyModifiers(result, ctx, opts) as ZodFinal;
       const { chain, childResults } = arrayToAst({
-        applyModifiers,
+        applyModifiers: (result, opts) => this.applyModifiers(result, ctx, opts) as ZodFinal,
         path: ctx.path,
-        plugin: ctx.plugin,
+        plugin,
         schema,
         walk,
       });
@@ -89,14 +89,14 @@ export function createVisitor(
       };
     },
     boolean(schema, ctx) {
-      const chain = booleanToAst({ path: ctx.path, plugin: ctx.plugin, schema });
+      const chain = booleanToAst({ path: ctx.path, plugin, schema });
       return {
         chain,
         meta: defaultMeta(schema),
       };
     },
     enum(schema, ctx) {
-      const chain = enumToAst({ path: ctx.path, plugin: ctx.plugin, schema });
+      const chain = enumToAst({ path: ctx.path, plugin, schema });
       const hasNull =
         schema.items?.some((item) => item.type === 'null' || item.const === null) ?? false;
       return {
@@ -108,7 +108,7 @@ export function createVisitor(
       };
     },
     integer(schema, ctx) {
-      const chain = numberToNode({ path: ctx.path, plugin: ctx.plugin, schema });
+      const chain = numberToNode({ path: ctx.path, plugin, schema });
       return {
         chain,
         meta: {
@@ -124,9 +124,9 @@ export function createVisitor(
             resource: 'definition',
             resourceId: pathToJsonPointer(fromRef(ctx.path)),
           },
-          naming: ctx.plugin.config.definitions,
+          naming: plugin.config.definitions,
           path: fromRef(ctx.path),
-          plugin: ctx.plugin,
+          plugin,
           schema,
         });
         if (extracted !== schema) {
@@ -147,7 +147,7 @@ export function createVisitor(
         childResults: items,
         parentSchema,
         path: ctx.path,
-        plugin: ctx.plugin,
+        plugin,
         schemas,
       });
 
@@ -165,7 +165,7 @@ export function createVisitor(
       };
     },
     never(schema, ctx) {
-      const chain = neverToAst({ path: ctx.path, plugin: ctx.plugin, schema });
+      const chain = neverToAst({ path: ctx.path, plugin, schema });
       return {
         chain,
         meta: {
@@ -176,7 +176,7 @@ export function createVisitor(
       };
     },
     null(schema, ctx) {
-      const chain = nullToAst({ path: ctx.path, plugin: ctx.plugin, schema });
+      const chain = nullToAst({ path: ctx.path, plugin, schema });
       return {
         chain,
         meta: {
@@ -187,7 +187,7 @@ export function createVisitor(
       };
     },
     number(schema, ctx) {
-      const chain = numberToNode({ path: ctx.path, plugin: ctx.plugin, schema });
+      const chain = numberToNode({ path: ctx.path, plugin, schema });
       return {
         chain,
         meta: {
@@ -197,12 +197,10 @@ export function createVisitor(
       };
     },
     object(schema, ctx, walk) {
-      const applyModifiers: Parameters<typeof objectToAst>[0]['applyModifiers'] = (result, opts) =>
-        this.applyModifiers(result, ctx, opts) as ZodFinal;
       const { chain, childResults } = objectToAst({
-        applyModifiers,
+        applyModifiers: (result, opts) => this.applyModifiers(result, ctx, opts) as ZodFinal,
         path: ctx.path,
-        plugin: ctx.plugin,
+        plugin,
         schema,
         walk,
       });
@@ -215,8 +213,8 @@ export function createVisitor(
         },
       };
     },
-    postProcess(result, schema, ctx) {
-      if (ctx.plugin.config.metadata && schema.description) {
+    postProcess(result, schema) {
+      if (plugin.config.metadata && schema.description) {
         return {
           ...result,
           chain: result.chain.attr(identifiers.describe).call($.literal(schema.description)),
@@ -224,8 +222,8 @@ export function createVisitor(
       }
       return result;
     },
-    reference($ref, schema, ctx) {
-      const z = ctx.plugin.external('zod.z');
+    reference($ref, schema) {
+      const z = plugin.external('zod.z');
       const query: SymbolMeta = {
         category: 'schema',
         resource: 'definition',
@@ -233,9 +231,9 @@ export function createVisitor(
         tool: 'zod',
       };
 
-      const refSymbol = ctx.plugin.referenceSymbol(query);
+      const refSymbol = plugin.referenceSymbol(query);
 
-      if (ctx.plugin.isSymbolRegistered(query)) {
+      if (plugin.isSymbolRegistered(query)) {
         return {
           chain: $(refSymbol),
           meta: defaultMeta(schema),
@@ -257,7 +255,7 @@ export function createVisitor(
       if (shouldCoerceToBigInt(schema.format)) {
         const chain = numberToNode({
           path: ctx.path,
-          plugin: ctx.plugin,
+          plugin,
           schema: { ...schema, type: 'number' },
         });
         return {
@@ -266,19 +264,17 @@ export function createVisitor(
         };
       }
 
-      const chain = stringToNode({ path: ctx.path, plugin: ctx.plugin, schema });
+      const chain = stringToNode({ path: ctx.path, plugin, schema });
       return {
         chain,
         meta: defaultMeta(schema),
       };
     },
     tuple(schema, ctx, walk) {
-      const applyModifiers: Parameters<typeof tupleToAst>[0]['applyModifiers'] = (result, opts) =>
-        this.applyModifiers(result, ctx, opts) as ZodFinal;
       const { chain, childResults } = tupleToAst({
-        applyModifiers,
+        applyModifiers: (result, opts) => this.applyModifiers(result, ctx, opts) as ZodFinal,
         path: ctx.path,
-        plugin: ctx.plugin,
+        plugin,
         schema,
         walk,
       });
@@ -289,7 +285,7 @@ export function createVisitor(
       };
     },
     undefined(schema, ctx) {
-      const chain = undefinedToAst({ path: ctx.path, plugin: ctx.plugin, schema });
+      const chain = undefinedToAst({ path: ctx.path, plugin, schema });
       return {
         chain,
         meta: {
@@ -308,7 +304,7 @@ export function createVisitor(
         childResults: items,
         parentSchema,
         path: ctx.path,
-        plugin: ctx.plugin,
+        plugin,
         schemas,
       });
 
@@ -326,7 +322,7 @@ export function createVisitor(
       };
     },
     unknown(schema, ctx) {
-      const chain = unknownToAst({ path: ctx.path, plugin: ctx.plugin, schema });
+      const chain = unknownToAst({ path: ctx.path, plugin, schema });
       return {
         chain,
         meta: {
@@ -337,7 +333,7 @@ export function createVisitor(
       };
     },
     void(schema, ctx) {
-      const chain = voidToAst({ path: ctx.path, plugin: ctx.plugin, schema });
+      const chain = voidToAst({ path: ctx.path, plugin, schema });
       return {
         chain,
         meta: {
