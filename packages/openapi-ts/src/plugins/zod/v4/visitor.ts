@@ -26,6 +26,8 @@ import { unknownToAst } from './toAst/unknown';
 import { voidToAst } from './toAst/void';
 
 export interface VisitorConfig {
+  /** The plugin instance. */
+  plugin: ZodPlugin['Instance'];
   /** Optional schema extractor function. */
   schemaExtractor?: SchemaExtractor<ProcessorContext>;
 }
@@ -35,67 +37,67 @@ function getDefaultValue(meta: ZodMeta): ReturnType<typeof $.fromValue> {
 }
 
 export function createVisitor(
-  config: VisitorConfig = {},
+  config: VisitorConfig,
 ): SchemaVisitor<ZodResult, ZodPlugin['Instance']> {
-  const { schemaExtractor } = config;
+  const { plugin, schemaExtractor } = config;
+
+  const z = plugin.external('zod.z');
 
   return {
     applyModifiers(result, ctx, options = {}): ZodFinal {
       const { optional } = options;
-      let expression = result.expression;
+      let chain = result.chain;
 
       if (result.meta.readonly) {
-        expression = expression.attr(identifiers.readonly).call();
+        chain = chain.attr(identifiers.readonly).call();
       }
 
       const needsDefault = result.meta.default !== undefined;
       const needsNullable = result.meta.nullable;
 
       if (optional && needsNullable) {
-        expression = expression.attr(identifiers.nullish).call();
+        chain = chain.attr(identifiers.nullish).call();
       } else if (optional) {
-        expression = expression.attr(identifiers.optional).call();
+        chain = chain.attr(identifiers.optional).call();
       } else if (needsNullable) {
-        expression = expression.attr(identifiers.nullable).call();
+        chain = chain.attr(identifiers.nullable).call();
       }
 
       if (needsDefault) {
-        expression = expression.attr(identifiers.default).call(getDefaultValue(result.meta));
+        chain = chain.attr(identifiers.default).call(getDefaultValue(result.meta));
       }
 
       return {
-        expression,
+        chain,
       };
     },
     array(schema, ctx, walk) {
-      const applyModifiers: Parameters<typeof arrayToAst>[0]['applyModifiers'] = (result, opts) =>
-        this.applyModifiers(result, ctx, opts) as ZodFinal;
-      const { childResults, expression } = arrayToAst({
-        applyModifiers,
+      const { chain, childResults } = arrayToAst({
+        applyModifiers: (result, opts) => this.applyModifiers(result, ctx, opts) as ZodFinal,
         path: ctx.path,
-        plugin: ctx.plugin,
+        plugin,
         schema,
         walk,
       });
 
       return {
-        expression,
+        chain,
         meta: inheritMeta(schema, childResults),
       };
     },
     boolean(schema, ctx) {
-      const expression = booleanToAst({ path: ctx.path, plugin: ctx.plugin, schema });
+      const chain = booleanToAst({ path: ctx.path, plugin, schema });
       return {
-        expression,
+        chain,
         meta: defaultMeta(schema),
       };
     },
     enum(schema, ctx) {
-      const expression = enumToAst({ path: ctx.path, plugin: ctx.plugin, schema });
+      const chain = enumToAst({ path: ctx.path, plugin, schema });
       const hasNull =
         schema.items?.some((item) => item.type === 'null' || item.const === null) ?? false;
       return {
-        expression,
+        chain,
         meta: {
           ...defaultMeta(schema),
           nullable: hasNull,
@@ -103,9 +105,9 @@ export function createVisitor(
       };
     },
     integer(schema, ctx) {
-      const expression = numberToNode({ path: ctx.path, plugin: ctx.plugin, schema });
+      const chain = numberToNode({ path: ctx.path, plugin, schema });
       return {
-        expression,
+        chain,
         meta: {
           ...defaultMeta(schema),
           format: schema.format,
@@ -119,9 +121,9 @@ export function createVisitor(
             resource: 'definition',
             resourceId: pathToJsonPointer(fromRef(ctx.path)),
           },
-          naming: ctx.plugin.config.definitions,
+          naming: plugin.config.definitions,
           path: fromRef(ctx.path),
-          plugin: ctx.plugin,
+          plugin,
           schema,
         });
         if (extracted !== schema) {
@@ -130,7 +132,7 @@ export function createVisitor(
       }
       if (schema.symbolRef) {
         return {
-          expression: $(schema.symbolRef),
+          chain: $(schema.symbolRef),
           meta: defaultMeta(schema),
         };
       }
@@ -138,16 +140,16 @@ export function createVisitor(
     intersection(items, schemas, parentSchema, ctx) {
       const hasAnyLazy = items.some((item) => item.meta.hasLazy);
 
-      const { expression } = intersectionToAst({
+      const { chain } = intersectionToAst({
         childResults: items,
         parentSchema,
         path: ctx.path,
-        plugin: ctx.plugin,
+        plugin,
         schemas,
       });
 
       return {
-        expression,
+        chain,
         meta: {
           default: parentSchema.default,
           format: parentSchema.format,
@@ -160,9 +162,9 @@ export function createVisitor(
       };
     },
     never(schema, ctx) {
-      const expression = neverToAst({ path: ctx.path, plugin: ctx.plugin, schema });
+      const chain = neverToAst({ path: ctx.path, plugin, schema });
       return {
-        expression,
+        chain,
         meta: {
           ...defaultMeta(schema),
           nullable: false,
@@ -171,9 +173,9 @@ export function createVisitor(
       };
     },
     null(schema, ctx) {
-      const expression = nullToAst({ path: ctx.path, plugin: ctx.plugin, schema });
+      const chain = nullToAst({ path: ctx.path, plugin, schema });
       return {
-        expression,
+        chain,
         meta: {
           ...defaultMeta(schema),
           nullable: false,
@@ -182,9 +184,9 @@ export function createVisitor(
       };
     },
     number(schema, ctx) {
-      const expression = numberToNode({ path: ctx.path, plugin: ctx.plugin, schema });
+      const chain = numberToNode({ path: ctx.path, plugin, schema });
       return {
-        expression,
+        chain,
         meta: {
           ...defaultMeta(schema),
           format: schema.format,
@@ -192,23 +194,21 @@ export function createVisitor(
       };
     },
     object(schema, ctx, walk) {
-      const applyModifiers: Parameters<typeof objectToAst>[0]['applyModifiers'] = (result, opts) =>
-        this.applyModifiers(result, ctx, opts) as ZodFinal;
-      const { childResults, expression } = objectToAst({
-        applyModifiers,
+      const { chain, childResults } = objectToAst({
+        applyModifiers: (result, opts) => this.applyModifiers(result, ctx, opts) as ZodFinal,
         path: ctx.path,
-        plugin: ctx.plugin,
+        plugin,
         schema,
         walk,
       });
 
       return {
-        expression,
+        chain,
         meta: inheritMeta(schema, childResults),
       };
     },
-    postProcess(result, schema, ctx) {
-      const { metadata } = ctx.plugin.config;
+    postProcess(result, schema) {
+      const { metadata } = plugin.config;
 
       if (!metadata) {
         return result;
@@ -229,17 +229,14 @@ export function createVisitor(
         return result;
       }
 
-      const z = ctx.plugin.external('zod.z');
-
       return {
         ...result,
-        expression: result.expression
+        chain: result.chain
           .attr(identifiers.register)
           .call($(z).attr(identifiers.globalRegistry), node),
       };
     },
-    reference($ref, schema, ctx) {
-      const z = ctx.plugin.external('zod.z');
+    reference($ref, schema) {
       const query: SymbolMeta = {
         category: 'schema',
         resource: 'definition',
@@ -247,17 +244,17 @@ export function createVisitor(
         tool: 'zod',
       };
 
-      const refSymbol = ctx.plugin.referenceSymbol(query);
+      const refSymbol = plugin.referenceSymbol(query);
 
-      if (ctx.plugin.isSymbolRegistered(query)) {
+      if (plugin.isSymbolRegistered(query)) {
         return {
-          expression: $(refSymbol),
+          chain: $(refSymbol),
           meta: defaultMeta(schema),
         };
       }
 
       return {
-        expression: $(z)
+        chain: $(z)
           .attr(identifiers.lazy)
           .call($.func().returns('any').do($(refSymbol).return())),
         meta: {
@@ -269,43 +266,41 @@ export function createVisitor(
     },
     string(schema, ctx) {
       if (shouldCoerceToBigInt(schema.format)) {
-        const expression = numberToNode({
+        const chain = numberToNode({
           path: ctx.path,
-          plugin: ctx.plugin,
+          plugin,
           schema: { ...schema, type: 'number' },
         });
         return {
-          expression,
+          chain,
           meta: defaultMeta(schema),
         };
       }
 
-      const expression = stringToNode({ path: ctx.path, plugin: ctx.plugin, schema });
+      const chain = stringToNode({ path: ctx.path, plugin, schema });
       return {
-        expression,
+        chain,
         meta: defaultMeta(schema),
       };
     },
     tuple(schema, ctx, walk) {
-      const applyModifiers: Parameters<typeof tupleToAst>[0]['applyModifiers'] = (result, opts) =>
-        this.applyModifiers(result, ctx, opts) as ZodFinal;
-      const { childResults, expression } = tupleToAst({
-        applyModifiers,
+      const { chain, childResults } = tupleToAst({
+        applyModifiers: (result, opts) => this.applyModifiers(result, ctx, opts) as ZodFinal,
         path: ctx.path,
-        plugin: ctx.plugin,
+        plugin,
         schema,
         walk,
       });
 
       return {
-        expression,
+        chain,
         meta: inheritMeta(schema, childResults),
       };
     },
     undefined(schema, ctx) {
-      const expression = undefinedToAst({ path: ctx.path, plugin: ctx.plugin, schema });
+      const chain = undefinedToAst({ path: ctx.path, plugin, schema });
       return {
-        expression,
+        chain,
         meta: {
           ...defaultMeta(schema),
           nullable: false,
@@ -318,16 +313,16 @@ export function createVisitor(
 
       const hasNull = schemas.some((s) => s.type === 'null') || items.some((i) => i.meta.nullable);
 
-      const { expression } = unionToAst({
+      const { chain } = unionToAst({
         childResults: items,
         parentSchema,
         path: ctx.path,
-        plugin: ctx.plugin,
+        plugin,
         schemas,
       });
 
       return {
-        expression,
+        chain,
         meta: {
           default: parentSchema.default,
           format: parentSchema.format,
@@ -340,9 +335,9 @@ export function createVisitor(
       };
     },
     unknown(schema, ctx) {
-      const expression = unknownToAst({ path: ctx.path, plugin: ctx.plugin, schema });
+      const chain = unknownToAst({ path: ctx.path, plugin, schema });
       return {
-        expression,
+        chain,
         meta: {
           ...defaultMeta(schema),
           nullable: false,
@@ -351,9 +346,9 @@ export function createVisitor(
       };
     },
     void(schema, ctx) {
-      const expression = voidToAst({ path: ctx.path, plugin: ctx.plugin, schema });
+      const chain = voidToAst({ path: ctx.path, plugin, schema });
       return {
-        expression,
+        chain,
         meta: {
           ...defaultMeta(schema),
           nullable: false,

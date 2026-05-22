@@ -1,4 +1,4 @@
-import { childContext } from '@hey-api/shared';
+import { fromRef, ref } from '@hey-api/codegen-core';
 
 import { $ } from '../../../../ts-dsl';
 import type { ObjectResolverContext } from '../../resolvers';
@@ -8,15 +8,15 @@ import type { CompositeHandlerResult, ValibotResult } from '../../shared/types';
 import { identifiers } from '../constants';
 
 function additionalPropertiesNode(ctx: ObjectResolverContext): Pipe | null | undefined {
-  const { path, pipes, plugin, schema } = ctx;
+  const { pipes, schema } = ctx;
 
   if (!schema.additionalProperties || !schema.additionalProperties.type) return;
   if (schema.additionalProperties.type === 'never') return null;
 
-  const additionalResult = ctx.walk(
-    schema.additionalProperties,
-    childContext({ path, plugin }, 'additionalProperties'),
-  );
+  const additionalResult = ctx.walk(schema.additionalProperties, {
+    path: ref([...fromRef(ctx.path), 'additionalProperties']),
+    plugin: ctx.plugin,
+  });
   ctx._childResults.push(additionalResult);
 
   return pipes.toNode(additionalResult.pipes, ctx.plugin);
@@ -51,14 +51,17 @@ function objectResolver(ctx: ObjectResolverContext): Pipes | Pipe {
 }
 
 function shapeNode(ctx: ObjectResolverContext): ReturnType<typeof $.object> {
-  const { path, pipes, plugin, schema } = ctx;
+  const { pipes, schema } = ctx;
   const shape = $.object().pretty();
 
   for (const name in schema.properties) {
     const property = schema.properties[name]!;
     const isOptional = !schema.required?.includes(name);
 
-    const propertyResult = ctx.walk(property, childContext({ path, plugin }, 'properties', name));
+    const propertyResult = ctx.walk(property, {
+      path: ref([...fromRef(ctx.path), 'properties', name]),
+      plugin: ctx.plugin,
+    });
     ctx._childResults.push(propertyResult);
 
     const finalExpr = ctx.applyModifiers(propertyResult, { optional: isOptional });
