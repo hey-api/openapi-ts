@@ -1,4 +1,4 @@
-import { childContext } from '@hey-api/shared';
+import { fromRef, ref } from '@hey-api/codegen-core';
 
 import { $ } from '../../../../ts-dsl';
 import type { TupleResolverContext } from '../../resolvers';
@@ -20,11 +20,14 @@ function baseNode(ctx: TupleResolverContext): PipeResult {
 
   for (let i = 0; i < schema.items.length; i++) {
     const item = schema.items[i]!;
-    const result = walk!(item, childContext({ path, plugin }, 'items', i));
+    const result = walk(item, {
+      path: ref([...fromRef(ctx.path), 'items', i]),
+      plugin: ctx.plugin,
+    });
     childResults.push(result);
   }
 
-  const tupleElements = childResults.map((r) => pipes.toNode(applyModifiers!(r).pipes, plugin));
+  const tupleElements = childResults.map((r) => pipes.toNode(applyModifiers(r).pipes, plugin));
 
   return $(v)
     .attr(identifiers.schemas.tuple)
@@ -69,7 +72,10 @@ export function tupleToPipes(
   if (schema.items) {
     for (let i = 0; i < schema.items.length; i++) {
       const item = schema.items[i]!;
-      const result = walk(item, childContext({ path, plugin }, 'items', i));
+      const result = walk(item, {
+        path: ref([...fromRef(ctx.path), 'items', i]),
+        plugin: ctx.plugin,
+      });
       childResults.push(result);
     }
   }

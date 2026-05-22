@@ -24,14 +24,16 @@ import { unknownToType } from './toAst/unknown';
 import { voidToType } from './toAst/void';
 
 export interface VisitorConfig {
+  /** The plugin instance. */
+  plugin: PydanticPlugin['Instance'];
   /** Optional schema extractor function. */
   schemaExtractor?: SchemaExtractor<ProcessorContext>;
 }
 
 export function createVisitor(
-  config: VisitorConfig = {},
+  config: VisitorConfig,
 ): SchemaVisitor<PydanticResult, PydanticPlugin['Instance']> {
-  const { schemaExtractor } = config;
+  const { plugin, schemaExtractor } = config;
 
   return {
     applyModifiers(result, ctx, options = {}): PydanticFinal {
@@ -45,8 +47,8 @@ export function createVisitor(
       const fieldConstraints = { ...result.fieldConstraints };
 
       if (needsOptional || needsNullable) {
-        const optionalType = ctx.plugin.external('typing.Optional');
-        type = $(optionalType).slice(type ?? ctx.plugin.external('typing.Any'));
+        const optionalType = plugin.external('typing.Optional');
+        type = $(optionalType).slice(type ?? plugin.external('typing.Any'));
         if (needsOptional) {
           fieldConstraints.default = needsDefault ? result.meta.default : null;
         }
@@ -60,13 +62,10 @@ export function createVisitor(
       };
     },
     array(schema, ctx, walk) {
-      const applyModifiers: Parameters<typeof arrayToType>[0]['applyModifiers'] = (result, opts) =>
-        this.applyModifiers(result, ctx, opts) as PydanticFinal;
-
       const { childResults, fieldConstraints, type } = arrayToType({
-        applyModifiers,
+        applyModifiers: (result, opts) => this.applyModifiers(result, ctx, opts) as PydanticFinal,
         path: ctx.path,
-        plugin: ctx.plugin,
+        plugin,
         schema,
         walk,
       });
@@ -78,21 +77,21 @@ export function createVisitor(
       };
     },
     boolean(schema, ctx) {
-      const result = booleanToType({ path: ctx.path, plugin: ctx.plugin, schema });
+      const result = booleanToType({ path: ctx.path, plugin, schema });
       return {
         ...result,
         meta: defaultMeta(schema),
       };
     },
     enum(schema, ctx) {
-      const result = enumToType({ path: ctx.path, plugin: ctx.plugin, schema });
+      const result = enumToType({ path: ctx.path, plugin, schema });
       return {
         ...result,
         meta: defaultMeta(schema),
       };
     },
     integer(schema, ctx) {
-      const result = numberToType({ path: ctx.path, plugin: ctx.plugin, schema });
+      const result = numberToType({ path: ctx.path, plugin, schema });
       return {
         ...result,
         meta: defaultMeta(schema),
@@ -102,26 +101,21 @@ export function createVisitor(
       if (schemaExtractor && !schema.$ref) {
         const extracted = schemaExtractor({
           meta: { resource: 'definition', resourceId: pathToJsonPointer(fromRef(ctx.path)) },
-          naming: ctx.plugin.config.definitions,
+          naming: plugin.config.definitions,
           path: fromRef(ctx.path),
-          plugin: ctx.plugin,
+          plugin,
           schema,
         });
         if (extracted !== schema) return walk(extracted, ctx);
       }
     },
     intersection(items, schemas, parentSchema, ctx) {
-      const applyModifiers: Parameters<typeof intersectionToType>[0]['applyModifiers'] = (
-        result,
-        opts,
-      ) => this.applyModifiers(result, ctx, opts) as PydanticFinal;
-
       const result = intersectionToType({
-        applyModifiers,
+        applyModifiers: (result, opts) => this.applyModifiers(result, ctx, opts) as PydanticFinal,
         childResults: items,
         parentSchema,
         path: ctx.path,
-        plugin: ctx.plugin,
+        plugin,
       });
 
       return {
@@ -130,7 +124,7 @@ export function createVisitor(
       };
     },
     never(schema, ctx) {
-      const result = neverToType({ path: ctx.path, plugin: ctx.plugin, schema });
+      const result = neverToType({ path: ctx.path, plugin, schema });
       return {
         ...result,
         meta: {
@@ -141,7 +135,7 @@ export function createVisitor(
       };
     },
     null(schema, ctx) {
-      const result = nullToType({ path: ctx.path, plugin: ctx.plugin, schema });
+      const result = nullToType({ path: ctx.path, plugin, schema });
       return {
         ...result,
         meta: {
@@ -152,22 +146,17 @@ export function createVisitor(
       };
     },
     number(schema, ctx) {
-      const result = numberToType({ path: ctx.path, plugin: ctx.plugin, schema });
+      const result = numberToType({ path: ctx.path, plugin, schema });
       return {
         ...result,
         meta: defaultMeta(schema),
       };
     },
     object(schema, ctx, walk) {
-      const applyModifiers: Parameters<typeof objectToFields>[0]['applyModifiers'] = (
-        result,
-        opts,
-      ) => this.applyModifiers(result, ctx, opts) as PydanticFinal;
-
       const { childResults, fields, type } = objectToFields({
-        applyModifiers,
+        applyModifiers: (result, opts) => this.applyModifiers(result, ctx, opts) as PydanticFinal,
         path: ctx.path,
-        plugin: ctx.plugin,
+        plugin,
         schema,
         walk,
       });
@@ -181,7 +170,7 @@ export function createVisitor(
     postProcess(result) {
       return result;
     },
-    reference($ref, schema, ctx) {
+    reference($ref, schema) {
       const query: SymbolMeta = {
         category: 'schema',
         resource: 'definition',
@@ -189,8 +178,8 @@ export function createVisitor(
         tool: 'pydantic',
       };
 
-      const refSymbol = ctx.plugin.referenceSymbol(query);
-      const isRegistered = ctx.plugin.isSymbolRegistered(query);
+      const refSymbol = plugin.referenceSymbol(query);
+      const isRegistered = plugin.isSymbolRegistered(query);
 
       return {
         meta: {
@@ -201,20 +190,17 @@ export function createVisitor(
       };
     },
     string(schema, ctx) {
-      const result = stringToType({ path: ctx.path, plugin: ctx.plugin, schema });
+      const result = stringToType({ path: ctx.path, plugin, schema });
       return {
         ...result,
         meta: defaultMeta(schema),
       };
     },
     tuple(schema, ctx, walk) {
-      const applyModifiers: Parameters<typeof tupleToType>[0]['applyModifiers'] = (result, opts) =>
-        this.applyModifiers(result, ctx, opts) as PydanticFinal;
-
       const { childResults, fieldConstraints, type } = tupleToType({
-        applyModifiers,
+        applyModifiers: (result, opts) => this.applyModifiers(result, ctx, opts) as PydanticFinal,
         path: ctx.path,
-        plugin: ctx.plugin,
+        plugin,
         schema,
         walk,
       });
@@ -226,7 +212,7 @@ export function createVisitor(
       };
     },
     undefined(schema, ctx) {
-      const result = undefinedToType({ path: ctx.path, plugin: ctx.plugin, schema });
+      const result = undefinedToType({ path: ctx.path, plugin, schema });
       return {
         ...result,
         meta: {
@@ -237,15 +223,12 @@ export function createVisitor(
       };
     },
     union(items, schemas, parentSchema, ctx) {
-      const applyModifiers: Parameters<typeof unionToType>[0]['applyModifiers'] = (result, opts) =>
-        this.applyModifiers(result, ctx, opts) as PydanticFinal;
-
       const result = unionToType({
-        applyModifiers,
+        applyModifiers: (result, opts) => this.applyModifiers(result, ctx, opts) as PydanticFinal,
         childResults: items,
         parentSchema,
         path: ctx.path,
-        plugin: ctx.plugin,
+        plugin,
         schemas,
       });
 
@@ -255,7 +238,7 @@ export function createVisitor(
       };
     },
     unknown(schema, ctx) {
-      const result = unknownToType({ path: ctx.path, plugin: ctx.plugin, schema });
+      const result = unknownToType({ path: ctx.path, plugin, schema });
       return {
         ...result,
         meta: {
@@ -266,7 +249,7 @@ export function createVisitor(
       };
     },
     void(schema, ctx) {
-      const result = voidToType({ path: ctx.path, plugin: ctx.plugin, schema });
+      const result = voidToType({ path: ctx.path, plugin, schema });
       return {
         ...result,
         meta: {
