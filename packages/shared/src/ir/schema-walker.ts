@@ -217,7 +217,7 @@ export function childContext<TPlugin>(
   ...segments: ReadonlyArray<string | number>
 ): SchemaVisitorContext<TPlugin> {
   return {
-    ...ctx,
     path: ref([...fromRef(ctx.path), ...segments]),
+    plugin: ctx.plugin,
   };
 }
