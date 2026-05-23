@@ -319,7 +319,7 @@ export function toNode(
   if (model.virtual) {
     const nodes: Array<ReturnType<typeof $.var>> = [];
     for (const item of model.itemsFrom<OperationItem>(source)) {
-      const { operation } = item.data;
+      const { operation, tags } = item.data;
       let node = $.const(createFnSymbol(plugin, item))
         .export()
         .assign(
@@ -332,6 +332,7 @@ export function toNode(
                 }),
                 operation,
                 plugin,
+                tags,
               })
             : implementFn({
                 node: $.func(),
@@ -360,7 +361,7 @@ export function toNode(
 
   let index = 0;
   for (const item of model.itemsFrom<OperationItem>(source)) {
-    const { operation } = item.data;
+    const { operation, tags } = item.data;
     if (node['~dsl'] === 'VarTsDsl') {
       // TODO: object
     } else {
@@ -378,6 +379,7 @@ export function toNode(
               }),
               operation,
               plugin,
+              tags,
             }),
           ),
           operation,

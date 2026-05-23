@@ -764,7 +764,7 @@ export const sessionGet = Object.assign(function sessionGet2<ThrowOnError extend
     method: 'get',
     requestSchema: z.object({ params: zSessionGetPath, query: zSessionGetQuery.optional() }),
     responseSchema: zSessionGetResponse,
-    tags: 1,
+    tags: ['Session'],
     url: '/session/{sessionID}'
 });
 
@@ -841,7 +841,7 @@ export const sessionChildren = Object.assign(function sessionChildren2<ThrowOnEr
     method: 'get',
     requestSchema: z.object({ params: zSessionChildrenPath, query: zSessionChildrenQuery.optional() }),
     responseSchema: zSessionChildrenResponse,
-    tags: 1,
+    tags: ['Session'],
     url: '/session/{sessionID}/children'
 });
 

@@ -49,8 +49,9 @@ function createResponseSchema(args: {
 export function createMetadataObject(args: {
   operation: IR.OperationObject;
   plugin: HeyApiSdkPlugin['Instance'];
+  tags?: ReadonlyArray<string>;
 }) {
-  const { operation, plugin } = args;
+  const { operation, plugin, tags } = args;
   const requestSchema = createRequestSchema({ operation, plugin });
   const responseSchema = createResponseSchema({ operation, plugin });
 
@@ -59,7 +60,7 @@ export function createMetadataObject(args: {
     .prop('method', $.literal(operation.method))
     .$if(requestSchema, (o, v) => o.prop('requestSchema', v))
     .$if(responseSchema, (o, v) => o.prop('responseSchema', v))
-    .$if(operation.tags?.length, (o, v) => o.prop('tags', $.fromValue(v)))
+    .$if(Boolean(tags?.length) && tags, (o, v) => o.prop('tags', $.array().elements(...v)))
     .prop('url', $.literal(operation.path));
 }
 
@@ -67,8 +68,9 @@ export function withMetadata(args: {
   fn: ReturnType<typeof $.func>;
   operation: IR.OperationObject;
   plugin: HeyApiSdkPlugin['Instance'];
+  tags?: ReadonlyArray<string>;
 }) {
-  const { fn, operation, plugin } = args;
+  const { fn, operation, plugin, tags } = args;
 
-  return $('Object').attr('assign').call(fn, createMetadataObject({ operation, plugin }));
+  return $('Object').attr('assign').call(fn, createMetadataObject({ operation, plugin, tags }));
 }

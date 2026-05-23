@@ -2969,7 +2969,7 @@ export class Session2 {
         method: 'get',
         requestSchema: z.object({ params: zSessionGetPath, query: zSessionGetQuery.optional() }),
         responseSchema: zSessionGetResponse,
-        tags: 1,
+        tags: ['Session'],
         url: '/session/{sessionID}'
     });
     
@@ -2999,7 +2999,7 @@ export class Session2 {
         method: 'get',
         requestSchema: z.object({ params: zSessionChildrenPath, query: zSessionChildrenQuery.optional() }),
         responseSchema: zSessionChildrenResponse,
-        tags: 1,
+        tags: ['Session'],
         url: '/session/{sessionID}/children'
     });
 }
