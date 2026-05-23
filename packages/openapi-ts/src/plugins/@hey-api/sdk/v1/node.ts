@@ -17,6 +17,7 @@ import {
 import { $, ctx } from '../../../../ts-dsl';
 import { createClientClass, createRegistryClass } from '../shared/class';
 import { nuxtTypeComposable, nuxtTypeDefault } from '../shared/constants';
+import { withMetadata } from '../shared/metadata';
 import { operationParameters, operationStatements } from '../shared/operation';
 import type { HeyApiSdkPlugin } from '../types';
 
@@ -35,11 +36,9 @@ export function isInstance(plugin: HeyApiSdkPlugin['Instance']): boolean {
   );
 }
 
-function attachComment<T extends ReturnType<typeof $.var | typeof $.method>>(args: {
-  node: T;
-  operation: IR.OperationObject;
-  plugin: HeyApiSdkPlugin['Instance'];
-}): T {
+function attachComment<
+  T extends ReturnType<typeof $.field | typeof $.method | typeof $.var>,
+>(args: { node: T; operation: IR.OperationObject; plugin: HeyApiSdkPlugin['Instance'] }): T {
   const { node, operation, plugin } = args;
   return node.$if(plugin.config.comments && createOperationComment(operation), (n, v) =>
     n.doc(v),
@@ -228,7 +227,7 @@ function enrichRootClass(args: {
 }
 
 function exampleIntent(
-  node: ReturnType<typeof $.method | typeof $.var>,
+  node: ReturnType<typeof $.field | typeof $.method | typeof $.var>,
   operation: IR.OperationObject,
   plugin: HeyApiSdkPlugin['Instance'],
 ): void {
@@ -324,11 +323,21 @@ export function toNode(
       let node = $.const(createFnSymbol(plugin, item))
         .export()
         .assign(
-          implementFn({
-            node: $.func(),
-            operation,
-            plugin,
-          }),
+          plugin.config.metadata
+            ? withMetadata({
+                fn: implementFn({
+                  node: $.func(createFnSymbol(plugin, item)).expr(),
+                  operation,
+                  plugin,
+                }),
+                operation,
+                plugin,
+              })
+            : implementFn({
+                node: $.func(),
+                operation,
+                plugin,
+              }),
         );
       node = attachComment({ node, operation, plugin });
       nodes.push(node);
@@ -356,21 +365,43 @@ export function toNode(
       // TODO: object
     } else {
       if (index > 0 || node.hasBody) node.newline();
-      const method = implementFn({
-        node: $.method(createFnSymbol(plugin, item), (m) =>
-          attachComment({
-            node: m,
-            operation,
-            plugin,
-          })
-            .public()
-            .static(!isAngularClient && !isInstance(plugin)),
-        ),
-        operation,
-        plugin,
-      });
-      node.do(method);
-      exampleIntent(method, operation, plugin);
+      if (plugin.config.metadata) {
+        const field = attachComment({
+          node: $.field(createFnSymbol(plugin, item), (f) =>
+            f.public().static(!isAngularClient && !isInstance(plugin)),
+          ).assign(
+            withMetadata({
+              fn: implementFn({
+                node: $.func(),
+                operation,
+                plugin,
+              }),
+              operation,
+              plugin,
+            }),
+          ),
+          operation,
+          plugin,
+        });
+        node.do(field);
+        exampleIntent(field, operation, plugin);
+      } else {
+        const method = implementFn({
+          node: $.method(createFnSymbol(plugin, item), (m) =>
+            attachComment({
+              node: m,
+              operation,
+              plugin,
+            })
+              .public()
+              .static(!isAngularClient && !isInstance(plugin)),
+          ),
+          operation,
+          plugin,
+        });
+        node.do(method);
+        exampleIntent(method, operation, plugin);
+      }
     }
     index += 1;
   }
