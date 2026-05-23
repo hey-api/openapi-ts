@@ -1,30 +1,10 @@
 import type { IR } from '@hey-api/shared';
+import type ts from 'typescript';
 
-import { $ } from '../../../../ts-dsl';
+import { $, type TsDsl } from '../../../../ts-dsl';
 import type { HeyApiSdkPlugin } from '../types';
 
-function createRequestSchema(args: {
-  operation: IR.OperationObject;
-  plugin: HeyApiSdkPlugin['Instance'];
-}) {
-  const { operation, plugin } = args;
-  if (!plugin.config.validator.request) return;
-
-  const validator = plugin.getPluginOrThrow(plugin.config.validator.request);
-  if (!validator.api || !('createRequestSchema' in validator.api)) return;
-
-  return validator.api.createRequestSchema({
-    layers: {
-      body: { whenEmpty: 'omit' },
-      headers: { whenEmpty: 'omit' },
-      path: { as: 'params', whenEmpty: 'omit' },
-      query: { whenEmpty: 'omit' },
-    },
-    operation,
-    // @ts-expect-error validator plugin instance type is narrowed by config
-    plugin: validator,
-  });
-}
+type MetadataFn = TsDsl<ts.Expression>;
 
 function createResponseSchema(args: {
   operation: IR.OperationObject;
@@ -52,14 +32,12 @@ export function createMetadataObject(args: {
   tags?: ReadonlyArray<string>;
 }) {
   const { operation, plugin, tags } = args;
-  const requestSchema = createRequestSchema({ operation, plugin });
   const responseSchema = createResponseSchema({ operation, plugin });
   const metadata = plugin.config.metadata;
 
   return $.object()
     .$if(metadata.id, (o) => o.prop('id', $.literal(operation.id)))
     .$if(metadata.method, (o) => o.prop('method', $.literal(operation.method)))
-    .$if(metadata.requestSchema && requestSchema, (o, v) => o.prop('requestSchema', v))
     .$if(metadata.responseSchema && responseSchema, (o, v) => o.prop('responseSchema', v))
     .$if(metadata.tags && Boolean(tags?.length) && tags, (o, v) =>
       o.prop('tags', $.array().elements(...v)),
@@ -68,12 +46,19 @@ export function createMetadataObject(args: {
 }
 
 export function withMetadata(args: {
-  fn: ReturnType<typeof $.func>;
+  fn: MetadataFn;
   operation: IR.OperationObject;
   plugin: HeyApiSdkPlugin['Instance'];
   tags?: ReadonlyArray<string>;
-}) {
+}): ReturnType<typeof $.call> {
   const { fn, operation, plugin, tags } = args;
 
-  return $('Object').attr('assign').call(fn, createMetadataObject({ operation, plugin, tags }));
+  return $('Object').attr('assign').call(
+    fn,
+    createMetadataObject({
+      operation,
+      plugin,
+      tags,
+    }),
+  );
 }

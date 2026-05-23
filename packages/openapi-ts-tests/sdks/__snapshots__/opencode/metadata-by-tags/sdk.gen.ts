@@ -110,7 +110,6 @@ export class Project {
     }, {
         id: 'projectList',
         method: 'get',
-        requestSchema: z.object({ query: zProjectListQuery.optional() }),
         responseSchema: zProjectListResponse,
         url: '/project'
     });
@@ -138,7 +137,6 @@ export class Project {
     }, {
         id: 'projectCurrent',
         method: 'get',
-        requestSchema: z.object({ query: zProjectCurrentQuery.optional() }),
         responseSchema: zProjectCurrentResponse,
         url: '/project/current'
     });
@@ -182,11 +180,6 @@ export class Project {
     }, {
         id: 'projectUpdate',
         method: 'patch',
-        requestSchema: z.object({
-            body: zProjectUpdateBody.optional(),
-            params: zProjectUpdatePath,
-            query: zProjectUpdateQuery.optional()
-        }),
         responseSchema: zProjectUpdateResponse,
         url: '/project/{projectID}'
     });
@@ -216,7 +209,6 @@ export class Pty {
     }, {
         id: 'ptyList',
         method: 'get',
-        requestSchema: z.object({ query: zPtyListQuery.optional() }),
         responseSchema: zPtyListResponse,
         url: '/pty'
     });
@@ -263,7 +255,6 @@ export class Pty {
     }, {
         id: 'ptyCreate',
         method: 'post',
-        requestSchema: z.object({ body: zPtyCreateBody.optional(), query: zPtyCreateQuery.optional() }),
         responseSchema: zPtyCreateResponse,
         url: '/pty'
     });
@@ -292,7 +283,6 @@ export class Pty {
     }, {
         id: 'ptyRemove',
         method: 'delete',
-        requestSchema: z.object({ params: zPtyRemovePath, query: zPtyRemoveQuery.optional() }),
         responseSchema: zPtyRemoveResponse,
         url: '/pty/{ptyID}'
     });
@@ -321,7 +311,6 @@ export class Pty {
     }, {
         id: 'ptyGet',
         method: 'get',
-        requestSchema: z.object({ params: zPtyGetPath, query: zPtyGetQuery.optional() }),
         responseSchema: zPtyGetResponse,
         url: '/pty/{ptyID}'
     });
@@ -365,11 +354,6 @@ export class Pty {
     }, {
         id: 'ptyUpdate',
         method: 'put',
-        requestSchema: z.object({
-            body: zPtyUpdateBody.optional(),
-            params: zPtyUpdatePath,
-            query: zPtyUpdateQuery.optional()
-        }),
         responseSchema: zPtyUpdateResponse,
         url: '/pty/{ptyID}'
     });
@@ -398,7 +382,6 @@ export class Pty {
     }, {
         id: 'ptyConnect',
         method: 'get',
-        requestSchema: z.object({ params: zPtyConnectPath, query: zPtyConnectQuery.optional() }),
         responseSchema: zPtyConnectResponse,
         url: '/pty/{ptyID}/connect'
     });
@@ -428,7 +411,6 @@ export class Config {
     }, {
         id: 'configGet',
         method: 'get',
-        requestSchema: z.object({ query: zConfigGetQuery.optional() }),
         responseSchema: zConfigGetResponse,
         url: '/config'
     });
@@ -462,7 +444,6 @@ export class Config {
     }, {
         id: 'configUpdate',
         method: 'patch',
-        requestSchema: z.object({ body: zConfigUpdateBody.optional(), query: zConfigUpdateQuery.optional() }),
         responseSchema: zConfigUpdateResponse,
         url: '/config'
     });
@@ -490,7 +471,6 @@ export class Config {
     }, {
         id: 'configProviders',
         method: 'get',
-        requestSchema: z.object({ query: zConfigProvidersQuery.optional() }),
         responseSchema: zConfigProvidersResponse,
         url: '/config/providers'
     });
@@ -520,7 +500,6 @@ export class Tool {
     }, {
         id: 'toolIds',
         method: 'get',
-        requestSchema: z.object({ query: zToolIdsQuery.optional() }),
         responseSchema: zToolIdsResponse,
         url: '/experimental/tool/ids'
     });
@@ -554,7 +533,6 @@ export class Tool {
     }, {
         id: 'toolList',
         method: 'get',
-        requestSchema: z.object({ query: zToolListQuery }),
         responseSchema: zToolListResponse,
         url: '/experimental/tool'
     });
@@ -584,7 +562,6 @@ export class Instance {
     }, {
         id: 'instanceDispose',
         method: 'post',
-        requestSchema: z.object({ query: zInstanceDisposeQuery.optional() }),
         responseSchema: zInstanceDisposeResponse,
         url: '/instance/dispose'
     });
@@ -614,7 +591,6 @@ export class Path {
     }, {
         id: 'pathGet',
         method: 'get',
-        requestSchema: z.object({ query: zPathGetQuery.optional() }),
         responseSchema: zPathGetResponse,
         url: '/path'
     });
@@ -644,7 +620,6 @@ export class Vcs {
     }, {
         id: 'vcsGet',
         method: 'get',
-        requestSchema: z.object({ query: zVcsGetQuery.optional() }),
         responseSchema: zVcsGetResponse,
         url: '/vcs'
     });
@@ -674,7 +649,6 @@ export class Session {
     }, {
         id: 'sessionList',
         method: 'get',
-        requestSchema: z.object({ query: zSessionListQuery.optional() }),
         responseSchema: zSessionListResponse,
         url: '/session'
     });
@@ -715,7 +689,6 @@ export class Session {
     }, {
         id: 'sessionCreate',
         method: 'post',
-        requestSchema: z.object({ body: zSessionCreateBody.optional(), query: zSessionCreateQuery.optional() }),
         responseSchema: zSessionCreateResponse,
         url: '/session'
     });
@@ -743,7 +716,6 @@ export class Session {
     }, {
         id: 'sessionStatus',
         method: 'get',
-        requestSchema: z.object({ query: zSessionStatusQuery.optional() }),
         responseSchema: zSessionStatusResponse,
         url: '/session/status'
     });
@@ -772,7 +744,6 @@ export class Session {
     }, {
         id: 'sessionDelete',
         method: 'delete',
-        requestSchema: z.object({ params: zSessionDeletePath, query: zSessionDeleteQuery.optional() }),
         responseSchema: zSessionDeleteResponse,
         url: '/session/{sessionID}'
     });
@@ -815,11 +786,6 @@ export class Session {
     }, {
         id: 'sessionUpdate',
         method: 'patch',
-        requestSchema: z.object({
-            body: zSessionUpdateBody.optional(),
-            params: zSessionUpdatePath,
-            query: zSessionUpdateQuery.optional()
-        }),
         responseSchema: zSessionUpdateResponse,
         url: '/session/{sessionID}'
     });
@@ -848,7 +814,6 @@ export class Session {
     }, {
         id: 'sessionTodo',
         method: 'get',
-        requestSchema: z.object({ params: zSessionTodoPath, query: zSessionTodoQuery.optional() }),
         responseSchema: zSessionTodoResponse,
         url: '/session/{sessionID}/todo'
     });
@@ -891,11 +856,6 @@ export class Session {
     }, {
         id: 'sessionInit',
         method: 'post',
-        requestSchema: z.object({
-            body: zSessionInitBody.optional(),
-            params: zSessionInitPath,
-            query: zSessionInitQuery.optional()
-        }),
         responseSchema: zSessionInitResponse,
         url: '/session/{sessionID}/init'
     });
@@ -934,11 +894,6 @@ export class Session {
     }, {
         id: 'sessionFork',
         method: 'post',
-        requestSchema: z.object({
-            body: zSessionForkBody.optional(),
-            params: zSessionForkPath,
-            query: zSessionForkQuery.optional()
-        }),
         responseSchema: zSessionForkResponse,
         url: '/session/{sessionID}/fork'
     });
@@ -967,7 +922,6 @@ export class Session {
     }, {
         id: 'sessionAbort',
         method: 'post',
-        requestSchema: z.object({ params: zSessionAbortPath, query: zSessionAbortQuery.optional() }),
         responseSchema: zSessionAbortResponse,
         url: '/session/{sessionID}/abort'
     });
@@ -996,7 +950,6 @@ export class Session {
     }, {
         id: 'sessionUnshare',
         method: 'delete',
-        requestSchema: z.object({ params: zSessionUnsharePath, query: zSessionUnshareQuery.optional() }),
         responseSchema: zSessionUnshareResponse,
         url: '/session/{sessionID}/share'
     });
@@ -1025,7 +978,6 @@ export class Session {
     }, {
         id: 'sessionShare',
         method: 'post',
-        requestSchema: z.object({ params: zSessionSharePath, query: zSessionShareQuery.optional() }),
         responseSchema: zSessionShareResponse,
         url: '/session/{sessionID}/share'
     });
@@ -1059,7 +1011,6 @@ export class Session {
     }, {
         id: 'sessionDiff',
         method: 'get',
-        requestSchema: z.object({ params: zSessionDiffPath, query: zSessionDiffQuery.optional() }),
         responseSchema: zSessionDiffResponse,
         url: '/session/{sessionID}/diff'
     });
@@ -1102,11 +1053,6 @@ export class Session {
     }, {
         id: 'sessionSummarize',
         method: 'post',
-        requestSchema: z.object({
-            body: zSessionSummarizeBody.optional(),
-            params: zSessionSummarizePath,
-            query: zSessionSummarizeQuery.optional()
-        }),
         responseSchema: zSessionSummarizeResponse,
         url: '/session/{sessionID}/summarize'
     });
@@ -1140,7 +1086,6 @@ export class Session {
     }, {
         id: 'sessionMessages',
         method: 'get',
-        requestSchema: z.object({ params: zSessionMessagesPath, query: zSessionMessagesQuery.optional() }),
         responseSchema: zSessionMessagesResponse,
         url: '/session/{sessionID}/message'
     });
@@ -1198,11 +1143,6 @@ export class Session {
     }, {
         id: 'sessionPrompt',
         method: 'post',
-        requestSchema: z.object({
-            body: zSessionPromptBody.optional(),
-            params: zSessionPromptPath,
-            query: zSessionPromptQuery.optional()
-        }),
         responseSchema: zSessionPromptResponse,
         url: '/session/{sessionID}/message'
     });
@@ -1236,7 +1176,6 @@ export class Session {
     }, {
         id: 'sessionMessage',
         method: 'get',
-        requestSchema: z.object({ params: zSessionMessagePath, query: zSessionMessageQuery.optional() }),
         responseSchema: zSessionMessageResponse,
         url: '/session/{sessionID}/message/{messageID}'
     });
@@ -1294,11 +1233,6 @@ export class Session {
     }, {
         id: 'sessionPromptAsync',
         method: 'post',
-        requestSchema: z.object({
-            body: zSessionPromptAsyncBody.optional(),
-            params: zSessionPromptAsyncPath,
-            query: zSessionPromptAsyncQuery.optional()
-        }),
         responseSchema: zSessionPromptAsyncResponse,
         url: '/session/{sessionID}/prompt_async'
     });
@@ -1347,11 +1281,6 @@ export class Session {
     }, {
         id: 'sessionCommand',
         method: 'post',
-        requestSchema: z.object({
-            body: zSessionCommandBody.optional(),
-            params: zSessionCommandPath,
-            query: zSessionCommandQuery.optional()
-        }),
         responseSchema: zSessionCommandResponse,
         url: '/session/{sessionID}/command'
     });
@@ -1397,11 +1326,6 @@ export class Session {
     }, {
         id: 'sessionShell',
         method: 'post',
-        requestSchema: z.object({
-            body: zSessionShellBody.optional(),
-            params: zSessionShellPath,
-            query: zSessionShellQuery.optional()
-        }),
         responseSchema: zSessionShellResponse,
         url: '/session/{sessionID}/shell'
     });
@@ -1442,11 +1366,6 @@ export class Session {
     }, {
         id: 'sessionRevert',
         method: 'post',
-        requestSchema: z.object({
-            body: zSessionRevertBody.optional(),
-            params: zSessionRevertPath,
-            query: zSessionRevertQuery.optional()
-        }),
         responseSchema: zSessionRevertResponse,
         url: '/session/{sessionID}/revert'
     });
@@ -1475,7 +1394,6 @@ export class Session {
     }, {
         id: 'sessionUnrevert',
         method: 'post',
-        requestSchema: z.object({ params: zSessionUnrevertPath, query: zSessionUnrevertQuery.optional() }),
         responseSchema: zSessionUnrevertResponse,
         url: '/session/{sessionID}/unrevert'
     });
@@ -1511,7 +1429,6 @@ export class Part {
     }, {
         id: 'partDelete',
         method: 'delete',
-        requestSchema: z.object({ params: zPartDeletePath, query: zPartDeleteQuery.optional() }),
         responseSchema: zPartDeleteResponse,
         url: '/session/{sessionID}/message/{messageID}/part/{partID}'
     });
@@ -1552,11 +1469,6 @@ export class Part {
     }, {
         id: 'partUpdate',
         method: 'patch',
-        requestSchema: z.object({
-            body: zPartUpdateBody.optional(),
-            params: zPartUpdatePath,
-            query: zPartUpdateQuery.optional()
-        }),
         responseSchema: zPartUpdateResponse,
         url: '/session/{sessionID}/message/{messageID}/part/{partID}'
     });
@@ -1601,11 +1513,6 @@ export class Permission {
     }, {
         id: 'permissionRespond',
         method: 'post',
-        requestSchema: z.object({
-            body: zPermissionRespondBody.optional(),
-            params: zPermissionRespondPath,
-            query: zPermissionRespondQuery.optional()
-        }),
         responseSchema: zPermissionRespondResponse,
         url: '/session/{sessionID}/permissions/{permissionID}'
     });
@@ -1644,11 +1551,6 @@ export class Permission {
     }, {
         id: 'permissionReply',
         method: 'post',
-        requestSchema: z.object({
-            body: zPermissionReplyBody.optional(),
-            params: zPermissionReplyPath,
-            query: zPermissionReplyQuery.optional()
-        }),
         responseSchema: zPermissionReplyResponse,
         url: '/permission/{requestID}/reply'
     });
@@ -1676,7 +1578,6 @@ export class Permission {
     }, {
         id: 'permissionList',
         method: 'get',
-        requestSchema: z.object({ query: zPermissionListQuery.optional() }),
         responseSchema: zPermissionListResponse,
         url: '/permission'
     });
@@ -1706,7 +1607,6 @@ export class Command {
     }, {
         id: 'commandList',
         method: 'get',
-        requestSchema: z.object({ query: zCommandListQuery.optional() }),
         responseSchema: zCommandListResponse,
         url: '/command'
     });
@@ -1747,11 +1647,6 @@ export class Oauth {
     }, {
         id: 'providerOauthAuthorize',
         method: 'post',
-        requestSchema: z.object({
-            body: zProviderOauthAuthorizeBody.optional(),
-            params: zProviderOauthAuthorizePath,
-            query: zProviderOauthAuthorizeQuery.optional()
-        }),
         responseSchema: zProviderOauthAuthorizeResponse,
         url: '/provider/{providerID}/oauth/authorize'
     });
@@ -1792,11 +1687,6 @@ export class Oauth {
     }, {
         id: 'providerOauthCallback',
         method: 'post',
-        requestSchema: z.object({
-            body: zProviderOauthCallbackBody.optional(),
-            params: zProviderOauthCallbackPath,
-            query: zProviderOauthCallbackQuery.optional()
-        }),
         responseSchema: zProviderOauthCallbackResponse,
         url: '/provider/{providerID}/oauth/callback'
     });
@@ -1826,7 +1716,6 @@ export class Provider {
     }, {
         id: 'providerList',
         method: 'get',
-        requestSchema: z.object({ query: zProviderListQuery.optional() }),
         responseSchema: zProviderListResponse,
         url: '/provider'
     });
@@ -1854,7 +1743,6 @@ export class Provider {
     }, {
         id: 'providerAuth',
         method: 'get',
-        requestSchema: z.object({ query: zProviderAuthQuery.optional() }),
         responseSchema: zProviderAuthResponse,
         url: '/provider/auth'
     });
@@ -1887,7 +1775,6 @@ export class Find {
     }, {
         id: 'findText',
         method: 'get',
-        requestSchema: z.object({ query: zFindTextQuery }),
         responseSchema: zFindTextResponse,
         url: '/find'
     });
@@ -1925,7 +1812,6 @@ export class Find {
     }, {
         id: 'findFiles',
         method: 'get',
-        requestSchema: z.object({ query: zFindFilesQuery }),
         responseSchema: zFindFilesResponse,
         url: '/find/file'
     });
@@ -1954,7 +1840,6 @@ export class Find {
     }, {
         id: 'findSymbols',
         method: 'get',
-        requestSchema: z.object({ query: zFindSymbolsQuery }),
         responseSchema: zFindSymbolsResponse,
         url: '/find/symbol'
     });
@@ -1985,7 +1870,6 @@ export class File_ {
     }, {
         id: 'fileList',
         method: 'get',
-        requestSchema: z.object({ query: zFileListQuery }),
         responseSchema: zFileListResponse,
         url: '/file'
     });
@@ -2014,7 +1898,6 @@ export class File_ {
     }, {
         id: 'fileRead',
         method: 'get',
-        requestSchema: z.object({ query: zFileReadQuery }),
         responseSchema: zFileReadResponse,
         url: '/file/content'
     });
@@ -2042,7 +1925,6 @@ export class File_ {
     }, {
         id: 'fileStatus',
         method: 'get',
-        requestSchema: z.object({ query: zFileStatusQuery.optional() }),
         responseSchema: zFileStatusResponse,
         url: '/file/status'
     });
@@ -2089,7 +1971,6 @@ export class App {
     }, {
         id: 'appLog',
         method: 'post',
-        requestSchema: z.object({ body: zAppLogBody.optional(), query: zAppLogQuery.optional() }),
         responseSchema: zAppLogResponse,
         url: '/log'
     });
@@ -2117,7 +1998,6 @@ export class App {
     }, {
         id: 'appAgents',
         method: 'get',
-        requestSchema: z.object({ query: zAppAgentsQuery.optional() }),
         responseSchema: zAppAgentsResponse,
         url: '/agent'
     });
@@ -2148,7 +2028,6 @@ export class Auth {
     }, {
         id: 'mcpAuthRemove',
         method: 'delete',
-        requestSchema: z.object({ params: zMcpAuthRemovePath, query: zMcpAuthRemoveQuery.optional() }),
         responseSchema: zMcpAuthRemoveResponse,
         url: '/mcp/{name}/auth'
     });
@@ -2177,7 +2056,6 @@ export class Auth {
     }, {
         id: 'mcpAuthStart',
         method: 'post',
-        requestSchema: z.object({ params: zMcpAuthStartPath, query: zMcpAuthStartQuery.optional() }),
         responseSchema: zMcpAuthStartResponse,
         url: '/mcp/{name}/auth'
     });
@@ -2216,11 +2094,6 @@ export class Auth {
     }, {
         id: 'mcpAuthCallback',
         method: 'post',
-        requestSchema: z.object({
-            body: zMcpAuthCallbackBody.optional(),
-            params: zMcpAuthCallbackPath,
-            query: zMcpAuthCallbackQuery.optional()
-        }),
         responseSchema: zMcpAuthCallbackResponse,
         url: '/mcp/{name}/auth/callback'
     });
@@ -2249,7 +2122,6 @@ export class Auth {
     }, {
         id: 'mcpAuthAuthenticate',
         method: 'post',
-        requestSchema: z.object({ params: zMcpAuthAuthenticatePath, query: zMcpAuthAuthenticateQuery.optional() }),
         responseSchema: zMcpAuthAuthenticateResponse,
         url: '/mcp/{name}/auth/authenticate'
     });
@@ -2279,7 +2151,6 @@ export class Mcp {
     }, {
         id: 'mcpStatus',
         method: 'get',
-        requestSchema: z.object({ query: zMcpStatusQuery.optional() }),
         responseSchema: zMcpStatusResponse,
         url: '/mcp'
     });
@@ -2318,7 +2189,6 @@ export class Mcp {
     }, {
         id: 'mcpAdd',
         method: 'post',
-        requestSchema: z.object({ body: zMcpAddBody.optional(), query: zMcpAddQuery.optional() }),
         responseSchema: zMcpAddResponse,
         url: '/mcp'
     });
@@ -2345,7 +2215,6 @@ export class Mcp {
     }, {
         id: 'mcpConnect',
         method: 'post',
-        requestSchema: z.object({ params: zMcpConnectPath, query: zMcpConnectQuery.optional() }),
         responseSchema: zMcpConnectResponse,
         url: '/mcp/{name}/connect'
     });
@@ -2372,7 +2241,6 @@ export class Mcp {
     }, {
         id: 'mcpDisconnect',
         method: 'post',
-        requestSchema: z.object({ params: zMcpDisconnectPath, query: zMcpDisconnectQuery.optional() }),
         responseSchema: zMcpDisconnectResponse,
         url: '/mcp/{name}/disconnect'
     });
@@ -2404,7 +2272,6 @@ export class Lsp {
     }, {
         id: 'lspStatus',
         method: 'get',
-        requestSchema: z.object({ query: zLspStatusQuery.optional() }),
         responseSchema: zLspStatusResponse,
         url: '/lsp'
     });
@@ -2434,7 +2301,6 @@ export class Formatter {
     }, {
         id: 'formatterStatus',
         method: 'get',
-        requestSchema: z.object({ query: zFormatterStatusQuery.optional() }),
         responseSchema: zFormatterStatusResponse,
         url: '/formatter'
     });
@@ -2464,7 +2330,6 @@ export class Control {
     }, {
         id: 'tuiControlNext',
         method: 'get',
-        requestSchema: z.object({ query: zTuiControlNextQuery.optional() }),
         responseSchema: zTuiControlNextResponse,
         url: '/tui/control/next'
     });
@@ -2498,7 +2363,6 @@ export class Control {
     }, {
         id: 'tuiControlResponse',
         method: 'post',
-        requestSchema: z.object({ body: zTuiControlResponseBody.optional(), query: zTuiControlResponseQuery.optional() }),
         responseSchema: zTuiControlResponseResponse,
         url: '/tui/control/response'
     });
@@ -2534,7 +2398,6 @@ export class Tui {
     }, {
         id: 'tuiAppendPrompt',
         method: 'post',
-        requestSchema: z.object({ body: zTuiAppendPromptBody.optional(), query: zTuiAppendPromptQuery.optional() }),
         responseSchema: zTuiAppendPromptResponse,
         url: '/tui/append-prompt'
     });
@@ -2562,7 +2425,6 @@ export class Tui {
     }, {
         id: 'tuiOpenHelp',
         method: 'post',
-        requestSchema: z.object({ query: zTuiOpenHelpQuery.optional() }),
         responseSchema: zTuiOpenHelpResponse,
         url: '/tui/open-help'
     });
@@ -2590,7 +2452,6 @@ export class Tui {
     }, {
         id: 'tuiOpenSessions',
         method: 'post',
-        requestSchema: z.object({ query: zTuiOpenSessionsQuery.optional() }),
         responseSchema: zTuiOpenSessionsResponse,
         url: '/tui/open-sessions'
     });
@@ -2618,7 +2479,6 @@ export class Tui {
     }, {
         id: 'tuiOpenThemes',
         method: 'post',
-        requestSchema: z.object({ query: zTuiOpenThemesQuery.optional() }),
         responseSchema: zTuiOpenThemesResponse,
         url: '/tui/open-themes'
     });
@@ -2646,7 +2506,6 @@ export class Tui {
     }, {
         id: 'tuiOpenModels',
         method: 'post',
-        requestSchema: z.object({ query: zTuiOpenModelsQuery.optional() }),
         responseSchema: zTuiOpenModelsResponse,
         url: '/tui/open-models'
     });
@@ -2674,7 +2533,6 @@ export class Tui {
     }, {
         id: 'tuiSubmitPrompt',
         method: 'post',
-        requestSchema: z.object({ query: zTuiSubmitPromptQuery.optional() }),
         responseSchema: zTuiSubmitPromptResponse,
         url: '/tui/submit-prompt'
     });
@@ -2702,7 +2560,6 @@ export class Tui {
     }, {
         id: 'tuiClearPrompt',
         method: 'post',
-        requestSchema: z.object({ query: zTuiClearPromptQuery.optional() }),
         responseSchema: zTuiClearPromptResponse,
         url: '/tui/clear-prompt'
     });
@@ -2736,7 +2593,6 @@ export class Tui {
     }, {
         id: 'tuiExecuteCommand',
         method: 'post',
-        requestSchema: z.object({ body: zTuiExecuteCommandBody.optional(), query: zTuiExecuteCommandQuery.optional() }),
         responseSchema: zTuiExecuteCommandResponse,
         url: '/tui/execute-command'
     });
@@ -2779,7 +2635,6 @@ export class Tui {
     }, {
         id: 'tuiShowToast',
         method: 'post',
-        requestSchema: z.object({ body: zTuiShowToastBody.optional(), query: zTuiShowToastQuery.optional() }),
         responseSchema: zTuiShowToastResponse,
         url: '/tui/show-toast'
     });
@@ -2813,7 +2668,6 @@ export class Tui {
     }, {
         id: 'tuiPublish',
         method: 'post',
-        requestSchema: z.object({ body: zTuiPublishBody.optional(), query: zTuiPublishQuery.optional() }),
         responseSchema: zTuiPublishResponse,
         url: '/tui/publish'
     });
@@ -2856,11 +2710,6 @@ export class Auth2 {
     }, {
         id: 'authSet',
         method: 'put',
-        requestSchema: z.object({
-            body: zAuthSetBody.optional(),
-            params: zAuthSetPath,
-            query: zAuthSetQuery.optional()
-        }),
         responseSchema: zAuthSetResponse,
         url: '/auth/{providerID}'
     });
@@ -2890,7 +2739,6 @@ export class Event_ {
     }, {
         id: 'eventSubscribe',
         method: 'get',
-        requestSchema: z.object({ query: zEventSubscribeQuery.optional() }),
         responseSchema: zEventSubscribeResponse,
         url: '/event'
     });
@@ -2967,7 +2815,6 @@ export class Session2 {
     }, {
         id: 'sessionGet',
         method: 'get',
-        requestSchema: z.object({ params: zSessionGetPath, query: zSessionGetQuery.optional() }),
         responseSchema: zSessionGetResponse,
         tags: ['Session'],
         url: '/session/{sessionID}'
@@ -2997,7 +2844,6 @@ export class Session2 {
     }, {
         id: 'sessionChildren',
         method: 'get',
-        requestSchema: z.object({ params: zSessionChildrenPath, query: zSessionChildrenQuery.optional() }),
         responseSchema: zSessionChildrenResponse,
         tags: ['Session'],
         url: '/session/{sessionID}/children'

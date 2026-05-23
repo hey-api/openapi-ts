@@ -124,7 +124,6 @@ describe(`SDK: ${namespace}`, () => {
             metadata: {
               id: true,
               method: false,
-              requestSchema: false,
               responseSchema: false,
               tags: true,
               url: true,

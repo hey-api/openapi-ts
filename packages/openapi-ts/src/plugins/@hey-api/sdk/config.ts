@@ -13,7 +13,6 @@ const validatorInferWarn =
 const enabledMetadata: MetadataConfig = {
   id: true,
   method: true,
-  requestSchema: true,
   responseSchema: true,
   tags: true,
   url: true,
@@ -21,7 +20,6 @@ const enabledMetadata: MetadataConfig = {
 const disabledMetadata: MetadataConfig = {
   id: false,
   method: false,
-  requestSchema: false,
   responseSchema: false,
   tags: false,
   url: false,

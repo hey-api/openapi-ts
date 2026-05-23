@@ -7,7 +7,6 @@ import type { OperationsConfig, UserOperationsConfig } from './operations';
 export type UserMetadataConfig = {
   id?: boolean;
   method?: boolean;
-  requestSchema?: boolean;
   responseSchema?: boolean;
   tags?: boolean;
   url?: boolean;

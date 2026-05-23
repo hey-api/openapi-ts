@@ -113,7 +113,6 @@ export const projectList = Object.assign(function projectList2<ThrowOnError exte
 }, {
     id: 'projectList',
     method: 'get',
-    requestSchema: z.object({ query: zProjectListQuery.optional() }),
     responseSchema: zProjectListResponse,
     url: '/project'
 });
@@ -141,7 +140,6 @@ export const projectCurrent = Object.assign(function projectCurrent2<ThrowOnErro
 }, {
     id: 'projectCurrent',
     method: 'get',
-    requestSchema: z.object({ query: zProjectCurrentQuery.optional() }),
     responseSchema: zProjectCurrentResponse,
     url: '/project/current'
 });
@@ -185,11 +183,6 @@ export const projectUpdate = Object.assign(function projectUpdate2<ThrowOnError 
 }, {
     id: 'projectUpdate',
     method: 'patch',
-    requestSchema: z.object({
-        body: zProjectUpdateBody.optional(),
-        params: zProjectUpdatePath,
-        query: zProjectUpdateQuery.optional()
-    }),
     responseSchema: zProjectUpdateResponse,
     url: '/project/{projectID}'
 });
@@ -217,7 +210,6 @@ export const ptyList = Object.assign(function ptyList2<ThrowOnError extends bool
 }, {
     id: 'ptyList',
     method: 'get',
-    requestSchema: z.object({ query: zPtyListQuery.optional() }),
     responseSchema: zPtyListResponse,
     url: '/pty'
 });
@@ -264,7 +256,6 @@ export const ptyCreate = Object.assign(function ptyCreate2<ThrowOnError extends 
 }, {
     id: 'ptyCreate',
     method: 'post',
-    requestSchema: z.object({ body: zPtyCreateBody.optional(), query: zPtyCreateQuery.optional() }),
     responseSchema: zPtyCreateResponse,
     url: '/pty'
 });
@@ -293,7 +284,6 @@ export const ptyRemove = Object.assign(function ptyRemove2<ThrowOnError extends 
 }, {
     id: 'ptyRemove',
     method: 'delete',
-    requestSchema: z.object({ params: zPtyRemovePath, query: zPtyRemoveQuery.optional() }),
     responseSchema: zPtyRemoveResponse,
     url: '/pty/{ptyID}'
 });
@@ -322,7 +312,6 @@ export const ptyGet = Object.assign(function ptyGet2<ThrowOnError extends boolea
 }, {
     id: 'ptyGet',
     method: 'get',
-    requestSchema: z.object({ params: zPtyGetPath, query: zPtyGetQuery.optional() }),
     responseSchema: zPtyGetResponse,
     url: '/pty/{ptyID}'
 });
@@ -366,11 +355,6 @@ export const ptyUpdate = Object.assign(function ptyUpdate2<ThrowOnError extends 
 }, {
     id: 'ptyUpdate',
     method: 'put',
-    requestSchema: z.object({
-        body: zPtyUpdateBody.optional(),
-        params: zPtyUpdatePath,
-        query: zPtyUpdateQuery.optional()
-    }),
     responseSchema: zPtyUpdateResponse,
     url: '/pty/{ptyID}'
 });
@@ -399,7 +383,6 @@ export const ptyConnect = Object.assign(function ptyConnect2<ThrowOnError extend
 }, {
     id: 'ptyConnect',
     method: 'get',
-    requestSchema: z.object({ params: zPtyConnectPath, query: zPtyConnectQuery.optional() }),
     responseSchema: zPtyConnectResponse,
     url: '/pty/{ptyID}/connect'
 });
@@ -427,7 +410,6 @@ export const configGet = Object.assign(function configGet2<ThrowOnError extends 
 }, {
     id: 'configGet',
     method: 'get',
-    requestSchema: z.object({ query: zConfigGetQuery.optional() }),
     responseSchema: zConfigGetResponse,
     url: '/config'
 });
@@ -461,7 +443,6 @@ export const configUpdate = Object.assign(function configUpdate2<ThrowOnError ex
 }, {
     id: 'configUpdate',
     method: 'patch',
-    requestSchema: z.object({ body: zConfigUpdateBody.optional(), query: zConfigUpdateQuery.optional() }),
     responseSchema: zConfigUpdateResponse,
     url: '/config'
 });
@@ -489,7 +470,6 @@ export const toolIds = Object.assign(function toolIds2<ThrowOnError extends bool
 }, {
     id: 'toolIds',
     method: 'get',
-    requestSchema: z.object({ query: zToolIdsQuery.optional() }),
     responseSchema: zToolIdsResponse,
     url: '/experimental/tool/ids'
 });
@@ -523,7 +503,6 @@ export const toolList = Object.assign(function toolList2<ThrowOnError extends bo
 }, {
     id: 'toolList',
     method: 'get',
-    requestSchema: z.object({ query: zToolListQuery }),
     responseSchema: zToolListResponse,
     url: '/experimental/tool'
 });
@@ -551,7 +530,6 @@ export const instanceDispose = Object.assign(function instanceDispose2<ThrowOnEr
 }, {
     id: 'instanceDispose',
     method: 'post',
-    requestSchema: z.object({ query: zInstanceDisposeQuery.optional() }),
     responseSchema: zInstanceDisposeResponse,
     url: '/instance/dispose'
 });
@@ -579,7 +557,6 @@ export const pathGet = Object.assign(function pathGet2<ThrowOnError extends bool
 }, {
     id: 'pathGet',
     method: 'get',
-    requestSchema: z.object({ query: zPathGetQuery.optional() }),
     responseSchema: zPathGetResponse,
     url: '/path'
 });
@@ -607,7 +584,6 @@ export const vcsGet = Object.assign(function vcsGet2<ThrowOnError extends boolea
 }, {
     id: 'vcsGet',
     method: 'get',
-    requestSchema: z.object({ query: zVcsGetQuery.optional() }),
     responseSchema: zVcsGetResponse,
     url: '/vcs'
 });
@@ -635,7 +611,6 @@ export const sessionList = Object.assign(function sessionList2<ThrowOnError exte
 }, {
     id: 'sessionList',
     method: 'get',
-    requestSchema: z.object({ query: zSessionListQuery.optional() }),
     responseSchema: zSessionListResponse,
     url: '/session'
 });
@@ -676,7 +651,6 @@ export const sessionCreate = Object.assign(function sessionCreate2<ThrowOnError 
 }, {
     id: 'sessionCreate',
     method: 'post',
-    requestSchema: z.object({ body: zSessionCreateBody.optional(), query: zSessionCreateQuery.optional() }),
     responseSchema: zSessionCreateResponse,
     url: '/session'
 });
@@ -704,7 +678,6 @@ export const sessionStatus = Object.assign(function sessionStatus2<ThrowOnError 
 }, {
     id: 'sessionStatus',
     method: 'get',
-    requestSchema: z.object({ query: zSessionStatusQuery.optional() }),
     responseSchema: zSessionStatusResponse,
     url: '/session/status'
 });
@@ -733,7 +706,6 @@ export const sessionDelete = Object.assign(function sessionDelete2<ThrowOnError 
 }, {
     id: 'sessionDelete',
     method: 'delete',
-    requestSchema: z.object({ params: zSessionDeletePath, query: zSessionDeleteQuery.optional() }),
     responseSchema: zSessionDeleteResponse,
     url: '/session/{sessionID}'
 });
@@ -762,7 +734,6 @@ export const sessionGet = Object.assign(function sessionGet2<ThrowOnError extend
 }, {
     id: 'sessionGet',
     method: 'get',
-    requestSchema: z.object({ params: zSessionGetPath, query: zSessionGetQuery.optional() }),
     responseSchema: zSessionGetResponse,
     tags: ['Session'],
     url: '/session/{sessionID}'
@@ -806,11 +777,6 @@ export const sessionUpdate = Object.assign(function sessionUpdate2<ThrowOnError 
 }, {
     id: 'sessionUpdate',
     method: 'patch',
-    requestSchema: z.object({
-        body: zSessionUpdateBody.optional(),
-        params: zSessionUpdatePath,
-        query: zSessionUpdateQuery.optional()
-    }),
     responseSchema: zSessionUpdateResponse,
     url: '/session/{sessionID}'
 });
@@ -839,7 +805,6 @@ export const sessionChildren = Object.assign(function sessionChildren2<ThrowOnEr
 }, {
     id: 'sessionChildren',
     method: 'get',
-    requestSchema: z.object({ params: zSessionChildrenPath, query: zSessionChildrenQuery.optional() }),
     responseSchema: zSessionChildrenResponse,
     tags: ['Session'],
     url: '/session/{sessionID}/children'
@@ -869,7 +834,6 @@ export const sessionTodo = Object.assign(function sessionTodo2<ThrowOnError exte
 }, {
     id: 'sessionTodo',
     method: 'get',
-    requestSchema: z.object({ params: zSessionTodoPath, query: zSessionTodoQuery.optional() }),
     responseSchema: zSessionTodoResponse,
     url: '/session/{sessionID}/todo'
 });
@@ -912,11 +876,6 @@ export const sessionInit = Object.assign(function sessionInit2<ThrowOnError exte
 }, {
     id: 'sessionInit',
     method: 'post',
-    requestSchema: z.object({
-        body: zSessionInitBody.optional(),
-        params: zSessionInitPath,
-        query: zSessionInitQuery.optional()
-    }),
     responseSchema: zSessionInitResponse,
     url: '/session/{sessionID}/init'
 });
@@ -955,11 +914,6 @@ export const sessionFork = Object.assign(function sessionFork2<ThrowOnError exte
 }, {
     id: 'sessionFork',
     method: 'post',
-    requestSchema: z.object({
-        body: zSessionForkBody.optional(),
-        params: zSessionForkPath,
-        query: zSessionForkQuery.optional()
-    }),
     responseSchema: zSessionForkResponse,
     url: '/session/{sessionID}/fork'
 });
@@ -988,7 +942,6 @@ export const sessionAbort = Object.assign(function sessionAbort2<ThrowOnError ex
 }, {
     id: 'sessionAbort',
     method: 'post',
-    requestSchema: z.object({ params: zSessionAbortPath, query: zSessionAbortQuery.optional() }),
     responseSchema: zSessionAbortResponse,
     url: '/session/{sessionID}/abort'
 });
@@ -1017,7 +970,6 @@ export const sessionUnshare = Object.assign(function sessionUnshare2<ThrowOnErro
 }, {
     id: 'sessionUnshare',
     method: 'delete',
-    requestSchema: z.object({ params: zSessionUnsharePath, query: zSessionUnshareQuery.optional() }),
     responseSchema: zSessionUnshareResponse,
     url: '/session/{sessionID}/share'
 });
@@ -1046,7 +998,6 @@ export const sessionShare = Object.assign(function sessionShare2<ThrowOnError ex
 }, {
     id: 'sessionShare',
     method: 'post',
-    requestSchema: z.object({ params: zSessionSharePath, query: zSessionShareQuery.optional() }),
     responseSchema: zSessionShareResponse,
     url: '/session/{sessionID}/share'
 });
@@ -1080,7 +1031,6 @@ export const sessionDiff = Object.assign(function sessionDiff2<ThrowOnError exte
 }, {
     id: 'sessionDiff',
     method: 'get',
-    requestSchema: z.object({ params: zSessionDiffPath, query: zSessionDiffQuery.optional() }),
     responseSchema: zSessionDiffResponse,
     url: '/session/{sessionID}/diff'
 });
@@ -1123,11 +1073,6 @@ export const sessionSummarize = Object.assign(function sessionSummarize2<ThrowOn
 }, {
     id: 'sessionSummarize',
     method: 'post',
-    requestSchema: z.object({
-        body: zSessionSummarizeBody.optional(),
-        params: zSessionSummarizePath,
-        query: zSessionSummarizeQuery.optional()
-    }),
     responseSchema: zSessionSummarizeResponse,
     url: '/session/{sessionID}/summarize'
 });
@@ -1161,7 +1106,6 @@ export const sessionMessages = Object.assign(function sessionMessages2<ThrowOnEr
 }, {
     id: 'sessionMessages',
     method: 'get',
-    requestSchema: z.object({ params: zSessionMessagesPath, query: zSessionMessagesQuery.optional() }),
     responseSchema: zSessionMessagesResponse,
     url: '/session/{sessionID}/message'
 });
@@ -1219,11 +1163,6 @@ export const sessionPrompt = Object.assign(function sessionPrompt2<ThrowOnError 
 }, {
     id: 'sessionPrompt',
     method: 'post',
-    requestSchema: z.object({
-        body: zSessionPromptBody.optional(),
-        params: zSessionPromptPath,
-        query: zSessionPromptQuery.optional()
-    }),
     responseSchema: zSessionPromptResponse,
     url: '/session/{sessionID}/message'
 });
@@ -1257,7 +1196,6 @@ export const sessionMessage = Object.assign(function sessionMessage2<ThrowOnErro
 }, {
     id: 'sessionMessage',
     method: 'get',
-    requestSchema: z.object({ params: zSessionMessagePath, query: zSessionMessageQuery.optional() }),
     responseSchema: zSessionMessageResponse,
     url: '/session/{sessionID}/message/{messageID}'
 });
@@ -1291,7 +1229,6 @@ export const partDelete = Object.assign(function partDelete2<ThrowOnError extend
 }, {
     id: 'partDelete',
     method: 'delete',
-    requestSchema: z.object({ params: zPartDeletePath, query: zPartDeleteQuery.optional() }),
     responseSchema: zPartDeleteResponse,
     url: '/session/{sessionID}/message/{messageID}/part/{partID}'
 });
@@ -1332,11 +1269,6 @@ export const partUpdate = Object.assign(function partUpdate2<ThrowOnError extend
 }, {
     id: 'partUpdate',
     method: 'patch',
-    requestSchema: z.object({
-        body: zPartUpdateBody.optional(),
-        params: zPartUpdatePath,
-        query: zPartUpdateQuery.optional()
-    }),
     responseSchema: zPartUpdateResponse,
     url: '/session/{sessionID}/message/{messageID}/part/{partID}'
 });
@@ -1394,11 +1326,6 @@ export const sessionPromptAsync = Object.assign(function sessionPromptAsync2<Thr
 }, {
     id: 'sessionPromptAsync',
     method: 'post',
-    requestSchema: z.object({
-        body: zSessionPromptAsyncBody.optional(),
-        params: zSessionPromptAsyncPath,
-        query: zSessionPromptAsyncQuery.optional()
-    }),
     responseSchema: zSessionPromptAsyncResponse,
     url: '/session/{sessionID}/prompt_async'
 });
@@ -1447,11 +1374,6 @@ export const sessionCommand = Object.assign(function sessionCommand2<ThrowOnErro
 }, {
     id: 'sessionCommand',
     method: 'post',
-    requestSchema: z.object({
-        body: zSessionCommandBody.optional(),
-        params: zSessionCommandPath,
-        query: zSessionCommandQuery.optional()
-    }),
     responseSchema: zSessionCommandResponse,
     url: '/session/{sessionID}/command'
 });
@@ -1497,11 +1419,6 @@ export const sessionShell = Object.assign(function sessionShell2<ThrowOnError ex
 }, {
     id: 'sessionShell',
     method: 'post',
-    requestSchema: z.object({
-        body: zSessionShellBody.optional(),
-        params: zSessionShellPath,
-        query: zSessionShellQuery.optional()
-    }),
     responseSchema: zSessionShellResponse,
     url: '/session/{sessionID}/shell'
 });
@@ -1542,11 +1459,6 @@ export const sessionRevert = Object.assign(function sessionRevert2<ThrowOnError 
 }, {
     id: 'sessionRevert',
     method: 'post',
-    requestSchema: z.object({
-        body: zSessionRevertBody.optional(),
-        params: zSessionRevertPath,
-        query: zSessionRevertQuery.optional()
-    }),
     responseSchema: zSessionRevertResponse,
     url: '/session/{sessionID}/revert'
 });
@@ -1575,7 +1487,6 @@ export const sessionUnrevert = Object.assign(function sessionUnrevert2<ThrowOnEr
 }, {
     id: 'sessionUnrevert',
     method: 'post',
-    requestSchema: z.object({ params: zSessionUnrevertPath, query: zSessionUnrevertQuery.optional() }),
     responseSchema: zSessionUnrevertResponse,
     url: '/session/{sessionID}/unrevert'
 });
@@ -1618,11 +1529,6 @@ export const permissionRespond = Object.assign(function permissionRespond2<Throw
 }, {
     id: 'permissionRespond',
     method: 'post',
-    requestSchema: z.object({
-        body: zPermissionRespondBody.optional(),
-        params: zPermissionRespondPath,
-        query: zPermissionRespondQuery.optional()
-    }),
     responseSchema: zPermissionRespondResponse,
     url: '/session/{sessionID}/permissions/{permissionID}'
 });
@@ -1661,11 +1567,6 @@ export const permissionReply = Object.assign(function permissionReply2<ThrowOnEr
 }, {
     id: 'permissionReply',
     method: 'post',
-    requestSchema: z.object({
-        body: zPermissionReplyBody.optional(),
-        params: zPermissionReplyPath,
-        query: zPermissionReplyQuery.optional()
-    }),
     responseSchema: zPermissionReplyResponse,
     url: '/permission/{requestID}/reply'
 });
@@ -1693,7 +1594,6 @@ export const permissionList = Object.assign(function permissionList2<ThrowOnErro
 }, {
     id: 'permissionList',
     method: 'get',
-    requestSchema: z.object({ query: zPermissionListQuery.optional() }),
     responseSchema: zPermissionListResponse,
     url: '/permission'
 });
@@ -1721,7 +1621,6 @@ export const commandList = Object.assign(function commandList2<ThrowOnError exte
 }, {
     id: 'commandList',
     method: 'get',
-    requestSchema: z.object({ query: zCommandListQuery.optional() }),
     responseSchema: zCommandListResponse,
     url: '/command'
 });
@@ -1749,7 +1648,6 @@ export const configProviders = Object.assign(function configProviders2<ThrowOnEr
 }, {
     id: 'configProviders',
     method: 'get',
-    requestSchema: z.object({ query: zConfigProvidersQuery.optional() }),
     responseSchema: zConfigProvidersResponse,
     url: '/config/providers'
 });
@@ -1777,7 +1675,6 @@ export const providerList = Object.assign(function providerList2<ThrowOnError ex
 }, {
     id: 'providerList',
     method: 'get',
-    requestSchema: z.object({ query: zProviderListQuery.optional() }),
     responseSchema: zProviderListResponse,
     url: '/provider'
 });
@@ -1805,7 +1702,6 @@ export const providerAuth = Object.assign(function providerAuth2<ThrowOnError ex
 }, {
     id: 'providerAuth',
     method: 'get',
-    requestSchema: z.object({ query: zProviderAuthQuery.optional() }),
     responseSchema: zProviderAuthResponse,
     url: '/provider/auth'
 });
@@ -1844,11 +1740,6 @@ export const providerOauthAuthorize = Object.assign(function providerOauthAuthor
 }, {
     id: 'providerOauthAuthorize',
     method: 'post',
-    requestSchema: z.object({
-        body: zProviderOauthAuthorizeBody.optional(),
-        params: zProviderOauthAuthorizePath,
-        query: zProviderOauthAuthorizeQuery.optional()
-    }),
     responseSchema: zProviderOauthAuthorizeResponse,
     url: '/provider/{providerID}/oauth/authorize'
 });
@@ -1889,11 +1780,6 @@ export const providerOauthCallback = Object.assign(function providerOauthCallbac
 }, {
     id: 'providerOauthCallback',
     method: 'post',
-    requestSchema: z.object({
-        body: zProviderOauthCallbackBody.optional(),
-        params: zProviderOauthCallbackPath,
-        query: zProviderOauthCallbackQuery.optional()
-    }),
     responseSchema: zProviderOauthCallbackResponse,
     url: '/provider/{providerID}/oauth/callback'
 });
@@ -1922,7 +1808,6 @@ export const findText = Object.assign(function findText2<ThrowOnError extends bo
 }, {
     id: 'findText',
     method: 'get',
-    requestSchema: z.object({ query: zFindTextQuery }),
     responseSchema: zFindTextResponse,
     url: '/find'
 });
@@ -1960,7 +1845,6 @@ export const findFiles = Object.assign(function findFiles2<ThrowOnError extends 
 }, {
     id: 'findFiles',
     method: 'get',
-    requestSchema: z.object({ query: zFindFilesQuery }),
     responseSchema: zFindFilesResponse,
     url: '/find/file'
 });
@@ -1989,7 +1873,6 @@ export const findSymbols = Object.assign(function findSymbols2<ThrowOnError exte
 }, {
     id: 'findSymbols',
     method: 'get',
-    requestSchema: z.object({ query: zFindSymbolsQuery }),
     responseSchema: zFindSymbolsResponse,
     url: '/find/symbol'
 });
@@ -2018,7 +1901,6 @@ export const fileList = Object.assign(function fileList2<ThrowOnError extends bo
 }, {
     id: 'fileList',
     method: 'get',
-    requestSchema: z.object({ query: zFileListQuery }),
     responseSchema: zFileListResponse,
     url: '/file'
 });
@@ -2047,7 +1929,6 @@ export const fileRead = Object.assign(function fileRead2<ThrowOnError extends bo
 }, {
     id: 'fileRead',
     method: 'get',
-    requestSchema: z.object({ query: zFileReadQuery }),
     responseSchema: zFileReadResponse,
     url: '/file/content'
 });
@@ -2075,7 +1956,6 @@ export const fileStatus = Object.assign(function fileStatus2<ThrowOnError extend
 }, {
     id: 'fileStatus',
     method: 'get',
-    requestSchema: z.object({ query: zFileStatusQuery.optional() }),
     responseSchema: zFileStatusResponse,
     url: '/file/status'
 });
@@ -2120,7 +2000,6 @@ export const appLog = Object.assign(function appLog2<ThrowOnError extends boolea
 }, {
     id: 'appLog',
     method: 'post',
-    requestSchema: z.object({ body: zAppLogBody.optional(), query: zAppLogQuery.optional() }),
     responseSchema: zAppLogResponse,
     url: '/log'
 });
@@ -2148,7 +2027,6 @@ export const appAgents = Object.assign(function appAgents2<ThrowOnError extends 
 }, {
     id: 'appAgents',
     method: 'get',
-    requestSchema: z.object({ query: zAppAgentsQuery.optional() }),
     responseSchema: zAppAgentsResponse,
     url: '/agent'
 });
@@ -2176,7 +2054,6 @@ export const mcpStatus = Object.assign(function mcpStatus2<ThrowOnError extends 
 }, {
     id: 'mcpStatus',
     method: 'get',
-    requestSchema: z.object({ query: zMcpStatusQuery.optional() }),
     responseSchema: zMcpStatusResponse,
     url: '/mcp'
 });
@@ -2215,7 +2092,6 @@ export const mcpAdd = Object.assign(function mcpAdd2<ThrowOnError extends boolea
 }, {
     id: 'mcpAdd',
     method: 'post',
-    requestSchema: z.object({ body: zMcpAddBody.optional(), query: zMcpAddQuery.optional() }),
     responseSchema: zMcpAddResponse,
     url: '/mcp'
 });
@@ -2244,7 +2120,6 @@ export const mcpAuthRemove = Object.assign(function mcpAuthRemove2<ThrowOnError 
 }, {
     id: 'mcpAuthRemove',
     method: 'delete',
-    requestSchema: z.object({ params: zMcpAuthRemovePath, query: zMcpAuthRemoveQuery.optional() }),
     responseSchema: zMcpAuthRemoveResponse,
     url: '/mcp/{name}/auth'
 });
@@ -2273,7 +2148,6 @@ export const mcpAuthStart = Object.assign(function mcpAuthStart2<ThrowOnError ex
 }, {
     id: 'mcpAuthStart',
     method: 'post',
-    requestSchema: z.object({ params: zMcpAuthStartPath, query: zMcpAuthStartQuery.optional() }),
     responseSchema: zMcpAuthStartResponse,
     url: '/mcp/{name}/auth'
 });
@@ -2312,11 +2186,6 @@ export const mcpAuthCallback = Object.assign(function mcpAuthCallback2<ThrowOnEr
 }, {
     id: 'mcpAuthCallback',
     method: 'post',
-    requestSchema: z.object({
-        body: zMcpAuthCallbackBody.optional(),
-        params: zMcpAuthCallbackPath,
-        query: zMcpAuthCallbackQuery.optional()
-    }),
     responseSchema: zMcpAuthCallbackResponse,
     url: '/mcp/{name}/auth/callback'
 });
@@ -2345,7 +2214,6 @@ export const mcpAuthAuthenticate = Object.assign(function mcpAuthAuthenticate2<T
 }, {
     id: 'mcpAuthAuthenticate',
     method: 'post',
-    requestSchema: z.object({ params: zMcpAuthAuthenticatePath, query: zMcpAuthAuthenticateQuery.optional() }),
     responseSchema: zMcpAuthAuthenticateResponse,
     url: '/mcp/{name}/auth/authenticate'
 });
@@ -2372,7 +2240,6 @@ export const mcpConnect = Object.assign(function mcpConnect2<ThrowOnError extend
 }, {
     id: 'mcpConnect',
     method: 'post',
-    requestSchema: z.object({ params: zMcpConnectPath, query: zMcpConnectQuery.optional() }),
     responseSchema: zMcpConnectResponse,
     url: '/mcp/{name}/connect'
 });
@@ -2399,7 +2266,6 @@ export const mcpDisconnect = Object.assign(function mcpDisconnect2<ThrowOnError 
 }, {
     id: 'mcpDisconnect',
     method: 'post',
-    requestSchema: z.object({ params: zMcpDisconnectPath, query: zMcpDisconnectQuery.optional() }),
     responseSchema: zMcpDisconnectResponse,
     url: '/mcp/{name}/disconnect'
 });
@@ -2427,7 +2293,6 @@ export const lspStatus = Object.assign(function lspStatus2<ThrowOnError extends 
 }, {
     id: 'lspStatus',
     method: 'get',
-    requestSchema: z.object({ query: zLspStatusQuery.optional() }),
     responseSchema: zLspStatusResponse,
     url: '/lsp'
 });
@@ -2455,7 +2320,6 @@ export const formatterStatus = Object.assign(function formatterStatus2<ThrowOnEr
 }, {
     id: 'formatterStatus',
     method: 'get',
-    requestSchema: z.object({ query: zFormatterStatusQuery.optional() }),
     responseSchema: zFormatterStatusResponse,
     url: '/formatter'
 });
@@ -2489,7 +2353,6 @@ export const tuiAppendPrompt = Object.assign(function tuiAppendPrompt2<ThrowOnEr
 }, {
     id: 'tuiAppendPrompt',
     method: 'post',
-    requestSchema: z.object({ body: zTuiAppendPromptBody.optional(), query: zTuiAppendPromptQuery.optional() }),
     responseSchema: zTuiAppendPromptResponse,
     url: '/tui/append-prompt'
 });
@@ -2517,7 +2380,6 @@ export const tuiOpenHelp = Object.assign(function tuiOpenHelp2<ThrowOnError exte
 }, {
     id: 'tuiOpenHelp',
     method: 'post',
-    requestSchema: z.object({ query: zTuiOpenHelpQuery.optional() }),
     responseSchema: zTuiOpenHelpResponse,
     url: '/tui/open-help'
 });
@@ -2545,7 +2407,6 @@ export const tuiOpenSessions = Object.assign(function tuiOpenSessions2<ThrowOnEr
 }, {
     id: 'tuiOpenSessions',
     method: 'post',
-    requestSchema: z.object({ query: zTuiOpenSessionsQuery.optional() }),
     responseSchema: zTuiOpenSessionsResponse,
     url: '/tui/open-sessions'
 });
@@ -2573,7 +2434,6 @@ export const tuiOpenThemes = Object.assign(function tuiOpenThemes2<ThrowOnError 
 }, {
     id: 'tuiOpenThemes',
     method: 'post',
-    requestSchema: z.object({ query: zTuiOpenThemesQuery.optional() }),
     responseSchema: zTuiOpenThemesResponse,
     url: '/tui/open-themes'
 });
@@ -2601,7 +2461,6 @@ export const tuiOpenModels = Object.assign(function tuiOpenModels2<ThrowOnError 
 }, {
     id: 'tuiOpenModels',
     method: 'post',
-    requestSchema: z.object({ query: zTuiOpenModelsQuery.optional() }),
     responseSchema: zTuiOpenModelsResponse,
     url: '/tui/open-models'
 });
@@ -2629,7 +2488,6 @@ export const tuiSubmitPrompt = Object.assign(function tuiSubmitPrompt2<ThrowOnEr
 }, {
     id: 'tuiSubmitPrompt',
     method: 'post',
-    requestSchema: z.object({ query: zTuiSubmitPromptQuery.optional() }),
     responseSchema: zTuiSubmitPromptResponse,
     url: '/tui/submit-prompt'
 });
@@ -2657,7 +2515,6 @@ export const tuiClearPrompt = Object.assign(function tuiClearPrompt2<ThrowOnErro
 }, {
     id: 'tuiClearPrompt',
     method: 'post',
-    requestSchema: z.object({ query: zTuiClearPromptQuery.optional() }),
     responseSchema: zTuiClearPromptResponse,
     url: '/tui/clear-prompt'
 });
@@ -2691,7 +2548,6 @@ export const tuiExecuteCommand = Object.assign(function tuiExecuteCommand2<Throw
 }, {
     id: 'tuiExecuteCommand',
     method: 'post',
-    requestSchema: z.object({ body: zTuiExecuteCommandBody.optional(), query: zTuiExecuteCommandQuery.optional() }),
     responseSchema: zTuiExecuteCommandResponse,
     url: '/tui/execute-command'
 });
@@ -2734,7 +2590,6 @@ export const tuiShowToast = Object.assign(function tuiShowToast2<ThrowOnError ex
 }, {
     id: 'tuiShowToast',
     method: 'post',
-    requestSchema: z.object({ body: zTuiShowToastBody.optional(), query: zTuiShowToastQuery.optional() }),
     responseSchema: zTuiShowToastResponse,
     url: '/tui/show-toast'
 });
@@ -2768,7 +2623,6 @@ export const tuiPublish = Object.assign(function tuiPublish2<ThrowOnError extend
 }, {
     id: 'tuiPublish',
     method: 'post',
-    requestSchema: z.object({ body: zTuiPublishBody.optional(), query: zTuiPublishQuery.optional() }),
     responseSchema: zTuiPublishResponse,
     url: '/tui/publish'
 });
@@ -2796,7 +2650,6 @@ export const tuiControlNext = Object.assign(function tuiControlNext2<ThrowOnErro
 }, {
     id: 'tuiControlNext',
     method: 'get',
-    requestSchema: z.object({ query: zTuiControlNextQuery.optional() }),
     responseSchema: zTuiControlNextResponse,
     url: '/tui/control/next'
 });
@@ -2830,7 +2683,6 @@ export const tuiControlResponse = Object.assign(function tuiControlResponse2<Thr
 }, {
     id: 'tuiControlResponse',
     method: 'post',
-    requestSchema: z.object({ body: zTuiControlResponseBody.optional(), query: zTuiControlResponseQuery.optional() }),
     responseSchema: zTuiControlResponseResponse,
     url: '/tui/control/response'
 });
@@ -2869,11 +2721,6 @@ export const authSet = Object.assign(function authSet2<ThrowOnError extends bool
 }, {
     id: 'authSet',
     method: 'put',
-    requestSchema: z.object({
-        body: zAuthSetBody.optional(),
-        params: zAuthSetPath,
-        query: zAuthSetQuery.optional()
-    }),
     responseSchema: zAuthSetResponse,
     url: '/auth/{providerID}'
 });
@@ -2901,7 +2748,6 @@ export const eventSubscribe = Object.assign(function eventSubscribe2<ThrowOnErro
 }, {
     id: 'eventSubscribe',
     method: 'get',
-    requestSchema: z.object({ query: zEventSubscribeQuery.optional() }),
     responseSchema: zEventSubscribeResponse,
     url: '/event'
 });

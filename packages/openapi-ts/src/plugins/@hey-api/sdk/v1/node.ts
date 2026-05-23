@@ -21,6 +21,9 @@ import { withMetadata } from '../shared/metadata';
 import { operationParameters, operationStatements } from '../shared/operation';
 import type { HeyApiSdkPlugin } from '../types';
 
+type ArrowFunc = Extract<ReturnType<typeof $.func>, { '~mode': 'arrow' }>;
+type ExprFunc = Extract<ReturnType<typeof $.func>, { '~mode': 'expr' }>;
+
 export interface OperationItem {
   operation: IR.OperationObject;
   path: ReadonlyArray<string | number>;
@@ -257,7 +260,7 @@ function exampleIntent(
   });
 }
 
-function implementFn<T extends ReturnType<typeof $.func | typeof $.method>>(args: {
+function implementFn<T extends ReturnType<typeof $.method> | ArrowFunc | ExprFunc>(args: {
   node: T;
   operation: IR.OperationObject;
   plugin: HeyApiSdkPlugin['Instance'];
@@ -330,7 +333,7 @@ export function toNode(
           isMetadataEnabled(plugin)
             ? withMetadata({
                 fn: implementFn({
-                  node: $.func(createFnSymbol(plugin, item)).expr(),
+                  node: $.func(createFnSymbol(plugin, item)).expr() as ExprFunc,
                   operation,
                   plugin,
                 }),
@@ -377,7 +380,7 @@ export function toNode(
           ).assign(
             withMetadata({
               fn: implementFn({
-                node: $.func(),
+                node: $.func() as ArrowFunc,
                 operation,
                 plugin,
               }),
