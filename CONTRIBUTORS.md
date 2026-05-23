@@ -48,6 +48,7 @@
 - [Karl Stoney](https://github.com/Stono)
 - [Keigo Ando](https://github.com/anchan828)
 - [Kenneth Apeland](https://github.com/kennidenni)
+- [Kit Langton](https://github.com/kitlangton)
 - [Landon Gavin](https://github.com/seriouslag)
 - [Laurin](https://github.com/lausek)
 - [Lee Lian Hoy](https://github.com/bakakaba)
