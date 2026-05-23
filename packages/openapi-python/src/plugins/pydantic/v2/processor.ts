@@ -1,5 +1,5 @@
 import { ref } from '@hey-api/codegen-core';
-import type { IR } from '@hey-api/shared';
+import type { SchemaExtractor } from '@hey-api/shared';
 import { createSchemaProcessor, createSchemaWalker, pathToJsonPointer } from '@hey-api/shared';
 
 import { exportAst } from '../shared/export';
@@ -23,7 +23,7 @@ export function createProcessor(plugin: PydanticPlugin['Instance']): ProcessorRe
       Boolean(ctx.schema.items.length),
   );
 
-  function extractor(ctx: ProcessorContext): IR.SchemaObject {
+  const schemaExtractor: SchemaExtractor<ProcessorContext> = (ctx) => {
     if (processor.hasEmitted(ctx.path)) {
       return ctx.schema;
     }
@@ -41,7 +41,7 @@ export function createProcessor(plugin: PydanticPlugin['Instance']): ProcessorRe
     }
 
     return ctx.schema;
-  }
+  };
 
   function process(ctx: ProcessorContext): PydanticFinal | void {
     if (!processor.markEmitted(ctx.path)) return;
@@ -49,7 +49,7 @@ export function createProcessor(plugin: PydanticPlugin['Instance']): ProcessorRe
     const shouldExport = ctx.export !== false;
 
     return processor.withContext({ anchor: ctx.namingAnchor, tags: ctx.tags }, () => {
-      const visitor = createVisitor({ schemaExtractor: extractor });
+      const visitor = createVisitor({ plugin, schemaExtractor });
       const walk = createSchemaWalker(visitor);
 
       const result = walk(ctx.schema, {

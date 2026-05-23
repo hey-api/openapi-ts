@@ -41,7 +41,7 @@ export function booleanToPipes({
 }: SchemaVisitorContext<ValibotPlugin['Instance']> & {
   schema: SchemaWithType<'boolean'>;
 }): Pipe {
-  const ctx: BooleanResolverContext = {
+  const resolverCtx: BooleanResolverContext = {
     $,
     nodes: {
       base: baseNode,
@@ -60,6 +60,6 @@ export function booleanToPipes({
   };
 
   const resolver = plugin.config['~resolvers']?.boolean;
-  const node = resolver?.(ctx) ?? booleanResolver(ctx);
-  return ctx.pipes.toNode(node, plugin);
+  const node = resolver?.(resolverCtx) ?? booleanResolver(resolverCtx);
+  return resolverCtx.pipes.toNode(node, plugin);
 }

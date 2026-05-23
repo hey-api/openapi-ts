@@ -24,22 +24,22 @@ class EventInstallationUpdateAvailable(BaseModel):
 
 
 class ProjectIcon(BaseModel):
-    url: Optional[str] = Field(default=None)
-    color: Optional[str] = Field(default=None)
+    url: Optional[Optional[str]]
+    color: Optional[Optional[str]]
 
 
 class ProjectTime(BaseModel):
     created: float
     updated: float
-    initialized: Optional[float] = Field(default=None)
+    initialized: Optional[Optional[float]]
 
 
 class Project(BaseModel):
     id_: str = Field(..., alias="id")
     worktree: str
-    vcs: Optional[Literal["git"]] = Field(default=None)
-    name: Optional[str] = Field(default=None)
-    icon: Optional[ProjectIcon] = Field(default=None)
+    vcs: Optional[Optional[Literal["git"]]]
+    name: Optional[Optional[str]]
+    icon: Optional[Optional[ProjectIcon]]
     time: ProjectTime
 
 
@@ -85,8 +85,8 @@ class UserMessageTime(BaseModel):
 
 
 class UserMessageSummary(BaseModel):
-    title: Optional[str] = Field(default=None)
-    body: Optional[str] = Field(default=None)
+    title: Optional[Optional[str]]
+    body: Optional[Optional[str]]
     diffs: list[FileDiff]
 
 
@@ -100,12 +100,12 @@ class UserMessage(BaseModel):
     session_id: str = Field(..., alias="sessionID")
     role: Literal["user"]
     time: UserMessageTime
-    summary: Optional[UserMessageSummary] = Field(default=None)
+    summary: Optional[Optional[UserMessageSummary]]
     agent: str
     model: UserMessageModel
-    system: Optional[str] = Field(default=None)
-    tools: Optional[dict[str, Any]] = Field(default=None)
-    variant: Optional[str] = Field(default=None)
+    system: Optional[Optional[str]]
+    tools: Optional[Optional[dict[str, Any]]]
+    variant: Optional[Optional[str]]
 
 
 class ProviderAuthErrorData(BaseModel):
@@ -143,11 +143,11 @@ class MessageAbortedError(BaseModel):
 
 class ApiErrorData(BaseModel):
     message: str
-    status_code: Optional[float] = Field(default=None, alias="statusCode")
+    status_code: Optional[Optional[float]] = Field(default=None, alias="statusCode")
     is_retryable: bool = Field(..., alias="isRetryable")
-    response_headers: Optional[dict[str, Any]] = Field(default=None, alias="responseHeaders")
-    response_body: Optional[str] = Field(default=None, alias="responseBody")
-    metadata: Optional[dict[str, Any]] = Field(default=None)
+    response_headers: Optional[Optional[dict[str, Any]]] = Field(default=None, alias="responseHeaders")
+    response_body: Optional[Optional[str]] = Field(default=None, alias="responseBody")
+    metadata: Optional[Optional[dict[str, Any]]]
 
 
 class ApiError(BaseModel):
@@ -157,7 +157,7 @@ class ApiError(BaseModel):
 
 class AssistantMessageTime(BaseModel):
     created: float
-    completed: Optional[float] = Field(default=None)
+    completed: Optional[Optional[float]]
 
 
 class AssistantMessagePath(BaseModel):
@@ -182,17 +182,17 @@ class AssistantMessage(BaseModel):
     session_id: str = Field(..., alias="sessionID")
     role: Literal["assistant"]
     time: AssistantMessageTime
-    error: Optional[Union[ProviderAuthError, UnknownError, MessageOutputLengthError, MessageAbortedError, ApiError]] = Field(default=None)
+    error: Optional[Optional[Union[ProviderAuthError, UnknownError, MessageOutputLengthError, MessageAbortedError, ApiError]]]
     parent_id: str = Field(..., alias="parentID")
     model_id: str = Field(..., alias="modelID")
     provider_id: str = Field(..., alias="providerID")
     mode: str
     agent: str
     path: AssistantMessagePath
-    summary: Optional[bool] = Field(default=None)
+    summary: Optional[Optional[bool]]
     cost: float
     tokens: AssistantMessageTokens
-    finish: Optional[str] = Field(default=None)
+    finish: Optional[Optional[str]]
 
 
 Message: TypeAlias = Union[UserMessage, AssistantMessage]
@@ -219,7 +219,7 @@ class EventMessageRemoved(BaseModel):
 
 class TextPartTime(BaseModel):
     start: float
-    end: Optional[float] = Field(default=None)
+    end: Optional[Optional[float]]
 
 
 class TextPart(BaseModel):
@@ -228,15 +228,15 @@ class TextPart(BaseModel):
     message_id: str = Field(..., alias="messageID")
     type_: Literal["text"] = Field(..., alias="type")
     text: str
-    synthetic: Optional[bool] = Field(default=None)
-    ignored: Optional[bool] = Field(default=None)
-    time: Optional[TextPartTime] = Field(default=None)
-    metadata: Optional[dict[str, Any]] = Field(default=None)
+    synthetic: Optional[Optional[bool]]
+    ignored: Optional[Optional[bool]]
+    time: Optional[Optional[TextPartTime]]
+    metadata: Optional[Optional[dict[str, Any]]]
 
 
 class ReasoningPartTime(BaseModel):
     start: float
-    end: Optional[float] = Field(default=None)
+    end: Optional[Optional[float]]
 
 
 class ReasoningPart(BaseModel):
@@ -245,7 +245,7 @@ class ReasoningPart(BaseModel):
     message_id: str = Field(..., alias="messageID")
     type_: Literal["reasoning"] = Field(..., alias="type")
     text: str
-    metadata: Optional[dict[str, Any]] = Field(default=None)
+    metadata: Optional[Optional[dict[str, Any]]]
     time: ReasoningPartTime
 
 
@@ -294,9 +294,9 @@ class FilePart(BaseModel):
     message_id: str = Field(..., alias="messageID")
     type_: Literal["file"] = Field(..., alias="type")
     mime: str
-    filename: Optional[str] = Field(default=None)
+    filename: Optional[Optional[str]]
     url: str
-    source: Optional[FilePartSource] = Field(default=None)
+    source: Optional[Optional[FilePartSource]]
 
 
 class ToolStatePending(BaseModel):
@@ -312,15 +312,15 @@ class ToolStateRunningTime(BaseModel):
 class ToolStateRunning(BaseModel):
     status: Literal["running"]
     input_: dict[str, Any] = Field(..., alias="input")
-    title: Optional[str] = Field(default=None)
-    metadata: Optional[dict[str, Any]] = Field(default=None)
+    title: Optional[Optional[str]]
+    metadata: Optional[Optional[dict[str, Any]]]
     time: ToolStateRunningTime
 
 
 class ToolStateCompletedTime(BaseModel):
     start: float
     end: float
-    compacted: Optional[float] = Field(default=None)
+    compacted: Optional[Optional[float]]
 
 
 class ToolStateCompleted(BaseModel):
@@ -330,7 +330,7 @@ class ToolStateCompleted(BaseModel):
     title: str
     metadata: dict[str, Any]
     time: ToolStateCompletedTime
-    attachments: Optional[list[FilePart]] = Field(default=None)
+    attachments: Optional[Optional[list[FilePart]]]
 
 
 class ToolStateErrorTime(BaseModel):
@@ -342,7 +342,7 @@ class ToolStateError(BaseModel):
     status: Literal["error"]
     input_: dict[str, Any] = Field(..., alias="input")
     error: str
-    metadata: Optional[dict[str, Any]] = Field(default=None)
+    metadata: Optional[Optional[dict[str, Any]]]
     time: ToolStateErrorTime
 
 
@@ -357,7 +357,7 @@ class ToolPart(BaseModel):
     call_id: str = Field(..., alias="callID")
     tool: str
     state: ToolState
-    metadata: Optional[dict[str, Any]] = Field(default=None)
+    metadata: Optional[Optional[dict[str, Any]]]
 
 
 class StepStartPart(BaseModel):
@@ -365,7 +365,7 @@ class StepStartPart(BaseModel):
     session_id: str = Field(..., alias="sessionID")
     message_id: str = Field(..., alias="messageID")
     type_: Literal["step-start"] = Field(..., alias="type")
-    snapshot: Optional[str] = Field(default=None)
+    snapshot: Optional[Optional[str]]
 
 
 class StepFinishPartTokensCache(BaseModel):
@@ -386,7 +386,7 @@ class StepFinishPart(BaseModel):
     message_id: str = Field(..., alias="messageID")
     type_: Literal["step-finish"] = Field(..., alias="type")
     reason: str
-    snapshot: Optional[str] = Field(default=None)
+    snapshot: Optional[Optional[str]]
     cost: float
     tokens: StepFinishPartTokens
 
@@ -420,7 +420,7 @@ class AgentPart(BaseModel):
     message_id: str = Field(..., alias="messageID")
     type_: Literal["agent"] = Field(..., alias="type")
     name: str
-    source: Optional[AgentPartSource] = Field(default=None)
+    source: Optional[Optional[AgentPartSource]]
 
 
 class RetryPartTime(BaseModel):
@@ -453,7 +453,7 @@ class Part(BaseModel):
     prompt: str
     description: str
     agent: str
-    command: Optional[str] = Field(default=None)
+    command: Optional[Optional[str]]
 
 
 Part_2: TypeAlias = Union[TextPart, Part, ReasoningPart, FilePart, ToolPart, StepStartPart, StepFinishPart, SnapshotPart, PatchPart, AgentPart, RetryPart, CompactionPart]
@@ -461,7 +461,7 @@ Part_2: TypeAlias = Union[TextPart, Part, ReasoningPart, FilePart, ToolPart, Ste
 
 class EventMessagePartUpdatedProperties(BaseModel):
     part: Part_2
-    delta: Optional[str] = Field(default=None)
+    delta: Optional[Optional[str]]
 
 
 class EventMessagePartUpdated(BaseModel):
@@ -492,7 +492,7 @@ class PermissionRequest(BaseModel):
     patterns: list[str]
     metadata: dict[str, Any]
     always: list[str]
-    tool: Optional[PermissionRequestTool] = Field(default=None)
+    tool: Optional[Optional[PermissionRequestTool]]
 
 
 class EventPermissionAsked(BaseModel):
@@ -632,10 +632,10 @@ class EventTuiToastShowPropertiesVariant(str, Enum):
 
 
 class EventTuiToastShowProperties(BaseModel):
-    title: Optional[str] = Field(default=None)
+    title: Optional[Optional[str]]
     message: str
     variant: EventTuiToastShowPropertiesVariant
-    duration: Optional[float] = Field(default=5000, description="Duration in milliseconds")
+    duration: Optional[Optional[float]] = Field(default=5000, description="Duration in milliseconds")
 
 
 class EventTuiToastShow(BaseModel):
@@ -683,7 +683,7 @@ class SessionSummary(BaseModel):
     additions: float
     deletions: float
     files: float
-    diffs: Optional[list[FileDiff]] = Field(default=None)
+    diffs: Optional[Optional[list[FileDiff]]]
 
 
 class SessionShare(BaseModel):
@@ -693,29 +693,29 @@ class SessionShare(BaseModel):
 class SessionTime(BaseModel):
     created: float
     updated: float
-    compacting: Optional[float] = Field(default=None)
-    archived: Optional[float] = Field(default=None)
+    compacting: Optional[Optional[float]]
+    archived: Optional[Optional[float]]
 
 
 class SessionRevert(BaseModel):
     message_id: str = Field(..., alias="messageID")
-    part_id: Optional[str] = Field(default=None, alias="partID")
-    snapshot: Optional[str] = Field(default=None)
-    diff: Optional[str] = Field(default=None)
+    part_id: Optional[Optional[str]] = Field(default=None, alias="partID")
+    snapshot: Optional[Optional[str]]
+    diff: Optional[Optional[str]]
 
 
 class Session(BaseModel):
     id_: str = Field(..., alias="id", pattern="^ses.*")
     project_id: str = Field(..., alias="projectID")
     directory: str
-    parent_id: Optional[str] = Field(default=None, alias="parentID", pattern="^ses.*")
-    summary: Optional[SessionSummary] = Field(default=None)
-    share: Optional[SessionShare] = Field(default=None)
+    parent_id: Optional[Optional[str]] = Field(default=None, alias="parentID", pattern="^ses.*")
+    summary: Optional[Optional[SessionSummary]]
+    share: Optional[Optional[SessionShare]]
     title: str
     version: str
     time: SessionTime
-    permission: Optional[PermissionRuleset] = Field(default=None)
-    revert: Optional[SessionRevert] = Field(default=None)
+    permission: Optional[Optional[PermissionRuleset]]
+    revert: Optional[Optional[SessionRevert]]
 
 
 class EventSessionCreatedProperties(BaseModel):
@@ -756,8 +756,8 @@ class EventSessionDiff(BaseModel):
 
 
 class EventSessionErrorProperties(BaseModel):
-    session_id: Optional[str] = Field(default=None, alias="sessionID")
-    error: Optional[Union[ProviderAuthError, UnknownError, MessageOutputLengthError, MessageAbortedError, ApiError]] = Field(default=None)
+    session_id: Optional[Optional[str]] = Field(default=None, alias="sessionID")
+    error: Optional[Optional[Union[ProviderAuthError, UnknownError, MessageOutputLengthError, MessageAbortedError, ApiError]]]
 
 
 class EventSessionError(BaseModel):
@@ -776,7 +776,7 @@ class EventFileWatcherUpdated(BaseModel):
 
 
 class EventVcsBranchUpdatedProperties(BaseModel):
-    branch: Optional[str] = Field(default=None)
+    branch: Optional[Optional[str]]
 
 
 class EventVcsBranchUpdated(BaseModel):
@@ -870,93 +870,93 @@ class NotFoundError(BaseModel):
 
 
 class KeybindsConfig(BaseModel):
-    leader: Optional[str] = Field(default="ctrl+x", description="Leader key for keybind combinations")
-    app_exit: Optional[str] = Field(default="ctrl+c,ctrl+d,<leader>q", description="Exit the application")
-    editor_open: Optional[str] = Field(default="<leader>e", description="Open external editor")
-    theme_list: Optional[str] = Field(default="<leader>t", description="List available themes")
-    sidebar_toggle: Optional[str] = Field(default="<leader>b", description="Toggle sidebar")
-    scrollbar_toggle: Optional[str] = Field(default="none", description="Toggle session scrollbar")
-    username_toggle: Optional[str] = Field(default="none", description="Toggle username visibility")
-    status_view: Optional[str] = Field(default="<leader>s", description="View status")
-    session_export: Optional[str] = Field(default="<leader>x", description="Export session to editor")
-    session_new: Optional[str] = Field(default="<leader>n", description="Create a new session")
-    session_list: Optional[str] = Field(default="<leader>l", description="List all sessions")
-    session_timeline: Optional[str] = Field(default="<leader>g", description="Show session timeline")
-    session_fork: Optional[str] = Field(default="none", description="Fork session from message")
-    session_rename: Optional[str] = Field(default="none", description="Rename session")
-    session_share: Optional[str] = Field(default="none", description="Share current session")
-    session_unshare: Optional[str] = Field(default="none", description="Unshare current session")
-    session_interrupt: Optional[str] = Field(default="escape", description="Interrupt current session")
-    session_compact: Optional[str] = Field(default="<leader>c", description="Compact the session")
-    messages_page_up: Optional[str] = Field(default="pageup", description="Scroll messages up by one page")
-    messages_page_down: Optional[str] = Field(default="pagedown", description="Scroll messages down by one page")
-    messages_half_page_up: Optional[str] = Field(default="ctrl+alt+u", description="Scroll messages up by half page")
-    messages_half_page_down: Optional[str] = Field(default="ctrl+alt+d", description="Scroll messages down by half page")
-    messages_first: Optional[str] = Field(default="ctrl+g,home", description="Navigate to first message")
-    messages_last: Optional[str] = Field(default="ctrl+alt+g,end", description="Navigate to last message")
-    messages_next: Optional[str] = Field(default="none", description="Navigate to next message")
-    messages_previous: Optional[str] = Field(default="none", description="Navigate to previous message")
-    messages_last_user: Optional[str] = Field(default="none", description="Navigate to last user message")
-    messages_copy: Optional[str] = Field(default="<leader>y", description="Copy message")
-    messages_undo: Optional[str] = Field(default="<leader>u", description="Undo message")
-    messages_redo: Optional[str] = Field(default="<leader>r", description="Redo message")
-    messages_toggle_conceal: Optional[str] = Field(default="<leader>h", description="Toggle code block concealment in messages")
-    tool_details: Optional[str] = Field(default="none", description="Toggle tool details visibility")
-    model_list: Optional[str] = Field(default="<leader>m", description="List available models")
-    model_cycle_recent: Optional[str] = Field(default="f2", description="Next recently used model")
-    model_cycle_recent_reverse: Optional[str] = Field(default="shift+f2", description="Previous recently used model")
-    model_cycle_favorite: Optional[str] = Field(default="none", description="Next favorite model")
-    model_cycle_favorite_reverse: Optional[str] = Field(default="none", description="Previous favorite model")
-    command_list: Optional[str] = Field(default="ctrl+p", description="List available commands")
-    agent_list: Optional[str] = Field(default="<leader>a", description="List agents")
-    agent_cycle: Optional[str] = Field(default="tab", description="Next agent")
-    agent_cycle_reverse: Optional[str] = Field(default="shift+tab", description="Previous agent")
-    variant_cycle: Optional[str] = Field(default="ctrl+t", description="Cycle model variants")
-    input_clear: Optional[str] = Field(default="ctrl+c", description="Clear input field")
-    input_paste: Optional[str] = Field(default="ctrl+v", description="Paste from clipboard")
-    input_submit: Optional[str] = Field(default="return", description="Submit input")
-    input_newline: Optional[str] = Field(default="shift+return,ctrl+return,alt+return,ctrl+j", description="Insert newline in input")
-    input_move_left: Optional[str] = Field(default="left,ctrl+b", description="Move cursor left in input")
-    input_move_right: Optional[str] = Field(default="right,ctrl+f", description="Move cursor right in input")
-    input_move_up: Optional[str] = Field(default="up", description="Move cursor up in input")
-    input_move_down: Optional[str] = Field(default="down", description="Move cursor down in input")
-    input_select_left: Optional[str] = Field(default="shift+left", description="Select left in input")
-    input_select_right: Optional[str] = Field(default="shift+right", description="Select right in input")
-    input_select_up: Optional[str] = Field(default="shift+up", description="Select up in input")
-    input_select_down: Optional[str] = Field(default="shift+down", description="Select down in input")
-    input_line_home: Optional[str] = Field(default="ctrl+a", description="Move to start of line in input")
-    input_line_end: Optional[str] = Field(default="ctrl+e", description="Move to end of line in input")
-    input_select_line_home: Optional[str] = Field(default="ctrl+shift+a", description="Select to start of line in input")
-    input_select_line_end: Optional[str] = Field(default="ctrl+shift+e", description="Select to end of line in input")
-    input_visual_line_home: Optional[str] = Field(default="alt+a", description="Move to start of visual line in input")
-    input_visual_line_end: Optional[str] = Field(default="alt+e", description="Move to end of visual line in input")
-    input_select_visual_line_home: Optional[str] = Field(default="alt+shift+a", description="Select to start of visual line in input")
-    input_select_visual_line_end: Optional[str] = Field(default="alt+shift+e", description="Select to end of visual line in input")
-    input_buffer_home: Optional[str] = Field(default="home", description="Move to start of buffer in input")
-    input_buffer_end: Optional[str] = Field(default="end", description="Move to end of buffer in input")
-    input_select_buffer_home: Optional[str] = Field(default="shift+home", description="Select to start of buffer in input")
-    input_select_buffer_end: Optional[str] = Field(default="shift+end", description="Select to end of buffer in input")
-    input_delete_line: Optional[str] = Field(default="ctrl+shift+d", description="Delete line in input")
-    input_delete_to_line_end: Optional[str] = Field(default="ctrl+k", description="Delete to end of line in input")
-    input_delete_to_line_start: Optional[str] = Field(default="ctrl+u", description="Delete to start of line in input")
-    input_backspace: Optional[str] = Field(default="backspace,shift+backspace", description="Backspace in input")
-    input_delete: Optional[str] = Field(default="ctrl+d,delete,shift+delete", description="Delete character in input")
-    input_undo: Optional[str] = Field(default="ctrl+-,super+z", description="Undo in input")
-    input_redo: Optional[str] = Field(default="ctrl+.,super+shift+z", description="Redo in input")
-    input_word_forward: Optional[str] = Field(default="alt+f,alt+right,ctrl+right", description="Move word forward in input")
-    input_word_backward: Optional[str] = Field(default="alt+b,alt+left,ctrl+left", description="Move word backward in input")
-    input_select_word_forward: Optional[str] = Field(default="alt+shift+f,alt+shift+right", description="Select word forward in input")
-    input_select_word_backward: Optional[str] = Field(default="alt+shift+b,alt+shift+left", description="Select word backward in input")
-    input_delete_word_forward: Optional[str] = Field(default="alt+d,alt+delete,ctrl+delete", description="Delete word forward in input")
-    input_delete_word_backward: Optional[str] = Field(default="ctrl+w,ctrl+backspace,alt+backspace", description="Delete word backward in input")
-    history_previous: Optional[str] = Field(default="up", description="Previous history item")
-    history_next: Optional[str] = Field(default="down", description="Next history item")
-    session_child_cycle: Optional[str] = Field(default="<leader>right", description="Next child session")
-    session_child_cycle_reverse: Optional[str] = Field(default="<leader>left", description="Previous child session")
-    session_parent: Optional[str] = Field(default="<leader>up", description="Go to parent session")
-    terminal_suspend: Optional[str] = Field(default="ctrl+z", description="Suspend terminal")
-    terminal_title_toggle: Optional[str] = Field(default="none", description="Toggle terminal title")
-    tips_toggle: Optional[str] = Field(default="<leader>h", description="Toggle tips on home screen")
+    leader: Optional[Optional[str]] = Field(default="ctrl+x", description="Leader key for keybind combinations")
+    app_exit: Optional[Optional[str]] = Field(default="ctrl+c,ctrl+d,<leader>q", description="Exit the application")
+    editor_open: Optional[Optional[str]] = Field(default="<leader>e", description="Open external editor")
+    theme_list: Optional[Optional[str]] = Field(default="<leader>t", description="List available themes")
+    sidebar_toggle: Optional[Optional[str]] = Field(default="<leader>b", description="Toggle sidebar")
+    scrollbar_toggle: Optional[Optional[str]] = Field(default="none", description="Toggle session scrollbar")
+    username_toggle: Optional[Optional[str]] = Field(default="none", description="Toggle username visibility")
+    status_view: Optional[Optional[str]] = Field(default="<leader>s", description="View status")
+    session_export: Optional[Optional[str]] = Field(default="<leader>x", description="Export session to editor")
+    session_new: Optional[Optional[str]] = Field(default="<leader>n", description="Create a new session")
+    session_list: Optional[Optional[str]] = Field(default="<leader>l", description="List all sessions")
+    session_timeline: Optional[Optional[str]] = Field(default="<leader>g", description="Show session timeline")
+    session_fork: Optional[Optional[str]] = Field(default="none", description="Fork session from message")
+    session_rename: Optional[Optional[str]] = Field(default="none", description="Rename session")
+    session_share: Optional[Optional[str]] = Field(default="none", description="Share current session")
+    session_unshare: Optional[Optional[str]] = Field(default="none", description="Unshare current session")
+    session_interrupt: Optional[Optional[str]] = Field(default="escape", description="Interrupt current session")
+    session_compact: Optional[Optional[str]] = Field(default="<leader>c", description="Compact the session")
+    messages_page_up: Optional[Optional[str]] = Field(default="pageup", description="Scroll messages up by one page")
+    messages_page_down: Optional[Optional[str]] = Field(default="pagedown", description="Scroll messages down by one page")
+    messages_half_page_up: Optional[Optional[str]] = Field(default="ctrl+alt+u", description="Scroll messages up by half page")
+    messages_half_page_down: Optional[Optional[str]] = Field(default="ctrl+alt+d", description="Scroll messages down by half page")
+    messages_first: Optional[Optional[str]] = Field(default="ctrl+g,home", description="Navigate to first message")
+    messages_last: Optional[Optional[str]] = Field(default="ctrl+alt+g,end", description="Navigate to last message")
+    messages_next: Optional[Optional[str]] = Field(default="none", description="Navigate to next message")
+    messages_previous: Optional[Optional[str]] = Field(default="none", description="Navigate to previous message")
+    messages_last_user: Optional[Optional[str]] = Field(default="none", description="Navigate to last user message")
+    messages_copy: Optional[Optional[str]] = Field(default="<leader>y", description="Copy message")
+    messages_undo: Optional[Optional[str]] = Field(default="<leader>u", description="Undo message")
+    messages_redo: Optional[Optional[str]] = Field(default="<leader>r", description="Redo message")
+    messages_toggle_conceal: Optional[Optional[str]] = Field(default="<leader>h", description="Toggle code block concealment in messages")
+    tool_details: Optional[Optional[str]] = Field(default="none", description="Toggle tool details visibility")
+    model_list: Optional[Optional[str]] = Field(default="<leader>m", description="List available models")
+    model_cycle_recent: Optional[Optional[str]] = Field(default="f2", description="Next recently used model")
+    model_cycle_recent_reverse: Optional[Optional[str]] = Field(default="shift+f2", description="Previous recently used model")
+    model_cycle_favorite: Optional[Optional[str]] = Field(default="none", description="Next favorite model")
+    model_cycle_favorite_reverse: Optional[Optional[str]] = Field(default="none", description="Previous favorite model")
+    command_list: Optional[Optional[str]] = Field(default="ctrl+p", description="List available commands")
+    agent_list: Optional[Optional[str]] = Field(default="<leader>a", description="List agents")
+    agent_cycle: Optional[Optional[str]] = Field(default="tab", description="Next agent")
+    agent_cycle_reverse: Optional[Optional[str]] = Field(default="shift+tab", description="Previous agent")
+    variant_cycle: Optional[Optional[str]] = Field(default="ctrl+t", description="Cycle model variants")
+    input_clear: Optional[Optional[str]] = Field(default="ctrl+c", description="Clear input field")
+    input_paste: Optional[Optional[str]] = Field(default="ctrl+v", description="Paste from clipboard")
+    input_submit: Optional[Optional[str]] = Field(default="return", description="Submit input")
+    input_newline: Optional[Optional[str]] = Field(default="shift+return,ctrl+return,alt+return,ctrl+j", description="Insert newline in input")
+    input_move_left: Optional[Optional[str]] = Field(default="left,ctrl+b", description="Move cursor left in input")
+    input_move_right: Optional[Optional[str]] = Field(default="right,ctrl+f", description="Move cursor right in input")
+    input_move_up: Optional[Optional[str]] = Field(default="up", description="Move cursor up in input")
+    input_move_down: Optional[Optional[str]] = Field(default="down", description="Move cursor down in input")
+    input_select_left: Optional[Optional[str]] = Field(default="shift+left", description="Select left in input")
+    input_select_right: Optional[Optional[str]] = Field(default="shift+right", description="Select right in input")
+    input_select_up: Optional[Optional[str]] = Field(default="shift+up", description="Select up in input")
+    input_select_down: Optional[Optional[str]] = Field(default="shift+down", description="Select down in input")
+    input_line_home: Optional[Optional[str]] = Field(default="ctrl+a", description="Move to start of line in input")
+    input_line_end: Optional[Optional[str]] = Field(default="ctrl+e", description="Move to end of line in input")
+    input_select_line_home: Optional[Optional[str]] = Field(default="ctrl+shift+a", description="Select to start of line in input")
+    input_select_line_end: Optional[Optional[str]] = Field(default="ctrl+shift+e", description="Select to end of line in input")
+    input_visual_line_home: Optional[Optional[str]] = Field(default="alt+a", description="Move to start of visual line in input")
+    input_visual_line_end: Optional[Optional[str]] = Field(default="alt+e", description="Move to end of visual line in input")
+    input_select_visual_line_home: Optional[Optional[str]] = Field(default="alt+shift+a", description="Select to start of visual line in input")
+    input_select_visual_line_end: Optional[Optional[str]] = Field(default="alt+shift+e", description="Select to end of visual line in input")
+    input_buffer_home: Optional[Optional[str]] = Field(default="home", description="Move to start of buffer in input")
+    input_buffer_end: Optional[Optional[str]] = Field(default="end", description="Move to end of buffer in input")
+    input_select_buffer_home: Optional[Optional[str]] = Field(default="shift+home", description="Select to start of buffer in input")
+    input_select_buffer_end: Optional[Optional[str]] = Field(default="shift+end", description="Select to end of buffer in input")
+    input_delete_line: Optional[Optional[str]] = Field(default="ctrl+shift+d", description="Delete line in input")
+    input_delete_to_line_end: Optional[Optional[str]] = Field(default="ctrl+k", description="Delete to end of line in input")
+    input_delete_to_line_start: Optional[Optional[str]] = Field(default="ctrl+u", description="Delete to start of line in input")
+    input_backspace: Optional[Optional[str]] = Field(default="backspace,shift+backspace", description="Backspace in input")
+    input_delete: Optional[Optional[str]] = Field(default="ctrl+d,delete,shift+delete", description="Delete character in input")
+    input_undo: Optional[Optional[str]] = Field(default="ctrl+-,super+z", description="Undo in input")
+    input_redo: Optional[Optional[str]] = Field(default="ctrl+.,super+shift+z", description="Redo in input")
+    input_word_forward: Optional[Optional[str]] = Field(default="alt+f,alt+right,ctrl+right", description="Move word forward in input")
+    input_word_backward: Optional[Optional[str]] = Field(default="alt+b,alt+left,ctrl+left", description="Move word backward in input")
+    input_select_word_forward: Optional[Optional[str]] = Field(default="alt+shift+f,alt+shift+right", description="Select word forward in input")
+    input_select_word_backward: Optional[Optional[str]] = Field(default="alt+shift+b,alt+shift+left", description="Select word backward in input")
+    input_delete_word_forward: Optional[Optional[str]] = Field(default="alt+d,alt+delete,ctrl+delete", description="Delete word forward in input")
+    input_delete_word_backward: Optional[Optional[str]] = Field(default="ctrl+w,ctrl+backspace,alt+backspace", description="Delete word backward in input")
+    history_previous: Optional[Optional[str]] = Field(default="up", description="Previous history item")
+    history_next: Optional[Optional[str]] = Field(default="down", description="Next history item")
+    session_child_cycle: Optional[Optional[str]] = Field(default="<leader>right", description="Next child session")
+    session_child_cycle_reverse: Optional[Optional[str]] = Field(default="<leader>left", description="Previous child session")
+    session_parent: Optional[Optional[str]] = Field(default="<leader>up", description="Go to parent session")
+    terminal_suspend: Optional[Optional[str]] = Field(default="ctrl+z", description="Suspend terminal")
+    terminal_title_toggle: Optional[Optional[str]] = Field(default="none", description="Toggle terminal title")
+    tips_toggle: Optional[Optional[str]] = Field(default="<leader>h", description="Toggle tips on home screen")
 
 
 class LogLevel(str, Enum):
@@ -967,10 +967,10 @@ class LogLevel(str, Enum):
 
 
 class ServerConfig(BaseModel):
-    port: Optional[int] = Field(default=None, description="Port to listen on", gt=0, le=9007199254740991)
-    hostname: Optional[str] = Field(default=None, description="Hostname to listen on")
-    mdns: Optional[bool] = Field(default=None)
-    cors: Optional[list[str]] = Field(default=None, description="Additional domains to allow for CORS")
+    port: Optional[Optional[int]] = Field(default=None, description="Port to listen on", gt=0, le=9007199254740991)
+    hostname: Optional[Optional[str]] = Field(default=None, description="Hostname to listen on")
+    mdns: Optional[Optional[bool]]
+    cors: Optional[Optional[list[str]]] = Field(default=None, description="Additional domains to allow for CORS")
 
 
 class PermissionActionConfig(str, Enum):
@@ -986,21 +986,21 @@ PermissionRuleConfig: TypeAlias = Union[PermissionActionConfig, PermissionObject
 
 
 class PermissionConfig(BaseModel):
-    read: Optional[PermissionRuleConfig] = Field(default=None)
-    edit: Optional[PermissionRuleConfig] = Field(default=None)
-    glob: Optional[PermissionRuleConfig] = Field(default=None)
-    grep: Optional[PermissionRuleConfig] = Field(default=None)
-    list_: Optional[PermissionRuleConfig] = Field(default=None, alias="list")
-    bash: Optional[PermissionRuleConfig] = Field(default=None)
-    task: Optional[PermissionRuleConfig] = Field(default=None)
-    external_directory: Optional[PermissionRuleConfig] = Field(default=None)
-    todowrite: Optional[PermissionActionConfig] = Field(default=None)
-    todoread: Optional[PermissionActionConfig] = Field(default=None)
-    webfetch: Optional[PermissionActionConfig] = Field(default=None)
-    websearch: Optional[PermissionActionConfig] = Field(default=None)
-    codesearch: Optional[PermissionActionConfig] = Field(default=None)
-    lsp: Optional[PermissionRuleConfig] = Field(default=None)
-    doom_loop: Optional[PermissionActionConfig] = Field(default=None)
+    read: Optional[Optional[PermissionRuleConfig]]
+    edit: Optional[Optional[PermissionRuleConfig]]
+    glob: Optional[Optional[PermissionRuleConfig]]
+    grep: Optional[Optional[PermissionRuleConfig]]
+    list_: Optional[Optional[PermissionRuleConfig]] = Field(default=None, alias="list")
+    bash: Optional[Optional[PermissionRuleConfig]]
+    task: Optional[Optional[PermissionRuleConfig]]
+    external_directory: Optional[Optional[PermissionRuleConfig]]
+    todowrite: Optional[Optional[PermissionActionConfig]]
+    todoread: Optional[Optional[PermissionActionConfig]]
+    webfetch: Optional[Optional[PermissionActionConfig]]
+    websearch: Optional[Optional[PermissionActionConfig]]
+    codesearch: Optional[Optional[PermissionActionConfig]]
+    lsp: Optional[Optional[PermissionRuleConfig]]
+    doom_loop: Optional[Optional[PermissionActionConfig]]
 
 
 PermissionConfig_2: TypeAlias = Union[PermissionConfig, PermissionActionConfig]
@@ -1021,16 +1021,16 @@ class ProviderConfigModelsValueInterleaved(BaseModel):
 class ProviderConfigModelsValueCostContextOver200k(BaseModel):
     input_: float = Field(..., alias="input")
     output: float
-    cache_read: Optional[float] = Field(default=None)
-    cache_write: Optional[float] = Field(default=None)
+    cache_read: Optional[Optional[float]]
+    cache_write: Optional[Optional[float]]
 
 
 class ProviderConfigModelsValueCost(BaseModel):
     input_: float = Field(..., alias="input")
     output: float
-    cache_read: Optional[float] = Field(default=None)
-    cache_write: Optional[float] = Field(default=None)
-    context_over_200k: Optional[ProviderConfigModelsValueCostContextOver200k] = Field(default=None)
+    cache_read: Optional[Optional[float]]
+    cache_write: Optional[Optional[float]]
+    context_over_200k: Optional[Optional[ProviderConfigModelsValueCostContextOver200k]]
 
 
 class ProviderConfigModelsValueLimit(BaseModel):
@@ -1073,62 +1073,62 @@ ProviderConfigModelsValueVariantsValue: TypeAlias = dict[str, Any]
 
 
 class ProviderConfigModelsValue(BaseModel):
-    id_: Optional[str] = Field(default=None, alias="id")
-    name: Optional[str] = Field(default=None)
-    family: Optional[str] = Field(default=None)
-    release_date: Optional[str] = Field(default=None)
-    attachment: Optional[bool] = Field(default=None)
-    reasoning: Optional[bool] = Field(default=None)
-    temperature: Optional[bool] = Field(default=None)
-    tool_call: Optional[bool] = Field(default=None)
-    interleaved: Optional[Union[Literal[True], ProviderConfigModelsValueInterleaved]] = Field(default=None)
-    cost: Optional[ProviderConfigModelsValueCost] = Field(default=None)
-    limit: Optional[ProviderConfigModelsValueLimit] = Field(default=None)
-    modalities: Optional[ProviderConfigModelsValueModalities] = Field(default=None)
-    experimental: Optional[bool] = Field(default=None)
-    status: Optional[ProviderConfigModelsValueStatus] = Field(default=None)
-    options: Optional[dict[str, Any]] = Field(default=None)
-    headers: Optional[dict[str, Any]] = Field(default=None)
-    provider: Optional[ProviderConfigModelsValueProvider] = Field(default=None)
-    variants: Optional[dict[str, Any]] = Field(default=None)
+    id_: Optional[Optional[str]] = Field(default=None, alias="id")
+    name: Optional[Optional[str]]
+    family: Optional[Optional[str]]
+    release_date: Optional[Optional[str]]
+    attachment: Optional[Optional[bool]]
+    reasoning: Optional[Optional[bool]]
+    temperature: Optional[Optional[bool]]
+    tool_call: Optional[Optional[bool]]
+    interleaved: Optional[Optional[Union[Literal[True], ProviderConfigModelsValueInterleaved]]]
+    cost: Optional[Optional[ProviderConfigModelsValueCost]]
+    limit: Optional[Optional[ProviderConfigModelsValueLimit]]
+    modalities: Optional[Optional[ProviderConfigModelsValueModalities]]
+    experimental: Optional[Optional[bool]]
+    status: Optional[Optional[ProviderConfigModelsValueStatus]]
+    options: Optional[Optional[dict[str, Any]]]
+    headers: Optional[Optional[dict[str, Any]]]
+    provider: Optional[Optional[ProviderConfigModelsValueProvider]]
+    variants: Optional[Optional[dict[str, Any]]]
 
 
 ProviderConfigOptions: TypeAlias = dict[str, Any]
 
 
 class ProviderConfig(BaseModel):
-    api: Optional[str] = Field(default=None)
-    name: Optional[str] = Field(default=None)
-    env: Optional[list[str]] = Field(default=None)
-    id_: Optional[str] = Field(default=None, alias="id")
-    npm: Optional[str] = Field(default=None)
-    models: Optional[dict[str, Any]] = Field(default=None)
-    whitelist: Optional[list[str]] = Field(default=None)
-    blacklist: Optional[list[str]] = Field(default=None)
-    options: Optional[ProviderConfigOptions] = Field(default=None)
+    api: Optional[Optional[str]]
+    name: Optional[Optional[str]]
+    env: Optional[Optional[list[str]]]
+    id_: Optional[Optional[str]] = Field(default=None, alias="id")
+    npm: Optional[Optional[str]]
+    models: Optional[Optional[dict[str, Any]]]
+    whitelist: Optional[Optional[list[str]]]
+    blacklist: Optional[Optional[list[str]]]
+    options: Optional[Optional[ProviderConfigOptions]]
 
 
 class McpLocalConfig(BaseModel):
     type_: Literal["local"] = Field(..., alias="type")
     command: list[str] = Field(..., description="Command and arguments to run the MCP server")
-    environment: Optional[dict[str, Any]] = Field(default=None)
-    enabled: Optional[bool] = Field(default=None)
-    timeout: Optional[int] = Field(default=None, description="Timeout in ms for fetching tools from the MCP server. Defaults to 5000 (5 seconds) if not specified.", gt=0, le=9007199254740991)
+    environment: Optional[Optional[dict[str, Any]]]
+    enabled: Optional[Optional[bool]]
+    timeout: Optional[Optional[int]] = Field(default=None, description="Timeout in ms for fetching tools from the MCP server. Defaults to 5000 (5 seconds) if not specified.", gt=0, le=9007199254740991)
 
 
 class McpOAuthConfig(BaseModel):
-    client_id: Optional[str] = Field(default=None, alias="clientId", description="OAuth client ID. If not provided, dynamic client registration (RFC 7591) will be attempted.")
-    client_secret: Optional[str] = Field(default=None, alias="clientSecret", description="OAuth client secret (if required by the authorization server)")
-    scope: Optional[str] = Field(default=None, description="OAuth scopes to request during authorization")
+    client_id: Optional[Optional[str]] = Field(default=None, alias="clientId", description="OAuth client ID. If not provided, dynamic client registration (RFC 7591) will be attempted.")
+    client_secret: Optional[Optional[str]] = Field(default=None, alias="clientSecret", description="OAuth client secret (if required by the authorization server)")
+    scope: Optional[Optional[str]] = Field(default=None, description="OAuth scopes to request during authorization")
 
 
 class McpRemoteConfig(BaseModel):
     type_: Literal["remote"] = Field(..., alias="type")
     url: str = Field(..., description="URL of the remote MCP server")
-    enabled: Optional[bool] = Field(default=None)
-    headers: Optional[dict[str, Any]] = Field(default=None)
-    oauth: Optional[Union[McpOAuthConfig, Literal[False]]] = Field(default=None, description="OAuth authentication configuration for the MCP server. Set to false to disable OAuth auto-detection.")
-    timeout: Optional[int] = Field(default=None, description="Timeout in ms for fetching tools from the MCP server. Defaults to 5000 (5 seconds) if not specified.", gt=0, le=9007199254740991)
+    enabled: Optional[Optional[bool]]
+    headers: Optional[Optional[dict[str, Any]]]
+    oauth: Optional[Optional[Union[McpOAuthConfig, Literal[False]]]] = Field(default=None, description="OAuth authentication configuration for the MCP server. Set to false to disable OAuth auto-detection.")
+    timeout: Optional[Optional[int]] = Field(default=None, description="Timeout in ms for fetching tools from the MCP server. Defaults to 5000 (5 seconds) if not specified.", gt=0, le=9007199254740991)
 
 
 class LayoutConfig(str, Enum):
@@ -1146,21 +1146,21 @@ class ConfigTuiDiffStyle(str, Enum):
 
 
 class ConfigTui(BaseModel):
-    scroll_speed: Optional[float] = Field(default=None, description="TUI scroll speed", ge=0.001)
-    scroll_acceleration: Optional[ConfigTuiScrollAcceleration] = Field(default=None)
-    diff_style: Optional[ConfigTuiDiffStyle] = Field(default=None)
+    scroll_speed: Optional[Optional[float]] = Field(default=None, description="TUI scroll speed", ge=0.001)
+    scroll_acceleration: Optional[Optional[ConfigTuiScrollAcceleration]]
+    diff_style: Optional[Optional[ConfigTuiDiffStyle]]
 
 
 class ConfigCommandValue(BaseModel):
     template: str
-    description: Optional[str] = Field(default=None)
-    agent: Optional[str] = Field(default=None)
-    model: Optional[str] = Field(default=None)
-    subtask: Optional[bool] = Field(default=None)
+    description: Optional[Optional[str]]
+    agent: Optional[Optional[str]]
+    model: Optional[Optional[str]]
+    subtask: Optional[Optional[bool]]
 
 
 class ConfigWatcher(BaseModel):
-    ignore: Optional[list[str]] = Field(default=None)
+    ignore: Optional[Optional[list[str]]]
 
 
 class ConfigShare(str, Enum):
@@ -1170,95 +1170,95 @@ class ConfigShare(str, Enum):
 
 
 class ConfigMode(BaseModel):
-    build: Optional[AgentConfig] = Field(default=None)
-    plan: Optional[AgentConfig] = Field(default=None)
+    build: Optional[Optional[AgentConfig]]
+    plan: Optional[Optional[AgentConfig]]
 
 
 class ConfigAgent(BaseModel):
-    plan: Optional[AgentConfig] = Field(default=None)
-    build: Optional[AgentConfig] = Field(default=None)
-    general: Optional[AgentConfig] = Field(default=None)
-    explore: Optional[AgentConfig] = Field(default=None)
-    title: Optional[AgentConfig] = Field(default=None)
-    summary: Optional[AgentConfig] = Field(default=None)
-    compaction: Optional[AgentConfig] = Field(default=None)
+    plan: Optional[Optional[AgentConfig]]
+    build: Optional[Optional[AgentConfig]]
+    general: Optional[Optional[AgentConfig]]
+    explore: Optional[Optional[AgentConfig]]
+    title: Optional[Optional[AgentConfig]]
+    summary: Optional[Optional[AgentConfig]]
+    compaction: Optional[Optional[AgentConfig]]
 
 
 class ConfigFormatterValue(BaseModel):
-    disabled: Optional[bool] = Field(default=None)
-    command: Optional[list[str]] = Field(default=None)
-    environment: Optional[dict[str, Any]] = Field(default=None)
-    extensions: Optional[list[str]] = Field(default=None)
+    disabled: Optional[Optional[bool]]
+    command: Optional[Optional[list[str]]]
+    environment: Optional[Optional[dict[str, Any]]]
+    extensions: Optional[Optional[list[str]]]
 
 
 class ConfigEnterprise(BaseModel):
-    url: Optional[str] = Field(default=None, description="Enterprise URL")
+    url: Optional[Optional[str]] = Field(default=None, description="Enterprise URL")
 
 
 class ConfigCompaction(BaseModel):
-    auto: Optional[bool] = Field(default=None)
-    prune: Optional[bool] = Field(default=None)
+    auto: Optional[Optional[bool]]
+    prune: Optional[Optional[bool]]
 
 
 class ConfigExperimentalHookFileEditedValue(BaseModel):
     command: list[str]
-    environment: Optional[dict[str, Any]] = Field(default=None)
+    environment: Optional[Optional[dict[str, Any]]]
 
 
 class ConfigExperimentalHookSessionCompleted(BaseModel):
     command: list[str]
-    environment: Optional[dict[str, Any]] = Field(default=None)
+    environment: Optional[Optional[dict[str, Any]]]
 
 
 class ConfigExperimentalHook(BaseModel):
-    file_edited: Optional[dict[str, Any]] = Field(default=None)
-    session_completed: Optional[list[ConfigExperimentalHookSessionCompleted]] = Field(default=None)
+    file_edited: Optional[Optional[dict[str, Any]]]
+    session_completed: Optional[Optional[list[ConfigExperimentalHookSessionCompleted]]]
 
 
 class ConfigExperimental(BaseModel):
-    hook: Optional[ConfigExperimentalHook] = Field(default=None)
-    chat_max_retries: Optional[float] = Field(default=None, alias="chatMaxRetries", description="Number of retries for chat completions on failure")
-    disable_paste_summary: Optional[bool] = Field(default=None)
-    batch_tool: Optional[bool] = Field(default=None)
-    open_telemetry: Optional[bool] = Field(default=None, alias="openTelemetry")
-    primary_tools: Optional[list[str]] = Field(default=None, description="Tools that should only be available to primary agents.")
-    continue_loop_on_deny: Optional[bool] = Field(default=None)
-    mcp_timeout: Optional[int] = Field(default=None, description="Timeout in milliseconds for model context protocol (MCP) requests", gt=0, le=9007199254740991)
+    hook: Optional[Optional[ConfigExperimentalHook]]
+    chat_max_retries: Optional[Optional[float]] = Field(default=None, alias="chatMaxRetries", description="Number of retries for chat completions on failure")
+    disable_paste_summary: Optional[Optional[bool]]
+    batch_tool: Optional[Optional[bool]]
+    open_telemetry: Optional[Optional[bool]] = Field(default=None, alias="openTelemetry")
+    primary_tools: Optional[Optional[list[str]]] = Field(default=None, description="Tools that should only be available to primary agents.")
+    continue_loop_on_deny: Optional[Optional[bool]]
+    mcp_timeout: Optional[Optional[int]] = Field(default=None, description="Timeout in milliseconds for model context protocol (MCP) requests", gt=0, le=9007199254740991)
 
 
 class Config(BaseModel):
-    schema: Optional[str] = Field(default=None, alias="$schema", description="JSON schema reference for configuration validation")
-    theme: Optional[str] = Field(default=None, description="Theme name to use for the interface")
-    keybinds: Optional[KeybindsConfig] = Field(default=None)
-    log_level: Optional[LogLevel] = Field(default=None, alias="logLevel")
-    tui: Optional[ConfigTui] = Field(default=None)
-    server: Optional[ServerConfig] = Field(default=None)
-    command: Optional[dict[str, Any]] = Field(default=None)
-    watcher: Optional[ConfigWatcher] = Field(default=None)
-    plugin: Optional[list[str]] = Field(default=None)
-    snapshot: Optional[bool] = Field(default=None)
-    share: Optional[ConfigShare] = Field(default=None)
-    autoshare: Optional[bool] = Field(default=None)
-    autoupdate: Optional[Union[bool, Literal["notify"]]] = Field(default=None, description="Automatically update to the latest version. Set to true to auto-update, false to disable, or 'notify' to show update notifications")
-    disabled_providers: Optional[list[str]] = Field(default=None, description="Disable providers that are loaded automatically")
-    enabled_providers: Optional[list[str]] = Field(default=None, description="When set, ONLY these providers will be enabled. All other providers will be ignored")
-    model: Optional[str] = Field(default=None, description="Model to use in the format of provider/model, eg anthropic/claude-2")
-    small_model: Optional[str] = Field(default=None, description="Small model to use for tasks like title generation in the format of provider/model")
-    default_agent: Optional[str] = Field(default=None, description="Default agent to use when none is specified. Must be a primary agent. Falls back to 'build' if not set or if the specified agent is invalid.")
-    username: Optional[str] = Field(default=None, description="Custom username to display in conversations instead of system username")
-    mode: Optional[ConfigMode] = Field(default=None)
-    agent: Optional[ConfigAgent] = Field(default=None)
-    provider: Optional[dict[str, Any]] = Field(default=None)
-    mcp: Optional[dict[str, Any]] = Field(default=None)
-    formatter: Optional[Union[Literal[False], dict[str, Any]]] = Field(default=None)
-    lsp: Optional[Union[Literal[False], dict[str, Any]]] = Field(default=None)
-    instructions: Optional[list[str]] = Field(default=None, description="Additional instruction files or patterns to include")
-    layout: Optional[LayoutConfig] = Field(default=None)
-    permission: Optional[PermissionConfig_2] = Field(default=None)
-    tools: Optional[dict[str, Any]] = Field(default=None)
-    enterprise: Optional[ConfigEnterprise] = Field(default=None)
-    compaction: Optional[ConfigCompaction] = Field(default=None)
-    experimental: Optional[ConfigExperimental] = Field(default=None)
+    schema_: Optional[Optional[str]] = Field(default=None, alias="$schema", description="JSON schema reference for configuration validation")
+    theme: Optional[Optional[str]] = Field(default=None, description="Theme name to use for the interface")
+    keybinds: Optional[Optional[KeybindsConfig]]
+    log_level: Optional[Optional[LogLevel]] = Field(default=None, alias="logLevel")
+    tui: Optional[Optional[ConfigTui]]
+    server: Optional[Optional[ServerConfig]]
+    command: Optional[Optional[dict[str, Any]]]
+    watcher: Optional[Optional[ConfigWatcher]]
+    plugin: Optional[Optional[list[str]]]
+    snapshot: Optional[Optional[bool]]
+    share: Optional[Optional[ConfigShare]]
+    autoshare: Optional[Optional[bool]]
+    autoupdate: Optional[Optional[Union[bool, Literal["notify"]]]] = Field(default=None, description="Automatically update to the latest version. Set to true to auto-update, false to disable, or 'notify' to show update notifications")
+    disabled_providers: Optional[Optional[list[str]]] = Field(default=None, description="Disable providers that are loaded automatically")
+    enabled_providers: Optional[Optional[list[str]]] = Field(default=None, description="When set, ONLY these providers will be enabled. All other providers will be ignored")
+    model: Optional[Optional[str]] = Field(default=None, description="Model to use in the format of provider/model, eg anthropic/claude-2")
+    small_model: Optional[Optional[str]] = Field(default=None, description="Small model to use for tasks like title generation in the format of provider/model")
+    default_agent: Optional[Optional[str]] = Field(default=None, description="Default agent to use when none is specified. Must be a primary agent. Falls back to 'build' if not set or if the specified agent is invalid.")
+    username: Optional[Optional[str]] = Field(default=None, description="Custom username to display in conversations instead of system username")
+    mode: Optional[Optional[ConfigMode]]
+    agent: Optional[Optional[ConfigAgent]]
+    provider: Optional[Optional[dict[str, Any]]]
+    mcp: Optional[Optional[dict[str, Any]]]
+    formatter: Optional[Optional[Union[Literal[False], dict[str, Any]]]]
+    lsp: Optional[Optional[Union[Literal[False], dict[str, Any]]]]
+    instructions: Optional[Optional[list[str]]] = Field(default=None, description="Additional instruction files or patterns to include")
+    layout: Optional[Optional[LayoutConfig]]
+    permission: Optional[Optional[PermissionConfig_2]]
+    tools: Optional[Optional[dict[str, Any]]]
+    enterprise: Optional[Optional[ConfigEnterprise]]
+    compaction: Optional[Optional[ConfigCompaction]]
+    experimental: Optional[Optional[ConfigExperimental]]
 
 
 ToolIds: TypeAlias = list[str]
@@ -1287,26 +1287,26 @@ class VcsInfo(BaseModel):
 
 class TextPartInputTime(BaseModel):
     start: float
-    end: Optional[float] = Field(default=None)
+    end: Optional[Optional[float]]
 
 
 class TextPartInput(BaseModel):
-    id_: Optional[str] = Field(default=None, alias="id")
+    id_: Optional[Optional[str]] = Field(default=None, alias="id")
     type_: Literal["text"] = Field(..., alias="type")
     text: str
-    synthetic: Optional[bool] = Field(default=None)
-    ignored: Optional[bool] = Field(default=None)
-    time: Optional[TextPartInputTime] = Field(default=None)
-    metadata: Optional[dict[str, Any]] = Field(default=None)
+    synthetic: Optional[Optional[bool]]
+    ignored: Optional[Optional[bool]]
+    time: Optional[Optional[TextPartInputTime]]
+    metadata: Optional[Optional[dict[str, Any]]]
 
 
 class FilePartInput(BaseModel):
-    id_: Optional[str] = Field(default=None, alias="id")
+    id_: Optional[Optional[str]] = Field(default=None, alias="id")
     type_: Literal["file"] = Field(..., alias="type")
     mime: str
-    filename: Optional[str] = Field(default=None)
+    filename: Optional[Optional[str]]
     url: str
-    source: Optional[FilePartSource] = Field(default=None)
+    source: Optional[Optional[FilePartSource]]
 
 
 class AgentPartInputSource(BaseModel):
@@ -1316,29 +1316,29 @@ class AgentPartInputSource(BaseModel):
 
 
 class AgentPartInput(BaseModel):
-    id_: Optional[str] = Field(default=None, alias="id")
+    id_: Optional[Optional[str]] = Field(default=None, alias="id")
     type_: Literal["agent"] = Field(..., alias="type")
     name: str
-    source: Optional[AgentPartInputSource] = Field(default=None)
+    source: Optional[Optional[AgentPartInputSource]]
 
 
 class SubtaskPartInput(BaseModel):
-    id_: Optional[str] = Field(default=None, alias="id")
+    id_: Optional[Optional[str]] = Field(default=None, alias="id")
     type_: Literal["subtask"] = Field(..., alias="type")
     prompt: str
     description: str
     agent: str
-    command: Optional[str] = Field(default=None)
+    command: Optional[Optional[str]]
 
 
 class Command(BaseModel):
     name: str
-    description: Optional[str] = Field(default=None)
-    agent: Optional[str] = Field(default=None)
-    model: Optional[str] = Field(default=None)
-    mcp: Optional[bool] = Field(default=None)
+    description: Optional[Optional[str]]
+    agent: Optional[Optional[str]]
+    model: Optional[Optional[str]]
+    mcp: Optional[Optional[bool]]
     template: str
-    subtask: Optional[bool] = Field(default=None)
+    subtask: Optional[Optional[bool]]
     hints: list[str]
 
 
@@ -1403,7 +1403,7 @@ class ModelCost(BaseModel):
     input_: float = Field(..., alias="input")
     output: float
     cache: ModelCostCache
-    experimental_over200k: Optional[ModelCostExperimentalOver200k] = Field(default=None, alias="experimentalOver200K")
+    experimental_over200k: Optional[Optional[ModelCostExperimentalOver200k]] = Field(default=None, alias="experimentalOver200K")
 
 
 class ModelLimit(BaseModel):
@@ -1423,7 +1423,7 @@ class Model(BaseModel):
     provider_id: str = Field(..., alias="providerID")
     api: ModelApi
     name: str
-    family: Optional[str] = Field(default=None)
+    family: Optional[Optional[str]]
     capabilities: ModelCapabilities
     cost: ModelCost
     limit: ModelLimit
@@ -1431,7 +1431,7 @@ class Model(BaseModel):
     options: dict[str, Any]
     headers: dict[str, Any]
     release_date: str
-    variants: Optional[dict[str, Any]] = Field(default=None)
+    variants: Optional[Optional[dict[str, Any]]]
 
 
 class ProviderSource(str, Enum):
@@ -1446,7 +1446,7 @@ class Provider(BaseModel):
     name: str
     source: ProviderSource
     env: list[str]
-    key: Optional[str] = Field(default=None)
+    key: Optional[Optional[str]]
     options: dict[str, Any]
     models: dict[str, Any]
 
@@ -1497,19 +1497,19 @@ class FileContentPatchHunks(BaseModel):
 class FileContentPatch(BaseModel):
     old_file_name: str = Field(..., alias="oldFileName")
     new_file_name: str = Field(..., alias="newFileName")
-    old_header: Optional[str] = Field(default=None, alias="oldHeader")
-    new_header: Optional[str] = Field(default=None, alias="newHeader")
+    old_header: Optional[Optional[str]] = Field(default=None, alias="oldHeader")
+    new_header: Optional[Optional[str]] = Field(default=None, alias="newHeader")
     hunks: list[FileContentPatchHunks]
-    index: Optional[str] = Field(default=None)
+    index: Optional[Optional[str]]
 
 
 class FileContent(BaseModel):
     type_: Literal["text"] = Field(..., alias="type")
     content: str
-    diff: Optional[str] = Field(default=None)
-    patch: Optional[FileContentPatch] = Field(default=None)
-    encoding: Optional[Literal["base64"]] = Field(default=None)
-    mime_type: Optional[str] = Field(default=None, alias="mimeType")
+    diff: Optional[Optional[str]]
+    patch: Optional[Optional[FileContentPatch]]
+    encoding: Optional[Optional[Literal["base64"]]]
+    mime_type: Optional[Optional[str]] = Field(default=None, alias="mimeType")
 
 
 class FileStatus(str, Enum):
@@ -1538,18 +1538,18 @@ class AgentModel(BaseModel):
 
 class Agent(BaseModel):
     name: str
-    description: Optional[str] = Field(default=None)
+    description: Optional[Optional[str]]
     mode: AgentMode
-    native: Optional[bool] = Field(default=None)
-    hidden: Optional[bool] = Field(default=None)
-    top_p: Optional[float] = Field(default=None, alias="topP")
-    temperature: Optional[float] = Field(default=None)
-    color: Optional[str] = Field(default=None)
+    native: Optional[Optional[bool]]
+    hidden: Optional[Optional[bool]]
+    top_p: Optional[Optional[float]] = Field(default=None, alias="topP")
+    temperature: Optional[Optional[float]]
+    color: Optional[Optional[str]]
     permission: PermissionRuleset
-    model: Optional[AgentModel] = Field(default=None)
-    prompt: Optional[str] = Field(default=None)
+    model: Optional[Optional[AgentModel]]
+    prompt: Optional[Optional[str]]
     options: dict[str, Any]
-    steps: Optional[int] = Field(default=None, gt=0, le=9007199254740991)
+    steps: Optional[Optional[int]] = Field(default=None, gt=0, le=9007199254740991)
 
 
 class McpStatusConnected(BaseModel):
@@ -1595,7 +1595,7 @@ class OAuth(BaseModel):
     refresh: str
     access: str
     expires: float
-    enterprise_url: Optional[str] = Field(default=None, alias="enterpriseUrl")
+    enterprise_url: Optional[Optional[str]] = Field(default=None, alias="enterpriseUrl")
 
 
 class ApiAuth(BaseModel):
