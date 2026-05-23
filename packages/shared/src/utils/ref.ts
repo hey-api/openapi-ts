@@ -45,6 +45,10 @@ export function jsonPointerToPath(pointer: string): ReadonlyArray<string> {
   if (!clean) {
     return [];
   }
+  // fast path: if the pointer doesn't contain '~', we can skip the decoding step entirely
+  if (!clean.includes('~')) {
+    return clean.split('/');
+  }
   return clean.split('/').map((part) => part.replaceAll('~1', '/').replaceAll('~0', '~'));
 }
 
@@ -98,18 +102,35 @@ export function pathToJsonPointer(path: ReadonlyArray<string | number>): string 
  * @returns true if the ref points to a top-level component, false otherwise
  */
 export function isTopLevelComponent(refOrPath: string | ReadonlyArray<string | number>): boolean {
-  const path = refOrPath instanceof Array ? refOrPath : jsonPointerToPath(refOrPath);
-
-  // OpenAPI 3.x: #/components/{type}/{name} = 3 segments
-  if (path[0] === 'components') {
-    return path.length === 3;
+  if (typeof refOrPath !== 'string') {
+    // OpenAPI 3.x: #/components/{type}/{name} = 3 segments
+    if (refOrPath[0] === 'components') {
+      return refOrPath.length === 3;
+    }
+    // OpenAPI 2.0: #/definitions/{name} = 2 segments
+    if (refOrPath[0] === 'definitions') {
+      return refOrPath.length === 2;
+    }
+    return false;
   }
 
-  // OpenAPI 2.0: #/definitions/{name} = 2 segments
-  if (path[0] === 'definitions') {
-    return path.length === 2;
+  // OpenAPI 3.x: #/components/{type}/{name} — exactly one slash after the type segment
+  if (refOrPath.startsWith('#/components/')) {
+    // '#/components/'.length === 13
+    const typeEnd = refOrPath.indexOf('/', 13);
+    if (typeEnd === -1) {
+      // there is no slash after the type segment, missing name segment
+      return false;
+    }
+    const nameStart = typeEnd + 1;
+    return nameStart < refOrPath.length && refOrPath.indexOf('/', nameStart) === -1;
   }
-
+  // OpenAPI 2.0: #/definitions/{name} — no slash after the name
+  if (refOrPath.startsWith('#/definitions/')) {
+    // '#/definitions/'.length === 14
+    const nameStart = 14;
+    return nameStart < refOrPath.length && refOrPath.indexOf('/', nameStart) === -1;
+  }
   return false;
 }
 
