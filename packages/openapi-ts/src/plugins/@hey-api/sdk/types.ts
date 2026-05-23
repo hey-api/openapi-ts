@@ -4,6 +4,17 @@ import type { PluginClientNames, PluginTransformerNames, PluginValidatorNames } 
 import type { ExamplesConfig, UserExamplesConfig } from './examples';
 import type { OperationsConfig, UserOperationsConfig } from './operations';
 
+export type UserMetadataConfig = {
+  id?: boolean;
+  method?: boolean;
+  requestSchema?: boolean;
+  responseSchema?: boolean;
+  tags?: boolean;
+  url?: boolean;
+};
+
+export type MetadataConfig = Required<UserMetadataConfig>;
+
 export type UserConfig = Plugin.Name<'@hey-api/sdk'> &
   Plugin.Hooks &
   Plugin.UserComments &
@@ -102,7 +113,7 @@ export type UserConfig = Plugin.Name<'@hey-api/sdk'> &
      *
      * @default false
      */
-    metadata?: boolean;
+    metadata?: boolean | UserMetadataConfig;
     /**
      * Customise the name of methods within the service. By default,
      * `operation.id` is used.
@@ -110,7 +121,6 @@ export type UserConfig = Plugin.Name<'@hey-api/sdk'> &
      * @deprecated Use `operations: { methodName: "..." }` instead.
      */
     methodNameBuilder?: NameTransformer;
-
 
     /**
      * Use operation ID to generate operation names?
@@ -194,7 +204,7 @@ export type UserConfig = Plugin.Name<'@hey-api/sdk'> &
           response?: PluginValidatorNames | boolean;
         };
     // DEPRECATED OPTIONS BELOW
-/**
+    /**
      * Group operation methods into classes? When enabled, you can select which
      * classes to export with `sdk.include` and/or transform their names with
      * `sdk.classNameBuilder`.
@@ -206,7 +216,7 @@ export type UserConfig = Plugin.Name<'@hey-api/sdk'> &
      * @deprecated Use `operations: { strategy: "byTags" }` or `operations: { strategy: "single" }` instead.
      * @default false
      */
-// eslint-disable-next-line typescript-sort-keys/interface
+    // eslint-disable-next-line typescript-sort-keys/interface
     asClass?: boolean;
     /**
      * Define shape of returned value from service calls
@@ -228,7 +238,7 @@ export type Config = Plugin.Name<'@hey-api/sdk'> &
     /** Configuration for generating SDK code examples. */
     examples: ExamplesConfig;
     /** Attach OpenAPI-derived metadata to generated SDK methods. */
-    metadata: boolean;
+    metadata: MetadataConfig;
     /** Define the structure of generated SDK operations. */
     operations: OperationsConfig;
     /** Define how request parameters are structured in generated SDK methods. */

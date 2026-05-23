@@ -4,12 +4,28 @@ import { definePluginConfig } from '@hey-api/shared';
 import { resolveExamples } from './examples';
 import { resolveOperations } from './operations';
 import { handler } from './plugin';
-import type { HeyApiSdkPlugin } from './types';
+import type { HeyApiSdkPlugin, MetadataConfig } from './types';
 
 const transformerInferWarn =
   'You set `transformer: true` but no transformer plugin was found in your plugins. Add a transformer plugin like `@hey-api/transformers` to enable this feature. The transformer option has been disabled.';
 const validatorInferWarn =
   'You set `validator: true` but no validator plugin was found in your plugins. Add a validator plugin like `zod` to enable this feature. The validator option has been disabled.';
+const enabledMetadata: MetadataConfig = {
+  id: true,
+  method: true,
+  requestSchema: true,
+  responseSchema: true,
+  tags: true,
+  url: true,
+};
+const disabledMetadata: MetadataConfig = {
+  id: false,
+  method: false,
+  requestSchema: false,
+  responseSchema: false,
+  tags: false,
+  url: false,
+};
 
 export const defaultConfig: HeyApiSdkPlugin['Config'] = {
   config: {
@@ -17,7 +33,9 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
     client: true,
     comments: true,
     includeInEntry: true,
-    metadata: false,
+    metadata: {
+      ...disabledMetadata,
+    },
     paramsStructure: 'grouped',
     responseStyle: 'fields',
     transformer: false,
@@ -103,6 +121,18 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
     } else {
       plugin.config.validator.response = false;
     }
+
+    plugin.config.metadata = context.valueToObject({
+      defaultValue: disabledMetadata,
+      mappers: {
+        boolean: (enabled) => (enabled ? { ...enabledMetadata } : { ...disabledMetadata }),
+        object: (fields) => ({
+          ...enabledMetadata,
+          ...fields,
+        }),
+      },
+      value: plugin.config.metadata,
+    });
 
     plugin.config.examples = resolveExamples(plugin.config, context);
     plugin.config.operations = resolveOperations(plugin.config, context);

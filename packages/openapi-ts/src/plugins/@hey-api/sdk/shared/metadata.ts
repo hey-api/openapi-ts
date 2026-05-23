@@ -54,14 +54,17 @@ export function createMetadataObject(args: {
   const { operation, plugin, tags } = args;
   const requestSchema = createRequestSchema({ operation, plugin });
   const responseSchema = createResponseSchema({ operation, plugin });
+  const metadata = plugin.config.metadata;
 
   return $.object()
-    .prop('id', $.literal(operation.id))
-    .prop('method', $.literal(operation.method))
-    .$if(requestSchema, (o, v) => o.prop('requestSchema', v))
-    .$if(responseSchema, (o, v) => o.prop('responseSchema', v))
-    .$if(Boolean(tags?.length) && tags, (o, v) => o.prop('tags', $.array().elements(...v)))
-    .prop('url', $.literal(operation.path));
+    .$if(metadata.id, (o) => o.prop('id', $.literal(operation.id)))
+    .$if(metadata.method, (o) => o.prop('method', $.literal(operation.method)))
+    .$if(metadata.requestSchema && requestSchema, (o, v) => o.prop('requestSchema', v))
+    .$if(metadata.responseSchema && responseSchema, (o, v) => o.prop('responseSchema', v))
+    .$if(metadata.tags && Boolean(tags?.length) && tags, (o, v) =>
+      o.prop('tags', $.array().elements(...v)),
+    )
+    .$if(metadata.url, (o) => o.prop('url', $.literal(operation.path)));
 }
 
 export function withMetadata(args: {

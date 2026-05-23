@@ -114,6 +114,29 @@ describe(`SDK: ${namespace}`, () => {
       }),
       description: 'metadata single',
     },
+    {
+      config: createConfig({
+        input: specPath,
+        output: 'metadata-partial',
+        plugins: [
+          'zod',
+          {
+            metadata: {
+              id: true,
+              method: false,
+              requestSchema: false,
+              responseSchema: false,
+              tags: true,
+              url: true,
+            },
+            name: '@hey-api/sdk',
+            paramsStructure: 'flat',
+            validator: true,
+          },
+        ],
+      }),
+      description: 'metadata partial',
+    },
   ];
 
   it.each(scenarios)(

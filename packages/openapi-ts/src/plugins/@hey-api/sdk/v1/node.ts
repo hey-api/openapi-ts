@@ -45,6 +45,10 @@ function attachComment<
   ) as T;
 }
 
+function isMetadataEnabled(plugin: HeyApiSdkPlugin['Instance']): boolean {
+  return Object.values(plugin.config.metadata).some(Boolean);
+}
+
 function createShellMeta(node: StructureNode): SymbolMeta {
   return {
     category: 'utility',
@@ -323,7 +327,7 @@ export function toNode(
       let node = $.const(createFnSymbol(plugin, item))
         .export()
         .assign(
-          plugin.config.metadata
+          isMetadataEnabled(plugin)
             ? withMetadata({
                 fn: implementFn({
                   node: $.func(createFnSymbol(plugin, item)).expr(),
@@ -366,7 +370,7 @@ export function toNode(
       // TODO: object
     } else {
       if (index > 0 || node.hasBody) node.newline();
-      if (plugin.config.metadata) {
+      if (isMetadataEnabled(plugin)) {
         const field = attachComment({
           node: $.field(createFnSymbol(plugin, item), (f) =>
             f.public().static(!isAngularClient && !isInstance(plugin)),
