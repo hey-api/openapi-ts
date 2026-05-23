@@ -282,7 +282,7 @@ export interface ObjectResolverContext
       shape: (ctx: ObjectResolverContext) => ReturnType<typeof $.object>;
     }> {
   _childResults: Array<ValibotResult>;
-  applyModifiers: (result: ValibotResult, opts: { optional?: boolean }) => ValibotFinal;
+  applyModifiers: (result: ValibotResult, opts?: { optional?: boolean }) => ValibotFinal;
   schema: SchemaWithType<'object'>;
   walk: Walker<ValibotResult, ValibotPlugin['Instance']>;
 }

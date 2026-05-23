@@ -31,13 +31,13 @@ function baseNode(ctx: ArrayResolverContext): Chain {
   }
 
   if (childResults.length === 1) {
-    const itemNode = applyModifiers(childResults[0]!, { optional: false }).expression;
+    const itemNode = applyModifiers(childResults[0]!, { optional: false }).chain;
     return arrayFn.call(itemNode);
   }
 
   if (childResults.length > 1) {
     const itemExpressions: Array<Chain> = childResults.map(
-      (result) => applyModifiers(result, { optional: false }).expression,
+      (result) => applyModifiers(result, { optional: false }).chain,
     );
 
     const firstSchema = normalizedSchema.items[0];
@@ -178,10 +178,10 @@ export function arrayToAst({
   };
 
   const resolver = plugin.config['~resolvers']?.array;
-  const expression = resolver?.(ctx) ?? arrayResolver(ctx);
+  const chain = resolver?.(ctx) ?? arrayResolver(ctx);
 
   return {
+    chain,
     childResults,
-    expression,
   };
 }

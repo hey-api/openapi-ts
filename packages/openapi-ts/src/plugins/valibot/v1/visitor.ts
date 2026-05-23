@@ -6,7 +6,6 @@ import { pathToJsonPointer } from '@hey-api/shared';
 import { $ } from '../../../ts-dsl';
 import { maybeBigInt } from '../../shared/utils/coerce';
 import { composeMeta, defaultMeta, inheritMeta } from '../shared/meta';
-import type { Pipes } from '../shared/pipes';
 import { pipesToNode } from '../shared/pipes';
 import type { ProcessorContext } from '../shared/processor';
 import type { ValibotFinal, ValibotMeta, ValibotResult } from '../shared/types';
@@ -28,6 +27,8 @@ import { unknownToPipes } from './toAst/unknown';
 import { voidToPipes } from './toAst/void';
 
 export interface VisitorConfig {
+  /** The plugin instance. */
+  plugin: ValibotPlugin['Instance'];
   /** Optional schema extractor function. */
   schemaExtractor?: SchemaExtractor<ProcessorContext>;
 }
@@ -37,62 +38,81 @@ function getDefaultValue(meta: ValibotMeta): ReturnType<typeof $.fromValue> {
 }
 
 export function createVisitor(
-  config: VisitorConfig = {},
+  config: VisitorConfig,
 ): SchemaVisitor<ValibotResult, ValibotPlugin['Instance']> {
-  const { schemaExtractor } = config;
+  const { plugin, schemaExtractor } = config;
+
+  const v = plugin.external('valibot.v');
+
+  function applyModifiers(
+    result: ValibotResult,
+    options: { optional?: boolean } = {},
+  ): ValibotFinal {
+    const pipes: ValibotResult['pipes'] = [...result.pipes];
+    if (result.meta.readonly) {
+      pipes.push($(v).attr(identifiers.actions.readonly).call());
+    }
+
+    const typeName: ValibotFinal['typeName'] = result.meta.hasLazy
+      ? identifiers.types.GenericSchema
+      : undefined;
+
+    const needsDefault = result.meta.default !== undefined;
+    const needsOptional = options.optional || needsDefault;
+    const needsNullable = result.meta.nullable;
+
+    if (needsOptional && needsNullable) {
+      const innerNode = pipesToNode(pipes, plugin);
+      if (needsDefault) {
+        return {
+          pipes: [
+            $(v).attr(identifiers.schemas.nullish).call(innerNode, getDefaultValue(result.meta)),
+          ],
+          typeName,
+        };
+      }
+      return {
+        pipes: [$(v).attr(identifiers.schemas.nullish).call(innerNode)],
+        typeName,
+      };
+    }
+
+    if (needsOptional) {
+      const innerNode = pipesToNode(pipes, plugin);
+      if (needsDefault) {
+        return {
+          pipes: [
+            $(v).attr(identifiers.schemas.optional).call(innerNode, getDefaultValue(result.meta)),
+          ],
+          typeName,
+        };
+      }
+      return {
+        pipes: [$(v).attr(identifiers.schemas.optional).call(innerNode)],
+        typeName,
+      };
+    }
+
+    if (needsNullable) {
+      const innerNode = pipesToNode(pipes, plugin);
+      return {
+        pipes: [$(v).attr(identifiers.schemas.nullable).call(innerNode)],
+        typeName,
+      };
+    }
+
+    return { pipes, typeName };
+  }
 
   return {
-    applyModifiers(result, ctx, options = {}): ValibotFinal {
-      const { optional } = options;
-      const v = ctx.plugin.external('valibot.v');
-      const pipes: Pipes = [...result.pipes];
-
-      if (result.meta.readonly) {
-        pipes.push($(v).attr(identifiers.actions.readonly).call());
-      }
-
-      const needsDefault = result.meta.default !== undefined;
-      const needsOptional = optional || needsDefault;
-      const needsNullable = result.meta.nullable;
-      const innerNode = pipesToNode(pipes, ctx.plugin);
-
-      let finalPipes: Pipes;
-
-      if (needsOptional && needsNullable) {
-        if (needsDefault) {
-          finalPipes = [
-            $(v).attr(identifiers.schemas.nullish).call(innerNode, getDefaultValue(result.meta)),
-          ];
-        } else {
-          finalPipes = [$(v).attr(identifiers.schemas.nullish).call(innerNode)];
-        }
-      } else if (needsOptional) {
-        if (needsDefault) {
-          finalPipes = [
-            $(v).attr(identifiers.schemas.optional).call(innerNode, getDefaultValue(result.meta)),
-          ];
-        } else {
-          finalPipes = [$(v).attr(identifiers.schemas.optional).call(innerNode)];
-        }
-      } else if (needsNullable) {
-        finalPipes = [$(v).attr(identifiers.schemas.nullable).call(innerNode)];
-      } else {
-        finalPipes = pipes;
-      }
-
-      return {
-        pipes: finalPipes,
-        typeName: result.meta.hasLazy ? identifiers.types.GenericSchema : undefined,
-      };
+    applyModifiers(result, ctx, opts) {
+      return applyModifiers(result, opts);
     },
     array(schema, ctx, walk) {
-      const applyModifiers: Parameters<typeof arrayToPipes>[0]['applyModifiers'] = (result, opts) =>
-        this.applyModifiers(result, ctx, opts) as ValibotFinal;
-
       const { childResults, pipes } = arrayToPipes({
         applyModifiers,
         path: ctx.path,
-        plugin: ctx.plugin,
+        plugin,
         schema,
         walk,
       });
@@ -103,14 +123,14 @@ export function createVisitor(
       };
     },
     boolean(schema, ctx) {
-      const pipe = booleanToPipes({ path: ctx.path, plugin: ctx.plugin, schema });
+      const pipe = booleanToPipes({ path: ctx.path, plugin, schema });
       return {
         meta: defaultMeta(schema),
         pipes: [pipe],
       };
     },
     enum(schema, ctx) {
-      const pipe = enumToPipes({ path: ctx.path, plugin: ctx.plugin, schema });
+      const pipe = enumToPipes({ path: ctx.path, plugin, schema });
       const isNullable =
         schema.items?.some((item) => item.type === 'null' || item.const === null) ?? false;
       return {
@@ -122,7 +142,7 @@ export function createVisitor(
       };
     },
     integer(schema, ctx) {
-      const pipe = numberToPipes({ path: ctx.path, plugin: ctx.plugin, schema });
+      const pipe = numberToPipes({ path: ctx.path, plugin, schema });
       return {
         meta: defaultMeta(schema),
         pipes: [pipe],
@@ -135,9 +155,9 @@ export function createVisitor(
             resource: 'definition',
             resourceId: pathToJsonPointer(fromRef(ctx.path)),
           },
-          naming: ctx.plugin.config.definitions,
+          naming: plugin.config.definitions,
           path: fromRef(ctx.path),
-          plugin: ctx.plugin,
+          plugin,
           schema,
         });
 
@@ -153,17 +173,12 @@ export function createVisitor(
       }
     },
     intersection(items, schemas, parentSchema, ctx) {
-      const applyModifiers: Parameters<typeof intersectionToPipes>[0]['applyModifiers'] = (
-        result,
-        opts,
-      ) => this.applyModifiers(result, ctx, opts) as ValibotFinal;
-
       const { pipes } = intersectionToPipes({
         applyModifiers,
         childResults: items,
         parentSchema,
         path: ctx.path,
-        plugin: ctx.plugin,
+        plugin,
       });
 
       return {
@@ -172,7 +187,7 @@ export function createVisitor(
       };
     },
     never(schema, ctx) {
-      const pipe = neverToPipes({ path: ctx.path, plugin: ctx.plugin, schema });
+      const pipe = neverToPipes({ path: ctx.path, plugin, schema });
       return {
         meta: {
           ...defaultMeta(schema),
@@ -183,7 +198,7 @@ export function createVisitor(
       };
     },
     null(schema, ctx) {
-      const pipe = nullToPipes({ path: ctx.path, plugin: ctx.plugin, schema });
+      const pipe = nullToPipes({ path: ctx.path, plugin, schema });
       return {
         meta: {
           ...defaultMeta(schema),
@@ -194,22 +209,17 @@ export function createVisitor(
       };
     },
     number(schema, ctx) {
-      const pipe = numberToPipes({ path: ctx.path, plugin: ctx.plugin, schema });
+      const pipe = numberToPipes({ path: ctx.path, plugin, schema });
       return {
         meta: defaultMeta(schema),
         pipes: [pipe],
       };
     },
     object(schema, ctx, walk) {
-      const applyModifiers: Parameters<typeof objectToPipes>[0]['applyModifiers'] = (
-        result,
-        opts,
-      ) => this.applyModifiers(result, ctx, opts) as ValibotFinal;
-
       const { childResults, pipes } = objectToPipes({
         applyModifiers,
         path: ctx.path,
-        plugin: ctx.plugin,
+        plugin,
         schema,
         walk,
       });
@@ -219,8 +229,8 @@ export function createVisitor(
         pipes,
       };
     },
-    postProcess(result, schema, ctx) {
-      const metadata = ctx.plugin.config.metadata;
+    postProcess(result, schema) {
+      const metadata = plugin.config.metadata;
       if (!metadata) {
         return result;
       }
@@ -233,7 +243,6 @@ export function createVisitor(
       if (node.isEmpty) {
         return result;
       }
-      const v = ctx.plugin.external('valibot.v');
       const metadataExpr = $(v).attr(identifiers.actions.metadata).call(node);
 
       return {
@@ -241,8 +250,7 @@ export function createVisitor(
         pipes: [...result.pipes, metadataExpr],
       };
     },
-    reference($ref, schema, ctx) {
-      const v = ctx.plugin.external('valibot.v');
+    reference($ref, schema) {
       const query: SymbolMeta = {
         category: 'schema',
         resource: 'definition',
@@ -250,8 +258,8 @@ export function createVisitor(
         tool: 'valibot',
       };
 
-      const refSymbol = ctx.plugin.referenceSymbol(query);
-      const isRegistered = ctx.plugin.isSymbolRegistered(query);
+      const refSymbol = plugin.referenceSymbol(query);
+      const isRegistered = plugin.isSymbolRegistered(query);
 
       if (isRegistered) {
         return {
@@ -273,20 +281,17 @@ export function createVisitor(
       };
     },
     string(schema, ctx) {
-      const pipe = stringToPipes({ path: ctx.path, plugin: ctx.plugin, schema });
+      const pipe = stringToPipes({ path: ctx.path, plugin, schema });
       return {
         meta: defaultMeta(schema),
         pipes: [pipe],
       };
     },
     tuple(schema, ctx, walk) {
-      const applyModifiers: Parameters<typeof tupleToPipes>[0]['applyModifiers'] = (result, opts) =>
-        this.applyModifiers(result, ctx, opts) as ValibotFinal;
-
       const { childResults, pipes } = tupleToPipes({
         applyModifiers,
         path: ctx.path,
-        plugin: ctx.plugin,
+        plugin,
         schema,
         walk,
       });
@@ -297,7 +302,7 @@ export function createVisitor(
       };
     },
     undefined(schema, ctx) {
-      const pipe = undefinedToPipes({ path: ctx.path, plugin: ctx.plugin, schema });
+      const pipe = undefinedToPipes({ path: ctx.path, plugin, schema });
       return {
         meta: {
           ...defaultMeta(schema),
@@ -308,9 +313,6 @@ export function createVisitor(
       };
     },
     union(items, schemas, parentSchema, ctx) {
-      const applyModifiers: Parameters<typeof unionToPipes>[0]['applyModifiers'] = (result, opts) =>
-        this.applyModifiers(result, ctx, opts) as ValibotFinal;
-
       const hasNull = schemas.some((s) => s.type === 'null') || items.some((i) => i.meta.nullable);
 
       const { pipes } = unionToPipes({
@@ -318,7 +320,7 @@ export function createVisitor(
         childResults: items,
         parentSchema,
         path: ctx.path,
-        plugin: ctx.plugin,
+        plugin,
         schemas,
       });
 
@@ -331,7 +333,7 @@ export function createVisitor(
       };
     },
     unknown(schema, ctx) {
-      const pipe = unknownToPipes({ path: ctx.path, plugin: ctx.plugin });
+      const pipe = unknownToPipes({ path: ctx.path, plugin });
       return {
         meta: {
           ...defaultMeta(schema),
@@ -342,7 +344,7 @@ export function createVisitor(
       };
     },
     void(schema, ctx) {
-      const pipe = voidToPipes({ path: ctx.path, plugin: ctx.plugin, schema });
+      const pipe = voidToPipes({ path: ctx.path, plugin, schema });
       return {
         meta: {
           ...defaultMeta(schema),

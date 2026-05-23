@@ -105,9 +105,14 @@ type MethodFn = <TData = unknown, TError = unknown, ThrowOnError extends boolean
   options: Omit<RequestOptions<TData, ThrowOnError>, 'method'>,
 ) => RequestResult<TData, TError, ThrowOnError>;
 
-type SseFn = <TData = unknown, TError = unknown, ThrowOnError extends boolean = false>(
+type SseFn = <
+  TData = unknown,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _TError = unknown,
+  ThrowOnError extends boolean = false,
+>(
   options: Omit<RequestOptions<never, ThrowOnError>, 'method'>,
-) => Promise<ServerSentEventsResult<TData, TError>>;
+) => Promise<ServerSentEventsResult<TData>>;
 
 type RequestFn = <TData = unknown, TError = unknown, ThrowOnError extends boolean = false>(
   options: Omit<RequestOptions<TData, ThrowOnError>, 'method'> &
