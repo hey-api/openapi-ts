@@ -1,4 +1,4 @@
-import { definePluginConfig, mappers } from '@hey-api/shared';
+import { coerce, defineNormalizers, definePluginConfig, mappers } from '@hey-api/shared';
 import colors from 'ansi-colors';
 
 import { Api } from './api';
@@ -6,6 +6,128 @@ import { handler } from './plugin';
 import type { ZodPlugin } from './types';
 
 type CompatibilityVersion = NonNullable<ZodPlugin['Config']['config']['compatibilityVersion']>;
+
+const normalizeConfig = defineNormalizers<
+  ZodPlugin['Types']['resolvedConfig'],
+  ZodPlugin['Config']['config']
+>((c, context) => {
+  const casing = c.case ?? 'camelCase';
+
+  const types = context.valueToObject({
+    defaultValue: {
+      infer: { case: 'PascalCase', enabled: false },
+      input: { case: 'PascalCase', enabled: false },
+      output: { case: 'PascalCase', enabled: false },
+    },
+    // @ts-expect-error
+    mappers,
+    value: c.types,
+  }) as ZodPlugin['Types']['resolvedConfig']['types'];
+
+  return {
+    dates: {
+      local: false,
+      offset: false,
+    },
+    definitions: {
+      case: casing,
+      enabled: true,
+      name: 'z{{name}}',
+      types: {
+        infer: { ...types.infer, name: '{{name}}ZodType' },
+        input: { ...types.input, name: '{{name}}ZodInput' },
+        output: { ...types.output, name: '{{name}}ZodOutput' },
+      },
+    },
+    requests: {
+      body: {
+        case: casing,
+        enabled: true,
+        name: 'z{{name}}Body',
+        types: {
+          infer: { ...types.infer, name: '{{name}}BodyZodType' },
+          input: { ...types.input, name: '{{name}}BodyZodInput' },
+          output: { ...types.output, name: '{{name}}BodyZodOutput' },
+        },
+      },
+      case: casing,
+      enabled: true,
+      headers: {
+        case: casing,
+        enabled: true,
+        name: 'z{{name}}Headers',
+        types: {
+          infer: { ...types.infer, name: '{{name}}HeadersZodType' },
+          input: { ...types.input, name: '{{name}}HeadersZodInput' },
+          output: { ...types.output, name: '{{name}}HeadersZodOutput' },
+        },
+      },
+      name: 'z{{name}}Data',
+      path: {
+        case: casing,
+        enabled: true,
+        name: 'z{{name}}Path',
+        types: {
+          infer: { ...types.infer, name: '{{name}}PathZodType' },
+          input: { ...types.input, name: '{{name}}PathZodInput' },
+          output: { ...types.output, name: '{{name}}PathZodOutput' },
+        },
+      },
+      query: {
+        case: casing,
+        enabled: true,
+        name: 'z{{name}}Query',
+        types: {
+          infer: { ...types.infer, name: '{{name}}QueryZodType' },
+          input: { ...types.input, name: '{{name}}QueryZodInput' },
+          output: { ...types.output, name: '{{name}}QueryZodOutput' },
+        },
+      },
+      shouldExtract: coerce((value) =>
+        typeof value === 'function' ? value : () => Boolean(value),
+      ),
+      types: {
+        infer: { ...types.infer, name: '{{name}}DataZodType' },
+        input: { ...types.input, name: '{{name}}DataZodInput' },
+        output: { ...types.output, name: '{{name}}DataZodOutput' },
+      },
+    },
+    responses: {
+      case: casing,
+      enabled: true,
+      name: 'z{{name}}Response',
+      types: {
+        infer: { ...types.infer, name: '{{name}}ResponseZodType' },
+        input: { ...types.input, name: '{{name}}ResponseZodInput' },
+        output: { ...types.output, name: '{{name}}ResponseZodOutput' },
+      },
+    },
+    types: {
+      infer: {
+        case: 'PascalCase',
+        enabled: false,
+      },
+      input: {
+        case: 'PascalCase',
+        enabled: false,
+      },
+      output: {
+        case: 'PascalCase',
+        enabled: false,
+      },
+    },
+    webhooks: {
+      case: casing,
+      enabled: true,
+      name: 'z{{name}}WebhookRequest',
+      types: {
+        infer: { ...types.infer, name: '{{name}}WebhookRequestZodType' },
+        input: { ...types.input, name: '{{name}}WebhookRequestZodInput' },
+        output: { ...types.output, name: '{{name}}WebhookRequestZodOutput' },
+      },
+    },
+  };
+});
 
 export const defaultConfig: ZodPlugin['Config'] = {
   api: new Api(),
@@ -21,18 +143,18 @@ export const defaultConfig: ZodPlugin['Config'] = {
     const packageName = 'zod';
     const version = context.package.getVersion(packageName);
 
-    const inferCompatibleVersion = (): CompatibilityVersion => {
+    function inferCompatibleVersion(): CompatibilityVersion {
       if (version && (version.major === 4 || version.major === 3)) {
         return version.major;
       }
 
       // default compatibility version
       return 4;
-    };
+    }
 
-    const ensureCompatibleVersion = (
+    function ensureCompatibleVersion(
       compatibilityVersion: CompatibilityVersion | undefined,
-    ): CompatibilityVersion => {
+    ): CompatibilityVersion {
       if (!compatibilityVersion) {
         return inferCompatibleVersion();
       }
@@ -56,958 +178,13 @@ export const defaultConfig: ZodPlugin['Config'] = {
       }
 
       return compatibilityVersion;
-    };
+    }
 
     plugin.config.compatibilityVersion = ensureCompatibleVersion(
       plugin.config.compatibilityVersion,
     );
 
-    plugin.config.dates = context.valueToObject({
-      defaultValue: {
-        local: false,
-        offset: false,
-      },
-      value: plugin.config.dates,
-    });
-
-    plugin.config.types = context.valueToObject({
-      defaultValue: {
-        infer: {
-          case: 'PascalCase',
-          enabled: false,
-        },
-        input: {
-          case: 'PascalCase',
-          enabled: false,
-        },
-        output: {
-          case: 'PascalCase',
-          enabled: false,
-        },
-      },
-      mappers: {
-        object: (fields, defaultValue) => ({
-          ...fields,
-          infer: context.valueToObject({
-            defaultValue: {
-              ...(defaultValue.infer as Extract<
-                typeof defaultValue.infer,
-                Record<string, unknown>
-              >),
-              enabled:
-                fields.infer !== undefined
-                  ? Boolean(fields.infer)
-                  : (
-                      defaultValue.infer as Extract<
-                        typeof defaultValue.infer,
-                        Record<string, unknown>
-                      >
-                    ).enabled,
-            },
-            mappers,
-            value: fields.infer,
-          }),
-          input: context.valueToObject({
-            defaultValue: {
-              ...(defaultValue.input as Extract<
-                typeof defaultValue.input,
-                Record<string, unknown>
-              >),
-              enabled:
-                fields.input !== undefined
-                  ? Boolean(fields.input)
-                  : (
-                      defaultValue.input as Extract<
-                        typeof defaultValue.input,
-                        Record<string, unknown>
-                      >
-                    ).enabled,
-            },
-            mappers,
-            value: fields.input,
-          }),
-          output: context.valueToObject({
-            defaultValue: {
-              ...(defaultValue.output as Extract<
-                typeof defaultValue.output,
-                Record<string, unknown>
-              >),
-              enabled:
-                fields.output !== undefined
-                  ? Boolean(fields.output)
-                  : (
-                      defaultValue.output as Extract<
-                        typeof defaultValue.output,
-                        Record<string, unknown>
-                      >
-                    ).enabled,
-            },
-            mappers,
-            value: fields.output,
-          }),
-        }),
-      },
-      value: plugin.config.types,
-    });
-
-    plugin.config.definitions = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
-        enabled: true,
-        name: 'z{{name}}',
-        types: {
-          ...plugin.config.types,
-          infer: {
-            ...(plugin.config.types.infer as Extract<
-              typeof plugin.config.types.infer,
-              Record<string, unknown>
-            >),
-            name: '{{name}}ZodType',
-          },
-          input: {
-            ...(plugin.config.types.input as Extract<
-              typeof plugin.config.types.input,
-              Record<string, unknown>
-            >),
-            name: '{{name}}ZodInput',
-          },
-          output: {
-            ...(plugin.config.types.output as Extract<
-              typeof plugin.config.types.output,
-              Record<string, unknown>
-            >),
-            name: '{{name}}ZodOutput',
-          },
-        },
-      },
-      mappers: {
-        ...mappers,
-        object: (fields, defaultValue) => ({
-          ...fields,
-          types: context.valueToObject({
-            defaultValue: defaultValue.types!,
-            mappers: {
-              object: (fields, defaultValue) => ({
-                ...fields,
-                infer: context.valueToObject({
-                  defaultValue: {
-                    ...(defaultValue.infer as Extract<
-                      typeof defaultValue.infer,
-                      Record<string, unknown>
-                    >),
-                    enabled:
-                      fields.infer !== undefined
-                        ? Boolean(fields.infer)
-                        : (
-                            defaultValue.infer as Extract<
-                              typeof defaultValue.infer,
-                              Record<string, unknown>
-                            >
-                          ).enabled,
-                  },
-                  mappers,
-                  value: fields.infer,
-                }),
-                input: context.valueToObject({
-                  defaultValue: {
-                    ...(defaultValue.input as Extract<
-                      typeof defaultValue.input,
-                      Record<string, unknown>
-                    >),
-                    enabled:
-                      fields.input !== undefined
-                        ? Boolean(fields.input)
-                        : (
-                            defaultValue.input as Extract<
-                              typeof defaultValue.input,
-                              Record<string, unknown>
-                            >
-                          ).enabled,
-                  },
-                  mappers,
-                  value: fields.input,
-                }),
-                output: context.valueToObject({
-                  defaultValue: {
-                    ...(defaultValue.output as Extract<
-                      typeof defaultValue.output,
-                      Record<string, unknown>
-                    >),
-                    enabled:
-                      fields.output !== undefined
-                        ? Boolean(fields.output)
-                        : (
-                            defaultValue.output as Extract<
-                              typeof defaultValue.output,
-                              Record<string, unknown>
-                            >
-                          ).enabled,
-                  },
-                  mappers,
-                  value: fields.output,
-                }),
-              }),
-            },
-            value: fields.types,
-          }),
-        }),
-      },
-      value: plugin.config.definitions,
-    });
-
-    plugin.config.requests = context.valueToObject({
-      defaultValue: {
-        body: {
-          case: plugin.config.case ?? 'camelCase',
-          enabled: true,
-          name: 'z{{name}}Body',
-          types: {
-            ...plugin.config.types,
-            infer: {
-              ...(plugin.config.types.infer as Extract<
-                typeof plugin.config.types.infer,
-                Record<string, unknown>
-              >),
-              name: '{{name}}BodyZodType',
-            },
-            input: {
-              ...(plugin.config.types.input as Extract<
-                typeof plugin.config.types.input,
-                Record<string, unknown>
-              >),
-              name: '{{name}}BodyZodInput',
-            },
-            output: {
-              ...(plugin.config.types.output as Extract<
-                typeof plugin.config.types.output,
-                Record<string, unknown>
-              >),
-              name: '{{name}}BodyZodOutput',
-            },
-          },
-        },
-        case: plugin.config.case ?? 'camelCase',
-        enabled: true,
-        headers: {
-          case: plugin.config.case ?? 'camelCase',
-          enabled: true,
-          name: 'z{{name}}Headers',
-          types: {
-            ...plugin.config.types,
-            infer: {
-              ...(plugin.config.types.infer as Extract<
-                typeof plugin.config.types.infer,
-                Record<string, unknown>
-              >),
-              name: '{{name}}HeadersZodType',
-            },
-            input: {
-              ...(plugin.config.types.input as Extract<
-                typeof plugin.config.types.input,
-                Record<string, unknown>
-              >),
-              name: '{{name}}HeadersZodInput',
-            },
-            output: {
-              ...(plugin.config.types.output as Extract<
-                typeof plugin.config.types.output,
-                Record<string, unknown>
-              >),
-              name: '{{name}}HeadersZodOutput',
-            },
-          },
-        },
-        name: 'z{{name}}Data',
-        path: {
-          case: plugin.config.case ?? 'camelCase',
-          enabled: true,
-          name: 'z{{name}}Path',
-          types: {
-            ...plugin.config.types,
-            infer: {
-              ...(plugin.config.types.infer as Extract<
-                typeof plugin.config.types.infer,
-                Record<string, unknown>
-              >),
-              name: '{{name}}PathZodType',
-            },
-            input: {
-              ...(plugin.config.types.input as Extract<
-                typeof plugin.config.types.input,
-                Record<string, unknown>
-              >),
-              name: '{{name}}PathZodInput',
-            },
-            output: {
-              ...(plugin.config.types.output as Extract<
-                typeof plugin.config.types.output,
-                Record<string, unknown>
-              >),
-              name: '{{name}}PathZodOutput',
-            },
-          },
-        },
-        query: {
-          case: plugin.config.case ?? 'camelCase',
-          enabled: true,
-          name: 'z{{name}}Query',
-          types: {
-            ...plugin.config.types,
-            infer: {
-              ...(plugin.config.types.infer as Extract<
-                typeof plugin.config.types.infer,
-                Record<string, unknown>
-              >),
-              name: '{{name}}QueryZodType',
-            },
-            input: {
-              ...(plugin.config.types.input as Extract<
-                typeof plugin.config.types.input,
-                Record<string, unknown>
-              >),
-              name: '{{name}}QueryZodInput',
-            },
-            output: {
-              ...(plugin.config.types.output as Extract<
-                typeof plugin.config.types.output,
-                Record<string, unknown>
-              >),
-              name: '{{name}}QueryZodOutput',
-            },
-          },
-        },
-        shouldExtract: () => false,
-        types: {
-          ...plugin.config.types,
-          infer: {
-            ...(plugin.config.types.infer as Extract<
-              typeof plugin.config.types.infer,
-              Record<string, unknown>
-            >),
-            name: '{{name}}DataZodType',
-          },
-          input: {
-            ...(plugin.config.types.input as Extract<
-              typeof plugin.config.types.input,
-              Record<string, unknown>
-            >),
-            name: '{{name}}DataZodInput',
-          },
-          output: {
-            ...(plugin.config.types.output as Extract<
-              typeof plugin.config.types.output,
-              Record<string, unknown>
-            >),
-            name: '{{name}}DataZodOutput',
-          },
-        },
-      },
-      mappers: {
-        ...mappers,
-        object: (fields, defaultValue) => ({
-          ...fields,
-          body: context.valueToObject({
-            defaultValue: defaultValue.body as Extract<
-              typeof defaultValue.body,
-              Record<string, unknown>
-            >,
-            mappers: {
-              ...mappers,
-              object: (fields, defaultValue) => ({
-                ...fields,
-                types: context.valueToObject({
-                  defaultValue: defaultValue.types!,
-                  mappers: {
-                    object: (fields, defaultValue) => ({
-                      ...fields,
-                      infer: context.valueToObject({
-                        defaultValue: {
-                          ...(defaultValue.infer as Extract<
-                            typeof defaultValue.infer,
-                            Record<string, unknown>
-                          >),
-                          enabled:
-                            fields.infer !== undefined
-                              ? Boolean(fields.infer)
-                              : (
-                                  defaultValue.infer as Extract<
-                                    typeof defaultValue.infer,
-                                    Record<string, unknown>
-                                  >
-                                ).enabled,
-                        },
-                        mappers,
-                        value: fields.infer,
-                      }),
-                      input: context.valueToObject({
-                        defaultValue: {
-                          ...(defaultValue.input as Extract<
-                            typeof defaultValue.input,
-                            Record<string, unknown>
-                          >),
-                          enabled:
-                            fields.input !== undefined
-                              ? Boolean(fields.input)
-                              : (
-                                  defaultValue.input as Extract<
-                                    typeof defaultValue.input,
-                                    Record<string, unknown>
-                                  >
-                                ).enabled,
-                        },
-                        mappers,
-                        value: fields.input,
-                      }),
-                      output: context.valueToObject({
-                        defaultValue: {
-                          ...(defaultValue.output as Extract<
-                            typeof defaultValue.output,
-                            Record<string, unknown>
-                          >),
-                          enabled:
-                            fields.output !== undefined
-                              ? Boolean(fields.output)
-                              : (
-                                  defaultValue.output as Extract<
-                                    typeof defaultValue.output,
-                                    Record<string, unknown>
-                                  >
-                                ).enabled,
-                        },
-                        mappers,
-                        value: fields.output,
-                      }),
-                    }),
-                  },
-                  value: fields.types,
-                }),
-              }),
-            },
-            value: fields.body,
-          }),
-          headers: context.valueToObject({
-            defaultValue: defaultValue.headers as Extract<
-              typeof defaultValue.headers,
-              Record<string, unknown>
-            >,
-            mappers: {
-              ...mappers,
-              object: (fields, defaultValue) => ({
-                ...fields,
-                types: context.valueToObject({
-                  defaultValue: defaultValue.types!,
-                  mappers: {
-                    object: (fields, defaultValue) => ({
-                      ...fields,
-                      infer: context.valueToObject({
-                        defaultValue: {
-                          ...(defaultValue.infer as Extract<
-                            typeof defaultValue.infer,
-                            Record<string, unknown>
-                          >),
-                          enabled:
-                            fields.infer !== undefined
-                              ? Boolean(fields.infer)
-                              : (
-                                  defaultValue.infer as Extract<
-                                    typeof defaultValue.infer,
-                                    Record<string, unknown>
-                                  >
-                                ).enabled,
-                        },
-                        mappers,
-                        value: fields.infer,
-                      }),
-                      input: context.valueToObject({
-                        defaultValue: {
-                          ...(defaultValue.input as Extract<
-                            typeof defaultValue.input,
-                            Record<string, unknown>
-                          >),
-                          enabled:
-                            fields.input !== undefined
-                              ? Boolean(fields.input)
-                              : (
-                                  defaultValue.input as Extract<
-                                    typeof defaultValue.input,
-                                    Record<string, unknown>
-                                  >
-                                ).enabled,
-                        },
-                        mappers,
-                        value: fields.input,
-                      }),
-                      output: context.valueToObject({
-                        defaultValue: {
-                          ...(defaultValue.output as Extract<
-                            typeof defaultValue.output,
-                            Record<string, unknown>
-                          >),
-                          enabled:
-                            fields.output !== undefined
-                              ? Boolean(fields.output)
-                              : (
-                                  defaultValue.output as Extract<
-                                    typeof defaultValue.output,
-                                    Record<string, unknown>
-                                  >
-                                ).enabled,
-                        },
-                        mappers,
-                        value: fields.output,
-                      }),
-                    }),
-                  },
-                  value: fields.types,
-                }),
-              }),
-            },
-            value: fields.headers,
-          }),
-          path: context.valueToObject({
-            defaultValue: defaultValue.path as Extract<
-              typeof defaultValue.path,
-              Record<string, unknown>
-            >,
-            mappers: {
-              ...mappers,
-              object: (fields, defaultValue) => ({
-                ...fields,
-                types: context.valueToObject({
-                  defaultValue: defaultValue.types!,
-                  mappers: {
-                    object: (fields, defaultValue) => ({
-                      ...fields,
-                      infer: context.valueToObject({
-                        defaultValue: {
-                          ...(defaultValue.infer as Extract<
-                            typeof defaultValue.infer,
-                            Record<string, unknown>
-                          >),
-                          enabled:
-                            fields.infer !== undefined
-                              ? Boolean(fields.infer)
-                              : (
-                                  defaultValue.infer as Extract<
-                                    typeof defaultValue.infer,
-                                    Record<string, unknown>
-                                  >
-                                ).enabled,
-                        },
-                        mappers,
-                        value: fields.infer,
-                      }),
-                      input: context.valueToObject({
-                        defaultValue: {
-                          ...(defaultValue.input as Extract<
-                            typeof defaultValue.input,
-                            Record<string, unknown>
-                          >),
-                          enabled:
-                            fields.input !== undefined
-                              ? Boolean(fields.input)
-                              : (
-                                  defaultValue.input as Extract<
-                                    typeof defaultValue.input,
-                                    Record<string, unknown>
-                                  >
-                                ).enabled,
-                        },
-                        mappers,
-                        value: fields.input,
-                      }),
-                      output: context.valueToObject({
-                        defaultValue: {
-                          ...(defaultValue.output as Extract<
-                            typeof defaultValue.output,
-                            Record<string, unknown>
-                          >),
-                          enabled:
-                            fields.output !== undefined
-                              ? Boolean(fields.output)
-                              : (
-                                  defaultValue.output as Extract<
-                                    typeof defaultValue.output,
-                                    Record<string, unknown>
-                                  >
-                                ).enabled,
-                        },
-                        mappers,
-                        value: fields.output,
-                      }),
-                    }),
-                  },
-                  value: fields.types,
-                }),
-              }),
-            },
-            value: fields.path,
-          }),
-          query: context.valueToObject({
-            defaultValue: defaultValue.query as Extract<
-              typeof defaultValue.query,
-              Record<string, unknown>
-            >,
-            mappers: {
-              ...mappers,
-              object: (fields, defaultValue) => ({
-                ...fields,
-                types: context.valueToObject({
-                  defaultValue: defaultValue.types!,
-                  mappers: {
-                    object: (fields, defaultValue) => ({
-                      ...fields,
-                      infer: context.valueToObject({
-                        defaultValue: {
-                          ...(defaultValue.infer as Extract<
-                            typeof defaultValue.infer,
-                            Record<string, unknown>
-                          >),
-                          enabled:
-                            fields.infer !== undefined
-                              ? Boolean(fields.infer)
-                              : (
-                                  defaultValue.infer as Extract<
-                                    typeof defaultValue.infer,
-                                    Record<string, unknown>
-                                  >
-                                ).enabled,
-                        },
-                        mappers,
-                        value: fields.infer,
-                      }),
-                      input: context.valueToObject({
-                        defaultValue: {
-                          ...(defaultValue.input as Extract<
-                            typeof defaultValue.input,
-                            Record<string, unknown>
-                          >),
-                          enabled:
-                            fields.input !== undefined
-                              ? Boolean(fields.input)
-                              : (
-                                  defaultValue.input as Extract<
-                                    typeof defaultValue.input,
-                                    Record<string, unknown>
-                                  >
-                                ).enabled,
-                        },
-                        mappers,
-                        value: fields.input,
-                      }),
-                      output: context.valueToObject({
-                        defaultValue: {
-                          ...(defaultValue.output as Extract<
-                            typeof defaultValue.output,
-                            Record<string, unknown>
-                          >),
-                          enabled:
-                            fields.output !== undefined
-                              ? Boolean(fields.output)
-                              : (
-                                  defaultValue.output as Extract<
-                                    typeof defaultValue.output,
-                                    Record<string, unknown>
-                                  >
-                                ).enabled,
-                        },
-                        mappers,
-                        value: fields.output,
-                      }),
-                    }),
-                  },
-                  value: fields.types,
-                }),
-              }),
-            },
-            value: fields.query,
-          }),
-          shouldExtract:
-            fields.shouldExtract !== undefined
-              ? typeof fields.shouldExtract === 'function'
-                ? fields.shouldExtract
-                : () => Boolean(fields.shouldExtract)
-              : defaultValue.shouldExtract,
-          types: context.valueToObject({
-            defaultValue: defaultValue.types!,
-            mappers: {
-              object: (fields, defaultValue) => ({
-                ...fields,
-                infer: context.valueToObject({
-                  defaultValue: {
-                    ...(defaultValue.infer as Extract<
-                      typeof defaultValue.infer,
-                      Record<string, unknown>
-                    >),
-                    enabled:
-                      fields.infer !== undefined
-                        ? Boolean(fields.infer)
-                        : (
-                            defaultValue.infer as Extract<
-                              typeof defaultValue.infer,
-                              Record<string, unknown>
-                            >
-                          ).enabled,
-                  },
-                  mappers,
-                  value: fields.infer,
-                }),
-                input: context.valueToObject({
-                  defaultValue: {
-                    ...(defaultValue.input as Extract<
-                      typeof defaultValue.input,
-                      Record<string, unknown>
-                    >),
-                    enabled:
-                      fields.input !== undefined
-                        ? Boolean(fields.input)
-                        : (
-                            defaultValue.input as Extract<
-                              typeof defaultValue.input,
-                              Record<string, unknown>
-                            >
-                          ).enabled,
-                  },
-                  mappers,
-                  value: fields.input,
-                }),
-                output: context.valueToObject({
-                  defaultValue: {
-                    ...(defaultValue.output as Extract<
-                      typeof defaultValue.output,
-                      Record<string, unknown>
-                    >),
-                    enabled:
-                      fields.output !== undefined
-                        ? Boolean(fields.output)
-                        : (
-                            defaultValue.output as Extract<
-                              typeof defaultValue.output,
-                              Record<string, unknown>
-                            >
-                          ).enabled,
-                  },
-                  mappers,
-                  value: fields.output,
-                }),
-              }),
-            },
-            value: fields.types,
-          }),
-        }),
-      },
-      value: plugin.config.requests,
-    });
-
-    plugin.config.responses = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
-        enabled: true,
-        name: 'z{{name}}Response',
-        types: {
-          ...plugin.config.types,
-          infer: {
-            ...(plugin.config.types.infer as Extract<
-              typeof plugin.config.types.infer,
-              Record<string, unknown>
-            >),
-            name: '{{name}}ResponseZodType',
-          },
-          input: {
-            ...(plugin.config.types.input as Extract<
-              typeof plugin.config.types.input,
-              Record<string, unknown>
-            >),
-            name: '{{name}}ResponseZodInput',
-          },
-          output: {
-            ...(plugin.config.types.output as Extract<
-              typeof plugin.config.types.output,
-              Record<string, unknown>
-            >),
-            name: '{{name}}ResponseZodOutput',
-          },
-        },
-      },
-      mappers: {
-        ...mappers,
-        object: (fields, defaultValue) => ({
-          ...fields,
-          types: context.valueToObject({
-            defaultValue: defaultValue.types!,
-            mappers: {
-              object: (fields, defaultValue) => ({
-                ...fields,
-                infer: context.valueToObject({
-                  defaultValue: {
-                    ...(defaultValue.infer as Extract<
-                      typeof defaultValue.infer,
-                      Record<string, unknown>
-                    >),
-                    enabled:
-                      fields.infer !== undefined
-                        ? Boolean(fields.infer)
-                        : (
-                            defaultValue.infer as Extract<
-                              typeof defaultValue.infer,
-                              Record<string, unknown>
-                            >
-                          ).enabled,
-                  },
-                  mappers,
-                  value: fields.infer,
-                }),
-                input: context.valueToObject({
-                  defaultValue: {
-                    ...(defaultValue.input as Extract<
-                      typeof defaultValue.input,
-                      Record<string, unknown>
-                    >),
-                    enabled:
-                      fields.input !== undefined
-                        ? Boolean(fields.input)
-                        : (
-                            defaultValue.input as Extract<
-                              typeof defaultValue.input,
-                              Record<string, unknown>
-                            >
-                          ).enabled,
-                  },
-                  mappers,
-                  value: fields.input,
-                }),
-                output: context.valueToObject({
-                  defaultValue: {
-                    ...(defaultValue.output as Extract<
-                      typeof defaultValue.output,
-                      Record<string, unknown>
-                    >),
-                    enabled:
-                      fields.output !== undefined
-                        ? Boolean(fields.output)
-                        : (
-                            defaultValue.output as Extract<
-                              typeof defaultValue.output,
-                              Record<string, unknown>
-                            >
-                          ).enabled,
-                  },
-                  mappers,
-                  value: fields.output,
-                }),
-              }),
-            },
-            value: fields.types,
-          }),
-        }),
-      },
-      value: plugin.config.responses,
-    });
-
-    plugin.config.webhooks = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
-        enabled: true,
-        name: 'z{{name}}WebhookRequest',
-        types: {
-          ...plugin.config.types,
-          infer: {
-            ...(plugin.config.types.infer as Extract<
-              typeof plugin.config.types.infer,
-              Record<string, unknown>
-            >),
-            name: '{{name}}WebhookRequestZodType',
-          },
-          input: {
-            ...(plugin.config.types.input as Extract<
-              typeof plugin.config.types.input,
-              Record<string, unknown>
-            >),
-            name: '{{name}}WebhookRequestZodInput',
-          },
-          output: {
-            ...(plugin.config.types.output as Extract<
-              typeof plugin.config.types.output,
-              Record<string, unknown>
-            >),
-            name: '{{name}}WebhookRequestZodOutput',
-          },
-        },
-      },
-      mappers: {
-        ...mappers,
-        object: (fields, defaultValue) => ({
-          ...fields,
-          types: context.valueToObject({
-            defaultValue: defaultValue.types!,
-            mappers: {
-              object: (fields, defaultValue) => ({
-                ...fields,
-                infer: context.valueToObject({
-                  defaultValue: {
-                    ...(defaultValue.infer as Extract<
-                      typeof defaultValue.infer,
-                      Record<string, unknown>
-                    >),
-                    enabled:
-                      fields.infer !== undefined
-                        ? Boolean(fields.infer)
-                        : (
-                            defaultValue.infer as Extract<
-                              typeof defaultValue.infer,
-                              Record<string, unknown>
-                            >
-                          ).enabled,
-                  },
-                  mappers,
-                  value: fields.infer,
-                }),
-                input: context.valueToObject({
-                  defaultValue: {
-                    ...(defaultValue.input as Extract<
-                      typeof defaultValue.input,
-                      Record<string, unknown>
-                    >),
-                    enabled:
-                      fields.input !== undefined
-                        ? Boolean(fields.input)
-                        : (
-                            defaultValue.input as Extract<
-                              typeof defaultValue.input,
-                              Record<string, unknown>
-                            >
-                          ).enabled,
-                  },
-                  mappers,
-                  value: fields.input,
-                }),
-                output: context.valueToObject({
-                  defaultValue: {
-                    ...(defaultValue.output as Extract<
-                      typeof defaultValue.output,
-                      Record<string, unknown>
-                    >),
-                    enabled:
-                      fields.output !== undefined
-                        ? Boolean(fields.output)
-                        : (
-                            defaultValue.output as Extract<
-                              typeof defaultValue.output,
-                              Record<string, unknown>
-                            >
-                          ).enabled,
-                  },
-                  mappers,
-                  value: fields.output,
-                }),
-              }),
-            },
-            value: fields.types,
-          }),
-        }),
-      },
-      value: plugin.config.webhooks,
-    });
+    normalizeConfig(plugin.config, context);
   },
   tags: ['transformer', 'validator'],
 };

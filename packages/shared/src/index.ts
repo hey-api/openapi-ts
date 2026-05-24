@@ -27,8 +27,8 @@ export type {
   UserCommentsOption,
   UserIndexExportOption,
 } from './config/shared';
-export type { ValueToObject } from './config/utils/config';
-export { valueToObject } from './config/utils/config';
+export type { Coercer, ValueToObject } from './config/utils/config';
+export { coerce, valueToObject } from './config/utils/config';
 export type { Dependency } from './config/utils/dependencies';
 export { dependencyFactory, satisfies } from './config/utils/dependencies';
 export { debugTools } from './debug';
@@ -101,7 +101,8 @@ export type {
 export type { GetNameContext, Hooks } from './parser/hooks';
 export { warnOnConflictingDuplicatePlugins } from './plugins/duplicate';
 export type { SchemaWithType } from './plugins/shared/types/schema';
-export { definePluginConfig, mappers } from './plugins/shared/utils/config';
+export type { NormalizerTable } from './plugins/shared/utils/config';
+export { defineNormalizers, definePluginConfig, mappers } from './plugins/shared/utils/config';
 export type { PluginInstanceTypes } from './plugins/shared/utils/instance';
 export { PluginInstance } from './plugins/shared/utils/instance';
 export { buildSymbolIn } from './plugins/symbol';
@@ -112,6 +113,7 @@ export type {
   PluginConfigMap,
   PluginContext,
   PluginNames,
+  PluginTag,
 } from './plugins/types';
 export type {
   DefaultRequestValidatorLayers,

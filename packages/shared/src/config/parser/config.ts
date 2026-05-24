@@ -1,4 +1,4 @@
-import { valueToObject } from '../utils/config';
+import { coerce, valueToObject } from '../utils/config';
 import type { Parser, UserParser } from './types';
 
 export const defaultPaginationKeywords = [
@@ -14,139 +14,84 @@ export function getParser(userConfig: { parser?: UserParser }): Parser {
   const parser = valueToObject({
     defaultValue: {
       hooks: {},
-      pagination: {
-        keywords: defaultPaginationKeywords,
-      },
-      transforms: {
-        enums: {
-          case: 'PascalCase',
-          enabled: false,
-          mode: 'root',
-          name: '{{name}}Enum',
-        },
-        propertiesRequiredByDefault: false,
-        readWrite: {
-          enabled: true,
-          requests: {
-            case: 'preserve',
-            name: '{{name}}Writable',
-          },
-          responses: {
-            case: 'preserve',
-            name: '{{name}}',
-          },
-        },
-        schemaName: undefined,
-      },
-      validate_EXPERIMENTAL: false,
-    },
-    mappers: {
-      object: (fields, defaultValue) => ({
-        ...fields,
-        pagination: valueToObject({
+      pagination: coerce((value) =>
+        valueToObject({
           defaultValue: {
-            ...(defaultValue.pagination as Extract<
-              typeof defaultValue.pagination,
-              Record<string, unknown>
-            >),
+            keywords: defaultPaginationKeywords,
           },
-          value: fields.pagination,
+          value: value as UserParser['pagination'],
         }),
-        transforms: valueToObject({
+      ),
+      transforms: coerce((value) =>
+        valueToObject({
           defaultValue: {
-            ...(defaultValue.transforms as Extract<
-              typeof defaultValue.transforms,
-              Record<string, unknown>
-            >),
-          },
-          mappers: {
-            object: (fields, defaultValue) => ({
-              ...fields,
-              enums: valueToObject({
+            enums: coerce((value) =>
+              valueToObject({
                 defaultValue: {
-                  ...(defaultValue.enums as Extract<
-                    typeof defaultValue.enums,
-                    Record<string, unknown>
-                  >),
-                  enabled:
-                    fields.enums !== undefined
-                      ? Boolean(fields.enums)
-                      : (
-                          defaultValue.enums as Extract<
-                            typeof defaultValue.enums,
-                            Record<string, unknown>
-                          >
-                        ).enabled,
+                  case: 'PascalCase',
+                  enabled: value !== undefined ? Boolean(value) : false,
+                  mode: 'root',
+                  name: '{{name}}Enum',
                 },
                 mappers: {
                   boolean: (enabled) => ({ enabled }),
                   string: (mode) => ({ mode }),
                 },
-                value: fields.enums,
+                value: value as NonNullable<UserParser['transforms']>['enums'],
               }),
-              propertiesRequiredByDefault:
-                fields.propertiesRequiredByDefault !== undefined
-                  ? fields.propertiesRequiredByDefault
-                  : defaultValue.propertiesRequiredByDefault,
-              readWrite: valueToObject({
+            ),
+            propertiesRequiredByDefault: false,
+            readWrite: coerce((value) =>
+              valueToObject({
                 defaultValue: {
-                  ...(defaultValue.readWrite as Extract<
-                    typeof defaultValue.readWrite,
-                    Record<string, unknown>
-                  >),
-                  enabled:
-                    fields.readWrite !== undefined
-                      ? Boolean(fields.readWrite)
-                      : (
-                          defaultValue.readWrite as Extract<
-                            typeof defaultValue.readWrite,
-                            Record<string, unknown>
-                          >
-                        ).enabled,
+                  enabled: value !== undefined ? Boolean(value) : true,
+                  requests: coerce((value) =>
+                    valueToObject({
+                      defaultValue: {
+                        case: 'preserve',
+                        name: '{{name}}Writable',
+                      },
+                      mappers: {
+                        function: (name) => ({ name }),
+                        string: (name) => ({ name }),
+                      },
+                      value: value as Extract<
+                        NonNullable<NonNullable<UserParser['transforms']>['readWrite']>,
+                        object
+                      >['requests'],
+                    }),
+                  ),
+                  responses: coerce((value) =>
+                    valueToObject({
+                      defaultValue: {
+                        case: 'preserve',
+                        name: '{{name}}',
+                      },
+                      mappers: {
+                        function: (name) => ({ name }),
+                        string: (name) => ({ name }),
+                      },
+                      value: value as Extract<
+                        NonNullable<NonNullable<UserParser['transforms']>['readWrite']>,
+                        object
+                      >['responses'],
+                    }),
+                  ),
                 },
                 mappers: {
                   boolean: (enabled) => ({ enabled }),
-                  object: (fields, defaultValue) => ({
-                    ...fields,
-                    requests: valueToObject({
-                      defaultValue: {
-                        ...(defaultValue.requests as Extract<
-                          typeof defaultValue.requests,
-                          Record<string, unknown>
-                        >),
-                      },
-                      mappers: {
-                        function: (name) => ({ name }),
-                        string: (name) => ({ name }),
-                      },
-                      value: fields.requests,
-                    }),
-                    responses: valueToObject({
-                      defaultValue: {
-                        ...(defaultValue.responses as Extract<
-                          typeof defaultValue.responses,
-                          Record<string, unknown>
-                        >),
-                      },
-                      mappers: {
-                        function: (name) => ({ name }),
-                        string: (name) => ({ name }),
-                      },
-                      value: fields.responses,
-                    }),
-                  }),
                 },
-                value: fields.readWrite,
+                value: value as NonNullable<UserParser['transforms']>['readWrite'],
               }),
-              schemaName:
-                fields.schemaName !== undefined ? fields.schemaName : defaultValue.schemaName,
-            }),
+            ),
+            schemaName: undefined,
           },
-          value: fields.transforms,
+          value: value as UserParser['transforms'],
         }),
-        validate_EXPERIMENTAL:
-          fields.validate_EXPERIMENTAL === true ? 'warn' : fields.validate_EXPERIMENTAL,
-      }),
+      ),
+      validate_EXPERIMENTAL: coerce(
+        (value) => (value === true ? 'warn' : value) as 'strict' | 'warn' | boolean | undefined,
+      ),
     },
     value: userConfig.parser,
   });
