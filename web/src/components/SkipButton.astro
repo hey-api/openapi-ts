@@ -1,4 +1,6 @@
 ---
+import arrowDownSvg from '@/assets/icons/arrow-down.svg?raw';
+
 interface Props {
   class?: string;
   id: string;
@@ -7,7 +9,7 @@ const { class: className, id } = Astro.props;
 ---
 
 <button class:list={['skip-btn', className]} id={id} aria-label="Skip to next section">
-  Skip section <span aria-hidden="true">↓</span>
+  Skip section <span class="icon" set:html={arrowDownSvg} aria-hidden="true" />
 </button>
 
 <style>
@@ -35,6 +37,20 @@ const { class: className, id } = Astro.props;
 
   .skip-btn:hover {
     color: var(--sl-color-text);
+  }
+
+  .skip-btn .icon {
+    display: inline-block;
+    height: 1em;
+    margin-right: -0.2em;
+    width: 1em;
+  }
+
+  .skip-btn .icon :global(svg) {
+    display: inline-block;
+    height: auto;
+    margin-bottom: -2px;
+    max-width: 100%;
   }
 
   @media (max-width: 640px) {

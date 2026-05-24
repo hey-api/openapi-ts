@@ -1,4 +1,6 @@
 ---
+import arrowRightSvg from '@/assets/icons/arrow-right.svg?raw';
+import arrowUpRightSvg from '@/assets/icons/arrow-up-right.svg?raw';
 import pythonSvg from '@/assets/lang/python.svg?raw';
 import typescriptSvg from '@/assets/lang/typescript.svg?raw';
 import type { ToggleOption } from '@/components/ToggleDropdown.astro';
@@ -143,7 +145,7 @@ const outputOptions = OUTPUT_OPTIONS.map(({ description, downloads, installComma
 
       <div class="cta-section">
         <a href={defaultOutputOption.link} class="btn-primary cta-get-started">
-          Get Started <span aria-hidden="true">→</span>
+          Get Started <span class="icon" set:html={arrowRightSvg} aria-hidden="true" />
         </a>
         <script is:inline define:vars={{ outputOptions, outputAttr: CODEGEN_OUTPUT_ATTR }}>
           (function () {
@@ -160,7 +162,7 @@ const outputOptions = OUTPUT_OPTIONS.map(({ description, downloads, installComma
           target="_blank"
           rel="noopener"
         >
-          View Demo ↗
+          View Demo <span class="icon" set:html={arrowUpRightSvg} aria-hidden="true" />
         </a>
       </div>
     </div>
@@ -318,6 +320,18 @@ const outputOptions = OUTPUT_OPTIONS.map(({ description, downloads, installComma
   .cta-section {
     display: flex;
     gap: 12px;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    gap: 4px;
+  }
+
+  .btn-primary .icon,
+  .btn-secondary .icon {
+    height: 1em;
+    margin-right: -0.2em;
+    width: 1em;
   }
 
   @media (max-width: 900px) {

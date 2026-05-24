@@ -1,4 +1,6 @@
 ---
+import arrowRightSvg from '@/assets/icons/arrow-right.svg?raw';
+import arrowUpRightSvg from '@/assets/icons/arrow-up-right.svg?raw';
 import { GITHUB_URL } from '@/data/constants';
 import type { CodegenOutput } from '@/utils/codegen-url';
 
@@ -10,10 +12,10 @@ const { defaultOutput = 'typescript' } = Astro.props;
 
 const title = "Ready when you are.";
 const primaryCta = {
-  label: "Get Started →",
+  label: "Get Started",
   href: `/docs/openapi/${defaultOutput}/get-started`
 };
-const secondaryCta = { label: "View on GitHub ↗", href: GITHUB_URL };
+const secondaryCta = { label: "View on GitHub", href: GITHUB_URL };
 const p1 = { label: "Player 1", name: "OpenAPI Spec" };
 const p2 = { label: "Player 2", name: "Your Client" };
 ---
@@ -38,10 +40,10 @@ const p2 = { label: "Player 2", name: "Your Client" };
 
     <div class="final-cta-actions">
       <a href={primaryCta.href} class="btn-primary btn-large" id="startBtn">
-        {primaryCta.label}
+        {primaryCta.label} <span class="icon" set:html={arrowRightSvg} aria-hidden="true" />
       </a>
       <a href={secondaryCta.href} class="btn-secondary btn-large" target="_blank" rel="noopener">
-        {secondaryCta.label}
+        {secondaryCta.label} <span class="icon" set:html={arrowUpRightSvg} aria-hidden="true" />
       </a>
     </div>
   </div>
@@ -49,6 +51,18 @@ const p2 = { label: "Player 2", name: "Your Client" };
 
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+  .btn-primary,
+  .btn-secondary {
+    gap: 4px;
+  }
+
+  .btn-primary .icon,
+  .btn-secondary .icon {
+    height: 1em;
+    margin-right: -0.2em;
+    width: 1em;
+  }
 
   .final-cta {
     margin-top: 0;

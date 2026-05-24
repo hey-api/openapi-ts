@@ -1,6 +1,8 @@
 ---
 import MobileMenuToggle from '@astrojs/starlight/components/MobileMenuToggle.astro';
 
+import arrowRightSvg from '@/assets/icons/arrow-right.svg?raw';
+
 const { hasSidebar } = Astro.locals.starlightRoute;
 ---
 
@@ -13,7 +15,7 @@ const { hasSidebar } = Astro.locals.starlightRoute;
     <span class="announcement-text">Host your specs. Generate from anywhere.</span>
     <span class="announcement-cta" aria-hidden="true">
       <span class="cta-text">Get Started</span>
-      →
+      <span class="icon" set:html={arrowRightSvg} aria-hidden="true" />
     </span>
   </a>
 </div>
@@ -117,6 +119,18 @@ const { hasSidebar } = Astro.locals.starlightRoute;
     text-decoration: none;
     transition: background 0.2s, border-color 0.2s, color 0.2s;
     white-space: nowrap;
+  }
+
+  .announcement-cta .icon {
+    height: 1em;
+    margin-right: -0.2em;
+    width: 1em;
+  }
+
+  .announcement-cta .icon :global(svg) {
+    display: block;
+    height: auto;
+    max-width: 100%;
   }
 
   .page {
