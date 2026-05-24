@@ -1,4 +1,4 @@
-import type { SchemaWithType } from '@hey-api/shared';
+import type { SchemaVisitorContext, SchemaWithType } from '@hey-api/shared';
 
 import { $ } from '../../../../../ts-dsl';
 import type { VoidResolverContext } from '../../resolvers';
@@ -14,10 +14,10 @@ function voidResolver(ctx: VoidResolverContext): Type {
 }
 
 export function voidToAst({
+  path,
   plugin,
   schema,
-}: {
-  plugin: HeyApiTypeScriptPlugin['Instance'];
+}: SchemaVisitorContext<HeyApiTypeScriptPlugin['Instance']> & {
   schema: SchemaWithType<'void'>;
 }): Type {
   const ctx: VoidResolverContext = {
@@ -25,6 +25,7 @@ export function voidToAst({
     nodes: {
       base: baseNode,
     },
+    path,
     plugin,
     schema,
   };

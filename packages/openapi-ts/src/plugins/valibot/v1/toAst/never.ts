@@ -1,4 +1,4 @@
-import type { SchemaWithType } from '@hey-api/shared';
+import type { SchemaVisitorContext, SchemaWithType } from '@hey-api/shared';
 
 import { $ } from '../../../../ts-dsl';
 import type { NeverResolverContext } from '../../resolvers';
@@ -20,17 +20,18 @@ function neverResolver(ctx: NeverResolverContext): Pipes {
 }
 
 export function neverToPipes({
+  path,
   plugin,
   schema,
-}: {
-  plugin: ValibotPlugin['Instance'];
+}: SchemaVisitorContext<ValibotPlugin['Instance']> & {
   schema: SchemaWithType<'never'>;
 }): Pipe {
-  const ctx: NeverResolverContext = {
+  const resolverCtx: NeverResolverContext = {
     $,
     nodes: {
       base: baseNode,
     },
+    path,
     pipes: {
       ...pipes,
       current: [],
@@ -43,6 +44,6 @@ export function neverToPipes({
   };
 
   const resolver = plugin.config['~resolvers']?.never;
-  const node = resolver?.(ctx) ?? neverResolver(ctx);
-  return ctx.pipes.toNode(node, plugin);
+  const node = resolver?.(resolverCtx) ?? neverResolver(resolverCtx);
+  return resolverCtx.pipes.toNode(node, plugin);
 }

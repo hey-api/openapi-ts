@@ -119,7 +119,7 @@ export const defaultConfig: ValibotPlugin['Config'] = {
       value: plugin.config.webhooks,
     });
   },
-  tags: ['validator'],
+  tags: ['transformer', 'validator'],
 };
 
 /**

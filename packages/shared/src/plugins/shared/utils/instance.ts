@@ -266,6 +266,21 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     );
   }
 
+  getHooks<T>(
+    selector: (hooks: Hooks) => T | undefined,
+    ...customHooks: ReadonlyArray<T | undefined>
+  ): Array<NonNullable<T>> {
+    const result: Array<NonNullable<T>> = [];
+    for (const hook of customHooks) {
+      if (hook) result.push(hook);
+    }
+    const local = selector(this.config['~hooks'] ?? {});
+    if (local) result.push(local);
+    const global = selector(this.context.config.parser.hooks);
+    if (global) result.push(global);
+    return result;
+  }
+
   /**
    * Retrieves a registered plugin instance by its name from the context. This
    * allows plugins to access other plugins that have been registered in the
@@ -341,7 +356,11 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
   }
 
   querySymbol(filter: SymbolMeta): Symbol<ResolvedNode> | undefined {
-    return this.gen.symbols.query(filter)[0] as Symbol<ResolvedNode> | undefined;
+    return this.querySymbols(filter)[0];
+  }
+
+  querySymbols(filter: SymbolMeta): Array<Symbol<ResolvedNode>> {
+    return this.gen.symbols.query(filter) as Array<Symbol<ResolvedNode>>;
   }
 
   referenceSymbol(meta: SymbolMeta): Symbol<ResolvedNode> {
@@ -373,7 +392,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     if (symbol.external) {
       if (!meta.category) meta.category = 'external';
       if (!meta.resource) meta.resource = `${symbol.external}.${name}`;
-      const existing = this.gen.symbols.query(meta).find((s) => s.name === name);
+      const existing = this.querySymbols(meta).find((s) => s.name === name);
       if (existing) return existing;
     }
     const symbolIn: SymbolIn = {
@@ -409,7 +428,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     // `.symbol()` will handle the external symbol deduplication
     if (symbol.external) return this.symbol(name, symbol);
     if (symbol.meta) {
-      const existing = this.gen.symbols.query(symbol.meta).find((s) => s.name === name);
+      const existing = this.querySymbols(symbol.meta).find((s) => s.name === name);
       if (existing) return existing;
     }
     return this.symbol(name, symbol);
@@ -448,9 +467,8 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
   }
 
   private getSymbolExportFromFilePath(symbol: Symbol): ReadonlyArray<string> | undefined {
-    const hooks = [this.config['~hooks']?.symbols, this.context.config.parser.hooks.symbols];
-    for (const hook of hooks) {
-      const result = hook?.getExportFromFilePath?.(symbol);
+    for (const hook of this.getHooks((hooks) => hooks.symbols?.getExportFromFilePath)) {
+      const result = hook(symbol);
       if (result !== undefined) return result;
     }
 
@@ -476,9 +494,8 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
   }
 
   private getSymbolFilePath(symbol: Symbol): string | undefined {
-    const hooks = [this.config['~hooks']?.symbols, this.context.config.parser.hooks.symbols];
-    for (const hook of hooks) {
-      const result = hook?.getFilePath?.(symbol);
+    for (const hook of this.getHooks((hooks) => hooks.symbols?.getFilePath)) {
+      const result = hook(symbol);
       if (result !== undefined) return result;
     }
     return defaultGetFilePath(symbol);

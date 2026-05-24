@@ -1,0 +1,64 @@
+---
+import Default from '@astrojs/starlight/components/TableOfContents.astro';
+---
+
+<Default {...Astro.props}><slot /></Default>
+
+<style is:global>
+  starlight-toc h2 {
+    color: var(--sl-color-gray-3);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    margin-bottom: 12px;
+    padding: 0 8px 0 12px;
+    text-transform: uppercase;
+  }
+
+  starlight-toc nav {
+    padding-left: 0;
+    position: relative;
+  }
+
+  starlight-toc nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  starlight-toc nav ul ul {
+    padding-left: 12px;
+  }
+
+  starlight-toc nav > ul > li + li {
+    margin-top: 1px;
+  }
+
+  starlight-toc a {
+    border-left: 2px solid transparent;
+    border-radius: 0 6px 6px 0;
+    color: var(--sl-color-gray-3);
+    display: block;
+    font-size: 13px;
+    line-height: 1.4;
+    padding: 5px 8px 5px 12px;
+    text-decoration: none;
+    transition: background 150ms ease, border-color 150ms ease, color 150ms ease;
+  }
+
+  starlight-toc a:hover,
+  starlight-toc a:focus-visible {
+    background: var(--dt-bg-2);
+    color: var(--sl-color-text);
+  }
+
+  starlight-toc a[aria-current='true'] {
+    border-left-color: var(--vp-c-brand-1);
+    color: var(--vp-c-brand-1);
+    font-weight: 600;
+  }
+
+  starlight-toc a[aria-current='true']:hover {
+    background: color-mix(in srgb, var(--vp-c-brand-1) 10%, transparent);
+  }
+</style>

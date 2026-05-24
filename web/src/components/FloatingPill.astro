@@ -1,0 +1,162 @@
+---
+import menuSvg from '@/assets/icons/menu.svg?raw';
+
+interface PillItem {
+  icon?: boolean;
+  label: string;
+  value: string;
+}
+
+interface Props {
+  items: Array<PillItem>;
+}
+
+const { items } = Astro.props;
+---
+
+<hey-api-pill class="floating-pill-group">
+  {items.map((item, i) => (
+    <>
+      {i > 0 && <div class="pill-divider" aria-hidden="true" />}
+      <button
+        class="floating-pill"
+        data-value={item.value}
+        aria-label={`Open ${item.label.toLowerCase()}`}
+        aria-expanded="false"
+      >
+        {item.icon && (
+          <span class="pill-icon" set:html={menuSvg} aria-hidden="true" />
+        )}
+        {item.label}
+      </button>
+    </>
+  ))}
+</hey-api-pill>
+
+<style>
+  .floating-pill-group {
+    align-items: center;
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(12px) saturate(160%);
+    -webkit-backdrop-filter: blur(12px) saturate(160%);
+    border-radius: 999px;
+    border: 0.5px solid rgba(255, 255, 255, 0.35);
+    bottom: 28px;
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.06),
+      0 1px 0 rgba(255, 255, 255, 0.18) inset,
+      0 -1px 0 rgba(0, 0, 0, 0.25) inset,
+      0 6px 20px rgba(0, 0, 0, 0.28),
+      0 1px 4px rgba(0, 0, 0, 0.18);
+    display: none;
+    left: 50%;
+    position: fixed;
+    transform: translateX(-50%);
+    transition: box-shadow 150ms ease, transform 150ms ease, opacity 200ms ease, background 150ms ease, border-color 150ms ease;
+    z-index: 50;
+  }
+
+  .floating-pill-group:hover {
+    background: rgba(255, 255, 255, 0.16);
+    border-color: rgba(255, 255, 255, 0.45);
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.09),
+      0 1px 0 rgba(255, 255, 255, 0.22) inset,
+      0 -1px 0 rgba(0, 0, 0, 0.25) inset,
+      0 10px 28px rgba(0, 0, 0, 0.32),
+      0 2px 6px rgba(0, 0, 0, 0.18);
+    transform: translateX(-50%) translateY(-1px);
+  }
+
+  .floating-pill-group:has([aria-expanded="true"]) {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .floating-pill {
+    align-items: center;
+    background: none;
+    border: none;
+    color: var(--sl-color-text);
+    cursor: pointer;
+    display: flex;
+    font-size: 14px;
+    font-weight: 500;
+    gap: 7px;
+    padding: 12px 20px;
+    transition: color 150ms ease;
+    white-space: nowrap;
+  }
+
+  .floating-pill:first-child {
+    border-radius: 999px 0 0 999px;
+  }
+
+  .floating-pill:last-child {
+    border-radius: 0 999px 999px 0;
+  }
+
+  .floating-pill:only-child {
+    border-radius: 999px;
+  }
+
+  .floating-pill:hover {
+    color: var(--vp-c-brand-1);
+  }
+
+  .pill-icon {
+    align-items: center;
+    display: flex;
+    flex-shrink: 0;
+    height: 15px;
+    width: 15px;
+  }
+
+  .pill-divider {
+    background: rgba(255, 255, 255, 0.15);
+    flex-shrink: 0;
+    height: 16px;
+    width: 0.5px;
+  }
+
+  @media (max-width: 50rem) {
+    .floating-pill-group {
+      display: flex;
+    }
+  }
+
+  @media (min-width: 50rem) {
+    .floating-pill-group {
+      display: none !important;
+    }
+  }
+</style>
+
+<script>
+  class HeyApiPill extends HTMLElement {
+    connectedCallback() {
+      this.querySelectorAll<HTMLButtonElement>('button[data-value]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          this.querySelectorAll<HTMLButtonElement>('button[data-value]').forEach((b) => {
+            b.setAttribute('aria-expanded', String(b === btn));
+          });
+
+          this.dispatchEvent(
+            new CustomEvent('pill:click', {
+              bubbles: true,
+              detail: { value: btn.dataset.value! },
+            }),
+          );
+        });
+      });
+    }
+
+    reset() {
+      this.querySelectorAll<HTMLButtonElement>('button[data-value]').forEach((btn) => {
+        btn.setAttribute('aria-expanded', 'false');
+      });
+    }
+  }
+
+  customElements.define('hey-api-pill', HeyApiPill);
+</script>

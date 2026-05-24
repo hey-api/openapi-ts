@@ -1,4 +1,4 @@
-import type { SchemaWithType } from '@hey-api/shared';
+import type { SchemaVisitorContext, SchemaWithType } from '@hey-api/shared';
 
 import { $ } from '../../../../ts-dsl';
 import type { UndefinedResolverContext } from '../../resolvers';
@@ -20,17 +20,18 @@ function undefinedResolver(ctx: UndefinedResolverContext): Pipes {
 }
 
 export function undefinedToPipes({
+  path,
   plugin,
   schema,
-}: {
-  plugin: ValibotPlugin['Instance'];
+}: SchemaVisitorContext<ValibotPlugin['Instance']> & {
   schema: SchemaWithType<'undefined'>;
 }): Pipe {
-  const ctx: UndefinedResolverContext = {
+  const resolverCtx: UndefinedResolverContext = {
     $,
     nodes: {
       base: baseNode,
     },
+    path,
     pipes: {
       ...pipes,
       current: [],
@@ -43,6 +44,6 @@ export function undefinedToPipes({
   };
 
   const resolver = plugin.config['~resolvers']?.undefined;
-  const node = resolver?.(ctx) ?? undefinedResolver(ctx);
-  return ctx.pipes.toNode(node, plugin);
+  const node = resolver?.(resolverCtx) ?? undefinedResolver(resolverCtx);
+  return resolverCtx.pipes.toNode(node, plugin);
 }

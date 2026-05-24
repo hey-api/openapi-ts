@@ -1,4 +1,4 @@
-import type { SchemaWithType } from '@hey-api/shared';
+import type { SchemaVisitorContext, SchemaWithType } from '@hey-api/shared';
 
 import { $ } from '../../../../ts-dsl';
 import type { VoidResolverContext } from '../../resolvers';
@@ -20,17 +20,18 @@ function voidResolver(ctx: VoidResolverContext): Pipes {
 }
 
 export function voidToPipes({
+  path,
   plugin,
   schema,
-}: {
-  plugin: ValibotPlugin['Instance'];
+}: SchemaVisitorContext<ValibotPlugin['Instance']> & {
   schema: SchemaWithType<'void'>;
 }): Pipe {
-  const ctx: VoidResolverContext = {
+  const resolverCtx: VoidResolverContext = {
     $,
     nodes: {
       base: baseNode,
     },
+    path,
     pipes: {
       ...pipes,
       current: [],
@@ -43,6 +44,6 @@ export function voidToPipes({
   };
 
   const resolver = plugin.config['~resolvers']?.void;
-  const node = resolver?.(ctx) ?? voidResolver(ctx);
-  return ctx.pipes.toNode(node, plugin);
+  const node = resolver?.(resolverCtx) ?? voidResolver(resolverCtx);
+  return resolverCtx.pipes.toNode(node, plugin);
 }

@@ -138,6 +138,25 @@ describe('setAuthParams', () => {
     expect(query.baz).toBe('Bearer foo');
   });
 
+  it('sets access token in query when query is initially undefined', async () => {
+    const auth = vi.fn().mockReturnValue('foo');
+    const headers = new Headers();
+    const opts: Parameters<typeof setAuthParams>[0] = {
+      auth,
+      headers,
+      security: [
+        {
+          in: 'query',
+          name: 'baz',
+          type: 'apiKey',
+        },
+      ],
+    };
+    await setAuthParams(opts);
+    expect(auth).toHaveBeenCalled();
+    expect(opts.query).toEqual({ baz: 'foo' });
+  });
+
   it('sets Authorization header when `in` and `name` are undefined', async () => {
     const auth = vi.fn().mockReturnValue('foo');
     const headers = new Headers();

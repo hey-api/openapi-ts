@@ -201,6 +201,7 @@ for (const version of versions) {
           plugins: [
             {
               getQueryData: true,
+              mutationKeys: true,
               name: '@tanstack/react-query',
               setQueryData: true,
               useGetQueryData: true,

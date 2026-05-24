@@ -20,7 +20,7 @@ This is an internal framework. Visit [Hey API](https://heyapi.dev/) to discover 
 
 Want to see your code in products used by millions?
 
-Start with our [Contributing](https://heyapi.dev/openapi-ts/community/contributing) guide and release your first feature.
+Start with our [Contributing](https://heyapi.dev/docs/openapi/typescript/community/contributing) guide and release your first feature.
 
 <!-- template-contributing-end -->
 
@@ -126,6 +126,14 @@ Partners behind the future of API tooling. [Become a sponsor](https://github.com
           <picture height="34px">
             <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/cella/logo-light.svg">
             <img alt="Cella logo" height="34px" src="https://heyapi.dev/assets/cella/logo-dark.svg">
+          </picture>
+        </a>
+      </td>
+      <td align="center" width="136px">
+        <a href="https://kutt.to/HW4GYR" target="_blank">
+          <picture height="34px">
+            <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/photon/logo-light.svg">
+            <img alt="Photon logo" height="34px" src="https://heyapi.dev/assets/photon/logo-dark.svg">
           </picture>
         </a>
       </td>

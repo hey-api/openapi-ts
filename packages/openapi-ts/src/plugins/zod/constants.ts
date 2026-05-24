@@ -42,6 +42,7 @@ export const identifiers = {
   min: 'min',
   minLength: 'minLength',
   minimum: 'minimum', // Zod Mini
+  nativeEnum: 'nativeEnum', // Zod 3
   never: 'never',
   null: 'null',
   nullable: 'nullable',

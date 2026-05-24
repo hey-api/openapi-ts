@@ -7,13 +7,8 @@ import type { Chain, ChainResult } from '../../shared/chain';
 import type { CompositeHandlerResult, ZodResult } from '../../shared/types';
 import { unknownToAst } from './unknown';
 
-type ArrayToAstOptions = Pick<
-  ArrayResolverContext,
-  'applyModifiers' | 'plugin' | 'schema' | 'walk' | 'walkerCtx'
->;
-
 function baseNode(ctx: ArrayResolverContext): Chain {
-  const { applyModifiers, childResults, plugin, schema, symbols } = ctx;
+  const { applyModifiers, childResults, path, plugin, schema, symbols } = ctx;
   const { z } = symbols;
 
   const arrayFn = $(z).attr(identifiers.array);
@@ -26,6 +21,7 @@ function baseNode(ctx: ArrayResolverContext): Chain {
   if (!normalizedSchema.items) {
     return arrayFn.call(
       unknownToAst({
+        path,
         plugin,
         schema: {
           type: 'unknown',
@@ -35,13 +31,13 @@ function baseNode(ctx: ArrayResolverContext): Chain {
   }
 
   if (childResults.length === 1) {
-    const itemNode = applyModifiers(childResults[0]!, { optional: false }).expression;
+    const itemNode = applyModifiers(childResults[0]!, { optional: false }).chain;
     return arrayFn.call(itemNode);
   }
 
   if (childResults.length > 1) {
     const itemExpressions: Array<Chain> = childResults.map(
-      (result) => applyModifiers(result, { optional: false }).expression,
+      (result) => applyModifiers(result, { optional: false }).chain,
     );
 
     if (normalizedSchema.logicalOperator === 'and') {
@@ -61,6 +57,7 @@ function baseNode(ctx: ArrayResolverContext): Chain {
 
   return arrayFn.call(
     unknownToAst({
+      path,
       plugin,
       schema: {
         type: 'unknown',
@@ -117,11 +114,14 @@ function arrayResolver(ctx: ArrayResolverContext): Chain {
 
 export function arrayToAst({
   applyModifiers,
+  path,
   plugin,
   schema,
   walk,
-  walkerCtx,
-}: ArrayToAstOptions): CompositeHandlerResult {
+}: Pick<
+  ArrayResolverContext,
+  'applyModifiers' | 'path' | 'plugin' | 'schema' | 'walk'
+>): CompositeHandlerResult {
   const childResults: Array<ZodResult> = [];
   let schemaCopy = schema;
 
@@ -131,7 +131,7 @@ export function arrayToAst({
     schemaCopy = deduplicateSchema({ schema: schemaCopy });
 
     schemaCopy.items!.forEach((item, index) => {
-      const itemResult = walk(item, childContext(walkerCtx, 'items', index));
+      const itemResult = walk(item, childContext({ path, plugin }, 'items', index));
       childResults.push(itemResult);
     });
   }
@@ -149,20 +149,20 @@ export function arrayToAst({
       maxLength: maxLengthNode,
       minLength: minLengthNode,
     },
+    path,
     plugin,
     schema,
     symbols: {
       z,
     },
     walk,
-    walkerCtx,
   };
 
   const resolver = plugin.config['~resolvers']?.array;
-  const expression = resolver?.(ctx) ?? arrayResolver(ctx);
+  const chain = resolver?.(ctx) ?? arrayResolver(ctx);
 
   return {
+    chain,
     childResults,
-    expression,
   };
 }

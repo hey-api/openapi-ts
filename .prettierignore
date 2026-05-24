@@ -6,8 +6,6 @@
 **/.nuxt
 **/.output
 **/.svelte-kit
-**/.vitepress/cache
-**/.vitepress/dist
 **/test/generated
 **/__snapshots__
 

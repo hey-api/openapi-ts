@@ -1,4 +1,4 @@
-import type { SchemaWithType } from '@hey-api/shared';
+import type { SchemaVisitorContext, SchemaWithType } from '@hey-api/shared';
 
 import { $ } from '../../../../py-dsl';
 import type { UndefinedResolverContext } from '../../resolvers';
@@ -17,10 +17,10 @@ function undefinedResolver(ctx: UndefinedResolverContext): PydanticType {
 }
 
 export function undefinedToType({
+  path,
   plugin,
   schema,
-}: {
-  plugin: PydanticPlugin['Instance'];
+}: SchemaVisitorContext<PydanticPlugin['Instance']> & {
   schema: SchemaWithType<'undefined'>;
 }): PydanticType {
   const ctx: UndefinedResolverContext = {
@@ -28,6 +28,7 @@ export function undefinedToType({
     nodes: {
       base: baseNode,
     },
+    path,
     plugin,
     schema,
   };

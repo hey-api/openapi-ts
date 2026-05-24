@@ -173,6 +173,14 @@ for (const zodVersion of zodVersions) {
       },
       {
         config: createConfig({
+          input: 'discriminator-empty-object-member.yaml',
+          output: 'discriminator-empty-object-member',
+        }),
+        description:
+          'falls back to z.union() when a discriminated union member is an empty object (z.record cannot be extended)',
+      },
+      {
+        config: createConfig({
           input: 'discriminator-any-of.yaml',
           output: 'discriminator-any-of',
         }),
@@ -197,9 +205,9 @@ for (const zodVersion of zodVersions) {
                 enum(ctx) {
                   const { $, symbols } = ctx;
                   const { z } = symbols;
-                  const { allStrings, enumMembers } = ctx.nodes.items(ctx);
+                  const { enumMembers, literalSchemas } = ctx.nodes.items(ctx);
 
-                  if (!allStrings || !enumMembers.length) {
+                  if (!enumMembers.length || enumMembers.length !== literalSchemas.length) {
                     return;
                   }
 
@@ -215,6 +223,24 @@ for (const zodVersion of zodVersions) {
           ],
         }),
         description: 'generates permissive enums with enum resolver',
+      },
+      {
+        config: createConfig({
+          input: 'type-format.yaml',
+          output: 'transformer',
+          plugins: [
+            {
+              compatibilityVersion: zodVersion.compatibilityVersion,
+              name: 'zod',
+            },
+            {
+              name: '@hey-api/sdk',
+              transformer: true,
+              validator: true,
+            },
+          ],
+        }),
+        description: 'handles various schema types and formats',
       },
     ];
 

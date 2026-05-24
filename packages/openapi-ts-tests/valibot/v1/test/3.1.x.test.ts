@@ -163,8 +163,6 @@ describe(`OpenAPI ${version}`, () => {
         input: 'type-format.yaml',
         output: 'type-format',
         plugins: [
-          '@hey-api/transformers',
-          '@hey-api/client-fetch',
           'valibot',
           {
             name: '@hey-api/sdk',
