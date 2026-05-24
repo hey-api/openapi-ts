@@ -1,4 +1,4 @@
-import type { SchemaWithType } from '@hey-api/shared';
+import type { SchemaVisitorContext, SchemaWithType } from '@hey-api/shared';
 
 import { $ } from '../../../../../ts-dsl';
 import type { NeverResolverContext } from '../../resolvers';
@@ -14,10 +14,10 @@ function neverResolver(ctx: NeverResolverContext): Type {
 }
 
 export function neverToAst({
+  path,
   plugin,
   schema,
-}: {
-  plugin: HeyApiTypeScriptPlugin['Instance'];
+}: SchemaVisitorContext<HeyApiTypeScriptPlugin['Instance']> & {
   schema: SchemaWithType<'never'>;
 }): Type {
   const ctx: NeverResolverContext = {
@@ -25,6 +25,7 @@ export function neverToAst({
     nodes: {
       base: baseNode,
     },
+    path,
     plugin,
     schema,
   };

@@ -19,27 +19,27 @@
   <span>&nbsp;•&nbsp;</span>
   <a href="https://github.com/hey-api/openapi-ts/issues">Issues</a>
   <span>&nbsp;•&nbsp;</span>
-  <a href="https://heyapi.dev/openapi-ts/community/contributing">Contribute</a>
+  <a href="https://heyapi.dev/docs/openapi/typescript/community/contributing">Contribute</a>
 </p>
 
 ## About
 
 The OpenAPI to TypeScript code generator used by Vercel, OpenCode, and PayPal.
 
-Generate production-ready SDKs, Zod schemas, TanStack Query hooks, or choose from 20+ other plugins.
+Generate production-grade SDKs, Zod schemas, TanStack Query hooks, or choose from 20+ other plugins.
 
 Part of the Hey API ecosystem.
 
 ## Features
 
-- production-ready code that compiles
+- production-grade code that compiles
 - runs in any Node.js 22+ environment
 - accepts any OpenAPI specification
 - core plugins for SDKs, types, and schemas
 - HTTP clients for Fetch API, Angular, Axios, Next.js, Nuxt, and more
 - 20+ plugins to reduce third-party boilerplate
 - highly customizable via plugins
-- [sync with Hey API Registry](https://heyapi.dev/openapi-ts/integrations) for spec management
+- [sync with Hey API Registry](https://heyapi.dev/docs/openapi/typescript/integrations) for spec management
 
 <!-- template-contributing-start -->
 
@@ -47,7 +47,7 @@ Part of the Hey API ecosystem.
 
 Want to see your code in products used by millions?
 
-Start with our [Contributing](https://heyapi.dev/openapi-ts/community/contributing) guide and release your first feature.
+Start with our [Contributing](https://heyapi.dev/docs/openapi/typescript/community/contributing) guide and release your first feature.
 
 <!-- template-contributing-end -->
 
@@ -156,6 +156,14 @@ Partners behind the future of API tooling. [Become a sponsor](https://github.com
           </picture>
         </a>
       </td>
+      <td align="center" width="136px">
+        <a href="https://kutt.to/HW4GYR" target="_blank">
+          <picture height="34px">
+            <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/photon/logo-light.svg">
+            <img alt="Photon logo" height="34px" src="https://heyapi.dev/assets/photon/logo-dark.svg">
+          </picture>
+        </a>
+      </td>
     </tr>
   </tbody>
 </table>
@@ -169,7 +177,7 @@ The fastest way to use `@hey-api/openapi-ts` is via npx
 npx @hey-api/openapi-ts -i hey-api/backend -o src/client
 ```
 
-Congratulations on creating your first client! 🎉 You can learn more about the generated files on the [Output](https://heyapi.dev/openapi-ts/output) page.
+Congratulations on creating your first client! 🎉 You can learn more about the generated files on the [Output](https://heyapi.dev/docs/openapi/typescript/output) page.
 
 ## Installation
 
@@ -178,7 +186,7 @@ You can download `@hey-api/openapi-ts` from npm using your favorite package mana
 #### npm
 
 ```sh
-npm add @hey-api/openapi-ts -D -E
+npm install @hey-api/openapi-ts -D -E
 ```
 
 #### pnpm
@@ -196,14 +204,14 @@ yarn add @hey-api/openapi-ts -D -E
 #### bun
 
 ```sh
-bun add @hey-api/openapi-ts -D -E
+bun add @hey-api/openapi-ts -D
 ```
 
 ### Versioning
 
 This package is in [initial development](https://semver.org/#spec-item-4). Please pin an exact version so you can safely upgrade when you're ready.
 
-We publish [migration notes](https://heyapi.dev/openapi-ts/migrating) for every breaking release. You might not be impacted by a breaking change if you don't use the affected features.
+We publish [migration notes](https://heyapi.dev/docs/openapi/typescript/migrating) for every breaking release. You might not be impacted by a breaking change if you don't use the affected features.
 
 ## Usage
 
@@ -217,7 +225,7 @@ Most people run `@hey-api/openapi-ts` via CLI. To do that, add a script to your 
 }
 ```
 
-The above script can be executed by running `npm run openapi-ts` or equivalent command in other package managers. Next, we will create a [configuration](https://heyapi.dev/openapi-ts/configuration) file and move our options from Quick Start to it.
+The above script can be executed by running `npm run openapi-ts` or equivalent command in other package managers. Next, we will create a [configuration](https://heyapi.dev/docs/openapi/typescript/configuration) file and move our options from Quick Start to it.
 
 ### Node.js
 
@@ -241,7 +249,7 @@ If you're using [Vite](https://vite.dev), you can integrate `@hey-api/openapi-ts
 #### npm
 
 ```sh
-npm add @hey-api/vite-plugin -D -E
+npm install @hey-api/vite-plugin -D -E
 ```
 
 #### pnpm
@@ -259,7 +267,7 @@ yarn add @hey-api/vite-plugin -D -E
 #### bun
 
 ```sh
-bun add @hey-api/vite-plugin -D -E
+bun add @hey-api/vite-plugin -D
 ```
 
 Then add the plugin to your Vite configuration:
@@ -282,7 +290,7 @@ export default defineConfig({
 });
 ```
 
-See the [Vite](https://heyapi.dev/openapi-ts/configuration/vite) page for full configuration options.
+See the [Vite](https://heyapi.dev/docs/openapi/typescript/configuration/vite) page for full configuration options.
 
 ## Configuration
 
@@ -347,73 +355,74 @@ Clients are responsible for sending the actual HTTP requests. We default to Fetc
 
 ### Available Clients
 
-- [`@hey-api/client-fetch`](https://heyapi.dev/openapi-ts/clients/fetch)
-- [`@hey-api/client-angular`](https://heyapi.dev/openapi-ts/clients/angular)
-- [`@hey-api/client-axios`](https://heyapi.dev/openapi-ts/clients/axios)
-- [`@hey-api/client-ky`](https://heyapi.dev/openapi-ts/clients/ky)
-- [`@hey-api/client-next`](https://heyapi.dev/openapi-ts/clients/next-js)
-- [`@hey-api/client-nuxt`](https://heyapi.dev/openapi-ts/clients/nuxt)
-- [`@hey-api/client-ofetch`](https://heyapi.dev/openapi-ts/clients/ofetch)
+- [`@hey-api/client-fetch`](https://heyapi.dev/docs/openapi/typescript/clients/fetch)
+- [`@hey-api/client-angular`](https://heyapi.dev/docs/openapi/typescript/clients/angular)
+- [`@hey-api/client-axios`](https://heyapi.dev/docs/openapi/typescript/clients/axios)
+- [`@hey-api/client-ky`](https://heyapi.dev/docs/openapi/typescript/clients/ky)
+- [`@hey-api/client-next`](https://heyapi.dev/docs/openapi/typescript/clients/next-js)
+- [`@hey-api/client-nuxt`](https://heyapi.dev/docs/openapi/typescript/clients/nuxt)
+- [`@hey-api/client-ofetch`](https://heyapi.dev/docs/openapi/typescript/clients/ofetch)
 
 ### Proposed Clients (Vote to Prioritize)
 
 The following clients are roadmap proposals and are not started yet. You can help us prioritize them by voting on [GitHub](https://github.com/hey-api/openapi-ts/issues?q=state%3Aopen%20label%3A%22vote%20%F0%9F%93%A9%22).
 
-- [`@hey-api/client-effect`](https://heyapi.dev/openapi-ts/clients/effect)
+- [`@hey-api/client-effect`](https://heyapi.dev/docs/openapi/typescript/clients/effect)
 
-Don't see your client? [Build your own](https://heyapi.dev/openapi-ts/clients/custom) or let us know your interest by [opening an issue](https://github.com/hey-api/openapi-ts/issues).
+Don't see your client? [Build your own](https://heyapi.dev/docs/openapi/typescript/clients/custom) or let us know your interest by [opening an issue](https://github.com/hey-api/openapi-ts/issues).
 
 ### Available Plugins
 
 These plugins help reduce boilerplate associated with third-party dependencies. Hey API natively supports the most popular packages. Please open an issue on [GitHub](https://github.com/hey-api/openapi-ts/issues) if you'd like us to support your favorite package.
 
-- [`@angular/common`](https://heyapi.dev/openapi-ts/plugins/angular)
-- [`@hey-api/schemas`](https://heyapi.dev/openapi-ts/output/json-schema)
-- [`@hey-api/sdk`](https://heyapi.dev/openapi-ts/output/sdk)
-- [`@hey-api/transformers`](https://heyapi.dev/openapi-ts/transformers)
-- [`@hey-api/typescript`](https://heyapi.dev/openapi-ts/output/typescript)
-- [`@pinia/colada`](https://heyapi.dev/openapi-ts/plugins/pinia-colada)
-- [`@tanstack/angular-query-experimental`](https://heyapi.dev/openapi-ts/plugins/tanstack-query)
-- [`@tanstack/preact-query`](https://heyapi.dev/openapi-ts/plugins/tanstack-query)
-- [`@tanstack/react-query`](https://heyapi.dev/openapi-ts/plugins/tanstack-query)
-- [`@tanstack/solid-query`](https://heyapi.dev/openapi-ts/plugins/tanstack-query)
-- [`@tanstack/svelte-query`](https://heyapi.dev/openapi-ts/plugins/tanstack-query)
-- [`@tanstack/vue-query`](https://heyapi.dev/openapi-ts/plugins/tanstack-query)
-- [`fastify`](https://heyapi.dev/openapi-ts/plugins/fastify)
-- [`orpc`](https://heyapi.dev/openapi-ts/plugins/orpc)
-- [`nestjs`](https://heyapi.dev/openapi-ts/plugins/nest)
-- [`valibot`](https://heyapi.dev/openapi-ts/plugins/valibot)
-- [`zod`](https://heyapi.dev/openapi-ts/plugins/zod)
+- [`@angular/common`](https://heyapi.dev/docs/openapi/typescript/plugins/angular)
+- [`@hey-api/schemas`](https://heyapi.dev/docs/openapi/typescript/plugins/schemas)
+- [`@hey-api/sdk`](https://heyapi.dev/docs/openapi/typescript/plugins/sdk)
+- [`@hey-api/transformers`](https://heyapi.dev/docs/openapi/typescript/plugins/transformers)
+- [`@hey-api/typescript`](https://heyapi.dev/docs/openapi/typescript/plugins/typescript)
+- [`@pinia/colada`](https://heyapi.dev/docs/openapi/typescript/plugins/pinia-colada)
+- [`@tanstack/angular-query-experimental`](https://heyapi.dev/docs/openapi/typescript/plugins/tanstack-query)
+- [`@tanstack/preact-query`](https://heyapi.dev/docs/openapi/typescript/plugins/tanstack-query)
+- [`@tanstack/react-query`](https://heyapi.dev/docs/openapi/typescript/plugins/tanstack-query)
+- [`@tanstack/solid-query`](https://heyapi.dev/docs/openapi/typescript/plugins/tanstack-query)
+- [`@tanstack/svelte-query`](https://heyapi.dev/docs/openapi/typescript/plugins/tanstack-query)
+- [`@tanstack/vue-query`](https://heyapi.dev/docs/openapi/typescript/plugins/tanstack-query)
+- [`fastify`](https://heyapi.dev/docs/openapi/typescript/plugins/fastify)
+- [`orpc`](https://heyapi.dev/docs/openapi/typescript/plugins/orpc)
+- [`nestjs`](https://heyapi.dev/docs/openapi/typescript/plugins/nest)
+- [`valibot`](https://heyapi.dev/docs/openapi/typescript/plugins/valibot)
+- [`zod`](https://heyapi.dev/docs/openapi/typescript/plugins/zod)
 
 ### Proposed Plugins (Vote to Prioritize)
 
 The following plugins are roadmap proposals and are not started yet. You can help us prioritize them by voting on [GitHub](https://github.com/hey-api/openapi-ts/issues?q=state%3Aopen%20label%3A%22vote%20%F0%9F%93%A9%22).
 
-- [Adonis](https://heyapi.dev/openapi-ts/plugins/adonis)
-- [Ajv](https://heyapi.dev/openapi-ts/plugins/ajv)
-- [Arktype](https://heyapi.dev/openapi-ts/plugins/arktype)
-- [Chance](https://heyapi.dev/openapi-ts/plugins/chance)
-- [Elysia](https://heyapi.dev/openapi-ts/plugins/elysia)
-- [Express](https://heyapi.dev/openapi-ts/plugins/express)
-- [Faker](https://heyapi.dev/openapi-ts/plugins/faker)
-- [Falso](https://heyapi.dev/openapi-ts/plugins/falso)
-- [Hono](https://heyapi.dev/openapi-ts/plugins/hono)
-- [Joi](https://heyapi.dev/openapi-ts/plugins/joi)
-- [Koa](https://heyapi.dev/openapi-ts/plugins/koa)
-- [MSW](https://heyapi.dev/openapi-ts/plugins/msw)
-- [Nock](https://heyapi.dev/openapi-ts/plugins/nock)
-- [Superstruct](https://heyapi.dev/openapi-ts/plugins/superstruct)
-- [Supertest](https://heyapi.dev/openapi-ts/plugins/supertest)
-- [SWR](https://heyapi.dev/openapi-ts/plugins/swr)
-- [TypeBox](https://heyapi.dev/openapi-ts/plugins/typebox)
-- [Yup](https://heyapi.dev/openapi-ts/plugins/yup)
-- [Zustand](https://heyapi.dev/openapi-ts/plugins/zustand)
+- [Adonis](https://heyapi.dev/docs/openapi/typescript/plugins/adonis)
+- [Ajv](https://heyapi.dev/docs/openapi/typescript/plugins/ajv)
+- [Arktype](https://heyapi.dev/docs/openapi/typescript/plugins/arktype)
+- [Chance](https://heyapi.dev/docs/openapi/typescript/plugins/chance)
+- [Elysia](https://heyapi.dev/docs/openapi/typescript/plugins/elysia)
+- [Express](https://heyapi.dev/docs/openapi/typescript/plugins/express)
+- [Faker](https://heyapi.dev/docs/openapi/typescript/plugins/faker)
+- [Falso](https://heyapi.dev/docs/openapi/typescript/plugins/falso)
+- [Hono](https://heyapi.dev/docs/openapi/typescript/plugins/hono)
+- [Joi](https://heyapi.dev/docs/openapi/typescript/plugins/joi)
+- [Koa](https://heyapi.dev/docs/openapi/typescript/plugins/koa)
+- [MSW](https://heyapi.dev/docs/openapi/typescript/plugins/msw)
+- [Nock](https://heyapi.dev/docs/openapi/typescript/plugins/nock)
+- [Superstruct](https://heyapi.dev/docs/openapi/typescript/plugins/superstruct)
+- [Supertest](https://heyapi.dev/docs/openapi/typescript/plugins/supertest)
+- [SWR](https://heyapi.dev/docs/openapi/typescript/plugins/swr)
+- [TanStack Start](https://heyapi.dev/docs/openapi/typescript/plugins/tanstack-start)
+- [TypeBox](https://heyapi.dev/docs/openapi/typescript/plugins/typebox)
+- [Yup](https://heyapi.dev/docs/openapi/typescript/plugins/yup)
+- [Zustand](https://heyapi.dev/docs/openapi/typescript/plugins/zustand)
 
-Don't see your plugin? [Build your own](https://heyapi.dev/openapi-ts/plugins/custom) or let us know your interest by [opening an issue](https://github.com/hey-api/openapi-ts/issues).
+Don't see your plugin? [Build your own](https://heyapi.dev/docs/openapi/typescript/plugins/custom) or let us know your interest by [opening an issue](https://github.com/hey-api/openapi-ts/issues).
 
 ## Migrating
 
-You can learn more on the [Migrating](https://heyapi.dev/openapi-ts/migrating) page.
+You can learn more on the [Migrating](https://heyapi.dev/docs/openapi/typescript/migrating) page.
 
 <!-- template-license-start -->
 

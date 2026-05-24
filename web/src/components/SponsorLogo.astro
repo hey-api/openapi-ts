@@ -1,0 +1,70 @@
+---
+import { Image, getImage } from 'astro:assets'
+import type { SponsorLogo } from '@/data/sponsors'
+
+interface Props {
+  logo: SponsorLogo
+  height: number
+}
+
+const { logo, height } = Astro.props
+
+let darkSrc: string | undefined
+if (logo.type === 'img' && logo.dark) {
+  const optimized = await getImage({ src: logo.dark, height, widths: [height, height * 2, height * 3] })
+  darkSrc = optimized.src
+}
+---
+
+{logo.type === 'svg' ? (
+  <>
+    <span class:list={['logo', logo.dark ? 'logo--light' : '']} set:html={logo.src} />
+    {logo.dark && <span class="logo logo--dark" set:html={logo.dark} />}
+  </>
+) : logo.type === 'svg+img' ? (
+  <span class="logo-composite" style={`--logo-height: ${height}px`}>
+    <Image densities={[1, 2, 3]} src={logo.img} alt={logo.alt} height={height} />
+    <span class:list={['logo', logo.dark ? 'logo--light' : '']} set:html={logo.src} />
+    {logo.dark && <span class="logo logo--dark" set:html={logo.dark} />}
+  </span>
+) : (
+  <picture>
+    {darkSrc && (
+      <source srcset={darkSrc} media="(prefers-color-scheme: dark)" />
+    )}
+    <Image densities={[1, 2, 3]} src={logo.src} alt={logo.alt} height={height} />
+  </picture>
+)}
+
+<style>
+  .logo {
+    align-items: center;
+    display: flex;
+    height: auto;
+  }
+
+  .logo-composite {
+    align-items: center;
+    display: inline-flex;
+    gap: 0.5em;
+    height: var(--logo-height);
+  }
+
+  .logo-composite .logo {
+    padding-block: 0.4em;
+  }
+
+  .logo-composite :global(svg) {
+    display: block;
+    height: 100%;
+    width: auto;
+  }
+
+  :global([data-theme='light']) .logo--dark {
+    display: none;
+  }
+
+  :global(:root:not([data-theme='light'])) .logo--light {
+    display: none;
+  }
+</style>

@@ -60,10 +60,10 @@ packages/
   config-vite-base/    # Shared Vite base configuration
   openapi-ts-tests/    # Test utilities and snapshots
 examples/              # 16+ framework-specific examples
-docs/                  # VitePress documentation site
 dev/                   # Development environment (CLI testing configs)
 specs/                 # OpenAPI test specifications
 scripts/               # Build and test scripts
+web/                   # Astro website
 ```
 
 ## Tooling
@@ -117,6 +117,5 @@ Some linting warnings in `.gen/snapshots/` directories are expected for generate
 
 ## Known Issues
 
-- Docs build may fail due to pnpm version mismatch in VitePress - use `--filter="@hey-api/**"` to skip
 - Some tests may fail in sandboxed environments due to network restrictions (OpenAPI spec downloads)
 - Generated test files in `packages/openapi-ts-tests/` may have expected linting warnings

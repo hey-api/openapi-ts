@@ -6,11 +6,6 @@ import type { TupleResolverContext } from '../../resolvers';
 import type { Chain, ChainResult } from '../../shared/chain';
 import type { CompositeHandlerResult, ZodResult } from '../../shared/types';
 
-type TupleToAstOptions = Pick<
-  TupleResolverContext,
-  'applyModifiers' | 'plugin' | 'schema' | 'walk' | 'walkerCtx'
->;
-
 function baseNode(ctx: TupleResolverContext): Chain {
   const { applyModifiers, childResults, symbols } = ctx;
   const { z } = symbols;
@@ -22,7 +17,7 @@ function baseNode(ctx: TupleResolverContext): Chain {
   }
 
   const tupleElements = childResults.map(
-    (result) => applyModifiers(result, { optional: false }).expression,
+    (result) => applyModifiers(result, { optional: false }).chain,
   );
 
   return tupleFn.call($.array(...tupleElements));
@@ -58,18 +53,21 @@ function tupleResolver(ctx: TupleResolverContext): Chain {
 
 export function tupleToAst({
   applyModifiers,
+  path,
   plugin,
   schema,
   walk,
-  walkerCtx,
-}: TupleToAstOptions): CompositeHandlerResult {
+}: Pick<
+  TupleResolverContext,
+  'applyModifiers' | 'path' | 'plugin' | 'schema' | 'walk'
+>): CompositeHandlerResult {
   const childResults: Array<ZodResult> = [];
 
   const z = plugin.external('zod.z');
 
   if (schema.items) {
     schema.items.forEach((item, index) => {
-      const itemResult = walk(item, childContext(walkerCtx, 'items', index));
+      const itemResult = walk(item, childContext({ path, plugin }, 'items', index));
       childResults.push(itemResult);
     });
   }
@@ -85,20 +83,20 @@ export function tupleToAst({
       base: baseNode,
       const: constNode,
     },
+    path,
     plugin,
     schema,
     symbols: {
       z,
     },
     walk,
-    walkerCtx,
   };
 
   const resolver = plugin.config['~resolvers']?.tuple;
-  const expression = resolver?.(ctx) ?? tupleResolver(ctx);
+  const chain = resolver?.(ctx) ?? tupleResolver(ctx);
 
   return {
+    chain,
     childResults,
-    expression,
   };
 }

@@ -1,4 +1,4 @@
-import type { SchemaWithType } from '@hey-api/shared';
+import type { SchemaVisitorContext, SchemaWithType } from '@hey-api/shared';
 
 import { $ } from '../../../../ts-dsl';
 import type { BooleanResolverContext } from '../../resolvers';
@@ -35,18 +35,19 @@ function booleanResolver(ctx: BooleanResolverContext): Pipes {
 }
 
 export function booleanToPipes({
+  path,
   plugin,
   schema,
-}: {
-  plugin: ValibotPlugin['Instance'];
+}: SchemaVisitorContext<ValibotPlugin['Instance']> & {
   schema: SchemaWithType<'boolean'>;
 }): Pipe {
-  const ctx: BooleanResolverContext = {
+  const resolverCtx: BooleanResolverContext = {
     $,
     nodes: {
       base: baseNode,
       const: constNode,
     },
+    path,
     pipes: {
       ...pipes,
       current: [],
@@ -59,6 +60,6 @@ export function booleanToPipes({
   };
 
   const resolver = plugin.config['~resolvers']?.boolean;
-  const node = resolver?.(ctx) ?? booleanResolver(ctx);
-  return ctx.pipes.toNode(node, plugin);
+  const node = resolver?.(resolverCtx) ?? booleanResolver(resolverCtx);
+  return resolverCtx.pipes.toNode(node, plugin);
 }

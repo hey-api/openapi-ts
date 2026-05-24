@@ -1,0 +1,96 @@
+---
+import SiteTitle from '@astrojs/starlight/components/SiteTitle.astro';
+import Search from '@astrojs/starlight-docsearch/DocSearch.astro';
+
+import GitHubLink from './GitHubLink.astro';
+import NavDropdown from './NavDropdown.astro';
+import SponsorGoal from './SponsorGoal.astro';
+
+const entry = Astro.locals.starlightRoute?.entry;
+const isSplash = entry?.data?.template === 'splash';
+---
+
+<div class:list={['header', isSplash ? 'header-home' : 'header-docs']}>
+	<div class="title-wrapper sl-flex">
+		<SiteTitle />
+	</div>
+  {isSplash ? (
+	  <div class="sl-flex print:hidden center-group">
+      <NavDropdown />
+    </div>
+  ) : null}
+	<div class="sl-flex print:hidden right-group">
+    {isSplash ? <GitHubLink /> : <SponsorGoal />}
+    <div>
+      <Search />
+    </div>
+	</div>
+</div>
+
+<style>
+  .header {
+    align-items: center;
+    display: flex;
+    gap: var(--sl-nav-gap);
+    height: 100%;
+    justify-content: space-between;
+  }
+
+  .title-wrapper {
+    margin: -0.25rem;
+    min-width: 0;
+    overflow: clip;
+    padding: 0.25rem;
+  }
+
+  .center-group {
+    flex: 1;
+    justify-content: flex-start;
+    padding-left: 2rem;
+  }
+
+  .right-group {
+    align-items: center;
+    gap: 1rem;
+    justify-content: flex-end;
+  }
+
+  @media (min-width: 50rem) {
+    :global(:root[data-has-sidebar]) {
+      --__sidebar-pad: calc(2 * var(--sl-nav-pad-x));
+    }
+    :global(:root:not([data-has-toc])) {
+      --__toc-width: 0rem;
+    }
+    .header-docs {
+      --__sidebar-width: max(0rem, var(--sl-content-inline-start, 0rem) - var(--sl-nav-pad-x));
+      --__main-column-fr: calc(
+        (
+            100% + var(--__sidebar-pad, 0rem) - var(--__toc-width, var(--sl-sidebar-width)) -
+              (2 * var(--__toc-width, var(--sl-nav-pad-x))) - var(--sl-content-inline-start, 0rem) -
+              var(--sl-content-width)
+          ) / 2
+      );
+      align-content: center;
+      display: grid;
+      grid-template-columns:
+        minmax(
+          calc(var(--__sidebar-width) + max(0rem, var(--__main-column-fr) - var(--sl-nav-gap))),
+          auto
+        )
+        1fr
+        auto;
+    }
+
+    .header-home {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .header-home .center-group {
+      left: 50%;
+      position: absolute;
+      transform: translateX(-50%);
+    }
+  }
+</style>

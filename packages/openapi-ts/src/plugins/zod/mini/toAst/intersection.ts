@@ -4,11 +4,6 @@ import type { IntersectionResolverContext } from '../../resolvers';
 import type { Chain } from '../../shared/chain';
 import type { ZodResult } from '../../shared/types';
 
-type IntersectionToAstOptions = Pick<
-  IntersectionResolverContext,
-  'childResults' | 'parentSchema' | 'plugin' | 'schemas'
->;
-
 function baseNode(ctx: IntersectionResolverContext): Chain {
   const { childResults, symbols } = ctx;
   const { z } = symbols;
@@ -17,19 +12,19 @@ function baseNode(ctx: IntersectionResolverContext): Chain {
     return $(z).attr(identifiers.never).call();
   }
 
-  let expression = childResults[0]!.expression;
+  let chain = childResults[0]!.chain;
   childResults.slice(1).forEach((item) => {
-    expression = $(z)
+    chain = $(z)
       .attr(identifiers.intersection)
       .call(
-        expression,
+        chain,
         item.meta.hasLazy
-          ? $(z).attr(identifiers.lazy).call($.func().do(item.expression.return()))
-          : item.expression,
+          ? $(z).attr(identifiers.lazy).call($.func().do(item.chain.return()))
+          : item.chain,
       );
   });
 
-  return expression;
+  return chain;
 }
 
 function intersectionResolver(ctx: IntersectionResolverContext): Chain {
@@ -41,11 +36,15 @@ function intersectionResolver(ctx: IntersectionResolverContext): Chain {
 export function intersectionToAst({
   childResults,
   parentSchema,
+  path,
   plugin,
   schemas,
-}: IntersectionToAstOptions): {
+}: Pick<
+  IntersectionResolverContext,
+  'childResults' | 'parentSchema' | 'path' | 'plugin' | 'schemas'
+>): {
+  chain: Chain;
   childResults: Array<ZodResult>;
-  expression: Chain;
 } {
   const z = plugin.external('zod.z');
 
@@ -59,6 +58,7 @@ export function intersectionToAst({
       base: baseNode,
     },
     parentSchema,
+    path,
     plugin,
     schema: parentSchema,
     schemas,
@@ -68,10 +68,10 @@ export function intersectionToAst({
   };
 
   const resolver = plugin.config['~resolvers']?.intersection;
-  const expression = resolver?.(ctx) ?? intersectionResolver(ctx);
+  const chain = resolver?.(ctx) ?? intersectionResolver(ctx);
 
   return {
+    chain,
     childResults,
-    expression,
   };
 }

@@ -1,0 +1,300 @@
+---
+import ContextualActions from '@/components/ContextualActions.astro';
+import FloatingPill from '@/components/FloatingPill.astro';
+import SidebarItems from '@/components/SidebarItems.astro';
+
+const { sidebar, toc } = Astro.locals.starlightRoute;
+const tocItems = toc?.items ?? [];
+const hasToc = tocItems.length > 0;
+
+const pillItems = [
+  { label: 'Menu', value: 'sidebar', icon: true },
+  ...(hasToc ? [{ label: 'On this page', value: 'toc' }] : []),
+];
+---
+
+<FloatingPill items={pillItems} />
+
+<div class="docs-sheet-backdrop" aria-hidden="true"></div>
+
+<div class="docs-sheet" role="dialog" aria-modal="true" aria-label="Navigation">
+  <div class="sheet-handle-area">
+    <div class="sheet-handle"></div>
+  </div>
+
+  {hasToc && (
+    <div class="sheet-tabs" role="tablist">
+      <button class="sheet-tab" role="tab" aria-selected="false" data-tab="sidebar">Menu</button>
+      <button class="sheet-tab" role="tab" aria-selected="false" data-tab="toc">On this page</button>
+    </div>
+  )}
+
+  <div class="sheet-body">
+    <div class="tab-panel" data-panel="sidebar">
+      <SidebarItems entries={sidebar} />
+    </div>
+
+    {hasToc && (
+      <div class="tab-panel" data-panel="toc">
+        <nav aria-label="Table of contents">
+          <ul class="toc-list">
+            {tocItems.map((entry) => (
+              <li>
+                <a href={`#${entry.slug}`} class="toc-link">{entry.text}</a>
+                {entry.children?.length > 0 && (
+                  <ul class="toc-list toc-list--nested">
+                    {entry.children.map((child) => (
+                      <li>
+                        <a href={`#${child.slug}`} class="toc-link">{child.text}</a>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        <ContextualActions />
+      </div>
+    )}
+  </div>
+</div>
+
+<style>
+  .docs-sheet-backdrop {
+    background: rgba(0,0,0,0.4);
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+    position: fixed;
+    transition: opacity 300ms ease;
+    z-index: 60;
+  }
+
+  .docs-sheet-backdrop.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .docs-sheet {
+    background: var(--sl-color-bg);
+    border-radius: 16px 16px 0 0;
+    border-top: 1px solid var(--vp-c-divider);
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    left: 0;
+    max-height: 80vh;
+    position: fixed;
+    right: 0;
+    transform: translateY(100%);
+    transition: transform 350ms cubic-bezier(0.32, 0.72, 0, 1);
+    will-change: transform;
+    z-index: 70;
+  }
+
+  .docs-sheet.open {
+    transform: translateY(0);
+  }
+
+  .sheet-handle-area {
+    align-items: center;
+    cursor: grab;
+    display: flex;
+    flex-shrink: 0;
+    justify-content: center;
+    padding: 12px 0 8px;
+    touch-action: none;
+  }
+
+  .sheet-handle {
+    background: var(--sl-color-gray-5);
+    border-radius: 999px;
+    height: 4px;
+    width: 36px;
+  }
+
+  .sheet-tabs {
+    border-bottom: 1px solid var(--vp-c-divider);
+    display: flex;
+    flex-shrink: 0;
+    padding: 0 16px;
+  }
+
+  .sheet-tab {
+    background: none;
+    border-bottom: 2px solid transparent;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    color: var(--sl-color-gray-3);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: -1px;
+    padding: 10px 16px;
+    transition: color 150ms ease, border-color 150ms ease;
+  }
+
+  .sheet-tab[aria-selected="true"] {
+    border-bottom-color: var(--vp-c-brand-1);
+    color: var(--sl-color-text);
+  }
+
+  .sheet-body {
+    -webkit-overflow-scrolling: touch;
+    background:
+      linear-gradient(var(--sl-color-bg) 30%, transparent) center top,
+      linear-gradient(transparent, var(--sl-color-bg) 70%) center bottom,
+      radial-gradient(farthest-side at 50% 0, rgba(0,0,0,0.08), transparent) center top,
+      radial-gradient(farthest-side at 50% 100%, rgba(0,0,0,0.08), transparent) center bottom;
+    background-attachment: local, local, scroll, scroll;
+    background-repeat: no-repeat;
+    background-size: 100% 40px, 100% 40px, 100% 12px, 100% 12px;
+    overflow-y: auto;
+    padding: 8px 16px 48px;
+  }
+
+  .tab-panel {
+    display: none;
+  }
+
+  .tab-panel.active {
+    display: block;
+  }
+
+  .toc-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .toc-list > li + li {
+    margin-top: 1px;
+  }
+
+  .toc-list--nested {
+    margin-top: 1px;
+    padding-left: 16px;
+  }
+
+  .toc-link {
+    border-radius: 6px;
+    color: var(--sl-color-gray-3);
+    display: block;
+    font-size: 14px;
+    line-height: 1.4;
+    padding: 7px 8px;
+    text-decoration: none;
+    transition: background 150ms ease, color 150ms ease;
+  }
+
+  .toc-link:hover {
+    background: var(--dt-bg-2);
+    color: var(--sl-color-text);
+  }
+
+  .toc-link.active {
+    color: var(--vp-c-brand-1);
+    font-weight: 500;
+  }
+
+  @media (min-width: 50rem) {
+    .docs-sheet,
+    .docs-sheet-backdrop {
+      display: none !important;
+    }
+  }
+</style>
+
+<script>
+  import { createSheet } from '@/utils/sheet';
+
+  class MobileDocsSheet {
+    private readonly pill: HTMLElement | null;
+    private readonly sheet: HTMLElement;
+    private readonly tabs: NodeListOf<HTMLButtonElement>;
+    private readonly panels: NodeListOf<HTMLElement>;
+
+    constructor() {
+      this.pill = document.querySelector<HTMLElement>('hey-api-pill');
+      this.sheet = document.querySelector<HTMLElement>('.docs-sheet')!;
+      this.tabs = this.sheet.querySelectorAll<HTMLButtonElement>('.sheet-tab');
+      this.panels = this.sheet.querySelectorAll<HTMLElement>('.tab-panel');
+
+      if (!this.sheet) return;
+
+      const backdrop = document.querySelector<HTMLElement>('.docs-sheet-backdrop')!;
+
+      const sheet = createSheet(this.sheet, backdrop, {
+        onClose: () => (this.pill as any)?.reset?.(),
+      });
+
+      this.pill?.addEventListener('pill:click', (e) => {
+        const { value } = (e as CustomEvent<{ value: string }>).detail;
+        this.switchTab(value);
+        sheet.open();
+      });
+
+      this.tabs.forEach((tab) => {
+        tab.addEventListener('click', () => this.switchTab(tab.dataset.tab!));
+      });
+
+      this.sheet.querySelectorAll<HTMLAnchorElement>('.sb-link, .toc-link').forEach((link) => {
+        link.addEventListener('click', () => {
+          sheet.close();
+          (this.pill as any)?.reset?.();
+        });
+      });
+
+      this.initTocHighlight();
+    }
+
+    private switchTab(tabId: string): void {
+      this.tabs.forEach((tab) => {
+        tab.setAttribute('aria-selected', String(tab.dataset.tab === tabId));
+      });
+      this.panels.forEach((panel) => {
+        panel.classList.toggle('active', panel.dataset.panel === tabId);
+      });
+    }
+
+    private initTocHighlight(): void {
+      const links = this.sheet.querySelectorAll<HTMLAnchorElement>('.toc-link');
+      if (!links.length) return;
+
+      const headings = Array.from(links)
+        .map((link) => {
+          const id = link.getAttribute('href')?.slice(1);
+          return id ? document.getElementById(id) : null;
+        })
+        .filter(Boolean) as Array<HTMLElement>;
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            const id = entry.target.id;
+            links.forEach((link) => {
+              link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
+            });
+          });
+        },
+        { rootMargin: '0px 0px -60% 0px', threshold: 0 },
+      );
+
+      headings.forEach((h) => observer.observe(h));
+    }
+  }
+
+  function init() {
+    new MobileDocsSheet();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+</script>

@@ -1,4 +1,4 @@
-import type { Symbol } from '@hey-api/codegen-core';
+import { ref, type Symbol } from '@hey-api/codegen-core';
 import type { RequestSchemaContext, ResolvedRequestValidatorLayer } from '@hey-api/shared';
 import { requestValidatorLayers, resolveValidatorLayer } from '@hey-api/shared';
 
@@ -14,6 +14,8 @@ import type { ValidatorArgs } from '../shared/types';
 import { getDefaultRequestValidatorLayers } from '../shared/validator';
 import type { ValibotPlugin } from '../types';
 import { identifiers } from './constants';
+
+type ArrowFunc = Extract<ReturnType<typeof $.func>, { '~mode': 'arrow' }>;
 
 function emptyNode(
   ctx: RequestValidatorResolverContext & {
@@ -93,9 +95,7 @@ function responseValidatorResolver(
   return $(v).attr(identifiers.async.parseAsync).call(schema, 'data').await().return();
 }
 
-function runRequestResolver(
-  ctx: RequestValidatorResolverContext,
-): ReturnType<typeof $.func> | undefined {
+function runRequestResolver(ctx: RequestValidatorResolverContext): ArrowFunc | undefined {
   const validator = ctx.plugin.config['~resolvers']?.validator;
   const resolver = typeof validator === 'function' ? validator : validator?.request;
   const candidates = [resolver, requestValidatorResolver];
@@ -111,9 +111,7 @@ function runRequestResolver(
   }
 }
 
-function runResponseResolver(
-  ctx: ResponseValidatorResolverContext,
-): ReturnType<typeof $.func> | undefined {
+function runResponseResolver(ctx: ResponseValidatorResolverContext): ArrowFunc | undefined {
   const validator = ctx.plugin.config['~resolvers']?.validator;
   const resolver = typeof validator === 'function' ? validator : validator?.response;
   const candidates = [resolver, responseValidatorResolver];
@@ -143,6 +141,7 @@ function createRequestSchemaContext(
       empty: emptyNode,
       optional: optionalNode,
     },
+    path: ref([]),
     pipes: {
       ...pipes,
       current: [],
@@ -186,7 +185,7 @@ export function createRequestSchemaV1(
 
 export function createRequestValidatorV1(
   ctx: RequestSchemaContext<ValibotPlugin['Instance']>,
-): ReturnType<typeof $.func> | undefined {
+): ArrowFunc | undefined {
   const symbolOrSchema = createRequestSchemaV1(ctx);
   if (!symbolOrSchema) return;
 
@@ -204,7 +203,7 @@ export function createRequestValidatorV1(
 export function createResponseValidatorV1({
   operation,
   plugin,
-}: ValidatorArgs): ReturnType<typeof $.func> | undefined {
+}: ValidatorArgs): ArrowFunc | undefined {
   const symbol = plugin.querySymbol({
     category: 'schema',
     resource: 'operation',
@@ -218,6 +217,7 @@ export function createResponseValidatorV1({
   const resolverCtx: ResponseValidatorResolverContext = {
     $,
     operation,
+    path: ref([]),
     pipes: {
       ...pipes,
       current: [],
@@ -229,4 +229,18 @@ export function createResponseValidatorV1({
     },
   };
   return runResponseResolver(resolverCtx);
+}
+
+export function createResponseTransformerV1(ctx: ValidatorArgs): ArrowFunc | undefined {
+  return createResponseValidatorV1(ctx);
+}
+
+export function createResponseHandlersV1(ctx: ValidatorArgs): {
+  transformer: ArrowFunc | undefined;
+  validator: ArrowFunc | undefined;
+} {
+  return {
+    transformer: createResponseTransformerV1(ctx),
+    validator: undefined,
+  };
 }

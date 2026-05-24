@@ -1,0 +1,59 @@
+---
+import raw from '../../CONTRIBUTORS.md?raw';
+
+interface Contributor {
+  name: string;
+  url: string;
+}
+
+const contributors: Array<Contributor> = raw
+  .split('\n')
+  .map((line) => line.trim())
+  .filter((line) => line.startsWith('- ['))
+  .map((line) => {
+    const match = line.match(/^- \[(.+?)\]\((.+?)\)$/);
+    if (!match) return null;
+    return { name: match[1], url: match[2] };
+  })
+  .filter((c): c is Contributor => c !== null);
+---
+
+<ul class="contributors not-content">
+  {contributors.map((contributor) => (
+    <li>
+      <a href={contributor.url} target="_blank" rel="noopener noreferrer">
+        {contributor.name}
+      </a>
+    </li>
+  ))}
+</ul>
+
+<style>
+  .contributors {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem 0.75rem;
+    list-style: none;
+    padding: 0;
+    margin-block: 1.5rem;
+  }
+
+  .contributors li {
+    margin: 0;
+    font-size: 0.875rem;
+  }
+
+  .contributors a {
+    color: var(--sl-color-gray-2);
+    text-decoration: none;
+    transition: color 150ms ease;
+  }
+
+  .contributors a:hover {
+    color: var(--sl-color-white);
+  }
+
+  .contributors a::after {
+    display: none !important;
+  }
+</style>

@@ -5,11 +5,6 @@ import type { Chain } from '../../shared/chain';
 import { tryBuildDiscriminatedUnion } from '../../shared/discriminated-union';
 import type { ZodResult } from '../../shared/types';
 
-type UnionToAstOptions = Pick<
-  UnionResolverContext,
-  'childResults' | 'parentSchema' | 'plugin' | 'schemas'
->;
-
 function baseNode(ctx: UnionResolverContext): Chain {
   const { childResults, parentSchema, plugin, schemas, symbols } = ctx;
   const { z } = symbols;
@@ -26,11 +21,11 @@ function baseNode(ctx: UnionResolverContext): Chain {
     }
   });
 
-  let expression: Chain;
+  let chain: Chain;
   if (!nonNullItems.length) {
-    expression = $(z).attr(identifiers.null).call();
+    chain = $(z).attr(identifiers.null).call();
   } else if (nonNullItems.length === 1) {
-    expression = nonNullItems[0]!.expression;
+    chain = nonNullItems[0]!.chain;
   } else {
     const discriminatedExpression = tryBuildDiscriminatedUnion({
       items: childResults,
@@ -51,7 +46,7 @@ function baseNode(ctx: UnionResolverContext): Chain {
           ),
       );
 
-      expression = $(z)
+      chain = $(z)
         .attr(identifiers.discriminatedUnion)
         .call(
           $.literal(discriminatedExpression.discriminatorKey),
@@ -60,17 +55,17 @@ function baseNode(ctx: UnionResolverContext): Chain {
             .elements(...unionMembers),
         );
     } else {
-      expression = $(z)
+      chain = $(z)
         .attr(identifiers.union)
         .call(
           $.array()
             .pretty()
-            .elements(...nonNullItems.map((item) => item.expression)),
+            .elements(...nonNullItems.map((item) => item.chain)),
         );
     }
   }
 
-  return expression;
+  return chain;
 }
 
 function unionResolver(ctx: UnionResolverContext): Chain {
@@ -79,9 +74,15 @@ function unionResolver(ctx: UnionResolverContext): Chain {
   return ctx.chain.current;
 }
 
-export function unionToAst({ childResults, parentSchema, plugin, schemas }: UnionToAstOptions): {
+export function unionToAst({
+  childResults,
+  parentSchema,
+  path,
+  plugin,
+  schemas,
+}: Pick<UnionResolverContext, 'childResults' | 'parentSchema' | 'path' | 'plugin' | 'schemas'>): {
+  chain: Chain;
   childResults: Array<ZodResult>;
-  expression: Chain;
 } {
   const z = plugin.external('zod.z');
 
@@ -95,6 +96,7 @@ export function unionToAst({ childResults, parentSchema, plugin, schemas }: Unio
       base: baseNode,
     },
     parentSchema,
+    path,
     plugin,
     schema: parentSchema,
     schemas,
@@ -104,10 +106,10 @@ export function unionToAst({ childResults, parentSchema, plugin, schemas }: Unio
   };
 
   const resolver = plugin.config['~resolvers']?.union;
-  const expression = resolver?.(ctx) ?? unionResolver(ctx);
+  const chain = resolver?.(ctx) ?? unionResolver(ctx);
 
   return {
+    chain,
     childResults,
-    expression,
   };
 }

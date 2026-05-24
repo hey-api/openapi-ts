@@ -1,4 +1,4 @@
-import type { SchemaWithType } from '@hey-api/shared';
+import type { SchemaVisitorContext, SchemaWithType } from '@hey-api/shared';
 
 import { $ } from '../../../../ts-dsl';
 import { identifiers } from '../../constants';
@@ -33,10 +33,10 @@ function booleanResolver(ctx: BooleanResolverContext): Chain {
 }
 
 export function booleanToAst({
+  path,
   plugin,
   schema,
-}: {
-  plugin: ZodPlugin['Instance'];
+}: SchemaVisitorContext<ZodPlugin['Instance']> & {
   schema: SchemaWithType<'boolean'>;
 }): Chain {
   const z = plugin.external('zod.z');
@@ -49,6 +49,7 @@ export function booleanToAst({
       base: baseNode,
       const: constNode,
     },
+    path,
     plugin,
     schema,
     symbols: {

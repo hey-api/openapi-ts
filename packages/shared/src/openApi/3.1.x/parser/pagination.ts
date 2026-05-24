@@ -77,7 +77,7 @@ export const paginationField = ({
 
       if (typeof property !== 'boolean') {
         // TODO: resolve deeper references
-        const schemaTypes = getSchemaTypes({ schema: property });
+        const schemaTypes = getSchemaTypes(property);
 
         if (!schemaTypes.length) {
           const compositionSchemas = property.anyOf ?? property.oneOf;
@@ -85,9 +85,7 @@ export const paginationField = ({
             (schema) => schema.type !== 'null',
           );
           if (nonNullCompositionSchemas.length === 1) {
-            const schemaTypes = getSchemaTypes({
-              schema: nonNullCompositionSchemas[0]!,
-            });
+            const schemaTypes = getSchemaTypes(nonNullCompositionSchemas[0]!);
             if (isPaginationType(schemaTypes)) {
               return name;
             }

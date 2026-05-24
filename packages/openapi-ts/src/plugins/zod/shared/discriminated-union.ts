@@ -16,6 +16,12 @@ export interface DiscriminatedUnionData {
   members: Array<DiscriminatedUnionMember>;
 }
 
+export function isRecordShaped(schema: IR.SchemaObject | undefined): boolean {
+  if (!schema || schema.type !== 'object') return false;
+  const hasProperties = schema.properties && Object.keys(schema.properties).length > 0;
+  return !hasProperties && Boolean(schema.additionalProperties);
+}
+
 export function tryBuildDiscriminatedUnion({
   items,
   parentSchema,
@@ -57,6 +63,13 @@ export function tryBuildDiscriminatedUnion({
         tool: 'zod',
       };
       if ((plugin.querySymbol(query)?.meta as unknown as ZodMeta)?.isIntersection) return null;
+      let resolved: IR.SchemaObject | undefined;
+      try {
+        resolved = plugin.context.resolveIrRef<IR.SchemaObject>(refPart.$ref);
+      } catch {
+        // unresolvable refs fall through and will surface elsewhere
+      }
+      if (isRecordShaped(resolved)) return null;
       refExpression = $(plugin.referenceSymbol(query));
     } else {
       return null;
