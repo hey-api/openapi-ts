@@ -44,14 +44,14 @@ export interface ZodMeta {
  * Result from walking a schema node.
  */
 export interface ZodResult {
-  expression: Chain;
+  chain: Chain;
   meta: ZodMeta;
 }
 
 /**
  * Finalized result after applyModifiers.
  */
-export interface ZodFinal extends Pick<ZodResult, 'expression'> {
+export interface ZodFinal extends Pick<ZodResult, 'chain'> {
   /** Type annotation for schemas requiring explicit typing (e.g., lazy). */
   typeName?: string | ts.Identifier;
 }
@@ -59,6 +59,6 @@ export interface ZodFinal extends Pick<ZodResult, 'expression'> {
 /**
  * Result from composite handlers that walk children.
  */
-export interface CompositeHandlerResult extends Pick<ZodResult, 'expression'> {
+export interface CompositeHandlerResult extends Pick<ZodResult, 'chain'> {
   childResults: Array<ZodResult>;
 }

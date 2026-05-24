@@ -1,5 +1,5 @@
 import type { SymbolMeta } from '@hey-api/codegen-core';
-import type { SchemaWithType } from '@hey-api/shared';
+import type { SchemaVisitorContext, SchemaWithType } from '@hey-api/shared';
 import { toCase } from '@hey-api/shared';
 
 import { $ } from '../../../../../ts-dsl';
@@ -25,7 +25,12 @@ function formatNode(ctx: StringResolverContext): Type | undefined {
   }
 
   if (format === 'date-time' || format === 'date') {
-    if (plugin.getPlugin('@hey-api/transformers')?.config.dates) {
+    const dates = plugin.getPlugin('@hey-api/transformers')?.config.dates;
+    if (dates) {
+      if (dates === 'temporal') {
+        const temporal = plugin.symbolOnce('Temporal', { external: 'temporal-polyfill' });
+        return $.type(temporal).attr(format === 'date' ? 'PlainDate' : 'Instant');
+      }
       return $.type('Date');
     }
   }
@@ -93,10 +98,10 @@ function stringResolver(ctx: StringResolverContext): Type {
 }
 
 export function stringToAst({
+  path,
   plugin,
   schema,
-}: {
-  plugin: HeyApiTypeScriptPlugin['Instance'];
+}: SchemaVisitorContext<HeyApiTypeScriptPlugin['Instance']> & {
   schema: SchemaWithType<'string'>;
 }): Type {
   const ctx: StringResolverContext = {
@@ -106,6 +111,7 @@ export function stringToAst({
       const: constNode,
       format: formatNode,
     },
+    path,
     plugin,
     schema,
   };

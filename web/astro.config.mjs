@@ -298,6 +298,10 @@ export default defineConfig({
                   badge: { text: 'Vote', variant: 'tip' },
                   slug: 'docs/openapi/typescript/plugins/koa',
                 },
+                {
+                  badge: { text: 'Vote', variant: 'tip' },
+                  slug: 'docs/openapi/typescript/plugins/tanstack-start',
+                },
               ],
               label: 'Web Frameworks',
             },

@@ -1,9 +1,6 @@
-import type { IR } from '@hey-api/shared';
-
 import { $ } from '../../../../../ts-dsl';
 import type { UnionResolverContext } from '../../resolvers';
-import type { Type, TypeScriptResult } from '../../shared/types';
-import type { HeyApiTypeScriptPlugin } from '../../types';
+import type { Type } from '../../shared/types';
 
 function baseNode(ctx: UnionResolverContext): Type {
   const { childResults } = ctx;
@@ -22,14 +19,13 @@ function unionResolver(ctx: UnionResolverContext): Type {
 export function unionToAst({
   childResults,
   parentSchema,
+  path,
   plugin,
   schemas,
-}: {
-  childResults: ReadonlyArray<TypeScriptResult>;
-  parentSchema: IR.SchemaObject;
-  plugin: HeyApiTypeScriptPlugin['Instance'];
-  schemas: ReadonlyArray<IR.SchemaObject>;
-}): Type {
+}: Pick<
+  UnionResolverContext,
+  'childResults' | 'parentSchema' | 'path' | 'plugin' | 'schemas'
+>): Type {
   const ctx: UnionResolverContext = {
     $,
     childResults,
@@ -37,6 +33,7 @@ export function unionToAst({
       base: baseNode,
     },
     parentSchema,
+    path,
     plugin,
     schemas,
   };

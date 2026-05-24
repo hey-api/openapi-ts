@@ -16,8 +16,6 @@
     "**/*-lock.json": true,
     "**/*.log": true,
     "**/*.map": true,
-    "**/*.mjs": true,
-    "**/*.mts": true,
     "**/dist": true,
     "**/.mypy_cache": true,
     "**/__snapshots__": true,

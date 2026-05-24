@@ -166,7 +166,7 @@ export function createRequestSchemaV3(
 
   return exportAst({
     final: {
-      expression: schema,
+      chain: schema,
     },
     meta: {
       resource: 'operation',

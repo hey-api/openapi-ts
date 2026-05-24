@@ -83,7 +83,54 @@ export default {
 };
 ```
 
-This will generate types that use `Date` instead of `string` and appropriate transformers. Note that third-party date packages are not supported at the moment.
+This will generate types that use `Date` instead of `string` and appropriate transformers.
+
+### Temporal
+
+To use the [Temporal API](https://tc39.es/proposal-temporal/docs/) via [`temporal-polyfill`](https://github.com/fullcalendar/temporal-polyfill), set `dates` to `temporal`.
+
+<Tabs>
+  <TabItem label="example">
+```ts title="transformers.gen.ts"
+import { Temporal } from 'temporal-polyfill';
+
+import type { GetFooResponse } from './types.gen';
+
+const quxSchemaResponseTransformer = (data: any) => {
+  if (data.baz) {
+    data.baz = Temporal.Instant.from(data.baz);
+  }
+  return data;
+};
+
+const bazSchemaResponseTransformer = (data: any) => {
+  data = quxSchemaResponseTransformer(data);
+  data.bar = Temporal.Instant.from(data.bar);
+  return data;
+};
+
+export const getFooResponseTransformer = async (data: any): Promise<GetFooResponse> => {
+  data = bazSchemaResponseTransformer(data);
+  return data;
+};
+```
+  </TabItem>
+  <TabItem label="config">
+```js {7} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      dates: 'temporal',
+      name: '@hey-api/transformers',
+    },
+  ],
+};
+```
+  </TabItem>
+</Tabs>
 
 ## BigInt
 
