@@ -44,7 +44,7 @@ export function exportAst({
     .export()
     .$if(plugin.config.comments && createSchemaComment(schema), (c, v) => c.doc(v))
     .$if(final.typeName, (c) => c.type($.type(z).attr(final.typeName!)))
-    .assign(final.expression);
+    .assign(final.chain);
   plugin.node(statement);
 
   const typeInferSymbol = naming.types.infer.enabled
