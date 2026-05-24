@@ -80,12 +80,15 @@ export class SymbolRegistry implements ISymbolRegistry {
     }
   }
 
-  private buildIndexKeySpace(meta: ISymbolMeta, prefix = ''): IndexKeySpace {
-    const entries: Array<IndexEntry> = [];
+  private buildIndexKeySpace(
+    meta: ISymbolMeta,
+    prefix = '',
+    entries: Array<IndexEntry> = [],
+  ): IndexKeySpace {
     for (const [key, value] of Object.entries(meta)) {
       const path = prefix ? `${prefix}.${key}` : key;
       if (value && typeof value === 'object' && !Array.isArray(value)) {
-        entries.push(...this.buildIndexKeySpace(value as ISymbolMeta, path));
+        this.buildIndexKeySpace(value as ISymbolMeta, path, entries);
       } else {
         entries.push([path, value, `${path}:${JSON.stringify(value)}`]);
       }

@@ -12,19 +12,19 @@ function baseNode(ctx: IntersectionResolverContext): Chain {
     return $(z).attr(identifiers.never).call();
   }
 
-  let expression = childResults[0]!.expression;
+  let chain = childResults[0]!.chain;
   childResults.slice(1).forEach((item) => {
-    expression = $(z)
+    chain = $(z)
       .attr(identifiers.intersection)
       .call(
-        expression,
+        chain,
         item.meta.hasLazy
-          ? $(z).attr(identifiers.lazy).call($.func().do(item.expression.return()))
-          : item.expression,
+          ? $(z).attr(identifiers.lazy).call($.func().do(item.chain.return()))
+          : item.chain,
       );
   });
 
-  return expression;
+  return chain;
 }
 
 function intersectionResolver(ctx: IntersectionResolverContext): Chain {
@@ -43,8 +43,8 @@ export function intersectionToAst({
   IntersectionResolverContext,
   'childResults' | 'parentSchema' | 'path' | 'plugin' | 'schemas'
 >): {
+  chain: Chain;
   childResults: Array<ZodResult>;
-  expression: Chain;
 } {
   const z = plugin.external('zod.z');
 
@@ -68,10 +68,10 @@ export function intersectionToAst({
   };
 
   const resolver = plugin.config['~resolvers']?.intersection;
-  const expression = resolver?.(ctx) ?? intersectionResolver(ctx);
+  const chain = resolver?.(ctx) ?? intersectionResolver(ctx);
 
   return {
+    chain,
     childResults,
-    expression,
   };
 }
