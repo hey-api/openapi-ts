@@ -1,5 +1,23 @@
 # @hey-api/shared
 
+## 0.4.5
+
+### Patch Changes
+
+- **types**: export `ResolverNodes` type on `Plugin` ([#3907](https://github.com/hey-api/openapi-ts/pull/3907)) ([`3aabff2`](https://github.com/hey-api/openapi-ts/commit/3aabff24719d7e5ed82ce9b0ba64a9d8050e94c2)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin**: expose getHooks method ([#3913](https://github.com/hey-api/openapi-ts/pull/3913)) ([`7c330bc`](https://github.com/hey-api/openapi-ts/commit/7c330bcc6bc1849aba979e1028a7d5e9dd97e0dd)) by [@mrlubos](https://github.com/mrlubos)
+
+- **fix**: various performance improvements ([#3917](https://github.com/hey-api/openapi-ts/pull/3917)) ([`ec2bdba`](https://github.com/hey-api/openapi-ts/commit/ec2bdba19e0afee59e9fb8bcbfeff837ee2535b1)) by [@SukkaW](https://github.com/SukkaW)
+
+- **utils**: turn on `enabled` flag in `mappers` ([#3827](https://github.com/hey-api/openapi-ts/pull/3827)) ([`1aa4785`](https://github.com/hey-api/openapi-ts/commit/1aa47851422dece48d103ad018759fea8151cb38)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+- **parser**: fix: encode special characters in JSON Pointer ([#3903](https://github.com/hey-api/openapi-ts/pull/3903)) ([`e6c66b0`](https://github.com/hey-api/openapi-ts/commit/e6c66b0d009d38a4c68ec5724c23bef8ae836fb4)) by [@aqeelat](https://github.com/aqeelat)
+
+### Updated Dependencies:
+
+- @hey-api/codegen-core@0.8.2
+
 ## 0.4.4
 
 ### Patch Changes
