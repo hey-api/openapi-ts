@@ -1,4 +1,5 @@
 ---
+import arrowRightSvg from '@/assets/icons/arrow-right.svg?raw';
 import boxSvg from '@/assets/icons/box.svg?raw';
 import fileAddSvg from '@/assets/icons/file-add.svg?raw';
 import layersSvg from '@/assets/icons/layers.svg?raw';
@@ -91,7 +92,7 @@ const DECK = {
               <span class="deck-teaser-count">{DECK.count}</span>
               <p class="deck-teaser-label">{DECK.title}</p>
               <p class="deck-teaser-sub">{DECK.sub}</p>
-              <a href={DECK.link.href} class="deck-teaser-link">{DECK.link.text} →</a>
+              <a href={DECK.link.href} class="deck-teaser-link">{DECK.link.text} <span class="icon" set:html={arrowRightSvg} aria-hidden="true" /></a>
             </div>
           </div>
         </div>
@@ -374,6 +375,20 @@ const DECK = {
 
   .deck-teaser-link:hover {
     opacity: 0.75;
+  }
+
+  .deck-teaser-link .icon {
+    display: inline-block;
+    height: 1em;
+    margin-right: -0.2em;
+    width: 1em;
+  }
+
+  .deck-teaser-link .icon :global(svg) {
+    display: inline-block;
+    height: auto;
+    margin-bottom: -2px;
+    max-width: 100%;
   }
 
   .features-skip {
