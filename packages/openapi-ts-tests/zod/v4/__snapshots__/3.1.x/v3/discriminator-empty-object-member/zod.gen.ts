@@ -8,11 +8,7 @@ export const zWithValue = z.object({
     value: z.string()
 });
 
-export const zTestResponse = z.union([
-    z.object({
-        type: z.literal('Empty')
-    }).and(zEmpty),
-    z.object({
-        type: z.literal('WithValue')
-    }).and(zWithValue)
+export const zTestResponse = z.discriminatedUnion('type', [
+    z.object({ type: z.literal('Empty') }).and(zEmpty),
+    zWithValue.extend({ type: z.literal('WithValue') })
 ]);
