@@ -42,11 +42,12 @@ export function createQueryKeyFunction({ plugin }: { plugin: PluginInstance }): 
   });
 
   const returnType = $.type(symbolQueryKeyType).generic(TOptionsType).idx(0);
+  const partialType = $.type('Partial').generic(TOptionsType);
 
   const fn = $.const(symbolCreateQueryKey).assign(
     $.func()
       .param('id', (p) => p.type('string'))
-      .param('options', (p) => p.optional().type(TOptionsType))
+      .param('options', (p) => p.optional().type(partialType))
       .param('infinite', (p) => p.optional().type('boolean'))
       .param('tags', (p) => p.optional().type('ReadonlyArray<string>'))
       .generic(TOptionsType, (g) => g.extends(symbolOptions))
