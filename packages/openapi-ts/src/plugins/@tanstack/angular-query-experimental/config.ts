@@ -13,6 +13,16 @@ export const defaultConfig: TanStackAngularQueryPlugin['Config'] = {
   handler: handler as TanStackAngularQueryPlugin['Handler'],
   name: '@tanstack/angular-query-experimental',
   resolveConfig: (plugin, context) => {
+    plugin.config.getQueryData = context.valueToObject({
+      defaultValue: {
+        case: plugin.config.case ?? 'camelCase',
+        enabled: false,
+        name: '{{name}}GetQueryData',
+      },
+      mappers,
+      value: plugin.config.getQueryData,
+    });
+
     plugin.config.infiniteQueryKeys = context.valueToObject({
       defaultValue: {
         case: plugin.config.case ?? 'camelCase',
@@ -84,12 +94,7 @@ export const defaultConfig: TanStackAngularQueryPlugin['Config'] = {
         enabled: false,
         name: '{{name}}SetQueryData',
       },
-      mappers: {
-        boolean: (enabled) => ({ enabled }),
-        function: (name) => ({ enabled: true, name }),
-        object: (fields) => ({ enabled: true, ...fields }),
-        string: (name) => ({ enabled: true, name }),
-      },
+      mappers,
       value: plugin.config.setQueryData,
     });
   },

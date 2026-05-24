@@ -13,6 +13,16 @@ export const defaultConfig: TanStackPreactQueryPlugin['Config'] = {
   handler: handler as TanStackPreactQueryPlugin['Handler'],
   name: '@tanstack/preact-query',
   resolveConfig: (plugin, context) => {
+    plugin.config.getQueryData = context.valueToObject({
+      defaultValue: {
+        case: plugin.config.case ?? 'camelCase',
+        enabled: false,
+        name: '{{name}}GetQueryData',
+      },
+      mappers,
+      value: plugin.config.getQueryData,
+    });
+
     plugin.config.infiniteQueryKeys = context.valueToObject({
       defaultValue: {
         case: plugin.config.case ?? 'camelCase',
@@ -84,13 +94,18 @@ export const defaultConfig: TanStackPreactQueryPlugin['Config'] = {
         enabled: false,
         name: '{{name}}SetQueryData',
       },
-      mappers: {
-        boolean: (enabled) => ({ enabled }),
-        function: (name) => ({ enabled: true, name }),
-        object: (fields) => ({ enabled: true, ...fields }),
-        string: (name) => ({ enabled: true, name }),
-      },
+      mappers,
       value: plugin.config.setQueryData,
+    });
+
+    plugin.config.useGetQueryData = context.valueToObject({
+      defaultValue: {
+        case: plugin.config.case ?? 'camelCase',
+        enabled: false,
+        name: 'use{{name}}GetQueryData',
+      },
+      mappers,
+      value: plugin.config.useGetQueryData,
     });
 
     plugin.config.useMutation = context.valueToObject({
@@ -99,12 +114,7 @@ export const defaultConfig: TanStackPreactQueryPlugin['Config'] = {
         enabled: false,
         name: 'use{{name}}Mutation',
       },
-      mappers: {
-        boolean: (enabled) => ({ enabled }),
-        function: (name) => ({ enabled: true, name }),
-        object: (fields) => ({ enabled: true, ...fields }),
-        string: (name) => ({ enabled: true, name }),
-      },
+      mappers,
       value: plugin.config.useMutation,
     });
 
@@ -114,12 +124,7 @@ export const defaultConfig: TanStackPreactQueryPlugin['Config'] = {
         enabled: false,
         name: 'use{{name}}Query',
       },
-      mappers: {
-        boolean: (enabled) => ({ enabled }),
-        function: (name) => ({ enabled: true, name }),
-        object: (fields) => ({ enabled: true, ...fields }),
-        string: (name) => ({ enabled: true, name }),
-      },
+      mappers,
       value: plugin.config.useQuery,
     });
 
@@ -129,12 +134,7 @@ export const defaultConfig: TanStackPreactQueryPlugin['Config'] = {
         enabled: false,
         name: 'use{{name}}SetQueryData',
       },
-      mappers: {
-        boolean: (enabled) => ({ enabled }),
-        function: (name) => ({ enabled: true, name }),
-        object: (fields) => ({ enabled: true, ...fields }),
-        string: (name) => ({ enabled: true, name }),
-      },
+      mappers,
       value: plugin.config.useSetQueryData,
     });
 
