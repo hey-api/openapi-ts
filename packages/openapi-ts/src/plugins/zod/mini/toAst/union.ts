@@ -1,10 +1,8 @@
-import type { IR } from '@hey-api/shared';
-
 import { $ } from '../../../../ts-dsl';
 import { identifiers } from '../../constants';
 import type { UnionResolverContext } from '../../resolvers';
 import type { Chain } from '../../shared/chain';
-import { isRecordShaped, tryBuildDiscriminatedUnion } from '../../shared/discriminated-union';
+import { tryBuildDiscriminatedUnion } from '../../shared/discriminated-union';
 import type { ZodResult } from '../../shared/types';
 
 function baseNode(ctx: UnionResolverContext): Chain {
@@ -39,41 +37,26 @@ function baseNode(ctx: UnionResolverContext): Chain {
   });
 
   if (discriminatedExpression) {
-    const hasRecordShaped = schemas.some((schema) => {
-      if (schema.logicalOperator !== 'and' || !schema.items || schema.items.length !== 2)
-        return false;
-      const refPart = schema.items[1]!;
-      if (!refPart.$ref) return false;
-      try {
-        const resolved = plugin.context.resolveIrRef<IR.SchemaObject>(refPart.$ref);
-        return isRecordShaped(resolved);
-      } catch {
-        return false;
-      }
-    });
-
-    if (!hasRecordShaped) {
-      const unionMembers = discriminatedExpression.members.map((member) =>
-        $(z)
-          .attr(identifiers.extend)
-          .call(
-            member.refExpression,
-            $.object().prop(
-              discriminatedExpression.discriminatorKey,
-              $(z).attr(identifiers.literal).call($.fromValue(member.discriminatedValue)),
-            ),
-          ),
-      );
-
-      return $(z)
-        .attr(identifiers.discriminatedUnion)
+    const unionMembers = discriminatedExpression.members.map((member) =>
+      $(z)
+        .attr(identifiers.extend)
         .call(
-          $.literal(discriminatedExpression.discriminatorKey),
-          $.array()
-            .pretty()
-            .elements(...unionMembers),
-        );
-    }
+          member.refExpression,
+          $.object().prop(
+            discriminatedExpression.discriminatorKey,
+            $(z).attr(identifiers.literal).call($.fromValue(member.discriminatedValue)),
+          ),
+        ),
+    );
+
+    return $(z)
+      .attr(identifiers.discriminatedUnion)
+      .call(
+        $.literal(discriminatedExpression.discriminatorKey),
+        $.array()
+          .pretty()
+          .elements(...unionMembers),
+      );
   }
 
   return $(z)

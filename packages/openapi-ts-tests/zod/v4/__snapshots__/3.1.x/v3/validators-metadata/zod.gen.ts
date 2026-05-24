@@ -4,7 +4,7 @@ import { z } from 'zod/v3';
 
 export const zBaz = z.string().regex(/foo\nbar/).readonly().default('baz');
 
-export const zQux = z.object({}).catchall(z.object({
+export const zQux = z.record(z.object({
     qux: z.string().optional()
 }));
 
