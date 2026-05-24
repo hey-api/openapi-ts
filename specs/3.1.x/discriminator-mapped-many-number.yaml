@@ -1,0 +1,31 @@
+openapi: 3.1.0
+info:
+  title: OpenAPI 3.1.0 discriminator mapped many (number) example
+  version: 1
+components:
+  schemas:
+    Foo:
+      oneOf:
+        - $ref: '#/components/schemas/Bar'
+        - $ref: '#/components/schemas/Baz'
+      discriminator:
+        propertyName: code
+        mapping:
+          '1': '#/components/schemas/Bar'
+          '2': '#/components/schemas/Bar'
+          '3': '#/components/schemas/Baz'
+    Bar:
+      type: object
+      properties:
+        code:
+          type: integer
+          enum:
+            - 1
+            - 2
+    Baz:
+      type: object
+      properties:
+        code:
+          type: integer
+          enum:
+            - 3
