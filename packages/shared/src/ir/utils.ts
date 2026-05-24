@@ -32,10 +32,7 @@ export function addItemsToSchema({
 
   if (mutateSchemaOneItem) {
     // bring composition up to avoid extraneous brackets
-    schema = {
-      ...schema,
-      ...items[0],
-    };
+    Object.assign(schema, items[0]);
     return schema;
   }
 

@@ -361,4 +361,49 @@ describe('buildClientParams', () => {
   it.each(scenarios)('$description', async ({ args, config, params }) => {
     expect(buildClientParams(args, config)).toEqual(params);
   });
+
+  describe('prototype pollution guards (GHSA-hhx9-57xq-r5rw)', () => {
+    const queryFields: FieldsConfig = [{ args: [{ in: 'query', key: 'q' }] }];
+
+    it('slot objects have null prototype', () => {
+      const result = buildClientParams([{ q: 'hello' }], queryFields);
+      expect(Object.getPrototypeOf(result.query)).toBeNull();
+    });
+
+    it('$query___proto__ writes a plain property, does not substitute prototype', () => {
+      const result = buildClientParams(
+        [{ $query___proto__: { isAdmin: true }, q: 'hello' }],
+        queryFields,
+      );
+      expect(Object.getPrototypeOf(result.query)).toBeNull();
+      expect(result.query.q).toBe('hello');
+    });
+
+    it('$query_constructor writes a plain property', () => {
+      const result = buildClientParams(
+        [{ $query_constructor: { prototype: { injected: true } }, q: 'hello' }],
+        queryFields,
+      );
+      expect(Object.getPrototypeOf(result.query)).toBeNull();
+    });
+
+    it('__proto__ in allowExtra branch writes a plain property', () => {
+      const result = buildClientParams(
+        [{ __proto__: { isAdmin: true }, q: 'hello' }],
+        [{ allowExtra: { query: true } }],
+      );
+      expect(Object.getPrototypeOf(result.query)).toBeNull();
+    });
+
+    it('does not affect global Object.prototype', () => {
+      buildClientParams([{ $query___proto__: { isAdmin: true }, q: 'hello' }], queryFields);
+      expect(({} as any).isAdmin).toBeUndefined();
+    });
+
+    it('still processes legitimate $query_ extra keys', () => {
+      const result = buildClientParams([{ $query_extra: 'value', q: 'hello' }], queryFields);
+      expect(result.query.extra).toBe('value');
+      expect(result.query.q).toBe('hello');
+    });
+  });
 });

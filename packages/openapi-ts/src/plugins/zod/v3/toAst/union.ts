@@ -26,7 +26,7 @@ function baseNode(ctx: UnionResolverContext): Chain {
   }
 
   if (nonNullItems.length === 1) {
-    return nonNullItems[0]!.expression;
+    return nonNullItems[0]!.chain;
   }
 
   const discriminatedExpression = tryBuildDiscriminatedUnion({
@@ -63,7 +63,7 @@ function baseNode(ctx: UnionResolverContext): Chain {
     .call(
       $.array()
         .pretty()
-        .elements(...nonNullItems.map((item) => item.expression)),
+        .elements(...nonNullItems.map((item) => item.chain)),
     );
 }
 
@@ -80,8 +80,8 @@ export function unionToAst({
   plugin,
   schemas,
 }: Pick<UnionResolverContext, 'childResults' | 'parentSchema' | 'path' | 'plugin' | 'schemas'>): {
+  chain: Chain;
   childResults: Array<ZodResult>;
-  expression: Chain;
 } {
   const z = plugin.external('zod.z');
 
@@ -105,10 +105,10 @@ export function unionToAst({
   };
 
   const resolver = plugin.config['~resolvers']?.union;
-  const expression = resolver?.(ctx) ?? unionResolver(ctx);
+  const chain = resolver?.(ctx) ?? unionResolver(ctx);
 
   return {
+    chain,
     childResults,
-    expression,
   };
 }

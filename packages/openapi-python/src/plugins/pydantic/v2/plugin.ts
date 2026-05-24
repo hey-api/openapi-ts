@@ -39,6 +39,9 @@ export const handlerV2: PydanticPlugin['Handler'] = ({ plugin }) => {
   plugin.symbol('Field', {
     external: 'pydantic',
   });
+  plugin.symbol('dataclass', {
+    external: 'pydantic.dataclasses',
+  });
 
   const processor = createProcessor(plugin);
 

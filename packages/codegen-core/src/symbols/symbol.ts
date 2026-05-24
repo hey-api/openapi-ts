@@ -302,10 +302,10 @@ export class Symbol<Node extends INode = INode> {
    */
   toString(): string {
     const canonical = this.canonical;
-    if (canonical._finalName && canonical._finalName !== canonical._name) {
+    if (canonical._finalName) {
       return `[Symbol ${canonical._name} → ${canonical._finalName}#${canonical.id}]`;
     }
-    return `[Symbol ${canonical._name || canonical._meta !== undefined ? JSON.stringify(canonical._meta) : '<unknown>'}#${canonical.id}]`;
+    return `[Symbol ${canonical._name}#${canonical.id}] ${JSON.stringify(canonical._meta ?? {})}`;
   }
 
   /**

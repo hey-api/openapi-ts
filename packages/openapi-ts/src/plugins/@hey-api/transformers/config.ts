@@ -1,6 +1,6 @@
 import { definePluginConfig } from '@hey-api/shared';
 
-import { bigIntExpressions, dateExpressions } from './expressions';
+import { bigIntExpressions, dateExpressions, temporalExpressions } from './expressions';
 import { handler } from './plugin';
 import type { HeyApiTransformersPlugin } from './types';
 
@@ -21,7 +21,9 @@ export const defaultConfig: HeyApiTransformersPlugin['Config'] = {
     }
 
     if (plugin.config.dates) {
-      plugin.config.transformers = [...plugin.config.transformers, dateExpressions];
+      const dateTransformer =
+        plugin.config.dates === 'temporal' ? temporalExpressions : dateExpressions;
+      plugin.config.transformers = [...plugin.config.transformers, dateTransformer];
     }
 
     if (plugin.config.bigInt) {

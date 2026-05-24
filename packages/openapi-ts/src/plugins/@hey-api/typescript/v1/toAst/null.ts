@@ -1,4 +1,4 @@
-import type { SchemaWithType } from '@hey-api/shared';
+import type { SchemaVisitorContext, SchemaWithType } from '@hey-api/shared';
 
 import { $ } from '../../../../../ts-dsl';
 import type { NullResolverContext } from '../../resolvers';
@@ -14,10 +14,10 @@ function nullResolver(ctx: NullResolverContext): Type {
 }
 
 export function nullToAst({
+  path,
   plugin,
   schema,
-}: {
-  plugin: HeyApiTypeScriptPlugin['Instance'];
+}: SchemaVisitorContext<HeyApiTypeScriptPlugin['Instance']> & {
   schema: SchemaWithType<'null'>;
 }): Type {
   const ctx: NullResolverContext = {
@@ -25,6 +25,7 @@ export function nullToAst({
     nodes: {
       base: baseNode,
     },
+    path,
     plugin,
     schema,
   };

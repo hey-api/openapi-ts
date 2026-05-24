@@ -11,6 +11,15 @@ export const irTopLevelKinds = [
 
 export type IrTopLevelKind = (typeof irTopLevelKinds)[number];
 
+const irPatterns: Record<IrTopLevelKind, RegExp> = {
+  operation: /^#\/paths\/[^/]+\/(get|put|post|delete|options|head|patch|trace)$/,
+  parameter: /^#\/components\/parameters\/[^/]+$/,
+  requestBody: /^#\/components\/requestBodies\/[^/]+$/,
+  schema: /^#\/components\/schemas\/[^/]+$/,
+  server: /^#\/servers\/(\d+|[^/]+)$/,
+  webhook: /^#\/webhooks\/[^/]+\/(get|put|post|delete|options|head|patch|trace)$/,
+};
+
 /**
  * Checks if a pointer matches a known top-level IR component (schema, parameter, etc) and returns match info.
  *
@@ -19,21 +28,12 @@ export type IrTopLevelKind = (typeof irTopLevelKinds)[number];
  * @returns { matched: true, kind: IrTopLevelKind } | { matched: false } - Whether it matched, and the matched kind if so
  */
 export const matchIrPointerToGroup: MatchPointerToGroupFn<IrTopLevelKind> = (pointer, kind) => {
-  const patterns: Record<IrTopLevelKind, RegExp> = {
-    operation: /^#\/paths\/[^/]+\/(get|put|post|delete|options|head|patch|trace)$/,
-    parameter: /^#\/components\/parameters\/[^/]+$/,
-    requestBody: /^#\/components\/requestBodies\/[^/]+$/,
-    schema: /^#\/components\/schemas\/[^/]+$/,
-    server: /^#\/servers\/(\d+|[^/]+)$/,
-    webhook: /^#\/webhooks\/[^/]+\/(get|put|post|delete|options|head|patch|trace)$/,
-  };
   if (kind) {
-    return patterns[kind].test(pointer) ? { kind, matched: true } : { matched: false };
+    return irPatterns[kind].test(pointer) ? { kind, matched: true } : { matched: false };
   }
-  for (const key of Object.keys(patterns)) {
-    const kind = key as IrTopLevelKind;
-    if (patterns[kind].test(pointer)) {
-      return { kind, matched: true };
+  for (const key of irTopLevelKinds) {
+    if (irPatterns[key].test(pointer)) {
+      return { kind: key, matched: true };
     }
   }
   return { matched: false };
