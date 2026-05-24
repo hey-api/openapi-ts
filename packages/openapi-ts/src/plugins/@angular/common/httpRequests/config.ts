@@ -1,4 +1,5 @@
 import type { PluginContext } from '@hey-api/shared';
+import { coerce } from '@hey-api/shared';
 
 import type { UserConfig } from '../types';
 import type { HttpRequestsConfig, UserHttpRequestsConfig } from './types';
@@ -20,16 +21,8 @@ export function resolveHttpRequests(config: Config, context: PluginContext): Htt
   return context.valueToObject({
     defaultValue: {
       container: 'class',
-      enabled: true,
-      methods: 'instance',
-      nesting: 'operationId',
-      nestingDelimiters: /[./]/,
-      strategy,
-      strategyDefaultTag: 'default',
-    },
-    mappers: {
-      object(value) {
-        value.containerName = context.valueToObject({
+      containerName: coerce((value) =>
+        context.valueToObject({
           defaultValue:
             strategy === 'single'
               ? { casing: 'PascalCase', name: 'HttpRequests' }
@@ -38,9 +31,12 @@ export function resolveHttpRequests(config: Config, context: PluginContext): Htt
             function: (name) => ({ name }),
             string: (name) => ({ name }),
           },
-          value: value.containerName,
-        });
-        value.methodName = context.valueToObject({
+          value,
+        }),
+      ),
+      enabled: true,
+      methodName: coerce((value) =>
+        context.valueToObject({
           defaultValue:
             strategy === 'flat'
               ? { casing: 'camelCase', name: '{{name}}Request' }
@@ -49,18 +45,24 @@ export function resolveHttpRequests(config: Config, context: PluginContext): Htt
             function: (name) => ({ name }),
             string: (name) => ({ name }),
           },
-          value: value.methodName,
-        });
-        value.segmentName = context.valueToObject({
+          value,
+        }),
+      ),
+      methods: 'instance',
+      nesting: 'operationId',
+      nestingDelimiters: /[./]/,
+      segmentName: coerce((value) =>
+        context.valueToObject({
           defaultValue: { casing: 'PascalCase', name: '{{name}}Requests' },
           mappers: {
             function: (name) => ({ name }),
             string: (name) => ({ name }),
           },
-          value: value.segmentName,
-        });
-        return value;
-      },
+          value,
+        }),
+      ),
+      strategy,
+      strategyDefaultTag: 'default',
     },
     value: input as UserHttpRequestsConfig,
   }) as HttpRequestsConfig;

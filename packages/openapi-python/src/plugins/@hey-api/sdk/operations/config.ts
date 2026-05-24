@@ -1,4 +1,5 @@
 import type { OperationsStrategy, PluginContext } from '@hey-api/shared';
+import { coerce } from '@hey-api/shared';
 
 import type { UserConfig } from '../types';
 import type { OperationsConfig, UserOperationsConfig } from './types';
@@ -22,15 +23,8 @@ function normalizeConfig(
   return context.valueToObject({
     defaultValue: {
       container: 'class',
-      methods: 'instance',
-      nesting: 'operationId',
-      nestingDelimiters: /[./]/,
-      strategy,
-      strategyDefaultTag: 'default',
-    },
-    mappers: {
-      object(value) {
-        value.containerName = context.valueToObject({
+      containerName: coerce((value) =>
+        context.valueToObject({
           defaultValue:
             strategy === 'single'
               ? { casing: 'PascalCase', name: 'Sdk' }
@@ -39,29 +33,35 @@ function normalizeConfig(
             function: (name) => ({ name }),
             string: (name) => ({ name }),
           },
-          value: value.containerName,
-        });
-        value.methodName = context.valueToObject({
+          value,
+        }),
+      ),
+      methodName: coerce((value) =>
+        context.valueToObject({
           defaultValue: { casing: 'snake_case' },
           mappers: {
             function: (name) => ({ name }),
             string: (name) => ({ name }),
           },
-          value: value.methodName,
-        });
-        value.segmentName = context.valueToObject({
+          value,
+        }),
+      ),
+      methods: 'instance',
+      nesting: 'operationId',
+      nestingDelimiters: /[./]/,
+      segmentName: coerce((value) =>
+        context.valueToObject({
           defaultValue: { casing: 'PascalCase' },
           mappers: {
             function: (name) => ({ name }),
             string: (name) => ({ name }),
           },
-          value: value.segmentName,
-        });
-        return value;
-      },
+          value,
+        }),
+      ),
+      strategy,
+      strategyDefaultTag: 'default',
     },
-    value: {
-      ...input,
-    } as UserOperationsConfig,
+    value: input as UserOperationsConfig,
   }) as OperationsConfig;
 }

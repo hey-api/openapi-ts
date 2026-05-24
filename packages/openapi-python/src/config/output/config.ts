@@ -1,5 +1,5 @@
 import type { PostProcessor } from '@hey-api/shared';
-import { resolveSource, valueToObject } from '@hey-api/shared';
+import { coerce, resolveSource, valueToObject } from '@hey-api/shared';
 import type { MaybeArray } from '@hey-api/types';
 
 import { postProcessors } from './postprocess';
@@ -19,33 +19,24 @@ export function getOutput(userConfig: { output: MaybeArray<string | UserOutput> 
     defaultValue: {
       clean: true,
       entryFile: true,
-      fileName: {
-        case: 'preserve',
-        name: '{{name}}',
-        suffix: '_gen',
-      },
-      module: {},
-      path: '',
-      postProcess: [],
-      preferExportAll: false,
-    },
-    mappers: {
-      object: (fields, defaultValue) => ({
-        ...fields,
-        fileName: valueToObject({
+      fileName: coerce((value) =>
+        valueToObject({
           defaultValue: {
-            ...(defaultValue.fileName as Extract<
-              typeof defaultValue.fileName,
-              Record<string, unknown>
-            >),
+            case: 'preserve',
+            name: '{{name}}',
+            suffix: '_gen',
           },
           mappers: {
             function: (name) => ({ name }),
             string: (name) => ({ name }),
           },
-          value: fields.fileName,
+          value,
         }),
-      }),
+      ),
+      module: {},
+      path: '',
+      postProcess: [],
+      preferExportAll: false,
     },
     value: userOutput,
   }) as Output;

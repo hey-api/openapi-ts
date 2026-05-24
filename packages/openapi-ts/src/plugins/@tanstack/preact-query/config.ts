@@ -1,7 +1,86 @@
-import { definePluginConfig, mappers } from '@hey-api/shared';
+import { defineNormalizers, definePluginConfig } from '@hey-api/shared';
 
 import { handler } from '../../../plugins/@tanstack/query-core/plugin';
 import type { TanStackPreactQueryPlugin } from './types';
+
+const defaultMeta = (): Record<string, unknown> => ({});
+
+const normalizeConfig = defineNormalizers<
+  TanStackPreactQueryPlugin['Types']['resolvedConfig'],
+  TanStackPreactQueryPlugin['Config']['config']
+>((c) => {
+  const casing = c.case ?? 'camelCase';
+  return {
+    getQueryData: {
+      case: casing,
+      enabled: false,
+      name: '{{name}}GetQueryData',
+    },
+    infiniteQueryKeys: {
+      case: casing,
+      enabled: true,
+      name: '{{name}}InfiniteQueryKey',
+      tags: false,
+    },
+    infiniteQueryOptions: {
+      case: casing,
+      enabled: true,
+      meta: defaultMeta,
+      name: '{{name}}InfiniteOptions',
+    },
+    mutationKeys: {
+      case: casing,
+      enabled: false,
+      name: '{{name}}MutationKey',
+      tags: false,
+    },
+    mutationOptions: {
+      case: casing,
+      enabled: true,
+      exported: true,
+      meta: defaultMeta,
+      name: '{{name}}Mutation',
+    },
+    queryKeys: {
+      case: casing,
+      enabled: true,
+      name: '{{name}}QueryKey',
+      tags: false,
+    },
+    queryOptions: {
+      case: casing,
+      enabled: true,
+      exported: true,
+      meta: defaultMeta,
+      name: '{{name}}Options',
+    },
+    setQueryData: {
+      case: casing,
+      enabled: false,
+      name: '{{name}}SetQueryData',
+    },
+    useGetQueryData: {
+      case: casing,
+      enabled: false,
+      name: 'use{{name}}GetQueryData',
+    },
+    useMutation: {
+      case: casing,
+      enabled: false,
+      name: 'use{{name}}Mutation',
+    },
+    useQuery: {
+      case: casing,
+      enabled: false,
+      name: 'use{{name}}Query',
+    },
+    useSetQueryData: {
+      case: casing,
+      enabled: false,
+      name: 'use{{name}}SetQueryData',
+    },
+  };
+});
 
 export const defaultConfig: TanStackPreactQueryPlugin['Config'] = {
   config: {
@@ -13,143 +92,16 @@ export const defaultConfig: TanStackPreactQueryPlugin['Config'] = {
   handler: handler as TanStackPreactQueryPlugin['Handler'],
   name: '@tanstack/preact-query',
   resolveConfig: (plugin, context) => {
-    plugin.config.getQueryData = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
-        enabled: false,
-        name: '{{name}}GetQueryData',
-      },
-      mappers,
-      value: plugin.config.getQueryData,
-    });
+    const config = normalizeConfig(plugin.config, context);
 
-    plugin.config.infiniteQueryKeys = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
-        enabled: true,
-        name: '{{name}}InfiniteQueryKey',
-        tags: false,
-      },
-      mappers,
-      value: plugin.config.infiniteQueryKeys,
-    });
-
-    plugin.config.infiniteQueryOptions = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
-        enabled: true,
-        name: '{{name}}InfiniteOptions',
-      },
-      mappers,
-      value: plugin.config.infiniteQueryOptions,
-    });
-
-    plugin.config.mutationKeys = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
-        enabled: false,
-        name: '{{name}}MutationKey',
-        tags: false,
-      },
-      mappers,
-      value: plugin.config.mutationKeys,
-    });
-
-    plugin.config.mutationOptions = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
-        enabled: true,
-        exported: true,
-        name: '{{name}}Mutation',
-      },
-      mappers,
-      value: plugin.config.mutationOptions,
-    });
-
-    plugin.config.queryKeys = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
-        enabled: true,
-        name: '{{name}}QueryKey',
-        tags: false,
-      },
-      mappers,
-      value: plugin.config.queryKeys,
-    });
-
-    plugin.config.queryOptions = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
-        enabled: true,
-        exported: true,
-        name: '{{name}}Options',
-      },
-      mappers,
-      value: plugin.config.queryOptions,
-    });
-
-    plugin.config.setQueryData = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
-        enabled: false,
-        name: '{{name}}SetQueryData',
-      },
-      mappers,
-      value: plugin.config.setQueryData,
-    });
-
-    plugin.config.useGetQueryData = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
-        enabled: false,
-        name: 'use{{name}}GetQueryData',
-      },
-      mappers,
-      value: plugin.config.useGetQueryData,
-    });
-
-    plugin.config.useMutation = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
-        enabled: false,
-        name: 'use{{name}}Mutation',
-      },
-      mappers,
-      value: plugin.config.useMutation,
-    });
-
-    plugin.config.useQuery = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
-        enabled: false,
-        name: 'use{{name}}Query',
-      },
-      mappers,
-      value: plugin.config.useQuery,
-    });
-
-    plugin.config.useSetQueryData = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
-        enabled: false,
-        name: 'use{{name}}SetQueryData',
-      },
-      mappers,
-      value: plugin.config.useSetQueryData,
-    });
-
-    if (plugin.config.useMutation.enabled) {
-      if (!plugin.config.mutationOptions.enabled) {
-        plugin.config.mutationOptions.enabled = true;
-        plugin.config.mutationOptions.exported = false;
-      }
+    if (config.useMutation.enabled && !config.mutationOptions.enabled) {
+      config.mutationOptions.enabled = true;
+      config.mutationOptions.exported = false;
     }
 
-    if (plugin.config.useQuery.enabled) {
-      if (!plugin.config.queryOptions.enabled) {
-        plugin.config.queryOptions.enabled = true;
-        plugin.config.queryOptions.exported = false;
-      }
+    if (config.useQuery.enabled && !config.queryOptions.enabled) {
+      config.queryOptions.enabled = true;
+      config.queryOptions.exported = false;
     }
   },
 };
