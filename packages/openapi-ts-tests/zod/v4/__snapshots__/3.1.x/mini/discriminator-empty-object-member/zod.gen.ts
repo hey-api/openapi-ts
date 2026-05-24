@@ -8,11 +8,7 @@ export const zWithValue = z.object({
     value: z.string()
 });
 
-export const zTestResponse = z.union([
-    z.intersection(z.object({
-        type: z.literal('Empty')
-    }), zEmpty),
-    z.intersection(z.object({
-        type: z.literal('WithValue')
-    }), zWithValue)
+export const zTestResponse = z.discriminatedUnion('type', [
+    z.intersection(z.object({ type: z.literal('Empty') }), zEmpty),
+    z.extend(zWithValue, { type: z.literal('WithValue') })
 ]);

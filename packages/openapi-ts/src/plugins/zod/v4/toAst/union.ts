@@ -35,16 +35,28 @@ function baseNode(ctx: UnionResolverContext): Chain {
     });
 
     if (discriminatedExpression) {
-      const unionMembers = discriminatedExpression.members.map((member) =>
-        member.refExpression
+      const unionMembers = discriminatedExpression.members.map((member) => {
+        if (member.useAnd) {
+          return $(z)
+            .attr(identifiers.object)
+            .call(
+              $.object().prop(
+                discriminatedExpression.discriminatorKey,
+                $(z).attr(identifiers.literal).call($.fromValue(member.discriminatedValue)),
+              ),
+            )
+            .attr(identifiers.and)
+            .call(member.refExpression);
+        }
+        return member.refExpression
           .attr(identifiers.extend)
           .call(
             $.object().prop(
               discriminatedExpression.discriminatorKey,
               $(z).attr(identifiers.literal).call($.fromValue(member.discriminatedValue)),
             ),
-          ),
-      );
+          );
+      });
 
       chain = $(z)
         .attr(identifiers.discriminatedUnion)

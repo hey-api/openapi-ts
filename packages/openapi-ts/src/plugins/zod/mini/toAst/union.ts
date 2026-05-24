@@ -37,8 +37,23 @@ function baseNode(ctx: UnionResolverContext): Chain {
   });
 
   if (discriminatedExpression) {
-    const unionMembers = discriminatedExpression.members.map((member) =>
-      $(z)
+    const unionMembers = discriminatedExpression.members.map((member) => {
+      if (member.useAnd) {
+        return $(z)
+          .attr(identifiers.intersection)
+          .call(
+            $(z)
+              .attr(identifiers.object)
+              .call(
+                $.object().prop(
+                  discriminatedExpression.discriminatorKey,
+                  $(z).attr(identifiers.literal).call($.fromValue(member.discriminatedValue)),
+                ),
+              ),
+            member.refExpression,
+          );
+      }
+      return $(z)
         .attr(identifiers.extend)
         .call(
           member.refExpression,
@@ -46,8 +61,8 @@ function baseNode(ctx: UnionResolverContext): Chain {
             discriminatedExpression.discriminatorKey,
             $(z).attr(identifiers.literal).call($.fromValue(member.discriminatedValue)),
           ),
-        ),
-    );
+        );
+    });
 
     return $(z)
       .attr(identifiers.discriminatedUnion)
