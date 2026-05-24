@@ -39,7 +39,7 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
     return [params];
 };
 
-export const listEventsQueryKey = (options?: Options<ListEventsData>) => createQueryKey('listEvents', options);
+export const listEventsQueryKey = (options?: Partial<Options<ListEventsData>>) => createQueryKey('listEvents', options);
 
 /**
  * List events
