@@ -200,9 +200,11 @@ for (const version of versions) {
           output: 'full-config',
           plugins: [
             {
+              getQueryData: true,
               mutationKeys: true,
               name: '@tanstack/react-query',
               setQueryData: true,
+              useGetQueryData: true,
               useMutation: true,
               useQuery: true,
               useSetQueryData: true,

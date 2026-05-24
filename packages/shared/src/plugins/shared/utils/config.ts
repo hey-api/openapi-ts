@@ -25,6 +25,7 @@ export const definePluginConfig =
  */
 export const mappers = {
   boolean: (enabled: boolean) => ({ enabled }),
-  function: (name: (...args: Array<any>) => any) => ({ name }),
-  string: (name: string) => ({ name }),
+  function: (name: (...args: Array<any>) => any) => ({ enabled: true, name }),
+  object: (fields: Record<string, any>) => ({ enabled: true, ...fields }),
+  string: (name: string) => ({ enabled: true, name }),
 } as const;
