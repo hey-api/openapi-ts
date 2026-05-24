@@ -2,13 +2,13 @@
 
 import * as z from 'zod';
 
-export const zEmpty = z.record(z.string(), z.unknown());
+export const zEmpty = z.object({}).catchall(z.unknown());
 
 export const zWithValue = z.object({
     value: z.string()
 });
 
 export const zTestResponse = z.discriminatedUnion('type', [
-    z.object({ type: z.literal('Empty') }).and(zEmpty),
+    zEmpty.extend({ type: z.literal('Empty') }),
     zWithValue.extend({ type: z.literal('WithValue') })
 ]);

@@ -10,7 +10,7 @@ export type BazZodInput = z.input<typeof zBaz>;
 
 export type BazZodOutput = z.output<typeof zBaz>;
 
-export const zQux = z.record(z.string(), z.object({
+export const zQux = z.object({}).catchall(z.object({
     qux: z.string().optional()
 }));
 

@@ -1,6 +1,5 @@
 import type { SymbolMeta } from '@hey-api/codegen-core';
 import type { IR } from '@hey-api/shared';
-import { pathToJsonPointer } from '@hey-api/shared';
 
 import { $ } from '../../../ts-dsl';
 import type { ZodPlugin } from '../types';
@@ -10,7 +9,6 @@ import type { ZodMeta, ZodResult } from './types';
 export interface DiscriminatedUnionMember {
   discriminatedValue: unknown;
   refExpression: Chain;
-  useAnd?: boolean;
 }
 
 export interface DiscriminatedUnionData {
@@ -18,14 +16,7 @@ export interface DiscriminatedUnionData {
   members: Array<DiscriminatedUnionMember>;
 }
 
-/**
- * A schema is emitted as `z.record(...)` rather than `z.object({...})` when it
- * has no `properties` but does declare `additionalProperties`. Such a schema
- * cannot be extended with `.extend({...})`, so it cannot participate in a
- * `z.discriminatedUnion` via the `ref.extend({ discriminator: literal })`
- * pattern this builder produces.
- */
-function isRecordShaped(schema: IR.SchemaObject | undefined): boolean {
+export function isRecordShaped(schema: IR.SchemaObject | undefined): boolean {
   if (!schema || schema.type !== 'object') return false;
   const hasProperties = schema.properties && Object.keys(schema.properties).length > 0;
   return !hasProperties && Boolean(schema.additionalProperties);
@@ -61,21 +52,9 @@ export function tryBuildDiscriminatedUnion({
     if (discriminatedValue === undefined || items[index]!.meta.hasLazy) return null;
 
     let refExpression: Chain;
-    let useAnd = false;
     if (refPart.symbolRef) {
       if ((refPart.symbolRef.meta as unknown as ZodMeta)?.isIntersection) return null;
       refExpression = $(refPart.symbolRef);
-      const symbolMeta = refPart.symbolRef.meta as { path?: ReadonlyArray<string | number> };
-      if (symbolMeta.path) {
-        try {
-          const resolved = plugin.context.resolveIrRef<IR.SchemaObject>(
-            pathToJsonPointer(symbolMeta.path),
-          );
-          useAnd = isRecordShaped(resolved);
-        } catch {
-          // unresolvable refs fall through
-        }
-      }
     } else if (refPart.$ref) {
       const query: SymbolMeta = {
         category: 'schema',
@@ -84,13 +63,6 @@ export function tryBuildDiscriminatedUnion({
         tool: 'zod',
       };
       if ((plugin.querySymbol(query)?.meta as unknown as ZodMeta)?.isIntersection) return null;
-      let resolved: IR.SchemaObject | undefined;
-      try {
-        resolved = plugin.context.resolveIrRef<IR.SchemaObject>(refPart.$ref);
-      } catch {
-        // unresolvable refs fall through and will surface elsewhere
-      }
-      useAnd = isRecordShaped(resolved);
       refExpression = $(plugin.referenceSymbol(query));
     } else {
       return null;
@@ -99,7 +71,6 @@ export function tryBuildDiscriminatedUnion({
     members.push({
       discriminatedValue,
       refExpression,
-      ...(useAnd ? { useAnd } : {}),
     });
   }
 
